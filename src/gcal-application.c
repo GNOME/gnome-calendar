@@ -48,6 +48,9 @@ gcal_application_activate (GApplication *application)
     {
       app->priv->window = gtk_application_window_new (GTK_APPLICATION (app));
       gtk_window_set_title (GTK_WINDOW (app->priv->window), _("Calendar"));
+      gtk_window_set_hide_titlebar_when_maximized (
+          GTK_WINDOW (app->priv->window),
+          TRUE);
 
       gtk_widget_show_all (GTK_WIDGET (app->priv->window));
     }
