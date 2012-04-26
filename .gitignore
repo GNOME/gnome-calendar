@@ -69,3 +69,4 @@ gnome_calendar.anjuta
 /ltmain.sh
 /missing
 /mkinstalldirs
+Debug*

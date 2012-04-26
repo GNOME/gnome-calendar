@@ -80,9 +80,9 @@ Rough description of some internals of Gnome Calendar Application
 
   +- GtkClutter.Embed::ClutterBox(BoxLayout) ----------------------------------+
   |                                                                            |
-  |  +- _bodyContainer::ClutterBox(BoxLayout) -----------------------------+   |
+  |  +- _body_actor::ClutterBox(BoxLayout) --------------------------------+   |
   |  |                                                                     |   |
-  |  |  +- _mainToolbar ------------------------------------------------+  |   |
+  |  |  +- _main_toolbar -----------------------------------------------+  |   |
   |  |  |                                                               |  |   |
   |  |  +---------------------------------------------------------------+  |   |
   |  |  +- _contentsContainer::ClutterBox(BinLayout) -------------------+  |   |

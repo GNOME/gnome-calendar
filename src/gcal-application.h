@@ -17,23 +17,23 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef _GCAL_APPLICATION_
-#define _GCAL_APPLICATION_
+#ifndef _GCAL_APPLICATION_H_
+#define _GCAL_APPLICATION_H_
 
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_APPLICATION             (gcal_application_get_type ())
-#define GCAL_APPLICATION(obj)             (G_TYPE_CHECK_INSTANCE_CAST ((obj), GCAL_TYPE_APPLICATION, GcalApplication))
-#define GCAL_APPLICATION_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST ((klass), GCAL_TYPE_APPLICATION, GcalApplicationClass))
-#define GCAL_IS_APPLICATION(obj)          (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GCAL_TYPE_APPLICATION))
-#define GCAL_IS_APPLICATION_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GCAL_TYPE_APPLICATION))
-#define GCAL_APPLICATION_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GCAL_TYPE_APPLICATION, GcalApplicationClass))
+#define GCAL_TYPE_APPLICATION               (gcal_application_get_type ())
+#define GCAL_APPLICATION(obj)               (G_TYPE_CHECK_INSTANCE_CAST ((obj), GCAL_TYPE_APPLICATION, GcalApplication))
+#define GCAL_APPLICATION_CLASS(klass)       (G_TYPE_CHECK_CLASS_CAST ((klass), GCAL_TYPE_APPLICATION, GcalApplicationClass))
+#define GCAL_IS_APPLICATION(obj)            (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GCAL_TYPE_APPLICATION))
+#define GCAL_IS_APPLICATION_CLASS(klass)    (G_TYPE_CHECK_CLASS_TYPE ((klass), GCAL_TYPE_APPLICATION))
+#define GCAL_APPLICATION_GET_CLASS(obj)     (G_TYPE_INSTANCE_GET_CLASS ((obj), GCAL_TYPE_APPLICATION, GcalApplicationClass))
 
-typedef struct _GcalApplicationClass       GcalApplicationClass;
-typedef struct _GcalApplication            GcalApplication;
-typedef struct _GcalApplicationPrivate     GcalApplicationPrivate;
+typedef struct _GcalApplicationClass         GcalApplicationClass;
+typedef struct _GcalApplication              GcalApplication;
+typedef struct _GcalApplicationPrivate       GcalApplicationPrivate;
 
 struct _GcalApplicationClass
 {

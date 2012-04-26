@@ -2,3 +2,4 @@
 
 src/main.c
 src/gcal-application.c
+src/gcal-main-toolbar.c

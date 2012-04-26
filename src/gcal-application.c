@@ -16,13 +16,17 @@
  * You should have received a copy of the GNU General Public License along
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 #include "gcal-application.h"
+#include "gcal-window.h"
+
+#include <clutter-gtk/clutter-gtk.h>
 
 #include <glib/gi18n.h>
 
 struct _GcalApplicationPrivate
 {
-  GtkWidget  *window;
+  GtkWidget    *window;
 };
 
 static void gcal_application_startup        (GApplication    *app);
@@ -46,7 +50,9 @@ gcal_application_activate (GApplication *application)
     gtk_window_present (GTK_WINDOW (app->priv->window));
   else
     {
-      app->priv->window = gtk_application_window_new (GTK_APPLICATION (app));
+      app->priv->window = gcal_window_new ();
+      gtk_window_set_application (GTK_WINDOW (app->priv->window),
+                                  GTK_APPLICATION (app));
       gtk_window_set_title (GTK_WINDOW (app->priv->window), _("Calendar"));
       gtk_window_set_hide_titlebar_when_maximized (
           GTK_WINDOW (app->priv->window),
@@ -87,6 +93,8 @@ gcal_application_startup (GApplication *app)
 {
   G_APPLICATION_CLASS (gcal_application_parent_class)->startup (app);
 
+  gtk_clutter_init (NULL, NULL);
+
   _gcal_application_set_app_menu (app);
 }
 
@@ -94,8 +102,10 @@ static void
 _gcal_application_set_app_menu (GApplication *app)
 {
   GMenu *app_menu = g_menu_new ();
+  GSimpleAction *about;
+  GSimpleAction *quit;
   
-  GSimpleAction *about = g_simple_action_new ("about", NULL);
+  about = g_simple_action_new ("about", NULL);
   g_signal_connect (about,
                     "activate",
                     G_CALLBACK (_gcal_application_show_about),
@@ -103,7 +113,7 @@ _gcal_application_set_app_menu (GApplication *app)
   g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (about));
   g_menu_append (app_menu, _("About"), "app.about");
 
-  GSimpleAction *quit = g_simple_action_new ("quit", NULL);
+  quit = g_simple_action_new ("quit", NULL);
   g_signal_connect (quit,
                     "activate",
                     G_CALLBACK (_gcal_application_quit),

@@ -47,6 +47,23 @@ LT_INIT
 
 GLIB_GSETTINGS
 
+GNOME_COMPILE_WARNINGS(maximum)
+GNOME_COMMON_INIT
+GNOME_MAINTAINER_MODE_DEFINES
+
+MAINTAINER_COMPILER_FLAGS="$MAINTAINER_COMPILER_FLAGS                        \
+                           -Wall -Wcast-align -Wuninitialized                \
+                           -Wno-strict-aliasing -Wempty-body -Wformat        \
+                           -Wformat-security -Wformat-nonliteral -Winit-self \
+                           -Wdeclaration-after-statement -Wvla               \
+                           -Wpointer-arith -Wmissing-declarations            \
+                           -Wcast-align                                      \
+                           -Wredundant-decls"
+
+# strip leading spaces
+MAINTAINER_COMPILER_FLAGS=${MAINTAINER_COMPILER_FLAGS#*  }
+AC_SUBST(MAINTAINER_COMPILER_FLAGS)
+
 GLIB_MIN_VERSION=2.30.0
 GTK_MIN_VERSION=3.4.0
 CLUTTER_MIN_VERSION=1.10
@@ -58,8 +75,8 @@ EDATASERVERUI_REQUIRED=3.1.5
 PKG_CHECK_MODULES(CALENDAR,
                   glib-2.0 >= $GLIB_MIN_VERSION
                   gtk+-3.0 >= $GTK_MIN_VERSION
-				  clutter-1.0 >= CLUTTER_MIN_VERSION
-				  clutter-gtk-1.0 >= CLUTTER_GTK_MIN_VERSION
+                  clutter-1.0 >= CLUTTER_MIN_VERSION
+                  clutter-gtk-1.0 >= CLUTTER_GTK_MIN_VERSION
                   libecal-1.2 >= $ECAL_REQUIRED
                   libedataserver-1.2 >= EDATASERVER_REQUIRED
                   libedataserverui-3.0 >= EDATASERVERUI_REQUIRED)

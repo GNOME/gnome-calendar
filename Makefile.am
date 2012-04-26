@@ -18,8 +18,8 @@ EXTRA_DIST =                    \
   $(gnome_calendardoc_DATA)     \
   $(INTLTOOL_FILES)             \
   THANKS                        \
-    TODO                        \
-    autogen.sh
+  TODO                          \
+  autogen.sh
 
 
 DISTCLEANFILES =                \
@@ -31,4 +31,4 @@ DISTCLEANFILES =                \
 
 # Remove doc directory on uninstall
 uninstall-local:
-  -rm -r $(gnome_calendardocdir)
+	-rm -r $(gnome_calendardocdir)
