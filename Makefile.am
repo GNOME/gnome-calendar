@@ -1,14 +1,10 @@
-## Process this file with automake to produce Makefile.in
-## Created by Anjuta
+ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
-SUBDIRS = src po
+SUBDIRS = src po doc
 
 gnome_calendardocdir = ${prefix}/doc/gnome_calendar
 gnome_calendardoc_DATA = \
 	README\
-	COPYING\
-	AUTHORS\
-	ChangeLog\
 	INSTALL\
 	NEWS
 
@@ -17,8 +13,13 @@ INTLTOOL_FILES = intltool-extract.in \
 	intltool-merge.in \
 	intltool-update.in
 
-EXTRA_DIST = $(gnome_calendardoc_DATA) \
-	$(INTLTOOL_FILES)
+EXTRA_DIST =                  \
+    $(gnome_calendardoc_DATA) \
+	$(INTLTOOL_FILES)         \
+	THANKS					  \
+    TODO                      \
+    autogen.sh
+
 
 DISTCLEANFILES = intltool-extract \
 	intltool-merge \

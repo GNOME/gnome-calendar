@@ -2,13 +2,13 @@ AM_CPPFLAGS = \
 	-DPACKAGE_LOCALE_DIR=\""$(localedir)"\" \
 	-DPACKAGE_SRC_DIR=\""$(srcdir)"\" \
 	-DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\" \
-	$(GNOME_CALENDAR_CFLAGS)
+	$(CALENDAR_CFLAGS)
 
 AM_CFLAGS =\
 	 -Wall\
 	 -g
 
-bin_PROGRAMS = gnome_calendar
+bin_PROGRAMS = gnome-calendar
 
 gnome_calendar_SOURCES = \
 	main.c \
@@ -18,6 +18,7 @@ gnome_calendar_SOURCES = \
 gnome_calendar_LDFLAGS = \
 	-Wl,--export-dynamic
 
-gnome_calendar_LDADD = $(GNOME_CALENDAR_LIBS)
+gnome_calendar_LDADD = \
+	$(CALENDAR_LIBS)
 
 

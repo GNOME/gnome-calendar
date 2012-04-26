@@ -31,9 +31,9 @@ G_BEGIN_DECLS
 #define GCAL_IS_APPLICATION_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE ((klass), GCAL_TYPE_APPLICATION))
 #define GCAL_APPLICATION_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS ((obj), GCAL_TYPE_APPLICATION, GcalApplicationClass))
 
-typedef struct _GcalApplicationClass GcalApplicationClass;
-typedef struct _GcalApplication GcalApplication;
-
+typedef struct _GcalApplicationClass       GcalApplicationClass;
+typedef struct _GcalApplication            GcalApplication;
+typedef struct _GcalApplicationPrivate     GcalApplicationPrivate;
 
 struct _GcalApplicationClass
 {
@@ -44,6 +44,7 @@ struct _GcalApplication
 {
   GtkApplication parent_instance;
 
+  GcalApplicationPrivate *priv;
 };
 
 GType gcal_application_get_type (void) G_GNUC_CONST;

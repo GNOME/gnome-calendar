@@ -1,0 +1,118 @@
+Rough description of some internals of Gnome Calendar Application
+
+
++ mainToolbar object:
+
+  Has 3 states:
+    1. Overview
+    2. View Event
+    3. Edit Event (this one could act as New Event View, or even as New anything view)
+
+
++ Global
+
+  Has dconf-key attribute
+    For keeping the last view and last day selected
+
+  Has GcalStore object
+    For managingn source and events, and everything else
+
+  Has a SourceManager object
+
+
++ SourceManager
+
+  It's the javascript counter part of GcalStore objects. It will handle adding
+  sources to GcalStore.
+
+
++ GcalStore
+
+  Has a list of GcalSToreUnit,
+    Containing:
+      Esource, ECalClient,ECalClientView
+
+  Has a list of ESourceGroup
+
+  Has GDate *initial_date, *final_date
+    For defining a range to get events from
+    Could have an active query representing the range (s-exp)
+
+  Has a list of Events in the active range (a list of ECalComponent)
+
+  Emit signals for:
+    - objects-added   (wrapping ECalClientView)
+    - objects-removed (wrapping ECalClientView)
+    - events-retrieved (for time range changing)
+
+
++ GcalSource
+
+  Has a base_uri
+  Has a relative uri
+  Has a color
+
+
++ GcalApplication
+
+  Has command-line option
+    For opening on the day specified
+
+
++ GcalView
+
+  Has NavigationPane
+  Has GDate: selected_date attribute
+
+  Has child classes
+  1. GcalDayView
+  ...
+
+
++ GcalEvent
+
+  Has one source
+
+
++ GcalMainWindow
+
+  Design
+
+  +- GtkClutter.Embed::ClutterBox(BoxLayout) ----------------------------------+
+  |                                                                            |
+  |  +- _bodyContainer::ClutterBox(BoxLayout) -----------------------------+   |
+  |  |                                                                     |   |
+  |  |  +- _mainToolbar ------------------------------------------------+  |   |
+  |  |  |                                                               |  |   |
+  |  |  +---------------------------------------------------------------+  |   |
+  |  |  +- _contentsContainer::ClutterBox(BinLayout) -------------------+  |   |
+  |  |  |                                                               |  |   |
+  |  |  |  +- _sourcesView ------------------------------------------+  |  |   |
+  |  |  |  |                                                         |  |  |   |
+  |  |  |  +---------------------------------------------------------+  |  |   |
+  |  |  |                                                               |  |   |
+  |  |  |  +- _notebookActor ----------------------------------------+  |  |   |
+  |  |  |  |                                                         |  |  |   |
+  |  |  |  |                                                         |  |  |   |
+  |  |  |  |                                                         |  |  |   |
+  |  |  |  +---------------------------------------------------------+  |  |   |
+  |  |  +---------------------------------------------------------------+  |   |
+  |  |                                                                     |   |
+  |  +---------------------------------------------------------------------+   |
+  +----------------------------------------------------------------------------+
+
+  Has an active_view attribute
+    For keeping the type view is actually showing
+
+  Has views
+    1. GcalDayView
+    2. GcalWeekView
+    3. GcalMonthView
+    ...
+
+  Has GDate attribute
+    For keeping actual date
+
+  Has set_view/update_view method
+    For updating the view content by talking to GcalStore
+    about events an dates of the view
