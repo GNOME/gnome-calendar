@@ -1,0 +1,10 @@
+[Desktop Entry]
+_Name=Calendar
+_Comment=Access, and manage calendar
+Exec=gnome-calendar
+Icon=calendr
+Terminal=false
+Type=Application
+StartupNotify=true
+OnlyShowIn=GNOME;
+Categories=GNOME;GTK;Utility;Core;

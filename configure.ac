@@ -84,6 +84,8 @@ PKG_CHECK_MODULES(CALENDAR,
 AC_CONFIG_FILES([
       Makefile
       src/Makefile
+      data/Makefile
+      data/gnome-calendar.desktop.in
       po/Makefile.in
       doc/Makefile
 ])

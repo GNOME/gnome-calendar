@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 #include "gcal-application.h"
 #include "gcal-window.h"
 
@@ -24,9 +25,13 @@
 
 #include <glib/gi18n.h>
 
+#define CSS_FILE UI_DATA_DIR "/gtk-style.css"
+
 struct _GcalApplicationPrivate
 {
-  GtkWidget    *window;
+  GtkWidget      *window;
+
+  GtkCssProvider *provider;
 };
 
 static void gcal_application_startup        (GApplication    *app);
@@ -91,9 +96,30 @@ gcal_application_class_init (GcalApplicationClass *klass)
 static void
 gcal_application_startup (GApplication *app)
 {
+  GcalApplicationPrivate *priv;
+  GError *error;
+  priv = GCAL_APPLICATION (app)->priv;
+
   G_APPLICATION_CLASS (gcal_application_parent_class)->startup (app);
 
-  gtk_clutter_init (NULL, NULL);
+  if (gtk_clutter_init (NULL, NULL) < 0)
+   {
+     g_error (_("Unable to initialize GtkClutter\n"));
+     g_application_quit (app);
+   }
+
+  if (priv->provider == NULL)
+   {
+     priv->provider = gtk_css_provider_new ();
+     gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+                                                GTK_STYLE_PROVIDER (priv->provider),
+                                                G_MAXUINT);
+
+     error = NULL;
+     gtk_css_provider_load_from_path (priv->provider, CSS_FILE, &error);
+     if (error != NULL)
+       g_warning ("Not loading stylesheet from file %s\n", CSS_FILE);
+   }
 
   _gcal_application_set_app_menu (app);
 }

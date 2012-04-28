@@ -1,6 +1,6 @@
 ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
-SUBDIRS = src po doc
+SUBDIRS = src data po doc
 
 gnome_calendardocdir = ${prefix}/doc/gnome_calendar
 gnome_calendardoc_DATA =        \

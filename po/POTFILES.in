@@ -3,3 +3,7 @@
 src/main.c
 src/gcal-application.c
 src/gcal-main-toolbar.c
+src/gcal-month-view.c
+
+data/gnome-calendar.desktop.in.in
+data/org.gnome.calendar.gschema.xml.in

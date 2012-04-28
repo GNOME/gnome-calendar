@@ -18,6 +18,7 @@
  */
 
 #include "gcal-main-toolbar.h"
+#include "gcal-utils.h"
 
 #include <glib/gi18n.h>
 
@@ -25,6 +26,20 @@ struct _GcalMainToolbarPrivate
 {
   GtkWidget *widget;
 };
+
+enum
+{
+  VIEW_CHANGED = 1,
+  SOURCES_SHOWN,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
+
+static void _gcal_main_toolbar_view_changed  (GtkWidget *button,
+                                              gpointer   user_data);
+static void _gcal_main_toolbar_sources_shown (GtkWidget *button,
+                                              gpointer   user_data);
 
 G_DEFINE_TYPE (GcalMainToolbar, gcal_main_toolbar, GTK_CLUTTER_TYPE_ACTOR);
 
@@ -70,6 +85,11 @@ gcal_main_toolbar_constructed (GObject *object)
   context = gtk_widget_get_style_context (button);
   gtk_style_context_add_class (context, "raised");
 
+  g_signal_connect (button,
+                    "clicked",
+                    G_CALLBACK (_gcal_main_toolbar_sources_shown),
+                    GCAL_MAIN_TOOLBAR (object));
+
   item = gtk_tool_item_new ();
   gtk_container_add (GTK_CONTAINER (item), button);
   gtk_toolbar_insert (GTK_TOOLBAR (priv->widget), item, 0);
@@ -99,6 +119,14 @@ gcal_main_toolbar_constructed (GObject *object)
 
   gtk_container_add (GTK_CONTAINER (views_box), button);
 
+  g_object_set_data (G_OBJECT (button),
+                    "view-type",
+                    GUINT_TO_POINTER (GCAL_VIEW_TYPE_DAILY));
+  g_signal_connect (button,
+                    "clicked",
+                    G_CALLBACK (_gcal_main_toolbar_view_changed),
+                    GCAL_MAIN_TOOLBAR (object));
+
   /* week */
   button = gtk_button_new_with_label (_("Week"));
   gtk_widget_set_size_request (button, 80, -1);
@@ -107,6 +135,14 @@ gcal_main_toolbar_constructed (GObject *object)
   gtk_style_context_add_class (context, "raised");
 
   gtk_container_add (GTK_CONTAINER (views_box), button);
+
+  g_object_set_data (G_OBJECT (button),
+                    "view-type",
+                    GUINT_TO_POINTER (GCAL_VIEW_TYPE_WEEKLY));
+  g_signal_connect (button,
+                    "clicked",
+                    G_CALLBACK (_gcal_main_toolbar_view_changed),
+                    GCAL_MAIN_TOOLBAR (object));
 
   /* month */
   button = gtk_button_new_with_label (_("Month"));
@@ -117,6 +153,14 @@ gcal_main_toolbar_constructed (GObject *object)
 
   gtk_container_add (GTK_CONTAINER (views_box), button);
 
+  g_object_set_data (G_OBJECT (button),
+                    "view-type",
+                    GUINT_TO_POINTER (GCAL_VIEW_TYPE_MONTHLY));
+  g_signal_connect (button,
+                    "clicked",
+                    G_CALLBACK (_gcal_main_toolbar_view_changed),
+                    GCAL_MAIN_TOOLBAR (object));
+
   /* year */
   button = gtk_button_new_with_label (_("Year"));
   gtk_widget_set_size_request (button, 80, -1);
@@ -126,6 +170,14 @@ gcal_main_toolbar_constructed (GObject *object)
 
   gtk_container_add (GTK_CONTAINER (views_box), button);
 
+  g_object_set_data (G_OBJECT (button),
+                    "view-type",
+                    GUINT_TO_POINTER (GCAL_VIEW_TYPE_YEARLY));
+  g_signal_connect (button,
+                    "clicked",
+                    G_CALLBACK (_gcal_main_toolbar_view_changed),
+                    GCAL_MAIN_TOOLBAR (object));
+
   /* list */
   button = gtk_button_new_with_label (_("List"));
   gtk_widget_set_size_request (button, 80, -1);
@@ -134,6 +186,14 @@ gcal_main_toolbar_constructed (GObject *object)
   gtk_style_context_add_class (context, "raised");
 
   gtk_container_add (GTK_CONTAINER (views_box), button);
+
+  g_object_set_data (G_OBJECT (button),
+                    "view-type",
+                    GUINT_TO_POINTER (GCAL_VIEW_TYPE_LIST));
+  g_signal_connect (button,
+                    "clicked",
+                    G_CALLBACK (_gcal_main_toolbar_view_changed),
+                    GCAL_MAIN_TOOLBAR (object));
 
   /* spacer */
   spacer = gtk_tool_item_new ();
@@ -173,7 +233,56 @@ gcal_main_toolbar_class_init (GcalMainToolbarClass *klass)
   G_OBJECT_CLASS (klass)->constructed = gcal_main_toolbar_constructed;
   G_OBJECT_CLASS (klass)->finalize = gcal_main_toolbar_finalize;
 
+  signals[VIEW_CHANGED] = g_signal_new ("view-changed",
+                                        GCAL_TYPE_MAIN_TOOLBAR,
+                                        G_SIGNAL_RUN_LAST,
+                                        G_STRUCT_OFFSET (GcalMainToolbarClass,
+                                                         view_changed),
+                                        NULL, NULL,
+                                        g_cclosure_marshal_VOID__UINT,
+                                        G_TYPE_NONE,
+                                        1,
+                                        G_TYPE_UINT);
+
+  signals[SOURCES_SHOWN] = g_signal_new ("sources-shown",
+                                         GCAL_TYPE_MAIN_TOOLBAR,
+                                         G_SIGNAL_RUN_LAST,
+                                         G_STRUCT_OFFSET (GcalMainToolbarClass,
+                                                          sources_shown),
+                                         NULL, NULL,
+                                         g_cclosure_marshal_VOID__BOOLEAN,
+                                         G_TYPE_NONE,
+                                         1,
+                                         G_TYPE_BOOLEAN);
+
   g_type_class_add_private ((gpointer) klass, sizeof(GcalMainToolbarPrivate));
+}
+
+static void
+_gcal_main_toolbar_view_changed (GtkWidget *button,
+                                 gpointer   user_data)
+{
+  GcalMainToolbar *app;
+  guint view_type;
+
+  app = GCAL_MAIN_TOOLBAR (user_data);
+  view_type = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (button),
+                                                   "view-type"));
+
+  g_signal_emit (app, signals[VIEW_CHANGED], 0, view_type);
+}
+
+static void
+_gcal_main_toolbar_sources_shown (GtkWidget *button,
+                                  gpointer   user_data)
+{
+  GcalMainToolbar *app;
+
+  app = GCAL_MAIN_TOOLBAR (user_data);
+  g_signal_emit (app,
+                 signals[SOURCES_SHOWN],
+                 0,
+                 gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button)));
 }
 
 ClutterActor*

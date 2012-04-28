@@ -19,6 +19,8 @@
 
 #include "gcal-window.h"
 #include "gcal-main-toolbar.h"
+#include "gcal-month-view.h"
+#include "gcal-utils.h"
 
 #include <clutter/clutter.h>
 #include <clutter-gtk/clutter-gtk.h>
@@ -26,7 +28,17 @@
 struct _GcalWindowPrivate
 {
   ClutterActor *main_toolbar;
+
+  GtkWidget    *notebook;
+  GtkWidget    *views [5];
 };
+
+static void _gcal_window_view_changed  (GcalMainToolbar *main_toolbar,
+                                        GcalViewType     view_type,
+                                        gpointer         user_data);
+static void _gcal_window_sources_shown (GcalMainToolbar *main_toolbar,
+                                        gboolean         visible,
+                                        gpointer         user_data);
 
 G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
@@ -45,6 +57,11 @@ static void gcal_window_init(GcalWindow *self)
   ClutterActor *body_actor;
   ClutterLayoutManager *body_layout_manager;
   ClutterActor *main_toolbar;
+  ClutterActor *contents_actor;
+  ClutterLayoutManager *contents_layout_manager;
+  ClutterActor *notebook_actor;
+
+  GtkStyleContext *context;
 
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE(self,
                                            GCAL_TYPE_WINDOW,
@@ -90,7 +107,69 @@ static void gcal_window_init(GcalWindow *self)
                            CLUTTER_BOX_ALIGNMENT_START,
                            CLUTTER_BOX_ALIGNMENT_START);
 
+  /* contents */
+  contents_layout_manager = clutter_bin_layout_new (CLUTTER_BIN_ALIGNMENT_CENTER,
+                                                    CLUTTER_BIN_ALIGNMENT_CENTER);
+  contents_actor = clutter_actor_new ();
+  clutter_actor_set_layout_manager (contents_actor, contents_layout_manager);
+  clutter_box_layout_pack (CLUTTER_BOX_LAYOUT (body_layout_manager),
+                           contents_actor,
+                           TRUE,
+                           TRUE,
+                           TRUE,
+                           CLUTTER_BOX_ALIGNMENT_START,
+                           CLUTTER_BOX_ALIGNMENT_START);
+
+  self->priv->notebook = gtk_notebook_new ();
+  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (self->priv->notebook), FALSE);
+  gtk_notebook_set_show_border (GTK_NOTEBOOK (self->priv->notebook), FALSE);
+  gtk_widget_show (self->priv->notebook);
+
+  notebook_actor = gtk_clutter_actor_new_with_contents (self->priv->notebook);
+
+  clutter_bin_layout_add (CLUTTER_BIN_LAYOUT (contents_layout_manager),
+                                              notebook_actor,
+                                              CLUTTER_BIN_ALIGNMENT_FILL,
+                                              CLUTTER_BIN_ALIGNMENT_FILL);
+
+  GDate *date = g_date_new ();
+  g_date_set_time_t (date, time (NULL));
+  self->priv->views[GCAL_VIEW_TYPE_MONTHLY] = gcal_month_view_new (date);
+
+  context = gtk_widget_get_style_context (self->priv->views[GCAL_VIEW_TYPE_MONTHLY]);
+  gtk_style_context_add_class (context, "views");
+
+  gtk_widget_show (self->priv->views[GCAL_VIEW_TYPE_MONTHLY]);
+  gtk_notebook_append_page (GTK_NOTEBOOK (self->priv->notebook),
+                            self->priv->views[GCAL_VIEW_TYPE_MONTHLY],
+                            NULL);
+
+  g_signal_connect (main_toolbar,
+                    "view-changed",
+                    G_CALLBACK (_gcal_window_view_changed),
+                    self);
+  g_signal_connect (main_toolbar,
+                    "sources-shown",
+                    G_CALLBACK (_gcal_window_sources_shown),
+                    self);
+
   gtk_widget_show (embed);
+}
+
+static void
+_gcal_window_view_changed (GcalMainToolbar *main_toolbar,
+                           GcalViewType     view_type,
+                           gpointer         user_data)
+{
+  g_print ("GcalViewType in GcalWindow %d\n", view_type);
+}
+
+static void
+_gcal_window_sources_shown (GcalMainToolbar *main_toolbar,
+                            gboolean         visible,
+                            gpointer         user_data)
+{
+  g_print ("Visible: %s\n", visible ? "yes" : "no");
 }
 
 GtkWidget*

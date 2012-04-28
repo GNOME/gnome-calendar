@@ -1,0 +1,9 @@
+<schemalist gettext-domain="gnome-calendar">
+    <schema id="org.gnome.calendar" path="/org/gnome/calendar/">
+        <key name="window-maximized" type="b">
+            <default>true</default>
+            <_summary>Window maximized</_summary>
+            <_description>Window maximized state</_description>
+        </key>
+    </schema>
+</schemalist>

@@ -38,6 +38,10 @@ typedef struct _GcalMainToolbarPrivate       GcalMainToolbarPrivate;
 struct _GcalMainToolbarClass
 {
   GtkClutterActorClass parent_class;
+
+  /* Signals */
+  void (*view_changed)  (GcalMainToolbar *main_toolbar, guint view_type);
+  void (*sources_shown) (GcalMainToolbar *main_toolbar, gboolean visible);
 };
 
 struct _GcalMainToolbar
