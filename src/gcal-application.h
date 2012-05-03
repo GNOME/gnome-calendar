@@ -20,6 +20,8 @@
 #ifndef _GCAL_APPLICATION_H_
 #define _GCAL_APPLICATION_H_
 
+#include "gcal-manager.h"
+
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
@@ -47,8 +49,11 @@ struct _GcalApplication
   GcalApplicationPrivate *priv;
 };
 
-GType gcal_application_get_type (void) G_GNUC_CONST;
-GcalApplication *gcal_application_new (void);
+GType            gcal_application_get_type    (void) G_GNUC_CONST;
+
+GcalApplication* gcal_application_new         (void);
+
+GcalManager*     gcal_application_get_manager (GcalApplication *app);
 
 /* Callbacks */
 

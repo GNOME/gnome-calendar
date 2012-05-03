@@ -31,6 +31,8 @@ struct _GcalApplicationPrivate
 {
   GtkWidget      *window;
 
+  GcalManager    *manager;
+
   GtkCssProvider *provider;
 };
 
@@ -49,21 +51,20 @@ G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 static void
 gcal_application_activate (GApplication *application)
 {
-  GcalApplication *app = GCAL_APPLICATION (application);
+  GcalApplicationPrivate *priv;
+  priv = GCAL_APPLICATION (application)->priv;
 
-  if (app->priv->window != NULL)
-    gtk_window_present (GTK_WINDOW (app->priv->window));
+  if (priv->window != NULL)
+    gtk_window_present (GTK_WINDOW (priv->window));
   else
     {
-      app->priv->window = gcal_window_new ();
-      gtk_window_set_application (GTK_WINDOW (app->priv->window),
-                                  GTK_APPLICATION (app));
-      gtk_window_set_title (GTK_WINDOW (app->priv->window), _("Calendar"));
-      gtk_window_set_hide_titlebar_when_maximized (
-          GTK_WINDOW (app->priv->window),
-          TRUE);
+      priv->window = gcal_window_new (GCAL_APPLICATION (application));
+      gtk_window_set_title (GTK_WINDOW (priv->window), _("Calendar"));
+      gtk_window_set_hide_titlebar_when_maximized (GTK_WINDOW (priv->window),
+                                                   TRUE);
 
-      gtk_widget_show_all (GTK_WIDGET (app->priv->window));
+      gtk_window_maximize (GTK_WINDOW (priv->window));
+      gtk_widget_show_all (priv->window);
     }
 }
 
@@ -73,7 +74,6 @@ gcal_application_init (GcalApplication *self)
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
                                             GCAL_TYPE_APPLICATION,
                                             GcalApplicationPrivate);
-
 }
 
 static void
@@ -120,6 +120,8 @@ gcal_application_startup (GApplication *app)
      if (error != NULL)
        g_warning ("Not loading stylesheet from file %s\n", CSS_FILE);
    }
+
+  priv->manager = gcal_manager_new ();
 
   _gcal_application_set_app_menu (app);
 }
@@ -181,4 +183,11 @@ gcal_application_new (void)
   return g_object_new (gcal_application_get_type (),
                        "application-id", "org.gnome.Calendar",
                        NULL);
+}
+
+GcalManager*
+gcal_application_get_manager (GcalApplication *app)
+{
+  g_return_val_if_fail (GCAL_IS_APPLICATION (app), NULL);
+  return app->priv->manager;
 }
