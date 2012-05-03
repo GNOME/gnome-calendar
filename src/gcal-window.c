@@ -309,7 +309,28 @@ _gcal_window_sources_row_activated (GtkTreeView       *tree_view,
                                     GtkTreeViewColumn *column,
                                     gpointer           user_data)
 {
-  g_print ("Activated row\n");
+  GcalWindowPrivate *priv;
+  GtkTreeIter iter;
+  gboolean active;
+
+  priv  = ((GcalWindow*) user_data)->priv;
+
+  gtk_tree_model_get_iter (
+      gtk_tree_view_get_model (GTK_TREE_VIEW (priv->sources_view)),
+      &iter,
+      path);
+  gtk_tree_model_get (
+      gtk_tree_view_get_model (GTK_TREE_VIEW (priv->sources_view)),
+      &iter,
+      2, &active,
+      -1);
+
+  active ^= 1;
+  gtk_list_store_set (
+      GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (priv->sources_view))),
+      &iter,
+      2, active,
+      -1);
 }
 
 GtkWidget*
