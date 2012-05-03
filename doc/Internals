@@ -9,26 +9,21 @@ Rough description of some internals of Gnome Calendar Application
     3. Edit Event (this one could act as New Event View, or even as New anything view)
 
 
-+ Global
++ GcalApplication
 
   Has dconf-key attribute
     For keeping the last view and last day selected
 
-  Has GcalStore object
+  Has command-line option
+    For opening on the day specified
+
+  Has a GcalManager object
     For managingn source and events, and everything else
 
-  Has a SourceManager object
 
++ GcalManager
 
-+ SourceManager
-
-  It's the javascript counter part of GcalStore objects. It will handle adding
-  sources to GcalStore.
-
-
-+ GcalStore
-
-  Has a list of GcalSToreUnit,
+  Has a list of GcalStoreUnit,
     Containing:
       Esource, ECalClient,ECalClientView
 
@@ -45,18 +40,13 @@ Rough description of some internals of Gnome Calendar Application
     - objects-removed (wrapping ECalClientView)
     - events-retrieved (for time range changing)
 
+  Has a GtkListStore with calendar/sources info.
 
 + GcalSource
 
   Has a base_uri
   Has a relative uri
   Has a color
-
-
-+ GcalApplication
-
-  Has command-line option
-    For opening on the day specified
 
 
 + GcalView
@@ -85,13 +75,13 @@ Rough description of some internals of Gnome Calendar Application
   |  |  +- _main_toolbar -----------------------------------------------+  |   |
   |  |  |                                                               |  |   |
   |  |  +---------------------------------------------------------------+  |   |
-  |  |  +- _contentsContainer::ClutterBox(BinLayout) -------------------+  |   |
+  |  |  +- _contents_actor::ClutterBox(BinLayout) ----------------------+  |   |
   |  |  |                                                               |  |   |
-  |  |  |  +- _sourcesView ------------------------------------------+  |  |   |
+  |  |  |  +- _sources_actor ----------------------------------------+  |  |   |
   |  |  |  |                                                         |  |  |   |
   |  |  |  +---------------------------------------------------------+  |  |   |
   |  |  |                                                               |  |   |
-  |  |  |  +- _notebookActor ----------------------------------------+  |  |   |
+  |  |  |  +- _notebook_actor ---------------------------------------+  |  |   |
   |  |  |  |                                                         |  |  |   |
   |  |  |  |                                                         |  |  |   |
   |  |  |  |                                                         |  |  |   |
@@ -114,5 +104,5 @@ Rough description of some internals of Gnome Calendar Application
     For keeping actual date
 
   Has set_view/update_view method
-    For updating the view content by talking to GcalStore
+    For updating the view content by talking to GcalManager
     about events an dates of the view
