@@ -20,6 +20,8 @@
 #ifndef __GCAL_WINDOW_H__
 #define __GCAL_WINDOW_H__
 
+#include "gcal-application.h"
+
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
@@ -50,7 +52,8 @@ struct _GcalWindowClass
 
 
 GType        gcal_window_get_type        (void);
-GtkWidget*   gcal_window_new             (void);
+
+GtkWidget*   gcal_window_new             (GcalApplication *app);
 
 G_END_DECLS
 

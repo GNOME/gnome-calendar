@@ -1,3 +1,30 @@
+/*******
+ * OSD *
+ *******/
+@define-color osd_highlight #ffffff;
+@define-color osd_base #212526;
+
+@define-color osd_fg #ededed;
+@define-color osd_bg alpha(@osd_base, 0.80);
+
+@define-color osd_toolbar_bg_a alpha(@osd_base, 0.80);
+@define-color osd_toolbar_bg_b alpha(#101010, 0.80);
+@define-color osd_toolbar_bg_c alpha(shade(@osd_base, 1.02), 0.80);
+
+.sources-views {
+  padding: 10px;
+  border-radius: 10px;
+  border-style: none;
+
+  background-image: -gtk-gradient(linear, left top, left bottom,
+                                  from(@osd_toolbar_bg_a),
+                                  color-stop(0.63, @osd_toolbar_bg_b),
+                                  to(@osd_toolbar_bg_c));
+
+  color: @osd_fg;
+  background-color: @osd_bg;
+}
+
 .views {
   padding: 10px;
 }

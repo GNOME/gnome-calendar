@@ -18,6 +18,8 @@
  */
 
 #include "gcal-window.h"
+#include "gcal-manager.h"
+#include "gcal-floating-container.h"
 #include "gcal-main-toolbar.h"
 #include "gcal-month-view.h"
 #include "gcal-utils.h"
@@ -25,50 +27,76 @@
 #include <clutter/clutter.h>
 #include <clutter-gtk/clutter-gtk.h>
 
+#include <libedataserverui/e-cell-renderer-color.h>
+
 struct _GcalWindowPrivate
 {
   ClutterActor *main_toolbar;
+  ClutterActor *notebook_actor;
+  ClutterActor *sources_actor;
 
   GtkWidget    *notebook;
+  GtkWidget    *sources_view;
   GtkWidget    *views [5];
 };
 
-static void _gcal_window_view_changed  (GcalMainToolbar *main_toolbar,
-                                        GcalViewType     view_type,
-                                        gpointer         user_data);
-static void _gcal_window_sources_shown (GcalMainToolbar *main_toolbar,
-                                        gboolean         visible,
-                                        gpointer         user_data);
+static void gcal_window_constructed            (GObject         *object);
+
+static void _gcal_window_set_sources_view      (GcalWindow      *window);
+
+static void _gcal_window_view_changed          (GcalMainToolbar *main_toolbar,
+                                                GcalViewType     view_type,
+                                                gpointer         user_data);
+
+static void _gcal_window_sources_shown         (GcalMainToolbar *main_toolbar,
+                                                gboolean         visible,
+                                                gpointer         user_data);
+
+static void _gcal_window_sources_row_activated (GtkTreeView       *tree_view,
+                                                GtkTreePath       *path,
+                                                GtkTreeViewColumn *column,
+                                                gpointer           user_data);
 
 G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static void
 gcal_window_class_init(GcalWindowClass *klass)
 {
+  G_OBJECT_CLASS (klass)->constructed = gcal_window_constructed;
+
   g_type_class_add_private((gpointer)klass, sizeof(GcalWindowPrivate));
 }
 
 static void gcal_window_init(GcalWindow *self)
 {
+  self->priv = G_TYPE_INSTANCE_GET_PRIVATE(self,
+                                           GCAL_TYPE_WINDOW,
+                                           GcalWindowPrivate);
+}
+
+static void
+gcal_window_constructed (GObject *object)
+{
+  GcalWindowPrivate *priv;
   GtkWidget *embed;
   ClutterActor *stage;
   ClutterActor *base;
   ClutterLayoutManager *base_layout_manager;
   ClutterActor *body_actor;
   ClutterLayoutManager *body_layout_manager;
-  ClutterActor *main_toolbar;
   ClutterActor *contents_actor;
   ClutterLayoutManager *contents_layout_manager;
-  ClutterActor *notebook_actor;
+  GtkWidget *holder;
 
   GtkStyleContext *context;
 
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE(self,
-                                           GCAL_TYPE_WINDOW,
-                                           GcalWindowPrivate);
+  if (G_OBJECT_CLASS (gcal_window_parent_class)->constructed != NULL)
+    G_OBJECT_CLASS (gcal_window_parent_class)->constructed (object);
+
+  priv = GCAL_WINDOW (object)->priv;
 
   embed = gtk_clutter_embed_new ();
-  gtk_container_add (GTK_CONTAINER (self), embed);
+  gtk_container_add (GTK_CONTAINER (object), embed);
   stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (embed));
 
   /* base */
@@ -98,9 +126,10 @@ static void gcal_window_init(GcalWindow *self)
                            CLUTTER_BOX_ALIGNMENT_CENTER,
                            CLUTTER_BOX_ALIGNMENT_CENTER);
 
-  main_toolbar = gcal_main_toolbar_new ();
+  /* main_toolbar */
+  priv->main_toolbar = gcal_main_toolbar_new ();
   clutter_box_layout_pack (CLUTTER_BOX_LAYOUT (body_layout_manager),
-                           main_toolbar,
+                           priv->main_toolbar,
                            FALSE,
                            TRUE,
                            FALSE,
@@ -117,43 +146,129 @@ static void gcal_window_init(GcalWindow *self)
                            TRUE,
                            TRUE,
                            TRUE,
-                           CLUTTER_BOX_ALIGNMENT_START,
-                           CLUTTER_BOX_ALIGNMENT_START);
+                           CLUTTER_BOX_ALIGNMENT_CENTER,
+                           CLUTTER_BOX_ALIGNMENT_CENTER);
 
-  self->priv->notebook = gtk_notebook_new ();
-  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (self->priv->notebook), FALSE);
-  gtk_notebook_set_show_border (GTK_NOTEBOOK (self->priv->notebook), FALSE);
-  gtk_widget_show (self->priv->notebook);
+  /* notebook widget for holding views */
+  priv->notebook = gtk_notebook_new ();
+  gtk_notebook_set_show_tabs (GTK_NOTEBOOK (priv->notebook), FALSE);
+  gtk_notebook_set_show_border (GTK_NOTEBOOK (priv->notebook), FALSE);
+  gtk_widget_show (priv->notebook);
 
-  notebook_actor = gtk_clutter_actor_new_with_contents (self->priv->notebook);
+  priv->notebook_actor = gtk_clutter_actor_new_with_contents (priv->notebook);
 
   clutter_bin_layout_add (CLUTTER_BIN_LAYOUT (contents_layout_manager),
-                                              notebook_actor,
-                                              CLUTTER_BIN_ALIGNMENT_FILL,
-                                              CLUTTER_BIN_ALIGNMENT_FILL);
+                          priv->notebook_actor,
+                          CLUTTER_BIN_ALIGNMENT_FILL,
+                          CLUTTER_BIN_ALIGNMENT_FILL);
 
   GDate *date = g_date_new ();
   g_date_set_time_t (date, time (NULL));
-  self->priv->views[GCAL_VIEW_TYPE_MONTHLY] = gcal_month_view_new (date);
+  priv->views[GCAL_VIEW_TYPE_MONTHLY] = gcal_month_view_new (date);
 
-  context = gtk_widget_get_style_context (self->priv->views[GCAL_VIEW_TYPE_MONTHLY]);
+  context = gtk_widget_get_style_context (priv->views[GCAL_VIEW_TYPE_MONTHLY]);
   gtk_style_context_add_class (context, "views");
 
-  gtk_widget_show (self->priv->views[GCAL_VIEW_TYPE_MONTHLY]);
-  gtk_notebook_append_page (GTK_NOTEBOOK (self->priv->notebook),
-                            self->priv->views[GCAL_VIEW_TYPE_MONTHLY],
+  gtk_widget_show (priv->views[GCAL_VIEW_TYPE_MONTHLY]);
+  gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook),
+                            priv->views[GCAL_VIEW_TYPE_MONTHLY],
                             NULL);
 
-  g_signal_connect (main_toolbar,
+  /* sources view */
+  holder = gcal_floating_container_new ();
+
+  context = gtk_widget_get_style_context (holder);
+  gtk_style_context_add_class (context, "sources-views");
+
+  gtk_widget_show_all (holder);
+
+  priv->sources_actor = gtk_clutter_actor_new_with_contents (holder);
+  clutter_actor_set_margin_left (priv->sources_actor, 10);
+  clutter_actor_set_margin_top (priv->sources_actor, 10);
+  clutter_actor_set_opacity (priv->sources_actor, 0);
+  clutter_bin_layout_add (CLUTTER_BIN_LAYOUT (contents_layout_manager),
+                          priv->sources_actor,
+                          CLUTTER_BIN_ALIGNMENT_START,
+                          CLUTTER_BIN_ALIGNMENT_START);
+
+  /* signals connection/handling */
+  g_signal_connect (priv->main_toolbar,
                     "view-changed",
                     G_CALLBACK (_gcal_window_view_changed),
-                    self);
-  g_signal_connect (main_toolbar,
+                    object);
+  g_signal_connect (priv->main_toolbar,
                     "sources-shown",
                     G_CALLBACK (_gcal_window_sources_shown),
-                    self);
+                    object);
 
   gtk_widget_show (embed);
+}
+
+static void
+_gcal_window_set_sources_view (GcalWindow *window)
+{
+  GcalWindowPrivate *priv;
+  GcalApplication *app;
+  GcalManager *manager;
+
+  GtkCellRenderer *renderer;
+  GtkTreeViewColumn *column;
+
+  priv = window->priv;
+  app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
+
+  manager = gcal_application_get_manager (app);
+  priv->sources_view = gtk_tree_view_new_with_model (
+      GTK_TREE_MODEL (gcal_manager_get_sources_model (manager)));
+  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->sources_view),
+                                     FALSE);
+  gtk_tree_selection_set_mode (
+      gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->sources_view)),
+      GTK_SELECTION_NONE);
+  gcal_gtk_tree_view_set_activate_on_single_click (
+      GTK_TREE_VIEW (priv->sources_view),
+      TRUE);
+
+  renderer = gtk_cell_renderer_toggle_new ();
+  gtk_cell_renderer_toggle_set_radio (GTK_CELL_RENDERER_TOGGLE (renderer),
+                                      TRUE);
+  column = gtk_tree_view_column_new_with_attributes ("",
+                                                     renderer,
+                                                     "active",
+                                                     2,
+                                                     NULL);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (priv->sources_view),
+                               column);
+
+  renderer = gtk_cell_renderer_text_new ();
+  column = gtk_tree_view_column_new_with_attributes ("",
+                                                     renderer,
+                                                     "text",
+                                                     1,
+                                                     NULL);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (priv->sources_view),
+                               column);
+
+  renderer = e_cell_renderer_color_new ();
+  column = gtk_tree_view_column_new_with_attributes ("",
+                                                     renderer,
+                                                     "color",
+                                                     3,
+                                                     NULL);
+  gtk_tree_view_append_column (GTK_TREE_VIEW (priv->sources_view),
+                               column);
+
+  gtk_container_add (
+      GTK_CONTAINER (gtk_clutter_actor_get_contents (
+                        GTK_CLUTTER_ACTOR (priv->sources_actor))),
+      priv->sources_view);
+  gtk_widget_show (priv->sources_view);
+
+  /* signals */
+  g_signal_connect (priv->sources_view,
+                    "row-activated",
+                    G_CALLBACK (_gcal_window_sources_row_activated),
+                    window);
 }
 
 static void
@@ -169,11 +284,41 @@ _gcal_window_sources_shown (GcalMainToolbar *main_toolbar,
                             gboolean         visible,
                             gpointer         user_data)
 {
-  g_print ("Visible: %s\n", visible ? "yes" : "no");
+  GcalWindowPrivate *priv;
+  priv  = ((GcalWindow*) user_data)->priv;
+
+  if (visible)
+    {
+      clutter_actor_animate (priv->sources_actor,
+                             CLUTTER_LINEAR, 150,
+                             "opacity", 255,
+                             NULL);
+    }
+  else
+    {
+      clutter_actor_animate (priv->sources_actor,
+                             CLUTTER_LINEAR, 150,
+                             "opacity", 0,
+                             NULL);
+    }
+}
+
+static void
+_gcal_window_sources_row_activated (GtkTreeView       *tree_view,
+                                    GtkTreePath       *path,
+                                    GtkTreeViewColumn *column,
+                                    gpointer           user_data)
+{
+  g_print ("Activated row\n");
 }
 
 GtkWidget*
-gcal_window_new (void)
+gcal_window_new (GcalApplication *app)
 {
-  return g_object_new (GCAL_TYPE_WINDOW, NULL);
+  GcalWindow *win =  g_object_new (GCAL_TYPE_WINDOW,
+                                   "application",
+                                   GTK_APPLICATION (app),
+                                   NULL);
+  _gcal_window_set_sources_view (win);
+  return GTK_WIDGET (win);
 }

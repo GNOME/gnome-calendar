@@ -17,6 +17,11 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifndef __GCAL_UTILS_H__
+#define __GCAL_UTILS_H__
+
+#include <gtk/gtk.h>
+
 typedef enum
 {
   GCAL_VIEW_TYPE_DAILY = 0,
@@ -25,3 +30,14 @@ typedef enum
   GCAL_VIEW_TYPE_YEARLY,
   GCAL_VIEW_TYPE_LIST,
 } GcalViewType;
+
+void            gcal_gtk_tree_view_set_activate_on_single_click (GtkTreeView    *tree_view,
+                                                                 gboolean       should_activate);
+
+
+const gchar*    gcal_get_group_name                             (const gchar    *base_uri);
+
+void            gcal_print_date                                 (gchar          *str,
+                                                                 GDate          *date);
+
+#endif // __GCAL_UTILS_H__
