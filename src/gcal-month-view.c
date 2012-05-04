@@ -19,6 +19,7 @@
  */
 
 #include "gcal-month-view.h"
+#include "gcal-utils.h"
 
 #include <glib/gi18n.h>
 
@@ -30,12 +31,12 @@ enum
 
 struct _GcalMonthViewPrivate
 {
-  GDate  *date;
+  icaltimetype   *date;
 
-  gint    header_font_size;
+  gint            header_font_size;
 
-  gdouble vertical_step;
-  gdouble horizontal_step;
+  gdouble         vertical_step;
+  gdouble         horizontal_step;
 };
 
 /* this will need translation */
@@ -88,15 +89,14 @@ static void gcal_month_view_class_init (GcalMonthViewClass *klass)
   object_class->finalize = gcal_month_view_finalize;
 
   g_object_class_install_property (object_class, PROP_DATE,
-                                   g_param_spec_boxed ("date",
-                                                       "date",
-                                                       _("Date"),
-                                                       G_TYPE_DATE,
-                                                       G_PARAM_CONSTRUCT |
-                                                       G_PARAM_READWRITE |
-                                                       G_PARAM_STATIC_NAME |
-                                                       G_PARAM_STATIC_NICK |
-                                                       G_PARAM_STATIC_BLURB));
+                                   g_param_spec_pointer ("date",
+                                                         "date",
+                                                         _("Date"),
+                                                         G_PARAM_CONSTRUCT |
+                                                         G_PARAM_READWRITE |
+                                                         G_PARAM_STATIC_NAME |
+                                                         G_PARAM_STATIC_BLURB |
+                                                         G_PARAM_STATIC_NICK));
 
   g_type_class_add_private ((gpointer)klass, sizeof (GcalMonthViewPrivate));
 }
@@ -123,10 +123,10 @@ gcal_month_view_set_property (GObject       *object,
   switch (property_id)
     {
     case PROP_DATE:
-      if (priv->date)
-        g_date_free (priv->date);
+      if (priv->date != NULL)
+        g_free (priv->date);
 
-      priv->date = g_value_dup_boxed (value);
+      priv->date = g_value_get_pointer (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -145,7 +145,7 @@ gcal_month_view_get_property (GObject       *object,
   switch (property_id)
     {
     case PROP_DATE:
-      g_value_set_boxed (value, priv->date);
+      g_value_set_pointer (value, priv->date);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -196,8 +196,8 @@ gcal_month_view_finalize (GObject       *object)
 {
   GcalMonthViewPrivate *priv = GCAL_MONTH_VIEW (object)->priv;
 
-  if (priv->date)
-    g_date_free (priv->date);
+  if (priv->date != NULL)
+    g_free (priv->date);
 
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_month_view_parent_class)->finalize (object);
@@ -223,8 +223,7 @@ _gcal_month_view_draw_month_grid (GcalMonthView *month_view,
   gint font_height;
 
   guint8 n_days_in_month;
-  GDate *first_of_month;
-  GDateWeekday lapse;
+  icaltimetype *first_of_month;
   gint space;
 
   PangoLayout *layout;
@@ -246,16 +245,14 @@ _gcal_month_view_draw_month_grid (GcalMonthView *month_view,
   priv->vertical_step = (gdouble) height / 5;
   priv->horizontal_step= (gdouble) width / 7;
 
-  n_days_in_month = g_date_get_days_in_month (g_date_get_month (priv->date),
-                                              g_date_get_year (priv->date));
+  n_days_in_month = icaltime_days_in_month (priv->date->month,
+                                            priv->date->year);
 
-  first_of_month = g_date_new_dmy (1,
-                                   g_date_get_month (priv->date),
-                                   g_date_get_year (priv->date));
+  first_of_month = gcal_dup_icaltime (priv->date);
+  first_of_month->day = 1;
 
-  lapse = g_date_get_weekday (first_of_month);
-  space = (lapse == 7 ? 1 : 1 - lapse);
-  g_date_free (first_of_month);
+  space =  - icaltime_day_of_week (*first_of_month) + 2;
+  g_free (first_of_month);
 
   for (i = 0; i < 7; i++)
     {
@@ -311,10 +308,8 @@ _gcal_month_view_draw_month_grid (GcalMonthView *month_view,
  * Returns: (transfer full):
  **/
 GtkWidget*
-gcal_month_view_new (GDate *date)
+gcal_month_view_new (icaltimetype *date)
 {
-  g_return_val_if_fail (g_date_valid (date),  NULL);
-
   return g_object_new (GCAL_TYPE_MONTH_VIEW, "date", date, NULL);
 }
 
@@ -325,14 +320,17 @@ gcal_month_view_new (GDate *date)
  * Return value: the first day of the month
  * Returns: (transfer full):
  **/
-GDate*
+icaltimetype*
 gcal_month_view_get_initial_date (GcalMonthView *view)
 {
-  GcalMonthViewPrivate *priv = view->priv;
-  GDate *initial = g_date_new_dmy (1,
-                                   g_date_get_month (priv->date),
-                                   g_date_get_year (priv->date));
-  return initial;
+  GcalMonthViewPrivate *priv;
+  icaltimetype *new_date;
+
+  priv = view->priv;
+  new_date = gcal_dup_icaltime (priv->date);
+  new_date->day = 1;
+
+  return new_date;
 }
 
 /**
@@ -342,14 +340,14 @@ gcal_month_view_get_initial_date (GcalMonthView *view)
  * Return value: the last day of the month
  * Returns: (transfer full):
  **/
-GDate*
+icaltimetype*
 gcal_month_view_get_final_date (GcalMonthView *view)
 {
-  GcalMonthViewPrivate *priv = view->priv;
-  GDate *last = g_date_new_dmy (g_date_get_days_in_month (
-                                  g_date_get_month (priv->date),
-                                  g_date_get_year (priv->date)),
-                                g_date_get_month (priv->date),
-                                g_date_get_year (priv->date));
-  return last;
+  GcalMonthViewPrivate *priv;
+  icaltimetype *new_date;
+
+  priv = view->priv;
+  new_date = gcal_dup_icaltime (priv->date);
+  new_date->day = icaltime_days_in_month (priv->date->month, priv->date->year);
+  return new_date;
 }

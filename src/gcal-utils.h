@@ -21,6 +21,7 @@
 #define __GCAL_UTILS_H__
 
 #include <gtk/gtk.h>
+#include <libical/icaltime.h>
 
 typedef enum
 {
@@ -36,6 +37,8 @@ void            gcal_gtk_tree_view_set_activate_on_single_click (GtkTreeView    
 
 
 const gchar*    gcal_get_group_name                             (const gchar    *base_uri);
+
+icaltimetype*   gcal_dup_icaltime                               (icaltimetype   *date);
 
 void            gcal_print_date                                 (gchar          *str,
                                                                  GDate          *date);

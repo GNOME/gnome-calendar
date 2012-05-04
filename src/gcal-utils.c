@@ -84,6 +84,26 @@ gcal_get_group_name (const gchar *base_uri)
     return "External";
 }
 
+icaltimetype*
+gcal_dup_icaltime (icaltimetype   *date)
+{
+  icaltimetype *new_date;
+
+  new_date= g_new (icaltimetype, 1);
+  new_date->year = date->year;
+  new_date->month = date->month;
+  new_date->day = date->day;
+  new_date->hour = date->hour;
+  new_date->minute = date->minute;
+  new_date->second = date->second;
+  new_date->is_utc = date->is_utc;
+  new_date->is_date = date->is_date;
+  new_date->is_daylight = date->is_daylight;
+  new_date->zone = date->zone;
+
+  return new_date;
+}
+
 void
 gcal_print_date (gchar *str,
                  GDate *date)

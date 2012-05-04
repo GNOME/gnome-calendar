@@ -22,8 +22,9 @@
 
 #include <gtk/gtk.h>
 
-G_BEGIN_DECLS
+#include <libical/icaltime.h>
 
+G_BEGIN_DECLS
 
 #define GCAL_TYPE_MONTH_VIEW                       (gcal_month_view_get_type ())
 #define GCAL_MONTH_VIEW(obj)                       (G_TYPE_CHECK_INSTANCE_CAST((obj), GCAL_TYPE_MONTH_VIEW, GcalMonthView))
@@ -49,12 +50,12 @@ struct _GcalMonthViewClass
   GtkWidgetClass parent_class;
 };
 
-GType        gcal_month_view_get_type         (void);
+GType          gcal_month_view_get_type         (void);
 
-GtkWidget*   gcal_month_view_new              (GDate         *date);
+GtkWidget*     gcal_month_view_new              (icaltimetype  *date);
 
-GDate*       gcal_month_view_get_initial_date (GcalMonthView *view);
-GDate*       gcal_month_view_get_final_date   (GcalMonthView *view);
+icaltimetype*  gcal_month_view_get_initial_date (GcalMonthView *view);
+icaltimetype*  gcal_month_view_get_final_date   (GcalMonthView *view);
 
 G_END_DECLS
 

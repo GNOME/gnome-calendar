@@ -29,6 +29,8 @@
 
 #include <libedataserverui/e-cell-renderer-color.h>
 
+#include <libical/icaltime.h>
+
 struct _GcalWindowPrivate
 {
   ClutterActor *main_toolbar;
@@ -162,8 +164,8 @@ gcal_window_constructed (GObject *object)
                           CLUTTER_BIN_ALIGNMENT_FILL,
                           CLUTTER_BIN_ALIGNMENT_FILL);
 
-  GDate *date = g_date_new ();
-  g_date_set_time_t (date, time (NULL));
+  icaltimetype *date = g_new (icaltimetype, 1);
+  *date = icaltime_today ();
   priv->views[GCAL_VIEW_TYPE_MONTHLY] = gcal_month_view_new (date);
 
   context = gtk_widget_get_style_context (priv->views[GCAL_VIEW_TYPE_MONTHLY]);
