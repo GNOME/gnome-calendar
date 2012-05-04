@@ -23,6 +23,8 @@
 #include <gtk/gtk.h>
 #include <glib-object.h>
 
+#include <libical/icaltime.h>
+
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_MANAGER                            (gcal_manager_get_type ())
@@ -53,15 +55,15 @@ GType          gcal_manager_get_type          (void);
 
 GcalManager*   gcal_manager_new               (void);
 
-GtkListStore*  gcal_manager_get_sources_model (GcalManager   *manager);
+GtkListStore*  gcal_manager_get_sources_model (GcalManager        *manager);
 
-gchar*         gcal_manager_add_source        (GcalManager   *manager,
-                                               const gchar   *name,
-                                               const gchar   *base_uri,
-                                               const gchar   *relative_uri);
-void           gcal_manager_set_new_range     (GcalManager   *manager,
-                                               const GDate   *initial_date,
-                                               const GDate   *final_date);
+gchar*         gcal_manager_add_source        (GcalManager        *manager,
+                                               const gchar        *name,
+                                               const gchar        *base_uri,
+                                               const gchar        *relative_uri);
+void           gcal_manager_set_new_range     (GcalManager        *manager,
+                                               const icaltimetype *initial_date,
+                                               const icaltimetype  *final_date);
 
 G_END_DECLS
 

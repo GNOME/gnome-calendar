@@ -74,8 +74,8 @@ struct _GcalManagerPrivate
   GtkListStore  *sources_model;
 
   /* The range of dates defining the query */
-  GDate         *initial_date;
-  GDate         *final_date;
+  icaltimetype  *initial_date;
+  icaltimetype  *final_date;
 
   /* The active query */
   gchar         *query;
@@ -134,6 +134,12 @@ gcal_manager_init (GcalManager *self)
                                             G_TYPE_BOOLEAN,
                                             GDK_TYPE_COLOR);
   g_object_ref_sink (priv->sources_model);
+
+  priv->initial_date = g_new(icaltimetype, 1);
+  *(priv->initial_date) = icaltime_from_timet (time (NULL), 0);
+
+  priv->final_date = g_new(icaltimetype, 1);
+  *(priv->final_date) = icaltime_from_timet (time (NULL), 0);
 }
 
 static void
@@ -166,6 +172,8 @@ gcal_manager_constructed (GObject *object)
                       COLUMN_ACTIVE, TRUE,
                       COLUMN_COLOR, &color,
                       -1);
+  priv->initial_date->month = priv->initial_date->month - 1;
+  priv->final_date->month = priv->final_date->month + 1;
 }
 
 static void
@@ -507,56 +515,50 @@ gcal_manager_add_source (GcalManager   *manager,
  * Since: 0.0.1
  */
 void
-gcal_manager_set_new_range (GcalManager   *manager,
-                            const GDate *initial_date,
-                            const GDate *final_date)
+gcal_manager_set_new_range (GcalManager        *manager,
+                            const icaltimetype *initial_date,
+                            const icaltimetype *final_date)
 {
-  gboolean refresh_events = TRUE;
+  GcalManagerPrivate *priv;
+  gboolean refresh_events;
 
-//  /* updating query range */
-//  if (g_date_compare (manager->priv->initial_date, initial_date) > 0)
-//    {
-//      /* switch dates */
-//      refresh_events = TRUE;
-//    }
-//  if (g_date_compare (manager->priv->final_date, final_date) < 0)
-//    {
-//      /* switch dates */
-//      refresh_events = TRUE;
-//    }
+  priv = manager->priv;
+  refresh_events = FALSE;
+
+  /* updating query range */
+  if ((icaltime_compare (*(priv->initial_date), *initial_date)) == 1)
+    {
+      /* switch dates */
+      *(priv->initial_date) = *initial_date;
+      refresh_events = TRUE;
+    }
+  if (icaltime_compare (*(priv->final_date), *final_date) == -1)
+    {
+      /* switch dates */
+      *(priv->final_date) = *final_date;
+      refresh_events = TRUE;
+    }
 
   if (refresh_events)
     {
       /* rebuild query */
-      GDateTime * first_datetime = g_date_time_new_local(g_date_get_year (initial_date),
-                                                         g_date_get_month (initial_date),
-                                                         g_date_get_day (initial_date),
-                                                         0,
-                                                         0,
-                                                         0);
-      time_t since = g_date_time_to_unix (first_datetime);
-      gchar* since_iso8601 = isodate_from_time_t (since);
+      gchar* since_iso8601 =
+        isodate_from_time_t (icaltime_as_timet (*(priv->initial_date)));
 
-      GDateTime * last_datetime = g_date_time_new_local(g_date_get_year (final_date),
-                                                        g_date_get_month (final_date),
-                                                        g_date_get_day (final_date),
-                                                        23,
-                                                        59,
-                                                        59);
-      gchar* until_iso8601 = isodate_from_time_t (
-          g_date_time_to_unix (last_datetime));
+      gchar* until_iso8601 =
+        isodate_from_time_t (icaltime_as_timet (*(priv->final_date)));
 
-      manager->priv->query = g_strdup_printf (
+      if (priv->query != NULL)
+        g_free (priv->query);
+      priv->query = g_strdup_printf (
           "occur-in-time-range? (make-time \"%s\") "
           "(make-time \"%s\")",
           since_iso8601,
           until_iso8601);
 
-      g_date_time_unref (first_datetime);
-      g_date_time_unref (last_datetime);
-
-      g_print ("Loading events since %s until %s\n",
-                   since_iso8601,
-                   until_iso8601);
+      g_print ("Loading events since %s until %s\nwith query %s\n",
+               since_iso8601,
+               until_iso8601,
+               priv->query);
     }
 }

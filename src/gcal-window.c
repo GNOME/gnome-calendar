@@ -42,22 +42,24 @@ struct _GcalWindowPrivate
   GtkWidget    *views [5];
 };
 
-static void gcal_window_constructed            (GObject         *object);
+static void   gcal_window_constructed            (GObject         *object);
 
-static void _gcal_window_set_sources_view      (GcalWindow      *window);
+GcalManager*  _gcal_window_get_manager           (GcalWindow      *window);
 
-static void _gcal_window_view_changed          (GcalMainToolbar *main_toolbar,
-                                                GcalViewType     view_type,
-                                                gpointer         user_data);
+static void   _gcal_window_set_sources_view      (GcalWindow      *window);
 
-static void _gcal_window_sources_shown         (GcalMainToolbar *main_toolbar,
-                                                gboolean         visible,
-                                                gpointer         user_data);
+static void   _gcal_window_view_changed          (GcalMainToolbar *main_toolbar,
+                                                  GcalViewType     view_type,
+                                                  gpointer         user_data);
 
-static void _gcal_window_sources_row_activated (GtkTreeView       *tree_view,
-                                                GtkTreePath       *path,
-                                                GtkTreeViewColumn *column,
-                                                gpointer           user_data);
+static void   _gcal_window_sources_shown         (GcalMainToolbar *main_toolbar,
+                                                  gboolean         visible,
+                                                  gpointer         user_data);
+
+static void   _gcal_window_sources_row_activated (GtkTreeView       *tree_view,
+                                                  GtkTreePath       *path,
+                                                  GtkTreeViewColumn *column,
+                                                  gpointer           user_data);
 
 G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
@@ -206,20 +208,27 @@ gcal_window_constructed (GObject *object)
   gtk_widget_show (embed);
 }
 
+GcalManager*
+_gcal_window_get_manager (GcalWindow *window)
+{
+  GcalApplication *app;
+  app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
+
+  return gcal_application_get_manager (app);
+}
+
 static void
 _gcal_window_set_sources_view (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
-  GcalApplication *app;
   GcalManager *manager;
 
   GtkCellRenderer *renderer;
   GtkTreeViewColumn *column;
 
   priv = window->priv;
-  app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
 
-  manager = gcal_application_get_manager (app);
+  manager = _gcal_window_get_manager (window);
   priv->sources_view = gtk_tree_view_new_with_model (
       GTK_TREE_MODEL (gcal_manager_get_sources_model (manager)));
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->sources_view),
@@ -278,7 +287,14 @@ _gcal_window_view_changed (GcalMainToolbar *main_toolbar,
                            GcalViewType     view_type,
                            gpointer         user_data)
 {
+  GcalWindow *window;
+  GcalManager *manager;
+
+  window = GCAL_WINDOW (user_data);
+  manager = _gcal_window_get_manager (window);
+  gcal_manager_set_new_range (manager, NULL, NULL);
   g_print ("GcalViewType in GcalWindow %d\n", view_type);
+
 }
 
 static void

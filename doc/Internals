@@ -29,7 +29,7 @@ Rough description of some internals of Gnome Calendar Application
 
   Has a list of ESourceGroup
 
-  Has GDate *initial_date, *final_date
+  Has icaltimetype *initial_date, *final_date
     For defining a range to get events from
     Could have an active query representing the range (s-exp)
 
@@ -52,7 +52,7 @@ Rough description of some internals of Gnome Calendar Application
 + GcalView
 
   Has NavigationPane
-  Has GDate: selected_date attribute
+  Has icaltimetype: selected_date attribute
 
   Has child classes
   1. GcalDayView
@@ -100,7 +100,7 @@ Rough description of some internals of Gnome Calendar Application
     3. GcalMonthView
     ...
 
-  Has GDate attribute
+  Has icaltimetype attribute
     For keeping actual date
 
   Has set_view/update_view method
