@@ -85,7 +85,7 @@ gcal_get_group_name (const gchar *base_uri)
 }
 
 icaltimetype*
-gcal_dup_icaltime (icaltimetype   *date)
+gcal_dup_icaltime (icaltimetype *date)
 {
   icaltimetype *new_date;
 
@@ -102,13 +102,4 @@ gcal_dup_icaltime (icaltimetype   *date)
   new_date->zone = date->zone;
 
   return new_date;
-}
-
-void
-gcal_print_date (gchar *str,
-                 GDate *date)
-{
-  gchar s [200];
-  g_date_strftime (s, sizeof (s), "%a, %d %b %Y", date);
-  g_print ("%s %s\n", str, s);
 }

@@ -40,7 +40,4 @@ const gchar*    gcal_get_group_name                             (const gchar    
 
 icaltimetype*   gcal_dup_icaltime                               (icaltimetype   *date);
 
-void            gcal_print_date                                 (gchar          *str,
-                                                                 GDate          *date);
-
 #endif // __GCAL_UTILS_H__
