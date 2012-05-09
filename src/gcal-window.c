@@ -269,6 +269,9 @@ _gcal_window_set_sources_view (GcalWindow *window)
   gtk_tree_view_append_column (GTK_TREE_VIEW (priv->sources_view),
                                column);
 
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (priv->sources_view),
+      "osd");
   gtk_container_add (
       GTK_CONTAINER (gtk_clutter_actor_get_contents (
                         GTK_CLUTTER_ACTOR (priv->sources_actor))),
@@ -290,11 +293,22 @@ _gcal_window_view_changed (GcalMainToolbar *main_toolbar,
   GcalWindow *window;
   GcalManager *manager;
 
+  /* FIXME: demo code */
+  icaltimetype *first_day;
+  icaltimetype *last_day;
+  first_day = g_new0 (icaltimetype, 1);
+  last_day = g_new0 (icaltimetype, 1);
+  *first_day = icaltime_from_timet (time (NULL), 0);
+  first_day->day = 1;
+  *last_day = *first_day;
+  last_day->day = 28;
+
   window = GCAL_WINDOW (user_data);
   manager = _gcal_window_get_manager (window);
-  gcal_manager_set_new_range (manager, NULL, NULL);
-  g_print ("GcalViewType in GcalWindow %d\n", view_type);
-
+  gcal_manager_set_new_range (manager, first_day, last_day);
+  g_debug ("GcalViewType in GcalWindow %d", view_type);
+  g_free (first_day);
+  g_free (last_day);
 }
 
 static void

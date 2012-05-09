@@ -25,6 +25,11 @@
   background-color: @osd_bg;
 }
 
+.osd.view {
+  color: @osd_fg;
+  background-color: transparent;
+}
+
 .views {
   padding: 10px;
 }
