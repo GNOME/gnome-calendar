@@ -49,6 +49,12 @@ struct _GcalManager
 struct _GcalManagerClass
 {
   GObjectClass parent_class;
+
+  /* signals */
+  void (* events_added)    (GcalManager *manager, const GList *events);
+  void (* events_modified) (GcalManager *manager, const GList *events);
+  void (* events_removed)  (GcalManager *manager, const GList *uids);
+
 };
 
 GType          gcal_manager_get_type          (void);
@@ -60,10 +66,12 @@ GtkListStore*  gcal_manager_get_sources_model (GcalManager        *manager);
 gchar*         gcal_manager_add_source        (GcalManager        *manager,
                                                const gchar        *name,
                                                const gchar        *base_uri,
-                                               const gchar        *relative_uri);
+                                               const gchar        *relative_uri,
+                                               const gchar        *color);
+
 void           gcal_manager_set_new_range     (GcalManager        *manager,
                                                const icaltimetype *initial_date,
-                                               const icaltimetype  *final_date);
+                                               const icaltimetype *final_date);
 
 G_END_DECLS
 

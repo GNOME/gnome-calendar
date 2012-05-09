@@ -123,6 +123,13 @@ gcal_application_startup (GApplication *app)
 
   priv->manager = gcal_manager_new ();
 
+  /* adding local system calendar */
+  gcal_manager_add_source (priv->manager,
+                           _("Personal"),
+                           "local:",
+                           "system",
+                           "cyan");
+
   _gcal_application_set_app_menu (app);
 }
 
