@@ -1,3 +1,5 @@
+# Flows #
+
 These are some of the flows followed inside the application.
 
 ### Adding calendar (`gcal_store_add_source`) ###
