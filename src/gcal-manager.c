@@ -74,9 +74,9 @@ struct _GcalManagerPrivate
   GHashTable    *clients;
 
   /**
-   * The list of source groups
+   * System sources read from gconf
    */
-  GList         *source_groups;
+  ESourceList   *system_sources;
 
   /* The store for keeping easily retrieved data about sources */
   GtkListStore  *sources_model;
@@ -115,14 +115,28 @@ static gboolean _gcal_manager_retry_open_on_timeout       (gpointer         user
 
 static void     _gcal_manager_free_retry_open_data        (gpointer         user_data);
 
-void            _gcal_manager_remove_client               (GcalManager      *manager,
-                                                           ECalClient       *client);
+void            _gcal_manager_remove_client               (GcalManager     *manager,
+                                                           ECalClient      *client);
 
-static void     _gcal_manager_on_object_list_received     (GObject         *source_object,
-                                                           GAsyncResult    *result,
-                                                           gpointer         user_data);
+static void     _gcal_manager_load_source                 (GcalManager     *manager,
+                                                           ESource         *source);
 
 static void     _gcal_manager_reload_events               (GcalManager     *manager);
+
+static void     _gcal_manager_reload_view                 (GcalManager     *manager,
+                                                           GcalManagerUnit *unit);
+
+static void     _gcal_manager_on_view_objects_added       (ECalClientView  *view,
+                                                           gpointer         objects,
+                                                           gpointer         user_data);
+
+static void     _gcal_manager_on_view_objects_removed     (ECalClientView  *view,
+                                                           gpointer         objects,
+                                                           gpointer         user_data);
+
+static void     _gcal_manager_on_view_objects_modified    (ECalClientView  *view,
+                                                           gpointer         objects,
+                                                           gpointer         user_data);
 
 G_DEFINE_TYPE(GcalManager, gcal_manager, G_TYPE_OBJECT)
 
@@ -200,11 +214,34 @@ gcal_manager_constructed (GObject *object)
 {
   GcalManagerPrivate *priv;
 
+  GError *error;
+  GSList *l_groups;
+  GSList *l;
+
   if (G_OBJECT_CLASS (gcal_manager_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_manager_parent_class)->constructed (object);
 
   priv = GCAL_MANAGER (object)->priv;
-  priv->query = NULL;
+
+  if (!e_cal_client_get_sources (&(priv->system_sources),
+                                 E_CAL_CLIENT_SOURCE_TYPE_EVENTS,
+                                 &error))
+    {
+     //FIXME maybe give more information of what happened
+      g_warning ("%s", error->message);
+    }
+
+  for (l_groups = e_source_list_peek_groups (priv->system_sources);
+       l_groups != NULL;
+       l_groups = l_groups->next)
+    {
+      for (l = e_source_group_peek_sources (E_SOURCE_GROUP (l_groups->data));
+           l != NULL;
+           l = l->next)
+        {
+          _gcal_manager_load_source (GCAL_MANAGER (object), l->data);
+        }
+    }
 }
 
 static void
@@ -215,7 +252,7 @@ gcal_manager_finalize (GObject *object)
   priv = GCAL_MANAGER (object)->priv;
 
   g_hash_table_destroy (priv->clients);
-  g_clear_object (priv->sources_model);
+  g_clear_object (&(priv->sources_model));
 }
 
 void
@@ -224,9 +261,9 @@ _gcal_manager_free_unit_data (gpointer data)
   GcalManagerUnit *unit;
 
   unit = (GcalManagerUnit*) data;
-  g_clear_object (unit->source);
-  g_clear_object (unit->client);
-  g_clear_object (unit->view);
+  g_clear_object (&(unit->source));
+  g_clear_object (&(unit->client));
+  g_clear_object (&(unit->view));
   g_hash_table_destroy (unit->events);
 
   g_free (unit);
@@ -242,6 +279,9 @@ _gcal_manager_on_client_opened (GObject      *source_object,
   GError *error;
   ESource *source;
 
+  const gchar *uid;
+  GcalManagerUnit *unit;
+
   client = E_CAL_CLIENT (source_object);
   priv = ((GcalManager*) user_data)->priv;
   error = NULL;
@@ -250,11 +290,11 @@ _gcal_manager_on_client_opened (GObject      *source_object,
       /* get_object_list */
       if (priv->query != NULL)
         {
-          e_cal_client_get_object_list (client,
-                                        priv->query,
-                                        priv->loading_clients,
-                                        _gcal_manager_on_object_list_received,
-                                        user_data);
+          uid = e_source_peek_uid (e_client_get_source (E_CLIENT (client)));
+          unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients, uid);
+
+          /* setting view */
+          _gcal_manager_reload_view (GCAL_MANAGER (user_data), unit);
         }
     }
   else
@@ -359,89 +399,73 @@ _gcal_manager_remove_client (GcalManager  *manager,
 }
 
 static void
-_gcal_manager_on_object_list_received (GObject      *source_object,
-                                       GAsyncResult *result,
-                                       gpointer      user_data)
+_gcal_manager_load_source (GcalManager *manager,
+                           ESource     *source)
 {
-  ECalClient *client;
   GcalManagerPrivate *priv;
-
-  GSList *event_list;
+  ECalClient *new_client;
+  GcalManagerUnit *unit;
   GError *error;
 
-  ECalComponentText summary;
-  ECalComponentDateTime start;
-  GSList *l;
+  GtkTreeIter iter;
+  GdkColor gdk_color;
 
-  const gchar* uid;
-  GcalManagerUnit *unit;
-  const gchar* event_uid;
-
-  client = E_CAL_CLIENT (source_object);
-  priv = ((GcalManager*) user_data)->priv;
-
-  event_list = NULL;
+  priv = manager->priv;
   error = NULL;
+  new_client = e_cal_client_new (source, E_CAL_CLIENT_SOURCE_TYPE_EVENTS, &error);
 
-  if (e_cal_client_get_object_list_finish (client,
-                                           result,
-                                           &event_list,
-                                           &error))
-    {
-      uid = e_source_peek_uid (e_client_get_source (E_CLIENT (client)));
+  unit = g_new0 (GcalManagerUnit, 1);
+  unit->client = g_object_ref (new_client);
+  unit->source = source;
+  unit->events = g_hash_table_new_full (g_str_hash,
+                                        g_str_equal,
+                                        g_free,
+                                        g_object_unref);
 
-      g_debug ("Obtained list: of length %d of events from source %s",
-               event_list == NULL ? 0 : g_slist_length (event_list),
-               uid);
+  g_hash_table_insert (priv->clients,
+                       g_strdup (e_source_peek_uid (source)),
+                       unit);
 
-      unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients, uid);
+  /* filling store */
+  gdk_color_parse (e_source_peek_color_spec (source), &gdk_color);
+  gtk_list_store_append (priv->sources_model, &iter);
+  gtk_list_store_set (priv->sources_model, &iter,
+                      COLUMN_UID, e_source_peek_uid (source),
+                      COLUMN_NAME, e_source_peek_name (source),
+                      COLUMN_ACTIVE, TRUE,
+                      COLUMN_COLOR, &gdk_color,
+                      -1);
 
-      for (l = event_list; l != NULL; l = l->next)
-        {
-          icalcomponent *ical = l->data;
-          ECalComponent *event = e_cal_component_new ();
-          e_cal_component_set_icalcomponent (event, ical);
-
-          e_cal_component_get_uid (event, &event_uid);
-          g_debug ("event_uid: %s", event_uid);
-
-          g_hash_table_insert (unit->events,
-                               g_strdup (event_uid),
-                               event);
-
-          e_cal_component_get_summary (event, &summary);
-          if (summary.value != NULL)
-            g_debug ("summary: %s", summary.value);
-
-          e_cal_component_get_dtstart (event, &start);
-          if (start.value != NULL)
-            {
-              struct tm glib_tm;
-              gchar buffer[64];
-              glib_tm = icaltimetype_to_tm (start.value);
-              e_utf8_strftime (buffer, sizeof (buffer), "%a, %d %b %Y", &glib_tm);
-              g_debug ("start date: %s", buffer);
-            }
-        }
-      e_cal_client_free_icalcomp_slist (event_list);
-    }
-  else
-    {
-      if (error != NULL)
-        {
-          g_warning ("%s", error->message);
-
-          g_error_free (error);
-          return;
-        }
-    }
+  e_client_open (E_CLIENT (unit->client),
+                 TRUE,
+                 priv->loading_clients,
+                 _gcal_manager_on_client_opened,
+                 manager);
 }
 
+/**
+ * _gcal_manager_reload_events:
+ *
+ * @manager: Self
+ *
+ * This executes every time a new query has been set.
+ * So, there are a bunch of stuff to be done here:
+ * <itemizedlist>
+ * <listitem><para>
+ *   Retrieving Object list with the new query.
+ * </para></listitem>
+ * <listitem><para>
+ *   Releasing the old view, desconnecting the callbacks
+ * </para></listitem>
+ * <listitem><para>
+ *   Creating a new view, connecting callbacks
+ * </para></listitem>
+ * </itemizedlist>
+ */
 static void
 _gcal_manager_reload_events (GcalManager *manager)
 {
   GcalManagerPrivate *priv;
-  GcalManagerUnit *unit_data;
   GHashTableIter iter;
   gpointer key;
   gpointer value;
@@ -450,13 +474,154 @@ _gcal_manager_reload_events (GcalManager *manager)
   g_hash_table_iter_init (&iter, priv->clients);
   while (g_hash_table_iter_next (&iter, &key, &value))
     {
-      unit_data = (GcalManagerUnit*) value;
-      e_cal_client_get_object_list (unit_data->client,
-                                    priv->query,
-                                    priv->loading_clients,
-                                    _gcal_manager_on_object_list_received,
-                                    manager);
+      _gcal_manager_reload_view (manager, (GcalManagerUnit*) value);
     }
+}
+
+static void
+_gcal_manager_reload_view (GcalManager     *manager,
+                           GcalManagerUnit *unit)
+{
+  GcalManagerPrivate *priv;
+  GError *error;
+
+  priv = manager->priv;
+  g_return_if_fail (priv->query != NULL);
+
+  /* stopping */
+  if (unit->view != NULL)
+    g_clear_object (&(unit->view));
+
+  error = NULL;
+  if (e_cal_client_get_view_sync (unit->client,
+                                  priv->query,
+                                  &(unit->view),
+                                  priv->loading_clients,
+                                  &error))
+    {
+      /*hooking signals */
+      g_signal_connect (unit->view,
+                        "objects-added",
+                        G_CALLBACK (_gcal_manager_on_view_objects_added),
+                        manager);
+
+      g_signal_connect (unit->view,
+                        "objects-removed",
+                        G_CALLBACK (_gcal_manager_on_view_objects_removed),
+                        manager);
+
+      g_signal_connect (unit->view,
+                        "objects-modified",
+                        G_CALLBACK (_gcal_manager_on_view_objects_modified),
+                        manager);
+
+      error = NULL;
+      e_cal_client_view_set_fields_of_interest (unit->view, NULL, &error);
+
+      error = NULL;
+      e_cal_client_view_start (unit->view, &error);
+      g_debug ("View created, connected and started");
+
+      if (error != NULL)
+        {
+          g_clear_object (&(unit->view));
+          g_warning ("%s", error->message);
+        }
+    }
+  else
+    {
+      g_warning ("%s", error->message);
+    }
+}
+
+/**
+ * _gcal_manager_on_view_objects_added
+ * @view: the view emitting the signal
+ * @objects: a GSList of icalcomponent*
+ * @user_data: The data passed when connecting the signal, here GcalManager
+ */
+static void
+_gcal_manager_on_view_objects_added (ECalClientView *view,
+                                     gpointer        objects,
+                                     gpointer        user_data)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+
+  GSList *l;
+  GSList *events_data;
+
+  ECalClient *client;
+  const gchar *source_uid;
+  GcalManagerEventData *data;
+
+  priv = GCAL_MANAGER (user_data)->priv;
+  events_data = NULL;
+
+  client = e_cal_client_view_get_client (view);
+  source_uid = e_source_peek_uid (e_client_get_source (E_CLIENT (client)));
+  unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients, source_uid);
+
+  for (l = objects; l != NULL; l = l->next)
+    {
+      if (l->data != NULL)
+        {
+          ECalComponent *component;
+          component = e_cal_component_new_from_icalcomponent (l->data);
+
+          if (! g_hash_table_lookup_extended (unit->events,
+                                              icalcomponent_get_uid (l->data),
+                                              NULL,
+                                              NULL))
+            {
+              g_hash_table_insert (unit->events,
+                                   g_strdup (icalcomponent_get_uid (l->data)),
+                                   component);
+            }
+
+          data = g_new0 (GcalManagerEventData, 1);
+          data->source_uid = g_strdup (source_uid);
+          data->event_uid = g_strdup (icalcomponent_get_uid (l->data));
+          events_data = g_slist_append (events_data, data);
+        }
+    }
+
+  g_signal_emit (GCAL_MANAGER (user_data), signals[EVENTS_ADDED], 0, events_data);
+
+  for (l = events_data; l != NULL;  l = l->next)
+    {
+      GcalManagerEventData *data;
+      data = l->data;
+      g_free (data->source_uid);
+      g_free (data->event_uid);
+    }
+  g_slist_free_full (events_data, g_free);
+}
+
+/**
+ * _gcal_manager_on_view_objects_removed
+ * @view: the view emitting the signal
+ * @objects: a GSList of ECalComponentId*
+ * @user_data: The data passed when connecting the signal, here GcalManager
+ */
+static void
+_gcal_manager_on_view_objects_removed (ECalClientView *view,
+                                       gpointer        objects,
+                                       gpointer        user_data)
+{
+}
+
+/**
+ * _gcal_manager_on_view_objects_modified
+ * @view: the view emitting the signal
+ * @objects: a GSList of icalcomponent*
+ * @user_data: The data passed when connecting the signal, here GcalManager
+ */
+static void
+_gcal_manager_on_view_objects_modified (ECalClientView *view,
+                                        gpointer        objects,
+                                        gpointer        user_data)
+{
 }
 
 /**
@@ -502,39 +667,33 @@ gcal_manager_add_source (GcalManager *manager,
                          const gchar *color)
 {
   GcalManagerPrivate *priv;
-  GcalManagerUnit *unit_data;
-
+  GSList *groups;
   ESourceGroup *selected_group;
-  GList *l;
-  GHashTableIter hash_iter;
+  GHashTableIter iter;
   gpointer key;
   gpointer value;
-
-  GError *error;
-
   ESource *source;
-  ECalClient *new_client;
-
-  GtkTreeIter iter;
-  GdkColor gdk_color;
 
   priv = manager->priv;
-  selected_group = NULL;
-
   g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
 
-  for (l = priv->source_groups; l != NULL; l = l->next)
-    {
-      ESourceGroup *source_group = (ESourceGroup *) l->data;
-      if (g_strcmp0 (base_uri, e_source_group_peek_base_uri (source_group)) == 0)
+  selected_group = NULL;
+  for (groups = e_source_list_peek_groups (priv->system_sources);
+       groups != NULL;
+       groups = groups->next)
+   {
+      if (g_strcmp0 (
+            base_uri,
+            e_source_group_peek_base_uri (E_SOURCE_GROUP (groups->data))) == 0)
         {
-          selected_group = source_group;
+          selected_group = (ESourceGroup*) groups->data;
 
-          g_hash_table_iter_init (&hash_iter, priv->clients);
-          while (g_hash_table_iter_next (&hash_iter, &key, &value))
+          g_hash_table_iter_init (&iter, priv->clients);
+          while (g_hash_table_iter_next (&iter, &key, &value))
             {
-              GcalManagerUnit *unit_data = (GcalManagerUnit*) value;
-              if (g_strcmp0 (e_source_peek_relative_uri (unit_data->source),
+              GcalManagerUnit *unit = (GcalManagerUnit*) value;
+              if (g_strcmp0 (
+                    e_source_peek_relative_uri (unit->source),
                     relative_uri) == 0)
                 {
                   return NULL;
@@ -542,49 +701,19 @@ gcal_manager_add_source (GcalManager *manager,
             }
           break;
         }
-    }
+   }
 
-  error = NULL;
-  /* building stuff */
   if (selected_group == NULL)
     {
       selected_group = e_source_group_new (gcal_get_group_name (base_uri),
                                            base_uri);
-      priv->source_groups = g_list_append (priv->source_groups, selected_group);
+      e_source_list_add_group (priv->system_sources, selected_group, -1);
     }
 
   source = e_source_new (name, relative_uri);
   e_source_group_add_source (selected_group, source, -1);
 
-  new_client = e_cal_client_new (source, E_CAL_CLIENT_SOURCE_TYPE_EVENTS, &error);
-
-  unit_data = g_new0 (GcalManagerUnit, 1);
-  unit_data->client = g_object_ref (new_client);
-  unit_data->source = source;
-  unit_data->events = g_hash_table_new_full (g_str_hash,
-                                             g_str_equal,
-                                             g_free,
-                                             g_object_unref);
-
-  g_hash_table_insert (priv->clients,
-                       g_strdup (e_source_peek_uid (source)),
-                       unit_data);
-
-  /* filling store */
-  gdk_color_parse (color, &gdk_color);
-  gtk_list_store_append (priv->sources_model, &iter);
-  gtk_list_store_set (priv->sources_model, &iter,
-                      COLUMN_UID, e_source_peek_uid (source),
-                      COLUMN_NAME, name,
-                      COLUMN_ACTIVE, TRUE,
-                      COLUMN_COLOR, &gdk_color,
-                      -1);
-
-  e_client_open (E_CLIENT (unit_data->client),
-                 TRUE,
-                 priv->loading_clients,
-                 _gcal_manager_on_client_opened,
-                 manager);
+  _gcal_manager_load_source (manager, source);
 
   return g_strdup (e_source_peek_uid (source));
 }

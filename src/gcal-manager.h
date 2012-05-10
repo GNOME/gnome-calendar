@@ -37,6 +37,13 @@ G_BEGIN_DECLS
 typedef struct _GcalManager                           GcalManager;
 typedef struct _GcalManagerClass                      GcalManagerClass;
 typedef struct _GcalManagerPrivate                    GcalManagerPrivate;
+typedef struct _GcalManagerEventData                  GcalManagerEventData;
+
+struct _GcalManagerEventData
+{
+  gchar *source_uid;
+  gchar *event_uid;
+};
 
 struct _GcalManager
 {

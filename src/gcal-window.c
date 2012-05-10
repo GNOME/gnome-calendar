@@ -42,23 +42,27 @@ struct _GcalWindowPrivate
   GtkWidget    *views [5];
 };
 
-static void   gcal_window_constructed            (GObject         *object);
+static void   gcal_window_constructed            (GObject           *object);
 
-GcalManager*  _gcal_window_get_manager           (GcalWindow      *window);
+GcalManager*  _gcal_window_get_manager           (GcalWindow        *window);
 
-static void   _gcal_window_set_sources_view      (GcalWindow      *window);
+static void   _gcal_window_set_sources_view      (GcalWindow        *window);
 
-static void   _gcal_window_view_changed          (GcalMainToolbar *main_toolbar,
-                                                  GcalViewType     view_type,
-                                                  gpointer         user_data);
+static void   _gcal_window_view_changed          (GcalMainToolbar   *main_toolbar,
+                                                  GcalViewType       view_type,
+                                                  gpointer           user_data);
 
-static void   _gcal_window_sources_shown         (GcalMainToolbar *main_toolbar,
-                                                  gboolean         visible,
-                                                  gpointer         user_data);
+static void   _gcal_window_sources_shown         (GcalMainToolbar   *main_toolbar,
+                                                  gboolean           visible,
+                                                  gpointer           user_data);
 
 static void   _gcal_window_sources_row_activated (GtkTreeView       *tree_view,
                                                   GtkTreePath       *path,
                                                   GtkTreeViewColumn *column,
+                                                  gpointer           user_data);
+
+static void   _gcal_window_events_added          (GcalManager       *manager,
+                                                  gpointer           events_list,
                                                   gpointer           user_data);
 
 G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -365,13 +369,32 @@ _gcal_window_sources_row_activated (GtkTreeView       *tree_view,
       -1);
 }
 
+static void
+_gcal_window_events_added (GcalManager *manager,
+                           gpointer     events_list,
+                           gpointer     user_data)
+{
+  g_debug ("[IWEA]: obtained %d events", g_slist_length (events_list));
+}
+
 GtkWidget*
 gcal_window_new (GcalApplication *app)
 {
-  GcalWindow *win =  g_object_new (GCAL_TYPE_WINDOW,
-                                   "application",
-                                   GTK_APPLICATION (app),
-                                   NULL);
+  GcalWindow *win;
+  GcalManager *manager;
+
+  win  =  g_object_new (GCAL_TYPE_WINDOW,
+                        "application",
+                        GTK_APPLICATION (app),
+                        NULL);
   _gcal_window_set_sources_view (win);
+
+  /* hooking signals */
+  manager = _gcal_window_get_manager (win);
+  g_signal_connect (manager,
+                    "events-added",
+                    G_CALLBACK (_gcal_window_events_added),
+                    win);
+
   return GTK_WIDGET (win);
 }
