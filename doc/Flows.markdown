@@ -12,11 +12,11 @@ source we're adding.
 * If it isn't new end processing.
 * Create the ECalClient, add it to the list.
 * Open the ECalClient (`e_client_open`)
+  * Create ECalClientView using the existing query.
+  * Hook to ECalClientView signals
 * Retrieve capabilities ? (ask IRC, what's this)
   //FIXME this wil be later implemented, when needed
 * Get Object list based on the existing query
-* Create ECalClientView using the existing query.
-* Hook to ECalClientView signals
 
 ### Setting a view in the main window (`gcal_main_window_set_view`) ###
 This will work for setting a new view (the app hasn't instanced a view
