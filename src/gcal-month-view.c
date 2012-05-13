@@ -31,6 +31,8 @@ enum
 
 struct _GcalMonthViewPrivate
 {
+  GdkWindow      *event_window;
+
   icaltimetype   *date;
 
   gint            header_font_size;
@@ -61,6 +63,17 @@ static void     gcal_month_view_get_property            (GObject       *object,
                                                          GValue        *value,
                                                          GParamSpec    *pspec);
 
+static void     gcal_month_view_realize                 (GtkWidget     *widget);
+
+static void     gcal_month_view_unrealize               (GtkWidget     *widget);
+
+static void     gcal_month_view_map                     (GtkWidget     *widget);
+
+static void     gcal_month_view_unmap                   (GtkWidget     *widget);
+
+static void     gcal_month_view_size_allocate           (GtkWidget     *widget,
+                                                         GtkAllocation *allocation);
+
 static gboolean gcal_month_view_draw                    (GtkWidget     *widget,
                                                          cairo_t       *cr);
 
@@ -81,6 +94,11 @@ static void gcal_month_view_class_init (GcalMonthViewClass *klass)
   GObjectClass *object_class;
 
   widget_class = GTK_WIDGET_CLASS (klass);
+  widget_class->realize = gcal_month_view_realize;
+  widget_class->unrealize = gcal_month_view_unrealize;
+  widget_class->map = gcal_month_view_map;
+  widget_class->unmap = gcal_month_view_unmap;
+  widget_class->size_allocate = gcal_month_view_size_allocate;
   widget_class->draw = gcal_month_view_draw;
 
   object_class = G_OBJECT_CLASS (klass);
@@ -151,6 +169,103 @@ gcal_month_view_get_property (GObject       *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
     }
+}
+
+static void
+gcal_month_view_realize (GtkWidget *widget)
+{
+  GcalMonthViewPrivate *priv;
+  GdkWindow *parent_window;
+  GdkWindowAttr attributes;
+  gint attributes_mask;
+  GtkAllocation allocation;
+
+  priv = GCAL_MONTH_VIEW (widget)->priv;
+  gtk_widget_set_realized (widget, TRUE);
+
+  parent_window = gtk_widget_get_parent_window (widget);
+  gtk_widget_set_window (widget, parent_window);
+  g_object_ref (parent_window);
+
+  gtk_widget_get_allocation (widget, &allocation);
+
+  attributes.window_type = GDK_WINDOW_CHILD;
+  attributes.wclass = GDK_INPUT_ONLY;
+  attributes.x = allocation.x;
+  attributes.y = allocation.y;
+  attributes.width = allocation.width;
+  attributes.height = allocation.height;
+  attributes.event_mask = gtk_widget_get_events (widget);
+  attributes.event_mask |= (GDK_BUTTON_PRESS_MASK |
+                            GDK_BUTTON_RELEASE_MASK |
+                            GDK_BUTTON1_MOTION_MASK |
+                            GDK_POINTER_MOTION_HINT_MASK |
+                            GDK_POINTER_MOTION_MASK |
+                            GDK_ENTER_NOTIFY_MASK |
+                            GDK_LEAVE_NOTIFY_MASK);
+  attributes_mask = GDK_WA_X | GDK_WA_Y;
+
+  priv->event_window = gdk_window_new (parent_window,
+                                       &attributes,
+                                       attributes_mask);
+  gdk_window_set_user_data (priv->event_window, widget);
+}
+
+static void
+gcal_month_view_unrealize (GtkWidget *widget)
+{
+  GcalMonthViewPrivate *priv;
+
+  priv = GCAL_MONTH_VIEW (widget)->priv;
+  if (priv->event_window != NULL)
+    {
+      gdk_window_set_user_data (priv->event_window, NULL);
+      gdk_window_destroy (priv->event_window);
+      priv->event_window = NULL;
+    }
+
+  GTK_WIDGET_CLASS (gcal_month_view_parent_class)->unrealize (widget);
+}
+
+static void
+gcal_month_view_map (GtkWidget *widget)
+{
+  GcalMonthViewPrivate *priv;
+
+  priv = GCAL_MONTH_VIEW (widget)->priv;
+  GTK_WIDGET_CLASS (gcal_month_view_parent_class)->map (widget);
+
+  if (priv->event_window)
+    gdk_window_show (priv->event_window);
+}
+
+static void
+gcal_month_view_unmap (GtkWidget *widget)
+{
+  GcalMonthViewPrivate *priv;
+
+  priv = GCAL_MONTH_VIEW (widget)->priv;
+  if (priv->event_window)
+    gdk_window_hide (priv->event_window);
+
+  GTK_WIDGET_CLASS (gcal_month_view_parent_class)->unmap (widget);
+}
+
+static void
+gcal_month_view_size_allocate (GtkWidget     *widget,
+                                 GtkAllocation *allocation)
+{
+  GcalMonthViewPrivate *priv;
+
+  priv = GCAL_MONTH_VIEW (widget)->priv;
+  gtk_widget_set_allocation (widget, allocation);
+
+  if (gtk_widget_get_realized (widget))
+    gdk_window_move_resize (priv->event_window,
+                            allocation->x,
+                            allocation->y,
+                            allocation->width,
+                            allocation->height);
 }
 
 static gboolean
@@ -284,17 +399,19 @@ _gcal_month_view_draw_month_grid (GcalMonthView *month_view,
   /* free the layout object */
   g_object_unref (layout);
 
-  for (i = 0; i < 6; i++) {
+  for (i = 0; i < 6; i++)
+    {
       cairo_move_to (cr, x, y + priv->vertical_step * i);
       cairo_line_to (cr,
                     x + priv->horizontal_step * 7,
                     y + priv->vertical_step * i);
-  }
+    }
 
-  for (i = 0; i < 8; i++) {
+  for (i = 0; i < 8; i++)
+    {
       cairo_move_to (cr, x + priv->horizontal_step * i, y);
       cairo_line_to (cr, x + priv->horizontal_step * i, y + height);
-  }
+    }
 
   cairo_stroke (cr);
 }
