@@ -50,8 +50,6 @@ static gboolean gcal_floating_container_draw                           (GtkWidge
 
 static void     gcal_floating_container_realize                        (GtkWidget       *widget);
 
-static void     gcal_floating_container_unrealize                      (GtkWidget       *widget);
-
 static void     gcal_floating_container_style_updated                  (GtkWidget       *widget);
 
 static void     gcal_floating_container_add                            (GtkContainer    *container,
@@ -82,7 +80,6 @@ gcal_floating_container_class_init (GcalFloatingContainerClass *klass)
   widget_class->size_allocate = gcal_floating_container_size_allocate;
   widget_class->draw = gcal_floating_container_draw;
   widget_class->realize = gcal_floating_container_realize;
-  widget_class->unrealize = gcal_floating_container_unrealize;
   widget_class->style_updated = gcal_floating_container_style_updated;
 
   container_class->add = gcal_floating_container_add;
@@ -100,7 +97,6 @@ gcal_floating_container_init (GcalFloatingContainer *self)
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
                                             GCAL_TYPE_FLOATING_CONTAINER,
                                             GcalFloatingContainerPrivate);
-
 }
 
 static void
@@ -289,11 +285,9 @@ gcal_floating_container_draw (GtkWidget *widget,
                               cairo_t   *cr)
 {
   GtkStyleContext *context;
-  GdkRectangle rect;
   guint border_width;
 
   context = gtk_widget_get_style_context (widget);
-  gtk_widget_get_allocation (widget, &rect);
   border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 
   gtk_render_background (context,  cr,
@@ -305,7 +299,7 @@ gcal_floating_container_draw (GtkWidget *widget,
                     gtk_widget_get_allocated_width (widget) - 2 * border_width,
                     gtk_widget_get_allocated_height (widget) - 2 * border_width);
   if (GTK_WIDGET_CLASS (gcal_floating_container_parent_class)->draw != NULL)
-    GTK_WIDGET_CLASS (gcal_floating_container_parent_class)->draw(widget, cr);
+    GTK_WIDGET_CLASS (gcal_floating_container_parent_class)->draw (widget, cr);
 
   return FALSE;
 }
@@ -325,12 +319,6 @@ gcal_floating_container_realize (GtkWidget *widget)
   child = gtk_bin_get_child (GTK_BIN (widget));
   if (child)
     gtk_widget_set_parent_window (child, window);
-}
-
-static void
-gcal_floating_container_unrealize (GtkWidget *widget)
-{
-  GTK_WIDGET_CLASS (gcal_floating_container_parent_class)->unrealize (widget);
 }
 
 static void

@@ -69,7 +69,7 @@ struct _GcalManagerPrivate
   /**
    * The list of clients we are managing.
    * Each value is of type GCalStoreUnit
-   * And is key is uid of the source
+   * And each key is the source uid
    */
   GHashTable    *clients;
 
@@ -90,6 +90,7 @@ struct _GcalManagerPrivate
 
   GCancellable  *loading_clients;
 };
+
 /* Signal IDs */
 enum
 {
@@ -136,6 +137,11 @@ static void     _gcal_manager_on_view_objects_removed     (ECalClientView  *view
 
 static void     _gcal_manager_on_view_objects_modified    (ECalClientView  *view,
                                                            gpointer         objects,
+                                                           gpointer         user_data);
+
+static void     _gcal_manager_on_sources_row_changed      (GtkTreeModel    *store,
+                                                           GtkTreePath     *path,
+                                                           GtkTreeIter     *iter,
                                                            gpointer         user_data);
 
 G_DEFINE_TYPE(GcalManager, gcal_manager, G_TYPE_OBJECT)
@@ -196,6 +202,11 @@ gcal_manager_init (GcalManager *self)
                                             G_TYPE_BOOLEAN,
                                             GDK_TYPE_COLOR);
   g_object_ref_sink (priv->sources_model);
+
+  g_signal_connect (priv->sources_model,
+                    "row-changed",
+                    G_CALLBACK (_gcal_manager_on_sources_row_changed),
+                    self);
 
   priv->initial_date = g_new(icaltimetype, 1);
   *(priv->initial_date) = icaltime_from_timet (time (NULL), 0);
@@ -553,7 +564,7 @@ _gcal_manager_on_view_objects_added (ECalClientView *view,
 
   ECalClient *client;
   const gchar *source_uid;
-  GcalManagerEventData *data;
+  gchar *event_uid;
 
   priv = GCAL_MANAGER (user_data)->priv;
   events_data = NULL;
@@ -579,22 +590,15 @@ _gcal_manager_on_view_objects_added (ECalClientView *view,
                                    component);
             }
 
-          data = g_new0 (GcalManagerEventData, 1);
-          data->source_uid = g_strdup (source_uid);
-          data->event_uid = g_strdup (icalcomponent_get_uid (l->data));
-          events_data = g_slist_append (events_data, data);
+          event_uid = g_strdup_printf ("%s:%s",
+                                       source_uid,
+                                       icalcomponent_get_uid (l->data));
+          events_data = g_slist_append (events_data, event_uid);
         }
     }
 
   g_signal_emit (GCAL_MANAGER (user_data), signals[EVENTS_ADDED], 0, events_data);
 
-  for (l = events_data; l != NULL;  l = l->next)
-    {
-      GcalManagerEventData *data;
-      data = l->data;
-      g_free (data->source_uid);
-      g_free (data->event_uid);
-    }
   g_slist_free_full (events_data, g_free);
 }
 
@@ -622,6 +626,31 @@ _gcal_manager_on_view_objects_modified (ECalClientView *view,
                                         gpointer        objects,
                                         gpointer        user_data)
 {
+}
+
+static void
+_gcal_manager_on_sources_row_changed (GtkTreeModel *store,
+                                      GtkTreePath  *path,
+                                      GtkTreeIter  *iter,
+                                      gpointer      user_data)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  gchar *source_uid;
+  gboolean active;
+
+  priv = GCAL_MANAGER (user_data)->priv;
+  gtk_tree_model_get (store,
+                      iter,
+                      COLUMN_UID,
+                      &source_uid,
+                      COLUMN_ACTIVE,
+                      &active,
+                      -1);
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  unit->enabled = active;
+
+  g_free (source_uid);
 }
 
 /**
@@ -681,7 +710,7 @@ gcal_manager_add_source (GcalManager *manager,
   for (groups = e_source_list_peek_groups (priv->system_sources);
        groups != NULL;
        groups = groups->next)
-   {
+    {
       if (g_strcmp0 (
             base_uri,
             e_source_group_peek_base_uri (E_SOURCE_GROUP (groups->data))) == 0)
@@ -701,7 +730,7 @@ gcal_manager_add_source (GcalManager *manager,
             }
           break;
         }
-   }
+    }
 
   if (selected_group == NULL)
     {
@@ -788,4 +817,26 @@ gcal_manager_set_new_range (GcalManager        *manager,
       /* redoing query */
       _gcal_manager_reload_events (manager);
     }
+}
+
+icaltimetype*
+gcal_manager_get_start_date (GcalManager *manager,
+                             const gchar *source_uid,
+                             const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  ECalComponentDateTime dt;
+  icaltimetype *dtstart;
+
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+  e_cal_component_get_dtstart (event, &dt);
+  dtstart = gcal_dup_icaltime (dt.value);
+
+  e_cal_component_free_datetime (&dt);
+  return dtstart;
 }

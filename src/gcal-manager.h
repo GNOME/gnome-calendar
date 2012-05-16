@@ -37,13 +37,6 @@ G_BEGIN_DECLS
 typedef struct _GcalManager                           GcalManager;
 typedef struct _GcalManagerClass                      GcalManagerClass;
 typedef struct _GcalManagerPrivate                    GcalManagerPrivate;
-typedef struct _GcalManagerEventData                  GcalManagerEventData;
-
-struct _GcalManagerEventData
-{
-  gchar *source_uid;
-  gchar *event_uid;
-};
 
 struct _GcalManager
 {
@@ -79,6 +72,10 @@ gchar*         gcal_manager_add_source        (GcalManager        *manager,
 void           gcal_manager_set_new_range     (GcalManager        *manager,
                                                const icaltimetype *initial_date,
                                                const icaltimetype *final_date);
+
+icaltimetype*  gcal_manager_get_start_date    (GcalManager        *manager,
+                                               const gchar        *source_uid,
+                                               const gchar        *event_uid);
 
 G_END_DECLS
 
