@@ -22,6 +22,7 @@
 #include "gcal-floating-container.h"
 #include "gcal-main-toolbar.h"
 #include "gcal-month-view.h"
+#include "gcal-view.h"
 #include "gcal-utils.h"
 
 #include <clutter/clutter.h>
@@ -33,15 +34,15 @@
 
 struct _GcalWindowPrivate
 {
-  ClutterActor  *main_toolbar;
-  ClutterActor  *notebook_actor;
-  ClutterActor  *sources_actor;
+  ClutterActor       *main_toolbar;
+  ClutterActor       *notebook_actor;
+  ClutterActor       *sources_actor;
 
-  GtkWidget     *notebook;
-  GtkWidget     *sources_view;
-  GtkWidget     *views [5];
+  GtkWidget          *notebook;
+  GtkWidget          *sources_view;
+  GtkWidget          *views [5];
 
-  GcalViewType   active_view;
+  GcalViewTypeEnum    active_view;
 };
 
 static void   gcal_window_constructed            (GObject           *object);
@@ -51,7 +52,7 @@ GcalManager*  _gcal_window_get_manager           (GcalWindow        *window);
 static void   _gcal_window_set_sources_view      (GcalWindow        *window);
 
 static void   _gcal_window_view_changed          (GcalMainToolbar   *main_toolbar,
-                                                  GcalViewType       view_type,
+                                                  GcalViewTypeEnum   view_type,
                                                   gpointer           user_data);
 
 static void   _gcal_window_sources_shown         (GcalMainToolbar   *main_toolbar,
@@ -300,9 +301,9 @@ _gcal_window_set_sources_view (GcalWindow *window)
 }
 
 static void
-_gcal_window_view_changed (GcalMainToolbar *main_toolbar,
-                           GcalViewType     view_type,
-                           gpointer         user_data)
+_gcal_window_view_changed (GcalMainToolbar  *main_toolbar,
+                           GcalViewTypeEnum  view_type,
+                           gpointer          user_data)
 {
   GcalWindowPrivate *priv;
   GcalManager *manager;
@@ -322,7 +323,7 @@ _gcal_window_view_changed (GcalMainToolbar *main_toolbar,
 
   manager = _gcal_window_get_manager (GCAL_WINDOW (user_data));
   gcal_manager_set_new_range (manager, first_day, last_day);
-  g_debug ("GcalViewType in GcalWindow %d", priv->active_view);
+  g_debug ("GcalViewTypeEnum in GcalWindow %d", priv->active_view);
   g_free (first_day);
   g_free (last_day);
 }
@@ -394,11 +395,14 @@ _gcal_window_events_added (GcalManager *manager,
                            gpointer     events_list,
                            gpointer     user_data)
 {
+  GcalWindowPrivate *priv;
   GSList *l;
   icaltimetype *starting_date;
   gchar **tokens;
   gchar *source_uid;
   gchar *event_uid;
+
+  priv = GCAL_WINDOW (user_data)->priv;
 
   g_debug ("[IWEA]: obtained %d events", g_slist_length (events_list));
   for (l = events_list; l != NULL; l = l->next)
@@ -411,6 +415,19 @@ _gcal_window_events_added (GcalManager *manager,
                                                    source_uid,
                                                    event_uid);
       g_debug ("starts on %s", icaltime_as_ical_string (*starting_date));
+      g_debug ("GcalViewTypeEnum in GcalWindow %d", priv->active_view);
+      /* FIXME: here priv->views[priv->active_view] instead of hardcoding
+       * GCAL_VIEW_TYPE_MONTHLY */
+      if (gcal_view_is_in_range (
+            GCAL_VIEW (priv->views[GCAL_VIEW_TYPE_MONTHLY]),
+            starting_date))
+        {
+          g_debug ("Returned true call on interface function");
+        }
+      else
+        {
+          g_debug ("Returned false call on interface func");
+        }
 
       g_free (starting_date);
       g_strfreev (tokens);

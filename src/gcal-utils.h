@@ -30,7 +30,7 @@ typedef enum
   GCAL_VIEW_TYPE_MONTHLY,
   GCAL_VIEW_TYPE_YEARLY,
   GCAL_VIEW_TYPE_LIST,
-} GcalViewType;
+} GcalViewTypeEnum;
 
 void            gcal_gtk_tree_view_set_activate_on_single_click (GtkTreeView    *tree_view,
                                                                  gboolean       should_activate);

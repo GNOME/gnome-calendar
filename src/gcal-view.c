@@ -20,6 +20,8 @@
 
 #include "gcal-view.h"
 
+#include <glib.h>
+
 static void
 gcal_view_base_init (gpointer g_iface)
 {
@@ -40,8 +42,8 @@ gcal_view_get_type (void)
     {
       const GTypeInfo info =
       {
-        sizeof (GcalViewInterface),
-        NULL,   /* base_init */
+        sizeof (GcalViewIface),
+        gcal_view_base_init,   /* base_init */
         NULL,   /* base_finalize */
         NULL,   /* class_init */
         NULL,   /* class_finalize */
@@ -50,19 +52,12 @@ gcal_view_get_type (void)
         0,      /* n_preallocs */
         NULL    /* instance_init */
       };
-      const GInterfaceInfo view_info =
-      {
-        (GInterfaceInitFunc) gcal_view_base_init,
-        NULL,               /* interface_finalize */
-        NULL          /* interface_data */
-      };
-      type = g_type_register_static (G_TYPE_OBJECT,
-                                     "GcalViewType",
+      type = g_type_register_static (G_TYPE_INTERFACE,
+                                     "GcalView",
                                      &info,
                                      0);
-      g_type_add_interface_static (type,
-                                   GCAL_TYPE_VIEW,
-                                   &view_info);
+      g_type_interface_add_prerequisite (type,
+                                        G_TYPE_OBJECT);
     }
   return type;
 }
@@ -71,5 +66,7 @@ gboolean
 gcal_view_is_in_range (GcalView     *view,
                        icaltimetype *date)
 {
+  g_return_val_if_fail (GCAL_IS_VIEW (view), FALSE);
+
   return GCAL_VIEW_GET_INTERFACE (view)->is_in_range (view, date);
 }

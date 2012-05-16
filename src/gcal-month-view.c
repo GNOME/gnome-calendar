@@ -20,6 +20,7 @@
 
 #include "gcal-month-view.h"
 #include "gcal-utils.h"
+#include "gcal-view.h"
 
 #include <glib/gi18n.h>
 
@@ -52,6 +53,11 @@ const char* weekdays [] =
    "Fri",
    "Sat"
   };
+
+static void     _gcal_view_interface_init               (GcalViewIface *iface);
+
+static gboolean _gcal_month_view_is_in_range            (GcalView      *view,
+                                                         icaltimetype  *date);
 
 static void     gcal_month_view_set_property            (GObject       *object,
                                                          guint          property_id,
@@ -86,7 +92,12 @@ static void     _gcal_month_view_draw_month_grid        (GcalMonthView *mont_vie
                                                          gint           width,
                                                          gint           height);
 
-G_DEFINE_TYPE(GcalMonthView, gcal_month_view, GTK_TYPE_WIDGET)
+G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
+                         gcal_month_view,
+                         GTK_TYPE_WIDGET,
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
+                                                _gcal_view_interface_init));
+
 
 static void gcal_month_view_class_init (GcalMonthViewClass *klass)
 {
@@ -129,6 +140,21 @@ static void gcal_month_view_init (GcalMonthView *self)
                                             GCAL_TYPE_MONTH_VIEW,
                                             GcalMonthViewPrivate);
 }
+
+static void
+_gcal_view_interface_init (GcalViewIface *iface)
+{
+    iface->is_in_range = _gcal_month_view_is_in_range;
+}
+
+static gboolean
+_gcal_month_view_is_in_range (GcalView *view,
+                              icaltimetype  *date)
+{
+  g_debug ("Implementation of is_in_range called");
+  return TRUE;
+}
+
 
 static void
 gcal_month_view_set_property (GObject       *object,

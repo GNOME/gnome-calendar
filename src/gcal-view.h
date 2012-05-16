@@ -29,13 +29,13 @@ G_BEGIN_DECLS
 #define GCAL_TYPE_VIEW                 (gcal_view_get_type ())
 #define GCAL_VIEW(obj)                 (G_TYPE_CHECK_INSTANCE_CAST ((obj), GCAL_TYPE_VIEW, GcalView))
 #define GCAL_IS_VIEW(obj)              (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GCAL_TYPE_VIEW))
-#define GCAL_VIEW_GET_INTERFACE(inst)  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), GCAL_TYPE_VIEW, GcalViewInterface))
+#define GCAL_VIEW_GET_INTERFACE(inst)  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), GCAL_TYPE_VIEW, GcalViewIface))
 
 
 typedef struct _GcalView                GcalView;
-typedef struct _GcalViewInterface       GcalViewInterface;
+typedef struct _GcalViewIface           GcalViewIface;
 
-struct _GcalViewInterface
+struct _GcalViewIface
 {
   GTypeInterface parent_iface;
 
