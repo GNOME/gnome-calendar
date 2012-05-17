@@ -117,15 +117,14 @@ static void gcal_month_view_class_init (GcalMonthViewClass *klass)
   object_class->get_property = gcal_month_view_get_property;
   object_class->finalize = gcal_month_view_finalize;
 
-  g_object_class_install_property (object_class, PROP_DATE,
-                                   g_param_spec_pointer ("date",
-                                                         "date",
-                                                         _("Date"),
-                                                         G_PARAM_CONSTRUCT |
-                                                         G_PARAM_READWRITE |
-                                                         G_PARAM_STATIC_NAME |
-                                                         G_PARAM_STATIC_BLURB |
-                                                         G_PARAM_STATIC_NICK));
+  g_object_class_install_property (object_class,
+                                   PROP_DATE,
+                                   g_param_spec_boxed ("date",
+                                                       "Date",
+                                                       _("Date"),
+                                                       ICAL_TIME_TYPE,
+                                                       G_PARAM_CONSTRUCT |
+                                                       G_PARAM_READWRITE));
 
   g_type_class_add_private ((gpointer)klass, sizeof (GcalMonthViewPrivate));
 }
@@ -170,7 +169,7 @@ gcal_month_view_set_property (GObject       *object,
       if (priv->date != NULL)
         g_free (priv->date);
 
-      priv->date = g_value_get_pointer (value);
+      priv->date = g_value_dup_boxed (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -189,7 +188,7 @@ gcal_month_view_get_property (GObject       *object,
   switch (property_id)
     {
     case PROP_DATE:
-      g_value_set_pointer (value, priv->date);
+      g_value_set_boxed (value, priv->date);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);

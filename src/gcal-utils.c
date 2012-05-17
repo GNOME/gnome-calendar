@@ -18,11 +18,13 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "gcal-utils.h"
+
 #include <string.h>
 
 #include <libedataserverui/e-cell-renderer-color.h>
 
-#include "gcal-utils.h"
+G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
 
 /* taken from eel/eel-gtk-extensions.c */
 static gboolean

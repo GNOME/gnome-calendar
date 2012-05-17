@@ -32,6 +32,10 @@ typedef enum
   GCAL_VIEW_TYPE_LIST,
 } GcalViewTypeEnum;
 
+#define ICAL_TIME_TYPE (icaltime_get_type ())
+
+GType           icaltime_get_type                               (void) G_GNUC_CONST;
+
 void            gcal_gtk_tree_view_set_activate_on_single_click (GtkTreeView    *tree_view,
                                                                  gboolean       should_activate);
 

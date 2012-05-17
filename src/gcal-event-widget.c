@@ -18,20 +18,25 @@
  */
 
 #include "gcal-event-widget.h"
+#include "gcal-utils.h"
+
+#include <libical/icaltime.h>
 
 struct _GcalEventWidgetPrivate
 {
-  GdkWindow *event_window;
+  GdkWindow    *event_window;
 
-  gchar     *summary;
-  GdkRGBA   *color;
+  gchar        *summary;
+  GdkRGBA      *color;
+  icaltimetype *dt_start;
 };
 
 enum
 {
   PROP_0,
   PROP_SUMMARY,
-  PROP_COLOR
+  PROP_COLOR,
+  PROP_DTSTART
 };
 
 static void     gcal_event_widget_constructed          (GObject        *object);
@@ -113,6 +118,15 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
                                                        G_PARAM_CONSTRUCT |
                                                        G_PARAM_READWRITE));
 
+  g_object_class_install_property (object_class,
+                                   PROP_DTSTART,
+                                   g_param_spec_boxed ("date-start",
+                                                       "Date Start",
+                                                       "The starting date of the event",
+                                                       ICAL_TIME_TYPE,
+                                                       G_PARAM_CONSTRUCT |
+                                                       G_PARAM_READWRITE));
+
   g_type_class_add_private((gpointer)klass, sizeof(GcalEventWidgetPrivate));
 }
 
@@ -162,6 +176,12 @@ gcal_event_widget_set_property (GObject      *object,
 
       priv->color = g_value_dup_boxed (value);
       return;
+    case PROP_DTSTART:
+      if (priv->dt_start != NULL)
+        g_free (priv->dt_start);
+
+      priv->dt_start = g_value_dup_boxed (value);
+      return;
     }
 
   G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -184,6 +204,9 @@ gcal_event_widget_get_property (GObject      *object,
       return;
     case PROP_COLOR:
       g_value_set_boxed (value, priv->color);
+      return;
+    case PROP_DTSTART:
+      g_value_set_boxed (value, priv->dt_start);
       return;
     }
 
