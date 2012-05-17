@@ -23,6 +23,7 @@
 #include "gcal-main-toolbar.h"
 #include "gcal-month-view.h"
 #include "gcal-view.h"
+#include "gcal-event-widget.h"
 #include "gcal-utils.h"
 
 #include <clutter/clutter.h>
@@ -397,24 +398,26 @@ _gcal_window_events_added (GcalManager *manager,
 {
   GcalWindowPrivate *priv;
   GSList *l;
-  icaltimetype *starting_date;
+
   gchar **tokens;
   gchar *source_uid;
   gchar *event_uid;
 
+  GtkWidget *event;
+  icaltimetype *starting_date;
+  gchar *summary;
+  GdkRGBA *color;
+
   priv = GCAL_WINDOW (user_data)->priv;
 
-  g_debug ("[IWEA]: obtained %d events", g_slist_length (events_list));
   for (l = events_list; l != NULL; l = l->next)
     {
-      g_debug ("event %s", (gchar*) l->data);
       tokens = g_strsplit ((gchar*) l->data, ":", -1);
       source_uid  = tokens[0];
       event_uid = tokens[1];
-      starting_date = gcal_manager_get_start_date (manager,
-                                                   source_uid,
-                                                   event_uid);
-      g_debug ("starts on %s", icaltime_as_ical_string (*starting_date));
+      starting_date = gcal_manager_get_event_start_date (manager,
+                                                         source_uid,
+                                                         event_uid);
       g_debug ("GcalViewTypeEnum in GcalWindow %d", priv->active_view);
       /* FIXME: here priv->views[priv->active_view] instead of hardcoding
        * GCAL_VIEW_TYPE_MONTHLY */
@@ -422,7 +425,25 @@ _gcal_window_events_added (GcalManager *manager,
             GCAL_VIEW (priv->views[GCAL_VIEW_TYPE_MONTHLY]),
             starting_date))
         {
+          summary = gcal_manager_get_event_summary (manager,
+                                                    source_uid,
+                                                    event_uid);
+          color = gcal_manager_get_event_color (manager,
+                                                source_uid,
+                                                event_uid);
+          event =
+            gcal_event_widget_new_with_summary_and_color (summary, color);
+          gcal_event_widget_set_date (GCAL_EVENT_WIDGET (event),
+                                      starting_date);
+          gcal_view_add_event (
+              GCAL_VIEW (priv->views[GCAL_VIEW_TYPE_MONTHLY]),
+              event);
+          gtk_style_context_add_class (gtk_widget_get_style_context (event),
+                                       "event");
+          gtk_widget_show (event);
           g_debug ("Returned true call on interface function");
+          g_free (summary);
+          gdk_rgba_free (color);
         }
       else
         {

@@ -39,7 +39,7 @@ typedef struct _GcalMonthViewPrivate                GcalMonthViewPrivate;
 
 struct _GcalMonthView
 {
-  GtkWidget parent;
+  GtkContainer parent;
 
   /* add your public declarations here */
   GcalMonthViewPrivate *priv;
@@ -47,7 +47,7 @@ struct _GcalMonthView
 
 struct _GcalMonthViewClass
 {
-  GtkWidgetClass parent_class;
+  GtkContainerClass parent_class;
 };
 
 GType          gcal_month_view_get_type         (void);

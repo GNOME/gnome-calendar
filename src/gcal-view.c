@@ -70,3 +70,12 @@ gcal_view_is_in_range (GcalView     *view,
 
   return GCAL_VIEW_GET_INTERFACE (view)->is_in_range (view, date);
 }
+
+void
+gcal_view_add_event (GcalView  *view,
+                     GtkWidget *event)
+{
+  g_return_if_fail (GCAL_IS_VIEW (view));
+
+  GCAL_VIEW_GET_INTERFACE (view)->add_event (view, event);
+}
