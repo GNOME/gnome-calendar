@@ -820,9 +820,9 @@ gcal_manager_set_new_range (GcalManager        *manager,
 }
 
 icaltimetype*
-gcal_manager_get_start_date (GcalManager *manager,
-                             const gchar *source_uid,
-                             const gchar *event_uid)
+gcal_manager_get_event_start_date (GcalManager *manager,
+                                   const gchar *source_uid,
+                                   const gchar *event_uid)
 {
   GcalManagerPrivate *priv;
   GcalManagerUnit *unit;
@@ -839,4 +839,54 @@ gcal_manager_get_start_date (GcalManager *manager,
 
   e_cal_component_free_datetime (&dt);
   return dtstart;
+}
+
+gchar*
+gcal_manager_get_event_summary (GcalManager *manager,
+                                const gchar *source_uid,
+                                const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  ECalComponentText e_summary;
+  gchar *summary;
+
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+  e_cal_component_get_summary (event, &e_summary);
+  summary = g_strdup (e_summary.value);
+
+  return summary;
+}
+
+GdkRGBA*
+gcal_manager_get_event_color (GcalManager *manager,
+                              const gchar *source_uid,
+                              const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  GdkRGBA *color;
+  GdkColor gdk_color;
+
+  priv = manager->priv;
+  color = g_new0 (GdkRGBA, 1);
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  gdk_color_parse (e_source_peek_color_spec (unit->source), &gdk_color);
+
+  g_debug ("Obtained color %s for %s",
+           gdk_color_to_string (&gdk_color),
+           event_uid);
+
+  color->red = (gdouble) gdk_color.red / 65535;
+  color->green = (gdouble) gdk_color.green / 65535;
+  color->blue = (gdouble) gdk_color.blue / 65535;
+  color->alpha = 1;
+
+  g_debug ("color %s for %s", gdk_rgba_to_string (color), event_uid);
+  return color;
 }

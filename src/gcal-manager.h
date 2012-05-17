@@ -57,25 +57,33 @@ struct _GcalManagerClass
 
 };
 
-GType          gcal_manager_get_type          (void);
+GType          gcal_manager_get_type                (void);
 
-GcalManager*   gcal_manager_new               (void);
+GcalManager*   gcal_manager_new                     (void);
 
-GtkListStore*  gcal_manager_get_sources_model (GcalManager        *manager);
+GtkListStore*  gcal_manager_get_sources_model       (GcalManager        *manager);
 
-gchar*         gcal_manager_add_source        (GcalManager        *manager,
-                                               const gchar        *name,
-                                               const gchar        *base_uri,
-                                               const gchar        *relative_uri,
-                                               const gchar        *color);
+gchar*         gcal_manager_add_source              (GcalManager        *manager,
+                                                     const gchar        *name,
+                                                     const gchar        *base_uri,
+                                                     const gchar        *relative_uri,
+                                                     const gchar        *color);
 
-void           gcal_manager_set_new_range     (GcalManager        *manager,
-                                               const icaltimetype *initial_date,
-                                               const icaltimetype *final_date);
+void           gcal_manager_set_new_range           (GcalManager        *manager,
+                                                     const icaltimetype *initial_date,
+                                                     const icaltimetype *final_date);
 
-icaltimetype*  gcal_manager_get_start_date    (GcalManager        *manager,
-                                               const gchar        *source_uid,
-                                               const gchar        *event_uid);
+icaltimetype*  gcal_manager_get_event_start_date    (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
+
+gchar*         gcal_manager_get_event_summary       (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
+
+GdkRGBA*       gcal_manager_get_event_color         (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
 
 G_END_DECLS
 
