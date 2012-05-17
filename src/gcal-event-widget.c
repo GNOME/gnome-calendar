@@ -457,3 +457,23 @@ gcal_event_widget_new_with_summary_and_color (const gchar   *summary,
                        color,
                        NULL);
 }
+
+void
+gcal_event_widget_set_date (GcalEventWidget *event,
+                           icaltimetype     *date)
+{
+  g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
+
+  g_object_set (event, "date-start", date, NULL);
+}
+
+icaltimetype*
+gcal_event_widget_get_date (GcalEventWidget *event)
+{
+  icaltimetype *dt;
+
+  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), NULL);
+
+  g_object_get (event, "date-start", &dt, NULL);
+  return dt;
+}

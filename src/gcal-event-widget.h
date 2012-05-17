@@ -22,6 +22,8 @@
 
 #include <gtk/gtk.h>
 
+#include <libical/icaltime.h>
+
 G_BEGIN_DECLS
 
 
@@ -49,12 +51,17 @@ struct _GcalEventWidgetClass
 };
 
 
-GType        gcal_event_widget_get_type                   (void);
+GType         gcal_event_widget_get_type                   (void);
 
-GtkWidget*   gcal_event_widget_new                        (void);
+GtkWidget*    gcal_event_widget_new                        (void);
 
-GtkWidget*   gcal_event_widget_new_with_summary_and_color (const gchar   *summary,
-                                                           const GdkRGBA *color);
+GtkWidget*    gcal_event_widget_new_with_summary_and_color (const gchar     *summary,
+                                                            const GdkRGBA   *color);
+
+void          gcal_event_widget_set_date                   (GcalEventWidget *event,
+                                                            icaltimetype    *date);
+
+icaltimetype* gcal_event_widget_get_date                   (GcalEventWidget *event);
 
 G_END_DECLS
 
