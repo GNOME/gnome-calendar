@@ -42,6 +42,7 @@ struct _GcalMainToolbarClass
   /* Signals */
   void (*view_changed)  (GcalMainToolbar *main_toolbar, guint view_type);
   void (*sources_shown) (GcalMainToolbar *main_toolbar, gboolean visible);
+  void (*add_event)     (GcalMainToolbar *main_toolbar);
 };
 
 struct _GcalMainToolbar
