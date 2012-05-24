@@ -25,7 +25,7 @@
 
 #include <glib/gi18n.h>
 
-#define CSS_FILE UI_DATA_DIR "/gtk-style.css"
+#define CSS_FILE UI_DATA_DIR "/gtk-styles.css"
 
 struct _GcalApplicationPrivate
 {
@@ -104,7 +104,7 @@ gcal_application_startup (GApplication *app)
 
   if (gtk_clutter_init (NULL, NULL) < 0)
    {
-     g_error (_("Unable to initialize GtkClutter\n"));
+     g_error (_("Unable to initialize GtkClutter"));
      g_application_quit (app);
    }
 
@@ -118,7 +118,7 @@ gcal_application_startup (GApplication *app)
      error = NULL;
      gtk_css_provider_load_from_path (priv->provider, CSS_FILE, &error);
      if (error != NULL)
-       g_warning ("Not loading stylesheet from file %s\n", CSS_FILE);
+       g_warning ("Not loading stylesheet from file %s", CSS_FILE);
    }
 
   priv->manager = gcal_manager_new ();
