@@ -33,3 +33,14 @@
 .views {
   padding: 10px;
 }
+
+.views:selected {
+  background-color: #555753;
+}
+
+.event {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-left: 8px;
+  padding-right: 8px;
+}

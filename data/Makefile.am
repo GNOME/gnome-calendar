@@ -14,7 +14,7 @@ gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 styledir = $(pkgdatadir)/style
 
 dist_style_DATA = \
-  gtk-style.css
+  gtk-styles.css
 
 EXTRA_DIST= \
   gnome-calendar.desktop \
