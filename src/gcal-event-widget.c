@@ -22,10 +22,13 @@
 
 #include <libical/icaltime.h>
 
+#define RADIUS 3
+
 struct _GcalEventWidgetPrivate
 {
   GdkWindow    *event_window;
 
+  gchar        *uuid;
   gchar        *summary;
   GdkRGBA      *color;
   icaltimetype *dt_start;
@@ -34,6 +37,7 @@ struct _GcalEventWidgetPrivate
 enum
 {
   PROP_0,
+  PROP_UUID,
   PROP_SUMMARY,
   PROP_COLOR,
   PROP_DTSTART
@@ -73,9 +77,6 @@ static void     gcal_event_widget_size_allocate        (GtkWidget      *widget,
 static gboolean gcal_event_widget_draw                 (GtkWidget      *widget,
                                                         cairo_t        *cr);
 
-static gboolean gcal_event_widget_button_press         (GtkWidget      *widget,
-                                                        GdkEventButton *event);
-
 G_DEFINE_TYPE(GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET)
 
 static void
@@ -98,7 +99,15 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
   widget_class->unmap = gcal_event_widget_unmap;
   widget_class->size_allocate = gcal_event_widget_size_allocate;
   widget_class->draw = gcal_event_widget_draw;
-  widget_class->button_press_event = gcal_event_widget_button_press;
+
+  g_object_class_install_property (object_class,
+                                   PROP_UUID,
+                                   g_param_spec_string ("uuid",
+                                                        "Unique uid",
+                                                        "The unique-unique id composed of source_uid:event_uid",
+                                                        NULL,
+                                                        G_PARAM_CONSTRUCT |
+                                                        G_PARAM_READWRITE));
 
   g_object_class_install_property (object_class,
                                    PROP_SUMMARY,
@@ -164,6 +173,12 @@ gcal_event_widget_set_property (GObject      *object,
 
   switch (property_id)
     {
+    case PROP_UUID:
+      if (priv->uuid != NULL)
+        g_free (priv->uuid);
+
+      priv->uuid = g_value_dup_string (value);
+      return;
     case PROP_SUMMARY:
       if (priv->summary != NULL)
         g_free (priv->summary);
@@ -199,6 +214,9 @@ gcal_event_widget_get_property (GObject      *object,
 
   switch (property_id)
     {
+    case PROP_UUID:
+      g_value_set_string (value, priv->uuid);
+      return;
     case PROP_SUMMARY:
       g_value_set_string (value, priv->summary);
       return;
@@ -232,7 +250,8 @@ gcal_event_widget_get_preferred_width (GtkWidget *widget,
                                  gtk_widget_get_state_flags (widget),
                                  &padding);
 
-  *minimum = *natural = logical_rect.width + padding.left + padding.right;
+  *minimum = *natural =
+    logical_rect.width + padding.left + padding.right + 2 * RADIUS;
 
   g_object_unref (layout);
 }
@@ -256,7 +275,8 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
                                  gtk_widget_get_state_flags (widget),
                                  &padding);
 
-  *minimum = *natural = logical_rect.height + padding.top + padding.bottom;
+  *minimum = *natural =
+    logical_rect.height + padding.top + padding.bottom + 2 * RADIUS;
 
   g_object_unref (layout);
 }
@@ -351,11 +371,13 @@ gcal_event_widget_size_allocate (GtkWidget     *widget,
   gtk_widget_set_allocation (widget, allocation);
 
   if (gtk_widget_get_realized (widget))
-    gdk_window_move_resize (priv->event_window,
-                            allocation->x,
-                            allocation->y,
-                            allocation->width,
-                            allocation->height);
+    {
+      gdk_window_move_resize (priv->event_window,
+                              allocation->x,
+                              allocation->y,
+                              allocation->width,
+                              allocation->height);
+    }
 }
 
 static gboolean
@@ -369,7 +391,6 @@ gcal_event_widget_draw (GtkWidget *widget,
 
   gint x,y;
   gint width, height;
-  gdouble radius;
   gdouble degrees;
 
   PangoLayout *layout;
@@ -385,10 +406,9 @@ gcal_event_widget_draw (GtkWidget *widget,
   x = padding.left;
   y = padding.top;
   width = gtk_widget_get_allocated_width (widget)
-   - padding.left - padding.right;
+   - (padding.left + padding.right);
   height = gtk_widget_get_allocated_height (widget)
-   - padding.top - padding.bottom;
-  radius = height / 10;
+   - (padding.top + padding.bottom);
   degrees = G_PI / 180.0;
 
   layout = pango_cairo_create_layout (cr);
@@ -396,20 +416,29 @@ gcal_event_widget_draw (GtkWidget *widget,
                                      gtk_style_context_get_font (context,
                                                                  state));
   pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
-  pango_layout_set_width (layout, (width - 2 * radius ) * PANGO_SCALE);
+  pango_layout_set_width (layout, (width - 2 * RADIUS ) * PANGO_SCALE);
 
   cairo_save (cr);
 
-  cairo_arc (cr, x + width - radius, y + radius, radius, -90 * degrees, 0 * degrees);
-  cairo_arc (cr, x + width - radius, y + height - radius, radius, 0 * degrees, 90 * degrees);
-  cairo_arc (cr, x + radius, y + height - radius, radius, 90 * degrees, 180 * degrees);
-  cairo_arc (cr, x + radius, y + radius, radius, 180 * degrees, 270 * degrees);
+  cairo_new_sub_path (cr);
+  cairo_arc (cr, x + width - RADIUS, y + RADIUS, RADIUS, -90 * degrees, 0 * degrees);
+  cairo_arc (cr, x + width - RADIUS, y + height - RADIUS, RADIUS, 0 * degrees, 90 * degrees);
+  cairo_arc (cr, x + RADIUS, y + height - RADIUS, RADIUS, 90 * degrees, 180 * degrees);
+  cairo_arc (cr, x + RADIUS, y + RADIUS, RADIUS, 180 * degrees, 270 * degrees);
+  cairo_close_path (cr);
+
   cairo_set_source_rgba (cr,
                          priv->color->red,
                          priv->color->green,
                          priv->color->blue,
-                         priv->color->alpha);
-  cairo_fill (cr);
+                         0.8);
+  cairo_fill_preserve (cr);
+  cairo_set_source_rgba (cr,
+                         priv->color->red - ((1 - priv->color->red) / 2),
+                         priv->color->green - ((1 - priv->color->green) / 2),
+                         priv->color->blue - ((1 - priv->color->blue) / 2),
+                         1);
+  cairo_stroke (cr);
 
   cairo_set_source_rgba (cr,
                          fg_color.red,
@@ -418,7 +447,7 @@ gcal_event_widget_draw (GtkWidget *widget,
                          fg_color.alpha);
   pango_layout_set_text (layout, priv->summary, -1);
   pango_cairo_update_layout (cr, layout);
-  cairo_move_to (cr, x + radius, y + radius);
+  cairo_move_to (cr, x + RADIUS, y + RADIUS);
   pango_cairo_show_layout (cr, layout);
   cairo_stroke (cr);
 
@@ -432,18 +461,10 @@ gcal_event_widget_draw (GtkWidget *widget,
   return FALSE;
 }
 
-static gboolean
-gcal_event_widget_button_press (GtkWidget      *widget,
-                                GdkEventButton *event)
-{
-  g_debug ("[ITW]: Called button press virtual function\n");
-  return FALSE;
-}
-
 GtkWidget*
-gcal_event_widget_new ()
+gcal_event_widget_new (gchar *uuid)
 {
-  return g_object_new (GCAL_TYPE_EVENT_WIDGET, NULL);
+  return g_object_new (GCAL_TYPE_EVENT_WIDGET, "uuid", uuid, NULL);
 }
 
 GtkWidget*
@@ -456,6 +477,15 @@ gcal_event_widget_new_with_summary_and_color (const gchar   *summary,
                        "color",
                        color,
                        NULL);
+}
+
+const gchar*
+gcal_event_widget_peek_uuid (GcalEventWidget *event)
+{
+  GcalEventWidgetPrivate *priv;
+  priv = event->priv;
+
+  return priv->uuid;
 }
 
 void
@@ -476,4 +506,44 @@ gcal_event_widget_get_date (GcalEventWidget *event)
 
   g_object_get (event, "date-start", &dt, NULL);
   return dt;
+}
+
+void
+gcal_event_widget_set_summary (GcalEventWidget *event,
+                               gchar           *summary)
+{
+  g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
+
+  g_object_set (event, "summary", summary, NULL);
+}
+
+gchar*
+gcal_event_widget_get_summary (GcalEventWidget *event)
+{
+  gchar *summary;
+  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), NULL);
+
+  summary = NULL;
+  g_object_get (event, "summary", summary, NULL);
+  return summary;
+}
+
+void
+gcal_event_widget_set_color (GcalEventWidget *event,
+                             GdkRGBA         *color)
+{
+  g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
+
+  g_object_set (event, "color", color, NULL);
+}
+
+GdkRGBA*
+gcal_event_widget_get_color (GcalEventWidget *event)
+{
+  GdkRGBA *color;
+  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), NULL);
+
+  color = NULL;
+  g_object_get (event, "color", color, NULL);
+  return color;
 }

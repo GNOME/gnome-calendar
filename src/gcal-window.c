@@ -36,42 +36,43 @@
 struct _GcalWindowPrivate
 {
   ClutterActor       *main_toolbar;
+  ClutterActor       *contents_actor;
   ClutterActor       *notebook_actor;
   ClutterActor       *sources_actor;
 
   GtkWidget          *notebook;
   GtkWidget          *sources_view;
   GtkWidget          *views [5];
+  GtkWidget          *add_view;
 
   GcalViewTypeEnum    active_view;
 };
 
-static void   gcal_window_constructed            (GObject           *object);
+static void       gcal_window_constructed            (GObject           *object);
 
-GcalManager*  _gcal_window_get_manager           (GcalWindow        *window);
+GcalManager*      _gcal_window_get_manager           (GcalWindow        *window);
 
-static void   _gcal_window_set_sources_view      (GcalWindow        *window);
+static void       _gcal_window_set_sources_view      (GcalWindow        *window);
 
-static void   _gcal_window_view_changed          (GcalMainToolbar   *main_toolbar,
-                                                  GcalViewTypeEnum   view_type,
-                                                  gpointer           user_data);
+static void       _gcal_window_view_changed          (GcalMainToolbar   *main_toolbar,
+                                                      GcalViewTypeEnum   view_type,
+                                                      gpointer           user_data);
 
-static void   _gcal_window_sources_shown         (GcalMainToolbar   *main_toolbar,
-                                                  gboolean           visible,
-                                                  gpointer           user_data);
+static void       _gcal_window_sources_shown         (GcalMainToolbar   *main_toolbar,
+                                                      gboolean           visible,
+                                                      gpointer           user_data);
 
-static void   _gcal_window_sources_row_activated (GtkTreeView       *tree_view,
-                                                  GtkTreePath       *path,
-                                                  GtkTreeViewColumn *column,
-                                                  gpointer           user_data);
+static void       _gcal_window_add_event             (GcalMainToolbar   *main_toolbar,
+                                                      gpointer           user_data);
 
-static void   _gcal_window_view_clicked          (GtkWidget         *widget,
-                                                  GdkEventButton    *event,
-                                                  gpointer           user_data);
+static void       _gcal_window_sources_row_activated (GtkTreeView       *tree_view,
+                                                      GtkTreePath       *path,
+                                                      GtkTreeViewColumn *column,
+                                                      gpointer           user_data);
 
-static void   _gcal_window_events_added          (GcalManager       *manager,
-                                                  gpointer           events_list,
-                                                  gpointer           user_data);
+static void       _gcal_window_events_added          (GcalManager       *manager,
+                                                      gpointer           events_list,
+                                                      gpointer           user_data);
 
 G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
@@ -100,7 +101,6 @@ gcal_window_constructed (GObject *object)
   ClutterLayoutManager *base_layout_manager;
   ClutterActor *body_actor;
   ClutterLayoutManager *body_layout_manager;
-  ClutterActor *contents_actor;
   ClutterLayoutManager *contents_layout_manager;
   GtkWidget *holder;
 
@@ -153,12 +153,14 @@ gcal_window_constructed (GObject *object)
                            CLUTTER_BOX_ALIGNMENT_START);
 
   /* contents */
-  contents_layout_manager = clutter_bin_layout_new (CLUTTER_BIN_ALIGNMENT_CENTER,
-                                                    CLUTTER_BIN_ALIGNMENT_CENTER);
-  contents_actor = clutter_actor_new ();
-  clutter_actor_set_layout_manager (contents_actor, contents_layout_manager);
+  contents_layout_manager =
+    clutter_bin_layout_new (CLUTTER_BIN_ALIGNMENT_CENTER,
+                            CLUTTER_BIN_ALIGNMENT_CENTER);
+  priv->contents_actor = clutter_actor_new ();
+  clutter_actor_set_layout_manager (priv->contents_actor,
+                                    contents_layout_manager);
   clutter_box_layout_pack (CLUTTER_BOX_LAYOUT (body_layout_manager),
-                           contents_actor,
+                           priv->contents_actor,
                            TRUE,
                            TRUE,
                            TRUE,
@@ -179,8 +181,9 @@ gcal_window_constructed (GObject *object)
                           CLUTTER_BIN_ALIGNMENT_FILL);
 
   icaltimetype *date = g_new (icaltimetype, 1);
-  *date = icaltime_today ();
+  *date = icaltime_from_timet (time (NULL), 0);
   priv->views[GCAL_VIEW_TYPE_MONTHLY] = gcal_month_view_new (date);
+  g_free (date);
 
   context = gtk_widget_get_style_context (priv->views[GCAL_VIEW_TYPE_MONTHLY]);
   gtk_style_context_add_class (context, "views");
@@ -206,6 +209,7 @@ gcal_window_constructed (GObject *object)
                           priv->sources_actor,
                           CLUTTER_BIN_ALIGNMENT_START,
                           CLUTTER_BIN_ALIGNMENT_START);
+  clutter_actor_hide (priv->sources_actor);
 
   /* signals connection/handling */
   g_signal_connect (priv->main_toolbar,
@@ -216,9 +220,9 @@ gcal_window_constructed (GObject *object)
                     "sources-shown",
                     G_CALLBACK (_gcal_window_sources_shown),
                     object);
-  g_signal_connect (priv->views[GCAL_VIEW_TYPE_MONTHLY],
-                    "button-press-event",
-                    G_CALLBACK (_gcal_window_view_clicked),
+  g_signal_connect (priv->main_toolbar,
+                    "add-event",
+                    G_CALLBACK (_gcal_window_add_event),
                     object);
 
   gtk_widget_show (embed);
@@ -307,26 +311,11 @@ _gcal_window_view_changed (GcalMainToolbar  *main_toolbar,
                            gpointer          user_data)
 {
   GcalWindowPrivate *priv;
-  GcalManager *manager;
 
   priv = GCAL_WINDOW (user_data)->priv;
   priv->active_view = view_type;
 
-  /* FIXME: demo code */
-  icaltimetype *first_day;
-  icaltimetype *last_day;
-  first_day = g_new0 (icaltimetype, 1);
-  last_day = g_new0 (icaltimetype, 1);
-  *first_day = icaltime_from_timet (time (NULL), 0);
-  first_day->day = 1;
-  *last_day = *first_day;
-  last_day->day = 28;
-
-  manager = _gcal_window_get_manager (GCAL_WINDOW (user_data));
-  gcal_manager_set_new_range (manager, first_day, last_day);
   g_debug ("GcalViewTypeEnum in GcalWindow %d", priv->active_view);
-  g_free (first_day);
-  g_free (last_day);
 }
 
 static void
@@ -339,6 +328,7 @@ _gcal_window_sources_shown (GcalMainToolbar *main_toolbar,
 
   if (visible)
     {
+      clutter_actor_show (priv->sources_actor);
       clutter_actor_animate (priv->sources_actor,
                              CLUTTER_LINEAR, 150,
                              "opacity", 255,
@@ -349,8 +339,16 @@ _gcal_window_sources_shown (GcalMainToolbar *main_toolbar,
       clutter_actor_animate (priv->sources_actor,
                              CLUTTER_LINEAR, 150,
                              "opacity", 0,
+                             "signal-swapped::completed", clutter_actor_hide, priv->sources_actor,
                              NULL);
     }
+}
+
+static void
+_gcal_window_add_event (GcalMainToolbar *main_toolbar,
+                        gpointer         user_data)
+{
+  g_debug ("Catched signal add-event");
 }
 
 static void
@@ -384,14 +382,6 @@ _gcal_window_sources_row_activated (GtkTreeView       *tree_view,
 }
 
 static void
-_gcal_window_view_clicked (GtkWidget      *widget,
-                           GdkEventButton *event,
-                           gpointer        user_data)
-{
-  g_debug ("View Clicked");
-}
-
-static void
 _gcal_window_events_added (GcalManager *manager,
                            gpointer     events_list,
                            gpointer     user_data)
@@ -412,13 +402,14 @@ _gcal_window_events_added (GcalManager *manager,
 
   for (l = events_list; l != NULL; l = l->next)
     {
+      g_debug ("Adding events in GcalWindow %d", priv->active_view);
+
       tokens = g_strsplit ((gchar*) l->data, ":", -1);
       source_uid  = tokens[0];
       event_uid = tokens[1];
       starting_date = gcal_manager_get_event_start_date (manager,
                                                          source_uid,
                                                          event_uid);
-      g_debug ("GcalViewTypeEnum in GcalWindow %d", priv->active_view);
       /* FIXME: here priv->views[priv->active_view] instead of hardcoding
        * GCAL_VIEW_TYPE_MONTHLY */
       if (gcal_view_is_in_range (
@@ -431,17 +422,17 @@ _gcal_window_events_added (GcalManager *manager,
           color = gcal_manager_get_event_color (manager,
                                                 source_uid,
                                                 event_uid);
-          event =
-            gcal_event_widget_new_with_summary_and_color (summary, color);
+          event = gcal_event_widget_new ((gchar*) l->data);
+          gcal_event_widget_set_summary (GCAL_EVENT_WIDGET (event), summary);
+          gcal_event_widget_set_color (GCAL_EVENT_WIDGET (event), color);
           gcal_event_widget_set_date (GCAL_EVENT_WIDGET (event),
                                       starting_date);
-          gcal_view_add_event (
-              GCAL_VIEW (priv->views[GCAL_VIEW_TYPE_MONTHLY]),
+          gtk_widget_show (event);
+          gtk_container_add (
+              GTK_CONTAINER (priv->views[GCAL_VIEW_TYPE_MONTHLY]),
               event);
           gtk_style_context_add_class (gtk_widget_get_style_context (event),
                                        "event");
-          gtk_widget_show (event);
-          g_debug ("Returned true call on interface function");
           g_free (summary);
           gdk_rgba_free (color);
         }
@@ -473,6 +464,20 @@ gcal_window_new (GcalApplication *app)
                     "events-added",
                     G_CALLBACK (_gcal_window_events_added),
                     win);
+
+  /* FIXME: demo code */
+  GcalWindowPrivate *priv;
+  icaltimetype *first_day;
+  icaltimetype *last_day;
+  priv = win->priv;
+  first_day = gcal_month_view_get_initial_date (
+                GCAL_MONTH_VIEW (priv->views[GCAL_VIEW_TYPE_MONTHLY]));
+  last_day = gcal_month_view_get_final_date (
+                GCAL_MONTH_VIEW (priv->views[GCAL_VIEW_TYPE_MONTHLY]));
+
+  gcal_manager_set_new_range (manager, first_day, last_day);
+  g_free (first_day);
+  g_free (last_day);
 
   return GTK_WIDGET (win);
 }
