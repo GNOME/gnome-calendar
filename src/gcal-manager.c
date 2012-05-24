@@ -531,7 +531,6 @@ _gcal_manager_reload_view (GcalManager     *manager,
 
       error = NULL;
       e_cal_client_view_start (unit->view, &error);
-      g_debug ("View created, connected and started");
 
       if (error != NULL)
         {
@@ -578,28 +577,34 @@ _gcal_manager_on_view_objects_added (ECalClientView *view,
       if (l->data != NULL)
         {
           ECalComponent *component;
-          component = e_cal_component_new_from_icalcomponent (l->data);
 
           if (! g_hash_table_lookup_extended (unit->events,
                                               icalcomponent_get_uid (l->data),
                                               NULL,
                                               NULL))
             {
+              component = e_cal_component_new_from_icalcomponent (l->data);
+
               g_hash_table_insert (unit->events,
                                    g_strdup (icalcomponent_get_uid (l->data)),
                                    component);
+              event_uid = g_strdup_printf ("%s:%s",
+                                           source_uid,
+                                           icalcomponent_get_uid (l->data));
+              events_data = g_slist_append (events_data, event_uid);
             }
-
-          event_uid = g_strdup_printf ("%s:%s",
-                                       source_uid,
-                                       icalcomponent_get_uid (l->data));
-          events_data = g_slist_append (events_data, event_uid);
         }
     }
 
-  g_signal_emit (GCAL_MANAGER (user_data), signals[EVENTS_ADDED], 0, events_data);
+  if (events_data != NULL)
+    {
+      g_signal_emit (GCAL_MANAGER (user_data),
+                     signals[EVENTS_ADDED],
+                     0,
+                     events_data);
 
-  g_slist_free_full (events_data, g_free);
+      g_slist_free_full (events_data, g_free);
+    }
 }
 
 /**
@@ -878,15 +883,10 @@ gcal_manager_get_event_color (GcalManager *manager,
   unit = g_hash_table_lookup (priv->clients, source_uid);
   gdk_color_parse (e_source_peek_color_spec (unit->source), &gdk_color);
 
-  g_debug ("Obtained color %s for %s",
-           gdk_color_to_string (&gdk_color),
-           event_uid);
-
   color->red = (gdouble) gdk_color.red / 65535;
   color->green = (gdouble) gdk_color.green / 65535;
   color->blue = (gdouble) gdk_color.blue / 65535;
   color->alpha = 1;
 
-  g_debug ("color %s for %s", gdk_rgba_to_string (color), event_uid);
   return color;
 }
