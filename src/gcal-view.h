@@ -41,16 +41,12 @@ struct _GcalViewIface
   GTypeInterface parent_iface;
 
   gboolean (*is_in_range) (GcalView *view, icaltimetype *date);
-  void     (*add_event)   (GcalView *view, GtkWidget    *event);
 };
 
 GType  gcal_view_get_type  (void);
 
 gboolean gcal_view_is_in_range (GcalView     *view,
                                 icaltimetype *date);
-
-void     gcal_view_add_event   (GcalView     *view,
-                                GtkWidget    *event);
 
 G_END_DECLS
 
