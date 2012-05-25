@@ -1,0 +1,79 @@
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Aviary.pl
+# Jeśli masz jakiekolwiek uwagi odnoszące się do tłumaczenia lub chcesz
+# pomóc w jego rozwijaniu i pielęgnowaniu, napisz do nas:
+# gnomepl@aviary.pl
+# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-calendar\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-05-25 22:08+0200\n"
+"PO-Revision-Date: 2012-05-25 22:11+0200\n"
+"Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
+"Language-Team: Polish <gnomepl@aviary.pl>\n"
+"Language: pl\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2);\n"
+"X-Poedit-Language: Polish\n"
+"X-Poedit-Country: Poland\n"
+
+#: ../src/gcal-application.c:62 ../data/gnome-calendar.desktop.in.in.h:1
+msgid "Calendar"
+msgstr "Kalendarz"
+
+#: ../src/gcal-application.c:107
+msgid "Unable to initialize GtkClutter"
+msgstr "Nie można zainicjować biblioteki GtkClutter"
+
+#: ../src/gcal-application.c:142
+msgid "About"
+msgstr "O programie"
+
+#: ../src/gcal-application.c:150
+msgid "Quit"
+msgstr "Zakończ"
+
+#. day
+#: ../src/gcal-main-toolbar.c:167
+msgid "Day"
+msgstr "Dzień"
+
+#. week
+#: ../src/gcal-main-toolbar.c:184
+msgid "Week"
+msgstr "Tydzień"
+
+#. month
+#: ../src/gcal-main-toolbar.c:201
+msgid "Month"
+msgstr "Miesiąc"
+
+#. year
+#: ../src/gcal-main-toolbar.c:218
+msgid "Year"
+msgstr "Rok"
+
+#. list
+#: ../src/gcal-main-toolbar.c:235
+msgid "List"
+msgstr "Lista"
+
+#: ../src/gcal-month-view.c:163
+msgid "Date"
+msgstr "Data"
+
+#: ../data/gnome-calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr "Wyświetlanie i zarządzanie kalendarzem"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Okno zmaksymalizowane"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Stan maksymalizacji okna"
