@@ -424,6 +424,12 @@ _gcal_manager_load_source (GcalManager *manager,
   priv = manager->priv;
   error = NULL;
   new_client = e_cal_client_new (source, E_CAL_CLIENT_SOURCE_TYPE_EVENTS, &error);
+  if (error != NULL)
+    {
+      g_warning ("Couldn't create ECalClient. Error: %s", error->message);
+      g_error_free (error);
+      return;
+    }
 
   unit = g_new0 (GcalManagerUnit, 1);
   unit->client = g_object_ref (new_client);
