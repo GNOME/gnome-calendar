@@ -4,7 +4,7 @@ SUBDIRS = src data po doc
 
 gnome_calendardocdir = ${prefix}/doc/gnome_calendar
 gnome_calendardoc_DATA =        \
-  README.md                     \
+  README                        \
   INSTALL                       \
   NEWS
 

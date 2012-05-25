@@ -10,7 +10,7 @@ AC_CONFIG_AUX_DIR([config])
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 # require automake 1.11
-AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip tar-ustar foreign])
+AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip tar-ustar])
 AM_MAINTAINER_MODE([enable])
 
 dnl ***************************************************************************
