@@ -55,7 +55,7 @@ static void     gcal_floating_container_style_updated                  (GtkWidge
 static void     gcal_floating_container_add                            (GtkContainer    *container,
                                                                         GtkWidget       *child);
 
-static void     _gcal_floating_container_get_padding_and_border        (GtkWidget       *widget,
+static void     gcal_floating_container_get_padding_and_border         (GtkWidget       *widget,
                                                                         GtkBorder       *border);
 
 G_DEFINE_TYPE(GcalFloatingContainer, gcal_floating_container, GTK_TYPE_BIN)
@@ -109,7 +109,7 @@ gcal_floating_container_get_preferred_width (GtkWidget *widget,
   GtkBorder padding;
   gint minimum, natural;
 
-  _gcal_floating_container_get_padding_and_border (widget, &padding);
+  gcal_floating_container_get_padding_and_border (widget, &padding);
 
   minimum = 0;
   natural = 0;
@@ -145,7 +145,7 @@ gcal_floating_container_get_preferred_height_for_width (GtkWidget *widget,
   gint minimum;
   gint natural;
 
-  _gcal_floating_container_get_padding_and_border (widget, &padding);
+  gcal_floating_container_get_padding_and_border (widget, &padding);
 
   minimum = 0;
   natural = 0;
@@ -182,7 +182,7 @@ gcal_floating_container_get_preferred_height (GtkWidget *widget,
   gint minimum;
   gint natural;
 
-  _gcal_floating_container_get_padding_and_border (widget, &padding);
+  gcal_floating_container_get_padding_and_border (widget, &padding);
 
   minimum = 0;
   natural = 0;
@@ -218,7 +218,7 @@ gcal_floating_container_get_preferred_width_for_height (GtkWidget *widget,
   gint minimum;
   gint natural;
 
-  _gcal_floating_container_get_padding_and_border (widget, &padding);
+  gcal_floating_container_get_padding_and_border (widget, &padding);
 
   minimum = 0;
   natural = 0;
@@ -254,7 +254,7 @@ gcal_floating_container_size_allocate (GtkWidget     *widget,
 
   gtk_widget_set_allocation (widget, allocation);
 
-  _gcal_floating_container_get_padding_and_border (widget, &padding);
+  gcal_floating_container_get_padding_and_border (widget, &padding);
 
   if (gtk_widget_get_realized (widget))
     {
@@ -341,8 +341,8 @@ gcal_floating_container_add (GtkContainer *container,
 }
 
 static void
-_gcal_floating_container_get_padding_and_border (GtkWidget *widget,
-                                                 GtkBorder *border)
+gcal_floating_container_get_padding_and_border (GtkWidget *widget,
+                                                GtkBorder *border)
 {
   GtkStyleContext *context;
   GtkStateFlags state;

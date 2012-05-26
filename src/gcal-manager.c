@@ -106,40 +106,40 @@ static void     gcal_manager_constructed                  (GObject         *obje
 
 static void     gcal_manager_finalize                     (GObject         *object);
 
-void            _gcal_manager_free_unit_data              (gpointer         data);
+void            gcal_manager_free_unit_data               (gpointer         data);
 
-static void     _gcal_manager_on_client_opened            (GObject         *source_object,
+static void     gcal_manager_on_client_opened             (GObject         *source_object,
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
 
-static gboolean _gcal_manager_retry_open_on_timeout       (gpointer         user_data);
+static gboolean gcal_manager_retry_open_on_timeout        (gpointer         user_data);
 
-static void     _gcal_manager_free_retry_open_data        (gpointer         user_data);
+static void     gcal_manager_free_retry_open_data         (gpointer         user_data);
 
-void            _gcal_manager_remove_client               (GcalManager     *manager,
+void            gcal_manager_remove_client                (GcalManager     *manager,
                                                            ECalClient      *client);
 
-static void     _gcal_manager_load_source                 (GcalManager     *manager,
+static void     gcal_manager_load_source                  (GcalManager     *manager,
                                                            ESource         *source);
 
-static void     _gcal_manager_reload_events               (GcalManager     *manager);
+static void     gcal_manager_reload_events                (GcalManager     *manager);
 
-static void     _gcal_manager_reload_view                 (GcalManager     *manager,
+static void     gcal_manager_reload_view                  (GcalManager     *manager,
                                                            GcalManagerUnit *unit);
 
-static void     _gcal_manager_on_view_objects_added       (ECalClientView  *view,
+static void     gcal_manager_on_view_objects_added        (ECalClientView  *view,
                                                            gpointer         objects,
                                                            gpointer         user_data);
 
-static void     _gcal_manager_on_view_objects_removed     (ECalClientView  *view,
+static void     gcal_manager_on_view_objects_removed      (ECalClientView  *view,
                                                            gpointer         objects,
                                                            gpointer         user_data);
 
-static void     _gcal_manager_on_view_objects_modified    (ECalClientView  *view,
+static void     gcal_manager_on_view_objects_modified     (ECalClientView  *view,
                                                            gpointer         objects,
                                                            gpointer         user_data);
 
-static void     _gcal_manager_on_sources_row_changed      (GtkTreeModel    *store,
+static void     gcal_manager_on_sources_row_changed       (GtkTreeModel    *store,
                                                            GtkTreePath     *path,
                                                            GtkTreeIter     *iter,
                                                            gpointer         user_data);
@@ -205,7 +205,7 @@ gcal_manager_init (GcalManager *self)
 
   g_signal_connect (priv->sources_model,
                     "row-changed",
-                    G_CALLBACK (_gcal_manager_on_sources_row_changed),
+                    G_CALLBACK (gcal_manager_on_sources_row_changed),
                     self);
 
   priv->initial_date = g_new(icaltimetype, 1);
@@ -217,7 +217,7 @@ gcal_manager_init (GcalManager *self)
   priv->clients = g_hash_table_new_full (g_str_hash,
                                          g_str_equal,
                                          g_free,
-                                         _gcal_manager_free_unit_data);
+                                         gcal_manager_free_unit_data);
 }
 
 static void
@@ -250,7 +250,7 @@ gcal_manager_constructed (GObject *object)
            l != NULL;
            l = l->next)
         {
-          _gcal_manager_load_source (GCAL_MANAGER (object), l->data);
+          gcal_manager_load_source (GCAL_MANAGER (object), l->data);
         }
     }
 }
@@ -267,7 +267,7 @@ gcal_manager_finalize (GObject *object)
 }
 
 void
-_gcal_manager_free_unit_data (gpointer data)
+gcal_manager_free_unit_data (gpointer data)
 {
   GcalManagerUnit *unit;
 
@@ -281,9 +281,9 @@ _gcal_manager_free_unit_data (gpointer data)
 }
 
 static void
-_gcal_manager_on_client_opened (GObject      *source_object,
-                                GAsyncResult *result,
-                                gpointer      user_data)
+gcal_manager_on_client_opened (GObject      *source_object,
+                               GAsyncResult *result,
+                               gpointer      user_data)
 {
   ECalClient *client;
   GcalManagerPrivate *priv;
@@ -305,7 +305,7 @@ _gcal_manager_on_client_opened (GObject      *source_object,
           unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients, uid);
 
           /* setting view */
-          _gcal_manager_reload_view (GCAL_MANAGER (user_data), unit);
+          gcal_manager_reload_view (GCAL_MANAGER (user_data), unit);
         }
     }
   else
@@ -334,9 +334,9 @@ _gcal_manager_on_client_opened (GObject      *source_object,
               /* postpone for 1/2 of a second, backend is busy now */
               g_timeout_add_full (G_PRIORITY_DEFAULT,
                                   500,
-                                  _gcal_manager_retry_open_on_timeout,
+                                  gcal_manager_retry_open_on_timeout,
                                   rod,
-                                  _gcal_manager_free_retry_open_data);
+                                  gcal_manager_free_retry_open_data);
 
               g_error_free (error);
 
@@ -345,12 +345,11 @@ _gcal_manager_on_client_opened (GObject      *source_object,
 
           /* in any other case, remove it*/
           source = e_client_get_source (E_CLIENT (client));
-          _gcal_manager_remove_client (GCAL_MANAGER (user_data), client);
-          g_warning (
-                  "%s: Failed to open '%s': %s",
-                  G_STRFUNC,
-                  e_source_peek_name (source),
-                  error->message);
+          gcal_manager_remove_client (GCAL_MANAGER (user_data), client);
+          g_warning ("%s: Failed to open '%s': %s",
+                     G_STRFUNC,
+                     e_source_peek_name (source),
+                     error->message);
 
           g_error_free (error);
           return;
@@ -364,7 +363,7 @@ _gcal_manager_on_client_opened (GObject      *source_object,
 }
 
 static gboolean
-_gcal_manager_retry_open_on_timeout (gpointer user_data)
+gcal_manager_retry_open_on_timeout (gpointer user_data)
 {
   RetryOpenData *rod = user_data;
 
@@ -375,14 +374,14 @@ _gcal_manager_retry_open_on_timeout (gpointer user_data)
   e_client_open (rod->client,
                  TRUE,
                  rod->cancellable,
-                 _gcal_manager_on_client_opened,
+                 gcal_manager_on_client_opened,
                  rod->manager);
 
   return FALSE;
 }
 
 static void
-_gcal_manager_free_retry_open_data (gpointer user_data)
+gcal_manager_free_retry_open_data (gpointer user_data)
 {
   RetryOpenData *rod = user_data;
 
@@ -395,8 +394,8 @@ _gcal_manager_free_retry_open_data (gpointer user_data)
 }
 
 void
-_gcal_manager_remove_client (GcalManager  *manager,
-                             ECalClient *client)
+gcal_manager_remove_client (GcalManager  *manager,
+                            ECalClient *client)
 {
   GcalManagerPrivate *priv;
 
@@ -410,8 +409,8 @@ _gcal_manager_remove_client (GcalManager  *manager,
 }
 
 static void
-_gcal_manager_load_source (GcalManager *manager,
-                           ESource     *source)
+gcal_manager_load_source (GcalManager *manager,
+                          ESource     *source)
 {
   GcalManagerPrivate *priv;
   ECalClient *new_client;
@@ -456,12 +455,12 @@ _gcal_manager_load_source (GcalManager *manager,
   e_client_open (E_CLIENT (unit->client),
                  TRUE,
                  priv->loading_clients,
-                 _gcal_manager_on_client_opened,
+                 gcal_manager_on_client_opened,
                  manager);
 }
 
 /**
- * _gcal_manager_reload_events:
+ * gcal_manager_reload_events:
  *
  * @manager: Self
  *
@@ -480,7 +479,7 @@ _gcal_manager_load_source (GcalManager *manager,
  * </itemizedlist>
  */
 static void
-_gcal_manager_reload_events (GcalManager *manager)
+gcal_manager_reload_events (GcalManager *manager)
 {
   GcalManagerPrivate *priv;
   GHashTableIter iter;
@@ -491,13 +490,13 @@ _gcal_manager_reload_events (GcalManager *manager)
   g_hash_table_iter_init (&iter, priv->clients);
   while (g_hash_table_iter_next (&iter, &key, &value))
     {
-      _gcal_manager_reload_view (manager, (GcalManagerUnit*) value);
+      gcal_manager_reload_view (manager, (GcalManagerUnit*) value);
     }
 }
 
 static void
-_gcal_manager_reload_view (GcalManager     *manager,
-                           GcalManagerUnit *unit)
+gcal_manager_reload_view (GcalManager     *manager,
+                          GcalManagerUnit *unit)
 {
   GcalManagerPrivate *priv;
   GError *error;
@@ -519,17 +518,17 @@ _gcal_manager_reload_view (GcalManager     *manager,
       /*hooking signals */
       g_signal_connect (unit->view,
                         "objects-added",
-                        G_CALLBACK (_gcal_manager_on_view_objects_added),
+                        G_CALLBACK (gcal_manager_on_view_objects_added),
                         manager);
 
       g_signal_connect (unit->view,
                         "objects-removed",
-                        G_CALLBACK (_gcal_manager_on_view_objects_removed),
+                        G_CALLBACK (gcal_manager_on_view_objects_removed),
                         manager);
 
       g_signal_connect (unit->view,
                         "objects-modified",
-                        G_CALLBACK (_gcal_manager_on_view_objects_modified),
+                        G_CALLBACK (gcal_manager_on_view_objects_modified),
                         manager);
 
       error = NULL;
@@ -551,15 +550,15 @@ _gcal_manager_reload_view (GcalManager     *manager,
 }
 
 /**
- * _gcal_manager_on_view_objects_added
+ * gcal_manager_on_view_objects_added
  * @view: the view emitting the signal
  * @objects: a GSList of icalcomponent*
  * @user_data: The data passed when connecting the signal, here GcalManager
  */
 static void
-_gcal_manager_on_view_objects_added (ECalClientView *view,
-                                     gpointer        objects,
-                                     gpointer        user_data)
+gcal_manager_on_view_objects_added (ECalClientView *view,
+                                    gpointer        objects,
+                                    gpointer        user_data)
 {
   GcalManagerPrivate *priv;
   GcalManagerUnit *unit;
@@ -614,36 +613,36 @@ _gcal_manager_on_view_objects_added (ECalClientView *view,
 }
 
 /**
- * _gcal_manager_on_view_objects_removed
+ * gcal_manager_on_view_objects_removed
  * @view: the view emitting the signal
  * @objects: a GSList of ECalComponentId*
  * @user_data: The data passed when connecting the signal, here GcalManager
  */
 static void
-_gcal_manager_on_view_objects_removed (ECalClientView *view,
-                                       gpointer        objects,
-                                       gpointer        user_data)
+gcal_manager_on_view_objects_removed (ECalClientView *view,
+                                      gpointer        objects,
+                                      gpointer        user_data)
 {
 }
 
 /**
- * _gcal_manager_on_view_objects_modified
+ * gcal_manager_on_view_objects_modified
  * @view: the view emitting the signal
  * @objects: a GSList of icalcomponent*
  * @user_data: The data passed when connecting the signal, here GcalManager
  */
 static void
-_gcal_manager_on_view_objects_modified (ECalClientView *view,
-                                        gpointer        objects,
-                                        gpointer        user_data)
+gcal_manager_on_view_objects_modified (ECalClientView *view,
+                                       gpointer        objects,
+                                       gpointer        user_data)
 {
 }
 
 static void
-_gcal_manager_on_sources_row_changed (GtkTreeModel *store,
-                                      GtkTreePath  *path,
-                                      GtkTreeIter  *iter,
-                                      gpointer      user_data)
+gcal_manager_on_sources_row_changed (GtkTreeModel *store,
+                                     GtkTreePath  *path,
+                                     GtkTreeIter  *iter,
+                                     gpointer      user_data)
 {
   GcalManagerPrivate *priv;
   GcalManagerUnit *unit;
@@ -753,7 +752,7 @@ gcal_manager_add_source (GcalManager *manager,
   source = e_source_new (name, relative_uri);
   e_source_group_add_source (selected_group, source, -1);
 
-  _gcal_manager_load_source (manager, source);
+  gcal_manager_load_source (manager, source);
 
   return g_strdup (e_source_peek_uid (source));
 }
@@ -826,7 +825,7 @@ gcal_manager_set_new_range (GcalManager        *manager,
       g_debug ("Query %s", priv->query);
 
       /* redoing query */
-      _gcal_manager_reload_events (manager);
+      gcal_manager_reload_events (manager);
     }
 }
 

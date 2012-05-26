@@ -1,6 +1,6 @@
 TODO
 
- - Reorder GcalMainToolbar
+ - Rewrite GcalToolbar
  - Rethink signals from GcalManager
  - Order events for starting hour in GcalMonthView, and the others
  - Review static modifiers

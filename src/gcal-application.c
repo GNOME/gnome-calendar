@@ -38,13 +38,13 @@ struct _GcalApplicationPrivate
 
 static void gcal_application_startup        (GApplication    *app);
 
-static void _gcal_application_set_app_menu  (GApplication    *app);
-static void _gcal_application_show_about    (GSimpleAction   *simple,
-                                             GVariant        *parameter,
-                                             gpointer         user_data);
-static void _gcal_application_quit          (GSimpleAction   *simple,
-                                             GVariant        *parameter,
-                                             gpointer         user_data);
+static void gcal_application_set_app_menu  (GApplication    *app);
+static void gcal_application_show_about    (GSimpleAction   *simple,
+                                            GVariant        *parameter,
+                                            gpointer         user_data);
+static void gcal_application_quit          (GSimpleAction   *simple,
+                                            GVariant        *parameter,
+                                            gpointer         user_data);
 
 G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 
@@ -123,11 +123,11 @@ gcal_application_startup (GApplication *app)
 
   priv->manager = gcal_manager_new ();
 
-  _gcal_application_set_app_menu (app);
+  gcal_application_set_app_menu (app);
 }
 
 static void 
-_gcal_application_set_app_menu (GApplication *app)
+gcal_application_set_app_menu (GApplication *app)
 {
   GMenu *app_menu = g_menu_new ();
   GSimpleAction *about;
@@ -136,7 +136,7 @@ _gcal_application_set_app_menu (GApplication *app)
   about = g_simple_action_new ("about", NULL);
   g_signal_connect (about,
                     "activate",
-                    G_CALLBACK (_gcal_application_show_about),
+                    G_CALLBACK (gcal_application_show_about),
                     app);
   g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (about));
   g_menu_append (app_menu, _("About"), "app.about");
@@ -144,7 +144,7 @@ _gcal_application_set_app_menu (GApplication *app)
   quit = g_simple_action_new ("quit", NULL);
   g_signal_connect (quit,
                     "activate",
-                    G_CALLBACK (_gcal_application_quit),
+                    G_CALLBACK (gcal_application_quit),
                     app);
   g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (quit));
   g_menu_append (app_menu, _("Quit"), "app.quit");
@@ -153,9 +153,9 @@ _gcal_application_set_app_menu (GApplication *app)
 }
 
 static void
-_gcal_application_show_about (GSimpleAction   *simple,
-                              GVariant        *parameter,
-                              gpointer         user_data)
+gcal_application_show_about (GSimpleAction *simple,
+                             GVariant      *parameter,
+                             gpointer       user_data)
 {
   GcalApplication *app = GCAL_APPLICATION (user_data);
 
@@ -164,16 +164,17 @@ _gcal_application_show_about (GSimpleAction   *simple,
                          NULL);
 }
 
-static void _gcal_application_quit          (GSimpleAction   *simple,
-                                             GVariant        *parameter,
-                                             gpointer         user_data)
+static void
+gcal_application_quit (GSimpleAction *simple,
+                       GVariant      *parameter,
+                       gpointer       user_data)
 {
   GApplication *app = G_APPLICATION (user_data);
 
   g_application_quit (app);
 }
 
-GcalApplication *
+GcalApplication*
 gcal_application_new (void)
 {
   g_type_init ();

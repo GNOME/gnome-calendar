@@ -2,7 +2,7 @@
 
 src/main.c
 src/gcal-application.c
-src/gcal-main-toolbar.c
+src/gcal-toolbar.c
 src/gcal-month-view.c
 src/gcal-event-view.c
 

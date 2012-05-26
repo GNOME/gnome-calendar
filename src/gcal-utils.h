@@ -32,6 +32,12 @@ typedef enum
   GCAL_VIEW_TYPE_LIST,
 } GcalViewTypeEnum;
 
+typedef enum
+{
+  GCAL_TOOLBAR_OVERVIEW = 0,
+  GCAL_TOOLBAR_EVENT
+} GcalToolbarMode;
+
 #define ICAL_TIME_TYPE (icaltime_get_type ())
 
 GType           icaltime_get_type                               (void) G_GNUC_CONST;

@@ -20,7 +20,7 @@
 #include "gcal-window.h"
 #include "gcal-manager.h"
 #include "gcal-floating-container.h"
-#include "gcal-main-toolbar.h"
+#include "gcal-toolbar.h"
 #include "gcal-month-view.h"
 #include "gcal-view.h"
 #include "gcal-event-widget.h"
@@ -51,27 +51,27 @@ struct _GcalWindowPrivate
 
 static void       gcal_window_constructed            (GObject           *object);
 
-GcalManager*      _gcal_window_get_manager           (GcalWindow        *window);
+GcalManager*      gcal_window_get_manager            (GcalWindow        *window);
 
-static void       _gcal_window_set_sources_view      (GcalWindow        *window);
+static void       gcal_window_set_sources_view       (GcalWindow        *window);
 
-static void       _gcal_window_view_changed          (GcalMainToolbar   *main_toolbar,
+static void       gcal_window_view_changed           (GcalToolbar       *main_toolbar,
                                                       GcalViewTypeEnum   view_type,
                                                       gpointer           user_data);
 
-static void       _gcal_window_sources_shown         (GcalMainToolbar   *main_toolbar,
+static void       gcal_window_sources_shown          (GcalToolbar       *main_toolbar,
                                                       gboolean           visible,
                                                       gpointer           user_data);
 
-static void       _gcal_window_add_event             (GcalMainToolbar   *main_toolbar,
+static void       gcal_window_add_event              (GcalToolbar       *main_toolbar,
                                                       gpointer           user_data);
 
-static void       _gcal_window_sources_row_activated (GtkTreeView       *tree_view,
+static void       gcal_window_sources_row_activated  (GtkTreeView       *tree_view,
                                                       GtkTreePath       *path,
                                                       GtkTreeViewColumn *column,
                                                       gpointer           user_data);
 
-static void       _gcal_window_events_added          (GcalManager       *manager,
+static void       gcal_window_events_added           (GcalManager       *manager,
                                                       gpointer           events_list,
                                                       gpointer           user_data);
 
@@ -144,7 +144,7 @@ gcal_window_constructed (GObject *object)
                            CLUTTER_BOX_ALIGNMENT_CENTER);
 
   /* main_toolbar */
-  priv->main_toolbar = gcal_main_toolbar_new ();
+  priv->main_toolbar = gcal_toolbar_new ();
   clutter_box_layout_pack (CLUTTER_BOX_LAYOUT (body_layout_manager),
                            priv->main_toolbar,
                            FALSE,
@@ -215,22 +215,22 @@ gcal_window_constructed (GObject *object)
   /* signals connection/handling */
   g_signal_connect (priv->main_toolbar,
                     "view-changed",
-                    G_CALLBACK (_gcal_window_view_changed),
+                    G_CALLBACK (gcal_window_view_changed),
                     object);
   g_signal_connect (priv->main_toolbar,
                     "sources-shown",
-                    G_CALLBACK (_gcal_window_sources_shown),
+                    G_CALLBACK (gcal_window_sources_shown),
                     object);
   g_signal_connect (priv->main_toolbar,
                     "add-event",
-                    G_CALLBACK (_gcal_window_add_event),
+                    G_CALLBACK (gcal_window_add_event),
                     object);
 
   gtk_widget_show (embed);
 }
 
 GcalManager*
-_gcal_window_get_manager (GcalWindow *window)
+gcal_window_get_manager (GcalWindow *window)
 {
   GcalApplication *app;
   app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
@@ -239,7 +239,7 @@ _gcal_window_get_manager (GcalWindow *window)
 }
 
 static void
-_gcal_window_set_sources_view (GcalWindow *window)
+gcal_window_set_sources_view (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
   GcalManager *manager;
@@ -249,7 +249,7 @@ _gcal_window_set_sources_view (GcalWindow *window)
 
   priv = window->priv;
 
-  manager = _gcal_window_get_manager (window);
+  manager = gcal_window_get_manager (window);
   priv->sources_view = gtk_tree_view_new_with_model (
       GTK_TREE_MODEL (gcal_manager_get_sources_model (manager)));
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->sources_view),
@@ -302,12 +302,12 @@ _gcal_window_set_sources_view (GcalWindow *window)
   /* signals */
   g_signal_connect (priv->sources_view,
                     "row-activated",
-                    G_CALLBACK (_gcal_window_sources_row_activated),
+                    G_CALLBACK (gcal_window_sources_row_activated),
                     window);
 }
 
 static void
-_gcal_window_view_changed (GcalMainToolbar  *main_toolbar,
+gcal_window_view_changed (GcalToolbar      *main_toolbar,
                            GcalViewTypeEnum  view_type,
                            gpointer          user_data)
 {
@@ -332,9 +332,9 @@ _gcal_window_view_changed (GcalMainToolbar  *main_toolbar,
 }
 
 static void
-_gcal_window_sources_shown (GcalMainToolbar *main_toolbar,
-                            gboolean         visible,
-                            gpointer         user_data)
+gcal_window_sources_shown (GcalToolbar *main_toolbar,
+                            gboolean     visible,
+                            gpointer     user_data)
 {
   GcalWindowPrivate *priv;
   priv  = ((GcalWindow*) user_data)->priv;
@@ -358,8 +358,8 @@ _gcal_window_sources_shown (GcalMainToolbar *main_toolbar,
 }
 
 static void
-_gcal_window_add_event (GcalMainToolbar *main_toolbar,
-                        gpointer         user_data)
+gcal_window_add_event (GcalToolbar *main_toolbar,
+                        gpointer     user_data)
 {
   GcalWindowPrivate *priv;
 
@@ -367,7 +367,7 @@ _gcal_window_add_event (GcalMainToolbar *main_toolbar,
   if (priv->add_view == NULL)
     {
       priv->add_view = gcal_event_view_new_with_manager (
-          _gcal_window_get_manager (GCAL_WINDOW (user_data)));
+          gcal_window_get_manager (GCAL_WINDOW (user_data)));
       gtk_widget_set_hexpand (priv->add_view, TRUE);
       gtk_widget_set_vexpand (priv->add_view, TRUE);
       gtk_widget_set_margin_top (priv->add_view, 10);
@@ -390,7 +390,7 @@ _gcal_window_add_event (GcalMainToolbar *main_toolbar,
 }
 
 static void
-_gcal_window_sources_row_activated (GtkTreeView       *tree_view,
+gcal_window_sources_row_activated (GtkTreeView       *tree_view,
                                     GtkTreePath       *path,
                                     GtkTreeViewColumn *column,
                                     gpointer           user_data)
@@ -420,7 +420,7 @@ _gcal_window_sources_row_activated (GtkTreeView       *tree_view,
 }
 
 static void
-_gcal_window_events_added (GcalManager *manager,
+gcal_window_events_added (GcalManager *manager,
                            gpointer     events_list,
                            gpointer     user_data)
 {
@@ -494,13 +494,13 @@ gcal_window_new (GcalApplication *app)
                         "application",
                         GTK_APPLICATION (app),
                         NULL);
-  _gcal_window_set_sources_view (win);
+  gcal_window_set_sources_view (win);
 
   /* hooking signals */
-  manager = _gcal_window_get_manager (win);
+  manager = gcal_window_get_manager (win);
   g_signal_connect (manager,
                     "events-added",
-                    G_CALLBACK (_gcal_window_events_added),
+                    G_CALLBACK (gcal_window_events_added),
                     win);
 
   /* FIXME: demo code */

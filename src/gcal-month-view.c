@@ -66,7 +66,7 @@ const char* weekdays [] =
    "Sat"
   };
 
-static void     _gcal_view_interface_init               (GcalViewIface  *iface);
+static void     gcal_view_interface_init                (GcalViewIface  *iface);
 
 static void     gcal_month_view_constructed             (GObject        *object);
 
@@ -113,12 +113,12 @@ static void     gcal_month_view_forall                  (GtkContainer   *contain
                                                          GtkCallback     callback,
                                                          gpointer        callback_data);
 
-static void     _gcal_month_view_draw_month_grid        (GcalMonthView  *mont_view,
+static void     gcal_month_view_draw_month_grid         (GcalMonthView  *mont_view,
                                                          cairo_t        *cr,
                                                          gint            x,
                                                          gint            y);
 
-static gboolean _gcal_month_view_is_in_range            (GcalView       *view,
+static gboolean gcal_month_view_is_in_range            (GcalView       *view,
                                                          icaltimetype   *date);
 
 
@@ -126,7 +126,7 @@ G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
                          gcal_month_view,
                          GTK_TYPE_CONTAINER,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
-                                                _gcal_view_interface_init));
+                                                gcal_view_interface_init));
 
 
 static void gcal_month_view_class_init (GcalMonthViewClass *klass)
@@ -189,9 +189,9 @@ static void gcal_month_view_init (GcalMonthView *self)
 }
 
 static void
-_gcal_view_interface_init (GcalViewIface *iface)
+gcal_view_interface_init (GcalViewIface *iface)
 {
-  iface->is_in_range = _gcal_month_view_is_in_range;
+  iface->is_in_range = gcal_month_view_is_in_range;
 }
 
 static void
@@ -454,7 +454,7 @@ gcal_month_view_draw (GtkWidget *widget,
   /* getting allocation, and so on */
   gtk_widget_get_allocation (widget, &alloc);
 
-  _gcal_month_view_draw_month_grid (
+  gcal_month_view_draw_month_grid (
       GCAL_MONTH_VIEW (widget),
       cr,
       alloc.x + padding.left,
@@ -621,10 +621,10 @@ gcal_month_view_forall (GtkContainer *container,
 }
 
 static void
-_gcal_month_view_draw_month_grid (GcalMonthView *month_view,
-                                  cairo_t       *cr,
-                                  gint           x,
-                                  gint           y)
+gcal_month_view_draw_month_grid (GcalMonthView *month_view,
+                                 cairo_t       *cr,
+                                 gint           x,
+                                 gint           y)
 {
   GcalMonthViewPrivate *priv;
   GtkWidget *widget;
@@ -720,8 +720,8 @@ _gcal_month_view_draw_month_grid (GcalMonthView *month_view,
 }
 
 static gboolean
-_gcal_month_view_is_in_range (GcalView     *view,
-                              icaltimetype *date)
+gcal_month_view_is_in_range (GcalView     *view,
+                             icaltimetype *date)
 {
   g_debug ("Implementation of is_in_range called");
   return TRUE;
