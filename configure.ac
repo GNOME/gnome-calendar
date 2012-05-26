@@ -1,8 +1,8 @@
 dnl -*- mode: m4 -*-
-AC_PREREQ(2.63)
+AC_PREREQ([2.69])
 AC_INIT([gnome-calendar],[0.0.2],[],[gnome-calendar])
 
-AM_CONFIG_HEADER(config/config.h)
+AC_CONFIG_HEADERS([config/config.h])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_AUX_DIR([config])
@@ -31,24 +31,20 @@ AC_CACHE_SAVE
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_CXX
-AC_ISC_POSIX
+AC_SEARCH_LIBS([strerror],[cposix])
 AC_HEADER_STDC
 
 # no stupid static libraries
-AM_DISABLE_STATIC
+AC_DISABLE_STATIC([])
 # enable libtool
-AC_PROG_LIBTOOL
-# avoid libtool for LTCOMPILE, use it only to link
+LT_INIT
 
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
 
-LT_INIT
-
 GLIB_GSETTINGS
 
 GNOME_COMPILE_WARNINGS(maximum)
-GNOME_COMMON_INIT
 GNOME_MAINTAINER_MODE_DEFINES
 
 MAINTAINER_COMPILER_FLAGS="$MAINTAINER_COMPILER_FLAGS                        \
