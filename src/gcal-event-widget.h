@@ -40,7 +40,7 @@ typedef struct _GcalEventWidgetPrivate            GcalEventWidgetPrivate;
 
 struct _GcalEventWidget
 {
-  GtkApplicationWindow parent;
+  GtkWidget parent;
 
   GcalEventWidgetPrivate *priv;
 };
