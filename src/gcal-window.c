@@ -24,6 +24,7 @@
 #include "gcal-month-view.h"
 #include "gcal-view.h"
 #include "gcal-event-widget.h"
+#include "gcal-event-view.h"
 #include "gcal-utils.h"
 
 #include <clutter/clutter.h>
@@ -311,11 +312,23 @@ _gcal_window_view_changed (GcalMainToolbar  *main_toolbar,
                            gpointer          user_data)
 {
   GcalWindowPrivate *priv;
+  gint activated_page;
 
   priv = GCAL_WINDOW (user_data)->priv;
   priv->active_view = view_type;
 
-  g_debug ("GcalViewTypeEnum in GcalWindow %d", priv->active_view);
+  if ((activated_page = gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook),
+                                               priv->views[view_type]))
+      != -1)
+    {
+      gtk_notebook_set_current_page (GTK_NOTEBOOK (priv->notebook),
+                                     activated_page);
+    }
+  else
+    {
+      //TODO create view
+      g_debug ("GcalViewTypeEnum in GcalWindow %d", priv->active_view);
+    }
 }
 
 static void
@@ -348,7 +361,32 @@ static void
 _gcal_window_add_event (GcalMainToolbar *main_toolbar,
                         gpointer         user_data)
 {
-  g_debug ("Catched signal add-event");
+  GcalWindowPrivate *priv;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+  if (priv->add_view == NULL)
+    {
+      priv->add_view = gcal_event_view_new_with_manager (
+          _gcal_window_get_manager (GCAL_WINDOW (user_data)));
+      gtk_widget_set_hexpand (priv->add_view, TRUE);
+      gtk_widget_set_vexpand (priv->add_view, TRUE);
+      gtk_widget_set_margin_top (priv->add_view, 10);
+      gtk_widget_set_margin_left (priv->add_view, 20);
+      gtk_widget_set_margin_right (priv->add_view, 20);
+
+      gtk_widget_show (priv->add_view);
+      gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook),
+                                priv->add_view,
+                                NULL);
+      gtk_notebook_set_current_page (GTK_NOTEBOOK (priv->notebook), -1);
+    }
+  else
+    {
+      //TODO: Reload/clean/reinitialize status
+      gtk_notebook_set_current_page (
+          GTK_NOTEBOOK (priv->notebook),
+          gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook), priv->add_view));
+    }
 }
 
 static void

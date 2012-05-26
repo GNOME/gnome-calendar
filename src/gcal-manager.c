@@ -30,7 +30,7 @@
 
 enum
 {
-  COLUMN_UID,         //corresponding source uid
+  COLUMN_UID = 0,         //corresponding source uid
   COLUMN_NAME,
   COLUMN_ACTIVE,
   COLUMN_COLOR,

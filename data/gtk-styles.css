@@ -38,6 +38,18 @@
   background-color: #555753;
 }
 
+.event-view .frame {
+  border-style: solid;
+  border-color: @borders;
+  border-width: 0.5px;
+  border-radius: 3px;
+}
+
+/* TODO: not working */
+.event-view .view {
+  box-shadow: 40 40 black;
+}
+
 .event {
   padding-top: 2px;
   padding-bottom: 2px;
