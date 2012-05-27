@@ -24,11 +24,16 @@
 
 struct _GcalToolbarPrivate
 {
-  GtkWidget *widget;
+  GtkWidget   *widget;
 
-  GtkWidget *left_item;
-  GtkWidget *central_item;
-  GtkWidget *right_item;
+  GtkToolItem *left_item;
+  GtkToolItem *central_item;
+  GtkToolItem *right_item;
+
+  /* overview widgets */
+  GtkWidget   *sources_button;
+  GtkWidget   *views_box;
+  GtkWidget   *add_button;
 };
 
 enum
@@ -116,11 +121,8 @@ gcal_toolbar_constructed (GObject *object)
 {
   GcalToolbarPrivate *priv;
 
-  GtkWidget *button;
   GtkStyleContext *context;
-  GtkToolItem *item;
   GtkToolItem *spacer;
-  GtkWidget *views_box;
   GtkWidget *bin;
 
   priv = GCAL_TOOLBAR (object)->priv;
@@ -136,156 +138,35 @@ gcal_toolbar_constructed (GObject *object)
   context = gtk_widget_get_style_context (priv->widget);
   gtk_style_context_add_class (context, "gcal-main-toolbar");
 
-  /* sources */
-  button = gtk_toggle_button_new ();
-  gtk_container_add (
-      GTK_CONTAINER (button),
-      gtk_image_new_from_icon_name ("emblem-documents-symbolic",
-                                    GTK_ICON_SIZE_MENU));
-
-  context = gtk_widget_get_style_context (button);
-  gtk_style_context_add_class (context, "raised");
-
-  g_signal_connect (button,
-                    "clicked",
-                    G_CALLBACK (gcal_toolbar_sources_shown),
-                    GCAL_TOOLBAR (object));
-
-  item = gtk_tool_item_new ();
-  gtk_container_add (GTK_CONTAINER (item), button);
-  gtk_toolbar_insert (GTK_TOOLBAR (priv->widget), item, 0);
-
-  /* spacer */
-  spacer = gtk_tool_item_new ();
-  gtk_tool_item_set_expand (spacer, TRUE);
-  gtk_toolbar_insert (GTK_TOOLBAR (priv->widget), spacer, -1);
-
-  /* views_box */
-  views_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-  gtk_widget_set_hexpand (views_box, TRUE);
-
-  context = gtk_widget_get_style_context (views_box);
-  gtk_style_context_add_class (context, "linked");
-
-  item = gtk_tool_item_new ();
-  gtk_container_add (GTK_CONTAINER (item), views_box);
-  gtk_toolbar_insert (GTK_TOOLBAR (priv->widget), item, -1);
-
-  /* day */
-  button = gtk_button_new_with_label (_("Day"));
-  gtk_widget_set_size_request (button, 80, -1);
-
-  context = gtk_widget_get_style_context (button);
-  gtk_style_context_add_class (context, "raised");
-
-  gtk_container_add (GTK_CONTAINER (views_box), button);
-
-  g_object_set_data (G_OBJECT (button),
-                    "view-type",
-                    GUINT_TO_POINTER (GCAL_VIEW_TYPE_DAILY));
-  g_signal_connect (button,
-                    "clicked",
-                    G_CALLBACK (gcal_toolbar_view_changed),
-                    GCAL_TOOLBAR (object));
-
-  /* week */
-  button = gtk_button_new_with_label (_("Week"));
-  gtk_widget_set_size_request (button, 80, -1);
-
-  context = gtk_widget_get_style_context (button);
-  gtk_style_context_add_class (context, "raised");
-
-  gtk_container_add (GTK_CONTAINER (views_box), button);
-
-  g_object_set_data (G_OBJECT (button),
-                    "view-type",
-                    GUINT_TO_POINTER (GCAL_VIEW_TYPE_WEEKLY));
-  g_signal_connect (button,
-                    "clicked",
-                    G_CALLBACK (gcal_toolbar_view_changed),
-                    GCAL_TOOLBAR (object));
-
-  /* month */
-  button = gtk_button_new_with_label (_("Month"));
-  gtk_widget_set_size_request (button, 80, -1);
-
-  context = gtk_widget_get_style_context (button);
-  gtk_style_context_add_class (context, "raised");
-
-  gtk_container_add (GTK_CONTAINER (views_box), button);
-
-  g_object_set_data (G_OBJECT (button),
-                    "view-type",
-                    GUINT_TO_POINTER (GCAL_VIEW_TYPE_MONTHLY));
-  g_signal_connect (button,
-                    "clicked",
-                    G_CALLBACK (gcal_toolbar_view_changed),
-                    GCAL_TOOLBAR (object));
-
-  /* year */
-  button = gtk_button_new_with_label (_("Year"));
-  gtk_widget_set_size_request (button, 80, -1);
-
-  context = gtk_widget_get_style_context (button);
-  gtk_style_context_add_class (context, "raised");
-
-  gtk_container_add (GTK_CONTAINER (views_box), button);
-
-  g_object_set_data (G_OBJECT (button),
-                    "view-type",
-                    GUINT_TO_POINTER (GCAL_VIEW_TYPE_YEARLY));
-  g_signal_connect (button,
-                    "clicked",
-                    G_CALLBACK (gcal_toolbar_view_changed),
-                    GCAL_TOOLBAR (object));
-
-  /* list */
-  button = gtk_button_new_with_label (_("List"));
-  gtk_widget_set_size_request (button, 80, -1);
-
-  context = gtk_widget_get_style_context (button);
-  gtk_style_context_add_class (context, "raised");
-
-  gtk_container_add (GTK_CONTAINER (views_box), button);
-
-  g_object_set_data (G_OBJECT (button),
-                    "view-type",
-                    GUINT_TO_POINTER (GCAL_VIEW_TYPE_LIST));
-  g_signal_connect (button,
-                    "clicked",
-                    G_CALLBACK (gcal_toolbar_view_changed),
-                    GCAL_TOOLBAR (object));
-
-  /* spacer */
-  spacer = gtk_tool_item_new ();
-  gtk_tool_item_set_expand (spacer, TRUE);
-  gtk_toolbar_insert (GTK_TOOLBAR (priv->widget), spacer, -1);
-
-  /* add */
-  button = gtk_button_new ();
-  gtk_container_add (
-      GTK_CONTAINER (button),
-      gtk_image_new_from_icon_name ("list-add-symbolic",
-                                    GTK_ICON_SIZE_MENU));
-
-  context = gtk_widget_get_style_context (button);
-  gtk_style_context_add_class (context, "raised");
-
-  g_signal_connect (button,
-                    "clicked",
-                    G_CALLBACK (gcal_toolbar_add_event),
-                    GCAL_TOOLBAR (object));
-
-  item = gtk_tool_item_new ();
-  gtk_container_add (GTK_CONTAINER (item), button);
-  gtk_toolbar_insert (GTK_TOOLBAR (priv->widget), item, -1);
-
   /* adding toolbar */
   bin = gtk_clutter_actor_get_widget (GTK_CLUTTER_ACTOR (object));
   gtk_container_add (GTK_CONTAINER (bin), priv->widget);
 
-  gtk_widget_show_all (bin);
+  /* adding sections */
+  /* left */
+  priv->left_item = gtk_tool_item_new ();
+  gtk_toolbar_insert (GTK_TOOLBAR (priv->widget), priv->left_item, 0);
 
+  /* spacer */
+  spacer = gtk_tool_item_new ();
+  gtk_tool_item_set_expand (spacer, TRUE);
+  gtk_toolbar_insert (GTK_TOOLBAR (priv->widget), spacer, -1);
+
+  /* central */
+  priv->central_item = gtk_tool_item_new ();
+  gtk_toolbar_insert (GTK_TOOLBAR (priv->widget), priv->central_item, -1);
+
+  /* spacer */
+  spacer = gtk_tool_item_new ();
+  gtk_tool_item_set_expand (spacer, TRUE);
+  gtk_toolbar_insert (GTK_TOOLBAR (priv->widget), spacer, -1);
+
+  /* right */
+  priv->right_item = gtk_tool_item_new ();
+  gtk_toolbar_insert (GTK_TOOLBAR (priv->widget), priv->right_item, -1);
+
+  gcal_toolbar_set_overview_mode (GCAL_TOOLBAR (object));
+  gtk_widget_show_all (bin);
 }
 
 static void
@@ -297,7 +178,150 @@ gcal_toolbar_finalize (GObject *object)
 static void
 gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
 {
-  ;
+  GcalToolbarPrivate *priv;
+  GtkStyleContext *context;
+  GtkWidget *button;
+
+  g_return_if_fail (GCAL_IS_TOOLBAR (toolbar));
+  priv = toolbar->priv;
+
+  /* sources */
+  if (priv->sources_button == NULL)
+    {
+      priv->sources_button = gtk_toggle_button_new ();
+      gtk_container_add (
+          GTK_CONTAINER (priv->sources_button),
+          gtk_image_new_from_icon_name ("emblem-documents-symbolic",
+                                        GTK_ICON_SIZE_MENU));
+
+      context = gtk_widget_get_style_context (priv->sources_button);
+      gtk_style_context_add_class (context, "raised");
+
+      g_signal_connect (priv->sources_button,
+                        "clicked",
+                        G_CALLBACK (gcal_toolbar_sources_shown),
+                        toolbar);
+
+    }
+  gtk_container_add (GTK_CONTAINER (priv->left_item), priv->sources_button);
+  gtk_widget_show_all (priv->sources_button);
+
+  /* views_box */
+  if (priv->views_box == NULL)
+    {
+      priv->views_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+      gtk_widget_set_hexpand (priv->views_box, TRUE);
+
+      context = gtk_widget_get_style_context (priv->views_box);
+      gtk_style_context_add_class (context, "linked");
+
+      /* day */
+      button = gtk_button_new_with_label (_("Day"));
+      gtk_widget_set_size_request (button, 80, -1);
+
+      context = gtk_widget_get_style_context (button);
+      gtk_style_context_add_class (context, "raised");
+
+      gtk_container_add (GTK_CONTAINER (priv->views_box), button);
+
+      g_object_set_data (G_OBJECT (button),
+                        "view-type",
+                        GUINT_TO_POINTER (GCAL_VIEW_TYPE_DAILY));
+      g_signal_connect (button,
+                        "clicked",
+                        G_CALLBACK (gcal_toolbar_view_changed),
+                        toolbar);
+
+      /* week */
+      button = gtk_button_new_with_label (_("Week"));
+      gtk_widget_set_size_request (button, 80, -1);
+
+      context = gtk_widget_get_style_context (button);
+      gtk_style_context_add_class (context, "raised");
+
+      gtk_container_add (GTK_CONTAINER (priv->views_box), button);
+
+      g_object_set_data (G_OBJECT (button),
+                        "view-type",
+                        GUINT_TO_POINTER (GCAL_VIEW_TYPE_WEEKLY));
+      g_signal_connect (button,
+                        "clicked",
+                        G_CALLBACK (gcal_toolbar_view_changed),
+                        toolbar);
+
+      /* month */
+      button = gtk_button_new_with_label (_("Month"));
+      gtk_widget_set_size_request (button, 80, -1);
+
+      context = gtk_widget_get_style_context (button);
+      gtk_style_context_add_class (context, "raised");
+
+      gtk_container_add (GTK_CONTAINER (priv->views_box), button);
+
+      g_object_set_data (G_OBJECT (button),
+                        "view-type",
+                        GUINT_TO_POINTER (GCAL_VIEW_TYPE_MONTHLY));
+      g_signal_connect (button,
+                        "clicked",
+                        G_CALLBACK (gcal_toolbar_view_changed),
+                        toolbar);
+
+      /* year */
+      button = gtk_button_new_with_label (_("Year"));
+      gtk_widget_set_size_request (button, 80, -1);
+
+      context = gtk_widget_get_style_context (button);
+      gtk_style_context_add_class (context, "raised");
+
+      gtk_container_add (GTK_CONTAINER (priv->views_box), button);
+
+      g_object_set_data (G_OBJECT (button),
+                        "view-type",
+                        GUINT_TO_POINTER (GCAL_VIEW_TYPE_YEARLY));
+      g_signal_connect (button,
+                        "clicked",
+                        G_CALLBACK (gcal_toolbar_view_changed),
+                        toolbar);
+
+      /* list */
+      button = gtk_button_new_with_label (_("List"));
+      gtk_widget_set_size_request (button, 80, -1);
+
+      context = gtk_widget_get_style_context (button);
+      gtk_style_context_add_class (context, "raised");
+
+      gtk_container_add (GTK_CONTAINER (priv->views_box), button);
+
+        g_object_set_data (G_OBJECT (button),
+                        "view-type",
+                        GUINT_TO_POINTER (GCAL_VIEW_TYPE_LIST));
+      g_signal_connect (button,
+                        "clicked",
+                        G_CALLBACK (gcal_toolbar_view_changed),
+                        toolbar);
+    }
+  gtk_container_add (GTK_CONTAINER (priv->central_item), priv->views_box);
+  gtk_widget_show_all (priv->views_box);
+
+  /* add */
+  if (priv->add_button == NULL)
+    {
+      priv->add_button = gtk_button_new ();
+      gtk_container_add (
+          GTK_CONTAINER (priv->add_button),
+          gtk_image_new_from_icon_name ("list-add-symbolic",
+                                        GTK_ICON_SIZE_MENU));
+
+      context = gtk_widget_get_style_context (priv->add_button);
+      gtk_style_context_add_class (context, "raised");
+
+      g_signal_connect (priv->add_button,
+                        "clicked",
+                        G_CALLBACK (gcal_toolbar_add_event),
+                        toolbar);
+    }
+  gtk_container_add (GTK_CONTAINER (priv->right_item), priv->add_button);
+  gtk_widget_show_all (priv->add_button);
 }
 
 static void
