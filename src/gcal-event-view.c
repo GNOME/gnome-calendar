@@ -18,6 +18,7 @@
  */
 
 #include "gcal-event-view.h"
+#include "gcal-editable-entry.h"
 
 #include <glib/gi18n.h>
 
@@ -93,8 +94,10 @@ gcal_event_view_constructed (GObject *object)
   if (G_OBJECT_CLASS (gcal_event_view_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_event_view_parent_class)->constructed (object);
 
-  priv->e_what = gtk_entry_new ();
-  priv->e_host = gtk_entry_new ();
+  priv->e_what = gcal_editable_entry_new ();
+  gcal_editable_enter_edit_mode (GCAL_EDITABLE (priv->e_what));
+  priv->e_host = gcal_editable_entry_new ();
+  gcal_editable_enter_edit_mode (GCAL_EDITABLE (priv->e_host));
 
   priv->e_since = gtk_entry_new ();
   priv->e_until = gtk_entry_new ();

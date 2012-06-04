@@ -118,7 +118,7 @@ static void     gcal_month_view_draw_month_grid         (GcalMonthView  *mont_vi
                                                          gint            x,
                                                          gint            y);
 
-static gboolean gcal_month_view_is_in_range            (GcalView       *view,
+static gboolean gcal_month_view_is_in_range             (GcalView       *view,
                                                          icaltimetype   *date);
 
 
@@ -746,7 +746,7 @@ gcal_month_view_new (icaltimetype *date)
  *
  * Since: 0.1
  * Return value: the first day of the month
- * Returns: (transfer full):
+ * Returns: (transfer full): Release with g_free
  **/
 icaltimetype*
 gcal_month_view_get_initial_date (GcalMonthView *view)
@@ -766,7 +766,7 @@ gcal_month_view_get_initial_date (GcalMonthView *view)
  *
  * Since: 0.1
  * Return value: the last day of the month
- * Returns: (transfer full):
+ * Returns: (transfer full): Release with g_free
  **/
 icaltimetype*
 gcal_month_view_get_final_date (GcalMonthView *view)

@@ -33,6 +33,10 @@ gnome_calendar_SOURCES =                                \
 	gcal-event-widget.h                                   \
 	gcal-event-view.c                                     \
 	gcal-event-view.h                                     \
+	gcal-editable.c                                       \
+	gcal-editable.h                                       \
+	gcal-editable-entry.c                                 \
+	gcal-editable-entry.h                                 \
 	gcal-manager.c                                        \
 	gcal-manager.h                                        \
 	gcal-utils.c                                          \

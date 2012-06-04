@@ -55,6 +55,7 @@ GType          gcal_month_view_get_type         (void);
 GtkWidget*     gcal_month_view_new              (icaltimetype  *date);
 
 icaltimetype*  gcal_month_view_get_initial_date (GcalMonthView *view);
+
 icaltimetype*  gcal_month_view_get_final_date   (GcalMonthView *view);
 
 G_END_DECLS

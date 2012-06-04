@@ -23,6 +23,8 @@
 #include <gtk/gtk.h>
 #include <libical/icaltime.h>
 
+#define ICAL_TIME_TYPE (icaltime_get_type ())
+
 typedef enum
 {
   GCAL_VIEW_TYPE_DAILY = 0,
@@ -35,12 +37,19 @@ typedef enum
 typedef enum
 {
   GCAL_TOOLBAR_OVERVIEW = 0,
-  GCAL_TOOLBAR_EVENT
+  GCAL_TOOLBAR_VIEW_EVENT
 } GcalToolbarMode;
 
-#define ICAL_TIME_TYPE (icaltime_get_type ())
+typedef enum
+{
+  GCAL_EDIT_MODE = 0,
+  GCAL_VIEW_MODE,
+} GcalEditableMode;
 
-GType           icaltime_get_type                               (void) G_GNUC_CONST;
+typedef
+const gchar*  (*GcalTranslateFunc)                             (GtkWidget      *source_widget);
+
+GType           icaltime_get_type                               (void)           G_GNUC_CONST;
 
 void            gcal_gtk_tree_view_set_activate_on_single_click (GtkTreeView    *tree_view,
                                                                  gboolean       should_activate);

@@ -383,7 +383,7 @@ gcal_toolbar_set_mode (GcalToolbar     *toolbar,
       case GCAL_TOOLBAR_OVERVIEW:
         gcal_toolbar_set_overview_mode (toolbar);
         return;
-      case GCAL_TOOLBAR_EVENT:
+      case GCAL_TOOLBAR_VIEW_EVENT:
         gcal_toolbar_set_event_mode (toolbar);
     }
 }
