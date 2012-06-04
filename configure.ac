@@ -1,5 +1,5 @@
 dnl -*- mode: m4 -*-
-AC_PREREQ([2.69])
+AC_PREREQ([2.68])
 AC_INIT([gnome-calendar],[0.0.2],[],[gnome-calendar])
 
 AC_CONFIG_HEADERS([config/config.h])

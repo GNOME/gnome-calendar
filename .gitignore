@@ -70,3 +70,4 @@ gnome_calendar.anjuta
 /missing
 /mkinstalldirs
 Debug*
+.gdb_history
