@@ -47,16 +47,33 @@ typedef enum
 } GcalEditableMode;
 
 typedef
-const gchar*  (*GcalTranslateFunc)                             (GtkWidget      *source_widget);
+const gchar*  (*GcalTranslateFunc)                              (GtkWidget       *source_widget);
 
-GType           icaltime_get_type                               (void)           G_GNUC_CONST;
+GType           icaltime_get_type                               (void)            G_GNUC_CONST;
 
-void            gcal_gtk_tree_view_set_activate_on_single_click (GtkTreeView    *tree_view,
-                                                                 gboolean       should_activate);
+void            gcal_gtk_tree_view_set_activate_on_single_click (GtkTreeView     *tree_view,
+                                                                 gboolean         should_activate);
 
 
-const gchar*    gcal_get_group_name                             (const gchar    *base_uri);
+const gchar*    gcal_get_group_name                             (const gchar     *base_uri);
 
-icaltimetype*   gcal_dup_icaltime                               (icaltimetype   *date);
+icaltimetype*   gcal_dup_icaltime                               (icaltimetype    *date);
+
+gchar*          gcal_get_source_name                            (GtkTreeModel    *model,
+                                                                 const gchar     *uid);
+
+gchar*          gcal_get_source_uid                             (GtkTreeModel    *model,
+                                                                 const gchar     *name);
+
+/* code brought from evolution */
+gsize           e_strftime_fix_am_pm                            (gchar           *str,
+                                                                 gsize            max,
+                                                                 const gchar     *fmt,
+                                                                 const struct tm *tm);
+gsize           e_utf8_strftime_fix_am_pm                       (gchar           *str,
+
+                                                                 gsize            max,
+                                                                 const gchar     *fmt,
+                                                                 const struct tm *tm);
 
 #endif // __GCAL_UTILS_H__

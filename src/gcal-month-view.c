@@ -327,10 +327,10 @@ gcal_month_view_map (GtkWidget *widget)
   GcalMonthViewPrivate *priv;
 
   priv = GCAL_MONTH_VIEW (widget)->priv;
-  GTK_WIDGET_CLASS (gcal_month_view_parent_class)->map (widget);
-
   if (priv->event_window)
     gdk_window_show (priv->event_window);
+
+  GTK_WIDGET_CLASS (gcal_month_view_parent_class)->map (widget);
 }
 
 static void

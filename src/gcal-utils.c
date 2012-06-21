@@ -22,6 +22,7 @@
 
 #include <string.h>
 
+#include <libedataserver/e-data-server-util.h>
 #include <libedataserverui/e-cell-renderer-color.h>
 
 G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
@@ -104,4 +105,182 @@ gcal_dup_icaltime (icaltimetype *date)
   new_date->zone = date->zone;
 
   return new_date;
+}
+
+/*
+ * gcal_get_source_name:
+ *
+ * This method assume it receive only the model inside GcalManager
+ * */
+gchar*
+gcal_get_source_name (GtkTreeModel *model,
+                      const gchar  *uid)
+{
+  GtkTreeIter iter;
+  gboolean valid;
+  gchar *name;
+
+  name = NULL;
+  valid = gtk_tree_model_get_iter_first (model, &iter);
+  while (valid)
+    {
+      gchar *name_data;
+      gchar *uid_data;
+
+      gtk_tree_model_get (model, &iter,
+                          0, &uid_data,
+                          1, &name_data,
+                          -1);
+
+      if (g_strcmp0 (uid_data, uid) == 0)
+        {
+          name = g_strdup (name_data);
+
+          g_free (name_data);
+          g_free (uid_data);
+          break;
+        }
+
+      g_free (name_data);
+      g_free (uid_data);
+
+      valid = gtk_tree_model_iter_next (model, &iter);
+    }
+  return name;
+}
+
+gchar*
+gcal_get_source_uid (GtkTreeModel *model,
+                     const gchar  *name)
+{
+  GtkTreeIter iter;
+  gboolean valid;
+  gchar *uid;
+
+  uid = NULL;
+  valid = gtk_tree_model_get_iter_first (model, &iter);
+  while (valid)
+    {
+      gchar *name_data;
+      gchar *uid_data;
+
+      gtk_tree_model_get (model, &iter,
+                          0, &uid_data,
+                          1, &name_data,
+                          -1);
+
+      if (g_strcmp0 (name_data, name) == 0)
+        {
+          uid = g_strdup (uid_data);
+
+          g_free (name_data);
+          g_free (uid_data);
+          break;
+        }
+
+      g_free (name_data);
+      g_free (uid_data);
+
+      valid = gtk_tree_model_iter_next (model, &iter);
+    }
+  return uid;
+}
+
+/* Function to do a last minute fixup of the AM/PM stuff if the locale
+ * and gettext haven't done it right. Most English speaking countries
+ * except the USA use the 24 hour clock (UK, Australia etc). However
+ * since they are English nobody bothers to write a language
+ * translation (gettext) file. So the locale turns off the AM/PM, but
+ * gettext does not turn on the 24 hour clock. Leaving a mess.
+ *
+ * This routine checks if AM/PM are defined in the locale, if not it
+ * forces the use of the 24 hour clock.
+ *
+ * The function itself is a front end on strftime and takes exactly
+ * the same arguments.
+ *
+ * TODO: Actually remove the '%p' from the fixed up string so that
+ * there isn't a stray space.
+ */
+
+gsize
+e_strftime_fix_am_pm (gchar *str,
+                      gsize max,
+                      const gchar *fmt,
+                      const struct tm *tm)
+{
+  gchar buf[10];
+  gchar *sp;
+  gchar *ffmt;
+  gsize ret;
+
+  if (strstr(fmt, "%p")==NULL && strstr(fmt, "%P")==NULL) {
+    /* No AM/PM involved - can use the fmt string directly */
+    ret = e_strftime (str, max, fmt, tm);
+  } else {
+    /* Get the AM/PM symbol from the locale */
+    e_strftime (buf, 10, "%p", tm);
+
+    if (buf[0]) {
+      /* AM/PM have been defined in the locale
+       * so we can use the fmt string directly. */
+      ret = e_strftime (str, max, fmt, tm);
+    } else {
+      /* No AM/PM defined by locale
+       * must change to 24 hour clock. */
+      ffmt = g_strdup (fmt);
+      for (sp=ffmt; (sp=strstr(sp, "%l")); sp++) {
+        /* Maybe this should be 'k', but I have never
+         * seen a 24 clock actually use that format. */
+        sp[1]='H';
+      }
+      for (sp=ffmt; (sp=strstr(sp, "%I")); sp++) {
+        sp[1]='H';
+      }
+      ret = e_strftime (str, max, ffmt, tm);
+      g_free (ffmt);
+    }
+  }
+
+  return (ret);
+}
+
+gsize
+e_utf8_strftime_fix_am_pm (gchar *str,
+                           gsize max,
+                           const gchar *fmt,
+                           const struct tm *tm)
+{
+  gsize sz, ret;
+  gchar *locale_fmt, *buf;
+
+  locale_fmt = g_locale_from_utf8 (fmt, -1, NULL, &sz, NULL);
+  if (!locale_fmt)
+    return 0;
+
+  ret = e_strftime_fix_am_pm (str, max, locale_fmt, tm);
+  if (!ret) {
+    g_free (locale_fmt);
+    return 0;
+  }
+
+  buf = g_locale_to_utf8 (str, ret, NULL, &sz, NULL);
+  if (!buf) {
+    g_free (locale_fmt);
+    return 0;
+  }
+
+  if (sz >= max) {
+    gchar *tmp = buf + max - 1;
+    tmp = g_utf8_find_prev_char (buf, tmp);
+    if (tmp)
+      sz = tmp - buf;
+    else
+      sz = 0;
+  }
+  memcpy (str, buf, sz);
+  str[sz] = '\0';
+  g_free (locale_fmt);
+  g_free (buf);
+  return sz;
 }

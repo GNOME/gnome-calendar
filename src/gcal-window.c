@@ -55,6 +55,8 @@ GcalManager*      gcal_window_get_manager            (GcalWindow        *window)
 
 static void       gcal_window_set_sources_view       (GcalWindow        *window);
 
+static void       gcal_window_init_event_view        (GcalWindow        *window);
+
 static void       gcal_window_view_changed           (GcalToolbar       *main_toolbar,
                                                       GcalViewTypeEnum   view_type,
                                                       gpointer           user_data);
@@ -73,6 +75,9 @@ static void       gcal_window_sources_row_activated  (GtkTreeView       *tree_vi
 
 static void       gcal_window_events_added           (GcalManager       *manager,
                                                       gpointer           events_list,
+                                                      gpointer           user_data);
+
+static void       gcal_window_event_activated        (GcalEventWidget   *event_widget,
                                                       gpointer           user_data);
 
 G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -307,6 +312,28 @@ gcal_window_set_sources_view (GcalWindow *window)
 }
 
 static void
+gcal_window_init_event_view (GcalWindow *window)
+{
+  GcalWindowPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_WINDOW (window));
+  priv = window->priv;
+
+  priv->add_view = gcal_event_view_new_with_manager (
+      gcal_window_get_manager (window));
+  gtk_widget_set_hexpand (priv->add_view, TRUE);
+  gtk_widget_set_vexpand (priv->add_view, TRUE);
+  gtk_widget_set_margin_top (priv->add_view, 10);
+  gtk_widget_set_margin_left (priv->add_view, 20);
+  gtk_widget_set_margin_right (priv->add_view, 20);
+
+  gtk_widget_show (priv->add_view);
+  gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook),
+                            priv->add_view,
+                            NULL);
+}
+
+static void
 gcal_window_view_changed (GcalToolbar      *main_toolbar,
                            GcalViewTypeEnum  view_type,
                            gpointer          user_data)
@@ -365,28 +392,12 @@ gcal_window_add_event (GcalToolbar *main_toolbar,
 
   priv = GCAL_WINDOW (user_data)->priv;
   if (priv->add_view == NULL)
-    {
-      priv->add_view = gcal_event_view_new_with_manager (
-          gcal_window_get_manager (GCAL_WINDOW (user_data)));
-      gtk_widget_set_hexpand (priv->add_view, TRUE);
-      gtk_widget_set_vexpand (priv->add_view, TRUE);
-      gtk_widget_set_margin_top (priv->add_view, 10);
-      gtk_widget_set_margin_left (priv->add_view, 20);
-      gtk_widget_set_margin_right (priv->add_view, 20);
+      gcal_window_init_event_view (GCAL_WINDOW (user_data));
 
-      gtk_widget_show (priv->add_view);
-      gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook),
-                                priv->add_view,
-                                NULL);
-      gtk_notebook_set_current_page (GTK_NOTEBOOK (priv->notebook), -1);
-    }
-  else
-    {
-      //TODO: Reload/clean/reinitialize status
-      gtk_notebook_set_current_page (
-          GTK_NOTEBOOK (priv->notebook),
-          gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook), priv->add_view));
-    }
+  //TODO: Reload/clean/reinitialize status
+  gtk_notebook_set_current_page (
+      GTK_NOTEBOOK (priv->notebook),
+      gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook), priv->add_view));
 }
 
 static void
@@ -471,6 +482,12 @@ gcal_window_events_added (GcalManager *manager,
               event);
           gtk_style_context_add_class (gtk_widget_get_style_context (event),
                                        "event");
+
+          g_signal_connect (event,
+                            "activated",
+                            G_CALLBACK (gcal_window_event_activated),
+                            user_data);
+
           g_free (summary);
           gdk_rgba_free (color);
         }
@@ -483,6 +500,29 @@ gcal_window_events_added (GcalManager *manager,
       g_strfreev (tokens);
     }
 }
+
+static void
+gcal_window_event_activated (GcalEventWidget *event_widget,
+                             gpointer         user_data)
+{
+  GcalWindowPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_WINDOW (user_data));
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  g_debug ("event_activated: %s", gcal_event_widget_peek_uuid (event_widget));
+  if (priv->add_view == NULL)
+    gcal_window_init_event_view (GCAL_WINDOW (user_data));
+
+  gtk_notebook_set_current_page (
+    GTK_NOTEBOOK (priv->notebook),
+    gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook), priv->add_view));
+
+  gcal_event_view_load_event (GCAL_EVENT_VIEW (priv->add_view),
+                              gcal_event_widget_peek_uuid (event_widget));
+}
+
+/* Public API */
 
 GtkWidget*
 gcal_window_new (GcalApplication *app)

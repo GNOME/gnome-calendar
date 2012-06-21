@@ -43,6 +43,14 @@ enum
   PROP_DTSTART
 };
 
+enum
+{
+  ACTIVATED,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
+
 static void     gcal_event_widget_constructed          (GObject        *object);
 
 static void     gcal_event_widget_set_property         (GObject        *object,
@@ -77,6 +85,9 @@ static void     gcal_event_widget_size_allocate        (GtkWidget      *widget,
 static gboolean gcal_event_widget_draw                 (GtkWidget      *widget,
                                                         cairo_t        *cr);
 
+static gboolean gcal_event_widget_button_press_event   (GtkWidget      *widget,
+                                                        GdkEventButton *event);
+
 G_DEFINE_TYPE(GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET)
 
 static void
@@ -99,6 +110,7 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
   widget_class->unmap = gcal_event_widget_unmap;
   widget_class->size_allocate = gcal_event_widget_size_allocate;
   widget_class->draw = gcal_event_widget_draw;
+  widget_class->button_press_event = gcal_event_widget_button_press_event;
 
   g_object_class_install_property (object_class,
                                    PROP_UUID,
@@ -135,6 +147,16 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
                                                        ICAL_TIME_TYPE,
                                                        G_PARAM_CONSTRUCT |
                                                        G_PARAM_READWRITE));
+
+  signals[ACTIVATED] = g_signal_new ("activated",
+                                     GCAL_TYPE_EVENT_WIDGET,
+                                     G_SIGNAL_RUN_LAST,
+                                     G_STRUCT_OFFSET (GcalEventWidgetClass,
+                                                      activated),
+                                     NULL, NULL,
+                                     g_cclosure_marshal_VOID__VOID,
+                                     G_TYPE_NONE,
+                                     0);
 
   g_type_class_add_private((gpointer)klass, sizeof(GcalEventWidgetPrivate));
 }
@@ -343,10 +365,10 @@ gcal_event_widget_map (GtkWidget *widget)
   GcalEventWidgetPrivate *priv;
 
   priv = GCAL_EVENT_WIDGET (widget)->priv;
-  GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->map (widget);
-
-  if (priv->event_window)
+  if (priv->event_window != NULL)
     gdk_window_show (priv->event_window);
+
+  GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->map (widget);
 }
 
 static void
@@ -355,7 +377,7 @@ gcal_event_widget_unmap (GtkWidget *widget)
   GcalEventWidgetPrivate *priv;
 
   priv = GCAL_EVENT_WIDGET (widget)->priv;
-  if (priv->event_window)
+  if (priv->event_window != NULL)
     gdk_window_hide (priv->event_window);
 
   GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->unmap (widget);
@@ -459,6 +481,19 @@ gcal_event_widget_draw (GtkWidget *widget,
     GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->draw (widget, cr);
 
   return FALSE;
+}
+
+static gboolean
+gcal_event_widget_button_press_event (GtkWidget      *widget,
+                                      GdkEventButton *event)
+{
+  g_debug ("button pressed over event: %s",
+           GCAL_EVENT_WIDGET (widget)->priv->uuid);
+
+  if (event->type == GDK_2BUTTON_PRESS)
+    g_signal_emit (widget, signals[ACTIVATED], 0);
+
+  return TRUE;
 }
 
 GtkWidget*

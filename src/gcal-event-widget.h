@@ -38,18 +38,20 @@ typedef struct _GcalEventWidget                   GcalEventWidget;
 typedef struct _GcalEventWidgetClass              GcalEventWidgetClass;
 typedef struct _GcalEventWidgetPrivate            GcalEventWidgetPrivate;
 
+struct _GcalEventWidgetClass
+{
+  GtkWidgetClass parent_class;
+
+  /* signals */
+  void (*activated)  (GcalEventWidget *event_widget);
+};
+
 struct _GcalEventWidget
 {
   GtkWidget parent;
 
   GcalEventWidgetPrivate *priv;
 };
-
-struct _GcalEventWidgetClass
-{
-  GtkWidgetClass parent_class;
-};
-
 
 GType         gcal_event_widget_get_type                   (void);
 
