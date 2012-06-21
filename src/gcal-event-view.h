@@ -51,7 +51,16 @@ struct _GcalEventViewClass
 
 GType         gcal_event_view_get_type                   (void);
 
-GtkWidget*    gcal_event_view_new_with_manager           (GcalManager *manager);
+GtkWidget*    gcal_event_view_new_with_manager           (GcalManager   *manager);
+
+void          gcal_event_view_load_new                   (GcalEventView *view);
+
+void          gcal_event_view_load_event                 (GcalEventView *view,
+                                                          const gchar   *event_uuid);
+
+void          gcal_event_view_enter_edit_mode            (GcalEventView *view);
+
+void          gcal_event_view_leave_edit_mode            (GcalEventView *view);
 
 G_END_DECLS
 

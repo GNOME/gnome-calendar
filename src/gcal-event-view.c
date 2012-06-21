@@ -19,36 +19,44 @@
 
 #include "gcal-event-view.h"
 #include "gcal-editable-entry.h"
+#include "gcal-editable-text.h"
+#include "gcal-editable-date.h"
+#include "gcal-editable-combo.h"
 
 #include <glib/gi18n.h>
 
 struct _GcalEventViewPrivate
 {
-  gboolean   edit_mode;
+  GcalEditableMode   edit_mode;
+  gchar             *source_uid;
+  gchar             *event_uid;
+  GSList            *e_widgets;
 
-  GtkWidget *e_what;
-  GtkWidget *e_host;
+  GtkWidget         *e_what;
+  GtkWidget         *e_host;
 
-  GtkWidget   *e_since;
-  GtkWidget   *e_until;
-  GtkWidget   *c_all_day;
+  GtkWidget         *d_when;
 
-  GtkWidget   *e_where;
+  GtkWidget         *e_where;
 
-  GtkWidget   *cb_cal;
+  GtkWidget         *cb_cal;
 
-  GtkWidget   *t_desc;
+  GtkWidget         *t_desc;
 
-  GtkWidget   *attending_yes;
-  GtkWidget   *attending_maybe;
-  GtkWidget   *attending_no;
+  GtkWidget         *attending_yes;
+  GtkWidget         *attending_maybe;
+  GtkWidget         *attending_no;
 
-  GcalManager *manager;
+  GcalManager       *manager;
 };
 
 static void     gcal_event_view_constructed          (GObject        *object);
 
+static void     gcal_event_view_finalize             (GObject        *object);
+
 static void     gcal_event_view_set_combo_box        (GcalEventView  *view);
+
+static void     gcal_event_view_update               (GcalEventView  *view);
 
 G_DEFINE_TYPE(GcalEventView, gcal_event_view, GTK_TYPE_GRID)
 
@@ -59,6 +67,7 @@ gcal_event_view_class_init(GcalEventViewClass *klass)
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_event_view_constructed;
+  object_class->finalize = gcal_event_view_finalize;
 
   g_type_class_add_private((gpointer)klass, sizeof(GcalEventViewPrivate));
 }
@@ -82,11 +91,9 @@ gcal_event_view_constructed (GObject *object)
   GtkWidget *what;
   GtkWidget *host;
   GtkWidget *when;
-  GtkWidget *to;
   GtkWidget *calendar;
   GtkWidget *where;
   GtkWidget *desc;
-  GtkWidget *desc_frame;
   GtkWidget *attending;
   GtkWidget *attending_box;
 
@@ -94,22 +101,33 @@ gcal_event_view_constructed (GObject *object)
   if (G_OBJECT_CLASS (gcal_event_view_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_event_view_parent_class)->constructed (object);
 
+  priv->edit_mode = GCAL_EDIT_MODE;
+  priv->source_uid = NULL;
+  priv->event_uid = NULL;
+  priv->e_widgets = NULL;
+
   priv->e_what = gcal_editable_entry_new ();
-  gcal_editable_enter_edit_mode (GCAL_EDITABLE (priv->e_what));
+  priv->e_widgets = g_slist_append (priv->e_widgets, priv->e_what);
   priv->e_host = gcal_editable_entry_new ();
-  gcal_editable_enter_edit_mode (GCAL_EDITABLE (priv->e_host));
+  priv->e_widgets = g_slist_append (priv->e_widgets, priv->e_host);
 
-  priv->e_since = gtk_entry_new ();
-  priv->e_until = gtk_entry_new ();
-  priv->c_all_day = gtk_check_button_new_with_label (_("All day"));
+  priv->d_when = gcal_editable_date_new ();
+  priv->e_widgets = g_slist_append (priv->e_widgets, priv->d_when);
 
-  priv->e_where = gtk_entry_new ();
+  priv->e_where = gcal_editable_entry_new ();
+  priv->e_widgets = g_slist_append (priv->e_widgets, priv->e_where);
 
-  priv->cb_cal = gtk_combo_box_new ();
+  /* FIXME: turn me into a GcalEditable Widget */
+  priv->cb_cal = gcal_editable_combo_new ();
+  priv->e_widgets = g_slist_append (priv->e_widgets, priv->cb_cal);
   gtk_widget_set_halign (priv->cb_cal, GTK_ALIGN_START);
 
-  priv->t_desc = gtk_text_view_new ();
+  priv->t_desc = gcal_editable_text_new ();
+  priv->e_widgets = g_slist_append (priv->e_widgets, priv->t_desc);
 
+  /* FIXME: do something with this to add it on the slist of widget
+   * something like, turning all the three into on widget
+   */
   priv->attending_yes = gtk_toggle_button_new_with_label (_("Yes"));
   priv->attending_maybe = gtk_toggle_button_new_with_label (_("Maybe"));
   priv->attending_no = gtk_toggle_button_new_with_label (_("No"));
@@ -133,64 +151,165 @@ gcal_event_view_constructed (GObject *object)
   gtk_grid_attach (GTK_GRID (object), priv->e_host, 5, 0, 1, 1);
 
   when = gtk_label_new (_("When"));
+  gtk_widget_set_valign (when, GTK_ALIGN_START);
   gtk_widget_set_halign (when, GTK_ALIGN_END);
   gtk_grid_attach (GTK_GRID (object), when, 0, 1, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), priv->e_since, 1, 1, 1, 1);
-  to = gtk_label_new (_("to"));
-  gtk_grid_attach (GTK_GRID (object), to, 2, 1, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), priv->e_until, 3, 1, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), priv->c_all_day, 1, 2, 1, 1);
+  gtk_grid_attach (GTK_GRID (object), priv->d_when, 1, 1, 1, 1);
 
   where = gtk_label_new (_("Where"));
   gtk_widget_set_halign (where, GTK_ALIGN_END);
-  gtk_grid_attach (GTK_GRID (object), where, 0, 3, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), priv->e_where, 1, 3, 3, 1);
+  gtk_grid_attach (GTK_GRID (object), where, 0, 2, 1, 1);
+  gtk_grid_attach (GTK_GRID (object), priv->e_where, 1, 2, 3, 1);
 
   calendar = gtk_label_new (_("Calendar"));
   gtk_widget_set_halign (calendar, GTK_ALIGN_END);
-  gtk_grid_attach (GTK_GRID (object), calendar, 0, 4, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), priv->cb_cal, 1, 4, 3, 1);
+  gtk_grid_attach (GTK_GRID (object), calendar, 0, 3, 1, 1);
+  gtk_grid_attach (GTK_GRID (object), priv->cb_cal, 1, 3, 3, 1);
 
   desc = gtk_label_new (_("Description"));
   gtk_widget_set_halign (desc, GTK_ALIGN_END);
   gtk_widget_set_valign (desc, GTK_ALIGN_START);
-  gtk_grid_attach (GTK_GRID (object), desc, 0, 5, 1, 1);
-  desc_frame = gtk_frame_new (NULL);
-  gtk_container_add (GTK_CONTAINER (desc_frame), priv->t_desc);
-  gtk_widget_set_size_request (desc_frame, -1, 200);
-  gtk_grid_attach (GTK_GRID (object), desc_frame, 1, 5, 3, 1);
+  gtk_grid_attach (GTK_GRID (object), desc, 0, 4, 1, 1);
+  gtk_widget_set_size_request (priv->t_desc, -1, 200);
+  gtk_grid_attach (GTK_GRID (object), priv->t_desc, 1, 4, 3, 1);
 
   attending = gtk_label_new (_("Attending"));
   gtk_widget_set_halign (attending, GTK_ALIGN_END);
-  gtk_grid_attach (GTK_GRID (object), attending, 0, 6, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), attending_box, 1, 6, 3, 1);
+  gtk_grid_attach (GTK_GRID (object), attending, 0, 5, 1, 1);
+  gtk_grid_attach (GTK_GRID (object), attending_box, 1, 5, 3, 1);
 
-  gtk_grid_set_row_spacing (GTK_GRID (object), 10);
-  gtk_grid_set_column_spacing (GTK_GRID (object), 6);
+  gtk_grid_set_row_spacing (GTK_GRID (object), 16);
+  gtk_grid_set_column_spacing (GTK_GRID (object), 16);
   gtk_widget_show_all (GTK_WIDGET (object));
+}
+
+static void
+gcal_event_view_finalize (GObject *object)
+{
+  GcalEventViewPrivate *priv;
+
+  priv = GCAL_EVENT_VIEW (object)->priv;
+
+  if (priv->source_uid != NULL)
+    g_free (priv->source_uid);
+  if (priv->event_uid != NULL)
+    g_free (priv->event_uid);
+
+  if (G_OBJECT_CLASS (gcal_event_view_parent_class)->finalize != NULL)
+    G_OBJECT_CLASS (gcal_event_view_parent_class)->finalize (object);
 }
 
 static void
 gcal_event_view_set_combo_box (GcalEventView *view)
 {
   GcalEventViewPrivate *priv;
-  GtkCellRenderer *renderer;
-
   priv = view->priv;
 
-  gtk_combo_box_set_model (
-      GTK_COMBO_BOX (priv->cb_cal),
+  gcal_editable_combo_set_model (
+      GCAL_EDITABLE_COMBO (priv->cb_cal),
       GTK_TREE_MODEL (gcal_manager_get_sources_model (priv->manager)));
-  renderer = gtk_cell_renderer_text_new ();
-  gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (priv->cb_cal), renderer, TRUE);
-  gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (priv->cb_cal),
-                                  renderer,
-                                  "text",
-                                  1,
-                                  NULL);
-  gtk_combo_box_set_active (GTK_COMBO_BOX (priv->cb_cal), 0);
 }
 
+/**
+ * gcal_event_view_update:
+ * @view: A GcalEventView widget
+ *
+ * Update the contents of the widget.
+ */
+static void
+gcal_event_view_update (GcalEventView *view)
+{
+  GcalEventViewPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_EVENT_VIEW (view));
+  priv = view->priv;
+
+  if (priv->event_uid == NULL)
+    {
+      /* Setting the widget to blank state */
+      g_slist_foreach (priv->e_widgets, (GFunc) gcal_editable_clear, NULL);
+    }
+  else
+    {
+      gchar  *summary;
+      gchar  *organizer_label;
+      gchar **organizer;
+      gchar *when;
+      const gchar *location;
+      gchar *description;
+
+      g_slist_foreach (priv->e_widgets, (GFunc) gcal_editable_leave_edit_mode, NULL);
+
+      summary = gcal_manager_get_event_summary (priv->manager,
+                                                priv->source_uid,
+                                                priv->event_uid);
+      gcal_editable_entry_set_content (GCAL_EDITABLE_ENTRY (priv->e_what),
+                                       summary,
+                                       FALSE);
+
+      /* FIXME: Hide when no shost, hide the panel completely */
+      organizer = gcal_manager_get_event_organizer (priv->manager,
+                                                    priv->source_uid,
+                                                    priv->event_uid);
+      if (organizer == NULL)
+        {
+          //HIDE PANEL
+          ;
+        }
+      else
+        {
+          gchar *link;
+          link = g_utf8_strdown (organizer[1], -1);
+          organizer_label = g_strdup_printf ("<a href=\"%s\">%s</a>",
+                                             link,
+                                             organizer[0]);
+          gcal_editable_entry_set_content (GCAL_EDITABLE_ENTRY (priv->e_host),
+                                           organizer_label,
+                                           TRUE);
+
+          g_free (organizer_label);
+          g_free (link);
+          g_strfreev (organizer);
+        }
+
+      when = gcal_manager_get_event_date (priv->manager,
+                                          priv->source_uid,
+                                          priv->event_uid);
+
+      gcal_editable_date_set_content (GCAL_EDITABLE_DATE (priv->d_when),
+                                      when);
+
+      location = gcal_manager_get_event_location (priv->manager,
+                                                  priv->source_uid,
+                                                  priv->event_uid);
+      gcal_editable_entry_set_content (GCAL_EDITABLE_ENTRY (priv->e_where),
+                                       location,
+                                       FALSE);
+
+      gcal_editable_combo_set_content (
+          GCAL_EDITABLE_COMBO (priv->cb_cal),
+          gcal_manager_get_source_name (priv->manager, priv->source_uid));
+
+      description = gcal_manager_get_event_description (priv->manager,
+                                                        priv->source_uid,
+                                                        priv->event_uid);
+      gcal_editable_text_set_content (GCAL_EDITABLE_TEXT (priv->t_desc),
+                                      description);
+
+      g_free (description);
+      g_free (when);
+      g_free (summary);
+    }
+}
+
+/* Public API */
+
+/**
+ * gcal_event_view_new_with_manager:
+ * @manager: A GcalManager instance, the app singleton
+ *
+ * Returns: (transfer full):
+ */
 GtkWidget*
 gcal_event_view_new_with_manager (GcalManager *manager)
 {
@@ -203,4 +322,75 @@ gcal_event_view_new_with_manager (GcalManager *manager)
   gcal_event_view_set_combo_box (GCAL_EVENT_VIEW (view));
 
   return view;
+}
+
+/**
+ * gcal_event_view_load_new:
+ * @view: A GcalEventView widget
+ *
+ * Sets the widget in a edit mode for creating a new
+ * event.
+ */
+void
+gcal_event_view_load_new (GcalEventView *view)
+{
+}
+
+/**
+ * gcal_event_view_load_event:
+ * @view: A GcalEventView widget
+ * @event_uuid: the uuid of the event as referenced in GcalManager
+ *
+ * Loads events data in the widget, for viewing
+ */
+void
+gcal_event_view_load_event (GcalEventView *view,
+                            const gchar   *event_uuid)
+{
+  GcalEventViewPrivate *priv;
+  gchar **tokens;
+
+  g_return_if_fail (GCAL_IS_EVENT_VIEW (view));
+  priv = view->priv;
+
+  if (event_uuid != NULL)
+    {
+      tokens = g_strsplit (event_uuid, ":", -1);
+
+      if (gcal_manager_exists_event (priv->manager, tokens[0], tokens[1]))
+        {
+          if (priv->source_uid != NULL)
+            g_free (priv->source_uid);
+          if (priv->event_uid != NULL)
+            g_free (priv->event_uid);
+
+          priv->source_uid = tokens[0];
+          priv->event_uid = tokens[1];
+          gcal_event_view_update (view);
+        }
+    }
+}
+
+/**
+ * gcal_event_view_enter_edit_mode:
+ * @view: A GcalEventView widget
+ *
+ * Sets the widget into edit mode. If it has an event set
+ * then edit that events, otherwise acts as load_new method.
+ */
+void
+gcal_event_view_enter_edit_mode (GcalEventView *view)
+{
+}
+
+/**
+ * gcal_event_view_leave_edit_mode:
+ * @view: A GcalEventView widget
+ *
+ * Sets the widget into view.
+ * FIXME: Maybe this is the place for update/create the event.
+ */
+void
+gcal_event_view_leave_edit_mode (GcalEventView *view)
+{
 }

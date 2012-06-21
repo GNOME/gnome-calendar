@@ -1,5 +1,6 @@
 TODO
 
+ - Review size/resize of GcalEventView widget
  - Rethink signals from GcalManager
  - Order events for starting hour in GcalMonthView, and the others
  - Review static modifiers

@@ -22,35 +22,36 @@
 
 struct _GcalEditableEntryPrivate
 {
+  GtkWidget *view_widget;
   GtkWidget *edit_widget;
-
-  gboolean   update_view;
 };
 
 static void     gcal_editable_entry_constructed             (GObject       *object);
 
-static gchar*   gcal_editable_entry_update_view_widget      (GcalEditable  *editable);
+static void     gcal_editable_entry_size_allocate           (GtkWidget     *widget,
+                                                             GtkAllocation *allocation);
 
 static void     gcal_editable_entry_enter_edit_mode         (GcalEditable  *editable);
 
-static gboolean gcal_editable_entry_key_pressed             (GtkWidget     *widget,
-                                                             GdkEventKey   *event,
-                                                             gpointer       user_data);
+static void     gcal_editable_entry_leave_edit_mode         (GcalEditable  *editable);
 
-static void     gcal_editable_entry_activated               (GtkEntry      *entry,
-                                                             gpointer       user_data);
+static void     gcal_editable_entry_clear                   (GcalEditable  *editable);
 
 G_DEFINE_TYPE (GcalEditableEntry, gcal_editable_entry, GCAL_TYPE_EDITABLE);
 
 static void gcal_editable_entry_class_init (GcalEditableEntryClass *klass)
 {
   GcalEditableClass *editable_class;
+  GtkWidgetClass *widget_class;
   GObjectClass *object_class;
 
   editable_class = GCAL_EDITABLE_CLASS (klass);
-  editable_class->update_view_widget = gcal_editable_entry_update_view_widget;
   editable_class->enter_edit_mode = gcal_editable_entry_enter_edit_mode;
-  editable_class->leave_edit_mode = NULL;
+  editable_class->leave_edit_mode = gcal_editable_entry_leave_edit_mode;
+  editable_class->clear = gcal_editable_entry_clear;
+
+  widget_class = GTK_WIDGET_CLASS (klass);
+  widget_class->size_allocate = gcal_editable_entry_size_allocate;
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_editable_entry_constructed;
@@ -68,7 +69,7 @@ static void gcal_editable_entry_init (GcalEditableEntry *self)
 }
 
 static void
-gcal_editable_entry_constructed (GObject       *object)
+gcal_editable_entry_constructed (GObject *object)
 {
   GcalEditableEntryPrivate *priv;
 
@@ -77,82 +78,83 @@ gcal_editable_entry_constructed (GObject       *object)
   if (G_OBJECT_CLASS (gcal_editable_entry_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_editable_entry_parent_class)->constructed (object);
 
+  priv->view_widget = gtk_label_new (NULL);
+  gtk_label_set_ellipsize (GTK_LABEL (priv->view_widget),
+                           PANGO_ELLIPSIZE_END);
+  gtk_widget_show (priv->view_widget);
+  gtk_widget_set_valign (priv->view_widget, GTK_ALIGN_CENTER);
+  gtk_widget_set_halign (priv->view_widget, GTK_ALIGN_START);
+  gcal_editable_set_view_widget (GCAL_EDITABLE (object), priv->view_widget);
   priv->edit_widget = gtk_entry_new ();
   gtk_widget_show (priv->edit_widget);
   gcal_editable_set_edit_widget (GCAL_EDITABLE (object), priv->edit_widget);
-
-  g_signal_connect (priv->edit_widget,
-                    "key-press-event",
-                    G_CALLBACK (gcal_editable_entry_key_pressed),
-                    object);
-  g_signal_connect (priv->edit_widget,
-                    "activate",
-                    G_CALLBACK (gcal_editable_entry_activated),
-                    object);
-
-  priv->update_view = TRUE;
 }
 
-static gchar*
-gcal_editable_entry_update_view_widget (GcalEditable *editable)
+static void
+gcal_editable_entry_size_allocate (GtkWidget     *widget,
+                                   GtkAllocation *allocation)
 {
   GcalEditableEntryPrivate *priv;
-  gchar *contents;
+  GtkAllocation view_allocation;
+  gint minimum;
+  gint natural;
 
-  g_return_val_if_fail (GCAL_IS_EDITABLE_ENTRY (editable), NULL);
-  priv = GCAL_EDITABLE_ENTRY (editable)->priv;
-  contents = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->edit_widget)));
-  return priv->update_view ? contents : NULL;
+  g_return_if_fail (GCAL_IS_EDITABLE_ENTRY (widget));
+  priv = GCAL_EDITABLE_ENTRY (widget)->priv;
+
+  if (GTK_WIDGET_CLASS (gcal_editable_entry_parent_class)->size_allocate != NULL)
+    GTK_WIDGET_CLASS (gcal_editable_entry_parent_class)->size_allocate (widget, allocation);
+
+  //FIXME: hack to keep the label thin
+  gtk_widget_get_preferred_height (priv->view_widget, &minimum, &natural);
+  gtk_widget_get_allocation (priv->view_widget, &view_allocation);
+  view_allocation.height = minimum;
+  gtk_widget_size_allocate (priv->view_widget, &view_allocation);
 }
 
 static void
 gcal_editable_entry_enter_edit_mode (GcalEditable *editable)
 {
   GcalEditableEntryPrivate *priv;
-  const gchar *contents;
 
   g_return_if_fail (GCAL_IS_EDITABLE_ENTRY (editable));
   priv = GCAL_EDITABLE_ENTRY (editable)->priv;
 
-  contents = gcal_editable_get_view_contents (editable);
-  gtk_entry_set_text (GTK_ENTRY (priv->edit_widget), contents);
+  gtk_entry_set_text (GTK_ENTRY (priv->edit_widget),
+                      gtk_label_get_text (GTK_LABEL (priv->view_widget)));
   gtk_editable_select_region (GTK_EDITABLE (priv->edit_widget), 0, -1);
 
   gtk_widget_grab_focus (priv->edit_widget);
 }
 
-static gboolean
-gcal_editable_entry_key_pressed (GtkWidget   *widget,
-                                 GdkEventKey *event,
-                                 gpointer     user_data)
+static void
+gcal_editable_entry_leave_edit_mode (GcalEditable *editable)
 {
   GcalEditableEntryPrivate *priv;
 
-  g_return_val_if_fail (GCAL_IS_EDITABLE_ENTRY (user_data), FALSE);
-  priv = GCAL_EDITABLE_ENTRY (user_data)->priv;
+  g_return_if_fail (GCAL_IS_EDITABLE_ENTRY (editable));
+  priv = GCAL_EDITABLE_ENTRY (editable)->priv;
 
-  if (event->keyval == GDK_KEY_Escape)
-    {
-      priv->update_view = FALSE;
-      gcal_editable_leave_edit_mode (GCAL_EDITABLE (user_data));
-      return TRUE;
-    }
-  return FALSE;
+  gtk_label_set_text (GTK_LABEL (priv->view_widget),
+                      gtk_entry_get_text (GTK_ENTRY (priv->edit_widget)));
 }
 
 static void
-gcal_editable_entry_activated (GtkEntry *entry,
-                               gpointer  user_data)
+gcal_editable_entry_clear (GcalEditable  *editable)
 {
-  if (gtk_entry_get_text_length (entry) != 0)
-    {
-      gcal_editable_leave_edit_mode (GCAL_EDITABLE (user_data));
-    }
+  GcalEditableEntryPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_EDITABLE_ENTRY (editable));
+  priv = GCAL_EDITABLE_ENTRY (editable)->priv;
+
+  gtk_label_set_text (GTK_LABEL (priv->view_widget), NULL);
+  gtk_entry_set_text (GTK_ENTRY (priv->edit_widget), NULL);
 }
 
 /**
  * gcal_editable_entry_new:
- * @date:
+ *
+ * Init the entry in EDIT_MODE
  *
  * Since: 0.1
  * Returns: (transfer full):
@@ -160,5 +162,41 @@ gcal_editable_entry_activated (GtkEntry *entry,
 GtkWidget*
 gcal_editable_entry_new (void)
 {
-  return g_object_new (GCAL_TYPE_EDITABLE_ENTRY, NULL);
+  GtkWidget *entry = g_object_new (GCAL_TYPE_EDITABLE_ENTRY, NULL);
+  gcal_editable_enter_edit_mode (GCAL_EDITABLE (entry));
+  return entry;
+}
+
+/**
+ * gcal_editable_entry_new_with_content:
+ *
+ * Init the entry in VIEW_MODE
+ *
+ * Since 0.2
+ * Returns: (transfer full)
+ */
+GtkWidget*
+gcal_editable_entry_new_with_content (const gchar* content)
+{
+  GtkWidget *entry;
+  entry = g_object_new (GCAL_TYPE_EDITABLE_ENTRY, NULL);
+  gcal_editable_entry_set_content (GCAL_EDITABLE_ENTRY (entry), content, FALSE);
+  gcal_editable_leave_edit_mode (GCAL_EDITABLE (entry));
+  return entry;
+}
+
+void
+gcal_editable_entry_set_content (GcalEditableEntry *entry,
+                                 const gchar       *content,
+                                 gboolean           use_markup)
+{
+  GcalEditableEntryPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_EDITABLE_ENTRY (entry));
+  priv = entry->priv;
+
+  if (use_markup)
+    gtk_label_set_markup (GTK_LABEL (priv->view_widget), content);
+  else
+    gtk_label_set_text (GTK_LABEL (priv->view_widget), content);
 }

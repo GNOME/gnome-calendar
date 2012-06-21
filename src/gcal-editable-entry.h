@@ -1,5 +1,5 @@
 /*
- * gcal-editable.h
+ * gcal-editable-entry.h
  *
  * Copyright (C) 2012 - Erick Pérez Castellanos
  *
@@ -52,6 +52,11 @@ GType          gcal_editable_entry_get_type           (void);
 
 GtkWidget*     gcal_editable_entry_new                (void);
 
+GtkWidget*     gcal_editable_entry_new_with_content   (const gchar       *content);
+
+void           gcal_editable_entry_set_content        (GcalEditableEntry *entry,
+                                                       const gchar       *content,
+                                                       gboolean           use_markup);
 G_END_DECLS
 
 #endif /* __GCAL_EDITABLE_ENTRY_H__ */

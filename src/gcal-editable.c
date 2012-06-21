@@ -19,13 +19,12 @@
  */
 
 #include "gcal-editable.h"
-#include "gcal-utils.h"
 
 struct _GcalEditablePrivate
 {
-  GtkWidget         *view_widget;
   GtkWidget         *event_box;
 
+  gboolean           locked;
   GcalEditableMode   mode : 1;
 };
 
@@ -44,7 +43,6 @@ static void gcal_editable_class_init (GcalEditableClass *klass)
   object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_editable_constructed;
 
-  klass->update_view_widget = NULL;
   klass->enter_edit_mode = gcal_editable_enter_edit_mode;
   klass->leave_edit_mode = gcal_editable_leave_edit_mode;
 
@@ -61,24 +59,22 @@ static void gcal_editable_init (GcalEditable *self)
 }
 
 static void
-gcal_editable_constructed (GObject       *object)
+gcal_editable_constructed (GObject *object)
 {
   GcalEditablePrivate *priv;
 
   priv = GCAL_EDITABLE (object)->priv;
 
+  priv->locked = FALSE;
   priv->mode = GCAL_VIEW_MODE;
-  priv->view_widget = gtk_label_new (NULL);
+
   priv->event_box = gtk_event_box_new ();
-  gtk_container_add (GTK_CONTAINER (priv->event_box),
-                     priv->view_widget);
   gtk_widget_show_all (priv->event_box);
   gtk_notebook_insert_page (GTK_NOTEBOOK (object),
                             priv->event_box,
                             NULL,
                             0);
 
-  gtk_notebook_set_current_page (GTK_NOTEBOOK (object), 0);
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (object), FALSE);
 
   g_signal_connect (priv->event_box,
@@ -99,15 +95,15 @@ gcal_editable_button_pressed (GtkWidget      *widget,
 
 /* Public API */
 void
-gcal_editable_set_view_contents (GcalEditable *editable,
-                                 const gchar  *contents)
+gcal_editable_set_view_widget (GcalEditable *editable,
+                               GtkWidget    *widget)
 {
   GcalEditablePrivate *priv;
 
   g_return_if_fail (GCAL_IS_EDITABLE (editable));
   priv = editable->priv;
 
-  gtk_label_set_text (GTK_LABEL (priv->view_widget), contents);
+  gtk_container_add (GTK_CONTAINER (priv->event_box), widget);
 }
 
 void
@@ -122,26 +118,23 @@ gcal_editable_set_edit_widget (GcalEditable *editable,
   gtk_notebook_insert_page (GTK_NOTEBOOK (editable), widget, NULL, 1);
 }
 
-const gchar*
-gcal_editable_get_view_contents (GcalEditable *editable)
-{
-  GcalEditablePrivate *priv;
-
-  g_return_val_if_fail (GCAL_IS_EDITABLE (editable), NULL);
-  priv = GCAL_EDITABLE (editable)->priv;
-  return gtk_label_get_text (GTK_LABEL (priv->view_widget));
-}
-
 void
 gcal_editable_enter_edit_mode (GcalEditable *editable)
 {
   GcalEditablePrivate *priv;
+  GtkWidget *view_widget;
+  GtkWidget *edit_widget;
 
   g_return_if_fail (GCAL_IS_EDITABLE (editable));
   priv = editable->priv;
 
-  if (priv->mode == GCAL_VIEW_MODE)
+  if (! priv->locked && priv->mode == GCAL_VIEW_MODE)
     {
+      edit_widget = gtk_notebook_get_nth_page (GTK_NOTEBOOK (editable), 1);
+      gtk_widget_show_all (edit_widget);
+      view_widget = gtk_notebook_get_nth_page (GTK_NOTEBOOK (editable), 0);
+      gtk_widget_hide (view_widget);
+
       gtk_notebook_set_current_page (GTK_NOTEBOOK (editable), 1);
 
       if (GCAL_EDITABLE_GET_CLASS (editable)->enter_edit_mode != NULL)
@@ -155,19 +148,18 @@ void
 gcal_editable_leave_edit_mode (GcalEditable *editable)
 {
   GcalEditablePrivate *priv;
-  gchar *str;
+  GtkWidget *view_widget;
+  GtkWidget *edit_widget;
 
   g_return_if_fail (GCAL_IS_EDITABLE (editable));
   priv = editable->priv;
 
-  if (priv->mode == GCAL_EDIT_MODE)
+  if (! priv->locked && priv->mode == GCAL_EDIT_MODE)
     {
-      str = GCAL_EDITABLE_GET_CLASS (editable)->update_view_widget (editable);
-      if (str != NULL)
-        {
-          gtk_label_set_text (GTK_LABEL (priv->view_widget), str);
-          g_free (str);
-        }
+      edit_widget = gtk_notebook_get_nth_page (GTK_NOTEBOOK (editable), 1);
+      gtk_widget_hide (edit_widget);
+      view_widget = gtk_notebook_get_nth_page (GTK_NOTEBOOK (editable), 0);
+      gtk_widget_show_all (view_widget);
 
       gtk_notebook_set_current_page (GTK_NOTEBOOK (editable), 0);
 
@@ -176,4 +168,51 @@ gcal_editable_leave_edit_mode (GcalEditable *editable)
 
       priv->mode = GCAL_VIEW_MODE;
     }
+}
+
+/**
+ * gcal_editable_clear:
+ * @editable: A GcalEditable widget
+ *
+ * Will clear the content of the widgets, and set it into GCAL_EDIT_MODE
+ */
+void
+gcal_editable_clear (GcalEditable *editable)
+{
+  g_return_if_fail (GCAL_IS_EDITABLE (editable));
+
+  if (GCAL_EDITABLE_GET_CLASS (editable)->clear != NULL)
+    GCAL_EDITABLE_GET_CLASS (editable)->clear (editable);
+
+  GCAL_EDITABLE_GET_CLASS (editable)->enter_edit_mode (editable);
+}
+
+GcalEditableMode
+gcal_editable_get_mode (GcalEditable *editable)
+{
+  GcalEditablePrivate *priv;
+
+  g_return_val_if_fail (GCAL_IS_EDITABLE (editable), GCAL_VIEW_MODE);
+  priv = editable->priv;
+  return priv->mode;
+}
+
+void
+gcal_editable_lock (GcalEditable *editable)
+{
+  GcalEditablePrivate *priv;
+
+  g_return_if_fail (GCAL_IS_EDITABLE (editable));
+  priv = editable->priv;
+  priv->locked = TRUE;
+}
+
+void
+gcal_editable_unlock (GcalEditable *editable)
+{
+  GcalEditablePrivate *priv;
+
+  g_return_if_fail (GCAL_IS_EDITABLE (editable));
+  priv = editable->priv;
+  priv->locked = FALSE;
 }

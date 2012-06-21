@@ -20,6 +20,8 @@
 #ifndef __GCAL_EDITABLE_H__
 #define __GCAL_EDITABLE_H__
 
+#include "gcal-utils.h"
+
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
@@ -48,24 +50,30 @@ struct _GcalEditableClass
   GtkNotebookClass parent_class;
 
   /* virtual methods */
-  gchar*     (*update_view_widget)     (GcalEditable *editable);
   void       (*enter_edit_mode)        (GcalEditable *editable);
   void       (*leave_edit_mode)        (GcalEditable *editable);
+  void       (*clear)                  (GcalEditable *editable);
 };
 
-GType          gcal_editable_get_type           (void);
+GType             gcal_editable_get_type           (void);
 
-void           gcal_editable_set_view_contents  (GcalEditable *editable,
-                                                 const gchar  *contents);
+void              gcal_editable_set_view_widget    (GcalEditable *editable,
+                                                    GtkWidget    *widget);
 
-void           gcal_editable_set_edit_widget    (GcalEditable *editable,
-                                                 GtkWidget    *widget);
+void              gcal_editable_set_edit_widget    (GcalEditable *editable,
+                                                    GtkWidget    *widget);
 
-const gchar*   gcal_editable_get_view_contents  (GcalEditable *editable);
+void              gcal_editable_enter_edit_mode    (GcalEditable *editable);
 
-void           gcal_editable_enter_edit_mode    (GcalEditable   *editable);
+void              gcal_editable_leave_edit_mode    (GcalEditable *editable);
 
-void           gcal_editable_leave_edit_mode    (GcalEditable   *editable);
+void              gcal_editable_clear              (GcalEditable *editable);
+
+GcalEditableMode  gcal_editable_get_mode           (GcalEditable *editable);
+
+void              gcal_editable_lock               (GcalEditable *editable);
+
+void              gcal_editable_unlock             (GcalEditable *editable);
 
 G_END_DECLS
 
