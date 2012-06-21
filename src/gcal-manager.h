@@ -69,15 +69,38 @@ gchar*         gcal_manager_add_source              (GcalManager        *manager
                                                      const gchar        *relative_uri,
                                                      const gchar        *color);
 
+const gchar*   gcal_manager_get_source_name         (GcalManager        *manager,
+                                                     const gchar        *source_uid);
+
 void           gcal_manager_set_new_range           (GcalManager        *manager,
                                                      const icaltimetype *initial_date,
                                                      const icaltimetype *final_date);
+
+gboolean       gcal_manager_exists_event            (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
 
 icaltimetype*  gcal_manager_get_event_start_date    (GcalManager        *manager,
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
 
 gchar*         gcal_manager_get_event_summary       (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
+
+gchar**        gcal_manager_get_event_organizer     (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
+
+gchar*         gcal_manager_get_event_date          (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
+
+const gchar*   gcal_manager_get_event_location      (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
+
+gchar*         gcal_manager_get_event_description   (GcalManager        *manager,
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
 

@@ -18,7 +18,6 @@
  */
 
 #include "gcal-manager.h"
-
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
@@ -568,7 +567,7 @@ gcal_manager_on_view_objects_added (ECalClientView *view,
 
   ECalClient *client;
   const gchar *source_uid;
-  gchar *event_uid;
+  gchar *event_uuid;
 
   priv = GCAL_MANAGER (user_data)->priv;
   events_data = NULL;
@@ -588,15 +587,15 @@ gcal_manager_on_view_objects_added (ECalClientView *view,
                                               NULL,
                                               NULL))
             {
-              component = e_cal_component_new_from_icalcomponent (l->data);
-
+              component = e_cal_component_new_from_icalcomponent (
+                  icalcomponent_new_clone (l->data));
               g_hash_table_insert (unit->events,
                                    g_strdup (icalcomponent_get_uid (l->data)),
                                    component);
-              event_uid = g_strdup_printf ("%s:%s",
+              event_uuid = g_strdup_printf ("%s:%s",
                                            source_uid,
                                            icalcomponent_get_uid (l->data));
-              events_data = g_slist_append (events_data, event_uid);
+              events_data = g_slist_append (events_data, event_uuid);
             }
         }
     }
@@ -713,6 +712,7 @@ gcal_manager_add_source (GcalManager *manager,
   gpointer value;
   ESource *source;
 
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
   priv = manager->priv;
   g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
 
@@ -757,6 +757,20 @@ gcal_manager_add_source (GcalManager *manager,
   return g_strdup (e_source_peek_uid (source));
 }
 
+const gchar*
+gcal_manager_get_source_name (GcalManager *manager,
+                              const gchar *source_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  return e_source_peek_name (unit->source);
+}
+
 /**
  * gcal_manager_set_new_range:
  * @manager: a #GcalManager
@@ -784,10 +798,7 @@ gcal_manager_set_new_range (GcalManager        *manager,
   GcalManagerPrivate *priv;
   gboolean refresh_events;
 
-  g_return_if_fail (manager != NULL);
-  g_return_if_fail (initial_date != NULL);
-  g_return_if_fail (final_date != NULL);
-
+  g_return_if_fail (GCAL_IS_MANAGER (manager));
   priv = manager->priv;
   refresh_events = FALSE;
 
@@ -829,6 +840,22 @@ gcal_manager_set_new_range (GcalManager        *manager,
     }
 }
 
+gboolean
+gcal_manager_exists_event (GcalManager *manager,
+                           const gchar *source_uid,
+                           const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
+  priv = manager->priv;
+
+  if ((unit = g_hash_table_lookup (priv->clients, source_uid)) != NULL)
+    return g_hash_table_lookup (unit->events, event_uid) != NULL;
+  return FALSE;
+}
+
 icaltimetype*
 gcal_manager_get_event_start_date (GcalManager *manager,
                                    const gchar *source_uid,
@@ -840,6 +867,7 @@ gcal_manager_get_event_start_date (GcalManager *manager,
   ECalComponentDateTime dt;
   icaltimetype *dtstart;
 
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
   priv = manager->priv;
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
@@ -862,6 +890,7 @@ gcal_manager_get_event_summary (GcalManager *manager,
   ECalComponentText e_summary;
   gchar *summary;
 
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
   priv = manager->priv;
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
@@ -870,6 +899,161 @@ gcal_manager_get_event_summary (GcalManager *manager,
   summary = g_strdup (e_summary.value);
 
   return summary;
+}
+
+gchar**
+gcal_manager_get_event_organizer (GcalManager *manager,
+                                  const gchar *source_uid,
+                                  const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  ECalComponentOrganizer e_organizer;
+  gchar** values;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+  e_cal_component_get_organizer (event, &e_organizer);
+
+  if (e_organizer.cn == NULL)
+    return NULL;
+
+  values = g_new (gchar*, 3);
+  values[2] = NULL;
+  values[0] = g_strdup (e_organizer.cn);
+  values[1] = g_strdup (e_organizer.value);
+
+  return values;
+}
+
+gchar*
+gcal_manager_get_event_date (GcalManager *manager,
+                             const gchar *source_uid,
+                             const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  ECalComponentDateTime dt;
+  icaltimetype *dtstart;
+  icaltimetype *dtend;
+  struct tm tm_date;
+  gchar *date;
+  gchar since [128];
+  gchar until [128];
+  gchar *all_day;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+
+  e_cal_component_get_dtstart (event, &dt);
+  dtstart = gcal_dup_icaltime (dt.value);
+  e_cal_component_free_datetime (&dt);
+
+  e_cal_component_get_dtend (event, &dt);
+  dtend = gcal_dup_icaltime (dt.value);
+  e_cal_component_free_datetime (&dt);
+
+  if (dtstart->is_date == 1 && dtend->is_date == 1)
+    {
+      all_day = g_strdup (_(" (All day)"));
+
+      tm_date = icaltimetype_to_tm (dtstart);
+      e_utf8_strftime_fix_am_pm (since, 128, "%b, %d", &tm_date);
+      tm_date = icaltimetype_to_tm (dtstart);
+      e_utf8_strftime_fix_am_pm (until, 128, "%b, %d", &tm_date);
+    }
+  else
+    {
+      all_day = NULL;
+
+      tm_date = icaltimetype_to_tm (dtstart);
+      e_utf8_strftime_fix_am_pm (since, 128, "%b, %d, %l:%M %p", &tm_date);
+      tm_date = icaltimetype_to_tm (dtstart);
+      e_utf8_strftime_fix_am_pm (until, 128, "%b, %d, %l:%M %p", &tm_date);
+    }
+
+  date = g_strdup_printf ("%s - %s%s",
+                          since,
+                          until,
+                          all_day == NULL ? "": all_day);
+
+  g_free (all_day);
+  g_free (dtstart);
+  g_free (dtend);
+  return date;
+}
+
+const gchar*
+gcal_manager_get_event_location (GcalManager *manager,
+                                 const gchar *source_uid,
+                                 const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  const gchar* location;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+  e_cal_component_get_location (event, &location);
+  return location;
+}
+
+gchar*
+gcal_manager_get_event_description (GcalManager *manager,
+                                    const gchar *source_uid,
+                                    const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  GSList *text_list;
+  GSList *l;
+
+  gchar *desc;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  priv = manager->priv;
+  desc = NULL;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+  e_cal_component_get_description_list (event, &text_list);
+
+  for (l = text_list; l != NULL; l = l->next)
+    {
+      if (l->data != NULL)
+        {
+          ECalComponentText *text;
+          gchar *carrier;
+          text = l->data;
+
+          if (desc != NULL)
+            {
+              carrier = g_strconcat (desc, text->value, NULL);
+              g_free (desc);
+              desc = carrier;
+            }
+          else
+            {
+              desc = g_strdup (text->value);
+            }
+        }
+    }
+
+  e_cal_component_free_text_list (text_list);
+  return desc;
 }
 
 GdkRGBA*
@@ -882,6 +1066,7 @@ gcal_manager_get_event_color (GcalManager *manager,
   GdkRGBA *color;
   GdkColor gdk_color;
 
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
   priv = manager->priv;
   color = g_new0 (GdkRGBA, 1);
 
