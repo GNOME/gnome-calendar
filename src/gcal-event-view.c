@@ -22,6 +22,7 @@
 #include "gcal-editable-text.h"
 #include "gcal-editable-date.h"
 #include "gcal-editable-combo.h"
+#include "gcal-editable-reminder.h"
 
 #include <glib/gi18n.h>
 
@@ -42,6 +43,8 @@ struct _GcalEventViewPrivate
   GtkWidget         *cb_cal;
 
   GtkWidget         *t_desc;
+
+  GtkWidget         *reminders;
 
   GtkWidget         *attending_yes;
   GtkWidget         *attending_maybe;
@@ -94,6 +97,7 @@ gcal_event_view_constructed (GObject *object)
   GtkWidget *calendar;
   GtkWidget *where;
   GtkWidget *desc;
+  GtkWidget *rem;
   GtkWidget *attending;
   GtkWidget *attending_box;
 
@@ -124,6 +128,9 @@ gcal_event_view_constructed (GObject *object)
 
   priv->t_desc = gcal_editable_text_new ();
   priv->e_widgets = g_slist_append (priv->e_widgets, priv->t_desc);
+
+  priv->reminders = gcal_editable_reminder_new ();
+  priv->e_widgets = g_slist_append (priv->e_widgets, priv->reminders);
 
   /* FIXME: do something with this to add it on the slist of widget
    * something like, turning all the three into on widget
@@ -173,13 +180,19 @@ gcal_event_view_constructed (GObject *object)
   gtk_widget_set_size_request (priv->t_desc, -1, 200);
   gtk_grid_attach (GTK_GRID (object), priv->t_desc, 1, 4, 3, 1);
 
+  rem = gtk_label_new (_("Reminders"));
+  gtk_widget_set_halign (rem, GTK_ALIGN_END);
+  gtk_widget_set_valign (rem, GTK_ALIGN_START);
+  gtk_grid_attach (GTK_GRID (object), rem, 0, 5, 1, 1);
+  gtk_grid_attach (GTK_GRID (object), priv->reminders, 1, 5, 3, 1);
+
   attending = gtk_label_new (_("Attending"));
   gtk_widget_set_halign (attending, GTK_ALIGN_END);
-  gtk_grid_attach (GTK_GRID (object), attending, 0, 5, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), attending_box, 1, 5, 3, 1);
+  gtk_grid_attach (GTK_GRID (object), attending, 0, 6, 1, 1);
+  gtk_grid_attach (GTK_GRID (object), attending_box, 1, 6, 3, 1);
 
-  gtk_grid_set_row_spacing (GTK_GRID (object), 16);
-  gtk_grid_set_column_spacing (GTK_GRID (object), 16);
+  gtk_grid_set_row_spacing (GTK_GRID (object), 12);
+  gtk_grid_set_column_spacing (GTK_GRID (object), 12);
   gtk_widget_show_all (GTK_WIDGET (object));
 }
 
@@ -237,6 +250,7 @@ gcal_event_view_update (GcalEventView *view)
       gchar *when;
       const gchar *location;
       gchar *description;
+      GList *reminders;
 
       g_slist_foreach (priv->e_widgets, (GFunc) gcal_editable_leave_edit_mode, NULL);
 
@@ -296,9 +310,18 @@ gcal_event_view_update (GcalEventView *view)
       gcal_editable_text_set_content (GCAL_EDITABLE_TEXT (priv->t_desc),
                                       description);
 
+      reminders = gcal_manager_get_event_reminders (priv->manager,
+                                                    priv->source_uid,
+                                                    priv->event_uid);
+
+      gcal_editable_reminder_set_content (
+          GCAL_EDITABLE_REMINDER (priv->reminders),
+          reminders);
+
       g_free (description);
       g_free (when);
       g_free (summary);
+      g_list_free_full (reminders, (GDestroyNotify) g_free);
     }
 }
 

@@ -1080,3 +1080,108 @@ gcal_manager_get_event_color (GcalManager *manager,
 
   return color;
 }
+
+GList*
+gcal_manager_get_event_reminders (GcalManager *manager,
+                                  const gchar *source_uid,
+                                  const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  GList *reminders;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  priv = manager->priv;
+  reminders = NULL;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+
+  if (e_cal_component_has_alarms (event))
+    {
+      GList *alarms;
+      GList *l;
+
+      alarms = e_cal_component_get_alarm_uids (event);
+      for (l = alarms; l != NULL; l = l->next)
+        {
+          gchar *type;
+          gint number;
+          gchar *time;
+          ECalComponentAlarm *alarm;
+          ECalComponentAlarmAction action;
+          ECalComponentAlarmTrigger trigger;
+
+          type = NULL;
+          time = NULL;
+          alarm = e_cal_component_get_alarm (event, l->data);
+
+          e_cal_component_alarm_get_action (alarm, &action);
+          /* here, this are the tricky bits.
+           * We assume a bunch of differents AlarmAction(s) as one:
+           * "Notification". In case we need to add extra-refinemen. This is the
+           * place to change stuff t*/
+          if (action == E_CAL_COMPONENT_ALARM_AUDIO
+              || action == E_CAL_COMPONENT_ALARM_DISPLAY)
+            type = g_strdup (_("Notification"));
+          else if (action == E_CAL_COMPONENT_ALARM_EMAIL)
+            type = g_strdup (_("Email"));
+
+          e_cal_component_alarm_get_trigger (alarm, &trigger);
+          /* Second part of tricky bits. We will ignore triggers types other
+           * than E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START, and other than
+           * before. In case of extra tweaking (almost sure it will be needed)
+           * this is the place of doing it. */
+          if (trigger.type == E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START)
+            {
+              /* cut/pasted/tweaking chunk of code from
+               * evo:calendar/gui/e-alarm-list.c +435 */
+              if (trigger.u.rel_duration.is_neg && trigger.u.rel_duration.days >= 1)
+                {
+                  number = trigger.u.rel_duration.days;
+                  time = g_strdup (_("days"));
+                }
+
+              if (trigger.u.rel_duration.is_neg && trigger.u.rel_duration.weeks >= 1)
+                {
+                  number = trigger.u.rel_duration.weeks;
+                  time = g_strdup (_("weeks"));
+                }
+
+              if (trigger.u.rel_duration.is_neg && trigger.u.rel_duration.hours >= 1)
+                {
+                  number = trigger.u.rel_duration.hours;
+                  time = g_strdup (_("hours"));
+                }
+
+              if (trigger.u.rel_duration.is_neg && trigger.u.rel_duration.minutes >= 1)
+                {
+                  number = trigger.u.rel_duration.minutes;
+                  time = g_strdup (_("minutes"));
+                }
+            }
+
+          if (type != NULL && time != NULL)
+            {
+              gchar *one_reminder;
+
+              one_reminder = g_strdup_printf ("%s %d %s %s",
+                                              type,
+                                              number,
+                                              time,
+                                              _("before"));
+              reminders = g_list_prepend (reminders, one_reminder);
+
+              g_free (type);
+              g_free (time);
+            }
+
+          e_cal_component_alarm_free (alarm);
+        }
+      cal_obj_uid_list_free (alarms);
+    }
+
+  reminders = g_list_reverse (reminders);
+  return reminders;
+}

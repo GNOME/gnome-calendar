@@ -108,6 +108,10 @@ GdkRGBA*       gcal_manager_get_event_color         (GcalManager        *manager
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
 
+GList*         gcal_manager_get_event_reminders     (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
+
 G_END_DECLS
 
 #endif /* __GCAL_MANAGER_H__ */

@@ -43,6 +43,8 @@ gnome_calendar_SOURCES =                                \
 	gcal-editable-date.h                                  \
 	gcal-editable-combo.c                                 \
 	gcal-editable-combo.h                                 \
+	gcal-editable-reminder.c                              \
+	gcal-editable-reminder.h                              \
 	gcal-manager.c                                        \
 	gcal-manager.h                                        \
 	gcal-utils.c                                          \
