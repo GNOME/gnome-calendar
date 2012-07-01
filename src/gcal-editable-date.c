@@ -174,9 +174,9 @@ gcal_editable_date_clear (GcalEditable  *editable)
   g_return_if_fail (GCAL_IS_EDITABLE_DATE (editable));
   priv = GCAL_EDITABLE_DATE (editable)->priv;
 
-  gtk_label_set_text (GTK_LABEL (priv->view_widget), NULL);
-  gtk_entry_set_text (GTK_ENTRY (priv->since_entry), NULL);
-  gtk_entry_set_text (GTK_ENTRY (priv->until_entry), NULL);
+  gtk_label_set_text (GTK_LABEL (priv->view_widget), "");
+  gtk_entry_set_text (GTK_ENTRY (priv->since_entry), "");
+  gtk_entry_set_text (GTK_ENTRY (priv->until_entry), "");
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->all_day_check), FALSE);
 }
 

@@ -389,6 +389,10 @@ gcal_event_view_load_event (GcalEventView *view,
 
           priv->source_uid = tokens[0];
           priv->event_uid = tokens[1];
+
+          /* Setting the widget to blank state to load a new event */
+          g_slist_foreach (priv->e_widgets, (GFunc) gcal_editable_clear, NULL);
+
           gcal_event_view_update (view);
         }
     }
@@ -404,6 +408,15 @@ gcal_event_view_load_event (GcalEventView *view,
 void
 gcal_event_view_enter_edit_mode (GcalEventView *view)
 {
+  GcalEventViewPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_EVENT_VIEW (view));
+  priv = view->priv;
+
+  /* Setting the widget to blank state to load a new event */
+  g_slist_foreach (priv->e_widgets,
+                   (GFunc) gcal_editable_enter_edit_mode,
+                   NULL);
 }
 
 /**
@@ -416,4 +429,13 @@ gcal_event_view_enter_edit_mode (GcalEventView *view)
 void
 gcal_event_view_leave_edit_mode (GcalEventView *view)
 {
+  GcalEventViewPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_EVENT_VIEW (view));
+  priv = view->priv;
+
+  /* Setting the widget to blank state to load a new event */
+  g_slist_foreach (priv->e_widgets,
+                   (GFunc) gcal_editable_leave_edit_mode,
+                   NULL);
 }

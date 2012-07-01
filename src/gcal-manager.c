@@ -976,7 +976,7 @@ gcal_manager_get_event_date (GcalManager *manager,
 
       tm_date = icaltimetype_to_tm (dtstart);
       e_utf8_strftime_fix_am_pm (since, 128, "%b, %d, %l:%M %p", &tm_date);
-      tm_date = icaltimetype_to_tm (dtstart);
+      tm_date = icaltimetype_to_tm (dtend);
       e_utf8_strftime_fix_am_pm (until, 128, "%b, %d, %l:%M %p", &tm_date);
     }
 

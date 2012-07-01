@@ -272,10 +272,6 @@ gcal_editable_reminder_clear (GcalEditable  *editable)
 
   g_list_free_full (priv->reminders, (GDestroyNotify) gtk_widget_destroy);
   priv->reminders = NULL;
-  gcal_editable_reminder_insert_reminder (GCAL_EDITABLE_REMINDER (editable),
-                                          NULL,
-                                          1,
-                                          NULL);
 
   g_list_free_full (priv->labels, (GDestroyNotify) gtk_widget_destroy);
   priv->labels = NULL;

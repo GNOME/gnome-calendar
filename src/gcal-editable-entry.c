@@ -147,8 +147,8 @@ gcal_editable_entry_clear (GcalEditable  *editable)
   g_return_if_fail (GCAL_IS_EDITABLE_ENTRY (editable));
   priv = GCAL_EDITABLE_ENTRY (editable)->priv;
 
-  gtk_label_set_text (GTK_LABEL (priv->view_widget), NULL);
-  gtk_entry_set_text (GTK_ENTRY (priv->edit_widget), NULL);
+  gtk_label_set_text (GTK_LABEL (priv->view_widget), "");
+  gtk_entry_set_text (GTK_ENTRY (priv->edit_widget), "");
 }
 
 /**

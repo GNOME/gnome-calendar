@@ -22,17 +22,11 @@
 
 struct _GcalEditablePrivate
 {
-  GtkWidget         *event_box;
-
   gboolean           locked;
   GcalEditableMode   mode : 1;
 };
 
 static void     gcal_editable_constructed             (GObject        *object);
-
-static gboolean gcal_editable_button_pressed          (GtkWidget      *widget,
-                                                       GdkEventButton *event,
-                                                       gpointer        user_data);
 
 G_DEFINE_TYPE (GcalEditable, gcal_editable, GTK_TYPE_NOTEBOOK);
 
@@ -68,29 +62,7 @@ gcal_editable_constructed (GObject *object)
   priv->locked = FALSE;
   priv->mode = GCAL_VIEW_MODE;
 
-  priv->event_box = gtk_event_box_new ();
-  gtk_widget_show_all (priv->event_box);
-  gtk_notebook_insert_page (GTK_NOTEBOOK (object),
-                            priv->event_box,
-                            NULL,
-                            0);
-
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (object), FALSE);
-
-  g_signal_connect (priv->event_box,
-                    "button-press-event",
-                    G_CALLBACK (gcal_editable_button_pressed), object);
-}
-
-static gboolean
-gcal_editable_button_pressed (GtkWidget      *widget,
-                              GdkEventButton *event,
-                              gpointer        user_data)
-{
-  if (event->type == GDK_2BUTTON_PRESS)
-    gcal_editable_enter_edit_mode (user_data);
-
-  return TRUE;
 }
 
 /* Public API */
@@ -98,12 +70,12 @@ void
 gcal_editable_set_view_widget (GcalEditable *editable,
                                GtkWidget    *widget)
 {
-  GcalEditablePrivate *priv;
-
   g_return_if_fail (GCAL_IS_EDITABLE (editable));
-  priv = editable->priv;
 
-  gtk_container_add (GTK_CONTAINER (priv->event_box), widget);
+  if (gtk_notebook_get_nth_page (GTK_NOTEBOOK (editable), 0) != NULL)
+    gtk_notebook_remove_page (GTK_NOTEBOOK (editable), 0);
+
+  gtk_notebook_insert_page (GTK_NOTEBOOK (editable), widget, NULL, 0);
 }
 
 void

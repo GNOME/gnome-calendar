@@ -139,7 +139,7 @@ gcal_editable_text_clear (GcalEditable  *editable)
   g_return_if_fail (GCAL_IS_EDITABLE_TEXT (editable));
   priv = GCAL_EDITABLE_TEXT (editable)->priv;
   buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->edit_widget));
-  gtk_text_buffer_set_text (buffer, NULL, -1);
+  gtk_text_buffer_set_text (buffer, "", -1);
 }
 
 /* Public API */
