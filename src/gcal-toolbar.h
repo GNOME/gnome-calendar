@@ -48,6 +48,7 @@ struct _GcalToolbarClass
 
   void (*back)          (GcalToolbar *toolbar);
   void (*edit_event)    (GcalToolbar *toolbar);
+  void (*done_edit)    (GcalToolbar *toolbar);
 };
 
 struct _GcalToolbar

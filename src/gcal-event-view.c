@@ -50,6 +50,8 @@ struct _GcalEventViewPrivate
   GtkWidget         *attending_maybe;
   GtkWidget         *attending_no;
 
+  GtkWidget         *delete_button;
+
   GcalManager       *manager;
 };
 
@@ -147,7 +149,7 @@ gcal_event_view_constructed (GObject *object)
   what = gtk_label_new (_("What"));
   gtk_widget_set_halign (what, GTK_ALIGN_END);
   gtk_grid_attach (GTK_GRID (object), what, 0, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), priv->e_what, 1, 0, 3, 1);
+  gtk_grid_attach (GTK_GRID (object), priv->e_what, 1, 0, 1, 1);
 
   when = gtk_label_new (_("When"));
   gtk_widget_set_valign (when, GTK_ALIGN_START);
@@ -158,33 +160,43 @@ gcal_event_view_constructed (GObject *object)
   where = gtk_label_new (_("Where"));
   gtk_widget_set_halign (where, GTK_ALIGN_END);
   gtk_grid_attach (GTK_GRID (object), where, 0, 2, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), priv->e_where, 1, 2, 3, 1);
+  gtk_grid_attach (GTK_GRID (object), priv->e_where, 1, 2, 1, 1);
 
   calendar = gtk_label_new (_("Calendar"));
   gtk_widget_set_halign (calendar, GTK_ALIGN_END);
   gtk_grid_attach (GTK_GRID (object), calendar, 0, 3, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), priv->cb_cal, 1, 3, 3, 1);
+  gtk_grid_attach (GTK_GRID (object), priv->cb_cal, 1, 3, 1, 1);
 
   desc = gtk_label_new (_("Description"));
   gtk_widget_set_halign (desc, GTK_ALIGN_END);
   gtk_widget_set_valign (desc, GTK_ALIGN_START);
   gtk_grid_attach (GTK_GRID (object), desc, 0, 4, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), priv->t_desc, 1, 4, 3, 1);
+  gtk_grid_attach (GTK_GRID (object), priv->t_desc, 1, 4, 1, 1);
 
   rem = gtk_label_new (_("Reminders"));
   gtk_widget_set_halign (rem, GTK_ALIGN_END);
   gtk_widget_set_valign (rem, GTK_ALIGN_START);
   gtk_grid_attach (GTK_GRID (object), rem, 0, 5, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), priv->reminders, 1, 5, 3, 1);
+  gtk_grid_attach (GTK_GRID (object), priv->reminders, 1, 5, 1, 1);
 
   attending = gtk_label_new (_("Attending"));
   gtk_widget_set_halign (attending, GTK_ALIGN_END);
   gtk_grid_attach (GTK_GRID (object), attending, 0, 6, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), attending_box, 1, 6, 3, 1);
+  gtk_grid_attach (GTK_GRID (object), attending_box, 1, 6, 1, 1);
 
-  gtk_grid_set_row_spacing (GTK_GRID (object), 12);
-  gtk_grid_set_column_spacing (GTK_GRID (object), 12);
+  priv->delete_button = gtk_button_new_with_label (_("Delete Event"));
+  gtk_widget_set_halign (priv->delete_button, GTK_ALIGN_START);
+  gtk_widget_set_valign (priv->delete_button, GTK_ALIGN_END);
+  gtk_widget_set_hexpand (priv->delete_button, FALSE);
+  gtk_grid_attach (GTK_GRID (object), priv->delete_button, 1, 7, 1, 1);
+
+  g_object_set (object,
+                "row-spacing", 12,
+                "column-spacing", 12,
+                NULL);
   gtk_widget_show_all (GTK_WIDGET (object));
+
+  gtk_widget_hide (priv->delete_button);
 }
 
 static void
@@ -281,6 +293,9 @@ gcal_event_view_update (GcalEventView *view)
       gcal_editable_reminder_set_content (
           GCAL_EDITABLE_REMINDER (priv->reminders),
           reminders);
+
+      /* since this loading is for viewing, we hide delete_button */
+      gtk_widget_hide (priv->delete_button);
 
       g_free (description);
       g_free (when);
@@ -381,6 +396,9 @@ gcal_event_view_enter_edit_mode (GcalEventView *view)
   g_slist_foreach (priv->e_widgets,
                    (GFunc) gcal_editable_enter_edit_mode,
                    NULL);
+
+  /* showing delete button */
+  gtk_widget_show (priv->delete_button);
 }
 
 /**
@@ -402,4 +420,6 @@ gcal_event_view_leave_edit_mode (GcalEventView *view)
   g_slist_foreach (priv->e_widgets,
                    (GFunc) gcal_editable_leave_edit_mode,
                    NULL);
+
+  gtk_widget_hide (priv->delete_button);
 }

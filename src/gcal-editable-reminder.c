@@ -115,7 +115,6 @@ gcal_editable_reminder_constructed (GObject *object)
                 "orientation", GTK_ORIENTATION_VERTICAL,
                 "row-spacing", 6,
                 "column-spacing", 6,
-                "vexpand", FALSE,
                 "valign", GTK_ALIGN_START,
                 NULL);
   gtk_grid_attach (GTK_GRID (priv->edit_widget), priv->left_box, 0, 0, 1, 1);

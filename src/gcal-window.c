@@ -74,6 +74,9 @@ static void       gcal_window_back_last_view         (GcalToolbar       *main_to
 static void       gcal_window_edit_event             (GcalToolbar       *main_toolbar,
                                                       gpointer           user_data);
 
+static void       gcal_window_done_edit_event        (GcalToolbar       *main_toolbar,
+                                                      gpointer           user_data);
+
 static void       gcal_window_sources_row_activated  (GtkTreeView       *tree_view,
                                                       GtkTreePath       *path,
                                                       GtkTreeViewColumn *column,
@@ -253,6 +256,10 @@ gcal_window_constructed (GObject *object)
                     "edit-event",
                     G_CALLBACK (gcal_window_edit_event),
                     object);
+  g_signal_connect (priv->main_toolbar,
+                    "done-edit",
+                    G_CALLBACK (gcal_window_done_edit_event),
+                    object);
 
   gtk_widget_show (embed);
 }
@@ -342,11 +349,13 @@ gcal_window_init_event_view (GcalWindow *window)
 
   priv->add_view = gcal_event_view_new_with_manager (
       gcal_window_get_manager (window));
-  gtk_widget_set_hexpand (priv->add_view, TRUE);
-  gtk_widget_set_vexpand (priv->add_view, TRUE);
-  gtk_widget_set_margin_top (priv->add_view, 10);
-  gtk_widget_set_margin_left (priv->add_view, 20);
-  gtk_widget_set_margin_right (priv->add_view, 20);
+  g_object_set (priv->add_view,
+                "hexpand", TRUE,
+                "vexpand", TRUE,
+                "margin-top", 10,
+                "margin-left", 20,
+                "margin-right", 20,
+                NULL);
 
   gtk_widget_show (priv->add_view);
   gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook),
@@ -421,6 +430,10 @@ gcal_window_add_event (GcalToolbar *main_toolbar,
       gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook), priv->add_view));
 }
 
+/*
+ * FIXME: Take into account the event we're viewing could be in edit-mode and we
+ * need to advice the user and offers him to save/discard the changes
+ */
 static void
 gcal_window_back_last_view (GcalToolbar *main_toolbar,
                             gpointer     user_data)
@@ -457,10 +470,22 @@ gcal_window_edit_event (GcalToolbar *main_toolbar,
   if (priv->add_view == NULL)
       gcal_window_init_event_view (GCAL_WINDOW (user_data));
 
+  //FIXME: check here, maybe this isn't need since edit-event
+  //can be triggered only from add_view
   gtk_notebook_set_current_page (
       GTK_NOTEBOOK (priv->notebook),
       gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook), priv->add_view));
   gcal_event_view_enter_edit_mode (GCAL_EVENT_VIEW (priv->add_view));
+}
+
+static void
+gcal_window_done_edit_event (GcalToolbar *main_toolbar,
+                        gpointer     user_data)
+{
+  GcalWindowPrivate *priv;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+  gcal_event_view_leave_edit_mode (GCAL_EVENT_VIEW (priv->add_view));
 }
 
 static void

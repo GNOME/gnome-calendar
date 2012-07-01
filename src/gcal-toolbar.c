@@ -49,6 +49,7 @@ enum
 
   BACK,
   EDIT_EVENT,
+  DONE_EDIT,
 
   NUM_SIGNALS
 };
@@ -138,6 +139,16 @@ gcal_toolbar_class_init (GcalToolbarClass *klass)
                                       g_cclosure_marshal_VOID__VOID,
                                       G_TYPE_NONE,
                                       0);
+
+  signals[DONE_EDIT] = g_signal_new ("done-edit",
+                                     GCAL_TYPE_TOOLBAR,
+                                     G_SIGNAL_RUN_LAST,
+                                     G_STRUCT_OFFSET (GcalToolbarClass,
+                                                      done_edit),
+                                     NULL, NULL,
+                                     g_cclosure_marshal_VOID__VOID,
+                                     G_TYPE_NONE,
+                                     0);
 
   g_type_class_add_private ((gpointer) klass, sizeof(GcalToolbarPrivate));
 }
@@ -430,19 +441,22 @@ gcal_toolbar_set_event_mode (GcalToolbar *toolbar)
   /* edit */
   if (priv->edit_button == NULL)
     {
-      priv->edit_button = gtk_button_new_with_label (_("Edit"));
+      priv->edit_button = gtk_toggle_button_new_with_label (_("Edit"));
       g_object_ref_sink (priv->edit_button);
 
       context = gtk_widget_get_style_context (priv->edit_button);
       gtk_style_context_add_class (context, "raised");
 
       g_signal_connect (priv->edit_button,
-                        "clicked",
+                        "toggled",
                         G_CALLBACK (gcal_toolbar_event_edited),
                         toolbar);
     }
   /* reset morphing edit_button */
   gtk_button_set_label (GTK_BUTTON (priv->edit_button), _("Edit"));
+  g_signal_handlers_block_by_func (priv->edit_button, gcal_toolbar_event_edited, toolbar);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->edit_button), FALSE);
+  g_signal_handlers_unblock_by_func (priv->edit_button, gcal_toolbar_event_edited, toolbar);
 
   gtk_container_add (GTK_CONTAINER (priv->right_item), priv->edit_button);
   gtk_widget_show_all (priv->edit_button);
@@ -506,9 +520,16 @@ gcal_toolbar_event_edited (GtkWidget *button,
   priv = toolbar->priv;
 
   /* morphing edit_button */
-  gtk_button_set_label (GTK_BUTTON (priv->edit_button), _("Done"));
-
-  g_signal_emit (toolbar, signals[EDIT_EVENT], 0);
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button)))
+    {
+      g_signal_emit (toolbar, signals[EDIT_EVENT], 0);
+      gtk_button_set_label (GTK_BUTTON (priv->edit_button), _("Done"));
+    }
+  else
+    {
+      g_signal_emit (toolbar, signals[DONE_EDIT], 0);
+      gtk_button_set_label (GTK_BUTTON (priv->edit_button), _("Edit"));
+    }
 }
 
 /* Public API */
