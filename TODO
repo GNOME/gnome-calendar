@@ -9,3 +9,7 @@ TODO
  - Create GcalView interface or superclass of all views.
  - Connect all dconf options to the program
  - Remove body_actor if there's no need of it in the end.
+
+Design stuff
+
+ - What to do when there's no host set in the event.
