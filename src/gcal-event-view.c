@@ -92,7 +92,6 @@ gcal_event_view_constructed (GObject *object)
 {
   GcalEventViewPrivate *priv;
   GtkWidget *what;
-  GtkWidget *host;
   GtkWidget *when;
   GtkWidget *calendar;
   GtkWidget *where;
@@ -112,8 +111,6 @@ gcal_event_view_constructed (GObject *object)
 
   priv->e_what = gcal_editable_entry_new ();
   priv->e_widgets = g_slist_append (priv->e_widgets, priv->e_what);
-  priv->e_host = gcal_editable_entry_new ();
-  priv->e_widgets = g_slist_append (priv->e_widgets, priv->e_host);
 
   priv->d_when = gcal_editable_date_new ();
   priv->e_widgets = g_slist_append (priv->e_widgets, priv->d_when);
@@ -152,11 +149,6 @@ gcal_event_view_constructed (GObject *object)
   gtk_grid_attach (GTK_GRID (object), what, 0, 0, 1, 1);
   gtk_grid_attach (GTK_GRID (object), priv->e_what, 1, 0, 3, 1);
 
-  host = gtk_label_new (_("Host"));
-  gtk_widget_set_halign (host, GTK_ALIGN_END);
-  gtk_grid_attach (GTK_GRID (object), host, 4, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (object), priv->e_host, 5, 0, 1, 1);
-
   when = gtk_label_new (_("When"));
   gtk_widget_set_valign (when, GTK_ALIGN_START);
   gtk_widget_set_halign (when, GTK_ALIGN_END);
@@ -177,7 +169,6 @@ gcal_event_view_constructed (GObject *object)
   gtk_widget_set_halign (desc, GTK_ALIGN_END);
   gtk_widget_set_valign (desc, GTK_ALIGN_START);
   gtk_grid_attach (GTK_GRID (object), desc, 0, 4, 1, 1);
-  gtk_widget_set_size_request (priv->t_desc, -1, 200);
   gtk_grid_attach (GTK_GRID (object), priv->t_desc, 1, 4, 3, 1);
 
   rem = gtk_label_new (_("Reminders"));
@@ -245,8 +236,6 @@ gcal_event_view_update (GcalEventView *view)
   else
     {
       gchar  *summary;
-      gchar  *organizer_label;
-      gchar **organizer;
       gchar *when;
       const gchar *location;
       gchar *description;
@@ -260,31 +249,6 @@ gcal_event_view_update (GcalEventView *view)
       gcal_editable_entry_set_content (GCAL_EDITABLE_ENTRY (priv->e_what),
                                        summary,
                                        FALSE);
-
-      /* FIXME: Hide when no shost, hide the panel completely */
-      organizer = gcal_manager_get_event_organizer (priv->manager,
-                                                    priv->source_uid,
-                                                    priv->event_uid);
-      if (organizer == NULL)
-        {
-          //HIDE PANEL
-          ;
-        }
-      else
-        {
-          gchar *link;
-          link = g_utf8_strdown (organizer[1], -1);
-          organizer_label = g_strdup_printf ("<a href=\"%s\">%s</a>",
-                                             link,
-                                             organizer[0]);
-          gcal_editable_entry_set_content (GCAL_EDITABLE_ENTRY (priv->e_host),
-                                           organizer_label,
-                                           TRUE);
-
-          g_free (organizer_label);
-          g_free (link);
-          g_strfreev (organizer);
-        }
 
       when = gcal_manager_get_event_date (priv->manager,
                                           priv->source_uid,
