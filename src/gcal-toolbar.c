@@ -34,6 +34,10 @@ struct _GcalToolbarPrivate
   GtkWidget   *sources_button;
   GtkWidget   *views_box;
   GtkWidget   *add_button;
+
+  /* events widgets */
+  GtkWidget   *back_button;
+  GtkWidget   *edit_button;
 };
 
 enum
@@ -43,27 +47,38 @@ enum
   SOURCES_SHOWN,
   ADD_EVENT,
 
+  BACK,
+  EDIT_EVENT,
+
   NUM_SIGNALS
 };
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-static void gcal_toolbar_constructed       (GObject   *object);
+static void gcal_toolbar_constructed       (GObject     *object);
 
-static void gcal_toolbar_finalize          (GObject   *object);
+static void gcal_toolbar_finalize          (GObject     *object);
+
+static void gcal_toolbar_clear             (GcalToolbar *toolbar);
 
 static void gcal_toolbar_set_overview_mode (GcalToolbar *toolbar);
 
 static void gcal_toolbar_set_event_mode    (GcalToolbar *toolbar);
 
-static void gcal_toolbar_view_changed      (GtkWidget *button,
-                                            gpointer   user_data);
+static void gcal_toolbar_view_changed      (GtkWidget   *button,
+                                            gpointer     user_data);
 
-static void gcal_toolbar_sources_shown     (GtkWidget *button,
-                                            gpointer   user_data);
+static void gcal_toolbar_sources_shown     (GtkWidget   *button,
+                                            gpointer     user_data);
 
-static void gcal_toolbar_add_event         (GtkWidget *button,
-                                            gpointer   user_data);
+static void gcal_toolbar_add_event         (GtkWidget   *button,
+                                            gpointer     user_data);
+
+static void gcal_toolbar_back_clicked      (GtkWidget   *button,
+                                            gpointer     user_data);
+
+static void gcal_toolbar_event_edited      (GtkWidget   *button,
+                                            gpointer     user_data);
 
 G_DEFINE_TYPE (GcalToolbar, gcal_toolbar, GTK_CLUTTER_TYPE_ACTOR);
 
@@ -104,6 +119,25 @@ gcal_toolbar_class_init (GcalToolbarClass *klass)
                                      g_cclosure_marshal_VOID__VOID,
                                      G_TYPE_NONE,
                                      0);
+
+  signals[BACK] = g_signal_new ("back",
+                                GCAL_TYPE_TOOLBAR,
+                                G_SIGNAL_RUN_LAST,
+                                G_STRUCT_OFFSET (GcalToolbarClass, back),
+                                NULL, NULL,
+                                g_cclosure_marshal_VOID__VOID,
+                                G_TYPE_NONE,
+                                0);
+
+  signals[EDIT_EVENT] = g_signal_new ("edit-event",
+                                      GCAL_TYPE_TOOLBAR,
+                                      G_SIGNAL_RUN_LAST,
+                                      G_STRUCT_OFFSET (GcalToolbarClass,
+                                                       edit_event),
+                                      NULL, NULL,
+                                      g_cclosure_marshal_VOID__VOID,
+                                      G_TYPE_NONE,
+                                      0);
 
   g_type_class_add_private ((gpointer) klass, sizeof(GcalToolbarPrivate));
 }
@@ -172,7 +206,43 @@ gcal_toolbar_constructed (GObject *object)
 static void
 gcal_toolbar_finalize (GObject *object)
 {
+  GcalToolbarPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_TOOLBAR (object));
+  priv = GCAL_TOOLBAR (object)->priv;
+
+  if (priv->sources_button)
+    g_clear_object (&(priv->sources_button));
+  if (priv->views_box)
+    g_clear_object (&(priv->views_box));
+  if (priv->add_button)
+    g_clear_object (&(priv->add_button));
+
+  if (priv->back_button)
+    g_clear_object (&(priv->back_button));
+  if (priv->edit_button)
+    g_clear_object (&(priv->edit_button));
+
   G_OBJECT_CLASS (gcal_toolbar_parent_class)->finalize (object);
+}
+
+static void
+gcal_toolbar_clear (GcalToolbar *toolbar)
+{
+  GcalToolbarPrivate *priv;
+  GtkWidget *child;
+
+  g_return_if_fail (GCAL_IS_TOOLBAR (toolbar));
+  priv = toolbar->priv;
+
+  if ((child = gtk_bin_get_child (GTK_BIN (priv->left_item))) != NULL)
+    gtk_container_remove (GTK_CONTAINER (priv->left_item), child);
+
+  if ((child = gtk_bin_get_child (GTK_BIN (priv->central_item))) != NULL)
+    gtk_container_remove (GTK_CONTAINER (priv->central_item), child);
+
+  if ((child = gtk_bin_get_child (GTK_BIN (priv->right_item))) != NULL)
+  gtk_container_remove (GTK_CONTAINER (priv->right_item), child);
 }
 
 static void
@@ -189,6 +259,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
   if (priv->sources_button == NULL)
     {
       priv->sources_button = gtk_toggle_button_new ();
+      g_object_ref_sink (priv->sources_button);
       gtk_container_add (
           GTK_CONTAINER (priv->sources_button),
           gtk_image_new_from_icon_name ("view-list-symbolic",
@@ -210,6 +281,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
   if (priv->views_box == NULL)
     {
       priv->views_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+      g_object_ref_sink (priv->views_box);
       gtk_widget_set_hexpand (priv->views_box, TRUE);
 
       context = gtk_widget_get_style_context (priv->views_box);
@@ -307,6 +379,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
   if (priv->add_button == NULL)
     {
       priv->add_button = gtk_button_new ();
+      g_object_ref_sink (priv->add_button);
       gtk_container_add (
           GTK_CONTAINER (priv->add_button),
           gtk_image_new_from_icon_name ("list-add-symbolic",
@@ -327,7 +400,52 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
 static void
 gcal_toolbar_set_event_mode (GcalToolbar *toolbar)
 {
-  ;
+  GcalToolbarPrivate *priv;
+  GtkStyleContext *context;
+
+  g_return_if_fail (GCAL_IS_TOOLBAR (toolbar));
+  priv = toolbar->priv;
+
+  /* back */
+  if (priv->back_button == NULL)
+    {
+      priv->back_button = gtk_button_new_with_label (_("Back"));
+      g_object_ref_sink (priv->back_button);
+      gtk_button_set_image (
+          GTK_BUTTON (priv->back_button),
+          gtk_image_new_from_icon_name ("go-previous-symbolic",
+                                        GTK_ICON_SIZE_MENU));
+
+      context = gtk_widget_get_style_context (priv->back_button);
+      gtk_style_context_add_class (context, "raised");
+
+      g_signal_connect (priv->back_button,
+                        "clicked",
+                        G_CALLBACK (gcal_toolbar_back_clicked),
+                        toolbar);
+    }
+  gtk_container_add (GTK_CONTAINER (priv->left_item), priv->back_button);
+  gtk_widget_show_all (priv->back_button);
+
+  /* edit */
+  if (priv->edit_button == NULL)
+    {
+      priv->edit_button = gtk_button_new_with_label (_("Edit"));
+      g_object_ref_sink (priv->edit_button);
+
+      context = gtk_widget_get_style_context (priv->edit_button);
+      gtk_style_context_add_class (context, "raised");
+
+      g_signal_connect (priv->edit_button,
+                        "clicked",
+                        G_CALLBACK (gcal_toolbar_event_edited),
+                        toolbar);
+    }
+  /* reset morphing edit_button */
+  gtk_button_set_label (GTK_BUTTON (priv->edit_button), _("Edit"));
+
+  gtk_container_add (GTK_CONTAINER (priv->right_item), priv->edit_button);
+  gtk_widget_show_all (priv->edit_button);
 }
 
 static void
@@ -367,6 +485,33 @@ gcal_toolbar_add_event (GtkWidget *button,
   g_signal_emit (toolbar, signals[ADD_EVENT], 0);
 }
 
+static void
+gcal_toolbar_back_clicked (GtkWidget *button,
+                           gpointer   user_data)
+{
+  GcalToolbar *toolbar;
+
+  toolbar = GCAL_TOOLBAR (user_data);
+  g_signal_emit (toolbar, signals[BACK], 0);
+}
+
+static void
+gcal_toolbar_event_edited (GtkWidget *button,
+                           gpointer   user_data)
+{
+  GcalToolbarPrivate *priv;
+  GcalToolbar *toolbar;
+
+  toolbar = GCAL_TOOLBAR (user_data);
+  priv = toolbar->priv;
+
+  /* morphing edit_button */
+  gtk_button_set_label (GTK_BUTTON (priv->edit_button), _("Done"));
+
+  g_signal_emit (toolbar, signals[EDIT_EVENT], 0);
+}
+
+/* Public API */
 ClutterActor*
 gcal_toolbar_new (void)
 {
@@ -378,6 +523,7 @@ gcal_toolbar_set_mode (GcalToolbar     *toolbar,
                        GcalToolbarMode  mode)
 {
   g_return_if_fail (GCAL_IS_TOOLBAR (toolbar));
+  gcal_toolbar_clear (toolbar);
   switch (mode)
     {
       case GCAL_TOOLBAR_OVERVIEW:
