@@ -191,7 +191,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
       priv->sources_button = gtk_toggle_button_new ();
       gtk_container_add (
           GTK_CONTAINER (priv->sources_button),
-          gtk_image_new_from_icon_name ("emblem-documents-symbolic",
+          gtk_image_new_from_icon_name ("view-list-symbolic",
                                         GTK_ICON_SIZE_MENU));
 
       context = gtk_widget_get_style_context (priv->sources_button);

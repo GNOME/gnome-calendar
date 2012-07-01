@@ -108,6 +108,7 @@ gcal_window_constructed (GObject *object)
   ClutterActor *body_actor;
   ClutterLayoutManager *body_layout_manager;
   ClutterLayoutManager *contents_layout_manager;
+  GtkWidget *holder_parent;
   GtkWidget *holder;
 
   GtkStyleContext *context;
@@ -217,6 +218,11 @@ gcal_window_constructed (GObject *object)
                           CLUTTER_BIN_ALIGNMENT_START);
   clutter_actor_hide (priv->sources_actor);
 
+  holder_parent = gtk_widget_get_parent (holder);
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (holder_parent),
+      "sources");
+
   /* signals connection/handling */
   g_signal_connect (priv->main_toolbar,
                     "view-changed",
@@ -267,8 +273,6 @@ gcal_window_set_sources_view (GcalWindow *window)
       TRUE);
 
   renderer = gtk_cell_renderer_toggle_new ();
-  gtk_cell_renderer_toggle_set_radio (GTK_CELL_RENDERER_TOGGLE (renderer),
-                                      TRUE);
   column = gtk_tree_view_column_new_with_attributes ("",
                                                      renderer,
                                                      "active",
