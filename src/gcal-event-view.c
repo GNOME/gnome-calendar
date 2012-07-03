@@ -166,6 +166,7 @@ gcal_event_view_constructed (GObject *object)
   gtk_container_add (GTK_CONTAINER (attending_box), priv->attending_maybe);
   gtk_container_add (GTK_CONTAINER (attending_box), priv->attending_no);
 
+  /* Building the skel grid */
   what = gtk_label_new (_("What"));
   gtk_widget_set_halign (what, GTK_ALIGN_END);
   gtk_grid_attach (GTK_GRID (object), what, 0, 0, 1, 1);
@@ -196,6 +197,7 @@ gcal_event_view_constructed (GObject *object)
   rem = gtk_label_new (_("Reminders"));
   gtk_widget_set_halign (rem, GTK_ALIGN_END);
   gtk_widget_set_valign (rem, GTK_ALIGN_START);
+  gtk_widget_set_margin_top (rem, 10);
   gtk_grid_attach (GTK_GRID (object), rem, 0, 5, 1, 1);
   gtk_grid_attach (GTK_GRID (object), priv->reminders, 1, 5, 1, 1);
 

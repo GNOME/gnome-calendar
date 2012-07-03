@@ -109,7 +109,12 @@ gcal_editable_reminder_constructed (GObject *object)
   gcal_editable_set_view_widget (GCAL_EDITABLE (object), priv->view_widget);
 
   priv->edit_widget = gtk_grid_new ();
-  gtk_grid_set_column_spacing (GTK_GRID (priv->edit_widget), 6);
+  g_object_set (priv->edit_widget,
+                "orientation", GTK_ORIENTATION_VERTICAL,
+                "row-spacing", 6,
+                "column-spacing", 6,
+                "valign", GTK_ALIGN_START,
+                NULL);
   priv->left_box = gtk_grid_new ();
   g_object_set (priv->left_box,
                 "orientation", GTK_ORIENTATION_VERTICAL,
@@ -123,18 +128,13 @@ gcal_editable_reminder_constructed (GObject *object)
                                           1,
                                           NULL);
 
-  priv->add_button = gtk_button_new ();
+  priv->add_button = gtk_button_new_with_label (_("Add reminder"));
   g_object_ref_sink (priv->add_button);
   g_object_set (priv->add_button,
+                "halign", GTK_ALIGN_START,
                 "valign", GTK_ALIGN_START,
-                "halign", GTK_ALIGN_END,
-                "relief", GTK_RELIEF_NONE,
                 NULL);
-  gtk_container_add (
-      GTK_CONTAINER (priv->add_button),
-      gtk_image_new_from_icon_name ("list-add-symbolic",
-                                    GTK_ICON_SIZE_MENU));
-  gtk_grid_attach (GTK_GRID (priv->edit_widget), priv->add_button, 1, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_widget), priv->add_button, 0, 1, 1, 1);
   g_signal_connect (priv->add_button,
                     "clicked",
                     G_CALLBACK (gcal_editable_reminder_add_button_clicked),
@@ -383,19 +383,6 @@ gcal_editable_reminder_insert_reminder (GcalEditableReminder *editable,
 
   gtk_widget_show_all (hbox);
   priv->reminders = g_list_append (priv->reminders, hbox);
-
-  /* hack for activating/deactivating first del_button */
-  if (g_list_length (priv->reminders) == 1)
-    {
-      gtk_widget_set_sensitive (del_button, FALSE);
-    }
-  else
-    {
-      del_button = gtk_grid_get_child_at (
-          GTK_GRID (g_list_first (priv->reminders)->data),
-          3, 0);
-      gtk_widget_set_sensitive (del_button, TRUE);
-    }
 }
 
 static void
@@ -415,16 +402,6 @@ gcal_editable_reminder_remove_reminder (GtkButton *button,
     {
       priv->reminders = g_list_remove (priv->reminders, parent);
       gtk_container_remove (GTK_CONTAINER (priv->left_box), parent);
-
-      /* hack for activating/deactivating first del_button */
-      if (g_list_length (priv->reminders) == 1)
-        {
-          GtkWidget *del_button;
-          del_button = gtk_grid_get_child_at (
-              GTK_GRID (g_list_last (priv->reminders)->data),
-              3, 0);
-          gtk_widget_set_sensitive (del_button, FALSE);
-        }
     }
 }
 
