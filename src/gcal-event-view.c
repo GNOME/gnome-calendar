@@ -55,6 +55,15 @@ struct _GcalEventViewPrivate
   GcalManager       *manager;
 };
 
+enum
+{
+  DONE = 1,
+
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
+
 static void     gcal_event_view_constructed          (GObject        *object);
 
 static void     gcal_event_view_finalize             (GObject        *object);
@@ -62,6 +71,9 @@ static void     gcal_event_view_finalize             (GObject        *object);
 static void     gcal_event_view_set_combo_box        (GcalEventView  *view);
 
 static void     gcal_event_view_update               (GcalEventView  *view);
+
+static void     gcal_event_view_delete_event         (GtkWidget      *button,
+                                                      gpointer        user_data);
 
 G_DEFINE_TYPE(GcalEventView, gcal_event_view, GTK_TYPE_GRID)
 
@@ -73,6 +85,15 @@ gcal_event_view_class_init(GcalEventViewClass *klass)
   object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_event_view_constructed;
   object_class->finalize = gcal_event_view_finalize;
+
+  signals[DONE] = g_signal_new ("done",
+                                GCAL_TYPE_EVENT_VIEW,
+                                G_SIGNAL_RUN_LAST,
+                                G_STRUCT_OFFSET (GcalEventViewClass, done),
+                                NULL, NULL,
+                                g_cclosure_marshal_VOID__VOID,
+                                G_TYPE_NONE,
+                                0);
 
   g_type_class_add_private((gpointer)klass, sizeof(GcalEventViewPrivate));
 }
@@ -120,7 +141,6 @@ gcal_event_view_constructed (GObject *object)
   priv->e_where = gcal_editable_entry_new ();
   priv->e_widgets = g_slist_append (priv->e_widgets, priv->e_where);
 
-  /* FIXME: turn me into a GcalEditable Widget */
   priv->cb_cal = gcal_editable_combo_new ();
   priv->e_widgets = g_slist_append (priv->e_widgets, priv->cb_cal);
   gtk_widget_set_halign (priv->cb_cal, GTK_ALIGN_START);
@@ -197,6 +217,12 @@ gcal_event_view_constructed (GObject *object)
   gtk_widget_show_all (GTK_WIDGET (object));
 
   gtk_widget_hide (priv->delete_button);
+
+  /* Signals */
+  g_signal_connect (priv->delete_button,
+                    "clicked",
+                    G_CALLBACK (gcal_event_view_delete_event),
+                    object);
 }
 
 static void
@@ -304,6 +330,24 @@ gcal_event_view_update (GcalEventView *view)
     }
 }
 
+static void
+gcal_event_view_delete_event (GtkWidget *button,
+                              gpointer   user_data)
+{
+  GcalEventViewPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_EVENT_VIEW (user_data));
+  priv = GCAL_EVENT_VIEW (user_data)->priv;
+
+  gcal_manager_remove_event (priv->manager,
+                             priv->source_uid,
+                             priv->event_uid);
+
+  /* Reset the widget, and let the windows it work it's done */
+  gcal_event_view_load_new (GCAL_EVENT_VIEW (user_data));
+  g_signal_emit (GCAL_EVENT_VIEW (user_data), signals[DONE], 0);
+}
+
 /* Public API */
 
 /**
@@ -336,6 +380,24 @@ gcal_event_view_new_with_manager (GcalManager *manager)
 void
 gcal_event_view_load_new (GcalEventView *view)
 {
+  GcalEventViewPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_EVENT_VIEW (view));
+  priv = view->priv;
+
+  if (priv->source_uid != NULL)
+    g_free (priv->source_uid);
+  if (priv->event_uid != NULL)
+    g_free (priv->event_uid);
+
+  priv->source_uid = NULL;
+  priv->event_uid = NULL;
+
+  /* Setting the widget to blank state to load a new event */
+  g_slist_foreach (priv->e_widgets, (GFunc) gcal_editable_clear, NULL);
+
+  gcal_event_view_update (view);
+  gcal_event_view_enter_edit_mode (view);
 }
 
 /**
@@ -398,7 +460,8 @@ gcal_event_view_enter_edit_mode (GcalEventView *view)
                    NULL);
 
   /* showing delete button */
-  gtk_widget_show (priv->delete_button);
+  if (priv->event_uid != NULL)
+    gtk_widget_show (priv->delete_button);
 }
 
 /**

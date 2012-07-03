@@ -40,6 +40,7 @@ struct _GcalWindowPrivate
   ClutterActor       *contents_actor;
   ClutterActor       *notebook_actor;
   ClutterActor       *sources_actor;
+  ClutterActor       *notification_actor;
 
   GtkWidget          *notebook;
   GtkWidget          *sources_view;
@@ -68,7 +69,7 @@ static void       gcal_window_sources_shown          (GcalToolbar       *main_to
 static void       gcal_window_add_event              (GcalToolbar       *main_toolbar,
                                                       gpointer           user_data);
 
-static void       gcal_window_back_last_view         (GcalToolbar       *main_toolbar,
+static void       gcal_window_back_last_view         (GtkWidget         *widget,
                                                       gpointer           user_data);
 
 static void       gcal_window_edit_event             (GcalToolbar       *main_toolbar,
@@ -83,6 +84,10 @@ static void       gcal_window_sources_row_activated  (GtkTreeView       *tree_vi
                                                       gpointer           user_data);
 
 static void       gcal_window_events_added           (GcalManager       *manager,
+                                                      gpointer           events_list,
+                                                      gpointer           user_data);
+
+static void       gcal_window_events_removed         (GcalManager       *manager,
                                                       gpointer           events_list,
                                                       gpointer           user_data);
 
@@ -373,6 +378,11 @@ gcal_window_init_event_view (GcalWindow *window)
                 "margin-right", 20,
                 NULL);
 
+  g_signal_connect (priv->add_view,
+                    "done",
+                    G_CALLBACK (gcal_window_back_last_view),
+                    window);
+
   gtk_widget_show (priv->add_view);
   gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook),
                             priv->add_view,
@@ -401,6 +411,9 @@ gcal_window_view_changed (GcalToolbar       *main_toolbar,
     {
       //TODO create view
       g_debug ("GcalViewTypeEnum in GcalWindow %d", priv->active_view);
+      if (priv->active_view == GCAL_VIEW_TYPE_LIST)
+        {
+        }
     }
 }
 
@@ -444,6 +457,11 @@ gcal_window_add_event (GcalToolbar *main_toolbar,
   gtk_notebook_set_current_page (
       GTK_NOTEBOOK (priv->notebook),
       gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook), priv->add_view));
+
+  gcal_toolbar_set_mode (GCAL_TOOLBAR (priv->main_toolbar),
+                         GCAL_TOOLBAR_VIEW_EVENT);
+
+  gcal_event_view_load_new (GCAL_EVENT_VIEW (priv->add_view));
 }
 
 /*
@@ -451,7 +469,7 @@ gcal_window_add_event (GcalToolbar *main_toolbar,
  * need to advice the user and offers him to save/discard the changes
  */
 static void
-gcal_window_back_last_view (GcalToolbar *main_toolbar,
+gcal_window_back_last_view (GtkWidget   *widget,
                             gpointer     user_data)
 {
   GcalWindowPrivate *priv;
@@ -471,8 +489,8 @@ gcal_window_back_last_view (GcalToolbar *main_toolbar,
     }
   else
     {
-      //TODO create view
-      g_debug ("GcalViewTypeEnum in GcalWindow %d", priv->active_view);
+      //FIXME: there's something that needs to be done here.
+      g_warning ("Your app has gone crazy");
     }
 }
 
@@ -555,8 +573,6 @@ gcal_window_events_added (GcalManager *manager,
 
   for (l = events_list; l != NULL; l = l->next)
     {
-      g_debug ("Adding events in GcalWindow %d", priv->active_view);
-
       tokens = g_strsplit ((gchar*) l->data, ":", -1);
       source_uid  = tokens[0];
       event_uid = tokens[1];
@@ -606,6 +622,31 @@ gcal_window_events_added (GcalManager *manager,
 }
 
 static void
+gcal_window_events_removed (GcalManager *manager,
+                            gpointer     events_list,
+                            gpointer     user_data)
+{
+  GcalWindowPrivate *priv;
+  GSList *l;
+
+  g_return_if_fail (GCAL_IS_WINDOW (user_data));
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  for (l = events_list; l != NULL; l = l->next)
+    {
+      gint i;
+      //FIXME: call destroy widget representing this event in every view.
+      g_debug ("Removed event: %s", (gchar*) l->data);
+      for (i = 0; i < 5; i++)
+        {
+          if (priv->views[i] != NULL)
+            gcal_view_remove_by_uuid (GCAL_VIEW (priv->views[i]),
+                                      (gchar*) l->data);
+        }
+    }
+}
+
+static void
 gcal_window_event_activated (GcalEventWidget *event_widget,
                              gpointer         user_data)
 {
@@ -614,7 +655,6 @@ gcal_window_event_activated (GcalEventWidget *event_widget,
   g_return_if_fail (GCAL_IS_WINDOW (user_data));
   priv = GCAL_WINDOW (user_data)->priv;
 
-  g_debug ("event_activated: %s", gcal_event_widget_peek_uuid (event_widget));
   if (priv->add_view == NULL)
     gcal_window_init_event_view (GCAL_WINDOW (user_data));
 
@@ -648,6 +688,11 @@ gcal_window_new (GcalApplication *app)
   g_signal_connect (manager,
                     "events-added",
                     G_CALLBACK (gcal_window_events_added),
+                    win);
+
+  g_signal_connect (manager,
+                    "events-removed",
+                    G_CALLBACK (gcal_window_events_removed),
                     win);
 
   /* FIXME: demo code */

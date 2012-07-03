@@ -47,6 +47,9 @@ struct _GcalEventView
 struct _GcalEventViewClass
 {
   GtkGridClass parent_class;
+
+  /* Signals */
+  void (*done) (GcalEventView *view);
 };
 
 GType         gcal_event_view_get_type                   (void);

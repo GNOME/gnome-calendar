@@ -121,6 +121,8 @@ static void     gcal_month_view_draw_month_grid         (GcalMonthView  *mont_vi
 static gboolean gcal_month_view_is_in_range             (GcalView       *view,
                                                          icaltimetype   *date);
 
+static void     gcal_month_view_remove_by_uuid          (GcalView       *view,
+                                                         const gchar    *uuid);
 
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
                          gcal_month_view,
@@ -192,6 +194,7 @@ static void
 gcal_view_interface_init (GcalViewIface *iface)
 {
   iface->is_in_range = gcal_month_view_is_in_range;
+  iface->remove_by_uuid = gcal_month_view_remove_by_uuid;
 }
 
 static void
@@ -723,10 +726,34 @@ static gboolean
 gcal_month_view_is_in_range (GcalView     *view,
                              icaltimetype *date)
 {
-  g_debug ("Implementation of is_in_range called");
+  //FIXME: Add implementation here.
+  // as it should return TRUE all the time.
   return TRUE;
 }
 
+static void
+gcal_month_view_remove_by_uuid (GcalView    *view,
+                                const gchar *uuid)
+{
+  GcalMonthViewPrivate *priv;
+  gint i;
+  GList *l;
+
+  g_return_if_fail (GCAL_IS_MONTH_VIEW (view));
+  priv = GCAL_MONTH_VIEW (view)->priv;
+
+  for (i = 0; i < 35; i++)
+    {
+      for (l = priv->days[i]; l != NULL; l = l->next)
+        {
+          const gchar* widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (l->data));
+          if (g_strcmp0 (uuid, widget_uuid) == 0)
+            gtk_widget_destroy (GTK_WIDGET (l->data));
+        }
+    }
+}
+
+/* Public API */
 /**
  * gcal_month_view_new:
  * @date:

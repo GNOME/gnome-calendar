@@ -112,6 +112,10 @@ GList*         gcal_manager_get_event_reminders     (GcalManager        *manager
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
 
+void           gcal_manager_remove_event            (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
+
 G_END_DECLS
 
 #endif /* __GCAL_MANAGER_H__ */

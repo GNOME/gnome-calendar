@@ -487,9 +487,6 @@ static gboolean
 gcal_event_widget_button_press_event (GtkWidget      *widget,
                                       GdkEventButton *event)
 {
-  g_debug ("button pressed over event: %s",
-           GCAL_EVENT_WIDGET (widget)->priv->uuid);
-
   if (event->type == GDK_2BUTTON_PRESS)
     g_signal_emit (widget, signals[ACTIVATED], 0);
 

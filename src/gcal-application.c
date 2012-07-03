@@ -118,7 +118,7 @@ gcal_application_startup (GApplication *app)
      error = NULL;
      gtk_css_provider_load_from_path (priv->provider, CSS_FILE, &error);
      if (error != NULL)
-       g_warning ("Not loading stylesheet from file %s", CSS_FILE);
+       g_warning ("Error loading stylesheet from file %s. %s", CSS_FILE, error->message);
    }
 
   priv->manager = gcal_manager_new ();
