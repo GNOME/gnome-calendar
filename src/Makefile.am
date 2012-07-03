@@ -48,7 +48,9 @@ gnome_calendar_SOURCES =                                \
 	gcal-manager.c                                        \
 	gcal-manager.h                                        \
 	gcal-utils.c                                          \
-	gcal-utils.h
+	gcal-utils.h                                          \
+	gtk-notification.c                                    \
+	gtk-notification.h
 
 
 gnome_calendar_LDFLAGS =                                \

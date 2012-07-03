@@ -51,9 +51,12 @@ struct _GcalWindowClass
 };
 
 
-GType        gcal_window_get_type        (void);
+GType        gcal_window_get_type          (void);
 
-GtkWidget*   gcal_window_new             (GcalApplication *app);
+GtkWidget*   gcal_window_new               (GcalApplication *app);
+
+void         gcal_window_show_notification (GcalWindow      *window,
+                                            GtkWidget       *notification);
 
 G_END_DECLS
 

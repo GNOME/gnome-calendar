@@ -117,7 +117,6 @@ gcal_window_constructed (GObject *object)
   ClutterActor *body_actor;
   ClutterLayoutManager *body_layout_manager;
   ClutterLayoutManager *contents_layout_manager;
-  GtkWidget *holder_parent;
   GtkWidget *holder;
 
   GtkStyleContext *context;
@@ -228,10 +227,27 @@ gcal_window_constructed (GObject *object)
                           CLUTTER_BIN_ALIGNMENT_START);
   clutter_actor_hide (priv->sources_actor);
 
-  holder_parent = gtk_widget_get_parent (holder);
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (holder_parent),
-      "sources");
+  context =
+    gtk_widget_get_style_context (
+        gtk_clutter_actor_get_widget (
+          GTK_CLUTTER_ACTOR (priv->sources_actor)));
+  gtk_style_context_add_class (context, "overlay");
+
+  /* notifications manager */
+  priv->notification_actor = gtk_clutter_actor_new ();
+  clutter_actor_set_opacity (priv->notification_actor, 0);
+  clutter_actor_set_clip_to_allocation (priv->notification_actor, TRUE);
+  clutter_bin_layout_add (CLUTTER_BIN_LAYOUT (contents_layout_manager),
+                          priv->notification_actor,
+                          CLUTTER_BIN_ALIGNMENT_CENTER,
+                          CLUTTER_BIN_ALIGNMENT_START);
+
+  context =
+    gtk_widget_get_style_context (
+        gtk_clutter_actor_get_widget (
+          GTK_CLUTTER_ACTOR (priv->notification_actor)));
+  gtk_style_context_add_class (context, "overlay");
+  clutter_actor_hide (priv->notification_actor);
 
   /* signals connection/handling */
   g_signal_connect (priv->main_toolbar,
@@ -649,4 +665,20 @@ gcal_window_new (GcalApplication *app)
   g_free (last_day);
 
   return GTK_WIDGET (win);
+}
+
+void
+gcal_window_show_notification (GcalWindow *window,
+                               GtkWidget  *notification)
+{
+  GcalWindowPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_WINDOW (window));
+  priv = window->priv;
+
+  gtk_container_add (
+      GTK_CONTAINER (gtk_clutter_actor_get_widget (GTK_CLUTTER_ACTOR (priv->notification_actor))),
+      notification);
+  gtk_widget_show_all (notification);
+  clutter_actor_show (priv->notification_actor);
 }
