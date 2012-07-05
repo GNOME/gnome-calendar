@@ -79,3 +79,12 @@ gcal_view_remove_by_uuid (GcalView    *view,
 
   GCAL_VIEW_GET_INTERFACE (view)->remove_by_uuid (view, uuid);
 }
+
+GtkWidget*
+gcal_view_get_by_uuid (GcalView    *view,
+                       const gchar *uuid)
+{
+  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+
+  return GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid (view, uuid);
+}

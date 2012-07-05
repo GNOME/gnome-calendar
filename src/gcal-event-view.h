@@ -49,7 +49,7 @@ struct _GcalEventViewClass
   GtkGridClass parent_class;
 
   /* Signals */
-  void (*done) (GcalEventView *view);
+  void (*will_delete) (GcalEventView *view, const gchar* event_uuid);
 };
 
 GType         gcal_event_view_get_type                   (void);

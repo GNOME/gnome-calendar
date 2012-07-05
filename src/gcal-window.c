@@ -26,9 +26,11 @@
 #include "gcal-event-widget.h"
 #include "gcal-event-view.h"
 #include "gcal-utils.h"
+#include "gtk-notification.h"
 
 #include <clutter/clutter.h>
 #include <clutter-gtk/clutter-gtk.h>
+#include <glib/gi18n.h>
 
 #include <libedataserverui/e-cell-renderer-color.h>
 
@@ -48,6 +50,9 @@ struct _GcalWindowPrivate
   GtkWidget          *add_view;
 
   GcalViewTypeEnum    active_view;
+
+  /* temp to keep the will_delete event uuid */
+  gchar              *event_to_delete;
 };
 
 static void       gcal_window_constructed            (GObject           *object);
@@ -94,6 +99,16 @@ static void       gcal_window_events_removed         (GcalManager       *manager
 static void       gcal_window_event_activated        (GcalEventWidget   *event_widget,
                                                       gpointer           user_data);
 
+static void       gcal_window_will_remove_event      (GcalEventView     *view,
+                                                      gchar             *event_uuid,
+                                                      gpointer           user_data);
+
+static void       gcal_window_remove_event           (GtkNotification   *notification,
+                                                      gpointer           user_data);
+
+static void       gcal_window_undo_remove_event      (GtkButton         *button,
+                                                      gpointer           user_data);
+
 G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static void
@@ -131,6 +146,10 @@ gcal_window_constructed (GObject *object)
 
   priv = GCAL_WINDOW (object)->priv;
 
+  /* internal data init*/
+  priv->event_to_delete = NULL;
+
+  /* ui init */
   embed = gtk_clutter_embed_new ();
   gtk_container_add (GTK_CONTAINER (object), embed);
   stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (embed));
@@ -240,8 +259,6 @@ gcal_window_constructed (GObject *object)
 
   /* notifications manager */
   priv->notification_actor = gtk_clutter_actor_new ();
-  clutter_actor_set_opacity (priv->notification_actor, 0);
-  clutter_actor_set_clip_to_allocation (priv->notification_actor, TRUE);
   clutter_bin_layout_add (CLUTTER_BIN_LAYOUT (contents_layout_manager),
                           priv->notification_actor,
                           CLUTTER_BIN_ALIGNMENT_CENTER,
@@ -379,8 +396,8 @@ gcal_window_init_event_view (GcalWindow *window)
                 NULL);
 
   g_signal_connect (priv->add_view,
-                    "done",
-                    G_CALLBACK (gcal_window_back_last_view),
+                    "will-delete",
+                    G_CALLBACK (gcal_window_will_remove_event),
                     window);
 
   gtk_widget_show (priv->add_view);
@@ -669,8 +686,120 @@ gcal_window_event_activated (GcalEventWidget *event_widget,
                          GCAL_TOOLBAR_VIEW_EVENT);
 }
 
-/* Public API */
+static void
+gcal_window_will_remove_event (GcalEventView *view,
+                               gchar         *event_uuid,
+                               gpointer      user_data)
+{
+  GcalWindowPrivate *priv;
+  gint activated_page;
 
+  GtkWidget *noty;
+  GtkWidget *grid;
+  GtkWidget *undo_button;
+
+  GtkWidget *event_widget;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  gcal_toolbar_set_mode (GCAL_TOOLBAR (priv->main_toolbar),
+                         GCAL_TOOLBAR_OVERVIEW);
+
+  if ((activated_page = gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook),
+                                               priv->views[priv->active_view]))
+      != -1)
+    {
+      gtk_notebook_set_current_page (GTK_NOTEBOOK (priv->notebook),
+                                     activated_page);
+    }
+  else
+    {
+      //FIXME: there's something that needs to be done here.
+      g_warning ("Your app has gone crazy");
+    }
+
+  noty = gtk_notification_new ();
+  grid = gtk_grid_new ();
+  gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
+  gtk_container_add (GTK_CONTAINER (grid), gtk_label_new (_("Event deleted")));
+
+  undo_button = gtk_button_new_from_stock (GTK_STOCK_UNDO);
+  gtk_container_add (GTK_CONTAINER (grid), undo_button);
+
+  gtk_container_add (GTK_CONTAINER (noty), grid);
+  gtk_widget_show_all (noty);
+  gcal_window_show_notification (GCAL_WINDOW (user_data), noty);
+
+  g_signal_connect (noty,
+                    "dismissed",
+                    G_CALLBACK (gcal_window_remove_event),
+                    user_data);
+  g_signal_connect (undo_button,
+                    "clicked",
+                    G_CALLBACK (gcal_window_undo_remove_event),
+                    user_data);
+
+  priv->event_to_delete = g_strdup (event_uuid);
+
+  /* hide widget of the event */
+  event_widget =
+    gcal_view_get_by_uuid (GCAL_VIEW (priv->views[priv->active_view]),
+                           priv->event_to_delete);
+  gtk_widget_hide (event_widget);
+}
+
+static void
+gcal_window_remove_event (GtkNotification *notification,
+                          gpointer         user_data)
+{
+  GcalWindowPrivate *priv;
+  GcalManager *manager;
+  gchar **tokens;
+
+  g_return_if_fail (GCAL_IS_WINDOW (user_data));
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  if (priv->event_to_delete != NULL)
+    {
+      manager = gcal_window_get_manager (GCAL_WINDOW (user_data));
+      tokens = g_strsplit (priv->event_to_delete, ":", -1);
+
+      gcal_manager_remove_event (manager, tokens[0], tokens[1]);
+
+      g_strfreev (tokens);
+      g_free (priv->event_to_delete);
+      priv->event_to_delete = NULL;
+    }
+
+  clutter_actor_hide (priv->notification_actor);
+}
+
+static void
+gcal_window_undo_remove_event (GtkButton *button,
+                               gpointer   user_data)
+{
+  GcalWindowPrivate *priv;
+  GtkWidget *event_widget;
+
+  g_return_if_fail (GCAL_IS_WINDOW (user_data));
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  if (priv->event_to_delete != NULL)
+    {
+      event_widget = gcal_view_get_by_uuid (
+          GCAL_VIEW (priv->views[priv->active_view]),
+          priv->event_to_delete);
+      gtk_widget_show (event_widget);
+
+      g_free (priv->event_to_delete);
+      priv->event_to_delete = NULL;
+
+      gcal_window_hide_notification (GCAL_WINDOW (user_data));
+    }
+
+}
+
+/* Public API */
 GtkWidget*
 gcal_window_new (GcalApplication *app)
 {
@@ -726,4 +855,18 @@ gcal_window_show_notification (GcalWindow *window,
       notification);
   gtk_widget_show_all (notification);
   clutter_actor_show (priv->notification_actor);
+}
+
+void
+gcal_window_hide_notification (GcalWindow *window)
+{
+  GcalWindowPrivate *priv;
+  GtkWidget *noty;
+
+  g_return_if_fail (GCAL_IS_WINDOW (window));
+  priv = window->priv;
+
+  noty = gtk_clutter_actor_get_contents (
+      GTK_CLUTTER_ACTOR (priv->notification_actor));
+  gtk_notification_dismiss (GTK_NOTIFICATION (noty));
 }

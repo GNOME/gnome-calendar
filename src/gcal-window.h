@@ -58,6 +58,8 @@ GtkWidget*   gcal_window_new               (GcalApplication *app);
 void         gcal_window_show_notification (GcalWindow      *window,
                                             GtkWidget       *notification);
 
+void         gcal_window_hide_notification (GcalWindow      *window);
+
 G_END_DECLS
 
 #endif /* __GCAL_WINDOW_H__ */

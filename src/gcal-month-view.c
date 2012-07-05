@@ -49,7 +49,7 @@ struct _GcalMonthViewPrivate
   icaltimetype   *date;
 
   gint            days_delay;
-  gint            header_font_size;
+  gint            grid_header_size;
   gdouble         vertical_step;
   gdouble         horizontal_step;
 };
@@ -66,63 +66,66 @@ const char* weekdays [] =
    "Sat"
   };
 
-static void     gcal_view_interface_init                (GcalViewIface  *iface);
+static void         gcal_view_interface_init                (GcalViewIface  *iface);
 
-static void     gcal_month_view_constructed             (GObject        *object);
+static void         gcal_month_view_constructed             (GObject        *object);
 
-static void     gcal_month_view_set_property            (GObject        *object,
-                                                         guint           property_id,
-                                                         const GValue   *value,
-                                                         GParamSpec     *pspec);
+static void         gcal_month_view_set_property            (GObject        *object,
+                                                             guint           property_id,
+                                                             const GValue   *value,
+                                                             GParamSpec     *pspec);
 
-static void     gcal_month_view_get_property            (GObject        *object,
-                                                         guint           property_id,
-                                                         GValue         *value,
-                                                         GParamSpec     *pspec);
+static void         gcal_month_view_get_property            (GObject        *object,
+                                                             guint           property_id,
+                                                             GValue         *value,
+                                                             GParamSpec     *pspec);
 
-static void     gcal_month_view_finalize                (GObject        *object);
+static void         gcal_month_view_finalize                (GObject        *object);
 
-static void     gcal_month_view_realize                 (GtkWidget      *widget);
+static void         gcal_month_view_realize                 (GtkWidget      *widget);
 
-static void     gcal_month_view_unrealize               (GtkWidget      *widget);
+static void         gcal_month_view_unrealize               (GtkWidget      *widget);
 
-static void     gcal_month_view_map                     (GtkWidget      *widget);
+static void         gcal_month_view_map                     (GtkWidget      *widget);
 
-static void     gcal_month_view_unmap                   (GtkWidget      *widget);
+static void         gcal_month_view_unmap                   (GtkWidget      *widget);
 
-static void     gcal_month_view_size_allocate           (GtkWidget      *widget,
-                                                         GtkAllocation  *allocation);
+static void         gcal_month_view_size_allocate           (GtkWidget      *widget,
+                                                             GtkAllocation  *allocation);
 
-static gboolean gcal_month_view_draw                    (GtkWidget      *widget,
-                                                         cairo_t        *cr);
+static gboolean     gcal_month_view_draw                    (GtkWidget      *widget,
+                                                             cairo_t        *cr);
 
-static gboolean gcal_month_view_button_press            (GtkWidget      *widget,
-                                                         GdkEventButton *event);
+static gboolean     gcal_month_view_button_press            (GtkWidget      *widget,
+                                                             GdkEventButton *event);
 
-static gboolean gcal_month_view_button_release          (GtkWidget      *widget,
-                                                         GdkEventButton *event);
+static gboolean     gcal_month_view_button_release          (GtkWidget      *widget,
+                                                             GdkEventButton *event);
 
-static void     gcal_month_view_add                     (GtkContainer   *constainer,
-                                                         GtkWidget      *widget);
+static void         gcal_month_view_add                     (GtkContainer   *constainer,
+                                                             GtkWidget      *widget);
 
-static void     gcal_month_view_remove                  (GtkContainer   *constainer,
-                                                         GtkWidget      *widget);
+static void         gcal_month_view_remove                  (GtkContainer   *constainer,
+                                                             GtkWidget      *widget);
 
-static void     gcal_month_view_forall                  (GtkContainer   *container,
-                                                         gboolean        include_internals,
-                                                         GtkCallback     callback,
-                                                         gpointer        callback_data);
+static void         gcal_month_view_forall                  (GtkContainer   *container,
+                                                             gboolean        include_internals,
+                                                             GtkCallback     callback,
+                                                             gpointer        callback_data);
 
-static void     gcal_month_view_draw_month_grid         (GcalMonthView  *mont_view,
-                                                         cairo_t        *cr,
-                                                         gint            x,
-                                                         gint            y);
+static void         gcal_month_view_draw_month_grid         (GcalMonthView  *view,
+                                                             cairo_t        *cr,
+                                                             gint            x,
+                                                             gint            y);
 
-static gboolean gcal_month_view_is_in_range             (GcalView       *view,
-                                                         icaltimetype   *date);
+static gboolean     gcal_month_view_is_in_range             (GcalView       *view,
+                                                             icaltimetype   *date);
 
-static void     gcal_month_view_remove_by_uuid          (GcalView       *view,
-                                                         const gchar    *uuid);
+static void         gcal_month_view_remove_by_uuid          (GcalView       *view,
+                                                             const gchar    *uuid);
+
+static GtkWidget*   gcal_month_view_get_by_uuid             (GcalView       *view,
+                                                             const gchar    *uuid);
 
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
                          gcal_month_view,
@@ -195,6 +198,7 @@ gcal_view_interface_init (GcalViewIface *iface)
 {
   iface->is_in_range = gcal_month_view_is_in_range;
   iface->remove_by_uuid = gcal_month_view_remove_by_uuid;
+  iface->get_by_uuid = gcal_month_view_get_by_uuid;
 }
 
 static void
@@ -386,11 +390,11 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
   /* init values */
-  priv->header_font_size = 12;
+  priv->grid_header_size = 12;
   priv->horizontal_step =
     (allocation->width - (allocation->x + padding.left + padding.right)) / 7;
   priv->vertical_step =
-    (allocation->height - (allocation->y + padding.top + padding.bottom + priv->header_font_size)) / 5;
+    (allocation->height - (allocation->y + padding.top + padding.bottom + priv->grid_header_size)) / 5;
 
   for (i = 0; i < 35; i++)
     {
@@ -408,12 +412,14 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           pos_x = ( i % 7 ) * priv->horizontal_step;
           pos_y = ( i / 7 ) * priv->vertical_step;
 
+          if (! gtk_widget_get_visible (GTK_WIDGET (l->data)))
+            continue;
           gtk_widget_get_preferred_height (GTK_WIDGET (l->data),
                                            &min_height,
                                            &natural_height);
           child_allocation.x = pos_x + allocation->x + padding.top;
           child_allocation.y = pos_y + font_height + allocation->y
-            + priv->header_font_size + padding.left;
+            + priv->grid_header_size + padding.left;
           child_allocation.width = priv->horizontal_step;
           child_allocation.height = MIN (natural_height, priv->vertical_step);
           if (added_height + font_height + child_allocation.height
@@ -451,8 +457,8 @@ gcal_month_view_draw (GtkWidget *widget,
   gtk_style_context_get_padding (context, state, &padding);
   gtk_style_context_get_color (context, state, &color);
 
-  /* header_font_size is found through pango_get_size_in_pixels */
-  priv->header_font_size = 12;
+  /* grid_header_size is found through pango_get_size_in_pixels */
+  priv->grid_header_size = 12;
 
   /* getting allocation, and so on */
   gtk_widget_get_allocation (widget, &alloc);
@@ -461,7 +467,7 @@ gcal_month_view_draw (GtkWidget *widget,
       GCAL_MONTH_VIEW (widget),
       cr,
       alloc.x + padding.left,
-      alloc.y + padding.top + priv->header_font_size);
+      alloc.y + padding.top + priv->grid_header_size);
 
   if (GTK_WIDGET_CLASS (gcal_month_view_parent_class)->draw != NULL)
     GTK_WIDGET_CLASS (gcal_month_view_parent_class)->draw (widget, cr);
@@ -500,7 +506,7 @@ gcal_month_view_button_press (GtkWidget      *widget,
     }
 
   x = x - padding.left;
-  y = y - ( padding.top + priv->header_font_size );
+  y = y - ( padding.top + priv->grid_header_size );
   priv->clicked_cell = 7 * ( (gint ) ( y  / priv->vertical_step )) + ((gint) ( x / priv->horizontal_step ));
 
   return TRUE;
@@ -537,7 +543,7 @@ static gboolean gcal_month_view_button_release (GtkWidget      *widget,
     }
 
   x = x - padding.left;
-  y = y - ( padding.top + priv->header_font_size );
+  y = y - ( padding.top + priv->grid_header_size );
   released = 7 * ( (gint ) ( y  / priv->vertical_step )) + ((gint) ( x / priv->horizontal_step ));
 
   if (priv->clicked_cell == released)
@@ -624,7 +630,7 @@ gcal_month_view_forall (GtkContainer *container,
 }
 
 static void
-gcal_month_view_draw_month_grid (GcalMonthView *month_view,
+gcal_month_view_draw_month_grid (GcalMonthView *view,
                                  cairo_t       *cr,
                                  gint           x,
                                  gint           y)
@@ -645,8 +651,8 @@ gcal_month_view_draw_month_grid (GcalMonthView *month_view,
   PangoLayout *layout;
   gchar *day;
 
-  priv = month_view->priv;
-  widget = GTK_WIDGET (month_view);
+  priv = view->priv;
+  widget = GTK_WIDGET (view);
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
 
@@ -751,6 +757,29 @@ gcal_month_view_remove_by_uuid (GcalView    *view,
             gtk_widget_destroy (GTK_WIDGET (l->data));
         }
     }
+}
+
+static GtkWidget*
+gcal_month_view_get_by_uuid (GcalView    *view,
+                             const gchar *uuid)
+{
+  GcalMonthViewPrivate *priv;
+  gint i;
+  GList *l;
+
+  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), NULL);
+  priv = GCAL_MONTH_VIEW (view)->priv;
+
+  for (i = 0; i < 35; i++)
+    {
+      for (l = priv->days[i]; l != NULL; l = l->next)
+        {
+          const gchar* widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (l->data));
+          if (g_strcmp0 (uuid, widget_uuid) == 0)
+            return GTK_WIDGET (l->data);
+        }
+    }
+  return NULL;
 }
 
 /* Public API */

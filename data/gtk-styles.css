@@ -57,7 +57,7 @@
   padding-right: 8px;
 }
 
-GtkClutterOffscreen.sources {
+GtkClutterOffscreen.overlay {
   background-color: transparent;
   background-image: none;
 }

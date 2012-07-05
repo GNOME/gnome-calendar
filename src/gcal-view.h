@@ -40,17 +40,21 @@ struct _GcalViewIface
 {
   GTypeInterface parent_iface;
 
-  gboolean (*is_in_range)    (GcalView *view, icaltimetype *date);
-  void     (*remove_by_uuid) (GcalView *view, const gchar *uuid);
+  gboolean    (*is_in_range)    (GcalView *view, icaltimetype *date);
+  void        (*remove_by_uuid) (GcalView *view, const gchar *uuid);
+  GtkWidget*  (*get_by_uuid)    (GcalView *view, const gchar *uuid);
 };
 
-GType    gcal_view_get_type       (void);
+GType       gcal_view_get_type       (void);
 
-gboolean gcal_view_is_in_range    (GcalView     *view,
-                                   icaltimetype *date);
+gboolean    gcal_view_is_in_range    (GcalView     *view,
+                                      icaltimetype *date);
 
-void     gcal_view_remove_by_uuid (GcalView     *view,
-                                   const gchar  *uuid);
+void        gcal_view_remove_by_uuid (GcalView     *view,
+                                      const gchar  *uuid);
+
+GtkWidget*  gcal_view_get_by_uuid    (GcalView     *view,
+                                      const gchar  *uuid);
 
 G_END_DECLS
 

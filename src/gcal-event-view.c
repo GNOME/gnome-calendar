@@ -57,7 +57,7 @@ struct _GcalEventViewPrivate
 
 enum
 {
-  DONE = 1,
+  WILL_DELETE = 1,
 
   NUM_SIGNALS
 };
@@ -86,14 +86,16 @@ gcal_event_view_class_init(GcalEventViewClass *klass)
   object_class->constructed = gcal_event_view_constructed;
   object_class->finalize = gcal_event_view_finalize;
 
-  signals[DONE] = g_signal_new ("done",
-                                GCAL_TYPE_EVENT_VIEW,
-                                G_SIGNAL_RUN_LAST,
-                                G_STRUCT_OFFSET (GcalEventViewClass, done),
-                                NULL, NULL,
-                                g_cclosure_marshal_VOID__VOID,
-                                G_TYPE_NONE,
-                                0);
+  signals[WILL_DELETE] = g_signal_new ("will-delete",
+                                       GCAL_TYPE_EVENT_VIEW,
+                                       G_SIGNAL_RUN_LAST,
+                                       G_STRUCT_OFFSET (GcalEventViewClass,
+                                                        will_delete),
+                                       NULL, NULL,
+                                       g_cclosure_marshal_VOID__STRING,
+                                       G_TYPE_NONE,
+                                       1,
+                                       G_TYPE_STRING);
 
   g_type_class_add_private((gpointer)klass, sizeof(GcalEventViewPrivate));
 }
@@ -337,17 +339,19 @@ gcal_event_view_delete_event (GtkWidget *button,
                               gpointer   user_data)
 {
   GcalEventViewPrivate *priv;
+  gchar *event_uuid;
 
   g_return_if_fail (GCAL_IS_EVENT_VIEW (user_data));
   priv = GCAL_EVENT_VIEW (user_data)->priv;
 
-  gcal_manager_remove_event (priv->manager,
-                             priv->source_uid,
-                             priv->event_uid);
-
+  event_uuid = g_strdup_printf ("%s:%s", priv->source_uid, priv->event_uid);
   /* Reset the widget, and let the windows it work it's done */
   gcal_event_view_load_new (GCAL_EVENT_VIEW (user_data));
-  g_signal_emit (GCAL_EVENT_VIEW (user_data), signals[DONE], 0);
+  g_signal_emit (GCAL_EVENT_VIEW (user_data),
+                 signals[WILL_DELETE],
+                 0,
+                 event_uuid);
+  g_free (event_uuid);
 }
 
 /* Public API */
