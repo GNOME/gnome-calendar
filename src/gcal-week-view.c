@@ -190,6 +190,10 @@ gcal_week_view_init (GcalWeekView *self)
     {
       priv->days[i] = NULL;
     }
+
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (GTK_WIDGET (self)),
+      "calendar-view");
 }
 
 static void
@@ -373,18 +377,30 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
   gtk_style_context_get_padding (context, state, &padding);
-
   layout = pango_layout_new (gtk_widget_get_pango_context (widget));
+
+  /* init header values */
+  gtk_style_context_save (context);
+  gtk_style_context_add_region (context, "header", 0);
+
   pango_layout_set_font_description (layout,
                                      gtk_style_context_get_font (context,
                                                                  state));
-  pango_layout_set_text (layout, _("All day"), -1);
-  pango_layout_get_pixel_size (layout, &font_width, &font_height);
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
 
-  /* init values */
-  /* FIXME: these values should be extracted from the theme font size */
-  priv->header_size = font_height + 4;
-  priv->grid_header_size = font_height + 4;
+  /* 6: is padding around the header */
+  priv->header_size = font_height + 6;
+  gtk_style_context_remove_region (context, "header");
+  gtk_style_context_restore (context);
+
+  /* init grid values */
+  pango_layout_set_text (layout, _("All day"), -1);
+  pango_layout_set_font_description (layout,
+                                     gtk_style_context_get_font (context,
+                                                                 state));
+  pango_layout_get_pixel_size (layout, &font_width, &font_height);
+  /* 6: is padding around the header */
+  priv->grid_header_size = font_height + 6;
   priv->grid_sidebar_size = font_width + 8;
 
   priv->horizontal_step = (allocation->width - (allocation->x + padding.left + padding.right + priv->grid_sidebar_size)) / 7;
@@ -605,6 +621,9 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   context = gtk_widget_get_style_context (GTK_WIDGET (view));
   state = gtk_widget_get_state_flags (GTK_WIDGET (view));
 
+  gtk_style_context_add_region (context, "header", 0);
+  gtk_style_context_save (context);
+
   gtk_style_context_get_color (context, state, &color);
   cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
 
@@ -612,6 +631,8 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   pango_layout_set_font_description (layout,
                                      gtk_style_context_get_font (context,
                                                                  state));
+  gtk_style_context_remove_region (context, "header");
+  gtk_style_context_restore (context);
 
   start_of_week = gcal_week_view_get_initial_date (view);
   tm_date = icaltimetype_to_tm (start_of_week);

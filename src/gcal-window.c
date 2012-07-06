@@ -225,9 +225,6 @@ gcal_window_constructed (GObject *object)
   priv->views[GCAL_VIEW_TYPE_MONTHLY] = gcal_month_view_new (date);
   g_free (date);
 
-  context = gtk_widget_get_style_context (priv->views[GCAL_VIEW_TYPE_MONTHLY]);
-  gtk_style_context_add_class (context, "views");
-
   gtk_widget_show (priv->views[GCAL_VIEW_TYPE_MONTHLY]);
   gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook),
                             priv->views[GCAL_VIEW_TYPE_MONTHLY],
@@ -617,8 +614,6 @@ gcal_window_events_added (GcalManager *manager,
           gtk_container_add (
               GTK_CONTAINER (priv->views[priv->active_view]),
               event);
-          gtk_style_context_add_class (gtk_widget_get_style_context (event),
-                                       "event");
 
           g_signal_connect (event,
                             "activated",

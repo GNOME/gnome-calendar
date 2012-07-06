@@ -197,6 +197,10 @@ gcal_month_view_init (GcalMonthView *self)
     {
       priv->days[i] = NULL;
     }
+
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (GTK_WIDGET (self)),
+      "calendar-view");
 }
 
 static void
@@ -388,16 +392,30 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
   gtk_style_context_get_padding (context, state, &padding);
-
   layout = pango_layout_new (gtk_widget_get_pango_context (widget));
+
+  /* init header values */
+  gtk_style_context_save (context);
+  gtk_style_context_add_region (context, "header", 0);
+
   pango_layout_set_font_description (layout,
                                      gtk_style_context_get_font (context,
                                                                  state));
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
-  /* init values */
-  priv->header_size = font_height + 4;
-  priv->grid_header_size = font_height + 4;
+  /* 6: is padding around the header */
+  priv->header_size = font_height + 6;
+  gtk_style_context_remove_region (context, "header");
+  gtk_style_context_restore (context);
+
+  /* init grid values */
+  pango_layout_set_font_description (layout,
+                                     gtk_style_context_get_font (context,
+                                                                 state));
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+  /* 6: is padding around the header */
+  priv->grid_header_size = font_height + 6;
+
   priv->horizontal_step =
     (allocation->width - (allocation->x + padding.left + padding.right)) / 7;
   priv->vertical_step =
@@ -679,6 +697,9 @@ gcal_month_view_draw_header (GcalMonthView  *view,
   context = gtk_widget_get_style_context (GTK_WIDGET (view));
   state = gtk_widget_get_state_flags (GTK_WIDGET (view));
 
+  gtk_style_context_save (context);
+  gtk_style_context_add_region (context, "header", 0);
+
   gtk_style_context_get_color (context, state, &color);
   cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
 
@@ -686,6 +707,8 @@ gcal_month_view_draw_header (GcalMonthView  *view,
   pango_layout_set_font_description (layout,
                                      gtk_style_context_get_font (context,
                                                                  state));
+  gtk_style_context_remove_region (context, "header");
+  gtk_style_context_restore (context);
 
   tm_date = icaltimetype_to_tm (priv->date);
   e_utf8_strftime_fix_am_pm (str_date, 64, "%B", &tm_date);
@@ -778,9 +801,10 @@ gcal_month_view_draw_grid (GcalMonthView *view,
       pango_layout_set_text (layout, gcal_get_weekday (i), -1);
       pango_cairo_update_layout (cr, layout);
       pango_layout_get_pixel_size (layout, &font_width, &font_height);
+      /* 6: is padding around the grid-header */
       cairo_move_to (cr,
-                     start_grid_x + priv->horizontal_step * i + 1,
-                     start_grid_y - font_height - 1);
+                     start_grid_x + priv->horizontal_step * i + 6,
+                     start_grid_y - priv->grid_header_size);
       pango_cairo_show_layout (cr, layout);
 
       for (j = 0; j < 5; j++)

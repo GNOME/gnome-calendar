@@ -30,24 +30,17 @@
   background-color: transparent;
 }
 
-.views {
-  padding: 10px;
+.calendar-view header {
+  font: bold 12;
 }
 
-.views:selected {
+.calendar-view {
+  padding: 12px;
+  font: 10;
+}
+
+.calendar-view:selected {
   background-color: #555753;
-}
-
-.event-view .frame {
-  border-style: solid;
-  border-color: @borders;
-  border-width: 0.5px;
-  border-radius: 3px;
-}
-
-/* TODO: not working */
-.event-view .view {
-  box-shadow: 40px 40px black;
 }
 
 .event {
@@ -55,6 +48,19 @@
   padding-bottom: 2px;
   padding-left: 8px;
   padding-right: 8px;
+  font: 10;
+}
+
+.event-details .frame {
+  border-style: solid;
+  border-color: @borders;
+  border-width: 0.5px;
+  border-radius: 3px;
+}
+
+/* TODO: not working */
+.event-details .view {
+  box-shadow: 40px 40px black;
 }
 
 GtkClutterOffscreen.overlay {

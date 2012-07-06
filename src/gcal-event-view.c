@@ -102,14 +102,13 @@ gcal_event_view_class_init(GcalEventViewClass *klass)
 
 static void gcal_event_view_init(GcalEventView *self)
 {
-  GtkStyleContext *context;
-
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE(self,
                                            GCAL_TYPE_EVENT_VIEW,
                                            GcalEventViewPrivate);
 
-  context = gtk_widget_get_style_context (GTK_WIDGET (self));
-  gtk_style_context_add_class (context, "event-view");
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (GTK_WIDGET (self)),
+      "event-details");
 }
 
 static void
