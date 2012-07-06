@@ -49,11 +49,13 @@ struct _GcalApplication
   GcalApplicationPrivate *priv;
 };
 
-GType            gcal_application_get_type    (void) G_GNUC_CONST;
+GType             gcal_application_get_type     (void) G_GNUC_CONST;
 
-GcalApplication* gcal_application_new         (void);
+GcalApplication*  gcal_application_new          (void);
 
-GcalManager*     gcal_application_get_manager (GcalApplication *app);
+GcalManager*      gcal_application_get_manager  (GcalApplication *app);
+
+GSettings*        gcal_application_get_settings (GcalApplication *app);
 
 /* Callbacks */
 

@@ -5,5 +5,10 @@
             <_summary>Window maximized</_summary>
             <_description>Window maximized state</_description>
         </key>
+        <key name="active-view" enum="org.gnome.calendar.GcalWindowViewType">
+            <default>'month'</default>
+            <_summary>Type of the active view</_summary>
+            <_description>Type of the active window view, default value is: monthly view</_description>
+        </key>
     </schema>
 </schemalist>

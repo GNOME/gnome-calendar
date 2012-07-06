@@ -4,6 +4,10 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
 @INTLTOOL_DESKTOP_RULE@
 
+gsettings_ENUM_NAMESPACE = org.gnome.calendar
+gsettings_ENUM_FILES = \
+	$(top_srcdir)/src/gcal-utils.h
+
 gsettingsschema_in_files = org.gnome.calendar.gschema.xml.in
 gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 .PRECIOUS: $(gsettings_SCHEMAS)

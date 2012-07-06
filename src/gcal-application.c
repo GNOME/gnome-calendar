@@ -31,6 +31,7 @@ struct _GcalApplicationPrivate
 {
   GtkWidget      *window;
 
+  GSettings      *settings;
   GcalManager    *manager;
 
   GtkCssProvider *provider;
@@ -59,6 +60,12 @@ gcal_application_activate (GApplication *application)
   else
     {
       priv->window = gcal_window_new (GCAL_APPLICATION (application));
+      g_settings_bind (priv->settings,
+                       "active-view",
+                       priv->window,
+                       "active-view",
+                       G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET
+                       | G_SETTINGS_BIND_GET_NO_CHANGES);
       gtk_window_set_title (GTK_WINDOW (priv->window), _("Calendar"));
       gtk_window_set_hide_titlebar_when_maximized (GTK_WINDOW (priv->window),
                                                    TRUE);
@@ -177,13 +184,16 @@ gcal_application_quit (GSimpleAction *simple,
 GcalApplication*
 gcal_application_new (void)
 {
+  GcalApplication *app;
   g_type_init ();
 
   g_set_application_name ("Calendar");
 
-  return g_object_new (gcal_application_get_type (),
-                       "application-id", "org.gnome.Calendar",
-                       NULL);
+  app = g_object_new (gcal_application_get_type (),
+                      "application-id", "org.gnome.Calendar",
+                      NULL);
+  app->priv->settings = g_settings_new ("org.gnome.calendar");
+  return app;
 }
 
 GcalManager*
@@ -191,4 +201,11 @@ gcal_application_get_manager (GcalApplication *app)
 {
   g_return_val_if_fail (GCAL_IS_APPLICATION (app), NULL);
   return app->priv->manager;
+}
+
+GSettings*
+gcal_application_get_settings (GcalApplication *app)
+{
+  g_return_val_if_fail (GCAL_IS_APPLICATION (app), NULL);
+  return app->priv->settings;
 }

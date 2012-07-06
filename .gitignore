@@ -71,3 +71,6 @@ gnome_calendar.anjuta
 /mkinstalldirs
 Debug*
 .gdb_history
+data/org.gnome.calendar.enums.xml
+src/gcal-enum-types.c
+src/gcal-enum-types.h

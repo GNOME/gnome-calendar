@@ -621,8 +621,8 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   context = gtk_widget_get_style_context (GTK_WIDGET (view));
   state = gtk_widget_get_state_flags (GTK_WIDGET (view));
 
-  gtk_style_context_add_region (context, "header", 0);
   gtk_style_context_save (context);
+  gtk_style_context_add_region (context, "header", 0);
 
   gtk_style_context_get_color (context, state, &color);
   cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
@@ -753,7 +753,7 @@ gcal_week_view_draw_grid (GcalWeekView  *view,
       pango_cairo_update_layout (cr, layout);
       pango_layout_get_pixel_size (layout, &font_width, &font_height);
       cairo_move_to (cr,
-                     alloc->x + padding->left + (( priv->grid_sidebar_size  - font_width) / 2),
+                     alloc->x + padding->left + priv->grid_sidebar_size - font_width - 4,
                      alloc->y + padding->top + priv->header_size + priv->grid_header_size + priv->vertical_step * (i + 1) + ((priv->vertical_step - font_height) / 2));
       pango_cairo_show_layout (cr, layout);
 

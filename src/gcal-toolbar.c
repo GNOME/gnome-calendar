@@ -309,7 +309,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
 
       g_object_set_data (G_OBJECT (button),
                         "view-type",
-                        GUINT_TO_POINTER (GCAL_VIEW_TYPE_DAILY));
+                        GUINT_TO_POINTER (GCAL_WINDOW_VIEW_DAY));
       g_signal_connect (button,
                         "clicked",
                         G_CALLBACK (gcal_toolbar_view_changed),
@@ -326,7 +326,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
 
       g_object_set_data (G_OBJECT (button),
                         "view-type",
-                        GUINT_TO_POINTER (GCAL_VIEW_TYPE_WEEKLY));
+                        GUINT_TO_POINTER (GCAL_WINDOW_VIEW_WEEK));
       g_signal_connect (button,
                         "clicked",
                         G_CALLBACK (gcal_toolbar_view_changed),
@@ -343,7 +343,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
 
       g_object_set_data (G_OBJECT (button),
                         "view-type",
-                        GUINT_TO_POINTER (GCAL_VIEW_TYPE_MONTHLY));
+                        GUINT_TO_POINTER (GCAL_WINDOW_VIEW_MONTH));
       g_signal_connect (button,
                         "clicked",
                         G_CALLBACK (gcal_toolbar_view_changed),
@@ -360,7 +360,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
 
       g_object_set_data (G_OBJECT (button),
                         "view-type",
-                        GUINT_TO_POINTER (GCAL_VIEW_TYPE_YEARLY));
+                        GUINT_TO_POINTER (GCAL_WINDOW_VIEW_YEAR));
       g_signal_connect (button,
                         "clicked",
                         G_CALLBACK (gcal_toolbar_view_changed),
@@ -377,7 +377,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
 
         g_object_set_data (G_OBJECT (button),
                         "view-type",
-                        GUINT_TO_POINTER (GCAL_VIEW_TYPE_LIST));
+                        GUINT_TO_POINTER (GCAL_WINDOW_VIEW_LIST));
       g_signal_connect (button,
                         "clicked",
                         G_CALLBACK (gcal_toolbar_view_changed),
