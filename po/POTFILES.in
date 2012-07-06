@@ -2,12 +2,15 @@
 
 src/main.c
 src/gcal-application.c
+src/gcal-window.c
 src/gcal-toolbar.c
 src/gcal-month-view.c
+src/gcal-week-view.c
 src/gcal-event-view.c
 src/gcal-editable-date.c
 src/gcal-editable-reminder.c
 src/gcal-manager.c
+src/gcal-utils.c
 
 data/gnome-calendar.desktop.in.in
 data/org.gnome.calendar.gschema.xml.in

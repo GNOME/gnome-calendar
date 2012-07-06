@@ -32,6 +32,7 @@ struct _GcalEventWidgetPrivate
   gchar        *summary;
   GdkRGBA      *color;
   icaltimetype *dt_start;
+  gboolean      all_day;
 };
 
 enum
@@ -40,7 +41,8 @@ enum
   PROP_UUID,
   PROP_SUMMARY,
   PROP_COLOR,
-  PROP_DTSTART
+  PROP_DTSTART,
+  PROP_ALLDAY
 };
 
 enum
@@ -148,6 +150,15 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
                                                        G_PARAM_CONSTRUCT |
                                                        G_PARAM_READWRITE));
 
+  g_object_class_install_property (object_class,
+                                   PROP_ALLDAY,
+                                   g_param_spec_boolean ("all-day",
+                                                         "All day",
+                                                         "Wheter the event is all-day or not",
+                                                         FALSE,
+                                                         G_PARAM_CONSTRUCT |
+                                                         G_PARAM_READWRITE));
+
   signals[ACTIVATED] = g_signal_new ("activated",
                                      GCAL_TYPE_EVENT_WIDGET,
                                      G_SIGNAL_RUN_LAST,
@@ -219,6 +230,9 @@ gcal_event_widget_set_property (GObject      *object,
 
       priv->dt_start = g_value_dup_boxed (value);
       return;
+    case PROP_ALLDAY:
+      priv->all_day = g_value_get_boolean (value);
+      return;
     }
 
   G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -247,6 +261,9 @@ gcal_event_widget_get_property (GObject      *object,
       return;
     case PROP_DTSTART:
       g_value_set_boxed (value, priv->dt_start);
+      return;
+    case PROP_ALLDAY:
+      g_value_set_boolean (value, priv->all_day);
       return;
     }
 
@@ -578,4 +595,23 @@ gcal_event_widget_get_color (GcalEventWidget *event)
   color = NULL;
   g_object_get (event, "color", color, NULL);
   return color;
+}
+
+void
+gcal_event_widget_set_all_day (GcalEventWidget *event,
+                               gboolean         all_day)
+{
+  g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
+
+  g_object_set (event, "all-day", all_day, NULL);
+}
+
+gboolean
+gcal_event_widget_get_all_day (GcalEventWidget *event)
+{
+  gboolean all_day;
+  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), FALSE);
+
+  g_object_get (event, "all-day", &all_day, NULL);
+  return all_day;
 }

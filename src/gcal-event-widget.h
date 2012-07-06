@@ -77,6 +77,11 @@ void          gcal_event_widget_set_color                  (GcalEventWidget *eve
 
 GdkRGBA*      gcal_event_widget_get_color                  (GcalEventWidget *event);
 
+void          gcal_event_widget_set_all_day                (GcalEventWidget *event,
+                                                            gboolean         all_day);
+
+gboolean     gcal_event_widget_get_all_day                 (GcalEventWidget *event);
+
 G_END_DECLS
 
 #endif /* __GCAL_EVENT_WIDGET_H__ */

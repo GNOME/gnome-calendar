@@ -129,7 +129,6 @@ gcal_editable_reminder_constructed (GObject *object)
                                           NULL);
 
   priv->add_button = gtk_button_new_with_label (_("Add reminder"));
-  g_object_ref_sink (priv->add_button);
   g_object_set (priv->add_button,
                 "halign", GTK_ALIGN_START,
                 "valign", GTK_ALIGN_START,

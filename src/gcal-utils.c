@@ -22,6 +22,8 @@
 
 #include <string.h>
 
+#include <glib/gi18n.h>
+
 #include <libedataserver/e-data-server-util.h>
 #include <libedataserverui/e-cell-renderer-color.h>
 
@@ -184,6 +186,22 @@ gcal_get_source_uid (GtkTreeModel *model,
       valid = gtk_tree_model_iter_next (model, &iter);
     }
   return uid;
+}
+
+const gchar*
+gcal_get_weekday (gint i)
+{
+  static const char* weekdays [] =
+    {
+      N_("Sun"),
+      N_("Mon"),
+      N_("Tue"),
+      N_("Wed"),
+      N_("Thu"),
+      N_("Fri"),
+      N_("Sat")
+   };
+  return _(weekdays[i]);
 }
 
 /* Function to do a last minute fixup of the AM/PM stuff if the locale

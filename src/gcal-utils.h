@@ -65,6 +65,8 @@ gchar*          gcal_get_source_name                            (GtkTreeModel   
 gchar*          gcal_get_source_uid                             (GtkTreeModel    *model,
                                                                  const gchar     *name);
 
+const gchar*    gcal_get_weekday                                (gint             i);
+
 /* code brought from evolution */
 gsize           e_strftime_fix_am_pm                            (gchar           *str,
                                                                  gsize            max,

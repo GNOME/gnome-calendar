@@ -615,7 +615,7 @@ gcal_window_events_added (GcalManager *manager,
                                       starting_date);
           gtk_widget_show (event);
           gtk_container_add (
-              GTK_CONTAINER (priv->views[GCAL_VIEW_TYPE_MONTHLY]),
+              GTK_CONTAINER (priv->views[priv->active_view]),
               event);
           gtk_style_context_add_class (gtk_widget_get_style_context (event),
                                        "event");
