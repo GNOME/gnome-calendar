@@ -1,4 +1,4 @@
-EXTRA_DIST=              \
-    Assumptions.markdown \
-    Flows.markdown       \
-    Internals.markdown
+EXTRA_DIST =             \
+    Assumptions          \
+    Flows.               \
+    Internals

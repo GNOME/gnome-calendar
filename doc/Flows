@@ -22,13 +22,7 @@ source we're adding.
 This will work for setting a new view (the app hasn't instanced a view
 of that type yet), or for updating an old view with a new time lapse
 
-* Update GSettings key for keeping active-view-type
-* Create/Update the view with the active date from
-  `GcalMainWindow.active_date`
+* Create/Update the view with the selected_date
 * Retrieve new time range from view.
 * Update time range in store (a `GcalStore`)
-* Hook up to signals emitted from GcalStore to read active events
-  from updated time range
-* Hook up to signals emitted from GcalStore to get events
-  updates lively
 * Update `GcalMainWindow.view_type`
