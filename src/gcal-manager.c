@@ -156,6 +156,8 @@ static void     gcal_manager_on_event_removed             (GObject         *sour
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
 
+static void     gcal_manager_send_fake_events_added       (GcalManager     *manager);
+
 G_DEFINE_TYPE(GcalManager, gcal_manager, G_TYPE_OBJECT)
 
 static void
@@ -488,9 +490,6 @@ gcal_manager_load_source (GcalManager *manager,
  * So, there are a bunch of stuff to be done here:
  * <itemizedlist>
  * <listitem><para>
- *   Retrieving Object list with the new query.
- * </para></listitem>
- * <listitem><para>
  *   Releasing the old view, desconnecting the callbacks
  * </para></listitem>
  * <listitem><para>
@@ -615,11 +614,11 @@ gcal_manager_on_view_objects_added (ECalClientView *view,
               g_hash_table_insert (unit->events,
                                    g_strdup (icalcomponent_get_uid (l->data)),
                                    component);
-              event_uuid = g_strdup_printf ("%s:%s",
-                                           source_uid,
-                                           icalcomponent_get_uid (l->data));
-              events_data = g_slist_append (events_data, event_uuid);
             }
+          event_uuid = g_strdup_printf ("%s:%s",
+                                        source_uid,
+                                        icalcomponent_get_uid (l->data));
+          events_data = g_slist_append (events_data, event_uuid);
         }
     }
 
@@ -741,6 +740,49 @@ gcal_manager_on_event_removed (GObject      *source_object,
 
   g_free (data->event_uid);
   g_free (data);
+}
+
+static void
+gcal_manager_send_fake_events_added (GcalManager *manager)
+{
+  GcalManagerPrivate *priv;
+
+  GHashTableIter clients_iter;
+  gpointer clients_key;
+  gpointer clients_value;
+
+  GHashTableIter e_iter;
+  gpointer e_key;
+  gpointer e_value;
+
+  GSList *events_data;
+  const gchar *source_uid;
+  const gchar *event_uid;
+  gchar *event_uuid;
+
+  priv = manager->priv;
+
+  events_data = NULL;
+  g_hash_table_iter_init (&clients_iter, priv->clients);
+  while (g_hash_table_iter_next (&clients_iter, &clients_key, &clients_value))
+    {
+      GcalManagerUnit *unit = (GcalManagerUnit*) clients_value;
+
+      source_uid = e_source_peek_uid (unit->source);
+      g_hash_table_iter_init (&e_iter, unit->events);
+      while (g_hash_table_iter_next (&e_iter, &e_key, &e_value))
+        {
+          ECalComponent *event = (ECalComponent*) e_value;
+          e_cal_component_get_uid (event, &event_uid);
+
+          event_uuid = g_strdup_printf ("%s:%s", source_uid, event_uid);
+          events_data = g_slist_append (events_data, event_uuid);
+        }
+    }
+
+  g_signal_emit (manager, signals[EVENTS_ADDED], 0, events_data);
+
+  g_slist_free_full (events_data, g_free);
 }
 
 /* Public API */
@@ -867,6 +909,8 @@ gcal_manager_get_source_name (GcalManager *manager,
  * an update of the internal list of events for every
  * opened calendar; a signal would be emitted
  * when the updated it's done.
+ * In case the new range fits inside the old one,
+ * then the method generate a fake ::events-added signal.
  *
  * Return value: void
  *
@@ -915,10 +959,14 @@ gcal_manager_set_new_range (GcalManager        *manager,
           since_iso8601,
           until_iso8601);
 
-      g_debug ("Query %s", priv->query);
+      g_debug ("Reload query %s", priv->query);
 
       /* redoing query */
       gcal_manager_reload_events (manager);
+    }
+  else
+    {
+      gcal_manager_send_fake_events_added (manager);
     }
 }
 
