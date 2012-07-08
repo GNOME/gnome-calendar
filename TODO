@@ -14,3 +14,5 @@ TODO
 Design stuff
 
  - What to do when there's no host set in the event.
+ - What to do when we found an event out of our day view
+   (out of 8:00 - 17:00)
