@@ -1316,6 +1316,42 @@ gcal_manager_get_event_reminders (GcalManager *manager,
   return reminders;
 }
 
+gboolean
+gcal_manager_get_event_all_day (GcalManager *manager,
+                                const gchar *source_uid,
+                                const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+
+  ECalComponentDateTime dt;
+  icaltimetype *dtstart;
+  icaltimetype *dtend;
+
+  gboolean all_day;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+
+  e_cal_component_get_dtstart (event, &dt);
+  dtstart = gcal_dup_icaltime (dt.value);
+  e_cal_component_free_datetime (&dt);
+
+  e_cal_component_get_dtend (event, &dt);
+  dtend = gcal_dup_icaltime (dt.value);
+  e_cal_component_free_datetime (&dt);
+
+  all_day = (dtstart->is_date == 1) && (dtend->is_date == 1);
+
+  g_free (dtstart);
+  g_free (dtend);
+  return all_day;
+}
+
 void
 gcal_manager_remove_event (GcalManager *manager,
                            const gchar *source_uid,
