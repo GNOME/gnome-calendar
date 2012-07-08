@@ -52,11 +52,7 @@ struct _GcalWeekViewClass
 
 GType          gcal_week_view_get_type         (void);
 
-GtkWidget*     gcal_week_view_new              (icaltimetype  *date);
-
-icaltimetype*  gcal_week_view_get_initial_date (GcalWeekView *view);
-
-icaltimetype*  gcal_week_view_get_final_date   (GcalWeekView *view);
+GtkWidget*     gcal_week_view_new              (void);
 
 G_END_DECLS
 
