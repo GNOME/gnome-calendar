@@ -37,9 +37,14 @@ struct _GcalApplicationPrivate
   GtkCssProvider *provider;
 };
 
-static void gcal_application_startup        (GApplication    *app);
+static void gcal_application_finalize      (GObject         *object);
+
+static void gcal_application_activate      (GApplication    *app);
+
+static void gcal_application_startup       (GApplication    *app);
 
 static void gcal_application_set_app_menu  (GApplication    *app);
+
 static void gcal_application_show_about    (GSimpleAction   *simple,
                                             GVariant        *parameter,
                                             gpointer         user_data);
@@ -50,13 +55,54 @@ static void gcal_application_quit          (GSimpleAction   *simple,
 G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 
 static void
+gcal_application_class_init (GcalApplicationClass *klass)
+{
+  GApplicationClass *application_class;
+  GObjectClass *object_class;
+
+  application_class = G_APPLICATION_CLASS (klass);
+  application_class->activate = gcal_application_activate;
+  application_class->startup = gcal_application_startup;
+
+  object_class = G_OBJECT_CLASS (klass);
+  object_class->finalize = gcal_application_finalize;
+
+  g_type_class_add_private ((gpointer) klass, sizeof(GcalApplicationPrivate));
+}
+
+static void
+gcal_application_init (GcalApplication *self)
+{
+  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
+                                            GCAL_TYPE_APPLICATION,
+                                            GcalApplicationPrivate);
+}
+
+static void
+gcal_application_finalize (GObject *object)
+{
+  GcalApplicationPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_APPLICATION (object));
+  priv = GCAL_APPLICATION (object)->priv;
+
+  if (priv->settings != NULL)
+    g_clear_object (&(priv->settings));
+
+  if (G_OBJECT_CLASS (gcal_application_parent_class)->finalize != NULL)
+    G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
+}
+
+static void
 gcal_application_activate (GApplication *application)
 {
   GcalApplicationPrivate *priv;
   priv = GCAL_APPLICATION (application)->priv;
 
   if (priv->window != NULL)
-    gtk_window_present (GTK_WINDOW (priv->window));
+    {
+      gtk_window_present (GTK_WINDOW (priv->window));
+    }
   else
     {
       priv->window = gcal_window_new (GCAL_APPLICATION (application));
@@ -73,31 +119,6 @@ gcal_application_activate (GApplication *application)
       gtk_window_maximize (GTK_WINDOW (priv->window));
       gtk_widget_show_all (priv->window);
     }
-}
-
-static void
-gcal_application_init (GcalApplication *self)
-{
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-                                            GCAL_TYPE_APPLICATION,
-                                            GcalApplicationPrivate);
-}
-
-static void
-gcal_application_finalize (GObject *object)
-{
-  G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
-}
-
-static void
-gcal_application_class_init (GcalApplicationClass *klass)
-{
-  G_APPLICATION_CLASS (klass)->activate = gcal_application_activate;
-  G_APPLICATION_CLASS (klass)->startup = gcal_application_startup;
-
-  G_OBJECT_CLASS (klass)->finalize = gcal_application_finalize;
-
-  g_type_class_add_private ((gpointer) klass, sizeof(GcalApplicationPrivate));
 }
 
 static void
@@ -181,6 +202,7 @@ gcal_application_quit (GSimpleAction *simple,
   g_application_quit (app);
 }
 
+/* Public API */
 GcalApplication*
 gcal_application_new (void)
 {
