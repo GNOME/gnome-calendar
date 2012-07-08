@@ -1,4 +1,4 @@
 EXTRA_DIST =             \
     Assumptions          \
-    Flows.               \
+    Flows                \
     Internals
