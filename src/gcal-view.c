@@ -19,6 +19,7 @@
  */
 
 #include "gcal-view.h"
+#include "gcal-utils.h"
 
 #include <glib.h>
 
@@ -29,7 +30,14 @@ gcal_view_base_init (gpointer g_iface)
 
   if (!initialized)
     {
-      /* create interface signals here. */
+      /* create interface signals && properties here. */
+      g_object_interface_install_property (
+          g_iface,
+          g_param_spec_boxed ("active-date",
+                              "The active date",
+                              "The active/selecetd date in the view",
+                              ICAL_TIME_TYPE,
+                              G_PARAM_READWRITE));
       initialized = TRUE;
     }
 }
@@ -62,13 +70,49 @@ gcal_view_get_type (void)
   return type;
 }
 
+void
+gcal_view_set_date (GcalView     *view,
+                    icaltimetype *date)
+{
+  g_return_if_fail (GCAL_IS_VIEW (view));
+
+  g_object_set (view, "active-date", date, NULL);
+}
+
+icaltimetype*
+gcal_view_get_date (GcalView *view)
+{
+  icaltimetype *date;
+
+  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+
+  g_object_get (view, "active-date", &date, NULL);
+  return date;
+}
+
+icaltimetype*
+gcal_view_get_initial_date (GcalView *view)
+{
+  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+
+  return GCAL_VIEW_GET_INTERFACE (view)->get_initial_date (view);
+}
+
+icaltimetype*
+gcal_view_get_final_date (GcalView *view)
+{
+  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+
+  return GCAL_VIEW_GET_INTERFACE (view)->get_final_date (view);
+}
+
 gboolean
-gcal_view_is_in_range (GcalView     *view,
+gcal_view_contains (GcalView     *view,
                        icaltimetype *date)
 {
   g_return_val_if_fail (GCAL_IS_VIEW (view), FALSE);
 
-  return GCAL_VIEW_GET_INTERFACE (view)->is_in_range (view, date);
+  return GCAL_VIEW_GET_INTERFACE (view)->contains (view, date);
 }
 
 void

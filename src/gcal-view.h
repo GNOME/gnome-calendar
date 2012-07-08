@@ -40,21 +40,34 @@ struct _GcalViewIface
 {
   GTypeInterface parent_iface;
 
-  gboolean    (*is_in_range)    (GcalView *view, icaltimetype *date);
-  void        (*remove_by_uuid) (GcalView *view, const gchar *uuid);
-  GtkWidget*  (*get_by_uuid)    (GcalView *view, const gchar *uuid);
+  /* pure virtual methods */
+  icaltimetype*   (*get_initial_date)     (GcalView *view);
+  icaltimetype*   (*get_final_date)       (GcalView *view);
+
+  gboolean        (*contains)             (GcalView *view, icaltimetype *date);
+  void            (*remove_by_uuid)       (GcalView *view, const gchar *uuid);
+  GtkWidget*      (*get_by_uuid)          (GcalView *view, const gchar *uuid);
 };
 
-GType       gcal_view_get_type       (void);
+GType         gcal_view_get_type          (void);
 
-gboolean    gcal_view_is_in_range    (GcalView     *view,
-                                      icaltimetype *date);
+void          gcal_view_set_date          (GcalView     *view,
+                                           icaltimetype *date);
 
-void        gcal_view_remove_by_uuid (GcalView     *view,
-                                      const gchar  *uuid);
+icaltimetype* gcal_view_get_date          (GcalView     *view);
 
-GtkWidget*  gcal_view_get_by_uuid    (GcalView     *view,
-                                      const gchar  *uuid);
+icaltimetype* gcal_view_get_initial_date  (GcalView     *view);
+
+icaltimetype* gcal_view_get_final_date    (GcalView     *view);
+
+gboolean      gcal_view_contains       (GcalView     *view,
+                                           icaltimetype *date);
+
+void          gcal_view_remove_by_uuid    (GcalView     *view,
+                                           const gchar  *uuid);
+
+GtkWidget*    gcal_view_get_by_uuid       (GcalView     *view,
+                                           const gchar  *uuid);
 
 G_END_DECLS
 
