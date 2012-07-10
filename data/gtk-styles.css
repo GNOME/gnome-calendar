@@ -11,9 +11,14 @@
 @define-color osd_toolbar_bg_b alpha(#101010, 0.80);
 @define-color osd_toolbar_bg_c alpha(shade(@osd_base, 1.02), 0.80);
 
+.contents.frame {
+  border-top: 1px lightgrey solid;
+  border-radius: 0px;
+}
+
 .sources-views {
-  padding: 10px;
-  border-radius: 10px;
+  padding: 12px;
+  border-radius: 0;
   border-style: none;
 
   background-image: -gtk-gradient(linear, left top, left bottom,

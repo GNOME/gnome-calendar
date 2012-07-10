@@ -260,12 +260,20 @@ gcal_window_constructed (GObject *object)
                            CLUTTER_BOX_ALIGNMENT_CENTER);
 
   /* notebook widget for holding views */
+  holder = gtk_frame_new (NULL);
+
   priv->notebook = gtk_notebook_new ();
   gtk_notebook_set_show_tabs (GTK_NOTEBOOK (priv->notebook), FALSE);
   gtk_notebook_set_show_border (GTK_NOTEBOOK (priv->notebook), FALSE);
+
   gtk_widget_show (priv->notebook);
 
-  priv->notebook_actor = gtk_clutter_actor_new_with_contents (priv->notebook);
+  context = gtk_widget_get_style_context (holder);
+  gtk_style_context_add_class (context, "contents");
+  gtk_container_add (GTK_CONTAINER (holder), priv->notebook);
+  gtk_widget_show (holder);
+
+  priv->notebook_actor = gtk_clutter_actor_new_with_contents (holder);
 
   clutter_bin_layout_add (CLUTTER_BIN_LAYOUT (contents_layout_manager),
                           priv->notebook_actor,
@@ -462,6 +470,8 @@ gcal_window_set_active_view (GcalWindow         *window,
                                     priv->views[priv->active_view],
                                     NULL));
     }
+
+  g_object_notify (G_OBJECT (window), "active-view");
 
   update_range = ! gcal_view_contains (GCAL_VIEW (priv->views[priv->active_view]),
                                        priv->active_date);
