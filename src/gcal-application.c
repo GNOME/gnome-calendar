@@ -31,6 +31,7 @@ struct _GcalApplicationPrivate
 {
   GtkWidget      *window;
 
+  GSimpleAction  *view;
   GSettings      *settings;
   GcalManager    *manager;
 
@@ -45,9 +46,18 @@ static void gcal_application_startup       (GApplication    *app);
 
 static void gcal_application_set_app_menu  (GApplication    *app);
 
+static void gcal_application_changed_view  (GSettings       *settings,
+                                            gchar           *key,
+                                            gpointer         user_data);
+
+static void gcal_application_change_view   (GSimpleAction   *simple,
+                                            GVariant        *parameter,
+                                            gpointer         user_data);
+
 static void gcal_application_show_about    (GSimpleAction   *simple,
                                             GVariant        *parameter,
                                             gpointer         user_data);
+
 static void gcal_application_quit          (GSimpleAction   *simple,
                                             GVariant        *parameter,
                                             gpointer         user_data);
@@ -110,8 +120,7 @@ gcal_application_activate (GApplication *application)
                        "active-view",
                        priv->window,
                        "active-view",
-                       G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET
-                       | G_SETTINGS_BIND_GET_NO_CHANGES);
+                       G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
       gtk_window_set_title (GTK_WINDOW (priv->window), _("Calendar"));
       gtk_window_set_hide_titlebar_when_maximized (GTK_WINDOW (priv->window),
                                                    TRUE);
@@ -157,10 +166,35 @@ gcal_application_startup (GApplication *app)
 static void 
 gcal_application_set_app_menu (GApplication *app)
 {
-  GMenu *app_menu = g_menu_new ();
+  GcalApplicationPrivate *priv;
+
+  GMenu *app_menu;
+  GMenu *view_as;
   GSimpleAction *about;
   GSimpleAction *quit;
-  
+
+  g_return_if_fail (GCAL_IS_APPLICATION (app));
+  priv = GCAL_APPLICATION (app)->priv;
+
+  app_menu = g_menu_new ();
+
+  priv->view = g_simple_action_new_stateful (
+      "view",
+      G_VARIANT_TYPE_STRING,
+      g_settings_get_value (priv->settings, "active-view"));
+
+  g_signal_connect (priv->view,
+                    "activate",
+                    G_CALLBACK (gcal_application_change_view),
+                    app);
+  g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (priv->view));
+
+  view_as = g_menu_new ();
+  g_menu_append (view_as, _("Weeks"), "app.view::week");
+  g_menu_append (view_as, _("Months"), "app.view::month");
+
+  g_menu_append_section (app_menu, _("View as"), G_MENU_MODEL (view_as));
+
   about = g_simple_action_new ("about", NULL);
   g_signal_connect (about,
                     "activate",
@@ -178,6 +212,33 @@ gcal_application_set_app_menu (GApplication *app)
   g_menu_append (app_menu, _("Quit"), "app.quit");
 
   gtk_application_set_app_menu (GTK_APPLICATION (app), G_MENU_MODEL (app_menu));
+}
+
+static void
+gcal_application_changed_view (GSettings *settings,
+                               gchar     *key,
+                               gpointer   user_data)
+{
+  GcalApplicationPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_APPLICATION (user_data));
+  priv = GCAL_APPLICATION (user_data)->priv;
+  g_simple_action_set_state (priv->view,
+                             g_settings_get_value (priv->settings,
+                                                   "active-view"));
+}
+
+static void
+gcal_application_change_view (GSimpleAction *simple,
+                              GVariant      *parameter,
+                              gpointer       user_data)
+{
+  GcalApplicationPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_APPLICATION (user_data));
+  priv = GCAL_APPLICATION (user_data)->priv;
+
+  g_settings_set_value (priv->settings, "active-view", parameter);
 }
 
 static void
@@ -215,6 +276,10 @@ gcal_application_new (void)
                       "application-id", "org.gnome.Calendar",
                       NULL);
   app->priv->settings = g_settings_new ("org.gnome.calendar");
+  g_signal_connect (app->priv->settings,
+                    "changed::active-view",
+                    G_CALLBACK (gcal_application_changed_view),
+                    app);
   return app;
 }
 

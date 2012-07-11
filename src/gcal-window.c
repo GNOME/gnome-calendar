@@ -767,7 +767,10 @@ gcal_window_events_added (GcalManager *manager,
                                                          event_uid);
       if (gcal_view_contains (
             GCAL_VIEW (priv->views[priv->active_view]),
-            starting_date))
+            starting_date)
+          && gcal_view_get_by_uuid (
+              GCAL_VIEW (priv->views[priv->active_view]),
+              (gchar*)l->data) == NULL)
         {
           summary = gcal_manager_get_event_summary (manager,
                                                     source_uid,
