@@ -594,6 +594,7 @@ gcal_month_view_add (GtkContainer *container,
             gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget)),
             gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget))) == 0)
         {
+          //TODO: remove once the main-dev phase its over
           g_warning ("Trying to add an event with the same uuid to the view");
           return;
         }

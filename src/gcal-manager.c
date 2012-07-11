@@ -158,6 +158,9 @@ static void     gcal_manager_on_event_removed             (GObject         *sour
 
 static void     gcal_manager_send_fake_events_added       (GcalManager     *manager);
 
+static void     gcal_manager_send_fave_events_removed     (GcalManager     *manager,
+                                                           GcalManagerUnit *unit);
+
 G_DEFINE_TYPE(GcalManager, gcal_manager, G_TYPE_OBJECT)
 
 static void
@@ -451,6 +454,7 @@ gcal_manager_load_source (GcalManager *manager,
                                         g_str_equal,
                                         g_free,
                                         g_object_unref);
+  unit->enabled = TRUE;
 
   if (g_hash_table_lookup (priv->clients, e_source_peek_uid (source)) == NULL)
     {
@@ -615,10 +619,13 @@ gcal_manager_on_view_objects_added (ECalClientView *view,
                                    g_strdup (icalcomponent_get_uid (l->data)),
                                    component);
             }
-          event_uuid = g_strdup_printf ("%s:%s",
-                                        source_uid,
-                                        icalcomponent_get_uid (l->data));
-          events_data = g_slist_append (events_data, event_uuid);
+          if (unit->enabled)
+            {
+              event_uuid = g_strdup_printf ("%s:%s",
+                                            source_uid,
+                                            icalcomponent_get_uid (l->data));
+              events_data = g_slist_append (events_data, event_uuid);
+            }
         }
     }
 
@@ -644,15 +651,23 @@ gcal_manager_on_view_objects_removed (ECalClientView *view,
                                       gpointer        objects,
                                       gpointer        user_data)
 {
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+
   GSList *l;
   GSList *events_data;
 
   ECalClient *client;
   const gchar *source_uid;
 
+  g_return_if_fail (GCAL_IS_MANAGER (user_data));
+  priv = GCAL_MANAGER (user_data)->priv;
+
   events_data = NULL;
   client = e_cal_client_view_get_client (view);
   source_uid = e_source_peek_uid (e_client_get_source (E_CLIENT (client)));
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
 
   for (l = objects; l != NULL; l = l->next)
     {
@@ -661,6 +676,9 @@ gcal_manager_on_view_objects_removed (ECalClientView *view,
                          source_uid,
                          ((ECalComponentId*)(l->data))->uid);
       events_data = g_slist_append (events_data, removed_event_uuid);
+
+      /* Removing from internal hash */
+      g_hash_table_remove (unit->events, ((ECalComponentId*)(l->data))->uid);
     }
 
   if (events_data != NULL)
@@ -708,7 +726,17 @@ gcal_manager_on_sources_row_changed (GtkTreeModel *store,
                       &active,
                       -1);
   unit = g_hash_table_lookup (priv->clients, source_uid);
-  unit->enabled = active;
+
+  /* hack for detecting when the activation was triggered by a button click */
+  if (! active || unit->enabled == FALSE)
+    {
+      unit->enabled = active;
+      if (active)
+        gcal_manager_send_fake_events_added (GCAL_MANAGER (user_data));
+      else
+        gcal_manager_send_fave_events_removed (GCAL_MANAGER (user_data), unit);
+    }
+
 
   g_free (source_uid);
 }
@@ -768,6 +796,9 @@ gcal_manager_send_fake_events_added (GcalManager *manager)
     {
       GcalManagerUnit *unit = (GcalManagerUnit*) clients_value;
 
+      if (! unit->enabled)
+        continue;
+
       source_uid = e_source_peek_uid (unit->source);
       g_hash_table_iter_init (&e_iter, unit->events);
       while (g_hash_table_iter_next (&e_iter, &e_key, &e_value))
@@ -781,6 +812,36 @@ gcal_manager_send_fake_events_added (GcalManager *manager)
     }
 
   g_signal_emit (manager, signals[EVENTS_ADDED], 0, events_data);
+
+  g_slist_free_full (events_data, g_free);
+}
+
+static void
+gcal_manager_send_fave_events_removed (GcalManager     *manager,
+                                       GcalManagerUnit *unit)
+{
+  GHashTableIter e_iter;
+  gpointer e_key;
+  gpointer e_value;
+
+  GSList *events_data;
+  const gchar *source_uid;
+  const gchar *event_uid;
+  gchar *event_uuid;
+
+  events_data = NULL;
+  source_uid = e_source_peek_uid (unit->source);
+  g_hash_table_iter_init (&e_iter, unit->events);
+  while (g_hash_table_iter_next (&e_iter, &e_key, &e_value))
+    {
+      ECalComponent *event = (ECalComponent*) e_value;
+      e_cal_component_get_uid (event, &event_uid);
+
+      event_uuid = g_strdup_printf ("%s:%s", source_uid, event_uid);
+      events_data = g_slist_append (events_data, event_uuid);
+    }
+
+  g_signal_emit (manager, signals[EVENTS_REMOVED], 0, events_data);
 
   g_slist_free_full (events_data, g_free);
 }
