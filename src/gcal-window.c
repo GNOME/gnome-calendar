@@ -29,11 +29,11 @@
 #include "gcal-enum-types.h"
 #include "gtk-notification.h"
 
+#include <glib/gi18n.h>
 #include <clutter/clutter.h>
 #include <clutter-gtk/clutter-gtk.h>
-#include <glib/gi18n.h>
 
-#include <libedataserverui/e-cell-renderer-color.h>
+#include <libedataserverui/libedataserverui.h>
 
 #include <libical/icaltime.h>
 

@@ -20,12 +20,12 @@
 
 #include "gcal-utils.h"
 
-#include <string.h>
-
 #include <glib/gi18n.h>
 
-#include <libedataserver/e-data-server-util.h>
-#include <libedataserverui/e-cell-renderer-color.h>
+#include <string.h>
+
+#include <libedataserver/libedataserver.h>
+#include <libedataserverui/libedataserverui.h>
 
 G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
 

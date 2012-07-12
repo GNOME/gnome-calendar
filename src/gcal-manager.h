@@ -65,8 +65,7 @@ GtkListStore*  gcal_manager_get_sources_model       (GcalManager        *manager
 
 gchar*         gcal_manager_add_source              (GcalManager        *manager,
                                                      const gchar        *name,
-                                                     const gchar        *base_uri,
-                                                     const gchar        *relative_uri,
+                                                     const gchar        *backend,
                                                      const gchar        *color);
 
 const gchar*   gcal_manager_get_source_name         (GcalManager        *manager,

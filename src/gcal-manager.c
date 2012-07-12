@@ -22,10 +22,8 @@
 
 #include <glib/gi18n.h>
 
-#include <libecal/e-cal-client.h>
-#include <libecal/e-cal-client-view.h>
-#include <libecal/e-cal-time-util.h>
-#include <libedataserver/e-data-server-util.h>
+#include <libecal/libecal.h>
+#include <libedataserver/libedataserver.h>
 
 enum
 {
@@ -79,24 +77,21 @@ struct _GcalManagerPrivate
    * Each value is of type GCalStoreUnit
    * And each key is the source uid
    */
-  GHashTable    *clients;
+  GHashTable      *clients;
 
-  /**
-   * System sources read from gconf
-   */
-  ESourceList   *system_sources;
+  ESourceRegistry *source_registry;
 
   /* The store for keeping easily retrieved data about sources */
-  GtkListStore  *sources_model;
+  GtkListStore    *sources_model;
 
   /* The range of dates defining the query */
-  icaltimetype  *initial_date;
-  icaltimetype  *final_date;
+  icaltimetype    *initial_date;
+  icaltimetype    *final_date;
 
   /* The active query */
-  gchar         *query;
+  gchar           *query;
 
-  GCancellable  *async_ops;
+  GCancellable    *async_ops;
 };
 
 /* Signal IDs */
@@ -114,6 +109,14 @@ static void     gcal_manager_constructed                  (GObject         *obje
 
 static void     gcal_manager_finalize                     (GObject         *object);
 
+static void     gcal_manager_on_source_added              (ESourceRegistry *registry,
+                                                           ESource         *source,
+                                                           GcalManager     *manager);
+
+static void     gcal_manager_on_source_removed            (ESourceRegistry *registry,
+                                                           ESource         *source,
+                                                           GcalManager     *manager);
+
 void            gcal_manager_free_unit_data               (gpointer         data);
 
 static void     gcal_manager_on_client_opened             (GObject         *source_object,
@@ -124,10 +127,10 @@ static gboolean gcal_manager_retry_open_on_timeout        (gpointer         user
 
 static void     gcal_manager_free_retry_open_data         (gpointer         user_data);
 
-void            gcal_manager_remove_client                (GcalManager     *manager,
-                                                           ECalClient      *client);
-
 static void     gcal_manager_load_source                  (GcalManager     *manager,
+                                                           ESource         *source);
+
+void            gcal_manager_remove_source                (GcalManager     *manager,
                                                            ESource         *source);
 
 static void     gcal_manager_reload_events                (GcalManager     *manager);
@@ -243,33 +246,34 @@ gcal_manager_constructed (GObject *object)
   GcalManagerPrivate *priv;
 
   GError *error;
-  GSList *l_groups;
-  GSList *l;
+  GList *sources;
+  GList *l;
 
   if (G_OBJECT_CLASS (gcal_manager_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_manager_parent_class)->constructed (object);
 
   priv = GCAL_MANAGER (object)->priv;
 
-  if (!e_cal_client_get_sources (&(priv->system_sources),
-                                 E_CAL_CLIENT_SOURCE_TYPE_EVENTS,
-                                 &error))
+  error = NULL;
+  priv->source_registry = e_source_registry_new_sync (NULL, &error);
+  if (priv->source_registry == NULL)
     {
-     //FIXME maybe give more information of what happened
-      g_warning ("%s", error->message);
+      g_warning ("Failed to access calendar configuration: %s", error->message);
+      g_error_free (error);
+      return;
     }
 
-  for (l_groups = e_source_list_peek_groups (priv->system_sources);
-       l_groups != NULL;
-       l_groups = l_groups->next)
-    {
-      for (l = e_source_group_peek_sources (E_SOURCE_GROUP (l_groups->data));
-           l != NULL;
-           l = l->next)
-        {
-          gcal_manager_load_source (GCAL_MANAGER (object), l->data);
-        }
-    }
+  sources = e_source_registry_list_sources (priv->source_registry,
+                                            E_SOURCE_EXTENSION_CALENDAR);
+
+  for (l = sources; l != NULL; l = l->next)
+    gcal_manager_load_source (GCAL_MANAGER (object), l->data);
+
+  g_object_connect (
+      priv->source_registry,
+      "signal::source-added", gcal_manager_on_source_added, object,
+      "signal::source-removed", gcal_manager_on_source_removed, object,
+      NULL);
 }
 
 static void
@@ -281,6 +285,22 @@ gcal_manager_finalize (GObject *object)
 
   g_hash_table_destroy (priv->clients);
   g_clear_object (&(priv->sources_model));
+}
+
+static void
+gcal_manager_on_source_added (ESourceRegistry *registry,
+                              ESource         *source,
+                              GcalManager     *manager)
+{
+  gcal_manager_load_source (manager, source);
+}
+
+static void
+gcal_manager_on_source_removed (ESourceRegistry *registry,
+                                ESource         *source,
+                                GcalManager     *manager)
+{
+  gcal_manager_remove_source (manager, source);
 }
 
 void
@@ -318,8 +338,9 @@ gcal_manager_on_client_opened (GObject      *source_object,
       /* get_object_list */
       if (priv->query != NULL)
         {
-          uid = e_source_peek_uid (e_client_get_source (E_CLIENT (client)));
+          uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
           unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients, uid);
+          unit->enabled = TRUE;
 
           /* setting view */
           gcal_manager_reload_view (GCAL_MANAGER (user_data), unit);
@@ -362,10 +383,10 @@ gcal_manager_on_client_opened (GObject      *source_object,
 
           /* in any other case, remove it*/
           source = e_client_get_source (E_CLIENT (client));
-          gcal_manager_remove_client (GCAL_MANAGER (user_data), client);
+          gcal_manager_remove_source (GCAL_MANAGER (user_data), source);
           g_warning ("%s: Failed to open '%s': %s",
                      G_STRFUNC,
-                     e_source_peek_name (source),
+                     e_source_get_display_name (source),
                      error->message);
 
           g_error_free (error);
@@ -411,18 +432,17 @@ gcal_manager_free_retry_open_data (gpointer user_data)
 }
 
 void
-gcal_manager_remove_client (GcalManager  *manager,
-                            ECalClient *client)
+gcal_manager_remove_source (GcalManager  *manager,
+                            ESource      *source)
 {
   GcalManagerPrivate *priv;
 
   g_return_if_fail (GCAL_IS_MANAGER (manager));
-  g_return_if_fail (E_IS_CAL_CLIENT (client));
+  g_return_if_fail (E_IS_SOURCE (source));
 
   priv = manager->priv;
-  g_hash_table_remove (
-      priv->clients,
-      e_source_peek_uid (e_client_get_source (E_CLIENT (client))));
+  g_hash_table_remove (priv->clients,
+                       e_source_get_uid (source));
 }
 
 static void
@@ -433,13 +453,17 @@ gcal_manager_load_source (GcalManager *manager,
   ECalClient *new_client;
   GcalManagerUnit *unit;
   GError *error;
+  ESourceSelectable *extension;
 
   GtkTreeIter iter;
   GdkColor gdk_color;
 
   priv = manager->priv;
   error = NULL;
-  new_client = e_cal_client_new (source, E_CAL_CLIENT_SOURCE_TYPE_EVENTS, &error);
+  new_client = e_cal_client_new (source,
+                                 E_CAL_CLIENT_SOURCE_TYPE_EVENTS,
+                                 &error);
+
   if (error != NULL)
     {
       g_warning ("Couldn't create ECalClient. Error: %s", error->message);
@@ -454,26 +478,27 @@ gcal_manager_load_source (GcalManager *manager,
                                         g_str_equal,
                                         g_free,
                                         g_object_unref);
-  unit->enabled = TRUE;
 
-  if (g_hash_table_lookup (priv->clients, e_source_peek_uid (source)) == NULL)
+  if (g_hash_table_lookup (priv->clients, e_source_get_uid (source)) == NULL)
     {
       g_hash_table_insert (priv->clients,
-                           g_strdup (e_source_peek_uid (source)),
+                           g_strdup (e_source_get_uid (source)),
                            unit);
     }
   else
     {
       g_warning ("Reinserting source: %s in priv->clients",
-                 e_source_peek_uid (source));
+                 e_source_get_uid (source));
     }
 
   /* filling store */
-  gdk_color_parse (e_source_peek_color_spec (source), &gdk_color);
+  extension = E_SOURCE_SELECTABLE (e_source_get_extension (source,
+                                   E_SOURCE_EXTENSION_CALENDAR));
+  gdk_color_parse (e_source_selectable_get_color (extension), &gdk_color);
   gtk_list_store_append (priv->sources_model, &iter);
   gtk_list_store_set (priv->sources_model, &iter,
-                      COLUMN_UID, e_source_peek_uid (source),
-                      COLUMN_NAME, e_source_peek_name (source),
+                      COLUMN_UID, e_source_get_uid (source),
+                      COLUMN_NAME, e_source_get_display_name (source),
                       COLUMN_ACTIVE, TRUE,
                       COLUMN_COLOR, &gdk_color,
                       -1);
@@ -599,7 +624,7 @@ gcal_manager_on_view_objects_added (ECalClientView *view,
   events_data = NULL;
 
   client = e_cal_client_view_get_client (view);
-  source_uid = e_source_peek_uid (e_client_get_source (E_CLIENT (client)));
+  source_uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
   unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients, source_uid);
 
   for (l = objects; l != NULL; l = l->next)
@@ -665,7 +690,7 @@ gcal_manager_on_view_objects_removed (ECalClientView *view,
 
   events_data = NULL;
   client = e_cal_client_view_get_client (view);
-  source_uid = e_source_peek_uid (e_client_get_source (E_CLIENT (client)));
+  source_uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
 
@@ -799,7 +824,7 @@ gcal_manager_send_fake_events_added (GcalManager *manager)
       if (! unit->enabled)
         continue;
 
-      source_uid = e_source_peek_uid (unit->source);
+      source_uid = e_source_get_uid (unit->source);
       g_hash_table_iter_init (&e_iter, unit->events);
       while (g_hash_table_iter_next (&e_iter, &e_key, &e_value))
         {
@@ -830,7 +855,7 @@ gcal_manager_send_fave_events_removed (GcalManager     *manager,
   gchar *event_uuid;
 
   events_data = NULL;
-  source_uid = e_source_peek_uid (unit->source);
+  source_uid = e_source_get_uid (unit->source);
   g_hash_table_iter_init (&e_iter, unit->events);
   while (g_hash_table_iter_next (&e_iter, &e_key, &e_value))
     {
@@ -885,61 +910,45 @@ gcal_manager_get_sources_model (GcalManager *manager)
 gchar*
 gcal_manager_add_source (GcalManager *manager,
                          const gchar *name,
-                         const gchar *base_uri,
-                         const gchar *relative_uri,
+                         const gchar *backend,
                          const gchar *color)
 {
   GcalManagerPrivate *priv;
-  GSList *groups;
-  ESourceGroup *selected_group;
-  GHashTableIter iter;
-  gpointer key;
-  gpointer value;
   ESource *source;
+  ESourceCalendar *extension;
+  GError *error;
 
   g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
   priv = manager->priv;
   g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
 
-  selected_group = NULL;
-  for (groups = e_source_list_peek_groups (priv->system_sources);
-       groups != NULL;
-       groups = groups->next)
+  source = e_source_new (NULL, NULL, NULL);
+  extension = E_SOURCE_CALENDAR (e_source_get_extension (source,
+                                                         E_SOURCE_EXTENSION_CALENDAR));
+
+  g_object_set (extension,
+                "backend-name", backend,
+                "color", color,
+                NULL);
+
+  e_source_set_display_name (source, name);
+
+  error = NULL;
+  e_source_registry_commit_source_sync (priv->source_registry,
+                                        source,
+                                        NULL,
+                                        &error);
+  if (error)
     {
-      if (g_strcmp0 (
-            base_uri,
-            e_source_group_peek_base_uri (E_SOURCE_GROUP (groups->data))) == 0)
-        {
-          selected_group = (ESourceGroup*) groups->data;
-
-          g_hash_table_iter_init (&iter, priv->clients);
-          while (g_hash_table_iter_next (&iter, &key, &value))
-            {
-              GcalManagerUnit *unit = (GcalManagerUnit*) value;
-              if (g_strcmp0 (
-                    e_source_peek_relative_uri (unit->source),
-                    relative_uri) == 0)
-                {
-                  return NULL;
-                }
-            }
-          break;
-        }
+      g_warning ("Failed to store calendar configuration: %s",
+                 error->message);
+      g_error_free (error);
+      g_object_unref (source);
+      return NULL;
     }
-
-  if (selected_group == NULL)
-    {
-      selected_group = e_source_group_new (gcal_get_group_name (base_uri),
-                                           base_uri);
-      e_source_list_add_group (priv->system_sources, selected_group, -1);
-    }
-
-  source = e_source_new (name, relative_uri);
-  e_source_group_add_source (selected_group, source, -1);
 
   gcal_manager_load_source (manager, source);
-
-  return g_strdup (e_source_peek_uid (source));
+  return e_source_dup_uid (source);
 }
 
 const gchar*
@@ -953,7 +962,7 @@ gcal_manager_get_source_name (GcalManager *manager,
   priv = manager->priv;
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
-  return e_source_peek_name (unit->source);
+  return e_source_get_display_name (unit->source);
 }
 
 /**
@@ -1254,21 +1263,18 @@ gcal_manager_get_event_color (GcalManager *manager,
 {
   GcalManagerPrivate *priv;
   GcalManagerUnit *unit;
+  ESourceSelectable *extension;
   GdkRGBA *color;
-  GdkColor gdk_color;
 
   g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
   priv = manager->priv;
   color = g_new0 (GdkRGBA, 1);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
-  gdk_color_parse (e_source_peek_color_spec (unit->source), &gdk_color);
 
-  color->red = (gdouble) gdk_color.red / 65535;
-  color->green = (gdouble) gdk_color.green / 65535;
-  color->blue = (gdouble) gdk_color.blue / 65535;
-  color->alpha = 1;
-
+  extension = E_SOURCE_SELECTABLE (e_source_get_extension (unit->source,
+                                   E_SOURCE_EXTENSION_CALENDAR));
+  gdk_rgba_parse (color, e_source_selectable_get_color (extension));
   return color;
 }
 

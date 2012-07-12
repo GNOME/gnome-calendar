@@ -25,7 +25,7 @@
 
 #include <glib/gi18n.h>
 
-#include <libecal/e-cal-time-util.h>
+#include <libecal/libecal.h>
 
 enum
 {
