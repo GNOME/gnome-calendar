@@ -250,10 +250,38 @@ gcal_application_show_about (GSimpleAction *simple,
                              gpointer       user_data)
 {
   GcalApplication *app = GCAL_APPLICATION (user_data);
+  char *copyright;
+  GDateTime *date;
+  int created_year = 2012;
+  const gchar *authors[] = {
+    "Erick Pérez Castellanos <erickpc@gnome.org>",
+    NULL
+  };
+
+  date = g_date_time_new_now_local ();
+
+  if (g_date_time_get_year (date) == created_year)
+    {
+      copyright = g_strdup_printf (_("Copyright \xC2\xA9 %Id "
+                                     "The Calendar authors"),
+                                   created_year);
+    }
+  else
+    {
+      copyright = g_strdup_printf (_("Copyright \xC2\xA9 %Id\xE2\x80\x93%Id "
+                                     "The Calendar authors"),
+                                   created_year, g_date_time_get_year (date));
+    }
 
   gtk_show_about_dialog (GTK_WINDOW (app->priv->window),
                          "program-name", "Calendar",
+                         "version", VERSION,
+                         "copyright", copyright,
+                         "authors", authors,
+                         "logo-icon-name", "x-office-calendar",
                          NULL);
+  g_free (copyright);
+  g_date_time_unref (date);
 }
 
 static void
