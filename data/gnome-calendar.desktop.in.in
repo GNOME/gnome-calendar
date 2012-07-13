@@ -2,7 +2,7 @@
 _Name=Calendar
 _Comment=Access, and manage calendar
 Exec=gnome-calendar
-Icon=calendr
+Icon=x-office-calendar
 Terminal=false
 Type=Application
 StartupNotify=true

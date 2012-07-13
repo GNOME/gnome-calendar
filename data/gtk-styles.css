@@ -45,10 +45,12 @@
 }
 
 .calendar-view:selected {
-  background-color: #555753;
+  color: #0C73E5;
+  font: bold;
 }
 
 .event {
+  border-radius: 0;
   padding-top: 3px;
   padding-left: 6px;
   padding-bottom: 3px;
@@ -60,15 +62,23 @@
   border-style: solid;
   border-color: @borders;
   border-width: 0.5px;
-  border-radius: 3px;
+  border-radius: 0;
 }
 
-/* TODO: not working */
-.event-details .view {
-  box-shadow: 40px 40px black;
+.entry {
+  border-radius: 0;
 }
 
 GtkClutterOffscreen.overlay {
   background-color: transparent;
   background-image: none;
+}
+
+GtkClutterOffscreen.overlay .frame {
+  padding: 12px;
+  margin: 12px;
+}
+
+GtkClutterOffscreen.overlay .frame * {
+  color: @theme_fg_color;
 }

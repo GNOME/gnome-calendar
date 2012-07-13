@@ -389,7 +389,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
   /* 6: is padding around the header */
-  priv->header_size = font_height + 6;
+  priv->header_size = font_height + 12;
   gtk_style_context_remove_region (context, "header");
   gtk_style_context_restore (context);
 
@@ -799,10 +799,11 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   GtkStyleContext *context;
   GtkStateFlags state;
   GdkRGBA color;
+  GdkRGBA selected_color;
 
   gint i, j;
   gint font_width;
-  gint font_height;
+  gint max_day_width;
 
   gdouble start_grid_x;
   gdouble start_grid_y;
@@ -810,6 +811,9 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   guint8 n_days_in_month;
 
   PangoLayout *layout;
+  const PangoFontDescription *font;
+  const PangoFontDescription *selected_font;
+
   gchar *day;
 
   priv = view->priv;
@@ -820,81 +824,130 @@ gcal_month_view_draw_grid (GcalMonthView *view,
 
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
-
-  /* drawing selected_cell */
-  //FIXME: to draw date in the selected cell if it's not in the month
   state |= GTK_STATE_FLAG_SELECTED;
-  gtk_style_context_get_background_color (context, state, &color);
-  cairo_set_source_rgba (cr, color.red, color.green, color.blue, 0.6);
-  cairo_rectangle (cr,
-                   start_grid_x + priv->horizontal_step * ( priv->selected_cell % 7),
-                   start_grid_y + priv->vertical_step * ( priv->selected_cell / 7),
-                   priv->horizontal_step,
-                   priv->vertical_step);
-  cairo_fill (cr);
+  gtk_style_context_get_color (context, state, &selected_color);
+  selected_font = gtk_style_context_get_font (context, state);
 
-  /* drawing grid */
   state = gtk_widget_get_state_flags (widget);
   gtk_style_context_get_color (context, state, &color);
+  font = gtk_style_context_get_font (context, state);
   cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
 
   layout = pango_cairo_create_layout (cr);
-  pango_layout_set_font_description (layout,
-                                     gtk_style_context_get_font (context,
-                                                                 state));
+  pango_layout_set_font_description (layout, font);
 
   n_days_in_month = icaltime_days_in_month (priv->date->month,
                                             priv->date->year);
 
+  /* drawing grid text */
+  max_day_width = 0;
+  /* calculating maximus */
   for (i = 0; i < 7; i++)
     {
       pango_layout_set_text (layout, gcal_get_weekday (i), -1);
       pango_cairo_update_layout (cr, layout);
-      pango_layout_get_pixel_size (layout, &font_width, &font_height);
+      pango_layout_get_pixel_size (layout, &font_width, NULL);
+
+      max_day_width = max_day_width < font_width ? font_width : max_day_width;
+    }
+
+  for (i = 0; i < 7; i++)
+    {
+      if (i == priv->selected_cell % 7)
+        {
+          cairo_set_source_rgba (cr, selected_color.red, selected_color.green, selected_color.blue, 1);
+          cairo_rectangle (cr,
+                           start_grid_x + priv->horizontal_step * i,
+                           start_grid_y - priv->grid_header_size - 6,
+                           max_day_width + 12,
+                           priv->grid_header_size + 6);
+          cairo_fill (cr);
+
+          cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 1.0);
+        }
+
+      pango_layout_set_text (layout, gcal_get_weekday (i), -1);
+      pango_cairo_update_layout (cr, layout);
+      pango_layout_get_pixel_size (layout, &font_width, NULL);
+
       /* 6: is padding around the grid-header */
       cairo_move_to (cr,
-                     start_grid_x + priv->horizontal_step * i + 6,
+                     start_grid_x + priv->horizontal_step * i + 6 + (gint) ( (max_day_width - font_width) / 2),
                      start_grid_y - priv->grid_header_size);
       pango_cairo_show_layout (cr, layout);
 
+      cairo_set_source_rgba (cr, color.red, color.green, color.blue, 1);
+
       for (j = 0; j < 5; j++)
         {
-          gint n_day = j * 7 + i + priv->days_delay;
-          if (n_day <= 0 ||
-              n_day > n_days_in_month)
+          gint n_day;
+          n_day = j * 7 + i + priv->days_delay;
+          if (n_day <= 0 || n_day > n_days_in_month)
             continue;
+
+          /* drawing selected_day */
+          if (priv->selected_cell == n_day - 1)
+            {
+              cairo_set_source_rgba (cr, selected_color.red, selected_color.green, selected_color.blue, 1);
+              pango_layout_set_font_description ( layout, selected_font);
+            }
+
           day = g_strdup_printf ("%d", n_day);
           pango_layout_set_text (layout, day, -1);
           pango_cairo_update_layout (cr, layout);
-          pango_layout_get_pixel_size (layout, &font_width, &font_height);
+          pango_layout_get_pixel_size (layout, &font_width, NULL);
           /* 2: is margin-left and 1: is margin_top for numbers */
           cairo_move_to (cr,
                          start_grid_x + priv->horizontal_step * i + 2,
                          start_grid_y + priv->vertical_step * j + 1);
           pango_cairo_show_layout (cr, layout);
+
+          /* unsetting selected flag */
+          if (priv->selected_cell == n_day - 1)
+            {
+              cairo_set_source_rgba (cr, color.red, color.green, color.blue, 1);
+              pango_layout_set_font_description ( layout, font);
+            }
           g_free (day);
         }
     }
-  /* free the layout object */
-  g_object_unref (layout);
+  /* drawing grid skel */
+  cairo_set_source_rgba (cr, color.red, color.green, color.blue, 1);
+  cairo_set_line_width (cr, 1.5);
 
   for (i = 0; i < 6; i++)
     {
       cairo_move_to (cr, start_grid_x, start_grid_y + priv->vertical_step * i);
-      cairo_line_to (cr,
-                     start_grid_x + priv->horizontal_step * 7,
-                     start_grid_y + priv->vertical_step * i);
+      cairo_rel_line_to (cr, priv->horizontal_step * 7, 0);
     }
 
   for (i = 0; i < 8; i++)
     {
       cairo_move_to (cr, start_grid_x + priv->horizontal_step * i, start_grid_y);
-      cairo_line_to (cr,
-                     start_grid_x + priv->horizontal_step * i,
-                     start_grid_y + priv->vertical_step * 5);
+      cairo_rel_line_to (cr, 0, priv->vertical_step * 5);
     }
 
   cairo_stroke (cr);
+
+  /* drawing selected_cell */
+  //FIXME: What to do when the selected date isn't on the in the month
+  cairo_set_source_rgba (cr, selected_color.red, selected_color.green, selected_color.blue, 1);
+  /* Tiny line behind weekday box */
+  cairo_move_to (cr,
+                 start_grid_x + priv->horizontal_step * ( priv->selected_cell % 7),
+                 start_grid_y);
+  cairo_rel_line_to (cr, max_day_width + 12, 0);
+
+  /* Two pixel line on the selected day cell */
+  cairo_set_line_width (cr, 2.0);
+  cairo_move_to (cr,
+                 start_grid_x + priv->horizontal_step * ( priv->selected_cell % 7),
+                 start_grid_y + priv->vertical_step * ( priv->selected_cell / 7));
+  cairo_rel_line_to (cr, priv->horizontal_step, 0);
+  cairo_stroke (cr);
+
+  /* free the layout object */
+  g_object_unref (layout);
 }
 
 /* GcalView Interface API */

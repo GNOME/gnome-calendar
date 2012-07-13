@@ -386,7 +386,7 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
   /* 6: is padding around the header */
-  priv->header_size = font_height + 6;
+  priv->header_size = font_height + 12;
   gtk_style_context_remove_region (context, "header");
   gtk_style_context_restore (context);
 
@@ -726,31 +726,50 @@ gcal_week_view_draw_grid (GcalWeekView  *view,
   GtkStyleContext *context;
   GtkStateFlags state;
   GdkRGBA color;
+  GdkRGBA selected_color;
 
   gint i;
   gint font_width;
   gint font_height;
 
+  gint max_day_width;
+  gint actual_day;
+
+  gdouble start_grid_x;
+  gdouble start_grid_y;
+
   PangoLayout *layout;
+  const PangoFontDescription *font;
 
   icaltimetype *start_of_week;
 
   priv = view->priv;
   widget = GTK_WIDGET (view);
+
+  start_grid_x = alloc->x + padding->left + priv->grid_sidebar_size;
+  start_grid_y = alloc->y + padding->top + priv->header_size + priv->grid_header_size;
+
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
+  state |= GTK_STATE_FLAG_SELECTED;
+  gtk_style_context_get_color (context, state, &selected_color);
 
-  /* drawing grid header */
   state = gtk_widget_get_state_flags (widget);
   gtk_style_context_get_color (context, state, &color);
+  font = gtk_style_context_get_font (context, state);
+
+  /* drawing grid header */
   cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
 
   layout = pango_cairo_create_layout (cr);
-  pango_layout_set_font_description (layout,
-                                     gtk_style_context_get_font (context,
-                                                                 state));
+  pango_layout_set_font_description (layout, font);
 
   start_of_week = gcal_week_view_get_initial_date (GCAL_VIEW (view));
+
+  /* drawing grid text */
+  max_day_width = 0;
+  actual_day = icaltime_day_of_week (*(priv->date)) - 1;
+  /* calculating maximus */
   for (i = 0; i < 7; i++)
     {
       gchar *weekday_header;
@@ -764,9 +783,42 @@ gcal_week_view_draw_grid (GcalWeekView  *view,
       pango_layout_set_text (layout, weekday_header, -1);
       pango_cairo_update_layout (cr, layout);
       pango_layout_get_pixel_size (layout, &font_width, &font_height);
+
+      max_day_width = max_day_width < font_width ? font_width : max_day_width;
+    }
+
+  for (i = 0; i < 7; i++)
+    {
+      gchar *weekday_header;
+      gint n_day;
+
+      if (i == actual_day)
+        {
+          cairo_set_source_rgba (cr, selected_color.red, selected_color.green, selected_color.blue, 1);
+          cairo_rectangle (cr,
+                           start_grid_x + priv->horizontal_step * i,
+                           start_grid_y - priv->grid_header_size - 6,
+                           max_day_width + 12,
+                           priv->grid_header_size + 6);
+          cairo_fill (cr);
+          cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 1.0);
+        }
+      else
+        {
+          cairo_set_source_rgba (cr, color.red, color.green, color.blue, 1);
+        }
+
+      n_day = start_of_week->day + i;
+      if (n_day > icaltime_days_in_month (start_of_week->month, start_of_week->year))
+        n_day = n_day - icaltime_days_in_month (start_of_week->month, start_of_week->year);
+
+      weekday_header = g_strdup_printf ("%s %d",gcal_get_weekday (i), n_day);
+      pango_layout_set_text (layout, weekday_header, -1);
+      pango_cairo_update_layout (cr, layout);
+      pango_layout_get_pixel_size (layout, &font_width, &font_height);
       cairo_move_to (cr,
-                     alloc->x + padding->left + priv->grid_sidebar_size + priv->horizontal_step * i + 1 + ((priv->horizontal_step - font_width) / 2),
-                     alloc->y + padding->top + priv->header_size);
+                     start_grid_x + priv->horizontal_step * i + 6 + (gint) ( (max_day_width - font_width) / 2),
+                     start_grid_y - priv->grid_header_size);
       pango_cairo_show_layout (cr, layout);
 
       g_free (weekday_header);
@@ -774,6 +826,7 @@ gcal_week_view_draw_grid (GcalWeekView  *view,
   g_free (start_of_week);
 
   /* draw grid_sidebar */
+  cairo_set_source_rgba (cr, color.red, color.green, color.blue, 1);
   pango_layout_set_text (layout, _("All day"), -1);
   pango_cairo_update_layout (cr, layout);
   pango_layout_get_pixel_size (layout, &font_width, &font_height);
@@ -807,27 +860,35 @@ gcal_week_view_draw_grid (GcalWeekView  *view,
     }
 
   /* grid, vertical lines first */
+  cairo_set_line_width (cr, 1.5);
   for (i = 0; i < 8; i++)
     {
       cairo_move_to (cr,
-                     alloc->x + padding->left + priv->grid_sidebar_size + priv->horizontal_step * i,
-                     alloc->y + padding->top + priv->header_size + priv->grid_header_size);
-      cairo_line_to (cr,
-                     alloc->x + padding->left + priv->grid_sidebar_size + priv->horizontal_step * i,
-                     alloc->y + padding->top + priv->header_size + priv->grid_header_size + priv->vertical_step *  ((10 / priv->hours_steps) + 1));
+                     start_grid_x + priv->horizontal_step * i,
+                     start_grid_y);
+      cairo_rel_line_to (cr, 0, priv->vertical_step *  ((10 / priv->hours_steps) + 1));
     }
 
   /* rest of the lines */
   for (i = 0; i <= 10 / priv->hours_steps + 1; i++)
     {
       cairo_move_to (cr,
-                     alloc->x + padding->left + priv->grid_sidebar_size,
-                     alloc->y + padding->top + priv->header_size + priv->grid_header_size + priv->vertical_step * i);
-      cairo_line_to (cr,
-                     alloc->x + padding->left + priv->grid_sidebar_size + priv->horizontal_step * 7,
-                     alloc->y + padding->top + priv->header_size + priv->grid_header_size + priv->vertical_step * i);
+                     start_grid_x,
+                     start_grid_y + priv->vertical_step * i);
+      cairo_rel_line_to (cr, priv->horizontal_step * 7, 0);
     }
 
+  cairo_stroke (cr);
+
+  /* drawing selected_cell */
+  //FIXME: What to do when the selected date isn't on the in the month
+  cairo_set_source_rgba (cr, selected_color.red, selected_color.green, selected_color.blue, 1);
+  /* Two pixel line on the selected day cell */
+  cairo_set_line_width (cr, 2.0);
+  cairo_move_to (cr,
+                 start_grid_x + priv->horizontal_step * ( actual_day % 7),
+                 start_grid_y);
+  cairo_rel_line_to (cr, priv->horizontal_step, 0);
   cairo_stroke (cr);
 
   g_object_unref (layout);
