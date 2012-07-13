@@ -62,8 +62,11 @@ GType         gcal_toolbar_get_type          (void) G_GNUC_CONST;
 
 ClutterActor* gcal_toolbar_new               (void);
 
-void          gcal_toolbar_set_mode          (GcalToolbar     *toolbar,
-                                              GcalToolbarMode  mode);
+void          gcal_toolbar_set_mode          (GcalToolbar        *toolbar,
+                                              GcalToolbarMode     mode);
+
+void          gcal_toolbar_set_active_view   (GcalToolbar        *toolbar,
+                                              GcalWindowViewType  view_type);
 
 G_END_DECLS
 

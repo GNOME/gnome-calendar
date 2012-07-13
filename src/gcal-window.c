@@ -974,7 +974,8 @@ gcal_window_undo_remove_event (GtkButton *button,
 
 /* Public API */
 GtkWidget*
-gcal_window_new (GcalApplication *app)
+gcal_window_new_with_view (GcalApplication *app,
+                           GcalWindowViewType view_type)
 {
   GcalWindow *win;
   GcalManager *manager;
@@ -997,6 +998,8 @@ gcal_window_new (GcalApplication *app)
                     G_CALLBACK (gcal_window_events_removed),
                     win);
 
+  gcal_toolbar_set_active_view (GCAL_TOOLBAR (win->priv->main_toolbar),
+                                view_type);
   return GTK_WIDGET (win);
 }
 

@@ -115,7 +115,10 @@ gcal_application_activate (GApplication *application)
     }
   else
     {
-      priv->window = gcal_window_new (GCAL_APPLICATION (application));
+      priv->window =
+        gcal_window_new_with_view (GCAL_APPLICATION (application),
+                                   g_settings_get_enum (priv->settings,
+                                                        "active-view"));
       g_settings_bind (priv->settings,
                        "active-view",
                        priv->window,

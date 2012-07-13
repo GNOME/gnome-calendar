@@ -24,20 +24,22 @@
 
 struct _GcalToolbarPrivate
 {
-  GtkWidget   *widget;
+  GtkWidget           *widget;
 
-  GtkToolItem *left_item;
-  GtkToolItem *central_item;
-  GtkToolItem *right_item;
+  GtkToolItem         *left_item;
+  GtkToolItem         *central_item;
+  GtkToolItem         *right_item;
 
   /* overview widgets */
-  GtkWidget   *sources_button;
-  GtkWidget   *views_box;
-  GtkWidget   *add_button;
+  GtkWidget           *sources_button;
+  GtkWidget           *views_box;
+  GtkWidget           *add_button;
 
   /* events widgets */
-  GtkWidget   *back_button;
-  GtkWidget   *edit_button;
+  GtkWidget           *back_button;
+  GtkWidget           *edit_button;
+
+  GtkWidget           *active_view_button;
 };
 
 enum
@@ -299,7 +301,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
       gtk_style_context_add_class (context, "linked");
 
       /* day */
-      button = gtk_button_new_with_label (_("Day"));
+      button = gtk_toggle_button_new_with_label (_("Day"));
       gtk_widget_set_size_request (button, 80, -1);
 
       context = gtk_widget_get_style_context (button);
@@ -311,12 +313,12 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
                         "view-type",
                         GUINT_TO_POINTER (GCAL_WINDOW_VIEW_DAY));
       g_signal_connect (button,
-                        "clicked",
+                        "toggled",
                         G_CALLBACK (gcal_toolbar_view_changed),
                         toolbar);
 
       /* week */
-      button = gtk_button_new_with_label (_("Week"));
+      button = gtk_toggle_button_new_with_label (_("Week"));
       gtk_widget_set_size_request (button, 80, -1);
 
       context = gtk_widget_get_style_context (button);
@@ -328,12 +330,12 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
                         "view-type",
                         GUINT_TO_POINTER (GCAL_WINDOW_VIEW_WEEK));
       g_signal_connect (button,
-                        "clicked",
+                        "toggled",
                         G_CALLBACK (gcal_toolbar_view_changed),
                         toolbar);
 
       /* month */
-      button = gtk_button_new_with_label (_("Month"));
+      button = gtk_toggle_button_new_with_label (_("Month"));
       gtk_widget_set_size_request (button, 80, -1);
 
       context = gtk_widget_get_style_context (button);
@@ -345,12 +347,12 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
                         "view-type",
                         GUINT_TO_POINTER (GCAL_WINDOW_VIEW_MONTH));
       g_signal_connect (button,
-                        "clicked",
+                        "toggled",
                         G_CALLBACK (gcal_toolbar_view_changed),
                         toolbar);
 
       /* year */
-      button = gtk_button_new_with_label (_("Year"));
+      button = gtk_toggle_button_new_with_label (_("Year"));
       gtk_widget_set_size_request (button, 80, -1);
 
       context = gtk_widget_get_style_context (button);
@@ -362,12 +364,12 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
                         "view-type",
                         GUINT_TO_POINTER (GCAL_WINDOW_VIEW_YEAR));
       g_signal_connect (button,
-                        "clicked",
+                        "toggled",
                         G_CALLBACK (gcal_toolbar_view_changed),
                         toolbar);
 
       /* list */
-      button = gtk_button_new_with_label (_("List"));
+      button = gtk_toggle_button_new_with_label (_("List"));
       gtk_widget_set_size_request (button, 80, -1);
 
       context = gtk_widget_get_style_context (button);
@@ -379,7 +381,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
                         "view-type",
                         GUINT_TO_POINTER (GCAL_WINDOW_VIEW_LIST));
       g_signal_connect (button,
-                        "clicked",
+                        "toggled",
                         G_CALLBACK (gcal_toolbar_view_changed),
                         toolbar);
     }
@@ -466,14 +468,32 @@ static void
 gcal_toolbar_view_changed (GtkWidget *button,
                            gpointer   user_data)
 {
-  GcalToolbar *toolbar;
+  GcalToolbarPrivate *priv;
   guint view_type;
 
-  toolbar = GCAL_TOOLBAR (user_data);
+  priv = GCAL_TOOLBAR (user_data)->priv;
+
+  if (priv->active_view_button != NULL)
+    {
+      g_signal_handlers_block_by_func (priv->active_view_button,
+                                       gcal_toolbar_view_changed,
+                                       user_data);
+      gtk_toggle_button_set_active (
+          GTK_TOGGLE_BUTTON (priv->active_view_button),
+          FALSE);
+      g_signal_handlers_unblock_by_func (priv->active_view_button,
+                                         gcal_toolbar_view_changed,
+                                         user_data);
+    }
+
+  priv->active_view_button = button;
   view_type = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (button),
                                                    "view-type"));
 
-  g_signal_emit (toolbar, signals[VIEW_CHANGED], 0, view_type);
+  g_signal_emit (GCAL_TOOLBAR (user_data),
+                 signals[VIEW_CHANGED],
+                 0,
+                 view_type);
 }
 
 static void
@@ -553,4 +573,32 @@ gcal_toolbar_set_mode (GcalToolbar     *toolbar,
       case GCAL_TOOLBAR_VIEW_EVENT:
         gcal_toolbar_set_event_mode (toolbar);
     }
+}
+
+void
+gcal_toolbar_set_active_view (GcalToolbar        *toolbar,
+                              GcalWindowViewType  view_type)
+{
+  GcalToolbarPrivate *priv;
+  GList *children;
+  GList *l;
+  guint button_view_type;
+
+  g_return_if_fail (GCAL_IS_TOOLBAR (toolbar));
+  priv = toolbar->priv;
+
+  children = gtk_container_get_children (GTK_CONTAINER (priv->views_box));
+  for (l = children; l != NULL; l = l->next)
+    {
+      button_view_type =
+        GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (l->data),
+                                             "view-type"));
+      if (view_type == button_view_type)
+        {
+          gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (l->data), TRUE);
+          break;
+        }
+    }
+
+  g_list_free (children);
 }
