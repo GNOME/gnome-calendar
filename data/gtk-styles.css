@@ -12,8 +12,11 @@
 @define-color osd_toolbar_bg_c alpha(shade(@osd_base, 1.02), 0.80);
 
 .contents.frame {
+  border: 0;
   border-top: 1px lightgrey solid;
   border-radius: 0px;
+
+  margin: 0;
 }
 
 .sources-views {
@@ -40,7 +43,7 @@
 }
 
 .calendar-view {
-  padding: 12px;
+  padding: 6px;
   font: 10;
 }
 

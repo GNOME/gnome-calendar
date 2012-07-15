@@ -58,10 +58,6 @@ struct _GcalMonthViewPrivate
   gint            selected_cell;
 
   gint            days_delay;
-  gint            header_size;
-  gint            grid_header_size;
-  gdouble         vertical_step;
-  gdouble         horizontal_step;
 
   /* property */
   icaltimetype   *date;
@@ -124,6 +120,8 @@ static void           gcal_month_view_draw_grid             (GcalMonthView  *vie
                                                              cairo_t        *cr,
                                                              GtkAllocation  *alloc,
                                                              GtkBorder      *padding);
+
+static gdouble        gcal_month_view_get_start_grid_y      (GtkWidget      *widget);
 
 static icaltimetype*  gcal_month_view_get_initial_date      (GcalView       *view);
 
@@ -355,12 +353,16 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   gint i;
   GList *l;
 
-  GtkStyleContext *context;
-  GtkStateFlags state;
   GtkBorder padding;
   PangoLayout *layout;
+
   gint font_height;
   gdouble added_height;
+
+  gdouble start_grid_y;
+  gdouble horizontal_block;
+  gdouble vertical_block;
+  gdouble vertical_cell_margin;
 
   priv = GCAL_MONTH_VIEW (widget)->priv;
 
@@ -374,38 +376,23 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                               allocation->height);
     }
 
-  context = gtk_widget_get_style_context (widget);
-  state = gtk_widget_get_state_flags (widget);
-  gtk_style_context_get_padding (context, state, &padding);
+  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
+                                 gtk_widget_get_state_flags (widget),
+                                 &padding);
   layout = pango_layout_new (gtk_widget_get_pango_context (widget));
 
-  /* init header values */
-  gtk_style_context_save (context);
-  gtk_style_context_add_region (context, "header", 0);
-
-  pango_layout_set_font_description (layout,
-                                     gtk_style_context_get_font (context,
-                                                                 state));
+  pango_layout_set_font_description (
+      layout,
+      gtk_style_context_get_font (gtk_widget_get_style_context (widget),
+                                  gtk_widget_get_state_flags (widget)));
   pango_layout_get_pixel_size (layout, NULL, &font_height);
+  g_object_unref (layout);
 
-  /* 6: is padding around the header */
-  priv->header_size = font_height + 12;
-  gtk_style_context_remove_region (context, "header");
-  gtk_style_context_restore (context);
+  start_grid_y = gcal_month_view_get_start_grid_y (widget);
+  horizontal_block = allocation->width / 7;
+  vertical_block = (allocation->height - start_grid_y) / 5;
 
-  /* init grid values */
-  pango_layout_set_font_description (layout,
-                                     gtk_style_context_get_font (context,
-                                                                 state));
-  pango_layout_get_pixel_size (layout, NULL, &font_height);
-  /* 6: is padding around the header */
-  priv->grid_header_size = font_height + 6;
-
-  priv->horizontal_step =
-    (allocation->width - (allocation->x + padding.left + padding.right)) / 7;
-  priv->vertical_step =
-    (allocation->height - (allocation->y + padding.top + padding.bottom + priv->header_size + priv->grid_header_size)) / 5;
-
+  vertical_cell_margin = padding.top + font_height;
   for (i = 0; i < 35; i++)
     {
       added_height = 0;
@@ -420,22 +407,22 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
           child = (GcalViewChild*) l->data;
 
-          pos_x = ( i % 7 ) * priv->horizontal_step;
-          pos_y = ( i / 7 ) * priv->vertical_step;
+          pos_x = ( i % 7 ) * horizontal_block;
+          pos_y = ( i / 7 ) * vertical_block;
 
-          if ((! gtk_widget_get_visible (child->widget)) && (! child->hidden_by_me))
+          if ((! gtk_widget_get_visible (child->widget))
+              && (! child->hidden_by_me))
             continue;
 
           gtk_widget_get_preferred_height (child->widget,
                                            &min_height,
                                            &natural_height);
-          child_allocation.x = pos_x + allocation->x + padding.left;
-          child_allocation.y = pos_y + font_height + allocation->y
-            + priv->header_size + priv->grid_header_size + padding.top;
-          child_allocation.width = priv->horizontal_step;
-          child_allocation.height = MIN (natural_height, priv->vertical_step);
-          if (added_height + font_height + child_allocation.height
-              > priv->vertical_step)
+          child_allocation.x = pos_x;
+          child_allocation.y = start_grid_y + vertical_cell_margin + pos_y;
+          child_allocation.width = horizontal_block;
+          child_allocation.height = MIN (natural_height, vertical_block);
+          if (added_height + vertical_cell_margin + child_allocation.height
+              > vertical_block)
             {
               gtk_widget_hide (child->widget);
               child->hidden_by_me = TRUE;
@@ -485,11 +472,12 @@ gcal_month_view_button_press (GtkWidget      *widget,
   GtkStateFlags state;
   GtkBorder padding;
   gint x, y;
+  gint width, height;
+  gdouble start_grid_y;
 
   priv = GCAL_MONTH_VIEW (widget)->priv;
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
-
   gtk_style_context_get_padding (context, state, &padding);
 
   x = event->x;
@@ -506,9 +494,12 @@ gcal_month_view_button_press (GtkWidget      *widget,
                                         &y);
     }
 
-  x = x - padding.left;
-  y = y - ( padding.top + priv->grid_header_size );
-  priv->clicked_cell = 7 * ( (gint ) ( y  / priv->vertical_step )) + ((gint) ( x / priv->horizontal_step ));
+  //FIXME calculations for clicks, if needed
+  width = gtk_widget_get_allocated_width (widget);
+  height = gtk_widget_get_allocated_height (widget);
+  start_grid_y = gcal_month_view_get_start_grid_y (widget);
+  y = y - start_grid_y;
+  priv->clicked_cell = 7 * ( (gint ) ( y  / ((height - start_grid_y) / 5) )) + ((gint) ( x / (width / 7) ));
 
   return TRUE;
 }
@@ -522,6 +513,8 @@ gcal_month_view_button_release (GtkWidget      *widget,
   GtkStateFlags state;
   GtkBorder padding;
   gint x, y;
+  gint width, height;
+  gdouble start_grid_y;
   gint released;
 
   icaltimetype *new_date;
@@ -546,9 +539,12 @@ gcal_month_view_button_release (GtkWidget      *widget,
                                         &y);
     }
 
-  x = x - padding.left;
-  y = y - ( padding.top + priv->grid_header_size );
-  released = 7 * ( (gint ) ( y  / priv->vertical_step )) + ((gint) ( x / priv->horizontal_step ));
+  //FIXME calculations for clicks, if needed
+  width = gtk_widget_get_allocated_width (widget);
+  height = gtk_widget_get_allocated_height (widget);
+  start_grid_y = gcal_month_view_get_start_grid_y (widget);
+  y = y - start_grid_y;
+  released = 7 * ( (gint ) ( y  / ((height - start_grid_y) / 5) )) + ((gint) ( x / (width / 7) ));
 
   if (priv->clicked_cell == released)
     {
@@ -592,7 +588,8 @@ gcal_month_view_add (GtkContainer *container,
       child = (GcalViewChild*) l->data;
       if (g_strcmp0 (
             gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget)),
-            gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget))) == 0)
+            gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget)))
+          == 0)
         {
           //TODO: remove once the main-dev phase its over
           g_warning ("Trying to add an event with the same uuid to the view");
@@ -707,7 +704,8 @@ gcal_month_view_set_date (GcalMonthView *view,
               icaltimetype *child_date;
 
               child = (GcalViewChild*) l->data;
-              child_date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
+              child_date =
+                gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
               if (! gcal_view_contains (GCAL_VIEW (view), child_date))
                 to_remove = g_list_append (to_remove, child->widget);
             }
@@ -748,7 +746,7 @@ gcal_month_view_draw_header (GcalMonthView  *view,
   gtk_style_context_add_region (context, "header", 0);
 
   gtk_style_context_get_color (context, state, &color);
-  cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
+  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
   layout = pango_cairo_create_layout (cr);
   pango_layout_set_font_description (layout,
@@ -771,7 +769,7 @@ gcal_month_view_draw_header (GcalMonthView  *view,
 
   state |= GTK_STATE_FLAG_INSENSITIVE;
   gtk_style_context_get_color (context, state, &color);
-  cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
+  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
   pango_layout_set_text (layout, right_header, -1);
   pango_cairo_update_layout (cr, layout);
@@ -803,9 +801,8 @@ gcal_month_view_draw_grid (GcalMonthView *view,
 
   gint i, j;
   gint font_width;
-  gint max_day_width;
+  gint font_height;
 
-  gdouble start_grid_x;
   gdouble start_grid_y;
 
   guint8 n_days_in_month;
@@ -813,16 +810,17 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   PangoLayout *layout;
   const PangoFontDescription *font;
   const PangoFontDescription *selected_font;
+  PangoFontDescription *bold_font;
 
   gchar *day;
 
   priv = view->priv;
   widget = GTK_WIDGET (view);
 
-  start_grid_x = alloc->x + padding->left;
-  start_grid_y = alloc->y + padding->top + priv->header_size + priv->grid_header_size;
-
   context = gtk_widget_get_style_context (widget);
+  layout = pango_cairo_create_layout (cr);
+
+  start_grid_y = gcal_month_view_get_start_grid_y (widget);
   state = gtk_widget_get_state_flags (widget);
   state |= GTK_STATE_FLAG_SELECTED;
   gtk_style_context_get_color (context, state, &selected_color);
@@ -831,52 +829,31 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   state = gtk_widget_get_state_flags (widget);
   gtk_style_context_get_color (context, state, &color);
   font = gtk_style_context_get_font (context, state);
-  cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
+  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
-  layout = pango_cairo_create_layout (cr);
   pango_layout_set_font_description (layout, font);
 
   n_days_in_month = icaltime_days_in_month (priv->date->month,
                                             priv->date->year);
 
   /* drawing grid text */
-  max_day_width = 0;
-  /* calculating maximus */
+  bold_font = pango_font_description_copy (font);
+  pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
   for (i = 0; i < 7; i++)
     {
+      pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, gcal_get_weekday (i), -1);
       pango_cairo_update_layout (cr, layout);
-      pango_layout_get_pixel_size (layout, &font_width, NULL);
-
-      max_day_width = max_day_width < font_width ? font_width : max_day_width;
-    }
-
-  for (i = 0; i < 7; i++)
-    {
-      if (i == priv->selected_cell % 7)
-        {
-          cairo_set_source_rgba (cr, selected_color.red, selected_color.green, selected_color.blue, 1);
-          cairo_rectangle (cr,
-                           start_grid_x + priv->horizontal_step * i,
-                           start_grid_y - priv->grid_header_size - 6,
-                           max_day_width + 12,
-                           priv->grid_header_size + 6);
-          cairo_fill (cr);
-
-          cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 1.0);
-        }
-
-      pango_layout_set_text (layout, gcal_get_weekday (i), -1);
-      pango_cairo_update_layout (cr, layout);
-      pango_layout_get_pixel_size (layout, &font_width, NULL);
+      pango_layout_get_pixel_size (layout, &font_width, &font_height);
 
       /* 6: is padding around the grid-header */
       cairo_move_to (cr,
-                     start_grid_x + priv->horizontal_step * i + 6 + (gint) ( (max_day_width - font_width) / 2),
-                     start_grid_y - priv->grid_header_size);
+                     (alloc->width / 7) * i + padding->left,
+                     start_grid_y - padding->top - font_height);
       pango_cairo_show_layout (cr, layout);
 
-      cairo_set_source_rgba (cr, color.red, color.green, color.blue, 1);
+      pango_layout_set_font_description (layout, font);
+      cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
       for (j = 0; j < 5; j++)
         {
@@ -888,7 +865,10 @@ gcal_month_view_draw_grid (GcalMonthView *view,
           /* drawing selected_day */
           if (priv->selected_cell == n_day - 1)
             {
-              cairo_set_source_rgba (cr, selected_color.red, selected_color.green, selected_color.blue, 1);
+              cairo_set_source_rgb (cr,
+                                    selected_color.red,
+                                    selected_color.green,
+                                    selected_color.blue);
               pango_layout_set_font_description ( layout, selected_font);
             }
 
@@ -896,58 +876,101 @@ gcal_month_view_draw_grid (GcalMonthView *view,
           pango_layout_set_text (layout, day, -1);
           pango_cairo_update_layout (cr, layout);
           pango_layout_get_pixel_size (layout, &font_width, NULL);
-          /* 2: is margin-left and 1: is margin_top for numbers */
-          cairo_move_to (cr,
-                         start_grid_x + priv->horizontal_step * i + 2,
-                         start_grid_y + priv->vertical_step * j + 1);
+          cairo_move_to (
+            cr,
+            (alloc->width / 7) * i + padding->left,
+            start_grid_y + ((alloc->height - start_grid_y) / 5) * j + padding->top);
           pango_cairo_show_layout (cr, layout);
 
           /* unsetting selected flag */
           if (priv->selected_cell == n_day - 1)
             {
-              cairo_set_source_rgba (cr, color.red, color.green, color.blue, 1);
+              cairo_set_source_rgb (cr, color.red, color.green, color.blue);
               pango_layout_set_font_description ( layout, font);
             }
           g_free (day);
         }
     }
+  /* free the layout object */
+  pango_font_description_free (bold_font);
+  g_object_unref (layout);
+
   /* drawing grid skel */
-  cairo_set_source_rgba (cr, color.red, color.green, color.blue, 1);
-  cairo_set_line_width (cr, 1.5);
+  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+  cairo_set_line_width (cr, 0.5);
+
+  for (i = 0; i < 5; i++)
+    {
+      cairo_move_to (cr, 0, start_grid_y + ((alloc->height - start_grid_y) / 5) * i);
+      cairo_rel_line_to (cr, alloc->width, 0);
+    }
 
   for (i = 0; i < 6; i++)
     {
-      cairo_move_to (cr, start_grid_x, start_grid_y + priv->vertical_step * i);
-      cairo_rel_line_to (cr, priv->horizontal_step * 7, 0);
-    }
-
-  for (i = 0; i < 8; i++)
-    {
-      cairo_move_to (cr, start_grid_x + priv->horizontal_step * i, start_grid_y);
-      cairo_rel_line_to (cr, 0, priv->vertical_step * 5);
+      cairo_move_to (cr, (alloc->width / 7) * (i + 1), start_grid_y);
+      cairo_rel_line_to (cr, 0, alloc->height - start_grid_y);
     }
 
   cairo_stroke (cr);
 
   /* drawing selected_cell */
   //FIXME: What to do when the selected date isn't on the in the month
-  cairo_set_source_rgba (cr, selected_color.red, selected_color.green, selected_color.blue, 1);
-  /* Tiny line behind weekday box */
-  cairo_move_to (cr,
-                 start_grid_x + priv->horizontal_step * ( priv->selected_cell % 7),
-                 start_grid_y);
-  cairo_rel_line_to (cr, max_day_width + 12, 0);
+  cairo_set_source_rgb (cr,
+                        selected_color.red,
+                        selected_color.green,
+                        selected_color.blue);
 
   /* Two pixel line on the selected day cell */
   cairo_set_line_width (cr, 2.0);
   cairo_move_to (cr,
-                 start_grid_x + priv->horizontal_step * ( priv->selected_cell % 7),
-                 start_grid_y + priv->vertical_step * ( priv->selected_cell / 7));
-  cairo_rel_line_to (cr, priv->horizontal_step, 0);
+                 (alloc->width / 7) * ( priv->selected_cell % 7),
+                 start_grid_y + ((alloc->height - start_grid_y) / 5) * ( priv->selected_cell / 7) + 0.5);
+  cairo_rel_line_to (cr, (alloc->width / 7), 0);
   cairo_stroke (cr);
+}
 
-  /* free the layout object */
+static gdouble
+gcal_month_view_get_start_grid_y (GtkWidget *widget)
+{
+  GtkStyleContext *context;
+  GtkBorder padding;
+
+  PangoLayout *layout;
+  gint font_height;
+  gdouble start_grid_y;
+
+  context = gtk_widget_get_style_context (widget);
+  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
+
+  /* init header values */
+  gtk_style_context_save (context);
+  gtk_style_context_add_region (context, "header", 0);
+
+  pango_layout_set_font_description (
+      layout,
+      gtk_style_context_get_font (context,
+                                  gtk_widget_get_state_flags(widget)));
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+
+  /* 6: is padding around the header */
+  start_grid_y = font_height;
+  gtk_style_context_remove_region (context, "header");
+  gtk_style_context_restore (context);
+
+  /* init grid values */
+  pango_layout_set_font_description (
+      layout,
+      gtk_style_context_get_font (context,
+                                  gtk_widget_get_state_flags(widget)));
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+
+  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
+                                 gtk_widget_get_state_flags (widget),
+                                 &padding);
+
+  start_grid_y += 3 * padding.top + font_height;
   g_object_unref (layout);
+  return start_grid_y;
 }
 
 /* GcalView Interface API */
