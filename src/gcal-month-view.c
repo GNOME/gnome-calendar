@@ -767,8 +767,9 @@ gcal_month_view_draw_header (GcalMonthView  *view,
   cairo_move_to (cr, alloc->x + padding->left, alloc->y + padding->top);
   pango_cairo_show_layout (cr, layout);
 
-  state |= GTK_STATE_FLAG_INSENSITIVE;
-  gtk_style_context_get_color (context, state, &color);
+  gtk_style_context_get_color (context,
+                               state | GTK_STATE_FLAG_INSENSITIVE,
+                               &color);
   cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
   pango_layout_set_text (layout, right_header, -1);
@@ -797,6 +798,7 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   GtkStyleContext *context;
   GtkStateFlags state;
   GdkRGBA color;
+  GdkRGBA ligther_color;
   GdkRGBA selected_color;
 
   gint i, j;
@@ -822,11 +824,14 @@ gcal_month_view_draw_grid (GcalMonthView *view,
 
   start_grid_y = gcal_month_view_get_start_grid_y (widget);
   state = gtk_widget_get_state_flags (widget);
-  state |= GTK_STATE_FLAG_SELECTED;
-  gtk_style_context_get_color (context, state, &selected_color);
+  gtk_style_context_get_color (context,
+                               state | GTK_STATE_FLAG_SELECTED,
+                               &selected_color);
   selected_font = gtk_style_context_get_font (context, state);
 
-  state = gtk_widget_get_state_flags (widget);
+  gtk_style_context_get_color (context,
+                               state | GTK_STATE_FLAG_INSENSITIVE,
+                               &ligther_color);
   gtk_style_context_get_color (context, state, &color);
   font = gtk_style_context_get_font (context, state);
   cairo_set_source_rgb (cr, color.red, color.green, color.blue);
@@ -841,6 +846,8 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
   for (i = 0; i < 7; i++)
     {
+      cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+
       pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, gcal_get_weekday (i), -1);
       pango_cairo_update_layout (cr, layout);
@@ -849,11 +856,14 @@ gcal_month_view_draw_grid (GcalMonthView *view,
       /* 6: is padding around the grid-header */
       cairo_move_to (cr,
                      (alloc->width / 7) * i + padding->left,
-                     start_grid_y - padding->top - font_height);
+                     start_grid_y - padding->bottom - font_height);
       pango_cairo_show_layout (cr, layout);
 
       pango_layout_set_font_description (layout, font);
-      cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+      cairo_set_source_rgb (cr,
+                            ligther_color.red,
+                            ligther_color.green,
+                            ligther_color.blue);
 
       for (j = 0; j < 5; j++)
         {
@@ -885,7 +895,10 @@ gcal_month_view_draw_grid (GcalMonthView *view,
           /* unsetting selected flag */
           if (priv->selected_cell == n_day - 1)
             {
-              cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+              cairo_set_source_rgb (cr,
+                                    ligther_color.red,
+                                    ligther_color.green,
+                                    ligther_color.blue);
               pango_layout_set_font_description ( layout, font);
             }
           g_free (day);
@@ -896,18 +909,23 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   g_object_unref (layout);
 
   /* drawing grid skel */
-  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
-  cairo_set_line_width (cr, 0.5);
+  cairo_set_source_rgb (cr,
+                        ligther_color.red,
+                        ligther_color.green,
+                        ligther_color.blue);
+  cairo_set_line_width (cr, 0.3);
 
   for (i = 0; i < 5; i++)
     {
-      cairo_move_to (cr, 0, start_grid_y + ((alloc->height - start_grid_y) / 5) * i);
+      //FIXME: ensure y coordinate has an integer value plus 0.4
+      cairo_move_to (cr, 0, start_grid_y + ((alloc->height - start_grid_y) / 5) * i + 0.4);
       cairo_rel_line_to (cr, alloc->width, 0);
     }
 
   for (i = 0; i < 6; i++)
     {
-      cairo_move_to (cr, (alloc->width / 7) * (i + 1), start_grid_y);
+      //FIXME: ensure x coordinate has an integer value plus 0.4
+      cairo_move_to (cr, (alloc->width / 7) * (i + 1) + 0.4, start_grid_y);
       cairo_rel_line_to (cr, 0, alloc->height - start_grid_y);
     }
 
@@ -924,7 +942,7 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   cairo_set_line_width (cr, 2.0);
   cairo_move_to (cr,
                  (alloc->width / 7) * ( priv->selected_cell % 7),
-                 start_grid_y + ((alloc->height - start_grid_y) / 5) * ( priv->selected_cell / 7) + 0.5);
+                 start_grid_y + ((alloc->height - start_grid_y) / 5) * ( priv->selected_cell / 7) + 1);
   cairo_rel_line_to (cr, (alloc->width / 7), 0);
   cairo_stroke (cr);
 }

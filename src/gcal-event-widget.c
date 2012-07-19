@@ -476,11 +476,10 @@ gcal_event_widget_draw (GtkWidget *widget,
                          priv->color->blue,
                          0.8);
   cairo_fill_preserve (cr);
-  cairo_set_source_rgba (cr,
-                         priv->color->red - ((1 - priv->color->red) / 2),
-                         priv->color->green - ((1 - priv->color->green) / 2),
-                         priv->color->blue - ((1 - priv->color->blue) / 2),
-                         1);
+  cairo_set_source_rgb (cr,
+                        priv->color->red - ((1 - priv->color->red) / 2),
+                        priv->color->green - ((1 - priv->color->green) / 2),
+                        priv->color->blue - ((1 - priv->color->blue) / 2));
   cairo_stroke (cr);
 
   cairo_set_source_rgba (cr,
