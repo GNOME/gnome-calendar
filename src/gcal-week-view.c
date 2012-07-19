@@ -876,12 +876,6 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
 
-  gtk_style_context_save (context);
-  gtk_style_context_add_region (context, "header", 0);
-
-  gtk_render_background (context, cr,
-                         alloc->x, alloc->y,
-                         alloc->width, start_grid_y);
   /* adding shadow */
   pattern = cairo_pattern_create_linear(0, start_grid_y - 18, 0, start_grid_y + 6);
 
@@ -893,6 +887,9 @@ gcal_week_view_draw_header (GcalWeekView  *view,
 
   cairo_rectangle(cr, 0, start_grid_y, alloc->width, 6);
   cairo_fill(cr);
+
+  gtk_style_context_save (context);
+  gtk_style_context_add_region (context, "header", 0);
 
   gtk_style_context_get_color (context, state, &color);
   cairo_set_source_rgb (cr, color.red, color.green, color.blue);

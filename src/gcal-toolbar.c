@@ -183,7 +183,7 @@ gcal_toolbar_constructed (GObject *object)
                              GTK_ICON_SIZE_BUTTON);
 
   context = gtk_widget_get_style_context (priv->widget);
-  gtk_style_context_add_class (context, "gcal-main-toolbar");
+  gtk_style_context_add_class (context, "main-toolbar");
 
   /* adding toolbar */
   bin = gtk_clutter_actor_get_widget (GTK_CLUTTER_ACTOR (object));

@@ -19,6 +19,15 @@
   margin: 0;
 }
 
+.main-toolbar {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.main-toolbar .button {
+  padding: 2px;
+}
+
 .sources-views {
   padding: 12px;
   border-radius: 0;
@@ -40,10 +49,11 @@
 
 .calendar-view header {
   font: bold 12;
-  background-color: @theme_bg_color;
 }
 
 .calendar-view {
+  background-color: #F6F6F6;
+
   padding: 6px;
   font: 10;
 }
