@@ -40,12 +40,14 @@
 
 .calendar-view header {
   font: bold 12;
+  background-color: @theme_bg_color;
 }
 
 .calendar-view {
   padding: 6px;
   font: 10;
 }
+
 
 .calendar-view:selected {
   color: #0C73E5;
@@ -66,6 +68,15 @@
   border-color: @borders;
   border-width: 0.5px;
   border-radius: 0;
+}
+
+.scrollbar.slider {
+  background-color: alpha (@scrollbar_slider, 0.5);
+  border: #6e6e6e 1px solid;
+}
+.scrollbar.trough {
+  background-color: transparent;
+  background-image: none;
 }
 
 .entry {

@@ -64,6 +64,7 @@ gnome_calendar_LDFLAGS =                                  \
   -Wl,--export-dynamic
 
 gnome_calendar_LDADD =                                    \
+  -lm                                                     \
   $(CALENDAR_LIBS)
 
 ENUM_TYPES =                                              \

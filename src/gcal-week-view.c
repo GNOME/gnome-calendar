@@ -27,6 +27,14 @@
 
 #include <libecal/libecal.h>
 
+#include <math.h>
+
+static const double dashed [] =
+{
+  1.0,
+  1.0
+};
+
 enum
 {
   PROP_0,
@@ -54,23 +62,22 @@ struct _GcalWeekViewPrivate
    */
   GList          *days [7];
 
-  GdkWindow      *event_window;
+  GdkWindow      *view_window;
+  GdkWindow      *grid_window;
+
+  GtkWidget      *vscrollbar;
 
   gint            days_delay;
-  gint            header_size;
-  gint            grid_header_size;
-  gint            grid_sidebar_size;
-
-  /* hours_steps is the number of cell I will show vertically */
-  gint            hours_steps;
-  gdouble         vertical_step;
-  gdouble         horizontal_step;
 
   /* property */
   icaltimetype   *date;
 };
 
 static void           gcal_view_interface_init             (GcalViewIface  *iface);
+
+static void           gcal_week_view_constructed           (GObject        *object);
+
+static void           gcal_week_view_finalize              (GObject        *object);
 
 static void           gcal_week_view_set_property          (GObject        *object,
                                                             guint           property_id,
@@ -82,21 +89,18 @@ static void           gcal_week_view_get_property          (GObject        *obje
                                                             GValue         *value,
                                                             GParamSpec     *pspec);
 
-static void           gcal_week_view_finalize              (GObject        *object);
-
 static void           gcal_week_view_realize               (GtkWidget      *widget);
 
 static void           gcal_week_view_unrealize             (GtkWidget      *widget);
-
-static void           gcal_week_view_map                   (GtkWidget      *widget);
-
-static void           gcal_week_view_unmap                 (GtkWidget      *widget);
 
 static void           gcal_week_view_size_allocate         (GtkWidget      *widget,
                                                             GtkAllocation  *allocation);
 
 static gboolean       gcal_week_view_draw                  (GtkWidget      *widget,
                                                             cairo_t        *cr);
+
+static gboolean       gcal_week_view_scroll_event          (GtkWidget      *widget,
+                                                            GdkEventScroll *event);
 
 static void           gcal_week_view_add                   (GtkContainer   *constainer,
                                                             GtkWidget      *widget);
@@ -117,10 +121,15 @@ static void           gcal_week_view_draw_header           (GcalWeekView   *view
                                                             GtkAllocation  *alloc,
                                                             GtkBorder      *padding);
 
-static void           gcal_week_view_draw_grid             (GcalWeekView   *view,
-                                                            cairo_t        *cr,
-                                                            GtkAllocation  *alloc,
-                                                            GtkBorder      *padding);
+static void           gcal_week_view_draw_grid_window      (GcalWeekView   *view,
+                                                            cairo_t        *cr);
+
+static gint           gcal_week_view_get_sidebar_width     (GtkWidget      *widget);
+
+static gint           gcal_week_view_get_start_grid_y      (GtkWidget      *widget);
+
+static void           gcal_week_view_scroll_value_changed  (GtkAdjustment  *adjusment,
+                                                            gpointer        user_data);
 
 static icaltimetype*  gcal_week_view_get_initial_date      (GcalView       *view);
 
@@ -141,7 +150,6 @@ G_DEFINE_TYPE_WITH_CODE (GcalWeekView,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
                                                 gcal_view_interface_init));
 
-
 static void
 gcal_week_view_class_init (GcalWeekViewClass *klass)
 {
@@ -153,19 +161,20 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   container_class->add   = gcal_week_view_add;
   container_class->remove = gcal_week_view_remove;
   container_class->forall = gcal_week_view_forall;
+  gtk_container_class_handle_border_width (container_class);
 
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->realize = gcal_week_view_realize;
   widget_class->unrealize = gcal_week_view_unrealize;
-  widget_class->map = gcal_week_view_map;
-  widget_class->unmap = gcal_week_view_unmap;
   widget_class->size_allocate = gcal_week_view_size_allocate;
   widget_class->draw = gcal_week_view_draw;
+  widget_class->scroll_event = gcal_week_view_scroll_event;
 
   object_class = G_OBJECT_CLASS (klass);
+  object_class->constructed = gcal_week_view_constructed;
+  object_class->finalize = gcal_week_view_finalize;
   object_class->set_property = gcal_week_view_set_property;
   object_class->get_property = gcal_week_view_get_property;
-  object_class->finalize = gcal_week_view_finalize;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
 
@@ -192,6 +201,8 @@ gcal_week_view_init (GcalWeekView *self)
       priv->days[i] = NULL;
     }
 
+  priv->view_window = NULL;
+  priv->grid_window = NULL;
   gtk_style_context_add_class (
       gtk_widget_get_style_context (GTK_WIDGET (self)),
       "calendar-view");
@@ -206,6 +217,50 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->contains = gcal_week_view_contains;
   iface->remove_by_uuid = gcal_week_view_remove_by_uuid;
   iface->get_by_uuid = gcal_week_view_get_by_uuid;
+}
+
+static void
+gcal_week_view_constructed (GObject *object)
+{
+  GcalWeekViewPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_WEEK_VIEW (object));
+  priv = GCAL_WEEK_VIEW (object)->priv;
+
+  if (G_OBJECT_CLASS (gcal_week_view_parent_class)->constructed != NULL)
+      G_OBJECT_CLASS (gcal_week_view_parent_class)->constructed (object);
+
+  gtk_widget_push_composite_child ();
+  priv->vscrollbar = gtk_scrollbar_new (GTK_ORIENTATION_VERTICAL, NULL);
+  gtk_widget_pop_composite_child ();
+
+  gtk_widget_set_parent (priv->vscrollbar, GTK_WIDGET (object));
+  gtk_widget_show (priv->vscrollbar);
+
+  g_signal_connect (gtk_range_get_adjustment (GTK_RANGE (priv->vscrollbar)),
+                    "value-changed",
+                    G_CALLBACK (gcal_week_view_scroll_value_changed),
+                    object);
+
+  g_object_ref (priv->vscrollbar);
+}
+
+static void
+gcal_week_view_finalize (GObject       *object)
+{
+  GcalWeekViewPrivate *priv = GCAL_WEEK_VIEW (object)->priv;
+
+  if (priv->date != NULL)
+    g_free (priv->date);
+
+  if (priv->vscrollbar != NULL)
+    {
+      gtk_widget_unparent (priv->vscrollbar);
+      g_clear_object (&(priv->vscrollbar));
+    }
+
+  /* Chain up to parent's finalize() method. */
+  G_OBJECT_CLASS (gcal_week_view_parent_class)->finalize (object);
 }
 
 static void
@@ -252,18 +307,6 @@ gcal_week_view_get_property (GObject       *object,
 }
 
 static void
-gcal_week_view_finalize (GObject       *object)
-{
-  GcalWeekViewPrivate *priv = GCAL_WEEK_VIEW (object)->priv;
-
-  if (priv->date != NULL)
-    g_free (priv->date);
-
-  /* Chain up to parent's finalize() method. */
-  G_OBJECT_CLASS (gcal_week_view_parent_class)->finalize (object);
-}
-
-static void
 gcal_week_view_realize (GtkWidget *widget)
 {
   GcalWeekViewPrivate *priv;
@@ -272,35 +315,55 @@ gcal_week_view_realize (GtkWidget *widget)
   gint attributes_mask;
   GtkAllocation allocation;
 
+  gint i;
+  GList *l;
+
   priv = GCAL_WEEK_VIEW (widget)->priv;
   gtk_widget_set_realized (widget, TRUE);
 
-  parent_window = gtk_widget_get_parent_window (widget);
-  gtk_widget_set_window (widget, parent_window);
-  g_object_ref (parent_window);
-
   gtk_widget_get_allocation (widget, &allocation);
 
+  parent_window = gtk_widget_get_parent_window (widget);
+  gtk_widget_set_window (widget, parent_window);
+
   attributes.window_type = GDK_WINDOW_CHILD;
-  attributes.wclass = GDK_INPUT_ONLY;
+  attributes.wclass = GDK_INPUT_OUTPUT;
   attributes.x = allocation.x;
   attributes.y = allocation.y;
-  attributes.width = allocation.width;
-  attributes.height = allocation.height;
   attributes.event_mask = gtk_widget_get_events (widget);
-  attributes.event_mask |= (GDK_BUTTON_PRESS_MASK |
-                            GDK_BUTTON_RELEASE_MASK |
-                            GDK_BUTTON1_MOTION_MASK |
-                            GDK_POINTER_MOTION_HINT_MASK |
-                            GDK_POINTER_MOTION_MASK |
-                            GDK_ENTER_NOTIFY_MASK |
-                            GDK_LEAVE_NOTIFY_MASK);
-  attributes_mask = GDK_WA_X | GDK_WA_Y;
+  attributes.event_mask |= (GDK_EXPOSURE_MASK |
+                            GDK_SCROLL_MASK |
+                            GDK_TOUCH_MASK |
+                            GDK_SMOOTH_SCROLL_MASK);
+  attributes.visual = gtk_widget_get_visual (widget);
+  attributes_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
 
-  priv->event_window = gdk_window_new (parent_window,
-                                       &attributes,
-                                       attributes_mask);
-  gdk_window_set_user_data (priv->event_window, widget);
+  priv->view_window = gdk_window_new (parent_window,
+                                      &attributes,
+                                      attributes_mask);
+  gdk_window_set_user_data (priv->view_window, widget);
+
+  attributes.event_mask = gtk_widget_get_events (widget);
+  attributes.event_mask |= GDK_EXPOSURE_MASK;
+  priv->grid_window = gdk_window_new (priv->view_window,
+                                      &attributes,
+                                      attributes_mask);
+  gdk_window_set_user_data (priv->grid_window, widget);
+
+  gdk_window_show (priv->grid_window);
+  gdk_window_show (priv->view_window);
+
+  /* setting parent_window for every event child */
+  for (i = 0; i < 7; i++)
+    {
+      for (l = priv->days[i]; l != NULL; l = l->next)
+        {
+          GcalViewChild *child;
+
+          child = (GcalViewChild*) l->data;
+          gtk_widget_set_parent_window (child->widget, priv->grid_window);
+        }
+    }
 }
 
 static void
@@ -309,38 +372,21 @@ gcal_week_view_unrealize (GtkWidget *widget)
   GcalWeekViewPrivate *priv;
 
   priv = GCAL_WEEK_VIEW (widget)->priv;
-  if (priv->event_window != NULL)
+  if (priv->view_window != NULL)
     {
-      gdk_window_set_user_data (priv->event_window, NULL);
-      gdk_window_destroy (priv->event_window);
-      priv->event_window = NULL;
+      gdk_window_set_user_data (priv->view_window, NULL);
+      gdk_window_destroy (priv->view_window);
+      priv->view_window = NULL;
+    }
+
+  if (priv->grid_window != NULL)
+    {
+      gdk_window_set_user_data (priv->grid_window, NULL);
+      gdk_window_destroy (priv->grid_window);
+      priv->grid_window = NULL;
     }
 
   GTK_WIDGET_CLASS (gcal_week_view_parent_class)->unrealize (widget);
-}
-
-static void
-gcal_week_view_map (GtkWidget *widget)
-{
-  GcalWeekViewPrivate *priv;
-
-  priv = GCAL_WEEK_VIEW (widget)->priv;
-  if (priv->event_window)
-    gdk_window_show (priv->event_window);
-
-  GTK_WIDGET_CLASS (gcal_week_view_parent_class)->map (widget);
-}
-
-static void
-gcal_week_view_unmap (GtkWidget *widget)
-{
-  GcalWeekViewPrivate *priv;
-
-  priv = GCAL_WEEK_VIEW (widget)->priv;
-  if (priv->event_window)
-    gdk_window_hide (priv->event_window);
-
-  GTK_WIDGET_CLASS (gcal_week_view_parent_class)->unmap (widget);
 }
 
 static void
@@ -348,87 +394,118 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
                               GtkAllocation *allocation)
 {
   GcalWeekViewPrivate *priv;
+
+  GtkBorder padding;
+  PangoLayout *layout;
+  gint font_height;
+
+  gint start_grid_y;
+  gint sidebar_width;
+
+  GtkAllocation scroll_allocation;
+  gint min;
+  gint natural;
+
+  gdouble horizontal_block;
+  gdouble vertical_block;
+  gdouble adj_value;
+
   gint i;
   GList *l;
 
-  GtkStyleContext *context;
-  GtkStateFlags state;
-  GtkBorder padding;
-
-  PangoLayout *layout;
-  gint font_width;
-  gint font_height;
+  gboolean scroll_needed;
+  gint grid_height;
+  gint view_height;
 
   priv = GCAL_WEEK_VIEW (widget)->priv;
 
   gtk_widget_set_allocation (widget, allocation);
-  if (gtk_widget_get_realized (widget))
-    {
-      gdk_window_move_resize (priv->event_window,
-                              allocation->x,
-                              allocation->y,
-                              allocation->width,
-                              allocation->height);
-    }
 
-  context = gtk_widget_get_style_context (widget);
-  state = gtk_widget_get_state_flags (widget);
-  gtk_style_context_get_padding (context, state, &padding);
+  if (! gtk_widget_get_realized (widget))
+    return;
+
+  gtk_style_context_get_padding (
+      gtk_widget_get_style_context (widget),
+      gtk_widget_get_state_flags (widget),
+      &padding);
+
+  start_grid_y = gcal_week_view_get_start_grid_y (widget);
+
+  /* Estimating cell height */
   layout = pango_layout_new (gtk_widget_get_pango_context (widget));
-
-  /* init header values */
-  gtk_style_context_save (context);
-  gtk_style_context_add_region (context, "header", 0);
-
-  pango_layout_set_font_description (layout,
-                                     gtk_style_context_get_font (context,
-                                                                 state));
+  pango_layout_set_font_description (
+      layout,
+      gtk_style_context_get_font (gtk_widget_get_style_context (widget),
+                                  gtk_widget_get_state_flags (widget)));
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
-  /* 6: is padding around the header */
-  priv->header_size = font_height + 12;
-  gtk_style_context_remove_region (context, "header");
-  gtk_style_context_restore (context);
+  gtk_widget_get_preferred_width (priv->vscrollbar, &min, &natural);
 
-  /* init grid values */
-  pango_layout_set_text (layout, _("All day"), -1);
-  pango_layout_set_font_description (layout,
-                                     gtk_style_context_get_font (context,
-                                                                 state));
-  pango_layout_get_pixel_size (layout, &font_width, &font_height);
-  /* 6: is padding around the header */
-  priv->grid_header_size = font_height + 6;
-  priv->grid_sidebar_size = font_width + 8;
+  view_height = allocation->height - start_grid_y;
+  grid_height = 24 * (padding.top + padding.bottom + 3 * font_height);
+  scroll_needed = grid_height > allocation->height - start_grid_y ? TRUE : FALSE;
+  grid_height = scroll_needed ? grid_height : allocation->height - start_grid_y;
 
-  priv->horizontal_step = (allocation->width - (allocation->x + padding.left + padding.right + priv->grid_sidebar_size)) / 7;
-  priv->vertical_step =
-    (allocation->height - (allocation->y + padding.top + padding.bottom + priv->header_size + priv->grid_header_size)) / 11;
-  priv->hours_steps = 1;
-  if (priv->vertical_step < 2 * font_height)
+  if (scroll_needed)
     {
-      priv->hours_steps = 2;
-      priv->vertical_step =
-        (allocation->height - (allocation->y + padding.top + padding.bottom + priv->header_size + priv->grid_header_size)) / 6;
+      adj_value = gtk_adjustment_get_value (
+          gtk_range_get_adjustment (GTK_RANGE (priv->vscrollbar)));
     }
+  else
+    {
+      adj_value = 0;
+    }
+
+  gdk_window_move_resize (priv->view_window,
+                          allocation->x,
+                          allocation->y + start_grid_y,
+                          allocation->width,
+                          allocation->height - start_grid_y);
+  gdk_window_move_resize (priv->grid_window,
+                          allocation->x,
+                          - adj_value,
+                          allocation->width,
+                          grid_height);
+
+  if (scroll_needed)
+    {
+      //FIXME: change those values for something not hardcoded
+      scroll_allocation.x = allocation->width - 10;
+      scroll_allocation.y = 7 + start_grid_y + 2;
+      scroll_allocation.width = 8;
+      scroll_allocation.height = view_height - 7 - 2;
+      gtk_widget_size_allocate (priv->vscrollbar, &scroll_allocation);
+
+      gtk_adjustment_set_page_size (
+          gtk_range_get_adjustment (GTK_RANGE (priv->vscrollbar)),
+          view_height * view_height / grid_height);
+      gtk_adjustment_set_upper (
+          gtk_range_get_adjustment (GTK_RANGE (priv->vscrollbar)),
+          grid_height - view_height + (view_height * view_height / grid_height));
+    }
+  else
+    {
+      gtk_widget_hide (priv->vscrollbar);
+    }
+
+  sidebar_width = gcal_week_view_get_sidebar_width (widget);
+  horizontal_block = (allocation->width - sidebar_width) / 7;
+  vertical_block = gdk_window_get_height (priv->grid_window) / 24;
 
   for (i = 0; i < 7; i++)
     {
       gdouble *added_height;
-      added_height = g_malloc0 (sizeof (gdouble) * 11);
+      added_height = g_malloc0 (sizeof (gdouble) * 25);
 
       for (l = priv->days[i]; l != NULL; l = l->next)
         {
           GcalViewChild *child;
-          gint pos_x;
-          gint pos_y;
           gint min_height;
           gint natural_height;
+          gdouble vertical_span;
           GtkAllocation child_allocation;
 
           child = (GcalViewChild*) l->data;
-
-          pos_x = i * priv->horizontal_step;
-          pos_y = ((child->index + (priv->hours_steps - 1)) / (priv->hours_steps)) * priv->vertical_step;
 
           if ((! gtk_widget_get_visible (child->widget)) && (! child->hidden_by_me))
             continue;
@@ -437,14 +514,21 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
                                            &min_height,
                                            &natural_height);
 
-          child_allocation.x = pos_x + allocation->x + padding.left
-            + priv->grid_sidebar_size;
-          child_allocation.y = pos_y + allocation->y + padding.top
-            + priv->header_size + priv->grid_header_size;
-          child_allocation.width = priv->horizontal_step;
-          child_allocation.height = MIN (natural_height, priv->vertical_step);
-          if (added_height[child->index] + child_allocation.height
-              > priv->vertical_step || child->index > 10)
+          child_allocation.x = i * horizontal_block + sidebar_width;
+          if (child->index == -1)
+            {
+              vertical_span = 2 * font_height;
+              child_allocation.y = start_grid_y - vertical_span;
+            }
+          else
+            {
+              vertical_span = vertical_block;
+              child_allocation.y = child->index * vertical_block;
+            }
+
+          child_allocation.width = horizontal_block;
+          child_allocation.height = MIN (natural_height, vertical_span);
+          if (added_height[child->index + 1] + child_allocation.height > vertical_span)
             {
               gtk_widget_hide (child->widget);
               child->hidden_by_me = TRUE;
@@ -453,9 +537,9 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
             {
               gtk_widget_show (child->widget);
               child->hidden_by_me = FALSE;
-              child_allocation.y = child_allocation.y + added_height[child->index];
+              child_allocation.y = child_allocation.y + added_height[child->index + 1];
               gtk_widget_size_allocate (child->widget, &child_allocation);
-              added_height[child->index] += child_allocation.height;
+              added_height[child->index + 1] += child_allocation.height;
             }
         }
       g_free (added_height);
@@ -464,12 +548,16 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
 
 static gboolean
 gcal_week_view_draw (GtkWidget *widget,
-                      cairo_t   *cr)
+                     cairo_t   *cr)
 {
+  GcalWeekViewPrivate *priv;
   GtkStyleContext *context;
   GtkStateFlags state;
   GtkBorder padding;
   GtkAllocation alloc;
+
+  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (widget), FALSE);
+  priv = GCAL_WEEK_VIEW (widget)->priv;
 
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
@@ -478,11 +566,109 @@ gcal_week_view_draw (GtkWidget *widget,
   gtk_style_context_get_padding (context, state, &padding);
   gtk_widget_get_allocation (widget, &alloc);
 
-  gcal_week_view_draw_header (GCAL_WEEK_VIEW (widget), cr, &alloc, &padding);
-  gcal_week_view_draw_grid (GCAL_WEEK_VIEW (widget), cr, &alloc, &padding);
+  gtk_render_background (context, cr, alloc.x, alloc.y, alloc.width, alloc.height);
+  /* setting the same line width for both windows */
+  cairo_set_line_width (cr, 0.3);
 
-  if (GTK_WIDGET_CLASS (gcal_week_view_parent_class)->draw != NULL)
-    GTK_WIDGET_CLASS (gcal_week_view_parent_class)->draw (widget, cr);
+  gcal_week_view_draw_header (GCAL_WEEK_VIEW (widget),
+                              cr,
+                              &alloc,
+                              &padding);
+
+
+  if (priv->view_window != NULL &&
+      gtk_cairo_should_draw_window (cr, priv->view_window))
+    {
+      gint y;
+
+      gdk_window_get_position (priv->view_window, NULL, &y);
+      cairo_rectangle (cr,
+                       alloc.x,
+                       y,
+                       alloc.width,
+                       gdk_window_get_height (priv->view_window));
+      cairo_clip (cr);
+    }
+
+  if (priv->grid_window != NULL &&
+      gtk_cairo_should_draw_window (cr, priv->grid_window))
+    {
+      cairo_save (cr);
+      gcal_week_view_draw_grid_window (GCAL_WEEK_VIEW (widget), cr);
+      cairo_restore (cr);
+    }
+
+  GTK_WIDGET_CLASS (gcal_week_view_parent_class)->draw (widget, cr);
+
+  return FALSE;
+}
+
+static gboolean
+gcal_week_view_scroll_event (GtkWidget      *widget,
+                             GdkEventScroll *event)
+{
+  GcalWeekViewPrivate *priv;
+
+  gdouble delta_y;
+  gdouble delta;
+
+  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (widget), FALSE);
+  g_return_val_if_fail (event != NULL, FALSE);
+
+  priv = GCAL_WEEK_VIEW (widget)->priv;
+
+  if (gdk_event_get_scroll_deltas ((GdkEvent *) event, NULL, &delta_y))
+    {
+      if (delta_y != 0.0 &&
+          priv->vscrollbar  != NULL &&
+          gtk_widget_get_visible (priv->vscrollbar))
+        {
+          GtkAdjustment *adj;
+          gdouble new_value;
+          gdouble page_size;
+          gdouble scroll_unit;
+
+          adj = gtk_range_get_adjustment (GTK_RANGE (priv->vscrollbar));
+          page_size = gtk_adjustment_get_page_size (adj);
+          scroll_unit = pow (page_size, 2.0 / 3.0);
+
+          new_value = CLAMP (gtk_adjustment_get_value (adj) + delta_y * scroll_unit,
+                             gtk_adjustment_get_lower (adj),
+                             gtk_adjustment_get_upper (adj) -
+                             gtk_adjustment_get_page_size (adj));
+
+          gtk_adjustment_set_value (adj, new_value);
+
+          return TRUE;
+        }
+    }
+  else
+    {
+      GtkWidget *range;
+
+      if (event->direction == GDK_SCROLL_UP || event->direction == GDK_SCROLL_DOWN)
+        range = priv->vscrollbar;
+
+      if (range != NULL && gtk_widget_get_visible (range))
+        {
+          GtkAdjustment *adj;
+          gdouble new_value;
+          gdouble page_size;
+
+          adj = gtk_range_get_adjustment (GTK_RANGE (range));
+          page_size = gtk_adjustment_get_page_size (adj);
+          delta = pow (page_size, 2.0 / 3.0);
+
+          new_value = CLAMP (gtk_adjustment_get_value (adj) + delta,
+                             gtk_adjustment_get_lower (adj),
+                             gtk_adjustment_get_upper (adj) -
+                             gtk_adjustment_get_page_size (adj));
+
+          gtk_adjustment_set_value (adj, new_value);
+
+          return TRUE;
+        }
+    }
 
   return FALSE;
 }
@@ -529,9 +715,17 @@ gcal_week_view_add (GtkContainer *container,
   new_child->hidden_by_me = FALSE;
 
   if (gcal_event_widget_get_all_day (GCAL_EVENT_WIDGET (widget)))
-    new_child->index = 0;
+    {
+      new_child->index = -1;
+      if (gtk_widget_get_window (widget) != NULL)
+        gtk_widget_set_parent_window (widget, gtk_widget_get_window (widget));
+    }
   else
-    new_child->index = date->hour + 1 - 8;
+    {
+      new_child->index = date->hour;
+      if (priv->grid_window != NULL)
+        gtk_widget_set_parent_window (widget, priv->grid_window);
+    }
 
   priv->days[day - 1] = g_list_append (priv->days[day - 1], new_child);
   gtk_widget_set_parent (widget, GTK_WIDGET (container));
@@ -595,6 +789,9 @@ gcal_week_view_forall (GtkContainer *container,
           (* callback) (child->widget, callback_data);
         }
     }
+
+  if (include_internals && priv->vscrollbar != NULL)
+    (* callback) (priv->vscrollbar, callback_data);
 }
 
 static void
@@ -648,43 +845,72 @@ gcal_week_view_draw_header (GcalWeekView  *view,
                             GtkAllocation *alloc,
                             GtkBorder     *padding)
 {
+  GtkWidget *widget;
   GtkStyleContext *context;
   GtkStateFlags state;
   GdkRGBA color;
 
   PangoLayout *layout;
+  PangoFontDescription *bold_font;
   gint layout_width;
 
   gchar *left_header;
   gchar *right_header;
-  gchar str_date[64];
+  gchar start_date[64];
+  gchar end_date[64];
 
+  gint i;
+  gint start_grid_y;
+  gint font_height;
+  gint sidebar_width;
   icaltimetype *start_of_week;
+  icaltimetype *end_of_week;
   struct tm tm_date;
 
-  g_return_if_fail (GCAL_IS_WEEK_VIEW (view));
+  cairo_pattern_t *pattern;
 
-  context = gtk_widget_get_style_context (GTK_WIDGET (view));
-  state = gtk_widget_get_state_flags (GTK_WIDGET (view));
+  widget = GTK_WIDGET (view);
+
+  cairo_save (cr);
+  start_grid_y = gcal_week_view_get_start_grid_y (widget);
+  context = gtk_widget_get_style_context (widget);
+  state = gtk_widget_get_state_flags (widget);
 
   gtk_style_context_save (context);
   gtk_style_context_add_region (context, "header", 0);
 
+  gtk_render_background (context, cr,
+                         alloc->x, alloc->y,
+                         alloc->width, start_grid_y);
+  /* adding shadow */
+  pattern = cairo_pattern_create_linear(0, start_grid_y - 18, 0, start_grid_y + 6);
+
+  cairo_pattern_add_color_stop_rgba(pattern, 0.0, 0, 0, 0, 0.6);
+  cairo_pattern_add_color_stop_rgba(pattern, 1.0, 0, 0, 0, 0.0);
+
+  cairo_set_source(cr, pattern);
+  cairo_pattern_destroy(pattern);
+
+  cairo_rectangle(cr, 0, start_grid_y, alloc->width, 6);
+  cairo_fill(cr);
+
   gtk_style_context_get_color (context, state, &color);
-  cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
+  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
   layout = pango_cairo_create_layout (cr);
-  pango_layout_set_font_description (layout,
-                                     gtk_style_context_get_font (context,
-                                                                 state));
-  gtk_style_context_remove_region (context, "header");
-  gtk_style_context_restore (context);
+  pango_layout_set_font_description (
+      layout,
+      gtk_style_context_get_font (context, state));
 
   start_of_week = gcal_week_view_get_initial_date (GCAL_VIEW (view));
   tm_date = icaltimetype_to_tm (start_of_week);
-  e_utf8_strftime_fix_am_pm (str_date, 64, "%B %d", &tm_date);
+  e_utf8_strftime_fix_am_pm (start_date, 64, "%B %d", &tm_date);
 
-  left_header = g_strdup_printf ("%s %s", _("Week of"), str_date);
+  end_of_week = gcal_week_view_get_final_date (GCAL_VIEW (view));
+  tm_date = icaltimetype_to_tm (end_of_week);
+  e_utf8_strftime_fix_am_pm (end_date, 64, "%B %d", &tm_date);
+
+  left_header = g_strdup_printf ("%s - %s", start_date, end_date);
   right_header = g_strdup_printf ("%s %d",
                                   _("Week"),
                                   icaltime_week_number (*start_of_week));
@@ -695,9 +921,10 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   cairo_move_to (cr, alloc->x + padding->left, alloc->y + padding->top);
   pango_cairo_show_layout (cr, layout);
 
-  state |= GTK_STATE_FLAG_INSENSITIVE;
-  gtk_style_context_get_color (context, state, &color);
-  cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
+  gtk_style_context_get_color (context,
+                               state | GTK_STATE_FLAG_INSENSITIVE,
+                               &color);
+  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
   pango_layout_set_text (layout, right_header, -1);
   pango_cairo_update_layout (cr, layout);
@@ -708,190 +935,274 @@ gcal_week_view_draw_header (GcalWeekView  *view,
                  alloc->y + padding->top);
   pango_cairo_show_layout (cr, layout);
 
+  gtk_style_context_restore (context);
+
+  /* grid header */
+  gtk_style_context_get_color (context, state, &color);
+  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+
+  bold_font = pango_font_description_copy (
+      gtk_style_context_get_font (context, state));
+  pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
+  pango_layout_set_font_description (layout, bold_font);
+
+  sidebar_width = gcal_week_view_get_sidebar_width (widget);
+  for (i = 0; i < 7; i++)
+    {
+      gchar *weekday_header;
+      gint n_day;
+
+      n_day = start_of_week->day + i;
+      if (n_day > icaltime_days_in_month (start_of_week->month, start_of_week->year))
+        n_day = n_day - icaltime_days_in_month (start_of_week->month, start_of_week->year);
+
+      weekday_header = g_strdup_printf ("%s %d",gcal_get_weekday (i), n_day);
+      pango_layout_set_text (layout, weekday_header, -1);
+      pango_cairo_update_layout (cr, layout);
+      pango_layout_get_pixel_size (layout, NULL, &font_height);
+      cairo_move_to (cr,
+                     padding->left + ((alloc->width  - sidebar_width)/ 7) * i + sidebar_width,
+                     start_grid_y - padding->bottom - font_height - (2 * font_height));
+      pango_cairo_show_layout (cr, layout);
+
+      cairo_save (cr);
+      gtk_style_context_get_color (context,
+                                   state | GTK_STATE_FLAG_INSENSITIVE,
+                                   &color);
+      cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+
+      cairo_move_to (cr,
+                     ((alloc->width  - sidebar_width)/ 7) * i + sidebar_width + 0.4,
+                     start_grid_y - (2 * font_height));
+      cairo_rel_line_to (cr, 0, 2 * font_height);
+      cairo_stroke (cr);
+      cairo_restore (cr);
+
+      g_free (weekday_header);
+    }
+
+  /* horizontal line */
+  gtk_style_context_get_color (context,
+                               state | GTK_STATE_FLAG_INSENSITIVE,
+                               &color);
+  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+  cairo_move_to (cr, sidebar_width, start_grid_y - (2 * font_height) + 0.4);
+  cairo_rel_line_to (cr, alloc->width - sidebar_width, 0);
+
+  cairo_stroke (cr);
+
+  cairo_restore (cr);
+
   g_free (start_of_week);
+  g_free (end_of_week);
   g_free (left_header);
   g_free (right_header);
+  pango_font_description_free (bold_font);
   g_object_unref (layout);
 }
 
 static void
-gcal_week_view_draw_grid (GcalWeekView  *view,
-                          cairo_t       *cr,
-                          GtkAllocation *alloc,
-                          GtkBorder     *padding)
+gcal_week_view_draw_grid_window (GcalWeekView  *view,
+                                 cairo_t       *cr)
 {
   GcalWeekViewPrivate *priv;
   GtkWidget *widget;
 
   GtkStyleContext *context;
   GtkStateFlags state;
+  GtkBorder padding;
   GdkRGBA color;
-  GdkRGBA selected_color;
 
   gint i;
-  gint font_width;
-  gint font_height;
-
-  gint max_day_width;
-  gint actual_day;
-
-  gdouble start_grid_x;
-  gdouble start_grid_y;
+  gint width;
+  gint height;
+  gint sidebar_width;
 
   PangoLayout *layout;
-  const PangoFontDescription *font;
-
-  icaltimetype *start_of_week;
 
   priv = view->priv;
   widget = GTK_WIDGET (view);
 
-  start_grid_x = alloc->x + padding->left + priv->grid_sidebar_size;
-  start_grid_y = alloc->y + padding->top + priv->header_size + priv->grid_header_size;
-
+  /* INSENSITIVE to make the lines ligther */
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
-  state |= GTK_STATE_FLAG_SELECTED;
-  gtk_style_context_get_color (context, state, &selected_color);
+  state |= GTK_STATE_FLAG_INSENSITIVE;
+  gtk_style_context_get_color (context, state, &color);
 
   state = gtk_widget_get_state_flags (widget);
-  gtk_style_context_get_color (context, state, &color);
-  font = gtk_style_context_get_font (context, state);
-
-  /* drawing grid header */
-  cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
+  gtk_style_context_get_padding (context, state, &padding);
 
   layout = pango_cairo_create_layout (cr);
-  pango_layout_set_font_description (layout, font);
+  pango_layout_set_font_description (
+      layout,
+      gtk_style_context_get_font (context, state));
+  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
-  start_of_week = gcal_week_view_get_initial_date (GCAL_VIEW (view));
+  sidebar_width = gcal_week_view_get_sidebar_width (widget);
+  width = gdk_window_get_width (priv->grid_window);
+  height = gdk_window_get_height (priv->grid_window);
 
-  /* drawing grid text */
-  max_day_width = 0;
-  actual_day = icaltime_day_of_week (*(priv->date)) - 1;
-  /* calculating maximus */
-  for (i = 0; i < 7; i++)
-    {
-      gchar *weekday_header;
-      gint n_day;
+  gtk_cairo_transform_to_window (cr, widget, priv->grid_window);
 
-      n_day = start_of_week->day + i;
-      if (n_day > icaltime_days_in_month (start_of_week->month, start_of_week->year))
-        n_day = n_day - icaltime_days_in_month (start_of_week->month, start_of_week->year);
-
-      weekday_header = g_strdup_printf ("%s %d",gcal_get_weekday (i), n_day);
-      pango_layout_set_text (layout, weekday_header, -1);
-      pango_cairo_update_layout (cr, layout);
-      pango_layout_get_pixel_size (layout, &font_width, &font_height);
-
-      max_day_width = max_day_width < font_width ? font_width : max_day_width;
-    }
-
-  for (i = 0; i < 7; i++)
-    {
-      gchar *weekday_header;
-      gint n_day;
-
-      if (i == actual_day)
-        {
-          cairo_set_source_rgba (cr, selected_color.red, selected_color.green, selected_color.blue, 1);
-          cairo_rectangle (cr,
-                           start_grid_x + priv->horizontal_step * i,
-                           start_grid_y - priv->grid_header_size - 6,
-                           max_day_width + 12,
-                           priv->grid_header_size + 6);
-          cairo_fill (cr);
-          cairo_set_source_rgba (cr, 1.0, 1.0, 1.0, 1.0);
-        }
-      else
-        {
-          cairo_set_source_rgba (cr, color.red, color.green, color.blue, 1);
-        }
-
-      n_day = start_of_week->day + i;
-      if (n_day > icaltime_days_in_month (start_of_week->month, start_of_week->year))
-        n_day = n_day - icaltime_days_in_month (start_of_week->month, start_of_week->year);
-
-      weekday_header = g_strdup_printf ("%s %d",gcal_get_weekday (i), n_day);
-      pango_layout_set_text (layout, weekday_header, -1);
-      pango_cairo_update_layout (cr, layout);
-      pango_layout_get_pixel_size (layout, &font_width, &font_height);
-      cairo_move_to (cr,
-                     start_grid_x + priv->horizontal_step * i + 6 + (gint) ( (max_day_width - font_width) / 2),
-                     start_grid_y - priv->grid_header_size);
-      pango_cairo_show_layout (cr, layout);
-
-      g_free (weekday_header);
-    }
-  g_free (start_of_week);
-
-  /* draw grid_sidebar */
-  cairo_set_source_rgba (cr, color.red, color.green, color.blue, 1);
-  pango_layout_set_text (layout, _("All day"), -1);
-  pango_cairo_update_layout (cr, layout);
-  pango_layout_get_pixel_size (layout, &font_width, &font_height);
-  cairo_move_to (cr,
-                 alloc->x + padding->left + (( priv->grid_sidebar_size  - font_width) / 2),
-                 alloc->y + padding->top + priv->header_size + priv->grid_header_size + ((priv->vertical_step - font_height) / 2));
-  pango_cairo_show_layout (cr, layout);
-
-  for (i = 0; i < 10 / priv->hours_steps; i++)
+  /* grid, sidebar hours */
+  for (i = 0; i < 24; i++)
     {
       gchar *hours;
-      gint n_hour;
+      hours = g_strdup_printf ("%d %s", i % 12, i < 12 ? _("AM") : _("PM"));
 
-      n_hour = 8 + i * priv->hours_steps;
-      if (n_hour < 12)
-        hours = g_strdup_printf ("%d %s", n_hour, _("AM"));
-      else if (n_hour == 12)
-        hours = g_strdup_printf (_("Noon"));
+      if (i == 0)
+        pango_layout_set_text (layout, _("Midnight"), -1);
+      else if (i == 12)
+        pango_layout_set_text (layout, _("Noon"), -1);
       else
-        hours = g_strdup_printf ("%d %s", n_hour - 12, _("PM"));
+        pango_layout_set_text (layout, hours, -1);
 
-      pango_layout_set_text (layout, hours, -1);
       pango_cairo_update_layout (cr, layout);
-      pango_layout_get_pixel_size (layout, &font_width, &font_height);
-      cairo_move_to (cr,
-                     alloc->x + padding->left + priv->grid_sidebar_size - font_width - 4,
-                     alloc->y + padding->top + priv->header_size + priv->grid_header_size + priv->vertical_step * (i + 1) + ((priv->vertical_step - font_height) / 2));
+      cairo_move_to (cr, padding.left, padding.top + (height / 24) * i);
       pango_cairo_show_layout (cr, layout);
 
       g_free (hours);
     }
 
   /* grid, vertical lines first */
-  cairo_set_line_width (cr, 1.5);
-  for (i = 0; i < 8; i++)
+  for (i = 0; i < 7; i++)
     {
       cairo_move_to (cr,
-                     start_grid_x + priv->horizontal_step * i,
-                     start_grid_y);
-      cairo_rel_line_to (cr, 0, priv->vertical_step *  ((10 / priv->hours_steps) + 1));
+                     sidebar_width + ((width - sidebar_width) / 7) * i + 0.4,
+                     0);
+      cairo_rel_line_to (cr, 0, height);
     }
 
   /* rest of the lines */
-  for (i = 0; i <= 10 / priv->hours_steps + 1; i++)
+  for (i = 0; i < 24; i++)
     {
-      cairo_move_to (cr,
-                     start_grid_x,
-                     start_grid_y + priv->vertical_step * i);
-      cairo_rel_line_to (cr, priv->horizontal_step * 7, 0);
+      /* hours lines */
+      cairo_move_to (cr, 0, (height / 24) * i + 0.4);
+      cairo_rel_line_to (cr, width, 0);
     }
 
   cairo_stroke (cr);
 
-  /* drawing selected_cell */
-  //FIXME: What to do when the selected date isn't on the in the month
-  cairo_set_source_rgba (cr, selected_color.red, selected_color.green, selected_color.blue, 1);
-  /* Two pixel line on the selected day cell */
-  cairo_set_line_width (cr, 2.0);
-  cairo_move_to (cr,
-                 start_grid_x + priv->horizontal_step * ( actual_day % 7),
-                 start_grid_y);
-  cairo_rel_line_to (cr, priv->horizontal_step, 0);
+  cairo_set_dash (cr, dashed, 2, 0);
+  for (i = 0; i < 24; i++)
+    {
+      /* 30 minutes lines */
+      cairo_move_to (cr, sidebar_width, (height / 24) * i + (height / 48) + 0.4);
+      cairo_rel_line_to (cr, width - sidebar_width, 0);
+    }
+
   cairo_stroke (cr);
 
   g_object_unref (layout);
+}
+
+static gint
+gcal_week_view_get_sidebar_width (GtkWidget *widget)
+{
+  GtkStyleContext *context;
+  GtkBorder padding;
+
+  PangoLayout *layout;
+  gint mid_width;
+  gint noon_width;
+  gint sidebar_width;
+
+  context = gtk_widget_get_style_context (widget);
+
+  gtk_style_context_get_padding (
+      gtk_widget_get_style_context (widget),
+      gtk_widget_get_state_flags (widget),
+      &padding);
+
+  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
+  pango_layout_set_font_description (
+      layout,
+      gtk_style_context_get_font (context,
+                                  gtk_widget_get_state_flags(widget)));
+
+  pango_layout_set_text (layout, _("Midnight"), -1);
+  pango_layout_get_pixel_size (layout, &mid_width, NULL);
+
+  pango_layout_set_text (layout, _("Noon"), -1);
+  pango_layout_get_pixel_size (layout, &noon_width, NULL);
+  sidebar_width = noon_width > mid_width ? noon_width : mid_width;
+  sidebar_width += padding.left + padding.right;
+  return sidebar_width;
+}
+
+/**
+ * gcal_week_view_get_start_grid_y:
+ *
+ * In GcalMonthView this method returns the height of the headers of the view
+ * and the grid. Here this points just the place where the grid_window hides
+ * behind the header
+ * Here this height includes:
+ *  - The big header of the view
+ *  - The grid header dislaying weekdays
+ *  - The cell containing all-day events.
+ */
+static gint
+gcal_week_view_get_start_grid_y (GtkWidget *widget)
+{
+  GtkStyleContext *context;
+  GtkBorder padding;
+
+  PangoLayout *layout;
+  gint font_height;
+  gdouble start_grid_y;
+
+  context = gtk_widget_get_style_context (widget);
+  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
+
+  /* init header values */
+  gtk_style_context_save (context);
+  gtk_style_context_add_region (context, "header", 0);
+
+  pango_layout_set_font_description (
+      layout,
+      gtk_style_context_get_font (context,
+                                  gtk_widget_get_state_flags(widget)));
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+
+  /* 6: is padding around the header */
+  start_grid_y = font_height;
+  gtk_style_context_restore (context);
+
+  /* init grid values */
+  pango_layout_set_font_description (
+      layout,
+      gtk_style_context_get_font (context,
+                                  gtk_widget_get_state_flags(widget)));
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+
+  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
+                                 gtk_widget_get_state_flags (widget),
+                                 &padding);
+
+  start_grid_y += 3 * padding.top + font_height;
+
+  /* for including the all-day cells */
+  start_grid_y += 2 * font_height;
+
+  g_object_unref (layout);
+  return start_grid_y;
+}
+
+static void
+gcal_week_view_scroll_value_changed (GtkAdjustment *adjusment,
+                                     gpointer       user_data)
+{
+  GcalWeekViewPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_WEEK_VIEW (user_data));
+  priv = GCAL_WEEK_VIEW (user_data)->priv;
+
+  if (priv->grid_window != NULL)
+    {
+      gdk_window_move (priv->grid_window,
+                       0,
+                       - gtk_adjustment_get_value (adjusment));
+    }
 }
 
 /* GcalView Interface API */
