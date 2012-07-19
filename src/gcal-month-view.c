@@ -454,8 +454,6 @@ gcal_month_view_draw (GtkWidget *widget,
   gtk_style_context_get_padding (context, state, &padding);
   gtk_widget_get_allocation (widget, &alloc);
 
-  gtk_render_background (context, cr, alloc.x, alloc.y, alloc.width, alloc.height);
-
   gcal_month_view_draw_header (GCAL_MONTH_VIEW (widget), cr, &alloc, &padding);
   gcal_month_view_draw_grid (GCAL_MONTH_VIEW (widget), cr, &alloc, &padding);
 

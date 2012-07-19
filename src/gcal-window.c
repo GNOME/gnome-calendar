@@ -268,8 +268,6 @@ gcal_window_constructed (GObject *object)
 
   gtk_widget_show (priv->notebook);
 
-  context = gtk_widget_get_style_context (holder);
-  gtk_style_context_add_class (context, "contents");
   gtk_container_add (GTK_CONTAINER (holder), priv->notebook);
   gtk_widget_show (holder);
 
@@ -279,6 +277,11 @@ gcal_window_constructed (GObject *object)
                           priv->notebook_actor,
                           CLUTTER_BIN_ALIGNMENT_FILL,
                           CLUTTER_BIN_ALIGNMENT_FILL);
+  context =
+    gtk_widget_get_style_context (
+        gtk_clutter_actor_get_widget (
+          GTK_CLUTTER_ACTOR (priv->notebook_actor)));
+  gtk_style_context_add_class (context, "contents");
 
   /* sources view */
   holder = gcal_floating_container_new ();

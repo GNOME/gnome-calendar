@@ -566,7 +566,6 @@ gcal_week_view_draw (GtkWidget *widget,
   gtk_style_context_get_padding (context, state, &padding);
   gtk_widget_get_allocation (widget, &alloc);
 
-  gtk_render_background (context, cr, alloc.x, alloc.y, alloc.width, alloc.height);
   /* setting the same line width for both windows */
   cairo_set_line_width (cr, 0.3);
 

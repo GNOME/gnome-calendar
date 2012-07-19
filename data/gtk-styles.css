@@ -11,7 +11,12 @@
 @define-color osd_toolbar_bg_b alpha(#101010, 0.80);
 @define-color osd_toolbar_bg_c alpha(shade(@osd_base, 1.02), 0.80);
 
-.contents.frame {
+GtkClutterOffscreen.contents {
+  background-color: #fafafa;
+  background-image: none;
+}
+
+GtkClutterOffscreen.contents .frame {
   border: 0;
   border-top: 1px lightgrey solid;
   border-radius: 0px;
@@ -52,8 +57,6 @@
 }
 
 .calendar-view {
-  background-color: #F6F6F6;
-
   padding: 6px;
   font: 10;
 }
