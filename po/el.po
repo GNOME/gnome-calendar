@@ -1,0 +1,262 @@
+# Greek translation for gnome-calendar.
+# Copyright (C) 2012 gnome-calendar's COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-calendar package.
+# Tom Tryfonidis <tomtryf@gmail.com>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-calendar\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-07-12 00:09+0200\n"
+"PO-Revision-Date: 2012-08-17 01:13+0200\n"
+"Last-Translator: Tom Tryfonidis <tomtryf@gmail.com>\n"
+"Language-Team: Greek <team@gnome.gr>\n"
+"Language: el\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: ../src/gcal-application.c:124 ../src/gcal-event-view.c:187
+#: ../data/gnome-calendar.desktop.in.in.h:1
+msgid "Calendar"
+msgstr "Ημερολόγιο"
+
+#: ../src/gcal-application.c:144
+msgid "Unable to initialize GtkClutter"
+msgstr "Αδυναμία αρχικοποίησης του GtkClutter"
+
+#: ../src/gcal-application.c:193
+msgid "Weeks"
+msgstr "Εβδομάδες"
+
+#: ../src/gcal-application.c:194
+msgid "Months"
+msgstr "Μήνες"
+
+#: ../src/gcal-application.c:196
+msgid "View as"
+msgstr "Προβολή ως"
+
+#: ../src/gcal-application.c:204
+msgid "About"
+msgstr "Περί"
+
+#: ../src/gcal-application.c:212
+msgid "Quit"
+msgstr "Έξοδος"
+
+#: ../src/gcal-window.c:897
+msgid "Event deleted"
+msgstr "Διαγράφηκε η εκδήλωση"
+
+#. day
+#: ../src/gcal-toolbar.c:302
+msgid "Day"
+msgstr "Ημέρα"
+
+#. week
+#: ../src/gcal-toolbar.c:319 ../src/gcal-week-view.c:689
+msgid "Week"
+msgstr "Εβδομάδα"
+
+#. month
+#: ../src/gcal-toolbar.c:336
+msgid "Month"
+msgstr "Μήνας"
+
+#. year
+#: ../src/gcal-toolbar.c:353
+msgid "Year"
+msgstr "Έτος"
+
+#. list
+#: ../src/gcal-toolbar.c:370
+msgid "List"
+msgstr "Λίστα"
+
+#: ../src/gcal-toolbar.c:423
+msgid "Back"
+msgstr "Πίσω"
+
+#. reset morphing edit_button
+#: ../src/gcal-toolbar.c:444 ../src/gcal-toolbar.c:456
+#: ../src/gcal-toolbar.c:531
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+#: ../src/gcal-toolbar.c:526
+msgid "Done"
+msgstr "Έγινε"
+
+#. init grid values
+#. draw grid_sidebar
+#: ../src/gcal-week-view.c:394 ../src/gcal-week-view.c:777
+#: ../src/gcal-editable-date.c:92
+msgid "All day"
+msgstr "Όλη μέρα"
+
+#: ../src/gcal-week-view.c:687
+msgid "Week of"
+msgstr "Εβδομάδα από"
+
+#: ../src/gcal-week-view.c:792
+msgid "AM"
+msgstr "ΠΜ"
+
+#: ../src/gcal-week-view.c:794
+#, c-format
+msgid "Noon"
+msgstr "Μεσημέρι"
+
+#: ../src/gcal-week-view.c:796
+msgid "PM"
+msgstr "ΜΜ"
+
+#. FIXME: do something with this to add it on the slist of widget
+#. * something like, turning all the three into on widget
+#.
+#: ../src/gcal-event-view.c:158
+msgid "Yes"
+msgstr "Ναι"
+
+#: ../src/gcal-event-view.c:159
+msgid "Maybe"
+msgstr "Πιθανώς"
+
+#: ../src/gcal-event-view.c:160
+msgid "No"
+msgstr "Όχι"
+
+#. Building the skel grid
+#: ../src/gcal-event-view.c:171
+msgid "What"
+msgstr "Τι"
+
+#: ../src/gcal-event-view.c:176
+msgid "When"
+msgstr "Πότε"
+
+#: ../src/gcal-event-view.c:182
+msgid "Where"
+msgstr "Που"
+
+#: ../src/gcal-event-view.c:192
+msgid "Description"
+msgstr "Περιγραφή"
+
+#: ../src/gcal-event-view.c:198
+msgid "Reminders"
+msgstr "Υπενθυμίσεις"
+
+#: ../src/gcal-event-view.c:205
+msgid "Attending"
+msgstr "Παρευρίσκομαι"
+
+#: ../src/gcal-event-view.c:210
+msgid "Delete Event"
+msgstr "Διαγραφή εκδήλωσης"
+
+#: ../src/gcal-editable-date.c:98
+msgid "to"
+msgstr "ως"
+
+#: ../src/gcal-editable-date.c:161 ../src/gcal-editable-date.c:197
+#: ../src/gcal-editable-date.c:201 ../src/gcal-manager.c:1157
+msgid " (All day)"
+msgstr " (Όλη μέρα)"
+
+#: ../src/gcal-editable-reminder.c:131
+msgid "Add reminder"
+msgstr "Προσθήκη υπενθύμισης"
+
+#: ../src/gcal-editable-reminder.c:186 ../src/gcal-editable-reminder.c:357
+#: ../src/gcal-manager.c:1320
+msgid "Email"
+msgstr "Ηλ. διεύθυνση"
+
+#: ../src/gcal-editable-reminder.c:193
+msgid "minute"
+msgstr "λεπτό"
+
+#: ../src/gcal-editable-reminder.c:195
+msgid "hour"
+msgstr "ώρα"
+
+#: ../src/gcal-editable-reminder.c:197
+msgid "day"
+msgstr "ημέρα"
+
+#: ../src/gcal-editable-reminder.c:253 ../src/gcal-manager.c:1364
+msgid "before"
+msgstr "πριν"
+
+#: ../src/gcal-editable-reminder.c:360 ../src/gcal-manager.c:1318
+msgid "Notification"
+msgstr "Ειδοποίηση"
+
+#: ../src/gcal-editable-reminder.c:363 ../src/gcal-manager.c:1352
+msgid "minutes"
+msgstr "λεπτά"
+
+#: ../src/gcal-editable-reminder.c:366 ../src/gcal-manager.c:1346
+msgid "hours"
+msgstr "ώρες"
+
+#: ../src/gcal-editable-reminder.c:369 ../src/gcal-manager.c:1334
+msgid "days"
+msgstr "ημέρες"
+
+#: ../src/gcal-editable-reminder.c:372 ../src/gcal-manager.c:1340
+msgid "weeks"
+msgstr "εβδομάδες"
+
+#: ../src/gcal-utils.c:196
+msgid "Sun"
+msgstr "Κυρ"
+
+#: ../src/gcal-utils.c:197
+msgid "Mon"
+msgstr "Δευ"
+
+#: ../src/gcal-utils.c:198
+msgid "Tue"
+msgstr "Τρί"
+
+#: ../src/gcal-utils.c:199
+msgid "Wed"
+msgstr "Τετ"
+
+#: ../src/gcal-utils.c:200
+msgid "Thu"
+msgstr "Πέμ"
+
+#: ../src/gcal-utils.c:201
+msgid "Fri"
+msgstr "Παρ"
+
+#: ../src/gcal-utils.c:202
+msgid "Sat"
+msgstr "Σάβ"
+
+#: ../data/gnome-calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr "Προσεγγίστε, και διαχειριστείτε το ημερολόγιο"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Μεγιστοποιημένο παράθυρο"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Κατάσταση μεγιστοποιημένου παραθύρου"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Type of the active view"
+msgstr "Τύπος της ενεργής προβολής"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Type of the active window view, default value is: monthly view"
+msgstr ""
+"Τύπος της ενεργής προβολής του παραθύρου, η προεπιλεγμένη τιμή είναι: "
+"μηνιαία προβολή"
