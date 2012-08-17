@@ -35,7 +35,7 @@
 
 #include <libedataserverui/libedataserverui.h>
 
-#include <libical/icaltime.h>
+#include <icaltime.h>
 
 struct _GcalWindowPrivate
 {

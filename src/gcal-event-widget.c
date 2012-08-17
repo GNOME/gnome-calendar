@@ -20,8 +20,6 @@
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 
-#include <libical/icaltime.h>
-
 #define RADIUS 3
 
 struct _GcalEventWidgetPrivate

@@ -21,7 +21,7 @@
 #define __GCAL_UTILS_H__
 
 #include <gtk/gtk.h>
-#include <libical/icaltime.h>
+#include <icaltime.h>
 
 #define ICAL_TIME_TYPE (icaltime_get_type ())
 
