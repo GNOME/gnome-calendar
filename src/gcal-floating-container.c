@@ -48,10 +48,6 @@ static void     gcal_floating_container_size_allocate                  (GtkWidge
 static gboolean gcal_floating_container_draw                           (GtkWidget       *widget,
                                                                         cairo_t         *cr);
 
-static void     gcal_floating_container_realize                        (GtkWidget       *widget);
-
-static void     gcal_floating_container_style_updated                  (GtkWidget       *widget);
-
 static void     gcal_floating_container_add                            (GtkContainer    *container,
                                                                         GtkWidget       *child);
 
@@ -79,8 +75,6 @@ gcal_floating_container_class_init (GcalFloatingContainerClass *klass)
       gcal_floating_container_get_preferred_width_for_height;
   widget_class->size_allocate = gcal_floating_container_size_allocate;
   widget_class->draw = gcal_floating_container_draw;
-  widget_class->realize = gcal_floating_container_realize;
-  widget_class->style_updated = gcal_floating_container_style_updated;
 
   container_class->add = gcal_floating_container_add;
 
@@ -305,33 +299,6 @@ gcal_floating_container_draw (GtkWidget *widget,
 }
 
 static void
-gcal_floating_container_realize (GtkWidget *widget)
-{
-  GdkWindow *window;
-  GtkWidget *child;
-
-  gtk_widget_set_realized (widget, TRUE);
-
-  window = gtk_widget_get_parent_window (widget);
-  gtk_widget_set_window (widget, window);
-  g_object_ref (window);
-
-  child = gtk_bin_get_child (GTK_BIN (widget));
-  if (child)
-    gtk_widget_set_parent_window (child, window);
-}
-
-static void
-gcal_floating_container_style_updated (GtkWidget *widget)
-{
-  GTK_WIDGET_CLASS (gcal_floating_container_parent_class)->style_updated (widget);
-
-  if (gtk_widget_get_realized (widget))
-    gtk_style_context_set_background (gtk_widget_get_style_context (widget),
-                                      gtk_widget_get_window (widget));
-}
-
-static void
 gcal_floating_container_add (GtkContainer *container,
                              GtkWidget    *child)
 {
@@ -348,16 +315,19 @@ gcal_floating_container_get_padding_and_border (GtkWidget *widget,
   GtkStateFlags state;
   GtkBorder tmp;
 
+  guint border_width;
+
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
 
   gtk_style_context_get_padding (context, state, border);
+  border_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
 
   gtk_style_context_get_border (context, state, &tmp);
-  border->top += tmp.top;
-  border->right += tmp.right;
-  border->bottom += tmp.bottom;
-  border->left += tmp.left;
+  border->top += tmp.top + border_width;
+  border->right += tmp.right + border_width;
+  border->bottom += tmp.bottom + border_width;
+  border->left += tmp.left + border_width;
 }
 
 GtkWidget*
