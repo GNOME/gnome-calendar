@@ -275,7 +275,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
       g_object_ref_sink (priv->sources_button);
       gtk_container_add (
           GTK_CONTAINER (priv->sources_button),
-          gtk_image_new_from_icon_name ("view-list-symbolic",
+          gtk_image_new_from_icon_name ("x-office-calendar-symbolic",
                                         GTK_ICON_SIZE_MENU));
 
       context = gtk_widget_get_style_context (priv->sources_button);
