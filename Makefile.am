@@ -15,17 +15,14 @@ INTLTOOL_FILES =                \
   intltool-merge.in             \
   intltool-update.in
 
-EXTRA_DIST =                   \
-  $(gnome_calendardoc_DATA)  \
-  $(INTLTOOL_FILES)           \
+EXTRA_DIST =                    \
+  $(gnome_calendardoc_DATA)     \
+  $(INTLTOOL_FILES)             \
   THANKS                        \
   TODO                          \
   autogen.sh
 
-CLEANFILES =                   \
-  AUTHORS
-
-DISTCLEANFILES =              \
+DISTCLEANFILES =                \
   intltool-extract              \
   intltool-merge                \
   intltool-update               \

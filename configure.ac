@@ -11,7 +11,7 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 # require automake 1.11
 AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip tar-ustar])
-AM_MAINTAINER_MODE([enable])
+AM_MAINTAINER_MODE
 
 dnl ***************************************************************************
 dnl Internationalization
@@ -50,6 +50,7 @@ dnl ================================================================
 AC_PATH_PROG(GLIB_GENMARSHAL, glib-genmarshal)
 AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
 
+GNOME_COMMON_INIT
 GNOME_COMPILE_WARNINGS(maximum)
 GNOME_MAINTAINER_MODE_DEFINES
 

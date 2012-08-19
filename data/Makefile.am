@@ -17,14 +17,15 @@ gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 
 styledir = $(pkgdatadir)/style
 
-dist_style_DATA = \
-  gtk-styles.css
+dist_style_DATA =               \
+	theme/gtk-styles.css          \
+  theme/close-window.svg
 
-EXTRA_DIST= \
-  gnome-calendar.desktop \
-  $(desktop_in_files) \
+EXTRA_DIST=                     \
+  gnome-calendar.desktop        \
+  $(desktop_in_files)           \
   $(gsettingsschema_in_files)
 
-CLEANFILES = \
-  $(desktop_DATA) \
+CLEANFILES =                    \
+  $(desktop_DATA)               \
   $(gsettings_SCHEMAS)
