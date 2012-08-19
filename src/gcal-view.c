@@ -20,6 +20,7 @@
 
 #include "gcal-view.h"
 #include "gcal-utils.h"
+#include "gcal-marshalers.h"
 
 #include <glib.h>
 
@@ -38,6 +39,32 @@ gcal_view_base_init (gpointer g_iface)
                               "The active/selecetd date in the view",
                               ICAL_TIME_TYPE,
                               G_PARAM_READWRITE));
+
+      g_signal_new ("create-event",
+                    GCAL_TYPE_VIEW,
+                    G_SIGNAL_RUN_LAST,
+                    G_STRUCT_OFFSET (GcalViewIface,
+                                     create_event),
+                    NULL, NULL,
+                    _gcal_marshal_VOID__POINTER_POINTER_DOUBLE_DOUBLE,
+                    G_TYPE_NONE,
+                    4,
+                    G_TYPE_POINTER,
+                    G_TYPE_POINTER,
+                    G_TYPE_DOUBLE,
+                    G_TYPE_DOUBLE);
+
+      g_signal_new ("updated",
+                    GCAL_TYPE_VIEW,
+                    G_SIGNAL_RUN_LAST,
+                    G_STRUCT_OFFSET (GcalViewIface,
+                                     updated),
+                    NULL, NULL,
+                    g_cclosure_marshal_VOID__POINTER,
+                    G_TYPE_NONE,
+                    1,
+                    G_TYPE_POINTER);
+
       initialized = TRUE;
     }
 }
@@ -131,4 +158,12 @@ gcal_view_get_by_uuid (GcalView    *view,
   g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid (view, uuid);
+}
+
+void
+gcal_view_clear_selection (GcalView *view)
+{
+  g_return_if_fail (GCAL_IS_VIEW (view));
+
+  GCAL_VIEW_GET_INTERFACE (view)->clear_selection (view);
 }
