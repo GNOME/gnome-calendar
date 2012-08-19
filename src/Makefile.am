@@ -1,5 +1,4 @@
 AM_CPPFLAGS =                                             \
-    -DCLUTTER_VERSION_MIN_REQUIRED=CLUTTER_VERSION_1_10   \
     -DPACKAGE_LOCALE_DIR=\""$(localedir)"\"               \
     -DPACKAGE_SRC_DIR=\""$(srcdir)"\"                     \
     -DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\"                \

@@ -209,8 +209,8 @@ gcal_window_constructed (GObject *object)
 
   /* base */
   base_layout_manager = clutter_box_layout_new ();
-  clutter_box_layout_set_vertical (CLUTTER_BOX_LAYOUT (base_layout_manager),
-                                   TRUE);
+  clutter_box_layout_set_orientation (CLUTTER_BOX_LAYOUT (base_layout_manager),
+                                      CLUTTER_ORIENTATION_VERTICAL);
   base  = clutter_actor_new ();
   clutter_actor_set_layout_manager (base, base_layout_manager);
   clutter_actor_add_constraint (base,
@@ -221,8 +221,8 @@ gcal_window_constructed (GObject *object)
 
   /* body_actor */
   body_layout_manager = clutter_box_layout_new ();
-  clutter_box_layout_set_vertical (CLUTTER_BOX_LAYOUT (body_layout_manager),
-                                   TRUE);
+  clutter_box_layout_set_orientation (CLUTTER_BOX_LAYOUT (body_layout_manager),
+                                      CLUTTER_ORIENTATION_VERTICAL);
 
   body_actor = clutter_actor_new ();
   clutter_actor_set_layout_manager (body_actor, body_layout_manager);
@@ -272,11 +272,14 @@ gcal_window_constructed (GObject *object)
   gtk_widget_show (holder);
 
   priv->notebook_actor = gtk_clutter_actor_new_with_contents (holder);
+  g_object_set (priv->notebook_actor,
+                "x-expand", TRUE,
+                "y-expand", TRUE,
+                "x-align", CLUTTER_ACTOR_ALIGN_FILL,
+                "y-align", CLUTTER_ACTOR_ALIGN_FILL,
+                NULL);
+  clutter_actor_add_child (priv->contents_actor, priv->notebook_actor);
 
-  clutter_bin_layout_add (CLUTTER_BIN_LAYOUT (contents_layout_manager),
-                          priv->notebook_actor,
-                          CLUTTER_BIN_ALIGNMENT_FILL,
-                          CLUTTER_BIN_ALIGNMENT_FILL);
   context =
     gtk_widget_get_style_context (
         gtk_clutter_actor_get_widget (
@@ -284,22 +287,25 @@ gcal_window_constructed (GObject *object)
   gtk_style_context_add_class (context, "contents");
 
   /* sources view */
-  holder = gcal_floating_container_new ();
-
-  context = gtk_widget_get_style_context (holder);
-  gtk_style_context_add_class (context, "sources-views");
-
-  gtk_widget_show_all (holder);
+  holder = gtk_frame_new (NULL);
+  gtk_widget_show (holder);
 
   priv->sources_actor = gtk_clutter_actor_new_with_contents (holder);
-  clutter_actor_set_margin_left (priv->sources_actor, 10);
-  clutter_actor_set_margin_top (priv->sources_actor, 10);
-  clutter_actor_set_opacity (priv->sources_actor, 0);
-  clutter_bin_layout_add (CLUTTER_BIN_LAYOUT (contents_layout_manager),
-                          priv->sources_actor,
-                          CLUTTER_BIN_ALIGNMENT_START,
-                          CLUTTER_BIN_ALIGNMENT_START);
+  g_object_set (priv->sources_actor,
+                "margin-left", 10.0,
+                "margin-top", 10.0,
+                "opacity", 0,
+                "x-expand", TRUE,
+                "y-expand", TRUE,
+                "x-align", CLUTTER_ACTOR_ALIGN_START,
+                "y-align", CLUTTER_ACTOR_ALIGN_START,
+                NULL);
+  clutter_actor_add_child (priv->contents_actor, priv->sources_actor);
+
   clutter_actor_hide (priv->sources_actor);
+  clutter_actor_set_background_color (
+      priv->sources_actor,
+      clutter_color_get_static (CLUTTER_COLOR_ALUMINIUM_2));
 
   context =
     gtk_widget_get_style_context (
@@ -616,24 +622,26 @@ gcal_window_sources_shown (GcalToolbar *main_toolbar,
   if (visible)
     {
       clutter_actor_show (priv->sources_actor);
-      clutter_actor_animate (priv->sources_actor,
-                             CLUTTER_LINEAR, 150,
-                             "opacity", 255,
-                             NULL);
+      clutter_actor_save_easing_state (priv->sources_actor);
+      clutter_actor_set_opacity (priv->sources_actor, 255);
+      clutter_actor_restore_easing_state (priv->sources_actor);
     }
   else
     {
-      clutter_actor_animate (priv->sources_actor,
-                             CLUTTER_LINEAR, 150,
-                             "opacity", 0,
-                             "signal-swapped::completed", clutter_actor_hide, priv->sources_actor,
-                             NULL);
+      clutter_actor_save_easing_state (priv->sources_actor);
+      clutter_actor_set_opacity (priv->sources_actor, 0);
+      clutter_actor_restore_easing_state (priv->sources_actor);
+
+      g_signal_connect (priv->sources_actor,
+                        "transition-stopped::opacity",
+                        G_CALLBACK (gcal_window_show_hide_actor_cb),
+                        NULL);
     }
 }
 
 static void
 gcal_window_add_event (GcalToolbar *main_toolbar,
-                        gpointer    user_data)
+                       gpointer     user_data)
 {
   GcalWindowPrivate *priv;
 
