@@ -74,3 +74,6 @@ Debug*
 data/org.gnome.calendar.enums.xml
 src/gcal-enum-types.c
 src/gcal-enum-types.h
+src/gcal-marshalers.c
+src/gcal-marshalers.h
+src/stamp-gcal-marshalers.h

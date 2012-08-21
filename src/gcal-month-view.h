@@ -48,6 +48,9 @@ struct _GcalMonthView
 struct _GcalMonthViewClass
 {
   GtkContainerClass parent_class;
+
+  /* signals */
+  void (*new_event) (gint new_day);
 };
 
 GType          gcal_month_view_get_type         (void);

@@ -108,10 +108,9 @@ GtkOverlay > GtkButton {
 
 .new-event-view {
    padding: 18px;
-   border-radius: 3px;
-   border: darkblue 1px solid;
-  color: @theme_fg_color;
+   border: darker(@borders) 1px solid;
+   color: @theme_fg_color;
    background-color: @theme_bg_color;
    -GcalArrowContainer-arrow-size: 12px;
-   -GcalArrowContainer-shadow-span: 6px;
+   -GcalArrowContainer-shadow-span: 3px;
 }

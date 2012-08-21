@@ -28,6 +28,7 @@
 #include "gcal-event-view.h"
 #include "gcal-enum-types.h"
 #include "gtk-notification.h"
+#include "gcal-event-overlay.h"
 
 #include <glib/gi18n.h>
 #include <clutter/clutter.h>
@@ -45,10 +46,13 @@ struct _GcalWindowPrivate
   ClutterActor        *sources_actor;
   ClutterActor        *notification_actor;
 
+  ClutterActor        *new_event_actor;
+
   GtkWidget           *notebook;
   GtkWidget           *sources_view;
   GtkWidget           *views [5];
-  GtkWidget           *add_view;
+  GtkWidget           *edit_dialog;
+  GtkWidget           *edit_widget;
 
   GcalWindowViewType   active_view;
   icaltimetype        *active_date;
@@ -85,7 +89,7 @@ static void           gcal_window_set_active_view        (GcalWindow          *w
 
 static void           gcal_window_set_sources_view       (GcalWindow          *window);
 
-static void           gcal_window_init_event_view        (GcalWindow          *window);
+static void           gcal_window_init_edit_dialog       (GcalWindow          *window);
 
 static void           gcal_window_view_changed           (GcalToolbar         *main_toolbar,
                                                           GcalWindowViewType   view_type,
@@ -99,12 +103,6 @@ static void           gcal_window_add_event              (GcalToolbar         *m
                                                           gpointer             user_data);
 
 static void           gcal_window_back_last_view         (GtkWidget           *widget,
-                                                          gpointer             user_data);
-
-static void           gcal_window_edit_event             (GcalToolbar         *main_toolbar,
-                                                          gpointer             user_data);
-
-static void           gcal_window_done_edit_event        (GcalToolbar         *main_toolbar,
                                                           gpointer             user_data);
 
 static void           gcal_window_sources_row_activated  (GtkTreeView         *tree_view,
@@ -131,6 +129,30 @@ static void           gcal_window_remove_event           (GtkNotification     *n
                                                           gpointer             user_data);
 
 static void           gcal_window_undo_remove_event      (GtkButton           *button,
+                                                          gpointer             user_data);
+
+static void           gcal_window_view_updated           (GcalView            *view,
+                                                          gpointer             date,
+                                                          gpointer             user_data);
+
+static void           gcal_window_event_overlay_shown   (GcalView            *view,
+                                                         gpointer             start_span,
+                                                         gpointer             end_span,
+                                                         gdouble              x,
+                                                         gdouble              y,
+                                                         gpointer             user_data);
+
+static void           gcal_window_event_overlay_closed   (GcalEventOverlay    *widget,
+                                                          gpointer             user_data);
+
+static void           gcal_window_create_event           (GcalEventOverlay    *widget,
+                                                          GcalNewEventData    *new_data,
+                                                          gboolean             open_details,
+                                                          gpointer             user_data);
+
+static void           gcal_window_show_hide_actor_cb     (ClutterActor        *actor,
+                                                          gchar               *name,
+                                                          gboolean             is_finished,
                                                           gpointer             user_data);
 
 G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -195,10 +217,10 @@ gcal_window_constructed (GObject *object)
 
   priv = GCAL_WINDOW (object)->priv;
 
-  /* internal data init*/
+  /* internal data init */
   priv->event_to_delete = NULL;
 
-  /* FIXME: here read the data from somewehere */
+  /* FIXME: here read the initial date from somewehere */
   priv->active_date = g_new (icaltimetype, 1);
   *(priv->active_date) = icaltime_from_timet (time (NULL), 0);
 
@@ -315,10 +337,13 @@ gcal_window_constructed (GObject *object)
 
   /* notifications manager */
   priv->notification_actor = gtk_clutter_actor_new ();
-  clutter_bin_layout_add (CLUTTER_BIN_LAYOUT (contents_layout_manager),
-                          priv->notification_actor,
-                          CLUTTER_BIN_ALIGNMENT_CENTER,
-                          CLUTTER_BIN_ALIGNMENT_START);
+  g_object_set (priv->notification_actor,
+                "x-expand", TRUE,
+                "y-expand", TRUE,
+                "x-align", CLUTTER_ACTOR_ALIGN_CENTER,
+                "y-align", CLUTTER_ACTOR_ALIGN_START,
+                NULL);
+  clutter_actor_add_child (priv->contents_actor, priv->notification_actor);
 
   context =
     gtk_widget_get_style_context (
@@ -326,6 +351,23 @@ gcal_window_constructed (GObject *object)
           GTK_CLUTTER_ACTOR (priv->notification_actor)));
   gtk_style_context_add_class (context, "overlay");
   clutter_actor_hide (priv->notification_actor);
+
+  /* event-overlay */
+  priv->new_event_actor = gcal_event_overlay_new ();
+  g_object_set (priv->new_event_actor,
+                "opacity", 0,
+                "x-align", CLUTTER_ACTOR_ALIGN_FILL,
+                "y-align", CLUTTER_ACTOR_ALIGN_FILL,
+                NULL);
+
+  context =
+    gtk_widget_get_style_context (
+        gtk_clutter_actor_get_widget (
+          GTK_CLUTTER_ACTOR (priv->new_event_actor)));
+  gtk_style_context_add_class (context, "overlay");
+
+  clutter_actor_add_child (priv->contents_actor, priv->new_event_actor);
+  clutter_actor_hide (priv->new_event_actor);
 
   /* signals connection/handling */
   g_signal_connect (priv->main_toolbar,
@@ -346,13 +388,14 @@ gcal_window_constructed (GObject *object)
                     G_CALLBACK (gcal_window_back_last_view),
                     object);
 
-  g_signal_connect (priv->main_toolbar,
-                    "edit-event",
-                    G_CALLBACK (gcal_window_edit_event),
+  g_signal_connect (priv->new_event_actor,
+                    "cancelled",
+                    G_CALLBACK (gcal_window_event_overlay_closed),
                     object);
-  g_signal_connect (priv->main_toolbar,
-                    "done-edit",
-                    G_CALLBACK (gcal_window_done_edit_event),
+
+  g_signal_connect (priv->new_event_actor,
+                    "created",
+                    G_CALLBACK (gcal_window_create_event),
                     object);
 
   gtk_widget_show (embed);
@@ -466,9 +509,21 @@ gcal_window_set_active_view (GcalWindow         *window,
             g_debug ("Unimplemented view yet");
             return;
         }
+
+      /* Bindings properties and signals */
       g_object_bind_property (priv->views[view_type], "active-date",
                               window, "active-date",
                               G_BINDING_DEFAULT);
+
+      g_signal_connect (priv->views[view_type],
+                        "create-event",
+                        G_CALLBACK (gcal_window_event_overlay_shown),
+                        window);
+
+      g_signal_connect (priv->views[view_type],
+                        "updated",
+                        G_CALLBACK (gcal_window_view_updated),
+                        window);
 
       priv->active_view = view_type;
 
@@ -485,7 +540,8 @@ gcal_window_set_active_view (GcalWindow         *window,
   update_range = ! gcal_view_contains (GCAL_VIEW (priv->views[priv->active_view]),
                                        priv->active_date);
 
-  gcal_view_set_date (GCAL_VIEW (priv->views[priv->active_view]), priv->active_date);
+  gcal_view_set_date (GCAL_VIEW (priv->views[priv->active_view]),
+                      priv->active_date);
   if (update_range)
     {
       first_day = gcal_view_get_initial_date (
@@ -570,32 +626,46 @@ gcal_window_set_sources_view (GcalWindow *window)
 }
 
 static void
-gcal_window_init_event_view (GcalWindow *window)
+gcal_window_init_edit_dialog (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
+  GcalManager *manager;
+
+  GtkWidget *content_area;
+  GtkWidget *action_area;
 
   g_return_if_fail (GCAL_IS_WINDOW (window));
   priv = window->priv;
 
-  priv->add_view = gcal_event_view_new_with_manager (
-      gcal_window_get_manager (window));
-  g_object_set (priv->add_view,
-                "hexpand", TRUE,
-                "vexpand", TRUE,
-                "margin-top", 10,
-                "margin-left", 20,
-                "margin-right", 20,
-                NULL);
+  priv->edit_dialog = gtk_dialog_new ();
+  gtk_window_set_title (GTK_WINDOW (priv->edit_dialog), _("Edit Event"));
+  gtk_window_set_modal (GTK_WINDOW (priv->edit_dialog), TRUE);
+  gtk_window_set_destroy_with_parent (GTK_WINDOW (priv->edit_dialog), TRUE);
+  gtk_window_set_resizable (GTK_WINDOW (priv->edit_dialog), FALSE);
 
+  content_area = gtk_dialog_get_content_area (GTK_DIALOG (priv->edit_dialog));
+  manager = gcal_window_get_manager (window);
+
+  priv->edit_widget = gcal_event_view_new_with_manager (manager);
+  gtk_container_add (GTK_CONTAINER (content_area),
+                     priv->edit_widget);
+
+  gtk_widget_show_all (content_area);
+
+  gtk_dialog_add_button (GTK_DIALOG (priv->edit_dialog),
+                         GTK_STOCK_CANCEL,
+                         GTK_RESPONSE_REJECT);
+  gtk_dialog_add_button (GTK_DIALOG (priv->edit_dialog),
+                         _("Done"),
+                         GTK_RESPONSE_ACCEPT);
+  action_area = gtk_dialog_get_action_area (GTK_DIALOG (priv->edit_dialog));
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (action_area), GTK_BUTTONBOX_EDGE);
+  gtk_widget_show_all (action_area);
+  /* FIXME: hook delete signal
   g_signal_connect (priv->add_view,
                     "will-delete",
                     G_CALLBACK (gcal_window_will_remove_event),
-                    window);
-
-  gtk_widget_show (priv->add_view);
-  gtk_notebook_append_page (GTK_NOTEBOOK (priv->notebook),
-                            priv->add_view,
-                            NULL);
+                    window);*/
 }
 
 static void
@@ -646,18 +716,11 @@ gcal_window_add_event (GcalToolbar *main_toolbar,
   GcalWindowPrivate *priv;
 
   priv = GCAL_WINDOW (user_data)->priv;
-  if (priv->add_view == NULL)
-      gcal_window_init_event_view (GCAL_WINDOW (user_data));
+  if (priv->edit_dialog == NULL)
+      gcal_window_init_edit_dialog (GCAL_WINDOW (user_data));
 
-  //TODO: Reload/clean/reinitialize status
-  gtk_notebook_set_current_page (
-      GTK_NOTEBOOK (priv->notebook),
-      gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook), priv->add_view));
-
-  gcal_toolbar_set_mode (GCAL_TOOLBAR (priv->main_toolbar),
-                         GCAL_TOOLBAR_VIEW_EVENT);
-
-  gcal_event_view_load_new (GCAL_EVENT_VIEW (priv->add_view));
+  /* FIXME: load
+  gcal_event_view_load_new (GCAL_EVENT_VIEW (priv->add_view));*/
 }
 
 /*
@@ -685,37 +748,9 @@ gcal_window_back_last_view (GtkWidget   *widget,
     }
   else
     {
-      //FIXME: there's something that needs to be done here.
+      /* FIXME: there's something that needs to be done here. */
       g_warning ("Your app has gone crazy");
     }
-}
-
-static void
-gcal_window_edit_event (GcalToolbar *main_toolbar,
-                        gpointer     user_data)
-{
-  GcalWindowPrivate *priv;
-
-  priv = GCAL_WINDOW (user_data)->priv;
-  if (priv->add_view == NULL)
-      gcal_window_init_event_view (GCAL_WINDOW (user_data));
-
-  //FIXME: check here, maybe this isn't need since edit-event
-  //can be triggered only from add_view
-  gtk_notebook_set_current_page (
-      GTK_NOTEBOOK (priv->notebook),
-      gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook), priv->add_view));
-  gcal_event_view_enter_edit_mode (GCAL_EVENT_VIEW (priv->add_view));
-}
-
-static void
-gcal_window_done_edit_event (GcalToolbar *main_toolbar,
-                        gpointer     user_data)
-{
-  GcalWindowPrivate *priv;
-
-  priv = GCAL_WINDOW (user_data)->priv;
-  gcal_event_view_leave_edit_mode (GCAL_EVENT_VIEW (priv->add_view));
 }
 
 static void
@@ -801,7 +836,8 @@ gcal_window_events_added (GcalManager *manager,
                                               event_uid));
           gtk_widget_show (event);
 
-          //FIXME: add event to every instantiated view
+          /* FIXME: add event-widget to every instantiated view, not pretty sure
+           * about this. */
           gtk_container_add (
               GTK_CONTAINER (priv->views[priv->active_view]),
               event);
@@ -856,18 +892,14 @@ gcal_window_event_activated (GcalEventWidget *event_widget,
   g_return_if_fail (GCAL_IS_WINDOW (user_data));
   priv = GCAL_WINDOW (user_data)->priv;
 
-  if (priv->add_view == NULL)
-    gcal_window_init_event_view (GCAL_WINDOW (user_data));
+  if (priv->edit_dialog == NULL)
+    gcal_window_init_edit_dialog (GCAL_WINDOW (user_data));
 
-  gtk_notebook_set_current_page (
-    GTK_NOTEBOOK (priv->notebook),
-    gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook), priv->add_view));
-
-  gcal_event_view_load_event (GCAL_EVENT_VIEW (priv->add_view),
+  gcal_event_view_load_event (GCAL_EVENT_VIEW (priv->edit_widget),
                               gcal_event_widget_peek_uuid (event_widget));
 
-  gcal_toolbar_set_mode (GCAL_TOOLBAR (priv->main_toolbar),
-                         GCAL_TOOLBAR_VIEW_EVENT);
+  gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
+  gtk_widget_hide (priv->edit_dialog);
 }
 
 static void
@@ -898,7 +930,7 @@ gcal_window_will_remove_event (GcalEventView *view,
     }
   else
     {
-      //FIXME: there's something that needs to be done here.
+      /* FIXME: there's something that needs to be done here. */
       g_warning ("Your app has gone crazy");
     }
 
@@ -981,6 +1013,132 @@ gcal_window_undo_remove_event (GtkButton *button,
       gcal_window_hide_notification (GCAL_WINDOW (user_data));
     }
 
+}
+
+static void
+gcal_window_view_updated (GcalView *view,
+                          gpointer  date,
+                          gpointer  user_data)
+{
+  GcalWindowPrivate *priv;
+  icaltimetype *first_day;
+  icaltimetype *last_day;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  gcal_view_set_date (GCAL_VIEW (priv->views[priv->active_view]),
+                      date);
+
+  first_day = gcal_view_get_initial_date (
+      GCAL_VIEW (priv->views[priv->active_view]));
+  last_day = gcal_view_get_final_date (
+          GCAL_VIEW (priv->views[priv->active_view]));
+
+  gcal_manager_set_new_range (
+      gcal_window_get_manager (GCAL_WINDOW (user_data)),
+      first_day,
+      last_day);
+
+  g_free (first_day);
+  g_free (last_day);
+}
+
+static void
+gcal_window_event_overlay_shown (GcalView *view,
+                                 gpointer  start_span,
+                                 gpointer  end_span,
+                                 gdouble   x,
+                                 gdouble   y,
+                                 gpointer  user_data)
+{
+  GcalWindowPrivate *priv;
+  GcalManager *manager;
+  gint width, height;
+
+  g_return_if_fail (user_data);
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  manager = gcal_window_get_manager (GCAL_WINDOW (user_data));
+  /* squeezed in here, reload on every show */
+  gcal_event_overlay_set_sources_model (
+      GCAL_EVENT_OVERLAY (priv->new_event_actor),
+      gcal_manager_get_sources_model (manager));
+
+  if (start_span != NULL)
+    {
+      gcal_event_overlay_set_span (GCAL_EVENT_OVERLAY (priv->new_event_actor),
+                                   (icaltimetype*) start_span,
+                                   (icaltimetype*) end_span);
+    }
+
+  clutter_actor_show (priv->new_event_actor);
+
+  width = clutter_actor_get_width (priv->new_event_actor);
+  height = clutter_actor_get_height (priv->new_event_actor);
+
+  x = x - width / 2;
+  y = y - height;
+
+  clutter_actor_set_x (priv->new_event_actor, x);
+  clutter_actor_set_y (priv->new_event_actor, y);
+
+  clutter_actor_save_easing_state (priv->new_event_actor);
+  clutter_actor_set_opacity (priv->new_event_actor, 255);
+  clutter_actor_restore_easing_state (priv->new_event_actor);
+}
+
+static void
+gcal_window_event_overlay_closed (GcalEventOverlay *widget,
+                                  gpointer          user_data)
+{
+  GcalWindowPrivate *priv;
+
+  g_return_if_fail (user_data);
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  /* reset and hide */
+  gcal_view_clear_selection (GCAL_VIEW (priv->views[priv->active_view]));
+  gcal_event_overlay_reset (GCAL_EVENT_OVERLAY (priv->new_event_actor));
+
+  clutter_actor_save_easing_state (priv->new_event_actor);
+  clutter_actor_set_opacity (priv->new_event_actor, 0);
+  clutter_actor_restore_easing_state (priv->new_event_actor);
+
+  g_signal_connect (priv->new_event_actor,
+                    "transition-stopped::opacity",
+                    G_CALLBACK (gcal_window_show_hide_actor_cb),
+                    NULL);
+}
+
+static void
+gcal_window_create_event (GcalEventOverlay    *widget,
+                          GcalNewEventData    *new_data,
+                          gboolean             open_details,
+                          gpointer             user_data)
+{
+  GcalWindowPrivate *priv;
+
+  g_return_if_fail (user_data);
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  /* reset and hide */
+  gcal_window_event_overlay_closed (widget, user_data);
+
+  /* create the event */
+  g_debug ("NOW CREATE THE EVENT");
+  if (open_details)
+    g_debug ("Opening details window NOW");
+}
+
+static void
+gcal_window_show_hide_actor_cb (ClutterActor *actor,
+                                gchar        *name,
+                                gboolean      is_finished,
+                                gpointer      user_data)
+{
+  if (CLUTTER_ACTOR_IS_VISIBLE (actor) &&
+      clutter_actor_get_opacity (actor) == 0)
+    clutter_actor_hide (actor);
 }
 
 /* Public API */

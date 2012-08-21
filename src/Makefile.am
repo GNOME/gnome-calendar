@@ -25,6 +25,8 @@ gnome_calendar_SOURCES =                                  \
     main.c                                                \
     gcal-application.h                                    \
     gcal-application.c                                    \
+    gcal-arrow-container.c                                \
+    gcal-arrow-container.h                                \
     gcal-floating-container.c                             \
     gcal-floating-container.h                             \
     gcal-toolbar.h                                        \
@@ -41,6 +43,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-event-widget.h                                   \
     gcal-event-view.c                                     \
     gcal-event-view.h                                     \
+    gcal-event-overlay.c                                  \
+    gcal-event-overlay.h                                  \
     gcal-editable.c                                       \
     gcal-editable.h                                       \
     gcal-editable-entry.c                                 \
