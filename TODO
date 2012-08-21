@@ -1,18 +1,29 @@
 TODO
 
+ !!! Fix GcalMonthView to take into accounts days outside the month shown, all
+   over the place, when clicking, when calculating new-dates (adding could
+   surpass 31 days), when drawing(maybe mark in other color) and selecting, etc.
+ !!! Fix GcalMonthView to take into account 31 days when in need of 42 cells
+   instead of 35.
+ - Review/check the adding of a new source live.
  - Review size/resize of GcalEventView widget
+ - Review GcalWeekView implementation to follow Benjamin advice of not composite
+   with Gtk+ widgets other than GtkOverlay.
  - Rethink signals from GcalManager
  - Order events for starting hour in GcalMonthView, and the others
- - Review static modifiers
+ - Add different triggers for hiding the sources view.
  - Connect keyboard-shortcuts like Ctrl+Q
  - Check for the real need of adding timezone, and check everywhere
- - Create GcalView interface or superclass of all views.
  - Connect all dconf options to the program
  - Remove body_actor if there's no need of it in the end.
  - Clear/reorder #include in every header file.
+ - Review every g_return_fi_fail statement since G_OBJECT macros does that
+   already
 
 Design stuff
 
  - What to do when there's no host set in the event.
- - What to do when we found an event out of our day view
-   (out of 8:00 - 17:00)
+ - Interactions explained
+     - When to show/hide sources view
+     - When to show/hide new-event overlay
+     - Random stuff I don't remember now

@@ -1,15 +1,15 @@
 Month View
 
 +--------------------
-|      padding.top
+|  header > padding.top
 |- - - - - - - - - -
 |    |July, 2021
 |- - - - - - - - - -
-| l  | top
+| l  | header > bottom
 | e - - - - - - - -
 | f  |Sun
 | t - - - - - - - -
-|    | top
+|    | normal > top
 |----------------------------+-------
 |    | top                   |
 |- - - - - - -               |
@@ -22,15 +22,15 @@ Month View
 Week View
 
 +--------------------
-|  l | padding.top
+|  l | header_padding.top
 |- e -   -   -   -   -
 |  f |July 13, 2021
 |- t -   -   -   -   -
-|      top    | l |
+| header > bot| l |
 |-   -   -   -  e -   -   -   -
 |             | f |Sun
 |-   -   -   -  t -   -   -   -
-|      top    |   |
+| normal > top|   |
 |-   -   -   -+-----------------+
 |             |                 |
 |             | All-day event   |
