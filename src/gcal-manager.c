@@ -57,6 +57,7 @@ struct _GcalManagerUnit
   GHashTable     *events;
 
   gboolean        enabled;
+  GtkTreeIter    *row;
 };
 
 typedef struct _GcalManagerUnit GcalManagerUnit;
@@ -309,9 +310,14 @@ gcal_manager_free_unit_data (gpointer data)
   GcalManagerUnit *unit;
 
   unit = (GcalManagerUnit*) data;
+
   g_clear_object (&(unit->source));
   g_clear_object (&(unit->client));
   g_clear_object (&(unit->view));
+
+  if (unit->row != NULL)
+    gtk_tree_iter_free (unit->row);
+
   g_hash_table_destroy (unit->events);
 
   g_free (unit);
@@ -325,7 +331,12 @@ gcal_manager_on_client_opened (GObject      *source_object,
   ECalClient *client;
   GcalManagerPrivate *priv;
   GError *error;
+
   ESource *source;
+  ESourceSelectable *extension;
+
+  GtkTreeIter iter;
+  GdkColor gdk_color;
 
   const gchar *uid;
   GcalManagerUnit *unit;
@@ -338,9 +349,24 @@ gcal_manager_on_client_opened (GObject      *source_object,
       /* get_object_list */
       if (priv->query != NULL)
         {
-          uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
+          source = e_client_get_source (E_CLIENT (client));
+          uid = e_source_get_uid (source);
           unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients, uid);
+
           unit->enabled = TRUE;
+
+          /* filling store */
+          extension = E_SOURCE_SELECTABLE (e_source_get_extension (source,
+                                           E_SOURCE_EXTENSION_CALENDAR));
+          gdk_color_parse (e_source_selectable_get_color (extension), &gdk_color);
+          gtk_list_store_append (priv->sources_model, &iter);
+          gtk_list_store_set (priv->sources_model, &iter,
+                              COLUMN_UID, e_source_get_uid (source),
+                              COLUMN_NAME, e_source_get_display_name (source),
+                              COLUMN_ACTIVE, unit->enabled,
+                              COLUMN_COLOR, &gdk_color,
+                              -1);
+          unit->row = gtk_tree_iter_copy (&iter);
 
           /* setting view */
           gcal_manager_reload_view (GCAL_MANAGER (user_data), unit);
@@ -410,7 +436,7 @@ gcal_manager_retry_open_on_timeout (gpointer user_data)
   g_return_val_if_fail (rod->manager != NULL, FALSE);
 
   e_client_open (rod->client,
-                 TRUE,
+                 FALSE,
                  rod->cancellable,
                  gcal_manager_on_client_opened,
                  rod->manager);
@@ -436,11 +462,21 @@ gcal_manager_remove_source (GcalManager  *manager,
                             ESource      *source)
 {
   GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
 
   g_return_if_fail (GCAL_IS_MANAGER (manager));
   g_return_if_fail (E_IS_SOURCE (source));
 
   priv = manager->priv;
+  unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients,
+                                                 e_source_get_uid (source));
+
+  /* removing the object from the model */
+  if (unit->row != NULL)
+    {
+      gtk_list_store_remove (GTK_LIST_STORE (priv->sources_model),
+                             unit->row);
+    }
   g_hash_table_remove (priv->clients,
                        e_source_get_uid (source));
 }
@@ -453,10 +489,6 @@ gcal_manager_load_source (GcalManager *manager,
   ECalClient *new_client;
   GcalManagerUnit *unit;
   GError *error;
-  ESourceSelectable *extension;
-
-  GtkTreeIter iter;
-  GdkColor gdk_color;
 
   priv = manager->priv;
   error = NULL;
@@ -490,18 +522,6 @@ gcal_manager_load_source (GcalManager *manager,
       g_warning ("Reinserting source: %s in priv->clients",
                  e_source_get_uid (source));
     }
-
-  /* filling store */
-  extension = E_SOURCE_SELECTABLE (e_source_get_extension (source,
-                                   E_SOURCE_EXTENSION_CALENDAR));
-  gdk_color_parse (e_source_selectable_get_color (extension), &gdk_color);
-  gtk_list_store_append (priv->sources_model, &iter);
-  gtk_list_store_set (priv->sources_model, &iter,
-                      COLUMN_UID, e_source_get_uid (source),
-                      COLUMN_NAME, e_source_get_display_name (source),
-                      COLUMN_ACTIVE, TRUE,
-                      COLUMN_COLOR, &gdk_color,
-                      -1);
 
   e_client_open (E_CLIENT (unit->client),
                  TRUE,
@@ -753,7 +773,8 @@ gcal_manager_on_sources_row_changed (GtkTreeModel *store,
   unit = g_hash_table_lookup (priv->clients, source_uid);
 
   /* hack for detecting when the activation was triggered by a button click */
-  if (! active || unit->enabled == FALSE)
+  if (e_client_is_opened (E_CLIENT (unit->client))
+      && (! active || unit->enabled == FALSE))
     {
       unit->enabled = active;
       if (active)
@@ -761,7 +782,6 @@ gcal_manager_on_sources_row_changed (GtkTreeModel *store,
       else
         gcal_manager_send_fave_events_removed (GCAL_MANAGER (user_data), unit);
     }
-
 
   g_free (source_uid);
 }
