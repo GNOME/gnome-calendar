@@ -257,6 +257,10 @@ gcal_application_show_about (GSimpleAction *simple,
     "Erick Pérez Castellanos <erickpc@gnome.org>",
     NULL
   };
+  const gchar *artists[] = {
+    "Reda Lazri <the.red.shortcut@gmail.com>",
+    NULL
+  };
 
   date = g_date_time_new_now_local ();
 
@@ -278,6 +282,7 @@ gcal_application_show_about (GSimpleAction *simple,
                          "version", VERSION,
                          "copyright", copyright,
                          "authors", authors,
+                         "artists", artists,
                          "logo-icon-name", "x-office-calendar",
                          NULL);
   g_free (copyright);
