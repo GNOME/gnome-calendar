@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-12 00:09+0200\n"
-"PO-Revision-Date: 2012-07-12 00:11+0200\n"
+"POT-Creation-Date: 2012-08-21 16:32+0200\n"
+"PO-Revision-Date: 2012-08-21 16:35+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -21,101 +21,126 @@ msgstr ""
 "X-Poedit-Language: Polish\n"
 "X-Poedit-Country: Poland\n"
 
-#: ../src/gcal-application.c:124 ../src/gcal-event-view.c:187
+#: ../src/gcal-application.c:127 ../src/gcal-event-view.c:187
 #: ../data/gnome-calendar.desktop.in.in.h:1
 msgid "Calendar"
 msgstr "Kalendarz"
 
-#: ../src/gcal-application.c:144
+#: ../src/gcal-application.c:147
 msgid "Unable to initialize GtkClutter"
 msgstr "Nie można zainicjować biblioteki GtkClutter"
 
-#: ../src/gcal-application.c:193
+#: ../src/gcal-application.c:196
 msgid "Weeks"
 msgstr "Tygodnie"
 
-#: ../src/gcal-application.c:194
+#: ../src/gcal-application.c:197
 msgid "Months"
 msgstr "Miesiące"
 
-#: ../src/gcal-application.c:196
+#: ../src/gcal-application.c:199
 msgid "View as"
 msgstr "Wyświetl jako"
 
-#: ../src/gcal-application.c:204
+#: ../src/gcal-application.c:207
 msgid "About"
 msgstr "O programie"
 
-#: ../src/gcal-application.c:212
+#: ../src/gcal-application.c:215
 msgid "Quit"
 msgstr "Zakończ"
 
-#: ../src/gcal-window.c:897
-msgid "Event deleted"
-msgstr "Usunięto wydarzenie"
+#: ../src/gcal-application.c:269
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Copyright © %Id Autorzy Kalendarza"
 
-#. day
-#: ../src/gcal-toolbar.c:302
-msgid "Day"
-msgstr "Dzień"
+#: ../src/gcal-application.c:275
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Copyright © %Id–%Id Autorzy Kalendarza"
 
-#. week
-#: ../src/gcal-toolbar.c:319 ../src/gcal-week-view.c:689
-msgid "Week"
-msgstr "Tydzień"
-
-#. month
-#: ../src/gcal-toolbar.c:336
-msgid "Month"
-msgstr "Miesiąc"
-
-#. year
-#: ../src/gcal-toolbar.c:353
-msgid "Year"
-msgstr "Rok"
-
-#. list
-#: ../src/gcal-toolbar.c:370
-msgid "List"
-msgstr "Lista"
-
-#: ../src/gcal-toolbar.c:423
-msgid "Back"
-msgstr "Wstecz"
-
-#. reset morphing edit_button
-#: ../src/gcal-toolbar.c:444 ../src/gcal-toolbar.c:456
-#: ../src/gcal-toolbar.c:531
-msgid "Edit"
-msgstr "Edycja"
-
-#: ../src/gcal-toolbar.c:526
-msgid "Done"
-msgstr "Gotowe"
-
-#. init grid values
-#. draw grid_sidebar
-#: ../src/gcal-week-view.c:394 ../src/gcal-week-view.c:777
 #: ../src/gcal-editable-date.c:92
 msgid "All day"
 msgstr "Cały dzień"
 
-#: ../src/gcal-week-view.c:687
-msgid "Week of"
-msgstr "Tydzień z"
+#: ../src/gcal-editable-date.c:98
+msgid "to"
+msgstr "do"
 
-#: ../src/gcal-week-view.c:792
-msgid "AM"
-msgstr "Przed południem"
+#: ../src/gcal-editable-date.c:161 ../src/gcal-editable-date.c:197
+#: ../src/gcal-editable-date.c:201 ../src/gcal-manager.c:1186
+msgid " (All day)"
+msgstr " (cały dzień)"
 
-#: ../src/gcal-week-view.c:794
+#: ../src/gcal-editable-reminder.c:131
+msgid "Add reminder"
+msgstr "Dodaj przypomnienie"
+
+#: ../src/gcal-editable-reminder.c:186 ../src/gcal-editable-reminder.c:357
+#: ../src/gcal-manager.c:1346
+msgid "Email"
+msgstr "E-mail"
+
+#: ../src/gcal-editable-reminder.c:193
+msgid "minute"
+msgstr "minuta"
+
+#: ../src/gcal-editable-reminder.c:195
+msgid "hour"
+msgstr "godzina"
+
+#: ../src/gcal-editable-reminder.c:197
+msgid "day"
+msgstr "dzień"
+
+#: ../src/gcal-editable-reminder.c:253 ../src/gcal-manager.c:1390
+msgid "before"
+msgstr "przed"
+
+#: ../src/gcal-editable-reminder.c:360 ../src/gcal-manager.c:1344
+msgid "Notification"
+msgstr "Powiadomienie"
+
+#: ../src/gcal-editable-reminder.c:363 ../src/gcal-manager.c:1378
+msgid "minutes"
+msgstr "minuty"
+
+#: ../src/gcal-editable-reminder.c:366 ../src/gcal-manager.c:1372
+msgid "hours"
+msgstr "godziny"
+
+#: ../src/gcal-editable-reminder.c:369 ../src/gcal-manager.c:1360
+msgid "days"
+msgstr "dni"
+
+#: ../src/gcal-editable-reminder.c:372 ../src/gcal-manager.c:1366
+msgid "weeks"
+msgstr "tygodnie"
+
+#: ../src/gcal-event-overlay.c:155 ../src/gcal-event-overlay.c:474
+msgid "New Event"
+msgstr "Nowe wydarzenie"
+
+#: ../src/gcal-event-overlay.c:165
+msgid "Create"
+msgstr "Utwórz"
+
+#: ../src/gcal-event-overlay.c:174
+msgid "More details"
+msgstr "Więcej informacji"
+
+#: ../src/gcal-event-overlay.c:188
+msgid "What (e.g. Alien Invasion)"
+msgstr "Co (np. inwazja kosmitów)"
+
+#: ../src/gcal-event-overlay.c:523
 #, c-format
-msgid "Noon"
-msgstr "Południe"
+msgid "New Event on %s"
+msgstr "Nowe wydarzenie w dniu %s"
 
-#: ../src/gcal-week-view.c:796
-msgid "PM"
-msgstr "Po południu"
+#: ../src/gcal-event-overlay.c:540
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "Nowe wydarzenie w dniach od %s do %s"
 
 #. FIXME: do something with this to add it on the slist of widget
 #. * something like, turning all the three into on widget
@@ -161,59 +186,50 @@ msgstr "Biorę udział"
 msgid "Delete Event"
 msgstr "Usuń wydarzenie"
 
-#: ../src/gcal-editable-date.c:98
-msgid "to"
-msgstr "do"
+#. Here translators should put the widgest letter in their alphabet, this
+#. * taken to make it align with week-view header
+#: ../src/gcal-month-view.c:898 ../src/gcal-week-view.c:1072
+msgid "WWW 99 - WWW 99"
+msgstr "WWW 99 - WWW 99"
 
-#: ../src/gcal-editable-date.c:161 ../src/gcal-editable-date.c:197
-#: ../src/gcal-editable-date.c:201 ../src/gcal-manager.c:1157
-msgid " (All day)"
-msgstr " (cały dzień)"
+#. day
+#: ../src/gcal-toolbar.c:304
+msgid "Day"
+msgstr "Dzień"
 
-#: ../src/gcal-editable-reminder.c:131
-msgid "Add reminder"
-msgstr "Dodaj przypomnienie"
+#. week
+#: ../src/gcal-toolbar.c:321 ../src/gcal-week-view.c:1086
+msgid "Week"
+msgstr "Tydzień"
 
-#: ../src/gcal-editable-reminder.c:186 ../src/gcal-editable-reminder.c:357
-#: ../src/gcal-manager.c:1320
-msgid "Email"
-msgstr "E-mail"
+#. month
+#: ../src/gcal-toolbar.c:338
+msgid "Month"
+msgstr "Miesiąc"
 
-#: ../src/gcal-editable-reminder.c:193
-msgid "minute"
-msgstr "minuta"
+#. year
+#: ../src/gcal-toolbar.c:355
+msgid "Year"
+msgstr "Rok"
 
-#: ../src/gcal-editable-reminder.c:195
-msgid "hour"
-msgstr "godzina"
+#. list
+#: ../src/gcal-toolbar.c:372
+msgid "List"
+msgstr "Lista"
 
-#: ../src/gcal-editable-reminder.c:197
-msgid "day"
-msgstr "dzień"
+#: ../src/gcal-toolbar.c:425
+msgid "Back"
+msgstr "Wstecz"
 
-#: ../src/gcal-editable-reminder.c:253 ../src/gcal-manager.c:1364
-msgid "before"
-msgstr "przed"
+#. reset morphing edit_button
+#: ../src/gcal-toolbar.c:446 ../src/gcal-toolbar.c:458
+#: ../src/gcal-toolbar.c:551
+msgid "Edit"
+msgstr "Edycja"
 
-#: ../src/gcal-editable-reminder.c:360 ../src/gcal-manager.c:1318
-msgid "Notification"
-msgstr "Powiadomienie"
-
-#: ../src/gcal-editable-reminder.c:363 ../src/gcal-manager.c:1352
-msgid "minutes"
-msgstr "minuty"
-
-#: ../src/gcal-editable-reminder.c:366 ../src/gcal-manager.c:1346
-msgid "hours"
-msgstr "godziny"
-
-#: ../src/gcal-editable-reminder.c:369 ../src/gcal-manager.c:1334
-msgid "days"
-msgstr "dni"
-
-#: ../src/gcal-editable-reminder.c:372 ../src/gcal-manager.c:1340
-msgid "weeks"
-msgstr "tygodnie"
+#: ../src/gcal-toolbar.c:546 ../src/gcal-window.c:659
+msgid "Done"
+msgstr "Gotowe"
 
 #: ../src/gcal-utils.c:196
 msgid "Sun"
@@ -242,6 +258,30 @@ msgstr "pią"
 #: ../src/gcal-utils.c:202
 msgid "Sat"
 msgstr "sob"
+
+#: ../src/gcal-week-view.c:1269
+msgid "AM"
+msgstr "Przed południem"
+
+#: ../src/gcal-week-view.c:1269
+msgid "PM"
+msgstr "Po południu"
+
+#: ../src/gcal-week-view.c:1272 ../src/gcal-week-view.c:1341
+msgid "Midnight"
+msgstr "Północ"
+
+#: ../src/gcal-week-view.c:1274 ../src/gcal-week-view.c:1344
+msgid "Noon"
+msgstr "Południe"
+
+#: ../src/gcal-window.c:641
+msgid "Edit Event"
+msgstr "Modyfikuj wydarzenie"
+
+#: ../src/gcal-window.c:940
+msgid "Event deleted"
+msgstr "Usunięto wydarzenie"
 
 #: ../data/gnome-calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
