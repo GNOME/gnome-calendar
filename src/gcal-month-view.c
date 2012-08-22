@@ -759,15 +759,21 @@ gcal_month_view_remove (GtkContainer *container,
           child = (GcalViewChild*) l->data;
           if (child->widget == widget)
             {
+              gboolean was_visible;
+
+              was_visible = gtk_widget_get_visible (widget);
+              gtk_widget_unparent (widget);
+
               priv->days[i] = g_list_remove (priv->days[i], child);
               g_free (child);
 
-              i = 36;
-              break;
+              if (was_visible)
+                gtk_widget_queue_resize (GTK_WIDGET (container));
+
+              return;
             }
         }
     }
-  gtk_widget_unparent (widget);
 }
 
 static void
@@ -784,11 +790,15 @@ gcal_month_view_forall (GtkContainer *container,
 
   for (i = 0; i < 35; i++)
     {
-      for (l = priv->days[i]; l != NULL; l = l->next)
+      l = priv->days[i];
+
+      while (l)
         {
           GcalViewChild *child;
 
           child = (GcalViewChild*) l->data;
+          l  = l->next;
+
           (* callback) (child->widget, callback_data);
         }
     }
@@ -1346,8 +1356,7 @@ gcal_month_view_remove_by_uuid (GcalView    *view,
           if (g_strcmp0 (uuid, widget_uuid) == 0)
             {
               gtk_widget_destroy (child->widget);
-              i = 36;
-              break;
+              return;
             }
         }
     }

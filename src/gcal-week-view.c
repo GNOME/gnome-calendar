@@ -900,6 +900,7 @@ gcal_week_view_remove (GtkContainer *container,
   GList *l;
   icaltimetype *date;
   gint day;
+  gboolean was_visible;
 
   g_return_if_fail (GCAL_IS_WEEK_VIEW (container));
   g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
@@ -921,7 +922,12 @@ gcal_week_view_remove (GtkContainer *container,
         }
     }
 
+
+  was_visible = gtk_widget_get_visible (widget);
   gtk_widget_unparent (widget);
+
+  if (was_visible)
+    gtk_widget_queue_resize (GTK_WIDGET (container));
 
   g_free (date);
 }
@@ -940,11 +946,15 @@ gcal_week_view_forall (GtkContainer *container,
 
   for (i = 0; i < 7; i++)
     {
-      for (l = priv->days[i]; l != NULL; l = l->next)
+      l = priv->days[i];
+
+      while (l)
         {
           GcalViewChild *child;
 
           child = (GcalViewChild*) l->data;
+          l  = l->next;
+
           (* callback) (child->widget, callback_data);
         }
     }
