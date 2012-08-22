@@ -39,6 +39,7 @@ struct _GcalEventOverlayPrivate
 
   icaltimetype  *start_span;
   icaltimetype  *end_span;
+  gboolean       one_day;
 };
 
 enum
@@ -342,7 +343,11 @@ gcal_event_overlay_gather_data (GcalEventOverlay  *widget,
                       -1);
   data->calendar_uid = uid;
   data->start_date = priv->start_span;
-  data->end_date = priv->end_span;
+
+  if (! priv->one_day)
+    data->end_date = priv->end_span;
+  else
+    data->end_date = NULL;
 
   *new_data = data;
   return TRUE;
@@ -507,6 +512,7 @@ gcal_event_overlay_set_span (GcalEventOverlay *widget,
     *(priv->start_span) = *start_date;
 
   real_end_date = end_date == NULL ? start_date : end_date;
+  priv->one_day = end_date == NULL;
   if (priv->end_span == NULL)
     priv->end_span = gcal_dup_icaltime (real_end_date);
   else

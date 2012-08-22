@@ -165,6 +165,10 @@ static void     gcal_manager_send_fake_events_added       (GcalManager     *mana
 static void     gcal_manager_send_fave_events_removed     (GcalManager     *manager,
                                                            GcalManagerUnit *unit);
 
+static void     gcal_manager_on_event_created             (GObject         *source_object,
+                                                           GAsyncResult    *result,
+                                                           gpointer         user_data);
+
 G_DEFINE_TYPE(GcalManager, gcal_manager, G_TYPE_OBJECT)
 
 static void
@@ -891,6 +895,34 @@ gcal_manager_send_fave_events_removed (GcalManager     *manager,
   g_slist_free_full (events_data, g_free);
 }
 
+static void
+gcal_manager_on_event_created (GObject      *source_object,
+                               GAsyncResult *result,
+                               gpointer      user_data)
+{
+  ECalClient *client;
+  gchar *new_uid;
+  GError *error;
+
+  /* If* the view catch a signal of the newly created object the almost sure I
+   * have nothing to do here. */
+
+  client = E_CAL_CLIENT (source_object);
+  error = NULL;
+  if (e_cal_client_create_object_finish (client, result, &new_uid, &error))
+    {
+      g_debug ("Telling event: %s was created", new_uid);
+
+      g_free (new_uid);
+    }
+  else
+    {
+      /* Some error */
+      g_warning ("Error creating object: %s", error->message);
+      g_error_free (error);
+    }
+}
+
 /* Public API */
 /**
  * gcal_manager_new:
@@ -1471,4 +1503,63 @@ gcal_manager_remove_event (GcalManager *manager,
                                   gcal_manager_on_event_removed,
                                   data);
     }
+}
+
+void
+gcal_manager_create_event (GcalManager        *manager,
+                           const gchar        *source_uid,
+                           const gchar        *summary,
+                           const icaltimetype *initial_date,
+                           const icaltimetype *final_date)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  ECalComponentDateTime dt;
+  ECalComponentText summ;
+  icalcomponent *new_event_icalcomp;
+  icaltimetype *dt_start;
+
+  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+
+  event = e_cal_component_new ();
+  e_cal_component_set_new_vtype (event, E_CAL_COMPONENT_EVENT);
+
+  dt_start = gcal_dup_icaltime (initial_date);
+  dt.value = dt_start;
+  dt.tzid = NULL;
+  e_cal_component_set_dtstart (event, &dt);
+  g_debug ("dt_start :%s", icaltime_as_ical_string (*dt_start));
+
+  if (final_date != NULL)
+    {
+      g_debug ("setting final_date");
+      *dt.value = *final_date;
+      g_debug ("dt_end :%s", icaltime_as_ical_string (*final_date));
+      e_cal_component_set_dtend (event, &dt);
+    }
+  else
+    {
+      icaltime_adjust (dt_start, 1, 0, 0, 0);
+      *dt.value = *dt_start;
+      e_cal_component_set_dtend (event, &dt);
+    }
+
+  summ.altrep = NULL;
+  summ.value = summary;
+  e_cal_component_set_summary (event, &summ);
+
+  e_cal_component_commit_sequence (event);
+
+  new_event_icalcomp = e_cal_component_get_icalcomponent (event);
+  e_cal_client_create_object (unit->client,
+                              new_event_icalcomp,
+                              priv->async_ops,
+                              gcal_manager_on_event_created,
+                              manager);
+
+  g_object_unref (event);
 }

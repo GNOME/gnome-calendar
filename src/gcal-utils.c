@@ -90,7 +90,7 @@ gcal_get_group_name (const gchar *base_uri)
 }
 
 icaltimetype*
-gcal_dup_icaltime (icaltimetype *date)
+gcal_dup_icaltime (const icaltimetype *date)
 {
   icaltimetype *new_date;
 

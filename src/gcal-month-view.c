@@ -550,6 +550,7 @@ gcal_month_view_button_press (GtkWidget      *widget,
 
       start_date = gcal_dup_icaltime (priv->date);
       start_date->day = priv->start_mark_cell + priv->days_delay;
+      start_date->is_date = 1;
 
       g_signal_emit_by_name (GCAL_VIEW (widget),
                              "create-event",
@@ -672,9 +673,11 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
       start_date = gcal_dup_icaltime (priv->date);
       start_date->day = priv->start_mark_cell + priv->days_delay;
+      start_date->is_date = 1;
 
       end_date = gcal_dup_icaltime (priv->date);
       end_date->day = priv->end_mark_cell + priv->days_delay;
+      end_date->is_date = 1;
 
       g_signal_emit_by_name (GCAL_VIEW (widget),
                              "create-event",

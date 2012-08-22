@@ -119,6 +119,12 @@ void           gcal_manager_remove_event            (GcalManager        *manager
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
 
+void           gcal_manager_create_event            (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *summary,
+                                                     const icaltimetype *initial_date,
+                                                     const icaltimetype *final_date);
+
 G_END_DECLS
 
 #endif /* __GCAL_MANAGER_H__ */

@@ -1117,17 +1117,26 @@ gcal_window_create_event (GcalEventOverlay    *widget,
                           gpointer             user_data)
 {
   GcalWindowPrivate *priv;
+  GcalManager *manager;
 
   g_return_if_fail (user_data);
   priv = GCAL_WINDOW (user_data)->priv;
 
-  /* reset and hide */
-  gcal_window_event_overlay_closed (widget, user_data);
-
   /* create the event */
+  manager = gcal_window_get_manager (GCAL_WINDOW (user_data));
+  gcal_manager_create_event (manager,
+                             new_data->calendar_uid,
+                             new_data->summary,
+                             new_data->start_date,
+                             new_data->end_date);
+
   g_debug ("NOW CREATE THE EVENT");
   if (open_details)
     g_debug ("Opening details window NOW");
+
+  /* reset and hide */
+  gcal_window_event_overlay_closed (widget, user_data);
+
 }
 
 static void
