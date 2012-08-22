@@ -74,6 +74,7 @@ CLUTTER_GTK_MIN_VERSION=1.2
 ECAL_REQUIRED=3.5.3
 EDATASERVER_REQUIRED=3.5.3
 EDATASERVERUI_REQUIRED=3.5.3
+LIBICAL_REQUIRED=0.43
 
 PKG_CHECK_MODULES(CALENDAR,
                   glib-2.0 >= $GLIB_MIN_VERSION
@@ -82,7 +83,8 @@ PKG_CHECK_MODULES(CALENDAR,
                   clutter-gtk-1.0 >= CLUTTER_GTK_MIN_VERSION
                   libecal-1.2 >= $ECAL_REQUIRED
                   libedataserver-1.2 >= EDATASERVER_REQUIRED
-                  libedataserverui-3.0 >= EDATASERVERUI_REQUIRED)
+                  libedataserverui-3.0 >= EDATASERVERUI_REQUIRED
+                  libical >= $LIBICAL_REQUIRED)
 
 AC_CONFIG_FILES([
       Makefile
