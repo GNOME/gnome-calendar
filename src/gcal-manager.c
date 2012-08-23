@@ -1029,6 +1029,20 @@ gcal_manager_get_source_name (GcalManager *manager,
   return e_source_get_display_name (unit->source);
 }
 
+gboolean
+gcal_manager_get_source_readonly (GcalManager *manager,
+                                  const gchar *source_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  return e_client_is_readonly (E_CLIENT (unit->client));
+}
+
 /**
  * gcal_manager_set_new_range:
  * @manager: a #GcalManager
