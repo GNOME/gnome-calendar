@@ -100,7 +100,7 @@ gcal_edit_dialog_constructed (GObject* object)
   /* chaining up */
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->constructed (object);
 
-  gtk_window_set_title (GTK_WINDOW (object), _("Edit Event"));
+  gtk_window_set_title (GTK_WINDOW (object), _("Event Details"));
   gtk_window_set_modal (GTK_WINDOW (object), TRUE);
   gtk_window_set_destroy_with_parent (GTK_WINDOW (object), TRUE);
   gtk_window_set_resizable (GTK_WINDOW (object), FALSE);
@@ -205,6 +205,8 @@ gcal_edit_dialog_constructed (GObject* object)
   /* Notes, description */
   child = gtk_label_new (_("Notes"));
   gtk_widget_set_halign (child, GTK_ALIGN_END);
+  gtk_widget_set_valign (child, GTK_ALIGN_START);
+  gtk_widget_set_margin_top (child, 4);
   gtk_grid_attach (GTK_GRID (grid), child, 0, 5, 1, 1);
 
   child = gtk_frame_new (NULL);
@@ -457,7 +459,10 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   g_free (text);
 
   /* FIXME: this is for now, I will have to ask GcalManager */
-  gcal_edit_dialog_set_writable (dialog, FALSE);
+  gcal_edit_dialog_set_writable (
+      dialog,
+      ! gcal_manager_get_source_readonly (priv->manager,
+                                          priv->source_uid));
 }
 
 void
