@@ -56,6 +56,10 @@ void       gtk_notification_set_timeout (GtkNotification *notification,
                                          guint            timeout_msec);
 void       gtk_notification_dismiss     (GtkNotification *notification);
 
+gboolean   gtk_notification_get_show_close_button (GtkNotification *notification);
+void       gtk_notification_set_show_close_button (GtkNotification *notification,
+                                                   gboolean         show_close_button);
+
 G_END_DECLS
 
 #endif /* _GTK_NOTIFICATION_H_ */
