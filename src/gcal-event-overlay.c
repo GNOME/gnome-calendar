@@ -267,7 +267,7 @@ gcal_event_overlay_set_calendars_menu (GcalEventOverlay *widget)
   if (! valid)
     return;
 
-  menu = gtk_menu_button_get_menu (GTK_MENU_BUTTON (priv->calendar_button));
+  menu = gtk_menu_button_get_popup (GTK_MENU_BUTTON (priv->calendar_button));
   children = gtk_container_get_children (GTK_CONTAINER (menu));
   g_list_foreach (children, (GFunc) gtk_widget_destroy, NULL);
 
