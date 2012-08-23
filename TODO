@@ -33,7 +33,6 @@ Roadmap
 
  - Add new-event mark to week-view
  - Scroll week-view to the actual-hour
- - Hook-up GcalManager::created-event signal to event-details show
 
 Wish-list
 
