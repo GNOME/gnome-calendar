@@ -43,7 +43,7 @@ struct _GcalEventWidgetClass
   GtkWidgetClass parent_class;
 
   /* signals */
-  void (*activated)  (GcalEventWidget *event_widget);
+  void (*activate)  (GcalEventWidget *event_widget);
 };
 
 struct _GcalEventWidget
@@ -81,6 +81,11 @@ void          gcal_event_widget_set_all_day                (GcalEventWidget *eve
                                                             gboolean         all_day);
 
 gboolean     gcal_event_widget_get_all_day                 (GcalEventWidget *event);
+
+void         gcal_event_widget_set_has_reminders           (GcalEventWidget *event,
+                                                            gboolean         has_reminders);
+
+gboolean     gcal_event_widget_get_has_reminders           (GcalEventWidget *event);
 
 G_END_DECLS
 

@@ -20,8 +20,6 @@
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 
-#define RADIUS 3
-
 struct _GcalEventWidgetPrivate
 {
   GdkWindow    *event_window;
@@ -31,6 +29,7 @@ struct _GcalEventWidgetPrivate
   GdkRGBA      *color;
   icaltimetype *dt_start;
   gboolean      all_day;
+  gboolean      has_reminders;
 };
 
 enum
@@ -40,12 +39,13 @@ enum
   PROP_SUMMARY,
   PROP_COLOR,
   PROP_DTSTART,
-  PROP_ALLDAY
+  PROP_ALL_DAY,
+  PROP_HAS_REMINDERS
 };
 
 enum
 {
-  ACTIVATED,
+  ACTIVATE,
   NUM_SIGNALS
 };
 
@@ -149,7 +149,7 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
                                                        G_PARAM_READWRITE));
 
   g_object_class_install_property (object_class,
-                                   PROP_ALLDAY,
+                                   PROP_ALL_DAY,
                                    g_param_spec_boolean ("all-day",
                                                          "All day",
                                                          "Wheter the event is all-day or not",
@@ -157,11 +157,20 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
                                                          G_PARAM_CONSTRUCT |
                                                          G_PARAM_READWRITE));
 
-  signals[ACTIVATED] = g_signal_new ("activated",
+  g_object_class_install_property (object_class,
+                                   PROP_HAS_REMINDERS,
+                                   g_param_spec_boolean ("has-reminders",
+                                                         "Event has reminders",
+                                                         "Wheter the event has reminders set or not",
+                                                         FALSE,
+                                                         G_PARAM_CONSTRUCT |
+                                                         G_PARAM_READWRITE));
+
+  signals[ACTIVATE] = g_signal_new ("activate",
                                      GCAL_TYPE_EVENT_WIDGET,
                                      G_SIGNAL_RUN_LAST,
                                      G_STRUCT_OFFSET (GcalEventWidgetClass,
-                                                      activated),
+                                                      activate),
                                      NULL, NULL,
                                      g_cclosure_marshal_VOID__VOID,
                                      G_TYPE_NONE,
@@ -190,6 +199,7 @@ gcal_event_widget_constructed (GObject *object)
   GcalEventWidgetPrivate *priv;
 
   priv = GCAL_EVENT_WIDGET (object)->priv;
+
   if (G_OBJECT_CLASS (gcal_event_widget_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_event_widget_parent_class)->constructed (object);
 
@@ -225,6 +235,10 @@ gcal_event_widget_set_property (GObject      *object,
         gdk_rgba_free (priv->color);
 
       priv->color = g_value_dup_boxed (value);
+      gtk_widget_override_background_color (
+          GTK_WIDGET (object),
+          gtk_widget_get_state_flags (GTK_WIDGET (object)),
+          priv->color);
       return;
     case PROP_DTSTART:
       if (priv->dt_start != NULL)
@@ -232,8 +246,11 @@ gcal_event_widget_set_property (GObject      *object,
 
       priv->dt_start = g_value_dup_boxed (value);
       return;
-    case PROP_ALLDAY:
+    case PROP_ALL_DAY:
       priv->all_day = g_value_get_boolean (value);
+      return;
+    case PROP_HAS_REMINDERS:
+      priv->has_reminders = g_value_get_boolean (value);
       return;
     }
 
@@ -264,8 +281,11 @@ gcal_event_widget_get_property (GObject      *object,
     case PROP_DTSTART:
       g_value_set_boxed (value, priv->dt_start);
       return;
-    case PROP_ALLDAY:
+    case PROP_ALL_DAY:
       g_value_set_boolean (value, priv->all_day);
+      return;
+    case PROP_HAS_REMINDERS:
+      g_value_set_boolean (value, priv->has_reminders);
       return;
     }
 
@@ -277,6 +297,7 @@ gcal_event_widget_get_preferred_width (GtkWidget *widget,
                                        gint      *minimum,
                                        gint      *natural)
 {
+  GtkBorder margin;
   GtkBorder padding;
   PangoLayout *layout;
   PangoRectangle logical_rect;
@@ -287,12 +308,15 @@ gcal_event_widget_get_preferred_width (GtkWidget *widget,
   pango_layout_get_extents (layout, NULL, &logical_rect);
   pango_extents_to_pixels (&logical_rect, NULL);
 
+  gtk_style_context_get_margin (gtk_widget_get_style_context (widget),
+                                gtk_widget_get_state_flags (widget),
+                                &margin);
   gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
                                  gtk_widget_get_state_flags (widget),
                                  &padding);
 
   *minimum = *natural =
-    logical_rect.width + padding.left + padding.right + 2 * RADIUS;
+    logical_rect.width + padding.left + padding.right + margin.left + margin.right;
 
   g_object_unref (layout);
 }
@@ -302,6 +326,7 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
                                         gint      *minimum,
                                         gint      *natural)
 {
+  GtkBorder margin;
   GtkBorder padding;
   PangoLayout *layout;
   PangoRectangle logical_rect;
@@ -312,12 +337,15 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
   pango_layout_get_extents (layout, NULL, &logical_rect);
   pango_extents_to_pixels (&logical_rect, NULL);
 
+  gtk_style_context_get_margin (gtk_widget_get_style_context (widget),
+                                gtk_widget_get_state_flags (widget),
+                                &margin);
   gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
                                  gtk_widget_get_state_flags (widget),
                                  &padding);
 
   *minimum = *natural =
-    logical_rect.height + padding.top + padding.bottom + 2 * RADIUS;
+    logical_rect.height + padding.top + padding.bottom + margin.top + margin.bottom;
 
   g_object_unref (layout);
 }
@@ -360,6 +388,7 @@ gcal_event_widget_realize (GtkWidget *widget)
                                        &attributes,
                                        attributes_mask);
   gdk_window_set_user_data (priv->event_window, widget);
+  gdk_window_show (priv->event_window);
 }
 
 static void
@@ -384,10 +413,11 @@ gcal_event_widget_map (GtkWidget *widget)
   GcalEventWidgetPrivate *priv;
 
   priv = GCAL_EVENT_WIDGET (widget)->priv;
-  if (priv->event_window != NULL)
-    gdk_window_show (priv->event_window);
 
   GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->map (widget);
+
+  if (priv->event_window != NULL)
+    gdk_window_show (priv->event_window);
 }
 
 static void
@@ -396,10 +426,11 @@ gcal_event_widget_unmap (GtkWidget *widget)
   GcalEventWidgetPrivate *priv;
 
   priv = GCAL_EVENT_WIDGET (widget)->priv;
-  if (priv->event_window != NULL)
-    gdk_window_hide (priv->event_window);
 
   GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->unmap (widget);
+
+  if (priv->event_window != NULL)
+    gdk_window_hide (priv->event_window);
 }
 
 static void
@@ -428,11 +459,11 @@ gcal_event_widget_draw (GtkWidget *widget,
   GcalEventWidgetPrivate *priv;
   GtkStyleContext *context;
   GtkStateFlags state;
+  GtkBorder margin;
   GtkBorder padding;
 
   gint x,y;
   gint width, height;
-  gdouble degrees;
 
   PangoLayout *layout;
   GdkRGBA fg_color;
@@ -442,61 +473,69 @@ gcal_event_widget_draw (GtkWidget *widget,
   state = gtk_widget_get_state_flags (widget);
 
   gtk_style_context_get_padding (context, state, &padding);
+  gtk_style_context_get_margin (context, state, &margin);
   gtk_style_context_get_color (context, state, &fg_color);
 
-  x = padding.left;
-  y = padding.top;
+  x = margin.left;
+  y = margin.top;
   width = gtk_widget_get_allocated_width (widget)
-   - (padding.left + padding.right);
+   - (margin.left + margin.right);
   height = gtk_widget_get_allocated_height (widget)
-   - (padding.top + padding.bottom);
-  degrees = G_PI / 180.0;
+   - (margin.top + margin.bottom);
+
+  gtk_render_background (context, cr, x, y, width, height);
+  gtk_render_frame (context, cr, x, y, width, height);
+
+  /* render icon */
+  if (priv->has_reminders)
+    {
+      GtkIconTheme *icon_theme;
+      GtkIconInfo *icon_info;
+      GdkPixbuf *pixbuf;
+      gboolean was_symbolic;
+
+      icon_theme = gtk_icon_theme_get_default ();
+      icon_info = gtk_icon_theme_lookup_icon (icon_theme,
+                                              "document-open-recent-symbolic",
+                                              height - (padding.top + padding.bottom),
+                                              0);
+      pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
+                                                        context,
+                                                        &was_symbolic,
+                                                        NULL);
+
+      gdk_cairo_set_source_pixbuf (cr,
+                                   pixbuf,
+                                   x + padding.left,
+                                   y + padding.top);
+      g_object_unref (pixbuf);
+      cairo_paint (cr);
+
+      padding.left += height - (padding.top + padding.bottom) + padding.left;
+    }
 
   layout = pango_cairo_create_layout (cr);
   pango_layout_set_font_description (layout,
                                      gtk_style_context_get_font (context,
                                                                  state));
   pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
-  pango_layout_set_width (layout, (width - 2 * RADIUS ) * PANGO_SCALE);
+  pango_layout_set_width (layout, (width - (padding.left + padding.right) ) * PANGO_SCALE);
+
+  pango_layout_set_text (layout, priv->summary, -1);
+  pango_cairo_update_layout (cr, layout);
 
   cairo_save (cr);
-
-  cairo_new_sub_path (cr);
-  cairo_arc (cr, x + width - RADIUS, y + RADIUS, RADIUS, -90 * degrees, 0 * degrees);
-  cairo_arc (cr, x + width - RADIUS, y + height - RADIUS, RADIUS, 0 * degrees, 90 * degrees);
-  cairo_arc (cr, x + RADIUS, y + height - RADIUS, RADIUS, 90 * degrees, 180 * degrees);
-  cairo_arc (cr, x + RADIUS, y + RADIUS, RADIUS, 180 * degrees, 270 * degrees);
-  cairo_close_path (cr);
-
-  cairo_set_source_rgba (cr,
-                         priv->color->red,
-                         priv->color->green,
-                         priv->color->blue,
-                         0.8);
-  cairo_fill_preserve (cr);
-  cairo_set_source_rgb (cr,
-                        priv->color->red - ((1 - priv->color->red) / 2),
-                        priv->color->green - ((1 - priv->color->green) / 2),
-                        priv->color->blue - ((1 - priv->color->blue) / 2));
-  cairo_stroke (cr);
-
   cairo_set_source_rgba (cr,
                          fg_color.red,
                          fg_color.green,
                          fg_color.blue,
                          fg_color.alpha);
-  pango_layout_set_text (layout, priv->summary, -1);
-  pango_cairo_update_layout (cr, layout);
-  cairo_move_to (cr, x + RADIUS, y + RADIUS);
+  cairo_move_to (cr, x + padding.left, y + padding.top);
   pango_cairo_show_layout (cr, layout);
-  cairo_stroke (cr);
 
   cairo_restore (cr);
 
   g_object_unref (layout);
-
-  if (GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->draw != NULL)
-    GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->draw (widget, cr);
 
   return FALSE;
 }
@@ -506,7 +545,7 @@ gcal_event_widget_button_press_event (GtkWidget      *widget,
                                       GdkEventButton *event)
 {
   if (event->type == GDK_2BUTTON_PRESS)
-    g_signal_emit (widget, signals[ACTIVATED], 0);
+    g_signal_emit (widget, signals[ACTIVATE], 0);
 
   return TRUE;
 }
@@ -615,4 +654,23 @@ gcal_event_widget_get_all_day (GcalEventWidget *event)
 
   g_object_get (event, "all-day", &all_day, NULL);
   return all_day;
+}
+
+void
+gcal_event_widget_set_has_reminders (GcalEventWidget *event,
+                                     gboolean         has_reminders)
+{
+  g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
+
+  g_object_set (event, "has-reminders", has_reminders, NULL);
+}
+
+gboolean
+gcal_event_widget_get_has_reminders (GcalEventWidget *event)
+{
+  gboolean has_reminders;
+  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), FALSE);
+
+  g_object_get (event, "has-reminders", &has_reminders, NULL);
+  return has_reminders;
 }
