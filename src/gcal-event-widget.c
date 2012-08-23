@@ -304,7 +304,6 @@ gcal_event_widget_get_preferred_width (GtkWidget *widget,
 
   layout = gtk_widget_create_pango_layout (widget, "00:00:00 00:00");
 
-
   pango_layout_get_extents (layout, NULL, &logical_rect);
   pango_extents_to_pixels (&logical_rect, NULL);
 
@@ -332,7 +331,6 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
   PangoRectangle logical_rect;
 
   layout = gtk_widget_create_pango_layout (widget, "00:00:00 00:00");
-
 
   pango_layout_get_extents (layout, NULL, &logical_rect);
   pango_extents_to_pixels (&logical_rect, NULL);
@@ -496,7 +494,7 @@ gcal_event_widget_draw (GtkWidget *widget,
 
       icon_theme = gtk_icon_theme_get_default ();
       icon_info = gtk_icon_theme_lookup_icon (icon_theme,
-                                              "document-open-recent-symbolic",
+                                              "preferences-system-time-symbolic",
                                               height - (padding.top + padding.bottom),
                                               0);
       pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
