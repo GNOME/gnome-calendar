@@ -62,6 +62,7 @@ struct _GcalWindowPrivate
 
   /* temp to keep event_creation */
   gboolean             waiting_for_creation;
+  gboolean             queue_open_edit_dialog;
 };
 
 enum
@@ -159,8 +160,9 @@ static void           gcal_window_show_hide_actor_cb     (ClutterActor        *a
                                                           gboolean             is_finished,
                                                           gpointer             user_data);
 
-static void           gcal_window_edit_dialog_responded  (GcalWindow          *window,
-                                                          gint                 response);
+static void           gcal_window_edit_dialog_responded  (GtkDialog           *dialog,
+                                                          gint                 response,
+                                                          gpointer             user_data);
 
 G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
@@ -208,6 +210,7 @@ gcal_window_init(GcalWindow *self)
 
   priv->event_to_delete = NULL;
   priv->waiting_for_creation = FALSE;
+  priv->queue_open_edit_dialog = FALSE;
 }
 
 static void
@@ -647,6 +650,11 @@ gcal_window_init_edit_dialog (GcalWindow *window)
   priv->edit_dialog = gcal_edit_dialog_new ();
   gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog),
                                 gcal_window_get_manager (window));
+
+  g_signal_connect (priv->edit_dialog,
+                    "response",
+                    G_CALLBACK (gcal_window_edit_dialog_responded),
+                    window);
 }
 
 static void
@@ -849,7 +857,6 @@ gcal_window_event_created (GcalManager *manager,
                            gpointer     user_data)
 {
   GcalWindowPrivate *priv;
-  gint response;
 
   priv = GCAL_WINDOW (user_data)->priv;
 
@@ -865,10 +872,13 @@ gcal_window_event_created (GcalManager *manager,
                               source_uid,
                               event_uid);
 
-  response = gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
-  gtk_widget_hide (priv->edit_dialog);
+  if (CLUTTER_ACTOR_IS_VISIBLE (priv->new_event_actor))
+    {
+      priv->queue_open_edit_dialog = TRUE;
+      return;
+    }
 
-  gcal_window_edit_dialog_responded (GCAL_WINDOW (user_data), response);
+  gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
 }
 
 static void
@@ -904,7 +914,6 @@ gcal_window_event_activated (GcalEventWidget *event_widget,
 {
   GcalWindowPrivate *priv;
   gchar **tokens;
-  gint response;
 
   g_return_if_fail (GCAL_IS_WINDOW (user_data));
   priv = GCAL_WINDOW (user_data)->priv;
@@ -918,10 +927,7 @@ gcal_window_event_activated (GcalEventWidget *event_widget,
                               tokens[1]);
   g_strfreev (tokens);
 
-  response = gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
-  gtk_widget_hide (priv->edit_dialog);
-
-  gcal_window_edit_dialog_responded (GCAL_WINDOW (user_data), response);
+  gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
 }
 
 static void
@@ -1061,7 +1067,6 @@ gcal_window_event_overlay_closed (GcalEventOverlay *widget,
   gcal_event_overlay_reset (GCAL_EVENT_OVERLAY (priv->new_event_actor));
 
   clutter_actor_save_easing_state (priv->new_event_actor);
-  clutter_actor_set_easing_duration (priv->new_event_actor, 100);
   clutter_actor_set_opacity (priv->new_event_actor, 0);
   clutter_actor_restore_easing_state (priv->new_event_actor);
 
@@ -1085,7 +1090,6 @@ gcal_window_create_event (GcalEventOverlay    *widget,
   if (open_details)
     {
       priv->waiting_for_creation = TRUE;
-      clutter_actor_hide (priv->new_event_actor);
     }
 
   /* create the event */
@@ -1106,9 +1110,19 @@ gcal_window_show_hide_actor_cb (ClutterActor *actor,
                                 gboolean      is_finished,
                                 gpointer      user_data)
 {
+  GcalWindowPrivate *priv;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+
   if (CLUTTER_ACTOR_IS_VISIBLE (actor) &&
       clutter_actor_get_opacity (actor) == 0)
     clutter_actor_hide (actor);
+
+  if (priv->queue_open_edit_dialog)
+    {
+      gtk_widget_show_all (priv->edit_dialog);
+      priv->queue_open_edit_dialog = FALSE;
+    }
 
   /* disconnect so we don't get multiple notifications */
   g_signal_handlers_disconnect_by_func (actor,
@@ -1117,8 +1131,9 @@ gcal_window_show_hide_actor_cb (ClutterActor *actor,
 }
 
 static void
-gcal_window_edit_dialog_responded (GcalWindow *window,
-                                  gint        response)
+gcal_window_edit_dialog_responded (GtkDialog *dialog,
+                                   gint       response,
+                                   gpointer   user_data)
 {
   GcalWindowPrivate *priv;
 
@@ -1127,7 +1142,9 @@ gcal_window_edit_dialog_responded (GcalWindow *window,
   GtkWidget *grid;
   GtkWidget *undo_button;
 
-  priv = window->priv;
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  gtk_widget_hide (priv->edit_dialog);
 
   switch (response)
     {
@@ -1150,16 +1167,16 @@ gcal_window_edit_dialog_responded (GcalWindow *window,
 
         gtk_container_add (GTK_CONTAINER (noty), grid);
         gtk_widget_show_all (noty);
-        gcal_window_show_notification (window, noty);
+        gcal_window_show_notification (GCAL_WINDOW (user_data), noty);
 
         g_signal_connect (noty,
                           "dismissed",
                           G_CALLBACK (gcal_window_remove_event),
-                          window);
+                          user_data);
         g_signal_connect (undo_button,
                           "clicked",
                           G_CALLBACK (gcal_window_undo_remove_event),
-                          window);
+                          user_data);
 
         priv->event_to_delete =
           gcal_edit_dialog_get_event_uuid (GCAL_EDIT_DIALOG (priv->edit_dialog));
