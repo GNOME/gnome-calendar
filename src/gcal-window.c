@@ -1075,11 +1075,7 @@ gcal_window_create_event (GcalEventOverlay    *widget,
                           gboolean             open_details,
                           gpointer             user_data)
 {
-  GcalWindowPrivate *priv;
   GcalManager *manager;
-
-  g_return_if_fail (user_data);
-  priv = GCAL_WINDOW (user_data)->priv;
 
   /* create the event */
   manager = gcal_window_get_manager (GCAL_WINDOW (user_data));
