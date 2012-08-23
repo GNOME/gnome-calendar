@@ -25,7 +25,7 @@
 #include "gcal-week-view.h"
 #include "gcal-view.h"
 #include "gcal-event-widget.h"
-#include "gcal-event-view.h"
+#include "gcal-edit-dialog.h"
 #include "gcal-enum-types.h"
 #include "gtk-notification.h"
 #include "gcal-event-overlay.h"
@@ -119,10 +119,6 @@ static void           gcal_window_events_removed         (GcalManager         *m
                                                           gpointer             user_data);
 
 static void           gcal_window_event_activated        (GcalEventWidget     *event_widget,
-                                                          gpointer             user_data);
-
-static void           gcal_window_will_remove_event      (GcalEventView       *view,
-                                                          gchar               *event_uuid,
                                                           gpointer             user_data);
 
 static void           gcal_window_remove_event           (GtkNotification     *notification,
@@ -628,43 +624,13 @@ static void
 gcal_window_init_edit_dialog (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
-  GcalManager *manager;
-
-  GtkWidget *content_area;
-  GtkWidget *action_area;
 
   g_return_if_fail (GCAL_IS_WINDOW (window));
   priv = window->priv;
 
-  priv->edit_dialog = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW (priv->edit_dialog), _("Edit Event"));
-  gtk_window_set_modal (GTK_WINDOW (priv->edit_dialog), TRUE);
-  gtk_window_set_destroy_with_parent (GTK_WINDOW (priv->edit_dialog), TRUE);
-  gtk_window_set_resizable (GTK_WINDOW (priv->edit_dialog), FALSE);
-
-  content_area = gtk_dialog_get_content_area (GTK_DIALOG (priv->edit_dialog));
-  manager = gcal_window_get_manager (window);
-
-  priv->edit_widget = gcal_event_view_new_with_manager (manager);
-  gtk_container_add (GTK_CONTAINER (content_area),
-                     priv->edit_widget);
-
-  gtk_widget_show_all (content_area);
-
-  gtk_dialog_add_button (GTK_DIALOG (priv->edit_dialog),
-                         GTK_STOCK_CANCEL,
-                         GTK_RESPONSE_REJECT);
-  gtk_dialog_add_button (GTK_DIALOG (priv->edit_dialog),
-                         _("Done"),
-                         GTK_RESPONSE_ACCEPT);
-  action_area = gtk_dialog_get_action_area (GTK_DIALOG (priv->edit_dialog));
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (action_area), GTK_BUTTONBOX_EDGE);
-  gtk_widget_show_all (action_area);
-  /* FIXME: hook delete signal
-  g_signal_connect (priv->add_view,
-                    "will-delete",
-                    G_CALLBACK (gcal_window_will_remove_event),
-                    window);*/
+  priv->edit_dialog = gcal_edit_dialog_new ();
+  gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog),
+                                gcal_window_get_manager (window));
 }
 
 static void
@@ -892,6 +858,12 @@ gcal_window_event_activated (GcalEventWidget *event_widget,
                              gpointer         user_data)
 {
   GcalWindowPrivate *priv;
+  gchar **tokens;
+  gint response;
+
+  GtkWidget *noty;
+  GtkWidget *grid;
+  GtkWidget *undo_button;
 
   g_return_if_fail (GCAL_IS_WINDOW (user_data));
   priv = GCAL_WINDOW (user_data)->priv;
@@ -899,73 +871,58 @@ gcal_window_event_activated (GcalEventWidget *event_widget,
   if (priv->edit_dialog == NULL)
     gcal_window_init_edit_dialog (GCAL_WINDOW (user_data));
 
-  gcal_event_view_load_event (GCAL_EVENT_VIEW (priv->edit_widget),
-                              gcal_event_widget_peek_uuid (event_widget));
+  tokens = g_strsplit (gcal_event_widget_peek_uuid (event_widget), ":", -1);
+  gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (priv->edit_dialog),
+                              tokens[0],
+                              tokens[1]);
+  g_strfreev (tokens);
 
-  gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
+  response = gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
   gtk_widget_hide (priv->edit_dialog);
-}
 
-static void
-gcal_window_will_remove_event (GcalEventView *view,
-                               gchar         *event_uuid,
-                               gpointer      user_data)
-{
-  GcalWindowPrivate *priv;
-  gint activated_page;
-
-  GtkWidget *noty;
-  GtkWidget *grid;
-  GtkWidget *undo_button;
-
-  GtkWidget *event_widget;
-
-  priv = GCAL_WINDOW (user_data)->priv;
-
-  gcal_toolbar_set_mode (GCAL_TOOLBAR (priv->main_toolbar),
-                         GCAL_TOOLBAR_OVERVIEW);
-
-  if ((activated_page = gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook),
-                                               priv->views[priv->active_view]))
-      != -1)
+  switch (response)
     {
-      gtk_notebook_set_current_page (GTK_NOTEBOOK (priv->notebook),
-                                     activated_page);
+      case GTK_RESPONSE_CANCEL:
+        /* do nothing, nor edit, nor nothing */
+        break;
+      case GTK_RESPONSE_ACCEPT:
+        /* save changes if editable */
+        break;
+      case GCAL_RESPONSE_DELETE_EVENT:
+        /* delete the event */
+        noty = gtk_notification_new ();
+        grid = gtk_grid_new ();
+        gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
+        gtk_container_add (GTK_CONTAINER (grid),
+                           gtk_label_new (_("Event deleted")));
+
+        undo_button = gtk_button_new_from_stock (GTK_STOCK_UNDO);
+        gtk_container_add (GTK_CONTAINER (grid), undo_button);
+
+        gtk_container_add (GTK_CONTAINER (noty), grid);
+        gtk_widget_show_all (noty);
+        gcal_window_show_notification (GCAL_WINDOW (user_data), noty);
+
+        g_signal_connect (noty,
+                          "dismissed",
+                          G_CALLBACK (gcal_window_remove_event),
+                          user_data);
+        g_signal_connect (undo_button,
+                          "clicked",
+                          G_CALLBACK (gcal_window_undo_remove_event),
+                          user_data);
+
+        priv->event_to_delete =
+          g_strdup (gcal_event_widget_peek_uuid (event_widget));
+
+        /* hide widget of the event */
+        gtk_widget_hide (GTK_WIDGET (event_widget));
+        break;
+
+      default:
+        /* do nothing */
+        break;
     }
-  else
-    {
-      /* FIXME: there's something that needs to be done here. */
-      g_warning ("Your app has gone crazy");
-    }
-
-  noty = gtk_notification_new ();
-  grid = gtk_grid_new ();
-  gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
-  gtk_container_add (GTK_CONTAINER (grid), gtk_label_new (_("Event deleted")));
-
-  undo_button = gtk_button_new_from_stock (GTK_STOCK_UNDO);
-  gtk_container_add (GTK_CONTAINER (grid), undo_button);
-
-  gtk_container_add (GTK_CONTAINER (noty), grid);
-  gtk_widget_show_all (noty);
-  gcal_window_show_notification (GCAL_WINDOW (user_data), noty);
-
-  g_signal_connect (noty,
-                    "dismissed",
-                    G_CALLBACK (gcal_window_remove_event),
-                    user_data);
-  g_signal_connect (undo_button,
-                    "clicked",
-                    G_CALLBACK (gcal_window_undo_remove_event),
-                    user_data);
-
-  priv->event_to_delete = g_strdup (event_uuid);
-
-  /* hide widget of the event */
-  event_widget =
-    gcal_view_get_by_uuid (GCAL_VIEW (priv->views[priv->active_view]),
-                           priv->event_to_delete);
-  gtk_widget_hide (event_widget);
 }
 
 static void
@@ -1134,13 +1091,11 @@ gcal_window_create_event (GcalEventOverlay    *widget,
                              new_data->start_date,
                              new_data->end_date);
 
-  g_debug ("NOW CREATE THE EVENT");
   if (open_details)
     g_debug ("Opening details window NOW");
 
   /* reset and hide */
   gcal_window_event_overlay_closed (widget, user_data);
-
 }
 
 static void

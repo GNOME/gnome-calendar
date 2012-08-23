@@ -67,6 +67,8 @@ gchar*          gcal_get_source_uid                             (GtkTreeModel   
 
 const gchar*    gcal_get_weekday                                (gint                   i);
 
+GdkPixbuf*      gcal_get_pixbuf_from_color                      (GdkColor              *color);
+
 /* code brought from evolution */
 gsize           e_strftime_fix_am_pm                            (gchar                 *str,
                                                                  gsize                  max,

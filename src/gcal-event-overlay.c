@@ -67,8 +67,6 @@ static void        gcal_event_overlay_close_button_clicked  (GtkWidget         *
 static void        gcal_event_overlay_calendar_selected     (GtkWidget         *menu_item,
                                                              gpointer           user_data);
 
-static GdkPixbuf*  gcal_event_overlay_get_pixbuf_for_color  (GdkColor          *color);
-
 G_DEFINE_TYPE(GcalEventOverlay, gcal_event_overlay, GTK_CLUTTER_TYPE_ACTOR)
 
 static void
@@ -294,7 +292,7 @@ gcal_event_overlay_set_calendars_menu (GcalEventOverlay *widget)
                         G_CALLBACK (gcal_event_overlay_calendar_selected),
                         widget);
 
-      pix = gcal_event_overlay_get_pixbuf_for_color (color);
+      pix = gcal_get_pixbuf_from_color (color);
 
       cal_image = gtk_image_new_from_pixbuf (pix);
       g_object_set (item,
@@ -409,39 +407,12 @@ gcal_event_overlay_calendar_selected (GtkWidget *menu_item,
     gtk_tree_iter_free (priv->active_iter);
   priv->active_iter = gtk_tree_iter_copy (iter);
 
-  pix = gcal_event_overlay_get_pixbuf_for_color (color);
+  pix = gcal_get_pixbuf_from_color (color);
   cal_image = gtk_image_new_from_pixbuf (pix);
   gtk_button_set_image (GTK_BUTTON (priv->calendar_button), cal_image);
 
   gdk_color_free (color);
   g_object_unref (pix);
-}
-
-static GdkPixbuf*
-gcal_event_overlay_get_pixbuf_for_color (GdkColor *color)
-{
-  cairo_surface_t *surface;
-  cairo_t *cr;
-  gint width, height;
-  GdkPixbuf *pix;
-
-  /* TODO: review size here, maybe not hardcoded */
-  width = height = 10;
-  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
-  cr = cairo_create (surface);
-
-  cairo_set_source_rgb (cr,
-                         color->red / 65535.0,
-                         color->green / 65535.0,
-                         color->blue / 65535.0);
-  cairo_rectangle (cr, 0, 0, width, height);
-  cairo_fill (cr);
-  cairo_destroy (cr);
-  pix = gdk_pixbuf_get_from_surface (surface,
-                                     0, 0,
-                                     width, height);
-  cairo_surface_destroy (surface);
-  return pix;
 }
 
 /* Public API */

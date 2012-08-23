@@ -204,6 +204,33 @@ gcal_get_weekday (gint i)
   return _(weekdays[i]);
 }
 
+GdkPixbuf*
+gcal_get_pixbuf_from_color (GdkColor *color)
+{
+  cairo_surface_t *surface;
+  cairo_t *cr;
+  gint width, height;
+  GdkPixbuf *pix;
+
+  /* TODO: review size here, maybe not hardcoded */
+  width = height = 10;
+  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
+  cr = cairo_create (surface);
+
+  cairo_set_source_rgb (cr,
+                         color->red / 65535.0,
+                         color->green / 65535.0,
+                         color->blue / 65535.0);
+  cairo_rectangle (cr, 0, 0, width, height);
+  cairo_fill (cr);
+  cairo_destroy (cr);
+  pix = gdk_pixbuf_get_from_surface (surface,
+                                     0, 0,
+                                     width, height);
+  cairo_surface_destroy (surface);
+  return pix;
+}
+
 /* Function to do a last minute fixup of the AM/PM stuff if the locale
  * and gettext haven't done it right. Most English speaking countries
  * except the USA use the 24 hour clock (UK, Australia etc). However

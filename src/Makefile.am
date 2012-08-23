@@ -41,22 +41,10 @@ gnome_calendar_SOURCES =                                  \
     gcal-week-view.h                                      \
     gcal-event-widget.c                                   \
     gcal-event-widget.h                                   \
-    gcal-event-view.c                                     \
-    gcal-event-view.h                                     \
     gcal-event-overlay.c                                  \
     gcal-event-overlay.h                                  \
-    gcal-editable.c                                       \
-    gcal-editable.h                                       \
-    gcal-editable-entry.c                                 \
-    gcal-editable-entry.h                                 \
-    gcal-editable-text.c                                  \
-    gcal-editable-text.h                                  \
-    gcal-editable-date.c                                  \
-    gcal-editable-date.h                                  \
-    gcal-editable-combo.c                                 \
-    gcal-editable-combo.h                                 \
-    gcal-editable-reminder.c                              \
-    gcal-editable-reminder.h                              \
+    gcal-edit-dialog.c                                    \
+    gcal-edit-dialog.h                                    \
     gcal-manager.c                                        \
     gcal-manager.h                                        \
     gcal-utils.c                                          \
