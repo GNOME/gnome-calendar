@@ -1436,6 +1436,23 @@ gcal_manager_get_event_reminders (GcalManager *manager,
 }
 
 gboolean
+gcal_manager_has_event_reminders (GcalManager *manager,
+                                  const gchar *source_uid,
+                                  const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+  return e_cal_component_has_alarms (event);
+}
+
+gboolean
 gcal_manager_get_event_all_day (GcalManager *manager,
                                 const gchar *source_uid,
                                 const gchar *event_uid)

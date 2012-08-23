@@ -111,6 +111,10 @@ GList*         gcal_manager_get_event_reminders     (GcalManager        *manager
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
 
+gboolean       gcal_manager_has_event_reminders     (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
+
 gboolean       gcal_manager_get_event_all_day       (GcalManager        *manager,
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
