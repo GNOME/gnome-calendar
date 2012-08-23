@@ -473,6 +473,21 @@ gcal_toolbar_view_changed (GtkWidget *button,
 
   priv = GCAL_TOOLBAR (user_data)->priv;
 
+  if (priv->active_view_button == button &&
+      ! gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (button)))
+    {
+      g_signal_handlers_block_by_func (priv->active_view_button,
+                                       gcal_toolbar_view_changed,
+                                       user_data);
+      gtk_toggle_button_set_active (
+          GTK_TOGGLE_BUTTON (priv->active_view_button),
+          TRUE);
+      g_signal_handlers_unblock_by_func (priv->active_view_button,
+                                         gcal_toolbar_view_changed,
+                                         user_data);
+      return;
+    }
+
   if (priv->active_view_button != NULL)
     {
       g_signal_handlers_block_by_func (priv->active_view_button,
