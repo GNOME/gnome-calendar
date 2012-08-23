@@ -650,3 +650,18 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
 
   gtk_widget_show_all (GTK_WIDGET (menu));
 }
+
+gchar*
+gcal_edit_dialog_get_event_uuid (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+
+  priv = dialog->priv;
+
+  if (priv->source_uid == NULL ||
+      priv->event_uid == NULL)
+    {
+      return NULL;
+    }
+  return g_strdup_printf ("%s:%s", priv->source_uid, priv->event_uid);
+}

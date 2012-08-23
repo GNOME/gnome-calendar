@@ -64,6 +64,8 @@ void            gcal_edit_dialog_set_event         (GcalEditDialog *dialog,
 void            gcal_edit_dialog_set_manager       (GcalEditDialog *dialog,
                                                     GcalManager    *manager);
 
+gchar*          gcal_edit_dialog_get_event_uuid    (GcalEditDialog *dialog);
+
 G_END_DECLS
 
 #endif /* __GCAL_EDIT_DIALOG_H__ */
