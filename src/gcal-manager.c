@@ -93,6 +93,9 @@ struct _GcalManagerPrivate
   gchar           *query;
 
   GCancellable    *async_ops;
+
+  /* timezone */
+  icaltimezone    *system_timezone;
 };
 
 /* Signal IDs */
@@ -243,6 +246,8 @@ gcal_manager_init (GcalManager *self)
                                          g_str_equal,
                                          g_free,
                                          gcal_manager_free_unit_data);
+
+  priv->system_timezone = e_cal_util_get_system_timezone ();
 }
 
 static void
@@ -944,6 +949,13 @@ gcal_manager_get_sources_model (GcalManager *manager)
   return manager->priv->sources_model;
 }
 
+icaltimezone*
+gcal_manager_get_system_timezone (GcalManager *manager)
+{
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  return manager->priv->system_timezone;
+}
+
 /**
  * gcal_manager_add_source:
  * @manager: a #GcalManager
@@ -1127,6 +1139,9 @@ gcal_manager_get_event_start_date (GcalManager *manager,
   e_cal_component_get_dtstart (event, &dt);
   dtstart = gcal_dup_icaltime (dt.value);
 
+  if (dtstart->is_date != 1)
+    *dtstart = icaltime_convert_to_zone (*(dt.value), priv->system_timezone);
+
   e_cal_component_free_datetime (&dt);
   return dtstart;
 }
@@ -1180,67 +1195,6 @@ gcal_manager_get_event_organizer (GcalManager *manager,
   values[1] = g_strdup (e_organizer.value);
 
   return values;
-}
-
-gchar*
-gcal_manager_get_event_date (GcalManager *manager,
-                             const gchar *source_uid,
-                             const gchar *event_uid)
-{
-  GcalManagerPrivate *priv;
-  GcalManagerUnit *unit;
-  ECalComponent *event;
-  ECalComponentDateTime dt;
-  icaltimetype *dtstart;
-  icaltimetype *dtend;
-  struct tm tm_date;
-  gchar *date;
-  gchar since [128];
-  gchar until [128];
-  gchar *all_day;
-
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  priv = manager->priv;
-
-  unit = g_hash_table_lookup (priv->clients, source_uid);
-  event = g_hash_table_lookup (unit->events, event_uid);
-
-  e_cal_component_get_dtstart (event, &dt);
-  dtstart = gcal_dup_icaltime (dt.value);
-  e_cal_component_free_datetime (&dt);
-
-  e_cal_component_get_dtend (event, &dt);
-  dtend = gcal_dup_icaltime (dt.value);
-  e_cal_component_free_datetime (&dt);
-
-  if (dtstart->is_date == 1 && dtend->is_date == 1)
-    {
-      all_day = g_strdup (_(" (All day)"));
-
-      tm_date = icaltimetype_to_tm (dtstart);
-      e_utf8_strftime_fix_am_pm (since, 128, "%b, %d", &tm_date);
-      tm_date = icaltimetype_to_tm (dtstart);
-      e_utf8_strftime_fix_am_pm (until, 128, "%b, %d", &tm_date);
-    }
-  else
-    {
-      all_day = NULL;
-
-      tm_date = icaltimetype_to_tm (dtstart);
-      e_utf8_strftime_fix_am_pm (since, 128, "%b, %d, %l:%M %p", &tm_date);
-      tm_date = icaltimetype_to_tm (dtend);
-      e_utf8_strftime_fix_am_pm (until, 128, "%b, %d, %l:%M %p", &tm_date);
-    }
-
-  date = g_strdup_printf ("%s - %s%s",
-                          since,
-                          until,
-                          all_day == NULL ? "": all_day);
-
-  g_free (all_day);
-  g_free (dtstart);
-  g_free (dtend);
-  return date;
 }
 
 const gchar*

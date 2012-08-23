@@ -63,6 +63,8 @@ GcalManager*   gcal_manager_new                     (void);
 
 GtkListStore*  gcal_manager_get_sources_model       (GcalManager        *manager);
 
+icaltimezone*  gcal_manager_get_system_timezone     (GcalManager        *manager);
+
 gchar*         gcal_manager_add_source              (GcalManager        *manager,
                                                      const gchar        *name,
                                                      const gchar        *backend,
@@ -88,10 +90,6 @@ gchar*         gcal_manager_get_event_summary       (GcalManager        *manager
                                                      const gchar        *event_uid);
 
 gchar**        gcal_manager_get_event_organizer     (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
-gchar*         gcal_manager_get_event_date          (GcalManager        *manager,
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
 
