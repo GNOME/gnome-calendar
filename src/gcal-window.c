@@ -412,8 +412,7 @@ gcal_window_finalize (GObject *object)
   if (priv->active_date != NULL)
     g_free (priv->active_date);
 
-  if (G_OBJECT_CLASS (gcal_window_parent_class)->finalize != NULL)
-    G_OBJECT_CLASS (gcal_window_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gcal_window_parent_class)->finalize (object);
 }
 
 static void
@@ -834,6 +833,11 @@ gcal_window_events_added (GcalManager *manager,
               gcal_manager_get_event_all_day (manager,
                                               source_uid,
                                               event_uid));
+          gcal_event_widget_set_has_reminders (
+              GCAL_EVENT_WIDGET (event),
+              gcal_manager_has_event_reminders (manager,
+                                                source_uid,
+                                                event_uid));
           gtk_widget_show (event);
 
           /* FIXME: add event-widget to every instantiated view, not pretty sure
@@ -843,7 +847,7 @@ gcal_window_events_added (GcalManager *manager,
               event);
 
           g_signal_connect (event,
-                            "activated",
+                            "activate",
                             G_CALLBACK (gcal_window_event_activated),
                             user_data);
 
