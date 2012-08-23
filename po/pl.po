@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-21 16:32+0200\n"
-"PO-Revision-Date: 2012-08-21 16:35+0200\n"
+"POT-Creation-Date: 2012-08-23 22:52+0200\n"
+"PO-Revision-Date: 2012-08-23 22:53+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -21,8 +21,7 @@ msgstr ""
 "X-Poedit-Language: Polish\n"
 "X-Poedit-Country: Poland\n"
 
-#: ../src/gcal-application.c:127 ../src/gcal-event-view.c:187
-#: ../data/gnome-calendar.desktop.in.in.h:1
+#: ../src/gcal-application.c:127 ../data/gnome-calendar.desktop.in.in.h:1
 msgid "Calendar"
 msgstr "Kalendarz"
 
@@ -58,137 +57,101 @@ msgstr "Copyright © %Id Autorzy Kalendarza"
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Autorzy Kalendarza"
 
-#: ../src/gcal-editable-date.c:92
+#: ../src/gcal-edit-dialog.c:104
+msgid "Event Details"
+msgstr "Informacje o wydarzeniu"
+
+#. Summary, title
+#: ../src/gcal-edit-dialog.c:122
+msgid "Title"
+msgstr "Tytuł"
+
+#. Start date and time
+#: ../src/gcal-edit-dialog.c:143
+msgid "Starts"
+msgstr "Zaczyna się"
+
+#: ../src/gcal-edit-dialog.c:166
 msgid "All day"
 msgstr "Cały dzień"
 
-#: ../src/gcal-editable-date.c:98
-msgid "to"
-msgstr "do"
+#. End date and time
+#: ../src/gcal-edit-dialog.c:171
+msgid "Ends"
+msgstr "Kończy się"
 
-#: ../src/gcal-editable-date.c:161 ../src/gcal-editable-date.c:197
-#: ../src/gcal-editable-date.c:201 ../src/gcal-manager.c:1186
-msgid " (All day)"
-msgstr " (cały dzień)"
+#. Location, location, location
+#: ../src/gcal-edit-dialog.c:195
+msgid "Location"
+msgstr "Położenie"
 
-#: ../src/gcal-editable-reminder.c:131
-msgid "Add reminder"
-msgstr "Dodaj przypomnienie"
+#. Notes, description
+#: ../src/gcal-edit-dialog.c:207
+msgid "Notes"
+msgstr "Uwagi"
 
-#: ../src/gcal-editable-reminder.c:186 ../src/gcal-editable-reminder.c:357
-#: ../src/gcal-manager.c:1346
-msgid "Email"
-msgstr "E-mail"
+#. done button
+#: ../src/gcal-edit-dialog.c:262 ../src/gcal-toolbar.c:561
+msgid "Done"
+msgstr "Gotowe"
 
-#: ../src/gcal-editable-reminder.c:193
-msgid "minute"
-msgstr "minuta"
-
-#: ../src/gcal-editable-reminder.c:195
-msgid "hour"
-msgstr "godzina"
-
-#: ../src/gcal-editable-reminder.c:197
-msgid "day"
-msgstr "dzień"
-
-#: ../src/gcal-editable-reminder.c:253 ../src/gcal-manager.c:1390
-msgid "before"
-msgstr "przed"
-
-#: ../src/gcal-editable-reminder.c:360 ../src/gcal-manager.c:1344
-msgid "Notification"
-msgstr "Powiadomienie"
-
-#: ../src/gcal-editable-reminder.c:363 ../src/gcal-manager.c:1378
-msgid "minutes"
-msgstr "minuty"
-
-#: ../src/gcal-editable-reminder.c:366 ../src/gcal-manager.c:1372
-msgid "hours"
-msgstr "godziny"
-
-#: ../src/gcal-editable-reminder.c:369 ../src/gcal-manager.c:1360
-msgid "days"
-msgstr "dni"
-
-#: ../src/gcal-editable-reminder.c:372 ../src/gcal-manager.c:1366
-msgid "weeks"
-msgstr "tygodnie"
-
-#: ../src/gcal-event-overlay.c:155 ../src/gcal-event-overlay.c:474
+#: ../src/gcal-event-overlay.c:154 ../src/gcal-event-overlay.c:450
 msgid "New Event"
 msgstr "Nowe wydarzenie"
 
-#: ../src/gcal-event-overlay.c:165
+#: ../src/gcal-event-overlay.c:164
 msgid "Create"
 msgstr "Utwórz"
 
-#: ../src/gcal-event-overlay.c:174
+#: ../src/gcal-event-overlay.c:173
 msgid "More details"
 msgstr "Więcej informacji"
 
-#: ../src/gcal-event-overlay.c:188
+#: ../src/gcal-event-overlay.c:187
 msgid "What (e.g. Alien Invasion)"
 msgstr "Co (np. inwazja kosmitów)"
 
-#: ../src/gcal-event-overlay.c:523
+#: ../src/gcal-event-overlay.c:500
 #, c-format
 msgid "New Event on %s"
 msgstr "Nowe wydarzenie w dniu %s"
 
-#: ../src/gcal-event-overlay.c:540
+#: ../src/gcal-event-overlay.c:517
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Nowe wydarzenie w dniach od %s do %s"
 
-#. FIXME: do something with this to add it on the slist of widget
-#. * something like, turning all the three into on widget
-#.
-#: ../src/gcal-event-view.c:158
-msgid "Yes"
-msgstr "Tak"
+#: ../src/gcal-manager.c:1394
+msgid "Notification"
+msgstr "Powiadomienie"
 
-#: ../src/gcal-event-view.c:159
-msgid "Maybe"
-msgstr "Być może"
+#: ../src/gcal-manager.c:1396
+msgid "Email"
+msgstr "E-mail"
 
-#: ../src/gcal-event-view.c:160
-msgid "No"
-msgstr "Nie"
+#: ../src/gcal-manager.c:1410
+msgid "days"
+msgstr "dni"
 
-#. Building the skel grid
-#: ../src/gcal-event-view.c:171
-msgid "What"
-msgstr "Co"
+#: ../src/gcal-manager.c:1416
+msgid "weeks"
+msgstr "tygodnie"
 
-#: ../src/gcal-event-view.c:176
-msgid "When"
-msgstr "Kiedy"
+#: ../src/gcal-manager.c:1422
+msgid "hours"
+msgstr "godziny"
 
-#: ../src/gcal-event-view.c:182
-msgid "Where"
-msgstr "Gdzie"
+#: ../src/gcal-manager.c:1428
+msgid "minutes"
+msgstr "minuty"
 
-#: ../src/gcal-event-view.c:192
-msgid "Description"
-msgstr "Opis"
-
-#: ../src/gcal-event-view.c:198
-msgid "Reminders"
-msgstr "Przypomnienia"
-
-#: ../src/gcal-event-view.c:205
-msgid "Attending"
-msgstr "Biorę udział"
-
-#: ../src/gcal-event-view.c:210
-msgid "Delete Event"
-msgstr "Usuń wydarzenie"
+#: ../src/gcal-manager.c:1440
+msgid "before"
+msgstr "przed"
 
 #. Here translators should put the widgest letter in their alphabet, this
 #. * taken to make it align with week-view header
-#: ../src/gcal-month-view.c:898 ../src/gcal-week-view.c:1072
+#: ../src/gcal-month-view.c:911 ../src/gcal-week-view.c:1082
 msgid "WWW 99 - WWW 99"
 msgstr "WWW 99 - WWW 99"
 
@@ -198,7 +161,7 @@ msgid "Day"
 msgstr "Dzień"
 
 #. week
-#: ../src/gcal-toolbar.c:321 ../src/gcal-week-view.c:1086
+#: ../src/gcal-toolbar.c:321 ../src/gcal-week-view.c:1096
 msgid "Week"
 msgstr "Tydzień"
 
@@ -223,13 +186,9 @@ msgstr "Wstecz"
 
 #. reset morphing edit_button
 #: ../src/gcal-toolbar.c:446 ../src/gcal-toolbar.c:458
-#: ../src/gcal-toolbar.c:551
+#: ../src/gcal-toolbar.c:566
 msgid "Edit"
 msgstr "Edycja"
-
-#: ../src/gcal-toolbar.c:546 ../src/gcal-window.c:659
-msgid "Done"
-msgstr "Gotowe"
 
 #: ../src/gcal-utils.c:196
 msgid "Sun"
@@ -259,27 +218,23 @@ msgstr "pią"
 msgid "Sat"
 msgstr "sob"
 
-#: ../src/gcal-week-view.c:1269
+#: ../src/gcal-week-view.c:1279
 msgid "AM"
 msgstr "Przed południem"
 
-#: ../src/gcal-week-view.c:1269
+#: ../src/gcal-week-view.c:1279
 msgid "PM"
 msgstr "Po południu"
 
-#: ../src/gcal-week-view.c:1272 ../src/gcal-week-view.c:1341
+#: ../src/gcal-week-view.c:1282 ../src/gcal-week-view.c:1351
 msgid "Midnight"
 msgstr "Północ"
 
-#: ../src/gcal-week-view.c:1274 ../src/gcal-week-view.c:1344
+#: ../src/gcal-week-view.c:1284 ../src/gcal-week-view.c:1354
 msgid "Noon"
 msgstr "Południe"
 
-#: ../src/gcal-window.c:641
-msgid "Edit Event"
-msgstr "Modyfikuj wydarzenie"
-
-#: ../src/gcal-window.c:940
+#: ../src/gcal-window.c:1163
 msgid "Event deleted"
 msgstr "Usunięto wydarzenie"
 
