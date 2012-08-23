@@ -216,9 +216,7 @@ gcal_window_constructed (GObject *object)
   /* internal data init */
   priv->event_to_delete = NULL;
 
-  /* FIXME: here read the initial date from somewehere */
   priv->active_date = g_new (icaltimetype, 1);
-  *(priv->active_date) = icaltime_from_timet (time (NULL), 0);
 
   /* ui init */
   embed = gtk_clutter_embed_new ();
@@ -1123,8 +1121,13 @@ gcal_window_new_with_view (GcalApplication *app,
                         NULL);
   gcal_window_set_sources_view (win);
 
-  /* hooking signals */
   manager = gcal_window_get_manager (win);
+
+  /* FIXME: here read the initial date from somewehere */
+  *(win->priv->active_date) =
+    icaltime_current_time_with_zone (gcal_manager_get_system_timezone (manager));
+
+  /* hooking signals */
   g_signal_connect (manager,
                     "events-added",
                     G_CALLBACK (gcal_window_events_added),
