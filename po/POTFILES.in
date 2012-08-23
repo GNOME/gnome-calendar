@@ -1,10 +1,8 @@
 # List of source files containing translatable strings.
 
 src/gcal-application.c
-src/gcal-editable-date.c
-src/gcal-editable-reminder.c
+src/gcal-edit-dialog.c
 src/gcal-event-overlay.c
-src/gcal-event-view.c
 src/gcal-manager.c
 src/gcal-month-view.c
 src/gcal-toolbar.c
