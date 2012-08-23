@@ -1160,6 +1160,32 @@ gcal_manager_get_event_start_date (GcalManager *manager,
   return dtstart;
 }
 
+icaltimetype*
+gcal_manager_get_event_end_date (GcalManager *manager,
+                                 const gchar *source_uid,
+                                 const gchar *event_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  ECalComponentDateTime dt;
+  icaltimetype *dtend;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+  e_cal_component_get_dtend (event, &dt);
+  dtend = gcal_dup_icaltime (dt.value);
+
+  if (dtend->is_date != 1)
+    *dtend = icaltime_convert_to_zone (*(dt.value), priv->system_timezone);
+
+  e_cal_component_free_datetime (&dt);
+  return dtend;
+}
+
 gchar*
 gcal_manager_get_event_summary (GcalManager *manager,
                                 const gchar *source_uid,

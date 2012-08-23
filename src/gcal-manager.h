@@ -88,6 +88,10 @@ icaltimetype*  gcal_manager_get_event_start_date    (GcalManager        *manager
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
 
+icaltimetype*  gcal_manager_get_event_end_date      (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid);
+
 gchar*         gcal_manager_get_event_summary       (GcalManager        *manager,
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);

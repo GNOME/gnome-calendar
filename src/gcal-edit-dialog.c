@@ -20,6 +20,7 @@
 #include "gcal-edit-dialog.h"
 #include "gcal-utils.h"
 
+#include <libecal/libecal.h>
 #include <glib/gi18n.h>
 
 struct _GcalEditDialogPrivate
@@ -327,6 +328,59 @@ gcal_edit_dialog_calendar_selected (GtkWidget *menu_item,
 }
 
 static void
+gcal_edit_dialog_set_calendar_selected (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+
+  GtkListStore *sources_model;
+  gboolean valid;
+  GtkTreeIter iter;
+
+  priv = dialog->priv;
+
+  /* Loading calendars */
+  sources_model = gcal_manager_get_sources_model (priv->manager);
+  valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (sources_model),
+                                         &iter);
+  while (valid)
+    {
+      /* Walk through the list, reading each row */
+      gchar *uid;
+      GdkColor *color;
+      GtkWidget *cal_image;
+      GdkPixbuf *pix;
+
+      gtk_tree_model_get (GTK_TREE_MODEL (sources_model), &iter,
+                          0, &uid,
+                          3, &color,
+                          -1);
+
+      if (g_strcmp0 (priv->source_uid, uid) == 0)
+        {
+          if (priv->active_iter != NULL)
+            gtk_tree_iter_free (priv->active_iter);
+          priv->active_iter = gtk_tree_iter_copy (&iter);
+
+          pix = gcal_get_pixbuf_from_color (color);
+          cal_image = gtk_image_new_from_pixbuf (pix);
+          gtk_button_set_image (GTK_BUTTON (priv->calendar_button), cal_image);
+
+          gdk_color_free (color);
+          g_free (uid);
+          g_object_unref (pix);
+
+          return;
+        }
+
+      gdk_color_free (color);
+      g_free (uid);
+
+      valid = gtk_tree_model_iter_next (GTK_TREE_MODEL (sources_model),
+                                        &iter);
+    }
+}
+
+static void
 gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
                                gboolean        writable)
 {
@@ -357,9 +411,29 @@ gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
 
   /* FIXME: add clear for the rest of the fields when I define loading code for
    * those below */
+  /* summary */
   gtk_entry_set_text (GTK_ENTRY (priv->summary_entry), "");
+
+  /* calendar button */
+  if (priv->active_iter != NULL)
+    {
+      gtk_tree_iter_free (priv->active_iter);
+      priv->active_iter = NULL;
+    }
+  gtk_button_set_image (GTK_BUTTON (priv->calendar_button),
+                        gtk_image_new_from_icon_name ("x-office-calendar-symbolic",
+                                                      GTK_ICON_SIZE_MENU));
+
+  /* date and time */
+  gtk_entry_set_text (GTK_ENTRY (priv->start_date_entry), "");
+  gtk_entry_set_text (GTK_ENTRY (priv->start_time_entry), "");
+  gtk_entry_set_text (GTK_ENTRY (priv->end_date_entry), "");
+  gtk_entry_set_text (GTK_ENTRY (priv->end_time_entry), "");
+
+  /* location */
   gtk_entry_set_text (GTK_ENTRY (priv->location_entry), "");
 
+  /* notes */
   gtk_text_buffer_set_text (
       gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)),
       "",
@@ -396,6 +470,10 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   const gchar *const_text;
   gboolean all_day;
 
+  icaltimetype *date;
+  gchar buffer [64];
+  struct tm tm_date;
+
   priv = dialog->priv;
   all_day = FALSE;
 
@@ -418,8 +496,19 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
                       text != NULL ? text : "");
   g_free (text);
 
-  /* start date */
+  /* calendar button */
+  gcal_edit_dialog_set_calendar_selected (dialog);
 
+  /* start date */
+  date = gcal_manager_get_event_start_date (priv->manager,
+                                            priv->source_uid,
+                                            priv->event_uid);
+  tm_date = icaltimetype_to_tm (date);
+  e_utf8_strftime_fix_am_pm (buffer, 64, "%x", &tm_date);
+  gtk_entry_set_text (GTK_ENTRY (priv->start_date_entry),
+                      buffer);
+
+  g_free (date);
   /* all_day  */
   all_day = gcal_manager_get_event_all_day (priv->manager,
                                             priv->source_uid,
@@ -430,15 +519,38 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   /* start time */
   if (all_day)
     {
-      /* FIXME: set time to 00:00 */
+      gtk_entry_set_text (GTK_ENTRY (priv->start_time_entry),
+                          "00:00");
+    }
+  else
+    {
+      e_utf8_strftime_fix_am_pm (buffer, 64, "%R", &tm_date);
+      gtk_entry_set_text (GTK_ENTRY (priv->start_time_entry),
+                          buffer);
     }
 
   /* end date */
+  date = gcal_manager_get_event_end_date (priv->manager,
+                                          priv->source_uid,
+                                          priv->event_uid);
+  tm_date = icaltimetype_to_tm (date);
+  e_utf8_strftime_fix_am_pm (buffer, 64, "%x", &tm_date);
+  gtk_entry_set_text (GTK_ENTRY (priv->end_date_entry),
+                      buffer);
+
+  g_free (date);
 
   /* end time */
   if (all_day)
     {
-      /* FIXME: set time to 00:00 */
+      gtk_entry_set_text (GTK_ENTRY (priv->end_time_entry),
+                          "00:00");
+    }
+  else
+    {
+      e_utf8_strftime_fix_am_pm (buffer, 64, "%R", &tm_date);
+      gtk_entry_set_text (GTK_ENTRY (priv->end_time_entry),
+                          buffer);
     }
 
   /* location */
@@ -484,8 +596,6 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
   priv->manager = manager;
 
   /* Loading calendars */
-
-
   sources_model = gcal_manager_get_sources_model (priv->manager);
   valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL (sources_model),
                                          &iter);
