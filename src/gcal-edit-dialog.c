@@ -30,6 +30,7 @@ struct _GcalEditDialogPrivate
   GcalManager *manager;
   GtkTreeIter *active_iter;
 
+  GtkWidget   *delete_button;
   GtkWidget   *summary_entry;
   GtkWidget   *calendar_button;
   GtkWidget   *start_date_entry;
@@ -111,7 +112,7 @@ gcal_edit_dialog_constructed (GObject* object)
   /* edit area, grid */
   grid = gtk_grid_new ();
   g_object_set (grid,
-                "row-spacing", 12,
+                "row-spacing", 24,
                 "column-spacing", 12,
                 "border-width", 6,
                 NULL);
@@ -146,6 +147,7 @@ gcal_edit_dialog_constructed (GObject* object)
   g_object_set (child,
                 "orientation", GTK_ORIENTATION_HORIZONTAL,
                 "column-spacing", 12,
+                "column-homogeneous", FALSE,
                 NULL);
   priv->start_date_entry = gtk_entry_new ();
   gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->start_date_entry),
@@ -154,6 +156,7 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_container_add (GTK_CONTAINER (child), priv->start_date_entry);
 
   priv->start_time_entry = gtk_entry_new ();
+  gtk_entry_set_width_chars (GTK_ENTRY (priv->start_time_entry), 8);
   gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->start_time_entry),
                                      GTK_ENTRY_ICON_SECONDARY,
                                      "preferences-system-time-symbolic");
@@ -180,6 +183,7 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_container_add (GTK_CONTAINER (child), priv->end_date_entry);
 
   priv->end_time_entry = gtk_entry_new ();
+  gtk_entry_set_width_chars (GTK_ENTRY (priv->end_time_entry), 8);
   gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->end_time_entry),
                                      GTK_ENTRY_ICON_SECONDARY,
                                      "preferences-system-time-symbolic");
@@ -233,22 +237,22 @@ gcal_edit_dialog_constructed (GObject* object)
                                       button,
                                       TRUE);
 
-  button = gtk_button_new ();
+  priv->delete_button = gtk_button_new ();
   gtk_container_add (
-      GTK_CONTAINER (button),
+      GTK_CONTAINER (priv->delete_button),
       gtk_image_new_from_icon_name ("user-trash-symbolic",
                                     GTK_ICON_SIZE_MENU));
-  gtk_widget_set_can_default (button, TRUE);
-  g_object_set_data (G_OBJECT (button),
+  gtk_widget_set_can_default (priv->delete_button, TRUE);
+  g_object_set_data (G_OBJECT (priv->delete_button),
                      "response",
                      GINT_TO_POINTER (GCAL_RESPONSE_DELETE_EVENT));
-  g_signal_connect (button,
+  g_signal_connect (priv->delete_button,
                     "clicked",
                     G_CALLBACK (gcal_edit_dialog_action_button_clicked),
                     object);
-  gtk_box_pack_end (GTK_BOX (action_area), button, TRUE, TRUE, 0);
+  gtk_box_pack_end (GTK_BOX (action_area), priv->delete_button, TRUE, TRUE, 0);
   gtk_button_box_set_child_non_homogeneous (GTK_BUTTON_BOX (action_area),
-                                            button,
+                                            priv->delete_button,
                                             TRUE);
 
   /* done button */
@@ -337,6 +341,9 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
   gtk_widget_set_sensitive (priv->end_time_entry, writable);
   gtk_widget_set_sensitive (priv->location_entry, writable);
   gtk_widget_set_sensitive (priv->notes_text, writable);
+
+  /* add delete_button here */
+  gtk_widget_set_sensitive (priv->delete_button, writable);
 }
 
 static void
