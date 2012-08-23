@@ -179,7 +179,8 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
   g_type_class_add_private((gpointer)klass, sizeof(GcalEventWidgetPrivate));
 }
 
-static void gcal_event_widget_init(GcalEventWidget *self)
+static void
+gcal_event_widget_init(GcalEventWidget *self)
 {
   self->priv = G_TYPE_INSTANCE_GET_PRIVATE(self,
                                            GCAL_TYPE_EVENT_WIDGET,

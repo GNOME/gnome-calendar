@@ -162,19 +162,19 @@ gcal_event_overlay_constructed (GObject* object)
                    0, 1,
                    2, 1);
   create_button = gtk_button_new_with_label (_("Create"));
-  g_object_set_data (G_OBJECT (create_button), "open-details", GUINT_TO_POINTER (0));
+  g_object_set_data (G_OBJECT (create_button), "open-details", GUINT_TO_POINTER (1));
   gtk_style_context_add_class (
       gtk_widget_get_style_context (create_button),
       "suggested-action");
   gtk_grid_attach (GTK_GRID (main_grid),
                    create_button,
-                   0, 2,
+                   1, 2,
                    1, 1);
   details_button = gtk_button_new_with_label (_("More details"));
-  g_object_set_data (G_OBJECT (details_button), "open-details", GUINT_TO_POINTER (1));
+  g_object_set_data (G_OBJECT (details_button), "open-details", GUINT_TO_POINTER (2));
   gtk_grid_attach (GTK_GRID (main_grid),
                    details_button,
-                   1, 2,
+                   0, 2,
                    1, 1);
 
   g_object_set (row_grid,
@@ -182,7 +182,7 @@ gcal_event_overlay_constructed (GObject* object)
                 "column-spacing", 6,
                 NULL);
   priv->what_entry = gtk_entry_new ();
-  g_object_set_data (G_OBJECT (priv->what_entry), "open-details", GUINT_TO_POINTER (0));
+  g_object_set_data (G_OBJECT (priv->what_entry), "open-details", GUINT_TO_POINTER (1));
   gtk_entry_set_placeholder_text (GTK_ENTRY (priv->what_entry),
                                   _("What (e.g. Alien Invasion)"));
   g_object_set (priv->what_entry,
@@ -368,7 +368,7 @@ gcal_event_overlay_create_button_clicked (GtkWidget *widget,
   g_signal_emit (GCAL_EVENT_OVERLAY (user_data),
                  signals[CREATED],
                  0,
-                 data, open_details == 1);
+                 data, open_details == 2);
 
   g_free (data->calendar_uid);
   g_free (data->summary);
