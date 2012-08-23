@@ -54,6 +54,7 @@ struct _GcalManagerClass
   void (* events_added)    (GcalManager *manager, const GList *events);
   void (* events_modified) (GcalManager *manager, const GList *events);
   void (* events_removed)  (GcalManager *manager, const GList *uids);
+  void (* event_created)   (GcalManager *manager, const gchar *source_uid, const gchar event_uid);
 
 };
 

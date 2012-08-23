@@ -19,6 +19,7 @@
 
 #include "gcal-manager.h"
 #include "gcal-utils.h"
+#include "gcal-marshalers.h"
 
 #include <glib/gi18n.h>
 
@@ -104,6 +105,7 @@ enum
   EVENTS_ADDED,
   EVENTS_MODIFIED,
   EVENTS_REMOVED,
+  EVENT_CREATED,
   LAST_SIGNAL
 };
 
@@ -201,6 +203,7 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                            G_TYPE_NONE,
                                            1,
                                            G_TYPE_POINTER);
+
   signals[EVENTS_REMOVED] = g_signal_new ("events-removed",
                                           GCAL_TYPE_MANAGER,
                                           G_SIGNAL_RUN_FIRST,
@@ -211,6 +214,18 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                           G_TYPE_NONE,
                                           1,
                                           G_TYPE_POINTER);
+
+  signals[EVENT_CREATED] = g_signal_new ("event-created",
+                                         GCAL_TYPE_MANAGER,
+                                         G_SIGNAL_RUN_FIRST,
+                                         G_STRUCT_OFFSET (GcalManagerClass,
+                                                          event_created),
+                                         NULL, NULL,
+                                         _gcal_marshal_VOID__POINTER_POINTER,
+                                         G_TYPE_NONE,
+                                         2,
+                                         G_TYPE_POINTER,
+                                         G_TYPE_POINTER);
 
   g_type_class_add_private ((gpointer) klass, sizeof(GcalManagerPrivate));
 }
@@ -916,7 +931,16 @@ gcal_manager_on_event_created (GObject      *source_object,
   error = NULL;
   if (e_cal_client_create_object_finish (client, result, &new_uid, &error))
     {
-      g_debug ("Telling event: %s was created", new_uid);
+      ESource *source;
+      const gchar *uid;
+
+      source = e_client_get_source (E_CLIENT (client));
+      uid = e_source_get_uid (source);
+
+      g_signal_emit (GCAL_MANAGER (user_data),
+                     signals[EVENT_CREATED],
+                     0,
+                     uid, new_uid);
 
       g_free (new_uid);
     }
@@ -1543,7 +1567,6 @@ gcal_manager_create_event (GcalManager        *manager,
   dt.value = dt_start;
   dt.tzid = NULL;
   e_cal_component_set_dtstart (event, &dt);
-  g_debug ("dt_start :%s", icaltime_as_ical_string (*dt_start));
 
   if (final_date != NULL)
     {
