@@ -1382,6 +1382,7 @@ gcal_manager_get_event_reminders (GcalManager *manager,
 
           type = NULL;
           time = NULL;
+	  number = 0;
           alarm = e_cal_component_get_alarm (event, l->data);
 
           e_cal_component_alarm_get_action (alarm, &action);

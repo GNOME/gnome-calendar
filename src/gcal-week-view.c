@@ -707,7 +707,7 @@ gcal_week_view_scroll_event (GtkWidget      *widget,
     }
   else
     {
-      GtkWidget *range;
+      GtkWidget *range = NULL;
 
       if (event->direction == GDK_SCROLL_UP || event->direction == GDK_SCROLL_DOWN)
         range = priv->vscrollbar;
