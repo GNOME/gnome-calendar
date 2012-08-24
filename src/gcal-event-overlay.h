@@ -21,7 +21,7 @@
 #define __GCAL_EVENT_OVERLAY_H__
 
 #include <clutter-gtk/clutter-gtk.h>
-#include <icaltime.h>
+#include <libical/icaltime.h>
 
 G_BEGIN_DECLS
 

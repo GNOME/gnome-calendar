@@ -23,7 +23,7 @@
 #include <gtk/gtk.h>
 #include <glib-object.h>
 
-#include <icaltime.h>
+#include <libical/icaltime.h>
 
 G_BEGIN_DECLS
 
