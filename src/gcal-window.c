@@ -40,7 +40,9 @@
 
 struct _GcalWindowPrivate
 {
-  ClutterActor        *main_toolbar;
+  ClutterActor        *toolbar_actor;
+  ClutterActor        *searchbar_actor;
+
   ClutterActor        *contents_actor;
   ClutterActor        *notebook_actor;
   ClutterActor        *sources_actor;
@@ -86,6 +88,10 @@ static void           gcal_window_get_property           (GObject             *o
                                                           GValue              *value,
                                                           GParamSpec          *pspec);
 
+static void           gcal_window_stage_notify_cb        (ClutterActor        *actor,
+                                                          GParamSpec          *pspec,
+                                                          gpointer             user_data);
+
 static GcalManager*   gcal_window_get_manager            (GcalWindow          *window);
 
 static void           gcal_window_set_active_view        (GcalWindow          *window,
@@ -95,15 +101,15 @@ static void           gcal_window_set_sources_view       (GcalWindow          *w
 
 static void           gcal_window_init_edit_dialog       (GcalWindow          *window);
 
-static void           gcal_window_view_changed           (GcalToolbar         *main_toolbar,
+static void           gcal_window_view_changed           (GcalToolbar         *toolbar_actor,
                                                           GcalWindowViewType   view_type,
                                                           gpointer             user_data);
 
-static void           gcal_window_sources_shown          (GcalToolbar         *main_toolbar,
+static void           gcal_window_sources_shown          (GcalToolbar         *toolbar_actor,
                                                           gboolean             visible,
                                                           gpointer             user_data);
 
-static void           gcal_window_add_event              (GcalToolbar         *main_toolbar,
+static void           gcal_window_add_event              (GcalToolbar         *toolbar_actor,
                                                           gpointer             user_data);
 
 static void           gcal_window_back_last_view         (GtkWidget           *widget,
@@ -177,23 +183,25 @@ gcal_window_class_init(GcalWindowClass *klass)
   object_class->set_property = gcal_window_set_property;
   object_class->get_property = gcal_window_get_property;
 
-  g_object_class_install_property (object_class,
-                                   PROP_ACTIVE_VIEW,
-                                   g_param_spec_enum ("active-view",
-                                                      "Active View",
-                                                      "The active view, eg: month, week, etc.",
-                                                      GCAL_WINDOW_VIEW_TYPE,
-                                                      GCAL_WINDOW_VIEW_MONTH,
-                                                      G_PARAM_READWRITE));
+  g_object_class_install_property (
+      object_class,
+      PROP_ACTIVE_VIEW,
+      g_param_spec_enum ("active-view",
+                         "Active View",
+                         "The active view, eg: month, week, etc.",
+                         GCAL_WINDOW_VIEW_TYPE,
+                         GCAL_WINDOW_VIEW_MONTH,
+                         G_PARAM_READWRITE));
 
-  g_object_class_install_property (object_class,
-                                   PROP_ACTIVE_DATE,
-                                   g_param_spec_boxed ("active-date",
-                                                       "Date",
-                                                       "The active/selected date",
-                                                       ICAL_TIME_TYPE,
-                                                       G_PARAM_CONSTRUCT |
-                                                       G_PARAM_READWRITE));
+  g_object_class_install_property (
+      object_class,
+      PROP_ACTIVE_DATE,
+      g_param_spec_boxed ("active-date",
+                          "Date",
+                          "The active/selected date",
+                          ICAL_TIME_TYPE,
+                          G_PARAM_CONSTRUCT |
+                          G_PARAM_READWRITE));
 
   g_type_class_add_private((gpointer)klass, sizeof(GcalWindowPrivate));
 }
@@ -220,12 +228,8 @@ gcal_window_constructed (GObject *object)
 
   GtkWidget *embed;
   ClutterActor *stage;
-  ClutterActor *base;
-  ClutterLayoutManager *base_layout_manager;
-  ClutterActor *body_actor;
-  ClutterLayoutManager *body_layout_manager;
-  ClutterLayoutManager *contents_layout_manager;
   GtkWidget *holder;
+  GtkWidget *entry;
 
   GtkStyleContext *context;
 
@@ -244,57 +248,80 @@ gcal_window_constructed (GObject *object)
   gtk_container_add (GTK_CONTAINER (object), embed);
   stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (embed));
 
-  /* base */
-  base_layout_manager = clutter_box_layout_new ();
-  clutter_box_layout_set_orientation (CLUTTER_BOX_LAYOUT (base_layout_manager),
-                                      CLUTTER_ORIENTATION_VERTICAL);
-  base  = clutter_actor_new ();
-  clutter_actor_set_layout_manager (base, base_layout_manager);
-  clutter_actor_add_constraint (base,
-                                clutter_bind_constraint_new (stage,
-                                                             CLUTTER_BIND_SIZE,
-                                                             0));
-  clutter_actor_add_child (stage, base);
+  /* toolbar_actor */
+  priv->toolbar_actor = gcal_toolbar_new ();
+  clutter_actor_add_child (stage, priv->toolbar_actor);
+  clutter_actor_set_position (priv->toolbar_actor, 0, 0);
+  clutter_actor_add_constraint_with_name (
+      priv->toolbar_actor,
+      "width-bind",
+      clutter_bind_constraint_new (stage,
+                                   CLUTTER_BIND_WIDTH,
+                                   0.0));
 
-  /* body_actor */
-  body_layout_manager = clutter_box_layout_new ();
-  clutter_box_layout_set_orientation (CLUTTER_BOX_LAYOUT (body_layout_manager),
-                                      CLUTTER_ORIENTATION_VERTICAL);
+  /* searchbar_actor */
+  holder = gtk_grid_new ();
+  entry = gtk_search_entry_new ();
+  gtk_widget_set_hexpand (entry, TRUE);
+  gtk_widget_set_vexpand (entry, TRUE);
+  gtk_widget_set_halign (entry, GTK_ALIGN_CENTER);
+  gtk_widget_set_valign (entry, GTK_ALIGN_CENTER);
+  gtk_widget_set_size_request (entry, 360, -1);
+  gtk_container_set_border_width (GTK_CONTAINER (holder), 12);
+  gtk_container_add (GTK_CONTAINER (holder), entry);
+  gtk_widget_show_all (holder);
 
-  body_actor = clutter_actor_new ();
-  clutter_actor_set_layout_manager (body_actor, body_layout_manager);
-  clutter_box_layout_pack (CLUTTER_BOX_LAYOUT (base_layout_manager),
-                           body_actor,
-                           TRUE,
-                           TRUE,
-                           TRUE,
-                           CLUTTER_BOX_ALIGNMENT_CENTER,
-                           CLUTTER_BOX_ALIGNMENT_CENTER);
-
-  /* main_toolbar */
-  priv->main_toolbar = gcal_toolbar_new ();
-  clutter_box_layout_pack (CLUTTER_BOX_LAYOUT (body_layout_manager),
-                           priv->main_toolbar,
-                           FALSE,
-                           TRUE,
-                           FALSE,
-                           CLUTTER_BOX_ALIGNMENT_START,
-                           CLUTTER_BOX_ALIGNMENT_START);
-
-  /* contents */
-  contents_layout_manager =
-    clutter_bin_layout_new (CLUTTER_BIN_ALIGNMENT_CENTER,
-                            CLUTTER_BIN_ALIGNMENT_CENTER);
+  priv->searchbar_actor = gtk_clutter_actor_new_with_contents (holder);
+  clutter_actor_add_child (stage, priv->searchbar_actor);
+  clutter_actor_set_x (priv->searchbar_actor, 0);
+  clutter_actor_add_constraint_with_name (
+      priv->searchbar_actor,
+      "width-bind",
+      clutter_bind_constraint_new (stage,
+                                   CLUTTER_BIND_WIDTH,
+                                   0.0));
+  clutter_actor_add_constraint_with_name (
+      priv->searchbar_actor,
+      "height-bind",
+      clutter_bind_constraint_new (priv->toolbar_actor,
+                                   CLUTTER_BIND_HEIGHT,
+                                   0.0));
+  clutter_actor_add_constraint_with_name (
+      priv->searchbar_actor,
+      "bottom-snap",
+      clutter_snap_constraint_new (priv->toolbar_actor,
+                                   CLUTTER_SNAP_EDGE_BOTTOM,
+                                   CLUTTER_SNAP_EDGE_TOP,
+                                   0.0));
+  /* contents_actor */
   priv->contents_actor = clutter_actor_new ();
-  clutter_actor_set_layout_manager (priv->contents_actor,
-                                    contents_layout_manager);
-  clutter_box_layout_pack (CLUTTER_BOX_LAYOUT (body_layout_manager),
-                           priv->contents_actor,
-                           TRUE,
-                           TRUE,
-                           TRUE,
-                           CLUTTER_BOX_ALIGNMENT_CENTER,
-                           CLUTTER_BOX_ALIGNMENT_CENTER);
+  clutter_actor_set_layout_manager (
+      priv->contents_actor,
+      clutter_bin_layout_new (CLUTTER_BIN_ALIGNMENT_CENTER,
+                              CLUTTER_BIN_ALIGNMENT_CENTER));
+  clutter_actor_set_x (priv->contents_actor, 0);
+  clutter_actor_add_constraint_with_name (
+      priv->contents_actor,
+      "width-bind",
+      clutter_bind_constraint_new (stage,
+                                   CLUTTER_BIND_WIDTH,
+                                   0.0));
+  clutter_actor_add_constraint_with_name (
+      priv->contents_actor,
+      "y-bind",
+      clutter_bind_constraint_new (
+          stage,
+          CLUTTER_BIND_Y,
+          0.0));
+  clutter_actor_add_constraint_with_name (
+      priv->contents_actor,
+      "bottom-snap",
+      clutter_snap_constraint_new (stage,
+                                   CLUTTER_SNAP_EDGE_BOTTOM,
+                                   CLUTTER_SNAP_EDGE_BOTTOM,
+                                   0.0));
+  clutter_actor_add_child (stage, priv->contents_actor);
+
 
   /* notebook widget for holding views */
   holder = gtk_frame_new (NULL);
@@ -385,20 +412,25 @@ gcal_window_constructed (GObject *object)
   clutter_actor_hide (priv->new_event_actor);
 
   /* signals connection/handling */
-  g_signal_connect (priv->main_toolbar,
+  g_signal_connect (stage,
+                    "notify::allocation",
+                    G_CALLBACK (gcal_window_stage_notify_cb),
+                    object);
+
+  g_signal_connect (priv->toolbar_actor,
                     "view-changed",
                     G_CALLBACK (gcal_window_view_changed),
                     object);
-  g_signal_connect (priv->main_toolbar,
+  g_signal_connect (priv->toolbar_actor,
                     "sources-shown",
                     G_CALLBACK (gcal_window_sources_shown),
                     object);
-  g_signal_connect (priv->main_toolbar,
+  g_signal_connect (priv->toolbar_actor,
                     "add-event",
                     G_CALLBACK (gcal_window_add_event),
                     object);
 
-  g_signal_connect (priv->main_toolbar,
+  g_signal_connect (priv->toolbar_actor,
                     "back",
                     G_CALLBACK (gcal_window_back_last_view),
                     object);
@@ -476,6 +508,24 @@ gcal_window_get_property (GObject    *object,
     }
 
   G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+}
+
+static void
+gcal_window_stage_notify_cb (ClutterActor        *actor,
+                             GParamSpec          *pspec,
+                             gpointer             user_data)
+{
+  GcalWindowPrivate *priv;
+  ClutterConstraint *constraint;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  /* Updating constraints */
+  constraint = clutter_actor_get_constraint (priv->contents_actor,
+                                             "y-bind");
+  clutter_bind_constraint_set_offset (
+      CLUTTER_BIND_CONSTRAINT (constraint),
+      clutter_actor_get_height (priv->toolbar_actor));
 }
 
 static GcalManager*
@@ -658,9 +708,9 @@ gcal_window_init_edit_dialog (GcalWindow *window)
 }
 
 static void
-gcal_window_view_changed (GcalToolbar         *main_toolbar,
-                           GcalWindowViewType  view_type,
-                           gpointer            user_data)
+gcal_window_view_changed (GcalToolbar         *toolbar_actor,
+                          GcalWindowViewType   view_type,
+                          gpointer             user_data)
 {
   GcalWindowPrivate *priv;
 
@@ -671,9 +721,9 @@ gcal_window_view_changed (GcalToolbar         *main_toolbar,
 }
 
 static void
-gcal_window_sources_shown (GcalToolbar *main_toolbar,
-                            gboolean    visible,
-                            gpointer    user_data)
+gcal_window_sources_shown (GcalToolbar *toolbar_actor,
+                           gboolean     visible,
+                           gpointer     user_data)
 {
   GcalWindowPrivate *priv;
   priv  = GCAL_WINDOW (user_data)->priv;
@@ -699,7 +749,7 @@ gcal_window_sources_shown (GcalToolbar *main_toolbar,
 }
 
 static void
-gcal_window_add_event (GcalToolbar *main_toolbar,
+gcal_window_add_event (GcalToolbar *toolbar_actor,
                        gpointer     user_data)
 {
   GcalWindowPrivate *priv;
@@ -725,7 +775,7 @@ gcal_window_back_last_view (GtkWidget   *widget,
 
   priv = GCAL_WINDOW (user_data)->priv;
 
-  gcal_toolbar_set_mode (GCAL_TOOLBAR (priv->main_toolbar),
+  gcal_toolbar_set_mode (GCAL_TOOLBAR (priv->toolbar_actor),
                          GCAL_TOOLBAR_OVERVIEW);
 
   if ((activated_page = gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook),
@@ -1230,7 +1280,7 @@ gcal_window_new_with_view (GcalApplication *app,
                     G_CALLBACK (gcal_window_event_created),
                     win);
 
-  gcal_toolbar_set_active_view (GCAL_TOOLBAR (win->priv->main_toolbar),
+  gcal_toolbar_set_active_view (GCAL_TOOLBAR (win->priv->toolbar_actor),
                                 view_type);
   return GTK_WIDGET (win);
 }
