@@ -31,9 +31,13 @@ struct _GcalToolbarPrivate
   GtkToolItem         *right_item;
 
   /* overview widgets */
-  GtkWidget           *sources_button;
-  GtkWidget           *views_box;
   GtkWidget           *add_button;
+
+  GtkWidget           *views_box;
+
+  GtkWidget           *right_box;
+  GtkWidget           *sources_button;
+  GtkWidget           *search_button;
 
   /* events widgets */
   GtkWidget           *back_button;
@@ -48,6 +52,7 @@ enum
   VIEW_CHANGED = 1,
   SOURCES_SHOWN,
   ADD_EVENT,
+  SEARCH_EVENTS,
 
   BACK,
   EDIT_EVENT,
@@ -58,38 +63,45 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-static void gcal_toolbar_constructed       (GObject     *object);
+static void gcal_toolbar_constructed            (GObject      *object);
 
-static void gcal_toolbar_finalize          (GObject     *object);
+static void gcal_toolbar_finalize               (GObject      *object);
 
-static void gcal_toolbar_clear             (GcalToolbar *toolbar);
+static void gcal_toolbar_clear                  (GcalToolbar  *toolbar);
 
-static void gcal_toolbar_set_overview_mode (GcalToolbar *toolbar);
+static void gcal_toolbar_set_overview_mode      (GcalToolbar  *toolbar);
 
-static void gcal_toolbar_set_event_mode    (GcalToolbar *toolbar);
+static void gcal_toolbar_set_event_mode         (GcalToolbar  *toolbar);
 
-static void gcal_toolbar_view_changed      (GtkWidget   *button,
-                                            gpointer     user_data);
+static void gcal_toolbar_view_changed           (GtkWidget    *button,
+                                                 gpointer      user_data);
 
-static void gcal_toolbar_sources_shown     (GtkWidget   *button,
-                                            gpointer     user_data);
+static void gcal_toolbar_sources_shown          (GtkWidget    *button,
+                                                 gpointer      user_data);
 
-static void gcal_toolbar_add_event         (GtkWidget   *button,
-                                            gpointer     user_data);
+static void gcal_toolbar_add_event              (GtkWidget    *button,
+                                                 gpointer      user_data);
 
-static void gcal_toolbar_back_clicked      (GtkWidget   *button,
-                                            gpointer     user_data);
+static void gcal_toolbar_search_events          (GtkWidget    *button,
+                                                 gpointer      user_data);
 
-static void gcal_toolbar_event_edited      (GtkWidget   *button,
-                                            gpointer     user_data);
+static void gcal_toolbar_back_clicked           (GtkWidget    *button,
+                                                 gpointer      user_data);
+
+static void gcal_toolbar_event_edited           (GtkWidget    *button,
+                                                 gpointer      user_data);
 
 G_DEFINE_TYPE (GcalToolbar, gcal_toolbar, GTK_CLUTTER_TYPE_ACTOR);
 
 static void
 gcal_toolbar_class_init (GcalToolbarClass *klass)
 {
-  G_OBJECT_CLASS (klass)->constructed = gcal_toolbar_constructed;
-  G_OBJECT_CLASS (klass)->finalize = gcal_toolbar_finalize;
+  GObjectClass *object_class;
+
+  object_class = G_OBJECT_CLASS (klass);
+
+  object_class->constructed = gcal_toolbar_constructed;
+  object_class->finalize = gcal_toolbar_finalize;
 
   signals[VIEW_CHANGED] = g_signal_new ("view-changed",
                                         GCAL_TYPE_TOOLBAR,
@@ -122,6 +134,16 @@ gcal_toolbar_class_init (GcalToolbarClass *klass)
                                      g_cclosure_marshal_VOID__VOID,
                                      G_TYPE_NONE,
                                      0);
+
+  signals[SEARCH_EVENTS] = g_signal_new ("search-events",
+                                         GCAL_TYPE_TOOLBAR,
+                                         G_SIGNAL_RUN_LAST,
+                                         G_STRUCT_OFFSET (GcalToolbarClass,
+                                                          search_events),
+                                         NULL, NULL,
+                                         g_cclosure_marshal_VOID__VOID,
+                                         G_TYPE_NONE,
+                                         0);
 
   signals[BACK] = g_signal_new ("back",
                                 GCAL_TYPE_TOOLBAR,
@@ -224,12 +246,12 @@ gcal_toolbar_finalize (GObject *object)
   g_return_if_fail (GCAL_IS_TOOLBAR (object));
   priv = GCAL_TOOLBAR (object)->priv;
 
-  if (priv->sources_button)
-    g_clear_object (&(priv->sources_button));
-  if (priv->views_box)
-    g_clear_object (&(priv->views_box));
-  if (priv->add_button)
+  if (priv->add_button != NULL)
     g_clear_object (&(priv->add_button));
+  if (priv->views_box != NULL)
+    g_clear_object (&(priv->views_box));
+  if (priv->right_box != NULL)
+    g_clear_object (&(priv->right_box));
 
   if (priv->back_button)
     g_clear_object (&(priv->back_button));
@@ -268,27 +290,23 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
   g_return_if_fail (GCAL_IS_TOOLBAR (toolbar));
   priv = toolbar->priv;
 
-  /* sources */
-  if (priv->sources_button == NULL)
+  /* add */
+  if (priv->add_button == NULL)
     {
-      priv->sources_button = gtk_toggle_button_new ();
-      g_object_ref_sink (priv->sources_button);
-      gtk_container_add (
-          GTK_CONTAINER (priv->sources_button),
-          gtk_image_new_from_icon_name ("x-office-calendar-symbolic",
-                                        GTK_ICON_SIZE_MENU));
+      priv->add_button = gtk_button_new_with_label (_("New Event"));
+      g_object_ref_sink (priv->add_button);
 
-      context = gtk_widget_get_style_context (priv->sources_button);
-      gtk_style_context_add_class (context, "raised");
+      gtk_widget_set_size_request (priv->add_button, 100, -1);
+      context = gtk_widget_get_style_context (priv->add_button);
+      gtk_style_context_add_class (context, "suggested-action");
 
-      g_signal_connect (priv->sources_button,
+      g_signal_connect (priv->add_button,
                         "clicked",
-                        G_CALLBACK (gcal_toolbar_sources_shown),
+                        G_CALLBACK (gcal_toolbar_add_event),
                         toolbar);
-
     }
-  gtk_container_add (GTK_CONTAINER (priv->left_item), priv->sources_button);
-  gtk_widget_show_all (priv->sources_button);
+  gtk_container_add (GTK_CONTAINER (priv->left_item), priv->add_button);
+  gtk_widget_show_all (priv->add_button);
 
   /* views_box */
   if (priv->views_box == NULL)
@@ -377,7 +395,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
 
       gtk_container_add (GTK_CONTAINER (priv->views_box), button);
 
-        g_object_set_data (G_OBJECT (button),
+      g_object_set_data (G_OBJECT (button),
                         "view-type",
                         GUINT_TO_POINTER (GCAL_WINDOW_VIEW_LIST));
       g_signal_connect (button,
@@ -388,26 +406,52 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
   gtk_container_add (GTK_CONTAINER (priv->central_item), priv->views_box);
   gtk_widget_show_all (priv->views_box);
 
-  /* add */
-  if (priv->add_button == NULL)
+  /* right_box */
+  if (priv->right_box == NULL)
     {
-      priv->add_button = gtk_button_new ();
-      g_object_ref_sink (priv->add_button);
+      priv->right_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+      g_object_ref_sink (priv->right_box);
+      gtk_widget_set_hexpand (priv->right_box, TRUE);
+      gtk_box_set_spacing (GTK_BOX (priv->right_box), 6);
+
+      /* sources_button */
+      priv->sources_button = gtk_toggle_button_new ();
       gtk_container_add (
-          GTK_CONTAINER (priv->add_button),
-          gtk_image_new_from_icon_name ("list-add-symbolic",
+          GTK_CONTAINER (priv->sources_button),
+          gtk_image_new_from_icon_name ("x-office-calendar-symbolic",
                                         GTK_ICON_SIZE_MENU));
 
-      context = gtk_widget_get_style_context (priv->add_button);
+      context = gtk_widget_get_style_context (priv->sources_button);
       gtk_style_context_add_class (context, "raised");
 
-      g_signal_connect (priv->add_button,
+      gtk_container_add (GTK_CONTAINER (priv->right_box),
+                         priv->sources_button);
+
+      g_signal_connect (priv->sources_button,
                         "clicked",
-                        G_CALLBACK (gcal_toolbar_add_event),
+                        G_CALLBACK (gcal_toolbar_sources_shown),
+                        toolbar);
+
+      /* search_button */
+      priv->search_button = gtk_button_new ();
+      gtk_container_add (
+          GTK_CONTAINER (priv->search_button),
+          gtk_image_new_from_icon_name ("folder-saved-search-symbolic",
+                                        GTK_ICON_SIZE_MENU));
+
+      context = gtk_widget_get_style_context (priv->search_button);
+      gtk_style_context_add_class (context, "raised");
+
+      gtk_container_add (GTK_CONTAINER (priv->right_box),
+                         priv->search_button);
+
+      g_signal_connect (priv->search_button,
+                        "clicked",
+                        G_CALLBACK (gcal_toolbar_search_events),
                         toolbar);
     }
-  gtk_container_add (GTK_CONTAINER (priv->right_item), priv->add_button);
-  gtk_widget_show_all (priv->add_button);
+  gtk_container_add (GTK_CONTAINER (priv->right_item), priv->right_box);
+  gtk_widget_show_all (priv->sources_button);
 }
 
 static void
@@ -532,6 +576,16 @@ gcal_toolbar_add_event (GtkWidget *button,
 
   toolbar = GCAL_TOOLBAR (user_data);
   g_signal_emit (toolbar, signals[ADD_EVENT], 0);
+}
+
+static void
+gcal_toolbar_search_events (GtkWidget *button,
+                            gpointer   user_data)
+{
+  GcalToolbar *toolbar;
+
+  toolbar = GCAL_TOOLBAR (user_data);
+  g_signal_emit (toolbar, signals[SEARCH_EVENTS], 0);
 }
 
 static void

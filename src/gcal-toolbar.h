@@ -45,6 +45,7 @@ struct _GcalToolbarClass
   void (*view_changed)  (GcalToolbar *toolbar, guint view_type);
   void (*sources_shown) (GcalToolbar *toolbar, gboolean visible);
   void (*add_event)     (GcalToolbar *toolbar);
+  void (*search_events) (GcalToolbar *toolbar);
 
   void (*back)          (GcalToolbar *toolbar);
   void (*edit_event)    (GcalToolbar *toolbar);
