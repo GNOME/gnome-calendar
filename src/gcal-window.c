@@ -676,7 +676,7 @@ gcal_window_sources_shown (GcalToolbar *main_toolbar,
                             gpointer    user_data)
 {
   GcalWindowPrivate *priv;
-  priv  = ((GcalWindow*) user_data)->priv;
+  priv  = GCAL_WINDOW (user_data)->priv;
 
   if (visible)
     {
@@ -694,7 +694,7 @@ gcal_window_sources_shown (GcalToolbar *main_toolbar,
       g_signal_connect (priv->sources_actor,
                         "transition-stopped::opacity",
                         G_CALLBACK (gcal_window_show_hide_actor_cb),
-                        NULL);
+                        user_data);
     }
 }
 
