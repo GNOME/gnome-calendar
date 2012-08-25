@@ -112,6 +112,12 @@ static void           gcal_window_sources_shown          (GcalToolbar         *t
 static void           gcal_window_add_event              (GcalToolbar         *toolbar_actor,
                                                           gpointer             user_data);
 
+static void           gcal_window_bring_searchbar        (GcalToolbar         *toolbar_actor,
+                                                          gpointer             user_data);
+
+static void           gcal_window_hide_searchbar         (GtkWidget           *button,
+                                                          gpointer             user_data);
+
 static void           gcal_window_back_last_view         (GtkWidget           *widget,
                                                           gpointer             user_data);
 
@@ -229,6 +235,7 @@ gcal_window_constructed (GObject *object)
   GtkWidget *embed;
   ClutterActor *stage;
   GtkWidget *holder;
+  GtkWidget *button;
   GtkWidget *entry;
 
   GtkStyleContext *context;
@@ -260,14 +267,29 @@ gcal_window_constructed (GObject *object)
                                    0.0));
 
   /* searchbar_actor */
+  /* FIXME: demo code */
   holder = gtk_grid_new ();
+  button = gtk_button_new_with_label (_("Done"));
+  gtk_widget_set_size_request (button, 100, -1);
+  gtk_container_set_border_width (GTK_CONTAINER (button), 3);
+  gtk_widget_set_hexpand (button, FALSE);
+  gtk_widget_set_vexpand (button, TRUE);
+  gtk_widget_set_halign (button, GTK_ALIGN_START);
+  gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (button),
+      "suggested-action");
+
   entry = gtk_search_entry_new ();
+  gtk_entry_set_placeholder_text (GTK_ENTRY (entry), _("Search ..."));
   gtk_widget_set_hexpand (entry, TRUE);
   gtk_widget_set_vexpand (entry, TRUE);
   gtk_widget_set_halign (entry, GTK_ALIGN_CENTER);
   gtk_widget_set_valign (entry, GTK_ALIGN_CENTER);
-  gtk_widget_set_size_request (entry, 360, -1);
+  gtk_widget_set_size_request (entry, 450, -1);
+
   gtk_container_set_border_width (GTK_CONTAINER (holder), 12);
+  gtk_container_add (GTK_CONTAINER (holder), button);
   gtk_container_add (GTK_CONTAINER (holder), entry);
   gtk_widget_show_all (holder);
 
@@ -416,6 +438,10 @@ gcal_window_constructed (GObject *object)
                     "notify::allocation",
                     G_CALLBACK (gcal_window_stage_notify_cb),
                     object);
+  g_signal_connect (button,
+                    "clicked",
+                    G_CALLBACK (gcal_window_hide_searchbar),
+                    object);
 
   g_signal_connect (priv->toolbar_actor,
                     "view-changed",
@@ -428,6 +454,10 @@ gcal_window_constructed (GObject *object)
   g_signal_connect (priv->toolbar_actor,
                     "add-event",
                     G_CALLBACK (gcal_window_add_event),
+                    object);
+  g_signal_connect (priv->toolbar_actor,
+                    "search-events",
+                    G_CALLBACK (gcal_window_bring_searchbar),
                     object);
 
   g_signal_connect (priv->toolbar_actor,
@@ -752,14 +782,42 @@ static void
 gcal_window_add_event (GcalToolbar *toolbar_actor,
                        gpointer     user_data)
 {
+  g_debug ("Create new-event here");
+  /* FIXME: bring new-event-overlay up front on the actual unit */
+}
+
+static void
+gcal_window_bring_searchbar (GcalToolbar *toolbar_actor,
+                             gpointer     user_data)
+{
   GcalWindowPrivate *priv;
 
   priv = GCAL_WINDOW (user_data)->priv;
-  if (priv->edit_dialog == NULL)
-      gcal_window_init_edit_dialog (GCAL_WINDOW (user_data));
 
-  /* FIXME: load
-  gcal_event_view_load_new (GCAL_EVENT_VIEW (priv->add_view));*/
+  clutter_actor_save_easing_state (priv->toolbar_actor);
+  clutter_actor_set_y (priv->toolbar_actor,
+                       clutter_actor_get_height (priv->toolbar_actor));
+  clutter_actor_set_easing_duration (priv->toolbar_actor, 500);
+  clutter_actor_restore_easing_state (priv->toolbar_actor);
+}
+
+static void
+gcal_window_hide_searchbar (GtkWidget *button,
+                            gpointer   user_data)
+{
+  GcalWindowPrivate *priv;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  clutter_actor_save_easing_state (priv->toolbar_actor);
+  clutter_actor_set_y (priv->toolbar_actor,
+                       0);
+  clutter_actor_set_easing_duration (priv->toolbar_actor, 500);
+  clutter_actor_restore_easing_state (priv->toolbar_actor);
+  /*clutter_actor_save_easing_state (priv->searchbar_actor);*/
+  /*clutter_actor_set_y (priv->searchbar_actor, 0);*/
+  /*clutter_actor_set_easing_duration (priv->searchbar_actor, 500);*/
+  /*clutter_actor_restore_easing_state (priv->searchbar_actor);*/
 }
 
 /*
