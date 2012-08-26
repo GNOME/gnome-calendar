@@ -608,16 +608,30 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
 
   while (valid)
     {
-      /* Walk through the list, reading each row */
+      gchar *uid;
       gchar *name;
+      gboolean active;
       GdkColor *color;
       GtkWidget *cal_image;
       GdkPixbuf *pix;
 
       gtk_tree_model_get (GTK_TREE_MODEL (sources_model), &iter,
+                          0, &uid,
                           1, &name,
+                          2, &active,
                           3, &color,
                           -1);
+
+      if (! active ||
+          gcal_manager_get_source_readonly (priv->manager, uid))
+        {
+          valid = gtk_tree_model_iter_next (GTK_TREE_MODEL (sources_model),
+                                            &iter);
+          gdk_color_free (color);
+          g_free (name);
+          g_free (uid);
+          continue;
+        }
 
       item = gtk_image_menu_item_new ();
       g_object_set_data_full (G_OBJECT (item),
@@ -641,8 +655,9 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
       gtk_container_add (GTK_CONTAINER (menu), item);
 
       g_object_unref (pix);
-      g_free (name);
       gdk_color_free (color);
+      g_free (name);
+      g_free (uid);
 
       valid = gtk_tree_model_iter_next (GTK_TREE_MODEL (sources_model),
                                         &iter);
