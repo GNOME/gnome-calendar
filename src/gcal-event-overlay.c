@@ -273,14 +273,23 @@ gcal_event_overlay_set_calendars_menu (GcalEventOverlay *widget)
     {
       /* Walk through the list, reading each row */
       gchar *name;
+      gboolean active;
       GdkColor *color;
       GtkWidget *cal_image;
       GdkPixbuf *pix;
 
       gtk_tree_model_get (GTK_TREE_MODEL (priv->sources_model), &iter,
                           1, &name,
+                          2, &active,
                           3, &color,
                           -1);
+
+      if (! active)
+        {
+          valid = gtk_tree_model_iter_next (GTK_TREE_MODEL (priv->sources_model),
+                                            &iter);
+          continue;
+        }
 
       item = gtk_image_menu_item_new ();
       g_object_set_data_full (G_OBJECT (item),
