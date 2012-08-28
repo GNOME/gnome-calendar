@@ -15,8 +15,6 @@ AM_CFLAGS =                                               \
 bin_PROGRAMS = gnome-calendar
 
 BUILT_SOURCES =                                           \
-    gcal-marshalers.c                                     \
-    gcal-marshalers.h                                     \
     gcal-enum-types.c                                     \
     gcal-enum-types.h
 
@@ -63,56 +61,19 @@ gnome_calendar_LDADD =                                    \
 ENUM_TYPES =                                              \
     gcal-utils.h
 
-if MAINTAINER_MODE
-
-CLEANFILES = \
-	$(BUILT_SOURCES) \
-	stamp-gcal-marshalers.h \
-	xgen-ac \
-	xgen-ah \
-	xgen-etbc \
-	xgen-etbh \
-	xgen-tmc \
-	xgen-tmh \
-	$(NULL)
-
 gcal-enum-types.h: gcal-enum-types.h.template $(ENUM_TYPES) $(GLIB_MKENUMS)
 	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template gcal-enum-types.h.template $(ENUM_TYPES)) > $@
 
 gcal-enum-types.c: gcal-enum-types.c.template $(ENUM_TYPES) $(GLIB_MKENUMS)
 	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template gcal-enum-types.c.template $(ENUM_TYPES)) > $@
 
-gcal-marshalers.h: stamp-gcal-marshalers.h
-	@true
-
-stamp-gcal-marshalers.h: gcal-marshalers.list Makefile
-	$(AM_V_GEN) ( \
-		cd $(srcdir) \
-		&& ( glib-genmarshal \
-			--prefix=_gcal_marshal \
-			--header gcal-marshalers.list ) >> xgen-tmh \
-		&& ( cmp -s xgen-tmh gcal-marshalers.h || cp xgen-tmh gcal-marshalers.h ) \
-		&& rm -f xgen-tmh \
-		&& echo timestamp > $(@F) \
-	)
-
-gcal-marshalers.c: gcal-marshalers.list gcal-marshalers.h Makefile
-	$(AM_V_GEN) ( \
-		cd $(srcdir) \
-		&& echo "#include \"gcal-marshalers.h\"" > xgen-tmc \
-		&& ( glib-genmarshal \
-			--prefix=_gcal_marshal \
-			--body gcal-marshalers.list ) >> xgen-tmc \
-		&& cp xgen-tmc gcal-marshalers.c \
-		&& rm -f xgen-tmc \
-	)
-
-endif
+CLEANFILES = \
+	$(BUILT_SOURCES) \
+	$(NULL)
 
 EXTRA_DIST =                                              \
     gcal-enum-types.h.template                            \
-    gcal-enum-types.c.template                            \
-    gcal-marshalers.list
+    gcal-enum-types.c.template
 
 dist-hook:
 	cd $(distdir); rm -f $(BUILT_SOURCES)
