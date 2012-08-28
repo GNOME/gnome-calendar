@@ -495,7 +495,7 @@ gcal_event_widget_draw (GtkWidget *widget,
 
       icon_theme = gtk_icon_theme_get_default ();
       icon_info = gtk_icon_theme_lookup_icon (icon_theme,
-                                              "preferences-system-time-symbolic",
+                                              "alarm-symbolic",
                                               height - (padding.top + padding.bottom),
                                               0);
       pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
