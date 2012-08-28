@@ -19,7 +19,6 @@
 
 #include "gcal-manager.h"
 #include "gcal-utils.h"
-#include "gcal-marshalers.h"
 
 #include <glib/gi18n.h>
 
@@ -220,8 +219,7 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                          G_SIGNAL_RUN_FIRST,
                                          G_STRUCT_OFFSET (GcalManagerClass,
                                                           event_created),
-                                         NULL, NULL,
-                                         _gcal_marshal_VOID__POINTER_POINTER,
+                                         NULL, NULL, NULL,
                                          G_TYPE_NONE,
                                          2,
                                          G_TYPE_POINTER,

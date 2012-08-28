@@ -20,7 +20,6 @@
 
 #include "gcal-view.h"
 #include "gcal-utils.h"
-#include "gcal-marshalers.h"
 
 #include <glib.h>
 
@@ -45,8 +44,7 @@ gcal_view_base_init (gpointer g_iface)
                     G_SIGNAL_RUN_LAST,
                     G_STRUCT_OFFSET (GcalViewIface,
                                      create_event),
-                    NULL, NULL,
-                    _gcal_marshal_VOID__POINTER_POINTER_DOUBLE_DOUBLE,
+                    NULL, NULL, NULL,
                     G_TYPE_NONE,
                     4,
                     G_TYPE_POINTER,

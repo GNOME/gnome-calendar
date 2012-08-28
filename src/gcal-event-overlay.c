@@ -20,7 +20,6 @@
 #include "gcal-event-overlay.h"
 #include "gcal-arrow-container.h"
 #include "gcal-utils.h"
-#include "gcal-marshalers.h"
 
 #include <libecal/libecal.h>
 #include <glib/gi18n.h>
@@ -92,8 +91,7 @@ gcal_event_overlay_class_init (GcalEventOverlayClass *klass)
                                    G_SIGNAL_RUN_LAST,
                                    G_STRUCT_OFFSET (GcalEventOverlayClass,
                                                     created),
-                                   NULL, NULL,
-                                   _gcal_marshal_VOID__POINTER_BOOLEAN,
+                                   NULL, NULL, NULL,
                                    G_TYPE_NONE,
                                    2,
                                    G_TYPE_POINTER,
