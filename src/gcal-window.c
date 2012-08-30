@@ -728,6 +728,8 @@ gcal_window_init_edit_dialog (GcalWindow *window)
   priv = window->priv;
 
   priv->edit_dialog = gcal_edit_dialog_new ();
+  gtk_window_set_transient_for (GTK_WINDOW (priv->edit_dialog),
+                                GTK_WINDOW (window));
   gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog),
                                 gcal_window_get_manager (window));
 
