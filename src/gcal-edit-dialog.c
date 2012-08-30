@@ -102,13 +102,12 @@ gcal_edit_dialog_constructed (GObject* object)
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->constructed (object);
 
   gtk_window_set_title (GTK_WINDOW (object), _("Event Details"));
-  gtk_window_set_modal (GTK_WINDOW (object), TRUE);
-  gtk_window_set_destroy_with_parent (GTK_WINDOW (object), TRUE);
-  gtk_window_set_resizable (GTK_WINDOW (object), FALSE);
 
   gtk_container_set_border_width (GTK_CONTAINER (object), 6);
 
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (object));
+
+  gtk_widget_push_composite_child ();
 
   /* edit area, grid */
   grid = gtk_grid_new ();
@@ -274,6 +273,8 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_box_pack_end (GTK_BOX (action_area), button, TRUE, TRUE, 0);
 
   gtk_widget_show_all (action_area);
+
+  gtk_widget_pop_composite_child ();
 
   /* signals handlers */
 }
@@ -456,7 +457,14 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
 GtkWidget*
 gcal_edit_dialog_new (void)
 {
-  return g_object_new (GCAL_TYPE_EDIT_DIALOG, NULL);
+  GtkWidget *dialog;
+
+  dialog = g_object_new (GCAL_TYPE_EDIT_DIALOG, NULL);
+  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
+  gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
+  gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+
+  return dialog;
 }
 
 void
