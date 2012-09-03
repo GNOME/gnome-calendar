@@ -4,12 +4,14 @@
 # pomóc w jego rozwijaniu i pielęgnowaniu, napisz do nas:
 # gnomepl@aviary.pl
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Piotr Drąg <piotrdrag@gmail.com>, 2012.
+# Aviary.pl <gnomepl@aviary.pl>, 2012.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-08-23 22:52+0200\n"
-"PO-Revision-Date: 2012-08-23 22:53+0200\n"
+"POT-Creation-Date: 2012-09-03 22:51+0200\n"
+"PO-Revision-Date: 2012-09-03 22:52+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -62,40 +64,42 @@ msgid "Event Details"
 msgstr "Informacje o wydarzeniu"
 
 #. Summary, title
-#: ../src/gcal-edit-dialog.c:122
+#: ../src/gcal-edit-dialog.c:121
 msgid "Title"
 msgstr "Tytuł"
 
 #. Start date and time
-#: ../src/gcal-edit-dialog.c:143
+#: ../src/gcal-edit-dialog.c:142
 msgid "Starts"
 msgstr "Zaczyna się"
 
-#: ../src/gcal-edit-dialog.c:166
+#: ../src/gcal-edit-dialog.c:165
 msgid "All day"
 msgstr "Cały dzień"
 
 #. End date and time
-#: ../src/gcal-edit-dialog.c:171
+#: ../src/gcal-edit-dialog.c:170
 msgid "Ends"
 msgstr "Kończy się"
 
 #. Location, location, location
-#: ../src/gcal-edit-dialog.c:195
+#: ../src/gcal-edit-dialog.c:194
 msgid "Location"
 msgstr "Położenie"
 
 #. Notes, description
-#: ../src/gcal-edit-dialog.c:207
+#: ../src/gcal-edit-dialog.c:206
 msgid "Notes"
 msgstr "Uwagi"
 
 #. done button
-#: ../src/gcal-edit-dialog.c:262 ../src/gcal-toolbar.c:561
+#: ../src/gcal-edit-dialog.c:261 ../src/gcal-toolbar.c:615
+#: ../src/gcal-window.c:272
 msgid "Done"
 msgstr "Gotowe"
 
-#: ../src/gcal-event-overlay.c:154 ../src/gcal-event-overlay.c:450
+#: ../src/gcal-event-overlay.c:154 ../src/gcal-event-overlay.c:459
+#: ../src/gcal-toolbar.c:296
 msgid "New Event"
 msgstr "Nowe wydarzenie"
 
@@ -111,41 +115,41 @@ msgstr "Więcej informacji"
 msgid "What (e.g. Alien Invasion)"
 msgstr "Co (np. inwazja kosmitów)"
 
-#: ../src/gcal-event-overlay.c:500
+#: ../src/gcal-event-overlay.c:509
 #, c-format
 msgid "New Event on %s"
 msgstr "Nowe wydarzenie w dniu %s"
 
-#: ../src/gcal-event-overlay.c:517
+#: ../src/gcal-event-overlay.c:526
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Nowe wydarzenie w dniach od %s do %s"
 
-#: ../src/gcal-manager.c:1394
+#: ../src/gcal-manager.c:1395
 msgid "Notification"
 msgstr "Powiadomienie"
 
-#: ../src/gcal-manager.c:1396
+#: ../src/gcal-manager.c:1397
 msgid "Email"
 msgstr "E-mail"
 
-#: ../src/gcal-manager.c:1410
+#: ../src/gcal-manager.c:1411
 msgid "days"
 msgstr "dni"
 
-#: ../src/gcal-manager.c:1416
+#: ../src/gcal-manager.c:1417
 msgid "weeks"
 msgstr "tygodnie"
 
-#: ../src/gcal-manager.c:1422
+#: ../src/gcal-manager.c:1423
 msgid "hours"
 msgstr "godziny"
 
-#: ../src/gcal-manager.c:1428
+#: ../src/gcal-manager.c:1429
 msgid "minutes"
 msgstr "minuty"
 
-#: ../src/gcal-manager.c:1440
+#: ../src/gcal-manager.c:1441
 msgid "before"
 msgstr "przed"
 
@@ -156,37 +160,37 @@ msgid "WWW 99 - WWW 99"
 msgstr "WWW 99 - WWW 99"
 
 #. day
-#: ../src/gcal-toolbar.c:304
+#: ../src/gcal-toolbar.c:322
 msgid "Day"
 msgstr "Dzień"
 
 #. week
-#: ../src/gcal-toolbar.c:321 ../src/gcal-week-view.c:1096
+#: ../src/gcal-toolbar.c:339 ../src/gcal-week-view.c:1096
 msgid "Week"
 msgstr "Tydzień"
 
 #. month
-#: ../src/gcal-toolbar.c:338
+#: ../src/gcal-toolbar.c:356
 msgid "Month"
 msgstr "Miesiąc"
 
 #. year
-#: ../src/gcal-toolbar.c:355
+#: ../src/gcal-toolbar.c:373
 msgid "Year"
 msgstr "Rok"
 
 #. list
-#: ../src/gcal-toolbar.c:372
+#: ../src/gcal-toolbar.c:390
 msgid "List"
 msgstr "Lista"
 
-#: ../src/gcal-toolbar.c:425
+#: ../src/gcal-toolbar.c:469
 msgid "Back"
 msgstr "Wstecz"
 
 #. reset morphing edit_button
-#: ../src/gcal-toolbar.c:446 ../src/gcal-toolbar.c:458
-#: ../src/gcal-toolbar.c:566
+#: ../src/gcal-toolbar.c:490 ../src/gcal-toolbar.c:502
+#: ../src/gcal-toolbar.c:620
 msgid "Edit"
 msgstr "Edycja"
 
@@ -234,7 +238,11 @@ msgstr "Północ"
 msgid "Noon"
 msgstr "Południe"
 
-#: ../src/gcal-window.c:1163
+#: ../src/gcal-window.c:284
+msgid "Search ..."
+msgstr "Wyszukiwanie..."
+
+#: ../src/gcal-window.c:1273
 msgid "Event deleted"
 msgstr "Usunięto wydarzenie"
 
