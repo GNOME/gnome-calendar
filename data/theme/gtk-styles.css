@@ -112,6 +112,6 @@ GtkOverlay > GtkButton {
    border: darker(@borders) 1px solid;
    color: @theme_fg_color;
    background-color: @theme_bg_color;
-   -GcalArrowContainer-arrow-size: 12px;
+   -GcalArrowBin-arrow-size: 12px;
    -GcalArrowContainer-shadow-span: 3px;
 }

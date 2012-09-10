@@ -18,7 +18,7 @@
  */
 
 #include "gcal-event-overlay.h"
-#include "gcal-arrow-container.h"
+#include "gcal-arrow-bin.h"
 #include "gcal-utils.h"
 
 #include <libecal/libecal.h>
@@ -135,7 +135,7 @@ gcal_event_overlay_constructed (GObject* object)
 
   overlay = gtk_overlay_new ();
 
-  priv->container = gcal_arrow_container_new ();
+  priv->container = gcal_arrow_bin_new ();
   gtk_container_set_border_width (GTK_CONTAINER (priv->container), 14);
   gtk_style_context_add_class (
       gtk_widget_get_style_context (priv->container),
