@@ -279,6 +279,9 @@ gcal_window_constructed (GObject *object)
   gtk_style_context_add_class (
       gtk_widget_get_style_context (button),
       "suggested-action");
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (button),
+      "toolbar-button");
 
   entry = gtk_search_entry_new ();
   gtk_entry_set_placeholder_text (GTK_ENTRY (entry), _("Search ..."));

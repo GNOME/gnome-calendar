@@ -28,7 +28,7 @@ GtkClutterOffscreen.contents .frame {
   padding: 12px;
 }
 
-.main-toolbar .button {
+.main-toolbar .button, .toolbar-button {
   padding: 2px;
 }
 

@@ -360,12 +360,7 @@ gcal_week_view_realize (GtkWidget *widget)
   attributes.y = allocation.y;
   attributes.event_mask = gtk_widget_get_events (widget);
   attributes.event_mask |= (GDK_BUTTON_PRESS_MASK |
-                            GDK_BUTTON_RELEASE_MASK |
-                            GDK_BUTTON1_MOTION_MASK |
-                            GDK_POINTER_MOTION_HINT_MASK |
-                            GDK_POINTER_MOTION_MASK |
-                            GDK_ENTER_NOTIFY_MASK |
-                            GDK_LEAVE_NOTIFY_MASK);
+                            GDK_BUTTON_RELEASE_MASK);
   attributes_mask = GDK_WA_X | GDK_WA_Y;
 
   priv->event_window = gdk_window_new (parent_window,
@@ -630,14 +625,16 @@ gcal_week_view_draw (GtkWidget *widget,
   gtk_style_context_get_padding (context, state, &padding);
   gtk_widget_get_allocation (widget, &alloc);
 
-  /* setting the same line width for both windows */
-  cairo_set_line_width (cr, 0.3);
-
-  gcal_week_view_draw_header (GCAL_WEEK_VIEW (widget),
-                              cr,
-                              &alloc,
-                              &padding);
-
+  if (gtk_cairo_should_draw_window (cr, gtk_widget_get_window (widget)))
+    {
+      cairo_save (cr);
+      cairo_set_line_width (cr, 0.3);
+      gcal_week_view_draw_header (GCAL_WEEK_VIEW (widget),
+                                  cr,
+                                  &alloc,
+                                  &padding);
+      cairo_restore (cr);
+    }
 
   if (priv->view_window != NULL &&
       gtk_cairo_should_draw_window (cr, priv->view_window))
@@ -657,6 +654,7 @@ gcal_week_view_draw (GtkWidget *widget,
       gtk_cairo_should_draw_window (cr, priv->grid_window))
     {
       cairo_save (cr);
+      cairo_set_line_width (cr, 0.3);
       gcal_week_view_draw_grid_window (GCAL_WEEK_VIEW (widget), cr);
       cairo_restore (cr);
     }
