@@ -27,13 +27,21 @@ struct _GcalEditDialogPrivate
 {
   gchar       *source_uid;
   gchar       *event_uid;
+  gboolean     writable;
 
   GcalManager *manager;
   GtkTreeIter *active_iter;
 
+  GtkWidget   *edit_grid;
+  GtkWidget   *readonly_box;
+
   GtkWidget   *delete_button;
+
   GtkWidget   *summary_entry;
+
   GtkWidget   *calendar_button;
+  GtkWidget   *calendars_menu;
+
   GtkWidget   *start_date_entry;
   GtkWidget   *end_date_entry;
   GtkWidget   *all_day_check;
@@ -56,6 +64,9 @@ static void        gcal_edit_dialog_set_writable          (GcalEditDialog    *di
 static void        gcal_edit_dialog_clear_data            (GcalEditDialog    *dialog);
 
 static void        gcal_edit_dialog_action_button_clicked (GtkWidget         *widget,
+                                                           gpointer           user_data);
+
+static void        gcal_edit_dialog_button_toggled        (GtkToggleButton   *button,
                                                            gpointer           user_data);
 
 G_DEFINE_TYPE(GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
@@ -84,6 +95,11 @@ gcal_edit_dialog_init (GcalEditDialog *self)
 
   priv->source_uid = NULL;
   priv->event_uid = NULL;
+  priv->writable = TRUE;
+
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (GTK_WIDGET (self)),
+      "edit-dialog");
 }
 
 static void
@@ -91,7 +107,6 @@ gcal_edit_dialog_constructed (GObject* object)
 {
   GcalEditDialogPrivate *priv;
   GtkWidget *content_area;
-  GtkWidget *grid;
   GtkWidget *child;
   GtkWidget *action_area;
   GtkWidget *button;
@@ -103,45 +118,49 @@ gcal_edit_dialog_constructed (GObject* object)
 
   gtk_window_set_title (GTK_WINDOW (object), _("Event Details"));
 
-  gtk_container_set_border_width (GTK_CONTAINER (object), 6);
-
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (object));
 
   gtk_widget_push_composite_child ();
 
   /* edit area, grid */
-  grid = gtk_grid_new ();
-  g_object_set (grid,
+  priv->edit_grid = gtk_grid_new ();
+  g_object_set (priv->edit_grid,
                 "row-spacing", 24,
                 "column-spacing", 12,
-                "border-width", 6,
+                "border-width", 18,
                 NULL);
 
   /* Summary, title */
   child = gtk_label_new (_("Title"));
   gtk_widget_set_halign (child, GTK_ALIGN_END);
-  gtk_grid_attach (GTK_GRID (grid), child, 0, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 0, 0, 1, 1);
 
   priv->summary_entry = gtk_entry_new ();
   gtk_widget_set_hexpand (priv->summary_entry, TRUE);
-  gtk_grid_attach (GTK_GRID (grid), priv->summary_entry, 1, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid),
+                   priv->summary_entry,
+                   1, 0, 1, 1);
 
   /* Calendar, source */
   priv->calendar_button = gtk_menu_button_new ();
   child = gtk_image_new_from_icon_name ("x-office-calendar-symbolic",
                                         GTK_ICON_SIZE_MENU);
+  priv->calendars_menu = gtk_menu_new ();
+  g_object_ref (priv->calendars_menu);
   g_object_set (priv->calendar_button,
                 "vexpand", TRUE,
                 "always-show-image", TRUE,
                 "image", child,
-                "menu", gtk_menu_new (),
+                "menu", priv->calendars_menu,
                 NULL);
-  gtk_grid_attach (GTK_GRID (grid), priv->calendar_button, 2, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid),
+                   priv->calendar_button,
+                   2, 0, 1, 1);
 
   /* Start date and time  */
   child = gtk_label_new (_("Starts"));
   gtk_widget_set_halign (child, GTK_ALIGN_END);
-  gtk_grid_attach (GTK_GRID (grid), child, 0, 2, 1, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 0, 2, 1, 1);
 
   child = gtk_grid_new ();
   g_object_set (child,
@@ -163,13 +182,14 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_container_add (GTK_CONTAINER (child), priv->start_time_entry);
 
   priv->all_day_check = gtk_check_button_new_with_label (_("All day"));
+  gtk_button_set_focus_on_click (GTK_BUTTON (priv->all_day_check), FALSE);
   gtk_container_add (GTK_CONTAINER (child), priv->all_day_check);
-  gtk_grid_attach (GTK_GRID (grid), child, 1, 2, 2, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 1, 2, 2, 1);
 
   /* End date and time  */
   child = gtk_label_new (_("Ends"));
   gtk_widget_set_halign (child, GTK_ALIGN_END);
-  gtk_grid_attach (GTK_GRID (grid), child, 0, 3, 1, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 0, 3, 1, 1);
 
   child = gtk_grid_new ();
   g_object_set (child,
@@ -188,26 +208,28 @@ gcal_edit_dialog_constructed (GObject* object)
                                      GTK_ENTRY_ICON_SECONDARY,
                                      "preferences-system-time-symbolic");
   gtk_container_add (GTK_CONTAINER (child), priv->end_time_entry);
-  gtk_grid_attach (GTK_GRID (grid), child, 1, 3, 2, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 1, 3, 2, 1);
 
   /* Location, location, location */
   child = gtk_label_new (_("Location"));
   gtk_widget_set_halign (child, GTK_ALIGN_END);
-  gtk_grid_attach (GTK_GRID (grid), child, 0, 4, 1, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 0, 4, 1, 1);
 
   priv->location_entry = gtk_entry_new ();
   gtk_widget_set_hexpand (priv->location_entry, TRUE);
   gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->location_entry),
                                      GTK_ENTRY_ICON_SECONDARY,
                                      "find-location-symbolic");
-  gtk_grid_attach (GTK_GRID (grid), priv->location_entry, 1, 4, 2, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid),
+                             priv->location_entry,
+                             1, 4, 2, 1);
 
   /* Notes, description */
   child = gtk_label_new (_("Notes"));
   gtk_widget_set_halign (child, GTK_ALIGN_END);
   gtk_widget_set_valign (child, GTK_ALIGN_START);
   gtk_widget_set_margin_top (child, 4);
-  gtk_grid_attach (GTK_GRID (grid), child, 0, 5, 1, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 0, 5, 1, 1);
 
   child = gtk_frame_new (NULL);
   priv->notes_text = gtk_text_view_new ();
@@ -216,9 +238,9 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_widget_set_size_request (
       gtk_bin_get_child (GTK_BIN (child)),
       -1, 80);
-  gtk_grid_attach (GTK_GRID (grid), child, 1, 5, 2, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 1, 5, 2, 1);
 
-  gtk_container_add (GTK_CONTAINER (content_area), grid);
+  gtk_container_add (GTK_CONTAINER (content_area), priv->edit_grid);
   gtk_widget_show_all (content_area);
 
   /* action area, buttons */
@@ -277,6 +299,14 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_widget_pop_composite_child ();
 
   /* signals handlers */
+  g_signal_connect (priv->calendar_button,
+                    "toggled",
+                    G_CALLBACK (gcal_edit_dialog_button_toggled),
+                    object);
+  g_signal_connect (priv->all_day_check,
+                    "toggled",
+                    G_CALLBACK (gcal_edit_dialog_button_toggled),
+                    object);
 }
 
 static void
@@ -291,6 +321,9 @@ gcal_edit_dialog_finalize (GObject *object)
 
   if (priv->event_uid != NULL)
     g_free (priv->event_uid);
+
+  if (priv->calendars_menu != NULL)
+    g_object_unref (priv->calendars_menu);
 
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->finalize (object);
 }
@@ -389,15 +422,74 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
 
   priv = dialog->priv;
 
-  gtk_widget_set_sensitive (priv->summary_entry, writable);
-  gtk_widget_set_sensitive (priv->calendar_button, writable);
-  gtk_widget_set_sensitive (priv->start_date_entry, writable);
-  gtk_widget_set_sensitive (priv->start_time_entry, writable);
-  gtk_widget_set_sensitive (priv->all_day_check, writable);
-  gtk_widget_set_sensitive (priv->end_date_entry, writable);
-  gtk_widget_set_sensitive (priv->end_time_entry, writable);
-  gtk_widget_set_sensitive (priv->location_entry, writable);
-  gtk_widget_set_sensitive (priv->notes_text, writable);
+  priv->writable = writable;
+  if (priv->readonly_box == NULL && ! writable)
+    {
+      GtkWidget *content_area;
+      GtkWidget *box;
+      GtkWidget *label;
+      GtkWidget *lock;
+
+      content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
+
+      priv->readonly_box = gtk_event_box_new ();
+      gtk_event_box_set_visible_window (GTK_EVENT_BOX (priv->readonly_box),
+                                        TRUE);
+      gtk_style_context_add_class (
+          gtk_widget_get_style_context (priv->readonly_box),
+          "readonly");
+      gtk_box_pack_start (GTK_BOX (content_area),
+                          priv->readonly_box,
+                          TRUE, TRUE,
+                          6);
+      gtk_box_reorder_child (GTK_BOX (content_area), priv->readonly_box, 0);
+
+      box = gtk_grid_new ();
+      gtk_container_set_border_width (GTK_CONTAINER (box), 12);
+      gtk_container_add(GTK_CONTAINER (priv->readonly_box), box);
+
+      label = gtk_label_new ("Calendar is read only");
+      gtk_label_set_markup (GTK_LABEL (label),
+                            "<span weight=\"bold\">Calendar is readonly</span>");
+      gtk_widget_set_hexpand (label, TRUE);
+      gtk_widget_set_vexpand (label, TRUE);
+      gtk_widget_set_halign (label, GTK_ALIGN_START);
+      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
+      gtk_container_add (GTK_CONTAINER (box), label);
+
+      lock = gtk_image_new_from_icon_name ("changes-prevent-symbolic",
+                                           GTK_ICON_SIZE_MENU);
+      gtk_widget_set_hexpand (lock, TRUE);
+      gtk_widget_set_vexpand (lock, TRUE);
+      gtk_widget_set_halign (lock, GTK_ALIGN_END);
+      gtk_container_add (GTK_CONTAINER (box), lock);
+
+      gtk_widget_show_all (priv->readonly_box);
+    }
+  else if (priv->readonly_box != NULL && writable)
+    {
+      gtk_widget_hide (priv->readonly_box);
+    }
+
+  gtk_editable_set_editable (GTK_EDITABLE (priv->summary_entry), writable);
+  gtk_editable_set_editable (GTK_EDITABLE (priv->start_date_entry), writable);
+  gtk_editable_set_editable (GTK_EDITABLE (priv->start_time_entry), writable);
+  gtk_editable_set_editable (GTK_EDITABLE (priv->end_time_entry), writable);
+  gtk_editable_set_editable (GTK_EDITABLE (priv->end_time_entry), writable);
+  gtk_editable_set_editable (GTK_EDITABLE (priv->location_entry), writable);
+
+  gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->notes_text), writable);
+
+  if (! writable)
+    {
+      gtk_menu_button_set_popup (GTK_MENU_BUTTON (priv->calendar_button),
+                                 NULL);
+    }
+  else if (gtk_menu_button_get_popup (GTK_MENU_BUTTON (priv->calendar_button)) == NULL)
+    {
+      gtk_menu_button_set_popup (GTK_MENU_BUTTON (priv->calendar_button),
+                                 priv->calendars_menu);
+    }
 
   /* add delete_button here */
   gtk_widget_set_sensitive (priv->delete_button, writable);
@@ -451,6 +543,32 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
                                                   "response"));
 
   gtk_dialog_response (GTK_DIALOG (user_data), response);
+}
+
+static void
+gcal_edit_dialog_button_toggled (GtkToggleButton *button,
+                                 gpointer         user_data)
+{
+  GcalEditDialogPrivate *priv;
+  gboolean active;
+
+  priv = GCAL_EDIT_DIALOG (user_data)->priv;
+
+  if (priv->writable)
+    return;
+
+  active = gtk_toggle_button_get_active (button);
+  g_debug ("active: %s", active ? "TRUE" : "FALSE");
+
+  g_signal_handlers_block_by_func (button,
+                                   gcal_edit_dialog_button_toggled,
+                                   user_data);
+  gtk_toggle_button_set_active (button, ! active);
+  g_signal_handlers_unblock_by_func (button,
+                                     gcal_edit_dialog_button_toggled,
+                                     user_data);
+
+  g_signal_stop_emission_by_name (button, "toggled");
 }
 
 /* Public API */
@@ -578,7 +696,6 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       -1);
   g_free (text);
 
-  /* FIXME: this is for now, I will have to ask GcalManager */
   gcal_edit_dialog_set_writable (
       dialog,
       ! gcal_manager_get_source_readonly (priv->manager,

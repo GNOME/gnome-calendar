@@ -115,3 +115,15 @@ GtkOverlay > GtkButton {
    -GcalArrowBin-arrow-size: 12px;
    -GcalArrowContainer-shadow-span: 3px;
 }
+
+.edit-dialog {
+  -GtkDialog-content-area-border: 0;
+  -GtkDialog-action-area-border: 18;
+}
+
+.readonly {
+  background-repeat: repeat;
+  background-image: linear-gradient(to bottom,
+                                    @borders,
+                                    shade(@theme_bg_color, 1.0));
+}
