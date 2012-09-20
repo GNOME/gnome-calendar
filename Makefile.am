@@ -2,7 +2,7 @@ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
 SUBDIRS = src data po doc
 
-gnome_calendardocdir = ${prefix}/doc/gnome_calendar
+gnome_calendardocdir = ${datadir}/doc/${PACKAGE_NAME}-${PACKAGE_VERSION}
 gnome_calendardoc_DATA =        \
   AUTHORS                       \
   README                        \
