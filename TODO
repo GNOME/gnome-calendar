@@ -31,6 +31,8 @@ Design stuff
 
 Roadmap
 
+ - Make Event Edit work as-is right now.
+ - Check MonthView is fully functional
  - Add new-event mark to week-view
  - Scroll week-view to the actual-hour
 
