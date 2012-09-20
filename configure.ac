@@ -19,7 +19,7 @@ dnl ***************************************************************************
 IT_PROG_INTLTOOL([0.35.0])
 PKG_PROG_PKG_CONFIG([0.22])
 
-GETTEXT_PACKAGE=gnome_calendar
+GETTEXT_PACKAGE=gnome-calendar
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
 
