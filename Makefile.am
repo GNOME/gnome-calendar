@@ -6,7 +6,6 @@ gnome_calendardocdir = ${prefix}/doc/gnome_calendar
 gnome_calendardoc_DATA =        \
   AUTHORS                       \
   README                        \
-  INSTALL                       \
   NEWS                          \
 	ChangeLog
 
@@ -18,6 +17,7 @@ INTLTOOL_FILES =                \
 EXTRA_DIST =                    \
   $(gnome_calendardoc_DATA)     \
   $(INTLTOOL_FILES)             \
+  INSTALL                       \
   THANKS                        \
   TODO                          \
   autogen.sh
