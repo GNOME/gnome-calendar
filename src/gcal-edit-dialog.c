@@ -18,37 +18,61 @@
  */
 
 #include "gcal-edit-dialog.h"
+#include "gcal-time-entry.h"
 #include "gcal-utils.h"
 
 #include <libecal/libecal.h>
 #include <glib/gi18n.h>
 
+typedef struct _SimpleTime SimpleTime;
+typedef struct _SimpleEventStore SimpleEventStore;
+
+struct _SimpleTime
+{
+  guint hour;
+  guint minute;
+};
+
+struct _SimpleEventStore
+{
+  gchar      *summary;
+
+  gboolean    all_day;
+  SimpleTime *start_time;
+  SimpleTime *end_time;
+
+  gchar      *location;
+  gchar      *description;
+};
+
 struct _GcalEditDialogPrivate
 {
-  gchar       *source_uid;
-  gchar       *event_uid;
-  gboolean     writable;
+  gchar            *source_uid;
+  gchar            *event_uid;
+  gboolean          writable;
 
-  GcalManager *manager;
-  GtkTreeIter *active_iter;
+  GcalManager      *manager;
+  GtkTreeIter      *active_iter;
 
-  GtkWidget   *edit_grid;
-  GtkWidget   *readonly_box;
+  GtkWidget        *edit_grid;
+  GtkWidget        *readonly_box;
 
-  GtkWidget   *delete_button;
+  GtkWidget        *delete_button;
 
-  GtkWidget   *summary_entry;
+  GtkWidget        *summary_entry;
 
-  GtkWidget   *calendar_button;
-  GtkWidget   *calendars_menu;
+  GtkWidget        *calendar_button;
+  GtkWidget        *calendars_menu;
 
-  GtkWidget   *start_date_entry;
-  GtkWidget   *end_date_entry;
-  GtkWidget   *all_day_check;
-  GtkWidget   *start_time_entry;
-  GtkWidget   *end_time_entry;
-  GtkWidget   *location_entry;
-  GtkWidget   *notes_text;
+  GtkWidget        *start_date_entry;
+  GtkWidget        *end_date_entry;
+  GtkWidget        *all_day_check;
+  GtkWidget        *start_time_entry;
+  GtkWidget        *end_time_entry;
+  GtkWidget        *location_entry;
+  GtkWidget        *notes_text;
+
+  SimpleEventStore *ev_store;
 };
 
 static void        gcal_edit_dialog_constructed           (GObject           *object);
@@ -67,6 +91,9 @@ static void        gcal_edit_dialog_action_button_clicked (GtkWidget         *wi
                                                            gpointer           user_data);
 
 static void        gcal_edit_dialog_button_toggled        (GtkToggleButton   *button,
+                                                           gpointer           user_data);
+
+static void        gcal_edit_dialog_all_day_changed       (GtkWidget         *widget,
                                                            gpointer           user_data);
 
 G_DEFINE_TYPE(GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
@@ -108,6 +135,7 @@ gcal_edit_dialog_constructed (GObject* object)
   GcalEditDialogPrivate *priv;
   GtkWidget *content_area;
   GtkWidget *child;
+  GtkWidget *frame;
 
   GtkSizeGroup *size_group;
   GtkWidget *action_area;
@@ -138,6 +166,7 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 0, 0, 1, 1);
 
   priv->summary_entry = gtk_entry_new ();
+  gtk_entry_set_activates_default (GTK_ENTRY (priv->summary_entry), TRUE);
   gtk_widget_set_hexpand (priv->summary_entry, TRUE);
   gtk_grid_attach (GTK_GRID (priv->edit_grid),
                    priv->summary_entry,
@@ -176,11 +205,7 @@ gcal_edit_dialog_constructed (GObject* object)
                                      "x-office-calendar-symbolic");
   gtk_container_add (GTK_CONTAINER (child), priv->start_date_entry);
 
-  priv->start_time_entry = gtk_entry_new ();
-  gtk_entry_set_width_chars (GTK_ENTRY (priv->start_time_entry), 8);
-  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->start_time_entry),
-                                     GTK_ENTRY_ICON_SECONDARY,
-                                     "preferences-system-time-symbolic");
+  priv->start_time_entry = gcal_time_entry_new ();
   gtk_container_add (GTK_CONTAINER (child), priv->start_time_entry);
 
   priv->all_day_check = gtk_check_button_new_with_label (_("All day"));
@@ -204,11 +229,7 @@ gcal_edit_dialog_constructed (GObject* object)
                                      "x-office-calendar-symbolic");
   gtk_container_add (GTK_CONTAINER (child), priv->end_date_entry);
 
-  priv->end_time_entry = gtk_entry_new ();
-  gtk_entry_set_width_chars (GTK_ENTRY (priv->end_time_entry), 8);
-  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->end_time_entry),
-                                     GTK_ENTRY_ICON_SECONDARY,
-                                     "preferences-system-time-symbolic");
+  priv->end_time_entry = gcal_time_entry_new ();
   gtk_container_add (GTK_CONTAINER (child), priv->end_time_entry);
   gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 1, 3, 2, 1);
 
@@ -233,14 +254,16 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_widget_set_margin_top (child, 4);
   gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 0, 5, 1, 1);
 
-  child = gtk_frame_new (NULL);
+  frame = gtk_frame_new (NULL);
+  child = gtk_scrolled_window_new (NULL, NULL);
+  gtk_container_add (GTK_CONTAINER (frame), child);
   priv->notes_text = gtk_text_view_new ();
   gtk_container_add (GTK_CONTAINER (child), priv->notes_text);
   gtk_widget_set_hexpand (child, TRUE);
   gtk_widget_set_size_request (
-      gtk_bin_get_child (GTK_BIN (child)),
+      gtk_bin_get_child (GTK_BIN (frame)),
       -1, 80);
-  gtk_grid_attach (GTK_GRID (priv->edit_grid), child, 1, 5, 2, 1);
+  gtk_grid_attach (GTK_GRID (priv->edit_grid), frame, 1, 5, 2, 1);
 
   gtk_container_add (GTK_CONTAINER (content_area), priv->edit_grid);
   gtk_widget_show_all (content_area);
@@ -252,7 +275,6 @@ gcal_edit_dialog_constructed (GObject* object)
 
   button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
   gtk_size_group_add_widget (size_group, button);
-  gtk_widget_set_can_default (button, TRUE);
   g_object_set_data (G_OBJECT (button),
                      "response",
                      GINT_TO_POINTER (GTK_RESPONSE_CANCEL));
@@ -271,7 +293,6 @@ gcal_edit_dialog_constructed (GObject* object)
       GTK_CONTAINER (priv->delete_button),
       gtk_image_new_from_icon_name ("user-trash-symbolic",
                                     GTK_ICON_SIZE_MENU));
-  gtk_widget_set_can_default (priv->delete_button, TRUE);
   g_object_set_data (G_OBJECT (priv->delete_button),
                      "response",
                      GINT_TO_POINTER (GCAL_RESPONSE_DELETE_EVENT));
@@ -300,6 +321,8 @@ gcal_edit_dialog_constructed (GObject* object)
       "suggested-action");
   gtk_box_pack_end (GTK_BOX (action_area), button, TRUE, TRUE, 0);
 
+  gtk_widget_grab_default (button);
+
   g_object_unref (size_group);
   g_debug ("Added size_group");
 
@@ -312,9 +335,11 @@ gcal_edit_dialog_constructed (GObject* object)
                     "toggled",
                     G_CALLBACK (gcal_edit_dialog_button_toggled),
                     object);
+
+  /* event data related signals */
   g_signal_connect (priv->all_day_check,
                     "toggled",
-                    G_CALLBACK (gcal_edit_dialog_button_toggled),
+                    G_CALLBACK (gcal_edit_dialog_all_day_changed),
                     object);
 }
 
@@ -528,9 +553,9 @@ gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
 
   /* date and time */
   gtk_entry_set_text (GTK_ENTRY (priv->start_date_entry), "");
-  gtk_entry_set_text (GTK_ENTRY (priv->start_time_entry), "");
+  gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->start_time_entry), 0, 0);
   gtk_entry_set_text (GTK_ENTRY (priv->end_date_entry), "");
-  gtk_entry_set_text (GTK_ENTRY (priv->end_time_entry), "");
+  gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->end_time_entry), 0, 0);
 
   /* location */
   gtk_entry_set_text (GTK_ENTRY (priv->location_entry), "");
@@ -580,6 +605,21 @@ gcal_edit_dialog_button_toggled (GtkToggleButton *button,
   g_signal_stop_emission_by_name (button, "toggled");
 }
 
+static void
+gcal_edit_dialog_all_day_changed (GtkWidget *widget,
+                                  gpointer   user_data)
+{
+  GcalEditDialogPrivate *priv;
+
+  priv = GCAL_EDIT_DIALOG (user_data)->priv;
+
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->all_day_check)))
+    {
+      gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->start_time_entry), 0, 0);
+      gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->end_time_entry), 0, 0);
+    }
+}
+
 /* Public API */
 GtkWidget*
 gcal_edit_dialog_new (void)
@@ -601,7 +641,6 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 {
   GcalEditDialogPrivate *priv;
 
-  gchar *text;
   const gchar *const_text;
   gboolean all_day;
 
@@ -623,19 +662,29 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   /* Clear event data */
   gcal_edit_dialog_clear_data (dialog);
 
+  if (priv->ev_store == NULL)
+    {
+      priv->ev_store = g_new0 (SimpleEventStore, 1);
+
+      priv->ev_store->start_time = g_new0 (SimpleTime, 1);
+      priv->ev_store->end_time = g_new0 (SimpleTime, 1);
+    }
+
   /* Load new event data */
   /* summary */
-  text = gcal_manager_get_event_summary (priv->manager,
-                                         priv->source_uid,
-                                         priv->event_uid);
+  priv->ev_store->summary = gcal_manager_get_event_summary (priv->manager,
+                                                            priv->source_uid,
+                                                            priv->event_uid);
   gtk_entry_set_text (GTK_ENTRY (priv->summary_entry),
-                      text != NULL ? text : "");
-  g_free (text);
+                      priv->ev_store->summary != NULL ?
+                      priv->ev_store->summary : "");
 
   /* calendar button */
+  /* FIXME: Add calendar to ev_store and edit-capabilities */
   gcal_edit_dialog_set_calendar_selected (dialog);
 
   /* start date */
+  /* FIXME: Add dates (start/end) to ev_store and edit-capabilities */
   date = gcal_manager_get_event_start_date (priv->manager,
                                             priv->source_uid,
                                             priv->event_uid);
@@ -644,26 +693,28 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   gtk_entry_set_text (GTK_ENTRY (priv->start_date_entry),
                       buffer);
 
-  g_free (date);
   /* all_day  */
-  all_day = gcal_manager_get_event_all_day (priv->manager,
-                                            priv->source_uid,
-                                            priv->event_uid);
+  priv->ev_store->all_day = gcal_manager_get_event_all_day (priv->manager,
+                                                            priv->source_uid,
+                                                            priv->event_uid);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->all_day_check),
-                                all_day);
+                                priv->ev_store->all_day);
 
   /* start time */
   if (all_day)
     {
-      gtk_entry_set_text (GTK_ENTRY (priv->start_time_entry),
-                          "00:00");
+      priv->ev_store->start_time->hour = 0;
+      priv->ev_store->start_time->minute = 0;
     }
   else
     {
-      e_utf8_strftime_fix_am_pm (buffer, 64, "%R", &tm_date);
-      gtk_entry_set_text (GTK_ENTRY (priv->start_time_entry),
-                          buffer);
+      priv->ev_store->start_time->hour = date->hour;
+      priv->ev_store->start_time->minute = date->minute;
     }
+  gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->start_time_entry),
+                            priv->ev_store->start_time->hour,
+                            priv->ev_store->start_time->minute);
+  g_free (date);
 
   /* end date */
   date = gcal_manager_get_event_end_date (priv->manager,
@@ -674,37 +725,42 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   gtk_entry_set_text (GTK_ENTRY (priv->end_date_entry),
                       buffer);
 
-  g_free (date);
-
   /* end time */
   if (all_day)
     {
-      gtk_entry_set_text (GTK_ENTRY (priv->end_time_entry),
-                          "00:00");
+      priv->ev_store->end_time->hour = 0;
+      priv->ev_store->end_time->minute = 0;
     }
   else
     {
-      e_utf8_strftime_fix_am_pm (buffer, 64, "%R", &tm_date);
-      gtk_entry_set_text (GTK_ENTRY (priv->end_time_entry),
-                          buffer);
+      priv->ev_store->end_time->hour = date->hour;
+      priv->ev_store->end_time->minute = date->minute;
     }
+  gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->end_time_entry),
+                            priv->ev_store->end_time->hour,
+                            priv->ev_store->end_time->minute);
+  g_free (date);
 
   /* location */
   const_text = gcal_manager_get_event_location (priv->manager,
-                                          priv->source_uid,
-                                          priv->event_uid);
+                                                priv->source_uid,
+                                                priv->event_uid);
   gtk_entry_set_text (GTK_ENTRY (priv->location_entry),
                       const_text != NULL ? const_text : "");
+  priv->ev_store->location = g_strdup (const_text);
 
   /* notes */
-  text = gcal_manager_get_event_description (priv->manager,
-                                             priv->source_uid,
-                                             priv->event_uid);
+  priv->ev_store->description =
+    gcal_manager_get_event_description (priv->manager,
+                                        priv->source_uid,
+                                        priv->event_uid);
+  if (priv->ev_store->description == NULL)
+    priv->ev_store->description = "";
+
   gtk_text_buffer_set_text (
       gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)),
-      text != NULL ? text : "",
+      priv->ev_store->description,
       -1);
-  g_free (text);
 
   gcal_edit_dialog_set_writable (
       dialog,
@@ -837,16 +893,38 @@ gcal_edit_dialog_get_event_uuid (GcalEditDialog *dialog)
 GList*
 gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog)
 {
-  /* FIXME: Implement some kind of backend/model here */
+  GcalEditDialogPrivate *priv;
+  gchar *desc;
   GList *res;
 
-  /* FIXME: Instead of always add SUMMARY check if was modified
-   by checking against some kind of model */
+  priv = dialog->priv;
+
+  if (! priv->writable)
+    return NULL;
+
   res = NULL;
-  res = g_list_append (res, GINT_TO_POINTER (EVENT_SUMMARY));
-  /* res = g_list_append (res, GINT_TO_POINTER (EVENT_START_DATE)); */
-  res = g_list_append (res, GINT_TO_POINTER (EVENT_LOCATION));
-  res = g_list_append (res, GINT_TO_POINTER (EVENT_DESCRIPTION));
+
+  if (g_strcmp0 (priv->ev_store->summary,
+                 gtk_entry_get_text (GTK_ENTRY (priv->summary_entry))) != 0)
+    {
+      res = g_list_append (res, GINT_TO_POINTER (EVENT_SUMMARY));
+    }
+
+  /* FIXME: add calendar and dates and times and all_day */
+
+  if (g_strcmp0 (priv->ev_store->location,
+                 gtk_entry_get_text (GTK_ENTRY (priv->location_entry))) != 0)
+    {
+      res = g_list_append (res, GINT_TO_POINTER (EVENT_LOCATION));
+    }
+  /* getting desc */
+  desc = gcal_edit_dialog_get_event_description (dialog);
+  if (g_strcmp0 (priv->ev_store->description, desc) != 0)
+    {
+      res = g_list_append (res, GINT_TO_POINTER (EVENT_DESCRIPTION));
+    }
+  g_free (desc);
+
   return res;
 }
 
