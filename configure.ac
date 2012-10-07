@@ -104,6 +104,7 @@ echo "
 
         prefix:    ${prefix}
         compiler:  ${CC}
+	flags:     ${CFLAGS} ${CPPFLAGS} ${CALENDAR_CFLAGS} ${LDFLAGS} ${CALENDAR_LIBS} ${LIBS}
 
         Now type 'make' to build $PACKAGE
 "
