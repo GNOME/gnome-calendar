@@ -46,6 +46,14 @@ typedef enum
   GCAL_VIEW_MODE,
 } GcalEditableMode;
 
+typedef enum
+{
+  EVENT_SUMMARY = 0,
+  EVENT_START_DATE,
+  EVENT_LOCATION,
+  EVENT_DESCRIPTION,
+} EventEditableProperty;
+
 typedef
 const gchar*  (*GcalTranslateFunc)                              (GtkWidget             *source_widget);
 

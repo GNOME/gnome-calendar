@@ -108,6 +108,8 @@ gcal_edit_dialog_constructed (GObject* object)
   GcalEditDialogPrivate *priv;
   GtkWidget *content_area;
   GtkWidget *child;
+
+  GtkSizeGroup *size_group;
   GtkWidget *action_area;
   GtkWidget *button;
 
@@ -244,10 +246,12 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_widget_show_all (content_area);
 
   /* action area, buttons */
+  size_group = gtk_size_group_new (GTK_SIZE_GROUP_VERTICAL);
   action_area = gtk_dialog_get_action_area (GTK_DIALOG (object));
   gtk_box_set_spacing (GTK_BOX (action_area), 6);
 
   button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+  gtk_size_group_add_widget (size_group, button);
   gtk_widget_set_can_default (button, TRUE);
   g_object_set_data (G_OBJECT (button),
                      "response",
@@ -262,6 +266,7 @@ gcal_edit_dialog_constructed (GObject* object)
                                       TRUE);
 
   priv->delete_button = gtk_button_new ();
+  gtk_size_group_add_widget (size_group, priv->delete_button);
   gtk_container_add (
       GTK_CONTAINER (priv->delete_button),
       gtk_image_new_from_icon_name ("user-trash-symbolic",
@@ -281,6 +286,7 @@ gcal_edit_dialog_constructed (GObject* object)
 
   /* done button */
   button = gtk_button_new_with_label (_("Done"));
+  gtk_size_group_add_widget (size_group, button);
   gtk_widget_set_can_default (button, TRUE);
   g_object_set_data (G_OBJECT (button),
                      "response",
@@ -293,6 +299,9 @@ gcal_edit_dialog_constructed (GObject* object)
       gtk_widget_get_style_context (button),
       "suggested-action");
   gtk_box_pack_end (GTK_BOX (action_area), button, TRUE, TRUE, 0);
+
+  g_object_unref (size_group);
+  g_debug ("Added size_group");
 
   gtk_widget_show_all (action_area);
 
@@ -611,9 +620,10 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
     g_free (priv->event_uid);
   priv->event_uid = g_strdup (event_uid);
 
-  /* Load event data */
+  /* Clear event data */
   gcal_edit_dialog_clear_data (dialog);
 
+  /* Load new event data */
   /* summary */
   text = gcal_manager_get_event_summary (priv->manager,
                                          priv->source_uid,
@@ -791,6 +801,24 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
   gtk_widget_show_all (GTK_WIDGET (menu));
 }
 
+const gchar*
+gcal_edit_dialog_peek_source_uid (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+
+  priv = dialog->priv;
+  return priv->source_uid;
+}
+
+const gchar*
+gcal_edit_dialog_peek_event_uid (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+
+  priv = dialog->priv;
+  return priv->event_uid;
+}
+
 gchar*
 gcal_edit_dialog_get_event_uuid (GcalEditDialog *dialog)
 {
@@ -804,4 +832,57 @@ gcal_edit_dialog_get_event_uuid (GcalEditDialog *dialog)
       return NULL;
     }
   return g_strdup_printf ("%s:%s", priv->source_uid, priv->event_uid);
+}
+
+GList*
+gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog)
+{
+  /* FIXME: Implement some kind of backend/model here */
+  GList *res;
+
+  /* FIXME: Instead of always add SUMMARY check if was modified
+   by checking against some kind of model */
+  res = NULL;
+  res = g_list_append (res, GINT_TO_POINTER (EVENT_SUMMARY));
+  /* res = g_list_append (res, GINT_TO_POINTER (EVENT_START_DATE)); */
+  res = g_list_append (res, GINT_TO_POINTER (EVENT_LOCATION));
+  res = g_list_append (res, GINT_TO_POINTER (EVENT_DESCRIPTION));
+  return res;
+}
+
+const gchar*
+gcal_edit_dialog_peek_summary (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+
+  priv = dialog->priv;
+
+  return gtk_entry_get_text (GTK_ENTRY (priv->summary_entry));
+}
+
+const gchar*
+gcal_edit_dialog_peek_location (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+
+  priv = dialog->priv;
+
+  return gtk_entry_get_text (GTK_ENTRY (priv->location_entry));
+}
+
+gchar*
+gcal_edit_dialog_get_event_description (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+  GtkTextBuffer *buffer;
+  GtkTextIter start_iter;
+  GtkTextIter end_iter;
+  gchar *desc;
+
+  priv = dialog->priv;
+  buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text));
+  gtk_text_buffer_get_start_iter (buffer, &start_iter);
+  gtk_text_buffer_get_end_iter (buffer, &end_iter);
+  desc = gtk_text_buffer_get_text (buffer, &start_iter, &end_iter, FALSE);
+  return desc;
 }
