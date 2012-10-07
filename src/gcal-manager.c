@@ -770,7 +770,39 @@ gcal_manager_on_view_objects_modified (ECalClientView *view,
                                        gpointer        objects,
                                        gpointer        user_data)
 {
-  g_debug ("Objects modified");
+  GSList *l;
+  GSList *events_data;
+
+  ECalClient *client;
+  const gchar *source_uid;
+
+  g_return_if_fail (GCAL_IS_MANAGER (user_data));
+
+  events_data = NULL;
+  client = e_cal_client_view_get_client (view);
+  source_uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
+
+  for (l = objects; l != NULL; l = l->next)
+    {
+      if (l->data != NULL)
+        {
+          gchar* event_uuid;
+          event_uuid = g_strdup_printf ("%s:%s",
+                                        source_uid,
+                                        icalcomponent_get_uid (l->data));
+          events_data = g_slist_append (events_data, event_uuid);
+        }
+    }
+
+  if (events_data != NULL)
+    {
+      g_signal_emit (GCAL_MANAGER (user_data),
+                     signals[EVENTS_MODIFIED],
+                     0,
+                     events_data);
+
+      g_slist_free_full (events_data, g_free);
+    }
 }
 
 static void
@@ -922,8 +954,8 @@ gcal_manager_on_event_created (GObject      *source_object,
   gchar *new_uid;
   GError *error;
 
-  /* If* the view catch a signal of the newly created object the almost sure I
-   * have nothing to do here. */
+  /* If the view catch a signal of the newly created object then
+   * almost sure I have nothing to do here. */
 
   client = E_CAL_CLIENT (source_object);
   error = NULL;
@@ -946,6 +978,32 @@ gcal_manager_on_event_created (GObject      *source_object,
     {
       /* Some error */
       g_warning ("Error creating object: %s", error->message);
+      g_error_free (error);
+    }
+}
+
+static void
+gcal_manager_on_event_modified (GObject      *source_object,
+                                GAsyncResult *result,
+                                gpointer      user_data)
+{
+  ECalClient *client;
+  GError *error;
+
+  /* If the view catch a signal of the newly modified object then
+     dunno what's the purposes of this pieces of code, other than
+     finish the async ops. */
+
+  client = E_CAL_CLIENT (source_object);
+  error = NULL;
+  if (e_cal_client_modify_object_finish (client, result, &error))
+    {
+      g_debug ("Call to modify finished");
+    }
+  else
+    {
+      /* Some error */
+      g_warning ("Error modifying object: %s", error->message);
       g_error_free (error);
     }
 }
@@ -1595,4 +1653,131 @@ gcal_manager_create_event (GcalManager        *manager,
                               manager);
 
   g_object_unref (event);
+}
+
+void
+gcal_manager_set_event_start_date (GcalManager        *manager,
+                                   const gchar        *source_uid,
+                                   const gchar        *event_uid,
+                                   const icaltimetype *initial_date)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  ECalComponentDateTime dt;
+  icaltimetype *dt_start;
+
+  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+
+  dt_start = gcal_dup_icaltime (initial_date);
+  dt.value = dt_start;
+  dt.tzid = NULL;
+  e_cal_component_set_dtstart (event, &dt);
+
+  e_cal_component_commit_sequence (event);
+
+  e_cal_client_modify_object (unit->client,
+                              e_cal_component_get_icalcomponent (event),
+                              CALOBJ_MOD_ALL,
+                              NULL,
+                              gcal_manager_on_event_modified,
+                              manager);
+}
+
+void
+gcal_manager_set_event_summary (GcalManager *manager,
+                                const gchar *source_uid,
+                                const gchar *event_uid,
+                                const gchar *summary)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  ECalComponentText e_summary;
+
+  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+
+  e_summary.altrep = NULL;
+  e_summary.value = summary;
+  e_cal_component_set_summary (event, &e_summary);
+
+  e_cal_component_commit_sequence (event);
+
+  e_cal_client_modify_object (unit->client,
+                              e_cal_component_get_icalcomponent (event),
+                              CALOBJ_MOD_ALL,
+                              NULL,
+                              gcal_manager_on_event_modified,
+                              manager);
+}
+
+void
+gcal_manager_set_event_location (GcalManager *manager,
+                                 const gchar *source_uid,
+                                 const gchar *event_uid,
+                                 const gchar *location)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+
+  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+
+  e_cal_component_set_location (event, location);
+
+  e_cal_component_commit_sequence (event);
+
+  e_cal_client_modify_object (unit->client,
+                              e_cal_component_get_icalcomponent (event),
+                              CALOBJ_MOD_ALL,
+                              NULL,
+                              gcal_manager_on_event_modified,
+                              manager);
+}
+
+void
+gcal_manager_set_event_description (GcalManager *manager,
+                                    const gchar *source_uid,
+                                    const gchar *event_uid,
+                                    const gchar *description)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  GSList l;
+  ECalComponentText desc;
+
+  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+
+  desc.value = description;
+  desc.altrep = NULL;
+  l.data = &desc;
+  l.next = NULL;
+
+  e_cal_component_set_description_list (event, &l);
+
+  e_cal_component_commit_sequence (event);
+
+  e_cal_client_modify_object (unit->client,
+                              e_cal_component_get_icalcomponent (event),
+                              CALOBJ_MOD_ALL,
+                              NULL,
+                              gcal_manager_on_event_modified,
+                              manager);
 }

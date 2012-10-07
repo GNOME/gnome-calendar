@@ -85,6 +85,7 @@ gboolean       gcal_manager_exists_event            (GcalManager        *manager
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
 
+/* Get methods */
 icaltimetype*  gcal_manager_get_event_start_date    (GcalManager        *manager,
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
@@ -129,11 +130,33 @@ void           gcal_manager_remove_event            (GcalManager        *manager
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
 
+/* Create method */
 void           gcal_manager_create_event            (GcalManager        *manager,
                                                      const gchar        *source_uid,
                                                      const gchar        *summary,
                                                      const icaltimetype *initial_date,
                                                      const icaltimetype *final_date);
+
+/* Set methods */
+void           gcal_manager_set_event_start_date    (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid,
+                                                     const icaltimetype *initial_date);
+
+void           gcal_manager_set_event_summary       (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid,
+                                                     const gchar        *summary);
+
+void           gcal_manager_set_event_location      (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid,
+                                                     const gchar        *location);
+
+void           gcal_manager_set_event_description   (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid,
+                                                     const gchar        *description);
 
 G_END_DECLS
 
