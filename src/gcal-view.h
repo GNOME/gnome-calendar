@@ -51,11 +51,13 @@ struct _GcalViewIface
   gboolean        (*contains)             (GcalView *view, icaltimetype *date);
   void            (*remove_by_uuid)       (GcalView *view, const gchar *uuid);
   GtkWidget*      (*get_by_uuid)          (GcalView *view, const gchar *uuid);
+  void            (*reposition_child)     (GcalView *view, const gchar *uuid);
 
   void            (*clear_selection)      (GcalView *view);
 };
 
 GType         gcal_view_get_type          (void);
+
 
 void          gcal_view_set_date          (GcalView     *view,
                                            icaltimetype *date);
@@ -74,6 +76,9 @@ void          gcal_view_remove_by_uuid    (GcalView     *view,
 
 GtkWidget*    gcal_view_get_by_uuid       (GcalView     *view,
                                            const gchar  *uuid);
+
+void          gcal_view_reposition_child  (GcalView     *view,
+					   const gchar  *uuid);
 
 void          gcal_view_clear_selection   (GcalView     *view);
 

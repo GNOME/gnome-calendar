@@ -147,6 +147,9 @@ static void           gcal_month_view_remove_by_uuid        (GcalView       *vie
 static GtkWidget*     gcal_month_view_get_by_uuid           (GcalView       *view,
                                                              const gchar    *uuid);
 
+static void           gcal_month_view_reposition_child      (GcalView       *view,
+                                                             const gchar    *uuid);
+
 static void           gcal_month_view_clear_selection       (GcalView       *view);
 
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
@@ -234,6 +237,7 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->contains = gcal_month_view_contains;
   iface->remove_by_uuid = gcal_month_view_remove_by_uuid;
   iface->get_by_uuid = gcal_month_view_get_by_uuid;
+  iface->reposition_child = gcal_month_view_reposition_child;
 
   iface->clear_selection = gcal_month_view_clear_selection;
 }
@@ -1387,6 +1391,61 @@ gcal_month_view_get_by_uuid (GcalView    *view,
         }
     }
   return NULL;
+}
+
+static void
+gcal_month_view_reposition_child (GcalView    *view,
+                                  const gchar *uuid)
+{
+  GcalMonthViewPrivate *priv;
+  gint i;
+  GList *l;
+
+  g_return_if_fail (GCAL_IS_MONTH_VIEW (view));
+  priv = GCAL_MONTH_VIEW (view)->priv;
+
+  for (i = 0; i < 35; i++)
+    {
+      for (l = priv->days[i]; l != NULL; l = l->next)
+        {
+          GcalViewChild *child;
+          const gchar* widget_uuid;
+
+          child = (GcalViewChild*) l->data;
+          widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
+          if (g_strcmp0 (uuid, widget_uuid) == 0)
+            {
+              icaltimetype *date;
+              gint day;
+
+              date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
+
+              if (gcal_month_view_contains (view, date))
+                {
+                  day = date->day + ( - priv->days_delay);
+
+                  if (day == i)
+                    {
+                      return;
+                    }
+                  else
+                    {
+                      priv->days[i] = g_list_remove (priv->days[i], child);
+
+                      child->hidden_by_me = FALSE;
+                      priv->days[day] = g_list_append (priv->days[day], child);
+                      gtk_widget_queue_resize (GTK_WIDGET (view));
+                    }
+                }
+              else
+                {
+                  gcal_month_view_remove_by_uuid (view, uuid);
+                }
+
+              g_free (date);
+            }
+        }
+    }
 }
 
 static void

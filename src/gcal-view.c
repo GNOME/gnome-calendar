@@ -159,6 +159,15 @@ gcal_view_get_by_uuid (GcalView    *view,
 }
 
 void
+gcal_view_reposition_child (GcalView    *view,
+                            const gchar *uuid)
+{
+  g_return_if_fail (GCAL_IS_VIEW (view));
+
+  GCAL_VIEW_GET_INTERFACE (view)->reposition_child (view, uuid);
+}
+
+void
 gcal_view_clear_selection (GcalView *view)
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
