@@ -47,7 +47,6 @@ GtkClutterOffscreen.contents .frame {
   font: 10;
 }
 
-
 .calendar-view:selected {
   color: #0C73E5;
   background-color: shade (#fff, 0.5);
@@ -72,11 +71,11 @@ GtkClutterOffscreen.contents .frame {
   border-radius: 0;
 }
 
-.scrollbar.slider {
+.calendar-view .scrollbar.slider {
   background-color: alpha (@scrollbar_slider, 0.5);
   border: #6e6e6e 1px solid;
 }
-.scrollbar.trough {
+.calendar-view .scrollbar.trough {
   background-color: transparent;
   background-image: none;
 }

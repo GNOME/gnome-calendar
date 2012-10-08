@@ -280,9 +280,7 @@ gcal_window_constructed (GObject *object)
   holder = gtk_grid_new ();
   button = gtk_button_new_with_label (_("Done"));
   gtk_widget_set_size_request (button, 100, -1);
-  gtk_container_set_border_width (GTK_CONTAINER (button), 3);
   gtk_widget_set_hexpand (button, FALSE);
-  gtk_widget_set_vexpand (button, TRUE);
   gtk_widget_set_halign (button, GTK_ALIGN_START);
   gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
   gtk_style_context_add_class (

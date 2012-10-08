@@ -31,8 +31,6 @@ G_BEGIN_DECLS
 #define GCAL_IS_TIME_ENTRY_CLASS(klass)     (G_TYPE_CHECK_CLASS_TYPE((klass), GCAL_TYPE_TIME_ENTRY))
 #define GCAL_TIME_ENTRY_GET_CLASS(obj)      (G_TYPE_INSTANCE_GET_CLASS((obj), GCAL_TYPE_TIME_ENTRY, GcalTimeEntryClass))
 
-typedef struct _GcalTime GcalTime;
-
 typedef struct _GcalTimeEntry                GcalTimeEntry;
 typedef struct _GcalTimeEntryClass           GcalTimeEntryClass;
 typedef struct _GcalTimeEntryPrivate         GcalTimeEntryPrivate;
