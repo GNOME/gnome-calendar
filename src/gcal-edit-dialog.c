@@ -324,7 +324,6 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_widget_grab_default (button);
 
   g_object_unref (size_group);
-  g_debug ("Added size_group");
 
   gtk_widget_show_all (action_area);
 
