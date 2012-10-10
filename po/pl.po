@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-09-03 22:51+0200\n"
-"PO-Revision-Date: 2012-09-03 22:52+0200\n"
+"POT-Creation-Date: 2012-10-11 01:02+0200\n"
+"PO-Revision-Date: 2012-10-11 01:03+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -23,9 +23,31 @@ msgstr ""
 "X-Poedit-Language: Polish\n"
 "X-Poedit-Country: Poland\n"
 
-#: ../src/gcal-application.c:127 ../data/gnome-calendar.desktop.in.in.h:1
+#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:127
 msgid "Calendar"
 msgstr "Kalendarz"
+
+#: ../data/gnome-calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr "Wyświetlanie i zarządzanie kalendarzem"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Okno zmaksymalizowane"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Stan maksymalizacji okna"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Type of the active view"
+msgstr "Typ aktywnego widoku"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Type of the active window view, default value is: monthly view"
+msgstr ""
+"Typ aktywnego widoku okna, domyślna wartość: \"monthly view\" (widok "
+"miesięczny)"
 
 #: ../src/gcal-application.c:147
 msgid "Unable to initialize GtkClutter"
@@ -59,105 +81,109 @@ msgstr "Copyright © %Id Autorzy Kalendarza"
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Autorzy Kalendarza"
 
-#: ../src/gcal-edit-dialog.c:104
+#: ../src/gcal-edit-dialog.c:149
 msgid "Event Details"
 msgstr "Informacje o wydarzeniu"
 
 #. Summary, title
-#: ../src/gcal-edit-dialog.c:121
+#: ../src/gcal-edit-dialog.c:164
 msgid "Title"
 msgstr "Tytuł"
 
 #. Start date and time
-#: ../src/gcal-edit-dialog.c:142
+#: ../src/gcal-edit-dialog.c:192
 msgid "Starts"
 msgstr "Zaczyna się"
 
-#: ../src/gcal-edit-dialog.c:165
+#: ../src/gcal-edit-dialog.c:211
 msgid "All day"
 msgstr "Cały dzień"
 
 #. End date and time
-#: ../src/gcal-edit-dialog.c:170
+#: ../src/gcal-edit-dialog.c:217
 msgid "Ends"
 msgstr "Kończy się"
 
 #. Location, location, location
-#: ../src/gcal-edit-dialog.c:194
+#: ../src/gcal-edit-dialog.c:237
 msgid "Location"
 msgstr "Położenie"
 
 #. Notes, description
-#: ../src/gcal-edit-dialog.c:206
+#: ../src/gcal-edit-dialog.c:251
 msgid "Notes"
 msgstr "Uwagi"
 
 #. done button
-#: ../src/gcal-edit-dialog.c:261 ../src/gcal-toolbar.c:615
-#: ../src/gcal-window.c:272
+#: ../src/gcal-edit-dialog.c:309 ../src/gcal-toolbar.c:615
+#: ../src/gcal-window.c:281
 msgid "Done"
 msgstr "Gotowe"
 
-#: ../src/gcal-event-overlay.c:154 ../src/gcal-event-overlay.c:459
+#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
 #: ../src/gcal-toolbar.c:296
 msgid "New Event"
 msgstr "Nowe wydarzenie"
 
-#: ../src/gcal-event-overlay.c:164
+#: ../src/gcal-event-overlay.c:162
 msgid "Create"
 msgstr "Utwórz"
 
-#: ../src/gcal-event-overlay.c:173
+#: ../src/gcal-event-overlay.c:171
 msgid "More details"
 msgstr "Więcej informacji"
 
-#: ../src/gcal-event-overlay.c:187
+#: ../src/gcal-event-overlay.c:185
 msgid "What (e.g. Alien Invasion)"
 msgstr "Co (np. inwazja kosmitów)"
 
-#: ../src/gcal-event-overlay.c:509
+#: ../src/gcal-event-overlay.c:507
 #, c-format
 msgid "New Event on %s"
 msgstr "Nowe wydarzenie w dniu %s"
 
-#: ../src/gcal-event-overlay.c:526
+#: ../src/gcal-event-overlay.c:524
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Nowe wydarzenie w dniach od %s do %s"
 
-#: ../src/gcal-manager.c:1395
+#: ../src/gcal-manager.c:1451
 msgid "Notification"
 msgstr "Powiadomienie"
 
-#: ../src/gcal-manager.c:1397
+#: ../src/gcal-manager.c:1453
 msgid "Email"
 msgstr "E-mail"
 
-#: ../src/gcal-manager.c:1411
+#: ../src/gcal-manager.c:1467
 msgid "days"
 msgstr "dni"
 
-#: ../src/gcal-manager.c:1417
+#: ../src/gcal-manager.c:1473
 msgid "weeks"
 msgstr "tygodnie"
 
-#: ../src/gcal-manager.c:1423
+#: ../src/gcal-manager.c:1479
 msgid "hours"
 msgstr "godziny"
 
-#: ../src/gcal-manager.c:1429
+#: ../src/gcal-manager.c:1485
 msgid "minutes"
 msgstr "minuty"
 
-#: ../src/gcal-manager.c:1441
+#: ../src/gcal-manager.c:1497
 msgid "before"
 msgstr "przed"
 
 #. Here translators should put the widgest letter in their alphabet, this
 #. * taken to make it align with week-view header
-#: ../src/gcal-month-view.c:911 ../src/gcal-week-view.c:1082
+#: ../src/gcal-month-view.c:915 ../src/gcal-week-view.c:1080
 msgid "WWW 99 - WWW 99"
 msgstr "WWW 99 - WWW 99"
+
+#: ../src/gcal-time-entry.c:101
+msgid "Change the time"
+msgstr "Zmień czas"
 
 #. day
 #: ../src/gcal-toolbar.c:322
@@ -165,7 +191,7 @@ msgid "Day"
 msgstr "Dzień"
 
 #. week
-#: ../src/gcal-toolbar.c:339 ../src/gcal-week-view.c:1096
+#: ../src/gcal-toolbar.c:339 ../src/gcal-week-view.c:1094
 msgid "Week"
 msgstr "Tydzień"
 
@@ -222,48 +248,26 @@ msgstr "pią"
 msgid "Sat"
 msgstr "sob"
 
-#: ../src/gcal-week-view.c:1279
+#: ../src/gcal-week-view.c:1277
 msgid "AM"
 msgstr "Przed południem"
 
-#: ../src/gcal-week-view.c:1279
+#: ../src/gcal-week-view.c:1277
 msgid "PM"
 msgstr "Po południu"
 
-#: ../src/gcal-week-view.c:1282 ../src/gcal-week-view.c:1351
+#: ../src/gcal-week-view.c:1280 ../src/gcal-week-view.c:1349
 msgid "Midnight"
 msgstr "Północ"
 
-#: ../src/gcal-week-view.c:1284 ../src/gcal-week-view.c:1354
+#: ../src/gcal-week-view.c:1282 ../src/gcal-week-view.c:1352
 msgid "Noon"
 msgstr "Południe"
 
-#: ../src/gcal-window.c:284
+#: ../src/gcal-window.c:294
 msgid "Search ..."
 msgstr "Wyszukiwanie..."
 
-#: ../src/gcal-window.c:1273
+#: ../src/gcal-window.c:1376
 msgid "Event deleted"
 msgstr "Usunięto wydarzenie"
-
-#: ../data/gnome-calendar.desktop.in.in.h:2
-msgid "Access, and manage calendar"
-msgstr "Wyświetlanie i zarządzanie kalendarzem"
-
-#: ../data/org.gnome.calendar.gschema.xml.in.h:1
-msgid "Window maximized"
-msgstr "Okno zmaksymalizowane"
-
-#: ../data/org.gnome.calendar.gschema.xml.in.h:2
-msgid "Window maximized state"
-msgstr "Stan maksymalizacji okna"
-
-#: ../data/org.gnome.calendar.gschema.xml.in.h:3
-msgid "Type of the active view"
-msgstr "Typ aktywnego widoku"
-
-#: ../data/org.gnome.calendar.gschema.xml.in.h:4
-msgid "Type of the active window view, default value is: monthly view"
-msgstr ""
-"Typ aktywnego widoku okna, domyślna wartość: \"monthly view\" (widok "
-"miesięczny)"
