@@ -45,6 +45,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-edit-dialog.h                                    \
     gcal-time-entry.c                                     \
     gcal-time-entry.h                                     \
+    gcal-date-entry.c                                     \
+    gcal-date-entry.h                                     \
     gcal-manager.c                                        \
     gcal-manager.h                                        \
     gcal-utils.c                                          \
