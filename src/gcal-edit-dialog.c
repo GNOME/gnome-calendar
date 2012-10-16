@@ -19,12 +19,14 @@
 
 #include "gcal-edit-dialog.h"
 #include "gcal-time-entry.h"
+#include "gcal-date-entry.h"
 #include "gcal-utils.h"
 
 #include <libecal/libecal.h>
 #include <glib/gi18n.h>
 
 typedef struct _SimpleTime SimpleTime;
+typedef struct _SimpleDate SimpleDate;
 typedef struct _SimpleEventStore SimpleEventStore;
 
 struct _SimpleTime
@@ -33,11 +35,20 @@ struct _SimpleTime
   guint minute;
 };
 
+struct _SimpleDate
+{
+  guint day;
+  guint month;
+  guint year;
+};
+
 struct _SimpleEventStore
 {
   gchar      *summary;
 
   gboolean    all_day;
+  SimpleDate *start_date;
+  SimpleDate *end_date;
   SimpleTime *start_time;
   SimpleTime *end_time;
 
@@ -95,6 +106,9 @@ static void        gcal_edit_dialog_button_toggled        (GtkToggleButton   *bu
 
 static void        gcal_edit_dialog_all_day_changed       (GtkWidget         *widget,
                                                            gpointer           user_data);
+
+static gboolean    gcal_edit_dialog_date_changed          (GcalEditDialog    *dialog,
+                                                           gboolean           start_date);
 
 G_DEFINE_TYPE(GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
 
@@ -199,10 +213,7 @@ gcal_edit_dialog_constructed (GObject* object)
                 "column-spacing", 12,
                 "column-homogeneous", FALSE,
                 NULL);
-  priv->start_date_entry = gtk_entry_new ();
-  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->start_date_entry),
-                                     GTK_ENTRY_ICON_SECONDARY,
-                                     "x-office-calendar-symbolic");
+  priv->start_date_entry = gcal_date_entry_new ();
   gtk_container_add (GTK_CONTAINER (child), priv->start_date_entry);
 
   priv->start_time_entry = gcal_time_entry_new ();
@@ -223,10 +234,7 @@ gcal_edit_dialog_constructed (GObject* object)
                 "orientation", GTK_ORIENTATION_HORIZONTAL,
                 "column-spacing", 12,
                 NULL);
-  priv->end_date_entry = gtk_entry_new ();
-  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->end_date_entry),
-                                     GTK_ENTRY_ICON_SECONDARY,
-                                     "x-office-calendar-symbolic");
+  priv->end_date_entry = gcal_date_entry_new ();
   gtk_container_add (GTK_CONTAINER (child), priv->end_date_entry);
 
   priv->end_time_entry = gcal_time_entry_new ();
@@ -354,6 +362,16 @@ gcal_edit_dialog_finalize (GObject *object)
 
   if (priv->event_uid != NULL)
     g_free (priv->event_uid);
+
+  if (priv->ev_store != NULL)
+    {
+      g_free (priv->ev_store->start_date);
+      g_free (priv->ev_store->end_date);
+      g_free (priv->ev_store->start_time);
+      g_free (priv->ev_store->end_time);
+
+      g_free (priv->ev_store);
+    }
 
   if (priv->calendars_menu != NULL)
     g_object_unref (priv->calendars_menu);
@@ -619,6 +637,59 @@ gcal_edit_dialog_all_day_changed (GtkWidget *widget,
     }
 }
 
+static gboolean
+gcal_edit_dialog_date_changed (GcalEditDialog *dialog,
+                               gboolean        start_date)
+{
+  GcalEditDialogPrivate *priv;
+  guint day;
+  guint month;
+  guint year;
+  guint hour;
+  guint minute;
+
+  GtkWidget *widget;
+  SimpleDate *date;
+  SimpleTime *time;
+  priv = dialog->priv;
+
+  if (start_date)
+    {
+      widget = priv->start_date_entry;
+      date = priv->ev_store->start_date;
+      time = priv->ev_store->start_time;
+    }
+  else
+    {
+      widget = priv->end_date_entry;
+      date = priv->ev_store->end_date;
+      time = priv->ev_store->end_time;
+    }
+
+  gcal_date_entry_get_date (GCAL_DATE_ENTRY (widget),
+                            &day,
+                            &month,
+                            &year);
+  if (day != date->day ||
+      month != date->month ||
+      year != date->year)
+    {
+      return TRUE;
+    }
+
+  widget = start_date ? priv->start_time_entry : priv->end_time_entry;
+  gcal_time_entry_get_time (GCAL_TIME_ENTRY (widget),
+                            &hour,
+                            &minute);
+  if (hour != time->hour ||
+      minute != time->minute)
+    {
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
 /* Public API */
 GtkWidget*
 gcal_edit_dialog_new (void)
@@ -644,8 +715,6 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   gboolean all_day;
 
   icaltimetype *date;
-  gchar buffer [64];
-  struct tm tm_date;
 
   priv = dialog->priv;
   all_day = FALSE;
@@ -665,6 +734,8 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
     {
       priv->ev_store = g_new0 (SimpleEventStore, 1);
 
+      priv->ev_store->start_date = g_new0 (SimpleDate, 1);
+      priv->ev_store->end_date = g_new0 (SimpleDate, 1);
       priv->ev_store->start_time = g_new0 (SimpleTime, 1);
       priv->ev_store->end_time = g_new0 (SimpleTime, 1);
     }
@@ -683,14 +754,16 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   gcal_edit_dialog_set_calendar_selected (dialog);
 
   /* start date */
-  /* FIXME: Add dates (start/end) to ev_store and edit-capabilities */
   date = gcal_manager_get_event_start_date (priv->manager,
                                             priv->source_uid,
                                             priv->event_uid);
-  tm_date = icaltimetype_to_tm (date);
-  e_utf8_strftime_fix_am_pm (buffer, 64, "%x", &tm_date);
-  gtk_entry_set_text (GTK_ENTRY (priv->start_date_entry),
-                      buffer);
+  gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->start_date_entry),
+                            date->day,
+                            date->month,
+                            date->year);
+  priv->ev_store->start_date->day = date->day;
+  priv->ev_store->start_date->month = date->month;
+  priv->ev_store->start_date->year = date->year;
 
   /* all_day  */
   priv->ev_store->all_day = gcal_manager_get_event_all_day (priv->manager,
@@ -719,10 +792,13 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   date = gcal_manager_get_event_end_date (priv->manager,
                                           priv->source_uid,
                                           priv->event_uid);
-  tm_date = icaltimetype_to_tm (date);
-  e_utf8_strftime_fix_am_pm (buffer, 64, "%x", &tm_date);
-  gtk_entry_set_text (GTK_ENTRY (priv->end_date_entry),
-                      buffer);
+  gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
+                            date->day,
+                            date->month,
+                            date->year);
+  priv->ev_store->end_date->day = date->day;
+  priv->ev_store->end_date->month = date->month;
+  priv->ev_store->end_date->year = date->year;
 
   /* end time */
   if (all_day)
@@ -893,6 +969,7 @@ GList*
 gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog)
 {
   GcalEditDialogPrivate *priv;
+  gboolean date_changed;
   gchar *desc;
   GList *res;
 
@@ -910,12 +987,24 @@ gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog)
     }
 
   /* FIXME: add calendar and dates and times and all_day */
+  date_changed = gcal_edit_dialog_date_changed (dialog, TRUE);
+  if (date_changed)
+    {
+      res = g_list_append (res, GINT_TO_POINTER (EVENT_START_DATE));
+    }
+
+  date_changed = gcal_edit_dialog_date_changed (dialog, FALSE);
+  if (date_changed)
+    {
+      res = g_list_append (res, GINT_TO_POINTER (EVENT_END_DATE));
+    }
 
   if (g_strcmp0 (priv->ev_store->location,
                  gtk_entry_get_text (GTK_ENTRY (priv->location_entry))) != 0)
     {
       res = g_list_append (res, GINT_TO_POINTER (EVENT_LOCATION));
     }
+
   /* getting desc */
   desc = gcal_edit_dialog_get_event_description (dialog);
   if (g_strcmp0 (priv->ev_store->description, desc) != 0)
@@ -962,4 +1051,42 @@ gcal_edit_dialog_get_event_description (GcalEditDialog *dialog)
   gtk_text_buffer_get_end_iter (buffer, &end_iter);
   desc = gtk_text_buffer_get_text (buffer, &start_iter, &end_iter, FALSE);
   return desc;
+}
+
+icaltimetype*
+gcal_edit_dialog_get_start_date (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+  icaltimetype *date;
+
+  guint value1;
+  guint value2;
+  guint value3;
+
+  priv = dialog->priv;
+
+  date = g_new0 (icaltimetype, 1);
+
+  gcal_date_entry_get_date (GCAL_DATE_ENTRY (priv->start_date_entry),
+                            &value1,
+                            &value2,
+                            &value3);
+  date->day = value1;
+  date->month = value2;
+  date->year = value3;
+
+  value1 = value2 = 0;
+  gcal_time_entry_get_time (GCAL_TIME_ENTRY (priv->start_time_entry),
+                            &value1,
+                            &value2);
+  date->hour = value1;
+  date->minute = value2;
+
+  if (date->hour == 0 &&
+      date->minute == 0)
+    {
+      date->is_date = 1;
+    }
+
+  return date;
 }

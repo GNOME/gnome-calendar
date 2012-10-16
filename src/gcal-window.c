@@ -1322,23 +1322,17 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
                 break;
               case EVENT_START_DATE:
                 {
-                  icaltimetype *new_start_date;
+                  icaltimetype *date;
+
+                  date = gcal_edit_dialog_get_start_date (GCAL_EDIT_DIALOG (dialog));
 
                   g_debug ("Will change start_date");
-                  /* FIXME: will have to call gcal_edit_dialog_peek_start_date */
-                  /* FIXME: take into account all-day assumptions */
-                  new_start_date =
-                    gcal_manager_get_event_start_date (
-                        manager,
-                        gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
-                        gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)));
-                  icaltime_adjust (new_start_date, 1, 0, 0, 0);
                   gcal_manager_set_event_start_date (
-                      manager,
-                      gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
-                      gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)),
-                      new_start_date);
-                  g_free (new_start_date);
+                       manager,
+                       gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
+                       gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)),
+                       date);
+                  g_free (date);
                   break;
                 }
               case EVENT_LOCATION:

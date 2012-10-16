@@ -50,6 +50,7 @@ typedef enum
 {
   EVENT_SUMMARY = 0,
   EVENT_START_DATE,
+  EVENT_END_DATE,
   EVENT_LOCATION,
   EVENT_DESCRIPTION,
 } EventEditableProperty;

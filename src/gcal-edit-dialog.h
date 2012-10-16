@@ -53,30 +53,32 @@ struct _GcalEditDialogClass
 };
 
 
-GType           gcal_edit_dialog_get_type                (void);
+GType                gcal_edit_dialog_get_type                (void);
 
-GtkWidget*      gcal_edit_dialog_new                     (void);
+GtkWidget*           gcal_edit_dialog_new                     (void);
 
-void            gcal_edit_dialog_set_event               (GcalEditDialog *dialog,
-                                                          const gchar    *source_uid,
-                                                          const gchar    *event_uid);
+void                 gcal_edit_dialog_set_event               (GcalEditDialog *dialog,
+                                                               const gchar    *source_uid,
+                                                               const gchar    *event_uid);
 
-void            gcal_edit_dialog_set_manager             (GcalEditDialog *dialog,
-                                                          GcalManager    *manager);
+void                 gcal_edit_dialog_set_manager             (GcalEditDialog *dialog,
+                                                               GcalManager    *manager);
 
-const gchar*    gcal_edit_dialog_peek_source_uid         (GcalEditDialog *dialog);
+const gchar*         gcal_edit_dialog_peek_source_uid         (GcalEditDialog *dialog);
 
-const gchar*    gcal_edit_dialog_peek_event_uid          (GcalEditDialog *dialog);
+const gchar*         gcal_edit_dialog_peek_event_uid          (GcalEditDialog *dialog);
 
-gchar*          gcal_edit_dialog_get_event_uuid          (GcalEditDialog *dialog);
+gchar*               gcal_edit_dialog_get_event_uuid          (GcalEditDialog *dialog);
 
-GList*          gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog);
+GList*               gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog);
 
-const gchar*    gcal_edit_dialog_peek_summary            (GcalEditDialog *dialog);
+const gchar*         gcal_edit_dialog_peek_summary            (GcalEditDialog *dialog);
 
-const gchar*    gcal_edit_dialog_peek_location           (GcalEditDialog *dialog);
+const gchar*         gcal_edit_dialog_peek_location           (GcalEditDialog *dialog);
 
-gchar*          gcal_edit_dialog_get_event_description   (GcalEditDialog *dialog);
+gchar*               gcal_edit_dialog_get_event_description   (GcalEditDialog *dialog);
+
+icaltimetype*        gcal_edit_dialog_get_start_date          (GcalEditDialog *dialog);
 
 G_END_DECLS
 
