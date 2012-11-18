@@ -330,10 +330,13 @@ gcal_date_entry_delete_text (GtkEditable *editable,
 
   if (priv->internal_skip)
     {
-      parent_editable_iface->delete_text (editable,
-                                          start_pos,
-                                          end_pos);
+      /* FIXME: Handle delete_text */
+      /* handle delete */
     }
+
+  parent_editable_iface->delete_text (editable,
+                                      start_pos,
+                                      end_pos);
 }
 
 static void
