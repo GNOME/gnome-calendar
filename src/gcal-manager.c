@@ -1689,6 +1689,39 @@ gcal_manager_set_event_start_date (GcalManager        *manager,
 }
 
 void
+gcal_manager_set_event_end_date (GcalManager        *manager,
+                                 const gchar        *source_uid,
+                                 const gchar        *event_uid,
+                                 const icaltimetype *initial_date)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponent *event;
+  ECalComponentDateTime dt;
+  icaltimetype *dt_start;
+
+  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  event = g_hash_table_lookup (unit->events, event_uid);
+
+  dt_start = gcal_dup_icaltime (initial_date);
+  dt.value = dt_start;
+  dt.tzid = NULL;
+  e_cal_component_set_dtend (event, &dt);
+
+  e_cal_component_commit_sequence (event);
+
+  e_cal_client_modify_object (unit->client,
+                              e_cal_component_get_icalcomponent (event),
+                              CALOBJ_MOD_ALL,
+                              NULL,
+                              gcal_manager_on_event_modified,
+                              manager);
+}
+
+void
 gcal_manager_set_event_summary (GcalManager *manager,
                                 const gchar *source_uid,
                                 const gchar *event_uid,

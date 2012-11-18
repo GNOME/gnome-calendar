@@ -143,6 +143,11 @@ void           gcal_manager_set_event_start_date    (GcalManager        *manager
                                                      const gchar        *event_uid,
                                                      const icaltimetype *initial_date);
 
+void           gcal_manager_set_event_end_date      (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid,
+                                                     const icaltimetype *initial_date);
+
 void           gcal_manager_set_event_summary       (GcalManager        *manager,
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid,
