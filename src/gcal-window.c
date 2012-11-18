@@ -1335,6 +1335,21 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
                   g_free (date);
                   break;
                 }
+              case EVENT_END_DATE:
+                {
+                  icaltimetype *date;
+
+                  date = gcal_edit_dialog_get_end_date (GCAL_EDIT_DIALOG (dialog));
+
+                  g_debug ("Will change start_date");
+                  gcal_manager_set_event_end_date (
+                       manager,
+                       gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
+                       gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)),
+                       date);
+                  g_free (date);
+                  break;
+                }
               case EVENT_LOCATION:
                 g_debug ("Will change location");
                 gcal_manager_set_event_location (
