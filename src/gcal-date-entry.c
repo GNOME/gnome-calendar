@@ -27,9 +27,9 @@ struct _GcalDateEntryPrivate
 {
   gboolean  internal_skip;
 
-  guint     day;              /* 1 - 28 || 29 || 30 || 31 */
-  guint     month;            /* 1 - 12 */
-  guint     year;
+  gint      day;              /* 1 - 28 || 29 || 30 || 31 */
+  gint      month;            /* 1 - 12 */
+  gint      year;
 
   gchar    *mask;
   guint     day_pos;
@@ -368,9 +368,9 @@ gcal_date_entry_new (void)
 
 void
 gcal_date_entry_set_date (GcalDateEntry *entry,
-                          guint          day,
-                          guint          month,
-                          guint          year)
+                          gint           day,
+                          gint           month,
+                          gint           year)
 {
   GcalDateEntryPrivate *priv;
 
@@ -386,9 +386,9 @@ gcal_date_entry_set_date (GcalDateEntry *entry,
 
 void
 gcal_date_entry_get_date (GcalDateEntry *entry,
-                          guint         *day,
-                          guint         *month,
-                          guint         *year)
+                          gint          *day,
+                          gint          *month,
+                          gint          *year)
 {
   GcalDateEntryPrivate *priv;
 

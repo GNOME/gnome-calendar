@@ -53,12 +53,12 @@ GType            gcal_time_entry_get_type        (void);
 GtkWidget*       gcal_time_entry_new             (void);
 
 void             gcal_time_entry_set_time        (GcalTimeEntry *entry,
-                                                  guint          hours,
-                                                  guint          minutes);
+                                                  gint           hours,
+                                                  gint           minutes);
 
 void             gcal_time_entry_get_time        (GcalTimeEntry *entry,
-                                                  guint         *hours,
-                                                  guint         *minutes);
+                                                  gint          *hours,
+                                                  gint          *minutes);
 
 G_END_DECLS
 

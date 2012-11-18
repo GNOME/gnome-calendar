@@ -25,8 +25,8 @@ struct _GcalTimeEntryPrivate
 {
   gboolean internal_delete;
 
-  guint    hours;
-  guint    minutes;
+  gint    hours;
+  gint    minutes;
 };
 
 static void     gtk_editable_iface_init                        (GtkEditableInterface *iface);
@@ -292,9 +292,9 @@ gcal_time_entry_insert_text (GtkEditable *editable,
 
   /* setting hours, minutes */
   hours_text = g_strdup_printf ("%.2s", old_text);
-  priv->hours = (guint) g_ascii_strtoull (hours_text, NULL, 10);
+  priv->hours = (gint) g_ascii_strtoull (hours_text, NULL, 10);
   g_free (hours_text);
-  priv->minutes = (guint) g_ascii_strtoull (old_text + 3, NULL, 10);
+  priv->minutes = (gint) g_ascii_strtoull (old_text + 3, NULL, 10);
 
   priv->internal_delete = TRUE;
   gtk_editable_delete_text (editable, 0, 5);
@@ -322,8 +322,8 @@ gcal_time_entry_new (void)
 
 void
 gcal_time_entry_set_time (GcalTimeEntry *entry,
-                          guint          hours,
-                          guint          minutes)
+                          gint           hours,
+                          gint           minutes)
 {
   GcalTimeEntryPrivate *priv;
   gchar *new_time;
@@ -343,8 +343,8 @@ gcal_time_entry_set_time (GcalTimeEntry *entry,
 
 void
 gcal_time_entry_get_time (GcalTimeEntry *entry,
-                          guint         *hours,
-                          guint         *minutes)
+                          gint          *hours,
+                          gint          *minutes)
 {
   GcalTimeEntryPrivate *priv;
 

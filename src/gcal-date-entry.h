@@ -55,14 +55,14 @@ GType            gcal_date_entry_get_type        (void);
 GtkWidget*       gcal_date_entry_new             (void);
 
 void             gcal_date_entry_set_date        (GcalDateEntry *entry,
-                                                  guint          day,
-                                                  guint          month,
-                                                  guint          year);
+                                                  gint           day,
+                                                  gint           month,
+                                                  gint           year);
 
 void             gcal_date_entry_get_date        (GcalDateEntry *entry,
-                                                  guint         *day,
-                                                  guint         *month,
-                                                  guint         *year);
+                                                  gint          *day,
+                                                  gint          *month,
+                                                  gint          *year);
 
 G_END_DECLS
 
