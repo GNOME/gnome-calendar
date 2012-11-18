@@ -29,6 +29,15 @@ struct _GcalTimeEntryPrivate
   gint    minutes;
 };
 
+enum
+{
+  MODIFIED,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
+
+
 static void     gtk_editable_iface_init                        (GtkEditableInterface *iface);
 
 static void     gcal_time_entry_constructed                    (GObject              *object);
@@ -40,6 +49,10 @@ static void     gcal_time_entry_insert_text                    (GtkEditable     
                                                                 const gchar          *new_text,
                                                                 gint                  new_text_length,
                                                                 gint                 *position);
+
+static void     gcal_time_entry_delete_text                    (GtkEditable          *editable,
+                                                                gint                  start_pos,
+                                                                gint                  end_pos);
 
 G_DEFINE_TYPE_WITH_CODE (GcalTimeEntry,
                          gcal_time_entry,
@@ -58,6 +71,17 @@ gcal_time_entry_class_init (GcalTimeEntryClass *klass)
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_time_entry_constructed;
+
+  signals[MODIFIED] = g_signal_new ("modified",
+                                    GCAL_TYPE_TIME_ENTRY,
+                                    G_SIGNAL_RUN_LAST,
+                                    G_STRUCT_OFFSET (GcalTimeEntryClass,
+                                                     modified),
+                                    NULL, NULL,
+                                    g_cclosure_marshal_VOID__VOID,
+                                    G_TYPE_NONE,
+                                    0);
+
 
   g_type_class_add_private ((gpointer)klass, sizeof(GcalTimeEntryPrivate));
 }
@@ -82,6 +106,7 @@ static void
 gtk_editable_iface_init (GtkEditableInterface *iface)
 {
   iface->insert_text = gcal_time_entry_insert_text;
+  iface->delete_text = gcal_time_entry_delete_text;
 }
 
 static void
@@ -311,6 +336,32 @@ gcal_time_entry_insert_text (GtkEditable *editable,
   *position = next_pos;
   g_free (old_text);
   g_free (text_to_insert);
+
+  /* sending modified signal */
+  g_signal_emit (editable, signals[MODIFIED], 0);
+}
+
+static void
+gcal_time_entry_delete_text (GtkEditable *editable,
+                             gint         start_pos,
+                             gint         end_pos)
+{
+  GcalTimeEntryPrivate *priv;
+  GtkEditableInterface *parent_editable_iface;
+
+  priv = GCAL_TIME_ENTRY (editable)->priv;
+  parent_editable_iface = g_type_interface_peek (gcal_time_entry_parent_class,
+                                                 GTK_TYPE_EDITABLE);
+  if (! priv->internal_delete)
+    {
+      /* FIXME: Handle delete_text */
+      /* handle delete */
+    }
+
+  parent_editable_iface->delete_text (editable,
+                                      start_pos,
+                                      end_pos);
+
 }
 
 /* Public API */

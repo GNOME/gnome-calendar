@@ -48,6 +48,9 @@ struct _GcalDateEntry
 struct _GcalDateEntryClass
 {
   GtkEntryClass parent_class;
+
+  /* signals */
+  void (*modified)  (GcalDateEntry *entry);
 };
 
 GType            gcal_date_entry_get_type        (void);

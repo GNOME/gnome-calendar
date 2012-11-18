@@ -38,6 +38,14 @@ struct _GcalDateEntryPrivate
   gboolean  have_long_year;
 };
 
+enum
+{
+  MODIFIED,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
+
 static void     gtk_editable_iface_init                        (GtkEditableInterface *iface);
 
 static void     gcal_date_entry_constructed                    (GObject              *object);
@@ -70,8 +78,17 @@ gcal_date_entry_class_init (GcalDateEntryClass *klass)
   GObjectClass *object_class;
 
   object_class = G_OBJECT_CLASS (klass);
-
   object_class->constructed = gcal_date_entry_constructed;
+
+  signals[MODIFIED] = g_signal_new ("modified",
+                                    GCAL_TYPE_DATE_ENTRY,
+                                    G_SIGNAL_RUN_LAST,
+                                    G_STRUCT_OFFSET (GcalDateEntryClass,
+                                                     modified),
+                                    NULL, NULL,
+                                    g_cclosure_marshal_VOID__VOID,
+                                    G_TYPE_NONE,
+                                    0);
 
   g_type_class_add_private ((gpointer)klass, sizeof(GcalDateEntryPrivate));
 }
@@ -255,6 +272,10 @@ gcal_date_entry_insert_text (GtkEditable *editable,
       gchar* unit_string;
       const gchar* text;
 
+      gint new_day;
+      gint new_month;
+      gint new_year;
+
       /* making space for new_string */
       priv->internal_skip = TRUE;
       gtk_editable_delete_text (editable,
@@ -270,18 +291,27 @@ gcal_date_entry_insert_text (GtkEditable *editable,
       /* Updating internal data and validating */
       text = gtk_entry_get_text (GTK_ENTRY (editable));
       unit_string = g_strndup (text + priv->day_pos, 2);
-      priv->day = (guint) g_ascii_strtoull (unit_string, NULL, 10);
+      new_day = (gint) g_ascii_strtoull (unit_string, NULL, 10);
       g_free (unit_string);
 
       unit_string = g_strndup (text + priv->month_pos, 2);
-      priv->month = (guint) g_ascii_strtoull (unit_string, NULL, 10);
+      new_month = (gint) g_ascii_strtoull (unit_string, NULL, 10);
       g_free (unit_string);
 
       unit_string = g_strndup (text + priv->year_pos, (priv->have_long_year ? 4 : 2));
-      priv->year = (guint) g_ascii_strtoull (unit_string, NULL, 10);
+      new_year = (gint) g_ascii_strtoull (unit_string, NULL, 10);
       g_free (unit_string);
 
-      gcal_date_entry_validate_and_insert (GCAL_DATE_ENTRY (editable));
+      if (priv->day != new_day ||
+          priv->month != new_month ||
+          priv->year != new_year)
+        {
+          priv->day = new_day;
+          priv->month = new_month;
+          priv->year = new_year;
+
+          gcal_date_entry_validate_and_insert (GCAL_DATE_ENTRY (editable));
+        }
     }
 }
 
@@ -354,6 +384,8 @@ gcal_date_entry_validate_and_insert (GcalDateEntry *entry)
   priv->internal_skip = TRUE;
   gtk_entry_set_text (GTK_ENTRY (entry), tmp);
   priv->internal_skip = FALSE;
+
+  g_signal_emit (entry, signals[MODIFIED], 0);
 
   g_free (tmp);
   g_free (tmp1);
