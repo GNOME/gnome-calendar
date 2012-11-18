@@ -80,6 +80,8 @@ gchar*               gcal_edit_dialog_get_event_description   (GcalEditDialog *d
 
 icaltimetype*        gcal_edit_dialog_get_start_date          (GcalEditDialog *dialog);
 
+icaltimetype*        gcal_edit_dialog_get_end_date            (GcalEditDialog *dialog);
+
 G_END_DECLS
 
 #endif /* __GCAL_EDIT_DIALOG_H__ */
