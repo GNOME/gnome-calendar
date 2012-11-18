@@ -507,6 +507,7 @@ gcal_arrow_bin_draw (GtkWidget *widget,
 
   width = gtk_widget_get_allocated_width (widget) - 2 * border_width;
   height = gtk_widget_get_allocated_height (widget) - 2 * border_width;
+  selected_border = 0;
 
   x = y = border_width;
   if (priv->arrow_position == GTK_POS_LEFT)
@@ -579,11 +580,11 @@ gcal_arrow_bin_draw_arrow (GtkWidget *widget,
   guint height;
   gdouble arrow_start_point;
 
-  GPoint p0;
-  GPoint p1;
-  GPoint p2;
-  GPoint p3;
-  GPoint p4;
+  GPoint p0 = { 0, 0 };
+  GPoint p1 = { 0, 0 };
+  GPoint p2 = { 0, 0 };
+  GPoint p3 = { 0, 0 };
+  GPoint p4 = { 0, 0 };
 
   priv = GCAL_ARROW_BIN (widget)->priv;
 
@@ -605,6 +606,7 @@ gcal_arrow_bin_draw_arrow (GtkWidget *widget,
 
   width = gtk_widget_get_allocated_width (widget) - 2 * border_width;
   height = gtk_widget_get_allocated_height (widget) - 2 * border_width;
+  selected_border = 0;
 
   switch (priv->arrow_position)
     {
