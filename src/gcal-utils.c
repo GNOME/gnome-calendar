@@ -20,12 +20,43 @@
 
 #include "gcal-utils.h"
 
+#include <libedataserver/libedataserver.h>
+#include <libedataserverui/libedataserverui.h>
+
 #include <glib/gi18n.h>
+
+#include <langinfo.h>
 
 #include <string.h>
 
-#include <libedataserver/libedataserver.h>
-#include <libedataserverui/libedataserverui.h>
+static const gint
+ab_day[7] =
+{
+  ABDAY_1,
+  ABDAY_2,
+  ABDAY_3,
+  ABDAY_4,
+  ABDAY_5,
+  ABDAY_6,
+  ABDAY_7,
+};
+
+static const gint
+month_item[12] =
+{
+  MON_1,
+  MON_2,
+  MON_3,
+  MON_4,
+  MON_5,
+  MON_6,
+  MON_7,
+  MON_8,
+  MON_9,
+  MON_10,
+  MON_11,
+  MON_12
+};
 
 G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
 
@@ -188,20 +219,16 @@ gcal_get_source_uid (GtkTreeModel *model,
   return uid;
 }
 
-const gchar*
+gchar*
 gcal_get_weekday (gint i)
 {
-  static const char* weekdays [] =
-    {
-      N_("Sun"),
-      N_("Mon"),
-      N_("Tue"),
-      N_("Wed"),
-      N_("Thu"),
-      N_("Fri"),
-      N_("Sat")
-   };
-  return _(weekdays[i]);
+  return nl_langinfo (ab_day[i]);
+}
+
+gchar*
+gcal_get_month_name (gint i)
+{
+  return nl_langinfo (month_item[i + 1]);
 }
 
 GdkPixbuf*

@@ -1122,10 +1122,13 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
   for (i = 0; i < 7; i++)
     {
+      gchar *weekday;
+
+      weekday = gcal_get_weekday (i);
       cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
       pango_layout_set_font_description (layout, bold_font);
-      pango_layout_set_text (layout, gcal_get_weekday (i), -1);
+      pango_layout_set_text (layout, weekday, -1);
       pango_cairo_update_layout (cr, layout);
       pango_layout_get_pixel_size (layout, &font_width, &font_height);
 

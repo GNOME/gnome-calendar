@@ -75,7 +75,9 @@ gchar*          gcal_get_source_name                            (GtkTreeModel   
 gchar*          gcal_get_source_uid                             (GtkTreeModel          *model,
                                                                  const gchar           *name);
 
-const gchar*    gcal_get_weekday                                (gint                   i);
+gchar*          gcal_get_weekday                                (gint                   i);
+
+gchar*          gcal_get_month_name                             (gint                   i);
 
 GdkPixbuf*      gcal_get_pixbuf_from_color                      (GdkColor              *color);
 

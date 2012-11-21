@@ -1176,13 +1176,16 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   for (i = 0; i < 7; i++)
     {
       gchar *weekday_header;
+      gchar *weekday_abv;
       gint n_day;
 
       n_day = start_of_week->day + i;
       if (n_day > icaltime_days_in_month (start_of_week->month, start_of_week->year))
         n_day = n_day - icaltime_days_in_month (start_of_week->month, start_of_week->year);
 
-      weekday_header = g_strdup_printf ("%s %d",gcal_get_weekday (i), n_day);
+      weekday_abv = gcal_get_weekday (i);
+      weekday_header = g_strdup_printf ("%s %d",weekday_abv, n_day);
+
       pango_layout_set_text (layout, weekday_header, -1);
       pango_cairo_update_layout (cr, layout);
       pango_layout_get_pixel_size (layout, NULL, &font_height);
