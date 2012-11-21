@@ -613,8 +613,7 @@ gcal_manager_reload_view (GcalManager     *manager,
   g_return_if_fail (priv->query != NULL);
 
   /* stopping */
-  if (unit->view != NULL)
-    g_clear_object (&(unit->view));
+  g_clear_object (&(unit->view));
 
   error = NULL;
   if (e_cal_client_get_view_sync (unit->client,

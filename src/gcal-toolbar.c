@@ -246,17 +246,12 @@ gcal_toolbar_finalize (GObject *object)
   g_return_if_fail (GCAL_IS_TOOLBAR (object));
   priv = GCAL_TOOLBAR (object)->priv;
 
-  if (priv->add_button != NULL)
-    g_clear_object (&(priv->add_button));
-  if (priv->views_box != NULL)
-    g_clear_object (&(priv->views_box));
-  if (priv->right_box != NULL)
-    g_clear_object (&(priv->right_box));
+  g_clear_object (&(priv->add_button));
+  g_clear_object (&(priv->views_box));
+  g_clear_object (&(priv->right_box));
 
-  if (priv->back_button)
-    g_clear_object (&(priv->back_button));
-  if (priv->edit_button)
-    g_clear_object (&(priv->edit_button));
+  g_clear_object (&(priv->back_button));
+  g_clear_object (&(priv->edit_button));
 
   G_OBJECT_CLASS (gcal_toolbar_parent_class)->finalize (object);
 }
