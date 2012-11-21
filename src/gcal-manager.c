@@ -71,6 +71,17 @@ struct _DeleteEventData
 
 typedef struct _DeleteEventData DeleteEventData;
 
+struct _MoveEventData
+{
+  gchar           *event_uid;
+  GcalManagerUnit *unit;
+  GcalManagerUnit *new_unit;
+  ECalComponent   *new_component;
+  GcalManager     *manager;
+};
+
+typedef struct _MoveEventData MoveEventData;
+
 struct _GcalManagerPrivate
 {
   /**
@@ -163,6 +174,11 @@ static void     gcal_manager_on_sources_row_changed       (GtkTreeModel    *stor
 static void     gcal_manager_on_event_removed             (GObject         *source_object,
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
+
+static void     gcal_manager_on_event_removed_for_move    (GObject         *source_object,
+                                                           GAsyncResult    *result,
+                                                           gpointer         user_data);
+
 
 static void     gcal_manager_send_fake_events_added       (GcalManager     *manager);
 
@@ -858,6 +874,48 @@ gcal_manager_on_event_removed (GObject      *source_object,
       /* removing events from hash */
       if (g_hash_table_remove (data->unit->events, data->event_uid))
         g_debug ("Found and removed: %s", data->event_uid);
+    }
+  else
+    {
+      //FIXME: do something when there was some error
+      ;
+    }
+
+  g_free (data->event_uid);
+  g_free (data);
+}
+
+static void
+gcal_manager_on_event_removed_for_move (GObject      *source_object,
+                                        GAsyncResult *result,
+                                        gpointer      user_data)
+{
+  GcalManagerPrivate *priv;
+  ECalClient *client;
+  MoveEventData *data;
+  GError *error;
+
+  client = E_CAL_CLIENT (source_object);
+  data = (MoveEventData*) user_data;
+  priv = ((GcalManager*) data->manager)->priv;
+
+  error = NULL;
+  if (e_cal_client_remove_object_finish (client, result, &error))
+    {
+      icalcomponent *new_event_icalcomp;
+      /* removing events from hash */
+      g_hash_table_remove (data->unit->events, data->event_uid);
+
+      e_cal_component_commit_sequence (data->new_component);
+
+      new_event_icalcomp =
+        e_cal_component_get_icalcomponent (data->new_component);
+      e_cal_client_create_object (data->new_unit->client,
+                                  new_event_icalcomp,
+                                  priv->async_ops,
+                                  gcal_manager_on_event_created,
+                                  data->manager);
+      g_object_unref (data->new_component);
     }
   else
     {
@@ -1627,9 +1685,7 @@ gcal_manager_create_event (GcalManager        *manager,
 
   if (final_date != NULL)
     {
-      g_debug ("setting final_date");
       *dt.value = *final_date;
-      g_debug ("dt_end :%s", icaltime_as_ical_string (*final_date));
       e_cal_component_set_dtend (event, &dt);
     }
   else
@@ -1813,4 +1869,45 @@ gcal_manager_set_event_description (GcalManager *manager,
                               NULL,
                               gcal_manager_on_event_modified,
                               manager);
+}
+
+void
+gcal_manager_move_event_to_source (GcalManager *manager,
+                                   const gchar *source_uid,
+                                   const gchar *event_uid,
+                                   const gchar *new_source_uid)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  GcalManagerUnit *new_unit;
+  ECalComponent *old_event;
+  ECalComponent *new_event;
+
+  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  priv = manager->priv;
+
+  unit = g_hash_table_lookup (priv->clients, source_uid);
+  old_event = g_hash_table_lookup (unit->events, event_uid);
+  new_unit = g_hash_table_lookup (priv->clients, new_source_uid);
+  if (old_event != NULL)
+    {
+      //FIXME: here sends notifications to everyone.
+      //FIXME: reload the events in all the views, etc, etc, etc
+      MoveEventData *data;
+
+      new_event = e_cal_component_clone (old_event);
+      data = g_new0 (MoveEventData, 1);
+      data->event_uid = g_strdup (event_uid);
+      data->unit = unit;
+      data->new_unit = new_unit;
+      data->new_component = new_event;
+      data->manager = manager;
+      e_cal_client_remove_object (unit->client,
+                                  event_uid,
+                                  NULL,
+                                  CALOBJ_MOD_ALL,
+                                  priv->async_ops,
+                                  gcal_manager_on_event_removed_for_move,
+                                  data);
+    }
 }

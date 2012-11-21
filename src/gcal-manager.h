@@ -163,6 +163,11 @@ void           gcal_manager_set_event_description   (GcalManager        *manager
                                                      const gchar        *event_uid,
                                                      const gchar        *description);
 
+void           gcal_manager_move_event_to_source    (GcalManager        *manager,
+                                                     const gchar        *source_uid,
+                                                     const gchar        *event_uid,
+                                                     const gchar        *new_source_uid);
+
 G_END_DECLS
 
 #endif /* __GCAL_MANAGER_H__ */
