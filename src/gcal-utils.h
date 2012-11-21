@@ -53,6 +53,7 @@ typedef enum
   EVENT_END_DATE,
   EVENT_LOCATION,
   EVENT_DESCRIPTION,
+  EVENT_SOURCE,
 } EventEditableProperty;
 
 typedef

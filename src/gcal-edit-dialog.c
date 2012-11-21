@@ -99,6 +99,8 @@ static gboolean    gcal_edit_dialog_date_changed          (GcalEditDialog    *di
 static void        gcal_edit_dialog_date_entry_modified   (GtkWidget         *entry,
                                                            gpointer           user_data);
 
+static gboolean    gcal_edit_dialog_source_changed        (GcalEditDialog    *dialog);
+
 G_DEFINE_TYPE(GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
 
 static void
@@ -409,6 +411,7 @@ gcal_edit_dialog_calendar_selected (GtkWidget *menu_item,
                       3, &color,
                       -1);
 
+
   if (priv->active_iter != NULL)
     gtk_tree_iter_free (priv->active_iter);
   priv->active_iter = gtk_tree_iter_copy (iter);
@@ -562,8 +565,6 @@ gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
 
   priv = dialog->priv;
 
-  /* FIXME: add clear for the rest of the fields when I define loading code for
-   * those below */
   /* summary */
   gtk_entry_set_text (GTK_ENTRY (priv->summary_entry), "");
 
@@ -827,6 +828,30 @@ gcal_edit_dialog_date_entry_modified (GtkWidget *entry,
                                          gcal_edit_dialog_date_entry_modified,
                                          user_data);
     }
+}
+
+static gboolean
+gcal_edit_dialog_source_changed (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+
+  GtkListStore *sources_model;
+  gchar* uid;
+
+  priv = dialog->priv;
+  sources_model = gcal_manager_get_sources_model (priv->manager);
+  gtk_tree_model_get (GTK_TREE_MODEL (sources_model), priv->active_iter,
+                      0, &uid,
+                      -1);
+
+  if (g_strcmp0 (priv->source_uid, uid) != 0)
+    {
+      g_free (uid);
+      return TRUE;
+    }
+
+  g_free (uid);
+  return FALSE;
 }
 
 /* Public API */
@@ -1100,7 +1125,6 @@ GList*
 gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog)
 {
   GcalEditDialogPrivate *priv;
-  gboolean date_changed;
   gchar *desc;
   GList *res;
 
@@ -1117,15 +1141,12 @@ gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog)
       res = g_list_append (res, GINT_TO_POINTER (EVENT_SUMMARY));
     }
 
-  /* FIXME: add calendar and dates and times and all_day */
-  date_changed = gcal_edit_dialog_date_changed (dialog, TRUE);
-  if (date_changed)
+  if (gcal_edit_dialog_date_changed (dialog, TRUE))
     {
       res = g_list_append (res, GINT_TO_POINTER (EVENT_START_DATE));
     }
 
-  date_changed = gcal_edit_dialog_date_changed (dialog, FALSE);
-  if (date_changed)
+  if (gcal_edit_dialog_date_changed (dialog, FALSE))
     {
       res = g_list_append (res, GINT_TO_POINTER (EVENT_END_DATE));
     }
@@ -1143,6 +1164,12 @@ gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog)
       res = g_list_append (res, GINT_TO_POINTER (EVENT_DESCRIPTION));
     }
   g_free (desc);
+
+  /* and the bigger one is the calendar, the source switched */
+  if (gcal_edit_dialog_source_changed (dialog))
+    {
+      res = g_list_append (res, GINT_TO_POINTER (EVENT_SOURCE));
+    }
 
   return res;
 }
@@ -1264,4 +1291,21 @@ gcal_edit_dialog_get_end_date (GcalEditDialog *dialog)
     }
 
   return date;
+}
+
+gchar*
+gcal_edit_dialog_get_new_source_uid (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+
+  GtkListStore *sources_model;
+  gchar* uid;
+
+  priv = dialog->priv;
+  sources_model = gcal_manager_get_sources_model (priv->manager);
+  gtk_tree_model_get (GTK_TREE_MODEL (sources_model), priv->active_iter,
+                      0, &uid,
+                      -1);
+
+  return uid;
 }

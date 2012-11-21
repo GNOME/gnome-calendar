@@ -82,6 +82,8 @@ icaltimetype*        gcal_edit_dialog_get_start_date          (GcalEditDialog *d
 
 icaltimetype*        gcal_edit_dialog_get_end_date            (GcalEditDialog *dialog);
 
+gchar*               gcal_edit_dialog_get_new_source_uid      (GcalEditDialog *dialog);
+
 G_END_DECLS
 
 #endif /* __GCAL_EDIT_DIALOG_H__ */
