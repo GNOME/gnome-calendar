@@ -1341,7 +1341,7 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
 
                   date = gcal_edit_dialog_get_end_date (GCAL_EDIT_DIALOG (dialog));
 
-                  g_debug ("Will change start_date");
+                  g_debug ("Will change end_date");
                   gcal_manager_set_event_end_date (
                        manager,
                        gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
@@ -1369,6 +1369,20 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
                        gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)),
                        new_desc);
                   g_free (new_desc);
+                  break;
+                }
+              case EVENT_SOURCE:
+                {
+                  gchar *new_uid;
+
+                  new_uid = gcal_edit_dialog_get_new_source_uid (GCAL_EDIT_DIALOG (dialog));
+                  gcal_manager_move_event_to_source (
+                       manager,
+                       gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
+                       gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)),
+                       new_uid);
+                  g_free (new_uid);
+                  break;
                 }
               default:
                 break;
