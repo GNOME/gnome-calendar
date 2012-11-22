@@ -351,6 +351,19 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
                               GtkAllocation *allocation)
 {
   GcalYearViewPrivate *priv;
+  gint i;
+  GList *l;
+
+  GtkBorder padding;
+  PangoLayout *layout;
+
+  gint font_height;
+  gdouble start_grid_y;
+
+  gdouble added_height;
+  gdouble horizontal_block;
+  gdouble vertical_block;
+  gdouble vertical_cell_margin;
 
   priv = GCAL_YEAR_VIEW (widget)->priv;
 
@@ -362,6 +375,72 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
                               allocation->y,
                               allocation->width,
                               allocation->height);
+    }
+
+  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
+                                 gtk_widget_get_state_flags (widget),
+                                 &padding);
+  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
+
+  pango_layout_set_font_description (
+      layout,
+      gtk_style_context_get_font (gtk_widget_get_style_context (widget),
+                                  gtk_widget_get_state_flags (widget)));
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+  g_object_unref (layout);
+
+  start_grid_y = gcal_year_view_get_start_grid_y (widget);
+  horizontal_block = allocation->width / 6;
+  vertical_block = (allocation->height - start_grid_y) / 2;
+  vertical_cell_margin = padding.top + font_height;
+
+  g_debug ("handling children sizes");
+  for (i = 0; i < 12; i++)
+    {
+      added_height = 0;
+      for (l = priv->months[i]; l != NULL; l = l->next)
+        {
+          GcalViewChild *child;
+          gint pos_x;
+          gint pos_y;
+          gint min_height;
+          gint natural_height;
+          GtkAllocation child_allocation;
+
+          g_debug ("list length for %s is %d",
+                   gcal_get_month_name (i),
+                   g_list_length (priv->months[i]));
+          child = (GcalViewChild*) l->data;
+
+          pos_x = ( i % 6 ) * horizontal_block;
+          pos_y = ( i / 6 ) * vertical_block;
+
+          if ((! gtk_widget_get_visible (child->widget))
+              && (! child->hidden_by_me))
+            continue;
+
+          gtk_widget_get_preferred_height (child->widget,
+                                           &min_height,
+                                           &natural_height);
+          child_allocation.x = pos_x;
+          child_allocation.y = start_grid_y + vertical_cell_margin + pos_y;
+          child_allocation.width = horizontal_block;
+          child_allocation.height = MIN (natural_height, vertical_block);
+          if (added_height + vertical_cell_margin + child_allocation.height
+              > vertical_block)
+            {
+              gtk_widget_hide (child->widget);
+              child->hidden_by_me = TRUE;
+            }
+          else
+            {
+              gtk_widget_show (child->widget);
+              child->hidden_by_me = FALSE;
+              child_allocation.y = child_allocation.y + added_height;
+              gtk_widget_size_allocate (child->widget, &child_allocation);
+              added_height += child_allocation.height;
+            }
+        }
     }
 }
 
@@ -718,17 +797,17 @@ gcal_year_view_draw_grid (GcalYearView *view,
                         ligther_color.blue);
 
   /* drawing grid text */
-  for (i = 0; i < 6; i++)
+  for (i = 0; i < 2; i++)
     {
-      for (j = 0; j < 2; j++)
+      for (j = 0; j < 6; j++)
         {
-          pango_layout_set_text (layout, gcal_get_month_name (i * 2 + j), -1);
+          pango_layout_set_text (layout, gcal_get_month_name (i * 6 + j), -1);
           pango_cairo_update_layout (cr, layout);
           pango_layout_get_pixel_size (layout, &font_width, &font_height);
 
           cairo_move_to (cr,
-                         (alloc->width / 6) * i + header_padding.left,
-                         start_grid_y + padding->top + j * (alloc->height - start_grid_y) / 2);
+                         (alloc->width / 6) * j + header_padding.left,
+                         start_grid_y + padding->top + i * (alloc->height - start_grid_y) / 2);
           pango_cairo_show_layout (cr, layout);
         }
     }
