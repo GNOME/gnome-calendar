@@ -610,10 +610,10 @@ gcal_window_set_active_view (GcalWindow         *window,
           case GCAL_WINDOW_VIEW_MONTH:
             priv->views[GCAL_WINDOW_VIEW_MONTH] = gcal_month_view_new ();
             break;
-        case GCAL_WINDOW_VIEW_YEAR:
-          priv->views[GCAL_WINDOW_VIEW_YEAR] = gcal_year_view_new ();
-          break;
-        default:
+          case GCAL_WINDOW_VIEW_YEAR:
+            priv->views[GCAL_WINDOW_VIEW_YEAR] = gcal_year_view_new ();
+            break;
+          default:
             g_debug ("Unimplemented view yet");
             return;
         }
@@ -1472,7 +1472,7 @@ gcal_window_update_event_widget (GcalManager     *manager,
 
 /* Public API */
 GtkWidget*
-gcal_window_new_with_view (GcalApplication *app,
+gcal_window_new_with_view (GcalApplication   *app,
                            GcalWindowViewType view_type)
 {
   GcalWindow *win;

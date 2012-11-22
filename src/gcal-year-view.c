@@ -63,7 +63,7 @@ enum
   PROP_DATE  //active-date inherited property
 };
 
-static void           gcal_view_interface_init              (GcalViewIface  *iface);
+static void           gcal_view_interface_init             (GcalViewIface  *iface);
 
 static void           gcal_year_view_set_property          (GObject        *object,
                                                             guint           property_id,
@@ -217,9 +217,9 @@ gcal_view_interface_init (GcalViewIface *iface)
 
 static void
 gcal_year_view_set_property (GObject       *object,
-                              guint          property_id,
-                              const GValue  *value,
-                              GParamSpec    *pspec)
+                             guint          property_id,
+                             const GValue  *value,
+                             GParamSpec    *pspec)
 {
   g_return_if_fail (GCAL_IS_YEAR_VIEW (object));
 
@@ -237,9 +237,9 @@ gcal_year_view_set_property (GObject       *object,
 
 static void
 gcal_year_view_get_property (GObject       *object,
-                              guint          property_id,
-                              GValue        *value,
-                              GParamSpec    *pspec)
+                             guint          property_id,
+                             GValue        *value,
+                             GParamSpec    *pspec)
 {
   GcalYearViewPrivate *priv;
 
@@ -356,7 +356,7 @@ gcal_year_view_unmap (GtkWidget *widget)
 
 static void
 gcal_year_view_size_allocate (GtkWidget     *widget,
-                               GtkAllocation *allocation)
+                              GtkAllocation *allocation)
 {
   GcalYearViewPrivate *priv;
 
@@ -375,7 +375,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
 
 static gboolean
 gcal_year_view_draw (GtkWidget *widget,
-                      cairo_t   *cr)
+                     cairo_t   *cr)
 {
   GtkStyleContext *context;
   GtkStateFlags state;
@@ -399,7 +399,7 @@ gcal_year_view_draw (GtkWidget *widget,
 
 static void
 gcal_year_view_add (GtkContainer *container,
-                     GtkWidget    *widget)
+                    GtkWidget    *widget)
 {
   GcalYearViewPrivate *priv;
   GList *l;
@@ -443,7 +443,7 @@ gcal_year_view_add (GtkContainer *container,
 
 static void
 gcal_year_view_remove (GtkContainer *container,
-                        GtkWidget    *widget)
+                       GtkWidget    *widget)
 {
   GcalYearViewPrivate *priv;
   gint i;
@@ -481,9 +481,9 @@ gcal_year_view_remove (GtkContainer *container,
 
 static void
 gcal_year_view_forall (GtkContainer *container,
-                        gboolean      include_internals,
-                        GtkCallback   callback,
-                        gpointer      callback_data)
+                       gboolean      include_internals,
+                       GtkCallback   callback,
+                       gpointer      callback_data)
 {
   GcalYearViewPrivate *priv;
   gint i;
@@ -509,7 +509,7 @@ gcal_year_view_forall (GtkContainer *container,
 
 static void
 gcal_year_view_set_date (GcalYearView *view,
-                          icaltimetype  *date)
+                         icaltimetype  *date)
 {
   GcalYearViewPrivate *priv;
   gboolean will_resize;
@@ -846,7 +846,7 @@ gcal_year_view_get_final_date (GcalView *view)
 
 static gboolean
 gcal_year_view_contains (GcalView     *view,
-                          icaltimetype *date)
+                         icaltimetype *date)
 {
   GcalYearViewPrivate *priv;
 
@@ -861,7 +861,7 @@ gcal_year_view_contains (GcalView     *view,
 
 static void
 gcal_year_view_remove_by_uuid (GcalView    *view,
-                                const gchar *uuid)
+                               const gchar *uuid)
 {
   GcalYearViewPrivate *priv;
   gint i;
@@ -890,7 +890,7 @@ gcal_year_view_remove_by_uuid (GcalView    *view,
 
 static GtkWidget*
 gcal_year_view_get_by_uuid (GcalView    *view,
-                             const gchar *uuid)
+                            const gchar *uuid)
 {
   GcalYearViewPrivate *priv;
   gint i;
