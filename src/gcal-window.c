@@ -487,6 +487,7 @@ gcal_window_constructed (GObject *object)
                     object);
 
   gtk_widget_show (embed);
+  gtk_widget_set_size_request (GTK_WIDGET (object), 800, 600);
 }
 
 static void
