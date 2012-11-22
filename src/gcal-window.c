@@ -518,8 +518,8 @@ gcal_window_set_property (GObject      *object,
   switch (property_id)
     {
     case PROP_ACTIVE_VIEW:
-      gcal_window_set_active_view (GCAL_WINDOW (object),
-                                   g_value_get_enum (value));
+      gcal_toolbar_set_active_view (GCAL_TOOLBAR (priv->toolbar_actor),
+                                    g_value_get_enum (value));
       return;
     case PROP_ACTIVE_DATE:
       priv->active_date = g_value_dup_boxed (value);
@@ -593,7 +593,6 @@ gcal_window_set_active_view (GcalWindow         *window,
   g_return_if_fail (GCAL_IS_WINDOW (window));
   priv = window->priv;
 
-  gcal_toolbar_set_active_view (GCAL_TOOLBAR (priv->toolbar_actor), view_type);
   if ((activated_page = gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook),
                                                priv->views[view_type]))
       != -1)
