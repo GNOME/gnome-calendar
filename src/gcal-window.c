@@ -592,6 +592,7 @@ gcal_window_set_active_view (GcalWindow         *window,
   g_return_if_fail (GCAL_IS_WINDOW (window));
   priv = window->priv;
 
+  gcal_toolbar_set_active_view (GCAL_TOOLBAR (priv->toolbar_actor), view_type);
   if ((activated_page = gtk_notebook_page_num (GTK_NOTEBOOK (priv->notebook),
                                                priv->views[view_type]))
       != -1)
