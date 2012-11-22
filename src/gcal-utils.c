@@ -228,7 +228,7 @@ gcal_get_weekday (gint i)
 gchar*
 gcal_get_month_name (gint i)
 {
-  return nl_langinfo (month_item[i + 1]);
+  return nl_langinfo (month_item[i]);
 }
 
 GdkPixbuf*
