@@ -194,6 +194,7 @@ gcal_application_set_app_menu (GApplication *app)
   view_as = g_menu_new ();
   g_menu_append (view_as, _("Weeks"), "app.view::week");
   g_menu_append (view_as, _("Months"), "app.view::month");
+  g_menu_append (view_as, _("Years"), "app.view::year");
 
   g_menu_append_section (app_menu, _("View as"), G_MENU_MODEL (view_as));
 

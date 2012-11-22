@@ -21,6 +21,7 @@
 #include "gcal-manager.h"
 #include "gcal-floating-container.h"
 #include "gcal-toolbar.h"
+#include "gcal-year-view.h"
 #include "gcal-month-view.h"
 #include "gcal-week-view.h"
 #include "gcal-view.h"
@@ -609,7 +610,10 @@ gcal_window_set_active_view (GcalWindow         *window,
           case GCAL_WINDOW_VIEW_MONTH:
             priv->views[GCAL_WINDOW_VIEW_MONTH] = gcal_month_view_new ();
             break;
-          default:
+        case GCAL_WINDOW_VIEW_YEAR:
+          priv->views[GCAL_WINDOW_VIEW_YEAR] = gcal_year_view_new ();
+          break;
+        default:
             g_debug ("Unimplemented view yet");
             return;
         }
