@@ -427,7 +427,11 @@ gcal_year_view_add (GtkContainer *container,
   new_child->widget = widget;
   new_child->hidden_by_me = FALSE;
 
-  priv->months[date->month - 1] = g_list_append (priv->months[date->month - 1], new_child);
+  priv->months[date->month - 1] =
+    g_list_insert_sorted (priv->months[date->month - 1],
+                          new_child,
+                          gcal_compare_event_widget_by_date);
+
   gtk_widget_set_parent (widget, GTK_WIDGET (container));
 
   g_free (date);

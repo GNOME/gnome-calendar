@@ -730,7 +730,9 @@ gcal_month_view_add (GtkContainer *container,
   new_child->widget = widget;
   new_child->hidden_by_me = FALSE;
 
-  priv->days[day] = g_list_append (priv->days[day], new_child);
+  priv->days[day] = g_list_insert_sorted (priv->days[day],
+                                          new_child,
+                                          gcal_compare_event_widget_by_date);
   gtk_widget_set_parent (widget, GTK_WIDGET (container));
 }
 
