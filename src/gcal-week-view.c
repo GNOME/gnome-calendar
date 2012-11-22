@@ -41,7 +41,7 @@ enum
   PROP_DATE
 };
 
-struct _GcalViewChild
+struct _GcalWeekViewChild
 {
   GtkWidget *widget;
   gboolean   hidden_by_me;
@@ -50,7 +50,7 @@ struct _GcalViewChild
   gint       index;
 };
 
-typedef struct _GcalViewChild GcalViewChild;
+typedef struct _GcalWeekViewChild GcalWeekViewChild;
 
 struct _GcalWeekViewPrivate
 {
@@ -405,9 +405,9 @@ gcal_week_view_realize (GtkWidget *widget)
     {
       for (l = priv->days[i]; l != NULL; l = l->next)
         {
-          GcalViewChild *child;
+          GcalWeekViewChild *child;
 
-          child = (GcalViewChild*) l->data;
+          child = (GcalWeekViewChild*) l->data;
           gtk_widget_set_parent_window (child->widget, priv->grid_window);
         }
     }
@@ -558,13 +558,13 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
 
       for (l = priv->days[i]; l != NULL; l = l->next)
         {
-          GcalViewChild *child;
+          GcalWeekViewChild *child;
           gint min_height;
           gint natural_height;
           gdouble vertical_span;
           GtkAllocation child_allocation;
 
-          child = (GcalViewChild*) l->data;
+          child = (GcalWeekViewChild*) l->data;
 
           if ((! gtk_widget_get_visible (child->widget)) && (! child->hidden_by_me))
             continue;
@@ -840,7 +840,7 @@ gcal_week_view_add (GtkContainer *container,
   gint day;
   icaltimetype *date;
 
-  GcalViewChild *new_child;
+  GcalWeekViewChild *new_child;
 
   g_return_if_fail (GCAL_IS_WEEK_VIEW (container));
   g_return_if_fail (GCAL_IS_EVENT_WIDGET (widget));
@@ -853,9 +853,9 @@ gcal_week_view_add (GtkContainer *container,
 
   for (l = priv->days[day - 1]; l != NULL; l = l->next)
     {
-      GcalViewChild *child;
+      GcalWeekViewChild *child;
 
-      child = (GcalViewChild*) l->data;
+      child = (GcalWeekViewChild*) l->data;
 
       if (g_strcmp0 (
             gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget)),
@@ -867,7 +867,7 @@ gcal_week_view_add (GtkContainer *container,
         }
     }
 
-  new_child = g_new0 (GcalViewChild, 1);
+  new_child = g_new0 (GcalWeekViewChild, 1);
   new_child->widget = widget;
   new_child->hidden_by_me = FALSE;
 
@@ -909,9 +909,9 @@ gcal_week_view_remove (GtkContainer *container,
 
   for (l = priv->days[day - 1]; l != NULL; l = l->next)
     {
-      GcalViewChild *child;
+      GcalWeekViewChild *child;
 
-      child = (GcalViewChild*) l->data;
+      child = (GcalWeekViewChild*) l->data;
       if (child->widget == widget)
         {
           priv->days[day - 1] = g_list_remove (priv->days[day - 1], child);
@@ -948,9 +948,9 @@ gcal_week_view_forall (GtkContainer *container,
 
       while (l)
         {
-          GcalViewChild *child;
+          GcalWeekViewChild *child;
 
-          child = (GcalViewChild*) l->data;
+          child = (GcalWeekViewChild*) l->data;
           l  = l->next;
 
           (* callback) (child->widget, callback_data);
@@ -991,10 +991,10 @@ gcal_week_view_set_date (GcalWeekView *view,
         {
           for (l = priv->days[i]; l != NULL; l = l->next)
             {
-              GcalViewChild *child;
+              GcalWeekViewChild *child;
               icaltimetype *child_date;
 
-              child = (GcalViewChild*) l->data;
+              child = (GcalWeekViewChild*) l->data;
               child_date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
               if (! gcal_view_contains (GCAL_VIEW (view), child_date))
                 to_remove = g_list_append (to_remove, child->widget);
@@ -1523,10 +1523,10 @@ gcal_week_view_remove_by_uuid (GcalView    *view,
     {
       for (l = priv->days[i]; l != NULL; l = l->next)
         {
-          GcalViewChild *child;
+          GcalWeekViewChild *child;
           const gchar* widget_uuid;
 
-          child = (GcalViewChild*) l->data;
+          child = (GcalWeekViewChild*) l->data;
           widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
           if (g_strcmp0 (uuid, widget_uuid) == 0)
             {
@@ -1553,10 +1553,10 @@ gcal_week_view_get_by_uuid (GcalView    *view,
     {
       for (l = priv->days[i]; l != NULL; l = l->next)
         {
-          GcalViewChild *child;
+          GcalWeekViewChild *child;
           const gchar* widget_uuid;
 
-          child = (GcalViewChild*) l->data;
+          child = (GcalWeekViewChild*) l->data;
           widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
           if (g_strcmp0 (uuid, widget_uuid) == 0)
             return child->widget;
