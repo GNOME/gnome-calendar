@@ -19,6 +19,8 @@
  */
 
 #include "gcal-utils.h"
+#include "gcal-event-widget.h"
+#include "gcal-view.h"
 
 #include <libedataserver/libedataserver.h>
 #include <libedataserverui/libedataserverui.h>
@@ -256,6 +258,25 @@ gcal_get_pixbuf_from_color (GdkColor *color)
                                      width, height);
   cairo_surface_destroy (surface);
   return pix;
+}
+
+gint
+gcal_compare_event_widget_by_date (gconstpointer a,
+                                   gconstpointer b)
+{
+  /* negative value if a < b; zero if a = b; positive value if a > b. */
+  GcalViewChild *a_child;
+  GcalViewChild *b_child;
+  icaltimetype *a_date;
+  icaltimetype *b_date;
+
+  a_child = (GcalViewChild*) a;
+  b_child = (GcalViewChild*) b;
+
+  a_date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (a_child->widget));
+  b_date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (b_child->widget));
+
+  return icaltime_compare (*a_date, *b_date);
 }
 
 /* Function to do a last minute fixup of the AM/PM stuff if the locale
