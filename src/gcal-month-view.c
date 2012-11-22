@@ -27,14 +27,6 @@
 
 #include <libecal/libecal.h>
 
-struct _GcalViewChild
-{
-  GtkWidget *widget;
-  gboolean   hidden_by_me;
-};
-
-typedef struct _GcalViewChild GcalViewChild;
-
 struct _GcalMonthViewPrivate
 {
   /**

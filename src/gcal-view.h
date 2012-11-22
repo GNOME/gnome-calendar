@@ -32,6 +32,13 @@ G_BEGIN_DECLS
 #define GCAL_IS_VIEW(obj)              (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GCAL_TYPE_VIEW))
 #define GCAL_VIEW_GET_INTERFACE(inst)  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), GCAL_TYPE_VIEW, GcalViewIface))
 
+struct _GcalViewChild
+{
+  GtkWidget *widget;
+  gboolean   hidden_by_me;
+};
+
+typedef struct _GcalViewChild GcalViewChild;
 
 typedef struct _GcalView                GcalView;
 typedef struct _GcalViewIface           GcalViewIface;
