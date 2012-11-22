@@ -1076,7 +1076,7 @@ gcal_week_view_draw_header (GcalWeekView  *view,
       gtk_style_context_get_font (context, state));
 
   /* Here translators should put the widgest letter in their alphabet, this
-   * taken to make it align with week-view header */
+   * taken to make it align with week-view header, which is the larger for now */
   pango_layout_set_text (layout, _("WWW 99 - WWW 99"), -1);
   pango_cairo_update_layout (cr, layout);
   pango_layout_get_pixel_size (layout, &layout_width, &layout_height);

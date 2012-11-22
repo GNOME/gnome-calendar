@@ -911,7 +911,7 @@ gcal_month_view_draw_header (GcalMonthView  *view,
   gtk_style_context_restore (context);
 
   /* Here translators should put the widgest letter in their alphabet, this
-   * taken to make it align with week-view header */
+   * taken to make it align with week-view header, which is the larger for now */
   pango_layout_set_text (layout, _("WWW 99 - WWW 99"), -1);
   pango_cairo_update_layout (cr, layout);
   pango_layout_get_pixel_size (layout, &layout_width, &layout_height);
@@ -1329,15 +1329,9 @@ gcal_month_view_contains (GcalView     *view,
 
   if (priv->date == NULL)
     return FALSE;
-  if (priv->date->month == date->month &&
-      priv->date->year == date->year)
-    {
-      return TRUE;
-    }
-  else
-    {
-      return FALSE;
-    }
+
+  return (priv->date->month == date->month &&
+          priv->date->year == date->year);
 }
 
 static void
