@@ -454,6 +454,17 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
             {
               gtk_widget_hide (child->widget);
               child->hidden_by_me = TRUE;
+
+              l = l->next;
+              for (; l != NULL; l = l->next)
+                {
+                  child = (GcalViewChild*) l->data;
+
+                  gtk_widget_hide (child->widget);
+                  child->hidden_by_me = TRUE;
+                }
+
+              break;
             }
           else
             {

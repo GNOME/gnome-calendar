@@ -394,7 +394,6 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
   vertical_block = (allocation->height - start_grid_y) / 2;
   vertical_cell_margin = padding.top + font_height;
 
-  g_debug ("handling children sizes");
   for (i = 0; i < 12; i++)
     {
       added_height = 0;
@@ -407,9 +406,6 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
           gint natural_height;
           GtkAllocation child_allocation;
 
-          g_debug ("list length for %s is %d",
-                   gcal_get_month_name (i),
-                   g_list_length (priv->months[i]));
           child = (GcalViewChild*) l->data;
 
           pos_x = ( i % 6 ) * horizontal_block;
@@ -431,6 +427,17 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
             {
               gtk_widget_hide (child->widget);
               child->hidden_by_me = TRUE;
+
+              l = l->next;
+              for (; l != NULL; l = l->next)
+                {
+                  child = (GcalViewChild*) l->data;
+
+                  gtk_widget_hide (child->widget);
+                  child->hidden_by_me = TRUE;
+                }
+
+              break;
             }
           else
             {
