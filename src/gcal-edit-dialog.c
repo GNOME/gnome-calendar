@@ -976,7 +976,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
                                                 priv->event_uid);
   gtk_entry_set_text (GTK_ENTRY (priv->location_entry),
                       const_text != NULL ? const_text : "");
-  priv->ev_store->location = g_strdup (const_text);
+  priv->ev_store->location = const_text != NULL ? g_strdup (const_text) : "";
 
   /* notes */
   priv->ev_store->description =
@@ -1154,6 +1154,9 @@ gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog)
   if (g_strcmp0 (priv->ev_store->location,
                  gtk_entry_get_text (GTK_ENTRY (priv->location_entry))) != 0)
     {
+      g_debug ("old Location: %s", priv->ev_store->location);
+      g_debug ("new Location: %s",
+               gtk_entry_get_text (GTK_ENTRY (priv->location_entry)));
       res = g_list_append (res, GINT_TO_POINTER (EVENT_LOCATION));
     }
 
