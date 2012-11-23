@@ -34,6 +34,7 @@ struct _GcalMonthViewPrivate
    * Every child added to the list placed in the position
    * of it corresponding cell number.
    * The cell number is calculated in _add method.
+   * cell_index = date->day + - priv->days_delay
    */
   GList          *days [35];
 
@@ -1420,7 +1421,8 @@ gcal_month_view_reposition_child (GcalView    *view,
               icaltimetype *date;
               gint day;
 
-              date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
+              date =
+                gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
 
               if (gcal_month_view_contains (view, date))
                 {

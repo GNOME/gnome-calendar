@@ -34,6 +34,7 @@ struct _GcalYearViewPrivate
    * Every child added to the list placed in the position
    * of it corresponding cell number.
    * The cell number is calculated in _add method.
+   * cell_index = date->month - 1
    */
   GList          *months [12];
 
@@ -219,7 +220,7 @@ gcal_year_view_set_property (GObject       *object,
     {
     case PROP_DATE:
       gcal_year_view_set_date (GCAL_YEAR_VIEW (object),
-                                g_value_dup_boxed (value));
+                               g_value_dup_boxed (value));
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
