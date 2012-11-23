@@ -1002,8 +1002,60 @@ static void
 gcal_year_view_reposition_child (GcalView    *view,
                                  const gchar *uuid)
 {
-  /* FIXME: Implement this one */
-  ;
+  GcalYearViewPrivate *priv;
+  gint i;
+  GList *l;
+
+  g_return_if_fail (GCAL_IS_YEAR_VIEW (view));
+  priv = GCAL_YEAR_VIEW (view)->priv;
+
+  for (i = 0; i < 12; i++)
+    {
+      for (l = priv->months[i]; l != NULL; l = l->next)
+        {
+          GcalViewChild *child;
+          const gchar* widget_uuid;
+
+          child = (GcalViewChild*) l->data;
+          widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
+          if (g_strcmp0 (uuid, widget_uuid) == 0)
+            {
+              icaltimetype *date;
+
+              date =
+                gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
+
+              if (gcal_year_view_contains (view, date))
+                {
+                  if (date->month - 1 == i)
+                    {
+                      priv->months[i] =
+                        g_list_sort (priv->months[i],
+                                     gcal_compare_event_widget_by_date);
+                    }
+                  else
+                    {
+                      priv->months[i] = g_list_remove (priv->months[i], child);
+
+                      child->hidden_by_me = TRUE;
+                      priv->months[date->month - 1] =
+                        g_list_insert_sorted (priv->months[date->month - 1],
+                                              child,
+                                              gcal_compare_event_widget_by_date);
+                    }
+
+                  gtk_widget_queue_resize (GTK_WIDGET (view));
+                }
+              else
+                {
+                  gcal_year_view_remove_by_uuid (view, uuid);
+                }
+
+              g_free (date);
+              return;
+            }
+        }
+    }
 }
 
 /* Public API */

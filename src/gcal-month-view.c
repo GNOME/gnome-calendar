@@ -1430,16 +1430,22 @@ gcal_month_view_reposition_child (GcalView    *view,
 
                   if (day == i)
                     {
-                      return;
+                      priv->days[day] =
+                        g_list_sort (priv->days[day],
+                                     gcal_compare_event_widget_by_date);
                     }
                   else
                     {
                       priv->days[i] = g_list_remove (priv->days[i], child);
 
-                      child->hidden_by_me = FALSE;
-                      priv->days[day] = g_list_append (priv->days[day], child);
-                      gtk_widget_queue_resize (GTK_WIDGET (view));
+                      child->hidden_by_me = TRUE;
+                      priv->days[day] =
+                        g_list_insert_sorted (priv->days[day],
+                                              child,
+                                              gcal_compare_event_widget_by_date);
                     }
+
+                  gtk_widget_queue_resize (GTK_WIDGET (view));
                 }
               else
                 {
@@ -1447,6 +1453,7 @@ gcal_month_view_reposition_child (GcalView    *view,
                 }
 
               g_free (date);
+              return;
             }
         }
     }
