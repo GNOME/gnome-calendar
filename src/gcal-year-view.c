@@ -749,6 +749,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
                           GtkAllocation *alloc,
                           GtkBorder     *padding)
 {
+  GcalYearViewPrivate *priv;
   GtkWidget *widget;
 
   GtkStyleContext *context;
@@ -768,6 +769,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
   PangoLayout *layout;
   const PangoFontDescription *font;
 
+  priv = view->priv;
   widget = GTK_WIDGET (view);
 
   context = gtk_widget_get_style_context (widget);
@@ -843,6 +845,18 @@ gcal_year_view_draw_grid (GcalYearView *view,
   cairo_stroke (cr);
 
   /* drawing actual_day_cell */
+  cairo_set_source_rgb (cr,
+                        selected_color.red,
+                        selected_color.green,
+                        selected_color.blue);
+
+  /* Two pixel line on the selected day cell */
+  cairo_set_line_width (cr, 2.0);
+  cairo_move_to (cr,
+                 (alloc->width / 6) * ( (priv->date->month - 1) % 6),
+                 start_grid_y + ((alloc->height - start_grid_y) / 2) * ( (priv->date->month - 1) / 6) + 1);
+  cairo_rel_line_to (cr, (alloc->width / 6), 0);
+  cairo_stroke (cr);
 }
 
 static gdouble
