@@ -1216,7 +1216,6 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   cairo_stroke (cr);
 
   /* drawing actual_day_cell */
-  //FIXME: What to do when the selected date isn't on the in the month
   cairo_set_source_rgb (cr,
                         selected_color.red,
                         selected_color.green,
@@ -1229,7 +1228,6 @@ gcal_month_view_draw_grid (GcalMonthView *view,
                  start_grid_y + ((alloc->height - start_grid_y) / 5) * ( priv->actual_day_cell / 7) + 1);
   cairo_rel_line_to (cr, (alloc->width / 7), 0);
   cairo_stroke (cr);
-
 }
 
 static gdouble

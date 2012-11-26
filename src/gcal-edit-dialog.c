@@ -619,7 +619,6 @@ gcal_edit_dialog_button_toggled (GtkToggleButton *button,
     return;
 
   active = gtk_toggle_button_get_active (button);
-  g_debug ("active: %s", active ? "TRUE" : "FALSE");
 
   g_signal_handlers_block_by_func (button,
                                    gcal_edit_dialog_button_toggled,
@@ -1154,9 +1153,6 @@ gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog)
   if (g_strcmp0 (priv->ev_store->location,
                  gtk_entry_get_text (GTK_ENTRY (priv->location_entry))) != 0)
     {
-      g_debug ("old Location: %s", priv->ev_store->location);
-      g_debug ("new Location: %s",
-               gtk_entry_get_text (GTK_ENTRY (priv->location_entry)));
       res = g_list_append (res, GINT_TO_POINTER (EVENT_LOCATION));
     }
 
