@@ -799,8 +799,10 @@ static void
 gcal_window_add_event (GcalToolbar *toolbar_actor,
                        gpointer     user_data)
 {
-  g_debug ("Create new-event here");
-  /* FIXME: bring new-event-overlay up front on the actual unit */
+  GcalWindowPrivate *priv;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+  gcal_view_create_event_on_current_unit (GCAL_VIEW (priv->views[priv->active_view]));
 }
 
 static void

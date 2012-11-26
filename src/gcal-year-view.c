@@ -128,6 +128,8 @@ static void           gcal_year_view_reposition_child             (GcalView     
 
 static void           gcal_year_view_clear_selection              (GcalView       *view);
 
+static void           gcal_year_view_create_event_on_current_unit (GcalView       *view);
+
 G_DEFINE_TYPE_WITH_CODE (GcalYearView,
                          gcal_year_view,
                          GTK_TYPE_CONTAINER,
@@ -207,7 +209,9 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->get_by_uuid = gcal_year_view_get_by_uuid;
   iface->reposition_child = gcal_year_view_reposition_child;
 
-  /* iface->clear_selection = gcal_year_view_clear_selection; */
+  iface->clear_selection = gcal_year_view_clear_selection;
+
+  iface->create_event_on_current_unit = gcal_year_view_create_event_on_current_unit;
 }
 
 static void
@@ -846,7 +850,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
 
   cairo_stroke (cr);
 
-  /* drawing actual_day_cell */
+  /* drawing current month marker */
   cairo_set_source_rgb (cr,
                         selected_color.red,
                         selected_color.green,
@@ -901,13 +905,12 @@ gcal_year_view_get_start_grid_y (GtkWidget *widget)
  * gcal_year_view_get_initial_date:
  *
  * Since: 0.1
- * Return value: the first day of the month
+ * Return value: the January first of the current year.
  * Returns: (transfer full): Release with g_free
  **/
 static icaltimetype*
 gcal_year_view_get_initial_date (GcalView *view)
 {
-  //FIXME to retrieve the 35 days range
   GcalYearViewPrivate *priv;
   icaltimetype *new_date;
 
@@ -1072,6 +1075,48 @@ gcal_year_view_reposition_child (GcalView    *view,
             }
         }
     }
+}
+
+static void
+gcal_year_view_clear_selection (GcalView *view)
+{
+  /* FIXME: implement this */
+  ;
+}
+
+static void
+gcal_year_view_create_event_on_current_unit (GcalView *view)
+{
+  GcalYearViewPrivate *priv;
+  gdouble h_block, v_block;
+  gdouble x, y;
+  icaltimetype *start_span;
+  icaltimetype *end_span;
+
+  /* FIXME: This need to include marking the current unit */
+  g_return_if_fail (GCAL_IS_YEAR_VIEW (view));
+  priv = GCAL_YEAR_VIEW (view)->priv;
+
+  h_block = (gdouble) gtk_widget_get_allocated_width (GTK_WIDGET (view)) / 6.0;
+  x = ((priv->date->month % 6 )- 1 + 0.5) * h_block;
+
+  v_block = (gdouble) gtk_widget_get_allocated_height (GTK_WIDGET (view)) / 2.0;
+  y = ((priv->date->month / 6 ) + 0.5) * v_block;
+
+  start_span = gcal_dup_icaltime (priv->date);
+  start_span->day = 1;
+  start_span->is_date = 1;
+  end_span = gcal_dup_icaltime (priv->date);
+  end_span->day = icaltime_days_in_month(priv->date->month, priv->date->year);
+  end_span->is_date = 1;
+
+  g_signal_emit_by_name (view,
+                         "create-event",
+                         start_span, end_span,
+                         x, y);
+
+  g_free (start_span);
+  g_free (end_span);
 }
 
 /* Public API */
