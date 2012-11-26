@@ -107,6 +107,10 @@ struct _GcalManagerPrivate
 
   /* timezone */
   icaltimezone    *system_timezone;
+
+  /* uid of pending create event actions */
+  gchar           *pending_event_uid;
+  gchar           *pending_event_source;
 };
 
 /* Signal IDs */
@@ -700,6 +704,17 @@ gcal_manager_on_view_objects_added (ECalClientView *view,
               g_hash_table_insert (unit->events,
                                    g_strdup (icalcomponent_get_uid (l->data)),
                                    component);
+
+              if (g_strcmp0 (source_uid, priv->pending_event_source) == 0 &&
+                  g_strcmp0 (icalcomponent_get_uid (l->data), priv->pending_event_uid) == 0)
+                {
+                  g_signal_emit (GCAL_MANAGER (user_data),
+                                 signals[EVENT_CREATED],
+                                 0,
+                                 source_uid, icalcomponent_get_uid (l->data));
+                  g_free (priv->pending_event_source);
+                  g_free (priv->pending_event_uid);
+                }
             }
           if (unit->enabled)
             {
@@ -1011,32 +1026,15 @@ gcal_manager_on_event_created (GObject      *source_object,
   gchar *new_uid;
   GError *error;
 
-  /* If the view catch a signal of the newly created object then
-   * almost sure I have nothing to do here. */
-
   client = E_CAL_CLIENT (source_object);
   error = NULL;
-  if (e_cal_client_create_object_finish (client, result, &new_uid, &error))
-    {
-      ESource *source;
-      const gchar *uid;
-
-      source = e_client_get_source (E_CLIENT (client));
-      uid = e_source_get_uid (source);
-
-      g_signal_emit (GCAL_MANAGER (user_data),
-                     signals[EVENT_CREATED],
-                     0,
-                     uid, new_uid);
-
-      g_free (new_uid);
-    }
-  else
+  if (! e_cal_client_create_object_finish (client, result, &new_uid, &error))
     {
       /* Some error */
       g_warning ("Error creating object: %s", error->message);
       g_error_free (error);
     }
+  g_free (new_uid);
 }
 
 static void
@@ -1701,6 +1699,11 @@ gcal_manager_create_event (GcalManager        *manager,
   e_cal_component_commit_sequence (event);
 
   new_event_icalcomp = e_cal_component_get_icalcomponent (event);
+
+  priv->pending_event_source = g_strdup (source_uid);
+  priv->pending_event_uid =
+    g_strdup (icalcomponent_get_uid (new_event_icalcomp));
+
   e_cal_client_create_object (unit->client,
                               new_event_icalcomp,
                               priv->async_ops,
