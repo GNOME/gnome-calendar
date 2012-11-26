@@ -61,6 +61,8 @@ struct _GcalViewIface
   void            (*reposition_child)                   (GcalView *view, const gchar *uuid);
 
   void            (*clear_selection)                    (GcalView *view);
+
+  void            (*create_event_on_current_unit)       (GcalView *view);
 };
 
 GType         gcal_view_get_type                      (void);
@@ -89,6 +91,7 @@ void          gcal_view_reposition_child              (GcalView     *view,
 
 void          gcal_view_clear_selection               (GcalView     *view);
 
+void          gcal_view_create_event_on_current_unit  (GcalView     *view);
 
 G_END_DECLS
 
