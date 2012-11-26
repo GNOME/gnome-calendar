@@ -43,6 +43,11 @@ struct _GcalYearViewPrivate
   /* property */
   icaltimetype   *date;
 
+  gint            clicked_cell;
+
+  gint            start_mark_cell;
+  gint            end_mark_cell;
+
   /* helpers */
   GdkRectangle   *prev_rectangle;
   GdkRectangle   *next_rectangle;
@@ -83,6 +88,15 @@ static void           gcal_year_view_size_allocate                (GtkWidget    
 
 static gboolean       gcal_year_view_draw                         (GtkWidget      *widget,
                                                                    cairo_t        *cr);
+
+static gboolean       gcal_year_view_button_press                 (GtkWidget      *widget,
+                                                                   GdkEventButton *event);
+
+static gboolean       gcal_year_view_motion_notify_event          (GtkWidget      *widget,
+                                                                   GdkEventMotion *event);
+
+static gboolean       gcal_year_view_button_release               (GtkWidget      *widget,
+                                                                   GdkEventButton *event);
 
 static void           gcal_year_view_add                          (GtkContainer   *constainer,
                                                                    GtkWidget      *widget);
@@ -156,6 +170,9 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   widget_class->unmap = gcal_year_view_unmap;
   widget_class->size_allocate = gcal_year_view_size_allocate;
   widget_class->draw = gcal_year_view_draw;
+  widget_class->button_press_event = gcal_year_view_button_press;
+  widget_class->motion_notify_event = gcal_year_view_motion_notify_event;
+  widget_class->button_release_event = gcal_year_view_button_release;
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->set_property = gcal_year_view_set_property;
@@ -181,6 +198,11 @@ gcal_year_view_init (GcalYearView *self)
                                             GCAL_TYPE_YEAR_VIEW,
                                             GcalYearViewPrivate);
   priv = self->priv;
+
+  priv->clicked_cell = -1;
+
+  priv->start_mark_cell = -1;
+  priv->end_mark_cell = -1;
 
   priv->prev_rectangle = NULL;
   priv->next_rectangle = NULL;
@@ -480,6 +502,208 @@ gcal_year_view_draw (GtkWidget *widget,
     GTK_WIDGET_CLASS (gcal_year_view_parent_class)->draw (widget, cr);
 
   return FALSE;
+}
+
+static gboolean
+gcal_year_view_button_press (GtkWidget      *widget,
+                             GdkEventButton *event)
+{
+  GcalYearViewPrivate *priv;
+  gdouble x, y;
+  gint width, height;
+  gdouble start_grid_y;
+
+  priv = GCAL_YEAR_VIEW (widget)->priv;
+
+  x = event->x;
+  y = event->y;
+
+  width = gtk_widget_get_allocated_width (widget);
+  height = gtk_widget_get_allocated_height (widget);
+  start_grid_y = gcal_year_view_get_start_grid_y (widget);
+
+  if (y - start_grid_y < 0)
+    {
+      if (priv->prev_rectangle->x < x &&
+          x < priv->prev_rectangle->x + priv->prev_rectangle->width &&
+          priv->prev_rectangle->y < y &&
+          y < priv->prev_rectangle->y + priv->prev_rectangle->height)
+        {
+          priv->clicked_prev = TRUE;
+        }
+      else if (priv->next_rectangle->x < x &&
+          x < priv->next_rectangle->x + priv->next_rectangle->width &&
+          priv->next_rectangle->y < y &&
+          y < priv->next_rectangle->y + priv->next_rectangle->height)
+        {
+          priv->clicked_next = TRUE;
+        }
+
+      return TRUE;
+    }
+
+  y = y - start_grid_y;
+
+  priv->clicked_cell = 6 * ( (gint ) ( y  / ((height - start_grid_y) / 2) )) + ((gint) ( x / (width / 6) ));
+  priv->start_mark_cell = priv->clicked_cell;
+
+  if (event->type == GDK_2BUTTON_PRESS)
+    {
+      icaltimetype *start_date;
+      icaltimetype *end_date;
+
+      priv->end_mark_cell = priv->start_mark_cell;
+      x = (width / 6) * (( priv->start_mark_cell % 6) + 0.5);
+      y = start_grid_y + ((height - start_grid_y) / 2) * (( priv->start_mark_cell / 6) + 0.5);
+
+      gtk_widget_queue_draw (widget);
+
+      start_date = gcal_dup_icaltime (priv->date);
+      start_date->day = 1;
+      start_date->month = priv->start_mark_cell + 1;
+      start_date->is_date = 1;
+      end_date = gcal_dup_icaltime (priv->date);
+      end_date->day = icaltime_days_in_month (start_date->month,
+                                              start_date->year);
+      end_date->month = priv->start_mark_cell + 1;
+      end_date->is_date = 1;
+
+      g_signal_emit_by_name (GCAL_VIEW (widget),
+                             "create-event",
+                             start_date, end_date,
+                             x, y);
+      g_free (start_date);
+      g_free (end_date);
+    }
+
+  return TRUE;
+}
+
+static gboolean
+gcal_year_view_motion_notify_event (GtkWidget      *widget,
+                                    GdkEventMotion *event)
+{
+  GcalYearViewPrivate *priv;
+  gint width, height;
+  gint y;
+  gdouble start_grid_y;
+
+  priv = GCAL_YEAR_VIEW (widget)->priv;
+
+  if (priv->clicked_cell == -1)
+    return FALSE;
+
+  width = gtk_widget_get_allocated_width (widget);
+  height = gtk_widget_get_allocated_height (widget);
+  start_grid_y = gcal_year_view_get_start_grid_y (widget);
+
+  y = event->y - start_grid_y;
+  if (y < 0)
+    return FALSE;
+
+  priv->end_mark_cell = 6 * ( (gint ) ( y  / ((height - start_grid_y) / 2) )) + ((gint) ( event->x / (width / 6) ));
+  if (priv->end_mark_cell == priv->start_mark_cell)
+    {
+      priv->end_mark_cell = -1;
+      return FALSE;
+    }
+
+  gtk_widget_queue_draw (widget);
+
+  return TRUE;
+}
+
+static gboolean
+gcal_year_view_button_release (GtkWidget      *widget,
+                               GdkEventButton *event)
+{
+  GcalYearViewPrivate *priv;
+  gdouble x, y;
+  gint width, height;
+  gdouble start_grid_y;
+  gint released;
+
+  priv = GCAL_YEAR_VIEW (widget)->priv;
+
+  x = event->x;
+  y = event->y;
+
+  width = gtk_widget_get_allocated_width (widget);
+  height = gtk_widget_get_allocated_height (widget);
+  start_grid_y = gcal_year_view_get_start_grid_y (widget);
+
+  if (y - start_grid_y < 0)
+    {
+      if (priv->prev_rectangle->x < x &&
+          x < priv->prev_rectangle->x + priv->prev_rectangle->width &&
+          priv->prev_rectangle->y < y &&
+          y < priv->prev_rectangle->y + priv->prev_rectangle->height &&
+          priv->clicked_prev)
+        {
+          icaltimetype *prev_year;
+          prev_year = gcal_view_get_date (GCAL_VIEW (widget));
+          prev_year->year--;
+
+          g_signal_emit_by_name (GCAL_VIEW (widget), "updated", prev_year);
+
+          g_free (prev_year);
+        }
+      else if (priv->next_rectangle->x < x &&
+          x < priv->next_rectangle->x + priv->next_rectangle->width &&
+          priv->next_rectangle->y < y &&
+          y < priv->next_rectangle->y + priv->next_rectangle->height &&
+          priv->clicked_next)
+        {
+          icaltimetype *next_year;
+          next_year = gcal_view_get_date (GCAL_VIEW (widget));
+          next_year->year++;
+
+          g_signal_emit_by_name (GCAL_VIEW (widget), "updated", next_year);
+
+          g_free (next_year);
+        }
+
+      priv->clicked_cell = -1;
+      priv->clicked_prev = FALSE;
+      priv->clicked_next = FALSE;
+      return TRUE;
+    }
+
+  y = y - start_grid_y;
+
+  released = 6 * ( (gint ) ( y  / ((height - start_grid_y) / 2) )) + ((gint) ( x / (width / 6) ));
+
+  if (priv->clicked_cell != released)
+    {
+      icaltimetype *start_date;
+      icaltimetype *end_date;
+
+      x = (width / 6) * (( priv->end_mark_cell % 6) + 0.5);
+      y = start_grid_y + ((height - start_grid_y) / 2) * (( priv->end_mark_cell / 6) + 0.5);
+
+      start_date = gcal_dup_icaltime (priv->date);
+      start_date->day = 1;
+      start_date->month = priv->start_mark_cell + 1;
+      start_date->is_date = 1;
+
+      end_date = gcal_dup_icaltime (priv->date);
+      end_date->day = icaltime_days_in_month (priv->end_mark_cell + 1,
+                                              end_date->year);
+      end_date->month = priv->end_mark_cell + 1;
+      end_date->is_date = 1;
+
+      g_signal_emit_by_name (GCAL_VIEW (widget),
+                             "create-event",
+                             start_date, end_date,
+                             x, y);
+      g_free (start_date);
+      g_free (end_date);
+    }
+
+  priv->clicked_cell = -1;
+  priv->clicked_prev = FALSE;
+  priv->clicked_next = FALSE;
+  return TRUE;
 }
 
 static void
@@ -812,6 +1036,62 @@ gcal_year_view_draw_grid (GcalYearView *view,
                         ligther_color.green,
                         ligther_color.blue);
 
+  /* drawing new-event mark */
+  if (priv->start_mark_cell != -1 &&
+      priv->end_mark_cell != -1)
+    {
+      gint first_cell;
+      gint last_cell;
+      gint rows;
+
+      cairo_save (cr);
+      if (priv->start_mark_cell < priv->end_mark_cell)
+        {
+          first_cell = priv->start_mark_cell;
+          last_cell = priv->end_mark_cell;
+        }
+      else
+        {
+          first_cell = priv->end_mark_cell;
+          last_cell = priv->start_mark_cell;
+        }
+
+      cairo_set_source_rgba (cr,
+                             background_selected_color.red,
+                             background_selected_color.green,
+                             background_selected_color.blue,
+                             background_selected_color.alpha);
+
+      for (rows = 0; rows < (last_cell / 6) - (first_cell / 6) + 1; rows++)
+        {
+          gint first_point;
+          gint last_point;
+
+          first_point = (rows == 0) ? first_cell : ((first_cell / 6) + rows) * 6;
+          cairo_move_to (
+              cr,
+              (alloc->width / 6) * ( first_point % 6),
+              start_grid_y + ((alloc->height - start_grid_y) / 2) * ( first_point / 6) + 1);
+
+          last_point = (rows == (last_cell / 6 - first_cell / 6)) ? last_cell : ((first_cell / 6) + rows) * 6 + 5;
+          cairo_rel_line_to (cr,
+                             (alloc->width / 6) * (last_point - first_point + 1),
+                             0);
+          cairo_rel_line_to (cr,
+                             0,
+                             (alloc->height - start_grid_y) / 2);
+          cairo_rel_line_to (cr,
+                             - (alloc->width / 6) * (last_point - first_point + 1),
+                             0);
+          cairo_rel_line_to (cr,
+                             0,
+                             - (alloc->height - start_grid_y) / 2);
+          cairo_fill (cr);
+        }
+
+      cairo_restore (cr);
+    }
+
   /* drawing grid text */
   for (i = 0; i < 2; i++)
     {
@@ -1080,8 +1360,13 @@ gcal_year_view_reposition_child (GcalView    *view,
 static void
 gcal_year_view_clear_selection (GcalView *view)
 {
-  /* FIXME: implement this */
-  ;
+  GcalYearViewPrivate *priv;
+
+  priv = GCAL_YEAR_VIEW (view)->priv;
+
+  priv->start_mark_cell = -1;
+  priv->end_mark_cell = -1;
+  gtk_widget_queue_draw (GTK_WIDGET (view));
 }
 
 static void
