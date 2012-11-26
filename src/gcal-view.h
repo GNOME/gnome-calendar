@@ -48,46 +48,47 @@ struct _GcalViewIface
   GTypeInterface parent_iface;
 
   /* signals */
-  void            (*create_event)         (GcalView *view, icaltimetype *start_span, icaltimetype *end_span, gdouble x, gdouble y);
-  void            (*updated)              (GcalView *view, icaltimetype *date);
+  void            (*create_event)                       (GcalView *view, icaltimetype *start_span, icaltimetype *end_span, gdouble x, gdouble y);
+  void            (*updated)                            (GcalView *view, icaltimetype *date);
 
   /* pure virtual methods */
-  icaltimetype*   (*get_initial_date)     (GcalView *view);
-  icaltimetype*   (*get_final_date)       (GcalView *view);
+  icaltimetype*   (*get_initial_date)                   (GcalView *view);
+  icaltimetype*   (*get_final_date)                     (GcalView *view);
 
-  gboolean        (*contains)             (GcalView *view, icaltimetype *date);
-  void            (*remove_by_uuid)       (GcalView *view, const gchar *uuid);
-  GtkWidget*      (*get_by_uuid)          (GcalView *view, const gchar *uuid);
-  void            (*reposition_child)     (GcalView *view, const gchar *uuid);
+  gboolean        (*contains)                           (GcalView *view, icaltimetype *date);
+  void            (*remove_by_uuid)                     (GcalView *view, const gchar *uuid);
+  GtkWidget*      (*get_by_uuid)                        (GcalView *view, const gchar *uuid);
+  void            (*reposition_child)                   (GcalView *view, const gchar *uuid);
 
-  void            (*clear_selection)      (GcalView *view);
+  void            (*clear_selection)                    (GcalView *view);
 };
 
-GType         gcal_view_get_type          (void);
+GType         gcal_view_get_type                      (void);
 
 
-void          gcal_view_set_date          (GcalView     *view,
-                                           icaltimetype *date);
+void          gcal_view_set_date                      (GcalView     *view,
+						       icaltimetype *date);
 
-icaltimetype* gcal_view_get_date          (GcalView     *view);
+icaltimetype* gcal_view_get_date                      (GcalView     *view);
 
-icaltimetype* gcal_view_get_initial_date  (GcalView     *view);
+icaltimetype* gcal_view_get_initial_date              (GcalView     *view);
 
-icaltimetype* gcal_view_get_final_date    (GcalView     *view);
+icaltimetype* gcal_view_get_final_date                (GcalView     *view);
 
-gboolean      gcal_view_contains          (GcalView     *view,
-                                           icaltimetype *date);
+gboolean      gcal_view_contains                      (GcalView     *view,
+						       icaltimetype *date);
 
-void          gcal_view_remove_by_uuid    (GcalView     *view,
-                                           const gchar  *uuid);
+void          gcal_view_remove_by_uuid                (GcalView     *view,
+						       const gchar  *uuid);
 
-GtkWidget*    gcal_view_get_by_uuid       (GcalView     *view,
-                                           const gchar  *uuid);
+GtkWidget*    gcal_view_get_by_uuid                   (GcalView     *view,
+						       const gchar  *uuid);
 
-void          gcal_view_reposition_child  (GcalView     *view,
-					   const gchar  *uuid);
+void          gcal_view_reposition_child              (GcalView     *view,
+						       const gchar  *uuid);
 
-void          gcal_view_clear_selection   (GcalView     *view);
+void          gcal_view_clear_selection               (GcalView     *view);
+
 
 G_END_DECLS
 

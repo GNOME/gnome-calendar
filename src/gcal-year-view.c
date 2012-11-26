@@ -56,75 +56,77 @@ enum
   PROP_DATE  //active-date inherited property
 };
 
-static void           gcal_view_interface_init             (GcalViewIface  *iface);
+static void           gcal_view_interface_init                    (GcalViewIface  *iface);
 
-static void           gcal_year_view_set_property          (GObject        *object,
-                                                            guint           property_id,
-                                                            const GValue   *value,
-                                                            GParamSpec     *pspec);
+static void           gcal_year_view_set_property                 (GObject        *object,
+                                                                   guint           property_id,
+                                                                   const GValue   *value,
+                                                                   GParamSpec     *pspec);
 
-static void           gcal_year_view_get_property          (GObject        *object,
-                                                            guint           property_id,
-                                                            GValue         *value,
-                                                            GParamSpec     *pspec);
+static void           gcal_year_view_get_property                 (GObject        *object,
+                                                                   guint           property_id,
+                                                                   GValue         *value,
+                                                                   GParamSpec     *pspec);
 
-static void           gcal_year_view_finalize              (GObject        *object);
+static void           gcal_year_view_finalize                     (GObject        *object);
 
-static void           gcal_year_view_realize               (GtkWidget      *widget);
+static void           gcal_year_view_realize                      (GtkWidget      *widget);
 
-static void           gcal_year_view_unrealize             (GtkWidget      *widget);
+static void           gcal_year_view_unrealize                    (GtkWidget      *widget);
 
-static void           gcal_year_view_map                   (GtkWidget      *widget);
+static void           gcal_year_view_map                          (GtkWidget      *widget);
 
-static void           gcal_year_view_unmap                 (GtkWidget      *widget);
+static void           gcal_year_view_unmap                        (GtkWidget      *widget);
 
-static void           gcal_year_view_size_allocate         (GtkWidget      *widget,
-                                                            GtkAllocation  *allocation);
+static void           gcal_year_view_size_allocate                (GtkWidget      *widget,
+                                                                   GtkAllocation  *allocation);
 
-static gboolean       gcal_year_view_draw                  (GtkWidget      *widget,
-                                                            cairo_t        *cr);
+static gboolean       gcal_year_view_draw                         (GtkWidget      *widget,
+                                                                   cairo_t        *cr);
 
-static void           gcal_year_view_add                   (GtkContainer   *constainer,
-                                                            GtkWidget      *widget);
+static void           gcal_year_view_add                          (GtkContainer   *constainer,
+                                                                   GtkWidget      *widget);
 
-static void           gcal_year_view_remove                (GtkContainer   *constainer,
-                                                            GtkWidget      *widget);
+static void           gcal_year_view_remove                       (GtkContainer   *constainer,
+                                                                   GtkWidget      *widget);
 
-static void           gcal_year_view_forall                (GtkContainer   *container,
-                                                            gboolean        include_internals,
-                                                            GtkCallback     callback,
-                                                            gpointer        callback_data);
+static void           gcal_year_view_forall                       (GtkContainer   *container,
+                                                                   gboolean        include_internals,
+                                                                   GtkCallback     callback,
+                                                                   gpointer        callback_data);
 
-static void           gcal_year_view_set_date              (GcalYearView  *view,
-                                                            icaltimetype   *date);
+static void           gcal_year_view_set_date                     (GcalYearView  *view,
+                                                                   icaltimetype   *date);
 
-static void           gcal_year_view_draw_header           (GcalYearView  *view,
-                                                            cairo_t        *cr,
-                                                            GtkAllocation  *alloc,
-                                                            GtkBorder      *padding);
+static void           gcal_year_view_draw_header                  (GcalYearView  *view,
+                                                                   cairo_t        *cr,
+                                                                   GtkAllocation  *alloc,
+                                                                   GtkBorder      *padding);
 
-static void           gcal_year_view_draw_grid             (GcalYearView  *view,
-                                                            cairo_t        *cr,
-                                                            GtkAllocation  *alloc,
-                                                            GtkBorder      *padding);
+static void           gcal_year_view_draw_grid                    (GcalYearView  *view,
+                                                                   cairo_t        *cr,
+                                                                   GtkAllocation  *alloc,
+                                                                   GtkBorder      *padding);
 
-static gdouble        gcal_year_view_get_start_grid_y      (GtkWidget      *widget);
+static gdouble        gcal_year_view_get_start_grid_y             (GtkWidget      *widget);
 
-static icaltimetype*  gcal_year_view_get_initial_date      (GcalView       *view);
+static icaltimetype*  gcal_year_view_get_initial_date             (GcalView       *view);
 
-static icaltimetype*  gcal_year_view_get_final_date        (GcalView       *view);
+static icaltimetype*  gcal_year_view_get_final_date               (GcalView       *view);
 
-static gboolean       gcal_year_view_contains              (GcalView       *view,
-                                                            icaltimetype   *date);
+static gboolean       gcal_year_view_contains                     (GcalView       *view,
+                                                                   icaltimetype   *date);
 
-static void           gcal_year_view_remove_by_uuid        (GcalView       *view,
-                                                            const gchar    *uuid);
+static void           gcal_year_view_remove_by_uuid               (GcalView       *view,
+                                                                   const gchar    *uuid);
 
-static GtkWidget*     gcal_year_view_get_by_uuid           (GcalView       *view,
-                                                            const gchar    *uuid);
+static GtkWidget*     gcal_year_view_get_by_uuid                  (GcalView       *view,
+                                                                   const gchar    *uuid);
 
-static void           gcal_year_view_reposition_child      (GcalView       *view,
-                                                            const gchar    *uuid);
+static void           gcal_year_view_reposition_child             (GcalView       *view,
+                                                                   const gchar    *uuid);
+
+static void           gcal_year_view_clear_selection              (GcalView       *view);
 
 G_DEFINE_TYPE_WITH_CODE (GcalYearView,
                          gcal_year_view,

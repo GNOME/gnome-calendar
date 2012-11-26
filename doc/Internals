@@ -68,7 +68,7 @@ Description of some internals of Gnome Calendar Application
     ...
 
   * Has icaltimetype attribute
-    For keeping actual date
+    For keeping current date
 
   * Has `set_view/update_view` method
     For updating the view content by talking to GcalManager
