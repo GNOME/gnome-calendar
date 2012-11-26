@@ -1388,6 +1388,11 @@ gcal_year_view_create_event_on_current_unit (GcalView *view)
   v_block = (gdouble) gtk_widget_get_allocated_height (GTK_WIDGET (view)) / 2.0;
   y = ((priv->date->month / 6 ) + 0.5) * v_block;
 
+  priv->start_mark_cell = priv->date->month - 1;
+  priv->end_mark_cell = priv->start_mark_cell;
+
+  gtk_widget_queue_draw (GTK_WIDGET (view));
+
   start_span = gcal_dup_icaltime (priv->date);
   start_span->day = 1;
   start_span->is_date = 1;
