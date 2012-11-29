@@ -22,6 +22,8 @@
 
 #include <glib/gi18n.h>
 
+#include <math.h>
+
 struct _GcalToolbarPrivate
 {
   GtkWidget           *widget;
@@ -90,6 +92,8 @@ static void gcal_toolbar_back_clicked           (GtkWidget    *button,
 
 static void gcal_toolbar_event_edited           (GtkWidget    *button,
                                                  gpointer      user_data);
+
+static gint get_icon_margin                     (void);
 
 G_DEFINE_TYPE (GcalToolbar, gcal_toolbar, GTK_CLUTTER_TYPE_ACTOR);
 
@@ -404,6 +408,7 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
   /* right_box */
   if (priv->right_box == NULL)
     {
+      GtkWidget *child;
       priv->right_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
       g_object_ref_sink (priv->right_box);
       gtk_widget_set_hexpand (priv->right_box, TRUE);
@@ -411,10 +416,10 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
 
       /* sources_button */
       priv->sources_button = gtk_toggle_button_new ();
-      gtk_container_add (
-          GTK_CONTAINER (priv->sources_button),
-          gtk_image_new_from_icon_name ("x-office-calendar-symbolic",
-                                        GTK_ICON_SIZE_MENU));
+      child = gtk_image_new_from_icon_name ("x-office-calendar-symbolic",
+                                            GTK_ICON_SIZE_MENU);
+      g_object_set (child, "margin", get_icon_margin (), NULL);
+      gtk_container_add (GTK_CONTAINER (priv->sources_button), child);
 
       context = gtk_widget_get_style_context (priv->sources_button);
       gtk_style_context_add_class (context, "raised");
@@ -429,10 +434,10 @@ gcal_toolbar_set_overview_mode (GcalToolbar *toolbar)
 
       /* search_button */
       priv->search_button = gtk_button_new ();
-      gtk_container_add (
-          GTK_CONTAINER (priv->search_button),
-          gtk_image_new_from_icon_name ("folder-saved-search-symbolic",
-                                        GTK_ICON_SIZE_MENU));
+      child = gtk_image_new_from_icon_name ("folder-saved-search-symbolic",
+                                            GTK_ICON_SIZE_MENU);
+      g_object_set (child, "margin", get_icon_margin (), NULL);
+      gtk_container_add (GTK_CONTAINER (priv->search_button), child);
 
       context = gtk_widget_get_style_context (priv->search_button);
       gtk_style_context_add_class (context, "raised");
@@ -614,6 +619,16 @@ gcal_toolbar_event_edited (GtkWidget *button,
       g_signal_emit (toolbar, signals[DONE_EDIT], 0);
       gtk_button_set_label (GTK_BUTTON (priv->edit_button), _("Edit"));
     }
+}
+
+static gint
+get_icon_margin (void)
+{
+  gint toolbar_size, menu_size;
+
+  gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &menu_size, NULL);
+  gtk_icon_size_lookup (GTK_ICON_SIZE_LARGE_TOOLBAR, &toolbar_size, NULL);
+  return (gint) floor ((toolbar_size - menu_size) / 2.0);
 }
 
 /* Public API */
