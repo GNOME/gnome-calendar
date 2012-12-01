@@ -8,6 +8,8 @@ Here, I'll place some notes about views
    should be marked as is_date views
 
  - For marking current unit:
+   View will draw with selected_color the font of the current unit, so:
+      December, 14, or the hour (in day view) will be drawn in a different color.
    View will provide a two pixels mark for the current unit in every view.
    So:
       week-view will mark the day of week of the current date, no matters
