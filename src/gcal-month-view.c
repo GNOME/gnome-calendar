@@ -27,26 +27,28 @@
 
 #include <libecal/libecal.h>
 
+#include <math.h>
+
 struct _GcalMonthViewPrivate
 {
   /**
    * This is where we keep the refs of the child widgets.
    * Every child added to the list placed in the position
-   * of it corresponding cell number.
-   * The cell number is calculated in _add method.
-   * cell_index = date->day + - priv->days_delay
+   * of it corresponding month day.
+   * The cell number of every month day is calculated elsewhere.
    */
-  GList          *days [35];
+  GList          *days [31];
 
   GdkWindow      *event_window;
 
-  gint            clicked_cell;
+  /* the day of week for first day of the month,
+   * sun: 0, mon: 1, ... sat = 6 */
+  gint            days_delay;
 
+  /* button_down/up flag */
+  gint            clicked_cell;
   gint            start_mark_cell;
   gint            end_mark_cell;
-
-  gint            actual_day_cell;
-  gint            days_delay;
 
   /* property */
   icaltimetype   *date;
@@ -61,7 +63,7 @@ struct _GcalMonthViewPrivate
 enum
 {
   PROP_0,
-  PROP_DATE  //active-date inherited property
+  PROP_DATE  /* active-date inherited property */
 };
 
 static void           gcal_view_interface_init              (GcalViewIface  *iface);
@@ -207,11 +209,10 @@ gcal_month_view_init (GcalMonthView *self)
 
   priv->prev_rectangle = NULL;
   priv->next_rectangle = NULL;
-
   priv->clicked_prev = FALSE;
   priv->clicked_next = FALSE;
 
-  for (i = 0; i < 35; i++)
+  for (i = 0; i < 31; i++)
     {
       priv->days[i] = NULL;
     }
@@ -356,7 +357,7 @@ gcal_month_view_map (GtkWidget *widget)
   GcalMonthViewPrivate *priv;
 
   priv = GCAL_MONTH_VIEW (widget)->priv;
-  if (priv->event_window)
+  if (priv->event_window != NULL)
     gdk_window_show (priv->event_window);
 
   GTK_WIDGET_CLASS (gcal_month_view_parent_class)->map (widget);
@@ -368,7 +369,7 @@ gcal_month_view_unmap (GtkWidget *widget)
   GcalMonthViewPrivate *priv;
 
   priv = GCAL_MONTH_VIEW (widget)->priv;
-  if (priv->event_window)
+  if (priv->event_window != NULL)
     gdk_window_hide (priv->event_window);
 
   GTK_WIDGET_CLASS (gcal_month_view_parent_class)->unmap (widget);
@@ -392,6 +393,14 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   gdouble horizontal_block;
   gdouble vertical_block;
   gdouble vertical_cell_margin;
+
+  gdouble days;
+  gint shown_rows;
+  gint february_gap;
+
+  gdouble lines_gap;
+
+  gdouble lines_gap_for_5;
 
   priv = GCAL_MONTH_VIEW (widget)->priv;
 
@@ -419,10 +428,16 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
   start_grid_y = gcal_month_view_get_start_grid_y (widget);
   horizontal_block = allocation->width / 7;
-  vertical_block = (allocation->height - start_grid_y) / 5;
+  vertical_block = (allocation->height - start_grid_y) / 6;
+
+  days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
+  shown_rows = ceil (days / 7.0);
+  february_gap = shown_rows == 4 ? 1 : 0;
+  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
+  lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
 
   vertical_cell_margin = padding.top + font_height;
-  for (i = 0; i < 35; i++)
+  for (i = 0; i < 31; i++)
     {
       added_height = 0;
       for (l = priv->days[i]; l != NULL; l = l->next)
@@ -436,8 +451,8 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
           child = (GcalViewChild*) l->data;
 
-          pos_x = ( i % 7 ) * horizontal_block;
-          pos_y = ( i / 7 ) * vertical_block;
+          pos_x = horizontal_block * ((i + priv->days_delay) % 7 );
+          pos_y = vertical_block * (((i + priv->days_delay + 7 * february_gap ) / 7 ) + lines_gap_for_5);
 
           if ((! gtk_widget_get_visible (child->widget))
               && (! child->hidden_by_me))
@@ -512,6 +527,15 @@ gcal_month_view_button_press (GtkWidget      *widget,
   gint width, height;
   gdouble start_grid_y;
 
+  gdouble days;
+  gint shown_rows;
+
+  gdouble lines_gap;
+  gdouble lines_gap_for_5;
+  gint february_gap;
+
+  gdouble v_block;
+
   priv = GCAL_MONTH_VIEW (widget)->priv;
 
   x = event->x;
@@ -543,21 +567,32 @@ gcal_month_view_button_press (GtkWidget      *widget,
 
   y = y - start_grid_y;
 
-  priv->clicked_cell = 7 * ( (gint ) ( y  / ((height - start_grid_y) / 5) )) + ((gint) ( x / (width / 7) ));
+  days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
+  shown_rows = ceil (days / 7.0);
+
+  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
+  lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
+  february_gap = shown_rows == 4 ? 1 : 0;
+
+  v_block = (height - start_grid_y) / 6.0;
+
+  priv->clicked_cell = 7 * ( floor ( (y - (lines_gap_for_5 * v_block))  / (v_block) )) + floor (x / (width / 7));
   priv->start_mark_cell = priv->clicked_cell;
 
-  if (event->type == GDK_2BUTTON_PRESS)
+  if (event->type == GDK_2BUTTON_PRESS &&
+      priv->clicked_cell >= priv->days_delay + 7 * february_gap &&
+      priv->clicked_cell < days)
     {
       icaltimetype *start_date;
 
       priv->end_mark_cell = priv->start_mark_cell;
-      x = (width / 7) * (( priv->start_mark_cell % 7) + 0.5);
-      y = start_grid_y + ((height - start_grid_y) / 5) * (( priv->start_mark_cell / 7) + 0.5);
+      x = (width / 7) * (( priv->end_mark_cell % 7) + 0.5);
+      y = start_grid_y + v_block * (lines_gap_for_5 + ( priv->end_mark_cell / 7) + 0.5);
 
       gtk_widget_queue_draw (widget);
 
       start_date = gcal_dup_icaltime (priv->date);
-      start_date->day = priv->start_mark_cell + priv->days_delay;
+      start_date->day = priv->start_mark_cell - (priv->days_delay + 7 * february_gap) + 1;
       start_date->is_date = 1;
 
       g_signal_emit_by_name (GCAL_VIEW (widget),
@@ -579,6 +614,14 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
   gint y;
   gdouble start_grid_y;
 
+  gdouble days;
+  gint shown_rows;
+
+  gdouble lines_gap;
+  gdouble lines_gap_for_5;
+
+  gdouble v_block;
+
   priv = GCAL_MONTH_VIEW (widget)->priv;
 
   if (priv->clicked_cell == -1)
@@ -592,7 +635,15 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
   if (y < 0)
     return FALSE;
 
-  priv->end_mark_cell = 7 * ( (gint ) ( y  / ((height - start_grid_y) / 5) )) + ((gint) ( event->x / (width / 7) ));
+  days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
+  shown_rows = ceil (days / 7.0);
+
+  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
+  lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
+
+  v_block = (height - start_grid_y) / 6.0;
+
+  priv->end_mark_cell = 7 * ( floor ( (y - (lines_gap_for_5 * v_block))  / (v_block) )) + floor (event->x / (width / 7));
   if (priv->end_mark_cell == priv->start_mark_cell)
     {
       priv->end_mark_cell = -1;
@@ -614,6 +665,15 @@ gcal_month_view_button_release (GtkWidget      *widget,
   gdouble start_grid_y;
   gint released;
 
+  gdouble days;
+  gint shown_rows;
+
+  gdouble lines_gap;
+  gdouble lines_gap_for_5;
+  gint february_gap;
+
+  gdouble v_block;
+
   priv = GCAL_MONTH_VIEW (widget)->priv;
 
   x = event->x;
@@ -633,10 +693,17 @@ gcal_month_view_button_release (GtkWidget      *widget,
         {
           icaltimetype *prev_month;
           prev_month = gcal_view_get_date (GCAL_VIEW (widget));
-          icaltime_adjust (prev_month,
-                           - icaltime_days_in_month (prev_month->month,
-                                                     prev_month->year),
-                           0, 0, 0);
+          prev_month->month--;
+
+          if (prev_month->month == 2 &&
+              prev_month->day > icaltime_days_in_month (2, prev_month->year))
+            {
+              prev_month->day = icaltime_days_in_month (2, prev_month->year);
+            }
+          else
+            {
+              *prev_month = icaltime_normalize (*prev_month);
+            }
 
           g_signal_emit_by_name (GCAL_VIEW (widget), "updated", prev_month);
 
@@ -650,18 +717,23 @@ gcal_month_view_button_release (GtkWidget      *widget,
         {
           icaltimetype *next_month;
           next_month = gcal_view_get_date (GCAL_VIEW (widget));
+          next_month->month++;
 
-          icaltime_adjust (next_month,
-                           icaltime_days_in_month (next_month->month,
-                                                   next_month->year),
-                           0, 0, 0);
+          if (next_month->month == 2 &&
+              next_month->day > icaltime_days_in_month (2, next_month->year))
+            {
+              next_month->day = icaltime_days_in_month (2, next_month->year);
+            }
+          else
+            {
+              *next_month = icaltime_normalize (*next_month);
+            }
 
           g_signal_emit_by_name (GCAL_VIEW (widget), "updated", next_month);
 
           g_free (next_month);
         }
 
-      priv->clicked_cell = -1;
       priv->clicked_prev = FALSE;
       priv->clicked_next = FALSE;
       return TRUE;
@@ -669,7 +741,29 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   y = y - start_grid_y;
 
-  released = 7 * ( (gint ) ( y  / ((height - start_grid_y) / 5) )) + ((gint) ( x / (width / 7) ));
+  days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
+  shown_rows = ceil (days / 7.0);
+
+  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
+  lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
+  february_gap = shown_rows == 4 ? 1 : 0;
+
+  v_block = (height - start_grid_y) / 6.0;
+
+  released = 7 * ( floor ( (y - (lines_gap_for_5 * v_block))  / (v_block) )) + floor (event->x / (width / 7));
+
+  if (released < priv->days_delay + 7 * february_gap ||
+      released >= days)
+    {
+      priv->clicked_cell = -1;
+      priv->start_mark_cell = -1;
+      priv->end_mark_cell = -1;
+      gtk_widget_queue_draw (widget);
+
+      priv->clicked_prev = FALSE;
+      priv->clicked_next = FALSE;
+      return TRUE;
+    }
 
   if (priv->clicked_cell != released)
     {
@@ -677,15 +771,21 @@ gcal_month_view_button_release (GtkWidget      *widget,
       icaltimetype *end_date;
 
       x = (width / 7) * (( priv->end_mark_cell % 7) + 0.5);
-      y = start_grid_y + ((height - start_grid_y) / 5) * (( priv->end_mark_cell / 7) + 0.5);
+      y = start_grid_y + v_block * (lines_gap_for_5 + ( priv->end_mark_cell / 7) + 0.5);
 
       start_date = gcal_dup_icaltime (priv->date);
-      start_date->day = priv->start_mark_cell + priv->days_delay;
+      start_date->day = priv->start_mark_cell - (priv->days_delay + 7 * february_gap) + 1;
       start_date->is_date = 1;
 
       end_date = gcal_dup_icaltime (priv->date);
-      end_date->day = priv->end_mark_cell + priv->days_delay;
+      end_date->day = priv->end_mark_cell - (priv->days_delay + 7 * february_gap) + 1;
       end_date->is_date = 1;
+
+      if (priv->start_mark_cell > priv->end_mark_cell)
+        {
+          start_date->day = priv->end_mark_cell - (priv->days_delay + 7 * february_gap) + 1;
+          end_date->day = priv->start_mark_cell - (priv->days_delay + 7 * february_gap) + 1;
+        }
 
       g_signal_emit_by_name (GCAL_VIEW (widget),
                              "create-event",
@@ -707,7 +807,6 @@ gcal_month_view_add (GtkContainer *container,
 {
   GcalMonthViewPrivate *priv;
   GList *l;
-  gint day;
   icaltimetype *date;
 
   GcalViewChild *new_child;
@@ -719,10 +818,8 @@ gcal_month_view_add (GtkContainer *container,
 
   /* Check if it's already added for date */
   date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
-  day = date->day + ( - priv->days_delay);
-  g_free (date);
 
-  for (l = priv->days[day]; l != NULL; l = l->next)
+  for (l = priv->days[date->day - 1]; l != NULL; l = l->next)
     {
       GcalViewChild *child;
 
@@ -742,10 +839,13 @@ gcal_month_view_add (GtkContainer *container,
   new_child->widget = widget;
   new_child->hidden_by_me = FALSE;
 
-  priv->days[day] = g_list_insert_sorted (priv->days[day],
-                                          new_child,
-                                          gcal_compare_event_widget_by_date);
+  priv->days[date->day - 1] =
+    g_list_insert_sorted (priv->days[date->day - 1],
+                          new_child,
+                          gcal_compare_event_widget_by_date);
   gtk_widget_set_parent (widget, GTK_WIDGET (container));
+
+  g_free (date);
 }
 
 static void
@@ -760,7 +860,7 @@ gcal_month_view_remove (GtkContainer *container,
   g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
   priv = GCAL_MONTH_VIEW (container)->priv;
 
-  for (i = 0; i < 35; i++)
+  for (i = 0; i < 31; i++)
     {
       for (l = priv->days[i]; l != NULL; l = l->next)
         {
@@ -798,7 +898,7 @@ gcal_month_view_forall (GtkContainer *container,
 
   priv = GCAL_MONTH_VIEW (container)->priv;
 
-  for (i = 0; i < 35; i++)
+  for (i = 0; i < 31; i++)
     {
       l = priv->days[i];
 
@@ -839,17 +939,14 @@ gcal_month_view_set_date (GcalMonthView *view,
 
   first_of_month = gcal_dup_icaltime (priv->date);
   first_of_month->day = 1;
-  priv->days_delay =  - icaltime_day_of_week (*first_of_month) + 2;
+  priv->days_delay = icaltime_day_of_week (*first_of_month) - 1;
   g_free (first_of_month);
-
-  /* if have_selection: yes this one have */
-  priv->actual_day_cell = priv->date->day - priv->days_delay;
 
   if (will_resize)
     {
       to_remove = NULL;
 
-      for (i = 0; i < 35; i++)
+      for (i = 0; i < 31; i++)
         {
           for (l = priv->days[i]; l != NULL; l = l->next)
             {
@@ -871,7 +968,7 @@ gcal_month_view_set_date (GcalMonthView *view,
 }
 
 static void
-gcal_month_view_draw_header (GcalMonthView  *view,
+gcal_month_view_draw_header (GcalMonthView *view,
                              cairo_t       *cr,
                              GtkAllocation *alloc,
                              GtkBorder     *padding)
@@ -1013,23 +1110,31 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   GdkRGBA color;
   GdkRGBA ligther_color;
   GdkRGBA selected_color;
+  GdkRGBA background_lighter_color;
   GdkRGBA background_selected_color;
   GtkBorder header_padding;
 
-  gint i, j;
+  gint i;
   gint font_width;
   gint font_height;
 
   gdouble start_grid_y;
-
-  guint8 n_days_in_month;
 
   PangoLayout *layout;
   const PangoFontDescription *font;
   const PangoFontDescription *selected_font;
   PangoFontDescription *bold_font;
 
-  gchar *day;
+  gdouble days;
+  gint shown_rows;
+
+  gint february_gap;
+  gint h_lines;
+  gdouble lines_gap;
+  gdouble lines_gap_for_5;
+
+  gint lower_mark;
+  gint upper_mark;
 
   priv = view->priv;
   widget = GTK_WIDGET (view);
@@ -1048,17 +1153,17 @@ gcal_month_view_draw_grid (GcalMonthView *view,
                                           state | GTK_STATE_FLAG_SELECTED,
                                           &background_selected_color);
 
+  gtk_style_context_get_background_color (context,
+                                          state | GTK_STATE_FLAG_INSENSITIVE,
+                                          &background_lighter_color);
+
   gtk_style_context_get_color (context,
                                state | GTK_STATE_FLAG_INSENSITIVE,
                                &ligther_color);
   gtk_style_context_get_color (context, state, &color);
   font = gtk_style_context_get_font (context, state);
-  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
   pango_layout_set_font_description (layout, font);
-
-  n_days_in_month = icaltime_days_in_month (priv->date->month,
-                                            priv->date->year);
 
   gtk_style_context_save (context);
   gtk_style_context_add_region (context, "header", 0);
@@ -1067,74 +1172,23 @@ gcal_month_view_draw_grid (GcalMonthView *view,
 
   gtk_style_context_restore (context);
 
-  /* drawing new-event mark */
-  if (priv->start_mark_cell != -1 &&
-      priv->end_mark_cell != -1)
-    {
-      gint first_cell;
-      gint last_cell;
-      gint rows;
+  days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
+  shown_rows = ceil (days / 7.0);
+  february_gap = shown_rows == 4 ? 1 : 0;
 
-      cairo_save (cr);
-      if (priv->start_mark_cell < priv->end_mark_cell)
-        {
-          first_cell = priv->start_mark_cell;
-          last_cell = priv->end_mark_cell;
-        }
-      else
-        {
-          first_cell = priv->end_mark_cell;
-          last_cell = priv->start_mark_cell;
-        }
+  h_lines = (shown_rows % 2) + 5;
+  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
 
-      cairo_set_source_rgba (cr,
-                             background_selected_color.red,
-                             background_selected_color.green,
-                             background_selected_color.blue,
-                             background_selected_color.alpha);
-
-      for (rows = 0; rows < (last_cell / 7) - (first_cell / 7) + 1; rows++)
-        {
-          gint first_point;
-          gint last_point;
-
-          first_point = (rows == 0) ? first_cell : ((first_cell / 7) + rows) * 7;
-          cairo_move_to (
-              cr,
-              (alloc->width / 7) * ( first_point % 7),
-              start_grid_y + ((alloc->height - start_grid_y) / 5) * ( first_point / 7) + 1);
-
-          last_point = (rows == (last_cell / 7 - first_cell / 7)) ? last_cell : ((first_cell / 7) + rows) * 7 + 6;
-          cairo_rel_line_to (cr,
-                             (alloc->width / 7) * (last_point - first_point + 1),
-                             0);
-          cairo_rel_line_to (cr,
-                             0,
-                             (alloc->height - start_grid_y) / 5);
-          cairo_rel_line_to (cr,
-                             - (alloc->width / 7) * (last_point - first_point + 1),
-                             0);
-          cairo_rel_line_to (cr,
-                             0,
-                             - (alloc->height - start_grid_y) / 5);
-          cairo_fill (cr);
-        }
-
-      cairo_restore (cr);
-    }
+  lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
 
   /* drawing grid text */
   bold_font = pango_font_description_copy (font);
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
+  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
   for (i = 0; i < 7; i++)
     {
-      gchar *weekday;
-
-      weekday = gcal_get_weekday (i);
-      cairo_set_source_rgb (cr, color.red, color.green, color.blue);
-
       pango_layout_set_font_description (layout, bold_font);
-      pango_layout_set_text (layout, weekday, -1);
+      pango_layout_set_text (layout, gcal_get_weekday (i), -1);
       pango_cairo_update_layout (cr, layout);
       pango_layout_get_pixel_size (layout, &font_width, &font_height);
 
@@ -1142,92 +1196,177 @@ gcal_month_view_draw_grid (GcalMonthView *view,
                      (alloc->width / 7) * i + header_padding.left,
                      start_grid_y - padding->bottom - font_height);
       pango_cairo_show_layout (cr, layout);
+    }
 
-      pango_layout_set_font_description (layout, font);
-      cairo_set_source_rgb (cr,
-                            ligther_color.red,
-                            ligther_color.green,
-                            ligther_color.blue);
-
-      for (j = 0; j < 5; j++)
+  if (priv->start_mark_cell != -1 &&
+      priv->end_mark_cell != -1)
+    {
+      lower_mark = priv->start_mark_cell;
+      upper_mark = priv->end_mark_cell;
+      if (priv->start_mark_cell > priv->end_mark_cell)
         {
-          gint n_day;
-          n_day = j * 7 + i + priv->days_delay;
-          if (n_day <= 0 || n_day > n_days_in_month)
-            continue;
-
-          /* drawing selected_day */
-          if (priv->actual_day_cell == n_day - priv->days_delay)
-            {
-              cairo_set_source_rgb (cr,
-                                    selected_color.red,
-                                    selected_color.green,
-                                    selected_color.blue);
-              pango_layout_set_font_description ( layout, selected_font);
-            }
-
-          day = g_strdup_printf ("%d", n_day);
-          pango_layout_set_text (layout, day, -1);
-          pango_cairo_update_layout (cr, layout);
-          pango_layout_get_pixel_size (layout, &font_width, NULL);
-          cairo_move_to (
-            cr,
-            (alloc->width / 7) * i + header_padding.left,
-            start_grid_y + ((alloc->height - start_grid_y) / 5) * j + padding->top);
-          pango_cairo_show_layout (cr, layout);
-
-          /* unsetting selected flag */
-          if (priv->actual_day_cell == n_day - priv->days_delay)
-            {
-              cairo_set_source_rgb (cr,
-                                    ligther_color.red,
-                                    ligther_color.green,
-                                    ligther_color.blue);
-              pango_layout_set_font_description ( layout, font);
-            }
-          g_free (day);
+          lower_mark = priv->end_mark_cell;
+          upper_mark = priv->start_mark_cell;
         }
     }
-  /* free the layout object */
-  pango_font_description_free (bold_font);
-  g_object_unref (layout);
+  else
+    {
+      lower_mark = 43;
+      upper_mark = -2;
+    }
+
+  cairo_set_source_rgb (cr,
+                        ligther_color.red,
+                        ligther_color.green,
+                        ligther_color.blue);
+
+  for (i = priv->days_delay + 7 * february_gap; i < days + 7 * february_gap; i++)
+    {
+      gchar *nr_day;
+      gint column = i % 7;
+      gint row = i / 7;
+      gint nr_day_i = i - (priv->days_delay + 7 * february_gap) + 1;
+
+      nr_day = g_strdup_printf ("%d", nr_day_i);
+
+      /* drawing new-event marks */
+      if (lower_mark <= i &&
+          i <= upper_mark)
+        {
+          cairo_set_source_rgba (cr,
+                                 background_selected_color.red,
+                                 background_selected_color.green,
+                                 background_selected_color.blue,
+                                 background_selected_color.alpha);
+          cairo_rectangle (cr,
+                           (alloc->width / 7) * column,
+                           ((alloc->height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y + 0.4,
+                           alloc->width / 7,
+                           (alloc->height - start_grid_y ) / 6);
+          cairo_fill (cr);
+          cairo_set_source_rgb (cr,
+                                ligther_color.red,
+                                ligther_color.green,
+                                ligther_color.blue);
+
+        }
+
+      /* drawing selected_day */
+      if (priv->date->day == nr_day_i)
+        {
+          cairo_set_source_rgb (cr,
+                                selected_color.red,
+                                selected_color.green,
+                                selected_color.blue);
+          pango_layout_set_font_description ( layout, selected_font);
+        }
+
+      pango_layout_set_text (layout, nr_day, -1);
+      pango_cairo_update_layout (cr, layout);
+      pango_layout_get_pixel_size (layout, &font_width, &font_height);
+
+      cairo_move_to (
+                     cr,
+                     (alloc->width / 7) * column + header_padding.left,
+                     ((alloc->height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y + 0.4 + padding->top);
+
+      pango_cairo_show_layout (cr, layout);
+
+      if (priv->date->day == nr_day_i)
+        {
+          /* drawing current_unit cell */
+          cairo_set_source_rgb (cr,
+                                selected_color.red,
+                                selected_color.green,
+                                selected_color.blue);
+
+          /* Two pixel line on the selected day cell */
+          cairo_set_line_width (cr, 2.0);
+          cairo_move_to (
+                  cr,
+                  (alloc->width / 7) * column,
+                  ((alloc->height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y + 0.4);
+          cairo_rel_line_to (cr, (alloc->width / 7), 0);
+          cairo_stroke (cr);
+
+          cairo_set_source_rgb (cr,
+                                ligther_color.red,
+                                ligther_color.green,
+                                ligther_color.blue);
+          pango_layout_set_font_description (layout, font);
+        }
+
+      g_free (nr_day);
+    }
 
   /* drawing grid skel */
+  /* graying out month slices */
+  cairo_set_source_rgb (cr,
+                        background_lighter_color.red,
+                        background_lighter_color.green,
+                        background_lighter_color.blue);
+  if (h_lines == 6)
+    {
+      cairo_rectangle (cr,
+                       0, start_grid_y,
+                       alloc->width, ((alloc->height - start_grid_y ) / 6) * 0.5);
+      cairo_rectangle (cr,
+                       0, start_grid_y + ((alloc->height - start_grid_y ) / 6) * (lines_gap + 5),
+                       alloc->width, ((alloc->height - start_grid_y ) / 6) * 0.5);
+    }
+  /* graying out cells */
+  /* initial gap */
+  for (i = 0; i < priv->days_delay + 7 * february_gap; i++)
+    {
+      gint column = i % 7;
+      gint row = i / 7;
+      cairo_rectangle (cr,
+                       (alloc->width / 7) * column,
+                       ((alloc->height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y + 0.4,
+                       alloc->width / 7, (alloc->height - start_grid_y ) / 6);
+    }
+  /* final gap */
+  for (i = days + 7 * february_gap; i < 7 * (shown_rows == 5 ? 5 : 6); i++)
+    {
+      gint column = i % 7;
+      gint row = i / 7;
+      cairo_rectangle (cr,
+                       (alloc->width / 7) * column,
+                       ((alloc->height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y + 0.4,
+                       alloc->width / 7, (alloc->height - start_grid_y ) / 6);
+    }
+  cairo_fill (cr);
+
+  /* lines */
   cairo_set_source_rgb (cr,
                         ligther_color.red,
                         ligther_color.green,
                         ligther_color.blue);
   cairo_set_line_width (cr, 0.3);
 
-  for (i = 0; i < 5; i++)
-    {
-      //FIXME: ensure y coordinate has an integer value plus 0.4
-      cairo_move_to (cr, 0, start_grid_y + ((alloc->height - start_grid_y) / 5) * i + 0.4);
-      cairo_rel_line_to (cr, alloc->width, 0);
-    }
-
+  /* vertical lines, the easy ones */
   for (i = 0; i < 6; i++)
     {
-      //FIXME: ensure x coordinate has an integer value plus 0.4
+      /* FIXME: ensure x coordinate has an integer value plus 0.4 */
       cairo_move_to (cr, (alloc->width / 7) * (i + 1) + 0.4, start_grid_y);
       cairo_rel_line_to (cr, 0, alloc->height - start_grid_y);
     }
 
+  /* top and bottom horizontal lines */
+  cairo_move_to (cr, 0, start_grid_y + 0.4);
+  cairo_rel_line_to (cr, alloc->width, 0);
+
+  /* drawing weeks lines */
+  for (i = 0; i < h_lines; i++)
+    {
+      cairo_move_to (cr, 0, ((alloc->height - start_grid_y ) / 6) * (i + lines_gap) + start_grid_y + 0.4);
+      cairo_rel_line_to (cr, alloc->width, 0);
+    }
+
   cairo_stroke (cr);
 
-  /* drawing actual_day_cell */
-  cairo_set_source_rgb (cr,
-                        selected_color.red,
-                        selected_color.green,
-                        selected_color.blue);
-
-  /* Two pixel line on the selected day cell */
-  cairo_set_line_width (cr, 2.0);
-  cairo_move_to (cr,
-                 (alloc->width / 7) * ( priv->actual_day_cell % 7),
-                 start_grid_y + ((alloc->height - start_grid_y) / 5) * ( priv->actual_day_cell / 7) + 1);
-  cairo_rel_line_to (cr, (alloc->width / 7), 0);
-  cairo_stroke (cr);
+  pango_font_description_free (bold_font);
+  g_object_unref (layout);
 }
 
 static gdouble
@@ -1349,7 +1488,7 @@ gcal_month_view_remove_by_uuid (GcalView    *view,
   g_return_if_fail (GCAL_IS_MONTH_VIEW (view));
   priv = GCAL_MONTH_VIEW (view)->priv;
 
-  for (i = 0; i < 35; i++)
+  for (i = 0; i < 31; i++)
     {
       for (l = priv->days[i]; l != NULL; l = l->next)
         {
@@ -1378,7 +1517,7 @@ gcal_month_view_get_by_uuid (GcalView    *view,
   g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), NULL);
   priv = GCAL_MONTH_VIEW (view)->priv;
 
-  for (i = 0; i < 35; i++)
+  for (i = 0; i < 31; i++)
     {
       for (l = priv->days[i]; l != NULL; l = l->next)
         {
@@ -1405,7 +1544,7 @@ gcal_month_view_reposition_child (GcalView    *view,
   g_return_if_fail (GCAL_IS_MONTH_VIEW (view));
   priv = GCAL_MONTH_VIEW (view)->priv;
 
-  for (i = 0; i < 35; i++)
+  for (i = 0; i < 31; i++)
     {
       for (l = priv->days[i]; l != NULL; l = l->next)
         {
@@ -1417,19 +1556,16 @@ gcal_month_view_reposition_child (GcalView    *view,
           if (g_strcmp0 (uuid, widget_uuid) == 0)
             {
               icaltimetype *date;
-              gint day;
 
               date =
                 gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
 
               if (gcal_month_view_contains (view, date))
                 {
-                  day = date->day + ( - priv->days_delay);
-
-                  if (day == i)
+                  if (date->day - 1 == i)
                     {
-                      priv->days[day] =
-                        g_list_sort (priv->days[day],
+                      priv->days[date->day - 1] =
+                        g_list_sort (priv->days[date->day - 1],
                                      gcal_compare_event_widget_by_date);
                     }
                   else
@@ -1437,8 +1573,8 @@ gcal_month_view_reposition_child (GcalView    *view,
                       priv->days[i] = g_list_remove (priv->days[i], child);
 
                       child->hidden_by_me = TRUE;
-                      priv->days[day] =
-                        g_list_insert_sorted (priv->days[day],
+                      priv->days[date->day - 1] =
+                        g_list_insert_sorted (priv->days[date->day - 1],
                                               child,
                                               gcal_compare_event_widget_by_date);
                     }
