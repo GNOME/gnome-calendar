@@ -692,6 +692,14 @@ gcal_year_view_button_release (GtkWidget      *widget,
       end_date->month = priv->end_mark_cell + 1;
       end_date->is_date = 1;
 
+      if (priv->start_mark_cell > priv->end_mark_cell)
+        {
+          start_date->month = priv->end_mark_cell + 1;
+          end_date->day = icaltime_days_in_month (priv->start_mark_cell + 1,
+                                                  end_date->year);
+          end_date->month = priv->start_mark_cell + 1;
+        }
+
       g_signal_emit_by_name (GCAL_VIEW (widget),
                              "create-event",
                              start_date, end_date,
