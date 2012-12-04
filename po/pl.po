@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-01 21:37+0100\n"
-"PO-Revision-Date: 2012-12-01 21:38+0100\n"
+"POT-Creation-Date: 2012-12-04 14:57+0100\n"
+"PO-Revision-Date: 2012-12-04 14:58+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -246,7 +246,7 @@ msgid "Noon"
 msgstr "Południe"
 
 #: ../src/gcal-window.c:295
-msgid "Search ..."
+msgid "Search..."
 msgstr "Wyszukiwanie..."
 
 #: ../src/gcal-window.c:1406
