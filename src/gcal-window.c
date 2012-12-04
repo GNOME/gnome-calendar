@@ -292,7 +292,7 @@ gcal_window_constructed (GObject *object)
       "toolbar-button");
 
   entry = gtk_search_entry_new ();
-  gtk_entry_set_placeholder_text (GTK_ENTRY (entry), _("Search ..."));
+  gtk_entry_set_placeholder_text (GTK_ENTRY (entry), _("Search..."));
   gtk_widget_set_hexpand (entry, TRUE);
   gtk_widget_set_vexpand (entry, TRUE);
   gtk_widget_set_halign (entry, GTK_ALIGN_CENTER);
