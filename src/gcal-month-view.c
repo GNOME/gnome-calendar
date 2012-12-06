@@ -147,6 +147,8 @@ static void           gcal_month_view_reposition_child      (GcalView       *vie
 
 static void           gcal_month_view_clear_selection       (GcalView       *view);
 
+static void           gcal_month_view_create_event_on_current_unit (GcalView *view);
+
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
                          gcal_month_view,
                          GTK_TYPE_CONTAINER,
@@ -234,6 +236,8 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->reposition_child = gcal_month_view_reposition_child;
 
   iface->clear_selection = gcal_month_view_clear_selection;
+
+  iface->create_event_on_current_unit = gcal_month_view_create_event_on_current_unit;
 }
 
 static void
@@ -1603,6 +1607,57 @@ gcal_month_view_clear_selection (GcalView *view)
   priv->start_mark_cell = -1;
   priv->end_mark_cell = -1;
   gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+static void
+gcal_month_view_create_event_on_current_unit (GcalView *view)
+{
+  GcalMonthViewPrivate *priv;
+
+  gdouble horizontal_block;
+  gdouble vertical_block;
+
+  gint days;
+  gint shown_rows;
+  gint february_gap;
+  gdouble lines_gap;
+  gdouble lines_gap_for_5;
+
+  gdouble x, y;
+  gdouble start_grid_y;
+  icaltimetype *start_span;
+
+  /* FIXME: This need to include marking the current unit */
+  g_return_if_fail (GCAL_IS_MONTH_VIEW (view));
+  priv = GCAL_MONTH_VIEW (view)->priv;
+
+  start_grid_y = gcal_month_view_get_start_grid_y (GTK_WIDGET (view));
+  horizontal_block = (gdouble) gtk_widget_get_allocated_width (GTK_WIDGET (view)) / 7.0;
+  vertical_block = (gdouble) (gtk_widget_get_allocated_height (GTK_WIDGET (view)) - start_grid_y) / 6.0;
+
+  days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
+  shown_rows = ceil (days / 7.0);
+  february_gap = shown_rows == 4 ? 1 : 0;
+  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
+  lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
+
+  priv->start_mark_cell = priv->date->day + 7 * february_gap + priv->days_delay - 1;
+  priv->end_mark_cell = priv->start_mark_cell;
+
+  x = horizontal_block * (( priv->end_mark_cell % 7) + 0.5);
+  y = start_grid_y + vertical_block * (lines_gap_for_5 + ( priv->end_mark_cell / 7) + 0.5);
+
+  gtk_widget_queue_draw (GTK_WIDGET (view));
+
+  start_span = gcal_dup_icaltime (priv->date);
+  start_span->is_date = 1;
+
+  g_signal_emit_by_name (view,
+                         "create-event",
+                         start_span, NULL,
+                         x, y);
+
+  g_free (start_span);
 }
 
 /* Public API */
