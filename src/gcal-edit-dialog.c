@@ -189,7 +189,7 @@ gcal_edit_dialog_constructed (GObject* object)
                 "vexpand", TRUE,
                 "always-show-image", TRUE,
                 "image", child,
-                "menu", priv->calendars_menu,
+                "popup", priv->calendars_menu,
                 NULL);
   gtk_grid_attach (GTK_GRID (priv->edit_grid),
                    priv->calendar_button,

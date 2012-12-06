@@ -197,7 +197,7 @@ gcal_event_overlay_constructed (GObject* object)
                 "vexpand", TRUE,
                 "always-show-image", TRUE,
                 "image", calendar_image,
-                "menu", gtk_menu_new (),
+                "popup", gtk_menu_new (),
                 NULL);
 
   gtk_container_add (GTK_CONTAINER (row_grid),
