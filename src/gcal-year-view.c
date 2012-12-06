@@ -1398,8 +1398,9 @@ static void
 gcal_year_view_create_event_on_current_unit (GcalView *view)
 {
   GcalYearViewPrivate *priv;
-  gdouble h_block, v_block;
   gdouble x, y;
+  gint width, height;
+  gdouble start_grid_y;
   icaltimetype *start_span;
   icaltimetype *end_span;
 
@@ -1407,14 +1408,15 @@ gcal_year_view_create_event_on_current_unit (GcalView *view)
   g_return_if_fail (GCAL_IS_YEAR_VIEW (view));
   priv = GCAL_YEAR_VIEW (view)->priv;
 
-  h_block = (gdouble) gtk_widget_get_allocated_width (GTK_WIDGET (view)) / 6.0;
-  x = ((priv->date->month % 6 )- 1 + 0.5) * h_block;
-
-  v_block = (gdouble) gtk_widget_get_allocated_height (GTK_WIDGET (view)) / 2.0;
-  y = ((priv->date->month / 6 ) + 0.5) * v_block;
+  width = gtk_widget_get_allocated_width (GTK_WIDGET (view));
+  height = gtk_widget_get_allocated_height (GTK_WIDGET (view));
+  start_grid_y = gcal_year_view_get_start_grid_y (GTK_WIDGET (view));
 
   priv->start_mark_cell = priv->date->month - 1;
   priv->end_mark_cell = priv->start_mark_cell;
+
+  x = (width / 6) * (( priv->start_mark_cell % 6) + 0.5);
+  y = start_grid_y + ((height - start_grid_y) / 2) * (( priv->start_mark_cell / 6) + 0.5);
 
   gtk_widget_queue_draw (GTK_WIDGET (view));
 
