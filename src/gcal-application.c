@@ -290,13 +290,14 @@ gcal_application_show_about (GSimpleAction *simple,
     }
 
   gtk_show_about_dialog (GTK_WINDOW (app->priv->window),
-                         "program-name", "Calendar",
+                         "program-name", _("Calendar"),
                          "version", VERSION,
                          "copyright", copyright,
                          "license-type", GTK_LICENSE_GPL_3_0,
                          "authors", authors,
                          "artists", artists,
                          "logo-icon-name", "x-office-calendar",
+                         "translator-credits", _("translator-credits"),
                          NULL);
   g_free (copyright);
   g_date_time_unref (date);
