@@ -4,14 +4,14 @@
 # pomóc w jego rozwijaniu i pielęgnowaniu, napisz do nas:
 # gnomepl@aviary.pl
 # -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# Piotr Drąg <piotrdrag@gmail.com>, 2012.
-# Aviary.pl <gnomepl@aviary.pl>, 2012.
+# Piotr Drąg <piotrdrag@gmail.com>, 2012-2013.
+# Aviary.pl <gnomepl@aviary.pl>, 2012-2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-04 14:57+0100\n"
-"PO-Revision-Date: 2012-12-04 14:58+0100\n"
+"POT-Creation-Date: 2013-01-02 02:39+0100\n"
+"PO-Revision-Date: 2013-01-02 02:40+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -24,6 +24,7 @@ msgstr ""
 "X-Poedit-Country: Poland\n"
 
 #: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:126
+#: ../src/gcal-application.c:293
 msgid "Calendar"
 msgstr "Kalendarz"
 
@@ -84,6 +85,12 @@ msgstr "Copyright © %Id Autorzy Kalendarza"
 #: ../src/gcal-application.c:287
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Autorzy Kalendarza"
+
+#: ../src/gcal-application.c:300
+msgid "translator-credits"
+msgstr ""
+"Piotr Drąg <piotrdrag@gmail.com>, 2012-2013\n"
+"Aviary.pl <gnomepl@aviary.pl>, 2012-2013"
 
 #: ../src/gcal-date-entry.c:162
 msgid "Change the date"
@@ -185,8 +192,8 @@ msgstr "przed"
 
 #. Here translators should put the widgest letter in their alphabet, this
 #. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:921 ../src/gcal-week-view.c:1080
-#: ../src/gcal-year-view.c:914
+#: ../src/gcal-month-view.c:1022 ../src/gcal-week-view.c:1080
+#: ../src/gcal-year-view.c:922
 msgid "WWW 99 - WWW 99"
 msgstr "WWW 99 - WWW 99"
 
@@ -253,7 +260,7 @@ msgstr "Wyszukiwanie..."
 msgid "Event deleted"
 msgstr "Usunięto wydarzenie"
 
-#: ../src/gcal-year-view.c:918
+#: ../src/gcal-year-view.c:926
 #, c-format
 msgid "Year %d"
 msgstr "Rok %d"
