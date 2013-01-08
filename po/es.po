@@ -2,25 +2,26 @@
 # Copyright (C) 2012 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# Daniel Mustieles <daniel.mustieles@gmail.com>, 2012.
+# Daniel Mustieles <daniel.mustieles@gmail.com>, 2012, 2013.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2012-12-04 10:43+0000\n"
-"PO-Revision-Date: 2012-12-04 11:44+0100\n"
+"POT-Creation-Date: 2013-01-02 01:40+0000\n"
+"PO-Revision-Date: 2013-01-08 16:58+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
-"Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
+"Language-Team: Español <gnome-es-list@gnome.org>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=(n!=1);\n"
 "X-Generator: Gtranslator 2.91.5\n"
 
 #: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:126
+#: ../src/gcal-application.c:293
 msgid "Calendar"
 msgstr "Calendario"
 
@@ -79,6 +80,10 @@ msgstr "Copyright © %Id Los autores de Calendario"
 #: ../src/gcal-application.c:287
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Los autores de Calendario"
+
+#: ../src/gcal-application.c:300
+msgid "translator-credits"
+msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2012, 2013"
 
 #: ../src/gcal-date-entry.c:162
 msgid "Change the date"
@@ -180,8 +185,8 @@ msgstr "antes del"
 
 #. Here translators should put the widgest letter in their alphabet, this
 #. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:921 ../src/gcal-week-view.c:1080
-#: ../src/gcal-year-view.c:914
+#: ../src/gcal-month-view.c:1022 ../src/gcal-week-view.c:1080
+#: ../src/gcal-year-view.c:922
 msgid "WWW 99 - WWW 99"
 msgstr "WWW 99 - WWW 99"
 
@@ -248,7 +253,7 @@ msgstr "Buscar…"
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
-#: ../src/gcal-year-view.c:918
+#: ../src/gcal-year-view.c:926
 #, c-format
 msgid "Year %d"
 msgstr "Año %d"
