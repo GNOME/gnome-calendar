@@ -82,7 +82,6 @@ PKG_CHECK_MODULES(CALENDAR,
                   clutter-gtk-1.0 >= $CLUTTER_GTK_MIN_VERSION
                   libecal-1.2 >= $ECAL_REQUIRED
                   libedataserver-1.2 >= $EDATASERVER_REQUIRED
-                  libedataserverui-3.0 >= $EDATASERVERUI_REQUIRED
                   libical >= $LIBICAL_REQUIRED)
 
 AC_CONFIG_FILES([

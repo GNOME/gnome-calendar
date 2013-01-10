@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "e-cell-renderer-color.h"
 #include "gcal-window.h"
 #include "gcal-manager.h"
 #include "gcal-floating-container.h"
@@ -34,8 +35,6 @@
 #include <glib/gi18n.h>
 #include <clutter/clutter.h>
 #include <clutter-gtk/clutter-gtk.h>
-
-#include <libedataserverui/libedataserverui.h>
 
 #include <libical/icaltime.h>
 

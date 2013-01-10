@@ -23,7 +23,6 @@
 #include "gcal-view.h"
 
 #include <libedataserver/libedataserver.h>
-#include <libedataserverui/libedataserverui.h>
 
 #include <glib/gi18n.h>
 
