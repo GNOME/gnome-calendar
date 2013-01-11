@@ -22,6 +22,7 @@
 #include "gcal-manager.h"
 #include "gcal-floating-container.h"
 #include "gcal-toolbar.h"
+#include "gcal-searchbar.h"
 #include "gcal-year-view.h"
 #include "gcal-month-view.h"
 #include "gcal-week-view.h"
@@ -244,8 +245,6 @@ gcal_window_constructed (GObject *object)
   GtkWidget *embed;
   ClutterActor *stage;
   GtkWidget *holder;
-  GtkWidget *button;
-  GtkWidget *entry;
 
   GtkStyleContext *context;
 
@@ -276,34 +275,7 @@ gcal_window_constructed (GObject *object)
                                    0.0));
 
   /* searchbar_actor */
-  /* FIXME: demo code */
-  holder = gtk_grid_new ();
-  button = gtk_button_new_with_label (_("Done"));
-  gtk_widget_set_size_request (button, 100, -1);
-  gtk_widget_set_hexpand (button, FALSE);
-  gtk_widget_set_halign (button, GTK_ALIGN_START);
-  gtk_widget_set_valign (button, GTK_ALIGN_CENTER);
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (button),
-      "suggested-action");
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (button),
-      "toolbar-button");
-
-  entry = gtk_search_entry_new ();
-  gtk_entry_set_placeholder_text (GTK_ENTRY (entry), _("Search..."));
-  gtk_widget_set_hexpand (entry, TRUE);
-  gtk_widget_set_vexpand (entry, TRUE);
-  gtk_widget_set_halign (entry, GTK_ALIGN_CENTER);
-  gtk_widget_set_valign (entry, GTK_ALIGN_CENTER);
-  gtk_widget_set_size_request (entry, 450, -1);
-
-  gtk_container_set_border_width (GTK_CONTAINER (holder), 12);
-  gtk_container_add (GTK_CONTAINER (holder), button);
-  gtk_container_add (GTK_CONTAINER (holder), entry);
-  gtk_widget_show_all (holder);
-
-  priv->searchbar_actor = gtk_clutter_actor_new_with_contents (holder);
+  priv->searchbar_actor = gcal_searchbar_new ();
   clutter_actor_add_child (stage, priv->searchbar_actor);
   clutter_actor_set_x (priv->searchbar_actor, 0);
   clutter_actor_add_constraint_with_name (
@@ -448,10 +420,6 @@ gcal_window_constructed (GObject *object)
                     "notify::allocation",
                     G_CALLBACK (gcal_window_stage_notify_cb),
                     object);
-  g_signal_connect (button,
-                    "clicked",
-                    G_CALLBACK (gcal_window_hide_searchbar),
-                    object);
 
   g_signal_connect (priv->toolbar_actor,
                     "view-changed",
@@ -468,6 +436,11 @@ gcal_window_constructed (GObject *object)
   g_signal_connect (priv->toolbar_actor,
                     "search-events",
                     G_CALLBACK (gcal_window_bring_searchbar),
+                    object);
+
+  g_signal_connect (priv->searchbar_actor,
+                    "done",
+                    G_CALLBACK (gcal_window_hide_searchbar),
                     object);
 
   g_signal_connect (priv->toolbar_actor,
