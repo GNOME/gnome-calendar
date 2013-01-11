@@ -1,10 +1,5 @@
 TODO
 
- !!! Fix GcalMonthView to take into accounts days outside the month shown, all
-   over the place, when clicking, when calculating new-dates (adding could
-   surpass 31 days), when drawing(maybe mark in other color) and selecting, etc.
- !!! Fix GcalMonthView to take into account 31 days when in need of 42 cells
-   instead of 35.
  - Review all-day checkbox and date/time fields interaction in GcalEditDialog
  - Check width of read-only layer in GcalEditDialog
  - Review the real need of GcalFloatingContainer
