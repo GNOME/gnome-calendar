@@ -29,6 +29,7 @@
 #include <langinfo.h>
 
 #include <string.h>
+#include <math.h>
 
 static const gint
 ab_day[7] =
@@ -276,6 +277,16 @@ gcal_compare_event_widget_by_date (gconstpointer a,
   b_date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (b_child->widget));
 
   return icaltime_compare (*a_date, *b_date);
+}
+
+gint
+get_icon_margin (void)
+{
+  gint toolbar_size, menu_size;
+
+  gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &menu_size, NULL);
+  gtk_icon_size_lookup (GTK_ICON_SIZE_LARGE_TOOLBAR, &toolbar_size, NULL);
+  return (gint) floor ((toolbar_size - menu_size) / 2.0);
 }
 
 /* Function to do a last minute fixup of the AM/PM stuff if the locale

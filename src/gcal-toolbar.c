@@ -22,8 +22,6 @@
 
 #include <glib/gi18n.h>
 
-#include <math.h>
-
 struct _GcalToolbarPrivate
 {
   GtkWidget           *widget;
@@ -92,8 +90,6 @@ static void gcal_toolbar_back_clicked           (GtkWidget    *button,
 
 static void gcal_toolbar_event_edited           (GtkWidget    *button,
                                                  gpointer      user_data);
-
-static gint get_icon_margin                     (void);
 
 G_DEFINE_TYPE (GcalToolbar, gcal_toolbar, GTK_CLUTTER_TYPE_ACTOR);
 
@@ -619,16 +615,6 @@ gcal_toolbar_event_edited (GtkWidget *button,
       g_signal_emit (toolbar, signals[DONE_EDIT], 0);
       gtk_button_set_label (GTK_BUTTON (priv->edit_button), _("Edit"));
     }
-}
-
-static gint
-get_icon_margin (void)
-{
-  gint toolbar_size, menu_size;
-
-  gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &menu_size, NULL);
-  gtk_icon_size_lookup (GTK_ICON_SIZE_LARGE_TOOLBAR, &toolbar_size, NULL);
-  return (gint) floor ((toolbar_size - menu_size) / 2.0);
 }
 
 /* Public API */
