@@ -150,14 +150,23 @@ gcal_application_startup (GApplication *app)
   if (priv->provider == NULL)
    {
      priv->provider = gtk_css_provider_new ();
-     gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-                                                GTK_STYLE_PROVIDER (priv->provider),
-                                                G_MAXUINT);
+     gtk_style_context_add_provider_for_screen (
+         gdk_screen_get_default (),
+         GTK_STYLE_PROVIDER (priv->provider),
+         G_MAXUINT);
 
      error = NULL;
      gtk_css_provider_load_from_path (priv->provider, CSS_FILE, &error);
      if (error != NULL)
-       g_warning ("Error loading stylesheet from file %s. %s", CSS_FILE, error->message);
+       {
+         g_warning ("Error loading stylesheet from file %s. %s",
+                    CSS_FILE,
+                    error->message);
+       }
+
+     g_object_set (gtk_settings_get_default (),
+                   "gtk-application-prefer-dark-theme", FALSE,
+                   NULL);
    }
 
   priv->manager = gcal_manager_new ();
