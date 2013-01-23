@@ -1,0 +1,260 @@
+# Czech translation for gnome-calendar.
+# Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-calendar package.
+#
+# Adam Matoušek <adamatousek@gmail.com>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-calendar master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2013-01-11 14:41+0000\n"
+"PO-Revision-Date: 2013-01-12 15:50+0100\n"
+"Last-Translator: Adam Matoušek <adamatousek@gmail.com>\n"
+"Language-Team: Czech <gnome-cs-list@gnome.org>\n"
+"Language: cs\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Generator: Poedit 1.5.4\n"
+
+#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:126
+#: ../src/gcal-application.c:293
+msgid "Calendar"
+msgstr "Kalendář"
+
+#: ../data/gnome-calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr "Zobrazit a spravovat kalendář"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Maximalizované okno"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Stav maximalizace okna"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Type of the active view"
+msgstr "Typ aktivního zobrazení"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Type of the active window view, default value is: monthly view"
+msgstr ""
+"Typ aktivního zobrazení okna, výchozí hodnotou je „month“ – měsíční zobrazení"
+
+#: ../src/gcal-application.c:146
+msgid "Unable to initialize GtkClutter"
+msgstr "Nelze inicializovat GtkClutter"
+
+#: ../src/gcal-application.c:197
+msgid "Weeks"
+msgstr "Týdny"
+
+#: ../src/gcal-application.c:198
+msgid "Months"
+msgstr "Měsíce"
+
+#: ../src/gcal-application.c:199
+msgid "Years"
+msgstr "Roky"
+
+#: ../src/gcal-application.c:201
+msgid "View as"
+msgstr "Zobrazit jako"
+
+#: ../src/gcal-application.c:209
+msgid "About"
+msgstr "O Kalendáři"
+
+#: ../src/gcal-application.c:217
+msgid "Quit"
+msgstr "Ukončit"
+
+#: ../src/gcal-application.c:281
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Copyright © %Id autoři Kalendáře"
+
+#: ../src/gcal-application.c:287
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Copyright © %Id – %Id autoři Kalendáře"
+
+#: ../src/gcal-application.c:300
+msgid "translator-credits"
+msgstr "Adam Matoušek <adamatousek@gmail.com>"
+
+#: ../src/gcal-date-entry.c:162
+msgid "Change the date"
+msgstr "Změnit datum"
+
+#: ../src/gcal-edit-dialog.c:156
+msgid "Event Details"
+msgstr "Podrobnosti události"
+
+#. Summary, title
+#: ../src/gcal-edit-dialog.c:171
+msgid "Title"
+msgstr "Název"
+
+#. Start date and time
+#: ../src/gcal-edit-dialog.c:199
+msgid "Starts"
+msgstr "Začíná"
+
+#: ../src/gcal-edit-dialog.c:215
+msgid "All day"
+msgstr "Celý den"
+
+#. End date and time
+#: ../src/gcal-edit-dialog.c:221
+msgid "Ends"
+msgstr "Končí"
+
+#. Location, location, location
+#: ../src/gcal-edit-dialog.c:238
+msgid "Location"
+msgstr "Umístění"
+
+#. Notes, description
+#: ../src/gcal-edit-dialog.c:252
+msgid "Notes"
+msgstr "Poznámky"
+
+#. done button
+#: ../src/gcal-edit-dialog.c:310 ../src/gcal-toolbar.c:615
+#: ../src/gcal-window.c:281
+msgid "Done"
+msgstr "Hotovo"
+
+#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
+#: ../src/gcal-toolbar.c:295
+msgid "New Event"
+msgstr "Nová událost"
+
+#: ../src/gcal-event-overlay.c:162
+msgid "Create"
+msgstr "Vytvořit"
+
+#: ../src/gcal-event-overlay.c:171
+msgid "More details"
+msgstr "Více podrobností"
+
+#: ../src/gcal-event-overlay.c:185
+msgid "What (e.g. Alien Invasion)"
+msgstr "Co (např. útok mimozemšťanů)"
+
+#: ../src/gcal-event-overlay.c:507
+#, c-format
+msgid "New Event on %s"
+msgstr "Nová událost %s"
+
+#: ../src/gcal-event-overlay.c:524
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "Nová událost od %s do %s"
+
+#: ../src/gcal-manager.c:1506
+msgid "Notification"
+msgstr "Upozornění"
+
+#: ../src/gcal-manager.c:1508
+msgid "Email"
+msgstr "E-mail"
+
+#: ../src/gcal-manager.c:1522
+msgid "days"
+msgstr "dny"
+
+#: ../src/gcal-manager.c:1528
+msgid "weeks"
+msgstr "týdny"
+
+#: ../src/gcal-manager.c:1534
+msgid "hours"
+msgstr "hod."
+
+#: ../src/gcal-manager.c:1540
+msgid "minutes"
+msgstr "min."
+
+#: ../src/gcal-manager.c:1552
+msgid "before"
+msgstr "předem"
+
+#. Here translators should put the widgest letter in their alphabet, this
+#. * taken to make it align with week-view header, which is the larger for now
+#: ../src/gcal-month-view.c:1022 ../src/gcal-week-view.c:1080
+#: ../src/gcal-year-view.c:922
+msgid "WWW 99 - WWW 99"
+msgstr "WWW 99 - WWW 99"
+
+#: ../src/gcal-time-entry.c:126
+msgid "Change the time"
+msgstr "Změnit čas"
+
+#. day
+#: ../src/gcal-toolbar.c:321
+msgid "Day"
+msgstr "Den"
+
+#. week
+#: ../src/gcal-toolbar.c:338 ../src/gcal-week-view.c:1094
+msgid "Week"
+msgstr "Týden"
+
+#. month
+#: ../src/gcal-toolbar.c:355
+msgid "Month"
+msgstr "Měsíc"
+
+#. year
+#: ../src/gcal-toolbar.c:372
+msgid "Year"
+msgstr "Rok"
+
+#. list
+#: ../src/gcal-toolbar.c:389
+msgid "List"
+msgstr "Seznam"
+
+#: ../src/gcal-toolbar.c:469
+msgid "Back"
+msgstr "Zpět"
+
+#. reset morphing edit_button
+#: ../src/gcal-toolbar.c:490 ../src/gcal-toolbar.c:502
+#: ../src/gcal-toolbar.c:620
+msgid "Edit"
+msgstr "Upravit"
+
+#: ../src/gcal-week-view.c:1280
+msgid "AM"
+msgstr "dop."
+
+#: ../src/gcal-week-view.c:1280
+msgid "PM"
+msgstr "odp."
+
+#: ../src/gcal-week-view.c:1283 ../src/gcal-week-view.c:1352
+msgid "Midnight"
+msgstr "Půlnoc"
+
+#: ../src/gcal-week-view.c:1285 ../src/gcal-week-view.c:1355
+msgid "Noon"
+msgstr "Poledne"
+
+#: ../src/gcal-window.c:294
+msgid "Search..."
+msgstr "Hledat…"
+
+#: ../src/gcal-window.c:1405
+msgid "Event deleted"
+msgstr "Událost smazána"
+
+#: ../src/gcal-year-view.c:926
+#, c-format
+msgid "Year %d"
+msgstr "Rok %d"
