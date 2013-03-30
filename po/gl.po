@@ -2,13 +2,13 @@
 # Copyright (C) 2012 THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Fran Diéguez <frandieguez@gnome.org>, 2012.
-# Fran Dieguez <frandieguez@gnome.org>, 2012.
+# Fran Dieguez <frandieguez@gnome.org>, 2012, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-27 00:40+0100\n"
-"PO-Revision-Date: 2012-12-27 00:43+0200\n"
+"POT-Creation-Date: 2013-03-30 20:30+0100\n"
+"PO-Revision-Date: 2013-03-30 20:31+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: gnome-l10n-gl@gnome.org\n"
 "Language: gl\n"
@@ -19,6 +19,7 @@ msgstr ""
 "X-Generator: Virtaal 0.7.1\n"
 
 #: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:126
+#: ../src/gcal-application.c:293
 msgid "Calendar"
 msgstr "Calendar"
 
@@ -78,6 +79,10 @@ msgstr "Copyright © %Id Os autores de Calendario"
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Os autores de Calendario"
 
+#: ../src/gcal-application.c:300
+msgid "translator-credits"
+msgstr "Francisco Dieguez <frandieguez@mabishu.com>, 2012-2013"
+
 #: ../src/gcal-date-entry.c:162
 msgid "Change the date"
 msgstr "Cambiar a data"
@@ -117,7 +122,7 @@ msgstr "Notas"
 
 #. done button
 #: ../src/gcal-edit-dialog.c:310 ../src/gcal-toolbar.c:615
-#: ../src/gcal-window.c:282
+#: ../src/gcal-window.c:281
 msgid "Done"
 msgstr "Feito"
 
@@ -238,11 +243,11 @@ msgstr "Media noite"
 msgid "Noon"
 msgstr "Mediodía"
 
-#: ../src/gcal-window.c:295
+#: ../src/gcal-window.c:294
 msgid "Search..."
 msgstr "Buscar…"
 
-#: ../src/gcal-window.c:1406
+#: ../src/gcal-window.c:1405
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
