@@ -2,242 +2,28 @@
 # Copyright (C) 2012 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Tom Tryfonidis <tomtryf@gmail.com>, 2012.
-#
+# Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2013.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-07-12 00:09+0200\n"
-"PO-Revision-Date: 2012-08-17 01:13+0200\n"
-"Last-Translator: Tom Tryfonidis <tomtryf@gmail.com>\n"
-"Language-Team: Greek <team@gnome.gr>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2013-01-02 01:40+0000\n"
+"PO-Revision-Date: 2013-04-10 17:09+0300\n"
+"Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
+"Language-Team: team@gnome.gr\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.7.1\n"
+"X-Project-Style: gnome\n"
 
-#: ../src/gcal-application.c:124 ../src/gcal-event-view.c:187
-#: ../data/gnome-calendar.desktop.in.in.h:1
+#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:126
+#: ../src/gcal-application.c:293
 msgid "Calendar"
 msgstr "Ημερολόγιο"
-
-#: ../src/gcal-application.c:144
-msgid "Unable to initialize GtkClutter"
-msgstr "Αδυναμία αρχικοποίησης του GtkClutter"
-
-#: ../src/gcal-application.c:193
-msgid "Weeks"
-msgstr "Εβδομάδες"
-
-#: ../src/gcal-application.c:194
-msgid "Months"
-msgstr "Μήνες"
-
-#: ../src/gcal-application.c:196
-msgid "View as"
-msgstr "Προβολή ως"
-
-#: ../src/gcal-application.c:204
-msgid "About"
-msgstr "Περί"
-
-#: ../src/gcal-application.c:212
-msgid "Quit"
-msgstr "Έξοδος"
-
-#: ../src/gcal-window.c:897
-msgid "Event deleted"
-msgstr "Διαγράφηκε η εκδήλωση"
-
-#. day
-#: ../src/gcal-toolbar.c:302
-msgid "Day"
-msgstr "Ημέρα"
-
-#. week
-#: ../src/gcal-toolbar.c:319 ../src/gcal-week-view.c:689
-msgid "Week"
-msgstr "Εβδομάδα"
-
-#. month
-#: ../src/gcal-toolbar.c:336
-msgid "Month"
-msgstr "Μήνας"
-
-#. year
-#: ../src/gcal-toolbar.c:353
-msgid "Year"
-msgstr "Έτος"
-
-#. list
-#: ../src/gcal-toolbar.c:370
-msgid "List"
-msgstr "Λίστα"
-
-#: ../src/gcal-toolbar.c:423
-msgid "Back"
-msgstr "Πίσω"
-
-#. reset morphing edit_button
-#: ../src/gcal-toolbar.c:444 ../src/gcal-toolbar.c:456
-#: ../src/gcal-toolbar.c:531
-msgid "Edit"
-msgstr "Επεξεργασία"
-
-#: ../src/gcal-toolbar.c:526
-msgid "Done"
-msgstr "Έγινε"
-
-#. init grid values
-#. draw grid_sidebar
-#: ../src/gcal-week-view.c:394 ../src/gcal-week-view.c:777
-#: ../src/gcal-editable-date.c:92
-msgid "All day"
-msgstr "Όλη μέρα"
-
-#: ../src/gcal-week-view.c:687
-msgid "Week of"
-msgstr "Εβδομάδα από"
-
-#: ../src/gcal-week-view.c:792
-msgid "AM"
-msgstr "ΠΜ"
-
-#: ../src/gcal-week-view.c:794
-#, c-format
-msgid "Noon"
-msgstr "Μεσημέρι"
-
-#: ../src/gcal-week-view.c:796
-msgid "PM"
-msgstr "ΜΜ"
-
-#. FIXME: do something with this to add it on the slist of widget
-#. * something like, turning all the three into on widget
-#.
-#: ../src/gcal-event-view.c:158
-msgid "Yes"
-msgstr "Ναι"
-
-#: ../src/gcal-event-view.c:159
-msgid "Maybe"
-msgstr "Πιθανώς"
-
-#: ../src/gcal-event-view.c:160
-msgid "No"
-msgstr "Όχι"
-
-#. Building the skel grid
-#: ../src/gcal-event-view.c:171
-msgid "What"
-msgstr "Τι"
-
-#: ../src/gcal-event-view.c:176
-msgid "When"
-msgstr "Πότε"
-
-#: ../src/gcal-event-view.c:182
-msgid "Where"
-msgstr "Που"
-
-#: ../src/gcal-event-view.c:192
-msgid "Description"
-msgstr "Περιγραφή"
-
-#: ../src/gcal-event-view.c:198
-msgid "Reminders"
-msgstr "Υπενθυμίσεις"
-
-#: ../src/gcal-event-view.c:205
-msgid "Attending"
-msgstr "Παρευρίσκομαι"
-
-#: ../src/gcal-event-view.c:210
-msgid "Delete Event"
-msgstr "Διαγραφή εκδήλωσης"
-
-#: ../src/gcal-editable-date.c:98
-msgid "to"
-msgstr "ως"
-
-#: ../src/gcal-editable-date.c:161 ../src/gcal-editable-date.c:197
-#: ../src/gcal-editable-date.c:201 ../src/gcal-manager.c:1157
-msgid " (All day)"
-msgstr " (Όλη μέρα)"
-
-#: ../src/gcal-editable-reminder.c:131
-msgid "Add reminder"
-msgstr "Προσθήκη υπενθύμισης"
-
-#: ../src/gcal-editable-reminder.c:186 ../src/gcal-editable-reminder.c:357
-#: ../src/gcal-manager.c:1320
-msgid "Email"
-msgstr "Ηλ. διεύθυνση"
-
-#: ../src/gcal-editable-reminder.c:193
-msgid "minute"
-msgstr "λεπτό"
-
-#: ../src/gcal-editable-reminder.c:195
-msgid "hour"
-msgstr "ώρα"
-
-#: ../src/gcal-editable-reminder.c:197
-msgid "day"
-msgstr "ημέρα"
-
-#: ../src/gcal-editable-reminder.c:253 ../src/gcal-manager.c:1364
-msgid "before"
-msgstr "πριν"
-
-#: ../src/gcal-editable-reminder.c:360 ../src/gcal-manager.c:1318
-msgid "Notification"
-msgstr "Ειδοποίηση"
-
-#: ../src/gcal-editable-reminder.c:363 ../src/gcal-manager.c:1352
-msgid "minutes"
-msgstr "λεπτά"
-
-#: ../src/gcal-editable-reminder.c:366 ../src/gcal-manager.c:1346
-msgid "hours"
-msgstr "ώρες"
-
-#: ../src/gcal-editable-reminder.c:369 ../src/gcal-manager.c:1334
-msgid "days"
-msgstr "ημέρες"
-
-#: ../src/gcal-editable-reminder.c:372 ../src/gcal-manager.c:1340
-msgid "weeks"
-msgstr "εβδομάδες"
-
-#: ../src/gcal-utils.c:196
-msgid "Sun"
-msgstr "Κυρ"
-
-#: ../src/gcal-utils.c:197
-msgid "Mon"
-msgstr "Δευ"
-
-#: ../src/gcal-utils.c:198
-msgid "Tue"
-msgstr "Τρί"
-
-#: ../src/gcal-utils.c:199
-msgid "Wed"
-msgstr "Τετ"
-
-#: ../src/gcal-utils.c:200
-msgid "Thu"
-msgstr "Πέμ"
-
-#: ../src/gcal-utils.c:201
-msgid "Fri"
-msgstr "Παρ"
-
-#: ../src/gcal-utils.c:202
-msgid "Sat"
-msgstr "Σάβ"
 
 #: ../data/gnome-calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
@@ -260,3 +46,292 @@ msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
 "Τύπος της ενεργής προβολής του παραθύρου, η προεπιλεγμένη τιμή είναι: "
 "μηνιαία προβολή"
+
+#: ../src/gcal-application.c:146
+msgid "Unable to initialize GtkClutter"
+msgstr "Αδυναμία αρχικοποίησης του GtkClutter"
+
+#: ../src/gcal-application.c:197
+msgid "Weeks"
+msgstr "Εβδομάδες"
+
+#: ../src/gcal-application.c:198
+msgid "Months"
+msgstr "Μήνες"
+
+#: ../src/gcal-application.c:199
+#| msgid "Year"
+msgid "Years"
+msgstr "Έτη"
+
+#: ../src/gcal-application.c:201
+msgid "View as"
+msgstr "Προβολή ως"
+
+#: ../src/gcal-application.c:209
+msgid "About"
+msgstr "Περί"
+
+#: ../src/gcal-application.c:217
+msgid "Quit"
+msgstr "Έξοδος"
+
+#: ../src/gcal-application.c:281
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Πνευματικά δικαιώματα © %Id Οι συγγραφείς του ημερολογίου"
+
+#: ../src/gcal-application.c:287
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Πνευματικά δικαιώματα © %Id–%Id Οι συγγραφείς του ημερολογίου"
+
+#: ../src/gcal-application.c:300
+msgid "translator-credits"
+msgstr ""
+" Δημήτρης Σπίγγος <dmtrs32@gmail.com>\n"
+" Για περισσότερα δείτε: http://gnome.gr"
+
+#: ../src/gcal-date-entry.c:162
+msgid "Change the date"
+msgstr "Αλλαγή της ημερομηνίας"
+
+#: ../src/gcal-edit-dialog.c:156
+#| msgid "Event deleted"
+msgid "Event Details"
+msgstr "Λεπτομέρειες εκδήλωσης"
+
+#. Summary, title
+#: ../src/gcal-edit-dialog.c:171
+msgid "Title"
+msgstr "Τίτλος"
+
+#. Start date and time
+#: ../src/gcal-edit-dialog.c:199
+msgid "Starts"
+msgstr "Ξεκινά"
+
+#: ../src/gcal-edit-dialog.c:215
+msgid "All day"
+msgstr "Όλη μέρα"
+
+#. End date and time
+#: ../src/gcal-edit-dialog.c:221
+msgid "Ends"
+msgstr "Τελειώνει"
+
+#. Location, location, location
+#: ../src/gcal-edit-dialog.c:238
+#| msgid "Notification"
+msgid "Location"
+msgstr "Τοποθεσία"
+
+#. Notes, description
+#: ../src/gcal-edit-dialog.c:252
+msgid "Notes"
+msgstr "Σημειώσεις"
+
+#. done button
+#: ../src/gcal-edit-dialog.c:310 ../src/gcal-toolbar.c:615
+#: ../src/gcal-window.c:282
+msgid "Done"
+msgstr "Έγινε"
+
+#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
+#: ../src/gcal-toolbar.c:295
+#| msgid "Delete Event"
+msgid "New Event"
+msgstr "Νέα εκδήλωση"
+
+#: ../src/gcal-event-overlay.c:162
+msgid "Create"
+msgstr "Δημιουργία"
+
+#: ../src/gcal-event-overlay.c:171
+msgid "More details"
+msgstr "Περισσότερες λεπτομέρειες"
+
+#: ../src/gcal-event-overlay.c:185
+msgid "What (e.g. Alien Invasion)"
+msgstr "Τι (π.χ. Εισβολή ξένων)"
+
+#: ../src/gcal-event-overlay.c:507
+#, c-format
+msgid "New Event on %s"
+msgstr "Νέα εκδήλωση στο %s"
+
+#: ../src/gcal-event-overlay.c:524
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "Νέα εκδήλωση από %s σε %s"
+
+#: ../src/gcal-manager.c:1506
+msgid "Notification"
+msgstr "Ειδοποίηση"
+
+#: ../src/gcal-manager.c:1508
+msgid "Email"
+msgstr "Ηλ. διεύθυνση"
+
+#: ../src/gcal-manager.c:1522
+msgid "days"
+msgstr "ημέρες"
+
+#: ../src/gcal-manager.c:1528
+msgid "weeks"
+msgstr "εβδομάδες"
+
+#: ../src/gcal-manager.c:1534
+msgid "hours"
+msgstr "ώρες"
+
+#: ../src/gcal-manager.c:1540
+msgid "minutes"
+msgstr "λεπτά"
+
+#: ../src/gcal-manager.c:1552
+msgid "before"
+msgstr "πριν"
+
+#. Here translators should put the widgest letter in their alphabet, this
+#. * taken to make it align with week-view header, which is the larger for now
+#: ../src/gcal-month-view.c:1022 ../src/gcal-week-view.c:1080
+#: ../src/gcal-year-view.c:922
+msgid "WWW 99 - WWW 99"
+msgstr "ΜΜΜ 99 - ΜΜΜ 99"
+
+#: ../src/gcal-time-entry.c:126
+msgid "Change the time"
+msgstr "Αλλαγή της ώρας"
+
+#. day
+#: ../src/gcal-toolbar.c:321
+msgid "Day"
+msgstr "Ημέρα"
+
+#. week
+#: ../src/gcal-toolbar.c:338 ../src/gcal-week-view.c:1094
+msgid "Week"
+msgstr "Εβδομάδα"
+
+#. month
+#: ../src/gcal-toolbar.c:355
+msgid "Month"
+msgstr "Μήνας"
+
+#. year
+#: ../src/gcal-toolbar.c:372
+msgid "Year"
+msgstr "Έτος"
+
+#. list
+#: ../src/gcal-toolbar.c:389
+msgid "List"
+msgstr "Λίστα"
+
+#: ../src/gcal-toolbar.c:469
+msgid "Back"
+msgstr "Πίσω"
+
+#. reset morphing edit_button
+#: ../src/gcal-toolbar.c:490 ../src/gcal-toolbar.c:502
+#: ../src/gcal-toolbar.c:620
+msgid "Edit"
+msgstr "Επεξεργασία"
+
+#: ../src/gcal-week-view.c:1280
+msgid "AM"
+msgstr "ΠΜ"
+
+#: ../src/gcal-week-view.c:1280
+msgid "PM"
+msgstr "ΜΜ"
+
+#: ../src/gcal-week-view.c:1283 ../src/gcal-week-view.c:1352
+msgid "Midnight"
+msgstr "Μεσάνυχτα"
+
+#: ../src/gcal-week-view.c:1285 ../src/gcal-week-view.c:1355
+msgid "Noon"
+msgstr "Μεσημέρι"
+
+#: ../src/gcal-window.c:295
+msgid "Search..."
+msgstr "Αναζήτηση..."
+
+#: ../src/gcal-window.c:1406
+msgid "Event deleted"
+msgstr "Διαγράφηκε η εκδήλωση"
+
+#: ../src/gcal-year-view.c:926
+#, c-format
+#| msgid "Year"
+msgid "Year %d"
+msgstr "Έτος %d"
+
+#~ msgid "Week of"
+#~ msgstr "Εβδομάδα από"
+
+#~ msgid "Yes"
+#~ msgstr "Ναι"
+
+#~ msgid "Maybe"
+#~ msgstr "Πιθανώς"
+
+#~ msgid "No"
+#~ msgstr "Όχι"
+
+#~ msgid "What"
+#~ msgstr "Τι"
+
+#~ msgid "When"
+#~ msgstr "Πότε"
+
+#~ msgid "Where"
+#~ msgstr "Που"
+
+#~ msgid "Description"
+#~ msgstr "Περιγραφή"
+
+#~ msgid "Reminders"
+#~ msgstr "Υπενθυμίσεις"
+
+#~ msgid "Attending"
+#~ msgstr "Παρευρίσκομαι"
+
+#~ msgid "to"
+#~ msgstr "ως"
+
+#~ msgid " (All day)"
+#~ msgstr " (Όλη μέρα)"
+
+#~ msgid "Add reminder"
+#~ msgstr "Προσθήκη υπενθύμισης"
+
+#~ msgid "minute"
+#~ msgstr "λεπτό"
+
+#~ msgid "hour"
+#~ msgstr "ώρα"
+
+#~ msgid "day"
+#~ msgstr "ημέρα"
+
+#~ msgid "Sun"
+#~ msgstr "Κυρ"
+
+#~ msgid "Mon"
+#~ msgstr "Δευ"
+
+#~ msgid "Tue"
+#~ msgstr "Τρί"
+
+#~ msgid "Wed"
+#~ msgstr "Τετ"
+
+#~ msgid "Thu"
+#~ msgstr "Πέμ"
+
+#~ msgid "Fri"
+#~ msgstr "Παρ"
+
+#~ msgid "Sat"
+#~ msgstr "Σάβ"
