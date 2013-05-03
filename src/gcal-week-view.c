@@ -450,6 +450,7 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
 
   GtkBorder padding;
   PangoLayout *layout;
+  PangoFontDescription *font_desc;
   gint font_height;
 
   gint start_grid_y;
@@ -492,11 +493,13 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
 
   /* Estimating cell height */
   layout = pango_layout_new (gtk_widget_get_pango_context (widget));
-  pango_layout_set_font_description (
-      layout,
-      gtk_style_context_get_font (gtk_widget_get_style_context (widget),
-                                  gtk_widget_get_state_flags (widget)));
+  gtk_style_context_get (gtk_widget_get_style_context (widget),
+                         gtk_widget_get_state_flags (widget),
+                         "font", &font_desc,
+                         NULL);
+  pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, NULL, &font_height);
+  pango_font_description_free (font_desc);
 
   gtk_widget_get_preferred_width (priv->vscrollbar, &min, &natural);
 
@@ -1021,6 +1024,7 @@ gcal_week_view_draw_header (GcalWeekView  *view,
 
   PangoLayout *layout;
   PangoFontDescription *bold_font;
+  PangoFontDescription *font_desc;
   gint header_width;
   gint layout_width;
   gint layout_height;
@@ -1071,9 +1075,8 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
   layout = pango_cairo_create_layout (cr);
-  pango_layout_set_font_description (
-      layout,
-      gtk_style_context_get_font (context, state));
+  gtk_style_context_get (context, state, "font", &font_desc, NULL);
+  pango_layout_set_font_description (layout, font_desc);
 
   /* Here translators should put the widgest letter in their alphabet, this
    * taken to make it align with week-view header, which is the larger for now */
@@ -1167,8 +1170,7 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   gtk_style_context_get_color (context, state, &color);
   cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
-  bold_font = pango_font_description_copy (
-      gtk_style_context_get_font (context, state));
+  gtk_style_context_get (context, state, "font", &bold_font, NULL);
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
   pango_layout_set_font_description (layout, bold_font);
 
@@ -1227,6 +1229,7 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   g_free (left_header);
   g_free (right_header);
   pango_font_description_free (bold_font);
+  pango_font_description_free (font_desc);
   g_object_unref (layout);
 }
 
@@ -1248,6 +1251,7 @@ gcal_week_view_draw_grid_window (GcalWeekView  *view,
   gint sidebar_width;
 
   PangoLayout *layout;
+  PangoFontDescription *font_desc;
 
   priv = view->priv;
   widget = GTK_WIDGET (view);
@@ -1262,9 +1266,8 @@ gcal_week_view_draw_grid_window (GcalWeekView  *view,
   gtk_style_context_get_padding (context, state, &padding);
 
   layout = pango_cairo_create_layout (cr);
-  pango_layout_set_font_description (
-      layout,
-      gtk_style_context_get_font (context, state));
+  gtk_style_context_get (context, state, "font", &font_desc, NULL);
+  pango_layout_set_font_description (layout, font_desc);
   cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
   sidebar_width = gcal_week_view_get_sidebar_width (widget);
@@ -1322,6 +1325,7 @@ gcal_week_view_draw_grid_window (GcalWeekView  *view,
 
   cairo_stroke (cr);
 
+  pango_font_description_free (font_desc);
   g_object_unref (layout);
 }
 
@@ -1332,6 +1336,7 @@ gcal_week_view_get_sidebar_width (GtkWidget *widget)
   GtkBorder padding;
 
   PangoLayout *layout;
+  PangoFontDescription *font_desc;
   gint mid_width;
   gint noon_width;
   gint sidebar_width;
@@ -1344,10 +1349,11 @@ gcal_week_view_get_sidebar_width (GtkWidget *widget)
       &padding);
 
   layout = pango_layout_new (gtk_widget_get_pango_context (widget));
-  pango_layout_set_font_description (
-      layout,
-      gtk_style_context_get_font (context,
-                                  gtk_widget_get_state_flags(widget)));
+  gtk_style_context_get (context,
+                         gtk_widget_get_state_flags(widget),
+                         "font", &font_desc,
+                         NULL);
+  pango_layout_set_font_description (layout, font_desc);
 
   pango_layout_set_text (layout, _("Midnight"), -1);
   pango_layout_get_pixel_size (layout, &mid_width, NULL);
@@ -1356,6 +1362,10 @@ gcal_week_view_get_sidebar_width (GtkWidget *widget)
   pango_layout_get_pixel_size (layout, &noon_width, NULL);
   sidebar_width = noon_width > mid_width ? noon_width : mid_width;
   sidebar_width += padding.left + padding.right;
+
+  pango_font_description_free (font_desc);
+  g_object_unref (layout);
+
   return sidebar_width;
 }
 
@@ -1378,6 +1388,7 @@ gcal_week_view_get_start_grid_y (GtkWidget *widget)
   GtkBorder header_padding;
 
   PangoLayout *layout;
+  PangoFontDescription *font_desc;
   gint font_height;
   gdouble start_grid_y;
 
@@ -1392,22 +1403,26 @@ gcal_week_view_get_start_grid_y (GtkWidget *widget)
                                  gtk_widget_get_state_flags (widget),
                                  &header_padding);
 
-  pango_layout_set_font_description (
-      layout,
-      gtk_style_context_get_font (context,
-                                  gtk_widget_get_state_flags(widget)));
+  gtk_style_context_get (context,
+                         gtk_widget_get_state_flags(widget),
+                         "font", &font_desc,
+                         NULL);
+  pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, NULL, &font_height);
+  pango_font_description_free (font_desc);
 
   /* 6: is padding around the header */
   start_grid_y = header_padding.top + font_height + header_padding.bottom;
   gtk_style_context_restore (context);
 
   /* init grid values */
-  pango_layout_set_font_description (
-      layout,
-      gtk_style_context_get_font (context,
-                                  gtk_widget_get_state_flags(widget)));
+  gtk_style_context_get (context,
+                         gtk_widget_get_state_flags(widget),
+                         "font", &font_desc,
+                         NULL);
+  pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, NULL, &font_height);
+  pango_font_description_free (font_desc);
 
   gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
                                  gtk_widget_get_state_flags (widget),

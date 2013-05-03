@@ -389,6 +389,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
   GtkBorder padding;
   PangoLayout *layout;
+  PangoFontDescription *font_desc;
 
   gint font_height;
   gdouble added_height;
@@ -423,11 +424,13 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                                  &padding);
   layout = pango_layout_new (gtk_widget_get_pango_context (widget));
 
-  pango_layout_set_font_description (
-      layout,
-      gtk_style_context_get_font (gtk_widget_get_style_context (widget),
-                                  gtk_widget_get_state_flags (widget)));
+  gtk_style_context_get (gtk_widget_get_style_context (widget),
+                         gtk_widget_get_state_flags (widget),
+                         "font", &font_desc,
+                         NULL);
+  pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, NULL, &font_height);
+  pango_font_description_free (font_desc);
   g_object_unref (layout);
 
   start_grid_y = gcal_month_view_get_start_grid_y (widget);
@@ -984,6 +987,7 @@ gcal_month_view_draw_header (GcalMonthView *view,
   GtkBorder header_padding;
 
   PangoLayout *layout;
+  PangoFontDescription *font_desc;
   gint layout_width;
   gint header_width;
   gint layout_height;
@@ -1011,10 +1015,10 @@ gcal_month_view_draw_header (GcalMonthView *view,
   gtk_style_context_get_color (context, state, &color);
   cairo_set_source_rgb (cr, color.red, color.green, color.blue);
 
+  gtk_style_context_get (context, state, "font", &font_desc, NULL);
   layout = pango_cairo_create_layout (cr);
-  pango_layout_set_font_description (layout,
-                                     gtk_style_context_get_font (context,
-                                                                 state));
+  pango_layout_set_font_description (layout, font_desc);
+  pango_font_description_free (font_desc);
   gtk_style_context_restore (context);
 
   /* Here translators should put the widgest letter in their alphabet, this
@@ -1125,8 +1129,8 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   gdouble start_grid_y;
 
   PangoLayout *layout;
-  const PangoFontDescription *font;
-  const PangoFontDescription *selected_font;
+  PangoFontDescription *font;
+  PangoFontDescription *selected_font;
   PangoFontDescription *bold_font;
 
   gdouble days;
@@ -1151,7 +1155,7 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   gtk_style_context_get_color (context,
                                state | GTK_STATE_FLAG_SELECTED,
                                &selected_color);
-  selected_font = gtk_style_context_get_font (context, state);
+  gtk_style_context_get (context, state, "font", &selected_font, NULL);
 
   gtk_style_context_get_background_color (context,
                                           state | GTK_STATE_FLAG_SELECTED,
@@ -1165,7 +1169,7 @@ gcal_month_view_draw_grid (GcalMonthView *view,
                                state | GTK_STATE_FLAG_INSENSITIVE,
                                &ligther_color);
   gtk_style_context_get_color (context, state, &color);
-  font = gtk_style_context_get_font (context, state);
+  gtk_style_context_get (context, state, "font", &font, NULL);
 
   pango_layout_set_font_description (layout, font);
 
@@ -1370,6 +1374,8 @@ gcal_month_view_draw_grid (GcalMonthView *view,
   cairo_stroke (cr);
 
   pango_font_description_free (bold_font);
+  pango_font_description_free (font);
+  pango_font_description_free (selected_font);
   g_object_unref (layout);
 }
 
@@ -1381,6 +1387,7 @@ gcal_month_view_get_start_grid_y (GtkWidget *widget)
   GtkBorder header_padding;
 
   PangoLayout *layout;
+  PangoFontDescription *font_desc;
   gint font_height;
   gdouble start_grid_y;
 
@@ -1395,21 +1402,24 @@ gcal_month_view_get_start_grid_y (GtkWidget *widget)
                                  gtk_widget_get_state_flags (widget),
                                  &header_padding);
 
-  pango_layout_set_font_description (
-      layout,
-      gtk_style_context_get_font (context,
-                                  gtk_widget_get_state_flags(widget)));
+  gtk_style_context_get (context,
+                         gtk_widget_get_state_flags(widget),
+                         "font", &font_desc,
+                         NULL);
+  pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
   /* 6: is padding around the header */
   start_grid_y = header_padding.top + font_height + header_padding.bottom;
   gtk_style_context_restore (context);
 
+  gtk_style_context_get (context,
+                         gtk_widget_get_state_flags(widget),
+                         "font", &font_desc,
+                         NULL);
+
   /* init grid values */
-  pango_layout_set_font_description (
-      layout,
-      gtk_style_context_get_font (context,
-                                  gtk_widget_get_state_flags(widget)));
+  pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
   gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
@@ -1417,6 +1427,8 @@ gcal_month_view_get_start_grid_y (GtkWidget *widget)
                                  &padding);
 
   start_grid_y += padding.top + font_height;
+
+  pango_font_description_free (font_desc);
   g_object_unref (layout);
   return start_grid_y;
 }

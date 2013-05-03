@@ -327,7 +327,6 @@ GcalApplication*
 gcal_application_new (void)
 {
   GcalApplication *app;
-  g_type_init ();
 
   g_set_application_name ("Calendar");
 

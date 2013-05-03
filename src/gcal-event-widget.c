@@ -465,6 +465,7 @@ gcal_event_widget_draw (GtkWidget *widget,
   gint width, height;
 
   PangoLayout *layout;
+  PangoFontDescription *font_desc;
   GdkRGBA fg_color;
 
   priv = GCAL_EVENT_WIDGET (widget)->priv;
@@ -513,10 +514,9 @@ gcal_event_widget_draw (GtkWidget *widget,
       padding.left += height - (padding.top + padding.bottom) + padding.left;
     }
 
+  gtk_style_context_get (context, state, "font", &font_desc, NULL);
   layout = pango_cairo_create_layout (cr);
-  pango_layout_set_font_description (layout,
-                                     gtk_style_context_get_font (context,
-                                                                 state));
+  pango_layout_set_font_description (layout, font_desc);
   pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
   pango_layout_set_width (layout, (width - (padding.left + padding.right) ) * PANGO_SCALE);
 
@@ -534,6 +534,7 @@ gcal_event_widget_draw (GtkWidget *widget,
 
   cairo_restore (cr);
 
+  pango_font_description_free (font_desc);
   g_object_unref (layout);
 
   return FALSE;
