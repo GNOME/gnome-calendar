@@ -17,7 +17,10 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
+
 #include "gcal-application.h"
 #include "gcal-window.h"
 
@@ -38,31 +41,45 @@ struct _GcalApplicationPrivate
   GtkCssProvider *provider;
 };
 
-static void gcal_application_finalize      (GObject         *object);
+static void gcal_application_finalize      (GObject                 *object);
 
-static void gcal_application_activate      (GApplication    *app);
+static void gcal_application_activate      (GApplication            *app);
 
-static void gcal_application_startup       (GApplication    *app);
+static void gcal_application_startup       (GApplication            *app);
 
-static void gcal_application_set_app_menu  (GApplication    *app);
+static gint gcal_application_command_line  (GApplication            *app,
+                                            GApplicationCommandLine *command_line);
 
-static void gcal_application_changed_view  (GSettings       *settings,
-                                            gchar           *key,
-                                            gpointer         user_data);
+static void gcal_application_set_app_menu  (GApplication            *app);
 
-static void gcal_application_change_view   (GSimpleAction   *simple,
-                                            GVariant        *parameter,
-                                            gpointer         user_data);
+static void gcal_application_changed_view  (GSettings               *settings,
+                                            gchar                   *key,
+                                            gpointer                 user_data);
 
-static void gcal_application_show_about    (GSimpleAction   *simple,
-                                            GVariant        *parameter,
-                                            gpointer         user_data);
+static void gcal_application_change_view   (GSimpleAction           *simple,
+                                            GVariant                *parameter,
+                                            gpointer                 user_data);
 
-static void gcal_application_quit          (GSimpleAction   *simple,
-                                            GVariant        *parameter,
-                                            gpointer         user_data);
+static void gcal_application_show_about    (GSimpleAction           *simple,
+                                            GVariant                *parameter,
+                                            gpointer                 user_data);
+
+static void gcal_application_quit          (GSimpleAction           *simple,
+                                            GVariant                *parameter,
+                                            gpointer                 user_data);
 
 G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
+
+static gboolean show_version = FALSE;
+
+static GOptionEntry gcal_application_goptions[] = {
+  {
+    "version", 'v', 0,
+    G_OPTION_ARG_NONE, &show_version,
+    N_("Display version number"), NULL
+  },
+  { NULL }
+};
 
 static void
 gcal_application_class_init (GcalApplicationClass *klass)
@@ -73,6 +90,7 @@ gcal_application_class_init (GcalApplicationClass *klass)
   application_class = G_APPLICATION_CLASS (klass);
   application_class->activate = gcal_application_activate;
   application_class->startup = gcal_application_startup;
+  application_class->command_line = gcal_application_command_line;
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gcal_application_finalize;
@@ -172,6 +190,42 @@ gcal_application_startup (GApplication *app)
   priv->manager = gcal_manager_new ();
 
   gcal_application_set_app_menu (app);
+}
+
+static gint
+gcal_application_command_line (GApplication            *app,
+                               GApplicationCommandLine *command_line)
+{
+  GOptionContext *context;
+  gchar **argv;
+  GError *error;
+  gint argc;
+
+  argv = g_application_command_line_get_arguments (command_line, &argc);
+  context = g_option_context_new (N_("- Calendar management"));
+  g_option_context_add_main_entries (context, gcal_application_goptions, GETTEXT_PACKAGE);
+
+  error = NULL;
+  if (!g_option_context_parse (context, &argc, &argv, &error))
+    {
+      g_critical ("Failed to parse argument: %s", error->message);
+      g_error_free (error);
+      g_option_context_free (context);
+      return 1;
+    }
+
+  if (show_version)
+    {
+      g_print ("gnome-calendar: Version: %s\n", PACKAGE_VERSION);
+      return 0;
+    }
+
+  g_option_context_free (context);
+  g_strfreev (argv);
+
+  g_application_activate (app);
+
+  return 0;
 }
 
 static void
@@ -332,6 +386,7 @@ gcal_application_new (void)
 
   app = g_object_new (gcal_application_get_type (),
                       "application-id", "org.gnome.Calendar",
+                      "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
                       NULL);
   app->priv->settings = g_settings_new ("org.gnome.calendar");
   g_signal_connect (app->priv->settings,
