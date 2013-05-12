@@ -7,6 +7,7 @@ src/gcal-edit-dialog.c
 src/gcal-event-overlay.c
 src/gcal-manager.c
 src/gcal-month-view.c
+src/gcal-searchbar.c
 src/gcal-time-entry.c
 src/gcal-toolbar.c
 src/gcal-utils.c
