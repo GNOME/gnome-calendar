@@ -41,32 +41,40 @@ struct _GcalApplicationPrivate
   GtkCssProvider *provider;
 };
 
-static void gcal_application_finalize      (GObject                 *object);
+static void     gcal_application_finalize             (GObject                 *object);
 
-static void gcal_application_activate      (GApplication            *app);
+static void     gcal_application_activate             (GApplication            *app);
 
-static void gcal_application_startup       (GApplication            *app);
+static void     gcal_application_startup              (GApplication            *app);
 
-static gint gcal_application_command_line  (GApplication            *app,
-                                            GApplicationCommandLine *command_line);
+static gint     gcal_application_command_line         (GApplication            *app,
+                                                       GApplicationCommandLine *command_line);
 
-static void gcal_application_set_app_menu  (GApplication            *app);
+static void     gcal_application_set_app_menu         (GApplication            *app);
 
-static void gcal_application_changed_view  (GSettings               *settings,
-                                            gchar                   *key,
-                                            gpointer                 user_data);
+static void     gcal_application_changed_view         (GSettings               *settings,
+                                                       gchar                   *key,
+                                                       gpointer                 user_data);
 
-static void gcal_application_change_view   (GSimpleAction           *simple,
-                                            GVariant                *parameter,
-                                            gpointer                 user_data);
+static void     gcal_application_change_view          (GSimpleAction           *simple,
+                                                       GVariant                *parameter,
+                                                       gpointer                 user_data);
 
-static void gcal_application_show_about    (GSimpleAction           *simple,
-                                            GVariant                *parameter,
-                                            gpointer                 user_data);
+static void     gcal_application_show_about           (GSimpleAction           *simple,
+                                                       GVariant                *parameter,
+                                                       gpointer                 user_data);
 
-static void gcal_application_quit          (GSimpleAction           *simple,
-                                            GVariant                *parameter,
-                                            gpointer                 user_data);
+static void     gcal_application_quit                 (GSimpleAction           *simple,
+                                                       GVariant                *parameter,
+                                                       gpointer                 user_data);
+
+static gboolean gcal_application_window_state_changed (GtkWidget               *widget,
+                                                       GdkEvent                *event,
+                                                       gpointer                 user_data);
+
+static gboolean gcal_application_window_configured    (GtkWidget               *widget,
+                                                       GdkEvent                *event,
+                                                       gpointer                 user_data);
 
 G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 
@@ -132,6 +140,12 @@ gcal_application_activate (GApplication *application)
     }
   else
     {
+      GVariant *variant;
+      gboolean maximized;
+      const gint32 *position;
+      const gint32 *size;
+      gsize n_elements;
+
       priv->window =
         gcal_window_new_with_view (GCAL_APPLICATION (application),
                                    g_settings_get_enum (priv->settings,
@@ -145,8 +159,34 @@ gcal_application_activate (GApplication *application)
       gtk_window_set_hide_titlebar_when_maximized (GTK_WINDOW (priv->window),
                                                    TRUE);
 
-      gtk_window_maximize (GTK_WINDOW (priv->window));
+
+      variant = g_settings_get_value (priv->settings, "window-size");
+      size = g_variant_get_fixed_array (variant, &n_elements, sizeof (gint32));
+      if (n_elements == 2)
+        gtk_window_set_default_size (GTK_WINDOW (priv->window), size[0], size[1]);
+      g_variant_unref (variant);
+
+      variant = g_settings_get_value (priv->settings, "window-position");
+      position = g_variant_get_fixed_array (variant, &n_elements, sizeof (gint32));
+      if (n_elements == 2)
+        gtk_window_move (GTK_WINDOW (priv->window), position[0], position[1]);
+      g_variant_unref (variant);
+
+      maximized = g_settings_get_boolean (priv->settings, "window-maximized");
+      if (maximized)
+        gtk_window_maximize (GTK_WINDOW (priv->window));
+
       gtk_widget_show_all (priv->window);
+
+      g_signal_connect (priv->window,
+                        "window-state-event",
+                        G_CALLBACK (gcal_application_window_state_changed),
+                        application);
+
+      g_signal_connect (priv->window,
+                        "configure-event",
+                        G_CALLBACK (gcal_application_window_configured),
+                        application);
     }
 }
 
@@ -374,6 +414,59 @@ gcal_application_quit (GSimpleAction *simple,
   GApplication *app = G_APPLICATION (user_data);
 
   g_application_quit (app);
+}
+
+static gboolean
+gcal_application_window_state_changed (GtkWidget *widget,
+                                       GdkEvent  *event,
+                                       gpointer   user_data)
+{
+  GcalApplicationPrivate *priv;
+  GdkWindowState state;
+  gboolean maximized;
+
+  priv = GCAL_APPLICATION (user_data)->priv;
+  state = gdk_window_get_state (gtk_widget_get_window (widget));
+  maximized = state & GDK_WINDOW_STATE_MAXIMIZED;
+
+  g_settings_set_boolean (priv->settings, "window-maximized", maximized);
+
+  return FALSE;
+}
+
+static gboolean
+gcal_application_window_configured (GtkWidget *widget,
+                                    GdkEvent  *event,
+                                    gpointer   user_data)
+{
+  GcalApplicationPrivate *priv;
+  GVariant *variant;
+  GdkWindowState state;
+  gint32 size[2];
+  gint32 position[2];
+
+  priv = GCAL_APPLICATION (user_data)->priv;
+  state = gdk_window_get_state (gtk_widget_get_window (widget));
+  if (state & GDK_WINDOW_STATE_MAXIMIZED)
+    return FALSE;
+
+  gtk_window_get_size (GTK_WINDOW (priv->window),
+                       (gint *) &size[0],
+                       (gint *) &size[1]);
+  variant = g_variant_new_fixed_array (G_VARIANT_TYPE_INT32,
+                                       size, 2,
+                                       sizeof (size[0]));
+  g_settings_set_value (priv->settings, "window-size", variant);
+
+  gtk_window_get_position (GTK_WINDOW (priv->window),
+                           (gint *) &position[0],
+                           (gint *) &position[1]);
+  variant = g_variant_new_fixed_array (G_VARIANT_TYPE_INT32,
+                                       position, 2,
+                                       sizeof (position[0]));
+  g_settings_set_value (priv->settings, "window-position", variant);
+
+  return FALSE;
 }
 
 /* Public API */

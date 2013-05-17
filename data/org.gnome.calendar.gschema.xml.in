@@ -5,6 +5,16 @@
             <_summary>Window maximized</_summary>
             <_description>Window maximized state</_description>
         </key>
+        <key name="window-size" type="ai">
+            <default>[768, 600]</default>
+            <_summary>Window size</_summary>
+            <_description>Window size (width and height).</_description>
+        </key>
+        <key name="window-position" type="ai">
+            <default>[]</default>
+            <_summary>Window position</_summary>
+            <_description>Window position (x and y).</_description>
+        </key>
         <key name="active-view" enum="org.gnome.calendar.GcalWindowViewType">
             <default>'month'</default>
             <_summary>Type of the active view</_summary>
