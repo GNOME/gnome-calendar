@@ -11,7 +11,7 @@ m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 # require automake 1.11
 AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip tar-ustar])
-AM_MAINTAINER_MODE
+AM_MAINTAINER_MODE([enable])
 
 dnl ***************************************************************************
 dnl Internationalization
@@ -19,7 +19,7 @@ dnl ***************************************************************************
 IT_PROG_INTLTOOL([0.35.0])
 PKG_PROG_PKG_CONFIG([0.22])
 
-GETTEXT_PACKAGE=gnome-calendar
+GETTEXT_PACKAGE=AC_PACKAGE_TARNAME
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
 
@@ -84,8 +84,18 @@ PKG_CHECK_MODULES(CALENDAR,
                   libedataserver-1.2 >= $EDATASERVER_REQUIRED
                   libical >= $LIBICAL_REQUIRED)
 
+LIBGD_INIT([
+  header-bar
+  notification
+  revealer
+  stack
+  static
+  tagged-entry
+])
+
 AC_CONFIG_FILES([
       Makefile
+      libgd/Makefile
       src/Makefile
       data/Makefile
       data/gnome-calendar.desktop.in
