@@ -5,6 +5,7 @@ srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 
 PKG_NAME="gnome-calendar"
+ACLOCAL_FLAGS="-I libgd $ACLOCAL_FLAGS"
 
 (test -f $srcdir/configure.ac \
   && test -d $srcdir/src) || {
@@ -18,4 +19,7 @@ which gnome-autogen.sh || {
     echo "your OS vendor's package manager)."
     exit 1
 }
+
+git submodule update --init --recursive
+
 USE_GNOME2_MACROS=1 USE_COMMON_DOC_BUILD=yes . gnome-autogen.sh
