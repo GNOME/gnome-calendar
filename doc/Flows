@@ -3,6 +3,7 @@
 These are some of the flows followed inside the application.
 
 ### Adding calendar (`gcal_store_add_source`) ###
+
 Sources are added defined by an URI, at least for now. I think there's
 work been done on improving this, but for now, there and URI defining every
 source we're adding.
@@ -18,7 +19,9 @@ source we're adding.
   //FIXME this wil be later implemented, when needed
 * Get Object list based on the existing query
 
+
 ### Setting a view in the main window (`gcal_main_window_set_view`) ###
+
 This will work for setting a new view (the app hasn't instanced a view
 of that type yet), or for updating an old view with a new time lapse
 
@@ -26,3 +29,10 @@ of that type yet), or for updating an old view with a new time lapse
 * Retrieve new time range from view.
 * Update time range in store (a `GcalStore`)
 * Update `GcalMainWindow.view_type`
+
+
+### Starting the application ###
+
+* Instantiate every view (here I'm doubt yet if I'll fill the view with it's children event widgets)
+* Set every view to the actual date (or the one got from the settings)
+* Set the last active view as active (got from the settings)

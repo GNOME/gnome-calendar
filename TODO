@@ -1,5 +1,12 @@
 TODO
 
+ - Rework toolbar, migrate to GdHeaderBar
+ - Remove GcalToolbar actor
+ - Handle prev/next operation from GcalWindow
+ - Remove stuff in GcalView and views for handling navigation
+ - Update views for handle forward/backward vfuncs
+ - Add disable/enable of views
+
  - Review all-day checkbox and date/time fields interaction in GcalEditDialog
  - Check width of read-only layer in GcalEditDialog
  - Review the real need of GcalFloatingContainer
@@ -13,7 +20,8 @@ TODO
  - Connect keyboard-shortcuts like Ctrl+Q
  - Check for the real need of adding timezone, and check everywhere
  - Connect all dconf options to the program
- - Remove body_actor if there's no need of it in the end.
+ - Remove body_actor if there's no need of it in the end
+ - Remove contents_actor if there's no need of it in the end
  - Clear/reorder #include in every header file.
  - Review every g_return_if_fail statement since G_OBJECT macros does that
    already

@@ -2,13 +2,11 @@
 
 Description of some internals of Gnome Calendar Application
 
-* mainToolbar object:
+* mainToolbar object (GdHeaderBar type):
 
-  Has 3 states:
+  Has 2 states:
   1. Overview
-  2. View Event
-  3. Edit Event (this one could act as New Event View,
-     or even as New anything view)
+  2. Search
 
 * GcalApplication
 
