@@ -3,6 +3,7 @@ AM_CPPFLAGS =                                             \
     -DPACKAGE_SRC_DIR=\""$(srcdir)"\"                     \
     -DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\"                \
     -DUI_DATA_DIR=\""$(pkgdatadir)/style"\"               \
+    -I$(top_srcdir)/libgd                                 \
     $(MAINTAINER_COMPILER_FLAGS)                          \
     -Wall                                                 \
     -g -O0                                                \
@@ -66,6 +67,7 @@ gnome_calendar_LDFLAGS =                                  \
 
 gnome_calendar_LDADD =                                    \
   -lm                                                     \
+  $(top_builddir)/libgd/libgd.la                          \
   $(CALENDAR_LIBS)
 
 ENUM_TYPES =                                              \
