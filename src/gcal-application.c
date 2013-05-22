@@ -374,6 +374,7 @@ gcal_application_show_about (GSimpleAction *simple,
   };
   const gchar *artists[] = {
     "Reda Lazri <the.red.shortcut@gmail.com>",
+    "William Jon McCann <jmccann@redhat.com>",
     NULL
   };
 
