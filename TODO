@@ -2,10 +2,12 @@ TODO
 
  - Rework toolbar, migrate to GdHeaderBar
  - Remove GcalToolbar actor
- - Handle prev/next operation from GcalWindow
- - Remove stuff in GcalView and views for handling navigation
- - Update views for handle forward/backward vfuncs
+ - Remove GcalSearchbar
  - Add disable/enable of views
+ - Update NewEvent widget to use GtkOverlay
+ - Update Notification widget to use GtkOverlay
+ - Clean GcalWindow compilation, no warnings
+ - Remove Clutter dependecy
 
  - Review all-day checkbox and date/time fields interaction in GcalEditDialog
  - Check width of read-only layer in GcalEditDialog
