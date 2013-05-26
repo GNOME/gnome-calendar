@@ -242,8 +242,15 @@ gcal_window_constructed (GObject *object)
   GtkWidget *holder;
 
   /* FIXME: demo code */
-  GtkWidget *prev_button;
+  GtkWidget *box;
+  GtkWidget *new_button;
   GtkWidget *search_button;
+  GtkWidget *menu_button;
+
+  GtkWidget *day_view;
+  GtkWidget *week_view;
+  GtkWidget *month_view;
+  GtkWidget *year_view;
 
   GtkStyleContext *context;
 
@@ -279,20 +286,63 @@ gcal_window_constructed (GObject *object)
 
   /* header_bar */
   priv->header_bar = gd_header_bar_new ();
-  prev_button = gd_header_simple_button_new ();
-  gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (prev_button),
-                                           "go-previous-symbolic");
-  gd_header_bar_pack_start (GD_HEADER_BAR (priv->header_bar), prev_button);
-  gd_header_bar_set_title (GD_HEADER_BAR (priv->header_bar), "Calendar");
-  search_button = gd_header_simple_button_new ();
+
+  /* header_bar: new */
+  /* new_button = gd_header_simple_button_new (); */
+  /* gd_header_button_set_label (GD_HEADER_BUTTON (new_button), */
+  /*                             _("New Event")); */
+  /* gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (new_button), */
+  /*                                          "list-add-symbolic"); */
+  new_button = gtk_button_new ();
+  gtk_container_add (GTK_CONTAINER (new_button),
+                     gtk_image_new_from_icon_name ("list-add-symbolic",
+                                                   GTK_ICON_SIZE_MENU));
+  /* FIXME: gtk_actionable_set_action_name (GTK_ACTIONABLE (forward_button), "win.new-event"); */
+  gd_header_bar_pack_start (GD_HEADER_BAR (priv->header_bar), new_button);
+
+  /* header_bar: views. Temporarily, since this will be made of GdStackSwitcher */
+  day_view = gd_header_radio_button_new ();
+  gd_header_button_set_label (GD_HEADER_BUTTON (day_view), _("Day"));
+  week_view = gd_header_radio_button_new ();
+  gd_header_button_set_label (GD_HEADER_BUTTON (week_view), _("Week"));
+  gtk_radio_button_join_group (GTK_RADIO_BUTTON (week_view),
+                               GTK_RADIO_BUTTON (day_view));
+  month_view = gd_header_radio_button_new ();
+  gd_header_button_set_label (GD_HEADER_BUTTON (month_view), _("Month"));
+  gtk_radio_button_join_group (GTK_RADIO_BUTTON (month_view),
+                               GTK_RADIO_BUTTON (day_view));
+  year_view = gd_header_radio_button_new ();
+  gd_header_button_set_label (GD_HEADER_BUTTON (year_view), _("Year"));
+  gtk_radio_button_join_group (GTK_RADIO_BUTTON (year_view),
+                               GTK_RADIO_BUTTON (day_view));
+
+  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
+  gtk_style_context_add_class (gtk_widget_get_style_context (box), "linked");
+  gtk_box_pack_start (GTK_BOX (box), day_view, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box), week_view, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box), month_view, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (box), year_view, FALSE, FALSE, 0);
+  gtk_widget_show_all (box);
+  gd_header_bar_set_custom_title (GD_HEADER_BAR (priv->header_bar), box);
+
+  /* header_bar: search */
+  search_button = gd_header_toggle_button_new ();
   gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (search_button),
                                            "edit-find-symbolic");
   gd_header_bar_pack_end (GD_HEADER_BAR (priv->header_bar), search_button);
 
+  /* header_bar: menu */
+  menu_button = gd_header_menu_button_new ();
+  gd_header_button_set_label (GD_HEADER_BUTTON (menu_button),
+                              _("Settings"));
+  gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (menu_button),
+                                           "emblem-system-symbolic");
+  gd_header_bar_pack_end (GD_HEADER_BAR (priv->header_bar), menu_button);
+
   gtk_widget_set_hexpand (priv->header_bar, TRUE);
   gtk_container_add (GTK_CONTAINER (holder), priv->header_bar);
 
-  /* notebook widget for holding views */
+  /* stack widget for holding views */
   priv->views_stack = gd_stack_new ();
 
   gtk_widget_set_vexpand (priv->views_stack, TRUE);
