@@ -21,8 +21,6 @@
 #include "gcal-window.h"
 #include "gcal-manager.h"
 #include "gcal-floating-container.h"
-#include "gcal-toolbar.h"
-#include "gcal-searchbar.h"
 #include "gcal-year-view.h"
 #include "gcal-month-view.h"
 #include "gcal-week-view.h"
@@ -36,25 +34,29 @@
 
 #include <glib/gi18n.h>
 #include <clutter/clutter.h>
-#include <clutter-gtk/clutter-gtk.h>
 
 #include <libical/icaltime.h>
 
 struct _GcalWindowPrivate
 {
-  ClutterActor        *contents_actor;
-  ClutterActor        *box_actor;
-  ClutterActor        *sources_actor;
-  ClutterActor        *notification_actor;
-
+  /* FIXME: For building: TO REMOVE */
   ClutterActor        *new_event_actor;
 
+  /* upper level widgets */
+  GtkWidget           *main_box;
+
   GtkWidget           *header_bar;
+  GtkWidget           *search_bar;
+  GtkWidget           *views_overlay;
   GtkWidget           *views_stack;
+
+  GtkWidget           *new_button;
+  GtkWidget           *search_entry;
+  GtkWidget           *views_switcher;
+
   GtkWidget           *sources_view;
   GtkWidget           *views [5];
   GtkWidget           *edit_dialog;
-  GtkWidget           *edit_widget;
 
   GcalWindowViewType   active_view;
   icaltimetype        *active_date;
@@ -88,30 +90,23 @@ static void           gcal_window_get_property           (GObject             *o
                                                           GValue              *value,
                                                           GParamSpec          *pspec);
 
-static GcalManager*   gcal_window_get_manager            (GcalWindow          *window);
+static void           gcal_window_search_toggled         (GObject             *object,
+                                                          GParamSpec          *pspec,
+                                                          gpointer             user_data);
+
+static void           gcal_window_search_changed         (GtkEditable         *editable,
+                                                          gpointer             user_data);
 
 static void           gcal_window_set_active_view        (GcalWindow          *window,
                                                           GcalWindowViewType   view_type);
+
+static GcalManager*   gcal_window_get_manager            (GcalWindow          *window);
 
 static void           gcal_window_set_sources_view       (GcalWindow          *window);
 
 static void           gcal_window_init_edit_dialog       (GcalWindow          *window);
 
-static void           gcal_window_view_changed           (GcalToolbar         *toolbar_actor,
-                                                          GcalWindowViewType   view_type,
-                                                          gpointer             user_data);
-
-static void           gcal_window_sources_shown          (GcalToolbar         *toolbar_actor,
-                                                          gboolean             visible,
-                                                          gpointer             user_data);
-
-static void           gcal_window_add_event              (GcalToolbar         *toolbar_actor,
-                                                          gpointer             user_data);
-
-static void           gcal_window_bring_searchbar        (GcalToolbar         *toolbar_actor,
-                                                          gpointer             user_data);
-
-static void           gcal_window_hide_searchbar         (GtkWidget           *button,
+static void           gcal_window_add_event              (GtkWidget         *toolbar_actor,
                                                           gpointer             user_data);
 
 static void           gcal_window_back_last_view         (GtkWidget           *widget,
@@ -237,22 +232,10 @@ gcal_window_constructed (GObject *object)
 {
   GcalWindowPrivate *priv;
 
-  GtkWidget *embed;
-  ClutterActor *stage;
-  GtkWidget *holder;
-
   /* FIXME: demo code */
   GtkWidget *box;
-  GtkWidget *new_button;
   GtkWidget *search_button;
   GtkWidget *menu_button;
-
-  GtkWidget *day_view;
-  GtkWidget *week_view;
-  GtkWidget *month_view;
-  GtkWidget *year_view;
-
-  GtkStyleContext *context;
 
   if (G_OBJECT_CLASS (gcal_window_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_window_parent_class)->constructed (object);
@@ -260,70 +243,28 @@ gcal_window_constructed (GObject *object)
   priv = GCAL_WINDOW (object)->priv;
 
   /* internal data init */
-  priv->event_to_delete = NULL;
-
   priv->active_date = g_new (icaltimetype, 1);
 
-  /* ui init */
-  embed = gtk_clutter_embed_new ();
-  gtk_container_add (GTK_CONTAINER (object), embed);
-  stage = gtk_clutter_embed_get_stage (GTK_CLUTTER_EMBED (embed));
-
-  /* contents_actor */
-  priv->contents_actor = clutter_actor_new ();
-  clutter_actor_add_constraint_with_name (
-      priv->contents_actor,
-      "size-bind",
-      clutter_bind_constraint_new (stage,
-                                   CLUTTER_BIND_SIZE,
-                                   0.0));
-  clutter_actor_add_child (stage, priv->contents_actor);
-
-  /* Gtk+ contents */
-  holder = gtk_grid_new ();
-  gtk_orientable_set_orientation (GTK_ORIENTABLE (holder),
+  /* ui constrction */
+  priv->main_box = gtk_grid_new ();
+  gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->main_box),
                                   GTK_ORIENTATION_VERTICAL);
 
   /* header_bar */
   priv->header_bar = gd_header_bar_new ();
 
   /* header_bar: new */
-  /* new_button = gd_header_simple_button_new (); */
-  /* gd_header_button_set_label (GD_HEADER_BUTTON (new_button), */
-  /*                             _("New Event")); */
-  /* gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (new_button), */
-  /*                                          "list-add-symbolic"); */
-  new_button = gtk_button_new ();
-  gtk_container_add (GTK_CONTAINER (new_button),
-                     gtk_image_new_from_icon_name ("list-add-symbolic",
-                                                   GTK_ICON_SIZE_MENU));
+  priv->new_button = gd_header_simple_button_new ();
+  gd_header_button_set_label (GD_HEADER_BUTTON (priv->new_button),
+                              _("New Event"));
+  gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (priv->new_button),
+                                           "list-add-symbolic");
   /* FIXME: gtk_actionable_set_action_name (GTK_ACTIONABLE (forward_button), "win.new-event"); */
-  gd_header_bar_pack_start (GD_HEADER_BAR (priv->header_bar), new_button);
+  gd_header_bar_pack_start (GD_HEADER_BAR (priv->header_bar), priv->new_button);
 
   /* header_bar: views. Temporarily, since this will be made of GdStackSwitcher */
-  day_view = gd_header_radio_button_new ();
-  gd_header_button_set_label (GD_HEADER_BUTTON (day_view), _("Day"));
-  week_view = gd_header_radio_button_new ();
-  gd_header_button_set_label (GD_HEADER_BUTTON (week_view), _("Week"));
-  gtk_radio_button_join_group (GTK_RADIO_BUTTON (week_view),
-                               GTK_RADIO_BUTTON (day_view));
-  month_view = gd_header_radio_button_new ();
-  gd_header_button_set_label (GD_HEADER_BUTTON (month_view), _("Month"));
-  gtk_radio_button_join_group (GTK_RADIO_BUTTON (month_view),
-                               GTK_RADIO_BUTTON (day_view));
-  year_view = gd_header_radio_button_new ();
-  gd_header_button_set_label (GD_HEADER_BUTTON (year_view), _("Year"));
-  gtk_radio_button_join_group (GTK_RADIO_BUTTON (year_view),
-                               GTK_RADIO_BUTTON (day_view));
-
-  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 0);
-  gtk_style_context_add_class (gtk_widget_get_style_context (box), "linked");
-  gtk_box_pack_start (GTK_BOX (box), day_view, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (box), week_view, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (box), month_view, FALSE, FALSE, 0);
-  gtk_box_pack_start (GTK_BOX (box), year_view, FALSE, FALSE, 0);
-  gtk_widget_show_all (box);
-  gd_header_bar_set_custom_title (GD_HEADER_BAR (priv->header_bar), box);
+  priv->views_switcher = gtk_image_new_from_icon_name ("face-wink-symbolic", GTK_ICON_SIZE_MENU);
+  g_object_ref_sink (priv->views_switcher);
 
   /* header_bar: search */
   search_button = gd_header_toggle_button_new ();
@@ -340,134 +281,55 @@ gcal_window_constructed (GObject *object)
   gd_header_bar_pack_end (GD_HEADER_BAR (priv->header_bar), menu_button);
 
   gtk_widget_set_hexpand (priv->header_bar, TRUE);
-  gtk_container_add (GTK_CONTAINER (holder), priv->header_bar);
+  gtk_container_add (GTK_CONTAINER (priv->main_box), priv->header_bar);
+
+  /* search_bar */
+  priv->search_entry = gtk_search_entry_new ();
+  g_object_set (priv->search_entry,
+                "width-request", 500,
+                "hexpand", TRUE,
+                "halign", GTK_ALIGN_CENTER,
+                NULL);
+
+  box = gtk_grid_new ();
+  gtk_container_add (GTK_CONTAINER (box), priv->search_entry);
+
+  priv->search_bar = gtk_search_bar_new (GTK_ENTRY (priv->search_entry));
+  gtk_widget_set_hexpand (priv->search_bar, TRUE);
+  g_object_bind_property (search_button, "active",
+                          priv->search_bar, "search-mode",
+                          G_BINDING_BIDIRECTIONAL);
+  gtk_container_add (GTK_CONTAINER (priv->search_bar), box);
+  gtk_container_add (GTK_CONTAINER (priv->main_box), priv->search_bar);
+
+  /* overlay */
+  priv->views_overlay = gtk_overlay_new ();
+  gtk_widget_set_hexpand (priv->views_overlay, TRUE);
+  gtk_widget_set_vexpand (priv->views_overlay, TRUE);
+  gtk_container_add (GTK_CONTAINER (priv->main_box), priv->views_overlay);
 
   /* stack widget for holding views */
   priv->views_stack = gd_stack_new ();
-
   gtk_widget_set_vexpand (priv->views_stack, TRUE);
   gtk_widget_set_hexpand (priv->views_stack, TRUE);
-  gtk_container_add (GTK_CONTAINER (holder), priv->views_stack);
-  gtk_widget_show_all (holder);
+  gtk_container_add (GTK_CONTAINER (priv->views_overlay), priv->views_stack);
 
-  priv->box_actor = gtk_clutter_actor_new_with_contents (holder);
-  clutter_actor_add_constraint_with_name (
-      priv->box_actor,
-      "size-bind",
-      clutter_bind_constraint_new (stage,
-                                   CLUTTER_BIND_SIZE,
-                                   0.0));
-  clutter_actor_add_child (priv->contents_actor, priv->box_actor);
-
-  context =
-    gtk_widget_get_style_context (
-        gtk_clutter_actor_get_widget (
-          GTK_CLUTTER_ACTOR (priv->box_actor)));
-  gtk_style_context_add_class (context, "contents");
-
-  /* sources view */
-  holder = gtk_frame_new (NULL);
-  gtk_widget_show (holder);
-
-  priv->sources_actor = gtk_clutter_actor_new_with_contents (holder);
-  g_object_set (priv->sources_actor,
-                "margin-right", 10.0,
-                "margin-top", 10.0,
-                "opacity", 0,
-                "x-expand", TRUE,
-                "y-expand", TRUE,
-                "x-align", CLUTTER_ACTOR_ALIGN_END,
-                "y-align", CLUTTER_ACTOR_ALIGN_START,
-                NULL);
-  clutter_actor_add_child (priv->contents_actor, priv->sources_actor);
-
-  clutter_actor_hide (priv->sources_actor);
-  clutter_actor_set_background_color (
-      priv->sources_actor,
-      clutter_color_get_static (CLUTTER_COLOR_ALUMINIUM_2));
-
-  context =
-    gtk_widget_get_style_context (
-        gtk_clutter_actor_get_widget (
-          GTK_CLUTTER_ACTOR (priv->sources_actor)));
-  gtk_style_context_add_class (context, "overlay");
-
-  /* notifications manager */
-  priv->notification_actor = gtk_clutter_actor_new ();
-  g_object_set (priv->notification_actor,
-                "x-expand", TRUE,
-                "y-expand", TRUE,
-                "x-align", CLUTTER_ACTOR_ALIGN_CENTER,
-                "y-align", CLUTTER_ACTOR_ALIGN_START,
-                NULL);
-  clutter_actor_add_child (priv->contents_actor, priv->notification_actor);
-
-  context =
-    gtk_widget_get_style_context (
-        gtk_clutter_actor_get_widget (
-          GTK_CLUTTER_ACTOR (priv->notification_actor)));
-  gtk_style_context_add_class (context, "overlay");
-  clutter_actor_hide (priv->notification_actor);
-
-  /* new event-overlay */
-  priv->new_event_actor = gcal_event_overlay_new ();
-  g_object_set (priv->new_event_actor,
-                "opacity", 0,
-                "x-align", CLUTTER_ACTOR_ALIGN_FILL,
-                "y-align", CLUTTER_ACTOR_ALIGN_FILL,
-                NULL);
-
-  context =
-    gtk_widget_get_style_context (
-        gtk_clutter_actor_get_widget (
-          GTK_CLUTTER_ACTOR (priv->new_event_actor)));
-  gtk_style_context_add_class (context, "overlay");
-
-  clutter_actor_add_child (priv->contents_actor, priv->new_event_actor);
-  clutter_actor_hide (priv->new_event_actor);
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (priv->views_stack),
+      "views");
 
   /* signals connection/handling */
+  g_signal_connect (priv->search_bar, "notify::search-mode",
+                    G_CALLBACK (gcal_window_search_toggled), object);
+  g_signal_connect (priv->search_entry, "changed",
+                    G_CALLBACK (gcal_window_search_changed), object);
 
-  /* FIXME */
-  /* g_signal_connect (priv->toolbar_actor, */
-  /*                   "view-changed", */
-  /*                   G_CALLBACK (gcal_window_view_changed), */
-  /*                   object); */
-  /* g_signal_connect (priv->toolbar_actor, */
-  /*                   "sources-shown", */
-  /*                   G_CALLBACK (gcal_window_sources_shown), */
-  /*                   object); */
-  /* g_signal_connect (priv->toolbar_actor, */
-  /*                   "add-event", */
-  /*                   G_CALLBACK (gcal_window_add_event), */
-  /*                   object); */
-  /* g_signal_connect (priv->toolbar_actor, */
-  /*                   "search-events", */
-  /*                   G_CALLBACK (gcal_window_bring_searchbar), */
-  /*                   object); */
+  gtk_container_add (GTK_CONTAINER (object), priv->main_box);
+  gtk_widget_show_all (priv->main_box);
 
-  /* g_signal_connect (priv->searchbar_actor, */
-  /*                   "done", */
-  /*                   G_CALLBACK (gcal_window_hide_searchbar), */
-  /*                   object); */
-
-  /* g_signal_connect (priv->toolbar_actor, */
-  /*                   "back", */
-  /*                   G_CALLBACK (gcal_window_back_last_view), */
-  /*                   object); */
-
-  g_signal_connect (priv->new_event_actor,
-                    "cancelled",
-                    G_CALLBACK (gcal_window_event_overlay_closed),
-                    object);
-
-  g_signal_connect (priv->new_event_actor,
-                    "created",
-                    G_CALLBACK (gcal_window_create_event),
-                    object);
-
-  gtk_widget_show (embed);
-  gtk_widget_set_size_request (GTK_WIDGET (object), 800, 600);
+  /* FIXME: hack to ensure proper working of gd_header_bar */
+  gd_header_bar_set_custom_title (GD_HEADER_BAR (priv->header_bar),
+                                  priv->views_switcher);
 }
 
 static void
@@ -498,9 +360,6 @@ gcal_window_set_property (GObject      *object,
   switch (property_id)
     {
     case PROP_ACTIVE_VIEW:
-      /* FIXME */
-      /* gcal_toolbar_set_active_view (GCAL_TOOLBAR (priv->toolbar_actor), */
-      /*                               g_value_get_enum (value)); */
       gcal_window_set_active_view (GCAL_WINDOW (object),
                                    g_value_get_enum (value));
       return;
@@ -535,13 +394,70 @@ gcal_window_get_property (GObject    *object,
   G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
-static GcalManager*
-gcal_window_get_manager (GcalWindow *window)
+static void
+gcal_window_search_toggled (GObject    *object,
+                            GParamSpec *pspec,
+                            gpointer    user_data)
 {
-  GcalApplication *app;
-  app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
+  GcalWindowPrivate *priv;
+  gboolean search_mode;
 
-  return gcal_application_get_manager (app);
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  g_object_get (object, "search-mode", &search_mode, NULL);
+  if (search_mode)
+    {
+      g_debug ("Entering search mode");
+
+      /* update headder_bar widget */
+      gtk_widget_hide (priv->new_button);
+      gd_header_bar_set_custom_title (GD_HEADER_BAR (priv->header_bar),
+                                      NULL);
+      /* _prepare_for_search */
+    }
+  else
+    {
+      g_debug ("Leaving search mode");
+      /* update header_bar */
+      gtk_widget_show (priv->new_button);
+      gd_header_bar_set_custom_title (GD_HEADER_BAR (priv->header_bar),
+                                      priv->views_switcher);
+      /* return to last active_view */
+      gd_stack_set_visible_child (GD_STACK (priv->views_stack),
+                                  priv->views[priv->active_view]);
+    }
+}
+
+static void
+gcal_window_search_changed (GtkEditable *editable,
+                            gpointer     user_data)
+{
+  GcalWindowPrivate *priv;
+  gboolean search_mode;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  g_object_get (priv->search_bar, "search-mode", &search_mode, NULL);
+  if (search_mode)
+    {
+      GtkWidget *entry;
+      gchar *title;
+
+      entry = gtk_search_bar_get_entry (GTK_SEARCH_BAR (priv->search_bar));
+
+      if (gtk_entry_get_text_length (GTK_ENTRY (entry)) != 0)
+        {
+          title = g_strdup_printf ("Results for \"%s\"",
+                                   gtk_entry_get_text (GTK_ENTRY (entry)));
+          gd_header_bar_set_title (GD_HEADER_BAR (priv->header_bar),
+                                   title);
+        }
+      else
+        {
+          gd_header_bar_set_title (GD_HEADER_BAR (priv->header_bar),
+                                   "");
+        }
+    }
 }
 
 static void
@@ -629,6 +545,15 @@ gcal_window_set_active_view (GcalWindow         *window,
     }
 }
 
+static GcalManager*
+gcal_window_get_manager (GcalWindow *window)
+{
+  GcalApplication *app;
+  app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
+
+  return gcal_application_get_manager (app);
+}
+
 static void
 gcal_window_set_sources_view (GcalWindow *window)
 {
@@ -682,10 +607,11 @@ gcal_window_set_sources_view (GcalWindow *window)
   gtk_style_context_add_class (
       gtk_widget_get_style_context (priv->sources_view),
       "osd");
-  gtk_container_add (
-      GTK_CONTAINER (gtk_clutter_actor_get_contents (
-                        GTK_CLUTTER_ACTOR (priv->sources_actor))),
-      priv->sources_view);
+  /* FIXME: decide on this */
+  /* gtk_container_add ( */
+  /*     GTK_CONTAINER (gtk_clutter_actor_get_contents ( */
+  /*                       GTK_CLUTTER_ACTOR (priv->sources_actor))), */
+  /*     priv->sources_view); */
   gtk_widget_show (priv->sources_view);
 
   /* signals */
@@ -716,90 +642,13 @@ gcal_window_init_edit_dialog (GcalWindow *window)
 }
 
 static void
-gcal_window_view_changed (GcalToolbar         *toolbar_actor,
-                          GcalWindowViewType   view_type,
-                          gpointer             user_data)
-{
-  GcalWindowPrivate *priv;
-
-  priv = GCAL_WINDOW (user_data)->priv;
-  priv->active_view = view_type;
-
-  gcal_window_set_active_view (GCAL_WINDOW (user_data), view_type);
-}
-
-static void
-gcal_window_sources_shown (GcalToolbar *toolbar_actor,
-                           gboolean     visible,
-                           gpointer     user_data)
-{
-  GcalWindowPrivate *priv;
-  priv  = GCAL_WINDOW (user_data)->priv;
-
-  if (visible)
-    {
-      clutter_actor_show (priv->sources_actor);
-      clutter_actor_save_easing_state (priv->sources_actor);
-      clutter_actor_set_opacity (priv->sources_actor, 255);
-      clutter_actor_restore_easing_state (priv->sources_actor);
-    }
-  else
-    {
-      clutter_actor_save_easing_state (priv->sources_actor);
-      clutter_actor_set_opacity (priv->sources_actor, 0);
-      clutter_actor_restore_easing_state (priv->sources_actor);
-
-      g_signal_connect (priv->sources_actor,
-                        "transition-stopped::opacity",
-                        G_CALLBACK (gcal_window_show_hide_actor_cb),
-                        user_data);
-    }
-}
-
-static void
-gcal_window_add_event (GcalToolbar *toolbar_actor,
+gcal_window_add_event (GtkWidget *toolbar_actor,
                        gpointer     user_data)
 {
   GcalWindowPrivate *priv;
 
   priv = GCAL_WINDOW (user_data)->priv;
   gcal_view_create_event_on_current_unit (GCAL_VIEW (priv->views[priv->active_view]));
-}
-
-static void
-gcal_window_bring_searchbar (GcalToolbar *toolbar_actor,
-                             gpointer     user_data)
-{
-  /* GcalWindowPrivate *priv; */
-
-  /* priv = GCAL_WINDOW (user_data)->priv; */
-
-  /* FIXME */
-  /* clutter_actor_save_easing_state (priv->toolbar_actor); */
-  /* clutter_actor_set_y (priv->toolbar_actor, */
-  /*                      clutter_actor_get_height (priv->toolbar_actor)); */
-  /* clutter_actor_set_easing_duration (priv->toolbar_actor, 500); */
-  /* clutter_actor_restore_easing_state (priv->toolbar_actor); */
-}
-
-static void
-gcal_window_hide_searchbar (GtkWidget *button,
-                            gpointer   user_data)
-{
-  /* GcalWindowPrivate *priv; */
-
-  /* priv = GCAL_WINDOW (user_data)->priv; */
-
-  /* FIXME */
-  /* clutter_actor_save_easing_state (priv->toolbar_actor); */
-  /* clutter_actor_set_y (priv->toolbar_actor, */
-  /*                      0); */
-  /* clutter_actor_set_easing_duration (priv->toolbar_actor, 500); */
-  /* clutter_actor_restore_easing_state (priv->toolbar_actor); */
-  /*clutter_actor_save_easing_state (priv->searchbar_actor);*/
-  /*clutter_actor_set_y (priv->searchbar_actor, 0);*/
-  /*clutter_actor_set_easing_duration (priv->searchbar_actor, 500);*/
-  /*clutter_actor_restore_easing_state (priv->searchbar_actor);*/
 }
 
 /*
@@ -1062,8 +911,6 @@ gcal_window_remove_event (GdNotification  *notification,
       g_free (priv->event_to_delete);
       priv->event_to_delete = NULL;
     }
-
-  clutter_actor_hide (priv->notification_actor);
 }
 
 static void
@@ -1485,11 +1332,9 @@ gcal_window_show_notification (GcalWindow *window,
   g_return_if_fail (GCAL_IS_WINDOW (window));
   priv = window->priv;
 
-  gtk_container_add (
-      GTK_CONTAINER (gtk_clutter_actor_get_widget (GTK_CLUTTER_ACTOR (priv->notification_actor))),
-      notification);
+  gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
+                           notification);
   gtk_widget_show_all (notification);
-  clutter_actor_show (priv->notification_actor);
 }
 
 void
@@ -1501,8 +1346,6 @@ gcal_window_hide_notification (GcalWindow *window)
   g_return_if_fail (GCAL_IS_WINDOW (window));
   priv = window->priv;
 
-  noty = gtk_clutter_actor_get_contents (
-      GTK_CLUTTER_ACTOR (priv->notification_actor));
-
-  gd_notification_dismiss (GD_NOTIFICATION (noty));
+  /* FIXME: get notification widget somehow */
+  /* gd_notification_dismiss (GD_NOTIFICATION (noty)); */
 }

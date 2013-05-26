@@ -1,41 +1,7 @@
-/*******
- * OSD *
- *******/
-@define-color osd_highlight #ffffff;
-@define-color osd_base #212526;
-
-@define-color osd_fg #ededed;
-@define-color osd_bg alpha(@osd_base, 0.80);
-
-@define-color osd_toolbar_bg_a alpha(@osd_base, 0.80);
-@define-color osd_toolbar_bg_b alpha(#101010, 0.80);
-@define-color osd_toolbar_bg_c alpha(shade(@osd_base, 1.02), 0.80);
-
-GtkClutterOffscreen.contents {
+.views {
   /* background color of every view */
   background-color: #fafafa;
   background-image: none;
-}
-
-GtkClutterOffscreen.contents .frame {
-  border: 0;
-  border-top: 1px lightgrey solid;
-  border-radius: 0px;
-
-  margin: 0;
-}
-
-.main-toolbar {
-  padding: 12px;
-}
-
-.main-toolbar .button, .toolbar-button {
-  padding: 2px;
-}
-
-.osd.view {
-  color: @osd_fg;
-  background-color: transparent;
 }
 
 .calendar-view header {
