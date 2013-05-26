@@ -57,8 +57,7 @@ GType        gcal_window_get_type          (void);
 GtkWidget*   gcal_window_new_with_view     (GcalApplication    *app,
                                             GcalWindowViewType  view_type);
 
-void         gcal_window_show_notification (GcalWindow         *window,
-                                            GtkWidget          *notification);
+void         gcal_window_show_notification (GcalWindow         *window);
 
 void         gcal_window_hide_notification (GcalWindow         *window);
 
