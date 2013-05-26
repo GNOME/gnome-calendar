@@ -49,7 +49,9 @@ struct _GcalWindowPrivate
   GtkWidget           *search_bar;
   GtkWidget           *views_overlay;
   GtkWidget           *views_stack;
+  GtkWidget           *noty; /* short-lived */
 
+  /* header_bar widets */
   GtkWidget           *new_button;
   GtkWidget           *search_entry;
   GtkWidget           *views_switcher;
@@ -911,6 +913,9 @@ gcal_window_remove_event (GdNotification  *notification,
       g_free (priv->event_to_delete);
       priv->event_to_delete = NULL;
     }
+
+  /* since this is called when the notification is dismissed is safe to do here: */
+  priv->noty = NULL;
 }
 
 static void
@@ -1099,7 +1104,6 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
   GList *l;
 
   GtkWidget *event_widget;
-  GtkWidget *noty;
   GtkWidget *grid;
   GtkWidget *undo_button;
 
@@ -1203,7 +1207,10 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
         break;
       case GCAL_RESPONSE_DELETE_EVENT:
         /* delete the event */
-        noty = gd_notification_new ();
+        if (priv->noty != NULL)
+          g_clear_object (&(priv->noty));
+
+        priv->noty = gd_notification_new ();
         grid = gtk_grid_new ();
         gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
         gtk_container_add (GTK_CONTAINER (grid),
@@ -1212,11 +1219,10 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
         undo_button = gtk_button_new_from_stock (GTK_STOCK_UNDO);
         gtk_container_add (GTK_CONTAINER (grid), undo_button);
 
-        gtk_container_add (GTK_CONTAINER (noty), grid);
-        gtk_widget_show_all (noty);
-        gcal_window_show_notification (GCAL_WINDOW (user_data), noty);
+        gtk_container_add (GTK_CONTAINER (priv->noty), grid);
+        gcal_window_show_notification (GCAL_WINDOW (user_data));
 
-        g_signal_connect (noty,
+        g_signal_connect (priv->noty,
                           "dismissed",
                           G_CALLBACK (gcal_window_remove_event),
                           user_data);
@@ -1324,8 +1330,7 @@ gcal_window_new_with_view (GcalApplication   *app,
 }
 
 void
-gcal_window_show_notification (GcalWindow *window,
-                               GtkWidget  *notification)
+gcal_window_show_notification (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
 
@@ -1333,19 +1338,17 @@ gcal_window_show_notification (GcalWindow *window,
   priv = window->priv;
 
   gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
-                           notification);
-  gtk_widget_show_all (notification);
+                           priv->noty);
+  gtk_widget_show_all (priv->noty);
 }
 
 void
 gcal_window_hide_notification (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
-  GtkWidget *noty;
 
   g_return_if_fail (GCAL_IS_WINDOW (window));
   priv = window->priv;
 
-  /* FIXME: get notification widget somehow */
-  /* gd_notification_dismiss (GD_NOTIFICATION (noty)); */
+  gd_notification_dismiss (GD_NOTIFICATION (priv->noty));
 }

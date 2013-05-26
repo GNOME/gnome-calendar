@@ -5,7 +5,6 @@ TODO
  - Remove GcalSearchbar
  - Add disable/enable of views
  - Update NewEvent widget to use GtkOverlay
- - Update Notification widget to use GtkOverlay
  - Clean GcalWindow compilation, no warnings
  - Remove Clutter dependecy
 
