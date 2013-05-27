@@ -159,7 +159,6 @@ gcal_application_activate (GApplication *application)
       gtk_window_set_hide_titlebar_when_maximized (GTK_WINDOW (priv->window),
                                                    TRUE);
 
-
       variant = g_settings_get_value (priv->settings, "window-size");
       size = g_variant_get_fixed_array (variant, &n_elements, sizeof (gint32));
       if (n_elements == 2)
@@ -256,7 +255,7 @@ gcal_application_command_line (GApplication            *app,
 
   if (show_version)
     {
-      g_print ("gnome-calendar: Version: %s\n", PACKAGE_VERSION);
+      g_print ("gnome-calendar: Version %s\n", PACKAGE_VERSION);
       return 0;
     }
 
