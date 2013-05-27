@@ -1,28 +1,26 @@
 TODO
 
  - Rework toolbar, migrate to GdHeaderBar
- - Remove GcalToolbar actor
- - Remove GcalSearchbar
  - Add disable/enable of views
  - Update NewEvent widget to use GtkOverlay
  - Clean GcalWindow compilation, no warnings
  - Remove Clutter dependecy
 
+ - Rework GcalViews as GtkGrid children (WeekView, MonthView, YearView)
+ - Review views title string: "Year 2013", shouldn't say "Year"
  - Review all-day checkbox and date/time fields interaction in GcalEditDialog
  - Check width of read-only layer in GcalEditDialog
  - Review the real need of GcalFloatingContainer
  - Review/check the adding of a new source live.
  - Review size/resize of GcalEventView widget
- - Review GcalWeekView implementation to follow Benjamin advice of not composite
+ - Review GcalWeekView implementation to follow Benjamin's advice of not composite
    with Gtk+ widgets other than GtkOverlay.
  - Rethink signals from GcalManager
- - Order events for starting hour in GcalMonthView, and the others
+ - Order events chronologically in views
  - Add different triggers for hiding the sources view.
  - Connect keyboard-shortcuts like Ctrl+Q
  - Check for the real need of adding timezone, and check everywhere
  - Connect all dconf options to the program
- - Remove body_actor if there's no need of it in the end
- - Remove contents_actor if there's no need of it in the end
  - Clear/reorder #include in every header file.
  - Review every g_return_if_fail statement since G_OBJECT macros does that
    already
