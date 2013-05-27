@@ -30,10 +30,6 @@ gnome_calendar_SOURCES =                                  \
     gcal-arrow-bin.h                                      \
     gcal-floating-container.c                             \
     gcal-floating-container.h                             \
-    gcal-toolbar.h                                        \
-    gcal-toolbar.c                                        \
-    gcal-searchbar.h                                      \
-    gcal-searchbar.c                                      \
     gcal-window.h                                         \
     gcal-window.c                                         \
     gcal-view.c                                           \
