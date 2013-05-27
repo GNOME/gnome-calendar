@@ -108,10 +108,7 @@ static void           gcal_window_set_sources_view       (GcalWindow          *w
 
 static void           gcal_window_init_edit_dialog       (GcalWindow          *window);
 
-static void           gcal_window_add_event              (GtkWidget         *toolbar_actor,
-                                                          gpointer             user_data);
-
-static void           gcal_window_back_last_view         (GtkWidget           *widget,
+static void           gcal_window_add_event              (GtkButton           *new_button,
                                                           gpointer             user_data);
 
 static void           gcal_window_sources_row_activated  (GtkTreeView         *tree_view,
@@ -211,7 +208,7 @@ gcal_window_class_init(GcalWindowClass *klass)
                           G_PARAM_CONSTRUCT |
                           G_PARAM_READWRITE));
 
-  g_type_class_add_private((gpointer)klass, sizeof(GcalWindowPrivate));
+  g_type_class_add_private((gpointer)klass, sizeof (GcalWindowPrivate));
 }
 
 static void
@@ -234,7 +231,6 @@ gcal_window_constructed (GObject *object)
 {
   GcalWindowPrivate *priv;
 
-  /* FIXME: demo code */
   GtkWidget *box;
   GtkWidget *search_button;
   GtkWidget *menu_button;
@@ -247,7 +243,7 @@ gcal_window_constructed (GObject *object)
   /* internal data init */
   priv->active_date = g_new (icaltimetype, 1);
 
-  /* ui constrction */
+  /* ui construction */
   priv->main_box = gtk_grid_new ();
   gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->main_box),
                                   GTK_ORIENTATION_VERTICAL);
@@ -259,8 +255,9 @@ gcal_window_constructed (GObject *object)
   priv->new_button = gd_header_simple_button_new ();
   gd_header_button_set_label (GD_HEADER_BUTTON (priv->new_button),
                               _("New Event"));
-  gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (priv->new_button),
-                                           "list-add-symbolic");
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (priv->new_button),
+      "suggested-action");
   /* FIXME: gtk_actionable_set_action_name (GTK_ACTIONABLE (forward_button), "win.new-event"); */
   gd_header_bar_pack_start (GD_HEADER_BAR (priv->header_bar), priv->new_button);
 
@@ -321,6 +318,8 @@ gcal_window_constructed (GObject *object)
       "views");
 
   /* signals connection/handling */
+  g_signal_connect (priv->new_button, "clicked",
+                    G_CALLBACK (gcal_window_add_event), object);
   g_signal_connect (priv->search_bar, "notify::search-mode",
                     G_CALLBACK (gcal_window_search_toggled), object);
   g_signal_connect (priv->search_entry, "changed",
@@ -644,37 +643,13 @@ gcal_window_init_edit_dialog (GcalWindow *window)
 }
 
 static void
-gcal_window_add_event (GtkWidget *toolbar_actor,
-                       gpointer     user_data)
+gcal_window_add_event (GtkButton *new_button,
+                       gpointer   user_data)
 {
   GcalWindowPrivate *priv;
 
   priv = GCAL_WINDOW (user_data)->priv;
   gcal_view_create_event_on_current_unit (GCAL_VIEW (priv->views[priv->active_view]));
-}
-
-/*
- * FIXME: Take into account the event we're viewing could be in edit-mode and we
- * need to advice the user and offers him to save/discard the changes
- */
-static void
-gcal_window_back_last_view (GtkWidget   *widget,
-                            gpointer     user_data)
-{
-  GcalWindowPrivate *priv;
-
-  priv = GCAL_WINDOW (user_data)->priv;
-
-  if (priv->views[priv->active_view] != NULL)
-    {
-      gd_stack_set_visible_child (GD_STACK (priv->views_stack),
-                                  priv->views[priv->active_view]);
-    }
-  else
-    {
-      /* FIXME: there's something that needs to be done here. */
-      g_warning ("Your app has gone crazy");
-    }
 }
 
 static void
@@ -1324,8 +1299,6 @@ gcal_window_new_with_view (GcalApplication   *app,
                     G_CALLBACK (gcal_window_event_created),
                     win);
 
-  /* gcal_toolbar_set_active_view (GCAL_TOOLBAR (win->priv->toolbar_actor), */
-  /*                               view_type); */
   return GTK_WIDGET (win);
 }
 
