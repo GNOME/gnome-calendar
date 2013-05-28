@@ -264,6 +264,8 @@ gcal_window_constructed (GObject *object)
   /* header_bar: views. Temporarily, since this will be made of GdStackSwitcher */
   priv->views_switcher = gtk_image_new_from_icon_name ("face-wink-symbolic", GTK_ICON_SIZE_MENU);
   g_object_ref_sink (priv->views_switcher);
+  gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
+                                   priv->views_switcher);
 
   /* header_bar: search */
   search_button = gd_header_toggle_button_new ();
@@ -280,7 +282,8 @@ gcal_window_constructed (GObject *object)
   gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), menu_button);
 
   gtk_widget_set_hexpand (priv->header_bar, TRUE);
-  /* gtk_container_add (GTK_CONTAINER (priv->main_box), priv->header_bar); */
+
+  gtk_window_set_titlebar (GTK_WINDOW (object), priv->header_bar);
 
   /* search_bar */
   priv->search_entry = gtk_search_entry_new ();
@@ -327,12 +330,6 @@ gcal_window_constructed (GObject *object)
 
   gtk_container_add (GTK_CONTAINER (object), priv->main_box);
   gtk_widget_show_all (priv->main_box);
-
-  /* FIXME: hack to ensure proper working of gtk_header_bar */
-  gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
-                                   priv->views_switcher);
-
-  gtk_window_set_titlebar (GTK_WINDOW (object), priv->header_bar);
 }
 
 static void
