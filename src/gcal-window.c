@@ -308,7 +308,7 @@ gcal_window_constructed (GObject *object)
   gtk_container_add (GTK_CONTAINER (priv->main_box), priv->views_overlay);
 
   /* stack widget for holding views */
-  priv->views_stack = gd_stack_new ();
+  priv->views_stack = gtk_stack_new ();
   gtk_widget_set_vexpand (priv->views_stack, TRUE);
   gtk_widget_set_hexpand (priv->views_stack, TRUE);
   gtk_container_add (GTK_CONTAINER (priv->views_overlay), priv->views_stack);
@@ -426,8 +426,8 @@ gcal_window_search_toggled (GObject    *object,
       gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
                                        priv->views_switcher);
       /* return to last active_view */
-      gd_stack_set_visible_child (GD_STACK (priv->views_stack),
-                                  priv->views[priv->active_view]);
+      gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
+                                   priv->views[priv->active_view]);
     }
 }
 
@@ -478,8 +478,8 @@ gcal_window_set_active_view (GcalWindow         *window,
 
   if (priv->views[view_type] != NULL)
     {
-      gd_stack_set_visible_child (GD_STACK (priv->views_stack),
-                                  priv->views[view_type]);
+      gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
+                                   priv->views[view_type]);
       priv->active_view = view_type;
     }
   else
@@ -520,8 +520,8 @@ gcal_window_set_active_view (GcalWindow         *window,
       gtk_widget_show (priv->views[priv->active_view]);
       gtk_container_add (GTK_CONTAINER (priv->views_stack),
                          priv->views[view_type]);
-      gd_stack_set_visible_child (GD_STACK (priv->views_stack),
-                                  priv->views[view_type]);
+      gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
+                                   priv->views[view_type]);
     }
 
   g_object_notify (G_OBJECT (window), "active-view");
