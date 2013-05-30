@@ -184,3 +184,41 @@ gcal_view_create_event_on_current_unit (GcalView *view)
 
   GCAL_VIEW_GET_INTERFACE (view)->create_event_on_current_unit (view);
 }
+
+void
+gcal_view_mark_current_unit (GcalView *view)
+{
+  g_return_if_fail (GCAL_IS_VIEW (view));
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->mark_current_unit);
+
+  GCAL_VIEW_GET_INTERFACE (view)->mark_current_unit (view);
+}
+
+void
+gcal_view_clear_mark (GcalView *view)
+{
+  g_return_if_fail (GCAL_IS_VIEW (view));
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->clear_mark);
+
+  GCAL_VIEW_GET_INTERFACE (view)->clear_mark (view);
+}
+
+void
+gcal_view_move_back (GcalView *view,
+                     gint      steps)
+{
+  g_return_if_fail (GCAL_IS_VIEW (view));
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->move_back);
+
+  GCAL_VIEW_GET_INTERFACE (view)->move_back (view, steps);
+}
+
+void
+gcal_view_move_forward (GcalView *view,
+                        gint      steps)
+{
+  g_return_if_fail (GCAL_IS_VIEW (view));
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->move_forward);
+
+  GCAL_VIEW_GET_INTERFACE (view)->move_forward (view, steps);
+}
