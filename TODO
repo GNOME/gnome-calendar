@@ -6,7 +6,8 @@ TODO
  - Clean GcalWindow compilation, no warnings
  - Remove Clutter dependecy
 
- - Rework GcalViews as GtkGrid children (WeekView, MonthView, YearView)
+ - Rework GcalViews as grid only (WeekView, MonthView, YearView)
+ - Rework GcalViews to get the new API
  - Review views title string: "Year 2013", shouldn't say "Year"
  - Reorder funcs inside GcalWindow
  - Review all-day checkbox and date/time fields interaction in GcalEditDialog
@@ -25,6 +26,7 @@ TODO
  - Clear/reorder #include in every header file.
  - Review every g_return_if_fail statement since G_OBJECT macros does that
    already
+ - Check the real need of a caching GcalManager
 
 Design stuff
 
