@@ -17,8 +17,9 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "e-cell-renderer-color.h"
 #include "gcal-window.h"
+
+#include "gcal-nav-bar.h"
 #include "gcal-manager.h"
 #include "gcal-floating-container.h"
 #include "gcal-year-view.h"
@@ -29,6 +30,8 @@
 #include "gcal-edit-dialog.h"
 #include "gcal-enum-types.h"
 #include "gcal-event-overlay.h"
+
+#include "e-cell-renderer-color.h"
 
 #include <libgd/gd.h>
 
@@ -43,6 +46,7 @@ struct _GcalWindowPrivate
 
   GtkWidget           *header_bar;
   GtkWidget           *search_bar;
+  GtkWidget           *nav_bar;
   GtkWidget           *views_overlay;
   GtkWidget           *views_stack;
   GtkWidget           *noty; /* short-lived */
@@ -108,6 +112,10 @@ static void           gcal_window_search_toggled         (GObject             *o
 static void           gcal_window_search_changed         (GtkEditable         *editable,
                                                           gpointer             user_data);
 
+static void           gcal_window_view_updated           (GcalNavBar          *nav_bar,
+                                                          gboolean             forward,
+                                                          gpointer             user_data);
+
 static void           gcal_window_set_active_view        (GcalWindow          *window,
                                                           GcalWindowViewType   view_type);
 
@@ -146,10 +154,6 @@ static void           gcal_window_remove_event           (GdNotification      *n
                                                           gpointer             user_data);
 
 static void           gcal_window_undo_remove_event      (GtkButton           *button,
-                                                          gpointer             user_data);
-
-static void           gcal_window_view_updated           (GcalView            *view,
-                                                          gpointer             date,
                                                           gpointer             user_data);
 
 static void           gcal_window_new_event_show         (GcalView            *view,
@@ -307,6 +311,12 @@ gcal_window_constructed (GObject *object)
   gtk_container_add (GTK_CONTAINER (priv->search_bar), box);
   gtk_container_add (GTK_CONTAINER (priv->main_box), priv->search_bar);
 
+  /* nav_bar */
+  priv->nav_bar = gcal_nav_bar_new ();
+  gtk_container_add (GTK_CONTAINER (priv->main_box), priv->nav_bar);
+  g_object_set (priv->nav_bar, "left-header", "May", NULL);
+  g_object_set (priv->nav_bar, "right-header", "2013", NULL);
+
   /* overlay */
   priv->views_overlay = gtk_overlay_new ();
   gtk_widget_set_hexpand (priv->views_overlay, TRUE);
@@ -332,9 +342,15 @@ gcal_window_constructed (GObject *object)
                     G_CALLBACK (gcal_window_search_toggled), object);
   g_signal_connect (priv->search_entry, "changed",
                     G_CALLBACK (gcal_window_search_changed), object);
+  g_signal_connect (priv->nav_bar, "move",
+                    G_CALLBACK (gcal_window_view_updated), object);
 
   gtk_container_add (GTK_CONTAINER (object), priv->main_box);
   gtk_widget_show_all (priv->main_box);
+
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (GTK_WIDGET (object)),
+      "views");
 }
 
 static void
@@ -513,6 +529,41 @@ gcal_window_search_changed (GtkEditable *editable,
                                     "");
         }
     }
+}
+
+static void
+gcal_window_view_updated (GcalNavBar *nav_bar,
+                          gboolean    forward,
+                          gpointer    user_data)
+{
+  /* FIXME: reenable views updating  */
+  /* GcalWindowPrivate *priv; */
+  /* icaltimetype *first_day; */
+  /* icaltimetype *last_day; */
+
+  if (! forward)
+    g_debug ("Moved back");
+  else
+    g_debug ("Moved forward");
+
+  /* FIXME: reenable views updating  */
+  /* priv = GCAL_WINDOW (user_data)->priv; */
+
+  /* gcal_view_set_date (GCAL_VIEW (priv->views[priv->active_view]), */
+  /*                     date); */
+
+  /* first_day = gcal_view_get_initial_date ( */
+  /*     GCAL_VIEW (priv->views[priv->active_view])); */
+  /* last_day = gcal_view_get_final_date ( */
+  /*         GCAL_VIEW (priv->views[priv->active_view])); */
+
+  /* gcal_manager_set_new_range ( */
+  /*     gcal_window_get_manager (GCAL_WINDOW (user_data)), */
+  /*     first_day, */
+  /*     last_day); */
+
+  /* g_free (first_day); */
+  /* g_free (last_day); */
 }
 
 static void
@@ -958,33 +1009,6 @@ gcal_window_undo_remove_event (GtkButton *button,
 }
 
 static void
-gcal_window_view_updated (GcalView *view,
-                          gpointer  date,
-                          gpointer  user_data)
-{
-  GcalWindowPrivate *priv;
-  icaltimetype *first_day;
-  icaltimetype *last_day;
-
-  priv = GCAL_WINDOW (user_data)->priv;
-
-  gcal_view_set_date (GCAL_VIEW (priv->views[priv->active_view]),
-                      date);
-
-  first_day = gcal_view_get_initial_date (
-      GCAL_VIEW (priv->views[priv->active_view]));
-  last_day = gcal_view_get_final_date (
-          GCAL_VIEW (priv->views[priv->active_view]));
-
-  gcal_manager_set_new_range (
-      gcal_window_get_manager (GCAL_WINDOW (user_data)),
-      first_day,
-      last_day);
-
-  g_free (first_day);
-  g_free (last_day);
-}
-
 gcal_window_new_event_show (GcalView *view,
                             gpointer  start_span,
                             gpointer  end_span,
