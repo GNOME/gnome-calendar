@@ -8,6 +8,7 @@ TODO
 
  - Rework GcalViews as GtkGrid children (WeekView, MonthView, YearView)
  - Review views title string: "Year 2013", shouldn't say "Year"
+ - Reorder funcs inside GcalWindow
  - Review all-day checkbox and date/time fields interaction in GcalEditDialog
  - Check width of read-only layer in GcalEditDialog
  - Review the real need of GcalFloatingContainer
