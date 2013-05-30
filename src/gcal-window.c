@@ -1018,7 +1018,6 @@ gcal_window_new_event_show (GcalView *view,
 {
   GcalWindowPrivate *priv;
   GcalManager *manager;
-  gint width, height;
 
   g_return_if_fail (user_data);
   priv = GCAL_WINDOW (user_data)->priv;

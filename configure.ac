@@ -85,10 +85,9 @@ PKG_CHECK_MODULES(CALENDAR,
                   libical >= $LIBICAL_REQUIRED)
 
 LIBGD_INIT([
-  header-bar
+  _header-button
   notification
   revealer
-  stack
   static
   tagged-entry
 ])
