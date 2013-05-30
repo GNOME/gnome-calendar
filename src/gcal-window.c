@@ -296,7 +296,9 @@ gcal_window_constructed (GObject *object)
   box = gtk_grid_new ();
   gtk_container_add (GTK_CONTAINER (box), priv->search_entry);
 
-  priv->search_bar = gtk_search_bar_new (GTK_ENTRY (priv->search_entry));
+  priv->search_bar = gtk_search_bar_new ();
+  gtk_search_bar_set_entry (GTK_SEARCH_BAR (priv->search_bar),
+                            GTK_ENTRY (priv->search_entry));
   gtk_widget_set_hexpand (priv->search_bar, TRUE);
   g_object_bind_property (search_button, "active",
                           priv->search_bar, "search-mode",
@@ -400,12 +402,10 @@ gcal_window_search_toggled (GObject    *object,
                             gpointer    user_data)
 {
   GcalWindowPrivate *priv;
-  gboolean search_mode;
 
   priv = GCAL_WINDOW (user_data)->priv;
 
-  g_object_get (object, "search-mode", &search_mode, NULL);
-  if (search_mode)
+  if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
     {
       g_debug ("Entering search mode");
 
@@ -433,12 +433,10 @@ gcal_window_search_changed (GtkEditable *editable,
                             gpointer     user_data)
 {
   GcalWindowPrivate *priv;
-  gboolean search_mode;
 
   priv = GCAL_WINDOW (user_data)->priv;
 
-  g_object_get (priv->search_bar, "search-mode", &search_mode, NULL);
-  if (search_mode)
+  if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
     {
       GtkWidget *entry;
       gchar *title;
