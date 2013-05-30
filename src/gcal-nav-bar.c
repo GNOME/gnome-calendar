@@ -189,7 +189,7 @@ gcal_nav_bar_btn_clicked (GtkButton *button,
   GcalNavBarPrivate *priv;
   priv = GCAL_NAV_BAR (user_data)->priv;
 
-  if (button == priv->back_button)
+  if ((GtkWidget*) button == priv->back_button)
     g_signal_emit (GCAL_NAV_BAR (user_data), signals[MOVE], 0, FALSE);
   else
     g_signal_emit (GCAL_NAV_BAR (user_data), signals[MOVE], 0, TRUE);
