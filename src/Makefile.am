@@ -16,6 +16,8 @@ AM_CFLAGS =                                               \
 bin_PROGRAMS = gnome-calendar
 
 BUILT_SOURCES =                                           \
+    gcal-resources.c                                      \
+    gcal-resources.h                                      \
     gcal-enum-types.c                                     \
     gcal-enum-types.h
 
@@ -63,6 +65,12 @@ gnome_calendar_LDADD =                                    \
   $(top_builddir)/libgd/libgd.la                          \
   $(CALENDAR_LIBS)
 
+resource_files = $(shell glib-compile-resources --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/calendar.gresource.xml)
+gcal-resources.c: calendar.gresource.xml $(resource_files)
+	glib-compile-resources --target=$@ --sourcedir=$(srcdir) --generate-source --c-name calendar $(srcdir)/calendar.gresource.xml
+gcal-resources.h: calendar.gresource.xml $(resource_files)
+	glib-compile-resources --target=$@ --sourcedir=$(srcdir) --generate-header --c-name calendar $(srcdir)/calendar.gresource.xml
+
 ENUM_TYPES =                                              \
     gcal-utils.h
 
@@ -77,6 +85,7 @@ CLEANFILES = \
 	$(NULL)
 
 EXTRA_DIST =                                              \
+    $(resource_files)                                     \
     gcal-enum-types.h.template                            \
     gcal-enum-types.c.template
 
