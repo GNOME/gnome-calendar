@@ -20,7 +20,7 @@
 #ifndef __GCAL_EVENT_OVERLAY_H__
 #define __GCAL_EVENT_OVERLAY_H__
 
-#include <clutter-gtk/clutter-gtk.h>
+#include <gtk/gtk.h>
 #include <libical/icaltime.h>
 
 G_BEGIN_DECLS
@@ -48,14 +48,14 @@ typedef struct _GcalEventOverlayPrivate         GcalEventOverlayPrivate;
 
 struct _GcalEventOverlay
 {
-  GtkClutterActor parent;
+  GtkOverlay parent;
 
   GcalEventOverlayPrivate *priv;
 };
 
 struct _GcalEventOverlayClass
 {
-  GtkClutterActorClass parent_class;
+  GtkOverlayClass parent_class;
 
   /* Signals */
   void (*cancelled) (GcalEventOverlay *widget);
@@ -65,7 +65,7 @@ struct _GcalEventOverlayClass
 
 GType           gcal_event_overlay_get_type          (void);
 
-ClutterActor*   gcal_event_overlay_new               (void);
+GtkWidget*      gcal_event_overlay_new               (void);
 
 void            gcal_event_overlay_reset             (GcalEventOverlay *widget);
 

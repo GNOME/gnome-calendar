@@ -66,7 +66,7 @@ static void        gcal_event_overlay_close_button_clicked  (GtkWidget         *
 static void        gcal_event_overlay_calendar_selected     (GtkWidget         *menu_item,
                                                              gpointer           user_data);
 
-G_DEFINE_TYPE(GcalEventOverlay, gcal_event_overlay, GTK_CLUTTER_TYPE_ACTOR)
+G_DEFINE_TYPE(GcalEventOverlay, gcal_event_overlay, GTK_TYPE_OVERLAY)
 
 static void
 gcal_event_overlay_class_init (GcalEventOverlayClass *klass)
@@ -121,7 +121,6 @@ gcal_event_overlay_constructed (GObject* object)
   GcalEventOverlayPrivate *priv;
   GtkWidget *main_grid;
   GtkWidget *row_grid;
-  GtkWidget *overlay;
   GtkWidget *create_button;
   GtkWidget *details_button;
   GtkWidget *close_image;
@@ -133,14 +132,12 @@ gcal_event_overlay_constructed (GObject* object)
   /* chaining up */
   G_OBJECT_CLASS (gcal_event_overlay_parent_class)->constructed (object);
 
-  overlay = gtk_overlay_new ();
-
   priv->container = gcal_arrow_bin_new ();
   gtk_container_set_border_width (GTK_CONTAINER (priv->container), 14);
   gtk_style_context_add_class (
       gtk_widget_get_style_context (priv->container),
       "new-event-view");
-  gtk_container_add (GTK_CONTAINER (overlay), priv->container);
+  gtk_container_add (GTK_CONTAINER (object), priv->container);
 
   main_grid = gtk_grid_new ();
   g_object_set (main_grid,
@@ -216,12 +213,9 @@ gcal_event_overlay_constructed (GObject* object)
                 "valign", GTK_ALIGN_START,
                 NULL);
 
-  gtk_overlay_add_overlay (GTK_OVERLAY (overlay), close_button);
+  gtk_overlay_add_overlay (GTK_OVERLAY (object), close_button);
 
-  gtk_widget_show_all (overlay);
-  gtk_container_add (
-      GTK_CONTAINER (gtk_clutter_actor_get_widget (GTK_CLUTTER_ACTOR (object))),
-      overlay);
+  gtk_widget_show_all (GTK_WIDGET (object));
 
   /* Hooking signals */
   g_signal_connect (priv->what_entry,
@@ -424,7 +418,7 @@ gcal_event_overlay_calendar_selected (GtkWidget *menu_item,
 
 /* Public API */
 
-ClutterActor*
+GtkWidget*
 gcal_event_overlay_new (void)
 {
   return g_object_new (GCAL_TYPE_EVENT_OVERLAY, NULL);
