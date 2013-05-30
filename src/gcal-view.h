@@ -60,9 +60,23 @@ struct _GcalViewIface
   GtkWidget*      (*get_by_uuid)                        (GcalView *view, const gchar *uuid);
   void            (*reposition_child)                   (GcalView *view, const gchar *uuid);
 
+/* FIXME remove me in favor of the one below */
   void            (*clear_selection)                    (GcalView *view);
 
+/* FIXME remove me in favor of the one below */
   void            (*create_event_on_current_unit)       (GcalView *view);
+
+/* New API */
+  /* Marks related API */
+  void       (*mark_current_unit)             (GcalView     *view);
+  void       (*clear_mark)                    (GcalView     *view);
+
+  /* Navigation related API */
+  void       (*move_back)                     (GcalView     *view,
+					       gint          steps);
+  void       (*move_forward)                  (GcalView     *view,
+					       gint          steps);
+
 };
 
 GType         gcal_view_get_type                      (void);
@@ -89,9 +103,22 @@ GtkWidget*    gcal_view_get_by_uuid                   (GcalView     *view,
 void          gcal_view_reposition_child              (GcalView     *view,
 						       const gchar  *uuid);
 
+/* FIXME remove me in favor of the one below */
 void          gcal_view_clear_selection               (GcalView     *view);
 
+/* FIXME remove me in favor of the one below */
 void          gcal_view_create_event_on_current_unit  (GcalView     *view);
+
+/* New API */
+void          gcal_view_mark_current_unit             (GcalView     *view);
+
+void          gcal_view_clear_mark                    (GcalView     *view);
+
+void          gcal_view_move_back                     (GcalView     *view,
+						       gint          steps);
+
+void          gcal_view_move_forward                  (GcalView     *view,
+						       gint          steps);
 
 G_END_DECLS
 
