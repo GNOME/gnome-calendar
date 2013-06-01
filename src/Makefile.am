@@ -56,6 +56,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-manager.h                                        \
     gcal-nav-bar.h                                        \
     gcal-nav-bar.c                                        \
+    gcal-all-day-grid.c                                   \
+    gcal-all-day-grid.h                                   \
     gcal-utils.c                                          \
     gcal-utils.h
 
