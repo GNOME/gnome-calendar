@@ -22,8 +22,6 @@
 
 #include <gtk/gtk.h>
 
-#include <libical/icaltime.h>
-
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_MONTH_VIEW                       (gcal_month_view_get_type ())
