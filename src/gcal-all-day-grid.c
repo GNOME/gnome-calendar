@@ -163,7 +163,7 @@ gcal_all_day_grid_init (GcalAllDayGrid *self)
 }
 
 static void
-gcal_all_day_grid_finalize (GObject       *object)
+gcal_all_day_grid_finalize (GObject *object)
 {
   GcalAllDayGridPrivate *priv;
 
@@ -180,10 +180,10 @@ gcal_all_day_grid_finalize (GObject       *object)
 }
 
 static void
-gcal_all_day_grid_set_property (GObject       *object,
-                                guint          property_id,
-                                const GValue  *value,
-                                GParamSpec    *pspec)
+gcal_all_day_grid_set_property (GObject      *object,
+                                guint         property_id,
+                                const GValue *value,
+                                GParamSpec   *pspec)
 {
   GcalAllDayGridPrivate *priv;
   priv = GCAL_ALL_DAY_GRID (object)->priv;
@@ -210,10 +210,10 @@ gcal_all_day_grid_set_property (GObject       *object,
 }
 
 static void
-gcal_all_day_grid_get_property (GObject       *object,
-                                guint          property_id,
-                                GValue        *value,
-                                GParamSpec    *pspec)
+gcal_all_day_grid_get_property (GObject    *object,
+                                guint       property_id,
+                                GValue     *value,
+                                GParamSpec *pspec)
 {
   GcalAllDayGridPrivate *priv;
   priv = GCAL_ALL_DAY_GRID (object)->priv;
@@ -580,10 +580,10 @@ gcal_all_day_grid_remove (GtkContainer *container,
 }
 
 static void
-gcal_all_day_grid_forall (GtkContainer    *container,
-                          gboolean         include_internals,
-                          GtkCallback      callback,
-                          gpointer         callback_data)
+gcal_all_day_grid_forall (GtkContainer *container,
+                          gboolean      include_internals,
+                          GtkCallback   callback,
+                          gpointer      callback_data)
 {
   GcalAllDayGridPrivate *priv;
 
