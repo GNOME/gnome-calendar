@@ -119,6 +119,7 @@ icaltimetype*
 gcal_view_get_initial_date (GcalView *view)
 {
   g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_initial_date);
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_initial_date (view);
 }
@@ -127,6 +128,7 @@ icaltimetype*
 gcal_view_get_final_date (GcalView *view)
 {
   g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_final_date);
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_final_date (view);
 }
@@ -136,6 +138,7 @@ gcal_view_contains (GcalView     *view,
                        icaltimetype *date)
 {
   g_return_val_if_fail (GCAL_IS_VIEW (view), FALSE);
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->contains);
 
   return GCAL_VIEW_GET_INTERFACE (view)->contains (view, date);
 }
@@ -145,6 +148,7 @@ gcal_view_remove_by_uuid (GcalView    *view,
                           const gchar *uuid)
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->remove_by_uuid);
 
   GCAL_VIEW_GET_INTERFACE (view)->remove_by_uuid (view, uuid);
 }
@@ -154,6 +158,7 @@ gcal_view_get_by_uuid (GcalView    *view,
                        const gchar *uuid)
 {
   g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid);
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid (view, uuid);
 }
@@ -163,6 +168,7 @@ gcal_view_reposition_child (GcalView    *view,
                             const gchar *uuid)
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->reposition_child);
 
   GCAL_VIEW_GET_INTERFACE (view)->reposition_child (view, uuid);
 }
@@ -171,6 +177,7 @@ void
 gcal_view_clear_selection (GcalView *view)
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->clear_selection);
 
   GCAL_VIEW_GET_INTERFACE (view)->clear_selection (view);
 }
@@ -179,7 +186,6 @@ void
 gcal_view_create_event_on_current_unit (GcalView *view)
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
-
   g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->create_event_on_current_unit);
 
   GCAL_VIEW_GET_INTERFACE (view)->create_event_on_current_unit (view);
