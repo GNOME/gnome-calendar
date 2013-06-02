@@ -47,12 +47,6 @@ struct _GcalYearViewPrivate
 
   gint            start_mark_cell;
   gint            end_mark_cell;
-
-  /* helpers */
-  GdkRectangle   *prev_rectangle;
-  GdkRectangle   *next_rectangle;
-  gboolean        clicked_prev;
-  gboolean        clicked_next;
 };
 
 enum
@@ -112,17 +106,10 @@ static void           gcal_year_view_forall                       (GtkContainer 
 static void           gcal_year_view_set_date                     (GcalYearView  *view,
                                                                    icaltimetype   *date);
 
-static void           gcal_year_view_draw_header                  (GcalYearView  *view,
-                                                                   cairo_t        *cr,
-                                                                   GtkAllocation  *alloc,
-                                                                   GtkBorder      *padding);
-
 static void           gcal_year_view_draw_grid                    (GcalYearView  *view,
                                                                    cairo_t        *cr,
                                                                    GtkAllocation  *alloc,
                                                                    GtkBorder      *padding);
-
-static gdouble        gcal_year_view_get_start_grid_y             (GtkWidget      *widget);
 
 static icaltimetype*  gcal_year_view_get_initial_date             (GcalView       *view);
 
@@ -204,12 +191,6 @@ gcal_year_view_init (GcalYearView *self)
   priv->start_mark_cell = -1;
   priv->end_mark_cell = -1;
 
-  priv->prev_rectangle = NULL;
-  priv->next_rectangle = NULL;
-
-  priv->clicked_prev = FALSE;
-  priv->clicked_next = FALSE;
-
   for (i = 0; i < 12; i++)
     {
       priv->months[i] = NULL;
@@ -285,11 +266,6 @@ gcal_year_view_finalize (GObject       *object)
 
   if (priv->date != NULL)
     g_free (priv->date);
-
-  if (priv->prev_rectangle != NULL)
-    g_free (priv->prev_rectangle);
-  if (priv->next_rectangle != NULL)
-    g_free (priv->next_rectangle);
 
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_year_view_parent_class)->finalize (object);
@@ -388,7 +364,6 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
   PangoFontDescription *font_desc;
 
   gint font_height;
-  gdouble start_grid_y;
 
   gdouble added_height;
   gdouble horizontal_block;
@@ -420,9 +395,8 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
   pango_font_description_free (font_desc);
   g_object_unref (layout);
 
-  start_grid_y = gcal_year_view_get_start_grid_y (widget);
   horizontal_block = allocation->width / 6;
-  vertical_block = (allocation->height - start_grid_y) / 2;
+  vertical_block = allocation->height / 2;
   vertical_cell_margin = padding.top + font_height;
 
   for (i = 0; i < 12; i++)
@@ -450,7 +424,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
                                            &min_height,
                                            &natural_height);
           child_allocation.x = pos_x;
-          child_allocation.y = start_grid_y + vertical_cell_margin + pos_y;
+          child_allocation.y = vertical_cell_margin + pos_y;
           child_allocation.width = horizontal_block;
           child_allocation.height = MIN (natural_height, vertical_block);
           if (added_height + vertical_cell_margin + child_allocation.height
@@ -497,7 +471,6 @@ gcal_year_view_draw (GtkWidget *widget,
   gtk_style_context_get_padding (context, state, &padding);
   gtk_widget_get_allocation (widget, &alloc);
 
-  gcal_year_view_draw_header (GCAL_YEAR_VIEW (widget), cr, &alloc, &padding);
   gcal_year_view_draw_grid (GCAL_YEAR_VIEW (widget), cr, &alloc, &padding);
 
   if (GTK_WIDGET_CLASS (gcal_year_view_parent_class)->draw != NULL)
@@ -511,9 +484,9 @@ gcal_year_view_button_press (GtkWidget      *widget,
                              GdkEventButton *event)
 {
   GcalYearViewPrivate *priv;
+
   gdouble x, y;
   gint width, height;
-  gdouble start_grid_y;
 
   priv = GCAL_YEAR_VIEW (widget)->priv;
 
@@ -522,31 +495,8 @@ gcal_year_view_button_press (GtkWidget      *widget,
 
   width = gtk_widget_get_allocated_width (widget);
   height = gtk_widget_get_allocated_height (widget);
-  start_grid_y = gcal_year_view_get_start_grid_y (widget);
 
-  if (y - start_grid_y < 0)
-    {
-      if (priv->prev_rectangle->x < x &&
-          x < priv->prev_rectangle->x + priv->prev_rectangle->width &&
-          priv->prev_rectangle->y < y &&
-          y < priv->prev_rectangle->y + priv->prev_rectangle->height)
-        {
-          priv->clicked_prev = TRUE;
-        }
-      else if (priv->next_rectangle->x < x &&
-          x < priv->next_rectangle->x + priv->next_rectangle->width &&
-          priv->next_rectangle->y < y &&
-          y < priv->next_rectangle->y + priv->next_rectangle->height)
-        {
-          priv->clicked_next = TRUE;
-        }
-
-      return TRUE;
-    }
-
-  y = y - start_grid_y;
-
-  priv->clicked_cell = 6 * ( (gint ) ( y  / ((height - start_grid_y) / 2) )) + ((gint) ( x / (width / 6) ));
+  priv->clicked_cell = 6 * ( (gint ) ( y  / (height / 2) )) + ((gint) ( x / (width / 6) ));
   priv->start_mark_cell = priv->clicked_cell;
 
   if (event->type == GDK_2BUTTON_PRESS)
@@ -556,7 +506,7 @@ gcal_year_view_button_press (GtkWidget      *widget,
 
       priv->end_mark_cell = priv->start_mark_cell;
       x = (width / 6) * (( priv->start_mark_cell % 6) + 0.5);
-      y = start_grid_y + ((height - start_grid_y) / 2) * (( priv->start_mark_cell / 6) + 0.5);
+      y = (height / 2) * (( priv->start_mark_cell / 6) + 0.5);
 
       gtk_widget_queue_draw (widget);
 
@@ -586,9 +536,9 @@ gcal_year_view_motion_notify_event (GtkWidget      *widget,
                                     GdkEventMotion *event)
 {
   GcalYearViewPrivate *priv;
+
   gint width, height;
   gint y;
-  gdouble start_grid_y;
 
   priv = GCAL_YEAR_VIEW (widget)->priv;
 
@@ -597,13 +547,13 @@ gcal_year_view_motion_notify_event (GtkWidget      *widget,
 
   width = gtk_widget_get_allocated_width (widget);
   height = gtk_widget_get_allocated_height (widget);
-  start_grid_y = gcal_year_view_get_start_grid_y (widget);
 
-  y = event->y - start_grid_y;
+  y = event->y;
+
   if (y < 0)
     return FALSE;
 
-  priv->end_mark_cell = 6 * ( (gint ) ( y  / ((height - start_grid_y) / 2) )) + ((gint) ( event->x / (width / 6) ));
+  priv->end_mark_cell = 6 * ( (gint ) ( y  / (height / 2) )) + ((gint) ( event->x / (width / 6) ));
   if (priv->end_mark_cell == priv->start_mark_cell)
     {
       priv->end_mark_cell = -1;
@@ -620,9 +570,10 @@ gcal_year_view_button_release (GtkWidget      *widget,
                                GdkEventButton *event)
 {
   GcalYearViewPrivate *priv;
+
   gdouble x, y;
   gint width, height;
-  gdouble start_grid_y;
+
   gint released;
 
   priv = GCAL_YEAR_VIEW (widget)->priv;
@@ -632,48 +583,8 @@ gcal_year_view_button_release (GtkWidget      *widget,
 
   width = gtk_widget_get_allocated_width (widget);
   height = gtk_widget_get_allocated_height (widget);
-  start_grid_y = gcal_year_view_get_start_grid_y (widget);
 
-  if (y - start_grid_y < 0)
-    {
-      if (priv->prev_rectangle->x < x &&
-          x < priv->prev_rectangle->x + priv->prev_rectangle->width &&
-          priv->prev_rectangle->y < y &&
-          y < priv->prev_rectangle->y + priv->prev_rectangle->height &&
-          priv->clicked_prev)
-        {
-          icaltimetype *prev_year;
-          prev_year = gcal_view_get_date (GCAL_VIEW (widget));
-          prev_year->year--;
-
-          g_signal_emit_by_name (GCAL_VIEW (widget), "updated", prev_year);
-
-          g_free (prev_year);
-        }
-      else if (priv->next_rectangle->x < x &&
-          x < priv->next_rectangle->x + priv->next_rectangle->width &&
-          priv->next_rectangle->y < y &&
-          y < priv->next_rectangle->y + priv->next_rectangle->height &&
-          priv->clicked_next)
-        {
-          icaltimetype *next_year;
-          next_year = gcal_view_get_date (GCAL_VIEW (widget));
-          next_year->year++;
-
-          g_signal_emit_by_name (GCAL_VIEW (widget), "updated", next_year);
-
-          g_free (next_year);
-        }
-
-      priv->clicked_cell = -1;
-      priv->clicked_prev = FALSE;
-      priv->clicked_next = FALSE;
-      return TRUE;
-    }
-
-  y = y - start_grid_y;
-
-  released = 6 * ( (gint ) ( y  / ((height - start_grid_y) / 2) )) + ((gint) ( x / (width / 6) ));
+  released = 6 * ( (gint ) ( y  / (height / 2) )) + ((gint) ( x / (width / 6) ));
 
   if (priv->clicked_cell != released)
     {
@@ -681,7 +592,7 @@ gcal_year_view_button_release (GtkWidget      *widget,
       icaltimetype *end_date;
 
       x = (width / 6) * (( priv->end_mark_cell % 6) + 0.5);
-      y = start_grid_y + ((height - start_grid_y) / 2) * (( priv->end_mark_cell / 6) + 0.5);
+      y = (height / 2) * (( priv->end_mark_cell / 6) + 0.5);
 
       start_date = gcal_dup_icaltime (priv->date);
       start_date->day = 1;
@@ -711,8 +622,6 @@ gcal_year_view_button_release (GtkWidget      *widget,
     }
 
   priv->clicked_cell = -1;
-  priv->clicked_prev = FALSE;
-  priv->clicked_next = FALSE;
   return TRUE;
 }
 
@@ -878,113 +787,6 @@ gcal_year_view_set_date (GcalYearView *view,
 }
 
 static void
-gcal_year_view_draw_header (GcalYearView  *view,
-                            cairo_t       *cr,
-                            GtkAllocation *alloc,
-                            GtkBorder     *padding)
-{
-  GcalYearViewPrivate *priv;
-  GtkStyleContext *context;
-  GtkStateFlags state;
-  GdkRGBA color;
-  GtkBorder header_padding;
-
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
-  gint layout_width;
-  gint header_width;
-  gint layout_height;
-
-  gchar *left_header;
-
-  GtkIconTheme *icon_theme;
-  GdkPixbuf *pixbuf;
-
-  g_return_if_fail (GCAL_IS_YEAR_VIEW (view));
-  priv = view->priv;
-
-  context = gtk_widget_get_style_context (GTK_WIDGET (view));
-  state = gtk_widget_get_state_flags (GTK_WIDGET (view));
-
-  gtk_style_context_save (context);
-  gtk_style_context_add_region (context, "header", 0);
-
-  gtk_style_context_get_padding (context, state, &header_padding);
-
-  gtk_style_context_get_color (context, state, &color);
-  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
-
-  layout = pango_cairo_create_layout (cr);
-  gtk_style_context_get (context, state, "font", &font_desc, NULL);
-  pango_layout_set_font_description (layout, font_desc);
-  pango_font_description_free (font_desc);
-  gtk_style_context_restore (context);
-
-  /* Here translators should put the widgest letter in their alphabet, this
-   * taken to make it align with week-view header, which is the larger for now */
-  pango_layout_set_text (layout, _("WWW 99 - WWW 99"), -1);
-  pango_cairo_update_layout (cr, layout);
-  pango_layout_get_pixel_size (layout, &layout_width, &layout_height);
-
-  left_header = g_strdup_printf (_("Year %d"), priv->date->year);
-
-  pango_layout_set_text (layout, left_header, -1);
-  pango_cairo_update_layout (cr, layout);
-  pango_layout_get_pixel_size (layout, &header_width, NULL);
-
-  cairo_move_to (cr,
-                 alloc->x + header_padding.left + ((layout_width - header_width) / 2),
-                 alloc->y + header_padding.top);
-  pango_cairo_show_layout (cr, layout);
-
-  /* Drawing arrows */
-  icon_theme = gtk_icon_theme_get_default ();
-  pixbuf = gtk_icon_theme_load_icon (icon_theme,
-                                     "go-previous-symbolic",
-                                     layout_height,
-                                     0,
-                                     NULL);
-
-  gdk_cairo_set_source_pixbuf (cr,
-                               pixbuf,
-                               alloc->x + layout_width + 2 * header_padding.left,
-                               alloc->y + header_padding.top);
-  g_object_unref (pixbuf);
-  cairo_paint (cr);
-
-  pixbuf = gtk_icon_theme_load_icon (icon_theme,
-                                     "go-next-symbolic",
-                                     layout_height,
-                                     0,
-                                     NULL);
-
-  gdk_cairo_set_source_pixbuf (cr,
-                               pixbuf,
-                               alloc->x + layout_width + 2 * header_padding.left + layout_height,
-                               alloc->y + header_padding.top);
-  g_object_unref (pixbuf);
-  cairo_paint (cr);
-
-  /* allocating rects */
-  if (priv->prev_rectangle == NULL)
-    priv->prev_rectangle = g_new0 (GdkRectangle, 1);
-  priv->prev_rectangle->x = alloc->x + layout_width + 2 * header_padding.left;
-  priv->prev_rectangle->y = alloc->y + header_padding.top;
-  priv->prev_rectangle->width = layout_height;
-  priv->prev_rectangle->height = layout_height;
-
-  if (priv->next_rectangle == NULL)
-    priv->next_rectangle = g_new0 (GdkRectangle, 1);
-  priv->next_rectangle->x = alloc->x + layout_width + 2 * header_padding.left + layout_height;
-  priv->next_rectangle->y = alloc->y + header_padding.top;
-  priv->next_rectangle->width = layout_height;
-  priv->next_rectangle->height = layout_height;
-
-  g_free (left_header);
-  g_object_unref (layout);
-}
-
-static void
 gcal_year_view_draw_grid (GcalYearView *view,
                           cairo_t       *cr,
                           GtkAllocation *alloc,
@@ -1005,8 +807,6 @@ gcal_year_view_draw_grid (GcalYearView *view,
   gint font_width;
   gint font_height;
 
-  gdouble start_grid_y;
-
   PangoLayout *layout;
   const PangoFontDescription *font;
 
@@ -1016,7 +816,6 @@ gcal_year_view_draw_grid (GcalYearView *view,
   context = gtk_widget_get_style_context (widget);
   layout = pango_cairo_create_layout (cr);
 
-  start_grid_y = gcal_year_view_get_start_grid_y (widget);
   state = gtk_widget_get_state_flags (widget);
   gtk_style_context_get_color (context,
                                state | GTK_STATE_FLAG_SELECTED,
@@ -1077,7 +876,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
           cairo_move_to (
               cr,
               (alloc->width / 6) * ( first_point % 6),
-              start_grid_y + ((alloc->height - start_grid_y) / 2) * ( first_point / 6) + 1);
+              (alloc->height / 2) * ( first_point / 6) + 1);
 
           last_point = (rows == (last_cell / 6 - first_cell / 6)) ? last_cell : ((first_cell / 6) + rows) * 6 + 5;
           cairo_rel_line_to (cr,
@@ -1085,13 +884,13 @@ gcal_year_view_draw_grid (GcalYearView *view,
                              0);
           cairo_rel_line_to (cr,
                              0,
-                             (alloc->height - start_grid_y) / 2);
+                             alloc->height / 2);
           cairo_rel_line_to (cr,
                              - (alloc->width / 6) * (last_point - first_point + 1),
                              0);
           cairo_rel_line_to (cr,
                              0,
-                             - (alloc->height - start_grid_y) / 2);
+                             - alloc->height / 2);
           cairo_fill (cr);
         }
 
@@ -1122,7 +921,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
 
           cairo_move_to (cr,
                          (alloc->width / 6) * j + header_padding.left,
-                         start_grid_y + padding->top + i * (alloc->height - start_grid_y) / 2);
+                         padding->top + i * alloc->height / 2);
           pango_cairo_show_layout (cr, layout);
 
           if (priv->date->month == i * 6 + j + 1)
@@ -1145,14 +944,14 @@ gcal_year_view_draw_grid (GcalYearView *view,
   for (i = 0; i < 5; i++)
     {
       //FIXME: ensure x coordinate has an integer value plus 0.4
-      cairo_move_to (cr, (alloc->width / 6) * (i + 1) + 0.4, start_grid_y);
-      cairo_rel_line_to (cr, 0, alloc->height - start_grid_y);
+      cairo_move_to (cr, (alloc->width / 6) * (i + 1) + 0.4, 0);
+      cairo_rel_line_to (cr, 0, alloc->height);
     }
 
   for (i = 0; i < 2; i++)
     {
       //FIXME: ensure y coordinate has an integer value plus 0.4
-      cairo_move_to (cr, 0, start_grid_y + ((alloc->height - start_grid_y) / 2) * i + 0.4);
+      cairo_move_to (cr, 0, (alloc->height / 2) * i + 0.4);
       cairo_rel_line_to (cr, alloc->width, 0);
     }
 
@@ -1168,47 +967,9 @@ gcal_year_view_draw_grid (GcalYearView *view,
   cairo_set_line_width (cr, 2.0);
   cairo_move_to (cr,
                  (alloc->width / 6) * ( (priv->date->month - 1) % 6),
-                 start_grid_y + ((alloc->height - start_grid_y) / 2) * ( (priv->date->month - 1) / 6) + 1);
+                 (alloc->height / 2) * ( (priv->date->month - 1) / 6) + 1);
   cairo_rel_line_to (cr, (alloc->width / 6), 0);
   cairo_stroke (cr);
-}
-
-static gdouble
-gcal_year_view_get_start_grid_y (GtkWidget *widget)
-{
-  GtkStyleContext *context;
-  GtkBorder header_padding;
-
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
-  gint font_height;
-  gdouble start_grid_y;
-
-  context = gtk_widget_get_style_context (widget);
-  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
-
-  /* init header values */
-  gtk_style_context_save (context);
-  gtk_style_context_add_region (context, "header", 0);
-
-  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
-                                 gtk_widget_get_state_flags (widget),
-                                 &header_padding);
-
-  gtk_style_context_get (context,
-                         gtk_widget_get_state_flags (widget),
-                         "font", &font_desc,
-                         NULL);
-  pango_layout_set_font_description (layout, font_desc);
-  pango_layout_get_pixel_size (layout, NULL, &font_height);
-
-  /* 6: is padding around the header */
-  start_grid_y = header_padding.top + font_height + header_padding.bottom;
-  gtk_style_context_restore (context);
-
-  pango_font_description_free (font_desc);
-  g_object_unref (layout);
-  return start_grid_y;
 }
 
 /* GcalView Interface API */
@@ -1404,9 +1165,10 @@ static void
 gcal_year_view_create_event_on_current_unit (GcalView *view)
 {
   GcalYearViewPrivate *priv;
+
   gdouble x, y;
   gint width, height;
-  gdouble start_grid_y;
+
   icaltimetype *start_span;
   icaltimetype *end_span;
 
@@ -1416,13 +1178,12 @@ gcal_year_view_create_event_on_current_unit (GcalView *view)
 
   width = gtk_widget_get_allocated_width (GTK_WIDGET (view));
   height = gtk_widget_get_allocated_height (GTK_WIDGET (view));
-  start_grid_y = gcal_year_view_get_start_grid_y (GTK_WIDGET (view));
 
   priv->start_mark_cell = priv->date->month - 1;
   priv->end_mark_cell = priv->start_mark_cell;
 
   x = (width / 6) * (( priv->start_mark_cell % 6) + 0.5);
-  y = start_grid_y + ((height - start_grid_y) / 2) * (( priv->start_mark_cell / 6) + 0.5);
+  y = (height / 2) * (( priv->start_mark_cell / 6) + 0.5);
 
   gtk_widget_queue_draw (GTK_WIDGET (view));
 
