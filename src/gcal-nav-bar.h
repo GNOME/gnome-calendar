@@ -46,14 +46,15 @@ struct _GcalNavBar
 struct _GcalNavBarClass
 {
   GtkGridClass parent_class;
-
-  /* signals */
-  void (*move)    (GcalNavBar *nav_bar, gboolean forward);
 };
 
 GType          gcal_nav_bar_get_type         (void);
 
 GtkWidget*     gcal_nav_bar_new              (void);
+
+GtkWidget*     gcal_nav_bar_get_prev_button  (GcalNavBar *nav_bar);
+
+GtkWidget*     gcal_nav_bar_get_next_button  (GcalNavBar *nav_bar);
 
 G_END_DECLS
 
