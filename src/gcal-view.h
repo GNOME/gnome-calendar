@@ -35,7 +35,7 @@ G_BEGIN_DECLS
 struct _GcalViewChild
 {
   GtkWidget *widget;
-  gboolean   hidden_by_me;
+  gboolean   hidden;
 };
 
 typedef struct _GcalViewChild GcalViewChild;
