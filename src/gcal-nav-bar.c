@@ -39,15 +39,6 @@ enum
   PROP_RIGHT_HEADER
 };
 
-/* Signal IDs */
-enum
-  {
-    MOVE,
-    LAST_SIGNAL
-  };
-
-static guint signals[LAST_SIGNAL];
-
 static void           gcal_nav_bar_set_property          (GObject        *object,
                                                           guint           property_id,
                                                           const GValue   *value,
@@ -57,9 +48,6 @@ static void           gcal_nav_bar_get_property          (GObject        *object
                                                           guint           property_id,
                                                           GValue         *value,
                                                           GParamSpec     *pspec);
-
-static void           gcal_nav_bar_btn_clicked           (GtkButton      *button,
-                                                          gpointer        user_data);
 
 G_DEFINE_TYPE(GcalNavBar, gcal_nav_bar, GTK_TYPE_GRID)
 
@@ -93,17 +81,6 @@ gcal_nav_bar_class_init (GcalNavBarClass *klass)
                            G_PARAM_CONSTRUCT |
                            G_PARAM_READWRITE));
 
-  signals[MOVE] = g_signal_new ("move",
-                                GCAL_TYPE_NAV_BAR,
-                                G_SIGNAL_RUN_LAST,
-                                G_STRUCT_OFFSET (GcalNavBarClass,
-                                                 move),
-                                NULL, NULL,
-                                g_cclosure_marshal_VOID__BOOLEAN,
-                                G_TYPE_NONE,
-                                1,
-                                G_TYPE_BOOLEAN);
-
   widget_class = GTK_WIDGET_CLASS (klass);
 
   /* Setup the template GtkBuilder xml for this class */
@@ -114,9 +91,6 @@ gcal_nav_bar_class_init (GcalNavBarClass *klass)
   gtk_widget_class_bind_child (widget_class, GcalNavBarPrivate, forward_button);
   gtk_widget_class_bind_child (widget_class, GcalNavBarPrivate, left_label);
   gtk_widget_class_bind_child (widget_class, GcalNavBarPrivate, right_label);
-
-  /* Bind callbacks */
-  gtk_widget_class_bind_callback (widget_class, gcal_nav_bar_btn_clicked);
 
   g_type_class_add_private ((gpointer)klass, sizeof (GcalNavBarPrivate));
 }
@@ -182,19 +156,6 @@ gcal_nav_bar_get_property (GObject       *object,
     }
 }
 
-static void
-gcal_nav_bar_btn_clicked (GtkButton *button,
-                          gpointer   user_data)
-{
-  GcalNavBarPrivate *priv;
-  priv = GCAL_NAV_BAR (user_data)->priv;
-
-  if ((GtkWidget*) button == priv->back_button)
-    g_signal_emit (GCAL_NAV_BAR (user_data), signals[MOVE], 0, FALSE);
-  else
-    g_signal_emit (GCAL_NAV_BAR (user_data), signals[MOVE], 0, TRUE);
-}
-
 /* Public API */
 /**
  * gcal_nav_bar_new:
@@ -207,4 +168,22 @@ GtkWidget*
 gcal_nav_bar_new (void)
 {
   return g_object_new (GCAL_TYPE_NAV_BAR, NULL);
+}
+
+GtkWidget*
+gcal_nav_bar_get_prev_button (GcalNavBar *nav_bar)
+{
+  GcalNavBarPrivate *priv;
+  priv = nav_bar->priv;
+
+  return priv->back_button;
+}
+
+GtkWidget*
+gcal_nav_bar_get_next_button (GcalNavBar *nav_bar)
+{
+  GcalNavBarPrivate *priv;
+  priv = nav_bar->priv;
+
+  return priv->forward_button;
 }

@@ -112,8 +112,7 @@ static void           gcal_window_search_toggled         (GObject             *o
 static void           gcal_window_search_changed         (GtkEditable         *editable,
                                                           gpointer             user_data);
 
-static void           gcal_window_view_updated           (GcalNavBar          *nav_bar,
-                                                          gboolean             forward,
+static void           gcal_window_view_updated           (GtkButton           *buttton,
                                                           gpointer             user_data);
 
 static void           gcal_window_set_active_view        (GcalWindow          *window,
@@ -342,8 +341,11 @@ gcal_window_constructed (GObject *object)
                     G_CALLBACK (gcal_window_search_toggled), object);
   g_signal_connect (priv->search_entry, "changed",
                     G_CALLBACK (gcal_window_search_changed), object);
-  g_signal_connect (priv->nav_bar, "move",
-                    G_CALLBACK (gcal_window_view_updated), object);
+
+  g_signal_connect (gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)),
+                    "clicked", G_CALLBACK (gcal_window_view_updated), object);
+  g_signal_connect (gcal_nav_bar_get_next_button (GCAL_NAV_BAR (priv->nav_bar)),
+                    "clicked", G_CALLBACK (gcal_window_view_updated), object);
 
   gtk_container_add (GTK_CONTAINER (object), priv->main_box);
   gtk_widget_show_all (priv->main_box);
@@ -532,19 +534,21 @@ gcal_window_search_changed (GtkEditable *editable,
 }
 
 static void
-gcal_window_view_updated (GcalNavBar *nav_bar,
-                          gboolean    forward,
+gcal_window_view_updated (GtkButton  *button,
                           gpointer    user_data)
 {
-  /* FIXME: reenable views updating  */
-  /* GcalWindowPrivate *priv; */
-  /* icaltimetype *first_day; */
-  /* icaltimetype *last_day; */
+  GcalWindowPrivate *priv;
+  priv = GCAL_WINDOW (user_data)->priv;
 
-  if (! forward)
-    g_debug ("Moved back");
+  if (gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)) ==
+      (GtkWidget*) button)
+    {
+      g_debug ("Moved back");
+    }
   else
-    g_debug ("Moved forward");
+    {
+      g_debug ("Moved forward");
+    }
 
   /* FIXME: reenable views updating  */
   /* priv = GCAL_WINDOW (user_data)->priv; */

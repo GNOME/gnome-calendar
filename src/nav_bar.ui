@@ -23,7 +23,6 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
 	    <property name="focus_on_click">False</property>
-	    <signal name="clicked" handler="gcal_nav_bar_btn_clicked" object="GcalNavBar" after="yes" swapped="no" />
             <style>
               <class name="nav-button"/>
             </style>
@@ -46,7 +45,6 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
 	    <property name="focus_on_click">False</property>
-	    <signal name="clicked" handler="gcal_nav_bar_btn_clicked" object="GcalNavBar" after="yes" swapped="no" />
             <style>
               <class name="nav-button"/>
             </style>
