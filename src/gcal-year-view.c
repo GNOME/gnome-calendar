@@ -417,7 +417,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
           pos_y = ( i / 6 ) * vertical_block;
 
           if ((! gtk_widget_get_visible (child->widget))
-              && (! child->hidden_by_me))
+              && (! child->hidden))
             continue;
 
           gtk_widget_get_preferred_height (child->widget,
@@ -431,7 +431,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
               > vertical_block)
             {
               gtk_widget_hide (child->widget);
-              child->hidden_by_me = TRUE;
+              child->hidden = TRUE;
 
               l = l->next;
               for (; l != NULL; l = l->next)
@@ -439,7 +439,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
                   child = (GcalViewChild*) l->data;
 
                   gtk_widget_hide (child->widget);
-                  child->hidden_by_me = TRUE;
+                  child->hidden = TRUE;
                 }
 
               break;
@@ -447,7 +447,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
           else
             {
               gtk_widget_show (child->widget);
-              child->hidden_by_me = FALSE;
+              child->hidden = FALSE;
               child_allocation.y = child_allocation.y + added_height;
               gtk_widget_size_allocate (child->widget, &child_allocation);
               added_height += child_allocation.height;
@@ -661,7 +661,7 @@ gcal_year_view_add (GtkContainer *container,
 
   new_child = g_new0 (GcalViewChild, 1);
   new_child->widget = widget;
-  new_child->hidden_by_me = FALSE;
+  new_child->hidden = FALSE;
 
   priv->months[date->month - 1] =
     g_list_insert_sorted (priv->months[date->month - 1],
@@ -1128,7 +1128,7 @@ gcal_year_view_reposition_child (GcalView    *view,
                     {
                       priv->months[i] = g_list_remove (priv->months[i], child);
 
-                      child->hidden_by_me = TRUE;
+                      child->hidden = TRUE;
                       priv->months[date->month - 1] =
                         g_list_insert_sorted (priv->months[date->month - 1],
                                               child,
