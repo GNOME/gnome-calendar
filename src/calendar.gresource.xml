@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/calendar">
-    <file compressed="true">nav_bar.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">nav_bar.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">viewport.ui</file>
   </gresource>
 </gresources>
