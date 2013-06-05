@@ -60,6 +60,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-viewport.h                                       \
     gcal-all-day-grid.c                                   \
     gcal-all-day-grid.h                                   \
+    gcal-days-grid.c                                      \
+    gcal-days-grid.h                                      \
     gcal-utils.c                                          \
     gcal-utils.h
 
