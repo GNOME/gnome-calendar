@@ -22,10 +22,11 @@
 #include "gcal-nav-bar.h"
 #include "gcal-manager.h"
 #include "gcal-floating-container.h"
-#include "gcal-year-view.h"
+#include "gcal-view.h"
+#include "gcal-day-view.h"
 #include "gcal-month-view.h"
 #include "gcal-week-view.h"
-#include "gcal-view.h"
+#include "gcal-year-view.h"
 #include "gcal-event-widget.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-enum-types.h"
@@ -318,8 +319,6 @@ gcal_window_constructed (GObject *object)
 
   /* overlay */
   priv->views_overlay = gtk_overlay_new ();
-  gtk_widget_set_hexpand (priv->views_overlay, TRUE);
-  gtk_widget_set_vexpand (priv->views_overlay, TRUE);
   gtk_container_add (GTK_CONTAINER (priv->main_box), priv->views_overlay);
 
   /* stack widget for holding views */
@@ -593,6 +592,9 @@ gcal_window_set_active_view (GcalWindow         *window,
     {
       switch (view_type)
         {
+          case GCAL_WINDOW_VIEW_DAY:
+            priv->views[GCAL_WINDOW_VIEW_DAY] = gcal_day_view_new ();
+            break;
           case GCAL_WINDOW_VIEW_WEEK:
             priv->views[GCAL_WINDOW_VIEW_WEEK] = gcal_week_view_new ();
             break;
