@@ -196,7 +196,7 @@ gcal_all_day_grid_set_property (GObject      *object,
         priv->columns_nr = g_value_get_uint (value);
         for (i = 0; i < priv->columns_nr; ++i)
           {
-            priv->children = g_list_append (priv->children, NULL);
+            priv->children = g_list_prepend (priv->children, NULL);
           }
         break;
       }
@@ -460,12 +460,13 @@ gcal_all_day_grid_draw (GtkWidget *widget,
 
   y_gap = padding.top + priv->spacing;
 
-  cairo_save (cr);
-
   gtk_style_context_get (
       gtk_widget_get_style_context (widget),
       gtk_widget_get_state_flags (widget),
       "font", &font_desc, NULL);
+
+  cairo_save (cr);
+
   layout = pango_cairo_create_layout (cr);
   pango_layout_set_font_description (layout, font_desc);
 
@@ -510,7 +511,7 @@ gcal_all_day_grid_draw (GtkWidget *widget,
   cairo_stroke (cr);
   cairo_restore (cr);
 
-  /* drawing childrens */
+  /* drawing children */
   if (GTK_WIDGET_CLASS (gcal_all_day_grid_parent_class)->draw != NULL)
     GTK_WIDGET_CLASS (gcal_all_day_grid_parent_class)->draw (widget, cr);
 
@@ -534,9 +535,7 @@ gcal_all_day_grid_add (GtkContainer *container,
   GcalAllDayGridPrivate* priv;
 
   priv = GCAL_ALL_DAY_GRID (container)->priv;
-
-  if (priv->columns_nr == 0)
-    priv->columns_nr = 1;
+  g_return_if_fail (priv->columns_nr != 0);
 
   gcal_all_day_grid_place (GCAL_ALL_DAY_GRID (container),
                            widget,
@@ -677,7 +676,7 @@ gcal_all_day_grid_set_column_headers (GcalAllDayGrid *all_day,
 void
 gcal_all_day_grid_place (GcalAllDayGrid *all_day,
                          GtkWidget      *widget,
-                         gint            column_idx)
+                         guint           column_idx)
 {
   GcalAllDayGridPrivate *priv;
   GList* children_link;

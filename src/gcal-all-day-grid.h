@@ -57,7 +57,7 @@ void           gcal_all_day_grid_set_column_headers  (GcalAllDayGrid *all_day,
 
 void           gcal_all_day_grid_place               (GcalAllDayGrid *all_day,
 						      GtkWidget      *widget,
-						      gint            column_idx);
+						      guint           column_idx);
 
 G_END_DECLS
 
