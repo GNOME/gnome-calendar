@@ -245,9 +245,6 @@ gcal_window_constructed (GObject *object)
 
   priv = GCAL_WINDOW (object)->priv;
 
-  /* internal data init */
-  priv->active_date = g_new (icaltimetype, 1);
-
   /* ui construction */
   priv->main_box = gtk_grid_new ();
   gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->main_box),
@@ -386,6 +383,8 @@ gcal_window_set_property (GObject      *object,
                                    g_value_get_enum (value));
       return;
     case PROP_ACTIVE_DATE:
+      if (priv->active_date != NULL)
+        g_free (priv->active_date);
       priv->active_date = g_value_dup_boxed (value);
       return;
     }
@@ -1281,18 +1280,18 @@ gcal_window_new_with_view (GcalApplication   *app,
 {
   GcalWindow *win;
   GcalManager *manager;
+  icaltimetype date;
+
+  manager = gcal_application_get_manager (GCAL_APPLICATION (app));
+  /* FIXME: here read the initial date from somewehere */
+  date = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (manager));
 
   win  =  g_object_new (GCAL_TYPE_WINDOW,
                         "application",
                         GTK_APPLICATION (app),
+                        "active-date",
+                        &date,
                         NULL);
-  gcal_window_set_sources_view (win);
-
-  manager = gcal_window_get_manager (win);
-
-  /* FIXME: here read the initial date from somewehere */
-  *(win->priv->active_date) =
-    icaltime_current_time_with_zone (gcal_manager_get_system_timezone (manager));
 
   /* hooking signals */
   g_signal_connect (manager,
