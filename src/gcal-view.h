@@ -51,11 +51,7 @@ struct _GcalViewIface
   void            (*create_event)                       (GcalView *view, icaltimetype *start_span, icaltimetype *end_span, gdouble x, gdouble y);
   void            (*updated)                            (GcalView *view, icaltimetype *date);
 
-  /* pure virtual methods */
-  icaltimetype*   (*get_initial_date)                   (GcalView *view);
-  icaltimetype*   (*get_final_date)                     (GcalView *view);
-
-  gboolean        (*contains)                           (GcalView *view, icaltimetype *date);
+  /* Container functions related API */
   void            (*remove_by_uuid)                     (GcalView *view, const gchar *uuid);
   GtkWidget*      (*get_by_uuid)                        (GcalView *view, const gchar *uuid);
   void            (*reposition_child)                   (GcalView *view, const gchar *uuid);
@@ -66,17 +62,19 @@ struct _GcalViewIface
 /* FIXME remove me in favor of the one below */
   void            (*create_event_on_current_unit)       (GcalView *view);
 
-/* New API */
+  /* New API */
+  /* Time handling related API */
+  icaltimetype*   (*get_initial_date)                   (GcalView *view);
+  icaltimetype*   (*get_final_date)                     (GcalView *view);
+  gboolean        (*contains_date)                      (GcalView *view, icaltimetype *date);
+
   /* Marks related API */
-  void       (*mark_current_unit)             (GcalView     *view);
-  void       (*clear_mark)                    (GcalView     *view);
+  void            (*mark_current_unit)                  (GcalView     *view);
+  void            (*clear_mark)                         (GcalView     *view);
 
-  /* Navigation related API */
-  void       (*move_back)                     (GcalView     *view,
-					       gint          steps);
-  void       (*move_forward)                  (GcalView     *view,
-					       gint          steps);
-
+  /* Update NavBar headings */
+  gchar*          (*get_left_header)                    (GcalView     *view);
+  gchar*          (*get_right_header)                   (GcalView     *view);
 };
 
 GType         gcal_view_get_type                      (void);
@@ -86,13 +84,6 @@ void          gcal_view_set_date                      (GcalView     *view,
 						       icaltimetype *date);
 
 icaltimetype* gcal_view_get_date                      (GcalView     *view);
-
-icaltimetype* gcal_view_get_initial_date              (GcalView     *view);
-
-icaltimetype* gcal_view_get_final_date                (GcalView     *view);
-
-gboolean      gcal_view_contains                      (GcalView     *view,
-						       icaltimetype *date);
 
 void          gcal_view_remove_by_uuid                (GcalView     *view,
 						       const gchar  *uuid);
@@ -110,15 +101,20 @@ void          gcal_view_clear_selection               (GcalView     *view);
 void          gcal_view_create_event_on_current_unit  (GcalView     *view);
 
 /* New API */
+icaltimetype* gcal_view_get_initial_date              (GcalView     *view);
+
+icaltimetype* gcal_view_get_final_date                (GcalView     *view);
+
+gboolean      gcal_view_contains_date                 (GcalView     *view,
+						       icaltimetype *date);
+
 void          gcal_view_mark_current_unit             (GcalView     *view);
 
 void          gcal_view_clear_mark                    (GcalView     *view);
 
-void          gcal_view_move_back                     (GcalView     *view,
-						       gint          steps);
+gchar*        gcal_view_get_left_header               (GcalView     *view);
 
-void          gcal_view_move_forward                  (GcalView     *view,
-						       gint          steps);
+gchar*        gcal_view_get_right_header              (GcalView     *view);
 
 G_END_DECLS
 

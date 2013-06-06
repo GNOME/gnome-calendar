@@ -626,8 +626,6 @@ gcal_window_set_active_view (GcalWindow         *window,
 
   g_object_notify (G_OBJECT (window), "active-view");
 
-  update_range = ! gcal_view_contains (GCAL_VIEW (priv->views[priv->active_view]),
-                                       priv->active_date);
 
   gcal_view_set_date (GCAL_VIEW (priv->views[priv->active_view]),
                       priv->active_date);
@@ -799,7 +797,7 @@ gcal_window_events_added (GcalManager *manager,
       starting_date = gcal_manager_get_event_start_date (manager,
                                                          source_uid,
                                                          event_uid);
-      if (gcal_view_contains (
+      if (gcal_view_contains_date (
             GCAL_VIEW (priv->views[priv->active_view]),
             starting_date) &&
           gcal_view_get_by_uuid (
