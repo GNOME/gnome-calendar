@@ -115,34 +115,6 @@ gcal_view_get_date (GcalView *view)
   return date;
 }
 
-icaltimetype*
-gcal_view_get_initial_date (GcalView *view)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_initial_date);
-
-  return GCAL_VIEW_GET_INTERFACE (view)->get_initial_date (view);
-}
-
-icaltimetype*
-gcal_view_get_final_date (GcalView *view)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_final_date);
-
-  return GCAL_VIEW_GET_INTERFACE (view)->get_final_date (view);
-}
-
-gboolean
-gcal_view_contains (GcalView     *view,
-                       icaltimetype *date)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), FALSE);
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->contains);
-
-  return GCAL_VIEW_GET_INTERFACE (view)->contains (view, date);
-}
-
 void
 gcal_view_remove_by_uuid (GcalView    *view,
                           const gchar *uuid)
@@ -191,6 +163,66 @@ gcal_view_create_event_on_current_unit (GcalView *view)
   GCAL_VIEW_GET_INTERFACE (view)->create_event_on_current_unit (view);
 }
 
+/* New API */
+/**
+ * gcal_view_get_initial_date:
+ * @view: a #GcalView
+ *
+ * Return the initial date represented by the view.
+ *
+ * Returns: (transfer full): An #icaltimetype object
+ **/
+icaltimetype*
+gcal_view_get_initial_date (GcalView *view)
+{
+  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_initial_date);
+
+  return GCAL_VIEW_GET_INTERFACE (view)->get_initial_date (view);
+}
+
+/**
+ * gcal_view_get_final_date:
+ * @view: a #GcalView
+ *
+ * Return the final date represented by the view.
+ *
+ * Returns: (transfer full): An #icaltimetype object
+ **/
+icaltimetype*
+gcal_view_get_final_date (GcalView *view)
+{
+  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_final_date);
+
+  return GCAL_VIEW_GET_INTERFACE (view)->get_final_date (view);
+}
+
+/**
+ * gcal_view_contains_date:
+ * @view: a #GcalView
+ * @date: an #icaltimetype object
+ *
+ * Whether @date is contained in the time-range represented by @view
+ *
+ * Returns: %TRUE if it is, %FALSE otherwise
+ **/
+gboolean
+gcal_view_contains_date (GcalView     *view,
+                         icaltimetype *date)
+{
+  g_return_val_if_fail (GCAL_IS_VIEW (view), FALSE);
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->contains_date);
+
+  return GCAL_VIEW_GET_INTERFACE (view)->contains_date (view, date);
+}
+
+/**
+ * gcal_view_mark_current_unit:
+ * @view: a #GcalView
+ *
+ * Mark the current unit in the view as marked for event creation
+ **/
 void
 gcal_view_mark_current_unit (GcalView *view)
 {
@@ -200,6 +232,12 @@ gcal_view_mark_current_unit (GcalView *view)
   GCAL_VIEW_GET_INTERFACE (view)->mark_current_unit (view);
 }
 
+/**
+ * gcal_view_clear_mark:
+ * @view: a #GcalView
+ *
+ * Clear any marking the view had drawn
+ **/
 void
 gcal_view_clear_mark (GcalView *view)
 {
@@ -209,22 +247,38 @@ gcal_view_clear_mark (GcalView *view)
   GCAL_VIEW_GET_INTERFACE (view)->clear_mark (view);
 }
 
-void
-gcal_view_move_back (GcalView *view,
-                     gint      steps)
+/**
+ * gcal_view_get_left_header:
+ * @view: a #GcalView
+ *
+ * Returns the string representing for the left header of the unit.
+ * e.g.: for #GcalMonthView returns the month name
+ *
+ * Returns: (transfer full): a string.
+ **/
+gchar*
+gcal_view_get_left_header (GcalView *view)
 {
-  g_return_if_fail (GCAL_IS_VIEW (view));
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->move_back);
+  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+  g_return_val_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_left_header, NULL);
 
-  GCAL_VIEW_GET_INTERFACE (view)->move_back (view, steps);
+  return GCAL_VIEW_GET_INTERFACE (view)->get_left_header (view);
 }
 
-void
-gcal_view_move_forward (GcalView *view,
-                        gint      steps)
+/**
+ * gcal_view_get_right_header:
+ * @view: a #GcalView
+ *
+ * Returns the string representing for the right header of the unit.
+ * e.g.: for #GcalMonthView returns the year
+ *
+ * Returns: (transfer full): a string.
+ **/
+gchar*
+gcal_view_get_right_header (GcalView *view)
 {
-  g_return_if_fail (GCAL_IS_VIEW (view));
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->move_forward);
+  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+  g_return_val_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_right_header, NULL);
 
-  GCAL_VIEW_GET_INTERFACE (view)->move_forward (view, steps);
+  return GCAL_VIEW_GET_INTERFACE (view)->get_right_header (view);
 }

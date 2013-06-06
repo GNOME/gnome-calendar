@@ -115,7 +115,7 @@ static icaltimetype*  gcal_year_view_get_initial_date             (GcalView     
 
 static icaltimetype*  gcal_year_view_get_final_date               (GcalView       *view);
 
-static gboolean       gcal_year_view_contains                     (GcalView       *view,
+static gboolean       gcal_year_view_contains_date                (GcalView       *view,
                                                                    icaltimetype   *date);
 
 static void           gcal_year_view_remove_by_uuid               (GcalView       *view,
@@ -207,7 +207,7 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->get_initial_date = gcal_year_view_get_initial_date;
   iface->get_final_date = gcal_year_view_get_final_date;
 
-  iface->contains = gcal_year_view_contains;
+  iface->contains_date = gcal_year_view_contains_date;
   iface->remove_by_uuid = gcal_year_view_remove_by_uuid;
   iface->get_by_uuid = gcal_year_view_get_by_uuid;
   iface->reposition_child = gcal_year_view_reposition_child;
@@ -754,7 +754,7 @@ gcal_year_view_set_date (GcalYearView *view,
   will_resize = FALSE;
 
   /* if span_updated: queue_resize */
-  will_resize = ! gcal_view_contains (GCAL_VIEW (view), date);
+  will_resize = ! gcal_year_view_contains_date (GCAL_VIEW (view), date);
 
   if (priv->date != NULL)
     g_free (priv->date);
@@ -775,7 +775,7 @@ gcal_year_view_set_date (GcalYearView *view,
               child = (GcalViewChild*) l->data;
               child_date =
                 gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
-              if (! gcal_view_contains (GCAL_VIEW (view), child_date))
+              if (! gcal_year_view_contains_date (GCAL_VIEW (view), child_date))
                 to_remove = g_list_append (to_remove, child->widget);
             }
         }
@@ -1019,8 +1019,8 @@ gcal_year_view_get_final_date (GcalView *view)
 }
 
 static gboolean
-gcal_year_view_contains (GcalView     *view,
-                         icaltimetype *date)
+gcal_year_view_contains_date (GcalView     *view,
+                              icaltimetype *date)
 {
   GcalYearViewPrivate *priv;
 
@@ -1116,7 +1116,7 @@ gcal_year_view_reposition_child (GcalView    *view,
               date =
                 gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
 
-              if (gcal_year_view_contains (view, date))
+              if (gcal_year_view_contains_date (view, date))
                 {
                   if (date->month - 1 == i)
                     {
