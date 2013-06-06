@@ -302,11 +302,11 @@ gcal_window_constructed (GObject *object)
   gtk_container_add (GTK_CONTAINER (box), priv->search_entry);
 
   priv->search_bar = gtk_search_bar_new ();
-  gtk_search_bar_set_entry (GTK_SEARCH_BAR (priv->search_bar),
-                            GTK_ENTRY (priv->search_entry));
+  gtk_search_bar_connect_entry (GTK_SEARCH_BAR (priv->search_bar),
+                                GTK_ENTRY (priv->search_entry));
   gtk_widget_set_hexpand (priv->search_bar, TRUE);
   g_object_bind_property (search_button, "active",
-                          priv->search_bar, "search-mode",
+                          priv->search_bar, "search-mode-enabled",
                           G_BINDING_BIDIRECTIONAL);
   gtk_container_add (GTK_CONTAINER (priv->search_bar), box);
   gtk_container_add (GTK_CONTAINER (priv->main_box), priv->search_bar);
@@ -336,7 +336,7 @@ gcal_window_constructed (GObject *object)
                     G_CALLBACK (gcal_window_add_event), object);
   g_signal_connect (priv->views_overlay, "get-child-position",
                     G_CALLBACK (gcal_window_place_new_event_widget), object);
-  g_signal_connect (priv->search_bar, "notify::search-mode",
+  g_signal_connect (priv->search_bar, "notify::search-mode-enabled",
                     G_CALLBACK (gcal_window_search_toggled), object);
   g_signal_connect (priv->search_entry, "changed",
                     G_CALLBACK (gcal_window_search_changed), object);
@@ -512,15 +512,12 @@ gcal_window_search_changed (GtkEditable *editable,
 
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
     {
-      GtkWidget *entry;
       gchar *title;
 
-      entry = gtk_search_bar_get_entry (GTK_SEARCH_BAR (priv->search_bar));
-
-      if (gtk_entry_get_text_length (GTK_ENTRY (entry)) != 0)
+      if (gtk_entry_get_text_length (GTK_ENTRY (priv->search_entry)) != 0)
         {
           title = g_strdup_printf ("Results for \"%s\"",
-                                   gtk_entry_get_text (GTK_ENTRY (entry)));
+                                   gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
           gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar),
                                     title);
         }
