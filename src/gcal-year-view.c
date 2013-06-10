@@ -131,6 +131,10 @@ static void           gcal_year_view_clear_selection              (GcalView     
 
 static void           gcal_year_view_create_event_on_current_unit (GcalView       *view);
 
+static gchar*         gcal_year_view_get_left_header              (GcalView       *view);
+
+static gchar*         gcal_year_view_get_right_header             (GcalView       *view);
+
 G_DEFINE_TYPE_WITH_CODE (GcalYearView,
                          gcal_year_view,
                          GTK_TYPE_CONTAINER,
@@ -215,6 +219,10 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->clear_selection = gcal_year_view_clear_selection;
 
   iface->create_event_on_current_unit = gcal_year_view_create_event_on_current_unit;
+
+  /* New API */
+  iface->get_left_header = gcal_year_view_get_left_header;
+  iface->get_right_header = gcal_year_view_get_right_header;
 }
 
 static void
@@ -1201,6 +1209,22 @@ gcal_year_view_create_event_on_current_unit (GcalView *view)
 
   g_free (start_span);
   g_free (end_span);
+}
+
+static gchar*
+gcal_year_view_get_left_header (GcalView *view)
+{
+  GcalYearViewPrivate *priv;
+
+  priv = GCAL_YEAR_VIEW (view)->priv;
+
+  return g_strdup_printf ("%d", priv->date->year);
+}
+
+static gchar*
+gcal_year_view_get_right_header (GcalView *view)
+{
+  return g_strdup ("");
 }
 
 /* Public API */
