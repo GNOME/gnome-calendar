@@ -133,6 +133,10 @@ static void           gcal_month_view_clear_selection       (GcalView       *vie
 
 static void           gcal_month_view_create_event_on_current_unit (GcalView *view);
 
+static gchar*         gcal_month_view_get_left_header       (GcalView       *view);
+
+static gchar*         gcal_month_view_get_right_header      (GcalView       *view);
+
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
                          gcal_month_view,
                          GTK_TYPE_CONTAINER,
@@ -217,6 +221,10 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->clear_selection = gcal_month_view_clear_selection;
 
   iface->create_event_on_current_unit = gcal_month_view_create_event_on_current_unit;
+
+  /* New API */
+  iface->get_left_header = gcal_month_view_get_left_header;
+  iface->get_right_header = gcal_month_view_get_right_header;
 }
 
 static void
@@ -1398,6 +1406,33 @@ gcal_month_view_create_event_on_current_unit (GcalView *view)
                          x, y);
 
   g_free (start_span);
+}
+
+static gchar*
+gcal_month_view_get_left_header (GcalView *view)
+{
+  GcalMonthViewPrivate *priv;
+
+  gchar str_date[64];
+
+  struct tm tm_date;
+
+  priv = GCAL_MONTH_VIEW (view)->priv;
+
+  tm_date = icaltimetype_to_tm (priv->date);
+  e_utf8_strftime_fix_am_pm (str_date, 64, "%B", &tm_date);
+
+  return g_strdup_printf ("%s", str_date);
+}
+
+static gchar*
+gcal_month_view_get_right_header (GcalView *view)
+{
+  GcalMonthViewPrivate *priv;
+
+  priv = GCAL_MONTH_VIEW (view)->priv;
+
+  return g_strdup_printf ("%d", priv->date->year);
 }
 
 /* Public API */
