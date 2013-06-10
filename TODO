@@ -1,15 +1,28 @@
 TODO
 
- - Rework toolbar, migrate to GdHeaderBar
- - Add disable/enable of views
+ - [DONE] Create AllDayGrid
+   1. Add child placement policy
+   2. Make it reactive
+ - [DONE] Create DaysGrid [Cause can be 1, 2 or 7 days]
+   1. Add child placement policy
+   2. Make it reactive
+ - Rework toolbar, migrate to GtkHeaderBar
  - Update NewEvent widget to use GtkOverlay
+ - Rework internal GcalWindow working
  - Clean GcalWindow compilation, no warnings
  - Remove Clutter dependecy
 
+ - Clean gcal-enums for removing toolbar related enums
+ - Add disable/enable of views
+ - Handle GObject bindings update to not work on hidden views
+   e.g.: when removing a child is he view is hidden not update
  - Rework GcalViews as grid only (WeekView, MonthView, YearView)
- - Rework GcalViews to get the new API
+ - Rework GcalViews to implement the new API (remove every "New API" comment)
  - Review views title string: "Year 2013", shouldn't say "Year"
+ - Review gtk-styles.css file for actually working css definitions
+ - Add css file and svg image to resources files
  - Reorder funcs inside GcalWindow
+ - Fix nav-button css to matches pushed-down state (font-color goes white)
  - Review all-day checkbox and date/time fields interaction in GcalEditDialog
  - Check width of read-only layer in GcalEditDialog
  - Review the real need of GcalFloatingContainer

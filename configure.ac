@@ -99,7 +99,6 @@ AC_CONFIG_FILES([
       data/Makefile
       data/gnome-calendar.desktop.in
       po/Makefile.in
-      doc/Makefile
 ])
 
 AC_OUTPUT
