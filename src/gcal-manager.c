@@ -1242,6 +1242,8 @@ gcal_manager_set_new_range (GcalManager        *manager,
           since_iso8601,
           until_iso8601);
 
+      g_free (since_iso8601);
+      g_free (until_iso8601);
       g_debug ("Reload query %s", priv->query);
 
       /* redoing query */
