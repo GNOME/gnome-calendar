@@ -20,9 +20,9 @@
 
 #include "gcal-viewport.h"
 
-#include <glib/gi18n.h>
-
 #include <string.h>
+
+#include <math.h>
 
 struct _GcalViewportPrivate
 {
@@ -42,6 +42,9 @@ static void       gcal_viewport_get_preferred_height (GtkWidget    *widget,
                                                       gint         *minimum,
                                                       gint         *natural);
 
+static gboolean   gcal_viewport_scroll_event          (GtkWidget      *widget,
+                                                       GdkEventScroll *event);
+
 static void       gcal_viewport_child_allocated      (GtkWidget    *widget,
                                                       GdkRectangle *allocation,
                                                       gpointer      user_data);
@@ -60,6 +63,7 @@ gcal_viewport_class_init (GcalViewportClass *klass)
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->get_preferred_width = gcal_viewport_get_preferred_width;
   widget_class->get_preferred_height = gcal_viewport_get_preferred_height;
+  widget_class->scroll_event = gcal_viewport_scroll_event;
 
   /* Setup the template GtkBuilder xml for this class */
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/viewport.ui");
@@ -122,6 +126,75 @@ gcal_viewport_get_preferred_height (GtkWidget *widget,
     *natural = 12;
 }
 
+static gboolean
+gcal_viewport_scroll_event (GtkWidget      *widget,
+                            GdkEventScroll *event)
+{
+  GcalViewportPrivate *priv;
+
+  gdouble delta_y;
+  gdouble delta;
+
+  g_return_val_if_fail (event != NULL, FALSE);
+
+  priv = GCAL_VIEWPORT (widget)->priv;
+
+  if (gdk_event_get_scroll_deltas ((GdkEvent *) event, NULL, &delta_y))
+    {
+      if (delta_y != 0.0 &&
+          priv->vscrollbar  != NULL &&
+          gtk_widget_get_visible (priv->vscrollbar))
+        {
+          GtkAdjustment *adj;
+          gdouble new_value;
+          gdouble page_size;
+          gdouble scroll_unit;
+
+          adj = gtk_range_get_adjustment (GTK_RANGE (priv->vscrollbar));
+          page_size = gtk_adjustment_get_page_size (adj);
+          scroll_unit = pow (page_size, 2.0 / 3.0);
+
+          new_value = CLAMP (gtk_adjustment_get_value (adj) + delta_y * scroll_unit,
+                             gtk_adjustment_get_lower (adj),
+                             gtk_adjustment_get_upper (adj) -
+                             gtk_adjustment_get_page_size (adj));
+
+          gtk_adjustment_set_value (adj, new_value);
+
+          return TRUE;
+        }
+    }
+  else
+    {
+      GtkWidget *range = NULL;
+
+      if (event->direction == GDK_SCROLL_UP || event->direction == GDK_SCROLL_DOWN)
+        range = priv->vscrollbar;
+
+      if (range != NULL && gtk_widget_get_visible (range))
+        {
+          GtkAdjustment *adj;
+          gdouble new_value;
+          gdouble page_size;
+
+          adj = gtk_range_get_adjustment (GTK_RANGE (range));
+          page_size = gtk_adjustment_get_page_size (adj);
+          delta = pow (page_size, 2.0 / 3.0);
+
+          new_value = CLAMP (gtk_adjustment_get_value (adj) + delta,
+                             gtk_adjustment_get_lower (adj),
+                             gtk_adjustment_get_upper (adj) -
+                             gtk_adjustment_get_page_size (adj));
+
+          gtk_adjustment_set_value (adj, new_value);
+
+          return TRUE;
+        }
+    }
+
+  return FALSE;
+}
+
 static void
 gcal_viewport_child_allocated (GtkWidget    *widget,
                                GdkRectangle *allocation,
@@ -160,6 +233,13 @@ gcal_viewport_new ()
   return g_object_new (GCAL_TYPE_VIEWPORT, NULL);
 }
 
+/**
+ * gcal_viewport_add:
+ * @viewport: a #GcalViewport
+ * @widget: the widget to add
+ *
+ * Add @widget to internal viewport of #GcalViewport
+ **/
 void
 gcal_viewport_add (GcalViewport *viewport,
                    GtkWidget    *widget)
