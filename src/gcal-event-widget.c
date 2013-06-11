@@ -577,15 +577,30 @@ gcal_event_widget_peek_uuid (GcalEventWidget *event)
   return priv->uuid;
 }
 
+/**
+ * gcal_event_widget_set_date:
+ * @event: a #GcalEventWidget
+ * @date: a #icaltimetype object with the date
+ *
+ * Set the start-date of the event
+ **/
 void
-gcal_event_widget_set_date (GcalEventWidget *event,
-                           icaltimetype     *date)
+gcal_event_widget_set_date (GcalEventWidget    *event,
+                            const icaltimetype *date)
 {
   g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
 
   g_object_set (event, "date-start", date, NULL);
 }
 
+/**
+ * gcal_event_widget_get_date:
+ * @event: a #GcalEventWidget
+ *
+ * Return the starting date of the event
+ *
+ * Returns: (transfer full): Release with g_free
+ **/
 icaltimetype*
 gcal_event_widget_get_date (GcalEventWidget *event)
 {
@@ -609,12 +624,11 @@ gcal_event_widget_set_summary (GcalEventWidget *event,
 gchar*
 gcal_event_widget_get_summary (GcalEventWidget *event)
 {
-  gchar *summary;
-  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), NULL);
+  GcalEventWidgetPrivate *priv;
 
-  summary = NULL;
-  g_object_get (event, "summary", summary, NULL);
-  return summary;
+  priv = event->priv;
+
+  return g_strdup (priv->summary);
 }
 
 void

@@ -55,37 +55,37 @@ struct _GcalEventWidget
 
 GType         gcal_event_widget_get_type                   (void);
 
-GtkWidget*    gcal_event_widget_new                        (gchar           *uuid);
+GtkWidget*    gcal_event_widget_new                        (gchar              *uuid);
 
-GtkWidget*    gcal_event_widget_new_with_summary_and_color (const gchar     *summary,
-                                                            const GdkRGBA   *color);
+GtkWidget*    gcal_event_widget_new_with_summary_and_color (const gchar        *summary,
+                                                            const GdkRGBA      *color);
 
-const gchar*  gcal_event_widget_peek_uuid                  (GcalEventWidget *event);
+const gchar*  gcal_event_widget_peek_uuid                  (GcalEventWidget    *event);
 
-void          gcal_event_widget_set_date                   (GcalEventWidget *event,
-                                                            icaltimetype    *date);
+void          gcal_event_widget_set_date                   (GcalEventWidget    *event,
+                                                            const icaltimetype *date);
 
-icaltimetype* gcal_event_widget_get_date                   (GcalEventWidget *event);
+icaltimetype* gcal_event_widget_get_date                   (GcalEventWidget    *event);
 
-void          gcal_event_widget_set_summary                (GcalEventWidget *event,
-                                                            gchar           *summary);
+void          gcal_event_widget_set_summary                (GcalEventWidget    *event,
+                                                            gchar              *summary);
 
-gchar*        gcal_event_widget_get_summary                (GcalEventWidget *event);
+gchar*        gcal_event_widget_get_summary                (GcalEventWidget    *event);
 
-void          gcal_event_widget_set_color                  (GcalEventWidget *event,
-                                                            GdkRGBA         *color);
+void          gcal_event_widget_set_color                  (GcalEventWidget    *event,
+                                                            GdkRGBA            *color);
 
-GdkRGBA*      gcal_event_widget_get_color                  (GcalEventWidget *event);
+GdkRGBA*      gcal_event_widget_get_color                  (GcalEventWidget    *event);
 
-void          gcal_event_widget_set_all_day                (GcalEventWidget *event,
-                                                            gboolean         all_day);
+void          gcal_event_widget_set_all_day                (GcalEventWidget    *event,
+                                                            gboolean            all_day);
 
-gboolean     gcal_event_widget_get_all_day                 (GcalEventWidget *event);
+gboolean     gcal_event_widget_get_all_day                 (GcalEventWidget    *event);
 
-void         gcal_event_widget_set_has_reminders           (GcalEventWidget *event,
-                                                            gboolean         has_reminders);
+void         gcal_event_widget_set_has_reminders           (GcalEventWidget    *event,
+                                                            gboolean            has_reminders);
 
-gboolean     gcal_event_widget_get_has_reminders           (GcalEventWidget *event);
+gboolean     gcal_event_widget_get_has_reminders           (GcalEventWidget    *event);
 
 G_END_DECLS
 
