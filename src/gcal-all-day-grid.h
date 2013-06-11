@@ -59,6 +59,8 @@ void           gcal_all_day_grid_place               (GcalAllDayGrid *all_day,
 						      GtkWidget      *widget,
 						      guint           column_idx);
 
+GtkWidget*     gcal_all_day_grid_get_by_uuid         (GcalAllDayGrid *all_day,
+                                                      const gchar    *uuid);
 G_END_DECLS
 
 #endif /* __GCAL_ALL_DAY_GRID_H__ */

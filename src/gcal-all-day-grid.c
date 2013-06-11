@@ -19,6 +19,7 @@
  */
 
 #include "gcal-all-day-grid.h"
+#include "gcal-event-widget.h"
 
 #include <string.h>
 
@@ -632,13 +633,17 @@ gcal_all_day_grid_button_release_event (GtkWidget      *widget,
   g_debug ("Button released on all-day area");
   return FALSE;
 }
+
 /* GtkContainer API */
-/*
+/**
  * gcal_all_day_grid_add:
+ * @container: a #GcalAllDayGrid
+ * @widget: a widget to add
  *
  * @gtk_container_add implementation. It assumes the widget will go
- * to the first column. If there's no column set, will set columns to 1
- */
+ * to the first column.
+ *
+ **/
 static void
 gcal_all_day_grid_add (GtkContainer *container,
                        GtkWidget    *widget)
@@ -663,27 +668,24 @@ gcal_all_day_grid_remove (GtkContainer *container,
 
   priv = GCAL_ALL_DAY_GRID (container)->priv;
 
-  if (priv->children != NULL)
+  for (columns = priv->children;
+       columns != NULL;
+       columns = g_list_next (columns))
     {
-      for (columns = priv->children;
-           columns != NULL;
-           columns = g_list_next (columns))
+      GList* column = (GList*) columns->data;
+      for (;column != NULL; column = g_list_next (column))
         {
-          GList* column = (GList*) columns->data;
-          for (;column != NULL; column = g_list_next (column))
+          if (widget == (GtkWidget*) column->data)
             {
-              if (widget == (GtkWidget*) column->data)
-                {
-                  GList* orig = (GList*) columns->data;
-                  orig = g_list_delete_link (orig, column);
+              GList* orig = (GList*) columns->data;
+              orig = g_list_delete_link (orig, column);
 
-                  gtk_widget_unparent (widget);
+              gtk_widget_unparent (widget);
 
-                  columns->data = orig;
+              columns->data = orig;
 
-                  columns = NULL;
-                  break;
-                }
+              columns = NULL;
+              break;
             }
         }
     }
@@ -701,24 +703,20 @@ gcal_all_day_grid_forall (GtkContainer *container,
 
   priv = GCAL_ALL_DAY_GRID (container)->priv;
 
-  if (priv->children != NULL)
+  columns = priv->children;
+  while (columns)
     {
-      columns = priv->children;
+      GList *column;
 
-      while (columns)
+      column = columns->data;
+      columns = columns->next;
+
+      while (column)
         {
-          GList *column;
+          GtkWidget *child = (GtkWidget*) column->data;
+          column  = column->next;
 
-          column = columns->data;
-          columns = columns->next;
-
-          while (column)
-            {
-              GtkWidget *child = (GtkWidget*) column->data;
-              column  = column->next;
-
-              (* callback) (child, callback_data);
-            }
+          (* callback) (child, callback_data);
         }
     }
 }
@@ -802,4 +800,38 @@ gcal_all_day_grid_place (GcalAllDayGrid *all_day,
   children_link->data = g_list_append (column, widget);
 
   gtk_widget_set_parent (widget, GTK_WIDGET (all_day));
+}
+
+GtkWidget*
+gcal_all_day_grid_get_by_uuid (GcalAllDayGrid *all_day,
+                               const gchar    *uuid)
+{
+  GcalAllDayGridPrivate *priv;
+
+  GList* columns;
+
+  priv = all_day->priv;
+
+  columns = priv->children;
+  while (columns)
+    {
+      GList *column;
+
+      column = columns->data;
+      columns = columns->next;
+
+      while (column)
+        {
+          GcalEventWidget *child = GCAL_EVENT_WIDGET ((GtkWidget*) column->data);
+          column  = column->next;
+
+          if (g_strcmp0 (uuid,
+                         gcal_event_widget_peek_uuid (child)) == 0)
+            {
+              return (GtkWidget*) child;
+            }
+        }
+    }
+
+  return NULL;
 }
