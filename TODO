@@ -1,11 +1,5 @@
 TODO
 
- - [DONE] Create AllDayGrid
-   1. Add child placement policy
-   2. Make it reactive
- - [DONE] Create DaysGrid [Cause can be 1, 2 or 7 days]
-   1. Add child placement policy
-   2. Make it reactive
  - Rework toolbar, migrate to GtkHeaderBar
  - Update NewEvent widget to use GtkOverlay
  - Rework internal GcalWindow working
@@ -13,6 +7,8 @@ TODO
  - Remove Clutter dependecy
 
  - Clean gcal-enums for removing toolbar related enums
+ - Add scroll_to_unit in day-view and week-view. Meaning, scroll to the actual
+   hour.
  - Add disable/enable of views
  - Handle GObject bindings update to not work on hidden views
    e.g.: when removing a child is he view is hidden not update
@@ -20,6 +16,8 @@ TODO
  - Rework GcalViews to implement the new API (remove every "New API" comment)
  - Review views title string: "Year 2013", shouldn't say "Year"
  - Review gtk-styles.css file for actually working css definitions
+ - Checkout the need ot GcalView:remove_by_uuid (could be replaced by)
+   GcalView:get_by_uuid ** gtk_widget_destroy
  - Add css file and svg image to resources files
  - Reorder funcs inside GcalWindow
  - Fix nav-button css to matches pushed-down state (font-color goes white)
@@ -32,6 +30,7 @@ TODO
    with Gtk+ widgets other than GtkOverlay.
  - Rethink signals from GcalManager
  - Order events chronologically in views
+ - Change ordering of events in all-day views (use a custom ordering)
  - Add different triggers for hiding the sources view.
  - Connect keyboard-shortcuts like Ctrl+Q
  - Check for the real need of adding timezone, and check everywhere
