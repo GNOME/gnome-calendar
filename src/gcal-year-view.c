@@ -986,7 +986,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
  *
  * Since: 0.1
  * Return value: the January first of the current year.
- * Returns: (transfer full): Release with g_free
+ * Returns: (transfer full): Release with g_free()
  **/
 static icaltimetype*
 gcal_year_view_get_initial_date (GcalView *view)
@@ -1008,7 +1008,7 @@ gcal_year_view_get_initial_date (GcalView *view)
  *
  * Since: 0.1
  * Return value: the last day of the month
- * Returns: (transfer full): Release with g_free
+ * Returns: (transfer full): Release with g_free()
  **/
 static icaltimetype*
 gcal_year_view_get_final_date (GcalView *view)
