@@ -23,8 +23,12 @@
 #include "gcal-all-day-grid.h"
 #include "gcal-days-grid.h"
 #include "gcal-viewport.h"
+#include "gcal-utils.h"
+#include "gcal-view.h"
 
 #include <glib/gi18n.h>
+
+#include <libecal/libecal.h>
 
 enum
 {
@@ -62,6 +66,20 @@ static void           gcal_day_view_get_property          (GObject        *objec
 
 static void           gcal_day_view_set_date              (GcalDayView    *view,
                                                            icaltimetype   *date);
+
+static icaltimetype*  gcal_day_view_get_initial_date      (GcalView       *view);
+
+static icaltimetype*  gcal_day_view_get_final_date        (GcalView       *view);
+
+static gboolean       gcal_day_view_contains_date         (GcalView       *view,
+                                                           icaltimetype   *date);
+
+static gchar*         gcal_day_view_get_left_header       (GcalView       *view);
+
+static gchar*         gcal_day_view_get_right_header      (GcalView       *view);
+
+static GtkWidget*     gcal_day_view_get_by_uuid           (GcalView       *view,
+                                                           const gchar    *uuid);
 
 G_DEFINE_TYPE_WITH_CODE (GcalDayView,
                          gcal_day_view,
@@ -107,12 +125,17 @@ static void
 gcal_view_interface_init (GcalViewIface *iface)
 {
   /* FIXME: add new GcalView API */
-  /* iface->get_initial_date = gcal_day_view_get_initial_date; */
-  /* iface->get_final_date = gcal_day_view_get_final_date; */
-
-  /* iface->contains = gcal_day_view_contains; */
   /* iface->remove_by_uuid = gcal_day_view_remove_by_uuid; */
-  /* iface->get_by_uuid = gcal_day_view_get_by_uuid; */
+
+  /* New API */
+  iface->get_initial_date = gcal_day_view_get_initial_date;
+  iface->get_final_date = gcal_day_view_get_final_date;
+  iface->contains_date = gcal_day_view_contains_date;
+
+  iface->get_left_header = gcal_day_view_get_left_header;
+  iface->get_right_header = gcal_day_view_get_right_header;
+
+  iface->get_by_uuid = gcal_day_view_get_by_uuid;
 }
 
 static void
@@ -239,6 +262,132 @@ gcal_day_view_set_date (GcalDayView  *view,
     g_free (priv->date);
 
   priv->date = date;
+}
+
+/* GcalView API */
+static icaltimetype*
+gcal_day_view_get_initial_date (GcalView *view)
+{
+  GcalDayViewPrivate *priv;
+  icaltimetype *new_date;
+
+  priv = GCAL_DAY_VIEW (view)->priv;
+  new_date = g_new0 (icaltimetype, 1);
+  *new_date = *(priv->date);
+  new_date->hour = 0;
+  new_date->minute = 0;
+  new_date->second = 0;
+
+  return new_date;
+}
+
+/**
+ * gcal_day_view_get_final_date:
+ * @view: a #GcalDayView
+ *
+ * Returns the date of "tomorrow" at 23:59
+ *
+ * Returns:
+ **/
+static icaltimetype*
+gcal_day_view_get_final_date (GcalView *view)
+{
+  GcalDayViewPrivate *priv;
+  icaltimetype *new_date;
+
+  priv = GCAL_DAY_VIEW (view)->priv;
+  new_date = g_new0 (icaltimetype, 1);
+  *new_date = *(priv->date);
+
+  icaltime_adjust (new_date, 1, 0, 0, 0);
+
+  new_date->hour = 23;
+  new_date->minute = 59;
+  new_date->second = 59;
+
+  return new_date;
+}
+
+static gboolean
+gcal_day_view_contains_date (GcalView     *view,
+                             icaltimetype *date)
+{
+  GcalDayViewPrivate *priv;
+
+  icaltimetype *first_day;
+  icaltimetype *last_day;
+  gint left_boundary;
+  gint right_boundary;
+
+  priv = GCAL_DAY_VIEW (view)->priv;
+  first_day = gcal_day_view_get_initial_date (view);
+  last_day = gcal_day_view_get_final_date (view);
+
+  if (priv->date == NULL)
+    return FALSE;
+
+  /* XXX: Check for date_only comparison since might drop timezone info */
+  left_boundary = icaltime_compare_date_only (*first_day, *date);
+  right_boundary = icaltime_compare_date_only (*date, *last_day);
+
+  if ((left_boundary == -1 || left_boundary == 0) &&
+      (right_boundary == -1 || right_boundary == 0))
+    {
+      return TRUE;
+    }
+
+    return FALSE;
+}
+
+static gchar*
+gcal_day_view_get_left_header (GcalView *view)
+{
+  GcalDayViewPrivate *priv;
+
+  gchar str_date[64];
+
+  struct tm tm_date;
+
+  priv = GCAL_DAY_VIEW (view)->priv;
+
+  tm_date = icaltimetype_to_tm (priv->date);
+  e_utf8_strftime_fix_am_pm (str_date, 64, "%B", &tm_date);
+
+  return g_strdup_printf ("%s, %d", str_date, priv->date->day);
+}
+
+static gchar*
+gcal_day_view_get_right_header (GcalView *view)
+{
+  GcalDayViewPrivate *priv;
+
+  priv = GCAL_DAY_VIEW (view)->priv;
+
+  return g_strdup_printf ("%d", priv->date->year);
+}
+
+static GtkWidget*
+gcal_day_view_get_by_uuid (GcalView    *view,
+                           const gchar *uuid)
+{
+  GcalDayViewPrivate *priv;
+  GtkWidget *widget;
+
+  priv = GCAL_DAY_VIEW (view)->priv;
+
+  widget =
+    gcal_all_day_grid_get_by_uuid (GCAL_ALL_DAY_GRID (priv->all_day_grid),
+                                   uuid);
+  if (widget != NULL)
+    return widget;
+
+  widget =
+    gcal_days_grid_get_by_uuid (GCAL_DAYS_GRID (priv->day_grid),
+                                uuid);
+  if (widget != NULL)
+    return widget;
+
+  return NULL;
 }
 
 /* Public API */
