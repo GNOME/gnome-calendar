@@ -58,23 +58,23 @@ struct _GcalWindowPrivate
   GtkWidget           *search_entry;
   GtkWidget           *views_switcher;
 
-  GtkWidget           *sources_view;
-  GtkWidget           *views [5];
+  GtkWidget           *views [5]; /* day, week, month, year, list */
   GtkWidget           *edit_dialog;
 
   GcalWindowViewType   active_view;
   icaltimetype        *active_date;
 
+  /* states */
+  gboolean             new_event_mode;
+  gboolean             search_mode;
+
+  /* FIXME: Review to see if this are needed */
   /* temp to keep the will_delete event uuid */
   gchar               *event_to_delete;
 
   /* temp to keep event_creation */
   gboolean             waiting_for_creation;
   gboolean             queue_open_edit_dialog;
-
-  /* temp to keep position sent by GcalView about it's current unit */
-  gdouble              x_pos;
-  gdouble              y_pos;
 };
 
 enum
@@ -98,12 +98,13 @@ static void           gcal_window_get_property           (GObject             *o
                                                           GValue              *value,
                                                           GParamSpec          *pspec);
 
-static void           gcal_window_add_event              (GtkButton           *new_button,
-                                                          gpointer             user_data);
-
 static gboolean       gcal_window_place_new_event_widget (GtkOverlay          *overlay,
                                                           GtkWidget           *child,
                                                           GdkRectangle        *allocation,
+                                                          gpointer             user_data);
+
+static void           gcal_window_view_changed           (GObject             *object,
+                                                          GParamSpec          *pspec,
                                                           gpointer             user_data);
 
 static void           gcal_window_search_toggled         (GObject             *object,
@@ -116,20 +117,11 @@ static void           gcal_window_search_changed         (GtkEditable         *e
 static void           gcal_window_view_updated           (GtkButton           *buttton,
                                                           gpointer             user_data);
 
-static void           gcal_window_set_active_view        (GcalWindow          *window,
-                                                          GcalWindowViewType   view_type);
-
 static GcalManager*   gcal_window_get_manager            (GcalWindow          *window);
-
-static void           gcal_window_set_sources_view       (GcalWindow          *window);
 
 static void           gcal_window_init_edit_dialog       (GcalWindow          *window);
 
-static void           gcal_window_sources_row_activated  (GtkTreeView         *tree_view,
-                                                          GtkTreePath         *path,
-                                                          GtkTreeViewColumn   *column,
-                                                          gpointer             user_data);
-
+/* GcalManager signal handling */
 static void           gcal_window_events_added           (GcalManager         *manager,
                                                           gpointer             events_list,
                                                           gpointer             user_data);
@@ -223,12 +215,14 @@ gcal_window_init(GcalWindow *self)
                                            GcalWindowPrivate);
   priv = self->priv;
 
+  /* states */
+  priv->new_event_mode = FALSE;
+  priv->search_mode = FALSE;
+
+  /* FIXME: Review real need of this */
   priv->event_to_delete = NULL;
   priv->waiting_for_creation = FALSE;
   priv->queue_open_edit_dialog = FALSE;
-
-  priv->x_pos = -1;
-  priv->y_pos = -1;
 }
 
 static void
@@ -260,11 +254,9 @@ gcal_window_constructed (GObject *object)
   gtk_style_context_add_class (
       gtk_widget_get_style_context (priv->new_button),
       "suggested-action");
-  /* FIXME: gtk_actionable_set_action_name (GTK_ACTIONABLE (forward_button), "win.new-event"); */
   gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), priv->new_button);
 
-  /* header_bar: views. Temporarily, since this will be made of GdStackSwitcher */
-  priv->views_switcher = gtk_image_new_from_icon_name ("face-wink-symbolic", GTK_ICON_SIZE_MENU);
+  priv->views_switcher = gtk_stack_switcher_new ();
   g_object_ref_sink (priv->views_switcher);
   gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
                                    priv->views_switcher);
@@ -311,8 +303,6 @@ gcal_window_constructed (GObject *object)
   /* nav_bar */
   priv->nav_bar = gcal_nav_bar_new ();
   gtk_container_add (GTK_CONTAINER (priv->main_box), priv->nav_bar);
-  g_object_set (priv->nav_bar, "left-header", "May", NULL);
-  g_object_set (priv->nav_bar, "right-header", "2013", NULL);
 
   /* overlay */
   priv->views_overlay = gtk_overlay_new ();
@@ -320,19 +310,60 @@ gcal_window_constructed (GObject *object)
 
   /* stack widget for holding views */
   priv->views_stack = gtk_stack_new ();
-  gtk_widget_set_vexpand (priv->views_stack, TRUE);
-  gtk_widget_set_hexpand (priv->views_stack, TRUE);
+  g_object_set (priv->views_stack,
+                "vexpand", TRUE,
+                "hexpand", TRUE,
+                "transition-type", GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN,
+                "transition-duration", 500,
+                NULL);
   gtk_container_add (GTK_CONTAINER (priv->views_overlay), priv->views_stack);
 
   gtk_style_context_add_class (
       gtk_widget_get_style_context (priv->views_stack),
       "views");
 
+  priv->views[GCAL_WINDOW_VIEW_DAY] = gcal_day_view_new ();
+  gtk_stack_add_titled (GTK_STACK (priv->views_stack),
+                        priv->views[GCAL_WINDOW_VIEW_DAY],
+                        "day", _("Day"));
+  g_object_bind_property (GCAL_WINDOW (object), "active-date",
+                          priv->views[GCAL_WINDOW_VIEW_DAY], "active-date",
+                          G_BINDING_DEFAULT);
+
+  priv->views[GCAL_WINDOW_VIEW_WEEK] = gcal_week_view_new ();
+  gtk_stack_add_titled (GTK_STACK (priv->views_stack),
+                        priv->views[GCAL_WINDOW_VIEW_WEEK],
+                        "week", _("Week"));
+  g_object_bind_property (GCAL_WINDOW (object), "active-date",
+                          priv->views[GCAL_WINDOW_VIEW_WEEK], "active-date",
+                          G_BINDING_DEFAULT);
+
+  priv->views[GCAL_WINDOW_VIEW_MONTH] = gcal_month_view_new ();
+  gtk_stack_add_titled (GTK_STACK (priv->views_stack),
+                        priv->views[GCAL_WINDOW_VIEW_MONTH],
+                        "month", _("Month"));
+  g_object_bind_property (GCAL_WINDOW (object), "active-date",
+                          priv->views[GCAL_WINDOW_VIEW_MONTH], "active-date",
+                          G_BINDING_DEFAULT);
+
+  priv->views[GCAL_WINDOW_VIEW_YEAR] = gcal_year_view_new ();
+  gtk_stack_add_titled (GTK_STACK (priv->views_stack),
+                        priv->views[GCAL_WINDOW_VIEW_YEAR],
+                        "year", _("Year"));
+  g_object_bind_property (GCAL_WINDOW (object), "active-date",
+                          priv->views[GCAL_WINDOW_VIEW_YEAR], "active-date",
+                          G_BINDING_DEFAULT);
+
+  gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (priv->views_switcher),
+                                GTK_STACK (priv->views_stack));
+
   /* signals connection/handling */
-  g_signal_connect (priv->new_button, "clicked",
-                    G_CALLBACK (gcal_window_add_event), object);
+  g_signal_connect_swapped (priv->new_button, "clicked",
+                            G_CALLBACK (gcal_window_new_event), object);
   g_signal_connect (priv->views_overlay, "get-child-position",
                     G_CALLBACK (gcal_window_place_new_event_widget), object);
+  g_signal_connect (priv->views_stack, "notify::visible-child",
+                    G_CALLBACK (gcal_window_view_changed), object);
   g_signal_connect (priv->search_bar, "notify::search-mode-enabled",
                     G_CALLBACK (gcal_window_search_toggled), object);
   g_signal_connect (priv->search_entry, "changed",
@@ -379,8 +410,9 @@ gcal_window_set_property (GObject      *object,
   switch (property_id)
     {
     case PROP_ACTIVE_VIEW:
-      gcal_window_set_active_view (GCAL_WINDOW (object),
-                                   g_value_get_enum (value));
+      gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
+                                   priv->views[g_value_get_enum (value)]);
+
       return;
     case PROP_ACTIVE_DATE:
       if (priv->active_date != NULL)
@@ -415,16 +447,6 @@ gcal_window_get_property (GObject    *object,
   G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
-static void
-gcal_window_add_event (GtkButton *new_button,
-                       gpointer   user_data)
-{
-  GcalWindowPrivate *priv;
-
-  priv = GCAL_WINDOW (user_data)->priv;
-  gcal_view_create_event_on_current_unit (GCAL_VIEW (priv->views[priv->active_view]));
-}
-
 static gboolean
 gcal_window_place_new_event_widget (GtkOverlay   *overlay,
                                     GtkWidget    *child,
@@ -437,7 +459,7 @@ gcal_window_place_new_event_widget (GtkOverlay   *overlay,
 
   priv = GCAL_WINDOW (user_data)->priv;
 
-  if (priv->x_pos == -1 || child != priv->new_event_widget)
+  if (child != priv->new_event_widget)
     return FALSE;
 
   gtk_widget_get_preferred_width (priv->new_event_widget,
@@ -455,8 +477,8 @@ gcal_window_place_new_event_widget (GtkOverlay   *overlay,
            allocation->height);
   g_debug ("natural size (%d, %d)",
            nat_width, nat_height);
-  allocation->x = priv->x_pos - nat_width / 2;
-  allocation->y = (priv->y_pos - nat_height) + 300;
+  allocation->x = 600;
+  allocation->y = 600;
   allocation->width = nat_width;
   allocation->height = nat_height;
 
@@ -467,6 +489,62 @@ gcal_window_place_new_event_widget (GtkOverlay   *overlay,
            allocation->height);
 
   return TRUE;
+}
+
+static void
+gcal_window_view_changed (GObject    *object,
+                          GParamSpec *pspec,
+                          gpointer    user_data)
+{
+  GcalWindowPrivate *priv;
+
+  GcalWindow *window;
+
+  GEnumClass *eklass;
+  GEnumValue *eval;
+  GcalWindowViewType view_type;
+
+  GtkWidget *widget;
+  icaltimetype *first_day;
+  icaltimetype *last_day;
+
+  gchar *header;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  window = GCAL_WINDOW (user_data);
+
+  eklass = g_type_class_ref (gcal_window_view_type_get_type ());
+  eval = g_enum_get_value_by_nick (
+             eklass,
+             gtk_stack_get_visible_child_name (GTK_STACK (priv->views_stack)));
+
+  view_type = eval->value;
+
+  g_type_class_unref (eklass);
+
+  /* Get view_type from widget, or widget-name */
+  priv->active_view = view_type;
+  g_object_notify (G_OBJECT (window), "active-view");
+
+  widget = priv->views[view_type];
+
+  first_day = gcal_view_get_initial_date (GCAL_VIEW (widget));
+  last_day = gcal_view_get_final_date (GCAL_VIEW (widget));
+
+  gcal_manager_set_new_range (gcal_window_get_manager (window),
+                              first_day,
+                              last_day);
+  g_free (first_day);
+  g_free (last_day);
+
+  header = gcal_view_get_left_header (GCAL_VIEW (widget));
+  g_object_set (priv->nav_bar, "left-header", header, NULL);
+  g_free (header);
+
+  header = gcal_view_get_right_header (GCAL_VIEW (widget));
+  g_object_set (priv->nav_bar, "right-header", header, NULL);
+  g_free (header);
 }
 
 static void
@@ -565,87 +643,6 @@ gcal_window_view_updated (GtkButton  *button,
   /* g_free (last_day); */
 }
 
-static void
-gcal_window_set_active_view (GcalWindow         *window,
-                             GcalWindowViewType  view_type)
-{
-  GcalWindowPrivate *priv;
-
-  gboolean update_range;
-  icaltimetype *first_day;
-  icaltimetype *last_day;
-
-  g_return_if_fail (GCAL_IS_WINDOW (window));
-  priv = window->priv;
-
-  if (priv->views[view_type] != NULL)
-    {
-      gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
-                                   priv->views[view_type]);
-      priv->active_view = view_type;
-    }
-  else
-    {
-      switch (view_type)
-        {
-          case GCAL_WINDOW_VIEW_DAY:
-            priv->views[GCAL_WINDOW_VIEW_DAY] = gcal_day_view_new ();
-            break;
-          case GCAL_WINDOW_VIEW_WEEK:
-            priv->views[GCAL_WINDOW_VIEW_WEEK] = gcal_week_view_new ();
-            break;
-          case GCAL_WINDOW_VIEW_MONTH:
-            priv->views[GCAL_WINDOW_VIEW_MONTH] = gcal_month_view_new ();
-            break;
-          case GCAL_WINDOW_VIEW_YEAR:
-            priv->views[GCAL_WINDOW_VIEW_YEAR] = gcal_year_view_new ();
-            break;
-          default:
-            g_debug ("Unimplemented view yet");
-            return;
-        }
-
-      /* Bindings properties and signals */
-      g_object_bind_property (priv->views[view_type], "active-date",
-                              window, "active-date",
-                              G_BINDING_DEFAULT);
-
-      g_signal_connect (priv->views[view_type],
-                        "create-event",
-                        G_CALLBACK (gcal_window_new_event_show),
-                        window);
-
-      priv->active_view = view_type;
-
-      gtk_widget_show (priv->views[priv->active_view]);
-      gtk_container_add (GTK_CONTAINER (priv->views_stack),
-                         priv->views[view_type]);
-      gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
-                                   priv->views[view_type]);
-    }
-
-  g_object_notify (G_OBJECT (window), "active-view");
-
-
-  gcal_view_set_date (GCAL_VIEW (priv->views[priv->active_view]),
-                      priv->active_date);
-  if (update_range)
-    {
-      first_day = gcal_view_get_initial_date (
-          GCAL_VIEW (priv->views[priv->active_view]));
-      last_day = gcal_view_get_final_date (
-          GCAL_VIEW (priv->views[priv->active_view]));
-
-      gcal_manager_set_new_range (
-          gcal_window_get_manager (window),
-          first_day,
-          last_day);
-
-      g_free (first_day);
-      g_free (last_day);
-    }
-}
-
 static GcalManager*
 gcal_window_get_manager (GcalWindow *window)
 {
@@ -653,73 +650,6 @@ gcal_window_get_manager (GcalWindow *window)
   app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
 
   return gcal_application_get_manager (app);
-}
-
-static void
-gcal_window_set_sources_view (GcalWindow *window)
-{
-  GcalWindowPrivate *priv;
-  GcalManager *manager;
-
-  GtkCellRenderer *renderer;
-  GtkTreeViewColumn *column;
-
-  priv = window->priv;
-
-  manager = gcal_window_get_manager (window);
-  priv->sources_view = gtk_tree_view_new_with_model (
-      GTK_TREE_MODEL (gcal_manager_get_sources_model (manager)));
-  gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (priv->sources_view),
-                                     FALSE);
-  gtk_tree_selection_set_mode (
-      gtk_tree_view_get_selection (GTK_TREE_VIEW (priv->sources_view)),
-      GTK_SELECTION_NONE);
-  gcal_gtk_tree_view_set_activate_on_single_click (
-      GTK_TREE_VIEW (priv->sources_view),
-      TRUE);
-
-  renderer = gtk_cell_renderer_toggle_new ();
-  column = gtk_tree_view_column_new_with_attributes ("",
-                                                     renderer,
-                                                     "active",
-                                                     2,
-                                                     NULL);
-  gtk_tree_view_append_column (GTK_TREE_VIEW (priv->sources_view),
-                               column);
-
-  renderer = gtk_cell_renderer_text_new ();
-  column = gtk_tree_view_column_new_with_attributes ("",
-                                                     renderer,
-                                                     "text",
-                                                     1,
-                                                     NULL);
-  gtk_tree_view_append_column (GTK_TREE_VIEW (priv->sources_view),
-                               column);
-
-  renderer = e_cell_renderer_color_new ();
-  column = gtk_tree_view_column_new_with_attributes ("",
-                                                     renderer,
-                                                     "color",
-                                                     3,
-                                                     NULL);
-  gtk_tree_view_append_column (GTK_TREE_VIEW (priv->sources_view),
-                               column);
-
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (priv->sources_view),
-      "osd");
-  /* FIXME: decide on this */
-  /* gtk_container_add ( */
-  /*     GTK_CONTAINER (gtk_clutter_actor_get_contents ( */
-  /*                       GTK_CLUTTER_ACTOR (priv->sources_actor))), */
-  /*     priv->sources_view); */
-  gtk_widget_show (priv->sources_view);
-
-  /* signals */
-  g_signal_connect (priv->sources_view,
-                    "row-activated",
-                    G_CALLBACK (gcal_window_sources_row_activated),
-                    window);
 }
 
 static void
@@ -742,52 +672,26 @@ gcal_window_init_edit_dialog (GcalWindow *window)
                     window);
 }
 
-static void
-gcal_window_sources_row_activated (GtkTreeView        *tree_view,
-                                   GtkTreePath        *path,
-                                   GtkTreeViewColumn  *column,
-                                   gpointer            user_data)
-{
-  GcalWindowPrivate *priv;
-  GtkTreeIter iter;
-  gboolean active;
-
-  priv  = ((GcalWindow*) user_data)->priv;
-
-  gtk_tree_model_get_iter (
-      gtk_tree_view_get_model (GTK_TREE_VIEW (priv->sources_view)),
-      &iter,
-      path);
-  gtk_tree_model_get (
-      gtk_tree_view_get_model (GTK_TREE_VIEW (priv->sources_view)),
-      &iter,
-      2, &active,
-      -1);
-
-  active ^= 1;
-  gtk_list_store_set (
-      GTK_LIST_STORE (gtk_tree_view_get_model (GTK_TREE_VIEW (priv->sources_view))),
-      &iter,
-      2, active,
-      -1);
-}
-
+/* GcalManager signal handling */
 static void
 gcal_window_events_added (GcalManager *manager,
                           gpointer     events_list,
                           gpointer     user_data)
 {
   GcalWindowPrivate *priv;
+
   GSList *l;
 
   gchar **tokens;
   gchar *source_uid;
   gchar *event_uid;
 
+  GcalView *view;
   GtkWidget *event;
   icaltimetype *starting_date;
 
   priv = GCAL_WINDOW (user_data)->priv;
+  view = GCAL_VIEW (priv->views[priv->active_view]);
 
   for (l = events_list; l != NULL; l = l->next)
     {
@@ -797,12 +701,14 @@ gcal_window_events_added (GcalManager *manager,
       starting_date = gcal_manager_get_event_start_date (manager,
                                                          source_uid,
                                                          event_uid);
-      if (gcal_view_contains_date (
-            GCAL_VIEW (priv->views[priv->active_view]),
-            starting_date) &&
-          gcal_view_get_by_uuid (
-            GCAL_VIEW (priv->views[priv->active_view]),
-            (gchar*)l->data) == NULL)
+
+      /* FIXME: erase me */
+      /* g_debug ("add: %s with date %s", */
+      /*          (gchar*) l->data, */
+      /*          icaltime_as_ical_string (*starting_date)); */
+
+      if (gcal_view_contains_date (view, starting_date) &&
+          gcal_view_get_by_uuid (view, (gchar*)l->data) == NULL)
         {
           event = gcal_event_widget_new ((gchar*) l->data);
 
@@ -812,11 +718,7 @@ gcal_window_events_added (GcalManager *manager,
                                            GCAL_EVENT_WIDGET (event));
           gtk_widget_show (event);
 
-          /* FIXME: add event-widget to every instantiated view, not pretty sure
-           * about this. */
-          gtk_container_add (
-              GTK_CONTAINER (priv->views[priv->active_view]),
-              event);
+          gtk_container_add (GTK_CONTAINER (view), event);
 
           g_signal_connect (event,
                             "activate",
@@ -1042,9 +944,6 @@ gcal_window_new_event_show (GcalView *view,
   gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
                            priv->new_event_widget);
 
-  priv->x_pos = x;
-  priv->y_pos = y;
-
   g_debug ("position (%f, %f)", x, y);
 }
 
@@ -1075,9 +974,6 @@ gcal_window_create_event (GcalEventOverlay    *widget,
   /* reset and hide */
   gcal_view_clear_selection (GCAL_VIEW (priv->views[priv->active_view]));
   gtk_widget_destroy (priv->new_event_widget);
-
-  priv->x_pos = -1;
-  priv->y_pos = -1;
 }
 
 static void
@@ -1244,31 +1140,40 @@ gcal_window_update_event_widget (GcalManager     *manager,
 {
   gchar *summary;
   GdkRGBA *color;
-  icaltimetype *starting_date;
+  icaltimetype *date;
 
   summary = gcal_manager_get_event_summary (manager,
                                             source_uid,
                                             event_uid);
+  gcal_event_widget_set_summary (widget, summary);
 
   color = gcal_manager_get_event_color (manager,
                                         source_uid,
                                         event_uid);
-  starting_date = gcal_manager_get_event_start_date (manager,
-                                                     source_uid,
-                                                     event_uid);
-  gcal_event_widget_set_summary (widget, summary);
   gcal_event_widget_set_color (widget, color);
-  gcal_event_widget_set_date (widget, starting_date);
+
+  date = gcal_manager_get_event_start_date (manager,
+                                            source_uid,
+                                            event_uid);
+  gcal_event_widget_set_date (widget, date);
+
+  g_free (date);
+  date = gcal_manager_get_event_end_date (manager,
+                                          source_uid,
+                                          event_uid);
+  gcal_event_widget_set_end_date (widget, date);
+
   gcal_event_widget_set_all_day (
       widget,
       gcal_manager_get_event_all_day (manager, source_uid, event_uid));
+
   gcal_event_widget_set_has_reminders (
       widget,
       gcal_manager_has_event_reminders (manager, source_uid, event_uid));
 
   g_free (summary);
   gdk_rgba_free (color);
-  g_free (starting_date);
+  g_free (date);
 }
 
 /* Public API */
@@ -1313,6 +1218,22 @@ gcal_window_new_with_view (GcalApplication   *app,
                     win);
 
   return GTK_WIDGET (win);
+}
+
+void
+gcal_window_new_event (GcalWindow *window)
+{
+  g_debug ("Enter here: event creation");
+}
+
+void
+gcal_window_set_search_mode (GcalWindow *window,
+                             gboolean    enabled)
+{
+  GcalWindowPrivate *priv;
+
+  priv = window->priv;
+  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (priv->search_bar), enabled);
 }
 
 void

@@ -52,14 +52,19 @@ struct _GcalWindowClass
 };
 
 
-GType        gcal_window_get_type          (void);
+GType        gcal_window_get_type             (void);
 
-GtkWidget*   gcal_window_new_with_view     (GcalApplication    *app,
-                                            GcalWindowViewType  view_type);
+GtkWidget*   gcal_window_new_with_view        (GcalApplication    *app,
+                                               GcalWindowViewType  view_type);
 
-void         gcal_window_show_notification (GcalWindow         *window);
+void         gcal_window_new_event            (GcalWindow         *window);
 
-void         gcal_window_hide_notification (GcalWindow         *window);
+void         gcal_window_set_search_mode      (GcalWindow         *window,
+                                               gboolean            enabled);
+
+void         gcal_window_show_notification    (GcalWindow         *window);
+
+void         gcal_window_hide_notification    (GcalWindow         *window);
 
 G_END_DECLS
 
