@@ -22,14 +22,16 @@
 
 struct _GcalEventWidgetPrivate
 {
-  GdkWindow    *event_window;
-
+  /* properties */
   gchar        *uuid;
   gchar        *summary;
   GdkRGBA      *color;
   icaltimetype *dt_start;
+  icaltimetype *dt_end;
   gboolean      all_day;
   gboolean      has_reminders;
+
+  GdkWindow    *event_window;
 };
 
 enum
@@ -39,6 +41,7 @@ enum
   PROP_SUMMARY,
   PROP_COLOR,
   PROP_DTSTART,
+  PROP_DTEND,
   PROP_ALL_DAY,
   PROP_HAS_REMINDERS
 };
@@ -149,6 +152,15 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
                                                        G_PARAM_READWRITE));
 
   g_object_class_install_property (object_class,
+                                   PROP_DTEND,
+                                   g_param_spec_boxed ("date-end",
+                                                       "Date End",
+                                                       "The end date of the event",
+                                                       ICAL_TIME_TYPE,
+                                                       G_PARAM_CONSTRUCT |
+                                                       G_PARAM_READWRITE));
+
+  g_object_class_install_property (object_class,
                                    PROP_ALL_DAY,
                                    g_param_spec_boolean ("all-day",
                                                          "All day",
@@ -247,6 +259,12 @@ gcal_event_widget_set_property (GObject      *object,
 
       priv->dt_start = g_value_dup_boxed (value);
       return;
+    case PROP_DTEND:
+      if (priv->dt_end != NULL)
+        g_free (priv->dt_end);
+
+      priv->dt_end = g_value_dup_boxed (value);
+      return;
     case PROP_ALL_DAY:
       priv->all_day = g_value_get_boolean (value);
       return;
@@ -281,6 +299,9 @@ gcal_event_widget_get_property (GObject      *object,
       return;
     case PROP_DTSTART:
       g_value_set_boxed (value, priv->dt_start);
+      return;
+    case PROP_DTEND:
+      g_value_set_boxed (value, priv->dt_end);
       return;
     case PROP_ALL_DAY:
       g_value_set_boolean (value, priv->all_day);
@@ -588,8 +609,6 @@ void
 gcal_event_widget_set_date (GcalEventWidget    *event,
                             const icaltimetype *date)
 {
-  g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
-
   g_object_set (event, "date-start", date, NULL);
 }
 
@@ -599,16 +618,45 @@ gcal_event_widget_set_date (GcalEventWidget    *event,
  *
  * Return the starting date of the event
  *
- * Returns: (transfer full): Release with g_free
+ * Returns: (transfer full): Release with g_free()
  **/
 icaltimetype*
 gcal_event_widget_get_date (GcalEventWidget *event)
 {
   icaltimetype *dt;
 
-  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), NULL);
-
   g_object_get (event, "date-start", &dt, NULL);
+  return dt;
+}
+
+/**
+ * gcal_event_widget_set_end_date:
+ * @event: a #GcalEventWidget
+ * @date: a #icaltimetype object with the date
+ *
+ * Set the end date of the event
+ **/
+void
+gcal_event_widget_set_end_date (GcalEventWidget    *event,
+                                const icaltimetype *date)
+{
+  g_object_set (event, "date-end", date, NULL);
+}
+
+/**
+ * gcal_event_widget_get_end_date:
+ * @event: a #GcalEventWidget
+ *
+ * Return the end date of the event
+ *
+ * Returns: (transfer full): Release with g_free()
+ **/
+icaltimetype*
+gcal_event_widget_get_end_date (GcalEventWidget *event)
+{
+  icaltimetype *dt;
+
+  g_object_get (event, "date-end", &dt, NULL);
   return dt;
 }
 
