@@ -19,6 +19,7 @@
  */
 
 #include "gcal-days-grid.h"
+#include "gcal-event-widget.h"
 
 #include <glib/gi18n.h>
 
@@ -684,4 +685,42 @@ gcal_days_grid_place (GcalDaysGrid *all_day,
   children_link->data = g_list_append (column, info);
 
   gtk_widget_set_parent (widget, GTK_WIDGET (all_day));
+}
+
+GtkWidget*
+gcal_days_grid_get_by_uuid (GcalDaysGrid *days_grid,
+                            const gchar  *uuid)
+{
+  GcalDaysGridPrivate *priv;
+
+  GList* columns;
+
+  priv = days_grid->priv;
+
+  columns = priv->children;
+  while (columns)
+    {
+      GList *column;
+
+      column = columns->data;
+      columns = columns->next;
+
+      while (column)
+        {
+          GcalEventWidget *event;
+
+          ChildInfo *info = (ChildInfo*) column->data;
+          column  = column->next;
+
+          event = GCAL_EVENT_WIDGET (info->widget);
+
+          if (g_strcmp0 (uuid,
+                         gcal_event_widget_peek_uuid (event)) == 0)
+            {
+              return info->widget;
+            }
+        }
+    }
+
+  return NULL;
 }

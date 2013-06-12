@@ -62,6 +62,9 @@ void           gcal_days_grid_place                     (GcalDaysGrid   *days_gr
 							 guint           column_idx,
 							 guint           cell_idx);
 
+GtkWidget*     gcal_days_grid_get_by_uuid               (GcalDaysGrid   *days_grid,
+							 const gchar    *uuid);
+
 G_END_DECLS
 
 #endif /* __GCAL_DAYS_GRID_H__ */
