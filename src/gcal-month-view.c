@@ -120,11 +120,17 @@ static icaltimetype*  gcal_month_view_get_final_date        (GcalView       *vie
 static gboolean       gcal_month_view_contains_date         (GcalView       *view,
                                                              icaltimetype   *date);
 
-static void           gcal_month_view_remove_by_uuid        (GcalView       *view,
-                                                             const gchar    *uuid);
+static gchar*         gcal_month_view_get_left_header       (GcalView       *view);
+
+static gchar*         gcal_month_view_get_right_header      (GcalView       *view);
 
 static GtkWidget*     gcal_month_view_get_by_uuid           (GcalView       *view,
                                                              const gchar    *uuid);
+
+/* Review API */
+static void           gcal_month_view_remove_by_uuid        (GcalView       *view,
+                                                             const gchar    *uuid);
+
 
 static void           gcal_month_view_reposition_child      (GcalView       *view,
                                                              const gchar    *uuid);
@@ -133,9 +139,6 @@ static void           gcal_month_view_clear_selection       (GcalView       *vie
 
 static void           gcal_month_view_create_event_on_current_unit (GcalView *view);
 
-static gchar*         gcal_month_view_get_left_header       (GcalView       *view);
-
-static gchar*         gcal_month_view_get_right_header      (GcalView       *view);
 
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
                          gcal_month_view,
@@ -210,12 +213,7 @@ gcal_month_view_init (GcalMonthView *self)
 static void
 gcal_view_interface_init (GcalViewIface *iface)
 {
-  iface->get_initial_date = gcal_month_view_get_initial_date;
-  iface->get_final_date = gcal_month_view_get_final_date;
-
-  iface->contains_date = gcal_month_view_contains_date;
   iface->remove_by_uuid = gcal_month_view_remove_by_uuid;
-  iface->get_by_uuid = gcal_month_view_get_by_uuid;
   iface->reposition_child = gcal_month_view_reposition_child;
 
   iface->clear_selection = gcal_month_view_clear_selection;
@@ -223,8 +221,14 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->create_event_on_current_unit = gcal_month_view_create_event_on_current_unit;
 
   /* New API */
+  iface->get_initial_date = gcal_month_view_get_initial_date;
+  iface->get_final_date = gcal_month_view_get_final_date;
+  iface->contains_date = gcal_month_view_contains_date;
+
   iface->get_left_header = gcal_month_view_get_left_header;
   iface->get_right_header = gcal_month_view_get_right_header;
+
+  iface->get_by_uuid = gcal_month_view_get_by_uuid;
 }
 
 static void
@@ -1175,7 +1179,7 @@ gcal_month_view_get_start_grid_y (GtkWidget *widget)
  *
  * Since: 0.1
  * Return value: the first day of the month
- * Returns: (transfer full): Release with g_free
+ * Returns: (transfer full): Release with g_free()
  **/
 static icaltimetype*
 gcal_month_view_get_initial_date (GcalView *view)
@@ -1197,7 +1201,7 @@ gcal_month_view_get_initial_date (GcalView *view)
  *
  * Since: 0.1
  * Return value: the last day of the month
- * Returns: (transfer full): Release with g_free
+ * Returns: (transfer full): Release with g_free()
  **/
 static icaltimetype*
 gcal_month_view_get_final_date (GcalView *view)
@@ -1229,33 +1233,31 @@ gcal_month_view_contains_date (GcalView     *view,
           priv->date->year == date->year);
 }
 
-static void
-gcal_month_view_remove_by_uuid (GcalView    *view,
-                                const gchar *uuid)
+static gchar*
+gcal_month_view_get_left_header (GcalView *view)
 {
   GcalMonthViewPrivate *priv;
-  gint i;
-  GList *l;
 
-  g_return_if_fail (GCAL_IS_MONTH_VIEW (view));
+  gchar str_date[64];
+
+  struct tm tm_date;
+
   priv = GCAL_MONTH_VIEW (view)->priv;
 
-  for (i = 0; i < 31; i++)
-    {
-      for (l = priv->days[i]; l != NULL; l = l->next)
-        {
-          GcalViewChild *child;
-          const gchar* widget_uuid;
+  tm_date = icaltimetype_to_tm (priv->date);
+  e_utf8_strftime_fix_am_pm (str_date, 64, "%B", &tm_date);
 
-          child = (GcalViewChild*) l->data;
-          widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
-          if (g_strcmp0 (uuid, widget_uuid) == 0)
-            {
-              gtk_widget_destroy (child->widget);
-              return;
-            }
-        }
-    }
+  return g_strdup_printf ("%s", str_date);
+}
+
+static gchar*
+gcal_month_view_get_right_header (GcalView *view)
+{
+  GcalMonthViewPrivate *priv;
+
+  priv = GCAL_MONTH_VIEW (view)->priv;
+
+  return g_strdup_printf ("%d", priv->date->year);
 }
 
 static GtkWidget*
@@ -1283,6 +1285,35 @@ gcal_month_view_get_by_uuid (GcalView    *view,
         }
     }
   return NULL;
+}
+
+static void
+gcal_month_view_remove_by_uuid (GcalView    *view,
+                                const gchar *uuid)
+{
+  GcalMonthViewPrivate *priv;
+  gint i;
+  GList *l;
+
+  g_return_if_fail (GCAL_IS_MONTH_VIEW (view));
+  priv = GCAL_MONTH_VIEW (view)->priv;
+
+  for (i = 0; i < 31; i++)
+    {
+      for (l = priv->days[i]; l != NULL; l = l->next)
+        {
+          GcalViewChild *child;
+          const gchar* widget_uuid;
+
+          child = (GcalViewChild*) l->data;
+          widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
+          if (g_strcmp0 (uuid, widget_uuid) == 0)
+            {
+              gtk_widget_destroy (child->widget);
+              return;
+            }
+        }
+    }
 }
 
 static void
@@ -1406,33 +1437,6 @@ gcal_month_view_create_event_on_current_unit (GcalView *view)
                          x, y);
 
   g_free (start_span);
-}
-
-static gchar*
-gcal_month_view_get_left_header (GcalView *view)
-{
-  GcalMonthViewPrivate *priv;
-
-  gchar str_date[64];
-
-  struct tm tm_date;
-
-  priv = GCAL_MONTH_VIEW (view)->priv;
-
-  tm_date = icaltimetype_to_tm (priv->date);
-  e_utf8_strftime_fix_am_pm (str_date, 64, "%B", &tm_date);
-
-  return g_strdup_printf ("%s", str_date);
-}
-
-static gchar*
-gcal_month_view_get_right_header (GcalView *view)
-{
-  GcalMonthViewPrivate *priv;
-
-  priv = GCAL_MONTH_VIEW (view)->priv;
-
-  return g_strdup_printf ("%d", priv->date->year);
 }
 
 /* Public API */
