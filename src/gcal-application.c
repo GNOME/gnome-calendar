@@ -52,9 +52,13 @@ static gint     gcal_application_command_line         (GApplication            *
 
 static void     gcal_application_set_app_menu         (GApplication            *app);
 
-static void     gcal_application_changed_view         (GSettings               *settings,
-                                                       gchar                   *key,
-                                                       gpointer                 user_data);
+static void     gcal_application_create_new_event     (GSimpleAction           *new_event,
+                                                       GVariant                *parameter,
+                                                       gpointer                *app);
+
+static void     gcal_application_launch_search        (GSimpleAction           *search,
+                                                       GVariant                *parameter,
+                                                       gpointer                *app);
 
 static void     gcal_application_change_view          (GSimpleAction           *simple,
                                                        GVariant                *parameter,
@@ -66,6 +70,10 @@ static void     gcal_application_show_about           (GSimpleAction           *
 
 static void     gcal_application_quit                 (GSimpleAction           *simple,
                                                        GVariant                *parameter,
+                                                       gpointer                 user_data);
+
+static void     gcal_application_changed_view         (GSettings               *settings,
+                                                       gchar                   *key,
                                                        gpointer                 user_data);
 
 static gboolean gcal_application_window_state_changed (GtkWidget               *widget,
@@ -92,16 +100,16 @@ static GOptionEntry gcal_application_goptions[] = {
 static void
 gcal_application_class_init (GcalApplicationClass *klass)
 {
-  GApplicationClass *application_class;
   GObjectClass *object_class;
+  GApplicationClass *application_class;
+
+  object_class = G_OBJECT_CLASS (klass);
+  object_class->finalize = gcal_application_finalize;
 
   application_class = G_APPLICATION_CLASS (klass);
   application_class->activate = gcal_application_activate;
   application_class->startup = gcal_application_startup;
   application_class->command_line = gcal_application_command_line;
-
-  object_class = G_OBJECT_CLASS (klass);
-  object_class->finalize = gcal_application_finalize;
 
   g_type_class_add_private ((gpointer) klass, sizeof(GcalApplicationPrivate));
 }
@@ -274,6 +282,8 @@ gcal_application_set_app_menu (GApplication *app)
 
   GMenu *app_menu;
   GMenu *view_as;
+  GSimpleAction *new_event;
+  GSimpleAction *search;
   GSimpleAction *about;
   GSimpleAction *quit;
 
@@ -284,15 +294,25 @@ gcal_application_set_app_menu (GApplication *app)
 
   app_menu = g_menu_new ();
 
+  new_event = g_simple_action_new ("new_event", NULL);
+  g_signal_connect (new_event, "activate",
+                    G_CALLBACK (gcal_application_create_new_event), app);
+  g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (new_event));
+  g_menu_append (app_menu, _("New Event"), "app.new_event");
+
+  search = g_simple_action_new ("search", NULL);
+  g_signal_connect (search, "activate",
+                    G_CALLBACK (gcal_application_launch_search), app);
+  g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (search));
+  g_menu_append (app_menu, _("Search"), "app.search");
+
   priv->view = g_simple_action_new_stateful (
       "view",
       G_VARIANT_TYPE_STRING,
       g_settings_get_value (priv->settings, "active-view"));
 
-  g_signal_connect (priv->view,
-                    "activate",
-                    G_CALLBACK (gcal_application_change_view),
-                    app);
+  g_signal_connect (priv->view, "activate",
+                    G_CALLBACK (gcal_application_change_view), app);
   g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (priv->view));
 
   view_as = g_menu_new ();
@@ -304,24 +324,22 @@ gcal_application_set_app_menu (GApplication *app)
   g_menu_append_section (app_menu, _("View as"), G_MENU_MODEL (view_as));
 
   about = g_simple_action_new ("about", NULL);
-  g_signal_connect (about,
-                    "activate",
-                    G_CALLBACK (gcal_application_show_about),
-                    app);
+  g_signal_connect (about, "activate",
+                    G_CALLBACK (gcal_application_show_about), app);
   g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (about));
   g_menu_append (app_menu, _("About"), "app.about");
 
   quit = g_simple_action_new ("quit", NULL);
-  g_signal_connect (quit,
-                    "activate",
-                    G_CALLBACK (gcal_application_quit),
-                    app);
+  g_signal_connect (quit, "activate",
+                    G_CALLBACK (gcal_application_quit), app);
   g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (quit));
   g_menu_append (app_menu, _("Quit"), "app.quit");
 
   gtk_application_set_app_menu (GTK_APPLICATION (app), G_MENU_MODEL (app_menu));
 
   /* Accelerators */
+  gtk_application_add_accelerator (GTK_APPLICATION (app), "<Primary>n", "app.new_event", NULL);
+  gtk_application_add_accelerator (GTK_APPLICATION (app), "<Primary>f", "app.search", NULL);
   gtk_application_add_accelerator (GTK_APPLICATION (app), "<Primary>q", "app.quit", NULL);
 
   va = g_variant_new_string ("month");
@@ -333,17 +351,27 @@ gcal_application_set_app_menu (GApplication *app)
 }
 
 static void
-gcal_application_changed_view (GSettings *settings,
-                               gchar     *key,
-                               gpointer   user_data)
+gcal_application_create_new_event (GSimpleAction *new_event,
+                                   GVariant      *parameter,
+                                   gpointer      *app)
 {
   GcalApplicationPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_APPLICATION (user_data));
-  priv = GCAL_APPLICATION (user_data)->priv;
-  g_simple_action_set_state (priv->view,
-                             g_settings_get_value (priv->settings,
-                                                   "active-view"));
+  priv = GCAL_APPLICATION (app)->priv;
+
+  gcal_window_new_event (GCAL_WINDOW (priv->window));
+}
+
+static void
+gcal_application_launch_search (GSimpleAction *search,
+                                GVariant      *parameter,
+                                gpointer      *app)
+{
+  GcalApplicationPrivate *priv;
+
+  priv = GCAL_APPLICATION (app)->priv;
+
+  gcal_window_set_search_mode (GCAL_WINDOW (priv->window), TRUE);
 }
 
 static void
@@ -415,6 +443,20 @@ gcal_application_quit (GSimpleAction *simple,
   GApplication *app = G_APPLICATION (user_data);
 
   g_application_quit (app);
+}
+
+static void
+gcal_application_changed_view (GSettings *settings,
+                               gchar     *key,
+                               gpointer   user_data)
+{
+  GcalApplicationPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_APPLICATION (user_data));
+  priv = GCAL_APPLICATION (user_data)->priv;
+  g_simple_action_set_state (priv->view,
+                             g_settings_get_value (priv->settings,
+                                                   "active-view"));
 }
 
 static gboolean
