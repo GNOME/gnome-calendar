@@ -19,12 +19,12 @@
  */
 
 #include "gcal-day-view.h"
-#include "gcal-view.h"
 #include "gcal-all-day-grid.h"
 #include "gcal-days-grid.h"
 #include "gcal-viewport.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
+#include "gcal-event-widget.h"
 
 #include <glib/gi18n.h>
 
@@ -64,6 +64,9 @@ static void           gcal_day_view_get_property          (GObject        *objec
                                                            GValue         *value,
                                                            GParamSpec     *pspec);
 
+static void           gcal_day_view_add                   (GtkContainer   *container,
+                                                           GtkWidget      *widget);
+
 static void           gcal_day_view_set_date              (GcalDayView    *view,
                                                            icaltimetype   *date);
 
@@ -90,21 +93,21 @@ G_DEFINE_TYPE_WITH_CODE (GcalDayView,
 static void
 gcal_day_view_class_init (GcalDayViewClass *klass)
 {
-  /* FIXME: Uncomment stuff here */
-  /* GtkContainerClass *container_class; */
   GObjectClass *object_class;
-
-  /* container_class = GTK_CONTAINER_CLASS (klass); */
-  /* container_class->add   = gcal_day_view_add; */
-  /* container_class->remove = gcal_day_view_remove; */
-  /* container_class->forall = gcal_day_view_forall; */
-  /* gtk_container_class_handle_border_width (container_class); */
+  GtkContainerClass *container_class;
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_day_view_constructed;
   object_class->finalize = gcal_day_view_finalize;
   object_class->set_property = gcal_day_view_set_property;
   object_class->get_property = gcal_day_view_get_property;
+
+  container_class = GTK_CONTAINER_CLASS (klass);
+  container_class->add = gcal_day_view_add;
+  /* FIXME: Uncomment stuff here */
+  /* container_class->remove = gcal_day_view_remove; */
+  /* container_class->forall = gcal_day_view_forall; */
+  /* gtk_container_class_handle_border_width (container_class); */
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
 
@@ -143,9 +146,7 @@ gcal_day_view_constructed (GObject *object)
 {
   GcalDayViewPrivate *priv;
 
-  /* FIXME: debug code */
   GtkWidget *sw; /* involve overlay in it */
-  GdkRGBA color;
 
   g_return_if_fail (GCAL_IS_DAY_VIEW (object));
   priv = GCAL_DAY_VIEW (object)->priv;
@@ -248,6 +249,54 @@ gcal_day_view_get_property (GObject       *object,
       break;
     }
 }
+
+/* GtkContainer API */
+static void
+gcal_day_view_add (GtkContainer *container,
+                   GtkWidget    *widget)
+{
+  GcalDayViewPrivate *priv;
+  icaltimetype *dt_start;
+  icaltimetype *dt_end;
+  gchar* summ;
+
+  g_return_if_fail (GCAL_IS_EVENT_WIDGET (widget));
+  g_return_if_fail (gtk_widget_get_parent (widget) == NULL);
+  priv = GCAL_DAY_VIEW (container)->priv;
+
+  summ = gcal_event_widget_get_summary (GCAL_EVENT_WIDGET (widget));
+  dt_start = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
+  dt_end = gcal_event_widget_get_end_date (GCAL_EVENT_WIDGET (widget));
+  /* FIXME: recheck conditions to add, what, where */
+  /* Maybe, should be good to add, inside days views only contained events */
+  if (gcal_event_widget_get_all_day (GCAL_EVENT_WIDGET (widget)))
+    {
+      g_debug ("[all-day-grid] %s from %s to %s",
+               summ,
+               icaltime_as_ical_string (*dt_start),
+               icaltime_as_ical_string (*dt_end));
+      gcal_all_day_grid_place (GCAL_ALL_DAY_GRID (priv->all_day_grid),
+                               widget,
+                               priv->date->day == dt_start->day ? 0 : 1);
+    }
+  else
+    {
+      g_debug ("[days-grid] %s from %s to %s",
+               summ,
+               icaltime_as_ical_string (*dt_start),
+               icaltime_as_ical_string (*dt_end));
+      gcal_days_grid_place (GCAL_DAYS_GRID (priv->day_grid),
+                            widget,
+                            priv->date->day == dt_start->day ? 0 : 1,
+                            dt_start->hour * 2 + (dt_start->minute / 30),
+                            dt_end->hour * 2 + (dt_end->minute / 30)); /* FIXME Include half hour and length */
+    }
+
+  g_free (dt_start);
+  g_free (dt_end);
+  g_free (summ);
+}
+
 
 static void
 gcal_day_view_set_date (GcalDayView  *view,

@@ -60,7 +60,8 @@ guint          gcal_days_grid_get_scale_width           (GcalDaysGrid   *days_gr
 void           gcal_days_grid_place                     (GcalDaysGrid   *days_grid,
 							 GtkWidget      *widget,
 							 guint           column_idx,
-							 guint           cell_idx);
+							 guint           start_cell,
+							 guint           end_cell);
 
 GtkWidget*     gcal_days_grid_get_by_uuid               (GcalDaysGrid   *days_grid,
 							 const gchar    *uuid);

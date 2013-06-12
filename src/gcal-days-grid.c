@@ -24,6 +24,15 @@
 #include <glib/gi18n.h>
 
 #include <string.h>
+#include <math.h>
+
+/*
+ * Notes:
+ * 1. the widget's height is divided between 48 cells
+ *    representing each a half-hour of the day.
+ *    the preferred value of the cell is kept is req_cell_heigth
+ *    private field.
+ */
 
 static const double dashed [] =
 {
@@ -43,7 +52,10 @@ struct _ChildInfo
 {
   GtkWidget *widget;
 
-  guint      cell;
+  guint      start_cell;
+  guint      end_cell;
+  guint      sub_column;
+
   gboolean   hidden;
 };
 
@@ -63,6 +75,10 @@ struct _GcalDaysGridPrivate
 
   GdkWindow      *event_window;
 };
+
+/* Helpers and private */
+static gint           compare_child_info                   (gconstpointer   a,
+                                                            gconstpointer   b);
 
 static void           gcal_days_grid_finalize              (GObject        *object);
 
@@ -115,7 +131,25 @@ static void           gcal_days_grid_forall                (GtkContainer    *con
                                                             GtkCallback      callback,
                                                             gpointer         callback_data);
 
+
 G_DEFINE_TYPE (GcalDaysGrid,gcal_days_grid, GTK_TYPE_CONTAINER);
+
+/* Helpers and private */
+static gint
+compare_child_info (gconstpointer a,
+                    gconstpointer b)
+{
+  ChildInfo *ac = (ChildInfo*) a;
+  ChildInfo *bc = (ChildInfo*) b;
+
+  if (ac->start_cell < bc->start_cell)
+    return -1;
+  else if (ac->start_cell == bc->start_cell)
+    return 0;
+  else
+    return 1;
+}
+
 
 static void
 gcal_days_grid_class_init (GcalDaysGridClass *klass)
@@ -449,13 +483,106 @@ static void
 gcal_days_grid_size_allocate (GtkWidget     *widget,
                               GtkAllocation *allocation)
 {
-  /* GcalDaysGridPrivate *priv; */
+  GcalDaysGridPrivate *priv;
 
-  /* priv = GCAL_DAYS_GRID (widget)->priv; */
+  GtkBorder padding;
+  gint width;
+  gint height;
+  gint width_block;
+  gint height_block;
+
+  GList *columns;
+  gint idx;
+
+  priv = GCAL_DAYS_GRID (widget)->priv;
   gtk_widget_set_allocation (widget, allocation);
 
-  /* FIXME: Todo, write later,
-   maybe write through delegation */
+  /* Placing the event_window */
+  if (gtk_widget_get_realized (widget))
+    {
+      gdk_window_move_resize (priv->event_window,
+                              allocation->x,
+                              allocation->y,
+                              allocation->width,
+                              allocation->height);
+    }
+
+  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
+                                 gtk_widget_get_state_flags (widget),
+                                 &padding);
+
+  width = allocation->width - (padding.left + padding.right) - priv->scale_width;
+  width_block = width / priv->columns_nr;
+  height = allocation->height - (padding.top + padding.bottom);
+  height_block = height / 48;
+
+  /* detecting columns and allocs */
+  for (columns = priv->children, idx = 0;
+       columns != NULL;
+       columns = g_list_next (columns), ++idx)
+    {
+      GtkAllocation child_allocation;
+      GArray *last_y;
+      GList* column = (GList*) columns->data;
+
+      /* last_y value for each column,
+         will keep the amount of columns as well */
+      last_y = g_array_new (FALSE, FALSE, sizeof (guint));
+
+      /* going through widgets */
+      for (;column != NULL; column = g_list_next (column))
+        {
+          ChildInfo *info;
+          gboolean new_column = TRUE;
+          gint i;
+
+          info = (ChildInfo*) column->data;
+
+          for (i = 0; i < last_y->len; ++i)
+            {
+              /* start before */
+              if (info->start_cell > g_array_index (last_y, guint, i))
+                {
+                  info->sub_column = i;
+                  new_column = FALSE;
+                  break;
+                }
+            }
+
+          if (new_column)
+            {
+              /* adding column to array */
+              g_array_append_val (last_y, info->end_cell);
+              info->sub_column = last_y->len - 1;
+            }
+          else
+            {
+              g_array_index (last_y, guint, info->sub_column) = info->end_cell;
+            }
+        }
+
+      /* allocating */
+      for (column = (GList*) columns->data;
+           column != NULL;
+           column = g_list_next (column))
+        {
+          ChildInfo *info;
+          guint sub_column_block;
+
+          info = (ChildInfo*) column->data;
+          sub_column_block = width_block / last_y->len;
+
+          child_allocation.x = allocation->x + priv->scale_width + padding.left +
+            idx * width_block + sub_column_block * info->sub_column;
+          child_allocation.y = info->start_cell * height_block;
+          child_allocation.width = sub_column_block;
+          child_allocation.height = (info->end_cell - info->start_cell) * height_block;
+
+          gtk_widget_size_allocate (info->widget, &child_allocation);
+        }
+
+      g_array_free (last_y, TRUE);
+    }
 }
 
 static gboolean
@@ -599,12 +726,15 @@ gcal_days_grid_button_release_event (GtkWidget      *widget,
 }
 
 /* GtkContainer API */
-/*
+/**
  * gcal_days_grid_add:
+ * @container:
+ * @widget:
  *
  * @gtk_container_add implementation. It assumes the widget will go
  * to the first column. If there's no column set, will set columns to 1
- */
+ *
+ **/
 static void
 gcal_days_grid_add (GtkContainer *container,
                     GtkWidget    *widget)
@@ -616,7 +746,7 @@ gcal_days_grid_add (GtkContainer *container,
 
   gcal_days_grid_place (GCAL_DAYS_GRID (container),
                         widget,
-                        0, 0);
+                        0, 0, 0);
 }
 
 static void
@@ -629,30 +759,27 @@ gcal_days_grid_remove (GtkContainer *container,
 
   priv = GCAL_DAYS_GRID (container)->priv;
 
-  if (priv->children != NULL)
+  for (columns = priv->children;
+       columns != NULL;
+       columns = g_list_next (columns))
     {
-      for (columns = priv->children;
-           columns != NULL;
-           columns = g_list_next (columns))
+      GList* column = (GList*) columns->data;
+      for (;column != NULL; column = g_list_next (column))
         {
-          GList* column = (GList*) columns->data;
-          for (;column != NULL; column = g_list_next (column))
+          ChildInfo *info = (ChildInfo*) column->data;
+          if (widget == info->widget)
             {
-              ChildInfo *info = (ChildInfo*) column->data;
-              if (widget == info->widget)
-                {
-                  GList* orig = (GList*) columns->data;
-                  orig = g_list_delete_link (orig, column);
+              GList* orig = (GList*) columns->data;
+              orig = g_list_delete_link (orig, column);
 
-                  g_free (info);
+              g_free (info);
 
-                  gtk_widget_unparent (widget);
+              gtk_widget_unparent (widget);
 
-                  columns->data = orig;
+              columns->data = orig;
 
-                  columns = NULL;
-                  break;
-                }
+              columns = NULL;
+              break;
             }
         }
     }
@@ -670,24 +797,20 @@ gcal_days_grid_forall (GtkContainer *container,
 
   priv = GCAL_DAYS_GRID (container)->priv;
 
-  if (priv->children != NULL)
+  columns = priv->children;
+  while (columns)
     {
-      columns = priv->children;
+      GList *column;
 
-      while (columns)
+      column = columns->data;
+      columns = columns->next;
+
+      while (column)
         {
-          GList *column;
+          ChildInfo *info = (ChildInfo*) column->data;
+          column  = column->next;
 
-          column = columns->data;
-          columns = columns->next;
-
-          while (column)
-            {
-              ChildInfo *info = (ChildInfo*) column->data;
-              column  = column->next;
-
-              (* callback) (info->widget, callback_data);
-            }
+          (* callback) (info->widget, callback_data);
         }
     }
 }
@@ -753,10 +876,11 @@ gcal_days_grid_get_scale_width (GcalDaysGrid *days_grid)
 
 /**
  * gcal_days_grid_place:
- * @all_day: A #GcalDaysGrid widget
- * @widget: The child widget to add
- * @column_idx: The index of the column, starting with zero
- * @cell_idx: The cell, refering the month, starting with zero
+ * @all_day: a #GcalDaysGrid widget
+ * @widget: the child widget to add
+ * @column_idx: the index of the column, starting with zero
+ * @start_cell: the start-cell, refering the hour, starting with zero
+ * @end_cell: the end-cell, refering the hour, starting with zero
  *
  * Adding a widget to a specified column. If the column index
  * is bigger than the #GcalDaysGrid:columns property set,
@@ -766,7 +890,8 @@ void
 gcal_days_grid_place (GcalDaysGrid *all_day,
                       GtkWidget    *widget,
                       guint         column_idx,
-                      guint         cell_idx)
+                      guint         start_cell,
+                      guint         end_cell)
 {
   GcalDaysGridPrivate *priv;
   GList* children_link;
@@ -783,8 +908,10 @@ gcal_days_grid_place (GcalDaysGrid *all_day,
   info = g_new0 (ChildInfo, 1);
   info->widget = widget;
   info->hidden = FALSE;
-  info->cell = cell_idx;
-  children_link->data = g_list_append (column, info);
+  info->start_cell = start_cell;
+  info->end_cell = end_cell;
+  info->sub_column = 0;
+  children_link->data = g_list_insert_sorted (column, info, compare_child_info);
 
   gtk_widget_set_parent (widget, GTK_WIDGET (all_day));
 }
