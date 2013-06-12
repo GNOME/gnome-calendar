@@ -60,6 +60,8 @@ struct _GcalDaysGridPrivate
   guint           req_cell_height;
 
   GList          *children;
+
+  GdkWindow      *event_window;
 };
 
 static void           gcal_days_grid_finalize              (GObject        *object);
@@ -82,21 +84,25 @@ static void           gcal_days_grid_get_preferred_height  (GtkWidget      *widg
                                                             gint           *minimum,
                                                             gint           *natural);
 
-/* FIXME: realize/unrealize/map/unmap commented out tll testing
-   not needed because I'm not using event-window here */
-/* static void           gcal_days_grid_realize               (GtkWidget      *widget); */
+static void           gcal_days_grid_realize               (GtkWidget      *widget);
 
-/* static void           gcal_days_grid_unrealize             (GtkWidget      *widget); */
+static void           gcal_days_grid_unrealize             (GtkWidget      *widget);
 
-/* static void           gcal_days_grid_map                   (GtkWidget      *widget); */
+static void           gcal_days_grid_map                   (GtkWidget      *widget);
 
-/* static void           gcal_days_grid_unmap                 (GtkWidget      *widget); */
+static void           gcal_days_grid_unmap                 (GtkWidget      *widget);
 
 static void           gcal_days_grid_size_allocate         (GtkWidget      *widget,
                                                             GtkAllocation  *allocation);
 
 static gboolean       gcal_days_grid_draw                  (GtkWidget      *widget,
                                                             cairo_t        *cr);
+
+static gboolean       gcal_days_grid_button_press_event    (GtkWidget      *widget,
+                                                            GdkEventButton *event);
+
+static gboolean       gcal_days_grid_button_release_event  (GtkWidget      *widget,
+                                                            GdkEventButton *event);
 
 static void           gcal_days_grid_add                   (GtkContainer    *container,
                                                             GtkWidget       *widget);
@@ -126,14 +132,14 @@ gcal_days_grid_class_init (GcalDaysGridClass *klass)
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->get_preferred_width = gcal_days_grid_get_preferred_width;
   widget_class->get_preferred_height = gcal_days_grid_get_preferred_height;
-  /* FIXME: realize/unrealize/map/unmap commented out tll testing
-   not needed because I'm not using event-window here */
-  /* widget_class->realize = gcal_days_grid_realize; */
-  /* widget_class->unrealize = gcal_days_grid_unrealize; */
-  /* widget_class->map = gcal_days_grid_map; */
-  /* widget_class->unmap = gcal_days_grid_unmap; */
+  widget_class->realize = gcal_days_grid_realize;
+  widget_class->unrealize = gcal_days_grid_unrealize;
+  widget_class->map = gcal_days_grid_map;
+  widget_class->unmap = gcal_days_grid_unmap;
   widget_class->size_allocate = gcal_days_grid_size_allocate;
   widget_class->draw = gcal_days_grid_draw;
+  widget_class->button_press_event = gcal_days_grid_button_press_event;
+  widget_class->button_release_event = gcal_days_grid_button_release_event;
 
   container_class = GTK_CONTAINER_CLASS (klass);
   container_class->add   = gcal_days_grid_add;
@@ -360,6 +366,86 @@ gcal_days_grid_get_preferred_height (GtkWidget *widget,
 }
 
 static void
+gcal_days_grid_realize (GtkWidget *widget)
+{
+  GcalDaysGridPrivate *priv;
+  GdkWindow *parent_window;
+  GdkWindowAttr attributes;
+  gint attributes_mask;
+  GtkAllocation allocation;
+
+  priv = GCAL_DAYS_GRID (widget)->priv;
+  gtk_widget_set_realized (widget, TRUE);
+
+  parent_window = gtk_widget_get_parent_window (widget);
+  gtk_widget_set_window (widget, parent_window);
+  g_object_ref (parent_window);
+
+  gtk_widget_get_allocation (widget, &allocation);
+
+  attributes.window_type = GDK_WINDOW_CHILD;
+  attributes.wclass = GDK_INPUT_ONLY;
+  attributes.x = allocation.x;
+  attributes.y = allocation.y;
+  attributes.width = allocation.width;
+  attributes.height = allocation.height;
+  attributes.event_mask = gtk_widget_get_events (widget);
+  attributes.event_mask |= (GDK_BUTTON_PRESS_MASK |
+                            GDK_BUTTON_RELEASE_MASK |
+                            GDK_BUTTON1_MOTION_MASK |
+                            GDK_POINTER_MOTION_HINT_MASK |
+                            GDK_POINTER_MOTION_MASK |
+                            GDK_ENTER_NOTIFY_MASK |
+                            GDK_LEAVE_NOTIFY_MASK);
+  attributes_mask = GDK_WA_X | GDK_WA_Y;
+
+  priv->event_window = gdk_window_new (parent_window,
+                                       &attributes,
+                                       attributes_mask);
+  gdk_window_set_user_data (priv->event_window, widget);
+}
+
+static void
+gcal_days_grid_unrealize (GtkWidget *widget)
+{
+  GcalDaysGridPrivate *priv;
+
+  priv = GCAL_DAYS_GRID (widget)->priv;
+  if (priv->event_window != NULL)
+    {
+      gdk_window_set_user_data (priv->event_window, NULL);
+      gdk_window_destroy (priv->event_window);
+      priv->event_window = NULL;
+    }
+
+  GTK_WIDGET_CLASS (gcal_days_grid_parent_class)->unrealize (widget);
+}
+
+static void
+gcal_days_grid_map (GtkWidget *widget)
+{
+  GcalDaysGridPrivate *priv;
+
+  priv = GCAL_DAYS_GRID (widget)->priv;
+  if (priv->event_window != NULL)
+    gdk_window_show (priv->event_window);
+
+  GTK_WIDGET_CLASS (gcal_days_grid_parent_class)->map (widget);
+}
+
+static void
+gcal_days_grid_unmap (GtkWidget *widget)
+{
+  GcalDaysGridPrivate *priv;
+
+  priv = GCAL_DAYS_GRID (widget)->priv;
+  if (priv->event_window != NULL)
+    gdk_window_hide (priv->event_window);
+
+  GTK_WIDGET_CLASS (gcal_days_grid_parent_class)->map (widget);
+}
+
+static void
 gcal_days_grid_size_allocate (GtkWidget     *widget,
                               GtkAllocation *allocation)
 {
@@ -493,6 +579,22 @@ gcal_days_grid_draw (GtkWidget *widget,
   pango_font_description_free (font_desc);
   g_object_unref (layout);
 
+  return FALSE;
+}
+
+static gboolean
+gcal_days_grid_button_press_event (GtkWidget      *widget,
+                                   GdkEventButton *event)
+{
+  g_debug ("Button pressed on days-grid area");
+  return FALSE;
+}
+
+static gboolean
+gcal_days_grid_button_release_event (GtkWidget      *widget,
+                                     GdkEventButton *event)
+{
+  g_debug ("Button released on days-grid area");
   return FALSE;
 }
 
