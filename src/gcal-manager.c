@@ -1297,6 +1297,16 @@ gcal_manager_get_event_start_date (GcalManager *manager,
   return dtstart;
 }
 
+/**
+ * gcal_manager_get_event_end_date:
+ * @manager: a #GcalManager object
+ * @source_uid: the uid of the #ESource
+ * @event_uid: the uid of the #ECalComponent
+ *
+ * Get the date/time end of a calendar event
+ *
+ * Returns: (transfer full) An #icaltimetype object, free with g_free().
+ **/
 icaltimetype*
 gcal_manager_get_event_end_date (GcalManager *manager,
                                  const gchar *source_uid,
@@ -1323,6 +1333,16 @@ gcal_manager_get_event_end_date (GcalManager *manager,
   return dtend;
 }
 
+/**
+ * gcal_manager_get_event_summary:
+ * @manager: a #GcalManager object
+ * @source_uid: the uid of the #ESource
+ * @event_uid: the uid of the #ECalComponent
+ *
+ * Returns the summary of a calendar event.
+ *
+ * Returns: (transfer full) a c-string to be freed with g_free()
+ **/
 gchar*
 gcal_manager_get_event_summary (GcalManager *manager,
                                 const gchar *source_uid,
