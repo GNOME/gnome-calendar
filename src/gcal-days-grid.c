@@ -909,7 +909,7 @@ gcal_days_grid_place (GcalDaysGrid *all_day,
   info->widget = widget;
   info->hidden = FALSE;
   info->start_cell = start_cell;
-  info->end_cell = end_cell;
+  info->end_cell = end_cell == 0 ? start_cell + 1 : end_cell;
   info->sub_column = 0;
   children_link->data = g_list_insert_sorted (column, info, compare_child_info);
 
