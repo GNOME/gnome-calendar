@@ -236,9 +236,8 @@ gcal_view_interface_init (GcalViewIface *iface)
 {
   iface->get_initial_date = gcal_week_view_get_initial_date;
   iface->get_final_date = gcal_week_view_get_final_date;
-
   iface->contains_date = gcal_week_view_contains_date;
-  iface->remove_by_uuid = gcal_week_view_remove_by_uuid;
+
   iface->get_by_uuid = gcal_week_view_get_by_uuid;
 }
 

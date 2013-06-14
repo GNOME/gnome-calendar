@@ -14,8 +14,6 @@ TODO
  - Rework GcalViews to implement the new API (remove every "New API" comment)
  - Review views title string: "Year 2013", shouldn't say "Year"
  - Review gtk-styles.css file for actually working css definitions
- - Checkout the need ot GcalView:remove_by_uuid (could be replaced by)
-   GcalView:get_by_uuid ** gtk_widget_destroy
  - Add css file and svg image to resources files
  - Reorder funcs inside GcalWindow
  - Fix nav-button css to matches pushed-down state (font-color goes white)

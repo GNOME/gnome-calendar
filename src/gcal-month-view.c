@@ -213,7 +213,6 @@ gcal_month_view_init (GcalMonthView *self)
 static void
 gcal_view_interface_init (GcalViewIface *iface)
 {
-  iface->remove_by_uuid = gcal_month_view_remove_by_uuid;
   iface->reposition_child = gcal_month_view_reposition_child;
 
   iface->clear_selection = gcal_month_view_clear_selection;
