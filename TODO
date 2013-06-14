@@ -5,7 +5,6 @@ TODO
  - Rework internal GcalWindow working
  - Clean GcalWindow compilation, no warnings
 
- - Clean gcal-enums for removing toolbar related enums
  - Add scroll_to_unit in day-view and week-view. Meaning, scroll to the actual
    hour.
  - Add disable/enable of views
