@@ -118,12 +118,10 @@ static icaltimetype*  gcal_year_view_get_final_date               (GcalView     
 static gboolean       gcal_year_view_contains_date                (GcalView       *view,
                                                                    icaltimetype   *date);
 
-static void           gcal_year_view_remove_by_uuid               (GcalView       *view,
-                                                                   const gchar    *uuid);
-
 static GtkWidget*     gcal_year_view_get_by_uuid                  (GcalView       *view,
                                                                    const gchar    *uuid);
 
+/* Review API */
 static void           gcal_year_view_reposition_child             (GcalView       *view,
                                                                    const gchar    *uuid);
 
@@ -1039,35 +1037,6 @@ gcal_year_view_contains_date (GcalView     *view,
   return priv->date->year == date->year;
 }
 
-static void
-gcal_year_view_remove_by_uuid (GcalView    *view,
-                               const gchar *uuid)
-{
-  GcalYearViewPrivate *priv;
-  gint i;
-  GList *l;
-
-  g_return_if_fail (GCAL_IS_YEAR_VIEW (view));
-  priv = GCAL_YEAR_VIEW (view)->priv;
-
-  for (i = 0; i < 12; i++)
-    {
-      for (l = priv->months[i]; l != NULL; l = l->next)
-        {
-          GcalViewChild *child;
-          const gchar* widget_uuid;
-
-          child = (GcalViewChild*) l->data;
-          widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
-          if (g_strcmp0 (uuid, widget_uuid) == 0)
-            {
-              gtk_widget_destroy (child->widget);
-              return;
-            }
-        }
-    }
-}
-
 static GtkWidget*
 gcal_year_view_get_by_uuid (GcalView    *view,
                             const gchar *uuid)
@@ -1145,7 +1114,7 @@ gcal_year_view_reposition_child (GcalView    *view,
                 }
               else
                 {
-                  gcal_year_view_remove_by_uuid (view, uuid);
+                  gtk_widget_destroy (gcal_year_view_get_by_uuid (view, uuid));
                 }
 
               g_free (date);

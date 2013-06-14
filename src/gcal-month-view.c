@@ -128,10 +128,6 @@ static GtkWidget*     gcal_month_view_get_by_uuid           (GcalView       *vie
                                                              const gchar    *uuid);
 
 /* Review API */
-static void           gcal_month_view_remove_by_uuid        (GcalView       *view,
-                                                             const gchar    *uuid);
-
-
 static void           gcal_month_view_reposition_child      (GcalView       *view,
                                                              const gchar    *uuid);
 
@@ -1287,35 +1283,6 @@ gcal_month_view_get_by_uuid (GcalView    *view,
 }
 
 static void
-gcal_month_view_remove_by_uuid (GcalView    *view,
-                                const gchar *uuid)
-{
-  GcalMonthViewPrivate *priv;
-  gint i;
-  GList *l;
-
-  g_return_if_fail (GCAL_IS_MONTH_VIEW (view));
-  priv = GCAL_MONTH_VIEW (view)->priv;
-
-  for (i = 0; i < 31; i++)
-    {
-      for (l = priv->days[i]; l != NULL; l = l->next)
-        {
-          GcalViewChild *child;
-          const gchar* widget_uuid;
-
-          child = (GcalViewChild*) l->data;
-          widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
-          if (g_strcmp0 (uuid, widget_uuid) == 0)
-            {
-              gtk_widget_destroy (child->widget);
-              return;
-            }
-        }
-    }
-}
-
-static void
 gcal_month_view_reposition_child (GcalView    *view,
                                   const gchar *uuid)
 {
@@ -1365,7 +1332,7 @@ gcal_month_view_reposition_child (GcalView    *view,
                 }
               else
                 {
-                  gcal_month_view_remove_by_uuid (view, uuid);
+                  gtk_widget_destroy (gcal_month_view_get_by_uuid (view, uuid));
                 }
 
               g_free (date);
