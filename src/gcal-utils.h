@@ -36,18 +36,6 @@ typedef enum
 
 typedef enum
 {
-  GCAL_TOOLBAR_OVERVIEW = 0,
-  GCAL_TOOLBAR_VIEW_EVENT
-} GcalToolbarMode;
-
-typedef enum
-{
-  GCAL_EDIT_MODE = 0,
-  GCAL_VIEW_MODE,
-} GcalEditableMode;
-
-typedef enum
-{
   EVENT_SUMMARY = 0,
   EVENT_START_DATE,
   EVENT_END_DATE,
@@ -83,8 +71,6 @@ GdkPixbuf*      gcal_get_pixbuf_from_color                      (GdkColor       
 
 gint            gcal_compare_event_widget_by_date               (gconstpointer          a,
                                                                  gconstpointer          b);
-
-gint            get_icon_margin                                 (void);
 
 /* code brought from evolution */
 gsize           e_strftime_fix_am_pm                            (gchar                 *str,

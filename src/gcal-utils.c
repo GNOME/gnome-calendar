@@ -279,16 +279,6 @@ gcal_compare_event_widget_by_date (gconstpointer a,
   return icaltime_compare (*a_date, *b_date);
 }
 
-gint
-get_icon_margin (void)
-{
-  gint toolbar_size, menu_size;
-
-  gtk_icon_size_lookup (GTK_ICON_SIZE_MENU, &menu_size, NULL);
-  gtk_icon_size_lookup (GTK_ICON_SIZE_LARGE_TOOLBAR, &toolbar_size, NULL);
-  return (gint) floor ((toolbar_size - menu_size) / 2.0);
-}
-
 /* Function to do a last minute fixup of the AM/PM stuff if the locale
  * and gettext haven't done it right. Most English speaking countries
  * except the USA use the 24 hour clock (UK, Australia etc). However
