@@ -24,8 +24,6 @@
 #include "gcal-application.h"
 #include "gcal-window.h"
 
-#include <clutter-gtk/clutter-gtk.h>
-
 #include <glib/gi18n.h>
 
 #define CSS_FILE UI_DATA_DIR "/gtk-styles.css"
@@ -205,12 +203,6 @@ gcal_application_startup (GApplication *app)
   priv = GCAL_APPLICATION (app)->priv;
 
   G_APPLICATION_CLASS (gcal_application_parent_class)->startup (app);
-
-  if (gtk_clutter_init (NULL, NULL) < 0)
-   {
-     g_error (_("Unable to initialize GtkClutter"));
-     g_application_quit (app);
-   }
 
   if (priv->provider == NULL)
    {
