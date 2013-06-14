@@ -51,9 +51,6 @@ struct _GcalViewIface
   void            (*create_event)                       (GcalView *view, icaltimetype *start_span, icaltimetype *end_span, gdouble x, gdouble y);
   void            (*updated)                            (GcalView *view, icaltimetype *date);
 
-  /* Container functions related API */
-  void            (*remove_by_uuid)                     (GcalView *view, const gchar *uuid);
-  GtkWidget*      (*get_by_uuid)                        (GcalView *view, const gchar *uuid);
   void            (*reposition_child)                   (GcalView *view, const gchar *uuid);
 
 /* FIXME remove me in favor of the one below */
@@ -75,6 +72,9 @@ struct _GcalViewIface
   /* Update NavBar headings */
   gchar*          (*get_left_header)                    (GcalView     *view);
   gchar*          (*get_right_header)                   (GcalView     *view);
+
+  /* Container functions related API */
+  GtkWidget*      (*get_by_uuid)                        (GcalView *view, const gchar *uuid);
 };
 
 GType         gcal_view_get_type                      (void);
@@ -84,12 +84,6 @@ void          gcal_view_set_date                      (GcalView     *view,
 						       icaltimetype *date);
 
 icaltimetype* gcal_view_get_date                      (GcalView     *view);
-
-void          gcal_view_remove_by_uuid                (GcalView     *view,
-						       const gchar  *uuid);
-
-GtkWidget*    gcal_view_get_by_uuid                   (GcalView     *view,
-						       const gchar  *uuid);
 
 void          gcal_view_reposition_child              (GcalView     *view,
 						       const gchar  *uuid);
@@ -115,6 +109,9 @@ void          gcal_view_clear_mark                    (GcalView     *view);
 gchar*        gcal_view_get_left_header               (GcalView     *view);
 
 gchar*        gcal_view_get_right_header              (GcalView     *view);
+
+GtkWidget*    gcal_view_get_by_uuid                   (GcalView     *view,
+						       const gchar  *uuid);
 
 G_END_DECLS
 

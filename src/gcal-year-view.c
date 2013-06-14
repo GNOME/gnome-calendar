@@ -208,21 +208,19 @@ gcal_year_view_init (GcalYearView *self)
 static void
 gcal_view_interface_init (GcalViewIface *iface)
 {
-  iface->get_initial_date = gcal_year_view_get_initial_date;
-  iface->get_final_date = gcal_year_view_get_final_date;
-
-  iface->contains_date = gcal_year_view_contains_date;
-  iface->remove_by_uuid = gcal_year_view_remove_by_uuid;
-  iface->get_by_uuid = gcal_year_view_get_by_uuid;
   iface->reposition_child = gcal_year_view_reposition_child;
-
   iface->clear_selection = gcal_year_view_clear_selection;
-
   iface->create_event_on_current_unit = gcal_year_view_create_event_on_current_unit;
 
   /* New API */
+  iface->get_initial_date = gcal_year_view_get_initial_date;
+  iface->get_final_date = gcal_year_view_get_final_date;
+  iface->contains_date = gcal_year_view_contains_date;
+
   iface->get_left_header = gcal_year_view_get_left_header;
   iface->get_right_header = gcal_year_view_get_right_header;
+
+  iface->get_by_uuid = gcal_year_view_get_by_uuid;
 }
 
 static void

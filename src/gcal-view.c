@@ -116,26 +116,6 @@ gcal_view_get_date (GcalView *view)
 }
 
 void
-gcal_view_remove_by_uuid (GcalView    *view,
-                          const gchar *uuid)
-{
-  g_return_if_fail (GCAL_IS_VIEW (view));
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->remove_by_uuid);
-
-  GCAL_VIEW_GET_INTERFACE (view)->remove_by_uuid (view, uuid);
-}
-
-GtkWidget*
-gcal_view_get_by_uuid (GcalView    *view,
-                       const gchar *uuid)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid);
-
-  return GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid (view, uuid);
-}
-
-void
 gcal_view_reposition_child (GcalView    *view,
                             const gchar *uuid)
 {
@@ -281,4 +261,24 @@ gcal_view_get_right_header (GcalView *view)
   g_return_val_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_right_header, NULL);
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_right_header (view);
+}
+
+/**
+ * gcal_view_get_by_uuid:
+ * @view: a #GcalView
+ * @uuid: the uuid of the event-widget
+ *
+ * The uuid is formed by source-uid:event-uid, and the widget with
+ * this uuid is fetched by this method
+ *
+ * Returns: a #GcalEventWidget as #GtkWidget
+ **/
+GtkWidget*
+gcal_view_get_by_uuid (GcalView    *view,
+                       const gchar *uuid)
+{
+  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid);
+
+  return GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid (view, uuid);
 }
