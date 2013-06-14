@@ -152,9 +152,6 @@ static icaltimetype*  gcal_week_view_get_final_date        (GcalView       *view
 static gboolean       gcal_week_view_contains_date         (GcalView       *view,
                                                             icaltimetype   *date);
 
-static void           gcal_week_view_remove_by_uuid        (GcalView       *view,
-                                                            const gchar    *uuid);
-
 static GtkWidget*     gcal_week_view_get_by_uuid           (GcalView       *view,
                                                             const gchar    *uuid);
 
@@ -1519,36 +1516,6 @@ gcal_week_view_contains_date (GcalView     *view,
   else
     {
       return FALSE;
-    }
-}
-
-static void
-gcal_week_view_remove_by_uuid (GcalView    *view,
-                                const gchar *uuid)
-{
-  GcalWeekViewPrivate *priv;
-  gint i;
-  GList *l;
-
-  g_return_if_fail (GCAL_IS_WEEK_VIEW (view));
-  priv = GCAL_WEEK_VIEW (view)->priv;
-
-  for (i = 0; i < 7; i++)
-    {
-      for (l = priv->days[i]; l != NULL; l = l->next)
-        {
-          GcalWeekViewChild *child;
-          const gchar* widget_uuid;
-
-          child = (GcalWeekViewChild*) l->data;
-          widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
-          if (g_strcmp0 (uuid, widget_uuid) == 0)
-            {
-              gtk_widget_destroy (child->widget);
-              i = 8;
-              break;
-            }
-        }
     }
 }
 
