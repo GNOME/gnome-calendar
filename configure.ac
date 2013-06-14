@@ -78,8 +78,6 @@ LIBICAL_REQUIRED=0.43
 PKG_CHECK_MODULES(CALENDAR,
                   glib-2.0 >= $GLIB_MIN_VERSION
                   gtk+-3.0 >= $GTK_MIN_VERSION
-                  clutter-1.0 >= $CLUTTER_MIN_VERSION
-                  clutter-gtk-1.0 >= $CLUTTER_GTK_MIN_VERSION
                   libecal-1.2 >= $ECAL_REQUIRED
                   libedataserver-1.2 >= $EDATASERVER_REQUIRED
                   libical >= $LIBICAL_REQUIRED)

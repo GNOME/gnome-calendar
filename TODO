@@ -4,7 +4,6 @@ TODO
  - Update NewEvent widget to use GtkOverlay
  - Rework internal GcalWindow working
  - Clean GcalWindow compilation, no warnings
- - Remove Clutter dependecy
 
  - Clean gcal-enums for removing toolbar related enums
  - Add scroll_to_unit in day-view and week-view. Meaning, scroll to the actual
