@@ -400,7 +400,7 @@ gcal_day_view_get_left_header (GcalView *view)
   priv = GCAL_DAY_VIEW (view)->priv;
 
   tm_date = icaltimetype_to_tm (priv->date);
-  e_utf8_strftime_fix_am_pm (str_date, 64, "%B", &tm_date);
+  e_utf8_strftime_fix_am_pm (str_date, 64, "%A %B", &tm_date);
 
   return g_strdup_printf ("%s, %d", str_date, priv->date->day);
 }
