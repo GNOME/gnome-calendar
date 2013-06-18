@@ -1217,6 +1217,10 @@ gcal_window_new_with_view (GcalApplication   *app,
                     G_CALLBACK (gcal_window_event_created),
                     win);
 
+  /* init hack */
+  if (view_type == GCAL_WINDOW_VIEW_DAY)
+    gcal_window_view_changed (NULL, NULL, win);
+
   return GTK_WIDGET (win);
 }
 
