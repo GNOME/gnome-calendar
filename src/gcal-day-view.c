@@ -41,12 +41,16 @@ struct _GcalDayViewPrivate
   /* property */
   icaltimetype   *date;
 
+  GtkWidget      *viewport;
   GtkWidget      *fold_button;
 
   /* events widgets parents */
   GtkWidget      *all_day_grid;
   GtkWidget      *day_grid;
 };
+
+static void           viewport_shown                      (GtkWidget      *widget,
+                                                           gpointer        user_data);
 
 static void           gcal_view_interface_init            (GcalViewIface  *iface);
 
@@ -67,9 +71,6 @@ static void           gcal_day_view_get_property          (GObject        *objec
 static void           gcal_day_view_add                   (GtkContainer   *container,
                                                            GtkWidget      *widget);
 
-static void           gcal_day_view_set_date              (GcalDayView    *view,
-                                                           icaltimetype   *date);
-
 static icaltimetype*  gcal_day_view_get_initial_date      (GcalView       *view);
 
 static icaltimetype*  gcal_day_view_get_final_date        (GcalView       *view);
@@ -89,6 +90,28 @@ G_DEFINE_TYPE_WITH_CODE (GcalDayView,
                          GTK_TYPE_GRID,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
                                                 gcal_view_interface_init));
+
+static void
+viewport_shown (GtkWidget *widget,
+                gpointer   user_data)
+{
+  GcalDayViewPrivate *priv;
+  icaltimetype date;
+  gdouble value;
+
+  priv = GCAL_DAY_VIEW (user_data)->priv;
+
+  if (priv->date == NULL)
+    return;
+
+  date = icaltime_current_time_with_zone (priv->date->zone);
+
+  /* 0.01 is spacing to let the mark show up */
+  value = (((gdouble) date.hour) / 24.0) - 0.01;
+
+  g_debug ("Getting into here, with value: %f", value);
+  gcal_viewport_scroll_to (GCAL_VIEWPORT (priv->viewport), value);
+}
 
 static void
 gcal_day_view_class_init (GcalDayViewClass *klass)
@@ -128,8 +151,6 @@ static void
 gcal_view_interface_init (GcalViewIface *iface)
 {
   /* FIXME: add new GcalView API */
-  /* iface->remove_by_uuid = gcal_day_view_remove_by_uuid; */
-
   /* New API */
   iface->get_initial_date = gcal_day_view_get_initial_date;
   iface->get_final_date = gcal_day_view_get_final_date;
@@ -182,9 +203,9 @@ gcal_day_view_constructed (GObject *object)
 
   gtk_grid_attach (GTK_GRID (object), priv->all_day_grid, 1, 0, 1, 1);
 
-  sw = gcal_viewport_new ();
-  gcal_viewport_add (GCAL_VIEWPORT (sw), priv->day_grid);
-  gtk_grid_attach (GTK_GRID (object), sw, 0, 1, 2, 1);
+  priv->viewport = gcal_viewport_new ();
+  gcal_viewport_add (GCAL_VIEWPORT (priv->viewport), priv->day_grid);
+  gtk_grid_attach (GTK_GRID (object), priv->viewport, 0, 1, 2, 1);
 
   /* binding sizes */
   gtk_widget_set_size_request (
@@ -193,6 +214,9 @@ gcal_day_view_constructed (GObject *object)
       -1);
 
   gtk_widget_show_all (GTK_WIDGET (object));
+
+  /* signal handling */
+  g_signal_connect (object, "map", G_CALLBACK (viewport_shown), object);
 }
 
 static void
