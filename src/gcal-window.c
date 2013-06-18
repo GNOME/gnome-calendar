@@ -738,7 +738,6 @@ gcal_window_events_removed (GcalManager *manager,
 {
   GcalWindowPrivate *priv;
   GSList *l;
-  GtkWidget *widget;
 
   g_return_if_fail (GCAL_IS_WINDOW (user_data));
   priv = GCAL_WINDOW (user_data)->priv;
@@ -750,9 +749,9 @@ gcal_window_events_removed (GcalManager *manager,
         {
           if (priv->views[i] != NULL)
             {
-              widget = gcal_view_get_by_uuid (GCAL_VIEW (priv->views[i]),
-                                              (gchar*) l->data);
-              gtk_widget_destroy (widget);
+              gtk_widget_destroy (
+                  gcal_view_get_by_uuid (GCAL_VIEW (priv->views[i]),
+                                         (gchar*) l->data));
             }
         }
     }
@@ -987,7 +986,6 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
   GList *changed_props;
   GList *l;
 
-  GtkWidget *event_widget;
   GtkWidget *grid;
   GtkWidget *undo_button;
 
@@ -1118,12 +1116,10 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
         priv->event_to_delete =
           gcal_edit_dialog_get_event_uuid (GCAL_EDIT_DIALOG (priv->edit_dialog));
 
-        event_widget =
-          gcal_view_get_by_uuid (GCAL_VIEW (priv->views[priv->active_view]),
-                                 priv->event_to_delete);
-
         /* hide widget of the event */
-        gtk_widget_hide (GTK_WIDGET (event_widget));
+        gtk_widget_hide (
+            gcal_view_get_by_uuid (GCAL_VIEW (priv->views[priv->active_view]),
+                                   priv->event_to_delete));
         break;
 
       default:
