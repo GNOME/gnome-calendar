@@ -75,8 +75,6 @@ static icaltimetype*  gcal_day_view_get_initial_date      (GcalView       *view)
 
 static icaltimetype*  gcal_day_view_get_final_date        (GcalView       *view);
 
-static gboolean       gcal_day_view_contains_date         (GcalView       *view,
-                                                           icaltimetype   *date);
 static gchar*         gcal_day_view_get_left_header       (GcalView       *view);
 
 static gchar*         gcal_day_view_get_right_header      (GcalView       *view);
@@ -169,8 +167,6 @@ static void
 gcal_day_view_constructed (GObject *object)
 {
   GcalDayViewPrivate *priv;
-
-  GtkWidget *sw; /* involve overlay in it */
 
   g_return_if_fail (GCAL_IS_DAY_VIEW (object));
   priv = GCAL_DAY_VIEW (object)->priv;
