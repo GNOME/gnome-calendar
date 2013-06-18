@@ -253,3 +253,31 @@ gcal_viewport_add (GcalViewport *viewport,
   g_signal_connect_after (widget, "size-allocate",
                           G_CALLBACK (gcal_viewport_child_allocated), viewport);
 }
+
+/**
+ * gcal_viewport_scroll_to:
+ * @viewport: a #GcalViewport
+ * @value: a value between 0 and 1.0 for scrolling the child.
+ *
+ * If no scrollbar is shown, this method does nothing
+ **/
+void
+gcal_viewport_scroll_to (GcalViewport *viewport,
+                         gdouble       value)
+{
+  GcalViewportPrivate *priv;
+  GtkAdjustment *adj;
+  gdouble lower, upper, page_size;
+
+  priv = viewport->priv;
+
+  value = CLAMP (value, 0.0, 1.0);
+
+  adj = gtk_range_get_adjustment (GTK_RANGE (priv->vscrollbar));
+  page_size = gtk_adjustment_get_page_size (adj);
+  lower = gtk_adjustment_get_lower (adj);
+  upper = gtk_adjustment_get_upper (adj);
+
+  value = ((upper - page_size) - lower) * value;
+  gtk_adjustment_set_value (adj, value);
+}
