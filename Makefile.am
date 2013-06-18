@@ -19,6 +19,7 @@ EXTRA_DIST =                    \
   $(INTLTOOL_FILES)             \
   INSTALL                       \
   THANKS                        \
+  HACKING                       \
   TODO                          \
   autogen.sh
 
