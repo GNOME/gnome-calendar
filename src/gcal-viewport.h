@@ -55,6 +55,9 @@ GtkWidget*     gcal_viewport_new                       (void);
 void           gcal_viewport_add                       (GcalViewport *viewport,
 							GtkWidget    *widget);
 
+void           gcal_viewport_scroll_to                 (GcalViewport *viewport,
+							gdouble       value);
+
 G_END_DECLS
 
 #endif /* __GCAL_VIEWPORT_H__ */
