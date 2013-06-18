@@ -209,18 +209,21 @@ gcal_day_view_finalize (GObject       *object)
 
 static void
 gcal_day_view_set_property (GObject       *object,
-                             guint          property_id,
-                             const GValue  *value,
-                             GParamSpec    *pspec)
+                            guint          property_id,
+                            const GValue  *value,
+                            GParamSpec    *pspec)
 {
-  g_return_if_fail (GCAL_IS_DAY_VIEW (object));
+  GcalDayViewPrivate *priv;
+
+  priv = GCAL_DAY_VIEW (object)->priv;
 
   switch (property_id)
     {
     case PROP_DATE:
-      gcal_day_view_set_date (
-          GCAL_DAY_VIEW (object),
-          g_value_dup_boxed (value));
+      if (priv->date != NULL)
+        g_free (priv->date);
+
+      priv->date = g_value_dup_boxed (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -236,7 +239,6 @@ gcal_day_view_get_property (GObject       *object,
 {
   GcalDayViewPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_DAY_VIEW (object));
   priv = GCAL_DAY_VIEW (object)->priv;
 
   switch (property_id)
@@ -295,22 +297,6 @@ gcal_day_view_add (GtkContainer *container,
   g_free (dt_start);
   g_free (dt_end);
   g_free (summ);
-}
-
-
-static void
-gcal_day_view_set_date (GcalDayView  *view,
-                        icaltimetype *date)
-
-{
-  GcalDayViewPrivate *priv;
-
-  priv = view->priv;
-
-  if (priv->date != NULL)
-    g_free (priv->date);
-
-  priv->date = date;
 }
 
 /* GcalView API */
