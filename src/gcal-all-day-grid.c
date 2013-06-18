@@ -30,6 +30,15 @@ enum
   PROP_SPACING
 };
 
+struct _ChildInfo
+{
+  GtkWidget *widget;
+
+  guint      column_span;
+};
+
+typedef struct _ChildInfo ChildInfo;
+
 struct _GcalAllDayGridPrivate
 {
   /* property */
@@ -173,11 +182,20 @@ static void
 gcal_all_day_grid_finalize (GObject *object)
 {
   GcalAllDayGridPrivate *priv;
+  GList *column;
 
   priv = GCAL_ALL_DAY_GRID (object)->priv;
 
   if (priv->children != NULL)
-    g_list_free_full (priv->children, (GDestroyNotify) g_list_free);
+    {
+      column = priv->children;
+      while (column)
+        {
+          g_list_free_full (column->data, (GDestroyNotify) g_free);
+          column = column->next;
+        }
+    }
+    g_list_free (priv->children);
 
   if (priv->column_headers != NULL)
     g_list_free_full (priv->column_headers, g_free);
@@ -340,10 +358,10 @@ gcal_all_day_grid_get_preferred_height (GtkWidget *widget,
       for (;column_children != NULL;
            column_children = g_list_next (column_children))
         {
-          GtkWidget *widget;
-          widget = (GtkWidget*) column_children->data;
+          ChildInfo *info;
+          info = (ChildInfo*) column_children->data;
 
-          gtk_widget_get_preferred_height (widget, &min_height, &nat_height);
+          gtk_widget_get_preferred_height (info->widget, &min_height, &nat_height);
 
           /* minimum is calculated as the minimum required
            by any child */
@@ -461,8 +479,11 @@ gcal_all_day_grid_size_allocate (GtkWidget     *widget,
 
   GList *columns;
   gint idx;
+  gint i;
 
-  gint width;
+  gint width_block;
+
+  GArray *last_y;
 
   priv = GCAL_ALL_DAY_GRID (widget)->priv;
   gtk_widget_set_allocation (widget, allocation);
@@ -472,7 +493,7 @@ gcal_all_day_grid_size_allocate (GtkWidget     *widget,
       gtk_widget_get_state_flags (widget),
       &padding);
 
-  width = allocation->width - (padding.left + padding.right);
+  width_block = (allocation->width - (padding.left + padding.right)) / priv->columns_nr;
 
   layout = gtk_widget_create_pango_layout (widget, "0");
 
@@ -492,6 +513,11 @@ gcal_all_day_grid_size_allocate (GtkWidget     *widget,
                               allocation->height - y_gap);
     }
 
+  /* last_y value for each column,
+     will keep the amount of columns as well */
+  last_y = g_array_new (FALSE, TRUE, sizeof (guint));
+  g_array_set_size (last_y, priv->columns_nr);
+
   /* Placing children */
   for (columns = priv->children, idx = 0;
        columns != NULL;
@@ -502,25 +528,39 @@ gcal_all_day_grid_size_allocate (GtkWidget     *widget,
 
       column = (GList*) columns->data;
 
-      child_allocation.x = idx * (width / priv->columns_nr) + allocation->x + padding.left;
-      child_allocation.width = (width / priv->columns_nr);
+      child_allocation.x = idx * width_block + allocation->x + padding.left;
+
+      y_gap += g_array_index (last_y, guint, idx);
 
       for (; column != NULL; column = g_list_next (column))
         {
           gint natural_height;
-          GtkWidget *item = (GtkWidget*) column->data;
+          ChildInfo *info;
+          GtkWidget *item;
+
+          info = (ChildInfo*) column->data;
+          item = info->widget;
           gtk_widget_get_preferred_height (item, NULL, &natural_height);
 
+          child_allocation.width = width_block * info->column_span;
           child_allocation.y = y_gap;
           child_allocation.height = natural_height;
 
           y_gap += natural_height;
 
           gtk_widget_size_allocate (item, &child_allocation);
+
+          /* updating y spacings */
+          for (i = 0; i < info->column_span; ++i)
+            {
+              g_array_index (last_y, guint, idx + i) = natural_height;
+            }
         }
 
       y_gap = allocation->y + padding.top + logical_rect.height + priv->spacing;
     }
+
+  g_array_free (last_y, TRUE);
 }
 
 static gboolean
@@ -655,7 +695,7 @@ gcal_all_day_grid_add (GtkContainer *container,
 
   gcal_all_day_grid_place (GCAL_ALL_DAY_GRID (container),
                            widget,
-                           0);
+                           0, 0);
 }
 
 static void
@@ -675,11 +715,13 @@ gcal_all_day_grid_remove (GtkContainer *container,
       GList* column = (GList*) columns->data;
       for (;column != NULL; column = g_list_next (column))
         {
-          if (widget == (GtkWidget*) column->data)
+          ChildInfo *info = (ChildInfo*) column->data;
+          if (widget == info->widget)
             {
               GList* orig = (GList*) columns->data;
               orig = g_list_delete_link (orig, column);
 
+              g_free (info);
               gtk_widget_unparent (widget);
 
               columns->data = orig;
@@ -713,10 +755,10 @@ gcal_all_day_grid_forall (GtkContainer *container,
 
       while (column)
         {
-          GtkWidget *child = (GtkWidget*) column->data;
+          ChildInfo *info = (ChildInfo*) column->data;
           column  = column->next;
 
-          (* callback) (child, callback_data);
+          (* callback) (info->widget, callback_data);
         }
     }
 }
@@ -777,6 +819,7 @@ gcal_all_day_grid_set_column_headers (GcalAllDayGrid *all_day,
  * @all_day: A #GcalAllDayGrid widget
  * @widget: The child widget to add
  * @column_idx: The index of the column, starting with zero
+ * @column_span: The columns the widgets should expand
  *
  * Adding a widget to a specified column. If the column index
  * is bigger than the #GcalAllDayGrid:columns property set,
@@ -785,11 +828,13 @@ gcal_all_day_grid_set_column_headers (GcalAllDayGrid *all_day,
 void
 gcal_all_day_grid_place (GcalAllDayGrid *all_day,
                          GtkWidget      *widget,
-                         guint           column_idx)
+                         guint           column_idx,
+                         guint           column_span)
 {
   GcalAllDayGridPrivate *priv;
   GList* children_link;
   GList* column;
+  ChildInfo *info;
 
   priv = all_day->priv;
 
@@ -797,7 +842,11 @@ gcal_all_day_grid_place (GcalAllDayGrid *all_day,
 
   children_link = g_list_nth (priv->children, column_idx);
   column = (GList*) children_link->data;
-  children_link->data = g_list_append (column, widget);
+
+  info = g_new0 (ChildInfo, 1);
+  info->widget = widget;
+  info->column_span = column_span;
+  children_link->data = g_list_append (column, info);
 
   gtk_widget_set_parent (widget, GTK_WIDGET (all_day));
 }
@@ -822,7 +871,11 @@ gcal_all_day_grid_get_by_uuid (GcalAllDayGrid *all_day,
 
       while (column)
         {
-          GcalEventWidget *child = GCAL_EVENT_WIDGET ((GtkWidget*) column->data);
+          ChildInfo *info;
+          GcalEventWidget *child;
+
+          info = ((ChildInfo*) column->data);
+          child = GCAL_EVENT_WIDGET (info->widget);
           column  = column->next;
 
           if (g_strcmp0 (uuid,
