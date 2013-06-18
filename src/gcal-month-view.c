@@ -117,12 +117,13 @@ static icaltimetype*  gcal_month_view_get_initial_date      (GcalView       *vie
 
 static icaltimetype*  gcal_month_view_get_final_date        (GcalView       *view);
 
-static gboolean       gcal_month_view_contains_date         (GcalView       *view,
-                                                             icaltimetype   *date);
-
 static gchar*         gcal_month_view_get_left_header       (GcalView       *view);
 
 static gchar*         gcal_month_view_get_right_header      (GcalView       *view);
+
+static gboolean       gcal_month_view_draw_event            (GcalView       *view,
+                                                             icaltimetype   *start_date,
+                                                             icaltimetype   *end_date);
 
 static GtkWidget*     gcal_month_view_get_by_uuid           (GcalView       *view,
                                                              const gchar    *uuid);
@@ -218,11 +219,11 @@ gcal_view_interface_init (GcalViewIface *iface)
   /* New API */
   iface->get_initial_date = gcal_month_view_get_initial_date;
   iface->get_final_date = gcal_month_view_get_final_date;
-  iface->contains_date = gcal_month_view_contains_date;
 
   iface->get_left_header = gcal_month_view_get_left_header;
   iface->get_right_header = gcal_month_view_get_right_header;
 
+  iface->draw_event = gcal_month_view_draw_event;
   iface->get_by_uuid = gcal_month_view_get_by_uuid;
 }
 
@@ -1099,7 +1100,7 @@ gcal_month_view_set_date (GcalMonthView *view,
   will_resize = FALSE;
 
   /* if span_updated: queue_resize */
-  will_resize = ! gcal_month_view_contains_date (GCAL_VIEW (view), date);
+  will_resize = ! gcal_month_view_draw_event (GCAL_VIEW (view), date, NULL);
 
   if (priv->date != NULL)
     g_free (priv->date);
@@ -1125,7 +1126,7 @@ gcal_month_view_set_date (GcalMonthView *view,
               child = (GcalViewChild*) l->data;
               child_date =
                 gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
-              if (! gcal_month_view_contains_date (GCAL_VIEW (view), child_date))
+              if (! gcal_month_view_draw_event (GCAL_VIEW (view), child_date, NULL))
                 to_remove = g_list_append (to_remove, child->widget);
             }
         }
@@ -1212,22 +1213,6 @@ gcal_month_view_get_final_date (GcalView *view)
   return new_date;
 }
 
-static gboolean
-gcal_month_view_contains_date (GcalView     *view,
-                               icaltimetype *date)
-{
-  GcalMonthViewPrivate *priv;
-
-  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), FALSE);
-  priv = GCAL_MONTH_VIEW (view)->priv;
-
-  if (priv->date == NULL)
-    return FALSE;
-
-  return (priv->date->month == date->month &&
-          priv->date->year == date->year);
-}
-
 static gchar*
 gcal_month_view_get_left_header (GcalView *view)
 {
@@ -1253,6 +1238,23 @@ gcal_month_view_get_right_header (GcalView *view)
   priv = GCAL_MONTH_VIEW (view)->priv;
 
   return g_strdup_printf ("%d", priv->date->year);
+}
+
+static gboolean
+gcal_month_view_draw_event (GcalView     *view,
+                            icaltimetype *start_date,
+                            icaltimetype *end_date)
+{
+  GcalMonthViewPrivate *priv;
+
+  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), FALSE);
+  priv = GCAL_MONTH_VIEW (view)->priv;
+
+  if (priv->date == NULL)
+    return FALSE;
+
+  return (priv->date->month == start_date->month &&
+          priv->date->year == start_date->year);
 }
 
 static GtkWidget*
@@ -1309,7 +1311,7 @@ gcal_month_view_reposition_child (GcalView    *view,
               date =
                 gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
 
-              if (gcal_month_view_contains_date (view, date))
+              if (gcal_month_view_draw_event (view, date, NULL))
                 {
                   if (date->day - 1 == i)
                     {
