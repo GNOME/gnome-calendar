@@ -408,7 +408,7 @@ gcal_day_view_draw_event (GcalView     *view,
 
   /* XXX: Check for date_only comparison since might drop timezone info */
   left_boundary = icaltime_compare_date_only (*end_date, *first_day);
-  right_boundary = icaltime_compare_date_only (*last_day, *end_date);
+  right_boundary = icaltime_compare_date_only (*last_day, *start_date);
 
   if (left_boundary == -1 || right_boundary == -1)
       return FALSE;
