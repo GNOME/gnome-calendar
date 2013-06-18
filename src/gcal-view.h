@@ -63,7 +63,6 @@ struct _GcalViewIface
   /* Time handling related API */
   icaltimetype*   (*get_initial_date)                   (GcalView *view);
   icaltimetype*   (*get_final_date)                     (GcalView *view);
-  gboolean        (*contains_date)                      (GcalView *view, icaltimetype *date);
 
   /* Marks related API */
   void            (*mark_current_unit)                  (GcalView     *view);
@@ -74,6 +73,7 @@ struct _GcalViewIface
   gchar*          (*get_right_header)                   (GcalView     *view);
 
   /* Container functions related API */
+  gboolean        (*draw_event)                         (GcalView *view, icaltimetype *start_date, icaltimetype *end_date);
   GtkWidget*      (*get_by_uuid)                        (GcalView *view, const gchar *uuid);
 };
 
@@ -99,9 +99,6 @@ icaltimetype* gcal_view_get_initial_date              (GcalView     *view);
 
 icaltimetype* gcal_view_get_final_date                (GcalView     *view);
 
-gboolean      gcal_view_contains_date                 (GcalView     *view,
-						       icaltimetype *date);
-
 void          gcal_view_mark_current_unit             (GcalView     *view);
 
 void          gcal_view_clear_mark                    (GcalView     *view);
@@ -109,6 +106,10 @@ void          gcal_view_clear_mark                    (GcalView     *view);
 gchar*        gcal_view_get_left_header               (GcalView     *view);
 
 gchar*        gcal_view_get_right_header              (GcalView     *view);
+
+gboolean      gcal_view_draw_event                    (GcalView     *view,
+						       icaltimetype *start_date,
+						       icaltimetype *end_date);
 
 GtkWidget*    gcal_view_get_by_uuid                   (GcalView     *view,
 						       const gchar  *uuid);

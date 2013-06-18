@@ -77,10 +77,13 @@ static icaltimetype*  gcal_day_view_get_final_date        (GcalView       *view)
 
 static gboolean       gcal_day_view_contains_date         (GcalView       *view,
                                                            icaltimetype   *date);
-
 static gchar*         gcal_day_view_get_left_header       (GcalView       *view);
 
 static gchar*         gcal_day_view_get_right_header      (GcalView       *view);
+
+static gboolean       gcal_day_view_draw_event            (GcalView       *view,
+                                                           icaltimetype   *start_date,
+                                                           icaltimetype   *end_date);
 
 static GtkWidget*     gcal_day_view_get_by_uuid           (GcalView       *view,
                                                            const gchar    *uuid);
@@ -154,11 +157,11 @@ gcal_view_interface_init (GcalViewIface *iface)
   /* New API */
   iface->get_initial_date = gcal_day_view_get_initial_date;
   iface->get_final_date = gcal_day_view_get_final_date;
-  iface->contains_date = gcal_day_view_contains_date;
 
   iface->get_left_header = gcal_day_view_get_left_header;
   iface->get_right_header = gcal_day_view_get_right_header;
 
+  iface->draw_event = gcal_day_view_draw_event;
   iface->get_by_uuid = gcal_day_view_get_by_uuid;
 }
 
@@ -368,8 +371,9 @@ gcal_day_view_get_final_date (GcalView *view)
 }
 
 static gboolean
-gcal_day_view_contains_date (GcalView     *view,
-                             icaltimetype *date)
+gcal_day_view_draw_event (GcalView     *view,
+                          icaltimetype *start_date,
+                          icaltimetype *end_date)
 {
   GcalDayViewPrivate *priv;
 
@@ -386,16 +390,13 @@ gcal_day_view_contains_date (GcalView     *view,
     return FALSE;
 
   /* XXX: Check for date_only comparison since might drop timezone info */
-  left_boundary = icaltime_compare_date_only (*first_day, *date);
-  right_boundary = icaltime_compare_date_only (*date, *last_day);
+  left_boundary = icaltime_compare_date_only (*end_date, *first_day);
+  right_boundary = icaltime_compare_date_only (*last_day, *end_date);
 
-  if ((left_boundary == -1 || left_boundary == 0) &&
-      (right_boundary == -1 || right_boundary == 0))
-    {
-      return TRUE;
-    }
+  if (left_boundary == -1 || right_boundary == -1)
+      return FALSE;
 
-    return FALSE;
+  return TRUE;
 }
 
 static gchar*

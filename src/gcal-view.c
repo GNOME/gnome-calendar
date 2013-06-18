@@ -179,25 +179,6 @@ gcal_view_get_final_date (GcalView *view)
 }
 
 /**
- * gcal_view_contains_date:
- * @view: a #GcalView
- * @date: an #icaltimetype object
- *
- * Whether @date is contained in the time-range represented by @view
- *
- * Returns: %TRUE if it is, %FALSE otherwise
- **/
-gboolean
-gcal_view_contains_date (GcalView     *view,
-                         icaltimetype *date)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), FALSE);
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->contains_date);
-
-  return GCAL_VIEW_GET_INTERFACE (view)->contains_date (view, date);
-}
-
-/**
  * gcal_view_mark_current_unit:
  * @view: a #GcalView
  *
@@ -261,6 +242,29 @@ gcal_view_get_right_header (GcalView *view)
   g_return_val_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_right_header, NULL);
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_right_header (view);
+}
+
+/**
+ * gcal_view_draw_event:
+ * @view: a #GcalView
+ * @start_date: an #icaltimetype object. The starting date of the event
+ * @end_date: an #icaltimetype object. The edn-date of the event
+ *
+ * Whether the event within these boundaries will be drawn by the #GcalView implementation
+ *
+ * Returns: %TRUE if it is, %FALSE otherwise
+ **/
+gboolean
+gcal_view_draw_event (GcalView     *view,
+                      icaltimetype *start_date,
+                      icaltimetype *end_date)
+{
+  g_return_val_if_fail (GCAL_IS_VIEW (view), FALSE);
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->draw_event);
+
+  return GCAL_VIEW_GET_INTERFACE (view)->draw_event (view,
+                                                     start_date,
+                                                     end_date);
 }
 
 /**

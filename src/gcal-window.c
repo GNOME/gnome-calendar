@@ -688,7 +688,8 @@ gcal_window_events_added (GcalManager *manager,
 
   GcalView *view;
   GtkWidget *event;
-  icaltimetype *starting_date;
+  icaltimetype *start_date;
+  icaltimetype *end_date;
 
   priv = GCAL_WINDOW (user_data)->priv;
   view = GCAL_VIEW (priv->views[priv->active_view]);
@@ -698,16 +699,19 @@ gcal_window_events_added (GcalManager *manager,
       tokens = g_strsplit ((gchar*) l->data, ":", -1);
       source_uid  = tokens[0];
       event_uid = tokens[1];
-      starting_date = gcal_manager_get_event_start_date (manager,
-                                                         source_uid,
-                                                         event_uid);
+      start_date = gcal_manager_get_event_start_date (manager,
+                                                      source_uid,
+                                                      event_uid);
+      end_date = gcal_manager_get_event_end_date (manager,
+                                                  source_uid,
+                                                  event_uid);
 
       /* FIXME: erase me */
       /* g_debug ("add: %s with date %s", */
       /*          (gchar*) l->data, */
-      /*          icaltime_as_ical_string (*starting_date)); */
+      /*          icaltime_as_ical_string (*start_date)); */
 
-      if (gcal_view_contains_date (view, starting_date) &&
+      if (gcal_view_draw_event (view, start_date, end_date) &&
           gcal_view_get_by_uuid (view, (gchar*)l->data) == NULL)
         {
           event = gcal_event_widget_new ((gchar*) l->data);
@@ -726,7 +730,7 @@ gcal_window_events_added (GcalManager *manager,
                             user_data);
         }
 
-      g_free (starting_date);
+      g_free (start_date);
       g_strfreev (tokens);
     }
 }
