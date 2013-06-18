@@ -57,7 +57,8 @@ void           gcal_all_day_grid_set_column_headers  (GcalAllDayGrid *all_day,
 
 void           gcal_all_day_grid_place               (GcalAllDayGrid *all_day,
 						      GtkWidget      *widget,
-						      guint           column_idx);
+						      guint           column_idx,
+						      guint           column_span);
 
 GtkWidget*     gcal_all_day_grid_get_by_uuid         (GcalAllDayGrid *all_day,
                                                       const gchar    *uuid);

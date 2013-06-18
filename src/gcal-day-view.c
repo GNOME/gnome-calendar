@@ -285,6 +285,7 @@ gcal_day_view_add (GtkContainer *container,
                    GtkWidget    *widget)
 {
   GcalDayViewPrivate *priv;
+  icaltimetype *tomorrow;
   icaltimetype *dt_start;
   icaltimetype *dt_end;
   gchar* summ;
@@ -294,33 +295,49 @@ gcal_day_view_add (GtkContainer *container,
   priv = GCAL_DAY_VIEW (container)->priv;
 
   summ = gcal_event_widget_get_summary (GCAL_EVENT_WIDGET (widget));
+
+  tomorrow = gcal_day_view_get_final_date (GCAL_VIEW (container));
   dt_start = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
   dt_end = gcal_event_widget_get_end_date (GCAL_EVENT_WIDGET (widget));
+
   /* FIXME: recheck conditions to add, what, where */
   /* Maybe, should be good to add, inside days views only contained events */
-  if (gcal_event_widget_get_all_day (GCAL_EVENT_WIDGET (widget)))
-    {
-      g_debug ("[all-day-grid] %s from %s to %s",
-               summ,
-               icaltime_as_ical_string (*dt_start),
-               icaltime_as_ical_string (*dt_end));
-      gcal_all_day_grid_place (GCAL_ALL_DAY_GRID (priv->all_day_grid),
-                               widget,
-                               priv->date->day == dt_start->day ? 0 : 1);
-    }
-  else
+  g_debug ("[processing] %s from %s to %s",
+           summ,
+           icaltime_as_ical_string (*dt_start),
+           icaltime_as_ical_string (*dt_end));
+
+  if (! gcal_event_widget_get_all_day (GCAL_EVENT_WIDGET (widget)) &&
+      (dt_start->day == dt_end->day) &&
+      (dt_start->day == priv->date->day ||
+       dt_start->day == tomorrow->day))
     {
       g_debug ("[days-grid] %s from %s to %s",
                summ,
                icaltime_as_ical_string (*dt_start),
                icaltime_as_ical_string (*dt_end));
+
       gcal_days_grid_place (GCAL_DAYS_GRID (priv->day_grid),
                             widget,
                             priv->date->day == dt_start->day ? 0 : 1,
                             dt_start->hour * 2 + (dt_start->minute / 30),
                             dt_end->hour * 2 + (dt_end->minute / 30)); /* FIXME Include half hour and length */
     }
+  else
+    {
+      gboolean start_tomorrow;
+      g_debug ("[all-day-grid] %s from %s to %s",
+               summ,
+               icaltime_as_ical_string (*dt_start),
+               icaltime_as_ical_string (*dt_end));
+      start_tomorrow = icaltime_compare_date_only (*dt_start, *tomorrow) == 0;
+      gcal_all_day_grid_place (GCAL_ALL_DAY_GRID (priv->all_day_grid),
+                               widget,
+                               start_tomorrow ? 1 : 0,
+                               dt_start->day != dt_end->day ? 2 : 1);
+    }
 
+  g_free (tomorrow);
   g_free (dt_start);
   g_free (dt_end);
   g_free (summ);
