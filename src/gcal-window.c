@@ -230,8 +230,7 @@ update_view (GcalWindow *window)
   widget = priv->views[priv->active_view];
 
   /* destroying old children */
-  /* gtk_container_foreach (GTK_CONTAINER (widget), */
-  /*                        (GtkCallback) gtk_widget_destroy, NULL); */
+  gcal_view_clear (GCAL_VIEW (widget));
 
   first_day = gcal_view_get_initial_date (GCAL_VIEW (widget));
   last_day = gcal_view_get_final_date (GCAL_VIEW (widget));

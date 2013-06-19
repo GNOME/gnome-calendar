@@ -86,6 +86,8 @@ static gboolean       gcal_day_view_draw_event            (GcalView       *view,
 static GtkWidget*     gcal_day_view_get_by_uuid           (GcalView       *view,
                                                            const gchar    *uuid);
 
+static void           gcal_day_view_clear                 (GcalView       *view);
+
 G_DEFINE_TYPE_WITH_CODE (GcalDayView,
                          gcal_day_view,
                          GTK_TYPE_GRID,
@@ -161,6 +163,7 @@ gcal_view_interface_init (GcalViewIface *iface)
 
   iface->draw_event = gcal_day_view_draw_event;
   iface->get_by_uuid = gcal_day_view_get_by_uuid;
+  iface->clear = gcal_day_view_clear;
 }
 
 static void
@@ -461,6 +464,19 @@ gcal_day_view_get_by_uuid (GcalView    *view,
     return widget;
 
   return NULL;
+}
+
+static void
+gcal_day_view_clear (GcalView *view)
+{
+  GcalDayViewPrivate *priv;
+
+  priv = GCAL_DAY_VIEW (view)->priv;
+
+  gtk_container_foreach (GTK_CONTAINER (priv->all_day_grid),
+                         (GtkCallback) gtk_widget_destroy, NULL);
+  gtk_container_foreach (GTK_CONTAINER (priv->day_grid),
+                         (GtkCallback) gtk_widget_destroy, NULL);
 }
 
 /* Public API */
