@@ -84,6 +84,11 @@ enum
   PROP_ACTIVE_DATE
 };
 
+static void           date_updated                       (GtkButton           *buttton,
+                                                          gpointer             user_data);
+
+static void           update_view                        (GcalWindow          *window);
+
 static void           gcal_window_constructed            (GObject             *object);
 
 static void           gcal_window_finalize               (GObject             *object);
@@ -112,9 +117,6 @@ static void           gcal_window_search_toggled         (GObject             *o
                                                           gpointer             user_data);
 
 static void           gcal_window_search_changed         (GtkEditable         *editable,
-                                                          gpointer             user_data);
-
-static void           gcal_window_view_updated           (GtkButton           *buttton,
                                                           gpointer             user_data);
 
 static GcalManager*   gcal_window_get_manager            (GcalWindow          *window);
@@ -170,6 +172,86 @@ static void           gcal_window_update_event_widget    (GcalManager         *m
                                                           GcalEventWidget     *widget);
 
 G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
+
+static void
+date_updated (GtkButton  *button,
+              gpointer    user_data)
+{
+  GcalWindowPrivate *priv;
+
+  gboolean move_back;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  move_back = gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)) == (GtkWidget*) button;
+
+  switch (priv->active_view)
+    {
+    case GCAL_WINDOW_VIEW_DAY:
+      priv->active_date->day += 1 * (move_back ? -1 : 1);
+      break;
+    case GCAL_WINDOW_VIEW_WEEK:
+      priv->active_date->day += 7 * (move_back ? -1 : 1);
+      break;
+    case GCAL_WINDOW_VIEW_MONTH:
+      priv->active_date->month += 1 * (move_back ? -1 : 1);
+      break;
+    case GCAL_WINDOW_VIEW_YEAR:
+      priv->active_date->year += 1 * (move_back ? -1 : 1);
+      break;
+    case GCAL_WINDOW_VIEW_LIST:
+      break;
+    }
+  *(priv->active_date) = icaltime_normalize (*(priv->active_date));
+  g_object_notify (user_data, "active-date");
+
+  update_view (GCAL_WINDOW (user_data));
+}
+
+/**
+ * update_view:
+ * @window:
+ *
+ * Calling update view on the active view
+ **/
+static void
+update_view (GcalWindow *window)
+{
+  GcalWindowPrivate *priv;
+
+  GtkWidget *widget;
+
+  icaltimetype *first_day;
+  icaltimetype *last_day;
+  gchar* header;
+
+  priv = window->priv;
+
+  widget = priv->views[priv->active_view];
+
+  /* destroying old children */
+  /* gtk_container_foreach (GTK_CONTAINER (widget), */
+  /*                        (GtkCallback) gtk_widget_destroy, NULL); */
+
+  first_day = gcal_view_get_initial_date (GCAL_VIEW (widget));
+  last_day = gcal_view_get_final_date (GCAL_VIEW (widget));
+
+  gcal_manager_set_new_range (
+      gcal_window_get_manager (window),
+      first_day,
+      last_day);
+
+  g_free (first_day);
+  g_free (last_day);
+
+  header = gcal_view_get_left_header (GCAL_VIEW (widget));
+  g_object_set (priv->nav_bar, "left-header", header, NULL);
+  g_free (header);
+
+  header = gcal_view_get_right_header (GCAL_VIEW (widget));
+  g_object_set (priv->nav_bar, "right-header", header, NULL);
+  g_free (header);
+}
 
 static void
 gcal_window_class_init(GcalWindowClass *klass)
@@ -375,9 +457,9 @@ gcal_window_constructed (GObject *object)
                     G_CALLBACK (gcal_window_search_changed), object);
 
   g_signal_connect (gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)),
-                    "clicked", G_CALLBACK (gcal_window_view_updated), object);
+                    "clicked", G_CALLBACK (date_updated), object);
   g_signal_connect (gcal_nav_bar_get_next_button (GCAL_NAV_BAR (priv->nav_bar)),
-                    "clicked", G_CALLBACK (gcal_window_view_updated), object);
+                    "clicked", G_CALLBACK (date_updated), object);
 
   gtk_container_add (GTK_CONTAINER (object), priv->main_box);
   gtk_widget_show_all (priv->main_box);
@@ -509,12 +591,6 @@ gcal_window_view_changed (GObject    *object,
   GEnumValue *eval;
   GcalWindowViewType view_type;
 
-  GtkWidget *widget;
-  icaltimetype *first_day;
-  icaltimetype *last_day;
-
-  gchar *header;
-
   priv = GCAL_WINDOW (user_data)->priv;
 
   window = GCAL_WINDOW (user_data);
@@ -532,24 +608,7 @@ gcal_window_view_changed (GObject    *object,
   priv->active_view = view_type;
   g_object_notify (G_OBJECT (window), "active-view");
 
-  widget = priv->views[view_type];
-
-  first_day = gcal_view_get_initial_date (GCAL_VIEW (widget));
-  last_day = gcal_view_get_final_date (GCAL_VIEW (widget));
-
-  gcal_manager_set_new_range (gcal_window_get_manager (window),
-                              first_day,
-                              last_day);
-  g_free (first_day);
-  g_free (last_day);
-
-  header = gcal_view_get_left_header (GCAL_VIEW (widget));
-  g_object_set (priv->nav_bar, "left-header", header, NULL);
-  g_free (header);
-
-  header = gcal_view_get_right_header (GCAL_VIEW (widget));
-  g_object_set (priv->nav_bar, "right-header", header, NULL);
-  g_free (header);
+  update_view (GCAL_WINDOW (user_data));
 }
 
 static void
@@ -609,43 +668,6 @@ gcal_window_search_changed (GtkEditable *editable,
                                     "");
         }
     }
-}
-
-static void
-gcal_window_view_updated (GtkButton  *button,
-                          gpointer    user_data)
-{
-  GcalWindowPrivate *priv;
-  priv = GCAL_WINDOW (user_data)->priv;
-
-  if (gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)) ==
-      (GtkWidget*) button)
-    {
-      g_debug ("Moved back");
-    }
-  else
-    {
-      g_debug ("Moved forward");
-    }
-
-  /* FIXME: reenable views updating  */
-  /* priv = GCAL_WINDOW (user_data)->priv; */
-
-  /* gcal_view_set_date (GCAL_VIEW (priv->views[priv->active_view]), */
-  /*                     date); */
-
-  /* first_day = gcal_view_get_initial_date ( */
-  /*     GCAL_VIEW (priv->views[priv->active_view])); */
-  /* last_day = gcal_view_get_final_date ( */
-  /*         GCAL_VIEW (priv->views[priv->active_view])); */
-
-  /* gcal_manager_set_new_range ( */
-  /*     gcal_window_get_manager (GCAL_WINDOW (user_data)), */
-  /*     first_day, */
-  /*     last_day); */
-
-  /* g_free (first_day); */
-  /* g_free (last_day); */
 }
 
 static GcalManager*
@@ -813,7 +835,8 @@ gcal_window_events_modified (GcalManager *manager,
                                                           source_uid,
                                                           event_uid);
 
-              if (gcal_view_draw_event (priv->views[i], start_date, end_date))
+              if (gcal_view_draw_event (GCAL_VIEW (priv->views[i]),
+                                        start_date, end_date))
                 {
                   gcal_window_update_event_widget (manager,
                                                    source_uid,
