@@ -52,17 +52,6 @@ gcal_view_base_init (gpointer g_iface)
                     G_TYPE_DOUBLE,
                     G_TYPE_DOUBLE);
 
-      g_signal_new ("updated",
-                    GCAL_TYPE_VIEW,
-                    G_SIGNAL_RUN_LAST,
-                    G_STRUCT_OFFSET (GcalViewIface,
-                                     updated),
-                    NULL, NULL,
-                    g_cclosure_marshal_VOID__POINTER,
-                    G_TYPE_NONE,
-                    1,
-                    G_TYPE_POINTER);
-
       initialized = TRUE;
     }
 }
