@@ -51,8 +51,6 @@ struct _GcalViewIface
   void            (*create_event)                       (GcalView *view, icaltimetype *start_span, icaltimetype *end_span, gdouble x, gdouble y);
   void            (*updated)                            (GcalView *view, icaltimetype *date);
 
-  void            (*reposition_child)                   (GcalView *view, const gchar *uuid);
-
 /* FIXME remove me in favor of the one below */
   void            (*clear_selection)                    (GcalView *view);
 
@@ -84,9 +82,6 @@ void          gcal_view_set_date                      (GcalView     *view,
 						       icaltimetype *date);
 
 icaltimetype* gcal_view_get_date                      (GcalView     *view);
-
-void          gcal_view_reposition_child              (GcalView     *view,
-						       const gchar  *uuid);
 
 /* FIXME remove me in favor of the one below */
 void          gcal_view_clear_selection               (GcalView     *view);

@@ -129,9 +129,6 @@ static GtkWidget*     gcal_month_view_get_by_uuid           (GcalView       *vie
                                                              const gchar    *uuid);
 
 /* Review API */
-static void           gcal_month_view_reposition_child      (GcalView       *view,
-                                                             const gchar    *uuid);
-
 static void           gcal_month_view_clear_selection       (GcalView       *view);
 
 static void           gcal_month_view_create_event_on_current_unit (GcalView *view);
@@ -168,7 +165,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   widget_class->button_release_event = gcal_month_view_button_release;
 
   container_class = GTK_CONTAINER_CLASS (klass);
-  container_class->add   = gcal_month_view_add;
+  container_class->add = gcal_month_view_add;
   container_class->remove = gcal_month_view_remove;
   container_class->forall = gcal_month_view_forall;
 
@@ -210,8 +207,6 @@ gcal_month_view_init (GcalMonthView *self)
 static void
 gcal_view_interface_init (GcalViewIface *iface)
 {
-  iface->reposition_child = gcal_month_view_reposition_child;
-
   iface->clear_selection = gcal_month_view_clear_selection;
 
   iface->create_event_on_current_unit = gcal_month_view_create_event_on_current_unit;
@@ -1282,66 +1277,6 @@ gcal_month_view_get_by_uuid (GcalView    *view,
         }
     }
   return NULL;
-}
-
-static void
-gcal_month_view_reposition_child (GcalView    *view,
-                                  const gchar *uuid)
-{
-  GcalMonthViewPrivate *priv;
-  gint i;
-  GList *l;
-
-  g_return_if_fail (GCAL_IS_MONTH_VIEW (view));
-  priv = GCAL_MONTH_VIEW (view)->priv;
-
-  for (i = 0; i < 31; i++)
-    {
-      for (l = priv->days[i]; l != NULL; l = l->next)
-        {
-          GcalViewChild *child;
-          const gchar* widget_uuid;
-
-          child = (GcalViewChild*) l->data;
-          widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
-          if (g_strcmp0 (uuid, widget_uuid) == 0)
-            {
-              icaltimetype *date;
-
-              date =
-                gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
-
-              if (gcal_month_view_draw_event (view, date, NULL))
-                {
-                  if (date->day - 1 == i)
-                    {
-                      priv->days[date->day - 1] =
-                        g_list_sort (priv->days[date->day - 1],
-                                     gcal_compare_event_widget_by_date);
-                    }
-                  else
-                    {
-                      priv->days[i] = g_list_remove (priv->days[i], child);
-
-                      child->hidden = TRUE;
-                      priv->days[date->day - 1] =
-                        g_list_insert_sorted (priv->days[date->day - 1],
-                                              child,
-                                              gcal_compare_event_widget_by_date);
-                    }
-
-                  gtk_widget_queue_resize (GTK_WIDGET (view));
-                }
-              else
-                {
-                  gtk_widget_destroy (gcal_month_view_get_by_uuid (view, uuid));
-                }
-
-              g_free (date);
-              return;
-            }
-        }
-    }
 }
 
 static void

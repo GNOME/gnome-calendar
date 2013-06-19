@@ -116,16 +116,6 @@ gcal_view_get_date (GcalView *view)
 }
 
 void
-gcal_view_reposition_child (GcalView    *view,
-                            const gchar *uuid)
-{
-  g_return_if_fail (GCAL_IS_VIEW (view));
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->reposition_child);
-
-  GCAL_VIEW_GET_INTERFACE (view)->reposition_child (view, uuid);
-}
-
-void
 gcal_view_clear_selection (GcalView *view)
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
@@ -273,9 +263,10 @@ gcal_view_draw_event (GcalView     *view,
  * @uuid: the uuid of the event-widget
  *
  * The uuid is formed by source-uid:event-uid, and the widget with
- * this uuid is fetched by this method
+ * this uuid is fetched by this method. If there's no widget with this
+ * uuid in the view %NULL is returned.
  *
- * Returns: a #GcalEventWidget as #GtkWidget
+ * Returns: a #GcalEventWidget as #GtkWidget, %NULL otherwise
  **/
 GtkWidget*
 gcal_view_get_by_uuid (GcalView    *view,

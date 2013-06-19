@@ -779,6 +779,8 @@ gcal_window_events_modified (GcalManager *manager,
   gchar *event_uid;
 
   GtkWidget *widget;
+  icaltimetype *start_date;
+  icaltimetype *end_date;
 
   priv = GCAL_WINDOW (user_data)->priv;
 
@@ -796,16 +798,41 @@ gcal_window_events_modified (GcalManager *manager,
 
       for (i = 0; i < 5; i++)
         {
-          if (priv->views[i] != NULL)
-            {
-              widget = gcal_view_get_by_uuid (GCAL_VIEW (priv->views[i]),
-                                              (gchar*) l->data);
-              gcal_window_update_event_widget (manager,
-                                               source_uid,
-                                               event_uid,
-                                               GCAL_EVENT_WIDGET (widget));
-              gcal_view_reposition_child (GCAL_VIEW (priv->views[i]),
+          if (priv->views[i] == NULL)
+            continue;
+
+          widget = gcal_view_get_by_uuid (GCAL_VIEW (priv->views[i]),
                                           (gchar*) l->data);
+
+          if (widget != NULL)
+            {
+              start_date = gcal_manager_get_event_start_date (manager,
+                                                              source_uid,
+                                                              event_uid);
+              end_date = gcal_manager_get_event_end_date (manager,
+                                                          source_uid,
+                                                          event_uid);
+
+              if (gcal_view_draw_event (priv->views[i], start_date, end_date))
+                {
+                  gcal_window_update_event_widget (manager,
+                                                   source_uid,
+                                                   event_uid,
+                                                   GCAL_EVENT_WIDGET (widget));
+                  g_object_ref (widget);
+                  gtk_container_remove (GTK_CONTAINER (priv->views[i]),
+                                        widget);
+                  gtk_container_add (GTK_CONTAINER (priv->views[i]),
+                                     widget);
+                  g_object_unref (widget);
+                }
+              else
+                {
+                  gtk_widget_destroy (widget);
+                }
+
+              g_free (start_date);
+              g_free (end_date);
             }
         }
 
