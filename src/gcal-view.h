@@ -72,6 +72,7 @@ struct _GcalViewIface
   /* Container functions related API */
   gboolean        (*draw_event)                         (GcalView *view, icaltimetype *start_date, icaltimetype *end_date);
   GtkWidget*      (*get_by_uuid)                        (GcalView *view, const gchar *uuid);
+  void            (*clear)                              (GcalView *view);
 };
 
 GType         gcal_view_get_type                      (void);
@@ -107,6 +108,8 @@ gboolean      gcal_view_draw_event                    (GcalView     *view,
 
 GtkWidget*    gcal_view_get_by_uuid                   (GcalView     *view,
 						       const gchar  *uuid);
+
+void          gcal_view_clear                         (GcalView     *view);
 
 G_END_DECLS
 
