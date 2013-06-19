@@ -266,3 +266,21 @@ gcal_view_get_by_uuid (GcalView    *view,
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid (view, uuid);
 }
+
+/**
+ * gcal_view_clear:
+ * @view: a #GcalView object
+ *
+ * Destroy every children inside the view.
+ *
+ * Note: this is a hack because of not-working container code
+ * for day and week view composited widgets.
+ **/
+void
+gcal_view_clear (GcalView *view)
+{
+  g_return_if_fail (GCAL_IS_VIEW (view));
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->clear);
+
+  GCAL_VIEW_GET_INTERFACE (view)->clear (view);
+}
