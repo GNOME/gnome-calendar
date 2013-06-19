@@ -300,13 +300,18 @@ gcal_window_constructed (GObject *object)
   gtk_container_add (GTK_CONTAINER (priv->search_bar), box);
   gtk_container_add (GTK_CONTAINER (priv->main_box), priv->search_bar);
 
-  /* nav_bar */
-  priv->nav_bar = gcal_nav_bar_new ();
-  gtk_container_add (GTK_CONTAINER (priv->main_box), priv->nav_bar);
-
   /* overlay */
   priv->views_overlay = gtk_overlay_new ();
   gtk_container_add (GTK_CONTAINER (priv->main_box), priv->views_overlay);
+
+  box = gtk_grid_new ();
+  gtk_orientable_set_orientation (GTK_ORIENTABLE (box),
+                                  GTK_ORIENTATION_VERTICAL);
+  gtk_container_add (GTK_CONTAINER (priv->views_overlay), box);
+
+  /* nav_bar */
+  priv->nav_bar = gcal_nav_bar_new ();
+  gtk_container_add (GTK_CONTAINER (box), priv->nav_bar);
 
   /* stack widget for holding views */
   priv->views_stack = gtk_stack_new ();
@@ -316,7 +321,7 @@ gcal_window_constructed (GObject *object)
                 "transition-type", GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT,
                 "transition-duration", 500,
                 NULL);
-  gtk_container_add (GTK_CONTAINER (priv->views_overlay), priv->views_stack);
+  gtk_container_add (GTK_CONTAINER (box), priv->views_stack);
 
   gtk_style_context_add_class (
       gtk_widget_get_style_context (priv->views_stack),
