@@ -128,6 +128,8 @@ static gboolean       gcal_month_view_draw_event            (GcalView       *vie
 static GtkWidget*     gcal_month_view_get_by_uuid           (GcalView       *view,
                                                              const gchar    *uuid);
 
+static void           gcal_month_view_clear                 (GcalView       *view);
+
 /* Review API */
 static void           gcal_month_view_clear_selection       (GcalView       *view);
 
@@ -220,6 +222,7 @@ gcal_view_interface_init (GcalViewIface *iface)
 
   iface->draw_event = gcal_month_view_draw_event;
   iface->get_by_uuid = gcal_month_view_get_by_uuid;
+  iface->clear = gcal_month_view_clear;
 }
 
 static void
@@ -1277,6 +1280,13 @@ gcal_month_view_get_by_uuid (GcalView    *view,
         }
     }
   return NULL;
+}
+
+static void
+gcal_month_view_clear (GcalView *view)
+{
+  gtk_container_foreach (GTK_CONTAINER (view),
+                         (GtkCallback) gtk_widget_destroy, NULL);
 }
 
 static void
