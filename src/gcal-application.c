@@ -282,8 +282,6 @@ gcal_application_set_app_menu (GApplication *app)
   GSimpleAction *about;
   GSimpleAction *quit;
 
-  GVariant *va;
-
   g_return_if_fail (GCAL_IS_APPLICATION (app));
   priv = GCAL_APPLICATION (app)->priv;
 
@@ -336,13 +334,6 @@ gcal_application_set_app_menu (GApplication *app)
   gtk_application_add_accelerator (GTK_APPLICATION (app), "<Primary>n", "app.new_event", NULL);
   gtk_application_add_accelerator (GTK_APPLICATION (app), "<Primary>f", "app.search", NULL);
   gtk_application_add_accelerator (GTK_APPLICATION (app), "<Primary>q", "app.quit", NULL);
-
-  va = g_variant_new_string ("month");
-  gtk_application_add_accelerator (GTK_APPLICATION (app), "<Primary>m", "app.view", va);
-  g_variant_unref (va);
-  va = g_variant_new_string ("year");
-  gtk_application_add_accelerator (GTK_APPLICATION (app), "<Primary>y", "app.view", va);
-  g_variant_unref (va);
 }
 
 static void
