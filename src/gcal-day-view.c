@@ -71,6 +71,9 @@ static void           gcal_day_view_get_property          (GObject        *objec
 static void           gcal_day_view_add                   (GtkContainer   *container,
                                                            GtkWidget      *widget);
 
+static void           gcal_day_view_remove                (GtkContainer   *container,
+                                                           GtkWidget      *widget);
+
 static icaltimetype*  gcal_day_view_get_initial_date      (GcalView       *view);
 
 static icaltimetype*  gcal_day_view_get_final_date        (GcalView       *view);
@@ -130,9 +133,8 @@ gcal_day_view_class_init (GcalDayViewClass *klass)
 
   container_class = GTK_CONTAINER_CLASS (klass);
   container_class->add = gcal_day_view_add;
+  container_class->remove = gcal_day_view_remove;
   /* FIXME: Uncomment stuff here */
-  /* container_class->remove = gcal_day_view_remove; */
-  /* container_class->forall = gcal_day_view_forall; */
   /* gtk_container_class_handle_border_width (container_class); */
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
@@ -340,6 +342,26 @@ gcal_day_view_add (GtkContainer *container,
   g_free (dt_start);
   g_free (dt_end);
   g_free (summ);
+}
+
+static void
+gcal_day_view_remove (GtkContainer *container,
+                      GtkWidget    *widget)
+{
+  GcalDayViewPrivate *priv;
+
+  priv = GCAL_DAY_VIEW (container)->priv;
+
+  if (gtk_widget_get_parent (widget) == (GtkWidget*) container)
+    {
+      GTK_CONTAINER_CLASS (gcal_day_view_parent_class)->remove (container,
+                                                                widget);
+    }
+  else
+    {
+      gtk_container_remove (GTK_CONTAINER (priv->all_day_grid), widget);
+      gtk_container_remove (GTK_CONTAINER (priv->day_grid), widget);
+    }
 }
 
 /* GcalView API */
