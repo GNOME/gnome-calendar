@@ -103,9 +103,6 @@ static void           gcal_year_view_forall                       (GtkContainer 
                                                                    GtkCallback     callback,
                                                                    gpointer        callback_data);
 
-static void           gcal_year_view_set_date                     (GcalYearView  *view,
-                                                                   icaltimetype   *date);
-
 static void           gcal_year_view_draw_grid                    (GcalYearView  *view,
                                                                    cairo_t        *cr,
                                                                    GtkAllocation  *alloc,
@@ -227,13 +224,17 @@ gcal_year_view_set_property (GObject       *object,
                              const GValue  *value,
                              GParamSpec    *pspec)
 {
-  g_return_if_fail (GCAL_IS_YEAR_VIEW (object));
+  GcalYearViewPrivate *priv;
+
+  priv = GCAL_YEAR_VIEW (object)->priv;
 
   switch (property_id)
     {
     case PROP_DATE:
-      gcal_year_view_set_date (GCAL_YEAR_VIEW (object),
-                               g_value_dup_boxed (value));
+      if (priv->date != NULL)
+        g_free (priv->date);
+
+      priv->date = g_value_dup_boxed (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -740,53 +741,6 @@ gcal_year_view_forall (GtkContainer *container,
 
           (* callback) (child->widget, callback_data);
         }
-    }
-}
-
-static void
-gcal_year_view_set_date (GcalYearView *view,
-                         icaltimetype  *date)
-{
-  GcalYearViewPrivate *priv;
-  gboolean will_resize;
-
-  gint i;
-  GList *l;
-  GList *to_remove;
-
-  priv = view->priv;
-  will_resize = FALSE;
-
-  /* if span_updated: queue_resize */
-  will_resize = ! gcal_year_view_draw_event (GCAL_VIEW (view), date, NULL);
-
-  if (priv->date != NULL)
-    g_free (priv->date);
-
-  priv->date = date;
-
-  if (will_resize)
-    {
-      to_remove = NULL;
-
-      for (i = 0; i < 12; i++)
-        {
-          for (l = priv->months[i]; l != NULL; l = l->next)
-            {
-              GcalViewChild *child;
-              icaltimetype *child_date;
-
-              child = (GcalViewChild*) l->data;
-              child_date =
-                gcal_event_widget_get_date (GCAL_EVENT_WIDGET (child->widget));
-              if (! gcal_year_view_draw_event (GCAL_VIEW (view), child_date, NULL))
-                to_remove = g_list_append (to_remove, child->widget);
-            }
-        }
-      g_list_foreach (to_remove, (GFunc) gtk_widget_destroy, NULL);
-
-      gtk_widget_queue_resize (GTK_WIDGET (view));
-      gtk_widget_queue_draw (GTK_WIDGET (view));
     }
 }
 
