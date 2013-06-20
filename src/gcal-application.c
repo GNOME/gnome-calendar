@@ -161,9 +161,6 @@ gcal_application_activate (GApplication *application)
                        priv->window,
                        "active-view",
                        G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
-      gtk_window_set_title (GTK_WINDOW (priv->window), _("Calendar"));
-      gtk_window_set_hide_titlebar_when_maximized (GTK_WINDOW (priv->window),
-                                                   FALSE);
 
       variant = g_settings_get_value (priv->settings, "window-size");
       size = g_variant_get_fixed_array (variant, &n_elements, sizeof (gint32));
