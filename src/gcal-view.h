@@ -63,7 +63,7 @@ struct _GcalViewIface
 
   /* Marks related API */
   void            (*mark_current_unit)                  (GcalView     *view);
-  void            (*clear_mark)                         (GcalView     *view);
+  void            (*clear_marks)                        (GcalView     *view);
 
   /* Update NavBar headings */
   gchar*          (*get_left_header)                    (GcalView     *view);
@@ -96,7 +96,7 @@ icaltimetype* gcal_view_get_final_date                (GcalView     *view);
 
 void          gcal_view_mark_current_unit             (GcalView     *view);
 
-void          gcal_view_clear_mark                    (GcalView     *view);
+void          gcal_view_clear_marks                   (GcalView     *view);
 
 gchar*        gcal_view_get_left_header               (GcalView     *view);
 
