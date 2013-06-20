@@ -327,15 +327,22 @@ gcal_day_view_add (GtkContainer *container,
   else
     {
       gboolean start_tomorrow;
+      guint length;
       g_debug ("[all-day-grid] %s from %s to %s",
                summ,
                icaltime_as_ical_string (*dt_start),
                icaltime_as_ical_string (*dt_end));
       start_tomorrow = icaltime_compare_date_only (*dt_start, *tomorrow) == 0;
+
+      if (start_tomorrow)
+        length = 1;
+      else if (dt_start->day != dt_end->day)
+        length = 2;
+      else
+        length = 1;
       gcal_all_day_grid_place (GCAL_ALL_DAY_GRID (priv->all_day_grid),
                                widget,
-                               start_tomorrow ? 1 : 0,
-                               dt_start->day != dt_end->day ? 2 : 1);
+                               start_tomorrow ? 1 : 0, length);
     }
 
   g_free (tomorrow);
