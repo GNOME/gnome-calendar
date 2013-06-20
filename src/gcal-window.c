@@ -81,8 +81,12 @@ enum
 {
   PROP_0,
   PROP_ACTIVE_VIEW,
-  PROP_ACTIVE_DATE
+  PROP_ACTIVE_DATE,
+  PROP_NEW_EVENT_MODE
 };
+
+static void           set_new_event_mode                 (GcalWindow          *window,
+                                                          gboolean             enabled);
 
 static void           date_updated                       (GtkButton           *buttton,
                                                           gpointer             user_data);
@@ -172,6 +176,28 @@ static void           gcal_window_update_event_widget    (GcalManager         *m
                                                           GcalEventWidget     *widget);
 
 G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
+
+static void
+set_new_event_mode (GcalWindow *window,
+                    gboolean    enabled)
+{
+  GcalWindowPrivate *priv;
+
+  priv = window->priv;
+  priv->new_event_mode = enabled;
+  g_object_notify (G_OBJECT (window), "new-event-mode");
+
+  if (enabled)
+    {
+      /* set views to disable clicks */
+      ;
+    }
+  else
+    {
+      /* clearing marks */
+      gcal_view_clear_marks (GCAL_VIEW (priv->views[priv->active_view]));
+    }
+}
 
 static void
 date_updated (GtkButton  *button,
@@ -283,6 +309,16 @@ gcal_window_class_init(GcalWindowClass *klass)
                           G_PARAM_CONSTRUCT |
                           G_PARAM_READWRITE));
 
+  g_object_class_install_property (
+      object_class,
+      PROP_NEW_EVENT_MODE,
+      g_param_spec_boolean ("new-event-mode",
+                            "New Event mode",
+                            "Whether the window is in new-event-mode or not",
+                            FALSE,
+                            G_PARAM_CONSTRUCT |
+                            G_PARAM_READWRITE));
+
   g_type_class_add_private((gpointer)klass, sizeof (GcalWindowPrivate));
 }
 
@@ -297,7 +333,6 @@ gcal_window_init(GcalWindow *self)
   priv = self->priv;
 
   /* states */
-  priv->new_event_mode = FALSE;
   priv->search_mode = FALSE;
 
   /* FIXME: Review real need of this */
@@ -341,6 +376,11 @@ gcal_window_constructed (GObject *object)
   g_object_ref_sink (priv->views_switcher);
   gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
                                    priv->views_switcher);
+  g_object_bind_property (object,
+                          "new-event-mode",
+                          priv->views_switcher,
+                          "sensitive",
+                          G_BINDING_DEFAULT | G_BINDING_INVERT_BOOLEAN);
 
   /* header_bar: search */
   search_button = gd_header_toggle_button_new ();
@@ -505,6 +545,9 @@ gcal_window_set_property (GObject      *object,
         g_free (priv->active_date);
       priv->active_date = g_value_dup_boxed (value);
       return;
+    case PROP_NEW_EVENT_MODE:
+      set_new_event_mode (GCAL_WINDOW (object), g_value_get_boolean (value));
+      return;
     }
 
   G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -527,6 +570,9 @@ gcal_window_get_property (GObject    *object,
       return;
     case PROP_ACTIVE_DATE:
       g_value_set_boxed (value, priv->active_date);
+      return;
+    case PROP_NEW_EVENT_MODE:
+      g_value_set_boolean (value, priv->new_event_mode);
       return;
     }
 

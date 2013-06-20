@@ -162,6 +162,12 @@ gcal_application_activate (GApplication *application)
                        "active-view",
                        G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
 
+      g_object_bind_property (priv->window,
+                              "new-event-mode",
+                              priv->view,
+                              "enabled",
+                              G_BINDING_DEFAULT | G_BINDING_INVERT_BOOLEAN);
+
       variant = g_settings_get_value (priv->settings, "window-size");
       size = g_variant_get_fixed_array (variant, &n_elements, sizeof (gint32));
       if (n_elements == 2)
