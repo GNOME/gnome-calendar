@@ -49,8 +49,9 @@ struct _GcalEditDialogPrivate
   GcalManager      *manager;
   GtkTreeIter      *active_iter;
 
+  GtkWidget        *titlebar;
+  GtkWidget        *lock;
   GtkWidget        *edit_grid;
-  GtkWidget        *readonly_box;
 
   GtkWidget        *delete_button;
 
@@ -153,11 +154,16 @@ gcal_edit_dialog_constructed (GObject* object)
   /* chaining up */
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->constructed (object);
 
-  gtk_window_set_title (GTK_WINDOW (object), _("Event Details"));
-
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (object));
 
-  gtk_widget_push_composite_child ();
+  /* titlebar */
+  priv->titlebar = gtk_header_bar_new ();
+  gtk_header_bar_set_title (GTK_HEADER_BAR (priv->titlebar),
+                            _("Event Details"));
+  priv->lock = gtk_image_new_from_icon_name ("changes-prevent-symbolic",
+                                             GTK_ICON_SIZE_MENU);
+  gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->titlebar), priv->lock);
+  gtk_window_set_titlebar (GTK_WINDOW (object), priv->titlebar);
 
   /* edit area, grid */
   priv->edit_grid = gtk_grid_new ();
@@ -328,8 +334,6 @@ gcal_edit_dialog_constructed (GObject* object)
 
   gtk_widget_show_all (action_area);
 
-  gtk_widget_pop_composite_child ();
-
   /* signals handlers */
   g_signal_connect (priv->calendar_button,
                     "toggled",
@@ -486,52 +490,17 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
   priv = dialog->priv;
 
   priv->writable = writable;
-  if (priv->readonly_box == NULL && ! writable)
+
+  if (! writable)
     {
-      GtkWidget *content_area;
-      GtkWidget *box;
-      GtkWidget *label;
-      GtkWidget *lock;
-
-      content_area = gtk_dialog_get_content_area (GTK_DIALOG (dialog));
-
-      priv->readonly_box = gtk_event_box_new ();
-      gtk_event_box_set_visible_window (GTK_EVENT_BOX (priv->readonly_box),
-                                        TRUE);
-      gtk_style_context_add_class (
-          gtk_widget_get_style_context (priv->readonly_box),
-          "readonly");
-      gtk_box_pack_start (GTK_BOX (content_area),
-                          priv->readonly_box,
-                          TRUE, TRUE,
-                          6);
-      gtk_box_reorder_child (GTK_BOX (content_area), priv->readonly_box, 0);
-
-      box = gtk_grid_new ();
-      gtk_container_set_border_width (GTK_CONTAINER (box), 12);
-      gtk_container_add(GTK_CONTAINER (priv->readonly_box), box);
-
-      label = gtk_label_new ("Calendar is read only");
-      gtk_label_set_markup (GTK_LABEL (label),
-                            "<span weight=\"bold\">Calendar is readonly</span>");
-      gtk_widget_set_hexpand (label, TRUE);
-      gtk_widget_set_vexpand (label, TRUE);
-      gtk_widget_set_halign (label, GTK_ALIGN_START);
-      gtk_widget_set_valign (label, GTK_ALIGN_CENTER);
-      gtk_container_add (GTK_CONTAINER (box), label);
-
-      lock = gtk_image_new_from_icon_name ("changes-prevent-symbolic",
-                                           GTK_ICON_SIZE_MENU);
-      gtk_widget_set_hexpand (lock, TRUE);
-      gtk_widget_set_vexpand (lock, TRUE);
-      gtk_widget_set_halign (lock, GTK_ALIGN_END);
-      gtk_container_add (GTK_CONTAINER (box), lock);
-
-      gtk_widget_show_all (priv->readonly_box);
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->titlebar),
+                                   _("Read only calendar"));
+      gtk_widget_show (priv->lock);
     }
-  else if (priv->readonly_box != NULL && writable)
+  else
     {
-      gtk_widget_hide (priv->readonly_box);
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->titlebar), NULL);
+      gtk_widget_hide (priv->lock);
     }
 
   gtk_editable_set_editable (GTK_EDITABLE (priv->summary_entry), writable);
@@ -553,6 +522,8 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
       gtk_menu_button_set_popup (GTK_MENU_BUTTON (priv->calendar_button),
                                  priv->calendars_menu);
     }
+
+  gtk_widget_set_sensitive (priv->all_day_check, writable);
 
   /* add delete_button here */
   gtk_widget_set_sensitive (priv->delete_button, writable);
