@@ -173,18 +173,18 @@ gcal_view_mark_current_unit (GcalView *view)
 }
 
 /**
- * gcal_view_clear_mark:
+ * gcal_view_clear_marks:
  * @view: a #GcalView
  *
  * Clear any marking the view had drawn
  **/
 void
-gcal_view_clear_mark (GcalView *view)
+gcal_view_clear_marks (GcalView *view)
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->clear_mark);
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->clear_marks);
 
-  GCAL_VIEW_GET_INTERFACE (view)->clear_mark (view);
+  GCAL_VIEW_GET_INTERFACE (view)->clear_marks (view);
 }
 
 /**
