@@ -76,6 +76,7 @@ EDATASERVERUI_REQUIRED=3.5.3
 LIBICAL_REQUIRED=0.43
 
 PKG_CHECK_MODULES(CALENDAR,
+                  gmodule-export-2.0
                   glib-2.0 >= $GLIB_MIN_VERSION
                   gtk+-3.0 >= $GTK_MIN_VERSION
                   libecal-1.2 >= $ECAL_REQUIRED

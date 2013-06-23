@@ -3,5 +3,7 @@
   <gresource prefix="/org/gnome/calendar">
     <file alias="nav_bar.ui" compressed="true" preprocess="xml-stripblanks">../data/ui/nav_bar.ui</file>
     <file alias="viewport.ui" compressed="true" preprocess="xml-stripblanks">../data/ui/viewport.ui</file>
+    <file alias="new-event.ui" compressed="true" preprocess="xml-stripblanks">../data/ui/new-event.ui</file>
+    <file alias="close.svg" compressed="true" preprocess="xml-stripblanks">../data/theme/close-window.svg</file>
   </gresource>
 </gresources>
