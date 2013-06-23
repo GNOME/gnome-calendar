@@ -30,7 +30,7 @@
 #include "gcal-event-widget.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-enum-types.h"
-#include "gcal-event-overlay.h"
+#include "gcal-new-event-widget.h"
 
 #include "e-cell-renderer-color.h"
 
@@ -39,6 +39,14 @@
 #include <glib/gi18n.h>
 
 #include <libical/icaltime.h>
+
+struct _NewEventData
+{
+  gint               x;
+  gint               y;
+};
+
+typedef struct _NewEventData NewEventData;
 
 struct _GcalWindowPrivate
 {
@@ -68,6 +76,7 @@ struct _GcalWindowPrivate
   gboolean             new_event_mode;
   gboolean             search_mode;
 
+  NewEventData        *event_creation_data;
   /* FIXME: Review to see if this are needed */
   /* temp to keep the will_delete event uuid */
   gchar               *event_to_delete;
@@ -92,6 +101,13 @@ static void           date_updated                       (GtkButton           *b
                                                           gpointer             user_data);
 
 static void           update_view                        (GcalWindow          *window);
+
+static void           show_new_event_widget              (GcalView            *view,
+                                                          gpointer             start_span,
+                                                          gpointer             end_span,
+                                                          gdouble              x,
+                                                          gdouble              y,
+                                                          gpointer             user_data);
 
 static void           gcal_window_constructed            (GObject             *object);
 
@@ -154,14 +170,7 @@ static void           gcal_window_remove_event           (GdNotification      *n
 static void           gcal_window_undo_remove_event      (GtkButton           *button,
                                                           gpointer             user_data);
 
-static void           gcal_window_new_event_show         (GcalView            *view,
-                                                          gpointer             start_span,
-                                                          gpointer             end_span,
-                                                          gdouble              x,
-                                                          gdouble              y,
-                                                          gpointer             user_data);
-
-static void           gcal_window_create_event           (GcalEventOverlay    *widget,
+static void           gcal_window_create_event           (GcalNewEventWidget  *widget,
                                                           GcalNewEventData    *new_data,
                                                           gboolean             open_details,
                                                           gpointer             user_data);
@@ -277,6 +286,54 @@ update_view (GcalWindow *window)
   g_object_set (priv->nav_bar, "right-header", header, NULL);
   g_free (header);
 }
+/* Second flow new-event flow */
+static void
+show_new_event_widget (GcalView *view,
+                       gpointer  start_span,
+                       gpointer  end_span,
+                       gdouble   x,
+                       gdouble   y,
+                       gpointer  user_data)
+{
+  GcalWindowPrivate *priv;
+  GcalManager *manager;
+
+  g_return_if_fail (user_data);
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  /* 1st and 2nd steps */
+  set_new_event_mode (GCAL_WINDOW (user_data), TRUE);
+
+  /* FIXME: ensure destruction or singleton pattern */
+  priv->new_event_widget = gcal_new_event_widget_new ();
+
+  /* manager = gcal_window_get_manager (GCAL_WINDOW (user_data)); */
+  /* /\* squeezed in here, reload on every show *\/ */
+  /* gcal_event_overlay_set_sources_model ( */
+  /*     GCAL_EVENT_OVERLAY (priv->new_event_widget), */
+  /*     gcal_manager_get_sources_model (manager)); */
+
+  /* if (start_span != NULL) */
+  /*   { */
+  /*     gcal_event_overlay_set_span (GCAL_EVENT_OVERLAY (priv->new_event_widget), */
+  /*                                  (icaltimetype*) start_span, */
+  /*                                  (icaltimetype*) end_span); */
+  /*   } */
+
+  gtk_widget_show_all (priv->new_event_widget);
+
+  if (priv->event_creation_data != NULL)
+    g_free (priv->event_creation_data);
+
+  priv->event_creation_data = g_new (NewEventData, 1);
+  priv->event_creation_data->x = x;
+  priv->event_creation_data->y = y;
+  g_debug ("[show_new_event] position (%f, %f)", x, y);
+
+  gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
+                           priv->new_event_widget);
+}
+
 
 static void
 gcal_window_class_init(GcalWindowClass *klass)
@@ -335,6 +392,8 @@ gcal_window_init(GcalWindow *self)
   /* states */
   priv->search_mode = FALSE;
 
+  priv->event_creation_data = NULL;
+
   /* FIXME: Review real need of this */
   priv->event_to_delete = NULL;
   priv->waiting_for_creation = FALSE;
@@ -349,6 +408,8 @@ gcal_window_constructed (GObject *object)
   GtkWidget *box;
   GtkWidget *search_button;
   GtkWidget *menu_button;
+
+  gint i;
 
   if (G_OBJECT_CLASS (gcal_window_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_window_parent_class)->constructed (object);
@@ -486,6 +547,11 @@ gcal_window_constructed (GObject *object)
   /* signals connection/handling */
   g_signal_connect_swapped (priv->new_button, "clicked",
                             G_CALLBACK (gcal_window_new_event), object);
+  for (i = 0; i < 4; ++i)
+    {
+      g_signal_connect (priv->views[i], "create-event",
+                        G_CALLBACK (show_new_event_widget), object);
+    }
   g_signal_connect (priv->views_overlay, "get-child-position",
                     G_CALLBACK (gcal_window_place_new_event_widget), object);
   g_signal_connect (priv->views_stack, "notify::visible-child",
@@ -1014,44 +1080,7 @@ gcal_window_undo_remove_event (GtkButton *button,
 }
 
 static void
-gcal_window_new_event_show (GcalView *view,
-                            gpointer  start_span,
-                            gpointer  end_span,
-                            gdouble   x,
-                            gdouble   y,
-                            gpointer  user_data)
-{
-  GcalWindowPrivate *priv;
-  GcalManager *manager;
-
-  g_return_if_fail (user_data);
-  priv = GCAL_WINDOW (user_data)->priv;
-
-  /* FIXME: ensure destruction or singleton pattern */
-  priv->new_event_widget = gcal_event_overlay_new ();
-
-  manager = gcal_window_get_manager (GCAL_WINDOW (user_data));
-  /* squeezed in here, reload on every show */
-  gcal_event_overlay_set_sources_model (
-      GCAL_EVENT_OVERLAY (priv->new_event_widget),
-      gcal_manager_get_sources_model (manager));
-
-  if (start_span != NULL)
-    {
-      gcal_event_overlay_set_span (GCAL_EVENT_OVERLAY (priv->new_event_widget),
-                                   (icaltimetype*) start_span,
-                                   (icaltimetype*) end_span);
-    }
-
-  gtk_widget_show (priv->new_event_widget);
-  gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
-                           priv->new_event_widget);
-
-  g_debug ("position (%f, %f)", x, y);
-}
-
-static void
-gcal_window_create_event (GcalEventOverlay    *widget,
+gcal_window_create_event (GcalNewEventWidget  *widget,
                           GcalNewEventData    *new_data,
                           gboolean             open_details,
                           gpointer             user_data)
