@@ -46,8 +46,6 @@ gnome_calendar_SOURCES =                                  \
     gcal-year-view.h                                      \
     gcal-event-widget.c                                   \
     gcal-event-widget.h                                   \
-    gcal-event-overlay.c                                  \
-    gcal-event-overlay.h                                  \
     gcal-new-event-widget.c                               \
     gcal-new-event-widget.h                               \
     gcal-edit-dialog.c                                    \
