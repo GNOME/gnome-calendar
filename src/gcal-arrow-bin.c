@@ -40,6 +40,13 @@ enum
   PROP_ARROW_ALIGN
 };
 
+static void     get_padding_and_border                        (GtkWidget       *widget,
+                                                               GtkBorder       *border,
+                                                               guint           *arrow_size);
+
+static void     draw_arrow                                    (GtkWidget       *widget,
+                                                               cairo_t         *cr);
+
 static void     gcal_arrow_bin_set_property                   (GObject         *object,
                                                                guint            property_id,
                                                                const GValue    *value,
@@ -74,15 +81,195 @@ static void     gcal_arrow_bin_size_allocate                  (GtkWidget       *
 static gboolean gcal_arrow_bin_draw                           (GtkWidget       *widget,
                                                                cairo_t         *cr);
 
-static void     gcal_arrow_bin_draw_arrow                     (GtkWidget       *widget,
-                                                               cairo_t         *cr);
-
-static void     gcal_arrow_bin_get_padding_and_border         (GtkWidget       *widget,
-                                                               GtkBorder       *border,
-                                                               guint           *border_width,
-                                                               guint           *arrow_size);
-
 G_DEFINE_TYPE(GcalArrowBin, gcal_arrow_bin, GTK_TYPE_BIN)
+
+static void
+get_padding_and_border (GtkWidget *widget,
+                        GtkBorder *border,
+                        guint     *arrow_size)
+{
+  GtkBorder tmp;
+
+  if (border != NULL)
+    {
+      guint bw = gtk_container_get_border_width (GTK_CONTAINER (widget));
+      gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
+                                     gtk_widget_get_state_flags (widget),
+                                     border);
+
+      gtk_style_context_get_border (gtk_widget_get_style_context (widget),
+                                    gtk_widget_get_state_flags (widget),
+                                    &tmp);
+
+      border->top += tmp.top + bw;
+      border->right += tmp.right + bw;
+      border->bottom += tmp.bottom + bw;
+      border->left += tmp.left + bw;
+    }
+
+  if (arrow_size != NULL)
+    {
+      gtk_style_context_get_style (
+          gtk_widget_get_style_context (widget),
+          "arrow-size", arrow_size,
+          NULL);
+    }
+}
+
+static void
+draw_arrow (GtkWidget *widget,
+            cairo_t   *cr)
+{
+  GcalArrowBinPrivate *priv;
+
+  GdkRGBA color;
+  GtkBorder border;
+  guint arrow_size;
+  gdouble selected_border;
+  gint selected_border_radius;
+  guint width;
+  guint height;
+  guint bw;
+  gdouble arrow_start_point;
+
+  GPoint p0 = { 0, 0 };
+  GPoint p1 = { 0, 0 };
+  GPoint p2 = { 0, 0 };
+  GPoint p3 = { 0, 0 };
+  GPoint p4 = { 0, 0 };
+
+  priv = GCAL_ARROW_BIN (widget)->priv;
+
+  gtk_style_context_get_border (gtk_widget_get_style_context (widget),
+                                gtk_widget_get_state_flags (widget),
+                                &border);
+
+  gtk_style_context_get (gtk_widget_get_style_context (widget),
+                         gtk_widget_get_state_flags (widget),
+                         "border-radius", &selected_border_radius,
+                         NULL);
+
+  gtk_style_context_get_style (gtk_widget_get_style_context (widget),
+                               "arrow-size", &arrow_size, NULL);
+
+  bw = gtk_container_get_border_width (GTK_CONTAINER (widget));
+  width = gtk_widget_get_allocated_width (widget) - (border.left + border.right + 2 * bw);
+  height = gtk_widget_get_allocated_height (widget) - (border.top + border.bottom + 2 * bw);
+
+  selected_border = bw;
+  switch (priv->arrow_position)
+    {
+      case GTK_POS_TOP:
+        selected_border += border.top;
+        break;
+      case GTK_POS_BOTTOM:
+        selected_border += border.bottom;
+        break;
+      case GTK_POS_LEFT:
+        selected_border += border.left;
+        break;
+      case GTK_POS_RIGHT:
+        selected_border += border.right;
+        break;
+    }
+
+  if (priv->arrow_position == GTK_POS_LEFT ||
+      priv->arrow_position == GTK_POS_RIGHT)
+    {
+      width -= arrow_size;
+      arrow_start_point = arrow_size + selected_border / 2 + selected_border_radius +
+          (height - 2 * (arrow_size + selected_border / 2 + selected_border_radius)) * priv->arrow_align;
+    }
+  else
+    {
+      height -= arrow_size;
+      arrow_start_point = arrow_size + selected_border / 2 + selected_border_radius +
+          (width - 2 * (arrow_size + selected_border / 2 + selected_border_radius)) * priv->arrow_align;
+    }
+
+  p0.x = p0.y = bw;
+  switch (priv->arrow_position)
+    {
+      case GTK_POS_TOP:
+        p0.x += arrow_start_point - arrow_size;
+        p0.y += border.top + arrow_size;
+        p1.x = p0.x;
+        p1.y = p0.y - border.top;
+        p2.x = p1.x + arrow_size;
+        p2.y = p1.y - arrow_size;
+        p3.x = p2.x + arrow_size;
+        p3.y = p1.y;
+        p4.x = p3.x;
+        p4.y = p0.y;
+        break;
+      case GTK_POS_BOTTOM:
+        p0.x += arrow_start_point - arrow_size;
+        p0.y += height - border.bottom;
+        p1.x = p0.x;
+        p1.y = p0.y + border.bottom;
+        p2.x = p1.x + arrow_size;
+        p2.y = p1.y + arrow_size;
+        p3.x = p2.x + arrow_size;
+        p3.y = p1.y;
+        p4.x = p3.x;
+        p4.y = p0.y;
+        break;
+      case GTK_POS_LEFT:
+        p0.x += arrow_size + border.left;
+        p0.y += arrow_start_point - arrow_size;
+        p1.x = p0.x - border.left;
+        p1.y = p0.y;
+        p2.x = p1.x - arrow_size;
+        p2.y = p1.y + arrow_size;
+        p3.x = p1.x;
+        p3.y = p2.y + arrow_size;
+        p4.x = p0.x;
+        p4.y = p3.y;
+        break;
+      case GTK_POS_RIGHT:
+        p0.x += width - border.left;
+        p0.y += arrow_start_point - arrow_size;
+        p1.x = p0.x + border.left;
+        p1.y = p0.y;
+        p2.x = p1.x + arrow_size;
+        p2.y = p1.y + arrow_size;
+        p3.x = p1.x;
+        p3.y = p2.y + arrow_size;
+        p4.x = p0.x;
+        p4.y = p3.y;
+        break;
+    }
+
+  cairo_save (cr);
+  cairo_set_line_width (cr, border.bottom);
+  cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
+  cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
+
+  cairo_move_to (cr, p0.x, p0.y);
+  cairo_line_to (cr, p1.x, p1.y);
+  cairo_line_to (cr, p2.x, p2.y);
+  cairo_line_to (cr, p3.x, p3.y);
+  cairo_line_to (cr, p4.x, p4.y);
+
+  gtk_style_context_get_background_color (
+      gtk_widget_get_style_context (widget),
+      gtk_widget_get_state_flags (widget),
+      &color);
+  cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
+  cairo_fill (cr);
+
+  cairo_move_to (cr, p1.x, p1.y);
+  cairo_line_to (cr, p2.x, p2.y);
+  cairo_line_to (cr, p3.x, p3.y);
+
+  gtk_style_context_get_border_color (
+      gtk_widget_get_style_context (widget),
+      gtk_widget_get_state_flags (widget),
+      &color);
+  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+  cairo_stroke (cr);
+  cairo_restore (cr);
+}
 
 static void
 gcal_arrow_bin_class_init (GcalArrowBinClass *klass)
@@ -222,11 +409,7 @@ gcal_arrow_bin_get_preferred_width (GtkWidget *widget,
   guint arrow_size;
 
   priv = GCAL_ARROW_BIN (widget)->priv;
-
-  gcal_arrow_bin_get_padding_and_border (widget,
-                                         &padding,
-                                         NULL,
-                                         &arrow_size);
+  get_padding_and_border (widget, &padding, &arrow_size);
 
   minimum = 0;
   natural = 0;
@@ -274,10 +457,7 @@ gcal_arrow_bin_get_preferred_height_for_width (GtkWidget *widget,
 
   priv = GCAL_ARROW_BIN (widget)->priv;
 
-  gcal_arrow_bin_get_padding_and_border (widget,
-                                         &padding,
-                                         NULL,
-                                         &arrow_size);
+  get_padding_and_border (widget, &padding, &arrow_size);
 
   minimum = 0;
   natural = 0;
@@ -285,7 +465,7 @@ gcal_arrow_bin_get_preferred_height_for_width (GtkWidget *widget,
   child = gtk_bin_get_child (GTK_BIN (widget));
   if (child && gtk_widget_get_visible (child))
     {
-      child_width = width - padding.left - padding.top;
+      child_width = width - (padding.left + padding.right);
 
       gtk_widget_get_preferred_height_for_width (child,
                                                  child_width,
@@ -327,10 +507,7 @@ gcal_arrow_bin_get_preferred_height (GtkWidget *widget,
 
   priv = GCAL_ARROW_BIN (widget)->priv;
 
-  gcal_arrow_bin_get_padding_and_border (widget,
-                                         &padding,
-                                         NULL,
-                                         &arrow_size);
+  get_padding_and_border (widget, &padding, &arrow_size);
 
   minimum = 0;
   natural = 0;
@@ -379,15 +556,12 @@ gcal_arrow_bin_get_preferred_width_for_height (GtkWidget *widget,
 
   priv = GCAL_ARROW_BIN (widget)->priv;
 
-  gcal_arrow_bin_get_padding_and_border (widget,
-                                         &padding,
-                                         NULL,
-                                         &arrow_size);
+  get_padding_and_border (widget, &padding, &arrow_size);
 
   minimum = 0;
   natural = 0;
 
-  child_height = height - padding.top - padding.bottom;
+  child_height = height - (padding.top + padding.bottom);
 
   child = gtk_bin_get_child (GTK_BIN (widget));
   if (child && gtk_widget_get_visible (child))
@@ -431,44 +605,36 @@ gcal_arrow_bin_size_allocate (GtkWidget     *widget,
 
   gtk_widget_set_allocation (widget, allocation);
 
-  gcal_arrow_bin_get_padding_and_border (widget,
-                                         &padding,
-                                         NULL,
-                                         &arrow_size);
-
-  if (gtk_widget_get_realized (widget))
-    {
-      gdk_window_move_resize (gtk_widget_get_window (widget),
-                              allocation->x,
-                              allocation->y,
-                              allocation->width,
-                              allocation->height);
-    }
-
-  child_allocation.x = padding.left + (priv->arrow_position == GTK_POS_LEFT ? arrow_size : 0);
-  child_allocation.y = padding.top + (priv->arrow_position == GTK_POS_TOP ? arrow_size : 0);
-
-  child_allocation.height =
-      MAX (1,
-           allocation->height - padding.top - padding.bottom);
-
-  child_allocation.width =
-      MAX (1,
-           allocation->width - padding.left - padding.right);
-
-  if (priv->arrow_position == GTK_POS_LEFT ||
-      priv->arrow_position == GTK_POS_RIGHT)
-    {
-      child_allocation.width -= arrow_size;
-    }
-  else
-    {
-      child_allocation.height -= arrow_size;
-    }
-
   child = gtk_bin_get_child (GTK_BIN (widget));
   if (child && gtk_widget_get_visible (child))
-    gtk_widget_size_allocate (child, &child_allocation);
+    {
+      get_padding_and_border (widget, &padding, &arrow_size);
+
+      child_allocation.x = allocation->x + padding.left +
+        (priv->arrow_position == GTK_POS_LEFT ? arrow_size : 0);
+      child_allocation.y = allocation->y + padding.top +
+        (priv->arrow_position == GTK_POS_TOP ? arrow_size : 0);
+
+      child_allocation.height =
+        MAX (1,
+             allocation->height - padding.top - padding.bottom);
+
+      child_allocation.width =
+        MAX (1,
+             allocation->width - padding.left - padding.right);
+
+      if (priv->arrow_position == GTK_POS_LEFT ||
+          priv->arrow_position == GTK_POS_RIGHT)
+        {
+          child_allocation.width -= arrow_size;
+        }
+      else
+        {
+          child_allocation.height -= arrow_size;
+        }
+
+      gtk_widget_size_allocate (child, &child_allocation);
+    }
 }
 
 static gboolean
@@ -478,38 +644,37 @@ gcal_arrow_bin_draw (GtkWidget *widget,
   GcalArrowBinPrivate *priv;
 
   GtkBorder border;
-  guint border_width;
   gdouble selected_border;
   gint selected_border_radius;
   guint width;
   guint height;
+  guint bw;
   guint arrow_size;
   gdouble arrow_start_point;
   gdouble x, y;
 
   priv = GCAL_ARROW_BIN (widget)->priv;
 
-  gtk_style_context_get_border (
-      gtk_widget_get_style_context (widget),
-      gtk_widget_get_state_flags (widget),
-      &border);
+  gtk_style_context_get_border (gtk_widget_get_style_context (widget),
+                                gtk_widget_get_state_flags (widget),
+                                &border);
 
-  gtk_style_context_get (
-      gtk_widget_get_style_context (widget),
-      gtk_widget_get_state_flags (widget),
-      "border-radius", &selected_border_radius,
-      NULL);
+  gtk_style_context_get (gtk_widget_get_style_context (widget),
+                         gtk_widget_get_state_flags (widget),
+                         "border-radius", &selected_border_radius,
+                         NULL);
 
-  gcal_arrow_bin_get_padding_and_border (widget,
-                                         NULL,
-                                         &border_width,
-                                         &arrow_size);
+  gtk_style_context_get_style (gtk_widget_get_style_context (widget),
+                               "arrow-size", &arrow_size, NULL);
 
-  width = gtk_widget_get_allocated_width (widget) - 2 * border_width;
-  height = gtk_widget_get_allocated_height (widget) - 2 * border_width;
-  selected_border = 0;
+  bw = gtk_container_get_border_width (GTK_CONTAINER (widget));
+  width = gtk_widget_get_allocated_width (widget) - (border.left + border.right + 2 * bw);
+  height = gtk_widget_get_allocated_height (widget) - (border.top + border.bottom + 2 * bw);
 
-  x = y = border_width;
+  selected_border = bw;
+
+  x = border.left + bw;
+  y = border.top + bw;
   if (priv->arrow_position == GTK_POS_LEFT)
     x += arrow_size;
   if (priv->arrow_position == GTK_POS_TOP)
@@ -518,16 +683,16 @@ gcal_arrow_bin_draw (GtkWidget *widget,
   switch (priv->arrow_position)
     {
       case GTK_POS_TOP:
-        selected_border = border.top;
+        selected_border += border.top;
         break;
       case GTK_POS_BOTTOM:
-        selected_border = border.bottom;
+        selected_border += border.bottom;
         break;
       case GTK_POS_LEFT:
-        selected_border = border.left;
+        selected_border += border.left;
         break;
       case GTK_POS_RIGHT:
-        selected_border = border.right;
+        selected_border += border.right;
         break;
     }
 
@@ -557,208 +722,11 @@ gcal_arrow_bin_draw (GtkWidget *widget,
                         arrow_start_point - arrow_size,
                         arrow_start_point + arrow_size);
 
-  gcal_arrow_bin_draw_arrow (widget, cr);
+  draw_arrow (widget, cr);
 
   GTK_WIDGET_CLASS (gcal_arrow_bin_parent_class)->draw (widget, cr);
 
   return FALSE;
-}
-
-static void
-gcal_arrow_bin_draw_arrow (GtkWidget *widget,
-                           cairo_t   *cr)
-{
-  GcalArrowBinPrivate *priv;
-
-  GdkRGBA color;
-  GtkBorder border;
-  guint arrow_size;
-  guint border_width;
-  gdouble selected_border;
-  gint selected_border_radius;
-  guint width;
-  guint height;
-  gdouble arrow_start_point;
-
-  GPoint p0 = { 0, 0 };
-  GPoint p1 = { 0, 0 };
-  GPoint p2 = { 0, 0 };
-  GPoint p3 = { 0, 0 };
-  GPoint p4 = { 0, 0 };
-
-  priv = GCAL_ARROW_BIN (widget)->priv;
-
-  gtk_style_context_get_border (
-      gtk_widget_get_style_context (widget),
-      gtk_widget_get_state_flags (widget),
-      &border);
-
-  gtk_style_context_get (
-      gtk_widget_get_style_context (widget),
-      gtk_widget_get_state_flags (widget),
-      "border-radius", &selected_border_radius,
-      NULL);
-
-  gcal_arrow_bin_get_padding_and_border (widget,
-                                         NULL,
-                                         &border_width,
-                                         &arrow_size);
-
-  width = gtk_widget_get_allocated_width (widget) - 2 * border_width;
-  height = gtk_widget_get_allocated_height (widget) - 2 * border_width;
-  selected_border = 0;
-
-  switch (priv->arrow_position)
-    {
-      case GTK_POS_TOP:
-        selected_border = border.top;
-        break;
-      case GTK_POS_BOTTOM:
-        selected_border = border.bottom;
-        break;
-      case GTK_POS_LEFT:
-        selected_border = border.left;
-        break;
-      case GTK_POS_RIGHT:
-        selected_border = border.right;
-        break;
-    }
-
-  if (priv->arrow_position == GTK_POS_LEFT ||
-      priv->arrow_position == GTK_POS_RIGHT)
-    {
-      width -= arrow_size;
-      arrow_start_point = arrow_size + selected_border / 2 + selected_border_radius +
-          (height - 2 * (arrow_size + selected_border / 2 + selected_border_radius)) * priv->arrow_align;
-    }
-  else
-    {
-      height -= arrow_size;
-      arrow_start_point = arrow_size + selected_border / 2 + selected_border_radius +
-          (width - 2 * (arrow_size + selected_border / 2 + selected_border_radius)) * priv->arrow_align;
-    }
-
-  switch (priv->arrow_position)
-    {
-      case GTK_POS_TOP:
-        p0.x = border_width + arrow_start_point - arrow_size;
-        p0.y = border_width + border.top + arrow_size;
-        p1.x = p0.x;
-        p1.y = p0.y - border.top;
-        p2.x = p1.x + arrow_size;
-        p2.y = p1.y - arrow_size;
-        p3.x = p2.x + arrow_size;
-        p3.y = p1.y;
-        p4.x = p3.x;
-        p4.y = p0.y;
-        break;
-      case GTK_POS_BOTTOM:
-        p0.x = border_width + arrow_start_point - arrow_size;
-        p0.y = border_width + height - border.bottom;
-        p1.x = p0.x;
-        p1.y = p0.y + border.bottom;
-        p2.x = p1.x + arrow_size;
-        p2.y = p1.y + arrow_size;
-        p3.x = p2.x + arrow_size;
-        p3.y = p1.y;
-        p4.x = p3.x;
-        p4.y = p0.y;
-        break;
-      case GTK_POS_LEFT:
-        p0.x = border_width + arrow_size + border.left;
-        p0.y = border_width + arrow_start_point - arrow_size;
-        p1.x = p0.x - border.left;
-        p1.y = p0.y;
-        p2.x = p1.x - arrow_size;
-        p2.y = p1.y + arrow_size;
-        p3.x = p1.x;
-        p3.y = p2.y + arrow_size;
-        p4.x = p0.x;
-        p4.y = p3.y;
-        break;
-      case GTK_POS_RIGHT:
-        p0.x = border_width + width - border.left;
-        p0.y = border_width + arrow_start_point - arrow_size;
-        p1.x = p0.x + border.left;
-        p1.y = p0.y;
-        p2.x = p1.x + arrow_size;
-        p2.y = p1.y + arrow_size;
-        p3.x = p1.x;
-        p3.y = p2.y + arrow_size;
-        p4.x = p0.x;
-        p4.y = p3.y;
-        break;
-    }
-
-  cairo_save (cr);
-  cairo_set_line_width (cr, border.bottom);
-  cairo_set_line_cap (cr, CAIRO_LINE_CAP_ROUND);
-  cairo_set_line_join (cr, CAIRO_LINE_JOIN_ROUND);
-
-  cairo_move_to (cr, p0.x, p0.y);
-  cairo_line_to (cr, p1.x, p1.y);
-  cairo_line_to (cr, p2.x, p2.y);
-  cairo_line_to (cr, p3.x, p3.y);
-  cairo_line_to (cr, p4.x, p4.y);
-
-  gtk_style_context_get_background_color (
-      gtk_widget_get_style_context (widget),
-      gtk_widget_get_state_flags (widget),
-      &color);
-  cairo_set_source_rgba (cr, color.red, color.green, color.blue, color.alpha);
-  cairo_fill (cr);
-
-  cairo_move_to (cr, p1.x, p1.y);
-  cairo_line_to (cr, p2.x, p2.y);
-  cairo_line_to (cr, p3.x, p3.y);
-
-  gtk_style_context_get_border_color (
-      gtk_widget_get_style_context (widget),
-      gtk_widget_get_state_flags (widget),
-      &color);
-  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
-  cairo_stroke (cr);
-  cairo_restore (cr);
-}
-
-static void
-gcal_arrow_bin_get_padding_and_border (GtkWidget *widget,
-                                       GtkBorder *border,
-                                       guint     *border_width,
-                                       guint     *arrow_size)
-{
-  GtkBorder tmp;
-  guint bd_width;
-
-  bd_width = gtk_container_get_border_width (GTK_CONTAINER (widget));
-  if (border != NULL)
-    {
-      gtk_style_context_get_padding (
-          gtk_widget_get_style_context (widget),
-          gtk_widget_get_state_flags (widget),
-          border);
-
-      gtk_style_context_get_border (
-          gtk_widget_get_style_context (widget),
-          gtk_widget_get_state_flags (widget),
-          &tmp);
-
-      border->top += tmp.top + bd_width;
-      border->right += tmp.right + bd_width;
-      border->bottom += tmp.bottom + bd_width;
-      border->left += tmp.left + bd_width;
-    }
-
-  if (arrow_size != NULL)
-    {
-      gtk_style_context_get_style (
-          gtk_widget_get_style_context (widget),
-          "arrow-size", arrow_size,
-          NULL);
-    }
-
-  if (border_width != NULL)
-    *border_width = bd_width;
 }
 
 GtkWidget*
