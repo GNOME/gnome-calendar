@@ -102,11 +102,20 @@ static void           date_updated                       (GtkButton           *b
 
 static void           update_view                        (GcalWindow          *window);
 
+static void           view_changed                       (GObject             *object,
+                                                          GParamSpec          *pspec,
+                                                          gpointer             user_data);
+
 static void           show_new_event_widget              (GcalView            *view,
                                                           gpointer             start_span,
                                                           gpointer             end_span,
                                                           gdouble              x,
                                                           gdouble              y,
+                                                          gpointer             user_data);
+
+static gboolean       place_new_event_widget             (GtkOverlay          *overlay,
+                                                          GtkWidget           *child,
+                                                          GdkRectangle        *allocation,
                                                           gpointer             user_data);
 
 static void           gcal_window_constructed            (GObject             *object);
@@ -122,15 +131,6 @@ static void           gcal_window_get_property           (GObject             *o
                                                           guint                property_id,
                                                           GValue              *value,
                                                           GParamSpec          *pspec);
-
-static gboolean       gcal_window_place_new_event_widget (GtkOverlay          *overlay,
-                                                          GtkWidget           *child,
-                                                          GdkRectangle        *allocation,
-                                                          gpointer             user_data);
-
-static void           gcal_window_view_changed           (GObject             *object,
-                                                          GParamSpec          *pspec,
-                                                          gpointer             user_data);
 
 static void           gcal_window_search_toggled         (GObject             *object,
                                                           GParamSpec          *pspec,
@@ -286,6 +286,39 @@ update_view (GcalWindow *window)
   g_object_set (priv->nav_bar, "right-header", header, NULL);
   g_free (header);
 }
+static void
+view_changed (GObject    *object,
+              GParamSpec *pspec,
+              gpointer    user_data)
+{
+  GcalWindowPrivate *priv;
+
+  GcalWindow *window;
+
+  GEnumClass *eklass;
+  GEnumValue *eval;
+  GcalWindowViewType view_type;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  window = GCAL_WINDOW (user_data);
+
+  eklass = g_type_class_ref (gcal_window_view_type_get_type ());
+  eval = g_enum_get_value_by_nick (
+             eklass,
+             gtk_stack_get_visible_child_name (GTK_STACK (priv->views_stack)));
+
+  view_type = eval->value;
+
+  g_type_class_unref (eklass);
+
+  /* Get view_type from widget, or widget-name */
+  priv->active_view = view_type;
+  g_object_notify (G_OBJECT (window), "active-view");
+
+  update_view (GCAL_WINDOW (user_data));
+}
+
 /* Second flow new-event flow */
 static void
 show_new_event_widget (GcalView *view,
@@ -334,6 +367,49 @@ show_new_event_widget (GcalView *view,
                            priv->new_event_widget);
 }
 
+static gboolean
+place_new_event_widget (GtkOverlay   *overlay,
+                        GtkWidget    *child,
+                        GdkRectangle *allocation,
+                        gpointer      user_data)
+{
+  GcalWindowPrivate *priv;
+  gint nat_width;
+  gint nat_height;
+
+  priv = GCAL_WINDOW (user_data)->priv;
+
+  if (! priv->new_event_mode)
+    return FALSE;
+
+  gtk_widget_get_preferred_width (priv->new_event_widget,
+                                  NULL,
+                                  &nat_width);
+  gtk_widget_get_preferred_height_for_width (priv->new_event_widget,
+                                             nat_width,
+                                             NULL,
+                                             &nat_height);
+
+  g_debug ("[allocate-child] incoming value (%d, %d) - (%d, %d)",
+           allocation->x,
+           allocation->y,
+           allocation->width,
+           allocation->height);
+  g_debug ("[allocate-child] natural size (%d, %d)",
+           nat_width, nat_height);
+  allocation->x = priv->event_creation_data->x;
+  allocation->y = priv->event_creation_data->y;
+  allocation->width = nat_width;
+  allocation->height = nat_height;
+
+  g_debug ("[allocate-child]: outgoing value (%d, %d) - (%d, %d)",
+           allocation->x,
+           allocation->y,
+           allocation->width,
+           allocation->height);
+
+  return TRUE;
+}
 
 static void
 gcal_window_class_init(GcalWindowClass *klass)
@@ -553,14 +629,15 @@ gcal_window_constructed (GObject *object)
                         G_CALLBACK (show_new_event_widget), object);
     }
   g_signal_connect (priv->views_overlay, "get-child-position",
-                    G_CALLBACK (gcal_window_place_new_event_widget), object);
-  g_signal_connect (priv->views_stack, "notify::visible-child",
-                    G_CALLBACK (gcal_window_view_changed), object);
+                    G_CALLBACK (place_new_event_widget), object);
+
   g_signal_connect (priv->search_bar, "notify::search-mode-enabled",
                     G_CALLBACK (gcal_window_search_toggled), object);
   g_signal_connect (priv->search_entry, "changed",
                     G_CALLBACK (gcal_window_search_changed), object);
 
+  g_signal_connect (priv->views_stack, "notify::visible-child",
+                    G_CALLBACK (view_changed), object);
   g_signal_connect (gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)),
                     "clicked", G_CALLBACK (date_updated), object);
   g_signal_connect (gcal_nav_bar_get_next_button (GCAL_NAV_BAR (priv->nav_bar)),
@@ -643,83 +720,6 @@ gcal_window_get_property (GObject    *object,
     }
 
   G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-}
-
-static gboolean
-gcal_window_place_new_event_widget (GtkOverlay   *overlay,
-                                    GtkWidget    *child,
-                                    GdkRectangle *allocation,
-                                    gpointer      user_data)
-{
-  GcalWindowPrivate *priv;
-  gint nat_width;
-  gint nat_height;
-
-  priv = GCAL_WINDOW (user_data)->priv;
-
-  if (child != priv->new_event_widget)
-    return FALSE;
-
-  gtk_widget_get_preferred_width (priv->new_event_widget,
-                                  NULL,
-                                  &nat_width);
-  gtk_widget_get_preferred_height_for_width (priv->new_event_widget,
-                                             nat_width,
-                                             NULL,
-                                             &nat_height);
-
-  g_debug ("incoming value (%d, %d) - (%d, %d)",
-           allocation->x,
-           allocation->y,
-           allocation->width,
-           allocation->height);
-  g_debug ("natural size (%d, %d)",
-           nat_width, nat_height);
-  allocation->x = 600;
-  allocation->y = 600;
-  allocation->width = nat_width;
-  allocation->height = nat_height;
-
-  g_debug ("outgoing value (%d, %d) - (%d, %d)",
-           allocation->x,
-           allocation->y,
-           allocation->width,
-           allocation->height);
-
-  return TRUE;
-}
-
-static void
-gcal_window_view_changed (GObject    *object,
-                          GParamSpec *pspec,
-                          gpointer    user_data)
-{
-  GcalWindowPrivate *priv;
-
-  GcalWindow *window;
-
-  GEnumClass *eklass;
-  GEnumValue *eval;
-  GcalWindowViewType view_type;
-
-  priv = GCAL_WINDOW (user_data)->priv;
-
-  window = GCAL_WINDOW (user_data);
-
-  eklass = g_type_class_ref (gcal_window_view_type_get_type ());
-  eval = g_enum_get_value_by_nick (
-             eklass,
-             gtk_stack_get_visible_child_name (GTK_STACK (priv->views_stack)));
-
-  view_type = eval->value;
-
-  g_type_class_unref (eklass);
-
-  /* Get view_type from widget, or widget-name */
-  priv->active_view = view_type;
-  g_object_notify (G_OBJECT (window), "active-view");
-
-  update_view (GCAL_WINDOW (user_data));
 }
 
 static void
@@ -1348,7 +1348,7 @@ gcal_window_new_with_view (GcalApplication   *app,
 
   /* init hack */
   if (view_type == GCAL_WINDOW_VIEW_DAY)
-    gcal_window_view_changed (NULL, NULL, win);
+    view_changed (NULL, NULL, win);
 
   return GTK_WIDGET (win);
 }
