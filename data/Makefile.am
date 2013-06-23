@@ -18,8 +18,7 @@ gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 styledir = $(pkgdatadir)/style
 
 dist_style_DATA =               \
-	theme/gtk-styles.css          \
-  theme/close-window.svg
+	theme/gtk-styles.css
 
 EXTRA_DIST=                     \
   gnome-calendar.desktop        \
