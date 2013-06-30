@@ -33,14 +33,10 @@ G_BEGIN_DECLS
 
 typedef struct _GcalMonthView                       GcalMonthView;
 typedef struct _GcalMonthViewClass                  GcalMonthViewClass;
-typedef struct _GcalMonthViewPrivate                GcalMonthViewPrivate;
 
 struct _GcalMonthView
 {
   GtkContainer parent;
-
-  /* add your public declarations here */
-  GcalMonthViewPrivate *priv;
 };
 
 struct _GcalMonthViewClass
