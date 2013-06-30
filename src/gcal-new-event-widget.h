@@ -63,11 +63,13 @@ GtkWidget*      gcal_new_event_widget_new                (void);
 void            gcal_new_event_widget_set_title          (GcalNewEventWidget *widget,
                                                           const gchar        *title);
 
-GtkWidget*      gcal_new_event_widget_get_close_button   (GcalNewEventWidget *widget);
+GtkWidget*      gcal_new_event_widget_get_entry          (GcalNewEventWidget *widget);
 
 GtkWidget*      gcal_new_event_widget_get_create_button  (GcalNewEventWidget *widget);
 
 GtkWidget*      gcal_new_event_widget_get_details_button (GcalNewEventWidget *widget);
+
+GtkWidget*      gcal_new_event_widget_get_close_button   (GcalNewEventWidget *widget);
 
 G_END_DECLS
 
