@@ -33,14 +33,10 @@ G_BEGIN_DECLS
 
 typedef struct _GcalNavBar                       GcalNavBar;
 typedef struct _GcalNavBarClass                  GcalNavBarClass;
-typedef struct _GcalNavBarPrivate                GcalNavBarPrivate;
 
 struct _GcalNavBar
 {
   GtkGrid parent;
-
-  /* add your public declarations here */
-  GcalNavBarPrivate *priv;
 };
 
 struct _GcalNavBarClass

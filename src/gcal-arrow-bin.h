@@ -34,14 +34,10 @@ G_BEGIN_DECLS
 
 typedef struct _GcalArrowBin                GcalArrowBin;
 typedef struct _GcalArrowBinClass           GcalArrowBinClass;
-typedef struct _GcalArrowBinPrivate         GcalArrowBinPrivate;
 
 struct _GcalArrowBin
 {
   GtkBin parent;
-  /* add your public declarations here */
-
-  GcalArrowBinPrivate *priv;
 };
 
 struct _GcalArrowBinClass

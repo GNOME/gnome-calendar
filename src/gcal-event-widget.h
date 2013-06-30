@@ -36,7 +36,6 @@ G_BEGIN_DECLS
 
 typedef struct _GcalEventWidget                   GcalEventWidget;
 typedef struct _GcalEventWidgetClass              GcalEventWidgetClass;
-typedef struct _GcalEventWidgetPrivate            GcalEventWidgetPrivate;
 
 struct _GcalEventWidgetClass
 {
@@ -49,8 +48,6 @@ struct _GcalEventWidgetClass
 struct _GcalEventWidget
 {
   GtkWidget parent;
-
-  GcalEventWidgetPrivate *priv;
 };
 
 GType         gcal_event_widget_get_type                   (void);

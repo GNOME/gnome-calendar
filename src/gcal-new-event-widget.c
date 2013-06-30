@@ -20,7 +20,7 @@
 #include "gcal-new-event-widget.h"
 #include "gcal-arrow-bin.h"
 
-struct _GcalNewEventWidgetPrivate
+typedef struct
 {
   GtkWidget     *title_label;
   GtkWidget     *what_entry;
@@ -30,9 +30,9 @@ struct _GcalNewEventWidgetPrivate
   GtkWidget     *details_button;
 
   GtkWidget     *close_button;
-};
+} GcalNewEventWidgetPrivate;
 
-G_DEFINE_TYPE(GcalNewEventWidget, gcal_new_event_widget, GTK_TYPE_OVERLAY)
+G_DEFINE_TYPE_WITH_PRIVATE (GcalNewEventWidget, gcal_new_event_widget, GTK_TYPE_OVERLAY)
 
 static void
 gcal_new_event_widget_class_init (GcalNewEventWidgetClass *klass)
@@ -51,17 +51,11 @@ gcal_new_event_widget_class_init (GcalNewEventWidgetClass *klass)
   gtk_widget_class_bind_child (widget_class, GcalNewEventWidgetPrivate, create_button);
   gtk_widget_class_bind_child (widget_class, GcalNewEventWidgetPrivate, details_button);
   gtk_widget_class_bind_child (widget_class, GcalNewEventWidgetPrivate, close_button);
-
-  g_type_class_add_private ((gpointer)klass, sizeof(GcalNewEventWidgetPrivate));
 }
 
 static void
 gcal_new_event_widget_init (GcalNewEventWidget *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-                                            GCAL_TYPE_NEW_EVENT_WIDGET,
-                                            GcalNewEventWidgetPrivate);
-
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
@@ -78,7 +72,6 @@ gcal_new_event_widget_set_title (GcalNewEventWidget *widget,
 {
   GcalNewEventWidgetPrivate *priv;
 
-  priv = widget->priv;
-
+  priv = gcal_new_event_widget_get_instance_private (widget);
   gtk_label_set_text (GTK_LABEL (priv->title_label), title);
 }

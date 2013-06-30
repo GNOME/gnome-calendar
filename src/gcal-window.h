@@ -37,13 +37,10 @@ G_BEGIN_DECLS
 
 typedef struct _GcalWindow                   GcalWindow;
 typedef struct _GcalWindowClass              GcalWindowClass;
-typedef struct _GcalWindowPrivate            GcalWindowPrivate;
 
 struct _GcalWindow
 {
   GtkApplicationWindow parent;
-
-  GcalWindowPrivate *priv;
 };
 
 struct _GcalWindowClass

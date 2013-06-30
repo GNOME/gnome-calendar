@@ -23,14 +23,14 @@
 
 #include <glib/gi18n.h>
 
-struct _GcalNavBarPrivate
+typedef struct
 {
   GtkWidget *back_button;
   GtkWidget *forward_button;
 
   GtkWidget *left_label;
   GtkWidget *right_label;
-};
+} GcalNavBarPrivate;
 
 enum
 {
@@ -49,7 +49,7 @@ static void           gcal_nav_bar_get_property          (GObject        *object
                                                           GValue         *value,
                                                           GParamSpec     *pspec);
 
-G_DEFINE_TYPE(GcalNavBar, gcal_nav_bar, GTK_TYPE_GRID)
+G_DEFINE_TYPE_WITH_PRIVATE (GcalNavBar, gcal_nav_bar, GTK_TYPE_GRID)
 
 static void
 gcal_nav_bar_class_init (GcalNavBarClass *klass)
@@ -91,8 +91,6 @@ gcal_nav_bar_class_init (GcalNavBarClass *klass)
   gtk_widget_class_bind_child (widget_class, GcalNavBarPrivate, forward_button);
   gtk_widget_class_bind_child (widget_class, GcalNavBarPrivate, left_label);
   gtk_widget_class_bind_child (widget_class, GcalNavBarPrivate, right_label);
-
-  g_type_class_add_private ((gpointer)klass, sizeof (GcalNavBarPrivate));
 }
 
 
@@ -100,9 +98,6 @@ gcal_nav_bar_class_init (GcalNavBarClass *klass)
 static void
 gcal_nav_bar_init (GcalNavBar *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-                                            GCAL_TYPE_NAV_BAR,
-                                            GcalNavBarPrivate);
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
@@ -113,7 +108,7 @@ gcal_nav_bar_set_property (GObject       *object,
                            GParamSpec    *pspec)
 {
   GcalNavBarPrivate *priv;
-  priv = GCAL_NAV_BAR (object)->priv;
+  priv = gcal_nav_bar_get_instance_private (GCAL_NAV_BAR (object));
 
   switch (property_id)
     {
@@ -138,7 +133,7 @@ gcal_nav_bar_get_property (GObject       *object,
                               GParamSpec    *pspec)
 {
   GcalNavBarPrivate *priv;
-  priv = GCAL_NAV_BAR (object)->priv;
+  priv = gcal_nav_bar_get_instance_private (GCAL_NAV_BAR (object));
 
   switch (property_id)
     {
@@ -174,8 +169,8 @@ GtkWidget*
 gcal_nav_bar_get_prev_button (GcalNavBar *nav_bar)
 {
   GcalNavBarPrivate *priv;
-  priv = nav_bar->priv;
 
+  priv = gcal_nav_bar_get_instance_private (nav_bar);
   return priv->back_button;
 }
 
@@ -183,7 +178,7 @@ GtkWidget*
 gcal_nav_bar_get_next_button (GcalNavBar *nav_bar)
 {
   GcalNavBarPrivate *priv;
-  priv = nav_bar->priv;
 
+  priv = gcal_nav_bar_get_instance_private (nav_bar);
   return priv->forward_button;
 }

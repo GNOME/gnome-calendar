@@ -27,7 +27,7 @@
 
 #include <libecal/libecal.h>
 
-struct _GcalYearViewPrivate
+typedef struct
 {
   /**
    * This is where we keep the refs of the child widgets.
@@ -47,7 +47,7 @@ struct _GcalYearViewPrivate
 
   gint            start_mark_cell;
   gint            end_mark_cell;
-};
+} GcalYearViewPrivate;
 
 enum
 {
@@ -133,6 +133,7 @@ static void           gcal_year_view_create_event_on_current_unit (GcalView     
 G_DEFINE_TYPE_WITH_CODE (GcalYearView,
                          gcal_year_view,
                          GTK_TYPE_CONTAINER,
+                         G_ADD_PRIVATE (GcalYearView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
                                                 gcal_view_interface_init));
 
@@ -166,8 +167,6 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   object_class->finalize = gcal_year_view_finalize;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
-
-  g_type_class_add_private ((gpointer)klass, sizeof (GcalYearViewPrivate));
 }
 
 
@@ -180,10 +179,7 @@ gcal_year_view_init (GcalYearView *self)
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-                                            GCAL_TYPE_YEAR_VIEW,
-                                            GcalYearViewPrivate);
-  priv = self->priv;
+  priv = gcal_year_view_get_instance_private (self);
 
   priv->clicked_cell = -1;
 
@@ -226,7 +222,7 @@ gcal_year_view_set_property (GObject       *object,
 {
   GcalYearViewPrivate *priv;
 
-  priv = GCAL_YEAR_VIEW (object)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (object));
 
   switch (property_id)
     {
@@ -250,8 +246,7 @@ gcal_year_view_get_property (GObject       *object,
 {
   GcalYearViewPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_YEAR_VIEW (object));
-  priv = GCAL_YEAR_VIEW (object)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (object));
 
   switch (property_id)
     {
@@ -267,7 +262,8 @@ gcal_year_view_get_property (GObject       *object,
 static void
 gcal_year_view_finalize (GObject       *object)
 {
-  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (object)->priv;
+  GcalYearViewPrivate *priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (object));
 
   if (priv->date != NULL)
     g_free (priv->date);
@@ -285,7 +281,7 @@ gcal_year_view_realize (GtkWidget *widget)
   gint attributes_mask;
   GtkAllocation allocation;
 
-  priv = GCAL_YEAR_VIEW (widget)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
   gtk_widget_set_realized (widget, TRUE);
 
   parent_window = gtk_widget_get_parent_window (widget);
@@ -321,7 +317,7 @@ gcal_year_view_unrealize (GtkWidget *widget)
 {
   GcalYearViewPrivate *priv;
 
-  priv = GCAL_YEAR_VIEW (widget)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
   if (priv->event_window != NULL)
     {
       gdk_window_set_user_data (priv->event_window, NULL);
@@ -337,7 +333,7 @@ gcal_year_view_map (GtkWidget *widget)
 {
   GcalYearViewPrivate *priv;
 
-  priv = GCAL_YEAR_VIEW (widget)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
   if (priv->event_window)
     gdk_window_show (priv->event_window);
 
@@ -349,7 +345,7 @@ gcal_year_view_unmap (GtkWidget *widget)
 {
   GcalYearViewPrivate *priv;
 
-  priv = GCAL_YEAR_VIEW (widget)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
   if (priv->event_window)
     gdk_window_hide (priv->event_window);
 
@@ -375,7 +371,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
   gdouble vertical_block;
   gdouble vertical_cell_margin;
 
-  priv = GCAL_YEAR_VIEW (widget)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
 
   gtk_widget_set_allocation (widget, allocation);
   if (gtk_widget_get_realized (widget))
@@ -493,7 +489,7 @@ gcal_year_view_button_press (GtkWidget      *widget,
   gdouble x, y;
   gint width, height;
 
-  priv = GCAL_YEAR_VIEW (widget)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
 
   x = event->x;
   y = event->y;
@@ -545,7 +541,7 @@ gcal_year_view_motion_notify_event (GtkWidget      *widget,
   gint width, height;
   gint y;
 
-  priv = GCAL_YEAR_VIEW (widget)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
 
   if (priv->clicked_cell == -1)
     return FALSE;
@@ -581,7 +577,7 @@ gcal_year_view_button_release (GtkWidget      *widget,
 
   gint released;
 
-  priv = GCAL_YEAR_VIEW (widget)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
 
   x = event->x;
   y = event->y;
@@ -640,10 +636,9 @@ gcal_year_view_add (GtkContainer *container,
 
   GcalViewChild *new_child;
 
-  g_return_if_fail (GCAL_IS_YEAR_VIEW (container));
   g_return_if_fail (GCAL_IS_EVENT_WIDGET (widget));
   g_return_if_fail (gtk_widget_get_parent (widget) == NULL);
-  priv = GCAL_YEAR_VIEW (container)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (container));
 
   /* Check if it's already added for date */
   date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
@@ -686,9 +681,8 @@ gcal_year_view_remove (GtkContainer *container,
   gint i;
   GList *l;
 
-  g_return_if_fail (GCAL_IS_YEAR_VIEW (container));
   g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
-  priv = GCAL_YEAR_VIEW (container)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (container));
 
   for (i = 0; i < 12; i++)
     {
@@ -726,7 +720,7 @@ gcal_year_view_forall (GtkContainer *container,
   gint i;
   GList *l;
 
-  priv = GCAL_YEAR_VIEW (container)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (container));
 
   for (i = 0; i < 12; i++)
     {
@@ -768,7 +762,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
   PangoLayout *layout;
   const PangoFontDescription *font;
 
-  priv = view->priv;
+  priv = gcal_year_view_get_instance_private (view);
   widget = GTK_WIDGET (view);
 
   context = gtk_widget_get_style_context (widget);
@@ -945,7 +939,8 @@ gcal_year_view_get_initial_date (GcalView *view)
   icaltimetype *new_date;
 
   g_return_val_if_fail (GCAL_IS_YEAR_VIEW (view), NULL);
-  priv = GCAL_YEAR_VIEW (view)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (view));
+
   new_date = gcal_dup_icaltime (priv->date);
   new_date->day = 1;
   new_date->month = 1;
@@ -968,7 +963,8 @@ gcal_year_view_get_final_date (GcalView *view)
   icaltimetype *new_date;
 
   g_return_val_if_fail (GCAL_IS_YEAR_VIEW (view), NULL);
-  priv = GCAL_YEAR_VIEW (view)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (view));
+
   new_date = gcal_dup_icaltime (priv->date);
   new_date->day = 31;
   new_date->month =  12;
@@ -984,7 +980,7 @@ gcal_year_view_draw_event (GcalView     *view,
   GcalYearViewPrivate *priv;
 
   g_return_val_if_fail (GCAL_IS_YEAR_VIEW (view), FALSE);
-  priv = GCAL_YEAR_VIEW (view)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (view));
 
   if (priv->date == NULL)
     return FALSE;
@@ -1001,7 +997,7 @@ gcal_year_view_get_by_uuid (GcalView    *view,
   GList *l;
 
   g_return_val_if_fail (GCAL_IS_YEAR_VIEW (view), NULL);
-  priv = GCAL_YEAR_VIEW (view)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (view));
 
   for (i = 0; i < 12; i++)
     {
@@ -1031,7 +1027,7 @@ gcal_year_view_clear_selection (GcalView *view)
 {
   GcalYearViewPrivate *priv;
 
-  priv = GCAL_YEAR_VIEW (view)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (view));
 
   priv->start_mark_cell = -1;
   priv->end_mark_cell = -1;
@@ -1050,8 +1046,7 @@ gcal_year_view_create_event_on_current_unit (GcalView *view)
   icaltimetype *end_span;
 
   /* FIXME: This need to include marking the current unit */
-  g_return_if_fail (GCAL_IS_YEAR_VIEW (view));
-  priv = GCAL_YEAR_VIEW (view)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (view));
 
   width = gtk_widget_get_allocated_width (GTK_WIDGET (view));
   height = gtk_widget_get_allocated_height (GTK_WIDGET (view));
@@ -1085,7 +1080,7 @@ gcal_year_view_get_left_header (GcalView *view)
 {
   GcalYearViewPrivate *priv;
 
-  priv = GCAL_YEAR_VIEW (view)->priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (view));
 
   return g_strdup_printf ("%d", priv->date->year);
 }

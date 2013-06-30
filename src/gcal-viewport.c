@@ -24,13 +24,13 @@
 
 #include <math.h>
 
-struct _GcalViewportPrivate
+typedef struct
 {
   /* property */
   GtkWidget      *viewport;
   GtkWidget      *hscrollbar;
   GtkWidget      *vscrollbar;
-};
+} GcalViewportPrivate;
 
 static void       gcal_viewport_constructed          (GObject      *object);
 
@@ -49,7 +49,7 @@ static void       gcal_viewport_child_allocated      (GtkWidget    *widget,
                                                       GdkRectangle *allocation,
                                                       gpointer      user_data);
 
-G_DEFINE_TYPE (GcalViewport,gcal_viewport, GTK_TYPE_OVERLAY);
+G_DEFINE_TYPE_WITH_PRIVATE (GcalViewport,gcal_viewport, GTK_TYPE_OVERLAY);
 
 static void
 gcal_viewport_class_init (GcalViewportClass *klass)
@@ -72,8 +72,6 @@ gcal_viewport_class_init (GcalViewportClass *klass)
   gtk_widget_class_bind_child (widget_class, GcalViewportPrivate, hscrollbar);
   gtk_widget_class_bind_child (widget_class, GcalViewportPrivate, vscrollbar);
   gtk_widget_class_bind_child (widget_class, GcalViewportPrivate, viewport);
-
-  g_type_class_add_private ((gpointer)klass, sizeof (GcalViewportPrivate));
 }
 
 
@@ -81,10 +79,6 @@ gcal_viewport_class_init (GcalViewportClass *klass)
 static void
 gcal_viewport_init (GcalViewport *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-                                            GCAL_TYPE_VIEWPORT,
-                                            GcalViewportPrivate);
-
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
@@ -95,7 +89,7 @@ gcal_viewport_constructed (GObject *object)
 
   GtkAdjustment *adj;
 
-  priv = GCAL_VIEWPORT (object)->priv;
+  priv = gcal_viewport_get_instance_private (GCAL_VIEWPORT (object));
 
   adj = gtk_scrollable_get_hadjustment (GTK_SCROLLABLE (priv->viewport));
   gtk_range_set_adjustment (GTK_RANGE (priv->hscrollbar), adj);
@@ -137,7 +131,7 @@ gcal_viewport_scroll_event (GtkWidget      *widget,
 
   g_return_val_if_fail (event != NULL, FALSE);
 
-  priv = GCAL_VIEWPORT (widget)->priv;
+  priv = gcal_viewport_get_instance_private (GCAL_VIEWPORT (widget));
 
   if (gdk_event_get_scroll_deltas ((GdkEvent *) event, NULL, &delta_y))
     {
@@ -203,7 +197,7 @@ gcal_viewport_child_allocated (GtkWidget    *widget,
   GcalViewportPrivate *priv;
   gint width, height;
 
-  priv = GCAL_VIEWPORT (user_data)->priv;
+  priv = gcal_viewport_get_instance_private (GCAL_VIEWPORT (user_data));
 
   width = gtk_widget_get_allocated_width (GTK_WIDGET (user_data));
   height = gtk_widget_get_allocated_height (GTK_WIDGET (user_data));
@@ -246,7 +240,7 @@ gcal_viewport_add (GcalViewport *viewport,
 {
   GcalViewportPrivate *priv;
 
-  priv = viewport->priv;
+  priv = gcal_viewport_get_instance_private (viewport);
   gtk_container_add (GTK_CONTAINER (priv->viewport), widget);
 
   /* signals handlers */
@@ -269,7 +263,7 @@ gcal_viewport_scroll_to (GcalViewport *viewport,
   GtkAdjustment *adj;
   gdouble lower, upper, page_size;
 
-  priv = viewport->priv;
+  priv = gcal_viewport_get_instance_private (viewport);
 
   value = CLAMP (value, 0.0, 1.0);
 

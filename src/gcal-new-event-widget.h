@@ -44,13 +44,10 @@ struct _GcalNewEventData
 
 typedef struct _GcalNewEventWidget                GcalNewEventWidget;
 typedef struct _GcalNewEventWidgetClass           GcalNewEventWidgetClass;
-typedef struct _GcalNewEventWidgetPrivate         GcalNewEventWidgetPrivate;
 
 struct _GcalNewEventWidget
 {
   GtkOverlay parent;
-
-  GcalNewEventWidgetPrivate *priv;
 };
 
 struct _GcalNewEventWidgetClass

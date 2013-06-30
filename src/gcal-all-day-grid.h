@@ -33,14 +33,10 @@ G_BEGIN_DECLS
 
 typedef struct _GcalAllDayGrid                       GcalAllDayGrid;
 typedef struct _GcalAllDayGridClass                  GcalAllDayGridClass;
-typedef struct _GcalAllDayGridPrivate                GcalAllDayGridPrivate;
 
 struct _GcalAllDayGrid
 {
   GtkContainer  parent;
-
-  /* add your public declarations here */
-  GcalAllDayGridPrivate *priv;
 };
 
 struct _GcalAllDayGridClass

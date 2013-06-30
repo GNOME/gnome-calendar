@@ -82,7 +82,7 @@ struct _MoveEventData
 
 typedef struct _MoveEventData MoveEventData;
 
-struct _GcalManagerPrivate
+typedef struct
 {
   /**
    * The list of clients we are managing.
@@ -111,7 +111,7 @@ struct _GcalManagerPrivate
   /* uid of pending create event actions */
   gchar           *pending_event_uid;
   gchar           *pending_event_source;
-};
+} GcalManagerPrivate;
 
 /* Signal IDs */
 enum
@@ -193,7 +193,7 @@ static void     gcal_manager_on_event_created             (GObject         *sour
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
 
-G_DEFINE_TYPE(GcalManager, gcal_manager, G_TYPE_OBJECT)
+G_DEFINE_TYPE_WITH_PRIVATE (GcalManager, gcal_manager, G_TYPE_OBJECT)
 
 static void
 gcal_manager_class_init (GcalManagerClass *klass)
@@ -244,8 +244,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                          2,
                                          G_TYPE_POINTER,
                                          G_TYPE_POINTER);
-
-  g_type_class_add_private ((gpointer) klass, sizeof(GcalManagerPrivate));
 }
 
 static void
@@ -253,10 +251,7 @@ gcal_manager_init (GcalManager *self)
 {
   GcalManagerPrivate *priv;
 
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-                                            GCAL_TYPE_MANAGER,
-                                            GcalManagerPrivate);
-  priv = self->priv;
+  priv = gcal_manager_get_instance_private (self);
   priv->sources_model = gtk_list_store_new (N_COLUMNS,
                                             G_TYPE_STRING,
                                             G_TYPE_STRING,
@@ -295,7 +290,7 @@ gcal_manager_constructed (GObject *object)
   if (G_OBJECT_CLASS (gcal_manager_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_manager_parent_class)->constructed (object);
 
-  priv = GCAL_MANAGER (object)->priv;
+  priv = gcal_manager_get_instance_private (GCAL_MANAGER (object));
 
   error = NULL;
   priv->source_registry = e_source_registry_new_sync (NULL, &error);
@@ -324,7 +319,7 @@ gcal_manager_finalize (GObject *object)
 {
   GcalManagerPrivate *priv;
 
-  priv = GCAL_MANAGER (object)->priv;
+  priv = gcal_manager_get_instance_private (GCAL_MANAGER (object));
 
   g_hash_table_destroy (priv->clients);
   g_clear_object (&(priv->sources_model));
@@ -384,7 +379,7 @@ gcal_manager_on_client_opened (GObject      *source_object,
   GcalManagerUnit *unit;
 
   client = E_CAL_CLIENT (source_object);
-  priv = ((GcalManager*) user_data)->priv;
+  priv = gcal_manager_get_instance_private (GCAL_MANAGER (user_data));
   error = NULL;
   if (e_client_open_finish (E_CLIENT (client), result, &error))
     {
@@ -509,7 +504,7 @@ gcal_manager_remove_source (GcalManager  *manager,
   g_return_if_fail (GCAL_IS_MANAGER (manager));
   g_return_if_fail (E_IS_SOURCE (source));
 
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
   unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients,
                                                  e_source_get_uid (source));
 
@@ -532,7 +527,7 @@ gcal_manager_load_source (GcalManager *manager,
   GcalManagerUnit *unit;
   GError *error;
 
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
   error = NULL;
   new_client = e_cal_client_new (source,
                                  E_CAL_CLIENT_SOURCE_TYPE_EVENTS,
@@ -596,7 +591,7 @@ gcal_manager_reload_events (GcalManager *manager)
   gpointer key;
   gpointer value;
 
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
   g_hash_table_iter_init (&iter, priv->clients);
   while (g_hash_table_iter_next (&iter, &key, &value))
     {
@@ -613,7 +608,7 @@ gcal_manager_reload_view (GcalManager     *manager,
   GcalManagerPrivate *priv;
   GError *error;
 
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
   g_return_if_fail (priv->query != NULL);
 
   /* stopping */
@@ -681,7 +676,7 @@ gcal_manager_on_view_objects_added (ECalClientView *view,
   const gchar *source_uid;
   gchar *event_uuid;
 
-  priv = GCAL_MANAGER (user_data)->priv;
+  priv = gcal_manager_get_instance_private (GCAL_MANAGER (user_data));
   events_data = NULL;
 
   client = e_cal_client_view_get_client (view);
@@ -757,8 +752,7 @@ gcal_manager_on_view_objects_removed (ECalClientView *view,
   ECalClient *client;
   const gchar *source_uid;
 
-  g_return_if_fail (GCAL_IS_MANAGER (user_data));
-  priv = GCAL_MANAGER (user_data)->priv;
+  priv = gcal_manager_get_instance_private (GCAL_MANAGER (user_data));
 
   events_data = NULL;
   client = e_cal_client_view_get_client (view);
@@ -806,8 +800,6 @@ gcal_manager_on_view_objects_modified (ECalClientView *view,
   ECalClient *client;
   const gchar *source_uid;
 
-  g_return_if_fail (GCAL_IS_MANAGER (user_data));
-
   events_data = NULL;
   client = e_cal_client_view_get_client (view);
   source_uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
@@ -846,7 +838,7 @@ gcal_manager_on_sources_row_changed (GtkTreeModel *store,
   gchar *source_uid;
   gboolean active;
 
-  priv = GCAL_MANAGER (user_data)->priv;
+  priv = gcal_manager_get_instance_private (GCAL_MANAGER (user_data));
   gtk_tree_model_get (store,
                       iter,
                       COLUMN_UID,
@@ -911,7 +903,7 @@ gcal_manager_on_event_removed_for_move (GObject      *source_object,
 
   client = E_CAL_CLIENT (source_object);
   data = (MoveEventData*) user_data;
-  priv = ((GcalManager*) data->manager)->priv;
+  priv = gcal_manager_get_instance_private (data->manager);
 
   error = NULL;
   if (e_cal_client_remove_object_finish (client, result, &error))
@@ -959,7 +951,7 @@ gcal_manager_send_fake_events_added (GcalManager *manager)
   const gchar *event_uid;
   gchar *event_uuid;
 
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   events_data = NULL;
   g_hash_table_iter_init (&clients_iter, priv->clients);
@@ -1080,15 +1072,19 @@ gcal_manager_new (void)
 GtkListStore*
 gcal_manager_get_sources_model (GcalManager *manager)
 {
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  return manager->priv->sources_model;
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (manager);
+  return priv->sources_model;
 }
 
 icaltimezone*
 gcal_manager_get_system_timezone (GcalManager *manager)
 {
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  return manager->priv->system_timezone;
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (manager);
+  return priv->system_timezone;
 }
 
 /**
@@ -1117,9 +1113,7 @@ gcal_manager_add_source (GcalManager *manager,
   ESourceCalendar *extension;
   GError *error;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  priv = manager->priv;
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
+  priv = gcal_manager_get_instance_private (manager);
 
   source = e_source_new (NULL, NULL, NULL);
   extension = E_SOURCE_CALENDAR (e_source_get_extension (source,
@@ -1157,8 +1151,7 @@ gcal_manager_get_source_name (GcalManager *manager,
   GcalManagerPrivate *priv;
   GcalManagerUnit *unit;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   return e_source_get_display_name (unit->source);
@@ -1171,8 +1164,7 @@ gcal_manager_get_source_readonly (GcalManager *manager,
   GcalManagerPrivate *priv;
   GcalManagerUnit *unit;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   return e_client_is_readonly (E_CLIENT (unit->client));
@@ -1207,8 +1199,7 @@ gcal_manager_set_new_range (GcalManager        *manager,
   GcalManagerPrivate *priv;
   gboolean refresh_events;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
   refresh_events = FALSE;
 
   /* updating query range */
@@ -1251,6 +1242,19 @@ gcal_manager_set_new_range (GcalManager        *manager,
     }
   else
     {
+      gchar* since_iso8601 =
+        isodate_from_time_t (icaltime_as_timet (*(priv->initial_date)));
+
+      gchar* until_iso8601 =
+        isodate_from_time_t (icaltime_as_timet (*(priv->final_date)));
+
+      g_debug ("fake-events-added between \"%s\" and \"%s\")",
+          since_iso8601,
+          until_iso8601);
+
+      g_free (since_iso8601);
+      g_free (until_iso8601);
+
       gcal_manager_send_fake_events_added (manager);
     }
 }
@@ -1263,8 +1267,7 @@ gcal_manager_exists_event (GcalManager *manager,
   GcalManagerPrivate *priv;
   GcalManagerUnit *unit;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   if ((unit = g_hash_table_lookup (priv->clients, source_uid)) != NULL)
     return g_hash_table_lookup (unit->events, event_uid) != NULL;
@@ -1282,8 +1285,7 @@ gcal_manager_get_event_start_date (GcalManager *manager,
   ECalComponentDateTime dt;
   icaltimetype *dtstart;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1318,8 +1320,7 @@ gcal_manager_get_event_end_date (GcalManager *manager,
   ECalComponentDateTime dt;
   icaltimetype *dtend;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1354,8 +1355,7 @@ gcal_manager_get_event_summary (GcalManager *manager,
   ECalComponentText e_summary;
   gchar *summary;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1376,8 +1376,7 @@ gcal_manager_get_event_organizer (GcalManager *manager,
   ECalComponentOrganizer e_organizer;
   gchar** values;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1404,8 +1403,7 @@ gcal_manager_get_event_location (GcalManager *manager,
   ECalComponent *event;
   const gchar* location;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1426,8 +1424,7 @@ gcal_manager_get_event_description (GcalManager *manager,
 
   gchar *desc;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
   desc = NULL;
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
@@ -1469,8 +1466,7 @@ gcal_manager_get_event_color (GcalManager *manager,
   ESourceSelectable *extension;
   GdkRGBA *color;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
   color = g_new0 (GdkRGBA, 1);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
@@ -1491,8 +1487,7 @@ gcal_manager_get_event_reminders (GcalManager *manager,
   ECalComponent *event;
   GList *reminders;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
   reminders = NULL;
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
@@ -1596,8 +1591,7 @@ gcal_manager_has_event_reminders (GcalManager *manager,
   GcalManagerUnit *unit;
   ECalComponent *event;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1619,8 +1613,7 @@ gcal_manager_get_event_all_day (GcalManager *manager,
 
   gboolean all_day;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1649,8 +1642,7 @@ gcal_manager_remove_event (GcalManager *manager,
   GcalManagerUnit *unit;
   ECalComponent *event;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1689,8 +1681,7 @@ gcal_manager_create_event (GcalManager        *manager,
   icalcomponent *new_event_icalcomp;
   icaltimetype *dt_start;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
 
@@ -1747,8 +1738,7 @@ gcal_manager_set_event_start_date (GcalManager        *manager,
   ECalComponentDateTime dt;
   icaltimetype *dt_start;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1780,8 +1770,7 @@ gcal_manager_set_event_end_date (GcalManager        *manager,
   ECalComponentDateTime dt;
   icaltimetype *dt_start;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1812,8 +1801,7 @@ gcal_manager_set_event_summary (GcalManager *manager,
   ECalComponent *event;
   ECalComponentText e_summary;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1842,8 +1830,7 @@ gcal_manager_set_event_location (GcalManager *manager,
   GcalManagerUnit *unit;
   ECalComponent *event;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1872,8 +1859,7 @@ gcal_manager_set_event_description (GcalManager *manager,
   GSList l;
   ECalComponentText desc;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   event = g_hash_table_lookup (unit->events, event_uid);
@@ -1907,8 +1893,7 @@ gcal_manager_move_event_to_source (GcalManager *manager,
   ECalComponent *old_event;
   ECalComponent *new_event;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
-  priv = manager->priv;
+  priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
   old_event = g_hash_table_lookup (unit->events, event_uid);

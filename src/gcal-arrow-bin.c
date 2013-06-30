@@ -27,11 +27,11 @@ struct _GPoint
 
 typedef struct _GPoint GPoint;
 
-struct _GcalArrowBinPrivate
+typedef struct
 {
   GtkPositionType arrow_position;
   gdouble         arrow_align;
-};
+} GcalArrowBinPrivate;
 
 enum
 {
@@ -81,7 +81,7 @@ static void     gcal_arrow_bin_size_allocate                  (GtkWidget       *
 static gboolean gcal_arrow_bin_draw                           (GtkWidget       *widget,
                                                                cairo_t         *cr);
 
-G_DEFINE_TYPE(GcalArrowBin, gcal_arrow_bin, GTK_TYPE_BIN)
+G_DEFINE_TYPE_WITH_PRIVATE (GcalArrowBin, gcal_arrow_bin, GTK_TYPE_BIN)
 
 static void
 get_padding_and_border (GtkWidget *widget,
@@ -138,7 +138,7 @@ draw_arrow (GtkWidget *widget,
   GPoint p3 = { 0, 0 };
   GPoint p4 = { 0, 0 };
 
-  priv = GCAL_ARROW_BIN (widget)->priv;
+  priv = gcal_arrow_bin_get_instance_private (GCAL_ARROW_BIN (widget));
 
   gtk_style_context_get_border (gtk_widget_get_style_context (widget),
                                 gtk_widget_get_state_flags (widget),
@@ -334,18 +334,12 @@ gcal_arrow_bin_class_init (GcalArrowBinClass *klass)
                          G_MAXUINT32,
                          0,
                          G_PARAM_READABLE));
-
-  g_type_class_add_private ((gpointer)klass, sizeof(GcalArrowBinPrivate));
 }
 
 static void
 gcal_arrow_bin_init (GcalArrowBin *self)
 {
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
-
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-                                            GCAL_TYPE_ARROW_BIN,
-                                            GcalArrowBinPrivate);
 }
 
 static void
@@ -356,7 +350,7 @@ gcal_arrow_bin_set_property (GObject      *object,
 {
   GcalArrowBinPrivate *priv;
 
-  priv = GCAL_ARROW_BIN (object)->priv;
+  priv = gcal_arrow_bin_get_instance_private (GCAL_ARROW_BIN (object));
 
   switch (property_id)
     {
@@ -380,7 +374,7 @@ gcal_arrow_bin_get_property (GObject    *object,
 {
   GcalArrowBinPrivate *priv;
 
-  priv = GCAL_ARROW_BIN (object)->priv;
+  priv = gcal_arrow_bin_get_instance_private (GCAL_ARROW_BIN (object));
 
   switch (property_id)
     {
@@ -408,7 +402,7 @@ gcal_arrow_bin_get_preferred_width (GtkWidget *widget,
   gint minimum, natural;
   guint arrow_size;
 
-  priv = GCAL_ARROW_BIN (widget)->priv;
+  priv = gcal_arrow_bin_get_instance_private (GCAL_ARROW_BIN (widget));
   get_padding_and_border (widget, &padding, &arrow_size);
 
   minimum = 0;
@@ -455,7 +449,7 @@ gcal_arrow_bin_get_preferred_height_for_width (GtkWidget *widget,
   gint minimum;
   gint natural;
 
-  priv = GCAL_ARROW_BIN (widget)->priv;
+  priv = gcal_arrow_bin_get_instance_private (GCAL_ARROW_BIN (widget));
 
   get_padding_and_border (widget, &padding, &arrow_size);
 
@@ -505,7 +499,7 @@ gcal_arrow_bin_get_preferred_height (GtkWidget *widget,
   gint minimum;
   gint natural;
 
-  priv = GCAL_ARROW_BIN (widget)->priv;
+  priv = gcal_arrow_bin_get_instance_private (GCAL_ARROW_BIN (widget));
 
   get_padding_and_border (widget, &padding, &arrow_size);
 
@@ -554,7 +548,7 @@ gcal_arrow_bin_get_preferred_width_for_height (GtkWidget *widget,
   gint minimum;
   gint natural;
 
-  priv = GCAL_ARROW_BIN (widget)->priv;
+  priv = gcal_arrow_bin_get_instance_private (GCAL_ARROW_BIN (widget));
 
   get_padding_and_border (widget, &padding, &arrow_size);
 
@@ -601,7 +595,7 @@ gcal_arrow_bin_size_allocate (GtkWidget     *widget,
   GtkWidget *child;
   guint arrow_size;
 
-  priv = GCAL_ARROW_BIN (widget)->priv;
+  priv = gcal_arrow_bin_get_instance_private (GCAL_ARROW_BIN (widget));
 
   gtk_widget_set_allocation (widget, allocation);
 
@@ -653,7 +647,7 @@ gcal_arrow_bin_draw (GtkWidget *widget,
   gdouble arrow_start_point;
   gdouble x, y;
 
-  priv = GCAL_ARROW_BIN (widget)->priv;
+  priv = gcal_arrow_bin_get_instance_private (GCAL_ARROW_BIN (widget));
 
   gtk_style_context_get_border (gtk_widget_get_style_context (widget),
                                 gtk_widget_get_state_flags (widget),

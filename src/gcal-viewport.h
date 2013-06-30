@@ -33,14 +33,10 @@ G_BEGIN_DECLS
 
 typedef struct _GcalViewport                      GcalViewport;
 typedef struct _GcalViewportClass                 GcalViewportClass;
-typedef struct _GcalViewportPrivate               GcalViewportPrivate;
 
 struct _GcalViewport
 {
   GtkOverlay  parent;
-
-  /* add your public declarations here */
-  GcalViewportPrivate *priv;
 };
 
 struct _GcalViewportClass

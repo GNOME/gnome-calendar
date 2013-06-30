@@ -33,14 +33,10 @@ G_BEGIN_DECLS
 
 typedef struct _GcalDayView                       GcalDayView;
 typedef struct _GcalDayViewClass                  GcalDayViewClass;
-typedef struct _GcalDayViewPrivate                GcalDayViewPrivate;
 
 struct _GcalDayView
 {
   GtkGrid parent;
-
-  /* add your public declarations here */
-  GcalDayViewPrivate *priv;
 };
 
 struct _GcalDayViewClass

@@ -35,14 +35,10 @@ G_BEGIN_DECLS
 
 typedef struct _GcalYearView                       GcalYearView;
 typedef struct _GcalYearViewClass                  GcalYearViewClass;
-typedef struct _GcalYearViewPrivate                GcalYearViewPrivate;
 
 struct _GcalYearView
 {
   GtkContainer parent;
-
-  /* add your public declarations here */
-  GcalYearViewPrivate *priv;
 };
 
 struct _GcalYearViewClass
