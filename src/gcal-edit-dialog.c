@@ -280,7 +280,7 @@ gcal_edit_dialog_constructed (GObject* object)
   action_area = gtk_dialog_get_action_area (GTK_DIALOG (object));
   gtk_box_set_spacing (GTK_BOX (action_area), 6);
 
-  button = gtk_button_new_from_stock (GTK_STOCK_CANCEL);
+  button = gtk_button_new_with_label (_("Cancel"));
   gtk_size_group_add_widget (size_group, button);
   g_object_set_data (G_OBJECT (button),
                      "response",

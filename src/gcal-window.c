@@ -1215,7 +1215,7 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
         gtk_container_add (GTK_CONTAINER (grid),
                            gtk_label_new (_("Event deleted")));
 
-        undo_button = gtk_button_new_from_stock (GTK_STOCK_UNDO);
+        undo_button = gtk_button_new_with_label (_("Undo"));
         gtk_container_add (GTK_CONTAINER (grid), undo_button);
 
         gtk_container_add (GTK_CONTAINER (priv->noty), grid);
