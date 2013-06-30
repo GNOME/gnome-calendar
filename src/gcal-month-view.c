@@ -840,7 +840,8 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
 
-  if (priv->start_mark_cell == -1)
+  if (priv->start_mark_cell == -1 ||
+      priv->clicked_cell == -1)
     return FALSE;
 
   width = gtk_widget_get_allocated_width (widget);
