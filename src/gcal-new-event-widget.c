@@ -77,20 +77,20 @@ gcal_new_event_widget_set_title (GcalNewEventWidget *widget,
 }
 
 /**
- * gcal_new_event_widget_get_close_button:
- * @widget: a #GcalNewEventWidget
+ * gcal_new_event_widget_get_entry:
+ * @widget:
  *
- * Get a pointer a to the close button in the widget.
+ * Get a reference to the summanry entry
  *
  * Returns: (transfer none) a #GtkWidget
  **/
 GtkWidget*
-gcal_new_event_widget_get_close_button (GcalNewEventWidget *widget)
+gcal_new_event_widget_get_entry (GcalNewEventWidget *widget)
 {
   GcalNewEventWidgetPrivate *priv;
 
   priv = gcal_new_event_widget_get_instance_private (widget);
-  return priv->close_button;
+  return priv->what_entry;
 }
 
 GtkWidget*
@@ -109,4 +109,21 @@ gcal_new_event_widget_get_details_button (GcalNewEventWidget *widget)
 
   priv = gcal_new_event_widget_get_instance_private (widget);
   return priv->details_button;
+}
+
+/**
+ * gcal_new_event_widget_get_close_button:
+ * @widget: a #GcalNewEventWidget
+ *
+ * Get a pointer a to the close button in the widget.
+ *
+ * Returns: (transfer none) a #GtkWidget
+ **/
+GtkWidget*
+gcal_new_event_widget_get_close_button (GcalNewEventWidget *widget)
+{
+  GcalNewEventWidgetPrivate *priv;
+
+  priv = gcal_new_event_widget_get_instance_private (widget);
+  return priv->close_button;
 }
