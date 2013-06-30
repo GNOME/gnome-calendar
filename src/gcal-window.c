@@ -48,7 +48,7 @@ struct _NewEventData
 
 typedef struct _NewEventData NewEventData;
 
-struct _GcalWindowPrivate
+typedef struct
 {
   /* upper level widgets */
   GtkWidget           *main_box;
@@ -84,7 +84,7 @@ struct _GcalWindowPrivate
   /* temp to keep event_creation */
   gboolean             waiting_for_creation;
   gboolean             queue_open_edit_dialog;
-};
+} GcalWindowPrivate;
 
 enum
 {
@@ -184,7 +184,7 @@ static void           gcal_window_update_event_widget    (GcalManager         *m
                                                           const gchar         *event_uid,
                                                           GcalEventWidget     *widget);
 
-G_DEFINE_TYPE(GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
+G_DEFINE_TYPE_WITH_PRIVATE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static void
 set_new_event_mode (GcalWindow *window,
@@ -192,7 +192,7 @@ set_new_event_mode (GcalWindow *window,
 {
   GcalWindowPrivate *priv;
 
-  priv = window->priv;
+  priv = gcal_window_get_instance_private (window);
   priv->new_event_mode = enabled;
   g_object_notify (G_OBJECT (window), "new-event-mode");
 
@@ -216,7 +216,7 @@ date_updated (GtkButton  *button,
 
   gboolean move_back;
 
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   move_back = gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)) == (GtkWidget*) button;
 
@@ -260,7 +260,7 @@ update_view (GcalWindow *window)
   icaltimetype *last_day;
   gchar* header;
 
-  priv = window->priv;
+  priv = gcal_window_get_instance_private (window);
 
   widget = priv->views[priv->active_view];
 
@@ -293,15 +293,11 @@ view_changed (GObject    *object,
 {
   GcalWindowPrivate *priv;
 
-  GcalWindow *window;
-
   GEnumClass *eklass;
   GEnumValue *eval;
   GcalWindowViewType view_type;
 
-  priv = GCAL_WINDOW (user_data)->priv;
-
-  window = GCAL_WINDOW (user_data);
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   eklass = g_type_class_ref (gcal_window_view_type_get_type ());
   eval = g_enum_get_value_by_nick (
@@ -314,7 +310,7 @@ view_changed (GObject    *object,
 
   /* Get view_type from widget, or widget-name */
   priv->active_view = view_type;
-  g_object_notify (G_OBJECT (window), "active-view");
+  g_object_notify (G_OBJECT (user_data), "active-view");
 
   update_view (GCAL_WINDOW (user_data));
 }
@@ -332,7 +328,7 @@ show_new_event_widget (GcalView *view,
   GcalManager *manager;
 
   g_return_if_fail (user_data);
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   /* 1st and 2nd steps */
   set_new_event_mode (GCAL_WINDOW (user_data), TRUE);
@@ -377,7 +373,7 @@ place_new_event_widget (GtkOverlay   *overlay,
   gint nat_width;
   gint nat_height;
 
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   if (! priv->new_event_mode)
     return FALSE;
@@ -451,8 +447,6 @@ gcal_window_class_init(GcalWindowClass *klass)
                             FALSE,
                             G_PARAM_CONSTRUCT |
                             G_PARAM_READWRITE));
-
-  g_type_class_add_private((gpointer)klass, sizeof (GcalWindowPrivate));
 }
 
 static void
@@ -460,10 +454,7 @@ gcal_window_init(GcalWindow *self)
 {
   GcalWindowPrivate *priv;
 
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE(self,
-                                           GCAL_TYPE_WINDOW,
-                                           GcalWindowPrivate);
-  priv = self->priv;
+  priv = gcal_window_get_instance_private (self);
 
   /* states */
   priv->search_mode = FALSE;
@@ -490,7 +481,7 @@ gcal_window_constructed (GObject *object)
   if (G_OBJECT_CLASS (gcal_window_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_window_parent_class)->constructed (object);
 
-  priv = GCAL_WINDOW (object)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (object));
 
   /* ui construction */
   priv->main_box = gtk_grid_new ();
@@ -656,8 +647,7 @@ gcal_window_finalize (GObject *object)
 {
   GcalWindowPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_WINDOW (object));
-  priv = GCAL_WINDOW (object)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (object));
 
   if (priv->active_date != NULL)
     g_free (priv->active_date);
@@ -673,8 +663,7 @@ gcal_window_set_property (GObject      *object,
 {
   GcalWindowPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_WINDOW (object));
-  priv = GCAL_WINDOW (object)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (object));
 
   switch (property_id)
     {
@@ -704,7 +693,7 @@ gcal_window_get_property (GObject    *object,
 {
   GcalWindowPrivate *priv;
 
-  priv = GCAL_WINDOW (object)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (object));
 
   switch (property_id)
     {
@@ -729,7 +718,7 @@ gcal_window_search_toggled (GObject    *object,
 {
   GcalWindowPrivate *priv;
 
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
     {
@@ -760,7 +749,7 @@ gcal_window_search_changed (GtkEditable *editable,
 {
   GcalWindowPrivate *priv;
 
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
     {
@@ -795,8 +784,7 @@ gcal_window_init_edit_dialog (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_WINDOW (window));
-  priv = window->priv;
+  priv = gcal_window_get_instance_private (window);
 
   priv->edit_dialog = gcal_edit_dialog_new ();
   gtk_window_set_transient_for (GTK_WINDOW (priv->edit_dialog),
@@ -829,7 +817,7 @@ gcal_window_events_added (GcalManager *manager,
   icaltimetype *start_date;
   icaltimetype *end_date;
 
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
   view = GCAL_VIEW (priv->views[priv->active_view]);
 
   for (l = events_list; l != NULL; l = l->next)
@@ -881,8 +869,7 @@ gcal_window_events_removed (GcalManager *manager,
   GcalWindowPrivate *priv;
   GSList *l;
 
-  g_return_if_fail (GCAL_IS_WINDOW (user_data));
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   for (l = events_list; l != NULL; l = l->next)
     {
@@ -915,7 +902,7 @@ gcal_window_events_modified (GcalManager *manager,
   icaltimetype *start_date;
   icaltimetype *end_date;
 
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   for (l = events_list; l != NULL; l = l->next)
     {
@@ -982,7 +969,7 @@ gcal_window_event_created (GcalManager *manager,
 {
   GcalWindowPrivate *priv;
 
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   if (! priv->waiting_for_creation)
     return;
@@ -1012,8 +999,7 @@ gcal_window_event_activated (GcalEventWidget *event_widget,
   GcalWindowPrivate *priv;
   gchar **tokens;
 
-  g_return_if_fail (GCAL_IS_WINDOW (user_data));
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   if (priv->edit_dialog == NULL)
     gcal_window_init_edit_dialog (GCAL_WINDOW (user_data));
@@ -1035,8 +1021,7 @@ gcal_window_remove_event (GdNotification  *notification,
   GcalManager *manager;
   gchar **tokens;
 
-  g_return_if_fail (GCAL_IS_WINDOW (user_data));
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   if (priv->event_to_delete != NULL)
     {
@@ -1061,8 +1046,7 @@ gcal_window_undo_remove_event (GtkButton *button,
   GcalWindowPrivate *priv;
   GtkWidget *event_widget;
 
-  g_return_if_fail (GCAL_IS_WINDOW (user_data));
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   if (priv->event_to_delete != NULL)
     {
@@ -1088,7 +1072,7 @@ gcal_window_create_event (GcalNewEventWidget  *widget,
   GcalWindowPrivate *priv;
   GcalManager *manager;
 
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   if (open_details)
     {
@@ -1122,7 +1106,7 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
   GtkWidget *grid;
   GtkWidget *undo_button;
 
-  priv = GCAL_WINDOW (user_data)->priv;
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   gtk_widget_hide (priv->edit_dialog);
 
@@ -1365,7 +1349,7 @@ gcal_window_set_search_mode (GcalWindow *window,
 {
   GcalWindowPrivate *priv;
 
-  priv = window->priv;
+  priv = gcal_window_get_instance_private (window);
   gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (priv->search_bar), enabled);
 }
 
@@ -1374,9 +1358,7 @@ gcal_window_show_notification (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_WINDOW (window));
-  priv = window->priv;
-
+  priv = gcal_window_get_instance_private (window);
   gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
                            priv->noty);
   gtk_widget_show_all (priv->noty);
@@ -1387,8 +1369,6 @@ gcal_window_hide_notification (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_WINDOW (window));
-  priv = window->priv;
-
+  priv = gcal_window_get_instance_private (window);
   gd_notification_dismiss (GD_NOTIFICATION (priv->noty));
 }

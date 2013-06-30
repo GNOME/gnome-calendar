@@ -36,7 +36,7 @@ enum
   PROP_DATE
 };
 
-struct _GcalDayViewPrivate
+typedef struct
 {
   /* property */
   icaltimetype   *date;
@@ -47,7 +47,7 @@ struct _GcalDayViewPrivate
   /* events widgets parents */
   GtkWidget      *all_day_grid;
   GtkWidget      *day_grid;
-};
+} GcalDayViewPrivate;
 
 static void           viewport_shown                      (GtkWidget      *widget,
                                                            gpointer        user_data);
@@ -94,6 +94,7 @@ static void           gcal_day_view_clear                 (GcalView       *view)
 G_DEFINE_TYPE_WITH_CODE (GcalDayView,
                          gcal_day_view,
                          GTK_TYPE_GRID,
+                         G_ADD_PRIVATE (GcalDayView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
                                                 gcal_view_interface_init));
 
@@ -105,7 +106,7 @@ viewport_shown (GtkWidget *widget,
   icaltimetype date;
   gdouble value;
 
-  priv = GCAL_DAY_VIEW (user_data)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (user_data));
 
   if (priv->date == NULL)
     return;
@@ -138,8 +139,6 @@ gcal_day_view_class_init (GcalDayViewClass *klass)
   /* gtk_container_class_handle_border_width (container_class); */
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
-
-  g_type_class_add_private ((gpointer)klass, sizeof (GcalDayViewPrivate));
 }
 
 
@@ -147,9 +146,6 @@ gcal_day_view_class_init (GcalDayViewClass *klass)
 static void
 gcal_day_view_init (GcalDayView *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-                                            GCAL_TYPE_DAY_VIEW,
-                                            GcalDayViewPrivate);
 }
 
 static void
@@ -173,8 +169,7 @@ gcal_day_view_constructed (GObject *object)
 {
   GcalDayViewPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_DAY_VIEW (object));
-  priv = GCAL_DAY_VIEW (object)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (object));
 
   if (G_OBJECT_CLASS (gcal_day_view_parent_class)->constructed != NULL)
       G_OBJECT_CLASS (gcal_day_view_parent_class)->constructed (object);
@@ -226,7 +221,8 @@ gcal_day_view_constructed (GObject *object)
 static void
 gcal_day_view_finalize (GObject       *object)
 {
-  GcalDayViewPrivate *priv = GCAL_DAY_VIEW (object)->priv;
+  GcalDayViewPrivate *priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (object));
 
   if (priv->date != NULL)
     g_free (priv->date);
@@ -243,7 +239,7 @@ gcal_day_view_set_property (GObject       *object,
 {
   GcalDayViewPrivate *priv;
 
-  priv = GCAL_DAY_VIEW (object)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (object));
 
   switch (property_id)
     {
@@ -261,13 +257,13 @@ gcal_day_view_set_property (GObject       *object,
 
 static void
 gcal_day_view_get_property (GObject       *object,
-                              guint          property_id,
-                              GValue        *value,
-                              GParamSpec    *pspec)
+                            guint          property_id,
+                            GValue        *value,
+                            GParamSpec    *pspec)
 {
   GcalDayViewPrivate *priv;
 
-  priv = GCAL_DAY_VIEW (object)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (object));
 
   switch (property_id)
     {
@@ -293,7 +289,7 @@ gcal_day_view_add (GtkContainer *container,
 
   g_return_if_fail (GCAL_IS_EVENT_WIDGET (widget));
   g_return_if_fail (gtk_widget_get_parent (widget) == NULL);
-  priv = GCAL_DAY_VIEW (container)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (container));
 
   summ = gcal_event_widget_get_summary (GCAL_EVENT_WIDGET (widget));
 
@@ -357,7 +353,7 @@ gcal_day_view_remove (GtkContainer *container,
 {
   GcalDayViewPrivate *priv;
 
-  priv = GCAL_DAY_VIEW (container)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (container));
 
   if (gtk_widget_get_parent (widget) == (GtkWidget*) container)
     {
@@ -378,7 +374,7 @@ gcal_day_view_get_initial_date (GcalView *view)
   GcalDayViewPrivate *priv;
   icaltimetype *new_date;
 
-  priv = GCAL_DAY_VIEW (view)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
   new_date = g_new0 (icaltimetype, 1);
   *new_date = *(priv->date);
   new_date->hour = 0;
@@ -402,7 +398,7 @@ gcal_day_view_get_final_date (GcalView *view)
   GcalDayViewPrivate *priv;
   icaltimetype *new_date;
 
-  priv = GCAL_DAY_VIEW (view)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
   new_date = g_new0 (icaltimetype, 1);
   *new_date = *(priv->date);
 
@@ -427,7 +423,7 @@ gcal_day_view_draw_event (GcalView     *view,
   gint left_boundary;
   gint right_boundary;
 
-  priv = GCAL_DAY_VIEW (view)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
   first_day = gcal_day_view_get_initial_date (view);
   last_day = gcal_day_view_get_final_date (view);
 
@@ -453,7 +449,7 @@ gcal_day_view_get_left_header (GcalView *view)
 
   struct tm tm_date;
 
-  priv = GCAL_DAY_VIEW (view)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
 
   tm_date = icaltimetype_to_tm (priv->date);
   e_utf8_strftime_fix_am_pm (str_date, 64, "%A %B", &tm_date);
@@ -466,7 +462,7 @@ gcal_day_view_get_right_header (GcalView *view)
 {
   GcalDayViewPrivate *priv;
 
-  priv = GCAL_DAY_VIEW (view)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
 
   return g_strdup_printf ("%d", priv->date->year);
 }
@@ -478,7 +474,7 @@ gcal_day_view_get_by_uuid (GcalView    *view,
   GcalDayViewPrivate *priv;
   GtkWidget *widget;
 
-  priv = GCAL_DAY_VIEW (view)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
 
   widget =
     gcal_all_day_grid_get_by_uuid (GCAL_ALL_DAY_GRID (priv->all_day_grid),
@@ -500,7 +496,7 @@ gcal_day_view_clear (GcalView *view)
 {
   GcalDayViewPrivate *priv;
 
-  priv = GCAL_DAY_VIEW (view)->priv;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
 
   gtk_container_foreach (GTK_CONTAINER (priv->all_day_grid),
                          (GtkCallback) gtk_widget_destroy, NULL);

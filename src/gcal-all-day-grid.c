@@ -39,7 +39,7 @@ struct _ChildInfo
 
 typedef struct _ChildInfo ChildInfo;
 
-struct _GcalAllDayGridPrivate
+typedef struct
 {
   /* property */
   guint           columns_nr;
@@ -49,7 +49,7 @@ struct _GcalAllDayGridPrivate
   GList          *children;
 
   GdkWindow      *event_window;
-};
+} GcalAllDayGridPrivate;
 
 static void           gcal_all_day_grid_finalize              (GObject         *object);
 
@@ -102,7 +102,7 @@ static void           gcal_all_day_grid_forall                (GtkContainer    *
                                                                GtkCallback      callback,
                                                                gpointer         callback_data);
 
-G_DEFINE_TYPE (GcalAllDayGrid,gcal_all_day_grid, GTK_TYPE_CONTAINER);
+G_DEFINE_TYPE_WITH_PRIVATE (GcalAllDayGrid,gcal_all_day_grid, GTK_TYPE_CONTAINER);
 
 static void
 gcal_all_day_grid_class_init (GcalAllDayGridClass *klass)
@@ -157,8 +157,6 @@ gcal_all_day_grid_class_init (GcalAllDayGridClass *klass)
                         0,
                         G_PARAM_CONSTRUCT |
                         G_PARAM_READWRITE));
-
-  g_type_class_add_private ((gpointer)klass, sizeof (GcalAllDayGridPrivate));
 }
 
 
@@ -170,10 +168,7 @@ gcal_all_day_grid_init (GcalAllDayGrid *self)
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-                                            GCAL_TYPE_ALL_DAY_GRID,
-                                            GcalAllDayGridPrivate);
-  priv = self->priv;
+  priv = gcal_all_day_grid_get_instance_private (self);
   priv->column_headers = NULL;
   priv->children = NULL;
 }
@@ -184,7 +179,7 @@ gcal_all_day_grid_finalize (GObject *object)
   GcalAllDayGridPrivate *priv;
   GList *column;
 
-  priv = GCAL_ALL_DAY_GRID (object)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (object));
 
   if (priv->children != NULL)
     {
@@ -211,7 +206,8 @@ gcal_all_day_grid_set_property (GObject      *object,
                                 GParamSpec   *pspec)
 {
   GcalAllDayGridPrivate *priv;
-  priv = GCAL_ALL_DAY_GRID (object)->priv;
+
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (object));
 
   switch (property_id)
     {
@@ -241,7 +237,8 @@ gcal_all_day_grid_get_property (GObject    *object,
                                 GParamSpec *pspec)
 {
   GcalAllDayGridPrivate *priv;
-  priv = GCAL_ALL_DAY_GRID (object)->priv;
+
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (object));
 
   switch (property_id)
     {
@@ -274,7 +271,7 @@ gcal_all_day_grid_get_preferred_width (GtkWidget *widget,
   PangoLayout *layout;
   PangoRectangle logical_rect;
 
-  priv = GCAL_ALL_DAY_GRID (widget)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
 
   length = 0;
   longest_header = NULL;
@@ -333,7 +330,7 @@ gcal_all_day_grid_get_preferred_height (GtkWidget *widget,
   PangoLayout *layout;
   PangoRectangle logical_rect;
 
-  priv = GCAL_ALL_DAY_GRID (widget)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
 
   layout = gtk_widget_create_pango_layout (widget, "0");
 
@@ -394,7 +391,7 @@ gcal_all_day_grid_realize (GtkWidget *widget)
   gint attributes_mask;
   GtkAllocation allocation;
 
-  priv = GCAL_ALL_DAY_GRID (widget)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
   gtk_widget_set_realized (widget, TRUE);
 
   parent_window = gtk_widget_get_parent_window (widget);
@@ -430,7 +427,7 @@ gcal_all_day_grid_unrealize (GtkWidget *widget)
 {
   GcalAllDayGridPrivate *priv;
 
-  priv = GCAL_ALL_DAY_GRID (widget)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
   if (priv->event_window != NULL)
     {
       gdk_window_set_user_data (priv->event_window, NULL);
@@ -446,7 +443,7 @@ gcal_all_day_grid_map (GtkWidget *widget)
 {
   GcalAllDayGridPrivate *priv;
 
-  priv = GCAL_ALL_DAY_GRID (widget)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
   if (priv->event_window != NULL)
     gdk_window_show (priv->event_window);
 
@@ -458,7 +455,7 @@ gcal_all_day_grid_unmap (GtkWidget *widget)
 {
   GcalAllDayGridPrivate *priv;
 
-  priv = GCAL_ALL_DAY_GRID (widget)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
   if (priv->event_window != NULL)
     gdk_window_hide (priv->event_window);
 
@@ -485,7 +482,7 @@ gcal_all_day_grid_size_allocate (GtkWidget     *widget,
 
   GArray *last_y;
 
-  priv = GCAL_ALL_DAY_GRID (widget)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
   gtk_widget_set_allocation (widget, allocation);
 
   gtk_style_context_get_padding (
@@ -584,7 +581,7 @@ gcal_all_day_grid_draw (GtkWidget *widget,
 
   GdkRGBA ligther_color;
 
-  priv = GCAL_ALL_DAY_GRID (widget)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
 
   gtk_style_context_get_padding (
       gtk_widget_get_style_context (widget),
@@ -690,7 +687,7 @@ gcal_all_day_grid_add (GtkContainer *container,
 {
   GcalAllDayGridPrivate* priv;
 
-  priv = GCAL_ALL_DAY_GRID (container)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (container));
   g_return_if_fail (priv->columns_nr != 0);
 
   gcal_all_day_grid_place (GCAL_ALL_DAY_GRID (container),
@@ -706,7 +703,7 @@ gcal_all_day_grid_remove (GtkContainer *container,
 
   GList *columns;
 
-  priv = GCAL_ALL_DAY_GRID (container)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (container));
 
   for (columns = priv->children;
        columns != NULL;
@@ -743,7 +740,7 @@ gcal_all_day_grid_forall (GtkContainer *container,
 
   GList* columns;
 
-  priv = GCAL_ALL_DAY_GRID (container)->priv;
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (container));
 
   columns = priv->children;
   while (columns)
@@ -793,7 +790,7 @@ gcal_all_day_grid_set_column_headers (GcalAllDayGrid *all_day,
   va_list args;
   gint i;
 
-  priv = all_day->priv;
+  priv = gcal_all_day_grid_get_instance_private (all_day);
 
   if (priv->columns_nr == 0)
     return;
@@ -836,7 +833,7 @@ gcal_all_day_grid_place (GcalAllDayGrid *all_day,
   GList* column;
   ChildInfo *info;
 
-  priv = all_day->priv;
+  priv = gcal_all_day_grid_get_instance_private (all_day);
 
   g_return_if_fail (column_idx < priv->columns_nr);
 
@@ -859,7 +856,7 @@ gcal_all_day_grid_get_by_uuid (GcalAllDayGrid *all_day,
 
   GList* columns;
 
-  priv = all_day->priv;
+  priv = gcal_all_day_grid_get_instance_private (all_day);
 
   columns = priv->children;
   while (columns)

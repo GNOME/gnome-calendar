@@ -28,7 +28,7 @@
 
 #define CSS_FILE UI_DATA_DIR "/gtk-styles.css"
 
-struct _GcalApplicationPrivate
+typedef struct
 {
   GtkWidget      *window;
 
@@ -37,7 +37,7 @@ struct _GcalApplicationPrivate
   GcalManager    *manager;
 
   GtkCssProvider *provider;
-};
+} GcalApplicationPrivate;
 
 static void     gcal_application_finalize             (GObject                 *object);
 
@@ -82,7 +82,7 @@ static gboolean gcal_application_window_configured    (GtkWidget               *
                                                        GdkEvent                *event,
                                                        gpointer                 user_data);
 
-G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
+G_DEFINE_TYPE_WITH_PRIVATE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 
 static gboolean show_version = FALSE;
 
@@ -108,16 +108,11 @@ gcal_application_class_init (GcalApplicationClass *klass)
   application_class->activate = gcal_application_activate;
   application_class->startup = gcal_application_startup;
   application_class->command_line = gcal_application_command_line;
-
-  g_type_class_add_private ((gpointer) klass, sizeof(GcalApplicationPrivate));
 }
 
 static void
 gcal_application_init (GcalApplication *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-                                            GCAL_TYPE_APPLICATION,
-                                            GcalApplicationPrivate);
 }
 
 static void
@@ -125,8 +120,7 @@ gcal_application_finalize (GObject *object)
 {
   GcalApplicationPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_APPLICATION (object));
-  priv = GCAL_APPLICATION (object)->priv;
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (object));
 
   g_clear_object (&(priv->settings));
 
@@ -138,7 +132,8 @@ static void
 gcal_application_activate (GApplication *application)
 {
   GcalApplicationPrivate *priv;
-  priv = GCAL_APPLICATION (application)->priv;
+
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (application));
 
   if (priv->window != NULL)
     {
@@ -203,7 +198,8 @@ gcal_application_startup (GApplication *app)
 {
   GcalApplicationPrivate *priv;
   GError *error;
-  priv = GCAL_APPLICATION (app)->priv;
+
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (app));
 
   G_APPLICATION_CLASS (gcal_application_parent_class)->startup (app);
 
@@ -282,8 +278,7 @@ gcal_application_set_app_menu (GApplication *app)
   GSimpleAction *about;
   GSimpleAction *quit;
 
-  g_return_if_fail (GCAL_IS_APPLICATION (app));
-  priv = GCAL_APPLICATION (app)->priv;
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (app));
 
   app_menu = g_menu_new ();
 
@@ -343,7 +338,7 @@ gcal_application_create_new_event (GSimpleAction *new_event,
 {
   GcalApplicationPrivate *priv;
 
-  priv = GCAL_APPLICATION (app)->priv;
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (app));
 
   gcal_window_new_event (GCAL_WINDOW (priv->window));
 }
@@ -355,7 +350,7 @@ gcal_application_launch_search (GSimpleAction *search,
 {
   GcalApplicationPrivate *priv;
 
-  priv = GCAL_APPLICATION (app)->priv;
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (app));
 
   gcal_window_set_search_mode (GCAL_WINDOW (priv->window), TRUE);
 }
@@ -367,8 +362,7 @@ gcal_application_change_view (GSimpleAction *simple,
 {
   GcalApplicationPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_APPLICATION (user_data));
-  priv = GCAL_APPLICATION (user_data)->priv;
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (user_data));
 
   g_settings_set_value (priv->settings, "active-view", parameter);
 }
@@ -378,7 +372,7 @@ gcal_application_show_about (GSimpleAction *simple,
                              GVariant      *parameter,
                              gpointer       user_data)
 {
-  GcalApplication *app = GCAL_APPLICATION (user_data);
+  GcalApplicationPrivate *priv;
   char *copyright;
   GDateTime *date;
   int created_year = 2012;
@@ -392,6 +386,7 @@ gcal_application_show_about (GSimpleAction *simple,
     NULL
   };
 
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (user_data));
   date = g_date_time_new_now_local ();
 
   if (g_date_time_get_year (date) == created_year)
@@ -407,7 +402,7 @@ gcal_application_show_about (GSimpleAction *simple,
                                    created_year, g_date_time_get_year (date));
     }
 
-  gtk_show_about_dialog (GTK_WINDOW (app->priv->window),
+  gtk_show_about_dialog (GTK_WINDOW (priv->window),
                          "program-name", _("Calendar"),
                          "version", VERSION,
                          "copyright", copyright,
@@ -426,9 +421,7 @@ gcal_application_quit (GSimpleAction *simple,
                        GVariant      *parameter,
                        gpointer       user_data)
 {
-  GApplication *app = G_APPLICATION (user_data);
-
-  g_application_quit (app);
+  g_application_quit (G_APPLICATION (user_data));
 }
 
 static void
@@ -438,8 +431,7 @@ gcal_application_changed_view (GSettings *settings,
 {
   GcalApplicationPrivate *priv;
 
-  g_return_if_fail (GCAL_IS_APPLICATION (user_data));
-  priv = GCAL_APPLICATION (user_data)->priv;
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (user_data));
   g_simple_action_set_state (priv->view,
                              g_settings_get_value (priv->settings,
                                                    "active-view"));
@@ -454,7 +446,7 @@ gcal_application_window_state_changed (GtkWidget *widget,
   GdkWindowState state;
   gboolean maximized;
 
-  priv = GCAL_APPLICATION (user_data)->priv;
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (user_data));
   state = gdk_window_get_state (gtk_widget_get_window (widget));
   maximized = state & GDK_WINDOW_STATE_MAXIMIZED;
 
@@ -474,7 +466,7 @@ gcal_application_window_configured (GtkWidget *widget,
   gint32 size[2];
   gint32 position[2];
 
-  priv = GCAL_APPLICATION (user_data)->priv;
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (user_data));
   state = gdk_window_get_state (gtk_widget_get_window (widget));
   if (state & GDK_WINDOW_STATE_MAXIMIZED)
     return FALSE;
@@ -503,6 +495,7 @@ GcalApplication*
 gcal_application_new (void)
 {
   GcalApplication *app;
+  GcalApplicationPrivate *priv;
 
   g_set_application_name ("Calendar");
 
@@ -510,8 +503,10 @@ gcal_application_new (void)
                       "application-id", "org.gnome.Calendar",
                       "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
                       NULL);
-  app->priv->settings = g_settings_new ("org.gnome.calendar");
-  g_signal_connect (app->priv->settings,
+
+  priv = gcal_application_get_instance_private (app);
+  priv->settings = g_settings_new ("org.gnome.calendar");
+  g_signal_connect (priv->settings,
                     "changed::active-view",
                     G_CALLBACK (gcal_application_changed_view),
                     app);
@@ -521,13 +516,17 @@ gcal_application_new (void)
 GcalManager*
 gcal_application_get_manager (GcalApplication *app)
 {
-  g_return_val_if_fail (GCAL_IS_APPLICATION (app), NULL);
-  return app->priv->manager;
+  GcalApplicationPrivate *priv;
+
+  priv = gcal_application_get_instance_private (app);
+  return priv->manager;
 }
 
 GSettings*
 gcal_application_get_settings (GcalApplication *app)
 {
-  g_return_val_if_fail (GCAL_IS_APPLICATION (app), NULL);
-  return app->priv->settings;
+  GcalApplicationPrivate *priv;
+
+  priv = gcal_application_get_instance_private (app);
+  return priv->settings;
 }

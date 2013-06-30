@@ -35,7 +35,6 @@ G_BEGIN_DECLS
 
 typedef struct _GcalApplicationClass         GcalApplicationClass;
 typedef struct _GcalApplication              GcalApplication;
-typedef struct _GcalApplicationPrivate       GcalApplicationPrivate;
 
 struct _GcalApplicationClass
 {
@@ -45,8 +44,6 @@ struct _GcalApplicationClass
 struct _GcalApplication
 {
   GtkApplication parent_instance;
-
-  GcalApplicationPrivate *priv;
 };
 
 GType             gcal_application_get_type     (void) G_GNUC_CONST;

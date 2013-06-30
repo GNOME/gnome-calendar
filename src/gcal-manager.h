@@ -36,14 +36,10 @@ G_BEGIN_DECLS
 
 typedef struct _GcalManager                           GcalManager;
 typedef struct _GcalManagerClass                      GcalManagerClass;
-typedef struct _GcalManagerPrivate                    GcalManagerPrivate;
 
 struct _GcalManager
 {
   GObject parent;
-  /* add your public declarations here */
-
-  GcalManagerPrivate *priv;
 };
 
 struct _GcalManagerClass

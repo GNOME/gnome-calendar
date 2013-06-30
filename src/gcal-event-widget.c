@@ -20,7 +20,7 @@
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 
-struct _GcalEventWidgetPrivate
+typedef struct
 {
   /* properties */
   gchar        *uuid;
@@ -32,7 +32,7 @@ struct _GcalEventWidgetPrivate
   gboolean      has_reminders;
 
   GdkWindow    *event_window;
-};
+} GcalEventWidgetPrivate;
 
 enum
 {
@@ -91,7 +91,7 @@ static gboolean gcal_event_widget_draw                 (GtkWidget      *widget,
 static gboolean gcal_event_widget_button_press_event   (GtkWidget      *widget,
                                                         GdkEventButton *event);
 
-G_DEFINE_TYPE(GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET)
+G_DEFINE_TYPE_WITH_PRIVATE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET)
 
 static void
 gcal_event_widget_class_init(GcalEventWidgetClass *klass)
@@ -187,17 +187,11 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
                                      g_cclosure_marshal_VOID__VOID,
                                      G_TYPE_NONE,
                                      0);
-
-  g_type_class_add_private((gpointer)klass, sizeof(GcalEventWidgetPrivate));
 }
 
 static void
 gcal_event_widget_init(GcalEventWidget *self)
 {
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE(self,
-                                           GCAL_TYPE_EVENT_WIDGET,
-                                           GcalEventWidgetPrivate);
-
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
   gtk_widget_set_can_focus (GTK_WIDGET (self), TRUE);
 
@@ -211,7 +205,7 @@ gcal_event_widget_constructed (GObject *object)
 {
   GcalEventWidgetPrivate *priv;
 
-  priv = GCAL_EVENT_WIDGET (object)->priv;
+  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (object));
 
   if (G_OBJECT_CLASS (gcal_event_widget_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_event_widget_parent_class)->constructed (object);
@@ -227,7 +221,7 @@ gcal_event_widget_set_property (GObject      *object,
 {
   GcalEventWidgetPrivate *priv;
 
-  priv = GCAL_EVENT_WIDGET (object)->priv;
+  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (object));
 
   switch (property_id)
     {
@@ -284,7 +278,7 @@ gcal_event_widget_get_property (GObject      *object,
 {
   GcalEventWidgetPrivate *priv;
 
-  priv = GCAL_EVENT_WIDGET (object)->priv;
+  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (object));
 
   switch (property_id)
     {
@@ -379,7 +373,7 @@ gcal_event_widget_realize (GtkWidget *widget)
   gint attributes_mask;
   GtkAllocation allocation;
 
-  priv = GCAL_EVENT_WIDGET (widget)->priv;
+  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
   gtk_widget_set_realized (widget, TRUE);
 
   parent_window = gtk_widget_get_parent_window (widget);
@@ -416,7 +410,7 @@ gcal_event_widget_unrealize (GtkWidget *widget)
 {
   GcalEventWidgetPrivate *priv;
 
-  priv = GCAL_EVENT_WIDGET (widget)->priv;
+  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
   if (priv->event_window != NULL)
     {
       gdk_window_set_user_data (priv->event_window, NULL);
@@ -432,7 +426,7 @@ gcal_event_widget_map (GtkWidget *widget)
 {
   GcalEventWidgetPrivate *priv;
 
-  priv = GCAL_EVENT_WIDGET (widget)->priv;
+  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
 
   GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->map (widget);
 
@@ -445,7 +439,7 @@ gcal_event_widget_unmap (GtkWidget *widget)
 {
   GcalEventWidgetPrivate *priv;
 
-  priv = GCAL_EVENT_WIDGET (widget)->priv;
+  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
 
   GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->unmap (widget);
 
@@ -459,7 +453,7 @@ gcal_event_widget_size_allocate (GtkWidget     *widget,
 {
   GcalEventWidgetPrivate *priv;
 
-  priv = GCAL_EVENT_WIDGET (widget)->priv;
+  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
   gtk_widget_set_allocation (widget, allocation);
 
   if (gtk_widget_get_realized (widget))
@@ -489,7 +483,7 @@ gcal_event_widget_draw (GtkWidget *widget,
   PangoFontDescription *font_desc;
   GdkRGBA fg_color;
 
-  priv = GCAL_EVENT_WIDGET (widget)->priv;
+  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
 
@@ -593,7 +587,7 @@ const gchar*
 gcal_event_widget_peek_uuid (GcalEventWidget *event)
 {
   GcalEventWidgetPrivate *priv;
-  priv = event->priv;
+  priv = gcal_event_widget_get_instance_private (event);
 
   return priv->uuid;
 }
@@ -674,7 +668,7 @@ gcal_event_widget_get_summary (GcalEventWidget *event)
 {
   GcalEventWidgetPrivate *priv;
 
-  priv = event->priv;
+  priv = gcal_event_widget_get_instance_private (event);
 
   return g_strdup (priv->summary);
 }
