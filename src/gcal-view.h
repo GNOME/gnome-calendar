@@ -79,7 +79,7 @@ GType         gcal_view_get_type                      (void);
 
 
 void          gcal_view_set_date                      (GcalView     *view,
-						       icaltimetype *date);
+                                                       icaltimetype *date);
 
 icaltimetype* gcal_view_get_date                      (GcalView     *view);
 
@@ -105,11 +105,11 @@ gchar*        gcal_view_get_left_header               (GcalView     *view);
 gchar*        gcal_view_get_right_header              (GcalView     *view);
 
 gboolean      gcal_view_draw_event                    (GcalView     *view,
-						       icaltimetype *start_date,
-						       icaltimetype *end_date);
+                                                       icaltimetype *start_date,
+                                                       icaltimetype *end_date);
 
 GtkWidget*    gcal_view_get_by_uuid                   (GcalView     *view,
-						       const gchar  *uuid);
+                                                       const gchar  *uuid);
 
 void          gcal_view_clear                         (GcalView     *view);
 
