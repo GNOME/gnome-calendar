@@ -56,12 +56,18 @@ struct _GcalNewEventWidgetClass
 };
 
 
-GType           gcal_new_event_widget_get_type          (void);
+GType           gcal_new_event_widget_get_type           (void);
 
-GtkWidget*      gcal_new_event_widget_new               (void);
+GtkWidget*      gcal_new_event_widget_new                (void);
 
-void            gcal_new_event_widget_set_title         (GcalNewEventWidget *widget,
-                                                         const gchar        *title);
+void            gcal_new_event_widget_set_title          (GcalNewEventWidget *widget,
+                                                          const gchar        *title);
+
+GtkWidget*      gcal_new_event_widget_get_close_button   (GcalNewEventWidget *widget);
+
+GtkWidget*      gcal_new_event_widget_get_create_button  (GcalNewEventWidget *widget);
+
+GtkWidget*      gcal_new_event_widget_get_details_button (GcalNewEventWidget *widget);
 
 G_END_DECLS
 
