@@ -67,7 +67,8 @@ gchar*          gcal_get_weekday                                (gint           
 
 gchar*          gcal_get_month_name                             (gint                   i);
 
-GdkPixbuf*      gcal_get_pixbuf_from_color                      (GdkColor              *color);
+GdkPixbuf*      gcal_get_pixbuf_from_color                      (GdkColor              *color,
+                                                                 gint                   size);
 
 gint            gcal_compare_event_widget_by_date               (gconstpointer          a,
                                                                  gconstpointer          b);

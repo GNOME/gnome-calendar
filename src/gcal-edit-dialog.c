@@ -420,7 +420,7 @@ gcal_edit_dialog_calendar_selected (GtkWidget *menu_item,
     gtk_tree_iter_free (priv->active_iter);
   priv->active_iter = gtk_tree_iter_copy (iter);
 
-  pix = gcal_get_pixbuf_from_color (color);
+  pix = gcal_get_pixbuf_from_color (color, 24);
   cal_image = gtk_image_new_from_pixbuf (pix);
   gtk_button_set_image (GTK_BUTTON (priv->calendar_button), cal_image);
 
@@ -462,7 +462,7 @@ gcal_edit_dialog_set_calendar_selected (GcalEditDialog *dialog)
             gtk_tree_iter_free (priv->active_iter);
           priv->active_iter = gtk_tree_iter_copy (&iter);
 
-          pix = gcal_get_pixbuf_from_color (color);
+          pix = gcal_get_pixbuf_from_color (color, 24);
           cal_image = gtk_image_new_from_pixbuf (pix);
           gtk_button_set_image (GTK_BUTTON (priv->calendar_button), cal_image);
 
@@ -1035,7 +1035,7 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
                         G_CALLBACK (gcal_edit_dialog_calendar_selected),
                         dialog);
 
-      pix = gcal_get_pixbuf_from_color (color);
+      pix = gcal_get_pixbuf_from_color (color, 24);
 
       cal_image = gtk_image_new_from_pixbuf (pix);
       g_object_set (item,
