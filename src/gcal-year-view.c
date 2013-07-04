@@ -788,30 +788,20 @@ gcal_year_view_draw_grid (GcalYearView *view,
                              background_selected_color.blue,
                              background_selected_color.alpha);
 
-      for (rows = 0; rows < (last_cell / 6) - (first_cell / 6) + 1; rows++)
+      for (rows = 0; rows < last_cell / 6 - first_cell / 6 + 1; rows++)
         {
           gint first_point;
           gint last_point;
 
           first_point = (rows == 0) ? first_cell : ((first_cell / 6) + rows) * 6;
-          cairo_move_to (
-              cr,
-              (alloc->width / 6) * ( first_point % 6),
-              (alloc->height / 2) * ( first_point / 6) + 1);
-
           last_point = (rows == (last_cell / 6 - first_cell / 6)) ? last_cell : ((first_cell / 6) + rows) * 6 + 5;
-          cairo_rel_line_to (cr,
-                             (alloc->width / 6) * (last_point - first_point + 1),
-                             0);
-          cairo_rel_line_to (cr,
-                             0,
-                             alloc->height / 2);
-          cairo_rel_line_to (cr,
-                             - (alloc->width / 6) * (last_point - first_point + 1),
-                             0);
-          cairo_rel_line_to (cr,
-                             0,
-                             - alloc->height / 2);
+
+          cairo_rectangle (cr,
+                           (alloc->width / 6) * ( first_point % 6),
+                           (alloc->height / 2) * ( first_point / 6) + 1,
+                           (alloc->width / 6) * (last_point - first_point + 1),
+                           alloc->height / 2);
+
           cairo_fill (cr);
         }
 
@@ -940,6 +930,7 @@ gcal_year_view_get_final_date (GcalView *view)
 
   return new_date;
 }
+
 static void
 gcal_year_view_mark_current_unit (GcalView *view,
                                   gint     *x,
