@@ -1453,7 +1453,30 @@ gcal_window_new_event (GcalWindow *window)
   priv->event_creation_data->x = x;
   priv->event_creation_data->y = y;
   priv->event_creation_data->start_date = gcal_dup_icaltime (priv->active_date);
-  g_debug ("[show_new_event] position (%d, %d)", x, y);
+  priv->event_creation_data->end_date = gcal_dup_icaltime (priv->active_date);
+
+  /* adjusting dates according to the actual view */
+  switch (priv->active_view)
+    {
+    case GCAL_WINDOW_VIEW_DAY:
+    case GCAL_WINDOW_VIEW_WEEK:
+      priv->event_creation_data->end_date->hour += 1;
+      *(priv->event_creation_data->end_date) =
+        icaltime_normalize (*(priv->event_creation_data->end_date));
+      break;
+    case GCAL_WINDOW_VIEW_YEAR:
+      priv->event_creation_data->start_date->day = 1;
+      priv->event_creation_data->end_date->day =
+        icaltime_days_in_month (priv->event_creation_data->end_date->month,
+                                priv->event_creation_data->end_date->year);
+      break;
+    case GCAL_WINDOW_VIEW_MONTH:
+      priv->event_creation_data->start_date->is_date = 1;
+      priv->event_creation_data->end_date->is_date = 1;
+      break;
+    case GCAL_WINDOW_VIEW_LIST:
+      break;
+    }
 
   prepare_new_event_widget (GCAL_WINDOW (window));
 
