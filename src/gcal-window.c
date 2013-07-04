@@ -38,12 +38,15 @@
 
 #include <glib/gi18n.h>
 
+#include <libecal/libecal.h>
 #include <libical/icaltime.h>
 
 struct _NewEventData
 {
   gint               x;
   gint               y;
+  icaltimetype      *start_date;
+  icaltimetype      *end_date;
 };
 
 typedef struct _NewEventData NewEventData;
@@ -82,8 +85,7 @@ typedef struct
   gchar               *event_to_delete;
 
   /* temp to keep event_creation */
-  gboolean             waiting_for_creation;
-  gboolean             queue_open_edit_dialog;
+  gboolean             open_edit_dialog;
 } GcalWindowPrivate;
 
 enum
@@ -94,8 +96,9 @@ enum
   PROP_NEW_EVENT_MODE
 };
 
-static void           set_new_event_mode                 (GcalWindow          *window,
-                                                          gboolean             enabled);
+static gboolean       key_pressed                        (GtkWidget           *widget,
+                                                          GdkEventKey         *event,
+                                                          gpointer             user_data);
 
 static void           date_updated                       (GtkButton           *buttton,
                                                           gpointer             user_data);
@@ -105,6 +108,11 @@ static void           update_view                        (GcalWindow          *w
 static void           view_changed                       (GObject             *object,
                                                           GParamSpec          *pspec,
                                                           gpointer             user_data);
+
+static void           set_new_event_mode                 (GcalWindow          *window,
+                                                          gboolean             enabled);
+
+static void           prepare_new_event_widget           (GcalWindow          *window);
 
 static void           show_new_event_widget              (GcalView            *view,
                                                           gpointer             start_span,
@@ -117,6 +125,15 @@ static gboolean       place_new_event_widget             (GtkOverlay          *o
                                                           GtkWidget           *child,
                                                           GdkRectangle        *allocation,
                                                           gpointer             user_data);
+
+static void           close_new_event_widget             (GtkButton           *button,
+                                                          gpointer             user_data);
+
+static GcalManager*   get_manager                        (GcalWindow          *window);
+
+/* handling events interaction */
+static void           create_event                       (gpointer             user_data,
+                                                          GtkWidget           *widget);
 
 static void           gcal_window_constructed            (GObject             *object);
 
@@ -138,8 +155,6 @@ static void           gcal_window_search_toggled         (GObject             *o
 
 static void           gcal_window_search_changed         (GtkEditable         *editable,
                                                           gpointer             user_data);
-
-static GcalManager*   gcal_window_get_manager            (GcalWindow          *window);
 
 static void           gcal_window_init_edit_dialog       (GcalWindow          *window);
 
@@ -170,11 +185,6 @@ static void           gcal_window_remove_event           (GdNotification      *n
 static void           gcal_window_undo_remove_event      (GtkButton           *button,
                                                           gpointer             user_data);
 
-static void           gcal_window_create_event           (GcalNewEventWidget  *widget,
-                                                          GcalNewEventData    *new_data,
-                                                          gboolean             open_details,
-                                                          gpointer             user_data);
-
 static void           gcal_window_edit_dialog_responded  (GtkDialog           *dialog,
                                                           gint                 response,
                                                           gpointer             user_data);
@@ -186,26 +196,25 @@ static void           gcal_window_update_event_widget    (GcalManager         *m
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
-static void
-set_new_event_mode (GcalWindow *window,
-                    gboolean    enabled)
+static gboolean
+key_pressed (GtkWidget   *widget,
+             GdkEventKey *event,
+             gpointer     user_data)
 {
   GcalWindowPrivate *priv;
 
-  priv = gcal_window_get_instance_private (window);
-  priv->new_event_mode = enabled;
-  g_object_notify (G_OBJECT (window), "new-event-mode");
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
-  if (enabled)
+  g_debug ("Catching key events");
+
+  if (priv->new_event_mode &&
+      event->keyval == GDK_KEY_Escape)
     {
-      /* set views to disable clicks */
-      ;
+      set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
+      return TRUE;
     }
-  else
-    {
-      /* clearing marks */
-      gcal_view_clear_marks (GCAL_VIEW (priv->views[priv->active_view]));
-    }
+
+  return FALSE;
 }
 
 static void
@@ -271,7 +280,7 @@ update_view (GcalWindow *window)
   last_day = gcal_view_get_final_date (GCAL_VIEW (widget));
 
   gcal_manager_set_new_range (
-      gcal_window_get_manager (window),
+      get_manager (window),
       first_day,
       last_day);
 
@@ -286,6 +295,7 @@ update_view (GcalWindow *window)
   g_object_set (priv->nav_bar, "right-header", header, NULL);
   g_free (header);
 }
+
 static void
 view_changed (GObject    *object,
               GParamSpec *pspec,
@@ -315,7 +325,86 @@ view_changed (GObject    *object,
   update_view (GCAL_WINDOW (user_data));
 }
 
-/* Second flow new-event flow */
+static void
+set_new_event_mode (GcalWindow *window,
+                    gboolean    enabled)
+{
+
+  GcalWindowPrivate *priv;
+
+  priv = gcal_window_get_instance_private (window);
+  priv->new_event_mode = enabled;
+  g_object_notify (G_OBJECT (window), "new-event-mode");
+
+  if (enabled)
+    {
+      /* set views to disable clicks */
+      ;
+    }
+  else
+    {
+      /* clearing marks */
+      gcal_view_clear_marks (GCAL_VIEW (priv->views[priv->active_view]));
+      gtk_widget_destroy (priv->new_event_widget);
+    }
+}
+
+static void
+prepare_new_event_widget (GcalWindow *window)
+{
+  GcalWindowPrivate *priv;
+
+  GcalManager *manager;
+  gchar *uid;
+
+  struct tm tm_date;
+  gchar start[64];
+  gchar *title_date;
+
+  GcalNewEventWidget *new_widget;
+  GtkWidget *widget;
+
+  priv = gcal_window_get_instance_private (window);
+
+  /* FIXME: ensure destruction or singleton pattern */
+  priv->new_event_widget = gcal_new_event_widget_new ();
+  new_widget = GCAL_NEW_EVENT_WIDGET (priv->new_event_widget);
+
+  /* setting title */
+  tm_date = icaltimetype_to_tm (priv->event_creation_data->start_date);
+  e_utf8_strftime_fix_am_pm (start, 64, "%B %d", &tm_date);
+  title_date = g_strdup_printf (_("New Event on %s"), start);
+
+  gcal_new_event_widget_set_title (new_widget, title_date);
+  g_free (title_date);
+
+  manager = get_manager (window);
+
+  gcal_new_event_widget_set_calendars (new_widget,
+                                       GTK_TREE_MODEL (gcal_manager_get_sources_model (manager)));
+
+  uid = gcal_manager_get_default_source (manager);
+  gcal_new_event_widget_set_default_calendar (new_widget, uid);
+  g_free (uid);
+
+  /* FIXME: add signals handling */
+  widget = gcal_new_event_widget_get_close_button (new_widget);
+  g_signal_connect (widget, "clicked",
+                    G_CALLBACK (close_new_event_widget), window);
+  widget = gcal_new_event_widget_get_create_button (new_widget);
+  g_signal_connect_swapped (widget, "clicked",
+                            G_CALLBACK (create_event), window);
+  widget = gcal_new_event_widget_get_details_button (new_widget);
+  g_signal_connect_swapped (widget, "clicked",
+                            G_CALLBACK (create_event), window);
+  widget = gcal_new_event_widget_get_entry (new_widget);
+  g_signal_connect_swapped (widget, "activate",
+                            G_CALLBACK (create_event), window);
+
+  gtk_widget_show_all (priv->new_event_widget);
+}
+
+/* new-event interaction: second variant */
 static void
 show_new_event_widget (GcalView *view,
                        gpointer  start_span,
@@ -325,7 +414,6 @@ show_new_event_widget (GcalView *view,
                        gpointer  user_data)
 {
   GcalWindowPrivate *priv;
-  GcalManager *manager;
 
   g_return_if_fail (user_data);
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
@@ -333,31 +421,22 @@ show_new_event_widget (GcalView *view,
   /* 1st and 2nd steps */
   set_new_event_mode (GCAL_WINDOW (user_data), TRUE);
 
-  /* FIXME: ensure destruction or singleton pattern */
-  priv->new_event_widget = gcal_new_event_widget_new ();
-
-  /* manager = gcal_window_get_manager (GCAL_WINDOW (user_data)); */
-  /* /\* squeezed in here, reload on every show *\/ */
-  /* gcal_event_overlay_set_sources_model ( */
-  /*     GCAL_EVENT_OVERLAY (priv->new_event_widget), */
-  /*     gcal_manager_get_sources_model (manager)); */
-
-  /* if (start_span != NULL) */
-  /*   { */
-  /*     gcal_event_overlay_set_span (GCAL_EVENT_OVERLAY (priv->new_event_widget), */
-  /*                                  (icaltimetype*) start_span, */
-  /*                                  (icaltimetype*) end_span); */
-  /*   } */
-
-  gtk_widget_show_all (priv->new_event_widget);
-
   if (priv->event_creation_data != NULL)
-    g_free (priv->event_creation_data);
+    {
+      g_free (priv->event_creation_data->start_date);
+      g_free (priv->event_creation_data->end_date);
+      g_free (priv->event_creation_data);
+    }
 
-  priv->event_creation_data = g_new (NewEventData, 1);
+  priv->event_creation_data = g_new0 (NewEventData, 1);
   priv->event_creation_data->x = x;
   priv->event_creation_data->y = y;
+  priv->event_creation_data->start_date = gcal_dup_icaltime (start_span);
+  if (end_span != NULL)
+    priv->event_creation_data->end_date = gcal_dup_icaltime (end_span);
   g_debug ("[show_new_event] position (%f, %f)", x, y);
+
+  prepare_new_event_widget (GCAL_WINDOW (user_data));
 
   gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
                            priv->new_event_widget);
@@ -404,7 +483,58 @@ place_new_event_widget (GtkOverlay   *overlay,
            allocation->width,
            allocation->height);
 
+  gtk_widget_grab_focus (gcal_new_event_widget_get_entry (
+                             GCAL_NEW_EVENT_WIDGET (priv->new_event_widget)));
+
   return TRUE;
+}
+
+static void
+close_new_event_widget (GtkButton *button,
+                        gpointer   user_data)
+{
+  set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
+}
+
+static GcalManager*
+get_manager (GcalWindow *window)
+{
+  GcalApplication *app;
+  app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
+
+  return gcal_application_get_manager (app);
+}
+
+static void
+create_event (gpointer   user_data,
+              GtkWidget *widget)
+{
+  GcalWindowPrivate *priv;
+
+  GcalNewEventWidget *new_widget;
+
+  gchar *uid;
+  gchar *summary;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  new_widget = GCAL_NEW_EVENT_WIDGET (priv->new_event_widget);
+
+  if (widget == gcal_new_event_widget_get_details_button (new_widget))
+    priv->open_edit_dialog = TRUE;
+
+  uid = gcal_new_event_widget_get_calendar_uid (new_widget);
+  summary = gcal_new_event_widget_get_summary (new_widget);
+
+  /* create the event */
+  gcal_manager_create_event (get_manager (GCAL_WINDOW (user_data)),
+                             uid, summary,
+                             priv->event_creation_data->start_date,
+                             priv->event_creation_data->end_date);
+
+  g_free (uid);
+  g_free (summary);
+  /* reset and hide */
+  set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
 }
 
 static void
@@ -463,8 +593,7 @@ gcal_window_init(GcalWindow *self)
 
   /* FIXME: Review real need of this */
   priv->event_to_delete = NULL;
-  priv->waiting_for_creation = FALSE;
-  priv->queue_open_edit_dialog = FALSE;
+  priv->open_edit_dialog = FALSE;
 }
 
 static void
@@ -611,7 +740,17 @@ gcal_window_constructed (GObject *object)
   gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (priv->views_switcher),
                                 GTK_STACK (priv->views_stack));
 
+  gtk_container_add (GTK_CONTAINER (object), priv->main_box);
+  gtk_widget_show_all (priv->main_box);
+
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (GTK_WIDGET (object)),
+      "views");
+
   /* signals connection/handling */
+  g_signal_connect (object, "key-press-event",
+                    G_CALLBACK (key_pressed), object);
+
   g_signal_connect_swapped (priv->new_button, "clicked",
                             G_CALLBACK (gcal_window_new_event), object);
   for (i = 0; i < 4; ++i)
@@ -633,13 +772,6 @@ gcal_window_constructed (GObject *object)
                     "clicked", G_CALLBACK (date_updated), object);
   g_signal_connect (gcal_nav_bar_get_next_button (GCAL_NAV_BAR (priv->nav_bar)),
                     "clicked", G_CALLBACK (date_updated), object);
-
-  gtk_container_add (GTK_CONTAINER (object), priv->main_box);
-  gtk_widget_show_all (priv->main_box);
-
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (GTK_WIDGET (object)),
-      "views");
 }
 
 static void
@@ -770,15 +902,6 @@ gcal_window_search_changed (GtkEditable *editable,
     }
 }
 
-static GcalManager*
-gcal_window_get_manager (GcalWindow *window)
-{
-  GcalApplication *app;
-  app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
-
-  return gcal_application_get_manager (app);
-}
-
 static void
 gcal_window_init_edit_dialog (GcalWindow *window)
 {
@@ -790,7 +913,7 @@ gcal_window_init_edit_dialog (GcalWindow *window)
   gtk_window_set_transient_for (GTK_WINDOW (priv->edit_dialog),
                                 GTK_WINDOW (window));
   gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog),
-                                gcal_window_get_manager (window));
+                                get_manager (window));
 
   g_signal_connect (priv->edit_dialog,
                     "response",
@@ -971,10 +1094,10 @@ gcal_window_event_created (GcalManager *manager,
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
-  if (! priv->waiting_for_creation)
+  if (! priv->open_edit_dialog)
     return;
 
-  priv->waiting_for_creation = FALSE;
+  priv->open_edit_dialog = FALSE;
 
   if (priv->edit_dialog == NULL)
     gcal_window_init_edit_dialog (GCAL_WINDOW (user_data));
@@ -982,12 +1105,6 @@ gcal_window_event_created (GcalManager *manager,
   gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (priv->edit_dialog),
                               source_uid,
                               event_uid);
-
-  if (gtk_widget_is_visible (priv->new_event_widget))
-    {
-      priv->queue_open_edit_dialog = TRUE;
-      return;
-    }
 
   gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
 }
@@ -1025,7 +1142,7 @@ gcal_window_remove_event (GdNotification  *notification,
 
   if (priv->event_to_delete != NULL)
     {
-      manager = gcal_window_get_manager (GCAL_WINDOW (user_data));
+      manager = get_manager (GCAL_WINDOW (user_data));
       tokens = g_strsplit (priv->event_to_delete, ":", -1);
 
       gcal_manager_remove_event (manager, tokens[0], tokens[1]);
@@ -1064,35 +1181,6 @@ gcal_window_undo_remove_event (GtkButton *button,
 }
 
 static void
-gcal_window_create_event (GcalNewEventWidget  *widget,
-                          GcalNewEventData    *new_data,
-                          gboolean             open_details,
-                          gpointer             user_data)
-{
-  GcalWindowPrivate *priv;
-  GcalManager *manager;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  if (open_details)
-    {
-      priv->waiting_for_creation = TRUE;
-    }
-
-  /* create the event */
-  manager = gcal_window_get_manager (GCAL_WINDOW (user_data));
-  gcal_manager_create_event (manager,
-                             new_data->calendar_uid,
-                             new_data->summary,
-                             new_data->start_date,
-                             new_data->end_date);
-
-  /* reset and hide */
-  gcal_view_clear_selection (GCAL_VIEW (priv->views[priv->active_view]));
-  gtk_widget_destroy (priv->new_event_widget);
-}
-
-static void
 gcal_window_edit_dialog_responded (GtkDialog *dialog,
                                    gint       response,
                                    gpointer   user_data)
@@ -1117,7 +1205,7 @@ gcal_window_edit_dialog_responded (GtkDialog *dialog,
         break;
       case GTK_RESPONSE_ACCEPT:
         /* save changes if editable */
-        manager = gcal_window_get_manager (GCAL_WINDOW (user_data));
+        manager = get_manager (GCAL_WINDOW (user_data));
         changed_props =
           gcal_edit_dialog_get_modified_properties (GCAL_EDIT_DIALOG (dialog));
         for (l = changed_props; l != NULL; l = l->next)
@@ -1337,10 +1425,39 @@ gcal_window_new_with_view (GcalApplication   *app,
   return GTK_WIDGET (win);
 }
 
+/* new-event interaction: first variant */
 void
 gcal_window_new_event (GcalWindow *window)
 {
-  g_debug ("Enter here: event creation");
+  GcalWindowPrivate *priv;
+
+  gint x, y;
+
+  priv = gcal_window_get_instance_private (window);
+
+  /* 1st and 2nd steps */
+  set_new_event_mode (window, TRUE);
+
+  gcal_view_mark_current_unit (GCAL_VIEW (priv->views[priv->active_view]),
+                               &x, &y);
+
+  if (priv->event_creation_data != NULL)
+    {
+      g_free (priv->event_creation_data->start_date);
+      g_free (priv->event_creation_data->end_date);
+      g_free (priv->event_creation_data);
+    }
+
+  priv->event_creation_data = g_new0 (NewEventData, 1);
+  priv->event_creation_data->x = x;
+  priv->event_creation_data->y = y;
+  priv->event_creation_data->start_date = gcal_dup_icaltime (priv->active_date);
+  g_debug ("[show_new_event] position (%d, %d)", x, y);
+
+  prepare_new_event_widget (GCAL_WINDOW (window));
+
+  gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
+                           priv->new_event_widget);
 }
 
 void
