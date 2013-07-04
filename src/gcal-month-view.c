@@ -913,6 +913,9 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
 
+  if (priv->clicked_cell == -1)
+    return FALSE;
+
   x = event->x;
   y = event->y;
 
@@ -935,7 +938,7 @@ gcal_month_view_button_release (GtkWidget      *widget,
   released = 7 * ( floor ( (y - (lines_gap_for_5 * v_block))  / (v_block) )) +
              floor (event->x / (width / 7));
 
-  /* whether the event is inside the days of the month */
+  /* whether the event is out of the days of the month */
   if (released < priv->days_delay + 7 * february_gap ||
       released >= days)
     {
