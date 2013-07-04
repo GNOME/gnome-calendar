@@ -36,14 +36,14 @@ G_BEGIN_DECLS
 typedef struct _GcalApplicationClass         GcalApplicationClass;
 typedef struct _GcalApplication              GcalApplication;
 
+struct _GcalApplication
+{
+  GtkApplication parent;
+};
+
 struct _GcalApplicationClass
 {
   GtkApplicationClass parent_class;
-};
-
-struct _GcalApplication
-{
-  GtkApplication parent_instance;
 };
 
 GType             gcal_application_get_type     (void) G_GNUC_CONST;
