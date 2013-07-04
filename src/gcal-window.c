@@ -966,13 +966,11 @@ gcal_window_events_added (GcalManager *manager,
           gcal_view_get_by_uuid (view, (gchar*)l->data) == NULL)
         {
           event = gcal_event_widget_new ((gchar*) l->data);
-
           gcal_window_update_event_widget (manager,
                                            source_uid,
                                            event_uid,
                                            GCAL_EVENT_WIDGET (event));
           gtk_widget_show (event);
-
           gtk_container_add (GTK_CONTAINER (view), event);
 
           g_signal_connect (event,
@@ -1058,23 +1056,24 @@ gcal_window_events_modified (GcalManager *manager,
                                                           source_uid,
                                                           event_uid);
 
+              gtk_widget_destroy (widget);
+
               if (gcal_view_draw_event (GCAL_VIEW (priv->views[i]),
                                         start_date, end_date))
                 {
+                  GtkWidget *event;
+                  event = gcal_event_widget_new ((gchar*) l->data);
                   gcal_window_update_event_widget (manager,
                                                    source_uid,
                                                    event_uid,
-                                                   GCAL_EVENT_WIDGET (widget));
-                  g_object_ref (widget);
-                  gtk_container_remove (GTK_CONTAINER (priv->views[i]),
-                                        widget);
+                                                   GCAL_EVENT_WIDGET (event));
+                  gtk_widget_show (event);
                   gtk_container_add (GTK_CONTAINER (priv->views[i]),
-                                     widget);
-                  g_object_unref (widget);
-                }
-              else
-                {
-                  gtk_widget_destroy (widget);
+                                     event);
+                  g_signal_connect (event,
+                                    "activate",
+                                    G_CALLBACK (gcal_window_event_activated),
+                                    user_data);
                 }
 
               g_free (start_date);
