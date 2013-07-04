@@ -37,17 +37,17 @@ G_BEGIN_DECLS
 typedef struct _GcalEventWidget                   GcalEventWidget;
 typedef struct _GcalEventWidgetClass              GcalEventWidgetClass;
 
+struct _GcalEventWidget
+{
+  GtkWidget parent;
+};
+
 struct _GcalEventWidgetClass
 {
   GtkWidgetClass parent_class;
 
   /* signals */
   void (*activate)  (GcalEventWidget *event_widget);
-};
-
-struct _GcalEventWidget
-{
-  GtkWidget parent;
 };
 
 GType         gcal_event_widget_get_type                   (void);
