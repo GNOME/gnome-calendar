@@ -234,28 +234,27 @@ gcal_get_month_name (gint i)
 }
 
 GdkPixbuf*
-gcal_get_pixbuf_from_color (GdkColor *color)
+gcal_get_pixbuf_from_color (GdkColor *color,
+                            gint      size)
 {
   cairo_surface_t *surface;
   cairo_t *cr;
-  gint width, height;
   GdkPixbuf *pix;
 
   /* TODO: review size here, maybe not hardcoded */
-  width = height = 10;
-  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, width, height);
+  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, size, size);
   cr = cairo_create (surface);
 
   cairo_set_source_rgb (cr,
                          color->red / 65535.0,
                          color->green / 65535.0,
                          color->blue / 65535.0);
-  cairo_rectangle (cr, 0, 0, width, height);
+  cairo_rectangle (cr, 0, 0, size, size);
   cairo_fill (cr);
   cairo_destroy (cr);
   pix = gdk_pixbuf_get_from_surface (surface,
                                      0, 0,
-                                     width, height);
+                                     size, size);
   cairo_surface_destroy (surface);
   return pix;
 }
