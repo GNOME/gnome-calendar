@@ -19,6 +19,7 @@
 
 #include "gcal-new-event-widget.h"
 #include "gcal-arrow-bin.h"
+#include "gcal-utils.h"
 
 typedef struct
 {
@@ -32,7 +33,40 @@ typedef struct
   GtkWidget     *close_button;
 } GcalNewEventWidgetPrivate;
 
+static void      item_activated          (GtkWidget *item,
+                                          gpointer   user_data);
+
 G_DEFINE_TYPE_WITH_PRIVATE (GcalNewEventWidget, gcal_new_event_widget, GTK_TYPE_OVERLAY)
+
+static void
+item_activated (GtkWidget *item,
+                gpointer   user_data)
+{
+  GcalNewEventWidgetPrivate *priv;
+
+  gchar *uid;
+  gchar *color_name;
+  GdkColor color;
+
+  GdkPixbuf *pix;
+  GtkWidget *image;
+
+  priv = gcal_new_event_widget_get_instance_private (
+              GCAL_NEW_EVENT_WIDGET (user_data));
+
+  uid = g_object_get_data (G_OBJECT (item), "calendar-uid");
+  color_name = g_object_get_data (G_OBJECT (item), "color");
+  gdk_color_parse (color_name, &color);
+
+  pix = gcal_get_pixbuf_from_color (&color, 16);
+  image = gtk_image_new_from_pixbuf (pix);
+  gtk_button_set_image (GTK_BUTTON (priv->calendar_button), image);
+
+  /* saving the value */
+  g_object_set_data (G_OBJECT (priv->calendar_button),
+                     "calendar-uid", uid);
+  g_object_unref (pix);
+}
 
 static void
 gcal_new_event_widget_class_init (GcalNewEventWidgetClass *klass)
@@ -74,6 +108,125 @@ gcal_new_event_widget_set_title (GcalNewEventWidget *widget,
 
   priv = gcal_new_event_widget_get_instance_private (widget);
   gtk_label_set_text (GTK_LABEL (priv->title_label), title);
+}
+
+void
+gcal_new_event_widget_set_calendars (GcalNewEventWidget *widget,
+                                     GtkTreeModel       *sources_model)
+{
+  GcalNewEventWidgetPrivate *priv;
+  GtkWidget *menu;
+  GtkWidget *item;
+
+  gboolean valid;
+  GtkTreeIter iter;
+
+  priv = gcal_new_event_widget_get_instance_private (widget);
+
+  valid = gtk_tree_model_get_iter_first (sources_model, &iter);
+  if (! valid)
+    return;
+
+  menu = gtk_menu_new ();
+  gtk_menu_button_set_popup (GTK_MENU_BUTTON (priv->calendar_button), menu);
+
+  while (valid)
+    {
+      /* Walk through the list, reading each row */
+      gchar *uid;
+      gchar *name;
+      gboolean active;
+      GdkColor *color;
+
+      GtkWidget *box;
+      GtkWidget *name_label;
+      GtkWidget *cal_image;
+      GdkPixbuf *pix;
+
+      gtk_tree_model_get (sources_model, &iter,
+                          0, &uid,
+                          1, &name,
+                          2, &active,
+                          3, &color,
+                          -1);
+
+      if (! active)
+        {
+          valid = gtk_tree_model_iter_next (sources_model, &iter);
+          continue;
+        }
+
+      item = gtk_menu_item_new ();
+      g_object_set_data_full (G_OBJECT (item),
+                              "calendar-uid", uid, g_free);
+      g_object_set_data_full (G_OBJECT (item),
+                              "color", gdk_color_to_string (color), g_free);
+      g_signal_connect (item,
+                        "activate",
+                        G_CALLBACK (item_activated),
+                        widget);
+
+      pix = gcal_get_pixbuf_from_color (color, 16);
+      cal_image = gtk_image_new_from_pixbuf (pix);
+      name_label = gtk_label_new (name);
+      box = gtk_grid_new ();
+      gtk_grid_set_column_spacing (GTK_GRID (box), 6);
+      gtk_container_add (GTK_CONTAINER (box), cal_image);
+      gtk_container_add (GTK_CONTAINER (box), name_label);
+      gtk_container_add (GTK_CONTAINER (item), box);
+
+      gtk_container_add (GTK_CONTAINER (menu), item);
+
+      g_object_unref (pix);
+      g_free (name);
+      gdk_color_free (color);
+
+      valid = gtk_tree_model_iter_next (sources_model, &iter);
+    }
+
+  gtk_widget_show_all (GTK_WIDGET (menu));
+}
+
+void
+gcal_new_event_widget_set_default_calendar (GcalNewEventWidget *widget,
+                                            const gchar        *source_uid)
+{
+  GcalNewEventWidgetPrivate *priv;
+
+  GList *l;
+  GtkMenu *menu;
+
+  gchar *uid;
+  gchar *color_name;
+  GdkColor color;
+  GdkPixbuf *pix;
+  GtkWidget *image;
+
+  priv = gcal_new_event_widget_get_instance_private (widget);
+
+  menu = gtk_menu_button_get_popup (GTK_MENU_BUTTON (priv->calendar_button));
+  for (l = gtk_container_get_children (GTK_CONTAINER (menu));
+       l != NULL;
+       l = l->next)
+    {
+      GObject *item = l->data;
+      uid = g_object_get_data (item, "calendar-uid");
+      if (g_strcmp0 (source_uid, uid) == 0)
+        {
+          color_name = g_object_get_data (item, "color");
+          break;
+        }
+    }
+
+  gdk_color_parse (color_name, &color);
+  pix = gcal_get_pixbuf_from_color (&color, 16);
+  image = gtk_image_new_from_pixbuf (pix);
+  gtk_button_set_image (GTK_BUTTON (priv->calendar_button), image);
+
+  /* saving the value */
+  g_object_set_data (G_OBJECT (priv->calendar_button),
+                     "calendar-uid", uid);
+  g_object_unref (pix);
 }
 
 /**
@@ -126,4 +279,41 @@ gcal_new_event_widget_get_close_button (GcalNewEventWidget *widget)
 
   priv = gcal_new_event_widget_get_instance_private (widget);
   return priv->close_button;
+}
+
+/**
+ * gcal_new_event_widget_get_calendar_uid:
+ * @widget: a #GcalNewEventWidget
+ *
+ * Returns the selected calendar uid.
+ *
+ * Returns: (transfer full) a c-string
+ **/
+gchar*
+gcal_new_event_widget_get_calendar_uid (GcalNewEventWidget *widget)
+{
+  GcalNewEventWidgetPrivate *priv;
+
+  priv = gcal_new_event_widget_get_instance_private (widget);
+
+  return g_strdup (g_object_get_data (G_OBJECT (priv->calendar_button),
+                                      "calendar-uid"));
+}
+
+/**
+ * gcal_new_event_widget_get_summary:
+ * @widget: a #GcalNewEventWidget
+ *
+ * Return the summary written down in the entry
+ *
+ * Returns: (transfer full) a c-string
+ **/
+gchar*
+gcal_new_event_widget_get_summary (GcalNewEventWidget *widget)
+{
+  GcalNewEventWidgetPrivate *priv;
+
+  priv = gcal_new_event_widget_get_instance_private (widget);
+
+  return g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->what_entry)));
 }
