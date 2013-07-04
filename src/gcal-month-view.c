@@ -229,11 +229,21 @@ gcal_month_view_set_property (GObject       *object,
   switch (property_id)
     {
     case PROP_DATE:
-      if (priv->date != NULL)
-        g_free (priv->date);
+      {
+        icaltimetype *first_of_month;
 
-      priv->date = g_value_dup_boxed (value);
-      break;
+        if (priv->date != NULL)
+          g_free (priv->date);
+
+        priv->date = g_value_dup_boxed (value);
+
+        first_of_month = gcal_dup_icaltime (priv->date);
+        first_of_month->day = 1;
+        priv->days_delay = icaltime_day_of_week (*first_of_month) - 1;
+        g_free (first_of_month);
+
+        break;
+      }
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -520,6 +530,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
 
+  /* fonts and colors selection */
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
 
@@ -557,6 +568,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
   gtk_style_context_restore (context);
 
+  /* calculations */
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
   shown_rows = ceil (days / 7.0);
   february_gap = shown_rows == 4 ? 1 : 0;
