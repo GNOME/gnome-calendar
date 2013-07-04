@@ -501,35 +501,7 @@ gcal_year_view_button_press (GtkWidget      *widget,
   priv->clicked_cell = 6 * ( (gint ) ( y  / (height / 2) )) + ((gint) ( x / (width / 6) ));
   priv->start_mark_cell = priv->clicked_cell;
 
-  if (event->type == GDK_2BUTTON_PRESS)
-    {
-      icaltimetype *start_date;
-      icaltimetype *end_date;
-
-      priv->end_mark_cell = priv->start_mark_cell;
-      x = (width / 6) * (( priv->start_mark_cell % 6) + 0.5);
-      y = (height / 2) * (( priv->start_mark_cell / 6) + 0.5);
-
-      gtk_widget_queue_draw (widget);
-
-      start_date = gcal_dup_icaltime (priv->date);
-      start_date->day = 1;
-      start_date->month = priv->start_mark_cell + 1;
-      start_date->is_date = 1;
-      end_date = gcal_dup_icaltime (priv->date);
-      end_date->day = icaltime_days_in_month (start_date->month,
-                                              start_date->year);
-      end_date->month = priv->start_mark_cell + 1;
-      end_date->is_date = 1;
-
-      g_signal_emit_by_name (GCAL_VIEW (widget),
-                             "create-event",
-                             start_date, end_date,
-                             x, y);
-      g_free (start_date);
-      g_free (end_date);
-    }
-
+  g_debug ("button pressed: cell %d", priv->start_mark_cell);
   return TRUE;
 }
 
@@ -556,11 +528,6 @@ gcal_year_view_motion_notify_event (GtkWidget      *widget,
     return FALSE;
 
   priv->end_mark_cell = 6 * ( (gint ) ( y  / (height / 2) )) + ((gint) ( event->x / (width / 6) ));
-  if (priv->end_mark_cell == priv->start_mark_cell)
-    {
-      priv->end_mark_cell = -1;
-      return FALSE;
-    }
 
   gtk_widget_queue_draw (widget);
 
@@ -576,9 +543,13 @@ gcal_year_view_button_release (GtkWidget      *widget,
   gdouble x, y;
   gint width, height;
 
-  gint released;
+  icaltimetype *start_date;
+  icaltimetype *end_date;
 
   priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
+
+  if (priv->clicked_cell == -1)
+    return FALSE;
 
   x = event->x;
   y = event->y;
@@ -586,42 +557,38 @@ gcal_year_view_button_release (GtkWidget      *widget,
   width = gtk_widget_get_allocated_width (widget);
   height = gtk_widget_get_allocated_height (widget);
 
-  released = 6 * ( (gint ) ( y  / (height / 2) )) + ((gint) ( x / (width / 6) ));
+  priv->end_mark_cell = 6 * ( (gint ) ( y  / (height / 2) )) + ((gint) ( x / (width / 6) ));
 
-  if (priv->clicked_cell != released)
+  x = (width / 6) * (( priv->end_mark_cell % 6) + 0.5);
+  y = (height / 2) * (( priv->end_mark_cell / 6) + 0.5);
+
+  start_date = gcal_dup_icaltime (priv->date);
+  start_date->day = 1;
+  start_date->month = priv->start_mark_cell + 1;
+  start_date->is_date = 1;
+
+  end_date = gcal_dup_icaltime (priv->date);
+  end_date->day = icaltime_days_in_month (priv->end_mark_cell + 1,
+                                          end_date->year);
+  end_date->month = priv->end_mark_cell + 1;
+  end_date->is_date = 1;
+
+  if (priv->start_mark_cell > priv->end_mark_cell)
     {
-      icaltimetype *start_date;
-      icaltimetype *end_date;
-
-      x = (width / 6) * (( priv->end_mark_cell % 6) + 0.5);
-      y = (height / 2) * (( priv->end_mark_cell / 6) + 0.5);
-
-      start_date = gcal_dup_icaltime (priv->date);
-      start_date->day = 1;
-      start_date->month = priv->start_mark_cell + 1;
-      start_date->is_date = 1;
-
-      end_date = gcal_dup_icaltime (priv->date);
-      end_date->day = icaltime_days_in_month (priv->end_mark_cell + 1,
+      start_date->month = priv->end_mark_cell + 1;
+      end_date->day = icaltime_days_in_month (priv->start_mark_cell + 1,
                                               end_date->year);
-      end_date->month = priv->end_mark_cell + 1;
-      end_date->is_date = 1;
-
-      if (priv->start_mark_cell > priv->end_mark_cell)
-        {
-          start_date->month = priv->end_mark_cell + 1;
-          end_date->day = icaltime_days_in_month (priv->start_mark_cell + 1,
-                                                  end_date->year);
-          end_date->month = priv->start_mark_cell + 1;
-        }
-
-      g_signal_emit_by_name (GCAL_VIEW (widget),
-                             "create-event",
-                             start_date, end_date,
-                             x, y);
-      g_free (start_date);
-      g_free (end_date);
+      end_date->month = priv->start_mark_cell + 1;
     }
+
+  g_signal_emit_by_name (GCAL_VIEW (widget),
+                         "create-event",
+                         start_date, end_date,
+                         x, y);
+  g_free (start_date);
+  g_free (end_date);
+
+  g_debug ("button released: cell %d", priv->end_mark_cell);
 
   priv->clicked_cell = -1;
   return TRUE;
@@ -766,6 +733,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
   priv = gcal_year_view_get_instance_private (view);
   widget = GTK_WIDGET (view);
 
+  /* fonts and colors selection */
   context = gtk_widget_get_style_context (widget);
   layout = pango_cairo_create_layout (cr);
 
