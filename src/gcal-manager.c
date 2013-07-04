@@ -1144,6 +1144,23 @@ gcal_manager_add_source (GcalManager *manager,
   return e_source_dup_uid (source);
 }
 
+gchar*
+gcal_manager_get_default_source (GcalManager *manager)
+{
+  GcalManagerPrivate *priv;
+
+  ESource *edefault;
+  gchar *source_uid;
+
+  priv = gcal_manager_get_instance_private (manager);
+
+  edefault = e_source_registry_ref_default_calendar (priv->source_registry);
+  source_uid = e_source_dup_uid (edefault);
+
+  g_object_unref (edefault);
+  return source_uid;
+}
+
 const gchar*
 gcal_manager_get_source_name (GcalManager *manager,
                               const gchar *source_uid)

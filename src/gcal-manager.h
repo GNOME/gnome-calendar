@@ -67,6 +67,8 @@ gchar*         gcal_manager_add_source              (GcalManager        *manager
                                                      const gchar        *backend,
                                                      const gchar        *color);
 
+gchar*         gcal_manager_get_default_source      (GcalManager        *manager);
+
 const gchar*   gcal_manager_get_source_name         (GcalManager        *manager,
                                                      const gchar        *source_uid);
 
