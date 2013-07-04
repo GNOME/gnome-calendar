@@ -58,18 +58,28 @@ struct _GcalNewEventWidgetClass
 
 GType           gcal_new_event_widget_get_type           (void);
 
-GtkWidget*      gcal_new_event_widget_new                (void);
+GtkWidget*      gcal_new_event_widget_new                  (void);
 
-void            gcal_new_event_widget_set_title          (GcalNewEventWidget *widget,
-                                                          const gchar        *title);
+void            gcal_new_event_widget_set_title            (GcalNewEventWidget *widget,
+                                                            const gchar        *title);
 
-GtkWidget*      gcal_new_event_widget_get_entry          (GcalNewEventWidget *widget);
+void            gcal_new_event_widget_set_calendars        (GcalNewEventWidget *widget,
+                                                            GtkTreeModel       *sources_model);
 
-GtkWidget*      gcal_new_event_widget_get_create_button  (GcalNewEventWidget *widget);
+void            gcal_new_event_widget_set_default_calendar (GcalNewEventWidget *widget,
+                                                            const gchar        *source_uid);
 
-GtkWidget*      gcal_new_event_widget_get_details_button (GcalNewEventWidget *widget);
+GtkWidget*      gcal_new_event_widget_get_entry            (GcalNewEventWidget *widget);
 
-GtkWidget*      gcal_new_event_widget_get_close_button   (GcalNewEventWidget *widget);
+GtkWidget*      gcal_new_event_widget_get_create_button    (GcalNewEventWidget *widget);
+
+GtkWidget*      gcal_new_event_widget_get_details_button   (GcalNewEventWidget *widget);
+
+GtkWidget*      gcal_new_event_widget_get_close_button     (GcalNewEventWidget *widget);
+
+gchar*          gcal_new_event_widget_get_calendar_uid     (GcalNewEventWidget *widget);
+
+gchar*          gcal_new_event_widget_get_summary          (GcalNewEventWidget *widget);
 
 G_END_DECLS
 
