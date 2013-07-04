@@ -448,8 +448,10 @@ place_new_event_widget (GtkOverlay   *overlay,
                         gpointer      user_data)
 {
   GcalWindowPrivate *priv;
+
   gint nat_width;
   gint nat_height;
+  gint nav_bar_height;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
@@ -463,6 +465,7 @@ place_new_event_widget (GtkOverlay   *overlay,
                                              nat_width,
                                              NULL,
                                              &nat_height);
+  nav_bar_height = gtk_widget_get_allocated_height (priv->nav_bar);
 
   g_debug ("[allocate-child] incoming value (%d, %d) - (%d, %d)",
            allocation->x,
@@ -471,8 +474,8 @@ place_new_event_widget (GtkOverlay   *overlay,
            allocation->height);
   g_debug ("[allocate-child] natural size (%d, %d)",
            nat_width, nat_height);
-  allocation->x = priv->event_creation_data->x;
-  allocation->y = priv->event_creation_data->y;
+  allocation->x = priv->event_creation_data->x - nat_width / 2;
+  allocation->y = priv->event_creation_data->y + nav_bar_height - nat_height;
   allocation->width = nat_width;
   allocation->height = nat_height;
 
