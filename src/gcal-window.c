@@ -336,16 +336,15 @@ set_new_event_mode (GcalWindow *window,
   priv->new_event_mode = enabled;
   g_object_notify (G_OBJECT (window), "new-event-mode");
 
-  if (enabled)
+  if (! enabled)
+    gcal_view_clear_marks (GCAL_VIEW (priv->views[priv->active_view]));
+
+  /* XXX: here we could disable clicks from the views, yet */
+  /* for now we relaunch the new-event widget */
+  if (priv->new_event_widget != NULL)
     {
-      /* set views to disable clicks */
-      ;
-    }
-  else
-    {
-      /* clearing marks */
-      gcal_view_clear_marks (GCAL_VIEW (priv->views[priv->active_view]));
       gtk_widget_destroy (priv->new_event_widget);
+      priv->new_event_widget = NULL;
     }
 }
 
