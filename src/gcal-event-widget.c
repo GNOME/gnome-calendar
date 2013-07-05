@@ -538,7 +538,6 @@ gcal_event_widget_draw (GtkWidget *widget,
   pango_layout_set_text (layout, priv->summary, -1);
   pango_cairo_update_layout (cr, layout);
 
-  cairo_save (cr);
   cairo_set_source_rgba (cr,
                          fg_color.red,
                          fg_color.green,
@@ -546,8 +545,6 @@ gcal_event_widget_draw (GtkWidget *widget,
                          fg_color.alpha);
   cairo_move_to (cr, x + padding.left, y + padding.top);
   pango_cairo_show_layout (cr, layout);
-
-  cairo_restore (cr);
 
   pango_font_description_free (font_desc);
   g_object_unref (layout);
