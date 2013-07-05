@@ -230,6 +230,9 @@ gcal_days_grid_init (GcalDaysGrid *self)
   priv->req_cell_height = 0;
 
   priv->children = NULL;
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (GTK_WIDGET (self)),
+      "calendar-view");
 }
 
 static void

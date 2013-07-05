@@ -171,6 +171,10 @@ gcal_all_day_grid_init (GcalAllDayGrid *self)
   priv = gcal_all_day_grid_get_instance_private (self);
   priv->column_headers = NULL;
   priv->children = NULL;
+
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (GTK_WIDGET (self)),
+      "calendar-view");
 }
 
 static void
