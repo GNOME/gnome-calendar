@@ -42,6 +42,9 @@ struct _GcalDaysGrid
 struct _GcalDaysGridClass
 {
   GtkContainerClass parent_class;
+
+  /* signals */
+  void (*marked) (guint start_cell, guint end_cell);
 };
 
 GType          gcal_days_grid_get_type                  (void);
@@ -59,8 +62,19 @@ void           gcal_days_grid_place                     (GcalDaysGrid   *days_gr
 							 guint           start_cell,
 							 guint           end_cell);
 
+/* GcalView API helpers */
 GtkWidget*     gcal_days_grid_get_by_uuid               (GcalDaysGrid   *days_grid,
 							 const gchar    *uuid);
+
+void           gcal_days_grid_clear_marks               (GcalDaysGrid   *days_grid);
+
+void           gcal_days_grid_mark_cell                 (GcalDaysGrid   *days_grid,
+							 guint           cell);
+
+void           gcal_days_grid_get_cell_position         (GcalDaysGrid   *days_grid,
+							 guint           cell,
+							 gint           *x,
+							 gint           *y);
 
 G_END_DECLS
 
