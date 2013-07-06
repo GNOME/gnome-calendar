@@ -194,7 +194,6 @@ gcal_day_view_constructed (GObject *object)
 
   priv->day_grid = gcal_days_grid_new (2);
   gcal_days_grid_set_preferred_cell_height (GCAL_DAYS_GRID (priv->day_grid), 60);
-  g_object_set (priv->day_grid, "spacing", 6, NULL);
 
   gtk_widget_set_hexpand (priv->day_grid, TRUE);
   gtk_widget_set_vexpand (priv->day_grid, TRUE);
