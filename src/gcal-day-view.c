@@ -189,7 +189,6 @@ gcal_day_view_constructed (GObject *object)
   gcal_all_day_grid_set_column_headers (GCAL_ALL_DAY_GRID (priv->all_day_grid),
                                         _("Today"),
                                         _("Tomorrow"));
-  g_object_set (priv->all_day_grid, "spacing", 6, NULL);
   gtk_widget_set_size_request (priv->all_day_grid, -1, 64);
   gtk_widget_set_hexpand (priv->all_day_grid, TRUE);
 
