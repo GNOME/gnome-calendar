@@ -78,6 +78,12 @@ static icaltimetype*  gcal_day_view_get_initial_date      (GcalView       *view)
 
 static icaltimetype*  gcal_day_view_get_final_date        (GcalView       *view);
 
+static void           gcal_day_view_mark_current_unit     (GcalView       *view,
+                                                           gint           *x,
+                                                           gint           *y);
+
+static void           gcal_day_view_clear_marks           (GcalView       *view);
+
 static gchar*         gcal_day_view_get_left_header       (GcalView       *view);
 
 static gchar*         gcal_day_view_get_right_header      (GcalView       *view);
@@ -141,8 +147,6 @@ gcal_day_view_class_init (GcalDayViewClass *klass)
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
 }
 
-
-
 static void
 gcal_day_view_init (GcalDayView *self)
 {
@@ -151,10 +155,12 @@ gcal_day_view_init (GcalDayView *self)
 static void
 gcal_view_interface_init (GcalViewIface *iface)
 {
-  /* FIXME: add new GcalView API */
   /* New API */
   iface->get_initial_date = gcal_day_view_get_initial_date;
   iface->get_final_date = gcal_day_view_get_final_date;
+
+  iface->mark_current_unit = gcal_day_view_mark_current_unit;
+  iface->clear_marks = gcal_day_view_clear_marks;
 
   iface->get_left_header = gcal_day_view_get_left_header;
   iface->get_right_header = gcal_day_view_get_right_header;
@@ -409,33 +415,38 @@ gcal_day_view_get_final_date (GcalView *view)
   return new_date;
 }
 
-static gboolean
-gcal_day_view_draw_event (GcalView     *view,
-                          icaltimetype *start_date,
-                          icaltimetype *end_date)
+static void
+gcal_day_view_mark_current_unit (GcalView *view,
+                                 gint     *x,
+                                 gint     *y)
 {
   GcalDayViewPrivate *priv;
 
-  icaltimetype *first_day;
-  icaltimetype *last_day;
-  gint left_boundary;
-  gint right_boundary;
+  guint cell;
+  gint orig_x, orig_y;
 
   priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
-  first_day = gcal_day_view_get_initial_date (view);
-  last_day = gcal_day_view_get_final_date (view);
 
-  if (priv->date == NULL)
-    return FALSE;
+  cell = priv->date->hour * 2 + (priv->date->minute / 30);
+  gcal_days_grid_mark_cell (GCAL_DAYS_GRID (priv->day_grid), cell);
+  gcal_days_grid_get_cell_position (GCAL_DAYS_GRID (priv->day_grid),
+                                    cell, &orig_x, &orig_y);
+  g_debug ("Click Position: %d, %d", orig_x, orig_y);
 
-  /* XXX: Check for date_only comparison since might drop timezone info */
-  left_boundary = icaltime_compare_date_only (*end_date, *first_day);
-  right_boundary = icaltime_compare_date_only (*last_day, *start_date);
+  gtk_widget_translate_coordinates (priv->day_grid,
+                                    GTK_WIDGET (view),
+                                    orig_x, orig_y,
+                                    x, y);
+  g_debug ("Translated Click Position: %d, %d", *x, *y);
+}
 
-  if (left_boundary == -1 || right_boundary == -1)
-      return FALSE;
+static void
+gcal_day_view_clear_marks (GcalView *view)
+{
+  GcalDayViewPrivate *priv;
 
-  return TRUE;
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
+  gcal_days_grid_clear_marks (GCAL_DAYS_GRID (priv->day_grid));
 }
 
 static gchar*
@@ -463,6 +474,35 @@ gcal_day_view_get_right_header (GcalView *view)
   priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
 
   return g_strdup_printf ("%d", priv->date->year);
+}
+
+static gboolean
+gcal_day_view_draw_event (GcalView     *view,
+                          icaltimetype *start_date,
+                          icaltimetype *end_date)
+{
+  GcalDayViewPrivate *priv;
+
+  icaltimetype *first_day;
+  icaltimetype *last_day;
+  gint left_boundary;
+  gint right_boundary;
+
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
+  first_day = gcal_day_view_get_initial_date (view);
+  last_day = gcal_day_view_get_final_date (view);
+
+  if (priv->date == NULL)
+    return FALSE;
+
+  /* XXX: Check for date_only comparison since might drop timezone info */
+  left_boundary = icaltime_compare_date_only (*end_date, *first_day);
+  right_boundary = icaltime_compare_date_only (*last_day, *start_date);
+
+  if (left_boundary == -1 || right_boundary == -1)
+      return FALSE;
+
+  return TRUE;
 }
 
 static GtkWidget*
