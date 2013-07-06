@@ -73,7 +73,21 @@ typedef struct
   GList          *children;
 
   GdkWindow      *event_window;
+
+  /* button_down/up flags */
+  gint            clicked_cell;
+  gint            start_mark_cell;
+  gint            end_mark_cell;
+
 } GcalDaysGridPrivate;
+
+enum
+{
+  MARKED,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
 
 /* Helpers and private */
 static gint           compare_child_info                   (gconstpointer   a,
@@ -115,6 +129,9 @@ static gboolean       gcal_days_grid_draw                  (GtkWidget      *widg
 
 static gboolean       gcal_days_grid_button_press_event    (GtkWidget      *widget,
                                                             GdkEventButton *event);
+
+static gboolean       gcal_days_grid_motion_notify_event   (GtkWidget      *widget,
+                                                            GdkEventMotion *event);
 
 static gboolean       gcal_days_grid_button_release_event  (GtkWidget      *widget,
                                                             GdkEventButton *event);
@@ -172,6 +189,7 @@ gcal_days_grid_class_init (GcalDaysGridClass *klass)
   widget_class->size_allocate = gcal_days_grid_size_allocate;
   widget_class->draw = gcal_days_grid_draw;
   widget_class->button_press_event = gcal_days_grid_button_press_event;
+  widget_class->motion_notify_event = gcal_days_grid_motion_notify_event;
   widget_class->button_release_event = gcal_days_grid_button_release_event;
 
   container_class = GTK_CONTAINER_CLASS (klass);
@@ -201,6 +219,18 @@ gcal_days_grid_class_init (GcalDaysGridClass *klass)
                             FALSE,
                             G_PARAM_CONSTRUCT |
                             G_PARAM_READWRITE));
+
+  /* to comunicate to it's parent view the marking */
+  signals[MARKED] = g_signal_new ("marked",
+                                  GCAL_TYPE_DAYS_GRID,
+                                  G_SIGNAL_RUN_LAST,
+                                  G_STRUCT_OFFSET (GcalDaysGridClass,
+                                                   marked),
+                                  NULL, NULL, NULL,
+                                  G_TYPE_NONE,
+                                  2,
+                                  G_TYPE_UINT,
+                                  G_TYPE_UINT);
 }
 
 
@@ -217,6 +247,11 @@ gcal_days_grid_init (GcalDaysGrid *self)
   priv->req_cell_height = 0;
 
   priv->children = NULL;
+
+  priv->clicked_cell = -1;
+  priv->start_mark_cell = -1;
+  priv->end_mark_cell = -1;
+
   gtk_style_context_add_class (
       gtk_widget_get_style_context (GTK_WIDGET (self)),
       "calendar-view");
@@ -577,6 +612,7 @@ gcal_days_grid_draw (GtkWidget *widget,
   gint width;
 
   GdkRGBA ligther_color;
+  GdkRGBA background_selected_color;
   GdkRGBA font_color;
 
   PangoLayout *layout;
@@ -603,6 +639,11 @@ gcal_days_grid_draw (GtkWidget *widget,
       gtk_widget_get_style_context (widget),
       gtk_widget_get_state_flags (widget) | GTK_STATE_FLAG_INSENSITIVE,
       &ligther_color);
+
+  gtk_style_context_get_background_color (
+      gtk_widget_get_style_context (widget),
+      gtk_widget_get_state_flags (widget) | GTK_STATE_FLAG_SELECTED,
+      &background_selected_color);
 
   gtk_style_context_get (
       gtk_widget_get_style_context (widget),
@@ -639,6 +680,51 @@ gcal_days_grid_draw (GtkWidget *widget,
       pango_cairo_show_layout (cr, layout);
 
       g_free (hours);
+    }
+
+  /* drawing new-event mark */
+  if (priv->start_mark_cell != -1 &&
+      priv->end_mark_cell != -1)
+    {
+      gint first_cell;
+      gint last_cell;
+      gint columns;
+
+      cairo_save (cr);
+      if (priv->start_mark_cell < priv->end_mark_cell)
+        {
+          first_cell = priv->start_mark_cell;
+          last_cell = priv->end_mark_cell;
+        }
+      else
+        {
+          first_cell = priv->end_mark_cell;
+          last_cell = priv->start_mark_cell;
+        }
+
+      cairo_set_source_rgba (cr,
+                             background_selected_color.red,
+                             background_selected_color.green,
+                             background_selected_color.blue,
+                             background_selected_color.alpha);
+
+      for (columns = 0; columns < last_cell / 48 - first_cell / 48 + 1; columns++)
+        {
+          gint first_point;
+          gint last_point;
+
+          first_point = (columns == 0) ? first_cell : ((first_cell / 48) + columns) * 48;
+          last_point = (columns == (last_cell / 48 - first_cell / 48)) ? last_cell : ((first_cell / 48) + columns) * 48 + 47;
+
+          cairo_rectangle (cr,
+                           priv->scale_width + (width / priv->columns_nr) * (first_point / 48),
+                           (first_point % 48) * (alloc.height / 48),
+                           (width / priv->columns_nr),
+                           (last_point - first_point + 1) * (alloc.height / 48));
+          cairo_fill (cr);
+
+        }
+      cairo_restore (cr);
     }
 
   /* drawing lines */
@@ -692,16 +778,113 @@ static gboolean
 gcal_days_grid_button_press_event (GtkWidget      *widget,
                                    GdkEventButton *event)
 {
-  g_debug ("Button pressed on days-grid area");
-  return FALSE;
+  GcalDaysGridPrivate *priv;
+
+  GtkBorder padding;
+  GtkAllocation alloc;
+  gint width_block;
+  gint height_block;
+  gint left_pad;
+
+  priv = gcal_days_grid_get_instance_private (GCAL_DAYS_GRID (widget));
+
+  gtk_style_context_get_padding (
+      gtk_widget_get_style_context (widget),
+      gtk_widget_get_state_flags (widget),
+      &padding);
+  left_pad = padding.left + padding.right + priv->scale_width;
+
+  /* XXX: an improvement will be to scroll to that position on click */
+  if (event->x < left_pad)
+    return FALSE;
+
+  gtk_widget_get_allocation (widget, &alloc);
+  width_block = (alloc.width - left_pad) / priv->columns_nr;
+  height_block = (alloc.height - (padding.top + padding.bottom)) / 48;
+
+  priv->clicked_cell = 48 * (((gint) event->x - left_pad) / width_block) + event->y / height_block;
+  priv->start_mark_cell = priv->clicked_cell;
+
+  return TRUE;
+}
+
+static gboolean
+gcal_days_grid_motion_notify_event (GtkWidget      *widget,
+                                    GdkEventMotion *event)
+{
+  GcalDaysGridPrivate *priv;
+
+  GtkBorder padding;
+  GtkAllocation alloc;
+  gint width_block;
+  gint height_block;
+  gint left_pad;
+
+  priv = gcal_days_grid_get_instance_private (GCAL_DAYS_GRID (widget));
+
+  if (priv->clicked_cell == -1)
+    return FALSE;
+
+  gtk_style_context_get_padding (
+      gtk_widget_get_style_context (widget),
+      gtk_widget_get_state_flags (widget),
+      &padding);
+  left_pad = padding.left + padding.right + priv->scale_width;
+
+  gtk_widget_get_allocation (widget, &alloc);
+  width_block = (alloc.width - left_pad) / priv->columns_nr;
+  height_block = (alloc.height - (padding.top + padding.bottom)) / 48;
+
+
+  priv->end_mark_cell = 48 * (((gint) event->x - left_pad) / width_block) + event->y / height_block;
+
+  gtk_widget_queue_draw (widget);
+  return TRUE;
 }
 
 static gboolean
 gcal_days_grid_button_release_event (GtkWidget      *widget,
                                      GdkEventButton *event)
 {
-  g_debug ("Button released on days-grid area");
-  return FALSE;
+  GcalDaysGridPrivate *priv;
+
+  GtkBorder padding;
+  GtkAllocation alloc;
+  gint width_block;
+  gint height_block;
+  gint left_pad;
+
+  priv = gcal_days_grid_get_instance_private (GCAL_DAYS_GRID (widget));
+
+  if (priv->clicked_cell == -1)
+    return FALSE;
+
+  gtk_style_context_get_padding (
+      gtk_widget_get_style_context (widget),
+      gtk_widget_get_state_flags (widget),
+      &padding);
+  left_pad = padding.left + padding.right + priv->scale_width;
+  if (event->x < left_pad)
+    {
+      priv->start_mark_cell = -1;
+      priv->end_mark_cell = -1;
+      return FALSE;
+    }
+
+  gtk_widget_get_allocation (widget, &alloc);
+  width_block = (alloc.width - left_pad) / priv->columns_nr;
+  height_block = (alloc.height - (padding.top + padding.bottom)) / 48;
+
+  priv->end_mark_cell = 48 * (((gint) event->x - left_pad) / width_block) + event->y / height_block;
+
+  gtk_widget_queue_draw (widget);
+
+  g_signal_emit (GCAL_DAYS_GRID (widget),
+                 signals[MARKED], 0,
+                 priv->start_mark_cell, priv->end_mark_cell);
+
+  priv->clicked_cell = -1;
+  return TRUE;
 }
 
 /* GtkContainer API */
@@ -938,4 +1121,61 @@ gcal_days_grid_get_by_uuid (GcalDaysGrid *days_grid,
     }
 
   return NULL;
+}
+
+void
+gcal_days_grid_clear_marks (GcalDaysGrid *days_grid)
+{
+  GcalDaysGridPrivate *priv;
+
+  priv = gcal_days_grid_get_instance_private (days_grid);
+
+  priv->start_mark_cell = -1;
+  priv->end_mark_cell = -1;
+  gtk_widget_queue_draw (GTK_WIDGET (days_grid));
+}
+
+void
+gcal_days_grid_mark_cell (GcalDaysGrid *days_grid,
+                          guint         cell)
+{
+  GcalDaysGridPrivate *priv;
+
+  priv = gcal_days_grid_get_instance_private (days_grid);
+
+  priv->start_mark_cell = cell;
+  priv->end_mark_cell = cell;
+  gtk_widget_queue_draw (GTK_WIDGET (days_grid));
+}
+
+void
+gcal_days_grid_get_cell_position (GcalDaysGrid *days_grid,
+                                  guint         cell,
+                                  gint         *x,
+                                  gint         *y)
+{
+  GcalDaysGridPrivate *priv;
+
+  GtkWidget *widget;
+  GtkBorder padding;
+  GtkAllocation alloc;
+  gint width;
+  gint height;
+  gint left_pad;
+
+  priv = gcal_days_grid_get_instance_private (days_grid);
+  widget = GTK_WIDGET (days_grid);
+
+  gtk_style_context_get_padding (
+      gtk_widget_get_style_context (widget),
+      gtk_widget_get_state_flags (widget),
+      &padding);
+  left_pad = padding.left + padding.right + priv->scale_width;
+
+  gtk_widget_get_allocation (widget, &alloc);
+  width = alloc.width - left_pad;
+  height = alloc.height - (padding.top + padding.bottom);
+
+  *x = (gint) left_pad + (width / priv->columns_nr) * (cell / 48 + 0.5);
+  *y = (gint) (height / 48) * ((cell % 48) + 0.5);
 }
