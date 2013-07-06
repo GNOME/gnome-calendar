@@ -44,7 +44,6 @@ enum
 {
   PROP_0,
   PROP_COLUMNS,
-  PROP_SPACING,
   PROP_FOLDED
 };
 
@@ -195,18 +194,6 @@ gcal_days_grid_class_init (GcalDaysGridClass *klass)
 
   g_object_class_install_property (
       object_class,
-      PROP_SPACING,
-      g_param_spec_uint ("spacing",
-                         "Spacing",
-                         "The horizontal space between the header and the side and below lines",
-                         0,
-                         G_MAXINT,
-                         0,
-                         G_PARAM_CONSTRUCT |
-                         G_PARAM_READWRITE));
-
-  g_object_class_install_property (
-      object_class,
       PROP_FOLDED,
       g_param_spec_boolean ("folded",
                             "Folded status",
@@ -271,9 +258,6 @@ gcal_days_grid_set_property (GObject      *object,
           }
         break;
       }
-    case PROP_SPACING:
-      priv->spacing = g_value_get_uint (value);
-      break;
     case PROP_FOLDED:
       priv->folded = g_value_get_boolean (value);
       break;
@@ -297,9 +281,6 @@ gcal_days_grid_get_property (GObject    *object,
     {
     case PROP_COLUMNS:
       g_value_set_uint (value, priv->columns_nr);
-      break;
-    case PROP_SPACING:
-      g_value_set_uint (value, priv->spacing);
       break;
     case PROP_FOLDED:
       g_value_set_boolean (value, priv->folded);
@@ -594,7 +575,6 @@ gcal_days_grid_draw (GtkWidget *widget,
   GtkBorder padding;
   GtkAllocation alloc;
   gint width;
-  gint height;
 
   GdkRGBA ligther_color;
   GdkRGBA font_color;
@@ -612,8 +592,7 @@ gcal_days_grid_draw (GtkWidget *widget,
       &padding);
 
   gtk_widget_get_allocation (widget, &alloc);
-  width = alloc.width - (padding.left + padding.right + priv->scale_width);
-  height = alloc.height - (padding.top + padding.bottom);
+  width = alloc.width - (priv->scale_width);
 
   gtk_style_context_get_color (
       gtk_widget_get_style_context (widget),
@@ -655,8 +634,8 @@ gcal_days_grid_draw (GtkWidget *widget,
 
       pango_cairo_update_layout (cr, layout);
       cairo_move_to (cr,
-                     padding.left + priv->spacing,
-                     padding.top + (height / 24) * i);
+                     padding.left,
+                     padding.top + (alloc.height / 24) * i);
       pango_cairo_show_layout (cr, layout);
 
       g_free (hours);
@@ -673,16 +652,16 @@ gcal_days_grid_draw (GtkWidget *widget,
   for (i = 0; i < priv->columns_nr + 1; i++)
     {
       cairo_move_to (cr,
-                     padding.left + priv->scale_width + (width / priv->columns_nr) * i + 0.4,
+                     priv->scale_width + (width / priv->columns_nr) * i + 0.4,
                      0);
-      cairo_rel_line_to (cr, 0, height);
+      cairo_rel_line_to (cr, 0, alloc.height);
     }
 
   /* rest of the lines */
   for (i = 0; i < 24; i++)
     {
       /* hours lines */
-      cairo_move_to (cr, padding.left, (height / 24) * i + 0.4);
+      cairo_move_to (cr, 0, (alloc.height / 24) * i + 0.4);
       cairo_rel_line_to (cr, width + priv->scale_width, 0);
     }
 
@@ -692,19 +671,19 @@ gcal_days_grid_draw (GtkWidget *widget,
   cairo_set_dash (cr, dashed, 2, 0);
   for (i = 0; i < 24; i++)
     {
-      cairo_move_to (cr, padding.left + priv->scale_width, (height / 24) * i + (height / 48) + 0.4);
+      cairo_move_to (cr, priv->scale_width, (alloc.height / 24) * i + (alloc.height / 48) + 0.4);
       cairo_rel_line_to (cr, width + priv->scale_width, 0);
     }
 
   cairo_stroke (cr);
   cairo_restore (cr);
 
+  pango_font_description_free (font_desc);
+  g_object_unref (layout);
+
   /* drawing children */
   if (GTK_WIDGET_CLASS (gcal_days_grid_parent_class)->draw != NULL)
     GTK_WIDGET_CLASS (gcal_days_grid_parent_class)->draw (widget, cr);
-
-  pango_font_description_free (font_desc);
-  g_object_unref (layout);
 
   return FALSE;
 }
@@ -851,12 +830,17 @@ gcal_days_grid_get_scale_width (GcalDaysGrid *days_grid)
     {
       GtkWidget *widget;
 
+      GtkBorder padding;
       PangoLayout *layout;
       PangoFontDescription *font_desc;
 
       gint mid_width;
 
       widget = GTK_WIDGET (days_grid);
+
+      gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
+                                     gtk_widget_get_state_flags (widget),
+                                     &padding);
 
       layout = gtk_widget_create_pango_layout (widget, "00:00 0000");
       gtk_style_context_get (gtk_widget_get_style_context (widget),
@@ -867,7 +851,7 @@ gcal_days_grid_get_scale_width (GcalDaysGrid *days_grid)
 
       pango_layout_get_pixel_size (layout, &mid_width, NULL);
 
-      priv->scale_width = mid_width + priv->spacing * 2;
+      priv->scale_width = mid_width + padding.left + padding.right;
 
       pango_font_description_free (font_desc);
       g_object_unref (layout);
