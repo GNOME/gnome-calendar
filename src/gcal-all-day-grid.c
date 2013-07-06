@@ -27,7 +27,6 @@ enum
 {
   PROP_0,
   PROP_COLUMNS,
-  PROP_SPACING
 };
 
 struct _ChildInfo
@@ -43,7 +42,6 @@ typedef struct
 {
   /* property */
   guint           columns_nr;
-  gint            spacing;
 
   GList          *column_headers;
   GList          *children;
@@ -145,18 +143,6 @@ gcal_all_day_grid_class_init (GcalAllDayGridClass *klass)
                          0,
                          G_PARAM_CONSTRUCT_ONLY |
                          G_PARAM_READWRITE));
-
-  g_object_class_install_property (
-      object_class,
-      PROP_SPACING,
-      g_param_spec_int ("spacing",
-                        "Spacing",
-                        "The horizontal space between the header and the side and below lines",
-                        0,
-                        G_MAXINT,
-                        0,
-                        G_PARAM_CONSTRUCT |
-                        G_PARAM_READWRITE));
 }
 
 
@@ -225,9 +211,6 @@ gcal_all_day_grid_set_property (GObject      *object,
           }
         break;
       }
-    case PROP_SPACING:
-      priv->spacing = g_value_get_int (value);
-      break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -248,9 +231,6 @@ gcal_all_day_grid_get_property (GObject    *object,
     {
     case PROP_COLUMNS:
       g_value_set_uint (value, priv->columns_nr);
-      break;
-    case PROP_SPACING:
-      g_value_set_int (value, priv->spacing);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -303,14 +283,12 @@ gcal_all_day_grid_get_preferred_width (GtkWidget *widget,
   if (minimum != NULL)
     {
       *minimum =
-        (priv->columns_nr * logical_rect.width) + padding.left + padding.right +
-        (priv->columns_nr * 2 * priv->spacing);
+        (priv->columns_nr * logical_rect.width) + padding.left + padding.right;
     }
   if (natural != NULL)
     {
       *natural =
-        (priv->columns_nr * logical_rect.width) + padding.left + padding.right +
-        (priv->columns_nr * 2 * priv->spacing);
+        (priv->columns_nr * logical_rect.width) + padding.left + padding.right;
     }
 
   g_object_unref (layout);
@@ -378,11 +356,11 @@ gcal_all_day_grid_get_preferred_height (GtkWidget *widget,
 
   if (minimum != NULL)
     {
-      *minimum = min_keeper + logical_rect.height + priv->spacing + padding.top + padding.bottom;
+      *minimum = min_keeper + logical_rect.height + padding.top + padding.bottom;
     }
   if (natural != NULL)
     {
-      *natural = nat_keeper + logical_rect.height + priv->spacing + padding.top + padding.bottom;
+      *natural = nat_keeper + logical_rect.height + padding.top + padding.bottom;
     }
 }
 
@@ -472,9 +450,9 @@ gcal_all_day_grid_size_allocate (GtkWidget     *widget,
 {
   GcalAllDayGridPrivate *priv;
 
-  GtkBorder padding;
   gint y_gap;
 
+  GtkBorder padding;
   PangoLayout *layout;
   PangoRectangle logical_rect;
 
@@ -489,18 +467,17 @@ gcal_all_day_grid_size_allocate (GtkWidget     *widget,
   priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
   gtk_widget_set_allocation (widget, allocation);
 
+  width_block = allocation->width / priv->columns_nr;
+
+  layout = gtk_widget_create_pango_layout (widget, "0");
+
   gtk_style_context_get_padding (
       gtk_widget_get_style_context (widget),
       gtk_widget_get_state_flags (widget),
       &padding);
-
-  width_block = (allocation->width - (padding.left + padding.right)) / priv->columns_nr;
-
-  layout = gtk_widget_create_pango_layout (widget, "0");
-
   pango_layout_get_extents (layout, NULL, &logical_rect);
   pango_extents_to_pixels (&logical_rect, NULL);
-  y_gap = allocation->y + padding.top + logical_rect.height + priv->spacing;
+  y_gap = allocation->y + padding.top + logical_rect.height + padding.bottom;
 
   g_object_unref (layout);
 
@@ -529,7 +506,7 @@ gcal_all_day_grid_size_allocate (GtkWidget     *widget,
 
       column = (GList*) columns->data;
 
-      child_allocation.x = idx * width_block + allocation->x + padding.left;
+      child_allocation.x = idx * width_block + allocation->x;
 
       y_gap += g_array_index (last_y, guint, idx);
 
@@ -558,7 +535,7 @@ gcal_all_day_grid_size_allocate (GtkWidget     *widget,
             }
         }
 
-      y_gap = allocation->y + padding.top + logical_rect.height + priv->spacing;
+      y_gap = allocation->y + padding.top + logical_rect.height + padding.bottom;
     }
 
   g_array_free (last_y, TRUE);
@@ -572,8 +549,6 @@ gcal_all_day_grid_draw (GtkWidget *widget,
 
   GtkBorder padding;
   GtkAllocation alloc;
-  gint width;
-  gint height;
   gint y_gap;
 
   PangoLayout *layout;
@@ -593,10 +568,6 @@ gcal_all_day_grid_draw (GtkWidget *widget,
       &padding);
 
   gtk_widget_get_allocation (widget, &alloc);
-  width = alloc.width - (padding.left + padding.right);
-  height = alloc.height - (padding.top + padding.bottom);
-
-  y_gap = padding.top + priv->spacing;
 
   gtk_style_context_get (
       gtk_widget_get_style_context (widget),
@@ -610,7 +581,7 @@ gcal_all_day_grid_draw (GtkWidget *widget,
 
   pango_layout_get_extents (layout, NULL, &logical_rect);
   pango_extents_to_pixels (&logical_rect, NULL);
-  y_gap += logical_rect.height;
+  y_gap = logical_rect.height + padding.top + padding.bottom;
 
   for (header = priv->column_headers, i = 0;
        header != NULL;
@@ -621,7 +592,7 @@ gcal_all_day_grid_draw (GtkWidget *widget,
       pango_cairo_update_layout (cr, layout);
 
       cairo_move_to (cr,
-                     (width / priv->columns_nr) * i + priv->spacing + padding.left,
+                     (alloc.width / priv->columns_nr) * i + padding.left,
                      padding.top);
       pango_cairo_show_layout (cr, layout);
     }
@@ -637,24 +608,24 @@ gcal_all_day_grid_draw (GtkWidget *widget,
                         ligther_color.blue);
   cairo_set_line_width (cr, 0.3);
 
-  cairo_move_to (cr, padding.left, y_gap + 0.4);
-  cairo_rel_line_to (cr, width, 0);
+  cairo_move_to (cr, 0, y_gap + 0.4);
+  cairo_rel_line_to (cr, alloc.width, 0);
 
   for (i = 0; i < priv->columns_nr + 1; ++i)
     {
-      cairo_move_to (cr, padding.left + i * (width / priv->columns_nr) + 0.4, y_gap);
-      cairo_rel_line_to (cr, 0, height - y_gap);
+      cairo_move_to (cr, i * (alloc.width / priv->columns_nr) + 0.4, y_gap);
+      cairo_rel_line_to (cr, 0, alloc.height - y_gap);
     }
 
   cairo_stroke (cr);
   cairo_restore (cr);
 
+  pango_font_description_free (font_desc);
+  g_object_unref (layout);
+
   /* drawing children */
   if (GTK_WIDGET_CLASS (gcal_all_day_grid_parent_class)->draw != NULL)
     GTK_WIDGET_CLASS (gcal_all_day_grid_parent_class)->draw (widget, cr);
-
-  pango_font_description_free (font_desc);
-  g_object_unref (layout);
 
   return FALSE;
 }
