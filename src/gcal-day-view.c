@@ -52,6 +52,11 @@ typedef struct
 static void           viewport_shown                      (GtkWidget      *widget,
                                                            gpointer        user_data);
 
+static void           days_grid_clicked                   (GcalDaysGrid   *days_grid,
+                                                           guint           start_cell,
+                                                           guint           end_cell,
+                                                           gpointer        user_data);
+
 static void           gcal_view_interface_init            (GcalViewIface  *iface);
 
 static void           gcal_day_view_constructed           (GObject        *object);
@@ -119,11 +124,66 @@ viewport_shown (GtkWidget *widget,
 
   date = icaltime_current_time_with_zone (priv->date->zone);
 
-  /* 0.01 is spacing to let the mark show up */
-  value = (((gdouble) date.hour) / 24.0) - 0.01;
+  /* FIXME: This isn't working as expected */
+  /* - 2.0 is spacing to the let running hour show */
+  value = ((gdouble) date.hour - 2.0) / 24.0;
 
   g_debug ("Getting into here, with value: %f", value);
   gcal_viewport_scroll_to (GCAL_VIEWPORT (priv->viewport), value);
+}
+
+static void
+days_grid_clicked (GcalDaysGrid *days_grid,
+                   guint         start_cell,
+                   guint         end_cell,
+                   gpointer      user_data)
+{
+  GcalDayViewPrivate *priv;
+
+  icaltimetype *start_date;
+  icaltimetype *end_date;
+
+  gint x, y;
+  gint new_x, new_y;
+
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (user_data));
+
+  start_date = gcal_dup_icaltime (priv->date);
+  end_date = gcal_dup_icaltime (priv->date);
+
+  start_date->hour = start_cell / 2;
+  start_date->minute = 0;
+  start_date->second = 0;
+  *start_date = icaltime_normalize (*start_date);
+  if (start_cell % 2 == 1)
+    start_date->minute = 30;
+
+  end_date->hour = end_cell / 2;
+  end_date->minute = 0;
+  end_date->second = 0;
+  if (end_cell % 2 == 1)
+    end_date->hour++;
+  else
+    end_date->minute = 30;
+  *end_date = icaltime_normalize (*end_date);
+
+  gcal_days_grid_get_cell_position (GCAL_DAYS_GRID (priv->day_grid),
+                                    start_cell, &x, &y);
+  g_debug ("Click Position: %d, %d", x, y);
+
+  gtk_widget_translate_coordinates (priv->day_grid,
+                                    GTK_WIDGET (user_data),
+                                    x, y,
+                                    &new_x, &new_y);
+  g_debug ("Translated Click Position: %d, %d", new_x, new_y);
+
+  g_signal_emit_by_name (GCAL_VIEW (user_data),
+                         "create-event",
+                         start_date, end_date,
+                         (gdouble) new_x, (gdouble) new_y);
+
+  g_free (start_date);
+  g_free (end_date);
 }
 
 static void
@@ -220,6 +280,8 @@ gcal_day_view_constructed (GObject *object)
 
   /* signal handling */
   g_signal_connect (object, "map", G_CALLBACK (viewport_shown), object);
+  g_signal_connect (priv->day_grid, "marked",
+                    G_CALLBACK (days_grid_clicked), object);
 }
 
 static void
