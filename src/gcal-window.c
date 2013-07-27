@@ -964,7 +964,7 @@ gcal_window_events_added (GcalManager *manager,
 
   for (l = events_list; l != NULL; l = l->next)
     {
-      tokens = g_strsplit ((gchar*) l->data, ":", -1);
+      tokens = g_strsplit ((gchar*) l->data, ":", 2);
       source_uid  = tokens[0];
       event_uid = tokens[1];
       start_date = gcal_manager_get_event_start_date (manager,
@@ -1048,7 +1048,7 @@ gcal_window_events_modified (GcalManager *manager,
     {
       gint i;
 
-      tokens = g_strsplit ((gchar*) l->data, ":", -1);
+      tokens = g_strsplit ((gchar*) l->data, ":", 2);
       source_uid  = tokens[0];
       event_uid = tokens[1];
 
@@ -1139,7 +1139,7 @@ gcal_window_event_activated (GcalEventWidget *event_widget,
   if (priv->edit_dialog == NULL)
     gcal_window_init_edit_dialog (GCAL_WINDOW (user_data));
 
-  tokens = g_strsplit (gcal_event_widget_peek_uuid (event_widget), ":", -1);
+  tokens = g_strsplit (gcal_event_widget_peek_uuid (event_widget), ":", 2);
   gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (priv->edit_dialog),
                               tokens[0],
                               tokens[1]);
@@ -1161,7 +1161,7 @@ gcal_window_remove_event (GdNotification  *notification,
   if (priv->event_to_delete != NULL)
     {
       manager = get_manager (GCAL_WINDOW (user_data));
-      tokens = g_strsplit (priv->event_to_delete, ":", -1);
+      tokens = g_strsplit (priv->event_to_delete, ":", 2);
 
       gcal_manager_remove_event (manager, tokens[0], tokens[1]);
 
