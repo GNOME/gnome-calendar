@@ -154,6 +154,8 @@ gcal_edit_dialog_constructed (GObject* object)
   /* chaining up */
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->constructed (object);
 
+  gtk_window_set_title (GTK_WINDOW (object), "");
+
   content_area = gtk_dialog_get_content_area (GTK_DIALOG (object));
 
   /* titlebar */
