@@ -220,7 +220,7 @@ gcal_days_grid_class_init (GcalDaysGridClass *klass)
                             G_PARAM_CONSTRUCT |
                             G_PARAM_READWRITE));
 
-  /* to comunicate to it's parent view the marking */
+  /* comunicate to its parent view the marking */
   signals[MARKED] = g_signal_new ("marked",
                                   GCAL_TYPE_DAYS_GRID,
                                   G_SIGNAL_RUN_LAST,
@@ -794,7 +794,8 @@ gcal_days_grid_button_press_event (GtkWidget      *widget,
       &padding);
   left_pad = padding.left + padding.right + priv->scale_width;
 
-  /* XXX: an improvement will be to scroll to that position on click */
+  /* XXX: an improvement will be scroll to that position when
+          click the scale at the side */
   if (event->x < left_pad)
     return FALSE;
 
