@@ -441,7 +441,7 @@ gcal_all_day_grid_unmap (GtkWidget *widget)
   if (priv->event_window != NULL)
     gdk_window_hide (priv->event_window);
 
-  GTK_WIDGET_CLASS (gcal_all_day_grid_parent_class)->map (widget);
+  GTK_WIDGET_CLASS (gcal_all_day_grid_parent_class)->unmap (widget);
 }
 
 static void
