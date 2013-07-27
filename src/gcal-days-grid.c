@@ -854,6 +854,8 @@ gcal_days_grid_button_release_event (GtkWidget      *widget,
   gint height_block;
   gint left_pad;
 
+  gint cell_temp;
+
   priv = gcal_days_grid_get_instance_private (GCAL_DAYS_GRID (widget));
 
   if (priv->clicked_cell == -1)
@@ -878,6 +880,13 @@ gcal_days_grid_button_release_event (GtkWidget      *widget,
   priv->end_mark_cell = 48 * (((gint) event->x - left_pad) / width_block) + event->y / height_block;
 
   gtk_widget_queue_draw (widget);
+
+  if (priv->start_mark_cell > priv->end_mark_cell)
+    {
+      cell_temp = priv->end_mark_cell;
+      priv->end_mark_cell = priv->start_mark_cell;
+      priv->start_mark_cell = cell_temp;
+    }
 
   g_signal_emit (GCAL_DAYS_GRID (widget),
                  signals[MARKED], 0,
