@@ -640,11 +640,6 @@ gcal_days_grid_draw (GtkWidget *widget,
       gtk_widget_get_state_flags (widget) | GTK_STATE_FLAG_INSENSITIVE,
       &ligther_color);
 
-  gtk_style_context_get_background_color (
-      gtk_widget_get_style_context (widget),
-      gtk_widget_get_state_flags (widget) | GTK_STATE_FLAG_SELECTED,
-      &background_selected_color);
-
   gtk_style_context_get (
       gtk_widget_get_style_context (widget),
       gtk_widget_get_state_flags (widget),
@@ -690,7 +685,11 @@ gcal_days_grid_draw (GtkWidget *widget,
       gint last_cell;
       gint columns;
 
-      cairo_save (cr);
+      gtk_style_context_get_background_color (
+          gtk_widget_get_style_context (widget),
+          gtk_widget_get_state_flags (widget) | GTK_STATE_FLAG_SELECTED,
+          &background_selected_color);
+
       if (priv->start_mark_cell < priv->end_mark_cell)
         {
           first_cell = priv->start_mark_cell;
@@ -702,6 +701,7 @@ gcal_days_grid_draw (GtkWidget *widget,
           last_cell = priv->start_mark_cell;
         }
 
+      cairo_save (cr);
       cairo_set_source_rgba (cr,
                              background_selected_color.red,
                              background_selected_color.green,
