@@ -693,7 +693,6 @@ gcal_all_day_grid_remove (GtkContainer *container,
               GList* orig = (GList*) columns->data;
               orig = g_list_delete_link (orig, column);
 
-              g_free (info);
               gtk_widget_unparent (widget);
 
               columns->data = orig;
