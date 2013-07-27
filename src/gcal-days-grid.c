@@ -334,8 +334,6 @@ gcal_days_grid_get_preferred_width (GtkWidget *widget,
 {
   GcalDaysGridPrivate* priv;
 
-  GtkBorder padding;
-
   GList *columns;
 
   gint nat_keeper;
@@ -345,10 +343,6 @@ gcal_days_grid_get_preferred_width (GtkWidget *widget,
   gint min_width;
 
   priv = gcal_days_grid_get_instance_private (GCAL_DAYS_GRID (widget));
-
-  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
-                                 gtk_widget_get_state_flags (widget),
-                                 &padding);
 
   gcal_days_grid_get_scale_width (GCAL_DAYS_GRID (widget));
 
@@ -380,13 +374,11 @@ gcal_days_grid_get_preferred_width (GtkWidget *widget,
 
   if (minimum != NULL)
     {
-      *minimum =
-        (priv->columns_nr * min_keeper) + padding.left + padding.right + priv->scale_width;
+      *minimum = (priv->columns_nr * min_keeper) + priv->scale_width;
     }
   if (natural != NULL)
     {
-      *natural =
-        (priv->columns_nr * nat_keeper) + padding.left + padding.right + priv->scale_width;
+      *natural = (priv->columns_nr * nat_keeper) + priv->scale_width;
     }
 }
 
@@ -502,8 +494,6 @@ gcal_days_grid_size_allocate (GtkWidget     *widget,
   GcalDaysGridPrivate *priv;
 
   GtkBorder padding;
-  gint width;
-  gint height;
   gint width_block;
   gint height_block;
 
@@ -527,10 +517,8 @@ gcal_days_grid_size_allocate (GtkWidget     *widget,
                                  gtk_widget_get_state_flags (widget),
                                  &padding);
 
-  width = allocation->width - (padding.left + padding.right) - priv->scale_width;
-  width_block = width / priv->columns_nr;
-  height = allocation->height - (padding.top + padding.bottom);
-  height_block = height / 48;
+  width_block = (allocation->width - priv->scale_width) / priv->columns_nr;
+  height_block = (allocation->height - (padding.top + padding.bottom)) / 48;
 
   /* detecting columns and allocs */
   for (columns = priv->children, idx = 0;
@@ -588,7 +576,7 @@ gcal_days_grid_size_allocate (GtkWidget     *widget,
           info = (ChildInfo*) column->data;
           sub_column_block = width_block / last_y->len;
 
-          child_allocation.x = allocation->x + priv->scale_width + padding.left +
+          child_allocation.x = allocation->x + priv->scale_width +
             idx * width_block + sub_column_block * info->sub_column;
           child_allocation.y = info->start_cell * height_block;
           child_allocation.width = sub_column_block;
@@ -784,7 +772,6 @@ gcal_days_grid_button_press_event (GtkWidget      *widget,
   GtkAllocation alloc;
   gint width_block;
   gint height_block;
-  gint left_pad;
 
   priv = gcal_days_grid_get_instance_private (GCAL_DAYS_GRID (widget));
 
@@ -792,18 +779,17 @@ gcal_days_grid_button_press_event (GtkWidget      *widget,
       gtk_widget_get_style_context (widget),
       gtk_widget_get_state_flags (widget),
       &padding);
-  left_pad = padding.left + padding.right + priv->scale_width;
 
   /* XXX: an improvement will be scroll to that position when
           click the scale at the side */
-  if (event->x < left_pad)
+  if (event->x < priv->scale_width)
     return FALSE;
 
   gtk_widget_get_allocation (widget, &alloc);
-  width_block = (alloc.width - left_pad) / priv->columns_nr;
+  width_block = (alloc.width - priv->scale_width) / priv->columns_nr;
   height_block = (alloc.height - (padding.top + padding.bottom)) / 48;
 
-  priv->clicked_cell = 48 * (((gint) event->x - left_pad) / width_block) + event->y / height_block;
+  priv->clicked_cell = 48 * (((gint) event->x - priv->scale_width) / width_block) + event->y / height_block;
   priv->start_mark_cell = priv->clicked_cell;
 
   return TRUE;
@@ -819,7 +805,6 @@ gcal_days_grid_motion_notify_event (GtkWidget      *widget,
   GtkAllocation alloc;
   gint width_block;
   gint height_block;
-  gint left_pad;
 
   priv = gcal_days_grid_get_instance_private (GCAL_DAYS_GRID (widget));
 
@@ -830,14 +815,12 @@ gcal_days_grid_motion_notify_event (GtkWidget      *widget,
       gtk_widget_get_style_context (widget),
       gtk_widget_get_state_flags (widget),
       &padding);
-  left_pad = padding.left + padding.right + priv->scale_width;
 
   gtk_widget_get_allocation (widget, &alloc);
-  width_block = (alloc.width - left_pad) / priv->columns_nr;
+  width_block = (alloc.width - priv->scale_width) / priv->columns_nr;
   height_block = (alloc.height - (padding.top + padding.bottom)) / 48;
 
-
-  priv->end_mark_cell = 48 * (((gint) event->x - left_pad) / width_block) + event->y / height_block;
+  priv->end_mark_cell = 48 * (((gint) event->x - priv->scale_width) / width_block) + event->y / height_block;
 
   gtk_widget_queue_draw (widget);
   return TRUE;
@@ -853,7 +836,6 @@ gcal_days_grid_button_release_event (GtkWidget      *widget,
   GtkAllocation alloc;
   gint width_block;
   gint height_block;
-  gint left_pad;
 
   gint cell_temp;
 
@@ -866,8 +848,8 @@ gcal_days_grid_button_release_event (GtkWidget      *widget,
       gtk_widget_get_style_context (widget),
       gtk_widget_get_state_flags (widget),
       &padding);
-  left_pad = padding.left + padding.right + priv->scale_width;
-  if (event->x < left_pad)
+
+  if (event->x < priv->scale_width)
     {
       priv->start_mark_cell = -1;
       priv->end_mark_cell = -1;
@@ -875,10 +857,10 @@ gcal_days_grid_button_release_event (GtkWidget      *widget,
     }
 
   gtk_widget_get_allocation (widget, &alloc);
-  width_block = (alloc.width - left_pad) / priv->columns_nr;
+  width_block = (alloc.width - priv->scale_width) / priv->columns_nr;
   height_block = (alloc.height - (padding.top + padding.bottom)) / 48;
 
-  priv->end_mark_cell = 48 * (((gint) event->x - left_pad) / width_block) + event->y / height_block;
+  priv->end_mark_cell = 48 * (((gint) event->x - priv->scale_width) / width_block) + event->y / height_block;
 
   gtk_widget_queue_draw (widget);
 
@@ -1010,6 +992,17 @@ gcal_days_grid_set_preferred_cell_height (GcalDaysGrid *days_grid,
   priv->req_cell_height = cell_height;
 }
 
+/**
+ * gcal_days_grid_get_scale_width:
+ * @days_grid: a #GcalDaysGrid widget
+ *
+ * Retrieve the size of the scale in the left size
+ * of the widget. The value is calculated the first
+ * time the function is called. After that, the value
+ * is cached internally.
+ *
+ * Returns: the size of the scale
+ **/
 guint
 gcal_days_grid_get_scale_width (GcalDaysGrid *days_grid)
 {
@@ -1166,10 +1159,8 @@ gcal_days_grid_get_cell_position (GcalDaysGrid *days_grid,
 
   GtkWidget *widget;
   GtkBorder padding;
-  GtkAllocation alloc;
   gint width;
   gint height;
-  gint left_pad;
 
   priv = gcal_days_grid_get_instance_private (days_grid);
   widget = GTK_WIDGET (days_grid);
@@ -1178,12 +1169,10 @@ gcal_days_grid_get_cell_position (GcalDaysGrid *days_grid,
       gtk_widget_get_style_context (widget),
       gtk_widget_get_state_flags (widget),
       &padding);
-  left_pad = padding.left + padding.right + priv->scale_width;
 
-  gtk_widget_get_allocation (widget, &alloc);
-  width = alloc.width - left_pad;
-  height = alloc.height - (padding.top + padding.bottom);
+  width = gtk_widget_get_allocated_width (widget) - priv->scale_width;
+  height = gtk_widget_get_allocated_height (widget) - (padding.top + padding.bottom);
 
-  *x = (gint) left_pad + (width / priv->columns_nr) * (cell / 48 + 0.5);
+  *x = (gint) priv->scale_width + (width / priv->columns_nr) * (cell / 48 + 0.5);
   *y = (gint) (height / 48) * ((cell % 48) + 0.5);
 }
