@@ -47,8 +47,23 @@ typedef struct
   GList          *children;
 
   GdkWindow      *event_window;
+
+  /* button_down/up flags */
+  gint            clicked_cell;
+  gint            start_mark_cell;
+  gint            end_mark_cell;
+
 } GcalAllDayGridPrivate;
 
+enum
+{
+  MARKED,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
+
+/* Helpers and private */
 static void           gcal_all_day_grid_finalize              (GObject         *object);
 
 static void           gcal_all_day_grid_set_property          (GObject         *object,
@@ -85,6 +100,9 @@ static gboolean       gcal_all_day_grid_draw                  (GtkWidget       *
 
 static gboolean       gcal_all_day_grid_button_press_event    (GtkWidget       *widget,
                                                                GdkEventButton  *event);
+
+static gboolean       gcal_all_day_grid_motion_notify_event   (GtkWidget       *widget,
+                                                               GdkEventMotion  *event);
 
 static gboolean       gcal_all_day_grid_button_release_event  (GtkWidget       *widget,
                                                                GdkEventButton  *event);
@@ -124,6 +142,7 @@ gcal_all_day_grid_class_init (GcalAllDayGridClass *klass)
   widget_class->size_allocate = gcal_all_day_grid_size_allocate;
   widget_class->draw = gcal_all_day_grid_draw;
   widget_class->button_press_event = gcal_all_day_grid_button_press_event;
+  widget_class->motion_notify_event = gcal_all_day_grid_motion_notify_event;
   widget_class->button_release_event = gcal_all_day_grid_button_release_event;
 
   container_class = GTK_CONTAINER_CLASS (klass);
@@ -143,6 +162,18 @@ gcal_all_day_grid_class_init (GcalAllDayGridClass *klass)
                          0,
                          G_PARAM_CONSTRUCT_ONLY |
                          G_PARAM_READWRITE));
+
+  /* comunicate to its parent view the marking */
+  signals[MARKED] = g_signal_new ("marked",
+                                  GCAL_TYPE_ALL_DAY_GRID,
+                                  G_SIGNAL_RUN_LAST,
+                                  G_STRUCT_OFFSET (GcalAllDayGridClass,
+                                                   marked),
+                                  NULL, NULL, NULL,
+                                  G_TYPE_NONE,
+                                  2,
+                                  G_TYPE_UINT,
+                                  G_TYPE_UINT);
 }
 
 
@@ -157,6 +188,10 @@ gcal_all_day_grid_init (GcalAllDayGrid *self)
   priv = gcal_all_day_grid_get_instance_private (self);
   priv->column_headers = NULL;
   priv->children = NULL;
+
+  priv->clicked_cell = -1;
+  priv->start_mark_cell = -1;
+  priv->end_mark_cell = -1;
 
   gtk_style_context_add_class (
       gtk_widget_get_style_context (GTK_WIDGET (self)),
@@ -559,6 +594,7 @@ gcal_all_day_grid_draw (GtkWidget *widget,
   gint i;
 
   GdkRGBA ligther_color;
+  GdkRGBA background_selected_color;
 
   priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
 
@@ -595,6 +631,43 @@ gcal_all_day_grid_draw (GtkWidget *widget,
                      (alloc.width / priv->columns_nr) * i + padding.left,
                      padding.top);
       pango_cairo_show_layout (cr, layout);
+    }
+
+  /* drawing marked cells */
+  if (priv->start_mark_cell != -1 &&
+      priv->end_mark_cell != -1)
+    {
+      gint first_cell;
+      gint last_cell;
+
+      gtk_style_context_get_background_color (
+          gtk_widget_get_style_context (widget),
+          gtk_widget_get_state_flags (widget) | GTK_STATE_FLAG_SELECTED,
+          &background_selected_color);
+
+      if (priv->start_mark_cell < priv->end_mark_cell)
+        {
+          first_cell = priv->start_mark_cell;
+          last_cell = priv->end_mark_cell;
+        }
+      else
+        {
+          first_cell = priv->end_mark_cell;
+          last_cell = priv->start_mark_cell;
+        }
+
+      cairo_save (cr);
+      cairo_set_source_rgba (cr,
+                             background_selected_color.red,
+                             background_selected_color.green,
+                             background_selected_color.blue,
+                             background_selected_color.alpha);
+
+      cairo_rectangle (cr,
+                       (alloc.width / priv->columns_nr) * first_cell, y_gap,
+                       (alloc.width / priv->columns_nr) * (last_cell + 1), alloc.height - y_gap);
+      cairo_fill (cr);
+      cairo_restore (cr);
     }
 
   /* drawing lines */
@@ -634,16 +707,75 @@ static gboolean
 gcal_all_day_grid_button_press_event (GtkWidget      *widget,
                                       GdkEventButton *event)
 {
-  g_debug ("Button pressed on all-day area");
-  return FALSE;
+  GcalAllDayGridPrivate *priv;
+
+  gint width_block;
+
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
+
+  width_block = gtk_widget_get_allocated_width (widget) / priv->columns_nr;
+
+  priv->clicked_cell = event->x / width_block;
+  priv->start_mark_cell = priv->clicked_cell;
+
+  return TRUE;
+}
+
+static gboolean
+gcal_all_day_grid_motion_notify_event (GtkWidget      *widget,
+                                       GdkEventMotion *event)
+{
+  GcalAllDayGridPrivate *priv;
+
+  gint width_block;
+
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
+
+  if (priv->clicked_cell == -1)
+    return FALSE;
+
+  width_block = gtk_widget_get_allocated_width (widget) / priv->columns_nr;
+  priv->end_mark_cell = event->x / width_block;
+
+  gtk_widget_queue_draw (widget);
+  return TRUE;
 }
 
 static gboolean
 gcal_all_day_grid_button_release_event (GtkWidget      *widget,
                                         GdkEventButton *event)
 {
-  g_debug ("Button released on all-day area");
-  return FALSE;
+  GcalAllDayGridPrivate *priv;
+
+  gint width_block;
+
+  gint cell_temp;
+
+  priv = gcal_all_day_grid_get_instance_private (GCAL_ALL_DAY_GRID (widget));
+
+  if (priv->clicked_cell == -1)
+    return FALSE;
+
+  width_block = gtk_widget_get_allocated_width (widget) / priv->columns_nr;
+
+  priv->end_mark_cell = event->x / width_block;
+
+  gtk_widget_queue_draw (widget);
+
+  priv->clicked_cell = -1;
+
+  if (priv->start_mark_cell > priv->end_mark_cell)
+    {
+      cell_temp = priv->end_mark_cell;
+      priv->end_mark_cell = priv->start_mark_cell;
+      priv->start_mark_cell = cell_temp;
+    }
+
+  g_signal_emit (GCAL_ALL_DAY_GRID (widget),
+                 signals[MARKED], 0,
+                 priv->start_mark_cell, priv->end_mark_cell);
+
+  return TRUE;
 }
 
 /* GtkContainer API */
@@ -858,4 +990,23 @@ gcal_all_day_grid_get_by_uuid (GcalAllDayGrid *all_day,
     }
 
   return NULL;
+}
+
+/**
+ * gcal_all_day_grid_clear_marks:
+ * @all_day: a #GcalAllDayGrid
+ *
+ * Clear the value of the markings and queue a draw to update
+ the widget looking
+ **/
+void
+gcal_all_day_grid_clear_marks (GcalAllDayGrid *all_day)
+{
+  GcalAllDayGridPrivate *priv;
+
+  priv = gcal_all_day_grid_get_instance_private (all_day);
+
+  priv->start_mark_cell = -1;
+  priv->end_mark_cell = -1;
+  gtk_widget_queue_draw (GTK_WIDGET (all_day));
 }

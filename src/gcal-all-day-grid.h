@@ -42,6 +42,9 @@ struct _GcalAllDayGrid
 struct _GcalAllDayGridClass
 {
   GtkContainerClass parent_class;
+
+  /* signals */
+  void (*marked) (guint start_cell, guint end_cell);
 };
 
 GType          gcal_all_day_grid_get_type            (void);
@@ -58,6 +61,9 @@ void           gcal_all_day_grid_place               (GcalAllDayGrid *all_day,
 
 GtkWidget*     gcal_all_day_grid_get_by_uuid         (GcalAllDayGrid *all_day,
                                                       const gchar    *uuid);
+
+void           gcal_all_day_grid_clear_marks         (GcalAllDayGrid *all_day);
+
 G_END_DECLS
 
 #endif /* __GCAL_ALL_DAY_GRID_H__ */
