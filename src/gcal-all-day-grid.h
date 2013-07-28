@@ -64,6 +64,11 @@ GtkWidget*     gcal_all_day_grid_get_by_uuid         (GcalAllDayGrid *all_day,
 
 void           gcal_all_day_grid_clear_marks         (GcalAllDayGrid *all_day);
 
+void           gcal_all_day_grid_get_cell_position   (GcalAllDayGrid *all_day,
+						      guint           cell,
+						      gint           *x,
+						      gint           *y);
+
 G_END_DECLS
 
 #endif /* __GCAL_ALL_DAY_GRID_H__ */
