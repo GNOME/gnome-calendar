@@ -1024,6 +1024,7 @@ gcal_all_day_grid_get_cell_position (GcalAllDayGrid *all_day,
   GtkBorder padding;
   PangoLayout *layout;
   PangoRectangle logical_rect;
+  gint y_gap;
 
   gint width_block;
 
@@ -1045,8 +1046,8 @@ gcal_all_day_grid_get_cell_position (GcalAllDayGrid *all_day,
       pango_layout_get_extents (layout, NULL, &logical_rect);
       pango_extents_to_pixels (&logical_rect, NULL);
 
-      *y = (gtk_widget_get_allocated_height (widget) -
-            (padding.top + logical_rect.height + padding.bottom)) / 2;
+      y_gap = padding.top + logical_rect.height + padding.bottom;
+      *y = y_gap + (gtk_widget_get_allocated_height (widget) - y_gap) / 2;
 
       g_object_unref (layout);
     }
