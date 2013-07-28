@@ -478,8 +478,11 @@ gcal_event_widget_draw (GtkWidget *widget,
 
   gint x,y;
   gint width, height;
+  gint icon_size;
+  gint left_gap;
 
   PangoLayout *layout;
+  PangoRectangle logical_rect;
   PangoFontDescription *font_desc;
   GdkRGBA fg_color;
 
@@ -501,6 +504,34 @@ gcal_event_widget_draw (GtkWidget *widget,
   gtk_render_background (context, cr, x, y, width, height);
   gtk_render_frame (context, cr, x, y, width, height);
 
+  gtk_style_context_get (context, state, "font", &font_desc, NULL);
+  layout = pango_cairo_create_layout (cr);
+  pango_layout_set_font_description (layout, font_desc);
+  pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
+  pango_layout_set_width (layout, (width - (padding.left + padding.right) ) * PANGO_SCALE);
+
+  pango_layout_set_text (layout, priv->summary, -1);
+  pango_cairo_update_layout (cr, layout);
+
+  left_gap = 0;
+  if (priv->has_reminders)
+    {
+      pango_layout_get_extents (layout, NULL, &logical_rect);
+      pango_extents_to_pixels (&logical_rect, NULL);
+      icon_size = logical_rect.height;
+      left_gap = icon_size + padding.left;
+      pango_layout_set_width (layout, (width - (padding.left + padding.right + left_gap) ) * PANGO_SCALE);
+    }
+
+  cairo_set_source_rgba (cr,
+                         fg_color.red,
+                         fg_color.green,
+                         fg_color.blue,
+                         fg_color.alpha);
+  cairo_move_to (cr, x + padding.left + left_gap, y + padding.top);
+  pango_cairo_show_layout (cr, layout);
+
+
   /* render icon */
   if (priv->has_reminders)
     {
@@ -512,7 +543,7 @@ gcal_event_widget_draw (GtkWidget *widget,
       icon_theme = gtk_icon_theme_get_default ();
       icon_info = gtk_icon_theme_lookup_icon (icon_theme,
                                               "alarm-symbolic",
-                                              height - (padding.top + padding.bottom),
+                                              icon_size,
                                               0);
       pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
                                                         context,
@@ -525,26 +556,7 @@ gcal_event_widget_draw (GtkWidget *widget,
                                    y + padding.top);
       g_object_unref (pixbuf);
       cairo_paint (cr);
-
-      padding.left += height - (padding.top + padding.bottom) + padding.left;
     }
-
-  gtk_style_context_get (context, state, "font", &font_desc, NULL);
-  layout = pango_cairo_create_layout (cr);
-  pango_layout_set_font_description (layout, font_desc);
-  pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
-  pango_layout_set_width (layout, (width - (padding.left + padding.right) ) * PANGO_SCALE);
-
-  pango_layout_set_text (layout, priv->summary, -1);
-  pango_cairo_update_layout (cr, layout);
-
-  cairo_set_source_rgba (cr,
-                         fg_color.red,
-                         fg_color.green,
-                         fg_color.blue,
-                         fg_color.alpha);
-  cairo_move_to (cr, x + padding.left, y + padding.top);
-  pango_cairo_show_layout (cr, layout);
 
   pango_font_description_free (font_desc);
   g_object_unref (layout);
