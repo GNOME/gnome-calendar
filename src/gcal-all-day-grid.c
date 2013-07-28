@@ -1010,3 +1010,44 @@ gcal_all_day_grid_clear_marks (GcalAllDayGrid *all_day)
   priv->end_mark_cell = -1;
   gtk_widget_queue_draw (GTK_WIDGET (all_day));
 }
+
+void
+gcal_all_day_grid_get_cell_position (GcalAllDayGrid *all_day,
+                                     guint           cell,
+                                     gint           *x,
+                                     gint           *y)
+{
+  GcalAllDayGridPrivate *priv;
+
+  GtkWidget *widget;
+
+  GtkBorder padding;
+  PangoLayout *layout;
+  PangoRectangle logical_rect;
+
+  gint width_block;
+
+  priv = gcal_all_day_grid_get_instance_private (all_day);
+
+  widget = GTK_WIDGET (all_day);
+  width_block = gtk_widget_get_allocated_width (widget) / priv->columns_nr;
+
+  if (x != NULL)
+    *x = cell * width_block + width_block / 2;
+
+  if (y != NULL)
+    {
+      layout = gtk_widget_create_pango_layout (widget, "0");
+
+      gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
+                                     gtk_widget_get_state_flags (widget),
+                                     &padding);
+      pango_layout_get_extents (layout, NULL, &logical_rect);
+      pango_extents_to_pixels (&logical_rect, NULL);
+
+      *y = (gtk_widget_get_allocated_height (widget) -
+            (padding.top + logical_rect.height + padding.bottom)) / 2;
+
+      g_object_unref (layout);
+    }
+}
