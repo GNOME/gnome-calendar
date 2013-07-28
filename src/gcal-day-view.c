@@ -57,6 +57,11 @@ static void           days_grid_clicked                   (GcalDaysGrid   *days_
                                                            guint           end_cell,
                                                            gpointer        user_data);
 
+static void           all_day_grid_clicked                (GcalAllDayGrid *all_day_grid,
+                                                           guint           start_cell,
+                                                           guint           end_cell,
+                                                           gpointer        user_data);
+
 static void           gcal_view_interface_init            (GcalViewIface  *iface);
 
 static void           gcal_day_view_constructed           (GObject        *object);
@@ -148,6 +153,8 @@ days_grid_clicked (GcalDaysGrid *days_grid,
 
   priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (user_data));
 
+  g_debug ("Cells positions: %d, %d", start_cell, end_cell);
+
   start_date = gcal_dup_icaltime (priv->date);
   end_date = gcal_dup_icaltime (priv->date);
 
@@ -181,6 +188,66 @@ days_grid_clicked (GcalDaysGrid *days_grid,
                          "create-event",
                          start_date, end_date,
                          (gdouble) new_x, (gdouble) new_y);
+
+  g_free (start_date);
+  g_free (end_date);
+}
+
+static void
+all_day_grid_clicked (GcalAllDayGrid *all_day_grid,
+                      guint           start_cell,
+                      guint           end_cell,
+                      gpointer        user_data)
+{
+  GcalDayViewPrivate *priv;
+
+  icaltimetype *start_date;
+  icaltimetype *end_date;
+
+  gint x, y;
+  gint new_x, new_y;
+
+  priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (user_data));
+
+  g_debug ("Receiving marked signal in day-view from all-day-grid");
+  g_debug ("Cells positions: %d, %d", start_cell, end_cell);
+
+  start_date = gcal_dup_icaltime (priv->date);
+  end_date = gcal_dup_icaltime (priv->date);
+
+  start_date->is_date = 1;
+  end_date->is_date = 1;
+
+  if (start_cell != end_cell)
+    {
+      end_date->day++;
+      *end_date = icaltime_normalize (*end_date);
+    }
+  else if (start_cell == 1)
+    {
+      start_date->day++;
+      *start_date = icaltime_normalize (*start_date);
+      end_date->day++;
+      *end_date = icaltime_normalize (*end_date);
+    }
+
+  gcal_all_day_grid_get_cell_position (GCAL_ALL_DAY_GRID (priv->all_day_grid),
+                                       start_cell, &x, &y);
+  g_debug ("Click Position: %d, %d", x, y);
+
+  gtk_widget_translate_coordinates (priv->all_day_grid,
+                                    GTK_WIDGET (user_data),
+                                    x, y,
+                                    &new_x, &new_y);
+  g_debug ("Translated Click Position: %d, %d", new_x, new_y);
+
+  g_signal_emit_by_name (GCAL_VIEW (user_data),
+                         "create-event",
+                         start_date, end_date,
+                         (gdouble) new_x, (gdouble) new_y);
+
+  g_debug ("start_date: %s", icaltime_as_ical_string (*start_date));
+  g_debug ("end_date: %s", icaltime_as_ical_string (*end_date));
 
   g_free (start_date);
   g_free (end_date);
@@ -279,9 +346,11 @@ gcal_day_view_constructed (GObject *object)
   gtk_widget_show_all (GTK_WIDGET (object));
 
   /* signal handling */
-  g_signal_connect (object, "map", G_CALLBACK (viewport_shown), object);
+  g_signal_connect_after (object, "map", G_CALLBACK (viewport_shown), object);
   g_signal_connect (priv->day_grid, "marked",
                     G_CALLBACK (days_grid_clicked), object);
+  g_signal_connect (priv->all_day_grid, "marked",
+                    G_CALLBACK (all_day_grid_clicked), object);
 }
 
 static void
@@ -509,6 +578,7 @@ gcal_day_view_clear_marks (GcalView *view)
 
   priv = gcal_day_view_get_instance_private (GCAL_DAY_VIEW (view));
   gcal_days_grid_clear_marks (GCAL_DAYS_GRID (priv->day_grid));
+  gcal_all_day_grid_clear_marks (GCAL_ALL_DAY_GRID (priv->all_day_grid));
 }
 
 static gchar*
