@@ -69,9 +69,9 @@ gcal_viewport_class_init (GcalViewportClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/viewport.ui");
 
   /* Bind internals widgets */
-  gtk_widget_class_bind_child (widget_class, GcalViewportPrivate, hscrollbar);
-  gtk_widget_class_bind_child (widget_class, GcalViewportPrivate, vscrollbar);
-  gtk_widget_class_bind_child (widget_class, GcalViewportPrivate, viewport);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalViewport, hscrollbar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalViewport, vscrollbar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalViewport, viewport);
 }
 
 
