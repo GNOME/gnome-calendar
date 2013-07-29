@@ -79,12 +79,12 @@ gcal_new_event_widget_class_init (GcalNewEventWidgetClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/new-event.ui");
 
   /* Bind internals widgets */
-  gtk_widget_class_bind_child (widget_class, GcalNewEventWidgetPrivate, title_label);
-  gtk_widget_class_bind_child (widget_class, GcalNewEventWidgetPrivate, what_entry);
-  gtk_widget_class_bind_child (widget_class, GcalNewEventWidgetPrivate, calendar_button);
-  gtk_widget_class_bind_child (widget_class, GcalNewEventWidgetPrivate, create_button);
-  gtk_widget_class_bind_child (widget_class, GcalNewEventWidgetPrivate, details_button);
-  gtk_widget_class_bind_child (widget_class, GcalNewEventWidgetPrivate, close_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalNewEventWidget, title_label);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalNewEventWidget, what_entry);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalNewEventWidget, calendar_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalNewEventWidget, create_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalNewEventWidget, details_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalNewEventWidget, close_button);
 }
 
 static void

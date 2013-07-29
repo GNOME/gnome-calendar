@@ -87,10 +87,10 @@ gcal_nav_bar_class_init (GcalNavBarClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/nav_bar.ui");
 
   /* Bind internals widgets */
-  gtk_widget_class_bind_child (widget_class, GcalNavBarPrivate, back_button);
-  gtk_widget_class_bind_child (widget_class, GcalNavBarPrivate, forward_button);
-  gtk_widget_class_bind_child (widget_class, GcalNavBarPrivate, left_label);
-  gtk_widget_class_bind_child (widget_class, GcalNavBarPrivate, right_label);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalNavBar, back_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalNavBar, forward_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalNavBar, left_label);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalNavBar, right_label);
 }
 
 
