@@ -610,8 +610,6 @@ gcal_window_constructed (GObject *object)
   GtkWidget *box;
   GtkWidget *search_button;
   GtkWidget *menu_button;
-  GtkWidget *separator;
-  GtkWidget *close_button;
 
   gint i;
 
@@ -661,15 +659,8 @@ gcal_window_constructed (GObject *object)
                                            "emblem-system-symbolic");
 
   gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), menu_button);
-
-  separator = gtk_separator_new (GTK_ORIENTATION_VERTICAL);
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), separator);
-
-  close_button = gd_header_simple_button_new ();
-  gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (close_button),
-                                           "window-close-symbolic");
-  gtk_button_set_relief (GTK_BUTTON (close_button), GTK_RELIEF_NONE);
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), close_button);
+  gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->header_bar),
+                                        TRUE);
 
   gtk_widget_set_hexpand (priv->header_bar, TRUE);
   gtk_window_set_titlebar (GTK_WINDOW (object), priv->header_bar);
@@ -770,8 +761,6 @@ gcal_window_constructed (GObject *object)
 
   g_signal_connect_swapped (priv->new_button, "clicked",
                             G_CALLBACK (gcal_window_new_event), object);
-  g_signal_connect_swapped (close_button, "clicked",
-                            G_CALLBACK (gtk_window_close), GTK_WINDOW (object));
   for (i = 0; i < 4; ++i)
     {
       g_signal_connect (priv->views[i], "create-event",
