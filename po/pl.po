@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-02 02:39+0100\n"
-"PO-Revision-Date: 2013-01-02 02:40+0100\n"
+"POT-Creation-Date: 2013-08-11 02:29+0200\n"
+"PO-Revision-Date: 2013-08-11 02:30+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -23,8 +23,8 @@ msgstr ""
 "X-Poedit-Language: Polish\n"
 "X-Poedit-Country: Poland\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:126
-#: ../src/gcal-application.c:293
+#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:158
+#: ../src/gcal-application.c:396
 msgid "Calendar"
 msgstr "Kalendarz"
 
@@ -41,52 +41,76 @@ msgid "Window maximized state"
 msgstr "Stan maksymalizacji okna"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Window size"
+msgstr "Rozmiar okna"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Rozmiar okna (szerokość i wysokość)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Położenie okna"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Położenie okna (na osi X oraz Y)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
 msgid "Type of the active view"
 msgstr "Typ aktywnego widoku"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
 "Typ aktywnego widoku okna, domyślna wartość: \"monthly view\" (widok "
 "miesięczny)"
 
-#: ../src/gcal-application.c:146
+#: ../src/gcal-application.c:87
+msgid "Display version number"
+msgstr "Wyświetla numer wersji"
+
+#: ../src/gcal-application.c:204
 msgid "Unable to initialize GtkClutter"
 msgstr "Nie można zainicjować biblioteki GtkClutter"
 
-#: ../src/gcal-application.c:197
+#: ../src/gcal-application.c:245
+msgid "- Calendar management"
+msgstr "- zarządzenie kalendarzem"
+
+#: ../src/gcal-application.c:300
 msgid "Weeks"
 msgstr "Tygodnie"
 
-#: ../src/gcal-application.c:198
+#: ../src/gcal-application.c:301
 msgid "Months"
 msgstr "Miesiące"
 
-#: ../src/gcal-application.c:199
+#: ../src/gcal-application.c:302
 msgid "Years"
 msgstr "Lata"
 
-#: ../src/gcal-application.c:201
+#: ../src/gcal-application.c:304
 msgid "View as"
 msgstr "Wyświetl jako"
 
-#: ../src/gcal-application.c:209
+#: ../src/gcal-application.c:312
 msgid "About"
 msgstr "O programie"
 
-#: ../src/gcal-application.c:217
+#: ../src/gcal-application.c:320
 msgid "Quit"
 msgstr "Zakończ"
 
-#: ../src/gcal-application.c:281
+#: ../src/gcal-application.c:384
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id Autorzy Kalendarza"
 
-#: ../src/gcal-application.c:287
+#: ../src/gcal-application.c:390
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Autorzy Kalendarza"
 
-#: ../src/gcal-application.c:300
+#: ../src/gcal-application.c:403
 msgid "translator-credits"
 msgstr ""
 "Piotr Drąg <piotrdrag@gmail.com>, 2012-2013\n"
@@ -130,13 +154,14 @@ msgid "Notes"
 msgstr "Uwagi"
 
 #. done button
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-toolbar.c:615
-#: ../src/gcal-window.c:282
+#. done
+#: ../src/gcal-edit-dialog.c:310 ../src/gcal-searchbar.c:158
+#: ../src/gcal-toolbar.c:611
 msgid "Done"
 msgstr "Gotowe"
 
 #: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:295
+#: ../src/gcal-toolbar.c:291
 msgid "New Event"
 msgstr "Nowe wydarzenie"
 
@@ -192,75 +217,75 @@ msgstr "przed"
 
 #. Here translators should put the widgest letter in their alphabet, this
 #. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1022 ../src/gcal-week-view.c:1080
-#: ../src/gcal-year-view.c:922
+#: ../src/gcal-month-view.c:1026 ../src/gcal-week-view.c:1083
+#: ../src/gcal-year-view.c:925
 msgid "WWW 99 - WWW 99"
 msgstr "WWW 99 - WWW 99"
+
+#: ../src/gcal-searchbar.c:179
+msgid "Search..."
+msgstr "Wyszukiwanie..."
 
 #: ../src/gcal-time-entry.c:126
 msgid "Change the time"
 msgstr "Zmień czas"
 
 #. day
-#: ../src/gcal-toolbar.c:321
+#: ../src/gcal-toolbar.c:317
 msgid "Day"
 msgstr "Dzień"
 
 #. week
-#: ../src/gcal-toolbar.c:338 ../src/gcal-week-view.c:1094
+#: ../src/gcal-toolbar.c:334 ../src/gcal-week-view.c:1097
 msgid "Week"
 msgstr "Tydzień"
 
 #. month
-#: ../src/gcal-toolbar.c:355
+#: ../src/gcal-toolbar.c:351
 msgid "Month"
 msgstr "Miesiąc"
 
 #. year
-#: ../src/gcal-toolbar.c:372
+#: ../src/gcal-toolbar.c:368
 msgid "Year"
 msgstr "Rok"
 
 #. list
-#: ../src/gcal-toolbar.c:389
+#: ../src/gcal-toolbar.c:385
 msgid "List"
 msgstr "Lista"
 
-#: ../src/gcal-toolbar.c:469
+#: ../src/gcal-toolbar.c:465
 msgid "Back"
 msgstr "Wstecz"
 
 #. reset morphing edit_button
-#: ../src/gcal-toolbar.c:490 ../src/gcal-toolbar.c:502
-#: ../src/gcal-toolbar.c:620
+#: ../src/gcal-toolbar.c:486 ../src/gcal-toolbar.c:498
+#: ../src/gcal-toolbar.c:616
 msgid "Edit"
 msgstr "Edycja"
 
-#: ../src/gcal-week-view.c:1280
+#: ../src/gcal-week-view.c:1283
 msgid "AM"
 msgstr "Przed południem"
 
-#: ../src/gcal-week-view.c:1280
+#: ../src/gcal-week-view.c:1283
 msgid "PM"
 msgstr "Po południu"
 
-#: ../src/gcal-week-view.c:1283 ../src/gcal-week-view.c:1352
+#: ../src/gcal-week-view.c:1286 ../src/gcal-week-view.c:1358
 msgid "Midnight"
 msgstr "Północ"
 
-#: ../src/gcal-week-view.c:1285 ../src/gcal-week-view.c:1355
+#: ../src/gcal-week-view.c:1288 ../src/gcal-week-view.c:1361
 msgid "Noon"
 msgstr "Południe"
 
-#: ../src/gcal-window.c:295
-msgid "Search..."
-msgstr "Wyszukiwanie..."
-
-#: ../src/gcal-window.c:1406
+#: ../src/gcal-window.c:1378
 msgid "Event deleted"
 msgstr "Usunięto wydarzenie"
 
-#: ../src/gcal-year-view.c:926
+#: ../src/gcal-year-view.c:929
 #, c-format
 msgid "Year %d"
 msgstr "Rok %d"
