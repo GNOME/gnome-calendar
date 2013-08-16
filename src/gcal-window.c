@@ -293,10 +293,6 @@ load_geometry (GcalWindow *window)
                                  size[1]);
   g_variant_unref (variant);
 
-  g_debug ("loaded window geometry -> size:[%d,%d]",
-           size[0],
-           size[1]);
-
   /* load window settings: position */
   variant = g_settings_get_value (settings,
                                   "window-position");
@@ -309,10 +305,6 @@ load_geometry (GcalWindow *window)
                      position[1]);
 
   g_variant_unref (variant);
-
-  g_debug ("loaded window geometry -> position:[%d,%d]",
-           position[0],
-           position[1]);
 
   /* load window settings: state */
   maximized = g_settings_get_boolean (settings,
