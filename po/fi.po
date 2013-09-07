@@ -1,26 +1,26 @@
 # Finnish translation for gnome-calendar.
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
-#
 # Jiri Grönroos <jiri.gronroos+l10n@iki.fi>, 2013.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-03-23 19:03+0000\n"
-"PO-Revision-Date: 2013-03-24 15:55+0200\n"
+"POT-Creation-Date: 2013-08-03 14:16+0000\n"
+"PO-Revision-Date: 2013-09-04 22:26+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
-"Language-Team: Finnish <gnome-fi-laatu@lists.sourceforge.net>\n"
+"Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 1.5\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:126
-#: ../src/gcal-application.c:293
+#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:158
+#: ../src/gcal-application.c:396
 msgid "Calendar"
 msgstr "Kalenteri"
 
@@ -30,57 +30,81 @@ msgstr "Hallitse aikatauluasi kalenterin avulla"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
-msgstr ""
+msgstr "Ikkuna suurennettu"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:2
 msgid "Window maximized state"
-msgstr ""
+msgstr "Suurennetun ikkunan tila"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:3
-msgid "Type of the active view"
-msgstr ""
+msgid "Window size"
+msgstr "Ikkunan koko"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Ikkunan koko (leveys ja korkeus)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Ikkunan sijainti"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Ikkunan sijainti (x ja y)"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
+msgid "Type of the active view"
+msgstr "Aktiivisen näkymän tyyppi"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
-msgstr ""
+msgstr "Aktiivisen näkymän tyyppi, oletusarvo on: monthly view"
 
-#: ../src/gcal-application.c:146
+#: ../src/gcal-application.c:87
+msgid "Display version number"
+msgstr "Näytä versionumero"
+
+#: ../src/gcal-application.c:204
 msgid "Unable to initialize GtkClutter"
-msgstr ""
+msgstr "GtkClutterin alustus ei onnistunut"
 
-#: ../src/gcal-application.c:197
+#: ../src/gcal-application.c:245
+msgid "- Calendar management"
+msgstr "- Kalenterin hallinta"
+
+#: ../src/gcal-application.c:300
 msgid "Weeks"
 msgstr "Viikot"
 
-#: ../src/gcal-application.c:198
+#: ../src/gcal-application.c:301
 msgid "Months"
 msgstr "Kuukaudet"
 
-#: ../src/gcal-application.c:199
+#: ../src/gcal-application.c:302
 msgid "Years"
 msgstr "Vuodet"
 
-#: ../src/gcal-application.c:201
+#: ../src/gcal-application.c:304
 msgid "View as"
 msgstr "Näytä"
 
-#: ../src/gcal-application.c:209
+#: ../src/gcal-application.c:312
 msgid "About"
 msgstr "Tietoja"
 
-#: ../src/gcal-application.c:217
+#: ../src/gcal-application.c:320
 msgid "Quit"
 msgstr "Lopeta"
 
-#: ../src/gcal-application.c:281
+#: ../src/gcal-application.c:384
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Tekijänoikeus © %Id Kalenterin tekijät"
 
-#: ../src/gcal-application.c:287
+#: ../src/gcal-application.c:390
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Tekijänoikeus © %Id–%Id Kalenterin tekijät"
 
-#: ../src/gcal-application.c:300
+#: ../src/gcal-application.c:403
 msgid "translator-credits"
 msgstr "Jiri Grönroos"
 
@@ -122,13 +146,14 @@ msgid "Notes"
 msgstr "Kommentit"
 
 #. done button
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-toolbar.c:615
-#: ../src/gcal-window.c:281
+#. done
+#: ../src/gcal-edit-dialog.c:310 ../src/gcal-searchbar.c:158
+#: ../src/gcal-toolbar.c:611
 msgid "Done"
 msgstr "Valmis"
 
 #: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:295
+#: ../src/gcal-toolbar.c:291
 msgid "New Event"
 msgstr "Uusi tapahtuma"
 
@@ -184,76 +209,75 @@ msgstr "ennen"
 
 #. Here translators should put the widgest letter in their alphabet, this
 #. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1022 ../src/gcal-week-view.c:1080
-#: ../src/gcal-year-view.c:922
+#: ../src/gcal-month-view.c:1026 ../src/gcal-week-view.c:1083
+#: ../src/gcal-year-view.c:925
 msgid "WWW 99 - WWW 99"
 msgstr "WWW 99 - WWW 99"
+
+#: ../src/gcal-searchbar.c:179
+msgid "Search..."
+msgstr "Etsi..."
 
 #: ../src/gcal-time-entry.c:126
 msgid "Change the time"
 msgstr "Vaihda aikaa"
 
 #. day
-#: ../src/gcal-toolbar.c:321
+#: ../src/gcal-toolbar.c:317
 msgid "Day"
 msgstr "Päivä"
 
 #. week
-#: ../src/gcal-toolbar.c:338 ../src/gcal-week-view.c:1094
+#: ../src/gcal-toolbar.c:334 ../src/gcal-week-view.c:1097
 msgid "Week"
 msgstr "Viikko"
 
 #. month
-#: ../src/gcal-toolbar.c:355
+#: ../src/gcal-toolbar.c:351
 msgid "Month"
 msgstr "Kuukausi"
 
 #. year
-#: ../src/gcal-toolbar.c:372
+#: ../src/gcal-toolbar.c:368
 msgid "Year"
 msgstr "Vuosi"
 
 #. list
-#: ../src/gcal-toolbar.c:389
+#: ../src/gcal-toolbar.c:385
 msgid "List"
 msgstr "Luettelo"
 
-#: ../src/gcal-toolbar.c:469
+#: ../src/gcal-toolbar.c:465
 msgid "Back"
 msgstr "Takaisin"
 
 #. reset morphing edit_button
-#: ../src/gcal-toolbar.c:490 ../src/gcal-toolbar.c:502
-#: ../src/gcal-toolbar.c:620
+#: ../src/gcal-toolbar.c:486 ../src/gcal-toolbar.c:498
+#: ../src/gcal-toolbar.c:616
 msgid "Edit"
 msgstr "Muokkaa"
 
-#: ../src/gcal-week-view.c:1280
+#: ../src/gcal-week-view.c:1283
 msgid "AM"
 msgstr "AM"
 
-#: ../src/gcal-week-view.c:1280
+#: ../src/gcal-week-view.c:1283
 msgid "PM"
 msgstr "PM"
 
-#: ../src/gcal-week-view.c:1283 ../src/gcal-week-view.c:1352
+#: ../src/gcal-week-view.c:1286 ../src/gcal-week-view.c:1358
 msgid "Midnight"
 msgstr "Keskiyö"
 
-#: ../src/gcal-week-view.c:1285 ../src/gcal-week-view.c:1355
+#: ../src/gcal-week-view.c:1288 ../src/gcal-week-view.c:1361
 msgid "Noon"
 msgstr "Keskipäivä"
 
-#: ../src/gcal-window.c:294
-msgid "Search..."
-msgstr "Etsi..."
-
-#: ../src/gcal-window.c:1405
+#: ../src/gcal-window.c:1378
 msgid "Event deleted"
 msgstr "Tapahtuma poistettu"
 
-#: ../src/gcal-year-view.c:926
+#: ../src/gcal-year-view.c:929
 #, c-format
 msgid "Year %d"
 msgstr "Vuosi %d"
-
