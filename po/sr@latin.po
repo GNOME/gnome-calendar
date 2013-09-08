@@ -7,21 +7,20 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-01-02 01:40+0000\n"
-"PO-Revision-Date: 2013-01-02 20:53+0200\n"
+"POT-Creation-Date: 2013-08-03 14:16+0000\n"
+"PO-Revision-Date: 2013-09-08 08:30+0200\n"
 "Last-Translator: Miroslav Nikolić <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
-"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : "
+"n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Project-Style: gnome\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:126
-#: ../src/gcal-application.c:293
+#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:158
+#: ../src/gcal-application.c:396
 msgid "Calendar"
 msgstr "Kalendar"
 
@@ -38,50 +37,75 @@ msgid "Window maximized state"
 msgstr "Stanje uvećanog prozora"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:3
+#| msgid "Window maximized"
+msgid "Window size"
+msgstr "Veličina prozora"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Veličina prozora (širina i visina)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Položaj prozora"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Položaj prozora (položeno i uspravno)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
 msgid "Type of the active view"
 msgstr "Vrsta radnog prikaza"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Vrsta prikaza radnog prozora, osnovno je: mesečni prikaz"
 
-#: ../src/gcal-application.c:146
+#: ../src/gcal-application.c:87
+msgid "Display version number"
+msgstr "Prikazuje broj izdanja"
+
+#: ../src/gcal-application.c:204
 msgid "Unable to initialize GtkClutter"
 msgstr "Ne mogu da pokrenem Gtk Galamdžiju"
 
-#: ../src/gcal-application.c:197
+#: ../src/gcal-application.c:245
+msgid "- Calendar management"
+msgstr "— Upravljanje kalendarom"
+
+#: ../src/gcal-application.c:300
 msgid "Weeks"
 msgstr "Nedelje"
 
-#: ../src/gcal-application.c:198
+#: ../src/gcal-application.c:301
 msgid "Months"
 msgstr "Meseci"
 
-#: ../src/gcal-application.c:199
+#: ../src/gcal-application.c:302
 msgid "Years"
 msgstr "Godine"
 
-#: ../src/gcal-application.c:201
+#: ../src/gcal-application.c:304
 msgid "View as"
 msgstr "Prikaži kao"
 
-#: ../src/gcal-application.c:209
+#: ../src/gcal-application.c:312
 msgid "About"
 msgstr "O programu"
 
-#: ../src/gcal-application.c:217
+#: ../src/gcal-application.c:320
 msgid "Quit"
 msgstr "Izađi"
 
-#: ../src/gcal-application.c:281
+#: ../src/gcal-application.c:384
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Autorska prava © %Id autori Kalendara"
 
-#: ../src/gcal-application.c:287
+#: ../src/gcal-application.c:390
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Autorska prava © %Id–%Id autori Kalendara"
 
-#: ../src/gcal-application.c:300
+#: ../src/gcal-application.c:403
 msgid "translator-credits"
 msgstr ""
 "  Miroslav Nikolić\n"
@@ -126,13 +150,14 @@ msgid "Notes"
 msgstr "Beleške"
 
 #. done button
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-toolbar.c:615
-#: ../src/gcal-window.c:282
+#. done
+#: ../src/gcal-edit-dialog.c:310 ../src/gcal-searchbar.c:158
+#: ../src/gcal-toolbar.c:611
 msgid "Done"
 msgstr "Urađeno"
 
 #: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:295
+#: ../src/gcal-toolbar.c:291
 msgid "New Event"
 msgstr "Novi događaj"
 
@@ -188,75 +213,75 @@ msgstr "pre"
 
 #. Here translators should put the widgest letter in their alphabet, this
 #. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1022 ../src/gcal-week-view.c:1080
-#: ../src/gcal-year-view.c:922
+#: ../src/gcal-month-view.c:1026 ../src/gcal-week-view.c:1083
+#: ../src/gcal-year-view.c:925
 msgid "WWW 99 - WWW 99"
 msgstr "ŠŠŠ 99 — ŠŠŠ 99"
+
+#: ../src/gcal-searchbar.c:179
+msgid "Search..."
+msgstr "Potraži..."
 
 #: ../src/gcal-time-entry.c:126
 msgid "Change the time"
 msgstr "Izmenite vreme"
 
 #. day
-#: ../src/gcal-toolbar.c:321
+#: ../src/gcal-toolbar.c:317
 msgid "Day"
 msgstr "Dan"
 
 #. week
-#: ../src/gcal-toolbar.c:338 ../src/gcal-week-view.c:1094
+#: ../src/gcal-toolbar.c:334 ../src/gcal-week-view.c:1097
 msgid "Week"
 msgstr "Sedmica"
 
 #. month
-#: ../src/gcal-toolbar.c:355
+#: ../src/gcal-toolbar.c:351
 msgid "Month"
 msgstr "Mesec"
 
 #. year
-#: ../src/gcal-toolbar.c:372
+#: ../src/gcal-toolbar.c:368
 msgid "Year"
 msgstr "Godina"
 
 #. list
-#: ../src/gcal-toolbar.c:389
+#: ../src/gcal-toolbar.c:385
 msgid "List"
 msgstr "Spisak"
 
-#: ../src/gcal-toolbar.c:469
+#: ../src/gcal-toolbar.c:465
 msgid "Back"
 msgstr "Nazad"
 
 #. reset morphing edit_button
-#: ../src/gcal-toolbar.c:490 ../src/gcal-toolbar.c:502
-#: ../src/gcal-toolbar.c:620
+#: ../src/gcal-toolbar.c:486 ../src/gcal-toolbar.c:498
+#: ../src/gcal-toolbar.c:616
 msgid "Edit"
 msgstr "Uredi"
 
-#: ../src/gcal-week-view.c:1280
+#: ../src/gcal-week-view.c:1283
 msgid "AM"
 msgstr "PrP"
 
-#: ../src/gcal-week-view.c:1280
+#: ../src/gcal-week-view.c:1283
 msgid "PM"
 msgstr "PoP"
 
-#: ../src/gcal-week-view.c:1283 ../src/gcal-week-view.c:1352
+#: ../src/gcal-week-view.c:1286 ../src/gcal-week-view.c:1358
 msgid "Midnight"
 msgstr "Ponoć"
 
-#: ../src/gcal-week-view.c:1285 ../src/gcal-week-view.c:1355
+#: ../src/gcal-week-view.c:1288 ../src/gcal-week-view.c:1361
 msgid "Noon"
 msgstr "Podne"
 
-#: ../src/gcal-window.c:295
-msgid "Search..."
-msgstr "Potraži..."
-
-#: ../src/gcal-window.c:1406
+#: ../src/gcal-window.c:1378
 msgid "Event deleted"
 msgstr "Događaj je obrisan"
 
-#: ../src/gcal-year-view.c:926
+#: ../src/gcal-year-view.c:929
 #, c-format
 msgid "Year %d"
 msgstr "%d. godina"
