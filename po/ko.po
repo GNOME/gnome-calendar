@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-03-03 02:17+0000\n"
-"PO-Revision-Date: 2013-03-21 02:52+0900\n"
+"POT-Creation-Date: 2013-09-13 20:19+0000\n"
+"PO-Revision-Date: 2013-09-18 14:08+0900\n"
 "Last-Translator: Seong-ho Cho <darkcircle.0426@gmail.com>\n"
 "Language-Team: GNOME Korea <gnome-kr@googlegroups.com>\n"
 "Language: ko\n"
@@ -19,8 +19,8 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.5.5\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:126
-#: ../src/gcal-application.c:293
+#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:158
+#: ../src/gcal-application.c:396
 msgid "Calendar"
 msgstr "달력"
 
@@ -37,50 +37,74 @@ msgid "Window maximized state"
 msgstr "창 최대화 상태"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Window size"
+msgstr "창 크기"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "창의 크기 입니다(폭과 너비)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "창 위치"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "창의 위치입니다(x와 y)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
 msgid "Type of the active view"
 msgstr "활성 보기 형식"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "활성 창 보기의 형식입니다. 기본 값은 월별 보기 입니다."
 
-#: ../src/gcal-application.c:146
+#: ../src/gcal-application.c:87
+msgid "Display version number"
+msgstr "버전 번호를 표시합니다"
+
+#: ../src/gcal-application.c:204
 msgid "Unable to initialize GtkClutter"
 msgstr "GtkClutter를 초기화 할 수 없습니다"
 
-#: ../src/gcal-application.c:197
+#: ../src/gcal-application.c:245
+msgid "- Calendar management"
+msgstr "- 달력 관리자"
+
+#: ../src/gcal-application.c:300
 msgid "Weeks"
 msgstr "주별"
 
-#: ../src/gcal-application.c:198
+#: ../src/gcal-application.c:301
 msgid "Months"
 msgstr "월별"
 
-#: ../src/gcal-application.c:199
+#: ../src/gcal-application.c:302
 msgid "Years"
 msgstr "연도별"
 
-#: ../src/gcal-application.c:201
+#: ../src/gcal-application.c:304
 msgid "View as"
 msgstr "다음 형식으로 보기"
 
-#: ../src/gcal-application.c:209
+#: ../src/gcal-application.c:312
 msgid "About"
 msgstr "정보"
 
-#: ../src/gcal-application.c:217
+#: ../src/gcal-application.c:320
 msgid "Quit"
 msgstr "끝내기"
 
-#: ../src/gcal-application.c:281
+#: ../src/gcal-application.c:384
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id The Calendar authors"
 
-#: ../src/gcal-application.c:287
+#: ../src/gcal-application.c:390
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id The Calendar authors"
 
-#: ../src/gcal-application.c:300
+#: ../src/gcal-application.c:403
 msgid "translator-credits"
 msgstr "Seong-ho Cho <darkcircle.0426@gmail.com>"
 
@@ -122,13 +146,14 @@ msgid "Notes"
 msgstr "참고"
 
 #. done button
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-toolbar.c:615
-#: ../src/gcal-window.c:281
+#. done
+#: ../src/gcal-edit-dialog.c:310 ../src/gcal-searchbar.c:158
+#: ../src/gcal-toolbar.c:611
 msgid "Done"
 msgstr "완료"
 
 #: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:295
+#: ../src/gcal-toolbar.c:291
 msgid "New Event"
 msgstr "새 행사"
 
@@ -184,75 +209,75 @@ msgstr "전"
 
 #. Here translators should put the widgest letter in their alphabet, this
 #. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1022 ../src/gcal-week-view.c:1080
-#: ../src/gcal-year-view.c:922
+#: ../src/gcal-month-view.c:1026 ../src/gcal-week-view.c:1083
+#: ../src/gcal-year-view.c:925
 msgid "WWW 99 - WWW 99"
 msgstr "WWW 99 - WWW 99"
+
+#: ../src/gcal-searchbar.c:179
+msgid "Search..."
+msgstr "검색..."
 
 #: ../src/gcal-time-entry.c:126
 msgid "Change the time"
 msgstr "시간 바꾸기"
 
 #. day
-#: ../src/gcal-toolbar.c:321
+#: ../src/gcal-toolbar.c:317
 msgid "Day"
 msgstr "일"
 
 #. week
-#: ../src/gcal-toolbar.c:338 ../src/gcal-week-view.c:1094
+#: ../src/gcal-toolbar.c:334 ../src/gcal-week-view.c:1097
 msgid "Week"
 msgstr "주"
 
 #. month
-#: ../src/gcal-toolbar.c:355
+#: ../src/gcal-toolbar.c:351
 msgid "Month"
 msgstr "월"
 
 #. year
-#: ../src/gcal-toolbar.c:372
+#: ../src/gcal-toolbar.c:368
 msgid "Year"
 msgstr "연"
 
 #. list
-#: ../src/gcal-toolbar.c:389
+#: ../src/gcal-toolbar.c:385
 msgid "List"
 msgstr "목록"
 
-#: ../src/gcal-toolbar.c:469
+#: ../src/gcal-toolbar.c:465
 msgid "Back"
 msgstr "뒤로"
 
 #. reset morphing edit_button
-#: ../src/gcal-toolbar.c:490 ../src/gcal-toolbar.c:502
-#: ../src/gcal-toolbar.c:620
+#: ../src/gcal-toolbar.c:486 ../src/gcal-toolbar.c:498
+#: ../src/gcal-toolbar.c:616
 msgid "Edit"
 msgstr "편집"
 
-#: ../src/gcal-week-view.c:1280
+#: ../src/gcal-week-view.c:1283
 msgid "AM"
 msgstr "오전"
 
-#: ../src/gcal-week-view.c:1280
+#: ../src/gcal-week-view.c:1283
 msgid "PM"
 msgstr "오후"
 
-#: ../src/gcal-week-view.c:1283 ../src/gcal-week-view.c:1352
+#: ../src/gcal-week-view.c:1286 ../src/gcal-week-view.c:1358
 msgid "Midnight"
 msgstr "자정"
 
-#: ../src/gcal-week-view.c:1285 ../src/gcal-week-view.c:1355
+#: ../src/gcal-week-view.c:1288 ../src/gcal-week-view.c:1361
 msgid "Noon"
 msgstr "정오"
 
-#: ../src/gcal-window.c:294
-msgid "Search..."
-msgstr "검색..."
-
-#: ../src/gcal-window.c:1405
+#: ../src/gcal-window.c:1378
 msgid "Event deleted"
 msgstr "삭제한 행사"
 
-#: ../src/gcal-year-view.c:926
+#: ../src/gcal-year-view.c:929
 #, c-format
 msgid "Year %d"
 msgstr "%d년"
