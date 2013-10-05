@@ -1,0 +1,283 @@
+# Indonesian translation for gnome-calendar.
+# Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-calendar package.
+# Andika Triwidada <andika@gmail.com>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-calendar master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2013-09-30 11:29+0000\n"
+"PO-Revision-Date: 2013-10-05 17:17+0700\n"
+"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
+"Language-Team: Indonesian <gnomed@i15n.org>\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.5.7\n"
+
+#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:158
+#: ../src/gcal-application.c:396
+msgid "Calendar"
+msgstr "Kalender"
+
+#: ../data/gnome-calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr "Mengakses dan mengelola kalender"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Jendela dimaksimalkan"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Keadaan termaksimalkan jendela"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Window size"
+msgstr "Ukuran jendela"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Ukuran jendela (lebar dan tinggi)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Posisi jendela"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Posisi jendela (x dan y)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
+msgid "Type of the active view"
+msgstr "Tipe dari tilikan yang aktif"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
+msgid "Type of the active window view, default value is: monthly view"
+msgstr ""
+"Tipe dari tilikan jendela yang aktif, nilai baku adalah: tilikan bulanan"
+
+#: ../src/gcal-application.c:87
+msgid "Display version number"
+msgstr "Tampilkan nomor versi"
+
+#: ../src/gcal-application.c:204
+msgid "Unable to initialize GtkClutter"
+msgstr "Tak bisa menginisialisasi GtkClutter"
+
+#: ../src/gcal-application.c:245
+msgid "- Calendar management"
+msgstr "- Manajemen kalender"
+
+#: ../src/gcal-application.c:300
+msgid "Weeks"
+msgstr "Mingguan"
+
+#: ../src/gcal-application.c:301
+msgid "Months"
+msgstr "Bulanan"
+
+#: ../src/gcal-application.c:302
+msgid "Years"
+msgstr "Tahunan"
+
+#: ../src/gcal-application.c:304
+msgid "View as"
+msgstr "Tilik sebagai"
+
+#: ../src/gcal-application.c:312
+msgid "About"
+msgstr "Tentang"
+
+#: ../src/gcal-application.c:320
+msgid "Quit"
+msgstr "Keluar"
+
+#: ../src/gcal-application.c:384
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Hak Cipta © %Id para penulis Kalender"
+
+#: ../src/gcal-application.c:390
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Hak Cipta © %Id–%Id para penulis Kalender"
+
+#: ../src/gcal-application.c:403
+msgid "translator-credits"
+msgstr "Andika Triwidada <andika@gmail.com>, 2013"
+
+#: ../src/gcal-date-entry.c:162
+msgid "Change the date"
+msgstr "Ubah tanggal"
+
+#: ../src/gcal-edit-dialog.c:156
+msgid "Event Details"
+msgstr "Rincian Kejadian"
+
+#. Summary, title
+#: ../src/gcal-edit-dialog.c:171
+msgid "Title"
+msgstr "Judul"
+
+#. Start date and time
+#: ../src/gcal-edit-dialog.c:199
+msgid "Starts"
+msgstr "Mulai"
+
+#: ../src/gcal-edit-dialog.c:215
+msgid "All day"
+msgstr "Sepanjang hari"
+
+#. End date and time
+#: ../src/gcal-edit-dialog.c:221
+msgid "Ends"
+msgstr "Berakhir"
+
+#. Location, location, location
+#: ../src/gcal-edit-dialog.c:238
+msgid "Location"
+msgstr "Lokasi"
+
+#. Notes, description
+#: ../src/gcal-edit-dialog.c:252
+msgid "Notes"
+msgstr "Catatan"
+
+#. done button
+#. done
+#: ../src/gcal-edit-dialog.c:310 ../src/gcal-searchbar.c:158
+#: ../src/gcal-toolbar.c:611
+msgid "Done"
+msgstr "Selesai"
+
+#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
+#: ../src/gcal-toolbar.c:291
+msgid "New Event"
+msgstr "Kejadian Baru"
+
+#: ../src/gcal-event-overlay.c:162
+msgid "Create"
+msgstr "Buat"
+
+#: ../src/gcal-event-overlay.c:171
+msgid "More details"
+msgstr "Lebih banyak rincian"
+
+#: ../src/gcal-event-overlay.c:185
+msgid "What (e.g. Alien Invasion)"
+msgstr "Apa (mis. Invasi Mahluk Asing)"
+
+#: ../src/gcal-event-overlay.c:507
+#, c-format
+msgid "New Event on %s"
+msgstr "Kejadian Baru pada %s"
+
+#: ../src/gcal-event-overlay.c:524
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "Kejadian Baru dari %s sampai %s"
+
+#: ../src/gcal-manager.c:1506
+msgid "Notification"
+msgstr "Pemberitahuan"
+
+#: ../src/gcal-manager.c:1508
+msgid "Email"
+msgstr "Surel"
+
+#: ../src/gcal-manager.c:1522
+msgid "days"
+msgstr "hari"
+
+#: ../src/gcal-manager.c:1528
+msgid "weeks"
+msgstr "minggu"
+
+#: ../src/gcal-manager.c:1534
+msgid "hours"
+msgstr "jam"
+
+#: ../src/gcal-manager.c:1540
+msgid "minutes"
+msgstr "menit"
+
+#: ../src/gcal-manager.c:1552
+msgid "before"
+msgstr "sebelum"
+
+#. Here translators should put the widgest letter in their alphabet, this
+#. * taken to make it align with week-view header, which is the larger for now
+#: ../src/gcal-month-view.c:1026 ../src/gcal-week-view.c:1083
+#: ../src/gcal-year-view.c:925
+msgid "WWW 99 - WWW 99"
+msgstr "WWW 99 - WWW 99"
+
+#: ../src/gcal-searchbar.c:179
+msgid "Search..."
+msgstr "Cari..."
+
+#: ../src/gcal-time-entry.c:126
+msgid "Change the time"
+msgstr "Ubah waktu"
+
+#. day
+#: ../src/gcal-toolbar.c:317
+msgid "Day"
+msgstr "Hari"
+
+#. week
+#: ../src/gcal-toolbar.c:334 ../src/gcal-week-view.c:1097
+msgid "Week"
+msgstr "Minggu"
+
+#. month
+#: ../src/gcal-toolbar.c:351
+msgid "Month"
+msgstr "Bulan"
+
+#. year
+#: ../src/gcal-toolbar.c:368
+msgid "Year"
+msgstr "Tahun"
+
+#. list
+#: ../src/gcal-toolbar.c:385
+msgid "List"
+msgstr "Daftar"
+
+#: ../src/gcal-toolbar.c:465
+msgid "Back"
+msgstr "Mundur"
+
+#. reset morphing edit_button
+#: ../src/gcal-toolbar.c:486 ../src/gcal-toolbar.c:498
+#: ../src/gcal-toolbar.c:616
+msgid "Edit"
+msgstr "Sunting"
+
+#: ../src/gcal-week-view.c:1283
+msgid "AM"
+msgstr "AM"
+
+#: ../src/gcal-week-view.c:1283
+msgid "PM"
+msgstr "PM"
+
+#: ../src/gcal-week-view.c:1286 ../src/gcal-week-view.c:1358
+msgid "Midnight"
+msgstr "Tengah malam"
+
+#: ../src/gcal-week-view.c:1288 ../src/gcal-week-view.c:1361
+msgid "Noon"
+msgstr "Siang"
+
+#: ../src/gcal-window.c:1378
+msgid "Event deleted"
+msgstr "Kejadian dihapus"
+
+#: ../src/gcal-year-view.c:929
+#, c-format
+msgid "Year %d"
+msgstr "Tahun %d"
