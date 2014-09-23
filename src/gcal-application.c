@@ -26,7 +26,7 @@
 
 #include <glib/gi18n.h>
 
-#define CSS_FILE UI_DATA_DIR "/gtk-styles.css"
+#define CSS_FILE "resource:///org/gnome/calendar/gtk-styles.css"
 
 typedef struct
 {
@@ -158,6 +158,7 @@ static void
 gcal_application_startup (GApplication *app)
 {
   GcalApplicationPrivate *priv;
+  GFile* css_file;
   GError *error;
 
   priv = gcal_application_get_instance_private (GCAL_APPLICATION (app));
@@ -173,7 +174,8 @@ gcal_application_startup (GApplication *app)
          G_MAXUINT);
 
      error = NULL;
-     gtk_css_provider_load_from_path (priv->provider, CSS_FILE, &error);
+     css_file = g_file_new_for_uri (CSS_FILE);
+     gtk_css_provider_load_from_file (priv->provider, css_file, &error);
      if (error != NULL)
        {
          g_warning ("Error loading stylesheet from file %s. %s",
@@ -184,6 +186,8 @@ gcal_application_startup (GApplication *app)
      g_object_set (gtk_settings_get_default (),
                    "gtk-application-prefer-dark-theme", FALSE,
                    NULL);
+
+     g_object_unref (css_file);
    }
 
   priv->manager = gcal_manager_new ();
