@@ -32,7 +32,7 @@ typedef struct
 {
   GtkWidget      *window;
 
-  GSimpleAction  *view;
+  GSimpleAction  *view_action;
   GSettings      *settings;
   GcalManager    *manager;
 
@@ -145,9 +145,10 @@ gcal_application_activate (GApplication *application)
 
       g_object_bind_property (priv->window,
                               "new-event-mode",
-                              priv->view,
+                              priv->view_action,
                               "enabled",
-                              G_BINDING_DEFAULT | G_BINDING_INVERT_BOOLEAN);
+                              G_BINDING_DEFAULT |
+                              G_BINDING_INVERT_BOOLEAN);
 
       gtk_widget_show_all (priv->window);
     }
@@ -254,14 +255,14 @@ gcal_application_set_app_menu (GApplication *app)
   g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (search));
   g_menu_append (app_menu, _("Search"), "app.search");
 
-  priv->view = g_simple_action_new_stateful (
+  priv->view_action = g_simple_action_new_stateful (
       "view",
       G_VARIANT_TYPE_STRING,
       g_settings_get_value (priv->settings, "active-view"));
 
-  g_signal_connect (priv->view, "activate",
+  g_signal_connect (priv->view_action, "activate",
                     G_CALLBACK (gcal_application_change_view), app);
-  g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (priv->view));
+  g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (priv->view_action));
 
   view_as = g_menu_new ();
   g_menu_append (view_as, _("Day"), "app.view::day");
@@ -392,7 +393,7 @@ gcal_application_changed_view (GSettings *settings,
   GcalApplicationPrivate *priv;
 
   priv = gcal_application_get_instance_private (GCAL_APPLICATION (user_data));
-  g_simple_action_set_state (priv->view,
+  g_simple_action_set_state (priv->view_action,
                              g_settings_get_value (priv->settings,
                                                    "active-view"));
 }

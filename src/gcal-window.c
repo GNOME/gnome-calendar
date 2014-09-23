@@ -389,6 +389,9 @@ save_geometry (gpointer user_data)
  * @window:
  *
  * Calling update view on the active view
+ * For the view:
+ * - update the date the view will present
+ * - recreate the child widgets representing the events for that date
  **/
 static void
 update_view (GcalWindow *window)
@@ -428,6 +431,15 @@ update_view (GcalWindow *window)
   g_free (header);
 }
 
+/**
+ * view_changed:
+ * @object:
+ * @pspec:
+ * @user_data:
+ *
+ * Retrieve the enum value representing the view, update internal
+ * @active_view with it and call @update_view
+ **/
 static void
 view_changed (GObject    *object,
               GParamSpec *pspec,
@@ -472,7 +484,7 @@ set_new_event_mode (GcalWindow *window,
   priv->new_event_mode = enabled;
   g_object_notify (G_OBJECT (window), "new-event-mode");
 
-  if (! enabled)
+  if (! enabled && priv->views[priv->active_view] != NULL)
     gcal_view_clear_marks (GCAL_VIEW (priv->views[priv->active_view]));
 
   /* XXX: here we could disable clicks from the views, yet */
