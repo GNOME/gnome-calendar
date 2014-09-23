@@ -75,11 +75,11 @@ gnome_calendar_LDADD =                                    \
   $(top_builddir)/libgd/libgd.la                          \
   $(CALENDAR_LIBS)
 
-resource_files = $(shell glib-compile-resources --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/calendar.gresource.xml)
-gcal-resources.c: calendar.gresource.xml $(resource_files)
-	glib-compile-resources --target=$@ --sourcedir=$(srcdir) --generate-source --c-name calendar $(srcdir)/calendar.gresource.xml
-gcal-resources.h: calendar.gresource.xml $(resource_files)
-	glib-compile-resources --target=$@ --sourcedir=$(srcdir) --generate-header --c-name calendar $(srcdir)/calendar.gresource.xml
+resource_files = $(shell glib-compile-resources --sourcedir=$(top_srcdir)/data --generate-dependencies $(top_srcdir)/data/calendar.gresource.xml)
+gcal-resources.c: $(top_srcdir)/data/calendar.gresource.xml $(resource_files)
+	glib-compile-resources --target=$@ --sourcedir=$(top_srcdir)/data --generate-source --c-name calendar $(top_srcdir)/data/calendar.gresource.xml
+gcal-resources.h: $(top_srcdir)/data/calendar.gresource.xml $(resource_files)
+	glib-compile-resources --target=$@ --sourcedir=$(top_srcdir)/data --generate-header --c-name calendar $(top_srcdir)/data/calendar.gresource.xml
 
 ENUM_TYPES =                                              \
     gcal-utils.h

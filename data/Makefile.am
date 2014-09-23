@@ -15,13 +15,14 @@ gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 @INTLTOOL_XML_NOMERGE_RULE@
 @GSETTINGS_RULES@
 
-styledir = $(pkgdatadir)/style
-
-dist_style_DATA =               \
-	theme/gtk-styles.css
-
 EXTRA_DIST=                     \
   gnome-calendar.desktop        \
+  calendar.gresource.xml        \
+  ui/nav_bar.ui                 \
+  ui/new-event.ui               \
+  ui/viewport.ui                \
+  theme/gtk-styles.css          \
+  theme/close-window.svg        \
   $(desktop_in_files)           \
   $(gsettingsschema_in_files)
 
