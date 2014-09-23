@@ -795,20 +795,20 @@ gcal_window_constructed (GObject *object)
                           "sensitive",
                           G_BINDING_DEFAULT | G_BINDING_INVERT_BOOLEAN);
 
+  /* header_bar: menu */
+  menu_button = gd_header_menu_button_new ();
+  gd_header_button_set_label (GD_HEADER_BUTTON (menu_button),
+                              _("Settings"));
+  gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (menu_button),
+                                           "open-menu-symbolic");
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), menu_button);
+
   /* header_bar: search */
   search_button = gd_header_toggle_button_new ();
   gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (search_button),
                                            "edit-find-symbolic");
   gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), search_button);
 
-  /* header_bar: menu */
-  menu_button = gd_header_menu_button_new ();
-  gd_header_button_set_label (GD_HEADER_BUTTON (menu_button),
-                              _("Settings"));
-  gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (menu_button),
-                                           "emblem-system-symbolic");
-
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), menu_button);
   gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->header_bar),
                                         TRUE);
 
