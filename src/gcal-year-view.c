@@ -751,7 +751,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
                                &ligther_color);
   gtk_style_context_get_color (context, state, &color);
   gtk_style_context_get (context, state, "font", &font, NULL);
-  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+  gdk_cairo_set_source_rgba (cr, &color);
 
   pango_layout_set_font_description (layout, font);
 
@@ -777,11 +777,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
           last_cell = priv->start_mark_cell;
         }
 
-      cairo_set_source_rgba (cr,
-                             background_selected_color.red,
-                             background_selected_color.green,
-                             background_selected_color.blue,
-                             background_selected_color.alpha);
+      gdk_cairo_set_source_rgba (cr, &background_selected_color);
 
       for (rows = 0; rows < last_cell / 6 - first_cell / 6 + 1; rows++)
         {
@@ -803,10 +799,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
       cairo_restore (cr);
     }
 
-  cairo_set_source_rgb (cr,
-                        ligther_color.red,
-                        ligther_color.green,
-                        ligther_color.blue);
+  gdk_cairo_set_source_rgba (cr, &ligther_color);
 
   /* drawing grid text */
   for (i = 0; i < 2; i++)
@@ -815,10 +808,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
         {
           if (priv->date->month == i * 6 + j + 1)
             {
-              cairo_set_source_rgb (cr,
-                                    selected_color.red,
-                                    selected_color.green,
-                                    selected_color.blue);
+              gdk_cairo_set_source_rgba (cr, &selected_color);
             }
 
           pango_layout_set_text (layout, gcal_get_month_name (i * 6 + j), -1);
@@ -832,10 +822,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
 
           if (priv->date->month == i * 6 + j + 1)
             {
-              cairo_set_source_rgb (cr,
-                                    ligther_color.red,
-                                    ligther_color.green,
-                                    ligther_color.blue);
+              gdk_cairo_set_source_rgba (cr, &ligther_color);
 
             }
         }
@@ -844,30 +831,27 @@ gcal_year_view_draw_grid (GcalYearView *view,
   g_object_unref (layout);
 
   /* drawing grid skel */
-  cairo_set_line_width (cr, 0.3);
+  cairo_set_line_width (cr, 0.4);
 
   /* vertical lines */
   for (i = 0; i < 5; i++)
     {
-      //FIXME: ensure x coordinate has an integer value plus 0.4
-      cairo_move_to (cr, (alloc->width / 6) * (i + 1) + 0.4, 0);
+      gint pos_x = (alloc->width / 6) * (i + 1);
+      cairo_move_to (cr, pos_x + 0.3, 0);
       cairo_rel_line_to (cr, 0, alloc->height);
     }
 
   for (i = 0; i < 2; i++)
     {
-      //FIXME: ensure y coordinate has an integer value plus 0.4
-      cairo_move_to (cr, 0, (alloc->height / 2) * i + 0.4);
+      gint pos_y = (alloc->height / 2) * i;
+      cairo_move_to (cr, 0, pos_y + 0.3);
       cairo_rel_line_to (cr, alloc->width, 0);
     }
 
   cairo_stroke (cr);
 
   /* drawing current month marker */
-  cairo_set_source_rgb (cr,
-                        selected_color.red,
-                        selected_color.green,
-                        selected_color.blue);
+  gdk_cairo_set_source_rgba (cr, &selected_color);
 
   /* Two pixel line on the selected day cell */
   cairo_set_line_width (cr, 2.0);
