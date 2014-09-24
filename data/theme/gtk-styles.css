@@ -1,6 +1,6 @@
 .views {
     /* background color of every view */
-    background-color: #fafafa;
+    background-color: @theme_base_color;
     background-image: none;
 }
 
@@ -31,8 +31,8 @@
 }
 
 .calendar-view:selected {
-    color: #0C73E5;
-    background-color: shade (#fff, 0.8);
+    color: @theme_selected_bg_color;
+    background-color: shade (@theme_base_color, 0.9);
     font: bold;
 }
 
