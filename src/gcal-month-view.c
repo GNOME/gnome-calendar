@@ -501,7 +501,6 @@ gcal_month_view_draw (GtkWidget *widget,
   GdkRGBA color;
   GdkRGBA ligther_color;
   GdkRGBA selected_color;
-  GdkRGBA background_lighter_color;
   GdkRGBA background_selected_color;
 
   GtkBorder header_padding;
@@ -528,6 +527,9 @@ gcal_month_view_draw (GtkWidget *widget,
   gint lower_mark;
   gint upper_mark;
 
+  gint pos_y;
+  gint pos_x;
+
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
 
   /* fonts and colors selection */
@@ -549,10 +551,6 @@ gcal_month_view_draw (GtkWidget *widget,
                                           state | GTK_STATE_FLAG_SELECTED,
                                           &background_selected_color);
 
-  gtk_style_context_get_background_color (context,
-                                          state | GTK_STATE_FLAG_INSENSITIVE,
-                                          &background_lighter_color);
-
   gtk_style_context_get_color (context,
                                state | GTK_STATE_FLAG_INSENSITIVE,
                                &ligther_color);
@@ -569,7 +567,8 @@ gcal_month_view_draw (GtkWidget *widget,
   gtk_style_context_restore (context);
 
   /* calculations */
-  days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
+  days = priv->days_delay + icaltime_days_in_month (priv->date->month,
+                                                    priv->date->year);
   shown_rows = ceil (days / 7.0);
   february_gap = shown_rows == 4 ? 1 : 0;
 
@@ -581,7 +580,7 @@ gcal_month_view_draw (GtkWidget *widget,
   /* drawing grid text */
   bold_font = pango_font_description_copy (font);
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
-  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+  gdk_cairo_set_source_rgba (cr, &color);
   for (i = 0; i < 7; i++)
     {
       pango_layout_set_font_description (layout, bold_font);
@@ -616,10 +615,7 @@ gcal_month_view_draw (GtkWidget *widget,
       upper_mark = -2;
     }
 
-  cairo_set_source_rgb (cr,
-                        ligther_color.red,
-                        ligther_color.green,
-                        ligther_color.blue);
+  gdk_cairo_set_source_rgba (cr, &ligther_color);
 
   for (i = priv->days_delay + 7 * february_gap; i < days + 7 * february_gap; i++)
     {
@@ -634,31 +630,22 @@ gcal_month_view_draw (GtkWidget *widget,
       if (lower_mark <= i &&
           i <= upper_mark)
         {
-          cairo_set_source_rgba (cr,
-                                 background_selected_color.red,
-                                 background_selected_color.green,
-                                 background_selected_color.blue,
-                                 background_selected_color.alpha);
+          gdk_cairo_set_source_rgba (cr, &background_selected_color);
+          pos_y = ((alloc.height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y;
           cairo_rectangle (cr,
                            (alloc.width / 7) * column,
-                           ((alloc.height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y + 0.4,
+                           pos_y + 0.3,
                            alloc.width / 7,
                            (alloc.height - start_grid_y ) / 6);
           cairo_fill (cr);
-          cairo_set_source_rgb (cr,
-                                ligther_color.red,
-                                ligther_color.green,
-                                ligther_color.blue);
+          gdk_cairo_set_source_rgba (cr, &ligther_color);
 
         }
 
       /* drawing selected_day */
       if (priv->date->day == nr_day_i)
         {
-          cairo_set_source_rgb (cr,
-                                selected_color.red,
-                                selected_color.green,
-                                selected_color.blue);
+          gdk_cairo_set_source_rgba (cr, &selected_color);
           pango_layout_set_font_description ( layout, selected_font);
         }
 
@@ -666,34 +653,28 @@ gcal_month_view_draw (GtkWidget *widget,
       pango_cairo_update_layout (cr, layout);
       pango_layout_get_pixel_size (layout, &font_width, &font_height);
 
-      cairo_move_to (
-                     cr,
+      pos_y = ((alloc.height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y + padding.top;
+      cairo_move_to (cr,
                      (alloc.width / 7) * column + header_padding.left,
-                     ((alloc.height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y + 0.4 + padding.top);
+                     pos_y + 0.3);
 
       pango_cairo_show_layout (cr, layout);
 
       if (priv->date->day == nr_day_i)
         {
           /* drawing current_unit cell */
-          cairo_set_source_rgb (cr,
-                                selected_color.red,
-                                selected_color.green,
-                                selected_color.blue);
+          gdk_cairo_set_source_rgba (cr, &selected_color);
 
           /* Two pixel line on the selected day cell */
           cairo_set_line_width (cr, 2.0);
-          cairo_move_to (
-                  cr,
-                  (alloc.width / 7) * column,
-                  ((alloc.height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y + 0.4);
+          pos_y = ((alloc.height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y;
+          cairo_move_to (cr,
+                         (alloc.width / 7) * column,
+                         pos_y + 1);
           cairo_rel_line_to (cr, (alloc.width / 7), 0);
           cairo_stroke (cr);
 
-          cairo_set_source_rgb (cr,
-                                ligther_color.red,
-                                ligther_color.green,
-                                ligther_color.blue);
+          gdk_cairo_set_source_rgba (cr, &ligther_color);
           pango_layout_set_font_description (layout, font);
         }
 
@@ -702,10 +683,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
   /* drawing grid skel */
   /* graying out month slices */
-  cairo_set_source_rgb (cr,
-                        background_lighter_color.red,
-                        background_lighter_color.green,
-                        background_lighter_color.blue);
+  gdk_cairo_set_source_rgba (cr, &background_selected_color);
   if (h_lines == 6)
     {
       cairo_rectangle (cr,
@@ -721,9 +699,10 @@ gcal_month_view_draw (GtkWidget *widget,
     {
       gint column = i % 7;
       gint row = i / 7;
+      pos_y = ((alloc.height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y;
       cairo_rectangle (cr,
                        (alloc.width / 7) * column,
-                       ((alloc.height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y + 0.4,
+                       pos_y + 0.3,
                        alloc.width / 7, (alloc.height - start_grid_y ) / 6);
     }
   /* final gap */
@@ -731,36 +710,35 @@ gcal_month_view_draw (GtkWidget *widget,
     {
       gint column = i % 7;
       gint row = i / 7;
+      pos_y = ((alloc.height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y;
       cairo_rectangle (cr,
                        (alloc.width / 7) * column,
-                       ((alloc.height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y + 0.4,
+                       pos_y + 0.3,
                        alloc.width / 7, (alloc.height - start_grid_y ) / 6);
     }
   cairo_fill (cr);
 
   /* lines */
-  cairo_set_source_rgb (cr,
-                        ligther_color.red,
-                        ligther_color.green,
-                        ligther_color.blue);
-  cairo_set_line_width (cr, 0.3);
+  gdk_cairo_set_source_rgba (cr, &ligther_color);
+  cairo_set_line_width (cr, 0.4);
 
   /* vertical lines, the easy ones */
   for (i = 0; i < 6; i++)
     {
-      /* FIXME: ensure x coordinate has an integer value plus 0.4 */
-      cairo_move_to (cr, (alloc.width / 7) * (i + 1) + 0.4, start_grid_y);
+      pos_x = (alloc.width / 7) * (i + 1);
+      cairo_move_to (cr, pos_x + 0.3, start_grid_y);
       cairo_rel_line_to (cr, 0, alloc.height - start_grid_y);
     }
 
   /* top and bottom horizontal lines */
-  cairo_move_to (cr, 0, start_grid_y + 0.4);
+  cairo_move_to (cr, 0, start_grid_y + 0.3);
   cairo_rel_line_to (cr, alloc.width, 0);
 
   /* drawing weeks lines */
   for (i = 0; i < h_lines; i++)
     {
-      cairo_move_to (cr, 0, ((alloc.height - start_grid_y ) / 6) * (i + lines_gap) + start_grid_y + 0.4);
+      pos_y = ((alloc.height - start_grid_y) / 6) * (i + lines_gap) + start_grid_y;
+      cairo_move_to (cr, 0, pos_y + 0.3);
       cairo_rel_line_to (cr, alloc.width, 0);
     }
 
