@@ -755,12 +755,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
 
   pango_layout_set_font_description (layout, font);
 
-  gtk_style_context_save (context);
-  gtk_style_context_add_region (context, "header", 0);
-
   gtk_style_context_get_padding (context, state, &header_padding);
-
-  gtk_style_context_restore (context);
 
   /* drawing new-event mark */
   if (priv->start_mark_cell != -1 &&
