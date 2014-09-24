@@ -559,12 +559,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
   pango_layout_set_font_description (layout, font);
 
-  gtk_style_context_save (context);
-  gtk_style_context_add_region (context, "header", 0);
-
   gtk_style_context_get_padding (context, state, &header_padding);
-
-  gtk_style_context_restore (context);
 
   /* calculations */
   days = priv->days_delay + icaltime_days_in_month (priv->date->month,
