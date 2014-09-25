@@ -73,12 +73,6 @@ struct _GcalWeekViewPrivate
   GdkWindow      *event_window;
 
   gint            clicked_cell;
-
-  /* helpers */
-  GdkRectangle   *prev_rectangle;
-  GdkRectangle   *next_rectangle;
-  gboolean        clicked_prev;
-  gboolean        clicked_next;
 };
 
 static void           gcal_view_interface_init             (GcalViewIface  *iface);
@@ -212,12 +206,6 @@ gcal_week_view_init (GcalWeekView *self)
 
   priv = gcal_week_view_get_instance_private (self);
 
-  priv->prev_rectangle = NULL;
-  priv->next_rectangle = NULL;
-
-  priv->clicked_prev = FALSE;
-  priv->clicked_next = FALSE;
-
   for (i = 0; i < 7; i++)
     {
       priv->days[i] = NULL;
@@ -289,11 +277,6 @@ gcal_week_view_finalize (GObject       *object)
       gtk_widget_unparent (priv->vscrollbar);
       g_clear_object (&(priv->vscrollbar));
     }
-
-  if (priv->prev_rectangle != NULL)
-    g_free (priv->prev_rectangle);
-  if (priv->next_rectangle != NULL)
-    g_free (priv->next_rectangle);
 
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_week_view_parent_class)->finalize (object);
@@ -762,22 +745,8 @@ gcal_week_view_button_press_event (GtkWidget      *widget,
 
   if (y - start_grid_y < 0)
     {
-      if (priv->prev_rectangle->x < x &&
-          x < priv->prev_rectangle->x + priv->prev_rectangle->width &&
-          priv->prev_rectangle->y < y &&
-          y < priv->prev_rectangle->y + priv->prev_rectangle->height)
-        {
-          priv->clicked_prev = TRUE;
-        }
-      else if (priv->next_rectangle->x < x &&
-          x < priv->next_rectangle->x + priv->next_rectangle->width &&
-          priv->next_rectangle->y < y &&
-          y < priv->next_rectangle->y + priv->next_rectangle->height)
-        {
-          priv->clicked_next = TRUE;
-        }
-
-      return TRUE;
+      /* FIXME: click on the header should create all day events */
+      return FALSE;
     }
 
   return FALSE;
@@ -800,44 +769,12 @@ gcal_week_view_button_release_event (GtkWidget      *widget,
 
   if (y - start_grid_y < 0)
     {
-      if (priv->prev_rectangle->x < x &&
-          x < priv->prev_rectangle->x + priv->prev_rectangle->width &&
-          priv->prev_rectangle->y < y &&
-          y < priv->prev_rectangle->y + priv->prev_rectangle->height &&
-          priv->clicked_prev)
-        {
-          icaltimetype *prev_week;
-          prev_week = gcal_view_get_date (GCAL_VIEW (widget));
-          icaltime_adjust (prev_week, - 7, 0, 0, 0);
-
-          g_signal_emit_by_name (GCAL_VIEW (widget), "updated", prev_week);
-
-          g_free (prev_week);
-        }
-      else if (priv->next_rectangle->x < x &&
-          x < priv->next_rectangle->x + priv->next_rectangle->width &&
-          priv->next_rectangle->y < y &&
-          y < priv->next_rectangle->y + priv->next_rectangle->height &&
-          priv->clicked_next)
-        {
-          icaltimetype *next_week;
-          next_week = gcal_view_get_date (GCAL_VIEW (widget));
-
-          icaltime_adjust (next_week, 7, 0, 0, 0);
-          g_signal_emit_by_name (GCAL_VIEW (widget), "updated", next_week);
-
-          g_free (next_week);
-        }
-
+      /* FIXME: click on the header should create all day events */
       priv->clicked_cell = -1;
-      priv->clicked_prev = FALSE;
-      priv->clicked_next = FALSE;
-      return TRUE;
+      return FALSE;
     }
 
   priv->clicked_cell = -1;
-  priv->clicked_prev = FALSE;
-  priv->clicked_next = FALSE;
   return FALSE;
 }
 
@@ -1086,94 +1023,6 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   gtk_style_context_get (context, state, "font", &font_desc, NULL);
   pango_layout_set_font_description (layout, font_desc);
 
-  /* Here translators should put the widgest letter in their alphabet, this
-   * taken to make it align with week-view header, which is the larger for now */
-  pango_layout_set_text (layout, _("WWW 99 - WWW 99"), -1);
-  pango_cairo_update_layout (cr, layout);
-  pango_layout_get_pixel_size (layout, &layout_width, &layout_height);
-
-  start_of_week = gcal_week_view_get_initial_date (GCAL_VIEW (view));
-  tm_date = icaltimetype_to_tm (start_of_week);
-  e_utf8_strftime_fix_am_pm (start_date, 64, "%b %d", &tm_date);
-
-  end_of_week = gcal_week_view_get_final_date (GCAL_VIEW (view));
-  tm_date = icaltimetype_to_tm (end_of_week);
-  e_utf8_strftime_fix_am_pm (end_date, 64, "%b %d", &tm_date);
-
-  left_header = g_strdup_printf ("%s - %s", start_date, end_date);
-  right_header = g_strdup_printf ("%s %d, %d",
-                                  _("Week"),
-                                  icaltime_week_number (*start_of_week) + 1,
-                                  priv->date->year);
-
-  pango_layout_set_text (layout, left_header, -1);
-  pango_cairo_update_layout (cr, layout);
-  pango_layout_get_pixel_size (layout, &header_width, NULL);
-
-  cairo_move_to (cr,
-                 alloc->x + header_padding.left + ((layout_width - header_width) / 2),
-                 alloc->y + header_padding.top);
-  pango_cairo_show_layout (cr, layout);
-
-  /* Drawing arrows */
-  icon_theme = gtk_icon_theme_get_default ();
-  pixbuf = gtk_icon_theme_load_icon (icon_theme,
-                                     "go-previous-symbolic",
-                                     layout_height,
-                                     0,
-                                     NULL);
-
-  gdk_cairo_set_source_pixbuf (cr,
-                               pixbuf,
-                               alloc->x + layout_width + 2 * header_padding.left,
-                               alloc->y + header_padding.top);
-  g_object_unref (pixbuf);
-  cairo_paint (cr);
-
-  pixbuf = gtk_icon_theme_load_icon (icon_theme,
-                                     "go-next-symbolic",
-                                     layout_height,
-                                     0,
-                                     NULL);
-
-  gdk_cairo_set_source_pixbuf (cr,
-                               pixbuf,
-                               alloc->x + layout_width + 2 * header_padding.left + layout_height,
-                               alloc->y + header_padding.top);
-  g_object_unref (pixbuf);
-  cairo_paint (cr);
-
-  /* allocating rects */
-  if (priv->prev_rectangle == NULL)
-    priv->prev_rectangle = g_new0 (GdkRectangle, 1);
-  priv->prev_rectangle->x = alloc->x + layout_width + 2 * header_padding.left;
-  priv->prev_rectangle->y = alloc->y + header_padding.top;
-  priv->prev_rectangle->width = layout_height;
-  priv->prev_rectangle->height = layout_height;
-
-  if (priv->next_rectangle == NULL)
-    priv->next_rectangle = g_new0 (GdkRectangle, 1);
-  priv->next_rectangle->x = alloc->x + layout_width + 2 * header_padding.left + layout_height;
-  priv->next_rectangle->y = alloc->y + header_padding.top;
-  priv->next_rectangle->width = layout_height;
-  priv->next_rectangle->height = layout_height;
-
-  gtk_style_context_get_color (context,
-                               state | GTK_STATE_FLAG_INSENSITIVE,
-                               &color);
-  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
-
-  pango_layout_set_text (layout, right_header, -1);
-  pango_cairo_update_layout (cr, layout);
-  pango_layout_get_pixel_size (layout, &layout_width, NULL);
-
-  cairo_move_to (cr,
-                 alloc->width - header_padding.right - layout_width,
-                 alloc->y + header_padding.top);
-  pango_cairo_show_layout (cr, layout);
-
-  gtk_style_context_restore (context);
-
   /* grid header */
   gtk_style_context_get_color (context, state, &color);
   cairo_set_source_rgb (cr, color.red, color.green, color.blue);
@@ -1181,6 +1030,9 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   gtk_style_context_get (context, state, "font", &bold_font, NULL);
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
   pango_layout_set_font_description (layout, bold_font);
+
+  start_of_week = gcal_week_view_get_initial_date (GCAL_VIEW (view));
+  end_of_week = gcal_week_view_get_initial_date (GCAL_VIEW (view));
 
   sidebar_width = gcal_week_view_get_sidebar_width (widget);
   for (i = 0; i < 7; i++)
@@ -1201,7 +1053,7 @@ gcal_week_view_draw_header (GcalWeekView  *view,
       pango_layout_get_pixel_size (layout, NULL, &font_height);
       cairo_move_to (cr,
                      padding->left + ((alloc->width  - sidebar_width)/ 7) * i + sidebar_width,
-                     start_grid_y - padding->bottom - font_height - (2 * font_height));
+                     start_grid_y - padding->bottom - (2 * font_height));
       pango_cairo_show_layout (cr, layout);
 
       cairo_save (cr);
@@ -1212,8 +1064,8 @@ gcal_week_view_draw_header (GcalWeekView  *view,
 
       cairo_move_to (cr,
                      ((alloc->width  - sidebar_width)/ 7) * i + sidebar_width + 0.4,
-                     start_grid_y - (2 * font_height));
-      cairo_rel_line_to (cr, 0, 2 * font_height);
+                     start_grid_y - font_height);
+      cairo_rel_line_to (cr, 0, font_height);
       cairo_stroke (cr);
       cairo_restore (cr);
 
@@ -1225,7 +1077,7 @@ gcal_week_view_draw_header (GcalWeekView  *view,
                                state | GTK_STATE_FLAG_INSENSITIVE,
                                &color);
   cairo_set_source_rgb (cr, color.red, color.green, color.blue);
-  cairo_move_to (cr, sidebar_width, start_grid_y - (2 * font_height) + 0.4);
+  cairo_move_to (cr, sidebar_width, start_grid_y - font_height + 0.4);
   cairo_rel_line_to (cr, alloc->width - sidebar_width, 0);
 
   cairo_stroke (cr);
@@ -1234,8 +1086,6 @@ gcal_week_view_draw_header (GcalWeekView  *view,
 
   g_free (start_of_week);
   g_free (end_of_week);
-  g_free (left_header);
-  g_free (right_header);
   pango_font_description_free (bold_font);
   pango_font_description_free (font_desc);
   g_object_unref (layout);
@@ -1393,7 +1243,6 @@ gcal_week_view_get_start_grid_y (GtkWidget *widget)
 {
   GtkStyleContext *context;
   GtkBorder padding;
-  GtkBorder header_padding;
 
   PangoLayout *layout;
   PangoFontDescription *font_desc;
@@ -1404,12 +1253,9 @@ gcal_week_view_get_start_grid_y (GtkWidget *widget)
   layout = pango_layout_new (gtk_widget_get_pango_context (widget));
 
   /* init header values */
-  gtk_style_context_save (context);
-  gtk_style_context_add_region (context, "header", 0);
-
   gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
                                  gtk_widget_get_state_flags (widget),
-                                 &header_padding);
+                                 &padding);
 
   gtk_style_context_get (context,
                          gtk_widget_get_state_flags(widget),
@@ -1420,23 +1266,7 @@ gcal_week_view_get_start_grid_y (GtkWidget *widget)
   pango_font_description_free (font_desc);
 
   /* 6: is padding around the header */
-  start_grid_y = header_padding.top + font_height + header_padding.bottom;
-  gtk_style_context_restore (context);
-
-  /* init grid values */
-  gtk_style_context_get (context,
-                         gtk_widget_get_state_flags(widget),
-                         "font", &font_desc,
-                         NULL);
-  pango_layout_set_font_description (layout, font_desc);
-  pango_layout_get_pixel_size (layout, NULL, &font_height);
-  pango_font_description_free (font_desc);
-
-  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
-                                 gtk_widget_get_state_flags (widget),
-                                 &padding);
-
-  start_grid_y += padding.top + font_height;
+  start_grid_y = padding.top + font_height + padding.bottom;
 
   /* for including the all-day cells */
   start_grid_y += 2 * font_height;
