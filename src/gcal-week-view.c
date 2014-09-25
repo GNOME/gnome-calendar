@@ -210,10 +210,7 @@ gcal_week_view_init (GcalWeekView *self)
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
-  self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self,
-                                            GCAL_TYPE_WEEK_VIEW,
-                                            GcalWeekViewPrivate);
-  priv = self->priv;
+  priv = gcal_week_view_get_instance_private (self);
 
   priv->prev_rectangle = NULL;
   priv->next_rectangle = NULL;
@@ -257,7 +254,7 @@ gcal_week_view_constructed (GObject *object)
   GcalWeekViewPrivate *priv;
 
   g_return_if_fail (GCAL_IS_WEEK_VIEW (object));
-  priv = GCAL_WEEK_VIEW (object)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (object));
 
   if (G_OBJECT_CLASS (gcal_week_view_parent_class)->constructed != NULL)
       G_OBJECT_CLASS (gcal_week_view_parent_class)->constructed (object);
@@ -280,7 +277,9 @@ gcal_week_view_constructed (GObject *object)
 static void
 gcal_week_view_finalize (GObject       *object)
 {
-  GcalWeekViewPrivate *priv = GCAL_WEEK_VIEW (object)->priv;
+  GcalWeekViewPrivate *priv;
+
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (object));
 
   if (priv->date != NULL)
     g_free (priv->date);
@@ -330,7 +329,7 @@ gcal_week_view_get_property (GObject       *object,
   GcalWeekViewPrivate *priv;
 
   g_return_if_fail (GCAL_IS_WEEK_VIEW (object));
-  priv = GCAL_WEEK_VIEW (object)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (object));
 
   switch (property_id)
     {
@@ -355,7 +354,7 @@ gcal_week_view_realize (GtkWidget *widget)
   gint i;
   GList *l;
 
-  priv = GCAL_WEEK_VIEW (widget)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (widget));
   gtk_widget_set_realized (widget, TRUE);
 
   gtk_widget_get_allocation (widget, &allocation);
@@ -427,7 +426,7 @@ gcal_week_view_unrealize (GtkWidget *widget)
 {
   GcalWeekViewPrivate *priv;
 
-  priv = GCAL_WEEK_VIEW (widget)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (widget));
   if (priv->view_window != NULL)
     {
       gdk_window_set_user_data (priv->view_window, NULL);
@@ -480,7 +479,7 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
   gint grid_height;
   gint view_height;
 
-  priv = GCAL_WEEK_VIEW (widget)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (widget));
 
   gtk_widget_set_allocation (widget, allocation);
 
@@ -628,7 +627,7 @@ gcal_week_view_draw (GtkWidget *widget,
   GtkAllocation alloc;
 
   g_return_val_if_fail (GCAL_IS_WEEK_VIEW (widget), FALSE);
-  priv = GCAL_WEEK_VIEW (widget)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (widget));
 
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
@@ -688,7 +687,7 @@ gcal_week_view_scroll_event (GtkWidget      *widget,
   g_return_val_if_fail (GCAL_IS_WEEK_VIEW (widget), FALSE);
   g_return_val_if_fail (event != NULL, FALSE);
 
-  priv = GCAL_WEEK_VIEW (widget)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (widget));
 
   if (gdk_event_get_scroll_deltas ((GdkEvent *) event, NULL, &delta_y))
     {
@@ -754,7 +753,7 @@ gcal_week_view_button_press_event (GtkWidget      *widget,
   gdouble x, y;
   gdouble start_grid_y;
 
-  priv = GCAL_WEEK_VIEW (widget)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (widget));
 
   x = event->x;
   y = event->y;
@@ -792,7 +791,7 @@ gcal_week_view_button_release_event (GtkWidget      *widget,
   gdouble x, y;
   gdouble start_grid_y;
 
-  priv = GCAL_WEEK_VIEW (widget)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (widget));
 
   x = event->x;
   y = event->y;
@@ -857,7 +856,7 @@ gcal_week_view_add (GtkContainer *container,
   g_return_if_fail (GCAL_IS_WEEK_VIEW (container));
   g_return_if_fail (GCAL_IS_EVENT_WIDGET (widget));
   g_return_if_fail (gtk_widget_get_parent (widget) == NULL);
-  priv = GCAL_WEEK_VIEW (container)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (container));
 
   /* Check if it's already added for date */
   date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
@@ -914,7 +913,7 @@ gcal_week_view_remove (GtkContainer *container,
 
   g_return_if_fail (GCAL_IS_WEEK_VIEW (container));
   g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
-  priv = GCAL_WEEK_VIEW (container)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (container));
 
   date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
   day = icaltime_day_of_week (*date);
@@ -952,7 +951,7 @@ gcal_week_view_forall (GtkContainer *container,
   gint i;
   GList *l;
 
-  priv = GCAL_WEEK_VIEW (container)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (container));
 
   for (i = 0; i < 7; i++)
     {
@@ -984,7 +983,7 @@ gcal_week_view_set_date (GcalWeekView *view,
   GList *l;
   GList *to_remove;
 
-  priv = view->priv;
+  priv = gcal_week_view_get_instance_private (view);
   will_resize = FALSE;
 
   /* if span_updated: queue_resize */
@@ -1056,7 +1055,7 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   GtkIconTheme *icon_theme;
   GdkPixbuf *pixbuf;
 
-  priv = view->priv;
+  priv = gcal_week_view_get_instance_private (view);
   widget = GTK_WIDGET (view);
 
   cairo_save (cr);
@@ -1262,7 +1261,7 @@ gcal_week_view_draw_grid_window (GcalWeekView  *view,
   PangoLayout *layout;
   PangoFontDescription *font_desc;
 
-  priv = view->priv;
+  priv = gcal_week_view_get_instance_private (view);
   widget = GTK_WIDGET (view);
 
   /* INSENSITIVE to make the lines ligther */
@@ -1453,7 +1452,7 @@ gcal_week_view_scroll_value_changed (GtkAdjustment *adjusment,
   GcalWeekViewPrivate *priv;
 
   g_return_if_fail (GCAL_IS_WEEK_VIEW (user_data));
-  priv = GCAL_WEEK_VIEW (user_data)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (user_data));
 
   if (priv->grid_window != NULL)
     {
@@ -1478,7 +1477,7 @@ gcal_week_view_get_initial_date (GcalView *view)
   icaltimetype *new_date;
 
   g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  priv = GCAL_WEEK_VIEW (view)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW(view));
   new_date = g_new0 (icaltimetype, 1);
   *new_date = icaltime_from_day_of_year (
       icaltime_day_of_year (*(priv->date)) - icaltime_day_of_week (*(priv->date)) + 1,
@@ -1501,7 +1500,7 @@ gcal_week_view_get_final_date (GcalView *view)
   icaltimetype *new_date;
 
   g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  priv = GCAL_WEEK_VIEW (view)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW(view));
   new_date = g_new0 (icaltimetype, 1);
   *new_date = icaltime_from_day_of_year (
       icaltime_day_of_year (*(priv->date)) + 7 - icaltime_day_of_week (*(priv->date)),
@@ -1564,7 +1563,7 @@ gcal_week_view_draw_event (GcalView     *view,
   GcalWeekViewPrivate *priv;
 
   g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), FALSE);
-  priv = GCAL_WEEK_VIEW (view)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW(view));
 
   if (priv->date == NULL)
     return FALSE;
@@ -1589,7 +1588,7 @@ gcal_week_view_get_by_uuid (GcalView    *view,
   GList *l;
 
   g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  priv = GCAL_WEEK_VIEW (view)->priv;
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW(view));
 
   for (i = 0; i < 7; i++)
     {
