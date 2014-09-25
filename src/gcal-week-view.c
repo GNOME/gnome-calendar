@@ -149,6 +149,10 @@ static icaltimetype*  gcal_week_view_get_initial_date      (GcalView       *view
 
 static icaltimetype*  gcal_week_view_get_final_date        (GcalView       *view);
 
+static gchar*         gcal_week_view_get_left_header       (GcalView       *view);
+
+static gchar*         gcal_week_view_get_right_header      (GcalView       *view);
+
 static gboolean       gcal_week_view_draw_event            (GcalView       *view,
                                                             icaltimetype   *start_date,
                                                             icaltimetype   *end_date);
@@ -159,6 +163,7 @@ static GtkWidget*     gcal_week_view_get_by_uuid           (GcalView       *view
 G_DEFINE_TYPE_WITH_CODE (GcalWeekView,
                          gcal_week_view,
                          GTK_TYPE_CONTAINER,
+                         G_ADD_PRIVATE (GcalWeekView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
                                                 gcal_view_interface_init));
 
@@ -235,9 +240,15 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->get_initial_date = gcal_week_view_get_initial_date;
   iface->get_final_date = gcal_week_view_get_final_date;
 
-  iface->draw_event = gcal_week_view_draw_event;
+  /* iface->mark_current_unit = gcal_week_view_mark_current_unit; */
+  /* iface->clear_marks = gcal_week_view_clear_marks; */
 
+  iface->get_left_header = gcal_week_view_get_left_header;
+  iface->get_right_header = gcal_week_view_get_right_header;
+
+  iface->draw_event = gcal_week_view_draw_event;
   iface->get_by_uuid = gcal_week_view_get_by_uuid;
+  /* iface->clear = gcal_week_view_clear; */
 }
 
 static void
@@ -1497,6 +1508,52 @@ gcal_week_view_get_final_date (GcalView *view)
       priv->date->year);
 
   return new_date;
+}
+
+static gchar*
+gcal_week_view_get_left_header (GcalView *view)
+{
+  icaltimetype *start_of_week;
+  icaltimetype *end_of_week;
+  gchar start_date[64];
+  gchar end_date[64];
+  struct tm tm_date;
+  gchar *header;
+
+  start_of_week = gcal_week_view_get_initial_date (view);
+  tm_date = icaltimetype_to_tm (start_of_week);
+  e_utf8_strftime_fix_am_pm (start_date, 64, "%b %d", &tm_date);
+
+  end_of_week = gcal_week_view_get_final_date (view);
+  tm_date = icaltimetype_to_tm (end_of_week);
+  e_utf8_strftime_fix_am_pm (end_date, 64, "%b %d", &tm_date);
+
+  header = g_strdup_printf ("%s - %s", start_date, end_date);
+
+  g_free (start_of_week);
+  g_free (end_of_week);
+
+  return header;
+}
+
+static gchar*
+gcal_week_view_get_right_header (GcalView *view)
+{
+  GcalWeekViewPrivate *priv;
+
+  icaltimetype *start_of_week;
+  gchar *header;
+
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (view));
+  start_of_week = gcal_week_view_get_initial_date (view);
+  header = g_strdup_printf ("%s %d, %d",
+                            _("Week"),
+                            icaltime_week_number (*start_of_week) + 1,
+                            priv->date->year);
+
+  g_free (start_of_week);
+
+  return header;
 }
 
 static gboolean
