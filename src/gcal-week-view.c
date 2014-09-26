@@ -54,7 +54,7 @@ struct _GcalWeekViewChild
 
 typedef struct _GcalWeekViewChild GcalWeekViewChild;
 
-struct _GcalWeekViewPrivate
+typedef struct
 {
   /**
    * This is where we keep the refs of the child widgets.
@@ -75,7 +75,7 @@ struct _GcalWeekViewPrivate
   GdkWindow      *event_window;
 
   gint            clicked_cell;
-};
+} GcalWeekViewPrivate;
 
 static void           gcal_view_interface_init             (GcalViewIface  *iface);
 
@@ -192,8 +192,6 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   object_class->get_property = gcal_week_view_get_property;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
-
-  g_type_class_add_private ((gpointer)klass, sizeof (GcalWeekViewPrivate));
 }
 
 
