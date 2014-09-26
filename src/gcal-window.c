@@ -1597,7 +1597,9 @@ gcal_window_new_with_view (GcalApplication   *app,
 
   manager = gcal_application_get_manager (GCAL_APPLICATION (app));
   /* FIXME: here read the initial date from somewehere */
-  date = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (manager));
+  date = icaltime_from_timet (time(NULL), 0);
+  date = icaltime_set_timezone (&date,
+                                gcal_manager_get_system_timezone (manager));
 
   win  =  g_object_new (GCAL_TYPE_WINDOW,
                         "application",
