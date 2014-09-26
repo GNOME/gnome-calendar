@@ -1128,6 +1128,10 @@ gcal_month_view_get_initial_date (GcalView *view)
 
   new_date = gcal_dup_icaltime (priv->date);
   new_date->day = 1;
+  new_date->is_date = 0;
+  new_date->hour = 0;
+  new_date->minute = 0;
+  new_date->second = 0;
 
   return new_date;
 }
@@ -1151,6 +1155,11 @@ gcal_month_view_get_final_date (GcalView *view)
 
   new_date = gcal_dup_icaltime (priv->date);
   new_date->day = icaltime_days_in_month (priv->date->month, priv->date->year);
+  new_date->is_date = 0;
+  new_date->hour = 23;
+  new_date->minute = 59;
+  new_date->second = 0;
+
   return new_date;
 }
 

@@ -1278,7 +1278,11 @@ gcal_week_view_get_initial_date (GcalView *view)
   *new_date = icaltime_from_day_of_year (
       icaltime_day_of_year (*(priv->date)) - icaltime_day_of_week (*(priv->date)) + 1,
       priv->date->year);
-
+  new_date->is_date = 0;
+  new_date->hour = 0;
+  new_date->minute = 0;
+  new_date->second = 0;
+  *new_date = icaltime_set_timezone (new_date, priv->date->zone);
   return new_date;
 }
 
@@ -1301,7 +1305,11 @@ gcal_week_view_get_final_date (GcalView *view)
   *new_date = icaltime_from_day_of_year (
       icaltime_day_of_year (*(priv->date)) + 7 - icaltime_day_of_week (*(priv->date)),
       priv->date->year);
-
+  new_date->is_date = 0;
+  new_date->hour = 23;
+  new_date->minute = 59;
+  new_date->second = 0;
+  *new_date = icaltime_set_timezone (new_date, priv->date->zone);
   return new_date;
 }
 
