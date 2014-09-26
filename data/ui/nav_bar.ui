@@ -6,10 +6,7 @@
     <property name="can_focus">False</property>
     <property name="hexpand">True</property>
     <property name="column_spacing">12</property>
-    <property name="margin_left">6</property>
-    <property name="margin_right">6</property>
-    <property name="margin_top">6</property>
-    <property name="margin_bottom">6</property>
+    <property name="margin">6</property>
     <child>
       <object class="GtkBox" id="nav_box">
         <property name="visible">True</property>
