@@ -228,6 +228,25 @@ key_pressed (GtkWidget   *widget,
       set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
       return TRUE;
     }
+  else
+    {
+      if ((event->state & GDK_META_MASK) != 0 ||
+          (event->state & GDK_CONTROL_MASK) != 0 ||
+          event->keyval == GDK_KEY_Control_L ||
+          event->keyval == GDK_KEY_Control_R ||
+          event->keyval == GDK_KEY_Meta_L ||
+          event->keyval == GDK_KEY_Meta_R ||
+          event->keyval == GDK_KEY_Alt_L ||
+          event->keyval == GDK_KEY_Alt_R)
+        {
+          return FALSE;
+        }
+
+      if (priv->search_mode && event->keyval == GDK_KEY_Escape)
+        gcal_window_set_search_mode (GCAL_WINDOW (widget), FALSE);
+      if (!priv->search_mode)
+        gcal_window_set_search_mode (GCAL_WINDOW (widget), TRUE);
+    }
 
   return FALSE;
 }
