@@ -29,6 +29,8 @@
 
 #include <math.h>
 
+#define ALL_DAY_CELLS_HEIGHT 40
+
 static const double dashed [] =
 {
   1.0,
@@ -622,7 +624,7 @@ gcal_week_view_draw (GtkWidget *widget,
   if (gtk_cairo_should_draw_window (cr, gtk_widget_get_window (widget)))
     {
       cairo_save (cr);
-      cairo_set_line_width (cr, 0.3);
+      cairo_set_line_width (cr, 0.4);
       gcal_week_view_draw_header (GCAL_WEEK_VIEW (widget),
                                   cr,
                                   &alloc,
@@ -960,39 +962,24 @@ gcal_week_view_draw_header (GcalWeekView  *view,
                             GtkAllocation *alloc,
                             GtkBorder     *padding)
 {
-  GcalWeekViewPrivate *priv;
   GtkWidget *widget;
   GtkStyleContext *context;
   GtkStateFlags state;
   GdkRGBA color;
-  GtkBorder header_padding;
 
   PangoLayout *layout;
   PangoFontDescription *bold_font;
-  PangoFontDescription *font_desc;
-  gint header_width;
-  gint layout_width;
-  gint layout_height;
-
-  gchar *left_header;
-  gchar *right_header;
-  gchar start_date[64];
-  gchar end_date[64];
 
   gint i;
+  gint pos_i;
   gint start_grid_y;
   gint font_height;
   gint sidebar_width;
   icaltimetype *start_of_week;
   icaltimetype *end_of_week;
-  struct tm tm_date;
 
   cairo_pattern_t *pattern;
 
-  GtkIconTheme *icon_theme;
-  GdkPixbuf *pixbuf;
-
-  priv = gcal_week_view_get_instance_private (view);
   widget = GTK_WIDGET (view);
 
   cairo_save (cr);
@@ -1012,21 +999,11 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   cairo_rectangle(cr, 0, start_grid_y, alloc->width, 6);
   cairo_fill(cr);
 
-  gtk_style_context_save (context);
-  gtk_style_context_add_region (context, "header", 0);
-
-  gtk_style_context_get_padding (context, state, &header_padding);
   gtk_style_context_get_color (context, state, &color);
-  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
-
-  layout = pango_cairo_create_layout (cr);
-  gtk_style_context_get (context, state, "font", &font_desc, NULL);
-  pango_layout_set_font_description (layout, font_desc);
+  gdk_cairo_set_source_rgba (cr, &color);
 
   /* grid header */
-  gtk_style_context_get_color (context, state, &color);
-  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
-
+  layout = pango_cairo_create_layout (cr);
   gtk_style_context_get (context, state, "font", &bold_font, NULL);
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
   pango_layout_set_font_description (layout, bold_font);
@@ -1053,19 +1030,18 @@ gcal_week_view_draw_header (GcalWeekView  *view,
       pango_layout_get_pixel_size (layout, NULL, &font_height);
       cairo_move_to (cr,
                      padding->left + ((alloc->width  - sidebar_width)/ 7) * i + sidebar_width,
-                     start_grid_y - padding->bottom - (2 * font_height));
+                     0.0);
       pango_cairo_show_layout (cr, layout);
 
       cairo_save (cr);
       gtk_style_context_get_color (context,
                                    state | GTK_STATE_FLAG_INSENSITIVE,
                                    &color);
-      cairo_set_source_rgb (cr, color.red, color.green, color.blue);
+      gdk_cairo_set_source_rgba (cr, &color);
 
-      cairo_move_to (cr,
-                     ((alloc->width  - sidebar_width)/ 7) * i + sidebar_width + 0.4,
-                     start_grid_y - font_height);
-      cairo_rel_line_to (cr, 0, font_height);
+      pos_i = ((alloc->width  - sidebar_width)/ 7) * i + sidebar_width;
+      cairo_move_to (cr, pos_i + 0.3, font_height + padding->bottom);
+      cairo_rel_line_to (cr, 0.0, ALL_DAY_CELLS_HEIGHT);
       cairo_stroke (cr);
       cairo_restore (cr);
 
@@ -1076,8 +1052,9 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   gtk_style_context_get_color (context,
                                state | GTK_STATE_FLAG_INSENSITIVE,
                                &color);
-  cairo_set_source_rgb (cr, color.red, color.green, color.blue);
-  cairo_move_to (cr, sidebar_width, start_grid_y - font_height + 0.4);
+  gdk_cairo_set_source_rgba (cr, &color);
+  pos_i = font_height + padding->bottom;
+  cairo_move_to (cr, sidebar_width, pos_i + 0.3);
   cairo_rel_line_to (cr, alloc->width - sidebar_width, 0);
 
   cairo_stroke (cr);
@@ -1087,7 +1064,6 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   g_free (start_of_week);
   g_free (end_of_week);
   pango_font_description_free (bold_font);
-  pango_font_description_free (font_desc);
   g_object_unref (layout);
 }
 
@@ -1261,15 +1237,16 @@ gcal_week_view_get_start_grid_y (GtkWidget *widget)
                          gtk_widget_get_state_flags(widget),
                          "font", &font_desc,
                          NULL);
+  pango_font_description_set_weight (font_desc, PANGO_WEIGHT_SEMIBOLD);
   pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, NULL, &font_height);
   pango_font_description_free (font_desc);
 
   /* 6: is padding around the header */
-  start_grid_y = padding.top + font_height + padding.bottom;
+  start_grid_y = font_height + padding.bottom;
 
   /* for including the all-day cells */
-  start_grid_y += 2 * font_height;
+  start_grid_y += ALL_DAY_CELLS_HEIGHT;
 
   g_object_unref (layout);
   return start_grid_y;
