@@ -32,6 +32,7 @@ typedef struct
   gboolean      has_reminders;
 
   GdkWindow    *event_window;
+  gboolean      button_pressed;
 } GcalEventWidgetPrivate;
 
 enum
@@ -91,6 +92,9 @@ static gboolean gcal_event_widget_draw                 (GtkWidget      *widget,
 static gboolean gcal_event_widget_button_press_event   (GtkWidget      *widget,
                                                         GdkEventButton *event);
 
+static gboolean gcal_event_widget_button_release_event (GtkWidget      *widget,
+                                                        GdkEventButton *event);
+
 G_DEFINE_TYPE_WITH_PRIVATE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET)
 
 static void
@@ -114,6 +118,7 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
   widget_class->size_allocate = gcal_event_widget_size_allocate;
   widget_class->draw = gcal_event_widget_draw;
   widget_class->button_press_event = gcal_event_widget_button_press_event;
+  widget_class->button_release_event = gcal_event_widget_button_release_event;
 
   g_object_class_install_property (object_class,
                                    PROP_UUID,
@@ -192,6 +197,11 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
 static void
 gcal_event_widget_init(GcalEventWidget *self)
 {
+  GcalEventWidgetPrivate *priv;
+
+  priv = gcal_event_widget_get_instance_private (self);
+  priv->button_pressed = FALSE;
+
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
   gtk_widget_set_can_focus (GTK_WIDGET (self), TRUE);
 
@@ -373,6 +383,8 @@ gcal_event_widget_realize (GtkWidget *widget)
   gint attributes_mask;
   GtkAllocation allocation;
 
+  GdkCursor* pointer_cursor;
+
   priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
   gtk_widget_set_realized (widget, TRUE);
 
@@ -403,6 +415,10 @@ gcal_event_widget_realize (GtkWidget *widget)
                                        attributes_mask);
   gdk_window_set_user_data (priv->event_window, widget);
   gdk_window_show (priv->event_window);
+
+  pointer_cursor = gdk_cursor_new_for_display (gdk_display_get_default (),
+                                               GDK_HAND1);
+  gdk_window_set_cursor (priv->event_window, pointer_cursor);
 }
 
 static void
@@ -568,10 +584,30 @@ static gboolean
 gcal_event_widget_button_press_event (GtkWidget      *widget,
                                       GdkEventButton *event)
 {
-  if (event->type == GDK_2BUTTON_PRESS)
-    g_signal_emit (widget, signals[ACTIVATE], 0);
+  GcalEventWidgetPrivate *priv;
+
+  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
+  priv->button_pressed = TRUE;
 
   return TRUE;
+}
+
+static gboolean
+gcal_event_widget_button_release_event (GtkWidget      *widget,
+                                        GdkEventButton *event)
+{
+  GcalEventWidgetPrivate *priv;
+
+  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
+
+  if (priv->button_pressed)
+    {
+      priv->button_pressed = FALSE;
+      g_signal_emit (widget, signals[ACTIVATE], 0);
+      return TRUE;
+    }
+
+  return FALSE;
 }
 
 GtkWidget*
