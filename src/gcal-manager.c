@@ -264,18 +264,22 @@ gcal_manager_init (GcalManager *self)
                     G_CALLBACK (gcal_manager_on_sources_row_changed),
                     self);
 
+  priv->system_timezone = e_cal_util_get_system_timezone ();
+
   priv->initial_date = g_new(icaltimetype, 1);
-  *(priv->initial_date) = icaltime_from_timet (time (NULL), 0);
+  *(priv->initial_date) = icaltime_from_timet_with_zone (time (NULL),
+                                                         0,
+                                                         priv->system_timezone);
 
   priv->final_date = g_new(icaltimetype, 1);
-  *(priv->final_date) = icaltime_from_timet (time (NULL), 0);
+  *(priv->final_date) = icaltime_from_timet_with_zone (time (NULL),
+                                                       0,
+                                                       priv->system_timezone);
 
   priv->clients = g_hash_table_new_full (g_str_hash,
                                          g_str_equal,
                                          g_free,
                                          gcal_manager_free_unit_data);
-
-  priv->system_timezone = e_cal_util_get_system_timezone ();
 }
 
 static void
@@ -1237,10 +1241,12 @@ gcal_manager_set_new_range (GcalManager        *manager,
     {
       /* rebuild query */
       gchar* since_iso8601 =
-        isodate_from_time_t (icaltime_as_timet (*(priv->initial_date)));
+        isodate_from_time_t (icaltime_as_timet_with_zone (*(priv->initial_date),
+                                                          priv->system_timezone));
 
       gchar* until_iso8601 =
-        isodate_from_time_t (icaltime_as_timet (*(priv->final_date)));
+        isodate_from_time_t (icaltime_as_timet_with_zone (*(priv->final_date),
+                                                          priv->system_timezone));
 
       if (priv->query != NULL)
         g_free (priv->query);
