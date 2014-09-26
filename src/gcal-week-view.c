@@ -247,9 +247,7 @@ gcal_week_view_constructed (GObject *object)
   if (G_OBJECT_CLASS (gcal_week_view_parent_class)->constructed != NULL)
       G_OBJECT_CLASS (gcal_week_view_parent_class)->constructed (object);
 
-  gtk_widget_push_composite_child ();
   priv->vscrollbar = gtk_scrollbar_new (GTK_ORIENTATION_VERTICAL, NULL);
-  gtk_widget_pop_composite_child ();
 
   gtk_widget_set_parent (priv->vscrollbar, GTK_WIDGET (object));
   gtk_widget_show (priv->vscrollbar);
@@ -732,13 +730,8 @@ static gboolean
 gcal_week_view_button_press_event (GtkWidget      *widget,
                                    GdkEventButton *event)
 {
-  GcalWeekViewPrivate *priv;
-  gdouble x, y;
-  gdouble start_grid_y;
+  gdouble y, start_grid_y;
 
-  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (widget));
-
-  x = event->x;
   y = event->y;
 
   start_grid_y = gcal_week_view_get_start_grid_y (widget);
@@ -757,12 +750,10 @@ gcal_week_view_button_release_event (GtkWidget      *widget,
                                      GdkEventButton *event)
 {
   GcalWeekViewPrivate *priv;
-  gdouble x, y;
-  gdouble start_grid_y;
+  gdouble y, start_grid_y;
 
   priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (widget));
 
-  x = event->x;
   y = event->y;
 
   start_grid_y = gcal_week_view_get_start_grid_y (widget);
