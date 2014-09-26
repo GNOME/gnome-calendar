@@ -1263,7 +1263,7 @@ gcal_week_view_scroll_value_changed (GtkAdjustment *adjusment,
  * gcal_week_view_get_initial_date:
  *
  * Since: 0.1
- * Return value: the first day of the month
+ * Return value: the first day of the week
  * Returns: (transfer full): Release with g_free()
  **/
 static icaltimetype*
@@ -1286,7 +1286,7 @@ gcal_week_view_get_initial_date (GcalView *view)
  * gcal_week_view_get_final_date:
  *
  * Since: 0.1
- * Return value: the last day of the month
+ * Return value: the last day of the week
  * Returns: (transfer full): Release with g_free()
  **/
 static icaltimetype*
