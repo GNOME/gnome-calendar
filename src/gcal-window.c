@@ -330,9 +330,6 @@ load_geometry (GcalWindow *window)
                                       "window-maximized");
   if (maximized)
     gtk_window_maximize (GTK_WINDOW (window));
-
-  g_debug ("loaded window geometry -> maximized:[%s]",
-           maximized ? "true" : "false");
 }
 
 static gboolean
@@ -362,9 +359,6 @@ save_geometry (gpointer user_data)
                           "window-maximized",
                           maximized);
 
-  g_debug ("saved window geometry -> maximized:[%s]",
-           maximized ? "true" : "false");
-
   if (maximized)
     return FALSE;
 
@@ -380,10 +374,6 @@ save_geometry (gpointer user_data)
                         "window-size",
                         variant);
 
-  g_debug ("saved window geometry -> size:[%d,%d]",
-           size[0],
-           size[1]);
-
   /* save windows's position */
   gtk_window_get_position (self,
                            (gint *) &position[0],
@@ -395,10 +385,6 @@ save_geometry (gpointer user_data)
   g_settings_set_value (settings,
                         "window-position",
                         variant);
-
-  g_debug ("saved window geometry -> position:[%d,%d]",
-           position[0],
-           position[1]);
 
   return FALSE;
 }
