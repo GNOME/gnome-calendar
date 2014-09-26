@@ -22,6 +22,7 @@
 #include "gcal-event-widget.h"
 #include "gcal-view.h"
 
+#include <libecal/libecal.h>
 #include <libedataserver/libedataserver.h>
 
 #include <glib/gi18n.h>
@@ -276,6 +277,19 @@ gcal_compare_event_widget_by_date (gconstpointer a,
   b_date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (b_child->widget));
 
   return icaltime_compare (*a_date, *b_date);
+}
+
+void print_date (const gchar*        prefix,
+                 const icaltimetype* icaltime)
+{
+  gchar* temp =
+    isodate_from_time_t (icaltime_as_timet_with_zone (*icaltime,
+                                                      icaltime->zone));
+  g_debug ("%s: %s  --  zone: %s",
+           prefix,
+           temp,
+           icaltimezone_get_display_name (icaltime->zone));
+  g_free (temp);
 }
 
 /* Function to do a last minute fixup of the AM/PM stuff if the locale
