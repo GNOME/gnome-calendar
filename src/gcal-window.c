@@ -360,7 +360,10 @@ save_geometry (gpointer user_data)
                           maximized);
 
   if (maximized)
-    return FALSE;
+    {
+      priv->save_geometry_timeout_id = 0;
+      return FALSE;
+    }
 
   /* save window's size */
   gtk_window_get_size (self,
@@ -385,6 +388,8 @@ save_geometry (gpointer user_data)
   g_settings_set_value (settings,
                         "window-position",
                         variant);
+
+  priv->save_geometry_timeout_id = 0;
 
   return FALSE;
 }
