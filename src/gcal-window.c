@@ -337,6 +337,7 @@ save_geometry (gpointer user_data)
 {
   GtkWindow *self;
   GdkWindow *window;
+  GcalWindowPrivate *priv;
   GdkWindowState state;
   GcalApplication *app;
   GSettings *settings;
@@ -349,6 +350,7 @@ save_geometry (gpointer user_data)
 
   window = gtk_widget_get_window (GTK_WIDGET (self));
   state = gdk_window_get_state (window);
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (self));
 
   app = GCAL_APPLICATION (gtk_window_get_application (self));
   settings = gcal_application_get_settings (app);
