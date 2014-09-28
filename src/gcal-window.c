@@ -423,6 +423,7 @@ update_view (GcalWindow *window)
 
   /* destroying old children */
   gcal_view_clear (GCAL_VIEW (widget));
+  gtk_widget_queue_draw (widget);
 
   first_day = gcal_view_get_initial_date (GCAL_VIEW (widget));
   last_day = gcal_view_get_final_date (GCAL_VIEW (widget));
