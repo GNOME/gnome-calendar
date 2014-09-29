@@ -276,6 +276,12 @@ gcal_manager_init (GcalManager *self)
                                                        0,
                                                        priv->system_timezone);
 
+  /* setting timezones */
+  *(priv->initial_date) = icaltime_set_timezone (priv->initial_date,
+                                                 priv->system_timezone);
+  *(priv->final_date) = icaltime_set_timezone (priv->final_date,
+                                               priv->system_timezone);
+
   priv->clients = g_hash_table_new_full (g_str_hash,
                                          g_str_equal,
                                          g_free,
@@ -1266,10 +1272,12 @@ gcal_manager_set_new_range (GcalManager        *manager,
   else
     {
       gchar* since_iso8601 =
-        isodate_from_time_t (icaltime_as_timet (*(priv->initial_date)));
+        isodate_from_time_t (icaltime_as_timet_with_zone (*(priv->initial_date),
+                                                          priv->system_timezone));
 
       gchar* until_iso8601 =
-        isodate_from_time_t (icaltime_as_timet (*(priv->final_date)));
+        isodate_from_time_t (icaltime_as_timet_with_zone (*(priv->final_date),
+                                                          priv->system_timezone));
 
       g_debug ("fake-events-added between \"%s\" and \"%s\")",
           since_iso8601,
