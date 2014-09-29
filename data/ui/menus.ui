@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<interface>
+  <menu id="appmenu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_New</attribute>
+        <attribute name="action">app.new</attribute>
+        <attribute name="accel">&lt;Primary&gt;n</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Search...</attribute>
+        <attribute name="action">app.search</attribute>
+        <attribute name="accel">&lt;Primary&gt;f</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_About</attribute>
+        <attribute name="action">app.about</attribute>
+        <attribute name="accel">&lt;Primary&gt;a</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Quit</attribute>
+        <attribute name="action">app.quit</attribute>
+        <attribute name="accel">&lt;Primary&gt;q</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>
