@@ -18,6 +18,7 @@ gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 EXTRA_DIST=                     \
   gnome-calendar.desktop        \
   calendar.gresource.xml        \
+  ui/menus.ui                   \
   ui/nav_bar.ui                 \
   ui/new-event.ui               \
   ui/viewport.ui                \

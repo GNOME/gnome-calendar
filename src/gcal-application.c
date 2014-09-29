@@ -24,6 +24,9 @@
 #include "gcal-application.h"
 #include "gcal-window.h"
 
+#include <glib.h>
+#include <glib-object.h>
+#include <gio/gio.h>
 #include <glib/gi18n.h>
 
 #define CSS_FILE "resource:///org/gnome/calendar/gtk-styles.css"
@@ -52,11 +55,11 @@ static void     gcal_application_set_app_menu         (GApplication            *
 
 static void     gcal_application_create_new_event     (GSimpleAction           *new_event,
                                                        GVariant                *parameter,
-                                                       gpointer                *app);
+                                                       gpointer                 app);
 
 static void     gcal_application_launch_search        (GSimpleAction           *search,
                                                        GVariant                *parameter,
-                                                       gpointer                *app);
+                                                       gpointer                 app);
 
 static void     gcal_application_change_view          (GSimpleAction           *simple,
                                                        GVariant                *parameter,
@@ -85,6 +88,14 @@ static GOptionEntry gcal_application_goptions[] = {
     N_("Display version number"), NULL
   },
   { NULL }
+};
+
+static const GActionEntry gcal_app_entries[] = {
+  { "new",    gcal_application_create_new_event },
+  { "search", gcal_application_launch_search },
+  { "view",   gcal_application_change_view, "s" },
+  { "about",  gcal_application_show_about },
+  { "quit",   gcal_application_quit },
 };
 
 static void
@@ -234,72 +245,28 @@ gcal_application_command_line (GApplication            *app,
 static void
 gcal_application_set_app_menu (GApplication *app)
 {
-  GcalApplicationPrivate *priv;
+  GtkBuilder *builder;
+  GMenuModel *appmenu;
 
-  GMenu *app_menu;
-  GMenu *view_as;
-  GSimpleAction *new_event;
-  GSimpleAction *search;
-  GSimpleAction *about;
-  GSimpleAction *quit;
+  builder = gtk_builder_new ();
+  gtk_builder_add_from_resource (builder, "/org/gnome/calendar/menus.ui", NULL);
 
-  priv = gcal_application_get_instance_private (GCAL_APPLICATION (app));
+  appmenu = (GMenuModel *)gtk_builder_get_object (builder, "appmenu");
 
-  app_menu = g_menu_new ();
+  g_action_map_add_action_entries (G_ACTION_MAP (app),
+                                   gcal_app_entries,
+                                   G_N_ELEMENTS (gcal_app_entries),
+                                   app);
 
-  new_event = g_simple_action_new ("new_event", NULL);
-  g_signal_connect (new_event, "activate",
-                    G_CALLBACK (gcal_application_create_new_event), app);
-  g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (new_event));
-  g_menu_append (app_menu, _("New Event"), "app.new_event");
+  gtk_application_set_app_menu (GTK_APPLICATION (app), appmenu);
 
-  search = g_simple_action_new ("search", NULL);
-  g_signal_connect (search, "activate",
-                    G_CALLBACK (gcal_application_launch_search), app);
-  g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (search));
-  g_menu_append (app_menu, _("Search"), "app.search");
-
-  priv->view_action = g_simple_action_new_stateful (
-      "view",
-      G_VARIANT_TYPE_STRING,
-      g_settings_get_value (priv->settings, "active-view"));
-
-  g_signal_connect (priv->view_action, "activate",
-                    G_CALLBACK (gcal_application_change_view), app);
-  g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (priv->view_action));
-
-  view_as = g_menu_new ();
-  g_menu_append (view_as, _("Day"), "app.view::day");
-  g_menu_append (view_as, _("Week"), "app.view::week");
-  g_menu_append (view_as, _("Month"), "app.view::month");
-  g_menu_append (view_as, _("Year"), "app.view::year");
-
-  g_menu_append_section (app_menu, _("View as"), G_MENU_MODEL (view_as));
-
-  about = g_simple_action_new ("about", NULL);
-  g_signal_connect (about, "activate",
-                    G_CALLBACK (gcal_application_show_about), app);
-  g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (about));
-  g_menu_append (app_menu, _("About"), "app.about");
-
-  quit = g_simple_action_new ("quit", NULL);
-  g_signal_connect (quit, "activate",
-                    G_CALLBACK (gcal_application_quit), app);
-  g_action_map_add_action ( G_ACTION_MAP (app), G_ACTION (quit));
-  g_menu_append (app_menu, _("Quit"), "app.quit");
-
-  gtk_application_set_app_menu (GTK_APPLICATION (app), G_MENU_MODEL (app_menu));
-
-  /* Accelerators */
-  gtk_application_add_accelerator (GTK_APPLICATION (app), "<Primary>n", "app.new_event", NULL);
-  gtk_application_add_accelerator (GTK_APPLICATION (app), "<Primary>f", "app.search", NULL);
-  gtk_application_add_accelerator (GTK_APPLICATION (app), "<Primary>q", "app.quit", NULL);
+  g_object_unref (builder);
 }
 
 static void
 gcal_application_create_new_event (GSimpleAction *new_event,
                                    GVariant      *parameter,
-                                   gpointer      *app)
+                                   gpointer       app)
 {
   GcalApplicationPrivate *priv;
 
@@ -311,7 +278,7 @@ gcal_application_create_new_event (GSimpleAction *new_event,
 static void
 gcal_application_launch_search (GSimpleAction *search,
                                 GVariant      *parameter,
-                                gpointer      *app)
+                                gpointer       app)
 {
   GcalApplicationPrivate *priv;
 
