@@ -47,12 +47,12 @@ typedef struct _GcalNewEventWidgetClass           GcalNewEventWidgetClass;
 
 struct _GcalNewEventWidget
 {
-  GtkOverlay parent;
+  GtkGrid parent;
 };
 
 struct _GcalNewEventWidgetClass
 {
-  GtkOverlayClass parent_class;
+  GtkGridClass parent_class;
 };
 
 

@@ -1,139 +1,121 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.3 -->
 <interface>
-  <!-- interface-requires gtk+ 3.10 -->
-  <template class="GcalNewEventWidget" parent="GtkOverlay">
+  <requires lib="gtk+" version="3.10"/>
+  <template class="GcalNewEventWidget" parent="GtkGrid">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <style>
-      <class name="new-event-widget"/>
-    </style>
-    <child type="overlay">
-      <object class="GtkButton" id="close_button">
-        <property name="visible">True</property>
-        <property name="can_focus">True</property>
-	<property name="halign">end</property>
-	<property name="valign">start</property>
-	<property name="focus_on_click">False</property>
-	<property name="relief">none</property>
-        <child>
-          <object class="GtkImage" id="image1">
-	    <property name="visible">True</property>
-	    <property name="can_focus">False</property>
-	    <property name="resource">/org/gnome/calendar/close.svg</property>
-	  </object>
-        </child>
-      </object>
-    </child>
     <child>
-      <object class="GcalArrowBin" id="container">
-	<property name="visible">True</property>
-	<property name="can_focus">False</property>
-	<property name="border_width">14</property>
-	<style>
-	  <class name="arrow-bin"/>
-	</style>
-	<child>
-	  <object class="GtkGrid" id="main_grid">
+      <object class="GtkGrid" id="container">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="border_width">14</property>
+        <child>
+          <object class="GtkGrid" id="main_grid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-	    <property name="row_spacing">18</property>
-	    <property name="column_spacing">12</property>
+            <property name="row_spacing">18</property>
+            <property name="column_spacing">12</property>
             <property name="column_homogeneous">True</property>
-	    <property name="margin">18</property>
-	    <child>
+            <child>
               <object class="GtkLabel" id="title_label">
-		<property name="visible">True</property>
-		<property name="can_focus">False</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
               </object>
               <packing>
-		<property name="left_attach">0</property>
-		<property name="top_attach">0</property>
-		<property name="width">2</property>
-		<property name="height">1</property>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+                <property name="width">2</property>
               </packing>
             </child>
             <child>
               <object class="GtkButton" id="create_button">
-		<property name="label" translatable="yes">Create</property>
-		<property name="visible">True</property>
-		<property name="can_focus">True</property>
-		<property name="receives_default">True</property>
-		<style>
-		  <class name="suggested-action"/>
-		</style>
+                <property name="label" translatable="yes">Create</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
               </object>
               <packing>
-		<property name="left_attach">0</property>
-		<property name="top_attach">2</property>
-		<property name="width">1</property>
-		<property name="height">1</property>
+                <property name="left_attach">0</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
               <object class="GtkButton" id="details_button">
-		<property name="label" translatable="yes">More Details</property>
-		<property name="visible">True</property>
-		<property name="can_focus">True</property>
-		<property name="receives_default">True</property>
+                <property name="label" translatable="yes">More Details</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
               </object>
               <packing>
-		<property name="left_attach">1</property>
-		<property name="top_attach">2</property>
-		<property name="width">1</property>
-		<property name="height">1</property>
+                <property name="left_attach">1</property>
+                <property name="top_attach">2</property>
               </packing>
             </child>
             <child>
               <object class="GtkGrid" id="row_grid">
-		<property name="visible">True</property>
-		<property name="can_focus">False</property>
-		<property name="column_spacing">6</property>
-		<child>
-		  <object class="GtkEntry" id="what_entry">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="column_spacing">6</property>
+                <child>
+                  <object class="GtkEntry" id="what_entry">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
-		  </object>
-		  <packing>
+                  </object>
+                  <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">0</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
-		  </packing>
-		</child>
-		<child>
-		  <object class="GtkMenuButton" id="calendar_button">
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkMenuButton" id="calendar_button">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-		    <property name="always_show_image">True</property>
+                    <property name="always_show_image">True</property>
                     <child>
                       <object class="GtkImage" id="image2">
-			<property name="visible">True</property>
-			<property name="can_focus">False</property>
-			<property name="icon_name">x-office-calendar-symbolic</property>
-			<property name="icon_size">1</property>
-		      </object>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">x-office-calendar-symbolic</property>
+                        <property name="icon_size">1</property>
+                      </object>
                     </child>
-		  </object>
-		  <packing>
+                  </object>
+                  <packing>
                     <property name="left_attach">1</property>
                     <property name="top_attach">0</property>
-                    <property name="width">1</property>
-                    <property name="height">1</property>
-		  </packing>
-		</child>
+                  </packing>
+                </child>
               </object>
               <packing>
-		<property name="left_attach">0</property>
-		<property name="top_attach">1</property>
-		<property name="width">2</property>
-		<property name="height">1</property>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+                <property name="width">2</property>
               </packing>
             </child>
-	  </object>
-	</child>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">0</property>
+          </packing>
+        </child>
       </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">1</property>
+        <property name="width">2</property>
+      </packing>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+    <child>
+      <placeholder/>
     </child>
   </template>
 </interface>

@@ -2,6 +2,7 @@
 /*
  * gcal-new-event-widget.c
  * Copyright (C) 2012 Erick Pérez Castellanos <erickpc@gnome.org>
+ * Copyright (C) 2014 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * gnome-calendar is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -18,7 +19,6 @@
  */
 
 #include "gcal-new-event-widget.h"
-#include "gcal-arrow-bin.h"
 #include "gcal-utils.h"
 
 typedef struct
@@ -26,17 +26,14 @@ typedef struct
   GtkWidget     *title_label;
   GtkWidget     *what_entry;
   GtkWidget     *calendar_button;
-
   GtkWidget     *create_button;
   GtkWidget     *details_button;
-
-  GtkWidget     *close_button;
 } GcalNewEventWidgetPrivate;
 
 static void      item_activated          (GtkWidget *item,
                                           gpointer   user_data);
 
-G_DEFINE_TYPE_WITH_PRIVATE (GcalNewEventWidget, gcal_new_event_widget, GTK_TYPE_OVERLAY)
+G_DEFINE_TYPE_WITH_PRIVATE (GcalNewEventWidget, gcal_new_event_widget, GTK_TYPE_GRID)
 
 static void
 item_activated (GtkWidget *item,
@@ -84,7 +81,7 @@ gcal_new_event_widget_class_init (GcalNewEventWidgetClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalNewEventWidget, calendar_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalNewEventWidget, create_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalNewEventWidget, details_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalNewEventWidget, close_button);
+
 }
 
 static void
@@ -262,23 +259,6 @@ gcal_new_event_widget_get_details_button (GcalNewEventWidget *widget)
 
   priv = gcal_new_event_widget_get_instance_private (widget);
   return priv->details_button;
-}
-
-/**
- * gcal_new_event_widget_get_close_button:
- * @widget: a #GcalNewEventWidget
- *
- * Get a pointer a to the close button in the widget.
- *
- * Returns: (transfer none) a #GtkWidget
- **/
-GtkWidget*
-gcal_new_event_widget_get_close_button (GcalNewEventWidget *widget)
-{
-  GcalNewEventWidgetPrivate *priv;
-
-  priv = gcal_new_event_widget_get_instance_private (widget);
-  return priv->close_button;
 }
 
 /**

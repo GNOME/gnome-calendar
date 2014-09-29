@@ -2,6 +2,7 @@
 /*
  * gcal-window.c
  * Copyright (C) 2012 Erick Pérez Castellanos <erickpc@gnome.org>
+ * Copyright (C) 2014 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * gnome-calendar is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -64,8 +65,9 @@ typedef struct
   GtkWidget           *nav_bar;
   GtkWidget           *views_overlay;
   GtkWidget           *views_stack;
+  GtkWidget           *new_event_widget;
   GtkWidget           *noty; /* short-lived */
-  GtkWidget           *new_event_widget; /* short-lived */
+  GtkWidget           *popover; /* short-lived */
 
   /* header_bar widets */
   GtkWidget           *new_button;
@@ -130,10 +132,9 @@ static void           show_new_event_widget              (GcalView            *v
                                                           gdouble              y,
                                                           gpointer             user_data);
 
-static gboolean       place_new_event_widget             (GtkOverlay          *overlay,
-                                                          GtkWidget           *child,
-                                                          GdkRectangle        *allocation,
-                                                          gpointer             user_data);
+static gboolean       place_new_event_widget             (GtkWidget           *popover,
+                                                          gint                 x,
+                                                          gint                 y);
 
 static void           close_new_event_widget             (GtkButton           *button,
                                                           gpointer             user_data);
@@ -458,7 +459,6 @@ view_changed (GObject    *object,
               gpointer    user_data)
 {
   GcalWindowPrivate *priv;
-
   GEnumClass *eklass;
   GEnumValue *eval;
   GcalWindowViewType view_type;
@@ -489,7 +489,6 @@ static void
 set_new_event_mode (GcalWindow *window,
                     gboolean    enabled)
 {
-
   GcalWindowPrivate *priv;
 
   priv = gcal_window_get_instance_private (window);
@@ -501,10 +500,10 @@ set_new_event_mode (GcalWindow *window,
 
   /* XXX: here we could disable clicks from the views, yet */
   /* for now we relaunch the new-event widget */
-  if (priv->new_event_widget != NULL)
+  if (!enabled &&
+      gtk_widget_is_visible (priv->popover))
     {
-      gtk_widget_destroy (priv->new_event_widget);
-      priv->new_event_widget = NULL;
+      gtk_widget_set_visible (priv->popover, FALSE);
     }
 }
 
@@ -524,9 +523,6 @@ prepare_new_event_widget (GcalWindow *window)
   GtkWidget *widget;
 
   priv = gcal_window_get_instance_private (window);
-
-  /* FIXME: ensure destruction or singleton pattern */
-  priv->new_event_widget = gcal_new_event_widget_new ();
   new_widget = GCAL_NEW_EVENT_WIDGET (priv->new_event_widget);
 
   /* setting title */
@@ -546,9 +542,13 @@ prepare_new_event_widget (GcalWindow *window)
   gcal_new_event_widget_set_default_calendar (new_widget, uid);
   g_free (uid);
 
+  /* clear entry */
+  widget = gcal_new_event_widget_get_entry (new_widget);
+  gtk_entry_set_text (GTK_ENTRY (widget), "");
+
   /* FIXME: add signals handling */
-  widget = gcal_new_event_widget_get_close_button (new_widget);
-  g_signal_connect (widget, "clicked",
+  widget = GTK_WIDGET (priv->popover);
+  g_signal_connect (widget, "closed",
                     G_CALLBACK (close_new_event_widget), window);
   widget = gcal_new_event_widget_get_create_button (new_widget);
   g_signal_connect_swapped (widget, "clicked",
@@ -559,8 +559,7 @@ prepare_new_event_widget (GcalWindow *window)
   widget = gcal_new_event_widget_get_entry (new_widget);
   g_signal_connect_swapped (widget, "activate",
                             G_CALLBACK (create_event), window);
-
-  gtk_widget_show_all (priv->new_event_widget);
+  gtk_widget_show_all (priv->popover);
 }
 
 /* new-event interaction: second variant */
@@ -595,58 +594,26 @@ show_new_event_widget (GcalView *view,
     priv->event_creation_data->end_date = gcal_dup_icaltime (end_span);
   g_debug ("[show_new_event] position (%f, %f)", x, y);
 
+  /* Setup new event widget data */
   prepare_new_event_widget (GCAL_WINDOW (user_data));
 
-  gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
-                           priv->new_event_widget);
+  place_new_event_widget (priv->popover, x, y);
 }
 
 static gboolean
-place_new_event_widget (GtkOverlay   *overlay,
-                        GtkWidget    *child,
-                        GdkRectangle *allocation,
-                        gpointer      user_data)
+place_new_event_widget (GtkWidget    *popover,
+                        gint          x,
+                        gint          y)
 {
-  GcalWindowPrivate *priv;
+  GdkRectangle rect;
 
-  gint nat_width;
-  gint nat_height;
-  gint nav_bar_height;
+  /* Place popover over the given (x,y) position */
+  rect.x = x;
+  rect.y = y;
+  rect.width = 1;
+  rect.height = 1;
 
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  if (! priv->new_event_mode)
-    return FALSE;
-
-  gtk_widget_get_preferred_width (priv->new_event_widget,
-                                  NULL,
-                                  &nat_width);
-  gtk_widget_get_preferred_height_for_width (priv->new_event_widget,
-                                             nat_width,
-                                             NULL,
-                                             &nat_height);
-  nav_bar_height = gtk_widget_get_allocated_height (priv->nav_bar);
-
-  g_debug ("[allocate-child] incoming value (%d, %d) - (%d, %d)",
-           allocation->x,
-           allocation->y,
-           allocation->width,
-           allocation->height);
-  g_debug ("[allocate-child] natural size (%d, %d)",
-           nat_width, nat_height);
-  allocation->x = priv->event_creation_data->x - nat_width / 2;
-  allocation->y = priv->event_creation_data->y + nav_bar_height - nat_height;
-  allocation->width = nat_width;
-  allocation->height = nat_height;
-
-  g_debug ("[allocate-child]: outgoing value (%d, %d) - (%d, %d)",
-           allocation->x,
-           allocation->y,
-           allocation->width,
-           allocation->height);
-
-  gtk_widget_grab_focus (gcal_new_event_widget_get_entry (
-                             GCAL_NEW_EVENT_WIDGET (priv->new_event_widget)));
+  gtk_popover_set_pointing_to (GTK_POPOVER (popover), &rect);
 
   return TRUE;
 }
@@ -801,11 +768,6 @@ gcal_window_constructed (GObject *object)
   g_object_ref_sink (priv->views_switcher);
   gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
                                    priv->views_switcher);
-  g_object_bind_property (object,
-                          "new-event-mode",
-                          priv->views_switcher,
-                          "sensitive",
-                          G_BINDING_DEFAULT | G_BINDING_INVERT_BOOLEAN);
 
   /* header_bar: menu */
   menu_button = gd_header_menu_button_new ();
@@ -917,6 +879,13 @@ gcal_window_constructed (GObject *object)
       gtk_widget_get_style_context (GTK_WIDGET (object)),
       "views");
 
+  /* popover and content */
+  priv->popover = gtk_popover_new (GTK_WIDGET(priv->views_stack));
+
+  priv->new_event_widget = gcal_new_event_widget_new ();
+
+  gtk_container_add (GTK_CONTAINER(priv->popover), GTK_WIDGET(priv->new_event_widget));
+
   /* signals connection/handling */
   g_signal_connect (object, "key-press-event",
                     G_CALLBACK (key_pressed), object);
@@ -928,8 +897,6 @@ gcal_window_constructed (GObject *object)
       g_signal_connect (priv->views[i], "create-event",
                         G_CALLBACK (show_new_event_widget), object);
     }
-  g_signal_connect (priv->views_overlay, "get-child-position",
-                    G_CALLBACK (place_new_event_widget), object);
 
   g_signal_connect (priv->search_bar, "notify::search-mode-enabled",
                     G_CALLBACK (gcal_window_search_toggled), object);
@@ -1655,7 +1622,6 @@ void
 gcal_window_new_event (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
-
   gint x, y;
 
   priv = gcal_window_get_instance_private (window);
@@ -1704,8 +1670,7 @@ gcal_window_new_event (GcalWindow *window)
 
   prepare_new_event_widget (GCAL_WINDOW (window));
 
-  gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
-                           priv->new_event_widget);
+  place_new_event_widget (priv->popover, x, y);
 }
 
 void
