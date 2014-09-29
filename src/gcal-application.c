@@ -35,7 +35,6 @@ typedef struct
 {
   GtkWidget      *window;
 
-  GSimpleAction  *view_action;
   GSettings      *settings;
   GcalManager    *manager;
 
@@ -61,20 +60,12 @@ static void     gcal_application_launch_search        (GSimpleAction           *
                                                        GVariant                *parameter,
                                                        gpointer                 app);
 
-static void     gcal_application_change_view          (GSimpleAction           *simple,
-                                                       GVariant                *parameter,
-                                                       gpointer                 user_data);
-
 static void     gcal_application_show_about           (GSimpleAction           *simple,
                                                        GVariant                *parameter,
                                                        gpointer                 user_data);
 
 static void     gcal_application_quit                 (GSimpleAction           *simple,
                                                        GVariant                *parameter,
-                                                       gpointer                 user_data);
-
-static void     gcal_application_changed_view         (GSettings               *settings,
-                                                       gchar                   *key,
                                                        gpointer                 user_data);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
@@ -93,7 +84,6 @@ static GOptionEntry gcal_application_goptions[] = {
 static const GActionEntry gcal_app_entries[] = {
   { "new",    gcal_application_create_new_event },
   { "search", gcal_application_launch_search },
-  { "view",   gcal_application_change_view, "s" },
   { "about",  gcal_application_show_about },
   { "quit",   gcal_application_quit },
 };
@@ -153,13 +143,6 @@ gcal_application_activate (GApplication *application)
                        priv->window,
                        "active-view",
                        G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
-
-      g_object_bind_property (priv->window,
-                              "new-event-mode",
-                              priv->view_action,
-                              "enabled",
-                              G_BINDING_DEFAULT |
-                              G_BINDING_INVERT_BOOLEAN);
 
       gtk_widget_show_all (priv->window);
     }
@@ -288,18 +271,6 @@ gcal_application_launch_search (GSimpleAction *search,
 }
 
 static void
-gcal_application_change_view (GSimpleAction *simple,
-                              GVariant      *parameter,
-                              gpointer       user_data)
-{
-  GcalApplicationPrivate *priv;
-
-  priv = gcal_application_get_instance_private (GCAL_APPLICATION (user_data));
-
-  g_settings_set_value (priv->settings, "active-view", parameter);
-}
-
-static void
 gcal_application_show_about (GSimpleAction *simple,
                              GVariant      *parameter,
                              gpointer       user_data)
@@ -356,19 +327,6 @@ gcal_application_quit (GSimpleAction *simple,
   g_application_quit (G_APPLICATION (user_data));
 }
 
-static void
-gcal_application_changed_view (GSettings *settings,
-                               gchar     *key,
-                               gpointer   user_data)
-{
-  GcalApplicationPrivate *priv;
-
-  priv = gcal_application_get_instance_private (GCAL_APPLICATION (user_data));
-  g_simple_action_set_state (priv->view_action,
-                             g_settings_get_value (priv->settings,
-                                                   "active-view"));
-}
-
 /* Public API */
 GcalApplication*
 gcal_application_new (void)
@@ -385,10 +343,6 @@ gcal_application_new (void)
 
   priv = gcal_application_get_instance_private (app);
   priv->settings = g_settings_new ("org.gnome.calendar");
-  g_signal_connect (priv->settings,
-                    "changed::active-view",
-                    G_CALLBACK (gcal_application_changed_view),
-                    app);
   return app;
 }
 
