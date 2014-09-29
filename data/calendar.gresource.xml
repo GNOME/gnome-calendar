@@ -4,7 +4,6 @@
     <file alias="nav_bar.ui" compressed="true" preprocess="xml-stripblanks">ui/nav_bar.ui</file>
     <file alias="viewport.ui" compressed="true" preprocess="xml-stripblanks">ui/viewport.ui</file>
     <file alias="new-event.ui" compressed="true" preprocess="xml-stripblanks">ui/new-event.ui</file>
-    <file alias="close.svg" compressed="true" preprocess="xml-stripblanks">theme/close-window.svg</file>
     <file alias="gtk-styles.css" compressed="true">theme/gtk-styles.css</file>
   </gresource>
 </gresources>
