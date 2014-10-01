@@ -5,13 +5,8 @@ AM_CPPFLAGS =                                             \
     -DUI_DATA_DIR=\""$(pkgdatadir)/style"\"               \
     -I$(top_srcdir)/libgd                                 \
     $(MAINTAINER_COMPILER_FLAGS)                          \
-    -Wall                                                 \
-    -g -O0                                                \
+    $(WARN_CFLAGS)                                        \
     $(CALENDAR_CFLAGS)
-
-AM_CFLAGS =                                               \
-    -Wall                                                 \
-    -g -O0
 
 bin_PROGRAMS = gnome-calendar
 

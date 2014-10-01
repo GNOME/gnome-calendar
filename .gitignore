@@ -77,3 +77,4 @@ src/gcal-enum-types.h
 src/gcal-resources.c
 src/gcal-resources.h
 AUTHORS
+build-aux
