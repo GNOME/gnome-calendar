@@ -1,15 +1,16 @@
 # List of source files containing translatable strings.
 data/gnome-calendar.desktop.in.in
 data/org.gnome.calendar.gschema.xml.in
+data/ui/menus.ui
+data/ui/new-event.ui
+src/gcal-day-view.c
+src/gcal-days-grid.c
 src/gcal-application.c
 src/gcal-date-entry.c
 src/gcal-edit-dialog.c
-src/gcal-event-overlay.c
 src/gcal-manager.c
 src/gcal-month-view.c
-src/gcal-searchbar.c
 src/gcal-time-entry.c
-src/gcal-toolbar.c
 src/gcal-utils.c
 src/gcal-week-view.c
 src/gcal-window.c
