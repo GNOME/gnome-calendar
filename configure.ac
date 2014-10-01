@@ -1,22 +1,22 @@
 dnl -*- mode: m4 -*-
-AC_PREREQ([2.68])
-AC_INIT([gnome-calendar],[0.0.3],[],[gnome-calendar])
+AC_PREREQ([2.69])
+AC_INIT([gnome-calendar],[0.0.3],[],[gnome-calendar],[https://wiki.gnome.org/Design/Apps/Calendar])
 
-AC_CONFIG_HEADERS([config/config.h])
+AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_AUX_DIR([config])
+AC_CONFIG_AUX_DIR([build-aux])
 
-m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+AM_SILENT_RULES([yes])
 
-# require automake 1.11
-AM_INIT_AUTOMAKE([1.11 dist-xz no-dist-gzip tar-ustar])
+# require automake 1.11.1
+AM_INIT_AUTOMAKE([1.11.1 dist-xz no-dist-gzip tar-ustar])
 AM_MAINTAINER_MODE([enable])
 
 dnl ***************************************************************************
 dnl Internationalization
 dnl ***************************************************************************
-IT_PROG_INTLTOOL([0.35.0])
+IT_PROG_INTLTOOL([0.40.6])
 PKG_PROG_PKG_CONFIG([0.22])
 
 GETTEXT_PACKAGE=AC_PACKAGE_TARNAME
@@ -31,16 +31,32 @@ AC_CACHE_SAVE
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_PROG_CXX
+AC_PROG_INSTALL
+AC_PROG_INSTALL
 AC_SEARCH_LIBS([strerror],[cposix])
 AC_HEADER_STDC
 
 # no stupid static libraries
 AC_DISABLE_STATIC([])
+
 # enable libtool
+LT_PREREQ([2.2.6])
 LT_INIT
 
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
+
+## checks
+AC_CHECK_HEADERS([langinfo.h])
+AC_CHECK_HEADERS([locale.h])
+AC_CHECK_HEADERS([string.h])
+
+AC_CHECK_FUNCS([floor])
+AC_CHECK_FUNCS([memset])
+AC_CHECK_FUNCS([nl_langinfo])
+AC_CHECK_FUNCS([pow])
+AC_CHECK_FUNCS([setlocale])
+AC_CHECK_FUNCS([strstr])
 
 GLIB_GSETTINGS
 
@@ -49,9 +65,7 @@ dnl Misc
 dnl ================================================================
 AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
 
-GNOME_COMMON_INIT
 GNOME_COMPILE_WARNINGS(maximum)
-GNOME_MAINTAINER_MODE_DEFINES
 
 MAINTAINER_COMPILER_FLAGS="$MAINTAINER_COMPILER_FLAGS                        \
                            -Wall -Wcast-align -Wuninitialized                \
