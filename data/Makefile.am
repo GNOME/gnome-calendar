@@ -23,7 +23,6 @@ EXTRA_DIST=                     \
   ui/new-event.ui               \
   ui/viewport.ui                \
   theme/gtk-styles.css          \
-  theme/close-window.svg        \
   $(desktop_in_files)           \
   $(gsettingsschema_in_files)
 
