@@ -710,7 +710,6 @@ gcal_window_class_init(GcalWindowClass *klass)
                             "New Event mode",
                             "Whether the window is in new-event-mode or not",
                             FALSE,
-                            G_PARAM_CONSTRUCT |
                             G_PARAM_READWRITE));
 }
 
