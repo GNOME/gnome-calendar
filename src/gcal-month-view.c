@@ -788,9 +788,7 @@ gcal_month_view_button_press (GtkWidget      *widget,
 
   priv->clicked_cell = 7 * ( floor ( (y - (lines_gap_for_5 * v_block))  / (v_block) )) + floor (x / (width / 7));
 
-  if (priv->clicked_cell <
-      icaltime_days_in_month (priv->date->month,
-                              priv->date->year))
+  if (priv->clicked_cell < days)
     {
       priv->start_mark_cell = priv->clicked_cell;
     }
