@@ -1120,54 +1120,26 @@ gcal_window_events_added (GcalManager *manager,
 
   GSList *l;
 
-  gchar **tokens;
-  gchar *source_uid;
-  gchar *event_uid;
-
   GcalView *view;
-  GtkWidget *event;
-  icaltimetype *start_date;
-  icaltimetype *end_date;
+  GtkWidget *e;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
   view = GCAL_VIEW (priv->views[priv->active_view]);
 
   for (l = events_list; l != NULL; l = l->next)
     {
-      tokens = g_strsplit ((gchar*) l->data, ":", 2);
-      source_uid  = tokens[0];
-      event_uid = tokens[1];
-      start_date = gcal_manager_get_event_start_date (manager,
-                                                      source_uid,
-                                                      event_uid);
-      end_date = gcal_manager_get_event_end_date (manager,
-                                                  source_uid,
-                                                  event_uid);
+      e = gcal_event_widget_new_from_data ((GcalEventData*) l->data);
 
-      /* FIXME: erase me */
-      /* g_debug ("add: %s with date %s", */
-      /*          (gchar*) l->data, */
-      /*          icaltime_as_ical_string (*start_date)); */
-
-      if (gcal_view_draw_event (view, start_date, end_date) &&
-          gcal_view_get_by_uuid (view, (gchar*)l->data) == NULL)
+      if (gcal_view_will_add_event (view, GCAL_EVENT_WIDGET (e)))
         {
-          event = gcal_event_widget_new ((gchar*) l->data);
-          gcal_window_update_event_widget (manager,
-                                           source_uid,
-                                           event_uid,
-                                           GCAL_EVENT_WIDGET (event));
-          gtk_widget_show (event);
-          gtk_container_add (GTK_CONTAINER (view), event);
+          gtk_widget_show (e);
+          gtk_container_add (GTK_CONTAINER (view), e);
 
-          g_signal_connect (event,
+          g_signal_connect (e,
                             "activate",
                             G_CALLBACK (gcal_window_event_activated),
                             user_data);
         }
-
-      g_free (start_date);
-      g_strfreev (tokens);
     }
 }
 
