@@ -352,8 +352,8 @@ recreate_view (GcalManager     *manager,
 /**
  * on_view_objects_added
  * @view: the view emitting the signal
- * @objects: a GSList of icalcomponent*
- * @user_data: The data passed when connecting the signal, here GcalManager
+ * @objects: a #GSList of icalcomponent*
+ * @user_data: the #GcalManager instance
  */
 static void
 on_view_objects_added (ECalClientView *view,
@@ -411,7 +411,7 @@ on_view_objects_added (ECalClientView *view,
  * on_view_objects_removed
  * @view: the view emitting the signal
  * @objects: a GSList of ECalComponentId*
- * @user_data: The data passed when connecting the signal, here GcalManager
+ * @user_data: a #GcalManager instance
  */
 static void
 on_view_objects_removed (ECalClientView *view,
@@ -516,6 +516,16 @@ gcal_manager_class_init (GcalManagerClass *klass)
   G_OBJECT_CLASS (klass)->constructed = gcal_manager_constructed;
   G_OBJECT_CLASS (klass)->finalize = gcal_manager_finalize;
 
+  /**
+   * GcalManager::objects-added:
+   *
+   * The list passed to the signalis composed of #GcalEventData
+   * structures keeping a volatile pointer to the source of the event
+   * and an owned copy of an #EcalComponent
+   *
+   * @manager: the #GcalManager instance which emitted the signal
+   * @objects: (type GSList) (transfer none) (element-type long):
+   */
   signals[EVENTS_ADDED] =
     g_signal_new ("events-added",
                   GCAL_TYPE_MANAGER,
