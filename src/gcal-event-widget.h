@@ -20,6 +20,8 @@
 #ifndef __GCAL_EVENT_WIDGET_H__
 #define __GCAL_EVENT_WIDGET_H__
 
+#include "gcal-manager.h"
+
 #include <gtk/gtk.h>
 
 #include <libical/icaltime.h>
@@ -53,6 +55,8 @@ struct _GcalEventWidgetClass
 GType         gcal_event_widget_get_type                   (void);
 
 GtkWidget*    gcal_event_widget_new                        (gchar              *uuid);
+
+GtkWidget*    gcal_event_widget_new_from_data              (GcalEventData      *data);
 
 GtkWidget*    gcal_event_widget_new_with_summary_and_color (const gchar        *summary,
                                                             const GdkRGBA      *color);
