@@ -289,3 +289,25 @@ gcal_view_clear (GcalView *view)
 
   GCAL_VIEW_GET_INTERFACE (view)->clear (view);
 }
+
+/**
+ * gcal_view_will_add_event:
+ * @view: a #GcalView
+ * @event: a #GcalEventWidget
+ *
+ * Check the ranges of dates and the existence of the widget in
+ * in the view already
+ *
+ * Returns: %TRUE if the date of the widget fall inside the range and
+ *          the widget isn't already on the view, %FALSE otherwise
+ **/
+gboolean
+gcal_view_will_add_event (GcalView        *view,
+                          GcalEventWidget *event)
+{
+  g_return_val_if_fail (GCAL_IS_VIEW (view), FALSE);
+  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->will_add_event);
+
+  return GCAL_VIEW_GET_INTERFACE (view)->will_add_event (view,
+                                                         event);
+}

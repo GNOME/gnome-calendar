@@ -131,6 +131,9 @@ static GtkWidget*     gcal_year_view_get_by_uuid                  (GcalView     
 
 static void           gcal_year_view_clear                        (GcalView       *view);
 
+static gboolean       gcal_year_view_will_add_event               (GcalView        *view,
+                                                                   GcalEventWidget *event);
+
 G_DEFINE_TYPE_WITH_CODE (GcalYearView,
                          gcal_year_view,
                          GTK_TYPE_CONTAINER,
@@ -213,6 +216,8 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->draw_event = gcal_year_view_draw_event;
   iface->get_by_uuid = gcal_year_view_get_by_uuid;
   iface->clear = gcal_year_view_clear;
+
+  iface->will_add_event = gcal_year_view_will_add_event;
 }
 
 static void
@@ -1024,6 +1029,13 @@ gcal_year_view_clear (GcalView *view)
 {
   gtk_container_foreach (GTK_CONTAINER (view),
                          (GtkCallback) gtk_widget_destroy, NULL);
+}
+
+static gboolean
+gcal_year_view_will_add_event (GcalView        *view,
+                               GcalEventWidget *event)
+{
+  ;
 }
 
 /* Public API */
