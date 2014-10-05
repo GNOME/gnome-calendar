@@ -69,19 +69,12 @@ gchar*         gcal_manager_add_source              (GcalManager        *manager
 
 gchar*         gcal_manager_get_default_source      (GcalManager        *manager);
 
-const gchar*   gcal_manager_get_source_name         (GcalManager        *manager,
-                                                     const gchar        *source_uid);
-
 gboolean       gcal_manager_get_source_readonly     (GcalManager        *manager,
                                                      const gchar        *source_uid);
 
 void           gcal_manager_set_new_range           (GcalManager        *manager,
                                                      const icaltimetype *initial_date,
                                                      const icaltimetype *final_date);
-
-gboolean       gcal_manager_exists_event            (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
 
 /* Get methods */
 icaltimetype*  gcal_manager_get_event_start_date    (GcalManager        *manager,

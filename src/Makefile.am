@@ -6,6 +6,7 @@ AM_CPPFLAGS =                                             \
     -I$(top_srcdir)/libgd                                 \
     $(MAINTAINER_COMPILER_FLAGS)                          \
     $(WARN_CFLAGS)                                        \
+    -DEDS_DISABLE_DEPRECATED                              \
     $(CALENDAR_CFLAGS)
 
 bin_PROGRAMS = gnome-calendar
