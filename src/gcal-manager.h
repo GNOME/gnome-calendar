@@ -23,6 +23,9 @@
 #include <gtk/gtk.h>
 #include <glib-object.h>
 
+#include <libedataserver/libedataserver.h>
+#include <libecal/libecal.h>
+
 #include <libical/icaltime.h>
 
 G_BEGIN_DECLS
@@ -53,6 +56,12 @@ struct _GcalManagerClass
   void (* event_created)   (GcalManager *manager, const gchar *source_uid, const gchar event_uid);
 
 };
+
+typedef struct
+{
+  ESource       *source;
+  ECalComponent *event_component;
+} GcalEventData;
 
 GType          gcal_manager_get_type                (void);
 

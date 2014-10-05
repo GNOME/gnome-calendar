@@ -22,9 +22,6 @@
 
 #include <glib/gi18n.h>
 
-#include <libecal/libecal.h>
-#include <libedataserver/libedataserver.h>
-
 typedef struct _RetryOpenData
 {
   ESource      *source;
@@ -364,34 +361,36 @@ on_view_objects_added (ECalClientView *view,
                        gpointer        user_data)
 {
   GcalManagerPrivate *priv;
+
+  ESource *source;
   GcalManagerUnit *unit;
 
-  const gchar *source_uid;
   GSList *l;
   GSList *events_data;
 
   ECalClient *client;
-  gchar *event_uuid;
 
   priv = gcal_manager_get_instance_private (GCAL_MANAGER (user_data));
   events_data = NULL;
 
   client = e_cal_client_view_ref_client (view);
-  source_uid =
-    e_source_get_uid (e_client_get_source (E_CLIENT (client)));
+  source = e_client_get_source (E_CLIENT (client));
 
-  unit = (GcalManagerUnit*)
-    g_hash_table_lookup (priv->clients,
-                         e_client_get_source (E_CLIENT (client)));
+  unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients,
+                                                 source);
 
   for (l = objects; l != NULL; l = l->next)
     {
       if (l->data != NULL && unit->enabled)
         {
-          event_uuid = g_strdup_printf ("%s:%s",
-                                        source_uid,
-                                        icalcomponent_get_uid (l->data));
-          events_data = g_slist_append (events_data, event_uuid);
+          GcalEventData *data;
+
+          data = g_new0 (GcalEventData, 1);
+          data->source = source;
+          data->event_component =
+            e_cal_component_new_from_icalcomponent (
+                 icalcomponent_new_clone (l->data));
+          events_data = g_slist_append (events_data, data);
         }
     }
 
