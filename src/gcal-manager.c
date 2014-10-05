@@ -227,7 +227,7 @@ on_client_connected (GObject      *source_object,
       unit->client = client;
 
       /* FIXME: user should be able to disable sources */
-      unit->enabled = FALSE;
+      unit->enabled = TRUE;
 
       g_debug ("Source %s connected",
                e_source_get_display_name (source));
