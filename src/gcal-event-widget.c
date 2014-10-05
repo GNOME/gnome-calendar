@@ -23,16 +23,21 @@
 typedef struct
 {
   /* properties */
-  gchar        *uuid;
-  gchar        *summary;
-  GdkRGBA      *color;
-  icaltimetype *dt_start;
-  icaltimetype *dt_end;
-  gboolean      all_day;
-  gboolean      has_reminders;
+  gchar         *uuid;
+  gchar         *summary;
+  GdkRGBA       *color;
+  icaltimetype  *dt_start;
+  icaltimetype  *dt_end;
+  gboolean       all_day;
+  gboolean       has_reminders;
 
-  GdkWindow    *event_window;
-  gboolean      button_pressed;
+  /* weak ESource reference */
+  ESource       *source;
+  /* ECalComponent data */
+  ECalComponent *component;
+
+  GdkWindow     *event_window;
+  gboolean       button_pressed;
 } GcalEventWidgetPrivate;
 
 enum
@@ -66,6 +71,8 @@ static void     gcal_event_widget_get_property         (GObject        *object,
                                                         guint           property_id,
                                                         GValue         *value,
                                                         GParamSpec     *pspec);
+
+static void     gcal_event_widget_finalize             (GObject        *object);
 
 static void     gcal_event_widget_get_preferred_width  (GtkWidget      *widget,
                                                         gint           *minimum,
@@ -107,6 +114,7 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
   object_class->constructed = gcal_event_widget_constructed;
   object_class->set_property = gcal_event_widget_set_property;
   object_class->get_property = gcal_event_widget_get_property;
+  object_class->finalize = gcal_event_widget_finalize;
 
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->get_preferred_width = gcal_event_widget_get_preferred_width;
@@ -316,6 +324,20 @@ gcal_event_widget_get_property (GObject      *object,
     }
 
   G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+}
+
+static void
+gcal_event_widget_finalize (GObject *object)
+{
+  GcalEventWidgetPrivate *priv;
+
+  priv =
+    gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (object));
+
+  if (priv->component != NULL)
+    g_object_unref (priv->component);
+
+  G_OBJECT_CLASS (gcal_event_widget_parent_class)->finalize (object);
 }
 
 static void
@@ -614,6 +636,89 @@ GtkWidget*
 gcal_event_widget_new (gchar *uuid)
 {
   return g_object_new (GCAL_TYPE_EVENT_WIDGET, "uuid", uuid, NULL);
+}
+
+/**
+ * gcal_event_widget_new_from_data:
+ * @data: a #GcalEventData instance
+ *
+ * Create an event widget by passing its #ECalComponent and #ESource
+ *
+ * Returns: a #GcalEventWidget as #GtkWidget
+ **/
+GtkWidget*
+gcal_event_widget_new_from_data (GcalEventData *data)
+{
+  GtkWidget *widget;
+  GcalEventWidget *event;
+  GcalEventWidgetPrivate *priv;
+
+  ECalComponentText e_summary;
+  ESourceSelectable *extension;
+  GdkRGBA *color;
+  ECalComponentDateTime dt;
+  icaltimetype *date;
+  gboolean start_is_date, end_is_date;
+
+  widget = g_object_new (GCAL_TYPE_EVENT_WIDGET, NULL);
+
+  event = GCAL_EVENT_WIDGET (widget);
+
+  priv = gcal_event_widget_get_instance_private (event);
+  priv->component = data->event_component;
+  priv->source = data->source;
+
+  /* summary */
+  e_cal_component_get_summary (priv->component, &e_summary);
+  gcal_event_widget_set_summary (event, e_summary.value);
+
+  /* color */
+  color = g_new0 (GdkRGBA, 1);
+
+  extension = E_SOURCE_SELECTABLE (
+                  e_source_get_extension (priv->source,
+                                          E_SOURCE_EXTENSION_CALENDAR));
+  gdk_rgba_parse (color, e_source_selectable_get_color (extension));
+  gcal_event_widget_set_color (event, color);
+  gdk_rgba_free (color);
+
+  /* start date */
+  e_cal_component_get_dtstart (priv->component, &dt);
+  date = gcal_dup_icaltime (dt.value);
+
+  /* FIXME: fix the timezone issue */
+  /* if (date->is_date != 1) */
+  /*   *date = icaltime_convert_to_zone (*(dt.value), */
+  /*                                     priv->system_timezone); */
+  start_is_date = date->is_date == 1;
+
+  gcal_event_widget_set_date (event, date);
+  e_cal_component_free_datetime (&dt);
+  g_free (date);
+
+  /* end date */
+  e_cal_component_get_dtend (priv->component, &dt);
+  date = gcal_dup_icaltime (dt.value);
+
+  /* FIXME: fix the timezone issue */
+  /* if (date->is_date != 1) */
+  /*   *date = icaltime_convert_to_zone (*(dt.value), */
+  /*                                     priv->system_timezone); */
+  end_is_date = date->is_date == 1;
+
+  gcal_event_widget_set_end_date (event, date);
+  e_cal_component_free_datetime (&dt);
+  g_free (date);
+
+  /* set_all_day */
+  gcal_event_widget_set_all_day (event, start_is_date && end_is_date);
+
+  /* set_has_reminders */
+  gcal_event_widget_set_has_reminders (
+      event,
+      e_cal_component_has_alarms (priv->component));
+
+  return widget;
 }
 
 GtkWidget*
