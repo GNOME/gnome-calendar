@@ -120,7 +120,14 @@ static void     recreate_view                             (GcalManager     *mana
 
 static void     on_view_objects_added                     (ECalClientView  *view,
                                                            gpointer         objects,
+                                                           gpointer         user_data);
 
+static void     on_view_objects_removed                   (ECalClientView  *view,
+                                                           gpointer         objects,
+                                                           gpointer         user_data);
+
+static void     on_view_objects_modified                  (ECalClientView  *view,
+                                                           gpointer         objects,
                                                            gpointer         user_data);
 
 static void     remove_source                             (GcalManager     *manager,
@@ -132,16 +139,6 @@ static void     gcal_manager_constructed                  (GObject         *obje
 
 static void     gcal_manager_finalize                     (GObject         *object);
 
-static void     gcal_manager_reload_events                (GcalManager     *manager);
-
-static void     gcal_manager_on_view_objects_removed      (ECalClientView  *view,
-                                                           gpointer         objects,
-                                                           gpointer         user_data);
-
-static void     gcal_manager_on_view_objects_modified     (ECalClientView  *view,
-                                                           gpointer         objects,
-                                                           gpointer         user_data);
-
 static void     gcal_manager_on_event_removed             (GObject         *source_object,
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
@@ -149,7 +146,6 @@ static void     gcal_manager_on_event_removed             (GObject         *sour
 static void     gcal_manager_on_event_removed_for_move    (GObject         *source_object,
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
-
 
 static void     gcal_manager_on_event_created             (GObject         *source_object,
                                                            GAsyncResult    *result,
@@ -330,12 +326,12 @@ recreate_view (GcalManager     *manager,
 
       g_signal_connect (unit->view,
                         "objects-removed",
-                        G_CALLBACK (gcal_manager_on_view_objects_removed),
+                        G_CALLBACK (on_view_objects_removed),
                         manager);
 
       g_signal_connect (unit->view,
                         "objects-modified",
-                        G_CALLBACK (gcal_manager_on_view_objects_modified),
+                        G_CALLBACK (on_view_objects_modified),
                         manager);
 
       error = NULL;
@@ -403,6 +399,95 @@ on_view_objects_added (ECalClientView *view,
     {
       g_signal_emit (GCAL_MANAGER (user_data),
                      signals[EVENTS_ADDED],
+                     0,
+                     events_data);
+
+      g_slist_free_full (events_data, g_free);
+    }
+
+  g_object_unref (client);
+}
+
+/**
+ * on_view_objects_removed
+ * @view: the view emitting the signal
+ * @objects: a GSList of ECalComponentId*
+ * @user_data: The data passed when connecting the signal, here GcalManager
+ */
+static void
+on_view_objects_removed (ECalClientView *view,
+                         gpointer        objects,
+                         gpointer        user_data)
+{
+  GSList *l;
+  GSList *events_data;
+
+  ECalClient *client;
+  const gchar *source_uid;
+
+  events_data = NULL;
+  client = e_cal_client_view_ref_client (view);
+  source_uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
+
+  for (l = objects; l != NULL; l = l->next)
+    {
+      gchar *removed_event_uuid =
+        g_strdup_printf ("%s:%s",
+                         source_uid,
+                         ((ECalComponentId*)(l->data))->uid);
+      events_data = g_slist_append (events_data, removed_event_uuid);
+    }
+
+  if (events_data != NULL)
+    {
+      g_signal_emit (GCAL_MANAGER (user_data),
+                     signals[EVENTS_REMOVED],
+                     0,
+                     events_data);
+
+      g_slist_free_full (events_data, g_free);
+    }
+
+  g_object_unref (client);
+}
+
+/**
+ * on_view_objects_modified
+ * @view: the view emitting the signal
+ * @objects: a GSList of icalcomponent*
+ * @user_data: The data passed when connecting the signal, here GcalManager
+ */
+static void
+on_view_objects_modified (ECalClientView *view,
+                          gpointer        objects,
+                          gpointer        user_data)
+{
+  GSList *l;
+  GSList *events_data;
+
+  ECalClient *client;
+  const gchar *source_uid;
+
+  events_data = NULL;
+  client = e_cal_client_view_ref_client (view);
+  source_uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
+
+  for (l = objects; l != NULL; l = l->next)
+    {
+      if (l->data != NULL)
+        {
+          gchar* event_uuid;
+          event_uuid = g_strdup_printf ("%s:%s",
+                                        source_uid,
+                                        icalcomponent_get_uid (l->data));
+          events_data = g_slist_append (events_data, event_uuid);
+        }
+    }
+
+  if (events_data != NULL)
+    {
+      g_signal_emit (GCAL_MANAGER (user_data),
+                     signals[EVENTS_MODIFIED],
                      0,
                      events_data);
 
@@ -546,129 +631,6 @@ gcal_manager_finalize (GObject *object)
   priv = gcal_manager_get_instance_private (GCAL_MANAGER (object));
 
   g_hash_table_destroy (priv->clients);
-}
-
-/**
- * gcal_manager_reload_events:
- *
- * @manager: Self
- *
- * This executes every time a new query has been set.
- * So, there are a bunch of stuff to be done here:
- * <itemizedlist>
- * <listitem><para>
- *   Releasing the old view, desconnecting the callbacks
- * </para></listitem>
- * <listitem><para>
- *   Creating a new view, connecting callbacks
- * </para></listitem>
- * </itemizedlist>
- */
-static void
-gcal_manager_reload_events (GcalManager *manager)
-{
-  GcalManagerPrivate *priv;
-  GHashTableIter iter;
-  gpointer key;
-  gpointer value;
-
-  priv = gcal_manager_get_instance_private (manager);
-  g_hash_table_iter_init (&iter, priv->clients);
-  while (g_hash_table_iter_next (&iter, &key, &value))
-    {
-      GcalManagerUnit *unit = (GcalManagerUnit*) value;
-      if (unit->connected)
-        recreate_view (manager, unit);
-    }
-}
-
-/**
- * gcal_manager_on_view_objects_removed
- * @view: the view emitting the signal
- * @objects: a GSList of ECalComponentId*
- * @user_data: The data passed when connecting the signal, here GcalManager
- */
-static void
-gcal_manager_on_view_objects_removed (ECalClientView *view,
-                                      gpointer        objects,
-                                      gpointer        user_data)
-{
-  GSList *l;
-  GSList *events_data;
-
-  ECalClient *client;
-  const gchar *source_uid;
-
-  events_data = NULL;
-  client = e_cal_client_view_ref_client (view);
-  source_uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
-
-  for (l = objects; l != NULL; l = l->next)
-    {
-      gchar *removed_event_uuid =
-        g_strdup_printf ("%s:%s",
-                         source_uid,
-                         ((ECalComponentId*)(l->data))->uid);
-      events_data = g_slist_append (events_data, removed_event_uuid);
-    }
-
-  if (events_data != NULL)
-    {
-      g_signal_emit (GCAL_MANAGER (user_data),
-                     signals[EVENTS_REMOVED],
-                     0,
-                     events_data);
-
-      g_slist_free_full (events_data, g_free);
-    }
-
-  g_object_unref (client);
-}
-
-/**
- * gcal_manager_on_view_objects_modified
- * @view: the view emitting the signal
- * @objects: a GSList of icalcomponent*
- * @user_data: The data passed when connecting the signal, here GcalManager
- */
-static void
-gcal_manager_on_view_objects_modified (ECalClientView *view,
-                                       gpointer        objects,
-                                       gpointer        user_data)
-{
-  GSList *l;
-  GSList *events_data;
-
-  ECalClient *client;
-  const gchar *source_uid;
-
-  events_data = NULL;
-  client = e_cal_client_view_ref_client (view);
-  source_uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
-
-  for (l = objects; l != NULL; l = l->next)
-    {
-      if (l->data != NULL)
-        {
-          gchar* event_uuid;
-          event_uuid = g_strdup_printf ("%s:%s",
-                                        source_uid,
-                                        icalcomponent_get_uid (l->data));
-          events_data = g_slist_append (events_data, event_uuid);
-        }
-    }
-
-  if (events_data != NULL)
-    {
-      g_signal_emit (GCAL_MANAGER (user_data),
-                     signals[EVENTS_MODIFIED],
-                     0,
-                     events_data);
-
-      g_slist_free_full (events_data, g_free);
-    }
-
-  g_object_unref (client);
 }
 
 static void
@@ -933,6 +895,9 @@ gcal_manager_set_new_range (GcalManager        *manager,
   GcalManagerPrivate *priv;
   gchar *since_iso8601;
   gchar *until_iso8601;
+  GHashTableIter iter;
+  gpointer key;
+  gpointer value;
 
   priv = gcal_manager_get_instance_private (manager);
 
@@ -959,7 +924,13 @@ gcal_manager_set_new_range (GcalManager        *manager,
   g_debug ("Reload query %s", priv->query);
 
   /* redoing query */
-  gcal_manager_reload_events (manager);
+  g_hash_table_iter_init (&iter, priv->clients);
+  while (g_hash_table_iter_next (&iter, &key, &value))
+    {
+      GcalManagerUnit *unit = (GcalManagerUnit*) value;
+      if (unit->connected)
+        recreate_view (manager, unit);
+    }
 }
 
 icaltimetype*
