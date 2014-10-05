@@ -1,14 +1,16 @@
 Code formating and ordering
+===========================
 
-* The source file will keep and order of methods. The order will be as
-following:
++ The source file will keep and order of methods. The order will be as
+  following:
   1. Private functions will go first.
   2. class_init and init will go second.
   3. vfuncs implementations will go third.
   4. Public API will go fourth
 
-* Methods naming will be according to:
++ Methods naming will be according to:
   1. Private methods will have no prefix
   2. vfuncs and public API will have the right prefix
 
-* The methods prototype will always be placed at the top of the source.
++ The methods prototype will always be placed at the top of the source, in the
+  same order as their implementation below.
