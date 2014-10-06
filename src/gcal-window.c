@@ -145,6 +145,11 @@ static GcalManager*   get_manager                        (GcalWindow          *w
 static void           create_event                       (gpointer             user_data,
                                                           GtkWidget           *widget);
 
+static void           event_activated                    (GcalEventWidget     *event_widget,
+                                                          gpointer             user_data);
+
+static void           init_edit_dialog                   (GcalWindow          *window);
+
 static void           gcal_window_constructed            (GObject             *object);
 
 static void           gcal_window_finalize               (GObject             *object);
@@ -172,8 +177,6 @@ static void           gcal_window_search_toggled         (GObject             *o
 static void           gcal_window_search_changed         (GtkEditable         *editable,
                                                           gpointer             user_data);
 
-static void           gcal_window_init_edit_dialog       (GcalWindow          *window);
-
 /* GcalManager signal handling */
 static void           gcal_window_events_added           (GcalManager         *manager,
                                                           gpointer             events_list,
@@ -192,23 +195,11 @@ static void           gcal_window_event_created          (GcalManager         *m
                                                           const gchar         *event_uid,
                                                           gpointer             user_data);
 
-static void           gcal_window_event_activated        (GcalEventWidget     *event_widget,
-                                                          gpointer             user_data);
-
 static void           gcal_window_remove_event           (GdNotification      *notification,
                                                           gpointer             user_data);
 
 static void           gcal_window_undo_remove_event      (GtkButton           *button,
                                                           gpointer             user_data);
-
-static void           gcal_window_edit_dialog_responded  (GtkDialog           *dialog,
-                                                          gint                 response,
-                                                          gpointer             user_data);
-
-static void           gcal_window_update_event_widget    (GcalManager         *manager,
-                                                          const gchar         *source_uid,
-                                                          const gchar         *event_uid,
-                                                          GcalEventWidget     *widget);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
@@ -536,6 +527,8 @@ prepare_new_event_widget (GcalWindow *window)
 
   manager = get_manager (window);
 
+  /* FIXME: do this somehow since GcalManager doesn't keep
+     a list store of calendars anymore, and this is a stub method */
   gcal_new_event_widget_set_calendars (new_widget,
                                        GTK_TREE_MODEL (gcal_manager_get_sources_model (manager)));
 
@@ -665,6 +658,46 @@ create_event (gpointer   user_data,
   g_free (summary);
   /* reset and hide */
   set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
+}
+
+static void
+event_activated (GcalEventWidget *event_widget,
+                 gpointer         user_data)
+{
+  GcalWindowPrivate *priv;
+  GcalEventData *data;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  if (priv->edit_dialog == NULL)
+    init_edit_dialog (GCAL_WINDOW (user_data));
+
+  data = gcal_event_widget_get_data (event_widget);
+  gcal_edit_dialog_set_event_data (
+      GCAL_EDIT_DIALOG (priv->edit_dialog),
+      data);
+  g_free (data);
+
+  gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
+}
+
+static void
+init_edit_dialog (GcalWindow *window)
+{
+  GcalWindowPrivate *priv;
+
+  priv = gcal_window_get_instance_private (window);
+
+  priv->edit_dialog = gcal_edit_dialog_new ();
+  gtk_window_set_transient_for (GTK_WINDOW (priv->edit_dialog),
+                                GTK_WINDOW (window));
+  gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog),
+                                get_manager (window));
+
+  /* FIXME: check if really hides edit-dialog */
+  g_signal_connect (priv->edit_dialog,
+                    "response", G_CALLBACK (gtk_widget_hide),
+                    NULL);
 }
 
 static void
@@ -1091,25 +1124,6 @@ gcal_window_search_changed (GtkEditable *editable,
     }
 }
 
-static void
-gcal_window_init_edit_dialog (GcalWindow *window)
-{
-  GcalWindowPrivate *priv;
-
-  priv = gcal_window_get_instance_private (window);
-
-  priv->edit_dialog = gcal_edit_dialog_new ();
-  gtk_window_set_transient_for (GTK_WINDOW (priv->edit_dialog),
-                                GTK_WINDOW (window));
-  gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog),
-                                get_manager (window));
-
-  g_signal_connect (priv->edit_dialog,
-                    "response",
-                    G_CALLBACK (gcal_window_edit_dialog_responded),
-                    window);
-}
-
 /* GcalManager signal handling */
 static void
 gcal_window_events_added (GcalManager *manager,
@@ -1137,7 +1151,7 @@ gcal_window_events_added (GcalManager *manager,
 
           g_signal_connect (e,
                             "activate",
-                            G_CALLBACK (gcal_window_event_activated),
+                            G_CALLBACK (event_activated),
                             user_data);
         }
     }
@@ -1174,73 +1188,46 @@ gcal_window_events_modified (GcalManager *manager,
                              gpointer     user_data)
 {
   GcalWindowPrivate *priv;
-  GSList *l;
 
-  gchar **tokens;
-  gchar *source_uid;
-  gchar *event_uid;
+  GcalView *view;
+  GSList *l;
+  gint i;
+
+  const gchar *event_uuid;
 
   GtkWidget *widget;
-  icaltimetype *start_date;
-  icaltimetype *end_date;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  view = GCAL_VIEW (priv->views[priv->active_view]);
 
   for (l = events_list; l != NULL; l = l->next)
     {
-      gint i;
+      GtkWidget *e;
 
-      tokens = g_strsplit ((gchar*) l->data, ":", 2);
-      source_uid  = tokens[0];
-      event_uid = tokens[1];
-
-      g_debug ("Object modified from UI on calendar: %s event: %s",
-               source_uid,
-               event_uid);
-
+      e = gcal_event_widget_new_from_data ((GcalEventData*) l->data);
+      event_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (e));
+      /* remove event from every view */
       for (i = 0; i < 5; i++)
         {
           if (priv->views[i] == NULL)
             continue;
 
           widget = gcal_view_get_by_uuid (GCAL_VIEW (priv->views[i]),
-                                          (gchar*) l->data);
-
+                                          event_uuid);
           if (widget != NULL)
-            {
-              start_date = gcal_manager_get_event_start_date (manager,
-                                                              source_uid,
-                                                              event_uid);
-              end_date = gcal_manager_get_event_end_date (manager,
-                                                          source_uid,
-                                                          event_uid);
-
-              gtk_widget_destroy (widget);
-
-              if (gcal_view_draw_event (GCAL_VIEW (priv->views[i]),
-                                        start_date, end_date))
-                {
-                  GtkWidget *event;
-                  event = gcal_event_widget_new ((gchar*) l->data);
-                  gcal_window_update_event_widget (manager,
-                                                   source_uid,
-                                                   event_uid,
-                                                   GCAL_EVENT_WIDGET (event));
-                  gtk_widget_show (event);
-                  gtk_container_add (GTK_CONTAINER (priv->views[i]),
-                                     event);
-                  g_signal_connect (event,
-                                    "activate",
-                                    G_CALLBACK (gcal_window_event_activated),
-                                    user_data);
-                }
-
-              g_free (start_date);
-              g_free (end_date);
-            }
+            gtk_widget_destroy (widget);
         }
 
-      g_strfreev (tokens);
+      /* add modified event on the current view only */
+      if (gcal_view_will_add_event (view, GCAL_EVENT_WIDGET (e)))
+        {
+          gtk_widget_show (e);
+          gtk_container_add (GTK_CONTAINER (view), e);
+          g_signal_connect (e,
+                            "activate",
+                            G_CALLBACK (event_activated),
+                            user_data);
+        }
     }
 }
 
@@ -1260,32 +1247,12 @@ gcal_window_event_created (GcalManager *manager,
   priv->open_edit_dialog = FALSE;
 
   if (priv->edit_dialog == NULL)
-    gcal_window_init_edit_dialog (GCAL_WINDOW (user_data));
+    init_edit_dialog (GCAL_WINDOW (user_data));
 
-  gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (priv->edit_dialog),
-                              source_uid,
-                              event_uid);
-
-  gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
-}
-
-static void
-gcal_window_event_activated (GcalEventWidget *event_widget,
-                             gpointer         user_data)
-{
-  GcalWindowPrivate *priv;
-  gchar **tokens;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  if (priv->edit_dialog == NULL)
-    gcal_window_init_edit_dialog (GCAL_WINDOW (user_data));
-
-  tokens = g_strsplit (gcal_event_widget_peek_uuid (event_widget), ":", 2);
-  gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (priv->edit_dialog),
-                              tokens[0],
-                              tokens[1]);
-  g_strfreev (tokens);
+  /* FIXME: use new GcalEditDialog API */
+  /* gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (priv->edit_dialog), */
+  /*                             source_uid, */
+  /*                             event_uid); */
 
   gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
 }
@@ -1338,203 +1305,6 @@ gcal_window_undo_remove_event (GtkButton *button,
       gcal_window_hide_notification (GCAL_WINDOW (user_data));
     }
 
-}
-
-static void
-gcal_window_edit_dialog_responded (GtkDialog *dialog,
-                                   gint       response,
-                                   gpointer   user_data)
-{
-  GcalWindowPrivate *priv;
-
-  GcalManager *manager;
-  GList *changed_props;
-  GList *l;
-
-  GtkWidget *grid;
-  GtkWidget *undo_button;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  gtk_widget_hide (priv->edit_dialog);
-
-  switch (response)
-    {
-      case GTK_RESPONSE_CANCEL:
-        /* do nothing, nor edit, nor nothing */
-        break;
-      case GTK_RESPONSE_ACCEPT:
-        /* save changes if editable */
-        manager = get_manager (GCAL_WINDOW (user_data));
-        changed_props =
-          gcal_edit_dialog_get_modified_properties (GCAL_EDIT_DIALOG (dialog));
-        for (l = changed_props; l != NULL; l = l->next)
-          {
-            EventEditableProperty prop = (EventEditableProperty) l->data;
-
-            switch (prop)
-              {
-              case EVENT_SUMMARY:
-                g_debug ("Will change summary");
-                gcal_manager_set_event_summary (
-                    manager,
-                    gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
-                    gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)),
-                    gcal_edit_dialog_peek_summary (GCAL_EDIT_DIALOG (dialog)));
-                break;
-              case EVENT_START_DATE:
-                {
-                  icaltimetype *date;
-
-                  date = gcal_edit_dialog_get_start_date (GCAL_EDIT_DIALOG (dialog));
-
-                  g_debug ("Will change start_date");
-                  gcal_manager_set_event_start_date (
-                       manager,
-                       gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
-                       gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)),
-                       date);
-                  g_free (date);
-                  break;
-                }
-              case EVENT_END_DATE:
-                {
-                  icaltimetype *date;
-
-                  date = gcal_edit_dialog_get_end_date (GCAL_EDIT_DIALOG (dialog));
-
-                  g_debug ("Will change end_date");
-                  gcal_manager_set_event_end_date (
-                       manager,
-                       gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
-                       gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)),
-                       date);
-                  g_free (date);
-                  break;
-                }
-              case EVENT_LOCATION:
-                g_debug ("Will change location");
-                gcal_manager_set_event_location (
-                    manager,
-                    gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
-                    gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)),
-                    gcal_edit_dialog_peek_location (GCAL_EDIT_DIALOG (dialog)));
-                break;
-              case EVENT_DESCRIPTION:
-                {
-                  gchar *new_desc;
-
-                  new_desc = gcal_edit_dialog_get_event_description (GCAL_EDIT_DIALOG (dialog));
-                  gcal_manager_set_event_description (
-                       manager,
-                       gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
-                       gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)),
-                       new_desc);
-                  g_free (new_desc);
-                  break;
-                }
-              case EVENT_SOURCE:
-                {
-                  gchar *new_uid;
-
-                  new_uid = gcal_edit_dialog_get_new_source_uid (GCAL_EDIT_DIALOG (dialog));
-                  gcal_manager_move_event_to_source (
-                       manager,
-                       gcal_edit_dialog_peek_source_uid (GCAL_EDIT_DIALOG (dialog)),
-                       gcal_edit_dialog_peek_event_uid (GCAL_EDIT_DIALOG (dialog)),
-                       new_uid);
-                  g_free (new_uid);
-                  break;
-                }
-              default:
-                break;
-              }
-          }
-
-        break;
-      case GCAL_RESPONSE_DELETE_EVENT:
-        /* delete the event */
-        if (priv->noty != NULL)
-          g_clear_object (&(priv->noty));
-
-        priv->noty = gd_notification_new ();
-        grid = gtk_grid_new ();
-        gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
-        gtk_container_add (GTK_CONTAINER (grid),
-                           gtk_label_new (_("Event deleted")));
-
-        undo_button = gtk_button_new_with_label (_("Undo"));
-        gtk_container_add (GTK_CONTAINER (grid), undo_button);
-
-        gtk_container_add (GTK_CONTAINER (priv->noty), grid);
-        gcal_window_show_notification (GCAL_WINDOW (user_data));
-
-        g_signal_connect (priv->noty,
-                          "dismissed",
-                          G_CALLBACK (gcal_window_remove_event),
-                          user_data);
-        g_signal_connect (undo_button,
-                          "clicked",
-                          G_CALLBACK (gcal_window_undo_remove_event),
-                          user_data);
-
-        priv->event_to_delete =
-          gcal_edit_dialog_get_event_uuid (GCAL_EDIT_DIALOG (priv->edit_dialog));
-
-        /* hide widget of the event */
-        gtk_widget_hide (
-            gcal_view_get_by_uuid (GCAL_VIEW (priv->views[priv->active_view]),
-                                   priv->event_to_delete));
-        break;
-
-      default:
-        /* do nothing */
-        break;
-    }
-}
-
-static void
-gcal_window_update_event_widget (GcalManager     *manager,
-                                 const gchar     *source_uid,
-                                 const gchar     *event_uid,
-                                 GcalEventWidget *widget)
-{
-  gchar *summary;
-  GdkRGBA *color;
-  icaltimetype *date;
-
-  summary = gcal_manager_get_event_summary (manager,
-                                            source_uid,
-                                            event_uid);
-  gcal_event_widget_set_summary (widget, summary);
-
-  color = gcal_manager_get_event_color (manager,
-                                        source_uid,
-                                        event_uid);
-  gcal_event_widget_set_color (widget, color);
-
-  date = gcal_manager_get_event_start_date (manager,
-                                            source_uid,
-                                            event_uid);
-  gcal_event_widget_set_date (widget, date);
-
-  g_free (date);
-  date = gcal_manager_get_event_end_date (manager,
-                                          source_uid,
-                                          event_uid);
-  gcal_event_widget_set_end_date (widget, date);
-
-  gcal_event_widget_set_all_day (
-      widget,
-      gcal_manager_get_event_all_day (manager, source_uid, event_uid));
-
-  gcal_event_widget_set_has_reminders (
-      widget,
-      gcal_manager_has_event_reminders (manager, source_uid, event_uid));
-
-  g_free (summary);
-  gdk_rgba_free (color);
-  g_free (date);
 }
 
 /* Public API */
