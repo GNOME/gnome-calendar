@@ -282,13 +282,16 @@ gcal_compare_event_widget_by_date (gconstpointer a,
 void print_date (const gchar*        prefix,
                  const icaltimetype* icaltime)
 {
-  gchar* temp =
-    isodate_from_time_t (icaltime_as_timet_with_zone (*icaltime,
-                                                      icaltime->zone));
+  gchar* temp = g_strdup_printf ("{y = %d, m = %d, d = %d, hour = %d:%d:%d, utc = %d, date = %d, daylight = %d, zone = %p}",
+                                 icaltime->year, icaltime->month,
+                                 icaltime->day, icaltime->hour,
+                                 icaltime->minute, icaltime->second,
+                                 icaltime->is_utc, icaltime->is_date,
+                                 icaltime->is_daylight, icaltime->zone);
   g_debug ("%s: %s  --  zone: %s",
            prefix,
            temp,
-           icaltimezone_get_display_name (icaltime->zone));
+           icaltimezone_get_display_name ((icaltimezone*) icaltime->zone));
   g_free (temp);
 }
 
