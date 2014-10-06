@@ -57,9 +57,8 @@ GType                gcal_edit_dialog_get_type                (void);
 
 GtkWidget*           gcal_edit_dialog_new                     (void);
 
-void                 gcal_edit_dialog_set_event               (GcalEditDialog *dialog,
-                                                               const gchar    *source_uid,
-                                                               const gchar    *event_uid);
+void                 gcal_edit_dialog_set_event_data          (GcalEditDialog *dialog,
+                                                               GcalEventData  *data);
 
 void                 gcal_edit_dialog_set_manager             (GcalEditDialog *dialog,
                                                                GcalManager    *manager);
