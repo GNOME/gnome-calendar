@@ -85,47 +85,6 @@ void           gcal_manager_set_new_range           (GcalManager        *manager
                                                      const icaltimetype *initial_date,
                                                      const icaltimetype *final_date);
 
-/* Get methods */
-icaltimetype*  gcal_manager_get_event_start_date    (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
-icaltimetype*  gcal_manager_get_event_end_date      (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
-gchar*         gcal_manager_get_event_summary       (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
-gchar**        gcal_manager_get_event_organizer     (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
-const gchar*   gcal_manager_get_event_location      (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
-gchar*         gcal_manager_get_event_description   (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
-GdkRGBA*       gcal_manager_get_event_color         (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
-GList*         gcal_manager_get_event_reminders     (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
-gboolean       gcal_manager_has_event_reminders     (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
-gboolean       gcal_manager_get_event_all_day       (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
 void           gcal_manager_remove_event            (GcalManager        *manager,
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid);
