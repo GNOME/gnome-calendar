@@ -78,8 +78,8 @@ gchar*         gcal_manager_add_source              (GcalManager        *manager
 
 gchar*         gcal_manager_get_default_source      (GcalManager        *manager);
 
-gboolean       gcal_manager_get_source_readonly     (GcalManager        *manager,
-                                                     const gchar        *source_uid);
+gboolean       gcal_manager_is_client_writable      (GcalManager        *manager,
+                                                     ESource            *source);
 
 void           gcal_manager_set_new_range           (GcalManager        *manager,
                                                      const icaltimetype *initial_date,

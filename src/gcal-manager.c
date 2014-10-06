@@ -863,15 +863,15 @@ gcal_manager_get_default_source (GcalManager *manager)
 }
 
 gboolean
-gcal_manager_get_source_readonly (GcalManager *manager,
-                                  const gchar *source_uid)
+gcal_manager_is_client_writable (GcalManager *manager,
+                                 ESource     *source)
 {
   GcalManagerPrivate *priv;
   GcalManagerUnit *unit;
 
   priv = gcal_manager_get_instance_private (manager);
 
-  unit = g_hash_table_lookup (priv->clients, source_uid);
+  unit = g_hash_table_lookup (priv->clients, source);
   return e_client_is_readonly (E_CLIENT (unit->client));
 }
 

@@ -70,6 +70,10 @@ struct _GcalEditDialogPrivate
 
   SimpleEventStore *ev_store;
 
+  /* new data holders */
+  ESource          *source; /* weak reference */
+  ECalComponent    *component;
+
   gboolean          setting_event;
 };
 
@@ -392,6 +396,9 @@ gcal_edit_dialog_finalize (GObject *object)
 
   if (priv->calendars_menu != NULL)
     g_object_unref (priv->calendars_menu);
+
+  if (priv->component != NULL)
+    g_object_unref (priv->component);
 
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->finalize (object);
 }
@@ -841,27 +848,36 @@ gcal_edit_dialog_new (void)
 }
 
 void
-gcal_edit_dialog_set_event (GcalEditDialog *dialog,
-                            const gchar    *source_uid,
-                            const gchar    *event_uid)
+gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
+                                 GcalEventData  *data)
 {
   GcalEditDialogPrivate *priv;
 
-  const gchar *const_text;
+  const gchar *const_text = NULL;
   gboolean all_day;
+
+  const gchar *uid = NULL;
+  ECalComponentText e_summary;
+  ECalComponentDateTime dt;
 
   priv = dialog->priv;
   all_day = FALSE;
 
   priv->setting_event = TRUE;
 
+  priv->source = data->source;
+  if (priv->component != NULL)
+    g_object_unref (priv->component);
+  priv->component = e_cal_component_clone (data->event_component);
+
   if (priv->source_uid != NULL)
     g_free (priv->source_uid);
-  priv->source_uid = g_strdup (source_uid);
+  priv->source_uid = g_strdup (e_source_get_uid (priv->source));
 
   if (priv->event_uid != NULL)
     g_free (priv->event_uid);
-  priv->event_uid = g_strdup (event_uid);
+  e_cal_component_get_uid (priv->component, &uid);
+  priv->event_uid = g_strdup (uid);
 
   /* Clear event data */
   gcal_edit_dialog_clear_data (dialog);
@@ -879,9 +895,8 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 
   /* Load new event data */
   /* summary */
-  priv->ev_store->summary = gcal_manager_get_event_summary (priv->manager,
-                                                            priv->source_uid,
-                                                            priv->event_uid);
+  e_cal_component_get_summary (priv->component, &e_summary);
+  priv->ev_store->summary = g_strdup (e_summary.value);
   gtk_entry_set_text (GTK_ENTRY (priv->summary_entry),
                       priv->ev_store->summary != NULL ?
                       priv->ev_store->summary : "");
@@ -891,20 +906,28 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   gcal_edit_dialog_set_calendar_selected (dialog);
 
   /* start date */
-  priv->ev_store->start_date =
-    gcal_manager_get_event_start_date (priv->manager,
-                                       priv->source_uid,
-                                       priv->event_uid);
+  e_cal_component_get_dtstart (priv->component, &dt);
+  priv->ev_store->start_date = gcal_dup_icaltime (dt.value);
+  e_cal_component_free_datetime (&dt);
 
   gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->start_date_entry),
                             priv->ev_store->start_date->day,
                             priv->ev_store->start_date->month,
                             priv->ev_store->start_date->year);
 
+  /* end date */
+  e_cal_component_get_dtend (priv->component, &dt);
+  priv->ev_store->end_date = gcal_dup_icaltime (dt.value);
+  e_cal_component_free_datetime (&dt);
+
+  gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
+                            priv->ev_store->end_date->day,
+                            priv->ev_store->end_date->month,
+                            priv->ev_store->end_date->year);
+
   /* all_day  */
-  priv->ev_store->all_day = gcal_manager_get_event_all_day (priv->manager,
-                                                            priv->source_uid,
-                                                            priv->event_uid);
+  priv->ev_store->all_day = (priv->ev_store->start_date->is_date == 1 &&
+                             priv->ev_store->end_date->is_date == 1);
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->all_day_check),
                                 priv->ev_store->all_day);
 
@@ -917,16 +940,6 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->start_time_entry),
                             priv->ev_store->start_date->hour,
                             priv->ev_store->start_date->minute);
-
-  /* end date */
-  priv->ev_store->end_date = gcal_manager_get_event_end_date (priv->manager,
-                                                              priv->source_uid,
-                                                              priv->event_uid);
-  gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
-                            priv->ev_store->end_date->day,
-                            priv->ev_store->end_date->month,
-                            priv->ev_store->end_date->year);
-
   /* end time */
   if (all_day)
     {
@@ -943,20 +956,13 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
                                                     0);
 
   /* location */
-  const_text = gcal_manager_get_event_location (priv->manager,
-                                                priv->source_uid,
-                                                priv->event_uid);
+  e_cal_component_get_location (priv->component, &const_text);
   gtk_entry_set_text (GTK_ENTRY (priv->location_entry),
                       const_text != NULL ? const_text : "");
   priv->ev_store->location = const_text != NULL ? g_strdup (const_text) : "";
 
   /* notes */
-  priv->ev_store->description =
-    gcal_manager_get_event_description (priv->manager,
-                                        priv->source_uid,
-                                        priv->event_uid);
-  if (priv->ev_store->description == NULL)
-    priv->ev_store->description = "";
+  priv->ev_store->description = "";
 
   gtk_text_buffer_set_text (
       gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)),
@@ -965,8 +971,8 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 
   gcal_edit_dialog_set_writable (
       dialog,
-      ! gcal_manager_get_source_readonly (priv->manager,
-                                          priv->source_uid));
+      ! gcal_manager_is_client_writable (priv->manager,
+                                         priv->source));
 
   priv->setting_event = FALSE;
 }
@@ -1016,8 +1022,7 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
                           3, &color,
                           -1);
 
-      if (! active ||
-          gcal_manager_get_source_readonly (priv->manager, uid))
+      if (! active)
         {
           valid = gtk_tree_model_iter_next (GTK_TREE_MODEL (sources_model),
                                             &iter);
