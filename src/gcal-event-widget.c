@@ -677,7 +677,7 @@ gcal_event_widget_new_from_data (GcalEventData *data)
 
   /* summary */
   e_cal_component_get_summary (priv->component, &e_summary);
-  gcal_event_widget_set_summary (event, e_summary.value);
+  gcal_event_widget_set_summary (event, (gchar*) e_summary.value);
 
   /* color */
   color = g_new0 (GdkRGBA, 1);
@@ -886,4 +886,29 @@ gcal_event_widget_get_has_reminders (GcalEventWidget *event)
 
   g_object_get (event, "has-reminders", &has_reminders, NULL);
   return has_reminders;
+}
+
+/**
+ * gcal_event_widget_get_data:
+ * @event: a #GcalEventWidget instance
+ *
+ * Returns a #GcalEventData with shallows members, meaning the members
+ * are owned but the struct should be freed.
+ *
+ * Returns: (transfer full): a #GcalEventData
+ **/
+GcalEventData*
+gcal_event_widget_get_data (GcalEventWidget *event)
+{
+  GcalEventWidgetPrivate *priv;
+  GcalEventData *data;
+
+  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), NULL);
+  priv = gcal_event_widget_get_instance_private (event);
+
+  data = g_new0 (GcalEventData, 1);
+  data->source = priv->source;
+  data->event_component = priv->component;
+
+  return data;
 }
