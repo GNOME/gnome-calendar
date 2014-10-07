@@ -187,18 +187,18 @@ load_source (GcalManager *manager,
       unit = g_new0 (GcalManagerUnit, 1);
 
       g_hash_table_insert (priv->clients, source, unit);
+
+      /* NULL: because maybe the operation cannot be really cancelled */
+      e_cal_client_connect (source,
+                            E_CAL_CLIENT_SOURCE_TYPE_EVENTS, NULL,
+                            on_client_connected,
+                            manager);
     }
   else
     {
       g_warning ("Skipping already loaded source: %s",
                  e_source_get_uid (source));
     }
-
-  /* NULL: because maybe the operation cannot be really cancelled */
-  e_cal_client_connect (source,
-                        E_CAL_CLIENT_SOURCE_TYPE_EVENTS, NULL,
-                        on_client_connected,
-                        manager);
 }
 
 static void
@@ -229,45 +229,44 @@ on_client_connected (GObject      *source_object,
       /* FIXME: user should be able to disable sources */
       unit->enabled = TRUE;
 
-      g_debug ("Source %s connected",
-               e_source_get_display_name (source));
+      g_debug ("Source %s (%s) connected",
+               e_source_get_display_name (source),
+               e_source_get_uid (source));
 
       /* setting view */
       recreate_view (GCAL_MANAGER (user_data), unit);
     }
   else
     {
-      if (error != NULL)
+      g_warning ("%s", error->message);
+
+      /* handling error */
+      if (g_error_matches (error,
+                           E_CLIENT_ERROR,
+                           E_CLIENT_ERROR_BUSY))
         {
-          g_warning ("%s", error->message);
+          RetryOpenData *rod;
 
-          /* handling error */
-          if (g_error_matches (error, E_CLIENT_ERROR,
-                               E_CLIENT_ERROR_BUSY))
-            {
-              RetryOpenData *rod;
+          rod = g_new0 (RetryOpenData, 1);
+          rod->source = source;
+          rod->manager = user_data;
 
-              rod = g_new0 (RetryOpenData, 1);
-              rod->source = source;
-              rod->manager = user_data;
+          g_timeout_add_seconds (2, retry_connect_on_timeout, rod);
 
-              g_timeout_add_seconds (2, retry_connect_on_timeout, rod);
-
-              g_error_free (error);
-              return;
-            }
-
-          /* in any other case, remove it*/
-          remove_source (GCAL_MANAGER (user_data), source);
-          g_warning ("%s: Failed to open/connect '%s': %s",
-                     G_STRFUNC,
-                     e_source_get_display_name (source),
-                     error->message);
-
-          g_object_unref (source);
           g_error_free (error);
           return;
         }
+
+      /* in any other case, remove it*/
+      remove_source (GCAL_MANAGER (user_data), source);
+      g_warning ("%s: Failed to open/connect '%s': %s",
+                 G_STRFUNC,
+                 e_source_get_display_name (source),
+                 error->message);
+
+      g_object_unref (source);
+      g_error_free (error);
+      return;
     }
 }
 
@@ -613,7 +612,7 @@ gcal_manager_constructed (GObject *object)
       return;
     }
 
-  sources = e_source_registry_list_sources (priv->source_registry,
+  sources = e_source_registry_list_enabled (priv->source_registry,
                                             E_SOURCE_EXTENSION_CALENDAR);
 
   for (l = sources; l != NULL; l = l->next)
