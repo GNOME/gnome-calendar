@@ -3,7 +3,6 @@ AM_CPPFLAGS =                                             \
     -DPACKAGE_SRC_DIR=\""$(srcdir)"\"                     \
     -DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\"                \
     -DUI_DATA_DIR=\""$(pkgdatadir)/style"\"               \
-    -I$(top_srcdir)/libgd                                 \
     $(MAINTAINER_COMPILER_FLAGS)                          \
     $(WARN_CFLAGS)                                        \
     -DEDS_DISABLE_DEPRECATED                              \
@@ -66,7 +65,6 @@ gnome_calendar_LDFLAGS =                                  \
 
 gnome_calendar_LDADD =                                    \
   -lm                                                     \
-  $(top_builddir)/libgd/libgd.la                          \
   $(CALENDAR_LIBS)
 
 resource_files = $(shell glib-compile-resources --sourcedir=$(top_srcdir)/data --generate-dependencies $(top_srcdir)/data/calendar.gresource.xml)

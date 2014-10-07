@@ -35,8 +35,6 @@
 
 #include "e-cell-renderer-color.h"
 
-#include <libgd/gd.h>
-
 #include <glib/gi18n.h>
 
 #include <libecal/libecal.h>
@@ -65,8 +63,8 @@ typedef struct
   GtkWidget           *nav_bar;
   GtkWidget           *views_overlay;
   GtkWidget           *views_stack;
+  GtkWidget           *notification;
   GtkWidget           *new_event_widget;
-  GtkWidget           *noty; /* short-lived */
   GtkWidget           *popover; /* short-lived */
 
   /* header_bar widets */
@@ -141,6 +139,11 @@ static void           close_new_event_widget             (GtkButton           *b
 
 static GcalManager*   get_manager                        (GcalWindow          *window);
 
+static void           create_notification                (GcalWindow          *window);
+
+static void           hide_notification                  (GtkWidget           *button,
+                                                          gpointer             user_data);
+
 /* handling events interaction */
 static void           create_event                       (gpointer             user_data,
                                                           GtkWidget           *widget);
@@ -199,7 +202,8 @@ static void           gcal_window_event_created          (GcalManager         *m
                                                           const gchar         *event_uid,
                                                           gpointer             user_data);
 
-static void           gcal_window_remove_event           (GdNotification      *notification,
+static void           gcal_window_remove_event           (GtkWidget           *notification,
+                                                          GParamSpec          *spec,
                                                           gpointer             user_data);
 
 static void           gcal_window_undo_remove_event      (GtkButton           *button,
@@ -633,6 +637,77 @@ get_manager (GcalWindow *window)
 }
 
 static void
+create_notification (GcalWindow *window)
+{
+  GcalWindowPrivate *priv;
+
+  GtkWidget *notification_frame;
+  GtkWidget *notification_grid;
+  GtkWidget *undo_button;
+  GtkWidget *hide_button;
+
+  priv = gcal_window_get_instance_private (window);
+
+  priv->notification = gtk_revealer_new ();
+  gtk_revealer_set_transition_type (
+      GTK_REVEALER (priv->notification),
+      GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN);
+  gtk_revealer_set_transition_duration (GTK_REVEALER (priv->notification), 100);
+  gtk_widget_set_halign (priv->notification, GTK_ALIGN_CENTER);
+  gtk_widget_set_valign (priv->notification, GTK_ALIGN_START);
+
+  gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
+                           priv->notification);
+
+  notification_frame = gtk_frame_new (NULL);
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (notification_frame),
+      "app-notification");
+
+  /* notification content */
+  notification_grid = gtk_grid_new ();
+  gtk_grid_set_column_spacing (GTK_GRID (notification_grid), 20);
+
+  undo_button = gtk_button_new_with_label (_("Undo"));
+  gtk_widget_set_valign (undo_button, GTK_ALIGN_CENTER);
+
+  hide_button = gtk_button_new_from_icon_name ("window-close-symbolic", GTK_ICON_SIZE_MENU);
+  gtk_button_set_relief (GTK_BUTTON (hide_button), GTK_RELIEF_NONE);
+  gtk_style_context_add_class (
+      gtk_widget_get_style_context (hide_button),
+      "image-button");
+
+  gtk_container_add (GTK_CONTAINER (notification_grid), gtk_label_new (_("Event deleted")));
+  gtk_container_add (GTK_CONTAINER (notification_grid), undo_button);
+  gtk_container_add (GTK_CONTAINER (notification_grid), hide_button);
+
+  gtk_container_add (GTK_CONTAINER (notification_frame), notification_grid);
+  gtk_container_add (GTK_CONTAINER (priv->notification), notification_frame);
+
+  gtk_widget_show_all (priv->notification);
+
+  g_signal_connect (hide_button,
+                    "clicked",
+                    G_CALLBACK (hide_notification),
+                    window);
+  g_signal_connect (priv->notification,
+                    "notify::child-revealed",
+                    G_CALLBACK (gcal_window_remove_event),
+                    window);
+  g_signal_connect (undo_button,
+                    "clicked",
+                    G_CALLBACK (gcal_window_undo_remove_event),
+                    window);
+}
+
+static void
+hide_notification (GtkWidget *button,
+                   gpointer   user_data)
+{
+  gcal_window_hide_notification (GCAL_WINDOW (user_data));
+}
+
+static void
 create_event (gpointer   user_data,
               GtkWidget *widget)
 {
@@ -714,9 +789,6 @@ edit_dialog_closed (GtkDialog *dialog,
   GcalEditDialog *edit_dialog;
   GcalView *view;
 
-  GtkWidget *grid;
-  GtkWidget *undo_button;
-
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   gtk_widget_hide (GTK_WIDGET (dialog));
@@ -729,29 +801,11 @@ edit_dialog_closed (GtkDialog *dialog,
     {
     case GCAL_RESPONSE_DELETE_EVENT:
       /* delete the event */
-      if (priv->noty != NULL)
-        g_clear_object (&(priv->noty));
+      if (priv->notification != NULL)
+        g_clear_object (&(priv->notification));
 
-      priv->noty = gd_notification_new ();
-      grid = gtk_grid_new ();
-      gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
-      gtk_container_add (GTK_CONTAINER (grid),
-                         gtk_label_new (_("Event deleted")));
-
-      undo_button = gtk_button_new_with_label (_("Undo"));
-      gtk_container_add (GTK_CONTAINER (grid), undo_button);
-
-      gtk_container_add (GTK_CONTAINER (priv->noty), grid);
+      create_notification (GCAL_WINDOW (user_data));
       gcal_window_show_notification (GCAL_WINDOW (user_data));
-
-      g_signal_connect (priv->noty,
-                        "dismissed",
-                        G_CALLBACK (gcal_window_remove_event),
-                        user_data);
-      g_signal_connect (undo_button,
-                        "clicked",
-                        G_CALLBACK (gcal_window_undo_remove_event),
-                        user_data);
 
       priv->event_to_delete =
         gcal_edit_dialog_get_event_uuid (edit_dialog);
@@ -854,9 +908,7 @@ gcal_window_constructed (GObject *object)
   priv->header_bar = gtk_header_bar_new ();
 
   /* header_bar: new */
-  priv->new_button = gd_header_simple_button_new ();
-  gd_header_button_set_label (GD_HEADER_BUTTON (priv->new_button),
-                              _("New Event"));
+  priv->new_button = gtk_button_new_with_label (_("New Event"));
   gtk_style_context_add_class (
       gtk_widget_get_style_context (priv->new_button),
       "suggested-action");
@@ -868,17 +920,14 @@ gcal_window_constructed (GObject *object)
                                    priv->views_switcher);
 
   /* header_bar: menu */
-  menu_button = gd_header_menu_button_new ();
-  gd_header_button_set_label (GD_HEADER_BUTTON (menu_button),
-                              _("Settings"));
-  gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (menu_button),
-                                           "open-menu-symbolic");
+  menu_button = gtk_button_new_from_icon_name ("open-menu-symbolic", GTK_ICON_SIZE_MENU);
   gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), menu_button);
 
   /* header_bar: search */
-  search_button = gd_header_toggle_button_new ();
-  gd_header_button_set_symbolic_icon_name (GD_HEADER_BUTTON (search_button),
-                                           "edit-find-symbolic");
+  search_button = gtk_toggle_button_new ();
+  gtk_container_add (
+      GTK_CONTAINER (search_button),
+      gtk_image_new_from_icon_name ("edit-find-symbolic", GTK_ICON_SIZE_MENU));
   gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), search_button);
 
   gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->header_bar),
@@ -1323,7 +1372,8 @@ gcal_window_event_created (GcalManager *manager,
 }
 
 static void
-gcal_window_remove_event (GdNotification  *notification,
+gcal_window_remove_event (GtkWidget       *notification,
+                          GParamSpec      *spec,
                           gpointer         user_data)
 {
   GcalWindowPrivate *priv;
@@ -1331,6 +1381,9 @@ gcal_window_remove_event (GdNotification  *notification,
   gchar **tokens;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  if (gtk_revealer_get_child_revealed (GTK_REVEALER (notification)))
+      return;
 
   if (priv->event_to_delete != NULL)
     {
@@ -1345,7 +1398,7 @@ gcal_window_remove_event (GdNotification  *notification,
     }
 
   /* since this is called when the notification is dismissed is safe to do here: */
-  priv->noty = NULL;
+  gtk_widget_destroy (priv->notification);
 }
 
 static void
@@ -1496,9 +1549,8 @@ gcal_window_show_notification (GcalWindow *window)
   GcalWindowPrivate *priv;
 
   priv = gcal_window_get_instance_private (window);
-  gtk_overlay_add_overlay (GTK_OVERLAY (priv->views_overlay),
-                           priv->noty);
-  gtk_widget_show_all (priv->noty);
+
+  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), TRUE);
 }
 
 void
@@ -1507,5 +1559,6 @@ gcal_window_hide_notification (GcalWindow *window)
   GcalWindowPrivate *priv;
 
   priv = gcal_window_get_instance_private (window);
-  gd_notification_dismiss (GD_NOTIFICATION (priv->noty));
+
+  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), FALSE);
 }

@@ -1,3 +1,0 @@
-[submodule "libgd"]
-	path = libgd
-	url = git://git.gnome.org/libgd

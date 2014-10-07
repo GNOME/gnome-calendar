@@ -1,6 +1,6 @@
-ACLOCAL_AMFLAGS = -I m4 -I libgd ${ACLOCAL_FLAGS}
+ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
-SUBDIRS = libgd src data po
+SUBDIRS = src data po
 
 gnome_calendardocdir = ${datadir}/doc/${PACKAGE_NAME}-${PACKAGE_VERSION}
 gnome_calendardoc_DATA =        \

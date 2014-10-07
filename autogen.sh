@@ -5,7 +5,6 @@ srcdir=`dirname $0`
 test -z "$srcdir" && srcdir=.
 
 PKG_NAME="gnome-calendar"
-ACLOCAL_FLAGS="-I libgd $ACLOCAL_FLAGS"
 
 (test -f $srcdir/configure.ac \
   && test -d $srcdir/src) || {
