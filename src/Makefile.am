@@ -24,8 +24,6 @@ gnome_calendar_SOURCES =                                  \
     main.c                                                \
     gcal-application.h                                    \
     gcal-application.c                                    \
-    gcal-arrow-bin.c                                      \
-    gcal-arrow-bin.h                                      \
     gcal-floating-container.c                             \
     gcal-floating-container.h                             \
     gcal-window.h                                         \
