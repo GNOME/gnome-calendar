@@ -96,16 +96,8 @@ PKG_CHECK_MODULES(CALENDAR,
                   libedataserver-1.2 >= $EDATASERVER_REQUIRED
                   libical >= $LIBICAL_REQUIRED)
 
-LIBGD_INIT([
-  _header-button
-  notification
-  static
-  tagged-entry
-])
-
 AC_CONFIG_FILES([
       Makefile
-      libgd/Makefile
       src/Makefile
       data/Makefile
       data/gnome-calendar.desktop.in
