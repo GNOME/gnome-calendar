@@ -150,6 +150,10 @@ static void           event_activated                    (GcalEventWidget     *e
 
 static void           init_edit_dialog                   (GcalWindow          *window);
 
+static void           edit_dialog_closed                 (GtkDialog           *dialog,
+                                                          gint                 response,
+                                                          gpointer             user_data);
+
 static void           gcal_window_constructed            (GObject             *object);
 
 static void           gcal_window_finalize               (GObject             *object);
@@ -696,8 +700,69 @@ init_edit_dialog (GcalWindow *window)
 
   /* FIXME: check if really hides edit-dialog */
   g_signal_connect (priv->edit_dialog,
-                    "response", G_CALLBACK (gtk_widget_hide),
-                    NULL);
+                    "response", G_CALLBACK (edit_dialog_closed),
+                    window);
+}
+
+static void
+edit_dialog_closed (GtkDialog *dialog,
+                    gint       response,
+                    gpointer   user_data)
+{
+  GcalWindowPrivate *priv;
+
+  GcalEditDialog *edit_dialog;
+  GcalView *view;
+
+  GtkWidget *grid;
+  GtkWidget *undo_button;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  gtk_widget_hide (GTK_WIDGET (dialog));
+
+  view = GCAL_VIEW (priv->views[priv->active_view]);
+  edit_dialog = GCAL_EDIT_DIALOG (dialog);
+
+  /* FIXME: add back cancel and accept responses */
+  switch (response)
+    {
+    case GCAL_RESPONSE_DELETE_EVENT:
+      /* delete the event */
+      if (priv->noty != NULL)
+        g_clear_object (&(priv->noty));
+
+      priv->noty = gd_notification_new ();
+      grid = gtk_grid_new ();
+      gtk_grid_set_column_spacing (GTK_GRID (grid), 12);
+      gtk_container_add (GTK_CONTAINER (grid),
+                         gtk_label_new (_("Event deleted")));
+
+      undo_button = gtk_button_new_with_label (_("Undo"));
+      gtk_container_add (GTK_CONTAINER (grid), undo_button);
+
+      gtk_container_add (GTK_CONTAINER (priv->noty), grid);
+      gcal_window_show_notification (GCAL_WINDOW (user_data));
+
+      g_signal_connect (priv->noty,
+                        "dismissed",
+                        G_CALLBACK (gcal_window_remove_event),
+                        user_data);
+      g_signal_connect (undo_button,
+                        "clicked",
+                        G_CALLBACK (gcal_window_undo_remove_event),
+                        user_data);
+
+      priv->event_to_delete =
+        gcal_edit_dialog_get_event_uuid (edit_dialog);
+
+      /* hide widget of the event */
+      gtk_widget_hide (gcal_view_get_by_uuid (view,
+                                              priv->event_to_delete));
+
+      break;
+
+    }
 }
 
 static void
