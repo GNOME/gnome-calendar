@@ -257,28 +257,39 @@ date_updated (GtkButton  *button,
 {
   GcalWindowPrivate *priv;
 
-  gboolean move_back;
+  gboolean move_back, move_today;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
+  move_today = gcal_nav_bar_get_today_button (GCAL_NAV_BAR (priv->nav_bar)) == (GtkWidget*) button;
   move_back = gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)) == (GtkWidget*) button;
 
-  switch (priv->active_view)
+  if (move_today)
     {
-    case GCAL_WINDOW_VIEW_DAY:
-      priv->active_date->day += 1 * (move_back ? -1 : 1);
-      break;
-    case GCAL_WINDOW_VIEW_WEEK:
-      priv->active_date->day += 7 * (move_back ? -1 : 1);
-      break;
-    case GCAL_WINDOW_VIEW_MONTH:
-      priv->active_date->month += 1 * (move_back ? -1 : 1);
-      break;
-    case GCAL_WINDOW_VIEW_YEAR:
-      priv->active_date->year += 1 * (move_back ? -1 : 1);
-      break;
-    case GCAL_WINDOW_VIEW_LIST:
-      break;
+      GcalManager *manager;
+
+      manager = get_manager (GCAL_WINDOW (user_data));
+      *(priv->active_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (manager));
+    }
+  else
+    {
+      switch (priv->active_view)
+        {
+        case GCAL_WINDOW_VIEW_DAY:
+          priv->active_date->day += 1 * (move_back ? -1 : 1);
+          break;
+        case GCAL_WINDOW_VIEW_WEEK:
+          priv->active_date->day += 7 * (move_back ? -1 : 1);
+          break;
+        case GCAL_WINDOW_VIEW_MONTH:
+          priv->active_date->month += 1 * (move_back ? -1 : 1);
+          break;
+        case GCAL_WINDOW_VIEW_YEAR:
+          priv->active_date->year += 1 * (move_back ? -1 : 1);
+          break;
+        case GCAL_WINDOW_VIEW_LIST:
+          break;
+        }
     }
   *(priv->active_date) = icaltime_normalize (*(priv->active_date));
   g_object_notify (user_data, "active-date");
@@ -1053,6 +1064,8 @@ gcal_window_constructed (GObject *object)
   g_signal_connect (priv->views_stack, "notify::visible-child",
                     G_CALLBACK (view_changed), object);
   g_signal_connect (gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)),
+                    "clicked", G_CALLBACK (date_updated), object);
+  g_signal_connect (gcal_nav_bar_get_today_button (GCAL_NAV_BAR (priv->nav_bar)),
                     "clicked", G_CALLBACK (date_updated), object);
   g_signal_connect (gcal_nav_bar_get_next_button (GCAL_NAV_BAR (priv->nav_bar)),
                     "clicked", G_CALLBACK (date_updated), object);
