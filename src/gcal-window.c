@@ -1281,6 +1281,10 @@ gcal_window_events_added (GcalManager *manager,
                             G_CALLBACK (event_activated),
                             user_data);
         }
+      else
+        {
+          gtk_widget_destroy (e);
+        }
     }
 }
 
