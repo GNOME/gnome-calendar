@@ -281,7 +281,7 @@ gcal_application_show_about (GSimpleAction *simple,
   int created_year = 2012;
   const gchar *authors[] = {
     "Erick Pérez Castellanos <erickpc@gnome.org>",
-    "Georges Basile Stavracas Neto <georges.stavracas@gmail.com>"
+    "Georges Basile Stavracas Neto <georges.stavracas@gmail.com>",
     NULL
   };
   const gchar *artists[] = {
