@@ -514,55 +514,9 @@ remove_source (GcalManager  *manager,
 static void
 gcal_manager_class_init (GcalManagerClass *klass)
 {
-  G_OBJECT_CLASS (klass)->constructed = gcal_manager_constructed;
   G_OBJECT_CLASS (klass)->finalize = gcal_manager_finalize;
 
-  /**
-   * GcalManager::objects-added:
-   *
-   * The list passed to the signalis composed of #GcalEventData
-   * structures keeping a volatile pointer to the source of the event
-   * and an owned copy of an #EcalComponent
-   *
-   * @manager: the #GcalManager instance which emitted the signal
-   * @objects: (type GSList) (transfer none) (element-type long):
-   */
-  signals[EVENTS_ADDED] =
-    g_signal_new ("events-added",
-                  GCAL_TYPE_MANAGER,
-                  G_SIGNAL_RUN_FIRST,
-                  G_STRUCT_OFFSET (GcalManagerClass,
-                                   events_added),
-                  NULL, NULL,
-                  g_cclosure_marshal_VOID__POINTER,
-                  G_TYPE_NONE,
-                  1,
-                  G_TYPE_POINTER);
-
-  signals[EVENTS_MODIFIED] =
-    g_signal_new ("events-modified",
-                  GCAL_TYPE_MANAGER,
-                  G_SIGNAL_RUN_FIRST,
-                  G_STRUCT_OFFSET (GcalManagerClass,
-                                   events_modified),
-                  NULL, NULL,
-                  g_cclosure_marshal_VOID__POINTER,
-                  G_TYPE_NONE,
-                  1,
-                  G_TYPE_POINTER);
-
-  signals[EVENTS_REMOVED] =
-    g_signal_new ("events-removed",
-                  GCAL_TYPE_MANAGER,
-                  G_SIGNAL_RUN_FIRST,
-                  G_STRUCT_OFFSET (GcalManagerClass,
-                                   events_removed),
-                  NULL, NULL,
-                  g_cclosure_marshal_VOID__POINTER,
-                  G_TYPE_NONE,
-                  1,
-                  G_TYPE_POINTER);
-
+  /* FIXME: check if this is really needed */
   signals[EVENT_CREATED] =
     g_signal_new ("event-created",
                   GCAL_TYPE_MANAGER,
@@ -580,6 +534,10 @@ static void
 gcal_manager_init (GcalManager *self)
 {
   GcalManagerPrivate *priv;
+
+  GError *error;
+  GList *sources;
+  GList *l;
 
   priv = gcal_manager_get_instance_private (self);
 
@@ -599,21 +557,6 @@ gcal_manager_init (GcalManager *self)
                                          (GEqualFunc) e_source_equal,
                                          NULL,
                                          free_manager_unit_data);
-}
-
-static void
-gcal_manager_constructed (GObject *object)
-{
-  GcalManagerPrivate *priv;
-
-  GError *error;
-  GList *sources;
-  GList *l;
-
-  if (G_OBJECT_CLASS (gcal_manager_parent_class)->constructed != NULL)
-    G_OBJECT_CLASS (gcal_manager_parent_class)->constructed (object);
-
-  priv = gcal_manager_get_instance_private (GCAL_MANAGER (object));
 
   error = NULL;
   priv->source_registry = e_source_registry_new_sync (NULL, &error);
