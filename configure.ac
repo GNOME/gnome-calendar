@@ -67,14 +67,15 @@ AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
 
 GNOME_COMPILE_WARNINGS(maximum)
 
-MAINTAINER_COMPILER_FLAGS="$MAINTAINER_COMPILER_FLAGS                        \
-                           -Wall -Wcast-align -Wuninitialized                \
-                           -Wno-strict-aliasing -Wempty-body -Wformat        \
-                           -Wformat-security -Wformat-nonliteral -Winit-self \
-                           -Wdeclaration-after-statement -Wvla               \
-                           -Wpointer-arith -Wmissing-declarations            \
-                           -Wcast-align                                      \
-                           -Wredundant-decls"
+MAINTAINER_COMPILER_FLAGS="\
+  $MAINTAINER_COMPILER_FLAGS\
+ -Wall -Wcast-align -Wuninitialized\
+ -Wno-strict-aliasing -Wempty-body -Wformat\
+ -Wformat-security -Wformat-nonliteral -Winit-self\
+ -Wdeclaration-after-statement -Wvla\
+ -Wpointer-arith -Wmissing-declarations\
+ -Wcast-align -Wmissing-prototypes\
+ -Wredundant-decls"
 
 # strip leading spaces
 MAINTAINER_COMPILER_FLAGS=${MAINTAINER_COMPILER_FLAGS#*  }
@@ -114,7 +115,9 @@ echo "
 
         prefix:    ${prefix}
         compiler:  ${CC}
-	flags:     ${CFLAGS} ${CPPFLAGS} ${CALENDAR_CFLAGS} ${LDFLAGS} ${CALENDAR_LIBS} ${LIBS}
+	flags:     ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
+	flags:     ${MAINTAINER_COMPILER_FLAGS}
+	flags:     ${CALENDAR_CFLAGS} ${CALENDAR_LIBS} ${LIBS}
 
         Now type 'make' to build $PACKAGE
 "
