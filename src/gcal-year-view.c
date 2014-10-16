@@ -42,6 +42,7 @@ typedef struct
 
   /* property */
   icaltimetype   *date;
+  GcalManager    *manager; /* weak reference */
 
   gint            clicked_cell;
 
@@ -52,7 +53,8 @@ typedef struct
 enum
 {
   PROP_0,
-  PROP_DATE  //active-date inherited property
+  PROP_DATE,  //active-date inherited property
+  PROP_MANAGER  //manager inherited property
 };
 
 static void           gcal_view_interface_init                    (GcalViewIface  *iface);
@@ -171,9 +173,8 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   object_class->finalize = gcal_year_view_finalize;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
+  g_object_class_override_property (object_class, PROP_MANAGER, "manager");
 }
-
-
 
 static void
 gcal_year_view_init (GcalYearView *self)
@@ -237,6 +238,9 @@ gcal_year_view_set_property (GObject       *object,
         g_free (priv->date);
 
       priv->date = g_value_dup_boxed (value);
+      break;
+    case PROP_MANAGER:
+      priv->manager = g_value_get_pointer (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -1035,19 +1039,21 @@ static gboolean
 gcal_year_view_will_add_event (GcalView        *view,
                                GcalEventWidget *event)
 {
-  ;
+  /* FIXME: implement me !!! */
+  return FALSE;
 }
 
 /* Public API */
 /**
  * gcal_year_view_new:
+ * @manager: App singleton #GcalManager instance
  *
- * Since: 0.1
- * Return value: the new month view widget
+ * Create the year view
+ *
  * Returns: (transfer full):
  **/
 GtkWidget*
-gcal_year_view_new (void)
+gcal_year_view_new (GcalManager *manager)
 {
-  return g_object_new (GCAL_TYPE_YEAR_VIEW, NULL);
+  return g_object_new (GCAL_TYPE_YEAR_VIEW, "manager", manager, NULL);
 }

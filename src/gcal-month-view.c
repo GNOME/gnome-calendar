@@ -25,8 +25,6 @@
 
 #include <glib/gi18n.h>
 
-#include <libecal/libecal.h>
-
 #include <math.h>
 
 typedef struct
@@ -52,12 +50,14 @@ typedef struct
 
   /* property */
   icaltimetype   *date;
+  GcalManager    *manager; /* weak reference */
 } GcalMonthViewPrivate;
 
 enum
 {
   PROP_0,
-  PROP_DATE  /* active-date inherited property */
+  PROP_DATE,  /* active-date inherited property */
+  PROP_MANAGER  /* manager inherited property */
 };
 
 static void           gcal_view_interface_init              (GcalViewIface  *iface);
@@ -173,9 +173,8 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   container_class->forall = gcal_month_view_forall;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
+  g_object_class_override_property (object_class, PROP_MANAGER, "manager");
 }
-
-
 
 static void
 gcal_month_view_init (GcalMonthView *self)
@@ -247,6 +246,11 @@ gcal_month_view_set_property (GObject       *object,
         priv->days_delay = icaltime_day_of_week (*first_of_month) - 1;
         g_free (first_of_month);
 
+        break;
+      }
+    case PROP_MANAGER:
+      {
+        priv->manager = g_value_get_pointer (value);
         break;
       }
     default:
@@ -1332,13 +1336,15 @@ gcal_month_view_will_add_event (GcalView        *view,
 /* Public API */
 /**
  * gcal_month_view_new:
+ * @manager: App singleton #GcalManager instance
  *
  * Since: 0.1
- * Return value: the new month view widget
+ * Create a new month view widget
+ *
  * Returns: (transfer full):
  **/
 GtkWidget*
-gcal_month_view_new (void)
+gcal_month_view_new (GcalManager *manager)
 {
-  return g_object_new (GCAL_TYPE_MONTH_VIEW, NULL);
+  return g_object_new (GCAL_TYPE_MONTH_VIEW, "manager", manager, NULL);
 }

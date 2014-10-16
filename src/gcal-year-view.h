@@ -20,9 +20,9 @@
 #ifndef __GCAL_YEAR_VIEW_H__
 #define __GCAL_YEAR_VIEW_H__
 
-#include <gtk/gtk.h>
+#include "gcal-manager.h"
 
-#include <libical/icaltime.h>
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
@@ -51,7 +51,7 @@ struct _GcalYearViewClass
 
 GType          gcal_year_view_get_type         (void);
 
-GtkWidget*     gcal_year_view_new              (void);
+GtkWidget*     gcal_year_view_new              (GcalManager *manager);
 
 G_END_DECLS
 
