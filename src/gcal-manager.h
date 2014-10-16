@@ -20,11 +20,9 @@
 #ifndef __GCAL_MANAGER_H__
 #define __GCAL_MANAGER_H__
 
-#include <gtk/gtk.h>
-#include <glib-object.h>
+#include "e-cal-data-model.h"
 
-#include <libedataserver/libedataserver.h>
-#include <libecal/libecal.h>
+#include <gtk/gtk.h>
 
 #include <libical/icaltime.h>
 
@@ -50,9 +48,6 @@ struct _GcalManagerClass
   GObjectClass parent_class;
 
   /* signals */
-  void (* events_added)    (GcalManager *manager, const GList *events);
-  void (* events_modified) (GcalManager *manager, const GList *events);
-  void (* events_removed)  (GcalManager *manager, const GList *uids);
   void (* event_created)   (GcalManager *manager, const gchar *source_uid, const gchar event_uid);
 
 };
@@ -70,6 +65,11 @@ GcalManager*   gcal_manager_new                     (void);
 GtkListStore*  gcal_manager_get_sources_model       (GcalManager        *manager);
 
 icaltimezone*  gcal_manager_get_system_timezone     (GcalManager        *manager);
+
+void           gcal_manager_set_subscriber          (GcalManager        *manager,
+                                                     ECalDataModelSubscriber *subscriber,
+                                                     time_t              range_start,
+                                                     time_t              range_end);
 
 gchar*         gcal_manager_add_source              (GcalManager        *manager,
                                                      const gchar        *name,
@@ -97,31 +97,6 @@ void           gcal_manager_create_event            (GcalManager        *manager
                                                      const icaltimetype *final_date);
 
 /* Set methods */
-void           gcal_manager_set_event_start_date    (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid,
-                                                     const icaltimetype *initial_date);
-
-void           gcal_manager_set_event_end_date      (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid,
-                                                     const icaltimetype *initial_date);
-
-void           gcal_manager_set_event_summary       (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid,
-                                                     const gchar        *summary);
-
-void           gcal_manager_set_event_location      (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid,
-                                                     const gchar        *location);
-
-void           gcal_manager_set_event_description   (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid,
-                                                     const gchar        *description);
-
 void           gcal_manager_move_event_to_source    (GcalManager        *manager,
                                                      const gchar        *source_uid,
                                                      const gchar        *event_uid,

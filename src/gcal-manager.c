@@ -20,24 +20,14 @@
 #include "gcal-manager.h"
 #include "gcal-utils.h"
 
-#include <glib/gi18n.h>
-
-typedef struct _RetryOpenData
-{
-  ESource      *source;
-  GcalManager  *manager;
-} RetryOpenData;
-
 typedef struct _GcalManagerUnit
 {
   ECalClient     *client;
-  ECalClientView *view;
 
   gboolean        enabled;
   gboolean        connected;
 
-  /* FIXME: remove me, stub code */
-  GHashTable     *events;
+  /* FIXME: add GdkRGBA colors */
 } GcalManagerUnit;
 
 typedef struct
@@ -50,6 +40,8 @@ typedef struct
   GHashTable      *clients;
 
   ESourceRegistry *source_registry;
+
+  ECalDataModel   *e_data_model;
 
   /* The range of dates defining the query */
   icaltimetype    *initial_date;
@@ -92,9 +84,6 @@ typedef struct _MoveEventData MoveEventData;
 /* Signal IDs */
 enum
 {
-  EVENTS_ADDED,
-  EVENTS_MODIFIED,
-  EVENTS_REMOVED,
   EVENT_CREATED,
   LAST_SIGNAL
 };
@@ -110,37 +99,17 @@ static void     on_client_connected                       (GObject         *sour
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
 
-static gboolean retry_connect_on_timeout                  (gpointer         user_data);
-
 static void     recreate_view                             (GcalManager     *manager,
                                                            GcalManagerUnit *unit);
-
-static void     on_view_objects_added                     (ECalClientView  *view,
-                                                           gpointer         objects,
-                                                           gpointer         user_data);
-
-static void     on_view_objects_removed                   (ECalClientView  *view,
-                                                           gpointer         objects,
-                                                           gpointer         user_data);
-
-static void     on_view_objects_modified                  (ECalClientView  *view,
-                                                           gpointer         objects,
-                                                           gpointer         user_data);
 
 static void     remove_source                             (GcalManager     *manager,
                                                            ESource         *source);
 
 /* class_init && init vfuncs */
 
-static void     gcal_manager_constructed                  (GObject         *object);
-
 static void     gcal_manager_finalize                     (GObject         *object);
 
 static void     gcal_manager_on_event_removed             (GObject         *source_object,
-                                                           GAsyncResult    *result,
-                                                           gpointer         user_data);
-
-static void     gcal_manager_on_event_removed_for_move    (GObject         *source_object,
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
 
@@ -150,6 +119,86 @@ static void     gcal_manager_on_event_created             (GObject         *sour
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalManager, gcal_manager, G_TYPE_OBJECT)
 
+/* -- start: threading related code provided by Milan Crha */
+typedef struct {
+  EThreadJobFunc func;
+  gpointer user_data;
+  GDestroyNotify free_user_data;
+
+  GCancellable *cancellable;
+  GError *error;
+} ThreadJobData;
+
+static void
+thread_job_data_free (gpointer ptr)
+{
+  ThreadJobData *tjd = ptr;
+
+  if (tjd != NULL)
+    {
+      /* This should go to UI with more info/description,
+       * if it is not G_IOI_ERROR_CANCELLED */
+      if (tjd->error != NULL)
+        g_warning ("Job faile: %s\n", tjd->error->message);
+
+      if (tjd->free_user_data != NULL)
+        tjd->free_user_data (tjd->user_data);
+
+      g_clear_object (&tjd->cancellable);
+      g_clear_error (&tjd->error);
+      g_free (tjd);
+    }
+}
+
+static gpointer
+thread_job_thread (gpointer user_data)
+{
+  ThreadJobData *tjd = user_data;
+
+  g_return_val_if_fail (tjd != NULL, NULL);
+
+  if (tjd->func != NULL)
+    tjd->func (tjd->user_data, tjd->cancellable, &tjd->error);
+
+  return g_thread_self ();
+}
+
+static GCancellable *
+submit_thread_job (EThreadJobFunc func,
+                   gpointer user_data,
+                   GDestroyNotify free_user_data)
+{
+  ThreadJobData *tjd;
+  GThread *thread;
+  GCancellable *cancellable;
+
+  cancellable = g_cancellable_new ();
+
+  tjd = g_new0 (ThreadJobData, 1);
+  tjd->func = func;
+  tjd->user_data = user_data;
+  tjd->free_user_data = free_user_data;
+  /* user should be able to cancel this cancellable somehow */
+  tjd->cancellable = g_object_ref (cancellable);
+  tjd->error = NULL;
+
+  thread = g_thread_try_new (NULL,
+                             thread_job_thread, tjd,
+                             &tjd->error);
+  if (thread != NULL)
+    {
+      g_thread_unref (thread);
+    }
+  else
+    {
+      thread_job_data_free (tjd);
+      g_clear_object (&cancellable);
+    }
+
+  return cancellable;
+}
+/* -- end: threading related code provided by Milan Crha -- */
+
 void
 free_manager_unit_data (gpointer data)
 {
@@ -158,7 +207,6 @@ free_manager_unit_data (gpointer data)
   unit = (GcalManagerUnit*) data;
 
   g_clear_object (&(unit->client));
-  g_clear_object (&(unit->view));
 
   g_free (unit);
 }
@@ -196,7 +244,8 @@ load_source (GcalManager *manager,
     }
   else
     {
-      g_warning ("Skipping already loaded source: %s",
+      g_warning ("%s: Skipping already loaded source: %s",
+                 G_STRFUNC,
                  e_source_get_uid (source));
     }
 }
@@ -233,30 +282,16 @@ on_client_connected (GObject      *source_object,
                e_source_get_display_name (source),
                e_source_get_uid (source));
 
+      /* FIXME: add to e_cal_data_model */
+      e_cal_data_model_add_client (priv->e_data_model, client);
+      g_clear_object (&client);
+
+      /* FIXME: remove me */
       /* setting view */
       recreate_view (GCAL_MANAGER (user_data), unit);
     }
   else
     {
-      g_warning ("%s", error->message);
-
-      /* handling error */
-      if (g_error_matches (error,
-                           E_CLIENT_ERROR,
-                           E_CLIENT_ERROR_BUSY))
-        {
-          RetryOpenData *rod;
-
-          rod = g_new0 (RetryOpenData, 1);
-          rod->source = source;
-          rod->manager = user_data;
-
-          g_timeout_add_seconds (2, retry_connect_on_timeout, rod);
-
-          g_error_free (error);
-          return;
-        }
-
       /* in any other case, remove it*/
       remove_source (GCAL_MANAGER (user_data), source);
       g_warning ("%s: Failed to open/connect '%s': %s",
@@ -270,231 +305,54 @@ on_client_connected (GObject      *source_object,
     }
 }
 
-static gboolean
-retry_connect_on_timeout (gpointer user_data)
-{
-  ESource *source;
-  GcalManager *manager;
-
-  RetryOpenData *rod = user_data;
-
-  g_return_val_if_fail (rod != NULL, FALSE);
-  g_return_val_if_fail (rod->source != NULL, FALSE);
-  g_return_val_if_fail (rod->manager != NULL, FALSE);
-
-  source = rod->source;
-  manager = rod->manager;
-  g_free (user_data);
-
-  e_cal_client_connect (source,
-                        E_CAL_CLIENT_SOURCE_TYPE_EVENTS, NULL,
-                        on_client_connected,
-                        manager);
-
-  return FALSE;
-}
-
 static void
 recreate_view (GcalManager     *manager,
                GcalManagerUnit *unit)
 {
   GcalManagerPrivate *priv;
-  GError *error;
 
   priv = gcal_manager_get_instance_private (manager);
   g_return_if_fail (priv->query != NULL);
 
-  /* stopping */
-  g_clear_object (&(unit->view));
+  /* FIXME: rethink the need of this method */
+  /* if (e_cal_client_get_view_sync (unit->client, */
+  /*                                 priv->query, */
+  /*                                 &(unit->view), */
+  /*                                 priv->async_ops, */
+  /*                                 &error)) */
+  /*   { */
+  /*     /\*hooking signals *\/ */
+  /*     g_signal_connect (unit->view, */
+  /*                       "objects-added", */
+  /*                       G_CALLBACK (on_view_objects_added), */
+  /*                       manager); */
 
-  error = NULL;
-  if (e_cal_client_get_view_sync (unit->client,
-                                  priv->query,
-                                  &(unit->view),
-                                  priv->async_ops,
-                                  &error))
-    {
-      /*hooking signals */
-      g_signal_connect (unit->view,
-                        "objects-added",
-                        G_CALLBACK (on_view_objects_added),
-                        manager);
+  /*     g_signal_connect (unit->view, */
+  /*                       "objects-removed", */
+  /*                       G_CALLBACK (on_view_objects_removed), */
+  /*                       manager); */
 
-      g_signal_connect (unit->view,
-                        "objects-removed",
-                        G_CALLBACK (on_view_objects_removed),
-                        manager);
+  /*     g_signal_connect (unit->view, */
+  /*                       "objects-modified", */
+  /*                       G_CALLBACK (on_view_objects_modified), */
+  /*                       manager); */
 
-      g_signal_connect (unit->view,
-                        "objects-modified",
-                        G_CALLBACK (on_view_objects_modified),
-                        manager);
+  /*     error = NULL; */
+  /*     e_cal_client_view_set_fields_of_interest (unit->view, NULL, &error); */
 
-      error = NULL;
-      e_cal_client_view_set_fields_of_interest (unit->view, NULL, &error);
+  /*     error = NULL; */
+  /*     e_cal_client_view_start (unit->view, &error); */
 
-      error = NULL;
-      e_cal_client_view_start (unit->view, &error);
-
-      if (error != NULL)
-        {
-          g_clear_object (&(unit->view));
-          g_warning ("%s", error->message);
-        }
-    }
-  else
-    {
-      g_warning ("%s", error->message);
-    }
-}
-
-/**
- * on_view_objects_added
- * @view: the view emitting the signal
- * @objects: a #GSList of icalcomponent*
- * @user_data: the #GcalManager instance
- */
-static void
-on_view_objects_added (ECalClientView *view,
-                       gpointer        objects,
-                       gpointer        user_data)
-{
-  GcalManagerPrivate *priv;
-
-  ESource *source;
-  GcalManagerUnit *unit;
-
-  GSList *l;
-  GSList *events_data;
-
-  ECalClient *client;
-
-  priv = gcal_manager_get_instance_private (GCAL_MANAGER (user_data));
-  events_data = NULL;
-
-  client = e_cal_client_view_ref_client (view);
-  source = e_client_get_source (E_CLIENT (client));
-
-  unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients,
-                                                 source);
-
-  for (l = objects; l != NULL; l = l->next)
-    {
-      if (l->data != NULL && unit->enabled)
-        {
-          GcalEventData *data;
-
-          data = g_new0 (GcalEventData, 1);
-          data->source = source;
-          data->event_component =
-            e_cal_component_new_from_icalcomponent (
-                 icalcomponent_new_clone (l->data));
-          events_data = g_slist_append (events_data, data);
-        }
-    }
-
-  if (events_data != NULL)
-    {
-      g_signal_emit (GCAL_MANAGER (user_data),
-                     signals[EVENTS_ADDED],
-                     0,
-                     events_data);
-
-      /* Releases only GcalEventData, the ECalComponent its passed
-       * into the event widgets */
-      g_slist_free_full (events_data, g_free);
-    }
-
-  g_object_unref (client);
-}
-
-/**
- * on_view_objects_removed
- * @view: the view emitting the signal
- * @objects: a GSList of ECalComponentId*
- * @user_data: a #GcalManager instance
- */
-static void
-on_view_objects_removed (ECalClientView *view,
-                         gpointer        objects,
-                         gpointer        user_data)
-{
-  GSList *l;
-  GSList *events_data;
-
-  ECalClient *client;
-  const gchar *source_uid;
-
-  events_data = NULL;
-  client = e_cal_client_view_ref_client (view);
-  source_uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
-
-  for (l = objects; l != NULL; l = l->next)
-    {
-      gchar *removed_event_uuid =
-        g_strdup_printf ("%s:%s",
-                         source_uid,
-                         ((ECalComponentId*)(l->data))->uid);
-      events_data = g_slist_append (events_data, removed_event_uuid);
-    }
-
-  if (events_data != NULL)
-    {
-      g_signal_emit (GCAL_MANAGER (user_data),
-                     signals[EVENTS_REMOVED],
-                     0,
-                     events_data);
-
-      g_slist_free_full (events_data, g_free);
-    }
-
-  g_object_unref (client);
-}
-
-/**
- * on_view_objects_modified
- * @view: the view emitting the signal
- * @objects: a GSList of icalcomponent*
- * @user_data: The data passed when connecting the signal, here GcalManager
- */
-static void
-on_view_objects_modified (ECalClientView *view,
-                          gpointer        objects,
-                          gpointer        user_data)
-{
-  GSList *l;
-  GSList *events_data;
-
-  ECalClient *client;
-  const gchar *source_uid;
-
-  events_data = NULL;
-  client = e_cal_client_view_ref_client (view);
-  source_uid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
-
-  for (l = objects; l != NULL; l = l->next)
-    {
-      if (l->data != NULL)
-        {
-          gchar* event_uuid;
-          event_uuid = g_strdup_printf ("%s:%s",
-                                        source_uid,
-                                        icalcomponent_get_uid (l->data));
-          events_data = g_slist_append (events_data, event_uuid);
-        }
-    }
-
-  if (events_data != NULL)
-    {
-      g_signal_emit (GCAL_MANAGER (user_data),
-                     signals[EVENTS_MODIFIED],
-                     0,
-                     events_data);
-
-      g_slist_free_full (events_data, g_free);
-    }
-
-  g_object_unref (client);
+  /*     if (error != NULL) */
+  /*       { */
+  /*         g_clear_object (&(unit->view)); */
+  /*         g_warning ("%s", error->message); */
+  /*       } */
+  /*   } */
+  /* else */
+  /*   { */
+  /*     g_warning ("%s", error->message); */
+  /*   } */
 }
 
 void
@@ -509,6 +367,8 @@ remove_source (GcalManager  *manager,
   priv = gcal_manager_get_instance_private (manager);
 
   g_hash_table_remove (priv->clients, source);
+
+  /* FIXME: add remove source from ECalDataModel */
 }
 
 static void
@@ -555,9 +415,10 @@ gcal_manager_init (GcalManager *self)
 
   priv->clients = g_hash_table_new_full ((GHashFunc) e_source_hash,
                                          (GEqualFunc) e_source_equal,
-                                         NULL,
+                                         g_object_unref,
                                          free_manager_unit_data);
 
+  /* reading sources and schedule its connecting */
   error = NULL;
   priv->source_registry = e_source_registry_new_sync (NULL, &error);
   if (priv->source_registry == NULL)
@@ -571,19 +432,26 @@ gcal_manager_init (GcalManager *self)
                                             E_SOURCE_EXTENSION_CALENDAR);
 
   for (l = sources; l != NULL; l = l->next)
-    load_source (GCAL_MANAGER (object), l->data);
+    load_source (self, l->data);
 
   g_list_free (sources);
 
   g_signal_connect_swapped (priv->source_registry,
                             "source-added",
                             G_CALLBACK (load_source),
-                            object);
+                            self);
 
   g_signal_connect_swapped (priv->source_registry,
                             "source-removed",
                             G_CALLBACK (remove_source),
-                            object);
+                            self);
+
+  /* create data model */
+  priv->e_data_model = e_cal_data_model_new (submit_thread_job);
+
+  e_cal_data_model_set_expand_recurrences (priv->e_data_model, TRUE);
+  e_cal_data_model_set_timezone (priv->e_data_model,
+                                 priv->system_timezone);
 }
 
 static void
@@ -631,46 +499,6 @@ gcal_manager_on_event_removed (GObject      *source_object,
 }
 
 static void
-gcal_manager_on_event_removed_for_move (GObject      *source_object,
-                                        GAsyncResult *result,
-                                        gpointer      user_data)
-{
-  GcalManagerPrivate *priv;
-  ECalClient *client;
-  MoveEventData *data;
-  GError *error;
-
-  client = E_CAL_CLIENT (source_object);
-  data = (MoveEventData*) user_data;
-  priv = gcal_manager_get_instance_private (data->manager);
-
-  error = NULL;
-  if (e_cal_client_remove_object_finish (client, result, &error))
-    {
-      icalcomponent *new_event_icalcomp;
-
-      e_cal_component_commit_sequence (data->new_component);
-
-      new_event_icalcomp =
-        e_cal_component_get_icalcomponent (data->new_component);
-      e_cal_client_create_object (data->new_unit->client,
-                                  new_event_icalcomp,
-                                  priv->async_ops,
-                                  gcal_manager_on_event_created,
-                                  data->manager);
-      g_object_unref (data->new_component);
-    }
-  else
-    {
-      //FIXME: do something when there was some error
-      ;
-    }
-
-  g_free (data->event_uid);
-  g_free (data);
-}
-
-static void
 gcal_manager_on_event_created (GObject      *source_object,
                                GAsyncResult *result,
                                gpointer      user_data)
@@ -688,32 +516,6 @@ gcal_manager_on_event_created (GObject      *source_object,
       g_error_free (error);
     }
   g_free (new_uid);
-}
-
-static void
-gcal_manager_on_event_modified (GObject      *source_object,
-                                GAsyncResult *result,
-                                gpointer      user_data)
-{
-  ECalClient *client;
-  GError *error;
-
-  /* If the view catch a signal of the newly modified object then
-     dunno what's the purposes of this pieces of code, other than
-     finish the async ops. */
-
-  client = E_CAL_CLIENT (source_object);
-  error = NULL;
-  if (e_cal_client_modify_object_finish (client, result, &error))
-    {
-      g_debug ("Call to modify finished");
-    }
-  else
-    {
-      /* Some error */
-      g_warning ("Error modifying object: %s", error->message);
-      g_error_free (error);
-    }
 }
 
 /* Public API */
@@ -745,6 +547,20 @@ gcal_manager_get_system_timezone (GcalManager *manager)
 
   priv = gcal_manager_get_instance_private (manager);
   return priv->system_timezone;
+}
+
+void
+gcal_manager_set_subscriber (GcalManager             *manager,
+                             ECalDataModelSubscriber *subscriber,
+                             time_t                   range_start,
+                             time_t                   range_end)
+{
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (manager);
+  e_cal_data_model_subscribe (priv->e_data_model,
+                              subscriber,
+                              range_start, range_end);
 }
 
 /**
@@ -917,30 +733,23 @@ gcal_manager_remove_event (GcalManager *manager,
 {
   GcalManagerPrivate *priv;
   GcalManagerUnit *unit;
-  ECalComponent *event;
+  DeleteEventData *data;
 
   priv = gcal_manager_get_instance_private (manager);
 
   unit = g_hash_table_lookup (priv->clients, source_uid);
-  event = g_hash_table_lookup (unit->events, event_uid);
-  if (event != NULL)
-    {
-      //FIXME: here sends notifications to everyone.
-      //FIXME: reload the events in all the views, etc, etc, etc
-      DeleteEventData *data;
 
-      data = g_new0 (DeleteEventData, 1);
-      data->event_uid = g_strdup (event_uid);
-      data->unit = unit;
-      data->manager = manager;
-      e_cal_client_remove_object (unit->client,
-                                  event_uid,
-                                  NULL,
-                                  E_CAL_OBJ_MOD_ALL,
-                                  priv->async_ops,
-                                  gcal_manager_on_event_removed,
-                                  data);
-    }
+  data = g_new0 (DeleteEventData, 1);
+  data->event_uid = g_strdup (event_uid);
+  data->unit = unit;
+  data->manager = manager;
+  e_cal_client_remove_object (unit->client,
+                              event_uid,
+                              NULL,
+                              E_CAL_OBJ_MOD_ALL,
+                              priv->async_ops,
+                              gcal_manager_on_event_removed,
+                              data);
 }
 
 void
@@ -1004,196 +813,13 @@ gcal_manager_create_event (GcalManager        *manager,
 }
 
 void
-gcal_manager_set_event_start_date (GcalManager        *manager,
-                                   const gchar        *source_uid,
-                                   const gchar        *event_uid,
-                                   const icaltimetype *initial_date)
-{
-  GcalManagerPrivate *priv;
-  GcalManagerUnit *unit;
-  ECalComponent *event;
-  ECalComponentDateTime dt;
-  icaltimetype *dt_start;
-
-  priv = gcal_manager_get_instance_private (manager);
-
-  unit = g_hash_table_lookup (priv->clients, source_uid);
-  event = g_hash_table_lookup (unit->events, event_uid);
-
-  dt_start = gcal_dup_icaltime (initial_date);
-  dt.value = dt_start;
-  dt.tzid = NULL;
-  e_cal_component_set_dtstart (event, &dt);
-
-  e_cal_component_commit_sequence (event);
-
-  e_cal_client_modify_object (unit->client,
-                              e_cal_component_get_icalcomponent (event),
-                              E_CAL_OBJ_MOD_ALL,
-                              NULL,
-                              gcal_manager_on_event_modified,
-                              manager);
-}
-
-void
-gcal_manager_set_event_end_date (GcalManager        *manager,
-                                 const gchar        *source_uid,
-                                 const gchar        *event_uid,
-                                 const icaltimetype *initial_date)
-{
-  GcalManagerPrivate *priv;
-  GcalManagerUnit *unit;
-  ECalComponent *event;
-  ECalComponentDateTime dt;
-  icaltimetype *dt_start;
-
-  priv = gcal_manager_get_instance_private (manager);
-
-  unit = g_hash_table_lookup (priv->clients, source_uid);
-  event = g_hash_table_lookup (unit->events, event_uid);
-
-  dt_start = gcal_dup_icaltime (initial_date);
-  dt.value = dt_start;
-  dt.tzid = NULL;
-  e_cal_component_set_dtend (event, &dt);
-
-  e_cal_component_commit_sequence (event);
-
-  e_cal_client_modify_object (unit->client,
-                              e_cal_component_get_icalcomponent (event),
-                              E_CAL_OBJ_MOD_ALL,
-                              NULL,
-                              gcal_manager_on_event_modified,
-                              manager);
-}
-
-void
-gcal_manager_set_event_summary (GcalManager *manager,
-                                const gchar *source_uid,
-                                const gchar *event_uid,
-                                const gchar *summary)
-{
-  GcalManagerPrivate *priv;
-  GcalManagerUnit *unit;
-  ECalComponent *event;
-  ECalComponentText e_summary;
-
-  priv = gcal_manager_get_instance_private (manager);
-
-  unit = g_hash_table_lookup (priv->clients, source_uid);
-  event = g_hash_table_lookup (unit->events, event_uid);
-
-  e_summary.altrep = NULL;
-  e_summary.value = summary;
-  e_cal_component_set_summary (event, &e_summary);
-
-  e_cal_component_commit_sequence (event);
-
-  e_cal_client_modify_object (unit->client,
-                              e_cal_component_get_icalcomponent (event),
-                              E_CAL_OBJ_MOD_ALL,
-                              NULL,
-                              gcal_manager_on_event_modified,
-                              manager);
-}
-
-void
-gcal_manager_set_event_location (GcalManager *manager,
-                                 const gchar *source_uid,
-                                 const gchar *event_uid,
-                                 const gchar *location)
-{
-  GcalManagerPrivate *priv;
-  GcalManagerUnit *unit;
-  ECalComponent *event;
-
-  priv = gcal_manager_get_instance_private (manager);
-
-  unit = g_hash_table_lookup (priv->clients, source_uid);
-  event = g_hash_table_lookup (unit->events, event_uid);
-
-  e_cal_component_set_location (event, location);
-
-  e_cal_component_commit_sequence (event);
-
-  e_cal_client_modify_object (unit->client,
-                              e_cal_component_get_icalcomponent (event),
-                              E_CAL_OBJ_MOD_ALL,
-                              NULL,
-                              gcal_manager_on_event_modified,
-                              manager);
-}
-
-void
-gcal_manager_set_event_description (GcalManager *manager,
-                                    const gchar *source_uid,
-                                    const gchar *event_uid,
-                                    const gchar *description)
-{
-  GcalManagerPrivate *priv;
-  GcalManagerUnit *unit;
-  ECalComponent *event;
-  GSList l;
-  ECalComponentText desc;
-
-  priv = gcal_manager_get_instance_private (manager);
-
-  unit = g_hash_table_lookup (priv->clients, source_uid);
-  event = g_hash_table_lookup (unit->events, event_uid);
-
-  desc.value = description;
-  desc.altrep = NULL;
-  l.data = &desc;
-  l.next = NULL;
-
-  e_cal_component_set_description_list (event, &l);
-
-  e_cal_component_commit_sequence (event);
-
-  e_cal_client_modify_object (unit->client,
-                              e_cal_component_get_icalcomponent (event),
-                              E_CAL_OBJ_MOD_ALL,
-                              NULL,
-                              gcal_manager_on_event_modified,
-                              manager);
-}
-
-void
 gcal_manager_move_event_to_source (GcalManager *manager,
                                    const gchar *source_uid,
                                    const gchar *event_uid,
                                    const gchar *new_source_uid)
 {
   GcalManagerPrivate *priv;
-  GcalManagerUnit *unit;
-  GcalManagerUnit *new_unit;
-  ECalComponent *old_event;
-  ECalComponent *new_event;
 
   priv = gcal_manager_get_instance_private (manager);
-
-  unit = g_hash_table_lookup (priv->clients, source_uid);
-  old_event = g_hash_table_lookup (unit->events, event_uid);
-  new_unit = g_hash_table_lookup (priv->clients, new_source_uid);
-  if (old_event != NULL)
-    {
-      //FIXME: here sends notifications to everyone.
-      //FIXME: reload the events in all the views, etc, etc, etc
-      MoveEventData *data;
-
-      new_event = e_cal_component_clone (old_event);
-      data = g_new0 (MoveEventData, 1);
-      data->event_uid = g_strdup (event_uid);
-      data->unit = unit;
-      data->new_unit = new_unit;
-      data->new_component = new_event;
-      data->manager = manager;
-      e_cal_client_remove_object (unit->client,
-                                  event_uid,
-                                  NULL,
-                                  E_CAL_OBJ_MOD_ALL,
-                                  priv->async_ops,
-                                  gcal_manager_on_event_removed_for_move,
-                                  data);
-    }
+  /* FIXME: add code, fix stub method  */
 }
