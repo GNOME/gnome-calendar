@@ -60,7 +60,12 @@ enum
   PROP_MANAGER  /* manager inherited property */
 };
 
+static void           event_opened                          (GcalEventWidget *event_widget,
+                                                             gpointer         user_data);
+
 static void           gcal_view_interface_init              (GcalViewIface  *iface);
+
+static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
 static void           gcal_month_view_set_property          (GObject        *object,
                                                              guint           property_id,
@@ -136,13 +141,41 @@ static void           gcal_month_view_clear                 (GcalView       *vie
 static gboolean       gcal_month_view_will_add_event        (GcalView        *view,
                                                              GcalEventWidget *event);
 
+static void           gcal_month_view_subscriber_component_added    (ECalDataModelSubscriber *subscriber,
+                                                                     ECalClient              *client,
+                                                                     ECalComponent           *comp);
+
+static void           gcal_month_view_subscriber_component_modified (ECalDataModelSubscriber *subscriber,
+                                                                     ECalClient              *client,
+                                                                     ECalComponent           *comp);
+
+static void           gcal_month_view_subscriber_component_removed  (ECalDataModelSubscriber *subscriber,
+                                                                     ECalClient              *client,
+                                                                     const gchar             *uid,
+                                                                     const gchar             *rid);
+
+static void           gcal_month_view_subscriber_freeze             (ECalDataModelSubscriber *subscriber);
+
+static void           gcal_month_view_subscriber_thaw               (ECalDataModelSubscriber *subscriber);
+
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
                          gcal_month_view,
                          GTK_TYPE_CONTAINER,
                          G_ADD_PRIVATE (GcalMonthView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
-                                                gcal_view_interface_init));
+                                                gcal_view_interface_init)
+                         G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
+                                                gcal_data_model_subscriber_interface_init));
 
+
+static void
+event_opened (GcalEventWidget *event_widget,
+              gpointer         user_data)
+{
+  g_signal_emit_by_name (GCAL_VIEW (user_data),
+                         "event-activated",
+                         event_widget);
+}
 
 static void
 gcal_month_view_class_init (GcalMonthViewClass *klass)
@@ -221,6 +254,17 @@ gcal_view_interface_init (GcalViewIface *iface)
 }
 
 static void
+gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
+{
+  iface->component_added = gcal_month_view_subscriber_component_added;
+  iface->component_modified = gcal_month_view_subscriber_component_modified;
+  iface->component_removed = gcal_month_view_subscriber_component_removed;
+  iface->freeze = gcal_month_view_subscriber_freeze;
+  iface->thaw = gcal_month_view_subscriber_thaw;
+}
+
+
+static void
 gcal_month_view_set_property (GObject       *object,
                               guint          property_id,
                               const GValue  *value,
@@ -235,6 +279,9 @@ gcal_month_view_set_property (GObject       *object,
     case PROP_DATE:
       {
         icaltimetype *first_of_month;
+        time_t range_start, range_end;
+        icaltimetype *date;
+        icaltimezone* default_zone;
 
         if (priv->date != NULL)
           g_free (priv->date);
@@ -246,6 +293,21 @@ gcal_month_view_set_property (GObject       *object,
         priv->days_delay = icaltime_day_of_week (*first_of_month) - 1;
         g_free (first_of_month);
 
+        default_zone =
+          gcal_manager_get_system_timezone (priv->manager);
+        date = gcal_view_get_initial_date (GCAL_VIEW (object));
+        range_start = icaltime_as_timet_with_zone (*date,
+                                                   default_zone);
+        g_free (date);
+        date = gcal_view_get_final_date (GCAL_VIEW (object));
+        range_end = icaltime_as_timet_with_zone (*date,
+                                                 default_zone);
+        g_free (date);
+        /* FIXME: update subscribed range here */
+        gcal_manager_set_subscriber (priv->manager,
+                                     E_CAL_DATA_MODEL_SUBSCRIBER (object),
+                                     range_start,
+                                     range_end);
         break;
       }
     case PROP_MANAGER:
@@ -1331,6 +1393,55 @@ gcal_month_view_will_add_event (GcalView        *view,
 
   event_uuid = gcal_event_widget_peek_uuid (event);
   return !(gcal_month_view_get_by_uuid (view, event_uuid) != NULL);
+}
+
+/* ECalDataModelSubscriber interface API */
+static void
+gcal_month_view_subscriber_component_added (ECalDataModelSubscriber *subscriber,
+                                            ECalClient              *client,
+                                            ECalComponent           *comp)
+{
+  GtkWidget *event;
+  GcalEventData *data;
+
+  data = g_new0 (GcalEventData, 1);
+  data->source = e_client_get_source (E_CLIENT (client));
+  data->event_component = comp;
+
+  event = gcal_event_widget_new_from_data (data);
+
+  gtk_widget_show (event);
+  gtk_container_add (GTK_CONTAINER (subscriber), event);
+
+  g_signal_connect (event,
+                    "activate",
+                    G_CALLBACK (event_opened),
+                    subscriber);
+}
+
+static void
+gcal_month_view_subscriber_component_modified (ECalDataModelSubscriber *subscriber,
+                                               ECalClient              *client,
+                                               ECalComponent           *comp)
+{
+}
+
+static void
+gcal_month_view_subscriber_component_removed (ECalDataModelSubscriber *subscriber,
+                                              ECalClient              *client,
+                                              const gchar             *uid,
+                                              const gchar             *rid)
+{
+}
+
+static void
+gcal_month_view_subscriber_freeze (ECalDataModelSubscriber *subscriber)
+{
+}
+
+static void
+gcal_month_view_subscriber_thaw (ECalDataModelSubscriber *subscriber)
+{
 }
 
 /* Public API */
