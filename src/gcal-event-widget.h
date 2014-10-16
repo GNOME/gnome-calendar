@@ -95,6 +95,9 @@ gboolean     gcal_event_widget_get_has_reminders           (GcalEventWidget    *
 
 GcalEventData* gcal_event_widget_get_data                  (GcalEventWidget *event);
 
+gboolean     gcal_event_widget_equal                       (GcalEventWidget    *widget1,
+                                                            GcalEventWidget    *widget2);
+
 G_END_DECLS
 
 #endif /* __GCAL_EVENT_WIDGET_H__ */
