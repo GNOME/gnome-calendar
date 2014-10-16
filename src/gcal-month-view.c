@@ -1405,7 +1405,7 @@ gcal_month_view_subscriber_component_added (ECalDataModelSubscriber *subscriber,
 
   data = g_new0 (GcalEventData, 1);
   data->source = e_client_get_source (E_CLIENT (client));
-  data->event_component = comp;
+  data->event_component = e_cal_component_clone (comp);
 
   event = gcal_event_widget_new_from_data (data);
 
