@@ -654,19 +654,30 @@ gcal_event_widget_new_from_data (GcalEventData *data)
   GcalEventWidgetPrivate *priv;
 
   gchar *uuid;
+  ECalComponentId *id;
   ECalComponentText e_summary;
   ESourceSelectable *extension;
   GdkRGBA *color;
   ECalComponentDateTime dt;
   icaltimetype *date;
   gboolean start_is_date, end_is_date;
-  const gchar *uid = NULL;
 
-  e_cal_component_get_uid (data->event_component, &uid);
-  uuid = g_strdup_printf ("%s:%s",
-                          e_source_get_uid (data->source),
-                          uid);
+  id = e_cal_component_get_id (data->event_component);
+  if (id->rid != NULL)
+    {
+      uuid = g_strdup_printf ("%s:%s:%s",
+                              e_source_get_uid (data->source),
+                              id->uid,
+                              id->rid);
+    }
+  else
+    {
+      uuid = g_strdup_printf ("%s:%s",
+                              e_source_get_uid (data->source),
+                              id->uid);
+    }
   widget = g_object_new (GCAL_TYPE_EVENT_WIDGET, "uuid", uuid, NULL);
+  e_cal_component_free_id (id);
   g_free (uuid);
 
   event = GCAL_EVENT_WIDGET (widget);
