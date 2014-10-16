@@ -73,6 +73,7 @@ typedef struct
   GtkWidget           *views [5]; /* day, week, month, year, list */
   GtkWidget           *edit_dialog;
 
+  GcalManager         *manager;
   GcalWindowViewType   active_view;
   icaltimetype        *active_date;
 
@@ -94,7 +95,8 @@ enum
   PROP_0,
   PROP_ACTIVE_VIEW,
   PROP_ACTIVE_DATE,
-  PROP_NEW_EVENT_MODE
+  PROP_NEW_EVENT_MODE,
+  PROP_MANAGER
 };
 
 #define SAVE_GEOMETRY_ID_TIMEOUT 100 /* ms */
@@ -134,8 +136,6 @@ static gboolean       place_new_event_widget             (GtkWidget           *p
 
 static void           close_new_event_widget             (GtkButton           *button,
                                                           gpointer             user_data);
-
-static GcalManager*   get_manager                        (GcalWindow          *window);
 
 static void           create_notification                (GcalWindow          *window);
 
@@ -252,10 +252,9 @@ date_updated (GtkButton  *button,
 
   if (move_today)
     {
-      GcalManager *manager;
-
-      manager = get_manager (GCAL_WINDOW (user_data));
-      *(priv->active_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (manager));
+      *(priv->active_date) =
+        icaltime_current_time_with_zone (
+            gcal_manager_get_system_timezone (priv->manager));
     }
   else
     {
@@ -490,7 +489,6 @@ prepare_new_event_widget (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
 
-  GcalManager *manager;
   gchar *uid;
 
   struct tm tm_date;
@@ -511,14 +509,13 @@ prepare_new_event_widget (GcalWindow *window)
   gcal_new_event_widget_set_title (new_widget, title_date);
   g_free (title_date);
 
-  manager = get_manager (window);
-
   /* FIXME: do this somehow since GcalManager doesn't keep
      a list store of calendars anymore, and this is a stub method */
-  gcal_new_event_widget_set_calendars (new_widget,
-                                       GTK_TREE_MODEL (gcal_manager_get_sources_model (manager)));
+  gcal_new_event_widget_set_calendars (
+      new_widget,
+      GTK_TREE_MODEL (gcal_manager_get_sources_model (priv->manager)));
 
-  uid = gcal_manager_get_default_source (manager);
+  uid = gcal_manager_get_default_source (priv->manager);
   gcal_new_event_widget_set_default_calendar (new_widget, uid);
   g_free (uid);
 
@@ -603,15 +600,6 @@ close_new_event_widget (GtkButton *button,
                         gpointer   user_data)
 {
   set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
-}
-
-static GcalManager*
-get_manager (GcalWindow *window)
-{
-  GcalApplication *app;
-  app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
-
-  return gcal_application_get_manager (app);
 }
 
 static void
@@ -706,7 +694,7 @@ create_event (gpointer   user_data,
   summary = gcal_new_event_widget_get_summary (new_widget);
 
   /* create the event */
-  gcal_manager_create_event (get_manager (GCAL_WINDOW (user_data)),
+  gcal_manager_create_event (priv->manager,
                              uid, summary,
                              priv->event_creation_data->start_date,
                              priv->event_creation_data->end_date);
@@ -749,7 +737,7 @@ init_edit_dialog (GcalWindow *window)
   gtk_window_set_transient_for (GTK_WINDOW (priv->edit_dialog),
                                 GTK_WINDOW (window));
   gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog),
-                                get_manager (window));
+                                priv->manager);
 
   /* FIXME: check if really hides edit-dialog */
   g_signal_connect (priv->edit_dialog,
@@ -840,6 +828,15 @@ gcal_window_class_init(GcalWindowClass *klass)
                             "New Event mode",
                             "Whether the window is in new-event-mode or not",
                             FALSE,
+                            G_PARAM_READWRITE));
+
+  g_object_class_install_property (
+      object_class,
+      PROP_MANAGER,
+      g_param_spec_pointer ("manager",
+                            "The manager object",
+                            "A weak reference to the app manager object",
+                            G_PARAM_CONSTRUCT_ONLY |
                             G_PARAM_READWRITE));
 }
 
@@ -962,7 +959,8 @@ gcal_window_constructed (GObject *object)
       gtk_widget_get_style_context (priv->views_stack),
       "views");
 
-  priv->views[GCAL_WINDOW_VIEW_WEEK] = gcal_week_view_new ();
+  priv->views[GCAL_WINDOW_VIEW_WEEK] =
+    gcal_week_view_new (priv->manager);
   gtk_stack_add_titled (GTK_STACK (priv->views_stack),
                         priv->views[GCAL_WINDOW_VIEW_WEEK],
                         "week", _("Week"));
@@ -970,7 +968,8 @@ gcal_window_constructed (GObject *object)
                           priv->views[GCAL_WINDOW_VIEW_WEEK], "active-date",
                           G_BINDING_DEFAULT);
 
-  priv->views[GCAL_WINDOW_VIEW_MONTH] = gcal_month_view_new ();
+  priv->views[GCAL_WINDOW_VIEW_MONTH] =
+    gcal_month_view_new (priv->manager);
   gtk_stack_add_titled (GTK_STACK (priv->views_stack),
                         priv->views[GCAL_WINDOW_VIEW_MONTH],
                         "month", _("Month"));
@@ -978,7 +977,8 @@ gcal_window_constructed (GObject *object)
                           priv->views[GCAL_WINDOW_VIEW_MONTH], "active-date",
                           G_BINDING_DEFAULT);
 
-  priv->views[GCAL_WINDOW_VIEW_YEAR] = gcal_year_view_new ();
+  priv->views[GCAL_WINDOW_VIEW_YEAR] =
+    gcal_year_view_new (priv->manager);
   gtk_stack_add_titled (GTK_STACK (priv->views_stack),
                         priv->views[GCAL_WINDOW_VIEW_YEAR],
                         "year", _("Year"));
@@ -1067,6 +1067,9 @@ gcal_window_set_property (GObject      *object,
       return;
     case PROP_NEW_EVENT_MODE:
       set_new_event_mode (GCAL_WINDOW (object), g_value_get_boolean (value));
+      return;
+    case PROP_MANAGER:
+      priv->manager = g_value_get_pointer (value);
       return;
     }
 
@@ -1242,7 +1245,6 @@ gcal_window_remove_event (GtkWidget       *notification,
                           gpointer         user_data)
 {
   GcalWindowPrivate *priv;
-  GcalManager *manager;
   gchar **tokens;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
@@ -1252,10 +1254,9 @@ gcal_window_remove_event (GtkWidget       *notification,
 
   if (priv->event_to_delete != NULL)
     {
-      manager = get_manager (GCAL_WINDOW (user_data));
       tokens = g_strsplit (priv->event_to_delete, ":", 2);
 
-      gcal_manager_remove_event (manager, tokens[0], tokens[1]);
+      gcal_manager_remove_event (priv->manager, tokens[0], tokens[1]);
 
       g_strfreev (tokens);
       g_free (priv->event_to_delete);
@@ -1310,6 +1311,8 @@ gcal_window_new_with_view (GcalApplication   *app,
                         GTK_APPLICATION (app),
                         "active-date",
                         &date,
+                        "manager",
+                        manager,
                         NULL);
 
   /* hooking signals */
