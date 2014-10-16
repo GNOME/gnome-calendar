@@ -39,6 +39,14 @@ gcal_view_base_init (gpointer g_iface)
                               ICAL_TIME_TYPE,
                               G_PARAM_READWRITE));
 
+      g_object_interface_install_property (
+          g_iface,
+          g_param_spec_pointer ("manager",
+                                "The manager object",
+                                "A weak reference to the app manager object",
+                                G_PARAM_CONSTRUCT_ONLY |
+                                G_PARAM_READWRITE));
+
       g_signal_new ("create-event",
                     GCAL_TYPE_VIEW,
                     G_SIGNAL_RUN_LAST,
