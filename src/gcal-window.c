@@ -183,18 +183,6 @@ static void           gcal_window_search_changed         (GtkEditable         *e
                                                           gpointer             user_data);
 
 /* GcalManager signal handling */
-static void           gcal_window_events_added           (GcalManager         *manager,
-                                                          gpointer             events_list,
-                                                          gpointer             user_data);
-
-static void           gcal_window_events_removed         (GcalManager         *manager,
-                                                          gpointer             events_list,
-                                                          gpointer             user_data);
-
-static void           gcal_window_events_modified        (GcalManager         *manager,
-                                                          gpointer             events_list,
-                                                          gpointer             user_data);
-
 static void           gcal_window_event_created          (GcalManager         *manager,
                                                           const gchar         *source_uid,
                                                           const gchar         *event_uid,
@@ -409,10 +397,8 @@ save_geometry (gpointer user_data)
  * update_view:
  * @window:
  *
- * Calling update view on the active view
- * For the view:
- * - update the date the view will present
- * - recreate the child widgets representing the events for that date
+ * Update the headers on the navbar. Everything else on the application
+ * updates itself on the date change.
  **/
 static void
 update_view (GcalWindow *window)
@@ -421,28 +407,11 @@ update_view (GcalWindow *window)
 
   GtkWidget *widget;
 
-  icaltimetype *first_day;
-  icaltimetype *last_day;
   gchar* header;
 
   priv = gcal_window_get_instance_private (window);
 
   widget = priv->views[priv->active_view];
-
-  /* destroying old children */
-  gcal_view_clear (GCAL_VIEW (widget));
-  gtk_widget_queue_draw (widget);
-
-  first_day = gcal_view_get_initial_date (GCAL_VIEW (widget));
-  last_day = gcal_view_get_final_date (GCAL_VIEW (widget));
-
-  gcal_manager_set_new_range (
-      get_manager (window),
-      first_day,
-      last_day);
-
-  g_free (first_day);
-  g_free (last_day);
 
   header = gcal_view_get_left_header (GCAL_VIEW (widget));
   g_object_set (priv->nav_bar, "left-header", header, NULL);
@@ -1241,117 +1210,6 @@ gcal_window_search_changed (GtkEditable *editable,
     }
 }
 
-/* GcalManager signal handling */
-static void
-gcal_window_events_added (GcalManager *manager,
-                          gpointer     events_list,
-                          gpointer     user_data)
-{
-  GcalWindowPrivate *priv;
-
-  GSList *l;
-
-  GcalView *view;
-  GtkWidget *e;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-  view = GCAL_VIEW (priv->views[priv->active_view]);
-
-  for (l = events_list; l != NULL; l = l->next)
-    {
-      e = gcal_event_widget_new_from_data ((GcalEventData*) l->data);
-
-      if (gcal_view_will_add_event (view, GCAL_EVENT_WIDGET (e)))
-        {
-          gtk_widget_show (e);
-          gtk_container_add (GTK_CONTAINER (view), e);
-
-          g_signal_connect (e,
-                            "activate",
-                            G_CALLBACK (event_activated),
-                            user_data);
-        }
-      else
-        {
-          gtk_widget_destroy (e);
-        }
-    }
-}
-
-static void
-gcal_window_events_removed (GcalManager *manager,
-                            gpointer     events_list,
-                            gpointer     user_data)
-{
-  GcalWindowPrivate *priv;
-  GSList *l;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  for (l = events_list; l != NULL; l = l->next)
-    {
-      gint i;
-      for (i = 0; i < 5; i++)
-        {
-          if (priv->views[i] != NULL)
-            {
-              gtk_widget_destroy (
-                  gcal_view_get_by_uuid (GCAL_VIEW (priv->views[i]),
-                                         (gchar*) l->data));
-            }
-        }
-    }
-}
-
-static void
-gcal_window_events_modified (GcalManager *manager,
-                             gpointer     events_list,
-                             gpointer     user_data)
-{
-  GcalWindowPrivate *priv;
-
-  GcalView *view;
-  GSList *l;
-  gint i;
-
-  const gchar *event_uuid;
-
-  GtkWidget *widget;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-  view = GCAL_VIEW (priv->views[priv->active_view]);
-
-  for (l = events_list; l != NULL; l = l->next)
-    {
-      GtkWidget *e;
-
-      e = gcal_event_widget_new_from_data ((GcalEventData*) l->data);
-      event_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (e));
-      /* remove event from every view */
-      for (i = 0; i < 5; i++)
-        {
-          if (priv->views[i] == NULL)
-            continue;
-
-          widget = gcal_view_get_by_uuid (GCAL_VIEW (priv->views[i]),
-                                          event_uuid);
-          if (widget != NULL)
-            gtk_widget_destroy (widget);
-        }
-
-      /* add modified event on the current view only */
-      if (gcal_view_will_add_event (view, GCAL_EVENT_WIDGET (e)))
-        {
-          gtk_widget_show (e);
-          gtk_container_add (GTK_CONTAINER (view), e);
-          g_signal_connect (e,
-                            "activate",
-                            G_CALLBACK (event_activated),
-                            user_data);
-        }
-    }
-}
-
 static void
 gcal_window_event_created (GcalManager *manager,
                            const gchar *source_uid,
@@ -1455,21 +1313,7 @@ gcal_window_new_with_view (GcalApplication   *app,
                         NULL);
 
   /* hooking signals */
-  g_signal_connect (manager,
-                    "events-added",
-                    G_CALLBACK (gcal_window_events_added),
-                    win);
-
-  g_signal_connect (manager,
-                    "events-removed",
-                    G_CALLBACK (gcal_window_events_removed),
-                    win);
-
-  g_signal_connect (manager,
-                    "events-modified",
-                    G_CALLBACK (gcal_window_events_modified),
-                    win);
-
+  /* FIXME: remember to check if this is really needed */
   g_signal_connect (manager,
                     "event-created",
                     G_CALLBACK (gcal_window_event_created),
