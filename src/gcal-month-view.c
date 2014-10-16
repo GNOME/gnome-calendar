@@ -1431,6 +1431,25 @@ gcal_month_view_subscriber_component_removed (ECalDataModelSubscriber *subscribe
                                               const gchar             *uid,
                                               const gchar             *rid)
 {
+  GtkWidget *widget;
+  const gchar *sid;
+  gchar *uuid;
+
+  sid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
+
+  if (rid != NULL)
+      uuid = g_strdup_printf ("%s:%s:%s", sid, uid, rid);
+  else
+    uuid = g_strdup_printf ("%s:%s", sid, uid);
+
+  widget = gcal_view_get_by_uuid (GCAL_VIEW (subscriber), uuid);
+  if (widget != NULL)
+    gtk_widget_destroy (widget);
+  else
+    g_warning ("%s: Widget with uuid: %s not found",
+               G_STRFUNC, uuid);
+
+  g_free (uuid);
 }
 
 static void
