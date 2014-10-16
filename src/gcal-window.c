@@ -22,9 +22,7 @@
 
 #include "gcal-nav-bar.h"
 #include "gcal-manager.h"
-#include "gcal-floating-container.h"
 #include "gcal-view.h"
-#include "gcal-day-view.h"
 #include "gcal-month-view.h"
 #include "gcal-week-view.h"
 #include "gcal-year-view.h"
@@ -994,14 +992,6 @@ gcal_window_constructed (GObject *object)
   gtk_style_context_add_class (
       gtk_widget_get_style_context (priv->views_stack),
       "views");
-
-  priv->views[GCAL_WINDOW_VIEW_DAY] = gcal_day_view_new ();
-  gtk_stack_add_titled (GTK_STACK (priv->views_stack),
-                        priv->views[GCAL_WINDOW_VIEW_DAY],
-                        "day", _("Day"));
-  g_object_bind_property (GCAL_WINDOW (object), "active-date",
-                          priv->views[GCAL_WINDOW_VIEW_DAY], "active-date",
-                          G_BINDING_DEFAULT);
 
   priv->views[GCAL_WINDOW_VIEW_WEEK] = gcal_week_view_new ();
   gtk_stack_add_titled (GTK_STACK (priv->views_stack),

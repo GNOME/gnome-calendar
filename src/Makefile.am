@@ -27,14 +27,10 @@ gnome_calendar_SOURCES =                                  \
     main.c                                                \
     gcal-application.h                                    \
     gcal-application.c                                    \
-    gcal-floating-container.c                             \
-    gcal-floating-container.h                             \
     gcal-window.h                                         \
     gcal-window.c                                         \
     gcal-view.c                                           \
     gcal-view.h                                           \
-    gcal-day-view.c                                       \
-    gcal-day-view.h                                       \
     gcal-month-view.c                                     \
     gcal-month-view.h                                     \
     gcal-week-view.c                                      \
@@ -55,12 +51,6 @@ gnome_calendar_SOURCES =                                  \
     gcal-manager.h                                        \
     gcal-nav-bar.h                                        \
     gcal-nav-bar.c                                        \
-    gcal-viewport.c                                       \
-    gcal-viewport.h                                       \
-    gcal-all-day-grid.c                                   \
-    gcal-all-day-grid.h                                   \
-    gcal-days-grid.c                                      \
-    gcal-days-grid.h                                      \
     gcal-utils.c                                          \
     gcal-utils.h
 
