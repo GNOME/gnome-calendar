@@ -146,7 +146,8 @@ static void           hide_notification                  (GtkWidget           *b
 static void           create_event                       (gpointer             user_data,
                                                           GtkWidget           *widget);
 
-static void           event_activated                    (GcalEventWidget     *event_widget,
+static void           event_activated                    (GcalView            *view,
+                                                          GcalEventWidget     *event_widget,
                                                           gpointer             user_data);
 
 static void           init_edit_dialog                   (GcalWindow          *window);
@@ -706,7 +707,8 @@ create_event (gpointer   user_data,
 }
 
 static void
-event_activated (GcalEventWidget *event_widget,
+event_activated (GcalView        *view,
+                 GcalEventWidget *event_widget,
                  gpointer         user_data)
 {
   GcalWindowPrivate *priv;
@@ -1011,8 +1013,13 @@ gcal_window_constructed (GObject *object)
                             G_CALLBACK (gcal_window_new_event), object);
   for (i = 0; i < 4; ++i)
     {
-      g_signal_connect (priv->views[i], "create-event",
-                        G_CALLBACK (show_new_event_widget), object);
+      if (priv->views[i] != NULL)
+        {
+          g_signal_connect (priv->views[i], "create-event",
+                            G_CALLBACK (show_new_event_widget), object);
+          g_signal_connect (priv->views[i], "event-activated",
+                            G_CALLBACK (event_activated), object);
+        }
     }
 
   g_signal_connect (priv->search_bar, "notify::search-mode-enabled",
