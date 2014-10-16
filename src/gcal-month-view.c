@@ -1054,16 +1054,15 @@ gcal_month_view_add (GtkContainer *container,
 
   for (l = priv->days[date->day - 1]; l != NULL; l = l->next)
     {
-      GcalViewChild *child;
+      GtkWidget *event;
 
-      child = (GcalViewChild*) l->data;
-      if (g_strcmp0 (
-            gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget)),
-            gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget)))
-          == 0)
+      event = GTK_WIDGET (((GcalViewChild*) l->data)->widget);
+      if (gcal_event_widget_equal (GCAL_EVENT_WIDGET (widget),
+                                   GCAL_EVENT_WIDGET (event)))
         {
           //TODO: remove once the main-dev phase its over
           g_warning ("Trying to add an event with the same uuid to the view");
+          g_object_unref (widget); /* FIXME: check if this destroy it */
           return;
         }
     }
