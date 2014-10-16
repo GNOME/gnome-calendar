@@ -912,3 +912,41 @@ gcal_event_widget_get_data (GcalEventWidget *event)
 
   return data;
 }
+
+/**
+ * gcal_event_widget_equal:
+ * @widget1: an #GcalEventWidget representing an event
+ * @widget2: an #GcalEventWidget representing an event
+ *
+ * Check if two widget represent the same event.
+ *
+ * Returns: %TRUE if both widget represent the same event,
+ *          false otherwise
+ **/
+gboolean
+gcal_event_widget_equal (GcalEventWidget *widget1,
+                         GcalEventWidget *widget2)
+{
+  GcalEventWidgetPrivate *priv1;
+  GcalEventWidgetPrivate *priv2;
+
+  ECalComponentId *id1;
+  ECalComponentId *id2;
+
+  gboolean same_id = FALSE;
+
+  priv1 = gcal_event_widget_get_instance_private (widget1);
+  priv2 = gcal_event_widget_get_instance_private (widget2);
+
+  if (!e_source_equal (priv1->source, priv2->source))
+    return FALSE;
+
+  id1 = e_cal_component_get_id (priv1->component);
+  id2 = e_cal_component_get_id (priv2->component);
+  same_id = e_cal_component_id_equal (id1, id2);
+
+  e_cal_component_free_id (id1);
+  e_cal_component_free_id (id2);
+
+  return same_id;
+}
