@@ -46,6 +46,7 @@ struct _GcalViewIface
 
   /* signals */
   void            (*create_event)                       (GcalView *view, icaltimetype *start_span, icaltimetype *end_span, gdouble x, gdouble y);
+  void            (*event_activated)                    (GcalView *view, GcalEventWidget *event_widget);
 
 /* FIXME remove me in favor of the one below */
   void            (*clear_selection)                    (GcalView *view);
