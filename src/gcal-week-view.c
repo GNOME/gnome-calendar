@@ -25,8 +25,6 @@
 
 #include <glib/gi18n.h>
 
-#include <libecal/libecal.h>
-
 #include <math.h>
 
 #define ALL_DAY_CELLS_HEIGHT 40
@@ -40,7 +38,8 @@ static const double dashed [] =
 enum
 {
   PROP_0,
-  PROP_DATE
+  PROP_DATE,
+  PROP_MANAGER
 };
 
 struct _GcalWeekViewChild
@@ -71,6 +70,7 @@ typedef struct
 
   /* property */
   icaltimetype   *date;
+  GcalManager    *manager; /* weak referenced */
 
   GdkWindow      *event_window;
 
@@ -195,9 +195,8 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   object_class->get_property = gcal_week_view_get_property;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
+  g_object_class_override_property (object_class, PROP_MANAGER, "manager");
 }
-
-
 
 static void
 gcal_week_view_init (GcalWeekView *self)
@@ -291,7 +290,9 @@ gcal_week_view_set_property (GObject       *object,
                              const GValue  *value,
                              GParamSpec    *pspec)
 {
-  g_return_if_fail (GCAL_IS_WEEK_VIEW (object));
+  GcalWeekViewPrivate *priv;
+
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (object));
 
   switch (property_id)
     {
@@ -299,6 +300,9 @@ gcal_week_view_set_property (GObject       *object,
       gcal_week_view_set_date (
           GCAL_WEEK_VIEW (object),
           g_value_dup_boxed (value));
+      break;
+    case PROP_MANAGER:
+      priv->manager = g_value_get_pointer (value);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -1425,14 +1429,14 @@ gcal_week_view_will_add_event (GcalView        *view,
 /* Public API */
 /**
  * gcal_week_view_new:
- * @date:
+ * @manager: App singleton #GcalManager instance
  *
- * Since: 0.1
- * Return value: the new month view widget
+ * Create a week-view widget
+ *
  * Returns: (transfer full):
  **/
 GtkWidget*
-gcal_week_view_new (void)
+gcal_week_view_new (GcalManager *manager)
 {
-  return g_object_new (GCAL_TYPE_WEEK_VIEW, NULL);
+  return g_object_new (GCAL_TYPE_WEEK_VIEW, "manager", manager, NULL);
 }

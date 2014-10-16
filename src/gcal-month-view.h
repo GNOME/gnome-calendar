@@ -20,6 +20,8 @@
 #ifndef __GCAL_MONTH_VIEW_H__
 #define __GCAL_MONTH_VIEW_H__
 
+#include "gcal-manager.h"
+
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
@@ -49,7 +51,7 @@ struct _GcalMonthViewClass
 
 GType          gcal_month_view_get_type         (void);
 
-GtkWidget*     gcal_month_view_new              (void);
+GtkWidget*     gcal_month_view_new              (GcalManager *manager);
 
 G_END_DECLS
 
