@@ -337,6 +337,22 @@ gcal_event_widget_finalize (GObject *object)
   if (priv->component != NULL)
     g_object_unref (priv->component);
 
+  /* releasing properties */
+  if (priv->uuid != NULL)
+    g_free (priv->uuid);
+
+  if (priv->summary != NULL)
+    g_free (priv->summary);
+
+  if (priv->color != NULL)
+    gdk_rgba_free (priv->color);
+
+  if (priv->dt_start != NULL)
+    g_free (priv->dt_start);
+
+  if (priv->dt_end != NULL)
+    g_free (priv->dt_end);
+
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->finalize (object);
 }
 
