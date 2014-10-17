@@ -1062,6 +1062,7 @@ gcal_month_view_add (GtkContainer *container,
         {
           //TODO: remove once the main-dev phase its over
           g_warning ("Trying to add an event with the same uuid to the view");
+          g_free (date);
           g_object_unref (widget); /* FIXME: check if this destroy it */
           return;
         }
@@ -1408,6 +1409,7 @@ gcal_month_view_subscriber_component_added (ECalDataModelSubscriber *subscriber,
   data->event_component = e_cal_component_clone (comp);
 
   event = gcal_event_widget_new_from_data (data);
+  g_free (data);
 
   gtk_widget_show (event);
   gtk_container_add (GTK_CONTAINER (subscriber), event);
