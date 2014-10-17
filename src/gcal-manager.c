@@ -160,6 +160,8 @@ thread_job_thread (gpointer user_data)
   if (tjd->func != NULL)
     tjd->func (tjd->user_data, tjd->cancellable, &tjd->error);
 
+  thread_job_data_free (tjd);
+
   return g_thread_self ();
 }
 

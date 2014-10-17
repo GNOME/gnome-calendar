@@ -270,13 +270,21 @@ gcal_compare_event_widget_by_date (gconstpointer a,
   icaltimetype *a_date;
   icaltimetype *b_date;
 
+  gint comparison;
+
   a_child = (GcalViewChild*) a;
   b_child = (GcalViewChild*) b;
 
-  a_date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (a_child->widget));
-  b_date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (b_child->widget));
+  a_date =
+    gcal_event_widget_get_date (GCAL_EVENT_WIDGET (a_child->widget));
+  b_date =
+    gcal_event_widget_get_date (GCAL_EVENT_WIDGET (b_child->widget));
 
-  return icaltime_compare (*a_date, *b_date);
+  comparison = icaltime_compare (*a_date, *b_date);
+  g_free (a_date);
+  g_free (b_date);
+
+  return comparison;
 }
 
 void print_date (const gchar*        prefix,
