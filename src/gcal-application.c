@@ -329,7 +329,12 @@ gcal_application_quit (GSimpleAction *simple,
                        GVariant      *parameter,
                        gpointer       user_data)
 {
-  g_application_quit (G_APPLICATION (user_data));
+  GcalApplicationPrivate *priv;
+
+  priv =
+    gcal_application_get_instance_private (GCAL_APPLICATION (user_data));
+
+  gtk_widget_destroy (priv->window);
 }
 
 /* Public API */
