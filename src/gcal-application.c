@@ -120,9 +120,10 @@ gcal_application_finalize (GObject *object)
   priv = gcal_application_get_instance_private (GCAL_APPLICATION (object));
 
   g_clear_object (&(priv->settings));
+  g_clear_object (&(priv->provider));
+  g_clear_object (&(priv->manager));
 
-  if (G_OBJECT_CLASS (gcal_application_parent_class)->finalize != NULL)
-    G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
+  G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
 }
 
 static void
