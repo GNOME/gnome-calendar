@@ -106,6 +106,10 @@ gcal_application_class_init (GcalApplicationClass *klass)
 static void
 gcal_application_init (GcalApplication *self)
 {
+  GcalApplicationPrivate *priv;
+
+  priv = gcal_application_get_instance_private (self);
+  priv->settings = g_settings_new ("org.gnome.calendar");
 }
 
 static void
@@ -332,19 +336,12 @@ gcal_application_quit (GSimpleAction *simple,
 GcalApplication*
 gcal_application_new (void)
 {
-  GcalApplication *app;
-  GcalApplicationPrivate *priv;
-
   g_set_application_name ("Calendar");
 
-  app = g_object_new (gcal_application_get_type (),
-                      "application-id", "org.gnome.Calendar",
-                      "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
-                      NULL);
-
-  priv = gcal_application_get_instance_private (app);
-  priv->settings = g_settings_new ("org.gnome.calendar");
-  return app;
+  return g_object_new (gcal_application_get_type (),
+                       "application-id", "org.gnome.Calendar",
+                       "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
+                       NULL);
 }
 
 GcalManager*
