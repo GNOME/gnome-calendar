@@ -187,6 +187,7 @@ gcal_application_startup (GApplication *app)
                    NULL);
 
      g_object_unref (css_file);
+     g_object_unref (priv->provider);
    }
 
   priv->manager = gcal_manager_new ();
