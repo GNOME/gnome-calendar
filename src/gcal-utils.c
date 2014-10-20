@@ -235,7 +235,7 @@ gcal_get_month_name (gint i)
 }
 
 GdkPixbuf*
-gcal_get_pixbuf_from_color (GdkColor *color,
+gcal_get_pixbuf_from_color (GdkRGBA  *color,
                             gint      size)
 {
   cairo_surface_t *surface;
@@ -246,10 +246,11 @@ gcal_get_pixbuf_from_color (GdkColor *color,
   surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, size, size);
   cr = cairo_create (surface);
 
-  cairo_set_source_rgb (cr,
-                         color->red / 65535.0,
-                         color->green / 65535.0,
-                         color->blue / 65535.0);
+  cairo_set_source_rgba (cr,
+                         color->red,
+                         color->green,
+                         color->blue,
+                         color->alpha);
   cairo_rectangle (cr, 0, 0, size, size);
   cairo_fill (cr);
   cairo_destroy (cr);

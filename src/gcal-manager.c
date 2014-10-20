@@ -570,7 +570,7 @@ gcal_manager_set_subscriber (GcalManager             *manager,
  * @manager: a #GcalManager
  * @base_uri: URI defining the ESourceGroup the client will belongs
  * @relative_uri: URI, relative to the base URI
- * @color: a string representing a color parseable for gdk_color_parse
+ * @color: a string representing a color parseable for gdk_rgba_parse
  *
  * Add a new calendar by its URI.
  * The calendar is enabled by default

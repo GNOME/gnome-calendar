@@ -43,7 +43,7 @@ item_activated (GtkWidget *item,
 
   gchar *uid;
   gchar *color_name;
-  GdkColor color;
+  GdkRGBA color;
 
   GdkPixbuf *pix;
   GtkWidget *image;
@@ -53,7 +53,7 @@ item_activated (GtkWidget *item,
 
   uid = g_object_get_data (G_OBJECT (item), "calendar-uid");
   color_name = g_object_get_data (G_OBJECT (item), "color");
-  gdk_color_parse (color_name, &color);
+  gdk_rgba_parse (&color, color_name);
 
   pix = gcal_get_pixbuf_from_color (&color, 16);
   image = gtk_image_new_from_pixbuf (pix);
@@ -133,7 +133,7 @@ gcal_new_event_widget_set_calendars (GcalNewEventWidget *widget,
       gchar *uid;
       gchar *name;
       gboolean active;
-      GdkColor *color;
+      GdkRGBA *color;
 
       GtkWidget *box;
       GtkWidget *name_label;
@@ -157,7 +157,7 @@ gcal_new_event_widget_set_calendars (GcalNewEventWidget *widget,
       g_object_set_data_full (G_OBJECT (item),
                               "calendar-uid", uid, g_free);
       g_object_set_data_full (G_OBJECT (item),
-                              "color", gdk_color_to_string (color), g_free);
+                              "color", gdk_rgba_to_string (color), g_free);
       g_signal_connect (item,
                         "activate",
                         G_CALLBACK (item_activated),
@@ -176,7 +176,7 @@ gcal_new_event_widget_set_calendars (GcalNewEventWidget *widget,
 
       g_object_unref (pix);
       g_free (name);
-      gdk_color_free (color);
+      gdk_rgba_free (color);
 
       valid = gtk_tree_model_iter_next (sources_model, &iter);
     }
@@ -195,7 +195,7 @@ gcal_new_event_widget_set_default_calendar (GcalNewEventWidget *widget,
 
   gchar *uid;
   gchar *color_name;
-  GdkColor color;
+  GdkRGBA color;
   GdkPixbuf *pix;
   GtkWidget *image;
 
@@ -215,7 +215,7 @@ gcal_new_event_widget_set_default_calendar (GcalNewEventWidget *widget,
         }
     }
 
-  gdk_color_parse (color_name, &color);
+  gdk_rgba_parse (&color, color_name);
   pix = gcal_get_pixbuf_from_color (&color, 16);
   image = gtk_image_new_from_pixbuf (pix);
   gtk_button_set_image (GTK_BUTTON (priv->calendar_button), image);
