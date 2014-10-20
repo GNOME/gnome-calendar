@@ -411,7 +411,7 @@ gcal_edit_dialog_calendar_selected (GtkWidget *menu_item,
 
   GtkListStore *sources_model;
   GtkTreeIter *iter;
-  GdkColor *color;
+  GdkRGBA *color;
 
   GdkPixbuf *pix;
   GtkWidget *cal_image;
@@ -433,7 +433,7 @@ gcal_edit_dialog_calendar_selected (GtkWidget *menu_item,
   cal_image = gtk_image_new_from_pixbuf (pix);
   gtk_button_set_image (GTK_BUTTON (priv->calendar_button), cal_image);
 
-  gdk_color_free (color);
+  gdk_rgba_free (color);
   g_object_unref (pix);
 }
 
@@ -456,7 +456,7 @@ gcal_edit_dialog_set_calendar_selected (GcalEditDialog *dialog)
     {
       /* Walk through the list, reading each row */
       gchar *uid;
-      GdkColor *color;
+      GdkRGBA *color;
       GtkWidget *cal_image;
       GdkPixbuf *pix;
 
@@ -475,14 +475,14 @@ gcal_edit_dialog_set_calendar_selected (GcalEditDialog *dialog)
           cal_image = gtk_image_new_from_pixbuf (pix);
           gtk_button_set_image (GTK_BUTTON (priv->calendar_button), cal_image);
 
-          gdk_color_free (color);
+          gdk_rgba_free (color);
           g_free (uid);
           g_object_unref (pix);
 
           return;
         }
 
-      gdk_color_free (color);
+      gdk_rgba_free (color);
       g_free (uid);
 
       valid = gtk_tree_model_iter_next (GTK_TREE_MODEL (sources_model),
@@ -1011,7 +1011,7 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
       gchar *uid;
       gchar *name;
       gboolean active;
-      GdkColor *color;
+      GdkRGBA *color;
       GtkWidget *cal_image;
       GdkPixbuf *pix;
 
@@ -1026,7 +1026,7 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
         {
           valid = gtk_tree_model_iter_next (GTK_TREE_MODEL (sources_model),
                                             &iter);
-          gdk_color_free (color);
+          gdk_rgba_free (color);
           g_free (name);
           g_free (uid);
           continue;
@@ -1054,7 +1054,7 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
       gtk_container_add (GTK_CONTAINER (menu), item);
 
       g_object_unref (pix);
-      gdk_color_free (color);
+      gdk_rgba_free (color);
       g_free (name);
       g_free (uid);
 

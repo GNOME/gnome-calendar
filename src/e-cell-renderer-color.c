@@ -37,7 +37,7 @@ enum {
 };
 
 struct _ECellRendererColorPrivate {
-	GdkColor *color;
+	GdkRGBA *color;
 };
 
 G_DEFINE_TYPE (
@@ -154,7 +154,7 @@ cell_renderer_color_set_property (GObject *object,
 	switch (property_id) {
 		case PROP_COLOR:
 			if (priv->color != NULL)
-				gdk_color_free (priv->color);
+				gdk_rgba_free (priv->color);
 			priv->color = g_value_dup_boxed (value);
 			return;
 	}
@@ -189,7 +189,7 @@ cell_renderer_color_finalize (GObject *object)
 	priv = E_CELL_RENDERER_COLOR_GET_PRIVATE (object);
 
 	if (priv->color != NULL)
-		gdk_color_free (priv->color);
+		gdk_rgba_free (priv->color);
 
 	/* Chain up to parent's finalize() method. */
 	G_OBJECT_CLASS (e_cell_renderer_color_parent_class)->finalize (object);
@@ -219,7 +219,7 @@ e_cell_renderer_color_class_init (ECellRendererColorClass *class)
 			"color",
 			"Color Info",
 			"The color to render",
-			GDK_TYPE_COLOR,
+			GDK_TYPE_RGBA,
 			G_PARAM_READWRITE));
 }
 
