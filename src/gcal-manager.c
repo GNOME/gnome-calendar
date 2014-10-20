@@ -90,8 +90,6 @@ enum
 
 static guint signals[LAST_SIGNAL];
 
-void            free_manager_unit_data                    (gpointer         data);
-
 static void     load_source                               (GcalManager     *manager,
                                                            ESource         *source);
 
@@ -200,18 +198,6 @@ submit_thread_job (EThreadJobFunc func,
   return cancellable;
 }
 /* -- end: threading related code provided by Milan Crha -- */
-
-void
-free_manager_unit_data (gpointer data)
-{
-  GcalManagerUnit *unit;
-
-  unit = (GcalManagerUnit*) data;
-
-  g_clear_object (&(unit->client));
-
-  g_free (unit);
-}
 
 /**
  * load_source:
@@ -467,6 +453,9 @@ gcal_manager_finalize (GObject *object)
     g_free (priv->initial_date);
   if (priv->final_date != NULL)
     g_free (priv->final_date);
+
+  if (priv->e_data_model != NULL)
+    g_object_unref (priv->e_data_model);
 
   g_hash_table_destroy (priv->clients);
 }
