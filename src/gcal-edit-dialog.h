@@ -38,13 +38,10 @@ G_BEGIN_DECLS
 
 typedef struct _GcalEditDialog                GcalEditDialog;
 typedef struct _GcalEditDialogClass           GcalEditDialogClass;
-typedef struct _GcalEditDialogPrivate         GcalEditDialogPrivate;
 
 struct _GcalEditDialog
 {
   GtkDialog parent;
-
-  GcalEditDialogPrivate *priv;
 };
 
 struct _GcalEditDialogClass
