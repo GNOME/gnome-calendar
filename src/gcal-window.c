@@ -217,6 +217,9 @@ key_pressed (GtkWidget   *widget,
     }
   else
     {
+      if (priv->new_event_mode)
+        return FALSE;
+
       if ((event->state & GDK_META_MASK) != 0 ||
           (event->state & GDK_CONTROL_MASK) != 0 ||
           event->keyval == GDK_KEY_Control_L ||
