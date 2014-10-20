@@ -393,12 +393,11 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
   GtkBorder margin;
   GtkBorder padding;
   PangoLayout *layout;
-  PangoRectangle logical_rect;
+  gint height;
 
-  layout = gtk_widget_create_pango_layout (widget, "00:00:00 00:00");
+  layout = gtk_widget_create_pango_layout (widget, NULL);
 
-  pango_layout_get_extents (layout, NULL, &logical_rect);
-  pango_extents_to_pixels (&logical_rect, NULL);
+  pango_layout_get_pixel_size (layout, NULL, &height);
 
   gtk_style_context_get_margin (gtk_widget_get_style_context (widget),
                                 gtk_widget_get_state_flags (widget),
@@ -408,7 +407,7 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
                                  &padding);
 
   *minimum = *natural =
-    logical_rect.height + padding.top + padding.bottom + margin.top + margin.bottom;
+    height + padding.top + padding.bottom + margin.top + margin.bottom;
 
   g_object_unref (layout);
 }
