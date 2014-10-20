@@ -209,6 +209,7 @@ gcal_event_widget_init(GcalEventWidget *self)
 
   priv = gcal_event_widget_get_instance_private (self);
   priv->button_pressed = FALSE;
+  priv->color = NULL;
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
   gtk_widget_set_can_focus (GTK_WIDGET (self), TRUE);
@@ -673,7 +674,7 @@ gcal_event_widget_new_from_data (GcalEventData *data)
   ECalComponentId *id;
   ECalComponentText e_summary;
   ESourceSelectable *extension;
-  GdkRGBA *color;
+  GdkRGBA color;
   ECalComponentDateTime dt;
   icaltimetype *date;
   gboolean start_is_date, end_is_date;
@@ -707,14 +708,11 @@ gcal_event_widget_new_from_data (GcalEventData *data)
   gcal_event_widget_set_summary (event, (gchar*) e_summary.value);
 
   /* color */
-  color = g_new0 (GdkRGBA, 1);
-
   extension = E_SOURCE_SELECTABLE (
                   e_source_get_extension (priv->source,
                                           E_SOURCE_EXTENSION_CALENDAR));
-  gdk_rgba_parse (color, e_source_selectable_get_color (extension));
-  gcal_event_widget_set_color (event, color);
-  gdk_rgba_free (color);
+  gdk_rgba_parse (&color, e_source_selectable_get_color (extension));
+  gcal_event_widget_set_color (event, &color);
 
   /* start date */
   e_cal_component_get_dtstart (priv->component, &dt);
