@@ -122,14 +122,8 @@ static gchar*         gcal_year_view_get_left_header              (GcalView     
 
 static gchar*         gcal_year_view_get_right_header             (GcalView       *view);
 
-static gboolean       gcal_year_view_draw_event                   (GcalView       *view,
-                                                                   icaltimetype   *start_date,
-                                                                   icaltimetype   *end_date);
-
 static GtkWidget*     gcal_year_view_get_by_uuid                  (GcalView       *view,
                                                                    const gchar    *uuid);
-
-static void           gcal_year_view_clear                        (GcalView       *view);
 
 G_DEFINE_TYPE_WITH_CODE (GcalYearView,
                          gcal_year_view,
@@ -209,9 +203,7 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->get_left_header = gcal_year_view_get_left_header;
   iface->get_right_header = gcal_year_view_get_right_header;
 
-  iface->draw_event = gcal_year_view_draw_event;
   iface->get_by_uuid = gcal_year_view_get_by_uuid;
-  iface->clear = gcal_year_view_clear;
 }
 
 static void
@@ -1000,22 +992,6 @@ gcal_year_view_get_right_header (GcalView *view)
   return g_strdup ("");
 }
 
-static gboolean
-gcal_year_view_draw_event (GcalView     *view,
-                           icaltimetype *start_date,
-                           icaltimetype *end_date)
-{
-  GcalYearViewPrivate *priv;
-
-  g_return_val_if_fail (GCAL_IS_YEAR_VIEW (view), FALSE);
-  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (view));
-
-  if (priv->date == NULL)
-    return FALSE;
-
-  return priv->date->year == start_date->year;
-}
-
 static GtkWidget*
 gcal_year_view_get_by_uuid (GcalView    *view,
                             const gchar *uuid)
@@ -1041,13 +1017,6 @@ gcal_year_view_get_by_uuid (GcalView    *view,
         }
     }
   return NULL;
-}
-
-static void
-gcal_year_view_clear (GcalView *view)
-{
-  gtk_container_foreach (GTK_CONTAINER (view),
-                         (GtkCallback) gtk_widget_destroy, NULL);
 }
 
 /* Public API */

@@ -230,9 +230,7 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->get_left_header = gcal_week_view_get_left_header;
   iface->get_right_header = gcal_week_view_get_right_header;
 
-  iface->draw_event = gcal_week_view_draw_event;
   iface->get_by_uuid = gcal_week_view_get_by_uuid;
-  /* iface->clear = gcal_week_view_clear; */
 }
 
 static void
@@ -917,6 +915,7 @@ gcal_week_view_set_date (GcalWeekView *view,
   priv = gcal_week_view_get_instance_private (view);
   will_resize = FALSE;
 
+  /* FIXME: draw_event don't exist anymore */
   /* if span_updated: queue_resize */
   will_resize = ! gcal_week_view_draw_event (GCAL_VIEW (view), date, NULL);
 
@@ -1362,6 +1361,7 @@ gcal_week_view_get_right_header (GcalView *view)
   return header;
 }
 
+/* FIXME: replace cause it doesn't exist anymore */
 static gboolean
 gcal_week_view_draw_event (GcalView     *view,
                            icaltimetype *start_date,
