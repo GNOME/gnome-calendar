@@ -3,7 +3,7 @@
   <menu id="appmenu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">_New</attribute>
+        <attribute name="label" translatable="yes">_New Event</attribute>
         <attribute name="action">app.new</attribute>
         <attribute name="accel">&lt;Primary&gt;n</attribute>
       </item>
@@ -23,6 +23,14 @@
         <attribute name="label" translatable="yes">_Quit</attribute>
         <attribute name="action">app.quit</attribute>
         <attribute name="accel">&lt;Primary&gt;q</attribute>
+      </item>
+    </section>
+  </menu>
+  <menu id="winmenu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">_New Event</attribute>
+        <attribute name="action">app.new</attribute>
       </item>
     </section>
   </menu>

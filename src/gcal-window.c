@@ -869,7 +869,10 @@ gcal_window_constructed (GObject *object)
 
   GtkWidget *box;
   GtkWidget *search_button;
+
   GtkWidget *menu_button;
+  GtkBuilder *builder;
+  GMenuModel *winmenu;
 
   gint i;
 
@@ -896,8 +899,26 @@ gcal_window_constructed (GObject *object)
                                    priv->views_switcher);
 
   /* header_bar: menu */
-  menu_button = gtk_button_new_from_icon_name ("open-menu-symbolic", GTK_ICON_SIZE_MENU);
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), menu_button);
+  menu_button = gtk_menu_button_new ();
+  gtk_menu_button_set_use_popover (GTK_MENU_BUTTON (menu_button),
+                                   TRUE);
+  gtk_button_set_image (
+      GTK_BUTTON (menu_button),
+      gtk_image_new_from_icon_name ("open-menu-symbolic",
+                                    GTK_ICON_SIZE_MENU));
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar),
+                           menu_button);
+
+  builder = gtk_builder_new ();
+  gtk_builder_add_from_resource (builder,
+                                 "/org/gnome/calendar/menus.ui",
+                                 NULL);
+
+  winmenu = (GMenuModel *)gtk_builder_get_object (builder, "winmenu");
+  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (menu_button),
+                                  winmenu);
+
+  g_object_unref (builder);
 
   /* header_bar: search */
   search_button = gtk_toggle_button_new ();
