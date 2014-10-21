@@ -22,7 +22,7 @@
 
 #include "gcal-manager.h"
 
-#include <gtk/gtk.h>
+#include "gcal-subscriber.h"
 
 G_BEGIN_DECLS
 
@@ -38,12 +38,12 @@ typedef struct _GcalYearViewClass                  GcalYearViewClass;
 
 struct _GcalYearView
 {
-  GtkContainer parent;
+  GcalSubscriber parent;
 };
 
 struct _GcalYearViewClass
 {
-  GtkContainerClass parent_class;
+  GcalSubscriberClass parent_class;
 
   /* signals */
   void (*new_event) (gint new_day);

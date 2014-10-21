@@ -25,8 +25,6 @@
 
 #include <glib/gi18n.h>
 
-#include <libecal/libecal.h>
-
 typedef struct
 {
   /**
@@ -138,7 +136,7 @@ static gboolean       gcal_year_view_will_add_event               (GcalView     
 
 G_DEFINE_TYPE_WITH_CODE (GcalYearView,
                          gcal_year_view,
-                         GTK_TYPE_CONTAINER,
+                         GCAL_TYPE_SUBSCRIBER,
                          G_ADD_PRIVATE (GcalYearView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
                                                 gcal_view_interface_init));
@@ -234,14 +232,37 @@ gcal_year_view_set_property (GObject       *object,
   switch (property_id)
     {
     case PROP_DATE:
-      if (priv->date != NULL)
-        g_free (priv->date);
+      {
+        time_t range_start, range_end;
+        icaltimetype *date;
+        icaltimezone* default_zone;
 
-      priv->date = g_value_dup_boxed (value);
-      break;
+        if (priv->date != NULL)
+          g_free (priv->date);
+
+        priv->date = g_value_dup_boxed (value);
+
+        default_zone =
+          gcal_manager_get_system_timezone (priv->manager);
+        date = gcal_view_get_initial_date (GCAL_VIEW (object));
+        range_start = icaltime_as_timet_with_zone (*date,
+                                                   default_zone);
+        g_free (date);
+        date = gcal_view_get_final_date (GCAL_VIEW (object));
+        range_end = icaltime_as_timet_with_zone (*date,
+                                                 default_zone);
+        g_free (date);
+        gcal_manager_set_subscriber (priv->manager,
+                                     E_CAL_DATA_MODEL_SUBSCRIBER (object),
+                                     range_start,
+                                     range_end);
+        break;
+      }
     case PROP_MANAGER:
-      priv->manager = g_value_get_pointer (value);
-      break;
+      {
+        priv->manager = g_value_get_pointer (value);
+        break;
+      }
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
