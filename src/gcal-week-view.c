@@ -156,9 +156,6 @@ static gboolean       gcal_week_view_draw_event            (GcalView       *view
 static GtkWidget*     gcal_week_view_get_by_uuid           (GcalView       *view,
                                                             const gchar    *uuid);
 
-static gboolean       gcal_week_view_will_add_event        (GcalView        *view,
-                                                            GcalEventWidget *event);
-
 G_DEFINE_TYPE_WITH_CODE (GcalWeekView,
                          gcal_week_view,
                          GTK_TYPE_CONTAINER,
@@ -236,8 +233,6 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->draw_event = gcal_week_view_draw_event;
   iface->get_by_uuid = gcal_week_view_get_by_uuid;
   /* iface->clear = gcal_week_view_clear; */
-
-  iface->will_add_event = gcal_week_view_will_add_event;
 }
 
 static void
@@ -1416,13 +1411,6 @@ gcal_week_view_get_by_uuid (GcalView    *view,
         }
     }
   return NULL;
-}
-
-static gboolean
-gcal_week_view_will_add_event (GcalView        *view,
-                               GcalEventWidget *event)
-{
-  ;
 }
 
 /* Public API */
