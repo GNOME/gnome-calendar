@@ -136,9 +136,6 @@ static GtkWidget*     gcal_month_view_get_by_uuid           (GcalView       *vie
 
 static void           gcal_month_view_clear                 (GcalView       *view);
 
-static gboolean       gcal_month_view_will_add_event        (GcalView        *view,
-                                                             GcalEventWidget *event);
-
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
                          gcal_month_view,
                          GCAL_TYPE_SUBSCRIBER,
@@ -228,8 +225,6 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->draw_event = gcal_month_view_draw_event;
   iface->get_by_uuid = gcal_month_view_get_by_uuid;
   iface->clear = gcal_month_view_clear;
-
-  iface->will_add_event = gcal_month_view_will_add_event;
 }
 
 static void
@@ -1336,35 +1331,6 @@ gcal_month_view_clear (GcalView *view)
 {
   gtk_container_foreach (GTK_CONTAINER (view),
                          (GtkCallback) gtk_widget_destroy, NULL);
-}
-
-static gboolean
-gcal_month_view_will_add_event (GcalView        *view,
-                                GcalEventWidget *event)
-{
-  GcalMonthViewPrivate *priv;
-
-  icaltimetype *start_date;
-  gboolean is_in_range;
-
-  const gchar* event_uuid;
-
-  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), FALSE);
-  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));
-
-  if (priv->date == NULL)
-    return FALSE;
-
-  start_date = gcal_event_widget_get_date (event);
-  is_in_range = (priv->date->month == start_date->month &&
-                 priv->date->year == start_date->year);
-  g_free (start_date);
-
-  if (!is_in_range)
-    return FALSE;
-
-  event_uuid = gcal_event_widget_peek_uuid (event);
-  return !(gcal_month_view_get_by_uuid (view, event_uuid) != NULL);
 }
 
 /* Public API */
