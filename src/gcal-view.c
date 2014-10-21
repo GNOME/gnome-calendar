@@ -122,25 +122,6 @@ gcal_view_get_date (GcalView *view)
   return date;
 }
 
-void
-gcal_view_clear_selection (GcalView *view)
-{
-  g_return_if_fail (GCAL_IS_VIEW (view));
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->clear_selection);
-
-  GCAL_VIEW_GET_INTERFACE (view)->clear_selection (view);
-}
-
-void
-gcal_view_create_event_on_current_unit (GcalView *view)
-{
-  g_return_if_fail (GCAL_IS_VIEW (view));
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->create_event_on_current_unit);
-
-  GCAL_VIEW_GET_INTERFACE (view)->create_event_on_current_unit (view);
-}
-
-/* New API */
 /**
  * gcal_view_get_initial_date:
  * @view: a #GcalView
