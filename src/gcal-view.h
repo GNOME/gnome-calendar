@@ -48,13 +48,6 @@ struct _GcalViewIface
   void            (*create_event)                       (GcalView *view, icaltimetype *start_span, icaltimetype *end_span, gdouble x, gdouble y);
   void            (*event_activated)                    (GcalView *view, GcalEventWidget *event_widget);
 
-/* FIXME remove me in favor of the one below */
-  void            (*clear_selection)                    (GcalView *view);
-
-/* FIXME remove me in favor of the one below */
-  void            (*create_event_on_current_unit)       (GcalView *view);
-
-  /* New API */
   /* Time handling related API */
   icaltimetype*   (*get_initial_date)                   (GcalView *view);
   icaltimetype*   (*get_final_date)                     (GcalView *view);
@@ -81,13 +74,6 @@ void          gcal_view_set_date                      (GcalView     *view,
 
 icaltimetype* gcal_view_get_date                      (GcalView     *view);
 
-/* FIXME remove me in favor of the one below */
-void          gcal_view_clear_selection               (GcalView     *view);
-
-/* FIXME remove me in favor of the one below */
-void          gcal_view_create_event_on_current_unit  (GcalView     *view);
-
-/* New API */
 icaltimetype* gcal_view_get_initial_date              (GcalView     *view);
 
 icaltimetype* gcal_view_get_final_date                (GcalView     *view);
