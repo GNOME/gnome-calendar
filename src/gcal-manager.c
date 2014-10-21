@@ -404,7 +404,7 @@ gcal_manager_init (GcalManager *self)
   priv->clients = g_hash_table_new_full ((GHashFunc) e_source_hash,
                                          (GEqualFunc) e_source_equal,
                                          g_object_unref,
-                                         free_manager_unit_data);
+                                         g_free);
 
   /* reading sources and schedule its connecting */
   error = NULL;
