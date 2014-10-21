@@ -744,7 +744,6 @@ init_edit_dialog (GcalWindow *window)
   gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog),
                                 priv->manager);
 
-  /* FIXME: check if really hides edit-dialog */
   g_signal_connect (priv->edit_dialog,
                     "response", G_CALLBACK (edit_dialog_closed),
                     window);
