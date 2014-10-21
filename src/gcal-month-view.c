@@ -266,7 +266,7 @@ gcal_month_view_set_property (GObject       *object,
         range_end = icaltime_as_timet_with_zone (*date,
                                                  default_zone);
         g_free (date);
-        /* FIXME: update subscribed range here */
+
         gcal_manager_set_subscriber (priv->manager,
                                      E_CAL_DATA_MODEL_SUBSCRIBER (object),
                                      range_start,
