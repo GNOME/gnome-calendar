@@ -26,7 +26,6 @@
 typedef struct
 {
   GtkWidget *back_button;
-  GtkWidget *today_button;
   GtkWidget *forward_button;
 
   GtkWidget *left_label;
@@ -89,7 +88,6 @@ gcal_nav_bar_class_init (GcalNavBarClass *klass)
 
   /* Bind internals widgets */
   gtk_widget_class_bind_template_child_private (widget_class, GcalNavBar, back_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalNavBar, today_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalNavBar, forward_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalNavBar, left_label);
   gtk_widget_class_bind_template_child_private (widget_class, GcalNavBar, right_label);
@@ -174,15 +172,6 @@ gcal_nav_bar_get_prev_button (GcalNavBar *nav_bar)
 
   priv = gcal_nav_bar_get_instance_private (nav_bar);
   return priv->back_button;
-}
-
-GtkWidget*
-gcal_nav_bar_get_today_button (GcalNavBar *nav_bar)
-{
-  GcalNavBarPrivate *priv;
-
-  priv = gcal_nav_bar_get_instance_private (nav_bar);
-  return priv->today_button;
 }
 
 GtkWidget*

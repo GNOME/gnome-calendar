@@ -66,7 +66,7 @@ typedef struct
   GtkWidget           *popover; /* short-lived */
 
   /* header_bar widets */
-  GtkWidget           *new_button;
+  GtkWidget           *today_button;
   GtkWidget           *search_entry;
   GtkWidget           *views_switcher;
 
@@ -251,7 +251,7 @@ date_updated (GtkButton  *button,
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
-  move_today = gcal_nav_bar_get_today_button (GCAL_NAV_BAR (priv->nav_bar)) == (GtkWidget*) button;
+  move_today = priv->today_button == (GtkWidget*) button;
   move_back = gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)) == (GtkWidget*) button;
 
   if (move_today)
@@ -887,11 +887,8 @@ gcal_window_constructed (GObject *object)
   priv->header_bar = gtk_header_bar_new ();
 
   /* header_bar: new */
-  priv->new_button = gtk_button_new_with_label (_("New Event"));
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (priv->new_button),
-      "suggested-action");
-  gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), priv->new_button);
+  priv->today_button = gtk_button_new_with_label (_("Today"));
+  gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), priv->today_button);
 
   priv->views_switcher = gtk_stack_switcher_new ();
   g_object_ref_sink (priv->views_switcher);
@@ -1011,8 +1008,6 @@ gcal_window_constructed (GObject *object)
   g_signal_connect (object, "key-press-event",
                     G_CALLBACK (key_pressed), object);
 
-  g_signal_connect_swapped (priv->new_button, "clicked",
-                            G_CALLBACK (gcal_window_new_event), object);
   for (i = 0; i < 4; ++i)
     {
       if (priv->views[i] != NULL)
@@ -1031,9 +1026,11 @@ gcal_window_constructed (GObject *object)
 
   g_signal_connect (priv->views_stack, "notify::visible-child",
                     G_CALLBACK (view_changed), object);
+
+  g_signal_connect (priv->today_button, "clicked",
+                    G_CALLBACK (date_updated), object);
+
   g_signal_connect (gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)),
-                    "clicked", G_CALLBACK (date_updated), object);
-  g_signal_connect (gcal_nav_bar_get_today_button (GCAL_NAV_BAR (priv->nav_bar)),
                     "clicked", G_CALLBACK (date_updated), object);
   g_signal_connect (gcal_nav_bar_get_next_button (GCAL_NAV_BAR (priv->nav_bar)),
                     "clicked", G_CALLBACK (date_updated), object);
@@ -1177,7 +1174,7 @@ gcal_window_search_toggled (GObject    *object,
       g_debug ("Entering search mode");
 
       /* update headder_bar widget */
-      gtk_widget_hide (priv->new_button);
+      gtk_widget_hide (priv->today_button);
       gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
                                        NULL);
       /* _prepare_for_search */
@@ -1186,7 +1183,7 @@ gcal_window_search_toggled (GObject    *object,
     {
       g_debug ("Leaving search mode");
       /* update header_bar */
-      gtk_widget_show (priv->new_button);
+      gtk_widget_show (priv->today_button);
       gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
                                        priv->views_switcher);
       /* return to last active_view */

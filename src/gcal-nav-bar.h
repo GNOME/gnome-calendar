@@ -50,8 +50,6 @@ GtkWidget*     gcal_nav_bar_new              (void);
 
 GtkWidget*     gcal_nav_bar_get_prev_button  (GcalNavBar *nav_bar);
 
-GtkWidget*     gcal_nav_bar_get_today_button (GcalNavBar *nav_bar);
-
 GtkWidget*     gcal_nav_bar_get_next_button  (GcalNavBar *nav_bar);
 
 G_END_DECLS
