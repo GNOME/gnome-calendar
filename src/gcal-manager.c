@@ -47,9 +47,6 @@ typedef struct
   icaltimetype    *initial_date;
   icaltimetype    *final_date;
 
-  /* The active query */
-  gchar           *query;
-
   GCancellable    *async_ops;
 
   /* timezone */
@@ -96,9 +93,6 @@ static void     load_source                               (GcalManager     *mana
 static void     on_client_connected                       (GObject         *source_object,
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
-
-static void     recreate_view                             (GcalManager     *manager,
-                                                           GcalManagerUnit *unit);
 
 static void     remove_source                             (GcalManager     *manager,
                                                            ESource         *source);
@@ -270,13 +264,8 @@ on_client_connected (GObject      *source_object,
                e_source_get_display_name (source),
                e_source_get_uid (source));
 
-      /* FIXME: add to e_cal_data_model */
       e_cal_data_model_add_client (priv->e_data_model, client);
       g_clear_object (&client);
-
-      /* FIXME: remove me */
-      /* setting view */
-      recreate_view (GCAL_MANAGER (user_data), unit);
     }
   else
     {
@@ -291,56 +280,6 @@ on_client_connected (GObject      *source_object,
       g_error_free (error);
       return;
     }
-}
-
-static void
-recreate_view (GcalManager     *manager,
-               GcalManagerUnit *unit)
-{
-  GcalManagerPrivate *priv;
-
-  priv = gcal_manager_get_instance_private (manager);
-  g_return_if_fail (priv->query != NULL);
-
-  /* FIXME: rethink the need of this method */
-  /* if (e_cal_client_get_view_sync (unit->client, */
-  /*                                 priv->query, */
-  /*                                 &(unit->view), */
-  /*                                 priv->async_ops, */
-  /*                                 &error)) */
-  /*   { */
-  /*     /\*hooking signals *\/ */
-  /*     g_signal_connect (unit->view, */
-  /*                       "objects-added", */
-  /*                       G_CALLBACK (on_view_objects_added), */
-  /*                       manager); */
-
-  /*     g_signal_connect (unit->view, */
-  /*                       "objects-removed", */
-  /*                       G_CALLBACK (on_view_objects_removed), */
-  /*                       manager); */
-
-  /*     g_signal_connect (unit->view, */
-  /*                       "objects-modified", */
-  /*                       G_CALLBACK (on_view_objects_modified), */
-  /*                       manager); */
-
-  /*     error = NULL; */
-  /*     e_cal_client_view_set_fields_of_interest (unit->view, NULL, &error); */
-
-  /*     error = NULL; */
-  /*     e_cal_client_view_start (unit->view, &error); */
-
-  /*     if (error != NULL) */
-  /*       { */
-  /*         g_clear_object (&(unit->view)); */
-  /*         g_warning ("%s", error->message); */
-  /*       } */
-  /*   } */
-  /* else */
-  /*   { */
-  /*     g_warning ("%s", error->message); */
-  /*   } */
 }
 
 void
@@ -639,82 +578,6 @@ gcal_manager_is_client_writable (GcalManager *manager,
 
   unit = g_hash_table_lookup (priv->clients, source);
   return e_client_is_readonly (E_CLIENT (unit->client));
-}
-
-/**
- * gcal_manager_set_new_range:
- * @manager: a #GcalManager
- * @initial_date: starting date of the new range
- * @final_date: final date of the new range
- *
- * Sets a new range of date to look for events.
- * This method compares the dates to find out
- * the larger range, between the new one and the old.
- * It signals once the range it's been set and the
- * events retrieved for it. This methods triggers
- * an update of the internal list of events for every
- * opened calendar; a signal would be emitted
- * when the updated it's done.
- * In case the new range fits inside the old one,
- * then the method generate a fake ::events-added signal.
- *
- * Return value: void
- *
- * Since: 0.0.1
- */
-void
-gcal_manager_set_new_range (GcalManager        *manager,
-                            const icaltimetype *initial_date,
-                            const icaltimetype *final_date)
-{
-  GcalManagerPrivate *priv;
-  gchar *since_iso8601;
-  gchar *until_iso8601;
-  GHashTableIter iter;
-  gpointer key;
-  gpointer value;
-
-  priv = gcal_manager_get_instance_private (manager);
-
-  /* updating query range */
-  if ((icaltime_compare (*(priv->initial_date), *initial_date)) == 1)
-    *(priv->initial_date) = *initial_date;
-
-  if (icaltime_compare (*(priv->final_date), *final_date) == -1)
-    *(priv->final_date) = *final_date;
-
-  /* rebuild query */
-  since_iso8601 =
-    isodate_from_time_t (
-        icaltime_as_timet_with_zone (*(priv->initial_date),
-                                     priv->system_timezone));
-
-  until_iso8601 =
-    isodate_from_time_t (
-        icaltime_as_timet_with_zone (*(priv->final_date),
-                                     priv->system_timezone));
-
-  if (priv->query != NULL)
-    g_free (priv->query);
-
-  priv->query = g_strdup_printf ("occur-in-time-range? "
-                                 "(make-time \"%s\") "
-                                 "(make-time \"%s\")",
-                                 since_iso8601,
-                                 until_iso8601);
-
-  g_free (since_iso8601);
-  g_free (until_iso8601);
-  g_debug ("Reload query %s", priv->query);
-
-  /* redoing query */
-  g_hash_table_iter_init (&iter, priv->clients);
-  while (g_hash_table_iter_next (&iter, &key, &value))
-    {
-      GcalManagerUnit *unit = (GcalManagerUnit*) value;
-      if (unit->connected)
-        recreate_view (manager, unit);
-    }
 }
 
 void
