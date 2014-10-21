@@ -227,6 +227,9 @@
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
                   </object>
+		  <style>
+		    <class name="entry"/>
+		  </style>
                 </child>
               </object>
               <packing>
