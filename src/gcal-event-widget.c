@@ -532,8 +532,8 @@ gcal_event_widget_draw (GtkWidget *widget,
 
   gint x,y;
   gint width, height;
-  gint icon_size;
   gint left_gap;
+  gint icon_size = 0;
 
   PangoLayout *layout;
   PangoRectangle logical_rect;
