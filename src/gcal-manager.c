@@ -289,9 +289,9 @@ remove_source (GcalManager  *manager,
 
   priv = gcal_manager_get_instance_private (manager);
 
+  e_cal_data_model_remove_client (priv->e_data_model,
+                                  e_source_get_uid (source));
   g_hash_table_remove (priv->clients, source);
-
-  /* FIXME: add remove source from ECalDataModel */
 }
 
 static void
