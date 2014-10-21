@@ -65,8 +65,6 @@ static void           event_opened                          (GcalEventWidget *ev
 
 static void           gcal_view_interface_init              (GcalViewIface  *iface);
 
-static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
-
 static void           gcal_month_view_set_property          (GObject        *object,
                                                              guint           property_id,
                                                              const GValue   *value,
@@ -141,31 +139,12 @@ static void           gcal_month_view_clear                 (GcalView       *vie
 static gboolean       gcal_month_view_will_add_event        (GcalView        *view,
                                                              GcalEventWidget *event);
 
-static void           gcal_month_view_subscriber_component_added    (ECalDataModelSubscriber *subscriber,
-                                                                     ECalClient              *client,
-                                                                     ECalComponent           *comp);
-
-static void           gcal_month_view_subscriber_component_modified (ECalDataModelSubscriber *subscriber,
-                                                                     ECalClient              *client,
-                                                                     ECalComponent           *comp);
-
-static void           gcal_month_view_subscriber_component_removed  (ECalDataModelSubscriber *subscriber,
-                                                                     ECalClient              *client,
-                                                                     const gchar             *uid,
-                                                                     const gchar             *rid);
-
-static void           gcal_month_view_subscriber_freeze             (ECalDataModelSubscriber *subscriber);
-
-static void           gcal_month_view_subscriber_thaw               (ECalDataModelSubscriber *subscriber);
-
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
                          gcal_month_view,
-                         GTK_TYPE_CONTAINER,
+                         GCAL_TYPE_SUBSCRIBER,
                          G_ADD_PRIVATE (GcalMonthView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
-                                                gcal_view_interface_init)
-                         G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
-                                                gcal_data_model_subscriber_interface_init));
+                                                gcal_view_interface_init));
 
 
 static void
@@ -252,17 +231,6 @@ gcal_view_interface_init (GcalViewIface *iface)
 
   iface->will_add_event = gcal_month_view_will_add_event;
 }
-
-static void
-gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
-{
-  iface->component_added = gcal_month_view_subscriber_component_added;
-  iface->component_modified = gcal_month_view_subscriber_component_modified;
-  iface->component_removed = gcal_month_view_subscriber_component_removed;
-  iface->freeze = gcal_month_view_subscriber_freeze;
-  iface->thaw = gcal_month_view_subscriber_thaw;
-}
-
 
 static void
 gcal_month_view_set_property (GObject       *object,
@@ -1078,6 +1046,10 @@ gcal_month_view_add (GtkContainer *container,
                           gcal_compare_event_widget_by_date);
   gtk_widget_set_parent (widget, GTK_WIDGET (container));
 
+  g_signal_connect (widget,
+                    "activate",
+                    G_CALLBACK (event_opened),
+                    container);
   g_free (date);
 }
 
@@ -1393,101 +1365,6 @@ gcal_month_view_will_add_event (GcalView        *view,
 
   event_uuid = gcal_event_widget_peek_uuid (event);
   return !(gcal_month_view_get_by_uuid (view, event_uuid) != NULL);
-}
-
-/* ECalDataModelSubscriber interface API */
-static void
-gcal_month_view_subscriber_component_added (ECalDataModelSubscriber *subscriber,
-                                            ECalClient              *client,
-                                            ECalComponent           *comp)
-{
-  GtkWidget *event;
-  GcalEventData *data;
-
-  data = g_new0 (GcalEventData, 1);
-  data->source = e_client_get_source (E_CLIENT (client));
-  data->event_component = e_cal_component_clone (comp);
-
-  event = gcal_event_widget_new_from_data (data);
-  g_free (data);
-
-  gtk_widget_show (event);
-  gtk_container_add (GTK_CONTAINER (subscriber), event);
-
-  g_signal_connect (event,
-                    "activate",
-                    G_CALLBACK (event_opened),
-                    subscriber);
-}
-
-static void
-gcal_month_view_subscriber_component_modified (ECalDataModelSubscriber *subscriber,
-                                               ECalClient              *client,
-                                               ECalComponent           *comp)
-{
-  GtkWidget *event;
-  GtkWidget *widget;
-  GcalEventData *data;
-
-  data = g_new0 (GcalEventData, 1);
-  data->source = e_client_get_source (E_CLIENT (client));
-  data->event_component = e_cal_component_clone (comp);
-
-  event = gcal_event_widget_new_from_data (data);
-  g_free (data);
-
-  widget =
-    gcal_view_get_by_uuid (GCAL_VIEW (subscriber),
-                           gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (event)));
-  if (widget != NULL)
-    {
-      gtk_widget_destroy (widget);
-
-      gtk_widget_show (event);
-      gtk_container_add (GTK_CONTAINER (subscriber), event);
-    }
-
-  g_signal_connect (event,
-                    "activate",
-                    G_CALLBACK (event_opened),
-                    subscriber);
-}
-
-static void
-gcal_month_view_subscriber_component_removed (ECalDataModelSubscriber *subscriber,
-                                              ECalClient              *client,
-                                              const gchar             *uid,
-                                              const gchar             *rid)
-{
-  GtkWidget *widget;
-  const gchar *sid;
-  gchar *uuid;
-
-  sid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
-
-  if (rid != NULL)
-      uuid = g_strdup_printf ("%s:%s:%s", sid, uid, rid);
-  else
-    uuid = g_strdup_printf ("%s:%s", sid, uid);
-
-  widget = gcal_view_get_by_uuid (GCAL_VIEW (subscriber), uuid);
-  if (widget != NULL)
-    gtk_widget_destroy (widget);
-  else
-    g_warning ("%s: Widget with uuid: %s not found",
-               G_STRFUNC, uuid);
-
-  g_free (uuid);
-}
-
-static void
-gcal_month_view_subscriber_freeze (ECalDataModelSubscriber *subscriber)
-{
-}
-
-static void
-gcal_month_view_subscriber_thaw (ECalDataModelSubscriber *subscriber)
-{
 }
 
 /* Public API */

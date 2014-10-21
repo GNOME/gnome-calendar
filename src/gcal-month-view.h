@@ -21,8 +21,7 @@
 #define __GCAL_MONTH_VIEW_H__
 
 #include "gcal-manager.h"
-
-#include <gtk/gtk.h>
+#include "gcal-subscriber.h"
 
 G_BEGIN_DECLS
 
@@ -38,12 +37,12 @@ typedef struct _GcalMonthViewClass                  GcalMonthViewClass;
 
 struct _GcalMonthView
 {
-  GtkContainer parent;
+  GcalSubscriber parent;
 };
 
 struct _GcalMonthViewClass
 {
-  GtkContainerClass parent_class;
+  GcalSubscriberClass parent_class;
 
   /* signals */
   void (*new_event) (gint new_day);
