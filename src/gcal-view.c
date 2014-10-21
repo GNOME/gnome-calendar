@@ -228,29 +228,6 @@ gcal_view_get_right_header (GcalView *view)
 }
 
 /**
- * gcal_view_draw_event:
- * @view: a #GcalView
- * @start_date: an #icaltimetype object. The starting date of the event
- * @end_date: an #icaltimetype object. The edn-date of the event
- *
- * Whether the event within these boundaries will be drawn by the #GcalView implementation
- *
- * Returns: %TRUE if it is, %FALSE otherwise
- **/
-gboolean
-gcal_view_draw_event (GcalView     *view,
-                      icaltimetype *start_date,
-                      icaltimetype *end_date)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), FALSE);
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->draw_event);
-
-  return GCAL_VIEW_GET_INTERFACE (view)->draw_event (view,
-                                                     start_date,
-                                                     end_date);
-}
-
-/**
  * gcal_view_get_by_uuid:
  * @view: a #GcalView
  * @uuid: the uuid of the event-widget
@@ -269,22 +246,4 @@ gcal_view_get_by_uuid (GcalView    *view,
   g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid);
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid (view, uuid);
-}
-
-/**
- * gcal_view_clear:
- * @view: a #GcalView object
- *
- * Destroy every children inside the view.
- *
- * Note: this is a hack because of not-working container code
- * for day and week view composited widgets.
- **/
-void
-gcal_view_clear (GcalView *view)
-{
-  g_return_if_fail (GCAL_IS_VIEW (view));
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->clear);
-
-  GCAL_VIEW_GET_INTERFACE (view)->clear (view);
 }
