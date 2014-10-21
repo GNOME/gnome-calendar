@@ -43,10 +43,6 @@ typedef struct
 
   ECalDataModel   *e_data_model;
 
-  /* The range of dates defining the query */
-  icaltimetype    *initial_date;
-  icaltimetype    *final_date;
-
   GCancellable    *async_ops;
 
   /* timezone */
@@ -329,16 +325,6 @@ gcal_manager_init (GcalManager *self)
   priv = gcal_manager_get_instance_private (self);
 
   priv->system_timezone = e_cal_util_get_system_timezone ();
-  priv->initial_date = g_new(icaltimetype, 1);
-  *(priv->initial_date) = icaltime_from_timet_with_zone (time (NULL),
-                                                         0,
-                                                         priv->system_timezone);
-  priv->final_date = gcal_dup_icaltime (priv->initial_date);
-
-  *(priv->initial_date) = icaltime_set_timezone (priv->initial_date,
-                                                 priv->system_timezone);
-  *(priv->final_date) = icaltime_set_timezone (priv->final_date,
-                                               priv->system_timezone);
 
   priv->clients = g_hash_table_new_full ((GHashFunc) e_source_hash,
                                          (GEqualFunc) e_source_equal,
@@ -387,11 +373,6 @@ gcal_manager_finalize (GObject *object)
   GcalManagerPrivate *priv;
 
   priv = gcal_manager_get_instance_private (GCAL_MANAGER (object));
-
-  if (priv->initial_date != NULL)
-    g_free (priv->initial_date);
-  if (priv->final_date != NULL)
-    g_free (priv->final_date);
 
   if (priv->e_data_model != NULL)
     g_object_unref (priv->e_data_model);
