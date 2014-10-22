@@ -22,7 +22,7 @@
 
 #include "gcal-manager.h"
 
-#include <gtk/gtk.h>
+#include "gcal-subscriber.h"
 
 G_BEGIN_DECLS
 
@@ -38,12 +38,12 @@ typedef struct _GcalWeekViewClass                  GcalWeekViewClass;
 
 struct _GcalWeekView
 {
-  GtkContainer parent;
+  GcalSubscriber parent;
 };
 
 struct _GcalWeekViewClass
 {
-  GtkContainerClass parent_class;
+  GcalSubscriberClass parent_class;
 };
 
 GType          gcal_week_view_get_type         (void);
