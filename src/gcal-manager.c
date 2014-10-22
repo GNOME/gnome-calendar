@@ -653,8 +653,6 @@ gcal_manager_move_event_to_source (GcalManager *manager,
                                    const gchar *event_uid,
                                    const gchar *new_source_uid)
 {
-  GcalManagerPrivate *priv;
-
-  priv = gcal_manager_get_instance_private (manager);
   /* FIXME: add code, fix stub method  */
+  ;
 }

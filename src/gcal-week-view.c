@@ -171,7 +171,7 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   GObjectClass *object_class;
 
   container_class = GTK_CONTAINER_CLASS (klass);
-  container_class->add   = gcal_week_view_add;
+  container_class->add = gcal_week_view_add;
   container_class->remove = gcal_week_view_remove;
   container_class->forall = gcal_week_view_forall;
   gtk_container_class_handle_border_width (container_class);
@@ -191,8 +191,10 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   object_class->set_property = gcal_week_view_set_property;
   object_class->get_property = gcal_week_view_get_property;
 
-  g_object_class_override_property (object_class, PROP_DATE, "active-date");
-  g_object_class_override_property (object_class, PROP_MANAGER, "manager");
+  g_object_class_override_property (object_class,
+                                    PROP_DATE, "active-date");
+  g_object_class_override_property (object_class,
+                                    PROP_MANAGER, "manager");
 }
 
 static void
@@ -399,7 +401,8 @@ gcal_week_view_realize (GtkWidget *widget)
           GcalWeekViewChild *child;
 
           child = (GcalWeekViewChild*) l->data;
-          gtk_widget_set_parent_window (child->widget, priv->grid_window);
+          gtk_widget_set_parent_window (child->widget,
+                                        priv->grid_window);
         }
     }
 }
@@ -560,8 +563,11 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
 
           child = (GcalWeekViewChild*) l->data;
 
-          if ((! gtk_widget_get_visible (child->widget)) && (! child->hidden_by_me))
-            continue;
+          if ((! gtk_widget_get_visible (child->widget)) &&
+              (! child->hidden_by_me))
+            {
+              continue;
+            }
 
           gtk_widget_get_preferred_height (child->widget,
                                            &min_height,
@@ -701,8 +707,11 @@ gcal_week_view_scroll_event (GtkWidget      *widget,
     {
       GtkWidget *range = NULL;
 
-      if (event->direction == GDK_SCROLL_UP || event->direction == GDK_SCROLL_DOWN)
-        range = priv->vscrollbar;
+      if (event->direction == GDK_SCROLL_UP ||
+          event->direction == GDK_SCROLL_DOWN)
+        {
+          range = priv->vscrollbar;
+        }
 
       if (range != NULL && gtk_widget_get_visible (range))
         {
@@ -815,7 +824,8 @@ gcal_week_view_add (GtkContainer *container,
     {
       new_child->index = -1;
       if (gtk_widget_get_window (widget) != NULL)
-        gtk_widget_set_parent_window (widget, gtk_widget_get_window (widget));
+        gtk_widget_set_parent_window (widget,
+                                      gtk_widget_get_window (widget));
     }
   else
     {
@@ -979,7 +989,8 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   state = gtk_widget_get_state_flags (widget);
 
   /* adding shadow */
-  pattern = cairo_pattern_create_linear(0, start_grid_y - 18, 0, start_grid_y + 6);
+  pattern = cairo_pattern_create_linear(0, start_grid_y - 18,
+                                        0, start_grid_y + 6);
 
   cairo_pattern_add_color_stop_rgba(pattern, 0.0, 0, 0, 0, 0.6);
   cairo_pattern_add_color_stop_rgba(pattern, 1.0, 0, 0, 0, 0.0);
@@ -1010,8 +1021,12 @@ gcal_week_view_draw_header (GcalWeekView  *view,
       gint n_day;
 
       n_day = start_of_week->day + i;
-      if (n_day > icaltime_days_in_month (start_of_week->month, start_of_week->year))
-        n_day = n_day - icaltime_days_in_month (start_of_week->month, start_of_week->year);
+      if (n_day > icaltime_days_in_month (start_of_week->month,
+                                          start_of_week->year))
+        {
+          n_day = n_day - icaltime_days_in_month (start_of_week->month,
+                                                  start_of_week->year);
+        }
 
       weekday_abv = gcal_get_weekday (i);
       weekday_header = g_strdup_printf ("%s %d",weekday_abv, n_day);
@@ -1105,7 +1120,9 @@ gcal_week_view_draw_grid_window (GcalWeekView  *view,
   for (i = 0; i < 24; i++)
     {
       gchar *hours;
-      hours = g_strdup_printf ("%d %s", i % 12, i < 12 ? _("AM") : _("PM"));
+      hours = g_strdup_printf ("%d %s",
+                               i % 12,
+                               i < 12 ? _("AM") : _("PM"));
 
       if (i == 0)
         pango_layout_set_text (layout, _("Midnight"), -1);
