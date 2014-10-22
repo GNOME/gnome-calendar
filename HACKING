@@ -15,3 +15,6 @@ Code formating and ordering
 
 + The methods prototype will always be placed at the top of the source, in the
   same order as their implementation below.
+
++ Line splitting will work accordingly to Gtk+ code style, adding the following:
+  1. Pure mathematic calculation can extend over the 80 pixel line

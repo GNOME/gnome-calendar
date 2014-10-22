@@ -922,11 +922,14 @@ gcal_window_constructed (GObject *object)
   search_button = gtk_toggle_button_new ();
   gtk_container_add (
       GTK_CONTAINER (search_button),
-      gtk_image_new_from_icon_name ("edit-find-symbolic", GTK_ICON_SIZE_MENU));
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar), search_button);
+      gtk_image_new_from_icon_name ("edit-find-symbolic",
+                                    GTK_ICON_SIZE_MENU));
+  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar),
+                           search_button);
 
-  gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->header_bar),
-                                        TRUE);
+  gtk_header_bar_set_show_close_button (
+      GTK_HEADER_BAR (priv->header_bar),
+      TRUE);
 
   gtk_widget_set_hexpand (priv->header_bar, TRUE);
   gtk_window_set_titlebar (GTK_WINDOW (object), priv->header_bar);
@@ -1021,7 +1024,8 @@ gcal_window_constructed (GObject *object)
 
   priv->new_event_widget = gcal_new_event_widget_new ();
 
-  gtk_container_add (GTK_CONTAINER(priv->popover), GTK_WIDGET(priv->new_event_widget));
+  gtk_container_add (GTK_CONTAINER(priv->popover),
+                     GTK_WIDGET(priv->new_event_widget));
 
   /* signals connection/handling */
   g_signal_connect (object, "key-press-event",
@@ -1422,7 +1426,8 @@ gcal_window_set_search_mode (GcalWindow *window,
   GcalWindowPrivate *priv;
 
   priv = gcal_window_get_instance_private (window);
-  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (priv->search_bar), enabled);
+  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (priv->search_bar),
+                                  enabled);
 }
 
 void
@@ -1432,7 +1437,8 @@ gcal_window_show_notification (GcalWindow *window)
 
   priv = gcal_window_get_instance_private (window);
 
-  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), TRUE);
+  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification),
+                                 TRUE);
 }
 
 void
@@ -1442,5 +1448,6 @@ gcal_window_hide_notification (GcalWindow *window)
 
   priv = gcal_window_get_instance_private (window);
 
-  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), FALSE);
+  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification),
+                                 FALSE);
 }
