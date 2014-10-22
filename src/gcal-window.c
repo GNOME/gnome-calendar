@@ -462,8 +462,6 @@ view_changed (GObject    *object,
   /* Get view_type from widget, or widget-name */
   priv->active_view = view_type;
   g_object_notify (G_OBJECT (user_data), "active-view");
-
-  update_view (GCAL_WINDOW (user_data));
 }
 
 static void
@@ -1083,9 +1081,12 @@ gcal_window_set_property (GObject      *object,
   switch (property_id)
     {
     case PROP_ACTIVE_VIEW:
+      priv->active_view = g_value_get_enum (value);
       gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
-                                   priv->views[g_value_get_enum (value)]);
+                                   priv->views[priv->active_view]);
 
+
+      update_view (GCAL_WINDOW (object));
       return;
     case PROP_ACTIVE_DATE:
       if (priv->active_date != NULL)
