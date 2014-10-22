@@ -77,6 +77,8 @@ typedef struct
   gint            clicked_cell;
 } GcalWeekViewPrivate;
 
+static gint           get_start_grid_y                     (GtkWidget      *widget);
+
 static void           event_opened                         (GcalEventWidget *event_widget,
                                                             gpointer         user_data);
 
@@ -552,7 +554,7 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
       gtk_widget_get_state_flags (widget),
       &padding);
 
-  start_grid_y = gcal_week_view_get_start_grid_y (widget);
+  start_grid_y = get_start_grid_y (widget);
 
   gdk_window_move_resize (priv->event_window,
                           allocation->x,
@@ -820,7 +822,7 @@ gcal_week_view_button_press_event (GtkWidget      *widget,
 
   y = event->y;
 
-  start_grid_y = gcal_week_view_get_start_grid_y (widget);
+  start_grid_y = get_start_grid_y (widget);
 
   if (y - start_grid_y < 0)
     {
@@ -842,7 +844,7 @@ gcal_week_view_button_release_event (GtkWidget      *widget,
 
   y = event->y;
 
-  start_grid_y = gcal_week_view_get_start_grid_y (widget);
+  start_grid_y = get_start_grid_y (widget);
 
   if (y - start_grid_y < 0)
     {
@@ -1017,7 +1019,7 @@ gcal_week_view_draw_header (GcalWeekView  *view,
   widget = GTK_WIDGET (view);
 
   cairo_save (cr);
-  start_grid_y = gcal_week_view_get_start_grid_y (widget);
+  start_grid_y = get_start_grid_y (widget);
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
 
@@ -1242,55 +1244,6 @@ gcal_week_view_get_sidebar_width (GtkWidget *widget)
   g_object_unref (layout);
 
   return sidebar_width;
-}
-
-/**
- * gcal_week_view_get_start_grid_y:
- *
- * In GcalMonthView this method returns the height of the headers of the view
- * and the grid. Here this points just the place where the grid_window hides
- * behind the header
- * Here this height includes:
- *  - The big header of the view
- *  - The grid header dislaying weekdays
- *  - The cell containing all-day events.
- */
-static gint
-gcal_week_view_get_start_grid_y (GtkWidget *widget)
-{
-  GtkStyleContext *context;
-  GtkBorder padding;
-
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
-  gint font_height;
-  gdouble start_grid_y;
-
-  context = gtk_widget_get_style_context (widget);
-  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
-
-  /* init header values */
-  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
-                                 gtk_widget_get_state_flags (widget),
-                                 &padding);
-
-  gtk_style_context_get (context,
-                         gtk_widget_get_state_flags(widget),
-                         "font", &font_desc,
-                         NULL);
-  pango_font_description_set_weight (font_desc, PANGO_WEIGHT_SEMIBOLD);
-  pango_layout_set_font_description (layout, font_desc);
-  pango_layout_get_pixel_size (layout, NULL, &font_height);
-  pango_font_description_free (font_desc);
-
-  /* 6: is padding around the header */
-  start_grid_y = font_height + padding.bottom;
-
-  /* for including the all-day cells */
-  start_grid_y += ALL_DAY_CELLS_HEIGHT;
-
-  g_object_unref (layout);
-  return start_grid_y;
 }
 
 static void
