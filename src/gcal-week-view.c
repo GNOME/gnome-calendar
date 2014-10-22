@@ -888,7 +888,8 @@ gcal_week_view_add (GtkContainer *container,
         {
           //TODO: remove once the main-dev phase its over
           g_warning ("Trying to add an event with the same uuid to the view");
-          g_object_unref (widget); /* FIXME: check if this destroy it */
+          g_free (date);
+          gtk_widget_destroy (widget);
           return;
         }
     }
