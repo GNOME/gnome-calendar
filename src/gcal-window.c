@@ -986,7 +986,7 @@ gcal_window_constructed (GObject *object)
                         "week", _("Week"));
   g_object_bind_property (GCAL_WINDOW (object), "active-date",
                           priv->views[GCAL_WINDOW_VIEW_WEEK], "active-date",
-                          G_BINDING_DEFAULT);
+                          G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   priv->views[GCAL_WINDOW_VIEW_MONTH] =
     gcal_month_view_new (priv->manager);
@@ -995,7 +995,7 @@ gcal_window_constructed (GObject *object)
                         "month", _("Month"));
   g_object_bind_property (GCAL_WINDOW (object), "active-date",
                           priv->views[GCAL_WINDOW_VIEW_MONTH], "active-date",
-                          G_BINDING_DEFAULT);
+                          G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   priv->views[GCAL_WINDOW_VIEW_YEAR] =
     gcal_year_view_new (priv->manager);
@@ -1004,7 +1004,7 @@ gcal_window_constructed (GObject *object)
                         "year", _("Year"));
   g_object_bind_property (GCAL_WINDOW (object), "active-date",
                           priv->views[GCAL_WINDOW_VIEW_YEAR], "active-date",
-                          G_BINDING_DEFAULT);
+                          G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (priv->views_switcher),
                                 GTK_STACK (priv->views_stack));
