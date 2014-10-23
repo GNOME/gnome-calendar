@@ -25,22 +25,22 @@
 
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
-static void           gcal_subscriber_subscriber_component_added    (ECalDataModelSubscriber *subscriber,
-                                                                     ECalClient              *client,
-                                                                     ECalComponent           *comp);
+static void           gcal_subscriber_component_added           (ECalDataModelSubscriber *subscriber,
+                                                                 ECalClient              *client,
+                                                                 ECalComponent           *comp);
 
-static void           gcal_subscriber_subscriber_component_modified (ECalDataModelSubscriber *subscriber,
-                                                                     ECalClient              *client,
-                                                                     ECalComponent           *comp);
+static void           gcal_subscriber_component_modified        (ECalDataModelSubscriber *subscriber,
+                                                                 ECalClient              *client,
+                                                                 ECalComponent           *comp);
 
-static void           gcal_subscriber_subscriber_component_removed  (ECalDataModelSubscriber *subscriber,
-                                                                     ECalClient              *client,
-                                                                     const gchar             *uid,
-                                                                     const gchar             *rid);
+static void           gcal_subscriber_component_removed         (ECalDataModelSubscriber *subscriber,
+                                                                 ECalClient              *client,
+                                                                 const gchar             *uid,
+                                                                 const gchar             *rid);
 
-static void           gcal_subscriber_subscriber_freeze             (ECalDataModelSubscriber *subscriber);
+static void           gcal_subscriber_freeze                    (ECalDataModelSubscriber *subscriber);
 
-static void           gcal_subscriber_subscriber_thaw               (ECalDataModelSubscriber *subscriber);
+static void           gcal_subscriber_thaw                      (ECalDataModelSubscriber *subscriber);
 
 G_DEFINE_TYPE_WITH_CODE (GcalSubscriber,
                          gcal_subscriber,
@@ -64,18 +64,18 @@ gcal_subscriber_init (GcalSubscriber *self)
 static void
 gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
 {
-  iface->component_added = gcal_subscriber_subscriber_component_added;
-  iface->component_modified = gcal_subscriber_subscriber_component_modified;
-  iface->component_removed = gcal_subscriber_subscriber_component_removed;
-  iface->freeze = gcal_subscriber_subscriber_freeze;
-  iface->thaw = gcal_subscriber_subscriber_thaw;
+  iface->component_added = gcal_subscriber_component_added;
+  iface->component_modified = gcal_subscriber_component_modified;
+  iface->component_removed = gcal_subscriber_component_removed;
+  iface->freeze = gcal_subscriber_freeze;
+  iface->thaw = gcal_subscriber_thaw;
 }
 
 /* ECalDataModelSubscriber interface API */
 static void
-gcal_subscriber_subscriber_component_added (ECalDataModelSubscriber *subscriber,
-                                            ECalClient              *client,
-                                            ECalComponent           *comp)
+gcal_subscriber_component_added (ECalDataModelSubscriber *subscriber,
+                                 ECalClient              *client,
+                                 ECalComponent           *comp)
 {
   GtkWidget *event;
   GcalEventData *data;
@@ -92,9 +92,9 @@ gcal_subscriber_subscriber_component_added (ECalDataModelSubscriber *subscriber,
 }
 
 static void
-gcal_subscriber_subscriber_component_modified (ECalDataModelSubscriber *subscriber,
-                                               ECalClient              *client,
-                                               ECalComponent           *comp)
+gcal_subscriber_component_modified (ECalDataModelSubscriber *subscriber,
+                                    ECalClient              *client,
+                                    ECalComponent           *comp)
 {
   GtkWidget *event;
   GtkWidget *widget;
@@ -108,8 +108,10 @@ gcal_subscriber_subscriber_component_modified (ECalDataModelSubscriber *subscrib
   g_free (data);
 
   widget =
-    gcal_view_get_by_uuid (GCAL_VIEW (subscriber),
-                           gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (event)));
+    gcal_view_get_by_uuid (
+        GCAL_VIEW (subscriber),
+        gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (event)));
+
   if (widget != NULL)
     {
       gtk_widget_destroy (widget);
@@ -120,10 +122,10 @@ gcal_subscriber_subscriber_component_modified (ECalDataModelSubscriber *subscrib
 }
 
 static void
-gcal_subscriber_subscriber_component_removed (ECalDataModelSubscriber *subscriber,
-                                              ECalClient              *client,
-                                              const gchar             *uid,
-                                              const gchar             *rid)
+gcal_subscriber_component_removed (ECalDataModelSubscriber *subscriber,
+                                   ECalClient              *client,
+                                   const gchar             *uid,
+                                   const gchar             *rid)
 {
   GtkWidget *widget;
   const gchar *sid;
@@ -147,11 +149,11 @@ gcal_subscriber_subscriber_component_removed (ECalDataModelSubscriber *subscribe
 }
 
 static void
-gcal_subscriber_subscriber_freeze (ECalDataModelSubscriber *subscriber)
+gcal_subscriber_freeze (ECalDataModelSubscriber *subscriber)
 {
 }
 
 static void
-gcal_subscriber_subscriber_thaw (ECalDataModelSubscriber *subscriber)
+gcal_subscriber_thaw (ECalDataModelSubscriber *subscriber)
 {
 }
