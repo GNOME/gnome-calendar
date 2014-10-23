@@ -460,9 +460,8 @@ view_changed (GObject    *object,
 
   g_type_class_unref (eklass);
 
-  /* Get view_type from widget, or widget-name */
   priv->active_view = view_type;
-  g_object_notify (G_OBJECT (user_data), "active-view");
+  update_view (GCAL_WINDOW (user_data));
 }
 
 static void
