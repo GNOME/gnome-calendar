@@ -277,6 +277,7 @@ date_updated (GtkButton  *button,
           priv->active_date->year += 1 * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_LIST:
+        case GCAL_WINDOW_VIEW_SEARCH:
           break;
         }
     }
@@ -1411,6 +1412,7 @@ gcal_window_new_event (GcalWindow *window)
       priv->event_creation_data->end_date->is_date = 1;
       break;
     case GCAL_WINDOW_VIEW_LIST:
+    case GCAL_WINDOW_VIEW_SEARCH:
       break;
     }
 
