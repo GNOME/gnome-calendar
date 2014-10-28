@@ -703,12 +703,19 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   priv->ev_store->location = const_text != NULL ? g_strdup (const_text) : "";
 
   /* notes */
-  priv->ev_store->description = "";
+  if (priv->ev_store->description != NULL)
+    g_free (priv->ev_store->description);
 
-  gtk_text_buffer_set_text (
-      gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)),
-      priv->ev_store->description,
-      -1);
+  priv->ev_store->description =
+    get_desc_from_component (priv->component,
+                             "\n");
+  if (priv->ev_store->description != NULL)
+    {
+      gtk_text_buffer_set_text (
+          gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)),
+          priv->ev_store->description,
+          -1);
+    }
 
   gcal_edit_dialog_set_writable (
       dialog,

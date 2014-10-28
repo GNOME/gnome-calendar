@@ -118,6 +118,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">end</property>
+                <property name="valign">start</property>
                 <property name="label" translatable="yes">Notes</property>
                 <style>
                   <class name="dim-label" />
@@ -215,11 +216,10 @@
             </child>
             <child>
               <object class="GtkScrolledWindow" id="scrolled_window">
-                <property name="height_request">80</property>
+                <property name="height_request">120</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="vexpand">True</property>
-                <property name="hscrollbar_policy">never</property>
                 <property name="shadow_type">in</property>
                 <child>
                   <object class="GtkTextView" id="notes_text">

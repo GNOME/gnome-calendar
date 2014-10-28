@@ -21,6 +21,7 @@
 #define __GCAL_UTILS_H__
 
 #include <gtk/gtk.h>
+#include <libecal/libecal.h>
 #include <libical/icaltime.h>
 
 #define ICAL_TIME_TYPE (icaltime_get_type ())
@@ -76,6 +77,9 @@ gint            gcal_compare_event_widget_by_date               (gconstpointer  
 
 void            print_date                                      (const gchar*           prefix,
                                                                  const icaltimetype*    icaltime);
+
+gchar*          get_desc_from_component                         (ECalComponent         *component,
+                                                                 const gchar           *joint_char);
 
 /* code brought from evolution */
 gsize           e_strftime_fix_am_pm                            (gchar                 *str,
