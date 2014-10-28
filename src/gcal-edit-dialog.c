@@ -29,8 +29,6 @@ typedef struct _SimpleEventStore SimpleEventStore;
 
 struct _SimpleEventStore
 {
-  gchar         *summary;
-
   gboolean       all_day;
   icaltimetype  *start_date;
   icaltimetype  *end_date;
@@ -77,6 +75,10 @@ typedef struct
   gboolean          setting_event;
 } GcalEditDialogPrivate;
 
+static void        update_summary                         (GtkEntry          *entry,
+                                                           GParamSpec        *pspec,
+                                                           gpointer           user_data);
+
 static void        gcal_edit_dialog_constructed           (GObject           *object);
 
 static void        gcal_edit_dialog_finalize              (GObject           *object);
@@ -101,6 +103,23 @@ static void        gcal_edit_dialog_date_entry_modified   (GtkWidget         *en
 static gboolean    gcal_edit_dialog_source_changed        (GcalEditDialog    *dialog);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
+
+static void
+update_summary (GtkEntry   *entry,
+                GParamSpec *pspec,
+                gpointer    user_data)
+{
+  GcalEditDialogPrivate *priv;
+
+  ECalComponentText summary;
+
+  priv = gcal_edit_dialog_get_instance_private (GCAL_EDIT_DIALOG (user_data));
+
+  summary.value = g_strdup (gtk_entry_get_text (entry));
+  summary.altrep = summary.value;
+
+  e_cal_component_set_summary (priv->component, &summary);
+}
 
 static void
 gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
@@ -211,6 +230,11 @@ gcal_edit_dialog_constructed (GObject* object)
   g_signal_connect (priv->all_day_check,
                     "toggled",
                     G_CALLBACK (gcal_edit_dialog_all_day_changed),
+                    object);
+
+  g_signal_connect (priv->summary_entry,
+                    "notify::text",
+                    G_CALLBACK (update_summary),
                     object);
 
   g_signal_connect (priv->start_date_entry,
@@ -629,10 +653,8 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   /* Load new event data */
   /* summary */
   e_cal_component_get_summary (priv->component, &e_summary);
-  priv->ev_store->summary = g_strdup (e_summary.value);
   gtk_entry_set_text (GTK_ENTRY (priv->summary_entry),
-                      priv->ev_store->summary != NULL ?
-                      priv->ev_store->summary : "");
+                      e_summary.value != NULL ? e_summary.value : "");
 
   /* dialog titlebar's title & subtitle */
   extension = E_SOURCE_SELECTABLE (e_source_get_extension (data->source, E_SOURCE_EXTENSION_CALENDAR));
@@ -783,12 +805,6 @@ gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog)
     return NULL;
 
   res = NULL;
-
-  if (g_strcmp0 (priv->ev_store->summary,
-                 gtk_entry_get_text (GTK_ENTRY (priv->summary_entry))) != 0)
-    {
-      res = g_list_append (res, GINT_TO_POINTER (EVENT_SUMMARY));
-    }
 
   if (gcal_edit_dialog_date_changed (dialog, TRUE))
     {
