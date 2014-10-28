@@ -328,7 +328,13 @@ gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
   priv = gcal_edit_dialog_get_instance_private (dialog);
 
   /* summary */
+  g_signal_handlers_block_by_func (priv->summary_entry,
+                                   update_summary,
+                                   dialog);
   gtk_entry_set_text (GTK_ENTRY (priv->summary_entry), "");
+  g_signal_handlers_unblock_by_func (priv->summary_entry,
+                                     update_summary,
+                                     dialog);
 
   /* calendar button */
   if (priv->active_iter != NULL)
