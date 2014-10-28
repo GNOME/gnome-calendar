@@ -304,6 +304,51 @@ void print_date (const gchar*        prefix,
   g_free (temp);
 }
 
+/**
+ * get_desc_from_component:
+ * @component:
+ *
+ * Utility method to handle the extraction of the description from an
+ * #ECalComponent. This cycle through the list of #ECalComponentText
+ * and concatenate each string into one.
+ *
+ * Returns: (Transfer full) a new allocated string with the description
+ **/
+gchar*
+get_desc_from_component (ECalComponent *component,
+                         const gchar   *joint_char)
+{
+  GSList *text_list;
+  GSList *l;
+
+  gchar *desc = NULL;
+  e_cal_component_get_description_list (component, &text_list);
+
+  for (l = text_list; l != NULL; l = l->next)
+    {
+      if (l->data != NULL)
+        {
+          ECalComponentText *text;
+          gchar *carrier;
+          text = l->data;
+
+          if (desc != NULL)
+            {
+              carrier = g_strconcat (desc, joint_char, text->value, NULL);
+              g_free (desc);
+              desc = carrier;
+            }
+          else
+            {
+              desc = g_strdup (text->value);
+            }
+        }
+    }
+
+  e_cal_component_free_text_list (text_list);
+  return desc;
+}
+
 /* Function to do a last minute fixup of the AM/PM stuff if the locale
  * and gettext haven't done it right. Most English speaking countries
  * except the USA use the 24 hour clock (UK, Australia etc). However
