@@ -20,6 +20,8 @@
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 
+#define INTENSITY(r, g, b) ((r) * 0.30 + (g) * 0.59 + (b) * 0.11)
+
 typedef struct
 {
   /* properties */
@@ -216,7 +218,7 @@ gcal_event_widget_init(GcalEventWidget *self)
 
   gtk_style_context_add_class (
       gtk_widget_get_style_context (GTK_WIDGET (self)),
-      "event");
+      "event-widget");
 }
 
 static void
@@ -257,15 +259,39 @@ gcal_event_widget_set_property (GObject      *object,
       priv->summary = g_value_dup_string (value);
       return;
     case PROP_COLOR:
-      if (priv->color != NULL)
-        gdk_rgba_free (priv->color);
+      {
+        GtkStyleContext *context;
 
-      priv->color = g_value_dup_boxed (value);
-      gtk_widget_override_background_color (
-          GTK_WIDGET (object),
-          gtk_widget_get_state_flags (GTK_WIDGET (object)),
-          priv->color);
-      return;
+        context = gtk_widget_get_style_context (GTK_WIDGET (object));
+
+        if (priv->color != NULL)
+          gdk_rgba_free (priv->color);
+
+        priv->color = g_value_dup_boxed (value);
+
+        if (priv->color == NULL)
+          return;
+
+        gtk_widget_override_background_color (
+            GTK_WIDGET (object),
+            gtk_widget_get_state_flags (GTK_WIDGET (object)),
+            priv->color);
+
+        if (INTENSITY (priv->color->red,
+                       priv->color->green,
+                       priv->color->blue) > 0.5)
+          {
+            gtk_style_context_remove_class (context, "color-dark");
+            gtk_style_context_add_class (context, "color-light");
+          }
+        else
+          {
+            gtk_style_context_remove_class (context, "color-light");
+            gtk_style_context_add_class (context, "color-dark");
+          }
+
+        return;
+      }
     case PROP_DTSTART:
       if (priv->dt_start != NULL)
         g_free (priv->dt_start);
@@ -538,7 +564,6 @@ gcal_event_widget_draw (GtkWidget *widget,
   PangoLayout *layout;
   PangoRectangle logical_rect;
   PangoFontDescription *font_desc;
-  GdkRGBA fg_color;
 
   priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
   context = gtk_widget_get_style_context (widget);
@@ -546,7 +571,6 @@ gcal_event_widget_draw (GtkWidget *widget,
 
   gtk_style_context_get_padding (context, state, &padding);
   gtk_style_context_get_margin (context, state, &margin);
-  gtk_style_context_get_color (context, state, &fg_color);
 
   x = margin.left;
   y = margin.top;
@@ -577,14 +601,10 @@ gcal_event_widget_draw (GtkWidget *widget,
       pango_layout_set_width (layout, (width - (padding.left + padding.right + left_gap) ) * PANGO_SCALE);
     }
 
-  cairo_set_source_rgba (cr,
-                         fg_color.red,
-                         fg_color.green,
-                         fg_color.blue,
-                         fg_color.alpha);
-  cairo_move_to (cr, x + padding.left + left_gap, y + padding.top);
-  pango_cairo_show_layout (cr, layout);
-
+  gtk_render_layout (context, cr,
+                     x + padding.left + left_gap,
+                     y + padding.top,
+                     layout);
 
   /* render icon */
   if (priv->has_reminders)
