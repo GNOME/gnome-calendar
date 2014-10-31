@@ -757,6 +757,7 @@ edit_dialog_closed (GtkDialog *dialog,
   GcalWindowPrivate *priv;
 
   GcalEditDialog *edit_dialog;
+  ECalComponent *component;
   GcalView *view;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
@@ -766,9 +767,18 @@ edit_dialog_closed (GtkDialog *dialog,
   view = GCAL_VIEW (priv->views[priv->active_view]);
   edit_dialog = GCAL_EDIT_DIALOG (dialog);
 
-  /* FIXME: add back cancel and accept responses */
   switch (response)
     {
+    case GCAL_RESPONSE_SAVE_EVENT:
+      /* retrieve the component from the dialog*/
+      component = gcal_edit_dialog_get_component (edit_dialog);
+
+      gcal_manager_update_event (priv->manager,
+                                 gcal_edit_dialog_get_source (edit_dialog),
+                                 component);
+
+      break;
+
     case GCAL_RESPONSE_DELETE_EVENT:
       /* delete the event */
       if (priv->notification != NULL)
@@ -784,6 +794,9 @@ edit_dialog_closed (GtkDialog *dialog,
       gtk_widget_hide (gcal_view_get_by_uuid (view,
                                               priv->event_to_delete));
 
+      break;
+
+    case GTK_RESPONSE_CANCEL:
       break;
 
     }
