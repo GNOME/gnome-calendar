@@ -90,6 +90,10 @@ static void     on_client_connected                       (GObject         *sour
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
 
+static void     on_event_updated                         (GObject          *source_object,
+                                                          GAsyncResult     *result,
+                                                          gpointer          user_data);
+
 static void     remove_source                             (GcalManager     *manager,
                                                            ESource         *source);
 
@@ -276,6 +280,34 @@ on_client_connected (GObject      *source_object,
       g_error_free (error);
       return;
     }
+}
+
+/**
+ * on_component_updated:
+ * @source_object: {@link ECalClient} source
+ * @result: result of the operation
+ * @user_data: manager instance
+ *
+ * Called when an component is modified. Currently, it only checks for
+ * error, but a more sophisticated implementation will come in no time.
+ *
+ **/
+static void
+on_event_updated (GObject      *source_object,
+                  GAsyncResult *result,
+                  gpointer      user_data)
+{
+  GError *error;
+
+  error = NULL;
+  if (! e_cal_client_modify_object_finish (E_CAL_CLIENT (source_object),
+                                           result,
+                                           &error))
+    {
+      g_warning ("Error updating component: %s", error->message);
+      g_error_free (error);
+    }
+  g_object_unref (E_CAL_COMPONENT (user_data));
 }
 
 void
@@ -645,6 +677,25 @@ gcal_manager_create_event (GcalManager        *manager,
                               manager);
 
   g_object_unref (event);
+}
+
+void
+gcal_manager_update_event (GcalManager   *manager,
+                           ESource       *source,
+                           ECalComponent *component)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+
+  priv = gcal_manager_get_instance_private (manager);
+  unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients, source);
+
+  e_cal_client_modify_object (unit->client,
+                              e_cal_component_get_icalcomponent (component),
+                              E_CAL_OBJ_MOD_THIS,
+                              NULL,
+                              on_event_updated,
+                              component);
 }
 
 void

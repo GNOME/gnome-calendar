@@ -220,7 +220,7 @@ gcal_edit_dialog_constructed (GObject* object)
                     object);
   g_object_set_data (G_OBJECT (priv->done_button),
                      "response",
-                     GINT_TO_POINTER (GTK_RESPONSE_ACCEPT));
+                     GINT_TO_POINTER (GCAL_RESPONSE_SAVE_EVENT));
   g_signal_connect (priv->done_button,
                     "clicked",
                     G_CALLBACK (gcal_edit_dialog_action_button_clicked),
@@ -763,6 +763,25 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
   priv = gcal_edit_dialog_get_instance_private (dialog);
 
   priv->manager = manager;
+}
+
+ECalComponent*
+gcal_edit_dialog_get_component (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+
+  priv = gcal_edit_dialog_get_instance_private (dialog);
+  g_object_ref (priv->component);
+  return priv->component;
+}
+
+ESource*
+gcal_edit_dialog_get_source (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+
+  priv = gcal_edit_dialog_get_instance_private (dialog);
+  return priv->source;
 }
 
 const gchar*

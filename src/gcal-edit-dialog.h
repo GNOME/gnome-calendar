@@ -27,6 +27,7 @@
 G_BEGIN_DECLS
 
 #define GCAL_RESPONSE_DELETE_EVENT 2
+#define GCAL_RESPONSE_SAVE_EVENT   4
 
 
 #define GCAL_TYPE_EDIT_DIALOG                (gcal_edit_dialog_get_type ())
@@ -59,6 +60,10 @@ void                 gcal_edit_dialog_set_event_data          (GcalEditDialog *d
 
 void                 gcal_edit_dialog_set_manager             (GcalEditDialog *dialog,
                                                                GcalManager    *manager);
+
+ECalComponent*       gcal_edit_dialog_get_component           (GcalEditDialog *dialog);
+
+ESource*             gcal_edit_dialog_get_source              (GcalEditDialog *dialog);
 
 const gchar*         gcal_edit_dialog_peek_source_uid         (GcalEditDialog *dialog);
 

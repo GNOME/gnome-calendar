@@ -92,6 +92,11 @@ void           gcal_manager_create_event            (GcalManager        *manager
                                                      const icaltimetype *initial_date,
                                                      const icaltimetype *final_date);
 
+/* Update method */
+void           gcal_manager_update_event            (GcalManager        *manager,
+                                                     ESource            *source,
+                                                     ECalComponent      *component);
+
 /* Set methods */
 void           gcal_manager_move_event_to_source    (GcalManager        *manager,
                                                      const gchar        *source_uid,
