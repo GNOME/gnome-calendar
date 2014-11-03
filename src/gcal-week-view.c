@@ -423,6 +423,7 @@ gcal_week_view_realize (GtkWidget *widget)
 
   parent_window = gtk_widget_get_parent_window (widget);
   gtk_widget_set_window (widget, parent_window);
+  g_object_ref (parent_window);
 
   attributes.window_type = GDK_WINDOW_CHILD;
   attributes.wclass = GDK_INPUT_ONLY;
