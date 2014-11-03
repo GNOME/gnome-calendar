@@ -347,7 +347,7 @@ gcal_month_view_realize (GtkWidget *widget)
   priv->event_window = gdk_window_new (parent_window,
                                        &attributes,
                                        attributes_mask);
-  gdk_window_set_user_data (priv->event_window, widget);
+  gtk_widget_register_window (widget, priv->event_window);
 }
 
 static void
@@ -358,7 +358,7 @@ gcal_month_view_unrealize (GtkWidget *widget)
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
   if (priv->event_window != NULL)
     {
-      gdk_window_set_user_data (priv->event_window, NULL);
+      gtk_widget_unregister_window (widget, priv->event_window);
       gdk_window_destroy (priv->event_window);
       priv->event_window = NULL;
     }

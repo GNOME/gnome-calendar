@@ -437,7 +437,7 @@ gcal_week_view_realize (GtkWidget *widget)
   priv->event_window = gdk_window_new (parent_window,
                                        &attributes,
                                        attributes_mask);
-  gdk_window_set_user_data (priv->event_window, widget);
+  gtk_widget_register_window (widget, priv->event_window);
 
   attributes.window_type = GDK_WINDOW_CHILD;
   attributes.wclass = GDK_INPUT_OUTPUT;
@@ -458,14 +458,14 @@ gcal_week_view_realize (GtkWidget *widget)
   priv->view_window = gdk_window_new (parent_window,
                                       &attributes,
                                       attributes_mask);
-  gdk_window_set_user_data (priv->view_window, widget);
+  gtk_widget_register_window (widget, priv->view_window);
 
   attributes.event_mask = gtk_widget_get_events (widget);
   attributes.event_mask |= GDK_EXPOSURE_MASK;
   priv->grid_window = gdk_window_new (priv->view_window,
                                       &attributes,
                                       attributes_mask);
-  gdk_window_set_user_data (priv->grid_window, widget);
+  gtk_widget_register_window (widget, priv->grid_window);
 
   gdk_window_show (priv->event_window);
   gdk_window_show (priv->grid_window);
@@ -493,20 +493,20 @@ gcal_week_view_unrealize (GtkWidget *widget)
   priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (widget));
   if (priv->view_window != NULL)
     {
-      gdk_window_set_user_data (priv->view_window, NULL);
+      gtk_widget_unregister_window (widget, priv->view_window);
       gdk_window_destroy (priv->view_window);
       priv->view_window = NULL;
     }
 
   if (priv->grid_window != NULL)
     {
-      gdk_window_set_user_data (priv->grid_window, NULL);
+      gtk_widget_unregister_window (widget, priv->grid_window);
       gdk_window_destroy (priv->grid_window);
       priv->grid_window = NULL;
     }
   if (priv->event_window != NULL)
     {
-      gdk_window_set_user_data (priv->event_window, NULL);
+      gtk_widget_unregister_window (widget, priv->event_window);
       gdk_window_destroy (priv->event_window);
       priv->event_window = NULL;
     }
