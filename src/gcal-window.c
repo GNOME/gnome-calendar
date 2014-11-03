@@ -1247,10 +1247,13 @@ gcal_window_search_changed (GtkEditable *editable,
 
       if (gtk_entry_get_text_length (GTK_ENTRY (priv->search_entry)) != 0)
         {
-          title = g_strdup_printf ("Results for \"%s\"",
-                                   gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
+          title =
+            g_strdup_printf (
+                "Results for \"%s\"",
+                gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
           gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar),
                                     title);
+          g_free (title);
         }
       else
         {
