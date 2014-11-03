@@ -316,6 +316,9 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
 
   gtk_widget_set_sensitive (priv->all_day_check, writable);
 
+  gtk_button_set_label (GTK_BUTTON (priv->done_button),
+                        writable ? _("Save") : _("Done"));
+
   /* add delete_button here */
   gtk_widget_set_sensitive (priv->delete_button, writable);
 }
