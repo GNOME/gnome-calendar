@@ -256,6 +256,9 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   data->event_component = e_cal_component_clone (comp);
 
   event = gcal_event_widget_new_from_data (data);
+  gcal_new_event_widget_set_read_only (
+      GCAL_EVENT_WIDGET (event),
+      e_client_is_readonly (E_CLIENT (client)));
   g_free (data);
 
   gtk_widget_set_margin_start (event, 96);
