@@ -26,6 +26,7 @@
 #include "gcal-month-view.h"
 #include "gcal-week-view.h"
 #include "gcal-year-view.h"
+#include "gcal-search-view.h"
 #include "gcal-event-widget.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-enum-types.h"
@@ -70,7 +71,8 @@ typedef struct
   GtkWidget           *search_entry;
   GtkWidget           *views_switcher;
 
-  GtkWidget           *views [5]; /* day, week, month, year, list */
+  /* day, week, month, year, list, search */
+  GtkWidget           *views [6];
   GtkWidget           *edit_dialog;
 
   GcalManager         *manager;
@@ -156,6 +158,13 @@ static void           edit_dialog_closed                 (GtkDialog           *d
                                                           gint                 response,
                                                           gpointer             user_data);
 
+static void           search_toggled                     (GObject             *object,
+                                                          GParamSpec          *pspec,
+                                                          gpointer             user_data);
+
+static void           search_changed                     (GtkEditable         *editable,
+                                                          gpointer             user_data);
+
 static void           gcal_window_constructed            (GObject             *object);
 
 static void           gcal_window_finalize               (GObject             *object);
@@ -175,13 +184,6 @@ static gboolean       gcal_window_configure_event        (GtkWidget           *w
 
 static gboolean       gcal_window_state_event            (GtkWidget           *widget,
                                                           GdkEventWindowState *event);
-
-static void           gcal_window_search_toggled         (GObject             *object,
-                                                          GParamSpec          *pspec,
-                                                          gpointer             user_data);
-
-static void           gcal_window_search_changed         (GtkEditable         *editable,
-                                                          gpointer             user_data);
 
 /* GcalManager signal handling */
 static void           gcal_window_event_created          (GcalManager         *manager,
@@ -467,6 +469,9 @@ view_changed (GObject    *object,
   view_type = eval->value;
 
   g_type_class_unref (eklass);
+
+  if (view_type == GCAL_WINDOW_VIEW_SEARCH)
+    return;
 
   priv->active_view = view_type;
   g_object_notify (G_OBJECT (user_data), "active-view");
@@ -811,6 +816,95 @@ edit_dialog_closed (GtkDialog *dialog,
 }
 
 static void
+search_toggled (GObject    *object,
+                GParamSpec *pspec,
+                gpointer    user_data)
+{
+  GcalWindowPrivate *priv;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
+    {
+      g_debug ("Entering search mode");
+
+      /* update header_bar widget */
+      gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
+                                       NULL);
+      gtk_widget_hide (priv->today_button);
+      gtk_widget_hide (priv->nav_bar);
+
+      gtk_stack_add_named (GTK_STACK (priv->views_stack),
+                           priv->views[GCAL_WINDOW_VIEW_SEARCH],
+                           "search");
+
+      if (gtk_stack_get_visible_child (GTK_STACK (priv->views_stack)) !=
+          priv->views[GCAL_WINDOW_VIEW_SEARCH])
+        {
+          gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
+                                       priv->views[GCAL_WINDOW_VIEW_SEARCH]);
+        }
+    }
+  else
+    {
+      g_debug ("Leaving search mode");
+      /* update header_bar */
+      gtk_widget_show (priv->nav_bar);
+      gtk_widget_show (priv->today_button);
+
+      gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
+                                   priv->views[priv->active_view]);
+
+      gtk_container_remove (GTK_CONTAINER (priv->views_stack),
+                            priv->views[GCAL_WINDOW_VIEW_SEARCH]);
+
+      gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
+                                       priv->views_switcher);
+      /* Reset manager filter */
+      gcal_manager_set_query (priv->manager, NULL);
+    }
+}
+
+static void
+search_changed (GtkEditable *editable,
+                gpointer     user_data)
+{
+  GcalWindowPrivate *priv;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
+    {
+
+      if (gtk_entry_get_text_length (GTK_ENTRY (priv->search_entry)) != 0)
+        {
+          gchar *title;
+          gchar *query;
+
+          title =
+            g_strdup_printf (
+                "Results for \"%s\"",
+                gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
+          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar),
+                                    title);
+          g_free (title);
+
+          /**/
+          query =
+            g_strdup_printf ("(contains? \"summary\" \"%s\")",
+                             gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
+          gcal_manager_set_query (priv->manager, query);
+          g_free (query);
+        }
+      else
+        {
+          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar),
+                                    "");
+        }
+    }
+}
+
+static void
 gcal_window_class_init(GcalWindowClass *klass)
 {
   GObjectClass *object_class;
@@ -1010,27 +1104,32 @@ gcal_window_constructed (GObject *object)
   gtk_stack_add_titled (GTK_STACK (priv->views_stack),
                         priv->views[GCAL_WINDOW_VIEW_WEEK],
                         "week", _("Week"));
-  g_object_bind_property (GCAL_WINDOW (object), "active-date",
-                          priv->views[GCAL_WINDOW_VIEW_WEEK], "active-date",
-                          G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   priv->views[GCAL_WINDOW_VIEW_MONTH] =
     gcal_month_view_new (priv->manager);
   gtk_stack_add_titled (GTK_STACK (priv->views_stack),
                         priv->views[GCAL_WINDOW_VIEW_MONTH],
                         "month", _("Month"));
-  g_object_bind_property (GCAL_WINDOW (object), "active-date",
-                          priv->views[GCAL_WINDOW_VIEW_MONTH], "active-date",
-                          G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   priv->views[GCAL_WINDOW_VIEW_YEAR] =
     gcal_year_view_new (priv->manager);
   gtk_stack_add_titled (GTK_STACK (priv->views_stack),
                         priv->views[GCAL_WINDOW_VIEW_YEAR],
                         "year", _("Year"));
+
+  priv->views[GCAL_WINDOW_VIEW_SEARCH] =
+    gcal_search_view_new (priv->manager);
+  g_object_ref_sink (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
+  gtk_widget_show (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
+
   g_object_bind_property (GCAL_WINDOW (object), "active-date",
-                          priv->views[GCAL_WINDOW_VIEW_YEAR], "active-date",
+                          priv->views[GCAL_WINDOW_VIEW_SEARCH],
+                          "active-date",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+
+  g_signal_connect_swapped (priv->views_stack, "destroy",
+                            G_CALLBACK (gtk_widget_destroy),
+                            priv->views[GCAL_WINDOW_VIEW_SEARCH]);
 
   gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (priv->views_switcher),
                                 GTK_STACK (priv->views_stack));
@@ -1054,10 +1153,16 @@ gcal_window_constructed (GObject *object)
   g_signal_connect (object, "key-press-event",
                     G_CALLBACK (key_pressed), object);
 
+  /* only GcalView implementations */
   for (i = 0; i < 4; ++i)
     {
       if (priv->views[i] != NULL)
         {
+          g_object_bind_property (GCAL_WINDOW (object), "active-date",
+                                  priv->views[i], "active-date",
+                                  G_BINDING_DEFAULT |
+                                  G_BINDING_SYNC_CREATE);
+
           g_signal_connect (priv->views[i], "create-event",
                             G_CALLBACK (show_new_event_widget), object);
           g_signal_connect (priv->views[i], "event-activated",
@@ -1066,9 +1171,9 @@ gcal_window_constructed (GObject *object)
     }
 
   g_signal_connect (priv->search_bar, "notify::search-mode-enabled",
-                    G_CALLBACK (gcal_window_search_toggled), object);
-  g_signal_connect (priv->search_entry, "changed",
-                    G_CALLBACK (gcal_window_search_changed), object);
+                    G_CALLBACK (search_toggled), object);
+  g_signal_connect (priv->search_entry, "search-changed",
+                    G_CALLBACK (search_changed), object);
 
   g_signal_connect (priv->views_stack, "notify::visible-child",
                     G_CALLBACK (view_changed), object);
@@ -1091,6 +1196,12 @@ gcal_window_finalize (GObject *object)
 
   if (priv->active_date != NULL)
     g_free (priv->active_date);
+
+  if (priv->views_switcher != NULL)
+    g_object_unref (priv->views_switcher);
+
+  if (priv->views[GCAL_WINDOW_VIEW_SEARCH] != NULL)
+    g_object_unref (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
 
   G_OBJECT_CLASS (gcal_window_parent_class)->finalize (object);
 }
@@ -1207,68 +1318,6 @@ gcal_window_state_event (GtkWidget           *widget,
   retval = GTK_WIDGET_CLASS (gcal_window_parent_class)->window_state_event (widget, event);
 
   return retval;
-}
-
-static void
-gcal_window_search_toggled (GObject    *object,
-                            GParamSpec *pspec,
-                            gpointer    user_data)
-{
-  GcalWindowPrivate *priv;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
-    {
-      g_debug ("Entering search mode");
-
-      /* update headder_bar widget */
-      gtk_widget_hide (priv->today_button);
-      gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
-                                       NULL);
-      /* _prepare_for_search */
-    }
-  else
-    {
-      g_debug ("Leaving search mode");
-      /* update header_bar */
-      gtk_widget_show (priv->today_button);
-      gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
-                                       priv->views_switcher);
-      /* return to last active_view */
-      gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
-                                   priv->views[priv->active_view]);
-    }
-}
-
-static void
-gcal_window_search_changed (GtkEditable *editable,
-                            gpointer     user_data)
-{
-  GcalWindowPrivate *priv;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
-    {
-      gchar *title;
-
-      if (gtk_entry_get_text_length (GTK_ENTRY (priv->search_entry)) != 0)
-        {
-          title =
-            g_strdup_printf (
-                "Results for \"%s\"",
-                gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
-          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar),
-                                    title);
-          g_free (title);
-        }
-      else
-        {
-          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar),
-                                    "");
-        }
-    }
 }
 
 static void
@@ -1453,6 +1502,7 @@ gcal_window_set_search_mode (GcalWindow *window,
   GcalWindowPrivate *priv;
 
   priv = gcal_window_get_instance_private (window);
+  priv->search_mode = enabled;
   gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (priv->search_bar),
                                   enabled);
 }
