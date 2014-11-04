@@ -25,19 +25,6 @@
 #include <libecal/libecal.h>
 #include <glib/gi18n.h>
 
-typedef struct _SimpleEventStore SimpleEventStore;
-
-struct _SimpleEventStore
-{
-  gboolean       all_day;
-  icaltimetype  *start_date;
-  icaltimetype  *end_date;
-  icaltime_span *time_span;
-
-  gchar         *location;
-  gchar         *description;
-};
-
 typedef struct
 {
   gchar            *source_uid;
@@ -66,8 +53,6 @@ typedef struct
   GtkWidget        *location_entry;
   GtkWidget        *notes_text;
 
-  SimpleEventStore *ev_store;
-
   /* new data holders */
   ESource          *source; /* weak reference */
   ECalComponent    *component;
@@ -75,8 +60,21 @@ typedef struct
   gboolean          setting_event;
 } GcalEditDialogPrivate;
 
+static void        update_date                            (GtkEntry          *entry,
+                                                           gpointer           user_data);
+
+static void        update_location                        (GtkEntry          *entry,
+                                                           GParamSpec        *pspec,
+                                                           gpointer           user_data);
+
+static void        update_notes                           (GtkTextBuffer     *buffer,
+                                                           gpointer           user_data);
+
 static void        update_summary                         (GtkEntry          *entry,
                                                            GParamSpec        *pspec,
+                                                           gpointer           user_data);
+
+static void        update_time                            (GtkEntry          *entry,
                                                            gpointer           user_data);
 
 static void        gcal_edit_dialog_constructed           (GObject           *object);
@@ -94,15 +92,136 @@ static void        gcal_edit_dialog_action_button_clicked (GtkWidget         *wi
 static void        gcal_edit_dialog_all_day_changed       (GtkWidget         *widget,
                                                            gpointer           user_data);
 
-static gboolean    gcal_edit_dialog_date_changed          (GcalEditDialog    *dialog,
-                                                           gboolean           start_date);
-
-static void        gcal_edit_dialog_date_entry_modified   (GtkWidget         *entry,
-                                                           gpointer           user_data);
-
-static gboolean    gcal_edit_dialog_source_changed        (GcalEditDialog    *dialog);
-
 G_DEFINE_TYPE_WITH_PRIVATE (GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
+
+static void
+update_date (GtkEntry   *entry,
+             gpointer    user_data)
+{
+  GcalEditDialogPrivate *priv;
+  ECalComponentDateTime dtstart;
+  ECalComponentDateTime dtend;
+  icaltimetype *start_date;
+  icaltimetype *end_date;
+
+  priv = gcal_edit_dialog_get_instance_private (GCAL_EDIT_DIALOG (user_data));
+
+  if (priv->setting_event)
+    return;
+
+  start_date = gcal_edit_dialog_get_start_date (GCAL_EDIT_DIALOG (user_data));
+  end_date = gcal_edit_dialog_get_end_date (GCAL_EDIT_DIALOG (user_data));
+
+  /* check if the start & end dates are sane */
+  if (icaltime_compare (*start_date, *end_date) != -1)
+    {
+      /* change the non-editing entry */
+      if (GTK_WIDGET (entry) == priv->start_date_entry)
+        {
+          end_date->day = start_date->day;
+          end_date->month = start_date->month;
+          end_date->year = start_date->year;
+
+          if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->all_day_check)))
+            {
+              end_date->day += 1;
+              *end_date = icaltime_normalize (*end_date);
+          }
+        }
+      else
+        {
+          start_date->day = end_date->day;
+          start_date->month = end_date->month;
+          start_date->year = end_date->year;
+
+          if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->all_day_check)))
+            {
+              start_date->day -= 1;
+              *start_date = icaltime_normalize (*start_date);
+          }
+        }
+
+      /* update the entries with the new sane values */
+      g_signal_handlers_block_by_func (priv->start_date_entry,
+                                       update_date,
+                                       user_data);
+      g_signal_handlers_block_by_func (priv->end_date_entry,
+                                       update_date,
+                                       user_data);
+
+      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->start_date_entry),
+                                start_date->day,
+                                start_date->month,
+                                start_date->year);
+      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
+                                end_date->day,
+                                end_date->month,
+                                end_date->year);
+
+      g_signal_handlers_unblock_by_func (priv->start_date_entry,
+                                       update_date,
+                                       user_data);
+      g_signal_handlers_unblock_by_func (priv->end_date_entry,
+                                       update_date,
+                                       user_data);
+    }
+
+  /* update component */
+  e_cal_component_get_dtstart (priv->component, &dtstart);
+  e_cal_component_get_dtend (priv->component, &dtend);
+
+  *(dtstart.value) = *start_date;
+  *(dtend.value) = *end_date;
+
+  e_cal_component_set_dtstart (priv->component, &dtstart);
+  e_cal_component_set_dtend (priv->component, &dtend);
+  e_cal_component_commit_sequence (priv->component);
+
+  g_free (start_date);
+  g_free (end_date);
+  e_cal_component_free_datetime (&dtstart);
+  e_cal_component_free_datetime (&dtend);
+}
+
+
+static void
+update_location (GtkEntry   *entry,
+                 GParamSpec *pspec,
+                 gpointer    user_data)
+{
+  GcalEditDialogPrivate *priv;
+
+  priv = gcal_edit_dialog_get_instance_private (GCAL_EDIT_DIALOG (user_data));
+
+  e_cal_component_set_location (priv->component, gtk_entry_get_text (entry));
+  e_cal_component_commit_sequence (priv->component);
+}
+
+static void
+update_notes (GtkTextBuffer *buffer,
+              gpointer       user_data)
+{
+  GcalEditDialogPrivate *priv;
+  GSList note;
+  ECalComponentText text;
+  gchar *note_text;
+
+  priv = gcal_edit_dialog_get_instance_private (GCAL_EDIT_DIALOG (user_data));
+
+  g_object_get (G_OBJECT (buffer),
+                "text", &note_text,
+                NULL);
+
+  text.value = note_text;
+  text.altrep = NULL;
+  note.data = &text;
+  note.next = NULL;
+
+  e_cal_component_set_description_list (priv->component, &note);
+  e_cal_component_commit_sequence (priv->component);
+
+  g_free (note_text);
+}
 
 static void
 update_summary (GtkEntry   *entry,
@@ -119,6 +238,95 @@ update_summary (GtkEntry   *entry,
   summary.altrep = summary.value;
 
   e_cal_component_set_summary (priv->component, &summary);
+  e_cal_component_commit_sequence (priv->component);
+}
+
+static void
+update_time (GtkEntry   *entry,
+             gpointer    user_data)
+{
+  GcalEditDialogPrivate *priv;
+  ECalComponentDateTime dtstart;
+  ECalComponentDateTime dtend;
+  icaltimetype *start_date;
+  icaltimetype *end_date;
+
+  priv = gcal_edit_dialog_get_instance_private (GCAL_EDIT_DIALOG (user_data));
+
+  if (priv->setting_event)
+    return;
+
+  start_date = gcal_edit_dialog_get_start_date (GCAL_EDIT_DIALOG (user_data));
+  end_date = gcal_edit_dialog_get_end_date (GCAL_EDIT_DIALOG (user_data));
+
+  /* check if the start & end dates are sane */
+  if (icaltime_compare (*start_date, *end_date) > -1)
+    {
+      /* change the non-editing entry */
+      if (GTK_WIDGET (entry) == priv->start_time_entry)
+        {
+          end_date->hour = start_date->hour + 1;
+          end_date->minute = start_date->minute;
+          *end_date = icaltime_normalize (*end_date);
+        }
+      else
+        {
+          start_date->hour = end_date->hour - 1;
+          start_date->minute = end_date->minute;
+          *start_date = icaltime_normalize (*start_date);
+        }
+
+      /* update the entries with the new sane values */
+      g_signal_handlers_block_by_func (priv->start_time_entry,
+                                       update_time,
+                                       user_data);
+      g_signal_handlers_block_by_func (priv->end_time_entry,
+                                       update_time,
+                                       user_data);
+
+      /* updates date as well, since hours can change the current date */
+      gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->start_time_entry),
+                                start_date->hour,
+                                start_date->minute);
+      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->start_date_entry),
+                                start_date->day,
+                                start_date->month,
+                                start_date->year);
+      gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->end_time_entry),
+                                end_date->hour,
+                                end_date->minute);
+      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
+                                end_date->day,
+                                end_date->month,
+                                end_date->year);
+
+      g_signal_handlers_unblock_by_func (priv->start_time_entry,
+                                       update_time,
+                                       user_data);
+      g_signal_handlers_unblock_by_func (priv->end_time_entry,
+                                       update_date,
+                                       user_data);
+    }
+
+  g_debug ("Updating date: %s -> %s",
+           icaltime_as_ical_string (*start_date),
+           icaltime_as_ical_string (*end_date));
+
+  /* update component */
+  e_cal_component_get_dtstart (priv->component, &dtstart);
+  e_cal_component_get_dtend (priv->component, &dtend);
+
+  *(dtstart.value) = *start_date;
+  *(dtend.value) = *end_date;
+
+  e_cal_component_set_dtstart (priv->component, &dtstart);
+  e_cal_component_set_dtend (priv->component, &dtend);
+  e_cal_component_commit_sequence (priv->component);
+
+  g_free (start_date);
+  g_free (end_date);
+  e_cal_component_free_datetime (&dtstart);
+  e_cal_component_free_datetime (&dtend);
 }
 
 static void
@@ -237,24 +445,34 @@ gcal_edit_dialog_constructed (GObject* object)
                     G_CALLBACK (update_summary),
                     object);
 
+  g_signal_connect (gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)),
+                    "changed",
+                    G_CALLBACK (update_notes),
+                    object);
+
+  g_signal_connect (priv->location_entry,
+                    "notify::text",
+                    G_CALLBACK (update_location),
+                    object);
+
   g_signal_connect (priv->start_date_entry,
                     "modified",
-                    G_CALLBACK (gcal_edit_dialog_date_entry_modified),
+                    G_CALLBACK (update_date),
                     object);
 
   g_signal_connect (priv->end_date_entry,
                     "modified",
-                    G_CALLBACK (gcal_edit_dialog_date_entry_modified),
+                    G_CALLBACK (update_date),
                     object);
 
   g_signal_connect (priv->start_time_entry,
                     "modified",
-                    G_CALLBACK (gcal_edit_dialog_date_entry_modified),
+                    G_CALLBACK (update_time),
                     object);
 
   g_signal_connect (priv->end_time_entry,
                     "modified",
-                    G_CALLBACK (gcal_edit_dialog_date_entry_modified),
+                    G_CALLBACK (update_time),
                     object);
 }
 
@@ -270,15 +488,6 @@ gcal_edit_dialog_finalize (GObject *object)
 
   if (priv->event_uid != NULL)
     g_free (priv->event_uid);
-
-  if (priv->ev_store != NULL)
-    {
-      g_free (priv->ev_store->start_date);
-      g_free (priv->ev_store->end_date);
-      g_free (priv->ev_store->time_span);
-
-      g_free (priv->ev_store);
-    }
 
   if (priv->component != NULL)
     g_object_unref (priv->component);
@@ -353,13 +562,25 @@ gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
   gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->end_time_entry), 0, 0);
 
   /* location */
+  g_signal_handlers_block_by_func (priv->location_entry,
+                                   update_location,
+                                   dialog);
   gtk_entry_set_text (GTK_ENTRY (priv->location_entry), "");
+  g_signal_handlers_unblock_by_func (priv->location_entry,
+                                     update_location,
+                                     dialog);
 
   /* notes */
+  g_signal_handlers_block_by_func (gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)),
+                                   update_notes,
+                                   dialog);
   gtk_text_buffer_set_text (
       gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)),
       "",
       -1);
+  g_signal_handlers_unblock_by_func (gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)),
+                                     update_notes,
+                                     dialog);
 }
 
 static void
@@ -389,213 +610,6 @@ gcal_edit_dialog_all_day_changed (GtkWidget *widget,
     }
 }
 
-static gboolean
-gcal_edit_dialog_date_changed (GcalEditDialog *dialog,
-                               gboolean        start_date)
-{
-  GcalEditDialogPrivate *priv;
-  gint day;
-  gint month;
-  gint year;
-  gint hour;
-  gint minute;
-
-  GtkWidget *widget;
-  icaltimetype *old_date;
-  priv = gcal_edit_dialog_get_instance_private (dialog);
-
-  if (start_date)
-    {
-      widget = priv->start_date_entry;
-      old_date = priv->ev_store->start_date;
-    }
-  else
-    {
-      widget = priv->end_date_entry;
-      old_date = priv->ev_store->end_date;
-    }
-
-  gcal_date_entry_get_date (GCAL_DATE_ENTRY (widget),
-                            &day,
-                            &month,
-                            &year);
-  if (day != old_date->day ||
-      month != old_date->month ||
-      year != old_date->year)
-    {
-      return TRUE;
-    }
-
-  widget = start_date ? priv->start_time_entry : priv->end_time_entry;
-  gcal_time_entry_get_time (GCAL_TIME_ENTRY (widget),
-                            &hour,
-                            &minute);
-  if (hour != old_date->hour ||
-      minute != old_date->minute)
-    {
-      return TRUE;
-    }
-
-  return FALSE;
-}
-
-static void
-gcal_edit_dialog_date_entry_modified (GtkWidget *entry,
-                                      gpointer   user_data)
-{
-  GcalEditDialogPrivate *priv;
-  icaltimetype start_date;
-  icaltimetype end_date;
-
-  priv = gcal_edit_dialog_get_instance_private (GCAL_EDIT_DIALOG (user_data));
-
-  if (priv->setting_event)
-    return;
-
-  gcal_date_entry_get_date (GCAL_DATE_ENTRY (priv->start_date_entry),
-                            &(start_date.day),
-                            &(start_date.month),
-                            &(start_date.year));
-  gcal_date_entry_get_date (GCAL_DATE_ENTRY (priv->end_date_entry),
-                            &(end_date.day),
-                            &(end_date.month),
-                            &(end_date.year));
-
-  start_date.is_date = 0;
-  end_date.is_date = 0;
-
-  gcal_time_entry_get_time (GCAL_TIME_ENTRY (priv->start_time_entry),
-                            &(start_date.hour),
-                            &(start_date.minute));
-  start_date.second = 0;
-  gcal_time_entry_get_time (GCAL_TIME_ENTRY (priv->end_time_entry),
-                            &(end_date.hour),
-                            &(end_date.minute));
-  end_date.second = 0;
-
-  if (start_date.hour == 0 &&
-      start_date.minute == 0 &&
-      end_date.hour == 0 &&
-      end_date.minute == 0)
-    {
-      start_date.is_date = 1;
-      end_date.is_date = 1;
-
-      /* block signaling */
-      g_signal_handlers_block_by_func (priv->all_day_check,
-                                       gcal_edit_dialog_all_day_changed,
-                                       user_data);
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->all_day_check), TRUE);
-      g_signal_handlers_unblock_by_func (priv->all_day_check,
-                                         gcal_edit_dialog_all_day_changed,
-                                         user_data);
-      /* unblock signaling */
-    }
-  else
-    {
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->all_day_check), FALSE);
-    }
-
-  icaltime_set_timezone (&start_date,
-                         gcal_manager_get_system_timezone (priv->manager));
-  icaltime_set_timezone (&end_date,
-                         gcal_manager_get_system_timezone (priv->manager));
-
-
-  if (icaltime_compare (start_date, end_date) != -1)
-    {
-      g_signal_handlers_block_by_func (priv->start_date_entry,
-                                       gcal_edit_dialog_date_entry_modified,
-                                       user_data);
-      g_signal_handlers_block_by_func (priv->start_time_entry,
-                                       gcal_edit_dialog_date_entry_modified,
-                                       user_data);
-      g_signal_handlers_block_by_func (priv->end_date_entry,
-                                       gcal_edit_dialog_date_entry_modified,
-                                       user_data);
-      g_signal_handlers_block_by_func (priv->end_time_entry,
-                                       gcal_edit_dialog_date_entry_modified,
-                                       user_data);
-
-      if (entry == priv->start_date_entry ||
-          entry == priv->start_time_entry)
-        {
-          time_t to_end;
-          time_t from_start = icaltime_as_timet (start_date);
-
-          to_end = from_start + (priv->ev_store->time_span->end - priv->ev_store->time_span->start);
-          end_date = icaltime_from_timet (to_end, start_date.is_date);
-
-          gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
-                                    end_date.day,
-                                    end_date.month,
-                                    end_date.year);
-          if (start_date.is_date != 1)
-            {
-              gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->end_time_entry),
-                                        end_date.hour,
-                                        end_date.minute);
-            }
-        }
-      else
-        {
-          time_t from_start;
-          time_t to_end = icaltime_as_timet (end_date);
-
-          from_start = to_end - (priv->ev_store->time_span->end - priv->ev_store->time_span->start);
-          start_date = icaltime_from_timet (from_start, end_date.is_date);
-
-          gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->start_date_entry),
-                                    start_date.day,
-                                    start_date.month,
-                                    start_date.year);
-          if (end_date.is_date != 1)
-            {
-              gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->start_time_entry),
-                                        start_date.hour,
-                                        start_date.minute);
-            }
-        }
-
-      g_signal_handlers_unblock_by_func (priv->start_date_entry,
-                                         gcal_edit_dialog_date_entry_modified,
-                                         user_data);
-      g_signal_handlers_unblock_by_func (priv->start_time_entry,
-                                         gcal_edit_dialog_date_entry_modified,
-                                         user_data);
-      g_signal_handlers_unblock_by_func (priv->end_date_entry,
-                                         gcal_edit_dialog_date_entry_modified,
-                                         user_data);
-      g_signal_handlers_unblock_by_func (priv->end_time_entry,
-                                         gcal_edit_dialog_date_entry_modified,
-                                         user_data);
-    }
-}
-
-static gboolean
-gcal_edit_dialog_source_changed (GcalEditDialog *dialog)
-{
-  GcalEditDialogPrivate *priv;
-
-  GtkListStore *sources_model;
-  gchar* uid;
-
-  priv = gcal_edit_dialog_get_instance_private (dialog);
-  sources_model = gcal_manager_get_sources_model (priv->manager);
-  gtk_tree_model_get (GTK_TREE_MODEL (sources_model), priv->active_iter,
-                      0, &uid,
-                      -1);
-
-  if (g_strcmp0 (priv->source_uid, uid) != 0)
-    {
-      g_free (uid);
-      return TRUE;
-    }
-
-  g_free (uid);
-  return FALSE;
-}
-
 /* Public API */
 GtkWidget*
 gcal_edit_dialog_new (void)
@@ -621,10 +635,12 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
 
   const gchar *const_text = NULL;
   gboolean all_day;
+  gchar *description;
 
   const gchar *uid = NULL;
   ECalComponentText e_summary;
-  ECalComponentDateTime dt;
+  ECalComponentDateTime dtstart;
+  ECalComponentDateTime dtend;
 
   priv = gcal_edit_dialog_get_instance_private (dialog);
   all_day = FALSE;
@@ -648,17 +664,6 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   /* Clear event data */
   gcal_edit_dialog_clear_data (dialog);
 
-  if (priv->ev_store == NULL)
-    {
-      priv->ev_store = g_new0 (SimpleEventStore, 1);
-      priv->ev_store->time_span = g_new0 (icaltime_span, 1);
-    }
-  else
-    {
-      g_free (priv->ev_store->start_date);
-      g_free (priv->ev_store->end_date);
-    }
-
   /* Load new event data */
   /* summary */
   e_cal_component_get_summary (priv->component, &e_summary);
@@ -678,74 +683,63 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
                                e_source_get_display_name (data->source));
 
   /* start date */
-  e_cal_component_get_dtstart (priv->component, &dt);
-  priv->ev_store->start_date = gcal_dup_icaltime (dt.value);
-  e_cal_component_free_datetime (&dt);
+  e_cal_component_get_dtstart (priv->component, &dtstart);
 
   gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->start_date_entry),
-                            priv->ev_store->start_date->day,
-                            priv->ev_store->start_date->month,
-                            priv->ev_store->start_date->year);
+                            dtstart.value->day,
+                            dtstart.value->month,
+                            dtstart.value->year);
 
   /* end date */
-  e_cal_component_get_dtend (priv->component, &dt);
-  priv->ev_store->end_date = gcal_dup_icaltime (dt.value);
-  e_cal_component_free_datetime (&dt);
+  e_cal_component_get_dtend (priv->component, &dtend);
 
   gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
-                            priv->ev_store->end_date->day,
-                            priv->ev_store->end_date->month,
-                            priv->ev_store->end_date->year);
+                            dtend.value->day,
+                            dtend.value->month,
+                            dtend.value->year);
 
   /* all_day  */
-  priv->ev_store->all_day = (priv->ev_store->start_date->is_date == 1 &&
-                             priv->ev_store->end_date->is_date == 1);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->all_day_check),
-                                priv->ev_store->all_day);
+  all_day = (dtstart.value->is_date == 1 && dtend.value->is_date == 1);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->all_day_check), all_day);
 
   /* start time */
   if (all_day)
     {
-      priv->ev_store->start_date->hour = 0;
-      priv->ev_store->start_date->minute = 0;
+      dtstart.value->hour = 0;
+      dtstart.value->minute = 0;
     }
   gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->start_time_entry),
-                            priv->ev_store->start_date->hour,
-                            priv->ev_store->start_date->minute);
+                            dtstart.value->hour,
+                            dtstart.value->minute);
   /* end time */
   if (all_day)
     {
-      priv->ev_store->end_date->hour = 0;
-      priv->ev_store->end_date->minute = 0;
+      dtend.value->hour = 0;
+      dtend.value->minute = 0;
     }
   gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->end_time_entry),
-                            priv->ev_store->end_date->hour,
-                            priv->ev_store->end_date->minute);
+                            dtend.value->hour,
+                            dtend.value->minute);
 
-  /* getting span before going on */
-  *(priv->ev_store->time_span) = icaltime_span_new (*(priv->ev_store->start_date),
-                                                    *(priv->ev_store->end_date),
-                                                    0);
+  e_cal_component_free_datetime (&dtstart);
+  e_cal_component_free_datetime (&dtend);
 
   /* location */
   e_cal_component_get_location (priv->component, &const_text);
   gtk_entry_set_text (GTK_ENTRY (priv->location_entry),
                       const_text != NULL ? const_text : "");
-  priv->ev_store->location = const_text != NULL ? g_strdup (const_text) : "";
 
   /* notes */
-  if (priv->ev_store->description != NULL)
-    g_free (priv->ev_store->description);
+  description = get_desc_from_component (priv->component, "\n");
 
-  priv->ev_store->description =
-    get_desc_from_component (priv->component,
-                             "\n");
-  if (priv->ev_store->description != NULL)
+  if (description != NULL)
     {
       gtk_text_buffer_set_text (
           gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)),
-          priv->ev_store->description,
+          description,
           -1);
+
+      g_free (description);
     }
 
   gcal_edit_dialog_set_writable (
@@ -818,90 +812,6 @@ gcal_edit_dialog_get_event_uuid (GcalEditDialog *dialog)
       return NULL;
     }
   return g_strdup_printf ("%s:%s", priv->source_uid, priv->event_uid);
-}
-
-GList*
-gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog)
-{
-  GcalEditDialogPrivate *priv;
-  gchar *desc;
-  GList *res;
-
-  priv = gcal_edit_dialog_get_instance_private (dialog);
-
-  if (! priv->writable)
-    return NULL;
-
-  res = NULL;
-
-  if (gcal_edit_dialog_date_changed (dialog, TRUE))
-    {
-      res = g_list_append (res, GINT_TO_POINTER (EVENT_START_DATE));
-    }
-
-  if (gcal_edit_dialog_date_changed (dialog, FALSE))
-    {
-      res = g_list_append (res, GINT_TO_POINTER (EVENT_END_DATE));
-    }
-
-  if (g_strcmp0 (priv->ev_store->location,
-                 gtk_entry_get_text (GTK_ENTRY (priv->location_entry))) != 0)
-    {
-      res = g_list_append (res, GINT_TO_POINTER (EVENT_LOCATION));
-    }
-
-  /* getting desc */
-  desc = gcal_edit_dialog_get_event_description (dialog);
-  if (g_strcmp0 (priv->ev_store->description, desc) != 0)
-    {
-      res = g_list_append (res, GINT_TO_POINTER (EVENT_DESCRIPTION));
-    }
-  g_free (desc);
-
-  /* and the bigger one is the calendar, the source switched */
-  if (gcal_edit_dialog_source_changed (dialog))
-    {
-      res = g_list_append (res, GINT_TO_POINTER (EVENT_SOURCE));
-    }
-
-  return res;
-}
-
-const gchar*
-gcal_edit_dialog_peek_summary (GcalEditDialog *dialog)
-{
-  GcalEditDialogPrivate *priv;
-
-  priv = gcal_edit_dialog_get_instance_private (dialog);
-
-  return gtk_entry_get_text (GTK_ENTRY (priv->summary_entry));
-}
-
-const gchar*
-gcal_edit_dialog_peek_location (GcalEditDialog *dialog)
-{
-  GcalEditDialogPrivate *priv;
-
-  priv = gcal_edit_dialog_get_instance_private (dialog);
-
-  return gtk_entry_get_text (GTK_ENTRY (priv->location_entry));
-}
-
-gchar*
-gcal_edit_dialog_get_event_description (GcalEditDialog *dialog)
-{
-  GcalEditDialogPrivate *priv;
-  GtkTextBuffer *buffer;
-  GtkTextIter start_iter;
-  GtkTextIter end_iter;
-  gchar *desc;
-
-  priv = gcal_edit_dialog_get_instance_private (dialog);
-  buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text));
-  gtk_text_buffer_get_start_iter (buffer, &start_iter);
-  gtk_text_buffer_get_end_iter (buffer, &end_iter);
-  desc = gtk_text_buffer_get_text (buffer, &start_iter, &end_iter, FALSE);
-  return desc;
 }
 
 icaltimetype*
@@ -986,19 +896,3 @@ gcal_edit_dialog_get_end_date (GcalEditDialog *dialog)
   return date;
 }
 
-gchar*
-gcal_edit_dialog_get_new_source_uid (GcalEditDialog *dialog)
-{
-  GcalEditDialogPrivate *priv;
-
-  GtkListStore *sources_model;
-  gchar* uid;
-
-  priv = gcal_edit_dialog_get_instance_private (dialog);
-  sources_model = gcal_manager_get_sources_model (priv->manager);
-  gtk_tree_model_get (GTK_TREE_MODEL (sources_model), priv->active_iter,
-                      0, &uid,
-                      -1);
-
-  return uid;
-}

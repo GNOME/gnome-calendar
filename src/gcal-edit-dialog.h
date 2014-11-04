@@ -71,19 +71,9 @@ const gchar*         gcal_edit_dialog_peek_event_uid          (GcalEditDialog *d
 
 gchar*               gcal_edit_dialog_get_event_uuid          (GcalEditDialog *dialog);
 
-GList*               gcal_edit_dialog_get_modified_properties (GcalEditDialog *dialog);
-
-const gchar*         gcal_edit_dialog_peek_summary            (GcalEditDialog *dialog);
-
-const gchar*         gcal_edit_dialog_peek_location           (GcalEditDialog *dialog);
-
-gchar*               gcal_edit_dialog_get_event_description   (GcalEditDialog *dialog);
-
 icaltimetype*        gcal_edit_dialog_get_start_date          (GcalEditDialog *dialog);
 
 icaltimetype*        gcal_edit_dialog_get_end_date            (GcalEditDialog *dialog);
-
-gchar*               gcal_edit_dialog_get_new_source_uid      (GcalEditDialog *dialog);
 
 G_END_DECLS
 
