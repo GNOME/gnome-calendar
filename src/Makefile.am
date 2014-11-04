@@ -39,6 +39,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-week-view.h                                      \
     gcal-year-view.c                                      \
     gcal-year-view.h                                      \
+    gcal-search-view.h                                    \
+    gcal-search-view.c                                    \
     gcal-event-widget.c                                   \
     gcal-event-widget.h                                   \
     gcal-new-event-widget.c                               \

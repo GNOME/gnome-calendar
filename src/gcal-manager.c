@@ -507,6 +507,26 @@ gcal_manager_set_subscriber (GcalManager             *manager,
 }
 
 /**
+ * gcal_manager_set_query:
+ * @manager: A #GcalManager instance
+ * @query: (nullable): query terms or %NULL
+ *
+ * Set the query terms of the #ECalDataModel or clear it if %NULL is
+ * passed
+ *
+ **/
+void
+gcal_manager_set_query (GcalManager *manager,
+                        const gchar *query)
+{
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (manager);
+  e_cal_data_model_set_filter (priv->e_data_model,
+                               query != NULL ? query : "#t");
+}
+
+/**
  * gcal_manager_add_source:
  * @manager: a #GcalManager
  * @base_uri: URI defining the ESourceGroup the client will belongs

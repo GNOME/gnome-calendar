@@ -71,6 +71,9 @@ void           gcal_manager_set_subscriber          (GcalManager        *manager
                                                      time_t              range_start,
                                                      time_t              range_end);
 
+void           gcal_manager_set_query               (GcalManager        *manager,
+                                                     const gchar        *query);
+
 gchar*         gcal_manager_add_source              (GcalManager        *manager,
                                                      const gchar        *name,
                                                      const gchar        *backend,
