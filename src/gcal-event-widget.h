@@ -63,6 +63,9 @@ GtkWidget*    gcal_event_widget_new_with_summary_and_color (const gchar        *
 
 const gchar*  gcal_event_widget_peek_uuid                  (GcalEventWidget    *event);
 
+void          gcal_new_event_widget_set_read_only          (GcalEventWidget    *event,
+                                                            gboolean            read_only);
+
 void          gcal_event_widget_set_date                   (GcalEventWidget    *event,
                                                             const icaltimetype *date);
 
