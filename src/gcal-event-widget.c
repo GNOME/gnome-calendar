@@ -33,6 +33,9 @@ typedef struct
   gboolean       all_day;
   gboolean       has_reminders;
 
+  /* internal data */
+  gboolean       read_only;
+
   /* weak ESource reference */
   ESource       *source;
   /* ECalComponent data */
@@ -559,6 +562,7 @@ gcal_event_widget_draw (GtkWidget *widget,
   gint x,y;
   gint width, height;
   gint left_gap;
+  gint right_gap;
   gint icon_size = 0;
 
   PangoLayout *layout;
@@ -598,7 +602,21 @@ gcal_event_widget_draw (GtkWidget *widget,
       pango_extents_to_pixels (&logical_rect, NULL);
       icon_size = logical_rect.height;
       left_gap = icon_size + padding.left;
-      pango_layout_set_width (layout, (width - (padding.left + padding.right + left_gap) ) * PANGO_SCALE);
+      pango_layout_set_width (layout, (width - (left_gap + padding.left + padding.right) ) * PANGO_SCALE);
+    }
+
+  right_gap = 0;
+  if (priv->read_only)
+    {
+      if (icon_size == 0)
+        {
+          pango_layout_get_extents (layout, NULL, &logical_rect);
+          pango_extents_to_pixels (&logical_rect, NULL);
+          icon_size = logical_rect.height;
+        }
+
+      right_gap = icon_size + padding.right;
+      pango_layout_set_width (layout, (width - (left_gap + padding.left + padding.right + right_gap) ) * PANGO_SCALE);
     }
 
   gtk_render_layout (context, cr,
@@ -606,7 +624,7 @@ gcal_event_widget_draw (GtkWidget *widget,
                      y + padding.top,
                      layout);
 
-  /* render icon */
+  /* render reminder icon */
   if (priv->has_reminders)
     {
       GtkIconTheme *icon_theme;
@@ -627,6 +645,32 @@ gcal_event_widget_draw (GtkWidget *widget,
       gdk_cairo_set_source_pixbuf (cr,
                                    pixbuf,
                                    x + padding.left,
+                                   y + padding.top);
+      g_object_unref (pixbuf);
+      cairo_paint (cr);
+    }
+
+  /* render locked icon */
+  if (priv->read_only)
+    {
+      GtkIconTheme *icon_theme;
+      GtkIconInfo *icon_info;
+      GdkPixbuf *pixbuf;
+      gboolean was_symbolic;
+
+      icon_theme = gtk_icon_theme_get_default ();
+      icon_info = gtk_icon_theme_lookup_icon (icon_theme,
+                                              "changes-prevent-symbolic",
+                                              icon_size,
+                                              0);
+      pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
+                                                        context,
+                                                        &was_symbolic,
+                                                        NULL);
+
+      gdk_cairo_set_source_pixbuf (cr,
+                                   pixbuf,
+                                   width - right_gap,
                                    y + padding.top);
       g_object_unref (pixbuf);
       cairo_paint (cr);
@@ -791,6 +835,17 @@ gcal_event_widget_peek_uuid (GcalEventWidget *event)
   priv = gcal_event_widget_get_instance_private (event);
 
   return priv->uuid;
+}
+
+void
+gcal_new_event_widget_set_read_only (GcalEventWidget *event,
+                                     gboolean         read_only)
+{
+  GcalEventWidgetPrivate *priv;
+
+  priv = gcal_event_widget_get_instance_private (event);
+
+  priv->read_only = read_only;
 }
 
 /**
