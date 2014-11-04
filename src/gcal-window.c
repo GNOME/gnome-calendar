@@ -204,38 +204,46 @@ key_pressed (GtkWidget   *widget,
              gpointer     user_data)
 {
   GcalWindowPrivate *priv;
+  GdkModifierType modifiers;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  modifiers = gtk_accelerator_get_default_mod_mask ();
 
   g_debug ("Catching key events");
 
+  /* case 1:close leave new event mode */
   if (priv->new_event_mode &&
       event->keyval == GDK_KEY_Escape)
     {
       set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
       return TRUE;
     }
-  else
+
+  /* case 2: write in new-event-widget entry */
+  if (priv->new_event_mode)
+    return FALSE;
+
+  /* case 3: leave search-mode*/
+  if (priv->search_mode && event->keyval == GDK_KEY_Escape)
     {
-      if (priv->new_event_mode)
-        return FALSE;
+      gcal_window_set_search_mode (GCAL_WINDOW (widget), FALSE);
+      return TRUE;
+    }
 
-      if ((event->state & GDK_META_MASK) != 0 ||
-          (event->state & GDK_CONTROL_MASK) != 0 ||
-          event->keyval == GDK_KEY_Control_L ||
-          event->keyval == GDK_KEY_Control_R ||
-          event->keyval == GDK_KEY_Meta_L ||
-          event->keyval == GDK_KEY_Meta_R ||
-          event->keyval == GDK_KEY_Alt_L ||
-          event->keyval == GDK_KEY_Alt_R)
-        {
-          return FALSE;
-        }
+  /* case 4: write into search-mode entry */
+  if (priv->search_mode)
+    return FALSE;
 
-      if (priv->search_mode && event->keyval == GDK_KEY_Escape)
-        gcal_window_set_search_mode (GCAL_WINDOW (widget), FALSE);
-      if (!priv->search_mode)
-        gcal_window_set_search_mode (GCAL_WINDOW (widget), TRUE);
+  /* case 5: open search-mode */
+  if (!priv->search_mode &&
+      gdk_keyval_to_unicode (event->keyval) != 0 &&
+      ((event->state & modifiers & GDK_META_MASK) == 0) &&
+      ((event->state & modifiers & GDK_SUPER_MASK) == 0) &&
+      ((event->state & modifiers & GDK_HYPER_MASK) == 0) &&
+      ((event->state & modifiers & GDK_CONTROL_MASK) == 0))
+    {
+      gcal_window_set_search_mode (GCAL_WINDOW (widget), TRUE);
+      return FALSE;
     }
 
   return FALSE;
