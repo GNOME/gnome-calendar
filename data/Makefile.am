@@ -22,7 +22,6 @@ EXTRA_DIST=                     \
   ui/menus.ui                   \
   ui/nav_bar.ui                 \
   ui/new-event.ui               \
-  ui/viewport.ui                \
   theme/gtk-styles.css          \
   $(desktop_in_files)           \
   $(gsettingsschema_in_files)

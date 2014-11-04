@@ -14,17 +14,6 @@
     padding: 12px;
 }
 
-.view-overlay .frame {
-    border-left: 0;
-    border-right: 0;
-    border-bottom: 0;
-}
-
-.view-overlay .scrollbar.trough {
-    background-color: transparent;
-    background-image: none;
-}
-
 .calendar-view {
     padding: 6px;
     font: 10;
@@ -62,11 +51,4 @@ GcalEventWidget.color-light {
 
 GcalEventWidget.color-light:backdrop {
     color: rgba(0, 0, 0, 0.3);
-}
-
-.event-details .frame {
-    border-style: solid;
-    border-color: @borders;
-    border-width: 0.5px;
-    border-radius: 0;
 }
