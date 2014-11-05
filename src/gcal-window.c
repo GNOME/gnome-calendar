@@ -82,6 +82,7 @@ typedef struct
   /* states */
   gboolean             new_event_mode;
   gboolean             search_mode;
+  gboolean             leaving_search_mode;
 
   NewEventData        *event_creation_data;
   /* FIXME: Review to see if this are needed */
@@ -117,6 +118,10 @@ static gboolean       save_geometry                      (gpointer             u
 static void           update_view                        (GcalWindow          *window);
 
 static void           view_changed                       (GObject             *object,
+                                                          GParamSpec          *pspec,
+                                                          gpointer             user_data);
+
+static void           stack_transition_running           (GObject             *object,
                                                           GParamSpec          *pspec,
                                                           gpointer             user_data);
 
@@ -479,6 +484,41 @@ view_changed (GObject    *object,
   update_view (GCAL_WINDOW (user_data));
 }
 
+/**
+ * stack_transition_running:
+ * @object:
+ * @pspec:
+ * @user_data:
+ *
+ * Listen on the transition of the stack to leave search-mode properly
+ **/
+static void
+stack_transition_running (GObject    *object,
+                          GParamSpec *pspec,
+                          gpointer    user_data)
+{
+  GcalWindowPrivate *priv;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  /* XXX: this is the destruction process */
+  if (!gtk_widget_get_visible (priv->views_stack))
+    return;
+
+  if (!priv->leaving_search_mode)
+    return;
+
+  priv->leaving_search_mode = FALSE;
+  gtk_container_remove (GTK_CONTAINER (priv->views_stack),
+                        priv->views[GCAL_WINDOW_VIEW_SEARCH]);
+  gtk_widget_hide (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
+
+  gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
+                                   priv->views_switcher);
+  /* Reset manager filter */
+  gcal_manager_set_query (priv->manager, NULL);
+}
+
 static void
 set_new_event_mode (GcalWindow *window,
                     gboolean    enabled)
@@ -834,6 +874,7 @@ search_toggled (GObject    *object,
       gtk_widget_hide (priv->today_button);
       gtk_widget_hide (priv->nav_bar);
 
+      gtk_widget_show (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
       gtk_stack_add_named (GTK_STACK (priv->views_stack),
                            priv->views[GCAL_WINDOW_VIEW_SEARCH],
                            "search");
@@ -854,14 +895,7 @@ search_toggled (GObject    *object,
 
       gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
                                    priv->views[priv->active_view]);
-
-      gtk_container_remove (GTK_CONTAINER (priv->views_stack),
-                            priv->views[GCAL_WINDOW_VIEW_SEARCH]);
-
-      gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
-                                       priv->views_switcher);
-      /* Reset manager filter */
-      gcal_manager_set_query (priv->manager, NULL);
+      priv->leaving_search_mode = TRUE;
     }
 }
 
@@ -1120,7 +1154,6 @@ gcal_window_constructed (GObject *object)
   priv->views[GCAL_WINDOW_VIEW_SEARCH] =
     gcal_search_view_new (priv->manager);
   g_object_ref_sink (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
-  gtk_widget_show (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
 
   g_object_bind_property (GCAL_WINDOW (object), "active-date",
                           priv->views[GCAL_WINDOW_VIEW_SEARCH],
@@ -1177,6 +1210,8 @@ gcal_window_constructed (GObject *object)
 
   g_signal_connect (priv->views_stack, "notify::visible-child",
                     G_CALLBACK (view_changed), object);
+  g_signal_connect (priv->views_stack, "notify::transition-running",
+                    G_CALLBACK (stack_transition_running), object);
 
   g_signal_connect (priv->today_button, "clicked",
                     G_CALLBACK (date_updated), object);
