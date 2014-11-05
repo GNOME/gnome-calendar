@@ -1125,7 +1125,7 @@ gcal_window_constructed (GObject *object)
                 "vexpand", TRUE,
                 "hexpand", TRUE,
                 "transition-type", GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT,
-                "transition-duration", 500,
+                "transition-duration", 250,
                 NULL);
   gtk_container_add (GTK_CONTAINER (box), priv->views_stack);
 
