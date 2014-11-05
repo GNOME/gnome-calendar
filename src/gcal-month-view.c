@@ -233,7 +233,6 @@ gcal_month_view_set_property (GObject       *object,
     {
     case PROP_DATE:
       {
-        icaltimetype *first_of_month;
         time_t range_start, range_end;
         icaltimetype *date;
         icaltimezone* default_zone;
@@ -243,14 +242,11 @@ gcal_month_view_set_property (GObject       *object,
 
         priv->date = g_value_dup_boxed (value);
 
-        first_of_month = gcal_dup_icaltime (priv->date);
-        first_of_month->day = 1;
-        priv->days_delay = icaltime_day_of_week (*first_of_month) - 1;
-        g_free (first_of_month);
+        date = gcal_view_get_initial_date (GCAL_VIEW (object));
+        priv->days_delay = icaltime_day_of_week (*date) - 1;
 
         default_zone =
           gcal_manager_get_system_timezone (priv->manager);
-        date = gcal_view_get_initial_date (GCAL_VIEW (object));
         range_start = icaltime_as_timet_with_zone (*date,
                                                    default_zone);
         g_free (date);
