@@ -615,10 +615,6 @@ gcal_month_view_draw (GtkWidget *widget,
       pango_cairo_show_layout (cr, layout);
     }
 
-  g_debug ("drawing marks from %d => %d",
-           priv->start_mark_cell,
-           priv->end_mark_cell);
-
   if (priv->start_mark_cell != -1 &&
       priv->end_mark_cell != -1)
     {

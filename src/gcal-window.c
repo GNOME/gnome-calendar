@@ -216,8 +216,6 @@ key_pressed (GtkWidget   *widget,
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
   modifiers = gtk_accelerator_get_default_mod_mask ();
 
-  g_debug ("Catching key events");
-
   /* case 1:close leave new event mode */
   if (priv->new_event_mode &&
       event->keyval == GDK_KEY_Escape)
@@ -447,6 +445,7 @@ update_view (GcalWindow *window)
  * @pspec:
  * @user_data:
  *
+ * Called every time the user activate the stack-switcher
  * Retrieve the enum value representing the view, update internal
  * @active_view with it and call @update_view
  **/
@@ -1040,7 +1039,8 @@ gcal_window_constructed (GObject *object)
 
   /* header_bar: new */
   priv->today_button = gtk_button_new_with_label (_("Today"));
-  gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar), priv->today_button);
+  gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar),
+                             priv->today_button);
 
   priv->views_switcher = gtk_stack_switcher_new ();
   g_object_ref_sink (priv->views_switcher);
@@ -1160,10 +1160,6 @@ gcal_window_constructed (GObject *object)
                           "active-date",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
-  g_signal_connect_swapped (priv->views_stack, "destroy",
-                            G_CALLBACK (gtk_widget_destroy),
-                            priv->views[GCAL_WINDOW_VIEW_SEARCH]);
-
   gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (priv->views_switcher),
                                 GTK_STACK (priv->views_stack));
 
@@ -1185,6 +1181,11 @@ gcal_window_constructed (GObject *object)
   /* signals connection/handling */
   g_signal_connect (object, "key-press-event",
                     G_CALLBACK (key_pressed), object);
+
+  /* HACK to ensure proper destroy of search-view widget */
+  g_signal_connect_swapped (priv->views_stack, "destroy",
+                            G_CALLBACK (gtk_widget_destroy),
+                            priv->views[GCAL_WINDOW_VIEW_SEARCH]);
 
   /* only GcalView implementations */
   for (i = 0; i < 4; ++i)
