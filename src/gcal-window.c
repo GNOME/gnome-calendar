@@ -1141,6 +1141,9 @@ gcal_window_constructed (GObject *object)
 
   priv->views[GCAL_WINDOW_VIEW_MONTH] =
     gcal_month_view_new (priv->manager);
+  gcal_month_view_set_first_weekday (
+      GCAL_MONTH_VIEW (priv->views[GCAL_WINDOW_VIEW_MONTH]),
+      get_first_weekday ());
   gtk_stack_add_titled (GTK_STACK (priv->views_stack),
                         priv->views[GCAL_WINDOW_VIEW_MONTH],
                         "month", _("Month"));
