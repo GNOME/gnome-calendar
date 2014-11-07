@@ -60,6 +60,7 @@ typedef struct
    * Every child added to the list placed in the position
    * of it corresponding cell number.
    * The cell number is calculated in _add method.
+   * day[0] Represents the first_weekday according to locale
    */
   GList          *days [7];
 
@@ -67,6 +68,10 @@ typedef struct
   GdkWindow      *grid_window;
 
   GtkWidget      *vscrollbar;
+
+  /* first day of the week according to user locale, being
+   * 0 for Sunday, 1 for Monday and so on */
+  gint            first_weekday;
 
   /* property */
   icaltimetype   *date;
@@ -877,9 +882,9 @@ gcal_week_view_add (GtkContainer *container,
 
   /* Check if it's already added for date */
   date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
-  day = icaltime_day_of_week (*date);
+  day = (icaltime_day_of_week (*date) - priv->first_weekday + 6) % 7;
 
-  for (l = priv->days[day - 1]; l != NULL; l = l->next)
+  for (l = priv->days[day]; l != NULL; l = l->next)
     {
       GtkWidget *event;
 
@@ -913,7 +918,7 @@ gcal_week_view_add (GtkContainer *container,
         gtk_widget_set_parent_window (widget, priv->grid_window);
     }
 
-  priv->days[day - 1] = g_list_append (priv->days[day - 1], new_child);
+  priv->days[day] = g_list_append (priv->days[day], new_child);
   gtk_widget_set_parent (widget, GTK_WIDGET (container));
 
   g_signal_connect (widget,
@@ -938,16 +943,16 @@ gcal_week_view_remove (GtkContainer *container,
   priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (container));
 
   date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
-  day = icaltime_day_of_week (*date);
+  day = (icaltime_day_of_week (*date) - priv->first_weekday + 6) % 7;
 
-  for (l = priv->days[day - 1]; l != NULL; l = l->next)
+  for (l = priv->days[day]; l != NULL; l = l->next)
     {
       GcalWeekViewChild *child;
 
       child = (GcalWeekViewChild*) l->data;
       if (child->widget == widget)
         {
-          priv->days[day - 1] = g_list_remove (priv->days[day - 1], child);
+          priv->days[day] = g_list_remove (priv->days[day], child);
           g_free (child);
           break;
         }
@@ -1000,6 +1005,7 @@ gcal_week_view_draw_header (GcalWeekView  *view,
                             GtkAllocation *alloc,
                             GtkBorder     *padding)
 {
+  GcalWeekViewPrivate *priv;
   GtkWidget *widget;
   GtkStyleContext *context;
   GtkStateFlags state;
@@ -1018,6 +1024,7 @@ gcal_week_view_draw_header (GcalWeekView  *view,
 
   cairo_pattern_t *pattern;
 
+  priv = gcal_week_view_get_instance_private (view);
   widget = GTK_WIDGET (view);
 
   cairo_save (cr);
@@ -1065,8 +1072,8 @@ gcal_week_view_draw_header (GcalWeekView  *view,
                                                   start_of_week->year);
         }
 
-      weekday_abv = gcal_get_weekday (i);
-      weekday_header = g_strdup_printf ("%s %d",weekday_abv, n_day);
+      weekday_abv = gcal_get_weekday ((i + priv->first_weekday) % 7);
+      weekday_header = g_strdup_printf ("%s %d", weekday_abv, n_day);
 
       pango_layout_set_text (layout, weekday_header, -1);
       pango_cairo_update_layout (cr, layout);
@@ -1283,8 +1290,8 @@ gcal_week_view_get_initial_date (GcalView *view)
   priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW(view));
   new_date = g_new0 (icaltimetype, 1);
   *new_date = icaltime_from_day_of_year (
-      icaltime_day_of_year (*(priv->date)) - icaltime_day_of_week (*(priv->date)) + 1,
-      priv->date->year);
+                  icaltime_start_doy_week (*(priv->date), priv->first_weekday + 1),
+                  priv->date->year);
   new_date->is_date = 0;
   new_date->hour = 0;
   new_date->minute = 0;
@@ -1310,8 +1317,8 @@ gcal_week_view_get_final_date (GcalView *view)
   priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW(view));
   new_date = g_new0 (icaltimetype, 1);
   *new_date = icaltime_from_day_of_year (
-      icaltime_day_of_year (*(priv->date)) + 7 - icaltime_day_of_week (*(priv->date)),
-      priv->date->year);
+                  icaltime_start_doy_week (*(priv->date), priv->first_weekday + 1) + 6,
+                  priv->date->year);
   new_date->is_date = 0;
   new_date->hour = 23;
   new_date->minute = 59;
@@ -1406,4 +1413,22 @@ GtkWidget*
 gcal_week_view_new (GcalManager *manager)
 {
   return g_object_new (GCAL_TYPE_WEEK_VIEW, "manager", manager, NULL);
+}
+
+/**
+ * gcal_week_view_set_first_weekday:
+ * @view:
+ * @day_nr:
+ *
+ * Set the first day of the week according to the locale, being
+ * 0 for Sunday, 1 for Monday and so on.
+ **/
+void
+gcal_week_view_set_first_weekday (GcalWeekView *view,
+                                  gint          day_nr)
+{
+  GcalWeekViewPrivate *priv;
+
+  priv = gcal_week_view_get_instance_private (view);
+  priv->first_weekday = day_nr;
 }
