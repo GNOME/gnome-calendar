@@ -349,6 +349,17 @@ get_desc_from_component (ECalComponent *component,
   return desc;
 }
 
+gint
+get_first_weekday (void)
+{
+ const char *const s = nl_langinfo(_NL_TIME_FIRST_WEEKDAY);
+
+ if (s && *s >= 1 && *s <= 7)
+   return ((int)*s) - 1;
+
+ return 0;
+}
+
 /* Function to do a last minute fixup of the AM/PM stuff if the locale
  * and gettext haven't done it right. Most English speaking countries
  * except the USA use the 24 hour clock (UK, Australia etc). However

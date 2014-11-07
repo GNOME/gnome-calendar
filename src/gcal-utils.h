@@ -81,6 +81,8 @@ void            print_date                                      (const gchar*   
 gchar*          get_desc_from_component                         (ECalComponent         *component,
                                                                  const gchar           *joint_char);
 
+gint            get_first_weekday                               (void);
+
 /* code brought from evolution */
 gsize           e_strftime_fix_am_pm                            (gchar                 *str,
                                                                  gsize                  max,
