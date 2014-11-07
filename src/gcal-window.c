@@ -1135,6 +1135,9 @@ gcal_window_constructed (GObject *object)
 
   priv->views[GCAL_WINDOW_VIEW_WEEK] =
     gcal_week_view_new (priv->manager);
+  gcal_week_view_set_first_weekday (
+      GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]),
+      get_first_weekday ());
   gtk_stack_add_titled (GTK_STACK (priv->views_stack),
                         priv->views[GCAL_WINDOW_VIEW_WEEK],
                         "week", _("Week"));
