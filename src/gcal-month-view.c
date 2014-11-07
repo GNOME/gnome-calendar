@@ -43,6 +43,10 @@ typedef struct
    * sun: 0, mon: 1, ... sat = 6 */
   gint            days_delay;
 
+  /* first day of the week according to user locale, being
+   * 0 for Sunday, 1 for Monday and so on */
+  gint            first_weekday;
+
   /* button_down/up flag */
   gint            clicked_cell;
   gint            start_mark_cell;
@@ -243,7 +247,7 @@ gcal_month_view_set_property (GObject       *object,
         priv->date = g_value_dup_boxed (value);
 
         date = gcal_view_get_initial_date (GCAL_VIEW (object));
-        priv->days_delay = icaltime_day_of_week (*date) - 1;
+        priv->days_delay = (icaltime_day_of_week (*date) - priv->first_weekday + 6) % 7;
 
         default_zone =
           gcal_manager_get_system_timezone (priv->manager);
@@ -601,7 +605,7 @@ gcal_month_view_draw (GtkWidget *widget,
   for (i = 0; i < 7; i++)
     {
       pango_layout_set_font_description (layout, bold_font);
-      pango_layout_set_text (layout, gcal_get_weekday (i), -1);
+      pango_layout_set_text (layout, gcal_get_weekday ((i + priv->first_weekday) % 7), -1);
       pango_cairo_update_layout (cr, layout);
       pango_layout_get_pixel_size (layout, &font_width, &font_height);
 
@@ -1306,4 +1310,31 @@ GtkWidget*
 gcal_month_view_new (GcalManager *manager)
 {
   return g_object_new (GCAL_TYPE_MONTH_VIEW, "manager", manager, NULL);
+}
+
+/**
+ * gcal_month_view_set_first_weekday:
+ * @view: A #GcalMonthView instance
+ * @day_nr: Integer representing the first day of the week
+ *
+ * Set the first day of the week according to the locale, being
+ * 0 for Sunday, 1 for Monday and so on.
+ **/
+void
+gcal_month_view_set_first_weekday (GcalMonthView *view,
+                                   gint           day_nr)
+{
+  GcalMonthViewPrivate *priv;
+  icaltimetype *date;
+
+  priv = gcal_month_view_get_instance_private (view);
+  priv->first_weekday = day_nr;
+
+  /* update days_delay */
+  if (priv->date != NULL)
+    {
+      date = gcal_month_view_get_initial_date (GCAL_VIEW (view));
+      priv->days_delay = (icaltime_day_of_week (*date) - priv->first_weekday + 6) % 7;
+      g_free (date);
+    }
 }
