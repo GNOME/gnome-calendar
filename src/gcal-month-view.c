@@ -199,9 +199,7 @@ gcal_month_view_init (GcalMonthView *self)
   priv->end_mark_cell = -1;
 
   for (i = 0; i < 31; i++)
-    {
-      priv->days[i] = NULL;
-    }
+    priv->days[i] = NULL;
 
   gtk_style_context_add_class (
       gtk_widget_get_style_context (GTK_WIDGET (self)),
