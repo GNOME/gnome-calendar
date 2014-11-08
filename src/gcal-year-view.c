@@ -55,6 +55,9 @@ enum
   PROP_MANAGER  //manager inherited property
 };
 
+static void           event_opened                                (GcalEventWidget *event_widget,
+                                                                   gpointer         user_data);
+
 static void           gcal_view_interface_init                    (GcalViewIface  *iface);
 
 static void           gcal_year_view_set_property                 (GObject        *object,
@@ -132,6 +135,15 @@ G_DEFINE_TYPE_WITH_CODE (GcalYearView,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
                                                 gcal_view_interface_init));
 
+
+static void
+event_opened (GcalEventWidget *event_widget,
+              gpointer         user_data)
+{
+  g_signal_emit_by_name (GCAL_VIEW (user_data),
+                         "event-activated",
+                         event_widget);
+}
 
 static void
 gcal_year_view_class_init (GcalYearViewClass *klass)
@@ -654,6 +666,10 @@ gcal_year_view_add (GtkContainer *container,
 
   gtk_widget_set_parent (widget, GTK_WIDGET (container));
 
+  g_signal_connect (widget,
+                    "activate",
+                    G_CALLBACK (event_opened),
+                    container);
   g_free (date);
 }
 
