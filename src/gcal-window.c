@@ -272,6 +272,10 @@ date_updated (GtkButton  *button,
       *(priv->active_date) =
         icaltime_current_time_with_zone (
             gcal_manager_get_system_timezone (priv->manager));
+      *(priv->active_date) =
+        icaltime_set_timezone (
+            priv->active_date,
+            gcal_manager_get_system_timezone (priv->manager));
     }
   else
     {
