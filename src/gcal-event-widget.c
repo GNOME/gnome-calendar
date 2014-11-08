@@ -591,7 +591,6 @@ gcal_event_widget_draw (GtkWidget *widget,
   pango_layout_set_font_description (layout, font_desc);
   pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
   pango_layout_set_width (layout, (width - (padding.left + padding.right) ) * PANGO_SCALE);
-
   pango_layout_set_text (layout, priv->summary, -1);
   pango_cairo_update_layout (cr, layout);
 

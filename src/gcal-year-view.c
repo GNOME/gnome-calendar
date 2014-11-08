@@ -932,7 +932,6 @@ gcal_year_view_get_initial_date (GcalView *view)
 static icaltimetype*
 gcal_year_view_get_final_date (GcalView *view)
 {
-  //FIXME to retrieve the 35 days range
   GcalYearViewPrivate *priv;
   icaltimetype *new_date;
 
