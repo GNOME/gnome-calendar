@@ -630,11 +630,13 @@ gcal_event_widget_draw (GtkWidget *widget,
       GtkIconInfo *icon_info;
       GdkPixbuf *pixbuf;
       gboolean was_symbolic;
+      gint multiplier;
 
+      multiplier = icon_size / 16;
       icon_theme = gtk_icon_theme_get_default ();
       icon_info = gtk_icon_theme_lookup_icon (icon_theme,
                                               "alarm-symbolic",
-                                              icon_size,
+                                              16 * multiplier,
                                               0);
       pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
                                                         context,
@@ -644,7 +646,7 @@ gcal_event_widget_draw (GtkWidget *widget,
       gdk_cairo_set_source_pixbuf (cr,
                                    pixbuf,
                                    x + padding.left,
-                                   y + padding.top);
+                                   y + padding.top + ((icon_size - (16 * multiplier)) / 2));
       g_object_unref (pixbuf);
       cairo_paint (cr);
     }
@@ -656,11 +658,13 @@ gcal_event_widget_draw (GtkWidget *widget,
       GtkIconInfo *icon_info;
       GdkPixbuf *pixbuf;
       gboolean was_symbolic;
+      gint multiplier;
 
+      multiplier = icon_size / 16;
       icon_theme = gtk_icon_theme_get_default ();
       icon_info = gtk_icon_theme_lookup_icon (icon_theme,
                                               "changes-prevent-symbolic",
-                                              icon_size,
+                                              16 * multiplier,
                                               0);
       pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
                                                         context,
@@ -670,7 +674,7 @@ gcal_event_widget_draw (GtkWidget *widget,
       gdk_cairo_set_source_pixbuf (cr,
                                    pixbuf,
                                    width - right_gap,
-                                   y + padding.top);
+                                   y + padding.top + ((icon_size - (16 * multiplier)) / 2));
       g_object_unref (pixbuf);
       cairo_paint (cr);
     }
