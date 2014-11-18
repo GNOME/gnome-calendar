@@ -53,6 +53,9 @@ GtkWidget*     gcal_week_view_new              (GcalManager *manager);
 void           gcal_week_view_set_first_weekday (GcalWeekView *view,
 						 gint          day_nr);
 
+void           gcal_week_view_set_use_24h_format (GcalWeekView *view,
+						  gboolean      use_24h);
+
 G_END_DECLS
 
 #endif /* __GCAL_WEEK_VIEW_H__ */

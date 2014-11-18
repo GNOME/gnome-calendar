@@ -1026,12 +1026,21 @@ gcal_window_constructed (GObject *object)
   GtkBuilder *builder;
   GMenuModel *winmenu;
 
+  GSettings *helper_settings;
+  gchar *clock_format;
+  gboolean use_24h_format;
   gint i;
 
   if (G_OBJECT_CLASS (gcal_window_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_window_parent_class)->constructed (object);
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (object));
+
+  helper_settings = g_settings_new ("org.gnome.desktop.interface");
+  clock_format = g_settings_get_string (helper_settings, "clock-format");
+  use_24h_format = (g_strcmp0 (clock_format, "24h") == 0);
+  g_free (clock_format);
+  g_object_unref (helper_settings);
 
   /* ui construction */
   priv->main_box = gtk_grid_new ();
@@ -1142,6 +1151,9 @@ gcal_window_constructed (GObject *object)
   gcal_week_view_set_first_weekday (
       GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]),
       get_first_weekday ());
+  gcal_week_view_set_use_24h_format (
+      GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]),
+      use_24h_format);
   gtk_stack_add_titled (GTK_STACK (priv->views_stack),
                         priv->views[GCAL_WINDOW_VIEW_WEEK],
                         "week", _("Week"));

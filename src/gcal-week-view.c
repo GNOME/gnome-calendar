@@ -74,6 +74,11 @@ typedef struct
    * 0 for Sunday, 1 for Monday and so on */
   gint            first_weekday;
 
+  /**
+   * clock format from GNOME desktop settings
+   */
+  gboolean        use_24h_format;
+
   /* property */
   icaltimetype   *date;
   GcalManager    *manager; /* weak referenced */
@@ -408,16 +413,24 @@ draw_grid_window (GcalWeekView  *view,
   for (i = 0; i < 24; i++)
     {
       gchar *hours;
-      hours = g_strdup_printf ("%d %s",
-                               i % 12,
-                               i < 12 ? _("AM") : _("PM"));
-
-      if (i == 0)
-        pango_layout_set_text (layout, _("Midnight"), -1);
-      else if (i == 12)
-        pango_layout_set_text (layout, _("Noon"), -1);
+      if (priv->use_24h_format)
+        {
+          hours = g_strdup_printf ("%02d:00", i);
+          pango_layout_set_text (layout, hours, -1);
+        }
       else
-        pango_layout_set_text (layout, hours, -1);
+        {
+          hours = g_strdup_printf ("%02d:00 %s",
+                                   i % 12,
+                                   i < 12 ? _("AM") : _("PM"));
+
+          if (i == 0)
+            pango_layout_set_text (layout, _("Midnight"), -1);
+          else if (i == 12)
+            pango_layout_set_text (layout, _("Noon"), -1);
+          else
+            pango_layout_set_text (layout, hours, -1);
+        }
 
       cairo_move_to (cr, padding.left, padding.top + (height / 24) * i);
       pango_cairo_show_layout (cr, layout);
@@ -468,6 +481,7 @@ get_sidebar_width (GtkWidget *widget)
   PangoFontDescription *font_desc;
   gint mid_width;
   gint noon_width;
+  gint hours_width;
   gint sidebar_width;
 
   context = gtk_widget_get_style_context (widget);
@@ -489,7 +503,12 @@ get_sidebar_width (GtkWidget *widget)
 
   pango_layout_set_text (layout, _("Noon"), -1);
   pango_layout_get_pixel_size (layout, &noon_width, NULL);
+
+  pango_layout_set_text (layout, _("00:00 PM"), -1);
+  pango_layout_get_pixel_size (layout, &hours_width, NULL);
+
   sidebar_width = noon_width > mid_width ? noon_width : mid_width;
+  sidebar_width = sidebar_width > hours_width ? 0 : hours_width;
   sidebar_width += padding.left + padding.right;
 
   pango_font_description_free (font_desc);
@@ -1449,4 +1468,21 @@ gcal_week_view_set_first_weekday (GcalWeekView *view,
 
   priv = gcal_week_view_get_instance_private (view);
   priv->first_weekday = day_nr;
+}
+
+/**
+ * gcal_week_view_set_use_24h_format:
+ * @view:
+ * @use_24h:
+ *
+ * Whether the view will show time using 24h or 12h format
+ **/
+void
+gcal_week_view_set_use_24h_format (GcalWeekView *view,
+                                   gboolean      use_24h)
+{
+  GcalWeekViewPrivate *priv;
+
+  priv = gcal_week_view_get_instance_private (view);
+  priv->use_24h_format = use_24h;
 }
