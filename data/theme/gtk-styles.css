@@ -19,6 +19,10 @@
     font: 10;
 }
 
+.calendar-view.current {
+    background-color: alpha(@theme_selected_bg_color, 0.2);
+}
+
 .calendar-view:selected {
     color: @theme_selected_bg_color;
     background-color: shade (@theme_base_color, 0.9);
