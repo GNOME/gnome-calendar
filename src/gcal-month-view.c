@@ -721,15 +721,16 @@ gcal_month_view_draw (GtkWidget *widget,
                        (alloc.width / 7) * column, pos_y + 0.3,
                        alloc.width / 7, cell_height);
     }
-  /* final gap: drawn horizontally to the end */
-  i = days + 7 * february_gap;
-  if (i < 7 * (shown_rows == 5 ? 5 : 6))
+  /* final gap */
+  for (i = days + 7 * february_gap; i < 7 * (shown_rows == 5 ? 5 : 6); i++)
     {
-      pos_y = cell_height * ((i / 7) + lines_gap_for_5) + start_grid_y;
+      gint column = i % 7;
+      gint row = i / 7;
+      pos_y = ((alloc.height - start_grid_y ) / 6) * (row + lines_gap_for_5) + start_grid_y;
       cairo_rectangle (cr,
-                       (alloc.width / 7) * (i % 7),
+                       (alloc.width / 7) * column,
                        pos_y + 0.3,
-                       alloc.width, cell_height);
+                       alloc.width / 7, (alloc.height - start_grid_y ) / 6);
     }
   cairo_fill (cr);
 
