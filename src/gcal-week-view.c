@@ -69,7 +69,8 @@ typedef struct
 
   GtkWidget      *vscrollbar;
 
-  /* first day of the week according to user locale, being
+  /**
+   * first day of the week according to user locale, being
    * 0 for Sunday, 1 for Monday and so on */
   gint            first_weekday;
 

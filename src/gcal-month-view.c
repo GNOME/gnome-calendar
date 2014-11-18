@@ -39,11 +39,13 @@ typedef struct
 
   GdkWindow      *event_window;
 
-  /* the day of week for first day of the month,
+  /**
+   * the day of week for first day of the month,
    * sun: 0, mon: 1, ... sat = 6 */
   gint            days_delay;
 
-  /* first day of the week according to user locale, being
+  /**
+   * first day of the week according to user locale, being
    * 0 for Sunday, 1 for Monday and so on */
   gint            first_weekday;
 
