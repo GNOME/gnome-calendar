@@ -158,21 +158,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkGrid" id="source_grid">
+              <object class="GtkImage" id="source_image">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="valign">center</property>
-                <property name="column_spacing">12</property>
-                <child>
-                  <object class="GtkImage" id="source_image">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                  </packing>
-                </child>
+                <property name="halign">start</property>
               </object>
               <packing>
                 <property name="left_attach">3</property>
@@ -226,6 +215,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
+                    <property name="margin">6</property>
                   </object>
 		  <style>
 		    <class name="entry"/>
