@@ -526,11 +526,8 @@ gcal_month_view_draw (GtkWidget *widget,
   GtkAllocation alloc;
 
   GdkRGBA color;
-  GdkRGBA ligther_color;
   GdkRGBA selected_color;
   GdkRGBA background_selected_color;
-
-  GtkBorder header_padding;
 
   gint i;
   gint font_width;
@@ -540,8 +537,6 @@ gcal_month_view_draw (GtkWidget *widget,
 
   PangoLayout *layout;
   PangoFontDescription *font;
-  PangoFontDescription *selected_font;
-  PangoFontDescription *bold_font;
 
   gdouble days;
   gint shown_rows;
@@ -566,31 +561,22 @@ gcal_month_view_draw (GtkWidget *widget,
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
 
-  gtk_style_context_get_padding (context, state, &padding);
   gtk_widget_get_allocation (widget, &alloc);
   start_grid_y = gcal_month_view_get_start_grid_y (widget);
   cell_width = alloc.width / 7.0;
   cell_height = (alloc.height - start_grid_y) / 6.0;
 
-  layout = pango_cairo_create_layout (cr);
+  layout = gtk_widget_create_pango_layout (widget, NULL);
 
   gtk_style_context_get_color (context,
                                state | GTK_STATE_FLAG_SELECTED,
                                &selected_color);
-  gtk_style_context_get_color (context,
-                               state | GTK_STATE_FLAG_INSENSITIVE,
-                               &ligther_color);
   gtk_style_context_get_color (context, state, &color);
   gtk_style_context_get_background_color (context,
                                           state | GTK_STATE_FLAG_SELECTED,
                                           &background_selected_color);
   gtk_style_context_get (context, state, "font", &font, NULL);
-  gtk_style_context_get (context, state | GTK_STATE_FLAG_SELECTED,
-                         "font", &selected_font, NULL);
-
-  gtk_style_context_get_padding (context, state, &header_padding);
-
-  pango_layout_set_font_description (layout, font);
+  gtk_style_context_get_padding (context, state, &padding);
 
   /* calculations */
   days = priv->days_delay + icaltime_days_in_month (priv->date->month,
@@ -604,18 +590,15 @@ gcal_month_view_draw (GtkWidget *widget,
   lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
 
   /* drawing grid text */
-  bold_font = pango_font_description_copy (font);
-  pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
   gdk_cairo_set_source_rgba (cr, &color);
+  pango_layout_set_font_description (layout, font);
   for (i = 0; i < 7; i++)
     {
-      pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, gcal_get_weekday ((i + priv->first_weekday) % 7), -1);
-      pango_cairo_update_layout (cr, layout);
       pango_layout_get_pixel_size (layout, &font_width, &font_height);
 
       cairo_move_to (cr,
-                     cell_width * i + header_padding.left,
+                     cell_width * i + padding.left,
                      start_grid_y - padding.bottom - font_height);
       pango_cairo_show_layout (cr, layout);
     }
@@ -637,8 +620,6 @@ gcal_month_view_draw (GtkWidget *widget,
       upper_mark = -2;
     }
 
-  gdk_cairo_set_source_rgba (cr, &ligther_color);
-
   for (i = priv->days_delay + 7 * february_gap; i < days + 7 * february_gap; i++)
     {
       gchar *nr_day;
@@ -647,6 +628,19 @@ gcal_month_view_draw (GtkWidget *widget,
       gint nr_day_i = i - (priv->days_delay + 7 * february_gap) + 1;
 
       nr_day = g_strdup_printf ("%d", nr_day_i);
+
+      if (priv->date->day == nr_day_i)
+        {
+          /* drawing current_unit cell */
+          gtk_style_context_save (context);
+          gtk_style_context_add_class (context, "current");
+          pos_y = cell_height * (row + lines_gap_for_5) + start_grid_y;
+          gtk_render_background (context, cr,
+                                 cell_width * column, pos_y,
+                                 cell_width, cell_height);
+          gtk_style_context_remove_class (context, "current");
+          gtk_style_context_restore (context);
+        }
 
       /* drawing new-event marks */
       if (lower_mark <= i &&
@@ -658,44 +652,44 @@ gcal_month_view_draw (GtkWidget *widget,
                            cell_width * column, pos_y + 0.3,
                            cell_width, cell_height);
           cairo_fill (cr);
-          gdk_cairo_set_source_rgba (cr, &ligther_color);
-
+          gdk_cairo_set_source_rgba (cr, &color);
         }
 
       /* drawing selected_day */
       if (priv->date->day == nr_day_i)
         {
-          gdk_cairo_set_source_rgba (cr, &selected_color);
-          pango_layout_set_font_description ( layout, selected_font);
+          PangoLayout *clayout;
+          PangoFontDescription *font_desc;
+
+          gtk_style_context_save (context);
+          gtk_style_context_add_class (context, "current");
+
+          clayout = gtk_widget_create_pango_layout (widget, nr_day);
+          gtk_style_context_get (context, state,
+                                 "font", &font_desc, NULL);
+          pango_layout_set_font_description (clayout, font_desc);
+
+          pos_y = cell_height * (row + lines_gap_for_5) + start_grid_y + padding.top;
+          gtk_render_layout (context, cr,
+                             cell_width * column + padding.left,
+                             pos_y + 0.3,
+                             clayout);
+
+          gtk_style_context_remove_class (context, "current");
+          gtk_style_context_restore (context);
+
+          pango_font_description_free (font_desc);
+          g_object_unref (clayout);
         }
-
-      pango_layout_set_text (layout, nr_day, -1);
-      pango_cairo_update_layout (cr, layout);
-      pango_layout_get_pixel_size (layout, &font_width, &font_height);
-
-      pos_y = cell_height * (row + lines_gap_for_5) + start_grid_y + padding.top;
-      cairo_move_to (cr,
-                     cell_width * column + header_padding.left,
-                     pos_y + 0.3);
-
-      pango_cairo_show_layout (cr, layout);
-
-      if (priv->date->day == nr_day_i)
+      else
         {
-          /* drawing current_unit cell */
-          gdk_cairo_set_source_rgba (cr, &selected_color);
+          pango_layout_set_text (layout, nr_day, -1);
 
-          /* Two pixel line on the selected day cell */
-          cairo_set_line_width (cr, 2.0);
-          pos_y = cell_height * (row + lines_gap_for_5) + start_grid_y;
+          pos_y = cell_height * (row + lines_gap_for_5) + start_grid_y + padding.top;
           cairo_move_to (cr,
-                         cell_width * column,
-                         pos_y + 1);
-          cairo_rel_line_to (cr, cell_width, 0);
-          cairo_stroke (cr);
-
-          gdk_cairo_set_source_rgba (cr, &ligther_color);
-          pango_layout_set_font_description (layout, font);
+                         cell_width * column + padding.left,
+                         pos_y + 0.3);
+          pango_cairo_show_layout (cr, layout);
         }
 
       g_free (nr_day);
@@ -737,7 +731,7 @@ gcal_month_view_draw (GtkWidget *widget,
   cairo_fill (cr);
 
   /* lines */
-  gdk_cairo_set_source_rgba (cr, &ligther_color);
+  gdk_cairo_set_source_rgba (cr, &color);
   cairo_set_line_width (cr, 0.4);
 
   /* vertical lines, the easy ones */
@@ -759,12 +753,9 @@ gcal_month_view_draw (GtkWidget *widget,
       cairo_move_to (cr, 0, pos_y + 0.3);
       cairo_rel_line_to (cr, alloc.width, 0);
     }
-
   cairo_stroke (cr);
 
-  pango_font_description_free (bold_font);
   pango_font_description_free (font);
-  pango_font_description_free (selected_font);
   g_object_unref (layout);
 
   if (GTK_WIDGET_CLASS (gcal_month_view_parent_class)->draw != NULL)
