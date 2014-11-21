@@ -32,6 +32,11 @@
         <attribute name="label" translatable="yes">_New Event</attribute>
         <attribute name="action">app.new</attribute>
       </item>
+      <item>
+        <attribute name="label" translatable="yes">_Synchronize</attribute>
+        <attribute name="action">app.sync</attribute>
+        <attribute name="accel">F5</attribute>
+      </item>
     </section>
   </menu>
 </interface>
