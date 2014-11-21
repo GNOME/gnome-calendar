@@ -470,8 +470,8 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
           child = (GcalViewChild*) l->data;
 
-          pos_x = horizontal_block * ((i + priv->days_delay) % 7 );
-          pos_y = vertical_block * (((i + priv->days_delay + 7 * february_gap ) / 7 ) + lines_gap_for_5);
+          pos_x = horizontal_block * ((i + priv->days_delay) % 7);
+          pos_y = vertical_block * (((i + priv->days_delay + 7 * february_gap) / 7) + lines_gap_for_5);
 
           if ((! gtk_widget_get_visible (child->widget))
               && (! child->hidden))
@@ -800,7 +800,7 @@ gcal_month_view_button_press (GtkWidget      *widget,
 
   v_block = (height - start_grid_y) / 6.0;
 
-  priv->clicked_cell = 7 * ( floor ( (y - (lines_gap_for_5 * v_block))  / (v_block) )) + floor (x / (width / 7));
+  priv->clicked_cell = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / (v_block))) + floor (x / (width / 7));
 
   if (priv->clicked_cell < days)
     {
@@ -858,7 +858,7 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
   v_block = (height - start_grid_y) / 6.0;
 
   /* caching value */
-  new_end_cell = 7 * ( floor ( (y - (lines_gap_for_5 * v_block))  / (v_block) )) + floor (event->x / (width / 7));
+  new_end_cell = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / (v_block))) + floor (event->x / (width / 7));
   if (priv->end_mark_cell != new_end_cell)
     {
       gtk_widget_queue_draw (widget);
@@ -920,7 +920,7 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   v_block = (height - start_grid_y) / 6.0;
 
-  released = 7 * ( floor ( (y - (lines_gap_for_5 * v_block))  / (v_block) )) +
+  released = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / (v_block))) +
              floor (event->x / (width / 7));
 
   /* whether the event is out of the days of the month */
