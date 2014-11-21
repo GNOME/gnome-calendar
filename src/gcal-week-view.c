@@ -904,11 +904,10 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
 
   if (scroll_needed)
     {
-      /* FIXME: change those values for something not hardcoded */
-      scroll_allocation.x = allocation->width - 10;
-      scroll_allocation.y = 7 + start_grid_y + 2;
-      scroll_allocation.width = 8;
-      scroll_allocation.height = view_height - 7 - 2;
+      scroll_allocation.x = allocation->width - natural;
+      scroll_allocation.y = start_grid_y;
+      scroll_allocation.width = natural;
+      scroll_allocation.height = view_height;
       gtk_widget_size_allocate (priv->vscrollbar, &scroll_allocation);
 
       gtk_adjustment_set_page_size (
