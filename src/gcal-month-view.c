@@ -447,12 +447,12 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
   start_grid_y = gcal_month_view_get_start_grid_y (widget);
   horizontal_block = allocation->width / 7.0;
-  vertical_block = (allocation->height - start_grid_y) / 6;
+  vertical_block = (allocation->height - start_grid_y) / 6.0;
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
   shown_rows = ceil (days / 7.0);
   february_gap = shown_rows == 4 ? 1 : 0;
-  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
+  lines_gap = ((shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
   lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
 
   vertical_cell_margin = padding.top + font_height;
@@ -585,7 +585,7 @@ gcal_month_view_draw (GtkWidget *widget,
   february_gap = shown_rows == 4 ? 1 : 0;
 
   h_lines = (shown_rows % 2) + 5;
-  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
+  lines_gap = ((shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
 
   lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
 
@@ -795,12 +795,12 @@ gcal_month_view_button_press (GtkWidget      *widget,
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
   shown_rows = ceil (days / 7.0);
 
-  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
+  lines_gap = ((shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
   lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
 
   v_block = (height - start_grid_y) / 6.0;
 
-  priv->clicked_cell = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / (v_block))) + floor (x / (width / 7));
+  priv->clicked_cell = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / v_block)) + floor (x / (width / 7));
 
   if (priv->clicked_cell < days)
     {
@@ -852,13 +852,13 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
   shown_rows = ceil (days / 7.0);
 
-  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
+  lines_gap = ((shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
   lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
 
   v_block = (height - start_grid_y) / 6.0;
 
   /* caching value */
-  new_end_cell = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / (v_block))) + floor (event->x / (width / 7));
+  new_end_cell = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / v_block)) + floor (event->x / (width / 7));
   if (priv->end_mark_cell != new_end_cell)
     {
       gtk_widget_queue_draw (widget);
@@ -914,13 +914,13 @@ gcal_month_view_button_release (GtkWidget      *widget,
                                                     priv->date->year);
   shown_rows = ceil (days / 7.0);
 
-  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
+  lines_gap = ((shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
   lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
   february_gap = shown_rows == 4 ? 1 : 0;
 
   v_block = (height - start_grid_y) / 6.0;
 
-  released = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / (v_block))) +
+  released = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / v_block)) +
              floor (event->x / (width / 7));
 
   /* whether the event is out of the days of the month */
@@ -940,8 +940,8 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   gtk_widget_queue_draw (widget);
 
-  x = (width / 7) * (( priv->end_mark_cell % 7) + 0.5);
-  y = start_grid_y + v_block * (lines_gap_for_5 + ( priv->end_mark_cell / 7) + 0.5);
+  x = (width / 7) * ((priv->end_mark_cell % 7) + 0.5);
+  y = start_grid_y + v_block * (lines_gap_for_5 + (priv->end_mark_cell / 7.0) + 0.5);
 
   start_date = gcal_dup_icaltime (priv->date);
   start_date->day = priv->start_mark_cell - (priv->days_delay + 7 * february_gap) + 1;
@@ -1200,20 +1200,20 @@ gcal_month_view_mark_current_unit (GcalView *view,
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));
   start_grid_y = gcal_month_view_get_start_grid_y (GTK_WIDGET (view));
-  horizontal_block = (gdouble) gtk_widget_get_allocated_width (GTK_WIDGET (view)) / 7.0;
-  vertical_block = (gdouble) (gtk_widget_get_allocated_height (GTK_WIDGET (view)) - start_grid_y) / 6.0;
+  horizontal_block = gtk_widget_get_allocated_width (GTK_WIDGET (view)) / 7.0;
+  vertical_block = (gtk_widget_get_allocated_height (GTK_WIDGET (view)) - start_grid_y) / 6.0;
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
   shown_rows = ceil (days / 7.0);
   february_gap = shown_rows == 4 ? 1 : 0;
-  lines_gap = ((gdouble) (shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
+  lines_gap = ((shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
   lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
 
   priv->start_mark_cell = priv->date->day + 7 * february_gap + priv->days_delay - 1;
   priv->end_mark_cell = priv->start_mark_cell;
 
-  x_pos = horizontal_block * (( priv->end_mark_cell % 7) + 0.5);
-  y_pos = start_grid_y + vertical_block * (lines_gap_for_5 + ( priv->end_mark_cell / 7) + 0.5);
+  x_pos = horizontal_block * ((priv->end_mark_cell % 7) + 0.5);
+  y_pos = start_grid_y + vertical_block * (lines_gap_for_5 + (priv->end_mark_cell / 7.0) + 0.5);
 
   gtk_widget_queue_draw (GTK_WIDGET (view));
 
