@@ -64,6 +64,10 @@ static void     gcal_application_show_about           (GSimpleAction           *
                                                        GVariant                *parameter,
                                                        gpointer                 user_data);
 
+static void     gcal_application_sync                 (GSimpleAction           *sync,
+                                                       GVariant                *parameter,
+                                                       gpointer                 app);
+
 static void     gcal_application_quit                 (GSimpleAction           *simple,
                                                        GVariant                *parameter,
                                                        gpointer                 user_data);
@@ -83,6 +87,7 @@ static GOptionEntry gcal_application_goptions[] = {
 
 static const GActionEntry gcal_app_entries[] = {
   { "new",    gcal_application_create_new_event },
+  { "sync",   gcal_application_sync },
   { "search", gcal_application_launch_search },
   { "about",  gcal_application_show_about },
   { "quit",   gcal_application_quit },
@@ -262,6 +267,18 @@ gcal_application_create_new_event (GSimpleAction *new_event,
   priv = gcal_application_get_instance_private (GCAL_APPLICATION (app));
 
   gcal_window_new_event (GCAL_WINDOW (priv->window));
+}
+
+static void
+gcal_application_sync (GSimpleAction *sync,
+                       GVariant      *parameter,
+                       gpointer       app)
+{
+  GcalApplicationPrivate *priv;
+
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (app));
+
+  gcal_manager_refresh (priv->manager);
 }
 
 static void

@@ -90,6 +90,10 @@ static void     on_client_connected                       (GObject         *sour
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
 
+static void     on_client_refreshed                       (GObject         *source_object,
+                                                           GAsyncResult    *result,
+                                                           gpointer         user_data);
+
 static void     on_event_updated                         (GObject          *source_object,
                                                           GAsyncResult     *result,
                                                           gpointer          user_data);
@@ -279,6 +283,27 @@ on_client_connected (GObject      *source_object,
       g_object_unref (source);
       g_error_free (error);
       return;
+    }
+}
+
+
+static void
+on_client_refreshed (GObject      *source_object,
+                     GAsyncResult *result,
+                     gpointer      user_data)
+{
+  GError *error;
+
+  error = NULL;
+  if (e_client_refresh_finish (E_CLIENT (source_object), result, &error))
+    {
+      /* FIXME: add notification to UI */
+      ;
+    }
+  else
+    {
+      /* FIXME: do something when there was some error */
+      g_warning ("Error synchronizing client");
     }
 }
 
@@ -598,6 +623,35 @@ gcal_manager_get_default_source (GcalManager *manager)
 
   g_object_unref (edefault);
   return source_uid;
+}
+
+void
+gcal_manager_refresh (GcalManager *manager)
+{
+  GcalManagerPrivate *priv;
+  GList *clients;
+  GList *l;
+
+  priv = gcal_manager_get_instance_private (manager);
+  clients = g_hash_table_get_values (priv->clients);
+
+  /* refresh clients */
+  for (l = clients; l != NULL; l = l->next)
+    {
+      GcalManagerUnit *unit;
+
+      unit = (GcalManagerUnit*) l->data;
+
+      if (! e_client_check_refresh_supported (E_CLIENT (unit->client)))
+        continue;
+
+      e_client_refresh (E_CLIENT (unit->client),
+                        NULL,
+                        on_client_refreshed,
+                        manager);
+    }
+
+  g_list_free (clients);
 }
 
 gboolean
