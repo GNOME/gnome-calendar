@@ -920,7 +920,7 @@ search_changed (GtkEditable *editable,
 
           title =
             g_strdup_printf (
-                "Results for \"%s\"",
+                _("Results for \"%s\""),
                 gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
           gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar),
                                     title);
