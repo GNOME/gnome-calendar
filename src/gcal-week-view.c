@@ -670,6 +670,7 @@ gcal_week_view_set_property (GObject       *object,
                                      E_CAL_DATA_MODEL_SUBSCRIBER (object),
                                      range_start,
                                      range_end);
+        gtk_widget_queue_draw (GTK_WIDGET (object));
         break;
       }
     case PROP_MANAGER:
