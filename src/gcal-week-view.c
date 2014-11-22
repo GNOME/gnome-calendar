@@ -247,8 +247,8 @@ draw_header (GcalWeekView  *view,
   gint pos_i;
   gint start_grid_y;
   gint font_height;
-  gint sidebar_width;
-  gint cell_width;
+  gdouble sidebar_width;
+  gdouble cell_width;
   icaltimetype *start_of_week;
   gint current_cell;
 
@@ -369,7 +369,7 @@ draw_grid_window (GcalWeekView  *view,
   gint i;
   gint width;
   gint height;
-  gint sidebar_width;
+  gdouble sidebar_width;
   gint current_cell;
 
   PangoLayout *layout;
@@ -402,9 +402,9 @@ draw_grid_window (GcalWeekView  *view,
   gtk_style_context_add_class (context, "current");
   gtk_render_background (
       context, cr,
-      ((width - sidebar_width)/ 7) * current_cell + sidebar_width,
+      ((width - sidebar_width)/ 7.0) * current_cell + sidebar_width,
       0,
-      ((width  - sidebar_width)/ 7),
+      ((width  - sidebar_width)/ 7.0),
       height);
   gtk_style_context_remove_class (context, "current");
   gtk_style_context_restore (context);
