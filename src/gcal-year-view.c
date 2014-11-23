@@ -427,8 +427,8 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
   pango_font_description_free (font_desc);
   g_object_unref (layout);
 
-  horizontal_block = allocation->width / 6;
-  vertical_block = allocation->height / 2;
+  horizontal_block = allocation->width / 6.0;
+  vertical_block = allocation->height / 2.0;
   vertical_cell_margin = padding.top + font_height;
 
   for (i = 0; i < 12; i++)
@@ -760,11 +760,16 @@ gcal_year_view_draw_grid (GcalYearView *view,
   gint font_width;
   gint font_height;
 
+  gdouble cell_width;
+  gdouble cell_height;
+
   PangoLayout *layout;
   const PangoFontDescription *font;
 
   priv = gcal_year_view_get_instance_private (view);
   widget = GTK_WIDGET (view);
+  cell_width = alloc->width / 6.0;
+  cell_height = alloc->height / 2.0;
 
   /* fonts and colors selection */
   context = gtk_widget_get_style_context (widget);
@@ -821,10 +826,10 @@ gcal_year_view_draw_grid (GcalYearView *view,
           last_point = (rows == (last_cell / 6 - first_cell / 6)) ? last_cell : ((first_cell / 6) + rows) * 6 + 5;
 
           cairo_rectangle (cr,
-                           (alloc->width / 6) * ( first_point % 6),
-                           (alloc->height / 2) * ( first_point / 6) + 1,
-                           (alloc->width / 6) * (last_point - first_point + 1),
-                           alloc->height / 2);
+                           cell_width * ( first_point % 6),
+                           cell_height * ( first_point / 6) + 1,
+                           cell_width * (last_point - first_point + 1),
+                           cell_height);
 
           cairo_fill (cr);
         }
@@ -849,8 +854,8 @@ gcal_year_view_draw_grid (GcalYearView *view,
           pango_layout_get_pixel_size (layout, &font_width, &font_height);
 
           cairo_move_to (cr,
-                         (alloc->width / 6) * j + header_padding.left,
-                         padding->top + i * alloc->height / 2);
+                         cell_width * j + header_padding.left,
+                         padding->top + i * cell_height);
           pango_cairo_show_layout (cr, layout);
 
           if (priv->date->month == i * 6 + j + 1)
@@ -869,7 +874,7 @@ gcal_year_view_draw_grid (GcalYearView *view,
   /* vertical lines */
   for (i = 0; i < 5; i++)
     {
-      gint pos_x = (alloc->width / 6) * (i + 1);
+      gint pos_x = cell_width * (i + 1);
       cairo_move_to (cr, pos_x + 0.3, 0);
       cairo_rel_line_to (cr, 0, alloc->height);
     }
@@ -889,9 +894,9 @@ gcal_year_view_draw_grid (GcalYearView *view,
   /* Two pixel line on the selected day cell */
   cairo_set_line_width (cr, 2.0);
   cairo_move_to (cr,
-                 (alloc->width / 6) * ( (priv->date->month - 1) % 6),
-                 (alloc->height / 2) * ( (priv->date->month - 1) / 6) + 1);
-  cairo_rel_line_to (cr, (alloc->width / 6), 0);
+                 cell_width * ( (priv->date->month - 1) % 6),
+                 cell_height * ( (priv->date->month - 1) / 6) + 1);
+  cairo_rel_line_to (cr, cell_width, 0);
   cairo_stroke (cr);
 }
 
