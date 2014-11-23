@@ -924,8 +924,8 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
     }
 
   sidebar_width = get_sidebar_width (widget);
-  horizontal_block = (allocation->width - sidebar_width) / 7;
-  vertical_block = gdk_window_get_height (priv->grid_window) / 24;
+  horizontal_block = (allocation->width - sidebar_width) / 7.0;
+  vertical_block = gdk_window_get_height (priv->grid_window) / 24.0;
 
   for (i = 0; i < 7; i++)
     {
