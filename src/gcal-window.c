@@ -105,7 +105,7 @@ enum
 #define SAVE_GEOMETRY_ID_TIMEOUT 100 /* ms */
 
 static gboolean       key_pressed                        (GtkWidget           *widget,
-                                                          GdkEventKey         *event,
+                                                          GdkEvent            *event,
                                                           gpointer             user_data);
 
 static void           date_updated                       (GtkButton           *buttton,
@@ -206,52 +206,20 @@ static void           gcal_window_undo_remove_event      (GtkButton           *b
 G_DEFINE_TYPE_WITH_PRIVATE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static gboolean
-key_pressed (GtkWidget   *widget,
-             GdkEventKey *event,
-             gpointer     user_data)
+key_pressed (GtkWidget *widget,
+             GdkEvent  *event,
+             gpointer   user_data)
 {
   GcalWindowPrivate *priv;
-  GdkModifierType modifiers;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-  modifiers = gtk_accelerator_get_default_mod_mask ();
 
-  /* case 1:close leave new event mode */
-  if (priv->new_event_mode &&
-      event->keyval == GDK_KEY_Escape)
-    {
-      set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
-      return TRUE;
-    }
-
-  /* case 2: write in new-event-widget entry */
+  /* special case: write in new-event-widget entry */
   if (priv->new_event_mode)
     return FALSE;
 
-  /* case 3: leave search-mode*/
-  if (priv->search_mode && event->keyval == GDK_KEY_Escape)
-    {
-      gcal_window_set_search_mode (GCAL_WINDOW (widget), FALSE);
-      return TRUE;
-    }
-
-  /* case 4: write into search-mode entry */
-  if (priv->search_mode)
-    return FALSE;
-
-  /* case 5: open search-mode */
-  if (!priv->search_mode &&
-      gdk_keyval_to_unicode (event->keyval) != 0 &&
-      ((event->state & modifiers & GDK_META_MASK) == 0) &&
-      ((event->state & modifiers & GDK_SUPER_MASK) == 0) &&
-      ((event->state & modifiers & GDK_HYPER_MASK) == 0) &&
-      ((event->state & modifiers & GDK_CONTROL_MASK) == 0))
-    {
-      gcal_window_set_search_mode (GCAL_WINDOW (widget), TRUE);
-      return FALSE;
-    }
-
-  return FALSE;
+  return gtk_search_bar_handle_event (GTK_SEARCH_BAR (priv->search_bar),
+                                      event);
 }
 
 static void
