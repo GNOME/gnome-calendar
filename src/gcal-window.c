@@ -515,6 +515,7 @@ stack_transition_running (GObject    *object,
   gtk_container_remove (GTK_CONTAINER (priv->views_stack),
                         priv->views[GCAL_WINDOW_VIEW_SEARCH]);
   gtk_widget_hide (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
+  gtk_widget_hide (priv->search_bar);
 
   gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
                                    priv->views_switcher);
@@ -870,6 +871,7 @@ search_toggled (GObject    *object,
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
     {
       g_debug ("Entering search mode");
+      gtk_widget_show (priv->search_bar);
 
       /* update header_bar widget */
       gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
@@ -1110,6 +1112,7 @@ gcal_window_constructed (GObject *object)
   gtk_container_add (GTK_CONTAINER (box), priv->search_entry);
 
   priv->search_bar = gtk_search_bar_new ();
+  gtk_widget_set_no_show_all (priv->search_bar, TRUE);
   gtk_search_bar_connect_entry (GTK_SEARCH_BAR (priv->search_bar),
                                 GTK_ENTRY (priv->search_entry));
   gtk_widget_set_hexpand (priv->search_bar, TRUE);
@@ -1118,6 +1121,7 @@ gcal_window_constructed (GObject *object)
                           G_BINDING_BIDIRECTIONAL);
   gtk_container_add (GTK_CONTAINER (priv->search_bar), box);
   gtk_container_add (GTK_CONTAINER (priv->main_box), priv->search_bar);
+  gtk_widget_show_all (box);
 
   /* overlay */
   priv->views_overlay = gtk_overlay_new ();
