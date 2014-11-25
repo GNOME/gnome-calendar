@@ -67,8 +67,10 @@ typedef struct
   GtkWidget           *popover; /* short-lived */
 
   /* header_bar widets */
-  GtkWidget           *today_button;
+  GtkWidget           *menu_button;
+  GtkWidget           *search_button;
   GtkWidget           *search_entry;
+  GtkWidget           *today_button;
   GtkWidget           *views_switcher;
 
   /* day, week, month, year, list, search */
@@ -926,6 +928,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->configure_event = gcal_window_configure_event;
   widget_class->window_state_event = gcal_window_state_event;
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/window.ui");
 
   g_object_class_install_property (
       object_class,
@@ -964,6 +967,19 @@ gcal_window_class_init(GcalWindowClass *klass)
                             "A weak reference to the app manager object",
                             G_PARAM_CONSTRUCT_ONLY |
                             G_PARAM_READWRITE));
+
+  /* widgets */
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, header_bar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, main_box);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, menu_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, nav_bar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_bar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_entry);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, today_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_overlay);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_stack);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_switcher);
 }
 
 static void
@@ -982,6 +998,8 @@ gcal_window_init (GcalWindow *self)
   priv->save_geometry_timeout_id = 0;
   priv->event_to_delete = NULL;
   priv->open_edit_dialog = FALSE;
+
+  gtk_widget_init_template (GTK_WIDGET (self));
 }
 
 static void
@@ -989,10 +1007,7 @@ gcal_window_constructed (GObject *object)
 {
   GcalWindowPrivate *priv;
 
-  GtkWidget *box;
-  GtkWidget *search_button;
 
-  GtkWidget *menu_button;
   GtkBuilder *builder;
   GMenuModel *winmenu;
 
@@ -1012,34 +1027,14 @@ gcal_window_constructed (GObject *object)
   g_free (clock_format);
   g_object_unref (helper_settings);
 
-  /* ui construction */
-  priv->main_box = gtk_grid_new ();
-  gtk_orientable_set_orientation (GTK_ORIENTABLE (priv->main_box),
-                                  GTK_ORIENTATION_VERTICAL);
-
-  /* header_bar */
-  priv->header_bar = gtk_header_bar_new ();
-
-  /* header_bar: new */
-  priv->today_button = gtk_button_new_with_label (_("Today"));
-  gtk_header_bar_pack_start (GTK_HEADER_BAR (priv->header_bar),
-                             priv->today_button);
-
-  priv->views_switcher = gtk_stack_switcher_new ();
-  g_object_ref_sink (priv->views_switcher);
-  gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
-                                   priv->views_switcher);
 
   /* header_bar: menu */
-  menu_button = gtk_menu_button_new ();
-  gtk_menu_button_set_use_popover (GTK_MENU_BUTTON (menu_button),
+  gtk_menu_button_set_use_popover (GTK_MENU_BUTTON (priv->menu_button),
                                    TRUE);
   gtk_button_set_image (
-      GTK_BUTTON (menu_button),
+      GTK_BUTTON (priv->menu_button),
       gtk_image_new_from_icon_name ("open-menu-symbolic",
                                     GTK_ICON_SIZE_MENU));
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar),
-                           menu_button);
 
   builder = gtk_builder_new ();
   gtk_builder_add_from_resource (builder,
@@ -1047,76 +1042,18 @@ gcal_window_constructed (GObject *object)
                                  NULL);
 
   winmenu = (GMenuModel *)gtk_builder_get_object (builder, "winmenu");
-  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (menu_button),
+  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->menu_button),
                                   winmenu);
 
   g_object_unref (builder);
 
-  /* header_bar: search */
-  search_button = gtk_toggle_button_new ();
-  gtk_container_add (
-      GTK_CONTAINER (search_button),
-      gtk_image_new_from_icon_name ("edit-find-symbolic",
-                                    GTK_ICON_SIZE_MENU));
-  gtk_header_bar_pack_end (GTK_HEADER_BAR (priv->header_bar),
-                           search_button);
-
-  gtk_header_bar_set_show_close_button (
-      GTK_HEADER_BAR (priv->header_bar),
-      TRUE);
-
-  gtk_widget_set_hexpand (priv->header_bar, TRUE);
-  gtk_window_set_titlebar (GTK_WINDOW (object), priv->header_bar);
-
-  /* search_bar */
-  priv->search_entry = gtk_search_entry_new ();
-  g_object_set (priv->search_entry,
-                "width-request", 500,
-                "hexpand", TRUE,
-                "halign", GTK_ALIGN_CENTER,
-                NULL);
-
-  box = gtk_grid_new ();
-  gtk_container_add (GTK_CONTAINER (box), priv->search_entry);
-
-  priv->search_bar = gtk_search_bar_new ();
-  gtk_widget_set_no_show_all (priv->search_bar, TRUE);
+  /* search bar */
   gtk_search_bar_connect_entry (GTK_SEARCH_BAR (priv->search_bar),
                                 GTK_ENTRY (priv->search_entry));
-  gtk_widget_set_hexpand (priv->search_bar, TRUE);
-  g_object_bind_property (search_button, "active",
+  g_object_bind_property (priv->search_button, "active",
                           priv->search_bar, "search-mode-enabled",
                           G_BINDING_BIDIRECTIONAL);
-  gtk_container_add (GTK_CONTAINER (priv->search_bar), box);
-  gtk_container_add (GTK_CONTAINER (priv->main_box), priv->search_bar);
-  gtk_widget_show_all (box);
 
-  /* overlay */
-  priv->views_overlay = gtk_overlay_new ();
-  gtk_container_add (GTK_CONTAINER (priv->main_box), priv->views_overlay);
-
-  box = gtk_grid_new ();
-  gtk_orientable_set_orientation (GTK_ORIENTABLE (box),
-                                  GTK_ORIENTATION_VERTICAL);
-  gtk_container_add (GTK_CONTAINER (priv->views_overlay), box);
-
-  /* nav_bar */
-  priv->nav_bar = gcal_nav_bar_new ();
-  gtk_container_add (GTK_CONTAINER (box), priv->nav_bar);
-
-  /* stack widget for holding views */
-  priv->views_stack = gtk_stack_new ();
-  g_object_set (priv->views_stack,
-                "vexpand", TRUE,
-                "hexpand", TRUE,
-                "transition-type", GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT,
-                "transition-duration", 250,
-                NULL);
-  gtk_container_add (GTK_CONTAINER (box), priv->views_stack);
-
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (priv->views_stack),
-      "views");
 
   priv->views[GCAL_WINDOW_VIEW_WEEK] =
     gcal_week_view_new (priv->manager);
@@ -1153,16 +1090,6 @@ gcal_window_constructed (GObject *object)
                           priv->views[GCAL_WINDOW_VIEW_SEARCH],
                           "active-date",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-
-  gtk_stack_switcher_set_stack (GTK_STACK_SWITCHER (priv->views_switcher),
-                                GTK_STACK (priv->views_stack));
-
-  gtk_container_add (GTK_CONTAINER (object), priv->main_box);
-  gtk_widget_show_all (priv->main_box);
-
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (GTK_WIDGET (object)),
-      "views");
 
   /* popover and content */
   priv->popover = gtk_popover_new (GTK_WIDGET(priv->views_stack));
