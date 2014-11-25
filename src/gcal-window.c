@@ -216,7 +216,7 @@ key_pressed (GtkWidget *widget,
 
   /* special case: write in new-event-widget entry */
   if (priv->new_event_mode)
-    return FALSE;
+    return GDK_EVENT_PROPAGATE;
 
   return gtk_search_bar_handle_event (GTK_SEARCH_BAR (priv->search_bar),
                                       event);
