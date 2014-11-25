@@ -1031,11 +1031,6 @@ gcal_window_constructed (GObject *object)
   /* header_bar: menu */
   gtk_menu_button_set_use_popover (GTK_MENU_BUTTON (priv->menu_button),
                                    TRUE);
-  gtk_button_set_image (
-      GTK_BUTTON (priv->menu_button),
-      gtk_image_new_from_icon_name ("open-menu-symbolic",
-                                    GTK_ICON_SIZE_MENU));
-
   builder = gtk_builder_new ();
   gtk_builder_add_from_resource (builder,
                                  "/org/gnome/calendar/menus.ui",
