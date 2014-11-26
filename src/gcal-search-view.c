@@ -145,6 +145,11 @@ gcal_search_view_constructed (GObject *object)
 
   priv->desc_size_group =
     gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
+
+  gcal_manager_set_search_subscriber (
+      priv->manager,
+      E_CAL_DATA_MODEL_SUBSCRIBER (object),
+      0, 0);
 }
 
 static void
@@ -162,34 +167,10 @@ gcal_search_view_set_property (GObject       *object,
     {
     case PROP_DATE:
       {
-        time_t range_start, range_end;
-        icaltimetype *date;
-        icaltimezone* default_zone;
-
         if (priv->date != NULL)
           g_free (priv->date);
 
         priv->date = g_value_dup_boxed (value);
-
-        default_zone =
-          gcal_manager_get_system_timezone (priv->manager);
-
-        /* FIXME: using fixed interval */
-        date = gcal_dup_icaltime (priv->date);
-        icaltime_adjust (date, -25, 0, 0, 0);
-        range_start = icaltime_as_timet_with_zone (*date,
-                                                   default_zone);
-        g_free (date);
-        date = gcal_dup_icaltime (priv->date);
-        icaltime_adjust (date, 25, 0, 0, 0);
-        range_end = icaltime_as_timet_with_zone (*date,
-                                                 default_zone);
-        g_free (date);
-
-        gcal_manager_set_subscriber (priv->manager,
-                                     E_CAL_DATA_MODEL_SUBSCRIBER (object),
-                                     range_start,
-                                     range_end);
         break;
       }
     case PROP_MANAGER:

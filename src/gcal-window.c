@@ -489,8 +489,6 @@ stack_transition_running (GObject    *object,
 
   gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar),
                                    priv->views_switcher);
-  /* Reset manager filter */
-  gcal_manager_set_query (priv->manager, NULL);
 }
 
 static void
