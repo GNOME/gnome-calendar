@@ -1052,9 +1052,6 @@ gcal_window_constructed (GObject *object)
   /* search bar */
   gtk_search_bar_connect_entry (GTK_SEARCH_BAR (priv->search_bar),
                                 GTK_ENTRY (priv->search_entry));
-  g_object_bind_property (priv->search_button, "active",
-                          priv->search_bar, "search-mode-enabled",
-                          G_BINDING_BIDIRECTIONAL);
 
   priv->views[GCAL_WINDOW_VIEW_WEEK] =
     gcal_week_view_new (priv->manager);
