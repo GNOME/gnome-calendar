@@ -986,7 +986,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, search_changed);
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
   gtk_widget_class_bind_template_callback (widget_class, stack_transition_running);
-  gtk_widget_class_bind_template_callback (widget_class, date_updated);  
+  gtk_widget_class_bind_template_callback (widget_class, date_updated);
 }
 
 static void

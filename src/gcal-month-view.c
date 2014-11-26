@@ -812,10 +812,16 @@ gcal_month_view_button_press (GtkWidget      *widget,
   return TRUE;
 }
 
-/*
- * Here we update priv->end_cell_mark in order to update the drawing
+/**
+ * gcal_month_view_motion_notify_event:
+ * @widget:
+ * @event:
+ *
+ * Update priv->end_cell_mark in order to update the drawing
  * belonging to the days involved in the event creation
- */
+ *
+ * Returns:
+ **/
 static gboolean
 gcal_month_view_motion_notify_event (GtkWidget      *widget,
                                      GdkEventMotion *event)
