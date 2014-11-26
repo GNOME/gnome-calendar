@@ -8,6 +8,7 @@
     <property name="default_width">800</property>
     <property name="default_height">600</property>
     <property name="show_menubar">False</property>
+    <signal name="key-press-event" handler="key_pressed" object="GcalWindow" swapped="no"/>
     <child>
       <object class="GtkOverlay" id="views_overlay">
         <property name="visible">True</property>
@@ -25,6 +26,7 @@
                 <property name="no_show_all">True</property>
                 <property name="hexpand">True</property>
                 <property name="show_close_button">True</property>
+		<signal name="notify::search-mode-enabled" handler="search_toggled" object="GcalWindow" swapped="no"/>
                 <child>
                   <object class="GtkGrid" id="search_entry_grid">
                     <property name="visible">True</property>
@@ -39,6 +41,7 @@
                         <property name="primary_icon_name">edit-find-symbolic</property>
                         <property name="primary_icon_activatable">False</property>
                         <property name="primary_icon_sensitive">False</property>
+			<signal name="search-changed" handler="search_changed" object="GcalWindow" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -61,6 +64,8 @@
                 <property name="vexpand">True</property>
                 <property name="transition_duration">250</property>
                 <property name="transition_type">slide-left-right</property>
+		<signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
+		<signal name="notify::transition-running" handler="stack_transition_running" object="GcalWindow" swapped="no"/>
                 <style>
                   <class name="views"/>
                 </style>
@@ -96,6 +101,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+	    <signal name="clicked" handler="date_updated" object="GcalWindow" swapped="no"/>
           </object>
         </child>
         <child type="title">
@@ -110,10 +116,12 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="use_popover">True</property>
             <child>
               <object class="GtkImage" id="menu_image">
                 <property name="can_focus">False</property>
                 <property name="icon_name">open-menu-symbolic</property>
+		<property name="icon_size">1</property>
               </object>
             </child>
           </object>
@@ -144,4 +152,13 @@
       <class name="views"/>
     </style>
   </template>
+  <object class="GtkPopover" id="popover">
+    <property name="visible">False</property>
+    <property name="relative_to">views_stack</property>
+    <child>
+      <object class="GcalNewEventWidget" id="new_event_widget">
+        <property name="visible">True</property>
+      </object>
+    </child>
+  </object>
 </interface>
