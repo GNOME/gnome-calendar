@@ -980,6 +980,15 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_overlay);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_stack);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_switcher);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, popover);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, new_event_widget);
+
+  gtk_widget_class_bind_template_callback (widget_class, key_pressed);
+  gtk_widget_class_bind_template_callback (widget_class, search_toggled);
+  gtk_widget_class_bind_template_callback (widget_class, search_changed);
+  gtk_widget_class_bind_template_callback (widget_class, view_changed);
+  gtk_widget_class_bind_template_callback (widget_class, stack_transition_running);
+  gtk_widget_class_bind_template_callback (widget_class, date_updated);  
 }
 
 static void
@@ -1029,8 +1038,6 @@ gcal_window_constructed (GObject *object)
 
 
   /* header_bar: menu */
-  gtk_menu_button_set_use_popover (GTK_MENU_BUTTON (priv->menu_button),
-                                   TRUE);
   builder = gtk_builder_new ();
   gtk_builder_add_from_resource (builder,
                                  "/org/gnome/calendar/menus.ui",
@@ -1048,7 +1055,6 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (priv->search_button, "active",
                           priv->search_bar, "search-mode-enabled",
                           G_BINDING_BIDIRECTIONAL);
-
 
   priv->views[GCAL_WINDOW_VIEW_WEEK] =
     gcal_week_view_new (priv->manager);
@@ -1086,18 +1092,7 @@ gcal_window_constructed (GObject *object)
                           "active-date",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
-  /* popover and content */
-  priv->popover = gtk_popover_new (GTK_WIDGET(priv->views_stack));
-
-  priv->new_event_widget = gcal_new_event_widget_new ();
-
-  gtk_container_add (GTK_CONTAINER(priv->popover),
-                     GTK_WIDGET(priv->new_event_widget));
-
   /* signals connection/handling */
-  g_signal_connect (object, "key-press-event",
-                    G_CALLBACK (key_pressed), object);
-
   /* HACK to ensure proper destroy of search-view widget */
   g_signal_connect_swapped (priv->views_stack, "destroy",
                             G_CALLBACK (gtk_widget_destroy),
@@ -1119,19 +1114,6 @@ gcal_window_constructed (GObject *object)
                             G_CALLBACK (event_activated), object);
         }
     }
-
-  g_signal_connect (priv->search_bar, "notify::search-mode-enabled",
-                    G_CALLBACK (search_toggled), object);
-  g_signal_connect (priv->search_entry, "search-changed",
-                    G_CALLBACK (search_changed), object);
-
-  g_signal_connect (priv->views_stack, "notify::visible-child",
-                    G_CALLBACK (view_changed), object);
-  g_signal_connect (priv->views_stack, "notify::transition-running",
-                    G_CALLBACK (stack_transition_running), object);
-
-  g_signal_connect (priv->today_button, "clicked",
-                    G_CALLBACK (date_updated), object);
 
   g_signal_connect (gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)),
                     "clicked", G_CALLBACK (date_updated), object);
