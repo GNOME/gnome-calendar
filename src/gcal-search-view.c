@@ -99,7 +99,7 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
       PROP_DATE,
       g_param_spec_boxed ("active-date",
                           "The active date",
-                          "The active/selecetd date in the view",
+                          "The active/selected date in the view",
                           ICAL_TIME_TYPE,
                           G_PARAM_READWRITE));
 
