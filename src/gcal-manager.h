@@ -71,6 +71,11 @@ void           gcal_manager_set_subscriber          (GcalManager        *manager
                                                      time_t              range_start,
                                                      time_t              range_end);
 
+void           gcal_manager_set_search_subscriber   (GcalManager        *manager,
+                                                     ECalDataModelSubscriber *subscriber,
+                                                     time_t              range_start,
+                                                     time_t              range_end);
+
 void           gcal_manager_set_query               (GcalManager        *manager,
                                                      const gchar        *query);
 
