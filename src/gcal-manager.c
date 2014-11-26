@@ -42,6 +42,7 @@ typedef struct
   ESourceRegistry *source_registry;
 
   ECalDataModel   *e_data_model;
+  ECalDataModel   *search_data_model;
 
   GCancellable    *async_ops;
 
@@ -269,6 +270,7 @@ on_client_connected (GObject      *source_object,
                e_source_get_uid (source));
 
       e_cal_data_model_add_client (priv->e_data_model, client);
+      e_cal_data_model_add_client (priv->search_data_model, client);
       g_clear_object (&client);
     }
   else
@@ -348,6 +350,8 @@ remove_source (GcalManager  *manager,
 
   e_cal_data_model_remove_client (priv->e_data_model,
                                   e_source_get_uid (source));
+  e_cal_data_model_remove_client (priv->search_data_model,
+                                  e_source_get_uid (source));
   g_hash_table_remove (priv->clients, source);
 }
 
@@ -418,9 +422,13 @@ gcal_manager_init (GcalManager *self)
 
   /* create data model */
   priv->e_data_model = e_cal_data_model_new (submit_thread_job);
+  priv->search_data_model = e_cal_data_model_new (submit_thread_job);
 
   e_cal_data_model_set_expand_recurrences (priv->e_data_model, TRUE);
   e_cal_data_model_set_timezone (priv->e_data_model,
+                                 priv->system_timezone);
+  e_cal_data_model_set_expand_recurrences (priv->search_data_model, TRUE);
+  e_cal_data_model_set_timezone (priv->search_data_model,
                                  priv->system_timezone);
 }
 
@@ -433,6 +441,8 @@ gcal_manager_finalize (GObject *object)
 
   if (priv->e_data_model != NULL)
     g_object_unref (priv->e_data_model);
+  if (priv->search_data_model != NULL)
+    g_object_unref (priv->search_data_model);
 
   g_hash_table_destroy (priv->clients);
 }
@@ -531,6 +541,20 @@ gcal_manager_set_subscriber (GcalManager             *manager,
                               range_start, range_end);
 }
 
+void
+gcal_manager_set_search_subscriber (GcalManager             *manager,
+                                    ECalDataModelSubscriber *subscriber,
+                                    time_t                   range_start,
+                                    time_t                   range_end)
+{
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (manager);
+  e_cal_data_model_subscribe (priv->search_data_model,
+                              subscriber,
+                              range_start, range_end);
+}
+
 /**
  * gcal_manager_set_query:
  * @manager: A #GcalManager instance
@@ -547,7 +571,7 @@ gcal_manager_set_query (GcalManager *manager,
   GcalManagerPrivate *priv;
 
   priv = gcal_manager_get_instance_private (manager);
-  e_cal_data_model_set_filter (priv->e_data_model,
+  e_cal_data_model_set_filter (priv->search_data_model,
                                query != NULL ? query : "#t");
 }
 
