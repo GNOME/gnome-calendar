@@ -200,6 +200,8 @@ gcal_new_event_widget_set_default_calendar (GcalNewEventWidget *widget,
   GtkWidget *image;
 
   priv = gcal_new_event_widget_get_instance_private (widget);
+  color_name = NULL;
+  uid = NULL;
 
   menu = gtk_menu_button_get_popup (GTK_MENU_BUTTON (priv->calendar_button));
   for (l = gtk_container_get_children (GTK_CONTAINER (menu));
