@@ -1,72 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.18.1 -->
 <interface>
-  <!-- interface-requires gtk+ 3.10 -->
+  <requires lib="gtk+" version="3.10"/>
   <template class="GcalNavBar" parent="GtkGrid">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="hexpand">True</property>
     <property name="column_spacing">12</property>
-    <property name="margin">6</property>
-    <child>
-      <object class="GtkBox" id="nav_box">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="valign">center</property>
-        <style>
-          <class name="linked"/>
-        </style>
-        <child>
-          <object class="GtkButton" id="back_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-	    <property name="focus_on_click">False</property>
-            <style>
-              <class name="nav-button"/>
-            </style>
-            <child>
-              <object class="GtkImage" id="image2">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_name">go-previous-symbolic</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="forward_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-	    <property name="focus_on_click">False</property>
-            <style>
-              <class name="nav-button"/>
-            </style>
-            <child>
-              <object class="GtkImage" id="image1">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_name">go-next-symbolic</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-      <packing>
-        <property name="left_attach">0</property>
-        <property name="top_attach">0</property>
-        <property name="width">1</property>
-        <property name="height">1</property>
-      </packing>
-    </child>
     <child>
       <object class="GtkLabel" id="left_label">
         <property name="visible">True</property>
@@ -76,10 +16,8 @@
         </style>
       </object>
       <packing>
-        <property name="left_attach">1</property>
+        <property name="left_attach">0</property>
         <property name="top_attach">0</property>
-        <property name="width">1</property>
-        <property name="height">1</property>
       </packing>
     </child>
     <child>
@@ -87,17 +25,15 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="halign">end</property>
-	<property name="hexpand">True</property>
+        <property name="hexpand">True</property>
         <style>
           <class name="nav-header"/>
           <class name="dim-label"/>
         </style>
       </object>
       <packing>
-        <property name="left_attach">2</property>
+        <property name="left_attach">1</property>
         <property name="top_attach">0</property>
-        <property name="width">1</property>
-        <property name="height">1</property>
       </packing>
     </child>
   </template>
