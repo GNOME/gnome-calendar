@@ -99,16 +99,16 @@ static void     on_event_updated                         (GObject          *sour
                                                           GAsyncResult     *result,
                                                           gpointer          user_data);
 
+static void     on_event_removed                          (GObject         *source_object,
+                                                           GAsyncResult    *result,
+                                                           gpointer         user_data);
+
 static void     remove_source                             (GcalManager     *manager,
                                                            ESource         *source);
 
 /* class_init && init vfuncs */
 
 static void     gcal_manager_finalize                     (GObject         *object);
-
-static void     gcal_manager_on_event_removed             (GObject         *source_object,
-                                                           GAsyncResult    *result,
-                                                           gpointer         user_data);
 
 static void     gcal_manager_on_event_created             (GObject         *source_object,
                                                            GAsyncResult    *result,
@@ -337,6 +337,37 @@ on_event_updated (GObject      *source_object,
   g_object_unref (E_CAL_COMPONENT (user_data));
 }
 
+/**
+ * on_event_removed:
+ * @source_object: {@link ECalClient} source
+ * @result: result of the operation
+ * @user_data: an {@link ECalComponent}
+ *
+ * Called when an component is removed. Currently, it only checks for
+ * error, but a more sophisticated implementation will come in no time.*
+ *
+ **/
+static void
+on_event_removed (GObject      *source_object,
+                  GAsyncResult *result,
+                  gpointer      user_data)
+{
+  ECalClient *client;
+  GError *error;
+
+  client = E_CAL_CLIENT (source_object);
+
+  error = NULL;
+  if (!e_cal_client_remove_object_finish (client, result, &error))
+    {
+      /* FIXME: Notify the user somehow */
+      g_warning ("Error removing event: %s", error->message);
+      g_error_free (error);
+    }
+
+  g_object_unref (E_CAL_COMPONENT (user_data));
+}
+
 void
 remove_source (GcalManager  *manager,
                ESource      *source)
@@ -445,35 +476,6 @@ gcal_manager_finalize (GObject *object)
     g_object_unref (priv->search_data_model);
 
   g_hash_table_destroy (priv->clients);
-}
-
-static void
-gcal_manager_on_event_removed (GObject      *source_object,
-                               GAsyncResult *result,
-                               gpointer      user_data)
-{
-  ECalClient *client;
-  DeleteEventData *data;
-  GError *error;
-
-  client = E_CAL_CLIENT (source_object);
-  data = (DeleteEventData*) user_data;
-
-  error = NULL;
-  if (e_cal_client_remove_object_finish (client, result, &error))
-    {
-      /* removing events from hash */
-      /* FIXME: add notification to UI */
-      g_debug ("Found and removed: %s", data->event_uid);
-    }
-  else
-    {
-      //FIXME: do something when there was some error
-      ;
-    }
-
-  g_free (data->event_uid);
-  g_free (data);
 }
 
 static void
@@ -692,32 +694,6 @@ gcal_manager_is_client_writable (GcalManager *manager,
 }
 
 void
-gcal_manager_remove_event (GcalManager *manager,
-                           const gchar *source_uid,
-                           const gchar *event_uid)
-{
-  GcalManagerPrivate *priv;
-  GcalManagerUnit *unit;
-  DeleteEventData *data;
-
-  priv = gcal_manager_get_instance_private (manager);
-
-  unit = g_hash_table_lookup (priv->clients, source_uid);
-
-  data = g_new0 (DeleteEventData, 1);
-  data->event_uid = g_strdup (event_uid);
-  data->unit = unit;
-  data->manager = manager;
-  e_cal_client_remove_object (unit->client,
-                              event_uid,
-                              NULL,
-                              E_CAL_OBJ_MOD_ALL,
-                              priv->async_ops,
-                              gcal_manager_on_event_removed,
-                              data);
-}
-
-void
 gcal_manager_create_event (GcalManager        *manager,
                            const gchar        *source_uid,
                            const gchar        *summary,
@@ -794,6 +770,31 @@ gcal_manager_update_event (GcalManager   *manager,
                               NULL,
                               on_event_updated,
                               component);
+}
+
+void
+gcal_manager_remove_event (GcalManager   *manager,
+                           ESource       *source,
+                           ECalComponent *component)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  ECalComponentId *id;
+
+  priv = gcal_manager_get_instance_private (manager);
+
+  unit = g_hash_table_lookup (priv->clients, source);
+  id = e_cal_component_get_id (component);
+
+  e_cal_client_remove_object (unit->client,
+                              id->uid,
+                              id->rid,
+                              E_CAL_OBJ_MOD_THIS,
+                              priv->async_ops,
+                              on_event_removed,
+                              component);
+
+  e_cal_component_free_id (id);
 }
 
 void
