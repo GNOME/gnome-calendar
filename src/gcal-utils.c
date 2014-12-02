@@ -349,6 +349,43 @@ get_desc_from_component (ECalComponent *component,
   return desc;
 }
 
+/**
+ * get_uuid_from_component:
+ * @source: an {@link ESource}
+ * @component: an {@link ECalComponent}
+ *
+ * Obtains the uuid from a component in the form
+ * "source_uid:event_uid:event_rid" or "source:uid:event_uid" if the
+ * component doesn't hold a recurrence event
+ *
+ * Returns: (Transfer full) a new allocated string with the description
+ **/
+gchar*
+get_uuid_from_component (ESource       *source,
+                         ECalComponent *component)
+{
+  gchar *uuid;
+  ECalComponentId *id;
+
+  id = e_cal_component_get_id (component);
+  if (id->rid != NULL)
+    {
+      uuid = g_strdup_printf ("%s:%s:%s",
+                              e_source_get_uid (source),
+                              id->uid,
+                              id->rid);
+    }
+  else
+    {
+      uuid = g_strdup_printf ("%s:%s",
+                              e_source_get_uid (source),
+                              id->uid);
+    }
+  e_cal_component_free_id (id);
+
+  return uuid;
+}
+
 gint
 get_first_weekday (void)
 {

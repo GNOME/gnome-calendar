@@ -81,6 +81,9 @@ void            print_date                                      (const gchar*   
 gchar*          get_desc_from_component                         (ECalComponent         *component,
                                                                  const gchar           *joint_char);
 
+gchar*          get_uuid_from_component                         (ESource               *source,
+                                                                 ECalComponent         *component);
+
 gint            get_first_weekday                               (void);
 
 /* code brought from evolution */
