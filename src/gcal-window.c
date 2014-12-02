@@ -70,7 +70,9 @@ typedef struct
   GtkWidget           *menu_button;
   GtkWidget           *search_button;
   GtkWidget           *search_entry;
+  GtkWidget           *back_button;
   GtkWidget           *today_button;
+  GtkWidget           *forward_button;
   GtkWidget           *views_switcher;
 
   /* day, week, month, year, list, search */
@@ -235,7 +237,7 @@ date_updated (GtkButton  *button,
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   move_today = priv->today_button == (GtkWidget*) button;
-  move_back = gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)) == (GtkWidget*) button;
+  move_back = priv->back_button == (GtkWidget*) button;
 
   if (move_today)
     {
@@ -974,7 +976,9 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_bar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_entry);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, back_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, today_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, forward_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_overlay);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_stack);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_switcher);
@@ -1109,11 +1113,6 @@ gcal_window_constructed (GObject *object)
                             G_CALLBACK (event_activated), object);
         }
     }
-
-  g_signal_connect (gcal_nav_bar_get_prev_button (GCAL_NAV_BAR (priv->nav_bar)),
-                    "clicked", G_CALLBACK (date_updated), object);
-  g_signal_connect (gcal_nav_bar_get_next_button (GCAL_NAV_BAR (priv->nav_bar)),
-                    "clicked", G_CALLBACK (date_updated), object);
 }
 
 static void
