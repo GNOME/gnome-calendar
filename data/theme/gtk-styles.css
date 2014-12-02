@@ -9,8 +9,15 @@
     background-image: none;
 }
 
-.nav-header {
-    font: bold 12;
+/* nav-bar labels */
+.start-header {
+    font: bold 18;
+    color: @theme_selected_bg_color;
+    padding: 12px;
+}
+
+.end-header {
+    font: bold 18;
     padding: 12px;
 }
 
