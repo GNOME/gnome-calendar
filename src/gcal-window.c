@@ -92,9 +92,8 @@ typedef struct
   gboolean             leaving_search_mode;
 
   NewEventData        *event_creation_data;
-  /* FIXME: Review to see if this are needed */
-  /* temp to keep the will_delete event uuid */
-  gchar               *event_to_delete;
+
+  GcalEventData       *event_to_delete;
 
   /* temp to keep event_creation */
   gboolean             open_edit_dialog;
@@ -764,6 +763,8 @@ edit_dialog_closed (GtkDialog *dialog,
   ECalComponent *component;
   GcalView *view;
 
+  gchar *uuid;
+
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   gtk_widget_hide (GTK_WIDGET (dialog));
@@ -791,13 +792,20 @@ edit_dialog_closed (GtkDialog *dialog,
       gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification),
                                      TRUE);
 
-      priv->event_to_delete =
-        gcal_edit_dialog_get_event_uuid (edit_dialog);
+      /* FIXME: this will crash if the notification is still open */
+      if (priv->event_to_delete != NULL)
+        g_free (priv->event_to_delete);
 
+      priv->event_to_delete = g_new0 (GcalEventData, 1);
+      priv->event_to_delete->source =
+        gcal_edit_dialog_get_source (edit_dialog);
+      priv->event_to_delete->event_component =
+        gcal_edit_dialog_get_component (edit_dialog);
+
+      uuid = gcal_edit_dialog_get_event_uuid (edit_dialog);
       /* hide widget of the event */
-      gtk_widget_hide (gcal_view_get_by_uuid (view,
-                                              priv->event_to_delete));
-
+      gtk_widget_hide (gcal_view_get_by_uuid (view, uuid));
+      g_free (uuid);
       break;
 
     case GTK_RESPONSE_CANCEL:
@@ -896,7 +904,6 @@ remove_event (GtkWidget       *notification,
                           gpointer         user_data)
 {
   GcalWindowPrivate *priv;
-  gchar **tokens;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
@@ -905,13 +912,11 @@ remove_event (GtkWidget       *notification,
 
   if (priv->event_to_delete != NULL)
     {
-      tokens = g_strsplit (priv->event_to_delete, ":", 2);
+      gcal_manager_remove_event (priv->manager,
+                                 priv->event_to_delete->source,
+                                 priv->event_to_delete->event_component);
 
-      gcal_manager_remove_event (priv->manager, tokens[0], tokens[1]);
-
-      g_strfreev (tokens);
-      g_free (priv->event_to_delete);
-      priv->event_to_delete = NULL;
+      g_clear_pointer (&(priv->event_to_delete), g_free);
     }
 }
 
@@ -920,19 +925,24 @@ undo_remove_event (GtkButton *button,
                    gpointer   user_data)
 {
   GcalWindowPrivate *priv;
+  gchar *uuid;
   GtkWidget *event_widget;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   if (priv->event_to_delete != NULL)
     {
+      uuid = get_uuid_from_component (
+                 priv->event_to_delete->source,
+                 priv->event_to_delete->event_component);
       event_widget = gcal_view_get_by_uuid (
           GCAL_VIEW (priv->views[priv->active_view]),
-          priv->event_to_delete);
+          uuid);
+
       gtk_widget_show (event_widget);
 
-      g_free (priv->event_to_delete);
-      priv->event_to_delete = NULL;
+      g_clear_pointer (&(priv->event_to_delete), g_free);
+      g_free (uuid);
 
       gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification),
                                      FALSE);

@@ -91,10 +91,6 @@ void           gcal_manager_refresh                 (GcalManager        *manager
 gboolean       gcal_manager_is_client_writable      (GcalManager        *manager,
                                                      ESource            *source);
 
-void           gcal_manager_remove_event            (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid);
-
 /* Create method */
 void           gcal_manager_create_event            (GcalManager        *manager,
                                                      const gchar        *source_uid,
@@ -104,6 +100,11 @@ void           gcal_manager_create_event            (GcalManager        *manager
 
 /* Update method */
 void           gcal_manager_update_event            (GcalManager        *manager,
+                                                     ESource            *source,
+                                                     ECalComponent      *component);
+
+/* Remove method */
+void           gcal_manager_remove_event            (GcalManager        *manager,
                                                      ESource            *source,
                                                      ECalComponent      *component);
 
