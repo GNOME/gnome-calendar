@@ -1149,6 +1149,7 @@ gcal_window_set_property (GObject      *object,
     {
     case PROP_ACTIVE_VIEW:
       priv->active_view = g_value_get_enum (value);
+      gtk_widget_show (priv->views[priv->active_view]);
       gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
                                    priv->views[priv->active_view]);
 
