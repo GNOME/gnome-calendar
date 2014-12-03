@@ -293,9 +293,78 @@
   <object class="GtkPopover" id="popover">
     <property name="visible">False</property>
     <property name="relative_to">views_stack</property>
+    <signal name="closed" handler="close_new_event_widget" object="GcalWindow" swapped="no"/>
     <child>
-      <object class="GcalNewEventWidget" id="new_event_widget">
+      <object class="GtkGrid">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="border_width">14</property>
+        <child>
+          <object class="GtkGrid">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="row_spacing">18</property>
+            <property name="column_spacing">12</property>
+            <property name="column_homogeneous">True</property>
+            <child>
+              <object class="GtkLabel" id="new_event_title_label">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+                <property name="width">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="new_event_create_button">
+                <property name="label" translatable="yes">Create</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="create_event" object="GcalWindow" swapped="yes"/>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="new_event_details_button">
+                <property name="label" translatable="yes">More Details</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="create_event" object="GcalWindow" swapped="yes"/>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="new_event_what_entry">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
+                <signal name="activate" handler="create_event" object="GcalWindow" swapped="yes"/>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+                <property name="width">2</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">0</property>
+          </packing>
+        </child>
       </object>
     </child>
   </object>
