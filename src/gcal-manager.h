@@ -22,8 +22,6 @@
 
 #include "e-cal-data-model.h"
 
-#include <gtk/gtk.h>
-
 #include <libical/icaltime.h>
 
 G_BEGIN_DECLS
@@ -62,7 +60,9 @@ GType          gcal_manager_get_type                (void);
 
 GcalManager*   gcal_manager_new                     (void);
 
-GtkListStore*  gcal_manager_get_sources_model       (GcalManager        *manager);
+GList*         gcal_manager_get_sources             (GcalManager        *manager);
+
+ESource*       gcal_manager_get_default_source      (GcalManager        *manager);
 
 icaltimezone*  gcal_manager_get_system_timezone     (GcalManager        *manager);
 
@@ -83,8 +83,6 @@ gchar*         gcal_manager_add_source              (GcalManager        *manager
                                                      const gchar        *name,
                                                      const gchar        *backend,
                                                      const gchar        *color);
-
-gchar*         gcal_manager_get_default_source      (GcalManager        *manager);
 
 void           gcal_manager_refresh                 (GcalManager        *manager);
 

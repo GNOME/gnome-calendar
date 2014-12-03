@@ -524,8 +524,6 @@ prepare_new_event_widget (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
 
-  gchar *uid;
-
   struct tm tm_date;
   gchar start[64];
   gchar *title_date;
@@ -543,16 +541,6 @@ prepare_new_event_widget (GcalWindow *window)
 
   gcal_new_event_widget_set_title (new_widget, title_date);
   g_free (title_date);
-
-  /* FIXME: do this somehow since GcalManager doesn't keep
-     a list store of calendars anymore, and this is a stub method */
-  gcal_new_event_widget_set_calendars (
-      new_widget,
-      GTK_TREE_MODEL (gcal_manager_get_sources_model (priv->manager)));
-
-  uid = gcal_manager_get_default_source (priv->manager);
-  gcal_new_event_widget_set_default_calendar (new_widget, uid);
-  g_free (uid);
 
   /* clear entry */
   widget = gcal_new_event_widget_get_entry (new_widget);
@@ -688,7 +676,7 @@ create_event (gpointer   user_data,
 
   GcalNewEventWidget *new_widget;
 
-  gchar *uid;
+  ESource *source;
   gchar *summary;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
@@ -697,16 +685,16 @@ create_event (gpointer   user_data,
   if (widget == gcal_new_event_widget_get_details_button (new_widget))
     priv->open_edit_dialog = TRUE;
 
-  uid = gcal_new_event_widget_get_calendar_uid (new_widget);
+  source = gcal_manager_get_default_source (priv->manager);
   summary = gcal_new_event_widget_get_summary (new_widget);
 
   /* create the event */
   gcal_manager_create_event (priv->manager,
-                             uid, summary,
+                             e_source_get_uid (source), summary,
                              priv->event_creation_data->start_date,
                              priv->event_creation_data->end_date);
 
-  g_free (uid);
+  g_object_unref (source);
   g_free (summary);
   /* reset and hide */
   set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
