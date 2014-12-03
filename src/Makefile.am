@@ -43,8 +43,6 @@ gnome_calendar_SOURCES =                                  \
     gcal-search-view.c                                    \
     gcal-event-widget.c                                   \
     gcal-event-widget.h                                   \
-    gcal-new-event-widget.c                               \
-    gcal-new-event-widget.h                               \
     gcal-edit-dialog.c                                    \
     gcal-edit-dialog.h                                    \
     gcal-time-entry.c                                     \

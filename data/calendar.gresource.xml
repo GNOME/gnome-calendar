@@ -4,7 +4,6 @@
     <file alias="edit-dialog.ui" compressed="true" preprocess="xml-stripblanks">ui/edit-dialog.ui</file>
     <file alias="menus.ui" compressed="true" preprocess="xml-stripblanks">ui/menus.ui</file>
     <file alias="nav_bar.ui" compressed="true" preprocess="xml-stripblanks">ui/nav_bar.ui</file>
-    <file alias="new-event.ui" compressed="true" preprocess="xml-stripblanks">ui/new-event.ui</file>
     <file alias="window.ui" compressed="true" preprocess="xml-stripblanks">ui/window.ui</file>
     <file alias="gtk-styles.css" compressed="true">theme/gtk-styles.css</file>
   </gresource>
