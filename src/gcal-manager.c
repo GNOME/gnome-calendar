@@ -512,12 +512,38 @@ gcal_manager_new (void)
   return GCAL_MANAGER (g_object_new (GCAL_TYPE_MANAGER, NULL));
 }
 
-GtkListStore*
-gcal_manager_get_sources_model (GcalManager *manager)
+/**
+ * gcal_manager_get_sources:
+ * @manager:
+ *
+ * Retrieve a list of the sources used in the application.
+ *
+ * Returns: (Transfer full) a {@link GList} object
+ * to be freed with g_list_free()
+ **/
+GList*
+gcal_manager_get_sources (GcalManager *manager)
 {
-  /* FIXME: stub code, since we don't keep a calendars list-store
-   anymore */
-  return NULL;
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (manager);
+  return g_hash_table_get_keys (priv->clients);
+}
+
+/**
+ * gcal_manager_get_default_source:
+ * @manager: App singleton {@link GcalManager} instance
+ *
+ * Returns: (Transfer full): an {@link ESource} object. Free with g_object_unref().
+ **/
+ESource*
+gcal_manager_get_default_source (GcalManager *manager)
+{
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (manager);
+
+  return e_source_registry_ref_default_calendar (priv->source_registry);
 }
 
 icaltimezone*
@@ -632,23 +658,6 @@ gcal_manager_add_source (GcalManager *manager,
 
   load_source (manager, source);
   return e_source_dup_uid (source);
-}
-
-gchar*
-gcal_manager_get_default_source (GcalManager *manager)
-{
-  GcalManagerPrivate *priv;
-
-  ESource *edefault;
-  gchar *source_uid;
-
-  priv = gcal_manager_get_instance_private (manager);
-
-  edefault = e_source_registry_ref_default_calendar (priv->source_registry);
-  source_uid = e_source_dup_uid (edefault);
-
-  g_object_unref (edefault);
-  return source_uid;
 }
 
 void
