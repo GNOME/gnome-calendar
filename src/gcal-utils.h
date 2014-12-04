@@ -86,6 +86,10 @@ gchar*          get_uuid_from_component                         (ESource        
 
 gint            get_first_weekday                               (void);
 
+ECalComponent*  build_component_from_details                    (const gchar           *summary,
+                                                                 const icaltimetype    *initial_date,
+                                                                 const icaltimetype    *final_date);
+
 /* code brought from evolution */
 gsize           e_strftime_fix_am_pm                            (gchar                 *str,
                                                                  gsize                  max,
