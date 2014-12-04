@@ -16,5 +16,7 @@ Code formating and ordering
 + The methods prototype will always be placed at the top of the source, in the
   same order as their implementation below.
 
++ Lines will have 120 chars of width. I've been to long of just 80
+
 + Line splitting will work accordingly to Gtk+ code style, adding the following:
-  1. Pure mathematic calculation can extend over the 80 pixel line
+  1. Pure mathematic calculation can extend over the 120 pixel line
