@@ -29,6 +29,7 @@ typedef struct
 {
   gchar            *source_uid;
   gchar            *event_uid;
+  gchar            *event_rid;
   gboolean          writable;
 
   GcalManager      *manager;
@@ -637,7 +638,7 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   gboolean all_day;
   gchar *description;
 
-  const gchar *uid = NULL;
+  ECalComponentId *id;
   ECalComponentText e_summary;
   ECalComponentDateTime dtstart;
   ECalComponentDateTime dtend;
@@ -656,10 +657,20 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
     g_free (priv->source_uid);
   priv->source_uid = g_strdup (e_source_get_uid (priv->source));
 
+  id = e_cal_component_get_id (priv->component);
+
   if (priv->event_uid != NULL)
     g_free (priv->event_uid);
-  e_cal_component_get_uid (priv->component, &uid);
-  priv->event_uid = g_strdup (uid);
+  priv->event_uid = g_strdup (id->uid);
+
+  if (priv->event_rid != NULL)
+    g_clear_pointer (&(priv->event_rid), g_free);
+  if (id->rid != NULL)
+    {
+      priv->event_rid = g_strdup (id->rid);
+    }
+
+  e_cal_component_free_id (id);
 
   /* Clear event data */
   gcal_edit_dialog_clear_data (dialog);
@@ -803,6 +814,7 @@ gchar*
 gcal_edit_dialog_get_event_uuid (GcalEditDialog *dialog)
 {
   GcalEditDialogPrivate *priv;
+  gchar *uuid;
 
   priv = gcal_edit_dialog_get_instance_private (dialog);
 
@@ -811,7 +823,22 @@ gcal_edit_dialog_get_event_uuid (GcalEditDialog *dialog)
     {
       return NULL;
     }
-  return g_strdup_printf ("%s:%s", priv->source_uid, priv->event_uid);
+
+  if (priv->event_rid != NULL)
+    {
+      uuid = g_strdup_printf ("%s:%s:%s",
+                              priv->source_uid,
+                              priv->event_uid,
+                              priv->event_rid);
+    }
+  else
+    {
+      uuid = g_strdup_printf ("%s:%s",
+                              priv->source_uid,
+                              priv->event_uid);
+   }
+
+  return uuid;
 }
 
 icaltimetype*
