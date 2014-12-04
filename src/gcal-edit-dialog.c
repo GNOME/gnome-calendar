@@ -58,6 +58,8 @@ typedef struct
   ESource          *source; /* weak reference */
   ECalComponent    *component;
 
+  /* flags */
+  gboolean          event_is_new;
   gboolean          setting_event;
 } GcalEditDialogPrivate;
 
@@ -490,6 +492,9 @@ gcal_edit_dialog_finalize (GObject *object)
   if (priv->event_uid != NULL)
     g_free (priv->event_uid);
 
+  if (priv->source != NULL)
+    g_object_unref (priv->source);
+
   if (priv->component != NULL)
     g_object_unref (priv->component);
 
@@ -588,10 +593,18 @@ static void
 gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
                                         gpointer   user_data)
 {
+  GcalEditDialogPrivate *priv;
   gint response;
 
+  priv = gcal_edit_dialog_get_instance_private (GCAL_EDIT_DIALOG (user_data));
   response = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget),
                                                   "response"));
+
+  if (response == GCAL_RESPONSE_SAVE_EVENT &&
+      priv->event_is_new)
+    {
+      response = GCAL_RESPONSE_CREATE_EVENT;
+    }
 
   gtk_dialog_response (GTK_DIALOG (user_data), response);
 }
@@ -626,6 +639,16 @@ gcal_edit_dialog_new (void)
 }
 
 void
+gcal_edit_dialog_set_event_is_new (GcalEditDialog *dialog,
+                                   gboolean        event_is_new)
+{
+  GcalEditDialogPrivate *priv;
+
+  priv = gcal_edit_dialog_get_instance_private (dialog);
+  priv->event_is_new = event_is_new;
+}
+
+void
 gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
                                  GcalEventData  *data)
 {
@@ -648,7 +671,10 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
 
   priv->setting_event = TRUE;
 
-  priv->source = data->source;
+  if (priv->source != NULL)
+    g_clear_object (&(priv->source));
+  priv->source = g_object_ref (data->source);
+
   if (priv->component != NULL)
     g_object_unref (priv->component);
   priv->component = e_cal_component_clone (data->event_component);
@@ -922,4 +948,3 @@ gcal_edit_dialog_get_end_date (GcalEditDialog *dialog)
 
   return date;
 }
-
