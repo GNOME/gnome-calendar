@@ -20,7 +20,14 @@
 #include "gcal-manager.h"
 #include "gcal-utils.h"
 
-typedef struct _GcalManagerUnit
+typedef struct
+{
+  ESource       *source;
+  ECalComponent *component;
+  GcalManager   *manager;
+} AsyncOpsData;
+
+typedef struct
 {
   ECalClient     *client;
 
@@ -48,10 +55,6 @@ typedef struct
 
   /* timezone */
   icaltimezone    *system_timezone;
-
-  /* uid of pending create event actions */
-  gchar           *pending_event_uid;
-  gchar           *pending_event_source;
 } GcalManagerPrivate;
 
 /* FIXME: review */
@@ -84,6 +87,8 @@ enum
 
 static guint signals[LAST_SIGNAL];
 
+static void     free_async_ops_data                       (AsyncOpsData    *data);
+
 static void     load_source                               (GcalManager     *manager,
                                                            ESource         *source);
 
@@ -92,6 +97,10 @@ static void     on_client_connected                       (GObject         *sour
                                                            gpointer         user_data);
 
 static void     on_client_refreshed                       (GObject         *source_object,
+                                                           GAsyncResult    *result,
+                                                           gpointer         user_data);
+
+static void     on_event_created                          (GObject         *source_object,
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
 
@@ -109,10 +118,6 @@ static void     remove_source                             (GcalManager     *mana
 /* class_init && init vfuncs */
 
 static void     gcal_manager_finalize                     (GObject         *object);
-
-static void     gcal_manager_on_event_created             (GObject         *source_object,
-                                                           GAsyncResult    *result,
-                                                           gpointer         user_data);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalManager, gcal_manager, G_TYPE_OBJECT)
 
@@ -197,6 +202,13 @@ submit_thread_job (EThreadJobFunc func,
   return cancellable;
 }
 /* -- end: threading related code provided by Milan Crha -- */
+
+static void
+free_async_ops_data (AsyncOpsData *data)
+{
+  g_object_unref (data->component);
+  g_free (data);
+}
 
 /**
  * load_source:
@@ -307,6 +319,36 @@ on_client_refreshed (GObject      *source_object,
       /* FIXME: do something when there was some error */
       g_warning ("Error synchronizing client");
     }
+}
+
+static void
+on_event_created (GObject      *source_object,
+                  GAsyncResult *result,
+                  gpointer      user_data)
+{
+  AsyncOpsData *data;
+  ECalClient *client;
+  gchar *new_uid;
+  GError *error;
+
+  data = (AsyncOpsData*) user_data;
+  client = E_CAL_CLIENT (source_object);
+  error = NULL;
+
+  if (e_cal_client_create_object_finish (client, result, &new_uid, &error))
+    {
+      g_signal_emit (data->manager, signals[EVENT_CREATED], 0,
+                     e_source_get_uid (data->source), new_uid);
+    }
+  else
+    {
+      /* Some error */
+      g_warning ("Error creating object: %s", error->message);
+      g_error_free (error);
+    }
+
+  g_free (new_uid);
+  free_async_ops_data (data);
 }
 
 /**
@@ -476,26 +518,6 @@ gcal_manager_finalize (GObject *object)
     g_object_unref (priv->search_data_model);
 
   g_hash_table_destroy (priv->clients);
-}
-
-static void
-gcal_manager_on_event_created (GObject      *source_object,
-                               GAsyncResult *result,
-                               gpointer      user_data)
-{
-  ECalClient *client;
-  gchar *new_uid;
-  GError *error;
-
-  client = E_CAL_CLIENT (source_object);
-  error = NULL;
-  if (! e_cal_client_create_object_finish (client, result, &new_uid, &error))
-    {
-      /* Some error */
-      g_warning ("Error creating object: %s", error->message);
-      g_error_free (error);
-    }
-  g_free (new_uid);
 }
 
 /* Public API */
@@ -704,62 +726,31 @@ gcal_manager_is_client_writable (GcalManager *manager,
 
 void
 gcal_manager_create_event (GcalManager        *manager,
-                           const gchar        *source_uid,
-                           const gchar        *summary,
-                           const icaltimetype *initial_date,
-                           const icaltimetype *final_date)
+                           ESource            *source,
+                           ECalComponent      *component)
 {
   GcalManagerPrivate *priv;
+
   GcalManagerUnit *unit;
-  ECalComponent *event;
-  ECalComponentDateTime dt;
-  ECalComponentText summ;
   icalcomponent *new_event_icalcomp;
-  icaltimetype *dt_start;
+  AsyncOpsData *data;
 
   priv = gcal_manager_get_instance_private (manager);
 
-  unit = g_hash_table_lookup (priv->clients, source_uid);
+  unit = g_hash_table_lookup (priv->clients, source);
 
-  event = e_cal_component_new ();
-  e_cal_component_set_new_vtype (event, E_CAL_COMPONENT_EVENT);
+  new_event_icalcomp = e_cal_component_get_icalcomponent (component);
 
-  dt_start = gcal_dup_icaltime (initial_date);
-  dt.value = dt_start;
-  dt.tzid = NULL;
-  e_cal_component_set_dtstart (event, &dt);
-
-  if (final_date != NULL)
-    {
-      *dt.value = *final_date;
-      e_cal_component_set_dtend (event, &dt);
-    }
-  else
-    {
-      icaltime_adjust (dt_start, 1, 0, 0, 0);
-      *dt.value = *dt_start;
-      e_cal_component_set_dtend (event, &dt);
-    }
-
-  summ.altrep = NULL;
-  summ.value = summary;
-  e_cal_component_set_summary (event, &summ);
-
-  e_cal_component_commit_sequence (event);
-
-  new_event_icalcomp = e_cal_component_get_icalcomponent (event);
-
-  priv->pending_event_source = g_strdup (source_uid);
-  priv->pending_event_uid =
-    g_strdup (icalcomponent_get_uid (new_event_icalcomp));
+  data = g_new0 (AsyncOpsData, 1);
+  data->source = source;
+  data->component = component;
+  data->manager = manager;
 
   e_cal_client_create_object (unit->client,
                               new_event_icalcomp,
                               priv->async_ops,
-                              gcal_manager_on_event_created,
-                              manager);
-
-  g_object_unref (event);
+                              on_event_created,
+                              data);
 }
 
 void

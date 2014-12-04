@@ -91,10 +91,8 @@ gboolean       gcal_manager_is_client_writable      (GcalManager        *manager
 
 /* Create method */
 void           gcal_manager_create_event            (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *summary,
-                                                     const icaltimetype *initial_date,
-                                                     const icaltimetype *final_date);
+                                                     ESource            *source,
+                                                     ECalComponent      *component);
 
 /* Update method */
 void           gcal_manager_update_event            (GcalManager        *manager,
