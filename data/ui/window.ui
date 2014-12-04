@@ -98,6 +98,7 @@
             <property name="halign">center</property>
             <property name="valign">start</property>
             <property name="transition_duration">100</property>
+            <signal name="notify::child-revealed" handler="remove_event" object="GcalWindow" swapped="no"/>
             <child>
               <object class="GtkFrame">
                 <property name="visible">True</property>
@@ -146,7 +147,6 @@
                         <property name="relief">none</property>
                         <property name="focus_on_click">False</property>
                         <signal name="clicked" handler="hide_notification" object="GcalWindow" swapped="no"/>
-                        <signal name="notify::child-revealed" handler="remove_event" object="GcalWindow" swapped="no"/>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
