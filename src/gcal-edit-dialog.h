@@ -28,6 +28,7 @@ G_BEGIN_DECLS
 
 #define GCAL_RESPONSE_DELETE_EVENT 2
 #define GCAL_RESPONSE_SAVE_EVENT   4
+#define GCAL_RESPONSE_CREATE_EVENT 6
 
 
 #define GCAL_TYPE_EDIT_DIALOG                (gcal_edit_dialog_get_type ())
@@ -54,6 +55,9 @@ struct _GcalEditDialogClass
 GType                gcal_edit_dialog_get_type                (void);
 
 GtkWidget*           gcal_edit_dialog_new                     (void);
+
+void                 gcal_edit_dialog_set_event_is_new        (GcalEditDialog *dialog,
+                                                               gboolean       event_is_new);
 
 void                 gcal_edit_dialog_set_event_data          (GcalEditDialog *dialog,
                                                                GcalEventData  *data);

@@ -655,25 +655,44 @@ create_event (gpointer   user_data,
   GcalWindowPrivate *priv;
 
   ESource *source;
+  ECalComponent *comp;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
-  priv->open_edit_dialog = (widget == priv->new_event_details_button);
-
-  source = gcal_manager_get_default_source (priv->manager);
-
-  /* create the event */
-  gcal_manager_create_event (
-      priv->manager,
-      e_source_get_uid (source),
-      gtk_entry_get_text (GTK_ENTRY (priv->new_event_what_entry)),
-      priv->event_creation_data->start_date,
-      priv->event_creation_data->end_date);
-
-  g_object_unref (source);
-
   /* reset and hide */
   set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
+
+  source = gcal_manager_get_default_source (priv->manager);
+  comp = build_component_from_details (gtk_entry_get_text (GTK_ENTRY (priv->new_event_what_entry)),
+                                       priv->event_creation_data->start_date,
+                                       priv->event_creation_data->end_date);
+  if (widget == priv->new_event_details_button)
+    {
+      GcalEventData *edata;
+
+      edata = g_new0 (GcalEventData, 1);
+      edata->source = source;
+      edata->event_component = comp;
+
+      if (priv->edit_dialog == NULL)
+        init_edit_dialog (GCAL_WINDOW (user_data));
+
+      gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (priv->edit_dialog),
+                                         TRUE);
+      gcal_edit_dialog_set_event_data (GCAL_EDIT_DIALOG (priv->edit_dialog),
+                                       edata);
+      g_object_unref (comp);
+      g_free (edata);
+
+      gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
+    }
+  else
+    {
+      /* create the event */
+      gcal_manager_create_event (priv->manager, source, comp);
+    }
+
+  g_object_unref (source);
 }
 
 static void
@@ -738,6 +757,14 @@ edit_dialog_closed (GtkDialog *dialog,
 
   switch (response)
     {
+    case GCAL_RESPONSE_CREATE_EVENT:
+      /* retrieve the component from the dialog*/
+      gcal_manager_create_event (priv->manager,
+                                 gcal_edit_dialog_get_source (edit_dialog),
+                                 gcal_edit_dialog_get_component (edit_dialog));
+
+      break;
+
     case GCAL_RESPONSE_SAVE_EVENT:
       /* retrieve the component from the dialog*/
       component = gcal_edit_dialog_get_component (edit_dialog);
