@@ -226,6 +226,10 @@ key_pressed (GtkWidget *widget,
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
+  /* special case: creating an event */
+  if (priv->new_event_mode)
+    return GDK_EVENT_PROPAGATE;
+
   return gtk_search_bar_handle_event (GTK_SEARCH_BAR (priv->search_bar),
                                       event);
 }
