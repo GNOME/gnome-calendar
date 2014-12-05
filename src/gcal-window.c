@@ -209,12 +209,6 @@ static gboolean       gcal_window_configure_event        (GtkWidget           *w
 static gboolean       gcal_window_state_event            (GtkWidget           *widget,
                                                           GdkEventWindowState *event);
 
-/* GcalManager signal handling */
-static void           gcal_window_event_created          (GcalManager         *manager,
-                                                          const gchar         *source_uid,
-                                                          const gchar         *event_uid,
-                                                          gpointer             user_data);
-
 G_DEFINE_TYPE_WITH_PRIVATE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static gboolean
@@ -1303,32 +1297,6 @@ gcal_window_state_event (GtkWidget           *widget,
   return retval;
 }
 
-static void
-gcal_window_event_created (GcalManager *manager,
-                           const gchar *source_uid,
-                           const gchar *event_uid,
-                           gpointer     user_data)
-{
-  GcalWindowPrivate *priv;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  if (! priv->open_edit_dialog)
-    return;
-
-  priv->open_edit_dialog = FALSE;
-
-  if (priv->edit_dialog == NULL)
-    init_edit_dialog (GCAL_WINDOW (user_data));
-
-  /* FIXME: use new GcalEditDialog API */
-  /* gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (priv->edit_dialog), */
-  /*                             source_uid, */
-  /*                             event_uid); */
-
-  gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
-}
-
 /* Public API */
 GtkWidget*
 gcal_window_new_with_view (GcalApplication   *app,
@@ -1353,14 +1321,7 @@ gcal_window_new_with_view (GcalApplication   *app,
                         manager,
                         NULL);
 
-  /* hooking signals */
-  /* FIXME: remember to check if this is really needed */
-  g_signal_connect (manager,
-                    "event-created",
-                    G_CALLBACK (gcal_window_event_created),
-                    win);
-
-  /* init hack */
+  /* loading size */
   load_geometry (win);
 
   if (view_type == GCAL_WINDOW_VIEW_DAY)

@@ -78,15 +78,6 @@ struct _MoveEventData
 
 typedef struct _MoveEventData MoveEventData;
 
-/* Signal IDs */
-enum
-{
-  EVENT_CREATED,
-  LAST_SIGNAL
-};
-
-static guint signals[LAST_SIGNAL];
-
 static void     free_async_ops_data                       (AsyncOpsData    *data);
 
 static void     load_source                               (GcalManager     *manager,
@@ -335,12 +326,7 @@ on_event_created (GObject      *source_object,
   client = E_CAL_CLIENT (source_object);
   error = NULL;
 
-  if (e_cal_client_create_object_finish (client, result, &new_uid, &error))
-    {
-      g_signal_emit (data->manager, signals[EVENT_CREATED], 0,
-                     e_source_get_uid (data->source), new_uid);
-    }
-  else
+  if (!e_cal_client_create_object_finish (client, result, &new_uid, &error))
     {
       /* Some error */
       g_warning ("Error creating object: %s", error->message);
@@ -432,19 +418,6 @@ static void
 gcal_manager_class_init (GcalManagerClass *klass)
 {
   G_OBJECT_CLASS (klass)->finalize = gcal_manager_finalize;
-
-  /* FIXME: check if this is really needed */
-  signals[EVENT_CREATED] =
-    g_signal_new ("event-created",
-                  GCAL_TYPE_MANAGER,
-                  G_SIGNAL_RUN_FIRST,
-                  G_STRUCT_OFFSET (GcalManagerClass,
-                                   event_created),
-                  NULL, NULL, NULL,
-                  G_TYPE_NONE,
-                  2,
-                  G_TYPE_POINTER,
-                  G_TYPE_POINTER);
 }
 
 static void

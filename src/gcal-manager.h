@@ -44,10 +44,6 @@ struct _GcalManager
 struct _GcalManagerClass
 {
   GObjectClass parent_class;
-
-  /* signals */
-  void (* event_created)   (GcalManager *manager, const gchar *source_uid, const gchar event_uid);
-
 };
 
 typedef struct
