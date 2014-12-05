@@ -158,10 +158,18 @@
               </packing>
             </child>
             <child>
-              <object class="GtkImage" id="source_image">
+              <object class="GtkMenuButton" id="sources_button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can_focus">True</property>
                 <property name="halign">start</property>
+                <property name="use_popover">True</property>
+                <child>
+                  <object class="GtkImage" id="source_image">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="left_attach">3</property>
