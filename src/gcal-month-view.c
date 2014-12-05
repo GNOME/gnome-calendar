@@ -947,7 +947,7 @@ gcal_month_view_button_release (GtkWidget      *widget,
   gtk_widget_queue_draw (widget);
 
   x = (width / 7) * ((priv->end_mark_cell % 7) + 0.5);
-  y = start_grid_y + v_block * (lines_gap_for_5 + (priv->end_mark_cell / 7.0) + 0.5);
+  y = start_grid_y + v_block * (lines_gap_for_5 + (priv->end_mark_cell / 7) + 0.5);
 
   start_date = gcal_dup_icaltime (priv->date);
   start_date->day = priv->start_mark_cell - (priv->days_delay + 7 * february_gap) + 1;
