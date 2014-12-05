@@ -337,7 +337,7 @@ gcal_application_show_about (GSimpleAction *simple,
                          "license-type", GTK_LICENSE_GPL_3_0,
                          "authors", authors,
                          "artists", artists,
-                         "logo-icon-name", "x-office-calendar",
+                         "logo-icon-name", "gnome-calendar",
                          "translator-credits", _("translator-credits"),
                          NULL);
   g_free (copyright);
