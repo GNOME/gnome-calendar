@@ -169,8 +169,6 @@ static void           event_activated                    (GcalView            *v
                                                           GcalEventWidget     *event_widget,
                                                           gpointer             user_data);
 
-static void           init_edit_dialog                   (GcalWindow          *window);
-
 static void           edit_dialog_closed                 (GtkDialog           *dialog,
                                                           gint                 response,
                                                           gpointer             user_data);
@@ -672,9 +670,6 @@ create_event (gpointer   user_data,
       edata->source = source;
       edata->event_component = comp;
 
-      if (priv->edit_dialog == NULL)
-        init_edit_dialog (GCAL_WINDOW (user_data));
-
       gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (priv->edit_dialog),
                                          TRUE);
       gcal_edit_dialog_set_event_data (GCAL_EDIT_DIALOG (priv->edit_dialog),
@@ -703,9 +698,6 @@ event_activated (GcalView        *view,
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
-  if (priv->edit_dialog == NULL)
-    init_edit_dialog (GCAL_WINDOW (user_data));
-
   data = gcal_event_widget_get_data (event_widget);
   gcal_edit_dialog_set_event_is_new (
       GCAL_EDIT_DIALOG (priv->edit_dialog),
@@ -716,24 +708,6 @@ event_activated (GcalView        *view,
   g_free (data);
 
   gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
-}
-
-static void
-init_edit_dialog (GcalWindow *window)
-{
-  GcalWindowPrivate *priv;
-
-  priv = gcal_window_get_instance_private (window);
-
-  priv->edit_dialog = gcal_edit_dialog_new ();
-  gtk_window_set_transient_for (GTK_WINDOW (priv->edit_dialog),
-                                GTK_WINDOW (window));
-  gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog),
-                                priv->manager);
-
-  g_signal_connect (priv->edit_dialog,
-                    "response", G_CALLBACK (edit_dialog_closed),
-                    window);
 }
 
 static void
@@ -1098,6 +1072,13 @@ gcal_window_constructed (GObject *object)
                                   winmenu);
 
   g_object_unref (builder);
+
+  /* edit dialog initialization */
+  priv->edit_dialog = gcal_edit_dialog_new ();
+  gtk_window_set_transient_for (GTK_WINDOW (priv->edit_dialog), GTK_WINDOW (object));
+  gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog), priv->manager);
+
+  g_signal_connect (priv->edit_dialog, "response", G_CALLBACK (edit_dialog_closed), object);
 
   /* search bar */
   gtk_search_bar_connect_entry (GTK_SEARCH_BAR (priv->search_bar),
