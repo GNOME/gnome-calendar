@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-05 10:13+0200\n"
-"PO-Revision-Date: 2014-12-05 10:19+0200\n"
-"Last-Translator: Yosef Or Boczko <yoseforb@gnome.org>\n"
+"POT-Creation-Date: 2014-12-05 10:29+0200\n"
+"PO-Revision-Date: 2014-12-05 10:30+0200\n"
+"Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: עברית <>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:333
 msgid "Calendar"
-msgstr "שנה לוח"
+msgstr "לוח שנה"
 
 #: ../data/gnome-calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
@@ -59,6 +59,74 @@ msgstr "Type of the active view"
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Type of the active window view, default value is: monthly view"
 
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "ביטול"
+
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:535
+msgid "Done"
+msgstr "בוצע"
+
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "כותרת"
+
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "התחלה"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "סיום"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "הערות"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "מיקום"
+
+#: ../data/ui/edit-dialog.ui.h:8
+msgid "All day"
+msgstr "כל היום"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "מחיקת אירוע"
+
+#: ../data/ui/menus.ui.h:1
+msgid "_New Event"
+msgstr "אירוע _חדש"
+
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "_חיפוש…"
+
+#: ../data/ui/menus.ui.h:3
+msgid "_About"
+msgstr "על _אודות"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Quit"
+msgstr "_יציאה"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "_תזמון"
+
+#: ../data/ui/window.ui.h:1
+msgid "Today"
+msgstr "היום"
+
+#: ../data/ui/window.ui.h:2
+msgid "Create"
+msgstr "יצירה"
+
+#: ../data/ui/window.ui.h:3
+msgid "More Details"
+msgstr "פרטים נוספים"
+
 #: ../src/gcal-application.c:83
 msgid "Display version number"
 msgstr "Display version number"
@@ -86,10 +154,6 @@ msgstr "שינוי התאריך"
 #: ../src/gcal-edit-dialog.c:535
 msgid "Save"
 msgstr "שמירה"
-
-#: ../src/gcal-edit-dialog.c:535
-msgid "Done"
-msgstr "בוצע"
 
 #: ../src/gcal-time-entry.c:126
 msgid "Change the time"
@@ -122,7 +186,7 @@ msgstr "שבוע"
 #: ../src/gcal-window.c:578
 #, c-format
 msgid "New Event on %s"
-msgstr "אירוע חדש על %s"
+msgstr "אירוע חדש ביום %s"
 
 #: ../src/gcal-window.c:788
 msgid "Event deleted"
@@ -144,3 +208,6 @@ msgstr "חודש"
 #: ../src/gcal-window.c:1136
 msgid "Year"
 msgstr "שנה"
+
+#~ msgid "button"
+#~ msgstr "כפתור"
