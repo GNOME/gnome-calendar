@@ -185,6 +185,16 @@ on_calendar_selected (GtkWidget *menu_item,
 
       if (g_strcmp0 (e_source_get_uid (source), uid) == 0)
       {
+        GdkRGBA color;
+        ESourceSelectable *extension;
+
+        /* retrieve color */
+        extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
+        gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
+
+        gtk_image_set_from_pixbuf (GTK_IMAGE (priv->source_image),
+                                   gcal_get_pixbuf_from_color (&color, 16));
+
         priv->source = source;
         gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->titlebar),
                                      e_source_get_display_name (priv->source));
