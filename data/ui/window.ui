@@ -124,7 +124,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="notification_action_button">
-                        <property name="label" translatable="yes">button</property>
+                        <property name="label" translatable="no">button</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
