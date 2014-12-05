@@ -102,6 +102,7 @@ AC_CONFIG_FILES([
       src/Makefile
       data/Makefile
       data/gnome-calendar.desktop.in
+      data/icons/Makefile
       po/Makefile.in
 ])
 
