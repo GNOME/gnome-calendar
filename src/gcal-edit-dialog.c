@@ -43,6 +43,7 @@ typedef struct
   GtkWidget        *delete_button;
   GtkWidget        *done_button;
   GtkWidget        *cancel_button;
+  GtkWidget        *sources_button;
 
   GtkWidget        *summary_entry;
 
@@ -54,6 +55,10 @@ typedef struct
   GtkWidget        *location_entry;
   GtkWidget        *notes_text;
 
+  /* actions */
+  GSimpleAction      *action;
+  GSimpleActionGroup *action_group;
+
   /* new data holders */
   ESource          *source; /* weak reference */
   ECalComponent    *component;
@@ -62,6 +67,12 @@ typedef struct
   gboolean          event_is_new;
   gboolean          setting_event;
 } GcalEditDialogPrivate;
+
+static void        fill_sources_menu                      (GcalEditDialog    *dialog);
+
+static void        on_calendar_selected                   (GtkWidget         *menu_item,
+                                                           GVariant          *value,
+                                                           gpointer           user_data);
 
 static void        update_date                            (GtkEntry          *entry,
                                                            gpointer           user_data);
@@ -96,6 +107,94 @@ static void        gcal_edit_dialog_all_day_changed       (GtkWidget         *wi
                                                            gpointer           user_data);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
+
+static void
+fill_sources_menu (GcalEditDialog *dialog)
+{
+  GcalEditDialogPrivate *priv;
+  GList *list;
+  GList *aux;
+  GMenu *menu;
+
+  priv = gcal_edit_dialog_get_instance_private (dialog);
+
+  if (priv->manager == NULL)
+    return;
+
+  list = gcal_manager_get_sources (priv->manager);
+  menu = g_menu_new ();
+
+  for (aux = list; aux != NULL; aux = aux->next)
+    {
+      ESource *source;
+      GMenuItem *item;
+      ESourceSelectable *extension;
+      GdkRGBA color;
+
+      source = E_SOURCE (aux->data);
+
+      /* retrieve color */
+      extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
+      gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
+
+      /* menu item */
+      item = g_menu_item_new (e_source_get_display_name (source), "edit.select_calendar");
+      g_menu_item_set_icon (item, G_ICON (gcal_get_pixbuf_from_color (&color, 12)));
+
+      /* set insensitive for read-only calendars */
+      if (! e_source_get_enabled (source)||
+          gcal_manager_is_client_writable (priv->manager, source))
+        {
+          g_menu_item_set_action_and_target_value (item, "edit.select_calendar", NULL);
+        }
+      else
+        {
+          g_menu_item_set_action_and_target_value (item, "edit.select_calendar",
+                                                   g_variant_new_string (e_source_dup_uid (source)));
+        }
+
+      g_menu_append_item (menu, item);
+    }
+
+  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->sources_button), G_MENU_MODEL (menu));
+
+  g_list_free (list);
+}
+
+static void
+on_calendar_selected (GtkWidget *menu_item,
+                      GVariant  *value,
+                      gpointer   user_data)
+{
+  GcalEditDialogPrivate *priv;
+  GList *list;
+  GList *aux;
+  gchar *uid;
+
+  priv = gcal_edit_dialog_get_instance_private (GCAL_EDIT_DIALOG (user_data));
+  list = gcal_manager_get_sources (priv->manager);
+
+  /* retrieve selected calendar uid */
+  g_variant_get (value, "s", &uid);
+
+  /* search for any source with the given UID */
+  for (aux = list; aux != NULL; aux = aux->next)
+    {
+      ESource *source;
+      source = E_SOURCE (aux->data);
+
+      if (g_strcmp0 (e_source_get_uid (source), uid) == 0)
+      {
+        priv->source = source;
+        gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->titlebar),
+                                     e_source_get_display_name (priv->source));
+        break;
+      }
+    }
+
+  g_free (uid);
+  g_list_free (list);
+}
 
 static void
 update_date (GtkEntry   *entry,
@@ -349,6 +448,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, done_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, cancel_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, delete_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, sources_button);
   /* Entries */
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, summary_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, start_time_entry);
@@ -394,6 +494,19 @@ gcal_edit_dialog_constructed (GObject* object)
 
   /* titlebar */
   gtk_window_set_titlebar (GTK_WINDOW (object), priv->titlebar);
+
+  /* actions */
+  priv->action_group = g_simple_action_group_new ();
+  gtk_widget_insert_action_group (GTK_WIDGET (object),
+                                  "edit",
+                                  G_ACTION_GROUP (priv->action_group));
+
+  priv->action = g_simple_action_new ("select_calendar", G_VARIANT_TYPE_STRING);
+  g_signal_connect (priv->action,
+                    "activate",
+                    G_CALLBACK (on_calendar_selected), object);
+
+  g_action_map_add_action (G_ACTION_MAP (priv->action_group), G_ACTION (priv->action));
 
   /* bind title & symmary */
   g_object_bind_property (priv->summary_entry,
@@ -497,6 +610,12 @@ gcal_edit_dialog_finalize (GObject *object)
 
   if (priv->component != NULL)
     g_object_unref (priv->component);
+
+  if (priv->action_group != NULL)
+    g_object_unref (priv->action_group);
+
+  if (priv->action != NULL)
+    g_object_unref (priv->action);
 
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->finalize (object);
 }
@@ -647,6 +766,10 @@ gcal_edit_dialog_set_event_is_new (GcalEditDialog *dialog,
   priv = gcal_edit_dialog_get_instance_private (dialog);
   priv->event_is_new = event_is_new;
   gtk_widget_set_visible (GTK_WIDGET (priv->delete_button), !event_is_new);
+
+  /* FIXME: implement moving events to other sources */
+  gtk_widget_set_sensitive (GTK_WIDGET (priv->sources_button), event_is_new);
+  gtk_button_set_relief (GTK_BUTTON (priv->sources_button), event_is_new ? GTK_RELIEF_NORMAL : GTK_RELIEF_NONE);
 }
 
 void
@@ -798,6 +921,9 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
   priv = gcal_edit_dialog_get_instance_private (dialog);
 
   priv->manager = manager;
+
+  /* sources menu */
+  fill_sources_menu (dialog);
 }
 
 ECalComponent*
