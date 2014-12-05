@@ -850,6 +850,7 @@ search_toggled (GObject    *object,
       /* update header_bar */
       gtk_widget_show (priv->nav_bar);
       gtk_widget_show (priv->today_button);
+      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar), _("Calendar"));
 
       gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
                                    priv->views[priv->active_view]);
