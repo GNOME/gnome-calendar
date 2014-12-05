@@ -713,6 +713,9 @@ event_activated (GcalView        *view,
     init_edit_dialog (GCAL_WINDOW (user_data));
 
   data = gcal_event_widget_get_data (event_widget);
+  gcal_edit_dialog_set_event_is_new (
+      GCAL_EDIT_DIALOG (priv->edit_dialog),
+      FALSE);
   gcal_edit_dialog_set_event_data (
       GCAL_EDIT_DIALOG (priv->edit_dialog),
       data);

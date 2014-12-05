@@ -646,6 +646,7 @@ gcal_edit_dialog_set_event_is_new (GcalEditDialog *dialog,
 
   priv = gcal_edit_dialog_get_instance_private (dialog);
   priv->event_is_new = event_is_new;
+  gtk_widget_set_visible (GTK_WIDGET (priv->delete_button), !event_is_new);
 }
 
 void
