@@ -841,8 +841,8 @@ gcal_event_widget_peek_uuid (GcalEventWidget *event)
 }
 
 void
-gcal_new_event_widget_set_read_only (GcalEventWidget *event,
-                                     gboolean         read_only)
+gcal_event_widget_set_read_only (GcalEventWidget *event,
+                                 gboolean         read_only)
 {
   GcalEventWidgetPrivate *priv;
 
