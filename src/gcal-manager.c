@@ -33,8 +33,6 @@ typedef struct
 
   gboolean        enabled;
   gboolean        connected;
-
-  /* FIXME: add GdkRGBA colors */
 } GcalManagerUnit;
 
 typedef struct
@@ -56,16 +54,6 @@ typedef struct
   /* timezone */
   icaltimezone    *system_timezone;
 } GcalManagerPrivate;
-
-/* FIXME: review */
-struct _DeleteEventData
-{
-  gchar           *event_uid;
-  GcalManagerUnit *unit;
-  GcalManager     *manager;
-};
-
-typedef struct _DeleteEventData DeleteEventData;
 
 struct _MoveEventData
 {
