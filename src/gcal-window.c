@@ -147,7 +147,7 @@ static void           show_new_event_widget              (GcalView            *v
 
 static void           prepare_new_event_widget           (GcalWindow          *window);
 
-static void           place_new_event_widget             (GtkWidget           *popover,
+static void           place_new_event_widget             (GcalWindow          *window,
                                                           gint                 x,
                                                           gint                 y);
 
@@ -550,7 +550,7 @@ show_new_event_widget (GcalView *view,
   /* Setup new event widget data */
   prepare_new_event_widget (GCAL_WINDOW (user_data));
 
-  place_new_event_widget (priv->popover, x, y);
+  place_new_event_widget (GCAL_WINDOW (user_data), x, y);
 }
 
 static void
@@ -578,20 +578,26 @@ prepare_new_event_widget (GcalWindow *window)
 }
 
 static void
-place_new_event_widget (GtkWidget    *popover,
+place_new_event_widget (GcalWindow   *window,
                         gint          x,
                         gint          y)
 {
+  GcalWindowPrivate *priv;
+
+  gint out_x, out_y;
   GdkRectangle rect;
 
+  priv = gcal_window_get_instance_private (window);
+  gtk_widget_translate_coordinates (priv->views[priv->active_view], priv->views_stack, x, y, &out_x, &out_y);
+
   /* Place popover over the given (x,y) position */
-  rect.x = x;
-  rect.y = y;
+  rect.x = out_x;
+  rect.y = out_y;
   rect.width = 1;
   rect.height = 1;
 
-  gtk_popover_set_pointing_to (GTK_POPOVER (popover), &rect);
-  gtk_widget_show_all (popover);
+  gtk_popover_set_pointing_to (GTK_POPOVER (priv->popover), &rect);
+  gtk_widget_show_all (priv->popover);
 }
 
 static void
@@ -1365,7 +1371,7 @@ gcal_window_new_event (GcalWindow *window)
 
   prepare_new_event_widget (GCAL_WINDOW (window));
 
-  place_new_event_widget (priv->popover, x, y);
+  place_new_event_widget (GCAL_WINDOW (window), x, y);
 }
 
 void
