@@ -861,39 +861,39 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
                             dtstart.value->month,
                             dtstart.value->year);
 
-  /* end date */
-  e_cal_component_get_dtend (priv->component, &dtend);
-
-  gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
-                            dtend.value->day,
-                            dtend.value->month,
-                            dtend.value->year);
-
-  /* all_day  */
-  all_day = (dtstart.value->is_date == 1 && dtend.value->is_date == 1);
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->all_day_check), all_day);
-
   /* start time */
   if (all_day)
     {
       dtstart.value->hour = 0;
       dtstart.value->minute = 0;
     }
-  gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->start_time_entry),
-                            dtstart.value->hour,
-                            dtstart.value->minute);
-  /* end time */
-  if (all_day)
+  gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->start_time_entry), dtstart.value->hour, dtstart.value->minute);
+
+  /* end date */
+  e_cal_component_get_dtend (priv->component, &dtend);
+  if (dtend.value != NULL)
     {
-      dtend.value->hour = 0;
-      dtend.value->minute = 0;
+      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
+                                dtend.value->day, dtend.value->month, dtend.value->year);
+      all_day = (dtstart.value->is_date == 1 && dtend.value->is_date == 1);
+
+      if (!all_day)
+        gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->end_time_entry), dtend.value->hour, dtend.value->minute);
     }
-  gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->end_time_entry),
-                            dtend.value->hour,
-                            dtend.value->minute);
+  else
+    {
+      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
+                                dtstart.value->day, dtstart.value->month, dtstart.value->year);
+      gcal_time_entry_set_time (GCAL_TIME_ENTRY (priv->end_time_entry), dtstart.value->hour, dtstart.value->minute);
+      all_day = FALSE;
+    }
 
   e_cal_component_free_datetime (&dtstart);
   e_cal_component_free_datetime (&dtend);
+
+  /* all_day  */
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->all_day_check), all_day);
+
 
   /* location */
   e_cal_component_get_location (priv->component, &const_text);

@@ -128,6 +128,9 @@ gcal_dup_icaltime (const icaltimetype *date)
 {
   icaltimetype *new_date;
 
+  if (date == NULL)
+    return NULL;
+
   new_date= g_new (icaltimetype, 1);
   new_date->year = date->year;
   new_date->month = date->month;

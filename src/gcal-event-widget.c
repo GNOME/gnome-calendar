@@ -796,20 +796,23 @@ gcal_event_widget_new_from_data (GcalEventData *data)
 
   /* end date */
   e_cal_component_get_dtend (priv->component, &dt);
-  date = gcal_dup_icaltime (dt.value);
+  if (dt.value != NULL)
+    {
+      date = gcal_dup_icaltime (dt.value);
 
-  /* FIXME: fix the timezone issue */
-  /* if (date->is_date != 1) */
-  /*   *date = icaltime_convert_to_zone (*(dt.value), */
-  /*                                     priv->system_timezone); */
-  end_is_date = date->is_date == 1;
+      /* FIXME: fix the timezone issue */
+      /* if (date->is_date != 1) */
+      /*   *date = icaltime_convert_to_zone (*(dt.value), */
+      /*                                     priv->system_timezone); */
+      end_is_date = date->is_date == 1;
 
-  gcal_event_widget_set_end_date (event, date);
-  e_cal_component_free_datetime (&dt);
-  g_free (date);
+      gcal_event_widget_set_end_date (event, date);
+      e_cal_component_free_datetime (&dt);
+      g_free (date);
 
-  /* set_all_day */
-  gcal_event_widget_set_all_day (event, start_is_date && end_is_date);
+      /* set_all_day */
+      gcal_event_widget_set_all_day (event, start_is_date && end_is_date);
+    }
 
   /* set_has_reminders */
   gcal_event_widget_set_has_reminders (
@@ -900,7 +903,8 @@ gcal_event_widget_set_end_date (GcalEventWidget    *event,
  * gcal_event_widget_get_end_date:
  * @event: a #GcalEventWidget
  *
- * Return the end date of the event
+ * Return the end date of the event. If the event has no end_date
+ * (as Google does on 0 sec events) %NULL will be returned
  *
  * Returns: (transfer full): Release with g_free()
  **/
