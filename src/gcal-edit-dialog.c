@@ -130,16 +130,18 @@ fill_sources_menu (GcalEditDialog *dialog)
       GMenuItem *item;
       ESourceSelectable *extension;
       GdkRGBA color;
+      GdkPixbuf *pix;
 
       source = E_SOURCE (aux->data);
 
       /* retrieve color */
       extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
       gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
+      pix = gcal_get_pixbuf_from_color (&color, 16);;
 
       /* menu item */
       item = g_menu_item_new (e_source_get_display_name (source), "edit.select_calendar");
-      g_menu_item_set_icon (item, G_ICON (gcal_get_pixbuf_from_color (&color, 16)));
+      g_menu_item_set_icon (item, G_ICON (pix));
 
       /* set insensitive for read-only calendars */
       if (gcal_manager_is_client_writable (priv->manager, source))
@@ -149,10 +151,13 @@ fill_sources_menu (GcalEditDialog *dialog)
       else
         {
           g_menu_item_set_action_and_target_value (item, "edit.select_calendar",
-                                                   g_variant_new_string (e_source_dup_uid (source)));
+                                                   g_variant_new_string (e_source_get_uid (source)));
         }
 
       g_menu_append_item (priv->sources_menu, item);
+
+      g_object_unref (pix);
+      g_object_unref (item);
     }
 
   gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->sources_button), G_MENU_MODEL (priv->sources_menu));
@@ -186,13 +191,15 @@ on_calendar_selected (GtkWidget *menu_item,
       {
         GdkRGBA color;
         ESourceSelectable *extension;
+        GdkPixbuf *pix;
 
         /* retrieve color */
         extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
         gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
 
-        gtk_image_set_from_pixbuf (GTK_IMAGE (priv->source_image),
-                                   gcal_get_pixbuf_from_color (&color, 16));
+        pix = gcal_get_pixbuf_from_color (&color, 16);
+        gtk_image_set_from_pixbuf (GTK_IMAGE (priv->source_image), pix);
+        g_object_unref (pix);
 
         priv->source = source;
         gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->titlebar),
