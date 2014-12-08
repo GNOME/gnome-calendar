@@ -48,6 +48,8 @@ cal_comp_get_instance_times (ECalClient *client,
 
 	start_time = icalcomponent_get_dtstart (icalcomp);
 	end_time = icalcomponent_get_dtend (icalcomp);
+	if (icaltime_is_null_time (end_time))
+	  end_time = start_time;
 
 	if (start_time.zone) {
 		zone = start_time.zone;
