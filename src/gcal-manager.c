@@ -208,12 +208,6 @@ load_source (GcalManager *manager,
 
   if (g_hash_table_lookup (priv->clients, source) == NULL)
     {
-      GcalManagerUnit *unit;
-
-      unit = g_new0 (GcalManagerUnit, 1);
-
-      g_hash_table_insert (priv->clients, source, unit);
-
       /* NULL: because maybe the operation cannot be really cancelled */
       e_cal_client_connect (source,
                             E_CAL_CLIENT_SOURCE_TYPE_EVENTS, NULL,
@@ -248,13 +242,14 @@ on_client_connected (GObject      *source_object,
   client = E_CAL_CLIENT (e_cal_client_connect_finish (result, &error));
   if (error == NULL)
     {
-      unit = (GcalManagerUnit*) g_hash_table_lookup (priv->clients,
-                                                     source);
+      unit = g_new0 (GcalManagerUnit, 1);
       unit->connected = TRUE;
       unit->client = client;
 
       /* FIXME: user should be able to disable sources */
       unit->enabled = TRUE;
+
+      g_hash_table_insert (priv->clients, source, unit);
 
       g_debug ("Source %s (%s) connected",
                e_source_get_display_name (source),
