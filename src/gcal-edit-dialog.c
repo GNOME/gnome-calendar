@@ -56,6 +56,7 @@ typedef struct
   GtkWidget        *notes_text;
 
   /* actions */
+  GMenu              *sources_menu;
   GSimpleAction      *action;
   GSimpleActionGroup *action_group;
 
@@ -114,7 +115,6 @@ fill_sources_menu (GcalEditDialog *dialog)
   GcalEditDialogPrivate *priv;
   GList *list;
   GList *aux;
-  GMenu *menu;
 
   priv = gcal_edit_dialog_get_instance_private (dialog);
 
@@ -122,7 +122,7 @@ fill_sources_menu (GcalEditDialog *dialog)
     return;
 
   list = gcal_manager_get_sources (priv->manager);
-  menu = g_menu_new ();
+  priv->sources_menu = g_menu_new ();
 
   for (aux = list; aux != NULL; aux = aux->next)
     {
@@ -139,11 +139,10 @@ fill_sources_menu (GcalEditDialog *dialog)
 
       /* menu item */
       item = g_menu_item_new (e_source_get_display_name (source), "edit.select_calendar");
-      g_menu_item_set_icon (item, G_ICON (gcal_get_pixbuf_from_color (&color, 12)));
+      g_menu_item_set_icon (item, G_ICON (gcal_get_pixbuf_from_color (&color, 16)));
 
       /* set insensitive for read-only calendars */
-      if (! e_source_get_enabled (source)||
-          gcal_manager_is_client_writable (priv->manager, source))
+      if (gcal_manager_is_client_writable (priv->manager, source))
         {
           g_menu_item_set_action_and_target_value (item, "edit.select_calendar", NULL);
         }
@@ -153,10 +152,10 @@ fill_sources_menu (GcalEditDialog *dialog)
                                                    g_variant_new_string (e_source_dup_uid (source)));
         }
 
-      g_menu_append_item (menu, item);
+      g_menu_append_item (priv->sources_menu, item);
     }
 
-  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->sources_button), G_MENU_MODEL (menu));
+  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->sources_button), G_MENU_MODEL (priv->sources_menu));
 
   g_list_free (list);
 }
@@ -835,6 +834,12 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   /* Clear event data */
   gcal_edit_dialog_clear_data (dialog);
 
+  /* update sources list */
+  if (priv->sources_menu != NULL)
+    g_menu_remove_all (priv->sources_menu);
+
+  fill_sources_menu (dialog);
+
   /* Load new event data */
   /* summary */
   e_cal_component_get_summary (priv->component, &e_summary);
@@ -931,9 +936,6 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
   priv = gcal_edit_dialog_get_instance_private (dialog);
 
   priv->manager = manager;
-
-  /* sources menu */
-  fill_sources_menu (dialog);
 }
 
 ECalComponent*
