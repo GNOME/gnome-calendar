@@ -51,8 +51,9 @@ struct _GcalWindowClass
 
 GType        gcal_window_get_type             (void);
 
-GtkWidget*   gcal_window_new_with_view        (GcalApplication    *app,
-                                               GcalWindowViewType  view_type);
+GtkWidget*   gcal_window_new_with_view_and_date (GcalApplication    *app,
+                                                 GcalWindowViewType  view_type,
+                                                 icaltimetype       *date);
 
 void         gcal_window_new_event            (GcalWindow         *window);
 

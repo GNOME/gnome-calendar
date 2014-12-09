@@ -1286,26 +1286,16 @@ gcal_window_state_event (GtkWidget           *widget,
 
 /* Public API */
 GtkWidget*
-gcal_window_new_with_view (GcalApplication   *app,
-                           GcalWindowViewType view_type)
+gcal_window_new_with_view_and_date (GcalApplication   *app,
+                                    GcalWindowViewType view_type,
+                                    icaltimetype      *date)
 {
   GcalWindow *win;
   GcalManager *manager;
-  icaltimetype date;
 
   manager = gcal_application_get_manager (GCAL_APPLICATION (app));
-  /* FIXME: here read the initial date from somewehere */
-  date = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (manager));
-  date = icaltime_set_timezone (&date,
-                                gcal_manager_get_system_timezone (manager));
 
-  win  =  g_object_new (GCAL_TYPE_WINDOW,
-                        "application",
-                        GTK_APPLICATION (app),
-                        "active-date",
-                        &date,
-                        "manager",
-                        manager,
+  win  =  g_object_new (GCAL_TYPE_WINDOW, "application", GTK_APPLICATION (app), "active-date", date, "manager", manager,
                         NULL);
 
   /* loading size */

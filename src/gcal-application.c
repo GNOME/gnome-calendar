@@ -39,6 +39,8 @@ typedef struct
   GcalManager    *manager;
 
   GtkCssProvider *provider;
+
+  icaltimetype   *initial_date;
 } GcalApplicationPrivate;
 
 static void     gcal_application_finalize             (GObject                 *object);
@@ -75,12 +77,18 @@ static void     gcal_application_quit                 (GSimpleAction           *
 G_DEFINE_TYPE_WITH_PRIVATE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 
 static gboolean show_version = FALSE;
+static gchar* date = NULL;
 
 static GOptionEntry gcal_application_goptions[] = {
   {
     "version", 'v', 0,
     G_OPTION_ARG_NONE, &show_version,
     N_("Display version number"), NULL
+  },
+  {
+    "date", 'd', 0,
+    G_OPTION_ARG_STRING, &date,
+    N_("Open calendar on the passed date"), NULL
   },
   { NULL }
 };
@@ -120,13 +128,16 @@ gcal_application_init (GcalApplication *self)
 static void
 gcal_application_finalize (GObject *object)
 {
-  GcalApplicationPrivate *priv;
+ GcalApplicationPrivate *priv;
 
   priv = gcal_application_get_instance_private (GCAL_APPLICATION (object));
 
   g_clear_object (&(priv->settings));
   g_clear_object (&(priv->provider));
   g_clear_object (&(priv->manager));
+
+  if (priv->initial_date != NULL)
+    g_free (priv->initial_date);
 
   G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
 }
@@ -144,14 +155,18 @@ gcal_application_activate (GApplication *application)
     }
   else
     {
-      priv->window =
-        gcal_window_new_with_view (GCAL_APPLICATION (application),
-                                   g_settings_get_enum (priv->settings,
-                                                        "active-view"));
-      g_settings_bind (priv->settings,
-                       "active-view",
-                       priv->window,
-                       "active-view",
+      if (priv->initial_date == NULL)
+        {
+          /* FIXME: here read the initial date from somewehere */
+          *(priv->initial_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (priv->manager));
+          *(priv->initial_date) = icaltime_set_timezone (priv->initial_date,
+                                                         gcal_manager_get_system_timezone (priv->manager));
+        }
+
+      priv->window = gcal_window_new_with_view_and_date (GCAL_APPLICATION (application),
+                                                         g_settings_get_enum (priv->settings, "active-view"),
+                                                         priv->initial_date);
+      g_settings_bind (priv->settings, "active-view", priv->window, "active-view",
                        G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
 
       gtk_widget_show_all (priv->window);
@@ -204,11 +219,14 @@ static gint
 gcal_application_command_line (GApplication            *app,
                                GApplicationCommandLine *command_line)
 {
+  GcalApplicationPrivate *priv;
+
   GOptionContext *context;
   gchar **argv;
   GError *error;
   gint argc;
 
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (app));
   argv = g_application_command_line_get_arguments (command_line, &argc);
   context = g_option_context_new (N_("- Calendar management"));
   g_option_context_add_main_entries (context, gcal_application_goptions, GETTEXT_PACKAGE);
@@ -226,6 +244,24 @@ gcal_application_command_line (GApplication            *app,
     {
       g_print ("gnome-calendar: Version %s\n", PACKAGE_VERSION);
       return 0;
+    }
+
+  if (date != NULL)
+    {
+      struct tm result;
+
+      if (e_time_parse_date_and_time (date, &result) == E_TIME_PARSE_OK)
+        {
+          if (priv->initial_date == NULL)
+            priv->initial_date = g_new0 (icaltimetype, 1);
+          *(priv->initial_date) = tm_to_icaltimetype (&result, FALSE);
+
+          *(priv->initial_date) = icaltime_set_timezone (priv->initial_date,
+                                                         gcal_manager_get_system_timezone (priv->manager));
+          print_date ("loading date", priv->initial_date);
+        }
+
+      g_clear_pointer (&date, g_free);
     }
 
   g_option_context_free (context);
