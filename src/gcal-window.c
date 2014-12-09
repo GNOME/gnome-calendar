@@ -405,14 +405,16 @@ update_view (GcalWindow *window)
   priv = gcal_window_get_instance_private (window);
 
   widget = priv->views[priv->active_view];
+  if (widget != NULL)
+    {
+      header = gcal_view_get_left_header (GCAL_VIEW (widget));
+      g_object_set (priv->nav_bar, "left-header", header, NULL);
+      g_free (header);
 
-  header = gcal_view_get_left_header (GCAL_VIEW (widget));
-  g_object_set (priv->nav_bar, "left-header", header, NULL);
-  g_free (header);
-
-  header = gcal_view_get_right_header (GCAL_VIEW (widget));
-  g_object_set (priv->nav_bar, "right-header", header, NULL);
-  g_free (header);
+      header = gcal_view_get_right_header (GCAL_VIEW (widget));
+      g_object_set (priv->nav_bar, "right-header", header, NULL);
+      g_free (header);
+    }
 }
 
 /**
