@@ -834,6 +834,22 @@ gcal_event_widget_new_with_summary_and_color (const gchar   *summary,
                        NULL);
 }
 
+GtkWidget*
+gcal_event_widget_clone (GcalEventWidget *widget)
+{
+  GtkWidget *new_widget;
+  GcalEventData *data;
+
+  data = gcal_event_widget_get_data (widget);
+  g_object_ref (data->event_component);
+
+  new_widget = gcal_event_widget_new_from_data (data);
+  g_free (data);
+
+  gcal_event_widget_set_read_only(GCAL_EVENT_WIDGET (new_widget), gcal_event_widget_get_read_only (widget));
+  return new_widget;
+}
+
 const gchar*
 gcal_event_widget_peek_uuid (GcalEventWidget *event)
 {
@@ -852,6 +868,15 @@ gcal_event_widget_set_read_only (GcalEventWidget *event,
   priv = gcal_event_widget_get_instance_private (event);
 
   priv->read_only = read_only;
+}
+
+gboolean
+gcal_event_widget_get_read_only (GcalEventWidget *event)
+{
+  GcalEventWidgetPrivate *priv;
+  priv = gcal_event_widget_get_instance_private (event);
+
+  return priv->read_only;
 }
 
 /**
