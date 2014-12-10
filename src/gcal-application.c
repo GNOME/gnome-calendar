@@ -157,6 +157,7 @@ gcal_application_activate (GApplication *application)
     {
       if (priv->initial_date == NULL)
         {
+          priv->initial_date = g_new0 (icaltimetype, 1);
           /* FIXME: here read the initial date from somewehere */
           *(priv->initial_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (priv->manager));
           *(priv->initial_date) = icaltime_set_timezone (priv->initial_date,
