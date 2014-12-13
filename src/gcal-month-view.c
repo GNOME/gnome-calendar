@@ -1058,14 +1058,14 @@ gcal_month_view_button_release (GtkWidget      *widget,
       end_date = gcal_dup_icaltime (priv->date);
       end_date->day = j - priv->days_delay;
       end_date->is_date = 1;
-    }
 
-  if (start_date->day > end_date->day)
-    {
-      gint day;
-      day = start_date->day;
-      start_date->day = end_date->day;
-      end_date->day = day;
+      if (start_date->day > end_date->day)
+        {
+          gint day;
+          day = start_date->day;
+          start_date->day = end_date->day;
+          end_date->day = day;
+        }
     }
 
   g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_date, end_date, x, y);
