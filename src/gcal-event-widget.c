@@ -1000,6 +1000,18 @@ gcal_event_widget_get_all_day (GcalEventWidget *event)
   return all_day;
 }
 
+gboolean
+gcal_event_widget_is_multiday (GcalEventWidget *event)
+{
+  GcalEventWidgetPrivate *priv;
+  priv = gcal_event_widget_get_instance_private (event);
+
+  if (priv->dt_end == NULL)
+    return FALSE;
+
+  return priv->dt_start->day != priv->dt_end->day;
+}
+
 void
 gcal_event_widget_set_has_reminders (GcalEventWidget *event,
                                      gboolean         has_reminders)
@@ -1080,4 +1092,37 @@ gcal_event_widget_equal (GcalEventWidget *widget1,
   e_cal_component_free_id (id2);
 
   return same_id;
+}
+
+/**
+ * gcal_event_widget_compare_by_length:
+ * @widget1:
+ * @widget2:
+ *
+ * Compare two widgets by the duration of the events they represent. From shortest to longest span.
+ *
+ * Returns: negative value if a < b ; zero if a = b ; positive value if a > b
+ **/
+gint
+gcal_event_widget_compare_by_length (GcalEventWidget *widget1,
+                                     GcalEventWidget *widget2)
+{
+  GcalEventWidgetPrivate *priv1;
+  GcalEventWidgetPrivate *priv2;
+
+  time_t time_s1, time_s2;
+  time_t time_e1, time_e2;
+
+  priv1 = gcal_event_widget_get_instance_private (widget1);
+  priv2 = gcal_event_widget_get_instance_private (widget2);
+
+  time_e1 = time_s1 = icaltime_as_timet (*(priv1->dt_start));
+  time_e2 = time_s2 = icaltime_as_timet (*(priv2->dt_start));
+
+  if (priv1->dt_end != NULL)
+    time_e1 = icaltime_as_timet (*(priv1->dt_end));
+  if (priv2->dt_end)
+    time_e2 = icaltime_as_timet (*(priv2->dt_end));
+
+  return (time_e2 - time_s2) - (time_e1 - time_s1);
 }

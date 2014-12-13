@@ -95,6 +95,8 @@ void          gcal_event_widget_set_all_day                (GcalEventWidget    *
 
 gboolean     gcal_event_widget_get_all_day                 (GcalEventWidget    *event);
 
+gboolean     gcal_event_widget_is_multiday                 (GcalEventWidget    *event);
+
 void         gcal_event_widget_set_has_reminders           (GcalEventWidget    *event,
                                                             gboolean            has_reminders);
 
@@ -103,6 +105,9 @@ gboolean     gcal_event_widget_get_has_reminders           (GcalEventWidget    *
 GcalEventData* gcal_event_widget_get_data                  (GcalEventWidget    *event);
 
 gboolean     gcal_event_widget_equal                       (GcalEventWidget    *widget1,
+                                                            GcalEventWidget    *widget2);
+
+gint         gcal_event_widget_compare_by_length           (GcalEventWidget    *widget1,
                                                             GcalEventWidget    *widget2);
 
 G_END_DECLS
