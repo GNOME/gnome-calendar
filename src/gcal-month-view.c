@@ -30,12 +30,27 @@
 typedef struct
 {
   /**
-   * This is where we keep the refs of the child widgets.
-   * Every child added to the list placed in the position
-   * of it corresponding month day.
-   * The cell number of every month day is calculated elsewhere.
+   * Hash to keep children widgets (all of them, parent widgets and its parts if there's any),
+   * uuid as key and a list of all the instances of the event as value. Here, the first widget on the list is
+   * the master, and the rest are the parts. Note: that the master is a part itself, the first one
    */
-  GList          *days [31];
+  GHashTable     *children;
+
+  /**
+   * Hash containig single-day events, day of the month as key and a list of the events that belongs to this day
+   */
+  GHashTable     *single_day_children;
+
+  /**
+   * An organizaed list containig multiday events
+   * This one contains only parents events, to find out its parts @children will be used
+   */
+  GList          *multiday_children;
+
+  /**
+   * Hash containing which days have overflow
+   */
+  GHashTable     *overflown_days;
 
   GdkWindow      *event_window;
 
@@ -272,7 +287,6 @@ static void
 gcal_month_view_init (GcalMonthView *self)
 {
   GcalMonthViewPrivate *priv;
-  gint i;
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
@@ -283,8 +297,10 @@ gcal_month_view_init (GcalMonthView *self)
   priv->start_mark_cell = -1;
   priv->end_mark_cell = -1;
 
-  for (i = 0; i < 31; i++)
-    priv->days[i] = NULL;
+  priv->children = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_list_free);
+  priv->single_day_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
+  priv->multiday_children = NULL;
+  priv->overflown_days = g_hash_table_new (g_direct_hash, g_direct_equal);
 
   gtk_style_context_add_class (
       gtk_widget_get_style_context (GTK_WIDGET (self)),
@@ -386,6 +402,13 @@ gcal_month_view_finalize (GObject       *object)
 {
   GcalMonthViewPrivate *priv;
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (object));
+
+  g_hash_table_destroy (priv->children);
+  g_hash_table_destroy (priv->single_day_children);
+  g_hash_table_destroy (priv->overflown_days);
+
+  if (priv->multiday_children != NULL)
+    g_list_free (priv->multiday_children);
 
   if (priv->date != NULL)
     g_free (priv->date);
@@ -1079,54 +1102,59 @@ gcal_month_view_button_release (GtkWidget      *widget,
   return TRUE;
 }
 
+/**
+ * gcal_month_view_add:
+ * @container:
+ * @widget:
+ *
+ * Since this is only called from inside {@link GcalSubscriber} it's safe to assume that it's a master widget what
+ * is being added here.
+ **/
 static void
 gcal_month_view_add (GtkContainer *container,
                      GtkWidget    *widget)
 {
   GcalMonthViewPrivate *priv;
-  GList *l;
-  icaltimetype *date;
 
-  GcalViewChild *new_child;
+  const gchar *uuid;
+  icaltimetype *date;
+  GList *l = NULL;
 
   g_return_if_fail (GCAL_IS_EVENT_WIDGET (widget));
   g_return_if_fail (gtk_widget_get_parent (widget) == NULL);
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (container));
+  uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget));
 
-  /* Check if it's already added for date */
-  date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
-
-  for (l = priv->days[date->day - 1]; l != NULL; l = l->next)
+  /* inserting in all children hash */
+  if (g_hash_table_lookup (priv->children, uuid) != NULL)
     {
-      GtkWidget *event;
+      g_warning ("Event with uuid: %s already added", uuid);
+      gtk_widget_destroy (widget);
+      return;
+    }
+  l = g_list_append (l, widget);
+  g_hash_table_insert (priv->children, g_strdup (uuid), l);
 
-      event = GTK_WIDGET (((GcalViewChild*) l->data)->widget);
-      if (gcal_event_widget_equal (GCAL_EVENT_WIDGET (widget),
-                                   GCAL_EVENT_WIDGET (event)))
-        {
-          //TODO: remove once the main-dev phase its over
-          g_warning ("Trying to add an event with the same uuid to the view");
-          g_free (date);
-          gtk_widget_destroy (widget);
-          return;
-        }
+  if (gcal_event_widget_is_multiday (GCAL_EVENT_WIDGET (widget)))
+    {
+      priv->multiday_children = g_list_insert_sorted (priv->multiday_children, widget,
+                                                      (GCompareFunc) gcal_event_widget_compare_by_length);
+    }
+  else
+    {
+      date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
+
+      l = g_hash_table_lookup (priv->single_day_children, GINT_TO_POINTER (date->day));
+      l = g_list_append (l, widget);
+
+      if (g_list_length (l) == 1)
+        g_hash_table_insert (priv->children, GINT_TO_POINTER (date->day), l);
+
+      g_free (date);
     }
 
-  new_child = g_new0 (GcalViewChild, 1);
-  new_child->widget = widget;
-  new_child->hidden = FALSE;
-
-  priv->days[date->day - 1] =
-    g_list_insert_sorted (priv->days[date->day - 1],
-                          new_child,
-                          gcal_compare_event_widget_by_date);
   gtk_widget_set_parent (widget, GTK_WIDGET (container));
-
-  g_signal_connect (widget,
-                    "activate",
-                    G_CALLBACK (event_opened),
-                    container);
-  g_free (date);
+  g_signal_connect (widget, "activate", G_CALLBACK (event_opened), container);
 }
 
 static void
@@ -1134,35 +1162,44 @@ gcal_month_view_remove (GtkContainer *container,
                         GtkWidget    *widget)
 {
   GcalMonthViewPrivate *priv;
-  gint i;
-  GList *l;
+  GList *l, *aux;
+  gboolean was_visible = FALSE;
+  GtkWidget *master_widget;
 
   g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (container));
 
-  for (i = 0; i < 31; i++)
+  l = g_hash_table_lookup (priv->children, gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget)));
+  if (l != NULL)
     {
-      for (l = priv->days[i]; l != NULL; l = l->next)
+      master_widget = (GtkWidget*) l->data;
+
+      if (widget == master_widget)
         {
-          GcalViewChild *child;
-
-          child = (GcalViewChild*) l->data;
-          if (child->widget == widget)
+          g_debug ("removing a master widget");
+          if (gcal_event_widget_is_multiday (GCAL_EVENT_WIDGET (widget)))
             {
-              gboolean was_visible;
+              priv->multiday_children = g_list_remove (priv->multiday_children, widget);
+            }
+          else
+            {
+              icaltimetype *date;
 
-              was_visible = gtk_widget_get_visible (widget);
-              gtk_widget_unparent (widget);
-
-              priv->days[i] = g_list_remove (priv->days[i], child);
-              g_free (child);
-
-              if (was_visible)
-                gtk_widget_queue_resize (GTK_WIDGET (container));
-
-              return;
+              date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
+              aux = g_hash_table_lookup (priv->single_day_children, GINT_TO_POINTER (date->day));
+              aux = g_list_remove (aux, widget);
+              g_hash_table_replace (priv->single_day_children, GINT_TO_POINTER (date->day), aux);
             }
         }
+
+      l = g_list_remove (l, widget);
+      g_hash_table_replace (priv->children, (gchar*) gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget)), l);
+
+      was_visible = gtk_widget_get_visible (widget);
+      gtk_widget_unparent (widget);
+
+      if (was_visible)
+        gtk_widget_queue_resize (GTK_WIDGET (container));
     }
 }
 
@@ -1173,23 +1210,22 @@ gcal_month_view_forall (GtkContainer *container,
                         gpointer      callback_data)
 {
   GcalMonthViewPrivate *priv;
-  gint i;
-  GList *l;
+  GList *l, *last;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (container));
 
-  for (i = 0; i < 31; i++)
+  l = g_hash_table_get_values (priv->children);
+  while (l != NULL)
     {
-      l = priv->days[i];
+      last = g_list_last (l);
+      l = l->next;
 
-      while (l)
+      while (last != NULL)
         {
-          GcalViewChild *child;
+          GtkWidget *widget = (GtkWidget*) last->data;
+          last = last->prev;
 
-          child = (GcalViewChild*) l->data;
-          l  = l->next;
-
-          (* callback) (child->widget, callback_data);
+          (*callback) (widget, callback_data);
         }
     }
 }
@@ -1336,26 +1372,10 @@ static GtkWidget*
 gcal_month_view_get_by_uuid (GcalView    *view,
                              const gchar *uuid)
 {
-  GcalMonthViewPrivate *priv;
-  gint i;
-  GList *l;
-
-  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), NULL);
-  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));
-
-  for (i = 0; i < 31; i++)
-    {
-      for (l = priv->days[i]; l != NULL; l = l->next)
-        {
-          GcalViewChild *child;
-          const gchar* widget_uuid;
-
-          child = (GcalViewChild*) l->data;
-          widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
-          if (g_strcmp0 (uuid, widget_uuid) == 0)
-            return child->widget;
-        }
-    }
+  /* FIXME: this method is deprecated in favor of remove_by_uuid, hide_by_uuid, etc */
+  /* Since the view internally duplicates the widgets per uuid, doesn't have much sense to do this. */
+  /* One possible way could be: retrieve always the master widget, and hook some handlers into */
+  /* ::hide, ::delete, etc. etc. Not sure what's best tho. */
   return NULL;
 }
 
