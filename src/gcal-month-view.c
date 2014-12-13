@@ -50,7 +50,11 @@ typedef struct
    * 0 for Sunday, 1 for Monday and so on */
   gint            first_weekday;
 
-  /* button_down/up flag */
+  /**
+   * button_down/up flag
+   * These keeps the cell index, meaning 0 for left top, 1 for the next in the row from left to right, etc.
+   * Note that this does not take into account the disabled row before the first active row.
+   */
   gint            clicked_cell;
   gint            start_mark_cell;
   gint            end_mark_cell;
@@ -69,6 +73,12 @@ enum
 
 static void           event_opened                          (GcalEventWidget *event_widget,
                                                              gpointer         user_data);
+
+static gint           get_cell_and_center_from_position     (GcalMonthView  *view,
+                                                             gdouble         x,
+                                                             gdouble         y,
+                                                             gdouble        *out_x,
+                                                             gdouble        *out_y);
 
 static void           gcal_view_interface_init              (GcalViewIface  *iface);
 
@@ -152,6 +162,50 @@ event_opened (GcalEventWidget *event_widget,
   g_signal_emit_by_name (GCAL_VIEW (user_data),
                          "event-activated",
                          event_widget);
+}
+
+static gint
+get_cell_and_center_from_position (GcalMonthView *view,
+                                   gdouble        x,
+                                   gdouble        y,
+                                   gdouble       *out_x,
+                                   gdouble       *out_y)
+{
+  GcalMonthViewPrivate *priv;
+  GtkWidget *widget;
+
+  gdouble start_grid_y;
+
+  gint shown_rows;
+  gdouble first_row_gap;
+
+  gdouble cell_width;
+  gdouble cell_height;
+
+  gint cell;
+
+  priv = gcal_month_view_get_instance_private (view);
+  widget = GTK_WIDGET (view);
+
+  start_grid_y = gcal_month_view_get_start_grid_y (widget);
+
+  shown_rows = ceil ((priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year)) / 7.0);
+  first_row_gap = (6 - shown_rows) * 0.5; /* invalid area before the actual rows */
+
+  cell_width = gtk_widget_get_allocated_width (widget) / 7.0;
+  cell_height = (gtk_widget_get_allocated_height (widget) - start_grid_y) / 6.0;
+
+  y = y - start_grid_y - first_row_gap * cell_height;
+
+  cell = 7 * (gint)(y / cell_height) + (gint)(x / cell_width);
+
+  if (out_x != NULL)
+    *out_x = cell_width * ((cell % 7) + 0.5);
+
+  if (out_y != NULL)
+    *out_y = cell_height * ((cell / 7) + 0.5 * (3.0 - (shown_rows % 2))) + start_grid_y;
+
+  return cell;
 }
 
 static void
@@ -745,45 +799,37 @@ gcal_month_view_button_press (GtkWidget      *widget,
                               GdkEventButton *event)
 {
   GcalMonthViewPrivate *priv;
-  gdouble x, y;
-  gint width, height;
-  gdouble start_grid_y;
 
-  gdouble days;
-  gint shown_rows;
+  gint days;
 
-  gdouble lines_gap;
-  gdouble lines_gap_for_5;
-
-  gdouble v_block;
+  gint j;
+  gint sw, k;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
 
-  x = event->x;
-  y = event->y;
-
-  width = gtk_widget_get_allocated_width (widget);
-  height = gtk_widget_get_allocated_height (widget);
-  start_grid_y = gcal_month_view_get_start_grid_y (widget);
-
-  y = y - start_grid_y;
-
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
-  shown_rows = ceil (days / 7.0);
 
-  lines_gap = ((shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
-  lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
-
-  v_block = (height - start_grid_y) / 6.0;
-
-  priv->clicked_cell = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / v_block)) + floor (x / (width / 7));
-
-  if (priv->clicked_cell < days)
+  /* orientation factors */
+  if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_LTR)
     {
-      priv->start_mark_cell = priv->clicked_cell;
+      sw = 1;
+      k = 0;
+    }
+  else if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL)
+    {
+      sw = -1;
+      k = 1;
     }
 
-  g_debug ("pressed cell is: %d", priv->start_mark_cell);
+  priv->clicked_cell = get_cell_and_center_from_position (GCAL_MONTH_VIEW (widget), event->x, event->y, NULL, NULL);
+
+  j = 7 * ((priv->clicked_cell + 7 * k) / 7) + sw * (priv->clicked_cell % 7) + (1 - k);
+
+  if (j > priv->days_delay && j <= days)
+    priv->start_mark_cell = priv->clicked_cell;
+
+  g_debug ("clicked is: %d", priv->clicked_cell);
+  g_debug ("pressed is: %d", priv->start_mark_cell);
 
   return TRUE;
 }
@@ -803,18 +849,11 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
                                      GdkEventMotion *event)
 {
   GcalMonthViewPrivate *priv;
-  gint width, height;
-  gint y;
-  gdouble start_grid_y;
 
-  gdouble days;
-  gint shown_rows;
+  gint days;
 
-  gdouble lines_gap;
-  gdouble lines_gap_for_5;
-
-  gdouble v_block;
-
+  gint j;
+  gint sw, k;
   gint new_end_cell;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
@@ -823,35 +862,32 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
       priv->clicked_cell == -1)
     return FALSE;
 
-  width = gtk_widget_get_allocated_width (widget);
-  height = gtk_widget_get_allocated_height (widget);
-  start_grid_y = gcal_month_view_get_start_grid_y (widget);
-
-  y = event->y - start_grid_y;
-  if (y < 0)
-    return FALSE;
-
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
-  shown_rows = ceil (days / 7.0);
 
-  lines_gap = ((shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
-  lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
-
-  v_block = (height - start_grid_y) / 6.0;
-
-  /* caching value */
-  new_end_cell = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / v_block)) + floor (event->x / (width / 7));
-  if (priv->end_mark_cell != new_end_cell)
+  /* orientation factors */
+  if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_LTR)
     {
-      gtk_widget_queue_draw (widget);
+      sw = 1;
+      k = 0;
+    }
+  else if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL)
+    {
+      sw = -1;
+      k = 1;
     }
 
-  priv->end_mark_cell = new_end_cell;
+  new_end_cell = get_cell_and_center_from_position (GCAL_MONTH_VIEW (widget), event->x, event->y, NULL, NULL);
 
-  g_debug ("move_notify: %d, %d, %d",
-           priv->start_mark_cell,
-           priv->end_mark_cell,
-           new_end_cell);
+  j = 7 * ((new_end_cell + 7 * k) / 7) + sw * (new_end_cell % 7) + (1 - k);
+
+  if (j > priv->days_delay && j <= days)
+    {
+      if (priv->end_mark_cell != new_end_cell)
+        gtk_widget_queue_draw (widget);
+
+      g_debug ("move_notify: %d, %d, %d", priv->start_mark_cell, priv->end_mark_cell, new_end_cell);
+      priv->end_mark_cell = new_end_cell;
+    }
 
   return TRUE;
 }
@@ -861,19 +897,14 @@ gcal_month_view_button_release (GtkWidget      *widget,
                                 GdkEventButton *event)
 {
   GcalMonthViewPrivate *priv;
-  gdouble x, y;
-  gint width, height;
-  gdouble start_grid_y;
+
+  gint days;
+
+  gint j;
+  gint sw, k;
   gint released;
 
-  gdouble days;
-  gint shown_rows;
-
-  gdouble lines_gap;
-  gdouble lines_gap_for_5;
-  gint february_gap;
-
-  gdouble v_block;
+  gdouble x,y;
 
   icaltimetype *start_date;
   icaltimetype *end_date;
@@ -883,31 +914,25 @@ gcal_month_view_button_release (GtkWidget      *widget,
   if (priv->clicked_cell == -1)
     return FALSE;
 
-  x = event->x;
-  y = event->y;
+  days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
 
-  width = gtk_widget_get_allocated_width (widget);
-  height = gtk_widget_get_allocated_height (widget);
-  start_grid_y = gcal_month_view_get_start_grid_y (widget);
+  /* orientation factors */
+  if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_LTR)
+    {
+      sw = 1;
+      k = 0;
+    }
+  else if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL)
+    {
+      sw = -1;
+      k = 1;
+    }
 
-  y = y - start_grid_y;
+  released = get_cell_and_center_from_position (GCAL_MONTH_VIEW (widget), event->x, event->y, &x, &y);
 
-  days = priv->days_delay + icaltime_days_in_month (priv->date->month,
-                                                    priv->date->year);
-  shown_rows = ceil (days / 7.0);
+  j = 7 * ((released + 7 * k) / 7) + sw * (released % 7) + (1 - k);
 
-  lines_gap = ((shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
-  lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
-  february_gap = shown_rows == 4 ? 1 : 0;
-
-  v_block = (height - start_grid_y) / 6.0;
-
-  released = 7 * (floor ((y - (lines_gap_for_5 * v_block))  / v_block)) +
-             floor (event->x / (width / 7));
-
-  /* whether the event is out of the days of the month */
-  if (released < priv->days_delay + 7 * february_gap ||
-      released >= days)
+  if (j <= priv->days_delay || j > days)
     {
       priv->clicked_cell = -1;
       priv->start_mark_cell = -1;
@@ -922,34 +947,28 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   gtk_widget_queue_draw (widget);
 
-  x = (width / 7) * ((priv->end_mark_cell % 7) + 0.5);
-  y = start_grid_y + v_block * (lines_gap_for_5 + (priv->end_mark_cell / 7) + 0.5);
-
   start_date = gcal_dup_icaltime (priv->date);
-  start_date->day = priv->start_mark_cell - (priv->days_delay + 7 * february_gap) + 1;
+  start_date->day = 7 * ((priv->start_mark_cell + 7 * k) / 7) + sw * (priv->start_mark_cell % 7) + (1 - k);
+  start_date->day -= priv->days_delay;
   start_date->is_date = 1;
 
   end_date = NULL;
   if (priv->start_mark_cell != priv->end_mark_cell)
     {
       end_date = gcal_dup_icaltime (priv->date);
-      end_date->day = priv->end_mark_cell - (priv->days_delay + 7 * february_gap) + 1;
+      end_date->day = j - priv->days_delay;
       end_date->is_date = 1;
     }
 
-  if (priv->start_mark_cell > priv->end_mark_cell)
+  if (start_date->day > end_date->day)
     {
-      start_date->day = priv->end_mark_cell - (priv->days_delay + 7 * february_gap) + 1;
-      end_date->day = priv->start_mark_cell - (priv->days_delay + 7 * february_gap) + 1;
+      gint day;
+      day = start_date->day;
+      start_date->day = end_date->day;
+      end_date->day = day;
     }
 
-  g_debug ("[view] will emit signal on: %f, %f, with %s",
-           x, y, icaltime_as_ical_string (*start_date));
-
-  g_signal_emit_by_name (GCAL_VIEW (widget),
-                         "create-event",
-                         start_date, end_date,
-                         x, y);
+  g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_date, end_date, x, y);
 
   g_free (start_date);
 
