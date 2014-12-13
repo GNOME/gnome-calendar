@@ -80,6 +80,8 @@ static gint           get_cell_and_center_from_position     (GcalMonthView  *vie
                                                              gdouble        *out_x,
                                                              gdouble        *out_y);
 
+static gdouble        get_start_grid_y                      (GtkWidget      *widget);
+
 static void           gcal_view_interface_init              (GcalViewIface  *iface);
 
 static void           gcal_month_view_set_property          (GObject        *object,
@@ -127,8 +129,6 @@ static void           gcal_month_view_forall                (GtkContainer   *con
                                                              gboolean        include_internals,
                                                              GtkCallback     callback,
                                                              gpointer        callback_data);
-
-static gdouble        gcal_month_view_get_start_grid_y      (GtkWidget      *widget);
 
 static icaltimetype*  gcal_month_view_get_initial_date      (GcalView       *view);
 
@@ -187,7 +187,7 @@ get_cell_and_center_from_position (GcalMonthView *view,
   priv = gcal_month_view_get_instance_private (view);
   widget = GTK_WIDGET (view);
 
-  start_grid_y = gcal_month_view_get_start_grid_y (widget);
+  start_grid_y = get_start_grid_y (widget);
 
   shown_rows = ceil ((priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year)) / 7.0);
   first_row_gap = (6 - shown_rows) * 0.5; /* invalid area before the actual rows */
@@ -206,6 +206,34 @@ get_cell_and_center_from_position (GcalMonthView *view,
     *out_y = cell_height * ((cell / 7) + 0.5 * (3.0 - (shown_rows % 2))) + start_grid_y;
 
   return cell;
+}
+
+static gdouble
+get_start_grid_y (GtkWidget *widget)
+{
+  GtkStyleContext* context;
+  GtkStateFlags state_flags;
+  gint padding_top;
+
+  PangoLayout *layout;
+  PangoFontDescription *font_desc;
+  gint font_height;
+  gdouble start_grid_y;
+
+  context = gtk_widget_get_style_context (widget);
+  state_flags = gtk_widget_get_state_flags (widget);
+
+  gtk_style_context_get (context, state_flags, "font", &font_desc, "padding-top", &padding_top, NULL);
+
+  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
+  pango_layout_set_font_description (layout, font_desc);
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+
+  start_grid_y = padding_top + font_height;
+
+  pango_font_description_free (font_desc);
+  g_object_unref (layout);
+  return start_grid_y;
 }
 
 static void
@@ -500,7 +528,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   pango_font_description_free (font_desc);
   g_object_unref (layout);
 
-  start_grid_y = gcal_month_view_get_start_grid_y (widget);
+  start_grid_y = get_start_grid_y (widget);
   horizontal_block = allocation->width / 7.0;
   vertical_block = (allocation->height - start_grid_y) / 6.0;
 
@@ -615,7 +643,7 @@ gcal_month_view_draw (GtkWidget *widget,
   gtk_style_context_get_padding (context, state, &padding);
 
   gtk_widget_get_allocation (widget, &alloc);
-  start_grid_y = gcal_month_view_get_start_grid_y (widget);
+  start_grid_y = get_start_grid_y (widget);
   cell_width = alloc.width / 7.0;
   cell_height = (alloc.height - start_grid_y) / 6.0;
 
@@ -1094,37 +1122,6 @@ gcal_month_view_forall (GtkContainer *container,
     }
 }
 
-static gdouble
-gcal_month_view_get_start_grid_y (GtkWidget *widget)
-{
-  GtkBorder padding;
-
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
-  gint font_height;
-  gdouble start_grid_y;
-
-  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
-                                 gtk_widget_get_state_flags (widget),
-                                 &padding);
-
-  gtk_style_context_get (gtk_widget_get_style_context (widget),
-                         gtk_widget_get_state_flags(widget),
-                         "font", &font_desc,
-                         NULL);
-
-  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
-  pango_layout_set_font_description (layout, font_desc);
-  pango_layout_get_pixel_size (layout, NULL, &font_height);
-
-
-  start_grid_y = padding.top + font_height;
-
-  pango_font_description_free (font_desc);
-  g_object_unref (layout);
-  return start_grid_y;
-}
-
 /* GcalView Interface API */
 /**
  * gcal_month_view_get_initial_date:
@@ -1200,7 +1197,7 @@ gcal_month_view_mark_current_unit (GcalView *view,
   gdouble start_grid_y;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));
-  start_grid_y = gcal_month_view_get_start_grid_y (GTK_WIDGET (view));
+  start_grid_y = get_start_grid_y (GTK_WIDGET (view));
   horizontal_block = gtk_widget_get_allocated_width (GTK_WIDGET (view)) / 7.0;
   vertical_block = (gtk_widget_get_allocated_height (GTK_WIDGET (view)) - start_grid_y) / 6.0;
 
