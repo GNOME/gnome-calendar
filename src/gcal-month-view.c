@@ -672,13 +672,18 @@ gcal_month_view_draw (GtkWidget *widget,
   /* active cells */
   if (priv->start_mark_cell != -1 && priv->end_mark_cell != -1)
     {
-      lower_mark = priv->start_mark_cell;
-      upper_mark = priv->end_mark_cell;
-      if (priv->start_mark_cell > priv->end_mark_cell)
+      lower_mark = 7 * ((priv->start_mark_cell + 7 * k) / 7) + sw * (priv->start_mark_cell % 7) + (1 - k);
+      upper_mark = 7 * ((priv->end_mark_cell + 7 * k) / 7) + sw * (priv->end_mark_cell % 7) + (1 - k);
+      if (lower_mark > upper_mark)
         {
-          lower_mark = priv->end_mark_cell;
-          upper_mark = priv->start_mark_cell;
+          gint cell;
+          cell = lower_mark;
+          lower_mark = upper_mark;
+          upper_mark = cell;
         }
+
+      lower_mark -= priv->days_delay;
+      upper_mark -= priv->days_delay;
     }
 
   /* grid header */
@@ -752,7 +757,7 @@ gcal_month_view_draw (GtkWidget *widget,
           pango_font_description_free (cfont_desc);
           g_object_unref (clayout);
         }
-      else if (lower_mark <= i && i <= upper_mark)
+      else if (lower_mark <= j && j <= upper_mark)
         {
           gtk_style_context_save (context);
           gtk_style_context_set_state (context, state | GTK_STATE_FLAG_SELECTED);
@@ -813,6 +818,73 @@ gcal_month_view_draw (GtkWidget *widget,
     }
   cairo_stroke (cr);
   gtk_style_context_restore (context);
+
+  /* selection borders */
+  if (priv->start_mark_cell != -1 && priv->end_mark_cell != -1)
+   {
+     gint first_mark, last_mark;
+     gint pos_x2, pos_y2;
+
+     first_mark = priv->start_mark_cell;
+     last_mark = priv->end_mark_cell;
+     if (priv->start_mark_cell > priv->end_mark_cell)
+       {
+         last_mark = priv->start_mark_cell;
+         first_mark = priv->end_mark_cell;
+       }
+
+     gtk_style_context_get_color (context, state | GTK_STATE_FLAG_SELECTED, &color);
+     gdk_cairo_set_source_rgba (cr, &color);
+     cairo_set_line_width (cr, 0.4);
+
+     /* horizontals */
+     if ((first_mark / 7) == (last_mark / 7))
+       {
+         gint row = first_mark / 7;
+         gint first_column = first_mark % 7;
+         gint last_column = last_mark % 7;
+
+         pos_x = cell_width * (first_column);
+         pos_x2 = cell_width * (last_column + 1);
+         pos_y = cell_height * (row + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
+         pos_y2 = cell_height * (row + 1.0 + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
+
+         cairo_rectangle (cr, pos_x + 0.3, pos_y + 0.3, pos_x2 - pos_x + 0.6, pos_y2 - pos_y + 0.6);
+       }
+     else
+       {
+         gint first_row = first_mark / 7;
+         gint last_row = last_mark / 7;
+         gint first_column = first_mark % 7;
+         gint last_column = last_mark % 7;
+         gdouble end;
+
+         for (i = first_row; i <= last_row; i++)
+           {
+             if (i == first_row)
+               {
+                 pos_x = cell_width * (first_column + k);
+                 end = (alloc.width * (1 - k)) - pos_x;
+               }
+             else if (i == last_row)
+               {
+                 pos_x = cell_width * (last_column + 1 - k);
+                 end = (alloc.width * k) - pos_x;
+               }
+             else
+               {
+                 pos_x = 0;
+                 end = alloc.width;
+               }
+
+             pos_y = cell_height * (i + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
+             pos_y2 = cell_height * (i + 1.0 + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
+             cairo_rectangle (cr, pos_x + 0.3, pos_y + 0.3, ((gint)end) + 0.6, pos_y2 - pos_y + 0.6);
+           }
+       }
+
+     cairo_stroke (cr);
+   }
 
   g_object_unref (layout);
 
