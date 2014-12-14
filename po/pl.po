@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-07 19:22+0100\n"
-"PO-Revision-Date: 2014-12-07 19:23+0100\n"
+"POT-Creation-Date: 2014-12-14 12:54+0100\n"
+"PO-Revision-Date: 2014-12-14 12:55+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -23,8 +23,8 @@ msgstr ""
 "X-Poedit-Language: Polish\n"
 "X-Poedit-Country: Poland\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:335
-#: ../src/gcal-window.c:827
+#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:372
+#: ../src/gcal-window.c:829
 msgid "Calendar"
 msgstr "Kalendarz"
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:664
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:670
 msgid "Done"
 msgstr "Gotowe"
 
@@ -134,23 +134,27 @@ msgstr "Utwórz"
 msgid "More Details"
 msgstr "Więcej informacji"
 
-#: ../src/gcal-application.c:83
+#: ../src/gcal-application.c:86
 msgid "Display version number"
 msgstr "Wyświetla numer wersji"
 
-#: ../src/gcal-application.c:213
+#: ../src/gcal-application.c:91
+msgid "Open calendar on the passed date"
+msgstr "Otwiera kalendarz na podanej dacie"
+
+#: ../src/gcal-application.c:232
 msgid "- Calendar management"
 msgstr "- zarządzenie kalendarzem"
 
-#: ../src/gcal-application.c:323
+#: ../src/gcal-application.c:360
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id Autorzy Kalendarza"
 
-#: ../src/gcal-application.c:329
+#: ../src/gcal-application.c:366
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Autorzy Kalendarza"
 
-#: ../src/gcal-application.c:342
+#: ../src/gcal-application.c:379
 msgid "translator-credits"
 msgstr ""
 "Piotr Drąg <piotrdrag@gmail.com>, 2012-2014\n"
@@ -160,7 +164,7 @@ msgstr ""
 msgid "Change the date"
 msgstr "Zmień datę"
 
-#: ../src/gcal-edit-dialog.c:664
+#: ../src/gcal-edit-dialog.c:670
 msgid "Save"
 msgstr "Zapisz"
 
@@ -188,32 +192,32 @@ msgstr "Południe"
 msgid "00:00 PM"
 msgstr "00∶00 PM"
 
-#: ../src/gcal-week-view.c:1404 ../src/gcal-window.c:1103
+#: ../src/gcal-week-view.c:1404 ../src/gcal-window.c:1105
 msgid "Week"
 msgstr "Tydzień"
 
-#: ../src/gcal-window.c:570
+#: ../src/gcal-window.c:572
 #, c-format
 msgid "New Event on %s"
 msgstr "Nowe wydarzenie w dniu %s"
 
-#: ../src/gcal-window.c:762
+#: ../src/gcal-window.c:764
 msgid "Event deleted"
 msgstr "Usunięto wydarzenie"
 
-#: ../src/gcal-window.c:763
+#: ../src/gcal-window.c:765
 msgid "Undo"
 msgstr "Cofnij"
 
-#: ../src/gcal-window.c:853
+#: ../src/gcal-window.c:855
 #, c-format
 msgid "Results for \"%s\""
 msgstr "Wyniki dla \"%s\""
 
-#: ../src/gcal-window.c:1112
+#: ../src/gcal-window.c:1114
 msgid "Month"
 msgstr "Miesiąc"
 
-#: ../src/gcal-window.c:1118
+#: ../src/gcal-window.c:1120
 msgid "Year"
 msgstr "Rok"
