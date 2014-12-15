@@ -658,8 +658,15 @@ void
 gcal_manager_enable_source (GcalManager *manager,
                             ESource     *source)
 {
-  /* TODO: implement me */
-  ;
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+
+  priv = gcal_manager_get_instance_private (manager);
+  unit = g_hash_table_lookup (priv->clients, source);
+
+  unit->enabled = TRUE;
+  e_cal_data_model_add_client (priv->e_data_model, unit->client);
+  e_cal_data_model_add_client (priv->search_data_model, unit->client);
 }
 
 /**
@@ -673,8 +680,15 @@ void
 gcal_manager_disable_source (GcalManager *manager,
                              ESource     *source)
 {
-  /* TODO: implement me */
-  ;
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+
+  priv = gcal_manager_get_instance_private (manager);
+  unit = g_hash_table_lookup (priv->clients, source);
+
+  unit->enabled = FALSE;
+  e_cal_data_model_remove_client (priv->e_data_model, e_source_get_uid (source));
+  e_cal_data_model_remove_client (priv->search_data_model, e_source_get_uid (source));
 }
 
 void
