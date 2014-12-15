@@ -80,6 +80,12 @@ gchar*         gcal_manager_add_source              (GcalManager        *manager
                                                      const gchar        *backend,
                                                      const gchar        *color);
 
+void           gcal_manager_enable_source           (GcalManager        *manager,
+                                                     ESource            *source);
+
+void           gcal_manager_disable_source          (GcalManager        *manager,
+                                                     ESource            *source);
+
 void           gcal_manager_refresh                 (GcalManager        *manager);
 
 gboolean       gcal_manager_is_client_writable      (GcalManager        *manager,

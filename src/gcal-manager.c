@@ -638,6 +638,36 @@ gcal_manager_add_source (GcalManager *manager,
   return e_source_dup_uid (source);
 }
 
+/**
+ * gcal_manager_enable_source:
+ * @manager: a #GcalManager
+ * @source: the target ESource
+ *
+ * Enable the given ESource.
+ */
+void
+gcal_manager_enable_source (GcalManager *manager,
+                            ESource     *source)
+{
+  /* TODO: implement me */
+  ;
+}
+
+/**
+ * gcal_manager_disable_source:
+ * @manager: a #GcalManager
+ * @source: the target ESource
+ *
+ * Disable the given ESource.
+ */
+void
+gcal_manager_disable_source (GcalManager *manager,
+                             ESource     *source)
+{
+  /* TODO: implement me */
+  ;
+}
+
 void
 gcal_manager_refresh (GcalManager *manager)
 {
