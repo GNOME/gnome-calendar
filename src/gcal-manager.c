@@ -68,6 +68,8 @@ typedef struct _MoveEventData MoveEventData;
 
 static void     free_async_ops_data                       (AsyncOpsData    *data);
 
+static void     free_unit_data                            (GcalManagerUnit *data);
+
 static void     load_source                               (GcalManager     *manager,
                                                            ESource         *source);
 
@@ -189,6 +191,13 @@ free_async_ops_data (AsyncOpsData *data)
   g_free (data);
 }
 
+static void
+free_unit_data (GcalManagerUnit *data)
+{
+  g_object_unref (data->client);
+  g_free (data);
+}
+
 /**
  * load_source:
  * @manager: Manager instance
@@ -244,7 +253,7 @@ on_client_connected (GObject      *source_object,
     {
       unit = g_new0 (GcalManagerUnit, 1);
       unit->connected = TRUE;
-      unit->client = client;
+      unit->client = g_object_ref (client);
 
       /* FIXME: user should be able to disable sources */
       unit->enabled = TRUE;
@@ -419,7 +428,7 @@ gcal_manager_init (GcalManager *self)
   priv->clients = g_hash_table_new_full ((GHashFunc) e_source_hash,
                                          (GEqualFunc) e_source_equal,
                                          g_object_unref,
-                                         g_free);
+                                         (GDestroyNotify) free_unit_data);
 
   /* reading sources and schedule its connecting */
   error = NULL;
