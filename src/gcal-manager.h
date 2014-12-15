@@ -44,6 +44,10 @@ struct _GcalManager
 struct _GcalManagerClass
 {
   GObjectClass parent_class;
+
+  /* signals */
+  void (*source_added)  (GcalManager *manager, ESource *source);
+  void (*source_removed)  (GcalManager *manager, ESource *source);
 };
 
 typedef struct

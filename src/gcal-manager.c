@@ -66,6 +66,16 @@ struct _MoveEventData
 
 typedef struct _MoveEventData MoveEventData;
 
+enum
+{
+  SOURCE_ACTIVATE,
+  SOURCE_ADDED,
+  SOURCE_REMOVED,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
+
 static void     free_async_ops_data                       (AsyncOpsData    *data);
 
 static void     free_unit_data                            (GcalManagerUnit *data);
@@ -76,6 +86,10 @@ static void     load_source                               (GcalManager     *mana
 static void     on_client_connected                       (GObject         *source_object,
                                                            GAsyncResult    *result,
                                                            gpointer         user_data);
+
+static void     on_client_readonly_changed                (EClient           *client,
+                                                           GParamSpec        *pspec,
+                                                           gpointer           user_data);
 
 static void     on_client_refreshed                       (GObject         *source_object,
                                                            GAsyncResult    *result,
@@ -259,10 +273,15 @@ on_client_connected (GObject      *source_object,
       unit->enabled = TRUE;
 
       g_hash_table_insert (priv->clients, source, unit);
+      g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ADDED], 0, source);
 
       g_debug ("Source %s (%s) connected",
                e_source_get_display_name (source),
                e_source_get_uid (source));
+
+      /* notify the readonly property */
+      g_signal_connect (client, "notify::readonly",
+                        G_CALLBACK (on_client_readonly_changed), user_data);
 
       e_cal_data_model_add_client (priv->e_data_model, client);
       e_cal_data_model_add_client (priv->search_data_model, client);
@@ -281,6 +300,20 @@ on_client_connected (GObject      *source_object,
       g_error_free (error);
       return;
     }
+}
+
+static void
+on_client_readonly_changed (EClient    *client,
+                            GParamSpec *pspec,
+                            gpointer    user_data)
+{
+  ESource *source;
+  gboolean readonly;
+
+  source = e_client_get_source (client);
+  readonly = e_client_is_readonly (client);
+
+  g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ACTIVATE], 0, source, !readonly);
 }
 
 
@@ -404,12 +437,29 @@ remove_source (GcalManager  *manager,
   e_cal_data_model_remove_client (priv->search_data_model,
                                   e_source_get_uid (source));
   g_hash_table_remove (priv->clients, source);
+  g_signal_emit (manager, signals[SOURCE_REMOVED], 0, source);
 }
 
 static void
 gcal_manager_class_init (GcalManagerClass *klass)
 {
   G_OBJECT_CLASS (klass)->finalize = gcal_manager_finalize;
+
+  /* signals */
+  signals[SOURCE_ACTIVATE] = g_signal_new ("source-activate", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
+                                           G_STRUCT_OFFSET (GcalManagerClass, source_activate),
+                                           NULL, NULL, NULL,
+                                           G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_BOOLEAN);
+
+  signals[SOURCE_ADDED] = g_signal_new ("source-added", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
+                                        G_STRUCT_OFFSET (GcalManagerClass, source_added),
+                                        NULL, NULL, NULL,
+                                        G_TYPE_NONE, 1, G_TYPE_POINTER);
+
+  signals[SOURCE_REMOVED] = g_signal_new ("source-removed", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
+                                          G_STRUCT_OFFSET (GcalManagerClass, source_removed),
+                                          NULL, NULL, NULL,
+                                          G_TYPE_NONE, 1, G_TYPE_POINTER);
 }
 
 static void
