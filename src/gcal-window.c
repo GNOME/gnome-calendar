@@ -742,12 +742,8 @@ remove_source (GcalManager *manager,
                 {
                   g_menu_remove (priv->calendar_menu, i);
                   source_found = TRUE;
-
-                  g_free (uid);
                   break;
                 }
-
-              g_free (uid);
             }
         }
 
