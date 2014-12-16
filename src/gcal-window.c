@@ -69,6 +69,7 @@ typedef struct
   /* header_bar widets */
   GtkWidget           *menu_button;
   GtkWidget           *search_button;
+  GtkWidget           *calendars_button;
   GtkWidget           *search_entry;
   GtkWidget           *back_button;
   GtkWidget           *today_button;
@@ -98,6 +99,9 @@ typedef struct
   NewEventData        *event_creation_data;
 
   GcalEventData       *event_to_delete;
+
+  /* calendar management */
+  GMenu               *calendar_menu;
 
   /* temp to keep event_creation */
   gboolean             open_edit_dialog;
@@ -159,6 +163,19 @@ static void           create_notification                (GcalWindow          *w
                                                           gchar               *button_label);
 
 static void           hide_notification                  (GtkWidget           *button,
+                                                          gpointer             user_data);
+
+/* calendar management */
+static void           add_source                         (GcalManager         *manager,
+                                                          ESource             *source,
+                                                          gpointer             user_data);
+
+static void           remove_source                      (GcalManager         *manager,
+                                                          ESource             *source,
+                                                          gpointer             user_data);
+
+static void           on_calendar_toggled                (GSimpleAction       *action,
+                                                          GVariant            *value,
                                                           gpointer             user_data);
 
 /* handling events interaction */
@@ -652,6 +669,140 @@ hide_notification (GtkWidget *button,
                                  FALSE);
 }
 
+
+static void
+add_source (GcalManager *manager,
+            ESource     *source,
+            gpointer     user_data)
+{
+  GcalWindowPrivate *priv;
+
+  GdkRGBA color;
+  GdkPixbuf *pix;
+  GMenuItem *item;
+  GSimpleAction *action;
+
+  gchar *item_name;
+  ESourceSelectable *extension;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  /* create the action itself */
+  action = g_simple_action_new_stateful (e_source_get_uid (source), NULL, g_variant_new_boolean (TRUE));
+  g_signal_connect (action, "change-state", G_CALLBACK (on_calendar_toggled), user_data);
+  g_action_map_add_action (G_ACTION_MAP (user_data), G_ACTION (action));
+
+  /* retrieve the source's color & build item name */
+  item_name = g_strdup_printf ("win.%s", e_source_get_uid (source));
+  extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
+  gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
+  pix = gcal_get_pixbuf_from_color (&color, 16);
+
+  /* create the menu item */
+  item = g_menu_item_new (e_source_get_display_name (source), item_name);
+  g_menu_item_set_attribute_value (item, "uid", g_variant_new_string (e_source_get_uid (source)));
+  g_menu_item_set_icon (item, G_ICON (pix));
+  g_menu_append_item (priv->calendar_menu, item);
+
+  g_object_unref (pix);
+  g_object_unref (item);
+  g_free (item_name);
+}
+
+static void
+remove_source (GcalManager *manager,
+               ESource     *source,
+               gpointer     user_data)
+{
+  GcalWindowPrivate *priv;
+  gboolean source_found;
+  gint n_items;
+  gint i;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  n_items = g_menu_model_get_n_items (G_MENU_MODEL (priv->calendar_menu));
+  source_found = FALSE;
+
+  for (i = 0; i < n_items; i++)
+    {
+      GMenuAttributeIter *iter;
+
+      iter = g_menu_model_iterate_item_attributes (G_MENU_MODEL (priv->calendar_menu), i);
+
+      /* look for 'uid' attribute */
+      while (g_menu_attribute_iter_next (iter))
+        {
+          if (g_strcmp0 (g_menu_attribute_iter_get_name (iter), "uid") == 0)
+            {
+              GVariant *uid;
+              uid = g_menu_attribute_iter_get_value (iter);
+
+              /* if we find the item with uid == source::uid, remove it */
+              if (g_strcmp0 (g_variant_get_string (uid, NULL), e_source_get_uid (source)) == 0)
+                {
+                  g_menu_remove (priv->calendar_menu, i);
+                  source_found = TRUE;
+
+                  g_free (uid);
+                  break;
+                }
+
+              g_free (uid);
+            }
+        }
+
+      g_object_unref (iter);
+
+      if (source_found)
+        break;
+    }
+
+  /* remove the action */
+  g_action_map_remove_action (G_ACTION_MAP (user_data), e_source_get_uid (source));
+}
+
+static void
+on_calendar_toggled (GSimpleAction *action,
+                     GVariant      *value,
+                     gpointer       user_data)
+{
+  GcalWindowPrivate *priv;
+  ESource *source;
+  GList *l;
+  GList *aux;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  /* lookup source */
+  source = NULL;
+  l = gcal_manager_get_sources (priv->manager);
+
+  for (aux = l; aux != NULL; aux = aux->next)
+    {
+      ESource *tmp;
+      tmp = (ESource *) aux->data;
+
+      if (g_strcmp0 (e_source_get_uid (tmp), g_action_get_name (G_ACTION (action))) == 0)
+        {
+          source = tmp;
+          break;
+        }
+    }
+
+  g_list_free (l);
+
+  if (source == NULL)
+    return;
+
+  /* toggle source visibility */
+  if (g_variant_get_boolean (value))
+    gcal_manager_enable_source (priv->manager, source);
+  else
+    gcal_manager_disable_source (priv->manager, source);
+
+  g_simple_action_set_state (action, value);
+}
+
 static void
 create_event (gpointer   user_data,
               GtkWidget *widget)
@@ -987,6 +1138,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, nav_bar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_bar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendars_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, back_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, today_button);
@@ -1035,6 +1187,9 @@ gcal_window_init (GcalWindow *self)
 
   priv->event_creation_data = NULL;
 
+  /* calendar management */
+  priv->calendar_menu = NULL;
+
   /* FIXME: Review real need of this */
   priv->save_geometry_timeout_id = 0;
   priv->event_to_delete = NULL;
@@ -1080,6 +1235,10 @@ gcal_window_constructed (GObject *object)
                                   winmenu);
 
   g_object_unref (builder);
+
+  /* calendar menu */
+  priv->calendar_menu = g_menu_new ();
+  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->calendars_button), G_MENU_MODEL (priv->calendar_menu));
 
   /* edit dialog initialization */
   priv->edit_dialog = gcal_edit_dialog_new ();
@@ -1202,6 +1361,10 @@ gcal_window_set_property (GObject      *object,
       return;
     case PROP_MANAGER:
       priv->manager = g_value_get_pointer (value);
+      g_signal_connect (priv->manager, "source-added",
+                        G_CALLBACK (add_source), object);
+      g_signal_connect (priv->manager, "source-removed",
+                        G_CALLBACK (remove_source), object);
       return;
     }
 
