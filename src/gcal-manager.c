@@ -446,7 +446,7 @@ gcal_manager_class_init (GcalManagerClass *klass)
   G_OBJECT_CLASS (klass)->finalize = gcal_manager_finalize;
 
   /* signals */
-  signals[SOURCE_ACTIVATE] = g_signal_new ("source-activated", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
+  signals[SOURCE_ACTIVATED] = g_signal_new ("source-activated", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
                                            G_STRUCT_OFFSET (GcalManagerClass, source_activated),
                                            NULL, NULL, NULL,
                                            G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_BOOLEAN);
