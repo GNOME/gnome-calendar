@@ -68,7 +68,7 @@ typedef struct _MoveEventData MoveEventData;
 
 enum
 {
-  SOURCE_ACTIVATE,
+  SOURCE_ACTIVATED,
   SOURCE_ADDED,
   SOURCE_REMOVED,
   NUM_SIGNALS
@@ -313,7 +313,7 @@ on_client_readonly_changed (EClient    *client,
   source = e_client_get_source (client);
   readonly = e_client_is_readonly (client);
 
-  g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ACTIVATE], 0, source, !readonly);
+  g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ACTIVATED], 0, source, !readonly);
 }
 
 
@@ -446,8 +446,8 @@ gcal_manager_class_init (GcalManagerClass *klass)
   G_OBJECT_CLASS (klass)->finalize = gcal_manager_finalize;
 
   /* signals */
-  signals[SOURCE_ACTIVATE] = g_signal_new ("source-activate", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
-                                           G_STRUCT_OFFSET (GcalManagerClass, source_activate),
+  signals[SOURCE_ACTIVATE] = g_signal_new ("source-activated", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
+                                           G_STRUCT_OFFSET (GcalManagerClass, source_activated),
                                            NULL, NULL, NULL,
                                            G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_BOOLEAN);
 

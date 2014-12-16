@@ -46,7 +46,7 @@ struct _GcalManagerClass
   GObjectClass parent_class;
 
   /* signals */
-  void (*source_activate)  (GcalManager *manager, ESource *source, gboolean active);
+  void (*source_activated)  (GcalManager *manager, ESource *source, gboolean active);
   void (*source_added)  (GcalManager *manager, ESource *source);
   void (*source_removed)  (GcalManager *manager, ESource *source);
 };

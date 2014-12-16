@@ -977,7 +977,7 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
 
   priv->manager = manager;
 
-  g_signal_connect (manager, "source-activate",
+  g_signal_connect (manager, "source-activated",
                     G_CALLBACK (on_source_activate), dialog);
   g_signal_connect (manager, "source-added",
                     G_CALLBACK (on_source_added), dialog);
