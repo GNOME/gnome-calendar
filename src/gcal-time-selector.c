@@ -146,6 +146,7 @@ gcal_time_selector_constructed (GObject *object)
   g_object_ref (priv->minute_spin);
 
   priv->period_combo = (GtkWidget*) gtk_builder_get_object (builder, "period_combo");
+  gtk_widget_set_visible (priv->period_combo, !priv->format_24h);
   g_object_ref (priv->period_combo);
 
   g_object_unref (builder);
