@@ -67,10 +67,7 @@ on_output (GtkSpinButton *button,
 static void
 gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
 {
-  GtkWidgetClass *widget_class;
   GObjectClass *object_class;
-
-  widget_class = GTK_WIDGET_CLASS (klass);
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_time_selector_constructed;
