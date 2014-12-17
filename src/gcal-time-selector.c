@@ -125,6 +125,8 @@ period_changed (GtkComboBox *combo,
                 gpointer     user_data)
 {
   format_date_label (GCAL_TIME_SELECTOR (user_data));
+
+  g_signal_emit (user_data, signals[MODIFIED], 0);
 }
 
 static void
@@ -132,6 +134,8 @@ time_changed (GtkAdjustment *adjustment,
               gpointer       user_data)
 {
   format_date_label (GCAL_TIME_SELECTOR (user_data));
+
+  g_signal_emit (user_data, signals[MODIFIED], 0);
 }
 
 static void
