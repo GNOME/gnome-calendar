@@ -29,6 +29,7 @@ struct _GcalTimeSelectorPrivate
   GtkWidget *hour_spin;
   GtkWidget *minute_spin;
   GtkWidget *period_check;
+  GtkWidget *period_combo;
 
   gboolean   format_24h;
 };
@@ -133,10 +134,19 @@ gcal_time_selector_constructed (GObject *object)
   builder = gtk_builder_new ();
   gtk_builder_add_from_resource (builder, "/org/gnome/calendar/time-selector.ui", NULL);
 
-  grid = (GtkWidget*) gtk_builder_get_object (builder, "grid");
   priv->popover = gtk_popover_new (GTK_WIDGET (object));
+
+  grid = (GtkWidget*) gtk_builder_get_object (builder, "grid");
+  g_object_ref (grid);
+
   priv->hour_spin = (GtkWidget*) gtk_builder_get_object (builder, "hour_spin");
+  g_object_ref (priv->hour_spin);
+
   priv->minute_spin = (GtkWidget*) gtk_builder_get_object (builder, "minute_spin");
+  g_object_ref (priv->minute_spin);
+
+  priv->period_combo = (GtkWidget*) gtk_builder_get_object (builder, "period_combo");
+  g_object_ref (priv->period_combo);
 
   g_object_unref (builder);
 
