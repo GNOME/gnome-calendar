@@ -40,6 +40,12 @@ enum
   NUM_SIGNALS
 };
 
+enum
+{
+  AM,
+  PM
+};
+
 static guint signals[NUM_SIGNALS] = { 0, };
 
 static gboolean on_output                                      (GtkSpinButton        *button,
@@ -191,18 +197,29 @@ gcal_time_selector_set_time (GcalTimeSelector *selector,
   g_warn_if_fail (hours < 24);
   g_warn_if_fail (minutes < 60);
 
-  gtk_adjustment_set_value (hour_adj, hours < 24 ? hours : 0);
-  gtk_adjustment_set_value (minute_adj, minutes < 60 ? minutes : 0);
-
+  /* format label & spin buttons according to the format */
   if (priv->format_24h)
     {
+      gtk_adjustment_set_value (hour_adj, hours < 24 ? hours : 0);
       new_time = g_strdup_printf ("%.2d:%.2d", hours, minutes);
     }
   else
     {
-      new_time = g_strdup_printf ("%.2d:%.2d", hours, minutes);
+      gint period;
+
+      period = hours < 12? AM : PM;
+      hours = hours % 12;
+
+      gtk_combo_box_set_active (GTK_COMBO_BOX (priv->period_combo), period);
+      gtk_adjustment_set_value (hour_adj, hours);
+
+      if (period == AM)
+        new_time = g_strdup_printf (_("%.2d:%.2d AM"), hours, minutes);
+      else
+        new_time = g_strdup_printf (_("%.2d:%.2d PM"), hours, minutes);
     }
 
+  gtk_adjustment_set_value (minute_adj, minutes < 60 ? minutes : 0);
   gtk_label_set_label (GTK_LABEL (priv->time_label), new_time);
 
   g_free (new_time);
@@ -222,6 +239,22 @@ gcal_time_selector_get_time (GcalTimeSelector *selector,
   hour_adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin));
   minute_adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->minute_spin));
 
-  *hours = (gint) gtk_adjustment_get_value (hour_adj);
+  /* 24h, the easy one*/
+  if (priv->format_24h)
+    {
+      *hours = (gint) gtk_adjustment_get_value (hour_adj);
+    }
+
+  /* 12h format must calculate the time
+   * according to the AM/PM combo box */
+  else
+    {
+      gint am_pm;
+
+      am_pm = gtk_combo_box_get_active (GTK_COMBO_BOX (priv->period_combo));
+      *hours = (gint) gtk_adjustment_get_value (hour_adj) + 12 * am_pm;
+    }
+
+  /* minute field isn't dependant on 12h/24h format */
   *minutes = (gint) gtk_adjustment_get_value (minute_adj);
 }
