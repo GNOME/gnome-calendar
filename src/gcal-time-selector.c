@@ -48,12 +48,58 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
+static void     format_date_label                              (GcalTimeSelector     *selector);
+
 static gboolean on_output                                      (GtkSpinButton        *button,
+                                                                gpointer              user_data);
+
+static void     period_changed                                 (GtkComboBox          *combo,
                                                                 gpointer              user_data);
 
 static void     gcal_time_selector_constructed                 (GObject              *object);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalTimeSelector, gcal_time_selector, GTK_TYPE_TOGGLE_BUTTON);
+
+static void
+format_date_label (GcalTimeSelector *selector)
+{
+  GcalTimeSelectorPrivate *priv;
+  GtkAdjustment *hour_adj;
+  GtkAdjustment *minute_adj;
+  gchar *new_time;
+  gint hour, minute;
+
+  priv = gcal_time_selector_get_instance_private (selector);
+
+  hour_adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin));
+  minute_adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->minute_spin));
+
+  /* get current time */
+  hour = (gint) gtk_adjustment_get_value (hour_adj);
+  minute = (gint) gtk_adjustment_get_value (minute_adj);
+
+  /* format time according to the system 12h/24h setting */
+  if (priv->format_24h)
+    {
+      new_time = g_strdup_printf ("%.2d:%.2d", hour, minute);
+    }
+  else
+    {
+      gint period;
+
+      period = gtk_combo_box_get_active (GTK_COMBO_BOX (priv->period_combo));
+
+      /* FIXME: we shouldn't expose print formatting code to translators */
+      if (period == AM)
+        new_time = g_strdup_printf (_("%.2d:%.2d AM"), hour, minute);
+      else
+        new_time = g_strdup_printf (_("%.2d:%.2d PM"), hour, minute);
+    }
+
+  gtk_label_set_label (GTK_LABEL (priv->time_label), new_time);
+
+  g_free (new_time);
+}
 
 static gboolean
 on_output (GtkSpinButton *button,
@@ -69,6 +115,13 @@ on_output (GtkSpinButton *button,
   g_free (text);
 
   return TRUE;
+}
+
+static void
+period_changed (GtkComboBox *combo,
+                gpointer     user_data)
+{
+  format_date_label (GCAL_TIME_SELECTOR (user_data));
 }
 
 static void
@@ -169,6 +222,7 @@ gcal_time_selector_constructed (GObject *object)
     }
 
   /* signals */
+  g_signal_connect (priv->period_combo, "changed", G_CALLBACK (period_changed), object);
   g_signal_connect (priv->hour_spin, "output", G_CALLBACK (on_output), object);
   g_signal_connect (priv->minute_spin, "output", G_CALLBACK (on_output), object);
 }
@@ -188,7 +242,6 @@ gcal_time_selector_set_time (GcalTimeSelector *selector,
   GcalTimeSelectorPrivate *priv;
   GtkAdjustment *hour_adj;
   GtkAdjustment *minute_adj;
-  gchar *new_time;
 
   g_return_if_fail (GCAL_IS_TIME_SELECTOR (selector));
   priv = gcal_time_selector_get_instance_private (selector);
@@ -197,11 +250,10 @@ gcal_time_selector_set_time (GcalTimeSelector *selector,
   g_warn_if_fail (hours < 24);
   g_warn_if_fail (minutes < 60);
 
-  /* format label & spin buttons according to the format */
+  /* setup spin buttons according to the format */
   if (priv->format_24h)
     {
       gtk_adjustment_set_value (hour_adj, hours < 24 ? hours : 0);
-      new_time = g_strdup_printf ("%.2d:%.2d", hours, minutes);
     }
   else
     {
@@ -212,17 +264,12 @@ gcal_time_selector_set_time (GcalTimeSelector *selector,
 
       gtk_combo_box_set_active (GTK_COMBO_BOX (priv->period_combo), period);
       gtk_adjustment_set_value (hour_adj, hours);
-
-      if (period == AM)
-        new_time = g_strdup_printf (_("%.2d:%.2d AM"), hours, minutes);
-      else
-        new_time = g_strdup_printf (_("%.2d:%.2d PM"), hours, minutes);
     }
 
   gtk_adjustment_set_value (minute_adj, minutes < 60 ? minutes : 0);
-  gtk_label_set_label (GTK_LABEL (priv->time_label), new_time);
 
-  g_free (new_time);
+  /* format time label accordingly */
+  format_date_label (selector);
 }
 
 void
