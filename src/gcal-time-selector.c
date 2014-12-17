@@ -195,6 +195,7 @@ gcal_time_selector_constructed (GObject *object)
   gtk_builder_add_from_resource (builder, "/org/gnome/calendar/time-selector.ui", NULL);
 
   priv->popover = gtk_popover_new (GTK_WIDGET (object));
+  gtk_popover_set_position (GTK_POPOVER (priv->popover), GTK_POS_BOTTOM);
 
   grid = (GtkWidget*) gtk_builder_get_object (builder, "grid");
   g_object_ref (grid);
