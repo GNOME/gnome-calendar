@@ -24,6 +24,7 @@ EXTRA_DIST=                     \
   ui/menus.ui                   \
   ui/nav_bar.ui                 \
   ui/new-event.ui               \
+  ui/time-selector.ui           \
   ui/window.ui                  \
   theme/gtk-styles.css          \
   $(desktop_in_files)           \

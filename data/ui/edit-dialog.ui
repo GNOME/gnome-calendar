@@ -237,7 +237,7 @@
               </packing>
             </child>
             <child>
-              <object class="GcalTimeEntry" id="start_time_entry">
+              <object class="GcalTimeSelector" id="start_time_selector">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -257,7 +257,7 @@
               </packing>
             </child>
             <child>
-              <object class="GcalTimeEntry" id="end_time_entry">
+              <object class="GcalTimeSelector" id="end_time_selector">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
