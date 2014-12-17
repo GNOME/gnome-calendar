@@ -56,6 +56,9 @@ static gboolean on_output                                      (GtkSpinButton   
 static void     period_changed                                 (GtkComboBox          *combo,
                                                                 gpointer              user_data);
 
+static void     time_changed                                   (GtkAdjustment        *adjustment,
+                                                                gpointer              user_data);
+
 static void     gcal_time_selector_constructed                 (GObject              *object);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalTimeSelector, gcal_time_selector, GTK_TYPE_TOGGLE_BUTTON);
@@ -120,6 +123,13 @@ on_output (GtkSpinButton *button,
 static void
 period_changed (GtkComboBox *combo,
                 gpointer     user_data)
+{
+  format_date_label (GCAL_TIME_SELECTOR (user_data));
+}
+
+static void
+time_changed (GtkAdjustment *adjustment,
+              gpointer       user_data)
 {
   format_date_label (GCAL_TIME_SELECTOR (user_data));
 }
@@ -223,6 +233,12 @@ gcal_time_selector_constructed (GObject *object)
     }
 
   /* signals */
+  adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin));
+  g_signal_connect (adj, "value-changed", G_CALLBACK (time_changed), object);
+
+  adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->minute_spin));
+  g_signal_connect (adj, "value-changed", G_CALLBACK (time_changed), object);
+
   g_signal_connect (priv->period_combo, "changed", G_CALLBACK (period_changed), object);
   g_signal_connect (priv->hour_spin, "output", G_CALLBACK (on_output), object);
   g_signal_connect (priv->minute_spin, "output", G_CALLBACK (on_output), object);
