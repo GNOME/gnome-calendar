@@ -702,8 +702,6 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
   gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->notes_text), writable);
 
   gtk_widget_set_sensitive (priv->all_day_check, writable);
-  gtk_widget_set_sensitive (priv->end_time_selector, writable);
-  gtk_widget_set_sensitive (priv->start_time_selector, writable);
 
   gtk_button_set_label (GTK_BUTTON (priv->done_button),
                         writable ? _("Save") : _("Done"));
