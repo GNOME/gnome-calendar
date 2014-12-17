@@ -104,6 +104,7 @@ gcal_time_selector_constructed (GObject *object)
   GcalTimeSelectorPrivate *priv;
   GtkWidget *grid;
   GtkBuilder *builder;
+  GtkAdjustment *adj;
 
   GSettings *settings;
   gchar *clock_format;
@@ -153,6 +154,13 @@ gcal_time_selector_constructed (GObject *object)
 
   gtk_container_add (GTK_CONTAINER (priv->popover), grid);
   g_object_bind_property (priv->popover, "visible", object, "active", G_BINDING_BIDIRECTIONAL);
+
+  /* maximum of 11 for 12h format */
+  if (! priv->format_24h)
+    {
+      adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin));
+      gtk_adjustment_set_upper (adj, 11.0);
+    }
 
   /* signals */
   g_signal_connect (priv->hour_spin, "output", G_CALLBACK (on_output), object);
