@@ -48,7 +48,7 @@ typedef struct
   GList          *multiday_children;
 
   /**
-   * Hash containing which days have overflow
+   * Set containing which days have overflow
    */
   GHashTable     *overflown_days;
 
@@ -861,6 +861,22 @@ gcal_month_view_draw (GtkWidget *widget,
                              cell_width * (column + 1 - k) - sw * padding.right + (k - 1) * font_width,
                              cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y,
                              layout);
+        }
+
+      if (g_hash_table_contains (priv->overflown_days, GINT_TO_POINTER (i)))
+        {
+          gchar *overflow_str;
+
+          overflow_str = g_strdup_printf (_("Other %d events"), 2); /* FIXME: handle plurars property */
+          pango_layout_set_text (layout, overflow_str, -1);
+          pango_layout_get_pixel_size (layout, &font_width, &font_height);
+
+          gtk_render_layout (context, cr,
+                             cell_width * (column + k) + sw * padding.right - k * font_width,
+                             cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y,
+                             layout);
+
+          g_free (overflow_str);
         }
 
       g_free (nr_day);
