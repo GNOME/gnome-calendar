@@ -52,6 +52,11 @@ typedef struct
    */
   GHashTable     *overflown_days;
 
+  /**
+   * Set containing the master widgets hidden for delete;
+   */
+  GHashTable     *hidden_for_delete;
+
   GdkWindow      *event_window;
 
   /**
@@ -356,6 +361,7 @@ gcal_month_view_init (GcalMonthView *self)
   priv->single_day_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   priv->multiday_children = NULL;
   priv->overflown_days = g_hash_table_new (g_direct_hash, g_direct_equal);
+  priv->hidden_for_delete = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 
   gtk_style_context_add_class (
       gtk_widget_get_style_context (GTK_WIDGET (self)),
@@ -461,6 +467,7 @@ gcal_month_view_finalize (GObject       *object)
   g_hash_table_destroy (priv->children);
   g_hash_table_destroy (priv->single_day_children);
   g_hash_table_destroy (priv->overflown_days);
+  g_hash_table_destroy (priv->hidden_for_delete);
 
   if (priv->multiday_children != NULL)
     g_list_free (priv->multiday_children);
