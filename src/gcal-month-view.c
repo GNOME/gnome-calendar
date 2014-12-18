@@ -564,121 +564,229 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                                GtkAllocation *allocation)
 {
   GcalMonthViewPrivate *priv;
-  gint i;
-  GList *l;
+  gint i, j;
+  gint sw, k;
 
-  GtkBorder padding;
+  gint padding_bottom;
   PangoLayout *layout;
   PangoFontDescription *font_desc;
-
   gint font_height;
-  gdouble added_height;
 
-  gdouble start_grid_y;
-  gdouble horizontal_block;
-  gdouble vertical_block;
-  gdouble vertical_cell_margin;
+  gdouble start_grid_y, cell_width, cell_height, vertical_cell_space;
+  gdouble pos_x, pos_y;
+  gdouble size_left [42];
 
-  gdouble days;
   gint shown_rows;
-  gint february_gap;
 
-  gdouble lines_gap;
+  const gchar *uuid;
+  GtkWidget *child_widget;
+  GtkAllocation child_allocation;
+  gint natural_height;
 
-  gdouble lines_gap_for_5;
+  GList *widgets, *l, *aux, *l2 = NULL;
+  GHashTableIter iter;
+  gpointer key, value;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
 
+  /* remove every widget' parts, but the master widget */
+  widgets = g_hash_table_get_values (priv->children);
+  for (aux = widgets; aux != NULL; aux = g_list_next (aux))
+    {
+      l = g_list_next ((GList*) aux->data);
+      for (; l != NULL; l = g_list_next (l))
+        l2 = g_list_append (l2, l->data);
+    }
+  g_list_free (widgets);
+
+  for (aux = l2; aux != NULL; aux = g_list_next (aux))
+    gtk_widget_destroy ((GtkWidget*) aux->data);
+  g_list_free (l2);
+
+  /* clean overflow information */
+  g_hash_table_remove_all (priv->overflown_days);
+
   gtk_widget_set_allocation (widget, allocation);
   if (gtk_widget_get_realized (widget))
-    {
-      gdk_window_move_resize (priv->event_window,
-                              allocation->x,
-                              allocation->y,
-                              allocation->width,
-                              allocation->height);
-    }
+    gdk_window_move_resize (priv->event_window, allocation->x, allocation->y, allocation->width, allocation->height);
 
-  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
-                                 gtk_widget_get_state_flags (widget),
-                                 &padding);
+  gtk_style_context_get (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget),
+                         "font", &font_desc, "padding-bottom", &padding_bottom, NULL);
+
   layout = pango_layout_new (gtk_widget_get_pango_context (widget));
-
-  gtk_style_context_get (gtk_widget_get_style_context (widget),
-                         gtk_widget_get_state_flags (widget),
-                         "font", &font_desc,
-                         NULL);
+  layout = gtk_widget_create_pango_layout (widget, _("Other events"));
   pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, NULL, &font_height);
   pango_font_description_free (font_desc);
   g_object_unref (layout);
 
   start_grid_y = get_start_grid_y (widget);
-  horizontal_block = allocation->width / 7.0;
-  vertical_block = (allocation->height - start_grid_y) / 6.0;
+  cell_width = allocation->width / 7.0;
+  cell_height = (allocation->height - start_grid_y) / 6.0;
+  vertical_cell_space = cell_height - (padding_bottom + font_height);
 
-  days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
-  shown_rows = ceil (days / 7.0);
-  february_gap = shown_rows == 4 ? 1 : 0;
-  lines_gap = ((shown_rows + 1) / 2.0) + 0.5 - ceil (shown_rows / 2.0);
-  lines_gap_for_5 = shown_rows == 5 ? lines_gap : 0;
+  for (i = 0; i < 42; i++)
+    size_left[i] = vertical_cell_space;
 
-  vertical_cell_margin = padding.top + font_height;
-  for (i = 0; i < 31; i++)
+  shown_rows = ceil ((priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year)) / 7.0);
+
+  /* orientation factors */ /* FIXME: replace with direction-changed signal handler */
+  if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_LTR)
     {
-      added_height = 0;
-      for (l = priv->days[i]; l != NULL; l = l->next)
+      sw = 1;
+      k = 0;
+    }
+  else if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL)
+    {
+      sw = -1;
+      k = 1;
+    }
+
+  /* allocate multidays events */
+  for (l = priv->multiday_children; l != NULL; l = g_list_next (l))
+    {
+      gint first_cell, last_cell, first_row, last_row, start, end;
+      gboolean visible;
+
+      const icaltimetype *date;
+      GArray *cells, *lengths;
+
+      child_widget = (GtkWidget*) l->data;
+      uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child_widget));
+      if (g_hash_table_contains (priv->hidden_for_delete, uuid))
+        continue;
+
+      gtk_widget_show (child_widget);
+      gtk_widget_get_preferred_height (child_widget, NULL, &natural_height);
+
+      j = 1;
+      date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (child_widget));
+      if (date->month == priv->date->month)
+        j = date->day;
+      j += priv->days_delay;
+      first_cell = 7 * ((j - 1) / 7)+ 6 * k + sw * ((j - 1) % 7);
+
+      j = icaltime_days_in_month (priv->date->month, priv->date->year);
+      date = gcal_event_widget_peek_end_date (GCAL_EVENT_WIDGET (child_widget));
+      if (date->month == priv->date->month)
+        j = date->day;
+      j += priv->days_delay;
+      last_cell = 7 * ((j - 1) / 7)+ 6 * k + sw * ((j - 1) % 7);
+
+      /* FIXME missing mark widgets with continuos tags */
+
+      first_row = first_cell / 7;
+      last_row = last_cell / 7;
+      visible = TRUE;
+      cells = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
+      lengths = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
+      for (i = first_row; i <= last_row && visible; i++)
         {
-          GcalViewChild *child;
-          gint pos_x;
-          gint pos_y;
-          gint min_height;
-          gint natural_height;
-          GtkAllocation child_allocation;
+          start = i * 7 + k * 6;
+          end = i * 7 + (1 - k) * 6;
 
-          child = (GcalViewChild*) l->data;
-
-          pos_x = horizontal_block * ((i + priv->days_delay) % 7);
-          pos_y = vertical_block * (((i + priv->days_delay + 7 * february_gap) / 7) + lines_gap_for_5);
-
-          if ((! gtk_widget_get_visible (child->widget))
-              && (! child->hidden))
-            continue;
-
-          gtk_widget_get_preferred_height (child->widget,
-                                           &min_height,
-                                           &natural_height);
-          child_allocation.x = pos_x;
-          child_allocation.y = start_grid_y + vertical_cell_margin + pos_y;
-          child_allocation.width = horizontal_block;
-          child_allocation.height = MIN (natural_height, vertical_block);
-          if (added_height + vertical_cell_margin + child_allocation.height
-              > vertical_block)
+          if (i == first_row)
             {
-              gtk_widget_hide (child->widget);
-              child->hidden = TRUE;
+              start = first_cell;
+            }
+          if (i == last_row)
+            {
+              end = last_cell;
+            }
 
-              l = l->next;
-              for (; l != NULL; l = l->next)
+          g_debug ("[calculate] event %s from: %d -> %d", gcal_event_widget_get_summary (GCAL_EVENT_WIDGET (child_widget)),
+                   start, end);
+
+          visible = get_widget_parts (start, end, natural_height, vertical_cell_space, size_left, cells, lengths);
+        }
+
+      if (visible)
+        {
+          for (i = 0; i < cells->len; i++)
+            {
+              gint cell_idx = g_array_index (cells, gint, i);
+              gint row = cell_idx / 7;
+              gint column = cell_idx % 7;
+              pos_x = cell_width * column;
+              pos_y = cell_height * (row + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
+
+              child_allocation.x = pos_x;
+              child_allocation.y = pos_y + vertical_cell_space - size_left[cell_idx];
+              child_allocation.width = cell_width * g_array_index (lengths, gint, i);
+              child_allocation.height = natural_height;
+
+              g_debug ("[allocate] event %s from: %d -- %d --> %d ", gcal_event_widget_get_summary (GCAL_EVENT_WIDGET (child_widget)),
+                       cell_idx, g_array_index (lengths, gint, i), cell_idx + g_array_index (lengths, gint, i));
+
+              if (i != 0)
                 {
-                  child = (GcalViewChild*) l->data;
+                  child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
 
-                  gtk_widget_hide (child->widget);
-                  child->hidden = TRUE;
+                  gtk_widget_set_parent (child_widget, widget);
+                  g_signal_connect (child_widget, "activate", G_CALLBACK (event_opened), widget);
+                  gtk_widget_show (child_widget);
+
+                  aux = g_hash_table_lookup (priv->children, uuid);
+                  aux = g_list_append (aux, child_widget);
                 }
+              gtk_widget_size_allocate (child_widget, &child_allocation);
 
-              break;
+              /* update size_left */
+              for (j = 0; j < g_array_index (lengths, gint, i); j++)
+                size_left[cell_idx + j] -= natural_height;
+            }
+        }
+      else
+        {
+          gtk_widget_hide (child_widget);
+
+          /* FIXME: improve overflow to handle the proper count of widgets */
+          g_hash_table_add (priv->overflown_days, GINT_TO_POINTER (first_cell));
+        }
+
+      g_array_free (cells, TRUE);
+      g_array_free (lengths, TRUE);
+    }
+
+  g_hash_table_iter_init (&iter, priv->single_day_children);
+  while (g_hash_table_iter_next (&iter, &key, &value))
+    {
+      j = GPOINTER_TO_INT (key);
+      j += priv->days_delay;
+      i = 7 * ((j - 1) / 7)+ 6 * k + sw * ((j - 1) % 7);
+
+      l = (GList*) value;
+      for (aux = l; aux != NULL; aux = g_list_next (aux))
+        {
+          child_widget = (GtkWidget*) aux->data;
+
+          gtk_widget_show (child_widget);
+          gtk_widget_get_preferred_height (child_widget, NULL, &natural_height);
+
+          if (size_left[i] > natural_height)
+            {
+              pos_x = cell_width * (i % 7);
+              pos_y = cell_height * ((i / 7) + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
+
+              child_allocation.x = pos_x;
+              child_allocation.y = pos_y + vertical_cell_space - size_left[i];
+              child_allocation.width = cell_width;
+              child_allocation.height = natural_height;
+              gtk_widget_show (child_widget);
+              gtk_widget_size_allocate (child_widget, &child_allocation);
+
+              size_left[i] -= natural_height;
             }
           else
             {
-              gtk_widget_show (child->widget);
-              child->hidden = FALSE;
-              child_allocation.y = child_allocation.y + added_height;
-              gtk_widget_size_allocate (child->widget, &child_allocation);
-              added_height += child_allocation.height;
+              gtk_widget_hide (child_widget);
+              g_hash_table_add (priv->overflown_days, GINT_TO_POINTER (i));
             }
         }
     }
+
+  if (g_hash_table_size (priv->overflown_days) != 0)
+    gtk_widget_queue_draw (widget);
 }
 
 static gboolean
