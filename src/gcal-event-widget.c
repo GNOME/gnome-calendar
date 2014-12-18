@@ -911,6 +911,23 @@ gcal_event_widget_get_date (GcalEventWidget *event)
 }
 
 /**
+ * gcal_event_widget_peek_start_date:
+ * @event:
+ *
+ * Return the starting date of the event.
+ *
+ * Returns: (Transfer none): An {@link icaltimetype} instance
+ **/
+const icaltimetype*
+gcal_event_widget_peek_start_date (GcalEventWidget *event)
+{
+  GcalEventWidgetPrivate *priv;
+  priv = gcal_event_widget_get_instance_private (event);
+
+  return priv->dt_start;
+}
+
+/**
  * gcal_event_widget_set_end_date:
  * @event: a #GcalEventWidget
  * @date: a #icaltimetype object with the date
@@ -940,6 +957,23 @@ gcal_event_widget_get_end_date (GcalEventWidget *event)
 
   g_object_get (event, "date-end", &dt, NULL);
   return dt;
+}
+
+/**
+ * gcal_event_widget_peek_end_date:
+ * @event:
+ *
+ * Return the end date of the event.
+ *
+ * Returns: (Transfer none): An {@link icaltimetype} instance
+ **/
+const icaltimetype*
+gcal_event_widget_peek_end_date (GcalEventWidget *event)
+{
+  GcalEventWidgetPrivate *priv;
+  priv = gcal_event_widget_get_instance_private (event);
+
+  return priv->dt_end;
 }
 
 void

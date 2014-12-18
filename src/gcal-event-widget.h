@@ -75,10 +75,14 @@ void          gcal_event_widget_set_date                   (GcalEventWidget    *
 
 icaltimetype* gcal_event_widget_get_date                   (GcalEventWidget    *event);
 
+const icaltimetype* gcal_event_widget_peek_start_date            (GcalEventWidget    *event);
+
 void          gcal_event_widget_set_end_date               (GcalEventWidget    *event,
                                                             const icaltimetype *date);
 
 icaltimetype* gcal_event_widget_get_end_date               (GcalEventWidget    *event);
+
+const icaltimetype* gcal_event_widget_peek_end_date              (GcalEventWidget    *event);
 
 void          gcal_event_widget_set_summary                (GcalEventWidget    *event,
                                                             gchar              *summary);
