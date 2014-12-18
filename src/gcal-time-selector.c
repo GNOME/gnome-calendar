@@ -187,8 +187,6 @@ gcal_time_selector_constructed (GObject *object)
   /* chaining up */
   G_OBJECT_CLASS (gcal_time_selector_parent_class)->constructed (object);
 
-  gtk_widget_set_hexpand (GTK_WIDGET (object), TRUE);
-
   /* 24h setting */
   settings = g_settings_new ("org.gnome.desktop.interface");
   clock_format = g_settings_get_string (settings, "clock-format");
