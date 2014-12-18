@@ -55,7 +55,7 @@ typedef struct
   /**
    * Set containing the master widgets hidden for delete;
    */
-  GHashTable     *hidden_for_delete;
+  GHashTable     *hidden_as_overflow;
 
   GdkWindow      *event_window;
 
@@ -361,7 +361,7 @@ gcal_month_view_init (GcalMonthView *self)
   priv->single_day_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   priv->multiday_children = NULL;
   priv->overflown_days = g_hash_table_new (g_direct_hash, g_direct_equal);
-  priv->hidden_for_delete = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+  priv->hidden_as_overflow = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 
   gtk_style_context_add_class (
       gtk_widget_get_style_context (GTK_WIDGET (self)),
@@ -467,7 +467,7 @@ gcal_month_view_finalize (GObject       *object)
   g_hash_table_destroy (priv->children);
   g_hash_table_destroy (priv->single_day_children);
   g_hash_table_destroy (priv->overflown_days);
-  g_hash_table_destroy (priv->hidden_for_delete);
+  g_hash_table_destroy (priv->hidden_as_overflow);
 
   if (priv->multiday_children != NULL)
     g_list_free (priv->multiday_children);
@@ -653,7 +653,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
       child_widget = (GtkWidget*) l->data;
       uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child_widget));
-      if (g_hash_table_contains (priv->hidden_for_delete, uuid))
+      if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (priv->hidden_as_overflow, uuid))
         continue;
 
       gtk_widget_show (child_widget);
@@ -730,6 +730,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                   aux = g_list_append (aux, child_widget);
                 }
               gtk_widget_size_allocate (child_widget, &child_allocation);
+              g_hash_table_remove (priv->hidden_as_overflow, g_strdup (uuid));
 
               /* update size_left */
               for (j = 0; j < g_array_index (lengths, gint, i); j++)
@@ -739,6 +740,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       else
         {
           gtk_widget_hide (child_widget);
+          g_hash_table_add (priv->hidden_as_overflow, g_strdup (uuid));
 
           /* FIXME: improve overflow to handle the proper count of widgets */
           g_hash_table_add (priv->overflown_days, GINT_TO_POINTER (first_cell));
@@ -760,6 +762,10 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
         {
           child_widget = (GtkWidget*) aux->data;
 
+          uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child_widget));
+          if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (priv->hidden_as_overflow, uuid))
+            continue;
+
           gtk_widget_show (child_widget);
           gtk_widget_get_preferred_height (child_widget, NULL, &natural_height);
 
@@ -774,19 +780,21 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               child_allocation.height = natural_height;
               gtk_widget_show (child_widget);
               gtk_widget_size_allocate (child_widget, &child_allocation);
+              g_hash_table_remove (priv->hidden_as_overflow, g_strdup (uuid));
 
               size_left[i] -= natural_height;
             }
           else
             {
               gtk_widget_hide (child_widget);
+              g_hash_table_add (priv->hidden_as_overflow, g_strdup (uuid));
               g_hash_table_add (priv->overflown_days, GINT_TO_POINTER (i));
             }
         }
     }
 
-  if (g_hash_table_size (priv->overflown_days) != 0)
-    gtk_widget_queue_draw (widget);
+  /* if (g_hash_table_size (priv->overflown_days) != 0) */
+  /*   gtk_widget_queue_draw_area (widget, allocation->x, allocation->y, allocation->width, allocation->height); */
 }
 
 static gboolean
@@ -1396,6 +1404,8 @@ gcal_month_view_remove (GtkContainer *container,
         g_hash_table_remove (priv->children, (gchar*) gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget)));
       else
         g_hash_table_replace (priv->children, g_strdup (gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget))), l);
+
+      g_hash_table_remove (priv->hidden_as_overflow, (gchar*) gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget)));
 
       if (was_visible)
         gtk_widget_queue_resize (GTK_WIDGET (container));
