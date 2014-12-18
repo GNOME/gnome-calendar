@@ -656,20 +656,18 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
   gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->notes_text), writable);
 
   gtk_widget_set_sensitive (priv->all_day_check, writable);
+  gtk_widget_set_sensitive (priv->end_date_selector, writable);
+  gtk_widget_set_sensitive (priv->start_date_selector, writable);
 
   if (!writable || (writable && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (priv->all_day_check))))
     {
       gtk_widget_set_sensitive (priv->start_time_selector, FALSE);
       gtk_widget_set_sensitive (priv->end_time_selector, FALSE);
-      gtk_widget_set_sensitive (priv->start_date_selector, FALSE);
-      gtk_widget_set_sensitive (priv->end_date_selector, FALSE);
     }
   else
     {
       gtk_widget_set_sensitive (priv->start_time_selector, TRUE);
       gtk_widget_set_sensitive (priv->end_time_selector, TRUE);
-      gtk_widget_set_sensitive (priv->start_date_selector, TRUE);
-      gtk_widget_set_sensitive (priv->end_date_selector, TRUE);
     }
 
   gtk_button_set_label (GTK_BUTTON (priv->done_button),
