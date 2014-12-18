@@ -139,7 +139,7 @@ icaltimetype*
 gcal_view_get_initial_date (GcalView *view)
 {
   g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_initial_date);
+  g_return_val_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_initial_date, NULL);
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_initial_date (view);
 }
@@ -156,7 +156,7 @@ icaltimetype*
 gcal_view_get_final_date (GcalView *view)
 {
   g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_final_date);
+  g_return_val_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_final_date, NULL);
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_final_date (view);
 }
@@ -248,7 +248,7 @@ gcal_view_get_by_uuid (GcalView    *view,
                        const gchar *uuid)
 {
   g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid);
+  g_return_val_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid, NULL);
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid (view, uuid);
 }
