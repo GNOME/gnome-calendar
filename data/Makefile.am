@@ -33,6 +33,7 @@ gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 EXTRA_DIST=                     \
   org.gnome.Calendar.desktop    \
   calendar.gresource.xml        \
+  ui/date-selector.ui           \
   ui/edit-dialog.ui             \
   ui/menus.ui                   \
   ui/nav_bar.ui                 \

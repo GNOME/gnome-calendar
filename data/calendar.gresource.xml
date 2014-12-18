@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/calendar">
+    <file alias="date-selector.ui" compressed="true" preprocess="xml-stripblanks">ui/date-selector.ui</file>
     <file alias="edit-dialog.ui" compressed="true" preprocess="xml-stripblanks">ui/edit-dialog.ui</file>
     <file alias="menus.ui" compressed="true" preprocess="xml-stripblanks">ui/menus.ui</file>
     <file alias="nav_bar.ui" compressed="true" preprocess="xml-stripblanks">ui/nav_bar.ui</file>

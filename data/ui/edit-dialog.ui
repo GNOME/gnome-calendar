@@ -247,7 +247,7 @@
               </packing>
             </child>
             <child>
-              <object class="GcalDateEntry" id="start_date_entry">
+              <object class="GcalDateSelector" id="start_date_selector">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>
@@ -267,7 +267,7 @@
               </packing>
             </child>
             <child>
-              <object class="GcalDateEntry" id="end_date_entry">
+              <object class="GcalDateSelector" id="end_date_selector">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
               </object>

@@ -19,7 +19,7 @@
 
 #include "gcal-edit-dialog.h"
 #include "gcal-time-selector.h"
-#include "gcal-date-entry.h"
+#include "gcal-date-selector.h"
 #include "gcal-utils.h"
 
 #include <libecal/libecal.h>
@@ -47,8 +47,8 @@ typedef struct
 
   GtkWidget        *summary_entry;
 
-  GtkWidget        *start_date_entry;
-  GtkWidget        *end_date_entry;
+  GtkWidget        *start_date_selector;
+  GtkWidget        *end_date_selector;
   GtkWidget        *all_day_check;
   GtkWidget        *start_time_selector;
   GtkWidget        *end_time_selector;
@@ -234,7 +234,7 @@ update_date (GtkEntry   *entry,
   if (icaltime_compare (*start_date, *end_date) != -1)
     {
       /* change the non-editing entry */
-      if (GTK_WIDGET (entry) == priv->start_date_entry)
+      if (GTK_WIDGET (entry) == priv->start_date_selector)
         {
           end_date->day = start_date->day;
           end_date->month = start_date->month;
@@ -260,26 +260,26 @@ update_date (GtkEntry   *entry,
         }
 
       /* update the entries with the new sane values */
-      g_signal_handlers_block_by_func (priv->start_date_entry,
+      g_signal_handlers_block_by_func (priv->start_date_selector,
                                        update_date,
                                        user_data);
-      g_signal_handlers_block_by_func (priv->end_date_entry,
+      g_signal_handlers_block_by_func (priv->end_date_selector,
                                        update_date,
                                        user_data);
 
-      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->start_date_entry),
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->start_date_selector),
                                 start_date->day,
                                 start_date->month,
                                 start_date->year);
-      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->end_date_selector),
                                 end_date->day,
                                 end_date->month,
                                 end_date->year);
 
-      g_signal_handlers_unblock_by_func (priv->start_date_entry,
+      g_signal_handlers_unblock_by_func (priv->start_date_selector,
                                        update_date,
                                        user_data);
-      g_signal_handlers_unblock_by_func (priv->end_date_entry,
+      g_signal_handlers_unblock_by_func (priv->end_date_selector,
                                        update_date,
                                        user_data);
     }
@@ -406,14 +406,14 @@ update_time (GtkEntry   *entry,
       gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->start_time_selector),
                                 start_date->hour,
                                 start_date->minute);
-      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->start_date_entry),
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->start_date_selector),
                                 start_date->day,
                                 start_date->month,
                                 start_date->year);
       gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->end_time_selector),
                                 end_date->hour,
                                 end_date->minute);
-      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->end_date_selector),
                                 end_date->day,
                                 end_date->month,
                                 end_date->year);
@@ -468,9 +468,9 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   /* Entries */
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, summary_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, start_time_selector);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, start_date_entry);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, start_date_selector);
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, end_time_selector);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, end_date_entry);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, end_date_selector);
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, location_entry);
   /* Other */
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, notes_text);
@@ -582,12 +582,12 @@ gcal_edit_dialog_constructed (GObject* object)
                     G_CALLBACK (update_location),
                     object);
 
-  g_signal_connect (priv->start_date_entry,
+  g_signal_connect (priv->start_date_selector,
                     "modified",
                     G_CALLBACK (update_date),
                     object);
 
-  g_signal_connect (priv->end_date_entry,
+  g_signal_connect (priv->end_date_selector,
                     "modified",
                     G_CALLBACK (update_date),
                     object);
@@ -651,8 +651,6 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
     }
 
   gtk_editable_set_editable (GTK_EDITABLE (priv->summary_entry), writable);
-  gtk_editable_set_editable (GTK_EDITABLE (priv->start_date_entry), writable);
-  gtk_editable_set_editable (GTK_EDITABLE (priv->end_date_entry), writable);
   gtk_editable_set_editable (GTK_EDITABLE (priv->location_entry), writable);
 
   gtk_text_view_set_editable (GTK_TEXT_VIEW (priv->notes_text), writable);
@@ -663,11 +661,15 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
     {
       gtk_widget_set_sensitive (priv->start_time_selector, FALSE);
       gtk_widget_set_sensitive (priv->end_time_selector, FALSE);
+      gtk_widget_set_sensitive (priv->start_date_selector, FALSE);
+      gtk_widget_set_sensitive (priv->end_date_selector, FALSE);
     }
   else
     {
       gtk_widget_set_sensitive (priv->start_time_selector, TRUE);
       gtk_widget_set_sensitive (priv->end_time_selector, TRUE);
+      gtk_widget_set_sensitive (priv->start_date_selector, TRUE);
+      gtk_widget_set_sensitive (priv->end_date_selector, TRUE);
     }
 
   gtk_button_set_label (GTK_BUTTON (priv->done_button),
@@ -701,9 +703,9 @@ gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
     }
 
   /* date and time */
-  gtk_entry_set_text (GTK_ENTRY (priv->start_date_entry), "");
+  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->start_date_selector), 0, 0, 0);
   gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->start_time_selector), 0, 0);
-  gtk_entry_set_text (GTK_ENTRY (priv->end_date_entry), "");
+  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->end_date_selector), 0, 0, 0);
   gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->end_time_selector), 0, 0);
 
   /* location */
@@ -874,7 +876,7 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   /* start date */
   e_cal_component_get_dtstart (priv->component, &dtstart);
 
-  gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->start_date_entry),
+  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->start_date_selector),
                             dtstart.value->day,
                             dtstart.value->month,
                             dtstart.value->year);
@@ -891,7 +893,7 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   e_cal_component_get_dtend (priv->component, &dtend);
   if (dtend.value != NULL)
     {
-      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->end_date_selector),
                                 dtend.value->day, dtend.value->month, dtend.value->year);
       all_day = (dtstart.value->is_date == 1 && dtend.value->is_date == 1);
 
@@ -900,7 +902,7 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
     }
   else
     {
-      gcal_date_entry_set_date (GCAL_DATE_ENTRY (priv->end_date_entry),
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->end_date_selector),
                                 dtstart.value->day, dtstart.value->month, dtstart.value->year);
       gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->end_time_selector), dtstart.value->hour, dtstart.value->minute);
       all_day = FALSE;
@@ -1036,7 +1038,7 @@ gcal_edit_dialog_get_start_date (GcalEditDialog *dialog)
   icaltime_set_timezone (date,
                          gcal_manager_get_system_timezone (priv->manager));
 
-  gcal_date_entry_get_date (GCAL_DATE_ENTRY (priv->start_date_entry),
+  gcal_date_selector_get_date (GCAL_DATE_SELECTOR (priv->start_date_selector),
                             &value1,
                             &value2,
                             &value3);
@@ -1077,7 +1079,7 @@ gcal_edit_dialog_get_end_date (GcalEditDialog *dialog)
   icaltime_set_timezone (date,
                          gcal_manager_get_system_timezone (priv->manager));
 
-  gcal_date_entry_get_date (GCAL_DATE_ENTRY (priv->end_date_entry),
+  gcal_date_selector_get_date (GCAL_DATE_SELECTOR (priv->end_date_selector),
                             &value1,
                             &value2,
                             &value3);

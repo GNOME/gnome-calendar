@@ -83,3 +83,11 @@ GcalEventWidget.color-light {
 GcalEventWidget.color-light:backdrop {
     color: rgba(0, 0, 0, 0.3);
 }
+
+.middle-entry {
+    border-left: 0px;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-right-radius: 0px;
+}
