@@ -23,19 +23,31 @@
 #include <langinfo.h>
 #include <glib/gi18n.h>
 
+enum
+{
+  DAY,
+  MONTH,
+  YEAR,
+  NUM_ENTRIES
+};
+
 struct _GcalDateSelectorPrivate
 {
-  gboolean  internal_skip;
+  GtkWidget   *date_label;
+  GtkWidget   *popover;
+  GtkWidget   *entries[NUM_ENTRIES];
 
-  gint      day;
-  gint      month;
-  gint      year;
+  gint         day;
+  gint         month;
+  gint         year;
 
-  gchar    *mask;
-  guint     day_pos;
-  guint     month_pos;
-  guint     year_pos;
-  gboolean  have_long_year;
+  gchar       *mask;
+  guint        day_pos;
+  guint        month_pos;
+  guint        year_pos;
+  gboolean     have_long_year;
+
+  gboolean     format_24h;
 };
 
 enum
@@ -76,13 +88,13 @@ gcal_date_selector_init (GcalDateSelector *self)
 
   priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (self));;
 
-  priv->internal_skip = FALSE;
   priv->day = 1;
   priv->month = 1;
   priv->year = 1970;
 
   setlocale (LC_ALL,"");
   priv->mask = nl_langinfo (D_FMT);
+  g_debug ("Mask: %s", priv->mask);
 
   priv->day_pos = - (priv->mask - g_strstr_len (priv->mask, -1, "%d"));
   priv->month_pos = - (priv->mask - g_strstr_len (priv->mask, -1, "%m"));
@@ -106,11 +118,45 @@ static void
 gcal_date_selector_constructed (GObject *object)
 {
   GcalDateSelectorPrivate *priv;
+  GtkWidget *grid;
+  GtkBuilder *builder;
+
+  GSettings *settings;
+  gchar *clock_format;
 
   priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (object));
 
   /* chaining up */
   G_OBJECT_CLASS (gcal_date_selector_parent_class)->constructed (object);
+
+  /* 24h setting */
+  settings = g_settings_new ("org.gnome.desktop.interface");
+  clock_format = g_settings_get_string (settings, "clock-format");
+  priv->format_24h = (g_strcmp0 (clock_format, "24h") == 0);
+
+  g_free (clock_format);
+  g_object_unref (settings);
+
+  /* date label */
+  priv->date_label = gtk_label_new (NULL);
+  gtk_widget_show (priv->date_label);
+
+  gtk_container_add (GTK_CONTAINER (object), priv->date_label);
+
+  /* retrieve components from UI definition */
+  builder = gtk_builder_new ();
+  gtk_builder_add_from_resource (builder, "/org/gnome/calendar/date-selector.ui", NULL);
+
+  /* popover */
+  priv->popover = gtk_popover_new (GTK_WIDGET (object));
+  gtk_popover_set_position (GTK_POPOVER (priv->popover), GTK_POS_BOTTOM);
+
+  /* main grid */
+  grid = (GtkWidget*) gtk_builder_get_object (builder, "grid");
+  g_object_ref (grid);
+
+  gtk_container_add (GTK_CONTAINER (priv->popover), grid);
+  g_object_bind_property (priv->popover, "visible", object, "active", G_BINDING_BIDIRECTIONAL);
 }
 
 /* Public API */
