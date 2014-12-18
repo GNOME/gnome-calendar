@@ -1200,10 +1200,11 @@ gcal_month_view_add (GtkContainer *container,
       date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
 
       l = g_hash_table_lookup (priv->single_day_children, GINT_TO_POINTER (date->day));
+      /* FIXME add sorted */
       l = g_list_append (l, widget);
 
       if (g_list_length (l) == 1)
-        g_hash_table_insert (priv->children, GINT_TO_POINTER (date->day), l);
+        g_hash_table_insert (priv->single_day_children, GINT_TO_POINTER (date->day), l);
 
       g_free (date);
     }
@@ -1220,6 +1221,7 @@ gcal_month_view_remove (GtkContainer *container,
   GList *l, *aux;
   gboolean was_visible = FALSE;
   GtkWidget *master_widget;
+  icaltimetype *date;
 
   g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (container));
@@ -1229,29 +1231,34 @@ gcal_month_view_remove (GtkContainer *container,
     {
       master_widget = (GtkWidget*) l->data;
 
+      was_visible = gtk_widget_get_visible (widget);
+      gtk_widget_unparent (widget);
+
       if (widget == master_widget)
         {
           g_debug ("removing a master widget");
+          /* FIXME, should I remove every parts when removing a master widget */
           if (gcal_event_widget_is_multiday (GCAL_EVENT_WIDGET (widget)))
             {
               priv->multiday_children = g_list_remove (priv->multiday_children, widget);
             }
           else
             {
-              icaltimetype *date;
-
               date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
               aux = g_hash_table_lookup (priv->single_day_children, GINT_TO_POINTER (date->day));
-              aux = g_list_remove (aux, widget);
-              g_hash_table_replace (priv->single_day_children, GINT_TO_POINTER (date->day), aux);
+              aux = g_list_remove (g_list_copy (aux), widget);
+              if (aux == NULL)
+                g_hash_table_remove (priv->single_day_children, GINT_TO_POINTER (date->day));
+              else
+                g_hash_table_replace (priv->single_day_children, GINT_TO_POINTER (date->day), aux);
             }
         }
 
-      l = g_list_remove (l, widget);
-      g_hash_table_replace (priv->children, (gchar*) gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget)), l);
-
-      was_visible = gtk_widget_get_visible (widget);
-      gtk_widget_unparent (widget);
+      l = g_list_remove (g_list_copy (l), widget);
+      if (l == NULL)
+        g_hash_table_remove (priv->children, (gchar*) gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget)));
+      else
+        g_hash_table_replace (priv->children, g_strdup (gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget))), l);
 
       if (was_visible)
         gtk_widget_queue_resize (GTK_WIDGET (container));
@@ -1265,24 +1272,24 @@ gcal_month_view_forall (GtkContainer *container,
                         gpointer      callback_data)
 {
   GcalMonthViewPrivate *priv;
-  GList *l, *last;
+  GList *l, *aux;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (container));
 
-  l = g_hash_table_get_values (priv->children);
-  while (l != NULL)
+  aux = NULL;
+
+  for (l = g_hash_table_get_values (priv->children); l != NULL; l = g_list_next (l))
+    aux = g_list_concat (aux, g_list_copy (l->data)); /* FIXME: check if reverse puts parts ahead of master */
+  g_list_free (l);
+
+  while (aux != NULL)
     {
-      last = g_list_last (l);
-      l = l->next;
+      GtkWidget *widget = (GtkWidget*) aux->data;
+      aux = aux->next;
 
-      while (last != NULL)
-        {
-          GtkWidget *widget = (GtkWidget*) last->data;
-          last = last->prev;
-
-          (*callback) (widget, callback_data);
-        }
+      (*callback) (widget, callback_data);
     }
+  g_list_free (aux);
 }
 
 /* GcalView Interface API */
