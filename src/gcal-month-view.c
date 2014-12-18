@@ -980,18 +980,24 @@ gcal_month_view_draw (GtkWidget *widget,
 
       if (g_hash_table_contains (priv->overflown_days, GINT_TO_POINTER (i)))
         {
+          PangoLayout *overflow_layout;
           gchar *overflow_str;
 
+          /* TODO: Warning in some languags this string can be too long and may overlap wit the number */
           overflow_str = g_strdup_printf (_("Other %d events"), 2); /* FIXME: handle plurars property */
-          pango_layout_set_text (layout, overflow_str, -1);
-          pango_layout_get_pixel_size (layout, &font_width, &font_height);
+          overflow_layout = gtk_widget_create_pango_layout (widget, overflow_str);
+
+          pango_layout_set_width (overflow_layout, pango_units_from_double (cell_width));
+          pango_layout_set_alignment (overflow_layout, PANGO_ALIGN_CENTER);
+          pango_layout_get_pixel_size (overflow_layout, &font_width, &font_height);
 
           gtk_render_layout (context, cr,
-                             cell_width * (column + k) + sw * padding.right - k * font_width,
+                             cell_width * column,
                              cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y,
-                             layout);
+                             overflow_layout);
 
           g_free (overflow_str);
+          g_object_unref (overflow_layout);
         }
 
       g_free (nr_day);
