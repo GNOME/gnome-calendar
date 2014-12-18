@@ -32,6 +32,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="width_chars">4</property>
+            <property name="max_width_chars">4</property>
             <property name="xalign">0.5</property>
             <property name="input_purpose">number</property>
           </object>
@@ -46,6 +47,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="width_chars">4</property>
+            <property name="max_width_chars">4</property>
             <property name="xalign">0.5</property>
             <property name="input_purpose">number</property>
             <style>
@@ -62,7 +64,9 @@
           <object class="GtkEntry" id="entry3">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="max_length">4</property>
             <property name="width_chars">4</property>
+            <property name="max_width_chars">4</property>
             <property name="xalign">0.5</property>
             <property name="input_purpose">number</property>
           </object>
