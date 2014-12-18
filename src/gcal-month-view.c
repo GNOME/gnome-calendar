@@ -94,6 +94,9 @@ enum
 static void           event_opened                          (GcalEventWidget *event_widget,
                                                              gpointer         user_data);
 
+static void           setup_child                           (GtkWidget       *child_widget,
+                                                             GtkWidget       *parent);
+
 static gint           get_cell_and_center_from_position     (GcalMonthView  *view,
                                                              gdouble         x,
                                                              gdouble         y,
@@ -190,6 +193,14 @@ event_opened (GcalEventWidget *event_widget,
   g_signal_emit_by_name (GCAL_VIEW (user_data),
                          "event-activated",
                          event_widget);
+}
+
+static void
+setup_child (GtkWidget *child_widget,
+             GtkWidget *parent)
+{
+  gtk_widget_set_parent (child_widget, parent);
+  g_signal_connect (child_widget, "activate", G_CALLBACK (event_opened), parent);
 }
 
 static gint
@@ -722,8 +733,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                 {
                   child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
 
-                  gtk_widget_set_parent (child_widget, widget);
-                  g_signal_connect (child_widget, "activate", G_CALLBACK (event_opened), widget);
+                  setup_child (child_widget, widget);
                   gtk_widget_show (child_widget);
 
                   aux = g_hash_table_lookup (priv->children, uuid);
@@ -1354,8 +1364,7 @@ gcal_month_view_add (GtkContainer *container,
       g_free (date);
     }
 
-  gtk_widget_set_parent (widget, GTK_WIDGET (container));
-  g_signal_connect (widget, "activate", G_CALLBACK (event_opened), container);
+  setup_child (widget, GTK_WIDGET (container));
 }
 
 static void
