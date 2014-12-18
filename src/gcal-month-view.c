@@ -1586,14 +1586,27 @@ gcal_month_view_get_right_header (GcalView *view)
   return g_strdup_printf ("%d", priv->date->year);
 }
 
+/**
+ * gcal_month_view_get_by_uuid:
+ * @view:
+ * @uuid:
+ *
+ * This will always returns a master widget.
+ *
+ * Returns:
+ **/
 static GtkWidget*
 gcal_month_view_get_by_uuid (GcalView    *view,
                              const gchar *uuid)
 {
-  /* FIXME: this method is deprecated in favor of remove_by_uuid, hide_by_uuid, etc */
-  /* Since the view internally duplicates the widgets per uuid, doesn't have much sense to do this. */
-  /* One possible way could be: retrieve always the master widget, and hook some handlers into */
-  /* ::hide, ::delete, etc. etc. Not sure what's best tho. */
+  GcalMonthViewPrivate *priv;
+  GList *l;
+
+  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));
+  l = g_hash_table_lookup (priv->children, uuid);
+  if (l != NULL)
+    return (GtkWidget*) l->data;
+
   return NULL;
 }
 
