@@ -471,6 +471,16 @@ rebuild_popover_for_day (GcalMonthView *view,
   gtk_widget_set_size_request (child_widget, cell_width, -1);
 }
 
+static void
+overflow_popover_hide (GtkWidget *widget,
+                       gpointer   user_data)
+{
+  GcalMonthViewPrivate *priv;
+
+  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (user_data));
+  priv->hovered_overflow_indicator = -1;
+
+  gtk_widget_queue_draw (GTK_WIDGET (user_data));
 }
 
 static void
@@ -541,6 +551,7 @@ gcal_month_view_init (GcalMonthView *self)
     priv->k = 1;
 
   priv->overflow_popover = gtk_popover_new (GTK_WIDGET (self));
+  g_signal_connect (priv->overflow_popover, "hide", G_CALLBACK (overflow_popover_hide), self);
 
   grid = gtk_grid_new ();
   g_object_set (grid, "margin", 6, "row-spacing", 6, "orientation", GTK_ORIENTATION_VERTICAL, NULL);
@@ -1385,6 +1396,8 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
     {
       if (j > priv->days_delay && j <= days)
         {
+          if (priv->end_mark_cell != priv->start_mark_cell)
+            priv->hovered_overflow_indicator = -1;
           if (priv->end_mark_cell != new_end_cell)
             gtk_widget_queue_draw (widget);
 
@@ -1395,6 +1408,9 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
     }
   else
     {
+      if (gtk_widget_is_visible (priv->overflow_popover))
+        return FALSE;
+
       if (hovered_indicator)
         new_hovered_cell = new_end_cell;
       else
@@ -1456,7 +1472,9 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   if (priv->pressed_overflow_indicator != -1 && priv->start_mark_cell == priv->end_mark_cell)
     {
-      rebuild_popover_for_cell (GCAL_MONTH_VIEW (widget));
+      priv->hovered_overflow_indicator = priv->pressed_overflow_indicator;
+
+      rebuild_popover_for_day (GCAL_MONTH_VIEW (widget), j - priv->days_delay);
       gtk_widget_show_all (priv->overflow_popover);
 
       priv->clicked_cell = -1;
