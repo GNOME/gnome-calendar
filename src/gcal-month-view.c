@@ -56,6 +56,9 @@ typedef struct
    */
   GHashTable     *overflow_cells;
 
+  GtkWidget      *overflow_popover;
+  GtkWidget      *events_list_box;
+
   /**
    * Set containing the master widgets hidden for delete;
    */
@@ -126,6 +129,8 @@ static gboolean       get_widget_parts                      (gint            fir
                                                              gdouble        *size_left,
                                                              GArray         *cells,
                                                              GArray         *lengths);
+
+static void           rebuild_popover_for_cell              (GcalMonthView  *view);
 
 static void           gcal_view_interface_init              (GcalViewIface  *iface);
 
@@ -207,9 +212,11 @@ static void
 event_opened (GcalEventWidget *event_widget,
               gpointer         user_data)
 {
-  g_signal_emit_by_name (GCAL_VIEW (user_data),
-                         "event-activated",
-                         event_widget);
+  GcalMonthViewPrivate *priv;
+  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (user_data));
+
+  gtk_widget_hide (priv->overflow_popover);
+  g_signal_emit_by_name (GCAL_VIEW (user_data), "event-activated", event_widget);
 }
 
 static void
@@ -370,6 +377,84 @@ get_widget_parts (gint     first_cell,
 }
 
 static void
+rebuild_popover_for_cell (GcalMonthView *view)
+{
+  GcalMonthViewPrivate *priv;
+  GList *l;
+  GtkWidget *child_widget;
+  GdkRectangle rect;
+
+  /* placement helpers */
+  gdouble start_grid_y;
+  gdouble cell_width, cell_height;
+
+  gint shown_rows;
+
+  GtkStyleContext *context;
+  GtkStateFlags state;
+
+  PangoLayout *overflow_layout;
+  PangoFontDescription *ofont_desc;
+  gint font_height, padding_bottom;
+
+  priv = gcal_month_view_get_instance_private (view);
+
+  /* Clean all the widgets */
+  gtk_container_foreach (GTK_CONTAINER (priv->events_list_box), (GtkCallback) gtk_widget_destroy, NULL);
+
+  l = g_hash_table_lookup (priv->overflow_cells, GINT_TO_POINTER (priv->pressed_overflow_indicator));
+  for (; l != NULL; l = g_list_next (l))
+    {
+      /* FIXME: This may be replaced by setup_child */
+      child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (l->data));
+      gtk_container_add (GTK_CONTAINER (priv->events_list_box), child_widget);
+      g_signal_connect (child_widget, "activate", G_CALLBACK (event_opened), GTK_WIDGET (view));
+    }
+
+  /* placement calculation */
+  start_grid_y = get_start_grid_y (GTK_WIDGET (view));
+  shown_rows = ceil ((priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year)) / 7.0);
+
+  cell_width = gtk_widget_get_allocated_width (GTK_WIDGET (view)) / 7.0;
+  cell_height = (gtk_widget_get_allocated_height (GTK_WIDGET (view)) - start_grid_y) / 6.0;
+
+  context = gtk_widget_get_style_context (GTK_WIDGET (view));
+  state = gtk_widget_get_state_flags (GTK_WIDGET (view));
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "overflow");
+  gtk_style_context_get (context, state, "font", &ofont_desc, "padding-bottom", &padding_bottom, NULL);
+
+  overflow_layout = gtk_widget_create_pango_layout (GTK_WIDGET (view), NULL);
+  pango_layout_set_font_description (overflow_layout, ofont_desc);
+  pango_layout_get_pixel_size (overflow_layout, NULL, &font_height);
+
+  gtk_style_context_restore (context);
+  pango_font_description_free (ofont_desc);
+  g_object_unref (overflow_layout);
+
+  rect.y = cell_height * ((priv->pressed_overflow_indicator / 7) + 1.0 + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y - padding_bottom - font_height / 2;
+  rect.width = 1;
+  rect.height = 1;
+
+  if (priv->pressed_overflow_indicator % 7 < 3)
+    {
+      rect.x = cell_width * ((priv->pressed_overflow_indicator % 7) + 1.0);
+      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), GTK_POS_RIGHT);
+    }
+  else if (priv->pressed_overflow_indicator % 7 > 3)
+    {
+      rect.x = cell_width * ((priv->pressed_overflow_indicator % 7));
+      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), GTK_POS_LEFT);
+    }
+  else
+    {
+      rect.x = cell_width * ((priv->pressed_overflow_indicator % 7) + 1.0 - priv->k);
+      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), priv->k == 0 ? GTK_POS_RIGHT : GTK_POS_LEFT);
+    }
+  gtk_popover_set_pointing_to (GTK_POPOVER (priv->overflow_popover), &rect);
+}
+
+static void
 gcal_month_view_class_init (GcalMonthViewClass *klass)
 {
   GObjectClass *object_class;
@@ -406,6 +491,8 @@ static void
 gcal_month_view_init (GcalMonthView *self)
 {
   GcalMonthViewPrivate *priv;
+  GtkWidget *grid;
+  GtkWidget *button;
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
@@ -433,6 +520,17 @@ gcal_month_view_init (GcalMonthView *self)
     priv->k = 0;
   else if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
     priv->k = 1;
+
+  priv->overflow_popover = gtk_popover_new (GTK_WIDGET (self));
+
+  grid = gtk_grid_new ();
+  gtk_orientable_set_orientation (GTK_ORIENTABLE (grid), GTK_ORIENTATION_VERTICAL);
+  gtk_container_add (GTK_CONTAINER (priv->overflow_popover), grid);
+
+  priv->events_list_box = gtk_list_box_new ();
+  button = gtk_button_new_with_label (_("Add new event..."));
+  gtk_container_add (GTK_CONTAINER (grid), priv->events_list_box);
+  gtk_container_add (GTK_CONTAINER (grid), button);
 }
 
 static void
