@@ -803,8 +803,9 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
         }
     }
 
-  /* if (g_hash_table_size (priv->overflown_days) != 0) */
-  /*   gtk_widget_queue_draw_area (widget, allocation->x, allocation->y, allocation->width, allocation->height); */
+  /* FIXME: remove when Gtk bug is fixed */
+  if (g_hash_table_size (priv->overflown_days) != 0)
+    gtk_widget_queue_draw_area (widget, allocation->x, allocation->y, allocation->width, allocation->height);
 }
 
 static gboolean
