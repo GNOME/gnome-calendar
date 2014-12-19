@@ -18,6 +18,10 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "gcal-month-view.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
@@ -48,9 +52,9 @@ typedef struct
   GList          *multiday_children;
 
   /**
-   * Set containing which days have overflow
+   * Hash containing cells that who has overflow per list of hidden widgets.
    */
-  GHashTable     *overflown_days;
+  GHashTable     *overflow_cells;
 
   /**
    * Set containing the master widgets hidden for delete;
@@ -378,7 +382,7 @@ gcal_month_view_init (GcalMonthView *self)
   priv->children = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_list_free);
   priv->single_day_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   priv->multiday_children = NULL;
-  priv->overflown_days = g_hash_table_new (g_direct_hash, g_direct_equal);
+  priv->overflow_cells = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   priv->hidden_as_overflow = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 
   gtk_style_context_add_class (
@@ -489,7 +493,7 @@ gcal_month_view_finalize (GObject       *object)
 
   g_hash_table_destroy (priv->children);
   g_hash_table_destroy (priv->single_day_children);
-  g_hash_table_destroy (priv->overflown_days);
+  g_hash_table_destroy (priv->overflow_cells);
   g_hash_table_destroy (priv->hidden_as_overflow);
 
   if (priv->multiday_children != NULL)
@@ -626,7 +630,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   g_list_free (l2);
 
   /* clean overflow information */
-  g_hash_table_remove_all (priv->overflown_days);
+  g_hash_table_remove_all (priv->overflow_cells);
 
   gtk_widget_set_allocation (widget, allocation);
   if (gtk_widget_get_realized (widget))
@@ -753,7 +757,16 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           g_hash_table_add (priv->hidden_as_overflow, g_strdup (uuid));
 
           /* FIXME: improve overflow to handle the proper count of widgets */
-          g_hash_table_add (priv->overflown_days, GINT_TO_POINTER (first_cell));
+          for (i = first_cell; i <= last_cell; i++)
+            {
+              aux = g_hash_table_lookup (priv->overflow_cells, GINT_TO_POINTER (i));
+              aux = g_list_append (aux, child_widget);
+
+              if (g_list_length (aux) == 1)
+                g_hash_table_insert (priv->overflow_cells, GINT_TO_POINTER (i), aux);
+              else
+                g_hash_table_replace (priv->overflow_cells, GINT_TO_POINTER (i), g_list_copy (aux));
+            }
         }
 
       g_array_free (cells, TRUE);
@@ -798,13 +811,20 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
             {
               gtk_widget_hide (child_widget);
               g_hash_table_add (priv->hidden_as_overflow, g_strdup (uuid));
-              g_hash_table_add (priv->overflown_days, GINT_TO_POINTER (i));
+
+              l = g_hash_table_lookup (priv->overflow_cells, GINT_TO_POINTER (i));
+              l = g_list_append (l, child_widget);
+
+              if (g_list_length (l) == 1)
+                g_hash_table_insert (priv->overflow_cells, GINT_TO_POINTER (i), l);
+              else
+                g_hash_table_replace (priv->overflow_cells, GINT_TO_POINTER (i), g_list_copy (l));
             }
         }
     }
 
   /* FIXME: remove when Gtk bug is fixed */
-  if (g_hash_table_size (priv->overflown_days) != 0)
+  if (g_hash_table_size (priv->overflow_cells) != 0)
     gtk_widget_queue_draw_area (widget, allocation->x, allocation->y, allocation->width, allocation->height);
 }
 
@@ -984,13 +1004,17 @@ gcal_month_view_draw (GtkWidget *widget,
                              layout);
         }
 
-      if (g_hash_table_contains (priv->overflown_days, GINT_TO_POINTER (i)))
+      if (g_hash_table_contains (priv->overflow_cells, GINT_TO_POINTER (i)))
         {
+          GList *l;
           PangoLayout *overflow_layout;
           gchar *overflow_str;
 
-          /* TODO: Warning in some languags this string can be too long and may overlap wit the number */
-          overflow_str = g_strdup_printf (_("Other %d events"), 2); /* FIXME: handle plurars property */
+          l = g_hash_table_lookup (priv->overflow_cells, GINT_TO_POINTER (i));
+
+          /* TODO: Warning in some languages this string can be too long and may overlap wit the number */
+          format = g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", g_list_length (l));
+          overflow_str = g_strdup_printf (format, g_list_length (l));
           overflow_layout = gtk_widget_create_pango_layout (widget, overflow_str);
 
           pango_layout_set_width (overflow_layout, pango_units_from_double (cell_width));
