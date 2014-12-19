@@ -83,6 +83,12 @@ typedef struct
   gint            start_mark_cell;
   gint            end_mark_cell;
 
+  /**
+   * This flags signals when the cursor is over an overflow indicator and when once has been clicked
+   */
+  gint            pressed_overflow_indicator;
+  gint            hovered_overflow_indicator;
+
   /* text direction factors */
   gint            k;
 
@@ -104,9 +110,10 @@ static void           event_opened                          (GcalEventWidget *ev
 static void           setup_child                           (GtkWidget       *child_widget,
                                                              GtkWidget       *parent);
 
-static gint           get_cell_and_center_from_position     (GcalMonthView  *view,
+static gint           gather_button_event_data              (GcalMonthView  *view,
                                                              gdouble         x,
                                                              gdouble         y,
+                                                             gboolean       *out_on_indicator,
                                                              gdouble        *out_x,
                                                              gdouble        *out_y);
 
@@ -214,11 +221,12 @@ setup_child (GtkWidget *child_widget,
 }
 
 static gint
-get_cell_and_center_from_position (GcalMonthView *view,
-                                   gdouble        x,
-                                   gdouble        y,
-                                   gdouble       *out_x,
-                                   gdouble       *out_y)
+gather_button_event_data (GcalMonthView *view,
+                          gdouble        x,
+                          gdouble        y,
+                          gboolean      *out_on_indicator,
+                          gdouble       *out_x,
+                          gdouble       *out_y)
 {
   GcalMonthViewPrivate *priv;
   GtkWidget *widget;
@@ -233,6 +241,13 @@ get_cell_and_center_from_position (GcalMonthView *view,
 
   gint cell;
 
+  GtkStyleContext *context;
+  GtkStateFlags state;
+
+  PangoLayout *overflow_layout;
+  PangoFontDescription *ofont_desc;
+  gint font_height, padding_bottom;
+
   priv = gcal_month_view_get_instance_private (view);
   widget = GTK_WIDGET (view);
 
@@ -244,9 +259,31 @@ get_cell_and_center_from_position (GcalMonthView *view,
   cell_width = gtk_widget_get_allocated_width (widget) / 7.0;
   cell_height = (gtk_widget_get_allocated_height (widget) - start_grid_y) / 6.0;
 
+  context = gtk_widget_get_style_context (widget);
+  state = gtk_widget_get_state_flags (widget);
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "overflow");
+  gtk_style_context_get (context, state, "font", &ofont_desc, "padding-bottom", &padding_bottom, NULL);
+
+  overflow_layout = gtk_widget_create_pango_layout (widget, NULL);
+  pango_layout_set_font_description (overflow_layout, ofont_desc);
+  pango_layout_get_pixel_size (overflow_layout, NULL, &font_height);
+
+  gtk_style_context_restore (context);
+  pango_font_description_free (ofont_desc);
+  g_object_unref (overflow_layout);
+
   y = y - start_grid_y - first_row_gap * cell_height;
 
   cell = 7 * (gint)(y / cell_height) + (gint)(x / cell_width);
+
+  if (out_on_indicator != NULL)
+    {
+      gdouble upper_border = cell_height * ((gint) y / (gint) cell_height);
+      y = y - upper_border;
+
+      *out_on_indicator = (cell_height - font_height - padding_bottom < y && y < cell_height);
+    }
 
   if (out_x != NULL)
     *out_x = cell_width * ((cell % 7) + 0.5);
@@ -378,6 +415,9 @@ gcal_month_view_init (GcalMonthView *self)
 
   priv->start_mark_cell = -1;
   priv->end_mark_cell = -1;
+
+  priv->pressed_overflow_indicator = -1;
+  priv->hovered_overflow_indicator = -1;
 
   priv->children = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_list_free);
   priv->single_day_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
@@ -1146,20 +1186,24 @@ gcal_month_view_button_press (GtkWidget      *widget,
   GcalMonthViewPrivate *priv;
 
   gint days;
-
   gint j, sw;
+  gboolean pressed_indicator = FALSE;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
   sw = 1 - 2 * priv->k;
 
-  priv->clicked_cell = get_cell_and_center_from_position (GCAL_MONTH_VIEW (widget), event->x, event->y, NULL, NULL);
+  priv->clicked_cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y,
+                                                 &pressed_indicator, NULL, NULL);
 
   j = 7 * ((priv->clicked_cell + 7 * priv->k) / 7) + sw * (priv->clicked_cell % 7) + (1 - priv->k);
 
   if (j > priv->days_delay && j <= days)
     priv->start_mark_cell = priv->clicked_cell;
+
+  if (pressed_indicator)
+    priv->pressed_overflow_indicator = priv->clicked_cell;
 
   g_debug ("clicked is: %d", priv->clicked_cell);
   g_debug ("pressed is: %d", priv->start_mark_cell);
@@ -1184,33 +1228,47 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
   GcalMonthViewPrivate *priv;
 
   gint days;
-
   gint j, sw;
-  gint new_end_cell;
+  gint new_end_cell, new_hovered_cell;
+  gboolean hovered_indicator = FALSE;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
-
-  if (priv->start_mark_cell == -1 ||
-      priv->clicked_cell == -1)
-    return FALSE;
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
   sw = 1 - 2 * priv->k;
 
-  new_end_cell = get_cell_and_center_from_position (GCAL_MONTH_VIEW (widget), event->x, event->y, NULL, NULL);
+  new_end_cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y, &hovered_indicator, NULL, NULL);
 
   j = 7 * ((new_end_cell + 7 * priv->k) / 7) + sw * (new_end_cell % 7) + (1 - priv->k);
 
-  if (j > priv->days_delay && j <= days)
+  if (priv->clicked_cell != -1)
     {
-      if (priv->end_mark_cell != new_end_cell)
-        gtk_widget_queue_draw (widget);
+      if (j > priv->days_delay && j <= days)
+        {
+          if (priv->end_mark_cell != new_end_cell)
+            gtk_widget_queue_draw (widget);
 
-      g_debug ("move_notify: %d, %d, %d", priv->start_mark_cell, priv->end_mark_cell, new_end_cell);
-      priv->end_mark_cell = new_end_cell;
+          g_debug ("move_notify: %d, %d, %d", priv->start_mark_cell, priv->end_mark_cell, new_end_cell);
+          priv->end_mark_cell = new_end_cell;
+          return TRUE;
+        }
+    }
+  else
+    {
+      if (hovered_indicator)
+        new_hovered_cell = new_end_cell;
+      else
+        new_hovered_cell = -1;
+
+      if (priv->hovered_overflow_indicator != new_hovered_cell)
+        {
+          priv->hovered_overflow_indicator = new_hovered_cell;
+          gtk_widget_queue_draw (widget);
+          return TRUE;
+        }
     }
 
-  return TRUE;
+  return FALSE;
 }
 
 static gboolean
@@ -1223,11 +1281,12 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   gint j, sw;
   gint released;
+  gboolean released_indicator = FALSE;
 
-  gdouble x,y;
+  gdouble x, y;
 
   icaltimetype *start_date;
-  icaltimetype *end_date;
+  icaltimetype *end_date = NULL;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
 
@@ -1237,13 +1296,14 @@ gcal_month_view_button_release (GtkWidget      *widget,
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
   sw = 1 - 2 * priv->k;
 
-  released = get_cell_and_center_from_position (GCAL_MONTH_VIEW (widget), event->x, event->y, &x, &y);
+  released = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y, &released_indicator, &x, &y);
 
   j = 7 * ((released + 7 * priv->k) / 7) + sw * (released % 7) + (1 - priv->k);
 
   if (j <= priv->days_delay || j > days)
     {
       priv->clicked_cell = -1;
+      priv->pressed_overflow_indicator = -1;
       priv->start_mark_cell = -1;
       priv->end_mark_cell = -1;
       gtk_widget_queue_draw (widget);
@@ -1254,37 +1314,49 @@ gcal_month_view_button_release (GtkWidget      *widget,
   priv->end_mark_cell = released;
   g_debug ("released button cell: %d", priv->end_mark_cell);
 
-  gtk_widget_queue_draw (widget);
-
-  start_date = gcal_dup_icaltime (priv->date);
-  start_date->day = 7 * ((priv->start_mark_cell + 7 * priv->k) / 7) + sw * (priv->start_mark_cell % 7) + (1 - priv->k);
-  start_date->day -= priv->days_delay;
-  start_date->is_date = 1;
-
-  end_date = NULL;
-  if (priv->start_mark_cell != priv->end_mark_cell)
+  if (priv->pressed_overflow_indicator != -1 && priv->start_mark_cell == priv->end_mark_cell)
     {
-      end_date = gcal_dup_icaltime (priv->date);
-      end_date->day = j - priv->days_delay;
-      end_date->is_date = 1;
+      rebuild_popover_for_cell (GCAL_MONTH_VIEW (widget));
+      gtk_widget_show_all (priv->overflow_popover);
 
-      if (start_date->day > end_date->day)
+      priv->clicked_cell = -1;
+      priv->pressed_overflow_indicator = -1;
+      priv->start_mark_cell = -1;
+      priv->end_mark_cell = -1;
+      return TRUE;
+    }
+  else
+    {
+      start_date = gcal_dup_icaltime (priv->date);
+      start_date->day = 7 * ((priv->start_mark_cell + 7 * priv->k) / 7) + sw * (priv->start_mark_cell % 7) + (1 - priv->k);
+      start_date->day -= priv->days_delay;
+      start_date->is_date = 1;
+
+      if (priv->start_mark_cell != priv->end_mark_cell)
         {
-          gint day;
-          day = start_date->day;
-          start_date->day = end_date->day;
-          end_date->day = day;
+          end_date = gcal_dup_icaltime (priv->date);
+          end_date->day = j - priv->days_delay;
+          end_date->is_date = 1;
+
+          if (start_date->day > end_date->day)
+            {
+              gint day = start_date->day;
+              start_date->day = end_date->day;
+              end_date->day = day;
+            }
         }
+
+      g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_date, end_date, x, y);
+
+      g_free (start_date);
+      if (end_date != NULL)
+        g_free (end_date);
     }
 
-  g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_date, end_date, x, y);
 
-  g_free (start_date);
-
-  if (end_date != NULL)
-    g_free (end_date);
-
+  gtk_widget_queue_draw (widget);
   priv->clicked_cell = -1;
+  priv->pressed_overflow_indicator = -1;
   return TRUE;
 }
 
