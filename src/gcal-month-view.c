@@ -1355,8 +1355,6 @@ gcal_month_view_remove (GtkContainer *container,
 
       if (widget == master_widget)
         {
-          g_debug ("removing a master widget");
-          /* FIXME, should I remove every parts when removing a master widget */
           if (gcal_event_widget_is_multiday (GCAL_EVENT_WIDGET (widget)))
             {
               priv->multiday_children = g_list_remove (priv->multiday_children, widget);
