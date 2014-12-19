@@ -58,6 +58,7 @@ typedef struct
 
   GtkWidget      *overflow_popover;
   GtkWidget      *events_list_box;
+  GtkWidget      *popover_title;
 
   /**
    * Set containing the master widgets hidden for delete;
@@ -130,7 +131,8 @@ static gboolean       get_widget_parts                      (gint            fir
                                                              GArray         *cells,
                                                              GArray         *lengths);
 
-static void           rebuild_popover_for_cell              (GcalMonthView  *view);
+static void           rebuild_popover_for_day               (GcalMonthView  *view,
+                                                             gint            day);
 
 static void           gcal_view_interface_init              (GcalViewIface  *iface);
 
@@ -377,12 +379,17 @@ get_widget_parts (gint     first_cell,
 }
 
 static void
-rebuild_popover_for_cell (GcalMonthView *view)
+rebuild_popover_for_day (GcalMonthView *view,
+                         gint           day)
 {
   GcalMonthViewPrivate *priv;
   GList *l;
   GtkWidget *child_widget;
   GdkRectangle rect;
+
+  gchar str_date[64];
+  struct tm tm_date;
+  gchar *markup;
 
   /* placement helpers */
   gdouble start_grid_y;
@@ -398,6 +405,12 @@ rebuild_popover_for_cell (GcalMonthView *view)
   gint font_height, padding_bottom;
 
   priv = gcal_month_view_get_instance_private (view);
+
+  tm_date = icaltimetype_to_tm (priv->date);
+  e_utf8_strftime_fix_am_pm (str_date, 64, "%B", &tm_date);
+  markup = g_strdup_printf ("<span weight=\"bold\">%s %d</span>", str_date, day);
+  gtk_label_set_markup (GTK_LABEL (priv->popover_title), markup);
+  g_free (markup);
 
   /* Clean all the widgets */
   gtk_container_foreach (GTK_CONTAINER (priv->events_list_box), (GtkCallback) gtk_widget_destroy, NULL);
@@ -452,6 +465,12 @@ rebuild_popover_for_cell (GcalMonthView *view)
       gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), GTK_POS_RIGHT);
     }
   gtk_popover_set_pointing_to (GTK_POPOVER (priv->overflow_popover), &rect);
+
+  /* sizing hack */
+  child_widget = gtk_bin_get_child (GTK_BIN (priv->overflow_popover));
+  gtk_widget_set_size_request (child_widget, cell_width, -1);
+}
+
 }
 
 static void
@@ -524,11 +543,17 @@ gcal_month_view_init (GcalMonthView *self)
   priv->overflow_popover = gtk_popover_new (GTK_WIDGET (self));
 
   grid = gtk_grid_new ();
-  gtk_orientable_set_orientation (GTK_ORIENTABLE (grid), GTK_ORIENTATION_VERTICAL);
+  g_object_set (grid, "margin", 6, "row-spacing", 6, "orientation", GTK_ORIENTATION_VERTICAL, NULL);
   gtk_container_add (GTK_CONTAINER (priv->overflow_popover), grid);
 
+  priv->popover_title = gtk_label_new (NULL);
   priv->events_list_box = gtk_list_box_new ();
+  gtk_list_box_set_selection_mode (GTK_LIST_BOX (priv->events_list_box), GTK_SELECTION_NONE);
+  gtk_style_context_remove_class (gtk_widget_get_style_context (priv->events_list_box), GTK_STYLE_CLASS_LIST);
   button = gtk_button_new_with_label (_("Add new event..."));
+  g_object_set (button, "margin", 6, "hexpand", TRUE, NULL);
+
+  gtk_container_add (GTK_CONTAINER (grid), priv->popover_title);
   gtk_container_add (GTK_CONTAINER (grid), priv->events_list_box);
   gtk_container_add (GTK_CONTAINER (grid), button);
 }
