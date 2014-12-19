@@ -79,6 +79,9 @@ typedef struct
   gint            start_mark_cell;
   gint            end_mark_cell;
 
+  /* text direction factors */
+  gint            k;
+
   /* property */
   icaltimetype   *date;
   GcalManager    *manager; /* weak reference */
@@ -149,6 +152,9 @@ static gboolean       gcal_month_view_motion_notify_event   (GtkWidget      *wid
 
 static gboolean       gcal_month_view_button_release        (GtkWidget      *widget,
                                                              GdkEventButton *event);
+
+static void           gcal_month_view_direction_changed     (GtkWidget        *widget,
+                                                             GtkTextDirection  previous_direction);
 
 static void           gcal_month_view_add                   (GtkContainer   *constainer,
                                                              GtkWidget      *widget);
@@ -344,6 +350,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   widget_class->button_press_event = gcal_month_view_button_press;
   widget_class->motion_notify_event = gcal_month_view_motion_notify_event;
   widget_class->button_release_event = gcal_month_view_button_release;
+  widget_class->direction_changed = gcal_month_view_direction_changed;
 
   container_class = GTK_CONTAINER_CLASS (klass);
   container_class->add = gcal_month_view_add;
@@ -377,6 +384,11 @@ gcal_month_view_init (GcalMonthView *self)
   gtk_style_context_add_class (
       gtk_widget_get_style_context (GTK_WIDGET (self)),
       "calendar-view");
+
+  if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_LTR)
+    priv->k = 0;
+  else if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
+    priv->k = 1;
 }
 
 static void
@@ -575,8 +587,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                                GtkAllocation *allocation)
 {
   GcalMonthViewPrivate *priv;
-  gint i, j;
-  gint sw, k;
+  gint i, j, sw;
 
   gint padding_bottom;
   PangoLayout *layout;
@@ -640,18 +651,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
     size_left[i] = vertical_cell_space;
 
   shown_rows = ceil ((priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year)) / 7.0);
-
-  /* orientation factors */ /* FIXME: replace with direction-changed signal handler */
-  if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_LTR)
-    {
-      sw = 1;
-      k = 0;
-    }
-  else if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL)
-    {
-      sw = -1;
-      k = 1;
-    }
+  sw = 1 - 2 * priv->k;
 
   /* allocate multidays events */
   for (l = priv->multiday_children; l != NULL; l = g_list_next (l))
@@ -675,14 +675,14 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       if (date->month == priv->date->month)
         j = date->day;
       j += priv->days_delay;
-      first_cell = 7 * ((j - 1) / 7)+ 6 * k + sw * ((j - 1) % 7);
+      first_cell = 7 * ((j - 1) / 7)+ 6 * priv->k + sw * ((j - 1) % 7);
 
       j = icaltime_days_in_month (priv->date->month, priv->date->year);
       date = gcal_event_widget_peek_end_date (GCAL_EVENT_WIDGET (child_widget));
       if (date->month == priv->date->month)
         j = date->day;
       j += priv->days_delay;
-      last_cell = 7 * ((j - 1) / 7)+ 6 * k + sw * ((j - 1) % 7);
+      last_cell = 7 * ((j - 1) / 7)+ 6 * priv->k + sw * ((j - 1) % 7);
 
       /* FIXME missing mark widgets with continuos tags */
 
@@ -693,8 +693,8 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       lengths = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
       for (i = first_row; i <= last_row && visible; i++)
         {
-          start = i * 7 + k * 6;
-          end = i * 7 + (1 - k) * 6;
+          start = i * 7 + priv->k * 6;
+          end = i * 7 + (1 - priv->k) * 6;
 
           if (i == first_row)
             {
@@ -765,7 +765,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
     {
       j = GPOINTER_TO_INT (key);
       j += priv->days_delay;
-      i = 7 * ((j - 1) / 7)+ 6 * k + sw * ((j - 1) % 7);
+      i = 7 * ((j - 1) / 7)+ 6 * priv->k + sw * ((j - 1) % 7);
 
       l = (GList*) value;
       for (aux = l; aux != NULL; aux = g_list_next (aux))
@@ -838,9 +838,7 @@ gcal_month_view_draw (GtkWidget *widget,
   gint shown_rows;
   gdouble first_row_gap = 0.0;
 
-  gint i, j;
-  gint sw;
-  gint k;
+  gint i, j, sw;
 
   gint lower_mark = 43;
   gint upper_mark = -2;
@@ -867,24 +865,13 @@ gcal_month_view_draw (GtkWidget *widget,
   shown_rows = ceil (days / 7.0);
 
   first_row_gap = (6 - shown_rows) * 0.5; /* invalid area before the actual rows */
-
-  /* orientation factors */
-  if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_LTR)
-    {
-      sw = 1;
-      k = 0;
-    }
-  else if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL)
-    {
-      sw = -1;
-      k = 1;
-    }
+  sw = 1 - 2 * priv->k;
 
   /* active cells */
   if (priv->start_mark_cell != -1 && priv->end_mark_cell != -1)
     {
-      lower_mark = 7 * ((priv->start_mark_cell + 7 * k) / 7) + sw * (priv->start_mark_cell % 7) + (1 - k);
-      upper_mark = 7 * ((priv->end_mark_cell + 7 * k) / 7) + sw * (priv->end_mark_cell % 7) + (1 - k);
+      lower_mark = 7 * ((priv->start_mark_cell + 7 * priv->k) / 7) + sw * (priv->start_mark_cell % 7) + (1 - priv->k);
+      upper_mark = 7 * ((priv->end_mark_cell + 7 * priv->k) / 7) + sw * (priv->end_mark_cell % 7) + (1 - priv->k);
       if (lower_mark > upper_mark)
         {
           gint cell;
@@ -907,13 +894,13 @@ gcal_month_view_draw (GtkWidget *widget,
     {
       gchar *upcased_day;
 
-      j = 6 * k + sw * i;
+      j = 6 * priv->k + sw * i;
       upcased_day = g_utf8_strup (gcal_get_weekday ((j + priv->first_weekday) % 7), -1);
       pango_layout_set_text (layout, upcased_day, -1);
       pango_layout_get_pixel_size (layout, &font_width, &font_height);
 
       gtk_render_layout (context, cr,
-                         cell_width * (i + k) + (sw * padding.left) - k * font_width,
+                         cell_width * (i + priv->k) + (sw * padding.left) - priv->k * font_width,
                          start_grid_y - padding.bottom - font_height,
                          layout);
       g_free (upcased_day);
@@ -931,7 +918,7 @@ gcal_month_view_draw (GtkWidget *widget,
       gint column = i % 7;
       gint row = i / 7;
 
-      j = 7 * ((i + 7 * k) / 7) + sw * (i % 7) + (1 - k);
+      j = 7 * ((i + 7 * priv->k) / 7) + sw * (i % 7) + (1 - priv->k);
       if (j <= priv->days_delay)
         continue;
       else if (j > days)
@@ -955,11 +942,11 @@ gcal_month_view_draw (GtkWidget *widget,
 
           /* FIXME: hardcoded padding of the number background */
           gtk_render_background (context, cr,
-                                 cell_width * (column + 1 - k) - sw * padding.right + (k - 1) * font_width - 2.0,
+                                 cell_width * (column + 1 - priv->k) - sw * padding.right + (priv->k - 1) * font_width - 2.0,
                                  cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y,
                                  font_width + 4, font_height + 2);
           gtk_render_layout (context, cr,
-                             cell_width * (column + 1 - k) - sw * padding.right + (k - 1) * font_width,
+                             cell_width * (column + 1 - priv->k) - sw * padding.right + (priv->k - 1) * font_width,
                              cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y,
                              clayout);
 
@@ -978,7 +965,7 @@ gcal_month_view_draw (GtkWidget *widget,
           pango_layout_get_pixel_size (layout, &font_width, &font_height);
 
           gtk_render_layout (context, cr,
-                             cell_width * (column + 1 - k) - sw * padding.right + (k - 1) * font_width,
+                             cell_width * (column + 1 - priv->k) - sw * padding.right + (priv->k - 1) * font_width,
                              cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y,
                              layout);
 
@@ -991,7 +978,7 @@ gcal_month_view_draw (GtkWidget *widget,
           pango_layout_get_pixel_size (layout, &font_width, &font_height);
 
           gtk_render_layout (context, cr,
-                             cell_width * (column + 1 - k) - sw * padding.right + (k - 1) * font_width,
+                             cell_width * (column + 1 - priv->k) - sw * padding.right + (priv->k - 1) * font_width,
                              cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y,
                              layout);
         }
@@ -1096,13 +1083,13 @@ gcal_month_view_draw (GtkWidget *widget,
            {
              if (i == first_row)
                {
-                 pos_x = cell_width * (first_column + k);
-                 end = (alloc.width * (1 - k)) - pos_x;
+                 pos_x = cell_width * (first_column + priv->k);
+                 end = (alloc.width * (1 - priv->k)) - pos_x;
                }
              else if (i == last_row)
                {
-                 pos_x = cell_width * (last_column + 1 - k);
-                 end = (alloc.width * k) - pos_x;
+                 pos_x = cell_width * (last_column + 1 - priv->k);
+                 end = (alloc.width * priv->k) - pos_x;
                }
              else
                {
@@ -1135,28 +1122,16 @@ gcal_month_view_button_press (GtkWidget      *widget,
 
   gint days;
 
-  gint j;
-  gint sw, k;
+  gint j, sw;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
-
-  /* orientation factors */
-  if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_LTR)
-    {
-      sw = 1;
-      k = 0;
-    }
-  else if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL)
-    {
-      sw = -1;
-      k = 1;
-    }
+  sw = 1 - 2 * priv->k;
 
   priv->clicked_cell = get_cell_and_center_from_position (GCAL_MONTH_VIEW (widget), event->x, event->y, NULL, NULL);
 
-  j = 7 * ((priv->clicked_cell + 7 * k) / 7) + sw * (priv->clicked_cell % 7) + (1 - k);
+  j = 7 * ((priv->clicked_cell + 7 * priv->k) / 7) + sw * (priv->clicked_cell % 7) + (1 - priv->k);
 
   if (j > priv->days_delay && j <= days)
     priv->start_mark_cell = priv->clicked_cell;
@@ -1185,8 +1160,7 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
 
   gint days;
 
-  gint j;
-  gint sw, k;
+  gint j, sw;
   gint new_end_cell;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
@@ -1196,22 +1170,11 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
     return FALSE;
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
-
-  /* orientation factors */
-  if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_LTR)
-    {
-      sw = 1;
-      k = 0;
-    }
-  else if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL)
-    {
-      sw = -1;
-      k = 1;
-    }
+  sw = 1 - 2 * priv->k;
 
   new_end_cell = get_cell_and_center_from_position (GCAL_MONTH_VIEW (widget), event->x, event->y, NULL, NULL);
 
-  j = 7 * ((new_end_cell + 7 * k) / 7) + sw * (new_end_cell % 7) + (1 - k);
+  j = 7 * ((new_end_cell + 7 * priv->k) / 7) + sw * (new_end_cell % 7) + (1 - priv->k);
 
   if (j > priv->days_delay && j <= days)
     {
@@ -1233,8 +1196,7 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   gint days;
 
-  gint j;
-  gint sw, k;
+  gint j, sw;
   gint released;
 
   gdouble x,y;
@@ -1248,22 +1210,11 @@ gcal_month_view_button_release (GtkWidget      *widget,
     return FALSE;
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
-
-  /* orientation factors */
-  if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_LTR)
-    {
-      sw = 1;
-      k = 0;
-    }
-  else if (gtk_widget_get_default_direction () == GTK_TEXT_DIR_RTL)
-    {
-      sw = -1;
-      k = 1;
-    }
+  sw = 1 - 2 * priv->k;
 
   released = get_cell_and_center_from_position (GCAL_MONTH_VIEW (widget), event->x, event->y, &x, &y);
 
-  j = 7 * ((released + 7 * k) / 7) + sw * (released % 7) + (1 - k);
+  j = 7 * ((released + 7 * priv->k) / 7) + sw * (released % 7) + (1 - priv->k);
 
   if (j <= priv->days_delay || j > days)
     {
@@ -1281,7 +1232,7 @@ gcal_month_view_button_release (GtkWidget      *widget,
   gtk_widget_queue_draw (widget);
 
   start_date = gcal_dup_icaltime (priv->date);
-  start_date->day = 7 * ((priv->start_mark_cell + 7 * k) / 7) + sw * (priv->start_mark_cell % 7) + (1 - k);
+  start_date->day = 7 * ((priv->start_mark_cell + 7 * priv->k) / 7) + sw * (priv->start_mark_cell % 7) + (1 - priv->k);
   start_date->day -= priv->days_delay;
   start_date->is_date = 1;
 
@@ -1310,6 +1261,19 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   priv->clicked_cell = -1;
   return TRUE;
+}
+
+static void
+gcal_month_view_direction_changed (GtkWidget        *widget,
+                                   GtkTextDirection  previous_direction)
+{
+  GcalMonthViewPrivate *priv;
+  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
+
+  if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
+    priv->k = 0;
+  else if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
+    priv->k = 1;
 }
 
 /**
