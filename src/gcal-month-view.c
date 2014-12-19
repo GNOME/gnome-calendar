@@ -1395,6 +1395,15 @@ gcal_month_view_remove (GtkContainer *container,
           if (gcal_event_widget_is_multiday (GCAL_EVENT_WIDGET (widget)))
             {
               priv->multiday_children = g_list_remove (priv->multiday_children, widget);
+
+              aux = g_list_next (l);
+              if (aux != NULL)
+                {
+                  l->next = NULL;
+                  aux->prev = NULL;
+                  g_list_foreach (aux, (GFunc) gtk_widget_unparent, NULL);
+                  g_list_free (aux);
+                }
             }
           else
             {
@@ -1435,7 +1444,7 @@ gcal_month_view_forall (GtkContainer *container,
   aux = NULL;
 
   for (l = g_hash_table_get_values (priv->children); l != NULL; l = g_list_next (l))
-    aux = g_list_concat (aux, g_list_copy (l->data)); /* FIXME: check if reverse puts parts ahead of master */
+    aux = g_list_concat (aux, g_list_reverse (g_list_copy (l->data)));
   g_list_free (l);
 
   while (aux != NULL)
