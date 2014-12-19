@@ -439,17 +439,17 @@ rebuild_popover_for_cell (GcalMonthView *view)
   if (priv->pressed_overflow_indicator % 7 < 3)
     {
       rect.x = cell_width * ((priv->pressed_overflow_indicator % 7) + 1.0);
-      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), GTK_POS_RIGHT);
+      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), priv->k == 0 ? GTK_POS_RIGHT : GTK_POS_LEFT);
     }
   else if (priv->pressed_overflow_indicator % 7 > 3)
     {
       rect.x = cell_width * ((priv->pressed_overflow_indicator % 7));
-      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), GTK_POS_LEFT);
+      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), priv->k == 0 ? GTK_POS_LEFT : GTK_POS_RIGHT);
     }
   else
     {
       rect.x = cell_width * ((priv->pressed_overflow_indicator % 7) + 1.0 - priv->k);
-      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), priv->k == 0 ? GTK_POS_RIGHT : GTK_POS_LEFT);
+      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), GTK_POS_RIGHT);
     }
   gtk_popover_set_pointing_to (GTK_POPOVER (priv->overflow_popover), &rect);
 }
