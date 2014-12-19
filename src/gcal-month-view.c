@@ -894,7 +894,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           gtk_widget_hide (child_widget);
           g_hash_table_add (priv->hidden_as_overflow, g_strdup (uuid));
 
-          /* FIXME: improve overflow to handle the proper count of widgets */
           for (i = first_cell; i <= last_cell; i++)
             {
               aux = g_hash_table_lookup (priv->overflow_cells, GINT_TO_POINTER (i));
