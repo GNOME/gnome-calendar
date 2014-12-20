@@ -114,6 +114,9 @@ gboolean     gcal_event_widget_equal                       (GcalEventWidget    *
 gint         gcal_event_widget_compare_by_length           (GcalEventWidget    *widget1,
                                                             GcalEventWidget    *widget2);
 
+gint         gcal_event_widget_compare_by_start_date       (GcalEventWidget    *widget1,
+                                                            GcalEventWidget    *widget2);
+
 G_END_DECLS
 
 #endif /* __GCAL_EVENT_WIDGET_H__ */

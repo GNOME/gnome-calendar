@@ -1160,3 +1160,16 @@ gcal_event_widget_compare_by_length (GcalEventWidget *widget1,
 
   return (time_e2 - time_s2) - (time_e1 - time_s1);
 }
+
+gint
+gcal_event_widget_compare_by_start_date (GcalEventWidget *widget1,
+                                         GcalEventWidget *widget2)
+{
+  GcalEventWidgetPrivate *priv1;
+  GcalEventWidgetPrivate *priv2;
+
+  priv1 = gcal_event_widget_get_instance_private (widget1);
+  priv2 = gcal_event_widget_get_instance_private (widget2);
+
+  return icaltime_compare (*(priv1->dt_start), *(priv2->dt_start));
+}
