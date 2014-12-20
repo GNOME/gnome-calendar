@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-12-19 18:00+0000\n"
-"PO-Revision-Date: 2014-12-20 12:20+0100\n"
+"POT-Creation-Date: 2014-12-20 14:13+0000\n"
+"PO-Revision-Date: 2014-12-20 17:58+0100\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -172,16 +172,22 @@ msgstr "Dátum módosítása"
 msgid "Save"
 msgstr "Mentés"
 
-#: ../src/gcal-month-view.c:639
-#| msgid "Delete event"
+#: ../src/gcal-month-view.c:618
+msgid "Add new event..."
+msgstr "Új esemény hozzáadása…"
+
+#: ../src/gcal-month-view.c:871
 msgid "Other events"
 msgstr "Egyéb események"
 
-#. TODO: Warning in some languags this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:993
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1190
 #, c-format
-msgid "Other %d events"
-msgstr "Egyéb %d esemény"
+#| msgid "Other events"
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Egyéb esemény"
+msgstr[1] "Egyéb %d esemény"
 
 #: ../src/gcal-time-selector.c:97
 #, c-format
@@ -227,13 +233,16 @@ msgstr "Visszavonás"
 msgid "Results for \"%s\""
 msgstr "Találatok erre: „%s”"
 
-#: ../src/gcal-window.c:1269
+#: ../src/gcal-window.c:1265
 msgid "Month"
 msgstr "Hónap"
 
-#: ../src/gcal-window.c:1275
+#: ../src/gcal-window.c:1271
 msgid "Year"
 msgstr "Év"
+
+#~ msgid "Other %d events"
+#~ msgstr "Egyéb %d esemény"
 
 #~ msgid "Change the time"
 #~ msgstr "Idő módosítása"
