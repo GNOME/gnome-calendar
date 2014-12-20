@@ -93,6 +93,11 @@ typedef struct
   gint            pressed_overflow_indicator;
   gint            hovered_overflow_indicator;
 
+  /**
+   * clock format from GNOME desktop settings
+   */
+  gboolean        use_24h_format;
+
   /* text direction factors */
   gint            k;
 
@@ -1885,4 +1890,21 @@ gcal_month_view_set_first_weekday (GcalMonthView *view,
       priv->days_delay = (icaltime_day_of_week (*date) - priv->first_weekday + 6) % 7;
       g_free (date);
     }
+}
+
+/**
+ * gcal_month_view_set_use_24h_format:
+ * @view:
+ * @use_24h:
+ *
+ * Whether the view will show time using 24h or 12h format
+ **/
+void
+gcal_month_view_set_use_24h_format (GcalMonthView *view,
+                                    gboolean       use_24h)
+{
+  GcalMonthViewPrivate *priv;
+
+  priv = gcal_month_view_get_instance_private (view);
+  priv->use_24h_format = use_24h;
 }
