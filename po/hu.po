@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-12-05 08:31+0000\n"
-"PO-Revision-Date: 2014-12-07 12:39+0100\n"
+"POT-Creation-Date: 2014-12-19 18:00+0000\n"
+"PO-Revision-Date: 2014-12-20 12:20+0100\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -19,7 +19,8 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 1.2\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:333
+#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:372
+#: ../src/gcal-window.c:976
 msgid "Calendar"
 msgstr "Naptár"
 
@@ -63,7 +64,7 @@ msgstr "Az aktív ablaknézet típusa, az alapértelmezett érték: havi nézet"
 msgid "Cancel"
 msgstr "Mégse"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:535
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:718
 msgid "Done"
 msgstr "Kész"
 
@@ -96,28 +97,36 @@ msgid "Delete event"
 msgstr "Esemény törlése"
 
 #: ../data/ui/menus.ui.h:1
-#| msgid "New Event"
 msgid "_New Event"
 msgstr "Ú_j esemény"
 
 #: ../data/ui/menus.ui.h:2
-#| msgid "Search..."
 msgid "_Search…"
 msgstr "_Keresés…"
 
 #: ../data/ui/menus.ui.h:3
-#| msgid "About"
 msgid "_About"
 msgstr "_Névjegy"
 
 #: ../data/ui/menus.ui.h:4
-#| msgid "Quit"
 msgid "_Quit"
 msgstr "_Kilépés"
 
 #: ../data/ui/menus.ui.h:5
 msgid "_Synchronize"
 msgstr "_Szinkronizálás"
+
+#: ../data/ui/time-selector.ui.h:1
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:2 ../src/gcal-week-view.c:425
+msgid "AM"
+msgstr "DE"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:425
+msgid "PM"
+msgstr "DU"
 
 #: ../data/ui/window.ui.h:1
 msgid "Today"
@@ -128,27 +137,30 @@ msgid "Create"
 msgstr "Létrehozás"
 
 #: ../data/ui/window.ui.h:3
-#| msgid "More details"
 msgid "More Details"
 msgstr "További részletek"
 
-#: ../src/gcal-application.c:83
+#: ../src/gcal-application.c:86
 msgid "Display version number"
 msgstr "Verziószám kiírása"
 
-#: ../src/gcal-application.c:213
+#: ../src/gcal-application.c:91
+msgid "Open calendar on the passed date"
+msgstr "Naptár megnyitása az átadott napra"
+
+#: ../src/gcal-application.c:232
 msgid "- Calendar management"
 msgstr "- Naptárkezelés"
 
-#: ../src/gcal-application.c:321
+#: ../src/gcal-application.c:360
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id A naptár szerzői"
 
-#: ../src/gcal-application.c:327
+#: ../src/gcal-application.c:366
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id A naptár szerzői"
 
-#: ../src/gcal-application.c:340
+#: ../src/gcal-application.c:379
 msgid "translator-credits"
 msgstr "Úr Balázs <urbalazs@gmail.com>"
 
@@ -156,21 +168,30 @@ msgstr "Úr Balázs <urbalazs@gmail.com>"
 msgid "Change the date"
 msgstr "Dátum módosítása"
 
-#: ../src/gcal-edit-dialog.c:535
+#: ../src/gcal-edit-dialog.c:718
 msgid "Save"
 msgstr "Mentés"
 
-#: ../src/gcal-time-entry.c:126
-msgid "Change the time"
-msgstr "Idő módosítása"
+#: ../src/gcal-month-view.c:639
+#| msgid "Delete event"
+msgid "Other events"
+msgstr "Egyéb események"
 
-#: ../src/gcal-week-view.c:425
-msgid "AM"
-msgstr "DE"
+#. TODO: Warning in some languags this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:993
+#, c-format
+msgid "Other %d events"
+msgstr "Egyéb %d esemény"
 
-#: ../src/gcal-week-view.c:425
-msgid "PM"
-msgstr "DU"
+#: ../src/gcal-time-selector.c:97
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "DE %.2d.%.2d"
+
+#: ../src/gcal-time-selector.c:99
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "DU %.2d.%.2d"
 
 #: ../src/gcal-week-view.c:428 ../src/gcal-week-view.c:501
 msgid "Midnight"
@@ -184,35 +205,38 @@ msgstr "Dél"
 msgid "00:00 PM"
 msgstr "du. 00:00"
 
-#: ../src/gcal-week-view.c:1404 ../src/gcal-window.c:1121
+#: ../src/gcal-week-view.c:1404 ../src/gcal-window.c:1260
 msgid "Week"
 msgstr "Hét"
 
-#: ../src/gcal-window.c:578
+#: ../src/gcal-window.c:589
 #, c-format
 msgid "New Event on %s"
 msgstr "Új esemény ekkor: %s"
 
-#: ../src/gcal-window.c:788
+#: ../src/gcal-window.c:911
 msgid "Event deleted"
 msgstr "Esemény törölve"
 
-#: ../src/gcal-window.c:789
+#: ../src/gcal-window.c:912
 msgid "Undo"
 msgstr "Visszavonás"
 
-#: ../src/gcal-window.c:878
+#: ../src/gcal-window.c:1002
 #, c-format
 msgid "Results for \"%s\""
 msgstr "Találatok erre: „%s”"
 
-#: ../src/gcal-window.c:1130
+#: ../src/gcal-window.c:1269
 msgid "Month"
 msgstr "Hónap"
 
-#: ../src/gcal-window.c:1136
+#: ../src/gcal-window.c:1275
 msgid "Year"
 msgstr "Év"
+
+#~ msgid "Change the time"
+#~ msgstr "Idő módosítása"
 
 #~ msgid "Unable to initialize GtkClutter"
 #~ msgstr "Nem lehet előkészíteni a GtkCluttert"
