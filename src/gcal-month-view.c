@@ -1636,8 +1636,7 @@ gcal_month_view_add (GtkContainer *container,
       date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
 
       l = g_hash_table_lookup (priv->single_day_children, GINT_TO_POINTER (date->day));
-      /* FIXME add sorted */
-      l = g_list_append (l, widget);
+      l = g_list_insert_sorted (l, widget, (GCompareFunc) gcal_event_widget_compare_by_start_date);
 
       if (g_list_length (l) == 1)
         g_hash_table_insert (priv->single_day_children, GINT_TO_POINTER (date->day), l);
