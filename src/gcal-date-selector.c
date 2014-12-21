@@ -111,22 +111,22 @@ set_date (GcalDateSelector *selector,
 
   /* set date entries' text */
   /* day entry */
-  label = g_strdup_printf ("%d", day);
+  label = g_strdup_printf ("%.2d", day);
 
   gtk_entry_set_text (GTK_ENTRY (priv->entries[DAY]), label);
   g_free (label);
 
   /* month entry */
-  label = g_strdup_printf ("%d", month + 1);
+  label = g_strdup_printf ("%.2d", month + 1);
 
   gtk_entry_set_text (GTK_ENTRY (priv->entries[MONTH]), label);
   g_free (label);
 
   /* year entry */
   if (priv->have_long_year)
-    label = g_strdup_printf ("%d", year);
+    label = g_strdup_printf ("%.4d", year);
   else
-    label = g_strdup_printf ("%d", year % 100);
+    label = g_strdup_printf ("%.2d", year % 100);
 
   gtk_entry_set_text (GTK_ENTRY (priv->entries[YEAR]), label);
 
