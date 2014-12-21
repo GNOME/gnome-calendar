@@ -33,14 +33,18 @@ enum
 
 struct _GcalDateSelectorPrivate
 {
+  /* widgets */
   GtkWidget   *date_label;
   GtkWidget   *popover;
   GtkWidget   *entries[NUM_ENTRIES];
+  GtkWidget   *calendar;
 
+  /* date */
   gint         day;
   gint         month;
   gint         year;
 
+  /* misc */
   gchar       *mask;
   guint        day_pos;
   guint        month_pos;
@@ -58,9 +62,35 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
+static void     set_date                                          (GcalDateSelector     *selector,
+                                                                   gint                  day,
+                                                                   gint                  month,
+                                                                   gint                  year);
+
 static void     gcal_date_selector_constructed                    (GObject              *object);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalDateSelector, gcal_date_selector, GTK_TYPE_TOGGLE_BUTTON);
+
+static void
+set_date (GcalDateSelector *selector,
+          gint              day,
+          gint              month,
+          gint              year)
+{
+  GcalDateSelectorPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
+  priv = gcal_date_selector_get_instance_private (selector);
+
+  priv->day = day;
+  priv->month = month;
+  priv->year = year;
+
+  month =  CLAMP (month - 1, 0, 11);
+
+  /* set calendar's date */
+  g_object_set (priv->calendar, "day", day, "month", month, "year", year, NULL);
+}
 
 static void
 gcal_date_selector_class_init (GcalDateSelectorClass *klass)
@@ -155,6 +185,11 @@ gcal_date_selector_constructed (GObject *object)
   grid = (GtkWidget*) gtk_builder_get_object (builder, "grid");
   g_object_ref (grid);
 
+  /* calendar */
+  priv->calendar = (GtkWidget*) gtk_builder_get_object (builder, "calendar");
+  g_object_ref (priv->calendar);
+
+  /* signals and properties */
   gtk_container_add (GTK_CONTAINER (priv->popover), grid);
   g_object_bind_property (priv->popover, "visible", object, "active", G_BINDING_BIDIRECTIONAL);
 }
@@ -172,14 +207,7 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
                              gint              month,
                              gint              year)
 {
-  GcalDateSelectorPrivate *priv;
-
-  g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
-  priv = gcal_date_selector_get_instance_private (selector);
-
-  priv->day = day;
-  priv->month = month;
-  priv->year = year;
+  set_date (selector, day, month, year);
 }
 
 void
