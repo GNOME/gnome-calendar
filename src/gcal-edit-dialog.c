@@ -892,8 +892,10 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   /* Load new event data */
   /* summary */
   e_cal_component_get_summary (priv->component, &e_summary);
-  gtk_entry_set_text (GTK_ENTRY (priv->summary_entry),
-                      e_summary.value != NULL ? e_summary.value : "");
+  if (e_summary.value == NULL || g_strcmp0 (e_summary.value, "") == 0)
+    gtk_entry_set_text (GTK_ENTRY (priv->summary_entry), _("Unnamed event"));
+  else
+    gtk_entry_set_text (GTK_ENTRY (priv->summary_entry), e_summary.value);
 
   /* dialog titlebar's title & subtitle */
   extension = E_SOURCE_SELECTABLE (e_source_get_extension (data->source, E_SOURCE_EXTENSION_CALENDAR));
