@@ -1442,7 +1442,7 @@ gcal_month_view_button_press (GtkWidget      *widget,
   if (j > priv->days_delay && j <= days)
     priv->start_mark_cell = priv->clicked_cell;
 
-  if (pressed_indicator)
+  if (pressed_indicator && g_hash_table_contains (priv->overflow_cells, GINT_TO_POINTER (priv->clicked_cell)))
     priv->pressed_overflow_indicator = priv->clicked_cell;
 
   g_debug ("clicked is: %d", priv->clicked_cell);
@@ -1559,7 +1559,8 @@ gcal_month_view_button_release (GtkWidget      *widget,
   priv->end_mark_cell = released;
   g_debug ("released button cell: %d", priv->end_mark_cell);
 
-  if (priv->pressed_overflow_indicator != -1 && priv->start_mark_cell == priv->end_mark_cell)
+  if (priv->pressed_overflow_indicator != -1 && priv->start_mark_cell == priv->end_mark_cell &&
+      g_hash_table_contains (priv->overflow_cells, GINT_TO_POINTER (priv->pressed_overflow_indicator)))
     {
       priv->hovered_overflow_indicator = priv->pressed_overflow_indicator;
 
