@@ -71,19 +71,6 @@ typedef struct
 
 static void        fill_sources_menu                      (GcalEditDialog    *dialog);
 
-static void        on_source_activate                     (GcalManager       *manager,
-                                                           ESource           *source,
-                                                           gboolean           active,
-                                                           gpointer           user_data);
-
-static void        on_source_added                        (GcalManager       *manager,
-                                                           ESource           *source,
-                                                           gpointer           user_data);
-
-static void        on_source_removed                      (GcalManager       *manager,
-                                                           ESource           *source,
-                                                           gpointer           user_data);
-
 static void        on_calendar_selected                   (GtkWidget         *menu_item,
                                                            GVariant          *value,
                                                            gpointer           user_data);
@@ -130,11 +117,12 @@ fill_sources_menu (GcalEditDialog *dialog)
   GList *aux;
 
   priv = gcal_edit_dialog_get_instance_private (dialog);
-  list = gcal_manager_get_sources (priv->manager);
 
-  /* clear menu */
-  if (priv->sources_menu)
-    g_menu_remove_all (priv->sources_menu);
+  if (priv->manager == NULL)
+    return;
+
+  list = gcal_manager_get_sources (priv->manager);
+  priv->sources_menu = g_menu_new ();
 
   for (aux = list; aux != NULL; aux = aux->next)
     {
@@ -149,7 +137,7 @@ fill_sources_menu (GcalEditDialog *dialog)
       /* retrieve color */
       extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
       gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
-      pix = gcal_get_pixbuf_from_color (&color, 16);
+      pix = gcal_get_pixbuf_from_color (&color, 16);;
 
       /* menu item */
       item = g_menu_item_new (e_source_get_display_name (source), "edit.select_calendar");
@@ -172,32 +160,9 @@ fill_sources_menu (GcalEditDialog *dialog)
       g_object_unref (item);
     }
 
+  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->sources_button), G_MENU_MODEL (priv->sources_menu));
+
   g_list_free (list);
-}
-
-static void
-on_source_activate (GcalManager *manager,
-                    ESource     *source,
-                    gboolean     active,
-                    gpointer     user_data)
-{
-  fill_sources_menu (GCAL_EDIT_DIALOG (user_data));
-}
-
-static void
-on_source_added (GcalManager *manager,
-                 ESource     *source,
-                 gpointer     user_data)
-{
-  fill_sources_menu (GCAL_EDIT_DIALOG (user_data));
-}
-
-static void
-on_source_removed (GcalManager *manager,
-                   ESource     *source,
-                   gpointer     user_data)
-{
-  fill_sources_menu (GCAL_EDIT_DIALOG (user_data));
 }
 
 static void
@@ -559,10 +524,6 @@ gcal_edit_dialog_constructed (GObject* object)
 
   g_action_map_add_action (G_ACTION_MAP (priv->action_group), G_ACTION (priv->action));
 
-  /* sources menu */
-  priv->sources_menu = g_menu_new ();
-  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->sources_button), G_MENU_MODEL (priv->sources_menu));
-
   /* bind title & symmary */
   g_object_bind_property (priv->summary_entry,
                           "text",
@@ -889,6 +850,12 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   /* Clear event data */
   gcal_edit_dialog_clear_data (dialog);
 
+  /* update sources list */
+  if (priv->sources_menu != NULL)
+    g_menu_remove_all (priv->sources_menu);
+
+  fill_sources_menu (dialog);
+
   /* Load new event data */
   /* summary */
   e_cal_component_get_summary (priv->component, &e_summary);
@@ -987,13 +954,6 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
   priv = gcal_edit_dialog_get_instance_private (dialog);
 
   priv->manager = manager;
-
-  g_signal_connect (manager, "source-activated",
-                    G_CALLBACK (on_source_activate), dialog);
-  g_signal_connect (manager, "source-added",
-                    G_CALLBACK (on_source_added), dialog);
-  g_signal_connect (manager, "source-removed",
-                    G_CALLBACK (on_source_removed), dialog);
 }
 
 ECalComponent*
