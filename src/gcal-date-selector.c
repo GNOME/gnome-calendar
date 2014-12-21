@@ -1,7 +1,7 @@
 /* -*- Mode: C; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /*
  * gcal-date-selector.c
- * Copyright (C) 2012 Erick Pérez Castellanos <erickpc@gnome.org>
+ * Copyright (C) 2014 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * gnome-calendar is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -78,9 +78,21 @@ set_date (GcalDateSelector *selector,
           gint              year)
 {
   GcalDateSelectorPrivate *priv;
+  GDateTime *dt;
+  gchar *label;
 
   g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
   priv = gcal_date_selector_get_instance_private (selector);
+  /* since we're dealing only with the date, the tz shouldn't be a problem */
+  dt = g_date_time_new_local (year, month, day, 0, 0, 0);
+
+  /**
+   * When it fails to be instances, it's
+   * because edit dialog is cleaning it's
+   * data. Thus, we should stop here.
+   */
+  if (dt == NULL)
+    return;
 
   priv->day = day;
   priv->month = month;
@@ -90,6 +102,13 @@ set_date (GcalDateSelector *selector,
 
   /* set calendar's date */
   g_object_set (priv->calendar, "day", day, "month", month, "year", year, NULL);
+
+  /* rebuild the date label */
+  label = g_date_time_format (dt, priv->mask);
+  gtk_label_set_label (GTK_LABEL (priv->date_label), label);
+
+  g_date_time_unref (dt);
+  g_free (label);
 }
 
 static void
@@ -112,7 +131,7 @@ static void
 gcal_date_selector_init (GcalDateSelector *self)
 {
   GcalDateSelectorPrivate *priv;
-  gchar *have_y;
+  gint i, d_index, max;
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
@@ -126,21 +145,50 @@ gcal_date_selector_init (GcalDateSelector *self)
   priv->mask = nl_langinfo (D_FMT);
   g_debug ("Mask: %s", priv->mask);
 
-  priv->day_pos = - (priv->mask - g_strstr_len (priv->mask, -1, "%d"));
-  priv->month_pos = - (priv->mask - g_strstr_len (priv->mask, -1, "%m"));
-  if ((have_y = g_strstr_len (priv->mask, - 1, "%y")) != NULL)
+  /**
+   * Select the day, month and year indexes. This will
+   * be used later on to map the date entries to the
+   * corresponding indexes.
+   */
+  max = strlen (priv->mask);
+  d_index = 0;
+
+  for (i = 0; i < max; i++)
     {
-      priv->have_long_year = FALSE;
-      priv->year_pos = - (priv->mask - have_y);
-    }
-  else
-    {
-      priv->have_long_year = TRUE;
-      priv->year_pos = - (priv->mask - g_strstr_len (priv->mask, -1, "%Y"));
-      if (priv->year_pos < priv->day_pos)
-        priv->day_pos += 2;
-      if (priv->year_pos < priv->month_pos)
-        priv->month_pos += 2;
+      gchar c;
+
+      c = *(priv->mask + i);
+
+      /* No need to check these common separators */
+      if (c == '%' || c == '-' || c == '/' || c == '.')
+        continue;
+
+      switch (c)
+        {
+          /* day */
+          case 'a':
+          case 'A':
+          case 'd':
+          case 'e':
+          case 'j':
+          case 'u':
+          case 'w':
+            priv->day_pos = d_index++;
+            break;
+
+          /* month */
+          case 'b':
+          case 'B':
+          case 'm':
+            priv->month_pos = d_index++;
+            break;
+
+          /* year */
+          case 'y':
+          case 'Y':
+            priv->year_pos = d_index++;
+            break;
+        }
     }
 }
 
