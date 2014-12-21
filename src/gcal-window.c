@@ -182,6 +182,11 @@ static void           on_calendar_toggled                (GSimpleAction       *a
 static void           create_event                       (gpointer             user_data,
                                                           GtkWidget           *widget);
 
+static void           create_event_detailed_cb           (GcalView            *view,
+                                                          gpointer             start_span,
+                                                          gpointer             end_span,
+                                                          gpointer             user_data);
+
 static void           event_activated                    (GcalView            *view,
                                                           GcalEventWidget     *event_widget,
                                                           gpointer             user_data);
@@ -844,6 +849,31 @@ create_event (gpointer   user_data,
 }
 
 static void
+create_event_detailed_cb (GcalView *view,
+                          gpointer  start_span,
+                          gpointer  end_span,
+                          gpointer  user_data)
+{
+  GcalWindowPrivate *priv;
+
+  GcalEventData *edata;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  edata = g_new0 (GcalEventData, 1);
+  edata->source = gcal_manager_get_default_source (priv->manager);
+  edata->event_component = build_component_from_details ("", (icaltimetype*) start_span, (icaltimetype*) end_span);
+
+  gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (priv->edit_dialog), TRUE);
+  gcal_edit_dialog_set_event_data (GCAL_EDIT_DIALOG (priv->edit_dialog), edata);
+
+  g_object_unref (edata->event_component);
+  g_free (edata);
+
+  gtk_dialog_run (GTK_DIALOG (priv->edit_dialog));
+}
+
+static void
 event_activated (GcalView        *view,
                  GcalEventWidget *event_widget,
                  gpointer         user_data)
@@ -1290,15 +1320,12 @@ gcal_window_constructed (GObject *object)
     {
       if (priv->views[i] != NULL)
         {
-          g_object_bind_property (GCAL_WINDOW (object), "active-date",
-                                  priv->views[i], "active-date",
-                                  G_BINDING_DEFAULT |
-                                  G_BINDING_SYNC_CREATE);
+          g_object_bind_property (GCAL_WINDOW (object), "active-date", priv->views[i], "active-date",
+                                  G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
-          g_signal_connect (priv->views[i], "create-event",
-                            G_CALLBACK (show_new_event_widget), object);
-          g_signal_connect (priv->views[i], "event-activated",
-                            G_CALLBACK (event_activated), object);
+          g_signal_connect (priv->views[i], "create-event", G_CALLBACK (show_new_event_widget), object);
+          g_signal_connect (priv->views[i], "create-event-detailed", G_CALLBACK (create_event_detailed_cb), object);
+          g_signal_connect (priv->views[i], "event-activated", G_CALLBACK (event_activated), object);
         }
     }
 }
