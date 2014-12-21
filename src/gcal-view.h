@@ -46,6 +46,7 @@ struct _GcalViewIface
 
   /* signals */
   void            (*create_event)                       (GcalView *view, icaltimetype *start_span, icaltimetype *end_span, gdouble x, gdouble y);
+  void            (*create_event_detailed)              (GcalView *view, icaltimetype *start_span, icaltimetype *end_span);
   void            (*event_activated)                    (GcalView *view, GcalEventWidget *event_widget);
 
   /* Time handling related API */

@@ -60,6 +60,11 @@ gcal_view_base_init (gpointer g_iface)
                     G_TYPE_DOUBLE,
                     G_TYPE_DOUBLE);
 
+      g_signal_new ("create-event-detailed", GCAL_TYPE_VIEW, G_SIGNAL_RUN_LAST,
+                    G_STRUCT_OFFSET (GcalViewIface, create_event_detailed),
+                    NULL, NULL, NULL,
+                    G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
+
       g_signal_new ("event-activated",
                     GCAL_TYPE_VIEW,
                     G_SIGNAL_RUN_LAST,
