@@ -143,6 +143,9 @@ static void           update_list_box_headers               (GtkListBoxRow  *row
                                                              GtkListBoxRow  *before,
                                                              gpointer        user_data);
 
+static void           add_new_event_button_cb               (GtkWidget      *button,
+                                                             gpointer        user_data);
+
 static void           gcal_view_interface_init              (GcalViewIface  *iface);
 
 static void           gcal_month_view_set_property          (GObject        *object,
@@ -478,6 +481,8 @@ rebuild_popover_for_day (GcalMonthView *view,
   /* sizing hack */
   child_widget = gtk_bin_get_child (GTK_BIN (priv->overflow_popover));
   gtk_widget_set_size_request (child_widget, cell_width, -1);
+
+  g_object_set_data (G_OBJECT (priv->overflow_popover), "selected-day", GINT_TO_POINTER (day));
 }
 
 static void
@@ -534,6 +539,27 @@ update_list_box_headers (GtkListBoxRow *row,
       gtk_list_box_row_set_header (row, vbox);
       g_free (time);
     }
+}
+
+static void
+add_new_event_button_cb (GtkWidget *button,
+                         gpointer   user_data)
+{
+  GcalMonthViewPrivate *priv;
+  gint day;
+  icaltimetype *start_date;
+
+  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (user_data));
+
+  gtk_widget_hide (priv->overflow_popover);
+
+  day = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (priv->overflow_popover), "selected-day"));
+  start_date = gcal_dup_icaltime (priv->date);
+  start_date->day = day;
+  start_date->is_date = 1;
+
+  g_signal_emit_by_name (GCAL_VIEW (user_data), "create-event-detailed", start_date, NULL);
+  g_free (start_date);
 }
 
 static void
@@ -617,6 +643,7 @@ gcal_month_view_init (GcalMonthView *self)
   gtk_style_context_remove_class (gtk_widget_get_style_context (priv->events_list_box), GTK_STYLE_CLASS_LIST);
   button = gtk_button_new_with_label (_("Add new event..."));
   g_object_set (button, "margin", 6, "hexpand", TRUE, NULL);
+  g_signal_connect (button, "clicked", G_CALLBACK (add_new_event_button_cb), self);
 
   gtk_container_add (GTK_CONTAINER (grid), priv->popover_title);
   gtk_container_add (GTK_CONTAINER (grid), priv->events_list_box);
