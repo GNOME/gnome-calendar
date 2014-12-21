@@ -414,16 +414,16 @@ gcal_date_selector_constructed (GObject *object)
   g_object_bind_property (priv->popover, "visible", object, "active", G_BINDING_BIDIRECTIONAL);
 
   g_signal_connect (priv->entries[DAY], "insert-text", G_CALLBACK (text_inserted), object);
+  g_signal_connect (priv->entries[DAY], "focus-out-event", G_CALLBACK (date_entry_focus_out), object);
+  g_signal_connect (priv->entries[DAY], "activate", G_CALLBACK (entry_activated), object);
   g_signal_connect (priv->entries[MONTH], "insert-text", G_CALLBACK (text_inserted), object);
+  g_signal_connect (priv->entries[MONTH], "focus-out-event", G_CALLBACK (date_entry_focus_out), object);
+  g_signal_connect (priv->entries[MONTH], "activate", G_CALLBACK (entry_activated), object);
   g_signal_connect (priv->entries[YEAR], "insert-text", G_CALLBACK (text_inserted), object);
+  g_signal_connect (priv->entries[YEAR], "focus-out-event", G_CALLBACK (date_entry_focus_out), object);
+  g_signal_connect (priv->entries[YEAR], "activate", G_CALLBACK (entry_activated), object);
 
   g_signal_connect (priv->calendar, "day-selected", G_CALLBACK (calendar_day_selected), object);
-  g_signal_connect (priv->entries[DAY], "focus-out-event", G_CALLBACK (date_entry_focus_out), object);
-  g_signal_connect (priv->entries[MONTH], "focus-out-event", G_CALLBACK (date_entry_focus_out), object);
-  g_signal_connect (priv->entries[YEAR], "focus-out-event", G_CALLBACK (date_entry_focus_out), object);
-  g_signal_connect (priv->entries[DAY], "activate", G_CALLBACK (entry_activated), object);
-  g_signal_connect (priv->entries[MONTH], "activate", G_CALLBACK (entry_activated), object);
-  g_signal_connect (priv->entries[YEAR], "activate", G_CALLBACK (entry_activated), object);
 
   g_object_unref (builder);
 }
@@ -495,6 +495,9 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
     label = g_strdup_printf ("%.2d", year % 100);
 
   gtk_entry_set_text (GTK_ENTRY (priv->entries[YEAR]), label);
+
+  /* emit the MODIFIED signal */
+  g_signal_emit (selector, signals[MODIFIED], 0);
 
   g_free (label);
   g_date_time_unref (dt);
