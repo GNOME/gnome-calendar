@@ -291,9 +291,6 @@ on_client_connected (GObject      *source_object,
       unit->connected = TRUE;
       unit->client = g_object_ref (client);
 
-      /* FIXME: user should be able to disable sources */
-      unit->enabled = TRUE;
-
       g_hash_table_insert (priv->clients, source, unit);
       g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ADDED], 0, source);
 
@@ -302,11 +299,19 @@ on_client_connected (GObject      *source_object,
                e_source_get_uid (source));
 
       /* notify the readonly property */
-      g_signal_connect (client, "notify::readonly",
-                        G_CALLBACK (on_client_readonly_changed), user_data);
+      g_signal_connect (client, "notify::readonly", G_CALLBACK (on_client_readonly_changed), user_data);
 
-      e_cal_data_model_add_client (priv->e_data_model, client);
-      e_cal_data_model_add_client (priv->search_data_model, client);
+      if (g_strv_contains ((const gchar * const *) priv->disabled_sources, e_source_get_uid (source)))
+        {
+          unit->enabled = FALSE;
+        }
+      else
+        {
+          unit->enabled = TRUE;
+
+          e_cal_data_model_add_client (priv->e_data_model, client);
+          e_cal_data_model_add_client (priv->search_data_model, client);
+        }
       g_clear_object (&client);
     }
   else
@@ -781,13 +786,32 @@ gcal_manager_enable_source (GcalManager *manager,
 {
   GcalManagerPrivate *priv;
   GcalManagerUnit *unit;
+  gchar **new_disabled_sources;
+  gint i;
 
   priv = gcal_manager_get_instance_private (manager);
   unit = g_hash_table_lookup (priv->clients, source);
 
+  if (unit->enabled)
+    return;
+
   unit->enabled = TRUE;
   e_cal_data_model_add_client (priv->e_data_model, unit->client);
   e_cal_data_model_add_client (priv->search_data_model, unit->client);
+
+  /* remove source's uid from disabled_sources array */
+  new_disabled_sources = g_malloc0_n (g_strv_length (priv->disabled_sources) - 1, sizeof (gchar*));
+  for (i = 0; i < g_strv_length (priv->disabled_sources); i++)
+    {
+      if (g_strcmp0 (priv->disabled_sources[i], e_source_get_uid (source)) == 0)
+        continue;
+      new_disabled_sources[i] = g_strdup (priv->disabled_sources[i]);
+    }
+  g_strfreev (priv->disabled_sources);
+  priv->disabled_sources = new_disabled_sources;
+
+  /* sync settings value */
+  g_settings_set_strv (priv->settings, "disabled-sources", (const gchar * const *) priv->disabled_sources);
 }
 
 /**
@@ -803,13 +827,31 @@ gcal_manager_disable_source (GcalManager *manager,
 {
   GcalManagerPrivate *priv;
   GcalManagerUnit *unit;
+  gchar **new_disabled_sources;
+  gint i;
 
   priv = gcal_manager_get_instance_private (manager);
   unit = g_hash_table_lookup (priv->clients, source);
 
+  if (!unit->enabled)
+    return;
+
   unit->enabled = FALSE;
   e_cal_data_model_remove_client (priv->e_data_model, e_source_get_uid (source));
   e_cal_data_model_remove_client (priv->search_data_model, e_source_get_uid (source));
+
+  /* add source's uid from disabled_sources array */
+  new_disabled_sources = g_malloc0_n (g_strv_length (priv->disabled_sources) + 1, sizeof (gchar*));
+  for (i = 0; i < g_strv_length (priv->disabled_sources); i++)
+      new_disabled_sources[i] = g_strdup (priv->disabled_sources[i]);
+
+  new_disabled_sources[g_strv_length (priv->disabled_sources)] = e_source_dup_uid (source);
+
+  g_strfreev (priv->disabled_sources);
+  priv->disabled_sources = new_disabled_sources;
+
+  /* sync settings value */
+  g_settings_set_strv (priv->settings, "disabled-sources", (const gchar * const *) priv->disabled_sources);
 }
 
 void
