@@ -66,7 +66,7 @@ static guint signals[NUM_SIGNALS] = { 0, };
 static void     calendar_day_selected                             (GtkCalendar          *calendar,
                                                                    gpointer              user_data);
 
-static void     date_entry_focus_out                              (GtkWidget            *widget,
+static gboolean date_entry_focus_out                              (GtkWidget            *widget,
                                                                    GdkEvent             *event,
                                                                    gpointer              user_data);
 
@@ -107,7 +107,7 @@ calendar_day_selected (GtkCalendar *calendar,
                                      user_data);
 }
 
-static void
+static gboolean
 date_entry_focus_out (GtkWidget *widget,
                       GdkEvent  *event,
                       gpointer   user_data)
@@ -150,6 +150,8 @@ date_entry_focus_out (GtkWidget *widget,
   g_signal_handlers_unblock_by_func (priv->calendar,
                                      calendar_day_selected,
                                      user_data);
+
+  return FALSE;
 }
 
 static void
