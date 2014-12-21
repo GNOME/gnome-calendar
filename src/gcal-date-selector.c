@@ -71,11 +71,6 @@ static void     text_inserted                                     (GtkEditable  
                                                                    gint                 *position,
                                                                    gpointer              user_data);
 
-static void     set_date                                          (GcalDateSelector     *selector,
-                                                                   gint                  day,
-                                                                   gint                  month,
-                                                                   gint                  year);
-
 static void     gcal_date_selector_constructed                    (GObject              *object);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalDateSelector, gcal_date_selector, GTK_TYPE_TOGGLE_BUTTON);
@@ -97,7 +92,7 @@ calendar_day_selected (GtkCalendar *calendar,
   g_signal_handlers_block_by_func (priv->calendar,
                                    calendar_day_selected,
                                    user_data);
-  set_date (GCAL_DATE_SELECTOR (user_data), day, month + 1, year);
+  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (user_data), day, month + 1, year);
 
   g_signal_handlers_unblock_by_func (priv->calendar,
                                      calendar_day_selected,
@@ -150,69 +145,6 @@ text_inserted (GtkEditable *editable,
   *position = *position + new_text_length;
 
   g_free (new_label);
-}
-
-static void
-set_date (GcalDateSelector *selector,
-          gint              day,
-          gint              month,
-          gint              year)
-{
-  GcalDateSelectorPrivate *priv;
-  GDateTime *dt;
-  gchar *label;
-
-  g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
-  priv = gcal_date_selector_get_instance_private (selector);
-  /* since we're dealing only with the date, the tz shouldn't be a problem */
-  dt = g_date_time_new_local (year, month, day, 0, 0, 0);
-
-  /**
-   * When it fails to be instances, it's
-   * because edit dialog is cleaning it's
-   * data. Thus, we should stop here.
-   */
-  if (dt == NULL)
-    return;
-
-  priv->day = day;
-  priv->month = month;
-  priv->year = year;
-
-  month =  CLAMP (month - 1, 0, 11);
-
-  /* set calendar's date */
-  g_object_set (priv->calendar, "day", day, "month", month, "year", year, NULL);
-
-  /* rebuild the date label */
-  label = g_date_time_format (dt, priv->mask);
-
-  gtk_label_set_label (GTK_LABEL (priv->date_label), label);
-  g_free (label);
-
-  /* set date entries' text */
-  /* day entry */
-  label = g_strdup_printf ("%.2d", day);
-
-  gtk_entry_set_text (GTK_ENTRY (priv->entries[DAY]), label);
-  g_free (label);
-
-  /* month entry */
-  label = g_strdup_printf ("%.2d", month + 1);
-
-  gtk_entry_set_text (GTK_ENTRY (priv->entries[MONTH]), label);
-  g_free (label);
-
-  /* year entry */
-  if (priv->have_long_year)
-    label = g_strdup_printf ("%.4d", year);
-  else
-    label = g_strdup_printf ("%.2d", year % 100);
-
-  gtk_entry_set_text (GTK_ENTRY (priv->entries[YEAR]), label);
-
-  g_free (label);
-  g_date_time_unref (dt);
 }
 
 static void
@@ -404,7 +336,64 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
                              gint              month,
                              gint              year)
 {
-  set_date (selector, day, month, year);
+  GcalDateSelectorPrivate *priv;
+  GDateTime *dt;
+  gchar *label;
+
+  g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
+  priv = gcal_date_selector_get_instance_private (selector);
+  /* since we're dealing only with the date, the tz shouldn't be a problem */
+  dt = g_date_time_new_local (year, month, day, 0, 0, 0);
+
+  /**
+   * When it fails to be instances, it's
+   * because edit dialog is cleaning it's
+   * data. Thus, we should stop here.
+   */
+  if (dt == NULL)
+    return;
+
+  day = CLAMP (day, 1, 31);
+  month = CLAMP (month, 1, 12);
+
+  priv->day = day;
+  priv->month = month;
+  priv->year = year;
+
+  month =  CLAMP (month - 1, 0, 11);
+
+  /* set calendar's date */
+  g_object_set (priv->calendar, "day", day, "month", month, "year", year, NULL);
+
+  /* rebuild the date label */
+  label = g_date_time_format (dt, priv->mask);
+
+  gtk_label_set_label (GTK_LABEL (priv->date_label), label);
+  g_free (label);
+
+  /* set date entries' text */
+  /* day entry */
+  label = g_strdup_printf ("%.2d", day);
+
+  gtk_entry_set_text (GTK_ENTRY (priv->entries[DAY]), label);
+  g_free (label);
+
+  /* month entry */
+  label = g_strdup_printf ("%.2d", priv->month);
+
+  gtk_entry_set_text (GTK_ENTRY (priv->entries[MONTH]), label);
+  g_free (label);
+
+  /* year entry */
+  if (priv->have_long_year)
+    label = g_strdup_printf ("%.4d", year);
+  else
+    label = g_strdup_printf ("%.2d", year % 100);
+
+  gtk_entry_set_text (GTK_ENTRY (priv->entries[YEAR]), label);
+
+  g_free (label);
+  g_date_time_unref (dt);
 }
 
 void
