@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-12-14 12:54+0100\n"
-"PO-Revision-Date: 2014-12-14 12:55+0100\n"
+"POT-Creation-Date: 2014-12-21 20:09+0100\n"
+"PO-Revision-Date: 2014-12-21 20:10+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -24,7 +24,7 @@ msgstr ""
 "X-Poedit-Country: Poland\n"
 
 #: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:372
-#: ../src/gcal-window.c:829
+#: ../src/gcal-window.c:976
 msgid "Calendar"
 msgstr "Kalendarz"
 
@@ -70,7 +70,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:670
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:718
 msgid "Done"
 msgstr "Gotowe"
 
@@ -122,6 +122,18 @@ msgstr "Za_kończ"
 msgid "_Synchronize"
 msgstr "Z_synchronizuj"
 
+#: ../data/ui/time-selector.ui.h:1
+msgid ":"
+msgstr "∶"
+
+#: ../data/ui/time-selector.ui.h:2 ../src/gcal-week-view.c:425
+msgid "AM"
+msgstr "Przed południem"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:425
+msgid "PM"
+msgstr "Po południu"
+
 #: ../data/ui/window.ui.h:1
 msgid "Today"
 msgstr "Dzisiaj"
@@ -164,21 +176,36 @@ msgstr ""
 msgid "Change the date"
 msgstr "Zmień datę"
 
-#: ../src/gcal-edit-dialog.c:670
+#: ../src/gcal-edit-dialog.c:718
 msgid "Save"
 msgstr "Zapisz"
 
-#: ../src/gcal-time-entry.c:126
-msgid "Change the time"
-msgstr "Zmień czas"
+#: ../src/gcal-month-view.c:618
+msgid "Add new event..."
+msgstr "Dodaj nowe wydarzenie..."
 
-#: ../src/gcal-week-view.c:425
-msgid "AM"
-msgstr "Przed południem"
+#: ../src/gcal-month-view.c:871
+msgid "Other events"
+msgstr "Inne wydarzenia"
 
-#: ../src/gcal-week-view.c:425
-msgid "PM"
-msgstr "Po południu"
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1190
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Inne wydarzenie"
+msgstr[1] "Pozostałe %d wydarzenia"
+msgstr[2] "Pozostałe %d wydarzeń"
+
+#: ../src/gcal-time-selector.c:97
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d∶%.2d AM"
+
+#: ../src/gcal-time-selector.c:99
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d∶%.2d PM"
 
 #: ../src/gcal-week-view.c:428 ../src/gcal-week-view.c:501
 msgid "Midnight"
@@ -192,32 +219,32 @@ msgstr "Południe"
 msgid "00:00 PM"
 msgstr "00∶00 PM"
 
-#: ../src/gcal-week-view.c:1404 ../src/gcal-window.c:1105
+#: ../src/gcal-week-view.c:1404 ../src/gcal-window.c:1260
 msgid "Week"
 msgstr "Tydzień"
 
-#: ../src/gcal-window.c:572
+#: ../src/gcal-window.c:589
 #, c-format
 msgid "New Event on %s"
 msgstr "Nowe wydarzenie w dniu %s"
 
-#: ../src/gcal-window.c:764
+#: ../src/gcal-window.c:911
 msgid "Event deleted"
 msgstr "Usunięto wydarzenie"
 
-#: ../src/gcal-window.c:765
+#: ../src/gcal-window.c:912
 msgid "Undo"
 msgstr "Cofnij"
 
-#: ../src/gcal-window.c:855
+#: ../src/gcal-window.c:1002
 #, c-format
 msgid "Results for \"%s\""
 msgstr "Wyniki dla \"%s\""
 
-#: ../src/gcal-window.c:1114
+#: ../src/gcal-window.c:1265
 msgid "Month"
 msgstr "Miesiąc"
 
-#: ../src/gcal-window.c:1120
+#: ../src/gcal-window.c:1271
 msgid "Year"
 msgstr "Rok"
