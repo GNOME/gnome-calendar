@@ -10,6 +10,8 @@
     <property name="use_header_bar">0</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
+    <property name="width_request">550</property>
+    <property name="height_request">550</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="titlebar">
         <property name="visible">True</property>
@@ -183,14 +185,7 @@
                 <property name="can_focus">True</property>
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
-                <child>
-                  <object class="GtkLabel" id="all_day_label">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">All day</property>
-                    <property name="xalign">0</property>
-                  </object>
-                </child>
+                <property name="label" translatable="yes">All day</property>
               </object>
               <packing>
                 <property name="left_attach">3</property>
