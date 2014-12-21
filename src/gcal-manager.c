@@ -51,8 +51,12 @@ typedef struct
 
   GCancellable    *async_ops;
 
+  gchar          **disabled_sources;
   /* timezone */
   icaltimezone    *system_timezone;
+
+  /* property */
+  GSettings       *settings;
 } GcalManagerPrivate;
 
 struct _MoveEventData
@@ -65,6 +69,12 @@ struct _MoveEventData
 };
 
 typedef struct _MoveEventData MoveEventData;
+
+enum
+{
+  PROP_0,
+  PROP_SETTINGS,
+};
 
 enum
 {
@@ -112,7 +122,19 @@ static void     remove_source                             (GcalManager     *mana
 
 /* class_init && init vfuncs */
 
+static void     gcal_manager_constructed                  (GObject         *object);
+
 static void     gcal_manager_finalize                     (GObject         *object);
+
+static void     gcal_manager_set_property                 (GObject         *object,
+                                                           guint            property_id,
+                                                           const GValue    *value,
+                                                           GParamSpec      *pspec);
+
+static void     gcal_manager_get_property                 (GObject         *object,
+                                                           guint            property_id,
+                                                           GValue          *value,
+                                                           GParamSpec      *pspec);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalManager, gcal_manager, G_TYPE_OBJECT)
 
@@ -443,7 +465,18 @@ remove_source (GcalManager  *manager,
 static void
 gcal_manager_class_init (GcalManagerClass *klass)
 {
+  G_OBJECT_CLASS (klass)->constructed = gcal_manager_constructed;
   G_OBJECT_CLASS (klass)->finalize = gcal_manager_finalize;
+  G_OBJECT_CLASS (klass)->set_property = gcal_manager_set_property;
+  G_OBJECT_CLASS (klass)->get_property = gcal_manager_get_property;
+
+  /* properties */
+  g_object_class_install_property (G_OBJECT_CLASS (klass), PROP_SETTINGS,
+                                   g_param_spec_object ("settings",
+                                                        "Application settings",
+                                                        "The settings of the application passed down from GcalApplication",
+                                                        G_TYPE_SETTINGS,
+                                                        G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
 
   /* signals */
   signals[SOURCE_ACTIVATED] = g_signal_new ("source-activated", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
@@ -465,23 +498,26 @@ gcal_manager_class_init (GcalManagerClass *klass)
 static void
 gcal_manager_init (GcalManager *self)
 {
+  ;
+}
+
+static void
+gcal_manager_constructed (GObject *object)
+{
   GcalManagerPrivate *priv;
 
-  GError *error;
-  GList *sources;
-  GList *l;
+  GList *sources, *l;
+  GError *error = NULL;
 
-  priv = gcal_manager_get_instance_private (self);
+  priv = gcal_manager_get_instance_private (GCAL_MANAGER (object));
 
+  priv->disabled_sources = g_settings_get_strv (priv->settings, "disabled-sources");
   priv->system_timezone = e_cal_util_get_system_timezone ();
 
-  priv->clients = g_hash_table_new_full ((GHashFunc) e_source_hash,
-                                         (GEqualFunc) e_source_equal,
-                                         g_object_unref,
-                                         (GDestroyNotify) free_unit_data);
+  priv->clients = g_hash_table_new_full ((GHashFunc) e_source_hash, (GEqualFunc) e_source_equal,
+                                         g_object_unref, (GDestroyNotify) free_unit_data);
 
   /* reading sources and schedule its connecting */
-  error = NULL;
   priv->source_registry = e_source_registry_new_sync (NULL, &error);
   if (priv->source_registry == NULL)
     {
@@ -490,34 +526,22 @@ gcal_manager_init (GcalManager *self)
       return;
     }
 
-  sources = e_source_registry_list_enabled (priv->source_registry,
-                                            E_SOURCE_EXTENSION_CALENDAR);
-
+  sources = e_source_registry_list_enabled (priv->source_registry, E_SOURCE_EXTENSION_CALENDAR);
   for (l = sources; l != NULL; l = l->next)
-    load_source (self, l->data);
-
+    load_source (GCAL_MANAGER (object), l->data);
   g_list_free (sources);
 
-  g_signal_connect_swapped (priv->source_registry,
-                            "source-added",
-                            G_CALLBACK (load_source),
-                            self);
-
-  g_signal_connect_swapped (priv->source_registry,
-                            "source-removed",
-                            G_CALLBACK (remove_source),
-                            self);
+  g_signal_connect_swapped (priv->source_registry, "source-added", G_CALLBACK (load_source), object);
+  g_signal_connect_swapped (priv->source_registry, "source-removed", G_CALLBACK (remove_source), object);
 
   /* create data model */
   priv->e_data_model = e_cal_data_model_new (submit_thread_job);
   priv->search_data_model = e_cal_data_model_new (submit_thread_job);
 
   e_cal_data_model_set_expand_recurrences (priv->e_data_model, TRUE);
-  e_cal_data_model_set_timezone (priv->e_data_model,
-                                 priv->system_timezone);
+  e_cal_data_model_set_timezone (priv->e_data_model, priv->system_timezone);
   e_cal_data_model_set_expand_recurrences (priv->search_data_model, TRUE);
-  e_cal_data_model_set_timezone (priv->search_data_model,
-                                 priv->system_timezone);
+  e_cal_data_model_set_timezone (priv->search_data_model, priv->system_timezone);
 }
 
 static void
@@ -527,6 +551,10 @@ gcal_manager_finalize (GObject *object)
 
   priv = gcal_manager_get_instance_private (GCAL_MANAGER (object));
 
+  if (priv->settings != NULL)
+    g_object_unref (priv->settings);
+  g_strfreev (priv->disabled_sources);
+
   if (priv->e_data_model != NULL)
     g_object_unref (priv->e_data_model);
   if (priv->search_data_model != NULL)
@@ -535,18 +563,61 @@ gcal_manager_finalize (GObject *object)
   g_hash_table_destroy (priv->clients);
 }
 
+static void
+gcal_manager_set_property (GObject      *object,
+                           guint         property_id,
+                           const GValue *value,
+                           GParamSpec   *pspec)
+{
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (GCAL_MANAGER (object));
+
+  switch (property_id)
+    {
+    case PROP_SETTINGS:
+      if (priv->settings != NULL)
+        g_object_unref (priv->settings);
+      priv->settings = g_value_dup_object (value);
+      return;
+    }
+
+  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+}
+
+static void
+gcal_manager_get_property (GObject    *object,
+                           guint       property_id,
+                           GValue     *value,
+                           GParamSpec *pspec)
+{
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (GCAL_MANAGER (object));
+
+  switch (property_id)
+    {
+    case PROP_SETTINGS:
+      g_value_set_object (value, priv->settings);
+      return;
+    }
+
+  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+}
+
 /* Public API */
 /**
- * gcal_manager_new:
+ * gcal_manager_new_with_settings:
+ * @settings:
  *
  * Since: 0.0.1
  * Return value: the new #GcalManager
  * Returns: (transfer full):
  **/
 GcalManager*
-gcal_manager_new (void)
+gcal_manager_new_with_settings (GSettings *settings)
 {
-  return GCAL_MANAGER (g_object_new (GCAL_TYPE_MANAGER, NULL));
+  return GCAL_MANAGER (g_object_new (GCAL_TYPE_MANAGER, "settings", settings, NULL));
 }
 
 /**

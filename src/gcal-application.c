@@ -211,7 +211,7 @@ gcal_application_startup (GApplication *app)
      g_object_unref (priv->provider);
    }
 
-  priv->manager = gcal_manager_new ();
+  priv->manager = gcal_manager_new_with_settings (priv->settings);
 
   gcal_application_set_app_menu (app);
 }

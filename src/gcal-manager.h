@@ -59,7 +59,7 @@ typedef struct
 
 GType          gcal_manager_get_type                (void);
 
-GcalManager*   gcal_manager_new                     (void);
+GcalManager*   gcal_manager_new_with_settings       (GSettings          *settings);
 
 GList*         gcal_manager_get_sources             (GcalManager        *manager);
 
