@@ -168,6 +168,7 @@ static void           hide_notification                  (GtkWidget           *b
 /* calendar management */
 static void           add_source                         (GcalManager         *manager,
                                                           ESource             *source,
+                                                          gboolean             enabled,
                                                           gpointer             user_data);
 
 static void           remove_source                      (GcalManager         *manager,
@@ -678,6 +679,7 @@ hide_notification (GtkWidget *button,
 static void
 add_source (GcalManager *manager,
             ESource     *source,
+            gboolean     enabled,
             gpointer     user_data)
 {
   GcalWindowPrivate *priv;
@@ -693,7 +695,7 @@ add_source (GcalManager *manager,
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   /* create the action itself */
-  action = g_simple_action_new_stateful (e_source_get_uid (source), NULL, g_variant_new_boolean (TRUE));
+  action = g_simple_action_new_stateful (e_source_get_uid (source), NULL, g_variant_new_boolean (enabled));
   g_signal_connect (action, "change-state", G_CALLBACK (on_calendar_toggled), user_data);
   g_action_map_add_action (G_ACTION_MAP (user_data), G_ACTION (action));
 

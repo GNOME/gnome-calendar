@@ -47,7 +47,7 @@ struct _GcalManagerClass
 
   /* signals */
   void (*source_activated)  (GcalManager *manager, ESource *source, gboolean active);
-  void (*source_added)  (GcalManager *manager, ESource *source);
+  void (*source_added)  (GcalManager *manager, ESource *source, gboolean enabled);
   void (*source_removed)  (GcalManager *manager, ESource *source);
 };
 

@@ -292,7 +292,6 @@ on_client_connected (GObject      *source_object,
       unit->client = g_object_ref (client);
 
       g_hash_table_insert (priv->clients, source, unit);
-      g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ADDED], 0, source);
 
       g_debug ("Source %s (%s) connected",
                e_source_get_display_name (source),
@@ -312,6 +311,8 @@ on_client_connected (GObject      *source_object,
           e_cal_data_model_add_client (priv->e_data_model, client);
           e_cal_data_model_add_client (priv->search_data_model, client);
         }
+      g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ADDED], 0, source, unit->enabled);
+
       g_clear_object (&client);
     }
   else
@@ -492,7 +493,7 @@ gcal_manager_class_init (GcalManagerClass *klass)
   signals[SOURCE_ADDED] = g_signal_new ("source-added", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
                                         G_STRUCT_OFFSET (GcalManagerClass, source_added),
                                         NULL, NULL, NULL,
-                                        G_TYPE_NONE, 1, G_TYPE_POINTER);
+                                        G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_BOOLEAN);
 
   signals[SOURCE_REMOVED] = g_signal_new ("source-removed", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
                                           G_STRUCT_OFFSET (GcalManagerClass, source_removed),
