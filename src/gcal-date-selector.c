@@ -342,6 +342,8 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
 
   g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
   priv = gcal_date_selector_get_instance_private (selector);
+  day = CLAMP (day, 1, 31);
+  month = CLAMP (month, 1, 12);
   /* since we're dealing only with the date, the tz shouldn't be a problem */
   dt = g_date_time_new_local (year, month, day, 0, 0, 0);
 
@@ -352,9 +354,6 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
    */
   if (dt == NULL)
     return;
-
-  day = CLAMP (day, 1, 31);
-  month = CLAMP (month, 1, 12);
 
   priv->day = day;
   priv->month = month;
