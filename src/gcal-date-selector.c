@@ -62,6 +62,12 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
+static void     text_inserted                                     (GtkEditable          *editable,
+                                                                   gchar                *new_text,
+                                                                   gint                  new_text_length,
+                                                                   gint                 *position,
+                                                                   gpointer              user_data);
+
 static void     set_date                                          (GcalDateSelector     *selector,
                                                                    gint                  day,
                                                                    gint                  month,
@@ -70,6 +76,54 @@ static void     set_date                                          (GcalDateSelec
 static void     gcal_date_selector_constructed                    (GObject              *object);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalDateSelector, gcal_date_selector, GTK_TYPE_TOGGLE_BUTTON);
+
+static void
+text_inserted (GtkEditable *editable,
+               gchar       *new_text,
+               gint         new_text_length,
+               gint        *position,
+               gpointer     user_data)
+{
+  GtkEntryBuffer *buffer;
+  gchar* new_label;
+  gint i;
+  gint current_length, max_length;
+  gboolean valid;
+
+  valid = TRUE;
+  buffer = gtk_entry_get_buffer (GTK_ENTRY (editable));
+  current_length = gtk_entry_buffer_get_length (buffer);
+  max_length = gtk_entry_get_max_length (GTK_ENTRY (editable));
+
+  /* honor max length property */
+  if (current_length + new_text_length > max_length)
+    return;
+
+  /* stop the default implementation */
+  g_signal_stop_emission (editable, g_signal_lookup ("insert-text", GTK_TYPE_ENTRY), 0);
+
+  for (i = 0; i < new_text_length; i++)
+    {
+      gchar c;
+      c = *(new_text + i);
+
+      /* trying to insert a non-numeric char */
+      if (c < '0' || c > '9')
+        {
+          valid = FALSE;
+          break;
+        }
+    }
+
+  if (!valid)
+    return;
+
+  new_label = g_strdup_printf ("%s%s", gtk_entry_buffer_get_text (buffer), new_text);
+  gtk_entry_buffer_set_text (buffer, new_label, current_length + new_text_length);
+  *position = *position + new_text_length;
+
+  g_free (new_label);
+}
 
 static void
 set_date (GcalDateSelector *selector,
@@ -300,6 +354,10 @@ gcal_date_selector_constructed (GObject *object)
   /* signals and properties */
   gtk_container_add (GTK_CONTAINER (priv->popover), grid);
   g_object_bind_property (priv->popover, "visible", object, "active", G_BINDING_BIDIRECTIONAL);
+
+  g_signal_connect (priv->entries[DAY], "insert-text", G_CALLBACK (text_inserted), object);
+  g_signal_connect (priv->entries[MONTH], "insert-text", G_CALLBACK (text_inserted), object);
+  g_signal_connect (priv->entries[YEAR], "insert-text", G_CALLBACK (text_inserted), object);
 
   g_object_unref (builder);
 }
