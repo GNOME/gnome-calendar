@@ -337,6 +337,7 @@ gcal_date_selector_constructed (GObject *object)
 {
   GcalDateSelectorPrivate *priv;
   GtkWidget *grid;
+  GtkWidget *label;
   GtkBuilder *builder;
 
   GSettings *settings;
@@ -390,6 +391,11 @@ gcal_date_selector_constructed (GObject *object)
   g_object_ref (priv->entries[DAY]);
   g_free (entry_name);
 
+  label = gtk_label_new (_("Day"));
+  gtk_widget_show (label);
+  gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
+  gtk_grid_attach (GTK_GRID (grid), label, priv->day_pos, 0, 1, 1);
+
   /* month entry */
   entry_name = g_strdup_printf ("entry%d", priv->month_pos);
 
@@ -397,6 +403,11 @@ gcal_date_selector_constructed (GObject *object)
   gtk_entry_set_max_length (GTK_ENTRY (priv->entries[MONTH]), 2);
   g_object_ref (priv->entries[MONTH]);
   g_free (entry_name);
+
+  label = gtk_label_new (_("Month"));
+  gtk_widget_show (label);
+  gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
+  gtk_grid_attach (GTK_GRID (grid), label, priv->month_pos, 0, 1, 1);
 
   /* year entry */
   entry_name = g_strdup_printf ("entry%d", priv->year_pos);
@@ -408,6 +419,11 @@ gcal_date_selector_constructed (GObject *object)
     gtk_entry_set_max_length (GTK_ENTRY (priv->entries[YEAR]), 2);
 
   g_free (entry_name);
+
+  label = gtk_label_new (_("Year"));
+  gtk_widget_show (label);
+  gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
+  gtk_grid_attach (GTK_GRID (grid), label, priv->year_pos, 0, 1, 1);
 
   /* signals and properties */
   gtk_container_add (GTK_CONTAINER (priv->popover), grid);
