@@ -218,10 +218,6 @@ gcal_event_widget_init(GcalEventWidget *self)
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
   gtk_widget_set_can_focus (GTK_WIDGET (self), TRUE);
-
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (GTK_WIDGET (self)),
-      "event-widget");
 }
 
 static void
