@@ -62,6 +62,9 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
+static void     calendar_day_selected                             (GtkCalendar          *calendar,
+                                                                   gpointer              user_data);
+
 static void     text_inserted                                     (GtkEditable          *editable,
                                                                    gchar                *new_text,
                                                                    gint                  new_text_length,
@@ -76,6 +79,30 @@ static void     set_date                                          (GcalDateSelec
 static void     gcal_date_selector_constructed                    (GObject              *object);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalDateSelector, gcal_date_selector, GTK_TYPE_TOGGLE_BUTTON);
+
+static void
+calendar_day_selected (GtkCalendar *calendar,
+                       gpointer     user_data)
+{
+  GcalDateSelectorPrivate *priv;
+  guint day, month, year;
+
+  priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (user_data));
+  gtk_calendar_get_date (calendar, &year, &month, &day);
+
+  /**
+   * Block signal handler to avoid an infinite
+   * recursion, exploding the proccess stack.
+   */
+  g_signal_handlers_block_by_func (priv->calendar,
+                                   calendar_day_selected,
+                                   user_data);
+  set_date (GCAL_DATE_SELECTOR (user_data), day, month + 1, year);
+
+  g_signal_handlers_unblock_by_func (priv->calendar,
+                                     calendar_day_selected,
+                                     user_data);
+}
 
 static void
 text_inserted (GtkEditable *editable,
@@ -358,6 +385,8 @@ gcal_date_selector_constructed (GObject *object)
   g_signal_connect (priv->entries[DAY], "insert-text", G_CALLBACK (text_inserted), object);
   g_signal_connect (priv->entries[MONTH], "insert-text", G_CALLBACK (text_inserted), object);
   g_signal_connect (priv->entries[YEAR], "insert-text", G_CALLBACK (text_inserted), object);
+
+  g_signal_connect (priv->calendar, "day-selected", G_CALLBACK (calendar_day_selected), object);
 
   g_object_unref (builder);
 }
