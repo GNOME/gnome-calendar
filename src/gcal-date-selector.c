@@ -105,10 +105,33 @@ set_date (GcalDateSelector *selector,
 
   /* rebuild the date label */
   label = g_date_time_format (dt, priv->mask);
-  gtk_label_set_label (GTK_LABEL (priv->date_label), label);
 
-  g_date_time_unref (dt);
+  gtk_label_set_label (GTK_LABEL (priv->date_label), label);
   g_free (label);
+
+  /* set date entries' text */
+  /* day entry */
+  label = g_strdup_printf ("%d", day);
+
+  gtk_entry_set_text (GTK_ENTRY (priv->entries[DAY]), label);
+  g_free (label);
+
+  /* month entry */
+  label = g_strdup_printf ("%d", month + 1);
+
+  gtk_entry_set_text (GTK_ENTRY (priv->entries[MONTH]), label);
+  g_free (label);
+
+  /* year entry */
+  if (priv->have_long_year)
+    label = g_strdup_printf ("%d", year);
+  else
+    label = g_strdup_printf ("%d", year % 100);
+
+  gtk_entry_set_text (GTK_ENTRY (priv->entries[YEAR]), label);
+
+  g_free (label);
+  g_date_time_unref (dt);
 }
 
 static void
@@ -140,6 +163,7 @@ gcal_date_selector_init (GcalDateSelector *self)
   priv->day = 1;
   priv->month = 1;
   priv->year = 1970;
+  priv->have_long_year = FALSE;
 
   setlocale (LC_ALL,"");
   priv->mask = nl_langinfo (D_FMT);
@@ -185,8 +209,12 @@ gcal_date_selector_init (GcalDateSelector *self)
 
           /* year */
           case 'y':
+            priv->year_pos = d_index++;
+            break;
+
           case 'Y':
             priv->year_pos = d_index++;
+            priv->have_long_year = TRUE;
             break;
         }
     }
@@ -201,6 +229,7 @@ gcal_date_selector_constructed (GObject *object)
 
   GSettings *settings;
   gchar *clock_format;
+  gchar *entry_name;
 
   priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (object));
 
@@ -237,9 +266,42 @@ gcal_date_selector_constructed (GObject *object)
   priv->calendar = (GtkWidget*) gtk_builder_get_object (builder, "calendar");
   g_object_ref (priv->calendar);
 
+  /**
+   * Date entries
+   *
+   * day entry 
+   */
+  entry_name = g_strdup_printf ("entry%d", priv->day_pos);
+
+  priv->entries[DAY] = (GtkWidget*) gtk_builder_get_object (builder, entry_name);
+  gtk_entry_set_max_length (GTK_ENTRY (priv->entries[DAY]), 2);
+  g_object_ref (priv->entries[DAY]);
+  g_free (entry_name);
+
+  /* month entry */
+  entry_name = g_strdup_printf ("entry%d", priv->month_pos);
+
+  priv->entries[MONTH] = (GtkWidget*) gtk_builder_get_object (builder, entry_name);
+  gtk_entry_set_max_length (GTK_ENTRY (priv->entries[MONTH]), 2);
+  g_object_ref (priv->entries[MONTH]);
+  g_free (entry_name);
+
+  /* year entry */
+  entry_name = g_strdup_printf ("entry%d", priv->year_pos);
+
+  priv->entries[YEAR] = (GtkWidget*) gtk_builder_get_object (builder, entry_name);
+  g_object_ref (priv->entries[YEAR]);
+
+  if (! priv->have_long_year)
+    gtk_entry_set_max_length (GTK_ENTRY (priv->entries[YEAR]), 2);
+
+  g_free (entry_name);
+
   /* signals and properties */
   gtk_container_add (GTK_CONTAINER (priv->popover), grid);
   g_object_bind_property (priv->popover, "visible", object, "active", G_BINDING_BIDIRECTIONAL);
+
+  g_object_unref (builder);
 }
 
 /* Public API */
