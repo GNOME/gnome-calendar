@@ -54,6 +54,9 @@ GType            gcal_date_selector_get_type        (void);
 
 GtkWidget*       gcal_date_selector_new             (void);
 
+void             gcal_date_selector_use_24h_format  (GcalDateSelector *selector,
+                                                     gboolean          use_24h_format);
+
 void             gcal_date_selector_set_date        (GcalDateSelector *selector,
                                                      gint              day,
                                                      gint              month,

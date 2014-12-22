@@ -447,6 +447,21 @@ gcal_date_selector_new (void)
 }
 
 void
+gcal_date_selector_use_24h_format (GcalDateSelector *selector,
+                                   gboolean          use_24h_format)
+{
+  GcalDateSelectorPrivate *priv;
+
+  g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
+  priv = gcal_date_selector_get_instance_private (selector);
+
+  priv->format_24h = use_24h_format;
+
+  /* update values */
+  gcal_date_selector_set_date (selector, priv->day, priv->month, priv->year);
+}
+
+void
 gcal_date_selector_set_date (GcalDateSelector *selector,
                              gint              day,
                              gint              month,
