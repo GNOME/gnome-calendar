@@ -335,13 +335,16 @@ on_client_readonly_changed (EClient    *client,
                             GParamSpec *pspec,
                             gpointer    user_data)
 {
+  GcalManagerPrivate *priv;
   ESource *source;
-  gboolean readonly;
+  GcalManagerUnit *unit;
 
+  priv = gcal_manager_get_instance_private (GCAL_MANAGER (user_data));
   source = e_client_get_source (client);
-  readonly = e_client_is_readonly (client);
 
-  g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ACTIVATED], 0, source, !readonly);
+  unit = g_hash_table_lookup (priv->clients, source);
+  if (unit->enabled)
+    g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ACTIVATED], 0, source, !e_client_is_readonly (client));
 }
 
 
