@@ -518,6 +518,8 @@ gcal_manager_constructed (GObject *object)
   GList *sources, *l;
   GError *error = NULL;
 
+  G_OBJECT_CLASS (gcal_manager_parent_class)->constructed (object);
+
   priv = gcal_manager_get_instance_private (GCAL_MANAGER (object));
 
   priv->disabled_sources = g_settings_get_strv (priv->settings, "disabled-sources");
