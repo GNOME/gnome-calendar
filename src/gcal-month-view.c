@@ -1207,15 +1207,14 @@ gcal_month_view_draw (GtkWidget *widget,
           GList *l;
           PangoLayout *overflow_layout;
           PangoFontDescription *ofont_desc;
-          const gchar *format;
           gchar *overflow_str;
           gdouble y_value;
 
           l = g_hash_table_lookup (priv->overflow_cells, GINT_TO_POINTER (i));
 
           /* TODO: Warning in some languages this string can be too long and may overlap wit the number */
-          format = g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", g_list_length (l));
-          overflow_str = g_strdup_printf (format, g_list_length (l));
+          overflow_str = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", g_list_length (l)),
+                                          g_list_length (l));
 
           gtk_style_context_save (context);
           gtk_style_context_add_class (context, "overflow");
