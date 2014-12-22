@@ -51,8 +51,6 @@ struct _GcalDateSelectorPrivate
   guint        month_pos;
   guint        year_pos;
   gboolean     have_long_year;
-
-  gboolean     format_24h;
 };
 
 enum
@@ -340,22 +338,12 @@ gcal_date_selector_constructed (GObject *object)
   GtkWidget *label;
   GtkBuilder *builder;
 
-  GSettings *settings;
-  gchar *clock_format;
   gchar *entry_name;
 
   priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (object));
 
   /* chaining up */
   G_OBJECT_CLASS (gcal_date_selector_parent_class)->constructed (object);
-
-  /* 24h setting */
-  settings = g_settings_new ("org.gnome.desktop.interface");
-  clock_format = g_settings_get_string (settings, "clock-format");
-  priv->format_24h = (g_strcmp0 (clock_format, "24h") == 0);
-
-  g_free (clock_format);
-  g_object_unref (settings);
 
   /* date label */
   priv->date_label = gtk_label_new (NULL);
@@ -444,21 +432,6 @@ GtkWidget*
 gcal_date_selector_new (void)
 {
   return g_object_new (GCAL_TYPE_DATE_SELECTOR, NULL);
-}
-
-void
-gcal_date_selector_use_24h_format (GcalDateSelector *selector,
-                                   gboolean          use_24h_format)
-{
-  GcalDateSelectorPrivate *priv;
-
-  g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
-  priv = gcal_date_selector_get_instance_private (selector);
-
-  priv->format_24h = use_24h_format;
-
-  /* update values */
-  gcal_date_selector_set_date (selector, priv->day, priv->month, priv->year);
 }
 
 void
