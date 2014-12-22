@@ -834,7 +834,7 @@ gcal_manager_enable_source (GcalManager *manager,
   e_cal_data_model_add_client (priv->search_data_model, unit->client);
 
   /* remove source's uid from disabled_sources array */
-  new_disabled_sources = g_malloc0_n (g_strv_length (priv->disabled_sources) - 1, sizeof (gchar*));
+  new_disabled_sources = g_new0 (gchar*, g_strv_length (priv->disabled_sources));
   for (i = 0; i < g_strv_length (priv->disabled_sources); i++)
     {
       if (g_strcmp0 (priv->disabled_sources[i], e_source_get_uid (source)) == 0)
@@ -875,7 +875,7 @@ gcal_manager_disable_source (GcalManager *manager,
   e_cal_data_model_remove_client (priv->search_data_model, e_source_get_uid (source));
 
   /* add source's uid from disabled_sources array */
-  new_disabled_sources = g_malloc0_n (g_strv_length (priv->disabled_sources) + 1, sizeof (gchar*));
+  new_disabled_sources = g_new0 (gchar*, g_strv_length (priv->disabled_sources) + 2);
   for (i = 0; i < g_strv_length (priv->disabled_sources); i++)
       new_disabled_sources[i] = g_strdup (priv->disabled_sources[i]);
 
