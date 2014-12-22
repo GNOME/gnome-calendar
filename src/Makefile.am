@@ -18,8 +18,6 @@ BUILT_SOURCES =                                           \
 
 gnome_calendar_SOURCES =                                  \
     $(BUILT_SOURCES)                                      \
-    e-cell-renderer-color.c                               \
-    e-cell-renderer-color.h                               \
     e-cal-data-model-subscriber.h                         \
     e-cal-data-model-subscriber.c                         \
     e-cal-data-model.h                                    \

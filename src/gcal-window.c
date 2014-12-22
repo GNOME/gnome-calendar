@@ -31,8 +31,6 @@
 #include "gcal-edit-dialog.h"
 #include "gcal-enum-types.h"
 
-#include "e-cell-renderer-color.h"
-
 #include <glib/gi18n.h>
 
 #include <libecal/libecal.h>
