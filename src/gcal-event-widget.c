@@ -29,7 +29,7 @@ typedef struct
   gchar         *summary;
   GdkRGBA       *color;
   icaltimetype  *dt_start;
-  icaltimetype  *dt_end;
+  icaltimetype  *dt_end; /* could be NULL, meaning dt_end is the same as start_date */
   gboolean       all_day;
   gboolean       has_reminders;
 
@@ -1034,12 +1034,24 @@ gboolean
 gcal_event_widget_is_multiday (GcalEventWidget *event)
 {
   GcalEventWidgetPrivate *priv;
+
+  gint start_day_of_year, end_day_of_year;
   priv = gcal_event_widget_get_instance_private (event);
 
   if (priv->dt_end == NULL)
     return FALSE;
 
-  return priv->dt_start->day != priv->dt_end->day;
+  start_day_of_year = icaltime_day_of_year (*(priv->dt_start));
+  end_day_of_year = icaltime_day_of_year (*(priv->dt_end));
+
+  if (priv->all_day && start_day_of_year + 1 == end_day_of_year)
+    return FALSE;
+
+  if (priv->all_day && start_day_of_year == icaltime_days_in_year (priv->dt_start->year) && end_day_of_year == 1 &&
+      priv->dt_start->year + 1 == priv->dt_end->year)
+    return FALSE;
+
+  return start_day_of_year != end_day_of_year;
 }
 
 void
