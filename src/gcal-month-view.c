@@ -1237,11 +1237,8 @@ gcal_month_view_draw (GtkWidget *widget,
           y_value = cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y;
 
           if (gtk_widget_is_visible (priv->overflow_popover) && priv->hovered_overflow_indicator == i)
-            {
-              gtk_render_background (context, cr, cell_width * column, y_value - padding.bottom,
-                                     cell_width, font_height + padding.bottom * 2);
-              g_debug ("This is the time to draw the background");
-            }
+            gtk_render_background (context, cr, cell_width * column, y_value - padding.bottom,
+                                   cell_width, font_height + padding.bottom * 2);
 
           gtk_render_layout (context, cr, cell_width * column, y_value, overflow_layout);
 
@@ -1566,6 +1563,7 @@ gcal_month_view_button_release (GtkWidget      *widget,
       rebuild_popover_for_day (GCAL_MONTH_VIEW (widget), j - priv->days_delay);
       gtk_widget_show_all (priv->overflow_popover);
 
+      gtk_widget_queue_draw (widget);
       priv->clicked_cell = -1;
       priv->pressed_overflow_indicator = -1;
       priv->start_mark_cell = -1;
