@@ -938,8 +938,16 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
       j = icaltime_days_in_month (priv->date->month, priv->date->year);
       date = gcal_event_widget_peek_end_date (GCAL_EVENT_WIDGET (child_widget));
-      if (date->month == priv->date->month)
-        j = date->day;
+      if (gcal_event_widget_get_all_day (GCAL_EVENT_WIDGET (child_widget)))
+        {
+          if (date->month == priv->date->month)
+            j = date->day - 1;
+        }
+      else
+        {
+          if (date->month == priv->date->month)
+            j = date->day;
+        }
       j += priv->days_delay;
       last_cell = 7 * ((j - 1) / 7)+ 6 * priv->k + sw * ((j - 1) % 7);
 
