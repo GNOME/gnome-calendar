@@ -373,11 +373,9 @@ gcal_date_selector_constructed (GObject *object)
 
   /* main grid */
   grid = (GtkWidget*) gtk_builder_get_object (builder, "grid");
-  g_object_ref (grid);
 
   /* calendar */
   priv->calendar = (GtkWidget*) gtk_builder_get_object (builder, "calendar");
-  g_object_ref (priv->calendar);
 
   /**
    * Date entries
@@ -388,7 +386,6 @@ gcal_date_selector_constructed (GObject *object)
 
   priv->entries[DAY] = (GtkWidget*) gtk_builder_get_object (builder, entry_name);
   gtk_entry_set_max_length (GTK_ENTRY (priv->entries[DAY]), 2);
-  g_object_ref (priv->entries[DAY]);
   g_free (entry_name);
 
   label = gtk_label_new (_("Day"));
@@ -401,7 +398,6 @@ gcal_date_selector_constructed (GObject *object)
 
   priv->entries[MONTH] = (GtkWidget*) gtk_builder_get_object (builder, entry_name);
   gtk_entry_set_max_length (GTK_ENTRY (priv->entries[MONTH]), 2);
-  g_object_ref (priv->entries[MONTH]);
   g_free (entry_name);
 
   label = gtk_label_new (_("Month"));
@@ -413,7 +409,6 @@ gcal_date_selector_constructed (GObject *object)
   entry_name = g_strdup_printf ("entry%d", priv->year_pos);
 
   priv->entries[YEAR] = (GtkWidget*) gtk_builder_get_object (builder, entry_name);
-  g_object_ref (priv->entries[YEAR]);
 
   if (! priv->have_long_year)
     gtk_entry_set_max_length (GTK_ENTRY (priv->entries[YEAR]), 2);
