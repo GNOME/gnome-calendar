@@ -275,7 +275,6 @@ gcal_date_selector_init (GcalDateSelector *self)
   priv->year = 1970;
   priv->have_long_year = FALSE;
 
-  setlocale (LC_ALL,"");
   priv->mask = nl_langinfo (D_FMT);
   g_debug ("Mask: %s", priv->mask);
 
