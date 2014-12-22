@@ -63,6 +63,8 @@ GcalManager*   gcal_manager_new_with_settings       (GSettings          *setting
 
 GList*         gcal_manager_get_sources             (GcalManager        *manager);
 
+GList*         gcal_manager_get_sources_connected   (GcalManager        *manager);
+
 ESource*       gcal_manager_get_default_source      (GcalManager        *manager);
 
 icaltimezone*  gcal_manager_get_system_timezone     (GcalManager        *manager);

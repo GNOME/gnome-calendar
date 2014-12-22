@@ -776,7 +776,7 @@ on_calendar_toggled (GSimpleAction *action,
 
   /* lookup source */
   source = NULL;
-  l = gcal_manager_get_sources (priv->manager);
+  l = gcal_manager_get_sources_connected (priv->manager);
 
   for (aux = l; aux != NULL; aux = aux->next)
     {

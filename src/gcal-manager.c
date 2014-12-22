@@ -635,8 +635,7 @@ gcal_manager_new_with_settings (GSettings *settings)
  *
  * Retrieve a list of the enabled sources used in the application.
  *
- * Returns: (Transfer full) a {@link GList} object
- * to be freed with g_list_free()
+ * Returns: (Transfer full) a {@link GList} object to be freed with g_list_free()
  **/
 GList*
 gcal_manager_get_sources (GcalManager *manager)
@@ -657,6 +656,23 @@ gcal_manager_get_sources (GcalManager *manager)
 
   g_list_free (l);
   return aux;
+}
+
+/**
+ * gcal_manager_get_sources_connected:
+ * @manager:
+ *
+ * Returns a {@link GList} with every source connected on the app, whether they are enabled or not.
+ *
+ * Returns: (Transfer full) a {@link GList} object to be freed with g_list_free()
+ **/
+GList*
+gcal_manager_get_sources_connected (GcalManager *manager)
+{
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (manager);
+  return g_hash_table_get_keys (priv->clients);
 }
 
 /**
