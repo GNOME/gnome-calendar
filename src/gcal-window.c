@@ -1250,7 +1250,7 @@ gcal_window_constructed (GObject *object)
   gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->calendars_button), G_MENU_MODEL (priv->calendar_menu));
 
   /* edit dialog initialization */
-  priv->edit_dialog = gcal_edit_dialog_new ();
+  priv->edit_dialog = gcal_edit_dialog_new (use_24h_format);
   gtk_window_set_transient_for (GTK_WINDOW (priv->edit_dialog), GTK_WINDOW (object));
   gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog), priv->manager);
 

@@ -65,6 +65,7 @@ typedef struct
   ECalComponent    *component;
 
   /* flags */
+  gboolean          format_24h;
   gboolean          event_is_new;
   gboolean          setting_event;
 } GcalEditDialogPrivate;
@@ -765,14 +766,18 @@ gcal_edit_dialog_all_day_changed (GtkWidget *widget,
 
 /* Public API */
 GtkWidget*
-gcal_edit_dialog_new (void)
+gcal_edit_dialog_new (gboolean format_24h)
 {
   GtkWidget *dialog;
+  GcalEditDialogPrivate *priv;
 
   dialog = g_object_new (GCAL_TYPE_EDIT_DIALOG, NULL);
+  priv = gcal_edit_dialog_get_instance_private (GCAL_EDIT_DIALOG (dialog));
+
   gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
   gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
   gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
+  priv->format_24h = format_24h;
 
   return dialog;
 }

@@ -54,7 +54,7 @@ struct _GcalEditDialogClass
 
 GType                gcal_edit_dialog_get_type                (void);
 
-GtkWidget*           gcal_edit_dialog_new                     (void);
+GtkWidget*           gcal_edit_dialog_new                     (gboolean format_24h);
 
 void                 gcal_edit_dialog_set_event_is_new        (GcalEditDialog *dialog,
                                                                gboolean       event_is_new);
