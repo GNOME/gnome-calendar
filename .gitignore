@@ -78,3 +78,6 @@ src/gcal-resources.c
 src/gcal-resources.h
 AUTHORS
 build-aux
+data/org.gnome.Calendar.desktop
+data/org.gnome.Calendar.desktop.in
+data/org.gnome.Calendar.service
