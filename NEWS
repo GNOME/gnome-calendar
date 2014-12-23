@@ -1,0 +1,13 @@
+Major changes in 3.15.3:
+* Initial search implementation
+* Month-view reworked
+* Month-view support for overflow of events
+* Month-view has support for RTL locales
+* Month-view has support for multiday events
+* Edit/new dialog reworked to use GtkBuilder UI files
+* Added new time and date selectors
+* Added proper `GtkHeaderBar`
+* Added calendar selector popover for when the dialog is used on event
+* Added calendar selector popover for hide/show calendars on the main window
+* Navigation buttons were relocated and a Today buttong was added
+* Calendar got a new 3d icon
