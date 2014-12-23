@@ -65,8 +65,6 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-static void     gcal_event_widget_constructed          (GObject        *object);
-
 static void     gcal_event_widget_set_property         (GObject        *object,
                                                         guint           property_id,
                                                         const GValue   *value,
@@ -116,7 +114,6 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
   GtkWidgetClass *widget_class;
 
   object_class = G_OBJECT_CLASS (klass);
-  object_class->constructed = gcal_event_widget_constructed;
   object_class->set_property = gcal_event_widget_set_property;
   object_class->get_property = gcal_event_widget_get_property;
   object_class->finalize = gcal_event_widget_finalize;
@@ -221,19 +218,6 @@ gcal_event_widget_init(GcalEventWidget *self)
 }
 
 static void
-gcal_event_widget_constructed (GObject *object)
-{
-  GcalEventWidgetPrivate *priv;
-
-  priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (object));
-
-  if (G_OBJECT_CLASS (gcal_event_widget_parent_class)->constructed != NULL)
-    G_OBJECT_CLASS (gcal_event_widget_parent_class)->constructed (object);
-
-  gtk_widget_override_background_color (GTK_WIDGET (object), 0, priv->color);
-}
-
-static void
 gcal_event_widget_set_property (GObject      *object,
                                 guint         property_id,
                                 const GValue *value,
@@ -270,11 +254,6 @@ gcal_event_widget_set_property (GObject      *object,
 
         if (priv->color == NULL)
           return;
-
-        gtk_widget_override_background_color (
-            GTK_WIDGET (object),
-            gtk_widget_get_state_flags (GTK_WIDGET (object)),
-            priv->color);
 
         if (INTENSITY (priv->color->red,
                        priv->color->green,
@@ -736,7 +715,11 @@ gcal_event_widget_new_from_data (GcalEventData *data)
   ECalComponentId *id;
   ECalComponentText e_summary;
   ESourceSelectable *extension;
+
+  GQuark color_id;
   GdkRGBA color;
+  gchar *custom_css_class;
+
   ECalComponentDateTime dt;
   icaltimetype *date;
   gboolean start_is_date, end_is_date;
@@ -775,6 +758,11 @@ gcal_event_widget_new_from_data (GcalEventData *data)
                                           E_SOURCE_EXTENSION_CALENDAR));
   gdk_rgba_parse (&color, e_source_selectable_get_color (extension));
   gcal_event_widget_set_color (event, &color);
+
+  color_id = g_quark_from_string (e_source_selectable_get_color (extension));
+  custom_css_class = g_strdup_printf ("color-%d", color_id);
+  gtk_style_context_add_class (gtk_widget_get_style_context (widget), custom_css_class);
+  g_free (custom_css_class);
 
   /* start date */
   e_cal_component_get_dtstart (priv->component, &dt);
