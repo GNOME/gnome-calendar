@@ -71,6 +71,8 @@ static gboolean date_entry_focus_out                              (GtkWidget    
 static void     entry_activated                                   (GtkEntry             *entry,
                                                                    gpointer              user_data);
 
+static void     parse_entries                                     (GcalDateSelector     *selector);
+
 static void     text_inserted                                     (GtkEditable          *editable,
                                                                    gchar                *new_text,
                                                                    gint                  new_text_length,
@@ -110,45 +112,7 @@ date_entry_focus_out (GtkWidget *widget,
                       GdkEvent  *event,
                       gpointer   user_data)
 {
-  GcalDateSelectorPrivate *priv;
-  gint day, month, year;
-
-  priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (user_data));
-
-  day = strtol (gtk_entry_get_text (GTK_ENTRY (priv->entries[DAY])), NULL, 0);
-  month = strtol (gtk_entry_get_text (GTK_ENTRY (priv->entries[MONTH])), NULL, 0);
-  year = strtol (gtk_entry_get_text (GTK_ENTRY (priv->entries[YEAR])), NULL, 0);
-
-  /* Fix year if neccessary */
-  if (!priv->have_long_year)
-    {
-      GDateTime *dt;
-      gint suffix;
-
-      dt = g_date_time_new_now_local ();
-      suffix = g_date_time_get_year (dt) % 100;
-
-      /* last century */
-      if (year > suffix)
-          year += g_date_time_get_year (dt) - suffix - 100;
-
-      /* this century */
-      else
-          year += g_date_time_get_year (dt) - suffix;
-
-      g_date_time_unref (dt);
-    }
-
-  /* select the date */
-  g_signal_handlers_block_by_func (priv->calendar,
-                                   calendar_day_selected,
-                                   user_data);
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (user_data), day, month, year);
-
-  g_signal_handlers_unblock_by_func (priv->calendar,
-                                     calendar_day_selected,
-                                     user_data);
-
+  parse_entries (GCAL_DATE_SELECTOR (user_data));
   return FALSE;
 }
 
@@ -156,10 +120,16 @@ static void
 entry_activated (GtkEntry *entry,
                  gpointer  user_data)
 {
+  parse_entries (GCAL_DATE_SELECTOR (user_data));
+}
+
+static void
+parse_entries (GcalDateSelector *selector)
+{
   GcalDateSelectorPrivate *priv;
   gint day, month, year;
 
-  priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (user_data));
+  priv = gcal_date_selector_get_instance_private (selector);
 
   day = strtol (gtk_entry_get_text (GTK_ENTRY (priv->entries[DAY])), NULL, 0);
   month = strtol (gtk_entry_get_text (GTK_ENTRY (priv->entries[MONTH])), NULL, 0);
@@ -188,12 +158,12 @@ entry_activated (GtkEntry *entry,
   /* select the date */
   g_signal_handlers_block_by_func (priv->calendar,
                                    calendar_day_selected,
-                                   user_data);
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (user_data), day, month, year);
+                                   selector);
+  gcal_date_selector_set_date (selector, day, month, year);
 
   g_signal_handlers_unblock_by_func (priv->calendar,
                                      calendar_day_selected,
-                                     user_data);
+                                     selector);
 }
 
 static void
