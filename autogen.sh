@@ -19,6 +19,4 @@ which gnome-autogen.sh || {
     exit 1
 }
 
-git submodule update --init --recursive
-
 USE_GNOME2_MACROS=1 USE_COMMON_DOC_BUILD=yes . gnome-autogen.sh
