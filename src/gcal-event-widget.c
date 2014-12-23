@@ -555,6 +555,7 @@ gcal_event_widget_draw (GtkWidget *widget,
   gtk_render_background (context, cr, x, y, width, height);
   gtk_render_frame (context, cr, x, y, width, height);
 
+  /* FIXME for RTL alignment and icons positions */
   gtk_style_context_get (context, state, "font", &font_desc, NULL);
   layout = pango_cairo_create_layout (cr);
   pango_layout_set_font_description (layout, font_desc);

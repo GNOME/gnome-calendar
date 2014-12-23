@@ -431,6 +431,7 @@ rebuild_popover_for_day (GcalMonthView *view,
   for (; l != NULL; l = g_list_next (l))
     {
       /* FIXME: This may be replaced by setup_child */
+      /* FIXME: mark the widgets properly with CSS tags */
       child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (l->data));
       gtk_container_add (GTK_CONTAINER (priv->events_list_box), child_widget);
       g_signal_connect (child_widget, "activate", G_CALLBACK (event_opened), GTK_WIDGET (view));

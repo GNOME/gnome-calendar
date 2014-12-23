@@ -237,6 +237,15 @@ gcal_get_month_name (gint i)
   return nl_langinfo (month_item[i]);
 }
 
+/**
+ * gcal_get_pixbuf_from_color:
+ * @color:
+ * @size:
+ *
+ * Create a pixbuf of a simple {@link GdkRGBA} color.
+ *
+ * Returns: (Transfer full): An instance of {@link GdkPixbuf} to be freed with g_object_unref()
+ **/
 GdkPixbuf*
 gcal_get_pixbuf_from_color (GdkRGBA  *color,
                             gint      size)
