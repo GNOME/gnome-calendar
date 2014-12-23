@@ -1,10 +1,23 @@
 SUBDIRS = icons
 
 desktopdir = $(datadir)/applications
+desktop_in_files = org.gnome.Calendar.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
-  desktop_in_files = gnome-calendar.desktop.in
 
 @INTLTOOL_DESKTOP_RULE@
+
+servicedir = $(datadir)/dbus-1/services
+service_DATA = org.gnome.Calendar.service
+
+%.service: %.service.in Makefile
+	$(AM_V_GEN) [ -d $(@D) ] || $(mkdir_p) $(@D) ; \
+	            sed -e "s|\@libexecdir\@|$(libexecdir)|" $< > $@.tmp && mv $@.tmp $@
+
+org.gnome.Calendar.service:
+	$(AM_V_GEN) (echo '[D-BUS Service]'; \
+	            echo 'Name=org.gnome.Calendar'; \
+	            echo 'Exec=${bindir}/gnome-calendar --gapplication-service') > $@.tmp && \
+	            mv $@.tmp $@
 
 gsettings_ENUM_NAMESPACE = org.gnome.calendar
 gsettings_ENUM_FILES = \
@@ -18,7 +31,7 @@ gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 @GSETTINGS_RULES@
 
 EXTRA_DIST=                     \
-  gnome-calendar.desktop        \
+  org.gnome.Calendar.desktop    \
   calendar.gresource.xml        \
   ui/edit-dialog.ui             \
   ui/menus.ui                   \

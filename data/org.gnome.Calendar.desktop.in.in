@@ -9,3 +9,4 @@ StartupNotify=true
 OnlyShowIn=GNOME;
 Categories=GNOME;GTK;Utility;Core;
 MimeType=text/calendar;
+DBusActivatable=true

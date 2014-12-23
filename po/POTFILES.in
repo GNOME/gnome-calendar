@@ -1,5 +1,5 @@
 # List of source files containing translatable strings.
-data/gnome-calendar.desktop.in.in
+data/org.gnome.Calendar.desktop.in.in
 data/org.gnome.calendar.gschema.xml.in
 [type: gettext/glade]data/ui/edit-dialog.ui
 [type: gettext/glade]data/ui/menus.ui
