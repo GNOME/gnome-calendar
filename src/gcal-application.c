@@ -30,6 +30,7 @@
 #include <glib/gi18n.h>
 
 #define CSS_FILE "resource:///org/gnome/calendar/gtk-styles.css"
+#define CSS_TEMPLATE "GcalEventWidget.color-%d { background-color: %s; }"
 
 typedef struct
 {
@@ -40,8 +41,16 @@ typedef struct
 
   GtkCssProvider *provider;
 
+  gchar         **css_code_snippets;
+  GtkCssProvider *colors_provider;
+
   icaltimetype   *initial_date;
 } GcalApplicationPrivate;
+
+static void     source_added_cb                       (GcalManager         *manager,
+                                                       ESource             *source,
+                                                       gboolean             enabled,
+                                                       gpointer             user_data);
 
 static void     gcal_application_finalize             (GObject                 *object);
 
@@ -102,6 +111,50 @@ static const GActionEntry gcal_app_entries[] = {
 };
 
 static void
+source_added_cb (GcalManager *manager,
+                 ESource     *source,
+                 gboolean     enabled,
+                 gpointer     user_data)
+{
+  GcalApplicationPrivate *priv;
+
+  gint i, arr_length = 0;
+  ESourceSelectable *extension;
+  GQuark color_id;
+
+  gchar **new_css_snippets;
+  gchar *new_css_data;
+
+  GError *error = NULL;
+
+  priv = gcal_application_get_instance_private (GCAL_APPLICATION (user_data));
+
+  extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
+  color_id = g_quark_from_string (e_source_selectable_get_color (extension));
+
+  if (priv->css_code_snippets != NULL)
+    arr_length = g_strv_length (priv->css_code_snippets);
+
+  new_css_snippets = g_new0 (gchar*, arr_length + 2);
+
+  for (i = 0; i < arr_length; i++)
+    new_css_snippets[i] = priv->css_code_snippets[i];
+  new_css_snippets[arr_length] = g_strdup_printf (CSS_TEMPLATE, color_id, e_source_selectable_get_color (extension));
+
+  if (priv->css_code_snippets != NULL)
+    g_free (priv->css_code_snippets); /* shallow free, cause I'm just moving the pointers */
+  priv->css_code_snippets = new_css_snippets;
+
+  new_css_data = g_strjoinv ("\n", new_css_snippets);
+  error = NULL;
+  gtk_css_provider_load_from_data (priv->colors_provider, new_css_data, -1, &error);
+  if (error != NULL)
+    g_warning ("Error creating custom stylesheet. %s", error->message);
+
+  g_free (new_css_data);
+}
+
+static void
 gcal_application_class_init (GcalApplicationClass *klass)
 {
   GObjectClass *object_class;
@@ -123,6 +176,7 @@ gcal_application_init (GcalApplication *self)
 
   priv = gcal_application_get_instance_private (self);
   priv->settings = g_settings_new ("org.gnome.calendar");
+  priv->colors_provider = gtk_css_provider_new ();
 }
 
 static void
@@ -133,11 +187,15 @@ gcal_application_finalize (GObject *object)
   priv = gcal_application_get_instance_private (GCAL_APPLICATION (object));
 
   g_clear_object (&(priv->settings));
+  g_clear_object (&(priv->colors_provider));
   g_clear_object (&(priv->provider));
   g_clear_object (&(priv->manager));
 
   if (priv->initial_date != NULL)
     g_free (priv->initial_date);
+
+  if (priv->css_code_snippets != NULL)
+    g_strfreev (priv->css_code_snippets);
 
   G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
 }
@@ -188,30 +246,32 @@ gcal_application_startup (GApplication *app)
   if (priv->provider == NULL)
    {
      priv->provider = gtk_css_provider_new ();
-     gtk_style_context_add_provider_for_screen (
-         gdk_screen_get_default (),
-         GTK_STYLE_PROVIDER (priv->provider),
-         G_MAXUINT);
+     gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+                                                GTK_STYLE_PROVIDER (priv->provider),
+                                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
 
      error = NULL;
      css_file = g_file_new_for_uri (CSS_FILE);
      gtk_css_provider_load_from_file (priv->provider, css_file, &error);
      if (error != NULL)
-       {
-         g_warning ("Error loading stylesheet from file %s. %s",
-                    CSS_FILE,
-                    error->message);
-       }
+         g_warning ("Error loading stylesheet from file %s. %s", CSS_FILE, error->message);
 
-     g_object_set (gtk_settings_get_default (),
-                   "gtk-application-prefer-dark-theme", FALSE,
-                   NULL);
+     g_object_set (gtk_settings_get_default (), "gtk-application-prefer-dark-theme", FALSE, NULL);
 
      g_object_unref (css_file);
      g_object_unref (priv->provider);
    }
 
+  if (priv->colors_provider != NULL)
+    {
+      gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+                                                 GTK_STYLE_PROVIDER (priv->colors_provider),
+                                                 GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
+      g_object_unref (priv->colors_provider);
+    }
+
   priv->manager = gcal_manager_new_with_settings (priv->settings);
+  g_signal_connect (priv->manager, "source-added", G_CALLBACK (source_added_cb), app);
 
   gcal_application_set_app_menu (app);
 }
