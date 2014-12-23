@@ -240,7 +240,6 @@ gcal_date_selector_init (GcalDateSelector *self)
   priv->have_long_year = FALSE;
 
   priv->mask = nl_langinfo (D_FMT);
-  g_debug ("Mask: %s", priv->mask);
 
   /**
    * Select the day, month and year indexes. This will
