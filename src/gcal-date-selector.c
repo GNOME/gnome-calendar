@@ -97,14 +97,11 @@ calendar_day_selected (GtkCalendar *calendar,
    * Block signal handler to avoid an infinite
    * recursion, exploding the proccess stack.
    */
-  g_signal_handlers_block_by_func (priv->calendar,
-                                   calendar_day_selected,
-                                   user_data);
+  g_signal_handlers_block_by_func (priv->calendar, calendar_day_selected, user_data);
+
   gcal_date_selector_set_date (GCAL_DATE_SELECTOR (user_data), day, month + 1, year);
 
-  g_signal_handlers_unblock_by_func (priv->calendar,
-                                     calendar_day_selected,
-                                     user_data);
+  g_signal_handlers_unblock_by_func (priv->calendar, calendar_day_selected, user_data);
 }
 
 static gboolean
@@ -156,14 +153,11 @@ parse_entries (GcalDateSelector *selector)
     }
 
   /* select the date */
-  g_signal_handlers_block_by_func (priv->calendar,
-                                   calendar_day_selected,
-                                   selector);
+  g_signal_handlers_block_by_func (priv->calendar, calendar_day_selected, selector);
+
   gcal_date_selector_set_date (selector, day, month, year);
 
-  g_signal_handlers_unblock_by_func (priv->calendar,
-                                     calendar_day_selected,
-                                     selector);
+  g_signal_handlers_unblock_by_func (priv->calendar, calendar_day_selected, selector);
 }
 
 static void
