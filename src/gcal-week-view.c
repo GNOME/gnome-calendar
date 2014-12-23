@@ -554,24 +554,8 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 static void
 gcal_week_view_init (GcalWeekView *self)
 {
-  GcalWeekViewPrivate *priv;
-  gint i;
-
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
-
-  priv = gcal_week_view_get_instance_private (self);
-
-  for (i = 0; i < 7; i++)
-    {
-      priv->days[i] = NULL;
-    }
-
-  priv->view_window = NULL;
-  priv->grid_window = NULL;
-
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (GTK_WIDGET (self)),
-      "calendar-view");
+  gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "calendar-view");
 }
 
 static void

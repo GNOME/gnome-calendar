@@ -1204,23 +1204,6 @@ gcal_window_class_init(GcalWindowClass *klass)
 static void
 gcal_window_init (GcalWindow *self)
 {
-  GcalWindowPrivate *priv;
-
-  priv = gcal_window_get_instance_private (self);
-
-  /* states */
-  priv->search_mode = FALSE;
-
-  priv->event_creation_data = NULL;
-
-  /* calendar management */
-  priv->calendar_menu = NULL;
-
-  /* FIXME: Review real need of this */
-  priv->save_geometry_timeout_id = 0;
-  priv->event_to_delete = NULL;
-  priv->open_edit_dialog = FALSE;
-
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 

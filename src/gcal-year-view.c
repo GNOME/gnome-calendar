@@ -192,14 +192,7 @@ gcal_year_view_init (GcalYearView *self)
   priv->start_mark_cell = -1;
   priv->end_mark_cell = -1;
 
-  for (i = 0; i < 12; i++)
-    {
-      priv->months[i] = NULL;
-    }
-
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (GTK_WIDGET (self)),
-      "calendar-view");
+  gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "calendar-view");
 }
 
 static void

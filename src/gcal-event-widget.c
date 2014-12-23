@@ -207,12 +207,6 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
 static void
 gcal_event_widget_init(GcalEventWidget *self)
 {
-  GcalEventWidgetPrivate *priv;
-
-  priv = gcal_event_widget_get_instance_private (self);
-  priv->button_pressed = FALSE;
-  priv->color = NULL;
-
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
   gtk_widget_set_can_focus (GTK_WIDGET (self), TRUE);
 }

@@ -487,12 +487,7 @@ gcal_edit_dialog_init (GcalEditDialog *self)
 
   priv = gcal_edit_dialog_get_instance_private (self);
 
-  priv->source_uid = NULL;
-  priv->event_uid = NULL;
   priv->writable = TRUE;
-
-  priv->setting_event = FALSE;
-
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 

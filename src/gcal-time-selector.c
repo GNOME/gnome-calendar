@@ -161,14 +161,7 @@ gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
 static void
 gcal_time_selector_init (GcalTimeSelector *self)
 {
-  GcalTimeSelectorPrivate *priv;
-
-  priv = gcal_time_selector_get_instance_private (self);
-
-  priv->time_label = NULL;
-  priv->popover = NULL;
-  priv->hour_spin = NULL;
-  priv->minute_spin = NULL;
+  ;
 }
 
 static void
