@@ -1108,14 +1108,10 @@ gcal_month_view_draw (GtkWidget *widget,
   PangoFontDescription *font_desc;
   PangoFontDescription *sfont_desc;
 
-  gint font_width;
-  gint font_height;
+  gint font_width, font_height;
 
-  gint pos_y;
-  gint pos_x;
-  gdouble start_grid_y;
-  gdouble cell_width;
-  gdouble cell_height;
+  gint pos_x, pos_y;
+  gdouble start_grid_y, cell_width, cell_height;
 
   gdouble days;
   gint shown_rows;
@@ -1282,7 +1278,6 @@ gcal_month_view_draw (GtkWidget *widget,
                              clayout);
 
           gtk_style_context_restore (context);
-
           pango_font_description_free (cfont_desc);
           g_object_unref (clayout);
         }
@@ -1888,7 +1883,6 @@ gcal_month_view_get_left_header (GcalView *view)
   GcalMonthViewPrivate *priv;
 
   gchar str_date[64];
-
   struct tm tm_date;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));

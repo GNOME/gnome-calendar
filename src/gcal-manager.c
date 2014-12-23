@@ -689,7 +689,6 @@ gcal_manager_get_default_source (GcalManager *manager)
   GcalManagerPrivate *priv;
 
   priv = gcal_manager_get_instance_private (manager);
-
   return e_source_registry_ref_default_calendar (priv->source_registry);
 }
 
