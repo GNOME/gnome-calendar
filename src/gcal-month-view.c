@@ -1240,9 +1240,12 @@ gcal_month_view_draw (GtkWidget *widget,
           pango_layout_get_pixel_size (overflow_layout, &font_width, &font_height);
           y_value = cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y;
 
-          if (gtk_widget_is_visible (priv->overflow_popover) && priv->hovered_overflow_indicator == i)
-            gtk_render_background (context, cr, cell_width * column, y_value - padding.bottom,
-                                   cell_width, font_height + padding.bottom * 2);
+          if ((!gtk_widget_is_visible (priv->overflow_popover) && priv->hovered_overflow_indicator == i) ||
+               gtk_widget_is_visible (priv->overflow_popover))
+            {
+              gtk_render_background (context, cr, cell_width * column, y_value - padding.bottom,
+                                     cell_width, font_height + padding.bottom * 2);
+            }
 
           gtk_render_layout (context, cr, cell_width * column, y_value, overflow_layout);
 
