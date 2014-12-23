@@ -128,9 +128,9 @@ parse_entries (GcalDateSelector *selector)
 
   priv = gcal_date_selector_get_instance_private (selector);
 
-  day = strtol (gtk_entry_get_text (GTK_ENTRY (priv->entries[DAY])), NULL, 0);
-  month = strtol (gtk_entry_get_text (GTK_ENTRY (priv->entries[MONTH])), NULL, 0);
-  year = strtol (gtk_entry_get_text (GTK_ENTRY (priv->entries[YEAR])), NULL, 0);
+  day = atoi (gtk_entry_get_text (GTK_ENTRY (priv->entries[DAY])));
+  month = atoi (gtk_entry_get_text (GTK_ENTRY (priv->entries[MONTH])));
+  year = atoi (gtk_entry_get_text (GTK_ENTRY (priv->entries[YEAR])));
 
   /* Fix year if neccessary */
   if (!priv->have_long_year)
