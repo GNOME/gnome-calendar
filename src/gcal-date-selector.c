@@ -392,6 +392,15 @@ gcal_date_selector_new (void)
   return g_object_new (GCAL_TYPE_DATE_SELECTOR, NULL);
 }
 
+/**
+ * gcal_date_selector_set_date:
+ * @selector:
+ * @day:  (nullable): The day number.
+ * @month: (nullable): The month number starting with 1
+ * @year: (nullable): The year number
+ *
+ * Set the value of the date shown
+ **/
 void
 gcal_date_selector_set_date (GcalDateSelector *selector,
                              gint              day,
@@ -460,6 +469,15 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
   g_date_time_unref (dt);
 }
 
+/**
+ * gcal_date_selector_get_date:
+ * @selector:
+ * @day:  (nullable): An out argument to hold the day number
+ * @month: (nullable): An out argument to hold the month number starting with 1
+ * @year: (nullable): An out argument to hold the year number
+ *
+ * Get the value of the date shown
+ **/
 void
 gcal_date_selector_get_date (GcalDateSelector *selector,
                              gint             *day,
