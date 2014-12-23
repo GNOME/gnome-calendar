@@ -44,5 +44,6 @@ EXTRA_DIST=                     \
   $(gsettingsschema_in_files)
 
 CLEANFILES =                    \
+  $(service_DATA)               \
   $(desktop_DATA)               \
   $(gsettings_SCHEMAS)

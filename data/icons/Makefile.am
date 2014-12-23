@@ -61,7 +61,12 @@ uninstall-icons:
 	done
 
 install-data-local: install-icons update-icon-cache
-
 uninstall-local: uninstall-icons update-icon-cache
+
+install-data-hook: update-icon-cache
+uninstall-hook: update-icon-cache
+
+clean-local :
+	rm -f *~
 
 -include $(top_srcdir)/git.mk
