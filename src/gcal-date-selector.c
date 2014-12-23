@@ -141,13 +141,10 @@ parse_entries (GcalDateSelector *selector)
       dt = g_date_time_new_now_local ();
       suffix = g_date_time_get_year (dt) % 100;
 
-      /* last century */
       if (year > suffix)
-          year += g_date_time_get_year (dt) - suffix - 100;
-
-      /* this century */
+          year += g_date_time_get_year (dt) - suffix - 100; /* last century */
       else
-          year += g_date_time_get_year (dt) - suffix;
+          year += g_date_time_get_year (dt) - suffix; /* this century */
 
       g_date_time_unref (dt);
     }
@@ -330,7 +327,7 @@ gcal_date_selector_constructed (GObject *object)
   /**
    * Date entries
    *
-   * day entry 
+   * day entry
    */
   entry_name = g_strdup_printf ("entry%d", priv->day_pos);
 
