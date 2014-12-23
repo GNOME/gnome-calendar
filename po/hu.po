@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-12-20 14:13+0000\n"
-"PO-Revision-Date: 2014-12-20 17:58+0100\n"
+"POT-Creation-Date: 2014-12-22 13:41+0000\n"
+"PO-Revision-Date: 2014-12-23 17:39+0100\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -20,7 +20,7 @@ msgstr ""
 "X-Generator: Lokalize 1.2\n"
 
 #: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:372
-#: ../src/gcal-window.c:976
+#: ../src/gcal-window.c:1006
 msgid "Calendar"
 msgstr "Naptár"
 
@@ -60,11 +60,19 @@ msgstr "Az aktív nézet típusa"
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Az aktív ablaknézet típusa, az alapértelmezett érték: havi nézet"
 
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "A letiltott források listája"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "A Naptár legutóbbi futásakor letiltott források"
+
 #: ../data/ui/edit-dialog.ui.h:1
 msgid "Cancel"
 msgstr "Mégse"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:718
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:679
 msgid "Done"
 msgstr "Kész"
 
@@ -168,22 +176,25 @@ msgstr "Úr Balázs <urbalazs@gmail.com>"
 msgid "Change the date"
 msgstr "Dátum módosítása"
 
-#: ../src/gcal-edit-dialog.c:718
+#: ../src/gcal-edit-dialog.c:679
 msgid "Save"
 msgstr "Mentés"
 
-#: ../src/gcal-month-view.c:618
+#: ../src/gcal-edit-dialog.c:863
+msgid "Unnamed event"
+msgstr "Névtelen esemény"
+
+#: ../src/gcal-month-view.c:644
 msgid "Add new event..."
 msgstr "Új esemény hozzáadása…"
 
-#: ../src/gcal-month-view.c:871
+#: ../src/gcal-month-view.c:898
 msgid "Other events"
 msgstr "Egyéb események"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1190
+#: ../src/gcal-month-view.c:1217
 #, c-format
-#| msgid "Other events"
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Egyéb esemény"
@@ -211,33 +222,33 @@ msgstr "Dél"
 msgid "00:00 PM"
 msgstr "du. 00:00"
 
-#: ../src/gcal-week-view.c:1404 ../src/gcal-window.c:1260
+#: ../src/gcal-week-view.c:1404 ../src/gcal-window.c:1290
 msgid "Week"
 msgstr "Hét"
 
-#: ../src/gcal-window.c:589
+#: ../src/gcal-window.c:593
 #, c-format
 msgid "New Event on %s"
 msgstr "Új esemény ekkor: %s"
 
-#: ../src/gcal-window.c:911
+#: ../src/gcal-window.c:941
 msgid "Event deleted"
 msgstr "Esemény törölve"
 
-#: ../src/gcal-window.c:912
+#: ../src/gcal-window.c:942
 msgid "Undo"
 msgstr "Visszavonás"
 
-#: ../src/gcal-window.c:1002
+#: ../src/gcal-window.c:1032
 #, c-format
 msgid "Results for \"%s\""
 msgstr "Találatok erre: „%s”"
 
-#: ../src/gcal-window.c:1265
+#: ../src/gcal-window.c:1295
 msgid "Month"
 msgstr "Hónap"
 
-#: ../src/gcal-window.c:1271
+#: ../src/gcal-window.c:1301
 msgid "Year"
 msgstr "Év"
 
