@@ -234,7 +234,6 @@ gcal_date_selector_init (GcalDateSelector *self)
   priv->day = 1;
   priv->month = 1;
   priv->year = 1970;
-  priv->have_long_year = FALSE;
 
   priv->mask = nl_langinfo (D_FMT);
 
