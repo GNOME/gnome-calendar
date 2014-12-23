@@ -23,7 +23,6 @@ EXTRA_DIST=                     \
   ui/edit-dialog.ui             \
   ui/menus.ui                   \
   ui/nav_bar.ui                 \
-  ui/new-event.ui               \
   ui/time-selector.ui           \
   ui/window.ui                  \
   theme/gtk-styles.css          \
