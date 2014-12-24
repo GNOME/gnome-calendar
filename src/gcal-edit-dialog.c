@@ -353,8 +353,8 @@ update_summary (GtkEntry   *entry,
 
   priv = gcal_edit_dialog_get_instance_private (GCAL_EDIT_DIALOG (user_data));
 
-  summary.value = g_strdup (gtk_entry_get_text (entry));
-  summary.altrep = summary.value;
+  summary.value = gtk_entry_get_text (entry);
+  summary.altrep = NULL;
 
   e_cal_component_set_summary (priv->component, &summary);
   e_cal_component_commit_sequence (priv->component);
