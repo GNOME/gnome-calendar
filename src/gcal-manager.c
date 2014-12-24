@@ -645,20 +645,21 @@ GList*
 gcal_manager_get_sources (GcalManager *manager)
 {
   GcalManagerPrivate *priv;
-  GList *l, *l2, *aux = NULL;
-  ESource *source;
+  GHashTableIter iter;
+  gpointer key, value;
+  GList *aux = NULL;
 
   priv = gcal_manager_get_instance_private (manager);
-  l = g_hash_table_get_keys (priv->clients);
-  for (l2 = l; l2 != NULL; l2 = g_list_next (l2))
-    {
-      source = l2->data;
-      if (g_strv_contains ((const gchar * const *) priv->disabled_sources, e_source_get_uid (source)))
-        continue;
-      aux = g_list_append (aux, source);
-    }
 
-  g_list_free (l);
+  g_hash_table_iter_init (&iter, priv->clients);
+  while (g_hash_table_iter_next (&iter, &key, &value))
+    {
+      GcalManagerUnit *unit = value;
+      if (!unit->enabled)
+        continue;
+      aux = g_list_append (aux, key);
+
+    }
   return aux;
 }
 
