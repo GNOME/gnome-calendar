@@ -310,7 +310,7 @@ gather_button_event_data (GcalMonthView *view,
     *out_x = cell_width * ((cell % 7) + 0.5);
 
   if (out_y != NULL)
-    *out_y = cell_height * ((cell / 7) + 0.5 * (3.0 - (shown_rows % 2))) + start_grid_y;
+    *out_y = cell_height * ((cell / 7) + first_row_gap + 0.5) + start_grid_y;
 
   return cell;
 }
@@ -458,7 +458,7 @@ rebuild_popover_for_day (GcalMonthView *view,
   pango_font_description_free (ofont_desc);
   g_object_unref (overflow_layout);
 
-  rect.y = cell_height * ((priv->pressed_overflow_indicator / 7) + 1.0 + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y - padding_bottom - font_height / 2;
+  rect.y = cell_height * ((priv->pressed_overflow_indicator / 7) + 1.0 + (6 - shown_rows) * 0.5) + start_grid_y - padding_bottom - font_height / 2;
   rect.width = 1;
   rect.height = 1;
 
@@ -853,7 +853,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   PangoFontDescription *font_desc;
   gint font_height;
 
-  gdouble start_grid_y, cell_width, cell_height, vertical_cell_space;
+  gdouble start_grid_y, first_row_gap, cell_width, cell_height, vertical_cell_space;
   gdouble pos_x, pos_y;
   gdouble size_left [42];
 
@@ -910,6 +910,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
     size_left[i] = vertical_cell_space;
 
   shown_rows = ceil ((priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year)) / 7.0);
+  first_row_gap = (6 - shown_rows) * 0.5;
   sw = 1 - 2 * priv->k;
 
   /* allocate multidays events */
@@ -986,7 +987,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               gint row = cell_idx / 7;
               gint column = cell_idx % 7;
               pos_x = cell_width * column;
-              pos_y = cell_height * (row + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
+              pos_y = cell_height * (row + first_row_gap) + start_grid_y;
 
               child_allocation.x = pos_x;
               child_allocation.y = pos_y + vertical_cell_space - size_left[cell_idx];
@@ -1057,7 +1058,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           if (size_left[i] > natural_height)
             {
               pos_x = cell_width * (i % 7);
-              pos_y = cell_height * ((i / 7) + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
+              pos_y = cell_height * ((i / 7) + first_row_gap) + start_grid_y;
 
               child_allocation.x = pos_x;
               child_allocation.y = pos_y + vertical_cell_space - size_left[i];
@@ -1373,9 +1374,8 @@ gcal_month_view_draw (GtkWidget *widget,
 
          pos_x = cell_width * (first_column);
          pos_x2 = cell_width * (last_column + 1);
-         pos_y = cell_height * (row + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
-         pos_y2 = cell_height * (row + 1.0 + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
-
+         pos_y = cell_height * (row + first_row_gap) + start_grid_y;
+         pos_y2 = cell_height * (row + 1.0 + first_row_gap) + start_grid_y;
          cairo_rectangle (cr, pos_x + 0.3, pos_y + 0.3, pos_x2 - pos_x + 0.6, pos_y2 - pos_y + 0.6);
        }
      else
@@ -1404,8 +1404,8 @@ gcal_month_view_draw (GtkWidget *widget,
                  end = alloc.width;
                }
 
-             pos_y = cell_height * (i + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
-             pos_y2 = cell_height * (i + 1.0 + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
+             pos_y = cell_height * (i + first_row_gap) + start_grid_y;
+             pos_y2 = cell_height * (i + 1.0 + first_row_gap) + start_grid_y;
              cairo_rectangle (cr, pos_x + 0.3, pos_y + 0.3, ((gint)end) + 0.6, pos_y2 - pos_y + 0.6);
            }
        }
