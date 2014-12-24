@@ -411,7 +411,9 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
   month =  CLAMP (month - 1, 0, 11);
 
   /* set calendar's date */
+  g_signal_handlers_block_by_func (priv->calendar, calendar_day_selected, selector);
   g_object_set (priv->calendar, "day", day, "month", month, "year", year, NULL);
+  g_signal_handlers_unblock_by_func (priv->calendar, calendar_day_selected, selector);
 
   /* rebuild the date label */
   label = g_date_time_format (dt, priv->mask);
