@@ -1,22 +1,25 @@
 #!/bin/sh
 # Run this to generate all the initial makefiles, etc.
+set -e
 
-srcdir=`dirname $0`
-test -z "$srcdir" && srcdir=.
+autoreconf -i -f
+intltoolize --force --copy --automake
 
-PKG_NAME="gnome-calendar"
+if test -z "$NOCONFIGURE"; then
+    run_configure=true
+    for arg in $*; do
+	case $arg in
+            --no-configure)
+		run_configure=false
+		;;
+            *)
+		;;
+	esac
+    done
+else
+    run_configure=false
+fi
 
-(test -f $srcdir/configure.ac \
-  && test -d $srcdir/src) || {
-    echo -n "**Error**: Directory "\`$srcdir\'" does not look like the"
-    echo " top-level gnome-calendar directory"
-    exit 1
-}
-
-which gnome-autogen.sh || {
-    echo "You need to install gnome-common from GNOME Git (or from"
-    echo "your OS vendor's package manager)."
-    exit 1
-}
-
-USE_GNOME2_MACROS=1 USE_COMMON_DOC_BUILD=yes . gnome-autogen.sh
+if test $run_configure = true; then
+    ./configure "$@"
+fi
