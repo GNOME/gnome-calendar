@@ -1,3 +1,7 @@
+Major changes in 3.15.3.1:
+* Fixed bug in month-view with with 6 rows
+* Fixed bug in date-selector
+
 Major changes in 3.15.3:
 * Initial search implementation
 * Month-view reworked
