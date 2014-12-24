@@ -358,8 +358,9 @@ on_client_refreshed (GObject      *source_object,
   error = NULL;
   if (e_client_refresh_finish (E_CLIENT (source_object), result, &error))
     {
+      ESource *source = e_client_get_source (E_CLIENT (source_object));
       /* FIXME: add notification to UI */
-      ;
+      g_debug ("Client of source: %s refreshed succesfully", e_source_get_uid (source));
     }
   else
     {
@@ -388,6 +389,7 @@ on_event_created (GObject      *source_object,
       g_warning ("Error creating object: %s", error->message);
       g_error_free (error);
     }
+  g_debug ("Event: %s created successfully", new_uid);
 
   g_free (new_uid);
   free_async_ops_data (data);
