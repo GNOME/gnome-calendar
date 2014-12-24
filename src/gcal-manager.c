@@ -900,11 +900,9 @@ gcal_manager_refresh (GcalManager *manager)
   /* refresh clients */
   for (l = clients; l != NULL; l = l->next)
     {
-      GcalManagerUnit *unit;
+      GcalManagerUnit *unit = l->data;
 
-      unit = (GcalManagerUnit*) l->data;
-
-      if (! e_client_check_refresh_supported (E_CLIENT (unit->client)))
+      if (!unit->connected && ! e_client_check_refresh_supported (E_CLIENT (unit->client)))
         continue;
 
       e_client_refresh (E_CLIENT (unit->client),
@@ -924,9 +922,9 @@ gcal_manager_is_client_writable (GcalManager *manager,
   GcalManagerUnit *unit;
 
   priv = gcal_manager_get_instance_private (manager);
-
   unit = g_hash_table_lookup (priv->clients, source);
-  return e_client_is_readonly (E_CLIENT (unit->client));
+
+  return unit->connected && e_client_is_readonly (E_CLIENT (unit->client));
 }
 
 void
