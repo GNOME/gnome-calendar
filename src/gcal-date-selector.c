@@ -50,7 +50,6 @@ struct _GcalDateSelectorPrivate
   guint        day_pos;
   guint        month_pos;
   guint        year_pos;
-  gboolean     have_long_year;
 };
 
 enum
@@ -131,23 +130,6 @@ parse_entries (GcalDateSelector *selector)
   day = atoi (gtk_entry_get_text (GTK_ENTRY (priv->entries[DAY])));
   month = atoi (gtk_entry_get_text (GTK_ENTRY (priv->entries[MONTH])));
   year = atoi (gtk_entry_get_text (GTK_ENTRY (priv->entries[YEAR])));
-
-  /* Fix year if neccessary */
-  if (!priv->have_long_year)
-    {
-      GDateTime *dt;
-      gint suffix;
-
-      dt = g_date_time_new_now_local ();
-      suffix = g_date_time_get_year (dt) % 100;
-
-      if (year > suffix)
-          year += g_date_time_get_year (dt) - suffix - 100; /* last century */
-      else
-          year += g_date_time_get_year (dt) - suffix; /* this century */
-
-      g_date_time_unref (dt);
-    }
 
   /* select the date */
   g_signal_handlers_block_by_func (priv->calendar, calendar_day_selected, selector);
@@ -282,7 +264,6 @@ gcal_date_selector_init (GcalDateSelector *self)
 
           case 'Y':
             priv->year_pos = d_index++;
-            priv->have_long_year = TRUE;
             break;
         }
     }
@@ -355,9 +336,6 @@ gcal_date_selector_constructed (GObject *object)
   entry_name = g_strdup_printf ("entry%d", priv->year_pos);
 
   priv->entries[YEAR] = (GtkWidget*) gtk_builder_get_object (builder, entry_name);
-
-  if (! priv->have_long_year)
-    gtk_entry_set_max_length (GTK_ENTRY (priv->entries[YEAR]), 2);
 
   g_free (entry_name);
 
@@ -455,10 +433,7 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
   g_free (label);
 
   /* year entry */
-  if (priv->have_long_year)
-    label = g_strdup_printf ("%.4d", year);
-  else
-    label = g_strdup_printf ("%.2d", year % 100);
+  label = g_strdup_printf ("%.4d", year);
 
   gtk_entry_set_text (GTK_ENTRY (priv->entries[YEAR]), label);
 
