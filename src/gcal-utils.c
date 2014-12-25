@@ -428,26 +428,26 @@ build_component_from_details (const gchar        *summary,
 
   ECalComponentDateTime dt;
   ECalComponentText summ;
-  icaltimetype *dt_start;
 
   event = e_cal_component_new ();
   e_cal_component_set_new_vtype (event, E_CAL_COMPONENT_EVENT);
 
-  dt_start = gcal_dup_icaltime (initial_date);
-  dt.value = dt_start;
+  dt.value = (icaltimetype*) initial_date;
   dt.tzid = NULL;
   e_cal_component_set_dtstart (event, &dt);
 
   if (final_date != NULL)
     {
-      *dt.value = *final_date;
+      dt.value = (icaltimetype*) final_date;
       e_cal_component_set_dtend (event, &dt);
     }
   else
     {
-      icaltime_adjust (dt_start, 1, 0, 0, 0);
-      *dt.value = *dt_start;
+      icaltimetype *dt_end = gcal_dup_icaltime (initial_date);
+      icaltime_adjust (dt_end, 1, 0, 0, 0);
+      dt.value = dt_end;
       e_cal_component_set_dtend (event, &dt);
+      g_free (dt_end);
     }
 
   summ.altrep = NULL;
