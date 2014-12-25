@@ -39,12 +39,12 @@ typedef struct _GcalDateSelectorPrivate      GcalDateSelectorPrivate;
 
 struct _GcalDateSelector
 {
-  GtkToggleButton parent;
+  GtkMenuButton parent;
 };
 
 struct _GcalDateSelectorClass
 {
-  GtkToggleButtonClass parent_class;
+  GtkMenuButtonClass parent_class;
 
   /* signals */
   void (*modified)  (GcalDateSelector *selector);

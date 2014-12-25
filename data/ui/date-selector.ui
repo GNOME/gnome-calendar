@@ -2,90 +2,148 @@
 <!-- Generated with glade 3.18.3 -->
 <interface>
   <requires lib="gtk+" version="3.12"/>
-  <object class="GtkGrid" id="grid">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="border_width">12</property>
-    <property name="row_spacing">6</property>
+  <template class="GcalDateSelector" parent="GtkMenuButton">
+    <property name="use_popover">True</property>
+    <property name="popover">date_selector_popover</property>
     <child>
-      <object class="GtkCalendar" id="calendar">
+      <object class="GtkLabel" id="date_label">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="year">2014</property>
-        <property name="month">11</property>
-        <property name="day">18</property>
-        <property name="show_week_numbers">True</property>
       </object>
-      <packing>
-        <property name="left_attach">0</property>
-        <property name="top_attach">2</property>
-        <property name="width">3</property>
-      </packing>
     </child>
+  </template>
+  <object class="GtkPopover" id="date_selector_popover">
+    <property name="visible">False</property>
+    <property name="position">bottom</property>
     <child>
-      <object class="GtkBox" id="box">
+      <object class="GtkGrid" id="grid">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="hexpand">True</property>
-        <property name="homogeneous">True</property>
+        <property name="border_width">12</property>
+        <property name="row_spacing">6</property>
         <child>
-          <object class="GtkEntry" id="entry0">
+          <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="width_chars">4</property>
-            <property name="max_width_chars">4</property>
-            <property name="xalign">0.5</property>
-            <property name="input_purpose">number</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkEntry" id="entry1">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="width_chars">4</property>
-            <property name="max_width_chars">4</property>
-            <property name="xalign">0.5</property>
-            <property name="input_purpose">number</property>
             <style>
-              <class name="middle-entry"/>
+              <class name="dim-label"/>
             </style>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="left_attach">0</property>
+            <property name="top_attach">0</property>
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="entry2">
+          <object class="GtkLabel">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="max_length">4</property>
-            <property name="width_chars">4</property>
-            <property name="max_width_chars">4</property>
-            <property name="xalign">0.5</property>
-            <property name="input_purpose">number</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="left_attach">1</property>
+            <property name="top_attach">0</property>
           </packing>
         </child>
-        <style>
-          <class name="linked"/>
-        </style>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <style>
+              <class name="dim-label"/>
+            </style>
+          </object>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="top_attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkCalendar" id="calendar">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="show_week_numbers">True</property>
+            <signal name="day-selected" handler="calendar_day_selected" object="GcalDateSelector" swapped="no"/>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">2</property>
+            <property name="width">3</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="homogeneous">True</property>
+            <child>
+              <object class="GtkEntry">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="width_chars">4</property>
+                <property name="max_width_chars">4</property>
+                <property name="xalign">0.5</property>
+                <property name="input_purpose">number</property>
+                <signal name="insert-text" handler="text_inserted" object="GcalDateSelector" swapped="no"/>
+                <signal name="focus-out-event" handler="date_entry_focus_out" object="GcalDateSelector" swapped="no"/>
+                <signal name="activate" handler="entry_activated" object="GcalDateSelector" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="width_chars">4</property>
+                <property name="max_width_chars">4</property>
+                <property name="xalign">0.5</property>
+                <property name="input_purpose">number</property>
+                <signal name="insert-text" handler="text_inserted" object="GcalDateSelector" swapped="no"/>
+                <signal name="focus-out-event" handler="date_entry_focus_out" object="GcalDateSelector" swapped="no"/>
+                <signal name="activate" handler="entry_activated" object="GcalDateSelector" swapped="no"/>
+                <style>
+                  <class name="middle-entry"/>
+                </style>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="max_length">4</property>
+                <property name="width_chars">4</property>
+                <property name="max_width_chars">4</property>
+                <property name="xalign">0.5</property>
+                <property name="input_purpose">number</property>
+                <signal name="insert-text" handler="text_inserted" object="GcalDateSelector" swapped="no"/>
+                <signal name="focus-out-event" handler="date_entry_focus_out" object="GcalDateSelector" swapped="no"/>
+                <signal name="activate" handler="entry_activated" object="GcalDateSelector" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <style>
+              <class name="linked"/>
+            </style>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">1</property>
+            <property name="width">3</property>
+          </packing>
+        </child>
       </object>
-      <packing>
-        <property name="left_attach">0</property>
-        <property name="top_attach">1</property>
-        <property name="width">3</property>
-      </packing>
     </child>
   </object>
 </interface>

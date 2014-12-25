@@ -36,9 +36,10 @@ struct _GcalDateSelectorPrivate
 {
   /* widgets */
   GtkWidget   *date_label;
-  GtkWidget   *popover;
-  GtkWidget   *entries[NUM_ENTRIES];
   GtkWidget   *calendar;
+  GtkWidget   *grid;
+
+  GtkWidget   *entries[NUM_ENTRIES];
 
   /* date */
   gint         day;
@@ -47,6 +48,8 @@ struct _GcalDateSelectorPrivate
 
   /* misc */
   gchar       *mask;
+
+  /* index in the mask starting by 0 */
   guint        day_pos;
   guint        month_pos;
   guint        year_pos;
@@ -80,7 +83,7 @@ static void     text_inserted                                     (GtkEditable  
 
 static void     gcal_date_selector_constructed                    (GObject              *object);
 
-G_DEFINE_TYPE_WITH_PRIVATE (GcalDateSelector, gcal_date_selector, GTK_TYPE_TOGGLE_BUTTON);
+G_DEFINE_TYPE_WITH_PRIVATE (GcalDateSelector, gcal_date_selector, GTK_TYPE_MENU_BUTTON);
 
 static void
 calendar_day_selected (GtkCalendar *calendar,
@@ -201,6 +204,17 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
                                     G_STRUCT_OFFSET (GcalDateSelectorClass, modified),
                                     NULL, NULL, NULL,
                                     G_TYPE_NONE, 0);
+
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/date-selector.ui");
+
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalDateSelector, date_label);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalDateSelector, calendar);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalDateSelector, grid);
+
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), text_inserted);
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), date_entry_focus_out);
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), entry_activated);
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), calendar_day_selected);
 }
 
 static void
@@ -212,6 +226,8 @@ gcal_date_selector_init (GcalDateSelector *self)
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
   priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (self));;
+
+  gtk_widget_init_template (GTK_WIDGET (self));
 
   priv->day = 1;
   priv->month = 1;
@@ -273,94 +289,39 @@ static void
 gcal_date_selector_constructed (GObject *object)
 {
   GcalDateSelectorPrivate *priv;
-  GtkWidget *grid;
-  GtkWidget *label;
-  GtkBuilder *builder;
 
-  gchar *entry_name;
+  GtkWidget *label, *box;
+  GList *l;
 
   priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (object));
 
   /* chaining up */
   G_OBJECT_CLASS (gcal_date_selector_parent_class)->constructed (object);
 
-  /* date label */
-  priv->date_label = gtk_label_new (NULL);
-  gtk_widget_show (priv->date_label);
+  /* set labels, on the first row */
+  label = gtk_grid_get_child_at (GTK_GRID (priv->grid), priv->day_pos, 0);
+  gtk_label_set_text (GTK_LABEL (label), _("Day"));
+  label = gtk_grid_get_child_at (GTK_GRID (priv->grid), priv->month_pos, 0);
+  gtk_label_set_text (GTK_LABEL (label), _("Month"));
+  label = gtk_grid_get_child_at (GTK_GRID (priv->grid), priv->year_pos, 0);
+  gtk_label_set_text (GTK_LABEL (label), _("Year"));
 
-  gtk_container_add (GTK_CONTAINER (object), priv->date_label);
+  /* retrieve components from UI definition: entries */
+  box = gtk_grid_get_child_at (GTK_GRID (priv->grid), 0, 1);
+  for (l = gtk_container_get_children (GTK_CONTAINER (box)); l != NULL; l = g_list_next (l))
+    {
+      gint position;
+      gtk_container_child_get (GTK_CONTAINER (box), l->data, "position", &position, NULL);
+      if (position == priv->day_pos)
+        priv->entries[DAY] = l->data;
+      if (position == priv->month_pos)
+        priv->entries[MONTH] = l->data;
+      if (position == priv->year_pos)
+        priv->entries[YEAR] = l->data;
 
-  /* retrieve components from UI definition */
-  builder = gtk_builder_new ();
-  gtk_builder_add_from_resource (builder, "/org/gnome/calendar/date-selector.ui", NULL);
-
-  /* popover */
-  priv->popover = gtk_popover_new (GTK_WIDGET (object));
-  gtk_popover_set_position (GTK_POPOVER (priv->popover), GTK_POS_BOTTOM);
-
-  /* main grid */
-  grid = (GtkWidget*) gtk_builder_get_object (builder, "grid");
-
-  /* calendar */
-  priv->calendar = (GtkWidget*) gtk_builder_get_object (builder, "calendar");
-
-  /**
-   * Date entries
-   *
-   * day entry
-   */
-  entry_name = g_strdup_printf ("entry%d", priv->day_pos);
-
-  priv->entries[DAY] = (GtkWidget*) gtk_builder_get_object (builder, entry_name);
-  gtk_entry_set_max_length (GTK_ENTRY (priv->entries[DAY]), 2);
-  g_free (entry_name);
-
-  label = gtk_label_new (_("Day"));
-  gtk_widget_show (label);
-  gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
-  gtk_grid_attach (GTK_GRID (grid), label, priv->day_pos, 0, 1, 1);
-
-  /* month entry */
-  entry_name = g_strdup_printf ("entry%d", priv->month_pos);
-
-  priv->entries[MONTH] = (GtkWidget*) gtk_builder_get_object (builder, entry_name);
-  gtk_entry_set_max_length (GTK_ENTRY (priv->entries[MONTH]), 2);
-  g_free (entry_name);
-
-  label = gtk_label_new (_("Month"));
-  gtk_widget_show (label);
-  gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
-  gtk_grid_attach (GTK_GRID (grid), label, priv->month_pos, 0, 1, 1);
-
-  /* year entry */
-  entry_name = g_strdup_printf ("entry%d", priv->year_pos);
-
-  priv->entries[YEAR] = (GtkWidget*) gtk_builder_get_object (builder, entry_name);
-
-  g_free (entry_name);
-
-  label = gtk_label_new (_("Year"));
-  gtk_widget_show (label);
-  gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
-  gtk_grid_attach (GTK_GRID (grid), label, priv->year_pos, 0, 1, 1);
-
-  /* signals and properties */
-  gtk_container_add (GTK_CONTAINER (priv->popover), grid);
-  g_object_bind_property (priv->popover, "visible", object, "active", G_BINDING_BIDIRECTIONAL);
-
-  g_signal_connect (priv->entries[DAY], "insert-text", G_CALLBACK (text_inserted), object);
-  g_signal_connect (priv->entries[DAY], "focus-out-event", G_CALLBACK (date_entry_focus_out), object);
-  g_signal_connect (priv->entries[DAY], "activate", G_CALLBACK (entry_activated), object);
-  g_signal_connect (priv->entries[MONTH], "insert-text", G_CALLBACK (text_inserted), object);
-  g_signal_connect (priv->entries[MONTH], "focus-out-event", G_CALLBACK (date_entry_focus_out), object);
-  g_signal_connect (priv->entries[MONTH], "activate", G_CALLBACK (entry_activated), object);
-  g_signal_connect (priv->entries[YEAR], "insert-text", G_CALLBACK (text_inserted), object);
-  g_signal_connect (priv->entries[YEAR], "focus-out-event", G_CALLBACK (date_entry_focus_out), object);
-  g_signal_connect (priv->entries[YEAR], "activate", G_CALLBACK (entry_activated), object);
-
-  g_signal_connect (priv->calendar, "day-selected", G_CALLBACK (calendar_day_selected), object);
-
-  g_object_unref (builder);
+      if (position == priv->day_pos || position == priv->month_pos)
+        gtk_entry_set_max_length (GTK_ENTRY (l->data), 2);
+    }
 }
 
 /* Public API */
