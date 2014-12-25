@@ -973,9 +973,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               end = last_cell;
             }
 
-          g_debug ("[calculate] event %s from: %d -> %d", gcal_event_widget_get_summary (GCAL_EVENT_WIDGET (child_widget)),
-                   start, end);
-
           visible = get_widget_parts (start, end, natural_height, vertical_cell_space, size_left, cells, lengths);
         }
 
@@ -994,9 +991,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               child_allocation.width = cell_width * g_array_index (lengths, gint, i);
               child_allocation.height = natural_height;
 
-              g_debug ("[allocate] event %s from: %d -- %d --> %d ", gcal_event_widget_get_summary (GCAL_EVENT_WIDGET (child_widget)),
-                       cell_idx, g_array_index (lengths, gint, i), cell_idx + g_array_index (lengths, gint, i));
-
               if (i != 0)
                 {
                   child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
@@ -1008,7 +1002,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                   aux = g_list_append (aux, child_widget);
                 }
               gtk_widget_size_allocate (child_widget, &child_allocation);
-              g_hash_table_remove (priv->hidden_as_overflow, g_strdup (uuid));
+              g_hash_table_remove (priv->hidden_as_overflow, uuid);
 
               /* update size_left */
               for (j = 0; j < g_array_index (lengths, gint, i); j++)
