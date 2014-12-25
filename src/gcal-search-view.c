@@ -29,8 +29,6 @@ typedef struct
 {
   GtkWidget      *listbox;
 
-  GtkSizeGroup   *desc_size_group;
-
   /* property */
   icaltimetype   *date;
   GcalManager    *manager; /* weak reference */
@@ -143,8 +141,6 @@ gcal_search_view_constructed (GObject *object)
 
   gtk_container_add (GTK_CONTAINER (object), priv->listbox);
 
-  priv->desc_size_group =
-    gtk_size_group_new (GTK_SIZE_GROUP_HORIZONTAL);
 
   gcal_manager_set_search_subscriber (
       priv->manager,
