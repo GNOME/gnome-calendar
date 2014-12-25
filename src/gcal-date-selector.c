@@ -291,7 +291,7 @@ gcal_date_selector_constructed (GObject *object)
   GcalDateSelectorPrivate *priv;
 
   GtkWidget *label, *box;
-  GList *l;
+  GList *l, *aux;
 
   priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (object));
 
@@ -308,7 +308,8 @@ gcal_date_selector_constructed (GObject *object)
 
   /* retrieve components from UI definition: entries */
   box = gtk_grid_get_child_at (GTK_GRID (priv->grid), 0, 1);
-  for (l = gtk_container_get_children (GTK_CONTAINER (box)); l != NULL; l = g_list_next (l))
+  aux = gtk_container_get_children (GTK_CONTAINER (box));
+  for (l = aux; l != NULL; l = g_list_next (l))
     {
       gint position;
       gtk_container_child_get (GTK_CONTAINER (box), l->data, "position", &position, NULL);
@@ -322,6 +323,7 @@ gcal_date_selector_constructed (GObject *object)
       if (position == priv->day_pos || position == priv->month_pos)
         gtk_entry_set_max_length (GTK_ENTRY (l->data), 2);
     }
+  g_list_free (aux);
 }
 
 /* Public API */
