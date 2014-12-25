@@ -1479,56 +1479,40 @@ void
 gcal_window_new_event (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
-  gint x, y;
+  icaltimetype *start_date, *end_date;
 
   priv = gcal_window_get_instance_private (window);
 
   /* 1st and 2nd steps */
   set_new_event_mode (window, TRUE);
 
-  gcal_view_mark_current_unit (GCAL_VIEW (priv->views[priv->active_view]),
-                               &x, &y);
-
-  if (priv->event_creation_data != NULL)
-    {
-      g_free (priv->event_creation_data->start_date);
-      g_free (priv->event_creation_data->end_date);
-      g_free (priv->event_creation_data);
-    }
-
-  priv->event_creation_data = g_new0 (NewEventData, 1);
-  priv->event_creation_data->x = x;
-  priv->event_creation_data->y = y;
-  priv->event_creation_data->start_date = gcal_dup_icaltime (priv->active_date);
-  priv->event_creation_data->end_date = gcal_dup_icaltime (priv->active_date);
+  start_date = gcal_dup_icaltime (priv->active_date);
+  end_date = gcal_dup_icaltime (priv->active_date);
 
   /* adjusting dates according to the actual view */
   switch (priv->active_view)
     {
     case GCAL_WINDOW_VIEW_DAY:
     case GCAL_WINDOW_VIEW_WEEK:
-      priv->event_creation_data->end_date->hour += 1;
-      *(priv->event_creation_data->end_date) =
-        icaltime_normalize (*(priv->event_creation_data->end_date));
+      end_date->hour += 1;
+      *end_date = icaltime_normalize (*end_date);
       break;
     case GCAL_WINDOW_VIEW_YEAR:
-      priv->event_creation_data->start_date->day = 1;
-      priv->event_creation_data->end_date->day =
-        icaltime_days_in_month (priv->event_creation_data->end_date->month,
-                                priv->event_creation_data->end_date->year);
+      start_date->day = 1;
+      end_date->day = icaltime_days_in_month (end_date->month, end_date->year);
       break;
     case GCAL_WINDOW_VIEW_MONTH:
-      priv->event_creation_data->start_date->is_date = 1;
-      priv->event_creation_data->end_date->is_date = 1;
+      start_date->is_date = 1;
+      end_date->is_date = 1;
+      end_date->day += 1;
+      *end_date = icaltime_normalize (*end_date);
       break;
     case GCAL_WINDOW_VIEW_LIST:
     case GCAL_WINDOW_VIEW_SEARCH:
       break;
     }
 
-  prepare_new_event_widget (GCAL_WINDOW (window));
-
-  place_new_event_widget (GCAL_WINDOW (window), x, y);
+  create_event_detailed_cb (NULL, start_date, end_date, window);
 }
 
 void
