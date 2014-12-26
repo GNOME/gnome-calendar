@@ -804,6 +804,7 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   GcalEditDialogPrivate *priv;
 
   GdkRGBA color;
+  GdkPixbuf *pix;
   ESourceSelectable *extension;
 
   const gchar *const_text = NULL;
@@ -870,8 +871,9 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
       &color,
       e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
 
-  gtk_image_set_from_pixbuf (GTK_IMAGE (priv->source_image),
-                             gcal_get_pixbuf_from_color (&color, 16));
+  pix = gcal_get_pixbuf_from_color (&color, 16);
+  gtk_image_set_from_pixbuf (GTK_IMAGE (priv->source_image), pix);
+  g_object_unref (pix);
 
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->titlebar),
                                e_source_get_display_name (data->source));

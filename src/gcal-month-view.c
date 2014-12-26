@@ -889,7 +889,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   gtk_style_context_get (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget),
                          "font", &font_desc, "padding-bottom", &padding_bottom, NULL);
 
-  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
   layout = gtk_widget_create_pango_layout (widget, _("Other events"));
   pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, NULL, &font_height);
@@ -1055,7 +1054,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               child_allocation.height = natural_height;
               gtk_widget_show (child_widget);
               gtk_widget_size_allocate (child_widget, &child_allocation);
-              g_hash_table_remove (priv->hidden_as_overflow, g_strdup (uuid));
+              g_hash_table_remove (priv->hidden_as_overflow, uuid);
 
               size_left[i] -= natural_height;
             }
@@ -1678,7 +1677,7 @@ gcal_month_view_remove (GtkContainer *container,
   GList *l, *aux;
   gboolean was_visible = FALSE;
   GtkWidget *master_widget;
-  icaltimetype *date;
+  const icaltimetype *date;
 
   g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (container));
@@ -1708,7 +1707,7 @@ gcal_month_view_remove (GtkContainer *container,
             }
           else
             {
-              date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
+              date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (widget));
               aux = g_hash_table_lookup (priv->single_day_children, GINT_TO_POINTER (date->day));
               aux = g_list_remove (g_list_copy (aux), widget);
               if (aux == NULL)
