@@ -1737,16 +1737,18 @@ gcal_month_view_forall (GtkContainer *container,
                         gpointer      callback_data)
 {
   GcalMonthViewPrivate *priv;
-  GList *l, *aux;
+  GList *l, *l2, *aux;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (container));
 
   aux = NULL;
 
-  for (l = g_hash_table_get_values (priv->children); l != NULL; l = g_list_next (l))
+  l2 = g_hash_table_get_values (priv->children);
+  for (l = l2; l != NULL; l = g_list_next (l))
     aux = g_list_concat (aux, g_list_reverse (g_list_copy (l->data)));
-  g_list_free (l);
+  g_list_free (l2);
 
+  l = aux;
   while (aux != NULL)
     {
       GtkWidget *widget = (GtkWidget*) aux->data;
@@ -1754,7 +1756,7 @@ gcal_month_view_forall (GtkContainer *container,
 
       (*callback) (widget, callback_data);
     }
-  g_list_free (aux);
+  g_list_free (l);
 }
 
 /* GcalView Interface API */
