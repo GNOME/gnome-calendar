@@ -1571,25 +1571,21 @@ gcal_month_view_button_release (GtkWidget      *widget,
       start_date->day -= priv->days_delay;
       start_date->is_date = 1;
 
-      if (priv->start_mark_cell != priv->end_mark_cell)
-        {
-          end_date = gcal_dup_icaltime (priv->date);
-          end_date->day = j - priv->days_delay;
-          end_date->is_date = 1;
+      end_date = gcal_dup_icaltime (priv->date);
+      end_date->day = j - priv->days_delay + 1;
+      end_date->is_date = 1;
 
-          if (start_date->day > end_date->day)
-            {
-              gint day = start_date->day;
-              start_date->day = end_date->day;
-              end_date->day = day;
-            }
+      if (start_date->day > end_date->day)
+        {
+          gint day = start_date->day;
+          start_date->day = end_date->day;
+          end_date->day = day;
         }
 
       g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_date, end_date, x, y);
 
       g_free (start_date);
-      if (end_date != NULL)
-        g_free (end_date);
+      g_free (end_date);
     }
 
 
