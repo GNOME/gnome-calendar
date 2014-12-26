@@ -115,10 +115,6 @@ static icaltimetype*  gcal_year_view_get_initial_date             (GcalView     
 
 static icaltimetype*  gcal_year_view_get_final_date               (GcalView       *view);
 
-static void           gcal_year_view_mark_current_unit            (GcalView       *view,
-                                                                   gint           *x,
-                                                                   gint           *y);
-
 static void           gcal_year_view_clear_marks                  (GcalView       *view);
 
 static gchar*         gcal_year_view_get_left_header              (GcalView       *view);
@@ -202,7 +198,6 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->get_initial_date = gcal_year_view_get_initial_date;
   iface->get_final_date = gcal_year_view_get_final_date;
 
-  iface->mark_current_unit = gcal_year_view_mark_current_unit;
   iface->clear_marks = gcal_year_view_clear_marks;
 
   iface->get_left_header = gcal_year_view_get_left_header;
@@ -946,36 +941,6 @@ gcal_year_view_get_final_date (GcalView *view)
   new_date->second = 0;
 
   return new_date;
-}
-
-static void
-gcal_year_view_mark_current_unit (GcalView *view,
-                                  gint     *x,
-                                  gint     *y)
-{
-  GcalYearViewPrivate *priv;
-
-  gint x_pos, y_pos;
-  gint width, height;
-
-  /* FIXME: This need to include marking the current unit */
-  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (view));
-
-  width = gtk_widget_get_allocated_width (GTK_WIDGET (view));
-  height = gtk_widget_get_allocated_height (GTK_WIDGET (view));
-
-  priv->start_mark_cell = priv->date->month - 1;
-  priv->end_mark_cell = priv->start_mark_cell;
-
-  x_pos = (width / 6) * (( priv->start_mark_cell % 6) + 0.5);
-  y_pos = (height / 2) * (( priv->start_mark_cell / 6) + 0.5);
-
-  gtk_widget_queue_draw (GTK_WIDGET (view));
-
-  if (x != NULL)
-    *x = x_pos;
-  if (y != NULL)
-    *y = y_pos;
 }
 
 static void

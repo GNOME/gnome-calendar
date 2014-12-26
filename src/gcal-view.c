@@ -162,26 +162,6 @@ gcal_view_get_final_date (GcalView *view)
 }
 
 /**
- * gcal_view_mark_current_unit:
- * @view: a #GcalView implementation
- * @x: the x position of the current unit. Returned by the view
- * @y: the y position of the current unit. Returned by the view
- *
- * Mark the current unit in the view as marked for event creation.
- * The (x, y) pair returned is the center of the cell
- **/
-void
-gcal_view_mark_current_unit (GcalView *view,
-                             gint     *x,
-                             gint     *y)
-{
-  g_return_if_fail (GCAL_IS_VIEW (view));
-  g_return_if_fail (GCAL_VIEW_GET_INTERFACE (view)->mark_current_unit);
-
-  GCAL_VIEW_GET_INTERFACE (view)->mark_current_unit (view, x, y);
-}
-
-/**
  * gcal_view_clear_marks:
  * @view: a #GcalView
  *

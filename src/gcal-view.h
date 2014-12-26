@@ -54,7 +54,6 @@ struct _GcalViewIface
   icaltimetype*   (*get_final_date)                     (GcalView *view);
 
   /* Marks related API */
-  void            (*mark_current_unit)                  (GcalView     *view, gint *x, gint *y);
   void            (*clear_marks)                        (GcalView     *view);
 
   /* Update NavBar headings */
@@ -76,10 +75,6 @@ icaltimetype* gcal_view_get_date                      (GcalView     *view);
 icaltimetype* gcal_view_get_initial_date              (GcalView     *view);
 
 icaltimetype* gcal_view_get_final_date                (GcalView     *view);
-
-void          gcal_view_mark_current_unit             (GcalView     *view,
-                                                       gint         *x,
-                                                       gint         *y);
 
 void          gcal_view_clear_marks                   (GcalView     *view);
 

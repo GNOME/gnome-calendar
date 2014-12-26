@@ -564,7 +564,6 @@ gcal_view_interface_init (GcalViewIface *iface)
   iface->get_initial_date = gcal_week_view_get_initial_date;
   iface->get_final_date = gcal_week_view_get_final_date;
 
-  /* iface->mark_current_unit = gcal_week_view_mark_current_unit; */
   /* iface->clear_marks = gcal_week_view_clear_marks; */
 
   iface->get_left_header = gcal_week_view_get_left_header;
