@@ -200,8 +200,8 @@ msgstr "Další události"
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Další událost"
-msgstr[1] "Další události"
-msgstr[2] "Další události"
+msgstr[1] "Další %d události"
+msgstr[2] "Další %d událostí"
 
 #: ../src/gcal-date-selector.c:337
 msgid "Day"
