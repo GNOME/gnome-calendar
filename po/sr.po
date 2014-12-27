@@ -1,14 +1,14 @@
 # Serbian translation for gnome-calendar.
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
-# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013.
+# Мирослав Николић <miroslavnikolic@rocketmail.com>, 2013—2014.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-08-03 14:16+0000\n"
-"PO-Revision-Date: 2013-09-08 08:30+0200\n"
+"POT-Creation-Date: 2014-12-23 17:15+0000\n"
+"PO-Revision-Date: 2014-12-27 14:12+0200\n"
 "Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
 "Language-Team: Serbian <gnom@prevod.org>\n"
 "Language: sr\n"
@@ -19,12 +19,12 @@ msgstr ""
 "n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Project-Style: gnome\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:158
-#: ../src/gcal-application.c:396
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../src/gcal-application.c:432
+#: ../src/gcal-window.c:1006
 msgid "Calendar"
 msgstr "Календар"
 
-#: ../data/gnome-calendar.desktop.in.in.h:2
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
 msgstr "Приступите и управљајте календаром"
 
@@ -37,7 +37,6 @@ msgid "Window maximized state"
 msgstr "Стање увећаног прозора"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:3
-#| msgid "Window maximized"
 msgid "Window size"
 msgstr "Величина прозора"
 
@@ -61,227 +60,271 @@ msgstr "Врста радног приказа"
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Врста приказа радног прозора, основно је: месечни приказ"
 
-#: ../src/gcal-application.c:87
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "Списак искључених извора"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "Извори који су искључени приликом последњег покретања календара"
+
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "Откажи"
+
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:675
+msgid "Done"
+msgstr "Урађено"
+
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "Назив"
+
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "Почиње"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "Завршава"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "Белешке"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "Место"
+
+#: ../data/ui/edit-dialog.ui.h:8
+msgid "All day"
+msgstr "Читав дан"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "Обриши догађај"
+
+#: ../data/ui/menus.ui.h:1
+#| msgid "New Event"
+msgid "_New Event"
+msgstr "_Нови догађај"
+
+#: ../data/ui/menus.ui.h:2
+#| msgid "Search..."
+msgid "_Search…"
+msgstr "_Потражи…"
+
+#: ../data/ui/menus.ui.h:3
+#| msgid "About"
+msgid "_About"
+msgstr "_О програму"
+
+#: ../data/ui/menus.ui.h:4
+#| msgid "Quit"
+msgid "_Quit"
+msgstr "_Изађи"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "_Усагласи"
+
+#: ../data/ui/time-selector.ui.h:1
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:2 ../src/gcal-week-view.c:425
+msgid "AM"
+msgstr "ПрП"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:425
+msgid "PM"
+msgstr "ПоП"
+
+#: ../data/ui/window.ui.h:1
+msgid "Today"
+msgstr "Данас"
+
+#: ../data/ui/window.ui.h:2
+msgid "Create"
+msgstr "Направи"
+
+#: ../data/ui/window.ui.h:3
+#| msgid "More details"
+msgid "More Details"
+msgstr "Више појединости"
+
+#: ../src/gcal-application.c:95
 msgid "Display version number"
 msgstr "Приказује број издања"
 
-#: ../src/gcal-application.c:204
-msgid "Unable to initialize GtkClutter"
-msgstr "Не могу да покренем Гтк Галамџију"
+#: ../src/gcal-application.c:100
+msgid "Open calendar on the passed date"
+msgstr "Отвара календар за прошли датум"
 
-#: ../src/gcal-application.c:245
+#: ../src/gcal-application.c:292
 msgid "- Calendar management"
 msgstr "— Управљање календаром"
 
-#: ../src/gcal-application.c:300
-msgid "Weeks"
-msgstr "Недеље"
-
-#: ../src/gcal-application.c:301
-msgid "Months"
-msgstr "Месеци"
-
-#: ../src/gcal-application.c:302
-msgid "Years"
-msgstr "Године"
-
-#: ../src/gcal-application.c:304
-msgid "View as"
-msgstr "Прикажи као"
-
-#: ../src/gcal-application.c:312
-msgid "About"
-msgstr "О програму"
-
-#: ../src/gcal-application.c:320
-msgid "Quit"
-msgstr "Изађи"
-
-#: ../src/gcal-application.c:384
+#: ../src/gcal-application.c:420
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Ауторска права © %Id аутори Календара"
 
-#: ../src/gcal-application.c:390
+#: ../src/gcal-application.c:426
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Ауторска права © %Id–%Id аутори Календара"
 
-#: ../src/gcal-application.c:403
+#: ../src/gcal-application.c:439
 msgid "translator-credits"
 msgstr ""
 "  Мирослав Николић\n"
 "\n"
 "  http://prevod.org — превод на српски језик"
 
-#: ../src/gcal-date-entry.c:162
-msgid "Change the date"
-msgstr "Измените датум"
+#: ../src/gcal-edit-dialog.c:675
+msgid "Save"
+msgstr "Сачувај"
 
-#: ../src/gcal-edit-dialog.c:156
-msgid "Event Details"
-msgstr "Појединости догађаја"
+#: ../src/gcal-edit-dialog.c:863
+msgid "Unnamed event"
+msgstr "Неименовани догађај"
 
-#. Summary, title
-#: ../src/gcal-edit-dialog.c:171
-msgid "Title"
-msgstr "Назив"
+#: ../src/gcal-month-view.c:644
+msgid "Add new event..."
+msgstr "Додај нови догађај..."
 
-#. Start date and time
-#: ../src/gcal-edit-dialog.c:199
-msgid "Starts"
-msgstr "Почиње"
+#: ../src/gcal-month-view.c:898
+msgid "Other events"
+msgstr "Други догађаји"
 
-#: ../src/gcal-edit-dialog.c:215
-msgid "All day"
-msgstr "Читав дан"
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1220
+#, c-format
+#| msgid "New Event"
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Други %d догађај"
+msgstr[1] "Друга %d догађаја"
+msgstr[2] "Других %d догађаја"
+msgstr[3] "Други догађај"
 
-#. End date and time
-#: ../src/gcal-edit-dialog.c:221
-msgid "Ends"
-msgstr "Завршава"
+#: ../src/gcal-date-selector.c:337
+msgid "Day"
+msgstr "Дан"
 
-#. Location, location, location
-#: ../src/gcal-edit-dialog.c:238
-msgid "Location"
-msgstr "Место"
+#: ../src/gcal-date-selector.c:349 ../src/gcal-window.c:1278
+msgid "Month"
+msgstr "Месец"
 
-#. Notes, description
-#: ../src/gcal-edit-dialog.c:252
-msgid "Notes"
-msgstr "Белешке"
+#: ../src/gcal-date-selector.c:364 ../src/gcal-window.c:1284
+msgid "Year"
+msgstr "Година"
 
-#. done button
-#. done
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-searchbar.c:158
-#: ../src/gcal-toolbar.c:611
-msgid "Done"
-msgstr "Урађено"
+#: ../src/gcal-time-selector.c:97
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d:%.2d прп"
 
-#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:291
-msgid "New Event"
-msgstr "Нови догађај"
+#: ../src/gcal-time-selector.c:99
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d:%.2d поп"
 
-#: ../src/gcal-event-overlay.c:162
-msgid "Create"
-msgstr "Направи"
+#: ../src/gcal-week-view.c:428 ../src/gcal-week-view.c:501
+msgid "Midnight"
+msgstr "Поноћ"
 
-#: ../src/gcal-event-overlay.c:171
-msgid "More details"
-msgstr "Више појединости"
+#: ../src/gcal-week-view.c:430 ../src/gcal-week-view.c:504
+msgid "Noon"
+msgstr "Подне"
 
-#: ../src/gcal-event-overlay.c:185
-msgid "What (e.g. Alien Invasion)"
-msgstr "Шта (нпр. Напад свемираца)"
+#: ../src/gcal-week-view.c:507
+msgid "00:00 PM"
+msgstr "00:00 поп"
 
-#: ../src/gcal-event-overlay.c:507
+#: ../src/gcal-week-view.c:1388 ../src/gcal-window.c:1273
+msgid "Week"
+msgstr "Седмица"
+
+#: ../src/gcal-window.c:593
 #, c-format
 msgid "New Event on %s"
 msgstr "Нови догађај „%s“"
 
-#: ../src/gcal-event-overlay.c:524
-#, c-format
-msgid "New Event from %s to %s"
-msgstr "Нови догађај од %s до %s"
-
-#: ../src/gcal-manager.c:1506
-msgid "Notification"
-msgstr "Обавештења"
-
-#: ../src/gcal-manager.c:1508
-msgid "Email"
-msgstr "Ел. пошта"
-
-#: ../src/gcal-manager.c:1522
-msgid "days"
-msgstr "дана"
-
-#: ../src/gcal-manager.c:1528
-msgid "weeks"
-msgstr "недеља"
-
-#: ../src/gcal-manager.c:1534
-msgid "hours"
-msgstr "сата"
-
-#: ../src/gcal-manager.c:1540
-msgid "minutes"
-msgstr "минута"
-
-#: ../src/gcal-manager.c:1552
-msgid "before"
-msgstr "пре"
-
-#. Here translators should put the widgest letter in their alphabet, this
-#. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1026 ../src/gcal-week-view.c:1083
-#: ../src/gcal-year-view.c:925
-msgid "WWW 99 - WWW 99"
-msgstr "ШШШ 99 — ШШШ 99"
-
-#: ../src/gcal-searchbar.c:179
-msgid "Search..."
-msgstr "Потражи..."
-
-#: ../src/gcal-time-entry.c:126
-msgid "Change the time"
-msgstr "Измените време"
-
-#. day
-#: ../src/gcal-toolbar.c:317
-msgid "Day"
-msgstr "Дан"
-
-#. week
-#: ../src/gcal-toolbar.c:334 ../src/gcal-week-view.c:1097
-msgid "Week"
-msgstr "Седмица"
-
-#. month
-#: ../src/gcal-toolbar.c:351
-msgid "Month"
-msgstr "Месец"
-
-#. year
-#: ../src/gcal-toolbar.c:368
-msgid "Year"
-msgstr "Година"
-
-#. list
-#: ../src/gcal-toolbar.c:385
-msgid "List"
-msgstr "Списак"
-
-#: ../src/gcal-toolbar.c:465
-msgid "Back"
-msgstr "Назад"
-
-#. reset morphing edit_button
-#: ../src/gcal-toolbar.c:486 ../src/gcal-toolbar.c:498
-#: ../src/gcal-toolbar.c:616
-msgid "Edit"
-msgstr "Уреди"
-
-#: ../src/gcal-week-view.c:1283
-msgid "AM"
-msgstr "ПрП"
-
-#: ../src/gcal-week-view.c:1283
-msgid "PM"
-msgstr "ПоП"
-
-#: ../src/gcal-week-view.c:1286 ../src/gcal-week-view.c:1358
-msgid "Midnight"
-msgstr "Поноћ"
-
-#: ../src/gcal-week-view.c:1288 ../src/gcal-week-view.c:1361
-msgid "Noon"
-msgstr "Подне"
-
-#: ../src/gcal-window.c:1378
+#: ../src/gcal-window.c:941
 msgid "Event deleted"
 msgstr "Догађај је обрисан"
 
-#: ../src/gcal-year-view.c:929
+#: ../src/gcal-window.c:942
+msgid "Undo"
+msgstr "Поништи"
+
+#: ../src/gcal-window.c:1032
 #, c-format
-msgid "Year %d"
-msgstr "%d. година"
+msgid "Results for \"%s\""
+msgstr "Резултати за „%s“"
+
+#~ msgid "Unable to initialize GtkClutter"
+#~ msgstr "Не могу да покренем Гтк Галамџију"
+
+#~ msgid "Weeks"
+#~ msgstr "Недеље"
+
+#~ msgid "Months"
+#~ msgstr "Месеци"
+
+#~ msgid "Years"
+#~ msgstr "Године"
+
+#~ msgid "View as"
+#~ msgstr "Прикажи као"
+
+#~ msgid "Change the date"
+#~ msgstr "Измените датум"
+
+#~ msgid "Event Details"
+#~ msgstr "Појединости догађаја"
+
+#~ msgid "What (e.g. Alien Invasion)"
+#~ msgstr "Шта (нпр. Напад свемираца)"
+
+#~ msgid "New Event from %s to %s"
+#~ msgstr "Нови догађај од %s до %s"
+
+#~ msgid "Notification"
+#~ msgstr "Обавештења"
+
+#~ msgid "Email"
+#~ msgstr "Ел. пошта"
+
+#~ msgid "days"
+#~ msgstr "дана"
+
+#~ msgid "weeks"
+#~ msgstr "недеља"
+
+#~ msgid "hours"
+#~ msgstr "сата"
+
+#~ msgid "minutes"
+#~ msgstr "минута"
+
+#~ msgid "before"
+#~ msgstr "пре"
+
+#~ msgid "WWW 99 - WWW 99"
+#~ msgstr "ШШШ 99 — ШШШ 99"
+
+#~ msgid "Change the time"
+#~ msgstr "Измените време"
+
+#~ msgid "List"
+#~ msgstr "Списак"
+
+#~ msgid "Back"
+#~ msgstr "Назад"
+
+#~ msgid "Edit"
+#~ msgstr "Уреди"
+
+#~ msgid "Year %d"
+#~ msgstr "%d. година"
