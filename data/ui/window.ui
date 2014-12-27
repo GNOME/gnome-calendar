@@ -27,6 +27,7 @@
                 <property name="no_show_all">True</property>
                 <property name="hexpand">True</property>
                 <property name="show_close_button">True</property>
+		<property name="search-mode-enabled" bind-source="search_button" bind-property="active" bind-flags="bidirectional"/>
                 <signal name="notify::search-mode-enabled" handler="search_toggled" object="GcalWindow" swapped="no"/>
                 <child>
                   <object class="GtkGrid" id="search_entry_grid">
@@ -67,9 +68,6 @@
                 <property name="transition_type">slide-left-right</property>
                 <signal name="notify::transition-running" handler="stack_transition_running" object="GcalWindow" swapped="no"/>
                 <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
-                <child>
-                  <placeholder/>
-                </child>
                 <style>
                   <class name="views"/>
                 </style>
