@@ -1005,6 +1005,14 @@ static GtkWidget*
 gcal_year_view_get_by_uuid (GcalView    *view,
                             const gchar *uuid)
 {
+  GcalSubscriberPrivate *priv;
+  GList *l;
+
+  priv = GCAL_SUBSCRIBER (view)->priv;
+  l = g_hash_table_lookup (priv->children, uuid);
+  if (l != NULL)
+    return (GtkWidget*) l->data;
+
   return NULL;
 }
 
