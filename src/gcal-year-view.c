@@ -22,7 +22,6 @@
 #include "gcal-subscriber-view-private.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
-#include "gcal-event-widget.h"
 
 #include <glib/gi18n.h>
 
