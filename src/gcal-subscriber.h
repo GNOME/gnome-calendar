@@ -21,6 +21,7 @@
 #define __GCAL_SUBSCRIBER_H__
 
 #include "gcal-manager.h"
+#include "gcal-event-widget.h"
 
 #include <gtk/gtk.h>
 
@@ -35,15 +36,22 @@ G_BEGIN_DECLS
 
 typedef struct _GcalSubscriber                       GcalSubscriber;
 typedef struct _GcalSubscriberClass                  GcalSubscriberClass;
+typedef struct _GcalSubscriberPrivate                GcalSubscriberPrivate;
 
 struct _GcalSubscriber
 {
   GtkContainer parent;
+
+  GcalSubscriberPrivate *priv;
 };
 
 struct _GcalSubscriberClass
 {
   GtkContainerClass parent_class;
+
+  /*< public >*/
+  gboolean  (*is_child_multicell) (GcalSubscriber *subscriber, GcalEventWidget *child);
+  guint     (*get_child_cell)     (GcalSubscriber *subscriber, GcalEventWidget *child);
 };
 
 GType          gcal_subscriber_get_type         (void);

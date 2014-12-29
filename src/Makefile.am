@@ -31,6 +31,7 @@ gnome_calendar_SOURCES =                                  \
     gcal-view.h                                           \
     gcal-subscriber.c                                     \
     gcal-subscriber.h                                     \
+    gcal-subscriber-private.h                             \
     gcal-month-view.c                                     \
     gcal-month-view.h                                     \
     gcal-week-view.c                                      \
