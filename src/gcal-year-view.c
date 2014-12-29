@@ -60,6 +60,14 @@ static gboolean       get_widget_parts                            (gint         
                                                                    GArray          *cells,
                                                                    GArray          *lengths);
 
+static gboolean       get_widget_parts                            (gint             first_cell,
+                                                                   gint             last_cell,
+                                                                   gint             natural_height,
+                                                                   gdouble          vertical_cell_space,
+                                                                   gdouble         *size_left,
+                                                                   GArray          *cells,
+                                                                   GArray          *lengths);
+
 static void           gcal_view_interface_init                    (GcalViewIface  *iface);
 
 static void           gcal_year_view_set_property                 (GObject        *object,
@@ -120,6 +128,53 @@ G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GCAL_TYPE_SUBSCRIBER_VIEW
                          G_ADD_PRIVATE (GcalYearView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,gcal_view_interface_init));
 
+
+static gboolean
+get_widget_parts (gint     first_cell,
+                  gint     last_cell,
+                  gint     natural_height,
+                  gdouble  vertical_cell_space,
+                  gdouble *size_left,
+                  GArray  *cells,
+                  GArray  *lengths)
+{
+  gint i;
+  gint current_part_length;
+  gdouble y, old_y = - 1.0;
+
+  if (last_cell < first_cell)
+    {
+      gint swap = last_cell;
+      last_cell = first_cell;
+      first_cell = swap;
+    }
+
+  for (i = first_cell; i <= last_cell; i++)
+    {
+      if (size_left[i] < natural_height)
+        {
+          return FALSE;
+        }
+      else
+        {
+          y = vertical_cell_space - size_left[i];
+          if (y != old_y)
+            {
+              current_part_length = 1;
+              g_array_append_val (cells, i);
+              g_array_append_val (lengths, current_part_length);
+              old_y = y;
+            }
+          else
+            {
+              current_part_length++;
+              g_array_index (lengths, gint, lengths->len - 1) = current_part_length;
+            }
+        }
+    }
+
+  return TRUE;
+}
 
 static gboolean
 get_widget_parts (gint     first_cell,
