@@ -326,28 +326,32 @@ gcal_subscriber_component_modified (ECalDataModelSubscriber *subscriber,
                                     ECalClient              *client,
                                     ECalComponent           *comp)
 {
-  GtkWidget *event;
-  GtkWidget *widget;
+  GcalSubscriberPrivate *priv;
+  GList *l;
+  GtkWidget *new_widget;
   GcalEventData *data;
 
+  priv = gcal_subscriber_get_instance_private (GCAL_SUBSCRIBER (subscriber));
   data = g_new0 (GcalEventData, 1);
   data->source = e_client_get_source (E_CLIENT (client));
   data->event_component = e_cal_component_clone (comp);
 
-  event = gcal_event_widget_new_from_data (data);
+  new_widget = gcal_event_widget_new_from_data (data);
   g_free (data);
 
-  widget =
-    gcal_view_get_by_uuid (
-        GCAL_VIEW (subscriber),
-        gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (event)));
-
-  if (widget != NULL)
+  l = g_hash_table_lookup (priv->children, gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (new_widget)));
+  if (l != NULL)
     {
-      gtk_widget_destroy (widget);
+      gtk_widget_destroy (l->data);
 
-      gtk_widget_show (event);
-      gtk_container_add (GTK_CONTAINER (subscriber), event);
+      gtk_widget_show (new_widget);
+      gtk_container_add (GTK_CONTAINER (subscriber), new_widget);
+    }
+  else
+    {
+      g_warning ("%s: Widget with uuid: %s not found",
+                 G_STRFUNC, gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (new_widget)));
+      gtk_widget_destroy (new_widget);
     }
 }
 
@@ -357,23 +361,24 @@ gcal_subscriber_component_removed (ECalDataModelSubscriber *subscriber,
                                    const gchar             *uid,
                                    const gchar             *rid)
 {
-  GtkWidget *widget;
+  GcalSubscriberPrivate *priv;
   const gchar *sid;
   gchar *uuid;
+  GList *l;
+
+  priv = gcal_subscriber_get_instance_private (GCAL_SUBSCRIBER (subscriber));
 
   sid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
-
   if (rid != NULL)
       uuid = g_strdup_printf ("%s:%s:%s", sid, uid, rid);
   else
     uuid = g_strdup_printf ("%s:%s", sid, uid);
 
-  widget = gcal_view_get_by_uuid (GCAL_VIEW (subscriber), uuid);
-  if (widget != NULL)
-    gtk_widget_destroy (widget);
+  l = g_hash_table_lookup (priv->children, uuid);
+  if (l != NULL)
+    gtk_widget_destroy (l->data);
   else
-    g_warning ("%s: Widget with uuid: %s not found",
-               G_STRFUNC, uuid);
+    g_warning ("%s: Widget with uuid: %s not found", G_STRFUNC, uuid);
 
   g_free (uuid);
 }
