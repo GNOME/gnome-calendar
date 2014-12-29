@@ -19,6 +19,7 @@
  */
 
 #include "gcal-year-view.h"
+#include "gcal-subscriber-private.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
 #include "gcal-event-widget.h"
@@ -27,28 +28,20 @@
 
 typedef struct
 {
-  /**
-   * This is where we keep the refs of the child widgets.
-   * Every child added to the list placed in the position
-   * of it corresponding cell number.
-   * The cell number is calculated in _add method.
-   * cell_index = date->month - 1
-   */
-  GList          *months [12];
 
   GdkWindow      *event_window;
 
-  /* property */
-  icaltimetype   *date;
-  GcalManager    *manager; /* weak reference */
-
+  /* input events flags */
   gint            clicked_cell;
-
   gint            start_mark_cell;
   gint            end_mark_cell;
 
   /* text direction factors */
   gint            k;
+
+  /* property */
+  icaltimetype   *date;
+  GcalManager    *manager; /* weak reference */
 } GcalYearViewPrivate;
 
 enum
@@ -100,18 +93,6 @@ static gboolean       gcal_year_view_button_release               (GtkWidget    
 
 static void           gcal_year_view_direction_changed            (GtkWidget        *widget,
                                                                    GtkTextDirection  previous_direction);
-static void           gcal_year_view_add                          (GtkContainer   *constainer,
-                                                                   GtkWidget      *widget);
-
-static void           gcal_year_view_remove                       (GtkContainer   *constainer,
-                                                                   GtkWidget      *widget);
-
-static void           gcal_year_view_forall                       (GtkContainer   *container,
-                                                                   gboolean        include_internals,
-                                                                   GtkCallback     callback,
-                                                                   gpointer        callback_data);
-
-
 static icaltimetype*  gcal_year_view_get_initial_date             (GcalView       *view);
 
 static icaltimetype*  gcal_year_view_get_final_date               (GcalView       *view);
@@ -145,14 +126,9 @@ event_opened (GcalEventWidget *event_widget,
 static void
 gcal_year_view_class_init (GcalYearViewClass *klass)
 {
-  GtkContainerClass *container_class;
   GtkWidgetClass *widget_class;
   GObjectClass *object_class;
 
-  container_class = GTK_CONTAINER_CLASS (klass);
-  container_class->add = gcal_year_view_add;
-  container_class->remove = gcal_year_view_remove;
-  container_class->forall = gcal_year_view_forall;
 
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->realize = gcal_year_view_realize;
@@ -383,19 +359,6 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
                               GtkAllocation *allocation)
 {
   GcalYearViewPrivate *priv;
-  gint i;
-  GList *l;
-
-  GtkBorder padding;
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
-
-  gint font_height;
-
-  gdouble added_height;
-  gdouble horizontal_block;
-  gdouble vertical_block;
-  gdouble vertical_cell_margin;
 
   priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
 
@@ -407,79 +370,6 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
                               allocation->y,
                               allocation->width,
                               allocation->height);
-    }
-
-  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
-                                 gtk_widget_get_state_flags (widget),
-                                 &padding);
-  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
-
-  gtk_style_context_get (gtk_widget_get_style_context (widget),
-                         gtk_widget_get_state_flags (widget),
-                         "font", &font_desc, NULL);
-  pango_layout_set_font_description (layout, font_desc);
-  pango_layout_get_pixel_size (layout, NULL, &font_height);
-  pango_font_description_free (font_desc);
-  g_object_unref (layout);
-
-  horizontal_block = allocation->width / 6.0;
-  vertical_block = allocation->height / 2.0;
-  vertical_cell_margin = padding.top + font_height;
-
-  for (i = 0; i < 12; i++)
-    {
-      added_height = 0;
-      for (l = priv->months[i]; l != NULL; l = l->next)
-        {
-          GcalViewChild *child;
-          gint pos_x;
-          gint pos_y;
-          gint min_height;
-          gint natural_height;
-          GtkAllocation child_allocation;
-
-          child = (GcalViewChild*) l->data;
-
-          pos_x = ( i % 6 ) * horizontal_block;
-          pos_y = ( i / 6 ) * vertical_block;
-
-          if ((! gtk_widget_get_visible (child->widget))
-              && (! child->hidden))
-            continue;
-
-          gtk_widget_get_preferred_height (child->widget,
-                                           &min_height,
-                                           &natural_height);
-          child_allocation.x = pos_x;
-          child_allocation.y = vertical_cell_margin + pos_y;
-          child_allocation.width = horizontal_block;
-          child_allocation.height = MIN (natural_height, vertical_block);
-          if (added_height + vertical_cell_margin + child_allocation.height
-              > vertical_block)
-            {
-              gtk_widget_hide (child->widget);
-              child->hidden = TRUE;
-
-              l = l->next;
-              for (; l != NULL; l = l->next)
-                {
-                  child = (GcalViewChild*) l->data;
-
-                  gtk_widget_hide (child->widget);
-                  child->hidden = TRUE;
-                }
-
-              break;
-            }
-          else
-            {
-              gtk_widget_show (child->widget);
-              child->hidden = FALSE;
-              child_allocation.y = child_allocation.y + added_height;
-              gtk_widget_size_allocate (child->widget, &child_allocation);
-              added_height += child_allocation.height;
-            }
-        }
     }
 }
 
@@ -727,121 +617,6 @@ gcal_year_view_direction_changed (GtkWidget        *widget,
     priv->k = 1;
 }
 
-static void
-gcal_year_view_add (GtkContainer *container,
-                    GtkWidget    *widget)
-{
-  GcalYearViewPrivate *priv;
-  GList *l;
-  icaltimetype *date;
-
-  GcalViewChild *new_child;
-
-  g_return_if_fail (GCAL_IS_EVENT_WIDGET (widget));
-  g_return_if_fail (gtk_widget_get_parent (widget) == NULL);
-  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (container));
-
-  /* Check if it's already added for date */
-  date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
-
-  for (l = priv->months[date->month - 1]; l != NULL; l = l->next)
-    {
-      GtkWidget *event;
-
-      event = GTK_WIDGET (((GcalViewChild*) l->data)->widget);
-      if (gcal_event_widget_equal (GCAL_EVENT_WIDGET (widget),
-                                   GCAL_EVENT_WIDGET (event)))
-        {
-          //TODO: remove once the main-dev phase its over
-          g_warning ("Trying to add an event with the same uuid to the view");
-          g_object_unref (widget); /* FIXME: check if this destroy it */
-          return;
-        }
-    }
-
-  new_child = g_new0 (GcalViewChild, 1);
-  new_child->widget = widget;
-  new_child->hidden = FALSE;
-
-  priv->months[date->month - 1] =
-    g_list_insert_sorted (priv->months[date->month - 1],
-                          new_child,
-                          gcal_compare_event_widget_by_date);
-
-  gtk_widget_set_parent (widget, GTK_WIDGET (container));
-
-  g_signal_connect (widget,
-                    "activate",
-                    G_CALLBACK (event_opened),
-                    container);
-  g_free (date);
-}
-
-static void
-gcal_year_view_remove (GtkContainer *container,
-                       GtkWidget    *widget)
-{
-  GcalYearViewPrivate *priv;
-  gint i;
-  GList *l;
-
-  g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
-  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (container));
-
-  for (i = 0; i < 12; i++)
-    {
-      for (l = priv->months[i]; l != NULL; l = l->next)
-        {
-          GcalViewChild *child;
-
-          child = (GcalViewChild*) l->data;
-          if (child->widget == widget)
-            {
-              gboolean was_visible;
-
-              was_visible = gtk_widget_get_visible (widget);
-              gtk_widget_unparent (widget);
-
-              priv->months[i] = g_list_remove (priv->months[i], child);
-              g_free (child);
-
-              if (was_visible)
-                gtk_widget_queue_resize (GTK_WIDGET (container));
-
-              return;
-            }
-        }
-    }
-}
-
-static void
-gcal_year_view_forall (GtkContainer *container,
-                       gboolean      include_internals,
-                       GtkCallback   callback,
-                       gpointer      callback_data)
-{
-  GcalYearViewPrivate *priv;
-  gint i;
-  GList *l;
-
-  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (container));
-
-  for (i = 0; i < 12; i++)
-    {
-      l = priv->months[i];
-
-      while (l)
-        {
-          GcalViewChild *child;
-
-          child = (GcalViewChild*) l->data;
-          l  = l->next;
-
-          (* callback) (child->widget, callback_data);
-        }
-    }
-}
-
 /* GcalView Interface API */
 /**
  * gcal_year_view_get_initial_date:
@@ -929,26 +704,6 @@ static GtkWidget*
 gcal_year_view_get_by_uuid (GcalView    *view,
                             const gchar *uuid)
 {
-  GcalYearViewPrivate *priv;
-  gint i;
-  GList *l;
-
-  g_return_val_if_fail (GCAL_IS_YEAR_VIEW (view), NULL);
-  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (view));
-
-  for (i = 0; i < 12; i++)
-    {
-      for (l = priv->months[i]; l != NULL; l = l->next)
-        {
-          GcalViewChild *child;
-          const gchar* widget_uuid;
-
-          child = (GcalViewChild*) l->data;
-          widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
-          if (g_strcmp0 (uuid, widget_uuid) == 0)
-            return child->widget;
-        }
-    }
   return NULL;
 }
 
