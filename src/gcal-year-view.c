@@ -99,6 +99,14 @@ static gboolean       gcal_year_view_button_release               (GtkWidget    
 
 static void           gcal_year_view_direction_changed            (GtkWidget        *widget,
                                                                    GtkTextDirection  previous_direction);
+<<<<<<< HEAD
+=======
+static void           gcal_year_view_add                          (GtkContainer   *constainer,
+                                                                   GtkWidget      *widget);
+
+static void           gcal_year_view_remove                       (GtkContainer   *constainer,
+                                                                   GtkWidget      *widget);
+>>>>>>> year-view: add orientation factor
 
 static gboolean       gcal_year_view_is_child_multimonth          (GcalSubscriberView  *subscriber,
                                                                    GcalEventWidget     *child);
@@ -870,6 +878,72 @@ gcal_year_view_button_release (GtkWidget      *widget,
 static void
 gcal_year_view_direction_changed (GtkWidget        *widget,
                                   GtkTextDirection  previous_direction)
+<<<<<<< HEAD
+=======
+{
+  GcalYearViewPrivate *priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
+
+  if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
+    priv->k = 0;
+  else if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
+    priv->k = 1;
+}
+
+static void
+gcal_year_view_add (GtkContainer *container,
+                    GtkWidget    *widget)
+{
+  GcalYearViewPrivate *priv;
+  GList *l;
+  icaltimetype *date;
+
+  GcalViewChild *new_child;
+
+  g_return_if_fail (GCAL_IS_EVENT_WIDGET (widget));
+  g_return_if_fail (gtk_widget_get_parent (widget) == NULL);
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (container));
+
+  /* Check if it's already added for date */
+  date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
+
+  for (l = priv->months[date->month - 1]; l != NULL; l = l->next)
+    {
+      GtkWidget *event;
+
+      event = GTK_WIDGET (((GcalViewChild*) l->data)->widget);
+      if (gcal_event_widget_equal (GCAL_EVENT_WIDGET (widget),
+                                   GCAL_EVENT_WIDGET (event)))
+        {
+          //TODO: remove once the main-dev phase its over
+          g_warning ("Trying to add an event with the same uuid to the view");
+          g_object_unref (widget); /* FIXME: check if this destroy it */
+          return;
+        }
+    }
+
+  new_child = g_new0 (GcalViewChild, 1);
+  new_child->widget = widget;
+  new_child->hidden = FALSE;
+
+  priv->months[date->month - 1] =
+    g_list_insert_sorted (priv->months[date->month - 1],
+                          new_child,
+                          gcal_compare_event_widget_by_date);
+
+  gtk_widget_set_parent (widget, GTK_WIDGET (container));
+
+  g_signal_connect (widget,
+                    "activate",
+                    G_CALLBACK (event_opened),
+                    container);
+  g_free (date);
+}
+
+static void
+gcal_year_view_remove (GtkContainer *container,
+                       GtkWidget    *widget)
+>>>>>>> year-view: add orientation factor
 {
   GcalYearViewPrivate *priv;
   priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
