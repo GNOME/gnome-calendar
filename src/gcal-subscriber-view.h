@@ -52,9 +52,15 @@ struct _GcalSubscriberViewClass
   /*< public >*/
   gboolean  (*is_child_multicell) (GcalSubscriberView *subscriber, GcalEventWidget *child);
   guint     (*get_child_cell)     (GcalSubscriberView *subscriber, GcalEventWidget *child);
+
+  /* gcal-view replacements */
+  GtkWidget*     (*get_child_by_uuid)        (GcalSubscriberView *subscriber_view, const gchar *uuid);
 };
 
-GType          gcal_subscriber_view_get_type         (void);
+GType          gcal_subscriber_view_get_type           (void);
+
+GtkWidget*     gcal_subscriber_view_get_child_by_uuid  (GcalSubscriberView *subscriber_view,
+							const gchar        *uuid);
 
 G_END_DECLS
 

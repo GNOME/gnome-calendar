@@ -392,3 +392,27 @@ static void
 gcal_subscriber_view_thaw (ECalDataModelSubscriber *subscriber)
 {
 }
+
+/* Public API */
+GtkWidget*
+gcal_subscriber_view_get_child_by_uuid (GcalSubscriberView *subscriber_view,
+                                        const gchar        *uuid)
+{
+  GcalSubscriberViewClass *klass;
+  GcalSubscriberViewPrivate *priv;
+  GList *l;
+
+  g_return_val_if_fail (GCAL_IS_SUBSCRIBER_VIEW (subscriber_view), NULL);
+
+  /* Allow for descendants to hook in here */
+  klass = GCAL_SUBSCRIBER_VIEW_GET_CLASS (subscriber_view);
+  if (klass->get_child_by_uuid)
+    return klass->get_child_by_uuid (subscriber_view, uuid);
+
+  priv = gcal_subscriber_view_get_instance_private (subscriber_view);
+  l = g_hash_table_lookup (priv->children, uuid);
+  if (l != NULL)
+    return l->data;
+
+  return 0;
+}

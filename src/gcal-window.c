@@ -1008,7 +1008,7 @@ edit_dialog_closed (GtkDialog *dialog,
 
       uuid = gcal_edit_dialog_get_event_uuid (edit_dialog);
       /* hide widget of the event */
-      gtk_widget_hide (gcal_view_get_by_uuid (view, uuid));
+      gtk_widget_hide (gcal_subscriber_view_get_child_by_uuid (GCAL_SUBSCRIBER_VIEW (view), uuid));
       g_free (uuid);
       break;
 
@@ -1130,13 +1130,9 @@ undo_remove_event (GtkButton *button,
 
   if (priv->event_to_delete != NULL)
     {
-      uuid = get_uuid_from_component (
-                 priv->event_to_delete->source,
-                 priv->event_to_delete->event_component);
-      event_widget = gcal_view_get_by_uuid (
-          GCAL_VIEW (priv->views[priv->active_view]),
-          uuid);
-
+      uuid = get_uuid_from_component (priv->event_to_delete->source, priv->event_to_delete->event_component);
+      event_widget = gcal_subscriber_view_get_child_by_uuid (GCAL_SUBSCRIBER_VIEW (priv->views[priv->active_view]),
+                                                             uuid);
       gtk_widget_show (event_widget);
 
       g_clear_pointer (&(priv->event_to_delete), g_free);

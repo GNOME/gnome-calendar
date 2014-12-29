@@ -160,8 +160,8 @@ static gchar*         gcal_week_view_get_left_header       (GcalView       *view
 
 static gchar*         gcal_week_view_get_right_header      (GcalView       *view);
 
-static GtkWidget*     gcal_week_view_get_by_uuid           (GcalView       *view,
-                                                            const gchar    *uuid);
+static GtkWidget*     gcal_week_view_get_by_uuid           (GcalSubscriberView *view,
+                                                            const gchar        *uuid);
 
 G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GCAL_TYPE_SUBSCRIBER_VIEW,
                          G_ADD_PRIVATE (GcalWeekView)
@@ -517,9 +517,13 @@ get_sidebar_width (GtkWidget *widget)
 static void
 gcal_week_view_class_init (GcalWeekViewClass *klass)
 {
+  GcalSubscriberViewClass *subscriber_view_class;
   GtkContainerClass *container_class;
   GtkWidgetClass *widget_class;
   GObjectClass *object_class;
+
+  subscriber_view_class = GCAL_SUBSCRIBER_VIEW_CLASS (klass);
+  subscriber_view_class->get_child_by_uuid = gcal_week_view_get_by_uuid;
 
   container_class = GTK_CONTAINER_CLASS (klass);
   container_class->add = gcal_week_view_add;
@@ -565,8 +569,6 @@ gcal_view_interface_init (GcalViewIface *iface)
 
   iface->get_left_header = gcal_week_view_get_left_header;
   iface->get_right_header = gcal_week_view_get_right_header;
-
-  iface->get_by_uuid = gcal_week_view_get_by_uuid;
 }
 
 static void
@@ -1391,15 +1393,15 @@ gcal_week_view_get_right_header (GcalView *view)
 }
 
 static GtkWidget*
-gcal_week_view_get_by_uuid (GcalView    *view,
-                            const gchar *uuid)
+gcal_week_view_get_by_uuid (GcalSubscriberView *subscriber_view,
+                            const gchar        *uuid)
 {
   GcalWeekViewPrivate *priv;
   gint i;
   GList *l;
 
-  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW(view));
+  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (subscriber_view), NULL);
+  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW(subscriber_view));
 
   for (i = 0; i < 7; i++)
     {

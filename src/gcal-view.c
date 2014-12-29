@@ -211,24 +211,3 @@ gcal_view_get_right_header (GcalView *view)
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_right_header (view);
 }
-
-/**
- * gcal_view_get_by_uuid:
- * @view: a #GcalView
- * @uuid: the uuid of the event-widget
- *
- * The uuid is formed by source-uid:event-uid, and the widget with
- * this uuid is fetched by this method. If there's no widget with this
- * uuid in the view %NULL is returned.
- *
- * Returns: a #GcalEventWidget as #GtkWidget, %NULL otherwise
- **/
-GtkWidget*
-gcal_view_get_by_uuid (GcalView    *view,
-                       const gchar *uuid)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_val_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid, NULL);
-
-  return GCAL_VIEW_GET_INTERFACE (view)->get_by_uuid (view, uuid);
-}

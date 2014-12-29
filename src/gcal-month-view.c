@@ -207,9 +207,6 @@ static gchar*         gcal_month_view_get_left_header       (GcalView       *vie
 
 static gchar*         gcal_month_view_get_right_header      (GcalView       *view);
 
-static GtkWidget*     gcal_month_view_get_by_uuid           (GcalView       *view,
-                                                             const gchar    *uuid);
-
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view,GCAL_TYPE_SUBSCRIBER_VIEW,
                          G_ADD_PRIVATE (GcalMonthView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
@@ -653,8 +650,6 @@ gcal_view_interface_init (GcalViewIface *iface)
 
   iface->get_left_header = gcal_month_view_get_left_header;
   iface->get_right_header = gcal_month_view_get_right_header;
-
-  iface->get_by_uuid = gcal_month_view_get_by_uuid;
 }
 
 static void
@@ -1843,30 +1838,6 @@ gcal_month_view_get_right_header (GcalView *view)
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));
 
   return g_strdup_printf ("%d", priv->date->year);
-}
-
-/**
- * gcal_month_view_get_by_uuid:
- * @view:
- * @uuid:
- *
- * This will always returns a master widget.
- *
- * Returns:
- **/
-static GtkWidget*
-gcal_month_view_get_by_uuid (GcalView    *view,
-                             const gchar *uuid)
-{
-  GcalMonthViewPrivate *priv;
-  GList *l;
-
-  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));
-  l = g_hash_table_lookup (priv->children, uuid);
-  if (l != NULL)
-    return (GtkWidget*) l->data;
-
-  return NULL;
 }
 
 /* Public API */

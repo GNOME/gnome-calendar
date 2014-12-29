@@ -120,9 +120,6 @@ static gchar*         gcal_year_view_get_left_header              (GcalView     
 
 static gchar*         gcal_year_view_get_right_header             (GcalView       *view);
 
-static GtkWidget*     gcal_year_view_get_by_uuid                  (GcalView       *view,
-                                                                   const gchar    *uuid);
-
 G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GCAL_TYPE_SUBSCRIBER_VIEW,
                          G_ADD_PRIVATE (GcalYearView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,gcal_view_interface_init));
@@ -248,8 +245,6 @@ gcal_view_interface_init (GcalViewIface *iface)
 
   iface->get_left_header = gcal_year_view_get_left_header;
   iface->get_right_header = gcal_year_view_get_right_header;
-
-  iface->get_by_uuid = gcal_year_view_get_by_uuid;
 }
 
 static void
@@ -994,21 +989,6 @@ static gchar*
 gcal_year_view_get_right_header (GcalView *view)
 {
   return g_strdup ("");
-}
-
-static GtkWidget*
-gcal_year_view_get_by_uuid (GcalView    *view,
-                            const gchar *uuid)
-{
-  GcalSubscriberViewPrivate *priv;
-  GList *l;
-
-  priv = GCAL_SUBSCRIBER_VIEW (view)->priv;
-  l = g_hash_table_lookup (priv->children, uuid);
-  if (l != NULL)
-    return (GtkWidget*) l->data;
-
-  return NULL;
 }
 
 /* Public API */
