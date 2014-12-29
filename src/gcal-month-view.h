@@ -37,12 +37,12 @@ typedef struct _GcalMonthViewClass                  GcalMonthViewClass;
 
 struct _GcalMonthView
 {
-  GcalSubscriber parent;
+  GcalSubscriberView parent;
 };
 
 struct _GcalMonthViewClass
 {
-  GcalSubscriberClass parent_class;
+  GcalSubscriberViewClass parent_class;
 
   /* signals */
   void (*new_event) (gint new_day);

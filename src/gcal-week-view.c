@@ -163,12 +163,9 @@ static gchar*         gcal_week_view_get_right_header      (GcalView       *view
 static GtkWidget*     gcal_week_view_get_by_uuid           (GcalView       *view,
                                                             const gchar    *uuid);
 
-G_DEFINE_TYPE_WITH_CODE (GcalWeekView,
-                         gcal_week_view,
-                         GCAL_TYPE_SUBSCRIBER,
+G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GCAL_TYPE_SUBSCRIBER_VIEW,
                          G_ADD_PRIVATE (GcalWeekView)
-                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
-                                                gcal_view_interface_init));
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
 
 /**
  * get_start_grid_y:

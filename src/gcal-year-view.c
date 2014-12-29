@@ -104,11 +104,11 @@ static gboolean       gcal_year_view_button_release               (GtkWidget    
 static void           gcal_year_view_direction_changed            (GtkWidget        *widget,
                                                                    GtkTextDirection  previous_direction);
 
-static gboolean       gcal_year_view_is_child_multimonth          (GcalSubscriber  *subscriber,
-                                                                   GcalEventWidget *child);
+static gboolean       gcal_year_view_is_child_multimonth          (GcalSubscriberView  *subscriber,
+                                                                   GcalEventWidget     *child);
 
-static guint          gcal_year_view_get_child_cell               (GcalSubscriber  *subscriber,
-                                                                   GcalEventWidget *child);
+static guint          gcal_year_view_get_child_cell               (GcalSubscriberView *subscriber,
+                                                                   GcalEventWidget    *child);
 
 static icaltimetype*  gcal_year_view_get_initial_date             (GcalView       *view);
 
@@ -123,12 +123,9 @@ static gchar*         gcal_year_view_get_right_header             (GcalView     
 static GtkWidget*     gcal_year_view_get_by_uuid                  (GcalView       *view,
                                                                    const gchar    *uuid);
 
-G_DEFINE_TYPE_WITH_CODE (GcalYearView,
-                         gcal_year_view,
-                         GCAL_TYPE_SUBSCRIBER,
+G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GCAL_TYPE_SUBSCRIBER_VIEW,
                          G_ADD_PRIVATE (GcalYearView)
-                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
-                                                gcal_view_interface_init));
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,gcal_view_interface_init));
 
 
 static void
@@ -190,13 +187,13 @@ get_widget_parts (gint     first_cell,
 static void
 gcal_year_view_class_init (GcalYearViewClass *klass)
 {
-  GcalSubscriberClass *subscriber_class;
+  GcalSubscriberViewClass *subscriber_view_class;
   GtkWidgetClass *widget_class;
   GObjectClass *object_class;
 
-  subscriber_class = GCAL_SUBSCRIBER_CLASS (klass);
-  subscriber_class->is_child_multicell = gcal_year_view_is_child_multimonth;
-  subscriber_class->get_child_cell = gcal_year_view_get_child_cell;
+  subscriber_view_class = GCAL_SUBSCRIBER_VIEW_CLASS (klass);
+  subscriber_view_class->is_child_multicell = gcal_year_view_is_child_multimonth;
+  subscriber_view_class->get_child_cell = gcal_year_view_get_child_cell;
 
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->realize = gcal_year_view_realize;
@@ -425,7 +422,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
                               GtkAllocation *allocation)
 {
   GcalYearViewPrivate *priv;
-  GcalSubscriberPrivate *ppriv;
+  GcalSubscriberViewPrivate *ppriv;
   gint i, j, sw;
 
   gint padding_bottom;
@@ -447,7 +444,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
   gpointer key, value;
 
   priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
-  ppriv = GCAL_SUBSCRIBER (widget)->priv;
+  ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
 
   /* remove every widget' parts, but the master widget */
   widgets = g_hash_table_get_values (ppriv->children);
@@ -895,8 +892,8 @@ gcal_year_view_direction_changed (GtkWidget        *widget,
 }
 
 static gboolean
-gcal_year_view_is_child_multimonth (GcalSubscriber  *subscriber,
-                                    GcalEventWidget *child)
+gcal_year_view_is_child_multimonth (GcalSubscriberView *subscriber,
+                                    GcalEventWidget    *child)
 {
   const icaltimetype *dt_start, *dt_end;
 
@@ -909,8 +906,8 @@ gcal_year_view_is_child_multimonth (GcalSubscriber  *subscriber,
 }
 
 static guint
-gcal_year_view_get_child_cell (GcalSubscriber  *subscriber,
-                               GcalEventWidget *child)
+gcal_year_view_get_child_cell (GcalSubscriberView *subscriber,
+                               GcalEventWidget    *child)
 {
   const icaltimetype *dt_start = gcal_event_widget_peek_start_date (child);
   return dt_start->month;
@@ -1003,10 +1000,10 @@ static GtkWidget*
 gcal_year_view_get_by_uuid (GcalView    *view,
                             const gchar *uuid)
 {
-  GcalSubscriberPrivate *priv;
+  GcalSubscriberViewPrivate *priv;
   GList *l;
 
-  priv = GCAL_SUBSCRIBER (view)->priv;
+  priv = GCAL_SUBSCRIBER_VIEW (view)->priv;
   l = g_hash_table_lookup (priv->children, uuid);
   if (l != NULL)
     return (GtkWidget*) l->data;

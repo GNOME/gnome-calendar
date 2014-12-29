@@ -210,12 +210,9 @@ static gchar*         gcal_month_view_get_right_header      (GcalView       *vie
 static GtkWidget*     gcal_month_view_get_by_uuid           (GcalView       *view,
                                                              const gchar    *uuid);
 
-G_DEFINE_TYPE_WITH_CODE (GcalMonthView,
-                         gcal_month_view,
-                         GCAL_TYPE_SUBSCRIBER,
+G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view,GCAL_TYPE_SUBSCRIBER_VIEW,
                          G_ADD_PRIVATE (GcalMonthView)
-                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,
-                                                gcal_view_interface_init));
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
 
 
 static void

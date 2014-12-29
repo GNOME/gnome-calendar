@@ -17,14 +17,14 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __GCAL_SUBSCRIBER_PRIVATE_H__
-#define __GCAL_SUBSCRIBER_PRIVATE_H____
+#ifndef __GCAL_SUBSCRIBER_VIEW_PRIVATE_H__
+#define __GCAL_SUBSCRIBER_VIEW_PRIVATE_H____
 
 #include <glib.h>
 
 G_BEGIN_DECLS
 
-struct _GcalSubscriberPrivate
+struct _GcalSubscriberViewPrivate
 {
   /**
    * Hash to keep children widgets (all of them, parent widgets and its parts if there's any),
@@ -56,4 +56,4 @@ struct _GcalSubscriberPrivate
 
 G_END_DECLS
 
-#endif /* __GCAL_SUBSCRIBER_H__ */
+#endif /* __GCAL_SUBSCRIBER_VIEW_PRIVATE_H____ */

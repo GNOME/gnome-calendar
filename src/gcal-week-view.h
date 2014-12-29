@@ -38,12 +38,12 @@ typedef struct _GcalWeekViewClass                  GcalWeekViewClass;
 
 struct _GcalWeekView
 {
-  GcalSubscriber parent;
+  GcalSubscriberView parent;
 };
 
 struct _GcalWeekViewClass
 {
-  GcalSubscriberClass parent_class;
+  GcalSubscriberViewClass parent_class;
 };
 
 GType          gcal_week_view_get_type         (void);
