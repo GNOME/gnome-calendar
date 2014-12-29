@@ -46,6 +46,9 @@ typedef struct
 
   gint            start_mark_cell;
   gint            end_mark_cell;
+
+  /* text direction factors */
+  gint            k;
 } GcalYearViewPrivate;
 
 enum
@@ -95,6 +98,8 @@ static gboolean       gcal_year_view_motion_notify_event          (GtkWidget    
 static gboolean       gcal_year_view_button_release               (GtkWidget      *widget,
                                                                    GdkEventButton *event);
 
+static void           gcal_year_view_direction_changed            (GtkWidget        *widget,
+                                                                   GtkTextDirection  previous_direction);
 static void           gcal_year_view_add                          (GtkContainer   *constainer,
                                                                    GtkWidget      *widget);
 
@@ -163,6 +168,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   widget_class->button_press_event = gcal_year_view_button_press;
   widget_class->motion_notify_event = gcal_year_view_motion_notify_event;
   widget_class->button_release_event = gcal_year_view_button_release;
+  widget_class->direction_changed = gcal_year_view_direction_changed;
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->set_property = gcal_year_view_set_property;
@@ -187,6 +193,11 @@ gcal_year_view_init (GcalYearView *self)
 
   priv->start_mark_cell = -1;
   priv->end_mark_cell = -1;
+
+  if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_LTR)
+    priv->k = 0;
+  else if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
+    priv->k = 1;
 
   gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "calendar-view");
 }
@@ -610,6 +621,19 @@ gcal_year_view_button_release (GtkWidget      *widget,
 
   priv->clicked_cell = -1;
   return TRUE;
+}
+
+static void
+gcal_year_view_direction_changed (GtkWidget        *widget,
+                                  GtkTextDirection  previous_direction)
+{
+  GcalYearViewPrivate *priv;
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
+
+  if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
+    priv->k = 0;
+  else if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
+    priv->k = 1;
 }
 
 static void
