@@ -223,14 +223,12 @@ static void
 gcal_year_view_init (GcalYearView *self)
 {
   GcalYearViewPrivate *priv;
-  gint i;
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
   priv = gcal_year_view_get_instance_private (self);
 
   priv->clicked_cell = -1;
-
   priv->start_mark_cell = -1;
   priv->end_mark_cell = -1;
 
