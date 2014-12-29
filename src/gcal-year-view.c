@@ -28,6 +28,8 @@
 
 typedef struct
 {
+  /* overflow buttons */
+  GHashTable     *internal_children;
 
   GdkWindow      *event_window;
 
@@ -53,6 +55,14 @@ enum
 
 static void           event_opened                                (GcalEventWidget *event_widget,
                                                                    gpointer         user_data);
+
+static gboolean       get_widget_parts                            (gint             first_cell,
+                                                                   gint             last_cell,
+                                                                   gint             natural_height,
+                                                                   gdouble          vertical_cell_space,
+                                                                   gdouble         *size_left,
+                                                                   GArray          *cells,
+                                                                   GArray          *lengths);
 
 static void           gcal_view_interface_init                    (GcalViewIface  *iface);
 
@@ -128,6 +138,53 @@ event_opened (GcalEventWidget *event_widget,
   g_signal_emit_by_name (GCAL_VIEW (user_data),
                          "event-activated",
                          event_widget);
+}
+
+static gboolean
+get_widget_parts (gint     first_cell,
+                  gint     last_cell,
+                  gint     natural_height,
+                  gdouble  vertical_cell_space,
+                  gdouble *size_left,
+                  GArray  *cells,
+                  GArray  *lengths)
+{
+  gint i;
+  gint current_part_length;
+  gdouble y, old_y = - 1.0;
+
+  if (last_cell < first_cell)
+    {
+      gint swap = last_cell;
+      last_cell = first_cell;
+      first_cell = swap;
+    }
+
+  for (i = first_cell; i <= last_cell; i++)
+    {
+      if (size_left[i] < natural_height)
+        {
+          return FALSE;
+        }
+      else
+        {
+          y = vertical_cell_space - size_left[i];
+          if (y != old_y)
+            {
+              current_part_length = 1;
+              g_array_append_val (cells, i);
+              g_array_append_val (lengths, current_part_length);
+              old_y = y;
+            }
+          else
+            {
+              current_part_length++;
+              g_array_index (lengths, gint, lengths->len - 1) = current_part_length;
+            }
+        }
+    }
+
+  return TRUE;
 }
 
 static void
@@ -370,18 +427,229 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
                               GtkAllocation *allocation)
 {
   GcalYearViewPrivate *priv;
+  GcalSubscriberPrivate *ppriv;
+  gint i, j, sw;
+
+  gint padding_bottom;
+  PangoLayout *layout;
+  PangoFontDescription *font_desc;
+  gint font_height;
+
+  gdouble cell_width, cell_height, vertical_cell_space;
+  gdouble pos_x, pos_y;
+  gdouble size_left [12];
+
+  const gchar *uuid;
+  GtkWidget *child_widget;
+  GtkAllocation child_allocation;
+  gint natural_height;
+
+  GList *widgets, *l, *aux, *l2 = NULL;
+  GHashTableIter iter;
+  gpointer key, value;
 
   priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
+  ppriv = GCAL_SUBSCRIBER (widget)->priv;
+
+  /* remove every widget' parts, but the master widget */
+  widgets = g_hash_table_get_values (ppriv->children);
+  for (aux = widgets; aux != NULL; aux = g_list_next (aux))
+    {
+      l = g_list_next ((GList*) aux->data);
+      for (; l != NULL; l = g_list_next (l))
+        l2 = g_list_append (l2, l->data);
+    }
+  g_list_free (widgets);
+
+  for (aux = l2; aux != NULL; aux = g_list_next (aux))
+    gtk_widget_destroy ((GtkWidget*) aux->data);
+  g_list_free (l2);
+
+  /* clean overflow information */
+  g_hash_table_remove_all (ppriv->overflow_cells);
 
   gtk_widget_set_allocation (widget, allocation);
   if (gtk_widget_get_realized (widget))
+    gdk_window_move_resize (priv->event_window, allocation->x, allocation->y, allocation->width, allocation->height);
+
+  gtk_style_context_get (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget),
+                         "font", &font_desc, "padding-bottom", &padding_bottom, NULL);
+
+  layout = gtk_widget_create_pango_layout (widget, _("Other events"));
+  pango_layout_set_font_description (layout, font_desc);
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+  pango_font_description_free (font_desc);
+  g_object_unref (layout);
+
+  cell_width = allocation->width / 6.0;
+  cell_height = allocation->height / 2.0;
+  vertical_cell_space = cell_height - (padding_bottom + font_height);
+
+  for (i = 0; i < 12; i++)
+    size_left[i] = vertical_cell_space;
+
+  sw = 1 - 2 * priv->k;
+
+  /* allocate multimonth events */
+  for (l = ppriv->multi_cell_children; l != NULL; l = g_list_next (l))
     {
-      gdk_window_move_resize (priv->event_window,
-                              allocation->x,
-                              allocation->y,
-                              allocation->width,
-                              allocation->height);
+      gint first_cell, last_cell, first_row, last_row, start, end;
+      gboolean visible;
+
+      const icaltimetype *date;
+      GArray *cells, *lengths;
+
+      child_widget = (GtkWidget*) l->data;
+      uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child_widget));
+      if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (ppriv->hidden_as_overflow, uuid))
+        continue;
+
+      gtk_widget_show (child_widget);
+      gtk_widget_get_preferred_height (child_widget, NULL, &natural_height);
+
+      j = 1;
+      date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (child_widget));
+      if (date->year == priv->date->year)
+        j = date->month;
+      first_cell = 6 * ((j - 1) / 6) + 6 * priv->k + sw * ((j - 1) % 6) - (1 * priv->k);
+
+      j = 12;
+      date = gcal_event_widget_peek_end_date (GCAL_EVENT_WIDGET (child_widget));
+      if (date->year == priv->date->year)
+        j = date->month;
+      last_cell = 6 * ((j - 1) / 6) + 6 * priv->k + sw * ((j - 1) % 6) - (1 * priv->k);
+
+      /* FIXME missing mark widgets with continuos tags */
+
+      first_row = first_cell / 6;
+      last_row = last_cell / 6;
+      visible = TRUE;
+      cells = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
+      lengths = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
+      for (i = first_row; i <= last_row && visible; i++)
+        {
+          start = i * 6 + priv->k * 5;
+          end = i * 6 + (1 - priv->k) * 5;
+
+          if (i == first_row)
+            {
+              start = first_cell;
+            }
+          if (i == last_row)
+            {
+              end = last_cell;
+            }
+
+          visible = get_widget_parts (start, end, natural_height, vertical_cell_space, size_left, cells, lengths);
+        }
+
+      if (visible)
+        {
+          for (i = 0; i < cells->len; i++)
+            {
+              gint cell_idx = g_array_index (cells, gint, i);
+              gint row = cell_idx / 6;
+              gint column = cell_idx % 6;
+              pos_x = cell_width * column;
+              pos_y = cell_height * row;
+
+              child_allocation.x = pos_x;
+              child_allocation.y = pos_y + vertical_cell_space - size_left[cell_idx];
+              child_allocation.width = cell_width * g_array_index (lengths, gint, i);
+              child_allocation.height = natural_height;
+
+              if (i != 0)
+                {
+                  child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
+
+                  //setup_child (child_widget, widget);
+                  gtk_widget_set_parent (child_widget, widget); /* FIXME */
+                  gtk_widget_show (child_widget);
+
+                  aux = g_hash_table_lookup (ppriv->children, uuid);
+                  aux = g_list_append (aux, child_widget);
+                }
+              gtk_widget_size_allocate (child_widget, &child_allocation);
+              g_hash_table_remove (ppriv->hidden_as_overflow, uuid);
+
+              /* update size_left */
+              for (j = 0; j < g_array_index (lengths, gint, i); j++)
+                size_left[cell_idx + j] -= natural_height;
+            }
+        }
+      else
+        {
+          gtk_widget_hide (child_widget);
+          g_hash_table_add (ppriv->hidden_as_overflow, g_strdup (uuid));
+
+          for (i = first_cell; i <= last_cell; i++)
+            {
+              aux = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (i));
+              aux = g_list_append (aux, child_widget);
+
+              if (g_list_length (aux) == 1)
+                g_hash_table_insert (ppriv->overflow_cells, GINT_TO_POINTER (i), aux);
+              else
+                g_hash_table_replace (ppriv->overflow_cells, GINT_TO_POINTER (i), g_list_copy (aux));
+            }
+        }
+
+      g_array_free (cells, TRUE);
+      g_array_free (lengths, TRUE);
     }
+
+  g_hash_table_iter_init (&iter, ppriv->single_cell_children);
+  while (g_hash_table_iter_next (&iter, &key, &value))
+    {
+      j = GPOINTER_TO_INT (key);
+      i = 6 * ((j - 1) / 6) + 6 * priv->k + sw * ((j - 1) % 6) - (1 * priv->k);
+
+      l = (GList*) value;
+      for (aux = l; aux != NULL; aux = g_list_next (aux))
+        {
+          child_widget = (GtkWidget*) aux->data;
+
+          uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child_widget));
+          if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (ppriv->hidden_as_overflow, uuid))
+            continue;
+
+          gtk_widget_show (child_widget);
+          gtk_widget_get_preferred_height (child_widget, NULL, &natural_height);
+
+          if (size_left[i] > natural_height)
+            {
+              pos_x = cell_width * (i % 6);
+              pos_y = cell_height * (i / 6);
+
+              child_allocation.x = pos_x;
+              child_allocation.y = pos_y + vertical_cell_space - size_left[i];
+              child_allocation.width = cell_width;
+              child_allocation.height = natural_height;
+              gtk_widget_show (child_widget);
+              gtk_widget_size_allocate (child_widget, &child_allocation);
+              g_hash_table_remove (ppriv->hidden_as_overflow, uuid);
+
+              size_left[i] -= natural_height;
+            }
+          else
+            {
+              gtk_widget_hide (child_widget);
+              g_hash_table_add (ppriv->hidden_as_overflow, g_strdup (uuid));
+
+              l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (i));
+              l = g_list_append (l, child_widget);
+
+              if (g_list_length (l) == 1)
+                g_hash_table_insert (ppriv->overflow_cells, GINT_TO_POINTER (i), l);
+              else
+                g_hash_table_replace (ppriv->overflow_cells, GINT_TO_POINTER (i), g_list_copy (l));
+            }
+        }
+    }
+
+  /* FIXME: remove on Gtk+ 3.15.4 release */
+  if (g_hash_table_size (ppriv->overflow_cells) != 0)
+    gtk_widget_queue_draw_area (widget, allocation->x, allocation->y, allocation->width, allocation->height);
 }
 
 static gboolean
