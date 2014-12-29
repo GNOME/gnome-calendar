@@ -1,5 +1,5 @@
 /*
- * gcal-subscriber-private.h
+ * gcal-subscriber-view-private.h
  *
  * Copyright (C) 2014 - Erick Pérez Castellanos
  *

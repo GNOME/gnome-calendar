@@ -1,6 +1,6 @@
 /* -*- mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /*
- * gcal-subscriber.c
+ * gcal-subscriber-view.c
  *
  * Copyright (C) 2014 - Erick Pérez Castellanos
  *
@@ -18,8 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gcal-subscriber.h"
-#include "gcal-subscriber-private.h"
+#include "gcal-subscriber-view.h"
+#include "gcal-subscriber-view-private.h"
 
 #include "gcal-view.h"
 #include "gcal-event-widget.h"

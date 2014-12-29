@@ -19,7 +19,7 @@
  */
 
 #include "gcal-year-view.h"
-#include "gcal-subscriber-private.h"
+#include "gcal-subscriber-view-private.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
 #include "gcal-event-widget.h"

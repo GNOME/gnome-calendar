@@ -21,7 +21,7 @@
 #define __GCAL_MONTH_VIEW_H__
 
 #include "gcal-manager.h"
-#include "gcal-subscriber.h"
+#include "gcal-subscriber-view.h"
 
 G_BEGIN_DECLS
 
