@@ -111,10 +111,6 @@ static void           gcal_year_view_forall                       (GtkContainer 
                                                                    GtkCallback     callback,
                                                                    gpointer        callback_data);
 
-static void           gcal_year_view_draw_grid                    (GcalYearView  *view,
-                                                                   cairo_t        *cr,
-                                                                   GtkAllocation  *alloc,
-                                                                   GtkBorder      *padding);
 
 static icaltimetype*  gcal_year_view_get_initial_date             (GcalView       *view);
 
@@ -491,18 +487,113 @@ static gboolean
 gcal_year_view_draw (GtkWidget *widget,
                      cairo_t   *cr)
 {
+  GcalYearViewPrivate *priv;
+
   GtkStyleContext *context;
   GtkStateFlags state;
+
   GtkBorder padding;
   GtkAllocation alloc;
 
+  /* new declares */
+  PangoLayout *layout;
+  PangoFontDescription *font_desc;
+  GdkRGBA color;
+
+  gdouble cell_width, cell_height, sw;
+  gint i, j, pos_x, pos_y;
+  int font_width, font_height;
+
+  priv = gcal_year_view_get_instance_private (GCAL_YEAR_VIEW (widget));
+  gtk_widget_get_allocation (widget, &alloc);
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
+  layout = gtk_widget_create_pango_layout (widget, NULL);
+
+  /* calculations */
+  cell_width = alloc.width / 6.0;
+  cell_height = alloc.height / 2.0;
+  sw = 1 - 2 * priv->k;
 
   gtk_style_context_get_padding (context, state, &padding);
-  gtk_widget_get_allocation (widget, &alloc);
+  gtk_style_context_get (context, state, "font", &font_desc, NULL);
 
-  gcal_year_view_draw_grid (GCAL_YEAR_VIEW (widget), cr, &alloc, &padding);
+  pango_layout_set_font_description (layout, font_desc);
+  for (i = 0; i < 12; i++)
+    {
+      gint column = i % 6;
+      gint row = i / 6;
+
+      j = 6 * ((i + 6 * priv->k) / 6) + sw * (i % 6) + (1 - priv->k);
+      g_debug ("cell: %d numbered: %d: %s", i, j, gcal_get_month_name (j - 1));
+
+      if (priv->date->month == j)
+        {
+          PangoLayout *clayout;
+          PangoFontDescription *cfont_desc;
+
+          gtk_style_context_save (context);
+          gtk_style_context_add_class (context, "current");
+
+          clayout = gtk_widget_create_pango_layout (widget, gcal_get_month_name (j - 1));
+          gtk_style_context_get (context, state, "font", &cfont_desc, NULL);
+          pango_layout_set_font_description (clayout, cfont_desc);
+          pango_layout_get_pixel_size (clayout, &font_width, &font_height);
+
+          /* FIXME: hardcoded padding of the number background */
+          gtk_render_background (context, cr,
+                                 cell_width * (column + 1 - priv->k) - sw * padding.right + (priv->k - 1) * font_width - 2.0,
+                                 cell_height * (row + 1) - font_height - padding.bottom,
+                                 font_width + 4, font_height + 2);
+          gtk_render_layout (context, cr,
+                             cell_width * (column + 1 - priv->k) - sw * padding.right + (priv->k - 1) * font_width,
+                             cell_height * (row + 1) - font_height - padding.bottom,
+                             clayout);
+
+          gtk_style_context_restore (context);
+          pango_font_description_free (cfont_desc);
+          g_object_unref (clayout);
+        }
+      else
+        {
+          pango_layout_set_text (layout, gcal_get_month_name (j - 1), -1);
+          pango_layout_get_pixel_size (layout, &font_width, &font_height);
+
+          gtk_render_layout (context, cr,
+                             cell_width * (column + 1 - priv->k) - sw * padding.right + (priv->k - 1) * font_width,
+                             cell_height * (row + 1) - font_height - padding.bottom,
+                             layout);
+
+        }
+    }
+  pango_font_description_free (font_desc);
+
+  /* FIXME: missing selected months lines */
+
+  /* drawing grid skel */
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "lines");
+
+  gtk_style_context_get_color (context, state, &color);
+  gdk_cairo_set_source_rgba (cr, &color);
+  cairo_set_line_width (cr, 0.2);
+
+  /* vertical lines */
+  for (i = 0; i < 5; i++)
+    {
+      pos_x = cell_width * (i + 1);
+      cairo_move_to (cr, pos_x + 0.4, 0);
+      cairo_rel_line_to (cr, 0, alloc.height);
+    }
+
+  for (i = 0; i < 2; i++)
+    {
+      pos_y = (alloc.height / 2) * i;
+      cairo_move_to (cr, 0, pos_y + 0.4);
+      cairo_rel_line_to (cr, alloc.width, 0);
+    }
+  cairo_stroke (cr);
+  gtk_style_context_restore (context);
 
   if (GTK_WIDGET_CLASS (gcal_year_view_parent_class)->draw != NULL)
     GTK_WIDGET_CLASS (gcal_year_view_parent_class)->draw (widget, cr);
@@ -749,167 +840,6 @@ gcal_year_view_forall (GtkContainer *container,
           (* callback) (child->widget, callback_data);
         }
     }
-}
-
-static void
-gcal_year_view_draw_grid (GcalYearView *view,
-                          cairo_t       *cr,
-                          GtkAllocation *alloc,
-                          GtkBorder     *padding)
-{
-  GcalYearViewPrivate *priv;
-  GtkWidget *widget;
-
-  GtkStyleContext *context;
-  GtkStateFlags state;
-  GdkRGBA color;
-  GdkRGBA ligther_color;
-  GdkRGBA selected_color;
-  GdkRGBA background_selected_color;
-  GtkBorder header_padding;
-
-  gint i, j;
-  gint font_width;
-  gint font_height;
-
-  gdouble cell_width;
-  gdouble cell_height;
-
-  PangoLayout *layout;
-  const PangoFontDescription *font;
-
-  priv = gcal_year_view_get_instance_private (view);
-  widget = GTK_WIDGET (view);
-  cell_width = alloc->width / 6.0;
-  cell_height = alloc->height / 2.0;
-
-  /* fonts and colors selection */
-  context = gtk_widget_get_style_context (widget);
-  layout = pango_cairo_create_layout (cr);
-
-  state = gtk_widget_get_state_flags (widget);
-  gtk_style_context_get_color (context,
-                               state | GTK_STATE_FLAG_SELECTED,
-                               &selected_color);
-
-  gtk_style_context_get_background_color (context,
-                                          state | GTK_STATE_FLAG_SELECTED,
-                                          &background_selected_color);
-
-  gtk_style_context_get_color (context,
-                               state | GTK_STATE_FLAG_INSENSITIVE,
-                               &ligther_color);
-  gtk_style_context_get_color (context, state, &color);
-  gtk_style_context_get (context, state, "font", &font, NULL);
-  gdk_cairo_set_source_rgba (cr, &color);
-
-  pango_layout_set_font_description (layout, font);
-
-  gtk_style_context_get_padding (context, state, &header_padding);
-
-  /* drawing new-event mark */
-  if (priv->start_mark_cell != -1 &&
-      priv->end_mark_cell != -1)
-    {
-      gint first_cell;
-      gint last_cell;
-      gint rows;
-
-      cairo_save (cr);
-      if (priv->start_mark_cell < priv->end_mark_cell)
-        {
-          first_cell = priv->start_mark_cell;
-          last_cell = priv->end_mark_cell;
-        }
-      else
-        {
-          first_cell = priv->end_mark_cell;
-          last_cell = priv->start_mark_cell;
-        }
-
-      gdk_cairo_set_source_rgba (cr, &background_selected_color);
-
-      for (rows = 0; rows < last_cell / 6 - first_cell / 6 + 1; rows++)
-        {
-          gint first_point;
-          gint last_point;
-
-          first_point = (rows == 0) ? first_cell : ((first_cell / 6) + rows) * 6;
-          last_point = (rows == (last_cell / 6 - first_cell / 6)) ? last_cell : ((first_cell / 6) + rows) * 6 + 5;
-
-          cairo_rectangle (cr,
-                           cell_width * ( first_point % 6),
-                           cell_height * ( first_point / 6) + 1,
-                           cell_width * (last_point - first_point + 1),
-                           cell_height);
-
-          cairo_fill (cr);
-        }
-
-      cairo_restore (cr);
-    }
-
-  gdk_cairo_set_source_rgba (cr, &ligther_color);
-
-  /* drawing grid text */
-  for (i = 0; i < 2; i++)
-    {
-      for (j = 0; j < 6; j++)
-        {
-          if (priv->date->month == i * 6 + j + 1)
-            {
-              gdk_cairo_set_source_rgba (cr, &selected_color);
-            }
-
-          pango_layout_set_text (layout, gcal_get_month_name (i * 6 + j), -1);
-          pango_cairo_update_layout (cr, layout);
-          pango_layout_get_pixel_size (layout, &font_width, &font_height);
-
-          cairo_move_to (cr,
-                         cell_width * j + header_padding.left,
-                         padding->top + i * cell_height);
-          pango_cairo_show_layout (cr, layout);
-
-          if (priv->date->month == i * 6 + j + 1)
-            {
-              gdk_cairo_set_source_rgba (cr, &ligther_color);
-
-            }
-        }
-    }
-  /* free the layout object */
-  g_object_unref (layout);
-
-  /* drawing grid skel */
-  cairo_set_line_width (cr, 0.4);
-
-  /* vertical lines */
-  for (i = 0; i < 5; i++)
-    {
-      gint pos_x = cell_width * (i + 1);
-      cairo_move_to (cr, pos_x + 0.3, 0);
-      cairo_rel_line_to (cr, 0, alloc->height);
-    }
-
-  for (i = 0; i < 2; i++)
-    {
-      gint pos_y = (alloc->height / 2) * i;
-      cairo_move_to (cr, 0, pos_y + 0.3);
-      cairo_rel_line_to (cr, alloc->width, 0);
-    }
-
-  cairo_stroke (cr);
-
-  /* drawing current month marker */
-  gdk_cairo_set_source_rgba (cr, &selected_color);
-
-  /* Two pixel line on the selected day cell */
-  cairo_set_line_width (cr, 2.0);
-  cairo_move_to (cr,
-                 cell_width * ( (priv->date->month - 1) % 6),
-                 cell_height * ( (priv->date->month - 1) / 6) + 1);
-  cairo_rel_line_to (cr, cell_width, 0);
-  cairo_stroke (cr);
 }
 
 /* GcalView Interface API */
