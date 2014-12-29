@@ -93,6 +93,13 @@ static gboolean       gcal_year_view_button_release               (GtkWidget    
 
 static void           gcal_year_view_direction_changed            (GtkWidget        *widget,
                                                                    GtkTextDirection  previous_direction);
+
+static gboolean       gcal_year_view_is_child_multimonth          (GcalSubscriber  *subscriber,
+                                                                   GcalEventWidget *child);
+
+static guint          gcal_year_view_get_child_cell               (GcalSubscriber  *subscriber,
+                                                                   GcalEventWidget *child);
+
 static icaltimetype*  gcal_year_view_get_initial_date             (GcalView       *view);
 
 static icaltimetype*  gcal_year_view_get_final_date               (GcalView       *view);
@@ -126,9 +133,13 @@ event_opened (GcalEventWidget *event_widget,
 static void
 gcal_year_view_class_init (GcalYearViewClass *klass)
 {
+  GcalSubscriberClass *subscriber_class;
   GtkWidgetClass *widget_class;
   GObjectClass *object_class;
 
+  subscriber_class = GCAL_SUBSCRIBER_CLASS (klass);
+  subscriber_class->is_child_multicell = gcal_year_view_is_child_multimonth;
+  subscriber_class->get_child_cell = gcal_year_view_get_child_cell;
 
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->realize = gcal_year_view_realize;
@@ -615,6 +626,28 @@ gcal_year_view_direction_changed (GtkWidget        *widget,
     priv->k = 0;
   else if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
     priv->k = 1;
+}
+
+static gboolean
+gcal_year_view_is_child_multimonth (GcalSubscriber  *subscriber,
+                                    GcalEventWidget *child)
+{
+  const icaltimetype *dt_start, *dt_end;
+
+  dt_start = gcal_event_widget_peek_start_date (child);
+  dt_end = gcal_event_widget_peek_end_date (child);
+  if (dt_end == NULL)
+    return FALSE;
+
+  return dt_start->month != dt_end->month || dt_start->year != dt_end->year;
+}
+
+static guint
+gcal_year_view_get_child_cell (GcalSubscriber  *subscriber,
+                               GcalEventWidget *child)
+{
+  const icaltimetype *dt_start = gcal_event_widget_peek_start_date (child);
+  return dt_start->month;
 }
 
 /* GcalView Interface API */
