@@ -219,7 +219,7 @@ event_opened (GcalEventWidget *event_widget,
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (user_data));
 
   gtk_widget_hide (priv->overflow_popover);
-  g_signal_emit_by_name (GCAL_VIEW (user_data), "event-activated", event_widget);
+  g_signal_emit_by_name (GCAL_SUBSCRIBER_VIEW (user_data), "event-activated", event_widget);
 }
 
 static void

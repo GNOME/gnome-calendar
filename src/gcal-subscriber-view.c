@@ -32,6 +32,9 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
+static void           event_activated                               (GcalEventWidget                   *widget,
+                                                                     gpointer                           user_data);
+
 static void           gcal_data_model_subscriber_interface_init      (ECalDataModelSubscriberInterface *iface);
 
 static void           gcal_subscriber_view_finalize                  (GObject                          *object);
@@ -75,6 +78,13 @@ G_DEFINE_TYPE_WITH_CODE (GcalSubscriberView, gcal_subscriber_view, GTK_TYPE_CONT
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 gcal_data_model_subscriber_interface_init));
 
+static void
+event_activated (GcalEventWidget *widget,
+		 gpointer         user_data)
+{
+  /* FIXME: clear_widget marks + popover + any state */
+  g_signal_emit (GCAL_SUBSCRIBER_VIEW (user_data), signals[EVENT_ACTIVATED], 0, widget);
+}
 
 static void
 gcal_subscriber_view_class_init (GcalSubscriberViewClass *klass)
@@ -181,9 +191,7 @@ gcal_subscriber_view_add (GtkContainer *container,
       g_hash_table_insert (priv->single_cell_children, GINT_TO_POINTER (cell_idx), l);
     }
 
-  /* setup child */
-  gtk_widget_set_parent (widget, GTK_WIDGET (container));
-  //g_signal_connect (widget, "activate", G_CALLBACK (event_opened), container);
+  _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (container), widget);
 }
 
 static void
@@ -428,4 +436,12 @@ gcal_subscriber_view_get_child_by_uuid (GcalSubscriberView *subscriber_view,
     return l->data;
 
   return 0;
+}
+
+void
+_gcal_subscriber_view_setup_child (GcalSubscriberView *subscriber_view,
+				   GtkWidget          *child_widget)
+{
+  gtk_widget_set_parent (child_widget, GTK_WIDGET (subscriber_view));
+  g_signal_connect (child_widget, "activate", G_CALLBACK (event_activated), subscriber_view);
 }

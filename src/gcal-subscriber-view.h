@@ -65,6 +65,10 @@ GType          gcal_subscriber_view_get_type           (void);
 GtkWidget*     gcal_subscriber_view_get_child_by_uuid  (GcalSubscriberView *subscriber_view,
 							const gchar        *uuid);
 
+/* protected */
+void           _gcal_subscriber_view_setup_child       (GcalSubscriberView *subscriber_view,
+							GtkWidget          *child_widget);
+
 G_END_DECLS
 
 #endif /* __GCAL_SUBSCRIBER_VIEW_H__ */

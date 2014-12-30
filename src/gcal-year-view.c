@@ -52,9 +52,6 @@ enum
   PROP_MANAGER  //manager inherited property
 };
 
-static void           event_opened                                (GcalEventWidget *event_widget,
-                                                                   gpointer         user_data);
-
 static gboolean       get_widget_parts                            (gint             first_cell,
                                                                    gint             last_cell,
                                                                    gint             natural_height,
@@ -123,15 +120,6 @@ G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GCAL_TYPE_SUBSCRIBER_VIEW
                          G_ADD_PRIVATE (GcalYearView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW,gcal_view_interface_init));
 
-
-static void
-event_opened (GcalEventWidget *event_widget,
-              gpointer         user_data)
-{
-  g_signal_emit_by_name (GCAL_VIEW (user_data),
-                         "event-activated",
-                         event_widget);
-}
 
 static gboolean
 get_widget_parts (gint     first_cell,
@@ -551,8 +539,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
                 {
                   child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
 
-                  //setup_child (child_widget, widget);
-                  gtk_widget_set_parent (child_widget, widget); /* FIXME */
+                  _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (widget), child_widget);
                   gtk_widget_show (child_widget);
 
                   aux = g_hash_table_lookup (ppriv->children, uuid);
