@@ -49,6 +49,9 @@ struct _GcalSubscriberViewClass
 {
   GtkContainerClass parent_class;
 
+  /*< signals >*/
+  void       (*event_activated)   (GcalSubscriberView *subscriber_view, GcalEventWidget *event_widget);
+
   /*< public >*/
   gboolean  (*is_child_multicell) (GcalSubscriberView *subscriber, GcalEventWidget *child);
   guint     (*get_child_cell)     (GcalSubscriberView *subscriber, GcalEventWidget *child);

@@ -24,6 +24,14 @@
 #include "gcal-view.h"
 #include "gcal-event-widget.h"
 
+enum
+{
+  EVENT_ACTIVATED,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
+
 static void           gcal_data_model_subscriber_interface_init      (ECalDataModelSubscriberInterface *iface);
 
 static void           gcal_subscriber_view_finalize                  (GObject                          *object);
@@ -82,6 +90,11 @@ gcal_subscriber_view_class_init (GcalSubscriberViewClass *klass)
   container_class->add = gcal_subscriber_view_add;
   container_class->remove = gcal_subscriber_view_remove;
   container_class->forall = gcal_subscriber_view_forall;
+
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_VIEW, G_SIGNAL_RUN_LAST,
+                                           G_STRUCT_OFFSET (GcalSubscriberViewClass, event_activated),
+                                           NULL, NULL, NULL,
+                                           G_TYPE_NONE, 1, GCAL_TYPE_EVENT_WIDGET);
 }
 
 static void
