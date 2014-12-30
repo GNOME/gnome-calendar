@@ -56,6 +56,8 @@ static gboolean       gcal_subscriber_view_is_child_multicell        (GcalSubscr
 static guint          gcal_subscriber_view_get_child_cell            (GcalSubscriberView               *subscriber,
                                                                       GcalEventWidget                  *child);
 
+static void           gcal_subscriber_view_clear_state               (GcalSubscriberView               *subscriber_view);
+
 static void           gcal_subscriber_view_component_added           (ECalDataModelSubscriber *subscriber,
                                                                       ECalClient              *client,
                                                                       ECalComponent           *comp);
@@ -82,7 +84,8 @@ static void
 event_activated (GcalEventWidget *widget,
 		 gpointer         user_data)
 {
-  /* FIXME: clear_widget marks + popover + any state */
+  /* FIXME: implement clear_state vfunc in descendants */
+  gcal_subscriber_view_clear_state (GCAL_SUBSCRIBER_VIEW (user_data));
   g_signal_emit (GCAL_SUBSCRIBER_VIEW (user_data), signals[EVENT_ACTIVATED], 0, widget);
 }
 
@@ -318,6 +321,18 @@ gcal_subscriber_view_get_child_cell (GcalSubscriberView  *subscriber,
     return klass->get_child_cell (subscriber, child);
 
   return 0;
+}
+
+static void
+gcal_subscriber_view_clear_state (GcalSubscriberView  *subscriber_view)
+{
+  GcalSubscriberViewClass *klass;
+
+  g_return_if_fail (GCAL_IS_SUBSCRIBER_VIEW (subscriber_view));
+
+  klass = GCAL_SUBSCRIBER_VIEW_GET_CLASS (subscriber_view);
+  if (klass->clear_state)
+    klass->clear_state (subscriber_view);
 }
 
 /* ECalDataModelSubscriber interface API */
