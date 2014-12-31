@@ -385,8 +385,9 @@ gcal_subscriber_view_component_modified (ECalDataModelSubscriber *subscriber,
     }
   else
     {
-      g_warning ("%s: Widget with uuid: %s not found",
-                 G_STRFUNC, gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (new_widget)));
+      g_warning ("%s: Widget with uuid: %s not found in view: %s",
+                 G_STRFUNC, gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (new_widget)),
+                 gtk_widget_get_name (GTK_WIDGET (subscriber)));
       gtk_widget_destroy (new_widget);
     }
 }
@@ -412,9 +413,14 @@ gcal_subscriber_view_component_removed (ECalDataModelSubscriber *subscriber,
 
   l = g_hash_table_lookup (priv->children, uuid);
   if (l != NULL)
-    gtk_widget_destroy (l->data);
+    {
+      gtk_widget_destroy (l->data);
+    }
   else
-    g_warning ("%s: Widget with uuid: %s not found", G_STRFUNC, uuid);
+    {
+      g_warning ("%s: Widget with uuid: %s not found in view: %s",
+                 G_STRFUNC, uuid, gtk_widget_get_name (GTK_WIDGET (subscriber)));
+    }
 
   g_free (uuid);
 }
