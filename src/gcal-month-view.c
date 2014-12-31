@@ -175,7 +175,6 @@ G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view,GCAL_TYPE_SUBSCRIBER_VIE
                          G_ADD_PRIVATE (GcalMonthView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
 
-
 static void
 event_opened (GcalEventWidget *event_widget,
               gpointer         user_data)
@@ -562,9 +561,7 @@ gcal_month_view_init (GcalMonthView *self)
   priv->pressed_overflow_indicator = -1;
   priv->hovered_overflow_indicator = -1;
 
-  gtk_style_context_add_class (
-      gtk_widget_get_style_context (GTK_WIDGET (self)),
-      "calendar-view");
+  gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "calendar-view");
 
   if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_LTR)
     priv->k = 0;
@@ -680,7 +677,7 @@ gcal_month_view_get_property (GObject       *object,
 }
 
 static void
-gcal_month_view_finalize (GObject       *object)
+gcal_month_view_finalize (GObject *object)
 {
   GcalMonthViewPrivate *priv;
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (object));
@@ -778,18 +775,15 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 {
   GcalSubscriberViewPrivate *ppriv;
   GcalMonthViewPrivate *priv;
-  gint i, j, sw;
 
-  gint padding_bottom;
+  gint i, j, sw, shown_rows;
+
+  gint padding_bottom, font_height;
   PangoLayout *layout;
   PangoFontDescription *font_desc;
-  gint font_height;
 
   gdouble start_grid_y, first_row_gap, cell_width, cell_height, vertical_cell_space;
-  gdouble pos_x, pos_y;
-  gdouble size_left [42];
-
-  gint shown_rows;
+  gdouble pos_x, pos_y, size_left [42];
 
   const gchar *uuid;
   GtkWidget *child_widget;
@@ -1058,6 +1052,7 @@ gcal_month_view_draw (GtkWidget *widget,
   state = gtk_widget_get_state_flags (widget);
 
   gtk_style_context_get_padding (context, state, &padding);
+  gtk_style_context_get (context, state | GTK_STATE_FLAG_SELECTED, "font", &sfont_desc, NULL);
 
   gtk_widget_get_allocation (widget, &alloc);
   start_grid_y = get_start_grid_y (widget);
@@ -1065,8 +1060,6 @@ gcal_month_view_draw (GtkWidget *widget,
   cell_height = (alloc.height - start_grid_y) / 6.0;
 
   layout = gtk_widget_create_pango_layout (widget, NULL);
-
-  gtk_style_context_get (context, state | GTK_STATE_FLAG_SELECTED, "font", &sfont_desc, NULL);
 
   /* calculations */
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
@@ -1531,7 +1524,6 @@ gcal_month_view_button_release (GtkWidget      *widget,
       g_free (start_date);
       g_free (end_date);
     }
-
 
   gtk_widget_queue_draw (widget);
   priv->clicked_cell = -1;
