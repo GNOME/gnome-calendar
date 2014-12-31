@@ -104,7 +104,7 @@ gcal_subscriber_view_class_init (GcalSubscriberViewClass *klass)
   container_class->remove = gcal_subscriber_view_remove;
   container_class->forall = gcal_subscriber_view_forall;
 
-  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_VIEW, G_SIGNAL_RUN_LAST,
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_SUBSCRIBER_VIEW, G_SIGNAL_RUN_LAST,
                                            G_STRUCT_OFFSET (GcalSubscriberViewClass, event_activated),
                                            NULL, NULL, NULL,
                                            G_TYPE_NONE, 1, GCAL_TYPE_EVENT_WIDGET);
