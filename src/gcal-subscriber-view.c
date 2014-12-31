@@ -463,6 +463,7 @@ void
 _gcal_subscriber_view_setup_child (GcalSubscriberView *subscriber_view,
 				   GtkWidget          *child_widget)
 {
-  gtk_widget_set_parent (child_widget, GTK_WIDGET (subscriber_view));
+  if (gtk_widget_get_parent (child_widget) == NULL)
+    gtk_widget_set_parent (child_widget, GTK_WIDGET (subscriber_view));
   g_signal_connect (child_widget, "activate", G_CALLBACK (event_activated), subscriber_view);
 }

@@ -85,9 +85,6 @@ enum
   PROP_MANAGER  /* manager inherited property */
 };
 
-static void           event_opened                          (GcalEventWidget *event_widget,
-                                                             gpointer         user_data);
-
 static gint           gather_button_event_data              (GcalMonthView  *view,
                                                              gdouble         x,
                                                              gdouble         y,
@@ -161,6 +158,8 @@ static gboolean       gcal_month_view_is_child_multiday     (GcalSubscriberView 
 static guint          gcal_month_view_get_child_cell        (GcalSubscriberView *subscriber,
                                                              GcalEventWidget    *child);
 
+static void           gcal_month_view_clear_state           (GcalSubscriberView *subscriber);
+
 static icaltimetype*  gcal_month_view_get_initial_date      (GcalView       *view);
 
 static icaltimetype*  gcal_month_view_get_final_date        (GcalView       *view);
@@ -175,16 +174,6 @@ G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view,GCAL_TYPE_SUBSCRIBER_VIE
                          G_ADD_PRIVATE (GcalMonthView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
 
-static void
-event_opened (GcalEventWidget *event_widget,
-              gpointer         user_data)
-{
-  GcalMonthViewPrivate *priv;
-  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (user_data));
-
-  gtk_widget_hide (priv->overflow_popover);
-  g_signal_emit_by_name (GCAL_SUBSCRIBER_VIEW (user_data), "event-activated", event_widget);
-}
 static gint
 gather_button_event_data (GcalMonthView *view,
                           gdouble        x,
@@ -376,12 +365,10 @@ rebuild_popover_for_day (GcalMonthView *view,
   l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (priv->pressed_overflow_indicator));
   for (; l != NULL; l = g_list_next (l))
     {
-      /* FIXME: This may be replaced by setup_child */
       /* FIXME: mark the widgets properly with CSS tags */
       child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (l->data));
       gtk_container_add (GTK_CONTAINER (priv->events_list_box), child_widget);
-      /* FIXME, replace with uncomment */
-      g_signal_connect (child_widget, "activate", G_CALLBACK (event_opened), GTK_WIDGET (view));
+      _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (view), child_widget);
     }
 
   /* placement calculation */
@@ -537,6 +524,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   subscriber_view_class = GCAL_SUBSCRIBER_VIEW_CLASS (klass);
   subscriber_view_class->is_child_multicell = gcal_month_view_is_child_multiday;
   subscriber_view_class->get_child_cell = gcal_month_view_get_child_cell;
+  subscriber_view_class->clear_state = gcal_month_view_clear_state;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
@@ -1557,6 +1545,20 @@ gcal_month_view_get_child_cell (GcalSubscriberView *subscriber,
 {
   const icaltimetype *dt_start = gcal_event_widget_peek_start_date (child);
   return dt_start->day;
+}
+
+static void
+gcal_month_view_clear_state (GcalSubscriberView *subscriber)
+{
+  GcalMonthViewPrivate *priv;
+
+  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (subscriber));
+
+  priv->start_mark_cell = -1;
+  priv->end_mark_cell = -1;
+  priv->pressed_overflow_indicator = -1;
+
+  gtk_widget_hide (priv->overflow_popover);
 }
 
 /* GcalView Interface API */
