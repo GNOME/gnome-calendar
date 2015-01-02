@@ -29,6 +29,8 @@ DISTCLEANFILES =                \
   intltool-update               \
   po/.intltool-merge-cache
 
+DISTCHECK_CONFIGURE_FLAGS = --enable-appstream-util
+
 # Remove doc directory on uninstall
 uninstall-local:
 	-rm -r $(gnome_calendardocdir)

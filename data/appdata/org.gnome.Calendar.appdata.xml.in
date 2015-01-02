@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2014 Igor Gnatenko <ignatenko@src.gnome.org> -->
+<component type="desktop">
+  <id>org.gnome.Calendar.desktop</id>
+  <metadata_license>CC0</metadata_license>
+  <project_license>GPL-3.0+</project_license>
+  <_name>Calendar</_name>
+  <_summary>Calendar for GNOME</_summary>
+
+  <description>
+    <_p>
+      Calendar is a simple and beautiful calendar application designed to fit
+      GNOME 3.
+    </_p>
+    <_p>Features:</_p>
+    <ul>
+      <_li>Week, month and year views</_li>
+      <_li>Basic editing of events</_li>
+      <_li>Evolution Data Server integration</_li>
+      <_li>Search support</_li>
+    </ul>
+  </description>
+
+  <screenshots>
+    <screenshot type="default">
+      <image width="1366" height="768">https://feaneron.files.wordpress.com/2014/12/captura-de-tela-de-2014-12-23-191620.png</image>
+    </screenshot>
+    <screenshot>
+      <_caption>Search for events</_caption>
+      <image width="1366" height="768">https://feaneron.files.wordpress.com/2014/12/captura-de-tela-de-2014-12-23-184243.png</image>
+    </screenshot>
+    <screenshot>
+      <_caption>Calendar management</_caption>
+      <image width="1377" height="798">https://feaneron.files.wordpress.com/2014/12/calendar-selector.jpg</image>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://wiki.gnome.org/Apps/Calendar</url>
+  <url type="bugtracker">https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar</url>
+  <project_group>GNOME</project_group>
+
+  <update_contact>ignatenko@src.gnome.org</update_contact>
+
+</component>

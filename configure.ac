@@ -97,12 +97,15 @@ PKG_CHECK_MODULES(CALENDAR,
                   libedataserver-1.2 >= $EDATASERVER_REQUIRED
                   libical >= $LIBICAL_REQUIRED)
 
+APPSTREAM_XML
+
 AC_CONFIG_FILES([
       Makefile
       src/Makefile
       data/Makefile
       data/org.gnome.Calendar.desktop.in
       data/icons/Makefile
+      data/appdata/Makefile
       po/Makefile.in
 ])
 

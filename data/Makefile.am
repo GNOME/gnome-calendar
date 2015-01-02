@@ -1,4 +1,4 @@
-SUBDIRS = icons
+SUBDIRS = icons appdata
 
 desktopdir = $(datadir)/applications
 desktop_in_files = org.gnome.Calendar.desktop.in
