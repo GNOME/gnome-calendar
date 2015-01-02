@@ -2,13 +2,6 @@ ACLOCAL_AMFLAGS = -I m4 ${ACLOCAL_FLAGS}
 
 SUBDIRS = src data po
 
-gnome_calendardocdir = ${datadir}/doc/${PACKAGE_NAME}-${PACKAGE_VERSION}
-gnome_calendardoc_DATA =        \
-  AUTHORS                       \
-  README                        \
-  NEWS                          \
-	ChangeLog
-
 INTLTOOL_FILES =                \
   intltool-extract.in           \
   intltool-merge.in             \
