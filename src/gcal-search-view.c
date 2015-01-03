@@ -287,12 +287,39 @@ gcal_search_view_component_removed (ECalDataModelSubscriber *subscriber,
                                     const gchar             *rid)
 {
   GcalSearchViewPrivate *priv;
+  GList *children, *aux;
+  ESource *source;
 
-  priv =
-    gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (subscriber));
+  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (subscriber));
+  children = gtk_container_get_children (GTK_CONTAINER (priv->listbox));
+  source = e_client_get_source (E_CLIENT (client));
 
-  gtk_container_foreach (GTK_CONTAINER (priv->listbox),
-                         (GtkCallback) gtk_widget_destroy, NULL);
+  /* search for the event */
+  for (aux = children; aux != NULL; aux = aux->next)
+    {
+      GcalEventWidget *event_widget;
+      GtkWidget *row;
+      gchar *uuid;
+
+      row = aux->data;
+      event_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (row)));
+
+      /* if the widget has recurrency, it's UUID is different */
+      if (rid != NULL)
+        uuid = g_strdup_printf ("%s:%s:%s", e_source_get_uid (source), uid, rid);
+      else
+        uuid = g_strdup_printf ("%s:%s", e_source_get_uid (source), uid);
+
+      /* compare widget by uid */
+      if (event_widget != NULL && g_strcmp0 (gcal_event_widget_peek_uuid (event_widget), uuid) == 0)
+        {
+          gtk_container_remove (GTK_CONTAINER (priv->listbox), row);
+        }
+
+      g_free (uuid);
+    }
+
+  g_list_free (children);
 }
 
 static void
