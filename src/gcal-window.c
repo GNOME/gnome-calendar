@@ -1292,6 +1292,9 @@ gcal_window_constructed (GObject *object)
                           "active-date",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
+  g_object_bind_property (priv->search_button, "active", priv->search_bar, "search-mode-enabled",
+                          G_BINDING_BIDIRECTIONAL);
+
   /* signals connection/handling */
   /* HACK to ensure proper destroy of search-view widget */
   g_signal_connect_swapped (priv->views_stack, "destroy",
