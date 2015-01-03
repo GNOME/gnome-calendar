@@ -49,6 +49,11 @@ enum
   PROP_MANAGER  /* manager inherited property */
 };
 
+static GtkWidget*     get_event_from_grid                       (GtkWidget            *grid);
+
+static GtkWidget*     make_grid_for_event                       (GcalSearchView       *view,
+                                                                 GcalEventWidget      *event);
+
 static gint           sort_by_event                             (GtkListBoxRow        *row1,
                                                                  GtkListBoxRow        *row2,
                                                                  gpointer              user_data);
@@ -100,6 +105,99 @@ G_DEFINE_TYPE_WITH_CODE (GcalSearchView,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
 
 
+static GtkWidget*
+get_event_from_grid (GtkWidget *grid)
+{
+  return gtk_grid_get_child_at (GTK_GRID (grid), 2, 0);
+}
+
+static GtkWidget*
+make_grid_for_event (GcalSearchView  *view,
+                     GcalEventWidget *event)
+{
+  GcalSearchViewPrivate *priv;
+  GDateTime *datetime;
+  GtkWidget *grid;
+
+  gchar *text;
+  GtkWidget *start_date;
+  GtkWidget *end_date;
+  GtkWidget *start_time;
+  GtkWidget *end_time;
+
+  icaltimetype *start, *end;
+
+  priv = gcal_search_view_get_instance_private (view);
+  start = gcal_event_widget_get_date (event);
+  end = gcal_event_widget_get_end_date (event);
+
+  /* event widget properties */
+  gtk_widget_set_margin_start (GTK_WIDGET (event), 96);
+  gtk_widget_set_margin_end (GTK_WIDGET (event), 96);
+  gtk_widget_set_valign (GTK_WIDGET (event), GTK_ALIGN_CENTER);
+  gtk_widget_set_hexpand (GTK_WIDGET (event), TRUE);
+
+  /* grid */
+  grid = gtk_grid_new ();
+  gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
+  gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
+  gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
+  gtk_widget_set_hexpand (grid, TRUE);
+
+  /* start date & time */
+  datetime = g_date_time_new_local (start->year, start->month, start->day, start->hour, start->minute, start->second);
+  text = g_date_time_format (datetime, priv->date_mask);
+  start_date = gtk_label_new (text);
+  g_free (text);
+
+  text = g_date_time_format (datetime, priv->time_mask);
+  start_time = gtk_label_new (text);
+  g_free (text);
+
+  g_date_time_unref (datetime);
+  g_free (start);
+
+  /* end date & time */
+  if (end != NULL)
+    {
+      datetime = g_date_time_new_local (end->year, end->month, end->day, end->hour, end->minute, end->second);
+      text = g_date_time_format (datetime, priv->date_mask);
+      end_date = gtk_label_new (text);
+      g_free (text);
+
+      text = g_date_time_format (datetime, priv->time_mask);
+      end_time = gtk_label_new (text);
+      g_free (text);
+
+      g_date_time_unref (datetime);
+      g_free (end);
+    }
+
+  gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (event), 2, 0, 1, 2);
+
+  if (end != NULL)
+    {
+      gtk_grid_attach (GTK_GRID (grid), start_date, 0, 0, 1, 1);
+      gtk_grid_attach (GTK_GRID (grid), start_time, 1, 0, 1, 1);
+      gtk_grid_attach (GTK_GRID (grid), end_date, 0, 1, 1, 1);
+      gtk_grid_attach (GTK_GRID (grid), end_time, 1, 1, 1, 1);
+
+      gtk_widget_show (end_date);
+      gtk_widget_show (end_time);
+    }
+  else
+    {
+      gtk_grid_attach (GTK_GRID (grid), start_date, 0, 0, 1, 2);
+      gtk_grid_attach (GTK_GRID (grid), start_time, 1, 0, 1, 2);
+    }
+
+  gtk_widget_show (start_date);
+  gtk_widget_show (start_time);
+  gtk_widget_show (grid);
+  gtk_widget_show (GTK_WIDGET (event));
+
+  return grid;
+}
 
 static gint
 sort_by_event (GtkListBoxRow *row1,
@@ -110,8 +208,8 @@ sort_by_event (GtkListBoxRow *row1,
   icaltimetype *date1, *date2;
   gint result;
 
-  ev1 = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (row1)));
-  ev2 = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (row2)));
+  ev1 = GCAL_EVENT_WIDGET (get_event_from_grid (gtk_bin_get_child (GTK_BIN (row1))));
+  ev2 = GCAL_EVENT_WIDGET (get_event_from_grid (gtk_bin_get_child (GTK_BIN (row2))));
   date1 = gcal_event_widget_get_date (ev1);
   date2 = gcal_event_widget_get_date (ev2);
 
@@ -297,6 +395,7 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   GcalSearchViewPrivate *priv;
 
   GtkWidget *event;
+  GtkWidget *grid;
   GcalEventData *data;
 
   priv =
@@ -311,10 +410,8 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   g_signal_connect (event, "activate", G_CALLBACK (open_event), subscriber);
   g_free (data);
 
-  gtk_widget_set_margin_start (event, 96);
-  gtk_widget_set_margin_end (event, 96);
-  gtk_widget_show (event);
-  gtk_container_add (GTK_CONTAINER (priv->listbox), event);
+  grid = make_grid_for_event (GCAL_SEARCH_VIEW (subscriber), GCAL_EVENT_WIDGET (event));
+  gtk_container_add (GTK_CONTAINER (priv->listbox), grid);
 }
 
 static void
@@ -347,7 +444,7 @@ gcal_search_view_component_removed (ECalDataModelSubscriber *subscriber,
       gchar *uuid;
 
       row = aux->data;
-      event_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (row)));
+      event_widget = GCAL_EVENT_WIDGET (get_event_from_grid (gtk_bin_get_child (GTK_BIN (row))));
 
       /* if the widget has recurrency, it's UUID is different */
       if (rid != NULL)
