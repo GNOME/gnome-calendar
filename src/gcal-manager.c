@@ -311,6 +311,13 @@ on_client_connected (GObject      *source_object,
           e_cal_data_model_add_client (priv->e_data_model, client);
           e_cal_data_model_add_client (priv->search_data_model, client);
         }
+
+      /* refresh client when it's added */
+      if (unit->enabled && e_client_check_refresh_supported (E_CLIENT (client)))
+      {
+        e_client_refresh (E_CLIENT (client), NULL, on_client_refreshed, user_data);
+      }
+
       g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ADDED], 0, source, unit->enabled);
 
       g_clear_object (&client);
