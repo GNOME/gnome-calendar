@@ -218,11 +218,9 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
-                    <property name="margin">6</property>
+                    <property name="left_margin">6</property>
+                    <property name="right_margin">6</property>
                   </object>
-		  <style>
-		    <class name="entry"/>
-		  </style>
                 </child>
               </object>
               <packing>
