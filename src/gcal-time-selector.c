@@ -25,10 +25,8 @@
 struct _GcalTimeSelectorPrivate
 {
   GtkWidget *time_label;
-  GtkWidget *popover;
   GtkWidget *hour_spin;
   GtkWidget *minute_spin;
-  GtkWidget *period_check;
   GtkWidget *period_combo;
 
   gboolean   format_24h;
@@ -61,7 +59,7 @@ static void     time_changed                                   (GtkAdjustment   
 
 static void     gcal_time_selector_constructed                 (GObject              *object);
 
-G_DEFINE_TYPE_WITH_PRIVATE (GcalTimeSelector, gcal_time_selector, GTK_TYPE_TOGGLE_BUTTON);
+G_DEFINE_TYPE_WITH_PRIVATE (GcalTimeSelector, gcal_time_selector, GTK_TYPE_MENU_BUTTON);
 
 static void
 format_date_label (GcalTimeSelector *selector)
@@ -156,21 +154,28 @@ gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
                                     G_TYPE_NONE,
                                     0);
 
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/time-selector.ui");
+
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalTimeSelector, time_label);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalTimeSelector, hour_spin);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalTimeSelector, minute_spin);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalTimeSelector, period_combo);
+
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), on_output);
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), period_changed);
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), time_changed);
 }
 
 static void
 gcal_time_selector_init (GcalTimeSelector *self)
 {
-  ;
+  gtk_widget_init_template (GTK_WIDGET (self));
 }
 
 static void
 gcal_time_selector_constructed (GObject *object)
 {
   GcalTimeSelectorPrivate *priv;
-  GtkWidget *grid;
-  GtkBuilder *builder;
-  GtkAdjustment *adj;
 
   GSettings *settings;
   gchar *clock_format;
@@ -188,55 +193,11 @@ gcal_time_selector_constructed (GObject *object)
   g_free (clock_format);
   g_object_unref (settings);
 
-  /* time label */
-  priv->time_label = gtk_label_new (NULL);
-  gtk_label_set_label (GTK_LABEL (priv->time_label), "00:00");
-  gtk_widget_show (priv->time_label);
-
-  gtk_container_add (GTK_CONTAINER (object), priv->time_label);
-
-  /* popover */
-  builder = gtk_builder_new ();
-  gtk_builder_add_from_resource (builder, "/org/gnome/calendar/time-selector.ui", NULL);
-
-  priv->popover = gtk_popover_new (GTK_WIDGET (object));
-  gtk_popover_set_position (GTK_POPOVER (priv->popover), GTK_POS_BOTTOM);
-
-  grid = (GtkWidget*) gtk_builder_get_object (builder, "grid");
-  g_object_ref (grid);
-
-  priv->hour_spin = (GtkWidget*) gtk_builder_get_object (builder, "hour_spin");
-  g_object_ref (priv->hour_spin);
-
-  priv->minute_spin = (GtkWidget*) gtk_builder_get_object (builder, "minute_spin");
-  g_object_ref (priv->minute_spin);
-
-  priv->period_combo = (GtkWidget*) gtk_builder_get_object (builder, "period_combo");
-  gtk_widget_set_visible (priv->period_combo, !priv->format_24h);
-  g_object_ref (priv->period_combo);
-
-  g_object_unref (builder);
-
-  gtk_container_add (GTK_CONTAINER (priv->popover), grid);
-  g_object_bind_property (priv->popover, "visible", object, "active", G_BINDING_BIDIRECTIONAL);
-
   /* maximum of 11 for 12h format */
   if (! priv->format_24h)
     {
-      adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin));
-      gtk_adjustment_set_upper (adj, 11.0);
+      gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin)), 11.0);
     }
-
-  /* signals */
-  adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin));
-  g_signal_connect (adj, "value-changed", G_CALLBACK (time_changed), object);
-
-  adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->minute_spin));
-  g_signal_connect (adj, "value-changed", G_CALLBACK (time_changed), object);
-
-  g_signal_connect (priv->period_combo, "changed", G_CALLBACK (period_changed), object);
-  g_signal_connect (priv->hour_spin, "output", G_CALLBACK (on_output), object);
-  g_signal_connect (priv->minute_spin, "output", G_CALLBACK (on_output), object);
 }
 
 /* Public API */

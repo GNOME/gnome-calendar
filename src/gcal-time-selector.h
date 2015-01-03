@@ -37,7 +37,7 @@ typedef struct _GcalTimeSelectorPrivate         GcalTimeSelectorPrivate;
 
 struct _GcalTimeSelector
 {
-  GtkToggleButton parent;
+  GtkMenuButton parent;
   /* add your public declarations here */
 
   GcalTimeSelectorPrivate *priv;
@@ -45,7 +45,7 @@ struct _GcalTimeSelector
 
 struct _GcalTimeSelectorClass
 {
-  GtkToggleButtonClass parent_class;
+  GtkMenuButtonClass parent_class;
 
   /* signals */
   void (*modified)  (GcalTimeSelector *selector);
