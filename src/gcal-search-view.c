@@ -42,6 +42,9 @@ enum
   PROP_MANAGER  /* manager inherited property */
 };
 
+static void           open_event                                (GcalEventWidget      *event_widget,
+                                                                 gpointer              user_data);
+
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
 static void           gcal_view_interface_init                  (GcalViewIface  *iface);
@@ -84,6 +87,14 @@ G_DEFINE_TYPE_WITH_CODE (GcalSearchView,
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 gcal_data_model_subscriber_interface_init)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
+
+
+static void
+open_event (GcalEventWidget *event_widget,
+            gpointer         user_data)
+{
+  g_signal_emit_by_name (GCAL_VIEW (user_data), "event-activated", event_widget);
+}
 
 static void
 gcal_search_view_class_init (GcalSearchViewClass *klass)
@@ -252,6 +263,7 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
 
   event = gcal_event_widget_new_from_data (data);
   gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event), e_client_is_readonly (E_CLIENT (client)));
+  g_signal_connect (event, "activate", G_CALLBACK (open_event), subscriber);
   g_free (data);
 
   gtk_widget_set_margin_start (event, 96);
