@@ -912,7 +912,7 @@ gcal_manager_refresh (GcalManager *manager)
     {
       GcalManagerUnit *unit = l->data;
 
-      if (!unit->connected && ! e_client_check_refresh_supported (E_CLIENT (unit->client)))
+      if (!unit->connected || ! e_client_check_refresh_supported (E_CLIENT (unit->client)))
         continue;
 
       e_client_refresh (E_CLIENT (unit->client),
