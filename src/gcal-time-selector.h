@@ -55,6 +55,9 @@ GType            gcal_time_selector_get_type     (void);
 
 GtkWidget*       gcal_time_selector_new          (void);
 
+void             gcal_time_selector_set_time_format (GcalTimeSelector *selector,
+                                                     gboolean          format_24h);
+
 void             gcal_time_selector_set_time     (GcalTimeSelector *selector,
                                                   gint              hours,
                                                   gint              minutes);

@@ -127,6 +127,23 @@ period_changed (GtkComboBox *combo,
   g_signal_emit (user_data, signals[MODIFIED], 0);
 }
 
+void
+gcal_time_selector_set_time_format (GcalTimeSelector *selector,
+                                    gboolean          format_24h)
+{
+  GcalTimeSelectorPrivate *priv;
+
+  priv = gcal_time_selector_get_instance_private (selector);
+
+  priv->format_24h = format_24h;
+  gtk_widget_set_visible (priv->period_combo, !format_24h);
+
+  if (format_24h)
+    gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin)), 23.0);
+  else
+    gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin)), 11.0);
+}
+
 static void
 time_changed (GtkAdjustment *adjustment,
               gpointer       user_data)
@@ -175,29 +192,8 @@ gcal_time_selector_init (GcalTimeSelector *self)
 static void
 gcal_time_selector_constructed (GObject *object)
 {
-  GcalTimeSelectorPrivate *priv;
-
-  GSettings *settings;
-  gchar *clock_format;
-
-  priv = gcal_time_selector_get_instance_private (GCAL_TIME_SELECTOR (object));
-
   /* chaining up */
   G_OBJECT_CLASS (gcal_time_selector_parent_class)->constructed (object);
-
-  /* 24h setting */
-  settings = g_settings_new ("org.gnome.desktop.interface");
-  clock_format = g_settings_get_string (settings, "clock-format");
-  priv->format_24h = (g_strcmp0 (clock_format, "24h") == 0);
-
-  g_free (clock_format);
-  g_object_unref (settings);
-
-  /* maximum of 11 for 12h format */
-  if (! priv->format_24h)
-    {
-      gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin)), 11.0);
-    }
 }
 
 /* Public API */

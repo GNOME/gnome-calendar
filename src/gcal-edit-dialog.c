@@ -779,6 +779,9 @@ gcal_edit_dialog_new (gboolean format_24h)
   gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
   priv->format_24h = format_24h;
 
+  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (priv->start_time_selector), format_24h);
+  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (priv->end_time_selector), format_24h);
+
   return dialog;
 }
 
