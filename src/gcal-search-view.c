@@ -42,6 +42,10 @@ enum
   PROP_MANAGER  /* manager inherited property */
 };
 
+static gint           sort_by_event                             (GtkListBoxRow        *row1,
+                                                                 GtkListBoxRow        *row2,
+                                                                 gpointer              user_data);
+
 static void           open_event                                (GcalEventWidget      *event_widget,
                                                                  gpointer              user_data);
 
@@ -88,6 +92,33 @@ G_DEFINE_TYPE_WITH_CODE (GcalSearchView,
                                                 gcal_data_model_subscriber_interface_init)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
 
+
+
+static gint
+sort_by_event (GtkListBoxRow *row1,
+               GtkListBoxRow *row2,
+               gpointer       user_data)
+{
+  GcalEventWidget *ev1, *ev2;
+  icaltimetype *date1, *date2;
+  gint result;
+
+  ev1 = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (row1)));
+  ev2 = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (row2)));
+  date1 = gcal_event_widget_get_date (ev1);
+  date2 = gcal_event_widget_get_date (ev2);
+
+  /* First, compare by their dates */
+  result = icaltime_compare (*date1, *date2);
+  g_free (date1);
+  g_free (date2);
+
+  if (result != 0)
+    return -1 * result;
+
+  /* Second, by their names */
+  return -1 * g_strcmp0 (gcal_event_widget_peek_uuid (ev1), gcal_event_widget_peek_uuid (ev2));
+}
 
 static void
 open_event (GcalEventWidget *event_widget,
@@ -166,6 +197,7 @@ gcal_search_view_constructed (GObject *object)
   priv->listbox = gtk_list_box_new ();
   gtk_list_box_set_selection_mode (GTK_LIST_BOX (priv->listbox),
                                    GTK_SELECTION_NONE);
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->listbox), (GtkListBoxSortFunc) sort_by_event, NULL, NULL);
   gtk_widget_show (priv->listbox);
 
   gtk_container_add (GTK_CONTAINER (object), priv->listbox);
