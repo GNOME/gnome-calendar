@@ -28,6 +28,7 @@ struct _GcalTimeSelectorPrivate
   GtkWidget *hour_spin;
   GtkWidget *minute_spin;
   GtkWidget *period_combo;
+  GtkWidget *grid;
 
   gboolean   format_24h;
 };
@@ -177,6 +178,7 @@ gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalTimeSelector, hour_spin);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalTimeSelector, minute_spin);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalTimeSelector, period_combo);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalTimeSelector, grid);
 
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), on_output);
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), period_changed);
@@ -192,8 +194,14 @@ gcal_time_selector_init (GcalTimeSelector *self)
 static void
 gcal_time_selector_constructed (GObject *object)
 {
+  GcalTimeSelectorPrivate *priv;
+
+  priv = gcal_time_selector_get_instance_private (GCAL_TIME_SELECTOR (object));
+
   /* chaining up */
   G_OBJECT_CLASS (gcal_time_selector_parent_class)->constructed (object);
+
+  gtk_widget_set_direction (priv->grid, GTK_TEXT_DIR_LTR);
 }
 
 /* Public API */
