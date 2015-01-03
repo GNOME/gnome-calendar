@@ -818,19 +818,15 @@ static gboolean
 refresh_sources (GcalWindow *window)
 {
   GcalWindowPrivate *priv;
-  static gint current_timeout = 0;
+  static gint current_timeout = FAST_REFRESH_TIMEOUT;
 
   priv = gcal_window_get_instance_private (window);
-
-  /* update current_timeout the first time it's called */
-  if (current_timeout == 0)
-    current_timeout = priv->refresh_timeout;
 
   /* refresh sources */
   gcal_manager_refresh (priv->manager);
 
   /* check window state */
-  if (current_timeout != 0 && current_timeout != priv->refresh_timeout)
+  if (current_timeout != priv->refresh_timeout)
     {
       current_timeout = priv->refresh_timeout;
 
