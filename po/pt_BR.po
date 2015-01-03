@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-05-30 23:22+0000\n"
-"PO-Revision-Date: 2013-06-04 22:07-0300\n"
+"POT-Creation-Date: 2015-01-03 17:11+0000\n"
+"PO-Revision-Date: 2015-01-03 20:24-0300\n"
 "Last-Translator: Rafael Ferreira <rafael.f.f1@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.7.1\n"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:158
-#: ../src/gcal-application.c:396
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../src/gcal-application.c:432
+#: ../src/gcal-window.c:1006
 msgid "Calendar"
 msgstr "Agenda"
 
-#: ../data/gnome-calendar.desktop.in.in.h:2
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
 msgstr "Acesse e gerencie sua agenda"
 
@@ -61,224 +61,265 @@ msgstr "Tipo da visão ativa"
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Tipo da visão da janela ativa, sendo o padrão: visão mensal"
 
-#: ../src/gcal-application.c:87
-msgid "Display version number"
-msgstr "Exibir número da versão"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "Lista de fontes desativadas"
 
-#: ../src/gcal-application.c:204
-msgid "Unable to initialize GtkClutter"
-msgstr "Não foi possível inicializar GtkClutter"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "Fontes desabilitadas na última execução do Agenda"
 
-#: ../src/gcal-application.c:245
-msgid "- Calendar management"
-msgstr "- Gerenciamento de agenda"
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "Cancelar"
 
-#: ../src/gcal-application.c:300
-msgid "Weeks"
-msgstr "Semanas"
-
-#: ../src/gcal-application.c:301
-msgid "Months"
-msgstr "Meses"
-
-#: ../src/gcal-application.c:302
-msgid "Years"
-msgstr "Anos"
-
-#: ../src/gcal-application.c:304
-msgid "View as"
-msgstr "Ver como"
-
-#: ../src/gcal-application.c:312
-msgid "About"
-msgstr "Sobre"
-
-#: ../src/gcal-application.c:320
-msgid "Quit"
-msgstr "Sair"
-
-#: ../src/gcal-application.c:384
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Copyright © %Id Os autores da Agenda"
-
-#: ../src/gcal-application.c:390
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Copyright © %Id–%Id Os autores da Agenda"
-
-#: ../src/gcal-application.c:403
-msgid "translator-credits"
-msgstr "Rafael Ferreira <rafael.f.f1@gmail.com>, 2012."
-
-#: ../src/gcal-date-entry.c:162
-msgid "Change the date"
-msgstr "Alterar a data"
-
-#: ../src/gcal-edit-dialog.c:156
-msgid "Event Details"
-msgstr "Detalhes do evento"
-
-#. Summary, title
-#: ../src/gcal-edit-dialog.c:171
-msgid "Title"
-msgstr "Título"
-
-#. Start date and time
-#: ../src/gcal-edit-dialog.c:199
-msgid "Starts"
-msgstr "Inicia"
-
-#: ../src/gcal-edit-dialog.c:215
-msgid "All day"
-msgstr "Todo o dia"
-
-#. End date and time
-#: ../src/gcal-edit-dialog.c:221
-msgid "Ends"
-msgstr "Termina"
-
-#. Location, location, location
-#: ../src/gcal-edit-dialog.c:238
-msgid "Location"
-msgstr "Localização"
-
-#. Notes, description
-#: ../src/gcal-edit-dialog.c:252
-msgid "Notes"
-msgstr "Notas"
-
-#. done button
-#. done
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-searchbar.c:158
-#: ../src/gcal-toolbar.c:611
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:675
 msgid "Done"
 msgstr "Feito"
 
-#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:291
-msgid "New Event"
-msgstr "Novo evento"
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "Título"
 
-#: ../src/gcal-event-overlay.c:162
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "Inicia"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "Termina"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "Notas"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "Localização"
+
+#: ../data/ui/edit-dialog.ui.h:8
+msgid "All day"
+msgstr "Todo o dia"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "Excluir evento"
+
+#: ../data/ui/menus.ui.h:1
+#| msgid "New Event"
+msgid "_New Event"
+msgstr "_Novo evento"
+
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "Pes_quisar…"
+
+#: ../data/ui/menus.ui.h:3
+msgid "_About"
+msgstr "_Sobre"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Quit"
+msgstr "Sai_r"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "_Sincronizar"
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:425
+msgid "AM"
+msgstr "AM"
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:425
+msgid "PM"
+msgstr "PM"
+
+#: ../data/ui/window.ui.h:1
+msgid "Today"
+msgstr "Hoje"
+
+#: ../data/ui/window.ui.h:2
 msgid "Create"
 msgstr "Criar"
 
-#: ../src/gcal-event-overlay.c:171
-msgid "More details"
+#: ../data/ui/window.ui.h:3
+msgid "More Details"
 msgstr "Mais detalhes"
 
-#: ../src/gcal-event-overlay.c:185
-msgid "What (e.g. Alien Invasion)"
-msgstr "O que (ex: Invasão de alienígenas)"
+#: ../src/gcal-application.c:95
+msgid "Display version number"
+msgstr "Exibir número da versão"
 
-#: ../src/gcal-event-overlay.c:507
+#: ../src/gcal-application.c:100
+msgid "Open calendar on the passed date"
+msgstr "Abrir agenda na data anterior"
+
+#: ../src/gcal-application.c:292
+msgid "- Calendar management"
+msgstr "- Gerenciamento de agenda"
+
+#: ../src/gcal-application.c:420
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Copyright © %Id Os autores da Agenda"
+
+#: ../src/gcal-application.c:426
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Copyright © %Id–%Id Os autores da Agenda"
+
+#: ../src/gcal-application.c:439
+msgid "translator-credits"
+msgstr "Rafael Ferreira <rafael.f.f1@gmail.com>, 2012."
+
+#: ../src/gcal-edit-dialog.c:675
+msgid "Save"
+msgstr "Salvar"
+
+#: ../src/gcal-edit-dialog.c:864
+msgid "Unnamed event"
+msgstr "Evento sem nome"
+
+#: ../src/gcal-month-view.c:640
+msgid "Add new event..."
+msgstr "Adicionar novo evento..."
+
+#: ../src/gcal-month-view.c:892
+msgid "Other events"
+msgstr "Outros eventos"
+
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1209
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Outro evento"
+msgstr[1] "Outros %d eventos"
+
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "Dia"
+
+#: ../src/gcal-date-selector.c:305 ../src/gcal-window.c:1271
+msgid "Month"
+msgstr "Mês"
+
+#: ../src/gcal-date-selector.c:307 ../src/gcal-window.c:1277
+msgid "Year"
+msgstr "Ano"
+
+#: ../src/gcal-time-selector.c:95
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d:%.2d AM"
+
+#: ../src/gcal-time-selector.c:97
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d:%.2d PM"
+
+#: ../src/gcal-week-view.c:428 ../src/gcal-week-view.c:501
+msgid "Midnight"
+msgstr "Meia-noite"
+
+#: ../src/gcal-week-view.c:430 ../src/gcal-week-view.c:504
+msgid "Noon"
+msgstr "Tarde"
+
+#: ../src/gcal-week-view.c:507
+msgid "00:00 PM"
+msgstr "00:00 PM"
+
+#: ../src/gcal-week-view.c:1387 ../src/gcal-window.c:1266
+msgid "Week"
+msgstr "Semana"
+
+#: ../src/gcal-window.c:593
 #, c-format
 msgid "New Event on %s"
 msgstr "Novo evento em %s"
 
-#: ../src/gcal-event-overlay.c:524
-#, c-format
-msgid "New Event from %s to %s"
-msgstr "Novo evento de %s até %s"
-
-#: ../src/gcal-manager.c:1506
-msgid "Notification"
-msgstr "Notificação"
-
-#: ../src/gcal-manager.c:1508
-msgid "Email"
-msgstr "Email"
-
-#: ../src/gcal-manager.c:1522
-msgid "days"
-msgstr "dias"
-
-#: ../src/gcal-manager.c:1528
-msgid "weeks"
-msgstr "semanas"
-
-#: ../src/gcal-manager.c:1534
-msgid "hours"
-msgstr "horas"
-
-#: ../src/gcal-manager.c:1540
-msgid "minutes"
-msgstr "minutos"
-
-#: ../src/gcal-manager.c:1552
-msgid "before"
-msgstr "antes"
-
-#. Here translators should put the widgest letter in their alphabet, this
-#. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1026 ../src/gcal-week-view.c:1083
-#: ../src/gcal-year-view.c:925
-msgid "WWW 99 - WWW 99"
-msgstr "WWW 99 - WWW 99"
-
-#: ../src/gcal-searchbar.c:179
-msgid "Search..."
-msgstr "Pesquisar..."
-
-#: ../src/gcal-time-entry.c:126
-msgid "Change the time"
-msgstr "Alterar o horário"
-
-#. day
-#: ../src/gcal-toolbar.c:317
-msgid "Day"
-msgstr "Dia"
-
-#. week
-#: ../src/gcal-toolbar.c:334 ../src/gcal-week-view.c:1097
-msgid "Week"
-msgstr "Semana"
-
-#. month
-#: ../src/gcal-toolbar.c:351
-msgid "Month"
-msgstr "Mês"
-
-#. year
-#: ../src/gcal-toolbar.c:368
-msgid "Year"
-msgstr "Ano"
-
-#. list
-#: ../src/gcal-toolbar.c:385
-msgid "List"
-msgstr "Lista"
-
-#: ../src/gcal-toolbar.c:465
-msgid "Back"
-msgstr "Voltar"
-
-#. reset morphing edit_button
-#: ../src/gcal-toolbar.c:486 ../src/gcal-toolbar.c:498
-#: ../src/gcal-toolbar.c:616
-msgid "Edit"
-msgstr "Editar"
-
-#: ../src/gcal-week-view.c:1283
-msgid "AM"
-msgstr "AM"
-
-#: ../src/gcal-week-view.c:1283
-msgid "PM"
-msgstr "PM"
-
-#: ../src/gcal-week-view.c:1286 ../src/gcal-week-view.c:1358
-msgid "Midnight"
-msgstr "Meia-noite"
-
-#: ../src/gcal-week-view.c:1288 ../src/gcal-week-view.c:1361
-msgid "Noon"
-msgstr "Tarde"
-
-#: ../src/gcal-window.c:1378
+#: ../src/gcal-window.c:941
 msgid "Event deleted"
 msgstr "Evento excluído"
 
-#: ../src/gcal-year-view.c:929
+#: ../src/gcal-window.c:942
+msgid "Undo"
+msgstr "Desfazer"
+
+#: ../src/gcal-window.c:1035
 #, c-format
-msgid "Year %d"
-msgstr "Ano %d"
+msgid "Results for \"%s\""
+msgstr "Resultados para \"%s\""
+
+#~ msgid "Unable to initialize GtkClutter"
+#~ msgstr "Não foi possível inicializar GtkClutter"
+
+#~ msgid "Weeks"
+#~ msgstr "Semanas"
+
+#~ msgid "Months"
+#~ msgstr "Meses"
+
+#~ msgid "Years"
+#~ msgstr "Anos"
+
+#~ msgid "View as"
+#~ msgstr "Ver como"
+
+#~ msgid "Change the date"
+#~ msgstr "Alterar a data"
+
+#~ msgid "Event Details"
+#~ msgstr "Detalhes do evento"
+
+#~ msgid "What (e.g. Alien Invasion)"
+#~ msgstr "O que (ex: Invasão de alienígenas)"
+
+#~ msgid "New Event from %s to %s"
+#~ msgstr "Novo evento de %s até %s"
+
+#~ msgid "Notification"
+#~ msgstr "Notificação"
+
+#~ msgid "Email"
+#~ msgstr "Email"
+
+#~ msgid "days"
+#~ msgstr "dias"
+
+#~ msgid "weeks"
+#~ msgstr "semanas"
+
+#~ msgid "hours"
+#~ msgstr "horas"
+
+#~ msgid "minutes"
+#~ msgstr "minutos"
+
+#~ msgid "before"
+#~ msgstr "antes"
+
+#~ msgid "WWW 99 - WWW 99"
+#~ msgstr "WWW 99 - WWW 99"
+
+#~ msgid "Change the time"
+#~ msgstr "Alterar o horário"
+
+#~ msgid "List"
+#~ msgstr "Lista"
+
+#~ msgid "Back"
+#~ msgstr "Voltar"
+
+#~ msgid "Edit"
+#~ msgstr "Editar"
+
+#~ msgid "Year %d"
+#~ msgstr "Ano %d"
