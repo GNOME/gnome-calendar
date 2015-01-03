@@ -1021,31 +1021,24 @@ search_changed (GtkEditable *editable,
 
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
     {
+      gchar *query;
+
+      /* perform the search */
+      query = g_strdup_printf ("(contains? \"summary\" \"%s\")", gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
+      gcal_manager_set_query (priv->manager, query);
+      g_free (query);
 
       if (gtk_entry_get_text_length (GTK_ENTRY (priv->search_entry)) != 0)
         {
           gchar *title;
-          gchar *query;
 
-          title =
-            g_strdup_printf (
-                _("Results for \"%s\""),
-                gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
-          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar),
-                                    title);
+          title = g_strdup_printf (_("Results for \"%s\""), gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
+          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar), title);
           g_free (title);
-
-          /**/
-          query =
-            g_strdup_printf ("(contains? \"summary\" \"%s\")",
-                             gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
-          gcal_manager_set_query (priv->manager, query);
-          g_free (query);
         }
       else
         {
-          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar),
-                                    "");
+          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar), "");
         }
     }
 }
