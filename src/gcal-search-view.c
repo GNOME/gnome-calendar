@@ -22,6 +22,7 @@
 
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
+#include "gcal-view.h"
 
 #include <glib/gi18n.h>
 
@@ -42,6 +43,8 @@ enum
 };
 
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
+
+static void           gcal_view_interface_init                  (GcalViewIface  *iface);
 
 static void           gcal_search_view_constructed              (GObject        *object);
 
@@ -79,7 +82,8 @@ G_DEFINE_TYPE_WITH_CODE (GcalSearchView,
                          GTK_TYPE_SCROLLED_WINDOW,
                          G_ADD_PRIVATE (GcalSearchView)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
-                                                gcal_data_model_subscriber_interface_init));
+                                                gcal_data_model_subscriber_interface_init)
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
 
 static void
 gcal_search_view_class_init (GcalSearchViewClass *klass)
@@ -109,6 +113,20 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
                             "A weak reference to the app manager object",
                             G_PARAM_CONSTRUCT_ONLY |
                             G_PARAM_READWRITE));
+}
+
+static void
+gcal_view_interface_init (GcalViewIface *iface)
+{
+  iface->get_initial_date = NULL;
+  iface->get_final_date = NULL;
+
+  iface->clear_marks = NULL;
+
+  iface->get_left_header = NULL;
+  iface->get_right_header = NULL;
+
+  iface->get_by_uuid = NULL;
 }
 
 static void
