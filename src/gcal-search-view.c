@@ -24,11 +24,18 @@
 #include "gcal-utils.h"
 #include "gcal-view.h"
 
+#include <locale.h>
+#include <langinfo.h>
+
 #include <glib/gi18n.h>
 
 typedef struct
 {
   GtkWidget      *listbox;
+
+  /* misc */
+  gchar          *time_mask;
+  gchar          *date_mask;
 
   /* property */
   icaltimetype   *date;
@@ -174,6 +181,12 @@ gcal_view_interface_init (GcalViewIface *iface)
 static void
 gcal_search_view_init (GcalSearchView *self)
 {
+  GcalSearchViewPrivate *priv;
+
+  priv = gcal_search_view_get_instance_private (self);
+
+  priv->date_mask = nl_langinfo (D_FMT);
+  priv->time_mask = "%H:%M";
 }
 
 static void
