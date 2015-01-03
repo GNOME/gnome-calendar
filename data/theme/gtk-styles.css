@@ -45,7 +45,8 @@
 .calendar-view.overflow:hover {
     font-weight: bold;
     color: @theme_selected_bg_color;
-    background-image: linear-gradient(rgba(0, 0, 0, 0.3) 1px, #efefef 2px)
+    background-image: linear-gradient(to bottom, shade(@theme_bg_color, 0.9), alpha(@theme_bg_color, 0.2) 10%,
+                                      alpha(@theme_bg_color, 0.2) 95%, shade(@theme_bg_color, 0.95) 100%);
 }
 
 .calendar-view.overflow {
