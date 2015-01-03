@@ -100,6 +100,8 @@ typedef struct
 
   /* calendar management */
   GMenu               *calendar_menu;
+  gint                 refresh_timeout;
+  gint                 refresh_timeout_id;
 
   /* temp to keep event_creation */
   gboolean             open_edit_dialog;
@@ -115,6 +117,8 @@ enum
 };
 
 #define SAVE_GEOMETRY_ID_TIMEOUT 100 /* ms */
+#define FAST_REFRESH_TIMEOUT     300000 /* ms */
+#define SLOW_REFRESH_TIMEOUT     1200000 /* ms */
 
 static gboolean       key_pressed                        (GtkWidget           *widget,
                                                           GdkEvent            *event,
@@ -175,6 +179,12 @@ static void           remove_source                      (GcalManager         *m
 
 static void           on_calendar_toggled                (GSimpleAction       *action,
                                                           GVariant            *value,
+                                                          gpointer             user_data);
+
+static gboolean       refresh_sources                    (GcalWindow          *window);
+
+static gboolean       window_state_changed               (GtkWidget           *window,
+                                                          GdkEvent            *event,
                                                           gpointer             user_data);
 
 /* handling events interaction */
@@ -804,6 +814,53 @@ on_calendar_toggled (GSimpleAction *action,
   g_simple_action_set_state (action, value);
 }
 
+static gboolean
+refresh_sources (GcalWindow *window)
+{
+  GcalWindowPrivate *priv;
+  static gint current_timeout = 0;
+
+  priv = gcal_window_get_instance_private (window);
+
+  /* update current_timeout the first time it's called */
+  if (current_timeout == 0)
+    current_timeout = priv->refresh_timeout;
+
+  /* refresh sources */
+  gcal_manager_refresh (priv->manager);
+
+  /* check window state */
+  if (current_timeout != 0 && current_timeout != priv->refresh_timeout)
+    {
+      current_timeout = priv->refresh_timeout;
+
+      priv->refresh_timeout_id = g_timeout_add (priv->refresh_timeout, (GSourceFunc) refresh_sources, window);
+
+      return G_SOURCE_REMOVE;
+    }
+
+  return G_SOURCE_CONTINUE;
+}
+
+static gboolean
+window_state_changed (GtkWidget *window,
+                      GdkEvent  *event,
+                      gpointer   user_data)
+{
+  GcalWindowPrivate *priv;
+  GdkEventWindowState *state;
+  gboolean active;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (window));
+  state = (GdkEventWindowState*) event;
+  active = (state->new_window_state & GDK_WINDOW_STATE_FOCUSED);
+
+  /* update timeout time according to the state */
+  priv->refresh_timeout = (active ? FAST_REFRESH_TIMEOUT : SLOW_REFRESH_TIMEOUT);
+
+  return FALSE;
+}
+
 static void
 create_event (gpointer   user_data,
               GtkWidget *widget)
@@ -1192,6 +1249,9 @@ gcal_window_class_init(GcalWindowClass *klass)
   /* Event creation related */
   gtk_widget_class_bind_template_callback (widget_class, create_event);
   gtk_widget_class_bind_template_callback (widget_class, close_new_event_widget);
+
+  /* Syncronization related */
+  gtk_widget_class_bind_template_callback (widget_class, window_state_changed);
 }
 
 static void
@@ -1307,6 +1367,9 @@ gcal_window_constructed (GObject *object)
           g_signal_connect (priv->views[i], "event-activated", G_CALLBACK (event_activated), object);
         }
     }
+
+  /* refresh timeout, first is fast */
+  priv->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, object);
 }
 
 static void

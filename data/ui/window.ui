@@ -9,6 +9,7 @@
     <property name="default_height">600</property>
     <property name="show_menubar">False</property>
     <signal name="key-press-event" handler="key_pressed" object="GcalWindow" swapped="no"/>
+    <signal name="window-state-event" handler="window_state_changed" object="GcalWindow" swapped="no"/>
     <child>
       <object class="GtkOverlay" id="views_overlay">
         <property name="visible">True</property>
