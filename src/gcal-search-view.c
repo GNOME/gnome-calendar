@@ -32,6 +32,7 @@
 typedef struct
 {
   GtkWidget      *listbox;
+  GtkWidget      *frame;
   GtkWidget      *no_results_grid;
 
   /* misc */
@@ -252,6 +253,7 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/search-view.ui");
 
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, no_results_grid);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, frame);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, listbox);
 }
 
@@ -403,6 +405,9 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   grid = make_grid_for_event (GCAL_SEARCH_VIEW (subscriber), GCAL_EVENT_WIDGET (event));
   gtk_container_add (GTK_CONTAINER (priv->listbox), grid);
   priv->num_results++;
+
+  gtk_widget_set_visible (priv->frame, priv->num_results != 0);
+  gtk_widget_set_visible (priv->no_results_grid, priv->num_results == 0);
 }
 
 static void
@@ -454,6 +459,9 @@ gcal_search_view_component_removed (ECalDataModelSubscriber *subscriber,
 
   g_list_free (children);
   priv->num_results--;
+
+  gtk_widget_set_visible (priv->frame, priv->num_results != 0);
+  gtk_widget_set_visible (priv->no_results_grid, priv->num_results == 0);
 }
 
 static void
