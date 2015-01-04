@@ -1337,6 +1337,17 @@ gcal_window_constructed (GObject *object)
                           "active-date",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
+  /* search related bindings */
+  g_object_bind_property (priv->search_button, "active", priv->search_bar, "search-mode-enabled",
+                          G_BINDING_BIDIRECTIONAL);
+
+  g_object_bind_property (priv->search_bar, "search-mode-enabled", priv->back_button, "visible",
+                          G_BINDING_DEFAULT | G_BINDING_INVERT_BOOLEAN);
+  g_object_bind_property (priv->search_bar, "search-mode-enabled", priv->today_button, "visible",
+                          G_BINDING_DEFAULT | G_BINDING_INVERT_BOOLEAN);
+  g_object_bind_property (priv->search_bar, "search-mode-enabled", priv->forward_button, "visible",
+                          G_BINDING_DEFAULT | G_BINDING_INVERT_BOOLEAN);
+
   /* signals connection/handling */
   /* HACK to ensure proper destroy of search-view widget */
   g_signal_connect_swapped (priv->views_stack, "destroy",
