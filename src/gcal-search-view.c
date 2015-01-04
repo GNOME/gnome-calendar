@@ -148,6 +148,7 @@ make_grid_for_event (GcalSearchView  *view,
 
   gtk_grid_set_column_spacing (GTK_GRID (box), 6);
   gtk_grid_set_column_homogeneous (GTK_GRID (box), TRUE);
+  gtk_widget_set_valign (box, GTK_ALIGN_CENTER);
   gtk_widget_set_margin_end (box, 6);
 
   /* start date & time */
