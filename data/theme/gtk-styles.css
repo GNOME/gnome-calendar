@@ -92,3 +92,7 @@ GcalEventWidget.color-light:backdrop {
     border-bottom-right-radius: 0px;
     border-top-right-radius: 0px;
 }
+
+GcalSearchView > GtkViewport {
+  background-color: @theme_bg_color;
+}
