@@ -31,6 +31,9 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="selection_mode">none</property>
+                    <style>
+                      <class name="search-list"/>
+                    </style>
                   </object>
                 </child>
                 <child type="label_item">
