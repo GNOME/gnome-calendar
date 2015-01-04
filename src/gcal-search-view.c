@@ -36,6 +36,7 @@ typedef struct
   GtkWidget      *no_results_grid;
 
   /* misc */
+  gint            no_results_timeout_id;
   gint            num_results;
   gchar          *time_mask;
   gchar          *date_mask;
@@ -52,6 +53,8 @@ enum
   PROP_MANAGER  /* manager inherited property */
 };
 
+#define NO_RESULT_TIMEOUT 250 /* ms */
+
 static GtkWidget*     get_event_from_grid                       (GtkWidget            *grid);
 
 static GtkWidget*     make_grid_for_event                       (GcalSearchView       *view,
@@ -63,6 +66,8 @@ static gint           sort_by_event                             (GtkListBoxRow  
 
 static void           open_event                                (GcalEventWidget      *event_widget,
                                                                  gpointer              user_data);
+
+static gboolean       show_no_results_page                      (GcalSearchView       *view);
 
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
@@ -219,6 +224,20 @@ open_event (GcalEventWidget *event_widget,
             gpointer         user_data)
 {
   g_signal_emit_by_name (GCAL_VIEW (user_data), "event-activated", event_widget);
+}
+
+static gboolean
+show_no_results_page (GcalSearchView *view)
+{
+  GcalSearchViewPrivate *priv;
+
+  priv = gcal_search_view_get_instance_private (view);
+  priv->no_results_timeout_id = 0;
+
+  gtk_widget_set_visible (priv->frame, priv->num_results != 0);
+  gtk_widget_set_visible (priv->no_results_grid, priv->num_results == 0);
+
+  return G_SOURCE_REMOVE;
 }
 
 static void
@@ -406,8 +425,11 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   gtk_container_add (GTK_CONTAINER (priv->listbox), grid);
   priv->num_results++;
 
-  gtk_widget_set_visible (priv->frame, priv->num_results != 0);
-  gtk_widget_set_visible (priv->no_results_grid, priv->num_results == 0);
+  /* show the 'no results' page with a delay */
+  if (priv->no_results_timeout_id != 0)
+    g_source_remove (priv->no_results_timeout_id);
+
+  priv->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT, (GSourceFunc) show_no_results_page, subscriber);
 }
 
 static void
@@ -460,8 +482,11 @@ gcal_search_view_component_removed (ECalDataModelSubscriber *subscriber,
   g_list_free (children);
   priv->num_results--;
 
-  gtk_widget_set_visible (priv->frame, priv->num_results != 0);
-  gtk_widget_set_visible (priv->no_results_grid, priv->num_results == 0);
+  /* show the 'no results' page with a delay */
+  if (priv->no_results_timeout_id != 0)
+    g_source_remove (priv->no_results_timeout_id);
+
+  priv->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT, (GSourceFunc) show_no_results_page, subscriber);
 }
 
 static void
