@@ -278,17 +278,28 @@ static void
 gcal_search_view_constructed (GObject *object)
 {
   GcalSearchViewPrivate *priv;
+  GtkWidget *frame;
 
   priv =
     gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
 
+  /* frame */
+  frame = gtk_frame_new (NULL);
+  gtk_widget_set_margin_start (frame, 96);
+  gtk_widget_set_margin_end (frame, 96);
+  gtk_widget_set_margin_top (frame, 24);
+  gtk_widget_set_margin_bottom (frame, 24);
+  gtk_widget_show (frame);
+
+  /* listbox */
   priv->listbox = gtk_list_box_new ();
   gtk_list_box_set_selection_mode (GTK_LIST_BOX (priv->listbox),
                                    GTK_SELECTION_NONE);
   gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->listbox), (GtkListBoxSortFunc) sort_by_event, NULL, NULL);
   gtk_widget_show (priv->listbox);
 
-  gtk_container_add (GTK_CONTAINER (object), priv->listbox);
+  gtk_container_add (GTK_CONTAINER (frame), priv->listbox);
+  gtk_container_add (GTK_CONTAINER (object), frame);
 
 
   gcal_manager_set_search_subscriber (
