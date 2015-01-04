@@ -108,7 +108,7 @@ G_DEFINE_TYPE_WITH_CODE (GcalSearchView,
 static GtkWidget*
 get_event_from_grid (GtkWidget *grid)
 {
-  return gtk_grid_get_child_at (GTK_GRID (grid), 2, 0);
+  return gtk_grid_get_child_at (GTK_GRID (grid), 1, 0);
 }
 
 static GtkWidget*
@@ -118,6 +118,7 @@ make_grid_for_event (GcalSearchView  *view,
   GcalSearchViewPrivate *priv;
   GDateTime *datetime;
   GtkWidget *grid;
+  GtkWidget *box;
 
   gchar *text;
   GtkWidget *start_date;
@@ -134,15 +135,20 @@ make_grid_for_event (GcalSearchView  *view,
   gtk_widget_set_valign (GTK_WIDGET (event), GTK_ALIGN_CENTER);
   gtk_widget_set_hexpand (GTK_WIDGET (event), TRUE);
 
-  /* grid */
+  /* grid & box*/
   grid = gtk_grid_new ();
+  box = gtk_grid_new ();
+
   g_object_set (grid,
                 "column-spacing", 6,
-                "column-homogeneous", TRUE,
                 "border-width", 6,
                 "margin-start", 12,
                 "margin-end", 12,
                 "hexpand", TRUE, NULL);
+
+  gtk_grid_set_column_spacing (GTK_GRID (box), 6);
+  gtk_grid_set_column_homogeneous (GTK_GRID (box), TRUE);
+  gtk_widget_set_margin_end (box, 6);
 
   /* start date & time */
   datetime = g_date_time_new_local (start->year, start->month, start->day, start->hour, start->minute, start->second);
@@ -164,12 +170,14 @@ make_grid_for_event (GcalSearchView  *view,
   g_date_time_unref (datetime);
   g_free (start);
 
-  /* labels: 20%; event widget: 80% */
-  gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (event), 2, 0, 10, 1);
-  gtk_grid_attach (GTK_GRID (grid), start_date, 0, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (grid), start_time, 1, 0, 1, 1);
+  /* labels: 10%; event widget: 90% */
+  gtk_grid_attach (GTK_GRID (box), start_date, 0, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (box), start_time, 1, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (event), 1, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (grid), box, 0, 0, 1, 1);
   gtk_widget_show (start_date);
   gtk_widget_show (start_time);
+  gtk_widget_show (box);
   gtk_widget_show (grid);
   gtk_widget_show (GTK_WIDGET (event));
 
