@@ -121,28 +121,28 @@ make_grid_for_event (GcalSearchView  *view,
 
   gchar *text;
   GtkWidget *start_date;
-  GtkWidget *end_date;
   GtkWidget *start_time;
-  GtkWidget *end_time;
 
-  icaltimetype *start, *end;
+  icaltimetype *start;
+  gboolean all_day;
 
   priv = gcal_search_view_get_instance_private (view);
   start = gcal_event_widget_get_date (event);
-  end = gcal_event_widget_get_end_date (event);
+  all_day = gcal_event_widget_get_all_day (event);
 
   /* event widget properties */
-  gtk_widget_set_margin_start (GTK_WIDGET (event), 96);
-  gtk_widget_set_margin_end (GTK_WIDGET (event), 96);
   gtk_widget_set_valign (GTK_WIDGET (event), GTK_ALIGN_CENTER);
   gtk_widget_set_hexpand (GTK_WIDGET (event), TRUE);
 
   /* grid */
   grid = gtk_grid_new ();
-  gtk_grid_set_column_spacing (GTK_GRID (grid), 6);
-  gtk_grid_set_row_spacing (GTK_GRID (grid), 6);
-  gtk_container_set_border_width (GTK_CONTAINER (grid), 6);
-  gtk_widget_set_hexpand (grid, TRUE);
+  g_object_set (grid,
+                "column-spacing", 6,
+                "column-homogeneous", TRUE,
+                "border-width", 6,
+                "margin-start", 12,
+                "margin-end", 12,
+                "hexpand", TRUE, NULL);
 
   /* start date & time */
   datetime = g_date_time_new_local (start->year, start->month, start->day, start->hour, start->minute, start->second);
@@ -150,47 +150,24 @@ make_grid_for_event (GcalSearchView  *view,
   start_date = gtk_label_new (text);
   g_free (text);
 
-  text = g_date_time_format (datetime, priv->time_mask);
-  start_time = gtk_label_new (text);
-  g_free (text);
+  if (!all_day)
+    {
+      text = g_date_time_format (datetime, priv->time_mask);
+      start_time = gtk_label_new (text);
+      g_free (text);
+    }
+  else
+    {
+      start_time = gtk_label_new (NULL);
+    }
 
   g_date_time_unref (datetime);
   g_free (start);
 
-  /* end date & time */
-  if (end != NULL)
-    {
-      datetime = g_date_time_new_local (end->year, end->month, end->day, end->hour, end->minute, end->second);
-      text = g_date_time_format (datetime, priv->date_mask);
-      end_date = gtk_label_new (text);
-      g_free (text);
-
-      text = g_date_time_format (datetime, priv->time_mask);
-      end_time = gtk_label_new (text);
-      g_free (text);
-
-      g_date_time_unref (datetime);
-      g_free (end);
-    }
-
-  gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (event), 2, 0, 1, 2);
-
-  if (end != NULL)
-    {
-      gtk_grid_attach (GTK_GRID (grid), start_date, 0, 0, 1, 1);
-      gtk_grid_attach (GTK_GRID (grid), start_time, 1, 0, 1, 1);
-      gtk_grid_attach (GTK_GRID (grid), end_date, 0, 1, 1, 1);
-      gtk_grid_attach (GTK_GRID (grid), end_time, 1, 1, 1, 1);
-
-      gtk_widget_show (end_date);
-      gtk_widget_show (end_time);
-    }
-  else
-    {
-      gtk_grid_attach (GTK_GRID (grid), start_date, 0, 0, 1, 2);
-      gtk_grid_attach (GTK_GRID (grid), start_time, 1, 0, 1, 2);
-    }
-
+  /* labels: 20%; event widget: 80% */
+  gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (event), 2, 0, 10, 1);
+  gtk_grid_attach (GTK_GRID (grid), start_date, 0, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (grid), start_time, 1, 0, 1, 1);
   gtk_widget_show (start_date);
   gtk_widget_show (start_time);
   gtk_widget_show (grid);
