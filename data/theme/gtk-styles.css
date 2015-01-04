@@ -96,3 +96,7 @@ GcalEventWidget.color-light:backdrop {
 GcalSearchView > GtkViewport {
   background-color: @theme_bg_color;
 }
+
+.search-list > GtkListBoxRow {
+  border-bottom: solid 1px @borders;
+}
