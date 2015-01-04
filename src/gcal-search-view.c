@@ -32,6 +32,7 @@
 typedef struct
 {
   GtkWidget      *listbox;
+  GtkWidget      *no_results_grid;
 
   /* misc */
   gchar          *time_mask;
@@ -246,6 +247,11 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
                             "A weak reference to the app manager object",
                             G_PARAM_CONSTRUCT_ONLY |
                             G_PARAM_READWRITE));
+
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/search-view.ui");
+
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, no_results_grid);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, listbox);
 }
 
 static void
@@ -271,6 +277,8 @@ gcal_search_view_init (GcalSearchView *self)
 
   priv->date_mask = nl_langinfo (D_FMT);
   priv->time_mask = "%H:%M";
+
+  gtk_widget_init_template (GTK_WIDGET (self));
 }
 
 static void
@@ -287,30 +295,13 @@ static void
 gcal_search_view_constructed (GObject *object)
 {
   GcalSearchViewPrivate *priv;
-  GtkWidget *frame;
 
   priv =
     gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
 
-  /* frame */
-  frame = gtk_frame_new (NULL);
-  gtk_widget_set_margin_start (frame, 96);
-  gtk_widget_set_margin_end (frame, 96);
-  gtk_widget_set_margin_top (frame, 24);
-  gtk_widget_set_margin_bottom (frame, 24);
-  gtk_widget_show (frame);
-
   /* listbox */
-  priv->listbox = gtk_list_box_new ();
-  gtk_list_box_set_selection_mode (GTK_LIST_BOX (priv->listbox),
-                                   GTK_SELECTION_NONE);
   gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->listbox), (GtkListBoxSortFunc) sort_by_event, NULL, NULL);
   gtk_style_context_add_class (gtk_widget_get_style_context (priv->listbox), "search-list");
-  gtk_widget_show (priv->listbox);
-
-  gtk_container_add (GTK_CONTAINER (frame), priv->listbox);
-  gtk_container_add (GTK_CONTAINER (object), frame);
-
 
   gcal_manager_set_search_subscriber (
       priv->manager,
