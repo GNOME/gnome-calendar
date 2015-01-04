@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2014-12-23 17:15+0000\n"
+"POT-Creation-Date: 2015-01-03 17:11+0000\n"
 "PO-Revision-Date: 2014-12-27 17:01+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
@@ -129,14 +129,18 @@ msgid "_Synchronize"
 msgstr "_Synchronizovat"
 
 #: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00∶00"
+
+#: ../data/ui/time-selector.ui.h:2
 msgid ":"
 msgstr "∶"
 
-#: ../data/ui/time-selector.ui.h:2 ../src/gcal-week-view.c:425
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:425
 msgid "AM"
 msgstr "dop."
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:425
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:425
 msgid "PM"
 msgstr "odp."
 
@@ -182,20 +186,20 @@ msgstr ""
 msgid "Save"
 msgstr "Uložit"
 
-#: ../src/gcal-edit-dialog.c:863
+#: ../src/gcal-edit-dialog.c:864
 msgid "Unnamed event"
 msgstr "Událost bez názvu"
 
-#: ../src/gcal-month-view.c:644
+#: ../src/gcal-month-view.c:640
 msgid "Add new event..."
 msgstr "Přidat novou událost…"
 
-#: ../src/gcal-month-view.c:898
+#: ../src/gcal-month-view.c:892
 msgid "Other events"
 msgstr "Další události"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1220
+#: ../src/gcal-month-view.c:1209
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -203,24 +207,24 @@ msgstr[0] "Další událost"
 msgstr[1] "Další %d události"
 msgstr[2] "Další %d událostí"
 
-#: ../src/gcal-date-selector.c:337
+#: ../src/gcal-date-selector.c:303
 msgid "Day"
 msgstr "Den"
 
-#: ../src/gcal-date-selector.c:349 ../src/gcal-window.c:1278
+#: ../src/gcal-date-selector.c:305 ../src/gcal-window.c:1271
 msgid "Month"
 msgstr "Měsíc"
 
-#: ../src/gcal-date-selector.c:364 ../src/gcal-window.c:1284
+#: ../src/gcal-date-selector.c:307 ../src/gcal-window.c:1277
 msgid "Year"
 msgstr "Rok"
 
-#: ../src/gcal-time-selector.c:97
+#: ../src/gcal-time-selector.c:95
 #, c-format
 msgid "%.2d:%.2d AM"
 msgstr "%.2d∶%.2d dop."
 
-#: ../src/gcal-time-selector.c:99
+#: ../src/gcal-time-selector.c:97
 #, c-format
 msgid "%.2d:%.2d PM"
 msgstr "%.2d∶%.2d odp."
@@ -237,7 +241,7 @@ msgstr "Poledne"
 msgid "00:00 PM"
 msgstr "00∶00 odp."
 
-#: ../src/gcal-week-view.c:1388 ../src/gcal-window.c:1273
+#: ../src/gcal-week-view.c:1387 ../src/gcal-window.c:1266
 msgid "Week"
 msgstr "Týden"
 
@@ -254,7 +258,7 @@ msgstr "Událost smazána"
 msgid "Undo"
 msgstr "Zpět"
 
-#: ../src/gcal-window.c:1032
+#: ../src/gcal-window.c:1035
 #, c-format
 msgid "Results for \"%s\""
 msgstr "Výsledky pro „%s“"
