@@ -23,15 +23,15 @@
 
   <screenshots>
     <screenshot type="default">
-      <image width="1366" height="768">https://feaneron.files.wordpress.com/2014/12/captura-de-tela-de-2014-12-23-191620.png</image>
+      <image width="1200" height="675">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/default.png</image>
     </screenshot>
     <screenshot>
       <_caption>Search for events</_caption>
-      <image width="1366" height="768">https://feaneron.files.wordpress.com/2014/12/captura-de-tela-de-2014-12-23-184243.png</image>
+      <image width="1200" height="675">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/search.png</image>
     </screenshot>
     <screenshot>
       <_caption>Calendar management</_caption>
-      <image width="1377" height="798">https://feaneron.files.wordpress.com/2014/12/calendar-selector.jpg</image>
+      <image width="1200" height="675">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/calendar-management.png</image>
     </screenshot>
   </screenshots>
 
