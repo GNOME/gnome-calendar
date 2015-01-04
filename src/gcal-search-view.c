@@ -35,6 +35,7 @@ typedef struct
   GtkWidget      *no_results_grid;
 
   /* misc */
+  gint            num_results;
   gchar          *time_mask;
   gchar          *date_mask;
 
@@ -401,6 +402,7 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
 
   grid = make_grid_for_event (GCAL_SEARCH_VIEW (subscriber), GCAL_EVENT_WIDGET (event));
   gtk_container_add (GTK_CONTAINER (priv->listbox), grid);
+  priv->num_results++;
 }
 
 static void
@@ -451,6 +453,7 @@ gcal_search_view_component_removed (ECalDataModelSubscriber *subscriber,
     }
 
   g_list_free (children);
+  priv->num_results--;
 }
 
 static void
