@@ -5,6 +5,7 @@
     <file alias="edit-dialog.ui" compressed="true" preprocess="xml-stripblanks">ui/edit-dialog.ui</file>
     <file alias="menus.ui" compressed="true" preprocess="xml-stripblanks">ui/menus.ui</file>
     <file alias="nav_bar.ui" compressed="true" preprocess="xml-stripblanks">ui/nav_bar.ui</file>
+    <file alias="search-view.ui" compressed="true" preprocess="xml-stripblanks">ui/search-view.ui</file>
     <file alias="time-selector.ui" compressed="true" preprocess="xml-stripblanks">ui/time-selector.ui</file>
     <file alias="window.ui" compressed="true" preprocess="xml-stripblanks">ui/window.ui</file>
     <file alias="gtk-styles.css" compressed="true">theme/gtk-styles.css</file>

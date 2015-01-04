@@ -37,6 +37,7 @@ EXTRA_DIST=                     \
   ui/edit-dialog.ui             \
   ui/menus.ui                   \
   ui/nav_bar.ui                 \
+  ui/search-view.ui             \
   ui/time-selector.ui           \
   ui/window.ui                  \
   theme/gtk-styles.css          \
