@@ -1352,7 +1352,7 @@ gcal_window_constructed (GObject *object)
                             priv->views[GCAL_WINDOW_VIEW_SEARCH]);
 
   /* only GcalView implementations */
-  for (i = 0; i < 6; ++i)
+  for (i = 0; i < 4; ++i)
     {
       if (priv->views[i] != NULL)
         {
