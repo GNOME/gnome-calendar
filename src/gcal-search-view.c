@@ -22,7 +22,6 @@
 
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
-#include "gcal-view.h"
 
 #include <locale.h>
 #include <langinfo.h>
@@ -228,7 +227,7 @@ static void
 open_event (GcalEventWidget *event_widget,
             gpointer         user_data)
 {
-  g_signal_emit_by_name (GCAL_VIEW (user_data), "event-activated", event_widget);
+  g_signal_emit_by_name (user_data, "event-activated", event_widget);
 }
 
 static gboolean
