@@ -132,7 +132,7 @@ make_grid_for_event (GcalSearchView  *view,
   GtkWidget *grid;
   GtkWidget *box;
 
-  gchar *text;
+  gchar *text, *markup;
   GtkWidget *start_date;
   GtkWidget *start_time;
 
@@ -166,8 +166,11 @@ make_grid_for_event (GcalSearchView  *view,
   /* start date & time */
   datetime = g_date_time_new_local (start->year, start->month, start->day, start->hour, start->minute, start->second);
   text = g_date_time_format (datetime, priv->date_mask);
-  start_date = gtk_label_new (text);
+  markup = g_strdup_printf ("<b>%s</b>", text);
+  start_date = gtk_label_new (NULL);
+  gtk_label_set_markup (GTK_LABEL (start_date), markup);
   g_free (text);
+  g_free (markup);
 
   if (!all_day)
     {
