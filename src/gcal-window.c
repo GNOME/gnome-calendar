@@ -1338,9 +1338,6 @@ gcal_window_constructed (GObject *object)
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   /* search related bindings */
-  g_object_bind_property (priv->search_button, "active", priv->search_bar, "search-mode-enabled",
-                          G_BINDING_BIDIRECTIONAL);
-
   g_object_bind_property (priv->search_bar, "search-mode-enabled", priv->back_button, "visible",
                           G_BINDING_DEFAULT | G_BINDING_INVERT_BOOLEAN);
   g_object_bind_property (priv->search_bar, "search-mode-enabled", priv->today_button, "visible",
