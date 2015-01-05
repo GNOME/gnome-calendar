@@ -53,6 +53,14 @@ enum
   PROP_MANAGER  /* manager inherited property */
 };
 
+enum
+{
+  EVENT_ACTIVATED,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
+
 #define NO_RESULT_TIMEOUT 250 /* ms */
 
 static GtkWidget*     get_event_from_grid                       (GtkWidget            *grid);
@@ -70,8 +78,6 @@ static void           open_event                                (GcalEventWidget
 static gboolean       show_no_results_page                      (GcalSearchView       *view);
 
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
-
-static void           gcal_view_interface_init                  (GcalViewIface  *iface);
 
 static void           gcal_search_view_constructed              (GObject        *object);
 
@@ -109,8 +115,7 @@ G_DEFINE_TYPE_WITH_CODE (GcalSearchView,
                          GTK_TYPE_SCROLLED_WINDOW,
                          G_ADD_PRIVATE (GcalSearchView)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
-                                                gcal_data_model_subscriber_interface_init)
-                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
+                                                gcal_data_model_subscriber_interface_init));
 
 
 static GtkWidget*
@@ -251,6 +256,13 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
   object_class->get_property = gcal_search_view_get_property;
   object_class->finalize = gcal_search_view_finalize;
 
+  /* signals */
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_SEARCH_VIEW, G_SIGNAL_RUN_LAST,
+                                           G_STRUCT_OFFSET (GcalSearchViewClass, event_activated),
+                                           NULL, NULL, NULL,
+                                           G_TYPE_NONE, 1, GCAL_TYPE_EVENT_WIDGET);
+
+  /* properties */
   g_object_class_install_property (
       object_class,
       PROP_DATE,
@@ -274,20 +286,6 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, no_results_grid);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, frame);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, listbox);
-}
-
-static void
-gcal_view_interface_init (GcalViewIface *iface)
-{
-  iface->get_initial_date = NULL;
-  iface->get_final_date = NULL;
-
-  iface->clear_marks = NULL;
-
-  iface->get_left_header = NULL;
-  iface->get_right_header = NULL;
-
-  iface->get_by_uuid = NULL;
 }
 
 static void

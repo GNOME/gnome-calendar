@@ -20,6 +20,7 @@
 #ifndef __GCAL_SEARCH_VIEW_H__
 #define __GCAL_SEARCH_VIEW_H__
 
+#include "gcal-event-widget.h"
 #include "gcal-manager.h"
 
 #include <gtk/gtk.h>
@@ -44,6 +45,9 @@ struct _GcalSearchView
 struct _GcalSearchViewClass
 {
   GtkScrolledWindowClass parent_class;
+
+  /* signals */
+  void       (*event_activated)   (GcalSearchView *view, GcalEventWidget *event_widget);
 };
 
 GType          gcal_search_view_get_type         (void);
