@@ -1365,6 +1365,8 @@ gcal_window_constructed (GObject *object)
         }
     }
 
+  g_signal_connect (priv->views[GCAL_WINDOW_VIEW_SEARCH], "event-activated", G_CALLBACK (event_activated), object);
+
   /* refresh timeout, first is fast */
   priv->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, object);
 }
