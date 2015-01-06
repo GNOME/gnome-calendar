@@ -117,8 +117,8 @@ enum
 };
 
 #define SAVE_GEOMETRY_ID_TIMEOUT 100 /* ms */
-#define FAST_REFRESH_TIMEOUT     300000 /* ms */
-#define SLOW_REFRESH_TIMEOUT     1200000 /* ms */
+#define FAST_REFRESH_TIMEOUT     900000 /* ms */
+#define SLOW_REFRESH_TIMEOUT     3600000 /* ms */
 
 static gboolean       key_pressed                        (GtkWidget           *widget,
                                                           GdkEvent            *event,
