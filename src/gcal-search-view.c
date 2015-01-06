@@ -237,6 +237,7 @@ sort_by_event (GtkListBoxRow *row1,
   GcalEventData *ev1, *ev2;
   ECalComponentText summary1, summary2;
   ECalComponentDateTime date1, date2;
+  gchar *down1, *down2;
   gint result;
 
   priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
@@ -250,9 +251,13 @@ sort_by_event (GtkListBoxRow *row1,
 
   e_cal_component_get_summary (ev1->event_component, &summary1);
   e_cal_component_get_summary (ev2->event_component, &summary2);
+  down1 = g_utf8_strdown (summary1.value, -1);
+  down2 = g_utf8_strdown (summary2.value, -1);
 
-  /* Second, by their names */
-  result = g_strcmp0 (summary1.value, summary2.value);
+  /* First, by their names */
+  result = g_strcmp0 (down1, down2);
+  g_free (down1);
+  g_free (down2);
 
   if (result != 0)
     return result;
@@ -260,7 +265,7 @@ sort_by_event (GtkListBoxRow *row1,
   e_cal_component_get_dtstart (ev1->event_component, &date1);
   e_cal_component_get_dtstart (ev2->event_component, &date2);
 
-  /* First, compare by their dates */
+  /* Second, compare by their dates */
   result = icaltime_compare (*date1.value, *date2.value);
   e_cal_component_free_datetime (&date1);
   e_cal_component_free_datetime (&date2);
