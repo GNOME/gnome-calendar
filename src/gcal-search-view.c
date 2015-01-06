@@ -120,7 +120,7 @@ G_DEFINE_TYPE_WITH_CODE (GcalSearchView,
 static GtkWidget*
 get_event_from_grid (GtkWidget *grid)
 {
-  return gtk_grid_get_child_at (GTK_GRID (grid), 1, 0);
+  return gtk_grid_get_child_at (GTK_GRID (grid), 0, 0);
 }
 
 static GtkWidget*
@@ -132,7 +132,7 @@ make_grid_for_event (GcalSearchView  *view,
   GtkWidget *grid;
   GtkWidget *box;
 
-  gchar *text, *markup;
+  gchar *text;
   GtkWidget *start_date;
   GtkWidget *start_time;
 
@@ -166,16 +166,14 @@ make_grid_for_event (GcalSearchView  *view,
   /* start date & time */
   datetime = g_date_time_new_local (start->year, start->month, start->day, start->hour, start->minute, start->second);
   text = g_date_time_format (datetime, priv->date_mask);
-  markup = g_strdup_printf ("<b>%s</b>", text);
-  start_date = gtk_label_new (NULL);
-  gtk_label_set_markup (GTK_LABEL (start_date), markup);
+  start_date = gtk_label_new (text);
   g_free (text);
-  g_free (markup);
 
   if (!all_day)
     {
       text = g_date_time_format (datetime, priv->time_mask);
       start_time = gtk_label_new (text);
+      gtk_style_context_add_class (gtk_widget_get_style_context (start_time), "dim-label");
       g_free (text);
     }
   else
@@ -187,10 +185,10 @@ make_grid_for_event (GcalSearchView  *view,
   g_free (start);
 
   /* labels: 10%; event widget: 90% */
-  gtk_grid_attach (GTK_GRID (box), start_date, 0, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (box), start_time, 1, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (event), 1, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (grid), box, 0, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (box), start_date, 1, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (box), start_time, 0, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (event), 0, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (grid), box, 1, 0, 1, 1);
   gtk_widget_show (start_date);
   gtk_widget_show (start_time);
   gtk_widget_show (box);
