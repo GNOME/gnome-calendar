@@ -127,6 +127,10 @@ static gboolean       key_pressed                        (GtkWidget           *w
 static void           date_updated                       (GtkButton           *buttton,
                                                           gpointer             user_data);
 
+static void           search_event_selected              (GcalSearchView      *search_view,
+                                                          icaltimetype        *date,
+                                                          gpointer             user_data);
+
 static void           load_geometry                      (GcalWindow          *window);
 
 static gboolean       save_geometry                      (gpointer             user_data);
@@ -305,6 +309,16 @@ date_updated (GtkButton  *button,
   g_object_notify (user_data, "active-date");
 
   update_view (GCAL_WINDOW (user_data));
+}
+
+static void
+search_event_selected (GcalSearchView *search_view,
+                       icaltimetype   *date,
+                       gpointer        user_data)
+{
+  g_object_set (user_data, "active-date", date, NULL);
+  update_view (GCAL_WINDOW (user_data));
+  gcal_window_set_search_mode (GCAL_WINDOW (user_data), FALSE);
 }
 
 static void
@@ -1366,7 +1380,8 @@ gcal_window_constructed (GObject *object)
         }
     }
 
-  g_signal_connect (priv->views[GCAL_WINDOW_VIEW_SEARCH], "event-activated", G_CALLBACK (event_activated), object);
+  g_signal_connect (priv->views[GCAL_WINDOW_VIEW_SEARCH], "event-activated", G_CALLBACK (search_event_selected),
+                    object);
 
   /* refresh timeout, first is fast */
   priv->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, object);
