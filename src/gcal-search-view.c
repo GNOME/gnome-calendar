@@ -184,12 +184,22 @@ make_row_for_event_data (GcalSearchView  *view,
                                     comp_dt.value->minute, comp_dt.value->second);
   text = g_date_time_format (datetime, priv->date_mask);
   date_label = gtk_label_new (text);
+  gtk_label_set_width_chars (GTK_LABEL (date_label), 14);
   g_free (text);
 
-  text = g_date_time_format (datetime, priv->time_mask);
-  time_label = gtk_label_new (text);
+  if (comp_dt.value->is_date == 0)
+    {
+      text = g_date_time_format (datetime, priv->time_mask);
+      time_label = gtk_label_new (text);
+      g_free (text);
+    }
+  else
+    {
+      time_label = gtk_label_new (_("All day"));
+    }
+
+  gtk_label_set_width_chars (GTK_LABEL (date_label), 14);
   gtk_style_context_add_class (gtk_widget_get_style_context (time_label), "dim-label");
-  g_free (text);
 
   /* name label */
   name_label = gtk_label_new (summary.value);
