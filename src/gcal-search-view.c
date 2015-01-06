@@ -76,7 +76,8 @@ static gint           sort_by_event                             (GtkListBoxRow  
                                                                  GtkListBoxRow        *row2,
                                                                  gpointer              user_data);
 
-static void           open_event                                (GtkListBoxRow        *row,
+static void           open_event                                (GtkListBox           *list,
+                                                                 GtkListBoxRow        *row,
                                                                  gpointer              user_data);
 
 static void           free_row_data                             (RowEventData          *data);
@@ -272,7 +273,8 @@ sort_by_event (GtkListBoxRow *row1,
 }
 
 static void
-open_event (GtkListBoxRow *row,
+open_event (GtkListBox    *list,
+            GtkListBoxRow *row,
             gpointer       user_data)
 {
   GcalSearchViewPrivate *priv;
@@ -360,6 +362,8 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, no_results_grid);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, frame);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, listbox);
+
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), open_event);
 }
 
 static void

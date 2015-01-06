@@ -30,6 +30,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="selection_mode">none</property>
+                    <signal name="row-activated" handler="open_event" object="GcalSearchView" swapped="no"/>
                     <style>
                       <class name="search-list"/>
                     </style>
