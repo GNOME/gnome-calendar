@@ -76,7 +76,7 @@ static gint           sort_by_event                             (GtkListBoxRow  
                                                                  GtkListBoxRow        *row2,
                                                                  gpointer              user_data);
 
-static void           open_event                                (GcalEventWidget      *event_widget,
+static void           open_event                                (GtkListBoxRow        *row,
                                                                  gpointer              user_data);
 
 static void           free_row_data                             (RowEventData          *data);
@@ -272,10 +272,24 @@ sort_by_event (GtkListBoxRow *row1,
 }
 
 static void
-open_event (GcalEventWidget *event_widget,
-            gpointer         user_data)
+open_event (GtkListBoxRow *row,
+            gpointer       user_data)
 {
-  g_signal_emit_by_name (user_data, "event-activated", event_widget);
+  GcalSearchViewPrivate *priv;
+  GcalEventData *data;
+  ECalComponentDateTime dt;
+  icaltimetype *time;
+
+
+  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
+  data = g_hash_table_lookup (priv->row_to_event, row);
+
+  e_cal_component_get_dtstart (data->event_component, &dt);
+  time = gcal_dup_icaltime (dt.value);
+
+  g_signal_emit_by_name (user_data, "event-activated", time);
+
+  e_cal_component_free_datetime (&dt);
 }
 
 static void
@@ -320,7 +334,7 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_SEARCH_VIEW, G_SIGNAL_RUN_LAST,
                                            G_STRUCT_OFFSET (GcalSearchViewClass, event_activated),
                                            NULL, NULL, NULL,
-                                           G_TYPE_NONE, 1, GCAL_TYPE_EVENT_WIDGET);
+                                           G_TYPE_NONE, 1, ICAL_TIME_TYPE);
 
   /* properties */
   g_object_class_install_property (

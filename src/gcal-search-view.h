@@ -47,7 +47,7 @@ struct _GcalSearchViewClass
   GtkScrolledWindowClass parent_class;
 
   /* signals */
-  void       (*event_activated)   (GcalSearchView *view, GcalEventWidget *event_widget);
+  void       (*event_activated)   (GcalSearchView *view, icaltimetype *date);
 };
 
 GType          gcal_search_view_get_type         (void);
