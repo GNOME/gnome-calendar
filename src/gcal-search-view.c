@@ -34,6 +34,9 @@ typedef struct
   GtkWidget      *frame;
   GtkWidget      *no_results_grid;
 
+  /* internal hash of row:event */
+  GHashTable     *events;
+
   /* misc */
   gint            no_results_timeout_id;
   gint            num_results;
@@ -295,6 +298,7 @@ gcal_search_view_init (GcalSearchView *self)
 
   priv = gcal_search_view_get_instance_private (self);
 
+  priv->events = g_hash_table_new (g_str_hash, g_str_equal);
   priv->date_mask = nl_langinfo (D_FMT);
   priv->time_mask = "%H:%M";
 
