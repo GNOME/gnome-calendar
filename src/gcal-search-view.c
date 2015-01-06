@@ -298,7 +298,7 @@ gcal_search_view_init (GcalSearchView *self)
 
   priv = gcal_search_view_get_instance_private (self);
 
-  priv->events = g_hash_table_new (g_str_hash, g_str_equal);
+  priv->events = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_free);
   priv->date_mask = nl_langinfo (D_FMT);
   priv->time_mask = "%H:%M";
 
