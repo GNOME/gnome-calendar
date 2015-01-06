@@ -1091,7 +1091,7 @@ search_changed (GtkEditable *editable,
         }
       else
         {
-          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar), "");
+          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar), _("Calendar"));
         }
     }
 }
