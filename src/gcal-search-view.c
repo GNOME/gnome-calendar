@@ -184,11 +184,11 @@ make_grid_for_event (GcalSearchView  *view,
   g_date_time_unref (datetime);
   g_free (start);
 
-  /* labels: 10%; event widget: 90% */
   gtk_grid_attach (GTK_GRID (box), start_date, 1, 0, 1, 1);
   gtk_grid_attach (GTK_GRID (box), start_time, 0, 0, 1, 1);
   gtk_grid_attach (GTK_GRID (grid), GTK_WIDGET (event), 0, 0, 1, 1);
   gtk_grid_attach (GTK_GRID (grid), box, 1, 0, 1, 1);
+
   gtk_widget_show (start_date);
   gtk_widget_show (start_time);
   gtk_widget_show (box);
