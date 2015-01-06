@@ -97,6 +97,10 @@ GcalSearchView > GtkViewport {
   background-color: @theme_bg_color;
 }
 
+.search-list {
+  border-bottom: 0px;
+}
+
 .search-list > GtkListBoxRow {
   border-bottom: solid 1px @borders;
 }

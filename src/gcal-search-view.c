@@ -401,7 +401,6 @@ gcal_search_view_constructed (GObject *object)
 
   /* listbox */
   gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->listbox), (GtkListBoxSortFunc) sort_by_event, object, NULL);
-  gtk_style_context_add_class (gtk_widget_get_style_context (priv->listbox), "search-list");
 
   gcal_manager_set_search_subscriber (
       priv->manager,
