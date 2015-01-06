@@ -69,8 +69,6 @@ static guint signals[NUM_SIGNALS] = { 0, };
 
 #define NO_RESULT_TIMEOUT 250 /* ms */
 
-static GtkWidget*     get_event_from_grid                       (GtkWidget            *grid);
-
 static GtkWidget*     make_row_for_event_data                   (GcalSearchView       *view,
                                                                  GcalEventData        *data);
 
