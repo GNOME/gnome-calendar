@@ -1030,6 +1030,7 @@ search_toggled (GObject    *object,
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
     {
       g_debug ("Entering search mode");
+      gcal_manager_set_query (priv->manager, NULL);
       gtk_widget_show (priv->search_bar);
 
       /* update header_bar widget */
