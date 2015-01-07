@@ -215,6 +215,10 @@ static void           search_toggled                     (GObject             *o
 static void           search_changed                     (GtkEditable         *editable,
                                                           gpointer             user_data);
 
+static void           search_bar_revealer_toggled        (GObject             *object,
+                                                          GParamSpec          *pspec,
+                                                          gpointer             user_data);
+
 static void           remove_event                       (GtkWidget           *notification,
                                                           GParamSpec          *spec,
                                                           gpointer             user_data);
@@ -1081,6 +1085,19 @@ search_changed (GtkEditable *editable,
 }
 
 static void
+search_bar_revealer_toggled (GObject    *object,
+                             GParamSpec *pspec,
+                             gpointer    user_data)
+{
+  GcalWindowPrivate *priv;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  if (!gtk_revealer_get_child_revealed (GTK_REVEALER (object)))
+    gtk_widget_hide (priv->search_bar);
+}
+
+static void
 remove_event (GtkWidget       *notification,
                           GParamSpec      *spec,
                           gpointer         user_data)
@@ -1288,6 +1305,9 @@ gcal_window_constructed (GObject *object)
   /* search bar */
   gtk_search_bar_connect_entry (GTK_SEARCH_BAR (priv->search_bar),
                                 GTK_ENTRY (priv->search_entry));
+
+  g_signal_connect (gtk_bin_get_child (GTK_BIN (priv->search_bar)), "notify::child-revealed",
+                    G_CALLBACK (search_bar_revealer_toggled), object);
 
   priv->views[GCAL_WINDOW_VIEW_WEEK] =
     gcal_week_view_new (priv->manager);
