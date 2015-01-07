@@ -186,7 +186,6 @@ make_row_for_event_data (GcalSearchView  *view,
                 "hexpand", TRUE, NULL);
 
   gtk_grid_set_column_spacing (GTK_GRID (box), 12);
-  gtk_grid_set_column_homogeneous (GTK_GRID (box), TRUE);
   gtk_widget_set_valign (box, GTK_ALIGN_CENTER);
   gtk_widget_set_margin_end (box, 6);
 
@@ -195,7 +194,7 @@ make_row_for_event_data (GcalSearchView  *view,
                                     comp_dt.value->minute, comp_dt.value->second);
   text = g_date_time_format (datetime, "%x");
   date_label = gtk_label_new (text);
-  gtk_label_set_width_chars (GTK_LABEL (date_label), 14);
+  gtk_label_set_width_chars (GTK_LABEL (date_label), 11);
   g_free (text);
 
   /* show 'all day' instead of 00:00 */
@@ -214,7 +213,7 @@ make_row_for_event_data (GcalSearchView  *view,
       time_label = gtk_label_new (_("All day"));
     }
 
-  gtk_label_set_width_chars (GTK_LABEL (time_label), 14);
+  gtk_label_set_width_chars (GTK_LABEL (time_label), 12);
   gtk_style_context_add_class (gtk_widget_get_style_context (time_label), "dim-label");
 
   /* name label */
