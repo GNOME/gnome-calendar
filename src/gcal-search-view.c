@@ -642,8 +642,11 @@ gcal_search_view_component_removed (ECalDataModelSubscriber *subscriber,
 
   row_data = g_hash_table_lookup (priv->events, uuid);
 
-  g_hash_table_remove (priv->row_to_event, row_data->row);
-  g_hash_table_remove (priv->events, uuid);
+  if (row_data)
+    {
+      g_hash_table_remove (priv->row_to_event, row_data->row);
+      g_hash_table_remove (priv->events, uuid);
+    }
   g_free (uuid);
 
   /* show 'no results' */
