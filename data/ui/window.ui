@@ -56,7 +56,6 @@
                       <object class="GtkToggleButton" id="search_list_button">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="active" bind-source="search_entry" bind-property="has-focus" bind-flags="bidirectional"/>
                         <child>
                           <object class="GtkImage" id="search_list_image">
                             <property name="visible">True</property>

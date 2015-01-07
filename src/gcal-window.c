@@ -1341,8 +1341,10 @@ gcal_window_constructed (GObject *object)
 
   g_object_bind_property (GCAL_WINDOW (object), "active-date", priv->views[GCAL_WINDOW_VIEW_SEARCH], "active-date",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (GTK_TOGGLE_BUTTON (priv->search_list_button), "active", priv->views[GCAL_WINDOW_VIEW_SEARCH],
+  g_object_bind_property (GTK_TOGGLE_BUTTON (priv->search_button), "active", priv->views[GCAL_WINDOW_VIEW_SEARCH],
                           "visible", G_BINDING_DEFAULT);
+  g_object_bind_property (priv->views[GCAL_WINDOW_VIEW_SEARCH], "visible",
+                          GTK_TOGGLE_BUTTON (priv->search_list_button), "active", G_BINDING_DEFAULT);
 
   /* signals connection/handling */
   /* HACK to ensure proper destroy of search-view widget */
