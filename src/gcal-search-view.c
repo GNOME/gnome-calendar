@@ -496,6 +496,9 @@ gcal_search_view_constructed (GObject *object)
   gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->listbox), (GtkListBoxSortFunc) sort_by_event, object, NULL);
 
   gcal_manager_set_search_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (object), 0, 0);
+
+  /* don't fill the list with all events on startup */
+  gcal_search_view_search (GCAL_SEARCH_VIEW (object), NULL, NULL);
 }
 
 static void
@@ -693,3 +696,48 @@ gcal_search_view_set_time_format (GcalSearchView *view,
   priv = gcal_search_view_get_instance_private (view);
   priv->format_24h = format_24h;
 }
+
+/**
+ * gcal_search_view_set_search:
+ * @view: a #GcalSearchView instance
+ * @field: the field to perform the search.
+ * @query: what the search will look for.
+ *
+ *
+ *
+ * Returns:
+ */
+void
+gcal_search_view_search (GcalSearchView *view,
+                         const gchar    *field,
+                         const gchar    *query)
+{
+  GcalSearchViewPrivate *priv;
+
+  priv = gcal_search_view_get_instance_private (view);
+
+  /* Only perform search on valid non-empty strings */
+  if (query && g_utf8_strlen (query, -1) > 0)
+    {
+      gchar *search_query;
+
+      search_query = g_strdup_printf ("(contains? \"%s\" \"%s\")", field != NULL? field : "summary",
+                                      query != NULL? query : "");
+
+      gcal_manager_set_query (priv->manager, search_query);
+
+      g_free (search_query);
+    }
+  else
+    {
+      /**
+       * Since the priv->events hash table will always call
+       * free_row_data on rows - and free_row_data removes the
+       * row from the list by calling gtk_widget_destroy - the
+       * following code will in fact clear the list.
+       */
+      g_hash_table_remove_all (priv->row_to_event);
+      g_hash_table_remove_all (priv->events);
+    }
+}
+

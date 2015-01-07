@@ -55,6 +55,11 @@ GType          gcal_search_view_get_type         (void);
 void           gcal_search_view_set_time_format  (GcalSearchView *view,
                                                   gboolean        format_24h);
 
+void           gcal_search_view_search           (GcalSearchView *view,
+                                                  const gchar    *field,
+                                                  const gchar    *query);
+
+
 GtkWidget*     gcal_search_view_new              (GcalManager *manager);
 
 G_END_DECLS

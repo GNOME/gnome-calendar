@@ -1038,7 +1038,6 @@ search_toggled (GObject    *object,
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
     {
       g_debug ("Entering search mode");
-      gcal_manager_set_query (priv->manager, NULL);
       gtk_widget_show (priv->search_bar);
 
       /* update header_bar widget */
@@ -1063,12 +1062,9 @@ search_changed (GtkEditable *editable,
 
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
     {
-      gchar *query;
-
       /* perform the search */
-      query = g_strdup_printf ("(contains? \"summary\" \"%s\")", gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
-      gcal_manager_set_query (priv->manager, query);
-      g_free (query);
+      gcal_search_view_search (GCAL_SEARCH_VIEW (priv->views[GCAL_WINDOW_VIEW_SEARCH]), "summary",
+                               gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
 
       if (gtk_entry_get_text_length (GTK_ENTRY (priv->search_entry)) != 0)
         {
