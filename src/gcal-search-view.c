@@ -37,7 +37,7 @@ typedef struct
   GtkWidget      *frame;
   GtkWidget      *no_results_grid;
 
-  /* internal hash of uuid:row_data */
+  /* internal hashes */
   GHashTable     *events;
   GHashTable     *row_to_event;
 
@@ -126,6 +126,16 @@ G_DEFINE_TYPE_WITH_CODE (GcalSearchView,
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 gcal_data_model_subscriber_interface_init));
 
+/**
+ * make_row_for_event_data:
+ * @view: a #GcalSearchView
+ * @data: a #GcalEventData pointer
+ *
+ * Creates a new #GtkListBoxRow with the event information
+ * as input.
+ *
+ * Returns: the newly created #GtkListBoxRow with the event data
+ */
 static GtkWidget*
 make_row_for_event_data (GcalSearchView  *view,
                          GcalEventData   *data)
@@ -151,12 +161,13 @@ make_row_for_event_data (GcalSearchView  *view,
 
   priv = gcal_search_view_get_instance_private (view);
 
-  /* event color */
+  /* get event color */
   extension = E_SOURCE_SELECTABLE (e_source_get_extension (data->source, E_SOURCE_EXTENSION_CALENDAR));
   gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
 
   pixbuf = gcal_get_pixbuf_from_color (&color, 16);
 
+  /* make an image of the color */
   image = gtk_image_new_from_pixbuf (pixbuf);
 
   /* date */
@@ -188,6 +199,7 @@ make_row_for_event_data (GcalSearchView  *view,
   gtk_label_set_width_chars (GTK_LABEL (date_label), 14);
   g_free (text);
 
+  /* show 'all day' instead of 00:00 */
   if (comp_dt.value->is_date == 0)
     {
       text = g_date_time_format (datetime, priv->time_mask);
@@ -207,6 +219,7 @@ make_row_for_event_data (GcalSearchView  *view,
   gtk_widget_set_hexpand (name_label, TRUE);
   gtk_widget_set_halign (name_label, GTK_ALIGN_START);
 
+  /* attach things up */
   gtk_grid_attach (GTK_GRID (box), time_label, 0, 0, 1, 1);
   gtk_grid_attach (GTK_GRID (box), date_label, 1, 0, 1, 1);
   gtk_grid_attach (GTK_GRID (grid), image, 0, 0, 1, 1);
@@ -222,6 +235,22 @@ make_row_for_event_data (GcalSearchView  *view,
   return row;
 }
 
+/**
+ * sort_by_event:
+ * @row1: the current #GtkListBoxRow being iterated.
+ * @row2: the reference #GtkListBoxRow.
+ * @user_data: a #GcalSearchView instance
+ *
+ * A #GtkListBoxSortFunc specialy crafted to sort
+ * event rows.
+ *
+ * It first compares the summary (i.e. event name).
+ * If the names are equal, they are compared by their
+ * date.
+ *
+ * Returns: -1 if @row1 should be placed before @row2, 0 if
+ * they are equal, 1 otherwise.
+ */
 static gint
 sort_by_event (GtkListBoxRow *row1,
                GtkListBoxRow *row2,
@@ -267,6 +296,21 @@ sort_by_event (GtkListBoxRow *row1,
   return -1 * result;
 }
 
+/**
+ * open_event:
+ * @list: the source #GtkListBox
+ * @row: the activated #GtkListBoxRow
+ * @user_data: a #GcalSearchView instance.
+ *
+ * Fire GcalSearchView::'event-activated' event
+ * when the @row is activated by the user.
+ *
+ * It is up to #GcalWindow to hear the signal,
+ * retrieve the #icaltimetype passed as parameter
+ * and select the day from the last view.
+ *
+ * Returns:
+ */
 static void
 open_event (GtkListBox    *list,
             GtkListBoxRow *row,
@@ -289,6 +333,15 @@ open_event (GtkListBox    *list,
   e_cal_component_free_datetime (&dt);
 }
 
+/**
+ * update_view:
+ * @view: a #GcalSearchView instance.
+ *
+ * Updates the timeout for the 'No results found'
+ * page.
+ *
+ * Returns:
+ */
 static void
 update_view (GcalSearchView *view)
 {
@@ -301,6 +354,15 @@ update_view (GcalSearchView *view)
   priv->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT, (GSourceFunc) show_no_results_page, view);
 }
 
+/**
+ * free_row_data:
+ * @data: a #RowEventData instance.
+ *
+ * Deallocate @data memory by destroying the #GtkListBoxRow
+ * and freeing the #GcalEventData associated from the structure.
+ *
+ * Returns:
+ */
 static void
 free_row_data (RowEventData *data)
 {
@@ -314,6 +376,14 @@ free_row_data (RowEventData *data)
   g_free (data);
 }
 
+/**
+ * show_no_results_page:
+ * @view: a #GcalSearchView instance.
+ *
+ * Callback to update the 'No results found' page.
+ *
+ * Returns: @G_SOURCE_REMOVE
+ */
 static gboolean
 show_no_results_page (GcalSearchView *view)
 {
@@ -340,24 +410,47 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
   object_class->finalize = gcal_search_view_finalize;
 
   /* signals */
+  /**
+   * GcalSearchView::event-activated:
+   * @view: the #GcalSearchView that generated the signal
+   * @date: the date of the selected event
+   *
+   * Emitted when an event is selected from the list.
+   *
+   */
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_SEARCH_VIEW, G_SIGNAL_RUN_LAST,
                                            G_STRUCT_OFFSET (GcalSearchViewClass, event_activated),
                                            NULL, NULL, NULL,
                                            G_TYPE_NONE, 1, ICAL_TIME_TYPE);
 
   /* properties */
+  /**
+   * GcalSearchView::active-date:
+   *
+   * The date from this view, as defined by #GcalWindow.
+   * Actually it is not used.
+   *
+   */
   g_object_class_install_property (object_class, PROP_DATE,
       g_param_spec_boxed ("active-date",
                           "The active date",
                           "The active/selected date in the view",
                           ICAL_TIME_TYPE, G_PARAM_READWRITE));
 
+  /**
+   * GcalSearchView::manager:
+   *
+   * A weak reference to the singleton #GcalManager of this
+   * application.
+   *
+   */
   g_object_class_install_property (object_class, PROP_MANAGER,
       g_param_spec_pointer ("manager",
                             "The manager object",
                             "A weak reference to the app manager object",
                             G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
 
+  /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/search-view.ui");
 
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, no_results_grid);
@@ -398,7 +491,7 @@ gcal_search_view_constructed (GObject *object)
   GcalSearchViewPrivate *priv;
   priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
 
-  /* listbox */
+  /* make the listbox sorted */
   gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->listbox), (GtkListBoxSortFunc) sort_by_event, object, NULL);
 
   gcal_manager_set_search_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (object), 0, 0);
