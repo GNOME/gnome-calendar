@@ -73,25 +73,17 @@ static guint signals[NUM_SIGNALS] = { 0, };
 
 #define NO_RESULT_TIMEOUT 250 /* ms */
 
-static GtkWidget*     make_row_for_event_data                   (GcalSearchView       *view,
-                                                                 GcalEventData        *data);
-
-static gint           sort_by_event                             (GtkListBoxRow        *row1,
-                                                                 GtkListBoxRow        *row2,
+/* callbacks */
+static void           display_header_func                       (GtkListBoxRow        *row,
+                                                                 GtkListBoxRow        *before,
                                                                  gpointer              user_data);
 
 static void           open_event                                (GtkListBox           *list,
                                                                  GtkListBoxRow        *row,
                                                                  gpointer              user_data);
 
-static void           update_view                               (GcalSearchView       *view);
-
-static void           free_row_data                             (RowEventData          *data);
-
-static gboolean       show_no_results_page                      (GcalSearchView       *view);
-
-static void           display_header_func                       (GtkListBoxRow        *row,
-                                                                 GtkListBoxRow        *before,
+static gint           sort_by_event                             (GtkListBoxRow        *row1,
+                                                                 GtkListBoxRow        *row2,
                                                                  gpointer              user_data);
 
 static void           source_added                              (GcalManager          *manager,
@@ -103,6 +95,17 @@ static void           source_removed                            (GcalManager    
                                                                  ESource              *source,
                                                                  gpointer              user_data);
 
+static gboolean       show_no_results_page                      (GcalSearchView       *view);
+
+/* private */
+static void           free_row_data                             (RowEventData          *data);
+
+static GtkWidget*     make_row_for_event_data                   (GcalSearchView       *view,
+                                                                 GcalEventData        *data);
+
+static void           update_view                               (GcalSearchView       *view);
+
+/* prefixed */
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
 static void           gcal_search_view_constructed              (GObject        *object);
@@ -142,6 +145,190 @@ G_DEFINE_TYPE_WITH_CODE (GcalSearchView,
                          G_ADD_PRIVATE (GcalSearchView)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 gcal_data_model_subscriber_interface_init));
+
+/**
+ * display_header_func:
+ *
+ * Shows a separator before each row.
+ *
+ */
+static void
+display_header_func (GtkListBoxRow *row,
+                     GtkListBoxRow *before,
+                     gpointer       user_data)
+{
+  if (before != NULL)
+    {
+      GtkWidget *header;
+
+      header = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
+      gtk_widget_show (header);
+
+      gtk_list_box_row_set_header (row, header);
+    }
+}
+
+/**
+ * open_event:
+ * @list: the source #GtkListBox
+ * @row: the activated #GtkListBoxRow
+ * @user_data: a #GcalSearchView instance.
+ *
+ * Fire GcalSearchView::'event-activated' event
+ * when the @row is activated by the user.
+ *
+ * It is up to #GcalWindow to hear the signal,
+ * retrieve the #icaltimetype passed as parameter
+ * and select the day from the last view.
+ *
+ * Returns:
+ */
+static void
+open_event (GtkListBox    *list,
+            GtkListBoxRow *row,
+            gpointer       user_data)
+{
+  GcalSearchViewPrivate *priv;
+  GcalEventData *data;
+  ECalComponentDateTime dt;
+  icaltimetype *time;
+
+
+  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
+  data = g_hash_table_lookup (priv->row_to_event, row);
+
+  e_cal_component_get_dtstart (data->event_component, &dt);
+  time = gcal_dup_icaltime (dt.value);
+
+  g_signal_emit_by_name (user_data, "event-activated", time);
+
+  e_cal_component_free_datetime (&dt);
+}
+
+/**
+ * sort_by_event:
+ * @row1: the current #GtkListBoxRow being iterated.
+ * @row2: the reference #GtkListBoxRow.
+ * @user_data: a #GcalSearchView instance
+ *
+ * A #GtkListBoxSortFunc specialy crafted to sort
+ * event rows.
+ *
+ * It first compares the summary (i.e. event name).
+ * If the names are equal, they are compared by their
+ * date.
+ *
+ * Returns: -1 if @row1 should be placed before @row2, 0 if
+ * they are equal, 1 otherwise.
+ */
+static gint
+sort_by_event (GtkListBoxRow *row1,
+               GtkListBoxRow *row2,
+               gpointer       user_data)
+{
+  GcalSearchViewPrivate *priv;
+  GcalEventData *ev1, *ev2;
+  ECalComponentText summary1, summary2;
+  ECalComponentDateTime date1, date2;
+  gchar *down1, *down2;
+  gint result;
+
+  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
+
+  /* retrieve event data */
+  ev1 = g_hash_table_lookup (priv->row_to_event, row1);
+  ev2 = g_hash_table_lookup (priv->row_to_event, row2);
+
+  if (ev1 == NULL || ev2 == NULL)
+      return 0;
+
+  e_cal_component_get_summary (ev1->event_component, &summary1);
+  e_cal_component_get_summary (ev2->event_component, &summary2);
+  down1 = g_utf8_strdown (summary1.value, -1);
+  down2 = g_utf8_strdown (summary2.value, -1);
+
+  /* First, by their names */
+  result = g_strcmp0 (down1, down2);
+  g_free (down1);
+  g_free (down2);
+
+  if (result != 0)
+    return result;
+
+  e_cal_component_get_dtstart (ev1->event_component, &date1);
+  e_cal_component_get_dtstart (ev2->event_component, &date2);
+
+  /* Second, compare by their dates */
+  result = icaltime_compare (*date1.value, *date2.value);
+  e_cal_component_free_datetime (&date1);
+  e_cal_component_free_datetime (&date2);
+
+  return -1 * result;
+}
+
+static void
+source_added (GcalManager *manager,
+              ESource     *source,
+              gboolean     enable,
+              gpointer     user_data)
+{
+  GcalSearchViewPrivate *priv;
+
+  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
+  gcal_search_view_search (GCAL_SEARCH_VIEW (user_data), priv->field, priv->query);
+}
+
+static void
+source_removed (GcalManager *manager,
+                ESource     *source,
+                gpointer     user_data)
+{
+  source_added (manager, source, FALSE, user_data);
+}
+
+/**
+ * show_no_results_page:
+ * @view: a #GcalSearchView instance.
+ *
+ * Callback to update the 'No results found' page.
+ *
+ * Returns: @G_SOURCE_REMOVE
+ */
+static gboolean
+show_no_results_page (GcalSearchView *view)
+{
+  GcalSearchViewPrivate *priv;
+
+  priv = gcal_search_view_get_instance_private (view);
+  priv->no_results_timeout_id = 0;
+
+  gtk_widget_set_visible (priv->scrolled_window, priv->num_results != 0);
+  gtk_widget_set_visible (priv->no_results_grid, priv->num_results == 0);
+
+  return G_SOURCE_REMOVE;
+}
+
+/**
+ * free_row_data:
+ * @data: a #RowEventData instance.
+ *
+ * Deallocate @data memory by destroying the #GtkListBoxRow
+ * and freeing the #GcalEventData associated from the structure.
+ *
+ * Returns:
+ */
+static void
+free_row_data (RowEventData *data)
+{
+  g_assert_nonnull (data);
+
+  gtk_widget_destroy (GTK_WIDGET (data->row));
+
+  g_object_unref (data->event_data->event_component);
+
+  g_free (data->event_data);
+  g_free (data);
+}
 
 /**
  * make_row_for_event_data:
@@ -257,104 +444,6 @@ make_row_for_event_data (GcalSearchView  *view,
 }
 
 /**
- * sort_by_event:
- * @row1: the current #GtkListBoxRow being iterated.
- * @row2: the reference #GtkListBoxRow.
- * @user_data: a #GcalSearchView instance
- *
- * A #GtkListBoxSortFunc specialy crafted to sort
- * event rows.
- *
- * It first compares the summary (i.e. event name).
- * If the names are equal, they are compared by their
- * date.
- *
- * Returns: -1 if @row1 should be placed before @row2, 0 if
- * they are equal, 1 otherwise.
- */
-static gint
-sort_by_event (GtkListBoxRow *row1,
-               GtkListBoxRow *row2,
-               gpointer       user_data)
-{
-  GcalSearchViewPrivate *priv;
-  GcalEventData *ev1, *ev2;
-  ECalComponentText summary1, summary2;
-  ECalComponentDateTime date1, date2;
-  gchar *down1, *down2;
-  gint result;
-
-  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
-
-  /* retrieve event data */
-  ev1 = g_hash_table_lookup (priv->row_to_event, row1);
-  ev2 = g_hash_table_lookup (priv->row_to_event, row2);
-
-  if (ev1 == NULL || ev2 == NULL)
-      return 0;
-
-  e_cal_component_get_summary (ev1->event_component, &summary1);
-  e_cal_component_get_summary (ev2->event_component, &summary2);
-  down1 = g_utf8_strdown (summary1.value, -1);
-  down2 = g_utf8_strdown (summary2.value, -1);
-
-  /* First, by their names */
-  result = g_strcmp0 (down1, down2);
-  g_free (down1);
-  g_free (down2);
-
-  if (result != 0)
-    return result;
-
-  e_cal_component_get_dtstart (ev1->event_component, &date1);
-  e_cal_component_get_dtstart (ev2->event_component, &date2);
-
-  /* Second, compare by their dates */
-  result = icaltime_compare (*date1.value, *date2.value);
-  e_cal_component_free_datetime (&date1);
-  e_cal_component_free_datetime (&date2);
-
-  return -1 * result;
-}
-
-/**
- * open_event:
- * @list: the source #GtkListBox
- * @row: the activated #GtkListBoxRow
- * @user_data: a #GcalSearchView instance.
- *
- * Fire GcalSearchView::'event-activated' event
- * when the @row is activated by the user.
- *
- * It is up to #GcalWindow to hear the signal,
- * retrieve the #icaltimetype passed as parameter
- * and select the day from the last view.
- *
- * Returns:
- */
-static void
-open_event (GtkListBox    *list,
-            GtkListBoxRow *row,
-            gpointer       user_data)
-{
-  GcalSearchViewPrivate *priv;
-  GcalEventData *data;
-  ECalComponentDateTime dt;
-  icaltimetype *time;
-
-
-  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
-  data = g_hash_table_lookup (priv->row_to_event, row);
-
-  e_cal_component_get_dtstart (data->event_component, &dt);
-  time = gcal_dup_icaltime (dt.value);
-
-  g_signal_emit_by_name (user_data, "event-activated", time);
-
-  e_cal_component_free_datetime (&dt);
-}
-
-/**
  * update_view:
  * @view: a #GcalSearchView instance.
  *
@@ -373,92 +462,6 @@ update_view (GcalSearchView *view)
     g_source_remove (priv->no_results_timeout_id);
 
   priv->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT, (GSourceFunc) show_no_results_page, view);
-}
-
-/**
- * free_row_data:
- * @data: a #RowEventData instance.
- *
- * Deallocate @data memory by destroying the #GtkListBoxRow
- * and freeing the #GcalEventData associated from the structure.
- *
- * Returns:
- */
-static void
-free_row_data (RowEventData *data)
-{
-  g_assert_nonnull (data);
-
-  gtk_widget_destroy (GTK_WIDGET (data->row));
-
-  g_object_unref (data->event_data->event_component);
-
-  g_free (data->event_data);
-  g_free (data);
-}
-
-/**
- * show_no_results_page:
- * @view: a #GcalSearchView instance.
- *
- * Callback to update the 'No results found' page.
- *
- * Returns: @G_SOURCE_REMOVE
- */
-static gboolean
-show_no_results_page (GcalSearchView *view)
-{
-  GcalSearchViewPrivate *priv;
-
-  priv = gcal_search_view_get_instance_private (view);
-  priv->no_results_timeout_id = 0;
-
-  gtk_widget_set_visible (priv->scrolled_window, priv->num_results != 0);
-  gtk_widget_set_visible (priv->no_results_grid, priv->num_results == 0);
-
-  return G_SOURCE_REMOVE;
-}
-
-/**
- * display_header_func:
- *
- * Shows a separator before each row.
- *
- */
-static void
-display_header_func (GtkListBoxRow *row,
-                     GtkListBoxRow *before,
-                     gpointer       user_data)
-{
-  if (before)
-    {
-      GtkWidget *header;
-
-      header = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
-      gtk_widget_show (header);
-
-      gtk_list_box_row_set_header (row, header);
-    }
-}
-
-static void
-source_added (GcalManager *manager,
-              ESource     *source,
-              gboolean     enable,
-              gpointer     user_data)
-{
-  GcalSearchViewPrivate *priv;
-
-  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
-  gcal_search_view_search (GCAL_SEARCH_VIEW (user_data), priv->field, priv->query);
-}
-
-static void
-source_removed (GcalManager *manager,
-                ESource     *source,
-                gpointer     user_data)
-{
-  source_added (manager, source, FALSE, user_data);
 }
 
 static void
