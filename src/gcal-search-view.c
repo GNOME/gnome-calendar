@@ -735,6 +735,7 @@ gcal_search_view_search (GcalSearchView *view,
       }
 
       gcal_manager_set_query (priv->manager, search_query);
+      gtk_widget_show (priv->listbox);
 
       g_free (search_query);
     }
@@ -748,6 +749,7 @@ gcal_search_view_search (GcalSearchView *view,
        */
       g_hash_table_remove_all (priv->row_to_event);
       g_hash_table_remove_all (priv->events);
+      gtk_widget_hide (priv->listbox);
     }
 }
 
