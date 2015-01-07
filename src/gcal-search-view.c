@@ -80,6 +80,8 @@ static void           open_event                                (GtkListBox     
                                                                  GtkListBoxRow        *row,
                                                                  gpointer              user_data);
 
+static void           update_view                               (GcalSearchView       *view);
+
 static void           free_row_data                             (RowEventData          *data);
 
 static gboolean       show_no_results_page                      (GcalSearchView       *view);
@@ -212,18 +214,11 @@ make_row_for_event_data (GcalSearchView  *view,
   gtk_grid_attach (GTK_GRID (grid), box, 2, 0, 1, 1);
   gtk_container_add (GTK_CONTAINER (row), grid);
 
-  gtk_widget_show (image);
-  gtk_widget_show (date_label);
-  gtk_widget_show (time_label);
-  gtk_widget_show (name_label);
-  gtk_widget_show (box);
-  gtk_widget_show (grid);
-  gtk_widget_show (row);
+  gtk_widget_show_all (row);
 
   g_date_time_unref (datetime);
   e_cal_component_free_datetime (&comp_dt);
   g_object_unref (pixbuf);
-
   return row;
 }
 
@@ -295,6 +290,18 @@ open_event (GtkListBox    *list,
 }
 
 static void
+update_view (GcalSearchView *view)
+{
+  GcalSearchViewPrivate *priv;
+  priv = gcal_search_view_get_instance_private (view);
+
+  if (priv->no_results_timeout_id != 0)
+    g_source_remove (priv->no_results_timeout_id);
+
+  priv->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT, (GSourceFunc) show_no_results_page, view);
+}
+
+static void
 free_row_data (RowEventData *data)
 {
   g_assert_nonnull (data);
@@ -339,23 +346,17 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
                                            G_TYPE_NONE, 1, ICAL_TIME_TYPE);
 
   /* properties */
-  g_object_class_install_property (
-      object_class,
-      PROP_DATE,
+  g_object_class_install_property (object_class, PROP_DATE,
       g_param_spec_boxed ("active-date",
                           "The active date",
                           "The active/selected date in the view",
-                          ICAL_TIME_TYPE,
-                          G_PARAM_READWRITE));
+                          ICAL_TIME_TYPE, G_PARAM_READWRITE));
 
-  g_object_class_install_property (
-      object_class,
-      PROP_MANAGER,
+  g_object_class_install_property (object_class, PROP_MANAGER,
       g_param_spec_pointer ("manager",
                             "The manager object",
                             "A weak reference to the app manager object",
-                            G_PARAM_CONSTRUCT_ONLY |
-                            G_PARAM_READWRITE));
+                            G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
 
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/search-view.ui");
 
@@ -395,17 +396,12 @@ static void
 gcal_search_view_constructed (GObject *object)
 {
   GcalSearchViewPrivate *priv;
-
-  priv =
-    gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
+  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
 
   /* listbox */
   gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->listbox), (GtkListBoxSortFunc) sort_by_event, object, NULL);
 
-  gcal_manager_set_search_subscriber (
-      priv->manager,
-      E_CAL_DATA_MODEL_SUBSCRIBER (object),
-      0, 0);
+  gcal_manager_set_search_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (object), 0, 0);
 }
 
 static void
@@ -416,8 +412,7 @@ gcal_search_view_set_property (GObject       *object,
 {
   GcalSearchViewPrivate *priv;
 
-  priv =
-    gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
+  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
 
   switch (property_id)
     {
@@ -487,16 +482,16 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   ECalComponentId *id;
   gchar *uuid;
 
-  priv =
-    gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (subscriber));
+  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (subscriber));
 
+  /* event data */
   data = g_new0 (GcalEventData, 1);
   data->source = e_client_get_source (E_CLIENT (client));
   data->event_component = e_cal_component_clone (comp);
 
+  /* build uuid */
   id = e_cal_component_get_id (comp);
 
-  /* build uuid */
   if (id->rid != NULL)
     uuid = g_strdup_printf ("%s:%s:%s", e_source_get_uid (data->source), id->uid, id->rid);
   else
@@ -512,13 +507,10 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
 
   gtk_container_add (GTK_CONTAINER (priv->listbox), row_data->row);
 
+  /* show 'no results' */
   priv->num_results++;
 
-  /* show the 'no results' page with a delay */
-  if (priv->no_results_timeout_id != 0)
-    g_source_remove (priv->no_results_timeout_id);
-
-  priv->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT, (GSourceFunc) show_no_results_page, subscriber);
+  update_view (GCAL_SEARCH_VIEW (subscriber));
 }
 
 static void
@@ -541,9 +533,10 @@ gcal_search_view_component_removed (ECalDataModelSubscriber *subscriber,
   gchar *uuid;
 
   priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (subscriber));
-  source = e_client_get_source (E_CLIENT (client));
 
   /* if the widget has recurrency, it's UUID is different */
+  source = e_client_get_source (E_CLIENT (client));
+
   if (rid != NULL)
     uuid = g_strdup_printf ("%s:%s:%s", e_source_get_uid (source), uid, rid);
   else
@@ -553,14 +546,12 @@ gcal_search_view_component_removed (ECalDataModelSubscriber *subscriber,
 
   g_hash_table_remove (priv->row_to_event, row_data->row);
   g_hash_table_remove (priv->events, uuid);
+  g_free (uuid);
 
+  /* show 'no results' */
   priv->num_results--;
 
-  /* show the 'no results' page with a delay */
-  if (priv->no_results_timeout_id != 0)
-    g_source_remove (priv->no_results_timeout_id);
-
-  priv->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT, (GSourceFunc) show_no_results_page, subscriber);
+  update_view (GCAL_SEARCH_VIEW (subscriber));
 }
 
 static void
