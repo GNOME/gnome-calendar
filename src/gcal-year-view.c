@@ -438,8 +438,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
     }
   g_list_free (widgets);
 
-  for (aux = l2; aux != NULL; aux = g_list_next (aux))
-    gtk_widget_destroy ((GtkWidget*) aux->data);
+  g_list_foreach (l2, (GFunc) gtk_widget_destroy, NULL);
   g_list_free (l2);
 
   /* clean overflow information */
