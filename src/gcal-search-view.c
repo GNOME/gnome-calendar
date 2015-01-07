@@ -48,7 +48,10 @@ typedef struct
   /* property */
   icaltimetype   *date;
   GcalManager    *manager; /* weak reference */
+
+  /* flags */
   gboolean        format_24h;
+  gboolean        subscribed;
 } GcalSearchViewPrivate;
 
 enum
@@ -495,8 +498,6 @@ gcal_search_view_constructed (GObject *object)
   /* make the listbox sorted */
   gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->listbox), (GtkListBoxSortFunc) sort_by_event, object, NULL);
 
-  gcal_manager_set_search_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (object), 0, 0);
-
   /* don't fill the list with all events on startup */
   gcal_search_view_search (GCAL_SEARCH_VIEW (object), NULL, NULL);
 }
@@ -723,6 +724,12 @@ gcal_search_view_search (GcalSearchView *view,
 
       search_query = g_strdup_printf ("(contains? \"%s\" \"%s\")", field != NULL? field : "summary",
                                       query != NULL? query : "");
+
+      if (!priv->subscribed)
+      {
+        gcal_manager_set_search_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view), 0, 0);
+        priv->subscribed = TRUE;
+      }
 
       gcal_manager_set_query (priv->manager, search_query);
 
