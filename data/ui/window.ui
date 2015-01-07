@@ -27,12 +27,15 @@
                 <property name="no_show_all">True</property>
                 <property name="hexpand">True</property>
                 <property name="show_close_button">True</property>
-		<property name="search-mode-enabled" bind-source="search_button" bind-property="active" bind-flags="bidirectional"/>
+                <property name="search-mode-enabled" bind-source="search_button" bind-property="active" bind-flags="bidirectional"/>
                 <signal name="notify::search-mode-enabled" handler="search_toggled" object="GcalWindow" swapped="no"/>
                 <child>
-                  <object class="GtkGrid" id="search_entry_grid">
+                  <object class="GtkBox" id="search_entry_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <style>
+                      <class name="linked" />
+                    </style>
                     <child>
                       <object class="GtkSearchEntry" id="search_entry">
                         <property name="width_request">500</property>
@@ -46,8 +49,24 @@
                         <signal name="search-changed" handler="search_changed" object="GcalWindow" swapped="no"/>
                       </object>
                       <packing>
-                        <property name="left_attach">0</property>
-                        <property name="top_attach">0</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkToggleButton" id="search_list_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="active" bind-source="search_entry" bind-property="has-focus" bind-flags="bidirectional"/>
+                        <child>
+                          <object class="GtkImage" id="search_list_image">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="icon_name">open-menu-symbolic</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
@@ -66,7 +85,6 @@
                 <property name="vexpand">True</property>
                 <property name="transition_duration">250</property>
                 <property name="transition_type">slide-left-right</property>
-                <signal name="notify::transition-running" handler="stack_transition_running" object="GcalWindow" swapped="no"/>
                 <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
                 <style>
                   <class name="views"/>

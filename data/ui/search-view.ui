@@ -2,33 +2,70 @@
 <!-- Generated with glade 3.18.1 -->
 <interface>
   <requires lib="gtk+" version="3.10"/>
-  <template class="GcalSearchView" parent="GtkScrolledWindow">
+  <template class="GcalSearchView" parent="GtkPopover">
     <property name="visible">True</property>
     <property name="can_focus">True</property>
+    <property name="width_request">600</property>
+    <property name="height_request">300</property>
+    <property name="border_width">12</property>
+    <property name="modal">False</property>
     <child>
-      <object class="GtkViewport" id="viewport">
+      <object class="GtkGrid" id="grid">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="shadow_type">none</property>
         <child>
-          <object class="GtkGrid" id="grid">
-            <property name="visible">True</property>
+          <object class="GtkGrid" id="no_results_grid">
             <property name="can_focus">False</property>
-            <property name="margin_start">96</property>
-            <property name="margin_end">96</property>
-            <property name="margin_top">24</property>
-            <property name="margin_bottom">24</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="row_spacing">24</property>
             <child>
-              <object class="GtkFrame" id="frame">
+              <object class="GtkImage" id="image">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="hexpand">True</property>
-                <property name="vexpand">False</property>
-                <property name="valign">GTK_ALIGN_START</property>
-                <property name="label_xalign">0</property>
-                <style>
-                  <class name="search-list" />
-                </style>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="pixel_size">48</property>
+                <property name="icon_name">face-sad-symbolic</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="label">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="halign">center</property>
+                <property name="valign">center</property>
+                <property name="label" translatable="yes">No results found</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkScrolledWindow" id="scrolled_window">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="shadow_type">in</property>
+            <child>
+              <object class="GtkViewport" id="viewport">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="shadow_type">none</property>
                 <child>
                   <object class="GtkListBox" id="listbox">
                     <property name="visible">True</property>
@@ -40,57 +77,13 @@
                     </style>
                   </object>
                 </child>
-                <child type="label_item">
-                  <placeholder/>
-                </child>
               </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkGrid" id="no_results_grid">
-                <property name="can_focus">False</property>
-                <property name="halign">center</property>
-                <property name="valign">center</property>
-                <property name="hexpand">True</property>
-                <property name="vexpand">True</property>
-                <property name="row_spacing">24</property>
-                <child>
-                  <object class="GtkImage" id="image">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="pixel_size">48</property>
-                    <property name="icon_name">face-sad-symbolic</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="label">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="label" translatable="yes">No results found</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
             </child>
           </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">1</property>
+          </packing>
         </child>
       </object>
     </child>

@@ -34,7 +34,7 @@ typedef struct
 typedef struct
 {
   GtkWidget      *listbox;
-  GtkWidget      *frame;
+  GtkWidget      *scrolled_window;
   GtkWidget      *no_results_grid;
 
   /* internal hashes */
@@ -120,7 +120,7 @@ static void           gcal_search_view_thaw                     (ECalDataModelSu
 
 G_DEFINE_TYPE_WITH_CODE (GcalSearchView,
                          gcal_search_view,
-                         GTK_TYPE_SCROLLED_WINDOW,
+                         GTK_TYPE_POPOVER,
                          G_ADD_PRIVATE (GcalSearchView)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 gcal_data_model_subscriber_interface_init));
@@ -221,6 +221,7 @@ make_row_for_event_data (GcalSearchView  *view,
   name_label = gtk_label_new (summary.value);
   gtk_widget_set_hexpand (name_label, TRUE);
   gtk_widget_set_halign (name_label, GTK_ALIGN_START);
+  gtk_label_set_ellipsize (GTK_LABEL (name_label), PANGO_ELLIPSIZE_END);
 
   /* attach things up */
   gtk_grid_attach (GTK_GRID (box), time_label, 0, 0, 1, 1);
@@ -395,7 +396,7 @@ show_no_results_page (GcalSearchView *view)
   priv = gcal_search_view_get_instance_private (view);
   priv->no_results_timeout_id = 0;
 
-  gtk_widget_set_visible (priv->frame, priv->num_results != 0);
+  gtk_widget_set_visible (priv->scrolled_window, priv->num_results != 0);
   gtk_widget_set_visible (priv->no_results_grid, priv->num_results == 0);
 
   return G_SOURCE_REMOVE;
@@ -457,7 +458,7 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/search-view.ui");
 
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, no_results_grid);
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, frame);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, scrolled_window);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, listbox);
 
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), open_event);

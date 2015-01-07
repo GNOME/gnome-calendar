@@ -39,12 +39,12 @@ typedef struct _GcalSearchViewClass                  GcalSearchViewClass;
 
 struct _GcalSearchView
 {
-  GtkScrolledWindow parent;
+  GtkPopover parent;
 };
 
 struct _GcalSearchViewClass
 {
-  GtkScrolledWindowClass parent_class;
+  GtkPopoverClass parent_class;
 
   /* signals */
   void       (*event_activated)   (GcalSearchView *view, icaltimetype *date);
