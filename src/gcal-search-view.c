@@ -812,6 +812,8 @@ gcal_search_view_search (GcalSearchView *view,
       gcal_manager_set_query (priv->manager, search_query);
       gtk_widget_show (priv->listbox);
 
+      update_view (view);
+
       g_free (search_query);
     }
   else
