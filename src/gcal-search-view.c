@@ -44,6 +44,8 @@ typedef struct
   /* misc */
   gint            no_results_timeout_id;
   gint            num_results;
+  gchar          *field;
+  gchar          *query;
 
   /* property */
   icaltimetype   *date;
@@ -90,6 +92,15 @@ static gboolean       show_no_results_page                      (GcalSearchView 
 
 static void           display_header_func                       (GtkListBoxRow        *row,
                                                                  GtkListBoxRow        *before,
+                                                                 gpointer              user_data);
+
+static void           source_added                              (GcalManager          *manager,
+                                                                 ESource              *source,
+                                                                 gboolean              enable,
+                                                                 gpointer              user_data);
+
+static void           source_removed                            (GcalManager          *manager,
+                                                                 ESource              *source,
                                                                  gpointer              user_data);
 
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
@@ -431,6 +442,26 @@ display_header_func (GtkListBoxRow *row,
 }
 
 static void
+source_added (GcalManager *manager,
+              ESource     *source,
+              gboolean     enable,
+              gpointer     user_data)
+{
+  GcalSearchViewPrivate *priv;
+
+  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
+  gcal_search_view_search (GCAL_SEARCH_VIEW (user_data), priv->field, priv->query);
+}
+
+static void
+source_removed (GcalManager *manager,
+                ESource     *source,
+                gpointer     user_data)
+{
+  source_added (manager, source, FALSE, user_data);
+}
+
+static void
 gcal_search_view_class_init (GcalSearchViewClass *klass)
 {
   GObjectClass *object_class;
@@ -552,6 +583,9 @@ gcal_search_view_set_property (GObject       *object,
     case PROP_MANAGER:
       {
         priv->manager = g_value_get_pointer (value);
+        g_signal_connect (priv->manager, "source-added", G_CALLBACK (source_added), object);
+        g_signal_connect (priv->manager, "source-activated", G_CALLBACK (source_added), object);
+        g_signal_connect (priv->manager, "source-removed", G_CALLBACK (source_removed), object);
         break;
       }
     default:
@@ -746,6 +780,14 @@ gcal_search_view_search (GcalSearchView *view,
   GcalSearchViewPrivate *priv;
 
   priv = gcal_search_view_get_instance_private (view);
+
+  if (priv->query != NULL)
+    g_free (priv->query);
+  if (priv->field != NULL)
+    g_free (priv->field);
+
+  priv->query = g_strdup (query);
+  priv->field = g_strdup (field);
 
   /* Only perform search on valid non-empty strings */
   if (query && g_utf8_strlen (query, -1) > 0)
