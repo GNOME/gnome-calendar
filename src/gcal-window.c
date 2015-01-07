@@ -529,10 +529,6 @@ search_view_closed (GtkPopover *popover,
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
-  /* XXX: this is the destruction process */
-  if (!gtk_widget_get_visible (priv->views_stack))
-    return;
-
   gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar), priv->views_switcher);
 }
 
@@ -1044,6 +1040,7 @@ search_toggled (GObject    *object,
 
       /* update header_bar widget */
       gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar), NULL);
+      gcal_search_view_search (GCAL_SEARCH_VIEW (priv->views[GCAL_WINDOW_VIEW_SEARCH]), NULL, NULL);
     }
   else
     {

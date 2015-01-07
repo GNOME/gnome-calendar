@@ -792,6 +792,9 @@ gcal_search_view_search (GcalSearchView *view,
   priv->query = g_strdup (query);
   priv->field = g_strdup (field);
 
+  gtk_widget_show (priv->scrolled_window);
+  gtk_widget_hide (priv->no_results_grid);
+
   /* Only perform search on valid non-empty strings */
   if (query && g_utf8_strlen (query, -1) > 0)
     {
