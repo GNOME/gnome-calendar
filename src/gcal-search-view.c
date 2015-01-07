@@ -44,7 +44,6 @@ typedef struct
   /* misc */
   gint            no_results_timeout_id;
   gint            num_results;
-  gchar          *date_mask;
 
   /* property */
   icaltimetype   *date;
@@ -194,7 +193,7 @@ make_row_for_event_data (GcalSearchView  *view,
   /* start date & time */
   datetime = g_date_time_new_local (comp_dt.value->year, comp_dt.value->month, comp_dt.value->day, comp_dt.value->hour,
                                     comp_dt.value->minute, comp_dt.value->second);
-  text = g_date_time_format (datetime, priv->date_mask);
+  text = g_date_time_format (datetime, "%x");
   date_label = gtk_label_new (text);
   gtk_label_set_width_chars (GTK_LABEL (date_label), 14);
   g_free (text);
@@ -473,7 +472,6 @@ gcal_search_view_init (GcalSearchView *self)
 
   priv->events = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) free_row_data);
   priv->row_to_event = g_hash_table_new (g_direct_hash, g_direct_equal);
-  priv->date_mask = "%d %b %Y";
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
