@@ -44,7 +44,6 @@ typedef struct
   /* misc */
   gint            no_results_timeout_id;
   gint            num_results;
-  gchar          *time_mask;
   gchar          *date_mask;
 
   /* property */
@@ -475,7 +474,6 @@ gcal_search_view_init (GcalSearchView *self)
   priv->events = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) free_row_data);
   priv->row_to_event = g_hash_table_new (g_direct_hash, g_direct_equal);
   priv->date_mask = "%d %b %Y";
-  priv->time_mask = "%H:%M";
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
@@ -696,9 +694,4 @@ gcal_search_view_set_time_format (GcalSearchView *view,
 
   priv = gcal_search_view_get_instance_private (view);
   priv->format_24h = format_24h;
-
-  if (format_24h)
-    priv->time_mask = "%H:%M";
-  else
-    priv->time_mask = "%I:%M %p";
 }
