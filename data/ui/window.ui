@@ -33,9 +33,6 @@
                   <object class="GtkBox" id="search_entry_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <style>
-                      <class name="linked" />
-                    </style>
                     <child>
                       <object class="GtkSearchEntry" id="search_entry">
                         <property name="width_request">500</property>
@@ -50,22 +47,6 @@
                       </object>
                       <packing>
                         <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkToggleButton" id="search_list_button">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <child>
-                          <object class="GtkImage" id="search_list_image">
-                            <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="icon_name">open-menu-symbolic</property>
-                          </object>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="position">1</property>
                       </packing>
                     </child>
                   </object>

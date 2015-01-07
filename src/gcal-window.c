@@ -73,7 +73,6 @@ typedef struct
   GtkWidget           *today_button;
   GtkWidget           *forward_button;
   GtkWidget           *views_switcher;
-  GtkWidget           *search_list_button;
 
   /* new event popover widgets */
   GtkWidget           *popover;
@@ -1209,7 +1208,6 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendars_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_entry);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_list_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, back_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, today_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, forward_button);
@@ -1343,8 +1341,6 @@ gcal_window_constructed (GObject *object)
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (GTK_TOGGLE_BUTTON (priv->search_button), "active", priv->views[GCAL_WINDOW_VIEW_SEARCH],
                           "visible", G_BINDING_DEFAULT);
-  g_object_bind_property (priv->views[GCAL_WINDOW_VIEW_SEARCH], "visible",
-                          GTK_TOGGLE_BUTTON (priv->search_list_button), "active", G_BINDING_DEFAULT);
 
   /* signals connection/handling */
   /* HACK to ensure proper destroy of search-view widget */
