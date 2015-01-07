@@ -66,6 +66,9 @@
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="shadow_type">none</property>
+                <style>
+                  <class name="search-viewport" />
+                </style>
                 <child>
                   <object class="GtkGrid" id="search_grid">
                     <property name="visible">True</property>
