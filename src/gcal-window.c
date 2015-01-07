@@ -530,7 +530,6 @@ search_view_closed (GtkPopover *popover,
   if (!gtk_widget_get_visible (priv->views_stack))
     return;
 
-  gtk_widget_hide (priv->search_bar);
   gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar), priv->views_switcher);
 }
 
