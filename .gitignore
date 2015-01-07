@@ -81,3 +81,4 @@ build-aux
 data/org.gnome.Calendar.desktop
 data/org.gnome.Calendar.desktop.in
 data/org.gnome.Calendar.service
+data/appdata/org.gnome.Calendar.appdata.xml
