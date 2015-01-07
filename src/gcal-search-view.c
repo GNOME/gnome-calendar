@@ -88,6 +88,10 @@ static void           free_row_data                             (RowEventData   
 
 static gboolean       show_no_results_page                      (GcalSearchView       *view);
 
+static void           display_header_func                       (GtkListBoxRow        *row,
+                                                                 GtkListBoxRow        *before,
+                                                                 gpointer              user_data);
+
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
 static void           gcal_search_view_constructed              (GObject        *object);
@@ -404,6 +408,28 @@ show_no_results_page (GcalSearchView *view)
   return G_SOURCE_REMOVE;
 }
 
+/**
+ * display_header_func:
+ *
+ * Shows a separator before each row.
+ *
+ */
+static void
+display_header_func (GtkListBoxRow *row,
+                     GtkListBoxRow *before,
+                     gpointer       user_data)
+{
+  if (before)
+    {
+      GtkWidget *header;
+
+      header = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
+      gtk_widget_show (header);
+
+      gtk_list_box_row_set_header (row, header);
+    }
+}
+
 static void
 gcal_search_view_class_init (GcalSearchViewClass *klass)
 {
@@ -497,6 +523,7 @@ gcal_search_view_constructed (GObject *object)
 
   /* make the listbox sorted */
   gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->listbox), (GtkListBoxSortFunc) sort_by_event, object, NULL);
+  gtk_list_box_set_header_func (GTK_LIST_BOX (priv->listbox), display_header_func, NULL, NULL);
 
   /* don't fill the list with all events on startup */
   gcal_search_view_search (GCAL_SEARCH_VIEW (object), NULL, NULL);
