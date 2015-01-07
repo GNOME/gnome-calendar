@@ -1346,6 +1346,7 @@ gcal_window_constructed (GObject *object)
   priv->views[GCAL_WINDOW_VIEW_SEARCH] =
     gcal_search_view_new (priv->manager);
   g_object_ref_sink (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
+  gcal_search_view_set_time_format (GCAL_SEARCH_VIEW (priv->views[GCAL_WINDOW_VIEW_SEARCH]), use_24h_format);
 
   g_object_bind_property (GCAL_WINDOW (object), "active-date",
                           priv->views[GCAL_WINDOW_VIEW_SEARCH],

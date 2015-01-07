@@ -52,6 +52,9 @@ struct _GcalSearchViewClass
 
 GType          gcal_search_view_get_type         (void);
 
+void           gcal_search_view_set_time_format  (GcalSearchView *view,
+                                                  gboolean        format_24h);
+
 GtkWidget*     gcal_search_view_new              (GcalManager *manager);
 
 G_END_DECLS

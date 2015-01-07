@@ -50,6 +50,7 @@ typedef struct
   /* property */
   icaltimetype   *date;
   GcalManager    *manager; /* weak reference */
+  gboolean        format_24h;
 } GcalSearchViewPrivate;
 
 enum
@@ -202,7 +203,11 @@ make_row_for_event_data (GcalSearchView  *view,
   /* show 'all day' instead of 00:00 */
   if (comp_dt.value->is_date == 0)
     {
-      text = g_date_time_format (datetime, priv->time_mask);
+      if (priv->format_24h)
+        text = g_strdup_printf ("%.2d:%.2d", comp_dt.value->hour, comp_dt.value->minute);
+      else
+        text = g_strdup_printf (_("%.2d:%.2d %s"), comp_dt.value->hour % 12, comp_dt.value->minute,
+                                comp_dt.value->hour < 12 ? _("AM") : _("PM"));
       time_label = gtk_label_new (text);
       g_free (text);
     }
@@ -211,7 +216,7 @@ make_row_for_event_data (GcalSearchView  *view,
       time_label = gtk_label_new (_("All day"));
     }
 
-  gtk_label_set_width_chars (GTK_LABEL (date_label), 14);
+  gtk_label_set_width_chars (GTK_LABEL (time_label), 14);
   gtk_style_context_add_class (gtk_widget_get_style_context (time_label), "dim-label");
 
   /* name label */
@@ -672,4 +677,28 @@ GtkWidget*
 gcal_search_view_new (GcalManager *manager)
 {
   return g_object_new (GCAL_TYPE_SEARCH_VIEW, "manager", manager, NULL);
+}
+
+/**
+ * gcal_search_view_set_time_format:
+ * @view: a #GcalSearchView instance.
+ * @format_24h: whether is 24h or not.
+ *
+ * Setup time format, instead of accessing DConf
+ * again.
+ *
+ */
+void
+gcal_search_view_set_time_format (GcalSearchView *view,
+                                  gboolean        format_24h)
+{
+  GcalSearchViewPrivate *priv;
+
+  priv = gcal_search_view_get_instance_private (view);
+  priv->format_24h = format_24h;
+
+  if (format_24h)
+    priv->time_mask = "%H:%M";
+  else
+    priv->time_mask = "%I:%M %p";
 }
