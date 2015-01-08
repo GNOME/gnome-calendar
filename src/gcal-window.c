@@ -525,11 +525,7 @@ static void
 search_view_closed (GtkPopover *popover,
                     gpointer    user_data)
 {
-  GcalWindowPrivate *priv;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar), priv->views_switcher);
+  ;
 }
 
 static void
@@ -1039,14 +1035,12 @@ search_toggled (GObject    *object,
       gtk_widget_show (priv->search_bar);
 
       /* update header_bar widget */
-      gtk_header_bar_set_custom_title (GTK_HEADER_BAR (priv->header_bar), NULL);
       gcal_search_view_search (GCAL_SEARCH_VIEW (priv->views[GCAL_WINDOW_VIEW_SEARCH]), NULL, NULL);
     }
   else
     {
       g_debug ("Leaving search mode");
       /* update header_bar */
-      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar), _("Calendar"));
       priv->leaving_search_mode = TRUE;
     }
 }
@@ -1064,19 +1058,6 @@ search_changed (GtkEditable *editable,
       /* perform the search */
       gcal_search_view_search (GCAL_SEARCH_VIEW (priv->views[GCAL_WINDOW_VIEW_SEARCH]), "summary",
                                gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
-
-      if (gtk_entry_get_text_length (GTK_ENTRY (priv->search_entry)) != 0)
-        {
-          gchar *title;
-
-          title = g_strdup_printf (_("Results for \"%s\""), gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
-          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar), title);
-          g_free (title);
-        }
-      else
-        {
-          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->header_bar), _("Calendar"));
-        }
     }
 }
 
