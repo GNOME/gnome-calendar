@@ -141,9 +141,6 @@ static void           view_changed                       (GObject             *o
                                                           GParamSpec          *pspec,
                                                           gpointer             user_data);
 
-static void           search_view_closed                 (GtkPopover          *popover,
-                                                          gpointer             user_data);
-
 static void           set_new_event_mode                 (GcalWindow          *window,
                                                           gboolean             enabled);
 
@@ -319,10 +316,6 @@ search_event_selected (GcalSearchView *search_view,
                        icaltimetype   *date,
                        gpointer        user_data)
 {
-  GcalWindowPrivate *priv;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
   g_object_set (user_data, "active-date", date, NULL);
   update_view (GCAL_WINDOW (user_data));
   gcal_window_set_search_mode (GCAL_WINDOW (user_data), FALSE);
@@ -511,21 +504,6 @@ view_changed (GObject    *object,
   g_object_notify (G_OBJECT (user_data), "active-view");
 
   update_view (GCAL_WINDOW (user_data));
-}
-
-/**
- * search_view_closed:
- * @object:
- * @pspec:
- * @user_data:
- *
- *
- **/
-static void
-search_view_closed (GtkPopover *popover,
-                    gpointer    user_data)
-{
-  ;
 }
 
 static void
@@ -1342,7 +1320,6 @@ gcal_window_constructed (GObject *object)
 
   g_signal_connect (priv->views[GCAL_WINDOW_VIEW_SEARCH], "event-activated", G_CALLBACK (search_event_selected),
                     object);
-  g_signal_connect (priv->views[GCAL_WINDOW_VIEW_SEARCH], "closed", G_CALLBACK (search_view_closed), object);
 
   /* refresh timeout, first is fast */
   priv->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, object);
