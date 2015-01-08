@@ -242,6 +242,17 @@ sort_by_event (GtkListBoxRow *row1,
   if (ev1 == NULL || ev2 == NULL)
       return 0;
 
+  e_cal_component_get_dtstart (ev1->event_component, &date1);
+  e_cal_component_get_dtstart (ev2->event_component, &date2);
+
+  /* Second, compare by their dates */
+  result = icaltime_compare (*date1.value, *date2.value);
+  e_cal_component_free_datetime (&date1);
+  e_cal_component_free_datetime (&date2);
+
+  if (result != 0)
+    return -1 * result;
+
   e_cal_component_get_summary (ev1->event_component, &summary1);
   e_cal_component_get_summary (ev2->event_component, &summary2);
   down1 = g_utf8_strdown (summary1.value, -1);
@@ -252,18 +263,7 @@ sort_by_event (GtkListBoxRow *row1,
   g_free (down1);
   g_free (down2);
 
-  if (result != 0)
-    return result;
-
-  e_cal_component_get_dtstart (ev1->event_component, &date1);
-  e_cal_component_get_dtstart (ev2->event_component, &date2);
-
-  /* Second, compare by their dates */
-  result = icaltime_compare (*date1.value, *date2.value);
-  e_cal_component_free_datetime (&date1);
-  e_cal_component_free_datetime (&date2);
-
-  return -1 * result;
+  return result;
 }
 
 static void
