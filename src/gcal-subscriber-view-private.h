@@ -17,7 +17,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef __GCAL_SUBSCRIBER_VIEW_PRIVATE_H__
+#ifndef __GCAL_SUBSCRIBER_VIEW_PRIVATE_H____
 #define __GCAL_SUBSCRIBER_VIEW_PRIVATE_H____
 
 #include <glib.h>
