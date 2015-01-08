@@ -428,6 +428,7 @@ make_row_for_event_data (GcalSearchView  *view,
 
   /* name label */
   name_label = gtk_label_new (summary.value);
+  gtk_widget_set_hexpand (name_label, TRUE);
   gtk_widget_set_halign (name_label, GTK_ALIGN_START);
   gtk_label_set_ellipsize (GTK_LABEL (name_label), PANGO_ELLIPSIZE_END);
 
