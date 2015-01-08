@@ -355,6 +355,7 @@ make_row_for_event_data (GcalSearchView  *view,
 
   GtkWidget *row;
   GtkWidget *grid;
+  GtkWidget *name_box;
   GtkWidget *box;
 
   gchar *text;
@@ -381,6 +382,7 @@ make_row_for_event_data (GcalSearchView  *view,
   /* grid & box*/
   row = gtk_list_box_row_new ();
   grid = gtk_grid_new ();
+  name_box = gtk_grid_new ();
   box = gtk_grid_new ();
 
   g_object_set (grid,
@@ -391,8 +393,11 @@ make_row_for_event_data (GcalSearchView  *view,
                 "hexpand", TRUE, NULL);
 
   gtk_grid_set_column_spacing (GTK_GRID (box), 12);
+  gtk_grid_set_column_spacing (GTK_GRID (name_box), 12);
   gtk_widget_set_valign (box, GTK_ALIGN_CENTER);
+  gtk_widget_set_valign (name_box, GTK_ALIGN_CENTER);
   gtk_widget_set_margin_end (box, 6);
+  gtk_widget_set_hexpand (name_box, TRUE);
 
   /* start date & time */
   datetime = g_date_time_new_local (comp_dt.value->year, comp_dt.value->month, comp_dt.value->day, comp_dt.value->hour,
@@ -423,16 +428,34 @@ make_row_for_event_data (GcalSearchView  *view,
 
   /* name label */
   name_label = gtk_label_new (summary.value);
-  gtk_widget_set_hexpand (name_label, TRUE);
   gtk_widget_set_halign (name_label, GTK_ALIGN_START);
   gtk_label_set_ellipsize (GTK_LABEL (name_label), PANGO_ELLIPSIZE_END);
+
+  /* alarm icon */
+  if (e_cal_component_has_alarms (data->event_component))
+    {
+      GtkWidget *alarm_icon;
+
+      alarm_icon = gtk_image_new_from_icon_name ("alarm-symbolic", GTK_ICON_SIZE_MENU);
+      gtk_grid_attach (GTK_GRID (name_box), alarm_icon, 2, 0, 1, 1);
+    }
+
+  /* lock icon */
+  if (gcal_manager_is_client_writable (priv->manager, data->source))
+    {
+      GtkWidget *lock_icon;
+
+      lock_icon = gtk_image_new_from_icon_name ("changes-prevent-symbolic", GTK_ICON_SIZE_MENU);
+      gtk_grid_attach (GTK_GRID (name_box), lock_icon, 3, 0, 1, 1);
+    }
 
   /* attach things up */
   gtk_grid_attach (GTK_GRID (box), time_label, 0, 0, 1, 1);
   gtk_grid_attach (GTK_GRID (box), date_label, 1, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (grid), image, 0, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (grid), name_label, 1, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (grid), box, 2, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (name_box), image, 0, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (name_box), name_label, 1, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (grid), name_box, 0, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (grid), box, 1, 0, 1, 1);
   gtk_container_add (GTK_CONTAINER (row), grid);
 
   gtk_widget_show_all (row);
