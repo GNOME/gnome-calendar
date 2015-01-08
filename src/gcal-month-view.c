@@ -785,6 +785,13 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
   ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
 
+  if (!ppriv->children_changed &&
+      allocation->height == gtk_widget_get_allocated_height (widget) &&
+      allocation->width == gtk_widget_get_allocated_width (widget))
+    {
+      return;
+    }
+
   /* remove every widget' parts, but the master widget */
   widgets = g_hash_table_get_values (ppriv->children);
   for (aux = widgets; aux != NULL; aux = g_list_next (aux))
@@ -997,6 +1004,8 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   /* FIXME: remove on Gtk+ 3.15.4 release */
   if (g_hash_table_size (ppriv->overflow_cells) != 0)
     gtk_widget_queue_draw_area (widget, allocation->x, allocation->y, allocation->width, allocation->height);
+
+  ppriv->children_changed = FALSE;
 }
 
 static gboolean
