@@ -52,6 +52,9 @@ struct _GcalSubscriberViewPrivate
    * Set containing the master widgets hidden for delete;
    */
   GHashTable     *hidden_as_overflow;
+
+  /* state flags */
+  gboolean        children_changed;
 };
 
 G_END_DECLS

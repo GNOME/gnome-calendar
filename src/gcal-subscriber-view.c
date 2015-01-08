@@ -173,6 +173,8 @@ gcal_subscriber_view_add (GtkContainer *container,
       gtk_widget_destroy (widget);
       return;
     }
+
+  priv->children_changed = TRUE;
   l = g_list_append (l, widget);
   g_hash_table_insert (priv->children, g_strdup (uuid), l);
 
@@ -216,6 +218,8 @@ gcal_subscriber_view_remove (GtkContainer *container,
   l = g_hash_table_lookup (priv->children, uuid);
   if (l != NULL)
     {
+      priv->children_changed = TRUE;
+
       master_widget = (GtkWidget*) l->data;
 
       was_visible = gtk_widget_get_visible (widget);
