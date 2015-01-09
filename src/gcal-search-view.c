@@ -86,15 +86,6 @@ static gint           sort_by_event                             (GtkListBoxRow  
                                                                  GtkListBoxRow        *row2,
                                                                  gpointer              user_data);
 
-static void           source_added                              (GcalManager          *manager,
-                                                                 ESource              *source,
-                                                                 gboolean              enable,
-                                                                 gpointer              user_data);
-
-static void           source_removed                            (GcalManager          *manager,
-                                                                 ESource              *source,
-                                                                 gpointer              user_data);
-
 static gboolean       show_no_results_page                      (GcalSearchView       *view);
 
 /* private */
@@ -261,26 +252,6 @@ sort_by_event (GtkListBoxRow *row1,
   g_free (down2);
 
   return result;
-}
-
-static void
-source_added (GcalManager *manager,
-              ESource     *source,
-              gboolean     enable,
-              gpointer     user_data)
-{
-  GcalSearchViewPrivate *priv;
-
-  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
-  gcal_search_view_search (GCAL_SEARCH_VIEW (user_data), priv->field, priv->query);
-}
-
-static void
-source_removed (GcalManager *manager,
-                ESource     *source,
-                gpointer     user_data)
-{
-  source_added (manager, source, FALSE, user_data);
 }
 
 /**
@@ -607,9 +578,6 @@ gcal_search_view_set_property (GObject       *object,
     case PROP_MANAGER:
       {
         priv->manager = g_value_get_pointer (value);
-        g_signal_connect (priv->manager, "source-added", G_CALLBACK (source_added), object);
-        g_signal_connect (priv->manager, "source-activated", G_CALLBACK (source_added), object);
-        g_signal_connect (priv->manager, "source-removed", G_CALLBACK (source_removed), object);
         break;
       }
     default:
