@@ -1306,7 +1306,8 @@ gcal_window_constructed (GObject *object)
                         "year", _("Year"));
 
   /* search view */
-  priv->views[GCAL_WINDOW_VIEW_SEARCH] = gcal_search_view_new (priv->manager);
+  priv->views[GCAL_WINDOW_VIEW_SEARCH] = gcal_search_view_new ();
+  gcal_search_view_connect (GCAL_SEARCH_VIEW (priv->views[GCAL_WINDOW_VIEW_SEARCH]), priv->manager);
   g_object_ref_sink (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
 
   gcal_search_view_set_time_format (GCAL_SEARCH_VIEW (priv->views[GCAL_WINDOW_VIEW_SEARCH]), use_24h_format);

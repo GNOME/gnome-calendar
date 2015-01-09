@@ -60,7 +60,6 @@ enum
 {
   PROP_0,
   PROP_DATE,  /* active-date inherited property */
-  PROP_MANAGER  /* manager inherited property */
 };
 
 enum
@@ -495,19 +494,6 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
                           "The active/selected date in the view",
                           ICAL_TIME_TYPE, G_PARAM_READWRITE));
 
-  /**
-   * GcalSearchView::manager:
-   *
-   * A weak reference to the singleton #GcalManager of this
-   * application.
-   *
-   */
-  g_object_class_install_property (object_class, PROP_MANAGER,
-      g_param_spec_pointer ("manager",
-                            "The manager object",
-                            "A weak reference to the app manager object",
-                            G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
-
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/search-view.ui");
 
@@ -573,11 +559,6 @@ gcal_search_view_set_property (GObject       *object,
           g_free (priv->date);
 
         priv->date = g_value_dup_boxed (value);
-        break;
-      }
-    case PROP_MANAGER:
-      {
-        priv->manager = g_value_get_pointer (value);
         break;
       }
     default:
@@ -722,7 +703,6 @@ gcal_search_view_thaw (ECalDataModelSubscriber *subscriber)
 /* Public API */
 /**
  * gcal_search_view_new:
- * @manager: App singleton #GcalManager instance
  *
  * Since: 0.1
  * Create a new month view widget
@@ -730,9 +710,28 @@ gcal_search_view_thaw (ECalDataModelSubscriber *subscriber)
  * Returns: (transfer full):
  **/
 GtkWidget*
-gcal_search_view_new (GcalManager *manager)
+gcal_search_view_new (void)
 {
-  return g_object_new (GCAL_TYPE_SEARCH_VIEW, "manager", manager, NULL);
+  return g_object_new (GCAL_TYPE_SEARCH_VIEW, NULL);
+}
+
+/**
+ * gcal_search_view_connect:
+ * @search_view: a #GcalSearchView instance
+ * @manager: App singleton #GcalManager instance
+ *
+ * Connect the view to the App singleton manager instance.
+ * This is designed to be called once, after create of the view and before any use.
+ */
+void
+gcal_search_view_connect (GcalSearchView *search_view,
+                          GcalManager    *manager)
+{
+  GcalSearchViewPrivate *priv;
+
+  priv = gcal_search_view_get_instance_private (search_view);
+  if (manager != NULL && manager != priv->manager)
+    priv->manager = manager;
 }
 
 /**

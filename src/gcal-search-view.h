@@ -59,8 +59,10 @@ void           gcal_search_view_search           (GcalSearchView *view,
                                                   const gchar    *field,
                                                   const gchar    *query);
 
+GtkWidget*     gcal_search_view_new              (void);
 
-GtkWidget*     gcal_search_view_new              (GcalManager *manager);
+void           gcal_search_view_connect          (GcalSearchView *search_view,
+                                                  GcalManager    *manager);
 
 G_END_DECLS
 
