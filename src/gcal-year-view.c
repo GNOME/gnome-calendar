@@ -733,7 +733,6 @@ gcal_year_view_draw (GtkWidget *widget,
       gint row = i / 6;
 
       j = 6 * ((i + 6 * priv->k) / 6) + sw * (i % 6) + (1 - priv->k);
-      g_debug ("cell: %d numbered: %d: %s", i, j, gcal_get_month_name (j - 1));
 
       if (priv->date->month == j)
         {
@@ -829,7 +828,6 @@ gcal_year_view_button_press (GtkWidget      *widget,
   priv->clicked_cell = 6 * ( (gint ) ( y  / (height / 2) )) + ((gint) ( x / (width / 6) ));
   priv->start_mark_cell = priv->clicked_cell;
 
-  g_debug ("button pressed: cell %d", priv->start_mark_cell);
   return TRUE;
 }
 
@@ -915,8 +913,6 @@ gcal_year_view_button_release (GtkWidget      *widget,
                          x, y);
   g_free (start_date);
   g_free (end_date);
-
-  g_debug ("button released: cell %d", priv->end_mark_cell);
 
   priv->clicked_cell = -1;
   return TRUE;
