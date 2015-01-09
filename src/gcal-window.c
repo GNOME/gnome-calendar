@@ -81,7 +81,9 @@ typedef struct
   GtkWidget           *new_event_details_button;
   GtkWidget           *new_event_what_entry;
 
-  /* day, week, month, year, list, search */
+  GtkWidget           *search_view;
+
+  /* day, week, month, year, list */
   GtkWidget           *views [6];
   GtkWidget           *edit_dialog;
 
@@ -212,10 +214,6 @@ static void           search_changed                     (GtkEditable         *e
                                                           gpointer             user_data);
 
 static void           search_bar_revealer_toggled        (GObject             *object,
-                                                          GParamSpec          *pspec,
-                                                          gpointer             user_data);
-
-static void           search_mode_toggled                (GObject             *object,
                                                           GParamSpec          *pspec,
                                                           gpointer             user_data);
 
@@ -1017,13 +1015,14 @@ search_toggled (GObject    *object,
       gtk_widget_show (priv->search_bar);
 
       /* update header_bar widget */
-      gcal_search_view_search (GCAL_SEARCH_VIEW (priv->views[GCAL_WINDOW_VIEW_SEARCH]), NULL, NULL);
+      gcal_search_view_search (GCAL_SEARCH_VIEW (priv->search_view), NULL, NULL);
     }
   else
     {
       g_debug ("Leaving search mode");
       /* update header_bar */
       priv->leaving_search_mode = TRUE;
+      gtk_widget_hide (priv->search_view);
     }
 }
 
@@ -1038,8 +1037,8 @@ search_changed (GtkEditable *editable,
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
     {
       /* perform the search */
-      gcal_search_view_search (GCAL_SEARCH_VIEW (priv->views[GCAL_WINDOW_VIEW_SEARCH]), "summary",
-                               gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
+      gcal_search_view_search (GCAL_SEARCH_VIEW (priv->search_view),
+                               "summary", gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
     }
 }
 
@@ -1055,20 +1054,7 @@ search_bar_revealer_toggled (GObject    *object,
   if (!gtk_revealer_get_child_revealed (GTK_REVEALER (object)))
     gtk_widget_hide (priv->search_bar);
   else
-    gtk_widget_show (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
-}
-
-static void
-search_mode_toggled (GObject    *object,
-                     GParamSpec *pspec,
-                     gpointer    user_data)
-{
-  GcalWindowPrivate *priv;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  if (!gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (object)))
-    gtk_widget_hide (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
+    gtk_widget_show (priv->search_view);
 }
 
 static void
@@ -1190,6 +1176,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_stack);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_switcher);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, popover);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_view);
 
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, new_event_title_label);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, new_event_create_button);
@@ -1218,6 +1205,9 @@ gcal_window_class_init(GcalWindowClass *klass)
 
   /* Syncronization related */
   gtk_widget_class_bind_template_callback (widget_class, window_state_changed);
+
+  /* search related */
+  gtk_widget_class_bind_template_callback (widget_class, search_event_selected);
 }
 
 static void
@@ -1306,22 +1296,10 @@ gcal_window_constructed (GObject *object)
                         "year", _("Year"));
 
   /* search view */
-  priv->views[GCAL_WINDOW_VIEW_SEARCH] = gcal_search_view_new ();
-  gcal_search_view_connect (GCAL_SEARCH_VIEW (priv->views[GCAL_WINDOW_VIEW_SEARCH]), priv->manager);
-  g_object_ref_sink (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
-
-  gcal_search_view_set_time_format (GCAL_SEARCH_VIEW (priv->views[GCAL_WINDOW_VIEW_SEARCH]), use_24h_format);
-  gtk_popover_set_relative_to (GTK_POPOVER (priv->views[GCAL_WINDOW_VIEW_SEARCH]), priv->search_entry);
-
-  g_object_bind_property (GCAL_WINDOW (object), "active-date", priv->views[GCAL_WINDOW_VIEW_SEARCH], "active-date",
-                          G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  gcal_search_view_connect (GCAL_SEARCH_VIEW (priv->search_view), priv->manager);
+  gcal_search_view_set_time_format (GCAL_SEARCH_VIEW (priv->search_view), use_24h_format);
 
   /* signals connection/handling */
-  /* HACK to ensure proper destroy of search-view widget */
-  g_signal_connect_swapped (priv->views_stack, "destroy",
-                            G_CALLBACK (gtk_widget_destroy),
-                            priv->views[GCAL_WINDOW_VIEW_SEARCH]);
-
   /* only GcalView implementations */
   for (i = 0; i < 4; ++i)
     {
@@ -1335,10 +1313,6 @@ gcal_window_constructed (GObject *object)
           g_signal_connect (priv->views[i], "event-activated", G_CALLBACK (event_activated), object);
         }
     }
-
-  g_signal_connect (priv->views[GCAL_WINDOW_VIEW_SEARCH], "event-activated", G_CALLBACK (search_event_selected),
-                    object);
-  g_signal_connect (priv->search_bar, "notify::search-mode-enabled", G_CALLBACK (search_mode_toggled), object);
 
   /* refresh timeout, first is fast */
   priv->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, object);
@@ -1356,9 +1330,6 @@ gcal_window_finalize (GObject *object)
 
   if (priv->views_switcher != NULL)
     g_object_unref (priv->views_switcher);
-
-  if (priv->views[GCAL_WINDOW_VIEW_SEARCH] != NULL)
-    g_object_unref (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
 
   G_OBJECT_CLASS (gcal_window_parent_class)->finalize (object);
 }
