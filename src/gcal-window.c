@@ -215,6 +215,10 @@ static void           search_bar_revealer_toggled        (GObject             *o
                                                           GParamSpec          *pspec,
                                                           gpointer             user_data);
 
+static void           search_mode_toggled                (GObject             *object,
+                                                          GParamSpec          *pspec,
+                                                          gpointer             user_data);
+
 static void           remove_event                       (GtkWidget           *notification,
                                                           GParamSpec          *spec,
                                                           gpointer             user_data);
@@ -1050,6 +1054,21 @@ search_bar_revealer_toggled (GObject    *object,
 
   if (!gtk_revealer_get_child_revealed (GTK_REVEALER (object)))
     gtk_widget_hide (priv->search_bar);
+  else
+    gtk_widget_show (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
+}
+
+static void
+search_mode_toggled (GObject    *object,
+                     GParamSpec *pspec,
+                     gpointer    user_data)
+{
+  GcalWindowPrivate *priv;
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  if (!gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (object)))
+    gtk_widget_hide (priv->views[GCAL_WINDOW_VIEW_SEARCH]);
 }
 
 static void
@@ -1295,8 +1314,6 @@ gcal_window_constructed (GObject *object)
 
   g_object_bind_property (GCAL_WINDOW (object), "active-date", priv->views[GCAL_WINDOW_VIEW_SEARCH], "active-date",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (gtk_bin_get_child (GTK_BIN (priv->search_bar)), "child-revealed",
-                          priv->views[GCAL_WINDOW_VIEW_SEARCH], "visible", G_BINDING_DEFAULT);
 
   /* signals connection/handling */
   /* HACK to ensure proper destroy of search-view widget */
@@ -1320,6 +1337,7 @@ gcal_window_constructed (GObject *object)
 
   g_signal_connect (priv->views[GCAL_WINDOW_VIEW_SEARCH], "event-activated", G_CALLBACK (search_event_selected),
                     object);
+  g_signal_connect (priv->search_bar, "notify::search-mode-enabled", G_CALLBACK (search_mode_toggled), object);
 
   /* refresh timeout, first is fast */
   priv->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, object);
