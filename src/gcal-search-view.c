@@ -191,16 +191,13 @@ open_event (GtkListBox    *list,
   GcalSearchViewPrivate *priv;
   GcalEventData *data;
   ECalComponentDateTime dt;
-  icaltimetype *time;
-
 
   priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
   data = g_hash_table_lookup (priv->row_to_event, row);
 
   e_cal_component_get_dtstart (data->event_component, &dt);
-  time = gcal_dup_icaltime (dt.value);
 
-  g_signal_emit_by_name (user_data, "event-activated", time);
+  g_signal_emit_by_name (user_data, "event-activated", dt.value);
 
   e_cal_component_free_datetime (&dt);
 }

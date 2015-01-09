@@ -47,7 +47,7 @@ struct _GcalSearchViewClass
   GtkPopoverClass parent_class;
 
   /* signals */
-  void       (*event_activated)   (GcalSearchView *view, icaltimetype *date);
+  void       (*event_activated)   (GcalSearchView *view, const icaltimetype *date);
 };
 
 GType          gcal_search_view_get_type         (void);
