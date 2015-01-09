@@ -7,6 +7,7 @@
     <property name="window_position">center</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
+    <property name="height_request">600</property>
     <property name="show_menubar">False</property>
     <signal name="key-press-event" handler="key_pressed" object="GcalWindow" swapped="no"/>
     <signal name="window-state-event" handler="window_state_changed" object="GcalWindow" swapped="no"/>
