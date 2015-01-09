@@ -186,6 +186,9 @@ gcal_application_finalize (GObject *object)
 
   priv = gcal_application_get_instance_private (GCAL_APPLICATION (object));
 
+  gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (priv->colors_provider));
+  gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (priv->provider));
+
   g_clear_object (&(priv->settings));
   g_clear_object (&(priv->colors_provider));
   g_clear_object (&(priv->provider));
@@ -259,7 +262,6 @@ gcal_application_startup (GApplication *app)
      g_object_set (gtk_settings_get_default (), "gtk-application-prefer-dark-theme", FALSE, NULL);
 
      g_object_unref (css_file);
-     g_object_unref (priv->provider);
    }
 
   if (priv->colors_provider != NULL)
@@ -267,7 +269,6 @@ gcal_application_startup (GApplication *app)
       gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
                                                  GTK_STYLE_PROVIDER (priv->colors_provider),
                                                  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
-      g_object_unref (priv->colors_provider);
     }
 
   priv->manager = gcal_manager_new_with_settings (priv->settings);
