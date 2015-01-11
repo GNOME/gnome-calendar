@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-05 09:19+0100\n"
-"PO-Revision-Date: 2015-01-05 09:20+0100\n"
+"POT-Creation-Date: 2015-01-11 15:08+0100\n"
+"PO-Revision-Date: 2015-01-11 15:09+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -23,10 +23,50 @@ msgstr ""
 "X-Poedit-Language: Polish\n"
 "X-Poedit-Country: Poland\n"
 
-#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../src/gcal-application.c:432
-#: ../src/gcal-window.c:1059
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../data/ui/window.ui.h:1
+#: ../src/gcal-application.c:433
 msgid "Calendar"
 msgstr "Kalendarz"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+msgid "Calendar for GNOME"
+msgstr "Kalendarz dla środowiska GNOME"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"Calendar is a simple and beautiful calendar application designed to fit "
+"GNOME 3."
+msgstr ""
+"Jest to prosty i estetyczny kalendarz zaprojektowany dla środowiska GNOME 3."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid "Features:"
+msgstr "Funkcje:"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Week, month and year views"
+msgstr "Widoki tygodnia, miesiąca i roku"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Basic editing of events"
+msgstr "Podstawowe modyfikowanie wydarzeń"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:7
+msgid "Evolution Data Server integration"
+msgstr "Integracja z Evolution Data Server"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:8
+msgid "Search support"
+msgstr "Wyszukiwanie"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:9
+msgid "Search for events"
+msgstr "Wyszukiwanie wydarzeń"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:10
+msgid "Calendar management"
+msgstr "Zarządzenie kalendarzem"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
@@ -102,7 +142,7 @@ msgstr "Uwagi"
 msgid "Location"
 msgstr "Położenie"
 
-#: ../data/ui/edit-dialog.ui.h:8
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:390
 msgid "All day"
 msgstr "Cały dzień"
 
@@ -130,6 +170,14 @@ msgstr "Za_kończ"
 msgid "_Synchronize"
 msgstr "Z_synchronizuj"
 
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "Brak wyników"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "Można wyszukiwać wydarzenia za pomocą pola powyżej."
+
 #: ../data/ui/time-selector.ui.h:1
 msgid "00:00"
 msgstr "00∶00"
@@ -138,23 +186,25 @@ msgstr "00∶00"
 msgid ":"
 msgstr "∶"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:425
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:384
+#: ../src/gcal-week-view.c:422
 msgid "AM"
 msgstr "Przed południem"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:425
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:384
+#: ../src/gcal-week-view.c:422
 msgid "PM"
 msgstr "Po południu"
 
-#: ../data/ui/window.ui.h:1
+#: ../data/ui/window.ui.h:2
 msgid "Today"
 msgstr "Dzisiaj"
 
-#: ../data/ui/window.ui.h:2
+#: ../data/ui/window.ui.h:3
 msgid "Create"
 msgstr "Utwórz"
 
-#: ../data/ui/window.ui.h:3
+#: ../data/ui/window.ui.h:4
 msgid "More Details"
 msgstr "Więcej informacji"
 
@@ -166,23 +216,35 @@ msgstr "Wyświetla numer wersji"
 msgid "Open calendar on the passed date"
 msgstr "Otwiera kalendarz na podanej dacie"
 
-#: ../src/gcal-application.c:292
+#: ../src/gcal-application.c:293
 msgid "- Calendar management"
 msgstr "- zarządzenie kalendarzem"
 
-#: ../src/gcal-application.c:420
+#: ../src/gcal-application.c:421
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id Autorzy Kalendarza"
 
-#: ../src/gcal-application.c:426
+#: ../src/gcal-application.c:427
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Autorzy Kalendarza"
 
-#: ../src/gcal-application.c:439
+#: ../src/gcal-application.c:440
 msgid "translator-credits"
 msgstr ""
 "Piotr Drąg <piotrdrag@gmail.com>, 2012-2015\n"
 "Aviary.pl <gnomepl@aviary.pl>, 2012-2015"
+
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "Dzień"
+
+#: ../src/gcal-date-selector.c:305 ../src/gcal-window.c:1290
+msgid "Month"
+msgstr "Miesiąc"
+
+#: ../src/gcal-date-selector.c:307 ../src/gcal-window.c:1296
+msgid "Year"
+msgstr "Rok"
 
 #: ../src/gcal-edit-dialog.c:675
 msgid "Save"
@@ -192,16 +254,16 @@ msgstr "Zapisz"
 msgid "Unnamed event"
 msgstr "Wydarzenie bez nazwy"
 
-#: ../src/gcal-month-view.c:640
+#: ../src/gcal-month-view.c:571
 msgid "Add new event..."
 msgstr "Dodaj nowe wydarzenie..."
 
-#: ../src/gcal-month-view.c:892
+#: ../src/gcal-month-view.c:819 ../src/gcal-year-view.c:460
 msgid "Other events"
 msgstr "Inne wydarzenia"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1209
+#: ../src/gcal-month-view.c:1139
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -209,17 +271,10 @@ msgstr[0] "Inne wydarzenie"
 msgstr[1] "Pozostałe %d wydarzenia"
 msgstr[2] "Pozostałe %d wydarzeń"
 
-#: ../src/gcal-date-selector.c:303
-msgid "Day"
-msgstr "Dzień"
-
-#: ../src/gcal-date-selector.c:305 ../src/gcal-window.c:1327
-msgid "Month"
-msgstr "Miesiąc"
-
-#: ../src/gcal-date-selector.c:307 ../src/gcal-window.c:1333
-msgid "Year"
-msgstr "Rok"
+#: ../src/gcal-search-view.c:383
+#, c-format
+msgid "%.2d:%.2d %s"
+msgstr "%.2d∶%.2d %s"
 
 #: ../src/gcal-time-selector.c:96
 #, c-format
@@ -231,36 +286,31 @@ msgstr "%.2d∶%.2d AM"
 msgid "%.2d:%.2d PM"
 msgstr "%.2d∶%.2d PM"
 
-#: ../src/gcal-week-view.c:428 ../src/gcal-week-view.c:501
+#: ../src/gcal-week-view.c:425 ../src/gcal-week-view.c:498
 msgid "Midnight"
 msgstr "Północ"
 
-#: ../src/gcal-week-view.c:430 ../src/gcal-week-view.c:504
+#: ../src/gcal-week-view.c:427 ../src/gcal-week-view.c:501
 msgid "Noon"
 msgstr "Południe"
 
-#: ../src/gcal-week-view.c:507
+#: ../src/gcal-week-view.c:504
 msgid "00:00 PM"
 msgstr "00∶00 PM"
 
-#: ../src/gcal-week-view.c:1387 ../src/gcal-window.c:1322
+#: ../src/gcal-week-view.c:1386 ../src/gcal-window.c:1285
 msgid "Week"
 msgstr "Tydzień"
 
-#: ../src/gcal-window.c:603
+#: ../src/gcal-window.c:585
 #, c-format
 msgid "New Event on %s"
 msgstr "Nowe wydarzenie w dniu %s"
 
-#: ../src/gcal-window.c:994
+#: ../src/gcal-window.c:976
 msgid "Event deleted"
 msgstr "Usunięto wydarzenie"
 
-#: ../src/gcal-window.c:995
+#: ../src/gcal-window.c:977
 msgid "Undo"
 msgstr "Cofnij"
-
-#: ../src/gcal-window.c:1088
-#, c-format
-msgid "Results for \"%s\""
-msgstr "Wyniki dla \"%s\""
