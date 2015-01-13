@@ -934,6 +934,9 @@ gcal_manager_is_client_writable (GcalManager *manager,
   priv = gcal_manager_get_instance_private (manager);
   unit = g_hash_table_lookup (priv->clients, source);
 
+  if (unit == NULL)
+    return FALSE;
+
   return unit->connected && e_client_is_readonly (E_CLIENT (unit->client));
 }
 
