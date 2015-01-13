@@ -483,6 +483,14 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, lock);
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, source_image);
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, sources_popover);
+
+  /* callbacks */
+  gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_action_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_all_day_changed);
+  gtk_widget_class_bind_template_callback (widget_class, update_summary);
+  gtk_widget_class_bind_template_callback (widget_class, update_location);
+  gtk_widget_class_bind_template_callback (widget_class, update_date);
+  gtk_widget_class_bind_template_callback (widget_class, update_time);
 }
 
 static void
@@ -547,65 +555,16 @@ gcal_edit_dialog_constructed (GObject* object)
   g_object_set_data (G_OBJECT (priv->cancel_button),
                      "response",
                      GINT_TO_POINTER (GTK_RESPONSE_CANCEL));
-  g_signal_connect (priv->cancel_button,
-                    "clicked",
-                    G_CALLBACK (gcal_edit_dialog_action_button_clicked),
-                    object);
   g_object_set_data (G_OBJECT (priv->delete_button),
                      "response",
                      GINT_TO_POINTER (GCAL_RESPONSE_DELETE_EVENT));
-  g_signal_connect (priv->delete_button,
-                    "clicked",
-                    G_CALLBACK (gcal_edit_dialog_action_button_clicked),
-                    object);
   g_object_set_data (G_OBJECT (priv->done_button),
                      "response",
                      GINT_TO_POINTER (GCAL_RESPONSE_SAVE_EVENT));
-  g_signal_connect (priv->done_button,
-                    "clicked",
-                    G_CALLBACK (gcal_edit_dialog_action_button_clicked),
+
+  g_signal_connect (gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)), "changed", G_CALLBACK (update_notes),
                     object);
 
-  /* signals handlers */
-  g_signal_connect (priv->all_day_check,
-                    "toggled",
-                    G_CALLBACK (gcal_edit_dialog_all_day_changed),
-                    object);
-
-  g_signal_connect (priv->summary_entry,
-                    "notify::text",
-                    G_CALLBACK (update_summary),
-                    object);
-
-  g_signal_connect (gtk_text_view_get_buffer (GTK_TEXT_VIEW (priv->notes_text)),
-                    "changed",
-                    G_CALLBACK (update_notes),
-                    object);
-
-  g_signal_connect (priv->location_entry,
-                    "notify::text",
-                    G_CALLBACK (update_location),
-                    object);
-
-  g_signal_connect (priv->start_date_selector,
-                    "modified",
-                    G_CALLBACK (update_date),
-                    object);
-
-  g_signal_connect (priv->end_date_selector,
-                    "modified",
-                    G_CALLBACK (update_date),
-                    object);
-
-  g_signal_connect (priv->start_time_selector,
-                    "modified",
-                    G_CALLBACK (update_time),
-                    object);
-
-  g_signal_connect (priv->end_time_selector,
-                    "modified",
-                    G_CALLBACK (update_time),
-                    object);
 }
 
 static void

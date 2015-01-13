@@ -21,6 +21,7 @@
             <property name="label" translatable="yes">Cancel</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <signal name="clicked" handler="gcal_edit_dialog_action_button_clicked" object="GcalEditDialog" swapped="no"/>
           </object>
         </child>
         <child>
@@ -37,6 +38,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <signal name="clicked" handler="gcal_edit_dialog_action_button_clicked" object="GcalEditDialog" swapped="no"/>
             <style>
               <class name="suggested-action"/>
             </style>
@@ -152,6 +154,7 @@
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="activates_default">True</property>
+                <signal name="notify::text" handler="update_summary" object="GcalEditDialog" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -186,6 +189,7 @@
                 <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
                 <property name="label" translatable="yes">All day</property>
+                <signal name="toggled" handler="gcal_edit_dialog_all_day_changed" object="GcalEditDialog" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">3</property>
@@ -199,6 +203,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_name">find-location-symbolic</property>
+                <signal name="notify::text" handler="update_location" object="GcalEditDialog" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -241,6 +246,7 @@
                   <object class="GcalDateSelector" id="start_date_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <signal name="modified" handler="update_date" object="GcalEditDialog" swapped="no"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -250,6 +256,7 @@
                   <object class="GcalTimeSelector" id="start_time_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <signal name="modified" handler="update_time" object="GcalEditDialog" swapped="no"/>
                   </object>
                   <packing>
                     <property name="position">2</property>
@@ -274,6 +281,7 @@
                   <object class="GcalDateSelector" id="end_date_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <signal name="modified" handler="update_date" object="GcalEditDialog" swapped="no"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -283,6 +291,7 @@
                   <object class="GcalTimeSelector" id="end_time_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <signal name="modified" handler="update_time" object="GcalEditDialog" swapped="no"/>
                   </object>
                   <packing>
                     <property name="position">2</property>
@@ -299,6 +308,7 @@
               <object class="GtkButton" id="delete_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <signal name="clicked" handler="gcal_edit_dialog_action_button_clicked" object="GcalEditDialog" swapped="no"/>
                 <child>
                   <object class="GtkLabel" id="delete_label">
                     <property name="visible">True</property>
