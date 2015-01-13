@@ -878,9 +878,14 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->titlebar),
                                e_source_get_display_name (data->source));
 
-  /* start date */
+  /* retrieve start and end dates */
   e_cal_component_get_dtstart (priv->component, &dtstart);
+  e_cal_component_get_dtend (priv->component, &dtend);
 
+  /* check if it's an all-day event */
+  all_day = (dtstart.value->is_date == 1 && (dtend.value != NULL ? dtend.value->is_date == 1 : FALSE));
+
+  /* start date */
   gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->start_date_selector),
                             dtstart.value->day,
                             dtstart.value->month,
@@ -895,12 +900,10 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->start_time_selector), dtstart.value->hour, dtstart.value->minute);
 
   /* end date */
-  e_cal_component_get_dtend (priv->component, &dtend);
   if (dtend.value != NULL)
     {
       gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->end_date_selector),
                                 dtend.value->day, dtend.value->month, dtend.value->year);
-      all_day = (dtstart.value->is_date == 1 && dtend.value->is_date == 1);
 
       if (!all_day)
         gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->end_time_selector), dtend.value->hour, dtend.value->minute);
@@ -910,7 +913,6 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
       gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->end_date_selector),
                                 dtstart.value->day, dtstart.value->month, dtstart.value->year);
       gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->end_time_selector), dtstart.value->hour, dtstart.value->minute);
-      all_day = FALSE;
     }
 
   e_cal_component_free_datetime (&dtstart);
