@@ -33,7 +33,6 @@ typedef struct
   gboolean          writable;
 
   GcalManager      *manager;
-  GtkTreeIter      *active_iter;
 
   GtkWidget        *titlebar;
   GtkWidget        *lock;
@@ -698,13 +697,6 @@ gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
   g_signal_handlers_unblock_by_func (priv->summary_entry,
                                      update_summary,
                                      dialog);
-
-  /* calendar button */
-  if (priv->active_iter != NULL)
-    {
-      gtk_tree_iter_free (priv->active_iter);
-      priv->active_iter = NULL;
-    }
 
   /* date and time */
   gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->start_date_selector), 0, 0, 0);
