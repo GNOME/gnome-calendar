@@ -184,8 +184,6 @@ static void           on_calendar_toggled                (GSimpleAction       *a
                                                           GVariant            *value,
                                                           gpointer             user_data);
 
-static void           fix_calendar_menu                  (GcalWindow          *window);
-
 static gboolean       refresh_sources                    (GcalWindow          *window);
 
 static gboolean       window_state_changed               (GtkWidget           *window,
