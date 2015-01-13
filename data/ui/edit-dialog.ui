@@ -164,7 +164,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="halign">start</property>
-                <property name="use_popover">True</property>
+                <property name="popover">sources_popover</property>
                 <child>
                   <object class="GtkImage" id="source_image">
                     <property name="visible">True</property>
@@ -326,4 +326,7 @@
       </object>
     </child>
   </template>
+  <object class="GtkPopover" id="sources_popover">
+    <property name="visible">False</property>
+  </object>
 </interface>

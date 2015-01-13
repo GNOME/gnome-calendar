@@ -44,6 +44,7 @@ typedef struct
   GtkWidget        *done_button;
   GtkWidget        *cancel_button;
   GtkWidget        *sources_button;
+  GtkWidget        *sources_popover;
 
   GtkWidget        *summary_entry;
 
@@ -141,17 +142,17 @@ fill_sources_menu (GcalEditDialog *dialog)
       pix = gcal_get_pixbuf_from_color (&color, 16);;
 
       /* menu item */
-      item = g_menu_item_new (e_source_get_display_name (source), "edit.select_calendar");
+      item = g_menu_item_new (e_source_get_display_name (source), "select_calendar");
       g_menu_item_set_icon (item, G_ICON (pix));
 
       /* set insensitive for read-only calendars */
       if (gcal_manager_is_client_writable (priv->manager, source))
         {
-          g_menu_item_set_action_and_target_value (item, "edit.select_calendar", NULL);
+          g_menu_item_set_action_and_target_value (item, "select_calendar", NULL);
         }
       else
         {
-          g_menu_item_set_action_and_target_value (item, "edit.select_calendar",
+          g_menu_item_set_action_and_target_value (item, "select_calendar",
                                                    g_variant_new_string (e_source_get_uid (source)));
         }
 
@@ -161,7 +162,10 @@ fill_sources_menu (GcalEditDialog *dialog)
       g_object_unref (item);
     }
 
-  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->sources_button), G_MENU_MODEL (priv->sources_menu));
+  gtk_popover_bind_model (GTK_POPOVER (priv->sources_popover), G_MENU_MODEL (priv->sources_menu), "edit");
+
+  /* HACK: show the popover menu icons */
+  fix_popover_menu_icons (GTK_POPOVER (priv->sources_popover));
 
   g_list_free (list);
 }
@@ -479,6 +483,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, titlebar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, lock);
   gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, source_image);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalEditDialog, sources_popover);
 }
 
 static void
