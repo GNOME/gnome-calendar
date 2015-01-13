@@ -557,3 +557,81 @@ e_utf8_strftime_fix_am_pm (gchar *str,
   g_free (buf);
   return sz;
 }
+
+
+/**
+ * fix_popover_menu_icons:
+ * @window: a #GtkPopover
+ *
+ * Hackish code that inspects the popover's children,
+ * retrieve the hidden GtkImage buried under lots of
+ * widgets, and make it visible again.
+ *
+ * Hopefully, we'll find a better way to do this in
+ * the long run.
+ *
+ */
+void
+fix_popover_menu_icons (GtkPopover *popover)
+{
+  GtkWidget *popover_stack;
+  GtkWidget *menu_section;
+  GtkWidget *menu_section_box;
+  GList *stack_children;
+  GList *menu_section_children;
+  GList *menu_section_box_children, *aux;
+
+  popover_stack = gtk_bin_get_child (GTK_BIN (popover));
+  stack_children = gtk_container_get_children (GTK_CONTAINER (popover_stack));
+
+  /**
+   * At the moment, the popover stack surely contains only
+   * one child of type GtkMenuSectionBox, which contains
+   * a single GtkBox.
+   */
+  menu_section = stack_children->data;
+  menu_section_children = gtk_container_get_children (GTK_CONTAINER (menu_section));
+
+	/**
+	 * Get the unique box's children.
+	 */
+  menu_section_box = menu_section_children->data;
+  menu_section_box_children = gtk_container_get_children (GTK_CONTAINER (menu_section_box));
+
+  /**
+   * Iterate through the GtkModelButtons inside the menu section box.
+   */
+  for (aux = menu_section_box_children; aux != NULL; aux = aux->next)
+    {
+      GtkWidget *button_box;
+      GList *button_box_children, *aux2;
+
+      button_box = gtk_bin_get_child (GTK_BIN (aux->data));
+      button_box_children = gtk_container_get_children (GTK_CONTAINER (button_box));
+
+      /**
+       * Since there is no guarantee that the first child is
+       * the GtkImage we're looking for, we have to iterate
+       * through the children and check if the types match.
+       */
+      for (aux2 = button_box_children; aux2 != NULL; aux2 = aux2->next)
+        {
+          GtkWidget *button_box_child;
+          button_box_child = aux2->data;
+
+          if (g_type_is_a (G_OBJECT_TYPE (button_box_child), GTK_TYPE_IMAGE))
+            {
+              gtk_widget_show (button_box_child);
+              break;
+            }
+        }
+
+      g_list_free (button_box_children);
+    }
+
+  g_list_free (stack_children);
+  g_list_free (menu_section_children);
+  g_list_free (menu_section_box_children);
+}
+
+

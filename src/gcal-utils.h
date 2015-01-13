@@ -101,4 +101,6 @@ gsize           e_utf8_strftime_fix_am_pm                       (gchar          
                                                                  const gchar           *fmt,
                                                                  const struct tm       *tm);
 
+void            fix_popover_menu_icons                          (GtkPopover            *popover);
+
 #endif // __GCAL_UTILS_H__
