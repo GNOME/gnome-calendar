@@ -272,6 +272,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="popover">calendar_popover</property>
             <child>
               <object class="GtkImage" id="calendars_button_image">
                 <property name="visible">True</property>
@@ -311,6 +312,9 @@
     <property name="visible">False</property>
     <property name="relative_to">search_entry</property>
     <signal name="event-activated" handler="search_event_selected" object="GcalWindow" swapped="no"/>
+  </object>
+  <object class="GtkPopover" id="calendar_popover">
+    <property name="visible">False</property>
   </object>
   <object class="GtkPopover" id="popover">
     <property name="visible">False</property>

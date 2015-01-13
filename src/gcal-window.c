@@ -101,6 +101,7 @@ typedef struct
   GcalEventData       *event_to_delete;
 
   /* calendar management */
+  GtkWidget           *calendar_popover;
   GMenu               *calendar_menu;
   gint                 refresh_timeout;
   gint                 refresh_timeout_id;
@@ -182,6 +183,8 @@ static void           remove_source                      (GcalManager         *m
 static void           on_calendar_toggled                (GSimpleAction       *action,
                                                           GVariant            *value,
                                                           gpointer             user_data);
+
+static void           fix_calendar_menu                  (GcalWindow          *window);
 
 static gboolean       refresh_sources                    (GcalWindow          *window);
 
@@ -690,7 +693,7 @@ add_source (GcalManager *manager,
   g_action_map_add_action (G_ACTION_MAP (user_data), G_ACTION (action));
 
   /* retrieve the source's color & build item name */
-  item_name = g_strdup_printf ("win.%s", e_source_get_uid (source));
+  item_name = g_strdup_printf ("%s", e_source_get_uid (source));
   extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
   gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
   pix = gcal_get_pixbuf_from_color (&color, 16);
@@ -700,6 +703,9 @@ add_source (GcalManager *manager,
   g_menu_item_set_attribute_value (item, "uid", g_variant_new_string (e_source_get_uid (source)));
   g_menu_item_set_icon (item, G_ICON (pix));
   g_menu_append_item (priv->calendar_menu, item);
+
+  /* HACK: show images of the popover menu */
+  fix_popover_menu_icons (GTK_POPOVER (priv->calendar_popover));
 
   g_object_unref (pix);
   g_object_unref (item);
@@ -1168,6 +1174,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_bar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendars_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendar_popover);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, back_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, today_button);
@@ -1256,7 +1263,7 @@ gcal_window_constructed (GObject *object)
 
   /* calendar menu */
   priv->calendar_menu = g_menu_new ();
-  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->calendars_button), G_MENU_MODEL (priv->calendar_menu));
+  gtk_popover_bind_model (GTK_POPOVER (priv->calendar_popover), G_MENU_MODEL (priv->calendar_menu), "win");
 
   /* edit dialog initialization */
   priv->edit_dialog = gcal_edit_dialog_new (use_24h_format);
