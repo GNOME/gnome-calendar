@@ -66,7 +66,7 @@
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <property name="transition_duration">250</property>
-                <property name="transition_type">slide-left-right</property>
+                <property name="transition_type">crossfade</property>
                 <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
                 <style>
                   <class name="views"/>
