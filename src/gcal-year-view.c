@@ -137,6 +137,20 @@ gcal_year_view_set_property (GObject      *object,
     }
 }
 
+static gchar*
+gcal_year_view_get_left_header (GcalView *view)
+{
+  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (view)->priv;
+
+  return g_strdup_printf ("%d", priv->date->year);
+}
+
+static gchar*
+gcal_year_view_get_right_header (GcalView *view)
+{
+  return g_strdup ("");
+}
+
 static void
 gcal_year_view_class_init (GcalYearViewClass *klass)
 {
@@ -173,6 +187,8 @@ static void
 gcal_view_interface_init (GcalViewIface *iface)
 {
   /* FIXME: implement what's needed */
+  iface->get_left_header = gcal_year_view_get_left_header;
+  iface->get_right_header = gcal_year_view_get_right_header;
 }
 
 static void
