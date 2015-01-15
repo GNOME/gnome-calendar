@@ -46,15 +46,14 @@ struct _GcalWeekViewClass
   GcalSubscriberViewClass parent_class;
 };
 
-GType          gcal_week_view_get_type         (void);
-
-GtkWidget*     gcal_week_view_new              (GcalManager *manager);
-
-void           gcal_week_view_set_first_weekday (GcalWeekView *view,
-						 gint          day_nr);
-
+GType          gcal_week_view_get_type           (void);
+GtkWidget*     gcal_week_view_new                (void);
+void           gcal_week_view_set_manager        (GcalWeekView *view,
+                                                  GcalManager  *manager);
+void           gcal_week_view_set_first_weekday  (GcalWeekView *view,
+                                                  gint          day_nr);
 void           gcal_week_view_set_use_24h_format (GcalWeekView *view,
-						  gboolean      use_24h);
+                                                  gboolean      use_24h);
 
 G_END_DECLS
 

@@ -1277,24 +1277,19 @@ gcal_window_constructed (GObject *object)
   g_signal_connect (gtk_bin_get_child (GTK_BIN (priv->search_bar)), "notify::child-revealed",
                     G_CALLBACK (search_bar_revealer_toggled), object);
 
-  priv->views[GCAL_WINDOW_VIEW_WEEK] =
-    gcal_week_view_new (priv->manager);
-  gcal_week_view_set_first_weekday (
-      GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]),
-      get_first_weekday ());
-  gcal_week_view_set_use_24h_format (
-      GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]),
-      use_24h_format);
-  gtk_stack_add_titled (GTK_STACK (priv->views_stack),
-                        priv->views[GCAL_WINDOW_VIEW_WEEK],
-                        "week", _("Week"));
+  priv->views[GCAL_WINDOW_VIEW_WEEK] = gcal_week_view_new ();
+  gcal_week_view_set_manager (GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]), priv->manager);
+  gcal_week_view_set_first_weekday (GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]), get_first_weekday ());
+  gcal_week_view_set_use_24h_format (GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]), use_24h_format);
+  gtk_stack_add_titled (GTK_STACK (priv->views_stack), priv->views[GCAL_WINDOW_VIEW_WEEK], "week", _("Week"));
 
-  priv->views[GCAL_WINDOW_VIEW_MONTH] = gcal_month_view_new (priv->manager);
+  priv->views[GCAL_WINDOW_VIEW_MONTH] = gcal_month_view_new ();
+  gcal_month_view_set_manager (GCAL_MONTH_VIEW (priv->views[GCAL_WINDOW_VIEW_MONTH]), priv->manager);
   gcal_month_view_set_first_weekday (GCAL_MONTH_VIEW (priv->views[GCAL_WINDOW_VIEW_MONTH]), get_first_weekday ());
   gcal_month_view_set_use_24h_format (GCAL_MONTH_VIEW (priv->views[GCAL_WINDOW_VIEW_MONTH]), use_24h_format);
   gtk_stack_add_titled (GTK_STACK (priv->views_stack), priv->views[GCAL_WINDOW_VIEW_MONTH], "month", _("Month"));
 
-  priv->views[GCAL_WINDOW_VIEW_YEAR] = GTK_WIDGET (gcal_year_view_new ());
+  priv->views[GCAL_WINDOW_VIEW_YEAR] = g_object_new (GCAL_TYPE_YEAR_VIEW, NULL);
   gcal_year_view_set_manager (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), priv->manager);
   gtk_stack_add_titled (GTK_STACK (priv->views_stack), priv->views[GCAL_WINDOW_VIEW_YEAR], "year", _("Year"));
 

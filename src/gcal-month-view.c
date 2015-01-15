@@ -82,7 +82,6 @@ enum
 {
   PROP_0,
   PROP_DATE,  /* active-date inherited property */
-  PROP_MANAGER  /* manager inherited property */
 };
 
 static gint           gather_button_event_data              (GcalMonthView  *view,
@@ -527,7 +526,6 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   subscriber_view_class->clear_state = gcal_month_view_clear_state;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
-  g_object_class_override_property (object_class, PROP_MANAGER, "manager");
 }
 
 static void
@@ -630,11 +628,6 @@ gcal_month_view_set_property (GObject       *object,
                                      range_start,
                                      range_end);
         gtk_widget_queue_draw (GTK_WIDGET (object));
-        break;
-      }
-    case PROP_MANAGER:
-      {
-        priv->manager = g_value_get_pointer (value);
         break;
       }
     default:
@@ -1666,7 +1659,6 @@ gcal_month_view_get_right_header (GcalView *view)
 /* Public API */
 /**
  * gcal_month_view_new:
- * @manager: App singleton #GcalManager instance
  *
  * Since: 0.1
  * Create a new month view widget
@@ -1674,9 +1666,18 @@ gcal_month_view_get_right_header (GcalView *view)
  * Returns: (transfer full):
  **/
 GtkWidget*
-gcal_month_view_new (GcalManager *manager)
+gcal_month_view_new (void)
 {
-  return g_object_new (GCAL_TYPE_MONTH_VIEW, "manager", manager, NULL);
+  return g_object_new (GCAL_TYPE_MONTH_VIEW, NULL);
+}
+
+void
+gcal_month_view_set_manager (GcalMonthView *month_view,
+                             GcalManager   *manager)
+{
+  GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (month_view);
+
+  priv->manager = manager;
 }
 
 /**
