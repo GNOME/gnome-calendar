@@ -40,6 +40,7 @@ EXTRA_DIST=                     \
   ui/search-view.ui             \
   ui/time-selector.ui           \
   ui/window.ui                  \
+  ui/year-view.ui               \
   theme/gtk-styles.css          \
   $(desktop_in_files)           \
   $(gsettingsschema_in_files)
