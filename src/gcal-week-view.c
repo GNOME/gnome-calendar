@@ -38,8 +38,7 @@ static const double dashed [] =
 enum
 {
   PROP_0,
-  PROP_DATE,
-  PROP_MANAGER
+  PROP_DATE
 };
 
 struct _GcalWeekViewChild
@@ -548,8 +547,6 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   g_object_class_override_property (object_class,
                                     PROP_DATE, "active-date");
-  g_object_class_override_property (object_class,
-                                    PROP_MANAGER, "manager");
 }
 
 static void
@@ -653,11 +650,6 @@ gcal_week_view_set_property (GObject       *object,
                                      range_start,
                                      range_end);
         gtk_widget_queue_draw (GTK_WIDGET (object));
-        break;
-      }
-    case PROP_MANAGER:
-      {
-        priv->manager = g_value_get_pointer (value);
         break;
       }
     default:
@@ -1422,16 +1414,24 @@ gcal_week_view_get_by_uuid (GcalSubscriberView *subscriber_view,
 /* Public API */
 /**
  * gcal_week_view_new:
- * @manager: App singleton #GcalManager instance
  *
  * Create a week-view widget
  *
  * Returns: (transfer full):
  **/
 GtkWidget*
-gcal_week_view_new (GcalManager *manager)
+gcal_week_view_new (void)
 {
-  return g_object_new (GCAL_TYPE_WEEK_VIEW, "manager", manager, NULL);
+  return g_object_new (GCAL_TYPE_WEEK_VIEW, NULL);
+}
+
+void
+gcal_week_view_set_manager (GcalWeekView *week_view,
+                            GcalManager  *manager)
+{
+  GcalWeekViewPrivate *priv = gcal_week_view_get_instance_private (week_view);
+
+  priv->manager = manager;
 }
 
 /**
