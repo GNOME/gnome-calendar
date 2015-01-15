@@ -1,7 +1,7 @@
 /* -*- mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /*
  * gcal-edit-dialog.h
- * Copyright (C) 2012 Erick Pérez Castellanos <erickpc@gnome.org>
+ * Copyright (C) 2015 Erick Pérez Castellanos <erickpc@gnome.org>
  *
  * gnome-calendar is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the

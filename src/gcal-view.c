@@ -2,7 +2,7 @@
 /*
  * gcal-view.c
  *
- * Copyright (C) 2012 - Erick Pérez Castellanos
+ * Copyright (C) 2015 - Erick Pérez Castellanos
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
