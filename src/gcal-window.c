@@ -1294,11 +1294,9 @@ gcal_window_constructed (GObject *object)
   gcal_month_view_set_use_24h_format (GCAL_MONTH_VIEW (priv->views[GCAL_WINDOW_VIEW_MONTH]), use_24h_format);
   gtk_stack_add_titled (GTK_STACK (priv->views_stack), priv->views[GCAL_WINDOW_VIEW_MONTH], "month", _("Month"));
 
-  priv->views[GCAL_WINDOW_VIEW_YEAR] =
-    gcal_year_view_new (priv->manager);
-  gtk_stack_add_titled (GTK_STACK (priv->views_stack),
-                        priv->views[GCAL_WINDOW_VIEW_YEAR],
-                        "year", _("Year"));
+  priv->views[GCAL_WINDOW_VIEW_YEAR] = GTK_WIDGET (gcal_year_view_new ());
+  gcal_year_view_set_manager (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), priv->manager);
+  gtk_stack_add_titled (GTK_STACK (priv->views_stack), priv->views[GCAL_WINDOW_VIEW_YEAR], "year", _("Year"));
 
   /* search view */
   gcal_search_view_connect (GCAL_SEARCH_VIEW (priv->search_view), priv->manager);
