@@ -57,6 +57,57 @@
     color: alpha(@theme_fg_color, 0.4);
 }
 
+.calendar-view.first-view-header {
+    font: bold 18;
+    color: @theme_selected_bg_color;
+    padding: 12px;
+}
+
+.calendar-view.second-view-header {
+    font: bold 18;
+    padding: 12px;
+}
+
+/* Header the padding if for sizing, on drawing the spacing between cells,
+ * and the padding will be automatically calculated
+ * Because of year-view widget internals, the color property should be the same
+ * of .calendar-view.first-view-header selector */
+.year-navigator {
+    padding: 6px 12px;
+    color: @theme_selected_bg_color;
+}
+
+.year-navigator.header {
+    color: @theme_selected_bg_color;
+    font-weight: bold;
+}
+
+.year-navigator.lines {
+    color: alpha(@theme_fg_color, 0.4);
+}
+
+.year-navigator.days {
+    color: @theme_fg_color;
+    font: 9;
+}
+
+.year-navigator.sunday {
+    color: alpha(@theme_fg_color, 0.5);
+}
+
+.year-navigator.week-numbers {
+    color: alpha(@theme_fg_color, 0.2);
+    font: 6;
+}
+
+/* this is supposed be changed in sync with .calendar-view.current */
+.year-navigator.current {
+    background-color: @theme_fg_color;
+    border-radius: 2px;
+    color: white;
+    font: bold;
+}
+
 GcalEventWidget {
     border-radius: 6px;
     margin-top: 2px;

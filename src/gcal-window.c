@@ -1291,6 +1291,8 @@ gcal_window_constructed (GObject *object)
 
   priv->views[GCAL_WINDOW_VIEW_YEAR] = g_object_new (GCAL_TYPE_YEAR_VIEW, NULL);
   gcal_year_view_set_manager (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), priv->manager);
+  gcal_year_view_set_first_weekday (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), get_first_weekday ());
+  gcal_year_view_set_use_24h_format (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), use_24h_format);
   gtk_stack_add_titled (GTK_STACK (priv->views_stack), priv->views[GCAL_WINDOW_VIEW_YEAR], "year", _("Year"));
 
   /* search view */
