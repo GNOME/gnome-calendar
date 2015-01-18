@@ -2,12 +2,15 @@
 <interface>
   <!-- interface-requires gtk+ 3.10 -->
   <template class="GcalYearView" parent="GtkBox">
-    <property name="visible">True</property>
     <child>
-      <object class="GtkDrawingArea" id="year_view_navigator">
+      <object class="GtkDrawingArea" id="navigator">
         <property name="visible">True</property>
+        <property name="hexpand">True</property>
         <signal name="draw" handler="draw_navigator" object="GcalYearView" swapped="yes" />
-        <!-- FIXME: add some other necessary signals -->
+        <style>
+          <class name="year-navigator" />
+        </style>
+        <!-- FIXME: add some other signals handlers -->
       </object>
      <packing>
        <property name="position">0</property>
@@ -15,12 +18,12 @@
     </child>
     <child>
       <object class="GtkOverlay" id="sidebar">
-        <property name="visible">True</property>
+        <property name="width_request">200</property>
         <child type="overlay">
           <object class="GtkButton" id="add_event_button">
             <property name="visible">True</property>
             <property name="valign">end</property>
-            <property name="label" translatable="yes">Add new event...</property>
+            <property name="label" translatable="yes">Add new event…</property>
             <signal name="clicked" handler="add_event_clicked_cb" object="GcalYearView" swapped="yes" />
           </object>
         </child>

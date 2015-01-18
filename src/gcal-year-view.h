@@ -50,10 +50,15 @@ struct _GcalYearViewClass
   GtkBoxClass parent;
 };
 
-GType             gcal_year_view_get_type (void);
-GcalYearView     *gcal_year_view_new      (void);
-void              gcal_year_view_set_manager (GcalYearView *year_view,
-                                              GcalManager  *manager);
+GType             gcal_year_view_get_type           (void);
+GcalYearView     *gcal_year_view_new                (void);
+void              gcal_year_view_set_manager        (GcalYearView *year_view,
+                                                     GcalManager  *manager);
+void              gcal_year_view_set_first_weekday  (GcalYearView *year_view,
+                                                     gint          nr_day);
+void              gcal_year_view_set_use_24h_format (GcalYearView *year_view,
+                                                     gboolean      use_24h_format);
+
 G_END_DECLS
 
 #endif /* GCAL_YEAR_VIEW_H */
