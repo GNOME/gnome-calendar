@@ -3,15 +3,15 @@
 # This file is distributed under the same license as the gnome-calendar package.
 #
 # Adam Matoušek <adamatousek@gmail.com>, 2013.
-# Marek Černocký <marek@manet.cz>, 2013, 2014.
+# Marek Černocký <marek@manet.cz>, 2013, 2014, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-01-03 17:11+0000\n"
-"PO-Revision-Date: 2014-12-27 17:01+0100\n"
+"POT-Creation-Date: 2015-01-09 15:45+0000\n"
+"PO-Revision-Date: 2015-01-18 23:25+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -21,10 +21,54 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
-#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../src/gcal-application.c:432
-#: ../src/gcal-window.c:1006
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../data/ui/window.ui.h:1
+#: ../src/gcal-application.c:433
 msgid "Calendar"
 msgstr "Kalendář"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+#| msgid "Calendar"
+msgid "Calendar for GNOME"
+msgstr "Kalendář pro GNOME"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"Calendar is a simple and beautiful calendar application designed to fit "
+"GNOME 3."
+msgstr ""
+"Kalendář je jednoduchá a hezká kalendářová aplikace navržená na míru pro "
+"GNOME 3."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid "Features:"
+msgstr "Vlastnosti:"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Week, month and year views"
+msgstr "Zobrazení po týdnech, měsících a rocích"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Basic editing of events"
+msgstr "Základní úpravy událostí"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:7
+msgid "Evolution Data Server integration"
+msgstr "Integrace s datovým serverem Evolution"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:8
+msgid "Search support"
+msgstr "Podpora vyhledávání"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:9
+#| msgid "Other events"
+msgid "Search for events"
+msgstr "Vyhledávání událostí"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:10
+#| msgid "- Calendar management"
+msgid "Calendar management"
+msgstr "Správa kalendáře"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
@@ -100,7 +144,7 @@ msgstr "Poznámky"
 msgid "Location"
 msgstr "Umístění"
 
-#: ../data/ui/edit-dialog.ui.h:8
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:391
 msgid "All day"
 msgstr "Celý den"
 
@@ -128,6 +172,14 @@ msgstr "U_končit"
 msgid "_Synchronize"
 msgstr "_Synchronizovat"
 
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "Nebylo nic nalezeno"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "Použijte položku výše pro vyhledání událostí."
+
 #: ../data/ui/time-selector.ui.h:1
 msgid "00:00"
 msgstr "00∶00"
@@ -136,23 +188,25 @@ msgstr "00∶00"
 msgid ":"
 msgstr "∶"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:425
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:385
+#: ../src/gcal-week-view.c:422
 msgid "AM"
 msgstr "dop."
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:425
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:385
+#: ../src/gcal-week-view.c:422
 msgid "PM"
 msgstr "odp."
 
-#: ../data/ui/window.ui.h:1
+#: ../data/ui/window.ui.h:2
 msgid "Today"
 msgstr "Dnes"
 
-#: ../data/ui/window.ui.h:2
+#: ../data/ui/window.ui.h:3
 msgid "Create"
 msgstr "Vytvořit"
 
-#: ../data/ui/window.ui.h:3
+#: ../data/ui/window.ui.h:4
 msgid "More Details"
 msgstr "Více podrobností"
 
@@ -164,42 +218,54 @@ msgstr "Zobrazit číslo verze"
 msgid "Open calendar on the passed date"
 msgstr "Otevřít kalendář na zadaném datu"
 
-#: ../src/gcal-application.c:292
+#: ../src/gcal-application.c:293
 msgid "- Calendar management"
 msgstr "– Správa kalendáře"
 
-#: ../src/gcal-application.c:420
+#: ../src/gcal-application.c:421
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id autoři Kalendáře"
 
-#: ../src/gcal-application.c:426
+#: ../src/gcal-application.c:427
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id – %Id autoři Kalendáře"
 
-#: ../src/gcal-application.c:439
+#: ../src/gcal-application.c:440
 msgid "translator-credits"
 msgstr ""
 "Adam Matoušek <adamatousek@gmail.com>\n"
 "Marek Černocký <marek@manet.cz>"
 
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "Den"
+
+#: ../src/gcal-date-selector.c:305 ../src/gcal-window.c:1300
+msgid "Month"
+msgstr "Měsíc"
+
+#: ../src/gcal-date-selector.c:307 ../src/gcal-window.c:1306
+msgid "Year"
+msgstr "Rok"
+
 #: ../src/gcal-edit-dialog.c:675
 msgid "Save"
 msgstr "Uložit"
 
-#: ../src/gcal-edit-dialog.c:864
+#: ../src/gcal-edit-dialog.c:867
 msgid "Unnamed event"
 msgstr "Událost bez názvu"
 
-#: ../src/gcal-month-view.c:640
+#: ../src/gcal-month-view.c:571
 msgid "Add new event..."
 msgstr "Přidat novou událost…"
 
-#: ../src/gcal-month-view.c:892
+#: ../src/gcal-month-view.c:819 ../src/gcal-year-view.c:460
 msgid "Other events"
 msgstr "Další události"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1209
+#: ../src/gcal-month-view.c:1139
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -207,58 +273,50 @@ msgstr[0] "Další událost"
 msgstr[1] "Další %d události"
 msgstr[2] "Další %d událostí"
 
-#: ../src/gcal-date-selector.c:303
-msgid "Day"
-msgstr "Den"
+#: ../src/gcal-search-view.c:384
+#, c-format
+#| msgid "%.2d:%.2d AM"
+msgid "%.2d:%.2d %s"
+msgstr "%.2d∶%.2d %s"
 
-#: ../src/gcal-date-selector.c:305 ../src/gcal-window.c:1271
-msgid "Month"
-msgstr "Měsíc"
-
-#: ../src/gcal-date-selector.c:307 ../src/gcal-window.c:1277
-msgid "Year"
-msgstr "Rok"
-
-#: ../src/gcal-time-selector.c:95
+#: ../src/gcal-time-selector.c:96
 #, c-format
 msgid "%.2d:%.2d AM"
 msgstr "%.2d∶%.2d dop."
 
-#: ../src/gcal-time-selector.c:97
+#: ../src/gcal-time-selector.c:98
 #, c-format
 msgid "%.2d:%.2d PM"
 msgstr "%.2d∶%.2d odp."
 
-#: ../src/gcal-week-view.c:428 ../src/gcal-week-view.c:501
+#: ../src/gcal-week-view.c:425 ../src/gcal-week-view.c:498
 msgid "Midnight"
 msgstr "Půlnoc"
 
-#: ../src/gcal-week-view.c:430 ../src/gcal-week-view.c:504
+#: ../src/gcal-week-view.c:427 ../src/gcal-week-view.c:501
 msgid "Noon"
 msgstr "Poledne"
 
-#: ../src/gcal-week-view.c:507
+#: ../src/gcal-week-view.c:504
 msgid "00:00 PM"
 msgstr "00∶00 odp."
 
-#: ../src/gcal-week-view.c:1387 ../src/gcal-window.c:1266
+#: ../src/gcal-week-view.c:1386 ../src/gcal-window.c:1295
 msgid "Week"
 msgstr "Týden"
 
-#: ../src/gcal-window.c:593
+#: ../src/gcal-window.c:587
 #, c-format
 msgid "New Event on %s"
 msgstr "Nová událost %s"
 
-#: ../src/gcal-window.c:941
+#: ../src/gcal-window.c:978
 msgid "Event deleted"
 msgstr "Událost smazána"
 
-#: ../src/gcal-window.c:942
+#: ../src/gcal-window.c:979
 msgid "Undo"
 msgstr "Zpět"
 
-#: ../src/gcal-window.c:1035
-#, c-format
-msgid "Results for \"%s\""
-msgstr "Výsledky pro „%s“"
+#~ msgid "Results for \"%s\""
+#~ msgstr "Výsledky pro „%s“"
