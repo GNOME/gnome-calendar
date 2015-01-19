@@ -112,6 +112,22 @@
     font-weight: bold;
 }
 
+GcalYearView GtkScrolledWindow {
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+
+GcalYearView GtkButton {
+    border-radius: 0;
+    border-left-width: 0;
+    border-right-width: 0;
+    border-bottom-width: 0;
+}
+
+GcalYearView GtkListBox {
+    background-color: @theme_bg_color;
+}
+
 GcalEventWidget {
     border-radius: 6px;
     margin-top: 2px;

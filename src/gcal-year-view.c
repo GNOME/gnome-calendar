@@ -47,10 +47,14 @@ struct _GcalYearViewPrivate
   GtkWidget    *navigator;
   GtkWidget    *sidebar;
   GtkWidget    *add_event_button;
-  GtkWidget    *events_listbox;
+  GtkWidget    *events_sidebar;
 
   /* manager singleton */
   GcalManager  *manager;
+
+  /* range shown on the sidebar */
+  icaltimetype *start_selected_date;
+  icaltimetype *end_selected_date;
 
   /* geometry info */
   GridData     *navigator_grid;
@@ -86,6 +90,14 @@ enum {
   LAST_PROP
 };
 
+enum
+{
+  EVENT_ACTIVATED,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
+
 static void   gcal_view_interface_init (GcalViewIface *iface);
 static void   gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
@@ -107,6 +119,142 @@ update_date (GcalYearView *year_view,
   priv->date = new_date;
 
   gtk_widget_queue_draw (GTK_WIDGET (year_view));
+}
+
+static void
+event_activated (GcalEventWidget *widget,
+                 gpointer         user_data)
+{
+  /* FIXME: if popover_mode, hide popover */
+  g_signal_emit (GCAL_YEAR_VIEW (user_data), signals[EVENT_ACTIVATED], 0, widget);
+}
+
+static void
+order_selected_data (ButtonData *selected_data)
+{
+  gint swap;
+  if (selected_data->end_month < selected_data->start_month)
+    {
+      swap = selected_data->start_month;
+      selected_data->start_month = selected_data->end_month;
+      selected_data->end_month = swap;
+
+      swap = selected_data->start_day;
+      selected_data->start_day = selected_data->end_day;
+      selected_data->end_day = swap;
+    }
+  else if (selected_data->start_month == selected_data->end_month && selected_data->end_day < selected_data->start_day)
+    {
+      swap = selected_data->start_day;
+      selected_data->start_day = selected_data->end_day;
+      selected_data->end_day = swap;
+    }
+}
+
+static void
+update_sidebar (GcalYearView *year_view)
+{
+  GcalYearViewPrivate *priv = year_view->priv;
+  GList *events, *l, *widgets = NULL;
+
+  if (priv->start_selected_date == NULL)
+    priv->start_selected_date = g_new0 (icaltimetype, 1);
+  if (priv->end_selected_date == NULL)
+    priv->end_selected_date = g_new0 (icaltimetype, 1);
+
+  if (priv->selected_data->start_day != 0)
+    {
+      ButtonData selected_data = *(priv->selected_data);
+      order_selected_data (&selected_data);
+
+      priv->start_selected_date->day = selected_data.start_day;
+      priv->start_selected_date->month = selected_data.start_month + 1;
+      priv->start_selected_date->year = priv->date->year;
+      priv->start_selected_date->is_date = 1;
+
+      priv->end_selected_date->day = selected_data.end_day + 1;
+      priv->end_selected_date->month = selected_data.end_month + 1;
+      priv->end_selected_date->year = priv->date->year;
+      priv->end_selected_date->is_date = 1;
+      *(priv->end_selected_date) = icaltime_normalize (*(priv->end_selected_date));
+    }
+  else
+    {
+      *(priv->start_selected_date) = *(priv->current_date);
+      priv->start_selected_date->is_date = 1;
+
+      *(priv->end_selected_date) = *(priv->current_date);
+      priv->end_selected_date->day += 1;
+      priv->end_selected_date->is_date = 1;
+      *(priv->end_selected_date) = icaltime_normalize (*(priv->end_selected_date));
+    }
+
+  gtk_container_foreach (GTK_CONTAINER (priv->events_sidebar), (GtkCallback) gtk_widget_destroy, NULL);
+
+  events = gcal_manager_get_events (priv->manager, priv->start_selected_date, priv->end_selected_date);
+  for (l = events; l != NULL; l = g_list_next (l))
+    {
+      GtkWidget *event;
+      GcalEventData *data = l->data;
+
+      event = gcal_event_widget_new_from_data (data);
+      gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event),
+                                       gcal_manager_is_client_writable (priv->manager, data->source));
+      g_signal_connect (event, "activate", G_CALLBACK (event_activated), year_view);
+
+      gtk_widget_show (event);
+      widgets = g_list_insert_sorted (widgets, event, (GCompareFunc) gcal_event_widget_compare_for_single_day);
+    }
+
+  for (l = widgets; l != NULL; l = g_list_next (l))
+    gtk_container_add (GTK_CONTAINER (priv->events_sidebar), l->data);
+
+  g_list_free_full (events, g_free);
+  g_list_free (widgets);
+}
+
+static void
+update_sidebar_headers (GtkListBoxRow *row,
+                        GtkListBoxRow *before,
+                        gpointer user_data)
+{
+  GcalYearViewPrivate *priv;
+  GtkWidget *row_child, *before_child = NULL;
+  const icaltimetype *row_date, *before_date = NULL;
+
+  priv = GCAL_YEAR_VIEW (user_data)->priv;
+  row_child = gtk_bin_get_child (GTK_BIN (row));
+  row_date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (row_child));
+  if (before != NULL)
+    {
+      before_child = gtk_bin_get_child (GTK_BIN (before));
+      before_date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (before_child));
+    }
+
+  if (!gcal_event_widget_is_multiday (GCAL_EVENT_WIDGET (row_child)) &&
+      !gcal_event_widget_get_all_day (GCAL_EVENT_WIDGET (row_child)) &&
+      (before_date == NULL || before_date->hour != row_date->hour))
+    {
+      gchar *time;
+      GtkWidget *label, *vbox;
+
+      if (priv->use_24h_format)
+        time = g_strdup_printf ("%.2d:00", row_date->hour);
+      else
+        time = g_strdup_printf ("%.2d:00 %s", row_date->hour % 12, row_date->hour < 12 ? "AM" : "PM");
+
+      label = gtk_label_new (time);
+      gtk_style_context_add_class (gtk_widget_get_style_context (label), GTK_STYLE_CLASS_DIM_LABEL);
+      g_object_set (label, "margin-start", 6, "margin-top", 2, "halign", GTK_ALIGN_START, NULL);
+
+      vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+      gtk_container_add (GTK_CONTAINER (vbox), label);
+      gtk_container_add (GTK_CONTAINER (vbox), gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
+      gtk_widget_show_all (vbox);
+
+      gtk_list_box_row_set_header (row, vbox);
+      g_free (time);
+    }
 }
 
 static gboolean
@@ -157,28 +305,6 @@ calculate_day_month_for_coord (GcalYearView *year_view,
   *out_day = day;
   *out_month = month;
   return TRUE;
-}
-
-static void
-order_selected_data (ButtonData *selected_data)
-{
-  gint swap;
-  if (selected_data->end_month < selected_data->start_month)
-    {
-      swap = selected_data->start_month;
-      selected_data->start_month = selected_data->end_month;
-      selected_data->end_month = swap;
-
-      swap = selected_data->start_day;
-      selected_data->start_day = selected_data->end_day;
-      selected_data->end_day = swap;
-    }
-  else if (selected_data->start_month == selected_data->end_month && selected_data->end_day < selected_data->start_day)
-    {
-      swap = selected_data->start_day;
-      selected_data->start_day = selected_data->end_day;
-      selected_data->end_day = swap;
-    }
 }
 
 static void
@@ -523,8 +649,7 @@ navigator_button_release_cb (GcalYearView   *year_view,
   priv->selected_data->end_month = month;
   gtk_widget_queue_draw (widget);
 
-  /* FIXME: */
-  //update events on listbox
+  update_sidebar (year_view);
   return TRUE;
 
 fail:
@@ -532,8 +657,7 @@ fail:
   memset (priv->selected_data, 0, sizeof (ButtonData));
   gtk_widget_queue_draw (widget);
 
-  /* FIXME: */
-  //reset listbox to today
+  update_sidebar (year_view);
   return TRUE;
 }
 
@@ -567,7 +691,25 @@ static void
 add_event_clicked_cb (GcalYearView *year_view,
                       GtkButton    *button)
 {
-  /* FIXME: implement send detailed signal */
+  GcalYearViewPrivate *priv = year_view->priv;
+  icaltimetype *start_date, *end_date = NULL;
+
+  if (priv->start_selected_date == NULL)
+    {
+      start_date = gcal_dup_icaltime (priv->current_date);
+    }
+  else
+    {
+      start_date = gcal_dup_icaltime (priv->start_selected_date);
+      end_date = gcal_dup_icaltime (priv->end_selected_date);
+      end_date->is_date = 1;
+    }
+
+  start_date->is_date = 1;
+  g_signal_emit_by_name (GCAL_VIEW (year_view), "create-event-detailed", start_date, end_date);
+  g_free (start_date);
+  if (end_date != NULL)
+    g_free (end_date);
 }
 
 static void
@@ -725,12 +867,18 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
 
+  /* FIXME: it will problably go back to GcalView */
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_YEAR_VIEW, G_SIGNAL_RUN_LAST,
+                                           G_STRUCT_OFFSET (GcalYearViewClass, event_activated),
+                                           NULL, NULL, NULL,
+                                           G_TYPE_NONE, 1, GCAL_TYPE_EVENT_WIDGET);
+
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/year-view.ui");
 
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, sidebar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, add_event_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, events_listbox);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, events_sidebar);
 
   gtk_widget_class_bind_template_callback (widget_class, draw_navigator);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_press_cb);
@@ -754,6 +902,8 @@ gcal_year_view_init (GcalYearView *self)
 
   self->priv->navigator_grid = g_new0 (GridData, 1);
   self->priv->selected_data = g_new0 (ButtonData, 1);
+
+  gtk_list_box_set_header_func (GTK_LIST_BOX (self->priv->events_sidebar), update_sidebar_headers, self, NULL);
 }
 
 static void
