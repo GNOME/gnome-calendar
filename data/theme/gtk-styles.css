@@ -128,6 +128,31 @@ GcalYearView GtkListBox {
     background-color: @theme_bg_color;
 }
 
+GcalYearView GtkListBox GtkLabel {
+    font-weight: bold;
+    font-size: 11px;
+}
+
+GcalEventWidget.slanted-start:dir(ltr) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+GcalEventWidget.slanted-end:dir(ltr) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+GcalEventWidget.slanted-start:dir(rtl) {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+GcalEventWidget.slanted-end:dir(rtl) {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
 GcalEventWidget {
     border-radius: 6px;
     margin-top: 2px;

@@ -155,7 +155,16 @@ static void
 update_sidebar (GcalYearView *year_view)
 {
   GcalYearViewPrivate *priv = year_view->priv;
-  GList *events, *l, *widgets = NULL;
+
+  GtkWidget *child_widget;
+
+  GList *events, *l;
+  GList **days_widgets_array;
+
+  gint i, days_span;
+
+  const icaltimetype *dt_start, *dt_end;
+  icaltimetype date, second_date;
 
   if (priv->start_selected_date == NULL)
     priv->start_selected_date = g_new0 (icaltimetype, 1);
@@ -191,26 +200,89 @@ update_sidebar (GcalYearView *year_view)
 
   gtk_container_foreach (GTK_CONTAINER (priv->events_sidebar), (GtkCallback) gtk_widget_destroy, NULL);
 
+  days_span = icaltime_day_of_year(*(priv->end_selected_date)) - icaltime_day_of_year(*(priv->start_selected_date));
+  days_widgets_array = g_new0 (GList*, days_span);
+
   events = gcal_manager_get_events (priv->manager, priv->start_selected_date, priv->end_selected_date);
   for (l = events; l != NULL; l = g_list_next (l))
     {
-      GtkWidget *event;
       GcalEventData *data = l->data;
+      gboolean child_widget_used = FALSE;
 
-      event = gcal_event_widget_new_from_data (data);
-      gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event),
+      child_widget = gcal_event_widget_new_from_data (data);
+      gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (child_widget),
                                        gcal_manager_is_client_writable (priv->manager, data->source));
-      g_signal_connect (event, "activate", G_CALLBACK (event_activated), year_view);
 
-      gtk_widget_show (event);
-      widgets = g_list_insert_sorted (widgets, event, (GCompareFunc) gcal_event_widget_compare_for_single_day);
+      dt_start = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (child_widget));
+      dt_end = gcal_event_widget_peek_end_date (GCAL_EVENT_WIDGET (child_widget));
+
+      /* normalize date on each new event */
+      date = *(priv->start_selected_date);
+      second_date = *(priv->start_selected_date);
+      second_date.day += 1;
+      second_date = icaltime_normalize (second_date);
+
+      /* marking and cloning */
+      for (i = 0; i < days_span; i++)
+        {
+          GtkWidget *cloned_child = child_widget;
+          gint start_comparison, end_comparison;
+
+          if (i != 0)
+            {
+              icaltime_adjust (&date, 1, 0, 0, 0);
+              icaltime_adjust (&second_date, 1, 0, 0, 0);
+            }
+
+          start_comparison = icaltime_compare_date_only (*dt_start, date);
+          if (start_comparison == 0 || start_comparison == -1)
+            {
+              if (child_widget_used)
+                cloned_child = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
+              else
+                child_widget_used = TRUE;
+            }
+          else
+            {
+              cloned_child = NULL;
+            }
+
+          if (cloned_child != NULL)
+            {
+              days_widgets_array[i] = g_list_insert_sorted (days_widgets_array[i],
+                                                            cloned_child,
+                                                            (GCompareFunc) gcal_event_widget_compare_for_single_day);
+
+              if (start_comparison == -1)
+                gtk_style_context_add_class (gtk_widget_get_style_context (cloned_child), "slanted-start");
+
+              end_comparison = icaltime_compare_date_only (second_date, *dt_end);
+              if (end_comparison == -1)
+                gtk_style_context_add_class (gtk_widget_get_style_context (cloned_child), "slanted-end");
+              else
+                break;
+            }
+        }
     }
 
-  for (l = widgets; l != NULL; l = g_list_next (l))
-    gtk_container_add (GTK_CONTAINER (priv->events_sidebar), l->data);
+  for (i = 0; i < days_span; i++)
+    {
+      GList *current_day = days_widgets_array[i];
+      g_debug ("for shift: %d the list has %d children", i, g_list_length (current_day));
+      for (l = current_day; l != NULL; l = g_list_next (l))
+        {
+          child_widget = l->data;
+          gtk_widget_show (child_widget);
+          g_signal_connect (child_widget, "activate", G_CALLBACK (event_activated), year_view);
+          g_object_set_data (G_OBJECT (child_widget), "shift", GINT_TO_POINTER (i));
+          gtk_container_add (GTK_CONTAINER (priv->events_sidebar), child_widget);
+        }
+
+      g_list_free (current_day);
+    }
 
   g_list_free_full (events, g_free);
-  g_list_free (widgets);
+  g_free (days_widgets_array);
 }
 
 static void
@@ -219,41 +291,36 @@ update_sidebar_headers (GtkListBoxRow *row,
                         gpointer user_data)
 {
   GcalYearViewPrivate *priv;
-  GtkWidget *row_child, *before_child = NULL;
-  const icaltimetype *row_date, *before_date = NULL;
+  GtkWidget *row_child, *before_child = NULL, *row_header = NULL;
+  icaltimetype row_date;
+  gint row_shift, before_shift =-1;
 
   priv = GCAL_YEAR_VIEW (user_data)->priv;
   row_child = gtk_bin_get_child (GTK_BIN (row));
-  row_date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (row_child));
+  row_shift = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (row_child), "shift"));
   if (before != NULL)
     {
       before_child = gtk_bin_get_child (GTK_BIN (before));
-      before_date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (before_child));
+      before_shift = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (before_child), "shift"));
     }
 
-  if (!gcal_event_widget_is_multiday (GCAL_EVENT_WIDGET (row_child)) &&
-      !gcal_event_widget_get_all_day (GCAL_EVENT_WIDGET (row_child)) &&
-      (before_date == NULL || before_date->hour != row_date->hour))
+  if (before_shift == -1 || before_shift != row_shift)
     {
-      gchar *time;
-      GtkWidget *label, *vbox;
+      GtkWidget *label;
+      gchar *label_str;
 
-      if (priv->use_24h_format)
-        time = g_strdup_printf ("%.2d:00", row_date->hour);
-      else
-        time = g_strdup_printf ("%.2d:00 %s", row_date->hour % 12, row_date->hour < 12 ? "AM" : "PM");
+      row_header = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+      row_date = *(priv->start_selected_date);
+      icaltime_adjust (&row_date, row_shift, 0, 0, 0);
 
-      label = gtk_label_new (time);
-      gtk_style_context_add_class (gtk_widget_get_style_context (label), GTK_STYLE_CLASS_DIM_LABEL);
-      g_object_set (label, "margin-start", 6, "margin-top", 2, "halign", GTK_ALIGN_START, NULL);
+      label_str = g_strdup_printf ("%s %d", gcal_get_month_name (row_date.month  - 1), row_date.day);
+      label = gtk_label_new (label_str);
+      g_object_set (label, "margin", 6, "halign", GTK_ALIGN_START, NULL);
+      g_free (label_str);
 
-      vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-      gtk_container_add (GTK_CONTAINER (vbox), label);
-      gtk_container_add (GTK_CONTAINER (vbox), gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
-      gtk_widget_show_all (vbox);
-
-      gtk_list_box_row_set_header (row, vbox);
-      g_free (time);
+      gtk_container_add (GTK_CONTAINER (row_header), label);
+      gtk_widget_show_all (row_header);
+      gtk_list_box_row_set_header (row, row_header);
     }
 }
 
