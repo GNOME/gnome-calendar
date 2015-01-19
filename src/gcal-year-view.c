@@ -21,6 +21,7 @@
 #include "gcal-view.h"
 #include "gcal-utils.h"
 
+#include <glib/gi18n.h>
 #include <math.h>
 #include <string.h>
 
@@ -292,15 +293,18 @@ update_sidebar_headers (GtkListBoxRow *row,
 {
   GcalYearViewPrivate *priv;
   GtkWidget *row_child, *before_child = NULL, *row_header = NULL;
-  icaltimetype row_date;
+  const icaltimetype *row_date, *before_date = NULL;
+  icaltimetype date;
   gint row_shift, before_shift =-1;
 
   priv = GCAL_YEAR_VIEW (user_data)->priv;
   row_child = gtk_bin_get_child (GTK_BIN (row));
+  row_date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (row_child));
   row_shift = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (row_child), "shift"));
   if (before != NULL)
     {
       before_child = gtk_bin_get_child (GTK_BIN (before));
+      before_date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (before_child));
       before_shift = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (before_child), "shift"));
     }
 
@@ -310,15 +314,49 @@ update_sidebar_headers (GtkListBoxRow *row,
       gchar *label_str;
 
       row_header = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-      row_date = *(priv->start_selected_date);
-      icaltime_adjust (&row_date, row_shift, 0, 0, 0);
+      date = *(priv->start_selected_date);
+      icaltime_adjust (&date, row_shift, 0, 0, 0);
 
-      label_str = g_strdup_printf ("%s %d", gcal_get_month_name (row_date.month  - 1), row_date.day);
+      if (icaltime_compare_date_only (date, *(priv->current_date)) == 0)
+        label_str = g_strdup (_("Today"));
+      else
+        label_str = g_strdup_printf ("%s %d", gcal_get_month_name (date.month  - 1), date.day);
+
       label = gtk_label_new (label_str);
+      gtk_style_context_add_class (gtk_widget_get_style_context (label), "sidebar-header");
       g_object_set (label, "margin", 6, "halign", GTK_ALIGN_START, NULL);
       g_free (label_str);
 
       gtk_container_add (GTK_CONTAINER (row_header), label);
+    }
+
+  if (!gcal_event_widget_is_multiday (GCAL_EVENT_WIDGET (row_child)) &&
+      !gcal_event_widget_get_all_day (GCAL_EVENT_WIDGET (row_child)) &&
+      (before_date == NULL || before_date->hour != row_date->hour))
+    {
+      gchar *time;
+      GtkWidget *label;
+
+      if (priv->use_24h_format)
+        time = g_strdup_printf ("%.2d:00", row_date->hour);
+      else
+        time = g_strdup_printf ("%.2d:00 %s", row_date->hour % 12, row_date->hour < 12 ? "AM" : "PM");
+
+      label = gtk_label_new (time);
+      gtk_style_context_add_class (gtk_widget_get_style_context (label), GTK_STYLE_CLASS_DIM_LABEL);
+      g_object_set (label, "margin", 6, "halign", GTK_ALIGN_START, NULL);
+
+      if (row_header == NULL)
+        row_header = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+
+      gtk_container_add (GTK_CONTAINER (row_header), label);
+      gtk_container_add (GTK_CONTAINER (row_header), gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
+
+      g_free (time);
+    }
+
+  if (row_header != NULL)
+    {
       gtk_widget_show_all (row_header);
       gtk_list_box_row_set_header (row, row_header);
     }
