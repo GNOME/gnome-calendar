@@ -1182,24 +1182,42 @@ gcal_event_widget_compare_for_single_day (GcalEventWidget *widget1,
   GcalEventWidgetPrivate *priv1;
   GcalEventWidgetPrivate *priv2;
 
-  time_t time_s1, time_s2;
-  time_t time_e1, time_e2;
-  time_t result;
-
   priv1 = gcal_event_widget_get_instance_private (widget1);
   priv2 = gcal_event_widget_get_instance_private (widget2);
 
-  time_e1 = time_s1 = icaltime_as_timet (*(priv1->dt_start));
-  time_e2 = time_s2 = icaltime_as_timet (*(priv2->dt_start));
+  if (gcal_event_widget_is_multiday (widget1) && gcal_event_widget_is_multiday (widget2))
+    {
+      time_t time_s1, time_s2;
+      time_t time_e1, time_e2;
+      time_t result;
 
-  if (priv1->dt_end != NULL)
-    time_e1 = icaltime_as_timet (*(priv1->dt_end));
-  if (priv2->dt_end)
-    time_e2 = icaltime_as_timet (*(priv2->dt_end));
+      time_s1 = icaltime_as_timet (*(priv1->dt_start));
+      time_s2 = icaltime_as_timet (*(priv2->dt_start));
+      time_e1 = icaltime_as_timet (*(priv1->dt_end));
+      time_e2 = icaltime_as_timet (*(priv2->dt_end));
 
-  result = (time_e2 - time_s2) - (time_e1 - time_s1);
-  if (result != 0)
-    return result;
+      result = (time_e2 - time_s2) - (time_e1 - time_s1);
+      if (result != 0)
+        return result;
+      else
+        return icaltime_compare (*(priv1->dt_start), *(priv2->dt_start));
+    }
   else
-    return icaltime_compare (*(priv1->dt_start), *(priv2->dt_start));
+    {
+      if (gcal_event_widget_is_multiday (widget1))
+        return -1;
+      else if (gcal_event_widget_is_multiday (widget2))
+        return 1;
+      else
+        {
+          if (priv1->all_day && priv2->all_day)
+            return 0;
+          else if (priv1->all_day)
+            return -1;
+          else if (priv2->all_day)
+            return 1;
+          else
+            return icaltime_compare (*(priv1->dt_start), *(priv2->dt_start));
+        }
+    }
 }
