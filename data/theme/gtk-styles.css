@@ -112,6 +112,11 @@
     font-weight: bold;
 }
 
+.sidebar-header {
+    font-weight: bold;
+    font-size: 11px;
+}
+
 GcalYearView GtkScrolledWindow {
     border-top-width: 0;
     border-bottom-width: 0;
@@ -126,11 +131,6 @@ GcalYearView GtkButton {
 
 GcalYearView GtkListBox {
     background-color: @theme_bg_color;
-}
-
-GcalYearView GtkListBox GtkLabel {
-    font-weight: bold;
-    font-size: 11px;
 }
 
 GcalEventWidget.slanted-start:dir(ltr) {
