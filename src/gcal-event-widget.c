@@ -1164,3 +1164,42 @@ gcal_event_widget_compare_by_start_date (GcalEventWidget *widget1,
 
   return icaltime_compare (*(priv1->dt_start), *(priv2->dt_start));
 }
+
+/**
+ * gcal_event_widget_compare_for_single_day:
+ * @widget1:
+ * @widget2:
+ *
+ * Compare widgets by putting those that span over a day before the rest, and between those
+ * who last less than a day by its start time/date
+ *
+ * Returns:
+ **/
+gint
+gcal_event_widget_compare_for_single_day (GcalEventWidget *widget1,
+                                          GcalEventWidget *widget2)
+{
+  GcalEventWidgetPrivate *priv1;
+  GcalEventWidgetPrivate *priv2;
+
+  time_t time_s1, time_s2;
+  time_t time_e1, time_e2;
+  time_t result;
+
+  priv1 = gcal_event_widget_get_instance_private (widget1);
+  priv2 = gcal_event_widget_get_instance_private (widget2);
+
+  time_e1 = time_s1 = icaltime_as_timet (*(priv1->dt_start));
+  time_e2 = time_s2 = icaltime_as_timet (*(priv2->dt_start));
+
+  if (priv1->dt_end != NULL)
+    time_e1 = icaltime_as_timet (*(priv1->dt_end));
+  if (priv2->dt_end)
+    time_e2 = icaltime_as_timet (*(priv2->dt_end));
+
+  result = (time_e2 - time_s2) - (time_e1 - time_s1);
+  if (result != 0)
+    return result;
+  else
+    return icaltime_compare (*(priv1->dt_start), *(priv2->dt_start));
+}
