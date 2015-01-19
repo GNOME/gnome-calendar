@@ -33,8 +33,9 @@
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">True</property>
+            <property name="shadow_type">out</property>
             <child>
-              <object class="GtkListBox" id="events_listbox">
+              <object class="GtkListBox" id="events_sidebar">
                 <property name="visible">True</property>
               </object>
             </child>

@@ -20,6 +20,7 @@
 #define GCAL_YEAR_VIEW_H
 
 #include "gcal-manager.h"
+#include "gcal-event-widget.h"
 
 #include <gtk/gtk.h>
 
@@ -48,6 +49,9 @@ struct _GcalYearView
 struct _GcalYearViewClass
 {
   GtkBoxClass parent;
+
+  /*< signals >*/
+  void       (*event_activated)   (GcalYearView *year_view, GcalEventWidget *event_widget);
 };
 
 GType             gcal_year_view_get_type           (void);
