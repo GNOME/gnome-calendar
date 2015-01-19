@@ -22,10 +22,24 @@
 #include "gcal-utils.h"
 
 #include <math.h>
+#include <string.h>
 
 #define NAVIGATOR_CELL_WIDTH (210 + 15)
 #define NAVIGATOR_CELL_HEIGHT 210
 #define SIDEBAR_PREFERRED_WIDTH 200
+
+typedef struct
+{
+  /* month span from 0 to 11 */
+  gint start_day, start_month;
+  gint end_day, end_month;
+} ButtonData;
+
+typedef struct
+{
+  gint     box_side;
+  GdkPoint coordinates [12];
+} GridData;
 
 struct _GcalYearViewPrivate
 {
@@ -38,8 +52,13 @@ struct _GcalYearViewPrivate
   /* manager singleton */
   GcalManager  *manager;
 
+  /* geometry info */
+  GridData     *navigator_grid;
+
   /* state flags */
   gboolean      popover_mode;
+  gboolean      button_pressed;
+  ButtonData   *selected_data;
 
   /**
    * first day of the week according to user locale, being
@@ -90,34 +109,111 @@ update_date (GcalYearView *year_view,
   gtk_widget_queue_draw (GTK_WIDGET (year_view));
 }
 
+static gboolean
+calculate_day_month_for_coord (GcalYearView *year_view,
+                               gdouble       x,
+                               gdouble       y,
+                               gint         *out_day,
+                               gint         *out_month)
+{
+  GcalYearViewPrivate *priv = year_view->priv;
+  gint row, column, i, sw, box_side, clicked_cell, day, month;
+
+  row = -1;
+  column = -1;
+  box_side = priv->navigator_grid->box_side;
+  sw = 1 - 2 * priv->k;
+
+  /* y selection */
+  for (i = 0; i < 4 && ((row == -1) || (column == -1)); i++)
+    {
+      if (row == -1 &&
+          y > priv->navigator_grid->coordinates[i * 4].y + box_side &&
+          y < priv->navigator_grid->coordinates[i * 4].y + box_side * 7)
+        {
+          row = i;
+        }
+      if (column == -1 &&
+          x > priv->navigator_grid->coordinates[i].x + box_side * 0.5 &&
+          x < priv->navigator_grid->coordinates[i].x + box_side * 7.5)
+        {
+          column = i;
+        }
+    }
+
+  if (row == -1 || column == -1)
+    return FALSE;
+
+  month = row * 4 + column;
+  row = (y - (priv->navigator_grid->coordinates[month].y + box_side)) / box_side;
+  column = (x - (priv->navigator_grid->coordinates[month].x + box_side * 0.5)) / box_side;
+  clicked_cell = row * 7 + column;
+  day = 7 * ((clicked_cell + 7 * priv->k) / 7) + sw * (clicked_cell % 7) + (1 - priv->k);
+  day -= ((time_day_of_week (1, month, priv->date->year) - priv->first_weekday + 7) % 7);
+
+  if (day < 1 || day > time_days_in_month (priv->date->year, month))
+    return FALSE;
+
+  *out_day = day;
+  *out_month = month;
+  return TRUE;
+}
+
+static void
+order_selected_data (ButtonData *selected_data)
+{
+  gint swap;
+  if (selected_data->end_month < selected_data->start_month)
+    {
+      swap = selected_data->start_month;
+      selected_data->start_month = selected_data->end_month;
+      selected_data->end_month = swap;
+
+      swap = selected_data->start_day;
+      selected_data->start_day = selected_data->end_day;
+      selected_data->end_day = swap;
+    }
+  else if (selected_data->start_month == selected_data->end_month && selected_data->end_day < selected_data->start_day)
+    {
+      swap = selected_data->start_day;
+      selected_data->start_day = selected_data->end_day;
+      selected_data->end_day = swap;
+    }
+}
+
 static void
 draw_month_grid (GcalYearView *year_view,
                  GtkWidget    *widget,
                  cairo_t      *cr,
                  gint          month_nr,
-                 gint         *weeks_counter,
-                 gint          block_side,
-                 gdouble       x,
-                 gdouble       y)
+                 gint         *weeks_counter)
 {
   GcalYearViewPrivate *priv = year_view->priv;
 
   GtkStyleContext *context;
   GtkStateFlags state_flags;
 
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
+  PangoLayout *layout, *slayout;
+  PangoFontDescription *font_desc, *sfont_desc;
 
   GdkRGBA color;
   gint layout_width, layout_height, i, j, sw;
-  gint column, row, box_padding_top, box_padding_start;
+  gint x, y, column, row, box_side, box_padding_top, box_padding_start;
   gint days_delay, days, shown_rows, sunday_idx;
   gchar *str, *nr_day, *nr_week;
+  gboolean selected_day;
 
   cairo_save (cr);
   context = gtk_widget_get_style_context (widget);
   state_flags = gtk_widget_get_state_flags (widget);
   sw = 1 - 2 * priv->k;
+  box_side = priv->navigator_grid->box_side;
+  x = priv->navigator_grid->coordinates[month_nr].x;
+  y = priv->navigator_grid->coordinates[month_nr].y;
+
+  gtk_style_context_get (context, state_flags | GTK_STATE_FLAG_SELECTED, "font", &sfont_desc, NULL);
+  slayout = gtk_widget_create_pango_layout (widget, NULL);
+  pango_layout_set_font_description (slayout, sfont_desc);
 
   /* header */
   gtk_style_context_save (context);
@@ -129,11 +225,11 @@ draw_month_grid (GcalYearView *year_view,
   layout = gtk_widget_create_pango_layout (widget, str);
   pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, &layout_width, &layout_height);
-  gtk_render_layout (context, cr, x + (block_side * 8 - layout_width) / 2, y + (block_side - layout_height) / 2,
+  gtk_render_layout (context, cr, x + (box_side * 8 - layout_width) / 2, y + (box_side - layout_height) / 2,
                      layout);
 
   gtk_render_background (context, cr,
-                         x + (block_side * 8 - layout_width) / 2, y + (block_side - layout_height) / 2,
+                         x + (box_side * 8 - layout_width) / 2, y + (box_side - layout_height) / 2,
                          layout_width, layout_width);
 
   pango_font_description_free (font_desc);
@@ -147,8 +243,8 @@ draw_month_grid (GcalYearView *year_view,
   gtk_style_context_get_color (context, state_flags, &color);
   cairo_set_line_width (cr, 0.2);
   gdk_cairo_set_source_rgba (cr, &color);
-  cairo_move_to (cr, x + block_side / 2, y + block_side + 0.4);
-  cairo_rel_line_to (cr, 7 * block_side, 0);
+  cairo_move_to (cr, x + box_side / 2, y + box_side + 0.4);
+  cairo_rel_line_to (cr, 7 * box_side, 0);
   cairo_stroke (cr);
 
   gtk_style_context_restore (context);
@@ -180,8 +276,31 @@ draw_month_grid (GcalYearView *year_view,
       nr_day = g_strdup_printf ("%d", j);
       pango_layout_set_text (layout, nr_day, -1);
       pango_layout_get_pixel_size (layout, &layout_width, &layout_height);
-      box_padding_top = (block_side - layout_height) / 2 > 0 ? (block_side - layout_height) / 2 : 0;
-      box_padding_start = (block_side - layout_width) / 2 > 0 ? (block_side - layout_width) / 2 : 0;
+      box_padding_top = (box_side - layout_height) / 2 > 0 ? (box_side - layout_height) / 2 : 0;
+      box_padding_start = (box_side - layout_width) / 2 > 0 ? (box_side - layout_width) / 2 : 0;
+
+      selected_day = FALSE;
+      if (priv->selected_data->start_day != 0)
+        {
+          ButtonData selected_data = *(priv->selected_data);
+          order_selected_data (&selected_data);
+          if (month_nr > selected_data.start_month && month_nr < selected_data.end_month)
+            {
+              selected_day = TRUE;
+            }
+          else if (month_nr == selected_data.start_month && month_nr == selected_data.end_month)
+            {
+              selected_day = j >= selected_data.start_day && j <= selected_data.end_day;
+            }
+          else if (month_nr == selected_data.start_month && j >= selected_data.start_day)
+            {
+              selected_day = TRUE;
+            }
+          else if (month_nr == selected_data.end_month && j <= selected_data.end_day)
+            {
+              selected_day = TRUE;
+            }
+        }
 
       if (priv->date->year == priv->current_date->year && month_nr + 1 == priv->current_date->month &&
           j == priv->current_date->day)
@@ -196,35 +315,53 @@ draw_month_grid (GcalYearView *year_view,
           gtk_style_context_get (context, state_flags, "font", &cfont_desc, NULL);
           pango_layout_set_font_description (clayout, cfont_desc);
           pango_layout_get_pixel_size (clayout, &layout_width, &layout_height);
+          box_padding_top = (box_side - layout_height) / 2 > 0 ? (box_side - layout_height) / 2 : 0;
+          box_padding_start = (box_side - layout_width) / 2 > 0 ? (box_side - layout_width) / 2 : 0;
 
           /* FIXME: hardcoded padding of the number background */
           gtk_render_background (context, cr,
-                                 block_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width - 2.0,
-                                 block_side * (row + 1) + y + box_padding_top - 1.0,
+                                 box_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width - 2.0,
+                                 box_side * (row + 1) + y + box_padding_top - 1.0,
                                  layout_width + 4.0, layout_height + 2.0);
           gtk_render_layout (context, cr,
-                             block_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
-                             block_side * (row + 1) + y + box_padding_top,
+                             box_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
+                             box_side * (row + 1) + y + box_padding_top,
                              clayout);
 
           gtk_style_context_restore (context);
           pango_font_description_free (cfont_desc);
           g_object_unref (clayout);
         }
+      else if (selected_day)
+        {
+          gtk_style_context_set_state (context, state_flags | GTK_STATE_FLAG_SELECTED);
+
+          pango_layout_set_text (slayout, nr_day, -1);
+          pango_layout_get_pixel_size (slayout, &layout_width, &layout_height);
+          box_padding_top = (box_side - layout_height) / 2 > 0 ? (box_side - layout_height) / 2 : 0;
+          box_padding_start = (box_side - layout_width) / 2 > 0 ? (box_side - layout_width) / 2 : 0;
+
+          gtk_render_layout (context, cr,
+                             box_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
+                             box_side * (row + 1) + y + box_padding_top,
+                             slayout);
+
+          gtk_style_context_set_state (context, state_flags);
+        }
       else if (column == sunday_idx)
         {
           gtk_style_context_add_class (context, "sunday");
           gtk_render_layout (context, cr,
-                             block_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
-                             block_side * (row + 1) + y + box_padding_top,
+                             box_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
+                             box_side * (row + 1) + y + box_padding_top,
                              layout);
           gtk_style_context_remove_class (context, "sunday");
         }
       else
         {
           gtk_render_layout (context, cr,
-                             block_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
-                             block_side * (row + 1) + y + box_padding_top,
+                             box_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
+                             box_side * (row + 1) + y + box_padding_top,
                              layout);
         }
 
@@ -254,19 +391,22 @@ draw_month_grid (GcalYearView *year_view,
 
       pango_layout_set_text (layout, nr_week, -1);
       pango_layout_get_pixel_size (layout, &layout_width, &layout_height);
-      box_padding_top = (block_side - layout_height) / 2 > 0 ? (block_side - layout_height) / 2 : 0;
-      box_padding_start = ((block_side / 2) - layout_width) / 2 > 0 ? ((block_side / 2) - layout_width) / 2 : 0;
+      box_padding_top = (box_side - layout_height) / 2 > 0 ? (box_side - layout_height) / 2 : 0;
+      box_padding_start = ((box_side / 2) - layout_width) / 2 > 0 ? ((box_side / 2) - layout_width) / 2 : 0;
 
       gtk_render_layout (context, cr,
-                         x + sw * box_padding_start + priv->k * (8 * block_side - layout_width),
-                         block_side * (i + 1) + y + box_padding_top,
+                         x + sw * box_padding_start + priv->k * (8 * box_side - layout_width),
+                         box_side * (i + 1) + y + box_padding_top,
                          layout);
 
       g_free (nr_week);
     }
-  pango_font_description_free (font_desc);
   gtk_style_context_restore (context);
 
+  pango_font_description_free (sfont_desc);
+  g_object_unref (slayout);
+
+  pango_font_description_free (font_desc);
   g_object_unref (layout);
   cairo_restore (cr);
 }
@@ -282,14 +422,12 @@ draw_navigator (GcalYearView *year_view,
   GtkStateFlags state_flags;
 
   gint header_padding_left, header_padding_top, header_height, layout_width, layout_height;
-  gint width, height, real_padding_left, real_padding_top, block_side, i, sw, weeks_counter;
+  gint width, height, box_side, real_padding_left, real_padding_top, i, sw, weeks_counter;
 
   gchar *header_str;
 
   PangoLayout *header_layout;
   PangoFontDescription *font_desc;
-
-  GdkRGBA color;
 
   priv = year_view->priv;
   context = gtk_widget_get_style_context (GTK_WIDGET (year_view));
@@ -325,32 +463,104 @@ draw_navigator (GcalYearView *year_view,
   g_free (header_str);
 
   header_height = header_padding_top * 2 + layout_height;
-
-  /* FIXME: debug statement, drawing frame */
-  gtk_style_context_get_color (context, state_flags, &color);
-
   height = gtk_widget_get_allocated_height (widget) - header_height;
 
   if (((width / 4) / 8) < ((height / 3) / 7))
-    block_side = (width / 4) / 8;
+    box_side = (width / 4) / 8;
   else
-    block_side = (height / 3) / 7;
+    box_side = (height / 3) / 7;
 
-  real_padding_left = (width - (8 * 4 * block_side)) / 5;
-  real_padding_top = (height - (7 * 3 * block_side)) / 5;
+  real_padding_left = (width - (8 * 4 * box_side)) / 5;
+  real_padding_top = (height - (7 * 3 * box_side)) / 4;
 
+  priv->navigator_grid->box_side = box_side;
   weeks_counter = 1;
   for (i = 0; i < 12; i++)
     {
       gint row = i / 4;
       gint column = priv->k * 3 + sw * (i % 4);
 
-      draw_month_grid (year_view, widget, cr, i, &weeks_counter, block_side,
-                       (column + 1) * real_padding_left + column * block_side * 8,
-                       (row + 1) * real_padding_top + row * block_side * 7 + header_height);
+      priv->navigator_grid->coordinates[i].x = (column + 1) * real_padding_left + column * box_side * 8;
+      priv->navigator_grid->coordinates[i].y = (row + 1) * real_padding_top + row * box_side * 7 + header_height;
+      draw_month_grid (year_view, widget, cr, i, &weeks_counter);
     }
 
   return FALSE;
+}
+
+static gboolean
+navigator_button_press_cb (GcalYearView   *year_view,
+                           GdkEventButton *event,
+                           GtkWidget      *widget)
+{
+  gint day, month;
+  if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month))
+    return FALSE;
+
+  year_view->priv->button_pressed = TRUE;
+  year_view->priv->selected_data->start_day = day;
+  year_view->priv->selected_data->start_month = month;
+
+  return TRUE;
+}
+
+static gboolean
+navigator_button_release_cb (GcalYearView   *year_view,
+                             GdkEventButton *event,
+                             GtkWidget      *widget)
+{
+  GcalYearViewPrivate *priv = year_view->priv;
+  gint day, month;
+
+  if (!priv->button_pressed)
+    return FALSE;
+
+  if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month))
+    goto fail;
+
+  priv->button_pressed = FALSE;
+  priv->selected_data->end_day = day;
+  priv->selected_data->end_month = month;
+  gtk_widget_queue_draw (widget);
+
+  /* FIXME: */
+  //update events on listbox
+  return TRUE;
+
+fail:
+  priv->button_pressed = FALSE;
+  memset (priv->selected_data, 0, sizeof (ButtonData));
+  gtk_widget_queue_draw (widget);
+
+  /* FIXME: */
+  //reset listbox to today
+  return TRUE;
+}
+
+static gboolean
+navigator_motion_notify_cb (GcalYearView   *year_view,
+                            GdkEventMotion *event,
+                            GtkWidget      *widget)
+{
+  GcalYearViewPrivate *priv = year_view->priv;
+  gint day, month;
+
+  if (!priv->button_pressed)
+    return FALSE;
+
+  if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month))
+    goto fail;
+
+  priv->selected_data->end_day = day;
+  priv->selected_data->end_month = month;
+  gtk_widget_queue_draw (widget);
+  return TRUE;
+
+fail:
+  priv->selected_data->end_day = priv->selected_data->start_day;
+  priv->selected_data->end_month = priv->selected_data->start_month;
+  gtk_widget_queue_draw (widget);
+  return TRUE;
 }
 
 static void
@@ -364,6 +574,9 @@ static void
 gcal_year_view_finalize (GObject *object)
 {
   GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (object)->priv;
+
+  g_free (priv->navigator_grid);
+  g_free (priv->selected_data);
 
   if (priv->date != NULL)
     g_free (priv->date);
@@ -520,6 +733,9 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, events_listbox);
 
   gtk_widget_class_bind_template_callback (widget_class, draw_navigator);
+  gtk_widget_class_bind_template_callback (widget_class, navigator_button_press_cb);
+  gtk_widget_class_bind_template_callback (widget_class, navigator_button_release_cb);
+  gtk_widget_class_bind_template_callback (widget_class, navigator_motion_notify_cb);
   gtk_widget_class_bind_template_callback (widget_class, add_event_clicked_cb);
 }
 
@@ -535,6 +751,9 @@ gcal_year_view_init (GcalYearView *self)
     self->priv->k = 0;
   else if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
     self->priv->k = 1;
+
+  self->priv->navigator_grid = g_new0 (GridData, 1);
+  self->priv->selected_data = g_new0 (ButtonData, 1);
 }
 
 static void

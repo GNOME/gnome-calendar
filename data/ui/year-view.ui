@@ -6,11 +6,14 @@
       <object class="GtkDrawingArea" id="navigator">
         <property name="visible">True</property>
         <property name="hexpand">True</property>
+        <property name="events">GDK_POINTER_MOTION_MASK|GDK_BUTTON_MOTION_MASK|GDK_BUTTON_PRESS_MASK|GDK_BUTTON_RELEASE_MASK|GDK_STRUCTURE_MASK</property>
         <signal name="draw" handler="draw_navigator" object="GcalYearView" swapped="yes" />
+        <signal name="button-press-event" handler="navigator_button_press_cb" object="GcalYearView" swapped="yes" />
+        <signal name="button-release-event" handler="navigator_button_release_cb" object="GcalYearView" swapped="yes" />
+        <signal name="motion-notify-event" handler="navigator_motion_notify_cb" object="GcalYearView" swapped="yes" />
         <style>
           <class name="year-navigator" />
         </style>
-        <!-- FIXME: add some other signals handlers -->
       </object>
      <packing>
        <property name="position">0</property>
