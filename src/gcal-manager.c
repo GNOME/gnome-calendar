@@ -234,6 +234,25 @@ free_unit_data (GcalManagerUnit *data)
   g_free (data);
 }
 
+static gboolean
+gather_components (ECalDataModel         *data_model,
+                   ECalClient            *client,
+                   const ECalComponentId *id,
+                   ECalComponent         *comp,
+                   time_t                 instance_start,
+                   time_t                 instance_end,
+                   gpointer               user_data)
+{
+  GList **result = user_data;
+  GcalEventData *new_data = g_new0 (GcalEventData, 1);
+
+  new_data->source = e_client_get_source (E_CLIENT (client));
+  new_data->event_component = g_object_ref (comp);
+  *result = g_list_append (*result, new_data);/* FIXME: add me sorted */
+
+  return TRUE;
+}
+
 /**
  * load_source:
  * @manager: Manager instance
@@ -1022,3 +1041,28 @@ gcal_manager_move_event_to_source (GcalManager *manager,
   /* FIXME: add code, fix stub method  */
   ;
 }
+
+/**
+ * gcal_manager_get_events:
+ *
+ * Returns a list with {@link GcalEventData} objects owned by the caller, the list and the objects.
+ * The components inside the list are owned by the caller as well. So, don't ref the component.
+ *
+ * Returns: An {@link GList} object
+ */
+GList*
+gcal_manager_get_events (GcalManager  *manager,
+                         icaltimetype *start_date,
+                         icaltimetype *end_date)
+{
+  GcalManagerPrivate *priv = gcal_manager_get_instance_private (manager);
+  time_t range_start, range_end;
+  GList *list = NULL;
+
+  range_start = icaltime_as_timet_with_zone (*start_date, priv->system_timezone);
+  range_end = icaltime_as_timet_with_zone (*end_date, priv->system_timezone);
+
+  e_cal_data_model_foreach_component (priv->e_data_model, range_start, range_end, gather_components, &list);
+  return list;
+}
+
