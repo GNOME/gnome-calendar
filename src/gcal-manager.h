@@ -119,6 +119,10 @@ void           gcal_manager_move_event_to_source    (GcalManager        *manager
                                                      const gchar        *event_uid,
                                                      const gchar        *new_source_uid);
 
+GList*         gcal_manager_get_events              (GcalManager        *manager,
+                                                     icaltimetype       *range_start,
+                                                     icaltimetype       *range_end);
+
 G_END_DECLS
 
 #endif /* __GCAL_MANAGER_H__ */
