@@ -335,6 +335,8 @@ update_sidebar_headers (GtkListBoxRow *row,
       date = *(priv->start_selected_date);
       icaltime_adjust (&date, row_shift, 0, 0, 0);
 
+      /* XXX: compare_date_only does not work if is_date field is different */
+      date.is_date = priv->current_date->is_date;
       if (icaltime_compare_date_only (date, *(priv->current_date)) == 0)
         label_str = g_strdup (_("Today"));
       else
@@ -987,6 +989,9 @@ gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
   e_cal_component_get_dtstart (comp, &dtstart);
   e_cal_component_get_dtend (comp, &dtend);
 
+  /* FIXME: this implementation clear the sidebar are rebuild it
+   * it should only add, what's new, and add it sorted in its position */
+  /* XXX: implement using shift as data and GtkListBox sort_func */
   if (icaltime_compare_date_only (*(dtstart.value), *(priv->start_selected_date)) >= 0)
     priv->update_sidebar_needed = TRUE;
   else if (icaltime_compare_date_only (*(dtend.value), *(priv->end_selected_date)) <= 0)
