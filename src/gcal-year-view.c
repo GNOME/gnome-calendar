@@ -103,6 +103,7 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
+static void   reset_sidebar (GcalYearView *year_view);
 static void   gcal_view_interface_init (GcalViewIface *iface);
 static void   gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
@@ -142,6 +143,9 @@ update_date (GcalYearView *year_view,
 
       gcal_manager_set_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (year_view), range_start, range_end);
       gtk_widget_queue_draw (GTK_WIDGET (year_view));
+
+      if (priv->start_selected_date->day != 0)
+        reset_sidebar (year_view);
     }
 
   if (priv->date != NULL)
@@ -308,6 +312,15 @@ update_sidebar (GcalYearView *year_view)
 
   g_list_free_full (events, g_free);
   g_free (days_widgets_array);
+}
+
+static void
+reset_sidebar (GcalYearView *year_view)
+{
+  memset (year_view->priv->selected_data, 0, sizeof (ButtonData));
+  gtk_widget_queue_draw (GTK_WIDGET (year_view));
+
+  update_sidebar (year_view);
 }
 
 static void
@@ -805,10 +818,7 @@ navigator_button_release_cb (GcalYearView   *year_view,
 
 fail:
   priv->button_pressed = FALSE;
-  memset (priv->selected_data, 0, sizeof (ButtonData));
-  gtk_widget_queue_draw (widget);
-
-  update_sidebar (year_view);
+  reset_sidebar (year_view);
   return TRUE;
 }
 
@@ -867,12 +877,7 @@ static void
 popover_closed_cb (GcalYearView *year_view,
                    GtkPopover   *popover)
 {
-  GcalYearViewPrivate *priv = year_view->priv;
-
-  memset (priv->selected_data, 0, sizeof (ButtonData));
-  gtk_widget_queue_draw (priv->navigator);
-
-  update_sidebar (year_view);
+  reset_sidebar (year_view);
 }
 
 static void
