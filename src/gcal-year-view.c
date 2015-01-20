@@ -1049,6 +1049,25 @@ gcal_year_view_get_right_header (GcalView *view)
   return g_strdup ("");
 }
 
+static GList*
+gcal_year_view_get_children_by_uuid (GcalView    *view,
+                                     const gchar *uuid)
+{
+  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (view)->priv;
+  GList *children, *l, *result = NULL;
+
+  children = gtk_container_get_children (GTK_CONTAINER (priv->events_sidebar));
+  for (l = children; l != NULL; l = g_list_next (l))
+    {
+      GcalEventWidget *child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
+      if (g_strcmp0 (uuid, gcal_event_widget_peek_uuid (child_widget)) == 0)
+        result = g_list_append (result, child_widget);
+    }
+  g_list_free (children);
+
+  return result;
+}
+
 static void
 gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
                                   ECalClient              *client,
@@ -1189,6 +1208,7 @@ gcal_view_interface_init (GcalViewIface *iface)
   /* FIXME: implement what's needed */
   iface->get_left_header = gcal_year_view_get_left_header;
   iface->get_right_header = gcal_year_view_get_right_header;
+  iface->get_children_by_uuid = gcal_year_view_get_children_by_uuid;
 }
 
 static void
