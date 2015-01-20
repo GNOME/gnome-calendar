@@ -209,28 +209,38 @@ update_sidebar (GcalYearView *year_view)
       priv->start_selected_date->day = selected_data.start_day;
       priv->start_selected_date->month = selected_data.start_month + 1;
       priv->start_selected_date->year = priv->date->year;
-      priv->start_selected_date->is_date = 1;
 
       priv->end_selected_date->day = selected_data.end_day + 1;
       priv->end_selected_date->month = selected_data.end_month + 1;
       priv->end_selected_date->year = priv->date->year;
-      priv->end_selected_date->is_date = 1;
+      priv->end_selected_date->hour = 23;
+      priv->end_selected_date->minute = 59;
       *(priv->end_selected_date) = icaltime_normalize (*(priv->end_selected_date));
     }
   else
     {
       *(priv->start_selected_date) = *(priv->current_date);
-      priv->start_selected_date->is_date = 1;
+      priv->start_selected_date->hour = 0;
+      priv->start_selected_date->minute = 0;
 
       *(priv->end_selected_date) = *(priv->current_date);
       priv->end_selected_date->day += 1;
-      priv->end_selected_date->is_date = 1;
+      priv->end_selected_date->hour = 23;
+      priv->end_selected_date->minute = 59;
       *(priv->end_selected_date) = icaltime_normalize (*(priv->end_selected_date));
+    }
+
+  if (priv->end_selected_date->year != priv->start_selected_date->year)
+    {
+      priv->end_selected_date->day = 31;
+      priv->end_selected_date->month = 12;
+      priv->end_selected_date->year = priv->start_selected_date->year;
     }
 
   gtk_container_foreach (GTK_CONTAINER (priv->events_sidebar), (GtkCallback) gtk_widget_destroy, NULL);
 
   days_span = icaltime_day_of_year(*(priv->end_selected_date)) - icaltime_day_of_year(*(priv->start_selected_date));
+  days_span = days_span == 0 ? 1 : days_span;
   days_widgets_array = g_new0 (GList*, days_span);
 
   events = gcal_manager_get_events (priv->manager, priv->start_selected_date, priv->end_selected_date);
@@ -249,8 +259,8 @@ update_sidebar (GcalYearView *year_view)
       /* normalize date on each new event */
       date = *(priv->start_selected_date);
       second_date = *(priv->start_selected_date);
-      second_date.day += 1;
-      second_date = icaltime_normalize (second_date);
+      second_date.hour = 23;
+      second_date.minute = 59;
 
       /* marking and cloning */
       for (i = 0; i < days_span; i++)
@@ -264,8 +274,8 @@ update_sidebar (GcalYearView *year_view)
               icaltime_adjust (&second_date, 1, 0, 0, 0);
             }
 
-          start_comparison = icaltime_compare_date_only (*dt_start, date);
-          if (start_comparison == 0 || start_comparison == -1)
+          start_comparison = icaltime_compare (*dt_start, date);
+          if (start_comparison == 0 || start_comparison == -1 || (date.day == dt_start->day && date.month == dt_start->month))
             {
               if (child_widget_used)
                 cloned_child = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
@@ -286,7 +296,7 @@ update_sidebar (GcalYearView *year_view)
               if (start_comparison == -1)
                 gtk_style_context_add_class (gtk_widget_get_style_context (cloned_child), "slanted-start");
 
-              end_comparison = icaltime_compare_date_only (second_date, *dt_end);
+              end_comparison = icaltime_compare (second_date, *dt_end);
               if (end_comparison == -1)
                 gtk_style_context_add_class (gtk_widget_get_style_context (cloned_child), "slanted-end");
               else
@@ -1072,9 +1082,9 @@ gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
    * it should only add, what's new, and add it sorted in its position */
   /* XXX: implement using shift as data and GtkListBox sort_func */
   /* XXX: comparing against zero is not reliable, but it can only result in TRUE */
-  if (icaltime_compare_date_only (*(dtstart.value), *(priv->start_selected_date)) >= 0)
+  if (icaltime_compare (*(dtstart.value), *(priv->start_selected_date)) >= 0)
     priv->update_sidebar_needed = TRUE;
-  else if (icaltime_compare_date_only (*(dtend.value), *(priv->end_selected_date)) <= 0)
+  else if (icaltime_compare (*(dtend.value), *(priv->end_selected_date)) <= 0)
     priv->update_sidebar_needed = TRUE;
 
   e_cal_component_free_datetime (&dtstart);
