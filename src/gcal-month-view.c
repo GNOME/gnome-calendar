@@ -169,6 +169,9 @@ static gchar*         gcal_month_view_get_left_header       (GcalView       *vie
 
 static gchar*         gcal_month_view_get_right_header      (GcalView       *view);
 
+static GList*         gcal_month_view_get_children_by_uuid  (GcalView       *view,
+                                                             const gchar    *uuid);
+
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view,GCAL_TYPE_SUBSCRIBER_VIEW,
                          G_ADD_PRIVATE (GcalMonthView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
@@ -598,6 +601,7 @@ gcal_view_interface_init (GcalViewIface *iface)
 
   iface->get_left_header = gcal_month_view_get_left_header;
   iface->get_right_header = gcal_month_view_get_right_header;
+  iface->get_children_by_uuid = gcal_month_view_get_children_by_uuid;
 }
 
 static void
@@ -1669,6 +1673,20 @@ gcal_month_view_clear_marks (GcalView *view)
   priv->start_mark_cell = -1;
   priv->end_mark_cell = -1;
   gtk_widget_queue_draw (GTK_WIDGET (view));
+}
+
+static GList*
+gcal_month_view_get_children_by_uuid (GcalView    *view,
+                                      const gchar *uuid)
+{
+  GcalSubscriberViewPrivate *ppriv = GCAL_SUBSCRIBER_VIEW (view)->priv;
+  GList *l;
+
+  l = g_hash_table_lookup (ppriv->children, uuid);
+  if (l != NULL)
+    return g_list_reverse (g_list_copy (l));
+
+  return NULL;
 }
 
 static gchar*
