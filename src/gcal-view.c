@@ -159,42 +159,6 @@ gcal_view_clear_marks (GcalView *view)
 }
 
 /**
- * gcal_view_get_left_header:
- * @view: a #GcalView
- *
- * Returns the string representing for the left header of the unit.
- * e.g.: for #GcalMonthView returns the month name
- *
- * Returns: (transfer full): a string.
- **/
-gchar*
-gcal_view_get_left_header (GcalView *view)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_val_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_left_header, NULL);
-
-  return GCAL_VIEW_GET_INTERFACE (view)->get_left_header (view);
-}
-
-/**
- * gcal_view_get_right_header:
- * @view: a #GcalView
- *
- * Returns the string representing for the right header of the unit.
- * e.g.: for #GcalMonthView returns the year
- *
- * Returns: (transfer full): a string.
- **/
-gchar*
-gcal_view_get_right_header (GcalView *view)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_val_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_right_header, NULL);
-
-  return GCAL_VIEW_GET_INTERFACE (view)->get_right_header (view);
-}
-
-/**
  * gcal_view_get_children_by_uuid:
  * @view: a #GcalView
  * @uuid: The unique id of an event

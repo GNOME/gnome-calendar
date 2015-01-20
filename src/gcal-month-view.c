@@ -165,10 +165,6 @@ static icaltimetype*  gcal_month_view_get_final_date        (GcalView       *vie
 
 static void           gcal_month_view_clear_marks           (GcalView       *view);
 
-static gchar*         gcal_month_view_get_left_header       (GcalView       *view);
-
-static gchar*         gcal_month_view_get_right_header      (GcalView       *view);
-
 static GList*         gcal_month_view_get_children_by_uuid  (GcalView       *view,
                                                              const gchar    *uuid);
 
@@ -599,8 +595,6 @@ gcal_view_interface_init (GcalViewIface *iface)
 
   iface->clear_marks = gcal_month_view_clear_marks;
 
-  iface->get_left_header = gcal_month_view_get_left_header;
-  iface->get_right_header = gcal_month_view_get_right_header;
   iface->get_children_by_uuid = gcal_month_view_get_children_by_uuid;
 }
 
@@ -1687,24 +1681,6 @@ gcal_month_view_get_children_by_uuid (GcalView    *view,
     return g_list_reverse (g_list_copy (l));
 
   return NULL;
-}
-
-static gchar*
-gcal_month_view_get_left_header (GcalView *view)
-{
-  GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));
-
-  return g_strdup_printf ("%s", gcal_get_month_name (priv->date->month - 1));
-}
-
-static gchar*
-gcal_month_view_get_right_header (GcalView *view)
-{
-  GcalMonthViewPrivate *priv;
-
-  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));
-
-  return g_strdup_printf ("%d", priv->date->year);
 }
 
 /* Public API */

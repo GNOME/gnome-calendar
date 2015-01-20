@@ -55,10 +55,6 @@ struct _GcalViewIface
   /* Marks related API */
   void            (*clear_marks)                        (GcalView     *view);
 
-  /* Update NavBar headings */
-  gchar*          (*get_left_header)                    (GcalView     *view);
-  gchar*          (*get_right_header)                   (GcalView     *view);
-
   GList*          (*get_children_by_uuid)               (GcalView     *view, const gchar *uuid);
 };
 
@@ -75,10 +71,6 @@ icaltimetype* gcal_view_get_initial_date              (GcalView     *view);
 icaltimetype* gcal_view_get_final_date                (GcalView     *view);
 
 void          gcal_view_clear_marks                   (GcalView     *view);
-
-gchar*        gcal_view_get_left_header               (GcalView     *view);
-
-gchar*        gcal_view_get_right_header              (GcalView     *view);
 
 GList*        gcal_view_get_children_by_uuid          (GcalView     *view,
                                                        const gchar  *uuid);
