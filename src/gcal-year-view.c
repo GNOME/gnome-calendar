@@ -47,8 +47,11 @@ struct _GcalYearViewPrivate
   /* composite, GtkBuilder's widgets */
   GtkWidget    *navigator;
   GtkWidget    *sidebar;
-  GtkWidget    *add_event_button;
   GtkWidget    *events_sidebar;
+  GtkWidget    *navigator_sidebar;
+
+  GtkWidget    *popover; /* Popover for popover_mode */
+  GtkWidget    *popover_sidebar;
 
   /* manager singleton */
   GcalManager  *manager;
@@ -150,7 +153,10 @@ static void
 event_activated (GcalEventWidget *widget,
                  gpointer         user_data)
 {
-  /* FIXME: if popover_mode, hide popover */
+  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (user_data)->priv;
+
+  if (priv->popover_mode)
+    gtk_widget_hide (priv->popover);
   g_signal_emit (GCAL_YEAR_VIEW (user_data), signals[EVENT_ACTIVATED], 0, widget);
 }
 
@@ -774,6 +780,26 @@ navigator_button_release_cb (GcalYearView   *year_view,
   priv->selected_data->end_month = month;
   gtk_widget_queue_draw (widget);
 
+  if (priv->popover_mode)
+    {
+      GdkRectangle rect;
+      GtkWidget *box;
+
+      /* sizing */
+      box = gtk_bin_get_child (GTK_BIN (priv->popover));
+      gtk_widget_set_size_request (box, 200, priv->navigator_grid->box_side * 2 * 7);
+
+      /* FIXME: improve rect */
+      rect.x = event->x;
+      rect.y = event->y;
+      rect.width = rect.height = 1;
+      gtk_popover_set_pointing_to (GTK_POPOVER (priv->popover), &rect);
+
+      /* FIXME: do no show over selected days */
+      gtk_popover_set_position (GTK_POPOVER (priv->popover), GTK_POS_RIGHT);
+      gtk_widget_show (priv->popover);
+    }
+
   update_sidebar (year_view);
   return TRUE;
 
@@ -835,6 +861,18 @@ add_event_clicked_cb (GcalYearView *year_view,
   g_free (start_date);
   if (end_date != NULL)
     g_free (end_date);
+}
+
+static void
+popover_closed_cb (GcalYearView *year_view,
+                   GtkPopover   *popover)
+{
+  GcalYearViewPrivate *priv = year_view->priv;
+
+  memset (priv->selected_data, 0, sizeof (ButtonData));
+  gtk_widget_queue_draw (priv->navigator);
+
+  update_sidebar (year_view);
 }
 
 static void
@@ -945,6 +983,37 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
   priv->popover_mode = (alloc->width < NAVIGATOR_CELL_WIDTH * 4 + padding_left * 8 + SIDEBAR_PREFERRED_WIDTH);
   if (gtk_widget_get_visible (priv->sidebar) == priv->popover_mode)
     gtk_widget_set_visible (priv->sidebar, !priv->popover_mode);
+
+  if (priv->popover_mode && !gtk_widget_is_ancestor (priv->events_sidebar, priv->popover))
+    {
+      GtkWidget *parent = gtk_widget_get_parent (priv->events_sidebar);
+      g_object_ref (priv->events_sidebar);
+
+      gtk_container_remove (GTK_CONTAINER (parent), priv->events_sidebar);
+      gtk_container_add (GTK_CONTAINER (priv->popover_sidebar), priv->events_sidebar);
+
+      gtk_widget_show_all (priv->events_sidebar);
+      g_object_unref (priv->events_sidebar);
+      gtk_widget_destroy (parent);
+
+      popover_closed_cb (GCAL_YEAR_VIEW (widget), GTK_POPOVER (priv->popover));
+    }
+  else if (!priv->popover_mode && gtk_widget_is_ancestor (priv->events_sidebar, priv->popover))
+    {
+      GtkWidget *parent = gtk_widget_get_parent (priv->events_sidebar);
+      g_object_ref (priv->events_sidebar);
+
+      gtk_container_remove (GTK_CONTAINER (parent), priv->events_sidebar);
+      gtk_container_add (GTK_CONTAINER (priv->navigator_sidebar), priv->events_sidebar);
+
+      gtk_widget_show_all (priv->events_sidebar);
+      g_object_unref (priv->events_sidebar);
+      gtk_widget_destroy (parent);
+
+      g_signal_handlers_block_by_func (priv->popover, popover_closed_cb, widget);
+      gtk_widget_hide (priv->popover);
+      g_signal_handlers_unblock_by_func (priv->popover, popover_closed_cb, widget);
+    }
 
   GTK_WIDGET_CLASS (gcal_year_view_parent_class)->size_allocate (widget, alloc);
 }
@@ -1073,14 +1142,17 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
 
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, sidebar);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, add_event_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, events_sidebar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator_sidebar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, popover);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, popover_sidebar);
 
   gtk_widget_class_bind_template_callback (widget_class, draw_navigator);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_press_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_release_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_motion_notify_cb);
   gtk_widget_class_bind_template_callback (widget_class, add_event_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, popover_closed_cb);
 }
 
 static void
