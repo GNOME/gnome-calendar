@@ -64,6 +64,7 @@ struct _GcalYearViewPrivate
   gboolean      popover_mode;
   gboolean      button_pressed;
   ButtonData   *selected_data;
+  gboolean      update_sidebar_needed;
 
   /**
    * first day of the week according to user locale, being
@@ -114,12 +115,35 @@ update_date (GcalYearView *year_view,
 {
   GcalYearViewPrivate *priv = year_view->priv;
 
-  /* FIXME: add updating subscribe range, only when needed */
+  if (priv->date == NULL || priv->date->year != new_date->year)
+    {
+      time_t range_start, range_end;
+      icaltimetype date;
+      icaltimezone* default_zone = gcal_manager_get_system_timezone (priv->manager);
+
+      date = *new_date;
+      date.day = 1;
+      date.month = 1;
+      date.hour = 0;
+      date.minute = 0;
+      date.second = 0;
+      date.is_date = 0;
+      range_start = icaltime_as_timet_with_zone (date, default_zone);
+
+      date.day = 31;
+      date.month = 12;
+      date.hour = 23;
+      date.minute = 59;
+      date.second = 0;
+      range_end = icaltime_as_timet_with_zone (date, default_zone);
+
+      gcal_manager_set_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (year_view), range_start, range_end);
+      gtk_widget_queue_draw (GTK_WIDGET (year_view));
+    }
+
   if (priv->date != NULL)
     g_free (priv->date);
   priv->date = new_date;
-
-  gtk_widget_queue_draw (GTK_WIDGET (year_view));
 }
 
 static void
@@ -166,11 +190,6 @@ update_sidebar (GcalYearView *year_view)
 
   const icaltimetype *dt_start, *dt_end;
   icaltimetype date, second_date;
-
-  if (priv->start_selected_date == NULL)
-    priv->start_selected_date = g_new0 (icaltimetype, 1);
-  if (priv->end_selected_date == NULL)
-    priv->end_selected_date = g_new0 (icaltimetype, 1);
 
   if (priv->selected_data->start_day != 0)
     {
@@ -269,7 +288,6 @@ update_sidebar (GcalYearView *year_view)
   for (i = 0; i < days_span; i++)
     {
       GList *current_day = days_widgets_array[i];
-      g_debug ("for shift: %d the list has %d children", i, g_list_length (current_day));
       for (l = current_day; l != NULL; l = g_list_next (l))
         {
           child_widget = l->data;
@@ -799,7 +817,7 @@ add_event_clicked_cb (GcalYearView *year_view,
   GcalYearViewPrivate *priv = year_view->priv;
   icaltimetype *start_date, *end_date = NULL;
 
-  if (priv->start_selected_date == NULL)
+  if (priv->start_selected_date->day == 0)
     {
       start_date = gcal_dup_icaltime (priv->current_date);
     }
@@ -956,6 +974,74 @@ gcal_year_view_get_right_header (GcalView *view)
 }
 
 static void
+gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
+                                  ECalClient              *client,
+                                  ECalComponent           *comp)
+{
+  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (subscriber)->priv;
+  ECalComponentDateTime dtstart, dtend;
+
+  if (priv->update_sidebar_needed || priv->start_selected_date->day == 0)
+    return;
+
+  e_cal_component_get_dtstart (comp, &dtstart);
+  e_cal_component_get_dtend (comp, &dtend);
+
+  if (icaltime_compare_date_only (*(dtstart.value), *(priv->start_selected_date)) >= 0)
+    priv->update_sidebar_needed = TRUE;
+  else if (icaltime_compare_date_only (*(dtend.value), *(priv->end_selected_date)) <= 0)
+    priv->update_sidebar_needed = TRUE;
+
+  e_cal_component_free_datetime (&dtstart);
+  e_cal_component_free_datetime (&dtend);
+}
+
+static void
+gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
+                                  ECalClient              *client,
+                                  const gchar             *uid,
+                                  const gchar             *rid)
+{
+  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (subscriber)->priv;
+  GList *children, *l;
+  ESource *source;
+  gchar *uuid;
+
+  source = e_client_get_source (E_CLIENT (client));
+  if (rid != NULL)
+    uuid = g_strdup_printf ("%s:%s:%s", e_source_get_uid (source), uid, rid);
+  else
+    uuid = g_strdup_printf ("%s:%s", e_source_get_uid (source), uid);
+
+  children = gtk_container_get_children (GTK_CONTAINER (priv->events_sidebar));
+  for (l = children; l != NULL; l = g_list_next (l))
+    {
+      GcalEventWidget *child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
+      if (g_strcmp0 (uuid, gcal_event_widget_peek_uuid (child_widget)) == 0)
+        gtk_widget_destroy (GTK_WIDGET (child_widget));
+    }
+  g_list_free (children);
+  g_free (uuid);
+}
+
+static void
+gcal_year_view_freeze (ECalDataModelSubscriber *subscriber)
+{
+  ;
+}
+
+static void
+gcal_year_view_thaw (ECalDataModelSubscriber *subscriber)
+{
+  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (subscriber)->priv;
+  if (priv->update_sidebar_needed)
+    {
+      priv->update_sidebar_needed = FALSE;
+      update_sidebar (GCAL_YEAR_VIEW (subscriber));
+    }
+}
+
+static void
 gcal_year_view_class_init (GcalYearViewClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
@@ -1008,6 +1094,9 @@ gcal_year_view_init (GcalYearView *self)
   self->priv->navigator_grid = g_new0 (GridData, 1);
   self->priv->selected_data = g_new0 (ButtonData, 1);
 
+  self->priv->start_selected_date = g_new0 (icaltimetype, 1);
+  self->priv->end_selected_date = g_new0 (icaltimetype, 1);
+
   gtk_list_box_set_header_func (GTK_LIST_BOX (self->priv->events_sidebar), update_sidebar_headers, self, NULL);
 }
 
@@ -1022,12 +1111,11 @@ gcal_view_interface_init (GcalViewIface *iface)
 static void
 gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
 {
-  /* FIXME: implement this */
-  iface->component_added = NULL;
-  iface->component_modified = NULL;
-  iface->component_removed = NULL;
-  iface->freeze = NULL;
-  iface->thaw = NULL;
+  iface->component_added = gcal_year_view_component_changed;
+  iface->component_modified = gcal_year_view_component_changed;
+  iface->component_removed = gcal_year_view_component_removed;
+  iface->freeze = gcal_year_view_freeze;
+  iface->thaw = gcal_year_view_thaw;
 }
 
 /* Public API */
