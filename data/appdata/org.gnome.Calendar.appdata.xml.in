@@ -9,16 +9,11 @@
 
   <description>
     <_p>
-      Calendar is a simple and beautiful calendar application designed to fit
-      GNOME 3.
+      GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME desktop. By reusing the components which the GNOME desktop is build on, Calendar nicely integrates with the GNOME ecosystem.
     </_p>
-    <_p>Features:</_p>
-    <ul>
-      <_li>Week, month and year views</_li>
-      <_li>Basic editing of events</_li>
-      <_li>Evolution Data Server integration</_li>
-      <_li>Search support</_li>
-    </ul>
+    <_p>
+      We aim to find the perfect balance between nicely crafted features and user-centred usability. No excess, no lacks. You'll feel comfortable using Calendar, like you've been using it for ages!
+    </_p>
   </description>
 
   <screenshots>

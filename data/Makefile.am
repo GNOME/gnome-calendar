@@ -1,4 +1,4 @@
-SUBDIRS = icons appdata
+SUBDIRS = icons
 
 desktopdir = $(datadir)/applications
 desktop_in_files = org.gnome.Calendar.desktop.in
@@ -30,6 +30,11 @@ gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 @INTLTOOL_XML_NOMERGE_RULE@
 @GSETTINGS_RULES@
 
+@INTLTOOL_XML_RULE@
+appdatadir = $(datadir)/appdata
+appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+appdata_in_files = appdata/org.gnome.Calendar.appdata.xml.in
+
 EXTRA_DIST=                     \
   org.gnome.Calendar.desktop    \
   calendar.gresource.xml        \
@@ -41,10 +46,12 @@ EXTRA_DIST=                     \
   ui/window.ui                  \
   ui/year-view.ui               \
   theme/gtk-styles.css          \
+  $(appdata_in_files)           \
   $(desktop_in_files)           \
   $(gsettingsschema_in_files)
 
 CLEANFILES =                    \
   $(service_DATA)               \
   $(desktop_DATA)               \
-  $(gsettings_SCHEMAS)
+  $(gsettings_SCHEMAS)          \
+  $(appdata_DATA)
