@@ -361,6 +361,8 @@ update_sidebar_headers (GtkListBoxRow *row,
 
   priv = GCAL_YEAR_VIEW (user_data)->priv;
   row_child = gtk_bin_get_child (GTK_BIN (row));
+  if (row_child == NULL)
+    return;
   row_date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (row_child));
   row_shift = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (row_child), "shift"));
   if (before != NULL)
