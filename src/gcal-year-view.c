@@ -1116,7 +1116,7 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
   for (l = children; l != NULL; l = g_list_next (l))
     {
       GcalEventWidget *child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
-      if (g_strcmp0 (uuid, gcal_event_widget_peek_uuid (child_widget)) == 0)
+      if (child_widget != NULL && g_strcmp0 (uuid, gcal_event_widget_peek_uuid (child_widget)) == 0)
         gtk_widget_destroy (GTK_WIDGET (child_widget));
     }
   g_list_free (children);
