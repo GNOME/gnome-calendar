@@ -262,13 +262,26 @@ get_start_grid_y (GtkWidget *widget)
   context = gtk_widget_get_style_context (widget);
   state_flags = gtk_widget_get_state_flags (widget);
 
-  gtk_style_context_get (context, state_flags, "font", &font_desc, "padding-top", &padding_top, NULL);
+  layout = gtk_widget_create_pango_layout (widget, NULL);
 
-  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "first-view-header");
+  gtk_style_context_get (context, state_flags, "padding-top", &padding_top, "font", &font_desc, NULL);
+
   pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
-  start_grid_y = padding_top + font_height;
+  pango_font_description_free (font_desc);
+  gtk_style_context_restore (context);
+
+  start_grid_y = 2 * padding_top + font_height;
+
+  gtk_style_context_get (context, state_flags, "font", &font_desc, "padding-top", &padding_top, NULL);
+
+  pango_layout_set_font_description (layout, font_desc);
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+
+  start_grid_y += padding_top + font_height;
 
   pango_font_description_free (font_desc);
   g_object_unref (layout);
@@ -1016,23 +1029,14 @@ gcal_month_view_draw (GtkWidget *widget,
 
   GdkRGBA color;
 
+  gchar *header_str;
   PangoLayout *layout;
-  PangoFontDescription *font_desc;
-  PangoFontDescription *sfont_desc;
+  PangoFontDescription *font_desc, *sfont_desc;
 
-  gint font_width, font_height;
-
-  gint pos_x, pos_y;
-  gdouble start_grid_y, cell_width, cell_height;
-
+  gint font_width, font_height, pos_x, pos_y, shown_rows;
+  gint i, j, sw, lower_mark = 43, upper_mark = -2;
+  gdouble start_grid_y, cell_width, cell_height, first_row_gap = 0.0;
   gdouble days;
-  gint shown_rows;
-  gdouble first_row_gap = 0.0;
-
-  gint i, j, sw;
-
-  gint lower_mark = 43;
-  gint upper_mark = -2;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
   ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
@@ -1041,7 +1045,6 @@ gcal_month_view_draw (GtkWidget *widget,
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
 
-  gtk_style_context_get_padding (context, state, &padding);
   gtk_style_context_get (context, state | GTK_STATE_FLAG_SELECTED, "font", &sfont_desc, NULL);
 
   gtk_widget_get_allocation (widget, &alloc);
@@ -1074,6 +1077,44 @@ gcal_month_view_draw (GtkWidget *widget,
       lower_mark -= priv->days_delay;
       upper_mark -= priv->days_delay;
     }
+
+  /* view headers */
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "first-view-header");
+
+  gtk_style_context_get (context, state, "font", &font_desc, NULL);
+  gtk_style_context_get_padding (context, state, &padding);
+
+  header_str = g_strdup_printf ("%s", gcal_get_month_name (priv->date->month - 1));
+  pango_layout_set_text (layout, header_str, -1);
+  pango_layout_set_font_description (layout, font_desc);
+  pango_layout_get_pixel_size (layout, &font_width, NULL);
+
+  gtk_render_layout (context, cr, priv->k * (alloc.width - font_width) + sw * padding.left, padding.top, layout);
+
+  pango_font_description_free (font_desc);
+  g_free (header_str);
+  gtk_style_context_restore (context);
+
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "second-view-header");
+
+  gtk_style_context_get (context, state, "font", &font_desc, NULL);
+  gtk_style_context_get_padding (context, state, &padding);
+
+  header_str = g_strdup_printf ("%d", priv->date->year);
+  pango_layout_set_text (layout, header_str, -1);
+  pango_layout_set_font_description (layout, font_desc);
+  pango_layout_get_pixel_size (layout, &font_width, NULL);
+
+  gtk_render_layout (context, cr, (1 - priv->k) * (alloc.width - font_width) - sw * padding.left, padding.top, layout);
+
+  pango_font_description_free (font_desc);
+  g_free (header_str);
+  gtk_style_context_restore (context);
+
+  /*same padding for the rest of the view */
+  gtk_style_context_get_padding (context, state, &padding);
 
   /* grid header */
   gtk_style_context_save (context);
@@ -1633,17 +1674,9 @@ gcal_month_view_clear_marks (GcalView *view)
 static gchar*
 gcal_month_view_get_left_header (GcalView *view)
 {
-  GcalMonthViewPrivate *priv;
+  GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));
 
-  gchar str_date[64];
-  struct tm tm_date;
-
-  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (view));
-
-  tm_date = icaltimetype_to_tm (priv->date);
-  e_utf8_strftime_fix_am_pm (str_date, 64, "%B", &tm_date);
-
-  return g_strdup_printf ("%s", str_date);
+  return g_strdup_printf ("%s", gcal_get_month_name (priv->date->month - 1));
 }
 
 static gchar*
