@@ -193,3 +193,22 @@ gcal_view_get_right_header (GcalView *view)
 
   return GCAL_VIEW_GET_INTERFACE (view)->get_right_header (view);
 }
+
+/**
+ * gcal_view_get_children_by_uuid:
+ * @view: a #GcalView
+ * @uuid: The unique id of an event
+ *
+ * Returns a list with every event that has the passed uuid
+ *
+ * Returns: (transfer full): a {@link GList} instance
+ **/
+GList*
+gcal_view_get_children_by_uuid (GcalView    *view,
+                                const gchar *uuid)
+{
+  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+  g_return_val_if_fail (GCAL_VIEW_GET_INTERFACE (view)->get_children_by_uuid, NULL);
+
+  return GCAL_VIEW_GET_INTERFACE (view)->get_children_by_uuid (view, uuid);
+}

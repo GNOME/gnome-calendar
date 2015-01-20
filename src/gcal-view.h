@@ -58,6 +58,8 @@ struct _GcalViewIface
   /* Update NavBar headings */
   gchar*          (*get_left_header)                    (GcalView     *view);
   gchar*          (*get_right_header)                   (GcalView     *view);
+
+  GList*          (*get_children_by_uuid)               (GcalView     *view, const gchar *uuid);
 };
 
 GType         gcal_view_get_type                      (void);
@@ -77,6 +79,9 @@ void          gcal_view_clear_marks                   (GcalView     *view);
 gchar*        gcal_view_get_left_header               (GcalView     *view);
 
 gchar*        gcal_view_get_right_header              (GcalView     *view);
+
+GList*        gcal_view_get_children_by_uuid          (GcalView     *view,
+                                                       const gchar  *uuid);
 
 G_END_DECLS
 
