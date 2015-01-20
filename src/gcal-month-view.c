@@ -566,7 +566,7 @@ gcal_month_view_init (GcalMonthView *self)
   gtk_list_box_set_selection_mode (GTK_LIST_BOX (priv->events_list_box), GTK_SELECTION_NONE);
   gtk_list_box_set_header_func (GTK_LIST_BOX (priv->events_list_box), update_list_box_headers, self, NULL);
   gtk_style_context_remove_class (gtk_widget_get_style_context (priv->events_list_box), GTK_STYLE_CLASS_LIST);
-  button = gtk_button_new_with_label (_("Add new event..."));
+  button = gtk_button_new_with_label (_("Add new event…"));
   g_object_set (button, "margin", 6, "hexpand", TRUE, NULL);
   g_signal_connect (button, "clicked", G_CALLBACK (add_new_event_button_cb), self);
 
