@@ -20,26 +20,34 @@
      </packing>
     </child>
     <child>
-      <object class="GtkOverlay" id="sidebar">
+      <object class="GtkBox" id="sidebar">
         <property name="width_request">200</property>
-        <child type="overlay">
-          <object class="GtkButton" id="add_event_button">
-            <property name="visible">True</property>
-            <property name="valign">end</property>
-            <property name="label" translatable="yes">Add new event…</property>
-            <signal name="clicked" handler="add_event_clicked_cb" object="GcalYearView" swapped="yes" />
-          </object>
-        </child>
+        <property name="orientation">vertical</property>
         <child>
           <object class="GtkScrolledWindow">
             <property name="visible">True</property>
             <property name="shadow_type">out</property>
+            <property name="vexpand">True</property>
             <child>
               <object class="GtkListBox" id="events_sidebar">
                 <property name="visible">True</property>
               </object>
             </child>
           </object>
+          <packing>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkButton" id="add_event_button">
+            <property name="visible">True</property>
+            <property name="valign">end</property>
+            <property name="label" translatable="yes">Add new event…</property>
+            <signal name="clicked" handler="add_event_clicked_cb" object="GcalYearView" swapped="yes" />
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
         </child>
       </object>
     </child>
