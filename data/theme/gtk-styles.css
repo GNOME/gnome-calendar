@@ -117,6 +117,10 @@
     font-size: 11px;
 }
 
+GtkListBox.sidebar {
+    background-color: @theme_bg_color;
+}
+
 GcalYearView GtkScrolledWindow {
     border-top-width: 0;
     border-bottom-width: 0;
@@ -127,8 +131,16 @@ GcalYearView GtkButton {
     border-bottom-width: 0;
 }
 
-GcalYearView GtkListBox {
+GtkPopover.popover-sidebar {
     background-color: @theme_bg_color;
+}
+
+GtkScrolledWindow.popover-sidebar {
+    border-bottom-width: 0;
+}
+
+GtkButton.popover-sidebar {
+    border-radius: 0;
 }
 
 GcalEventWidget.slanted-start:dir(ltr) {
