@@ -1057,7 +1057,7 @@ gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
   GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (subscriber)->priv;
   ECalComponentDateTime dtstart, dtend;
 
-  if (priv->update_sidebar_needed || priv->start_selected_date->day == 0)
+  if (priv->update_sidebar_needed)
     return;
 
   e_cal_component_get_dtstart (comp, &dtstart);
@@ -1066,6 +1066,7 @@ gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
   /* FIXME: this implementation clear the sidebar are rebuild it
    * it should only add, what's new, and add it sorted in its position */
   /* XXX: implement using shift as data and GtkListBox sort_func */
+  /* XXX: comparing against zero is not reliable, but it can only result in TRUE */
   if (icaltime_compare_date_only (*(dtstart.value), *(priv->start_selected_date)) >= 0)
     priv->update_sidebar_needed = TRUE;
   else if (icaltime_compare_date_only (*(dtend.value), *(priv->end_selected_date)) <= 0)
