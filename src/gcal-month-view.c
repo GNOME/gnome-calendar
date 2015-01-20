@@ -1692,19 +1692,12 @@ void
 gcal_month_view_set_first_weekday (GcalMonthView *view,
                                    gint           day_nr)
 {
-  GcalMonthViewPrivate *priv;
-  icaltimetype *date;
+  GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (view);
 
-  priv = gcal_month_view_get_instance_private (view);
   priv->first_weekday = day_nr;
-
   /* update days_delay */
   if (priv->date != NULL)
-    {
-      date = gcal_month_view_get_initial_date (GCAL_VIEW (view));
-      priv->days_delay = (icaltime_day_of_week (*date) - priv->first_weekday + 6) % 7;
-      g_free (date);
-    }
+    priv->days_delay = (time_day_of_week (1, priv->date->month - 1, priv->date->year) - priv->first_weekday + 7) % 7;
 }
 
 /**
