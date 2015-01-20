@@ -1,3 +1,8 @@
+Major changes in 3.15.4:
+* Implemented new year-view
+* Added initial working search
+* Added appdata support for GNOME Software
+
 Major changes in 3.15.3.1:
 * Fixed bug in month-view with with 6 rows
 * Fixed bug in date-selector
