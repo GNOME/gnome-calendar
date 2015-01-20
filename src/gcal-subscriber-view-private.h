@@ -34,7 +34,8 @@ struct _GcalSubscriberViewPrivate
   GHashTable     *children;
 
   /**
-   * Hash containig single-day events, day of the month as key and a list of the events that belongs to this day
+   * Hash containig single-cell events, day of the month, on month-view, month of the year on year-view as key and
+   * a list of the events that belongs to this cell
    */
   GHashTable     *single_cell_children;
 

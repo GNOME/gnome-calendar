@@ -82,7 +82,7 @@ G_DEFINE_TYPE_WITH_CODE (GcalSubscriberView, gcal_subscriber_view, GTK_TYPE_CONT
 
 static void
 event_activated (GcalEventWidget *widget,
-		 gpointer         user_data)
+                 gpointer         user_data)
 {
   /* FIXME: implement clear_state vfunc in descendants */
   gcal_subscriber_view_clear_state (GCAL_SUBSCRIBER_VIEW (user_data));

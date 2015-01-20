@@ -231,6 +231,7 @@ gcal_application_activate (GApplication *application)
       g_settings_bind (priv->settings, "active-view", priv->window, "active-view",
                        G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
 
+      /* FIXME: remove me in favor of gtk_widget_show() */
       gtk_widget_show_all (priv->window);
     }
 }
