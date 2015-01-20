@@ -905,6 +905,7 @@ edit_dialog_closed (GtkDialog *dialog,
   ECalComponent *component;
   GcalView *view;
 
+  GList *widgets;
   gchar *uuid;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
@@ -954,7 +955,9 @@ edit_dialog_closed (GtkDialog *dialog,
 
       uuid = gcal_edit_dialog_get_event_uuid (edit_dialog);
       /* hide widget of the event */
-      gtk_widget_hide (gcal_subscriber_view_get_child_by_uuid (GCAL_SUBSCRIBER_VIEW (view), uuid));
+      widgets = gcal_view_get_children_by_uuid (view, uuid);
+      g_list_foreach (widgets, (GFunc) gtk_widget_hide, NULL);
+      g_list_free (widgets);
       g_free (uuid);
       break;
 
@@ -1049,18 +1052,18 @@ undo_remove_event (GtkButton *button,
 {
   GcalWindowPrivate *priv;
   gchar *uuid;
-  GtkWidget *event_widget;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
   if (priv->event_to_delete != NULL)
     {
+      GList *widgets;
       uuid = get_uuid_from_component (priv->event_to_delete->source, priv->event_to_delete->event_component);
-      event_widget = gcal_subscriber_view_get_child_by_uuid (GCAL_SUBSCRIBER_VIEW (priv->views[priv->active_view]),
-                                                             uuid);
-      gtk_widget_show (event_widget);
+      widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (priv->views[priv->active_view]), uuid);
+      g_list_foreach (widgets, (GFunc) gtk_widget_show, NULL);
 
       g_clear_pointer (&(priv->event_to_delete), g_free);
+      g_list_free (widgets);
       g_free (uuid);
 
       gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification),

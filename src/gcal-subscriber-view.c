@@ -35,6 +35,9 @@ static guint signals[NUM_SIGNALS] = { 0, };
 static void           event_activated                               (GcalEventWidget                   *widget,
                                                                      gpointer                           user_data);
 
+static void           event_visibility_changed                      (GtkWidget                         *widget,
+                                                                      gpointer                           user_data);
+
 static void           gcal_data_model_subscriber_interface_init      (ECalDataModelSubscriberInterface *iface);
 
 static void           gcal_subscriber_view_finalize                  (GObject                          *object);
@@ -87,6 +90,14 @@ event_activated (GcalEventWidget *widget,
   /* FIXME: implement clear_state vfunc in descendants */
   gcal_subscriber_view_clear_state (GCAL_SUBSCRIBER_VIEW (user_data));
   g_signal_emit (GCAL_SUBSCRIBER_VIEW (user_data), signals[EVENT_ACTIVATED], 0, widget);
+}
+
+static void
+event_visibility_changed(GtkWidget *widget,
+                         gpointer   user_data)
+{
+  GcalSubscriberViewPrivate *priv = GCAL_SUBSCRIBER_VIEW (user_data)->priv;
+  priv->children_changed = TRUE;
 }
 
 static void
@@ -470,4 +481,6 @@ _gcal_subscriber_view_setup_child (GcalSubscriberView *subscriber_view,
   if (gtk_widget_get_parent (child_widget) == NULL)
     gtk_widget_set_parent (child_widget, GTK_WIDGET (subscriber_view));
   g_signal_connect (child_widget, "activate", G_CALLBACK (event_activated), subscriber_view);
+  g_signal_connect (child_widget, "hide", G_CALLBACK (event_visibility_changed), subscriber_view);
+  g_signal_connect (child_widget, "show", G_CALLBACK (event_visibility_changed), subscriber_view);
 }
