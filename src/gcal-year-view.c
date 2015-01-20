@@ -48,6 +48,7 @@ struct _GcalYearViewPrivate
   GtkWidget    *navigator;
   GtkWidget    *sidebar;
   GtkWidget    *events_sidebar;
+  GtkWidget    *navigator_stack;
   GtkWidget    *navigator_sidebar;
 
   GtkWidget    *popover; /* Popover for popover_mode */
@@ -244,6 +245,20 @@ update_sidebar (GcalYearView *year_view)
   days_widgets_array = g_new0 (GList*, days_span);
 
   events = gcal_manager_get_events (priv->manager, priv->start_selected_date, priv->end_selected_date);
+
+  /* XXX: compare_date_only does not work if is_date field is different */
+  priv->start_selected_date->is_date = priv->current_date->is_date;
+  if (events == NULL && icaltime_compare_date_only (*(priv->start_selected_date), *(priv->current_date)) == 0)
+    {
+      days_span = 0;
+      gtk_stack_set_visible_child_name (GTK_STACK (priv->navigator_stack), "no-events");
+    }
+  else
+    {
+      gtk_stack_set_visible_child_name (GTK_STACK (priv->navigator_stack), "events-list");
+    }
+  priv->start_selected_date->is_date = 0;
+
   for (l = events; l != NULL; l = g_list_next (l))
     {
       GcalEventData *data = l->data;
@@ -1164,6 +1179,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, sidebar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, events_sidebar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator_stack);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator_sidebar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, popover);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, popover_sidebar);

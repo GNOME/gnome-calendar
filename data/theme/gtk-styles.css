@@ -118,8 +118,26 @@
     font-size: 11px;
 }
 
+.italic-label {
+    font-style: italic;
+}
+
 GtkListBox.sidebar {
     background-color: @theme_bg_color;
+}
+
+GtkBox.sidebar {
+    background-color: @theme_bg_color;
+    border-color: @borders;
+    border-style: solid;
+}
+
+GtkBox.sidebar:dir(ltr) {
+    border-left-width: 1px;
+}
+
+GtkBox.sidebar:dir(rtl) {
+    border-right-width: 1px;
 }
 
 GcalYearView GtkScrolledWindow {
