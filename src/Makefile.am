@@ -50,8 +50,6 @@ gnome_calendar_SOURCES =                                  \
     gcal-date-selector.h                                  \
     gcal-manager.c                                        \
     gcal-manager.h                                        \
-    gcal-nav-bar.h                                        \
-    gcal-nav-bar.c                                        \
     gcal-utils.c                                          \
     gcal-utils.h
 

@@ -20,7 +20,6 @@
 
 #include "gcal-window.h"
 
-#include "gcal-nav-bar.h"
 #include "gcal-manager.h"
 #include "gcal-view.h"
 #include "gcal-month-view.h"

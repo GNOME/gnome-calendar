@@ -36,7 +36,6 @@ EXTRA_DIST=                     \
   ui/date-selector.ui           \
   ui/edit-dialog.ui             \
   ui/menus.ui                   \
-  ui/nav_bar.ui                 \
   ui/search-view.ui             \
   ui/time-selector.ui           \
   ui/window.ui                  \
