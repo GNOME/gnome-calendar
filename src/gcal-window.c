@@ -56,7 +56,6 @@ typedef struct
 
   GtkWidget           *header_bar;
   GtkWidget           *search_bar;
-  GtkWidget           *nav_bar;
   GtkWidget           *views_overlay;
   GtkWidget           *views_stack;
   GtkWidget           *notification;
@@ -137,8 +136,6 @@ static void           search_event_selected              (GcalSearchView      *s
 static void           load_geometry                      (GcalWindow          *window);
 
 static gboolean       save_geometry                      (gpointer             user_data);
-
-static void           update_view                        (GcalWindow          *window);
 
 static void           view_changed                       (GObject             *object,
                                                           GParamSpec          *pspec,
@@ -310,8 +307,6 @@ date_updated (GtkButton  *button,
     }
   *(priv->active_date) = icaltime_normalize (*(priv->active_date));
   g_object_notify (user_data, "active-date");
-
-  update_view (GCAL_WINDOW (user_data));
 }
 
 static void
@@ -320,7 +315,6 @@ search_event_selected (GcalSearchView *search_view,
                        gpointer        user_data)
 {
   g_object_set (user_data, "active-date", date, NULL);
-  update_view (GCAL_WINDOW (user_data));
   gcal_window_set_search_mode (GCAL_WINDOW (user_data), FALSE);
 }
 
@@ -435,37 +429,6 @@ save_geometry (gpointer user_data)
 }
 
 /**
- * update_view:
- * @window:
- *
- * Update the headers on the navbar. Everything else on the application
- * updates itself on the date change.
- **/
-static void
-update_view (GcalWindow *window)
-{
-  GcalWindowPrivate *priv;
-
-  GtkWidget *widget;
-
-  gchar* header;
-
-  priv = gcal_window_get_instance_private (window);
-
-  widget = priv->views[priv->active_view];
-  if (widget != NULL)
-    {
-      header = gcal_view_get_left_header (GCAL_VIEW (widget));
-      g_object_set (priv->nav_bar, "left-header", header, NULL);
-      g_free (header);
-
-      header = gcal_view_get_right_header (GCAL_VIEW (widget));
-      g_object_set (priv->nav_bar, "right-header", header, NULL);
-      g_free (header);
-    }
-}
-
-/**
  * view_changed:
  * @object:
  * @pspec:
@@ -473,7 +436,7 @@ update_view (GcalWindow *window)
  *
  * Called every time the user activate the stack-switcher
  * Retrieve the enum value representing the view, update internal
- * @active_view with it and call @update_view
+ * @active_view with it
  **/
 static void
 view_changed (GObject    *object,
@@ -505,8 +468,6 @@ view_changed (GObject    *object,
 
   priv->active_view = view_type;
   g_object_notify (G_OBJECT (user_data), "active-view");
-
-  update_view (GCAL_WINDOW (user_data));
 }
 
 static void
@@ -1168,7 +1129,6 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, header_bar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, main_box);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, menu_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, nav_bar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_bar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendars_button);
@@ -1355,9 +1315,6 @@ gcal_window_set_property (GObject      *object,
       gtk_widget_show (priv->views[priv->active_view]);
       gtk_stack_set_visible_child (GTK_STACK (priv->views_stack),
                                    priv->views[priv->active_view]);
-
-
-      update_view (GCAL_WINDOW (object));
       return;
     case PROP_ACTIVE_DATE:
       if (priv->active_date != NULL)
