@@ -62,6 +62,8 @@ void              gcal_year_view_set_first_weekday  (GcalYearView *year_view,
                                                      gint          nr_day);
 void              gcal_year_view_set_use_24h_format (GcalYearView *year_view,
                                                      gboolean      use_24h_format);
+void              gcal_year_view_set_current_date   (GcalYearView *year_view,
+                                                     icaltimetype *current_date);
 
 G_END_DECLS
 

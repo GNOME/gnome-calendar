@@ -1130,13 +1130,6 @@ gcal_year_view_set_manager (GcalYearView *year_view,
                             GcalManager  *manager)
 {
   year_view->priv->manager = manager;
-
-  /* FIXME: move into window */
-  year_view->priv->current_date = g_new0 (icaltimetype, 1);
-  *(year_view->priv->current_date) =
-  icaltime_current_time_with_zone (gcal_manager_get_system_timezone (year_view->priv->manager));
-  *(year_view->priv->current_date) = icaltime_set_timezone (year_view->priv->current_date,
-                                                            gcal_manager_get_system_timezone (year_view->priv->manager));
 }
 
 void
@@ -1151,4 +1144,19 @@ gcal_year_view_set_use_24h_format (GcalYearView *year_view,
                                    gboolean      use_24h_format)
 {
   year_view->priv->use_24h_format = use_24h_format;
+}
+
+void
+gcal_year_view_set_current_date (GcalYearView *year_view,
+                                 icaltimetype *current_date)
+{
+  /* FIXME: move into window */
+  year_view->priv->current_date = g_new0 (icaltimetype, 1);
+  *(year_view->priv->current_date) =
+  icaltime_current_time_with_zone (gcal_manager_get_system_timezone (year_view->priv->manager));
+  *(year_view->priv->current_date) = icaltime_set_timezone (year_view->priv->current_date,
+                                                            gcal_manager_get_system_timezone (year_view->priv->manager));
+
+  /* Launches update */
+  update_sidebar (year_view);
 }
