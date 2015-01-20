@@ -1299,6 +1299,9 @@ gcal_window_constructed (GObject *object)
   gcal_search_view_connect (GCAL_SEARCH_VIEW (priv->search_view), priv->manager);
   gcal_search_view_set_time_format (GCAL_SEARCH_VIEW (priv->search_view), use_24h_format);
 
+  /* current date hook */
+  gcal_year_view_set_current_date (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), NULL);
+
   /* signals connection/handling */
   /* only GcalView implementations */
   for (i = 0; i < 4; ++i)
