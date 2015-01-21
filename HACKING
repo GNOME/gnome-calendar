@@ -20,3 +20,11 @@ Code formating and ordering
 
 + Line splitting will work accordingly to Gtk+ code style, adding the following:
   1. Pure mathematic calculation can extend over the 120 pixel line
+
+Contributing guidelines
+=======================
+
++ Fill a bug, attach a patch, wait for review (ping the maintainers if you think
+we took too long)
++ If you patch touch any autotools related files at all in any non trivial way,
+ensure **make distcheck** pass before posting the patch
