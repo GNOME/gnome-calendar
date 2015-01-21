@@ -4,6 +4,11 @@ desktopdir = $(datadir)/applications
 desktop_in_files = org.gnome.Calendar.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
+@INTLTOOL_XML_RULE@
+appdatadir = $(datadir)/appdata
+appdata_DATA = $(appdata_in_files:.xml.in=.xml)
+appdata_in_files = appdata/org.gnome.Calendar.appdata.xml.in
+
 @INTLTOOL_DESKTOP_RULE@
 
 servicedir = $(datadir)/dbus-1/services
@@ -28,14 +33,9 @@ gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 .PRECIOUS: $(gsettings_SCHEMAS)
 
 @INTLTOOL_XML_NOMERGE_RULE@
-@GSETTINGS_RULES@
-
-@INTLTOOL_XML_RULE@
-appdatadir = $(datadir)/appdata
-appdata_DATA = $(appdata_in_files:.xml.in=.xml)
-appdata_in_files = appdata/org.gnome.Calendar.appdata.xml.in
 
 EXTRA_DIST=                     \
+  appdata/org.gnome.Calendar.appdata.xml \
   org.gnome.Calendar.desktop    \
   calendar.gresource.xml        \
   ui/date-selector.ui           \
