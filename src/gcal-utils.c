@@ -398,15 +398,59 @@ get_uuid_from_component (ESource       *source,
   return uuid;
 }
 
+/**
+ * get_first_weekday:
+ *
+ * Copied from Clocks, which by itself is
+ * copied from GtkCalendar.
+ *
+ * Returns: the first weekday, from 0 to 6
+ */
 gint
 get_first_weekday (void)
 {
- const char *const s = nl_langinfo(_NL_TIME_FIRST_WEEKDAY);
+  int week_start;
+#ifdef HAVE__NL_TIME_FIRST_WEEKDAY
+  union { unsigned int word; char *string; } langinfo;
+  int week_1stday = 0;
+  int first_weekday = 1;
+  guint week_origin;
+#else
+  char *gtk_week_start;
+#endif
 
- if (s && *s >= 1 && *s <= 7)
-   return ((int)*s) - 1;
+#ifdef HAVE__NL_TIME_FIRST_WEEKDAY
+  langinfo.string = nl_langinfo (_NL_TIME_FIRST_WEEKDAY);
+  first_weekday = langinfo.string[0];
+  langinfo.string = nl_langinfo (_NL_TIME_WEEK_1STDAY);
+  week_origin = langinfo.word;
+  if (week_origin == 19971130) /* Sunday */
+    week_1stday = 0;
+  else if (week_origin == 19971201) /* Monday */
+    week_1stday = 1;
+  else
+    g_warning ("Unknown value of _NL_TIME_WEEK_1STDAY.\n");
 
- return 0;
+  week_start = (week_1stday + first_weekday - 1) % 7;
+#else
+  /* Use a define to hide the string from xgettext */
+# define GTK_WEEK_START "calendar:week_start:0"
+  gtk_week_start = dgettext ("gtk30", GTK_WEEK_START);
+
+  if (strncmp (gtk_week_start, "calendar:week_start:", 20) == 0)
+    week_start = *(gtk_week_start + 20) - '0';
+  else
+    week_start = -1;
+
+  if (week_start < 0 || week_start > 6)
+    {
+      g_warning ("Whoever translated calendar:week_start:0 for GTK+ "
+                 "did so wrongly.\n");
+      week_start = 0;
+    }
+#endif
+
+  return week_start;
 }
 
 /**
