@@ -1040,10 +1040,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
         }
     }
 
-  /* FIXME: remove on Gtk+ 3.15.4 release */
-  if (g_hash_table_size (ppriv->overflow_cells) != 0)
-    gtk_widget_queue_draw_area (widget, allocation->x, allocation->y, allocation->width, allocation->height);
-
   ppriv->children_changed = FALSE;
 }
 
