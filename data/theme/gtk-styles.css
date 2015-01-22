@@ -162,28 +162,8 @@ GtkButton.popover-sidebar {
     border-radius: 0;
 }
 
-GcalEventWidget.slanted-start:dir(ltr) {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
-GcalEventWidget.slanted-end:dir(ltr) {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-GcalEventWidget.slanted-start:dir(rtl) {
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-GcalEventWidget.slanted-end:dir(rtl) {
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
-}
-
 GcalEventWidget {
-    border-radius: 6px;
+    border-radius: 3px;
     margin-top: 2px;
     margin-left: 4px;
     margin-bottom: 2px;

@@ -22,6 +22,7 @@
 #endif
 
 #include "gcal-application.h"
+#include "css-code.h"
 #include "gcal-window.h"
 
 #include <glib.h>
@@ -30,7 +31,6 @@
 #include <glib/gi18n.h>
 
 #define CSS_FILE "resource:///org/gnome/calendar/gtk-styles.css"
-#define CSS_TEMPLATE "GcalEventWidget.color-%d { background-color: %s; }"
 
 typedef struct
 {
@@ -121,7 +121,10 @@ source_added_cb (GcalManager *manager,
   gint i, arr_length = 0;
   ESourceSelectable *extension;
   GQuark color_id;
+  const gchar* color_str;
 
+  gchar *css_snippet, *bkg_color, *slanted_edge_both_ltr, *slanted_edge_both_rtl;
+  gchar *slanted_edge_start_ltr, *slanted_edge_start_rtl, *slanted_edge_end_ltr, *slanted_edge_end_rtl;
   gchar **new_css_snippets;
   gchar *new_css_data;
 
@@ -131,6 +134,7 @@ source_added_cb (GcalManager *manager,
 
   extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
   color_id = g_quark_from_string (e_source_selectable_get_color (extension));
+  color_str = e_source_selectable_get_color (extension);
 
   if (priv->css_code_snippets != NULL)
     arr_length = g_strv_length (priv->css_code_snippets);
@@ -139,7 +143,39 @@ source_added_cb (GcalManager *manager,
 
   for (i = 0; i < arr_length; i++)
     new_css_snippets[i] = priv->css_code_snippets[i];
-  new_css_snippets[arr_length] = g_strdup_printf (CSS_TEMPLATE, color_id, e_source_selectable_get_color (extension));
+
+  bkg_color = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
+  slanted_edge_both_ltr =
+      g_strdup_printf (CSS_TEMPLATE_EDGE_BOTH, color_id,
+                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str,
+                       color_str, color_str, color_str, color_str, color_str, color_str, color_str);
+  slanted_edge_both_rtl =
+      g_strdup_printf (CSS_TEMPLATE_EDGE_BOTH_RTL, color_id,
+                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str,
+                       color_str, color_str, color_str, color_str, color_str, color_str, color_str);
+  slanted_edge_end_ltr =
+      g_strdup_printf (CSS_TEMPLATE_EDGE, color_id,
+                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
+  slanted_edge_start_ltr =
+      g_strdup_printf (CSS_TEMPLATE_EDGE_START, color_id,
+                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
+  slanted_edge_end_rtl =
+      g_strdup_printf (CSS_TEMPLATE_EDGE_RTL, color_id,
+                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
+  slanted_edge_start_rtl =
+      g_strdup_printf (CSS_TEMPLATE_EDGE_START_RTL, color_id,
+                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
+  css_snippet = g_strconcat (bkg_color, slanted_edge_both_ltr, slanted_edge_both_rtl,
+                             slanted_edge_end_ltr, slanted_edge_start_ltr,
+                             slanted_edge_end_rtl, slanted_edge_start_rtl, NULL);
+  new_css_snippets[arr_length] = css_snippet;
+  g_free (bkg_color);
+  g_free (slanted_edge_both_ltr);
+  g_free (slanted_edge_both_rtl);
+  g_free (slanted_edge_end_ltr);
+  g_free (slanted_edge_start_ltr);
+  g_free (slanted_edge_start_rtl);
+  g_free (slanted_edge_end_rtl);
 
   if (priv->css_code_snippets != NULL)
     g_free (priv->css_code_snippets); /* shallow free, cause I'm just moving the pointers */
@@ -486,3 +522,4 @@ gcal_application_get_settings (GcalApplication *app)
   priv = gcal_application_get_instance_private (app);
   return priv->settings;
 }
+
