@@ -24,6 +24,8 @@ org.gnome.Calendar.service:
 	            echo 'Exec=${bindir}/gnome-calendar --gapplication-service') > $@.tmp && \
 	            mv $@.tmp $@
 
+@GSETTINGS_RULES@
+
 gsettings_ENUM_NAMESPACE = org.gnome.calendar
 gsettings_ENUM_FILES = \
 	$(top_srcdir)/src/gcal-utils.h
