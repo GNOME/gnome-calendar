@@ -308,6 +308,8 @@ update_sidebar (GcalYearView *year_view)
                                                             cloned_child,
                                                             (GCompareFunc) gcal_event_widget_compare_for_single_day);
 
+              date.is_date = dt_start->is_date;
+              start_comparison = icaltime_compare (*dt_start, date);
               end_comparison = icaltime_compare (second_date, *dt_end);
               if (start_comparison == -1 && end_comparison == -1)
                 gtk_style_context_add_class (gtk_widget_get_style_context (cloned_child), "slanted");
