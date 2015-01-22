@@ -348,9 +348,12 @@ rebuild_popover_for_day (GcalMonthView *view,
   struct tm tm_date;
   gchar *markup;
 
+  icaltimetype date, second_date;
+  const icaltimetype *dt_start, *dt_end;
+  gint start_comparison, end_comparison;
+
   /* placement helpers */
-  gdouble start_grid_y;
-  gdouble cell_width, cell_height;
+  gdouble start_grid_y, cell_width, cell_height;
 
   gint shown_rows;
 
@@ -374,12 +377,37 @@ rebuild_popover_for_day (GcalMonthView *view,
   gtk_container_foreach (GTK_CONTAINER (priv->events_list_box), (GtkCallback) gtk_widget_destroy, NULL);
 
   l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (priv->pressed_overflow_indicator));
+  if (l != NULL)
+    {
+      date = *(priv->date);
+      date.day = day;
+
+      second_date = date;
+
+      date.hour = 0;
+      date.minute = 0;
+      second_date.hour = 23;
+      second_date.minute =59;
+    }
   for (; l != NULL; l = g_list_next (l))
     {
       /* FIXME: mark the widgets properly with CSS tags */
       child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (l->data));
       gtk_container_add (GTK_CONTAINER (priv->events_list_box), child_widget);
       _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (view), child_widget);
+
+      dt_start = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (child_widget));
+      dt_end = gcal_event_widget_peek_end_date (GCAL_EVENT_WIDGET (child_widget));
+
+      date.is_date = dt_start->is_date;
+      start_comparison = icaltime_compare (*dt_start, date);
+      end_comparison = icaltime_compare (second_date, *dt_end);
+      if (start_comparison == -1 && end_comparison == -1)
+        gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted");
+      else if (start_comparison == -1)
+        gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted-start");
+      else if (end_comparison == -1)
+        gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted-end");
     }
 
   /* placement calculation */
@@ -923,9 +951,19 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                   _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (widget), child_widget);
                   gtk_widget_show (child_widget);
 
+                  if (i != cells->len - 1)
+                    gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted");
+                  else
+                    gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted-start");
+
                   aux = g_hash_table_lookup (ppriv->children, uuid);
                   aux = g_list_append (aux, child_widget);
                 }
+              else if (i != cells->len - 1)
+                {
+                  gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted-end");
+                }
+
               gtk_widget_size_allocate (child_widget, &child_allocation);
               g_hash_table_remove (ppriv->hidden_as_overflow, uuid);
 
