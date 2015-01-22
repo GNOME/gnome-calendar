@@ -391,7 +391,6 @@ rebuild_popover_for_day (GcalMonthView *view,
     }
   for (; l != NULL; l = g_list_next (l))
     {
-      /* FIXME: mark the widgets properly with CSS tags */
       child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (l->data));
       gtk_container_add (GTK_CONTAINER (priv->events_list_box), child_widget);
       _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (view), child_widget);
@@ -904,8 +903,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
         }
       j += priv->days_delay;
       last_cell = 7 * ((j - 1) / 7)+ 6 * priv->k + sw * ((j - 1) % 7);
-
-      /* FIXME missing mark widgets with continuos tags */
 
       first_row = first_cell / 7;
       last_row = last_cell / 7;
