@@ -212,7 +212,7 @@ update_sidebar (GcalYearView *year_view)
       priv->start_selected_date->month = selected_data.start_month + 1;
       priv->start_selected_date->year = priv->date->year;
 
-      priv->end_selected_date->day = selected_data.end_day + 1;
+      priv->end_selected_date->day = selected_data.end_day;
       priv->end_selected_date->month = selected_data.end_month + 1;
       priv->end_selected_date->year = priv->date->year;
       priv->end_selected_date->hour = 23;
@@ -226,7 +226,6 @@ update_sidebar (GcalYearView *year_view)
       priv->start_selected_date->minute = 0;
 
       *(priv->end_selected_date) = *(priv->current_date);
-      priv->end_selected_date->day += 1;
       priv->end_selected_date->hour = 23;
       priv->end_selected_date->minute = 59;
       *(priv->end_selected_date) = icaltime_normalize (*(priv->end_selected_date));
