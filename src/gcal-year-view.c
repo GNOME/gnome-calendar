@@ -49,6 +49,7 @@ struct _GcalYearViewPrivate
   GtkWidget    *sidebar;
   GtkWidget    *events_sidebar;
   GtkWidget    *navigator_stack;
+  GtkWidget    *no_events_title;
   GtkWidget    *navigator_sidebar;
 
   GtkWidget    *popover; /* Popover for popover_mode */
@@ -247,17 +248,37 @@ update_sidebar (GcalYearView *year_view)
   events = gcal_manager_get_events (priv->manager, priv->start_selected_date, priv->end_selected_date);
 
   /* XXX: compare_date_only does not work if is_date field is different */
-  priv->start_selected_date->is_date = priv->current_date->is_date;
-  if (events == NULL && icaltime_compare_date_only (*(priv->start_selected_date), *(priv->current_date)) == 0)
+  if (events == NULL)
     {
+      gchar *title;
+      gboolean has_range = FALSE;
       days_span = 0;
+
+      has_range = (priv->start_selected_date->day != priv->end_selected_date->day ||
+                   priv->start_selected_date->month != priv->end_selected_date->month);
+
+      if (priv->current_date->day == priv->start_selected_date->day &&
+          priv->current_date->month == priv->start_selected_date->month &&
+          priv->current_date->year == priv->start_selected_date->year)
+        {
+          title = g_strdup_printf ("%s%s", _("Today"), has_range ? "…" : "");
+        }
+      else
+        {
+          title = g_strdup_printf ("%s %d%s",
+                                   gcal_get_month_name (priv->start_selected_date->month - 1),
+                                   priv->start_selected_date->day,
+                                   has_range ? "…" : "");
+        }
+
+      gtk_label_set_text (GTK_LABEL (priv->no_events_title), title);
+      g_free (title);
       gtk_stack_set_visible_child_name (GTK_STACK (priv->navigator_stack), "no-events");
     }
   else
     {
       gtk_stack_set_visible_child_name (GTK_STACK (priv->navigator_stack), "events-list");
     }
-  priv->start_selected_date->is_date = 0;
 
   for (l = events; l != NULL; l = g_list_next (l))
     {
@@ -1186,6 +1207,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, events_sidebar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator_stack);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator_sidebar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, no_events_title);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, popover);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, popover_sidebar);
 
