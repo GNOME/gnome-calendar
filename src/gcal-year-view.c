@@ -1097,7 +1097,7 @@ gcal_year_view_get_children_by_uuid (GcalView    *view,
   for (l = children; l != NULL; l = g_list_next (l))
     {
       GcalEventWidget *child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
-      if (g_strcmp0 (uuid, gcal_event_widget_peek_uuid (child_widget)) == 0)
+      if (child_widget != NULL && g_strcmp0 (uuid, gcal_event_widget_peek_uuid (child_widget)) == 0)
         result = g_list_append (result, child_widget);
     }
   g_list_free (children);
@@ -1154,7 +1154,11 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
     {
       GcalEventWidget *child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
       if (child_widget != NULL && g_strcmp0 (uuid, gcal_event_widget_peek_uuid (child_widget)) == 0)
-        gtk_widget_destroy (GTK_WIDGET (child_widget));
+        {
+          if (g_list_length (children) == 1)
+            priv->update_sidebar_needed = TRUE;
+          gtk_widget_destroy (GTK_WIDGET (l->data));
+        }
     }
   g_list_free (children);
   g_free (uuid);
