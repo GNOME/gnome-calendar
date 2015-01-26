@@ -7,7 +7,7 @@ desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_XML_RULE@
 appdatadir = $(datadir)/appdata
 appdata_DATA = $(appdata_in_files:.xml.in=.xml)
-appdata_in_files = appdata/org.gnome.Calendar.appdata.xml.in
+appdata_in_files = $(srcdir)/appdata/org.gnome.Calendar.appdata.xml.in
 
 @INTLTOOL_DESKTOP_RULE@
 
