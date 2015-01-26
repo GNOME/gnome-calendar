@@ -8,5 +8,6 @@ Type=Application
 StartupNotify=true
 OnlyShowIn=GNOME;
 Categories=GNOME;GTK;Utility;Core;
+_Keywords=Calendar;Event;Reminder;
 MimeType=text/calendar;
 DBusActivatable=true
