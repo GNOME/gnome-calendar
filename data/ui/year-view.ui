@@ -97,7 +97,7 @@
           <object class="GtkButton">
             <property name="visible">True</property>
             <property name="valign">end</property>
-            <property name="label" translatable="yes">Add new event…</property>
+            <property name="label" translatable="yes">Add Event…</property>
             <signal name="clicked" handler="add_event_clicked_cb" object="GcalYearView" swapped="yes" />
           </object>
           <packing>

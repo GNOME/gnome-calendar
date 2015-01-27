@@ -3,7 +3,7 @@
   <menu id="appmenu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">_New Event</attribute>
+        <attribute name="label" translatable="yes">Add Eve_nt…</attribute>
         <attribute name="action">app.new</attribute>
         <attribute name="accel">&lt;Primary&gt;n</attribute>
       </item>
@@ -28,7 +28,7 @@
   <menu id="winmenu">
     <section>
       <item>
-        <attribute name="label" translatable="yes">_New Event</attribute>
+        <attribute name="label" translatable="yes">Add Eve_nt…</attribute>
         <attribute name="action">app.new</attribute>
       </item>
       <item>
