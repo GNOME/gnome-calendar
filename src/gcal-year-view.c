@@ -915,6 +915,8 @@ add_event_clicked_cb (GcalYearView *year_view,
     {
       start_date = gcal_dup_icaltime (priv->start_selected_date);
       end_date = gcal_dup_icaltime (priv->end_selected_date);
+      end_date->day += 1;
+      *end_date = icaltime_normalize (*end_date);
       end_date->is_date = 1;
     }
 
