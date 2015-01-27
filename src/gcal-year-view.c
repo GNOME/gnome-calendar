@@ -239,13 +239,11 @@ update_sidebar (GcalYearView *year_view)
 
   gtk_container_foreach (GTK_CONTAINER (priv->events_sidebar), (GtkCallback) gtk_widget_destroy, NULL);
 
-  days_span = icaltime_day_of_year(*(priv->end_selected_date)) - icaltime_day_of_year(*(priv->start_selected_date));
-  days_span = days_span == 0 ? 1 : days_span;
+  days_span = icaltime_day_of_year(*(priv->end_selected_date)) - icaltime_day_of_year(*(priv->start_selected_date)) + 1;
   days_widgets_array = g_new0 (GList*, days_span);
 
   events = gcal_manager_get_events (priv->manager, priv->start_selected_date, priv->end_selected_date);
 
-  /* XXX: compare_date_only does not work if is_date field is different */
   if (events == NULL)
     {
       gchar *title;
@@ -255,9 +253,7 @@ update_sidebar (GcalYearView *year_view)
       has_range = (priv->start_selected_date->day != priv->end_selected_date->day ||
                    priv->start_selected_date->month != priv->end_selected_date->month);
 
-      if (priv->current_date->day == priv->start_selected_date->day &&
-          priv->current_date->month == priv->start_selected_date->month &&
-          priv->current_date->year == priv->start_selected_date->year)
+      if (icaltime_compare_date (priv->current_date, priv->start_selected_date) == 0)
         {
           title = g_strdup_printf ("%s%s", _("Today"), has_range ? "…" : "");
         }
@@ -308,8 +304,8 @@ update_sidebar (GcalYearView *year_view)
               icaltime_adjust (&second_date, 1, 0, 0, 0);
             }
 
-          start_comparison = icaltime_compare (*dt_start, date);
-          if (start_comparison == 0 || start_comparison == -1 || (date.day == dt_start->day && date.month == dt_start->month))
+          start_comparison = icaltime_compare_date (dt_start, &date);
+          if (start_comparison <= 0)
             {
               if (child_widget_used)
                 cloned_child = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
@@ -327,14 +323,16 @@ update_sidebar (GcalYearView *year_view)
                                                             cloned_child,
                                                             (GCompareFunc) gcal_event_widget_compare_for_single_day);
 
-              date.is_date = dt_start->is_date;
-              start_comparison = icaltime_compare (*dt_start, date);
-              end_comparison = icaltime_compare (second_date, *dt_end);
-              if (start_comparison == -1 && end_comparison == -1)
+              end_comparison = icaltime_compare_date (&second_date, dt_end);
+              /* XXX: hack ensuring allday events with end_date a day after */
+              if (end_comparison == -1 && second_date.year == dt_end->year && dt_end->is_date == 1)
+                end_comparison = 0;
+
+              if (start_comparison < 0 && end_comparison < 0)
                 gtk_style_context_add_class (gtk_widget_get_style_context (cloned_child), "slanted");
-              else if (start_comparison == -1)
+              else if (start_comparison < 0)
                 gtk_style_context_add_class (gtk_widget_get_style_context (cloned_child), "slanted-start");
-              else if (end_comparison == -1)
+              else if (end_comparison < 0)
                 gtk_style_context_add_class (gtk_widget_get_style_context (cloned_child), "slanted-end");
               else
                 break;
@@ -403,9 +401,7 @@ update_sidebar_headers (GtkListBoxRow *row,
       date = *(priv->start_selected_date);
       icaltime_adjust (&date, row_shift, 0, 0, 0);
 
-      /* XXX: compare_date_only does not work if is_date field is different */
-      date.is_date = priv->current_date->is_date;
-      if (icaltime_compare_date_only (date, *(priv->current_date)) == 0)
+      if (icaltime_compare_date (&date, priv->current_date) == 0)
         label_str = g_strdup (_("Today"));
       else
         label_str = g_strdup_printf ("%s %d", gcal_get_month_name (date.month  - 1), date.day);
@@ -1120,8 +1116,8 @@ gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
    * it should only add, what's new, and add it sorted in its position */
   /* XXX: implement using shift as data and GtkListBox sort_func */
   /* XXX: comparing against zero is not reliable, but it can only result in TRUE */
-  start_comparison = icaltime_compare (*(dtstart.value), *(priv->start_selected_date));
-  end_comparison = icaltime_compare (*(dtend.value), *(priv->end_selected_date));
+  start_comparison = icaltime_compare_date (dtstart.value, priv->start_selected_date);
+  end_comparison = icaltime_compare_date (dtend.value, priv->end_selected_date);
   if (start_comparison >= 0 || end_comparison <= 0 || (start_comparison < 0 && end_comparison > 0))
     priv->update_sidebar_needed = TRUE;
 
