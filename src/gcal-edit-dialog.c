@@ -426,7 +426,7 @@ update_time (GtkEntry   *entry,
                                        update_time,
                                        user_data);
       g_signal_handlers_unblock_by_func (priv->end_time_selector,
-                                       update_date,
+                                       update_time,
                                        user_data);
     }
 
