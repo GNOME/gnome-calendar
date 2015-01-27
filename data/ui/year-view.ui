@@ -109,7 +109,6 @@
   </template>
   <object class="GtkPopover" id="popover">
     <property name="relative_to">navigator</property>
-    <property name="border_width">6</property>
     <style>
       <class name="popover-sidebar" />
     </style>
