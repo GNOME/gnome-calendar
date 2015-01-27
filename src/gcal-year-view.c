@@ -53,7 +53,6 @@ struct _GcalYearViewPrivate
   GtkWidget    *navigator_sidebar;
 
   GtkWidget    *popover; /* Popover for popover_mode */
-  GtkWidget    *popover_sidebar;
 
   /* manager singleton */
   GcalManager  *manager;
@@ -905,6 +904,9 @@ add_event_clicked_cb (GcalYearView *year_view,
   GcalYearViewPrivate *priv = year_view->priv;
   icaltimetype *start_date, *end_date = NULL;
 
+  if (priv->popover_mode)
+    gtk_widget_hide (priv->popover);
+
   if (priv->start_selected_date->day == 0)
     {
       start_date = gcal_dup_icaltime (priv->current_date);
@@ -1036,35 +1038,28 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
   gtk_style_context_restore (context);
 
   priv->popover_mode = (alloc->width < NAVIGATOR_CELL_WIDTH * 4 + padding_left * 8 + SIDEBAR_PREFERRED_WIDTH);
-  if (gtk_widget_get_visible (priv->sidebar) == priv->popover_mode)
-    gtk_widget_set_visible (priv->sidebar, !priv->popover_mode);
-
   if (priv->popover_mode && !gtk_widget_is_ancestor (priv->events_sidebar, priv->popover))
     {
-      GtkWidget *parent = gtk_widget_get_parent (priv->events_sidebar);
-      g_object_ref (priv->events_sidebar);
+      g_object_ref (priv->sidebar);
 
-      gtk_container_remove (GTK_CONTAINER (parent), priv->events_sidebar);
-      gtk_container_add (GTK_CONTAINER (priv->popover_sidebar), priv->events_sidebar);
+      gtk_container_remove (GTK_CONTAINER (widget), priv->sidebar);
+      gtk_container_add (GTK_CONTAINER (priv->popover), priv->sidebar);
 
-      gtk_widget_show_all (priv->events_sidebar);
-      g_object_unref (priv->events_sidebar);
-      gtk_widget_destroy (parent);
+      g_object_unref (priv->sidebar);
 
+      gtk_widget_show_all (priv->sidebar);
       popover_closed_cb (GCAL_YEAR_VIEW (widget), GTK_POPOVER (priv->popover));
     }
   else if (!priv->popover_mode && gtk_widget_is_ancestor (priv->events_sidebar, priv->popover))
     {
-      GtkWidget *parent = gtk_widget_get_parent (priv->events_sidebar);
-      g_object_ref (priv->events_sidebar);
+      g_object_ref (priv->sidebar);
 
-      gtk_container_remove (GTK_CONTAINER (parent), priv->events_sidebar);
-      gtk_container_add (GTK_CONTAINER (priv->navigator_sidebar), priv->events_sidebar);
+      gtk_container_remove (GTK_CONTAINER (priv->popover), priv->sidebar);
+      gtk_box_pack_end (GTK_BOX (widget), priv->sidebar, FALSE, TRUE, 0);
 
-      gtk_widget_show_all (priv->events_sidebar);
-      g_object_unref (priv->events_sidebar);
-      gtk_widget_destroy (parent);
+      g_object_unref (priv->sidebar);
 
+      gtk_widget_show (priv->sidebar);
       g_signal_handlers_block_by_func (priv->popover, popover_closed_cb, widget);
       gtk_widget_hide (priv->popover);
       g_signal_handlers_unblock_by_func (priv->popover, popover_closed_cb, widget);
@@ -1212,7 +1207,6 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator_sidebar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, no_events_title);
   gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, popover);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, popover_sidebar);
 
   gtk_widget_class_bind_template_callback (widget_class, draw_navigator);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_press_cb);

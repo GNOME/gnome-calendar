@@ -17,6 +17,7 @@
       </object>
      <packing>
        <property name="position">0</property>
+       <property name="pack_type">start</property>
      </packing>
     </child>
     <child>
@@ -108,45 +109,11 @@
   </template>
   <object class="GtkPopover" id="popover">
     <property name="relative_to">navigator</property>
+    <property name="border_width">6</property>
     <style>
       <class name="popover-sidebar" />
     </style>
     <signal name="closed" handler="popover_closed_cb" object="GcalYearView" swapped="yes" />
-    <child>
-      <object class="GtkBox">
-        <property name="visible">True</property>
-        <property name="width_request">200</property>
-        <property name="orientation">vertical</property>
-        <property name="margin">6</property>
-        <child>
-          <object class="GtkScrolledWindow" id="popover_sidebar">
-            <property name="visible">True</property>
-            <property name="shadow_type">out</property>
-            <property name="vexpand">True</property>
-            <style>
-              <class name="popover-sidebar" />
-            </style>
-          </object>
-          <packing>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton">
-            <property name="visible">True</property>
-            <property name="valign">end</property>
-            <property name="label" translatable="yes">Add new event…</property>
-            <style>
-              <class name="popover-sidebar" />
-            </style>
-            <signal name="clicked" handler="add_event_clicked_cb" object="GcalYearView" swapped="yes" />
-          </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
   </object>
 </interface>
  
