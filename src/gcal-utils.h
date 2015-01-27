@@ -90,6 +90,9 @@ ECalComponent*  build_component_from_details                    (const gchar    
                                                                  const icaltimetype    *initial_date,
                                                                  const icaltimetype    *final_date);
 
+gint            icaltime_compare_date                           (const icaltimetype    *date1,
+                                                                 const icaltimetype    *date2);
+
 /* code brought from evolution */
 gsize           e_strftime_fix_am_pm                            (gchar                 *str,
                                                                  gsize                  max,

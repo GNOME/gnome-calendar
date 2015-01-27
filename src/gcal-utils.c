@@ -503,6 +503,30 @@ build_component_from_details (const gchar        *summary,
   return event;
 }
 
+/**
+ * icaltime_compare_date:
+ * @date1:
+ * @date2:
+ *
+ * Compare date parts of {@link icaltimetype} objects. Return negative value, 0 or positive value
+ * accordingly if date1 is before, same day of after date2.
+ * As a bonus it returns the amount of days passed between two days on the same year.
+ *
+ * Returns: negative, 0 or positive
+ **/
+gint
+icaltime_compare_date (const icaltimetype *date1,
+                       const icaltimetype *date2)
+{
+  if (date1->year < date2->year)
+    return -1;
+  else if (date1->year > date2->year)
+    return 1;
+  else
+    return time_day_of_year (date1->day, date1->month - 1, date1->year) -
+           time_day_of_year (date2->day, date2->month - 1, date2->year);
+}
+
 /* Function to do a last minute fixup of the AM/PM stuff if the locale
  * and gettext haven't done it right. Most English speaking countries
  * except the USA use the 24 hour clock (UK, Australia etc). However
