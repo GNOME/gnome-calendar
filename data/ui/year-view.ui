@@ -58,7 +58,7 @@
                      <property name="visible">True</property>
                      <property name="halign">start</property>
                      <property name="margin">6</property>
-                     <property name="label" translatable="True">Today</property>
+                     <property name="label" translatable="yes">Today</property>
                       <style>
                         <class name="sidebar-header" />
                       </style>
@@ -72,7 +72,7 @@
                      <property name="visible">True</property>
                      <property name="halign">start</property>
                      <property name="margin_start">6</property>
-                     <property name="label" translatable="True">No events</property>
+                     <property name="label" translatable="yes">No events</property>
                       <style>
                         <class name="dim-label" />
                         <class name="italic-label"/>
