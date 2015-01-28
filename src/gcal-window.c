@@ -333,6 +333,7 @@ update_current_date (GcalWindow *window)
   *(priv->current_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (priv->manager));
   *(priv->current_date) = icaltime_set_timezone (priv->current_date, gcal_manager_get_system_timezone (priv->manager));
 
+  gcal_month_view_set_current_date (GCAL_MONTH_VIEW (priv->month_view), priv->current_date);
   gcal_year_view_set_current_date (GCAL_YEAR_VIEW (priv->year_view), priv->current_date);
 
   seconds = 24 * 60 * 60 - (icaltime_as_timet (*(priv->current_date)) % (24 * 60 * 60));

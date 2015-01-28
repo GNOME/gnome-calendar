@@ -73,6 +73,8 @@ typedef struct
   /* text direction factors */
   gint            k;
 
+  icaltimetype   *current_date;
+
   /* property */
   icaltimetype   *date;
 } GcalMonthViewPrivate;
@@ -1214,7 +1216,8 @@ gcal_month_view_draw (GtkWidget *widget,
           g_object_unref (overflow_layout);
         }
 
-      if (priv->date->day == j)
+      if (priv->date->year == priv->current_date->year && priv->date->month == priv->current_date->month &&
+          j == priv->current_date->day)
         {
           PangoLayout *clayout;
           PangoFontDescription *cfont_desc;
@@ -1702,6 +1705,16 @@ GtkWidget*
 gcal_month_view_new (void)
 {
   return g_object_new (GCAL_TYPE_MONTH_VIEW, NULL);
+}
+
+void
+gcal_month_view_set_current_date (GcalMonthView *month_view,
+                                  icaltimetype  *current_date)
+{
+  GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (month_view);
+
+  priv->current_date = current_date;
+  gtk_widget_queue_draw (GTK_WIDGET (month_view));
 }
 
 /**
