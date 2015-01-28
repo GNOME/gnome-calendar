@@ -1272,7 +1272,7 @@ gcal_window_constructed (GObject *object)
       if (priv->views[i] != NULL)
         {
           g_object_bind_property (GCAL_WINDOW (object), "active-date", priv->views[i], "active-date",
-                                  G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+                                  G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
 
           g_signal_connect (priv->views[i], "create-event", G_CALLBACK (show_new_event_widget), object);
           g_signal_connect (priv->views[i], "create-event-detailed", G_CALLBACK (create_event_detailed_cb), object);

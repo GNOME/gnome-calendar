@@ -836,6 +836,12 @@ navigator_button_release_cb (GcalYearView   *year_view,
   priv->button_pressed = FALSE;
   priv->selected_data->end_day = day;
   priv->selected_data->end_month = month;
+
+  /* update date and notify */
+  priv->date->day = priv->end_selected_date->day;
+  priv->date->month = priv->end_selected_date->month + 1;
+  g_object_notify (G_OBJECT (year_view), "active-date");
+
   gtk_widget_queue_draw (widget);
 
   if (priv->popover_mode)
