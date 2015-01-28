@@ -150,25 +150,26 @@ GcalYearView GtkButton {
     border-bottom-width: 0;
 }
 
-GtkPopover.popover-sidebar {
+GtkPopover.events {
     background-color: @theme_bg_color;
     padding: 0;
 }
 
-GtkPopover.popover-sidebar GtkBox {
+GtkPopover.events GtkBox {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
 }
 
-GtkPopover.popover-sidebar GtkListBox {
+GtkPopover.events GtkListBox {
+    background-color: @theme_bg_color;
     border-radius: 6px;
 }
 
-GtkPopover.popover-sidebar GtkScrolledWindow {
+GtkPopover.events GtkScrolledWindow {
     border-width: 0;
 }
 
-GtkPopover.popover-sidebar GtkButton {
+GtkPopover.events GtkButton {
     border-radius: 6px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;

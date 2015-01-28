@@ -110,7 +110,7 @@
   <object class="GtkPopover" id="popover">
     <property name="relative_to">navigator</property>
     <style>
-      <class name="popover-sidebar" />
+      <class name="events" />
     </style>
     <signal name="closed" handler="popover_closed_cb" object="GcalYearView" swapped="yes" />
   </object>

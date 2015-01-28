@@ -343,9 +343,7 @@ rebuild_popover_for_day (GcalMonthView *view,
   GtkWidget *child_widget;
   GdkRectangle rect;
 
-  gchar str_date[64];
-  struct tm tm_date;
-  gchar *markup;
+  gchar *label_title;
 
   icaltimetype date, second_date;
   const icaltimetype *dt_start, *dt_end;
@@ -366,11 +364,9 @@ rebuild_popover_for_day (GcalMonthView *view,
   priv = gcal_month_view_get_instance_private (view);
   ppriv = GCAL_SUBSCRIBER_VIEW (view)->priv;
 
-  tm_date = icaltimetype_to_tm (priv->date);
-  e_utf8_strftime_fix_am_pm (str_date, 64, "%B", &tm_date);
-  markup = g_strdup_printf ("<span weight=\"bold\">%s %d</span>", str_date, day);
-  gtk_label_set_markup (GTK_LABEL (priv->popover_title), markup);
-  g_free (markup);
+  label_title = g_strdup_printf ("%s %d", gcal_get_month_name (priv->date->month - 1), day);
+  gtk_label_set_text (GTK_LABEL (priv->popover_title), label_title);
+  g_free (label_title);
 
   /* Clean all the widgets */
   gtk_container_foreach (GTK_CONTAINER (priv->events_list_box), (GtkCallback) gtk_widget_destroy, NULL);
@@ -452,7 +448,7 @@ rebuild_popover_for_day (GcalMonthView *view,
 
   /* sizing hack */
   child_widget = gtk_bin_get_child (GTK_BIN (priv->overflow_popover));
-  gtk_widget_set_size_request (child_widget, cell_width, -1);
+  gtk_widget_set_size_request (child_widget, 200, -1);
 
   g_object_set_data (G_OBJECT (priv->overflow_popover), "selected-day", GINT_TO_POINTER (day));
 }
@@ -501,7 +497,7 @@ update_list_box_headers (GtkListBoxRow *row,
 
       label = gtk_label_new (time);
       gtk_style_context_add_class (gtk_widget_get_style_context (label), GTK_STYLE_CLASS_DIM_LABEL);
-      g_object_set (label, "margin-start", 6, "margin-top", 2, "halign", GTK_ALIGN_START, NULL);
+      g_object_set (label, "margin-start", 6, "halign", GTK_ALIGN_START, NULL);
 
       vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
       gtk_container_add (GTK_CONTAINER (vbox), label);
@@ -593,19 +589,21 @@ gcal_month_view_init (GcalMonthView *self)
     priv->k = 1;
 
   priv->overflow_popover = gtk_popover_new (GTK_WIDGET (self));
+  gtk_style_context_add_class (gtk_widget_get_style_context (priv->overflow_popover), "events");
   g_signal_connect (priv->overflow_popover, "hide", G_CALLBACK (overflow_popover_hide), self);
 
   grid = gtk_grid_new ();
-  g_object_set (grid, "margin", 6, "row-spacing", 6, "orientation", GTK_ORIENTATION_VERTICAL, NULL);
+  g_object_set (grid, "row-spacing", 6, "orientation", GTK_ORIENTATION_VERTICAL, NULL);
   gtk_container_add (GTK_CONTAINER (priv->overflow_popover), grid);
 
   priv->popover_title = gtk_label_new (NULL);
+  gtk_style_context_add_class (gtk_widget_get_style_context (priv->popover_title), "sidebar-header");
+  g_object_set (priv->popover_title, "margin", 6, "halign", GTK_ALIGN_START, NULL);
   priv->events_list_box = gtk_list_box_new ();
   gtk_list_box_set_selection_mode (GTK_LIST_BOX (priv->events_list_box), GTK_SELECTION_NONE);
   gtk_list_box_set_header_func (GTK_LIST_BOX (priv->events_list_box), update_list_box_headers, self, NULL);
-  gtk_style_context_remove_class (gtk_widget_get_style_context (priv->events_list_box), GTK_STYLE_CLASS_LIST);
   button = gtk_button_new_with_label (_("Add Event…"));
-  g_object_set (button, "margin", 6, "hexpand", TRUE, NULL);
+  g_object_set (button, "hexpand", TRUE, NULL);
   g_signal_connect (button, "clicked", G_CALLBACK (add_new_event_button_cb), self);
 
   gtk_container_add (GTK_CONTAINER (grid), priv->popover_title);
