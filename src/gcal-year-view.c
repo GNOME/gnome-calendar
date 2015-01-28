@@ -120,34 +120,8 @@ update_date (GcalYearView *year_view,
 {
   GcalYearViewPrivate *priv = year_view->priv;
 
-  if (priv->date == NULL || priv->date->year != new_date->year)
-    {
-      time_t range_start, range_end;
-      icaltimetype date;
-      icaltimezone* default_zone = gcal_manager_get_system_timezone (priv->manager);
-
-      date = *new_date;
-      date.day = 1;
-      date.month = 1;
-      date.hour = 0;
-      date.minute = 0;
-      date.second = 0;
-      date.is_date = 0;
-      range_start = icaltime_as_timet_with_zone (date, default_zone);
-
-      date.day = 31;
-      date.month = 12;
-      date.hour = 23;
-      date.minute = 59;
-      date.second = 0;
-      range_end = icaltime_as_timet_with_zone (date, default_zone);
-
-      gcal_manager_set_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (year_view), range_start, range_end);
-      gtk_widget_queue_draw (GTK_WIDGET (year_view));
-
-      if (priv->start_selected_date->day != 0)
-        reset_sidebar (year_view);
-    }
+  if (priv->date != NULL && priv->date->year != new_date->year && priv->start_selected_date->day != 0)
+    reset_sidebar (year_view);
 
   if (priv->date != NULL)
     g_free (priv->date);

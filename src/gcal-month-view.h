@@ -47,8 +47,6 @@ struct _GcalMonthViewClass
 
 GType          gcal_month_view_get_type           (void);
 GtkWidget*     gcal_month_view_new                (void);
-void           gcal_month_view_set_manager        (GcalMonthView *month_view,
-                                                   GcalManager   *manager);
 void           gcal_month_view_set_first_weekday  (GcalMonthView *view,
                                                    gint           day_nr);
 void           gcal_month_view_set_use_24h_format (GcalMonthView *view,

@@ -112,9 +112,9 @@ enum
 {
   PROP_0,
   PROP_ACTIVE_VIEW,
+  PROP_MANAGER,
   PROP_ACTIVE_DATE,
-  PROP_NEW_EVENT_MODE,
-  PROP_MANAGER
+  PROP_NEW_EVENT_MODE
 };
 
 #define SAVE_GEOMETRY_ID_TIMEOUT 100 /* ms */
@@ -261,11 +261,73 @@ key_pressed (GtkWidget *widget,
 }
 
 static void
+update_active_date (GcalWindow   *window,
+                    icaltimetype *new_date)
+{
+  GcalWindowPrivate *priv;
+
+  time_t range_start, range_end;
+  icaltimetype date;
+  icaltimezone* default_zone;
+
+  priv = gcal_window_get_instance_private (window);
+  default_zone = gcal_manager_get_system_timezone (priv->manager);
+
+  /* year_view */
+  if (priv->active_date->year != new_date->year)
+    {
+      date = *new_date;
+      date.day = 1;
+      date.month = 1;
+      date.hour = 0;
+      date.minute = 0;
+      date.second = 0;
+      date.is_date = 0;
+      range_start = icaltime_as_timet_with_zone (date, default_zone);
+
+      date.day = 31;
+      date.month = 12;
+      date.hour = 23;
+      date.minute = 59;
+      range_end = icaltime_as_timet_with_zone (date, default_zone);
+
+      gcal_manager_set_subscriber (priv->manager,
+                                   E_CAL_DATA_MODEL_SUBSCRIBER (priv->views[GCAL_WINDOW_VIEW_YEAR]),
+                                   range_start, range_end);
+    }
+
+  /* month_view */
+  if (priv->active_date->month != new_date->month || priv->active_date->year != new_date->year)
+    {
+      date = *new_date;
+      date.day = 1;
+      date.hour = 0;
+      date.minute = 0;
+      date.second = 0;
+      date.is_date = 0;
+      range_start = icaltime_as_timet_with_zone (date, default_zone);
+
+      date.day = time_days_in_month (new_date->year, new_date->month - 1);
+      date.hour = 23;
+      date.minute = 59;
+      range_end = icaltime_as_timet_with_zone (date, default_zone);
+
+      gcal_manager_set_subscriber (priv->manager,
+                                   E_CAL_DATA_MODEL_SUBSCRIBER (priv->views[GCAL_WINDOW_VIEW_MONTH]),
+                                   range_start, range_end);
+    }
+
+    g_free (priv->active_date);
+    priv->active_date = new_date;
+}
+
+static void
 date_updated (GtkButton  *button,
               gpointer    user_data)
 {
   GcalWindowPrivate *priv;
 
+  icaltimetype *new_date;
   gboolean move_back, move_today;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
@@ -273,38 +335,37 @@ date_updated (GtkButton  *button,
   move_today = priv->today_button == (GtkWidget*) button;
   move_back = priv->back_button == (GtkWidget*) button;
 
+  new_date = gcal_dup_icaltime (priv->active_date);
+
+  /* FIXME: use current_date */
   if (move_today)
     {
-      *(priv->active_date) =
-        icaltime_current_time_with_zone (
-            gcal_manager_get_system_timezone (priv->manager));
-      *(priv->active_date) =
-        icaltime_set_timezone (
-            priv->active_date,
-            gcal_manager_get_system_timezone (priv->manager));
+      *new_date = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (priv->manager));
+      *new_date = icaltime_set_timezone (new_date, gcal_manager_get_system_timezone (priv->manager));
     }
   else
     {
       switch (priv->active_view)
         {
         case GCAL_WINDOW_VIEW_DAY:
-          priv->active_date->day += 1 * (move_back ? -1 : 1);
+          new_date->day += 1 * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_WEEK:
-          priv->active_date->day += 7 * (move_back ? -1 : 1);
+          new_date->day += 7 * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_MONTH:
-          priv->active_date->month += 1 * (move_back ? -1 : 1);
+          new_date->month += 1 * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_YEAR:
-          priv->active_date->year += 1 * (move_back ? -1 : 1);
+          new_date->year += 1 * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_LIST:
         case GCAL_WINDOW_VIEW_SEARCH:
           break;
         }
     }
-  *(priv->active_date) = icaltime_normalize (*(priv->active_date));
+  *new_date = icaltime_normalize (*new_date);
+  update_active_date (user_data, new_date);
   g_object_notify (user_data, "active-date");
 }
 
@@ -1101,6 +1162,15 @@ gcal_window_class_init(GcalWindowClass *klass)
 
   g_object_class_install_property (
       object_class,
+      PROP_MANAGER,
+      g_param_spec_pointer ("manager",
+                            "The manager object",
+                            "A weak reference to the app manager object",
+                            G_PARAM_CONSTRUCT_ONLY |
+                            G_PARAM_READWRITE));
+
+  g_object_class_install_property (
+      object_class,
       PROP_ACTIVE_DATE,
       g_param_spec_boxed ("active-date",
                           "Date",
@@ -1116,15 +1186,6 @@ gcal_window_class_init(GcalWindowClass *klass)
                             "New Event mode",
                             "Whether the window is in new-event-mode or not",
                             FALSE,
-                            G_PARAM_READWRITE));
-
-  g_object_class_install_property (
-      object_class,
-      PROP_MANAGER,
-      g_param_spec_pointer ("manager",
-                            "The manager object",
-                            "A weak reference to the app manager object",
-                            G_PARAM_CONSTRUCT_ONLY |
                             G_PARAM_READWRITE));
 
   /* widgets */
@@ -1180,6 +1241,10 @@ gcal_window_class_init(GcalWindowClass *klass)
 static void
 gcal_window_init (GcalWindow *self)
 {
+  GcalWindowPrivate *priv = gcal_window_get_instance_private (self);
+
+  priv->active_date = g_new0 (icaltimetype, 1);
+
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
@@ -1291,8 +1356,7 @@ gcal_window_finalize (GObject *object)
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (object));
 
-  if (priv->active_date != NULL)
-    g_free (priv->active_date);
+  g_free (priv->active_date);
 
   if (priv->views_switcher != NULL)
     g_object_unref (priv->views_switcher);
@@ -1319,9 +1383,7 @@ gcal_window_set_property (GObject      *object,
                                    priv->views[priv->active_view]);
       return;
     case PROP_ACTIVE_DATE:
-      if (priv->active_date != NULL)
-        g_free (priv->active_date);
-      priv->active_date = g_value_dup_boxed (value);
+      update_active_date (GCAL_WINDOW (object), g_value_dup_boxed (value));
       return;
     case PROP_NEW_EVENT_MODE:
       set_new_event_mode (GCAL_WINDOW (object), g_value_get_boolean (value));
@@ -1427,7 +1489,7 @@ gcal_window_new_with_view_and_date (GcalApplication   *app,
 
   manager = gcal_application_get_manager (GCAL_APPLICATION (app));
 
-  win  =  g_object_new (GCAL_TYPE_WINDOW, "application", GTK_APPLICATION (app), "active-date", date, "manager", manager,
+  win  =  g_object_new (GCAL_TYPE_WINDOW, "application", GTK_APPLICATION (app), "manager", manager, "active-date", date,
                         NULL);
 
   /* loading size */

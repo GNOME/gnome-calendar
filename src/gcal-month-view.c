@@ -75,7 +75,6 @@ typedef struct
 
   /* property */
   icaltimetype   *date;
-  GcalManager    *manager; /* weak reference */
 } GcalMonthViewPrivate;
 
 enum
@@ -639,32 +638,10 @@ gcal_month_view_set_property (GObject       *object,
     {
     case PROP_DATE:
       {
-        time_t range_start, range_end;
-        icaltimetype *date;
-        icaltimezone* default_zone;
-
         if (priv->date != NULL)
           g_free (priv->date);
 
         priv->date = g_value_dup_boxed (value);
-
-        date = gcal_view_get_initial_date (GCAL_VIEW (object));
-        priv->days_delay = (icaltime_day_of_week (*date) - priv->first_weekday + 6) % 7;
-
-        default_zone =
-          gcal_manager_get_system_timezone (priv->manager);
-        range_start = icaltime_as_timet_with_zone (*date,
-                                                   default_zone);
-        g_free (date);
-        date = gcal_view_get_final_date (GCAL_VIEW (object));
-        range_end = icaltime_as_timet_with_zone (*date,
-                                                 default_zone);
-        g_free (date);
-
-        gcal_manager_set_subscriber (priv->manager,
-                                     E_CAL_DATA_MODEL_SUBSCRIBER (object),
-                                     range_start,
-                                     range_end);
         gtk_widget_queue_draw (GTK_WIDGET (object));
         break;
       }
@@ -1727,15 +1704,6 @@ GtkWidget*
 gcal_month_view_new (void)
 {
   return g_object_new (GCAL_TYPE_MONTH_VIEW, NULL);
-}
-
-void
-gcal_month_view_set_manager (GcalMonthView *month_view,
-                             GcalManager   *manager)
-{
-  GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (month_view);
-
-  priv->manager = manager;
 }
 
 /**
