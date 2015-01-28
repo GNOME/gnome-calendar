@@ -57,6 +57,8 @@ typedef struct
   GtkWidget           *search_bar;
   GtkWidget           *views_overlay;
   GtkWidget           *views_stack;
+  GtkWidget           *month_view;
+  GtkWidget           *year_view;
   GtkWidget           *notification;
   GtkWidget           *notification_label;
   GtkWidget           *notification_action_button;
@@ -291,9 +293,7 @@ update_active_date (GcalWindow   *window,
       date.minute = 59;
       range_end = icaltime_as_timet_with_zone (date, default_zone);
 
-      gcal_manager_set_subscriber (priv->manager,
-                                   E_CAL_DATA_MODEL_SUBSCRIBER (priv->views[GCAL_WINDOW_VIEW_YEAR]),
-                                   range_start, range_end);
+      gcal_manager_set_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (priv->year_view), range_start, range_end);
     }
 
   /* month_view */
@@ -312,9 +312,7 @@ update_active_date (GcalWindow   *window,
       date.minute = 59;
       range_end = icaltime_as_timet_with_zone (date, default_zone);
 
-      gcal_manager_set_subscriber (priv->manager,
-                                   E_CAL_DATA_MODEL_SUBSCRIBER (priv->views[GCAL_WINDOW_VIEW_MONTH]),
-                                   range_start, range_end);
+      gcal_manager_set_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (priv->month_view), range_start, range_end);
     }
 
     g_free (priv->active_date);
@@ -1202,6 +1200,8 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, forward_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_overlay);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_stack);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, month_view);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, year_view);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, views_switcher);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, popover);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_view);
@@ -1229,7 +1229,10 @@ gcal_window_class_init(GcalWindowClass *klass)
 
   /* Event creation related */
   gtk_widget_class_bind_template_callback (widget_class, create_event);
+  gtk_widget_class_bind_template_callback (widget_class, create_event_detailed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, show_new_event_widget);
   gtk_widget_class_bind_template_callback (widget_class, close_new_event_widget);
+  gtk_widget_class_bind_template_callback (widget_class, event_activated);
 
   /* Syncronization related */
   gtk_widget_class_bind_template_callback (widget_class, window_state_changed);
@@ -1260,7 +1263,6 @@ gcal_window_constructed (GObject *object)
   GSettings *helper_settings;
   gchar *clock_format;
   gboolean use_24h_format;
-  gint i;
 
   if (G_OBJECT_CLASS (gcal_window_parent_class)->constructed != NULL)
     G_OBJECT_CLASS (gcal_window_parent_class)->constructed (object);
@@ -1311,17 +1313,15 @@ gcal_window_constructed (GObject *object)
   //gcal_week_view_set_use_24h_format (GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]), use_24h_format);
   //gtk_stack_add_titled (GTK_STACK (priv->views_stack), priv->views[GCAL_WINDOW_VIEW_WEEK], "week", _("Week"));
 
-  priv->views[GCAL_WINDOW_VIEW_MONTH] = gcal_month_view_new ();
-  gcal_month_view_set_manager (GCAL_MONTH_VIEW (priv->views[GCAL_WINDOW_VIEW_MONTH]), priv->manager);
+  priv->views[GCAL_WINDOW_VIEW_MONTH] = priv->month_view;
+  priv->views[GCAL_WINDOW_VIEW_YEAR] = priv->year_view;
+
   gcal_month_view_set_first_weekday (GCAL_MONTH_VIEW (priv->views[GCAL_WINDOW_VIEW_MONTH]), get_first_weekday ());
   gcal_month_view_set_use_24h_format (GCAL_MONTH_VIEW (priv->views[GCAL_WINDOW_VIEW_MONTH]), use_24h_format);
-  gtk_stack_add_titled (GTK_STACK (priv->views_stack), priv->views[GCAL_WINDOW_VIEW_MONTH], "month", _("Month"));
 
-  priv->views[GCAL_WINDOW_VIEW_YEAR] = g_object_new (GCAL_TYPE_YEAR_VIEW, NULL);
   gcal_year_view_set_manager (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), priv->manager);
   gcal_year_view_set_first_weekday (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), get_first_weekday ());
   gcal_year_view_set_use_24h_format (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), use_24h_format);
-  gtk_stack_add_titled (GTK_STACK (priv->views_stack), priv->views[GCAL_WINDOW_VIEW_YEAR], "year", _("Year"));
 
   /* search view */
   gcal_search_view_connect (GCAL_SEARCH_VIEW (priv->search_view), priv->manager);
@@ -1329,21 +1329,6 @@ gcal_window_constructed (GObject *object)
 
   /* current date hook */
   gcal_year_view_set_current_date (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), NULL);
-
-  /* signals connection/handling */
-  /* only GcalView implementations */
-  for (i = 0; i < 4; ++i)
-    {
-      if (priv->views[i] != NULL)
-        {
-          g_object_bind_property (GCAL_WINDOW (object), "active-date", priv->views[i], "active-date",
-                                  G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE | G_BINDING_BIDIRECTIONAL);
-
-          g_signal_connect (priv->views[i], "create-event", G_CALLBACK (show_new_event_widget), object);
-          g_signal_connect (priv->views[i], "create-event-detailed", G_CALLBACK (create_event_detailed_cb), object);
-          g_signal_connect (priv->views[i], "event-activated", G_CALLBACK (event_activated), object);
-        }
-    }
 
   /* refresh timeout, first is fast */
   priv->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, object);
