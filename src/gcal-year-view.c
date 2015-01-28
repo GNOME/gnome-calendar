@@ -308,7 +308,8 @@ update_sidebar (GcalYearView *year_view)
                 gtk_style_context_add_class (gtk_widget_get_style_context (cloned_child), "slanted-start");
               else if (end_comparison < 0)
                 gtk_style_context_add_class (gtk_widget_get_style_context (cloned_child), "slanted-end");
-              else
+
+              if (end_comparison == 0)
                 break;
             }
         }
