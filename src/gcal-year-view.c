@@ -922,10 +922,6 @@ gcal_year_view_finalize (GObject *object)
   if (priv->date != NULL)
     g_free (priv->date);
 
-  /* FIXME: move into window */
-  if (priv->current_date != NULL)
-    g_free (priv->current_date);
-
   G_OBJECT_CLASS (gcal_year_view_parent_class)->finalize (object);
 }
 
@@ -1267,13 +1263,9 @@ void
 gcal_year_view_set_current_date (GcalYearView *year_view,
                                  icaltimetype *current_date)
 {
-  /* FIXME: move into window */
-  year_view->priv->current_date = g_new0 (icaltimetype, 1);
-  *(year_view->priv->current_date) =
-  icaltime_current_time_with_zone (gcal_manager_get_system_timezone (year_view->priv->manager));
-  *(year_view->priv->current_date) = icaltime_set_timezone (year_view->priv->current_date,
-                                                            gcal_manager_get_system_timezone (year_view->priv->manager));
+  year_view->priv->current_date = current_date;
 
   /* Launches update */
+  gtk_widget_queue_draw (GTK_WIDGET (year_view));
   update_sidebar (year_view);
 }

@@ -91,6 +91,8 @@ typedef struct
   GcalWindowViewType   active_view;
   icaltimetype        *active_date;
 
+  icaltimetype        *current_date;
+
   /* states */
   gboolean             new_event_mode;
   gboolean             search_mode;
@@ -317,6 +319,25 @@ update_active_date (GcalWindow   *window,
 
     g_free (priv->active_date);
     priv->active_date = new_date;
+}
+
+static gboolean
+update_current_date (GcalWindow *window)
+{
+  GcalWindowPrivate *priv = gcal_window_get_instance_private (window);
+  guint seconds;
+
+  if (priv->current_date == NULL)
+    priv->current_date = g_new0 (icaltimetype, 1);
+
+  *(priv->current_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (priv->manager));
+  *(priv->current_date) = icaltime_set_timezone (priv->current_date, gcal_manager_get_system_timezone (priv->manager));
+
+  gcal_year_view_set_current_date (GCAL_YEAR_VIEW (priv->year_view), priv->current_date);
+
+  seconds = 24 * 60 * 60 - (icaltime_as_timet (*(priv->current_date)) % (24 * 60 * 60));
+  g_timeout_add_seconds (seconds, (GSourceFunc) update_current_date, window);
+  return FALSE;
 }
 
 static void
@@ -1319,16 +1340,12 @@ gcal_window_constructed (GObject *object)
   gcal_month_view_set_first_weekday (GCAL_MONTH_VIEW (priv->views[GCAL_WINDOW_VIEW_MONTH]), get_first_weekday ());
   gcal_month_view_set_use_24h_format (GCAL_MONTH_VIEW (priv->views[GCAL_WINDOW_VIEW_MONTH]), use_24h_format);
 
-  gcal_year_view_set_manager (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), priv->manager);
   gcal_year_view_set_first_weekday (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), get_first_weekday ());
   gcal_year_view_set_use_24h_format (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), use_24h_format);
 
   /* search view */
   gcal_search_view_connect (GCAL_SEARCH_VIEW (priv->search_view), priv->manager);
   gcal_search_view_set_time_format (GCAL_SEARCH_VIEW (priv->search_view), use_24h_format);
-
-  /* current date hook */
-  gcal_year_view_set_current_date (GCAL_YEAR_VIEW (priv->views[GCAL_WINDOW_VIEW_YEAR]), NULL);
 
   /* refresh timeout, first is fast */
   priv->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, object);
@@ -1375,10 +1392,11 @@ gcal_window_set_property (GObject      *object,
       return;
     case PROP_MANAGER:
       priv->manager = g_value_get_pointer (value);
-      g_signal_connect (priv->manager, "source-added",
-                        G_CALLBACK (add_source), object);
-      g_signal_connect (priv->manager, "source-removed",
-                        G_CALLBACK (remove_source), object);
+      g_signal_connect (priv->manager, "source-added", G_CALLBACK (add_source), object);
+      g_signal_connect (priv->manager, "source-removed", G_CALLBACK (remove_source), object);
+
+      gcal_year_view_set_manager (GCAL_YEAR_VIEW (priv->year_view), priv->manager);
+      update_current_date (GCAL_WINDOW (object));
       return;
     }
 
