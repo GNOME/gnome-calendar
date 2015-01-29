@@ -2,15 +2,15 @@
 # Copyright (C) 2012 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Yuri Myasoedov <omerta13@yandex.ru>, 2012.
-# Stas Solovey <whats_up@tut.by>, 2014.
+# Stas Solovey <whats_up@tut.by>, 2014, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-12-18 20:06+0000\n"
-"PO-Revision-Date: 2014-10-02 12:34+0300\n"
+"POT-Creation-Date: 2015-01-29 19:06+0000\n"
+"PO-Revision-Date: 2015-01-30 00:28+0300\n"
 "Last-Translator: Stas Solovey <whats_up@tut.by>\n"
 "Language-Team: Русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -21,25 +21,63 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:158
-#: ../src/gcal-application.c:396
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:458
 msgid "Calendar"
 msgstr "Календарь"
 
-#: ../data/gnome-calendar.desktop.in.in.h:2
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+msgid "Calendar for GNOME"
+msgstr "Календарь для среды рабочего стола GNOME"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"Календарь GNOME представляет собой простое и красивое приложение календаря, "
+"разработанное, чтобы полностью соответствовать рабочему столу GNOME. За счет "
+"использования тех же компонентов из которых состоит рабочий стол GNOME, "
+"календарь красиво интегрируется с экосистемой среды GNOME."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"Мы стремимся найти идеальный баланс между хорошо созданными функциями и "
+"ориентированным на пользователя удобством использования. Нет излишеств, нет "
+"недостатков. Вы будете чувствовать себя комфортно, используя календарь, "
+"будто вы используете его уже годы!"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "Поиск событий"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Calendar management"
+msgstr "Управление календарем"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
-msgstr "Доступ к календарю"
+msgstr "Доступ и управление календарём"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Календарь;Событие;Напоминание;"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
-msgstr "Окно максимального размера"
+msgstr "Окно развёрнуто"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:2
 msgid "Window maximized state"
 msgstr "Окно имеет максимальный размер"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:3
-#| msgid "Window maximized"
 msgid "Window size"
 msgstr "Размер окна"
 
@@ -63,226 +101,214 @@ msgstr "Тип просмотра"
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Тип окна просмотра, по умолчанию используется просмотр по месяцам"
 
-#: ../src/gcal-application.c:87
-msgid "Display version number"
-msgstr "Отобразить номер версии"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "Список отключённых источников"
 
-#: ../src/gcal-application.c:204
-msgid "Unable to initialize GtkClutter"
-msgstr "Не удалось инициализировать GtkClutter"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "Источники отключённые при последнем запуске приложения «Календарь»"
 
-#: ../src/gcal-application.c:245
-msgid "- Calendar management"
-msgstr "— управление календарем"
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "Отмена"
 
-#: ../src/gcal-application.c:300
-msgid "Weeks"
-msgstr "Недели"
-
-#: ../src/gcal-application.c:301
-msgid "Months"
-msgstr "Месяцы"
-
-#: ../src/gcal-application.c:302
-msgid "Years"
-msgstr "Годы"
-
-#: ../src/gcal-application.c:304
-msgid "View as"
-msgstr "Показывать как"
-
-#: ../src/gcal-application.c:312
-msgid "About"
-msgstr "О приложении"
-
-#: ../src/gcal-application.c:320
-msgid "Quit"
-msgstr "Завершить"
-
-#: ../src/gcal-application.c:384
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Авторские права © %Id авторы приложения «Календарь»"
-
-#: ../src/gcal-application.c:390
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Авторские права © %Id–%Id авторы приложения «Календарь»"
-
-#: ../src/gcal-application.c:403
-msgid "translator-credits"
-msgstr ""
-"Yuri Myasoedov <omerta13@yandex.ru>, 2012. \n"
-"Stas Solovey <whats_up@tut.by>, 2014."
-
-#: ../src/gcal-date-entry.c:162
-msgid "Change the date"
-msgstr "Изменить дату"
-
-#: ../src/gcal-edit-dialog.c:156
-msgid "Event Details"
-msgstr "Подробности о событии"
-
-#. Summary, title
-#: ../src/gcal-edit-dialog.c:171
-msgid "Title"
-msgstr "Заголовок"
-
-#. Start date and time
-#: ../src/gcal-edit-dialog.c:199
-msgid "Starts"
-msgstr "Начало"
-
-#: ../src/gcal-edit-dialog.c:215
-msgid "All day"
-msgstr "Весь день"
-
-#. End date and time
-#: ../src/gcal-edit-dialog.c:221
-msgid "Ends"
-msgstr "Конец"
-
-#. Location, location, location
-#: ../src/gcal-edit-dialog.c:238
-msgid "Location"
-msgstr "Местоположение"
-
-#. Notes, description
-#: ../src/gcal-edit-dialog.c:252
-msgid "Notes"
-msgstr "Замечания"
-
-#. done button
-#. done
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-searchbar.c:158
-#: ../src/gcal-toolbar.c:611
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:638
 msgid "Done"
 msgstr "Выполнено"
 
-#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:291
-msgid "New Event"
-msgstr "Создать событие"
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "Заголовок"
 
-#: ../src/gcal-event-overlay.c:162
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "Начало"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "Конец"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "Замечания"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "Местоположение"
+
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:390
+msgid "All day"
+msgstr "Весь день"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "Удалить событие"
+
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "_Новое событие…"
+
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "_Найти…"
+
+#: ../data/ui/menus.ui.h:3
+msgid "_About"
+msgstr "_О приложении"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Quit"
+msgstr "_Завершить"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "_Синхронизировать"
+
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "Ничего не найдено"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "Используйте строку ввода выше для поиска событий."
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:384
+#: ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "д. п."
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:384
+#: ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "п. п."
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "Месяц"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
+msgstr "Год"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:232 ../src/gcal-year-view.c:380
+msgid "Today"
+msgstr "Сегодня"
+
+#: ../data/ui/window.ui.h:5
 msgid "Create"
 msgstr "Создать"
 
-#: ../src/gcal-event-overlay.c:171
-msgid "More details"
+#: ../data/ui/window.ui.h:6
+msgid "More Details"
 msgstr "Подробности"
 
-#: ../src/gcal-event-overlay.c:185
-msgid "What (e.g. Alien Invasion)"
-msgstr "Что (например, вторжение инопланетян)"
+#: ../data/ui/year-view.ui.h:2
+msgid "No events"
+msgstr "Нет событий"
 
-#: ../src/gcal-event-overlay.c:507
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:607
+msgid "Add Event…"
+msgstr "Новое событие…"
+
+#: ../src/gcal-application.c:95
+msgid "Display version number"
+msgstr "Отобразить номер версии"
+
+#: ../src/gcal-application.c:100
+msgid "Open calendar on the passed date"
+msgstr "Открыть календарь на прошедшей дате"
+
+#: ../src/gcal-application.c:327
+msgid "- Calendar management"
+msgstr "— управление календарем"
+
+#: ../src/gcal-application.c:446
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Авторские права © %Id авторы приложения «Календарь»"
+
+#: ../src/gcal-application.c:452
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Авторские права © %Id–%Id авторы приложения «Календарь»"
+
+#: ../src/gcal-application.c:465
+msgid "translator-credits"
+msgstr ""
+"Yuri Myasoedov <omerta13@yandex.ru>, 2012.\n"
+"Stas Solovey <whats_up@tut.by>, 2014, 2015."
+
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "День"
+
+#: ../src/gcal-edit-dialog.c:638
+msgid "Save"
+msgstr "Сохранить"
+
+#: ../src/gcal-edit-dialog.c:823
+msgid "Unnamed event"
+msgstr "Событие без названия"
+
+#: ../src/gcal-month-view.c:828
+msgid "Other events"
+msgstr "Другие события"
+
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1180
+#, c-format
+#| msgid "Other event"
+#| msgid_plural "Other %d events"
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Другое %d событие"
+msgstr[1] "Другие %d события"
+msgstr[2] "Другие %d событий"
+
+#: ../src/gcal-search-view.c:383
+#, c-format
+msgid "%.2d:%.2d %s"
+msgstr "%.2d:%.2d %s"
+
+#: ../src/gcal-time-selector.c:96
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d:%.2d д. п."
+
+#: ../src/gcal-time-selector.c:98
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d:%.2d п. п."
+
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
+msgid "Midnight"
+msgstr "Полночь"
+
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
+msgid "Noon"
+msgstr "Полдень"
+
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "00:00 п. п."
+
+#: ../src/gcal-window.c:628
 #, c-format
 msgid "New Event on %s"
 msgstr "Создать событие на %s"
 
-#: ../src/gcal-event-overlay.c:524
-#, c-format
-msgid "New Event from %s to %s"
-msgstr "Создать событие от %s до %s"
-
-#: ../src/gcal-manager.c:1506
-msgid "Notification"
-msgstr "Уведомление"
-
-#: ../src/gcal-manager.c:1508
-msgid "Email"
-msgstr "Эл. почта"
-
-#: ../src/gcal-manager.c:1522
-msgid "days"
-msgstr "дни"
-
-#: ../src/gcal-manager.c:1528
-msgid "weeks"
-msgstr "недели"
-
-#: ../src/gcal-manager.c:1534
-msgid "hours"
-msgstr "часы"
-
-#: ../src/gcal-manager.c:1540
-msgid "minutes"
-msgstr "минуты"
-
-#: ../src/gcal-manager.c:1552
-msgid "before"
-msgstr "до"
-
-#. Here translators should put the widgest letter in their alphabet, this
-#. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1026 ../src/gcal-week-view.c:1083
-#: ../src/gcal-year-view.c:925
-msgid "WWW 99 - WWW 99"
-msgstr "ЩЩЩ 99 — ЩЩЩ 99"
-
-#: ../src/gcal-searchbar.c:179
-msgid "Search..."
-msgstr "Найти…"
-
-#: ../src/gcal-time-entry.c:126
-msgid "Change the time"
-msgstr "Изменить время"
-
-#. day
-#: ../src/gcal-toolbar.c:317
-msgid "Day"
-msgstr "День"
-
-#. week
-#: ../src/gcal-toolbar.c:334 ../src/gcal-week-view.c:1097
-msgid "Week"
-msgstr "Неделя"
-
-#. month
-#: ../src/gcal-toolbar.c:351
-msgid "Month"
-msgstr "Месяц"
-
-#. year
-#: ../src/gcal-toolbar.c:368
-msgid "Year"
-msgstr "Год"
-
-#. list
-#: ../src/gcal-toolbar.c:385
-msgid "List"
-msgstr "Список"
-
-#: ../src/gcal-toolbar.c:465
-msgid "Back"
-msgstr "Назад"
-
-#. reset morphing edit_button
-#: ../src/gcal-toolbar.c:486 ../src/gcal-toolbar.c:498
-#: ../src/gcal-toolbar.c:616
-msgid "Edit"
-msgstr "Изменить"
-
-#: ../src/gcal-week-view.c:1283
-msgid "AM"
-msgstr "д. п."
-
-#: ../src/gcal-week-view.c:1283
-msgid "PM"
-msgstr "п. п."
-
-#: ../src/gcal-week-view.c:1286 ../src/gcal-week-view.c:1358
-msgid "Midnight"
-msgstr "Полночь"
-
-#: ../src/gcal-week-view.c:1288 ../src/gcal-week-view.c:1361
-msgid "Noon"
-msgstr "Полдень"
-
-#: ../src/gcal-window.c:1378
+#: ../src/gcal-window.c:1023
 msgid "Event deleted"
 msgstr "Событие удалено"
 
-#: ../src/gcal-year-view.c:929
-#, c-format
-msgid "Year %d"
-msgstr "%d год"
+#: ../src/gcal-window.c:1024
+msgid "Undo"
+msgstr "Вернуть"
