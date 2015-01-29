@@ -1500,7 +1500,7 @@ gcal_month_view_button_release (GtkWidget      *widget,
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
   ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
 
-  if (priv->clicked_cell == -1)
+  if (priv->clicked_cell == -1 || priv->start_mark_cell == -1)
     return FALSE;
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
