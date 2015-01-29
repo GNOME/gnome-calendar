@@ -374,6 +374,7 @@ date_updated (GtkButton  *button,
           new_date->day += 7 * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_MONTH:
+          new_date->day = 1;
           new_date->month += 1 * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_YEAR:
