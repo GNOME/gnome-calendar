@@ -218,7 +218,6 @@ gcal_subscriber_view_remove (GtkContainer *container,
   const gchar *uuid;
 
   GList *l, *aux;
-  gboolean was_visible = FALSE;
   GtkWidget *master_widget;
 
   g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
@@ -231,11 +230,9 @@ gcal_subscriber_view_remove (GtkContainer *container,
     {
       priv->children_changed = TRUE;
 
-      master_widget = (GtkWidget*) l->data;
-
-      was_visible = gtk_widget_get_visible (widget);
       gtk_widget_unparent (widget);
 
+      master_widget = (GtkWidget*) l->data;
       if (widget == master_widget)
         {
           if (gcal_subscriber_view_is_child_multicell (GCAL_SUBSCRIBER_VIEW (container), GCAL_EVENT_WIDGET (widget)))
@@ -272,8 +269,7 @@ gcal_subscriber_view_remove (GtkContainer *container,
 
       g_hash_table_remove (priv->hidden_as_overflow, uuid);
 
-      if (was_visible)
-        gtk_widget_queue_resize (GTK_WIDGET (container));
+      gtk_widget_queue_resize (GTK_WIDGET (container));
     }
 }
 
