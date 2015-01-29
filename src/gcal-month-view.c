@@ -642,6 +642,7 @@ gcal_month_view_set_property (GObject       *object,
           g_free (priv->date);
 
         priv->date = g_value_dup_boxed (value);
+        priv->days_delay = (time_day_of_week (1, priv->date->month - 1, priv->date->year) - priv->first_weekday + 7) % 7;
         gtk_widget_queue_draw (GTK_WIDGET (object));
         break;
       }
