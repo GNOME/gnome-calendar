@@ -35,10 +35,14 @@ G_BEGIN_DECLS
 
 typedef struct _GcalApplicationClass         GcalApplicationClass;
 typedef struct _GcalApplication              GcalApplication;
+typedef struct _GcalApplicationPrivate       GcalApplicationPrivate;
 
 struct _GcalApplication
 {
   GtkApplication parent;
+
+  /*< private >*/
+  GcalApplicationPrivate *priv;
 };
 
 struct _GcalApplicationClass
