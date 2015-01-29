@@ -1693,20 +1693,6 @@ gcal_month_view_get_children_by_uuid (GcalView    *view,
 }
 
 /* Public API */
-/**
- * gcal_month_view_new:
- *
- * Since: 0.1
- * Create a new month view widget
- *
- * Returns: (transfer full):
- **/
-GtkWidget*
-gcal_month_view_new (void)
-{
-  return g_object_new (GCAL_TYPE_MONTH_VIEW, NULL);
-}
-
 void
 gcal_month_view_set_current_date (GcalMonthView *month_view,
                                   icaltimetype  *current_date)

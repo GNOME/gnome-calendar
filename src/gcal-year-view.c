@@ -1232,12 +1232,6 @@ gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *ifa
 }
 
 /* Public API */
-GcalYearView *
-gcal_year_view_new (void)
-{
-  return g_object_new (GCAL_TYPE_YEAR_VIEW, NULL);
-}
-
 void
 gcal_year_view_set_manager (GcalYearView *year_view,
                             GcalManager  *manager)

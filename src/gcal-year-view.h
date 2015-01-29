@@ -55,7 +55,6 @@ struct _GcalYearViewClass
 };
 
 GType             gcal_year_view_get_type           (void);
-GcalYearView     *gcal_year_view_new                (void);
 void              gcal_year_view_set_manager        (GcalYearView *year_view,
                                                      GcalManager  *manager);
 void              gcal_year_view_set_first_weekday  (GcalYearView *year_view,
