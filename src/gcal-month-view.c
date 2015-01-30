@@ -55,7 +55,6 @@ typedef struct
    * These keeps the cell index, meaning 0 for left top, 1 for the next in the row from left to right, etc.
    * Note that this does not take into account the disabled row before the first active row.
    */
-  gint            clicked_cell;
   gint            start_mark_cell;
   gint            end_mark_cell;
 
@@ -574,8 +573,6 @@ gcal_month_view_init (GcalMonthView *self)
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
   priv = gcal_month_view_get_instance_private (self);
-
-  priv->clicked_cell = -1;
 
   priv->start_mark_cell = -1;
   priv->end_mark_cell = -1;
@@ -1388,8 +1385,7 @@ gcal_month_view_button_press (GtkWidget      *widget,
   GcalSubscriberViewPrivate *ppriv;
   GcalMonthViewPrivate *priv;
 
-  gint days;
-  gint j, sw;
+  gint days, j, sw, clicked_cell;
   gboolean pressed_indicator = FALSE;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
@@ -1398,19 +1394,16 @@ gcal_month_view_button_press (GtkWidget      *widget,
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
   sw = 1 - 2 * priv->k;
 
-  priv->clicked_cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y,
+  clicked_cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y,
                                                  &pressed_indicator, NULL, NULL);
 
-  j = 7 * ((priv->clicked_cell + 7 * priv->k) / 7) + sw * (priv->clicked_cell % 7) + (1 - priv->k);
+  j = 7 * ((clicked_cell + 7 * priv->k) / 7) + sw * (clicked_cell % 7) + (1 - priv->k);
 
   if (j > priv->days_delay && j <= days)
-    priv->start_mark_cell = priv->clicked_cell;
+    priv->start_mark_cell = clicked_cell;
 
-  if (pressed_indicator && g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (priv->clicked_cell)))
-    priv->pressed_overflow_indicator = priv->clicked_cell;
-
-  g_debug ("clicked is: %d", priv->clicked_cell);
-  g_debug ("pressed is: %d", priv->start_mark_cell);
+  if (pressed_indicator && g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (clicked_cell)))
+    priv->pressed_overflow_indicator = clicked_cell;
 
   return TRUE;
 }
@@ -1445,7 +1438,7 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
 
   j = 7 * ((new_end_cell + 7 * priv->k) / 7) + sw * (new_end_cell % 7) + (1 - priv->k);
 
-  if (priv->clicked_cell != -1)
+  if (priv->start_mark_cell != -1)
     {
       if (j > priv->days_delay && j <= days)
         {
@@ -1454,7 +1447,6 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
           if (priv->end_mark_cell != new_end_cell)
             gtk_widget_queue_draw (widget);
 
-          g_debug ("move_notify: %d, %d, %d", priv->start_mark_cell, priv->end_mark_cell, new_end_cell);
           priv->end_mark_cell = new_end_cell;
           return TRUE;
         }
@@ -1501,7 +1493,7 @@ gcal_month_view_button_release (GtkWidget      *widget,
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
   ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
 
-  if (priv->clicked_cell == -1 || priv->start_mark_cell == -1)
+  if (priv->start_mark_cell == -1)
     return FALSE;
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
@@ -1513,7 +1505,6 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   if (j <= priv->days_delay || j > days)
     {
-      priv->clicked_cell = -1;
       priv->pressed_overflow_indicator = -1;
       priv->start_mark_cell = -1;
       priv->end_mark_cell = -1;
@@ -1523,7 +1514,6 @@ gcal_month_view_button_release (GtkWidget      *widget,
     }
 
   priv->end_mark_cell = released;
-  g_debug ("released button cell: %d", priv->end_mark_cell);
 
   if (priv->pressed_overflow_indicator != -1 && priv->start_mark_cell == priv->end_mark_cell &&
       g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (priv->pressed_overflow_indicator)))
@@ -1534,7 +1524,6 @@ gcal_month_view_button_release (GtkWidget      *widget,
       gtk_widget_show_all (priv->overflow_popover);
 
       gtk_widget_queue_draw (widget);
-      priv->clicked_cell = -1;
       priv->pressed_overflow_indicator = -1;
       priv->start_mark_cell = -1;
       priv->end_mark_cell = -1;
@@ -1565,7 +1554,6 @@ gcal_month_view_button_release (GtkWidget      *widget,
     }
 
   gtk_widget_queue_draw (widget);
-  priv->clicked_cell = -1;
   priv->pressed_overflow_indicator = -1;
   return TRUE;
 }
