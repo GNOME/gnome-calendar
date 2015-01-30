@@ -640,12 +640,13 @@ draw_month_grid (GcalYearView *year_view,
         }
       else if (column == sunday_idx)
         {
+          gtk_style_context_save (context);
           gtk_style_context_add_class (context, "sunday");
           gtk_render_layout (context, cr,
                              box_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
                              box_side * (row + 1) + y + box_padding_top,
                              layout);
-          gtk_style_context_remove_class (context, "sunday");
+          gtk_style_context_restore (context);
         }
       else
         {
