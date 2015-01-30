@@ -1,0 +1,7 @@
+[Shell Search Provider]
+_Title=Calendar
+Icon=gnome-calendar
+DesktopId=org.gnome.Calendar.desktop
+BusName=org.gnome.Calendar
+ObjectPath=/org/gnome/Calendar/SearchProvider
+Version=2

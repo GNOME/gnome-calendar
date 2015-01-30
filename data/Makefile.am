@@ -4,6 +4,12 @@ desktopdir = $(datadir)/applications
 desktop_in_files = org.gnome.Calendar.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
+searchproviderdir = $(datadir)/gnome-shell/search-providers
+searchprovider_DATA = org.gnome.Calendar.search-provider.ini
+
+%.ini: %.ini.in
+	LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
+
 @INTLTOOL_XML_RULE@
 appdatadir = $(datadir)/appdata
 appdata_DATA = $(appdata_in_files:.xml.in=.xml)
@@ -34,10 +40,9 @@ gsettingsschema_in_files = org.gnome.calendar.gschema.xml.in
 gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
 .PRECIOUS: $(gsettings_SCHEMAS)
 
-@INTLTOOL_XML_NOMERGE_RULE@
-
 EXTRA_DIST=                     \
   appdata/org.gnome.Calendar.appdata.xml \
+  org.gnome.Calendar.search-provider.ini.in.in \
   org.gnome.Calendar.desktop    \
   calendar.gresource.xml        \
   ui/date-selector.ui           \
@@ -55,5 +60,6 @@ EXTRA_DIST=                     \
 CLEANFILES =                    \
   $(service_DATA)               \
   $(desktop_DATA)               \
+  $(searchprovider_DATA)        \
   $(gsettings_SCHEMAS)          \
   $(appdata_DATA)

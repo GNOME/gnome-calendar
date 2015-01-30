@@ -104,6 +104,7 @@ AC_CONFIG_FILES([
       src/Makefile
       data/Makefile
       data/org.gnome.Calendar.desktop.in
+      data/org.gnome.Calendar.search-provider.ini.in
       data/icons/Makefile
       po/Makefile.in
 ])
