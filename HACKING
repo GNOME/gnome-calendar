@@ -3,11 +3,11 @@ Code formating and ordering
 
 + The source file will keep and order of methods. The order will be as
   following:
-  1. Private functions will go first
-  2. class_init and init will go second
-  3. interface init will go third
-  3. vfuncs implementations will go fourth
-  4. Public API will go in the end
+  1. Private functions
+  2. vfuncs implementations
+  3. interface init
+  4. class_init and init
+  5. Public API will go in the end
 
 + Methods naming will be according to:
   1. Private methods will have no prefix
