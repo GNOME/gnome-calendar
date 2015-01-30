@@ -116,6 +116,7 @@ echo "
         gnome-calendar $VERSION
         ==================
 
+        source at: ${srcdir}
         prefix:    ${prefix}
         compiler:  ${CC}
 	flags:     ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
