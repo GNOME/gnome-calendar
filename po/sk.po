@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-01-28 18:58+0000\n"
-"PO-Revision-Date: 2015-01-31 18:53+0100\n"
+"POT-Creation-Date: 2015-01-31 17:54+0000\n"
+"PO-Revision-Date: 2015-01-31 19:17+0100\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:470
+#: ../src/gcal-application.c:458
 msgid "Calendar"
 msgstr "Kalendár"
 
@@ -122,11 +122,11 @@ msgstr "Názov"
 
 #: ../data/ui/edit-dialog.ui.h:4
 msgid "Starts"
-msgstr "Začína"
+msgstr "Začiatok"
 
 #: ../data/ui/edit-dialog.ui.h:5
 msgid "Ends"
-msgstr "Končí"
+msgstr "Koniec"
 
 #: ../data/ui/edit-dialog.ui.h:6
 msgid "Notes"
@@ -215,7 +215,7 @@ msgstr "Viac podrobností"
 msgid "No events"
 msgstr "Žiadne udalosti"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:605
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
 msgid "Add Event…"
 msgstr "Pridať udalosť…"
 
@@ -227,19 +227,19 @@ msgstr "Vypíše číslo verzie"
 msgid "Open calendar on the passed date"
 msgstr "Otvorí kalendár na určenom dátume"
 
-#: ../src/gcal-application.c:330
+#: ../src/gcal-application.c:327
 msgid "- Calendar management"
 msgstr "- Správa kalendára"
 
-#: ../src/gcal-application.c:458
+#: ../src/gcal-application.c:446
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Autorské práva © %Id Autori programu Kalendár"
 
-#: ../src/gcal-application.c:464
+#: ../src/gcal-application.c:452
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Autorské práva © %Id–%Id Autori programu Kalendár"
 
-#: ../src/gcal-application.c:477
+#: ../src/gcal-application.c:465
 msgid "translator-credits"
 msgstr "Dušan Kazik <prescott66@gmail.com>"
 
@@ -295,16 +295,16 @@ msgstr "Poludnie"
 msgid "00:00 PM"
 msgstr "00:00 Popoludní"
 
-#: ../src/gcal-window.c:605
+#: ../src/gcal-window.c:628
 #, c-format
 msgid "New Event on %s"
 msgstr "Nová udalosť na deň %s"
 
-#: ../src/gcal-window.c:1000
+#: ../src/gcal-window.c:1023
 msgid "Event deleted"
 msgstr "Udalosť bola odstránená"
 
-#: ../src/gcal-window.c:1001
+#: ../src/gcal-window.c:1024
 msgid "Undo"
 msgstr "Vrátiť späť"
 
