@@ -52,7 +52,10 @@ typedef struct
 
   GCancellable    *async_ops;
 
+  /* state flags */
   gchar          **disabled_sources;
+  gint             sources_at_launch;
+
   /* timezone */
   icaltimezone    *system_timezone;
 
@@ -82,6 +85,7 @@ enum
   SOURCE_ACTIVATED,
   SOURCE_ADDED,
   SOURCE_REMOVED,
+  LOAD_COMPLETED,
   NUM_SIGNALS
 };
 
@@ -302,6 +306,10 @@ on_client_connected (GObject      *source_object,
 
   priv = gcal_manager_get_instance_private (GCAL_MANAGER (user_data));
   source = e_client_get_source (E_CLIENT (source_object));
+
+  priv->sources_at_launch--;
+  if (priv->sources_at_launch == 0)
+    g_signal_emit (user_data, signals[LOAD_COMPLETED], 0);
 
   error = NULL;
   client = E_CAL_CLIENT (e_cal_client_connect_finish (result, &error));
@@ -531,6 +539,11 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                           G_STRUCT_OFFSET (GcalManagerClass, source_removed),
                                           NULL, NULL, NULL,
                                           G_TYPE_NONE, 1, G_TYPE_POINTER);
+
+  signals[LOAD_COMPLETED] = g_signal_new ("load-completed", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
+                                          G_STRUCT_OFFSET (GcalManagerClass, load_completed),
+                                          NULL, NULL, NULL,
+                                          G_TYPE_NONE, 0);
 }
 
 static void
@@ -566,11 +579,6 @@ gcal_manager_constructed (GObject *object)
       return;
     }
 
-  sources = e_source_registry_list_enabled (priv->source_registry, E_SOURCE_EXTENSION_CALENDAR);
-  for (l = sources; l != NULL; l = l->next)
-    load_source (GCAL_MANAGER (object), l->data);
-  g_list_free (sources);
-
   g_signal_connect_swapped (priv->source_registry, "source-added", G_CALLBACK (load_source), object);
   g_signal_connect_swapped (priv->source_registry, "source-removed", G_CALLBACK (remove_source), object);
 
@@ -582,6 +590,15 @@ gcal_manager_constructed (GObject *object)
   e_cal_data_model_set_timezone (priv->e_data_model, priv->system_timezone);
   e_cal_data_model_set_expand_recurrences (priv->search_data_model, TRUE);
   e_cal_data_model_set_timezone (priv->search_data_model, priv->system_timezone);
+
+  g_signal_connect_swapped (priv->search_data_model, "view-state-changed", G_CALLBACK (model_state_changed), object);
+
+  sources = e_source_registry_list_enabled (priv->source_registry, E_SOURCE_EXTENSION_CALENDAR);
+  priv->sources_at_launch = g_list_length (sources);
+
+  for (l = sources; l != NULL; l = l->next)
+    load_source (GCAL_MANAGER (object), l->data);
+  g_list_free (sources);
 }
 
 static void

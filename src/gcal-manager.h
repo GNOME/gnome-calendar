@@ -49,6 +49,7 @@ struct _GcalManagerClass
   void (*source_activated)  (GcalManager *manager, ESource *source, gboolean active);
   void (*source_added)  (GcalManager *manager, ESource *source, gboolean enabled);
   void (*source_removed)  (GcalManager *manager, ESource *source);
+  void (*load_completed)  (GcalManager *manager);
 };
 
 typedef struct
