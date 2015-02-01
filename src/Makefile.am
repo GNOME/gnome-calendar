@@ -11,6 +11,7 @@ AM_CPPFLAGS =                                             \
 bin_PROGRAMS = gnome-calendar
 
 BUILT_SOURCES =                                           \
+    $(dbus_shell_search_provider_built_sources)           \
     gcal-resources.c                                      \
     gcal-resources.h                                      \
     gcal-enum-types.c                                     \
@@ -26,6 +27,8 @@ gnome_calendar_SOURCES =                                  \
     css-code.h                                            \
     gcal-application.h                                    \
     gcal-application.c                                    \
+    gcal-shell-search-provider.h                          \
+    gcal-shell-search-provider.c                          \
     gcal-window.h                                         \
     gcal-window.c                                         \
     gcal-view.c                                           \
@@ -75,6 +78,17 @@ gcal-enum-types.h: gcal-enum-types.h.template $(ENUM_TYPES) $(GLIB_MKENUMS)
 
 gcal-enum-types.c: gcal-enum-types.c.template $(ENUM_TYPES) $(GLIB_MKENUMS)
 	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template gcal-enum-types.c.template $(ENUM_TYPES)) > $@
+
+dbus_shell_search_provider_built_sources =		\
+	gcal-shell-search-provider-generated.c	\
+	gcal-shell-search-provider-generated.h
+
+$(dbus_shell_search_provider_built_sources) : Makefile.am $(top_srcdir)/data/shell-search-provider-dbus-interfaces.xml
+	gdbus-codegen									\
+		--interface-prefix org.gnome.						\
+		--c-namespace Gcal							\
+		--generate-c-code gcal-shell-search-provider-generated		\
+		$(top_srcdir)/data/shell-search-provider-dbus-interfaces.xml
 
 CLEANFILES = \
 	$(BUILT_SOURCES) \

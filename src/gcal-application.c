@@ -24,6 +24,7 @@
 #include "gcal-application.h"
 #include "css-code.h"
 #include "gcal-window.h"
+#include "gcal-shell-search-provider.h"
 
 #include <glib.h>
 #include <glib-object.h>
@@ -38,6 +39,8 @@ struct _GcalApplicationPrivate
 
   GSettings      *settings;
   GcalManager    *manager;
+
+  GcalShellSearchProvider *search_provider;
 
   GtkCssProvider *provider;
 
@@ -82,6 +85,15 @@ static void     gcal_application_sync                 (GSimpleAction           *
 static void     gcal_application_quit                 (GSimpleAction           *simple,
                                                        GVariant                *parameter,
                                                        gpointer                 user_data);
+
+static gboolean gcal_application_dbus_register       (GApplication             *application,
+                                                      GDBusConnection          *connection,
+                                                      const gchar              *object_path,
+                                                      GError                  **error);
+
+static void     gcal_application_dbus_unregister     (GApplication             *application,
+                                                      GDBusConnection          *connection,
+                                                      const gchar              *object_path);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 
@@ -203,6 +215,9 @@ gcal_application_class_init (GcalApplicationClass *klass)
   application_class->activate = gcal_application_activate;
   application_class->startup = gcal_application_startup;
   application_class->command_line = gcal_application_command_line;
+
+  application_class->dbus_register = gcal_application_dbus_register;
+  application_class->dbus_unregister = gcal_application_dbus_unregister;
 }
 
 static void
@@ -212,6 +227,7 @@ gcal_application_init (GcalApplication *self)
 
   priv->settings = g_settings_new ("org.gnome.calendar");
   priv->colors_provider = gtk_css_provider_new ();
+  priv->search_provider = gcal_shell_search_provider_new ();
 
   self->priv = priv;
 }
@@ -221,27 +237,64 @@ gcal_application_finalize (GObject *object)
 {
  GcalApplicationPrivate *priv = GCAL_APPLICATION (object)->priv;
 
-  gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (priv->colors_provider));
-  gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (priv->provider));
-
-  g_clear_object (&(priv->settings));
-  g_clear_object (&(priv->colors_provider));
-  g_clear_object (&(priv->provider));
-  g_clear_object (&(priv->manager));
-
   if (priv->initial_date != NULL)
     g_free (priv->initial_date);
 
   if (priv->css_code_snippets != NULL)
     g_strfreev (priv->css_code_snippets);
 
+  if (priv->provider != NULL)
+    {
+      gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (priv->colors_provider));
+
+      gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (priv->provider));
+      g_clear_object (&(priv->provider));
+    }
+
+  g_clear_object (&(priv->colors_provider));
+  g_clear_object (&(priv->settings));
+
+  g_clear_object (&(priv->manager));
+
   G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
+  g_clear_object (&(priv->search_provider));
 }
 
 static void
 gcal_application_activate (GApplication *application)
 {
-  GcalApplicationPrivate *priv = GCAL_APPLICATION (application)->priv;
+  GcalApplicationPrivate *priv;
+  GFile* css_file;
+  GError *error;
+
+  priv = GCAL_APPLICATION (application)->priv;
+
+  if (priv->provider == NULL)
+   {
+     priv->provider = gtk_css_provider_new ();
+     gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+                                                GTK_STYLE_PROVIDER (priv->provider),
+                                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
+
+     error = NULL;
+     css_file = g_file_new_for_uri (CSS_FILE);
+     gtk_css_provider_load_from_file (priv->provider, css_file, &error);
+     if (error != NULL)
+         g_warning ("Error loading stylesheet from file %s. %s", CSS_FILE, error->message);
+
+     g_object_set (gtk_settings_get_default (), "gtk-application-prefer-dark-theme", FALSE, NULL);
+
+     g_object_unref (css_file);
+   }
+
+  if (priv->colors_provider != NULL)
+    {
+      gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+                                                 GTK_STYLE_PROVIDER (priv->colors_provider),
+                                                 GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
+    }
+
+  gcal_application_set_app_menu (application);
 
   if (priv->window != NULL)
     {
@@ -273,42 +326,20 @@ static void
 gcal_application_startup (GApplication *app)
 {
   GcalApplicationPrivate *priv;
-  GFile* css_file;
-  GError *error;
 
   priv = GCAL_APPLICATION (app)->priv;
 
   G_APPLICATION_CLASS (gcal_application_parent_class)->startup (app);
 
-  if (priv->provider == NULL)
-   {
-     priv->provider = gtk_css_provider_new ();
-     gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-                                                GTK_STYLE_PROVIDER (priv->provider),
-                                                GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
-
-     error = NULL;
-     css_file = g_file_new_for_uri (CSS_FILE);
-     gtk_css_provider_load_from_file (priv->provider, css_file, &error);
-     if (error != NULL)
-         g_warning ("Error loading stylesheet from file %s. %s", CSS_FILE, error->message);
-
-     g_object_set (gtk_settings_get_default (), "gtk-application-prefer-dark-theme", FALSE, NULL);
-
-     g_object_unref (css_file);
-   }
-
-  if (priv->colors_provider != NULL)
-    {
-      gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-                                                 GTK_STYLE_PROVIDER (priv->colors_provider),
-                                                 GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
-    }
-
   priv->manager = gcal_manager_new_with_settings (priv->settings);
   g_signal_connect (priv->manager, "source-added", G_CALLBACK (source_added_cb), app);
 
-  gcal_application_set_app_menu (app);
+  /* We're assuming the application is called as a service only by the shell search system */
+  if ((g_application_get_flags (app) & G_APPLICATION_IS_SERVICE) != 0)
+    {
+      g_application_set_inactivity_timeout (app, 600 * 1000);
+      gcal_manager_set_shell_search (priv->manager);
+    }
 }
 
 static gint
@@ -366,6 +397,50 @@ gcal_application_command_line (GApplication            *app,
   g_application_activate (app);
 
   return 0;
+}
+
+static gboolean
+gcal_application_dbus_register (GApplication    *application,
+                                GDBusConnection *connection,
+                                const gchar     *object_path,
+                                GError         **error)
+{
+  GcalApplicationPrivate *priv;
+  gchar *search_provider_path = NULL;
+  gboolean ret_val = FALSE;
+
+  priv = GCAL_APPLICATION (application)->priv;
+
+  if (!G_APPLICATION_CLASS (gcal_application_parent_class)->dbus_register (application, connection, object_path, error))
+    goto out;
+
+  search_provider_path = g_strconcat (object_path, "/SearchProvider", NULL);
+  if (!gcal_shell_search_provider_dbus_export (priv->search_provider, connection, search_provider_path, error))
+    goto out;
+
+  ret_val = TRUE;
+
+out:
+  g_free (search_provider_path);
+  return ret_val;
+}
+
+static void
+gcal_application_dbus_unregister (GApplication *application,
+                                  GDBusConnection *connection,
+                                  const gchar *object_path)
+{
+  GcalApplicationPrivate *priv;
+  gchar *search_provider_path = NULL;
+
+  priv = GCAL_APPLICATION (application)->priv;
+
+  search_provider_path = g_strconcat (object_path, "/SearchProvider", NULL);
+  gcal_shell_search_provider_dbus_unexport (priv->search_provider, connection, search_provider_path);
+
+  G_APPLICATION_CLASS (gcal_application_parent_class)->dbus_unregister (application, connection, object_path);
+
+  g_free (search_provider_path);
 }
 
 static void

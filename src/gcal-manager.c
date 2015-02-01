@@ -48,6 +48,7 @@ typedef struct
 
   ECalDataModel   *e_data_model;
   ECalDataModel   *search_data_model;
+  ECalDataModel   *shell_search_data_model;
 
   GCancellable    *async_ops;
 
@@ -728,6 +729,40 @@ gcal_manager_get_system_timezone (GcalManager *manager)
 
   priv = gcal_manager_get_instance_private (manager);
   return priv->system_timezone;
+}
+
+void
+gcal_manager_set_shell_search (GcalManager *manager)
+{
+  GcalManagerPrivate *priv;
+  priv = gcal_manager_get_instance_private (manager);
+
+  if (priv->shell_search_data_model == NULL)
+    {
+      priv->shell_search_data_model = e_cal_data_model_new (submit_thread_job);
+
+      e_cal_data_model_set_expand_recurrences (priv->shell_search_data_model, TRUE);
+      e_cal_data_model_set_timezone (priv->shell_search_data_model, priv->system_timezone);
+    }
+}
+
+/**
+ * gcal_manager_set_shell_query:
+ * @manager: A #GcalManager instance
+ * @query: (nullable): query terms or %NULL
+ *
+ * Set the query terms of the #ECalDataModel or clear it if %NULL is
+ * passed
+ *
+ **/
+void
+gcal_manager_set_shell_query (GcalManager *manager,
+                              const gchar *query)
+{
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (manager);
+  e_cal_data_model_set_filter (priv->shell_search_data_model, query);
 }
 
 void

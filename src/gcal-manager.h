@@ -69,6 +69,11 @@ ESource*       gcal_manager_get_default_source      (GcalManager        *manager
 
 icaltimezone*  gcal_manager_get_system_timezone     (GcalManager        *manager);
 
+void           gcal_manager_set_shell_search        (GcalManager        *manager);
+
+void           gcal_manager_set_shell_query         (GcalManager        *manager,
+                                                     const gchar        *query);
+
 void           gcal_manager_set_subscriber          (GcalManager        *manager,
                                                      ECalDataModelSubscriber *subscriber,
                                                      time_t              range_start,

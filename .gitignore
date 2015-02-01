@@ -76,6 +76,8 @@ src/gcal-enum-types.c
 src/gcal-enum-types.h
 src/gcal-resources.c
 src/gcal-resources.h
+src/gcal-shell-search-provider-generated.c
+src/gcal-shell-search-provider-generated.h
 AUTHORS
 build-aux
 data/org.gnome.Calendar.desktop
