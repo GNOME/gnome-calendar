@@ -147,10 +147,8 @@ msgid "Delete event"
 msgstr "Smazat událost"
 
 #: ../data/ui/menus.ui.h:1
-#, fuzzy
-#| msgid "Add new event…"
 msgid "Add Eve_nt…"
-msgstr "Přidat novou událost…"
+msgstr "Přidat _událost…"
 
 #: ../data/ui/menus.ui.h:2
 msgid "_Search…"
@@ -216,16 +214,12 @@ msgid "More Details"
 msgstr "Více podrobností"
 
 #: ../data/ui/year-view.ui.h:2
-#, fuzzy
-#| msgid "Other events"
 msgid "No events"
-msgstr "Další události"
+msgstr "Žádné události"
 
 #: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:605
-#, fuzzy
-#| msgid "Add new event…"
 msgid "Add Event…"
-msgstr "Přidat novou událost…"
+msgstr "Přidat událost…"
 
 #: ../src/gcal-application.c:95
 msgid "Display version number"
@@ -317,6 +311,3 @@ msgstr "Událost smazána"
 #: ../src/gcal-window.c:1001
 msgid "Undo"
 msgstr "Zpět"
-
-#~ msgid "_New Event"
-#~ msgstr "_Nová událost"
