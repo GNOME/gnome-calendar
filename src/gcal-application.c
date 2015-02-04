@@ -243,7 +243,12 @@ gcal_application_init (GcalApplication *self)
 
   priv->settings = g_settings_new ("org.gnome.calendar");
   priv->colors_provider = gtk_css_provider_new ();
+
+  priv->manager = gcal_manager_new_with_settings (priv->settings);
+  g_signal_connect_swapped (priv->manager, "load-completed", G_CALLBACK (load_completed_cb), self);
+
   priv->search_provider = gcal_shell_search_provider_new ();
+  gcal_shell_search_provider_connect (priv->search_provider, priv->manager);
 
   self->priv = priv;
 }
@@ -338,20 +343,13 @@ gcal_application_activate (GApplication *application)
 static void
 gcal_application_startup (GApplication *app)
 {
-  GcalApplicationPrivate *priv;
-
-  priv = GCAL_APPLICATION (app)->priv;
-
   G_APPLICATION_CLASS (gcal_application_parent_class)->startup (app);
-
-  priv->manager = gcal_manager_new_with_settings (priv->settings);
-  g_signal_connect (priv->manager, "source-added", G_CALLBACK (source_added_cb), app);
 
   /* We're assuming the application is called as a service only by the shell search system */
   if ((g_application_get_flags (app) & G_APPLICATION_IS_SERVICE) != 0)
     {
-      g_application_set_inactivity_timeout (app, 600 * 1000);
-      gcal_manager_set_shell_search (priv->manager);
+      g_application_set_inactivity_timeout (app, 3 * 60 * 1000);
+      g_debug ("[%s]: set_inactivity_timeout: %d", G_STRFUNC, 3 * 60 * 1000);
     }
 }
 
