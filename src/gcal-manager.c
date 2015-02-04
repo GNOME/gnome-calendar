@@ -29,6 +29,16 @@ typedef struct
 
 typedef struct
 {
+  ECalDataModelSubscriber *subscriber;
+  gchar                   *query;
+
+  guint                    sources_left;
+  gboolean                 passed_start;
+  gboolean                 search_done;
+} ViewStateData;
+
+typedef struct
+{
   ECalClient     *client;
 
   gboolean        enabled;
@@ -48,7 +58,9 @@ typedef struct
 
   ECalDataModel   *e_data_model;
   ECalDataModel   *search_data_model;
+
   ECalDataModel   *shell_search_data_model;
+  ViewStateData   *search_view_data;
 
   GCancellable    *async_ops;
 
@@ -86,6 +98,7 @@ enum
   SOURCE_ADDED,
   SOURCE_REMOVED,
   LOAD_COMPLETED,
+  QUERY_COMPLETED,
   NUM_SIGNALS
 };
 
@@ -338,6 +351,8 @@ on_client_connected (GObject      *source_object,
 
           e_cal_data_model_add_client (priv->e_data_model, client);
           e_cal_data_model_add_client (priv->search_data_model, client);
+          if (priv->shell_search_data_model != NULL)
+            e_cal_data_model_add_client (priv->shell_search_data_model, client);
         }
 
       /* refresh client when it's added */
@@ -509,6 +524,37 @@ remove_source (GcalManager  *manager,
 }
 
 static void
+model_state_changed (GcalManager            *manager,
+                     ECalClientView         *view,
+                     ECalDataModelViewState  state,
+                     guint                   percent,
+                     const gchar            *message,
+                     const GError           *error,
+                     ECalDataModel          *data_model)
+{
+  GcalManagerPrivate *priv = gcal_manager_get_instance_private (manager);
+  gchar *filter = e_cal_data_model_dup_filter (data_model);
+  if (state == E_CAL_DATA_MODEL_VIEW_STATE_START && g_strcmp0 (priv->search_view_data->query, filter) == 0)
+    {
+      priv->search_view_data->passed_start = TRUE;
+      goto out;
+    }
+
+  if (priv->search_view_data->passed_start && state == E_CAL_DATA_MODEL_VIEW_STATE_COMPLETE &&
+      g_strcmp0 (priv->search_view_data->query, filter) == 0)
+    {
+      priv->search_view_data->sources_left--;
+      priv->search_view_data->search_done = (priv->search_view_data->sources_left == 0);
+      if (priv->search_view_data->search_done)
+        g_signal_emit (manager, signals[QUERY_COMPLETED], 0);
+    }
+
+out:
+    g_free (filter);
+    return;
+}
+
+static void
 gcal_manager_class_init (GcalManagerClass *klass)
 {
   G_OBJECT_CLASS (klass)->constructed = gcal_manager_constructed;
@@ -544,6 +590,11 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                           G_STRUCT_OFFSET (GcalManagerClass, load_completed),
                                           NULL, NULL, NULL,
                                           G_TYPE_NONE, 0);
+
+  signals[QUERY_COMPLETED] = g_signal_new ("query-completed", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
+                                           G_STRUCT_OFFSET (GcalManagerClass, query_completed),
+                                           NULL, NULL, NULL,
+                                           G_TYPE_NONE, 0);
 }
 
 static void
@@ -591,8 +642,6 @@ gcal_manager_constructed (GObject *object)
   e_cal_data_model_set_expand_recurrences (priv->search_data_model, TRUE);
   e_cal_data_model_set_timezone (priv->search_data_model, priv->system_timezone);
 
-  g_signal_connect_swapped (priv->search_data_model, "view-state-changed", G_CALLBACK (model_state_changed), object);
-
   sources = e_source_registry_list_enabled (priv->source_registry, E_SOURCE_EXTENSION_CALENDAR);
   priv->sources_at_launch = g_list_length (sources);
 
@@ -616,6 +665,14 @@ gcal_manager_finalize (GObject *object)
     g_object_unref (priv->e_data_model);
   if (priv->search_data_model != NULL)
     g_object_unref (priv->search_data_model);
+
+  if (priv->search_view_data != NULL)
+    {
+      g_free (priv->search_view_data->query);
+      g_free (priv->search_view_data);
+    }
+  if (priv->shell_search_data_model != NULL)
+    g_object_unref (priv->shell_search_data_model);
 
   g_hash_table_destroy (priv->clients);
 }
@@ -749,7 +806,8 @@ gcal_manager_get_system_timezone (GcalManager *manager)
 }
 
 void
-gcal_manager_set_shell_search (GcalManager *manager)
+gcal_manager_setup_shell_search (GcalManager             *manager,
+                                 ECalDataModelSubscriber *subscriber)
 {
   GcalManagerPrivate *priv;
   priv = gcal_manager_get_instance_private (manager);
@@ -757,29 +815,72 @@ gcal_manager_set_shell_search (GcalManager *manager)
   if (priv->shell_search_data_model == NULL)
     {
       priv->shell_search_data_model = e_cal_data_model_new (submit_thread_job);
+      g_signal_connect_swapped (priv->shell_search_data_model, "view-state-changed", G_CALLBACK (model_state_changed), manager);
 
       e_cal_data_model_set_expand_recurrences (priv->shell_search_data_model, TRUE);
       e_cal_data_model_set_timezone (priv->shell_search_data_model, priv->system_timezone);
+
+      priv->search_view_data = g_new0 (ViewStateData, 1);
+      priv->search_view_data->subscriber = subscriber;
     }
 }
 
 /**
- * gcal_manager_set_shell_query:
+ * gcal_manager_set_shell_search_query:
  * @manager: A #GcalManager instance
- * @query: (nullable): query terms or %NULL
+ * @query: query string (an s-exp)
  *
- * Set the query terms of the #ECalDataModel or clear it if %NULL is
- * passed
- *
+ * Set the query terms of the #ECalDataModel used in the shell search
  **/
 void
-gcal_manager_set_shell_query (GcalManager *manager,
-                              const gchar *query)
+gcal_manager_set_shell_search_query (GcalManager *manager,
+                                     const gchar *query)
+{
+  GcalManagerPrivate *priv = gcal_manager_get_instance_private (manager);
+
+  priv->search_view_data->passed_start = FALSE;
+  priv->search_view_data->search_done = FALSE;
+  priv->search_view_data->sources_left = g_hash_table_size (priv->clients) - g_strv_length (priv->disabled_sources);
+
+  if (priv->search_view_data->query != NULL)
+    g_free (priv->search_view_data->query);
+  priv->search_view_data->query = g_strdup (query);
+
+  e_cal_data_model_set_filter (priv->shell_search_data_model, query);
+}
+
+void
+gcal_manager_set_shell_search_subscriber (GcalManager             *manager,
+                                          ECalDataModelSubscriber *subscriber,
+                                          time_t                   range_start,
+                                          time_t                   range_end)
 {
   GcalManagerPrivate *priv;
 
   priv = gcal_manager_get_instance_private (manager);
-  e_cal_data_model_set_filter (priv->shell_search_data_model, query);
+  e_cal_data_model_subscribe (priv->shell_search_data_model, subscriber, range_start, range_end);
+}
+
+gboolean
+gcal_manager_shell_search_done (GcalManager *manager)
+{
+  GcalManagerPrivate *priv = gcal_manager_get_instance_private (manager);
+  return priv->search_view_data->search_done;
+}
+
+GList*
+gcal_manager_get_shell_search_events (GcalManager *manager)
+{
+  GcalManagerPrivate *priv;
+  time_t range_start, range_end;
+  GList *list = NULL;
+
+  priv = gcal_manager_get_instance_private (manager);
+
+  e_cal_data_model_get_subscriber_range (priv->shell_search_data_model, priv->search_view_data->subscriber,
+                                         &range_start, &range_end);
+  e_cal_data_model_foreach_component (priv->shell_search_data_model, range_start, range_end, gather_components, &list);
+  return list;
 }
 
 void

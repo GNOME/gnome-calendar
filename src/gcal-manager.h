@@ -50,6 +50,7 @@ struct _GcalManagerClass
   void (*source_added)  (GcalManager *manager, ESource *source, gboolean enabled);
   void (*source_removed)  (GcalManager *manager, ESource *source);
   void (*load_completed)  (GcalManager *manager);
+  void (*query_completed) (GcalManager *manager);
 };
 
 typedef struct
@@ -70,10 +71,20 @@ ESource*       gcal_manager_get_default_source      (GcalManager        *manager
 
 icaltimezone*  gcal_manager_get_system_timezone     (GcalManager        *manager);
 
-void           gcal_manager_set_shell_search        (GcalManager        *manager);
+void           gcal_manager_setup_shell_search      (GcalManager             *manager,
+                                                     ECalDataModelSubscriber *subscriber);
 
-void           gcal_manager_set_shell_query         (GcalManager        *manager,
+void           gcal_manager_set_shell_search_query  (GcalManager        *manager,
                                                      const gchar        *query);
+
+void           gcal_manager_set_shell_search_subscriber (GcalManager             *manager,
+                                                         ECalDataModelSubscriber *subscriber,
+                                                         time_t                   range_start,
+                                                         time_t                   range_end);
+
+gboolean       gcal_manager_shell_search_done       (GcalManager        *manager);
+
+GList*         gcal_manager_get_shell_search_events (GcalManager        *manager);
 
 void           gcal_manager_set_subscriber          (GcalManager        *manager,
                                                      ECalDataModelSubscriber *subscriber,
