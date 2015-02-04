@@ -43,17 +43,13 @@ struct _GcalApplicationPrivate
   GcalShellSearchProvider *search_provider;
 
   GtkCssProvider *provider;
-
-  gchar         **css_code_snippets;
   GtkCssProvider *colors_provider;
 
   icaltimetype   *initial_date;
 };
 
-static void     source_added_cb                       (GcalManager         *manager,
-                                                       ESource             *source,
-                                                       gboolean             enabled,
-                                                       gpointer             user_data);
+static void     load_completed_cb                     (GcalApplication         *application,
+                                                       GcalManager             *manager);
 
 static void     gcal_application_finalize             (GObject                 *object);
 
@@ -123,83 +119,103 @@ static const GActionEntry gcal_app_entries[] = {
 };
 
 static void
-source_added_cb (GcalManager *manager,
-                 ESource     *source,
-                 gboolean     enabled,
-                 gpointer     user_data)
+process_sources (GcalApplication *application)
 {
   GcalApplicationPrivate *priv;
 
-  gint i, arr_length = 0;
+  GList *sources, *l;
+  ESource *source;
+
+  gint arr_length, i = 0;
   ESourceSelectable *extension;
   GQuark color_id;
   const gchar* color_str;
 
-  gchar *css_snippet, *bkg_color, *slanted_edge_both_ltr, *slanted_edge_both_rtl;
+  gchar *bkg_color, *slanted_edge_both_ltr, *slanted_edge_both_rtl;
   gchar *slanted_edge_start_ltr, *slanted_edge_start_rtl, *slanted_edge_end_ltr, *slanted_edge_end_rtl;
   gchar **new_css_snippets;
   gchar *new_css_data;
 
   GError *error = NULL;
 
-  priv = GCAL_APPLICATION (user_data)->priv;
+  priv = application->priv;
 
-  extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
-  color_id = g_quark_from_string (e_source_selectable_get_color (extension));
-  color_str = e_source_selectable_get_color (extension);
-
-  if (priv->css_code_snippets != NULL)
-    arr_length = g_strv_length (priv->css_code_snippets);
-
+  sources = gcal_manager_get_sources_connected (priv->manager);
+  arr_length = g_list_length (sources);
   new_css_snippets = g_new0 (gchar*, arr_length + 2);
+  for (l = sources; l != NULL; l = g_list_next (l), i++)
+    {
+      source = l->data;
 
-  for (i = 0; i < arr_length; i++)
-    new_css_snippets[i] = priv->css_code_snippets[i];
+      extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
+      color_id = g_quark_from_string (e_source_selectable_get_color (extension));
+      color_str = e_source_selectable_get_color (extension);
 
-  bkg_color = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
-  slanted_edge_both_ltr =
-      g_strdup_printf (CSS_TEMPLATE_EDGE_BOTH, color_id,
-                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str,
-                       color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-  slanted_edge_both_rtl =
-      g_strdup_printf (CSS_TEMPLATE_EDGE_BOTH_RTL, color_id,
-                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str,
-                       color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-  slanted_edge_end_ltr =
-      g_strdup_printf (CSS_TEMPLATE_EDGE, color_id,
-                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-  slanted_edge_start_ltr =
-      g_strdup_printf (CSS_TEMPLATE_EDGE_START, color_id,
-                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-  slanted_edge_end_rtl =
-      g_strdup_printf (CSS_TEMPLATE_EDGE_RTL, color_id,
-                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-  slanted_edge_start_rtl =
-      g_strdup_printf (CSS_TEMPLATE_EDGE_START_RTL, color_id,
-                       color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-  css_snippet = g_strconcat (bkg_color, slanted_edge_both_ltr, slanted_edge_both_rtl,
-                             slanted_edge_end_ltr, slanted_edge_start_ltr,
-                             slanted_edge_end_rtl, slanted_edge_start_rtl, NULL);
-  new_css_snippets[arr_length] = css_snippet;
-  g_free (bkg_color);
-  g_free (slanted_edge_both_ltr);
-  g_free (slanted_edge_both_rtl);
-  g_free (slanted_edge_end_ltr);
-  g_free (slanted_edge_start_ltr);
-  g_free (slanted_edge_start_rtl);
-  g_free (slanted_edge_end_rtl);
+      bkg_color = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
+      slanted_edge_both_ltr =
+          g_strdup_printf (CSS_TEMPLATE_EDGE_BOTH, color_id,
+                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str,
+                           color_str, color_str, color_str, color_str, color_str, color_str, color_str);
+      slanted_edge_both_rtl =
+          g_strdup_printf (CSS_TEMPLATE_EDGE_BOTH_RTL, color_id,
+                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str,
+                           color_str, color_str, color_str, color_str, color_str, color_str, color_str);
+      slanted_edge_end_ltr =
+          g_strdup_printf (CSS_TEMPLATE_EDGE, color_id,
+                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
+      slanted_edge_start_ltr =
+          g_strdup_printf (CSS_TEMPLATE_EDGE_START, color_id,
+                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
+      slanted_edge_end_rtl =
+          g_strdup_printf (CSS_TEMPLATE_EDGE_RTL, color_id,
+                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
+      slanted_edge_start_rtl =
+          g_strdup_printf (CSS_TEMPLATE_EDGE_START_RTL, color_id,
+                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
 
-  if (priv->css_code_snippets != NULL)
-    g_free (priv->css_code_snippets); /* shallow free, cause I'm just moving the pointers */
-  priv->css_code_snippets = new_css_snippets;
+      new_css_snippets[i] = g_strconcat (bkg_color, slanted_edge_both_ltr, slanted_edge_both_rtl,
+                                         slanted_edge_end_ltr, slanted_edge_start_ltr,
+                                         slanted_edge_end_rtl, slanted_edge_start_rtl, NULL);
+
+      g_free (bkg_color);
+      g_free (slanted_edge_both_ltr);
+      g_free (slanted_edge_both_rtl);
+      g_free (slanted_edge_end_ltr);
+      g_free (slanted_edge_start_ltr);
+      g_free (slanted_edge_start_rtl);
+      g_free (slanted_edge_end_rtl);
+    }
+
+  g_list_free (sources);
 
   new_css_data = g_strjoinv ("\n", new_css_snippets);
+  g_strfreev (new_css_snippets);
+
   error = NULL;
   gtk_css_provider_load_from_data (priv->colors_provider, new_css_data, -1, &error);
   if (error != NULL)
     g_warning ("Error creating custom stylesheet. %s", error->message);
 
   g_free (new_css_data);
+}
+
+static void
+sources_added_cb (GcalApplication *application,
+                  ESource         *source,
+                  gboolean         enabled,
+                  GcalManager     *manager)
+{
+  process_sources (application);
+}
+
+static void
+load_completed_cb (GcalApplication *application,
+                   GcalManager     *manager)
+{
+  process_sources (application);
+
+  /* listen for other sources */
+  g_signal_connect_swapped (manager, "source-added", G_CALLBACK (sources_added_cb), application);
 }
 
 static void
@@ -239,9 +255,6 @@ gcal_application_finalize (GObject *object)
 
   if (priv->initial_date != NULL)
     g_free (priv->initial_date);
-
-  if (priv->css_code_snippets != NULL)
-    g_strfreev (priv->css_code_snippets);
 
   if (priv->provider != NULL)
     {
