@@ -72,6 +72,11 @@ gchar*          gcal_get_month_name                             (gint           
 GdkPixbuf*      gcal_get_pixbuf_from_color                      (GdkRGBA               *color,
                                                                  gint                   size);
 
+GdkPixbuf*      get_circle_pixbuf_from_color                    (GdkRGBA               *color,
+                                                                 gint                   size);
+
+const gchar*    get_color_name_from_source                      (ESource               *source);
+
 gint            gcal_compare_event_widget_by_date               (gconstpointer          a,
                                                                  gconstpointer          b);
 

@@ -273,6 +273,40 @@ gcal_get_pixbuf_from_color (GdkRGBA  *color,
   return pix;
 }
 
+GdkPixbuf*
+get_circle_pixbuf_from_color (GdkRGBA *color,
+                              gint     size)
+{
+  cairo_surface_t *surface;
+  cairo_t *cr;
+  GdkPixbuf *pix;
+
+  /* TODO: review size here, maybe not hardcoded */
+  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, size, size);
+  cr = cairo_create (surface);
+
+  cairo_set_source_rgba (cr,
+                         color->red,
+                         color->green,
+                         color->blue,
+                         color->alpha);
+  cairo_arc (cr, size / 2.0, size / 2.0, size / 2.0, 0., 2 * M_PI);
+  cairo_fill (cr);
+  cairo_destroy (cr);
+  pix = gdk_pixbuf_get_from_surface (surface,
+                                     0, 0,
+                                     size, size);
+  cairo_surface_destroy (surface);
+  return pix;
+}
+
+const gchar*
+get_color_name_from_source (ESource *source)
+{
+  ESourceSelectable *extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
+  return e_source_selectable_get_color (extension);
+}
+
 gint
 gcal_compare_event_widget_by_date (gconstpointer a,
                                    gconstpointer b)
