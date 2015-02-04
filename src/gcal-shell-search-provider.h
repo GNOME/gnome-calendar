@@ -22,6 +22,8 @@
 #include <glib-object.h>
 #include <gio/gio.h>
 
+#include "gcal-manager.h"
+
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_SHELL_SEARCH_PROVIDER (gcal_shell_search_provider_get_type())
@@ -41,6 +43,8 @@ gboolean                 gcal_shell_search_provider_dbus_export   (GcalShellSear
 void                     gcal_shell_search_provider_dbus_unexport (GcalShellSearchProvider *search_provider,
                                                                    GDBusConnection         *connection,
                                                                    const gchar             *object_path);
+void                     gcal_shell_search_provider_connect       (GcalShellSearchProvider *search_provider,
+                                                                   GcalManager             *manager);
 
 G_END_DECLS
 
