@@ -1118,3 +1118,9 @@ gcal_manager_get_events (GcalManager  *manager,
   return list;
 }
 
+gboolean
+gcal_manager_load_completed (GcalManager *manager)
+{
+  GcalManagerPrivate *priv = gcal_manager_get_instance_private (manager);
+  return priv->sources_at_launch == 0;
+}

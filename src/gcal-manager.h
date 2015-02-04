@@ -129,6 +129,8 @@ GList*         gcal_manager_get_events              (GcalManager        *manager
                                                      icaltimetype       *range_start,
                                                      icaltimetype       *range_end);
 
+gboolean       gcal_manager_load_completed          (GcalManager        *manager);
+
 G_END_DECLS
 
 #endif /* __GCAL_MANAGER_H__ */
