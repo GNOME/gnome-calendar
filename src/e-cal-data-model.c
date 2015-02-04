@@ -1415,13 +1415,19 @@ cal_data_model_view_complete (ECalClientView *view,
 	LOCK_PROPS ();
 
 	client = e_cal_client_view_ref_client (view);
-	view_data =
-	  g_hash_table_lookup (data_model->priv->views, client);
+	if (!client) {
+		UNLOCK_PROPS ();
+		return;
+	}
+
+	view_data = g_hash_table_lookup (data_model->priv->views, client);
+
+	g_clear_object (&client);
+
 	if (view_data) {
 		view_data_ref (view_data);
 		g_warn_if_fail (view_data->view == view);
 	}
-	g_object_unref (client);
 
 	UNLOCK_PROPS ();
 
@@ -1438,6 +1444,8 @@ cal_data_model_view_complete (ECalClientView *view,
 		g_hash_table_destroy (view_data->lost_components);
 		view_data->lost_components = NULL;
 	}
+
+	cal_data_model_emit_view_state_changed (data_model, view, E_CAL_DATA_MODEL_VIEW_STATE_COMPLETE, 0, NULL, error);
 
 	view_data_unlock (view_data);
 	view_data_unref (view_data);
