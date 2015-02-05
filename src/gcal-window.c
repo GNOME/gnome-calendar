@@ -1377,6 +1377,17 @@ gcal_window_constructed (GObject *object)
 
   /* refresh timeout, first is fast */
   priv->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, object);
+
+  /* calendars popover */
+  if (gcal_manager_load_completed (priv->manager))
+    {
+      GList *sources, *l;
+      sources = gcal_manager_get_sources_connected (priv->manager);
+      for (l = sources; l != NULL; l = g_list_next (l))
+        add_source (priv->manager, l->data, gcal_manager_source_enabled (priv->manager, l->data), object);
+
+      g_list_free (sources);
+    }
 }
 
 static void
