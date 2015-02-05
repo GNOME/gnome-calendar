@@ -20,6 +20,7 @@
 #include "gcal-shell-search-provider-generated.h"
 
 #include "gcal-application.h"
+#include "gcal-window.h"
 #include "gcal-utils.h"
 
 typedef struct
@@ -279,6 +280,32 @@ launch_search_cb (GcalShellSearchProvider  *search_provider,
                   guint32                   timestamp,
                   GcalShellSearchProvider2 *skel)
 {
+  GcalShellSearchProviderPrivate *priv;
+  GApplication *application;
+  gchar *terms_joined;
+  icaltimetype current_date;
+  GList *windows;
+
+  priv = search_provider->priv;
+  application = g_application_get_default ();
+  terms_joined = g_strjoinv (" ", terms);
+
+  current_date = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (priv->manager));
+  current_date = icaltime_set_timezone (&current_date, gcal_manager_get_system_timezone (priv->manager));
+  gcal_application_set_initial_date (GCAL_APPLICATION (application), &current_date);
+
+  g_application_activate (application);
+
+  windows = g_list_reverse (gtk_application_get_windows (GTK_APPLICATION (application)));
+  if (windows != NULL)
+    {
+      gcal_window_set_search_mode (GCAL_WINDOW (windows->data), TRUE);
+      gcal_window_set_search_query (GCAL_WINDOW (windows->data), terms_joined);
+
+      g_list_free (windows);
+    }
+
+  g_free (terms_joined);
   return TRUE;
 }
 
