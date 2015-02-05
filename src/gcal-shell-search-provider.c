@@ -105,6 +105,7 @@ execute_search (GcalShellSearchProvider *search_provider)
     }
 
   gcal_manager_set_shell_search_query (priv->manager,  search_query);
+  g_free (search_query);
 
   priv->scheduled_search_id = 0;
   return FALSE;
@@ -192,6 +193,7 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
   struct tm tm_date;
   GdkRGBA color;
   GVariantBuilder abuilder, builder;
+  GVariant *icon_variant;
   GcalEventData *data;
   GdkPixbuf *gicon;
 
@@ -211,8 +213,10 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
 
       gdk_rgba_parse (&color, get_color_name_from_source (data->source));
       gicon = get_circle_pixbuf_from_color (&color, 128);
-      g_variant_builder_add (&builder, "{sv}", "icon", g_icon_serialize (G_ICON (gicon)));
+      icon_variant = g_icon_serialize (G_ICON (gicon));
+      g_variant_builder_add (&builder, "{sv}", "icon", icon_variant);
       g_object_unref (gicon);
+      g_variant_unref (icon_variant);
 
       e_cal_component_get_dtstart (data->event_component, &dtstart);
       tm_date = icaltimetype_to_tm (dtstart.value);
