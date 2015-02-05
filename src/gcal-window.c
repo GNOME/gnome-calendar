@@ -35,15 +35,14 @@
 #include <libecal/libecal.h>
 #include <libical/icaltime.h>
 
-struct _NewEventData
+typedef struct
 {
   gint               x;
   gint               y;
   icaltimetype      *start_date;
   icaltimetype      *end_date;
-};
+} NewEventData;
 
-typedef struct _NewEventData NewEventData;
 typedef struct
 {
   GcalWindow *window;
