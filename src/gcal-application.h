@@ -51,12 +51,11 @@ struct _GcalApplicationClass
 };
 
 GType             gcal_application_get_type     (void) G_GNUC_CONST;
-
 GcalApplication*  gcal_application_new          (void);
-
 GcalManager*      gcal_application_get_manager  (GcalApplication *app);
-
 GSettings*        gcal_application_get_settings (GcalApplication *app);
+void              gcal_application_set_uuid     (GcalApplication *application,
+                                                 const gchar     *uuid);
 
 G_END_DECLS
 

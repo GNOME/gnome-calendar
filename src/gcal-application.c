@@ -45,6 +45,7 @@ struct _GcalApplicationPrivate
   GtkCssProvider *provider;
   GtkCssProvider *colors_provider;
 
+  gchar          *uuid;
   icaltimetype   *initial_date;
 };
 
@@ -95,6 +96,7 @@ G_DEFINE_TYPE_WITH_PRIVATE (GcalApplication, gcal_application, GTK_TYPE_APPLICAT
 
 static gboolean show_version = FALSE;
 static gchar* date = NULL;
+static gchar* uuid = NULL;
 
 static GOptionEntry gcal_application_goptions[] = {
   {
@@ -106,6 +108,11 @@ static GOptionEntry gcal_application_goptions[] = {
     "date", 'd', 0,
     G_OPTION_ARG_STRING, &date,
     N_("Open calendar on the passed date"), NULL
+  },
+  {
+    "uuid", 'u', 0,
+    G_OPTION_ARG_STRING, &uuid,
+    N_("Open calendar showing the passed event"), NULL
   },
   { NULL }
 };
@@ -258,6 +265,7 @@ gcal_application_finalize (GObject *object)
 {
  GcalApplicationPrivate *priv = GCAL_APPLICATION (object)->priv;
 
+  g_free (priv->uuid);
   if (priv->initial_date != NULL)
     g_free (priv->initial_date);
 
@@ -338,6 +346,11 @@ gcal_application_activate (GApplication *application)
       /* FIXME: remove me in favor of gtk_widget_show() */
       gtk_widget_show_all (priv->window);
     }
+    if (priv->uuid != NULL)
+      {
+        gcal_window_open_event_by_uuid (GCAL_WINDOW (priv->window), priv->uuid);
+        g_clear_pointer (&(priv->uuid), g_free);
+      }
 }
 
 static void
@@ -384,7 +397,12 @@ gcal_application_command_line (GApplication            *app,
       return 0;
     }
 
-  if (date != NULL)
+  if (uuid != NULL)
+    {
+      gcal_application_set_uuid (GCAL_APPLICATION (app), uuid);
+      g_clear_pointer (&uuid, g_free);
+    }
+  else if (date != NULL)
     {
       struct tm result;
 
@@ -586,5 +604,15 @@ GSettings*
 gcal_application_get_settings (GcalApplication *app)
 {
   return app->priv->settings;
+}
+
+void
+gcal_application_set_uuid (GcalApplication *application,
+                           const gchar     *uuid)
+{
+  GcalApplicationPrivate *priv = application->priv;
+
+  g_free (priv->uuid);
+  priv->uuid = g_strdup (uuid);
 }
 
