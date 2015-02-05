@@ -325,6 +325,8 @@ gcal_application_activate (GApplication *application)
   if (priv->window != NULL)
     {
       gtk_window_present (GTK_WINDOW (priv->window));
+      if (priv->initial_date != NULL)
+        g_object_set (priv->window, "active-date", priv->initial_date, NULL);
     }
   else
     {
@@ -346,6 +348,8 @@ gcal_application_activate (GApplication *application)
       /* FIXME: remove me in favor of gtk_widget_show() */
       gtk_widget_show_all (priv->window);
     }
+
+    g_clear_pointer (&(priv->initial_date), g_free);
     if (priv->uuid != NULL)
       {
         gcal_window_open_event_by_uuid (GCAL_WINDOW (priv->window), priv->uuid);
@@ -616,3 +620,12 @@ gcal_application_set_uuid (GcalApplication *application,
   priv->uuid = g_strdup (uuid);
 }
 
+void
+gcal_application_set_initial_date (GcalApplication *application,
+                                   const icaltimetype *date)
+{
+  GcalApplicationPrivate *priv = application->priv;
+
+  g_free (priv->initial_date);
+  priv->initial_date = gcal_dup_icaltime (date);
+}
