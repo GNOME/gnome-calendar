@@ -19,6 +19,7 @@
 #include "gcal-shell-search-provider.h"
 #include "gcal-shell-search-provider-generated.h"
 
+#include "gcal-application.h"
 #include "gcal-utils.h"
 
 typedef struct
@@ -242,6 +243,25 @@ activate_result_cb (GcalShellSearchProvider  *search_provider,
                     guint32                   timestamp,
                     GcalShellSearchProvider2 *skel)
 {
+  GcalShellSearchProviderPrivate *priv;
+  GApplication *application;
+  GcalEventData *data;
+  ECalComponentDateTime dtstart;
+
+  priv = search_provider->priv;
+  application = g_application_get_default ();
+
+  data = gcal_manager_get_event_from_shell_search (priv->manager, result);
+  e_cal_component_get_dtstart (data->event_component, &dtstart);
+
+  gcal_application_set_uuid (GCAL_APPLICATION (application), result);
+  gcal_application_set_initial_date (GCAL_APPLICATION (application), dtstart.value);
+  e_cal_component_free_datetime (&dtstart);
+
+  g_application_activate (application);
+
+  g_object_unref (data->event_component);
+  g_free (data);
   return TRUE;
 }
 
