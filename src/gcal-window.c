@@ -1586,6 +1586,14 @@ gcal_window_set_search_mode (GcalWindow *window,
 }
 
 void
+gcal_window_set_search_query (GcalWindow  *window,
+                              const gchar *query)
+{
+  GcalWindowPrivate *priv = gcal_window_get_instance_private (window);
+  gtk_entry_set_text (GTK_ENTRY (priv->search_entry), query);
+}
+
+void
 gcal_window_open_event_by_uuid (GcalWindow  *window,
                                 const gchar *uuid)
 {

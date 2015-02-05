@@ -56,6 +56,8 @@ GtkWidget*   gcal_window_new_with_view_and_date (GcalApplication    *app,
 void         gcal_window_new_event              (GcalWindow         *window);
 void         gcal_window_set_search_mode        (GcalWindow         *window,
                                                  gboolean            enabled);
+void         gcal_window_set_search_query       (GcalWindow         *window,
+                                                 const gchar        *query);
 void         gcal_window_open_event_by_uuid     (GcalWindow         *window,
                                                  const gchar        *uuid);
 
