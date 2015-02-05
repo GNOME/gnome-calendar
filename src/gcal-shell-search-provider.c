@@ -108,6 +108,7 @@ execute_search (GcalShellSearchProvider *search_provider)
   g_free (search_query);
 
   priv->scheduled_search_id = 0;
+  g_application_hold (g_application_get_default ());
   return FALSE;
 }
 
@@ -129,6 +130,9 @@ schedule_search (GcalShellSearchProvider *search_provider,
     {
       g_object_unref (priv->pending_search->invocation);
       g_strfreev (priv->pending_search->terms);
+
+      if (priv->scheduled_search_id == 0)
+        g_application_release (g_application_get_default ());
     }
   else
     {
@@ -144,7 +148,6 @@ schedule_search (GcalShellSearchProvider *search_provider,
   priv->pending_search->invocation = g_object_ref (invocation);
   priv->pending_search->terms = g_strdupv (terms);
 
-  g_application_hold (g_application_get_default ());
   if (!gcal_manager_load_completed (priv->manager))
    {
       priv->scheduled_search_id = g_timeout_add_seconds (1, (GSourceFunc) execute_search, search_provider);
