@@ -1069,6 +1069,20 @@ gcal_manager_disable_source (GcalManager *manager,
   g_settings_set_strv (priv->settings, "disabled-sources", (const gchar * const *) priv->disabled_sources);
 }
 
+gboolean
+gcal_manager_source_enabled (GcalManager *manager,
+                             ESource     *source)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+
+  priv = gcal_manager_get_instance_private (manager);
+  unit = g_hash_table_lookup (priv->clients, source);
+  if (unit == NULL)
+    return FALSE;
+  return unit->enabled;
+}
+
 void
 gcal_manager_refresh (GcalManager *manager)
 {
