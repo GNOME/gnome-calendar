@@ -1558,3 +1558,22 @@ gcal_window_set_search_mode (GcalWindow *window,
   gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (priv->search_bar),
                                   enabled);
 }
+
+void
+gcal_window_open_event_by_uuid (GcalWindow  *window,
+                                const gchar *uuid)
+{
+  GcalWindowPrivate *priv;
+  GList *widgets;
+
+  priv = gcal_window_get_instance_private (window);
+
+  /* XXX: show events on month view */
+  gtk_stack_set_visible_child (GTK_STACK (priv->views_stack), priv->month_view);
+  widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (priv->month_view), uuid);
+  if (widgets != NULL)
+    {
+      event_activated (NULL, widgets->data, window);
+      g_list_free (widgets);
+    }
+}

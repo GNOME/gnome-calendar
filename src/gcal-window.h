@@ -50,15 +50,14 @@ struct _GcalWindowClass
 
 
 GType        gcal_window_get_type             (void);
-
 GtkWidget*   gcal_window_new_with_view_and_date (GcalApplication    *app,
                                                  GcalWindowViewType  view_type,
                                                  icaltimetype       *date);
-
-void         gcal_window_new_event            (GcalWindow         *window);
-
-void         gcal_window_set_search_mode      (GcalWindow         *window,
-                                               gboolean            enabled);
+void         gcal_window_new_event              (GcalWindow         *window);
+void         gcal_window_set_search_mode        (GcalWindow         *window,
+                                                 gboolean            enabled);
+void         gcal_window_open_event_by_uuid     (GcalWindow         *window,
+                                                 const gchar        *uuid);
 
 G_END_DECLS
 
