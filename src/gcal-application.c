@@ -364,10 +364,7 @@ gcal_application_startup (GApplication *app)
 
   /* We're assuming the application is called as a service only by the shell search system */
   if ((g_application_get_flags (app) & G_APPLICATION_IS_SERVICE) != 0)
-    {
-      g_application_set_inactivity_timeout (app, 3 * 60 * 1000);
-      g_debug ("[%s]: set_inactivity_timeout: %d", G_STRFUNC, 3 * 60 * 1000);
-    }
+    g_application_set_inactivity_timeout (app, 3 * 60 * 1000);
 }
 
 static gint

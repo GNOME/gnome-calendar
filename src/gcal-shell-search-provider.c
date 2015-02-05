@@ -89,7 +89,6 @@ execute_search (GcalShellSearchProvider *search_provider)
   gcal_manager_set_shell_search_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (search_provider),
                                             range_start, range_end);
 
-  /* FIXME: terms */
   search_query = g_strdup_printf ("(or (contains? \"summary\" \"%s\") (contains? \"description\" \"%s\"))",
                                   priv->pending_search->terms[0], priv->pending_search->terms[0]);
   for (i = 1; i < g_strv_length (priv->pending_search->terms); i++)
@@ -150,9 +149,8 @@ schedule_search (GcalShellSearchProvider *search_provider,
   priv->pending_search->terms = g_strdupv (terms);
 
   if (!gcal_manager_load_completed (priv->manager))
-   {
+    {
       priv->scheduled_search_id = g_timeout_add_seconds (1, (GSourceFunc) execute_search, search_provider);
-      g_debug ("[%s]: scheduling search", G_STRFUNC);
       return;
     }
 
