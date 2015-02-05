@@ -1225,3 +1225,41 @@ gcal_manager_load_completed (GcalManager *manager)
   GcalManagerPrivate *priv = gcal_manager_get_instance_private (manager);
   return priv->sources_at_launch == 0;
 }
+
+GcalEventData*
+gcal_manager_get_event_from_shell_search (GcalManager *manager,
+                                          const gchar *uuid)
+{
+  GcalManagerPrivate *priv;
+  time_t range_start, range_end;
+  GList *l, *list = NULL;
+  GcalEventData *new_data, *data;
+  gchar *cuuid;
+
+  priv = gcal_manager_get_instance_private (manager);
+
+  e_cal_data_model_get_subscriber_range (priv->shell_search_data_model, priv->search_view_data->subscriber,
+                                         &range_start, &range_end);
+  e_cal_data_model_foreach_component (priv->shell_search_data_model, range_start, range_end, gather_components, &list);
+  if (list != NULL)
+    new_data = g_new0 (GcalEventData, 1);
+
+  for (l = list; l != NULL; l = g_list_next (l))
+    {
+      data = l->data;
+      cuuid = get_uuid_from_component (data->source, data->event_component);
+
+      if (g_strcmp0 (cuuid, uuid) == 0)
+        {
+          new_data->source = data->source;
+          new_data->event_component = g_object_ref (data->event_component);
+        }
+
+      g_object_unref (data->event_component);
+      g_free (data);
+      g_free (cuuid);
+    }
+  g_list_free (list);
+
+  return new_data;
+}

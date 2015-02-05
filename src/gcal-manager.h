@@ -142,6 +142,9 @@ GList*         gcal_manager_get_events              (GcalManager        *manager
 
 gboolean       gcal_manager_load_completed          (GcalManager        *manager);
 
+GcalEventData* gcal_manager_get_event_from_shell_search (GcalManager        *manager,
+                                                         const gchar        *uuid);
+
 G_END_DECLS
 
 #endif /* __GCAL_MANAGER_H__ */
