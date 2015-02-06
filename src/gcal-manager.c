@@ -292,7 +292,7 @@ load_source (GcalManager *manager,
     {
       /* NULL: because maybe the operation cannot be really cancelled */
       e_cal_client_connect (source,
-                            E_CAL_CLIENT_SOURCE_TYPE_EVENTS, NULL,
+                            E_CAL_CLIENT_SOURCE_TYPE_EVENTS, 1, NULL,
                             on_client_connected,
                             manager);
     }
