@@ -316,7 +316,6 @@ make_row_for_event_data (GcalSearchView  *view,
   GDateTime *datetime;
   ECalComponentDateTime comp_dt;
   ECalComponentText summary;
-  ESourceSelectable *extension;
   GdkRGBA color;
   GdkPixbuf *pixbuf;
 
@@ -334,9 +333,7 @@ make_row_for_event_data (GcalSearchView  *view,
   priv = gcal_search_view_get_instance_private (view);
 
   /* get event color */
-  extension = E_SOURCE_SELECTABLE (e_source_get_extension (data->source, E_SOURCE_EXTENSION_CALENDAR));
-  gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
-
+  gdk_rgba_parse (&color, get_color_name_from_source (data->source));
   pixbuf = gcal_get_pixbuf_from_color (&color, 16);
 
   /* make an image of the color */

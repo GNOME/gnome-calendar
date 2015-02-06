@@ -129,15 +129,13 @@ fill_sources_menu (GcalEditDialog *dialog)
     {
       ESource *source;
       GMenuItem *item;
-      ESourceSelectable *extension;
       GdkRGBA color;
       GdkPixbuf *pix;
 
       source = E_SOURCE (aux->data);
 
       /* retrieve color */
-      extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
-      gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
+      gdk_rgba_parse (&color, get_color_name_from_source (source));
       pix = gcal_get_pixbuf_from_color (&color, 16);;
 
       /* menu item */
@@ -194,12 +192,10 @@ on_calendar_selected (GtkWidget *menu_item,
       if (g_strcmp0 (e_source_get_uid (source), uid) == 0)
       {
         GdkRGBA color;
-        ESourceSelectable *extension;
         GdkPixbuf *pix;
 
         /* retrieve color */
-        extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
-        gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
+        gdk_rgba_parse (&color, get_color_name_from_source (source));
 
         pix = gcal_get_pixbuf_from_color (&color, 16);
         gtk_image_set_from_pixbuf (GTK_IMAGE (priv->source_image), pix);
@@ -764,7 +760,6 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
 
   GdkRGBA color;
   GdkPixbuf *pix;
-  ESourceSelectable *extension;
 
   const gchar *const_text = NULL;
   gboolean all_day;
@@ -825,10 +820,7 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
     gtk_entry_set_text (GTK_ENTRY (priv->summary_entry), e_summary.value);
 
   /* dialog titlebar's title & subtitle */
-  extension = E_SOURCE_SELECTABLE (e_source_get_extension (data->source, E_SOURCE_EXTENSION_CALENDAR));
-  gdk_rgba_parse (
-      &color,
-      e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
+  gdk_rgba_parse (&color, get_color_name_from_source (data->source));
 
   pix = gcal_get_pixbuf_from_color (&color, 16);
   gtk_image_set_from_pixbuf (GTK_IMAGE (priv->source_image), pix);

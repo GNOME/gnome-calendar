@@ -727,7 +727,6 @@ add_source (GcalManager *manager,
   GSimpleAction *action;
 
   gchar *item_name;
-  ESourceSelectable *extension;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
@@ -738,8 +737,7 @@ add_source (GcalManager *manager,
 
   /* retrieve the source's color & build item name */
   item_name = g_strdup_printf ("%s", e_source_get_uid (source));
-  extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
-  gdk_rgba_parse (&color, e_source_selectable_get_color (E_SOURCE_SELECTABLE (extension)));
+  gdk_rgba_parse (&color, get_color_name_from_source (source));
   pix = gcal_get_pixbuf_from_color (&color, 16);
 
   /* create the menu item */

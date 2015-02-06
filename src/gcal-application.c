@@ -134,7 +134,6 @@ process_sources (GcalApplication *application)
   ESource *source;
 
   gint arr_length, i = 0;
-  ESourceSelectable *extension;
   GQuark color_id;
   const gchar* color_str;
 
@@ -154,9 +153,8 @@ process_sources (GcalApplication *application)
     {
       source = l->data;
 
-      extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
-      color_id = g_quark_from_string (e_source_selectable_get_color (extension));
-      color_str = e_source_selectable_get_color (extension);
+      color_str = get_color_name_from_source (source);
+      color_id = g_quark_from_string (color_str);
 
       bkg_color = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
       slanted_edge_both_ltr =

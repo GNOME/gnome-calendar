@@ -705,7 +705,6 @@ gcal_event_widget_new_from_data (GcalEventData *data)
   gchar *uuid;
   ECalComponentId *id;
   ECalComponentText e_summary;
-  ESourceSelectable *extension;
 
   GQuark color_id;
   GdkRGBA color;
@@ -744,13 +743,10 @@ gcal_event_widget_new_from_data (GcalEventData *data)
   gcal_event_widget_set_summary (event, (gchar*) e_summary.value);
 
   /* color */
-  extension = E_SOURCE_SELECTABLE (
-                  e_source_get_extension (priv->source,
-                                          E_SOURCE_EXTENSION_CALENDAR));
-  gdk_rgba_parse (&color, e_source_selectable_get_color (extension));
+  gdk_rgba_parse (&color, get_color_name_from_source (priv->source));
   gcal_event_widget_set_color (event, &color);
 
-  color_id = g_quark_from_string (e_source_selectable_get_color (extension));
+  color_id = g_quark_from_string (get_color_name_from_source (priv->source));
   custom_css_class = g_strdup_printf ("color-%d", color_id);
   gtk_style_context_add_class (gtk_widget_get_style_context (widget), custom_css_class);
   g_free (custom_css_class);
