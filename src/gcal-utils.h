@@ -51,19 +51,7 @@ const gchar*  (*GcalTranslateFunc)                              (GtkWidget      
 
 GType           icaltime_get_type                               (void)            G_GNUC_CONST;
 
-void            gcal_gtk_tree_view_set_activate_on_single_click (GtkTreeView           *tree_view,
-                                                                 gboolean               should_activate);
-
-
-const gchar*    gcal_get_group_name                             (const gchar           *base_uri);
-
 icaltimetype*   gcal_dup_icaltime                               (const icaltimetype    *date);
-
-gchar*          gcal_get_source_name                            (GtkTreeModel          *model,
-                                                                 const gchar           *uid);
-
-gchar*          gcal_get_source_uid                             (GtkTreeModel          *model,
-                                                                 const gchar           *name);
 
 gchar*          gcal_get_weekday                                (gint                   i);
 
@@ -79,9 +67,6 @@ const gchar*    get_color_name_from_source                      (ESource        
 
 gint            gcal_compare_event_widget_by_date               (gconstpointer          a,
                                                                  gconstpointer          b);
-
-void            print_date                                      (const gchar*           prefix,
-                                                                 const icaltimetype*    icaltime);
 
 gchar*          get_desc_from_component                         (ECalComponent         *component,
                                                                  const gchar           *joint_char);

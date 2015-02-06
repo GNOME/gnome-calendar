@@ -413,7 +413,6 @@ gcal_application_command_line (GApplication            *app,
 
           *(priv->initial_date) = icaltime_set_timezone (priv->initial_date,
                                                          gcal_manager_get_system_timezone (priv->manager));
-          print_date ("loading date", priv->initial_date);
         }
 
       g_clear_pointer (&date, g_free);

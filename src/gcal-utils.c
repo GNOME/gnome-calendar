@@ -63,66 +63,6 @@ month_item[12] =
 
 G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
 
-/* taken from eel/eel-gtk-extensions.c */
-static gboolean
-tree_view_button_press_callback (GtkWidget *tree_view,
-         GdkEventButton *event,
-         gpointer data)
-{
-  GtkTreePath *path;
-  GtkTreeViewColumn *column;
-
-  if (event->button == 1 && event->type == GDK_BUTTON_PRESS) {
-    if (gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (tree_view),
-             event->x, event->y,
-             &path,
-             &column,
-             NULL,
-             NULL)) {
-      gtk_tree_view_row_activated
-        (GTK_TREE_VIEW (tree_view), path, column);
-    }
-  }
-
-  return FALSE;
-}
-
-void
-gcal_gtk_tree_view_set_activate_on_single_click (GtkTreeView *tree_view,
-                                                 gboolean should_activate)
-{
-  guint button_press_id;
-
-  button_press_id = GPOINTER_TO_UINT
-    (g_object_get_data (G_OBJECT (tree_view),
-          "gd-tree-view-activate"));
-
-  if (button_press_id && !should_activate) {
-    g_signal_handler_disconnect (tree_view, button_press_id);
-    g_object_set_data (G_OBJECT (tree_view),
-         "gd-tree-view-activate",
-         NULL);
-  } else if (!button_press_id && should_activate) {
-    button_press_id = g_signal_connect
-      (tree_view,
-       "button_press_event",
-       G_CALLBACK  (tree_view_button_press_callback),
-       NULL);
-    g_object_set_data (G_OBJECT (tree_view),
-         "gd-tree-view-activate",
-         GUINT_TO_POINTER (button_press_id));
-  }
-}
-
-const gchar*
-gcal_get_group_name (const gchar *base_uri)
-{
-  if (g_strcmp0 (base_uri, "local:") == 0)
-    return "Local";
-  else
-    return "External";
-}
-
 icaltimetype*
 gcal_dup_icaltime (const icaltimetype *date)
 {
@@ -144,85 +84,6 @@ gcal_dup_icaltime (const icaltimetype *date)
   new_date->zone = date->zone;
 
   return new_date;
-}
-
-/*
- * gcal_get_source_name:
- *
- * This method assume it receive only the model inside GcalManager
- * */
-gchar*
-gcal_get_source_name (GtkTreeModel *model,
-                      const gchar  *uid)
-{
-  GtkTreeIter iter;
-  gboolean valid;
-  gchar *name;
-
-  name = NULL;
-  valid = gtk_tree_model_get_iter_first (model, &iter);
-  while (valid)
-    {
-      gchar *name_data;
-      gchar *uid_data;
-
-      gtk_tree_model_get (model, &iter,
-                          0, &uid_data,
-                          1, &name_data,
-                          -1);
-
-      if (g_strcmp0 (uid_data, uid) == 0)
-        {
-          name = g_strdup (name_data);
-
-          g_free (name_data);
-          g_free (uid_data);
-          break;
-        }
-
-      g_free (name_data);
-      g_free (uid_data);
-
-      valid = gtk_tree_model_iter_next (model, &iter);
-    }
-  return name;
-}
-
-gchar*
-gcal_get_source_uid (GtkTreeModel *model,
-                     const gchar  *name)
-{
-  GtkTreeIter iter;
-  gboolean valid;
-  gchar *uid;
-
-  uid = NULL;
-  valid = gtk_tree_model_get_iter_first (model, &iter);
-  while (valid)
-    {
-      gchar *name_data;
-      gchar *uid_data;
-
-      gtk_tree_model_get (model, &iter,
-                          0, &uid_data,
-                          1, &name_data,
-                          -1);
-
-      if (g_strcmp0 (name_data, name) == 0)
-        {
-          uid = g_strdup (uid_data);
-
-          g_free (name_data);
-          g_free (uid_data);
-          break;
-        }
-
-      g_free (name_data);
-      g_free (uid_data);
-
-      valid = gtk_tree_model_iter_next (model, &iter);
-    }
-  return uid;
 }
 
 gchar*
@@ -332,22 +193,6 @@ gcal_compare_event_widget_by_date (gconstpointer a,
   g_free (b_date);
 
   return comparison;
-}
-
-void print_date (const gchar*        prefix,
-                 const icaltimetype* icaltime)
-{
-  gchar* temp = g_strdup_printf ("{y = %d, m = %d, d = %d, hour = %d:%d:%d, utc = %d, date = %d, daylight = %d, zone = %p}",
-                                 icaltime->year, icaltime->month,
-                                 icaltime->day, icaltime->hour,
-                                 icaltime->minute, icaltime->second,
-                                 icaltime->is_utc, icaltime->is_date,
-                                 icaltime->is_daylight, icaltime->zone);
-  g_debug ("%s: %s  --  zone: %s",
-           prefix,
-           temp,
-           icaltimezone_get_display_name ((icaltimezone*) icaltime->zone));
-  g_free (temp);
 }
 
 /**
