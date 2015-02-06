@@ -361,11 +361,9 @@ date_updated (GtkButton  *button,
 
   new_date = gcal_dup_icaltime (priv->active_date);
 
-  /* FIXME: use current_date */
   if (move_today)
     {
-      *new_date = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (priv->manager));
-      *new_date = icaltime_set_timezone (new_date, gcal_manager_get_system_timezone (priv->manager));
+      *new_date = *(priv->current_date);
     }
   else
     {
@@ -388,8 +386,10 @@ date_updated (GtkButton  *button,
         case GCAL_WINDOW_VIEW_SEARCH:
           break;
         }
+
+      *new_date = icaltime_normalize (*new_date);
     }
-  *new_date = icaltime_normalize (*new_date);
+
   update_active_date (user_data, new_date);
   g_object_notify (user_data, "active-date");
 }
