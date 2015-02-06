@@ -1013,6 +1013,8 @@ gcal_manager_enable_source (GcalManager *manager,
   unit->enabled = TRUE;
   e_cal_data_model_add_client (priv->e_data_model, unit->client);
   e_cal_data_model_add_client (priv->search_data_model, unit->client);
+  if (priv->shell_search_data_model != NULL)
+    e_cal_data_model_add_client (priv->shell_search_data_model, unit->client);
 
   /* remove source's uid from disabled_sources array */
   new_disabled_sources = g_new0 (gchar*, g_strv_length (priv->disabled_sources));
@@ -1044,6 +1046,7 @@ gcal_manager_disable_source (GcalManager *manager,
   GcalManagerUnit *unit;
   gchar **new_disabled_sources;
   gint i;
+  const gchar *source_uid;
 
   priv = gcal_manager_get_instance_private (manager);
   unit = g_hash_table_lookup (priv->clients, source);
@@ -1051,9 +1054,12 @@ gcal_manager_disable_source (GcalManager *manager,
   if (!unit->enabled)
     return;
 
+  source_uid = e_source_get_uid (source);
   unit->enabled = FALSE;
-  e_cal_data_model_remove_client (priv->e_data_model, e_source_get_uid (source));
-  e_cal_data_model_remove_client (priv->search_data_model, e_source_get_uid (source));
+  e_cal_data_model_remove_client (priv->e_data_model, source_uid);
+  e_cal_data_model_remove_client (priv->search_data_model, source_uid);
+  if (priv->shell_search_data_model != NULL)
+    e_cal_data_model_remove_client (priv->shell_search_data_model, source_uid);
 
   /* add source's uid from disabled_sources array */
   new_disabled_sources = g_new0 (gchar*, g_strv_length (priv->disabled_sources) + 2);
