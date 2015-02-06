@@ -389,6 +389,7 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
                                         gint      *natural)
 {
   GtkBorder margin;
+  GtkBorder padding;
   PangoLayout *layout;
   gint height;
 
@@ -399,9 +400,12 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
   gtk_style_context_get_margin (gtk_widget_get_style_context (widget),
                                 gtk_widget_get_state_flags (widget),
                                 &margin);
+  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
+                                 gtk_widget_get_state_flags (widget),
+                                 &padding);
 
   *minimum = *natural =
-    height + 4 + 4 + margin.top + margin.bottom;
+    height + padding.top + padding.bottom + margin.top + margin.bottom;
 
   g_object_unref (layout);
 }
@@ -586,7 +590,7 @@ gcal_event_widget_draw (GtkWidget *widget,
 
   gtk_render_layout (context, cr,
                      x + padding.left + left_gap,
-                     y + 4,
+                     y + padding.top,
                      layout);
 
   /* render reminder icon */
@@ -612,7 +616,7 @@ gcal_event_widget_draw (GtkWidget *widget,
       gdk_cairo_set_source_pixbuf (cr,
                                    pixbuf,
                                    x + padding.left,
-                                   y + 4 + ((icon_size - (16 * multiplier)) / 2));
+                                   y + padding.top + ((icon_size - (16 * multiplier)) / 2));
       g_object_unref (pixbuf);
       cairo_paint (cr);
     }
@@ -640,7 +644,7 @@ gcal_event_widget_draw (GtkWidget *widget,
       gdk_cairo_set_source_pixbuf (cr,
                                    pixbuf,
                                    width - right_gap,
-                                   y + 4 + ((icon_size - (16 * multiplier)) / 2));
+                                   y + padding.top + ((icon_size - (16 * multiplier)) / 2));
       g_object_unref (pixbuf);
       cairo_paint (cr);
     }
