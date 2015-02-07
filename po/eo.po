@@ -1,0 +1,313 @@
+# Esperanto translation for gnome-calendar.
+# Copyright (C) 2015 Free Software Foundation, Inc.
+# This file is distributed under the same license as the gnome-calendar package.
+# Daniel PUENTES <blatberk@openmailbox.org>, 2015.
+# Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-02-06 14:25+0000\n"
+"PO-Revision-Date: 2015-02-08 00:06+0200\n"
+"Last-Translator: Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
+"Language-Team: Esperanto\n"
+"Language: eo\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Virtaal 0.7.1\n"
+"X-Project-Style: gnome\n"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:560
+msgid "Calendar"
+msgstr "Kalendaro"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+msgid "Calendar for GNOME"
+msgstr "Kalendaro por GNOME"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"GNOME-Kalendaro estas simpla kaj bela kalendar-aplikaĵo desegnita por "
+"perfekte konveni la surfacon de GNOME. Per reuzado de la eroj sur kiuj la "
+"GNOME-surfaco estas konstruita, Kalendaro agrable integriĝas en la "
+"ekosistemo de GNOME."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"Ni celas trovi la perfektan ekvilibron inter agrable formitaj eblecoj kaj "
+"uzanto-centrita afableco. Neniuj troigoj, neniuj mankoj. Vi komforte fartos "
+"dum uzado de Kalendaro, kiele vi estis uzanta ĝin dum longa tempo!"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "Serĉi eventojn"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Calendar management"
+msgstr "Kalendara administrado"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr "Aliri kaj administri kalendaron"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Kalendaro;Evento;Rememorigilo;"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Maksimumigita fenestro"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Maksimumigita stato de fenestro"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Window size"
+msgstr "Fenestra grando"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Fenestra grando (larĝo kaj alto)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Fenestra pozicio"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Fenestra pozicio (x kaj y)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
+msgid "Type of the active view"
+msgstr "Tipo de la aktiva vidon"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
+msgid "Type of the active window view, default value is: monthly view"
+msgstr "Tipo de la vido de la aktiva fenestro, defaŭlta estas: monata vido"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "Listo de la malvalidigitaj fontoj"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "Fontoj malvalidigitaj lastfoja lanĉo de Kalendaro"
+
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "Rezigni"
+
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
+msgid "Done"
+msgstr "Farite"
+
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "Titolo"
+
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "Komencas"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "Finas"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "Notoj"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "Loko"
+
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:387
+msgid "All day"
+msgstr "Tutatage"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "Forigi eventon"
+
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "Aldoni eve_nton…"
+
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "_Serĉi…"
+
+#: ../data/ui/menus.ui.h:3
+msgid "_About"
+msgstr "_Pri"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Quit"
+msgstr "_Forlasi"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "_Sinkronigi"
+
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "Nenia rezultoj trovitaj"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "Uzi la supran enigan kriterion por serĉi eventojn."
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:381
+#: ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "ATM"
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:381
+#: ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "PTM"
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "Monato"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
+msgstr "Jaro"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:232 ../src/gcal-year-view.c:380
+msgid "Today"
+msgstr "Hodiaŭ"
+
+#: ../data/ui/window.ui.h:5
+msgid "Create"
+msgstr "Krei"
+
+#: ../data/ui/window.ui.h:6
+msgid "More Details"
+msgstr "Pli da detaloj"
+
+#: ../data/ui/year-view.ui.h:2
+msgid "No events"
+msgstr "Neniu evento"
+
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+msgid "Add Event…"
+msgstr "Aldoni eventon…"
+
+#: ../src/gcal-application.c:105
+msgid "Display version number"
+msgstr "Montri versia nombro"
+
+#: ../src/gcal-application.c:110
+msgid "Open calendar on the passed date"
+msgstr "Malfermi kalendaron je la pasinta dato"
+
+#: ../src/gcal-application.c:115
+#| msgid "Open calendar on the passed date"
+msgid "Open calendar showing the passed event"
+msgstr "Malfermi kalendaron montrante la pasintan daton"
+
+#: ../src/gcal-application.c:381
+msgid "- Calendar management"
+msgstr "- Kalendara administrado"
+
+#: ../src/gcal-application.c:548
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Kopirajto© %Id La aŭtoroj de Kalendaro"
+
+#: ../src/gcal-application.c:554
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Kopirajto© %Id–%Id La aŭtoroj de Kalendaro"
+
+#: ../src/gcal-application.c:567
+msgid "translator-credits"
+msgstr "Daniel PUENTES, Kristjan SCHMIDT"
+
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "Tago"
+
+#: ../src/gcal-edit-dialog.c:634
+msgid "Save"
+msgstr "Konservi"
+
+#: ../src/gcal-edit-dialog.c:818
+msgid "Unnamed event"
+msgstr "Nenomita evento"
+
+#: ../src/gcal-month-view.c:825
+msgid "Other events"
+msgstr "Aliaj eventoj"
+
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1177
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Alia evento"
+msgstr[1] "Aliaj %d eventoj"
+
+#: ../src/gcal-search-view.c:380
+#, c-format
+msgid "%.2d:%.2d %s"
+msgstr "%.2d:%.2d %s"
+
+#: ../src/gcal-time-selector.c:96
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d:%.2d ATM"
+
+#: ../src/gcal-time-selector.c:98
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d:%.2d PTM"
+
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
+msgid "Midnight"
+msgstr "Noktomezo"
+
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
+msgid "Noon"
+msgstr "Tagmezo"
+
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "00:00 PTM"
+
+#: ../src/gcal-window.c:632
+#, c-format
+msgid "New Event on %s"
+msgstr "Nova evento ĉe %s"
+
+#: ../src/gcal-window.c:1025
+msgid "Event deleted"
+msgstr "Forigita evento"
+
+#: ../src/gcal-window.c:1026
+msgid "Undo"
+msgstr "Malfari"
