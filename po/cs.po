@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-01-28 18:58+0000\n"
-"PO-Revision-Date: 2015-02-03 19:56+0100\n"
+"POT-Creation-Date: 2015-02-06 14:25+0000\n"
+"PO-Revision-Date: 2015-02-08 23:53+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -22,8 +22,9 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.6\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
-#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:470
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:560
 msgid "Calendar"
 msgstr "Kalendář"
 
@@ -114,7 +115,7 @@ msgstr "Zdroje zakázané při posledním spuštění Kalendáře"
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:638
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
 msgid "Done"
 msgstr "Hotovo"
 
@@ -138,7 +139,7 @@ msgstr "Poznámky"
 msgid "Location"
 msgstr "Umístění"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:390
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:387
 msgid "All day"
 msgstr "Celý den"
 
@@ -182,12 +183,12 @@ msgstr "00∶00"
 msgid ":"
 msgstr "∶"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:381
 #: ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "dop."
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:381
 #: ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "odp."
@@ -217,31 +218,35 @@ msgstr "Více podrobností"
 msgid "No events"
 msgstr "Žádné události"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:605
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
 msgid "Add Event…"
 msgstr "Přidat událost…"
 
-#: ../src/gcal-application.c:95
+#: ../src/gcal-application.c:105
 msgid "Display version number"
 msgstr "Zobrazit číslo verze"
 
-#: ../src/gcal-application.c:100
+#: ../src/gcal-application.c:110
 msgid "Open calendar on the passed date"
 msgstr "Otevřít kalendář na zadaném datu"
 
-#: ../src/gcal-application.c:330
+#: ../src/gcal-application.c:115
+msgid "Open calendar showing the passed event"
+msgstr "Otevřít kalendář na zadané události"
+
+#: ../src/gcal-application.c:381
 msgid "- Calendar management"
 msgstr "– Správa kalendáře"
 
-#: ../src/gcal-application.c:458
+#: ../src/gcal-application.c:548
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id autoři Kalendáře"
 
-#: ../src/gcal-application.c:464
+#: ../src/gcal-application.c:554
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id – %Id autoři Kalendáře"
 
-#: ../src/gcal-application.c:477
+#: ../src/gcal-application.c:567
 msgid "translator-credits"
 msgstr ""
 "Adam Matoušek <adamatousek@gmail.com>\n"
@@ -251,11 +256,11 @@ msgstr ""
 msgid "Day"
 msgstr "Den"
 
-#: ../src/gcal-edit-dialog.c:638
+#: ../src/gcal-edit-dialog.c:634
 msgid "Save"
 msgstr "Uložit"
 
-#: ../src/gcal-edit-dialog.c:823
+#: ../src/gcal-edit-dialog.c:818
 msgid "Unnamed event"
 msgstr "Událost bez názvu"
 
@@ -272,7 +277,7 @@ msgstr[0] "Další událost"
 msgstr[1] "Další %d události"
 msgstr[2] "Další %d událostí"
 
-#: ../src/gcal-search-view.c:383
+#: ../src/gcal-search-view.c:380
 #, c-format
 msgid "%.2d:%.2d %s"
 msgstr "%.2d∶%.2d %s"
@@ -299,15 +304,15 @@ msgstr "Poledne"
 msgid "00:00 PM"
 msgstr "00∶00 odp."
 
-#: ../src/gcal-window.c:605
+#: ../src/gcal-window.c:632
 #, c-format
 msgid "New Event on %s"
 msgstr "Nová událost %s"
 
-#: ../src/gcal-window.c:1000
+#: ../src/gcal-window.c:1025
 msgid "Event deleted"
 msgstr "Událost smazána"
 
-#: ../src/gcal-window.c:1001
+#: ../src/gcal-window.c:1026
 msgid "Undo"
 msgstr "Zpět"
