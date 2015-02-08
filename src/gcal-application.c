@@ -137,8 +137,6 @@ process_sources (GcalApplication *application)
   GQuark color_id;
   const gchar* color_str;
 
-  gchar *bkg_color, *slanted_edge_both_ltr, *slanted_edge_both_rtl;
-  gchar *slanted_edge_start_ltr, *slanted_edge_start_rtl, *slanted_edge_end_ltr, *slanted_edge_end_rtl;
   gchar **new_css_snippets;
   gchar *new_css_data;
 
@@ -156,39 +154,7 @@ process_sources (GcalApplication *application)
       color_str = get_color_name_from_source (source);
       color_id = g_quark_from_string (color_str);
 
-      bkg_color = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
-      slanted_edge_both_ltr =
-          g_strdup_printf (CSS_TEMPLATE_EDGE_BOTH, color_id,
-                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str,
-                           color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-      slanted_edge_both_rtl =
-          g_strdup_printf (CSS_TEMPLATE_EDGE_BOTH_RTL, color_id,
-                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str,
-                           color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-      slanted_edge_end_ltr =
-          g_strdup_printf (CSS_TEMPLATE_EDGE, color_id,
-                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-      slanted_edge_start_ltr =
-          g_strdup_printf (CSS_TEMPLATE_EDGE_START, color_id,
-                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-      slanted_edge_end_rtl =
-          g_strdup_printf (CSS_TEMPLATE_EDGE_RTL, color_id,
-                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-      slanted_edge_start_rtl =
-          g_strdup_printf (CSS_TEMPLATE_EDGE_START_RTL, color_id,
-                           color_str, color_str, color_str, color_str, color_str, color_str, color_str, color_str);
-
-      new_css_snippets[i] = g_strconcat (bkg_color, slanted_edge_both_ltr, slanted_edge_both_rtl,
-                                         slanted_edge_end_ltr, slanted_edge_start_ltr,
-                                         slanted_edge_end_rtl, slanted_edge_start_rtl, NULL);
-
-      g_free (bkg_color);
-      g_free (slanted_edge_both_ltr);
-      g_free (slanted_edge_both_rtl);
-      g_free (slanted_edge_end_ltr);
-      g_free (slanted_edge_start_ltr);
-      g_free (slanted_edge_start_rtl);
-      g_free (slanted_edge_end_rtl);
+      new_css_snippets[i] = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
     }
 
   g_list_free (sources);
