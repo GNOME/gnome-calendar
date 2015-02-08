@@ -223,3 +223,7 @@ GcalEventWidget.color-light:backdrop {
   background-color: @theme_base_color;
 }
 
+/* calendar popover */
+.calendar-list {
+    background-color: rgba(0, 0, 0, 0);
+}

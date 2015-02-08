@@ -109,9 +109,11 @@ typedef struct
 
   /* calendar management */
   GtkWidget           *calendar_popover;
-  GMenu               *calendar_menu;
+  GtkWidget           *calendar_listbox;
   gint                 refresh_timeout;
   gint                 refresh_timeout_id;
+
+  GHashTable          *calendar_source_to_row;
 
   /* temp to keep event_creation */
   gboolean             open_edit_dialog;
@@ -185,12 +187,15 @@ static void           add_source                         (GcalManager         *m
                                                           gboolean             enabled,
                                                           gpointer             user_data);
 
+static GtkWidget*     make_row_for_source                (GcalWindow          *window,
+                                                          ESource             *source);
+
 static void           remove_source                      (GcalManager         *manager,
                                                           ESource             *source,
                                                           gpointer             user_data);
 
-static void           on_calendar_toggled                (GSimpleAction       *action,
-                                                          GVariant            *value,
+static void           on_calendar_toggled                (GObject             *object,
+                                                          GParamSpec          *pspec,
                                                           gpointer             user_data);
 
 static gboolean       refresh_sources                    (GcalWindow          *window);
@@ -763,38 +768,69 @@ add_source (GcalManager *manager,
             gpointer     user_data)
 {
   GcalWindowPrivate *priv;
-
-  GdkRGBA color;
-  GdkPixbuf *pix;
-  GMenuItem *item;
-  GSimpleAction *action;
-
-  gchar *item_name;
+  GtkWidget *row;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  row = make_row_for_source (GCAL_WINDOW (user_data), source);
 
-  /* create the action itself */
-  action = g_simple_action_new_stateful (e_source_get_uid (source), NULL, g_variant_new_boolean (enabled));
-  g_signal_connect (action, "change-state", G_CALLBACK (on_calendar_toggled), user_data);
-  g_action_map_add_action (G_ACTION_MAP (user_data), G_ACTION (action));
+  /* add to the hash */
+  g_hash_table_insert (priv->calendar_source_to_row, source, row);
 
-  /* retrieve the source's color & build item name */
-  item_name = g_strdup_printf ("%s", e_source_get_uid (source));
-  get_color_name_from_source (source, &color);
-  pix = gcal_get_pixbuf_from_color (&color, 16);
+  gtk_container_add (GTK_CONTAINER (priv->calendar_listbox), row);
+}
 
-  /* create the menu item */
-  item = g_menu_item_new (e_source_get_display_name (source), item_name);
-  g_menu_item_set_attribute_value (item, "uid", g_variant_new_string (e_source_get_uid (source)));
-  g_menu_item_set_icon (item, G_ICON (pix));
-  g_menu_append_item (priv->calendar_menu, item);
+/**
+ * make_row_for_source:
+ *
+ * Create a GtkListBoxRow for a given
+ * ESource.
+ *
+ * Returns: (transfer full) the new row
+ */
+static GtkWidget*
+make_row_for_source (GcalWindow *window,
+                     ESource    *source)
+{
+  GcalWindowPrivate *priv = gcal_window_get_instance_private (window);
+  GtkWidget *label, *icon, *separator, *checkbox, *box, *row;
+  GdkPixbuf *pixbuf;
+  GdkRGBA color;
 
-  /* HACK: show images of the popover menu */
-  fix_popover_menu_icons (GTK_POPOVER (priv->calendar_popover));
+  row = gtk_list_box_row_new ();
 
-  g_object_unref (pix);
-  g_object_unref (item);
-  g_free (item_name);
+  /* main box */
+  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
+  gtk_container_set_border_width (GTK_CONTAINER (box), 6);
+
+  /* source color icon */
+  gdk_rgba_parse (&color, get_color_name_from_source (source));
+  pixbuf = gcal_get_pixbuf_from_color (&color, 16);
+  icon = gtk_image_new_from_pixbuf (pixbuf);
+
+  /* source name label */
+  label = gtk_label_new (e_source_get_display_name (source));
+  gtk_label_set_xalign (GTK_LABEL (label), 0.0);
+  gtk_widget_set_hexpand (label, TRUE);
+
+  /* vertical separator */
+  separator = gtk_separator_new (GTK_ORIENTATION_VERTICAL);
+
+  /* checkbox */
+  checkbox = gtk_check_button_new ();
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbox), gcal_manager_source_enabled (priv->manager, source));
+  g_signal_connect (checkbox, "notify::active", G_CALLBACK (on_calendar_toggled), window);
+
+  gtk_container_add (GTK_CONTAINER (box), icon);
+  gtk_container_add (GTK_CONTAINER (box), label);
+  gtk_container_add (GTK_CONTAINER (box), separator);
+  gtk_container_add (GTK_CONTAINER (box), checkbox);
+  gtk_container_add (GTK_CONTAINER (row), box);
+
+  gtk_widget_show_all (row);
+
+  g_object_unref (pixbuf);
+
+  return row;
 }
 
 static void
@@ -802,89 +838,51 @@ remove_source (GcalManager *manager,
                ESource     *source,
                gpointer     user_data)
 {
-  GcalWindowPrivate *priv;
-  gboolean source_found;
-  gint n_items;
-  gint i;
+  GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-  n_items = g_menu_model_get_n_items (G_MENU_MODEL (priv->calendar_menu));
-  source_found = FALSE;
-
-  for (i = 0; i < n_items; i++)
-    {
-      GMenuAttributeIter *iter;
-
-      iter = g_menu_model_iterate_item_attributes (G_MENU_MODEL (priv->calendar_menu), i);
-
-      /* look for 'uid' attribute */
-      while (g_menu_attribute_iter_next (iter))
-        {
-          if (g_strcmp0 (g_menu_attribute_iter_get_name (iter), "uid") == 0)
-            {
-              GVariant *uid;
-              uid = g_menu_attribute_iter_get_value (iter);
-
-              /* if we find the item with uid == source::uid, remove it */
-              if (g_strcmp0 (g_variant_get_string (uid, NULL), e_source_get_uid (source)) == 0)
-                {
-                  g_menu_remove (priv->calendar_menu, i);
-                  source_found = TRUE;
-                  break;
-                }
-            }
-        }
-
-      g_object_unref (iter);
-
-      if (source_found)
-        break;
-    }
-
-  /* remove the action */
-  g_action_map_remove_action (G_ACTION_MAP (user_data), e_source_get_uid (source));
+  /**
+   * Since a destroyer function was
+   * defined, simply removing the
+   * source will call gtk_widget_destroy
+   * on the row, which will remove it
+   * from the listbox.
+   */
+  g_hash_table_remove (priv->calendar_source_to_row, source);
 }
 
 static void
-on_calendar_toggled (GSimpleAction *action,
-                     GVariant      *value,
-                     gpointer       user_data)
+on_calendar_toggled (GObject    *object,
+                     GParamSpec *pspec,
+                     gpointer    user_data)
 {
-  GcalWindowPrivate *priv;
-  ESource *source;
-  GList *l;
-  GList *aux;
+  GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  gboolean active;
+  GtkWidget *row;
+  GList *l, *aux;
 
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  /* lookup source */
-  source = NULL;
-  l = gcal_manager_get_sources_connected (priv->manager);
+  row = gtk_widget_get_parent (gtk_widget_get_parent (GTK_WIDGET (object)));
+  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object));
+  l = g_hash_table_get_keys (priv->calendar_source_to_row);
 
   for (aux = l; aux != NULL; aux = aux->next)
     {
-      ESource *tmp;
-      tmp = (ESource *) aux->data;
+      GtkWidget *current_row;
 
-      if (g_strcmp0 (e_source_get_uid (tmp), g_action_get_name (G_ACTION (action))) == 0)
+      current_row = g_hash_table_lookup (priv->calendar_source_to_row, aux->data);
+
+      /* Enable/disable the toggled calendar */
+      if (current_row == row)
         {
-          source = tmp;
+          if (active)
+            gcal_manager_enable_source (priv->manager, E_SOURCE (aux->data));
+          else
+            gcal_manager_disable_source (priv->manager, E_SOURCE (aux->data));
+
           break;
         }
     }
 
   g_list_free (l);
-
-  if (source == NULL)
-    return;
-
-  /* toggle source visibility */
-  if (g_variant_get_boolean (value))
-    gcal_manager_enable_source (priv->manager, source);
-  else
-    gcal_manager_disable_source (priv->manager, source);
-
-  g_simple_action_set_state (action, value);
 }
 
 static gboolean
@@ -1288,6 +1286,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_bar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendars_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendar_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendar_popover);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, back_button);
@@ -1386,10 +1385,6 @@ gcal_window_constructed (GObject *object)
 
   g_object_unref (builder);
 
-  /* calendar menu */
-  priv->calendar_menu = g_menu_new ();
-  gtk_popover_bind_model (GTK_POPOVER (priv->calendar_popover), G_MENU_MODEL (priv->calendar_menu), "win");
-
   /* edit dialog initialization */
   priv->edit_dialog = gcal_edit_dialog_new (use_24h_format);
   gtk_window_set_transient_for (GTK_WINDOW (priv->edit_dialog), GTK_WINDOW (object));
@@ -1403,6 +1398,10 @@ gcal_window_constructed (GObject *object)
 
   g_signal_connect (gtk_bin_get_child (GTK_BIN (priv->search_bar)), "notify::child-revealed",
                     G_CALLBACK (search_bar_revealer_toggled), object);
+
+  /* calendars menu */
+  priv->calendar_source_to_row = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL,
+                                                        (GDestroyNotify) gtk_widget_destroy);
 
   /* XXX: Week view disabled until after the release when we restart the work on it*/
   //priv->views[GCAL_WINDOW_VIEW_WEEK] = gcal_week_view_new ();
