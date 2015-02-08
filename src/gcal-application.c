@@ -49,9 +49,6 @@ struct _GcalApplicationPrivate
   icaltimetype   *initial_date;
 };
 
-static void     load_completed_cb                     (GcalApplication         *application,
-                                                       GcalManager             *manager);
-
 static void     gcal_application_finalize             (GObject                 *object);
 
 static void     gcal_application_activate             (GApplication            *app);
@@ -180,16 +177,6 @@ sources_added_cb (GcalApplication *application,
 }
 
 static void
-load_completed_cb (GcalApplication *application,
-                   GcalManager     *manager)
-{
-  process_sources (application);
-
-  /* listen for other sources */
-  g_signal_connect_swapped (manager, "source-added", G_CALLBACK (sources_added_cb), application);
-}
-
-static void
 gcal_application_class_init (GcalApplicationClass *klass)
 {
   GObjectClass *object_class;
@@ -216,7 +203,7 @@ gcal_application_init (GcalApplication *self)
   priv->colors_provider = gtk_css_provider_new ();
 
   priv->manager = gcal_manager_new_with_settings (priv->settings);
-  g_signal_connect_swapped (priv->manager, "load-completed", G_CALLBACK (load_completed_cb), self);
+  g_signal_connect_swapped (priv->manager, "source-added", G_CALLBACK (sources_added_cb), self);
 
   priv->search_provider = gcal_shell_search_provider_new ();
   gcal_shell_search_provider_connect (priv->search_provider, priv->manager);
