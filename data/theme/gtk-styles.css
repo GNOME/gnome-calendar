@@ -227,3 +227,8 @@ GcalEventWidget.color-light:backdrop {
 .calendar-list {
     background-color: rgba(0, 0, 0, 0);
 }
+
+/* source dialog */
+.details-frame {
+    background-color: rgba(0, 0, 0, 0);
+}
