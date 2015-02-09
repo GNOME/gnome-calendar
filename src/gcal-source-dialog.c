@@ -104,5 +104,9 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 static void
 gcal_source_dialog_init (GcalSourceDialog *self)
 {
+  GcalShellSearchProviderPrivate *priv = gcal_shell_search_provider_get_instance_private (self);
+
+  self->priv = priv;
+
   gtk_widget_init_template (GTK_WIDGET (self));
 }
