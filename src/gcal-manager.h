@@ -113,6 +113,9 @@ void           gcal_manager_enable_source           (GcalManager        *manager
 void           gcal_manager_disable_source          (GcalManager        *manager,
                                                      ESource            *source);
 
+void           gcal_manager_save_source             (GcalManager        *manager,
+                                                     ESource            *source);
+
 gboolean       gcal_manager_source_enabled          (GcalManager        *manager,
                                                      ESource            *source);
 

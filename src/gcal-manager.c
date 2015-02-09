@@ -1212,6 +1212,33 @@ gcal_manager_disable_source (GcalManager *manager,
   g_settings_set_strv (priv->settings, "disabled-sources", (const gchar * const *) priv->disabled_sources);
 }
 
+/**
+ * gcal_manager_save_source:
+ * @manager: a #GcalManager
+ * @source: the target ESource
+ *
+ * Commit the given ESource.
+ */
+void
+gcal_manager_save_source (GcalManager *manager,
+                          ESource     *source)
+{
+  GcalManagerPrivate *priv;
+  GError *error;
+
+  priv = gcal_manager_get_instance_private (manager);
+  error = NULL;
+
+  e_source_registry_commit_source_sync (priv->source_registry, source, NULL, &error);
+
+  if (error != NULL)
+    {
+      /* FIXME: Notify the user somehow */
+      g_warning ("Error saving source: %s", error->message);
+      g_error_free (error);
+    }
+}
+
 gboolean
 gcal_manager_source_enabled (GcalManager *manager,
                              ESource     *source)
