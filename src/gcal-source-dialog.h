@@ -23,6 +23,7 @@
 #include <glib-object.h>
 #include "gcal-manager.h"
 
+#include <libecal/libecal.h>
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
@@ -49,6 +50,9 @@ void                gcal_source_dialog_set_manager          (GcalSourceDialog   
 
 void                gcal_source_dialog_set_mode             (GcalSourceDialog     *dialog,
                                                              GcalSourceDialogMode  mode);
+
+void                gcal_source_dialog_set_source           (GcalSourceDialog     *dialog,
+                                                             ESource              *source);
 
 G_END_DECLS
 

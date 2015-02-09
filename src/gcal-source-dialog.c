@@ -18,15 +18,22 @@
 
 #include "gcal-source-dialog.h"
 
+#include "gcal-utils.h"
+
+#include <glib/gi18n.h>
+
 typedef struct
 {
   GtkWidget          *add_button;
+  GtkWidget          *calendar_color_button;
   GtkWidget          *cancel_button;
   GtkWidget          *headerbar;
+  GtkWidget          *name_entry;
   GtkWidget          *stack;
 
   /* flags */
   gint                mode : 1;
+  ESource            *source;
 
   /* manager */
   GcalManager        *manager;
@@ -154,8 +161,10 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
 
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_color_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
@@ -215,5 +224,38 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
   gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), edit_mode ? "edit" : "create");
 
   if (!edit_mode)
-    gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), "Add Calendar");
+    {
+      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), "");
+    }
+}
+
+/**
+ * gcal_source_dialog_set_source:
+ *
+ * Sets the source to be edited by the user.
+ *
+ * Returns:
+ */
+void
+gcal_source_dialog_set_source (GcalSourceDialog *dialog,
+                               ESource          *source)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+  GdkRGBA color;
+
+  priv->source = source;
+
+  /* color button */
+  gdk_rgba_parse (&color, get_color_name_from_source (source));
+  gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (priv->calendar_color_button), &color);
+
+  /* entry */
+  gtk_entry_set_text (GTK_ENTRY (priv->name_entry), e_source_get_display_name (source));
+
+  /* title */
+  gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), e_source_get_display_name (source));
+
+  /* FIXME: account information on subtitle */
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), "");
 }
