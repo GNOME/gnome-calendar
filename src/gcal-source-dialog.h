@@ -22,6 +22,8 @@
 
 #include <glib-object.h>
 
+#include <gtk/gtk.h>
+
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_SOURCE_DIALOG (gcal_source_dialog_get_type())
