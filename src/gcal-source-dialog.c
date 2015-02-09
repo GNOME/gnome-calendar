@@ -341,6 +341,7 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
   default_source = gcal_manager_get_default_source (priv->manager);
 
   /* block signals */
+  g_signal_handlers_block_by_func (priv->calendar_color_button, color_set, dialog);
   g_signal_handlers_block_by_func (priv->name_entry, name_entry_text_changed, dialog);
 
   /* color button */
@@ -361,6 +362,7 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), "");
 
   /* unblock signals */
+  g_signal_handlers_unblock_by_func (priv->calendar_color_button, color_set, dialog);
   g_signal_handlers_unblock_by_func (priv->name_entry, name_entry_text_changed, dialog);
 
   g_object_unref (default_source);
