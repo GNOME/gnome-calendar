@@ -27,6 +27,7 @@ typedef struct
   GtkWidget          *add_button;
   GtkWidget          *calendar_color_button;
   GtkWidget          *cancel_button;
+  GtkWidget          *default_check;
   GtkWidget          *headerbar;
   GtkWidget          *name_entry;
   GtkWidget          *stack;
@@ -163,6 +164,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_color_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, default_check);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
@@ -247,9 +249,11 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
                                ESource          *source)
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
+  ESource *default_source;
   GdkRGBA color;
 
   priv->source = source;
+  default_source = gcal_manager_get_default_source (priv->manager);
 
   /* color button */
   gdk_rgba_parse (&color, get_color_name_from_source (source));
@@ -258,9 +262,14 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
   /* entry */
   gtk_entry_set_text (GTK_ENTRY (priv->name_entry), e_source_get_display_name (source));
 
+  /* default source check button */
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->default_check), (source == default_source));
+
   /* title */
   gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), e_source_get_display_name (source));
 
   /* FIXME: account information on subtitle */
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), "");
+
+  g_object_unref (default_source);
 }
