@@ -878,11 +878,32 @@ source_row_activated (GtkListBox    *listbox,
                       gpointer       user_data)
 {
   GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  ESource *source;
+  GList *l, *aux;
+
+  l = g_hash_table_get_keys (priv->calendar_source_to_row);
+
+  for (aux = l; aux != NULL; aux = aux->next)
+    {
+      GtkWidget *current_row;
+
+      current_row = g_hash_table_lookup (priv->calendar_source_to_row, aux->data);
+
+      /* Enable/disable the toggled calendar */
+      if (current_row == row)
+        {
+          source = aux->data;
+          break;
+        }
+    }
 
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (priv->source_dialog), GCAL_SOURCE_DIALOG_MODE_EDIT);
+  gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (priv->source_dialog), source);
 
   gtk_dialog_run (GTK_DIALOG (priv->source_dialog));
   gtk_widget_hide (priv->source_dialog);
+
+  g_list_free (l);
 }
 
 static void
