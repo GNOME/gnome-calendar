@@ -282,6 +282,7 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
  *
  * Returns:
  */
+void
 gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
                              GcalSourceDialogMode mode)
 {
