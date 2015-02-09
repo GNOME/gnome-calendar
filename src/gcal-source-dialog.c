@@ -52,6 +52,9 @@ struct _GcalSourceDialog
 static void       action_widget_activated               (GtkWidget            *widget,
                                                          gpointer              user_data);
 
+static void       color_set                             (GtkColorButton       *button,
+                                                         gpointer              user_data);
+
 static gboolean   description_label_link_activated      (GtkWidget            *widget,
                                                          gchar                *uri,
                                                          gpointer              user_data);
@@ -89,6 +92,21 @@ action_widget_activated (GtkWidget *widget,
   response = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget), "response"));
 
   gtk_dialog_response (GTK_DIALOG (user_data), response);
+}
+
+static void
+color_set (GtkColorButton *button,
+           gpointer        user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  ESourceSelectable *extension;
+  GdkRGBA color;
+
+  gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (button), &color);
+
+  extension = E_SOURCE_SELECTABLE (e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR));
+
+  e_source_selectable_set_color (extension, gdk_rgba_to_string (&color));
 }
 
 /**
@@ -220,6 +238,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
+  gtk_widget_class_bind_template_callback (widget_class, color_set);
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
 }
