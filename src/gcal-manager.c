@@ -916,6 +916,23 @@ gcal_manager_get_default_source (GcalManager *manager)
   return e_source_registry_ref_default_calendar (priv->source_registry);
 }
 
+/**
+ * gcal_manager_set_default_source:
+ * @manager: App singleton {@link GcalManager} instance
+ * @source: the new default source.
+ *
+ * Returns:
+ **/
+ESource*
+gcal_manager_set_default_source (GcalManager *manager,
+                                 ESource     *source)
+{
+  GcalManagerPrivate *priv;
+
+  priv = gcal_manager_get_instance_private (manager);
+  e_source_registry_set_default_calendar (priv->source_registry, source);
+}
+
 icaltimezone*
 gcal_manager_get_system_timezone (GcalManager *manager)
 {
