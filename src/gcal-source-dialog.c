@@ -52,6 +52,10 @@ struct _GcalSourceDialog
 static void       action_widget_activated               (GtkWidget            *widget,
                                                          gpointer              user_data);
 
+static void       name_entry_text_changed               (GObject             *object,
+                                                         GParamSpec          *pspec,
+                                                         gpointer             user_data);
+
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
 enum {
@@ -81,6 +85,27 @@ action_widget_activated (GtkWidget *widget,
   response = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget), "response"));
 
   gtk_dialog_response (GTK_DIALOG (user_data), response);
+}
+
+/**
+ * name_entry_text_changed:
+ *
+ * Callend when the name entry's text
+ * is edited. It changes the source's
+ * display name, but wait's for the
+ * calendar's ::response signal to
+ * commit these changes.
+ *
+ * Returns:
+ */
+static void
+name_entry_text_changed (GObject    *object,
+                         GParamSpec *pspec,
+                         gpointer    user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  e_source_set_display_name (priv->source, gtk_entry_get_text (GTK_ENTRY (priv->name_entry)));
 }
 
 GcalSourceDialog *
@@ -171,6 +196,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
+  gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
 }
 
 static void
@@ -269,6 +295,9 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
   priv->source = source;
   default_source = gcal_manager_get_default_source (priv->manager);
 
+  /* block signals */
+  g_signal_handlers_block_by_func (priv->name_entry, name_entry_text_changed, dialog);
+
   /* color button */
   gdk_rgba_parse (&color, get_color_name_from_source (source));
   gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (priv->calendar_color_button), &color);
@@ -285,6 +314,9 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
 
   /* FIXME: account information on subtitle */
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), "");
+
+  /* unblock signals */
+  g_signal_handlers_unblock_by_func (priv->name_entry, name_entry_text_changed, dialog);
 
   g_object_unref (default_source);
 }
