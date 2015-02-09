@@ -880,6 +880,7 @@ source_row_activated (GtkListBox    *listbox,
                       gpointer       user_data)
 {
   GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  GtkWidget *new_row;
   ESource *source;
   GList *l, *aux;
 
@@ -906,6 +907,14 @@ source_row_activated (GtkListBox    *listbox,
 
   gtk_dialog_run (GTK_DIALOG (priv->source_dialog));
   gtk_widget_hide (priv->source_dialog);
+
+  /* update the source */
+  new_row = make_row_for_source (GCAL_WINDOW (user_data), source);
+
+  g_hash_table_remove (priv->calendar_source_to_row, source);
+  g_hash_table_insert (priv->calendar_source_to_row, source, new_row);
+
+  gtk_container_add (GTK_CONTAINER (priv->calendar_listbox), new_row);
 
   g_list_free (l);
 }
