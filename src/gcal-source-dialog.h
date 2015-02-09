@@ -36,7 +36,10 @@ struct _GcalSourceDialogClass
   GtkDialogClass parent;
 };
 
-GcalSourceDialog* gcal_source_dialog_new (void);
+GcalSourceDialog*   gcal_source_dialog_new                  (void);
+
+void                gcal_source_dialog_set_manager          (GcalSourceDialog   *dialog,
+                                                             GcalManager        *manager);
 
 G_END_DECLS
 

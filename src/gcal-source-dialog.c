@@ -110,3 +110,22 @@ gcal_source_dialog_init (GcalSourceDialog *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
+
+/**
+ * gcal_source_dialog_set_manager:
+ *
+ * Setup the {@link GcalManager} singleton
+ * instance of the application.
+ *
+ * Returns:
+ */
+void
+gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
+                                GcalManager      *manager)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+
+  priv->manager = manager;
+
+  /* TODO: connect ::source-added & ::source-removed signals */
+}
