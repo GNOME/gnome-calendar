@@ -40,6 +40,9 @@ struct _GcalSourceDialog
   GcalSourceDialogPrivate *priv;
 };
 
+static void       action_widget_activated               (GtkWidget            *widget,
+                                                         gpointer              user_data);
+
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
 enum {
@@ -48,6 +51,28 @@ enum {
 };
 
 static GParamSpec *gParamSpecs [LAST_PROP];
+
+/**
+ * action_widget_activated:
+ * @widget: the button which emited the signal.
+ * @user_data: a {@link GcalSourceDialog} instance.
+ *
+ * Emit a response when action buttons
+ * are clicked.
+ *
+ * Returns:
+ */
+static void
+action_widget_activated (GtkWidget *widget,
+                         gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  gint response;
+
+  response = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget), "response"));
+
+  gtk_dialog_response (GTK_DIALOG (user_data), response);
+}
 
 GcalSourceDialog *
 gcal_source_dialog_new (void)
@@ -63,6 +88,13 @@ gcal_source_dialog_constructed (GObject *object)
 
   G_OBJECT_CLASS (gcal_source_dialog_parent_class)->constructed (object);
 
+  /* widget responses */
+  gtk_dialog_set_default_response (GTK_DIALOG (object), GTK_RESPONSE_CANCEL);
+
+  g_object_set_data (G_OBJECT (priv->add_button), "response", GINT_TO_POINTER (GTK_RESPONSE_APPLY));
+  g_object_set_data (G_OBJECT (priv->cancel_button), "response", GINT_TO_POINTER (GTK_RESPONSE_CANCEL));
+
+  /* setup titlebar */
   gtk_window_set_titlebar (GTK_WINDOW (object), priv->headerbar);
 }
 
@@ -125,6 +157,8 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
+
+  gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
 }
 
 static void

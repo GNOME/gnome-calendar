@@ -247,6 +247,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <signal name="clicked" handler="action_widget_activated" object="GcalSourceDialog" swapped="no"/>
           </object>
         </child>
         <child>
@@ -255,6 +256,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <signal name="clicked" handler="action_widget_activated" object="GcalSourceDialog" swapped="no"/>
           </object>
           <packing>
             <property name="pack_type">end</property>
