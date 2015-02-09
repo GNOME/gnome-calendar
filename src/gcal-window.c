@@ -868,7 +868,8 @@ show_source_dialog (GtkButton *button,
 
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (priv->source_dialog), GCAL_SOURCE_DIALOG_MODE_CREATE);
 
-  gtk_window_present (GTK_WINDOW (priv->source_dialog));
+  gtk_dialog_run (GTK_DIALOG (priv->source_dialog));
+  gtk_widget_hide (priv->source_dialog);
 }
 
 static void
@@ -880,7 +881,8 @@ source_row_activated (GtkListBox    *listbox,
 
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (priv->source_dialog), GCAL_SOURCE_DIALOG_MODE_EDIT);
 
-  gtk_window_present (GTK_WINDOW (priv->source_dialog));
+  gtk_dialog_run (GTK_DIALOG (priv->source_dialog));
+  gtk_widget_hide (priv->source_dialog);
 }
 
 static void
