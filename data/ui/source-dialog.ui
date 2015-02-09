@@ -6,11 +6,15 @@
     <property name="can_focus">False</property>
     <property name="type_hint">dialog</property>
     <property name="use_header_bar">1</property>
+    <property name="border_width">0</property>
+    <property name="default_width">550</property>
+    <property name="default_height">500</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="vbox">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
+        <property name="spacing">0</property>
+        <property name="border_width">0</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="action_area">
             <property name="can_focus">False</property>
