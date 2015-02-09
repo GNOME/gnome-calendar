@@ -23,6 +23,8 @@ gnome_calendar_SOURCES =                                  \
     e-cal-data-model-subscriber.c                         \
     e-cal-data-model.h                                    \
     e-cal-data-model.c                                    \
+    e-source-local.h                                      \
+    e-source-local.c                                      \
     main.c                                                \
     css-code.h                                            \
     gcal-application.h                                    \
