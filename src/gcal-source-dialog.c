@@ -20,6 +20,10 @@
 
 typedef struct
 {
+  GtkWidget          *headerbar;
+  GtkWidget          *stack;
+
+  /* flags */
   gint                mode : 1;
 
   /* manager */
@@ -47,6 +51,17 @@ GcalSourceDialog *
 gcal_source_dialog_new (void)
 {
   return g_object_new (GCAL_TYPE_SOURCE_DIALOG, NULL);
+}
+
+static void
+gcal_source_dialog_constructed (GObject *object)
+{
+  GcalSourceDialog *self = (GcalSourceDialog *)object;
+  GcalSourceDialogPrivate *priv = gcal_source_dialog_get_instance_private (self);
+
+  G_OBJECT_CLASS (gcal_source_dialog_parent_class)->constructed (object);
+
+  gtk_window_set_titlebar (GTK_WINDOW (object), priv->headerbar);
 }
 
 static void
@@ -92,13 +107,20 @@ static void
 gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GtkWidgetClass *widget_class;
 
+  object_class->constructed = gcal_source_dialog_constructed;
   object_class->finalize = gcal_source_dialog_finalize;
   object_class->get_property = gcal_source_dialog_get_property;
   object_class->set_property = gcal_source_dialog_set_property;
 
+  widget_class = GTK_WIDGET_CLASS (klass);
+
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
+
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
 }
 
 static void
