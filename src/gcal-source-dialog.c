@@ -278,6 +278,7 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
 
   /* default source check button */
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->default_check), (source == default_source));
+  gtk_widget_set_visible (priv->default_check, !gcal_manager_is_client_writable (priv->manager, source));
 
   /* title */
   gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), e_source_get_display_name (source));
