@@ -17,24 +17,24 @@
  */
 
 
-#ifndef GCAL_SOURCE_MANAGER_H
-#define GCAL_SOURCE_MANAGER_H
+#ifndef GCAL_SOURCE_DIALOG_H
+#define GCAL_SOURCE_DIALOG_H
 
 #include <glib-object.h>
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_SOURCE_MANAGER (gcal_source_manager_get_type())
+#define GCAL_TYPE_SOURCE_DIALOG (gcal_source_dialog_get_type())
 
-G_DECLARE_FINAL_TYPE (GcalSourceManager, gcal_source_manager, GCAL, SOURCE_MANAGER, GtkDialog)
+G_DECLARE_FINAL_TYPE (GcalSourceDialog, gcal_source_dialog, GCAL, SOURCE_DIALOG, GtkDialog)
 
-struct _GcalSourceManagerClass
+struct _GcalSourceDialogClass
 {
   GtkDialogClass parent;
 };
 
-GcalSourceManager *gcal_source_manager_new (void);
+GcalSourceManager *gcal_source_dialog_new (void);
 
 G_END_DECLS
 
-#endif /* GCAL_SOURCE_MANAGER_H */
+#endif /* GCAL_SOURCE_DIALOG_H */
