@@ -20,6 +20,8 @@
 
 typedef struct
 {
+  GtkWidget          *add_button;
+  GtkWidget          *cancel_button;
   GtkWidget          *headerbar;
   GtkWidget          *stack;
 
@@ -119,6 +121,8 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
 
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
 }
@@ -166,8 +170,16 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
                              GcalSourceDialogMode mode)
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
+  gboolean edit_mode;
 
   priv->mode = mode;
+  edit_mode = (mode == GCAL_SOURCE_DIALOG_MODE_EDIT);
 
-  /* TODO: change UI */
+  gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->headerbar), edit_mode);
+  gtk_widget_set_visible (priv->cancel_button, !edit_mode);
+  gtk_widget_set_visible (priv->add_button, !edit_mode);
+  gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), edit_mode ? "edit" : "create");
+
+  if (!edit_mode)
+    gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), "Add Calendar");
 }
