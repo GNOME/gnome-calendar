@@ -214,7 +214,8 @@ response_signal (GtkDialog *dialog,
   /* save the source */
   if (priv->mode == GCAL_SOURCE_DIALOG_MODE_EDIT || response_id == GTK_RESPONSE_APPLY)
     {
-      gcal_manager_save_source (priv->manager, priv->source);
+      if (priv->source)
+        gcal_manager_save_source (priv->manager, priv->source);
     }
 }
 
