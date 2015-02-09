@@ -861,6 +861,8 @@ show_source_dialog (GtkButton *button,
 {
   GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
+  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (priv->source_dialog), GCAL_SOURCE_DIALOG_MODE_CREATE);
+
   gtk_window_present (GTK_WINDOW (priv->source_dialog));
 }
 
