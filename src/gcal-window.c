@@ -196,6 +196,9 @@ static void           remove_source                      (GcalManager         *m
                                                           ESource             *source,
                                                           gpointer             user_data);
 
+static void           show_source_dialog                 (GtkButton           *button,
+                                                          gpointer             user_data);
+
 static void           on_calendar_toggled                (GObject             *object,
                                                           GParamSpec          *pspec,
                                                           gpointer             user_data);
@@ -853,6 +856,15 @@ remove_source (GcalManager *manager,
 }
 
 static void
+show_source_dialog (GtkButton *button,
+                    gpointer   user_data)
+{
+  GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+
+  gtk_window_present (GTK_WINDOW (priv->source_dialog));
+}
+
+static void
 on_calendar_toggled (GObject    *object,
                      GParamSpec *pspec,
                      gpointer    user_data)
@@ -1312,6 +1324,8 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, notification_label);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, notification_action_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, notification_close_button);
+
+  gtk_widget_class_bind_template_callback (widget_class, show_source_dialog);
 
   gtk_widget_class_bind_template_callback (widget_class, key_pressed);
   gtk_widget_class_bind_template_callback (widget_class, search_toggled);
