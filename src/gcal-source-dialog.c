@@ -225,8 +225,13 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
 
   if (!edit_mode)
     {
+      gtk_window_resize (GTK_WINDOW (dialog), 550, 500);
       gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), "");
+    }
+  else
+    {
+      gtk_window_resize (GTK_WINDOW (dialog), 550, 250);
     }
 }
 
