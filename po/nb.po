@@ -2,249 +2,358 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # Kjartan Maraas <kmaraas@gnome.org>, 2012.
+# Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2012-12-08 15:42+0100\n"
-"PO-Revision-Date: 2012-12-08 15:45+0100\n"
-"Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
+"POT-Creation-Date: 2015-02-09 18:16+0100\n"
+"PO-Revision-Date: 2015-02-09 08:30+0100\n"
+"Last-Translator: Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:126
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:560
 msgid "Calendar"
 msgstr "Kalender"
 
-#: ../data/gnome-calendar.desktop.in.in.h:2
-msgid "Access, and manage calendar"
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+msgid "Calendar for GNOME"
+msgstr "Kalender for GNOME"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
+"GNOME Kalender er et enkelt og pent kalenderprogram. Det gjenbruker mange av "
+"komponentene som GNOME-skrivebordet er bygget på, og kler derfor GNOME-"
+"skrivebordet perfekt."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"Vi prøver å finne en perfekt balanse mellom velbygde funksjoner og "
+"brukskvalitet. Ikke for mye, og ikke for lite. Du skal føle deg komfortabel "
+"med å bruke Kalender, som om du har brukt den i mange år."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "Søk etter hendelser"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Calendar management"
+msgstr "Kalenderbehandling"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr "Se på og håndter kalender"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Kalender;Hendelse;Påminnelse;"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
-msgstr ""
+msgstr "Vindu maksimert"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:2
 msgid "Window maximized state"
-msgstr ""
+msgstr "Vindu maksimert tilstand"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:3
-msgid "Type of the active view"
-msgstr ""
+msgid "Window size"
+msgstr "Vindustørrelse"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Vindustørrelse (bredde og høyde)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Vinduposisjon"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Vinduposisjon (x og y)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
+msgid "Type of the active view"
+msgstr "Gjeldende visningstype"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
-msgstr ""
+msgstr "Gjeldende vindu-visningstype. Standardverdi er månedsvisning"
 
-#: ../src/gcal-application.c:146
-msgid "Unable to initialize GtkClutter"
-msgstr ""
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "Liste over avslåtte kilder"
 
-#: ../src/gcal-application.c:197
-msgid "Weeks"
-msgstr "Uker"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "Kilder som var slått av forrige gang Kalender kjørte"
 
-#: ../src/gcal-application.c:198
-msgid "Months"
-msgstr "Måneder"
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "Avbryt"
 
-#: ../src/gcal-application.c:199
-msgid "Years"
-msgstr "År"
-
-#: ../src/gcal-application.c:201
-msgid "View as"
-msgstr "Vis som"
-
-#: ../src/gcal-application.c:209
-msgid "About"
-msgstr "Om"
-
-#: ../src/gcal-application.c:217
-msgid "Quit"
-msgstr "Avslutt"
-
-#: ../src/gcal-application.c:281
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Opphavsrett © %Id kalenderforfatterene"
-
-#: ../src/gcal-application.c:287
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr ""
-
-#: ../src/gcal-date-entry.c:162
-msgid "Change the date"
-msgstr "Endre dato"
-
-#: ../src/gcal-edit-dialog.c:156
-msgid "Event Details"
-msgstr ""
-
-#. Summary, title
-#: ../src/gcal-edit-dialog.c:171
-msgid "Title"
-msgstr "Tittel"
-
-#. Start date and time
-#: ../src/gcal-edit-dialog.c:199
-msgid "Starts"
-msgstr "Starter"
-
-#: ../src/gcal-edit-dialog.c:215
-msgid "All day"
-msgstr "Hele dagen"
-
-#. End date and time
-#: ../src/gcal-edit-dialog.c:221
-msgid "Ends"
-msgstr "Slutter"
-
-#. Location, location, location
-#: ../src/gcal-edit-dialog.c:238
-msgid "Location"
-msgstr "Lokasjon"
-
-#. Notes, description
-#: ../src/gcal-edit-dialog.c:252
-msgid "Notes"
-msgstr "Notater"
-
-#. done button
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-toolbar.c:615
-#: ../src/gcal-window.c:282
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
 msgid "Done"
 msgstr "Ferdig"
 
-#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:295
-msgid "New Event"
-msgstr "Ny hendelse"
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "Tittel"
 
-#: ../src/gcal-event-overlay.c:162
-msgid "Create"
-msgstr "Lag"
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "Starter"
 
-#: ../src/gcal-event-overlay.c:171
-msgid "More details"
-msgstr "Flere detaljer"
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "Slutter"
 
-#: ../src/gcal-event-overlay.c:185
-msgid "What (e.g. Alien Invasion)"
-msgstr ""
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "Notater"
 
-#: ../src/gcal-event-overlay.c:507
-#, c-format
-msgid "New Event on %s"
-msgstr "Ny hendelse på %s"
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "Plassering"
 
-#: ../src/gcal-event-overlay.c:524
-#, c-format
-msgid "New Event from %s to %s"
-msgstr ""
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:387
+msgid "All day"
+msgstr "Hele dagen"
 
-#: ../src/gcal-manager.c:1506
-msgid "Notification"
-msgstr ""
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "Slett hendelse"
 
-#: ../src/gcal-manager.c:1508
-msgid "Email"
-msgstr "E-post"
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "Legg til he_ndelse …"
 
-#: ../src/gcal-manager.c:1522
-msgid "days"
-msgstr "dager"
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "_Søk …"
 
-#: ../src/gcal-manager.c:1528
-msgid "weeks"
-msgstr "uker"
+#: ../data/ui/menus.ui.h:3
+msgid "_About"
+msgstr "_Om"
 
-#: ../src/gcal-manager.c:1534
-msgid "hours"
-msgstr "timer"
+#: ../data/ui/menus.ui.h:4
+msgid "_Quit"
+msgstr "_Avslutt"
 
-#: ../src/gcal-manager.c:1540
-msgid "minutes"
-msgstr "minutter"
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "_Synkroniser"
 
-#: ../src/gcal-manager.c:1552
-msgid "before"
-msgstr "før"
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "Ingen treff"
 
-#. Here translators should put the widgest letter in their alphabet, this
-#. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1022 ../src/gcal-week-view.c:1080
-#: ../src/gcal-year-view.c:922
-msgid "WWW 99 - WWW 99"
-msgstr ""
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "Bruk elementet ovenfor for å søke etter hendelser."
 
-#: ../src/gcal-time-entry.c:126
-msgid "Change the time"
-msgstr ""
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
 
-#. day
-#: ../src/gcal-toolbar.c:321
-msgid "Day"
-msgstr "Dag"
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
 
-#. week
-#: ../src/gcal-toolbar.c:338 ../src/gcal-week-view.c:1094
-msgid "Week"
-msgstr "Uke"
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:381
+#: ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "AM"
 
-#. month
-#: ../src/gcal-toolbar.c:355
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:381
+#: ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "PM"
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
 msgid "Month"
 msgstr "Måned"
 
-#. year
-#: ../src/gcal-toolbar.c:372
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
 msgid "Year"
 msgstr "År"
 
-#. list
-#: ../src/gcal-toolbar.c:389
-msgid "List"
-msgstr "Liste"
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:232 ../src/gcal-year-view.c:380
+msgid "Today"
+msgstr "I dag"
 
-#: ../src/gcal-toolbar.c:469
-msgid "Back"
-msgstr "Tilbake"
+#: ../data/ui/window.ui.h:5
+msgid "Create"
+msgstr "Lag"
 
-#. reset morphing edit_button
-#: ../src/gcal-toolbar.c:490 ../src/gcal-toolbar.c:502
-#: ../src/gcal-toolbar.c:620
-msgid "Edit"
-msgstr "Rediger"
+#: ../data/ui/window.ui.h:6
+msgid "More Details"
+msgstr "Flere detaljer"
 
-#: ../src/gcal-week-view.c:1280
-msgid "AM"
+#: ../data/ui/year-view.ui.h:2
+msgid "No events"
+msgstr "Ingen hendelser"
+
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+msgid "Add Event…"
+msgstr "Legg til hendelse …"
+
+#: ../src/gcal-application.c:105
+msgid "Display version number"
+msgstr "Vis versjonsnummer"
+
+#: ../src/gcal-application.c:110
+msgid "Open calendar on the passed date"
+msgstr "Åpne kalender på passert dato"
+
+#: ../src/gcal-application.c:115
+msgid "Open calendar showing the passed event"
+msgstr "Åpne kalender som viser passert hendelse"
+
+#: ../src/gcal-application.c:381
+msgid "- Calendar management"
+msgstr "- Kalenderbehandling"
+
+#: ../src/gcal-application.c:548
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Opphavsrett © %Id kalender-utviklerne"
+
+#: ../src/gcal-application.c:554
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Opphavsrett © %Id–%Id Kalender-utviklerne"
+
+#: ../src/gcal-application.c:567
+msgid "translator-credits"
 msgstr ""
+"Kjartan Maraas <kmaraas@gnome.org>\n"
+"Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com"
 
-#: ../src/gcal-week-view.c:1280
-msgid "PM"
-msgstr ""
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "Dag"
 
-#: ../src/gcal-week-view.c:1283 ../src/gcal-week-view.c:1352
+#: ../src/gcal-edit-dialog.c:634
+msgid "Save"
+msgstr "Lagre"
+
+#: ../src/gcal-edit-dialog.c:818
+msgid "Unnamed event"
+msgstr "Hendelse uten navn"
+
+#: ../src/gcal-month-view.c:825
+msgid "Other events"
+msgstr "Andre hendelser"
+
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1177
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Annen hendelse"
+msgstr[1] "%d andre hendelser"
+
+#: ../src/gcal-search-view.c:380
+#, c-format
+msgid "%.2d:%.2d %s"
+msgstr "%.2d:%.2d %s"
+
+#: ../src/gcal-time-selector.c:96
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d:%.2d AM"
+
+#: ../src/gcal-time-selector.c:98
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d:%.2d PM"
+
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
 msgstr "Midnatt"
 
-#: ../src/gcal-week-view.c:1285 ../src/gcal-week-view.c:1355
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
 msgid "Noon"
-msgstr ""
+msgstr "Midt på dagen"
 
-#: ../src/gcal-window.c:295
-msgid "Search..."
-msgstr "Søk …"
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "00:00 PM"
 
-#: ../src/gcal-window.c:1406
-msgid "Event deleted"
-msgstr ""
-
-#: ../src/gcal-year-view.c:926
+#: ../src/gcal-window.c:632
 #, c-format
-msgid "Year %d"
-msgstr "År %d"
+msgid "New Event on %s"
+msgstr "Ny hendelse %s"
+
+#: ../src/gcal-window.c:1025
+msgid "Event deleted"
+msgstr "Hendelse slettet"
+
+#: ../src/gcal-window.c:1026
+msgid "Undo"
+msgstr "Angre"
+
+#~ msgid "Weeks"
+#~ msgstr "Uker"
+
+#~ msgid "Months"
+#~ msgstr "Måneder"
+
+#~ msgid "Years"
+#~ msgstr "År"
+
+#~ msgid "View as"
+#~ msgstr "Vis som"
+
+#~ msgid "Change the date"
+#~ msgstr "Endre dato"
+
+#~ msgid "Email"
+#~ msgstr "E-post"
+
+#~ msgid "days"
+#~ msgstr "dager"
+
+#~ msgid "weeks"
+#~ msgstr "uker"
+
+#~ msgid "hours"
+#~ msgstr "timer"
+
+#~ msgid "minutes"
+#~ msgstr "minutter"
+
+#~ msgid "before"
+#~ msgstr "før"
+
+#~ msgid "Week"
+#~ msgstr "Uke"
+
+#~ msgid "List"
+#~ msgstr "Liste"
+
+#~ msgid "Back"
+#~ msgstr "Tilbake"
+
+#~ msgid "Edit"
+#~ msgstr "Rediger"
+
+#~ msgid "Year %d"
+#~ msgstr "År %d"
