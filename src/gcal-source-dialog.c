@@ -28,8 +28,10 @@ typedef struct
   GtkWidget          *calendar_color_button;
   GtkWidget          *cancel_button;
   GtkWidget          *default_check;
+  GtkWidget          *edit_grid;
   GtkWidget          *headerbar;
   GtkWidget          *name_entry;
+  GtkWidget          *notebook;
   GtkWidget          *stack;
 
   /* flags */
@@ -233,8 +235,10 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_color_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, default_check);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, edit_grid);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notebook);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
@@ -295,6 +299,8 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
   gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->headerbar), edit_mode);
   gtk_widget_set_visible (priv->cancel_button, !edit_mode);
   gtk_widget_set_visible (priv->add_button, !edit_mode);
+  gtk_widget_set_visible (priv->edit_grid, edit_mode);
+  gtk_widget_set_visible (priv->notebook, !edit_mode);
   gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), edit_mode ? "edit" : "create");
 
   if (!edit_mode)
@@ -318,7 +324,7 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
           priv->title_bind = g_object_bind_property (priv->name_entry, "text", priv->headerbar, "title",
                                                      G_BINDING_DEFAULT);
         }
-      gtk_window_resize (GTK_WINDOW (dialog), 550, 250);
+      gtk_window_resize (GTK_WINDOW (dialog), 550, 200);
     }
 }
 
