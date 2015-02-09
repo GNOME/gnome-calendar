@@ -96,9 +96,13 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   object_class->finalize = gcal_source_dialog_finalize;
   object_class->get_property = gcal_source_dialog_get_property;
   object_class->set_property = gcal_source_dialog_set_property;
+
+  /* bind things for/from the template class */
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
 }
 
 static void
 gcal_source_dialog_init (GcalSourceDialog *self)
 {
+  gtk_widget_init_template (GTK_WIDGET (self));
 }
