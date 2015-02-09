@@ -348,6 +348,7 @@
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <property name="selection_mode">none</property>
+            <signal name="row-activated" handler="source_row_activated" object="GcalWindow" swapped="no" />
             <style>
               <class name="calendar-list" />
             </style>
