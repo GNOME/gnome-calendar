@@ -29,6 +29,7 @@
 #include "gcal-event-widget.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-enum-types.h"
+#include "gcal-source-dialog.h"
 
 #include <glib/gi18n.h>
 
@@ -110,6 +111,7 @@ typedef struct
   /* calendar management */
   GtkWidget           *calendar_popover;
   GtkWidget           *calendar_listbox;
+  GtkWidget           *source_dialog;
   gint                 refresh_timeout;
   gint                 refresh_timeout_id;
 
@@ -1288,6 +1290,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendars_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendar_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendar_popover);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, source_dialog);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, back_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, today_button);
