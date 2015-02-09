@@ -129,3 +129,23 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
 
   /* TODO: connect ::source-added & ::source-removed signals */
 }
+
+/**
+ * gcal_source_dialog_set_mode:
+ *
+ * Set the source dialog mode. Creation
+ * mode means that a new calendar will
+ * be created, while edit mode means a
+ * calendar will be edited.
+ *
+ * Returns:
+ */
+gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
+                             GcalSourceDialogMode mode)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+
+  priv->mode = mode;
+
+  /* TODO: change UI */
+}
