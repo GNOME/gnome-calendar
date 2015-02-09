@@ -923,7 +923,7 @@ gcal_manager_get_default_source (GcalManager *manager)
  *
  * Returns:
  **/
-ESource*
+void
 gcal_manager_set_default_source (GcalManager *manager,
                                  ESource     *source)
 {
