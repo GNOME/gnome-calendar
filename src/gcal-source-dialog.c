@@ -37,6 +37,7 @@ typedef struct
   /* flags */
   gint                mode : 1;
   ESource            *source;
+  ESource            *old_default_source;
   GBinding           *title_bind;
 
   /* manager */
@@ -56,6 +57,10 @@ static void       action_widget_activated               (GtkWidget            *w
 
 static void       color_set                             (GtkColorButton       *button,
                                                          gpointer              user_data);
+
+static void       default_check_toggled                 (GObject             *object,
+                                                         GParamSpec          *pspec,
+                                                         gpointer             user_data);
 
 static gboolean   description_label_link_activated      (GtkWidget            *widget,
                                                          gchar                *uri,
@@ -93,6 +98,8 @@ action_widget_activated (GtkWidget *widget,
 
   response = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget), "response"));
 
+  priv->old_default_source = NULL;
+
   gtk_dialog_response (GTK_DIALOG (user_data), response);
 }
 
@@ -110,6 +117,36 @@ color_set (GtkColorButton *button,
 
   e_source_selectable_set_color (extension, gdk_rgba_to_string (&color));
 }
+
+static void
+default_check_toggled (GObject    *object,
+                       GParamSpec *pspec,
+                       gpointer    user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  /* Retrieve the current default source */
+  if (priv->old_default_source == NULL)
+    {
+      priv->old_default_source = gcal_manager_get_default_source (priv->manager);
+      g_object_unref (priv->old_default_source);
+    }
+
+  /**
+   * Keeps toggling between the
+   * current source and the previous
+   * default source.
+   */
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object)))
+    {
+      gcal_manager_set_default_source (priv->manager, priv->source);
+    }
+  else
+    {
+      gcal_manager_set_default_source (priv->manager, priv->old_default_source);
+    }
+}
+
 
 /**
  * description_label_link_activated:
@@ -243,6 +280,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
   gtk_widget_class_bind_template_callback (widget_class, color_set);
+  gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
 }
