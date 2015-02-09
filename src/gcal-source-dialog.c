@@ -70,6 +70,10 @@ static void       name_entry_text_changed               (GObject             *ob
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
 
+static void       response_signal                       (GtkDialog           *dialog,
+                                                         gint                 response_id,
+                                                         gpointer             user_data);
+
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
 enum {
@@ -99,6 +103,9 @@ action_widget_activated (GtkWidget *widget,
   response = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget), "response"));
 
   priv->old_default_source = NULL;
+
+  /* save the source */
+  gcal_manager_save_source (priv->manager, priv->source);
 
   gtk_dialog_response (GTK_DIALOG (user_data), response);
 }
@@ -187,6 +194,28 @@ name_entry_text_changed (GObject    *object,
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
 
   e_source_set_display_name (priv->source, gtk_entry_get_text (GTK_ENTRY (priv->name_entry)));
+}
+
+/**
+ * response_signal:
+ *
+ * Save the source when the dialog
+ * is close.
+ *
+ * Returns:
+ */
+static void
+response_signal (GtkDialog *dialog,
+                 gint       response_id,
+                 gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (dialog)->priv;
+
+  /* save the source */
+  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_EDIT || response_id == GTK_RESPONSE_APPLY)
+    {
+      gcal_manager_save_source (priv->manager, priv->source);
+    }
 }
 
 GcalSourceDialog *
@@ -283,6 +312,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
+  gtk_widget_class_bind_template_callback (widget_class, response_signal);
 }
 
 static void
