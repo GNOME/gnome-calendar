@@ -52,6 +52,10 @@ struct _GcalSourceDialog
 static void       action_widget_activated               (GtkWidget            *widget,
                                                          gpointer              user_data);
 
+static gboolean   description_label_link_activated      (GtkWidget            *widget,
+                                                         gchar                *uri,
+                                                         gpointer              user_data);
+
 static void       name_entry_text_changed               (GObject             *object,
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
@@ -86,6 +90,26 @@ action_widget_activated (GtkWidget *widget,
 
   gtk_dialog_response (GTK_DIALOG (user_data), response);
 }
+
+/**
+ * description_label_link_activated:
+ *
+ * Show GNOME Control Center when
+ * the label's link is pressed.
+ *
+ * Returns:
+ */
+static gboolean
+description_label_link_activated (GtkWidget *widget,
+                                  gchar     *uri,
+                                  gpointer   user_data)
+{
+  gchar *command[] = {"gnome-control-center", "online-accounts", NULL};
+  g_spawn_async (NULL, command, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
+
+  return TRUE;
+}
+
 
 /**
  * name_entry_text_changed:
@@ -196,6 +220,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
+  gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
 }
 

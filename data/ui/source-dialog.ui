@@ -138,9 +138,11 @@
                       <object class="GtkLabel" id="web_description_label">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Enter the address of the calendar that you want to add. If the calendar belongs to one of you online accounts, you can add it through the online account settings.</property>
+                        <property name="label" translatable="yes">Enter the address of the calendar that you want to add. If the calendar belongs to one of you online accounts, you can add it through the &lt;a href="GOA"&gt;online account settings&lt;/a&gt;.</property>
+                        <property name="use_markup">True</property>
                         <property name="wrap">True</property>
                         <property name="xalign">0</property>
+                        <signal name="activate_link" handler="description_label_link_activated" object="GcalSourceDialog" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
