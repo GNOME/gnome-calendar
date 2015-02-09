@@ -21,6 +21,7 @@
 #define GCAL_SOURCE_DIALOG_H
 
 #include <glib-object.h>
+#include "gcal-manager.h"
 
 #include <gtk/gtk.h>
 

@@ -26,6 +26,14 @@ typedef struct
   GcalManager        *manager;
 } GcalSourceDialogPrivate;
 
+struct _GcalSourceDialog
+{
+  GtkDialog parent;
+
+  /*< private >*/
+  GcalSourceDialogPrivate *priv;
+};
+
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
 enum {
