@@ -33,6 +33,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-window.c                                         \
     gcal-view.c                                           \
     gcal-view.h                                           \
+    gcal-source-dialog.c                                  \
+    gcal-source-dialog.h                                  \
     gcal-subscriber-view.c                                \
     gcal-subscriber-view.h                                \
     gcal-subscriber-view-private.h                        \
