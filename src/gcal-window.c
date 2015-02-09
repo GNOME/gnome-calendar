@@ -145,6 +145,10 @@ static void           search_event_selected              (GcalSearchView      *s
                                                           icaltimetype        *date,
                                                           gpointer             user_data);
 
+static gint           calendar_listbox_sort_func         (GtkListBoxRow       *row1,
+                                                          GtkListBoxRow       *row2,
+                                                          gpointer             user_data);
+
 static void           load_geometry                      (GcalWindow          *window);
 
 static gboolean       save_geometry                      (gpointer             user_data);
@@ -424,6 +428,43 @@ search_event_selected (GcalSearchView *search_view,
 {
   g_object_set (user_data, "active-date", date, NULL);
   gcal_window_set_search_mode (GCAL_WINDOW (user_data), FALSE);
+}
+
+static gint
+calendar_listbox_sort_func (GtkListBoxRow *row1,
+                            GtkListBoxRow *row2,
+                            gpointer       user_data)
+{
+  GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  ESource *source1, *source2;
+  GList *l, *aux;
+
+  l = g_hash_table_get_keys (priv->calendar_source_to_row);
+  source1 = source2 = NULL;
+
+  for (aux = l; aux != NULL; aux = aux->next)
+    {
+      GtkWidget *current_row;
+
+      current_row = g_hash_table_lookup (priv->calendar_source_to_row, aux->data);
+
+      /* Enable/disable the toggled calendar */
+      if (current_row == GTK_WIDGET (row1))
+        source1 = aux->data;
+
+      if (current_row == GTK_WIDGET (row2))
+        source2 = aux->data;
+
+      if (source1 != NULL && source2 != NULL)
+        break;
+    }
+
+  if (source1 == NULL && source2 == NULL)
+    return -1;
+
+  g_list_free (l);
+
+  return g_strcmp0 (e_source_get_display_name (source1), e_source_get_display_name (source2));
 }
 
 static void
@@ -1503,6 +1544,9 @@ gcal_window_constructed (GObject *object)
   priv->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, object);
 
   /* calendars popover */
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->calendar_listbox), (GtkListBoxSortFunc) calendar_listbox_sort_func,
+                              object, NULL);
+
   if (gcal_manager_load_completed (priv->manager))
     {
       GList *sources, *l;
