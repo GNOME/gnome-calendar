@@ -39,6 +39,7 @@ typedef struct
 
   /* new source details */
   GtkWidget          *author_label;
+  GtkWidget          *calendar_address_entry;
   GtkWidget          *details_frame;
   GtkWidget          *local_source_grid;
   GtkWidget          *new_calendar_name_entry;
@@ -66,6 +67,8 @@ struct _GcalSourceDialog
 
 static void       action_widget_activated               (GtkWidget            *widget,
                                                          gpointer              user_data);
+
+static void       clear_pages                           (GcalSourceDialog     *dialog);
 
 static void       color_set                             (GtkColorButton       *button,
                                                          gpointer              user_data);
@@ -128,6 +131,30 @@ action_widget_activated (GtkWidget *widget,
   priv->old_default_source = NULL;
 
   gtk_dialog_response (GTK_DIALOG (user_data), response);
+}
+
+/**
+ * clear_pages:
+ *
+ * Clear local and web pages.
+ *
+ * Returns:
+ */
+static void
+clear_pages (GcalSourceDialog *dialog)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+
+  gtk_button_set_label (GTK_BUTTON (priv->select_file_button), _("Select Calendar File…"));
+
+  gtk_entry_set_text (GTK_ENTRY (priv->calendar_address_entry), "");
+
+  gtk_widget_set_sensitive (priv->add_button, FALSE);
+
+  /* details frame */
+  if (gtk_widget_get_parent (priv->details_frame) != NULL)
+    gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (priv->details_frame)), priv->details_frame);
+  gtk_widget_hide (priv->details_frame);
 }
 
 static void
@@ -514,6 +541,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, author_label);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_address_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_color_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, default_check);
@@ -607,6 +635,8 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
       gtk_window_resize (GTK_WINDOW (dialog), 550, 500);
       gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), "");
+
+      clear_pages (dialog);
     }
   else
     {
