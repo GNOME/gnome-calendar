@@ -28,6 +28,8 @@
 
 G_BEGIN_DECLS
 
+#define GCAL_RESPONSE_REMOVE_SOURCE   2
+
 #define GCAL_TYPE_SOURCE_DIALOG (gcal_source_dialog_get_type())
 
 G_DECLARE_FINAL_TYPE (GcalSourceDialog, gcal_source_dialog, GCAL, SOURCE_DIALOG, GtkDialog)

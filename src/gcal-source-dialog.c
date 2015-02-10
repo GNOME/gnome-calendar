@@ -33,6 +33,7 @@ typedef struct
   GtkWidget          *headerbar;
   GtkWidget          *name_entry;
   GtkWidget          *notebook;
+  GtkWidget          *remove_button;
   GtkWidget          *select_file_button;
   GtkWidget          *stack;
 
@@ -382,6 +383,7 @@ gcal_source_dialog_constructed (GObject *object)
 
   g_object_set_data (G_OBJECT (priv->add_button), "response", GINT_TO_POINTER (GTK_RESPONSE_APPLY));
   g_object_set_data (G_OBJECT (priv->cancel_button), "response", GINT_TO_POINTER (GTK_RESPONSE_CANCEL));
+  g_object_set_data (G_OBJECT (priv->remove_button), "response", GINT_TO_POINTER (GCAL_RESPONSE_REMOVE_SOURCE));
 
   /* setup titlebar */
   gtk_window_set_titlebar (GTK_WINDOW (object), priv->headerbar);
@@ -450,6 +452,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notebook);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, remove_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, select_file_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
 

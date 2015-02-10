@@ -100,6 +100,7 @@
                     <property name="receives_default">True</property>
                     <property name="halign">end</property>
                     <property name="margin_top">6</property>
+                    <signal name="clicked" handler="action_widget_activated" object="GcalSourceDialog" swapped="no"/>
                     <style>
                       <class name="destructive-action"/>
                     </style>
