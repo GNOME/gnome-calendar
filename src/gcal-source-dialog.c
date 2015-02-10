@@ -18,6 +18,7 @@
 
 #include "gcal-source-dialog.h"
 
+#include "e-source-local.h"
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
@@ -32,10 +33,11 @@ typedef struct
   GtkWidget          *headerbar;
   GtkWidget          *name_entry;
   GtkWidget          *notebook;
+  GtkWidget          *select_file_button;
   GtkWidget          *stack;
 
   /* flags */
-  gint                mode : 1;
+  GcalSourceDialogMode mode;
   ESource            *source;
   ESource            *old_default_source;
   GBinding           *title_bind;
@@ -74,6 +76,9 @@ static void       response_signal                       (GtkDialog           *di
                                                          gint                 response_id,
                                                          gpointer             user_data);
 
+static void       select_calendar_file                 (GtkButton            *button,
+                                                        gpointer              user_data);
+
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
 enum {
@@ -103,9 +108,6 @@ action_widget_activated (GtkWidget *widget,
   response = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget), "response"));
 
   priv->old_default_source = NULL;
-
-  /* save the source */
-  gcal_manager_save_source (priv->manager, priv->source);
 
   gtk_dialog_response (GTK_DIALOG (user_data), response);
 }
@@ -212,11 +214,91 @@ response_signal (GtkDialog *dialog,
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (dialog)->priv;
 
   /* save the source */
-  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_EDIT || response_id == GTK_RESPONSE_APPLY)
+  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_EDIT ||
+      (priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE && response_id == GTK_RESPONSE_APPLY))
     {
-      if (priv->source)
-        gcal_manager_save_source (priv->manager, priv->source);
+      gcal_manager_save_source (priv->manager, priv->source);
     }
+
+  /* Destroy the source when the operation is cancelled */
+  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE && response_id == GTK_RESPONSE_CANCEL)
+    {
+      g_object_unref (priv->source);
+      priv->source = NULL;
+    }
+}
+
+/**
+ * select_calendar_file:
+ *
+ * Opens a file selector dialog and
+ * parse the resulting selection.
+ *
+ * Returns:
+ */
+static void
+select_calendar_file (GtkButton *button,
+                      gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GtkFileFilter *filter;
+  GtkWidget *dialog, *add_button;
+  gint response;
+
+  /* File filter */
+  filter = gtk_file_filter_new ();
+  gtk_file_filter_set_name (filter, _("Calendar files"));
+  gtk_file_filter_add_mime_type (filter, "text/calendar");
+
+  /* File chooser dialog */
+  dialog = gtk_file_chooser_dialog_new (_("Select a calendar file"), GTK_WINDOW (user_data),
+                                        GTK_FILE_CHOOSER_ACTION_OPEN, _("Cancel"), GTK_RESPONSE_CANCEL, _("Open"),
+                                        GTK_RESPONSE_OK, NULL);
+
+  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
+  response = gtk_dialog_run (GTK_DIALOG (dialog));
+
+  if (response == GTK_RESPONSE_OK)
+    {
+      ESourceExtension *ext;
+      ESource *source;
+      GFile *file;
+
+      file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
+
+      /**
+       * Since we cannot guarantee that the
+       * type system registered ESourceLocal,
+       * it must be ensured at least here.
+       */
+      g_type_ensure (E_TYPE_SOURCE_LOCAL);
+
+      /**
+       * Create the new source and add the needed
+       * extensions.
+       */
+      source = e_source_new (NULL, NULL, NULL);
+      e_source_set_parent (source, "local-stub");
+
+      ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
+      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
+
+      ext = e_source_get_extension (source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
+      e_source_local_set_custom_file (E_SOURCE_LOCAL (ext), file);
+
+      /* update the source properties */
+      e_source_set_display_name (source, g_file_get_basename (file));
+
+      /* Set the private source so it saves at closing */
+      priv->source = source;
+
+      /* Update buttons */
+      gtk_button_set_label (GTK_BUTTON (priv->select_file_button), g_file_get_basename (file));
+      gtk_widget_set_sensitive (priv->add_button, source != NULL);
+    }
+
+  gtk_widget_destroy (dialog);
 }
 
 GcalSourceDialog *
@@ -306,6 +388,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notebook);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, select_file_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
@@ -314,6 +397,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
+  gtk_widget_class_bind_template_callback (widget_class, select_calendar_file);
 }
 
 static void
