@@ -586,6 +586,9 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
   /* FIXME: account information on subtitle */
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), "");
 
+  /* toggle the remove button */
+  gtk_widget_set_sensitive (priv->remove_button, e_source_get_removable (source));
+
   /* unblock signals */
   g_signal_handlers_unblock_by_func (priv->calendar_color_button, color_set, dialog);
   g_signal_handlers_unblock_by_func (priv->name_entry, name_entry_text_changed, dialog);
