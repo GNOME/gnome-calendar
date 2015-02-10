@@ -341,6 +341,13 @@ select_calendar_file (GtkButton *button,
       file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
 
       /**
+       * Remove any reminescent ESources
+       * cached before.
+       */
+      if (priv->local_source != NULL)
+        g_clear_pointer (&(priv->local_source), g_object_unref);
+
+      /**
        * Since we cannot guarantee that the
        * type system registered ESourceLocal,
        * it must be ensured at least here.
