@@ -37,6 +37,13 @@ typedef struct
   GtkWidget          *select_file_button;
   GtkWidget          *stack;
 
+  /* new source details */
+  GtkWidget          *author_label;
+  GtkWidget          *details_frame;
+  GtkWidget          *local_source_grid;
+  GtkWidget          *new_calendar_name_entry;
+  GtkWidget          *web_source_grid;
+
   /* flags */
   GcalSourceDialogMode mode;
   ESource            *source;
@@ -86,6 +93,9 @@ static void       response_signal                       (GtkDialog           *di
 
 static void       select_calendar_file                 (GtkButton            *button,
                                                         gpointer              user_data);
+
+static void       setup_source_details                 (GcalSourceDialog     *dialog,
+                                                        ESource              *source);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
@@ -359,9 +369,62 @@ select_calendar_file (GtkButton *button,
       /* Update buttons */
       gtk_button_set_label (GTK_BUTTON (priv->select_file_button), g_file_get_basename (file));
       gtk_widget_set_sensitive (priv->add_button, source != NULL);
+
+      setup_source_details (GCAL_SOURCE_DIALOG (user_data), source);
     }
 
   gtk_widget_destroy (dialog);
+}
+
+/**
+ * setup_source_details:
+ *
+ * Setup the details frame of a given
+ * calendar in proccess of creation.
+ *
+ * Returns:
+ */
+static void
+setup_source_details (GcalSourceDialog *dialog,
+                      ESource          *source)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+  gchar *email, *n_events;
+  GtkWidget *parent_grid;
+  GQueue *queue;
+  GList *aux;
+
+  if (gtk_notebook_get_current_page (GTK_NOTEBOOK (priv->notebook)) == 0)
+    parent_grid = priv->web_source_grid;
+  else
+    parent_grid = priv->local_source_grid;
+
+  /* If it's inside any grid, remove it */
+  if (gtk_widget_get_parent (priv->details_frame) != NULL)
+    gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (priv->details_frame)), priv->details_frame);
+
+  /* Add it to the current grid */
+  gtk_grid_attach (GTK_GRID (parent_grid), priv->details_frame, 0, 2, 1, 2);
+
+  /* Calendar name */
+  gtk_entry_set_text (GTK_ENTRY (priv->new_calendar_name_entry), e_source_get_display_name (source));
+
+  /* Email field */
+  email = gcal_manager_query_client_data (priv->manager, source, CAL_BACKEND_PROPERTY_CAL_EMAIL_ADDRESS);
+
+  if (email != NULL)
+    {
+      gtk_label_set_markup (GTK_LABEL (priv->author_label), email);
+    }
+  else
+    {
+      gchar *text = g_strdup_printf ("<i><small>%s</small></i>", _("No author"));
+      gtk_label_set_markup (GTK_LABEL (priv->author_label), text);
+
+      g_free (text);
+    }
+
+  gtk_widget_show_all (priv->details_frame);
 }
 
 GcalSourceDialog *
@@ -445,16 +508,21 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
 
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, author_label);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_color_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, default_check);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, details_frame);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, edit_grid);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, local_source_grid);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, new_calendar_name_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notebook);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, remove_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, select_file_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_source_grid);
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
   gtk_widget_class_bind_template_callback (widget_class, color_set);
