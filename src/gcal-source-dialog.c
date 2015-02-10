@@ -39,6 +39,8 @@ typedef struct
   /* flags */
   GcalSourceDialogMode mode;
   ESource            *source;
+  ESource            *local_source;
+  ESource            *remote_source;
   ESource            *old_default_source;
   GBinding           *title_bind;
 
@@ -71,6 +73,11 @@ static gboolean   description_label_link_activated      (GtkWidget            *w
 static void       name_entry_text_changed               (GObject             *object,
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
+
+static void       notebook_page_switched               (GtkWidget            *notebook,
+                                                        GtkWidget            *page,
+                                                        guint                 page_num,
+                                                        gpointer              user_data);
 
 static void       response_signal                       (GtkDialog           *dialog,
                                                          gint                 response_id,
@@ -199,6 +206,33 @@ name_entry_text_changed (GObject    *object,
 }
 
 /**
+ * notebook_page_switched:
+ *
+ * Validates the current state of
+ * the dialog according to the current
+ * page.
+ *
+ * Returns:
+ */
+static void
+notebook_page_switched (GtkWidget *notebook,
+                        GtkWidget *page,
+                        guint      page_num,
+                        gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  if (page_num == 0)
+    {
+      gtk_widget_set_sensitive (priv->add_button, (priv->remote_source != NULL));
+    }
+  else
+    {
+      gtk_widget_set_sensitive (priv->add_button, (priv->local_source != NULL));
+    }
+}
+
+/**
  * response_signal:
  *
  * Save the source when the dialog
@@ -214,17 +248,45 @@ response_signal (GtkDialog *dialog,
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (dialog)->priv;
 
   /* save the source */
-  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_EDIT ||
-      (priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE && response_id == GTK_RESPONSE_APPLY))
+  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_EDIT)
     {
       gcal_manager_save_source (priv->manager, priv->source);
+    }
+
+  /* commit the new source */
+  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE && response_id == GTK_RESPONSE_APPLY)
+    {
+      ESource *current_source, *other_source;
+      gint page;
+
+      page = gtk_notebook_get_current_page (GTK_NOTEBOOK (priv->notebook));
+      current_source = (page == 0 ? priv->remote_source : priv->local_source);
+      other_source = (page == 1 ? priv->remote_source : priv->local_source);
+
+      /* save the current page's source */
+      if (current_source != NULL)
+        gcal_manager_save_source (priv->manager, current_source);
+
+      /* destory the leftover source */
+      if (other_source != NULL)
+        g_object_unref (other_source);
+
     }
 
   /* Destroy the source when the operation is cancelled */
   if (priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE && response_id == GTK_RESPONSE_CANCEL)
     {
-      g_object_unref (priv->source);
-      priv->source = NULL;
+      if (priv->local_source != NULL)
+        {
+          g_object_unref (priv->local_source);
+          priv->local_source = NULL;
+        }
+
+      if (priv->remote_source != NULL)
+        {
+          g_object_unref (priv->remote_source);
+          priv->remote_source = NULL;
+        }
     }
 }
 
@@ -291,7 +353,7 @@ select_calendar_file (GtkButton *button,
       e_source_set_display_name (source, g_file_get_basename (file));
 
       /* Set the private source so it saves at closing */
-      priv->source = source;
+      priv->local_source = source;
 
       /* Update buttons */
       gtk_button_set_label (GTK_BUTTON (priv->select_file_button), g_file_get_basename (file));
@@ -396,6 +458,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
+  gtk_widget_class_bind_template_callback (widget_class, notebook_page_switched);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
   gtk_widget_class_bind_template_callback (widget_class, select_calendar_file);
 }

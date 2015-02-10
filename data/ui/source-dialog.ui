@@ -134,6 +134,7 @@
                 <property name="show_border">False</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
+                <signal name="switch_page" handler="notebook_page_switched" object="GcalSourceDialog" swapped="no" />
                 <child>
                   <object class="GtkGrid" id="web_source_grid">
                     <property name="visible">True</property>
