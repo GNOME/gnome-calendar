@@ -934,7 +934,7 @@ source_row_activated (GtkListBox    *listbox,
       current_row = g_hash_table_lookup (priv->calendar_source_to_row, aux->data);
 
       /* Enable/disable the toggled calendar */
-      if (current_row == row)
+      if (current_row == GTK_WIDGET (row))
         {
           source = aux->data;
           break;
