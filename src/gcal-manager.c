@@ -1089,6 +1089,34 @@ gcal_manager_set_query (GcalManager *manager,
 }
 
 /**
+ * gcal_manager_query_client_data:
+ *
+ * Queries for a specific data field of
+ * the {@link ECalClient}.
+ *
+ * Returns: (Transfer none) a string representing the retrieved value, or NULL.
+ */
+gchar*
+gcal_manager_query_client_data (GcalManager *manager,
+                                ESource     *source,
+                                const gchar *field)
+{
+  GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
+  gchar *out;
+
+  priv = gcal_manager_get_instance_private (manager);
+  unit = g_hash_table_lookup (priv->clients, source);
+
+  if (unit == NULL)
+    return NULL;
+
+  g_object_get (unit->client, field, &out, NULL);
+
+  return out;
+}
+
+/**
  * gcal_manager_add_source:
  * @manager: a #GcalManager
  * @base_uri: URI defining the ESourceGroup the client will belongs

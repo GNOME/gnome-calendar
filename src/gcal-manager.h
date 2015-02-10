@@ -105,6 +105,10 @@ void           gcal_manager_set_search_subscriber   (GcalManager        *manager
 void           gcal_manager_set_query               (GcalManager        *manager,
                                                      const gchar        *query);
 
+gchar*         gcal_manager_query_client_data       (GcalManager        *manager,
+                                                     ESource            *source,
+                                                     const gchar        *field);
+
 gchar*         gcal_manager_add_source              (GcalManager        *manager,
                                                      const gchar        *name,
                                                      const gchar        *backend,
