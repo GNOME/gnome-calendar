@@ -856,6 +856,26 @@ gcal_manager_new_with_settings (GSettings *settings)
 }
 
 /**
+ * gcal_manager_get_source:
+ * @manager:
+ *
+ * Retrieve a source according to it's UID. The source
+ * is referenced for thread-safety and must be unreferenced
+ * after user.
+ *
+ * Returns: (Transfer full) an {@link ESource}, or NULL.
+ **/
+ESource*
+gcal_manager_get_source (GcalManager *manager,
+                         const gchar *uid)
+{
+  GcalManagerPrivate *priv;
+  priv = gcal_manager_get_instance_private (manager);
+
+  return e_source_registry_ref_source (priv->source_registry, uid);
+}
+
+/**
  * gcal_manager_get_sources:
  * @manager:
  *

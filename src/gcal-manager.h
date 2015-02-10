@@ -63,6 +63,9 @@ GType          gcal_manager_get_type                (void);
 
 GcalManager*   gcal_manager_new_with_settings       (GSettings          *settings);
 
+ESource*       gcal_manager_get_source              (GcalManager        *manager,
+                                                     const gchar        *uid);
+
 GList*         gcal_manager_get_sources             (GcalManager        *manager);
 
 GList*         gcal_manager_get_sources_connected   (GcalManager        *manager);
