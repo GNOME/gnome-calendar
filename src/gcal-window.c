@@ -783,7 +783,7 @@ create_notification (GcalWindow *window,
   priv = gcal_window_get_instance_private (window);
 
   /* notification content */
-  gtk_label_set_text (GTK_LABEL (priv->notification_label), message);
+  gtk_label_set_markup (GTK_LABEL (priv->notification_label), message);
   gtk_widget_show_all (priv->notification);
 
   if (button_label != NULL)
@@ -965,7 +965,7 @@ source_row_activated (GtkListBox    *listbox,
     {
       gchar *str;
 
-      str = g_strdup_printf (_("Calendar '%s' removed"), e_source_get_display_name (source));
+      str = g_strdup_printf (_("Calendar <b>%s</b> removed"), e_source_get_display_name (source));
       priv->removed_source = source;
 
       create_notification (GCAL_WINDOW (user_data), str, _("Undo"));
