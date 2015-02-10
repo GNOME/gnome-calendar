@@ -315,7 +315,7 @@ select_calendar_file (GtkButton *button,
 {
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
   GtkFileFilter *filter;
-  GtkWidget *dialog, *add_button;
+  GtkWidget *dialog;
   gint response;
 
   /* File filter */
@@ -396,10 +396,8 @@ setup_source_details (GcalSourceDialog *dialog,
                       ESource          *source)
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
-  gchar *email, *n_events;
+  gchar *email;
   GtkWidget *parent_grid;
-  GQueue *queue;
-  GList *aux;
 
   if (gtk_notebook_get_current_page (GTK_NOTEBOOK (priv->notebook)) == 0)
     parent_grid = priv->web_source_grid;
