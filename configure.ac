@@ -95,6 +95,7 @@ PKG_CHECK_MODULES(CALENDAR,
                   gtk+-3.0 >= $GTK_MIN_VERSION
                   libecal-1.2 >= $ECAL_REQUIRED
                   libedataserver-1.2 >= $EDATASERVER_REQUIRED
+                  libedataserverui-1.2 >= $EDATASERVERUI_REQUIRED
                   libical >= $LIBICAL_REQUIRED)
 
 APPSTREAM_XML

@@ -20,6 +20,8 @@
 #include "gcal-manager.h"
 #include "gcal-utils.h"
 
+#include <libedataserverui/libedataserverui.h>
+
 typedef struct
 {
   ESource       *source;
@@ -55,6 +57,7 @@ typedef struct
   GHashTable      *clients;
 
   ESourceRegistry *source_registry;
+  ECredentialsPrompter *credentials_prompter;
 
   ECalDataModel   *e_data_model;
   ECalDataModel   *search_data_model;
@@ -555,6 +558,83 @@ out:
 }
 
 static void
+show_source_error (const gchar  *where,
+                   const gchar  *what,
+                   ESource      *source,
+                   const GError *error)
+{
+  if (!error || g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+    return;
+
+  /* TODO Show the error in UI, somehow */
+  g_warning ("%s: %s '%s': %s", where, what, e_source_get_display_name (source), error->message);
+}
+
+static void
+source_invoke_authenticate_cb (GObject      *source_object,
+                               GAsyncResult *result,
+                               gpointer      user_data)
+{
+  ESource *source = E_SOURCE (source_object);
+  GError *error = NULL;
+
+  if (!e_source_invoke_authenticate_finish (source, result, &error) &&
+      !g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED)) {
+    show_source_error (G_STRFUNC, "Failed to invoke authenticate", source, error);
+  }
+
+  g_clear_error (&error);
+}
+
+static void
+source_trust_prompt_done_cb (GObject      *source_object,
+                             GAsyncResult *result,
+                             gpointer      user_data)
+{
+  ETrustPromptResponse response = E_TRUST_PROMPT_RESPONSE_UNKNOWN;
+  ESource *source = E_SOURCE (source_object);
+  GError *error = NULL;
+
+  if (!e_trust_prompt_run_for_source_finish (source, result, &response, &error)) {
+    show_source_error (G_STRFUNC, "Failed to prompt for trust for", source, error);
+  } else if (response == E_TRUST_PROMPT_RESPONSE_ACCEPT || response == E_TRUST_PROMPT_RESPONSE_ACCEPT_TEMPORARILY) {
+    /* Use NULL credentials to reuse those from the last time. */
+    e_source_invoke_authenticate (source, NULL, NULL /* cancellable */, source_invoke_authenticate_cb, NULL);
+  }
+
+  g_clear_error (&error);
+}
+
+static void
+source_credentials_required_cb (ESourceRegistry         *registry,
+                                ESource                 *source,
+                                ESourceCredentialsReason reason,
+                                const gchar             *certificate_pem,
+                                GTlsCertificateFlags     certificate_errors,
+                                const GError            *op_error,
+                                GcalManager             *manager)
+{
+  GcalManagerPrivate *priv;
+  ECredentialsPrompter *credentials_prompter;
+
+  g_return_if_fail (GCAL_IS_MANAGER (manager));
+
+  priv = gcal_manager_get_instance_private (manager);
+  credentials_prompter = priv->credentials_prompter;
+
+  if (e_credentials_prompter_get_auto_prompt_disabled_for (credentials_prompter, source))
+    return;
+
+  if (reason == E_SOURCE_CREDENTIALS_REASON_SSL_FAILED) {
+    e_trust_prompt_run_for_source (e_credentials_prompter_get_dialog_parent (credentials_prompter),
+                                   source, certificate_pem, certificate_errors, op_error ? op_error->message : NULL,
+                                   TRUE /* allow_source_save */, NULL /* cancellable */, source_trust_prompt_done_cb, NULL);
+  } else if (reason == E_SOURCE_CREDENTIALS_REASON_ERROR && op_error) {
+    show_source_error (G_STRFUNC, "Failed to authenticate", source, op_error);
+  }
+}
+
+static void
 gcal_manager_class_init (GcalManagerClass *klass)
 {
   G_OBJECT_CLASS (klass)->constructed = gcal_manager_constructed;
@@ -610,6 +690,7 @@ gcal_manager_constructed (GObject *object)
 
   GList *sources, *l;
   GError *error = NULL;
+  ESourceCredentialsProvider *credentials_provider;
 
   G_OBJECT_CLASS (gcal_manager_parent_class)->constructed (object);
 
@@ -629,6 +710,46 @@ gcal_manager_constructed (GObject *object)
       g_error_free (error);
       return;
     }
+
+  priv->credentials_prompter = e_credentials_prompter_new (priv->source_registry);
+
+  /* First disable credentials prompt for all but calendar sources... */
+  sources = e_source_registry_list_sources (priv->source_registry, NULL);
+
+  for (l = sources; l != NULL; l = g_list_next (l))
+    {
+      ESource *source = E_SOURCE (l->data);
+
+      /* Mark for skip also currently disabled sources */
+      if (!e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR))
+        e_credentials_prompter_set_auto_prompt_disabled_for (priv->credentials_prompter, source, TRUE);
+    }
+
+  g_list_free_full (sources, g_object_unref);
+
+  credentials_provider = e_credentials_prompter_get_provider (priv->credentials_prompter);
+
+  /* ...then enable credentials prompt for credential source of the calendar sources,
+     which can be a collection source.  */
+  sources = e_source_registry_list_sources (priv->source_registry, E_SOURCE_EXTENSION_CALENDAR);
+
+  for (l = sources; l != NULL; l = g_list_next (l))
+    {
+      ESource *source = E_SOURCE (l->data), *cred_source;
+
+      cred_source = e_source_credentials_provider_ref_credentials_source (credentials_provider, source);
+      if (cred_source && !e_source_equal (source, cred_source))
+        e_credentials_prompter_set_auto_prompt_disabled_for (priv->credentials_prompter, cred_source, FALSE);
+      g_clear_object (&cred_source);
+    }
+
+  g_list_free_full (sources, g_object_unref);
+
+  /* The eds_credentials_prompter responses to REQUIRED and REJECTED reasons,
+     the SSL_FAILED should be handled elsewhere. */
+  g_signal_connect (priv->source_registry, "credentials-required", G_CALLBACK (source_credentials_required_cb), object);
+
+  e_credentials_prompter_process_awaiting_credentials (priv->credentials_prompter);
 
   g_signal_connect_swapped (priv->source_registry, "source-added", G_CALLBACK (load_source), object);
   g_signal_connect_swapped (priv->source_registry, "source-removed", G_CALLBACK (remove_source), object);
