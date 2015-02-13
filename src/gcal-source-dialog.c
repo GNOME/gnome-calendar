@@ -33,6 +33,8 @@ typedef struct
   GtkWidget          *headerbar;
   GtkWidget          *name_entry;
   GtkWidget          *notebook;
+  GtkWidget          *spinner;
+  GtkWidget          *spinner_window;
   GtkWidget          *remove_button;
   GtkWidget          *select_file_button;
   GtkWidget          *stack;
@@ -101,6 +103,10 @@ static void       select_calendar_file                 (GtkButton            *bu
 
 static void       setup_source_details                 (GcalSourceDialog     *dialog,
                                                         ESource              *source);
+
+static gboolean   spinner_damaged                       (GtkWidget           *spinner,
+                                                         GdkEvent            *event,
+                                                         gpointer             user_data);
 
 static void       url_entry_text_changed                (GObject             *object,
                                                          GParamSpec          *pspec,
@@ -468,6 +474,29 @@ setup_source_details (GcalSourceDialog *dialog,
 }
 
 /**
+ * spinner_damaged:
+ *
+ * Update the url's entry with
+ * the spinner icon.
+ *
+ * Returns: FALSE
+ */
+static gboolean
+spinner_damaged (GtkWidget  *spinner,
+                 GdkEvent   *event,
+                 gpointer    user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GdkPixbuf *pix;
+
+  pix = gtk_offscreen_window_get_pixbuf (GTK_OFFSCREEN_WINDOW (priv->spinner_window));
+
+  gtk_entry_set_icon_from_pixbuf (GTK_ENTRY (priv->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY, pix);
+
+  return FALSE;
+}
+
+/**
  * url_entry_text_changed:
  *
  * Performs a validation of the URL
@@ -496,6 +525,7 @@ url_entry_text_changed (GObject    *object,
   else
     {
       /* remove entry's icon */
+      gtk_spinner_stop (GTK_SPINNER (priv->spinner));
       gtk_entry_set_icon_from_pixbuf (GTK_ENTRY (priv->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY, NULL);
     }
 }
@@ -514,6 +544,8 @@ validate_url_cb (GcalSourceDialog *dialog)
   GcalSourceDialogPrivate *priv = dialog->priv;
 
   priv->validate_url_resource_id = 0;
+
+  gtk_spinner_start (GTK_SPINNER (priv->spinner));
 
   g_message ("stub");
 
@@ -615,6 +647,8 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notebook);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, remove_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, select_file_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, spinner);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, spinner_window);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_source_grid);
 
@@ -626,6 +660,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, notebook_page_switched);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
   gtk_widget_class_bind_template_callback (widget_class, select_calendar_file);
+  gtk_widget_class_bind_template_callback (widget_class, spinner_damaged);
   gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
 }
 
