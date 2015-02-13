@@ -45,6 +45,8 @@ typedef struct
   GtkWidget          *new_calendar_name_entry;
   GtkWidget          *web_source_grid;
 
+  gint                validate_url_resource_id;
+
   /* flags */
   GcalSourceDialogMode mode;
   ESource            *source;
@@ -99,6 +101,12 @@ static void       select_calendar_file                 (GtkButton            *bu
 
 static void       setup_source_details                 (GcalSourceDialog     *dialog,
                                                         ESource              *source);
+
+static void       url_entry_text_changed                (GObject             *object,
+                                                         GParamSpec          *pspec,
+                                                         gpointer             user_data);
+
+static gboolean   validate_url_cb                       (GcalSourceDialog    *dialog);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
@@ -459,6 +467,59 @@ setup_source_details (GcalSourceDialog *dialog,
   gtk_widget_show_all (priv->details_frame);
 }
 
+/**
+ * url_entry_text_changed:
+ *
+ * Performs a validation of the URL
+ * 1 second after the user inputs.
+ *
+ * Returns:
+ */
+static void
+url_entry_text_changed (GObject    *object,
+                        GParamSpec *pspec,
+                        gpointer    user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  const gchar* text;
+
+  text = gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry));
+
+  if (g_utf8_strlen (text, -1) != 0)
+    {
+      // Remove any previous unreleased resource
+      if (priv->validate_url_resource_id != 0)
+        g_source_remove (priv->validate_url_resource_id);
+
+      priv->validate_url_resource_id = g_timeout_add_seconds (1, validate_url_cb, user_data);
+    }
+  else
+    {
+      /* remove entry's icon */
+      gtk_entry_set_icon_from_pixbuf (GTK_ENTRY (priv->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY, NULL);
+    }
+}
+
+/**
+ * validate_url_cb:
+ *
+ * Query the given URL for possible
+ * calendar data.
+ *
+ * Returns:FALSE
+ */
+static gboolean
+validate_url_cb (GcalSourceDialog *dialog)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+
+  priv->validate_url_resource_id = 0;
+
+  g_message ("stub");
+
+  return FALSE;
+}
+
 GcalSourceDialog *
 gcal_source_dialog_new (void)
 {
@@ -565,6 +626,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, notebook_page_switched);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
   gtk_widget_class_bind_template_callback (widget_class, select_calendar_file);
+  gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
 }
 
 static void
