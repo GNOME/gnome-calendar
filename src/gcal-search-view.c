@@ -594,6 +594,9 @@ gcal_search_view_finalize (GObject       *object)
   if (priv->date != NULL)
     g_free (priv->date);
 
+  g_hash_table_destroy (priv->events);
+  g_hash_table_destroy (priv->row_to_event);
+
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_search_view_parent_class)->finalize (object);
 }

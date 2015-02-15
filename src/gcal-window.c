@@ -1399,6 +1399,7 @@ gcal_window_finalize (GObject *object)
   priv = gcal_window_get_instance_private (GCAL_WINDOW (object));
 
   g_free (priv->active_date);
+  g_free (priv->current_date);
 
   if (priv->views_switcher != NULL)
     g_object_unref (priv->views_switcher);

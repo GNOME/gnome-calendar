@@ -377,6 +377,7 @@ gcal_shell_search_provider_finalize (GObject *object)
 {
   GcalShellSearchProviderPrivate *priv = GCAL_SHELL_SEARCH_PROVIDER (object)->priv;
 
+  g_hash_table_destroy (priv->events);
   g_clear_object (&priv->skel);
   G_OBJECT_CLASS (gcal_shell_search_provider_parent_class)->finalize (object);
 }

@@ -964,6 +964,9 @@ gcal_year_view_finalize (GObject *object)
   g_free (priv->navigator_grid);
   g_free (priv->selected_data);
 
+  g_free (priv->start_selected_date);
+  g_free (priv->end_selected_date);
+
   if (priv->date != NULL)
     g_free (priv->date);
 
@@ -1162,7 +1165,10 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
         (event_start >= range_start && event_end <= range_end) ||
         (event_start >= range_start && event_start <= range_end) ||
         (event_end >= range_start && event_end <= range_end)))
-    goto out;
+    {
+      g_object_unref (data->event_component);
+      goto out;
+    }
 
   add_event_to_day_array (year_view, data, days_widgets_array, days_span);
   gtk_stack_set_visible_child_name (GTK_STACK (priv->navigator_stack), "events-list");
