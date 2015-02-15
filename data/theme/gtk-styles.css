@@ -60,13 +60,13 @@
 }
 
 .calendar-view.first-view-header {
-    font: bold 18;
+    font: bold 16;
     color: @theme_selected_bg_color;
     padding: 12px;
 }
 
 .calendar-view.second-view-header {
-    font: bold 18;
+    font: bold 16;
     padding: 12px;
     color: alpha(@theme_fg_color, 0.55);
 }
