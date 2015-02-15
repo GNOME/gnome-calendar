@@ -284,7 +284,6 @@ gcal_application_activate (GApplication *application)
       if (priv->initial_date == NULL)
         {
           priv->initial_date = g_new0 (icaltimetype, 1);
-          /* FIXME: here read the initial date from somewehere */
           *(priv->initial_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (priv->manager));
           *(priv->initial_date) = icaltime_set_timezone (priv->initial_date,
                                                          gcal_manager_get_system_timezone (priv->manager));
@@ -296,8 +295,7 @@ gcal_application_activate (GApplication *application)
       g_settings_bind (priv->settings, "active-view", priv->window, "active-view",
                        G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
 
-      /* FIXME: remove me in favor of gtk_widget_show() */
-      gtk_widget_show_all (priv->window);
+      gtk_widget_show (priv->window);
     }
 
     g_clear_pointer (&(priv->initial_date), g_free);
