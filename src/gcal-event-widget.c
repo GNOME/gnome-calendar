@@ -727,11 +727,9 @@ gcal_event_widget_new_from_data (GcalEventData *data)
   e_cal_component_get_dtstart (priv->component, &dt);
   date = gcal_dup_icaltime (dt.value);
 
-  /* FIXME: fix the timezone issue */
-  /* if (date->is_date != 1) */
-  /*   *date = icaltime_convert_to_zone (*(dt.value), */
-  /*                                     priv->system_timezone); */
   start_is_date = date->is_date == 1;
+  if (start_is_date)
+    *date = icaltime_convert_to_zone (*(dt.value), e_cal_util_get_system_timezone ());
 
   gcal_event_widget_set_date (event, date);
   e_cal_component_free_datetime (&dt);
@@ -743,11 +741,9 @@ gcal_event_widget_new_from_data (GcalEventData *data)
     {
       date = gcal_dup_icaltime (dt.value);
 
-      /* FIXME: fix the timezone issue */
-      /* if (date->is_date != 1) */
-      /*   *date = icaltime_convert_to_zone (*(dt.value), */
-      /*                                     priv->system_timezone); */
       end_is_date = date->is_date == 1;
+      if (end_is_date)
+        *date = icaltime_convert_to_zone (*(dt.value), e_cal_util_get_system_timezone ());
 
       gcal_event_widget_set_end_date (event, date);
       e_cal_component_free_datetime (&dt);
