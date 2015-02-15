@@ -360,27 +360,21 @@ gcal_event_widget_get_preferred_width (GtkWidget *widget,
                                        gint      *minimum,
                                        gint      *natural)
 {
-  GtkBorder margin;
-  GtkBorder padding;
+  GtkBorder border, padding;
   PangoLayout *layout;
-  PangoRectangle logical_rect;
+  gint layout_width;
 
   layout = gtk_widget_create_pango_layout (widget, "00:00:00 00:00");
-
-  pango_layout_get_extents (layout, NULL, &logical_rect);
-  pango_extents_to_pixels (&logical_rect, NULL);
-
-  gtk_style_context_get_margin (gtk_widget_get_style_context (widget),
-                                gtk_widget_get_state_flags (widget),
-                                &margin);
-  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
-                                 gtk_widget_get_state_flags (widget),
-                                 &padding);
-
-  *minimum = *natural =
-    logical_rect.width + padding.left + padding.right + margin.left + margin.right;
-
+  pango_layout_get_pixel_size (layout, &layout_width, NULL);
   g_object_unref (layout);
+
+  gtk_style_context_get_border (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget), &border);
+  gtk_style_context_get_padding (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget), &padding);
+
+  if (minimum != NULL)
+    *minimum = layout_width + padding.left + padding.right + border.left + border.right;
+  if (natural != NULL)
+    *natural = layout_width + padding.left + padding.right + border.left + border.right;
 }
 
 static void
@@ -388,26 +382,21 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
                                         gint      *minimum,
                                         gint      *natural)
 {
-  GtkBorder margin;
-  GtkBorder padding;
+  GtkBorder border, padding;
   PangoLayout *layout;
-  gint height;
+  gint layout_height;
 
   layout = gtk_widget_create_pango_layout (widget, NULL);
-
-  pango_layout_get_pixel_size (layout, NULL, &height);
-
-  gtk_style_context_get_margin (gtk_widget_get_style_context (widget),
-                                gtk_widget_get_state_flags (widget),
-                                &margin);
-  gtk_style_context_get_padding (gtk_widget_get_style_context (widget),
-                                 gtk_widget_get_state_flags (widget),
-                                 &padding);
-
-  *minimum = *natural =
-    height + padding.top + padding.bottom + margin.top + margin.bottom;
-
+  pango_layout_get_pixel_size (layout, NULL, &layout_height);
   g_object_unref (layout);
+
+  gtk_style_context_get_border (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget), &border);
+  gtk_style_context_get_padding (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget), &padding);
+
+  if (minimum != NULL)
+    *minimum = layout_height + padding.top + padding.bottom + border.top + border.bottom;
+  if (natural != NULL)
+    *natural = layout_height + padding.top + padding.bottom + border.top + border.bottom;
 }
 
 static void
@@ -523,19 +512,15 @@ gcal_event_widget_draw (GtkWidget *widget,
                         cairo_t   *cr)
 {
   GcalEventWidgetPrivate *priv;
+
   GtkStyleContext *context;
   GtkStateFlags state;
-  GtkBorder margin;
   GtkBorder padding;
 
-  gint x,y;
-  gint width, height;
-  gint left_gap;
-  gint right_gap;
-  gint icon_size = 0;
+  gint width, height, layout_height;
+  gint left_gap, right_gap, icon_size = 0;
 
   PangoLayout *layout;
-  PangoRectangle logical_rect;
   PangoFontDescription *font_desc;
 
   priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
@@ -543,33 +528,26 @@ gcal_event_widget_draw (GtkWidget *widget,
   state = gtk_widget_get_state_flags (widget);
 
   gtk_style_context_get_padding (context, state, &padding);
-  gtk_style_context_get_margin (context, state, &margin);
 
-  x = margin.left;
-  y = margin.top;
-  width = gtk_widget_get_allocated_width (widget)
-   - (margin.left + margin.right);
-  height = gtk_widget_get_allocated_height (widget)
-   - (margin.top + margin.bottom);
+  width = gtk_widget_get_allocated_width (widget);
+  height = gtk_widget_get_allocated_height (widget);
 
-  gtk_render_background (context, cr, x, y, width, height);
-  gtk_render_frame (context, cr, x, y, width, height);
+  gtk_render_background (context, cr, 0, 0, width, height);
+  gtk_render_frame (context, cr, 0, 0, width, height);
 
   /* FIXME for RTL alignment and icons positions */
   gtk_style_context_get (context, state, "font", &font_desc, NULL);
-  layout = pango_cairo_create_layout (cr);
+  layout = gtk_widget_create_pango_layout (widget, priv->summary);
   pango_layout_set_font_description (layout, font_desc);
   pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
   pango_layout_set_width (layout, (width - (padding.left + padding.right) ) * PANGO_SCALE);
-  pango_layout_set_text (layout, priv->summary, -1);
   pango_cairo_update_layout (cr, layout);
 
   left_gap = 0;
   if (priv->has_reminders)
     {
-      pango_layout_get_extents (layout, NULL, &logical_rect);
-      pango_extents_to_pixels (&logical_rect, NULL);
-      icon_size = logical_rect.height;
+      pango_layout_get_pixel_size (layout, NULL, &layout_height);
+      icon_size = layout_height;
       left_gap = icon_size + padding.left;
       pango_layout_set_width (layout, (width - (left_gap + padding.left + padding.right) ) * PANGO_SCALE);
     }
@@ -579,19 +557,15 @@ gcal_event_widget_draw (GtkWidget *widget,
     {
       if (icon_size == 0)
         {
-          pango_layout_get_extents (layout, NULL, &logical_rect);
-          pango_extents_to_pixels (&logical_rect, NULL);
-          icon_size = logical_rect.height;
+          pango_layout_get_pixel_size (layout, NULL, &layout_height);
+          icon_size = layout_height;
         }
 
       right_gap = icon_size + padding.right;
       pango_layout_set_width (layout, (width - (left_gap + padding.left + padding.right + right_gap) ) * PANGO_SCALE);
     }
 
-  gtk_render_layout (context, cr,
-                     x + padding.left + left_gap,
-                     y + padding.top,
-                     layout);
+  gtk_render_layout (context, cr, padding.left + left_gap, padding.top, layout);
 
   /* render reminder icon */
   if (priv->has_reminders)
@@ -613,10 +587,7 @@ gcal_event_widget_draw (GtkWidget *widget,
                                                         &was_symbolic,
                                                         NULL);
 
-      gdk_cairo_set_source_pixbuf (cr,
-                                   pixbuf,
-                                   x + padding.left,
-                                   y + padding.top + ((icon_size - (16 * multiplier)) / 2));
+      gdk_cairo_set_source_pixbuf (cr, pixbuf, padding.left, padding.top + ((icon_size - (16 * multiplier)) / 2));
       g_object_unref (pixbuf);
       cairo_paint (cr);
     }
@@ -641,10 +612,7 @@ gcal_event_widget_draw (GtkWidget *widget,
                                                         &was_symbolic,
                                                         NULL);
 
-      gdk_cairo_set_source_pixbuf (cr,
-                                   pixbuf,
-                                   width - right_gap,
-                                   y + padding.top + ((icon_size - (16 * multiplier)) / 2));
+      gdk_cairo_set_source_pixbuf (cr, pixbuf, width - right_gap, padding.top + ((icon_size - (16 * multiplier)) / 2));
       g_object_unref (pixbuf);
       cairo_paint (cr);
     }

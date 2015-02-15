@@ -180,11 +180,8 @@ GtkPopover.events GtkButton {
 }
 
 GcalEventWidget {
-    border-radius: 3px;
-    margin-top: 2px;
-    margin-left: 4px;
-    margin-bottom: 2px;
-    margin-right: 4px;
+    border-radius: 2px;
+    margin: 2px;
     padding: 4px;
     font: 10;
 }
