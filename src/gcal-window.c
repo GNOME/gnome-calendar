@@ -276,13 +276,18 @@ update_active_date (GcalWindow   *window,
 
   time_t range_start, range_end;
   icaltimetype date;
+  icaltimetype *previous_date;
   icaltimezone* default_zone;
 
   priv = gcal_window_get_instance_private (window);
   default_zone = gcal_manager_get_system_timezone (priv->manager);
 
+  previous_date = priv->active_date;
+  priv->active_date = new_date;
+  g_object_notify (G_OBJECT (window), "active-date");
+
   /* year_view */
-  if (priv->active_date->year != new_date->year)
+  if (previous_date->year != new_date->year)
     {
       date = *new_date;
       date.day = 1;
@@ -303,7 +308,7 @@ update_active_date (GcalWindow   *window,
     }
 
   /* month_view */
-  if (priv->active_date->month != new_date->month || priv->active_date->year != new_date->year)
+  if (previous_date->month != new_date->month || previous_date->year != new_date->year)
     {
       date = *new_date;
       date.day = 1;
@@ -321,8 +326,7 @@ update_active_date (GcalWindow   *window,
       gcal_manager_set_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (priv->month_view), range_start, range_end);
     }
 
-    g_free (priv->active_date);
-    priv->active_date = new_date;
+  g_free (previous_date);
 }
 
 static gboolean
@@ -391,7 +395,6 @@ date_updated (GtkButton  *button,
     }
 
   update_active_date (user_data, new_date);
-  g_object_notify (user_data, "active-date");
 }
 
 static void
