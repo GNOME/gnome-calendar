@@ -22,6 +22,7 @@
     </child>
     <child>
       <object class="GtkBox" id="sidebar">
+        <property name="visible">True</property>
         <property name="width_request">200</property>
         <property name="orientation">vertical</property>
         <child>
