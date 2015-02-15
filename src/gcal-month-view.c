@@ -1044,6 +1044,9 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
         }
     }
 
+  if (g_hash_table_size (ppriv->overflow_cells) != 0)
+    gtk_widget_queue_draw (widget);
+
   ppriv->children_changed = FALSE;
 }
 
