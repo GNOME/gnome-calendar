@@ -772,6 +772,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
   gint i, j, sw, shown_rows;
 
+  GtkBorder margin;
   gint padding_bottom, font_height;
   PangoLayout *layout;
   PangoFontDescription *font_desc;
@@ -917,13 +918,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               gint cell_idx = g_array_index (cells, gint, i);
               gint row = cell_idx / 7;
               gint column = cell_idx % 7;
-              pos_x = cell_width * column;
-              pos_y = cell_height * (row + first_row_gap) + start_grid_y;
-
-              child_allocation.x = pos_x;
-              child_allocation.y = pos_y + vertical_cell_space - size_left[cell_idx];
-              child_allocation.width = cell_width * g_array_index (lengths, gint, i);
-              child_allocation.height = natural_height;
 
               if (i != 0)
                 {
@@ -955,12 +949,24 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                     gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted-end");
                 }
 
+              gtk_style_context_get_margin (gtk_widget_get_style_context (child_widget),
+                                            gtk_widget_get_state_flags (child_widget),
+                                            &margin);
+
+              pos_x = cell_width * column + margin.left;
+              pos_y = cell_height * (row + first_row_gap) + start_grid_y + margin.top;
+
+              child_allocation.x = pos_x;
+              child_allocation.y = pos_y + vertical_cell_space - size_left[cell_idx];
+              child_allocation.width = cell_width * g_array_index (lengths, gint, i) - (margin.left + margin.right);
+              child_allocation.height = natural_height;
+
               gtk_widget_size_allocate (child_widget, &child_allocation);
               g_hash_table_remove (ppriv->hidden_as_overflow, uuid);
 
               /* update size_left */
               for (j = 0; j < g_array_index (lengths, gint, i); j++)
-                size_left[cell_idx + j] -= natural_height;
+                size_left[cell_idx + j] -= natural_height + margin.top + margin.bottom;
             }
         }
       else
@@ -1005,18 +1011,22 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
           if (size_left[i] > natural_height)
             {
-              pos_x = cell_width * (i % 7);
-              pos_y = cell_height * ((i / 7) + first_row_gap) + start_grid_y;
+              gtk_style_context_get_margin (gtk_widget_get_style_context (child_widget),
+                                            gtk_widget_get_state_flags (child_widget),
+                                            &margin);
+
+              pos_x = cell_width * (i % 7) + margin.left;
+              pos_y = cell_height * ((i / 7) + first_row_gap) + start_grid_y + margin.top;
 
               child_allocation.x = pos_x;
               child_allocation.y = pos_y + vertical_cell_space - size_left[i];
-              child_allocation.width = cell_width;
+              child_allocation.width = cell_width - (margin.left + margin.right);
               child_allocation.height = natural_height;
               gtk_widget_show (child_widget);
               gtk_widget_size_allocate (child_widget, &child_allocation);
               g_hash_table_remove (ppriv->hidden_as_overflow, uuid);
 
-              size_left[i] -= natural_height;
+              size_left[i] -= natural_height + margin.top + margin.bottom;
             }
           else
             {
