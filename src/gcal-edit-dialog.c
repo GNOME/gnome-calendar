@@ -838,31 +838,37 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
 
   /* start date */
   gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->start_date_selector),
-                            dtstart.value->day,
-                            dtstart.value->month,
-                            dtstart.value->year);
+                               dtstart.value->day,
+                               dtstart.value->month,
+                               dtstart.value->year);
 
   /* start time */
-  if (all_day)
+  if (!all_day)
     {
-      dtstart.value->hour = 0;
-      dtstart.value->minute = 0;
+      icaltimetype *date = gcal_dup_icaltime (dtstart.value);
+      *date = icaltime_convert_to_zone (*(dtstart.value), e_cal_util_get_system_timezone ());
+      gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->start_time_selector), date->hour, date->minute);
+      g_free (date);
     }
-  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->start_time_selector), dtstart.value->hour, dtstart.value->minute);
 
   /* end date */
   if (dtend.value != NULL)
     {
       gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->end_date_selector),
-                                dtend.value->day, dtend.value->month, dtend.value->year);
+                                   dtend.value->day, dtend.value->month, dtend.value->year);
 
       if (!all_day)
-        gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->end_time_selector), dtend.value->hour, dtend.value->minute);
+        {
+          icaltimetype *date = gcal_dup_icaltime (dtend.value);
+          *date = icaltime_convert_to_zone (*(dtstart.value), e_cal_util_get_system_timezone ());
+          gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->end_time_selector), date->hour, date->minute);
+          g_free (date);
+        }
     }
   else
     {
       gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->end_date_selector),
-                                dtstart.value->day, dtstart.value->month, dtstart.value->year);
+                                   dtstart.value->day, dtstart.value->month, dtstart.value->year);
       gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->end_time_selector), dtstart.value->hour, dtstart.value->minute);
     }
 
