@@ -83,6 +83,10 @@ ECalComponent*  build_component_from_details                    (const gchar    
 gint            icaltime_compare_date                           (const icaltimetype    *date1,
                                                                  const icaltimetype    *date2);
 
+gint            icaltime_compare_with_current                   (const icaltimetype    *date1,
+                                                                 const icaltimetype    *date2,
+                                                                 time_t                *current_time_t);
+
 /* code brought from evolution */
 gsize           e_strftime_fix_am_pm                            (gchar                 *str,
                                                                  gsize                  max,
