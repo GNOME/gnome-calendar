@@ -728,7 +728,7 @@ gcal_event_widget_new_from_data (GcalEventData *data)
   date = gcal_dup_icaltime (dt.value);
 
   start_is_date = date->is_date == 1;
-  if (start_is_date)
+  if (!start_is_date)
     *date = icaltime_convert_to_zone (*(dt.value), e_cal_util_get_system_timezone ());
 
   gcal_event_widget_set_date (event, date);
@@ -742,7 +742,7 @@ gcal_event_widget_new_from_data (GcalEventData *data)
       date = gcal_dup_icaltime (dt.value);
 
       end_is_date = date->is_date == 1;
-      if (end_is_date)
+      if (!end_is_date)
         *date = icaltime_convert_to_zone (*(dt.value), e_cal_util_get_system_timezone ());
 
       gcal_event_widget_set_end_date (event, date);
