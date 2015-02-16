@@ -46,6 +46,7 @@ typedef struct
   gint            num_results;
   gchar          *field;
   gchar          *query;
+  time_t          current_utc_date;
 
   /* property */
   icaltimetype   *date;
@@ -215,10 +216,9 @@ sort_by_event (GtkListBoxRow *row1,
 {
   GcalSearchViewPrivate *priv;
   GcalEventData *ev1, *ev2;
-  ECalComponentText summary1, summary2;
   ECalComponentDateTime date1, date2;
-  gchar *down1, *down2;
   gint result;
+  time_t start1, start2, diff1, diff2;
 
   priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
 
@@ -232,23 +232,34 @@ sort_by_event (GtkListBoxRow *row1,
   e_cal_component_get_dtstart (ev1->event_component, &date1);
   e_cal_component_get_dtstart (ev2->event_component, &date2);
 
-  /* Second, compare by their dates */
-  result = icaltime_compare (*date1.value, *date2.value);
+  start1 = icaltime_as_timet_with_zone (*(date1.value), date1.value->zone != NULL ? date1.value->zone : e_cal_util_get_system_timezone ());
+  start2 = icaltime_as_timet_with_zone (*(date2.value), date2.value->zone != NULL ? date2.value->zone : e_cal_util_get_system_timezone ());
+  diff1 = start1 - priv->current_utc_date;
+  diff2 = start2 - priv->current_utc_date;
+
+  if (diff1 == diff2)
+    {
+      result = 0;
+    }
+  else
+    {
+      if (diff1 == 0)
+        result = -1;
+      else if (diff2 == 0)
+        result = 1;
+
+      if (diff1 > 0 && diff2 < 0)
+        result = -1;
+      else if (diff2 > 0 && diff1 < 0)
+        result = 1;
+      else if (diff1 < 0 && diff2 < 0)
+        result = ABS (diff1) - ABS (diff2);
+      else if (diff1 > 0 && diff2 > 0)
+        result = diff1 - diff2;
+    }
+
   e_cal_component_free_datetime (&date1);
   e_cal_component_free_datetime (&date2);
-
-  if (result != 0)
-    return -1 * result;
-
-  e_cal_component_get_summary (ev1->event_component, &summary1);
-  e_cal_component_get_summary (ev2->event_component, &summary2);
-  down1 = g_utf8_strdown (summary1.value, -1);
-  down2 = g_utf8_strdown (summary2.value, -1);
-
-  /* First, by their names */
-  result = g_strcmp0 (down1, down2);
-  g_free (down1);
-  g_free (down2);
 
   return result;
 }
@@ -796,6 +807,9 @@ gcal_search_view_search (GcalSearchView *view,
         gcal_manager_set_search_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view), 0, 0);
         priv->subscribed = TRUE;
       }
+
+      /* update internal current time_t */
+      priv->current_utc_date = time (NULL);
 
       gcal_manager_set_query (priv->manager, search_query);
       gtk_widget_show (priv->listbox);
