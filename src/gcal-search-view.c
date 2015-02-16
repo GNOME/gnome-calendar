@@ -218,7 +218,6 @@ sort_by_event (GtkListBoxRow *row1,
   GcalEventData *ev1, *ev2;
   ECalComponentDateTime date1, date2;
   gint result;
-  time_t start1, start2, diff1, diff2;
 
   priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
 
@@ -232,31 +231,7 @@ sort_by_event (GtkListBoxRow *row1,
   e_cal_component_get_dtstart (ev1->event_component, &date1);
   e_cal_component_get_dtstart (ev2->event_component, &date2);
 
-  start1 = icaltime_as_timet_with_zone (*(date1.value), date1.value->zone != NULL ? date1.value->zone : e_cal_util_get_system_timezone ());
-  start2 = icaltime_as_timet_with_zone (*(date2.value), date2.value->zone != NULL ? date2.value->zone : e_cal_util_get_system_timezone ());
-  diff1 = start1 - priv->current_utc_date;
-  diff2 = start2 - priv->current_utc_date;
-
-  if (diff1 == diff2)
-    {
-      result = 0;
-    }
-  else
-    {
-      if (diff1 == 0)
-        result = -1;
-      else if (diff2 == 0)
-        result = 1;
-
-      if (diff1 > 0 && diff2 < 0)
-        result = -1;
-      else if (diff2 > 0 && diff1 < 0)
-        result = 1;
-      else if (diff1 < 0 && diff2 < 0)
-        result = ABS (diff1) - ABS (diff2);
-      else if (diff1 > 0 && diff2 > 0)
-        result = diff1 - diff2;
-    }
+  result = icaltime_compare_with_current (date1.value, date2.value, &(priv->current_utc_date));
 
   e_cal_component_free_datetime (&date1);
   e_cal_component_free_datetime (&date2);

@@ -62,6 +62,30 @@ free_event_data (gpointer data)
   g_free (event_data);
 }
 
+static gint
+sort_event_data (gconstpointer a,
+                 gconstpointer b,
+                 gpointer user_data)
+{
+  ECalComponent *comp1, *comp2;
+  ECalComponentDateTime date1, date2;
+  gint result;
+
+
+  comp1 = ((GcalEventData*) a)->event_component;
+  comp2 = ((GcalEventData*) b)->event_component;
+
+  e_cal_component_get_dtstart (comp1, &date1);
+  e_cal_component_get_dtstart (comp2, &date2);
+
+  result = icaltime_compare_with_current (date1.value, date2.value, user_data);
+
+  e_cal_component_free_datetime (&date1);
+  e_cal_component_free_datetime (&date2);
+
+  return result;
+}
+
 static gboolean
 execute_search (GcalShellSearchProvider *search_provider)
 {
@@ -309,6 +333,7 @@ query_completed_cb (GcalShellSearchProvider *search_provider,
 
   GcalEventData *data;
   gchar *uuid;
+  time_t current_time_t;
 
   g_hash_table_remove_all (priv->events);
 
@@ -320,8 +345,9 @@ query_completed_cb (GcalShellSearchProvider *search_provider,
     }
 
   g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
-  /* FIXME: add sorting and ranking */
-  //events = g_list_sort (events, search_compare_func);
+
+  current_time_t = time (NULL);
+  events = g_list_sort_with_data (events, sort_event_data, &current_time_t);
   for (l = events; l != NULL; l = g_list_next (l))
     {
       data = l->data;
