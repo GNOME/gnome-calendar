@@ -300,7 +300,8 @@ free_row_data (RowEventData *data)
 {
   g_assert_nonnull (data);
 
-  gtk_widget_destroy (GTK_WIDGET (data->row));
+  if (data->row != NULL)
+    gtk_widget_destroy (GTK_WIDGET (data->row));
 
   g_object_unref (data->event_data->event_component);
 
@@ -605,8 +606,8 @@ gcal_search_view_finalize (GObject       *object)
   if (priv->date != NULL)
     g_free (priv->date);
 
-  g_hash_table_destroy (priv->events);
   g_hash_table_destroy (priv->row_to_event);
+  g_hash_table_destroy (priv->events);
 
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_search_view_parent_class)->finalize (object);
@@ -644,6 +645,7 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   row_data = g_new0 (RowEventData, 1);
   row_data->event_data = data;
   row_data->row = make_row_for_event_data (GCAL_SEARCH_VIEW (subscriber), data);
+  g_signal_connect (row_data->row, "destroy", G_CALLBACK (gtk_widget_destroyed), &(row_data->row));
 
   g_hash_table_insert (priv->row_to_event, row_data->row, data);
   g_hash_table_insert (priv->events, uuid, row_data);
