@@ -1,3 +1,6 @@
+Major changes in 3.15.90:
+* Added gnome shell search provider
+
 Major changes in 3.15.4.1:
 * Fix configure.ac distributed in package
 
