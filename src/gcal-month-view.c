@@ -785,7 +785,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   GtkAllocation child_allocation;
   gint natural_height;
 
-  GList *widgets, *l, *aux, *l2 = NULL;
+  GList *widgets, *aux, *l = NULL;
   GHashTableIter iter;
   gpointer key, value;
 
@@ -802,16 +802,10 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   /* remove every widget' parts, but the master widget */
   widgets = g_hash_table_get_values (ppriv->children);
   for (aux = widgets; aux != NULL; aux = g_list_next (aux))
-    {
-      l = g_list_next ((GList*) aux->data);
-      for (; l != NULL; l = g_list_next (l))
-        l2 = g_list_append (l2, l->data);
-    }
+    l = g_list_concat (l, g_list_copy (g_list_next (aux->data)));
   g_list_free (widgets);
 
-  for (aux = l2; aux != NULL; aux = g_list_next (aux))
-    gtk_widget_destroy ((GtkWidget*) aux->data);
-  g_list_free (l2);
+  g_list_free_full (l, (GDestroyNotify) gtk_widget_destroy);
 
   /* clean overflow information */
   g_hash_table_remove_all (ppriv->overflow_cells);
