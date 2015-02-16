@@ -1158,7 +1158,10 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
   e_cal_component_free_datetime (&date);
 
   e_cal_component_get_dtend (comp, &date);
-  event_end = icaltime_as_timet_with_zone (*(date.value), date.value->zone != NULL ? date.value->zone : zone);
+  if (date.value != NULL)
+    event_end = icaltime_as_timet_with_zone (*(date.value), date.value->zone != NULL ? date.value->zone : zone);
+  else
+    event_end = event_start;
   e_cal_component_free_datetime (&date);
 
   if (!((event_start <= range_start && event_end >= range_end) ||

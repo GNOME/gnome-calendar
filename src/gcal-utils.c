@@ -397,6 +397,9 @@ gint
 icaltime_compare_date (const icaltimetype *date1,
                        const icaltimetype *date2)
 {
+  if (date2 == NULL)
+    return 0;
+
   if (date1->year < date2->year)
     return -1;
   else if (date1->year > date2->year)

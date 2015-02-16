@@ -912,7 +912,7 @@ gcal_event_widget_peek_end_date (GcalEventWidget *event)
   GcalEventWidgetPrivate *priv;
   priv = gcal_event_widget_get_instance_private (event);
 
-  return priv->dt_end;
+  return priv->dt_end != NULL ? priv->dt_end : priv->dt_start;
 }
 
 void
