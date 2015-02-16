@@ -1,15 +1,15 @@
 # Norwegian bokmål translation of gnome-calendar.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Kjartan Maraas <kmaraas@gnome.org>, 2012.
+# Kjartan Maraas <kmaraas@gnome.org>, 2012-2015.
 # Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-09 18:16+0100\n"
-"PO-Revision-Date: 2015-02-09 08:30+0100\n"
+"POT-Creation-Date: 2015-02-16 18:24+0100\n"
+"PO-Revision-Date: 2015-02-16 18:24+0100\n"
 "Last-Translator: Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -21,7 +21,7 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:560
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -196,7 +196,7 @@ msgid "Year"
 msgstr "År"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:232 ../src/gcal-year-view.c:380
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
 msgid "Today"
 msgstr "I dag"
 
@@ -216,31 +216,31 @@ msgstr "Ingen hendelser"
 msgid "Add Event…"
 msgstr "Legg til hendelse …"
 
-#: ../src/gcal-application.c:105
+#: ../src/gcal-application.c:102
 msgid "Display version number"
 msgstr "Vis versjonsnummer"
 
-#: ../src/gcal-application.c:110
+#: ../src/gcal-application.c:107
 msgid "Open calendar on the passed date"
 msgstr "Åpne kalender på passert dato"
 
-#: ../src/gcal-application.c:115
+#: ../src/gcal-application.c:112
 msgid "Open calendar showing the passed event"
 msgstr "Åpne kalender som viser passert hendelse"
 
-#: ../src/gcal-application.c:381
+#: ../src/gcal-application.c:332
 msgid "- Calendar management"
 msgstr "- Kalenderbehandling"
 
-#: ../src/gcal-application.c:548
+#: ../src/gcal-application.c:499
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Opphavsrett © %Id kalender-utviklerne"
 
-#: ../src/gcal-application.c:554
+#: ../src/gcal-application.c:505
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Opphavsrett © %Id–%Id Kalender-utviklerne"
 
-#: ../src/gcal-application.c:567
+#: ../src/gcal-application.c:518
 msgid "translator-credits"
 msgstr ""
 "Kjartan Maraas <kmaraas@gnome.org>\n"
@@ -258,12 +258,12 @@ msgstr "Lagre"
 msgid "Unnamed event"
 msgstr "Hendelse uten navn"
 
-#: ../src/gcal-month-view.c:825
+#: ../src/gcal-month-view.c:826
 msgid "Other events"
 msgstr "Andre hendelser"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1177
+#: ../src/gcal-month-view.c:1209
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -297,63 +297,19 @@ msgstr "Midt på dagen"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#: ../src/gcal-window.c:632
+#: ../src/gcal-window.c:636
 #, c-format
 msgid "New Event on %s"
 msgstr "Ny hendelse %s"
 
-#: ../src/gcal-window.c:1025
-msgid "Event deleted"
-msgstr "Hendelse slettet"
+#: ../src/gcal-window.c:1036
+msgid "Another event deleted"
+msgstr "Enda en hendelse slettet"
 
-#: ../src/gcal-window.c:1026
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
 msgid "Undo"
 msgstr "Angre"
 
-#~ msgid "Weeks"
-#~ msgstr "Uker"
-
-#~ msgid "Months"
-#~ msgstr "Måneder"
-
-#~ msgid "Years"
-#~ msgstr "År"
-
-#~ msgid "View as"
-#~ msgstr "Vis som"
-
-#~ msgid "Change the date"
-#~ msgstr "Endre dato"
-
-#~ msgid "Email"
-#~ msgstr "E-post"
-
-#~ msgid "days"
-#~ msgstr "dager"
-
-#~ msgid "weeks"
-#~ msgstr "uker"
-
-#~ msgid "hours"
-#~ msgstr "timer"
-
-#~ msgid "minutes"
-#~ msgstr "minutter"
-
-#~ msgid "before"
-#~ msgstr "før"
-
-#~ msgid "Week"
-#~ msgstr "Uke"
-
-#~ msgid "List"
-#~ msgstr "Liste"
-
-#~ msgid "Back"
-#~ msgstr "Tilbake"
-
-#~ msgid "Edit"
-#~ msgstr "Rediger"
-
-#~ msgid "Year %d"
-#~ msgstr "År %d"
+#: ../src/gcal-window.c:1040
+msgid "Event deleted"
+msgstr "Hendelse slettet"
