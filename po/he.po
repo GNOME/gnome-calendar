@@ -8,9 +8,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-01-26 21:27+0200\n"
-"PO-Revision-Date: 2015-01-26 21:59+0200\n"
-"Last-Translator: Yosef Or Boczko <yoseforb@gnome.org>\n"
+"POT-Creation-Date: 2015-02-17 01:25+0200\n"
+"PO-Revision-Date: 2015-02-17 01:27+0200\n"
+"Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: עברית <>\n"
 "Language: he\n"
 "MIME-Version: 1.0\n"
@@ -20,8 +20,9 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.6\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
-#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../data/ui/window.ui.h:1
-#: ../src/gcal-application.c:470
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
 msgid "Calendar"
 msgstr "לוח שנה"
 
@@ -109,7 +110,7 @@ msgstr "Sources disabled last time Calendar ran"
 msgid "Cancel"
 msgstr "ביטול"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:638
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
 msgid "Done"
 msgstr "בוצע"
 
@@ -133,7 +134,7 @@ msgstr "הערות"
 msgid "Location"
 msgstr "מיקום"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:390
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:399
 msgid "All day"
 msgstr "כל היום"
 
@@ -142,8 +143,8 @@ msgid "Delete event"
 msgstr "מחיקת אירוע"
 
 #: ../data/ui/menus.ui.h:1
-msgid "_New Event"
-msgstr "אירוע _חדש"
+msgid "Add Eve_nt…"
+msgstr "הוספת _אירוע…"
 
 #: ../data/ui/menus.ui.h:2
 msgid "_Search…"
@@ -177,54 +178,70 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:393
 #: ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "לפנה״צ"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:393
 #: ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "אחה״צ"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-year-view.c:263
-#: ../src/gcal-year-view.c:410
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "חודש"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
+msgstr "שנה"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
 msgid "Today"
 msgstr "היום"
 
-#: ../data/ui/window.ui.h:3
+#: ../data/ui/window.ui.h:5
 msgid "Create"
 msgstr "יצירה"
 
-#: ../data/ui/window.ui.h:4
+#: ../data/ui/window.ui.h:6
 msgid "More Details"
 msgstr "פרטים נוספים"
 
-#: ../data/ui/year-view.ui.h:1 ../src/gcal-month-view.c:608
-msgid "Add new event…"
-msgstr "הוספת אירוע חדש…"
+#: ../data/ui/year-view.ui.h:2
+msgid "No events"
+msgstr "אין אירועים"
 
-#: ../src/gcal-application.c:95
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+msgid "Add Event…"
+msgstr "הוספת אירוע…"
+
+#: ../src/gcal-application.c:102
 msgid "Display version number"
 msgstr "Display version number"
 
-#: ../src/gcal-application.c:100
+#: ../src/gcal-application.c:107
 msgid "Open calendar on the passed date"
 msgstr "Open calendar on the passed date"
 
-#: ../src/gcal-application.c:330
+#: ../src/gcal-application.c:112
+msgid "Open calendar showing the passed event"
+msgstr "Open calendar showing the passed event"
+
+#: ../src/gcal-application.c:332
 msgid "- Calendar management"
 msgstr "- Calendar management"
 
-#: ../src/gcal-application.c:458
+#: ../src/gcal-application.c:499
 msgid "Copyright © %Id The Calendar authors"
 msgstr "כל הזכויות שמורות © %Id מחברי לוח השנה"
 
-#: ../src/gcal-application.c:464
+#: ../src/gcal-application.c:505
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "כל הזכויות שמורות © %Id–%Id מחברי לוח השנה"
 
-#: ../src/gcal-application.c:477
+#: ../src/gcal-application.c:518
 msgid "translator-credits"
 msgstr "יוסף אור בוצ׳קו <yoseforb@gnome.org>"
 
@@ -232,35 +249,27 @@ msgstr "יוסף אור בוצ׳קו <yoseforb@gnome.org>"
 msgid "Day"
 msgstr "יום"
 
-#: ../src/gcal-date-selector.c:305 ../src/gcal-window.c:1253
-msgid "Month"
-msgstr "חודש"
-
-#: ../src/gcal-date-selector.c:307 ../src/gcal-window.c:1259
-msgid "Year"
-msgstr "שנה"
-
-#: ../src/gcal-edit-dialog.c:638
+#: ../src/gcal-edit-dialog.c:634
 msgid "Save"
 msgstr "שמירה"
 
-#: ../src/gcal-edit-dialog.c:823
+#: ../src/gcal-edit-dialog.c:818
 msgid "Unnamed event"
 msgstr "אירוע ללא שם"
 
-#: ../src/gcal-month-view.c:850
+#: ../src/gcal-month-view.c:826
 msgid "Other events"
 msgstr "אירועים אחרים"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1202
+#: ../src/gcal-month-view.c:1209
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "אירוע אחר"
 msgstr[1] "%d אירועים אחרים"
 
-#: ../src/gcal-search-view.c:383
+#: ../src/gcal-search-view.c:392
 #, c-format
 msgid "%.2d:%.2d %s"
 msgstr "%.2d:%.2d %s"
@@ -287,18 +296,25 @@ msgstr "חצות היום"
 msgid "00:00 PM"
 msgstr "00:00 בלילה"
 
-#: ../src/gcal-window.c:546
+#: ../src/gcal-window.c:636
 #, c-format
 msgid "New Event on %s"
 msgstr "אירוע חדש ביום %s"
 
-#: ../src/gcal-window.c:941
+#: ../src/gcal-window.c:1036
+msgid "Another event deleted"
+msgstr "אירוע נוסף נמחק"
+
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
+msgid "Undo"
+msgstr "ביטול"
+
+#: ../src/gcal-window.c:1040
 msgid "Event deleted"
 msgstr "מחיקת אירוע"
 
-#: ../src/gcal-window.c:942
-msgid "Undo"
-msgstr "ביטול"
+#~ msgid "_New Event"
+#~ msgstr "אירוע _חדש"
 
 #~ msgid "Change the date"
 #~ msgstr "שינוי התאריך"
