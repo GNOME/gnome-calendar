@@ -362,10 +362,10 @@ gcal_subscriber_view_component_added (ECalDataModelSubscriber *subscriber,
   event = gcal_event_widget_new_from_data (data);
   gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event), e_client_is_readonly (E_CLIENT (client)));
 
-  g_free (data);
-
   gtk_widget_show (event);
   gtk_container_add (GTK_CONTAINER (subscriber), event);
+
+  g_free (data);
 }
 
 static void

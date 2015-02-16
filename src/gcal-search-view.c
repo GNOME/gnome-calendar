@@ -799,10 +799,8 @@ gcal_search_view_search (GcalSearchView *view,
   /* Only perform search on valid non-empty strings */
   if (query && g_utf8_strlen (query, -1) > 0)
     {
-      gchar *search_query;
-
-      search_query = g_strdup_printf ("(contains? \"%s\" \"%s\")", field != NULL? field : "summary",
-                                      query != NULL? query : "");
+      gchar *search_query = g_strdup_printf ("(contains? \"%s\" \"%s\")", field != NULL? field : "summary",
+                                             query != NULL? query : "");
 
       if (!priv->subscribed)
       {

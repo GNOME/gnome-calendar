@@ -1185,9 +1185,9 @@ gcal_manager_disable_source (GcalManager *manager,
   /* add source's uid from disabled_sources array */
   new_disabled_sources = g_new0 (gchar*, g_strv_length (priv->disabled_sources) + 2);
   for (i = 0; i < g_strv_length (priv->disabled_sources); i++)
-      new_disabled_sources[i] = g_strdup (priv->disabled_sources[i]);
+    new_disabled_sources[i] = g_strdup (priv->disabled_sources[i]);
 
-  new_disabled_sources[g_strv_length (priv->disabled_sources)] = e_source_dup_uid (source);
+  new_disabled_sources[g_strv_length (priv->disabled_sources)] = g_strdup (source_uid);
 
   g_strfreev (priv->disabled_sources);
   priv->disabled_sources = new_disabled_sources;
