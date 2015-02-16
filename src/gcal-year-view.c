@@ -439,10 +439,8 @@ update_sidebar_headers (GtkListBoxRow *row,
     }
 
   if (row_header != NULL)
-    {
-      gtk_widget_show_all (row_header);
-      gtk_list_box_row_set_header (row, row_header);
-    }
+    gtk_widget_show_all (row_header);
+  gtk_list_box_row_set_header (row, row_header);
 }
 
 static gint
