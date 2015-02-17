@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-06 14:25+0000\n"
-"PO-Revision-Date: 2015-02-09 18:51+0100\n"
+"POT-Creation-Date: 2015-02-16 14:32+0000\n"
+"PO-Revision-Date: 2015-02-17 18:01+0100\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:560
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
 msgid "Calendar"
 msgstr "Calendario"
 
@@ -199,7 +199,7 @@ msgid "Year"
 msgstr "Año"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:232 ../src/gcal-year-view.c:380
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
 msgid "Today"
 msgstr "Hoy"
 
@@ -219,32 +219,31 @@ msgstr "No hay eventos"
 msgid "Add Event…"
 msgstr "Añadir evento…"
 
-#: ../src/gcal-application.c:105
+#: ../src/gcal-application.c:102
 msgid "Display version number"
 msgstr "Mostrar el número de versión"
 
-#: ../src/gcal-application.c:110
+#: ../src/gcal-application.c:107
 msgid "Open calendar on the passed date"
 msgstr "Abrir el calendario en una fecha pasada"
 
-#: ../src/gcal-application.c:115
-#| msgid "Open calendar on the passed date"
+#: ../src/gcal-application.c:112
 msgid "Open calendar showing the passed event"
 msgstr "Abrir el calendario en una evento pasada"
 
-#: ../src/gcal-application.c:381
+#: ../src/gcal-application.c:332
 msgid "- Calendar management"
 msgstr "- Gestión del calendario"
 
-#: ../src/gcal-application.c:548
+#: ../src/gcal-application.c:499
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id Los autores de Calendario"
 
-#: ../src/gcal-application.c:554
+#: ../src/gcal-application.c:505
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Los autores de Calendario"
 
-#: ../src/gcal-application.c:567
+#: ../src/gcal-application.c:518
 msgid "translator-credits"
 msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2012 - 2015"
 
@@ -260,12 +259,12 @@ msgstr "Guardar"
 msgid "Unnamed event"
 msgstr "Evento sin nombre"
 
-#: ../src/gcal-month-view.c:825
+#: ../src/gcal-month-view.c:826
 msgid "Other events"
 msgstr "Otros eventos"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1177
+#: ../src/gcal-month-view.c:1209
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -299,18 +298,23 @@ msgstr "MEdiodía"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#: ../src/gcal-window.c:632
+#: ../src/gcal-window.c:636
 #, c-format
 msgid "New Event on %s"
 msgstr "Evento nuevo en %s"
 
-#: ../src/gcal-window.c:1025
-msgid "Event deleted"
-msgstr "Evento eliminado"
+#: ../src/gcal-window.c:1036
+#| msgid "Event deleted"
+msgid "Another event deleted"
+msgstr "Otro evento eliminado"
 
-#: ../src/gcal-window.c:1026
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
 msgid "Undo"
 msgstr "Deshacer"
+
+#: ../src/gcal-window.c:1040
+msgid "Event deleted"
+msgstr "Evento eliminado"
 
 #~| msgid "New Event"
 #~ msgid "_New Event"
