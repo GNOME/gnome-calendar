@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-01-31 17:54+0000\n"
-"PO-Revision-Date: 2015-01-31 19:17+0100\n"
+"POT-Creation-Date: 2015-02-16 14:32+0000\n"
+"PO-Revision-Date: 2015-02-18 15:50+0100\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -17,11 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Generator: Poedit 1.7.3\n"
+"X-Generator: Poedit 1.7.4\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
-#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:458
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
 msgid "Calendar"
 msgstr "Kalendár"
 
@@ -112,7 +113,7 @@ msgstr "Zdroje zakázané pri poslednom spustení kalendára"
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:638
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
 msgid "Done"
 msgstr "Hotovo"
 
@@ -136,7 +137,7 @@ msgstr "Poznámky"
 msgid "Location"
 msgstr "Umiestnenie"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:390
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:387
 msgid "All day"
 msgstr "Celý deň"
 
@@ -180,12 +181,12 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:381
 #: ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "Dopoludnia"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:381
 #: ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "Popoludní"
@@ -199,7 +200,7 @@ msgid "Year"
 msgstr "Rok"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:232 ../src/gcal-year-view.c:380
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
 msgid "Today"
 msgstr "Dnes"
 
@@ -219,27 +220,31 @@ msgstr "Žiadne udalosti"
 msgid "Add Event…"
 msgstr "Pridať udalosť…"
 
-#: ../src/gcal-application.c:95
+#: ../src/gcal-application.c:102
 msgid "Display version number"
 msgstr "Vypíše číslo verzie"
 
-#: ../src/gcal-application.c:100
+#: ../src/gcal-application.c:107
 msgid "Open calendar on the passed date"
 msgstr "Otvorí kalendár na určenom dátume"
 
-#: ../src/gcal-application.c:327
+#: ../src/gcal-application.c:112
+msgid "Open calendar showing the passed event"
+msgstr "Otvorí kalendár zobrazujúc určenú udalosť"
+
+#: ../src/gcal-application.c:332
 msgid "- Calendar management"
 msgstr "- Správa kalendára"
 
-#: ../src/gcal-application.c:446
+#: ../src/gcal-application.c:499
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Autorské práva © %Id Autori programu Kalendár"
 
-#: ../src/gcal-application.c:452
+#: ../src/gcal-application.c:505
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Autorské práva © %Id–%Id Autori programu Kalendár"
 
-#: ../src/gcal-application.c:465
+#: ../src/gcal-application.c:518
 msgid "translator-credits"
 msgstr "Dušan Kazik <prescott66@gmail.com>"
 
@@ -247,20 +252,20 @@ msgstr "Dušan Kazik <prescott66@gmail.com>"
 msgid "Day"
 msgstr "Deň"
 
-#: ../src/gcal-edit-dialog.c:638
+#: ../src/gcal-edit-dialog.c:634
 msgid "Save"
 msgstr "Uložiť"
 
-#: ../src/gcal-edit-dialog.c:823
+#: ../src/gcal-edit-dialog.c:818
 msgid "Unnamed event"
 msgstr "Nepomenovaná udalosť"
 
-#: ../src/gcal-month-view.c:825
+#: ../src/gcal-month-view.c:826
 msgid "Other events"
 msgstr "Iné udalosti"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1177
+#: ../src/gcal-month-view.c:1209
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -268,7 +273,7 @@ msgstr[0] "%d iných udalostíIná udalosť"
 msgstr[1] "Iná udalosť"
 msgstr[2] "%d iné udalosti"
 
-#: ../src/gcal-search-view.c:383
+#: ../src/gcal-search-view.c:380
 #, c-format
 msgid "%.2d:%.2d %s"
 msgstr "%.2d:%.2d %s"
@@ -295,18 +300,22 @@ msgstr "Poludnie"
 msgid "00:00 PM"
 msgstr "00:00 Popoludní"
 
-#: ../src/gcal-window.c:628
+#: ../src/gcal-window.c:636
 #, c-format
 msgid "New Event on %s"
 msgstr "Nová udalosť na deň %s"
 
-#: ../src/gcal-window.c:1023
-msgid "Event deleted"
-msgstr "Udalosť bola odstránená"
+#: ../src/gcal-window.c:1036
+msgid "Another event deleted"
+msgstr "Iná udalosť bola odstránená"
 
-#: ../src/gcal-window.c:1024
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
 msgid "Undo"
 msgstr "Vrátiť späť"
+
+#: ../src/gcal-window.c:1040
+msgid "Event deleted"
+msgstr "Udalosť bola odstránená"
 
 #~ msgid "_New Event"
 #~ msgstr "_Nová udalosť"
