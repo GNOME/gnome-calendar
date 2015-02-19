@@ -1,18 +1,18 @@
 # Russian translation for gnome-calendar.
 # Copyright (C) 2012 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
-# Yuri Myasoedov <omerta13@yandex.ru>, 2012.
 # Stas Solovey <whats_up@tut.by>, 2014, 2015.
+# Yuri Myasoedov <ymyasoedov@yandex.ru>, 2012, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-01-29 19:06+0000\n"
-"PO-Revision-Date: 2015-01-30 00:28+0300\n"
-"Last-Translator: Stas Solovey <whats_up@tut.by>\n"
-"Language-Team: Русский <gnome-cyr@gnome.org>\n"
+"POT-Creation-Date: 2015-02-16 14:32+0000\n"
+"PO-Revision-Date: 2015-02-19 10:22+0300\n"
+"Last-Translator: Yuri Myasoedov <ymyasoedov@yandex.ru>\n"
+"Language-Team: русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,8 +22,9 @@ msgstr ""
 "X-Generator: Gtranslator 2.91.6\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
-#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:458
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
 msgid "Calendar"
 msgstr "Календарь"
 
@@ -95,11 +96,11 @@ msgstr "Расположение окна (x ; y)."
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:7
 msgid "Type of the active view"
-msgstr "Тип просмотра"
+msgstr "Текущий режим просмотра"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
-msgstr "Тип окна просмотра, по умолчанию используется просмотр по месяцам"
+msgstr "Текущий режим просмотра, по умолчанию используется месячный просмотр"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:9
 msgid "List of the disabled sources"
@@ -107,13 +108,13 @@ msgstr "Список отключённых источников"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:10
 msgid "Sources disabled last time Calendar ran"
-msgstr "Источники отключённые при последнем запуске приложения «Календарь»"
+msgstr "Источники, отключённые при последнем запуске приложения «Календарь»"
 
 #: ../data/ui/edit-dialog.ui.h:1
 msgid "Cancel"
 msgstr "Отмена"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:638
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
 msgid "Done"
 msgstr "Выполнено"
 
@@ -131,13 +132,13 @@ msgstr "Конец"
 
 #: ../data/ui/edit-dialog.ui.h:6
 msgid "Notes"
-msgstr "Замечания"
+msgstr "Примечания"
 
 #: ../data/ui/edit-dialog.ui.h:7
 msgid "Location"
 msgstr "Местоположение"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:390
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:387
 msgid "All day"
 msgstr "Весь день"
 
@@ -147,7 +148,7 @@ msgstr "Удалить событие"
 
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
-msgstr "_Новое событие…"
+msgstr "_Добавить событие…"
 
 #: ../data/ui/menus.ui.h:2
 msgid "_Search…"
@@ -181,12 +182,12 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:381
 #: ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "д. п."
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:381
 #: ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "п. п."
@@ -200,7 +201,7 @@ msgid "Year"
 msgstr "Год"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:232 ../src/gcal-year-view.c:380
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
 msgid "Today"
 msgstr "Сегодня"
 
@@ -216,64 +217,67 @@ msgstr "Подробности"
 msgid "No events"
 msgstr "Нет событий"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:607
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
 msgid "Add Event…"
 msgstr "Новое событие…"
 
-#: ../src/gcal-application.c:95
+#: ../src/gcal-application.c:102
 msgid "Display version number"
-msgstr "Отобразить номер версии"
+msgstr "Показать номер версии"
 
-#: ../src/gcal-application.c:100
+#: ../src/gcal-application.c:107
 msgid "Open calendar on the passed date"
 msgstr "Открыть календарь на прошедшей дате"
 
-#: ../src/gcal-application.c:327
+#: ../src/gcal-application.c:112
+#| msgid "Open calendar on the passed date"
+msgid "Open calendar showing the passed event"
+msgstr "Открыть календарь на прошедшем событии"
+
+#: ../src/gcal-application.c:332
 msgid "- Calendar management"
 msgstr "— управление календарем"
 
-#: ../src/gcal-application.c:446
+#: ../src/gcal-application.c:499
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Авторские права © %Id авторы приложения «Календарь»"
 
-#: ../src/gcal-application.c:452
+#: ../src/gcal-application.c:505
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Авторские права © %Id–%Id авторы приложения «Календарь»"
 
-#: ../src/gcal-application.c:465
+#: ../src/gcal-application.c:518
 msgid "translator-credits"
 msgstr ""
-"Yuri Myasoedov <omerta13@yandex.ru>, 2012.\n"
-"Stas Solovey <whats_up@tut.by>, 2014, 2015."
+"Юрий Мясоедов <ymyasoedov@yandex.ru>, 2012-2015.\n"
+"Стас Соловей <whats_up@tut.by>, 2014-2015."
 
 #: ../src/gcal-date-selector.c:303
 msgid "Day"
 msgstr "День"
 
-#: ../src/gcal-edit-dialog.c:638
+#: ../src/gcal-edit-dialog.c:634
 msgid "Save"
 msgstr "Сохранить"
 
-#: ../src/gcal-edit-dialog.c:823
+#: ../src/gcal-edit-dialog.c:818
 msgid "Unnamed event"
-msgstr "Событие без названия"
+msgstr "Безымянное событие"
 
-#: ../src/gcal-month-view.c:828
+#: ../src/gcal-month-view.c:826
 msgid "Other events"
 msgstr "Другие события"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1180
+#: ../src/gcal-month-view.c:1209
 #, c-format
-#| msgid "Other event"
-#| msgid_plural "Other %d events"
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Другое %d событие"
 msgstr[1] "Другие %d события"
 msgstr[2] "Другие %d событий"
 
-#: ../src/gcal-search-view.c:383
+#: ../src/gcal-search-view.c:380
 #, c-format
 msgid "%.2d:%.2d %s"
 msgstr "%.2d:%.2d %s"
@@ -298,17 +302,22 @@ msgstr "Полдень"
 
 #: ../src/gcal-week-view.c:499
 msgid "00:00 PM"
-msgstr "00:00 п. п."
+msgstr "12:00"
 
-#: ../src/gcal-window.c:628
+#: ../src/gcal-window.c:636
 #, c-format
 msgid "New Event on %s"
 msgstr "Создать событие на %s"
 
-#: ../src/gcal-window.c:1023
-msgid "Event deleted"
-msgstr "Событие удалено"
+#: ../src/gcal-window.c:1036
+#| msgid "Event deleted"
+msgid "Another event deleted"
+msgstr "Ещё одно событие удалено"
 
-#: ../src/gcal-window.c:1024
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
 msgid "Undo"
 msgstr "Вернуть"
+
+#: ../src/gcal-window.c:1040
+msgid "Event deleted"
+msgstr "Событие удалено"
