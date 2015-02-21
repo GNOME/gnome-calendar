@@ -2,34 +2,33 @@
 # Copyright (C) 2012 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Tom Tryfonidis <tomtryf@gmail.com>, 2012.
-# Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2013.
+# Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>, 2013, 2015.
 # Efstathios Iosifidis <iosifidis@opensuse.org>, 2015.
-#
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-01-20 23:28+0000\n"
-"PO-Revision-Date: 2015-02-20 21:17+0200\n"
-"Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
-"Language-Team: Greek, Modern (1453-) <opensuse-translation-el@opensuse.org>\n"
+"POT-Creation-Date: 2015-02-20 19:20+0000\n"
+"PO-Revision-Date: 2015-02-21 05:47+0300\n"
+"Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
+"Language-Team: team@gnome.gr\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 2.91.6\n"
+"X-Generator: Virtaal 0.7.1\n"
 "X-Project-Style: gnome\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
-#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../data/ui/window.ui.h:1
-#: ../src/gcal-application.c:434
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
 msgid "Calendar"
 msgstr "Ημερολόγιο"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
-#| msgid "Calendar"
 msgid "Calendar for GNOME"
 msgstr "Ημερολόγιο του GNOME"
 
@@ -59,13 +58,16 @@ msgid "Search for events"
 msgstr "Αναζήτηση για συμβάντα"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
-#| msgid "- Calendar management"
 msgid "Calendar management"
 msgstr "Διαχείριση ημερολογίου"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
 msgstr "Προσεγγίστε, και διαχειριστείτε το ημερολόγιο"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Ημερολόγιο;Συμβάν;Υπενθύμιση;"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
@@ -114,7 +116,7 @@ msgstr ""
 msgid "Cancel"
 msgstr "Άκυρο"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:638
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
 msgid "Done"
 msgstr "Έτοιμο"
 
@@ -138,7 +140,7 @@ msgstr "Σημειώσεις"
 msgid "Location"
 msgstr "Τοποθεσία"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:390
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:374
 msgid "All day"
 msgstr "Όλη μέρα"
 
@@ -147,22 +149,19 @@ msgid "Delete event"
 msgstr "Διαγραφή συμβάντος"
 
 #: ../data/ui/menus.ui.h:1
-#| msgid "New Event"
-msgid "_New Event"
-msgstr "_Νέο συμβάν"
+#| msgid "Add new event…"
+msgid "Add Eve_nt…"
+msgstr "Προσθήκη σ_υμβάντος…"
 
 #: ../data/ui/menus.ui.h:2
-#| msgid "Search..."
 msgid "_Search…"
-msgstr "_Αναζήτηση..."
+msgstr "_Αναζήτηση…"
 
 #: ../data/ui/menus.ui.h:3
-#| msgid "About"
 msgid "_About"
 msgstr "_Περί"
 
 #: ../data/ui/menus.ui.h:4
-#| msgid "Quit"
 msgid "_Quit"
 msgstr "Έ_ξοδος"
 
@@ -186,54 +185,73 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:368
 #: ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "ΠΜ"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:368
 #: ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "ΜΜ"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-year-view.c:387
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "Μήνας"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
+msgstr "Έτος"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
 msgid "Today"
 msgstr "Σήμερα"
 
-#: ../data/ui/window.ui.h:3
+#: ../data/ui/window.ui.h:5
 msgid "Create"
 msgstr "Δημιουργία"
 
-#: ../data/ui/window.ui.h:4
-#| msgid "More details"
+#: ../data/ui/window.ui.h:6
 msgid "More Details"
 msgstr "Περισσότερες λεπτομέρειες"
 
-#: ../data/ui/year-view.ui.h:1 ../src/gcal-month-view.c:581
-msgid "Add new event…"
-msgstr "Προσθήκη νέου συμβάντος..."
+#: ../data/ui/year-view.ui.h:2
+#| msgid "Other events"
+msgid "No events"
+msgstr "Χωρίς συμβάντα"
 
-#: ../src/gcal-application.c:95
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+#| msgid "Add new event…"
+msgid "Add Event…"
+msgstr "Προσθήκη συμβάντος…"
+
+#: ../src/gcal-application.c:102
 msgid "Display version number"
 msgstr "Εμφάνιση αριθμού έκδοσης"
 
-#: ../src/gcal-application.c:100
+#: ../src/gcal-application.c:107
 msgid "Open calendar on the passed date"
 msgstr "Άνοιγμα ημερολογίου σε προηγούμενη ημερομηνία"
 
-#: ../src/gcal-application.c:294
+#: ../src/gcal-application.c:112
+#| msgid "Open calendar on the passed date"
+msgid "Open calendar showing the passed event"
+msgstr "Άνοιγμα ημερολογίου σε προηγούμενο συμβάν"
+
+#: ../src/gcal-application.c:332
 msgid "- Calendar management"
 msgstr "- Διαχείριση ημερολογίου"
 
-#: ../src/gcal-application.c:422
+#: ../src/gcal-application.c:499
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Πνευματικά δικαιώματα © %Id Οι συγγραφείς του ημερολογίου"
 
-#: ../src/gcal-application.c:428
+#: ../src/gcal-application.c:505
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Πνευματικά δικαιώματα © %Id–%Id Οι συγγραφείς του ημερολογίου"
 
-#: ../src/gcal-application.c:441
+#: ../src/gcal-application.c:518
 msgid "translator-credits"
 msgstr ""
 "Ελληνική μεταφραστική ομάδα GNOME\n"
@@ -245,36 +263,27 @@ msgstr ""
 msgid "Day"
 msgstr "Ημέρα"
 
-#: ../src/gcal-date-selector.c:305 ../src/gcal-window.c:1253
-msgid "Month"
-msgstr "Μήνας"
-
-#: ../src/gcal-date-selector.c:307 ../src/gcal-window.c:1259
-msgid "Year"
-msgstr "Έτος"
-
-#: ../src/gcal-edit-dialog.c:638
+#: ../src/gcal-edit-dialog.c:634
 msgid "Save"
 msgstr "Αποθήκευση"
 
-#: ../src/gcal-edit-dialog.c:823
+#: ../src/gcal-edit-dialog.c:818
 msgid "Unnamed event"
 msgstr "Ανώνυμο συμβάν"
 
-#: ../src/gcal-month-view.c:823
+#: ../src/gcal-month-view.c:820
 msgid "Other events"
 msgstr "Άλλα συμβάντα"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1171
+#: ../src/gcal-month-view.c:1203
 #, c-format
-#| msgid "New Event"
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Άλλο συμβάν"
 msgstr[1] "Άλλα %d συμβάντα"
 
-#: ../src/gcal-search-view.c:383
+#: ../src/gcal-search-view.c:367
 #, c-format
 msgid "%.2d:%.2d %s"
 msgstr "%.2d:%.2d %s"
@@ -301,18 +310,27 @@ msgstr "Μεσημέρι"
 msgid "00:00 PM"
 msgstr "00:00 ΜΜ"
 
-#: ../src/gcal-window.c:546
+#: ../src/gcal-window.c:636
 #, c-format
 msgid "New Event on %s"
 msgstr "Νέο συμβάν στο %s"
 
-#: ../src/gcal-window.c:941
+#: ../src/gcal-window.c:1036
+#| msgid "Event deleted"
+msgid "Another event deleted"
+msgstr "Διαγράφηκε ένα άλλο συμβάν"
+
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
+msgid "Undo"
+msgstr "Αναίρεση"
+
+#: ../src/gcal-window.c:1040
 msgid "Event deleted"
 msgstr "Διαγράφηκε το συμβάν"
 
-#: ../src/gcal-window.c:942
-msgid "Undo"
-msgstr "Αναίρεση"
+#~| msgid "New Event"
+#~ msgid "_New Event"
+#~ msgstr "_Νέο συμβάν"
 
 #~ msgid "Unable to initialize GtkClutter"
 #~ msgstr "Αδυναμία αρχικοποίησης του GtkClutter"
