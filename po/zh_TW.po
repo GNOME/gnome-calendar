@@ -6,25 +6,62 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-09-30 19:28+0800\n"
-"PO-Revision-Date: 2013-09-28 14:29+0800\n"
-"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-01-28 18:58+0000\n"
+"PO-Revision-Date: 2015-02-18 14:58+0800\n"
+"Last-Translator: Chao-Hsiung Liao <j_h_liau@yahoo.com.tw>\n"
 "Language-Team: Chinese (Taiwan) <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.5.4\n"
+"X-Generator: Poedit 1.7.4\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:158
-#: ../src/gcal-application.c:396
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:470
 msgid "Calendar"
 msgstr "行事曆"
 
-#: ../data/gnome-calendar.desktop.in.in.h:2
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+msgid "Calendar for GNOME"
+msgstr "Gnome 的行事曆"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"GNOME Calendar 是一個為了能完美搭配 GNOME 桌面而設計的簡單、精美的行事曆應用程"
+"式。藉著重複使用 GNOME 桌面內建的元件，Calendar 順利的整合到 GNOME 生態系中。"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"我們的目標是在精心設計的功能與以使用者為中心的可用性之間找到完美的平衡點，不多"
+"也不少。您會很舒適的使用 Calendar，就像您過去一直在使用的一樣！"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "搜尋事件"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Calendar management"
+msgstr "行事曆管理"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
 msgstr "存取、管理行事曆"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Calendar;Event;Reminder;行事曆;事件;提醒;"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
@@ -58,225 +95,279 @@ msgstr "使用中檢視的類型"
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "使用中視窗檢視的類型，預設值為：月次檢視"
 
-#: ../src/gcal-application.c:87
-msgid "Display version number"
-msgstr "顯示版本號碼"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "已停用來源清單"
 
-#: ../src/gcal-application.c:204
-msgid "Unable to initialize GtkClutter"
-msgstr "無法初始化 GtkClutter。"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "上次 Calendar 執行時停用的來源"
 
-#: ../src/gcal-application.c:245
-msgid "- Calendar management"
-msgstr "- 行事曆管理"
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "取消"
 
-#: ../src/gcal-application.c:300
-msgid "Weeks"
-msgstr "週"
-
-#: ../src/gcal-application.c:301
-msgid "Months"
-msgstr "月"
-
-#: ../src/gcal-application.c:302
-msgid "Years"
-msgstr "年"
-
-#: ../src/gcal-application.c:304
-msgid "View as"
-msgstr "檢視方式"
-
-#: ../src/gcal-application.c:312
-msgid "About"
-msgstr "關於"
-
-#: ../src/gcal-application.c:320
-msgid "Quit"
-msgstr "退出"
-
-#: ../src/gcal-application.c:384
-msgid "Copyright © %Id The Calendar authors"
-msgstr "著作權所有 © %Id The Calendar 作者群"
-
-#: ../src/gcal-application.c:390
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "著作權所有 © %Id–%Id The Calendar 作者群"
-
-#: ../src/gcal-application.c:403
-msgid "translator-credits"
-msgstr "Cheng-Chia Tseng <pswo10680@gmail.com>, 2013."
-
-#: ../src/gcal-date-entry.c:162
-msgid "Change the date"
-msgstr "更改日期"
-
-#: ../src/gcal-edit-dialog.c:156
-msgid "Event Details"
-msgstr "事件細節"
-
-#. Summary, title
-#: ../src/gcal-edit-dialog.c:171
-msgid "Title"
-msgstr "標題"
-
-#. Start date and time
-#: ../src/gcal-edit-dialog.c:199
-msgid "Starts"
-msgstr "開始於"
-
-#: ../src/gcal-edit-dialog.c:215
-msgid "All day"
-msgstr "整日"
-
-#. End date and time
-#: ../src/gcal-edit-dialog.c:221
-msgid "Ends"
-msgstr "結束於"
-
-#. Location, location, location
-#: ../src/gcal-edit-dialog.c:238
-msgid "Location"
-msgstr "位置"
-
-#. Notes, description
-#: ../src/gcal-edit-dialog.c:252
-msgid "Notes"
-msgstr "備註"
-
-#. done button
-#. done
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-searchbar.c:158
-#: ../src/gcal-toolbar.c:611
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:638
 msgid "Done"
 msgstr "完成"
 
-#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:291
-msgid "New Event"
-msgstr "新事件"
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "標題"
 
-#: ../src/gcal-event-overlay.c:162
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "開始於"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "結束於"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "備註"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "位置"
+
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:390
+msgid "All day"
+msgstr "整日"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "刪除事件"
+
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "加入事件(_N)…"
+
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "搜尋(_S)…"
+
+#: ../data/ui/menus.ui.h:3
+msgid "_About"
+msgstr "關於(_A)"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Quit"
+msgstr "結束(_Q)"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "同步化(_S)"
+
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "找不到結果"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "使用上列輸入方塊開始搜尋事件。"
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:384
+#: ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "上午"
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:384
+#: ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "下午"
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "月"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
+msgstr "年"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:232 ../src/gcal-year-view.c:380
+msgid "Today"
+msgstr "今天"
+
+#: ../data/ui/window.ui.h:5
 msgid "Create"
 msgstr "建立"
 
-#: ../src/gcal-event-overlay.c:171
-msgid "More details"
-msgstr "更多細節"
+#: ../data/ui/window.ui.h:6
+msgid "More Details"
+msgstr "更多詳細資訊"
 
-#: ../src/gcal-event-overlay.c:185
-msgid "What (e.g. Alien Invasion)"
-msgstr "什麼事 (例：外星人入侵)"
+#: ../data/ui/year-view.ui.h:2
+msgid "No events"
+msgstr "沒有事件"
 
-#: ../src/gcal-event-overlay.c:507
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:605
+msgid "Add Event…"
+msgstr "加入事件…"
+
+#: ../src/gcal-application.c:95
+msgid "Display version number"
+msgstr "顯示版本號碼"
+
+#: ../src/gcal-application.c:100
+msgid "Open calendar on the passed date"
+msgstr "在已過完的日期開啟行事曆"
+
+#: ../src/gcal-application.c:330
+msgid "- Calendar management"
+msgstr "- 行事曆管理"
+
+#: ../src/gcal-application.c:458
+msgid "Copyright © %Id The Calendar authors"
+msgstr "著作權所有 © %Id The Calendar 作者群"
+
+#: ../src/gcal-application.c:464
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "著作權所有 © %Id–%Id The Calendar 作者群"
+
+#: ../src/gcal-application.c:477
+msgid "translator-credits"
+msgstr "Cheng-Chia Tseng <pswo10680@gmail.com>, 2013."
+
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "日"
+
+#: ../src/gcal-edit-dialog.c:638
+msgid "Save"
+msgstr "儲存"
+
+#: ../src/gcal-edit-dialog.c:823
+msgid "Unnamed event"
+msgstr "未命名的事件"
+
+#: ../src/gcal-month-view.c:825
+msgid "Other events"
+msgstr "其他事件"
+
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1177
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "其他 %d 項事件"
+
+#: ../src/gcal-search-view.c:383
+#, c-format
+msgid "%.2d:%.2d %s"
+msgstr "%.2d:%.2d %s"
+
+#: ../src/gcal-time-selector.c:96
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "上午 %.2d:%.2d"
+
+#: ../src/gcal-time-selector.c:98
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "下午 %.2d:%.2d "
+
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
+msgid "Midnight"
+msgstr "午夜"
+
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
+msgid "Noon"
+msgstr "中午"
+
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "下午 00:00"
+
+#: ../src/gcal-window.c:605
 #, c-format
 msgid "New Event on %s"
 msgstr "%s 的新事件"
 
-#: ../src/gcal-event-overlay.c:524
-#, c-format
-msgid "New Event from %s to %s"
-msgstr "從 %s 到 %s 的新事件"
-
-#: ../src/gcal-manager.c:1506
-msgid "Notification"
-msgstr "通知"
-
-#: ../src/gcal-manager.c:1508
-msgid "Email"
-msgstr "電子郵件"
-
-#: ../src/gcal-manager.c:1522
-msgid "days"
-msgstr "天"
-
-#: ../src/gcal-manager.c:1528
-msgid "weeks"
-msgstr "週"
-
-#: ../src/gcal-manager.c:1534
-msgid "hours"
-msgstr "小時"
-
-#: ../src/gcal-manager.c:1540
-msgid "minutes"
-msgstr "分鐘"
-
-#: ../src/gcal-manager.c:1552
-msgid "before"
-msgstr "前"
-
-#. Here translators should put the widgest letter in their alphabet, this
-#. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1026 ../src/gcal-week-view.c:1083
-#: ../src/gcal-year-view.c:925
-#, fuzzy
-msgid "WWW 99 - WWW 99"
-msgstr "WWW 99 - WWW 99"
-
-#: ../src/gcal-searchbar.c:179
-msgid "Search..."
-msgstr "搜尋..."
-
-#: ../src/gcal-time-entry.c:126
-msgid "Change the time"
-msgstr "更改時間"
-
-#. day
-#: ../src/gcal-toolbar.c:317
-msgid "Day"
-msgstr "日"
-
-#. week
-#: ../src/gcal-toolbar.c:334 ../src/gcal-week-view.c:1097
-msgid "Week"
-msgstr "週"
-
-#. month
-#: ../src/gcal-toolbar.c:351
-msgid "Month"
-msgstr "月"
-
-#. year
-#: ../src/gcal-toolbar.c:368
-msgid "Year"
-msgstr "年"
-
-#. list
-#: ../src/gcal-toolbar.c:385
-msgid "List"
-msgstr "清單"
-
-#: ../src/gcal-toolbar.c:465
-msgid "Back"
-msgstr "返回"
-
-#. reset morphing edit_button
-#: ../src/gcal-toolbar.c:486 ../src/gcal-toolbar.c:498
-#: ../src/gcal-toolbar.c:616
-msgid "Edit"
-msgstr "編輯"
-
-#: ../src/gcal-week-view.c:1283
-msgid "AM"
-msgstr "上午"
-
-#: ../src/gcal-week-view.c:1283
-msgid "PM"
-msgstr "下午"
-
-#: ../src/gcal-week-view.c:1286 ../src/gcal-week-view.c:1358
-msgid "Midnight"
-msgstr "午夜"
-
-#: ../src/gcal-week-view.c:1288 ../src/gcal-week-view.c:1361
-msgid "Noon"
-msgstr "中午"
-
-#: ../src/gcal-window.c:1378
+#: ../src/gcal-window.c:1000
 msgid "Event deleted"
 msgstr "事件已刪除"
 
-#: ../src/gcal-year-view.c:929
-#, fuzzy, c-format
-msgid "Year %d"
-msgstr "%d 年"
+#: ../src/gcal-window.c:1001
+msgid "Undo"
+msgstr "復原"
+
+#~ msgid "Unable to initialize GtkClutter"
+#~ msgstr "無法初始化 GtkClutter。"
+
+#~ msgid "Weeks"
+#~ msgstr "週"
+
+#~ msgid "Months"
+#~ msgstr "月"
+
+#~ msgid "Years"
+#~ msgstr "年"
+
+#~ msgid "View as"
+#~ msgstr "檢視方式"
+
+#~ msgid "Change the date"
+#~ msgstr "更改日期"
+
+#~ msgid "Event Details"
+#~ msgstr "事件細節"
+
+#~ msgid "What (e.g. Alien Invasion)"
+#~ msgstr "什麼事 (例：外星人入侵)"
+
+#~ msgid "New Event from %s to %s"
+#~ msgstr "從 %s 到 %s 的新事件"
+
+#~ msgid "Notification"
+#~ msgstr "通知"
+
+#~ msgid "Email"
+#~ msgstr "電子郵件"
+
+#~ msgid "days"
+#~ msgstr "天"
+
+#~ msgid "weeks"
+#~ msgstr "週"
+
+#~ msgid "hours"
+#~ msgstr "小時"
+
+#~ msgid "minutes"
+#~ msgstr "分鐘"
+
+#~ msgid "before"
+#~ msgstr "前"
+
+#, fuzzy
+#~ msgid "WWW 99 - WWW 99"
+#~ msgstr "WWW 99 - WWW 99"
+
+#~ msgid "Change the time"
+#~ msgstr "更改時間"
+
+#~ msgid "Week"
+#~ msgstr "週"
+
+#~ msgid "List"
+#~ msgstr "清單"
+
+#~ msgid "Back"
+#~ msgstr "返回"
+
+#~ msgid "Edit"
+#~ msgstr "編輯"
+
+#, fuzzy
+#~ msgid "Year %d"
+#~ msgstr "%d 年"
