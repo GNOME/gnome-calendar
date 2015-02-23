@@ -468,7 +468,7 @@ url_entry_text_changed (GObject    *object,
       if (priv->validate_url_resource_id != 0)
         g_source_remove (priv->validate_url_resource_id);
 
-      priv->validate_url_resource_id = g_timeout_add_seconds (1, validate_url_cb, user_data);
+      priv->validate_url_resource_id = g_timeout_add_seconds (1, (GSourceFunc) validate_url_cb, user_data);
     }
   else
     {
