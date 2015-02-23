@@ -430,17 +430,4 @@
       <class name="details-frame"/>
     </style>
   </object>
-  <object class="GtkOffscreenWindow" id="spinner_window">
-    <property name="visible">True</property>
-    <signal name="damage-event" handler="spinner_damaged" object="GcalSourceDialog" swapped="no"/>
-    <style>
-      <class name="spinner-offscreen" />
-    </style>
-    <child>
-      <object class="GtkSpinner" id="spinner">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-      </object>
-    </child>
-  </object>
 </interface>
