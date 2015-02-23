@@ -196,7 +196,7 @@ static void           add_source                         (GcalManager         *m
                                                           gpointer             user_data);
 
 
-static GtkWidget*     make_row_for_source                (GcalWindow          *window,
+static GtkWidget*     make_row_from_source               (GcalWindow          *window,
                                                           ESource             *source);
 
 static void           remove_source                      (GcalManager         *manager,
@@ -824,7 +824,7 @@ add_source (GcalManager *manager,
   GtkWidget *row;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-  row = make_row_for_source (GCAL_WINDOW (user_data), source);
+  row = make_row_from_source (GCAL_WINDOW (user_data), source);
 
   /* add to the hash */
   g_hash_table_insert (priv->calendar_source_to_row, source, row);
@@ -833,7 +833,7 @@ add_source (GcalManager *manager,
 }
 
 /**
- * make_row_for_source:
+ * make_row_from_source:
  *
  * Create a GtkListBoxRow for a given
  * ESource.
@@ -841,8 +841,8 @@ add_source (GcalManager *manager,
  * Returns: (transfer full) the new row
  */
 static GtkWidget*
-make_row_for_source (GcalWindow *window,
-                     ESource    *source)
+make_row_from_source (GcalWindow *window,
+                      ESource    *source)
 {
   GcalWindowPrivate *priv = gcal_window_get_instance_private (window);
   GtkWidget *label, *icon, *separator, *checkbox, *box, *row;
@@ -977,7 +977,7 @@ source_row_activated (GtkListBox    *listbox,
     }
   else
     {
-      new_row = make_row_for_source (GCAL_WINDOW (user_data), source);
+      new_row = make_row_from_source (GCAL_WINDOW (user_data), source);
 
       g_hash_table_insert (priv->calendar_source_to_row, source, new_row);
 
