@@ -640,7 +640,6 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
           priv->title_bind = NULL;
         }
 
-      gtk_window_resize (GTK_WINDOW (dialog), 550, 500);
       gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
 
@@ -654,7 +653,6 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
           priv->title_bind = g_object_bind_property (priv->name_entry, "text", priv->headerbar, "title",
                                                      G_BINDING_DEFAULT);
         }
-      gtk_window_resize (GTK_WINDOW (dialog), 550, 200);
     }
 }
 
