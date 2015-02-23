@@ -117,8 +117,6 @@ typedef struct
 
   ESource             *removed_source;
 
-  GHashTable          *calendar_source_to_row;
-
   /* temp to keep event_creation */
   gboolean             open_edit_dialog;
 } GcalWindowPrivate;
@@ -437,34 +435,13 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
                             GtkListBoxRow *row2,
                             gpointer       user_data)
 {
-  GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
   ESource *source1, *source2;
-  GList *l, *aux;
 
-  l = g_hash_table_get_keys (priv->calendar_source_to_row);
-  source1 = source2 = NULL;
-
-  for (aux = l; aux != NULL; aux = aux->next)
-    {
-      GtkWidget *current_row;
-
-      current_row = g_hash_table_lookup (priv->calendar_source_to_row, aux->data);
-
-      /* Enable/disable the toggled calendar */
-      if (current_row == GTK_WIDGET (row1))
-        source1 = aux->data;
-
-      if (current_row == GTK_WIDGET (row2))
-        source2 = aux->data;
-
-      if (source1 != NULL && source2 != NULL)
-        break;
-    }
+  source1 = g_object_get_data (G_OBJECT (row1), "source");
+  source2 = g_object_get_data (G_OBJECT (row2), "source");
 
   if (source1 == NULL && source2 == NULL)
-    return -1;
-
-  g_list_free (l);
+    return 0;
 
   return g_strcmp0 (e_source_get_display_name (source1), e_source_get_display_name (source2));
 }
@@ -824,10 +801,9 @@ add_source (GcalManager *manager,
   GtkWidget *row;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-  row = make_row_from_source (GCAL_WINDOW (user_data), source);
 
-  /* add to the hash */
-  g_hash_table_insert (priv->calendar_source_to_row, source, row);
+  row = make_row_from_source (GCAL_WINDOW (user_data), source);
+  g_object_set_data (G_OBJECT (row), "source", source);
 
   gtk_container_add (GTK_CONTAINER (priv->calendar_listbox), row);
 }
@@ -892,15 +868,24 @@ remove_source (GcalManager *manager,
                gpointer     user_data)
 {
   GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  GtkWidget *row;
+  GList *children, *aux;
 
-  /**
-   * Since a destroyer function was
-   * defined, simply removing the
-   * source will call gtk_widget_destroy
-   * on the row, which will remove it
-   * from the listbox.
-   */
-  g_hash_table_remove (priv->calendar_source_to_row, source);
+  children = gtk_container_get_children (GTK_CONTAINER (priv->calendar_listbox));
+  row = NULL;
+
+  for (aux = children; aux != NULL; aux = aux->next)
+    {
+      ESource *child_source = g_object_get_data (G_OBJECT (aux->data), "source");
+
+      if (child_source != NULL && child_source == source)
+        row = aux->data;
+    }
+
+  if (row != NULL)
+    gtk_widget_destroy (row);
+
+  g_list_free (children);
 }
 
 static void
@@ -926,26 +911,9 @@ source_row_activated (GtkListBox    *listbox,
   GtkWidget *new_row;
   ESource *source;
   gint response;
-  GList *l, *aux;
 
-  l = g_hash_table_get_keys (priv->calendar_source_to_row);
-  source = NULL;
+  source = g_object_get_data (G_OBJECT (row), "source");
 
-  for (aux = l; aux != NULL; aux = aux->next)
-    {
-      GtkWidget *current_row;
-
-      current_row = g_hash_table_lookup (priv->calendar_source_to_row, aux->data);
-
-      /* Enable/disable the toggled calendar */
-      if (current_row == GTK_WIDGET (row))
-        {
-          source = aux->data;
-          break;
-        }
-    }
-
-  /* double check the source */
   if (source == NULL)
     return;
 
@@ -958,8 +926,8 @@ source_row_activated (GtkListBox    *listbox,
 
   gtk_widget_hide (priv->source_dialog);
 
-  /* update the source */
-  g_hash_table_remove (priv->calendar_source_to_row, source);
+  /* remove the row */
+  gtk_widget_destroy (GTK_WIDGET (row));
 
   if (response == GCAL_RESPONSE_REMOVE_SOURCE)
     {
@@ -978,13 +946,10 @@ source_row_activated (GtkListBox    *listbox,
   else
     {
       new_row = make_row_from_source (GCAL_WINDOW (user_data), source);
-
-      g_hash_table_insert (priv->calendar_source_to_row, source, new_row);
+      g_object_set_data (G_OBJECT (new_row), "source", source);
 
       gtk_container_add (GTK_CONTAINER (priv->calendar_listbox), new_row);
     }
-
-  g_list_free (l);
 }
 
 static void
@@ -995,31 +960,20 @@ on_calendar_toggled (GObject    *object,
   GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
   gboolean active;
   GtkWidget *row;
-  GList *l, *aux;
+  ESource *source;
 
-  row = gtk_widget_get_parent (gtk_widget_get_parent (GTK_WIDGET (object)));
   active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object));
-  l = g_hash_table_get_keys (priv->calendar_source_to_row);
+  row = gtk_widget_get_parent (gtk_widget_get_parent (GTK_WIDGET (object)));
+  source = g_object_get_data (G_OBJECT (row), "source");
 
-  for (aux = l; aux != NULL; aux = aux->next)
-    {
-      GtkWidget *current_row;
+  if (source == NULL)
+    return;
 
-      current_row = g_hash_table_lookup (priv->calendar_source_to_row, aux->data);
-
-      /* Enable/disable the toggled calendar */
-      if (current_row == row)
-        {
-          if (active)
-            gcal_manager_enable_source (priv->manager, E_SOURCE (aux->data));
-          else
-            gcal_manager_disable_source (priv->manager, E_SOURCE (aux->data));
-
-          break;
-        }
-    }
-
-  g_list_free (l);
+  /* Enable/disable the toggled calendar */
+  if (active)
+    gcal_manager_enable_source (priv->manager, source);
+  else
+    gcal_manager_disable_source (priv->manager, source);
 }
 
 static gboolean
@@ -1589,10 +1543,6 @@ gcal_window_constructed (GObject *object)
 
   g_signal_connect (gtk_bin_get_child (GTK_BIN (priv->search_bar)), "notify::child-revealed",
                     G_CALLBACK (search_bar_revealer_toggled), object);
-
-  /* calendars menu */
-  priv->calendar_source_to_row = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL,
-                                                        (GDestroyNotify) gtk_widget_destroy);
 
   /* XXX: Week view disabled until after the release when we restart the work on it*/
   //priv->views[GCAL_WINDOW_VIEW_WEEK] = gcal_week_view_new ();
