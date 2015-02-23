@@ -576,54 +576,12 @@ gcal_source_dialog_constructed (GObject *object)
 }
 
 static void
-gcal_source_dialog_finalize (GObject *object)
-{
-  GcalSourceDialog *self = (GcalSourceDialog *)object;
-  GcalSourceDialogPrivate *priv = gcal_source_dialog_get_instance_private (self);
-
-  G_OBJECT_CLASS (gcal_source_dialog_parent_class)->finalize (object);
-}
-
-static void
-gcal_source_dialog_get_property (GObject    *object,
-                                 guint       prop_id,
-                                 GValue     *value,
-                                 GParamSpec *pspec)
-{
-  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (object);
-
-  switch (prop_id)
-    {
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_source_dialog_set_property (GObject      *object,
-                                 guint         prop_id,
-                                 const GValue *value,
-                                 GParamSpec   *pspec)
-{
-  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (object);
-
-  switch (prop_id)
-    {
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
 gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class;
 
   object_class->constructed = gcal_source_dialog_constructed;
-  object_class->finalize = gcal_source_dialog_finalize;
-  object_class->get_property = gcal_source_dialog_get_property;
-  object_class->set_property = gcal_source_dialog_set_property;
 
   widget_class = GTK_WIDGET_CLASS (klass);
 
