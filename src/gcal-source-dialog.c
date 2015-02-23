@@ -116,13 +116,6 @@ static gboolean   validate_url_cb                       (GcalSourceDialog    *di
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
-enum {
-  PROP_0,
-  LAST_PROP
-};
-
-static GParamSpec *gParamSpecs [LAST_PROP];
-
 /**
  * action_widget_activated:
  * @widget: the button which emited the signal.
