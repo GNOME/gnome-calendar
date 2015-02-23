@@ -312,16 +312,10 @@ response_signal (GtkDialog *dialog,
   if (priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE && response_id == GTK_RESPONSE_CANCEL)
     {
       if (priv->local_source != NULL)
-        {
-          g_object_unref (priv->local_source);
-          priv->local_source = NULL;
-        }
+        g_clear_object (&(priv->local_source));
 
       if (priv->remote_source != NULL)
-        {
-          g_object_unref (priv->remote_source);
-          priv->remote_source = NULL;
-        }
+        g_clear_object (&(priv->remote_source));
     }
 }
 
