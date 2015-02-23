@@ -197,13 +197,9 @@ default_check_toggled (GObject    *object,
    * default source.
    */
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object)))
-    {
-      gcal_manager_set_default_source (priv->manager, priv->source);
-    }
+    gcal_manager_set_default_source (priv->manager, priv->source);
   else
-    {
-      gcal_manager_set_default_source (priv->manager, priv->old_default_source);
-    }
+    gcal_manager_set_default_source (priv->manager, priv->old_default_source);
 }
 
 
@@ -266,13 +262,9 @@ notebook_page_switched (GtkWidget *notebook,
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
 
   if (page_num == 0)
-    {
-      gtk_widget_set_sensitive (priv->add_button, (priv->remote_source != NULL));
-    }
+    gtk_widget_set_sensitive (priv->add_button, (priv->remote_source != NULL));
   else
-    {
-      gtk_widget_set_sensitive (priv->add_button, (priv->local_source != NULL));
-    }
+    gtk_widget_set_sensitive (priv->add_button, (priv->local_source != NULL));
 }
 
 /**
