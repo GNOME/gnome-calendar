@@ -714,10 +714,6 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
   edit_mode = (mode == GCAL_SOURCE_DIALOG_MODE_EDIT);
 
   gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->headerbar), edit_mode);
-  gtk_widget_set_visible (priv->cancel_button, !edit_mode);
-  gtk_widget_set_visible (priv->add_button, !edit_mode);
-  gtk_widget_set_visible (priv->edit_grid, edit_mode);
-  gtk_widget_set_visible (priv->notebook, !edit_mode);
   gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), edit_mode ? "edit" : "create");
 
   if (!edit_mode)
