@@ -1628,6 +1628,7 @@ gcal_window_set_property (GObject      *object,
       g_signal_connect (priv->manager, "source-removed", G_CALLBACK (remove_source), object);
 
       gcal_year_view_set_manager (GCAL_YEAR_VIEW (priv->year_view), priv->manager);
+      gcal_source_dialog_set_manager (GCAL_SOURCE_DIALOG (priv->source_dialog), priv->manager);
       update_current_date (GCAL_WINDOW (object));
       return;
     }
