@@ -160,9 +160,7 @@ clear_pages (GcalSourceDialog *dialog)
   GcalSourceDialogPrivate *priv = dialog->priv;
 
   gtk_button_set_label (GTK_BUTTON (priv->select_file_button), _("Select Calendar File…"));
-
   gtk_entry_set_text (GTK_ENTRY (priv->calendar_address_entry), "");
-
   gtk_widget_set_sensitive (priv->add_button, FALSE);
 
   /* details frame */
@@ -727,7 +725,7 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
 
       gtk_window_resize (GTK_WINDOW (dialog), 550, 500);
       gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
-      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), "");
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
 
       clear_pages (dialog);
     }
