@@ -380,13 +380,6 @@ select_calendar_file (GtkButton *button,
         g_clear_pointer (&(priv->local_source), g_object_unref);
 
       /**
-       * Since we cannot guarantee that the
-       * type system registered ESourceLocal,
-       * it must be ensured at least here.
-       */
-      g_type_ensure (E_TYPE_SOURCE_LOCAL);
-
-      /**
        * Create the new source and add the needed
        * extensions.
        */
@@ -573,6 +566,13 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class;
+
+  /**
+   * Since we cannot guarantee that the
+   * type system registered ESourceLocal,
+   * it must be ensured at least here.
+   */
+  g_type_ensure (E_TYPE_SOURCE_LOCAL);
 
   object_class->constructed = gcal_source_dialog_constructed;
 
