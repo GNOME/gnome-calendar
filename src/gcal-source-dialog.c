@@ -98,8 +98,8 @@ static void       response_signal                       (GtkDialog           *di
                                                          gint                 response_id,
                                                          gpointer             user_data);
 
-static void       select_calendar_file                 (GtkButton            *button,
-                                                        gpointer              user_data);
+static void       calendar_file_selected                (GtkFileChooserButton *button,
+                                                         gpointer              user_data);
 
 static void       setup_source_details                 (GcalSourceDialog     *dialog,
                                                         ESource              *source);
@@ -152,7 +152,6 @@ clear_pages (GcalSourceDialog *dialog)
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
 
-  gtk_button_set_label (GTK_BUTTON (priv->select_file_button), _("Select Calendar File…"));
   gtk_entry_set_text (GTK_ENTRY (priv->calendar_address_entry), "");
   gtk_widget_set_sensitive (priv->add_button, FALSE);
 
@@ -320,7 +319,7 @@ response_signal (GtkDialog *dialog,
 }
 
 /**
- * select_calendar_file:
+ * calendar_file_selected:
  *
  * Opens a file selector dialog and
  * parse the resulting selection.
@@ -328,70 +327,49 @@ response_signal (GtkDialog *dialog,
  * Returns:
  */
 static void
-select_calendar_file (GtkButton *button,
-                      gpointer   user_data)
+calendar_file_selected (GtkFileChooserButton *button,
+                        gpointer              user_data)
 {
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
-  GtkFileFilter *filter;
-  GtkWidget *dialog;
-  gint response;
+  ESourceExtension *ext;
+  ESource *source;
+  GFile *file;
 
-  /* File filter */
-  filter = gtk_file_filter_new ();
-  gtk_file_filter_set_name (filter, _("Calendar files"));
-  gtk_file_filter_add_mime_type (filter, "text/calendar");
+  file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (priv->select_file_button));
 
-  /* File chooser dialog */
-  dialog = gtk_file_chooser_dialog_new (_("Select a calendar file"), GTK_WINDOW (user_data),
-                                        GTK_FILE_CHOOSER_ACTION_OPEN, _("Cancel"), GTK_RESPONSE_CANCEL, _("Open"),
-                                        GTK_RESPONSE_OK, NULL);
+  if (file == NULL)
+    return;
 
-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+  /**
+   * Remove any reminescent ESources
+   * cached before.
+   */
+  if (priv->local_source != NULL)
+    g_clear_pointer (&(priv->local_source), g_object_unref);
 
-  response = gtk_dialog_run (GTK_DIALOG (dialog));
+  /**
+   * Create the new source and add the needed
+   * extensions.
+   */
+  source = e_source_new (NULL, NULL, NULL);
+  e_source_set_parent (source, "local-stub");
 
-  if (response == GTK_RESPONSE_OK)
-    {
-      ESourceExtension *ext;
-      ESource *source;
-      GFile *file;
+  ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
+  e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
 
-      file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (dialog));
+  ext = e_source_get_extension (source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
+  e_source_local_set_custom_file (E_SOURCE_LOCAL (ext), file);
 
-      /**
-       * Remove any reminescent ESources
-       * cached before.
-       */
-      if (priv->local_source != NULL)
-        g_clear_pointer (&(priv->local_source), g_object_unref);
+  /* update the source properties */
+  e_source_set_display_name (source, g_file_get_basename (file));
 
-      /**
-       * Create the new source and add the needed
-       * extensions.
-       */
-      source = e_source_new (NULL, NULL, NULL);
-      e_source_set_parent (source, "local-stub");
+  /* Set the private source so it saves at closing */
+  priv->local_source = source;
 
-      ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
-      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
+  /* Update buttons */
+  gtk_widget_set_sensitive (priv->add_button, source != NULL);
 
-      ext = e_source_get_extension (source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
-      e_source_local_set_custom_file (E_SOURCE_LOCAL (ext), file);
-
-      /* update the source properties */
-      e_source_set_display_name (source, g_file_get_basename (file));
-
-      /* Set the private source so it saves at closing */
-      priv->local_source = source;
-
-      /* Update buttons */
-      gtk_button_set_label (GTK_BUTTON (priv->select_file_button), g_file_get_basename (file));
-      gtk_widget_set_sensitive (priv->add_button, source != NULL);
-
-      setup_source_details (GCAL_SOURCE_DIALOG (user_data), source);
-    }
-
-  gtk_widget_destroy (dialog);
+  setup_source_details (GCAL_SOURCE_DIALOG (user_data), source);
 }
 
 /**
@@ -533,6 +511,7 @@ gcal_source_dialog_constructed (GObject *object)
 {
   GcalSourceDialog *self = (GcalSourceDialog *)object;
   GcalSourceDialogPrivate *priv = gcal_source_dialog_get_instance_private (self);
+  GtkFileFilter *filter;
 
   G_OBJECT_CLASS (gcal_source_dialog_parent_class)->constructed (object);
 
@@ -542,6 +521,13 @@ gcal_source_dialog_constructed (GObject *object)
   g_object_set_data (G_OBJECT (priv->add_button), "response", GINT_TO_POINTER (GTK_RESPONSE_APPLY));
   g_object_set_data (G_OBJECT (priv->cancel_button), "response", GINT_TO_POINTER (GTK_RESPONSE_CANCEL));
   g_object_set_data (G_OBJECT (priv->remove_button), "response", GINT_TO_POINTER (GCAL_RESPONSE_REMOVE_SOURCE));
+
+  /* File filter */
+  filter = gtk_file_filter_new ();
+  gtk_file_filter_set_name (filter, _("Calendar files"));
+  gtk_file_filter_add_mime_type (filter, "text/calendar");
+
+  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (priv->select_file_button), filter);
 
   /* setup titlebar */
   gtk_window_set_titlebar (GTK_WINDOW (object), priv->headerbar);
@@ -588,13 +574,13 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_source_grid);
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
+  gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
   gtk_widget_class_bind_template_callback (widget_class, color_set);
   gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, notebook_page_switched);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
-  gtk_widget_class_bind_template_callback (widget_class, select_calendar_file);
   gtk_widget_class_bind_template_callback (widget_class, spinner_damaged);
   gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
 }

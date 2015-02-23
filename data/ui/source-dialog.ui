@@ -207,13 +207,14 @@
                     <property name="border_width">18</property>
                     <property name="row_spacing">12</property>
                     <child>
-                      <object class="GtkButton" id="select_file_button">
-                        <property name="label" translatable="yes">Select Calendar File…</property>
+                      <object class="GtkFileChooserButton" id="select_file_button">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="hexpand">True</property>
-                        <signal name="clicked" handler="select_calendar_file" object="GcalSourceDialog" swapped="no"/>
+                        <property name="action">GTK_FILE_CHOOSER_ACTION_OPEN</property>
+                        <property name="local_only">True</property>
+                        <signal name="file_set" handler="calendar_file_selected" object="GcalSourceDialog" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
