@@ -602,9 +602,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 static void
 gcal_source_dialog_init (GcalSourceDialog *self)
 {
-  GcalSourceDialogPrivate *priv = gcal_source_dialog_get_instance_private (self);
-
-  self->priv = priv;
+  self->priv = gcal_source_dialog_get_instance_private (self);
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
