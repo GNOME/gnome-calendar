@@ -465,6 +465,12 @@ url_entry_text_changed (GObject    *object,
       gtk_entry_set_progress_fraction (GTK_ENTRY (priv->calendar_address_entry), 0);
     }
 
+  if (priv->validate_url_resource_id != 0)
+    {
+      g_source_remove (priv->validate_url_resource_id);
+      priv->validate_url_resource_id = 0;
+    }
+
   if (g_utf8_strlen (text, -1) != 0)
     {
       // Remove any previous unreleased resource
