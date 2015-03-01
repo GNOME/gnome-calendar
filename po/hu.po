@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-01-03 17:11+0000\n"
-"PO-Revision-Date: 2015-01-05 13:30+0100\n"
+"POT-Creation-Date: 2015-02-16 14:32+0000\n"
+"PO-Revision-Date: 2015-03-01 10:46+0100\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -19,14 +19,57 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Lokalize 1.2\n"
 
-#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../src/gcal-application.c:432
-#: ../src/gcal-window.c:1006
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
 msgid "Calendar"
 msgstr "Naptár"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+#| msgid "Calendar"
+msgid "Calendar for GNOME"
+msgstr "Naptár a GNOME-hoz"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"A GNOME Naptár egy egyszerű és gyönyörű naptáralkalmazás, amelyet úgy "
+"terveztek, hogy tökéletesen illeszkedjen a GNOME asztalhoz. A GNOME asztalt "
+"felépítő összetevők újrafelhasználásával a Naptár nagyon jól integrálódik a "
+"GNOME ökoszisztémába."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"Célunk a tökéletes egyensúly megtalálása a szépen kialakított szolgáltatások "
+"és a felhasználóközpontú használhatóság között. Túlzások és hiány nélkül. "
+"Kényelmesen fogja érezni magát a Naptár használatakor, mintha már évek óta "
+"ezt használná!"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#| msgid "Other %d events"
+msgid "Search for events"
+msgstr "Események keresése"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+#| msgid "- Calendar management"
+msgid "Calendar management"
+msgstr "Naptárkezelés"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
 msgstr "Naptár elérése és kezelése"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Naptár;Esemény;Emlékeztető;"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
@@ -72,7 +115,7 @@ msgstr "A Naptár legutóbbi futásakor letiltott források"
 msgid "Cancel"
 msgstr "Mégse"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:675
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
 msgid "Done"
 msgstr "Kész"
 
@@ -96,7 +139,7 @@ msgstr "Megjegyzések"
 msgid "Location"
 msgstr "Hely"
 
-#: ../data/ui/edit-dialog.ui.h:8
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:387
 msgid "All day"
 msgstr "Egész nap"
 
@@ -105,8 +148,8 @@ msgid "Delete event"
 msgstr "Esemény törlése"
 
 #: ../data/ui/menus.ui.h:1
-msgid "_New Event"
-msgstr "Ú_j esemény"
+msgid "Add Eve_nt…"
+msgstr "_Esemény hozzáadása…"
 
 #: ../data/ui/menus.ui.h:2
 msgid "_Search…"
@@ -124,8 +167,15 @@ msgstr "_Kilépés"
 msgid "_Synchronize"
 msgstr "_Szinkronizálás"
 
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "Nincs találat"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "A fenti bejegyzés használata események kereséséhez."
+
 #: ../data/ui/time-selector.ui.h:1
-#| msgid "00:00 PM"
 msgid "00:00"
 msgstr "00:00"
 
@@ -133,63 +183,88 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:425
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:381
+#: ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "DE"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:425
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:381
+#: ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "DU"
 
-#: ../data/ui/window.ui.h:1
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "Hónap"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
+msgstr "Év"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
 msgid "Today"
 msgstr "Ma"
 
-#: ../data/ui/window.ui.h:2
+#: ../data/ui/window.ui.h:5
 msgid "Create"
 msgstr "Létrehozás"
 
-#: ../data/ui/window.ui.h:3
+#: ../data/ui/window.ui.h:6
 msgid "More Details"
 msgstr "További részletek"
 
-#: ../src/gcal-application.c:95
+#: ../data/ui/year-view.ui.h:2
+#| msgid "Other events"
+msgid "No events"
+msgstr "Nincsenek események"
+
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+msgid "Add Event…"
+msgstr "Esemény hozzáadása…"
+
+#: ../src/gcal-application.c:102
 msgid "Display version number"
 msgstr "Verziószám kiírása"
 
-#: ../src/gcal-application.c:100
+#: ../src/gcal-application.c:107
 msgid "Open calendar on the passed date"
 msgstr "Naptár megnyitása az átadott napra"
 
-#: ../src/gcal-application.c:292
+#: ../src/gcal-application.c:112
+#| msgid "Open calendar on the passed date"
+msgid "Open calendar showing the passed event"
+msgstr "Naptár megnyitása az átadott esemény megtekintéséhez"
+
+#: ../src/gcal-application.c:332
 msgid "- Calendar management"
 msgstr "- Naptárkezelés"
 
-#: ../src/gcal-application.c:420
+#: ../src/gcal-application.c:499
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id A naptár szerzői"
 
-#: ../src/gcal-application.c:426
+#: ../src/gcal-application.c:505
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id A naptár szerzői"
 
-#: ../src/gcal-application.c:439
+#: ../src/gcal-application.c:518
 msgid "translator-credits"
 msgstr "Úr Balázs <urbalazs@gmail.com>"
 
-#: ../src/gcal-edit-dialog.c:675
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "Nap"
+
+#: ../src/gcal-edit-dialog.c:634
 msgid "Save"
 msgstr "Mentés"
 
-#: ../src/gcal-edit-dialog.c:864
+#: ../src/gcal-edit-dialog.c:818
 msgid "Unnamed event"
 msgstr "Névtelen esemény"
 
-#: ../src/gcal-month-view.c:640
-msgid "Add new event..."
-msgstr "Új esemény hozzáadása…"
-
-#: ../src/gcal-month-view.c:892
+#: ../src/gcal-month-view.c:826
 msgid "Other events"
 msgstr "Egyéb események"
 
@@ -201,67 +276,66 @@ msgid_plural "Other %d events"
 msgstr[0] "Egyéb esemény"
 msgstr[1] "Egyéb %d esemény"
 
-#: ../src/gcal-date-selector.c:303
-msgid "Day"
-msgstr "Nap"
+#: ../src/gcal-search-view.c:380
+#, c-format
+#| msgid "%.2d:%.2d AM"
+msgid "%.2d:%.2d %s"
+msgstr "%.2d.%.2d %s"
 
-#: ../src/gcal-date-selector.c:305 ../src/gcal-window.c:1271
-msgid "Month"
-msgstr "Hónap"
-
-#: ../src/gcal-date-selector.c:307 ../src/gcal-window.c:1277
-msgid "Year"
-msgstr "Év"
-
-#: ../src/gcal-time-selector.c:95
+#: ../src/gcal-time-selector.c:96
 #, c-format
 msgid "%.2d:%.2d AM"
 msgstr "DE %.2d.%.2d"
 
-#: ../src/gcal-time-selector.c:97
+#: ../src/gcal-time-selector.c:98
 #, c-format
 msgid "%.2d:%.2d PM"
 msgstr "DU %.2d.%.2d"
 
-#: ../src/gcal-week-view.c:428 ../src/gcal-week-view.c:501
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
 msgstr "Éjfél"
 
-#: ../src/gcal-week-view.c:430 ../src/gcal-week-view.c:504
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
 msgid "Noon"
 msgstr "Dél"
 
-#: ../src/gcal-week-view.c:507
+#: ../src/gcal-week-view.c:499
 msgid "00:00 PM"
 msgstr "du. 00:00"
 
-#: ../src/gcal-week-view.c:1387 ../src/gcal-window.c:1266
-msgid "Week"
-msgstr "Hét"
-
-#: ../src/gcal-window.c:593
+#: ../src/gcal-window.c:636
 #, c-format
 msgid "New Event on %s"
 msgstr "Új esemény ekkor: %s"
 
-#: ../src/gcal-window.c:941
-msgid "Event deleted"
-msgstr "Esemény törölve"
+#: ../src/gcal-window.c:1036
+#| msgid "Event deleted"
+msgid "Another event deleted"
+msgstr "Egy másik esemény törölve"
 
-#: ../src/gcal-window.c:942
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
 msgid "Undo"
 msgstr "Visszavonás"
 
-#: ../src/gcal-window.c:1035
-#, c-format
-msgid "Results for \"%s\""
-msgstr "Találatok erre: „%s”"
+#: ../src/gcal-window.c:1040
+msgid "Event deleted"
+msgstr "Esemény törölve"
+
+#~ msgid "_New Event"
+#~ msgstr "Ú_j esemény"
+
+#~ msgid "Add new event..."
+#~ msgstr "Új esemény hozzáadása…"
+
+#~ msgid "Week"
+#~ msgstr "Hét"
+
+#~ msgid "Results for \"%s\""
+#~ msgstr "Találatok erre: „%s”"
 
 #~ msgid "Change the date"
 #~ msgstr "Dátum módosítása"
-
-#~ msgid "Other %d events"
-#~ msgstr "Egyéb %d esemény"
 
 #~ msgid "Change the time"
 #~ msgstr "Idő módosítása"
