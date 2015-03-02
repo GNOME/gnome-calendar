@@ -328,6 +328,7 @@
   <object class="GcalSearchView" id="search_view">
     <property name="visible">False</property>
     <property name="relative_to">search_entry</property>
+    <property name="position">bottom</property>
     <signal name="event-activated" handler="search_event_selected" object="GcalWindow" swapped="no"/>
   </object>
   <object class="GtkPopover" id="calendar_popover">
