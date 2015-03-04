@@ -326,6 +326,7 @@ gcal_date_selector_constructed (GObject *object)
   g_list_free (aux);
 
   gtk_widget_set_direction (box, GTK_TEXT_DIR_LTR);
+  gtk_widget_set_direction (priv->grid, GTK_TEXT_DIR_LTR);
 }
 
 /* Public API */
