@@ -324,6 +324,8 @@ gcal_date_selector_constructed (GObject *object)
         gtk_entry_set_max_length (GTK_ENTRY (l->data), 2);
     }
   g_list_free (aux);
+
+  gtk_widget_set_direction (box, GTK_TEXT_DIR_LTR);
 }
 
 /* Public API */
