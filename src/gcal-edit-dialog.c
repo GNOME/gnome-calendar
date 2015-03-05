@@ -201,7 +201,8 @@ on_calendar_selected (GtkWidget *menu_item,
         gtk_image_set_from_pixbuf (GTK_IMAGE (priv->source_image), pix);
         g_object_unref (pix);
 
-        priv->source = source;
+        if (priv->source != NULL)
+          g_set_object (&(priv->source), source);
         gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->titlebar),
                                      e_source_get_display_name (priv->source));
         break;
