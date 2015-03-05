@@ -237,7 +237,7 @@ get_desc_from_component (ECalComponent *component,
     }
 
   e_cal_component_free_text_list (text_list);
-  return desc;
+  return desc != NULL ? g_strstrip (desc) : NULL;
 }
 
 /**
