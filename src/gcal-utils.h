@@ -63,7 +63,8 @@ GdkPixbuf*      gcal_get_pixbuf_from_color                      (GdkRGBA        
 GdkPixbuf*      get_circle_pixbuf_from_color                    (GdkRGBA               *color,
                                                                  gint                   size);
 
-const gchar*    get_color_name_from_source                      (ESource               *source);
+void            get_color_name_from_source                      (ESource               *source,
+                                                                 GdkRGBA               *out_color);
 
 gint            gcal_compare_event_widget_by_date               (gconstpointer          a,
                                                                  gconstpointer          b);

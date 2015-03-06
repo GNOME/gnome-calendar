@@ -161,11 +161,14 @@ get_circle_pixbuf_from_color (GdkRGBA *color,
   return pix;
 }
 
-const gchar*
-get_color_name_from_source (ESource *source)
+void
+get_color_name_from_source (ESource *source, GdkRGBA *out_color)
 {
   ESourceSelectable *extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
-  return e_source_selectable_get_color (extension);
+
+  /* FIXME: We should handle calendars colours better */
+  if (!gdk_rgba_parse (out_color, e_source_selectable_get_color (extension)))
+    gdk_rgba_parse (out_color, "#becedd"); /* calendar default colour */
 }
 
 gint

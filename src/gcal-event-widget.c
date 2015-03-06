@@ -680,7 +680,7 @@ gcal_event_widget_new_from_data (GcalEventData *data)
 
   GQuark color_id;
   GdkRGBA color;
-  gchar *custom_css_class;
+  gchar *color_str, *custom_css_class;
 
   ECalComponentDateTime dt;
   icaltimetype *date;
@@ -715,13 +715,15 @@ gcal_event_widget_new_from_data (GcalEventData *data)
   gcal_event_widget_set_summary (event, (gchar*) e_summary.value);
 
   /* color */
-  gdk_rgba_parse (&color, get_color_name_from_source (priv->source));
+  get_color_name_from_source (priv->source, &color);
   gcal_event_widget_set_color (event, &color);
 
-  color_id = g_quark_from_string (get_color_name_from_source (priv->source));
+  color_str = gdk_rgba_to_string (&color);
+  color_id = g_quark_from_string (color_str);
   custom_css_class = g_strdup_printf ("color-%d", color_id);
   gtk_style_context_add_class (gtk_widget_get_style_context (widget), custom_css_class);
   g_free (custom_css_class);
+  g_free (color_str);
 
   /* start date */
   e_cal_component_get_dtstart (priv->component, &dt);

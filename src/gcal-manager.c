@@ -880,7 +880,6 @@ gcal_manager_get_sources (GcalManager *manager)
       if (!unit->enabled)
         continue;
       aux = g_list_append (aux, key);
-
     }
   return aux;
 }

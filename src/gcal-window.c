@@ -745,7 +745,7 @@ add_source (GcalManager *manager,
 
   /* retrieve the source's color & build item name */
   item_name = g_strdup_printf ("%s", e_source_get_uid (source));
-  gdk_rgba_parse (&color, get_color_name_from_source (source));
+  get_color_name_from_source (source, &color);
   pix = gcal_get_pixbuf_from_color (&color, 16);
 
   /* create the menu item */

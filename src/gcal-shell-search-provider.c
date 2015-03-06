@@ -237,7 +237,7 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
       e_cal_component_get_summary (data->event_component, &summary);
       g_variant_builder_add (&builder, "{sv}", "name", g_variant_new_string (summary.value));
 
-      gdk_rgba_parse (&color, get_color_name_from_source (data->source));
+      get_color_name_from_source (data->source, &color);
       gicon = get_circle_pixbuf_from_color (&color, 128);
       icon_variant = g_icon_serialize (G_ICON (gicon));
       g_variant_builder_add (&builder, "{sv}", "icon", icon_variant);

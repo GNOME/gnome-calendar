@@ -135,7 +135,7 @@ fill_sources_menu (GcalEditDialog *dialog)
       source = E_SOURCE (aux->data);
 
       /* retrieve color */
-      gdk_rgba_parse (&color, get_color_name_from_source (source));
+      get_color_name_from_source (source, &color);
       pix = gcal_get_pixbuf_from_color (&color, 16);;
 
       /* menu item */
@@ -195,7 +195,7 @@ on_calendar_selected (GtkWidget *menu_item,
         GdkPixbuf *pix;
 
         /* retrieve color */
-        gdk_rgba_parse (&color, get_color_name_from_source (source));
+        get_color_name_from_source (source, &color);
 
         pix = gcal_get_pixbuf_from_color (&color, 16);
         gtk_image_set_from_pixbuf (GTK_IMAGE (priv->source_image), pix);
@@ -821,7 +821,7 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
     gtk_entry_set_text (GTK_ENTRY (priv->summary_entry), e_summary.value);
 
   /* dialog titlebar's title & subtitle */
-  gdk_rgba_parse (&color, get_color_name_from_source (data->source));
+  get_color_name_from_source (data->source, &color);
 
   pix = gcal_get_pixbuf_from_color (&color, 16);
   gtk_image_set_from_pixbuf (GTK_IMAGE (priv->source_image), pix);

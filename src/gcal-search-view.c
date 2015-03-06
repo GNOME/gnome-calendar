@@ -320,7 +320,7 @@ make_row_for_event_data (GcalSearchView  *view,
   priv = gcal_search_view_get_instance_private (view);
 
   /* get event color */
-  gdk_rgba_parse (&color, get_color_name_from_source (data->source));
+  get_color_name_from_source (data->source, &color);
   pixbuf = gcal_get_pixbuf_from_color (&color, 16);
 
   /* make an image of the color */

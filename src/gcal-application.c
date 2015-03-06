@@ -132,7 +132,8 @@ process_sources (GcalApplication *application)
 
   gint arr_length, i = 0;
   GQuark color_id;
-  const gchar* color_str;
+  GdkRGBA color;
+  gchar* color_str;
 
   gchar **new_css_snippets;
   gchar *new_css_data;
@@ -148,10 +149,13 @@ process_sources (GcalApplication *application)
     {
       source = l->data;
 
-      color_str = get_color_name_from_source (source);
+      get_color_name_from_source (source, &color);
+      color_str = gdk_rgba_to_string (&color);
       color_id = g_quark_from_string (color_str);
 
       new_css_snippets[i] = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
+
+      g_free (color_str);
     }
 
   g_list_free (sources);
