@@ -1,16 +1,16 @@
 # Korean translation for gnome-calendar.
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
-# Seong-ho Cho <darkcircle.0426@gmail.com>, 2013.
+# Seong-ho Cho <shcho@gnome.org>, 2013, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-09-13 20:19+0000\n"
-"PO-Revision-Date: 2013-09-18 14:08+0900\n"
-"Last-Translator: Seong-ho Cho <darkcircle.0426@gmail.com>\n"
+"POT-Creation-Date: 2015-03-06 16:35+0000\n"
+"PO-Revision-Date: 2015-03-06 13:27+0900\n"
+"Last-Translator: Seong-ho Cho <shcho@gnome.org>\n"
 "Language-Team: GNOME Korea <gnome-kr@googlegroups.com>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
@@ -19,14 +19,52 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Poedit 1.5.5\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:158
-#: ../src/gcal-application.c:396
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:515
 msgid "Calendar"
 msgstr "달력"
 
-#: ../data/gnome-calendar.desktop.in.in.h:2
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+msgid "Calendar for GNOME"
+msgstr "그놈용 달력"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"그놈 달력은 그놈 데스크톱에 완벽하게 맞춰 설계한 단순하고 아름다운 달력 프로"
+"그램입니다. 그놈 달력은 그놈 데스크톱에 내장한 구성 요소를 재사용하여 그놈 환"
+"경에 멋지게 어우러집니다."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"멋지게 가다듬은 기능과 사용자 중심의 활용성간의 균형을 완벽하게 유지하는 것"
+"이 저희의 목표입니다. 잘나지도 부족하지도 않습니다. 오랫동안 달력을 사용해보"
+"셨던 것처럼 그놈 달력을 편하게 사용하실 수 있습니다!"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "행사 검색"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Calendar management"
+msgstr "달력 관리자"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
 msgstr "달력에 접근하고 관리합니다"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Calendar;달력;Event;행사;Reminder;알림;"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
@@ -42,7 +80,7 @@ msgstr "창 크기"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:4
 msgid "Window size (width and height)."
-msgstr "창의 크기 입니다(폭과 너비)."
+msgstr "창 크기(너비 및 높이)."
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:5
 msgid "Window position"
@@ -50,7 +88,7 @@ msgstr "창 위치"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:6
 msgid "Window position (x and y)."
-msgstr "창의 위치입니다(x와 y)."
+msgstr "창 위치(가로 및 세로)."
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:7
 msgid "Type of the active view"
@@ -60,224 +98,285 @@ msgstr "활성 보기 형식"
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "활성 창 보기의 형식입니다. 기본 값은 월별 보기 입니다."
 
-#: ../src/gcal-application.c:87
-msgid "Display version number"
-msgstr "버전 번호를 표시합니다"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "비활성화 원본 검색"
 
-#: ../src/gcal-application.c:204
-msgid "Unable to initialize GtkClutter"
-msgstr "GtkClutter를 초기화 할 수 없습니다"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "달력을 실행한 마지막 시기 후 비활성화 한 원본입니다"
 
-#: ../src/gcal-application.c:245
-msgid "- Calendar management"
-msgstr "- 달력 관리자"
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "취소"
 
-#: ../src/gcal-application.c:300
-msgid "Weeks"
-msgstr "주별"
-
-#: ../src/gcal-application.c:301
-msgid "Months"
-msgstr "월별"
-
-#: ../src/gcal-application.c:302
-msgid "Years"
-msgstr "연도별"
-
-#: ../src/gcal-application.c:304
-msgid "View as"
-msgstr "다음 형식으로 보기"
-
-#: ../src/gcal-application.c:312
-msgid "About"
-msgstr "정보"
-
-#: ../src/gcal-application.c:320
-msgid "Quit"
-msgstr "끝내기"
-
-#: ../src/gcal-application.c:384
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Copyright © %Id The Calendar authors"
-
-#: ../src/gcal-application.c:390
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Copyright © %Id–%Id The Calendar authors"
-
-#: ../src/gcal-application.c:403
-msgid "translator-credits"
-msgstr "Seong-ho Cho <darkcircle.0426@gmail.com>"
-
-#: ../src/gcal-date-entry.c:162
-msgid "Change the date"
-msgstr "날짜 바꾸기"
-
-#: ../src/gcal-edit-dialog.c:156
-msgid "Event Details"
-msgstr "행사 세부내용"
-
-#. Summary, title
-#: ../src/gcal-edit-dialog.c:171
-msgid "Title"
-msgstr "제목"
-
-#. Start date and time
-#: ../src/gcal-edit-dialog.c:199
-msgid "Starts"
-msgstr "시작"
-
-#: ../src/gcal-edit-dialog.c:215
-msgid "All day"
-msgstr "매일"
-
-#. End date and time
-#: ../src/gcal-edit-dialog.c:221
-msgid "Ends"
-msgstr "끝"
-
-#. Location, location, location
-#: ../src/gcal-edit-dialog.c:238
-msgid "Location"
-msgstr "위치"
-
-#. Notes, description
-#: ../src/gcal-edit-dialog.c:252
-msgid "Notes"
-msgstr "참고"
-
-#. done button
-#. done
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-searchbar.c:158
-#: ../src/gcal-toolbar.c:611
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:635
 msgid "Done"
 msgstr "완료"
 
-#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:291
-msgid "New Event"
-msgstr "새 행사"
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "제목"
 
-#: ../src/gcal-event-overlay.c:162
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "시작"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "끝"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "참고"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "위치"
+
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:374
+msgid "All day"
+msgstr "매일"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "행사 삭제"
+
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "행사 추가(_N)…"
+
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "검색(_S)…"
+
+#: ../data/ui/menus.ui.h:3
+msgid "_About"
+msgstr "정보(_A)"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Quit"
+msgstr "끝내기(_Q)"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "동기화(_S)"
+
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "결과가 없습니다"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "행사를 검색하려면 상단의 항목을 사용하십시오."
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:368
+#: ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "오전"
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:368
+#: ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "오후"
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "월"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
+msgstr "연"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+msgid "Today"
+msgstr "오늘"
+
+#: ../data/ui/window.ui.h:5
 msgid "Create"
 msgstr "만들기"
 
-#: ../src/gcal-event-overlay.c:171
-msgid "More details"
-msgstr "자세히"
+#: ../data/ui/window.ui.h:6
+msgid "More Details"
+msgstr "더 자세히"
 
-#: ../src/gcal-event-overlay.c:185
-msgid "What (e.g. Alien Invasion)"
-msgstr "할 일 (예: 외계인 침공)"
+#: ../data/ui/year-view.ui.h:2
+msgid "No events"
+msgstr "행사 없음"
 
-#: ../src/gcal-event-overlay.c:507
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+msgid "Add Event…"
+msgstr "행사 추가…"
+
+#: ../src/gcal-application.c:102
+msgid "Display version number"
+msgstr "버전 번호를 표시합니다"
+
+#: ../src/gcal-application.c:107
+msgid "Open calendar on the passed date"
+msgstr "과거 달력 열기"
+
+#: ../src/gcal-application.c:112
+msgid "Open calendar showing the passed event"
+msgstr "과거 행사를 보여주는 달력을 엽니다"
+
+#: ../src/gcal-application.c:336
+msgid "- Calendar management"
+msgstr "- 달력 관리자"
+
+#: ../src/gcal-application.c:503
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Copyright © %Id The Calendar authors"
+
+#: ../src/gcal-application.c:509
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Copyright © %Id–%Id The Calendar authors"
+
+#: ../src/gcal-application.c:522
+msgid "translator-credits"
+msgstr "조성호 <shcho@gnome.org>"
+
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "일"
+
+#: ../src/gcal-edit-dialog.c:635
+msgid "Save"
+msgstr "저장"
+
+#: ../src/gcal-edit-dialog.c:819
+msgid "Unnamed event"
+msgstr "이름 없는 행사"
+
+#: ../src/gcal-month-view.c:820
+msgid "Other events"
+msgstr "다른 행사"
+
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1203
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "다른 행사 %d개"
+
+#: ../src/gcal-search-view.c:367
+#, c-format
+msgid "%.2d:%.2d %s"
+msgstr "%3$s %1$.2d:%2$.2d"
+
+#: ../src/gcal-time-selector.c:96
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "오전 %.2d:%.2d"
+
+#: ../src/gcal-time-selector.c:98
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "오후 %.2d:%.2d"
+
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
+msgid "Midnight"
+msgstr "자정"
+
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
+msgid "Noon"
+msgstr "정오"
+
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "오후 00:00"
+
+#: ../src/gcal-window.c:636
 #, c-format
 msgid "New Event on %s"
 msgstr "%s의 새 행사"
 
-#: ../src/gcal-event-overlay.c:524
-#, c-format
-msgid "New Event from %s to %s"
-msgstr "%s부터 %s까지의 새 행사"
+#: ../src/gcal-window.c:1036
+msgid "Another event deleted"
+msgstr "삭제한 다른 행사"
 
-#: ../src/gcal-manager.c:1506
-msgid "Notification"
-msgstr "알림"
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
+msgid "Undo"
+msgstr "실행취소"
 
-#: ../src/gcal-manager.c:1508
-msgid "Email"
-msgstr "전자메일"
-
-#: ../src/gcal-manager.c:1522
-msgid "days"
-msgstr "일"
-
-#: ../src/gcal-manager.c:1528
-msgid "weeks"
-msgstr "주"
-
-#: ../src/gcal-manager.c:1534
-msgid "hours"
-msgstr "시간"
-
-#: ../src/gcal-manager.c:1540
-msgid "minutes"
-msgstr "분"
-
-#: ../src/gcal-manager.c:1552
-msgid "before"
-msgstr "전"
-
-#. Here translators should put the widgest letter in their alphabet, this
-#. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1026 ../src/gcal-week-view.c:1083
-#: ../src/gcal-year-view.c:925
-msgid "WWW 99 - WWW 99"
-msgstr "WWW 99 - WWW 99"
-
-#: ../src/gcal-searchbar.c:179
-msgid "Search..."
-msgstr "검색..."
-
-#: ../src/gcal-time-entry.c:126
-msgid "Change the time"
-msgstr "시간 바꾸기"
-
-#. day
-#: ../src/gcal-toolbar.c:317
-msgid "Day"
-msgstr "일"
-
-#. week
-#: ../src/gcal-toolbar.c:334 ../src/gcal-week-view.c:1097
-msgid "Week"
-msgstr "주"
-
-#. month
-#: ../src/gcal-toolbar.c:351
-msgid "Month"
-msgstr "월"
-
-#. year
-#: ../src/gcal-toolbar.c:368
-msgid "Year"
-msgstr "연"
-
-#. list
-#: ../src/gcal-toolbar.c:385
-msgid "List"
-msgstr "목록"
-
-#: ../src/gcal-toolbar.c:465
-msgid "Back"
-msgstr "뒤로"
-
-#. reset morphing edit_button
-#: ../src/gcal-toolbar.c:486 ../src/gcal-toolbar.c:498
-#: ../src/gcal-toolbar.c:616
-msgid "Edit"
-msgstr "편집"
-
-#: ../src/gcal-week-view.c:1283
-msgid "AM"
-msgstr "오전"
-
-#: ../src/gcal-week-view.c:1283
-msgid "PM"
-msgstr "오후"
-
-#: ../src/gcal-week-view.c:1286 ../src/gcal-week-view.c:1358
-msgid "Midnight"
-msgstr "자정"
-
-#: ../src/gcal-week-view.c:1288 ../src/gcal-week-view.c:1361
-msgid "Noon"
-msgstr "정오"
-
-#: ../src/gcal-window.c:1378
+#: ../src/gcal-window.c:1040
 msgid "Event deleted"
 msgstr "삭제한 행사"
 
-#: ../src/gcal-year-view.c:929
-#, c-format
-msgid "Year %d"
-msgstr "%d년"
+#~ msgid "Unable to initialize GtkClutter"
+#~ msgstr "GtkClutter를 초기화 할 수 없습니다"
+
+#~ msgid "Weeks"
+#~ msgstr "주별"
+
+#~ msgid "Months"
+#~ msgstr "월별"
+
+#~ msgid "Years"
+#~ msgstr "연도별"
+
+#~ msgid "View as"
+#~ msgstr "다음 형식으로 보기"
+
+#~ msgid "Change the date"
+#~ msgstr "날짜 바꾸기"
+
+#~ msgid "Event Details"
+#~ msgstr "행사 세부내용"
+
+#~ msgid "What (e.g. Alien Invasion)"
+#~ msgstr "할 일 (예: 외계인 침공)"
+
+#~ msgid "New Event from %s to %s"
+#~ msgstr "%s부터 %s까지의 새 행사"
+
+#~ msgid "Notification"
+#~ msgstr "알림"
+
+#~ msgid "Email"
+#~ msgstr "전자메일"
+
+#~ msgid "days"
+#~ msgstr "일"
+
+#~ msgid "weeks"
+#~ msgstr "주"
+
+#~ msgid "hours"
+#~ msgstr "시간"
+
+#~ msgid "minutes"
+#~ msgstr "분"
+
+#~ msgid "before"
+#~ msgstr "전"
+
+#~ msgid "WWW 99 - WWW 99"
+#~ msgstr "WWW 99 - WWW 99"
+
+#~ msgid "Change the time"
+#~ msgstr "시간 바꾸기"
+
+#~ msgid "Week"
+#~ msgstr "주"
+
+#~ msgid "List"
+#~ msgstr "목록"
+
+#~ msgid "Back"
+#~ msgstr "뒤로"
+
+#~ msgid "Edit"
+#~ msgstr "편집"
+
+#~ msgid "Year %d"
+#~ msgstr "%d년"
