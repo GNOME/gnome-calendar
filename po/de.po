@@ -10,20 +10,21 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-04 19:04+0000\n"
-"PO-Revision-Date: 2015-02-05 15:37+0100\n"
-"Last-Translator: Bernd Homuth <dev@hmt.im>\n"
+"POT-Creation-Date: 2015-02-16 14:32+0000\n"
+"PO-Revision-Date: 2015-03-10 06:38+0100\n"
+"Last-Translator: Simon Linden <xhi2018@googlemail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.7.3\n"
+"X-Generator: Poedit 1.7.4\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
-#: ../data/org.gnome.Calendar.desktop.in.in.h:1 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:458
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -55,7 +56,7 @@ msgstr ""
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
 msgid "Search for events"
-msgstr "Nach Ereignissen suchen"
+msgstr "Nach Terminen suchen"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
 msgid "Calendar management"
@@ -67,7 +68,7 @@ msgstr "Auf Kalender zugreifen und verwalten"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:3
 msgid "Calendar;Event;Reminder;"
-msgstr "Kalender;Ereignis;Erinnerung;Termin;"
+msgstr "Kalender;Termin;Erinnerung;"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
@@ -113,7 +114,7 @@ msgstr "Deaktivierte Quellen seit dem letzten Aufruf von Kalender"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:638
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
 msgid "Done"
 msgstr "Fertig"
 
@@ -137,17 +138,17 @@ msgstr "Notizen"
 msgid "Location"
 msgstr "Ort"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:390
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:387
 msgid "All day"
 msgstr "Ganzer Tag"
 
 #: ../data/ui/edit-dialog.ui.h:9
 msgid "Delete event"
-msgstr "Ereignis löschen"
+msgstr "Termin löschen"
 
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
-msgstr "Ereig_nis hinzufügen …"
+msgstr "Termi_n hinzufügen …"
 
 #: ../data/ui/menus.ui.h:2
 msgid "_Search…"
@@ -171,7 +172,7 @@ msgstr "Keine Ergebnisse gefunden"
 
 #: ../data/ui/search-view.ui.h:2
 msgid "Use the entry above to search for events."
-msgstr "Suchen Sie nach Ereignissen mit dem Eingabefeld oben"
+msgstr "Suchen Sie nach Termine mit dem Eingabefeld oben"
 
 #: ../data/ui/time-selector.ui.h:1
 msgid "00:00"
@@ -181,12 +182,12 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:381
 #: ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "AM"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:384
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:381
 #: ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "PM"
@@ -200,7 +201,7 @@ msgid "Year"
 msgstr "Jahr"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:232 ../src/gcal-year-view.c:380
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
 msgid "Today"
 msgstr "Heute"
 
@@ -214,33 +215,37 @@ msgstr "Mehr Details"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
-msgstr "Keine Ereignisse"
+msgstr "Keine Termine"
 
 #: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
 msgid "Add Event…"
-msgstr "Ereignis hinzufügen …"
+msgstr "Termin hinzufügen …"
 
-#: ../src/gcal-application.c:95
+#: ../src/gcal-application.c:102
 msgid "Display version number"
 msgstr "Versionsnummer anzeigen"
 
-#: ../src/gcal-application.c:100
+#: ../src/gcal-application.c:107
 msgid "Open calendar on the passed date"
 msgstr "Kalender am vergangenen Datum öffnen"
 
-#: ../src/gcal-application.c:327
+#: ../src/gcal-application.c:112
+msgid "Open calendar showing the passed event"
+msgstr "Kalender am vergangenen Termin öffnen"
+
+#: ../src/gcal-application.c:332
 msgid "- Calendar management"
 msgstr "- Kalenderverwaltung"
 
-#: ../src/gcal-application.c:446
+#: ../src/gcal-application.c:499
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id Die Kalender-Autoren"
 
-#: ../src/gcal-application.c:452
+#: ../src/gcal-application.c:505
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Die Kalender-Autoren"
 
-#: ../src/gcal-application.c:465
+#: ../src/gcal-application.c:518
 msgid "translator-credits"
 msgstr ""
 "Mario Blättermann <mario.blaettermann@gmail.com>\n"
@@ -250,27 +255,27 @@ msgstr ""
 msgid "Day"
 msgstr "Tag"
 
-#: ../src/gcal-edit-dialog.c:638
+#: ../src/gcal-edit-dialog.c:634
 msgid "Save"
 msgstr "Speichern"
 
-#: ../src/gcal-edit-dialog.c:823
+#: ../src/gcal-edit-dialog.c:818
 msgid "Unnamed event"
-msgstr "Unbenanntes Ereignis"
+msgstr "Unbenannter Termin"
 
-#: ../src/gcal-month-view.c:825
+#: ../src/gcal-month-view.c:826
 msgid "Other events"
-msgstr "Weitere Ereignisse"
+msgstr "Weitere Termine"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1177
+#: ../src/gcal-month-view.c:1209
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
-msgstr[0] "Weiteres Ereignis"
-msgstr[1] "Weitere %d Ereignisse"
+msgstr[0] "Weiterer Termin"
+msgstr[1] "Weitere %d Termine"
 
-#: ../src/gcal-search-view.c:383
+#: ../src/gcal-search-view.c:380
 #, c-format
 msgid "%.2d:%.2d %s"
 msgstr "%.2d:%.2d %s"
@@ -298,18 +303,22 @@ msgstr "Mittag"
 msgid "00:00 PM"
 msgstr "00:00 p. m."
 
-#: ../src/gcal-window.c:628
+#: ../src/gcal-window.c:636
 #, c-format
 msgid "New Event on %s"
-msgstr "Neues Ereignis am %s"
+msgstr "Neuer Termin am %s"
 
-#: ../src/gcal-window.c:1023
-msgid "Event deleted"
-msgstr "Ereignis gelöscht"
+#: ../src/gcal-window.c:1036
+msgid "Another event deleted"
+msgstr "Weiteren Termin gelöscht"
 
-#: ../src/gcal-window.c:1024
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
 msgid "Undo"
 msgstr "Rückgängig"
+
+#: ../src/gcal-window.c:1040
+msgid "Event deleted"
+msgstr "Termin gelöscht"
 
 #~ msgid "Unable to initialize GtkClutter"
 #~ msgstr "GtkClutter konnte nicht initialisiert werden"
