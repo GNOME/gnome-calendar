@@ -1,15 +1,15 @@
 # Finnish translation for gnome-calendar.
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
-# Jiri Grönroos <jiri.gronroos+l10n@iki.fi>, 2013.
+# Jiri Grönroos <jiri.gronroos+l10n@iki.fi>, 2013, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-08-03 14:16+0000\n"
-"PO-Revision-Date: 2013-09-04 22:26+0300\n"
+"POT-Creation-Date: 2015-02-16 14:32+0000\n"
+"PO-Revision-Date: 2015-03-03 00:06+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
 "Language: fi\n"
@@ -19,14 +19,53 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Gtranslator 2.91.6\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:158
-#: ../src/gcal-application.c:396
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
 msgid "Calendar"
 msgstr "Kalenteri"
 
-#: ../data/gnome-calendar.desktop.in.in.h:2
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+#| msgid "Calendar"
+msgid "Calendar for GNOME"
+msgstr "Kalenteri Gnome-työpöydälle"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"Gnomen kalenteri on yksinkertainen ja nätti sovellus tapahtumien sekä "
+"aikataulujen hallintaan."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"Tavoitteena on ollut löytää sopiva tasapaino ominaisuuksien sekä "
+"käytettävyyden välillä. Ei liikaa, ei liian vähän. Kalenterin käyttö on yhtä "
+"helppoa kuin aina ennenkin!"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "Etsi tapahtumia"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+#| msgid "- Calendar management"
+msgid "Calendar management"
+msgstr "Kalenterin hallinta"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
 msgstr "Hallitse aikatauluasi kalenterin avulla"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Calendar;Event;Reminder;Kalenteri;Tapahtuma;Muistutus;"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
@@ -60,224 +99,294 @@ msgstr "Aktiivisen näkymän tyyppi"
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Aktiivisen näkymän tyyppi, oletusarvo on: monthly view"
 
-#: ../src/gcal-application.c:87
-msgid "Display version number"
-msgstr "Näytä versionumero"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "Luettelo käytöstä poistetuista lähteistä"
 
-#: ../src/gcal-application.c:204
-msgid "Unable to initialize GtkClutter"
-msgstr "GtkClutterin alustus ei onnistunut"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr ""
+"Kalenterin viimeisen käynnistyskerran aikana käytöstä poistetut lähteet"
 
-#: ../src/gcal-application.c:245
-msgid "- Calendar management"
-msgstr "- Kalenterin hallinta"
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "Peru"
 
-#: ../src/gcal-application.c:300
-msgid "Weeks"
-msgstr "Viikot"
-
-#: ../src/gcal-application.c:301
-msgid "Months"
-msgstr "Kuukaudet"
-
-#: ../src/gcal-application.c:302
-msgid "Years"
-msgstr "Vuodet"
-
-#: ../src/gcal-application.c:304
-msgid "View as"
-msgstr "Näytä"
-
-#: ../src/gcal-application.c:312
-msgid "About"
-msgstr "Tietoja"
-
-#: ../src/gcal-application.c:320
-msgid "Quit"
-msgstr "Lopeta"
-
-#: ../src/gcal-application.c:384
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Tekijänoikeus © %Id Kalenterin tekijät"
-
-#: ../src/gcal-application.c:390
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Tekijänoikeus © %Id–%Id Kalenterin tekijät"
-
-#: ../src/gcal-application.c:403
-msgid "translator-credits"
-msgstr "Jiri Grönroos"
-
-#: ../src/gcal-date-entry.c:162
-msgid "Change the date"
-msgstr "Vaihda päivää"
-
-#: ../src/gcal-edit-dialog.c:156
-msgid "Event Details"
-msgstr "Tapahtuman tiedot"
-
-#. Summary, title
-#: ../src/gcal-edit-dialog.c:171
-msgid "Title"
-msgstr "Nimi"
-
-#. Start date and time
-#: ../src/gcal-edit-dialog.c:199
-msgid "Starts"
-msgstr "Alkaa"
-
-#: ../src/gcal-edit-dialog.c:215
-msgid "All day"
-msgstr "Koko päivä"
-
-#. End date and time
-#: ../src/gcal-edit-dialog.c:221
-msgid "Ends"
-msgstr "Päättyy"
-
-#. Location, location, location
-#: ../src/gcal-edit-dialog.c:238
-msgid "Location"
-msgstr "Sijainti"
-
-#. Notes, description
-#: ../src/gcal-edit-dialog.c:252
-msgid "Notes"
-msgstr "Kommentit"
-
-#. done button
-#. done
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-searchbar.c:158
-#: ../src/gcal-toolbar.c:611
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
 msgid "Done"
 msgstr "Valmis"
 
-#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:291
-msgid "New Event"
-msgstr "Uusi tapahtuma"
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "Nimi"
 
-#: ../src/gcal-event-overlay.c:162
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "Alkaa"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "Päättyy"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "Kommentit"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "Sijainti"
+
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:387
+msgid "All day"
+msgstr "Koko päivä"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "Poista tapahtuma"
+
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "Lisä_ä tapahtuma…"
+
+#: ../data/ui/menus.ui.h:2
+#| msgid "Search..."
+msgid "_Search…"
+msgstr "_Etsi…"
+
+#: ../data/ui/menus.ui.h:3
+#| msgid "About"
+msgid "_About"
+msgstr "_Tietoja"
+
+#: ../data/ui/menus.ui.h:4
+#| msgid "Quit"
+msgid "_Quit"
+msgstr "_Lopeta"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "_Synkronoi"
+
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "Tuloksia ei löytynyt"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "Etsi tapahtumia yläpuolelta."
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:381
+#: ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "AM"
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:381
+#: ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "PM"
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "Kuukausi"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
+msgstr "Vuosi"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+msgid "Today"
+msgstr "Tänään"
+
+#: ../data/ui/window.ui.h:5
 msgid "Create"
 msgstr "Luo"
 
-#: ../src/gcal-event-overlay.c:171
-msgid "More details"
+#: ../data/ui/window.ui.h:6
+#| msgid "More details"
+msgid "More Details"
 msgstr "Lisätietoja"
 
-#: ../src/gcal-event-overlay.c:185
-msgid "What (e.g. Alien Invasion)"
-msgstr "Mitä (esim. muista maito)"
+#: ../data/ui/year-view.ui.h:2
+#| msgid "New Event"
+msgid "No events"
+msgstr "Ei tapahtumia"
 
-#: ../src/gcal-event-overlay.c:507
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+msgid "Add Event…"
+msgstr "Lisää tapahtuma…"
+
+#: ../src/gcal-application.c:102
+msgid "Display version number"
+msgstr "Näytä versionumero"
+
+#: ../src/gcal-application.c:107
+msgid "Open calendar on the passed date"
+msgstr "Avaa kalenteri menneeseen päivään"
+
+#: ../src/gcal-application.c:112
+msgid "Open calendar showing the passed event"
+msgstr "Avaa kalenteri näyttäen mennyt tapahtuma"
+
+#: ../src/gcal-application.c:332
+msgid "- Calendar management"
+msgstr "- Kalenterin hallinta"
+
+#: ../src/gcal-application.c:499
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Tekijänoikeus © %Id Kalenterin tekijät"
+
+#: ../src/gcal-application.c:505
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Tekijänoikeus © %Id–%Id Kalenterin tekijät"
+
+#: ../src/gcal-application.c:518
+msgid "translator-credits"
+msgstr "Jiri Grönroos"
+
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "Päivä"
+
+#: ../src/gcal-edit-dialog.c:634
+msgid "Save"
+msgstr "Tallenna"
+
+#: ../src/gcal-edit-dialog.c:818
+msgid "Unnamed event"
+msgstr "Nimetön tapahtuma"
+
+#: ../src/gcal-month-view.c:826
+msgid "Other events"
+msgstr "Muut tapahtumat"
+
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1209
+#, c-format
+#| msgid "New Event"
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Muu tapahtuma"
+msgstr[1] "Muut %d tapahtumaa"
+
+#: ../src/gcal-search-view.c:380
+#, c-format
+msgid "%.2d:%.2d %s"
+msgstr "%.2d:%.2d %s"
+
+#: ../src/gcal-time-selector.c:96
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d:%.2d AM"
+
+#: ../src/gcal-time-selector.c:98
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d:%.2d PM"
+
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
+msgid "Midnight"
+msgstr "Keskiyö"
+
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
+msgid "Noon"
+msgstr "Keskipäivä"
+
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "00:00 PM"
+
+#: ../src/gcal-window.c:636
 #, c-format
 msgid "New Event on %s"
 msgstr "Uusi tapahtuma - %s"
 
-#: ../src/gcal-event-overlay.c:524
-#, c-format
-msgid "New Event from %s to %s"
-msgstr "Uusi tapahtuma -  %s-%s"
+#: ../src/gcal-window.c:1036
+#| msgid "Event deleted"
+msgid "Another event deleted"
+msgstr "Toinen tapahtuma poistettu"
 
-#: ../src/gcal-manager.c:1506
-msgid "Notification"
-msgstr "Ilmoitus"
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
+msgid "Undo"
+msgstr "Kumoa"
 
-#: ../src/gcal-manager.c:1508
-msgid "Email"
-msgstr "Sähköposti"
-
-#: ../src/gcal-manager.c:1522
-msgid "days"
-msgstr "päivää"
-
-#: ../src/gcal-manager.c:1528
-msgid "weeks"
-msgstr "viikkoa"
-
-#: ../src/gcal-manager.c:1534
-msgid "hours"
-msgstr "tuntia"
-
-#: ../src/gcal-manager.c:1540
-msgid "minutes"
-msgstr "minuuttia"
-
-#: ../src/gcal-manager.c:1552
-msgid "before"
-msgstr "ennen"
-
-#. Here translators should put the widgest letter in their alphabet, this
-#. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1026 ../src/gcal-week-view.c:1083
-#: ../src/gcal-year-view.c:925
-msgid "WWW 99 - WWW 99"
-msgstr "WWW 99 - WWW 99"
-
-#: ../src/gcal-searchbar.c:179
-msgid "Search..."
-msgstr "Etsi..."
-
-#: ../src/gcal-time-entry.c:126
-msgid "Change the time"
-msgstr "Vaihda aikaa"
-
-#. day
-#: ../src/gcal-toolbar.c:317
-msgid "Day"
-msgstr "Päivä"
-
-#. week
-#: ../src/gcal-toolbar.c:334 ../src/gcal-week-view.c:1097
-msgid "Week"
-msgstr "Viikko"
-
-#. month
-#: ../src/gcal-toolbar.c:351
-msgid "Month"
-msgstr "Kuukausi"
-
-#. year
-#: ../src/gcal-toolbar.c:368
-msgid "Year"
-msgstr "Vuosi"
-
-#. list
-#: ../src/gcal-toolbar.c:385
-msgid "List"
-msgstr "Luettelo"
-
-#: ../src/gcal-toolbar.c:465
-msgid "Back"
-msgstr "Takaisin"
-
-#. reset morphing edit_button
-#: ../src/gcal-toolbar.c:486 ../src/gcal-toolbar.c:498
-#: ../src/gcal-toolbar.c:616
-msgid "Edit"
-msgstr "Muokkaa"
-
-#: ../src/gcal-week-view.c:1283
-msgid "AM"
-msgstr "AM"
-
-#: ../src/gcal-week-view.c:1283
-msgid "PM"
-msgstr "PM"
-
-#: ../src/gcal-week-view.c:1286 ../src/gcal-week-view.c:1358
-msgid "Midnight"
-msgstr "Keskiyö"
-
-#: ../src/gcal-week-view.c:1288 ../src/gcal-week-view.c:1361
-msgid "Noon"
-msgstr "Keskipäivä"
-
-#: ../src/gcal-window.c:1378
+#: ../src/gcal-window.c:1040
 msgid "Event deleted"
 msgstr "Tapahtuma poistettu"
 
-#: ../src/gcal-year-view.c:929
-#, c-format
-msgid "Year %d"
-msgstr "Vuosi %d"
+#~ msgid "Unable to initialize GtkClutter"
+#~ msgstr "GtkClutterin alustus ei onnistunut"
+
+#~ msgid "Weeks"
+#~ msgstr "Viikot"
+
+#~ msgid "Months"
+#~ msgstr "Kuukaudet"
+
+#~ msgid "Years"
+#~ msgstr "Vuodet"
+
+#~ msgid "View as"
+#~ msgstr "Näytä"
+
+#~ msgid "Change the date"
+#~ msgstr "Vaihda päivää"
+
+#~ msgid "Event Details"
+#~ msgstr "Tapahtuman tiedot"
+
+#~ msgid "What (e.g. Alien Invasion)"
+#~ msgstr "Mitä (esim. muista maito)"
+
+#~ msgid "New Event from %s to %s"
+#~ msgstr "Uusi tapahtuma -  %s-%s"
+
+#~ msgid "Notification"
+#~ msgstr "Ilmoitus"
+
+#~ msgid "Email"
+#~ msgstr "Sähköposti"
+
+#~ msgid "days"
+#~ msgstr "päivää"
+
+#~ msgid "weeks"
+#~ msgstr "viikkoa"
+
+#~ msgid "hours"
+#~ msgstr "tuntia"
+
+#~ msgid "minutes"
+#~ msgstr "minuuttia"
+
+#~ msgid "before"
+#~ msgstr "ennen"
+
+#~ msgid "WWW 99 - WWW 99"
+#~ msgstr "WWW 99 - WWW 99"
+
+#~ msgid "Change the time"
+#~ msgstr "Vaihda aikaa"
+
+#~ msgid "Week"
+#~ msgstr "Viikko"
+
+#~ msgid "List"
+#~ msgstr "Luettelo"
+
+#~ msgid "Back"
+#~ msgstr "Takaisin"
+
+#~ msgid "Edit"
+#~ msgstr "Muokkaa"
+
+#~ msgid "Year %d"
+#~ msgstr "Vuosi %d"
