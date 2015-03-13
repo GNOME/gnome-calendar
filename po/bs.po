@@ -1,0 +1,320 @@
+# Bosnian translation for bosnianuniversetranslation
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the bosnianuniversetranslation package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: bosnianuniversetranslation\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-02-27 07:10+0000\n"
+"PO-Revision-Date: 2015-03-02 08:45+0100\n"
+"Last-Translator: Samir Ribić <Unknown>\n"
+"Language-Team: Bosnian <bs@li.org>\n"
+"Language: bs\n"
+"MIME-Version: 1.0\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%"
+"10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.7.4\n"
+"X-Launchpad-Export-Date: 2015-02-15 06:18+0000\n"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
+msgid "Calendar"
+msgstr "Kalendar"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+msgid "Calendar for GNOME"
+msgstr "Kalendar za GNOME"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"GNOME Kalendar je jednostavna i lijepa kalendarska aplikacija  dizajnirana "
+"da se savršeno uklapa u GNOME desktop. Koristeći komponente od kojih je "
+"GNOME desktop je izgrađena, Kalendar se lijepo integrira sa GNOME "
+"ekosistemom."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"Plan nam je naći savršenu ravnotežu između mogućnosti i korisnički "
+"orijentsane upotrebljivosti. Ni viška ni manjka. Ako vam je ugodno koristiti "
+"kalendar, koristićete ga godinama."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "Traži događaje"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Calendar management"
+msgstr "- Upravljanje kalendarom"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr "Pristup,i upravljanje kalendarom"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Kalendar;Događaj;Podsjetnik;"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Uvećan prozor"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Stanje uvećanog prozora"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Window size"
+msgstr "Veličina prozora"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Veličina prozora(sirina  i visina)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Pozicija prozora"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Pozicija prozora (x i y)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
+msgid "Type of the active view"
+msgstr "Tip aktivnog pogleda"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
+msgid "Type of the active window view, default value is: monthly view"
+msgstr "Tip aktivnog pogleda prozora,zadana vrijednost je:mjesečni pregled"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "Spisak isključenih izvora"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "Izvori koji su isključeni prilikom posljednjeg pokretanja kalendara"
+
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "Otkaži"
+
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
+msgid "Done"
+msgstr "Završeno"
+
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "Naziv"
+
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "Počinje"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "Završava"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "Bilješke"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "Lokacija"
+
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:374
+msgid "All day"
+msgstr "Čitav dan"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "Obriši događaj"
+
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "Dodaj do_gađaj..."
+
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "_Potraži…"
+
+#: ../data/ui/menus.ui.h:3
+msgid "_About"
+msgstr "_O programu"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Quit"
+msgstr "_Izađi"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "_Usaglasi"
+
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "Nema nađenih rezultata"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "Koristi gornji unos za traženje događaja"
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:368
+#: ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "AM"
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:368
+#: ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "PM"
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "Mjesec"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
+msgstr "Godina"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+msgid "Today"
+msgstr "Danas"
+
+#: ../data/ui/window.ui.h:5
+msgid "Create"
+msgstr "Napravi"
+
+#: ../data/ui/window.ui.h:6
+msgid "More Details"
+msgstr "Više pojedinosti"
+
+#: ../data/ui/year-view.ui.h:2
+msgid "No events"
+msgstr "Bez događaja"
+
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+msgid "Add Event…"
+msgstr "Dodaj događaj...."
+
+#: ../src/gcal-application.c:102
+msgid "Display version number"
+msgstr "Prikaži broj verzije"
+
+#: ../src/gcal-application.c:107
+msgid "Open calendar on the passed date"
+msgstr "Otvara kalendar za prošli datum"
+
+#: ../src/gcal-application.c:112
+msgid "Open calendar showing the passed event"
+msgstr "Otvori kalendar koji pokazuje prošle događaje"
+
+#: ../src/gcal-application.c:332
+msgid "- Calendar management"
+msgstr "- Upravljanje kalendarom"
+
+#: ../src/gcal-application.c:499
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Autorska prava © %Id Autori kalendara"
+
+#: ../src/gcal-application.c:505
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Autorska prava © %Id–%Id Autori kalendara"
+
+#: ../src/gcal-application.c:518
+msgid "translator-credits"
+msgstr ""
+"   Dijelila Halać https://launchpad.net/~delila94\n"
+"  Samir Ribić https://launchpad.net/~megaribi"
+
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "Dan"
+
+#: ../src/gcal-edit-dialog.c:634
+msgid "Save"
+msgstr "Sačuvaj"
+
+#: ../src/gcal-edit-dialog.c:818
+msgid "Unnamed event"
+msgstr "Neimenovani događaj"
+
+#: ../src/gcal-month-view.c:826
+msgid "Other events"
+msgstr "Drugi događaji"
+
+#. TODO: Warning in some languages this string can bje too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1209
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Drugi %d događaj"
+msgstr[1] "Druga %d događaja"
+msgstr[2] "Drugih %d događaja"
+
+#: ../src/gcal-search-view.c:367
+#, c-format
+msgid "%.2d:%.2d %s"
+msgstr "%.2d:%.2d %s"
+
+#: ../src/gcal-time-selector.c:96
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d:%.2d prp"
+
+#: ../src/gcal-time-selector.c:98
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d:%.2d pop"
+
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
+msgid "Midnight"
+msgstr "Ponoć"
+
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
+msgid "Noon"
+msgstr "Podne"
+
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "00:00 pop"
+
+#: ../src/gcal-window.c:636
+#, c-format
+msgid "New Event on %s"
+msgstr "Novi događaj na %s"
+
+#: ../src/gcal-window.c:1036
+msgid "Another event deleted"
+msgstr "Još jedan događaj je obrisan"
+
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
+msgid "Undo"
+msgstr "Poništi"
+
+#: ../src/gcal-window.c:1040
+msgid "Event deleted"
+msgstr "Događaj obrisan"
