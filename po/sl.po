@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
 "POT-Creation-Date: 2015-03-15 07:00+0000\n"
-"PO-Revision-Date: 2015-03-15 13:18+0100\n"
+"PO-Revision-Date: 2015-03-15 13:25+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -269,10 +269,10 @@ msgstr "Drugi dogodki"
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
-msgstr[0] "Drugi dogodki"
-msgstr[1] "Drug dogodek"
-msgstr[2] "Druga dogodka"
-msgstr[3] "Drugi dogodki"
+msgstr[0] "Drugih %d dogodkov"
+msgstr[1] "Drug %d dogodek"
+msgstr[2] "Druga %d dogodka"
+msgstr[3] "Drugi %d dogodki"
 
 #: ../src/gcal-search-view.c:367
 #, c-format
