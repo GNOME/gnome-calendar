@@ -1325,7 +1325,9 @@ gcal_year_view_init (GcalYearView *self)
   self->priv->selected_data = g_new0 (ButtonData, 1);
 
   self->priv->start_selected_date = g_new0 (icaltimetype, 1);
+  self->priv->start_selected_date->zone = e_cal_util_get_system_timezone ();
   self->priv->end_selected_date = g_new0 (icaltimetype, 1);
+  self->priv->end_selected_date->zone = e_cal_util_get_system_timezone ();
 
   gtk_list_box_set_header_func (GTK_LIST_BOX (self->priv->events_sidebar), update_sidebar_headers, self, NULL);
   gtk_list_box_set_sort_func (GTK_LIST_BOX (self->priv->events_sidebar), sidebar_sort_func, NULL, NULL);
