@@ -78,6 +78,10 @@ sort_event_data (gconstpointer a,
   e_cal_component_get_dtstart (comp1, &date1);
   e_cal_component_get_dtstart (comp2, &date2);
 
+  if (date1.tzid != NULL)
+    date1.value->zone = icaltimezone_get_builtin_timezone_from_tzid (date1.tzid);
+  if (date2.tzid != NULL)
+    date2.value->zone = icaltimezone_get_builtin_timezone_from_tzid (date2.tzid);
   result = icaltime_compare_with_current (date1.value, date2.value, user_data);
 
   e_cal_component_free_datetime (&date1);
@@ -213,10 +217,14 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
   gint i;
   gchar *uuid, *desc;
   const gchar* location;
-  gchar start_date [64];
-  ECalComponentText summary;
+
+  g_autoptr(GTimeZone) tz;
+  g_autoptr (GDateTime) datetime;
+  g_autoptr (GDateTime) local_datetime;
   ECalComponentDateTime dtstart;
-  struct tm tm_date;
+  gchar *start_date;
+
+  ECalComponentText summary;
   GdkRGBA color;
   GVariantBuilder abuilder, builder;
   GVariant *icon_variant;
@@ -245,9 +253,22 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
       g_variant_unref (icon_variant);
 
       e_cal_component_get_dtstart (data->event_component, &dtstart);
-      tm_date = icaltimetype_to_tm (dtstart.value);
+
+      if (dtstart.tzid != NULL)
+        tz = g_time_zone_new (dtstart.tzid);
+      else if (dtstart.value->zone != NULL)
+        tz = g_time_zone_new (icaltimezone_get_tzid ((icaltimezone*) dtstart.value->zone));
+      else
+        tz = g_time_zone_new_local ();
+
+      datetime = g_date_time_new (tz,
+                                  dtstart.value->year, dtstart.value->month, dtstart.value->day,
+                                  dtstart.value->hour, dtstart.value->minute, dtstart.value->second);
+      local_datetime = g_date_time_to_local (datetime);
+
       /* FIXME: respect 24h time format */
-      e_utf8_strftime_fix_am_pm (start_date, 64, (dtstart.value->is_date == 1) ? "%x" : "%c", &tm_date);
+      start_date = g_date_time_format (local_datetime,
+                                       (dtstart.value->is_date == 1) ? "%x" : "%c");
       e_cal_component_free_datetime (&dtstart);
 
       e_cal_component_get_location (data->event_component, &location);
@@ -255,7 +276,9 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
         desc = g_strconcat (start_date, ". ", location, NULL);
       else
         desc = g_strdup (start_date);
+
       g_variant_builder_add (&builder, "{sv}", "description", g_variant_new_string (desc));
+      g_free (start_date);
       g_free (desc);
 
       g_variant_builder_add_value (&abuilder, g_variant_builder_end (&builder));
@@ -283,6 +306,8 @@ activate_result_cb (GcalShellSearchProvider  *search_provider,
 
   data = gcal_manager_get_event_from_shell_search (priv->manager, result);
   e_cal_component_get_dtstart (data->event_component, &dtstart);
+  if (dtstart.tzid != NULL)
+    dtstart.value->zone = icaltimezone_get_builtin_timezone_from_tzid (dtstart.tzid);
 
   gcal_application_set_uuid (GCAL_APPLICATION (application), result);
   gcal_application_set_initial_date (GCAL_APPLICATION (application), dtstart.value);
