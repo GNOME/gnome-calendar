@@ -906,7 +906,8 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
     {
       gcal_date_selector_set_date (GCAL_DATE_SELECTOR (priv->end_date_selector),
                                    dtstart.value->day, dtstart.value->month, dtstart.value->year);
-      gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->end_time_selector), dtstart.value->hour, dtstart.value->minute);
+      gcal_time_selector_set_time (GCAL_TIME_SELECTOR (priv->end_time_selector),
+                                   dtstart.value->hour, dtstart.value->minute);
     }
 
   e_cal_component_free_datetime (&dtstart);
