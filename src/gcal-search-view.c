@@ -231,6 +231,10 @@ sort_by_event (GtkListBoxRow *row1,
   e_cal_component_get_dtstart (ev1->event_component, &date1);
   e_cal_component_get_dtstart (ev2->event_component, &date2);
 
+  if (date1.tzid != NULL)
+    date1.value->zone = icaltimezone_get_builtin_timezone_from_tzid (date1.tzid);
+  if (date2.tzid != NULL)
+    date2.value->zone = icaltimezone_get_builtin_timezone_from_tzid (date2.tzid);
   result = icaltime_compare_with_current (date1.value, date2.value, &(priv->current_utc_date));
 
   e_cal_component_free_datetime (&date1);
@@ -300,7 +304,9 @@ make_row_for_event_data (GcalSearchView  *view,
 {
   GcalSearchViewPrivate *priv;
 
-  GDateTime *datetime;
+  g_autoptr(GTimeZone) tz;
+  g_autoptr (GDateTime) datetime;
+  g_autoptr (GDateTime) local_datetime;
   ECalComponentDateTime comp_dt;
   ECalComponentText summary;
   GdkRGBA color;
@@ -351,9 +357,18 @@ make_row_for_event_data (GcalSearchView  *view,
   gtk_widget_set_hexpand (name_box, TRUE);
 
   /* start date & time */
-  datetime = g_date_time_new_local (comp_dt.value->year, comp_dt.value->month, comp_dt.value->day, comp_dt.value->hour,
-                                    comp_dt.value->minute, comp_dt.value->second);
-  text = g_date_time_format (datetime, "%x");
+  if (comp_dt.tzid != NULL)
+    tz = g_time_zone_new (comp_dt.tzid);
+  else if (comp_dt.value->zone != NULL)
+    tz = g_time_zone_new (icaltimezone_get_tzid ((icaltimezone*) comp_dt.value->zone));
+  else
+    tz = g_time_zone_new_local ();
+
+  datetime = g_date_time_new (tz,
+                              comp_dt.value->year, comp_dt.value->month, comp_dt.value->day,
+                              comp_dt.value->hour, comp_dt.value->minute, comp_dt.value->second);
+  local_datetime = g_date_time_to_local (datetime);
+  text = g_date_time_format (local_datetime, "%x");
   date_label = gtk_label_new (text);
   gtk_label_set_width_chars (GTK_LABEL (date_label), 11);
   g_free (text);
@@ -361,11 +376,7 @@ make_row_for_event_data (GcalSearchView  *view,
   /* show 'all day' instead of 00:00 */
   if (comp_dt.value->is_date == 0)
     {
-      if (priv->format_24h)
-        text = g_strdup_printf ("%.2d:%.2d", comp_dt.value->hour, comp_dt.value->minute);
-      else
-        text = g_strdup_printf (_("%.2d:%.2d %s"), comp_dt.value->hour % 12, comp_dt.value->minute,
-                                comp_dt.value->hour < 12 ? _("AM") : _("PM"));
+      text = g_date_time_format (local_datetime, priv->format_24h ? "%R" : "%r");
       time_label = gtk_label_new (text);
       g_free (text);
     }
@@ -412,7 +423,6 @@ make_row_for_event_data (GcalSearchView  *view,
 
   gtk_widget_show_all (row);
 
-  g_date_time_unref (datetime);
   e_cal_component_free_datetime (&comp_dt);
   g_object_unref (pixbuf);
   return row;
