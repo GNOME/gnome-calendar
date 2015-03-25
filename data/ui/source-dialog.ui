@@ -405,9 +405,6 @@
         </child>
       </object>
     </child>
-    <child type="label_item">
-      <placeholder/>
-    </child>
     <style>
       <class name="details-frame"/>
     </style>
