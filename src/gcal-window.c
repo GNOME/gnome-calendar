@@ -1292,6 +1292,8 @@ remove_event (GtkWidget  *notification,
           g_error_free (error);
         }
     }
+
+
 }
 
 static void
@@ -1336,7 +1338,11 @@ undo_remove_action (GtkButton *button,
       priv->removed_source = NULL;
     }
 
-  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), FALSE);
+  if (priv->event_to_delete != NULL || priv->removed_source != NULL)
+    {
+      g_source_remove (priv->notification_timeout);
+      hide_notification (GCAL_WINDOW (user_data), NULL);
+    }
 
 }
 
