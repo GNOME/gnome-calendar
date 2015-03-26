@@ -495,12 +495,64 @@ static gboolean
 validate_url_cb (GcalSourceDialog *dialog)
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
+  ESourceAuthentication *auth;
+  ESourceExtension *ext;
+  ESourceWebdav *webdav;
+  ESource *source;
+  gchar *host, *path;
 
   priv->validate_url_resource_id = 0;
+  host = path = NULL;
 
+  /**
+   * Remove any reminescent ESources
+   * cached before.
+   */
+  if (priv->remote_source != NULL)
+    g_clear_pointer (&(priv->remote_source), g_object_unref);
+
+  // Get the hostname and file path from the server
+  uri_get_fields (gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)), NULL, &host, &path);
+
+  g_debug ("[source-dialog] host: '%s', path: '%s'", host, path);
+
+  if (path == NULL || host == NULL)
+    goto out;
+
+  // Pulse the entry while it performs the check
   priv->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
 
-  g_message ("stub");
+  /**
+   * Create the new source and add the needed
+   * extensions.
+   */
+  source = e_source_new (NULL, NULL, NULL);
+  e_source_set_parent (source, "webcal-stub");
+
+  ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
+  e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "webcal");
+
+  // Authentication
+  auth = e_source_get_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
+  e_source_authentication_set_host (auth, host);
+
+  // Webdav
+  webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
+  e_source_webdav_set_resource_path (webdav, path);
+
+  /* Set the private source so it saves at closing */
+  priv->remote_source = source;
+
+  /* Update buttons */
+  gtk_widget_set_sensitive (priv->add_button, source != NULL);
+
+  setup_source_details (dialog, source);
+out:
+  if (host)
+    g_free (host);
+
+  if (path)
+    g_free (path);
 
   return FALSE;
 }
