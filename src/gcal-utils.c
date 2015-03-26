@@ -624,4 +624,65 @@ fix_popover_menu_icons (GtkPopover *popover)
   g_list_free (menu_section_box_children);
 }
 
+/**
+ * uri_get_fields:
+ *
+ * Split the given URI into the
+ * fields.
+ *
+ * Returns: #TRUE if @uri could be parsed, #FALSE otherwise
+ */
+gboolean
+uri_get_fields (const gchar  *uri,
+                gchar       **schema,
+                gchar       **host,
+                gchar       **path)
+{
+  GRegex *regex;
+  GMatchInfo *match;
+  gboolean valid;
 
+  g_return_val_if_fail (uri != NULL, FALSE);
+
+  match = NULL;
+  valid = FALSE;
+
+  regex = g_regex_new ("([a-zA-Z0-9\\+\\.\\-]*):\\/\\/{0,1}([-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b)([-a-zA-Z0-9@:%_\\+.//=]*)",
+                       G_REGEX_CASELESS, 0, NULL);
+
+  /*
+   * Retrieved matching URI. The whole url is
+   * checked and the regex groups are:
+   * 1. schema
+   * 2. host
+   * 3. server path
+   */
+  if (g_regex_match (regex, uri, 0, &match))
+    {
+      valid = TRUE;
+
+      if (schema)
+        *schema = g_match_info_fetch (match, 1);
+
+      if (host)
+        *host = g_match_info_fetch (match, 2);
+
+      if (path)
+        *path = g_match_info_fetch (match, 3);
+    }
+  else
+    {
+      if (schema)
+        *schema = NULL;
+
+      if (host)
+        *host = NULL;
+
+      if (path)
+        *path = NULL;
+    }
+
+  g_match_info_free (match);
+  g_regex_unref (regex);
+  return valid;
+}
