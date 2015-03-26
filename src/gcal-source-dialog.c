@@ -479,6 +479,7 @@ validate_url_cb (GcalSourceDialog *dialog)
   ESourceWebdav *webdav;
   ESource *source;
   gchar *host, *path;
+  gboolean uri_valid;
 
   priv->validate_url_resource_id = 0;
   host = path = NULL;
@@ -491,11 +492,11 @@ validate_url_cb (GcalSourceDialog *dialog)
     g_clear_pointer (&(priv->remote_source), g_object_unref);
 
   // Get the hostname and file path from the server
-  uri_get_fields (gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)), NULL, &host, &path);
+  uri_valid = uri_get_fields (gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)), NULL, &host, &path);
 
   g_debug ("[source-dialog] host: '%s', path: '%s'", host, path);
 
-  if (path == NULL || host == NULL)
+  if (host == NULL || !uri_valid)
     goto out;
 
   /**
