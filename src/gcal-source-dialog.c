@@ -105,6 +105,8 @@ static void       calendar_file_selected                (GtkFileChooserButton *b
 static void       setup_source_details                 (GcalSourceDialog     *dialog,
                                                         ESource              *source);
 
+static gboolean   pulse_web_entry                       (GcalSourceDialog    *dialog);
+
 static void       url_entry_text_changed                (GObject             *object,
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
@@ -419,6 +421,25 @@ setup_source_details (GcalSourceDialog *dialog,
 }
 
 /**
+ * pulse_web_entry:
+ *
+ * Update the url's entry with a pulse fraction.
+ *
+ * Returns: FALSE
+ */
+static gboolean
+pulse_web_entry (GcalSourceDialog *dialog)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+
+  gtk_entry_progress_pulse (GTK_ENTRY (priv->calendar_address_entry));
+
+  priv->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
+
+  return FALSE;
+}
+
+/**
  * url_entry_text_changed:
  *
  * Performs a validation of the URL
@@ -498,6 +519,9 @@ validate_url_cb (GcalSourceDialog *dialog)
 
   if (host == NULL || !uri_valid)
     goto out;
+
+  // Pulse the entry while it performs the check
+  priv->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
 
   /**
    * Create the new source and add the needed
