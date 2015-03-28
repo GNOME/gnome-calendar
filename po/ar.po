@@ -1,0 +1,315 @@
+# Arabic translation for gnome-calendar.
+# Copyright (C) 2015 gnome-calendar's COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-calendar package.
+#
+# Safa Alfulaij <safa1996alfulaij@gmail.com>, 2015.
+# Abderrahim Kitouni <a.kitouni@gmail.com>, 2015.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-calendar master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-03-27 07:19+0000\n"
+"PO-Revision-Date: 2015-03-28 11:59+0100\n"
+"Last-Translator: Abderrahim Kitouni <a.kitouni@gmail.com>\n"
+"Language-Team: العربية <doc@arabeyes.org>\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural= n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
+"&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
+"X-Generator: Gtranslator 2.91.6\n"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:515
+msgid "Calendar"
+msgstr "التقويم"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+msgid "Calendar for GNOME"
+msgstr "تطبيق تقويم لجنوم"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"«تقويم جنوم» هو تطبيق تقويم جميل وبسيط مصمّم ليلائم سطح مكتب جنوم تماما. "
+"يتكامل التقويم (باستخدام المكونات التي بُني عليها سطح مكتب جنوم) مع نظام جنوم "
+"البيئي."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"نسعى لإيجاد التوازن المثالي بين الميزات الجميلة وسهولة الاستخدام. لا زيادة "
+"ولا نقصان. ستشعر بالراحة وأنت تستخدم «التقويم» كما لو كنت تستخدمه لأعوام!"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "ابحث عن أحداث"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Calendar management"
+msgstr "إدارة التقويم"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr "انفذ إلى التقويم وأدره"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Calendar;Event;Reminder;تقويم;حدث;تذكير;"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "النافذة مكبرة"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "حالة كون النافذة مكبرة"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Window size"
+msgstr "حجم النافذة"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "حجم النافذة (العرض والارتفاع)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "موضع النافذة"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "موضع النافذة (س و ص)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
+msgid "Type of the active view"
+msgstr "نوع الحدث الجديد"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
+msgid "Type of the active window view, default value is: monthly view"
+msgstr "نوع منظور النافذة النشط، القيمة الافتراضية هي: المنظور الشهري"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "قائمة المصادر المعطلة"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "عُطّلت المصادر منذ آخر تشغيل للتقويم"
+
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "ألغِ"
+
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+msgid "Done"
+msgstr "تمّ"
+
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "العنوان"
+
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "يبدأ في"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "ينتهي في"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "ملاحظات"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "المكان"
+
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:385
+msgid "All day"
+msgstr "طوال اليوم"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "احذف الحدث"
+
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "أضف ح_دثًا..."
+
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "ا_بحث..."
+
+#: ../data/ui/menus.ui.h:3
+msgid "_About"
+msgstr "_عن"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Quit"
+msgstr "أ_نهِ"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "زا_من"
+
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "لم يُعثر على نتائج"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "استخدم المدخلة أعلاه للبحث عن الأحداث."
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "ص"
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "م"
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "الشهر"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
+msgstr "السنة"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+msgid "Today"
+msgstr "اليوم"
+
+#: ../data/ui/window.ui.h:5
+msgid "Create"
+msgstr "أنشئ"
+
+#: ../data/ui/window.ui.h:6
+msgid "More Details"
+msgstr "تفاصيل أكثر"
+
+#: ../data/ui/year-view.ui.h:2
+msgid "No events"
+msgstr "لا حدث"
+
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+msgid "Add Event…"
+msgstr "أضف حدثًا..."
+
+#: ../src/gcal-application.c:102
+msgid "Display version number"
+msgstr "اعرض رقم الإصدارة"
+
+#: ../src/gcal-application.c:107
+msgid "Open calendar on the passed date"
+msgstr "افتح التقويم عند التاريخ الممرر"
+
+#: ../src/gcal-application.c:112
+msgid "Open calendar showing the passed event"
+msgstr "افتح التقويم وأظهر التقويم الممرر"
+
+#: ../src/gcal-application.c:336
+msgid "- Calendar management"
+msgstr "- إدارة التقويم"
+
+#: ../src/gcal-application.c:503
+msgid "Copyright © %Id The Calendar authors"
+msgstr "حقوق النشر © %Id لمؤلفي التقويم"
+
+#: ../src/gcal-application.c:509
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "حقوق النشر © %Id–%Id لمؤلفي التقويم"
+
+#: ../src/gcal-application.c:522
+msgid "translator-credits"
+msgstr ""
+"فريق عربآيز للتّرجمة http://www.arabeyes.org:\n"
+"صفا الفليج\t<safa1996alfulaij@gmail.com>"
+
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "اليوم"
+
+#: ../src/gcal-edit-dialog.c:657
+msgid "Save"
+msgstr "احفظ"
+
+#: ../src/gcal-edit-dialog.c:841
+msgid "Unnamed event"
+msgstr "حدث غير مُعنوَن"
+
+#: ../src/gcal-month-view.c:820
+msgid "Other events"
+msgstr "أحداث أخرى"
+
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1203
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "لا أحداث أخرى"
+msgstr[1] "حدث آخر"
+msgstr[2] "حدثان آخران"
+msgstr[3] "%d أحداث أخرى"
+msgstr[4] "%d حدثًا آخرًا"
+msgstr[5] "%d حدث آخر"
+
+#: ../src/gcal-time-selector.c:96
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d:%.2d ص"
+
+#: ../src/gcal-time-selector.c:98
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d:%.2d م"
+
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
+msgid "Midnight"
+msgstr "منتصف اللّيل"
+
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
+msgid "Noon"
+msgstr "منتصف النّهار"
+
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "00:00 م"
+
+#: ../src/gcal-window.c:636
+#, c-format
+msgid "New Event on %s"
+msgstr "حدث جديد في %s"
+
+#: ../src/gcal-window.c:1036
+msgid "Another event deleted"
+msgstr "حُذف حدث آخر"
+
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
+msgid "Undo"
+msgstr "تراجع"
+
+#: ../src/gcal-window.c:1040
+msgid "Event deleted"
+msgstr "حُذف الحدث"
