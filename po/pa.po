@@ -2,14 +2,14 @@
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 #
-# A S Alam <aalam@users.sf.net>, 2013.
+# A S Alam <aalam@users.sf.net>, 2013, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2013-02-16 07:04+0000\n"
-"PO-Revision-Date: 2013-03-03 07:47+0530\n"
+"POT-Creation-Date: 2015-03-16 17:10+0000\n"
+"PO-Revision-Date: 2015-03-28 19:49-0500\n"
 "Last-Translator: A S Alam <aalam@users.sf.net>\n"
 "Language-Team: Punjabi/Panjabi <punjabi-users@lists.sf.net>\n"
 "Language: pa\n"
@@ -19,14 +19,56 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Lokalize 1.5\n"
 
-#: ../data/gnome-calendar.desktop.in.in.h:1 ../src/gcal-application.c:126
-#: ../src/gcal-application.c:293
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:515
 msgid "Calendar"
 msgstr "ਕੈਲੰਡਰ"
 
-#: ../data/gnome-calendar.desktop.in.in.h:2
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+#| msgid "Calendar"
+msgid "Calendar for GNOME"
+msgstr "ਗਨੋਮ ਲਈ ਕੈਲੰਡਰ"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"ਗਨੋਮ ਕੈਲੰਡਰ ਸਧਾਰਨ ਤੇ ਸੋਹਣੀ ਕੈਲੰਡਰ ਐਪਲੀਕੇਸ਼ਨ ਹੈ, ਜੋ ਕਿ ਗਨੋਮ ਡੈਸਕਟਾਪ ਵਿੱਚ ਫਿੱਟ "
+"ਹੋਣ ਲਈ "
+"ਤਿਆਰ ਕੀਤੀ ਗਈ ਹੈ। ਗਨੋਮ ਡੈਸਕਟਾਪ ਵਿੱਚ ਮੌਜੂਦ ਭਾਗਾਂ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਤਿਆਰ ਕੀਤੇ ਹੋਣ "
+"ਨਾਲ ਕੈਲੰਡਰ "
+"ਗਨੋਮ ਸਿਸਟਮ ਦੇ ਨਾਲ ਬਹੁਤ ਵਧੀਆ ਰੂਪ ਵਿੱਚ ਜੁੜਿਆ ਹੈ।"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"ਅਸੀਂ ਵਧੀਆ ਤਿਆਰ ਕੀਤੇ ਫੀਚਰਾਂ ਤੇ ਵਰਤੋਂਕਾਰ ਦੀ ਸੌਖ ਦੇ ਵਿਚਾਲੇ ਚੰਗਾ ਤਾਲਮੇਲ ਲੱਭਣ ਦੀ "
+"ਕੋਸ਼ਿਸ਼ ਕੀਤੀ ਹੈ। ਕੋਈ ਬਹਾਨਾ "
+"ਨਹੀਂ, ਕੋਈ ਕਮੀ ਨਹੀਂ। ਤੁਸੀਂ ਕੈਲੰਡਰ ਦੀ ਵਰਤੋਂ ਕਰਕੇ ਤੁਹਾਨੂੰ ਲੱਗੇਗਾ ਕਿ ਜਿਵੇਂ ਤੁਸੀਂ "
+"ਇਸ ਨੂੰ ਸਾਲਾਂ ਤੋਂ ਵਰਤ ਰਹੇ ਹੋ।"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "ਈਵੈਂਟ ਲੱਭੋ"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Calendar management"
+msgstr "ਕੈਲੰਡਰ ਪਰਬੰਧ"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
 msgstr "ਕੈਲੰਡਰ ਵਰਤੋਂ ਅਤੇ ਪਰਬੰਧ"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "ਕੈਲੰਡਰ;ਈਵੈਂਟ;ਰੀਮਾਈਡਰ;"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
@@ -37,225 +79,303 @@ msgid "Window maximized state"
 msgstr "ਵਿੰਡੋ ਵੱਧੋ-ਵੱਧ ਆਕਾਰ ਸਥਿਤੀ"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:3
+#| msgid "Window maximized"
+msgid "Window size"
+msgstr "ਵਿੰਡੋ ਆਕਾਰ"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "ਵਿੰਡੋ ਆਕਾਰ (ਉਚਾਈ ਤੇ ਚੌੜਾਈ)।"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "ਵਿੰਡੋ ਸਥਿਤੀ"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "ਵਿੰਡੋ ਸਥਿਤੀ (x ਤੇ y)।"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
 msgid "Type of the active view"
 msgstr "ਸਰਗਰਮ ਝਲਕ ਦੀ ਕਿਸਮ"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
-msgstr ""
+msgstr "ਸਰਗਰਮ ਵਿੰਡੋ ਝਲਕ ਦੀ ਕਿਸਮ, ਮੂਲ ਮੁੱਲ: ਮਹੀਨਾ ਝਲਕ "
 
-#: ../src/gcal-application.c:146
-msgid "Unable to initialize GtkClutter"
-msgstr ""
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "ਅਸਮਰੱਥ ਕੀਤੇ ਸਰੋਤਾਂ ਦੀ ਸੂਚੀ"
 
-#: ../src/gcal-application.c:197
-msgid "Weeks"
-msgstr "ਹਫਤੇ"
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "ਪਿਛਲੀ ਵਾਰ ਕੈਲੰਡਰ ਚੱਲਣ ਸਮੇਂ ਸਰੋਤ ਅਸਮਰੱਥ ਕੀਤੇ"
 
-#: ../src/gcal-application.c:198
-msgid "Months"
-msgstr "ਮਹੀਨੇ"
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "ਰੱਦ ਕਰੋ"
 
-#: ../src/gcal-application.c:199
-msgid "Years"
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+msgid "Done"
+msgstr "ਮੁਕੰਮਲ"
+
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "ਟਾਈਟਲ"
+
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "ਸ਼ੁਰੂ"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "ਅੰਤ"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "ਨੋਟ"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "ਟਿਕਾਣਾ"
+
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:385
+msgid "All day"
+msgstr "ਸਭ ਦਿਨ"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "ਈਵੈਂਟ ਹਟਾਓ"
+
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "...ਈਵੈਂਟ ਜੋੜੋ(_n)"
+
+#: ../data/ui/menus.ui.h:2
+#| msgid "Search..."
+msgid "_Search…"
+msgstr "...ਖੋਜ(_S)"
+
+#: ../data/ui/menus.ui.h:3
+#| msgid "About"
+msgid "_About"
+msgstr "ਇਸ ਬਾਰੇ(_A)"
+
+#: ../data/ui/menus.ui.h:4
+#| msgid "Quit"
+msgid "_Quit"
+msgstr "ਬੰਦ ਕਰੋ(_Q)"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "ਸਿੰਕਰੋਨਾਈਜ਼(_S)"
+
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "ਕੋਈ ਨਤੀਜਾ ਨਹੀਂ ਲੱਭਿਆ"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "ਈਵੈਂਟ ਲੱਭਣ ਲਈ ਉੱਤੇ ਐਂਟਰੀ ਨੂੰ ਵਰਤੋਂ।"
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "ਸਵੇਰ"
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "ਸ਼ਾਮ"
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "ਮਹੀਨਾ"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
 msgstr "ਸਾਲ"
 
-#: ../src/gcal-application.c:201
-msgid "View as"
-msgstr "ਵੇਖੋ"
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+msgid "Today"
+msgstr "ਅੱਜ"
 
-#: ../src/gcal-application.c:209
-msgid "About"
-msgstr "ਇਸ ਬਾਰੇ"
+#: ../data/ui/window.ui.h:5
+msgid "Create"
+msgstr "ਬਣਾਓ"
 
-#: ../src/gcal-application.c:217
-msgid "Quit"
-msgstr "ਬਾਹਰ"
+#: ../data/ui/window.ui.h:6
+#| msgid "More details"
+msgid "More Details"
+msgstr "ਹੋਰ ਵੇਰਵੇ"
 
-#: ../src/gcal-application.c:281
+#: ../data/ui/year-view.ui.h:2
+#| msgid "New Event"
+msgid "No events"
+msgstr "ਕੋਈ ਈਵੈਂਟ ਨਹੀਂ"
+
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+msgid "Add Event…"
+msgstr "...ਈਵੈਂਟ ਜੋੜੋ"
+
+#: ../src/gcal-application.c:102
+msgid "Display version number"
+msgstr "ਵਰਜ਼ਨ ਨੰਬਰ ਦਿਖਾਉ"
+
+#: ../src/gcal-application.c:107
+msgid "Open calendar on the passed date"
+msgstr "ਲੰਘੀ ਮਿਤੀ ਦੇ ਨਾਲ ਕੈਲੰਡਰ ਖੋਲ੍ਹੋ"
+
+#: ../src/gcal-application.c:112
+msgid "Open calendar showing the passed event"
+msgstr "ਲੰਘੇ ਈਵੈਂਟ ਵਿਖਾਉਣ ਦੇ ਨਾਲ ਕੈਲੰਡਰ ਖੋਲ੍ਹੋ"
+
+#: ../src/gcal-application.c:336
+msgid "- Calendar management"
+msgstr "- ਕੈਲੰਡਰ ਪਰਬੰਧ"
+
+#: ../src/gcal-application.c:503
 msgid "Copyright © %Id The Calendar authors"
 msgstr "ਕਾਪੀਰਾਈਟ © %Id ਕੈਲੰਡਰ ਟੀਮ"
 
-#: ../src/gcal-application.c:287
+#: ../src/gcal-application.c:509
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "ਕਾਪੀਰਾਈਟ © %Id-%Id ਕੈਲੰਡਰ ਟੀਮ"
 
-#: ../src/gcal-application.c:300
+#: ../src/gcal-application.c:522
 msgid "translator-credits"
 msgstr ""
 "ਅਮਨਪਰੀਤ ਸਿੰਘ ਆਲਮ (Amanpreet Singh)\n"
 "ਪੰਜਾਬੀ ਓਪਨਸੋਰਸ ਟੀਮ (POST)"
 
-#: ../src/gcal-date-entry.c:162
-msgid "Change the date"
-msgstr "ਮਿਤੀ ਬਦਲੋ"
-
-#: ../src/gcal-edit-dialog.c:156
-msgid "Event Details"
-msgstr "ਈਵੈਂਟ ਵੇਰਵਾ"
-
-#. Summary, title
-#: ../src/gcal-edit-dialog.c:171
-msgid "Title"
-msgstr "ਟਾਈਟਲ"
-
-#. Start date and time
-#: ../src/gcal-edit-dialog.c:199
-msgid "Starts"
-msgstr "ਸ਼ੁਰੂ"
-
-#: ../src/gcal-edit-dialog.c:215
-msgid "All day"
-msgstr "ਸਭ ਦਿਨ"
-
-#. End date and time
-#: ../src/gcal-edit-dialog.c:221
-msgid "Ends"
-msgstr "ਅੰਤ"
-
-#. Location, location, location
-#: ../src/gcal-edit-dialog.c:238
-msgid "Location"
-msgstr "ਟਿਕਾਣਾ"
-
-#. Notes, description
-#: ../src/gcal-edit-dialog.c:252
-msgid "Notes"
-msgstr "ਨੋਟ"
-
-#. done button
-#: ../src/gcal-edit-dialog.c:310 ../src/gcal-toolbar.c:615
-#: ../src/gcal-window.c:281
-msgid "Done"
-msgstr "ਮੁਕੰਮਲ"
-
-#: ../src/gcal-event-overlay.c:152 ../src/gcal-event-overlay.c:457
-#: ../src/gcal-toolbar.c:295
-msgid "New Event"
-msgstr "ਨਵਾਂ ਈਵੈਂਟ"
-
-#: ../src/gcal-event-overlay.c:162
-msgid "Create"
-msgstr "ਬਣਾਓ"
-
-#: ../src/gcal-event-overlay.c:171
-msgid "More details"
-msgstr "ਹੋਰ ਵੇਰਵਾ"
-
-#: ../src/gcal-event-overlay.c:185
-msgid "What (e.g. Alien Invasion)"
-msgstr ""
-
-#: ../src/gcal-event-overlay.c:507
-#, c-format
-msgid "New Event on %s"
-msgstr ""
-
-#: ../src/gcal-event-overlay.c:524
-#, c-format
-msgid "New Event from %s to %s"
-msgstr ""
-
-#: ../src/gcal-manager.c:1506
-msgid "Notification"
-msgstr "ਸੂਚਨਾ"
-
-#: ../src/gcal-manager.c:1508
-msgid "Email"
-msgstr "ਈ-ਮੇਲ"
-
-#: ../src/gcal-manager.c:1522
-msgid "days"
-msgstr "ਦਿਨ"
-
-#: ../src/gcal-manager.c:1528
-msgid "weeks"
-msgstr "ਹਫਤੇ"
-
-#: ../src/gcal-manager.c:1534
-msgid "hours"
-msgstr "ਘੰਟੇ"
-
-#: ../src/gcal-manager.c:1540
-msgid "minutes"
-msgstr "ਮਿੰਟ"
-
-#: ../src/gcal-manager.c:1552
-msgid "before"
-msgstr "ਪਹਿਲਾਂ"
-
-#. Here translators should put the widgest letter in their alphabet, this
-#. * taken to make it align with week-view header, which is the larger for now
-#: ../src/gcal-month-view.c:1022 ../src/gcal-week-view.c:1080
-#: ../src/gcal-year-view.c:922
-msgid "WWW 99 - WWW 99"
-msgstr "WWW 99 - WWW 99"
-
-#: ../src/gcal-time-entry.c:126
-msgid "Change the time"
-msgstr "ਸਮਾਂ ਬਦਲੋ"
-
-#. day
-#: ../src/gcal-toolbar.c:321
+#: ../src/gcal-date-selector.c:303
 msgid "Day"
 msgstr "ਦਿਨ"
 
-#. week
-#: ../src/gcal-toolbar.c:338 ../src/gcal-week-view.c:1094
-msgid "Week"
-msgstr "ਹਫਤਾ"
+#: ../src/gcal-edit-dialog.c:657
+msgid "Save"
+msgstr "ਸੰਭਾਲੋ"
 
-#. month
-#: ../src/gcal-toolbar.c:355
-msgid "Month"
-msgstr "ਮਹੀਨਾ"
+#: ../src/gcal-edit-dialog.c:841
+msgid "Unnamed event"
+msgstr "ਬਿਨਾਂ-ਨਾਂ ਈਵੈਂਟ"
 
-#. year
-#: ../src/gcal-toolbar.c:372
-msgid "Year"
-msgstr "ਸਾਲ"
+#: ../src/gcal-month-view.c:820
+msgid "Other events"
+msgstr "ਹੋਰ ਈਵੈਂਟ"
 
-#. list
-#: ../src/gcal-toolbar.c:389
-msgid "List"
-msgstr "ਲਿਸਟ"
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1203
+#, c-format
+#| msgid "New Event"
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "ਹੋਰ ਈਵੈਂਟ"
+msgstr[1] "ਹੋਰ %d ਈਵੈਂਟ"
 
-#: ../src/gcal-toolbar.c:469
-msgid "Back"
-msgstr "ਪਿੱਛੇ"
+#: ../src/gcal-time-selector.c:96
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d:%.2d ਸਵੇਰੇ"
 
-#. reset morphing edit_button
-#: ../src/gcal-toolbar.c:490 ../src/gcal-toolbar.c:502
-#: ../src/gcal-toolbar.c:620
-msgid "Edit"
-msgstr "ਸੋਧ"
+#: ../src/gcal-time-selector.c:98
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d:%.2d ਸ਼ਾਮ"
 
-#: ../src/gcal-week-view.c:1280
-msgid "AM"
-msgstr "ਸਵੇਰ"
-
-#: ../src/gcal-week-view.c:1280
-msgid "PM"
-msgstr "ਸ਼ਾਮ"
-
-#: ../src/gcal-week-view.c:1283 ../src/gcal-week-view.c:1352
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
 msgstr "ਅੱਧੀ-ਰਾਤ"
 
-#: ../src/gcal-week-view.c:1285 ../src/gcal-week-view.c:1355
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
 msgid "Noon"
 msgstr "ਦੁਪੈਹਰ"
 
-#: ../src/gcal-window.c:294
-msgid "Search..."
-msgstr "...ਖੋਜ"
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "00:00 ਸ਼ਾਮ"
 
-#: ../src/gcal-window.c:1405
+#: ../src/gcal-window.c:636
+#, c-format
+msgid "New Event on %s"
+msgstr "%s ਉੱਤੇ ਨਵਾਂ ਈਵੈਂਟ"
+
+#: ../src/gcal-window.c:1036
+#| msgid "Event deleted"
+msgid "Another event deleted"
+msgstr "ਹੋਰ ਈਵੈਂਟ ਹਟਾਇਆ"
+
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
+msgid "Undo"
+msgstr "ਵਾਪਸ"
+
+#: ../src/gcal-window.c:1040
 msgid "Event deleted"
 msgstr "ਈਵੈਂਟ ਹਟਾਇਆ ਗਿਆ"
 
-#: ../src/gcal-year-view.c:926
-#, c-format
-msgid "Year %d"
-msgstr "ਸਾਲ %d"
+#~ msgid "Weeks"
+#~ msgstr "ਹਫਤੇ"
 
+#~ msgid "Months"
+#~ msgstr "ਮਹੀਨੇ"
+
+#~ msgid "Years"
+#~ msgstr "ਸਾਲ"
+
+#~ msgid "View as"
+#~ msgstr "ਵੇਖੋ"
+
+#~ msgid "Change the date"
+#~ msgstr "ਮਿਤੀ ਬਦਲੋ"
+
+#~ msgid "Event Details"
+#~ msgstr "ਈਵੈਂਟ ਵੇਰਵਾ"
+
+#~ msgid "Notification"
+#~ msgstr "ਸੂਚਨਾ"
+
+#~ msgid "Email"
+#~ msgstr "ਈ-ਮੇਲ"
+
+#~ msgid "days"
+#~ msgstr "ਦਿਨ"
+
+#~ msgid "weeks"
+#~ msgstr "ਹਫਤੇ"
+
+#~ msgid "hours"
+#~ msgstr "ਘੰਟੇ"
+
+#~ msgid "minutes"
+#~ msgstr "ਮਿੰਟ"
+
+#~ msgid "before"
+#~ msgstr "ਪਹਿਲਾਂ"
+
+#~ msgid "WWW 99 - WWW 99"
+#~ msgstr "WWW 99 - WWW 99"
+
+#~ msgid "Change the time"
+#~ msgstr "ਸਮਾਂ ਬਦਲੋ"
+
+#~ msgid "Week"
+#~ msgstr "ਹਫਤਾ"
+
+#~ msgid "List"
+#~ msgstr "ਲਿਸਟ"
+
+#~ msgid "Back"
+#~ msgstr "ਪਿੱਛੇ"
+
+#~ msgid "Edit"
+#~ msgstr "ਸੋਧ"
+
+#~ msgid "Year %d"
+#~ msgstr "ਸਾਲ %d"
