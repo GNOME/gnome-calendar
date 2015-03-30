@@ -45,6 +45,8 @@ typedef struct
   GtkWidget          *local_source_grid;
   GtkWidget          *new_calendar_name_entry;
   GtkWidget          *web_source_grid;
+  GtkWidget          *web_sources_listbox;
+  GtkWidget          *web_sources_revealer;
 
   gint                validate_url_resource_id;
   gint                calendar_address_id;
@@ -743,24 +745,60 @@ discover_sources_cb (GObject      *source,
 
   if (n_sources > 1)
     {
+      // Show the list of calendars
+      gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), TRUE);
+
       /* TODO: show a list of calendars */
       for (aux = discovered_sources; aux != NULL; aux = aux->next)
         {
-          src = discovered_sources->data;
+          GtkWidget *row;
+          GtkWidget *grid;
+          GtkWidget *name_label, *url_label;
+          GdkRGBA rgba;
 
-          g_message ("Discovered source '%s' at '%s'", src->display_name, src->href);
+          src = discovered_sources->data;
+          row = gtk_list_box_row_new ();
+
+          grid = g_object_new (GTK_TYPE_GRID,
+                               "column_spacing", 12,
+                               "border_width", 10,
+                               NULL);
+
+          name_label = gtk_label_new (src->display_name);
+          gtk_label_set_xalign (GTK_LABEL (name_label), 0.0);
+          gtk_label_set_ellipsize (GTK_LABEL (name_label), PANGO_ELLIPSIZE_END);
+
+          url_label = gtk_label_new (src->href);
+          gtk_style_context_add_class (gtk_widget_get_style_context (url_label), "dim-label");
+          gtk_label_set_xalign (GTK_LABEL (url_label), 0.0);
+          gtk_label_set_ellipsize (GTK_LABEL (url_label), PANGO_ELLIPSIZE_END);
+
+          if (src->color != NULL)
+            {
+              GtkWidget *color_image;
+
+              gdk_rgba_parse (&rgba, src->color);
+              color_image = gtk_image_new_from_pixbuf (get_circle_pixbuf_from_color (&rgba, 16));
+
+              gtk_grid_attach (GTK_GRID (grid), color_image, 0, 0, 1, 2);
+            }
+
+          gtk_grid_attach (GTK_GRID (grid), name_label, 1, 0, 1, 1);
+          gtk_grid_attach (GTK_GRID (grid), url_label, 1, 1, 1, 1);
+
+          gtk_container_add (GTK_CONTAINER (priv->web_sources_listbox), row);
+          gtk_container_add (GTK_CONTAINER (row), grid);
+
+          g_object_set_data (G_OBJECT (row), "source", source);
+          g_object_set_data (G_OBJECT (row), "discovery_data", src);
+
+          gtk_widget_show_all (row);
         }
     }
   else if (n_sources == 1)
     {
-      src = discovered_sources->data;
-
-      g_message ("Discovered source '%s' at '%s'", src->display_name, src->href);
+      // TODO: no need to select the only source available
     }
-  /* Update buttons */
-  //gtk_widget_set_sensitive (priv->add_button, source != NULL);
-
-  //setup_source_details (dialog, source);
 
   // Free things up
   e_webdav_discover_free_discovered_sources (discovered_sources);
@@ -837,6 +875,8 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, select_file_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_source_grid);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_listbox);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_revealer);
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
   gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
