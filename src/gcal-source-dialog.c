@@ -115,6 +115,10 @@ static void       url_entry_text_changed                (GObject             *ob
 
 static gboolean   validate_url_cb                       (GcalSourceDialog    *dialog);
 
+static gint       prompt_credentials                    (GcalSourceDialog    *dialog,
+                                                         gchar              **username,
+                                                         gchar              **password);
+
 static void       discover_sources_cb                   (GObject             *source,
                                                          GAsyncResult        *result,
                                                          gpointer             user_data);
@@ -577,7 +581,32 @@ validate_url_cb (GcalSourceDialog *dialog)
        */
       if (priv->prompt_password)
         {
-          // FIXME: finish this mess
+          gint response;
+          gchar *user, *password;
+
+          response = prompt_credentials (dialog, &user, &password);
+
+          /*
+           * User entered username and password, let's try
+           * with it.
+           */
+          if (response == GTK_RESPONSE_OK)
+            {
+              ENamedParameters *credentials = e_named_parameters_new ();
+              e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, user);
+              e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, password);
+
+              e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)),
+                                         E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, credentials, NULL, discover_sources_cb,
+                                         dialog);
+
+              e_named_parameters_free (credentials);
+            }
+
+          if (user)
+            g_free (user);
+          if (password)
+            g_free (password);
         }
       else
         {
@@ -595,6 +624,78 @@ out:
     g_free (path);
 
   return FALSE;
+}
+
+static gint
+prompt_credentials (GcalSourceDialog  *dialog,
+                    gchar            **username,
+                    gchar            **password)
+{
+  GtkWidget *password_entry;
+  GtkWidget *prompt_dialog;
+  GtkWidget *name_entry;
+  GtkWidget *grid, *label;
+  GtkWidget *button;
+  gint response;
+
+  // Name entry
+  name_entry = gtk_entry_new ();
+  gtk_widget_set_hexpand (name_entry, TRUE);
+
+  // Password entry
+  password_entry = g_object_new (GTK_TYPE_ENTRY,
+                                 "visibility", FALSE,
+                                 "hexpand", TRUE,
+                                 NULL);
+
+  prompt_dialog = gtk_dialog_new_with_buttons (_("Enter your username and password"), GTK_WINDOW (dialog),
+                                               GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR,
+                                               _("Cancel"), GTK_RESPONSE_CANCEL,
+                                               _("Connect"), GTK_RESPONSE_OK, NULL);
+
+  // Set the "Connect" button style
+  button = gtk_dialog_get_widget_for_response (GTK_DIALOG (prompt_dialog), GTK_RESPONSE_OK);
+  gtk_style_context_add_class (gtk_widget_get_style_context (button), "suggested-action");
+
+  // Add some labels
+  grid = gtk_grid_new ();
+  g_object_set (grid,
+                "border-width", 12,
+                "column-spacing", 12,
+                "row-spacing", 6,
+                "expand", TRUE,
+                NULL);
+
+  label = gtk_label_new (_("User"));
+  gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
+  gtk_label_set_xalign (GTK_LABEL (label), 1.0);
+  gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
+
+  label = gtk_label_new (_("Password"));
+  gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
+  gtk_label_set_xalign (GTK_LABEL (label), 1.0);
+  gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
+
+  // Add entries
+  gtk_grid_attach (GTK_GRID (grid), name_entry, 1, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (grid), password_entry, 1, 1, 1, 1);
+
+  // Insert into the dialog
+  gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (prompt_dialog))), grid);
+  gtk_widget_show_all (grid);
+
+  // Show the dialog, then destroy it
+  response = gtk_dialog_run (GTK_DIALOG (prompt_dialog));
+
+  if (username)
+    *username = g_strdup (gtk_entry_get_text (GTK_ENTRY (name_entry)));
+
+  if (password)
+    *password = g_strdup (gtk_entry_get_text (GTK_ENTRY (password_entry)));
+
+  gtk_widget_destroy (prompt_dialog);
+
+  return response;
 }
 
 static void
@@ -643,6 +744,12 @@ discover_sources_cb (GObject      *source,
   if (n_sources > 1)
     {
       /* TODO: show a list of calendars */
+      for (aux = discovered_sources; aux != NULL; aux = aux->next)
+        {
+          src = discovered_sources->data;
+
+          g_message ("Discovered source '%s' at '%s'", src->display_name, src->href);
+        }
     }
   else if (n_sources == 1)
     {
