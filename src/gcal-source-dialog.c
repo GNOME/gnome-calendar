@@ -628,6 +628,13 @@ out:
   return FALSE;
 }
 
+static void
+credential_entry_activate (GtkEntry *entry,
+                           gpointer  user_data)
+{
+  gtk_dialog_response (GTK_DIALOG (user_data), GTK_RESPONSE_OK);
+}
+
 static gint
 prompt_credentials (GcalSourceDialog  *dialog,
                     gchar            **username,
@@ -685,6 +692,9 @@ prompt_credentials (GcalSourceDialog  *dialog,
   // Insert into the dialog
   gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (prompt_dialog))), grid);
   gtk_widget_show_all (grid);
+
+  g_signal_connect (name_entry, "activate", G_CALLBACK (credential_entry_activate), prompt_dialog);
+  g_signal_connect (password_entry, "activate", G_CALLBACK (credential_entry_activate), prompt_dialog);
 
   // Show the dialog, then destroy it
   response = gtk_dialog_run (GTK_DIALOG (prompt_dialog));
