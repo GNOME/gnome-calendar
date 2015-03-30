@@ -56,6 +56,7 @@ typedef struct
   ESource            *remote_source;
   ESource            *old_default_source;
   GBinding           *title_bind;
+  gboolean           *prompt_password;
 
   /* manager */
   GcalManager        *manager;
@@ -482,6 +483,13 @@ url_entry_text_changed (GObject    *object,
       if (priv->validate_url_resource_id != 0)
         g_source_remove (priv->validate_url_resource_id);
 
+      /*
+       * At first, don't bother the user with
+       * the login prompt. Only prompt it when
+       * it fails.
+       */
+      priv->prompt_password = FALSE;
+
       priv->validate_url_resource_id = g_timeout_add (500, (GSourceFunc) validate_url_cb, user_data);
     }
   else
@@ -562,9 +570,21 @@ validate_url_cb (GcalSourceDialog *dialog)
       // Pulse the entry while it performs the check
       priv->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
 
-      // Search for possible sources from the set host/path
-      e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)),
-                                 E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, NULL, NULL, discover_sources_cb, dialog);
+      /*
+       * Try to retrieve the sources without prompting
+       * username and password. If we get any error,
+       * then it prompts and retry.
+       */
+      if (priv->prompt_password)
+        {
+          // FIXME: finish this mess
+        }
+      else
+        {
+          g_debug ("[source-dialog] Trying to connect without credentials...");
+          e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)),
+                                     E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, NULL, NULL, discover_sources_cb, dialog);
+        }
     }
 
 out:
@@ -601,7 +621,19 @@ discover_sources_cb (GObject      *source,
   if (!e_webdav_discover_sources_finish (E_SOURCE (source), result, NULL, NULL, &discovered_sources, &user_adresses,
                                         &error))
     {
-      g_debug ("[source-dialog] error parsing source: %s", error->message);
+      /*
+       * If it's the first try and things went wrong,
+       * retry with the user credentials.
+       */
+      if (!priv->prompt_password)
+        {
+          g_debug ("[source-dialog] No credentials failed, retrying with user credentials...");
+
+          priv->prompt_password = TRUE;
+
+          validate_url_cb (GCAL_SOURCE_DIALOG (user_data));
+        }
+
       g_error_free (error);
       return;
     }
