@@ -22,6 +22,7 @@
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
+#include <libedataserverui/libedataserverui.h>
 
 typedef struct
 {
@@ -112,6 +113,10 @@ static void       url_entry_text_changed                (GObject             *ob
                                                          gpointer             user_data);
 
 static gboolean   validate_url_cb                       (GcalSourceDialog    *dialog);
+
+static void       discover_sources_cb                   (GObject             *source,
+                                                         GAsyncResult        *result,
+                                                         gpointer             user_data);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
@@ -397,7 +402,7 @@ setup_source_details (GcalSourceDialog *dialog,
     gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (priv->details_frame)), priv->details_frame);
 
   /* Add it to the current grid */
-  gtk_grid_attach (GTK_GRID (parent_grid), priv->details_frame, 0, 2, 1, 2);
+  gtk_grid_attach (GTK_GRID (parent_grid), priv->details_frame, 0, 2, 2, 2);
 
   /* Calendar name */
   gtk_entry_set_text (GTK_ENTRY (priv->new_calendar_name_entry), e_source_get_display_name (source));
@@ -520,9 +525,6 @@ validate_url_cb (GcalSourceDialog *dialog)
   if (host == NULL || !uri_valid)
     goto out;
 
-  // Pulse the entry while it performs the check
-  priv->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
-
   /**
    * Create the new source and add the needed
    * extensions.
@@ -541,13 +543,30 @@ validate_url_cb (GcalSourceDialog *dialog)
   webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
   e_source_webdav_set_resource_path (webdav, path);
 
-  /* Set the private source so it saves at closing */
-  priv->remote_source = source;
+  /*
+   * If we're dealing with an absolute file path,
+   * there is no need to check the server for more
+   * sources.
+   */
+  if (g_str_has_suffix (path, ".ics"))
+    {
+      // Set the private source so it saves at closing
+      priv->remote_source = source;
 
-  /* Update buttons */
-  gtk_widget_set_sensitive (priv->add_button, source != NULL);
+      // Update buttons
+      gtk_widget_set_sensitive (priv->add_button, source != NULL);
+      setup_source_details (dialog, source);
+    }
+  else
+    {
+      // Pulse the entry while it performs the check
+      priv->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
 
-  setup_source_details (dialog, source);
+      // Search for possible sources from the set host/path
+      e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)),
+                                 E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, NULL, NULL, discover_sources_cb, dialog);
+    }
+
 out:
   if (host)
     g_free (host);
@@ -556,6 +575,57 @@ out:
     g_free (path);
 
   return FALSE;
+}
+
+static void
+discover_sources_cb (GObject      *source,
+                     GAsyncResult *result,
+                     gpointer      user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  EWebDAVDiscoveredSource *src;
+  GSList *discovered_sources, *user_adresses, *aux;
+  GError *error;
+  gint n_sources;
+
+  error = NULL;
+
+  // Stop the pulsing entry
+  if (priv->calendar_address_id != 0)
+    {
+      gtk_entry_set_progress_fraction (GTK_ENTRY (priv->calendar_address_entry), 0);
+      g_source_remove (priv->calendar_address_id);
+      priv->calendar_address_id = 0;
+    }
+
+  if (!e_webdav_discover_sources_finish (E_SOURCE (source), result, NULL, NULL, &discovered_sources, &user_adresses,
+                                        &error))
+    {
+      g_debug ("[source-dialog] error parsing source: %s", error->message);
+      g_error_free (error);
+      return;
+    }
+
+  n_sources = g_slist_length (discovered_sources);
+
+  if (n_sources > 1)
+    {
+      /* TODO: show a list of calendars */
+    }
+  else if (n_sources == 1)
+    {
+      src = discovered_sources->data;
+
+      g_message ("Discovered source '%s' at '%s'", src->display_name, src->href);
+    }
+  /* Update buttons */
+  //gtk_widget_set_sensitive (priv->add_button, source != NULL);
+
+  //setup_source_details (dialog, source);
+
+  // Free things up
+  e_webdav_discover_free_discovered_sources (discovered_sources);
+  g_slist_free_full (user_adresses, g_free);
 }
 
 GcalSourceDialog *
