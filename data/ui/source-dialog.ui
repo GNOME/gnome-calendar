@@ -255,6 +255,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
+                                <signal name="notify::text" handler="new_name_entry_text_changed" object="GcalSourceDialog" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
@@ -409,6 +410,7 @@
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="hexpand">True</property>
+                                <signal name="notify::text" handler="new_name_entry_text_changed" object="GcalSourceDialog" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>

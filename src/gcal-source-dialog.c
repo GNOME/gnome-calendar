@@ -97,6 +97,10 @@ static void       name_entry_text_changed               (GObject             *ob
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
 
+static void       new_name_entry_text_changed           (GObject             *object,
+                                                         GParamSpec          *pspec,
+                                                         gpointer             user_data);
+
 static void       notebook_page_switched               (GtkWidget            *notebook,
                                                         GtkWidget            *page,
                                                         guint                 page_num,
@@ -260,6 +264,36 @@ name_entry_text_changed (GObject    *object,
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
 
   e_source_set_display_name (priv->source, gtk_entry_get_text (GTK_ENTRY (priv->name_entry)));
+}
+
+/**
+ * new_name_entry_text_changed:
+ *
+ * Callend when the name entry of a
+ * new to-be-added source is edited.
+ * It changes the source's display
+ * name, but wait's for the calendar's
+ * 'response' signal to commit these
+ * changes.
+ *
+ * Returns:
+ */
+static void
+new_name_entry_text_changed (GObject    *object,
+                             GParamSpec *pspec,
+                             gpointer    user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  ESource *source = NULL;
+
+  if (GTK_WIDGET (object) == priv->web_new_calendar_name_entry)
+    source = priv->remote_source;
+
+  if (GTK_WIDGET (object) == priv->new_calendar_name_entry)
+    source = priv->local_source;
+
+  if (source != NULL)
+    e_source_set_display_name (source, gtk_entry_get_text (GTK_ENTRY (object)));
 }
 
 /**
@@ -949,6 +983,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
+  gtk_widget_class_bind_template_callback (widget_class, new_name_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, notebook_page_switched);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
   gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
