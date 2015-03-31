@@ -727,7 +727,7 @@ discover_sources_cb (GObject      *source,
   EWebDAVDiscoveredSource *src;
   GSList *discovered_sources, *user_adresses, *aux;
   GError *error;
-  gint n_sources;
+  gint n_sources, counter;
 
   error = NULL;
 
@@ -766,6 +766,7 @@ discover_sources_cb (GObject      *source,
     }
 
   n_sources = g_slist_length (discovered_sources);
+  counter = 0;
 
   if (n_sources > 1)
     {
@@ -818,9 +819,14 @@ discover_sources_cb (GObject      *source,
           gtk_container_add (GTK_CONTAINER (row), grid);
 
           g_object_set_data (G_OBJECT (row), "source", source);
-          g_object_set_data (G_OBJECT (row), "discovery_data", src);
+          g_object_set_data (G_OBJECT (row), "source-url", g_strdup (src->href));
+          g_object_set_data (G_OBJECT (row), "source-color", g_strdup (src->color));
+          g_object_set_data (G_OBJECT (row), "source-display-name", g_strdup (src->display_name));
+          g_object_set_data (G_OBJECT (row), "source-email", g_strdup (g_slist_nth_data (user_adresses, counter)));
 
           gtk_widget_show_all (row);
+
+          counter++;
         }
     }
   else if (n_sources == 1)
@@ -839,6 +845,10 @@ discover_sources_cb (GObject      *source,
           ESourceWebdav *webdav = e_source_get_extension (E_SOURCE (source), E_SOURCE_EXTENSION_WEBDAV_BACKEND);
 
           e_source_webdav_set_resource_path (webdav, resource_path);
+          e_source_webdav_set_display_name (webdav, src->display_name);
+          e_source_webdav_set_email_address (webdav, user_adresses->data);
+
+          e_source_set_display_name (E_SOURCE (source), src->display_name);
 
           // Update button sensivity, etc
           gtk_widget_set_sensitive (priv->add_button, source != NULL);
