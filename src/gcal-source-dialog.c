@@ -822,7 +822,28 @@ discover_sources_cb (GObject      *source,
     }
   else if (n_sources == 1)
     {
-      // TODO: no need to select the only source available
+      gboolean uri_valid;
+      gchar *resource_path;
+
+      src = discovered_sources->data;
+
+      // Get the new resource path from the uri
+      uri_valid = uri_get_fields (src->href, NULL, NULL, &resource_path);
+
+      // Update the ESourceWebdav extension's resource path
+      if (uri_valid)
+        {
+          ESourceWebdav *webdav = e_source_get_extension (E_SOURCE (source), E_SOURCE_EXTENSION_WEBDAV_BACKEND);
+
+          e_source_webdav_set_resource_path (webdav, resource_path);
+
+          // Update button sensivity, etc
+          gtk_widget_set_sensitive (priv->add_button, source != NULL);
+          setup_source_details (GCAL_SOURCE_DIALOG (user_data), E_SOURCE (source));
+        }
+
+      if (resource_path)
+        g_free (resource_path);
     }
 
   // Free things up
