@@ -647,7 +647,7 @@ uri_get_fields (const gchar  *uri,
   match = NULL;
   valid = FALSE;
 
-  regex = g_regex_new ("([a-zA-Z0-9\\+\\.\\-]*):\\/\\/{0,1}([-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b)([-a-zA-Z0-9@:%_\\+.//=]*)",
+  regex = g_regex_new ("([a-zA-Z0-9\\+\\.\\-]*:\\/\\/){0,1}([-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b)([-a-zA-Z0-9@:%_\\+.//=]*)",
                        G_REGEX_CASELESS, 0, NULL);
 
   /*
