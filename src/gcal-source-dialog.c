@@ -763,6 +763,10 @@ discover_sources_cb (GObject      *source,
 
   if (n_sources > 1)
     {
+      // Remove previous results
+      g_list_free_full (gtk_container_get_children (GTK_CONTAINER (priv->web_sources_listbox)),
+                        (GDestroyNotify) gtk_widget_destroy);
+
       // Show the list of calendars
       gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), TRUE);
 
