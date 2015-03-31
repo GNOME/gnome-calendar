@@ -742,6 +742,9 @@ discover_sources_cb (GObject      *source,
   if (!e_webdav_discover_sources_finish (E_SOURCE (source), result, NULL, NULL, &discovered_sources, &user_adresses,
                                         &error))
     {
+      // Don't add an source with errors
+      gtk_widget_set_sensitive (priv->add_button, FALSE);
+
       /*
        * If it's the first try and things went wrong,
        * retry with the user credentials.
