@@ -162,13 +162,21 @@ static void
 clear_pages (GcalSourceDialog *dialog)
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
+  GList *list;
 
   gtk_entry_set_text (GTK_ENTRY (priv->calendar_address_entry), "");
   gtk_widget_set_sensitive (priv->add_button, FALSE);
 
+  // Remove discovered web sources (if any)
+  list = gtk_container_get_children (GTK_CONTAINER (priv->web_sources_listbox));
+  g_list_free_full (list, (GDestroyNotify) gtk_widget_destroy);
+
+  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), FALSE);
+
   /* details frame */
   if (gtk_widget_get_parent (priv->details_frame) != NULL)
     gtk_container_remove (GTK_CONTAINER (gtk_widget_get_parent (priv->details_frame)), priv->details_frame);
+
   gtk_widget_hide (priv->details_frame);
 }
 
