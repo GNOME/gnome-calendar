@@ -747,9 +747,12 @@ discover_sources_cb (GObject      *source,
 
       /*
        * If it's the first try and things went wrong,
-       * retry with the user credentials.
+       * retry with the user credentials. Also, it
+       * checks for the error code, since we don't
+       * really want to retry things on unavailable
+       * servers.
        */
-      if (!priv->prompt_password)
+      if (!priv->prompt_password && error->code == 14)
         {
           g_debug ("[source-dialog] No credentials failed, retrying with user credentials...");
 
