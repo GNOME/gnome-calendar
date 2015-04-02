@@ -380,7 +380,7 @@
             </child>
             <child>
               <object class="GtkButton" id="new_event_details_button">
-                <property name="label" translatable="yes">More Details</property>
+                <property name="label" translatable="yes">Edit Details</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
