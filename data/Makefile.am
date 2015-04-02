@@ -32,6 +32,9 @@ org.gnome.Calendar.service:
 
 @GSETTINGS_RULES@
 
+%.gschema.xml: %.gschema.xml.in
+	$(AM_V_GEN) $(INTLTOOL_MERGE) -x -u --no-translations $< $@
+
 gsettings_ENUM_NAMESPACE = org.gnome.calendar
 gsettings_ENUM_FILES = \
 	$(top_srcdir)/src/gcal-utils.h
