@@ -168,6 +168,10 @@ static void           place_new_event_widget             (GcalWindow          *w
 static void           close_new_event_widget             (GtkButton           *button,
                                                           gpointer             user_data);
 
+static void           new_event_entry_text_changed       (GObject             *object,
+                                                          GParamSpec          *pspec,
+                                                          gpointer             user_data);
+
 static void           create_notification                (GcalWindow          *window,
                                                           gchar               *message,
                                                           gchar               *button_label);
@@ -671,6 +675,34 @@ close_new_event_widget (GtkButton *button,
                         gpointer   user_data)
 {
   set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
+}
+
+static void
+new_event_entry_text_changed (GObject    *object,
+                              GParamSpec *pspec,
+                              gpointer    user_data)
+{
+  GcalWindowPrivate *priv;
+  static gboolean blocked = TRUE;
+  gint length;
+
+  g_return_if_fail (user_data);
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (object));
+
+  length = g_utf8_strlen (gtk_entry_get_text (GTK_ENTRY (user_data)), -1);
+
+  gtk_widget_set_sensitive (priv->new_event_create_button, length > 0);
+
+  if (length > 0 && blocked)
+    {
+      g_signal_handlers_unblock_by_func (user_data, create_event, object);
+      blocked = FALSE;
+    }
+  else if (length < 1 && !blocked)
+    {
+      g_signal_handlers_block_by_func (user_data, create_event, object);
+      blocked = TRUE;
+    }
 }
 
 /**
@@ -1292,6 +1324,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, create_event_detailed_cb);
   gtk_widget_class_bind_template_callback (widget_class, show_new_event_widget);
   gtk_widget_class_bind_template_callback (widget_class, close_new_event_widget);
+  gtk_widget_class_bind_template_callback (widget_class, new_event_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, event_activated);
 
   /* Syncronization related */
@@ -1335,6 +1368,8 @@ gcal_window_constructed (GObject *object)
   g_free (clock_format);
   g_object_unref (helper_settings);
 
+  // Prevents nameless events' creation
+  g_signal_handlers_block_by_func (priv->new_event_what_entry, create_event, object);
 
   /* header_bar: menu */
   builder = gtk_builder_new ();

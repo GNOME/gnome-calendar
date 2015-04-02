@@ -367,6 +367,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="sensitive">False</property>
                 <signal name="clicked" handler="create_event" object="GcalWindow" swapped="yes"/>
                 <style>
                   <class name="suggested-action"/>
@@ -396,6 +397,7 @@
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <signal name="activate" handler="create_event" object="GcalWindow" swapped="yes"/>
+                <signal name="notify::text" handler="new_event_entry_text_changed" object="GcalWindow" swapped="yes"/>
               </object>
               <packing>
                 <property name="left_attach">0</property>
