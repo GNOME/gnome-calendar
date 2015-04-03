@@ -636,7 +636,10 @@ prepare_new_event_widget (GcalWindow *window)
 
   /* setting title */
   tm_date = icaltimetype_to_tm (priv->event_creation_data->start_date);
-  e_utf8_strftime_fix_am_pm (start, 64, "%B %d", &tm_date);
+  /* Translators:
+   * this is the format string for representing a date consisting of a month name
+   * and a date of month. */
+  e_utf8_strftime_fix_am_pm (start, 64, C_("event date format", "%B %d"), &tm_date);
   title_date = g_strdup_printf (_("New Event on %s"), start);
 
   gtk_label_set_text (GTK_LABEL (priv->new_event_title_label),
