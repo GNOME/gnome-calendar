@@ -91,6 +91,10 @@ static gint           sort_by_event                             (GtkListBoxRow  
                                                                  GtkListBoxRow        *row2,
                                                                  gpointer              user_data);
 
+static gint           compare_events                            (GcalEventData        *ev1,
+                                                                 GcalEventData        *ev2,
+                                                                 time_t               *utc);
+
 static gboolean       show_no_results_page                      (GcalSearchView       *view);
 
 /* private */
@@ -220,8 +224,6 @@ sort_by_event (GtkListBoxRow *row1,
   GcalSearchViewPrivate *priv;
   RowEventData *rd1, *rd2;
   GcalEventData *ev1, *ev2;
-  ECalComponentDateTime date1, date2;
-  gint result;
 
   priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
 
@@ -235,6 +237,17 @@ sort_by_event (GtkListBoxRow *row1,
   if (ev1 == NULL || ev2 == NULL)
       return 0;
 
+  return compare_events (ev1, ev2, &(priv->current_utc_date));
+}
+
+static gint
+compare_events (GcalEventData *ev1,
+                GcalEventData *ev2,
+                time_t        *utc)
+{
+  ECalComponentDateTime date1, date2;
+  gint result;
+
   e_cal_component_get_dtstart (ev1->event_component, &date1);
   e_cal_component_get_dtstart (ev2->event_component, &date2);
 
@@ -242,7 +255,7 @@ sort_by_event (GtkListBoxRow *row1,
     date1.value->zone = icaltimezone_get_builtin_timezone_from_tzid (date1.tzid);
   if (date2.tzid != NULL)
     date2.value->zone = icaltimezone_get_builtin_timezone_from_tzid (date2.tzid);
-  result = icaltime_compare_with_current (date1.value, date2.value, &(priv->current_utc_date));
+  result = icaltime_compare_with_current (date1.value, date2.value, utc);
 
   e_cal_component_free_datetime (&date1);
   e_cal_component_free_datetime (&date2);
