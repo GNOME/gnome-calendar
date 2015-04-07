@@ -54,6 +54,11 @@ typedef struct
   gint                validate_url_resource_id;
   gint                calendar_address_id;
 
+  /* overview widgets */
+  GtkWidget          *add_calendar_menu_button;
+  GtkWidget          *calendars_listbox;
+  GtkWidget          *online_accounts_listbox;
+
   /* flags */
   GcalSourceDialogMode mode;
   ESource            *source;
@@ -956,9 +961,11 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
 
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_calendar_menu_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, author_label);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_address_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_color_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendars_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, default_check);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, edit_grid);
@@ -968,6 +975,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, new_calendar_name_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notebook);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, online_accounts_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, remove_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, select_file_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
