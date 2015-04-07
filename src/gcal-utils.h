@@ -20,6 +20,7 @@
 #ifndef __GCAL_UTILS_H__
 #define __GCAL_UTILS_H__
 
+#include "gcal-manager.h"
 #include <gtk/gtk.h>
 #include <libecal/libecal.h>
 #include <libical/icaltime.h>
@@ -105,5 +106,10 @@ gboolean        uri_get_fields                                  (const gchar    
                                                                  gchar                **schema,
                                                                  gchar                **host,
                                                                  gchar                **path);
+
+void            get_source_parent_name_color                    (GcalManager           *manager,
+                                                                 ESource               *source,
+                                                                 gchar                **name,
+                                                                 gchar                **color);
 
 #endif // __GCAL_UTILS_H__

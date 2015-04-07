@@ -686,3 +686,21 @@ uri_get_fields (const gchar  *uri,
   g_regex_unref (regex);
   return valid;
 }
+
+void
+get_source_parent_name_color (GcalManager  *manager,
+                              ESource      *source,
+                              gchar       **name,
+                              gchar       **color)
+{
+  ESource *parent_source;
+
+  g_assert (source && E_IS_SOURCE (source));
+
+  parent_source = gcal_manager_get_source (manager, e_source_get_parent (source));
+
+  if (name)
+    *name = e_source_dup_display_name (parent_source);
+  if (color)
+    *color = g_strdup (get_color_name_from_source (parent_source));
+}
