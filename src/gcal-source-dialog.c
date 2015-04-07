@@ -98,6 +98,10 @@ static gboolean   description_label_link_activated      (GtkWidget            *w
                                                          gchar                *uri,
                                                          gpointer              user_data);
 
+static void       display_header_func                   (GtkListBoxRow        *row,
+                                                         GtkListBoxRow        *before,
+                                                         gpointer              user_data);
+
 static void       name_entry_text_changed               (GObject             *object,
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
@@ -249,6 +253,27 @@ description_label_link_activated (GtkWidget *widget,
   return TRUE;
 }
 
+/**
+ * display_header_func:
+ *
+ * Shows a separator before each row.
+ *
+ */
+static void
+display_header_func (GtkListBoxRow *row,
+                     GtkListBoxRow *before,
+                     gpointer       user_data)
+{
+  if (before != NULL)
+    {
+      GtkWidget *header;
+
+      header = gtk_separator_new (GTK_ORIENTATION_HORIZONTAL);
+      gtk_widget_show (header);
+
+      gtk_list_box_row_set_header (row, header);
+    }
+}
 
 /**
  * name_entry_text_changed:
@@ -928,6 +953,10 @@ gcal_source_dialog_constructed (GObject *object)
   g_object_set_data (G_OBJECT (priv->add_button), "response", GINT_TO_POINTER (GTK_RESPONSE_APPLY));
   g_object_set_data (G_OBJECT (priv->cancel_button), "response", GINT_TO_POINTER (GTK_RESPONSE_CANCEL));
   g_object_set_data (G_OBJECT (priv->remove_button), "response", GINT_TO_POINTER (GCAL_RESPONSE_REMOVE_SOURCE));
+
+  // Setup listbox header functions
+  gtk_list_box_set_header_func (GTK_LIST_BOX (priv->calendars_listbox), display_header_func, NULL, NULL);
+  gtk_list_box_set_header_func (GTK_LIST_BOX (priv->online_accounts_listbox), display_header_func, NULL, NULL);
 
   /* File filter */
   filter = gtk_file_filter_new ();
