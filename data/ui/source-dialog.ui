@@ -3,20 +3,27 @@
 <interface>
   <requires lib="gtk+" version="3.15"/>
   <template class="GcalSourceDialog" parent="GtkDialog">
-    <property name="can_focus">False</property>
-    <property name="type_hint">dialog</property>
-    <property name="use_header_bar">1</property>
-    <property name="border_width">0</property>
     <property name="width_request">450</property>
+    <property name="can_focus">False</property>
+    <property name="border_width">0</property>
     <property name="default_width">550</property>
     <property name="default_height">500</property>
+    <property name="type_hint">dialog</property>
     <signal name="response" handler="response_signal" object="GcalSourceDialog" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="vbox">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
-        <property name="spacing">0</property>
-        <property name="border_width">0</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="dialog-action_area1">
+            <property name="can_focus">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
         <child>
           <object class="GtkStack" id="stack">
             <property name="visible">True</property>
@@ -24,6 +31,193 @@
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <property name="vhomogeneous">False</property>
+            <property name="transition_type">crossfade</property>
+            <child>
+              <object class="GtkScrolledWindow" id="main_scrolledwindow">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hscrollbar_policy">never</property>
+                <child>
+                  <object class="GtkViewport" id="main_viewport">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <object class="GtkBox" id="main_box">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="border_width">18</property>
+                        <property name="orientation">vertical</property>
+                        <property name="spacing">18</property>
+                        <child>
+                          <object class="GtkGrid" id="online_account_main_grid">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="row_spacing">12</property>
+                            <property name="column_spacing">12</property>
+                            <child>
+                              <object class="GtkLabel" id="online_account_label">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Online Accounts</property>
+                                <property name="xalign">0</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                </attributes>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="online_accounts_settings_button">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="tooltip_text" translatable="yes">Open online account settings</property>
+                                <child>
+                                  <object class="GtkImage" id="online_accounts_settings_button_image">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="icon_name">emblem-system-symbolic</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkFrame" id="online_accounts_main_frame">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label_xalign">0</property>
+                                <child>
+                                  <object class="GtkListBox" id="online_accounts_listbox">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="selection_mode">none</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">1</property>
+                                <property name="width">2</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkGrid" id="other_calendars_main_grid">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="row_spacing">12</property>
+                            <property name="column_spacing">12</property>
+                            <child>
+                              <object class="GtkLabel" id="calendars_header_label">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="hexpand">True</property>
+                                <property name="label" translatable="yes">Calendars</property>
+                                <property name="xalign">0</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                </attributes>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkFrame" id="other_calendars_main_frame">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <property name="label_xalign">0</property>
+                                <child>
+                                  <object class="GtkListBox" id="calendars_listbox">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="selection_mode">none</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">0</property>
+                                <property name="top_attach">1</property>
+                                <property name="width">2</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkMenuButton" id="add_calendar_ubutton">
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <child>
+                                  <object class="GtkBox" id="add_calendar_button_box">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">False</property>
+                                    <property name="spacing">6</property>
+                                    <child>
+                                      <object class="GtkLabel" id="add_calendar_button">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="label" translatable="yes">Add</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">0</property>
+                                      </packing>
+                                    </child>
+                                    <child>
+                                      <object class="GtkImage" id="add_calendar_button_image">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="icon_name">pan-down-symbolic</property>
+                                      </object>
+                                      <packing>
+                                        <property name="expand">False</property>
+                                        <property name="fill">True</property>
+                                        <property name="position">1</property>
+                                      </packing>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="top_attach">0</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="name">main</property>
+                <property name="title" translatable="yes">Overview</property>
+              </packing>
+            </child>
             <child>
               <object class="GtkGrid" id="edit_grid">
                 <property name="visible">True</property>
@@ -31,36 +225,85 @@
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <property name="border_width">18</property>
-                <property name="row_spacing">18</property>
-                <property name="column_spacing">6</property>
+                <property name="row_spacing">12</property>
+                <property name="column_spacing">12</property>
                 <child>
-                  <object class="GtkLabel" id="calendar_name_label">
+                  <object class="GtkCheckButton" id="default_check">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Calendar name</property>
-                    <property name="xalign">1</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">False</property>
+                    <property name="xalign">0.5</property>
+                    <property name="draw_indicator">True</property>
+                    <signal name="notify::active" handler="default_check_toggled" object="GcalSourceDialog" swapped="no"/>
+                    <child>
+                      <object class="GtkLabel" id="default_check_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Add new events to this calendar by default</property>
+                        <property name="xalign">0</property>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">5</property>
+                    <property name="width">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="remove_button">
+                    <property name="label" translatable="yes">Remove Calendar</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="halign">end</property>
+                    <property name="valign">end</property>
+                    <property name="margin_top">6</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <signal name="clicked" handler="action_widget_activated" object="GcalSourceDialog" swapped="no"/>
                     <style>
-                      <class name="dim-label"/>
+                      <class name="destructive-action"/>
                     </style>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">0</property>
+                    <property name="top_attach">6</property>
+                    <property name="width">2</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkCheckButton" id="default_check">
-                    <property name="label" translatable="yes">Add new events to this calendar by default</property>
+                  <object class="GtkCheckButton" id="calendar_visible_check">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="xalign">0</property>
                     <property name="draw_indicator">True</property>
-                    <signal name="notify::active" handler="default_check_toggled" object="GcalSourceDialog" swapped="no"/>
+                    <child>
+                      <object class="GtkLabel" id="display_calendar_check_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Display calendar</property>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
-                    <property name="top_attach">1</property>
-                    <property name="width">3</property>
+                    <property name="top_attach">4</property>
+                    <property name="width">2</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkColorButton" id="calendar_color_button">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="receives_default">True</property>
+                    <property name="halign">start</property>
+                    <signal name="color-set" handler="color_set" object="GcalSourceDialog" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">3</property>
                   </packing>
                 </child>
                 <child>
@@ -72,53 +315,136 @@
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
-                    <property name="top_attach">0</property>
+                    <property name="top_attach">2</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="remove_button">
-                    <property name="label" translatable="yes">Remove Calendar</property>
+                  <object class="GtkLabel" id="calendar_dim_label">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="halign">end</property>
-                    <property name="margin_top">6</property>
-                    <signal name="clicked" handler="action_widget_activated" object="GcalSourceDialog" swapped="no"/>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Calendar name</property>
+                    <property name="xalign">1</property>
                     <style>
-                      <class name="destructive-action"/>
+                      <class name="dim-label"/>
                     </style>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
                     <property name="top_attach">2</property>
-                    <property name="width">3</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkColorButton" id="calendar_color_button">
+                  <object class="GtkLabel" id="color_dim_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Color</property>
+                    <property name="xalign">1</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">3</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="account_dim_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Account</property>
+                    <property name="xalign">1</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="location_dim_label">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label" translatable="yes">Location</property>
+                    <property name="xalign">1</property>
+                    <style>
+                      <class name="dim-label"/>
+                    </style>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox" id="account_box">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel" id="account_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="hexpand">True</property>
+                        <property name="xalign">0</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="settings_button">
+                        <property name="label" translatable="yes">Settings</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLinkButton" id="calendar_url_button">
+                    <property name="label" translatable="yes">button</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">True</property>
-                    <signal name="color-set" handler="color_set" object="GcalSourceDialog" swapped="no"/>
+                    <property name="relief">none</property>
+                    <property name="xalign">0</property>
+                    <property name="uri">http://glade.gnome.org</property>
                   </object>
                   <packing>
-                    <property name="left_attach">2</property>
-                    <property name="top_attach">0</property>
+                    <property name="left_attach">1</property>
+                    <property name="top_attach">1</property>
                   </packing>
                 </child>
               </object>
               <packing>
                 <property name="name">edit</property>
+                <property name="title" translatable="yes">Edit Calendar</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
               <object class="GtkNotebook" id="notebook">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="show_border">False</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
-                <signal name="switch_page" handler="notebook_page_switched" object="GcalSourceDialog" swapped="no" />
+                <property name="show_border">False</property>
+                <signal name="switch-page" handler="notebook_page_switched" object="GcalSourceDialog" swapped="no"/>
                 <child>
                   <object class="GtkGrid" id="web_source_grid">
                     <property name="visible">True</property>
@@ -134,7 +460,7 @@
                         <property name="use_markup">True</property>
                         <property name="wrap">True</property>
                         <property name="xalign">0</property>
-                        <signal name="activate_link" handler="description_label_link_activated" object="GcalSourceDialog" swapped="no"/>
+                        <signal name="activate-link" handler="description_label_link_activated" object="GcalSourceDialog" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -175,12 +501,12 @@
                         <property name="can_focus">False</property>
                         <child>
                           <object class="GtkScrolledWindow" id="web_list_scrolledwindow">
+                            <property name="height_request">100</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
                             <property name="shadow_type">etched-in</property>
-                            <property name="height_request">100</property>
                             <child>
                               <object class="GtkViewport" id="viewport">
                                 <property name="visible">True</property>
@@ -206,7 +532,6 @@
                     </child>
                     <child>
                       <object class="GtkFrame" id="web_details_frame">
-                        <property name="visible">False</property>
                         <property name="can_focus">False</property>
                         <property name="label_xalign">0</property>
                         <property name="shadow_type">none</property>
@@ -350,9 +675,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="hexpand">True</property>
-                        <property name="action">GTK_FILE_CHOOSER_ACTION_OPEN</property>
-                        <property name="local_only">True</property>
-                        <signal name="file_set" handler="calendar_file_selected" object="GcalSourceDialog" swapped="no"/>
+                        <signal name="file-set" handler="calendar_file_selected" object="GcalSourceDialog" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -361,9 +684,7 @@
                     </child>
                     <child>
                       <object class="GtkFrame" id="local_details_frame">
-                        <property name="visible">False</property>
                         <property name="can_focus">False</property>
-                        <property name="label_xalign">0</property>
                         <property name="shadow_type">none</property>
                         <child>
                           <object class="GtkGrid" id="details_grid">
@@ -501,7 +822,7 @@
               <packing>
                 <property name="name">create</property>
                 <property name="title" translatable="yes">Add Calendar</property>
-                <property name="position">1</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
@@ -517,23 +838,44 @@
       <object class="GtkHeaderBar" id="headerbar">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="title">Calendar Settings</property>
+        <property name="has_subtitle">True</property>
+        <property name="show_close_button">True</property>
+        <child>
+          <object class="GtkButton" id="back_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <child>
+              <object class="GtkImage" id="back_button_image">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="icon_name">go-previous-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
         <child>
           <object class="GtkButton" id="cancel_button">
             <property name="label" translatable="yes">Cancel</property>
-            <property name="visible" bind-source="headerbar" bind-property="show-close-button" bind-flags="default|sync-create|invert-boolean"/>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <signal name="clicked" handler="action_widget_activated" object="GcalSourceDialog" swapped="no"/>
           </object>
+          <packing>
+            <property name="position">2</property>
+          </packing>
         </child>
         <child>
           <object class="GtkButton" id="add_button">
             <property name="label" translatable="yes">Add</property>
-            <property name="visible" bind-source="headerbar" bind-property="show-close-button" bind-flags="default|sync-create|invert-boolean"/>
-            <property name="can_focus">True</property>
             <property name="sensitive">False</property>
+            <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <signal name="clicked" handler="action_widget_activated" object="GcalSourceDialog" swapped="no"/>
+            <style>
+              <class name="suggested-action"/>
+            </style>
           </object>
           <packing>
             <property name="pack_type">end</property>
