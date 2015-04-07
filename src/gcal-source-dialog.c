@@ -1032,13 +1032,11 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
   gboolean edit_mode;
-  gint window_width;
 
   priv->mode = mode;
   edit_mode = (mode == GCAL_SOURCE_DIALOG_MODE_EDIT);
 
-  gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->headerbar), edit_mode);
-  gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), edit_mode ? "edit" : "create");
+  gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), edit_mode ? "edit" : "main");
 
   if (!edit_mode)
     {
@@ -1049,8 +1047,7 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
           priv->title_bind = NULL;
         }
 
-      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
-      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
+      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Calendar Settings"));
 
       clear_pages (dialog);
     }
@@ -1063,13 +1060,6 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
                                                      G_BINDING_DEFAULT);
         }
     }
-
-  /*
-   * Resize the window to the smallest possible
-   * size.
-   */
-  gtk_window_get_size (GTK_WINDOW (dialog), &window_width, NULL);
-  gtk_window_resize (GTK_WINDOW (dialog), window_width, 1);
 }
 
 /**
