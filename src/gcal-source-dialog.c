@@ -341,7 +341,7 @@ response_signal (GtkDialog *dialog,
     }
 
   /* commit the new source */
-  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE && response_id == GTK_RESPONSE_APPLY)
+  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_APPLY)
     {
       ESource *current_source, *other_source;
       gint page;
@@ -361,7 +361,7 @@ response_signal (GtkDialog *dialog,
     }
 
   /* Destroy the source when the operation is cancelled */
-  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE && response_id == GTK_RESPONSE_CANCEL)
+  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_CANCEL)
     {
       if (priv->local_source != NULL)
         g_clear_object (&(priv->local_source));
