@@ -35,15 +35,11 @@ typedef struct
   GtkWidget          *name_entry;
   GtkWidget          *notebook;
   GtkWidget          *remove_button;
-  GtkWidget          *select_file_button;
   GtkWidget          *stack;
 
   /* new source details */
   GtkWidget          *author_label;
   GtkWidget          *calendar_address_entry;
-  GtkWidget          *local_details_frame;
-  GtkWidget          *local_source_grid;
-  GtkWidget          *new_calendar_name_entry;
   GtkWidget          *web_author_label;
   GtkWidget          *web_details_frame;
   GtkWidget          *web_new_calendar_name_entry;
@@ -62,7 +58,6 @@ typedef struct
   /* flags */
   GcalSourceDialogMode mode;
   ESource            *source;
-  ESource            *local_source;
   ESource            *remote_source;
   ESource            *old_default_source;
   GBinding           *title_bind;
@@ -117,11 +112,6 @@ static void       name_entry_text_changed               (GObject             *ob
 static void       new_name_entry_text_changed           (GObject             *object,
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
-
-static void       notebook_page_switched               (GtkWidget            *notebook,
-                                                        GtkWidget            *page,
-                                                        guint                 page_num,
-                                                        gpointer              user_data);
 
 static void       response_signal                       (GtkDialog           *dialog,
                                                          gint                 response_id,
@@ -213,7 +203,6 @@ clear_pages (GcalSourceDialog *dialog)
   gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), FALSE);
 
   gtk_widget_hide (priv->web_details_frame);
-  gtk_widget_hide (priv->local_details_frame);
 }
 
 static void
@@ -407,34 +396,8 @@ new_name_entry_text_changed (GObject    *object,
   if (GTK_WIDGET (object) == priv->web_new_calendar_name_entry)
     source = priv->remote_source;
 
-  if (GTK_WIDGET (object) == priv->new_calendar_name_entry)
-    source = priv->local_source;
-
   if (source != NULL)
     e_source_set_display_name (source, gtk_entry_get_text (GTK_ENTRY (object)));
-}
-
-/**
- * notebook_page_switched:
- *
- * Validates the current state of
- * the dialog according to the current
- * page.
- *
- * Returns:
- */
-static void
-notebook_page_switched (GtkWidget *notebook,
-                        GtkWidget *page,
-                        guint      page_num,
-                        gpointer   user_data)
-{
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
-
-  if (page_num == 0)
-    gtk_widget_set_sensitive (priv->add_button, (priv->remote_source != NULL));
-  else
-    gtk_widget_set_sensitive (priv->add_button, (priv->local_source != NULL));
 }
 
 /**
@@ -461,29 +424,14 @@ response_signal (GtkDialog *dialog,
   /* commit the new source */
   if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_APPLY)
     {
-      ESource *current_source, *other_source;
-      gint page;
-
-      page = gtk_notebook_get_current_page (GTK_NOTEBOOK (priv->notebook));
-      current_source = (page == 0 ? priv->remote_source : priv->local_source);
-      other_source = (page == 1 ? priv->remote_source : priv->local_source);
-
       /* save the current page's source */
-      if (current_source != NULL)
-        gcal_manager_save_source (priv->manager, current_source);
-
-      /* destory the leftover source */
-      if (other_source != NULL)
-        g_object_unref (other_source);
-
+      if (priv->remote_source != NULL)
+        gcal_manager_save_source (priv->manager, priv->remote_source);
     }
 
   /* Destroy the source when the operation is cancelled */
   if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_CANCEL)
     {
-      if (priv->local_source != NULL)
-        g_clear_object (&(priv->local_source));
-
       if (priv->remote_source != NULL)
         g_clear_object (&(priv->remote_source));
     }
@@ -506,17 +454,10 @@ calendar_file_selected (GtkFileChooserButton *button,
   ESource *source;
   GFile *file;
 
-  file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (priv->select_file_button));
+  //file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (priv->select_file_button));
 
   if (file == NULL)
     return;
-
-  /**
-   * Remove any reminescent ESources
-   * cached before.
-   */
-  if (priv->local_source != NULL)
-    g_clear_pointer (&(priv->local_source), g_object_unref);
 
   /**
    * Create the new source and add the needed
@@ -534,13 +475,8 @@ calendar_file_selected (GtkFileChooserButton *button,
   /* update the source properties */
   e_source_set_display_name (source, g_file_get_basename (file));
 
-  /* Set the private source so it saves at closing */
-  priv->local_source = source;
-
   /* Update buttons */
   gtk_widget_set_sensitive (priv->add_button, source != NULL);
-
-  setup_source_details (GCAL_SOURCE_DIALOG (user_data), source);
 }
 
 /**
@@ -556,41 +492,27 @@ setup_source_details (GcalSourceDialog *dialog,
                       ESource          *source)
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
-  GtkWidget *name_entry, *author_label, *frame;
   gchar *email;
 
-  if (gtk_notebook_get_current_page (GTK_NOTEBOOK (priv->notebook)) == 0)
-    {
-      frame = priv->web_details_frame;
-      name_entry = priv->web_new_calendar_name_entry;
-      author_label = priv->web_author_label;
-    }
-  else
-    {
-      frame = priv->local_details_frame;
-      name_entry = priv->new_calendar_name_entry;
-      author_label = priv->author_label;
-    }
-
   /* Calendar name */
-  gtk_entry_set_text (GTK_ENTRY (name_entry), e_source_get_display_name (source));
+  gtk_entry_set_text (GTK_ENTRY (priv->web_new_calendar_name_entry), e_source_get_display_name (source));
 
   /* Email field */
   email = gcal_manager_query_client_data (priv->manager, source, CAL_BACKEND_PROPERTY_CAL_EMAIL_ADDRESS);
 
   if (email != NULL)
     {
-      gtk_label_set_markup (GTK_LABEL (author_label), email);
+      gtk_label_set_markup (GTK_LABEL (priv->web_author_label), email);
     }
   else
     {
       gchar *text = g_strdup_printf ("<i><small>%s</small></i>", _("No author"));
-      gtk_label_set_markup (GTK_LABEL (author_label), text);
+      gtk_label_set_markup (GTK_LABEL (priv->web_author_label), text);
 
       g_free (text);
     }
 
-  gtk_widget_show_all (frame);
+  gtk_widget_show_all (priv->web_details_frame);
 }
 
 /**
@@ -1051,7 +973,7 @@ gcal_source_dialog_constructed (GObject *object)
   gtk_file_filter_set_name (filter, _("Calendar files"));
   gtk_file_filter_add_mime_type (filter, "text/calendar");
 
-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (priv->select_file_button), filter);
+  //gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (priv->select_file_button), filter);
 
   /* setup titlebar */
   gtk_window_set_titlebar (GTK_WINDOW (object), priv->headerbar);
@@ -1079,7 +1001,6 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_calendar_menu_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, author_label);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_address_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_color_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendars_listbox);
@@ -1087,14 +1008,9 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, default_check);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, edit_grid);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, local_details_frame);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, local_source_grid);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, new_calendar_name_entry);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notebook);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, online_accounts_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, remove_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, select_file_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_details_frame);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_new_calendar_name_entry);
@@ -1109,7 +1025,6 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, new_name_entry_text_changed);
-  gtk_widget_class_bind_template_callback (widget_class, notebook_page_switched);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
   gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
 }
