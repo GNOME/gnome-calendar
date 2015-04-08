@@ -227,7 +227,7 @@ back_button_clicked (GtkButton *button,
    * go back to the GOA calendar selection page.
    */
 
-  if (g_strcmp0 (gtk_stack_get_visible_child_name (GTK_STACK (priv->stack)), "edit"))
+  if (g_strcmp0 (gtk_stack_get_visible_child_name (GTK_STACK (priv->stack)), "edit") == 0)
     {
       gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "main");
       gtk_widget_hide (GTK_WIDGET (button));
