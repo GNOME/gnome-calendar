@@ -236,8 +236,7 @@ back_button_clicked (GtkButton *button,
       g_object_unref (priv->source);
       priv->source = NULL;
 
-      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "main");
-      gtk_widget_hide (GTK_WIDGET (button));
+      gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
     }
 }
 
@@ -634,7 +633,7 @@ calendar_listbox_row_activated (GtkListBox    *box,
       ESource *source = g_object_get_data (G_OBJECT (row), "source");
 
       gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
-      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "edit");
+      gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_EDIT);
     }
 }
 
