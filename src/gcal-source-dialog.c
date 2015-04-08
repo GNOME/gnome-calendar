@@ -27,6 +27,7 @@
 typedef struct
 {
   GtkWidget          *add_button;
+  GtkWidget          *back_button;
   GtkWidget          *calendar_color_button;
   GtkWidget          *cancel_button;
   GtkWidget          *default_check;
@@ -85,6 +86,16 @@ static void       add_source                             (GcalManager         *m
 static void       action_widget_activated               (GtkWidget            *widget,
                                                          gpointer              user_data);
 
+static void       back_button_clicked                   (GtkButton            *button,
+                                                         gpointer              user_data);
+
+static void       calendar_file_selected                (GtkFileChooserButton *button,
+                                                         gpointer              user_data);
+
+static void       calendar_listbox_row_activated        (GtkListBox          *box,
+                                                         GtkListBoxRow       *row,
+                                                         gpointer             user_data);
+
 static void       clear_pages                           (GcalSourceDialog     *dialog);
 
 static void       color_set                             (GtkColorButton       *button,
@@ -117,15 +128,12 @@ static void       response_signal                       (GtkDialog           *di
                                                          gint                 response_id,
                                                          gpointer             user_data);
 
-static void       calendar_file_selected                (GtkFileChooserButton *button,
-                                                         gpointer              user_data);
+static void       setup_source_details                  (GcalSourceDialog     *dialog,
+                                                         ESource              *source);
 
-static void       calendar_listbox_row_activated        (GtkListBox          *box,
-                                                         GtkListBoxRow       *row,
+static void       stack_visible_child_name_changed      (GObject             *object,
+                                                         GParamSpec          *pspec,
                                                          gpointer             user_data);
-
-static void       setup_source_details                 (GcalSourceDialog     *dialog,
-                                                        ESource              *source);
 
 static gboolean   pulse_web_entry                       (GcalSourceDialog    *dialog);
 
@@ -199,6 +207,31 @@ action_widget_activated (GtkWidget *widget,
   priv->old_default_source = NULL;
 
   gtk_dialog_response (GTK_DIALOG (user_data), response);
+}
+
+/**
+ * back_button_clicked:
+ *
+ * Returns to the previous page.
+ *
+ * Returns:
+ */
+static void
+back_button_clicked (GtkButton *button,
+                     gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  /*
+   * TODO: when editing a GOA calendar, it should
+   * go back to the GOA calendar selection page.
+   */
+
+  if (g_strcmp0 (gtk_stack_get_visible_child_name (GTK_STACK (priv->stack)), "edit"))
+    {
+      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "main");
+      gtk_widget_hide (GTK_WIDGET (button));
+    }
 }
 
 /**
@@ -455,6 +488,28 @@ response_signal (GtkDialog *dialog,
     {
       if (priv->remote_source != NULL)
         g_clear_object (&(priv->remote_source));
+    }
+}
+
+static void
+stack_visible_child_name_changed (GObject    *object,
+                                  GParamSpec *pspec,
+                                  gpointer    user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  const gchar *visible_name;
+  gboolean is_main;
+
+  visible_name = gtk_stack_get_visible_child_name (GTK_STACK (object));
+  is_main = g_strcmp0 (visible_name, "main") == 0;
+
+  // Show the '<' button everywhere except "main" page
+  gtk_widget_set_visible (priv->back_button, !is_main);
+
+  if (is_main)
+    {
+      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Calendar Settings"));
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
     }
 }
 
@@ -1054,6 +1109,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_calendar_menu_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, back_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_address_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_color_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendars_listbox);
@@ -1072,6 +1128,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_revealer);
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
+  gtk_widget_class_bind_template_callback (widget_class, back_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
   gtk_widget_class_bind_template_callback (widget_class, calendar_listbox_row_activated);
   gtk_widget_class_bind_template_callback (widget_class, color_set);
@@ -1080,6 +1137,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, new_name_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
+  gtk_widget_class_bind_template_callback (widget_class, stack_visible_child_name_changed);
   gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
 }
 

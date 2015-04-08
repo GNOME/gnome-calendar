@@ -33,6 +33,7 @@
             <property name="vexpand">True</property>
             <property name="vhomogeneous">False</property>
             <property name="transition_type">crossfade</property>
+            <signal name="notify::visible-child-name" handler="stack_visible_child_name_changed" object="GcalSourceDialog" swapped="no"/>
             <child>
               <object class="GtkScrolledWindow" id="main_scrolledwindow">
                 <property name="visible">True</property>
@@ -789,6 +790,7 @@
             <property name="visible">False</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <signal name="clicked" handler="back_button_clicked" object="GcalSourceDialog" swapped="no" />
             <child>
               <object class="GtkImage" id="back_button_image">
                 <property name="visible">True</property>
