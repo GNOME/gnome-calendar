@@ -65,6 +65,9 @@ typedef struct
   GBinding           *title_bind;
   gboolean           *prompt_password;
 
+  /* auxiliary */
+  GSimpleActionGroup *action_group;
+
   /* manager */
   GcalManager        *manager;
 } GcalSourceDialogPrivate;
@@ -164,6 +167,12 @@ static void       discover_sources_cb                   (GObject             *so
                                                          gpointer             user_data);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
+
+GActionEntry actions[] = {
+  {"file",  NULL, NULL, NULL, NULL},
+  {"local", NULL, NULL, NULL, NULL},
+  {"web",   NULL, NULL, NULL, NULL}
+};
 
 static void
 add_source (GcalManager *manager,
@@ -1229,6 +1238,12 @@ gcal_source_dialog_constructed (GObject *object)
   gtk_file_filter_add_mime_type (filter, "text/calendar");
 
   //gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (priv->select_file_button), filter);
+
+  // Action group
+  priv->action_group = g_simple_action_group_new ();
+  gtk_widget_insert_action_group (GTK_WIDGET (object), "source", G_ACTION_GROUP (priv->action_group));
+
+  g_action_map_add_action_entries (G_ACTION_MAP (priv->action_group), actions, G_N_ELEMENTS (actions), object);
 
   /* setup titlebar */
   gtk_window_set_titlebar (GTK_WINDOW (object), priv->headerbar);
