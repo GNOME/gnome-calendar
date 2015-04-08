@@ -917,8 +917,8 @@ source_row_activated (GtkListBox    *listbox,
   if (source == NULL)
     return;
 
-  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (priv->source_dialog), GCAL_SOURCE_DIALOG_MODE_EDIT);
   gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (priv->source_dialog), source);
+  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (priv->source_dialog), GCAL_SOURCE_DIALOG_MODE_EDIT);
 
   gtk_widget_hide (priv->calendar_popover);
 
