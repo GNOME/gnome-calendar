@@ -120,6 +120,10 @@ static void       response_signal                       (GtkDialog           *di
 static void       calendar_file_selected                (GtkFileChooserButton *button,
                                                          gpointer              user_data);
 
+static void       calendar_listbox_row_activated        (GtkListBox          *box,
+                                                         GtkListBoxRow       *row,
+                                                         gpointer             user_data);
+
 static void       setup_source_details                 (GcalSourceDialog     *dialog,
                                                         ESource              *source);
 
@@ -494,6 +498,38 @@ calendar_file_selected (GtkFileChooserButton *button,
 
   /* Update buttons */
   gtk_widget_set_sensitive (priv->add_button, source != NULL);
+}
+
+/**
+ * calendar_listbox_row_activated:
+ *
+ * Edits the selected calendar for the
+ * 'Calendars' listbox or goes to the
+ * calendar selection for the Online
+ * Accounts listbox.
+ *
+ * Returns:
+ */
+static void
+calendar_listbox_row_activated (GtkListBox    *box,
+                                GtkListBoxRow *row,
+                                gpointer       user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  g_assert (row != NULL);
+
+  /*
+   * For non-GOA calendars, show the edit page
+   * directly.
+   */
+  if (GTK_WIDGET (box) == priv->calendars_listbox)
+    {
+      ESource *source = g_object_get_data (G_OBJECT (row), "source");
+
+      gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
+      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "edit");
+    }
 }
 
 /**
@@ -1037,6 +1073,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
   gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
+  gtk_widget_class_bind_template_callback (widget_class, calendar_listbox_row_activated);
   gtk_widget_class_bind_template_callback (widget_class, color_set);
   gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
