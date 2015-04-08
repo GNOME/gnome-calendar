@@ -521,6 +521,47 @@ stack_visible_child_name_changed (GObject    *object,
       gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Calendar Settings"));
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
     }
+
+  // Update fields when it goes to the edit page.
+  if (g_strcmp0 (visible_name, "edit") == 0 && priv->source != NULL)
+    {
+      ESource *default_source;
+      gchar *parent_name;
+      GdkRGBA color;
+
+      default_source = gcal_manager_get_default_source (priv->manager);
+
+      get_source_parent_name_color (priv->manager, priv->source, &parent_name, NULL);
+
+      /* block signals */
+      g_signal_handlers_block_by_func (priv->calendar_color_button, color_set, user_data);
+      g_signal_handlers_block_by_func (priv->name_entry, name_entry_text_changed, user_data);
+
+      /* color button */
+      gdk_rgba_parse (&color, get_color_name_from_source (priv->source));
+      gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (priv->calendar_color_button), &color);
+
+      /* entry */
+      gtk_entry_set_text (GTK_ENTRY (priv->name_entry), e_source_get_display_name (priv->source));
+
+      /* default source check button */
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->default_check), (priv->source == default_source));
+      gtk_widget_set_visible (priv->default_check, !gcal_manager_is_client_writable (priv->manager, priv->source));
+
+      /* title */
+      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), e_source_get_display_name (priv->source));
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), parent_name);
+
+      /* toggle the remove button */
+      gtk_widget_set_visible (priv->remove_button, e_source_get_removable (priv->source));
+
+      /* unblock signals */
+      g_signal_handlers_unblock_by_func (priv->calendar_color_button, color_set, user_data);
+      g_signal_handlers_unblock_by_func (priv->name_entry, name_entry_text_changed, user_data);
+
+      g_object_unref (default_source);
+      g_free (parent_name);
+    }
 }
 
 /**
