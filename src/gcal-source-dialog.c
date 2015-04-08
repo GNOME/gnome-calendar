@@ -82,6 +82,11 @@ struct _GcalSourceDialog
 
 #define ENTRY_PROGRESS_TIMEOUT            100
 
+static void       add_source                             (GcalManager         *manager,
+                                                          ESource             *source,
+                                                          gboolean             enabled,
+                                                          gpointer             user_data);
+
 static void       action_widget_activated               (GtkWidget            *widget,
                                                          gpointer              user_data);
 
@@ -101,6 +106,9 @@ static gboolean   description_label_link_activated      (GtkWidget            *w
 static void       display_header_func                   (GtkListBoxRow        *row,
                                                          GtkListBoxRow        *before,
                                                          gpointer              user_data);
+
+static GtkWidget* make_row_from_source                  (GcalSourceDialog    *dialog,
+                                                         ESource             *source);
 
 static void       name_entry_text_changed               (GObject             *object,
                                                          GParamSpec          *pspec,
@@ -142,6 +150,21 @@ static void       discover_sources_cb                   (GObject             *so
                                                          gpointer             user_data);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
+
+static void
+add_source (GcalManager *manager,
+            ESource     *source,
+            gboolean     enabled,
+            gpointer     user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GtkWidget *row;
+
+  row = make_row_from_source (GCAL_SOURCE_DIALOG (user_data), source);
+  g_object_set_data (G_OBJECT (row), "source", source);
+
+  gtk_container_add (GTK_CONTAINER (priv->calendars_listbox), row);
+}
 
 /**
  * action_widget_activated:
@@ -273,6 +296,71 @@ display_header_func (GtkListBoxRow *row,
 
       gtk_list_box_row_set_header (row, header);
     }
+}
+
+/**
+ * make_row_from_source:
+ *
+ * Create a GtkListBoxRow for a given
+ * ESource.
+ *
+ * Returns: (transfer full) the new row
+ */
+static GtkWidget*
+make_row_from_source (GcalSourceDialog *dialog,
+                      ESource          *source)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+  GtkWidget *bottom_label;
+  GtkWidget *top_label;
+  GdkPixbuf *pixbuf;
+  GtkWidget *icon;
+  GtkWidget *grid;
+  GtkWidget *row;
+  GdkRGBA color;
+  gchar *parent_name;
+
+  get_source_parent_name_color (priv->manager, source, &parent_name, NULL);
+  row = gtk_list_box_row_new ();
+
+  /* main box */
+  grid = g_object_new (GTK_TYPE_GRID,
+                       "border-width", 6,
+                       "column-spacing", 12,
+                       NULL);
+
+  /* source color icon */
+  gdk_rgba_parse (&color, get_color_name_from_source (source));
+  pixbuf = get_circle_pixbuf_from_color (&color, 24);
+  icon = gtk_image_new_from_pixbuf (pixbuf);
+
+  /* source name label */
+  top_label = g_object_new (GTK_TYPE_LABEL,
+                            "label", e_source_get_display_name (source),
+                            "xalign", 0.0,
+                            "hexpand", TRUE,
+                            NULL);
+
+  /* parent source name label */
+  bottom_label = g_object_new (GTK_TYPE_LABEL,
+                               "label", parent_name,
+                               "xalign", 0.0,
+                               "hexpand", TRUE,
+                               NULL);
+  gtk_style_context_add_class (gtk_widget_get_style_context (bottom_label), "dim-label");
+
+
+  gtk_grid_attach (GTK_GRID (grid), icon, 0, 0, 1, 2);
+  gtk_grid_attach (GTK_GRID (grid), top_label, 1, 0, 1, 1);
+  gtk_grid_attach (GTK_GRID (grid), bottom_label, 1, 1, 1, 1);
+  gtk_container_add (GTK_CONTAINER (row), grid);
+
+  gtk_widget_show_all (row);
+
+  g_object_unref (pixbuf);
+  g_free (parent_name);
+
+  return row;
 }
 
 /**
@@ -1050,7 +1138,18 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
 
   priv->manager = manager;
 
-  /* TODO: connect ::source-added & ::source-removed signals */
+  if (gcal_manager_load_completed (priv->manager))
+    {
+      GList *sources, *l;
+
+      sources = gcal_manager_get_sources_connected (priv->manager);
+
+      for (l = sources; l != NULL; l = l->next)
+        add_source (priv->manager, l->data, gcal_manager_source_enabled (priv->manager, l->data), dialog);
+    }
+
+  g_signal_connect (priv->manager, "source-added", G_CALLBACK (add_source), dialog);
+  /* TODO: connect ::source-removed signals */
 }
 
 /**
