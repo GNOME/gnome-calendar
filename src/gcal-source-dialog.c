@@ -132,6 +132,10 @@ static void       new_name_entry_text_changed           (GObject             *ob
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
 
+static void       remove_source                         (GcalManager         *manager,
+                                                         ESource             *source,
+                                                         gpointer             user_data);
+
 static void       response_signal                       (GtkDialog           *dialog,
                                                          gint                 response_id,
                                                          gpointer             user_data);
@@ -1156,6 +1160,43 @@ discover_sources_cb (GObject      *source,
   g_slist_free_full (user_adresses, g_free);
 }
 
+/**
+ * remove_source:
+ *
+ * Removes the given source from the source
+ * list.
+ *
+ * Returns:
+ */
+static void
+remove_source (GcalManager *manager,
+               ESource     *source,
+               gpointer     user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GtkWidget *row;
+  GList *children, *aux;
+
+  children = gtk_container_get_children (GTK_CONTAINER (priv->calendars_listbox));
+  row = NULL;
+
+  for (aux = children; aux != NULL; aux = aux->next)
+    {
+      ESource *child_source = g_object_get_data (G_OBJECT (aux->data), "source");
+
+      if (child_source != NULL && child_source == source)
+        {
+          row = aux->data;
+          break;
+        }
+    }
+
+  if (row != NULL)
+    gtk_widget_destroy (row);
+
+  g_list_free (children);
+}
+
 GcalSourceDialog *
 gcal_source_dialog_new (void)
 {
@@ -1284,6 +1325,7 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
     }
 
   g_signal_connect (priv->manager, "source-added", G_CALLBACK (add_source), dialog);
+  g_signal_connect (priv->manager, "source-removed", G_CALLBACK (remove_source), dialog);
   /* TODO: connect ::source-removed signals */
 }
 
