@@ -118,6 +118,9 @@ static void       display_header_func                   (GtkListBoxRow        *r
                                                          GtkListBoxRow        *before,
                                                          gpointer              user_data);
 
+static gboolean   is_goa_source                         (GcalSourceDialog     *dialog,
+                                                         ESource              *source);
+
 static GtkWidget* make_row_from_source                  (GcalSourceDialog    *dialog,
                                                          ESource             *source);
 
@@ -365,6 +368,33 @@ display_header_func (GtkListBoxRow *row,
 
       gtk_list_box_row_set_header (row, header);
     }
+}
+
+/**
+ * is_goa_source:
+ *
+ * Checks whether the source comes from
+ * a online account.
+ *
+ * Returns: %TRUE if the source came from a GOA account
+ */
+static gboolean
+is_goa_source (GcalSourceDialog *dialog,
+               ESource          *source)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+  ESource *parent;
+  gboolean is_goa;
+
+  g_assert (source && E_IS_SOURCE (source));
+
+  parent = gcal_manager_get_source (priv->manager, e_source_get_parent (source));
+
+  is_goa = e_source_has_extension (parent, E_SOURCE_EXTENSION_GOA);
+
+  g_object_unref (parent);
+
+  return is_goa;
 }
 
 /**
