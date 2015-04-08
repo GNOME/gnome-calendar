@@ -29,6 +29,7 @@ typedef struct
   GtkWidget          *add_button;
   GtkWidget          *back_button;
   GtkWidget          *calendar_color_button;
+  GtkWidget          *calendar_visible_check;
   GtkWidget          *cancel_button;
   GtkWidget          *default_check;
   GtkWidget          *edit_grid;
@@ -94,6 +95,10 @@ static void       calendar_file_selected                (GtkFileChooserButton *b
 
 static void       calendar_listbox_row_activated        (GtkListBox          *box,
                                                          GtkListBoxRow       *row,
+                                                         gpointer             user_data);
+
+static void       calendar_visible_check_toggled        (GObject             *object,
+                                                         GParamSpec          *pspec,
                                                          gpointer             user_data);
 
 static void       clear_pages                           (GcalSourceDialog     *dialog);
@@ -238,6 +243,21 @@ back_button_clicked (GtkButton *button,
 
       gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
     }
+}
+
+static void
+calendar_visible_check_toggled (GObject    *object,
+                                GParamSpec *pspec,
+                                gpointer    user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  g_assert (priv->source != NULL);
+
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object)))
+    gcal_manager_enable_source (priv->manager, priv->source);
+  else
+    gcal_manager_disable_source (priv->manager, priv->source);
 }
 
 /**
@@ -533,6 +553,7 @@ stack_visible_child_name_changed (GObject    *object,
       get_source_parent_name_color (priv->manager, priv->source, &parent_name, NULL);
 
       /* block signals */
+      g_signal_handlers_block_by_func (priv->calendar_visible_check, calendar_visible_check_toggled, user_data);
       g_signal_handlers_block_by_func (priv->calendar_color_button, color_set, user_data);
       g_signal_handlers_block_by_func (priv->name_entry, name_entry_text_changed, user_data);
 
@@ -542,6 +563,10 @@ stack_visible_child_name_changed (GObject    *object,
 
       /* entry */
       gtk_entry_set_text (GTK_ENTRY (priv->name_entry), e_source_get_display_name (priv->source));
+
+      // enabled check
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->calendar_visible_check),
+                                    gcal_manager_source_enabled (priv->manager, priv->source));
 
       /* default source check button */
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->default_check), (priv->source == default_source));
@@ -555,6 +580,7 @@ stack_visible_child_name_changed (GObject    *object,
       gtk_widget_set_visible (priv->remove_button, e_source_get_removable (priv->source));
 
       /* unblock signals */
+      g_signal_handlers_unblock_by_func (priv->calendar_visible_check, calendar_visible_check_toggled, user_data);
       g_signal_handlers_unblock_by_func (priv->calendar_color_button, color_set, user_data);
       g_signal_handlers_unblock_by_func (priv->name_entry, name_entry_text_changed, user_data);
 
@@ -1162,6 +1188,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, back_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_address_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_color_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_visible_check);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendars_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, default_check);
@@ -1181,6 +1208,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, back_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
   gtk_widget_class_bind_template_callback (widget_class, calendar_listbox_row_activated);
+  gtk_widget_class_bind_template_callback (widget_class, calendar_visible_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, color_set);
   gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
