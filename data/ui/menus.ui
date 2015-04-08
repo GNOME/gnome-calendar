@@ -38,4 +38,20 @@
       </item>
     </section>
   </menu>
+  <menu id="add-source-menu">
+    <section>
+      <item>
+        <attribute name="label" translatable="yes">From Web…</attribute>
+        <attribute name="action">source.web</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">New Local Calendar…</attribute>
+        <attribute name="action">source.local</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">From File…</attribute>
+        <attribute name="action">source.file</attribute>
+      </item>
+    </section>
+  </menu>
 </interface>

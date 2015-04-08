@@ -1218,6 +1218,8 @@ gcal_source_dialog_constructed (GObject *object)
   GcalSourceDialog *self = (GcalSourceDialog *)object;
   GcalSourceDialogPrivate *priv = gcal_source_dialog_get_instance_private (self);
   GtkFileFilter *filter;
+  GtkBuilder *builder;
+  GMenuModel *menu;
 
   G_OBJECT_CLASS (gcal_source_dialog_parent_class)->constructed (object);
 
@@ -1244,6 +1246,14 @@ gcal_source_dialog_constructed (GObject *object)
   gtk_widget_insert_action_group (GTK_WIDGET (object), "source", G_ACTION_GROUP (priv->action_group));
 
   g_action_map_add_action_entries (G_ACTION_MAP (priv->action_group), actions, G_N_ELEMENTS (actions), object);
+
+  // Load the "Add" button menu
+  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/menus.ui");
+
+  menu = G_MENU_MODEL (gtk_builder_get_object (builder, "add-source-menu"));
+  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->add_calendar_menu_button), menu);
+
+  g_object_unref (builder);
 
   /* setup titlebar */
   gtk_window_set_titlebar (GTK_WINDOW (object), priv->headerbar);
