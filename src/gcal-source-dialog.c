@@ -148,12 +148,29 @@ add_source (GcalManager *manager,
             gpointer     user_data)
 {
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
-  GtkWidget *row;
+  GList *children, *l;
+  gboolean contains_source;
 
-  row = make_row_from_source (GCAL_SOURCE_DIALOG (user_data), source);
-  g_object_set_data (G_OBJECT (row), "source", source);
+  children = gtk_container_get_children (GTK_CONTAINER (priv->calendars_listbox));
+  contains_source = FALSE;
 
-  gtk_container_add (GTK_CONTAINER (priv->calendars_listbox), row);
+  for (l = children; l != NULL; l = l->next)
+    {
+      if (g_object_get_data (l->data, "source") == source)
+        contains_source = TRUE;
+    }
+
+  if (!contains_source)
+    {
+      GtkWidget *row;
+
+      row = make_row_from_source (GCAL_SOURCE_DIALOG (user_data), source);
+      g_object_set_data (G_OBJECT (row), "source", source);
+
+      gtk_container_add (GTK_CONTAINER (priv->calendars_listbox), row);
+    }
+
+  g_list_free (children);
 }
 
 /**
