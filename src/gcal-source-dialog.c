@@ -1111,12 +1111,14 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
                                ESource          *source)
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
-  ESource *default_source, *parent_source;
+  ESource *default_source;
+  gchar *parent_name;
   GdkRGBA color;
 
   priv->source = source;
   default_source = gcal_manager_get_default_source (priv->manager);
-  parent_source = gcal_manager_get_source (priv->manager, e_source_get_parent (source));
+
+  get_source_parent_name_color (priv->manager, source, &parent_name, NULL);
 
   /* block signals */
   g_signal_handlers_block_by_func (priv->calendar_color_button, color_set, dialog);
@@ -1135,7 +1137,7 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
 
   /* title */
   gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), e_source_get_display_name (source));
-  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), e_source_get_display_name (parent_source));
+  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), parent_name);
 
   /* toggle the remove button */
   gtk_widget_set_sensitive (priv->remove_button, e_source_get_removable (source));
@@ -1145,5 +1147,5 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
   g_signal_handlers_unblock_by_func (priv->name_entry, name_entry_text_changed, dialog);
 
   g_object_unref (default_source);
-  g_object_unref (parent_source);
+  g_free (parent_name);
 }
