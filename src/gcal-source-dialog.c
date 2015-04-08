@@ -229,6 +229,13 @@ back_button_clicked (GtkButton *button,
 
   if (g_strcmp0 (gtk_stack_get_visible_child_name (GTK_STACK (priv->stack)), "edit") == 0)
     {
+      // Save the source before leaving
+      gcal_manager_save_source (priv->manager, priv->source);
+
+      // Release the source ref we acquired
+      g_object_unref (priv->source);
+      priv->source = NULL;
+
       gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "main");
       gtk_widget_hide (GTK_WIDGET (button));
     }
@@ -470,9 +477,12 @@ response_signal (GtkDialog *dialog,
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (dialog)->priv;
 
   /* save the source */
-  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_EDIT)
+  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_EDIT && priv->source != NULL)
     {
       gcal_manager_save_source (priv->manager, priv->source);
+
+      g_object_unref (priv->source);
+      priv->source = NULL;
     }
 
   /* commit the new source */
@@ -1237,41 +1247,10 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
                                ESource          *source)
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
-  ESource *default_source;
-  gchar *parent_name;
-  GdkRGBA color;
+
+  g_assert (source && E_IS_SOURCE (source));
+
+  g_object_ref (source);
 
   priv->source = source;
-  default_source = gcal_manager_get_default_source (priv->manager);
-
-  get_source_parent_name_color (priv->manager, source, &parent_name, NULL);
-
-  /* block signals */
-  g_signal_handlers_block_by_func (priv->calendar_color_button, color_set, dialog);
-  g_signal_handlers_block_by_func (priv->name_entry, name_entry_text_changed, dialog);
-
-  /* color button */
-  gdk_rgba_parse (&color, get_color_name_from_source (source));
-  gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (priv->calendar_color_button), &color);
-
-  /* entry */
-  gtk_entry_set_text (GTK_ENTRY (priv->name_entry), e_source_get_display_name (source));
-
-  /* default source check button */
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->default_check), (source == default_source));
-  gtk_widget_set_visible (priv->default_check, !gcal_manager_is_client_writable (priv->manager, source));
-
-  /* title */
-  gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), e_source_get_display_name (source));
-  gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), parent_name);
-
-  /* toggle the remove button */
-  gtk_widget_set_visible (priv->remove_button, e_source_get_removable (source));
-
-  /* unblock signals */
-  g_signal_handlers_unblock_by_func (priv->calendar_color_button, color_set, dialog);
-  g_signal_handlers_unblock_by_func (priv->name_entry, name_entry_text_changed, dialog);
-
-  g_object_unref (default_source);
-  g_free (parent_name);
 }
