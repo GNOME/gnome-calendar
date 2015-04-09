@@ -164,6 +164,10 @@ static void       on_file_activated                     (GSimpleAction       *ac
                                                          GVariant            *param,
                                                          gpointer             user_data);
 
+static void       on_local_activated                    (GSimpleAction       *action,
+                                                         GVariant            *param,
+                                                         gpointer             user_data);
+
 static void       remove_source                         (GcalManager         *manager,
                                                          ESource             *source,
                                                          gpointer             user_data);
@@ -198,9 +202,9 @@ static void       discover_sources_cb                   (GObject             *so
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
 GActionEntry actions[] = {
-  {"file",  on_file_activated, NULL, NULL, NULL},
-  {"local", NULL,              NULL, NULL, NULL},
-  {"web",   NULL,              NULL, NULL, NULL}
+  {"file",  on_file_activated,  NULL, NULL, NULL},
+  {"local", on_local_activated, NULL, NULL, NULL},
+  {"web",   NULL,               NULL, NULL, NULL}
 };
 
 
@@ -1039,6 +1043,41 @@ on_file_activated (GSimpleAction *action,
   gtk_dialog_run (GTK_DIALOG (dialog));
 
   gtk_widget_destroy (dialog);
+}
+
+/**
+ * on_local_activated:
+ *
+ * Creates a new local calendar, and let
+ * the user adjust the settings after.
+ *
+ * Returns:
+ */
+static void
+on_local_activated (GSimpleAction *action,
+                    GVariant      *param,
+                    gpointer       user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  ESourceExtension *ext;
+  ESource *source;
+
+  /**
+   * Create the new source and add the needed
+   * extensions.
+   */
+  source = e_source_new (NULL, NULL, NULL);
+  e_source_set_parent (source, "local-stub");
+
+  ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
+  e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
+
+  /* update the source properties */
+  e_source_set_display_name (source, _("Unnamed Calendar"));
+
+  // Jump to the edit page
+  gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
+  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_CREATE);
 }
 
 /**
