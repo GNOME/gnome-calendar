@@ -646,6 +646,44 @@ response_signal (GtkDialog *dialog,
     }
 }
 
+static gboolean
+is_remote_source (ESource *source)
+{
+  gboolean has_webdav, has_auth;
+
+  g_assert (E_IS_SOURCE (source));
+
+  has_webdav = e_source_has_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
+  has_auth = e_source_has_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
+
+  if (!has_webdav || !has_auth)
+    return FALSE;
+
+  if (has_auth)
+    {
+      ESourceAuthentication *auth;
+
+      auth = e_source_get_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
+
+      // No host is set, it's not a remote source
+      if (e_source_authentication_get_host (auth) == NULL)
+        return FALSE;
+    }
+
+  if (has_webdav)
+    {
+      ESourceWebdav *webdav;
+
+      webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
+
+      // No resource path specified, not a remote source
+      if (e_source_webdav_get_resource_path (webdav) == NULL)
+        return FALSE;
+    }
+
+  return TRUE;
+}
+
 static void
 stack_visible_child_name_changed (GObject    *object,
                                   GParamSpec *pspec,
@@ -666,16 +704,27 @@ stack_visible_child_name_changed (GObject    *object,
       gtk_widget_set_visible (priv->back_button, FALSE);
     }
 
-  // Update fields when it goes to the edit page.
+  /*
+   * Update fields when it goes to the edit page.
+   * Here, only widgets that depends on the current
+   * source are updated, while indenpendent widgets
+   * are updated at #gcal_source_dialog_set_mode
+   */
   if (g_strcmp0 (visible_name, "edit") == 0 && priv->source != NULL)
     {
       ESource *default_source;
       gchar *parent_name;
       GdkRGBA color;
       gboolean creation_mode;
+      gboolean is_goa;
+      gboolean is_file;
+      gboolean is_remote;
 
       default_source = gcal_manager_get_default_source (priv->manager);
       creation_mode = priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE;
+      is_goa = is_goa_source (GCAL_SOURCE_DIALOG (user_data), priv->source);
+      is_file = e_source_has_extension (priv->source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
+      is_remote = is_remote_source (priv->source);
 
       get_source_parent_name_color (priv->manager, priv->source, &parent_name, NULL);
 
@@ -685,6 +734,45 @@ stack_visible_child_name_changed (GObject    *object,
       gtk_widget_set_visible (priv->back_button, !creation_mode);
       gtk_widget_set_visible (priv->add_button, creation_mode);
       gtk_widget_set_visible (priv->cancel_button, creation_mode);
+      gtk_widget_set_visible (priv->account_box, is_goa);
+      gtk_widget_set_visible (priv->calendar_url_button, !is_goa && (is_file || is_remote));
+
+      // If it's a file, set the file path
+      if (is_file)
+        {
+          ESourceLocal *local;
+          GFile *file;
+          gchar *uri;
+
+          local = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
+          file = e_source_local_get_custom_file (local);
+          uri = g_file_get_uri (file);
+
+          gtk_link_button_set_uri (GTK_LINK_BUTTON (priv->calendar_url_button), uri);
+          gtk_button_set_label (GTK_BUTTON (priv->calendar_url_button), uri);
+
+          g_free (uri);
+        }
+
+      // If it's remote, build the uri
+      if (is_remote)
+        {
+          ESourceAuthentication *auth;
+          ESourceWebdav *webdav;
+          gchar *uri;
+
+          auth = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_AUTHENTICATION);
+          webdav = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
+          uri = g_strdup_printf ("https://%s%s", e_source_authentication_get_host (auth),
+                                 e_source_webdav_get_resource_path (webdav));
+
+          gtk_link_button_set_uri (GTK_LINK_BUTTON (priv->calendar_url_button), uri);
+          gtk_button_set_label (GTK_BUTTON (priv->calendar_url_button), uri);
+
+          g_free (uri);
+        }
+
+      // TODO: setup GOA settings
 
       /* block signals */
       g_signal_handlers_block_by_func (priv->calendar_visible_check, calendar_visible_check_toggled, user_data);
