@@ -81,6 +81,7 @@
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <property name="tooltip_text" translatable="yes">Open online account settings</property>
+                                <signal name="clicked" handler="online_accounts_settings_button_clicked" object="GcalSourceDialog" swapped="no" />
                                 <child>
                                   <object class="GtkImage" id="online_accounts_settings_button_image">
                                     <property name="visible">True</property>

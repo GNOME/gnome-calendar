@@ -140,6 +140,9 @@ static void       new_name_entry_text_changed           (GObject             *ob
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
 
+static void       online_accounts_settings_button_clicked (GtkWidget         *button,
+                                                          gpointer            user_data);
+
 static void       on_file_activated                     (GSimpleAction       *action,
                                                          GVariant            *param,
                                                          gpointer             user_data);
@@ -874,6 +877,22 @@ url_entry_text_changed (GObject    *object,
     }
 }
 
+/**
+ * online_accounts_settings_button_clicked:
+ *
+ * Spawns the GNOME Control Center app
+ * with Online Accounts openned.
+ *
+ * Returns:
+ */
+static void
+online_accounts_settings_button_clicked (GtkWidget *button,
+                                         gpointer   user_data)
+{
+  gchar *command[] = {"gnome-control-center", "online-accounts", NULL};
+  g_spawn_async (NULL, command, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
+}
+
 static void
 on_file_activated (GSimpleAction *action,
                    GVariant      *param,
@@ -1391,6 +1410,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, new_name_entry_text_changed);
+  gtk_widget_class_bind_template_callback (widget_class, online_accounts_settings_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
   gtk_widget_class_bind_template_callback (widget_class, stack_visible_child_name_changed);
   gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
