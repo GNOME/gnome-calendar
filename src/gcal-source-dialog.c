@@ -18,7 +18,6 @@
 
 #include "gcal-source-dialog.h"
 
-#include "e-source-local.h"
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
