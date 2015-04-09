@@ -535,8 +535,15 @@ name_entry_text_changed (GObject    *object,
                          gpointer    user_data)
 {
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  gboolean valid;
 
-  e_source_set_display_name (priv->source, gtk_entry_get_text (GTK_ENTRY (priv->name_entry)));
+  valid = g_utf8_strlen (gtk_entry_get_text (GTK_ENTRY (object)), -1) > 0;
+
+  gtk_widget_set_sensitive (priv->back_button, valid);
+  gtk_widget_set_sensitive (priv->add_button, valid);
+
+  if (valid)
+    e_source_set_display_name (priv->source, gtk_entry_get_text (GTK_ENTRY (priv->name_entry)));
 }
 
 /**
