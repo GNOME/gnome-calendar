@@ -59,6 +59,13 @@ typedef struct
   GtkWidget          *web_sources_listbox;
   GtkWidget          *web_sources_revealer;
 
+  /* credentials dialog */
+  GtkWidget          *credentials_cancel_button;
+  GtkWidget          *credentials_connect_button;
+  GtkWidget          *credentials_dialog;
+  GtkWidget          *credentials_password_entry;
+  GtkWidget          *credentials_user_entry;
+
   gint                calendar_address_id;
   gint                validate_url_resource_id;
   gint                notification_timeout_id;
@@ -1229,6 +1236,18 @@ out:
 }
 
 static void
+credential_button_clicked (GtkWidget *button,
+                           gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG(user_data)->priv;
+
+  if (button == priv->credentials_cancel_button)
+    gtk_dialog_response (GTK_DIALOG (priv->credentials_dialog), GTK_RESPONSE_CANCEL);
+  else
+    gtk_dialog_response (GTK_DIALOG (priv->credentials_dialog), GTK_RESPONSE_OK);
+}
+
+static void
 credential_entry_activate (GtkEntry *entry,
                            gpointer  user_data)
 {
@@ -1240,72 +1259,26 @@ prompt_credentials (GcalSourceDialog  *dialog,
                     gchar            **username,
                     gchar            **password)
 {
-  GtkWidget *password_entry;
-  GtkWidget *prompt_dialog;
-  GtkWidget *name_entry;
-  GtkWidget *grid, *label;
-  GtkWidget *button;
+  GcalSourceDialogPrivate *priv = dialog->priv;
   gint response;
 
-  // Name entry
-  name_entry = gtk_entry_new ();
-  gtk_widget_set_hexpand (name_entry, TRUE);
-
-  // Password entry
-  password_entry = g_object_new (GTK_TYPE_ENTRY,
-                                 "visibility", FALSE,
-                                 "hexpand", TRUE,
-                                 NULL);
-
-  prompt_dialog = gtk_dialog_new_with_buttons (_("Enter your username and password"), GTK_WINDOW (dialog),
-                                               GTK_DIALOG_MODAL | GTK_DIALOG_USE_HEADER_BAR,
-                                               _("Cancel"), GTK_RESPONSE_CANCEL,
-                                               _("Connect"), GTK_RESPONSE_OK, NULL);
-
-  // Set the "Connect" button style
-  button = gtk_dialog_get_widget_for_response (GTK_DIALOG (prompt_dialog), GTK_RESPONSE_OK);
-  gtk_style_context_add_class (gtk_widget_get_style_context (button), "suggested-action");
-
-  // Add some labels
-  grid = gtk_grid_new ();
-  g_object_set (grid,
-                "border-width", 12,
-                "column-spacing", 12,
-                "row-spacing", 6,
-                "expand", TRUE,
-                NULL);
-
-  label = gtk_label_new (_("User"));
-  gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
-  gtk_label_set_xalign (GTK_LABEL (label), 1.0);
-  gtk_grid_attach (GTK_GRID (grid), label, 0, 0, 1, 1);
-
-  label = gtk_label_new (_("Password"));
-  gtk_style_context_add_class (gtk_widget_get_style_context (label), "dim-label");
-  gtk_label_set_xalign (GTK_LABEL (label), 1.0);
-  gtk_grid_attach (GTK_GRID (grid), label, 0, 1, 1, 1);
-
-  // Add entries
-  gtk_grid_attach (GTK_GRID (grid), name_entry, 1, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (grid), password_entry, 1, 1, 1, 1);
-
-  // Insert into the dialog
-  gtk_container_add (GTK_CONTAINER (gtk_dialog_get_content_area (GTK_DIALOG (prompt_dialog))), grid);
-  gtk_widget_show_all (grid);
-
-  g_signal_connect (name_entry, "activate", G_CALLBACK (credential_entry_activate), prompt_dialog);
-  g_signal_connect (password_entry, "activate", G_CALLBACK (credential_entry_activate), prompt_dialog);
+  // Cleanup last credentials
+  gtk_entry_set_text (GTK_ENTRY (priv->credentials_password_entry), "");
+  gtk_entry_set_text (GTK_ENTRY (priv->credentials_user_entry), "");
 
   // Show the dialog, then destroy it
-  response = gtk_dialog_run (GTK_DIALOG (prompt_dialog));
+  response = gtk_dialog_run (GTK_DIALOG (priv->credentials_dialog));
 
-  if (username)
-    *username = g_strdup (gtk_entry_get_text (GTK_ENTRY (name_entry)));
+  if (response == GTK_RESPONSE_OK)
+    {
+      if (username)
+        *username = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->credentials_user_entry)));
 
-  if (password)
-    *password = g_strdup (gtk_entry_get_text (GTK_ENTRY (password_entry)));
+      if (password)
+        *password = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->credentials_password_entry)));
+    }
 
-  gtk_widget_destroy (prompt_dialog);
+  gtk_widget_hide (priv->credentials_dialog);
 
   return response;
 }
@@ -1741,6 +1714,11 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_visible_check);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendars_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, credentials_cancel_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, credentials_connect_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, credentials_dialog);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, credentials_password_entry);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, credentials_user_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, default_check);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, edit_grid);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
@@ -1764,6 +1742,8 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, calendar_listbox_row_activated);
   gtk_widget_class_bind_template_callback (widget_class, calendar_visible_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, cancel_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, credential_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, credential_entry_activate);
   gtk_widget_class_bind_template_callback (widget_class, color_set);
   gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
