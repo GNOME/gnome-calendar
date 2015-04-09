@@ -200,7 +200,7 @@ add_source (GcalManager *manager,
         contains_source = TRUE;
     }
 
-  if (!contains_source)
+  if (!contains_source && !is_goa_source (GCAL_SOURCE_DIALOG (user_data), source))
     {
       GtkWidget *row;
 
