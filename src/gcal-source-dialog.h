@@ -41,6 +41,7 @@ struct _GcalSourceDialogClass
 
 typedef enum
 {
+  GCAL_SOURCE_DIALOG_MODE_CREATE,
   GCAL_SOURCE_DIALOG_MODE_EDIT,
   GCAL_SOURCE_DIALOG_MODE_NORMAL
 } GcalSourceDialogMode;
