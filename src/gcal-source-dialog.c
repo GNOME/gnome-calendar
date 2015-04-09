@@ -115,6 +115,10 @@ static void       calendar_listbox_row_activated        (GtkListBox          *bo
                                                          GtkListBoxRow       *row,
                                                          gpointer             user_data);
 
+static gint       calendar_listbox_sort_func             (GtkListBoxRow       *row1,
+                                                          GtkListBoxRow       *row2,
+                                                          gpointer             user_data);
+
 static void       calendar_visible_check_toggled        (GObject             *object,
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
@@ -302,6 +306,19 @@ back_button_clicked (GtkButton *button,
 
       gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
     }
+}
+
+static gint
+calendar_listbox_sort_func (GtkListBoxRow *row1,
+                            GtkListBoxRow *row2,
+                            gpointer       user_data)
+{
+  ESource *source1, *source2;
+
+  source1 = g_object_get_data (G_OBJECT (row1), "source");
+  source2 = g_object_get_data (G_OBJECT (row2), "source");
+
+  return g_strcmp0 (e_source_get_display_name (source1), e_source_get_display_name (source2));
 }
 
 static void
@@ -1521,6 +1538,9 @@ gcal_source_dialog_constructed (GObject *object)
 
   // Setup listbox header functions
   gtk_list_box_set_header_func (GTK_LIST_BOX (priv->calendars_listbox), display_header_func, NULL, NULL);
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->calendars_listbox), (GtkListBoxSortFunc) calendar_listbox_sort_func,
+                              object, NULL);
+
   gtk_list_box_set_header_func (GTK_LIST_BOX (priv->online_accounts_listbox), display_header_func, NULL, NULL);
 
   // Action group
