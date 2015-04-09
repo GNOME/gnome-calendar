@@ -297,13 +297,11 @@ back_button_clicked (GtkButton *button,
                      gpointer   user_data)
 {
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  const gchar *visible_child;
 
-  /*
-   * TODO: when editing a GOA calendar, it should
-   * go back to the GOA calendar selection page.
-   */
+  visible_child = gtk_stack_get_visible_child_name (GTK_STACK (priv->stack));
 
-  if (g_strcmp0 (gtk_stack_get_visible_child_name (GTK_STACK (priv->stack)), "edit") == 0)
+  if (g_strcmp0 (visible_child, "edit") == 0)
     {
       // Save the source before leaving
       gcal_manager_save_source (priv->manager, priv->source);
@@ -311,9 +309,9 @@ back_button_clicked (GtkButton *button,
       // Release the source ref we acquired
       g_object_unref (priv->source);
       priv->source = NULL;
-
-      gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
     }
+
+  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
 }
 
 static gint
