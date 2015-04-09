@@ -38,6 +38,17 @@ typedef struct
   GtkWidget          *remove_button;
   GtkWidget          *stack;
 
+  /* notification */
+  GtkWidget          *notification;
+  GtkWidget          *notification_label;
+
+  /* edit page widgets */
+  GtkWidget          *account_box;
+  GtkWidget          *account_label;
+  GtkWidget          *account_dim_label;
+  GtkWidget          *calendar_url_button;
+  GtkWidget          *location_dim_label;
+
   /* new source details */
   GtkWidget          *author_label;
   GtkWidget          *calendar_address_entry;
@@ -48,8 +59,9 @@ typedef struct
   GtkWidget          *web_sources_listbox;
   GtkWidget          *web_sources_revealer;
 
-  gint                validate_url_resource_id;
   gint                calendar_address_id;
+  gint                validate_url_resource_id;
+  gint                notification_timeout_id;
 
   /* overview widgets */
   GtkWidget          *add_calendar_menu_button;
@@ -60,6 +72,7 @@ typedef struct
   GcalSourceDialogMode mode;
   ESource            *source;
   ESource            *remote_source;
+  ESource            *removed_source;
   ESource            *old_default_source;
   GBinding           *title_bind;
   gboolean           *prompt_password;
@@ -1314,6 +1327,177 @@ remove_source (GcalManager *manager,
   g_list_free (children);
 }
 
+/**
+ * notification_child_revealed_changed:
+ *
+ * Remove the source after the notification
+ * is hidden.
+ *
+ * Returns:
+ */
+static void
+notification_child_revealed_changed (GtkWidget  *notification,
+                                     GParamSpec *spec,
+                                     gpointer    user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  if (gtk_revealer_get_child_revealed (GTK_REVEALER (notification)))
+      return;
+
+  /* If we have any removed source, delete it */
+  if (priv->removed_source != NULL)
+    {
+      GError *error = NULL;
+
+      /* We don't really want to remove non-removable sources */
+      if (!e_source_get_removable (priv->removed_source))
+        return;
+
+      // Enable the source again to remove it's name from disabled list
+      gcal_manager_enable_source (priv->manager, priv->removed_source);
+
+      e_source_remove_sync (priv->removed_source, NULL, &error);
+
+      /**
+       * If something goes wrong, throw
+       * an alert and add the source back.
+       */
+      if (error != NULL)
+        {
+          g_warning ("[source-dialog] Error removing source: %s", error->message);
+
+          add_source (priv->manager, priv->removed_source,
+                      gcal_manager_source_enabled (priv->manager, priv->removed_source), user_data);
+
+          gcal_manager_enable_source (priv->manager, priv->removed_source);
+
+          g_error_free (error);
+        }
+    }
+}
+
+/**
+ * undo_remove_action:
+ *
+ * Readd the removed source.
+ *
+ * Returns:
+ */
+static void
+undo_remove_action (GtkButton *button,
+                    gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  /* if there's any set source, unremove it */
+  if (priv->removed_source != NULL)
+    {
+      // Enable the source before adding it again
+      gcal_manager_enable_source (priv->manager, priv->removed_source);
+
+      add_source (priv->manager, priv->removed_source,
+                  gcal_manager_source_enabled (priv->manager, priv->removed_source), user_data);
+
+      /*
+       * Don't clear the pointer, since we don't
+       * want to erase the source at all.
+       */
+      priv->removed_source = NULL;
+
+      // Hide notification
+      gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), FALSE);
+    }
+}
+
+/**
+ * hide_notification:
+ *
+ * Helper function that hides the
+ * notification, causing the removal
+ * of the source (when valid).
+ *
+ * Returns:
+ */
+static void
+hide_notification (GcalSourceDialog *dialog,
+                   GtkWidget        *button)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), FALSE);
+  priv->notification_timeout_id = 0;
+}
+
+/**
+ * hide_notification_scheduled:
+ *
+ * Limit the ammount of time that
+ * the notification is shown.
+ *
+ * Returns: %FALSE
+ */
+static gboolean
+hide_notification_scheduled (gpointer dialog)
+{
+  hide_notification (GCAL_SOURCE_DIALOG (dialog), NULL);
+  return FALSE;
+}
+
+/**
+ * remove_button_clicked:
+ *
+ * Trigger the source removal
+ * logic.
+ *
+ * Returns:
+ */
+static void
+remove_button_clicked (GtkWidget *button,
+                       gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  if (priv->source != NULL)
+    {
+      GList *children, *l;
+      gchar *str;
+
+      priv->removed_source = priv->source;
+      priv->source = NULL;
+      children = gtk_container_get_children (GTK_CONTAINER (priv->calendars_listbox));
+
+      gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), TRUE);
+
+      // Remove the listbox entry (if any)
+      for (l = children; l != NULL; l = l->next)
+        {
+          if (g_object_get_data (l->data, "source") == priv->removed_source)
+            {
+              gtk_widget_destroy (l->data);
+              break;
+            }
+        }
+
+      // Update notification label
+      str = g_strdup_printf (_("Calendar <b>%s</b> removed"), e_source_get_display_name (priv->removed_source));
+      gtk_label_set_markup (GTK_LABEL (priv->notification_label), str);
+
+      // Remove old notifications
+      if (priv->notification_timeout_id != 0)
+        g_source_remove (priv->notification_timeout_id);
+
+      priv->notification_timeout_id = g_timeout_add_seconds (5, hide_notification_scheduled, user_data);
+
+      // Disable the source, so it gets hidden
+      gcal_manager_disable_source (priv->manager, priv->removed_source);
+
+      g_list_free (children);
+      g_free (str);
+    }
+
+  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
+}
+
 GcalSourceDialog *
 gcal_source_dialog_new (void)
 {
@@ -1377,18 +1561,24 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
 
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, account_box);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, account_label);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_calendar_menu_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, back_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_address_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_color_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_url_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_visible_check);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendars_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, default_check);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, edit_grid);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, location_dim_label);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notification);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notification_label);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, online_accounts_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, remove_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
@@ -1408,11 +1598,15 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, color_set);
   gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
+  gtk_widget_class_bind_template_callback (widget_class, hide_notification);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, new_name_entry_text_changed);
+  gtk_widget_class_bind_template_callback (widget_class, notification_child_revealed_changed);
   gtk_widget_class_bind_template_callback (widget_class, online_accounts_settings_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, remove_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
   gtk_widget_class_bind_template_callback (widget_class, stack_visible_child_name_changed);
+  gtk_widget_class_bind_template_callback (widget_class, undo_remove_action);
   gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
 }
 

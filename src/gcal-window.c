@@ -115,8 +115,6 @@ typedef struct
   gint                 refresh_timeout;
   gint                 refresh_timeout_id;
 
-  ESource             *removed_source;
-
   /* temp to keep event_creation */
   gboolean             open_edit_dialog;
 } GcalWindowPrivate;
@@ -908,9 +906,7 @@ source_row_activated (GtkListBox    *listbox,
                       gpointer       user_data)
 {
   GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-  GtkWidget *new_row;
   ESource *source;
-  gint response;
 
   source = g_object_get_data (G_OBJECT (row), "source");
 
@@ -922,34 +918,9 @@ source_row_activated (GtkListBox    *listbox,
 
   gtk_widget_hide (priv->calendar_popover);
 
-  response = gtk_dialog_run (GTK_DIALOG (priv->source_dialog));
+  gtk_dialog_run (GTK_DIALOG (priv->source_dialog));
 
   gtk_widget_hide (priv->source_dialog);
-
-  /* remove the row */
-  gtk_widget_destroy (GTK_WIDGET (row));
-
-  if (response == GCAL_RESPONSE_REMOVE_SOURCE)
-    {
-      gchar *str;
-
-      str = g_strdup_printf (_("Calendar <b>%s</b> removed"), e_source_get_display_name (source));
-      priv->removed_source = source;
-
-      create_notification (GCAL_WINDOW (user_data), str, _("Undo"));
-      gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), TRUE);
-
-      gcal_manager_disable_source (priv->manager, source);
-
-      g_free (str);
-    }
-  else
-    {
-      new_row = make_row_from_source (GCAL_WINDOW (user_data), source);
-      g_object_set_data (G_OBJECT (new_row), "source", source);
-
-      gtk_container_add (GTK_CONTAINER (priv->calendar_listbox), new_row);
-    }
 }
 
 static void
@@ -1264,36 +1235,6 @@ remove_event (GtkWidget  *notification,
 
       g_clear_pointer (&(priv->event_to_delete), g_free);
     }
-
-  /* If we have any removed source, finally delete it */
-  if (priv->removed_source != NULL)
-    {
-      GError *error = NULL;
-
-      /* We don't really want to remove non-removable sources */
-      if (!e_source_get_removable (priv->removed_source))
-        return;
-
-      e_source_remove_sync (priv->removed_source, NULL, &error);
-
-      /**
-       * If something goes wrong, throw
-       * an alert and add the source back.
-       */
-      if (error != NULL)
-        {
-          g_warning ("Error removing source: %s", error->message);
-
-          add_source (priv->manager, priv->removed_source,
-                      gcal_manager_source_enabled (priv->manager, priv->removed_source), user_data);
-
-          gcal_manager_enable_source (priv->manager, priv->removed_source);
-
-          g_error_free (error);
-        }
-    }
-
-
 }
 
 static void
@@ -1317,33 +1258,6 @@ undo_remove_action (GtkButton *button,
       g_list_free (widgets);
       g_free (uuid);
     }
-
-  /* if there's any set source, unremove it */
-  if (priv->removed_source != NULL)
-    {
-      /**
-       * Enable the source before adding it again to
-       * avoid an enabled source with unchecked check
-       * button.
-       */
-      gcal_manager_enable_source (priv->manager, priv->removed_source);
-
-      add_source (priv->manager, priv->removed_source,
-                  gcal_manager_source_enabled (priv->manager, priv->removed_source), user_data);
-
-      /**
-       * Don't clear the pointer, since we don't
-       * want to erase the source at all.
-       */
-      priv->removed_source = NULL;
-    }
-
-  if (priv->event_to_delete != NULL || priv->removed_source != NULL)
-    {
-      g_source_remove (priv->notification_timeout);
-      hide_notification (GCAL_WINDOW (user_data), NULL);
-    }
-
 }
 
 static gboolean
