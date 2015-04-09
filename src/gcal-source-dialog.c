@@ -168,6 +168,10 @@ static void       on_local_activated                    (GSimpleAction       *ac
                                                          GVariant            *param,
                                                          gpointer             user_data);
 
+static void       on_web_activated                      (GSimpleAction       *action,
+                                                         GVariant            *param,
+                                                         gpointer             user_data);
+
 static void       remove_source                         (GcalManager         *manager,
                                                          ESource             *source,
                                                          gpointer             user_data);
@@ -204,7 +208,7 @@ G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALO
 GActionEntry actions[] = {
   {"file",  on_file_activated,  NULL, NULL, NULL},
   {"local", on_local_activated, NULL, NULL, NULL},
-  {"web",   NULL,               NULL, NULL, NULL}
+  {"web",   on_web_activated,   NULL, NULL, NULL}
 };
 
 
@@ -725,7 +729,8 @@ stack_visible_child_name_changed (GObject    *object,
       gboolean is_remote;
 
       default_source = gcal_manager_get_default_source (priv->manager);
-      creation_mode = priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE;
+      creation_mode = (priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE ||
+                       priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE_WEB);
       is_goa = is_goa_source (GCAL_SOURCE_DIALOG (user_data), priv->source);
       is_file = e_source_has_extension (priv->source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
       is_remote = is_remote_source (priv->source);
@@ -799,8 +804,11 @@ stack_visible_child_name_changed (GObject    *object,
       gtk_widget_set_visible (priv->default_check, !gcal_manager_is_client_writable (priv->manager, priv->source));
 
       /* title */
-      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), e_source_get_display_name (priv->source));
-      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), parent_name);
+      if (!creation_mode)
+        {
+          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), e_source_get_display_name (priv->source));
+          gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), parent_name);
+        }
 
       /* toggle the remove button */
       gtk_widget_set_visible (priv->remove_button, e_source_get_removable (priv->source));
@@ -1078,6 +1086,22 @@ on_local_activated (GSimpleAction *action,
   // Jump to the edit page
   gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_CREATE);
+}
+
+/**
+ * on_web_activated:
+ *
+ * Redirect to the web calendar creation
+ * page
+ *
+ * Returns:
+ */
+static void
+on_web_activated (GSimpleAction *action,
+                  GVariant      *param,
+                  gpointer       user_data)
+{
+  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_CREATE_WEB);
 }
 
 /**
@@ -1820,14 +1844,18 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
   switch (mode)
     {
     case GCAL_SOURCE_DIALOG_MODE_CREATE:
-      // Bind title
-      if (priv->title_bind == NULL)
-        {
-          priv->title_bind = g_object_bind_property (priv->name_entry, "text", priv->headerbar, "title",
-                                                     G_BINDING_DEFAULT);
-        }
-
+      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
       gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "edit");
+      break;
+
+    case GCAL_SOURCE_DIALOG_MODE_CREATE_WEB:
+      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
+      gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->headerbar), FALSE);
+      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "create");
+      gtk_widget_set_visible (priv->add_button, TRUE);
+      gtk_widget_set_visible (priv->cancel_button, TRUE);
       break;
 
     case GCAL_SOURCE_DIALOG_MODE_EDIT:
