@@ -81,6 +81,9 @@ struct _GcalSourceDialog
 
 #define ENTRY_PROGRESS_TIMEOUT            100
 
+static void       add_button_clicked                    (GtkWidget            *button,
+                                                         gpointer              user_data);
+
 static void       add_source                             (GcalManager         *manager,
                                                           ESource             *source,
                                                           gboolean             enabled,
@@ -179,6 +182,24 @@ GActionEntry actions[] = {
   {"local", NULL,              NULL, NULL, NULL},
   {"web",   NULL,              NULL, NULL, NULL}
 };
+
+
+static void
+add_button_clicked (GtkWidget *button,
+                    gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  if (priv->source != NULL)
+    {
+      // Commit the new source
+      gcal_manager_save_source (priv->manager, priv->source);
+
+      priv->source = NULL;
+
+      gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
+    }
+}
 
 static void
 add_source (GcalManager *manager,
@@ -1352,6 +1373,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_revealer);
 
+  gtk_widget_class_bind_template_callback (widget_class, add_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
   gtk_widget_class_bind_template_callback (widget_class, back_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);

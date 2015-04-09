@@ -818,7 +818,7 @@
             <property name="sensitive">False</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="action_widget_activated" object="GcalSourceDialog" swapped="no"/>
+            <signal name="clicked" handler="add_button_clicked" object="GcalSourceDialog" swapped="no"/>
             <style>
               <class name="suggested-action"/>
             </style>
