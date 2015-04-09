@@ -806,7 +806,7 @@
             <property name="label" translatable="yes">Cancel</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="action_widget_activated" object="GcalSourceDialog" swapped="no"/>
+            <signal name="clicked" handler="cancel_button_clicked" object="GcalSourceDialog" swapped="no"/>
           </object>
           <packing>
             <property name="position">2</property>

@@ -593,18 +593,17 @@ stack_visible_child_name_changed (GObject    *object,
 {
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
   const gchar *visible_name;
-  gboolean is_main;
 
   visible_name = gtk_stack_get_visible_child_name (GTK_STACK (object));
-  is_main = g_strcmp0 (visible_name, "main") == 0;
 
-  // Show the '<' button everywhere except "main" page
-  gtk_widget_set_visible (priv->back_button, !is_main);
-
-  if (is_main)
+  if (g_strcmp0 (visible_name, "main") == 0)
     {
       gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Calendar Settings"));
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
+      gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->headerbar), TRUE);
+      gtk_widget_set_visible (priv->add_button, FALSE);
+      gtk_widget_set_visible (priv->cancel_button, FALSE);
+      gtk_widget_set_visible (priv->back_button, FALSE);
     }
 
   // Update fields when it goes to the edit page.
@@ -613,10 +612,19 @@ stack_visible_child_name_changed (GObject    *object,
       ESource *default_source;
       gchar *parent_name;
       GdkRGBA color;
+      gboolean creation_mode;
 
       default_source = gcal_manager_get_default_source (priv->manager);
+      creation_mode = priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE;
 
       get_source_parent_name_color (priv->manager, priv->source, &parent_name, NULL);
+
+      // update headerbar buttons
+      gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->headerbar), !creation_mode);
+      gtk_widget_set_visible (priv->calendar_visible_check, !creation_mode);
+      gtk_widget_set_visible (priv->back_button, !creation_mode);
+      gtk_widget_set_visible (priv->add_button, creation_mode);
+      gtk_widget_set_visible (priv->cancel_button, creation_mode);
 
       /* block signals */
       g_signal_handlers_block_by_func (priv->calendar_visible_check, calendar_visible_check_toggled, user_data);
@@ -693,8 +701,9 @@ calendar_file_selected (GtkFileChooser       *button,
   /* update the source properties */
   e_source_set_display_name (source, g_file_get_basename (file));
 
-  /* Update buttons */
-  gtk_widget_set_sensitive (priv->add_button, source != NULL);
+  // Jump to the edit page
+  gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
+  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_CREATE);
 }
 
 /**
@@ -1416,12 +1425,35 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
   gboolean edit_mode;
 
   priv->mode = mode;
-  edit_mode = (mode == GCAL_SOURCE_DIALOG_MODE_EDIT);
 
-  gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), edit_mode ? "edit" : "main");
+  // Cleanup old data
+  clear_pages (dialog);
 
-  if (!edit_mode)
+  switch (mode)
     {
+    case GCAL_SOURCE_DIALOG_MODE_CREATE:
+      // Bind title
+      if (priv->title_bind == NULL)
+        {
+          priv->title_bind = g_object_bind_property (priv->name_entry, "text", priv->headerbar, "title",
+                                                     G_BINDING_DEFAULT);
+        }
+
+      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "edit");
+      break;
+
+    case GCAL_SOURCE_DIALOG_MODE_EDIT:
+      // Bind title
+      if (priv->title_bind == NULL)
+        {
+          priv->title_bind = g_object_bind_property (priv->name_entry, "text", priv->headerbar, "title",
+                                                     G_BINDING_DEFAULT);
+        }
+
+      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "edit");
+      break;
+
+    case GCAL_SOURCE_DIALOG_MODE_NORMAL:
       /* Free any bindings left behind */
       if (priv->title_bind != NULL)
         {
@@ -1430,17 +1462,12 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
         }
 
       gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Calendar Settings"));
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
+      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "main");
+      break;
 
-      clear_pages (dialog);
-    }
-  else
-    {
-      /* bind title when nothing is binded */
-      if (priv->title_bind == NULL)
-        {
-          priv->title_bind = g_object_bind_property (priv->name_entry, "text", priv->headerbar, "title",
-                                                     G_BINDING_DEFAULT);
-        }
+    default:
+      g_assert_not_reached ();
     }
 }
 
