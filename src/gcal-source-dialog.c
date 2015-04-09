@@ -1194,6 +1194,7 @@ validate_url_cb (GcalSourceDialog *dialog)
           gchar *user, *password;
 
           response = prompt_credentials (dialog, &user, &password);
+          user = password = NULL;
 
           /*
            * User entered username and password, let's try
