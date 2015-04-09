@@ -93,7 +93,7 @@ static void       action_widget_activated               (GtkWidget            *w
 static void       back_button_clicked                   (GtkButton            *button,
                                                          gpointer              user_data);
 
-static void       calendar_file_selected                (GtkFileChooserButton *button,
+static void       calendar_file_selected                (GtkFileChooser       *button,
                                                          gpointer              user_data);
 
 static void       calendar_listbox_row_activated        (GtkListBox          *box,
@@ -103,6 +103,9 @@ static void       calendar_listbox_row_activated        (GtkListBox          *bo
 static void       calendar_visible_check_toggled        (GObject             *object,
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
+
+static void       cancel_button_clicked                 (GtkWidget            *button,
+                                                         gpointer              user_data);
 
 static void       clear_pages                           (GcalSourceDialog     *dialog);
 
@@ -133,6 +136,10 @@ static void       name_entry_text_changed               (GObject             *ob
 
 static void       new_name_entry_text_changed           (GObject             *object,
                                                          GParamSpec          *pspec,
+                                                         gpointer             user_data);
+
+static void       on_file_activated                     (GSimpleAction       *action,
+                                                         GVariant            *param,
                                                          gpointer             user_data);
 
 static void       remove_source                         (GcalManager         *manager,
@@ -169,9 +176,9 @@ static void       discover_sources_cb                   (GObject             *so
 G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
 GActionEntry actions[] = {
-  {"file",  NULL, NULL, NULL, NULL},
-  {"local", NULL, NULL, NULL, NULL},
-  {"web",   NULL, NULL, NULL, NULL}
+  {"file",  on_file_activated, NULL, NULL, NULL},
+  {"local", NULL,              NULL, NULL, NULL},
+  {"web",   NULL,              NULL, NULL, NULL}
 };
 
 static void
@@ -274,6 +281,22 @@ calendar_visible_check_toggled (GObject    *object,
     gcal_manager_enable_source (priv->manager, priv->source);
   else
     gcal_manager_disable_source (priv->manager, priv->source);
+}
+
+static void
+cancel_button_clicked (GtkWidget *button,
+                       gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  // Destroy the ongoing created source
+  if (priv->source != NULL)
+    {
+      g_object_unref (priv->source);
+      priv->source = NULL;
+    }
+
+  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
 }
 
 /**
@@ -641,7 +664,7 @@ stack_visible_child_name_changed (GObject    *object,
  * Returns:
  */
 static void
-calendar_file_selected (GtkFileChooserButton *button,
+calendar_file_selected (GtkFileChooser       *button,
                         gpointer              user_data)
 {
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
@@ -649,7 +672,7 @@ calendar_file_selected (GtkFileChooserButton *button,
   ESource *source;
   GFile *file;
 
-  //file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (priv->select_file_button));
+  file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (button));
 
   if (file == NULL)
     return;
@@ -813,6 +836,36 @@ url_entry_text_changed (GObject    *object,
       gtk_entry_set_progress_fraction (GTK_ENTRY (priv->calendar_address_entry), 0);
       gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), FALSE);
     }
+}
+
+static void
+on_file_activated (GSimpleAction *action,
+                   GVariant      *param,
+                   gpointer       user_data)
+{
+  GtkWidget *dialog;
+  GtkFileFilter *filter;
+
+  // Dialog
+  dialog = gtk_file_chooser_dialog_new (_("Select a calendar file"),
+                                        GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (user_data))),
+                                        GTK_FILE_CHOOSER_ACTION_SAVE,
+                                        _("Cancel"), GTK_RESPONSE_CANCEL,
+                                        _("Open"), GTK_RESPONSE_OK,
+                                        NULL);
+
+  g_signal_connect (dialog, "file-activated", G_CALLBACK (calendar_file_selected), user_data);
+
+  // File filter
+  filter = gtk_file_filter_new ();
+  gtk_file_filter_set_name (filter, _("Calendar files"));
+  gtk_file_filter_add_mime_type (filter, "text/calendar");
+
+  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
+
+  gtk_dialog_run (GTK_DIALOG (dialog));
+
+  gtk_widget_destroy (dialog);
 }
 
 /**
@@ -1217,7 +1270,6 @@ gcal_source_dialog_constructed (GObject *object)
 {
   GcalSourceDialog *self = (GcalSourceDialog *)object;
   GcalSourceDialogPrivate *priv = gcal_source_dialog_get_instance_private (self);
-  GtkFileFilter *filter;
   GtkBuilder *builder;
   GMenuModel *menu;
 
@@ -1227,19 +1279,11 @@ gcal_source_dialog_constructed (GObject *object)
   gtk_dialog_set_default_response (GTK_DIALOG (object), GTK_RESPONSE_CANCEL);
 
   g_object_set_data (G_OBJECT (priv->add_button), "response", GINT_TO_POINTER (GTK_RESPONSE_APPLY));
-  g_object_set_data (G_OBJECT (priv->cancel_button), "response", GINT_TO_POINTER (GTK_RESPONSE_CANCEL));
   g_object_set_data (G_OBJECT (priv->remove_button), "response", GINT_TO_POINTER (GCAL_RESPONSE_REMOVE_SOURCE));
 
   // Setup listbox header functions
   gtk_list_box_set_header_func (GTK_LIST_BOX (priv->calendars_listbox), display_header_func, NULL, NULL);
   gtk_list_box_set_header_func (GTK_LIST_BOX (priv->online_accounts_listbox), display_header_func, NULL, NULL);
-
-  /* File filter */
-  filter = gtk_file_filter_new ();
-  gtk_file_filter_set_name (filter, _("Calendar files"));
-  gtk_file_filter_add_mime_type (filter, "text/calendar");
-
-  //gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (priv->select_file_button), filter);
 
   // Action group
   priv->action_group = g_simple_action_group_new ();
@@ -1305,6 +1349,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
   gtk_widget_class_bind_template_callback (widget_class, calendar_listbox_row_activated);
   gtk_widget_class_bind_template_callback (widget_class, calendar_visible_check_toggled);
+  gtk_widget_class_bind_template_callback (widget_class, cancel_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, color_set);
   gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
@@ -1351,7 +1396,6 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
 
   g_signal_connect (priv->manager, "source-added", G_CALLBACK (add_source), dialog);
   g_signal_connect (priv->manager, "source-removed", G_CALLBACK (remove_source), dialog);
-  /* TODO: connect ::source-removed signals */
 }
 
 /**
