@@ -1314,7 +1314,6 @@ gcal_source_dialog_constructed (GObject *object)
   /* widget responses */
   gtk_dialog_set_default_response (GTK_DIALOG (object), GTK_RESPONSE_CANCEL);
 
-  g_object_set_data (G_OBJECT (priv->add_button), "response", GINT_TO_POINTER (GTK_RESPONSE_APPLY));
   g_object_set_data (G_OBJECT (priv->remove_button), "response", GINT_TO_POINTER (GCAL_RESPONSE_REMOVE_SOURCE));
 
   // Setup listbox header functions
