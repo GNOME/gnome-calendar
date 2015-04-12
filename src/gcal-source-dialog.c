@@ -326,12 +326,48 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
                             GtkListBoxRow *row2,
                             gpointer       user_data)
 {
-  ESource *source1, *source2;
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  ESource *source1;
+  ESource *source2;
+  gboolean is_goa1;
+  gboolean is_goa2;
+  gint retval;
 
+  // first source
   source1 = g_object_get_data (G_OBJECT (row1), "source");
-  source2 = g_object_get_data (G_OBJECT (row2), "source");
+  is_goa1 = is_goa_source (GCAL_SOURCE_DIALOG (user_data), source1);
 
-  return g_strcmp0 (e_source_get_display_name (source1), e_source_get_display_name (source2));
+  // second source
+  source2 = g_object_get_data (G_OBJECT (row2), "source");
+  is_goa2 = is_goa_source (GCAL_SOURCE_DIALOG (user_data), source2);
+
+  if (is_goa1 == is_goa2)
+    {
+      gchar *parent_name1 = NULL;
+      gchar *parent_name2 = NULL;
+
+      // Retrieve parent names
+      get_source_parent_name_color (priv->manager, source1, &parent_name1, NULL);
+      get_source_parent_name_color (priv->manager, source1, &parent_name2, NULL);
+
+      retval =  g_strcmp0 (parent_name1, parent_name2);
+
+      // If they have the same parent names, compare by the source display names
+      if (retval == 0)
+        retval = g_strcmp0 (e_source_get_display_name (source1), e_source_get_display_name (source2));
+
+      if (parent_name1 != NULL)
+        g_free (parent_name1);
+      if (parent_name2 != NULL)
+        g_free (parent_name2);
+    }
+  else
+    {
+      // If one is a GOA account and the other isn't, make the GOA one go first
+      retval = is_goa1 ? -1 : 1;
+    }
+
+  return retval;
 }
 
 static void
