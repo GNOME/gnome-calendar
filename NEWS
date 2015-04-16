@@ -1,3 +1,7 @@
+Major changes in 3.16.1:
+* Added translations
+* Block creation on nameless events
+
 Major changes in 3.15.90:
 * Added gnome shell search provider
 
