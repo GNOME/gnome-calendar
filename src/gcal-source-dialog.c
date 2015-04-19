@@ -78,7 +78,7 @@ typedef struct
   /* flags */
   GcalSourceDialogMode mode;
   ESource            *source;
-  ESource            *remote_source;
+  GList              *remote_sources;
   ESource            *removed_source;
   ESource            *old_default_source;
   GBinding           *title_bind;
@@ -232,6 +232,24 @@ add_button_clicked (GtkWidget *button,
 
       priv->source = NULL;
 
+      gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
+    }
+
+  if (priv->remote_sources != NULL)
+    {
+      GList *l;
+
+      for (l = priv->remote_sources; l != NULL; l = l->next)
+        {
+          // Commit each new remote source
+          gcal_manager_save_source (priv->manager, l->data);
+        }
+
+      g_list_free (priv->remote_sources);
+
+      priv->remote_sources = NULL;
+
+      // Go back to overview
       gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
     }
 }
@@ -396,6 +414,13 @@ cancel_button_clicked (GtkWidget *button,
     {
       g_object_unref (priv->source);
       priv->source = NULL;
+    }
+
+  // Cleanup detected remote sources that weren't added
+  if (priv->remote_sources != NULL)
+    {
+      g_list_free_full (priv->remote_sources, g_object_unref);
+      priv->remote_sources = NULL;
     }
 
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
@@ -683,15 +708,30 @@ response_signal (GtkDialog *dialog,
   if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_APPLY)
     {
       /* save the current page's source */
-      if (priv->remote_source != NULL)
-        gcal_manager_save_source (priv->manager, priv->remote_source);
+      if (priv->remote_sources != NULL)
+        {
+          GList *l;
+
+          for (l = priv->remote_sources; l != NULL; l = l->next)
+            {
+              // Commit each new remote source
+              gcal_manager_save_source (priv->manager, l->data);
+            }
+
+          g_list_free (priv->remote_sources);
+
+          priv->remote_sources = NULL;
+        }
     }
 
   /* Destroy the source when the operation is cancelled */
   if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_CANCEL)
     {
-      if (priv->remote_source != NULL)
-        g_clear_object (&(priv->remote_source));
+      if (priv->remote_sources != NULL)
+        {
+          g_list_free_full (priv->remote_sources, g_object_unref);
+          priv->remote_sources = NULL;
+        }
     }
 }
 
@@ -1169,8 +1209,11 @@ validate_url_cb (GcalSourceDialog *dialog)
    * Remove any reminescent ESources
    * cached before.
    */
-  if (priv->remote_source != NULL)
-    g_clear_pointer (&(priv->remote_source), g_object_unref);
+  if (priv->remote_sources != NULL)
+    {
+      g_list_free_full (priv->remote_sources, g_object_unref);
+      priv->remote_sources = NULL;
+    }
 
   // Get the hostname and file path from the server
   uri_valid = uri_get_fields (gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)), NULL, &host, &path);
@@ -1206,7 +1249,7 @@ validate_url_cb (GcalSourceDialog *dialog)
   if (g_str_has_suffix (path, ".ics"))
     {
       // Set the private source so it saves at closing
-      priv->remote_source = source;
+      priv->remote_sources = g_list_append (priv->remote_sources, source);
 
       // Update buttons
       gtk_widget_set_sensitive (priv->add_button, source != NULL);
