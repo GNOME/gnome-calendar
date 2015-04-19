@@ -82,7 +82,7 @@ typedef struct
   ESource            *removed_source;
   ESource            *old_default_source;
   GBinding           *title_bind;
-  gboolean           *prompt_password;
+  gboolean            prompt_password;
 
   /* auxiliary */
   GSimpleActionGroup *action_group;
