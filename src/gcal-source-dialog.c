@@ -875,6 +875,7 @@ static void
 calendar_file_selected (GtkFileChooser       *button,
                         gpointer              user_data)
 {
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
   ESourceExtension *ext;
   ESource *source;
   GFile *file;
@@ -903,6 +904,8 @@ calendar_file_selected (GtkFileChooser       *button,
   // Jump to the edit page
   gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_CREATE);
+
+  gtk_widget_set_sensitive (priv->add_button, TRUE);
 }
 
 /**
@@ -1069,6 +1072,7 @@ on_local_activated (GSimpleAction *action,
                     GVariant      *param,
                     gpointer       user_data)
 {
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
   ESourceExtension *ext;
   ESource *source;
 
@@ -1088,6 +1092,8 @@ on_local_activated (GSimpleAction *action,
   // Jump to the edit page
   gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_CREATE);
+
+  gtk_widget_set_sensitive (priv->add_button, TRUE);
 }
 
 /**
