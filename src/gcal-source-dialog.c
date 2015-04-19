@@ -435,6 +435,7 @@ clear_pages (GcalSourceDialog *dialog)
   g_list_free_full (list, (GDestroyNotify) gtk_widget_destroy);
 
   gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), FALSE);
+  gtk_widget_hide (priv->web_sources_revealer);
 }
 
 static void
@@ -1009,7 +1010,6 @@ url_entry_text_changed (GObject    *object,
   else
     {
       gtk_entry_set_progress_fraction (GTK_ENTRY (priv->calendar_address_entry), 0);
-      gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), FALSE);
     }
 }
 
@@ -1433,6 +1433,7 @@ discover_sources_cb (GObject      *source,
 
   // Show the list of calendars
   gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), TRUE);
+  gtk_widget_show (priv->web_sources_revealer);
 
   /* TODO: show a list of calendars */
   for (aux = discovered_sources; aux != NULL; aux = aux->next)

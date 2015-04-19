@@ -698,29 +698,56 @@
                     </child>
                     <child>
                       <object class="GtkRevealer" id="web_sources_revealer">
-                        <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkScrolledWindow" id="web_list_scrolledwindow">
-                            <property name="height_request">100</property>
+                          <object class="GtkBox" id="web_sources_listbox_box">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="hexpand">True</property>
-                            <property name="vexpand">True</property>
-                            <property name="shadow_type">etched-in</property>
+                            <property name="can_focus">False</property>
+                            <property name="orientation">vertical</property>
+                            <property name="spacing">6</property>
                             <child>
-                              <object class="GtkViewport" id="viewport">
+                              <object class="GtkLabel" id="web_sources_calendar_label">
                                 <property name="visible">True</property>
                                 <property name="can_focus">False</property>
+                                <property name="label" translatable="yes">Calendars</property>
+                                <property name="xalign">0</property>
+                                <attributes>
+                                  <attribute name="weight" value="bold"/>
+                                </attributes>
+                              </object>
+                              <packing>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkScrolledWindow" id="web_list_scrolledwindow">
+                                <property name="height_request">100</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
                                 <property name="shadow_type">none</property>
                                 <child>
-                                  <object class="GtkListBox" id="web_sources_listbox">
+                                  <object class="GtkViewport" id="viewport">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="activate_on_single_click">False</property>
+                                    <property name="shadow_type">none</property>
+                                    <child>
+                                      <object class="GtkListBox" id="web_sources_listbox">
+                                        <property name="visible">True</property>
+                                        <property name="can_focus">False</property>
+                                        <property name="activate_on_single_click">False</property>
+                                        <style>
+                                          <class name="calendar-list" />
+                                        </style>
+                                      </object>
+                                    </child>
                                   </object>
                                 </child>
                               </object>
+                              <packing>
+                                <property name="position">1</property>
+                              </packing>
                             </child>
                           </object>
                         </child>

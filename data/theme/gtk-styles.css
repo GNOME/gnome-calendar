@@ -225,14 +225,5 @@ GcalEventWidget.color-light:backdrop {
 
 /* calendar popover */
 .calendar-list {
-    background-color: rgba(0, 0, 0, 0);
-}
-
-/* source dialog */
-.details-frame {
-    background-color: rgba(0, 0, 0, 0);
-}
-
-.spinner-offscreen {
     background-color: transparent;
 }
