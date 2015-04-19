@@ -50,12 +50,7 @@ typedef struct
   GtkWidget          *location_dim_label;
 
   /* new source details */
-  GtkWidget          *author_label;
   GtkWidget          *calendar_address_entry;
-  GtkWidget          *web_author_label;
-  GtkWidget          *web_details_frame;
-  GtkWidget          *web_new_calendar_name_entry;
-  GtkWidget          *web_source_grid;
   GtkWidget          *web_sources_listbox;
   GtkWidget          *web_sources_revealer;
 
@@ -160,10 +155,6 @@ static void       name_entry_text_changed               (GObject             *ob
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
 
-static void       new_name_entry_text_changed           (GObject             *object,
-                                                         GParamSpec          *pspec,
-                                                         gpointer             user_data);
-
 static void       online_accounts_settings_button_clicked (GtkWidget         *button,
                                                           gpointer            user_data);
 
@@ -186,9 +177,6 @@ static void       remove_source                         (GcalManager         *ma
 static void       response_signal                       (GtkDialog           *dialog,
                                                          gint                 response_id,
                                                          gpointer             user_data);
-
-static void       setup_source_details                  (GcalSourceDialog     *dialog,
-                                                         ESource              *source);
 
 static void       stack_visible_child_name_changed      (GObject             *object,
                                                          GParamSpec          *pspec,
@@ -447,8 +435,6 @@ clear_pages (GcalSourceDialog *dialog)
   g_list_free_full (list, (GDestroyNotify) gtk_widget_destroy);
 
   gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), FALSE);
-
-  gtk_widget_hide (priv->web_details_frame);
 }
 
 static void
@@ -651,33 +637,6 @@ name_entry_text_changed (GObject    *object,
 
   if (valid)
     e_source_set_display_name (priv->source, gtk_entry_get_text (GTK_ENTRY (priv->name_entry)));
-}
-
-/**
- * new_name_entry_text_changed:
- *
- * Callend when the name entry of a
- * new to-be-added source is edited.
- * It changes the source's display
- * name, but wait's for the calendar's
- * 'response' signal to commit these
- * changes.
- *
- * Returns:
- */
-static void
-new_name_entry_text_changed (GObject    *object,
-                             GParamSpec *pspec,
-                             gpointer    user_data)
-{
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
-  ESource *source = NULL;
-
-  if (GTK_WIDGET (object) == priv->web_new_calendar_name_entry)
-    source = priv->remote_source;
-
-  if (source != NULL)
-    e_source_set_display_name (source, gtk_entry_get_text (GTK_ENTRY (object)));
 }
 
 /**
@@ -979,42 +938,6 @@ calendar_listbox_row_activated (GtkListBox    *box,
 }
 
 /**
- * setup_source_details:
- *
- * Setup the details frame of a given
- * calendar in proccess of creation.
- *
- * Returns:
- */
-static void
-setup_source_details (GcalSourceDialog *dialog,
-                      ESource          *source)
-{
-  GcalSourceDialogPrivate *priv = dialog->priv;
-  gchar *email;
-
-  /* Calendar name */
-  gtk_entry_set_text (GTK_ENTRY (priv->web_new_calendar_name_entry), e_source_get_display_name (source));
-
-  /* Email field */
-  email = gcal_manager_query_client_data (priv->manager, source, CAL_BACKEND_PROPERTY_CAL_EMAIL_ADDRESS);
-
-  if (email != NULL)
-    {
-      gtk_label_set_markup (GTK_LABEL (priv->web_author_label), email);
-    }
-  else
-    {
-      gchar *text = g_strdup_printf ("<i><small>%s</small></i>", _("No author"));
-      gtk_label_set_markup (GTK_LABEL (priv->web_author_label), text);
-
-      g_free (text);
-    }
-
-  gtk_widget_show_all (priv->web_details_frame);
-}
-
-/**
  * pulse_web_entry:
  *
  * Update the url's entry with a pulse fraction.
@@ -1253,7 +1176,6 @@ validate_url_cb (GcalSourceDialog *dialog)
 
       // Update buttons
       gtk_widget_set_sensitive (priv->add_button, source != NULL);
-      setup_source_details (dialog, source);
     }
   else
     {
@@ -1505,7 +1427,6 @@ discover_sources_cb (GObject      *source,
 
           // Update button sensivity, etc
           gtk_widget_set_sensitive (priv->add_button, source != NULL);
-          setup_source_details (GCAL_SOURCE_DIALOG (user_data), E_SOURCE (source));
         }
 
       if (resource_path)
@@ -1817,9 +1738,6 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, online_accounts_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, remove_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_details_frame);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_new_calendar_name_entry);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_source_grid);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_revealer);
 
@@ -1837,7 +1755,6 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, hide_notification);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
-  gtk_widget_class_bind_template_callback (widget_class, new_name_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, notification_child_revealed_changed);
   gtk_widget_class_bind_template_callback (widget_class, online_accounts_settings_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, remove_button_clicked);
