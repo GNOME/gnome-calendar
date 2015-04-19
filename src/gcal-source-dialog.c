@@ -876,7 +876,6 @@ static void
 calendar_file_selected (GtkFileChooser       *button,
                         gpointer              user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
   ESourceExtension *ext;
   ESource *source;
   GFile *file;
@@ -1107,7 +1106,6 @@ on_local_activated (GSimpleAction *action,
                     GVariant      *param,
                     gpointer       user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
   ESourceExtension *ext;
   ESource *source;
 
@@ -1849,7 +1847,6 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
                              GcalSourceDialogMode mode)
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
-  gboolean edit_mode;
 
   priv->mode = mode;
 
