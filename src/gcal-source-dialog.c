@@ -1276,6 +1276,8 @@ prompt_credentials (GcalSourceDialog  *dialog,
   gtk_entry_set_text (GTK_ENTRY (priv->credentials_password_entry), "");
   gtk_entry_set_text (GTK_ENTRY (priv->credentials_user_entry), "");
 
+  gtk_widget_grab_focus (priv->credentials_user_entry);
+
   // Show the dialog, then destroy it
   response = gtk_dialog_run (GTK_DIALOG (priv->credentials_dialog));
 
@@ -1378,7 +1380,6 @@ discover_sources_cb (GObject      *source,
   EWebDAVDiscoveredSource *src;
   GSList *discovered_sources, *user_adresses, *aux;
   GError *error;
-  gint n_sources, counter;
 
   error = NULL;
 
