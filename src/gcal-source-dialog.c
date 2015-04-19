@@ -1257,6 +1257,8 @@ validate_url_cb (GcalSourceDialog *dialog)
     }
   else
     {
+      ENamedParameters *credentials;
+
       // Pulse the entry while it performs the check
       priv->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
 
@@ -1265,6 +1267,8 @@ validate_url_cb (GcalSourceDialog *dialog)
        * username and password. If we get any error,
        * then it prompts and retry.
        */
+      credentials = e_named_parameters_new ();
+
       if (priv->prompt_password)
         {
           gint response;
@@ -1279,15 +1283,13 @@ validate_url_cb (GcalSourceDialog *dialog)
            */
           if (response == GTK_RESPONSE_OK)
             {
-              ENamedParameters *credentials = e_named_parameters_new ();
+              // User inputted credentials
               e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, user);
               e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, password);
 
               e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)),
                                          E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, credentials, NULL, discover_sources_cb,
                                          dialog);
-
-              e_named_parameters_free (credentials);
             }
 
           if (user)
@@ -1298,9 +1300,17 @@ validate_url_cb (GcalSourceDialog *dialog)
       else
         {
           g_debug ("[source-dialog] Trying to connect without credentials...");
+
+          // NULL credentials
+          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, NULL);
+          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, NULL);
+
           e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)),
-                                     E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, NULL, NULL, discover_sources_cb, dialog);
+                                     E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, credentials, NULL, discover_sources_cb,
+                                     dialog);
         }
+
+      e_named_parameters_free (credentials);
     }
 
 out:
