@@ -737,6 +737,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="activate_on_single_click">False</property>
+                                        <property name="selection_mode">none</property>
                                         <style>
                                           <class name="calendar-list" />
                                         </style>
