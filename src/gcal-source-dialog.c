@@ -354,9 +354,9 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
 
       // Retrieve parent names
       get_source_parent_name_color (priv->manager, source1, &parent_name1, NULL);
-      get_source_parent_name_color (priv->manager, source1, &parent_name2, NULL);
+      get_source_parent_name_color (priv->manager, source2, &parent_name2, NULL);
 
-      retval =  g_strcmp0 (parent_name1, parent_name2);
+      retval = g_strcmp0 (parent_name1, parent_name2);
 
       // If they have the same parent names, compare by the source display names
       if (retval == 0)
