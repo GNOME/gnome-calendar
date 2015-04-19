@@ -1191,10 +1191,24 @@ validate_url_cb (GcalSourceDialog *dialog)
        */
       credentials = e_named_parameters_new ();
 
-      if (priv->prompt_password)
+      if (!priv->prompt_password)
+        {
+          g_debug ("[source-dialog] Trying to connect without credentials...");
+
+          // NULL credentials
+          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, NULL);
+          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, NULL);
+
+          e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)),
+                                     E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, credentials, NULL, discover_sources_cb,
+                                     dialog);
+        }
+      else
         {
           gint response;
           gchar *user, *password;
+
+          g_debug ("[source-dialog] No credentials failed, retrying with user credentials...");
 
           user = password = NULL;
           response = prompt_credentials (dialog, &user, &password);
@@ -1218,18 +1232,6 @@ validate_url_cb (GcalSourceDialog *dialog)
             g_free (user);
           if (password)
             g_free (password);
-        }
-      else
-        {
-          g_debug ("[source-dialog] Trying to connect without credentials...");
-
-          // NULL credentials
-          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, NULL);
-          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, NULL);
-
-          e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)),
-                                     E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, credentials, NULL, discover_sources_cb,
-                                     dialog);
         }
 
       e_named_parameters_free (credentials);
@@ -1406,8 +1408,6 @@ discover_sources_cb (GObject      *source,
        */
       if (!priv->prompt_password && error->code == 14)
         {
-          g_debug ("[source-dialog] No credentials failed, retrying with user credentials...");
-
           priv->prompt_password = TRUE;
 
           validate_url_cb (GCAL_SOURCE_DIALOG (user_data));
