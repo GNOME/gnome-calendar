@@ -1293,6 +1293,82 @@ prompt_credentials (GcalSourceDialog  *dialog,
   return response;
 }
 
+static ESource*
+duplicate_source (ESource *source)
+{
+  ESourceExtension *ext;
+  ESource *new_source;
+
+  g_assert (source && E_IS_SOURCE (source));
+
+  new_source = e_source_new (NULL, NULL, NULL);
+  e_source_set_parent (new_source, "local");
+
+  ext = e_source_get_extension (new_source, E_SOURCE_EXTENSION_CALENDAR);
+  e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
+
+  // Copy Authentication data
+  if (e_source_has_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION))
+    {
+      ESourceAuthentication *new_auth, *parent_auth;
+
+      parent_auth = e_source_get_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
+      new_auth = e_source_get_extension (new_source, E_SOURCE_EXTENSION_AUTHENTICATION);
+
+      e_source_authentication_set_host (new_auth, e_source_authentication_get_host (parent_auth));
+      e_source_authentication_set_method (new_auth, e_source_authentication_get_method (parent_auth));
+      e_source_authentication_set_port (new_auth, e_source_authentication_get_port (parent_auth));
+      e_source_authentication_set_user (new_auth, e_source_authentication_get_user (parent_auth));
+      e_source_authentication_set_proxy_uid (new_auth, e_source_authentication_get_proxy_uid (parent_auth));
+    }
+
+  // Copy Webdav data
+  if (e_source_has_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND))
+    {
+      ESourceWebdav *new_webdav, *parent_webdav;
+
+      parent_webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
+      new_webdav = e_source_get_extension (new_source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
+
+      e_source_webdav_set_display_name (new_webdav, e_source_webdav_get_display_name (parent_webdav));
+      e_source_webdav_set_resource_path (new_webdav, e_source_webdav_get_resource_path (parent_webdav));
+      e_source_webdav_set_resource_query (new_webdav, e_source_webdav_get_resource_query (parent_webdav));
+      e_source_webdav_set_email_address (new_webdav, e_source_webdav_get_email_address (parent_webdav));
+      e_source_webdav_set_ssl_trust (new_webdav, e_source_webdav_get_ssl_trust (parent_webdav));
+
+      e_source_set_parent (new_source, "webcal-stub");
+      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "webcal");
+    }
+
+  return new_source;
+}
+
+static void
+check_activated_cb (GtkWidget  *check,
+                    GParamSpec *spec,
+                    gpointer    user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GtkWidget *row;
+  ESource *source;
+
+  g_assert (user_data && GCAL_IS_SOURCE_DIALOG (user_data));
+
+  row = gtk_widget_get_parent (check);
+  source = g_object_get_data (G_OBJECT (row), "source");
+
+  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)))
+    {
+      priv->remote_sources = g_list_append (priv->remote_sources, source);
+    }
+  else
+    {
+      priv->remote_sources = g_list_remove (priv->remote_sources, source);
+    }
+
+  gtk_widget_set_sensitive (priv->add_button, g_list_length (priv->remote_sources) > 0);
+}
+
 static void
 discover_sources_cb (GObject      *source,
                      GAsyncResult *result,
@@ -1335,98 +1411,69 @@ discover_sources_cb (GObject      *source,
 
           validate_url_cb (GCAL_SOURCE_DIALOG (user_data));
         }
+      else
+        {
+          g_debug ("[source-dialog] error: %s", error->message);
+        }
 
       g_error_free (error);
       return;
     }
 
-  n_sources = g_slist_length (discovered_sources);
-  counter = 0;
+  // Remove previous results
+  g_list_free_full (gtk_container_get_children (GTK_CONTAINER (priv->web_sources_listbox)),
+                    (GDestroyNotify) gtk_widget_destroy);
 
-  if (n_sources > 1)
+  // Show the list of calendars
+  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), TRUE);
+
+  /* TODO: show a list of calendars */
+  for (aux = discovered_sources; aux != NULL; aux = aux->next)
     {
-      // Remove previous results
-      g_list_free_full (gtk_container_get_children (GTK_CONTAINER (priv->web_sources_listbox)),
-                        (GDestroyNotify) gtk_widget_destroy);
-
-      // Show the list of calendars
-      gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), TRUE);
-
-      /* TODO: show a list of calendars */
-      for (aux = discovered_sources; aux != NULL; aux = aux->next)
-        {
-          GtkWidget *row;
-          GtkWidget *grid;
-          GtkWidget *name_label, *url_label;
-          GdkRGBA rgba;
-
-          src = discovered_sources->data;
-          row = gtk_list_box_row_new ();
-
-          grid = g_object_new (GTK_TYPE_GRID,
-                               "column_spacing", 12,
-                               "border_width", 10,
-                               NULL);
-
-          name_label = gtk_label_new (src->display_name);
-          gtk_label_set_xalign (GTK_LABEL (name_label), 0.0);
-          gtk_label_set_ellipsize (GTK_LABEL (name_label), PANGO_ELLIPSIZE_END);
-
-          url_label = gtk_label_new (src->href);
-          gtk_style_context_add_class (gtk_widget_get_style_context (url_label), "dim-label");
-          gtk_label_set_xalign (GTK_LABEL (url_label), 0.0);
-          gtk_label_set_ellipsize (GTK_LABEL (url_label), PANGO_ELLIPSIZE_END);
-
-          if (src->color != NULL)
-            {
-              GtkWidget *color_image;
-
-              gdk_rgba_parse (&rgba, src->color);
-              color_image = gtk_image_new_from_pixbuf (get_circle_pixbuf_from_color (&rgba, 16));
-
-              gtk_grid_attach (GTK_GRID (grid), color_image, 0, 0, 1, 2);
-            }
-
-          gtk_grid_attach (GTK_GRID (grid), name_label, 1, 0, 1, 1);
-          gtk_grid_attach (GTK_GRID (grid), url_label, 1, 1, 1, 1);
-
-          gtk_container_add (GTK_CONTAINER (priv->web_sources_listbox), row);
-          gtk_container_add (GTK_CONTAINER (row), grid);
-
-          g_object_set_data (G_OBJECT (row), "source", source);
-          g_object_set_data (G_OBJECT (row), "source-url", g_strdup (src->href));
-          g_object_set_data (G_OBJECT (row), "source-color", g_strdup (src->color));
-          g_object_set_data (G_OBJECT (row), "source-display-name", g_strdup (src->display_name));
-          g_object_set_data (G_OBJECT (row), "source-email", g_strdup (g_slist_nth_data (user_adresses, counter)));
-
-          gtk_widget_show_all (row);
-
-          counter++;
-        }
-    }
-  else if (n_sources == 1)
-    {
+      gchar *resource_path = NULL;
       gboolean uri_valid;
-      gchar *resource_path;
 
-      src = discovered_sources->data;
+      src = aux->data;
 
       // Get the new resource path from the uri
       uri_valid = uri_get_fields (src->href, NULL, NULL, &resource_path);
 
-      // Update the ESourceWebdav extension's resource path
       if (uri_valid)
         {
-          ESourceWebdav *webdav = e_source_get_extension (E_SOURCE (source), E_SOURCE_EXTENSION_WEBDAV_BACKEND);
+          ESourceWebdav *webdav;
+          GtkWidget *row;
+          GtkWidget *check;
+          ESource *new_source;
 
+
+          /* build up the new source */
+          new_source = duplicate_source (E_SOURCE (source));
+          e_source_set_display_name (E_SOURCE (new_source), src->display_name);
+
+          webdav = e_source_get_extension (new_source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
           e_source_webdav_set_resource_path (webdav, resource_path);
           e_source_webdav_set_display_name (webdav, src->display_name);
           e_source_webdav_set_email_address (webdav, user_adresses->data);
 
-          e_source_set_display_name (E_SOURCE (source), src->display_name);
 
-          // Update button sensivity, etc
-          gtk_widget_set_sensitive (priv->add_button, source != NULL);
+          /* create the new row */
+          row = gtk_list_box_row_new ();
+
+          check = gtk_check_button_new ();
+          gtk_button_set_label (GTK_BUTTON (check), src->display_name);
+          g_signal_connect (check, "notify::active", G_CALLBACK (check_activated_cb), user_data);
+
+          gtk_container_add (GTK_CONTAINER (row), check);
+          gtk_container_add (GTK_CONTAINER (priv->web_sources_listbox), row);
+
+          g_object_set_data (G_OBJECT (row), "parent-source", source);
+          g_object_set_data (G_OBJECT (row), "source", new_source);
+          g_object_set_data (G_OBJECT (row), "source-url", g_strdup (src->href));
+          g_object_set_data (G_OBJECT (row), "source-color", g_strdup (src->color));
+          g_object_set_data (G_OBJECT (row), "source-display-name", g_strdup (src->display_name));
+          //g_object_set_data (G_OBJECT (row), "source-email", g_strdup (g_slist_nth_data (user_adresses, counter)));
+
+          gtk_widget_show_all (row);
         }
 
       if (resource_path)
