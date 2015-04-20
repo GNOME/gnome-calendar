@@ -1144,6 +1144,9 @@ validate_url_cb (GcalSourceDialog *dialog)
       priv->remote_sources = NULL;
     }
 
+  // Clear the entry icon
+  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY, NULL);
+
   // Get the hostname and file path from the server
   uri_valid = uri_get_fields (gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)), NULL, &host, &path);
 
@@ -1426,6 +1429,10 @@ discover_sources_cb (GObject      *source,
       g_error_free (error);
       return;
     }
+
+  // Add a success icon to the entry
+  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY,
+                                     "emblem-ok-symbolic");
 
   // Remove previous results
   g_list_free_full (gtk_container_get_children (GTK_CONTAINER (priv->web_sources_listbox)),
