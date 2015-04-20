@@ -1144,6 +1144,11 @@ validate_url_cb (GcalSourceDialog *dialog)
       priv->remote_sources = NULL;
     }
 
+  // Remove previous results
+  g_list_free_full (gtk_container_get_children (GTK_CONTAINER (priv->web_sources_listbox)),
+                    (GDestroyNotify) gtk_widget_destroy);
+  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), FALSE);
+
   // Clear the entry icon
   gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 
