@@ -688,6 +688,7 @@
                         <property name="can_focus">True</property>
                         <property name="hexpand">True</property>
                         <signal name="notify::text" handler="url_entry_text_changed" object="GcalSourceDialog" swapped="no"/>
+                        <signal name="activate" handler="calendar_address_activated" object="GcalSourceDialog" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>

@@ -1112,6 +1112,15 @@ on_web_activated (GSimpleAction *action,
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_CREATE_WEB);
 }
 
+static void
+calendar_address_activated (GtkEntry *entry,
+                            gpointer  user_data)
+{
+  g_assert (GCAL_IS_SOURCE_DIALOG (user_data));
+
+  validate_url_cb (GCAL_SOURCE_DIALOG (user_data));
+}
+
 /**
  * validate_url_cb:
  *
@@ -1811,6 +1820,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, add_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
   gtk_widget_class_bind_template_callback (widget_class, back_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, calendar_address_activated);
   gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
   gtk_widget_class_bind_template_callback (widget_class, calendar_listbox_row_activated);
   gtk_widget_class_bind_template_callback (widget_class, calendar_visible_check_toggled);
