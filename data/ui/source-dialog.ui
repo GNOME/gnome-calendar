@@ -697,6 +697,8 @@
                     <child>
                       <object class="GtkRevealer" id="web_sources_revealer">
                         <property name="can_focus">False</property>
+                        <property name="transition_type">crossfade</property>
+                        <property name="transition_duration">200</property>
                         <child>
                           <object class="GtkBox" id="web_sources_listbox_box">
                             <property name="visible">True</property>
