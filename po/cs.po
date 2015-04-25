@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-16 14:32+0000\n"
-"PO-Revision-Date: 2015-03-02 19:21+0100\n"
+"POT-Creation-Date: 2015-04-07 13:17+0000\n"
+"PO-Revision-Date: 2015-04-25 11:54+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:515
 msgid "Calendar"
 msgstr "Kalendář"
 
@@ -115,7 +115,7 @@ msgstr "Zdroje zakázané při posledním spuštění Kalendáře"
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
 msgid "Done"
 msgstr "Hotovo"
 
@@ -139,7 +139,7 @@ msgstr "Poznámky"
 msgid "Location"
 msgstr "Umístění"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:387
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:406
 msgid "All day"
 msgstr "Celý den"
 
@@ -183,13 +183,11 @@ msgstr "00∶00"
 msgid ":"
 msgstr "∶"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:381
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "dop."
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:381
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "odp."
 
@@ -211,8 +209,8 @@ msgid "Create"
 msgstr "Vytvořit"
 
 #: ../data/ui/window.ui.h:6
-msgid "More Details"
-msgstr "Více podrobností"
+msgid "Edit Details"
+msgstr "Upravit podrobnosti"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
@@ -234,19 +232,19 @@ msgstr "Otevřít kalendář na zadaném datu"
 msgid "Open calendar showing the passed event"
 msgstr "Otevřít kalendář na zadané události"
 
-#: ../src/gcal-application.c:332
+#: ../src/gcal-application.c:336
 msgid "- Calendar management"
 msgstr "– Správa kalendáře"
 
-#: ../src/gcal-application.c:499
+#: ../src/gcal-application.c:503
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id autoři Kalendáře"
 
-#: ../src/gcal-application.c:505
+#: ../src/gcal-application.c:509
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id – %Id autoři Kalendáře"
 
-#: ../src/gcal-application.c:518
+#: ../src/gcal-application.c:522
 msgid "translator-credits"
 msgstr ""
 "Adam Matoušek <adamatousek@gmail.com>\n"
@@ -256,31 +254,26 @@ msgstr ""
 msgid "Day"
 msgstr "Den"
 
-#: ../src/gcal-edit-dialog.c:634
+#: ../src/gcal-edit-dialog.c:657
 msgid "Save"
 msgstr "Uložit"
 
-#: ../src/gcal-edit-dialog.c:818
+#: ../src/gcal-edit-dialog.c:841
 msgid "Unnamed event"
 msgstr "Událost bez názvu"
 
-#: ../src/gcal-month-view.c:826
+#: ../src/gcal-month-view.c:820
 msgid "Other events"
 msgstr "Další události"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1209
+#: ../src/gcal-month-view.c:1203
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Další událost"
 msgstr[1] "Další %d události"
 msgstr[2] "Další %d událostí"
-
-#: ../src/gcal-search-view.c:380
-#, c-format
-msgid "%.2d:%.2d %s"
-msgstr "%.2d∶%.2d %s"
 
 #: ../src/gcal-time-selector.c:96
 #, c-format
@@ -304,19 +297,27 @@ msgstr "Poledne"
 msgid "00:00 PM"
 msgstr "00∶00 odp."
 
-#: ../src/gcal-window.c:636
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#: ../src/gcal-window.c:642
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%e. %B"
+
+#: ../src/gcal-window.c:643
 #, c-format
 msgid "New Event on %s"
 msgstr "Nová událost %s"
 
-#: ../src/gcal-window.c:1036
+#: ../src/gcal-window.c:1071
 msgid "Another event deleted"
 msgstr "Smazána ještě jedna událost"
 
-#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
+#: ../src/gcal-window.c:1071 ../src/gcal-window.c:1075
 msgid "Undo"
 msgstr "Zpět"
 
-#: ../src/gcal-window.c:1040
+#: ../src/gcal-window.c:1075
 msgid "Event deleted"
 msgstr "Událost smazána"
