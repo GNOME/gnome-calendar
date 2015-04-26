@@ -296,6 +296,7 @@ gcal_application_activate (GApplication *application)
       priv->window = gcal_window_new_with_view_and_date (GCAL_APPLICATION (application),
                                                          g_settings_get_enum (priv->settings, "active-view"),
                                                          priv->initial_date);
+      g_signal_connect (priv->window, "destroy", G_CALLBACK (gtk_widget_destroyed), &(priv->window));
       g_settings_bind (priv->settings, "active-view", priv->window, "active-view",
                        G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
 
