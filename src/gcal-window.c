@@ -1605,8 +1605,10 @@ gcal_window_new_event (GcalWindow *window)
   /* 1st and 2nd steps */
   set_new_event_mode (window, TRUE);
 
-  start_date = gcal_dup_icaltime (priv->active_date);
-  end_date = gcal_dup_icaltime (priv->active_date);
+  start_date = gcal_dup_icaltime (priv->current_date);
+  start_date->is_date = 1;
+  end_date = gcal_dup_icaltime (priv->current_date);
+  end_date->is_date = 1;
 
   /* adjusting dates according to the actual view */
   switch (priv->active_view)
@@ -1616,14 +1618,10 @@ gcal_window_new_event (GcalWindow *window)
       end_date->hour += 1;
       *end_date = icaltime_normalize (*end_date);
       break;
-    case GCAL_WINDOW_VIEW_YEAR:
-      start_date->day = 1;
-      end_date->day = icaltime_days_in_month (end_date->month, end_date->year);
-      break;
     case GCAL_WINDOW_VIEW_MONTH:
-      start_date->is_date = 1;
-      end_date->is_date = 1;
+    case GCAL_WINDOW_VIEW_YEAR:
       end_date->day += 1;
+      end_date->is_date = 1;
       *end_date = icaltime_normalize (*end_date);
       break;
     case GCAL_WINDOW_VIEW_LIST:
