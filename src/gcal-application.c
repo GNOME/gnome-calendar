@@ -30,12 +30,15 @@
 #include <glib-object.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>
+#include <goa/goa.h>
 
 #define CSS_FILE "resource:///org/gnome/calendar/gtk-styles.css"
 
 struct _GcalApplicationPrivate
 {
   GtkWidget      *window;
+
+  GoaClient      *client;
 
   GSettings      *settings;
   GcalManager    *manager;
@@ -88,6 +91,10 @@ static gboolean gcal_application_dbus_register       (GApplication             *
 static void     gcal_application_dbus_unregister     (GApplication             *application,
                                                       GDBusConnection          *connection,
                                                       const gchar              *object_path);
+
+static void     gcal_application_goa_client_ready    (GObject                  *source,
+                                                      GAsyncResult             *result,
+                                                      gpointer                  user_data);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 
@@ -212,7 +219,31 @@ gcal_application_init (GcalApplication *self)
   priv->search_provider = gcal_shell_search_provider_new ();
   gcal_shell_search_provider_connect (priv->search_provider, priv->manager);
 
+  goa_client_new (NULL, // we won't really cancel it
+                  (GAsyncReadyCallback) gcal_application_goa_client_ready,
+                  self);
+
   self->priv = priv;
+}
+
+static void
+gcal_application_goa_client_ready (GObject      *source,
+                                   GAsyncResult *result,
+                                   gpointer      user_data)
+{
+  GcalApplicationPrivate *priv = GCAL_APPLICATION (user_data)->priv;
+  GError *error = NULL;
+
+  priv->client = goa_client_new_finish (result, &error);
+
+  if (error != NULL)
+    {
+      g_warning ("%s: Error retrieving GoaClient: %s",
+                 G_STRFUNC,
+                 error->message);
+
+      g_error_free (error);
+    }
 }
 
 static void

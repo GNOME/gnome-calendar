@@ -23,6 +23,7 @@
 #include "gcal-manager.h"
 
 #include <gtk/gtk.h>
+#include <goa/goa.h>
 
 G_BEGIN_DECLS
 
@@ -58,6 +59,7 @@ void              gcal_application_set_uuid     (GcalApplication *application,
                                                  const gchar     *uuid);
 void              gcal_application_set_initial_date (GcalApplication *application,
                                                      const icaltimetype *date);
+GoaClient*        gcal_application_get_client   (GcalApplication *application);
 
 G_END_DECLS
 
