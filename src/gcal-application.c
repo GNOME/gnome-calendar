@@ -52,6 +52,14 @@ struct _GcalApplicationPrivate
   icaltimetype   *initial_date;
 };
 
+enum
+{
+  GOA_CLIENT_READY,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
+
 static void     gcal_application_finalize             (GObject                 *object);
 
 static void     gcal_application_activate             (GApplication            *app);
@@ -203,6 +211,22 @@ gcal_application_class_init (GcalApplicationClass *klass)
 
   application_class->dbus_register = gcal_application_dbus_register;
   application_class->dbus_unregister = gcal_application_dbus_unregister;
+
+  /**
+   * GcalApplication::goa-client-ready:
+   *
+   * Emited when the #GoaClient asyncronous loading is finished.
+   */
+  signals[GOA_CLIENT_READY] = g_signal_new ("source-removed",
+                                            GCAL_TYPE_APPLICATION,
+                                            G_SIGNAL_RUN_LAST,
+                                            G_STRUCT_OFFSET (GcalApplicationClass, goa_client_ready),
+                                            NULL,
+                                            NULL,
+                                            NULL,
+                                            G_TYPE_NONE,
+                                            1,
+                                            GOA_TYPE_CLIENT);
 }
 
 static void
@@ -235,6 +259,8 @@ gcal_application_goa_client_ready (GObject      *source,
   GError *error = NULL;
 
   priv->client = goa_client_new_finish (result, &error);
+
+  g_signal_emit (user_data, signals[GOA_CLIENT_READY], 0, priv->client);
 
   if (error != NULL)
     {

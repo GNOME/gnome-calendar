@@ -49,6 +49,8 @@ struct _GcalApplication
 struct _GcalApplicationClass
 {
   GtkApplicationClass parent_class;
+
+  void (*goa_client_ready) (GcalApplication *app, GoaClient *client);
 };
 
 GType             gcal_application_get_type     (void) G_GNUC_CONST;
