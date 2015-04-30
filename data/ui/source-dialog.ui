@@ -192,6 +192,7 @@
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
                                         <property name="selection_mode">none</property>
+                                        <signal name="row-activated" handler="online_accounts_listbox_row_activated" object="GcalSourceDialog" swapped="no" />
                                         <child>
                                           <object class="GtkListBoxRow" id="google_stub_row">
                                             <property name="visible">True</property>
