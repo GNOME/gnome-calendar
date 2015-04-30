@@ -6,6 +6,7 @@ AM_CPPFLAGS =                                             \
     $(MAINTAINER_COMPILER_FLAGS)                          \
     $(WARN_CFLAGS)                                        \
     -DEDS_DISABLE_DEPRECATED                              \
+    -DGOA_API_IS_SUBJECT_TO_CHANGE                        \
     $(CALENDAR_CFLAGS)
 
 bin_PROGRAMS = gnome-calendar

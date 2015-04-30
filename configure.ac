@@ -87,11 +87,13 @@ ECAL_REQUIRED=3.13.90
 EDATASERVER_REQUIRED=3.17.1
 EDATASERVERUI_REQUIRED=3.17.1
 LIBICAL_REQUIRED=0.43
+GOA_MIN_VERSION=3.2.0
 
 PKG_CHECK_MODULES(CALENDAR,
                   gmodule-export-2.0
                   gio-2.0 >= $GLIB_MIN_VERSION
                   glib-2.0 >= $GLIB_MIN_VERSION
+                  goa-1.0 >= $GOA_MIN_VERSION
                   gtk+-3.0 >= $GTK_MIN_VERSION
                   libecal-1.2 >= $ECAL_REQUIRED
                   libedataserver-1.2 >= $EDATASERVER_REQUIRED
