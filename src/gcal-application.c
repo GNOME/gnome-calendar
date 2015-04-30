@@ -610,3 +610,20 @@ gcal_application_set_initial_date (GcalApplication *application,
   g_free (priv->initial_date);
   priv->initial_date = gcal_dup_icaltime (date);
 }
+
+/**
+ * gcal_application_get_client:
+ * @application: a #GcalApplication
+ *
+ * Retrieves the internal #GoaClient from @application. It
+ * should not be unreferenced after usage.
+ *
+ * Returns: (transfer none): the #GoaClient of @application
+ */
+GoaClient*
+gcal_application_get_client (GcalApplication *application)
+{
+  g_return_val_if_fail (GCAL_IS_APPLICATION (application), NULL);
+
+  return application->priv->client;
+}
