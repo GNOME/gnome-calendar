@@ -21,6 +21,7 @@
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
+#include <goa/goa.h>
 #include <libedataserverui/libedataserverui.h>
 
 typedef struct
@@ -69,6 +70,11 @@ typedef struct
   GtkWidget          *add_calendar_menu_button;
   GtkWidget          *calendars_listbox;
   GtkWidget          *online_accounts_listbox;
+
+  /* stub goa rows */
+  GtkWidget          *exchange_stub_row;
+  GtkWidget          *google_stub_row;
+  GtkWidget          *owncloud_stub_row;
 
   /* flags */
   GcalSourceDialogMode mode;
@@ -153,6 +159,10 @@ static GtkWidget* make_row_from_source                  (GcalSourceDialog    *di
 
 static void       name_entry_text_changed               (GObject             *object,
                                                          GParamSpec          *pspec,
+                                                         gpointer             user_data);
+
+static void       online_accounts_listbox_row_activated (GtkListBox          *box,
+                                                         GtkListBoxRow       *row,
                                                          gpointer             user_data);
 
 static void       online_accounts_settings_button_clicked (GtkWidget         *button,
@@ -638,6 +648,45 @@ name_entry_text_changed (GObject    *object,
 
   if (valid)
     e_source_set_display_name (priv->source, gtk_entry_get_text (GTK_ENTRY (priv->name_entry)));
+}
+
+static void
+spawn_goa_with_args (gchar *action,
+                     gchar *arg)
+{
+  gchar *command[] = {"gnome-control-center", "online-accounts", action, arg, NULL};
+  g_spawn_async (NULL, command, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
+}
+
+/**
+ * online_accounts_listbox_row_activated:
+ *
+ * Selects the online account, or add one.
+ *
+ * Returns:
+ */
+static void
+online_accounts_listbox_row_activated (GtkListBox    *box,
+                                       GtkListBoxRow *row,
+                                       gpointer       user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+
+  if ((GtkWidget*) row == priv->exchange_stub_row)
+    {
+      spawn_goa_with_args ("add", "exchange");
+    }
+  else if ((GtkWidget*) row == priv->google_stub_row)
+    {
+      spawn_goa_with_args ("add", "google");
+    }
+  else if ((GtkWidget*) row == priv->owncloud_stub_row)
+    {
+      spawn_goa_with_args ("add", "owncloud");
+    }
+  else
+    {
+    }
 }
 
 /**
@@ -1806,12 +1855,15 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, credentials_user_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, default_check);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, edit_grid);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, exchange_stub_row);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, google_stub_row);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, location_dim_label);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notification);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notification_label);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, online_accounts_listbox);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, owncloud_stub_row);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, remove_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_listbox);
@@ -1833,6 +1885,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, hide_notification);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, notification_child_revealed_changed);
+  gtk_widget_class_bind_template_callback (widget_class, online_accounts_listbox_row_activated);
   gtk_widget_class_bind_template_callback (widget_class, online_accounts_settings_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, remove_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
