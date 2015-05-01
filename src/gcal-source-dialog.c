@@ -1983,17 +1983,17 @@ add_goa_account (GcalSourceDialog *dialog,
     {
     case GCAL_ACCOUNT_TYPE_EXCHANGE:
       icon_name = "goa";
-      gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->exchange_stub_row);
+      gtk_widget_hide (priv->exchange_stub_row);
       break;
 
     case GCAL_ACCOUNT_TYPE_GOOGLE:
       icon_name = "goa-account-google";
-      gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->google_stub_row);
+      gtk_widget_hide (priv->google_stub_row);
       break;
 
     case GCAL_ACCOUNT_TYPE_OWNCLOUD:
       icon_name = "goa-account-owncloud";
-      gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->owncloud_stub_row);
+      gtk_widget_hide (priv->owncloud_stub_row);
       break;
 
     case GCAL_ACCOUNT_TYPE_NOT_SUPPORTED:
