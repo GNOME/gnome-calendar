@@ -672,7 +672,7 @@ spawn_goa_with_args (gchar *action,
                      gchar *arg)
 {
   gchar *command[] = {"gnome-control-center", "online-accounts", action, arg, NULL};
-  g_spawn_async (NULL, command, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
+  g_spawn_async (NULL, command, NULL, G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL, NULL, NULL, NULL, NULL);
 }
 
 /**
