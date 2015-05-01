@@ -1461,9 +1461,6 @@ gcal_window_constructed (GObject *object)
 
   g_signal_connect (priv->edit_dialog, "response", G_CALLBACK (edit_dialog_closed), object);
 
-  /* source dialog manager */
-  gcal_source_dialog_set_manager (GCAL_SOURCE_DIALOG (priv->source_dialog), priv->manager);
-
   /* search bar */
   gtk_search_bar_connect_entry (GTK_SEARCH_BAR (priv->search_bar),
                                 GTK_ENTRY (priv->search_entry));
