@@ -1967,7 +1967,7 @@ add_goa_account (GcalSourceDialog *dialog,
   GtkWidget *enabled_label;
   GtkWidget *row;
   GtkWidget *icon;
-  gchar *icon_name;
+  gchar *icon_name = "goa";
 
   if (type == GCAL_ACCOUNT_TYPE_NOT_SUPPORTED)
     return;
