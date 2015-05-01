@@ -178,6 +178,10 @@ static void       online_accounts_listbox_row_activated (GtkListBox          *bo
                                                          GtkListBoxRow       *row,
                                                          gpointer             user_data);
 
+static gint       online_accounts_listbox_sort_func      (GtkListBoxRow       *row1,
+                                                          GtkListBoxRow       *row2,
+                                                          gpointer             user_data);
+
 static void       online_accounts_settings_button_clicked (GtkWidget         *button,
                                                           gpointer            user_data);
 
@@ -1821,6 +1825,8 @@ gcal_source_dialog_constructed (GObject *object)
                               object, NULL);
 
   gtk_list_box_set_header_func (GTK_LIST_BOX (priv->online_accounts_listbox), display_header_func, NULL, NULL);
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->online_accounts_listbox), (GtkListBoxSortFunc) online_accounts_listbox_sort_func,
+                              object, NULL);
 
   // Action group
   priv->action_group = g_simple_action_group_new ();
@@ -1940,6 +1946,27 @@ get_account_type (GoaAccount *account)
     return GCAL_ACCOUNT_TYPE_OWNCLOUD;
 
   return GCAL_ACCOUNT_TYPE_NOT_SUPPORTED;
+}
+
+static gint
+online_accounts_listbox_sort_func (GtkListBoxRow *row1,
+                                   GtkListBoxRow *row2,
+                                   gpointer       user_data)
+{
+  GoaAccount *a1 = g_object_get_data (G_OBJECT (row1), "goa-account");
+  GoaAccount *a2 = g_object_get_data (G_OBJECT (row2), "goa-account");
+  GcalAccountType t1, t2;
+
+  if (!a1 || !a2)
+    return a1 ? -1 : (a2 ? 1 : 0);
+
+  t1 = get_account_type (a1);
+  t2 = get_account_type (a2);
+
+  if (t1 != t2)
+    return t1 - t2;
+
+  return g_strcmp0 (goa_account_get_identity (a1), goa_account_get_identity (a2));
 }
 
 static void
