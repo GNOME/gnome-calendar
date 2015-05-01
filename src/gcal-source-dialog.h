@@ -21,6 +21,7 @@
 #define GCAL_SOURCE_DIALOG_H
 
 #include <glib-object.h>
+#include "gcal-application.h"
 #include "gcal-manager.h"
 
 #include <libecal/libecal.h>
@@ -47,7 +48,7 @@ typedef enum
   GCAL_SOURCE_DIALOG_MODE_NORMAL
 } GcalSourceDialogMode;
 
-GcalSourceDialog*   gcal_source_dialog_new                  (void);
+GtkWidget*          gcal_source_dialog_new                  (void);
 
 void                gcal_source_dialog_set_manager          (GcalSourceDialog   *dialog,
                                                              GcalManager        *manager);

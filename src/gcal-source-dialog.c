@@ -16,8 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "gcal-application.h"
 #include "gcal-source-dialog.h"
-
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
@@ -89,6 +89,7 @@ typedef struct
   GSimpleActionGroup *action_group;
 
   /* manager */
+  GcalApplication    *application;
   GcalManager        *manager;
 } GcalSourceDialogPrivate;
 
@@ -98,6 +99,12 @@ struct _GcalSourceDialog
 
   /*< private >*/
   GcalSourceDialogPrivate *priv;
+};
+
+enum {
+  PROP_0,
+  PROP_APPLICATION,
+  LAST_PROP
 };
 
 #define ENTRY_PROGRESS_TIMEOUT            100
@@ -1771,7 +1778,7 @@ remove_button_clicked (GtkWidget *button,
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
 }
 
-GcalSourceDialog *
+GtkWidget*
 gcal_source_dialog_new (void)
 {
   return g_object_new (GCAL_TYPE_SOURCE_DIALOG, NULL);
@@ -1818,6 +1825,44 @@ gcal_source_dialog_constructed (GObject *object)
 }
 
 static void
+gcal_source_dialog_get_property (GObject    *object,
+                                 guint       prop_id,
+                                 GValue     *value,
+                                 GParamSpec *pspec)
+{
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (object);
+
+  switch (prop_id)
+    {
+    case PROP_APPLICATION:
+      g_value_set_object (value, self->priv->application);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_source_dialog_set_property (GObject      *object,
+                                 guint         prop_id,
+                                 const GValue *value,
+                                 GParamSpec   *pspec)
+{
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (object);
+
+  switch (prop_id)
+    {
+    case PROP_APPLICATION:
+      self->priv->application = g_value_get_object (value);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
 gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
@@ -1831,8 +1876,23 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   g_type_ensure (E_TYPE_SOURCE_LOCAL);
 
   object_class->constructed = gcal_source_dialog_constructed;
+  object_class->get_property = gcal_source_dialog_get_property;
+  object_class->set_property = gcal_source_dialog_set_property;
 
   widget_class = GTK_WIDGET_CLASS (klass);
+
+  /**
+   * GcalSourceDialog::application:
+   *
+   * The #GcalApplication of the dialog.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_APPLICATION,
+                                   g_param_spec_object ("application",
+                                                        "Application of this dialog",
+                                                        "The application that runs this dialog over",
+                                                        GCAL_TYPE_APPLICATION,
+                                                        G_PARAM_READWRITE));
 
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
