@@ -38,8 +38,6 @@ struct _GcalApplicationPrivate
 {
   GtkWidget      *window;
 
-  GoaClient      *client;
-
   GSettings      *settings;
   GcalManager    *manager;
 
@@ -51,14 +49,6 @@ struct _GcalApplicationPrivate
   gchar          *uuid;
   icaltimetype   *initial_date;
 };
-
-enum
-{
-  GOA_CLIENT_READY,
-  NUM_SIGNALS
-};
-
-static guint signals[NUM_SIGNALS] = { 0, };
 
 static void     gcal_application_finalize             (GObject                 *object);
 
@@ -99,10 +89,6 @@ static gboolean gcal_application_dbus_register       (GApplication             *
 static void     gcal_application_dbus_unregister     (GApplication             *application,
                                                       GDBusConnection          *connection,
                                                       const gchar              *object_path);
-
-static void     gcal_application_goa_client_ready    (GObject                  *source,
-                                                      GAsyncResult             *result,
-                                                      gpointer                  user_data);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 
@@ -211,22 +197,6 @@ gcal_application_class_init (GcalApplicationClass *klass)
 
   application_class->dbus_register = gcal_application_dbus_register;
   application_class->dbus_unregister = gcal_application_dbus_unregister;
-
-  /**
-   * GcalApplication::goa-client-ready:
-   *
-   * Emited when the #GoaClient asyncronous loading is finished.
-   */
-  signals[GOA_CLIENT_READY] = g_signal_new ("source-removed",
-                                            GCAL_TYPE_APPLICATION,
-                                            G_SIGNAL_RUN_LAST,
-                                            G_STRUCT_OFFSET (GcalApplicationClass, goa_client_ready),
-                                            NULL,
-                                            NULL,
-                                            NULL,
-                                            G_TYPE_NONE,
-                                            1,
-                                            GOA_TYPE_CLIENT);
 }
 
 static void
@@ -243,33 +213,7 @@ gcal_application_init (GcalApplication *self)
   priv->search_provider = gcal_shell_search_provider_new ();
   gcal_shell_search_provider_connect (priv->search_provider, priv->manager);
 
-  goa_client_new (NULL, // we won't really cancel it
-                  (GAsyncReadyCallback) gcal_application_goa_client_ready,
-                  self);
-
   self->priv = priv;
-}
-
-static void
-gcal_application_goa_client_ready (GObject      *source,
-                                   GAsyncResult *result,
-                                   gpointer      user_data)
-{
-  GcalApplicationPrivate *priv = GCAL_APPLICATION (user_data)->priv;
-  GError *error = NULL;
-
-  priv->client = goa_client_new_finish (result, &error);
-
-  g_signal_emit (user_data, signals[GOA_CLIENT_READY], 0, priv->client);
-
-  if (error != NULL)
-    {
-      g_warning ("%s: Error retrieving GoaClient: %s",
-                 G_STRFUNC,
-                 error->message);
-
-      g_error_free (error);
-    }
 }
 
 static void
@@ -635,21 +579,4 @@ gcal_application_set_initial_date (GcalApplication *application,
 
   g_free (priv->initial_date);
   priv->initial_date = gcal_dup_icaltime (date);
-}
-
-/**
- * gcal_application_get_client:
- * @application: a #GcalApplication
- *
- * Retrieves the internal #GoaClient from @application. It
- * should not be unreferenced after usage.
- *
- * Returns: (transfer none): the #GoaClient of @application
- */
-GoaClient*
-gcal_application_get_client (GcalApplication *application)
-{
-  g_return_val_if_fail (GCAL_IS_APPLICATION (application), NULL);
-
-  return application->priv->client;
 }

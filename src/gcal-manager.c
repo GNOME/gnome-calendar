@@ -67,7 +67,10 @@ typedef struct
 
   GCancellable    *async_ops;
 
+  GoaClient       *client;
+
   /* state flags */
+  gboolean         goa_client_ready;
   gchar          **disabled_sources;
   gint             sources_at_launch;
 
@@ -102,6 +105,7 @@ enum
   SOURCE_REMOVED,
   LOAD_COMPLETED,
   QUERY_COMPLETED,
+  GOA_CLIENT_READY,
   NUM_SIGNALS
 };
 
@@ -675,12 +679,42 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                            G_STRUCT_OFFSET (GcalManagerClass, query_completed),
                                            NULL, NULL, NULL,
                                            G_TYPE_NONE, 0);
+
+  signals[GOA_CLIENT_READY] = g_signal_new ("goa-client-ready", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
+                                            G_STRUCT_OFFSET (GcalManagerClass, goa_client_ready),
+                                            NULL, NULL, NULL,
+                                            G_TYPE_NONE, 1, GOA_TYPE_CLIENT);
+}
+
+static void
+gcal_manager_client_ready_cb (GObject      *source,
+                              GAsyncResult *result,
+                              gpointer      user_data)
+{
+  GcalManagerPrivate *priv = gcal_manager_get_instance_private (GCAL_MANAGER (user_data));
+  GError *error = NULL;
+
+  priv->client = goa_client_new_finish (result, &error);
+  priv->goa_client_ready = TRUE;
+
+  g_signal_emit (user_data, signals[GOA_CLIENT_READY], 0, priv->client);
+
+  if (error != NULL)
+    {
+      g_warning ("%s: Error retrieving GoaClient: %s",
+                 G_STRFUNC,
+                 error->message);
+
+      g_error_free (error);
+    }
 }
 
 static void
 gcal_manager_init (GcalManager *self)
 {
-  ;
+  goa_client_new (NULL, // we won't really cancel it
+                  (GAsyncReadyCallback) gcal_manager_client_ready_cb,
+                  self);
 }
 
 static void
@@ -1494,4 +1528,28 @@ gcal_manager_get_event_from_shell_search (GcalManager *manager,
   g_list_free (list);
 
   return new_data;
+}
+
+gboolean
+gcal_manager_is_client_ready (GcalManager *manager)
+{
+  GcalManagerPrivate *priv;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
+
+  priv = gcal_manager_get_instance_private (manager);
+
+  return priv->goa_client_ready;
+}
+
+GoaClient*
+gcal_manager_get_client (GcalManager *manager)
+{
+  GcalManagerPrivate *priv;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
+
+  priv = gcal_manager_get_instance_private (manager);
+
+  return priv->client;
 }

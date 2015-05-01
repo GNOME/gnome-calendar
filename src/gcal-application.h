@@ -49,8 +49,6 @@ struct _GcalApplication
 struct _GcalApplicationClass
 {
   GtkApplicationClass parent_class;
-
-  void (*goa_client_ready) (GcalApplication *app, GoaClient *client);
 };
 
 GType             gcal_application_get_type     (void) G_GNUC_CONST;
@@ -61,7 +59,6 @@ void              gcal_application_set_uuid     (GcalApplication *application,
                                                  const gchar     *uuid);
 void              gcal_application_set_initial_date (GcalApplication *application,
                                                      const icaltimetype *date);
-GoaClient*        gcal_application_get_client   (GcalApplication *application);
 
 G_END_DECLS
 
