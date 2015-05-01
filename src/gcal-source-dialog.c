@@ -48,6 +48,7 @@ typedef struct
   GtkWidget          *account_dim_label;
   GtkWidget          *calendar_url_button;
   GtkWidget          *location_dim_label;
+  GtkWidget          *settings_button;
 
   /* new source details */
   GtkWidget          *calendar_address_entry;
@@ -209,6 +210,9 @@ static void       stack_visible_child_name_changed      (GObject             *ob
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
 
+static void       settings_button_clicked               (GtkWidget           *button,
+                                                         gpointer             user_data);
+
 static gboolean   pulse_web_entry                       (GcalSourceDialog    *dialog);
 
 static void       url_entry_text_changed                (GObject             *object,
@@ -291,11 +295,23 @@ add_source (GcalManager *manager,
   if (!contains_source)
     {
       GtkWidget *row;
+      ESource *parent;
+
+      parent = gcal_manager_get_source (priv->manager, e_source_get_parent (source));
 
       row = make_row_from_source (GCAL_SOURCE_DIALOG (user_data), source);
       g_object_set_data (G_OBJECT (row), "source", source);
 
+      if (e_source_has_extension (parent, E_SOURCE_EXTENSION_GOA))
+        {
+          ESourceGoa *goa = e_source_get_extension (parent, E_SOURCE_EXTENSION_GOA);
+
+          g_object_set_data (G_OBJECT (row), "account-id", (gpointer) e_source_goa_get_account_id (goa));
+        }
+
       gtk_container_add (GTK_CONTAINER (priv->calendars_listbox), row);
+
+      g_object_unref (parent);
     }
 
   g_list_free (children);
@@ -810,6 +826,19 @@ is_remote_source (ESource *source)
 }
 
 static void
+settings_button_clicked (GtkWidget *button,
+                         gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  const gchar *account_id;
+
+  /* Selects the account to open */
+  account_id = g_object_get_data (G_OBJECT (priv->account_label), "account-id");
+
+  spawn_goa_with_args ((gchar*) account_id, NULL);
+}
+
+static void
 stack_visible_child_name_changed (GObject    *object,
                                   GParamSpec *pspec,
                                   gpointer    user_data)
@@ -898,7 +927,14 @@ stack_visible_child_name_changed (GObject    *object,
           g_free (uri);
         }
 
-      // TODO: setup GOA settings
+      if (is_goa)
+        {
+          gchar *name;
+
+          get_source_parent_name_color (priv->manager, priv->source, &name, NULL);
+
+          gtk_label_set_label (GTK_LABEL (priv->account_label), name);
+        }
 
       /* block signals */
       g_signal_handlers_block_by_func (priv->calendar_visible_check, calendar_visible_check_toggled, user_data);
@@ -1894,6 +1930,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, online_accounts_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, owncloud_stub_row);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, remove_button);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, settings_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_revealer);
@@ -1918,6 +1955,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, online_accounts_settings_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, remove_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
+  gtk_widget_class_bind_template_callback (widget_class, settings_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, stack_visible_child_name_changed);
   gtk_widget_class_bind_template_callback (widget_class, undo_remove_action);
   gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
