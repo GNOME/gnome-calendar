@@ -227,3 +227,7 @@ GcalEventWidget.color-light:backdrop {
 .calendar-list {
     background-color: transparent;
 }
+
+.calendar-list > GtkListBoxRow{
+    border-radius: 4px;
+}

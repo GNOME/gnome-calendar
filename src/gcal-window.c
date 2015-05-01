@@ -820,10 +820,17 @@ make_row_from_source (GcalWindow *window,
 {
   GcalWindowPrivate *priv = gcal_window_get_instance_private (window);
   GtkWidget *label, *icon, *separator, *checkbox, *box, *row;
+  GtkStyleContext *context;
   GdkPixbuf *pixbuf;
   GdkRGBA color;
 
   row = gtk_list_box_row_new ();
+
+  /* apply some nice styling */
+  context = gtk_widget_get_style_context (row);
+  gtk_style_context_add_class (context, "button");
+  gtk_style_context_add_class (context, "flat");
+  gtk_style_context_add_class (context, "menuitem");
 
   /* main box */
   box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
