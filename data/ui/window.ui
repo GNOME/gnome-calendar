@@ -462,4 +462,9 @@
       </object>
     </child>
   </object>
+  <object class="GcalSourceDialog" id="source_dialog">
+    <property name="visible">False</property>
+    <property name="can_focus">False</property>
+    <property name="transient_for">GcalWindow</property>
+  </object>
 </interface>
