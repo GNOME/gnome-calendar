@@ -9,6 +9,9 @@
     <property name="default_width">550</property>
     <property name="default_height">500</property>
     <property name="type_hint">dialog</property>
+    <property name="modal">True</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="modal">True</property>
     <signal name="response" handler="response_signal" object="GcalSourceDialog" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="vbox">
