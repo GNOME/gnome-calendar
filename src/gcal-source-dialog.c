@@ -699,6 +699,16 @@ online_accounts_listbox_row_activated (GtkListBox    *box,
     }
   else
     {
+      GoaAccount *account = g_object_get_data (G_OBJECT (row), "goa-account");
+      gchar *id;
+
+      g_return_if_fail (GOA_IS_ACCOUNT (account));
+
+      id = goa_account_dup_id (account);
+
+      spawn_goa_with_args (id, NULL);
+
+      g_free (id);
     }
 }
 
