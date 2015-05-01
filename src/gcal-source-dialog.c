@@ -105,6 +105,14 @@ enum {
   LAST_PROP
 };
 
+typedef enum
+{
+  GCAL_ACCOUNT_TYPE_EXCHANGE,
+  GCAL_ACCOUNT_TYPE_GOOGLE,
+  GCAL_ACCOUNT_TYPE_OWNCLOUD,
+  GCAL_ACCOUNT_TYPE_NOT_SUPPORTED
+} GcalAccountType;
+
 #define ENTRY_PROGRESS_TIMEOUT            100
 
 static void       add_button_clicked                    (GtkWidget            *button,
@@ -1839,19 +1847,6 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 
   widget_class = GTK_WIDGET_CLASS (klass);
 
-  /**
-   * GcalSourceDialog::application:
-   *
-   * The #GcalApplication of the dialog.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_APPLICATION,
-                                   g_param_spec_object ("application",
-                                                        "Application of this dialog",
-                                                        "The application that runs this dialog over",
-                                                        GCAL_TYPE_APPLICATION,
-                                                        G_PARAM_READWRITE));
-
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
 
@@ -1920,6 +1915,113 @@ gcal_source_dialog_init (GcalSourceDialog *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
+static GcalAccountType
+get_account_type (GoaAccount *account)
+{
+  g_return_val_if_fail (GOA_IS_ACCOUNT (account), GCAL_ACCOUNT_TYPE_NOT_SUPPORTED);
+
+  if (g_strcmp0 (goa_account_get_provider_type (account), "exchange") == 0)
+    return GCAL_ACCOUNT_TYPE_EXCHANGE;
+
+  if (g_strcmp0 (goa_account_get_provider_type (account), "google") == 0)
+    return GCAL_ACCOUNT_TYPE_GOOGLE;
+
+  if (g_strcmp0 (goa_account_get_provider_type (account), "owncloud") == 0)
+    return GCAL_ACCOUNT_TYPE_OWNCLOUD;
+
+  return GCAL_ACCOUNT_TYPE_NOT_SUPPORTED;
+}
+
+static void
+account_calendar_disable_changed (GObject    *object,
+                                  GParamSpec *pspec,
+                                  gpointer    user_data)
+{
+  GoaAccount *account = GOA_ACCOUNT (object);
+
+  g_return_if_fail (GTK_IS_LABEL (user_data));
+
+  gtk_label_set_label (GTK_LABEL (user_data), goa_account_get_calendar_disabled (account) ? _("Off") : _("On"));
+}
+
+static void
+goa_client_ready_cb (GcalSourceDialog *dialog,
+                     GoaClient        *client,
+                     gpointer          user_data)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+  GList *accounts, *l;
+
+  g_return_if_fail (GCAL_IS_SOURCE_DIALOG (dialog));
+  g_return_if_fail (GOA_IS_CLIENT (client));
+
+  accounts = goa_client_get_accounts (client);
+
+  for (l = accounts; l != NULL; l = l->next)
+    {
+      GoaAccount *account = goa_object_get_account (GOA_OBJECT (l->data));
+      GcalAccountType type = get_account_type (account);
+      GtkBuilder *builder;
+      GtkWidget *provider_label;
+      GtkWidget *account_label;
+      GtkWidget *enabled_label;
+      GtkWidget *row;
+      GtkWidget *icon;
+      gboolean should_add = TRUE;
+      gchar *icon_name;
+
+      builder = gtk_builder_new_from_resource ("/org/gnome/calendar/online-account-row.ui");
+      row = GTK_WIDGET (gtk_builder_get_object (builder, "row"));
+      icon = GTK_WIDGET (gtk_builder_get_object (builder, "icon"));
+      provider_label = GTK_WIDGET (gtk_builder_get_object (builder, "account_provider_label"));
+      account_label = GTK_WIDGET (gtk_builder_get_object (builder, "account_name_label"));
+      enabled_label = GTK_WIDGET (gtk_builder_get_object (builder, "on_off_label"));
+
+      switch (type)
+        {
+        case GCAL_ACCOUNT_TYPE_EXCHANGE:
+          icon_name = "goa";
+          gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->exchange_stub_row);
+          break;
+
+        case GCAL_ACCOUNT_TYPE_GOOGLE:
+          icon_name = "goa-account-google";
+          gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->google_stub_row);
+          break;
+
+        case GCAL_ACCOUNT_TYPE_OWNCLOUD:
+          icon_name = "goa-account-owncloud";
+          gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->owncloud_stub_row);
+          break;
+
+        case GCAL_ACCOUNT_TYPE_NOT_SUPPORTED:
+        default:
+          should_add = FALSE;
+        }
+
+      if (should_add)
+        {
+          /* update fields */
+          gtk_label_set_label (GTK_LABEL (provider_label), goa_account_get_provider_name (account));
+          gtk_label_set_label (GTK_LABEL (account_label), goa_account_get_identity (account));
+          gtk_label_set_label (GTK_LABEL (enabled_label),
+                               goa_account_get_calendar_disabled (account) ? _("Off") : _("On"));
+          gtk_image_set_from_icon_name (GTK_IMAGE (icon), icon_name, GTK_ICON_SIZE_DIALOG);
+          gtk_image_set_pixel_size (GTK_IMAGE (icon), 32);
+
+          g_object_set_data (G_OBJECT (row), "goa-account", account);
+          g_signal_connect (account, "notify::calendar-disabled",
+                            G_CALLBACK (account_calendar_disable_changed), enabled_label);
+
+          gtk_list_box_insert (GTK_LIST_BOX (priv->online_accounts_listbox), row, 0);
+        }
+
+      g_object_unref (builder);
+    }
+
+  g_list_free (accounts);
+}
+
 /**
  * gcal_source_dialog_set_manager:
  *
@@ -1935,6 +2037,19 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
   GcalSourceDialogPrivate *priv = dialog->priv;
 
   priv->manager = manager;
+
+  /*
+   * If the GoaClient is already loaded, fetch the online accounts
+   * directly. Otherwise, wait for it to be ready.
+   */
+  if (gcal_manager_is_client_ready (manager))
+    {
+      goa_client_ready_cb (dialog, gcal_manager_get_client (manager), NULL);
+    }
+  else
+    {
+      g_signal_connect_swapped (manager, "goa-client-ready", G_CALLBACK (goa_client_ready_cb), dialog);
+    }
 
   if (gcal_manager_load_completed (priv->manager))
     {
