@@ -1346,7 +1346,6 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendars_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendar_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, calendar_popover);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, source_dialog);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, search_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, back_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, today_button);
@@ -1403,6 +1402,13 @@ gcal_window_init (GcalWindow *self)
 {
   GcalWindowPrivate *priv = gcal_window_get_instance_private (self);
 
+  /* source dialog */
+  priv->source_dialog = gcal_source_dialog_new ();
+  gtk_window_set_transient_for (GTK_WINDOW (priv->source_dialog), GTK_WINDOW (self));
+
+  g_object_bind_property (self, "application", priv->source_dialog, "application",
+                          G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+
   priv->active_date = g_new0 (icaltimetype, 1);
 
   gtk_widget_init_template (GTK_WIDGET (self));
@@ -1454,8 +1460,6 @@ gcal_window_constructed (GObject *object)
 
   g_signal_connect (priv->edit_dialog, "response", G_CALLBACK (edit_dialog_closed), object);
 
-  /* source dialog manager */
-  gcal_source_dialog_set_manager (GCAL_SOURCE_DIALOG (priv->source_dialog), priv->manager);
 
   /* search bar */
   gtk_search_bar_connect_entry (GTK_SEARCH_BAR (priv->search_bar),
