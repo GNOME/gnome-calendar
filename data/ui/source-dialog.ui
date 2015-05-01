@@ -201,11 +201,12 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <child>
-                                              <object class="GtkBox" id="google_stub_box">
+                                              <object class="GtkGrid" id="google_stub_grid">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="border_width">6</property>
-                                                <property name="spacing">12</property>
+                                                <property name="margin_end">18</property>
+                                                <property name="column_spacing">12</property>
                                                 <child>
                                                   <object class="GtkImage" id="google_account_image">
                                                     <property name="visible">True</property>
@@ -214,9 +215,9 @@
                                                     <property name="icon_name">goa-account-google</property>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">0</property>
+                                                    <property name="left_attach">0</property>
+                                                    <property name="top_attach">0</property>
+                                                    <property name="height">2</property>
                                                   </packing>
                                                 </child>
                                                 <child>
@@ -224,11 +225,28 @@
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">False</property>
                                                     <property name="label" translatable="yes">Google</property>
+                                                    <property name="xalign">0</property>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">1</property>
+                                                    <property name="left_attach">1</property>
+                                                    <property name="top_attach">0</property>
+                                                    <property name="height">1</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel" id="google_account_config_label">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">False</property>
+                                                    <property name="label" translatable="yes">Click to set up</property>
+                                                    <property name="xalign">0</property>
+                                                    <style>
+                                                      <class name="dim-label"/>
+                                                    </style>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="left_attach">1</property>
+                                                    <property name="top_attach">1</property>
+                                                    <property name="height">1</property>
                                                   </packing>
                                                 </child>
                                               </object>
@@ -240,11 +258,12 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <child>
-                                              <object class="GtkBox" id="owncloud_stub_box">
+                                              <object class="GtkGrid" id="owncloud_stub_grid">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="border_width">6</property>
-                                                <property name="spacing">12</property>
+                                                <property name="margin_end">18</property>
+                                                <property name="column_spacing">12</property>
                                                 <child>
                                                   <object class="GtkImage" id="owncloud_account_image">
                                                     <property name="visible">True</property>
@@ -253,9 +272,9 @@
                                                     <property name="icon_name">goa-account-owncloud</property>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">0</property>
+                                                    <property name="left_attach">0</property>
+                                                    <property name="top_attach">0</property>
+                                                    <property name="height">2</property>
                                                   </packing>
                                                 </child>
                                                 <child>
@@ -263,11 +282,28 @@
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">False</property>
                                                     <property name="label" translatable="yes">ownCloud</property>
+                                                    <property name="xalign">0</property>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">1</property>
+                                                    <property name="left_attach">1</property>
+                                                    <property name="top_attach">0</property>
+                                                    <property name="height">1</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel" id="owncloud_account_config_label">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">False</property>
+                                                    <property name="label" translatable="yes">Click to set up</property>
+                                                    <property name="xalign">0</property>
+                                                    <style>
+                                                      <class name="dim-label"/>
+                                                    </style>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="left_attach">1</property>
+                                                    <property name="top_attach">1</property>
+                                                    <property name="height">1</property>
                                                   </packing>
                                                 </child>
                                               </object>
@@ -279,11 +315,12 @@
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <child>
-                                              <object class="GtkBox" id="exchange_stub_box">
+                                              <object class="GtkGrid" id="exchange_stub_grid">
                                                 <property name="visible">True</property>
                                                 <property name="can_focus">False</property>
                                                 <property name="border_width">6</property>
-                                                <property name="spacing">12</property>
+                                                <property name="margin_end">18</property>
+                                                <property name="column_spacing">12</property>
                                                 <child>
                                                   <object class="GtkImage" id="exchange_account_image">
                                                     <property name="visible">True</property>
@@ -292,9 +329,9 @@
                                                     <property name="icon_name">goa-account</property>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">0</property>
+                                                    <property name="left_attach">0</property>
+                                                    <property name="top_attach">0</property>
+                                                    <property name="height">2</property>
                                                   </packing>
                                                 </child>
                                                 <child>
@@ -302,11 +339,28 @@
                                                     <property name="visible">True</property>
                                                     <property name="can_focus">False</property>
                                                     <property name="label" translatable="yes">Microsoft Exchange</property>
+                                                    <property name="xalign">0</property>
                                                   </object>
                                                   <packing>
-                                                    <property name="expand">False</property>
-                                                    <property name="fill">True</property>
-                                                    <property name="position">1</property>
+                                                    <property name="left_attach">1</property>
+                                                    <property name="top_attach">0</property>
+                                                    <property name="height">1</property>
+                                                  </packing>
+                                                </child>
+                                                <child>
+                                                  <object class="GtkLabel" id="exchange_account_config_label">
+                                                    <property name="visible">True</property>
+                                                    <property name="can_focus">False</property>
+                                                    <property name="label" translatable="yes">Click to set up</property>
+                                                    <property name="xalign">0</property>
+                                                    <style>
+                                                      <class name="dim-label"/>
+                                                    </style>
+                                                  </object>
+                                                  <packing>
+                                                    <property name="left_attach">1</property>
+                                                    <property name="top_attach">1</property>
+                                                    <property name="height">1</property>
                                                   </packing>
                                                 </child>
                                               </object>
