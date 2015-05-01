@@ -2025,6 +2025,68 @@ goa_account_added_cb (GoaClient *client,
   add_goa_account (GCAL_SOURCE_DIALOG (user_data), goa_object_get_account (object));
 }
 
+static void
+goa_account_removed_cb (GoaClient *client,
+                        GoaObject *object,
+                        gpointer   user_data)
+{
+  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GoaAccount *account = goa_object_get_account (object);
+  GcalAccountType type = get_account_type (account);
+  GList *children, *l;
+  gint counter = 1;
+
+  if (type == GCAL_ACCOUNT_TYPE_NOT_SUPPORTED)
+    return;
+
+  children = gtk_container_get_children (GTK_CONTAINER (priv->online_accounts_listbox));
+
+  for (l = children; l != NULL; l = l->next)
+    {
+      GoaAccount *row_account;
+      GcalAccountType row_type;
+
+      row_account = g_object_get_data (l->data, "goa-account");
+      row_type = row_account ? get_account_type (row_account) : GCAL_ACCOUNT_TYPE_NOT_SUPPORTED;
+
+      if (row_account == account)
+        {
+          gtk_widget_destroy (l->data);
+          counter--;
+        }
+      else if (type == row_type)
+        {
+          counter++;
+        }
+    }
+
+  /*
+   * If there's any other account with the same type,
+   * it should show back the stub row of the given type.
+   */
+  if (counter == 0)
+    {
+      switch (type)
+        {
+        case GCAL_ACCOUNT_TYPE_EXCHANGE:
+          gtk_widget_show (priv->exchange_stub_row);
+          break;
+
+        case GCAL_ACCOUNT_TYPE_GOOGLE:
+          gtk_widget_show (priv->google_stub_row);
+          break;
+
+        case GCAL_ACCOUNT_TYPE_OWNCLOUD:
+          gtk_widget_show (priv->owncloud_stub_row);
+          break;
+
+        default:
+          g_assert_not_reached ();
+        }
+    }
+
+  g_list_free (children);
+}
 
 static void
 goa_client_ready_cb (GcalSourceDialog *dialog,
@@ -2044,6 +2106,7 @@ goa_client_ready_cb (GcalSourceDialog *dialog,
 
   /* Be ready to other accounts */
   g_signal_connect (client, "account-added", G_CALLBACK (goa_account_added_cb), user_data);
+  g_signal_connect (client, "account-removed", G_CALLBACK (goa_account_removed_cb), user_data);
 
   g_list_free (accounts);
 }
