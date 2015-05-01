@@ -4,6 +4,7 @@
     <file alias="date-selector.ui" compressed="true" preprocess="xml-stripblanks">ui/date-selector.ui</file>
     <file alias="edit-dialog.ui" compressed="true" preprocess="xml-stripblanks">ui/edit-dialog.ui</file>
     <file alias="menus.ui" compressed="true" preprocess="xml-stripblanks">ui/menus.ui</file>
+    <file alias="online-account-row.ui" compressed="true" preprocess="xml-stripblanks">ui/online-account-row.ui</file>
     <file alias="search-view.ui" compressed="true" preprocess="xml-stripblanks">ui/search-view.ui</file>
     <file alias="source-dialog.ui" compressed="true" preprocess="xml-stripblanks">ui/source-dialog.ui</file>
     <file alias="time-selector.ui" compressed="true" preprocess="xml-stripblanks">ui/time-selector.ui</file>
