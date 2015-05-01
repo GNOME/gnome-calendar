@@ -669,6 +669,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
+                            <signal name="clicked" handler="settings_button_clicked" object="GcalSourceDialog" swapped="no" />
                           </object>
                           <packing>
                             <property name="expand">False</property>
