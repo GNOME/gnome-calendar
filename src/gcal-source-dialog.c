@@ -1954,80 +1954,96 @@ account_calendar_disable_changed (GObject    *object,
   gtk_label_set_label (GTK_LABEL (user_data), goa_account_get_calendar_disabled (account) ? _("Off") : _("On"));
 }
 
+
+static void
+add_goa_account (GcalSourceDialog *dialog,
+                 GoaAccount       *account)
+{
+  GcalSourceDialogPrivate *priv = dialog->priv;
+  GcalAccountType type = get_account_type (account);
+  GtkBuilder *builder;
+  GtkWidget *provider_label;
+  GtkWidget *account_label;
+  GtkWidget *enabled_label;
+  GtkWidget *row;
+  GtkWidget *icon;
+  gchar *icon_name;
+
+  if (type == GCAL_ACCOUNT_TYPE_NOT_SUPPORTED)
+    return;
+
+  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/online-account-row.ui");
+  row = GTK_WIDGET (gtk_builder_get_object (builder, "row"));
+  icon = GTK_WIDGET (gtk_builder_get_object (builder, "icon"));
+  provider_label = GTK_WIDGET (gtk_builder_get_object (builder, "account_provider_label"));
+  account_label = GTK_WIDGET (gtk_builder_get_object (builder, "account_name_label"));
+  enabled_label = GTK_WIDGET (gtk_builder_get_object (builder, "on_off_label"));
+
+  switch (type)
+    {
+    case GCAL_ACCOUNT_TYPE_EXCHANGE:
+      icon_name = "goa";
+      gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->exchange_stub_row);
+      break;
+
+    case GCAL_ACCOUNT_TYPE_GOOGLE:
+      icon_name = "goa-account-google";
+      gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->google_stub_row);
+      break;
+
+    case GCAL_ACCOUNT_TYPE_OWNCLOUD:
+      icon_name = "goa-account-owncloud";
+      gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->owncloud_stub_row);
+      break;
+
+    case GCAL_ACCOUNT_TYPE_NOT_SUPPORTED:
+      g_assert_not_reached ();
+    }
+
+  /* update fields */
+  gtk_label_set_label (GTK_LABEL (provider_label), goa_account_get_provider_name (account));
+  gtk_label_set_label (GTK_LABEL (account_label), goa_account_get_identity (account));
+  gtk_label_set_label (GTK_LABEL (enabled_label),
+                       goa_account_get_calendar_disabled (account) ? _("Off") : _("On"));
+  gtk_image_set_from_icon_name (GTK_IMAGE (icon), icon_name, GTK_ICON_SIZE_DIALOG);
+  gtk_image_set_pixel_size (GTK_IMAGE (icon), 32);
+
+  g_object_set_data (G_OBJECT (row), "goa-account", account);
+  g_signal_connect (account, "notify::calendar-disabled",
+                    G_CALLBACK (account_calendar_disable_changed), enabled_label);
+
+  gtk_list_box_insert (GTK_LIST_BOX (priv->online_accounts_listbox), row, 0);
+
+  g_object_unref (builder);
+}
+
+static void
+goa_account_added_cb (GoaClient *client,
+                      GoaObject *object,
+                      gpointer   user_data)
+{
+  add_goa_account (GCAL_SOURCE_DIALOG (user_data), goa_object_get_account (object));
+}
+
+
 static void
 goa_client_ready_cb (GcalSourceDialog *dialog,
                      GoaClient        *client,
                      gpointer          user_data)
 {
-  GcalSourceDialogPrivate *priv = dialog->priv;
   GList *accounts, *l;
 
   g_return_if_fail (GCAL_IS_SOURCE_DIALOG (dialog));
   g_return_if_fail (GOA_IS_CLIENT (client));
 
+  /* Add already fetched accounts */
   accounts = goa_client_get_accounts (client);
 
   for (l = accounts; l != NULL; l = l->next)
-    {
-      GoaAccount *account = goa_object_get_account (GOA_OBJECT (l->data));
-      GcalAccountType type = get_account_type (account);
-      GtkBuilder *builder;
-      GtkWidget *provider_label;
-      GtkWidget *account_label;
-      GtkWidget *enabled_label;
-      GtkWidget *row;
-      GtkWidget *icon;
-      gboolean should_add = TRUE;
-      gchar *icon_name;
+    add_goa_account (dialog, goa_object_get_account (l->data));
 
-      builder = gtk_builder_new_from_resource ("/org/gnome/calendar/online-account-row.ui");
-      row = GTK_WIDGET (gtk_builder_get_object (builder, "row"));
-      icon = GTK_WIDGET (gtk_builder_get_object (builder, "icon"));
-      provider_label = GTK_WIDGET (gtk_builder_get_object (builder, "account_provider_label"));
-      account_label = GTK_WIDGET (gtk_builder_get_object (builder, "account_name_label"));
-      enabled_label = GTK_WIDGET (gtk_builder_get_object (builder, "on_off_label"));
-
-      switch (type)
-        {
-        case GCAL_ACCOUNT_TYPE_EXCHANGE:
-          icon_name = "goa";
-          gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->exchange_stub_row);
-          break;
-
-        case GCAL_ACCOUNT_TYPE_GOOGLE:
-          icon_name = "goa-account-google";
-          gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->google_stub_row);
-          break;
-
-        case GCAL_ACCOUNT_TYPE_OWNCLOUD:
-          icon_name = "goa-account-owncloud";
-          gtk_container_remove (GTK_CONTAINER (priv->online_accounts_listbox), priv->owncloud_stub_row);
-          break;
-
-        case GCAL_ACCOUNT_TYPE_NOT_SUPPORTED:
-        default:
-          should_add = FALSE;
-        }
-
-      if (should_add)
-        {
-          /* update fields */
-          gtk_label_set_label (GTK_LABEL (provider_label), goa_account_get_provider_name (account));
-          gtk_label_set_label (GTK_LABEL (account_label), goa_account_get_identity (account));
-          gtk_label_set_label (GTK_LABEL (enabled_label),
-                               goa_account_get_calendar_disabled (account) ? _("Off") : _("On"));
-          gtk_image_set_from_icon_name (GTK_IMAGE (icon), icon_name, GTK_ICON_SIZE_DIALOG);
-          gtk_image_set_pixel_size (GTK_IMAGE (icon), 32);
-
-          g_object_set_data (G_OBJECT (row), "goa-account", account);
-          g_signal_connect (account, "notify::calendar-disabled",
-                            G_CALLBACK (account_calendar_disable_changed), enabled_label);
-
-          gtk_list_box_insert (GTK_LIST_BOX (priv->online_accounts_listbox), row, 0);
-        }
-
-      g_object_unref (builder);
-    }
+  /* Be ready to other accounts */
+  g_signal_connect (client, "account-added", G_CALLBACK (goa_account_added_cb), user_data);
 
   g_list_free (accounts);
 }
