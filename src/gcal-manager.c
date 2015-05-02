@@ -103,6 +103,7 @@ enum
   SOURCE_ACTIVATED,
   SOURCE_ADDED,
   SOURCE_REMOVED,
+  SOURCE_ENABLED,
   LOAD_COMPLETED,
   QUERY_COMPLETED,
   GOA_CLIENT_READY,
@@ -669,6 +670,11 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                           G_STRUCT_OFFSET (GcalManagerClass, source_removed),
                                           NULL, NULL, NULL,
                                           G_TYPE_NONE, 1, G_TYPE_POINTER);
+
+  signals[SOURCE_ENABLED] = g_signal_new ("source-enabled", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
+                                          G_STRUCT_OFFSET (GcalManagerClass, source_enabled),
+                                          NULL, NULL, NULL,
+                                          G_TYPE_NONE, 2, E_TYPE_SOURCE, G_TYPE_BOOLEAN);
 
   signals[LOAD_COMPLETED] = g_signal_new ("load-completed", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
                                           G_STRUCT_OFFSET (GcalManagerClass, load_completed),
@@ -1246,6 +1252,8 @@ gcal_manager_enable_source (GcalManager *manager,
   g_strfreev (priv->disabled_sources);
   priv->disabled_sources = new_disabled_sources;
 
+  g_signal_emit (manager, signals[SOURCE_ENABLED], 0, source, TRUE);
+
   /* sync settings value */
   g_settings_set_strv (priv->settings, "disabled-sources", (const gchar * const *) priv->disabled_sources);
 }
@@ -1289,6 +1297,8 @@ gcal_manager_disable_source (GcalManager *manager,
 
   g_strfreev (priv->disabled_sources);
   priv->disabled_sources = new_disabled_sources;
+
+  g_signal_emit (manager, signals[SOURCE_ENABLED], 0, source, FALSE);
 
   /* sync settings value */
   g_settings_set_strv (priv->settings, "disabled-sources", (const gchar * const *) priv->disabled_sources);

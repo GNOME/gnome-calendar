@@ -206,6 +206,12 @@ static void           source_row_activated               (GtkListBox          *l
                                                           GtkListBoxRow       *row,
                                                           gpointer             user_data);
 
+static void           source_enabled                     (GcalManager         *manager,
+                                                          ESource             *source,
+                                                          gboolean             enabled,
+                                                          gpointer             user_data);
+
+
 static void           on_calendar_toggled                (GObject             *object,
                                                           GParamSpec          *pspec,
                                                           gpointer             user_data);
@@ -931,6 +937,32 @@ source_row_activated (GtkListBox    *listbox,
 }
 
 static void
+source_enabled (GcalManager *manager,
+                ESource     *source,
+                gboolean     enabled,
+                gpointer     user_data)
+{
+  GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  GList *children, *aux;
+
+  children = gtk_container_get_children (GTK_CONTAINER (priv->calendar_listbox));
+
+  for (aux = children; aux != NULL; aux = aux->next)
+    {
+      ESource *child_source = g_object_get_data (G_OBJECT (aux->data), "source");
+
+      if (child_source != NULL && child_source == source)
+        {
+          gtk_widget_destroy (aux->data);
+          add_source (manager, source, enabled, user_data);
+          break;
+        }
+    }
+
+  g_list_free (children);
+}
+
+static void
 on_calendar_toggled (GObject    *object,
                      GParamSpec *pspec,
                      gpointer    user_data)
@@ -1556,6 +1588,7 @@ gcal_window_set_property (GObject      *object,
     case PROP_MANAGER:
       priv->manager = g_value_get_pointer (value);
       g_signal_connect (priv->manager, "source-added", G_CALLBACK (add_source), object);
+      g_signal_connect (priv->manager, "source-enabled", G_CALLBACK (source_enabled), object);
       g_signal_connect (priv->manager, "source-removed", G_CALLBACK (remove_source), object);
 
       gcal_year_view_set_manager (GCAL_YEAR_VIEW (priv->year_view), priv->manager);

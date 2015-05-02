@@ -50,6 +50,7 @@ struct _GcalManagerClass
   void (*source_activated)  (GcalManager *manager, ESource *source, gboolean active);
   void (*source_added)  (GcalManager *manager, ESource *source, gboolean enabled);
   void (*source_removed)  (GcalManager *manager, ESource *source);
+  void (*source_enabled)  (GcalManager *manager, ESource *source, gboolean enabled);
   void (*load_completed)  (GcalManager *manager);
   void (*query_completed) (GcalManager *manager);
   void (*goa_client_ready) (GcalManager *manager, GoaClient *client);

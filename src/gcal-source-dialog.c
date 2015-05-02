@@ -2247,6 +2247,7 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
                              GcalSourceDialogMode mode)
 {
   GcalSourceDialogPrivate *priv = dialog->priv;
+  GcalSourceDialogMode previous_mode = priv->mode;
 
   priv->mode = mode;
 
@@ -2297,6 +2298,10 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
     default:
       g_assert_not_reached ();
     }
+
+  if (previous_mode == mode)
+    stack_visible_child_name_changed (G_OBJECT (priv->stack), NULL, dialog);
+
 }
 
 /**
