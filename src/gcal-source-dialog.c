@@ -590,6 +590,16 @@ is_goa_source (GcalSourceDialog *dialog,
   return is_goa;
 }
 
+static void
+invalidate_calendar_listbox_sort (GObject    *source,
+                                  GParamSpec *pspec,
+                                  gpointer    user_data)
+{
+  g_return_if_fail (GTK_IS_LIST_BOX (user_data));
+
+  gtk_list_box_invalidate_sort (GTK_LIST_BOX (user_data));
+}
+
 /**
  * make_row_from_source:
  *
@@ -632,6 +642,9 @@ make_row_from_source (GcalSourceDialog *dialog,
                             "xalign", 0.0,
                             "hexpand", TRUE,
                             NULL);
+  g_object_bind_property (source, "display-name", top_label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_signal_connect (source, "notify::display-name", G_CALLBACK (invalidate_calendar_listbox_sort),
+                    priv->calendars_listbox);
 
   /* parent source name label */
   bottom_label = g_object_new (GTK_TYPE_LABEL,
