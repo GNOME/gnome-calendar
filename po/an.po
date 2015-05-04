@@ -1,0 +1,317 @@
+# Aragonese translation for gnome-calendar.
+# Copyright (C) 2015 gnome-calendar's COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-calendar package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-calendar master\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-05-04 18:13+0000\n"
+"PO-Revision-Date: 2015-05-04 23:25+0200\n"
+"Last-Translator: Daniel <entaltoaragon@gmail.com>\n"
+"Language-Team: Aragonese <softaragones@googlegroups.com>\n"
+"Language: an\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.1.1\n"
+"X-POOTLE-MTIME: 1430778324.000000\n"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
+msgid "Calendar"
+msgstr "Calandario"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+msgid "Calendar for GNOME"
+msgstr "Calandario ta GNOME"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"Calandario de GNOME ye una aplicación de calandario bonica y sencilla "
+"disenyada ta achustar-se perfectament a o escritorio GNOME. Al reutilizar "
+"components con os quals s'ha construiu o escritorio GNOME, Calandario "
+"s'integra muit bien con l'entorno de GNOME."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"S'ha tractau de buscar l'equilibrio entre caracteristicas bien elaboradas y "
+"a usabilidad centrada en l'usuario. No i hai excesos ni carencias. Se "
+"sentirá comodo usando Calandario, como si levase anyos usando-lo."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "Buscar eventos"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Calendar management"
+msgstr "Chestión d'o calandario"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr "Accedir y chestionar calandarios"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Calandario;Evento;Recordatorio;"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Finestra maximizada"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Estau maximizau d'a finestra"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Window size"
+msgstr "Grandaria d'a finestra"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Grandaria d'a finestra (amplaria y altura)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Posición d'a finestra"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Posición d'a finestra (X y Y)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
+msgid "Type of the active view"
+msgstr "Tipo de vista activa"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
+msgid "Type of the active window view, default value is: monthly view"
+msgstr "Tipo de vista activa; o tipo predeterminau ye: vista mensual"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "Lista de recursos desactivaus"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "Fuentes desactivadas a zaguera vegada que s'executó Calandario"
+
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "Cancelar"
+
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+msgid "Done"
+msgstr "Feito"
+
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "Titol"
+
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "Empecipia"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "Remata"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "Notas"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "Ubicación"
+
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:406
+msgid "All day"
+msgstr "Tot o día"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "Eliminar evento"
+
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "Adhibir eve_nto…"
+
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "_Buscar…"
+
+#: ../data/ui/menus.ui.h:3
+msgid "_About"
+msgstr "_Arredol"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Quit"
+msgstr "_Salir"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "_Sincronizar"
+
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "No se troboron resultaus"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "Use a dentrada anterior ta buscar eventos."
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "AM"
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "PM"
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+msgid "Month"
+msgstr "Mes"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+msgid "Year"
+msgstr "Anyo"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+msgid "Today"
+msgstr "Hue"
+
+#: ../data/ui/window.ui.h:5
+msgid "Create"
+msgstr "Creyar"
+
+#: ../data/ui/window.ui.h:6
+msgid "Edit Details"
+msgstr "Editar os detalles"
+
+#: ../data/ui/year-view.ui.h:2
+msgid "No events"
+msgstr "No i hai eventos"
+
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+msgid "Add Event…"
+msgstr "Adhibir evento…"
+
+#: ../src/gcal-application.c:102
+msgid "Display version number"
+msgstr "Amostrar o numero de versión"
+
+#: ../src/gcal-application.c:107
+msgid "Open calendar on the passed date"
+msgstr "Ubrir o calandario en una calendata pasada"
+
+#: ../src/gcal-application.c:112
+msgid "Open calendar showing the passed event"
+msgstr "Ubrir o calandario en un evento pasau"
+
+#: ../src/gcal-application.c:337
+msgid "- Calendar management"
+msgstr "- Chestión d'o calandario"
+
+#: ../src/gcal-application.c:504
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Copyright © %Id Os autors de Calandario"
+
+#: ../src/gcal-application.c:510
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Copyright © %Id–%Id Os autors de Calandario"
+
+#: ../src/gcal-application.c:523
+msgid "translator-credits"
+msgstr "Daniel Martinez <entaltoaragon@gmail.com>, 2015"
+
+#: ../src/gcal-date-selector.c:303
+msgid "Day"
+msgstr "Diya"
+
+#: ../src/gcal-edit-dialog.c:657
+msgid "Save"
+msgstr "Alzar"
+
+#: ../src/gcal-edit-dialog.c:841
+msgid "Unnamed event"
+msgstr "Evento sin nombre"
+
+#: ../src/gcal-month-view.c:820
+msgid "Other events"
+msgstr "Atros eventos"
+
+#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#: ../src/gcal-month-view.c:1203
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Unatro evento"
+msgstr[1] "Atros %d eventos"
+
+#: ../src/gcal-time-selector.c:96
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d:%.2d AM"
+
+#: ../src/gcal-time-selector.c:98
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d:%.2d PM"
+
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
+msgid "Midnight"
+msgstr "Meyanuei"
+
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
+msgid "Noon"
+msgstr "Meyodía"
+
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "00:00 PM"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#: ../src/gcal-window.c:642
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%d %B"
+
+#: ../src/gcal-window.c:643
+#, c-format
+msgid "New Event on %s"
+msgstr "Evento nuevo en %s"
+
+#: ../src/gcal-window.c:1071
+msgid "Another event deleted"
+msgstr "Unatro evento eliminau"
+
+#: ../src/gcal-window.c:1071 ../src/gcal-window.c:1075
+msgid "Undo"
+msgstr "Desfer"
+
+#: ../src/gcal-window.c:1075
+msgid "Event deleted"
+msgstr "Evento eliminau"
