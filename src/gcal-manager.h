@@ -164,9 +164,9 @@ gboolean       gcal_manager_load_completed          (GcalManager        *manager
 GcalEventData* gcal_manager_get_event_from_shell_search (GcalManager        *manager,
                                                          const gchar        *uuid);
 
-gboolean       gcal_manager_is_client_ready          (GcalManager        *manager);
+gboolean       gcal_manager_is_goa_client_ready    (GcalManager        *manager);
 
-GoaClient*     gcal_manager_get_client               (GcalManager        *manager);
+GoaClient*     gcal_manager_get_goa_client         (GcalManager        *manager);
 
 G_END_DECLS
 

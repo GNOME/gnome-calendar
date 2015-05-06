@@ -1541,7 +1541,7 @@ gcal_manager_get_event_from_shell_search (GcalManager *manager,
 }
 
 gboolean
-gcal_manager_is_client_ready (GcalManager *manager)
+gcal_manager_is_goa_client_ready (GcalManager *manager)
 {
   GcalManagerPrivate *priv;
 
@@ -1553,7 +1553,7 @@ gcal_manager_is_client_ready (GcalManager *manager)
 }
 
 GoaClient*
-gcal_manager_get_client (GcalManager *manager)
+gcal_manager_get_goa_client (GcalManager *manager)
 {
   GcalManagerPrivate *priv;
 

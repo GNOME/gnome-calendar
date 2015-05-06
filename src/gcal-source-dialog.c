@@ -2209,9 +2209,9 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
    * If the GoaClient is already loaded, fetch the online accounts
    * directly. Otherwise, wait for it to be ready.
    */
-  if (gcal_manager_is_client_ready (manager))
+  if (gcal_manager_is_goa_client_ready (manager))
     {
-      goa_client_ready_cb (dialog, gcal_manager_get_client (manager), NULL);
+      goa_client_ready_cb (dialog, gcal_manager_get_goa_client (manager), NULL);
     }
   else
     {
