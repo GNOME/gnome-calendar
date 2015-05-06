@@ -399,10 +399,8 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
       if (retval == 0)
         retval = g_strcmp0 (e_source_get_display_name (source1), e_source_get_display_name (source2));
 
-      if (parent_name1 != NULL)
-        g_free (parent_name1);
-      if (parent_name2 != NULL)
-        g_free (parent_name2);
+      g_free (parent_name1);
+      g_free (parent_name2);
     }
   else
     {
@@ -1370,21 +1368,16 @@ validate_url_cb (GcalSourceDialog *dialog)
                                          dialog);
             }
 
-          if (user)
-            g_free (user);
-          if (password)
-            g_free (password);
+          g_free (user);
+          g_free (password);
         }
 
       e_named_parameters_free (credentials);
     }
 
 out:
-  if (host)
-    g_free (host);
-
-  if (path)
-    g_free (path);
+  g_free (host);
+  g_free (path);
 
   return FALSE;
 }
@@ -1624,8 +1617,7 @@ discover_sources_cb (GObject      *source,
           gtk_widget_show_all (row);
         }
 
-      if (resource_path)
-        g_free (resource_path);
+      g_free (resource_path);
     }
 
   // Free things up
