@@ -357,8 +357,7 @@ back_button_clicked (GtkButton *button,
       gcal_manager_save_source (priv->manager, priv->source);
 
       // Release the source ref we acquired
-      g_object_unref (priv->source);
-      priv->source = NULL;
+      g_clear_object (&priv->source);
     }
 
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
@@ -434,10 +433,7 @@ cancel_button_clicked (GtkWidget *button,
 
   // Destroy the ongoing created source
   if (priv->source != NULL)
-    {
-      g_object_unref (priv->source);
-      priv->source = NULL;
-    }
+    g_clear_object (&priv->source);
 
   // Cleanup detected remote sources that weren't added
   if (priv->remote_sources != NULL)
@@ -757,8 +753,7 @@ response_signal (GtkDialog *dialog,
     {
       gcal_manager_save_source (priv->manager, priv->source);
 
-      g_object_unref (priv->source);
-      priv->source = NULL;
+      g_clear_object (&priv->source);
     }
 
   /* commit the new source */
