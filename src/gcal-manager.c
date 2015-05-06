@@ -718,9 +718,7 @@ gcal_manager_client_ready_cb (GObject      *source,
 static void
 gcal_manager_init (GcalManager *self)
 {
-  goa_client_new (NULL, // we won't really cancel it
-                  (GAsyncReadyCallback) gcal_manager_client_ready_cb,
-                  self);
+  ;
 }
 
 static void
@@ -741,6 +739,11 @@ gcal_manager_constructed (GObject *object)
 
   priv->clients = g_hash_table_new_full ((GHashFunc) e_source_hash, (GEqualFunc) e_source_equal,
                                          g_object_unref, (GDestroyNotify) free_unit_data);
+
+  /* load GOA client */
+  goa_client_new (NULL, // we won't really cancel it
+                  (GAsyncReadyCallback) gcal_manager_client_ready_cb,
+                  object);
 
   /* reading sources and schedule its connecting */
   priv->source_registry = e_source_registry_new_sync (NULL, &error);
