@@ -100,12 +100,6 @@ struct _GcalSourceDialog
   GcalSourceDialogPrivate *priv;
 };
 
-enum {
-  PROP_0,
-  PROP_APPLICATION,
-  LAST_PROP
-};
-
 typedef enum
 {
   GCAL_ACCOUNT_TYPE_EXCHANGE,
