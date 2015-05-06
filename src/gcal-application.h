@@ -23,7 +23,6 @@
 #include "gcal-manager.h"
 
 #include <gtk/gtk.h>
-#include <goa/goa.h>
 
 G_BEGIN_DECLS
 

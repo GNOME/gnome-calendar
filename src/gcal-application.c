@@ -30,7 +30,6 @@
 #include <glib-object.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>
-#include <goa/goa.h>
 
 #define CSS_FILE "resource:///org/gnome/calendar/gtk-styles.css"
 
