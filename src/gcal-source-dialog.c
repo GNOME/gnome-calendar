@@ -675,7 +675,7 @@ name_entry_text_changed (GObject    *object,
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
   gboolean valid;
 
-  valid = g_utf8_strlen (gtk_entry_get_text (GTK_ENTRY (object)), -1) > 0;
+  valid = gtk_entry_get_text_length (GTK_ENTRY (object)) > 0;
 
   gtk_widget_set_sensitive (priv->back_button, valid);
   gtk_widget_set_sensitive (priv->add_button, valid);
