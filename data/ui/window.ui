@@ -147,6 +147,9 @@
                         <property name="receives_default">True</property>
                         <property name="no_show_all">True</property>
                         <signal name="clicked" handler="undo_remove_action" object="GcalWindow" swapped="no"/>
+                        <style>
+                          <class name="text-button"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
