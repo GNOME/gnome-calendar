@@ -72,14 +72,14 @@
                             <property name="receives_default">True</property>
                             <property name="no_show_all">True</property>
                             <signal name="clicked" handler="undo_remove_action" object="GcalSourceDialog" swapped="no"/>
+                            <style>
+                              <class name="text-button"/>
+                            </style>
                           </object>
                           <packing>
                             <property name="left_attach">1</property>
                             <property name="top_attach">0</property>
                           </packing>
-                          <style>
-                            <class name="text-button"/>
-                          </style>
                         </child>
                         <child>
                           <object class="GtkButton" id="notification_close_button">
