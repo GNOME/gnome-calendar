@@ -1,3 +1,7 @@
+Major changes in 3.16.1:
+* Fix date related bug
+* Fix app relaunching bug
+
 Major changes in 3.15.90:
 * Added gnome shell search provider
 
