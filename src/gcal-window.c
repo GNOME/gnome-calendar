@@ -130,6 +130,12 @@ enum
 #define FAST_REFRESH_TIMEOUT     900000 /* ms */
 #define SLOW_REFRESH_TIMEOUT     3600000 /* ms */
 
+#define gcal_window_add_accelerator(app,action,accel) {\
+  const gchar *tmp[] = {accel, NULL};\
+  gtk_application_set_accels_for_action (GTK_APPLICATION (app), action, tmp);\
+}
+
+
 static void           on_date_action_activated           (GSimpleAction       *action,
                                                           GVariant            *param,
                                                           gpointer             user_data);
@@ -1615,9 +1621,6 @@ gcal_window_new_with_view_and_date (GcalApplication   *app,
 {
   GcalWindow *win;
   GcalManager *manager;
-  const gchar *next_accel[] = {"<Alt>Right", NULL};
-  const gchar *previous_accel[] = {"<Alt>Left", NULL};
-  const gchar *today_accel[] = {"<Alt>Down", "<Ctrl>t", NULL};
 
   manager = gcal_application_get_manager (GCAL_APPLICATION (app));
 
@@ -1625,9 +1628,13 @@ gcal_window_new_with_view_and_date (GcalApplication   *app,
                         NULL);
 
   /* setup accels */
-  gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.next", next_accel);
-  gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.previous", previous_accel);
-  gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.today", today_accel);
+  gcal_window_add_accelerator (app, "win.next",     "<Alt>Right");
+  gcal_window_add_accelerator (app, "win.next",     "<Ctrl>Right");
+  gcal_window_add_accelerator (app, "win.previous", "<Alt>Left");
+  gcal_window_add_accelerator (app, "win.previous", "<Ctrl>Left");
+  gcal_window_add_accelerator (app, "win.today",    "<Alt>Down");
+  gcal_window_add_accelerator (app, "win.today",    "<Ctrl>Down");
+  gcal_window_add_accelerator (app, "win.today",    "<Ctrl>t");
 
   /* loading size */
   load_geometry (win);
