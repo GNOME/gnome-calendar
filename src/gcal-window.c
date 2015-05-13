@@ -140,6 +140,10 @@ static void           on_date_action_activated           (GSimpleAction       *a
                                                           GVariant            *param,
                                                           gpointer             user_data);
 
+static void           on_view_action_activated           (GSimpleAction       *action,
+                                                          GVariant            *param,
+                                                          gpointer             user_data);
+
 static gboolean       key_pressed                        (GtkWidget           *widget,
                                                           GdkEvent            *event,
                                                           gpointer             user_data);
@@ -269,7 +273,8 @@ G_DEFINE_TYPE_WITH_PRIVATE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW
 static const GActionEntry actions[] = {
   {"next",     on_date_action_activated },
   {"previous", on_date_action_activated },
-  {"today",    on_date_action_activated }
+  {"today",    on_date_action_activated },
+  {"change-view", on_view_action_activated, "i" },
 };
 
 static void
@@ -291,6 +296,31 @@ on_date_action_activated (GSimpleAction *action,
     date_updated (GTK_BUTTON (priv->back_button), user_data);
   else if (g_strcmp0 (action_name, "today") == 0)
     date_updated (GTK_BUTTON (priv->today_button), user_data);
+}
+
+static void
+on_view_action_activated (GSimpleAction *action,
+                          GVariant      *param,
+                          gpointer       user_data)
+{
+  GcalWindowPrivate *priv;
+  guint view;
+
+  g_return_if_fail (GCAL_IS_WINDOW (user_data));
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  view = g_variant_get_int32 (param);
+
+  // -1 means next view
+  if (view == -1)
+    view = ++(priv->active_view);
+  else if (view == -2)
+    view = --(priv->active_view);
+
+  priv->active_view = CLAMP (view, GCAL_WINDOW_VIEW_MONTH, GCAL_WINDOW_VIEW_YEAR);
+  gtk_stack_set_visible_child (GTK_STACK (priv->views_stack), priv->views[priv->active_view]);
+
+  g_object_notify (G_OBJECT (user_data), "active-view");
 }
 
 static gboolean
@@ -1635,6 +1665,11 @@ gcal_window_new_with_view_and_date (GcalApplication   *app,
   gcal_window_add_accelerator (app, "win.today",    "<Alt>Down");
   gcal_window_add_accelerator (app, "win.today",    "<Ctrl>Down");
   gcal_window_add_accelerator (app, "win.today",    "<Ctrl>t");
+
+  gcal_window_add_accelerator (app, "win.change-view(-1)", "<Ctrl>Page_Down");
+  gcal_window_add_accelerator (app, "win.change-view(-2)", "<Ctrl>Page_Up");
+  gcal_window_add_accelerator (app, "win.change-view(2)",  "<Ctrl>2");
+  gcal_window_add_accelerator (app, "win.change-view(3)",  "<Ctrl>3");
 
   /* loading size */
   load_geometry (win);
