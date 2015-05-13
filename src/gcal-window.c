@@ -130,6 +130,10 @@ enum
 #define FAST_REFRESH_TIMEOUT     900000 /* ms */
 #define SLOW_REFRESH_TIMEOUT     3600000 /* ms */
 
+static void           on_date_action_activated           (GSimpleAction       *action,
+                                                          GVariant            *param,
+                                                          gpointer             user_data);
+
 static gboolean       key_pressed                        (GtkWidget           *widget,
                                                           GdkEvent            *event,
                                                           gpointer             user_data);
@@ -255,6 +259,33 @@ static gboolean       gcal_window_state_event            (GtkWidget           *w
                                                           GdkEventWindowState *event);
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
+
+static const GActionEntry actions[] = {
+  {"next",     on_date_action_activated },
+  {"previous", on_date_action_activated },
+  {"today",    on_date_action_activated }
+};
+
+static void
+on_date_action_activated (GSimpleAction *action,
+                          GVariant      *param,
+                          gpointer       user_data)
+{
+  GcalWindowPrivate *priv;
+  const gchar *action_name;
+
+  g_return_if_fail (GCAL_IS_WINDOW (user_data));
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  action_name = g_action_get_name (G_ACTION (action));
+
+  if (g_strcmp0 (action_name, "next") == 0)
+    date_updated (GTK_BUTTON (priv->forward_button), user_data);
+  else if (g_strcmp0 (action_name, "previous") == 0)
+    date_updated (GTK_BUTTON (priv->back_button), user_data);
+  else if (g_strcmp0 (action_name, "today") == 0)
+    date_updated (GTK_BUTTON (priv->today_button), user_data);
+}
 
 static gboolean
 key_pressed (GtkWidget *widget,
@@ -1374,6 +1405,12 @@ gcal_window_constructed (GObject *object)
   // Prevents nameless events' creation
   g_signal_handlers_block_by_func (priv->new_event_what_entry, create_event, object);
 
+  // Setup actions
+  g_action_map_add_action_entries (G_ACTION_MAP (object),
+                                   actions,
+                                   G_N_ELEMENTS (actions),
+                                   object);
+
   /* header_bar: menu */
   builder = gtk_builder_new ();
   gtk_builder_add_from_resource (builder,
@@ -1578,11 +1615,19 @@ gcal_window_new_with_view_and_date (GcalApplication   *app,
 {
   GcalWindow *win;
   GcalManager *manager;
+  const gchar *next_accel[] = {"<Alt>Right", NULL};
+  const gchar *previous_accel[] = {"<Alt>Left", NULL};
+  const gchar *today_accel[] = {"<Alt>Down", "<Ctrl>t", NULL};
 
   manager = gcal_application_get_manager (GCAL_APPLICATION (app));
 
   win  =  g_object_new (GCAL_TYPE_WINDOW, "application", GTK_APPLICATION (app), "manager", manager, "active-date", date,
                         NULL);
+
+  /* setup accels */
+  gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.next", next_accel);
+  gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.previous", previous_accel);
+  gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.today", today_accel);
 
   /* loading size */
   load_geometry (win);

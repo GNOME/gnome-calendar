@@ -206,7 +206,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="date_updated" swapped="no"/>
+                <property name="action_name">win.previous</property>
                 <child>
                   <object class="GtkImage" id="go_back_image">
                     <property name="visible">True</property>
@@ -227,7 +227,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="date_updated" object="GcalWindow" swapped="no"/>
+                <property name="action_name">win.today</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -240,7 +240,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="date_updated" swapped="no"/>
+                <property name="action_name">win.next</property>
                 <child>
                   <object class="GtkImage" id="go_next_image">
                     <property name="visible">True</property>
