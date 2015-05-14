@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-02-16 18:24+0100\n"
-"PO-Revision-Date: 2015-02-16 18:24+0100\n"
+"POT-Creation-Date: 2015-05-14 15:53+0200\n"
+"PO-Revision-Date: 2015-05-14 15:54+0200\n"
 "Last-Translator: Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -21,7 +21,7 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -109,7 +109,7 @@ msgstr "Kilder som var slått av forrige gang Kalender kjørte"
 msgid "Cancel"
 msgstr "Avbryt"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
 msgid "Done"
 msgstr "Ferdig"
 
@@ -133,7 +133,7 @@ msgstr "Notater"
 msgid "Location"
 msgstr "Plassering"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:387
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:406
 msgid "All day"
 msgstr "Hele dagen"
 
@@ -177,13 +177,11 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:381
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "AM"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:381
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "PM"
 
@@ -205,8 +203,8 @@ msgid "Create"
 msgstr "Lag"
 
 #: ../data/ui/window.ui.h:6
-msgid "More Details"
-msgstr "Flere detaljer"
+msgid "Edit Details"
+msgstr "Rediger detaljer"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
@@ -228,19 +226,19 @@ msgstr "Åpne kalender på passert dato"
 msgid "Open calendar showing the passed event"
 msgstr "Åpne kalender som viser passert hendelse"
 
-#: ../src/gcal-application.c:332
+#: ../src/gcal-application.c:337
 msgid "- Calendar management"
 msgstr "- Kalenderbehandling"
 
-#: ../src/gcal-application.c:499
+#: ../src/gcal-application.c:504
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Opphavsrett © %Id kalender-utviklerne"
 
-#: ../src/gcal-application.c:505
+#: ../src/gcal-application.c:510
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Opphavsrett © %Id–%Id Kalender-utviklerne"
 
-#: ../src/gcal-application.c:518
+#: ../src/gcal-application.c:523
 msgid "translator-credits"
 msgstr ""
 "Kjartan Maraas <kmaraas@gnome.org>\n"
@@ -250,30 +248,25 @@ msgstr ""
 msgid "Day"
 msgstr "Dag"
 
-#: ../src/gcal-edit-dialog.c:634
+#: ../src/gcal-edit-dialog.c:657
 msgid "Save"
 msgstr "Lagre"
 
-#: ../src/gcal-edit-dialog.c:818
+#: ../src/gcal-edit-dialog.c:841
 msgid "Unnamed event"
 msgstr "Hendelse uten navn"
 
-#: ../src/gcal-month-view.c:826
+#: ../src/gcal-month-view.c:820
 msgid "Other events"
 msgstr "Andre hendelser"
 
 #. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1209
+#: ../src/gcal-month-view.c:1203
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Annen hendelse"
 msgstr[1] "%d andre hendelser"
-
-#: ../src/gcal-search-view.c:380
-#, c-format
-msgid "%.2d:%.2d %s"
-msgstr "%.2d:%.2d %s"
 
 #: ../src/gcal-time-selector.c:96
 #, c-format
@@ -297,19 +290,27 @@ msgstr "Midt på dagen"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#: ../src/gcal-window.c:636
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#: ../src/gcal-window.c:642
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%d %B"
+
+#: ../src/gcal-window.c:643
 #, c-format
 msgid "New Event on %s"
 msgstr "Ny hendelse %s"
 
-#: ../src/gcal-window.c:1036
+#: ../src/gcal-window.c:1071
 msgid "Another event deleted"
 msgstr "Enda en hendelse slettet"
 
-#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
+#: ../src/gcal-window.c:1071 ../src/gcal-window.c:1075
 msgid "Undo"
 msgstr "Angre"
 
-#: ../src/gcal-window.c:1040
+#: ../src/gcal-window.c:1075
 msgid "Event deleted"
 msgstr "Hendelse slettet"
