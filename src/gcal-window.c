@@ -1659,11 +1659,8 @@ gcal_window_new_with_view_and_date (GcalApplication   *app,
 
   /* setup accels */
   gcal_window_add_accelerator (app, "win.next",     "<Alt>Right");
-  gcal_window_add_accelerator (app, "win.next",     "<Ctrl>Right");
   gcal_window_add_accelerator (app, "win.previous", "<Alt>Left");
-  gcal_window_add_accelerator (app, "win.previous", "<Ctrl>Left");
   gcal_window_add_accelerator (app, "win.today",    "<Alt>Down");
-  gcal_window_add_accelerator (app, "win.today",    "<Ctrl>Down");
   gcal_window_add_accelerator (app, "win.today",    "<Ctrl>t");
 
   gcal_window_add_accelerator (app, "win.change-view(-1)", "<Ctrl>Page_Down");
