@@ -1637,13 +1637,11 @@ remove_source (GcalManager *manager,
                ESource     *source,
                gpointer     user_data)
 {
-  GtkWidget *row;
   GcalSourceDialogPrivate *priv;
   GList *children, *aux;
 
   priv = GCAL_SOURCE_DIALOG (user_data)->priv;
   children = gtk_container_get_children (GTK_CONTAINER (priv->calendars_listbox));
-  row = NULL;
 
   for (aux = children; aux != NULL; aux = aux->next)
     {
@@ -1651,13 +1649,10 @@ remove_source (GcalManager *manager,
 
       if (child_source != NULL && child_source == source)
         {
-          row = aux->data;
+          gtk_widget_destroy (aux->data);
           break;
         }
     }
-
-  if (row != NULL)
-    gtk_widget_destroy (row);
 
   g_list_free (children);
 }
