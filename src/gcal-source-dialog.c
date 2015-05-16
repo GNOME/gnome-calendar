@@ -259,7 +259,6 @@ add_button_clicked (GtkWidget *button,
         }
 
       g_list_free (priv->remote_sources);
-
       priv->remote_sources = NULL;
 
       // Go back to overview
@@ -480,7 +479,6 @@ color_set (GtkColorButton *button,
   gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (button), &color);
 
   extension = E_SOURCE_SELECTABLE (e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR));
-
   e_source_selectable_set_color (extension, gdk_rgba_to_string (&color));
 }
 
@@ -569,9 +567,7 @@ is_goa_source (GcalSourceDialog *dialog,
   g_assert (source && E_IS_SOURCE (source));
 
   parent = gcal_manager_get_source (priv->manager, e_source_get_parent (source));
-
   is_goa = e_source_has_extension (parent, E_SOURCE_EXTENSION_GOA);
-
   g_object_unref (parent);
 
   return is_goa;
@@ -641,7 +637,6 @@ make_row_from_source (GcalSourceDialog *dialog,
                                "hexpand", TRUE,
                                NULL);
   gtk_style_context_add_class (gtk_widget_get_style_context (bottom_label), "dim-label");
-
 
   gtk_grid_attach (GTK_GRID (grid), icon, 0, 0, 1, 2);
   gtk_grid_attach (GTK_GRID (grid), top_label, 1, 0, 1, 1);
@@ -725,7 +720,6 @@ online_accounts_listbox_row_activated (GtkListBox    *box,
       g_return_if_fail (GOA_IS_ACCOUNT (account));
 
       id = goa_account_dup_id (account);
-
       spawn_goa_with_args (id, NULL);
 
       g_free (id);
@@ -751,7 +745,6 @@ response_signal (GtkDialog *dialog,
   if (priv->mode == GCAL_SOURCE_DIALOG_MODE_EDIT && priv->source != NULL)
     {
       gcal_manager_save_source (priv->manager, priv->source);
-
       g_clear_object (&priv->source);
     }
 
@@ -930,7 +923,6 @@ stack_visible_child_name_changed (GObject    *object,
           gchar *name;
 
           get_source_parent_name_color (priv->manager, priv->source, &name, NULL);
-
           gtk_label_set_label (GTK_LABEL (priv->account_label), name);
         }
 
@@ -1594,7 +1586,6 @@ discover_sources_cb (GObject      *source,
           e_source_webdav_set_resource_path (webdav, resource_path);
           e_source_webdav_set_display_name (webdav, src->display_name);
           e_source_webdav_set_email_address (webdav, user_adresses->data);
-
 
           /* create the new row */
           row = gtk_list_box_row_new ();
