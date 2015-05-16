@@ -365,11 +365,9 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
                             GtkListBoxRow *row2,
                             gpointer       user_data)
 {
-  ESource *source1;
-  ESource *source2;
-  gboolean is_goa1;
-  gboolean is_goa2;
   GcalSourceDialogPrivate *priv;
+  ESource *source1, *source2;
+  gboolean is_goa1, is_goa2;
   gint retval;
 
   priv = GCAL_SOURCE_DIALOG (user_data)->priv;
@@ -872,10 +870,7 @@ stack_visible_child_name_changed (GObject    *object,
       ESource *default_source;
       gchar *parent_name;
       GdkRGBA color;
-      gboolean creation_mode;
-      gboolean is_goa;
-      gboolean is_file;
-      gboolean is_remote;
+      gboolean creation_mode, is_goa, is_file, is_remote;
 
       default_source = gcal_manager_get_default_source (priv->manager);
       creation_mode = (priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE ||
@@ -1587,8 +1582,7 @@ discover_sources_cb (GObject      *source,
       if (uri_valid)
         {
           ESourceWebdav *webdav;
-          GtkWidget *row;
-          GtkWidget *check;
+          GtkWidget *row, *check;
           ESource *new_source;
 
 
