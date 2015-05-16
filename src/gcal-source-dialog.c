@@ -2279,8 +2279,5 @@ gcal_source_dialog_set_source (GcalSourceDialog *dialog,
   GcalSourceDialogPrivate *priv = dialog->priv;
 
   g_assert (source && E_IS_SOURCE (source));
-
-  g_object_ref (source);
-
-  priv->source = source;
+  priv->source = g_object_ref (source);
 }
