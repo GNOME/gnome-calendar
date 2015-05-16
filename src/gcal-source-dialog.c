@@ -956,8 +956,8 @@ stack_visible_child_name_changed (GObject    *object,
  * Returns:
  */
 static void
-calendar_file_selected (GtkFileChooser       *button,
-                        gpointer              user_data)
+calendar_file_selected (GtkFileChooser *button,
+                        gpointer        user_data)
 {
   GcalSourceDialogPrivate *priv;
   ESourceExtension *ext;
