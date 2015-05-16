@@ -1373,7 +1373,7 @@ gcal_manager_get_event_from_shell_search (GcalManager *manager,
   GcalManagerPrivate *priv;
   time_t range_start, range_end;
   GList *l, *list = NULL;
-  GcalEventData *new_data, *data;
+  GcalEventData *data, *new_data = NULL;
   gchar *cuuid;
 
   priv = gcal_manager_get_instance_private (manager);
