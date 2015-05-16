@@ -824,12 +824,13 @@ static GtkWidget*
 make_row_from_source (GcalWindow *window,
                       ESource    *source)
 {
-  GcalWindowPrivate *priv = gcal_window_get_instance_private (window);
+  GcalWindowPrivate *priv;
   GtkWidget *label, *icon, *separator, *checkbox, *box, *row;
   GtkStyleContext *context;
   GdkPixbuf *pixbuf;
   GdkRGBA color;
 
+  priv = gcal_window_get_instance_private (window);
   row = gtk_list_box_row_new ();
 
   /* apply some nice styling */
@@ -918,9 +919,10 @@ source_row_activated (GtkListBox    *listbox,
                       GtkListBoxRow *row,
                       gpointer       user_data)
 {
-  GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  GcalWindowPrivate *priv;
   ESource *source;
 
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
   source = g_object_get_data (G_OBJECT (row), "source");
 
   if (source == NULL)
@@ -942,9 +944,10 @@ source_enabled (GcalManager *manager,
                 gboolean     enabled,
                 gpointer     user_data)
 {
-  GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  GcalWindowPrivate *priv;
   GList *children, *aux;
 
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
   children = gtk_container_get_children (GTK_CONTAINER (priv->calendar_listbox));
 
   for (aux = children; aux != NULL; aux = aux->next)
@@ -967,11 +970,12 @@ on_calendar_toggled (GObject    *object,
                      GParamSpec *pspec,
                      gpointer    user_data)
 {
-  GcalWindowPrivate *priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  GcalWindowPrivate *priv;
   gboolean active;
   GtkWidget *row;
   ESource *source;
 
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
   active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object));
   row = gtk_widget_get_parent (gtk_widget_get_parent (GTK_WIDGET (object)));
   source = g_object_get_data (G_OBJECT (row), "source");
