@@ -252,11 +252,9 @@ add_button_clicked (GtkWidget *button,
     {
       GList *l;
 
+      // Commit each new remote source
       for (l = priv->remote_sources; l != NULL; l = l->next)
-        {
-          // Commit each new remote source
-          gcal_manager_save_source (priv->manager, l->data);
-        }
+        gcal_manager_save_source (priv->manager, l->data);
 
       g_list_free (priv->remote_sources);
       priv->remote_sources = NULL;
@@ -1488,13 +1486,9 @@ check_activated_cb (GtkWidget  *check,
   source = g_object_get_data (G_OBJECT (row), "source");
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)))
-    {
-      priv->remote_sources = g_list_append (priv->remote_sources, source);
-    }
+    priv->remote_sources = g_list_append (priv->remote_sources, source);
   else
-    {
-      priv->remote_sources = g_list_remove (priv->remote_sources, source);
-    }
+    priv->remote_sources = g_list_remove (priv->remote_sources, source);
 
   gtk_widget_set_sensitive (priv->add_button, g_list_length (priv->remote_sources) > 0);
 }
