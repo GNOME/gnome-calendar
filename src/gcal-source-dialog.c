@@ -608,10 +608,7 @@ make_row_from_source (GcalSourceDialog *dialog,
   row = gtk_list_box_row_new ();
 
   /* main box */
-  grid = g_object_new (GTK_TYPE_GRID,
-                       "border-width", 6,
-                       "column-spacing", 12,
-                       NULL);
+  grid = g_object_new (GTK_TYPE_GRID, "border-width", 6, "column-spacing", 12, NULL);
 
   /* source color icon */
   gdk_rgba_parse (&color, get_color_name_from_source (source));
@@ -629,11 +626,7 @@ make_row_from_source (GcalSourceDialog *dialog,
                     priv->calendars_listbox);
 
   /* parent source name label */
-  bottom_label = g_object_new (GTK_TYPE_LABEL,
-                               "label", parent_name,
-                               "xalign", 0.0,
-                               "hexpand", TRUE,
-                               NULL);
+  bottom_label = g_object_new (GTK_TYPE_LABEL, "label", parent_name, "xalign", 0.0, "hexpand", TRUE, NULL);
   gtk_style_context_add_class (gtk_widget_get_style_context (bottom_label), "dim-label");
 
   gtk_grid_attach (GTK_GRID (grid), icon, 0, 0, 1, 2);
