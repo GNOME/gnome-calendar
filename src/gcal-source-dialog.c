@@ -281,7 +281,10 @@ add_source (GcalManager *manager,
   for (l = children; l != NULL; l = l->next)
     {
       if (g_object_get_data (l->data, "source") == source)
-        contains_source = TRUE;
+        {
+          contains_source = TRUE;
+          break;
+        }
     }
 
   if (!contains_source)
