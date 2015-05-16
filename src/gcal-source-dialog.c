@@ -739,34 +739,24 @@ response_signal (GtkDialog *dialog,
       g_clear_object (&priv->source);
     }
 
-  /* commit the new source */
-  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_APPLY)
-    {
-      /* save the current page's source */
-      if (priv->remote_sources != NULL)
-        {
-          GList *l;
+  /* commit the new source; save the current page's source */
+  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_APPLY && priv->remote_sources != NULL)
+      {
+        GList *l;
 
-          for (l = priv->remote_sources; l != NULL; l = l->next)
-            {
-              // Commit each new remote source
-              gcal_manager_save_source (priv->manager, l->data);
-            }
+        // Commit each new remote source
+        for (l = priv->remote_sources; l != NULL; l = l->next)
+          gcal_manager_save_source (priv->manager, l->data);
 
-          g_list_free (priv->remote_sources);
-
-          priv->remote_sources = NULL;
-        }
-    }
+        g_list_free (priv->remote_sources);
+        priv->remote_sources = NULL;
+      }
 
   /* Destroy the source when the operation is cancelled */
-  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_CANCEL)
+  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_CANCEL && priv->remote_sources != NULL)
     {
-      if (priv->remote_sources != NULL)
-        {
-          g_list_free_full (priv->remote_sources, g_object_unref);
-          priv->remote_sources = NULL;
-        }
+      g_list_free_full (priv->remote_sources, g_object_unref);
+      priv->remote_sources = NULL;
     }
 }
 
