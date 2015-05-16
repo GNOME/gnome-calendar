@@ -1394,10 +1394,10 @@ prompt_credentials (GcalSourceDialog  *dialog,
 
   if (response == GTK_RESPONSE_OK)
     {
-      if (username)
+      if (username != NULL)
         *username = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->credentials_user_entry)));
 
-      if (password)
+      if (password != NULL)
         *password = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->credentials_password_entry)));
     }
 
