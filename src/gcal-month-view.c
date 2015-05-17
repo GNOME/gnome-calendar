@@ -45,6 +45,11 @@ typedef struct
    */
   gint            days_delay;
 
+  /*
+   * The cell whose keyboard focus is on.
+   */
+  gint            keyboard_cell;
+
   /**
    * first day of the week according to user locale, being
    * 0 for Sunday, 1 for Monday and so on */
@@ -107,6 +112,9 @@ static void           rebuild_popover_for_day               (GcalMonthView  *vie
 static void           update_list_box_headers               (GtkListBoxRow  *row,
                                                              GtkListBoxRow  *before,
                                                              gpointer        user_data);
+
+static gboolean       gcal_month_view_key_press             (GtkWidget      *widget,
+                                                             GdkEventKey    *event);
 
 static void           add_new_event_button_cb               (GtkWidget      *button,
                                                              gpointer        user_data);
@@ -510,6 +518,55 @@ update_list_box_headers (GtkListBoxRow *row,
     }
 }
 
+static gboolean
+gcal_month_view_key_press (GtkWidget   *widget,
+                           GdkEventKey *event)
+{
+  GcalMonthViewPrivate *priv;
+
+  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (widget), FALSE);
+
+  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
+
+  if (!(event->state & GDK_MODIFIER_MASK))
+    {
+      switch (event->keyval)
+        {
+        case GDK_KEY_Up:
+          priv->keyboard_cell -= 7;
+          break;
+
+        case GDK_KEY_Down:
+          priv->keyboard_cell += 7;
+          break;
+
+        case GDK_KEY_Left:
+          priv->keyboard_cell--;
+          break;
+
+        case GDK_KEY_Right:
+          priv->keyboard_cell++;
+          break;
+
+        case GDK_KEY_Return:
+
+          break;
+
+        default:
+          return FALSE;
+        }
+
+      priv->keyboard_cell = CLAMP (priv->keyboard_cell, priv->days_delay,
+                                   (priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year) - 1));
+
+      gtk_widget_queue_draw (widget);
+
+      return TRUE;
+    }
+
+  return FALSE;
+}
+
 static void
 add_new_event_button_cb (GtkWidget *button,
                          gpointer   user_data)
@@ -554,6 +611,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   widget_class->motion_notify_event = gcal_month_view_motion_notify_event;
   widget_class->button_release_event = gcal_month_view_button_release;
   widget_class->direction_changed = gcal_month_view_direction_changed;
+  widget_class->key_press_event = gcal_month_view_key_press;
 
   subscriber_view_class = GCAL_SUBSCRIBER_VIEW_CLASS (klass);
   subscriber_view_class->is_child_multicell = gcal_month_view_is_child_multiday;
@@ -640,6 +698,7 @@ gcal_month_view_set_property (GObject       *object,
 
         priv->date = g_value_dup_boxed (value);
         priv->days_delay = (time_day_of_week (1, priv->date->month - 1, priv->date->year) - priv->first_weekday + 7) % 7;
+        priv->keyboard_cell = -1;
         gtk_widget_queue_draw (GTK_WIDGET (object));
         break;
       }
@@ -1396,6 +1455,17 @@ gcal_month_view_draw (GtkWidget *widget,
      cairo_stroke (cr);
    }
 
+  if (priv->keyboard_cell > priv->days_delay - 1)
+    {
+      gint x;
+      gint y;
+
+      x = cell_width * (priv->keyboard_cell % 7);
+      y = cell_height * (priv->keyboard_cell / 7 + first_row_gap) + start_grid_y;
+
+      gtk_render_focus (context, cr, x, y, cell_width, cell_height);
+    }
+
   g_object_unref (layout);
 
   if (GTK_WIDGET_CLASS (gcal_month_view_parent_class)->draw != NULL)
@@ -1524,6 +1594,8 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
   sw = 1 - 2 * priv->k;
+
+  priv->keyboard_cell = -1;
 
   released = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y, &released_indicator, &x, &y);
 
