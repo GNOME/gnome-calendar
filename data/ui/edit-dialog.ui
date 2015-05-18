@@ -15,7 +15,6 @@
     <child type="titlebar">
       <object class="GtkHeaderBar" id="titlebar">
         <property name="visible">True</property>
-        <property name="has-subtitle">True</property>
         <child>
           <object class="GtkButton" id="cancel_button">
             <property name="label" translatable="yes">Cancel</property>
@@ -26,8 +25,6 @@
         </child>
         <child>
           <object class="GtkImage" id="lock">
-            <property name="visible">False</property>
-            <property name="can_focus">False</property>
             <property name="icon_name">changes-prevent-symbolic</property>
             <property name="icon_size">1</property>
           </object>
@@ -51,35 +48,29 @@
     </child>
     <child internal-child="vbox">
       <object class="GtkBox" id="dialog-vbox">
-        <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
           <object class="GtkButtonBox" id="dialog-action_area1">
-            <property name="can_focus">False</property>
           </object>
           <packing>
-            <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">0</property>
           </packing>
         </child>
         <child>
           <object class="GtkGrid" id="main_grid">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="border_width">18</property>
             <property name="row_spacing">24</property>
             <property name="column_spacing">12</property>
             <child>
               <object class="GtkLabel" id="summary_label">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes">Title</property>
                 <property name="ellipsize">end</property>
                 <style>
-                  <class name="dim-label" />
+                  <class name="dim-label"/>
                 </style>
               </object>
               <packing>
@@ -90,11 +81,10 @@
             <child>
               <object class="GtkLabel" id="starts_label">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes">Starts</property>
                 <style>
-                  <class name="dim-label" />
+                  <class name="dim-label"/>
                 </style>
               </object>
               <packing>
@@ -105,11 +95,10 @@
             <child>
               <object class="GtkLabel" id="ends_label">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes">Ends</property>
                 <style>
-                  <class name="dim-label" />
+                  <class name="dim-label"/>
                 </style>
               </object>
               <packing>
@@ -120,12 +109,11 @@
             <child>
               <object class="GtkLabel" id="notes_label">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="halign">end</property>
                 <property name="valign">start</property>
                 <property name="label" translatable="yes">Notes</property>
                 <style>
-                  <class name="dim-label" />
+                  <class name="dim-label"/>
                 </style>
               </object>
               <packing>
@@ -136,11 +124,10 @@
             <child>
               <object class="GtkLabel" id="location_label">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="halign">end</property>
                 <property name="label" translatable="yes">Location</property>
                 <style>
-                  <class name="dim-label" />
+                  <class name="dim-label"/>
                 </style>
               </object>
               <packing>
@@ -171,7 +158,6 @@
                 <child>
                   <object class="GtkImage" id="source_image">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <property name="halign">start</property>
                   </object>
                 </child>
@@ -179,14 +165,12 @@
               <packing>
                 <property name="left_attach">3</property>
                 <property name="top_attach">0</property>
-                <property name="width">1</property>
               </packing>
             </child>
             <child>
               <object class="GtkCheckButton" id="all_day_check">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="receives_default">False</property>
                 <property name="draw_indicator">True</property>
                 <property name="label" translatable="yes">All day</property>
                 <signal name="toggled" handler="gcal_edit_dialog_all_day_changed" object="GcalEditDialog" swapped="no"/>
@@ -195,7 +179,6 @@
                 <property name="left_attach">3</property>
                 <property name="top_attach">1</property>
                 <property name="width">2</property>
-                <property name="height">1</property>
               </packing>
             </child>
             <child>
@@ -238,10 +221,9 @@
             <child>
               <object class="GtkBox" id="start_date_box">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="homogeneous">True</property>
                 <style>
-                  <class name="linked" />
+                  <class name="linked"/>
                 </style>
                 <child>
                   <object class="GcalDateSelector" id="start_date_selector">
@@ -273,10 +255,9 @@
             <child>
               <object class="GtkBox" id="end_date_box">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="homogeneous">True</property>
                 <style>
-                  <class name="linked" />
+                  <class name="linked"/>
                 </style>
                 <child>
                   <object class="GcalDateSelector" id="end_date_selector">
@@ -313,24 +294,21 @@
                 <child>
                   <object class="GtkLabel" id="delete_label">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <property name="label" translatable="yes">Delete event</property>
                   </object>
                 </child>
                 <style>
-                  <class name="destructive-action" />
+                  <class name="destructive-action"/>
                 </style>
               </object>
               <packing>
-                 <property name="left_attach">0</property>
-                 <property name="top_attach">5</property>
-                 <property name="width">1</property>
+                <property name="left_attach">0</property>
+                <property name="top_attach">5</property>
               </packing>
             </child>
           </object>
           <packing>
             <property name="expand">True</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
           </packing>
         </child>
@@ -338,6 +316,5 @@
     </child>
   </template>
   <object class="GtkPopover" id="sources_popover">
-    <property name="visible">False</property>
   </object>
 </interface>

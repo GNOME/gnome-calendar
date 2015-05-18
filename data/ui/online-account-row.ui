@@ -9,14 +9,12 @@
     <child>
       <object class="GtkGrid" id="grid">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
         <property name="margin_end">18</property>
         <property name="border_width">6</property>
         <property name="column_spacing">12</property>
         <child>
           <object class="GtkImage" id="icon">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="pixel_size">22</property>
           </object>
           <packing>
@@ -28,7 +26,6 @@
         <child>
           <object class="GtkLabel" id="account_provider_label">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="hexpand">True</property>
             <property name="xalign">0</property>
           </object>
@@ -40,7 +37,6 @@
         <child>
           <object class="GtkLabel" id="account_name_label">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="hexpand">True</property>
             <property name="xalign">0</property>
             <style>
@@ -55,7 +51,6 @@
         <child>
           <object class="GtkLabel" id="on_off_label">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
           </object>
           <packing>
             <property name="left_attach">2</property>

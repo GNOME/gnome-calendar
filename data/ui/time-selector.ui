@@ -23,12 +23,10 @@
     <signal name="value-changed" handler="time_changed" object="GcalTimeSelector" swapped="no"/>
   </object>
   <object class="GtkPopover" id="time_selector_popover">
-    <property name="visible">False</property>
     <property name="position">bottom</property>
     <child>
       <object class="GtkGrid" id="grid">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
         <property name="border_width">12</property>
         <property name="column_spacing">6</property>
         <child>
@@ -64,7 +62,6 @@
         <child>
           <object class="GtkLabel" id="label1">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="label" translatable="yes">:</property>
           </object>
           <packing>
@@ -74,8 +71,6 @@
         </child>
         <child>
           <object class="GtkComboBoxText" id="period_combo">
-            <property name="visible">False</property>
-            <property name="can_focus">False</property>
             <property name="valign">center</property>
             <property name="active">0</property>
             <signal name="changed" handler="period_changed" object="GcalTimeSelector" swapped="no"/>

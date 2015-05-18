@@ -3,7 +3,6 @@
 <interface>
   <requires lib="gtk+" version="3.14"/>
   <template class="GcalWindow" parent="GtkApplicationWindow">
-    <property name="can_focus">False</property>
     <property name="window_position">center</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
@@ -15,17 +14,14 @@
     <child>
       <object class="GtkOverlay" id="views_overlay">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
         <child>
           <object class="GtkGrid" id="main_box">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="hexpand">True</property>
             <property name="vexpand">True</property>
             <child>
               <object class="GtkSearchBar" id="search_bar">
                 <property name="app_paintable">True</property>
-                <property name="can_focus">False</property>
                 <property name="no_show_all">True</property>
                 <property name="hexpand">True</property>
                 <property name="show_close_button">True</property>
@@ -34,7 +30,6 @@
                 <child>
                   <object class="GtkBox" id="search_entry_box">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <child>
                       <object class="GtkSearchEntry" id="search_entry">
                         <property name="width_request">500</property>
@@ -47,9 +42,6 @@
                         <property name="primary_icon_sensitive">False</property>
                         <signal name="search-changed" handler="search_changed" object="GcalWindow" swapped="no"/>
                       </object>
-                      <packing>
-                        <property name="position">0</property>
-                      </packing>
                     </child>
                   </object>
                 </child>
@@ -62,7 +54,6 @@
             <child>
               <object class="GtkStack" id="views_stack">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <property name="transition_duration">250</property>
@@ -80,7 +71,6 @@
                     <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
                   </object>
                   <packing>
-                    <property name="position">0</property>
                     <property name="name">month</property>
                     <property name="title" translatable="yes">Month</property>
                   </packing>
@@ -110,7 +100,6 @@
         <child type="overlay">
           <object class="GtkRevealer" id="notification">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="halign">center</property>
             <property name="valign">start</property>
             <property name="transition_duration">100</property>
@@ -118,11 +107,9 @@
             <child>
               <object class="GtkFrame">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <child>
                   <object class="GtkGrid">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <property name="margin_start">12</property>
                     <property name="margin_end">12</property>
                     <property name="margin_top">2</property>
@@ -131,7 +118,6 @@
                     <child>
                       <object class="GtkLabel" id="notification_label">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="use_markup">True</property>
                       </object>
                       <packing>
@@ -167,7 +153,6 @@
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
                             <property name="icon_name">window-close-symbolic</property>
                             <property name="icon_size">2</property>
                           </object>
@@ -195,13 +180,11 @@
     <child type="titlebar">
       <object class="GtkHeaderBar" id="header_bar">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
         <property name="show_close_button">True</property>
         <property name="title" translatable="yes">Calendar</property>
         <child>
           <object class="GtkBox" id="button_box">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <child>
               <object class="GtkButton" id="back_button">
                 <property name="visible">True</property>
@@ -211,16 +194,10 @@
                 <child>
                   <object class="GtkImage" id="go_back_image">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <property name="icon_name">go-previous-symbolic</property>
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="today_button">
@@ -231,8 +208,6 @@
                 <signal name="clicked" handler="date_updated" object="GcalWindow" swapped="no"/>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -245,14 +220,11 @@
                 <child>
                   <object class="GtkImage" id="go_next_image">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <property name="icon_name">go-next-symbolic</property>
                   </object>
                 </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
                 <property name="position">2</property>
               </packing>
             </child>
@@ -264,7 +236,6 @@
         <child type="title">
           <object class="GtkStackSwitcher" id="views_switcher">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="stack">views_stack</property>
           </object>
         </child>
@@ -276,7 +247,6 @@
             <child>
               <object class="GtkImage" id="menu_image">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="icon_name">open-menu-symbolic</property>
               </object>
             </child>
@@ -294,7 +264,6 @@
             <child>
               <object class="GtkImage" id="calendars_button_image">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="icon_name">x-office-calendar-symbolic</property>
               </object>
             </child>
@@ -311,7 +280,6 @@
             <child>
               <object class="GtkImage" id="search_button_image">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="icon_name">edit-find-symbolic</property>
               </object>
             </child>
@@ -350,15 +318,11 @@
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
                 <property name="selection_mode">none</property>
-                <signal name="row-activated" handler="source_row_activated" object="GcalWindow" swapped="no" />
+                <signal name="row-activated" handler="source_row_activated" object="GcalWindow" swapped="no"/>
                 <style>
-                  <class name="calendar-list" />
+                  <class name="calendar-list"/>
                 </style>
               </object>
-              <packing>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
             </child>
             <child>
               <object class="GtkButton" id="calendar_settings_button">
@@ -366,7 +330,7 @@
                 <property name="can_focus">True</property>
                 <property name="relief">none</property>
                 <property name="receives_default">True</property>
-                <signal name="clicked" handler="show_source_dialog" object="GcalWindow" swapped="no" />
+                <signal name="clicked" handler="show_source_dialog" object="GcalWindow" swapped="no"/>
                 <child>
                   <object class="GtkLabel" id="calendar_settings_label">
                     <property name="visible">True</property>
@@ -376,7 +340,6 @@
                 </child>
               </object>
               <packing>
-                <property name="fill">True</property>
                 <property name="position">1</property>
               </packing>
             </child>
@@ -386,25 +349,21 @@
     </child>
   </object>
   <object class="GtkPopover" id="popover">
-    <property name="visible">False</property>
     <property name="relative_to">views_stack</property>
     <signal name="closed" handler="close_new_event_widget" object="GcalWindow" swapped="no"/>
     <child>
       <object class="GtkGrid">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
         <property name="border_width">14</property>
         <child>
           <object class="GtkGrid">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
             <property name="row_spacing">18</property>
             <property name="column_spacing">12</property>
             <property name="column_homogeneous">True</property>
             <child>
               <object class="GtkLabel" id="new_event_title_label">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
               </object>
               <packing>
                 <property name="left_attach">0</property>
@@ -467,7 +426,6 @@
   </object>
   <object class="GcalSourceDialog" id="source_dialog">
     <property name="visible">False</property>
-    <property name="can_focus">False</property>
     <property name="transient_for">GcalWindow</property>
   </object>
 </interface>

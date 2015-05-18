@@ -12,10 +12,8 @@
     <child>
       <object class="GtkGrid" id="grid">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
         <child>
           <object class="GtkGrid" id="no_results_grid">
-            <property name="can_focus">False</property>
             <property name="halign">center</property>
             <property name="valign">center</property>
             <property name="hexpand">True</property>
@@ -24,7 +22,6 @@
             <child>
               <object class="GtkImage" id="image">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="halign">center</property>
                 <property name="valign">center</property>
                 <property name="pixel_size">48</property>
@@ -38,7 +35,6 @@
             <child>
               <object class="GtkLabel" id="label">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="halign">center</property>
                 <property name="valign">center</property>
                 <property name="label" translatable="yes">No results found</property>
@@ -64,21 +60,18 @@
             <child>
               <object class="GtkViewport" id="viewport">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
                 <property name="shadow_type">none</property>
                 <style>
-                  <class name="search-viewport" />
+                  <class name="search-viewport"/>
                 </style>
                 <child>
                   <object class="GtkGrid" id="search_grid">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
                     <child>
                       <object class="GtkLabel" id="empty_search_label">
-                        <property name="visible" bind-source="listbox" bind-property="visible" bind-flags="invert-boolean | bidirectional" />
-                        <property name="can_focus">False</property>
+                        <property name="visible" bind-source="listbox" bind-property="visible" bind-flags="invert-boolean | bidirectional"/>
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
                         <property name="label" translatable="yes">Use the entry above to search for events.</property>
@@ -91,7 +84,6 @@
                     <child>
                       <object class="GtkListBox" id="listbox">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
                         <property name="selection_mode">none</property>
                         <signal name="row-activated" handler="open_event" object="GcalSearchView" swapped="no"/>
                       </object>
