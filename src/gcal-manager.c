@@ -67,7 +67,7 @@ typedef struct
 
   GCancellable    *async_ops;
 
-  GoaClient       *client;
+  GoaClient       *goa_client;
 
   /* state flags */
   gboolean         goa_client_ready;
@@ -700,10 +700,10 @@ gcal_manager_client_ready_cb (GObject      *source,
   GcalManagerPrivate *priv = gcal_manager_get_instance_private (GCAL_MANAGER (user_data));
   GError *error = NULL;
 
-  priv->client = goa_client_new_finish (result, &error);
+  priv->goa_client = goa_client_new_finish (result, &error);
   priv->goa_client_ready = TRUE;
 
-  g_signal_emit (user_data, signals[GOA_CLIENT_READY], 0, priv->client);
+  g_signal_emit (user_data, signals[GOA_CLIENT_READY], 0, priv->goa_client);
 
   if (error != NULL)
     {
@@ -1564,5 +1564,5 @@ gcal_manager_get_goa_client (GcalManager *manager)
 
   priv = gcal_manager_get_instance_private (manager);
 
-  return priv->client;
+  return priv->goa_client;
 }
