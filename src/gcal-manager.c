@@ -838,6 +838,9 @@ gcal_manager_finalize (GObject *object)
   if (priv->shell_search_data_model != NULL)
     g_object_unref (priv->shell_search_data_model);
 
+  if (priv->goa_client != NULL)
+    g_object_unref (priv->goa_client);
+
   g_hash_table_destroy (priv->clients);
 }
 
