@@ -952,6 +952,12 @@ source_enabled (GcalManager *manager,
     {
       ESource *child_source = g_object_get_data (G_OBJECT (aux->data), "source");
 
+      /*
+       * Here we destroy the row and re-add it because there is no
+       * way to actually bind the ::enabled state of source. It behaves
+       * like a construct-only property, and we need to re-create the
+       * row if there's any changes.
+       */
       if (child_source != NULL && child_source == source)
         {
           gtk_widget_destroy (aux->data);
