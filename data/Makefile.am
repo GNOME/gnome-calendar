@@ -49,6 +49,7 @@ EXTRA_DIST=                     \
   org.gnome.Calendar.desktop    \
   calendar.gresource.xml        \
   shell-search-provider-dbus-interfaces.xml \
+  ui/calendar-row.ui            \
   ui/date-selector.ui           \
   ui/edit-dialog.ui             \
   ui/menus.ui                   \

@@ -597,6 +597,7 @@ make_row_from_source (GcalSourceDialog *dialog,
                       ESource          *source)
 {
   GcalSourceDialogPrivate *priv;
+  GtkBuilder *builder;
   GtkWidget *bottom_label;
   GtkWidget *top_label;
   GdkPixbuf *pixbuf;
@@ -608,37 +609,36 @@ make_row_from_source (GcalSourceDialog *dialog,
 
   priv = dialog->priv;
   get_source_parent_name_color (priv->manager, source, &parent_name, NULL);
-  row = gtk_list_box_row_new ();
+  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/calendar-row.ui");
+
+  /*
+   * Since we're destroying the builder instance before adding
+   * the row to the listbox, it should be referenced here so
+   * it isn't destroyed with the GtkBuilder.
+   */
+  row = g_object_ref (gtk_builder_get_object (builder, "row"));
 
   /* main box */
-  grid = g_object_new (GTK_TYPE_GRID, "border-width", 6, "column-spacing", 12, NULL);
+  grid = GTK_WIDGET (gtk_builder_get_object (builder, "grid"));
 
   /* source color icon */
   gdk_rgba_parse (&color, get_color_name_from_source (source));
   pixbuf = get_circle_pixbuf_from_color (&color, 24);
-  icon = gtk_image_new_from_pixbuf (pixbuf);
+  icon = GTK_WIDGET (gtk_builder_get_object (builder, "icon"));
+  gtk_image_set_from_pixbuf (GTK_IMAGE (icon), pixbuf);
 
   /* source name label */
-  top_label = g_object_new (GTK_TYPE_LABEL,
-                            "label", e_source_get_display_name (source),
-                            "xalign", 0.0,
-                            "hexpand", TRUE,
-                            NULL);
+  top_label = GTK_WIDGET (gtk_builder_get_object (builder, "title"));
+  gtk_label_set_label (GTK_LABEL (top_label), e_source_get_display_name (source));
   g_object_bind_property (source, "display-name", top_label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_signal_connect (source, "notify::display-name", G_CALLBACK (invalidate_calendar_listbox_sort),
                     priv->calendars_listbox);
 
   /* parent source name label */
-  bottom_label = g_object_new (GTK_TYPE_LABEL, "label", parent_name, "xalign", 0.0, "hexpand", TRUE, NULL);
-  gtk_style_context_add_class (gtk_widget_get_style_context (bottom_label), "dim-label");
+  bottom_label = GTK_WIDGET (gtk_builder_get_object (builder, "subtitle"));
+  gtk_label_set_label (GTK_LABEL (bottom_label), parent_name);
 
-  gtk_grid_attach (GTK_GRID (grid), icon, 0, 0, 1, 2);
-  gtk_grid_attach (GTK_GRID (grid), top_label, 1, 0, 1, 1);
-  gtk_grid_attach (GTK_GRID (grid), bottom_label, 1, 1, 1, 1);
-  gtk_container_add (GTK_CONTAINER (row), grid);
-
-  gtk_widget_show_all (row);
-
+  g_object_unref (builder);
   g_object_unref (pixbuf);
   g_free (parent_name);
 
