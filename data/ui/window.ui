@@ -333,54 +333,54 @@
     <signal name="event-activated" handler="search_event_selected" object="GcalWindow" swapped="no"/>
   </object>
   <object class="GtkPopover" id="calendar_popover">
-    <property name="visible">False</property>
-    <property name="can_focus">False</property>
     <property name="border_width">6</property>
     <child>
-      <object class="GtkBox" id="calendar_box">
+      <object class="GbScrolledWindow">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">6</property>
+        <property name="hscrollbar_policy">never</property>
+        <property name="min_content_height">80</property>
+        <property name="max_content_height">500</property>
         <child>
-          <object class="GtkListBox" id="calendar_listbox">
+          <object class="GtkBox" id="calendar_box">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="hexpand">True</property>
-            <property name="vexpand">True</property>
-            <property name="selection_mode">none</property>
-            <signal name="row-activated" handler="source_row_activated" object="GcalWindow" swapped="no" />
-            <style>
-              <class name="calendar-list" />
-            </style>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkButton" id="calendar_settings_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="relief">none</property>
-            <property name="receives_default">True</property>
-            <signal name="clicked" handler="show_source_dialog" object="GcalWindow" swapped="no" />
+            <property name="orientation">vertical</property>
+            <property name="spacing">6</property>
             <child>
-              <object class="GtkLabel" id="calendar_settings_label">
+              <object class="GtkListBox" id="calendar_listbox">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="label" translatable="yes">Calendar Settings</property>
-                <property name="xalign">0</property>
+                <property name="hexpand">True</property>
+                <property name="selection_mode">none</property>
+                <signal name="row-activated" handler="source_row_activated" object="GcalWindow" swapped="no" />
+                <style>
+                  <class name="calendar-list" />
+                </style>
               </object>
+              <packing>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="calendar_settings_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="relief">none</property>
+                <property name="receives_default">True</property>
+                <signal name="clicked" handler="show_source_dialog" object="GcalWindow" swapped="no" />
+                <child>
+                  <object class="GtkLabel" id="calendar_settings_label">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Calendar Settings</property>
+                    <property name="xalign">0</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">1</property>
-          </packing>
         </child>
       </object>
     </child>
