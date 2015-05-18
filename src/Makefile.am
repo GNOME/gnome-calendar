@@ -20,6 +20,8 @@ BUILT_SOURCES =                                           \
 
 gnome_calendar_SOURCES =                                  \
     $(BUILT_SOURCES)                                      \
+    gb-scrolled-window.h                                  \
+    gb-scrolled-window.c                                  \
     e-cal-data-model-subscriber.h                         \
     e-cal-data-model-subscriber.c                         \
     e-cal-data-model.h                                    \
