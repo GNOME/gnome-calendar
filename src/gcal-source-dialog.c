@@ -602,7 +602,6 @@ make_row_from_source (GcalSourceDialog *dialog,
   GtkWidget *top_label;
   GdkPixbuf *pixbuf;
   GtkWidget *icon;
-  GtkWidget *grid;
   GtkWidget *row;
   GdkRGBA color;
   gchar *parent_name;
@@ -617,9 +616,6 @@ make_row_from_source (GcalSourceDialog *dialog,
    * it isn't destroyed with the GtkBuilder.
    */
   row = g_object_ref (gtk_builder_get_object (builder, "row"));
-
-  /* main box */
-  grid = GTK_WIDGET (gtk_builder_get_object (builder, "grid"));
 
   /* source color icon */
   gdk_rgba_parse (&color, get_color_name_from_source (source));
