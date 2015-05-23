@@ -1577,10 +1577,9 @@ discover_sources_cb (GObject      *source,
 
           g_object_set_data (G_OBJECT (row), "parent-source", source);
           g_object_set_data (G_OBJECT (row), "source", new_source);
-          g_object_set_data (G_OBJECT (row), "source-url", g_strdup (src->href));
-          g_object_set_data (G_OBJECT (row), "source-color", g_strdup (src->color));
-          g_object_set_data (G_OBJECT (row), "source-display-name", g_strdup (src->display_name));
-          //g_object_set_data (G_OBJECT (row), "source-email", g_strdup (g_slist_nth_data (user_adresses, counter)));
+          g_object_set_data_full (G_OBJECT (row), "source-url", g_strdup (src->href), g_free);
+          g_object_set_data_full (G_OBJECT (row), "source-color", g_strdup (src->color), g_free);
+          g_object_set_data_full (G_OBJECT (row), "source-display-name", g_strdup (src->display_name), g_free);
 
           gtk_widget_show_all (row);
         }
