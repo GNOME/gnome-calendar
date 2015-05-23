@@ -33,10 +33,12 @@ typedef struct
   GtkWidget          *default_check;
   GtkWidget          *edit_grid;
   GtkWidget          *headerbar;
+  GtkWidget          *main_scrolledwindow;
   GtkWidget          *name_entry;
   GtkWidget          *notebook;
   GtkWidget          *remove_button;
   GtkWidget          *stack;
+  GtkWidget          *web_source_grid;
 
   /* notification */
   GtkWidget          *notification;
@@ -346,9 +348,8 @@ back_button_clicked (GtkButton *button,
                      gpointer   user_data)
 {
   GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
-  const gchar *visible_child = gtk_stack_get_visible_child_name (GTK_STACK (priv->stack));
 
-  if (g_strcmp0 (visible_child, "edit") == 0)
+  if (gtk_stack_get_visible_child (GTK_STACK (priv->stack)) == priv->edit_grid)
     {
       // Save the source before leaving
       gcal_manager_save_source (priv->manager, priv->source);
@@ -819,12 +820,12 @@ stack_visible_child_name_changed (GObject    *object,
                                   gpointer    user_data)
 {
   GcalSourceDialogPrivate *priv;
-  const gchar *visible_name;
+  GtkWidget *visible_child;
 
   priv = GCAL_SOURCE_DIALOG (user_data)->priv;
-  visible_name = gtk_stack_get_visible_child_name (GTK_STACK (object));
+  visible_child = gtk_stack_get_visible_child (GTK_STACK (object));
 
-  if (g_strcmp0 (visible_name, "main") == 0)
+  if (visible_child == priv->main_scrolledwindow)
     {
       gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Calendar Settings"));
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
@@ -840,7 +841,7 @@ stack_visible_child_name_changed (GObject    *object,
    * source are updated, while indenpendent widgets
    * are updated at #gcal_source_dialog_set_mode
    */
-  if (g_strcmp0 (visible_name, "edit") == 0 && priv->source != NULL)
+  if (visible_child == priv->edit_grid && priv->source != NULL)
     {
       ESource *default_source;
       gchar *parent_name;
@@ -1888,6 +1889,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, google_stub_row);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, location_dim_label);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, main_scrolledwindow);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notification);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notification_label);
@@ -1896,6 +1898,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, remove_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, settings_button);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
+  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_source_grid);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_listbox);
   gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_revealer);
 
@@ -2217,14 +2220,14 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
     case GCAL_SOURCE_DIALOG_MODE_CREATE:
       gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
-      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "edit");
+      gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->edit_grid);
       break;
 
     case GCAL_SOURCE_DIALOG_MODE_CREATE_WEB:
       gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
       gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->headerbar), FALSE);
-      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "create");
+      gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->web_source_grid);
       gtk_widget_set_visible (priv->add_button, TRUE);
       gtk_widget_set_visible (priv->cancel_button, TRUE);
       break;
@@ -2237,7 +2240,7 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
                                                      G_BINDING_DEFAULT);
         }
 
-      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "edit");
+      gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->edit_grid);
       break;
 
     case GCAL_SOURCE_DIALOG_MODE_NORMAL:
@@ -2250,7 +2253,7 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
 
       gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Calendar Settings"));
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
-      gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "main");
+      gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->main_scrolledwindow);
       break;
 
     default:
