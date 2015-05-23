@@ -757,6 +757,8 @@ response_signal (GtkDialog *dialog,
       g_list_free_full (priv->remote_sources, g_object_unref);
       priv->remote_sources = NULL;
     }
+
+  gtk_widget_hide (GTK_WIDGET (dialog));
 }
 
 static gboolean

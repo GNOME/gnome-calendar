@@ -909,7 +909,6 @@ show_source_dialog (GtkButton *button,
   gtk_widget_hide (priv->calendar_popover);
 
   gtk_dialog_run (GTK_DIALOG (priv->source_dialog));
-  gtk_widget_hide (priv->source_dialog);
 }
 
 static void
@@ -932,8 +931,6 @@ source_row_activated (GtkListBox    *listbox,
   gtk_widget_hide (priv->calendar_popover);
 
   gtk_dialog_run (GTK_DIALOG (priv->source_dialog));
-
-  gtk_widget_hide (priv->source_dialog);
 }
 
 static void
