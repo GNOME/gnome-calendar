@@ -619,7 +619,7 @@ make_row_from_source (GcalSourceDialog *dialog,
   row = g_object_ref (gtk_builder_get_object (builder, "row"));
 
   /* source color icon */
-  gdk_rgba_parse (&color, get_color_name_from_source (source));
+  get_color_name_from_source (source, &color);
   pixbuf = get_circle_pixbuf_from_color (&color, 24);
   icon = GTK_WIDGET (gtk_builder_get_object (builder, "icon"));
   gtk_image_set_from_pixbuf (GTK_IMAGE (icon), pixbuf);
@@ -915,7 +915,7 @@ stack_visible_child_name_changed (GObject    *object,
       g_signal_handlers_block_by_func (priv->name_entry, name_entry_text_changed, user_data);
 
       /* color button */
-      gdk_rgba_parse (&color, get_color_name_from_source (priv->source));
+      get_color_name_from_source (priv->source, &color);
       gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (priv->calendar_color_button), &color);
 
       /* entry */

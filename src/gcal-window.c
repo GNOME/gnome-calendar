@@ -844,7 +844,7 @@ make_row_from_source (GcalWindow *window,
   gtk_container_set_border_width (GTK_CONTAINER (box), 6);
 
   /* source color icon */
-  gdk_rgba_parse (&color, get_color_name_from_source (source));
+  get_color_name_from_source (source, &color);
   pixbuf = gcal_get_pixbuf_from_color (&color, 16);
   icon = gtk_image_new_from_pixbuf (pixbuf);
 
