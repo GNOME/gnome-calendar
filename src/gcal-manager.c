@@ -296,7 +296,8 @@ load_source (GcalManager *manager,
 
   priv = gcal_manager_get_instance_private (manager);
 
-  if (g_hash_table_lookup (priv->clients, source) == NULL)
+  if (g_hash_table_lookup (priv->clients, source) == NULL &&
+      e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR))
     {
       /* NULL: because maybe the operation cannot be really cancelled */
       e_cal_client_connect (source,
