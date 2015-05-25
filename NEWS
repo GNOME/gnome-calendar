@@ -1,3 +1,8 @@
+Major changes in 3.17.2:
+* Added translations
+* Added a calendar management dialog for creating, updating and deleting calendars
+* When adding a new event, use current date as event start
+
 Major changes in 3.16.1:
 * Added translations
 * Block creation on nameless events
