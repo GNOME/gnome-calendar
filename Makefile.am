@@ -27,7 +27,10 @@ DISTCHECK_CONFIGURE_FLAGS = --enable-appstream-util
 
 # Remove doc directory on uninstall
 uninstall-local:
-	-rm -r $(gnome_calendardocdir)
+	@if test -d "$(docdir)"; \
+	then \
+		-rm -r $(docdir); \
+	fi
 
 AUTHORS:
 	@if test -d "$(srcdir)/.git"; \
