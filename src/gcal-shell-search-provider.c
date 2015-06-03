@@ -218,9 +218,8 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
   gchar *uuid, *desc;
   const gchar* location;
 
-  g_autoptr(GTimeZone) tz;
-  g_autoptr (GDateTime) datetime;
-  g_autoptr (GDateTime) local_datetime;
+  GTimeZone *tz;
+  GDateTime *datetime, *local_datetime;
   ECalComponentDateTime dtstart;
   gchar *start_date;
 
@@ -280,6 +279,10 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
       g_variant_builder_add (&builder, "{sv}", "description", g_variant_new_string (desc));
       g_free (start_date);
       g_free (desc);
+
+      g_date_time_unref (datetime);
+      g_date_time_unref (local_datetime);
+      g_time_zone_unref (tz);
 
       g_variant_builder_add_value (&abuilder, g_variant_builder_end (&builder));
     }
