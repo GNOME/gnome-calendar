@@ -425,11 +425,8 @@ icaltime_compare_with_current (const icaltimetype *date1,
   diff1 = start1 - *current_time_t;
   diff2 = start2 - *current_time_t;
 
-  if (diff1 == diff2)
-    {
-      result = 0;
-    }
-  else
+  result = 0;
+  if (diff1 != diff2)
     {
       if (diff1 == 0)
         result = -1;
