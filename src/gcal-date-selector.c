@@ -236,7 +236,7 @@ gcal_date_selector_init (GcalDateSelector *self)
   /* This string represents day/month/year order for each of the different
    * languages. It could possibly be default value, %m/%d/%y placing the month
    * before, or any ordering according to the translator's environment. */
-  priv->mask = _("%d/%m/%y");
+  priv->mask = _("%m/%d/%y");
 
   /**
    * Translators: Select the day, month and year indexes. This will
