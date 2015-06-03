@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-22 07:06+0000\n"
+"POT-Creation-Date: 2015-05-25 17:32+0000\n"
 "PO-Revision-Date: 2015-03-01 23:52+0100\n"
 "Last-Translator: Julien Hardelin <jhardlin@orange.fr>\n"
 "Language-Team: French <GNOME French Team <gnomefr@traduc.org>>\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
 msgid "Calendar"
 msgstr "Agenda"
 
@@ -38,10 +38,10 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"GNOME Agenda est un agenda simple et de belle facture, conçu pour "
-"s'intégrer parfaitement au bureau GNOME. En réutilisant les composants sur "
-"lesquels le bureau GNOME est construit, Agenda s'intègre à la perfection à "
-"l'écosystème GNOME."
+"GNOME Agenda est un agenda simple et de belle facture, conçu pour s'intégrer "
+"parfaitement au bureau GNOME. En réutilisant les composants sur lesquels le "
+"bureau GNOME est construit, Agenda s'intègre à la perfection à l'écosystème "
+"GNOME."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
@@ -50,8 +50,8 @@ msgid ""
 "Calendar, like you've been using it for ages!"
 msgstr ""
 "Nous recherchons l'équilibre parfait entre fonctionnalités bien conçues et "
-"facilité d'utilisation. Aucun excès, aucun manque. Vous serez à l'aise "
-"en utilisant Agenda, comme si vous l'utilisiez depuis des siècles !"
+"facilité d'utilisation. Aucun excès, aucun manque. Vous serez à l'aise en "
+"utilisant Agenda, comme si vous l'utilisiez depuis des siècles !"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
 msgid "Search for events"
@@ -110,11 +110,12 @@ msgstr "Liste des sources désactivées"
 msgid "Sources disabled last time Calendar ran"
 msgstr "Sources désactivées à la dernière exécution d'Agenda"
 
-#: ../data/ui/edit-dialog.ui.h:1
+#: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
+#: ../src/gcal-source-dialog.c:1131
 msgid "Cancel"
 msgstr "Annuler"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
 msgid "Done"
 msgstr "Terminé"
 
@@ -134,11 +135,11 @@ msgstr "Se termine"
 msgid "Notes"
 msgstr "Notes"
 
-#: ../data/ui/edit-dialog.ui.h:7
+#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "Emplacement"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:374
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:406
 msgid "All day"
 msgstr "Toute la journée"
 
@@ -166,6 +167,18 @@ msgstr "_Quitter"
 msgid "_Synchronize"
 msgstr "_Synchroniser"
 
+#: ../data/ui/menus.ui.h:6
+msgid "From Web…"
+msgstr "Depuis le Web…"
+
+#: ../data/ui/menus.ui.h:7
+msgid "New Local Calendar…"
+msgstr "Nouvel agenda local…"
+
+#: ../data/ui/menus.ui.h:8
+msgid "From File…"
+msgstr "Depuis un fichier…"
+
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
 msgstr "Aucun résultat trouvé"
@@ -173,6 +186,107 @@ msgstr "Aucun résultat trouvé"
 #: ../data/ui/search-view.ui.h:2
 msgid "Use the entry above to search for events."
 msgstr "Utilisez la barre ci-dessus pour rechercher des événements."
+
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1175
+#: ../src/gcal-window.c:1179
+msgid "Undo"
+msgstr "Annuler"
+
+#: ../data/ui/source-dialog.ui.h:2
+msgid "Online Accounts"
+msgstr "Comptes en ligne"
+
+#: ../data/ui/source-dialog.ui.h:3
+msgid "Open online account settings"
+msgstr ""
+
+#: ../data/ui/source-dialog.ui.h:4
+msgid "Google"
+msgstr "Google"
+
+#: ../data/ui/source-dialog.ui.h:5
+msgid "Click to set up"
+msgstr ""
+
+#: ../data/ui/source-dialog.ui.h:6
+msgid "ownCloud"
+msgstr "ownCloud"
+
+#: ../data/ui/source-dialog.ui.h:7
+msgid "Microsoft Exchange"
+msgstr "Microsoft Exchange"
+
+#: ../data/ui/source-dialog.ui.h:8
+msgid "Calendars"
+msgstr "Agendas"
+
+#: ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "Ajouter"
+
+#: ../data/ui/source-dialog.ui.h:10
+msgid "Overview"
+msgstr "Vue d'ensemble"
+
+#: ../data/ui/source-dialog.ui.h:11
+msgid "Add new events to this calendar by default"
+msgstr ""
+
+#: ../data/ui/source-dialog.ui.h:12
+msgid "Remove Calendar"
+msgstr "Supprimer l'agenda"
+
+#: ../data/ui/source-dialog.ui.h:13
+msgid "Display calendar"
+msgstr "Afficher l'agenda"
+
+#: ../data/ui/source-dialog.ui.h:14
+msgid "Calendar name"
+msgstr "Nom de l'agenda"
+
+#: ../data/ui/source-dialog.ui.h:15
+msgid "Color"
+msgstr "Couleur"
+
+#: ../data/ui/source-dialog.ui.h:16
+msgid "Account"
+msgstr "Compte"
+
+#: ../data/ui/source-dialog.ui.h:18
+msgid "Settings"
+msgstr "Paramètres"
+
+#: ../data/ui/source-dialog.ui.h:19
+msgid "Edit Calendar"
+msgstr "Modifier l'agenda"
+
+#: ../data/ui/source-dialog.ui.h:20
+msgid ""
+"Enter the address of the calendar that you want to add. If the calendar "
+"belongs to one of you online accounts, you can add it through the <a href="
+"\"GOA\">online account settings</a>."
+msgstr ""
+
+#: ../data/ui/source-dialog.ui.h:21
+msgid "Calendar Address"
+msgstr "Adresse de l'agenda"
+
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
+#: ../src/gcal-source-dialog.c:2227
+msgid "Add Calendar"
+msgstr "Ajouter un agenda"
+
+#: ../data/ui/source-dialog.ui.h:24
+msgid "User"
+msgstr "Utilisateur"
+
+#: ../data/ui/source-dialog.ui.h:25
+msgid "Password"
+msgstr "Mot de passe"
+
+#: ../data/ui/source-dialog.ui.h:26
+msgid "Connect"
+msgstr ""
 
 #: ../data/ui/time-selector.ui.h:1
 msgid "00:00"
@@ -182,13 +296,11 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:368
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "AM"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:368
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "PM"
 
@@ -205,12 +317,21 @@ msgstr "Année"
 msgid "Today"
 msgstr "Aujourd'hui"
 
-#: ../data/ui/window.ui.h:5
+#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
+#: ../src/gcal-source-dialog.c:2254
+#, fuzzy
+#| msgid "Calendar"
+msgid "Calendar Settings"
+msgstr "Agenda"
+
+#: ../data/ui/window.ui.h:6
 msgid "Create"
 msgstr "Créer"
 
-#: ../data/ui/window.ui.h:6
-msgid "More Details"
+#: ../data/ui/window.ui.h:7
+#, fuzzy
+#| msgid "More Details"
+msgid "Edit Details"
 msgstr "Plus de détails"
 
 #: ../data/ui/year-view.ui.h:2
@@ -220,6 +341,54 @@ msgstr "Aucun événement"
 #: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
 msgid "Add Event…"
 msgstr "Ajouter un événement…"
+
+#: ../src/gb-scrolled-window.c:254
+msgid "Max Content Height"
+msgstr ""
+
+#: ../src/gb-scrolled-window.c:255
+msgid "The maximum height request that can be made."
+msgstr ""
+
+#: ../src/gb-scrolled-window.c:263
+msgid "Max Content Width"
+msgstr ""
+
+#: ../src/gb-scrolled-window.c:264
+msgid "The maximum width request that can be made."
+msgstr ""
+
+#. Dialog
+#: ../src/gcal-source-dialog.c:1128
+msgid "Select a calendar file"
+msgstr ""
+
+#: ../src/gcal-source-dialog.c:1132
+msgid "Open"
+msgstr "Ouvrir"
+
+#: ../src/gcal-source-dialog.c:1139
+msgid "Calendar files"
+msgstr "Fichiers agenda"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1178
+msgid "Unnamed Calendar"
+msgstr "Agenda anonyme"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1781
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr ""
+
+#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
+msgid "Off"
+msgstr "Désactivé"
+
+#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
+msgid "On"
+msgstr "Activé"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -233,19 +402,19 @@ msgstr "Ouvrir l'agenda sur la date transmise"
 msgid "Open calendar showing the passed event"
 msgstr "Ouvrir l'agenda en affichant l'événement transmis"
 
-#: ../src/gcal-application.c:332
+#: ../src/gcal-application.c:337
 msgid "- Calendar management"
 msgstr "- Gestion de l'agenda"
 
-#: ../src/gcal-application.c:499
+#: ../src/gcal-application.c:504
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id Les auteurs d'Agenda"
 
-#: ../src/gcal-application.c:505
+#: ../src/gcal-application.c:510
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Les auteurs d'Agenda"
 
-#: ../src/gcal-application.c:518
+#: ../src/gcal-application.c:523
 msgid "translator-credits"
 msgstr ""
 "Ahmed Kachakch <ahmed.kachkach@gmail.com>, 2013\n"
@@ -255,11 +424,11 @@ msgstr ""
 msgid "Day"
 msgstr "Jour"
 
-#: ../src/gcal-edit-dialog.c:634
+#: ../src/gcal-edit-dialog.c:657
 msgid "Save"
 msgstr "Enregistrer"
 
-#: ../src/gcal-edit-dialog.c:818
+#: ../src/gcal-edit-dialog.c:841
 msgid "Unnamed event"
 msgstr "Événement anonyme"
 
@@ -274,11 +443,6 @@ msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Autre événement"
 msgstr[1] "%d autres événements"
-
-#: ../src/gcal-search-view.c:367
-#, c-format
-msgid "%.2d:%.2d %s"
-msgstr "%.2d:%.2d %s"
 
 #: ../src/gcal-time-selector.c:96
 #, c-format
@@ -302,19 +466,24 @@ msgstr "Midi"
 msgid "00:00 PM"
 msgstr "00:00"
 
-#: ../src/gcal-window.c:636
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#: ../src/gcal-window.c:681
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%B %d"
+
+#: ../src/gcal-window.c:682
 #, c-format
 msgid "New Event on %s"
 msgstr "Nouvel événement le %s"
 
-#: ../src/gcal-window.c:1036
+#: ../src/gcal-window.c:1175
 msgid "Another event deleted"
 msgstr "Autre événement supprimé"
 
-#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
-msgid "Undo"
-msgstr "Annuler"
-
-#: ../src/gcal-window.c:1040
+#: ../src/gcal-window.c:1179
 msgid "Event deleted"
 msgstr "Événement supprimé"
+
