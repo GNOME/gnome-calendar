@@ -1199,7 +1199,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
           l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (i));
 
-          /* TODO: Warning in some languages this string can be too long and may overlap wit the number */
+          /* TODO: Warning: in some languages this string can be too long and may overlap with the number */
           overflow_str = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", g_list_length (l)),
                                           g_list_length (l));
 
