@@ -233,15 +233,15 @@ gcal_date_selector_init (GcalDateSelector *self)
   priv->month = 1;
   priv->year = 1970;
 
-  /* This string represents day/month/year order for each of the differents
+  /* This string represents day/month/year order for each of the different
    * languages. It could possibly be default value, %m/%d/%y placing the month
-   * before, or any ordering according to the translators environment */
+   * before, or any ordering according to the translator's environment. */
   priv->mask = _("%d/%m/%y");
 
   /**
    * Translators: Select the day, month and year indexes. This will
    * be used later on to map the date entries to the
-   * corresponding indexes. I've should add more validations here.
+   * corresponding indexes. I should have added more validations here.
    */
   max = strlen (priv->mask);
   if (max != 6)
