@@ -97,6 +97,7 @@ typedef struct
   icaltimetype        *active_date;
 
   icaltimetype        *current_date;
+  gboolean             rtl;
 
   /* states */
   gboolean             new_event_mode;
@@ -429,8 +430,10 @@ date_updated (GtkButton  *button,
 
   icaltimetype *new_date;
   gboolean move_back, move_today;
+  gint factor;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  factor = priv->rtl ? - 1 : 1;
 
   move_today = priv->today_button == (GtkWidget*) button;
   move_back = priv->back_button == (GtkWidget*) button;
@@ -446,17 +449,17 @@ date_updated (GtkButton  *button,
       switch (priv->active_view)
         {
         case GCAL_WINDOW_VIEW_DAY:
-          new_date->day += 1 * (move_back ? -1 : 1);
+          new_date->day += 1 * factor * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_WEEK:
-          new_date->day += 7 * (move_back ? -1 : 1);
+          new_date->day += 7 * factor * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_MONTH:
           new_date->day = 1;
-          new_date->month += 1 * (move_back ? -1 : 1);
+          new_date->month += 1 * factor * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_YEAR:
-          new_date->year += 1 * (move_back ? -1 : 1);
+          new_date->year += 1 * factor * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_LIST:
         case GCAL_WINDOW_VIEW_SEARCH:
@@ -1410,6 +1413,7 @@ gcal_window_init (GcalWindow *self)
   GcalWindowPrivate *priv = gcal_window_get_instance_private (self);
 
   priv->active_date = g_new0 (icaltimetype, 1);
+  priv->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
