@@ -690,10 +690,14 @@ gcal_month_view_key_press (GtkWidget   *widget,
        * simulate it by changing the start & end selected cells = keyboard cell.
        */
       if (!selection && priv->start_mark_cell == -1 && priv->end_mark_cell == -1)
-        priv->start_mark_cell = priv->end_mark_cell = real_cell (priv->keyboard_cell, priv->k);
+        priv->start_mark_cell = priv->end_mark_cell = priv->keyboard_cell;
 
-      get_cell_position (GCAL_MONTH_VIEW (widget), priv->start_mark_cell, &x, &y);
+      get_cell_position (GCAL_MONTH_VIEW (widget), real_cell (priv->end_mark_cell, priv->k), &x, &y);
       show_popover_for_position (GCAL_MONTH_VIEW (widget), x, y, FALSE);
+      break;
+
+    case GDK_KEY_Escape:
+      priv->start_mark_cell = priv->end_mark_cell = -1;
       break;
 
     default:
@@ -715,8 +719,7 @@ gcal_month_view_key_press (GtkWidget   *widget,
       priv->start_mark_cell = priv->end_mark_cell = -1;
     }
 
-  if (diff != 0)
-    gtk_widget_queue_draw (widget);
+  gtk_widget_queue_draw (widget);
 
   return TRUE;
 }
@@ -1652,7 +1655,10 @@ gcal_month_view_button_press (GtkWidget      *widget,
   clicked_cell = real_cell (clicked_cell, priv->k);
 
   if (clicked_cell >= priv->days_delay && clicked_cell <= days)
-    priv->start_mark_cell = clicked_cell;
+    {
+      priv->start_mark_cell = clicked_cell;
+      priv->keyboard_cell = clicked_cell;
+    }
 
   if (pressed_indicator && g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (clicked_cell)))
     priv->pressed_overflow_indicator = clicked_cell;
@@ -1694,6 +1700,8 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
 
       if (new_end_cell >= priv->days_delay && new_end_cell < days)
         {
+          priv->keyboard_cell = new_end_cell;
+
           if (priv->end_mark_cell != priv->start_mark_cell)
             priv->hovered_overflow_indicator = -1;
           if (priv->end_mark_cell != new_end_cell)
@@ -1741,6 +1749,7 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   if (priv->end_mark_cell >= priv->days_delay && priv->end_mark_cell < days)
     {
+      priv->keyboard_cell = priv->end_mark_cell;
       return show_popover_for_position (GCAL_MONTH_VIEW (widget), x, y, released_indicator);
     }
   else
