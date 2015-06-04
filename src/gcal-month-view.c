@@ -75,7 +75,7 @@ typedef struct
   gboolean        use_24h_format;
 
   /* text direction factors */
-  gint            k;
+  gboolean        k;
 
   icaltimetype   *current_date;
 
@@ -88,6 +88,8 @@ enum
   PROP_0,
   PROP_DATE,  /* active-date inherited property */
 };
+
+#define MIRROR(val,start,end) (start + (val / end) * end + (end - cell % end))
 
 static gint           gather_button_event_data              (GcalMonthView  *view,
                                                              gdouble         x,
@@ -179,6 +181,118 @@ static GList*         gcal_month_view_get_children_by_uuid  (GcalView       *vie
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view,GCAL_TYPE_SUBSCRIBER_VIEW,
                          G_ADD_PRIVATE (GcalMonthView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
+
+static gint
+real_cell (gint     cell,
+           gboolean rtl)
+{
+  return rtl ? MIRROR (cell, 0, 7) - 1 : cell;
+}
+
+static void
+get_cell_position (GcalMonthView *view,
+                   gint           cell,
+                   gdouble       *out_x,
+                   gdouble       *out_y)
+{
+  GcalMonthViewPrivate *priv;
+  GtkWidget *widget;
+
+  gdouble start_grid_y;
+
+  gint shown_rows;
+  gdouble first_row_gap;
+
+  gdouble cell_width;
+  gdouble cell_height;
+
+  priv = gcal_month_view_get_instance_private (view);
+  widget = GTK_WIDGET (view);
+
+  start_grid_y = get_start_grid_y (widget);
+
+  shown_rows = ceil ((priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year)) / 7.0);
+  first_row_gap = (6 - shown_rows) * 0.5; /* invalid area before the actual rows */
+
+  cell_width = gtk_widget_get_allocated_width (widget) / 7.0;
+  cell_height = (gtk_widget_get_allocated_height (widget) - start_grid_y) / 6.0;
+
+  if (out_x != NULL)
+    *out_x = cell_width * ((cell % 7) + 0.5);
+
+  if (out_y != NULL)
+    *out_y = cell_height * ((cell / 7) + first_row_gap + 0.5) + start_grid_y;
+}
+
+static gboolean
+show_popover_for_position (GcalMonthView *view,
+                           gdouble        x,
+                           gdouble        y,
+                           gboolean       on_indicator)
+{
+  GcalSubscriberViewPrivate *ppriv;
+  GcalMonthViewPrivate *priv;
+  GtkWidget *widget;
+
+  gint start_day, end_day;
+
+  icaltimetype *start_date;
+  icaltimetype *end_date = NULL;
+
+  widget = GTK_WIDGET (view);
+  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
+  ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
+
+  if (priv->start_mark_cell < 0)
+    return FALSE;
+
+  start_day = priv->start_mark_cell - priv->days_delay + 1;
+  end_day = priv->end_mark_cell - priv->days_delay + 1;
+
+  if (priv->pressed_overflow_indicator != -1 && priv->start_mark_cell == priv->end_mark_cell &&
+      g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (priv->pressed_overflow_indicator)))
+    {
+      priv->hovered_overflow_indicator = priv->pressed_overflow_indicator;
+
+      rebuild_popover_for_day (GCAL_MONTH_VIEW (widget), end_day);
+      gtk_widget_show_all (priv->overflow_popover);
+
+      gtk_widget_queue_draw (widget);
+      priv->pressed_overflow_indicator = -1;
+      priv->start_mark_cell = -1;
+      priv->end_mark_cell = -1;
+      return TRUE;
+    }
+  else
+    {
+      start_date = gcal_dup_icaltime (priv->date);
+      start_date->day = start_day;
+      start_date->is_date = 1;
+
+      end_date = gcal_dup_icaltime (priv->date);
+      end_date->day = end_day;
+      end_date->is_date = 1;
+
+      if (start_date->day > end_date->day)
+        {
+          gint day = start_date->day;
+          start_date->day = end_date->day;
+          end_date->day = day;
+        }
+
+      end_date->day += 1;
+
+      g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_date, end_date, x, y);
+
+      g_free (start_date);
+      g_free (end_date);
+    }
+
+  gtk_widget_queue_draw (widget);
+  priv->pressed_overflow_indicator = -1;
+
+  return FALSE;
+}
 
 static gint
 gather_button_event_data (GcalMonthView *view,
@@ -362,6 +476,7 @@ rebuild_popover_for_day (GcalMonthView *view,
   gdouble start_grid_y, cell_width, cell_height;
 
   gint shown_rows;
+  gint real_clicked_popover_cell;
 
   GtkStyleContext *context;
   GtkStateFlags state;
@@ -434,23 +549,24 @@ rebuild_popover_for_day (GcalMonthView *view,
   pango_font_description_free (ofont_desc);
   g_object_unref (overflow_layout);
 
-  rect.y = cell_height * ((priv->pressed_overflow_indicator / 7) + 1.0 + (6 - shown_rows) * 0.5) + start_grid_y - padding_bottom - font_height / 2;
+  real_clicked_popover_cell = real_cell (priv->pressed_overflow_indicator, priv->k);
+  rect.y = cell_height * ((real_clicked_popover_cell / 7) + 1.0 + (6 - shown_rows) * 0.5) + start_grid_y - padding_bottom - font_height / 2;
   rect.width = 1;
   rect.height = 1;
 
-  if (priv->pressed_overflow_indicator % 7 < 3)
+  if (real_clicked_popover_cell % 7 < 3)
     {
-      rect.x = cell_width * ((priv->pressed_overflow_indicator % 7) + 1.0);
-      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), priv->k == 0 ? GTK_POS_RIGHT : GTK_POS_LEFT);
+      rect.x = cell_width * ((real_clicked_popover_cell % 7) + 1.0);
+      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), priv->k ? GTK_POS_LEFT : GTK_POS_RIGHT);
     }
-  else if (priv->pressed_overflow_indicator % 7 > 3)
+  else if (real_clicked_popover_cell % 7 > 3)
     {
-      rect.x = cell_width * ((priv->pressed_overflow_indicator % 7));
-      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), priv->k == 0 ? GTK_POS_LEFT : GTK_POS_RIGHT);
+      rect.x = cell_width * ((real_clicked_popover_cell % 7));
+      gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), priv->k ? GTK_POS_RIGHT : GTK_POS_LEFT);
     }
   else
     {
-      rect.x = cell_width * ((priv->pressed_overflow_indicator % 7) + 1.0 - priv->k);
+      rect.x = cell_width * ((real_clicked_popover_cell % 7) + 1.0 - priv->k);
       gtk_popover_set_position (GTK_POPOVER (priv->overflow_popover), GTK_POS_RIGHT);
     }
   gtk_popover_set_pointing_to (GTK_POPOVER (priv->overflow_popover), &rect);
@@ -523,48 +639,86 @@ gcal_month_view_key_press (GtkWidget   *widget,
                            GdkEventKey *event)
 {
   GcalMonthViewPrivate *priv;
+  gboolean selection, valid_key;
+  gdouble x, y;
+  gint min, max, diff;
 
   g_return_val_if_fail (GCAL_IS_MONTH_VIEW (widget), FALSE);
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
+  selection = event->state & GDK_SHIFT_MASK;
+  valid_key = FALSE;
+  diff = 0;
+  min = priv->days_delay;
+  max = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year) - 1;
 
-  if (!(event->state & GDK_MODIFIER_MASK))
+  /*
+   * If it's starting the selection right now, it should mark the current keyboard
+   * focused cell as the start, and then update the end mark after updating the
+   * focused cell.
+   */
+  if (selection && priv->start_mark_cell == -1)
     {
-      switch (event->keyval)
-        {
-        case GDK_KEY_Up:
-          priv->keyboard_cell -= 7;
-          break;
-
-        case GDK_KEY_Down:
-          priv->keyboard_cell += 7;
-          break;
-
-        case GDK_KEY_Left:
-          priv->keyboard_cell--;
-          break;
-
-        case GDK_KEY_Right:
-          priv->keyboard_cell++;
-          break;
-
-        case GDK_KEY_Return:
-
-          break;
-
-        default:
-          return FALSE;
-        }
-
-      priv->keyboard_cell = CLAMP (priv->keyboard_cell, priv->days_delay,
-                                   (priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year) - 1));
-
-      gtk_widget_queue_draw (widget);
-
-      return TRUE;
+      priv->start_mark_cell = priv->keyboard_cell;
     }
 
-  return FALSE;
+  switch (event->keyval)
+    {
+    case GDK_KEY_Up:
+      valid_key = TRUE;
+      diff = -7;
+      break;
+
+    case GDK_KEY_Down:
+      valid_key = TRUE;
+      diff = 7;
+      break;
+
+    case GDK_KEY_Left:
+      valid_key = TRUE;
+      diff = priv->k ? 1 : -1;
+      break;
+
+    case GDK_KEY_Right:
+      valid_key = TRUE;
+      diff = priv->k ? -1 : 1;
+      break;
+
+    case GDK_KEY_Return:
+      /*
+       * If it's not on the selection mode (i.e. shift is not pressed), we should
+       * simulate it by changing the start & end selected cells = keyboard cell.
+       */
+      if (!selection && priv->start_mark_cell == -1 && priv->end_mark_cell == -1)
+        priv->start_mark_cell = priv->end_mark_cell = real_cell (priv->keyboard_cell, priv->k);
+
+      get_cell_position (GCAL_MONTH_VIEW (widget), priv->start_mark_cell, &x, &y);
+      show_popover_for_position (GCAL_MONTH_VIEW (widget), x, y, FALSE);
+      break;
+
+    default:
+      return FALSE;
+    }
+
+  if (priv->keyboard_cell + diff <= max && priv->keyboard_cell + diff >= min)
+    {
+      priv->keyboard_cell += diff;
+    }
+
+  if (selection)
+    {
+      priv->end_mark_cell = priv->keyboard_cell;
+    }
+  else if (!selection && valid_key)
+    {
+      /* Cancel selection if SHIFT is not pressed */
+      priv->start_mark_cell = priv->end_mark_cell = -1;
+    }
+
+  if (diff != 0)
+    gtk_widget_queue_draw (widget);
+
+  return TRUE;
 }
 
 static void
@@ -640,10 +794,7 @@ gcal_month_view_init (GcalMonthView *self)
 
   gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "calendar-view");
 
-  if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_LTR)
-    priv->k = 0;
-  else if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
-    priv->k = 1;
+  priv->k = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
   priv->overflow_popover = gtk_popover_new (GTK_WIDGET (self));
   gtk_style_context_add_class (gtk_widget_get_style_context (priv->overflow_popover), "events");
@@ -698,7 +849,9 @@ gcal_month_view_set_property (GObject       *object,
 
         priv->date = g_value_dup_boxed (value);
         priv->days_delay = (time_day_of_week (1, priv->date->month - 1, priv->date->year) - priv->first_weekday + 7) % 7;
-        priv->keyboard_cell = -1;
+        priv->keyboard_cell = priv->days_delay;
+        priv->start_mark_cell = -1;
+        priv->end_mark_cell = -1;
         gtk_widget_queue_draw (GTK_WIDGET (object));
         break;
       }
@@ -1151,10 +1304,11 @@ gcal_month_view_draw (GtkWidget *widget,
   sw = 1 - 2 * priv->k;
 
   /* active cells */
-  if (priv->start_mark_cell != -1 && priv->end_mark_cell != -1)
+  if (priv->start_mark_cell > -1 && priv->end_mark_cell > -1)
     {
-      lower_mark = 7 * ((priv->start_mark_cell + 7 * priv->k) / 7) + sw * (priv->start_mark_cell % 7) + (1 - priv->k);
-      upper_mark = 7 * ((priv->end_mark_cell + 7 * priv->k) / 7) + sw * (priv->end_mark_cell % 7) + (1 - priv->k);
+      lower_mark = priv->start_mark_cell - priv->days_delay + 1;
+      upper_mark = priv->end_mark_cell  - priv->days_delay + 1;
+
       if (lower_mark > upper_mark)
         {
           gint cell;
@@ -1162,9 +1316,6 @@ gcal_month_view_draw (GtkWidget *widget,
           lower_mark = upper_mark;
           upper_mark = cell;
         }
-
-      lower_mark -= priv->days_delay;
-      upper_mark -= priv->days_delay;
     }
 
   /* view headers */
@@ -1238,6 +1389,7 @@ gcal_month_view_draw (GtkWidget *widget,
       gchar *nr_day;
       gint column = i % 7;
       gint row = i / 7;
+      gint real_i = real_cell (i, priv->k);
 
       j = 7 * ((i + 7 * priv->k) / 7) + sw * (i % 7) + (1 - priv->k);
       if (j <= priv->days_delay)
@@ -1248,7 +1400,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
       nr_day = g_strdup_printf ("%d", j);
 
-      if (g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (i)))
+      if (g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (real_i)))
         {
           GList *l;
           PangoLayout *overflow_layout;
@@ -1256,7 +1408,7 @@ gcal_month_view_draw (GtkWidget *widget,
           gchar *overflow_str;
           gdouble y_value;
 
-          l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (i));
+          l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (real_i));
 
           /* TODO: Warning in some languages this string can be too long and may overlap wit the number */
           overflow_str = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", g_list_length (l)),
@@ -1264,7 +1416,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
           gtk_style_context_save (context);
           gtk_style_context_add_class (context, "overflow");
-          if (priv->hovered_overflow_indicator == i)
+          if (priv->hovered_overflow_indicator == real_i)
             {
               gtk_style_context_set_state (context, state | GTK_STATE_FLAG_PRELIGHT);
               gtk_style_context_get (context, state | GTK_STATE_FLAG_PRELIGHT, "font", &ofont_desc, NULL);
@@ -1282,7 +1434,7 @@ gcal_month_view_draw (GtkWidget *widget,
           pango_layout_get_pixel_size (overflow_layout, &font_width, &font_height);
           y_value = cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y;
 
-          if ((!gtk_widget_is_visible (priv->overflow_popover) && priv->hovered_overflow_indicator == i) ||
+          if ((!gtk_widget_is_visible (priv->overflow_popover) && priv->hovered_overflow_indicator == real_i) ||
                gtk_widget_is_visible (priv->overflow_popover))
             {
               gtk_render_background (context, cr, cell_width * column, y_value - padding.bottom,
@@ -1395,12 +1547,13 @@ gcal_month_view_draw (GtkWidget *widget,
      gint first_mark, last_mark;
      gint pos_x2, pos_y2;
 
-     first_mark = priv->start_mark_cell;
-     last_mark = priv->end_mark_cell;
-     if (priv->start_mark_cell > priv->end_mark_cell)
+     first_mark = real_cell (priv->start_mark_cell, priv->k);
+     last_mark = real_cell (priv->end_mark_cell, priv->k);
+     if (first_mark > last_mark)
        {
-         last_mark = priv->start_mark_cell;
-         first_mark = priv->end_mark_cell;
+         gint tmp = first_mark;
+         first_mark = last_mark;
+         last_mark = tmp;
        }
 
      gtk_style_context_get_color (context, state | GTK_STATE_FLAG_SELECTED, &color);
@@ -1455,12 +1608,16 @@ gcal_month_view_draw (GtkWidget *widget,
      cairo_stroke (cr);
    }
 
+  /* Draw focus rectangle */
   if (priv->keyboard_cell > priv->days_delay - 1)
     {
+      gint localized_cell;
       gint x;
       gint y;
 
-      x = cell_width * (priv->keyboard_cell % 7);
+      localized_cell = real_cell (priv->keyboard_cell % 7, priv->k);
+
+      x = cell_width * (localized_cell);
       y = cell_height * (priv->keyboard_cell / 7 + first_row_gap) + start_grid_y;
 
       gtk_render_focus (context, cr, x, y, cell_width, cell_height);
@@ -1481,21 +1638,20 @@ gcal_month_view_button_press (GtkWidget      *widget,
   GcalSubscriberViewPrivate *ppriv;
   GcalMonthViewPrivate *priv;
 
-  gint days, j, sw, clicked_cell;
+  gint days, clicked_cell;
   gboolean pressed_indicator = FALSE;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
   ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
-  sw = 1 - 2 * priv->k;
 
   clicked_cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y,
                                                  &pressed_indicator, NULL, NULL);
 
-  j = 7 * ((clicked_cell + 7 * priv->k) / 7) + sw * (clicked_cell % 7) + (1 - priv->k);
+  clicked_cell = real_cell (clicked_cell, priv->k);
 
-  if (j > priv->days_delay && j <= days)
+  if (clicked_cell >= priv->days_delay && clicked_cell <= days)
     priv->start_mark_cell = clicked_cell;
 
   if (pressed_indicator && g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (clicked_cell)))
@@ -1521,22 +1677,22 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
   GcalMonthViewPrivate *priv;
 
   gint days;
-  gint j, sw;
   gint new_end_cell, new_hovered_cell;
   gboolean hovered_indicator = FALSE;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
 
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
-  sw = 1 - 2 * priv->k;
 
   new_end_cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y, &hovered_indicator, NULL, NULL);
-
-  j = 7 * ((new_end_cell + 7 * priv->k) / 7) + sw * (new_end_cell % 7) + (1 - priv->k);
+  new_end_cell = real_cell (new_end_cell, priv->k);
 
   if (priv->start_mark_cell != -1)
     {
-      if (j > priv->days_delay && j <= days)
+      if (!(event->state & GDK_BUTTON_PRESS_MASK))
+        return TRUE;
+
+      if (new_end_cell >= priv->days_delay && new_end_cell < days)
         {
           if (priv->end_mark_cell != priv->start_mark_cell)
             priv->hovered_overflow_indicator = -1;
@@ -1572,89 +1728,29 @@ static gboolean
 gcal_month_view_button_release (GtkWidget      *widget,
                                 GdkEventButton *event)
 {
-  GcalSubscriberViewPrivate *ppriv;
   GcalMonthViewPrivate *priv;
-
+  gdouble x, y;
   gint days;
-
-  gint j, sw;
-  gint released;
   gboolean released_indicator = FALSE;
 
-  gdouble x, y;
-
-  icaltimetype *start_date;
-  icaltimetype *end_date = NULL;
-
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
-  ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
-
-  if (priv->start_mark_cell == -1)
-    return FALSE;
-
   days = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year);
-  sw = 1 - 2 * priv->k;
 
-  priv->keyboard_cell = -1;
+  priv->end_mark_cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y, &released_indicator, &x, &y);
+  priv->end_mark_cell = real_cell (priv->end_mark_cell, priv->k);
 
-  released = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y, &released_indicator, &x, &y);
-
-  j = 7 * ((released + 7 * priv->k) / 7) + sw * (released % 7) + (1 - priv->k);
-
-  if (j <= priv->days_delay || j > days)
+  if (priv->end_mark_cell >= priv->days_delay && priv->end_mark_cell < days)
     {
-      priv->pressed_overflow_indicator = -1;
-      priv->start_mark_cell = -1;
-      priv->end_mark_cell = -1;
-      gtk_widget_queue_draw (widget);
-
-      return TRUE;
-    }
-
-  priv->end_mark_cell = released;
-
-  if (priv->pressed_overflow_indicator != -1 && priv->start_mark_cell == priv->end_mark_cell &&
-      g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (priv->pressed_overflow_indicator)))
-    {
-      priv->hovered_overflow_indicator = priv->pressed_overflow_indicator;
-
-      rebuild_popover_for_day (GCAL_MONTH_VIEW (widget), j - priv->days_delay);
-      gtk_widget_show_all (priv->overflow_popover);
-
-      gtk_widget_queue_draw (widget);
-      priv->pressed_overflow_indicator = -1;
-      priv->start_mark_cell = -1;
-      priv->end_mark_cell = -1;
-      return TRUE;
+      return show_popover_for_position (GCAL_MONTH_VIEW (widget), x, y, released_indicator);
     }
   else
     {
-      start_date = gcal_dup_icaltime (priv->date);
-      start_date->day = 7 * ((priv->start_mark_cell + 7 * priv->k) / 7) + sw * (priv->start_mark_cell % 7) + (1 - priv->k);
-      start_date->day -= priv->days_delay;
-      start_date->is_date = 1;
+      /* If the button is released over an invalid cell, entirely cancel the selection */
+      priv->start_mark_cell = priv->end_mark_cell = -1;
+      gtk_widget_queue_draw (widget);
 
-      end_date = gcal_dup_icaltime (priv->date);
-      end_date->day = j - priv->days_delay;
-      end_date->is_date = 1;
-
-      if (start_date->day > end_date->day)
-        {
-          gint day = start_date->day;
-          start_date->day = end_date->day;
-          end_date->day = day;
-        }
-      end_date->day += 1 ;
-
-      g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_date, end_date, x, y);
-
-      g_free (start_date);
-      g_free (end_date);
+      return FALSE;
     }
-
-  gtk_widget_queue_draw (widget);
-  priv->pressed_overflow_indicator = -1;
-  return TRUE;
 }
 
 static void
