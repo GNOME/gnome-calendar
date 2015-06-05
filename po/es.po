@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-05-25 17:32+0000\n"
-"PO-Revision-Date: 2015-05-26 19:03+0200\n"
+"POT-Creation-Date: 2015-06-05 06:20+0000\n"
+"PO-Revision-Date: 2015-06-05 \n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -215,7 +215,6 @@ msgid "Microsoft Exchange"
 msgstr "Microsoft Exchange"
 
 #: ../data/ui/source-dialog.ui.h:8
-#| msgid "Calendar"
 msgid "Calendars"
 msgstr "Calendarios"
 
@@ -232,7 +231,6 @@ msgid "Add new events to this calendar by default"
 msgstr "Añadir los eventos nuevos a este calendario de manera predeterminada"
 
 #: ../data/ui/source-dialog.ui.h:12
-#| msgid "Calendar"
 msgid "Remove Calendar"
 msgstr "Eliminar calendario"
 
@@ -241,7 +239,6 @@ msgid "Display calendar"
 msgstr "Mostrar calendario"
 
 #: ../data/ui/source-dialog.ui.h:14
-#| msgid "Calendar management"
 msgid "Calendar name"
 msgstr "Nombre del calendario"
 
@@ -258,7 +255,6 @@ msgid "Settings"
 msgstr "Configuración"
 
 #: ../data/ui/source-dialog.ui.h:19
-#| msgid "Calendar"
 msgid "Edit Calendar"
 msgstr "Editar calendario"
 
@@ -273,13 +269,11 @@ msgstr ""
 "\"GOA\">configuración de las cuentas en línea</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
-#| msgid "Calendar"
 msgid "Calendar Address"
 msgstr "Dirección del calendario"
 
 #: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
 #: ../src/gcal-source-dialog.c:2227
-#| msgid "Calendar"
 msgid "Add Calendar"
 msgstr "Añadir calendario"
 
@@ -311,11 +305,11 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
 msgid "Month"
 msgstr "Mes"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
 msgid "Year"
 msgstr "Año"
 
@@ -326,7 +320,6 @@ msgstr "Hoy"
 
 #: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
 #: ../src/gcal-source-dialog.c:2254
-#| msgid "Calendar"
 msgid "Calendar Settings"
 msgstr "Configuración del calendario"
 
@@ -335,7 +328,6 @@ msgid "Create"
 msgstr "Crear"
 
 #: ../data/ui/window.ui.h:7
-#| msgid "Event Details"
 msgid "Edit Details"
 msgstr "Editar los detalles"
 
@@ -373,13 +365,11 @@ msgid "Open"
 msgstr "Abrir"
 
 #: ../src/gcal-source-dialog.c:1139
-#| msgid "Calendar"
 msgid "Calendar files"
 msgstr "Archivos de calendario"
 
 #. update the source properties
 #: ../src/gcal-source-dialog.c:1178
-#| msgid "Unnamed event"
 msgid "Unnamed Calendar"
 msgstr "Calendario sin nombre"
 
@@ -425,7 +415,14 @@ msgstr "Copyright © %Id–%Id Los autores de Calendario"
 msgid "translator-credits"
 msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2012 - 2015"
 
-#: ../src/gcal-date-selector.c:303
+#. This string represents day/month/year order for each of the different
+#. * languages. It could possibly be default value, %m/%d/%y placing the month
+#. * before, or any ordering according to the translator's environment.
+#: ../src/gcal-date-selector.c:239
+msgid "%m/%d/%y"
+msgstr "%m/%d/%y"
+
+#: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "Día"
 
@@ -441,7 +438,7 @@ msgstr "Evento sin nombre"
 msgid "Other events"
 msgstr "Otros eventos"
 
-#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
 #: ../src/gcal-month-view.c:1203
 #, c-format
 msgid "Other event"
