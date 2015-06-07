@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-04-07 13:17+0000\n"
-"PO-Revision-Date: 2015-05-01 15:09+0100\n"
+"POT-Creation-Date: 2015-06-07 06:20+0000\n"
+"PO-Revision-Date: 2015-06-07 14:06+0100\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Poedit 1.8.1\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:515
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
 msgid "Calendar"
 msgstr "Kalendár"
 
@@ -109,7 +109,8 @@ msgstr "Zoznam zakázaných zdrojov"
 msgid "Sources disabled last time Calendar ran"
 msgstr "Zdroje zakázané pri poslednom spustení kalendára"
 
-#: ../data/ui/edit-dialog.ui.h:1
+#: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
+#: ../src/gcal-source-dialog.c:1131
 msgid "Cancel"
 msgstr "Zrušiť"
 
@@ -133,7 +134,7 @@ msgstr "Koniec"
 msgid "Notes"
 msgstr "Poznámky"
 
-#: ../data/ui/edit-dialog.ui.h:7
+#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "Umiestnenie"
 
@@ -165,6 +166,18 @@ msgstr "_Ukončiť"
 msgid "_Synchronize"
 msgstr "_Synchronizovať"
 
+#: ../data/ui/menus.ui.h:6
+msgid "From Web…"
+msgstr "Z webu…"
+
+#: ../data/ui/menus.ui.h:7
+msgid "New Local Calendar…"
+msgstr "Nový miestny kalendár…"
+
+#: ../data/ui/menus.ui.h:8
+msgid "From File…"
+msgstr "Zo súboru…"
+
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
 msgstr "Nenašli sa žiadne výsledky"
@@ -172,6 +185,111 @@ msgstr "Nenašli sa žiadne výsledky"
 #: ../data/ui/search-view.ui.h:2
 msgid "Use the entry above to search for events."
 msgstr "Použite pole vyššie na vyhľadanie udalostí."
+
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1175
+#: ../src/gcal-window.c:1179
+msgid "Undo"
+msgstr "Vrátiť späť"
+
+#: ../data/ui/source-dialog.ui.h:2
+msgid "Online Accounts"
+msgstr "Účty služieb"
+
+# tooltip
+#: ../data/ui/source-dialog.ui.h:3
+msgid "Open online account settings"
+msgstr "Otvorí nastavenia účtov služieb"
+
+#: ../data/ui/source-dialog.ui.h:4
+msgid "Google"
+msgstr "Google"
+
+#: ../data/ui/source-dialog.ui.h:5
+msgid "Click to set up"
+msgstr "Kliknutím nastavíte"
+
+#: ../data/ui/source-dialog.ui.h:6
+msgid "ownCloud"
+msgstr "ownCloud"
+
+#: ../data/ui/source-dialog.ui.h:7
+msgid "Microsoft Exchange"
+msgstr "Microsoft Exchange"
+
+#: ../data/ui/source-dialog.ui.h:8
+msgid "Calendars"
+msgstr "Kalendáre"
+
+#: ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "Pridať"
+
+#: ../data/ui/source-dialog.ui.h:10
+msgid "Overview"
+msgstr "Prehľad"
+
+#: ../data/ui/source-dialog.ui.h:11
+msgid "Add new events to this calendar by default"
+msgstr "Pridávať nové udalosti predvolene do tohto kalendára"
+
+#: ../data/ui/source-dialog.ui.h:12
+msgid "Remove Calendar"
+msgstr "Odstrániť kalendár"
+
+#: ../data/ui/source-dialog.ui.h:13
+msgid "Display calendar"
+msgstr "Zobraziť kalendár"
+
+#: ../data/ui/source-dialog.ui.h:14
+msgid "Calendar name"
+msgstr "Názov kalendára"
+
+#: ../data/ui/source-dialog.ui.h:15
+msgid "Color"
+msgstr "Farba"
+
+#: ../data/ui/source-dialog.ui.h:16
+msgid "Account"
+msgstr "Účet"
+
+#: ../data/ui/source-dialog.ui.h:18
+msgid "Settings"
+msgstr "Nastavenia"
+
+#: ../data/ui/source-dialog.ui.h:19
+msgid "Edit Calendar"
+msgstr "Pridať kalendár"
+
+#: ../data/ui/source-dialog.ui.h:20
+msgid ""
+"Enter the address of the calendar that you want to add. If the calendar "
+"belongs to one of you online accounts, you can add it through the <a href="
+"\"GOA\">online account settings</a>."
+msgstr ""
+"Zadajte adresu kalendára, ktorý chcete pridať. Ak kalendár patrí do jedného z "
+"vašich účtov služieb, môžete ho pridať cez <a href=\"GOA\">nastavenia účtov "
+"služieb</a>."
+
+#: ../data/ui/source-dialog.ui.h:21
+msgid "Calendar Address"
+msgstr "Adresa kalendára"
+
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
+#: ../src/gcal-source-dialog.c:2227
+msgid "Add Calendar"
+msgstr "Pridať kalendár"
+
+#: ../data/ui/source-dialog.ui.h:24
+msgid "User"
+msgstr "Používateľ"
+
+#: ../data/ui/source-dialog.ui.h:25
+msgid "Password"
+msgstr "Heslo"
+
+#: ../data/ui/source-dialog.ui.h:26
+msgid "Connect"
+msgstr "Pripojiť"
 
 #: ../data/ui/time-selector.ui.h:1
 msgid "00:00"
@@ -189,11 +307,11 @@ msgstr "Dopoludnia"
 msgid "PM"
 msgstr "Popoludní"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
 msgid "Month"
 msgstr "Mesiac"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
 msgid "Year"
 msgstr "Rok"
 
@@ -202,11 +320,16 @@ msgstr "Rok"
 msgid "Today"
 msgstr "Dnes"
 
-#: ../data/ui/window.ui.h:5
+#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
+#: ../src/gcal-source-dialog.c:2254
+msgid "Calendar Settings"
+msgstr "Nastavenia kalendára"
+
+#: ../data/ui/window.ui.h:6
 msgid "Create"
 msgstr "Vytvoriť"
 
-#: ../data/ui/window.ui.h:6
+#: ../data/ui/window.ui.h:7
 msgid "Edit Details"
 msgstr "Upraviť podrobnosti"
 
@@ -217,6 +340,54 @@ msgstr "Žiadne udalosti"
 #: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
 msgid "Add Event…"
 msgstr "Pridať udalosť…"
+
+#: ../src/gb-scrolled-window.c:254
+msgid "Max Content Height"
+msgstr "Maximálna výška obsahu"
+
+#: ../src/gb-scrolled-window.c:255
+msgid "The maximum height request that can be made."
+msgstr "Maximálna požiadavka na výšku, aká môže byť vytvorená."
+
+#: ../src/gb-scrolled-window.c:263
+msgid "Max Content Width"
+msgstr "Maximálne šírka obsahu"
+
+#: ../src/gb-scrolled-window.c:264
+msgid "The maximum width request that can be made."
+msgstr "Maximálna požiadavka na  šírku, aká môže byť vytvorená."
+
+#. Dialog
+#: ../src/gcal-source-dialog.c:1128
+msgid "Select a calendar file"
+msgstr "Výber súboru kalendára"
+
+#: ../src/gcal-source-dialog.c:1132
+msgid "Open"
+msgstr "Otvoriť"
+
+#: ../src/gcal-source-dialog.c:1139
+msgid "Calendar files"
+msgstr "Súbory kalendára"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1178
+msgid "Unnamed Calendar"
+msgstr "Nepomenovaný kalendár"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1781
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "Kalendár <b>%s</b> bol odstránený"
+
+#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
+msgid "Off"
+msgstr "Vypnutý"
+
+#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
+msgid "On"
+msgstr "Zapnutý"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -230,23 +401,30 @@ msgstr "Otvorí kalendár na určenom dátume"
 msgid "Open calendar showing the passed event"
 msgstr "Otvorí kalendár zobrazujúc určenú udalosť"
 
-#: ../src/gcal-application.c:336
+#: ../src/gcal-application.c:337
 msgid "- Calendar management"
 msgstr "- Správa kalendára"
 
-#: ../src/gcal-application.c:503
+#: ../src/gcal-application.c:504
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Autorské práva © %Id Autori programu Kalendár"
 
-#: ../src/gcal-application.c:509
+#: ../src/gcal-application.c:510
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Autorské práva © %Id–%Id Autori programu Kalendár"
 
-#: ../src/gcal-application.c:522
+#: ../src/gcal-application.c:523
 msgid "translator-credits"
 msgstr "Dušan Kazik <prescott66@gmail.com>"
 
-#: ../src/gcal-date-selector.c:303
+#. This string represents day/month/year order for each of the different
+#. * languages. It could possibly be default value, %m/%d/%y placing the month
+#. * before, or any ordering according to the translator's environment.
+#: ../src/gcal-date-selector.c:239
+msgid "%m/%d/%y"
+msgstr "%d/%m/%y"
+
+#: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "Deň"
 
@@ -262,7 +440,7 @@ msgstr "Nepomenovaná udalosť"
 msgid "Other events"
 msgstr "Iné udalosti"
 
-#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
 #: ../src/gcal-month-view.c:1203
 #, c-format
 msgid "Other event"
@@ -296,25 +474,21 @@ msgstr "00:00 Popoludní"
 #. Translators:
 #. * this is the format string for representing a date consisting of a month name
 #. * and a date of month.
-#: ../src/gcal-window.c:642
+#: ../src/gcal-window.c:681
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%e. %B"
 
-#: ../src/gcal-window.c:643
+#: ../src/gcal-window.c:682
 #, c-format
 msgid "New Event on %s"
 msgstr "Nová udalosť na deň %s"
 
-#: ../src/gcal-window.c:1071
+#: ../src/gcal-window.c:1175
 msgid "Another event deleted"
 msgstr "Iná udalosť bola odstránená"
 
-#: ../src/gcal-window.c:1071 ../src/gcal-window.c:1075
-msgid "Undo"
-msgstr "Vrátiť späť"
-
-#: ../src/gcal-window.c:1075
+#: ../src/gcal-window.c:1179
 msgid "Event deleted"
 msgstr "Udalosť bola odstránená"
 
