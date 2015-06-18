@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-01 06:19+0000\n"
-"PO-Revision-Date: 2015-06-01 15:55+0200\n"
+"POT-Creation-Date: 2015-06-18 06:16+0000\n"
+"PO-Revision-Date: 2015-06-18 11:13+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: Czech <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -207,7 +207,7 @@ msgstr "Google"
 
 #: ../data/ui/source-dialog.ui.h:5
 msgid "Click to set up"
-msgstr ""
+msgstr "Nastavte kliknutím"
 
 #: ../data/ui/source-dialog.ui.h:6
 msgid "ownCloud"
@@ -218,7 +218,6 @@ msgid "Microsoft Exchange"
 msgstr "Microsoft Exchange"
 
 #: ../data/ui/source-dialog.ui.h:8
-#| msgid "Calendar"
 msgid "Calendars"
 msgstr "Kalendáře"
 
@@ -235,17 +234,15 @@ msgid "Add new events to this calendar by default"
 msgstr "Standardně přidávat nové události do tohoto kalendáře"
 
 #: ../data/ui/source-dialog.ui.h:12
-#, fuzzy
 #| msgid "Calendar"
 msgid "Remove Calendar"
-msgstr "Kalendář"
+msgstr "Odstranit kalendář"
 
 #: ../data/ui/source-dialog.ui.h:13
 msgid "Display calendar"
 msgstr "Zobrazit kalendář"
 
 #: ../data/ui/source-dialog.ui.h:14
-#| msgid "Calendar management"
 msgid "Calendar name"
 msgstr "Název kalendáře"
 
@@ -262,10 +259,9 @@ msgid "Settings"
 msgstr "Nastavení"
 
 #: ../data/ui/source-dialog.ui.h:19
-#, fuzzy
 #| msgid "Calendar"
 msgid "Edit Calendar"
-msgstr "Kalendář"
+msgstr "Upravit kalendář"
 
 #: ../data/ui/source-dialog.ui.h:20
 msgid ""
@@ -278,16 +274,14 @@ msgstr ""
 "\">nastavení účtů on-line</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
-#| msgid "Calendar"
 msgid "Calendar Address"
 msgstr "Adresa kalendáře"
 
 #: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
 #: ../src/gcal-source-dialog.c:2227
-#, fuzzy
 #| msgid "Calendar"
 msgid "Add Calendar"
-msgstr "Kalendář"
+msgstr "Přidání kalendáře"
 
 #: ../data/ui/source-dialog.ui.h:24
 msgid "User"
@@ -317,11 +311,11 @@ msgstr "dop."
 msgid "PM"
 msgstr "odp."
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
 msgid "Month"
 msgstr "Měsíc"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
 msgid "Year"
 msgstr "Rok"
 
@@ -332,7 +326,6 @@ msgstr "Dnes"
 
 #: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
 #: ../src/gcal-source-dialog.c:2254
-#| msgid "Calendar"
 msgid "Calendar Settings"
 msgstr "Nastavení kalendáře"
 
@@ -378,13 +371,11 @@ msgid "Open"
 msgstr "Otevřít"
 
 #: ../src/gcal-source-dialog.c:1139
-#| msgid "Calendar"
 msgid "Calendar files"
 msgstr "Kalendářové soubory"
 
 #. update the source properties
 #: ../src/gcal-source-dialog.c:1178
-#| msgid "Unnamed event"
 msgid "Unnamed Calendar"
 msgstr "Kalendář bez názvu"
 
@@ -396,11 +387,11 @@ msgstr "Kalendář <b>%s</b> byl odstraněn"
 
 #: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
 msgid "Off"
-msgstr ""
+msgstr "Vypnuto"
 
 #: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
 msgid "On"
-msgstr ""
+msgstr "Zapnuto"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -432,7 +423,14 @@ msgstr ""
 "Adam Matoušek <adamatousek@gmail.com>\n"
 "Marek Černocký <marek@manet.cz>"
 
-#: ../src/gcal-date-selector.c:303
+#. This string represents day/month/year order for each of the different
+#. * languages. It could possibly be default value, %m/%d/%y placing the month
+#. * before, or any ordering according to the translator's environment.
+#: ../src/gcal-date-selector.c:239
+msgid "%m/%d/%y"
+msgstr "%d/%m/%y"
+
+#: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "Den"
 
@@ -448,7 +446,7 @@ msgstr "Událost bez názvu"
 msgid "Other events"
 msgstr "Další události"
 
-#. TODO: Warning in some languages this string can be too long and may overlap wit the number
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
 #: ../src/gcal-month-view.c:1203
 #, c-format
 msgid "Other event"
