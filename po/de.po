@@ -4,27 +4,28 @@
 # Mario Blättermann <mario.blaettermann@gmail.com>, 2013.
 # Simon Linden <xhi2018@gmail.com>, 2014.
 # Benjamin Steinwender <b@stbe.at>, 2015.
+# Bernd Homuth <dev@hmt.im>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-16 14:32+0000\n"
-"PO-Revision-Date: 2015-03-10 06:38+0100\n"
-"Last-Translator: Simon Linden <xhi2018@googlemail.com>\n"
+"POT-Creation-Date: 2015-06-03 18:42+0000\n"
+"PO-Revision-Date: 2015-06-11 23:11+0200\n"
+"Last-Translator: Bernd Homuth <dev@hmt.im>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.7.4\n"
+"X-Generator: Gtranslator 2.91.6\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -114,7 +115,7 @@ msgstr "Deaktivierte Quellen seit dem letzten Aufruf von Kalender"
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
 msgid "Done"
 msgstr "Fertig"
 
@@ -138,7 +139,7 @@ msgstr "Notizen"
 msgid "Location"
 msgstr "Ort"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:387
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:385
 msgid "All day"
 msgstr "Ganzer Tag"
 
@@ -182,21 +183,19 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:381
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "AM"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:381
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "PM"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
 msgid "Month"
 msgstr "Monat"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
 msgid "Year"
 msgstr "Jahr"
 
@@ -233,52 +232,54 @@ msgstr "Kalender am vergangenen Datum öffnen"
 msgid "Open calendar showing the passed event"
 msgstr "Kalender am vergangenen Termin öffnen"
 
-#: ../src/gcal-application.c:332
+#: ../src/gcal-application.c:337
 msgid "- Calendar management"
 msgstr "- Kalenderverwaltung"
 
-#: ../src/gcal-application.c:499
+#: ../src/gcal-application.c:504
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id Die Kalender-Autoren"
 
-#: ../src/gcal-application.c:505
+#: ../src/gcal-application.c:510
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Die Kalender-Autoren"
 
-#: ../src/gcal-application.c:518
+#: ../src/gcal-application.c:523
 msgid "translator-credits"
 msgstr ""
 "Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Benjamin Steinwender <b@stbe.at>"
 
-#: ../src/gcal-date-selector.c:303
+#. This string represents day/month/year order for each of the different
+#. * languages. It could possibly be default value, %m/%d/%y placing the month
+#. * before, or any ordering according to the translator's environment.
+#: ../src/gcal-date-selector.c:239
+msgid "%m/%d/%y"
+msgstr "%d/%m/%y"
+
+#: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "Tag"
 
-#: ../src/gcal-edit-dialog.c:634
+#: ../src/gcal-edit-dialog.c:657
 msgid "Save"
 msgstr "Speichern"
 
-#: ../src/gcal-edit-dialog.c:818
+#: ../src/gcal-edit-dialog.c:841
 msgid "Unnamed event"
 msgstr "Unbenannter Termin"
 
-#: ../src/gcal-month-view.c:826
+#: ../src/gcal-month-view.c:820
 msgid "Other events"
 msgstr "Weitere Termine"
 
-#. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1209
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/gcal-month-view.c:1203
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Weiterer Termin"
 msgstr[1] "Weitere %d Termine"
-
-#: ../src/gcal-search-view.c:380
-#, c-format
-msgid "%.2d:%.2d %s"
-msgstr "%.2d:%.2d %s"
 
 # http://de.wikipedia.org/wiki/2-mal-12-Stunden-Z%C3%A4hlung
 #: ../src/gcal-time-selector.c:96
@@ -319,6 +320,9 @@ msgstr "Rückgängig"
 #: ../src/gcal-window.c:1040
 msgid "Event deleted"
 msgstr "Termin gelöscht"
+
+#~ msgid "%.2d:%.2d %s"
+#~ msgstr "%.2d:%.2d %s"
 
 #~ msgid "Unable to initialize GtkClutter"
 #~ msgstr "GtkClutter konnte nicht initialisiert werden"
