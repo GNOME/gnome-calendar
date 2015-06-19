@@ -647,6 +647,45 @@ source_credentials_required_cb (ESourceRegistry         *registry,
 }
 
 static void
+source_get_last_credentials_required_arguments_cb (GObject      *source_object,
+                                                   GAsyncResult *result,
+                                                   gpointer      user_data)
+{
+  GcalManager *manager = user_data;
+  ESource *source;
+  ESourceCredentialsReason reason = E_SOURCE_CREDENTIALS_REASON_UNKNOWN;
+  gchar *certificate_pem = NULL;
+  GTlsCertificateFlags certificate_errors = 0;
+  GError *op_error = NULL;
+  GError *error = NULL;
+
+  g_return_if_fail (E_IS_SOURCE (source_object));
+
+  source = E_SOURCE (source_object);
+
+  if (!e_source_get_last_credentials_required_arguments_finish (source, result, &reason,
+          &certificate_pem, &certificate_errors, &op_error, &error))
+    {
+      /* Can be cancelled only if the manager is disposing/disposed */
+      if (error && !g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+        {
+           show_source_error (G_STRFUNC, "Failed to get last credentials required arguments for", source, error);
+        }
+
+      g_clear_error (&error);
+      return;
+    }
+
+    g_return_if_fail (GCAL_IS_MANAGER (manager));
+
+    if (reason != E_SOURCE_CREDENTIALS_REASON_UNKNOWN)
+        source_credentials_required_cb (NULL, source, reason, certificate_pem, certificate_errors, op_error, manager);
+
+    g_free (certificate_pem);
+    g_clear_error (&op_error);
+}
+
+static void
 gcal_manager_class_init (GcalManagerClass *klass)
 {
   G_OBJECT_CLASS (klass)->constructed = gcal_manager_constructed;
@@ -771,8 +810,12 @@ gcal_manager_constructed (GObject *object)
       ESource *source = E_SOURCE (l->data);
 
       /* Mark for skip also currently disabled sources */
-      if (!e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR))
+      if (!e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR) &&
+          !e_source_has_extension (source, E_SOURCE_EXTENSION_COLLECTION))
         e_credentials_prompter_set_auto_prompt_disabled_for (priv->credentials_prompter, source, TRUE);
+      else
+        e_source_get_last_credentials_required_arguments (source, NULL,
+           source_get_last_credentials_required_arguments_cb, object);
     }
 
   g_list_free_full (sources, g_object_unref);
@@ -789,7 +832,16 @@ gcal_manager_constructed (GObject *object)
 
       cred_source = e_source_credentials_provider_ref_credentials_source (credentials_provider, source);
       if (cred_source && !e_source_equal (source, cred_source))
-        e_credentials_prompter_set_auto_prompt_disabled_for (priv->credentials_prompter, cred_source, FALSE);
+	{
+          e_credentials_prompter_set_auto_prompt_disabled_for (priv->credentials_prompter, cred_source, FALSE);
+
+          if (e_source_get_connection_status (cred_source) == E_SOURCE_CONNECTION_STATUS_SSL_FAILED)
+            {
+              e_source_get_last_credentials_required_arguments (cred_source, NULL,
+                  source_get_last_credentials_required_arguments_cb, object);
+            }
+        }
+
       g_clear_object (&cred_source);
     }
 
