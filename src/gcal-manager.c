@@ -402,7 +402,7 @@ on_client_readonly_changed (EClient    *client,
   source = e_client_get_source (client);
 
   unit = g_hash_table_lookup (priv->clients, source);
-  if (unit->enabled)
+  if (unit && unit->enabled)
     g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ACTIVATED], 0, source, !e_client_is_readonly (client));
 }
 
@@ -518,6 +518,7 @@ remove_source (GcalManager  *manager,
                ESource      *source)
 {
   GcalManagerPrivate *priv;
+  GcalManagerUnit *unit;
 
   g_return_if_fail (GCAL_IS_MANAGER (manager));
   g_return_if_fail (E_IS_SOURCE (source));
@@ -528,6 +529,11 @@ remove_source (GcalManager  *manager,
                                   e_source_get_uid (source));
   e_cal_data_model_remove_client (priv->search_data_model,
                                   e_source_get_uid (source));
+
+  unit = g_hash_table_lookup (priv->clients, source);
+  if (unit && unit->client)
+     g_signal_handlers_disconnect_by_data (unit->client, manager);
+
   g_hash_table_remove (priv->clients, source);
   g_signal_emit (manager, signals[SOURCE_REMOVED], 0, source);
 }
