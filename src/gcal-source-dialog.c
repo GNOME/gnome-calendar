@@ -2144,8 +2144,8 @@ goa_client_ready_cb (GcalSourceDialog *dialog,
     add_goa_account (dialog, goa_object_get_account (l->data));
 
   /* Be ready to other accounts */
-  g_signal_connect (client, "account-added", G_CALLBACK (goa_account_added_cb), user_data);
-  g_signal_connect (client, "account-removed", G_CALLBACK (goa_account_removed_cb), user_data);
+  g_signal_connect (client, "account-added", G_CALLBACK (goa_account_added_cb), dialog);
+  g_signal_connect (client, "account-removed", G_CALLBACK (goa_account_removed_cb), dialog);
 
   g_list_free (accounts);
 }
