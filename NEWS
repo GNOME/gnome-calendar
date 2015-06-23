@@ -1,3 +1,18 @@
+Major changes in 3.17.3:
+* Misc bugfixes (751206, 751209, 751211, 751244)
+* Update translations for:
+  * Catalan
+  * Czech
+  * French
+  * Greek
+  * German
+  * Italian
+  * Slovak
+  * Spanish
+  * Tajik
+  * Turkish
+
+
 Major changes in 3.17.2:
 * Added translations
 * Added a calendar management dialog for creating, updating and deleting calendars
