@@ -98,6 +98,7 @@ typedef struct
   icaltimetype        *active_date;
 
   icaltimetype        *current_date;
+  gboolean             rtl;
 
   /* states */
   gboolean             new_event_mode;
@@ -131,6 +132,20 @@ enum
 #define SAVE_GEOMETRY_ID_TIMEOUT 100 /* ms */
 #define FAST_REFRESH_TIMEOUT     900000 /* ms */
 #define SLOW_REFRESH_TIMEOUT     3600000 /* ms */
+
+#define gcal_window_add_accelerator(app,action,accel) {\
+  const gchar *tmp[] = {accel, NULL};\
+  gtk_application_set_accels_for_action (GTK_APPLICATION (app), action, tmp);\
+}
+
+
+static void           on_date_action_activated           (GSimpleAction       *action,
+                                                          GVariant            *param,
+                                                          gpointer             user_data);
+
+static void           on_view_action_activated           (GSimpleAction       *action,
+                                                          GVariant            *param,
+                                                          gpointer             user_data);
 
 static gboolean       key_pressed                        (GtkWidget           *widget,
                                                           GdkEvent            *event,
@@ -279,6 +294,59 @@ static gboolean       gcal_window_state_event            (GtkWidget           *w
 
 G_DEFINE_TYPE_WITH_PRIVATE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
+static const GActionEntry actions[] = {
+  {"next",     on_date_action_activated },
+  {"previous", on_date_action_activated },
+  {"today",    on_date_action_activated },
+  {"change-view", on_view_action_activated, "i" },
+};
+
+static void
+on_date_action_activated (GSimpleAction *action,
+                          GVariant      *param,
+                          gpointer       user_data)
+{
+  GcalWindowPrivate *priv;
+  const gchar *action_name;
+
+  g_return_if_fail (GCAL_IS_WINDOW (user_data));
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  action_name = g_action_get_name (G_ACTION (action));
+
+  if (g_strcmp0 (action_name, "next") == 0)
+    date_updated (GTK_BUTTON (priv->forward_button), user_data);
+  else if (g_strcmp0 (action_name, "previous") == 0)
+    date_updated (GTK_BUTTON (priv->back_button), user_data);
+  else if (g_strcmp0 (action_name, "today") == 0)
+    date_updated (GTK_BUTTON (priv->today_button), user_data);
+}
+
+static void
+on_view_action_activated (GSimpleAction *action,
+                          GVariant      *param,
+                          gpointer       user_data)
+{
+  GcalWindowPrivate *priv;
+  guint view;
+
+  g_return_if_fail (GCAL_IS_WINDOW (user_data));
+
+  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  view = g_variant_get_int32 (param);
+
+  // -1 means next view
+  if (view == -1)
+    view = ++(priv->active_view);
+  else if (view == -2)
+    view = --(priv->active_view);
+
+  priv->active_view = CLAMP (view, GCAL_WINDOW_VIEW_MONTH, GCAL_WINDOW_VIEW_YEAR);
+  gtk_stack_set_visible_child (GTK_STACK (priv->views_stack), priv->views[priv->active_view]);
+
+  g_object_notify (G_OBJECT (user_data), "active-view");
+}
+
 static gboolean
 key_pressed (GtkWidget *widget,
              GdkEvent  *event,
@@ -385,8 +453,10 @@ date_updated (GtkButton  *button,
 
   icaltimetype *new_date;
   gboolean move_back, move_today;
+  gint factor;
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
+  factor = priv->rtl ? - 1 : 1;
 
   move_today = priv->today_button == (GtkWidget*) button;
   move_back = priv->back_button == (GtkWidget*) button;
@@ -402,17 +472,17 @@ date_updated (GtkButton  *button,
       switch (priv->active_view)
         {
         case GCAL_WINDOW_VIEW_DAY:
-          new_date->day += 1 * (move_back ? -1 : 1);
+          new_date->day += 1 * factor * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_WEEK:
-          new_date->day += 7 * (move_back ? -1 : 1);
+          new_date->day += 7 * factor * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_MONTH:
           new_date->day = 1;
-          new_date->month += 1 * (move_back ? -1 : 1);
+          new_date->month += 1 * factor * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_YEAR:
-          new_date->year += 1 * (move_back ? -1 : 1);
+          new_date->year += 1 * factor * (move_back ? -1 : 1);
           break;
         case GCAL_WINDOW_VIEW_LIST:
         case GCAL_WINDOW_VIEW_SEARCH:
@@ -1455,6 +1525,7 @@ gcal_window_init (GcalWindow *self)
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   priv->active_date = g_new0 (icaltimetype, 1);
+  priv->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
@@ -1485,6 +1556,12 @@ gcal_window_constructed (GObject *object)
 
   // Prevents nameless events' creation
   g_signal_handlers_block_by_func (priv->new_event_what_entry, create_event, object);
+
+  // Setup actions
+  g_action_map_add_action_entries (G_ACTION_MAP (object),
+                                   actions,
+                                   G_N_ELEMENTS (actions),
+                                   object);
 
   /* header_bar: menu */
   builder = gtk_builder_new ();
@@ -1696,6 +1773,17 @@ gcal_window_new_with_view_and_date (GcalApplication   *app,
 
   win  =  g_object_new (GCAL_TYPE_WINDOW, "application", GTK_APPLICATION (app), "manager", manager, "active-date", date,
                         NULL);
+
+  /* setup accels */
+  gcal_window_add_accelerator (app, "win.next",     "<Alt>Right");
+  gcal_window_add_accelerator (app, "win.previous", "<Alt>Left");
+  gcal_window_add_accelerator (app, "win.today",    "<Alt>Down");
+  gcal_window_add_accelerator (app, "win.today",    "<Ctrl>t");
+
+  gcal_window_add_accelerator (app, "win.change-view(-1)", "<Ctrl>Page_Down");
+  gcal_window_add_accelerator (app, "win.change-view(-2)", "<Ctrl>Page_Up");
+  gcal_window_add_accelerator (app, "win.change-view(2)",  "<Ctrl>2");
+  gcal_window_add_accelerator (app, "win.change-view(3)",  "<Ctrl>3");
 
   /* loading size */
   load_geometry (win);
