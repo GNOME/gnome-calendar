@@ -103,7 +103,6 @@ typedef struct
   /* states */
   gboolean             new_event_mode;
   gboolean             search_mode;
-  gboolean             leaving_search_mode;
 
   NewEventData        *event_creation_data;
 
@@ -259,10 +258,6 @@ static void           search_toggled                     (GObject             *o
                                                           gpointer             user_data);
 
 static void           search_changed                     (GtkEditable         *editable,
-                                                          gpointer             user_data);
-
-static void           search_bar_revealer_toggled        (GObject             *object,
-                                                          GParamSpec          *pspec,
                                                           gpointer             user_data);
 
 static void           remove_event                       (GtkWidget           *notification,
@@ -1281,21 +1276,9 @@ search_toggled (GObject    *object,
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
 
+  /* update header_bar widget */
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (priv->search_bar)))
-    {
-      g_debug ("Entering search mode");
-      gtk_widget_show (priv->search_bar);
-
-      /* update header_bar widget */
-      gcal_search_view_search (GCAL_SEARCH_VIEW (priv->search_view), NULL, NULL);
-    }
-  else
-    {
-      g_debug ("Leaving search mode");
-      /* update header_bar */
-      priv->leaving_search_mode = TRUE;
-      gtk_widget_hide (priv->search_view);
-    }
+    gcal_search_view_search (GCAL_SEARCH_VIEW (priv->search_view), NULL, NULL);
 }
 
 static void
@@ -1312,21 +1295,6 @@ search_changed (GtkEditable *editable,
       gcal_search_view_search (GCAL_SEARCH_VIEW (priv->search_view),
                                "summary", gtk_entry_get_text (GTK_ENTRY (priv->search_entry)));
     }
-}
-
-static void
-search_bar_revealer_toggled (GObject    *object,
-                             GParamSpec *pspec,
-                             gpointer    user_data)
-{
-  GcalWindowPrivate *priv;
-
-  priv = gcal_window_get_instance_private (GCAL_WINDOW (user_data));
-
-  if (!gtk_revealer_get_child_revealed (GTK_REVEALER (object)))
-    gtk_widget_hide (priv->search_bar);
-  else
-    gtk_widget_show (priv->search_view);
 }
 
 static void
@@ -1581,13 +1549,6 @@ gcal_window_constructed (GObject *object)
   gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog), priv->manager);
 
   g_signal_connect (priv->edit_dialog, "response", G_CALLBACK (edit_dialog_closed), object);
-
-  /* search bar */
-  gtk_search_bar_connect_entry (GTK_SEARCH_BAR (priv->search_bar),
-                                GTK_ENTRY (priv->search_entry));
-
-  g_signal_connect (gtk_bin_get_child (GTK_BIN (priv->search_bar)), "notify::child-revealed",
-                    G_CALLBACK (search_bar_revealer_toggled), object);
 
   /* XXX: Week view disabled until after the release when we restart the work on it*/
   //priv->views[GCAL_WINDOW_VIEW_WEEK] = gcal_week_view_new ();
