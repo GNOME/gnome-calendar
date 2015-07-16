@@ -247,6 +247,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="popover">calendar_popover</property>
+            <property name="tooltip_text" translatable="true">Manage your calendars</property>
             <child>
               <object class="GtkImage" id="calendars_button_image">
                 <property name="visible">True</property>
@@ -263,6 +264,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="tooltip_text" translatable="true">Search for events</property>
             <child>
               <object class="GtkImage" id="search_button_image">
                 <property name="visible">True</property>
