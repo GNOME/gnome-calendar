@@ -440,6 +440,7 @@ on_event_created (GObject      *source_object,
 
   data = (AsyncOpsData*) user_data;
   client = E_CAL_CLIENT (source_object);
+  new_uid = NULL;
   error = NULL;
 
   if (!e_cal_client_create_object_finish (client, result, &new_uid, &error))
