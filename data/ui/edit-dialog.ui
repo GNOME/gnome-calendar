@@ -50,13 +50,6 @@
       <object class="GtkBox" id="dialog-vbox">
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox" id="dialog-action_area1">
-          </object>
-          <packing>
-            <property name="fill">False</property>
-          </packing>
-        </child>
         <child>
           <object class="GtkGrid" id="main_grid">
             <property name="visible">True</property>
