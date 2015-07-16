@@ -151,9 +151,9 @@ void           gcal_manager_remove_event            (GcalManager        *manager
 
 /* Set methods */
 void           gcal_manager_move_event_to_source    (GcalManager        *manager,
-                                                     const gchar        *source_uid,
-                                                     const gchar        *event_uid,
-                                                     const gchar        *new_source_uid);
+                                                     ECalComponent      *component,
+                                                     ESource            *source,
+                                                     ESource            *dest);
 
 GList*         gcal_manager_get_events              (GcalManager        *manager,
                                                      icaltimetype       *range_start,

@@ -1528,13 +1528,66 @@ gcal_manager_remove_event (GcalManager   *manager,
 }
 
 void
-gcal_manager_move_event_to_source (GcalManager *manager,
-                                   const gchar *source_uid,
-                                   const gchar *event_uid,
-                                   const gchar *new_source_uid)
+gcal_manager_move_event_to_source (GcalManager   *manager,
+                                   ECalComponent *component,
+                                   ESource       *source,
+                                   ESource       *dest)
 {
-  /* FIXME: add code, fix stub method  */
-  ;
+  GcalManagerPrivate *priv;
+  ECalComponent *clone;
+  icalcomponent *comp;
+  GcalManagerUnit *unit;
+  ECalComponentId *id;
+  GError *error;
+
+  g_return_if_fail (GCAL_IS_MANAGER (manager));
+
+  priv = gcal_manager_get_instance_private (manager);
+  error = NULL;
+
+  /* First, try to create the component on the destination source */
+  unit = g_hash_table_lookup (priv->clients, dest);
+
+  clone = e_cal_component_clone (component);
+  comp = e_cal_component_get_icalcomponent (clone);
+
+  e_cal_client_create_object_sync (unit->client,
+                                   comp,
+                                   NULL,
+                                   NULL,
+                                   &error);
+
+  if (error)
+    {
+      g_warning ("Error moving source: %s", error->message);
+      g_clear_error (&error);
+      return;
+    }
+
+  /*
+   * After we carefully confirm that a clone of the component was
+   * created, try to remove the old component. Data loss it the last
+   * thing we want to happen here.
+   */
+  unit = g_hash_table_lookup (priv->clients, source);
+
+  id = e_cal_component_get_id (component);
+
+  e_cal_client_remove_object_sync (unit->client,
+                                   id->uid,
+                                   id->rid,
+                                   E_CAL_OBJ_MOD_THIS,
+                                   priv->async_ops,
+                                   &error);
+
+  if (error)
+    {
+      g_warning ("Error moving source: %s", error->message);
+      g_clear_error (&error);
+      return;
+    }
+
+  e_cal_component_free_id (id);
 }
 
 /**
