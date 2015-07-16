@@ -38,7 +38,7 @@ typedef struct
 
 typedef struct
 {
-  gint     box_side;
+  gdouble  box_side;
   GdkPoint coordinates [12];
 } GridData;
 
@@ -471,7 +471,8 @@ calculate_day_month_for_coord (GcalYearView *year_view,
                                gint         *out_month)
 {
   GcalYearViewPrivate *priv = year_view->priv;
-  gint row, column, i, sw, box_side, clicked_cell, day, month;
+  gint row, column, i, sw, clicked_cell, day, month;
+  gdouble box_side;
 
   row = -1;
   column = -1;
@@ -530,7 +531,8 @@ draw_month_grid (GcalYearView *year_view,
 
   GdkRGBA color;
   gint layout_width, layout_height, i, j, sw;
-  gint x, y, column, row, box_side, box_padding_top, box_padding_start;
+  gint column, row;
+  gdouble x, y, box_side, box_padding_top, box_padding_start;
   gint days_delay, days, shown_rows, sunday_idx;
   gchar *str, *nr_day, *nr_week;
   gboolean selected_day;
@@ -557,11 +559,11 @@ draw_month_grid (GcalYearView *year_view,
   layout = gtk_widget_create_pango_layout (widget, str);
   pango_layout_set_font_description (layout, font_desc);
   pango_layout_get_pixel_size (layout, &layout_width, &layout_height);
-  gtk_render_layout (context, cr, x + (box_side * 8 - layout_width) / 2, y + (box_side - layout_height) / 2,
+  gtk_render_layout (context, cr, x + (box_side * 8 - layout_width) / 2.0, y + (box_side - layout_height) / 2.0,
                      layout);
 
   gtk_render_background (context, cr,
-                         x + (box_side * 8 - layout_width) / 2, y + (box_side - layout_height) / 2,
+                         x + (box_side * 8 - layout_width) / 2.0, y + (box_side - layout_height) / 2.0,
                          layout_width, layout_width);
 
   pango_font_description_free (font_desc);
@@ -576,7 +578,7 @@ draw_month_grid (GcalYearView *year_view,
   cairo_set_line_width (cr, 0.2);
   gdk_cairo_set_source_rgba (cr, &color);
   cairo_move_to (cr, x + box_side / 2, y + box_side + 0.4);
-  cairo_rel_line_to (cr, 7 * box_side, 0);
+  cairo_rel_line_to (cr, 7.0 * box_side, 0);
   cairo_stroke (cr);
 
   gtk_style_context_restore (context);
@@ -755,7 +757,8 @@ draw_navigator (GcalYearView *year_view,
   GtkStateFlags state_flags;
 
   gint header_padding_left, header_padding_top, header_height, layout_width, layout_height;
-  gint width, height, box_side, real_padding_left, real_padding_top, i, sw, weeks_counter;
+  gint real_padding_left, real_padding_top, i, sw, weeks_counter;
+  gdouble width, height, box_side;
 
   gchar *header_str;
 
@@ -798,13 +801,13 @@ draw_navigator (GcalYearView *year_view,
   header_height = header_padding_top * 2 + layout_height;
   height = gtk_widget_get_allocated_height (widget) - header_height;
 
-  if (((width / 4) / 8) < ((height / 3) / 7))
-    box_side = (width / 4) / 8;
+  if (((width / 4.0) / 8.0) < ((height / 3.0) / 7.0))
+    box_side = (width / 4.0) / 8.0;
   else
-    box_side = (height / 3) / 7;
+    box_side = (height / 3.0) / 7.0;
 
-  real_padding_left = (width - (8 * 4 * box_side)) / 5;
-  real_padding_top = (height - (7 * 3 * box_side)) / 4;
+  real_padding_left = (width - (8 * 4 * box_side)) / 5.0;
+  real_padding_top = (height - (7 * 3 * box_side)) / 4.0;
 
   priv->navigator_grid->box_side = box_side;
   weeks_counter = 1;
