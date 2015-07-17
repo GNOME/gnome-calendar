@@ -35,8 +35,7 @@ typedef struct
 typedef struct
 {
   GtkWidget      *listbox;
-  GtkWidget      *scrolled_window;
-  GtkWidget      *no_results_grid;
+  GtkWidget      *stack;
 
   /* Since the user can have (literally)
    * thousands of events, the usage of
@@ -279,8 +278,10 @@ show_no_results_page (GcalSearchView *view)
   priv = gcal_search_view_get_instance_private (view);
   priv->no_results_timeout_id = 0;
 
-  gtk_widget_set_visible (priv->scrolled_window, priv->num_results != 0);
-  gtk_widget_set_visible (priv->no_results_grid, priv->num_results == 0);
+  if (priv->query)
+    gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), priv->num_results != 0 ? "results" : "no_results");
+  else
+    gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "results");
 
   return G_SOURCE_REMOVE;
 }
@@ -512,8 +513,7 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/search-view.ui");
 
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, no_results_grid);
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, scrolled_window);
+  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, stack);
   gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, listbox);
 
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), open_event);
@@ -539,6 +539,8 @@ static void
 gcal_search_view_constructed (GObject *object)
 {
   GcalSearchViewPrivate *priv;
+  GtkWidget *placeholder_label;
+
   priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
 
   /* make the listbox sorted */
@@ -550,6 +552,18 @@ gcal_search_view_constructed (GObject *object)
 
   /* don't fill the list with all events on startup */
   gcal_search_view_search (GCAL_SEARCH_VIEW (object), NULL, NULL);
+
+  /* "type to search" label */
+  placeholder_label = g_object_new (GTK_TYPE_LABEL,
+                                    "label", _("Use the entry above to search for events."),
+                                    "expand", TRUE,
+                                    "valign", GTK_ALIGN_CENTER,
+                                    "halign", GTK_ALIGN_CENTER,
+                                    "visible", TRUE,
+                                    NULL);
+  gtk_style_context_add_class (gtk_widget_get_style_context (placeholder_label), "dim-label");
+
+  gtk_list_box_set_placeholder (GTK_LIST_BOX (priv->listbox), placeholder_label);
 }
 
 static void
@@ -798,8 +812,6 @@ gcal_search_view_search (GcalSearchView *view,
   priv->query = g_strdup (query);
   priv->field = g_strdup (field);
 
-  gtk_widget_show (priv->scrolled_window);
-  gtk_widget_hide (priv->no_results_grid);
 
   /* Only perform search on valid non-empty strings */
   if (query && g_utf8_strlen (query, -1) > 0)
@@ -817,16 +829,14 @@ gcal_search_view_search (GcalSearchView *view,
       priv->current_utc_date = time (NULL);
 
       gcal_manager_set_query (priv->manager, search_query);
-      gtk_widget_show (priv->listbox);
-
-      update_view (view);
 
       g_free (search_query);
     }
   else
     {
       g_hash_table_remove_all (priv->uuid_to_event);
-      gtk_widget_hide (priv->listbox);
     }
+
+  update_view (view);
 }
 
