@@ -3,15 +3,16 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # Tiagosdot <almosthumane@portugalmail.pt>, 2014.
 # Tiago S. <almosthumane@portugalmail.pt>, 2014, 2015.
+# Pedro Albuquerque <palbuquerque73o@gmail.com>, 2015.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-03 18:46+0000\n"
-"PO-Revision-Date: 2015-06-15 18:03+0100\n"
-"Last-Translator: Tiago S. <almosthumane@portugalmail.pt>\n"
+"POT-Creation-Date: 2015-07-18 06:22+0000\n"
+"PO-Revision-Date: 2015-07-18 10:58+0100\n"
+"Last-Translator: Pedro Albuquerque <palbuquerque73o@gmail.com>\n"
 "Language-Team: Português <>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +31,6 @@ msgstr "Agenda"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
-#| msgid "Calendar"
 msgid "Calendar for GNOME"
 msgstr "Agenda do GNOME"
 
@@ -59,7 +59,6 @@ msgid "Search for events"
 msgstr "Procurar eventos"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
-#| msgid "- Calendar management"
 msgid "Calendar management"
 msgstr "Gestão de agenda"
 
@@ -140,7 +139,7 @@ msgstr "Notas"
 msgid "Location"
 msgstr "Localização"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:406
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
 msgid "All day"
 msgstr "Dia completo"
 
@@ -153,17 +152,14 @@ msgid "Add Eve_nt…"
 msgstr "Adicionar eve_Nto…"
 
 #: ../data/ui/menus.ui.h:2
-#| msgid "Search..."
 msgid "_Search…"
 msgstr "_Procurar…"
 
 #: ../data/ui/menus.ui.h:3
-#| msgid "About"
 msgid "_About"
 msgstr "_Sobre"
 
 #: ../data/ui/menus.ui.h:4
-#| msgid "Quit"
 msgid "_Quit"
 msgstr "_Sair"
 
@@ -188,11 +184,11 @@ msgid "No results found"
 msgstr "Sem resultados"
 
 #: ../data/ui/search-view.ui.h:2
-msgid "Use the entry above to search for events."
-msgstr "Use a caixa acima para procurar eventos."
+msgid "Try a different search"
+msgstr "Tente uma procura diferente"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1175
-#: ../src/gcal-window.c:1179
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1244
 msgid "Undo"
 msgstr "Desfazer"
 
@@ -222,7 +218,6 @@ msgstr "Microsoft Exchange"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: ../data/ui/source-dialog.ui.h:8
-#| msgid "Calendar"
 msgid "Calendars"
 msgstr "Agendas"
 
@@ -240,7 +235,6 @@ msgstr "Adicionar novos eventos a esta agenda por predefinição"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: ../data/ui/source-dialog.ui.h:12
-#| msgid "Calendar"
 msgid "Remove Calendar"
 msgstr "Remover agenda"
 
@@ -249,7 +243,6 @@ msgid "Display calendar"
 msgstr "Mostrar agenda"
 
 #: ../data/ui/source-dialog.ui.h:14
-#| msgid "- Calendar management"
 msgid "Calendar name"
 msgstr "Nome da agenda"
 
@@ -267,7 +260,6 @@ msgstr "Definições"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: ../data/ui/source-dialog.ui.h:19
-#| msgid "Calendar"
 msgid "Edit Calendar"
 msgstr "Editar agenda"
 
@@ -283,14 +275,12 @@ msgstr ""
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: ../data/ui/source-dialog.ui.h:21
-#| msgid "Calendar"
 msgid "Calendar Address"
 msgstr "Endereço da agenda"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
 #: ../src/gcal-source-dialog.c:2227
-#| msgid "Calendar"
 msgid "Add Calendar"
 msgstr "Adicionar agenda"
 
@@ -338,7 +328,6 @@ msgstr "Hoje"
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
 #: ../src/gcal-source-dialog.c:2254
-#| msgid "Calendar"
 msgid "Calendar Settings"
 msgstr "Definições da agenda"
 
@@ -347,16 +336,14 @@ msgid "Create"
 msgstr "Criar"
 
 #: ../data/ui/window.ui.h:7
-#| msgid "Event Details"
 msgid "Edit Details"
 msgstr "Editar detalhes"
 
 #: ../data/ui/year-view.ui.h:2
-#| msgid "New Event"
 msgid "No events"
 msgstr "Sem eventos"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
 msgid "Add Event…"
 msgstr "Adicionar evento…"
 
@@ -387,14 +374,12 @@ msgstr "Abrir"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: ../src/gcal-source-dialog.c:1139
-#| msgid "Calendar"
 msgid "Calendar files"
 msgstr "Ficheiros de agenda"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #. update the source properties
 #: ../src/gcal-source-dialog.c:1178
-#| msgid "Calendar"
 msgid "Unnamed Calendar"
 msgstr "Agenda sem nome"
 
@@ -461,18 +446,21 @@ msgstr "Gravar"
 msgid "Unnamed event"
 msgstr "Evento sem nome"
 
-#: ../src/gcal-month-view.c:820
+#: ../src/gcal-month-view.c:1035
 msgid "Other events"
 msgstr "Outros eventos"
 
-#. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1203
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/gcal-month-view.c:1417
 #, c-format
-#| msgid "New Event"
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Outro evento"
 msgstr[1] "Outros %d eventos"
+
+#: ../src/gcal-search-view.c:558
+msgid "Use the entry above to search for events."
+msgstr "Use a caixa acima para procurar eventos."
 
 #: ../src/gcal-time-selector.c:96
 #, c-format
@@ -499,22 +487,21 @@ msgstr "00:00 PM"
 #. Translators:
 #. * this is the format string for representing a date consisting of a month name
 #. * and a date of month.
-#: ../src/gcal-window.c:681
+#: ../src/gcal-window.c:746
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%B %d"
 
-#: ../src/gcal-window.c:682
+#: ../src/gcal-window.c:747
 #, c-format
 msgid "New Event on %s"
 msgstr "Novo evento em %s"
 
-#: ../src/gcal-window.c:1175
-#| msgid "Event deleted"
+#: ../src/gcal-window.c:1240
 msgid "Another event deleted"
 msgstr "Outro evento eliminado"
 
-#: ../src/gcal-window.c:1179
+#: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
