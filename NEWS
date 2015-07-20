@@ -1,3 +1,17 @@
+Major changes in 3.17.4:
+* Fixed GNOME Calendar's category (Igor Gnatenko)
+* Added initial keyboard navigation for Month View
+* Various code cleanups and fixes
+* Updated translations for:
+  * Dutch
+  * Hebrew
+  * Hungarian
+  * Portuguese
+  * Russian
+  * Slovenian
+  * Spanish
+  * Swedish
+
 Major changes in 3.17.3:
 * Misc bugfixes (751206, 751209, 751211, 751244)
 * Update translations for:
