@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-05-25 17:32+0000\n"
-"PO-Revision-Date: 2015-05-30 10:56+0300\n"
-"Last-Translator: Dimitris Spingos (Δημήτρης Σπίγγος) <dmtrs32@gmail.com>\n"
+"POT-Creation-Date: 2015-06-01 06:19+0000\n"
+"PO-Revision-Date: 2015-06-01 11:37+0200\n"
+"Last-Translator: Tom Tryfonidis <tomtryf@gmail.com>\n"
 "Language-Team: www.gnome.gr\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"X-Generator: Poedit 1.7.5\n"
 "X-Project-Style: gnome\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
@@ -67,7 +67,7 @@ msgstr "Προσεγγίστε, και διαχειριστείτε το ημε�
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:3
 msgid "Calendar;Event;Reminder;"
-msgstr "Ημερολόγιο;Συμβάν;Υπενθύμιση;"
+msgstr "Ημερολόγιο;Συμβάν;Υπενθύμιση;Calendar;Event;Reminder;"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
@@ -100,8 +100,8 @@ msgstr "Τύπος της ενεργής προβολής"
 #: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
-"Τύπος της ενεργής προβολής του παραθύρου, η προεπιλεγμένη τιμή είναι: "
-"μηνιαία προβολή"
+"Τύπος της ενεργής προβολής του παραθύρου, η προεπιλεγμένη τιμή είναι: μηνιαία "
+"προβολή"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:9
 msgid "List of the disabled sources"
@@ -200,7 +200,7 @@ msgstr "Διαδικτυακοί λογαριασμοί"
 
 #: ../data/ui/source-dialog.ui.h:3
 msgid "Open online account settings"
-msgstr "Άνοιγμα ρυθμίσεων δικτυακού λογαριασμού"
+msgstr "Άνοιγμα ρυθμίσεων διαδικτυακού λογαριασμού"
 
 #: ../data/ui/source-dialog.ui.h:4
 msgid "Google"
@@ -208,18 +208,17 @@ msgstr "Google"
 
 #: ../data/ui/source-dialog.ui.h:5
 msgid "Click to set up"
-msgstr "Πατήστε για να ρυθμίσετε"
+msgstr "Πατήστε για ρύθμιση"
 
 #: ../data/ui/source-dialog.ui.h:6
 msgid "ownCloud"
-msgstr "Το ΣύννεφοΜου"
+msgstr "ownCloud"
 
 #: ../data/ui/source-dialog.ui.h:7
 msgid "Microsoft Exchange"
 msgstr "Microsoft Exchange"
 
 #: ../data/ui/source-dialog.ui.h:8
-#| msgid "Calendar"
 msgid "Calendars"
 msgstr "Ημερολόγια"
 
@@ -236,7 +235,6 @@ msgid "Add new events to this calendar by default"
 msgstr "Προσθήκη νέων συμβάντων σε αυτό το ημερολόγιο από προεπιλογή"
 
 #: ../data/ui/source-dialog.ui.h:12
-#| msgid "Calendar"
 msgid "Remove Calendar"
 msgstr "Αφαίρεση ημερολογίου"
 
@@ -245,7 +243,6 @@ msgid "Display calendar"
 msgstr "Εμφάνιση ημερολογίου"
 
 #: ../data/ui/source-dialog.ui.h:14
-#| msgid "Calendar management"
 msgid "Calendar name"
 msgstr "Όνομα ημερολογίου"
 
@@ -262,7 +259,6 @@ msgid "Settings"
 msgstr "Ρυθμίσεις"
 
 #: ../data/ui/source-dialog.ui.h:19
-#| msgid "Calendar"
 msgid "Edit Calendar"
 msgstr "Επεξεργασία ημερολογίου"
 
@@ -273,18 +269,16 @@ msgid ""
 "\"GOA\">online account settings</a>."
 msgstr ""
 "Εισάγετε τη διεύθυνση του ημερολογίου που θέλετε να προσθέσετε. Αν το "
-"ημερολόγιο ανήκει σε έναν από τους δικτυακούς σας λογαριασμούς, μπορείτε να "
-"το προσθέσετε μέσα από τις <a href=\"GOA\">δικτυακές ρυθμίσεις "
+"ημερολόγιο ανήκει σε έναν από τους διαδικτυακούς σας λογαριασμούς, μπορείτε "
+"να το προσθέσετε μέσα από τις <a href=\"GOA\">ρυθμίσεις διαδικτυακού "
 "λογαριασμού</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
-#| msgid "Calendar"
 msgid "Calendar Address"
 msgstr "Διεύθυνση ημερολογίου"
 
 #: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
 #: ../src/gcal-source-dialog.c:2227
-#| msgid "Calendar"
 msgid "Add Calendar"
 msgstr "Προσθήκη ημερολογίου"
 
@@ -331,7 +325,6 @@ msgstr "Σήμερα"
 
 #: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
 #: ../src/gcal-source-dialog.c:2254
-#| msgid "Calendar"
 msgid "Calendar Settings"
 msgstr "Ρυθμίσεις ημερολογίου"
 
@@ -340,7 +333,6 @@ msgid "Create"
 msgstr "Δημιουργία"
 
 #: ../data/ui/window.ui.h:7
-#| msgid "Event Details"
 msgid "Edit Details"
 msgstr "Επεξεργασία λεπτομερειών"
 
@@ -378,13 +370,11 @@ msgid "Open"
 msgstr "Άνοιγμα"
 
 #: ../src/gcal-source-dialog.c:1139
-#| msgid "Calendar"
 msgid "Calendar files"
 msgstr "Αρχεία ημερολογίου"
 
 #. update the source properties
 #: ../src/gcal-source-dialog.c:1178
-#| msgid "Unnamed event"
 msgid "Unnamed Calendar"
 msgstr "Ανώνυμο ημερολόγιο"
 
