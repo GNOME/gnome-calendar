@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-07 06:20+0000\n"
-"PO-Revision-Date: 2015-06-07 14:06+0100\n"
+"POT-Creation-Date: 2015-07-28 06:21+0000\n"
+"PO-Revision-Date: 2015-07-28 16:18+0200\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Generator: Poedit 1.8.1\n"
+"X-Generator: Poedit 1.8.2\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
@@ -138,7 +138,7 @@ msgstr "Poznámky"
 msgid "Location"
 msgstr "Umiestnenie"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:406
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
 msgid "All day"
 msgstr "Celý deň"
 
@@ -183,11 +183,11 @@ msgid "No results found"
 msgstr "Nenašli sa žiadne výsledky"
 
 #: ../data/ui/search-view.ui.h:2
-msgid "Use the entry above to search for events."
-msgstr "Použite pole vyššie na vyhľadanie udalostí."
+msgid "Try a different search"
+msgstr "Skúste vyhľadať niečo iné"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1175
-#: ../src/gcal-window.c:1179
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1244
 msgid "Undo"
 msgstr "Vrátiť späť"
 
@@ -337,7 +337,7 @@ msgstr "Upraviť podrobnosti"
 msgid "No events"
 msgstr "Žiadne udalosti"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
 msgid "Add Event…"
 msgstr "Pridať udalosť…"
 
@@ -436,18 +436,22 @@ msgstr "Uložiť"
 msgid "Unnamed event"
 msgstr "Nepomenovaná udalosť"
 
-#: ../src/gcal-month-view.c:820
+#: ../src/gcal-month-view.c:1035
 msgid "Other events"
 msgstr "Iné udalosti"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1203
+#: ../src/gcal-month-view.c:1417
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "%d iných udalostíIná udalosť"
 msgstr[1] "Iná udalosť"
 msgstr[2] "%d iné udalosti"
+
+#: ../src/gcal-search-view.c:558
+msgid "Use the entry above to search for events."
+msgstr "Použite pole vyššie na vyhľadanie udalostí."
 
 #: ../src/gcal-time-selector.c:96
 #, c-format
@@ -474,21 +478,21 @@ msgstr "00:00 Popoludní"
 #. Translators:
 #. * this is the format string for representing a date consisting of a month name
 #. * and a date of month.
-#: ../src/gcal-window.c:681
+#: ../src/gcal-window.c:746
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%e. %B"
 
-#: ../src/gcal-window.c:682
+#: ../src/gcal-window.c:747
 #, c-format
 msgid "New Event on %s"
 msgstr "Nová udalosť na deň %s"
 
-#: ../src/gcal-window.c:1175
+#: ../src/gcal-window.c:1240
 msgid "Another event deleted"
 msgstr "Iná udalosť bola odstránená"
 
-#: ../src/gcal-window.c:1179
+#: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "Udalosť bola odstránená"
 
