@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 3.17.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-06 16:11+0200\n"
-"PO-Revision-Date: 2015-08-06 16:14+0200\n"
+"POT-Creation-Date: 2015-08-07 11:41+0200\n"
+"PO-Revision-Date: 2015-08-07 11:43+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -225,7 +225,7 @@ msgstr "Oversikt"
 
 #: ../data/ui/source-dialog.ui.h:11
 msgid "Add new events to this calendar by default"
-msgstr ""
+msgstr "Legg til nye hendelser i denne kalenderen som forvalg"
 
 #: ../data/ui/source-dialog.ui.h:12
 msgid "Remove Calendar"
@@ -260,7 +260,7 @@ msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
 "belongs to one of you online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
-msgstr ""
+msgstr "Skriv inn adressen til kalenderen du vil legge til. Hvis kalenderen tilhører en av dine kontoer på nettet kan du legge den til via <a href=\"GOA\">Innstillinger for kontoer på nettet</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
@@ -335,19 +335,19 @@ msgstr "Legg til hendelse …"
 
 #: ../src/gb-scrolled-window.c:254
 msgid "Max Content Height"
-msgstr ""
+msgstr "Maksimal høyde på innhold"
 
 #: ../src/gb-scrolled-window.c:255
 msgid "The maximum height request that can be made."
-msgstr ""
+msgstr "Maksimal høydeforespørsel som kan gjøres."
 
 #: ../src/gb-scrolled-window.c:263
 msgid "Max Content Width"
-msgstr ""
+msgstr "Maksimal bredde på innhold"
 
 #: ../src/gb-scrolled-window.c:264
 msgid "The maximum width request that can be made."
-msgstr ""
+msgstr "Maksimal breddeforespørsel som kan gjøres."
 
 #. Dialog
 #: ../src/gcal-source-dialog.c:1128
