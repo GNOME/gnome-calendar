@@ -3,28 +3,29 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # Rafael Ferreira <rafael.f.f1@gmail.com>, 2012.
 # Enrico Nicoletto <liverig@gmail.com>, 2014.
-#
+# Felipe Braga <fbobraga@gmail.com>, 2015.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-17 13:17+0000\n"
-"PO-Revision-Date: 2015-02-02 07:04-0300\n"
-"Last-Translator: Enrico Nicoletto <liverig@gmail.com>\n"
+"POT-Creation-Date: 2015-04-07 13:17+0000\n"
+"PO-Revision-Date: 2015-05-13 16:32-0200\n"
+"Last-Translator: Felipe Braga <fbobraga@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.7.3\n"
+"X-Generator: Virtaal 0.7.1\n"
+"X-Project-Style: gnome\n"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:515
 msgid "Calendar"
 msgstr "Agenda"
 
@@ -40,8 +41,8 @@ msgid ""
 "desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "GNOME Agenda é um aplicativo de agenda simples e bonito projetado para se "
-"encaixar perfeitamente ao ambiente GNOME. Por reutilizar os componentes com o "
-"qual GNOME é construído, Agenda se integra muito bem à esse ecossistema."
+"encaixar perfeitamente ao ambiente GNOME. Por reutilizar os componentes com "
+"o qual GNOME é construído, Agenda se integra muito bem à esse ecossistema."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
@@ -91,7 +92,7 @@ msgstr "Posição da janela"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:6
 msgid "Window position (x and y)."
-msgstr "Posição da janela (x e y)"
+msgstr "Posição da janela (x e y)."
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:7
 msgid "Type of the active view"
@@ -113,7 +114,7 @@ msgstr "Fontes desabilitadas na última execução do Agenda"
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
 msgid "Done"
 msgstr "Feito"
 
@@ -137,7 +138,7 @@ msgstr "Notas"
 msgid "Location"
 msgstr "Localização"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:374
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:406
 msgid "All day"
 msgstr "Todo o dia"
 
@@ -181,13 +182,11 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:368
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "AM"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:368
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "PM"
 
@@ -209,8 +208,9 @@ msgid "Create"
 msgstr "Criar"
 
 #: ../data/ui/window.ui.h:6
-msgid "More Details"
-msgstr "Mais detalhes"
+#| msgid "Event Details"
+msgid "Edit Details"
+msgstr "Editar detalhes"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
@@ -232,19 +232,19 @@ msgstr "Abrir agenda na data anterior"
 msgid "Open calendar showing the passed event"
 msgstr "Abrir agenda mostrando o evento anterior"
 
-#: ../src/gcal-application.c:332
+#: ../src/gcal-application.c:336
 msgid "- Calendar management"
 msgstr "- Gerenciamento de agenda"
 
-#: ../src/gcal-application.c:499
+#: ../src/gcal-application.c:503
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id Os autores da Agenda"
 
-#: ../src/gcal-application.c:505
+#: ../src/gcal-application.c:509
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Os autores da Agenda"
 
-#: ../src/gcal-application.c:518
+#: ../src/gcal-application.c:522
 msgid "translator-credits"
 msgstr ""
 "Rafael Ferreira <rafael.f.f1@gmail.com>, 2012\n"
@@ -254,11 +254,11 @@ msgstr ""
 msgid "Day"
 msgstr "Dia"
 
-#: ../src/gcal-edit-dialog.c:634
+#: ../src/gcal-edit-dialog.c:657
 msgid "Save"
 msgstr "Salvar"
 
-#: ../src/gcal-edit-dialog.c:818
+#: ../src/gcal-edit-dialog.c:841
 msgid "Unnamed event"
 msgstr "Evento sem nome"
 
@@ -273,11 +273,6 @@ msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Outro evento"
 msgstr[1] "Outros %d eventos"
-
-#: ../src/gcal-search-view.c:367
-#, c-format
-msgid "%.2d:%.2d %s"
-msgstr "%.2d:%.2d %s"
 
 #: ../src/gcal-time-selector.c:96
 #, c-format
@@ -301,22 +296,36 @@ msgstr "Tarde"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#: ../src/gcal-window.c:636
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#: ../src/gcal-window.c:642
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%d de %B"
+
+#: ../src/gcal-window.c:643
 #, c-format
 msgid "New Event on %s"
 msgstr "Novo evento em %s"
 
-#: ../src/gcal-window.c:1036
+#: ../src/gcal-window.c:1071
 msgid "Another event deleted"
 msgstr "Outro evento excluído"
 
-#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
+#: ../src/gcal-window.c:1071 ../src/gcal-window.c:1075
 msgid "Undo"
 msgstr "Desfazer"
 
-#: ../src/gcal-window.c:1040
+#: ../src/gcal-window.c:1075
 msgid "Event deleted"
 msgstr "Evento excluído"
+
+#~ msgid "More Details"
+#~ msgstr "Mais detalhes"
+
+#~ msgid "%.2d:%.2d %s"
+#~ msgstr "%.2d:%.2d %s"
 
 #~ msgid ""
 #~ "Calendar is a simple and beautiful calendar application designed to fit "
@@ -369,9 +378,6 @@ msgstr "Evento excluído"
 
 #~ msgid "Change the date"
 #~ msgstr "Alterar a data"
-
-#~ msgid "Event Details"
-#~ msgstr "Detalhes do evento"
 
 #~ msgid "What (e.g. Alien Invasion)"
 #~ msgstr "O que (ex: Invasão de alienígenas)"
