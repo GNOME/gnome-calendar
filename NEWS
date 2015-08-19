@@ -1,3 +1,13 @@
+Major changes in 3.17.90:
+* Updated translations for:
+  * Brazilian Portuguese
+  * Czech
+  * Greek
+  * Lithuanian
+  * Slovak
+  * Thai
+  * Norwegian bokmål
+
 Major changes in 3.17.4:
 * Fixed GNOME Calendar's category (Igor Gnatenko)
 * Added initial keyboard navigation for Month View
