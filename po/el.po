@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-01 06:19+0000\n"
-"PO-Revision-Date: 2015-06-01 11:37+0200\n"
+"POT-Creation-Date: 2015-08-25 06:25+0000\n"
+"PO-Revision-Date: 2015-08-25 17:52+0300\n"
 "Last-Translator: Tom Tryfonidis <tomtryf@gmail.com>\n"
 "Language-Team: www.gnome.gr\n"
 "Language: el\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.7.5\n"
+"X-Generator: Poedit 1.8.4\n"
 "X-Project-Style: gnome\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
@@ -141,7 +141,7 @@ msgstr "Σημειώσεις"
 msgid "Location"
 msgstr "Τοποθεσία"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:406
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
 msgid "All day"
 msgstr "Όλη μέρα"
 
@@ -186,11 +186,11 @@ msgid "No results found"
 msgstr "Δεν βρέθηκαν αποτελέσματα"
 
 #: ../data/ui/search-view.ui.h:2
-msgid "Use the entry above to search for events."
-msgstr "Χρήση της παραπάνω καταχώρησης για αναζήτηση για συμβάντα."
+msgid "Try a different search"
+msgstr "Δοκιμάστε μια διαφορετική αναζήτηση"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1175
-#: ../src/gcal-window.c:1179
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1244
 msgid "Undo"
 msgstr "Αναίρεση"
 
@@ -310,11 +310,11 @@ msgstr "ΠΜ"
 msgid "PM"
 msgstr "ΜΜ"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
 msgid "Month"
 msgstr "Μήνας"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
 msgid "Year"
 msgstr "Έτος"
 
@@ -340,7 +340,7 @@ msgstr "Επεξεργασία λεπτομερειών"
 msgid "No events"
 msgstr "Χωρίς συμβάντα"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
 msgid "Add Event…"
 msgstr "Προσθήκη συμβάντος…"
 
@@ -422,9 +422,18 @@ msgstr ""
 "Ελληνική μεταφραστική ομάδα GNOME\n"
 " Δημήτρης Σπίγγος <dmtrs32@gmail.com>\n"
 " Ευστάθιος Ιωσηφίδης <iosifidis@gmail.com>\n"
-"Για περισσότερα δείτε http://www.gnome.gr/"
+"\n"
+"Για περισσότερες πληροφορίες, επισκεφθείτε τη σελίδα\n"
+"http://gnome.gr/"
 
-#: ../src/gcal-date-selector.c:303
+#. This string represents day/month/year order for each of the different
+#. * languages. It could possibly be default value, %m/%d/%y placing the month
+#. * before, or any ordering according to the translator's environment.
+#: ../src/gcal-date-selector.c:239
+msgid "%m/%d/%y"
+msgstr "%m/%d/%y"
+
+#: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "Ημέρα"
 
@@ -436,17 +445,21 @@ msgstr "Αποθήκευση"
 msgid "Unnamed event"
 msgstr "Ανώνυμο συμβάν"
 
-#: ../src/gcal-month-view.c:820
+#: ../src/gcal-month-view.c:1035
 msgid "Other events"
 msgstr "Άλλα συμβάντα"
 
-#. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1203
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/gcal-month-view.c:1417
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Άλλο συμβάν"
 msgstr[1] "Άλλα %d συμβάντα"
+
+#: ../src/gcal-search-view.c:558
+msgid "Use the entry above to search for events."
+msgstr "Χρήση της παραπάνω καταχώρησης για αναζήτηση για συμβάντα."
 
 #: ../src/gcal-time-selector.c:96
 #, c-format
@@ -473,21 +486,21 @@ msgstr "00:00 ΜΜ"
 #. Translators:
 #. * this is the format string for representing a date consisting of a month name
 #. * and a date of month.
-#: ../src/gcal-window.c:681
+#: ../src/gcal-window.c:746
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%d %B"
 
-#: ../src/gcal-window.c:682
+#: ../src/gcal-window.c:747
 #, c-format
 msgid "New Event on %s"
 msgstr "Νέο συμβάν στο %s"
 
-#: ../src/gcal-window.c:1175
+#: ../src/gcal-window.c:1240
 msgid "Another event deleted"
 msgstr "Διαγράφηκε ένα άλλο συμβάν"
 
-#: ../src/gcal-window.c:1179
+#: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "Διαγράφηκε το συμβάν"
 
