@@ -8,21 +8,21 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-02-23 07:29+0000\n"
-"PO-Revision-Date: 2015-03-02 22:55+0800\n"
+"POT-Creation-Date: 2015-07-17 05:21+0000\n"
+"PO-Revision-Date: 2015-08-30 13:19+0800\n"
 "Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.7.1\n"
+"X-Generator: Poedit 1.8.4\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:511
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
 msgid "Calendar"
 msgstr "行事曆"
 
@@ -104,11 +104,12 @@ msgstr "已停用來源清單"
 msgid "Sources disabled last time Calendar ran"
 msgstr "上次《行事曆》執行時停用的來源"
 
-#: ../data/ui/edit-dialog.ui.h:1
+#: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
+#: ../src/gcal-source-dialog.c:1131
 msgid "Cancel"
 msgstr "取消"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:634
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
 msgid "Done"
 msgstr "完成"
 
@@ -128,11 +129,11 @@ msgstr "結束於"
 msgid "Notes"
 msgstr "備註"
 
-#: ../data/ui/edit-dialog.ui.h:7
+#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "位置"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:374
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
 msgid "All day"
 msgstr "整日"
 
@@ -160,13 +161,128 @@ msgstr "結束(_Q)"
 msgid "_Synchronize"
 msgstr "同步(_S)"
 
+#: ../data/ui/menus.ui.h:6
+msgid "From Web…"
+msgstr "從網路…"
+
+#: ../data/ui/menus.ui.h:7
+msgid "New Local Calendar…"
+msgstr "新本地端行事曆…"
+
+#: ../data/ui/menus.ui.h:8
+msgid "From File…"
+msgstr "從檔案…"
+
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
 msgstr "找不到結果"
 
 #: ../data/ui/search-view.ui.h:2
-msgid "Use the entry above to search for events."
-msgstr "使用上列輸入方塊開始搜尋行程。"
+msgid "Try a different search"
+msgstr "嘗試不同的搜尋"
+
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1244
+msgid "Undo"
+msgstr "復原"
+
+#: ../data/ui/source-dialog.ui.h:2
+msgid "Online Accounts"
+msgstr "線上帳號"
+
+#: ../data/ui/source-dialog.ui.h:3
+msgid "Open online account settings"
+msgstr "開啟線上帳號設定"
+
+#: ../data/ui/source-dialog.ui.h:4
+msgid "Google"
+msgstr "Google"
+
+#: ../data/ui/source-dialog.ui.h:5
+msgid "Click to set up"
+msgstr "點選來設置"
+
+#: ../data/ui/source-dialog.ui.h:6
+msgid "ownCloud"
+msgstr "ownCloud"
+
+#: ../data/ui/source-dialog.ui.h:7
+msgid "Microsoft Exchange"
+msgstr "Microsoft Exchange"
+
+#: ../data/ui/source-dialog.ui.h:8
+msgid "Calendars"
+msgstr "行事曆"
+
+#: ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "加入"
+
+#: ../data/ui/source-dialog.ui.h:10
+msgid "Overview"
+msgstr "概覽"
+
+#: ../data/ui/source-dialog.ui.h:11
+msgid "Add new events to this calendar by default"
+msgstr "將新行程預設加入此行事曆中"
+
+#: ../data/ui/source-dialog.ui.h:12
+msgid "Remove Calendar"
+msgstr "移除行事曆"
+
+#: ../data/ui/source-dialog.ui.h:13
+msgid "Display calendar"
+msgstr "顯示行事曆"
+
+#: ../data/ui/source-dialog.ui.h:14
+msgid "Calendar name"
+msgstr "行事曆名稱"
+
+#: ../data/ui/source-dialog.ui.h:15
+msgid "Color"
+msgstr "色彩"
+
+#: ../data/ui/source-dialog.ui.h:16
+msgid "Account"
+msgstr "帳號"
+
+#: ../data/ui/source-dialog.ui.h:18
+msgid "Settings"
+msgstr "設定"
+
+#: ../data/ui/source-dialog.ui.h:19
+msgid "Edit Calendar"
+msgstr "編輯行事曆"
+
+#: ../data/ui/source-dialog.ui.h:20
+msgid ""
+"Enter the address of the calendar that you want to add. If the calendar "
+"belongs to one of you online accounts, you can add it through the <a href="
+"\"GOA\">online account settings</a>."
+msgstr ""
+"請輸入您想要加入的行事曆位置。如果該行事曆屬於您的線上帳號之一，您可以透過<a "
+"href=\"GOA\">線上帳號設定</a>來將之加入。"
+
+#: ../data/ui/source-dialog.ui.h:21
+msgid "Calendar Address"
+msgstr "行事曆位置"
+
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
+#: ../src/gcal-source-dialog.c:2227
+msgid "Add Calendar"
+msgstr "加入行事曆"
+
+#: ../data/ui/source-dialog.ui.h:24
+msgid "User"
+msgstr "使用者"
+
+#: ../data/ui/source-dialog.ui.h:25
+msgid "Password"
+msgstr "密碼"
+
+#: ../data/ui/source-dialog.ui.h:26
+msgid "Connect"
+msgstr "連接"
 
 #: ../data/ui/time-selector.ui.h:1
 msgid "00:00"
@@ -176,21 +292,19 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:368
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "上午"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:368
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "下午"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
 msgid "Month"
 msgstr "月"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
 msgid "Year"
 msgstr "年"
 
@@ -199,21 +313,74 @@ msgstr "年"
 msgid "Today"
 msgstr "今天"
 
-#: ../data/ui/window.ui.h:5
+#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
+#: ../src/gcal-source-dialog.c:2254
+msgid "Calendar Settings"
+msgstr "行事曆設定"
+
+#: ../data/ui/window.ui.h:6
 msgid "Create"
 msgstr "建立"
 
-#: ../data/ui/window.ui.h:6
-msgid "More Details"
-msgstr "更多詳細資訊"
+#: ../data/ui/window.ui.h:7
+msgid "Edit Details"
+msgstr "編輯細節"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
 msgstr "沒有行程"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
 msgid "Add Event…"
 msgstr "加入行程…"
+
+#: ../src/gb-scrolled-window.c:254
+msgid "Max Content Height"
+msgstr "最大內容高度"
+
+#: ../src/gb-scrolled-window.c:255
+msgid "The maximum height request that can be made."
+msgstr "可以請求的最大高度。"
+
+#: ../src/gb-scrolled-window.c:263
+msgid "Max Content Width"
+msgstr "最大內容寬度"
+
+#: ../src/gb-scrolled-window.c:264
+msgid "The maximum width request that can be made."
+msgstr "可以請求的最大寬度。"
+
+#. Dialog
+#: ../src/gcal-source-dialog.c:1128
+msgid "Select a calendar file"
+msgstr "選取行事曆檔案"
+
+#: ../src/gcal-source-dialog.c:1132
+msgid "Open"
+msgstr "開啟"
+
+#: ../src/gcal-source-dialog.c:1139
+msgid "Calendar files"
+msgstr "行事曆檔案"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1178
+msgid "Unnamed Calendar"
+msgstr "未命名行事曆"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1781
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "<b>%s</b> 行事曆已移除"
+
+#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
+msgid "Off"
+msgstr "關"
+
+#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
+msgid "On"
+msgstr "開"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -227,49 +394,55 @@ msgstr "在已過完的日期開啟行事曆"
 msgid "Open calendar showing the passed event"
 msgstr "開啟行事曆顯示已過期行程"
 
-#: ../src/gcal-application.c:332
+#: ../src/gcal-application.c:337
 msgid "- Calendar management"
 msgstr "- 行事曆管理"
 
-#: ../src/gcal-application.c:499
+#: ../src/gcal-application.c:504
 msgid "Copyright © %Id The Calendar authors"
 msgstr "著作權所有 © %Id Calendar 作者群"
 
-#: ../src/gcal-application.c:505
+#: ../src/gcal-application.c:510
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "著作權所有 © %Id–%Id Calendar 作者群"
 
-#: ../src/gcal-application.c:518
+#: ../src/gcal-application.c:523
 msgid "translator-credits"
-msgstr "Cheng-Chia Tseng <pswo10680@gmail.com>, 2013."
+msgstr "Cheng-Chia Tseng <pswo10680@gmail.com>, 2013, 2015."
 
-#: ../src/gcal-date-selector.c:303
+#. This string represents day/month/year order for each of the different
+#. * languages. It could possibly be default value, %m/%d/%y placing the month
+#. * before, or any ordering according to the translator's environment.
+#: ../src/gcal-date-selector.c:239
+msgid "%m/%d/%y"
+msgstr "%y/%m/%d"
+
+#: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "日"
 
-#: ../src/gcal-edit-dialog.c:634
+#: ../src/gcal-edit-dialog.c:657
 msgid "Save"
 msgstr "儲存"
 
-#: ../src/gcal-edit-dialog.c:818
+#: ../src/gcal-edit-dialog.c:841
 msgid "Unnamed event"
 msgstr "未命名的行程"
 
-#: ../src/gcal-month-view.c:820
+#: ../src/gcal-month-view.c:1035
 msgid "Other events"
 msgstr "其他行程"
 
-#. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1203
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/gcal-month-view.c:1417
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "其他 %d 項行程"
 
-#: ../src/gcal-search-view.c:367
-#, c-format
-msgid "%.2d:%.2d %s"
-msgstr "%.2d:%.2d %s"
+#: ../src/gcal-search-view.c:558
+msgid "Use the entry above to search for events."
+msgstr "使用上列輸入方塊開始搜尋行程。"
 
 #: ../src/gcal-time-selector.c:96
 #, c-format
@@ -293,22 +466,32 @@ msgstr "中午"
 msgid "00:00 PM"
 msgstr "下午 00:00"
 
-#: ../src/gcal-window.c:636
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#: ../src/gcal-window.c:746
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%m月%d日"
+
+#: ../src/gcal-window.c:747
 #, c-format
 msgid "New Event on %s"
 msgstr "%s 的新行程"
 
-#: ../src/gcal-window.c:1036
+#: ../src/gcal-window.c:1240
 msgid "Another event deleted"
 msgstr "叧一個行程已刪除"
 
-#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
-msgid "Undo"
-msgstr "復原"
-
-#: ../src/gcal-window.c:1040
+#: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "行程已刪除"
+
+#~ msgid "More Details"
+#~ msgstr "更多詳細資訊"
+
+#~ msgid "%.2d:%.2d %s"
+#~ msgstr "%.2d:%.2d %s"
 
 #~ msgid "Unable to initialize GtkClutter"
 #~ msgstr "無法初始化 GtkClutter。"
@@ -327,9 +510,6 @@ msgstr "行程已刪除"
 
 #~ msgid "Change the date"
 #~ msgstr "更改日期"
-
-#~ msgid "Event Details"
-#~ msgstr "事件細節"
 
 #~ msgid "What (e.g. Alien Invasion)"
 #~ msgstr "什麼事 (例：外星人入侵)"
