@@ -1,0 +1,310 @@
+# translation of gnome-calendar.gnome-3-16.po to Icelandic
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#
+# Sveinn í Felli <sv1@fellsnet.is>, 2015.
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-calendar.gnome-3-16\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-ca"
+"lendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-09-02 06:23+0000\n"
+"PO-Revision-Date: 2015-09-07 14:06+0000\n"
+"Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
+"Language-Team: Icelandic <translation-team-is@lists.sourceforge.net>\n"
+"Language: is\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Lokalize 1.5\n"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
+msgid "Calendar"
+msgstr "Dagatal"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+msgid "Calendar for GNOME"
+msgstr "Dagatal fyrir GNOME"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "Leita að atburðum"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Calendar management"
+msgstr "Umsýsla dagatals"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr ""
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr ""
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Gluggi hámarkaður"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Hámörkunargildi glugga"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Window size"
+msgstr "Gluggastærð"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Gluggastærð (breidd og hæð)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Staðsetning glugga"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Staðsetning glugga (x og y)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
+msgid "Type of the active view"
+msgstr ""
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
+msgid "Type of the active window view, default value is: monthly view"
+msgstr ""
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr ""
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr ""
+
+#: ../data/ui/edit-dialog.ui.h:1
+msgid "Cancel"
+msgstr "Hætta við"
+
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+msgid "Done"
+msgstr "Lokið"
+
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "Titill"
+
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "Byrjar"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "Endar"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "Athugasemdir"
+
+#: ../data/ui/edit-dialog.ui.h:7
+msgid "Location"
+msgstr "Staðsetning"
+
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:385
+msgid "All day"
+msgstr "Heilsdags"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "Eyða atburði"
+
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "_Bæta við atburði…"
+
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "_Leita…"
+
+#: ../data/ui/menus.ui.h:3
+msgid "_About"
+msgstr "_Um hugbúnaðinn"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Quit"
+msgstr "_Hætta"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Synchronize"
+msgstr "_Samstilla"
+
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "Engar niðurstöður fundust"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Use the entry above to search for events."
+msgstr "Notaðu færsluna hér að ofan til að leita að atburðum."
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "f.h."
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "e.h."
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
+msgid "Month"
+msgstr "Mánuður"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
+msgid "Year"
+msgstr "Ár"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+msgid "Today"
+msgstr "Í dag"
+
+#: ../data/ui/window.ui.h:5
+msgid "Create"
+msgstr "Búa til"
+
+#: ../data/ui/window.ui.h:6
+msgid "More Details"
+msgstr "Nánari upplýsingar"
+
+#: ../data/ui/year-view.ui.h:2
+msgid "No events"
+msgstr "Engir atburðir"
+
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+msgid "Add Event…"
+msgstr "Bæta við atburði..."
+
+#: ../src/gcal-application.c:102
+msgid "Display version number"
+msgstr "Birta útgáfunúmer"
+
+#: ../src/gcal-application.c:107
+msgid "Open calendar on the passed date"
+msgstr ""
+
+#: ../src/gcal-application.c:112
+msgid "Open calendar showing the passed event"
+msgstr ""
+
+#: ../src/gcal-application.c:337
+msgid "- Calendar management"
+msgstr "- Umsýsla dagatals"
+
+#: ../src/gcal-application.c:504
+msgid "Copyright © %Id The Calendar authors"
+msgstr "Höfundarréttur © %Id Höfundar Calendar/Dagatals"
+
+#: ../src/gcal-application.c:510
+msgid "Copyright © %Id–%Id The Calendar authors"
+msgstr "Höfundarréttur © %Id–%Id Höfundar Calendar/Dagatals"
+
+#: ../src/gcal-application.c:523
+msgid "translator-credits"
+msgstr "Sveinn í Felli, sv1@fellsnet.is"
+
+#. This string represents day/month/year order for each of the different
+#. * languages. It could possibly be default value, %m/%d/%y placing the month
+#. * before, or any ordering according to the translator's environment.
+#: ../src/gcal-date-selector.c:239
+msgid "%m/%d/%y"
+msgstr "%d/%m/%y"
+
+#: ../src/gcal-date-selector.c:315
+msgid "Day"
+msgstr "Dagur"
+
+#: ../src/gcal-edit-dialog.c:657
+msgid "Save"
+msgstr "Vista"
+
+#: ../src/gcal-edit-dialog.c:841
+msgid "Unnamed event"
+msgstr "Nafnlaus atburður"
+
+#: ../src/gcal-month-view.c:820
+msgid "Other events"
+msgstr "Aðrir atburðir"
+
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/gcal-month-view.c:1203
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Annar atburður"
+msgstr[1] "Aðrir %d atburðir"
+
+#: ../src/gcal-time-selector.c:96
+#, c-format
+msgid "%.2d:%.2d AM"
+msgstr "%.2d:%.2d f.h."
+
+#: ../src/gcal-time-selector.c:98
+#, c-format
+msgid "%.2d:%.2d PM"
+msgstr "%.2d:%.2d e.h."
+
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
+msgid "Midnight"
+msgstr "Miðnætti"
+
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
+msgid "Noon"
+msgstr "Hádegi"
+
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "00:00 e.h."
+
+#: ../src/gcal-window.c:636
+#, c-format
+msgid "New Event on %s"
+msgstr "Nýr atburður þann %s"
+
+#: ../src/gcal-window.c:1036
+msgid "Another event deleted"
+msgstr "Öðrum atburði eytt"
+
+#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
+msgid "Undo"
+msgstr "Afturkalla"
+
+#: ../src/gcal-window.c:1040
+msgid "Event deleted"
+msgstr "Atburði eytt"
+
+
