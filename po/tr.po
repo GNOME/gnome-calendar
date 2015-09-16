@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-06-16 06:27+0000\n"
-"PO-Revision-Date: 2015-06-19 11:09+0300\n"
+"POT-Creation-Date: 2015-09-16 06:29+0000\n"
+"PO-Revision-Date: 2015-09-16 21:25+0300\n"
 "Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -139,7 +139,7 @@ msgstr "Notlar"
 msgid "Location"
 msgstr "Konum"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:406
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
 msgid "All day"
 msgstr "Bütün gün"
 
@@ -184,11 +184,11 @@ msgid "No results found"
 msgstr "Hiçbir sonuç bulunamadı"
 
 #: ../data/ui/search-view.ui.h:2
-msgid "Use the entry above to search for events."
-msgstr "Olaylarda arama yapmak için yukarıdaki girdiyi kullanın."
+msgid "Try a different search"
+msgstr "Farklı bir arama deneyin"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1175
-#: ../src/gcal-window.c:1179
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1244
 msgid "Undo"
 msgstr "Geri Al"
 
@@ -337,25 +337,9 @@ msgstr "Ayrıntıları düzenle"
 msgid "No events"
 msgstr "Olay yok"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
 msgid "Add Event…"
 msgstr "Olay Ekle…"
-
-#: ../src/gb-scrolled-window.c:254
-msgid "Max Content Height"
-msgstr "En Fazla İçerik Yüksekliği"
-
-#: ../src/gb-scrolled-window.c:255
-msgid "The maximum height request that can be made."
-msgstr "Yapılabilecek en fazla yükseklik isteği."
-
-#: ../src/gb-scrolled-window.c:263
-msgid "Max Content Width"
-msgstr "En Fazla İçerik Genişliği"
-
-#: ../src/gb-scrolled-window.c:264
-msgid "The maximum width request that can be made."
-msgstr "Yapılabilecek en fazla genişlik isteği."
 
 #. Dialog
 #: ../src/gcal-source-dialog.c:1128
@@ -436,16 +420,20 @@ msgstr "Kaydet"
 msgid "Unnamed event"
 msgstr "Adsız olay"
 
-#: ../src/gcal-month-view.c:820
+#: ../src/gcal-month-view.c:1035
 msgid "Other events"
 msgstr "Diğer olaylar"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1203
+#: ../src/gcal-month-view.c:1417
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Diğer %d olay"
+
+#: ../src/gcal-search-view.c:558
+msgid "Use the entry above to search for events."
+msgstr "Olaylarda arama yapmak için yukarıdaki girdiyi kullanın."
 
 #: ../src/gcal-time-selector.c:96
 #, c-format
@@ -472,23 +460,35 @@ msgstr "00:00 ÖS"
 #. Translators:
 #. * this is the format string for representing a date consisting of a month name
 #. * and a date of month.
-#: ../src/gcal-window.c:681
+#: ../src/gcal-window.c:746
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%d %B"
 
-#: ../src/gcal-window.c:682
+#: ../src/gcal-window.c:747
 #, c-format
 msgid "New Event on %s"
 msgstr "%s'de Yeni Olay"
 
-#: ../src/gcal-window.c:1175
+#: ../src/gcal-window.c:1240
 msgid "Another event deleted"
 msgstr "Başka bir olay silindi"
 
-#: ../src/gcal-window.c:1179
+#: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "Olay silindi"
+
+#~ msgid "Max Content Height"
+#~ msgstr "En Fazla İçerik Yüksekliği"
+
+#~ msgid "The maximum height request that can be made."
+#~ msgstr "Yapılabilecek en fazla yükseklik isteği."
+
+#~ msgid "Max Content Width"
+#~ msgstr "En Fazla İçerik Genişliği"
+
+#~ msgid "The maximum width request that can be made."
+#~ msgstr "Yapılabilecek en fazla genişlik isteği."
 
 #~ msgid "%.2d:%.2d %s"
 #~ msgstr "%.2d:%.2d %s"
