@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-07-09 18:21+0000\n"
-"PO-Revision-Date: 2015-07-09 23:07+0300\n"
+"POT-Creation-Date: 2015-09-17 06:30+0000\n"
+"PO-Revision-Date: 2015-09-17 14:46+0300\n"
 "Last-Translator: Stas Solovey <whats_up@tut.by>\n"
 "Language-Team: Русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
@@ -139,7 +139,7 @@ msgstr "Примечания"
 msgid "Location"
 msgstr "Местоположение"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:406
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
 msgid "All day"
 msgstr "Весь день"
 
@@ -184,11 +184,11 @@ msgid "No results found"
 msgstr "Ничего не найдено"
 
 #: ../data/ui/search-view.ui.h:2
-msgid "Use the entry above to search for events."
-msgstr "Используйте строку ввода выше для поиска событий."
+msgid "Try a different search"
+msgstr "Попробуйте другой поисковый запрос"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1175
-#: ../src/gcal-window.c:1179
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1244
 msgid "Undo"
 msgstr "Вернуть"
 
@@ -217,7 +217,6 @@ msgid "Microsoft Exchange"
 msgstr "Microsoft Exchange"
 
 #: ../data/ui/source-dialog.ui.h:8
-#| msgid "Calendar"
 msgid "Calendars"
 msgstr "Календари"
 
@@ -234,7 +233,6 @@ msgid "Add new events to this calendar by default"
 msgstr "Добавлять новые события в этот календарь по умолчанию"
 
 #: ../data/ui/source-dialog.ui.h:12
-#| msgid "Calendar"
 msgid "Remove Calendar"
 msgstr "Удалить календарь"
 
@@ -243,7 +241,6 @@ msgid "Display calendar"
 msgstr "Показать календарь"
 
 #: ../data/ui/source-dialog.ui.h:14
-#| msgid "Calendar management"
 msgid "Calendar name"
 msgstr "Имя календаря"
 
@@ -260,7 +257,6 @@ msgid "Settings"
 msgstr "Параметры"
 
 #: ../data/ui/source-dialog.ui.h:19
-#| msgid "Calendar"
 msgid "Edit Calendar"
 msgstr "Редактировать календарь"
 
@@ -275,13 +271,11 @@ msgstr ""
 "\">параметры сетевых учётных записей</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
-#| msgid "Calendar"
 msgid "Calendar Address"
 msgstr "Адрес календаря"
 
 #: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
 #: ../src/gcal-source-dialog.c:2227
-#| msgid "Calendar"
 msgid "Add Calendar"
 msgstr "Добавить календарь"
 
@@ -328,7 +322,6 @@ msgstr "Сегодня"
 
 #: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
 #: ../src/gcal-source-dialog.c:2254
-#| msgid "Calendar"
 msgid "Calendar Settings"
 msgstr "Параметры календаря"
 
@@ -337,7 +330,6 @@ msgid "Create"
 msgstr "Создать"
 
 #: ../data/ui/window.ui.h:7
-#| msgid "More Details"
 msgid "Edit Details"
 msgstr "Редактировать подробности"
 
@@ -345,25 +337,9 @@ msgstr "Редактировать подробности"
 msgid "No events"
 msgstr "Нет событий"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
 msgid "Add Event…"
 msgstr "Новое событие…"
-
-#: ../src/gb-scrolled-window.c:254
-msgid "Max Content Height"
-msgstr "Максимальная высота содержимого"
-
-#: ../src/gb-scrolled-window.c:255
-msgid "The maximum height request that can be made."
-msgstr "Максимально возможная запрошенная высота."
-
-#: ../src/gb-scrolled-window.c:263
-msgid "Max Content Width"
-msgstr "Максимальная ширина содержимого"
-
-#: ../src/gb-scrolled-window.c:264
-msgid "The maximum width request that can be made."
-msgstr "Максимально возможная запрошенная ширина."
 
 #. Dialog
 #: ../src/gcal-source-dialog.c:1128
@@ -375,13 +351,11 @@ msgid "Open"
 msgstr "Открыть"
 
 #: ../src/gcal-source-dialog.c:1139
-#| msgid "Calendar"
 msgid "Calendar files"
 msgstr "Файлы календаря"
 
 #. update the source properties
 #: ../src/gcal-source-dialog.c:1178
-#| msgid "Unnamed event"
 msgid "Unnamed Calendar"
 msgstr "Безымянный календарь"
 
@@ -448,18 +422,22 @@ msgstr "Сохранить"
 msgid "Unnamed event"
 msgstr "Безымянное событие"
 
-#: ../src/gcal-month-view.c:820
+#: ../src/gcal-month-view.c:1035
 msgid "Other events"
 msgstr "Другие события"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1203
+#: ../src/gcal-month-view.c:1417
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Другое %d событие"
 msgstr[1] "Другие %d события"
 msgstr[2] "Другие %d событий"
+
+#: ../src/gcal-search-view.c:558
+msgid "Use the entry above to search for events."
+msgstr "Используйте строку ввода выше для поиска событий."
 
 #: ../src/gcal-time-selector.c:96
 #, c-format
@@ -486,23 +464,35 @@ msgstr "12:00"
 #. Translators:
 #. * this is the format string for representing a date consisting of a month name
 #. * and a date of month.
-#: ../src/gcal-window.c:681
+#: ../src/gcal-window.c:746
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%d %b."
 
-#: ../src/gcal-window.c:682
+#: ../src/gcal-window.c:747
 #, c-format
 msgid "New Event on %s"
 msgstr "Создать событие на %s"
 
-#: ../src/gcal-window.c:1175
+#: ../src/gcal-window.c:1240
 msgid "Another event deleted"
 msgstr "Ещё одно событие удалено"
 
-#: ../src/gcal-window.c:1179
+#: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "Событие удалено"
+
+#~ msgid "Max Content Height"
+#~ msgstr "Максимальная высота содержимого"
+
+#~ msgid "The maximum height request that can be made."
+#~ msgstr "Максимально возможная запрошенная высота."
+
+#~ msgid "Max Content Width"
+#~ msgstr "Максимальная ширина содержимого"
+
+#~ msgid "The maximum width request that can be made."
+#~ msgstr "Максимально возможная запрошенная ширина."
 
 #~ msgid "%.2d:%.2d %s"
 #~ msgstr "%.2d:%.2d %s"
