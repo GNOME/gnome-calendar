@@ -8,20 +8,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-03-15 14:42+0100\n"
-"PO-Revision-Date: 2015-03-14 19:05+0100\n"
-"Last-Translator: Ask Hjorth Larsen <asklarsen@gmail.com>\n"
+"POT-Creation-Date: 2015-09-21 14:24+0200\n"
+"PO-Revision-Date: 2015-09-11 15:12+0100\n"
+"Last-Translator: Kenneth Nielsen <k.nielsen81@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:515
+#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -105,11 +106,12 @@ msgstr "Liste af deaktiverede kilder"
 msgid "Sources disabled last time Calendar ran"
 msgstr "Kilder som blev deaktiveret sidste gang kalenderen kørte"
 
-#: ../data/ui/edit-dialog.ui.h:1
+#: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
+#: ../src/gcal-source-dialog.c:1131
 msgid "Cancel"
 msgstr "Annullér"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:635
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
 msgid "Done"
 msgstr "Færdig"
 
@@ -129,11 +131,11 @@ msgstr "Slutter"
 msgid "Notes"
 msgstr "Noter"
 
-#: ../data/ui/edit-dialog.ui.h:7
+#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "Sted"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:374
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
 msgid "All day"
 msgstr "Hele dagen"
 
@@ -161,13 +163,129 @@ msgstr "_Afslut"
 msgid "_Synchronize"
 msgstr "_Synkronisér"
 
+#: ../data/ui/menus.ui.h:6
+msgid "From Web…"
+msgstr "Fra internettet…"
+
+#: ../data/ui/menus.ui.h:7
+msgid "New Local Calendar…"
+msgstr "Ny lokal kalender…"
+
+#: ../data/ui/menus.ui.h:8
+msgid "From File…"
+msgstr "Fra fil…"
+
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
 msgstr "Ingen resultater fundet"
 
 #: ../data/ui/search-view.ui.h:2
-msgid "Use the entry above to search for events."
-msgstr "Søg efter begivenheder med feltet herover."
+msgid "Try a different search"
+msgstr "Prøv en anden søgning"
+
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1244
+msgid "Undo"
+msgstr "Fortryd"
+
+#: ../data/ui/source-dialog.ui.h:2
+msgid "Online Accounts"
+msgstr "Online konti"
+
+#: ../data/ui/source-dialog.ui.h:3
+msgid "Open online account settings"
+msgstr "Åbn indstillinger for online konti"
+
+#: ../data/ui/source-dialog.ui.h:4
+msgid "Google"
+msgstr "Google"
+
+#: ../data/ui/source-dialog.ui.h:5
+msgid "Click to set up"
+msgstr "Klik for at indstille"
+
+#: ../data/ui/source-dialog.ui.h:6
+msgid "ownCloud"
+msgstr "ownCloud"
+
+#: ../data/ui/source-dialog.ui.h:7
+msgid "Microsoft Exchange"
+msgstr "Microsoft Exchange"
+
+#: ../data/ui/source-dialog.ui.h:8
+msgid "Calendars"
+msgstr "Kalendere"
+
+#: ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "Tilføj"
+
+#: ../data/ui/source-dialog.ui.h:10
+msgid "Overview"
+msgstr "Oversigt"
+
+#: ../data/ui/source-dialog.ui.h:11
+msgid "Add new events to this calendar by default"
+msgstr "Tilføj nye begivenheder til denne kalender som standard"
+
+#: ../data/ui/source-dialog.ui.h:12
+msgid "Remove Calendar"
+msgstr "Fjern kalender"
+
+#: ../data/ui/source-dialog.ui.h:13
+msgid "Display calendar"
+msgstr "Vis kalender"
+
+#: ../data/ui/source-dialog.ui.h:14
+msgid "Calendar name"
+msgstr "Kalendernavn"
+
+#: ../data/ui/source-dialog.ui.h:15
+msgid "Color"
+msgstr "Farve"
+
+#: ../data/ui/source-dialog.ui.h:16
+msgid "Account"
+msgstr "Konto"
+
+#: ../data/ui/source-dialog.ui.h:18
+msgid "Settings"
+msgstr "Indstillinger"
+
+#: ../data/ui/source-dialog.ui.h:19
+msgid "Edit Calendar"
+msgstr "Redigér kalender"
+
+#: ../data/ui/source-dialog.ui.h:20
+msgid ""
+"Enter the address of the calendar that you want to add. If the calendar "
+"belongs to one of you online accounts, you can add it through the <a href="
+"\"GOA\">online account settings</a>."
+msgstr ""
+"Indtast adressen for den kalender som du vil tilføje. Hvis kalenderen "
+"tilhører en af dine online konto, kan du tilføje den gennem <a href=\"GOA"
+"\">indstillinger for online konti</a>."
+
+#: ../data/ui/source-dialog.ui.h:21
+msgid "Calendar Address"
+msgstr "Kalenderadresse"
+
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
+#: ../src/gcal-source-dialog.c:2227
+msgid "Add Calendar"
+msgstr "Tilføj kalender"
+
+#: ../data/ui/source-dialog.ui.h:24
+msgid "User"
+msgstr "Bruger"
+
+#: ../data/ui/source-dialog.ui.h:25
+msgid "Password"
+msgstr "Adgangskode"
+
+#: ../data/ui/source-dialog.ui.h:26
+msgid "Connect"
+msgstr "Tilslut"
 
 #: ../data/ui/time-selector.ui.h:1
 msgid "00:00"
@@ -177,21 +295,19 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-search-view.c:368
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
 msgid "AM"
 msgstr "AM"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-search-view.c:368
-#: ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
 msgid "PM"
 msgstr "PM"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
 msgid "Month"
 msgstr "Måned"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
 msgid "Year"
 msgstr "År"
 
@@ -200,21 +316,60 @@ msgstr "År"
 msgid "Today"
 msgstr "I dag"
 
-#: ../data/ui/window.ui.h:5
+#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
+#: ../src/gcal-source-dialog.c:2254
+msgid "Calendar Settings"
+msgstr "Kalenderindstillinger"
+
+#: ../data/ui/window.ui.h:6
 msgid "Create"
 msgstr "Opret"
 
-#: ../data/ui/window.ui.h:6
-msgid "More Details"
-msgstr "Flere detaljer"
+#: ../data/ui/window.ui.h:7
+msgid "Edit Details"
+msgstr "Redigér detaljer"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
 msgstr "Ingen begivenheder"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
 msgid "Add Event…"
 msgstr "Tilføj begivenhed…"
+
+#. Dialog
+#: ../src/gcal-source-dialog.c:1128
+msgid "Select a calendar file"
+msgstr "Vælg en kalenderfil"
+
+#: ../src/gcal-source-dialog.c:1132
+msgid "Open"
+msgstr "Åbn"
+
+#: ../src/gcal-source-dialog.c:1139
+msgid "Calendar files"
+msgstr "Kalenderfiler"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1178
+msgid "Unnamed Calendar"
+msgstr "Unavngivet kalender"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1781
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "Kalender <b>%s</b> fjernet"
+
+# Jeg tror det drejer sig om kalenderkilder
+#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
+msgid "Off"
+msgstr "Slået fra"
+
+# Jeg tror det drejer sig om kalenderkilder
+#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
+msgid "On"
+msgstr "Slået til"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -228,19 +383,19 @@ msgstr "Åbn kalender for foregående dato"
 msgid "Open calendar showing the passed event"
 msgstr "Åbn kalender som viser den foregående begivenhed"
 
-#: ../src/gcal-application.c:336
+#: ../src/gcal-application.c:337
 msgid "- Calendar management"
 msgstr "- Kalenderhåndtering"
 
-#: ../src/gcal-application.c:503
+#: ../src/gcal-application.c:504
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Ophavsret © %Id Kalenderens forfattere"
 
-#: ../src/gcal-application.c:509
+#: ../src/gcal-application.c:510
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Ophavsret © %Id–%Id Kalenderens forfattere"
 
-#: ../src/gcal-application.c:522
+#: ../src/gcal-application.c:523
 msgid "translator-credits"
 msgstr ""
 "Kris Thomsen\n"
@@ -248,34 +403,40 @@ msgstr ""
 "Dansk-gruppen <dansk@dansk-gruppen.dk>\n"
 "Mere info: http://www.dansk-gruppen.dk"
 
-#: ../src/gcal-date-selector.c:303
+#. This string represents day/month/year order for each of the different
+#. * languages. It could possibly be default value, %m/%d/%y placing the month
+#. * before, or any ordering according to the translator's environment.
+#: ../src/gcal-date-selector.c:239
+msgid "%m/%d/%y"
+msgstr "%d/%m/%y"
+
+#: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "Dag"
 
-#: ../src/gcal-edit-dialog.c:635
+#: ../src/gcal-edit-dialog.c:657
 msgid "Save"
 msgstr "Gem"
 
-#: ../src/gcal-edit-dialog.c:819
+#: ../src/gcal-edit-dialog.c:841
 msgid "Unnamed event"
 msgstr "Unavngivet begivenhed"
 
-#: ../src/gcal-month-view.c:820
+#: ../src/gcal-month-view.c:1035
 msgid "Other events"
 msgstr "Andre begivenheder"
 
-#. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1203
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/gcal-month-view.c:1417
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Anden begivenhed"
 msgstr[1] "%d andre begivenheder"
 
-#: ../src/gcal-search-view.c:367
-#, c-format
-msgid "%.2d:%.2d %s"
-msgstr "%.2d:%.2d %s"
+#: ../src/gcal-search-view.c:558
+msgid "Use the entry above to search for events."
+msgstr "Søg efter begivenheder med feltet herover."
 
 # Det er nok en fejl at de ikke bruger strftime.  Regionsindstillingerne bør forhindre at der kommer 12-timers-klokkeslæt ud til brugeren
 #: ../src/gcal-time-selector.c:96
@@ -301,22 +462,32 @@ msgstr "Middag"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#: ../src/gcal-window.c:636
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#: ../src/gcal-window.c:746
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%d. %B"
+
+#: ../src/gcal-window.c:747
 #, c-format
 msgid "New Event on %s"
 msgstr "Ny begivenhed d. %s"
 
-#: ../src/gcal-window.c:1036
+#: ../src/gcal-window.c:1240
 msgid "Another event deleted"
 msgstr "Anden begivenhed slettet"
 
-#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
-msgid "Undo"
-msgstr "Fortryd"
-
-#: ../src/gcal-window.c:1040
+#: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "Begivenhed slettet"
+
+#~ msgid "More Details"
+#~ msgstr "Flere detaljer"
+
+#~ msgid "%.2d:%.2d %s"
+#~ msgstr "%.2d:%.2d %s"
 
 #~ msgid "Unable to initialize GtkClutter"
 #~ msgstr "Kunne ikke initialisere GtkClutter"
@@ -335,9 +506,6 @@ msgstr "Begivenhed slettet"
 
 #~ msgid "Change the date"
 #~ msgstr "Skift datoen"
-
-#~ msgid "Event Details"
-#~ msgstr "Detaljer om begivenhed"
 
 #~ msgid "What (e.g. Alien Invasion)"
 #~ msgstr "Hvad (f.eks. Alieninvasion)"
