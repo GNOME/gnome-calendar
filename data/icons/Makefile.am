@@ -12,6 +12,7 @@ public_icons = \
 	hicolor_apps_48x48_gnome-calendar.png \
 	hicolor_apps_256x256_gnome-calendar.png \
 	hicolor_apps_512x512_gnome-calendar.png \
+  hicolor_apps_symbolic_gnome-calendar-symbolic.svg \
 	$(NULL)
 
 noinst_DATA = \
