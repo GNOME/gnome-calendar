@@ -100,6 +100,9 @@ PKG_CHECK_MODULES(CALENDAR,
                   libedataserverui-1.2 >= $EDATASERVERUI_REQUIRED
                   libical >= $LIBICAL_REQUIRED)
 
+AC_CHECK_LIB(ical, icaltime_days_in_year, [],
+                AC_MSG_ERROR([Error: icaltime_days_in_year() not found in libical!. Upgrade your libical library.]))
+
 APPSTREAM_XML
 
 AC_CONFIG_FILES([
