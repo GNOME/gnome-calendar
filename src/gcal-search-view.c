@@ -426,7 +426,7 @@ make_row_for_event_data (GcalSearchView  *view,
     }
 
   /* lock icon */
-  if (gcal_manager_is_client_writable (priv->manager, data->source))
+  if (!gcal_manager_is_client_writable (priv->manager, data->source))
     {
       GtkWidget *lock_icon;
 

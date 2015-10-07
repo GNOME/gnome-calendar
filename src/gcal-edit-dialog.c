@@ -143,7 +143,7 @@ fill_sources_menu (GcalEditDialog *dialog)
       g_menu_item_set_icon (item, G_ICON (pix));
 
       /* set insensitive for read-only calendars */
-      if (gcal_manager_is_client_writable (priv->manager, source))
+      if (!gcal_manager_is_client_writable (priv->manager, source))
         {
           g_menu_item_set_action_and_target_value (item, "select_calendar", NULL);
         }
@@ -935,10 +935,7 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
       g_free (description);
     }
 
-  gcal_edit_dialog_set_writable (
-      dialog,
-      ! gcal_manager_is_client_writable (priv->manager,
-                                         priv->source));
+  gcal_edit_dialog_set_writable (dialog, gcal_manager_is_client_writable (priv->manager, priv->source));
 
   priv->setting_event = FALSE;
 }

@@ -927,7 +927,7 @@ stack_visible_child_name_changed (GObject    *object,
 
       /* default source check button */
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->default_check), (priv->source == default_source));
-      gtk_widget_set_visible (priv->default_check, !gcal_manager_is_client_writable (priv->manager, priv->source));
+      gtk_widget_set_visible (priv->default_check, gcal_manager_is_client_writable (priv->manager, priv->source));
 
       /* title */
       if (!creation_mode)

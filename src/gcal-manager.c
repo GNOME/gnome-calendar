@@ -1451,7 +1451,7 @@ gcal_manager_is_client_writable (GcalManager *manager,
   if (unit == NULL)
     return FALSE;
 
-  return unit->connected && e_client_is_readonly (E_CLIENT (unit->client));
+  return unit->connected && !e_client_is_readonly (E_CLIENT (unit->client));
 }
 
 void

@@ -247,7 +247,7 @@ add_event_to_day_array (GcalYearView  *year_view,
   priv = year_view->priv;
   child_widget = gcal_event_widget_new_from_data (event_data);
   gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (child_widget),
-                                   gcal_manager_is_client_writable (priv->manager, event_data->source));
+                                   !gcal_manager_is_client_writable (priv->manager, event_data->source));
 
   dt_start = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (child_widget));
   dt_end = gcal_event_widget_peek_end_date (GCAL_EVENT_WIDGET (child_widget));
