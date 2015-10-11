@@ -142,7 +142,7 @@ gcal_time_selector_set_time_format (GcalTimeSelector *selector,
   if (format_24h)
     gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin)), 23.0);
   else
-    gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin)), 11.0);
+    gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (priv->hour_spin)), 12.0);
 }
 
 static void
@@ -276,7 +276,7 @@ gcal_time_selector_get_time (GcalTimeSelector *selector,
       gint am_pm;
 
       am_pm = gtk_combo_box_get_active (GTK_COMBO_BOX (priv->period_combo));
-      *hours = (gint) gtk_adjustment_get_value (hour_adj) + 12 * am_pm;
+      *hours = (gint) gtk_adjustment_get_value (hour_adj) % 12 + 12 * am_pm;
     }
 
   /* minute field isn't dependant on 12h/24h format */
