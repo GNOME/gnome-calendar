@@ -238,6 +238,9 @@ gcal_time_selector_set_time (GcalTimeSelector *selector,
 
       period = hours < 12? AM : PM;
       hours = hours % 12;
+      if(hours == 0){
+        hours = 12;
+      }
 
       gtk_combo_box_set_active (GTK_COMBO_BOX (priv->period_combo), period);
       gtk_adjustment_set_value (hour_adj, hours);
