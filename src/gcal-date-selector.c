@@ -47,7 +47,7 @@ struct _GcalDateSelectorPrivate
   gint         year;
 
   /* misc */
-  gchar       *mask;
+  const gchar *mask;
 
   /* index in the mask starting by 0 */
   guint        day_pos;
@@ -236,7 +236,7 @@ gcal_date_selector_init (GcalDateSelector *self)
   /* This string represents day/month/year order for each of the different
    * languages. It could possibly be default value, %m/%d/%y placing the month
    * before, or any ordering according to the translator's environment. */
-  priv->mask = _("%m/%d/%y");
+  priv->mask = g_dpgettext2 ("glib20", "GDateTime", "%m/%d/%y");
 
   /**
    * Translators: Select the day, month and year indexes. This will
