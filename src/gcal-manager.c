@@ -183,7 +183,7 @@ thread_job_data_free (gpointer ptr)
     {
       /* This should go to UI with more info/description,
        * if it is not G_IOI_ERROR_CANCELLED */
-      if (tjd->error != NULL)
+      if (tjd->error != NULL && !g_error_matches (tjd->error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
         g_warning ("Job failed: %s\n", tjd->error->message);
 
       if (tjd->free_user_data != NULL)
