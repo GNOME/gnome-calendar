@@ -186,6 +186,9 @@ static gint
 real_cell (gint     cell,
            gboolean rtl)
 {
+  if (cell < 0)
+    return cell;
+
   return rtl ? MIRROR (cell, 0, 7) - 1 : cell;
 }
 
@@ -349,7 +352,12 @@ gather_button_event_data (GcalMonthView *view,
 
   y = y - start_grid_y - first_row_gap * cell_height;
 
-  cell = 7 * (gint)(y / cell_height) + (gint)(x / cell_width);
+  /* When we're dealing with 5-row months, the first_row_gap
+   * is never big enought, and (gint)(y / cell_height) always
+   * rounds to 0, resulting in a valid cell number when it is
+   * actually invalid.
+   */
+  cell = y < 0 ? -1 : 7 * (gint)(y / cell_height) + (gint)(x / cell_width);
 
   if (out_on_indicator != NULL)
     {
