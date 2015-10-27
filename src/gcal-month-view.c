@@ -89,7 +89,7 @@ enum
   PROP_DATE,  /* active-date inherited property */
 };
 
-#define MIRROR(val,start,end) (start + (val / end) * end + (end - cell % end))
+#define MIRROR(val,start,end) (start + (val / end) * end + (end - val % end))
 
 static gint           gather_button_event_data              (GcalMonthView  *view,
                                                              gdouble         x,
