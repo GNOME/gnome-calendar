@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-07-28 06:21+0000\n"
-"PO-Revision-Date: 2015-07-28 16:18+0200\n"
+"POT-Creation-Date: 2015-11-08 08:10+0000\n"
+"PO-Revision-Date: 2015-11-08 14:25+0100\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Generator: Poedit 1.8.2\n"
+"X-Generator: Poedit 1.8.5\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
@@ -263,7 +263,7 @@ msgstr "Pridať kalendár"
 #: ../data/ui/source-dialog.ui.h:20
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of you online accounts, you can add it through the <a href="
+"belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
 "Zadajte adresu kalendára, ktorý chcete pridať. Ak kalendár patrí do jedného z "
@@ -337,25 +337,9 @@ msgstr "Upraviť podrobnosti"
 msgid "No events"
 msgstr "Žiadne udalosti"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
 msgid "Add Event…"
 msgstr "Pridať udalosť…"
-
-#: ../src/gb-scrolled-window.c:254
-msgid "Max Content Height"
-msgstr "Maximálna výška obsahu"
-
-#: ../src/gb-scrolled-window.c:255
-msgid "The maximum height request that can be made."
-msgstr "Maximálna požiadavka na výšku, aká môže byť vytvorená."
-
-#: ../src/gb-scrolled-window.c:263
-msgid "Max Content Width"
-msgstr "Maximálne šírka obsahu"
-
-#: ../src/gb-scrolled-window.c:264
-msgid "The maximum width request that can be made."
-msgstr "Maximálna požiadavka na  šírku, aká môže byť vytvorená."
 
 #. Dialog
 #: ../src/gcal-source-dialog.c:1128
@@ -417,13 +401,6 @@ msgstr "Autorské práva © %Id–%Id Autori programu Kalendár"
 msgid "translator-credits"
 msgstr "Dušan Kazik <prescott66@gmail.com>"
 
-#. This string represents day/month/year order for each of the different
-#. * languages. It could possibly be default value, %m/%d/%y placing the month
-#. * before, or any ordering according to the translator's environment.
-#: ../src/gcal-date-selector.c:239
-msgid "%m/%d/%y"
-msgstr "%d/%m/%y"
-
 #: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "Deň"
@@ -436,12 +413,12 @@ msgstr "Uložiť"
 msgid "Unnamed event"
 msgstr "Nepomenovaná udalosť"
 
-#: ../src/gcal-month-view.c:1035
+#: ../src/gcal-month-view.c:1043
 msgid "Other events"
 msgstr "Iné udalosti"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1417
+#: ../src/gcal-month-view.c:1425
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -495,6 +472,21 @@ msgstr "Iná udalosť bola odstránená"
 #: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "Udalosť bola odstránená"
+
+#~ msgid "Max Content Height"
+#~ msgstr "Maximálna výška obsahu"
+
+#~ msgid "The maximum height request that can be made."
+#~ msgstr "Maximálna požiadavka na výšku, aká môže byť vytvorená."
+
+#~ msgid "Max Content Width"
+#~ msgstr "Maximálne šírka obsahu"
+
+#~ msgid "The maximum width request that can be made."
+#~ msgstr "Maximálna požiadavka na  šírku, aká môže byť vytvorená."
+
+#~ msgid "%m/%d/%y"
+#~ msgstr "%d/%m/%y"
 
 #~ msgid "%.2d:%.2d %s"
 #~ msgstr "%.2d:%.2d %s"
