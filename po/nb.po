@@ -6,10 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-calendar 3.17.x\n"
+"Project-Id-Version: gnome-calendar 3.19.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-08-07 11:41+0200\n"
-"PO-Revision-Date: 2015-08-07 11:43+0200\n"
+"POT-Creation-Date: 2015-11-14 16:16+0100\n"
+"PO-Revision-Date: 2015-11-14 16:17+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: \n"
@@ -258,7 +258,7 @@ msgstr "Rediger kalender"
 #: ../data/ui/source-dialog.ui.h:20
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of you online accounts, you can add it through the <a href="
+"belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr "Skriv inn adressen til kalenderen du vil legge til. Hvis kalenderen tilhører en av dine kontoer på nettet kan du legge den til via <a href=\"GOA\">Innstillinger for kontoer på nettet</a>."
 
@@ -329,25 +329,9 @@ msgstr "Rediger detaljer"
 msgid "No events"
 msgstr "Ingen hendelser"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
 msgid "Add Event…"
 msgstr "Legg til hendelse …"
-
-#: ../src/gb-scrolled-window.c:254
-msgid "Max Content Height"
-msgstr "Maksimal høyde på innhold"
-
-#: ../src/gb-scrolled-window.c:255
-msgid "The maximum height request that can be made."
-msgstr "Maksimal høydeforespørsel som kan gjøres."
-
-#: ../src/gb-scrolled-window.c:263
-msgid "Max Content Width"
-msgstr "Maksimal bredde på innhold"
-
-#: ../src/gb-scrolled-window.c:264
-msgid "The maximum width request that can be made."
-msgstr "Maksimal breddeforespørsel som kan gjøres."
 
 #. Dialog
 #: ../src/gcal-source-dialog.c:1128
@@ -411,13 +395,6 @@ msgstr ""
 "Kjartan Maraas <kmaraas@gnome.org>\n"
 "Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com"
 
-#. This string represents day/month/year order for each of the different
-#. * languages. It could possibly be default value, %m/%d/%y placing the month
-#. * before, or any ordering according to the translator's environment.
-#: ../src/gcal-date-selector.c:239
-msgid "%m/%d/%y"
-msgstr "%d.%m.%y"
-
 #: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "Dag"
@@ -430,12 +407,12 @@ msgstr "Lagre"
 msgid "Unnamed event"
 msgstr "Hendelse uten navn"
 
-#: ../src/gcal-month-view.c:1035
+#: ../src/gcal-month-view.c:1043
 msgid "Other events"
 msgstr "Andre hendelser"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1417
+#: ../src/gcal-month-view.c:1425
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
