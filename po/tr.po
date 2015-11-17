@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-09-16 06:29+0000\n"
-"PO-Revision-Date: 2015-09-16 21:25+0300\n"
+"POT-Creation-Date: 2015-11-17 20:08+0000\n"
+"PO-Revision-Date: 2015-11-18 01:15+0200\n"
 "Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -261,14 +261,18 @@ msgid "Edit Calendar"
 msgstr "Takvimi Düzenle"
 
 #: ../data/ui/source-dialog.ui.h:20
+#| msgid ""
+#| "Enter the address of the calendar that you want to add. If the calendar "
+#| "belongs to one of you online accounts, you can add it through the <a href="
+#| "\"GOA\">online account settings</a>."
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of you online accounts, you can add it through the <a href="
+"belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
 "Eklemek istediğiniz takvimin adresini girin. Eğer takvim çevrimiçi "
-"hesaplarınızdan birine bağlıysa onu <a href=\"GOA\">çevrimiçi hesap "
-"ayarları</a>ndan ekleyebilirsiniz."
+"hesaplarınızdan birine aitse, onu <a href=\"GOA\">çevrimiçi hesap ayarları</"
+"a> üzerinden ekleyebilirsiniz."
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
@@ -337,7 +341,7 @@ msgstr "Ayrıntıları düzenle"
 msgid "No events"
 msgstr "Olay yok"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
 msgid "Add Event…"
 msgstr "Olay Ekle…"
 
@@ -401,13 +405,6 @@ msgstr "Telif Hakkı © %Id–%Id Takvim geliştiricileri"
 msgid "translator-credits"
 msgstr "Muhammet Kara <muhammetk@gmail.com>"
 
-#. This string represents day/month/year order for each of the different
-#. * languages. It could possibly be default value, %m/%d/%y placing the month
-#. * before, or any ordering according to the translator's environment.
-#: ../src/gcal-date-selector.c:239
-msgid "%m/%d/%y"
-msgstr "%d/%m/%y"
-
 #: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "Gün"
@@ -420,12 +417,12 @@ msgstr "Kaydet"
 msgid "Unnamed event"
 msgstr "Adsız olay"
 
-#: ../src/gcal-month-view.c:1035
+#: ../src/gcal-month-view.c:1043
 msgid "Other events"
 msgstr "Diğer olaylar"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1417
+#: ../src/gcal-month-view.c:1425
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -477,6 +474,9 @@ msgstr "Başka bir olay silindi"
 #: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "Olay silindi"
+
+#~ msgid "%m/%d/%y"
+#~ msgstr "%d/%m/%y"
 
 #~ msgid "Max Content Height"
 #~ msgstr "En Fazla İçerik Yüksekliği"
