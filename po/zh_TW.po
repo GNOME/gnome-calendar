@@ -6,16 +6,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-11-07 20:07+0000\n"
-"PO-Revision-Date: 2015-11-08 01:03-0500\n"
-"Last-Translator: Mingye Wang (Arthur2e5) <arthur200126@gmail.com>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-11-19 08:07+0000\n"
+"PO-Revision-Date: 2015-11-19 23:06+0800\n"
+"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.6\n"
+"X-Generator: Poedit 1.8.5\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
@@ -30,12 +31,22 @@ msgid "Calendar for GNOME"
 msgstr "GNOME 的行事曆"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
-msgid "GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME desktop. By reusing the components which the GNOME desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr "GNOME《行事曆》是為了能完美搭配 GNOME 桌面而設計的簡單、精美行事曆應用程式。藉著重複使用 GNOME 桌面內建的元件，《行事曆》順利整合到 GNOME 生態系中。"
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"GNOME《行事曆》是為了能完美搭配 GNOME 桌面而設計的簡單、精美行事曆應用程式。藉"
+"著重複使用 GNOME 桌面內建的元件，《行事曆》順利整合到 GNOME 生態系中。"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
-msgid "We aim to find the perfect balance between nicely crafted features and user-centred usability. No excess, no lacks. You'll feel comfortable using Calendar, like you've been using it for ages!"
-msgstr "我們的目標是在精心設計的功能，與以使用者為中心的可用性之間找到完美的平衡點，不多也不少。您會很舒適的使用《行事曆》，就像您過去一直在使用的一樣！"
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"我們的目標是在精心設計的功能，與以使用者為中心的可用性之間找到完美的平衡點，不"
+"多也不少。您會很舒適的使用《行事曆》，就像您過去一直在使用的一樣！"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
 msgid "Search for events"
@@ -244,8 +255,13 @@ msgid "Edit Calendar"
 msgstr "編輯行事曆"
 
 #: ../data/ui/source-dialog.ui.h:20
-msgid "Enter the address of the calendar that you want to add. If the calendar belongs to one of your online accounts, you can add it through the <a href=\"GOA\">online account settings</a>."
-msgstr "請輸入您想要加入的行事曆位址。如果該行事曆屬於您的線上帳號之一，您可以透過<a href=\"GOA\">線上帳號設定</a>來將之加入。"
+msgid ""
+"Enter the address of the calendar that you want to add. If the calendar "
+"belongs to one of your online accounts, you can add it through the <a href="
+"\"GOA\">online account settings</a>."
+msgstr ""
+"請輸入您想要加入的行事曆位址。如果該行事曆屬於您的線上帳號之一，您可以透過<a "
+"href=\"GOA\">線上帳號設定</a>來將之加入。"
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
@@ -356,11 +372,11 @@ msgstr "顯示版本號碼"
 
 #: ../src/gcal-application.c:107
 msgid "Open calendar on the passed date"
-msgstr "在已過完的日期開啟行事曆"
+msgstr "在傳入的日期開啟行事曆"
 
 #: ../src/gcal-application.c:112
 msgid "Open calendar showing the passed event"
-msgstr "開啟行事曆顯示已過期行程"
+msgstr "開啟行事曆顯示傳入的行程"
 
 #: ../src/gcal-application.c:337
 msgid "- Calendar management"
