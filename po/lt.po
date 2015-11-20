@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-08-02 18:23+0000\n"
-"PO-Revision-Date: 2015-08-02 23:28+0300\n"
+"POT-Creation-Date: 2015-11-13 08:07+0000\n"
+"PO-Revision-Date: 2015-11-13 13:50+0200\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -20,7 +20,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && (n"
 "%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Poedit 1.8.5\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
@@ -216,7 +216,6 @@ msgid "Microsoft Exchange"
 msgstr "Microsoft Exchange"
 
 #: ../data/ui/source-dialog.ui.h:8
-#| msgid "Calendar"
 msgid "Calendars"
 msgstr "Kalendoriai"
 
@@ -233,7 +232,6 @@ msgid "Add new events to this calendar by default"
 msgstr "Numatytai pridėti naujus įvykius į šį kalendorių"
 
 #: ../data/ui/source-dialog.ui.h:12
-#| msgid "Calendar"
 msgid "Remove Calendar"
 msgstr "Pašalinti kalendorių"
 
@@ -242,7 +240,6 @@ msgid "Display calendar"
 msgstr "Rodyti kalendorių"
 
 #: ../data/ui/source-dialog.ui.h:14
-#| msgid "Calendar management"
 msgid "Calendar name"
 msgstr "Kalendoriaus pavadinimas"
 
@@ -259,14 +256,13 @@ msgid "Settings"
 msgstr "Nustatymai"
 
 #: ../data/ui/source-dialog.ui.h:19
-#| msgid "Calendar"
 msgid "Edit Calendar"
 msgstr "Keisti kalendorių"
 
 #: ../data/ui/source-dialog.ui.h:20
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of you online accounts, you can add it through the <a href="
+"belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
 "Įveskite pridedamo kalendoriaus adresą. Jei kalendorius priklauso vienai iš "
@@ -274,13 +270,11 @@ msgstr ""
 "\">internetinių paskyrų nustatymus</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
-#| msgid "Calendar"
 msgid "Calendar Address"
 msgstr "Kalendoriaus adresas"
 
 #: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
 #: ../src/gcal-source-dialog.c:2227
-#| msgid "Calendar"
 msgid "Add Calendar"
 msgstr "Pridėti kalendorių"
 
@@ -327,7 +321,6 @@ msgstr "Šiandien"
 
 #: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
 #: ../src/gcal-source-dialog.c:2254
-#| msgid "Calendar"
 msgid "Calendar Settings"
 msgstr "Kalendoriaus nustatymai"
 
@@ -336,7 +329,6 @@ msgid "Create"
 msgstr "Sukurti"
 
 #: ../data/ui/window.ui.h:7
-#| msgid "More Details"
 msgid "Edit Details"
 msgstr "Keisti detales"
 
@@ -344,25 +336,9 @@ msgstr "Keisti detales"
 msgid "No events"
 msgstr "Įvykių nėra"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
 msgid "Add Event…"
 msgstr "Pridėti įvykį..."
-
-#: ../src/gb-scrolled-window.c:254
-msgid "Max Content Height"
-msgstr "Didžiausias turinio aukštis"
-
-#: ../src/gb-scrolled-window.c:255
-msgid "The maximum height request that can be made."
-msgstr "Didžiausias aukštis, kokio galima prašyti."
-
-#: ../src/gb-scrolled-window.c:263
-msgid "Max Content Width"
-msgstr "Didžiausias turinio plotis"
-
-#: ../src/gb-scrolled-window.c:264
-msgid "The maximum width request that can be made."
-msgstr "Didžiausias plotis, kokio galima prašyti."
 
 #. Dialog
 #: ../src/gcal-source-dialog.c:1128
@@ -374,13 +350,11 @@ msgid "Open"
 msgstr "Atverti"
 
 #: ../src/gcal-source-dialog.c:1139
-#| msgid "Calendar"
 msgid "Calendar files"
 msgstr "Kalendoriaus failai"
 
 #. update the source properties
 #: ../src/gcal-source-dialog.c:1178
-#| msgid "Unnamed event"
 msgid "Unnamed Calendar"
 msgstr "Bevardis kalendorius"
 
@@ -428,13 +402,6 @@ msgstr ""
 "Išvertė:\n"
 "Jonas Skarulskis <jonas.ska@gmail.com>"
 
-#. This string represents day/month/year order for each of the different
-#. * languages. It could possibly be default value, %m/%d/%y placing the month
-#. * before, or any ordering according to the translator's environment.
-#: ../src/gcal-date-selector.c:239
-msgid "%m/%d/%y"
-msgstr "%y-%m-%d"
-
 #: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "Diena"
@@ -447,12 +414,12 @@ msgstr "Įrašyti"
 msgid "Unnamed event"
 msgstr "Bevardis įvykis"
 
-#: ../src/gcal-month-view.c:1035
+#: ../src/gcal-month-view.c:1043
 msgid "Other events"
 msgstr "Kiti įvykiai"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1417
+#: ../src/gcal-month-view.c:1425
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -506,6 +473,21 @@ msgstr "Dar vienas įvykis ištrintas"
 #: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "Įvykis ištrintas"
+
+#~ msgid "Max Content Height"
+#~ msgstr "Didžiausias turinio aukštis"
+
+#~ msgid "The maximum height request that can be made."
+#~ msgstr "Didžiausias aukštis, kokio galima prašyti."
+
+#~ msgid "Max Content Width"
+#~ msgstr "Didžiausias turinio plotis"
+
+#~ msgid "The maximum width request that can be made."
+#~ msgstr "Didžiausias plotis, kokio galima prašyti."
+
+#~ msgid "%m/%d/%y"
+#~ msgstr "%y-%m-%d"
 
 #~ msgid "%.2d:%.2d %s"
 #~ msgstr "%.2d:%.2d %s"
