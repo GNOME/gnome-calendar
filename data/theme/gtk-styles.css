@@ -23,49 +23,49 @@
     padding: 12px;
 }
 
-.calendar-view {
+calendar-view {
     padding: 6px;
     font: 10;
 }
 
-.calendar-view.header {
+calendar-view.header {
     font-weight: bold;
 }
 
-.calendar-view.current {
+calendar-view.current {
     background-color: black;
     border-radius: 2px;
     color: white;
     font: bold;
 }
 
-.calendar-view:selected {
+calendar-view:selected {
     color: @theme_selected_bg_color;
     font-weight: bold;
 }
 
-.calendar-view.overflow:hover {
+calendar-view.overflow:hover {
     font-weight: bold;
     color: @theme_selected_bg_color;
     background-image: linear-gradient(to bottom, shade(@theme_bg_color, 0.9), alpha(@theme_bg_color, 0.2) 10%,
                                       alpha(@theme_bg_color, 0.2) 95%, shade(@theme_bg_color, 0.95) 100%);
 }
 
-.calendar-view.overflow {
+calendar-view.overflow {
     font: 8;
 }
 
-.calendar-view.lines {
+calendar-view.lines {
     color: alpha(@theme_fg_color, 0.4);
 }
 
-.calendar-view.first-view-header {
+calendar-view.first-view-header {
     font: bold 16;
     color: @theme_selected_bg_color;
     padding: 12px;
 }
 
-.calendar-view.second-view-header {
+calendar-view.second-view-header {
     font: bold 16;
     padding: 12px;
     color: alpha(@theme_fg_color, 0.55);
@@ -124,54 +124,54 @@
     font-style: italic;
 }
 
-GtkListBox.sidebar {
+list.sidebar {
     background-color: @theme_bg_color;
 }
 
-GtkBox.sidebar {
+box.sidebar {
     background-color: @theme_bg_color;
     border-color: @borders;
     border-style: solid;
 }
 
-GcalYearView GtkBox.sidebar:dir(ltr) {
+GcalYearView box.sidebar:dir(ltr) {
     border-left-width: 1px;
 }
 
-GcalYearView GtkBox.sidebar:dir(rtl) {
+GcalYearView box.sidebar:dir(rtl) {
     border-right-width: 1px;
 }
 
-GcalYearView GtkScrolledWindow {
+GcalYearView scrolledwindow {
     border-top-width: 0;
     border-bottom-width: 0;
 }
 
-GcalYearView GtkButton {
+GcalYearView button {
     border-radius: 0;
     border-bottom-width: 0;
 }
 
-GtkPopover.events {
+popover.events {
     background-color: @theme_bg_color;
     padding: 0;
 }
 
-GtkPopover.events GtkBox {
+popover.events box {
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
 }
 
-GtkPopover.events GtkListBox {
+popover.events list {
     background-color: @theme_bg_color;
     border-radius: 6px;
 }
 
-GtkPopover.events GtkScrolledWindow {
+popover.events scrolledwindow {
     border-width: 0;
 }
 
-GtkPopover.events GtkButton {
+popover.events button {
     border-radius: 6px;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -179,28 +179,28 @@ GtkPopover.events GtkButton {
     box-shadow: none;
 }
 
-GcalEventWidget {
+event-widget {
     border-radius: 2px;
     margin: 2px;
     padding: 4px;
     font: 10;
 }
 
-GcalEventWidget.color-dark {
+event-widget.color-dark {
     color: white;
     outline-color: rgba(0, 0, 0, 0.3);
 }
 
-GcalEventWidget.color-dark:backdrop {
+event-widget.color-dark:backdrop {
     color: rgba(255, 255, 255, 0.3);
 }
 
-GcalEventWidget.color-light {
+event-widget.color-light {
     color: black;
     outline-color: rgba(255, 255, 255, 0.5);
 }
 
-GcalEventWidget.color-light:backdrop {
+event-widget.color-light:backdrop {
     color: rgba(0, 0, 0, 0.3);
 }
 

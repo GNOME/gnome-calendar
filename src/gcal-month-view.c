@@ -337,7 +337,7 @@ gather_button_event_data (GcalMonthView *view,
   cell_height = (gtk_widget_get_allocated_height (widget) - start_grid_y) / 6.0;
 
   context = gtk_widget_get_style_context (widget);
-  state = gtk_widget_get_state_flags (widget);
+  state = gtk_style_context_get_state (context);
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, "overflow");
   gtk_style_context_get (context, state, "font", &ofont_desc, "padding-bottom", &padding_bottom, NULL);
@@ -389,7 +389,7 @@ get_start_grid_y (GtkWidget *widget)
   gdouble start_grid_y;
 
   context = gtk_widget_get_style_context (widget);
-  state_flags = gtk_widget_get_state_flags (widget);
+  state_flags = gtk_style_context_get_state (context);
 
   layout = gtk_widget_create_pango_layout (widget, NULL);
 
@@ -544,7 +544,7 @@ rebuild_popover_for_day (GcalMonthView *view,
   cell_height = (gtk_widget_get_allocated_height (GTK_WIDGET (view)) - start_grid_y) / 6.0;
 
   context = gtk_widget_get_style_context (GTK_WIDGET (view));
-  state = gtk_widget_get_state_flags (GTK_WIDGET (view));
+  state = gtk_style_context_get_state (context);
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, "overflow");
   gtk_style_context_get (context, state, "font", &ofont_desc, "padding-bottom", &padding_bottom, NULL);
@@ -784,6 +784,8 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   subscriber_view_class->clear_state = gcal_month_view_clear_state;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
+
+  gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
 
 static void
@@ -802,8 +804,6 @@ gcal_month_view_init (GcalMonthView *self)
 
   priv->pressed_overflow_indicator = -1;
   priv->hovered_overflow_indicator = -1;
-
-  gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "calendar-view");
 
   priv->k = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
@@ -992,6 +992,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 {
   GcalSubscriberViewPrivate *ppriv;
   GcalMonthViewPrivate *priv;
+  GtkStyleContext *context;
 
   gint i, j, sw, shown_rows;
 
@@ -1013,6 +1014,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   gpointer key, value;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
+  context = gtk_widget_get_style_context (widget);
   ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
 
   if (!ppriv->children_changed &&
@@ -1037,7 +1039,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   if (gtk_widget_get_realized (widget))
     gdk_window_move_resize (priv->event_window, allocation->x, allocation->y, allocation->width, allocation->height);
 
-  gtk_style_context_get (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget),
+  gtk_style_context_get (context, gtk_style_context_get_state (context),
                          "font", &font_desc, "padding-bottom", &padding_bottom, NULL);
 
   layout = gtk_widget_create_pango_layout (widget, _("Other events"));
@@ -1167,7 +1169,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                 }
 
               gtk_style_context_get_margin (gtk_widget_get_style_context (child_widget),
-                                            gtk_widget_get_state_flags (child_widget),
+                                            gtk_style_context_get_state (context),
                                             &margin);
 
               pos_x = cell_width * column + margin.left;
@@ -1229,7 +1231,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           if (size_left[i] > natural_height)
             {
               gtk_style_context_get_margin (gtk_widget_get_style_context (child_widget),
-                                            gtk_widget_get_state_flags (child_widget),
+                                            gtk_style_context_get_state (context),
                                             &margin);
 
               pos_x = cell_width * (i % 7) + margin.left;
@@ -1296,7 +1298,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
   /* fonts and colors selection */
   context = gtk_widget_get_style_context (widget);
-  state = gtk_widget_get_state_flags (widget);
+  state = gtk_style_context_get_state (context);
 
   gtk_style_context_get (context, state | GTK_STATE_FLAG_SELECTED, "font", &sfont_desc, NULL);
 
