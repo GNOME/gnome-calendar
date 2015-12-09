@@ -539,13 +539,18 @@ draw_month_grid (GcalYearView *year_view,
 
   cairo_save (cr);
   context = gtk_widget_get_style_context (widget);
-  state_flags = gtk_widget_get_state_flags (widget);
+  state_flags = gtk_style_context_get_state (context);
   sw = 1 - 2 * priv->k;
   box_side = priv->navigator_grid->box_side;
   x = priv->navigator_grid->coordinates[month_nr].x;
   y = priv->navigator_grid->coordinates[month_nr].y;
 
+  /* Get the font description */
+  gtk_style_context_save (context);
+  gtk_style_context_set_state (context, state_flags | GTK_STATE_FLAG_SELECTED);
   gtk_style_context_get (context, state_flags | GTK_STATE_FLAG_SELECTED, "font", &sfont_desc, NULL);
+  gtk_style_context_restore (context);
+
   slayout = gtk_widget_create_pango_layout (widget, NULL);
   pango_layout_set_font_description (slayout, sfont_desc);
 
@@ -767,7 +772,7 @@ draw_navigator (GcalYearView *year_view,
 
   priv = year_view->priv;
   context = gtk_widget_get_style_context (GTK_WIDGET (year_view));
-  state_flags = gtk_widget_get_state_flags (GTK_WIDGET (year_view));
+  state_flags = gtk_style_context_get_state (context);
   sw = 1 - 2 * priv->k;
   width = gtk_widget_get_allocated_width (widget);
 
@@ -784,7 +789,7 @@ draw_navigator (GcalYearView *year_view,
 
   /* draw header on navigator */
   context = gtk_widget_get_style_context (widget);
-  state_flags = gtk_widget_get_state_flags (GTK_WIDGET (year_view));
+  state_flags = gtk_style_context_get_state (context);
 
   header_layout = gtk_widget_create_pango_layout (widget, header_str);
   pango_layout_set_font_description (header_layout, font_desc);
@@ -1016,10 +1021,13 @@ gcal_year_view_get_preferred_width (GtkWidget *widget,
                                     gint      *natural)
 {
   GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (widget)->priv;
+  GtkStyleContext *context;
   gint padding_left;
 
-  gtk_style_context_get (gtk_widget_get_style_context (priv->navigator),
-                         gtk_widget_get_state_flags (priv->navigator),
+  context = gtk_widget_get_style_context (priv->navigator);
+
+  gtk_style_context_get (context,
+                         gtk_style_context_get_state (context),
                          "padding-left", &padding_left, NULL);
 
   if (minimum != NULL)
@@ -1035,10 +1043,13 @@ gcal_year_view_get_preferred_height_for_width (GtkWidget *widget,
                                                gint      *natural)
 {
   GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (widget)->priv;
+  GtkStyleContext *context;
   gint padding_top;
 
-  gtk_style_context_get (gtk_widget_get_style_context (priv->navigator),
-                         gtk_widget_get_state_flags (priv->navigator),
+  context = gtk_widget_get_style_context (priv->navigator);
+
+  gtk_style_context_get (context,
+                         gtk_style_context_get_state (context),
                          "padding-top", &padding_top, NULL);
 
   if (minimum != NULL)
@@ -1058,7 +1069,7 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
   context = gtk_widget_get_style_context (widget);
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, "year-navigator");
-  gtk_style_context_get (context, gtk_widget_get_state_flags (widget), "padding-left", &padding_left, NULL);
+  gtk_style_context_get (context, gtk_style_context_get_state (context), "padding-left", &padding_left, NULL);
   gtk_style_context_restore (context);
 
   priv->popover_mode = (alloc->width < NAVIGATOR_CELL_WIDTH * 4 + padding_left * 8 + SIDEBAR_PREFERRED_WIDTH);
@@ -1309,6 +1320,8 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, navigator_motion_notify_cb);
   gtk_widget_class_bind_template_callback (widget_class, add_event_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, popover_closed_cb);
+
+  gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
 
 static void
@@ -1317,7 +1330,6 @@ gcal_year_view_init (GcalYearView *self)
   self->priv = gcal_year_view_get_instance_private (self);
 
   gtk_widget_init_template (GTK_WIDGET (self));
-  gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "calendar-view");
 
   if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_LTR)
     self->priv->k = 0;

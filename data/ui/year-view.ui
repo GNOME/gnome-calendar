@@ -2,6 +2,9 @@
 <interface>
   <!-- interface-requires gtk+ 3.10 -->
   <template class="GcalYearView" parent="GtkBox">
+    <style>
+      <class name="year-view"/>
+    </style>
     <child>
       <object class="GtkDrawingArea" id="navigator">
         <property name="visible">True</property>

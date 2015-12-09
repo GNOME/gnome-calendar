@@ -134,20 +134,20 @@ box.sidebar {
     border-style: solid;
 }
 
-GcalYearView box.sidebar:dir(ltr) {
+.year-view box.sidebar:dir(ltr) {
     border-left-width: 1px;
 }
 
-GcalYearView box.sidebar:dir(rtl) {
+.year-view box.sidebar:dir(rtl) {
     border-right-width: 1px;
 }
 
-GcalYearView scrolledwindow {
+.year-view scrolledwindow {
     border-top-width: 0;
     border-bottom-width: 0;
 }
 
-GcalYearView button {
+.year-view button {
     border-radius: 0;
     border-bottom-width: 0;
 }
