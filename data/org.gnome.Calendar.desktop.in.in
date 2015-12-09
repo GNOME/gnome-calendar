@@ -6,7 +6,6 @@ Icon=gnome-calendar
 Terminal=false
 Type=Application
 StartupNotify=true
-OnlyShowIn=GNOME;
 Categories=GNOME;GTK;Office;Calendar;Core;
 _Keywords=Calendar;Event;Reminder;
 MimeType=text/calendar;
