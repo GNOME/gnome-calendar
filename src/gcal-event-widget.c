@@ -202,6 +202,8 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
                                      g_cclosure_marshal_VOID__VOID,
                                      G_TYPE_NONE,
                                      0);
+
+  gtk_widget_class_set_css_name (widget_class, "event-widget");
 }
 
 static void
@@ -361,15 +363,17 @@ gcal_event_widget_get_preferred_width (GtkWidget *widget,
                                        gint      *natural)
 {
   GtkBorder border, padding;
+  GtkStyleContext *context;
   PangoLayout *layout;
   gint layout_width;
 
+  context = gtk_widget_get_style_context (widget);
   layout = gtk_widget_create_pango_layout (widget, "00:00:00 00:00");
   pango_layout_get_pixel_size (layout, &layout_width, NULL);
   g_object_unref (layout);
 
-  gtk_style_context_get_border (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget), &border);
-  gtk_style_context_get_padding (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget), &padding);
+  gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
+  gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
 
   if (minimum != NULL)
     *minimum = layout_width + padding.left + padding.right + border.left + border.right;
@@ -383,15 +387,17 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
                                         gint      *natural)
 {
   GtkBorder border, padding;
+  GtkStyleContext *context;
   PangoLayout *layout;
   gint layout_height;
 
+  context = gtk_widget_get_style_context (widget);
   layout = gtk_widget_create_pango_layout (widget, NULL);
   pango_layout_get_pixel_size (layout, NULL, &layout_height);
   g_object_unref (layout);
 
-  gtk_style_context_get_border (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget), &border);
-  gtk_style_context_get_padding (gtk_widget_get_style_context (widget), gtk_widget_get_state_flags (widget), &padding);
+  gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
+  gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
 
   if (minimum != NULL)
     *minimum = layout_height + padding.top + padding.bottom + border.top + border.bottom;
@@ -525,7 +531,7 @@ gcal_event_widget_draw (GtkWidget *widget,
 
   priv = gcal_event_widget_get_instance_private (GCAL_EVENT_WIDGET (widget));
   context = gtk_widget_get_style_context (widget);
-  state = gtk_widget_get_state_flags (widget);
+  state = gtk_style_context_get_state (context);
 
   gtk_style_context_get_padding (context, state, &padding);
 
