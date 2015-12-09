@@ -1431,8 +1431,8 @@ gcal_month_view_draw (GtkWidget *widget,
           gtk_style_context_add_class (context, "overflow");
           if (priv->hovered_overflow_indicator == real_i)
             {
-              gtk_style_context_set_state (context, state | GTK_STATE_FLAG_PRELIGHT);
-              gtk_style_context_get (context, state | GTK_STATE_FLAG_PRELIGHT, "font", &ofont_desc, NULL);
+              gtk_style_context_set_state (context, GTK_STATE_FLAG_PRELIGHT);
+              gtk_style_context_get (context, GTK_STATE_FLAG_PRELIGHT, "font", &ofont_desc, NULL);
             }
           else
             {
@@ -1456,7 +1456,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
           gtk_render_layout (context, cr, cell_width * column, y_value, overflow_layout);
 
-          gtk_style_context_set_state (context, state);
+          //gtk_style_context_set_state (context, state);
           gtk_style_context_remove_class (context, "overflow");
           gtk_style_context_restore (context);
           g_free (overflow_str);
@@ -1495,7 +1495,7 @@ gcal_month_view_draw (GtkWidget *widget,
       else if (lower_mark <= j && j <= upper_mark)
         {
           gtk_style_context_save (context);
-          gtk_style_context_set_state (context, state | GTK_STATE_FLAG_SELECTED);
+          gtk_style_context_set_state (context, GTK_STATE_FLAG_SELECTED);
 
           pango_layout_set_text (layout, nr_day, -1);
           pango_layout_set_font_description (layout, sfont_desc);

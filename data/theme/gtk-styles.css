@@ -228,6 +228,6 @@ event-widget.color-light:backdrop {
     background-color: transparent;
 }
 
-.calendar-list > GtkListBoxRow{
+.calendar-list > list {
     border-radius: 4px;
 }
