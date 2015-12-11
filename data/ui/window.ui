@@ -169,6 +169,18 @@
         <property name="show_close_button">True</property>
         <property name="title" translatable="yes">Calendar</property>
         <child>
+          <object class="GtkButton" id="today_button">
+            <property name="label" translatable="yes">Today</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="action_name">win.today</property>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
           <object class="GtkBox" id="button_box">
             <property name="visible">True</property>
             <child>
@@ -186,18 +198,6 @@
               </object>
             </child>
             <child>
-              <object class="GtkButton" id="today_button">
-                <property name="label" translatable="yes">Today</property>
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="action_name">win.today</property>
-              </object>
-              <packing>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkButton" id="forward_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -210,9 +210,6 @@
                   </object>
                 </child>
               </object>
-              <packing>
-                <property name="position">2</property>
-              </packing>
             </child>
             <style>
               <class name="linked"/>
