@@ -417,7 +417,7 @@ icaltime_compare_with_current (const icaltimetype *date1,
                                const icaltimetype *date2,
                                time_t             *current_time_t)
 {
-  gint result;
+  gint result = 0;
 
   time_t start1, start2, diff1, diff2;
   start1 = icaltime_as_timet_with_zone (*date1, date1->zone != NULL ? date1->zone : e_cal_util_get_system_timezone ());
@@ -425,11 +425,7 @@ icaltime_compare_with_current (const icaltimetype *date1,
   diff1 = start1 - *current_time_t;
   diff2 = start2 - *current_time_t;
 
-  if (diff1 == diff2)
-    {
-      result = 0;
-    }
-  else
+  if (diff1 != diff2)
     {
       if (diff1 == 0)
         result = -1;
