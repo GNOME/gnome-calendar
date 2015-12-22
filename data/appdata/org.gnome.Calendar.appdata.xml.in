@@ -30,6 +30,13 @@
     </screenshot>
   </screenshots>
 
+  <kudos>
+    <kudo>AppMenu</kudo>
+    <kudo>HiDpiIcon</kudo>
+    <kudo>ModernToolkit</kudo>
+    <kudo>SearchProvider</kudo>
+  </kudos>
+
   <url type="homepage">https://wiki.gnome.org/Apps/Calendar</url>
   <url type="bugtracker">https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar</url>
   <project_group>GNOME</project_group>
