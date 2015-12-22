@@ -927,9 +927,6 @@ add_event_clicked_cb (GcalYearView *year_view,
   GcalYearViewPrivate *priv = year_view->priv;
   icaltimetype *start_date, *end_date = NULL;
 
-  if (priv->popover_mode)
-    gtk_widget_hide (priv->popover);
-
   if (priv->start_selected_date->day == 0)
     {
       start_date = gcal_dup_icaltime (priv->current_date);
@@ -942,6 +939,9 @@ add_event_clicked_cb (GcalYearView *year_view,
       *end_date = icaltime_normalize (*end_date);
       end_date->is_date = 1;
     }
+
+  if (priv->popover_mode)
+    gtk_widget_hide (priv->popover);
 
   start_date->is_date = 1;
   g_signal_emit_by_name (GCAL_VIEW (year_view), "create-event-detailed", start_date, end_date);
