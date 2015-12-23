@@ -244,7 +244,7 @@ gcal_date_selector_init (GcalDateSelector *self)
    * corresponding indexes. I should have added more validations here.
    */
   max = strlen (priv->mask);
-  if (max != 6)
+  if (max != 8)
     {
       /* I'll assume an error and bail out with the default values */
       priv->day_pos = 0;
