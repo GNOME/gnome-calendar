@@ -625,7 +625,7 @@
                     <child>
                       <object class="GtkLabel" id="web_description_label">
                         <property name="visible">True</property>
-                        <property name="label" translatable="yes">Enter the address of the calendar that you want to add. If the calendar belongs to one of your online accounts, you can add it through the &lt;a href=&quot;GOA&quot;&gt;online account settings&lt;/a&gt;.</property>
+                        <property name="label" translatable="yes">Enter the address of the calendar that you want to add. If the calendar belongs to one of you online accounts, you can add it through the &lt;a href=&quot;GOA&quot;&gt;online account settings&lt;/a&gt;.</property>
                         <property name="use_markup">True</property>
                         <property name="wrap">True</property>
                         <property name="xalign">0</property>
