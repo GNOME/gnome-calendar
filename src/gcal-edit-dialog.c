@@ -112,6 +112,14 @@ static void        gcal_edit_dialog_all_day_changed       (GtkWidget         *wi
 
 G_DEFINE_TYPE (GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
 
+enum
+{
+  PROP_0,
+  PROP_MANAGER,
+  PROP_WRITABLE,
+  LAST_PROP
+};
+
 static void
 fill_sources_menu (GcalEditDialog *dialog)
 {
@@ -469,17 +477,91 @@ update_time (GtkEntry   *entry,
 }
 
 static void
+gcal_edit_dialog_get_property (GObject    *object,
+                               guint       prop_id,
+                               GValue     *value,
+                               GParamSpec *pspec)
+{
+  GcalEditDialog *self = GCAL_EDIT_DIALOG (object);
+
+  switch (prop_id)
+    {
+    case PROP_MANAGER:
+      g_value_set_object (value, self->manager);
+      break;
+
+    case PROP_WRITABLE:
+      g_value_set_boolean (value, self->writable);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_edit_dialog_set_property (GObject      *object,
+                               guint         prop_id,
+                               const GValue *value,
+                               GParamSpec   *pspec)
+{
+  GcalEditDialog *self = GCAL_EDIT_DIALOG (object);
+
+  switch (prop_id)
+    {
+    case PROP_MANAGER:
+      gcal_edit_dialog_set_manager (self, g_value_get_object (value));
+      break;
+
+    case PROP_WRITABLE:
+      gcal_edit_dialog_set_writable (self, g_value_get_boolean (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
 gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
 
   object_class = G_OBJECT_CLASS (klass);
+  object_class->get_property = gcal_edit_dialog_get_property;
+  object_class->set_property = gcal_edit_dialog_set_property;
   object_class->constructed = gcal_edit_dialog_constructed;
   object_class->finalize = gcal_edit_dialog_finalize;
 
   widget_class = GTK_WIDGET_CLASS (klass);
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/edit-dialog.ui");
+
+  /**
+   * GcalEditDialog::manager:
+   *
+   * The #GcalManager of the dialog.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_MANAGER,
+                                   g_param_spec_object ("manager",
+                                                        "Manager of the dialog",
+                                                        "The manager of the dialog",
+                                                        GCAL_TYPE_MANAGER,
+                                                        G_PARAM_READWRITE));
+
+  /**
+   * GcalEditDialog::writable:
+   *
+   * Whether the current event can be edited or not.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_WRITABLE,
+                                   g_param_spec_boolean ("writable",
+                                                         "Whether the current event can be edited",
+                                                         "Whether the current event can be edited or not",
+                                                         TRUE,
+                                                         G_PARAM_READWRITE));
 
   /* Buttons */
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, done_button);
@@ -574,6 +656,7 @@ gcal_edit_dialog_finalize (GObject *object)
   g_clear_object (&dialog->action_group);
   g_clear_object (&dialog->action);
   g_clear_object (&dialog->component);
+  g_clear_object (&dialog->manager);
   g_clear_object (&dialog->source);
 
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->finalize (object);
@@ -583,35 +666,25 @@ static void
 gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
                                gboolean        writable)
 {
-  dialog->writable = writable;
-
-  gtk_widget_set_visible (dialog->lock, !writable);
-
-  gtk_editable_set_editable (GTK_EDITABLE (dialog->summary_entry), writable);
-  gtk_editable_set_editable (GTK_EDITABLE (dialog->location_entry), writable);
-
-  gtk_text_view_set_editable (GTK_TEXT_VIEW (dialog->notes_text), writable);
-
-  gtk_widget_set_sensitive (dialog->all_day_check, writable);
-  gtk_widget_set_sensitive (dialog->end_date_selector, writable);
-  gtk_widget_set_sensitive (dialog->start_date_selector, writable);
-
-  if (!writable || (writable && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check))))
+  if (dialog->writable != writable)
     {
-      gtk_widget_set_sensitive (dialog->start_time_selector, FALSE);
-      gtk_widget_set_sensitive (dialog->end_time_selector, FALSE);
-    }
-  else
-    {
-      gtk_widget_set_sensitive (dialog->start_time_selector, TRUE);
-      gtk_widget_set_sensitive (dialog->end_time_selector, TRUE);
-    }
+      dialog->writable = writable;
 
-  gtk_button_set_label (GTK_BUTTON (dialog->done_button),
-                        writable ? _("Save") : _("Done"));
+      gtk_button_set_label (GTK_BUTTON (dialog->done_button), writable ? _("Save") : _("Done"));
 
-  /* add delete_button here */
-  gtk_widget_set_sensitive (dialog->delete_button, writable);
+      if (!writable || (writable && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check))))
+        {
+          gtk_widget_set_sensitive (dialog->start_time_selector, FALSE);
+          gtk_widget_set_sensitive (dialog->end_time_selector, FALSE);
+        }
+      else
+        {
+          gtk_widget_set_sensitive (dialog->start_time_selector, TRUE);
+          gtk_widget_set_sensitive (dialog->end_time_selector, TRUE);
+        }
+
+      g_object_notify (G_OBJECT (dialog), "writable");
+    }
 }
 
 static void
@@ -879,7 +952,8 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
   g_return_if_fail (GCAL_IS_EDIT_DIALOG (dialog));
   g_return_if_fail (GCAL_IS_MANAGER (manager));
 
-  dialog->manager = manager;
+  if (g_set_object (&dialog->manager, manager))
+    g_object_notify (G_OBJECT (dialog), "manager");
 }
 
 ECalComponent*

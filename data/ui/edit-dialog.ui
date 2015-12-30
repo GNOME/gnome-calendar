@@ -26,6 +26,7 @@
         </child>
         <child>
           <object class="GtkImage" id="lock">
+            <property name="visible" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default|invert-boolean" />
             <property name="icon_name">changes-prevent-symbolic</property>
             <property name="icon_size">1</property>
           </object>
@@ -135,6 +136,7 @@
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="activates_default">True</property>
+                <property name="editable" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <signal name="notify::text" handler="update_summary" object="GcalEditDialog" swapped="no"/>
               </object>
               <packing>
@@ -167,6 +169,7 @@
                 <property name="can_focus">True</property>
                 <property name="draw_indicator">True</property>
                 <property name="label" translatable="yes">All day</property>
+                <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <signal name="toggled" handler="gcal_edit_dialog_all_day_changed" object="GcalEditDialog" swapped="no"/>
               </object>
               <packing>
@@ -180,6 +183,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="secondary_icon_name">find-location-symbolic</property>
+                <property name="editable" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <signal name="notify::text" handler="update_location" object="GcalEditDialog" swapped="no"/>
               </object>
               <packing>
@@ -202,6 +206,7 @@
                     <property name="hexpand">True</property>
                     <property name="left_margin">6</property>
                     <property name="right_margin">6</property>
+                    <property name="editable" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                     <property name="wrap_mode">GTK_WRAP_WORD_CHAR</property>
                   </object>
                 </child>
@@ -223,6 +228,7 @@
                   <object class="GcalDateSelector" id="start_date_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                     <signal name="modified" handler="update_date" object="GcalEditDialog" swapped="no"/>
                   </object>
                   <packing>
@@ -258,6 +264,7 @@
                   <object class="GcalDateSelector" id="end_date_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                     <signal name="modified" handler="update_date" object="GcalEditDialog" swapped="no"/>
                   </object>
                   <packing>
@@ -286,6 +293,7 @@
               <object class="GtkButton" id="delete_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <signal name="clicked" handler="gcal_edit_dialog_action_button_clicked" object="GcalEditDialog" swapped="no"/>
                 <child>
                   <object class="GtkLabel" id="delete_label">
