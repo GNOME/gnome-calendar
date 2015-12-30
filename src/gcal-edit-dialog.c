@@ -750,10 +750,10 @@ gcal_edit_dialog_set_event_is_new (GcalEditDialog *dialog,
 {
   dialog->event_is_new = event_is_new;
 
-  gtk_widget_set_visible (GTK_WIDGET (dialog->delete_button), !event_is_new);
+  gtk_widget_set_visible (dialog->delete_button, !event_is_new);
 
   /* FIXME: implement moving events to other sources */
-  gtk_widget_set_sensitive (GTK_WIDGET (dialog->sources_button), event_is_new);
+  gtk_widget_set_sensitive (dialog->sources_button, event_is_new);
   gtk_button_set_relief (GTK_BUTTON (dialog->sources_button), event_is_new ? GTK_RELIEF_NORMAL : GTK_RELIEF_NONE);
 }
 
