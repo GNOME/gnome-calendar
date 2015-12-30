@@ -546,25 +546,6 @@ gcal_edit_dialog_constructed (GObject* object)
 
   g_action_map_add_action (G_ACTION_MAP (dialog->action_group), G_ACTION (dialog->action));
 
-  /* bind title & symmary */
-  g_object_bind_property (dialog->summary_entry,
-                          "text",
-                          dialog->titlebar,
-                          "title",
-                          G_BINDING_DEFAULT);
-
-  /* bind all-day check button & time entries */
-  g_object_bind_property (dialog->all_day_check,
-                          "active",
-                          dialog->start_time_selector,
-                          "sensitive",
-                          G_BINDING_DEFAULT | G_BINDING_INVERT_BOOLEAN);
-  g_object_bind_property (dialog->all_day_check,
-                          "active",
-                          dialog->end_time_selector,
-                          "sensitive",
-                          G_BINDING_DEFAULT | G_BINDING_INVERT_BOOLEAN);
-
   /* action area, buttons */
   g_object_set_data (G_OBJECT (dialog->cancel_button),
                      "response",

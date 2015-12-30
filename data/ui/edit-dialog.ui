@@ -15,6 +15,7 @@
     <child type="titlebar">
       <object class="GtkHeaderBar" id="titlebar">
         <property name="visible">True</property>
+        <property name="title" bind-source="summary_entry" bind-property="text" bind-flags="default" />
         <child>
           <object class="GtkButton" id="cancel_button">
             <property name="label" translatable="yes">Cancel</property>
@@ -232,6 +233,7 @@
                   <object class="GcalTimeSelector" id="start_time_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="sensitive" bind-source="all_day_check" bind-property="active" bind-flags="invert-boolean|default" />
                     <signal name="modified" handler="update_time" object="GcalEditDialog" swapped="no"/>
                   </object>
                   <packing>
@@ -266,6 +268,7 @@
                   <object class="GcalTimeSelector" id="end_time_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="sensitive" bind-source="all_day_check" bind-property="active" bind-flags="invert-boolean|default" />
                     <signal name="modified" handler="update_time" object="GcalEditDialog" swapped="no"/>
                   </object>
                   <packing>
