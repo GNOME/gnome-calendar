@@ -30,29 +30,9 @@ G_BEGIN_DECLS
 #define GCAL_RESPONSE_SAVE_EVENT   4
 #define GCAL_RESPONSE_CREATE_EVENT 6
 
-
 #define GCAL_TYPE_EDIT_DIALOG                (gcal_edit_dialog_get_type ())
-#define GCAL_EDIT_DIALOG(obj)                (G_TYPE_CHECK_INSTANCE_CAST((obj), GCAL_TYPE_EDIT_DIALOG, GcalEditDialog))
-#define GCAL_EDIT_DIALOG_CLASS(klass)        (G_TYPE_CHECK_CLASS_CAST((klass), GCAL_TYPE_EDIT_DIALOG, GcalEditDialogClass))
-#define GCAL_IS_EDIT_DIALOG(obj)             (G_TYPE_CHECK_INSTANCE_TYPE((obj), GCAL_TYPE_EDIT_DIALOG))
-#define GCAL_IS_EDIT_DIALOG_CLASS(klass)     (G_TYPE_CHECK_CLASS_TYPE((klass), GCAL_TYPE_EDIT_DIALOG))
-#define GCAL_EDIT_DIALOG_GET_CLASS(obj)      (G_TYPE_INSTANCE_GET_CLASS((obj), GCAL_TYPE_EDIT_DIALOG, GcalEditDialogClass))
 
-typedef struct _GcalEditDialog                GcalEditDialog;
-typedef struct _GcalEditDialogClass           GcalEditDialogClass;
-
-struct _GcalEditDialog
-{
-  GtkDialog parent;
-};
-
-struct _GcalEditDialogClass
-{
-  GtkDialogClass parent_class;
-};
-
-
-GType                gcal_edit_dialog_get_type                (void);
+G_DECLARE_FINAL_TYPE (GcalEditDialog, gcal_edit_dialog, GCAL, EDIT_DIALOG, GtkDialog);
 
 GtkWidget*           gcal_edit_dialog_new                     (gboolean format_24h);
 
