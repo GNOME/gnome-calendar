@@ -749,9 +749,6 @@ gcal_edit_dialog_new (gboolean format_24h)
   dialog = g_object_new (GCAL_TYPE_EDIT_DIALOG, NULL);
   priv = gcal_edit_dialog_get_instance_private (GCAL_EDIT_DIALOG (dialog));
 
-  gtk_window_set_modal (GTK_WINDOW (dialog), TRUE);
-  gtk_window_set_destroy_with_parent (GTK_WINDOW (dialog), TRUE);
-  gtk_window_set_resizable (GTK_WINDOW (dialog), FALSE);
   priv->format_24h = format_24h;
 
   gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (priv->start_time_selector), format_24h);
