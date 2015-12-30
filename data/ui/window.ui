@@ -55,7 +55,7 @@
                 <child>
                   <object class="GcalMonthView" id="month_view">
                     <property name="visible">True</property>
-                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="default|sync-create|bidirectional"/>
+                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
                     <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
                     <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
                     <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
@@ -68,7 +68,7 @@
                 <child>
                   <object class="GcalYearView" id="year_view">
                     <property name="visible">True</property>
-                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="default|sync-create|bidirectional"/>
+                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
                     <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
                     <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
                     <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
@@ -412,5 +412,10 @@
   <object class="GcalSourceDialog" id="source_dialog">
     <property name="visible">False</property>
     <property name="transient_for">GcalWindow</property>
+  </object>
+  <object class="GcalEditDialog" id="edit_dialog">
+    <property name="visible">False</property>
+    <property name="transient_for">GcalWindow</property>
+    <signal name="response" handler="edit_dialog_closed" object="GcalWindow" swapped="no"/>
   </object>
 </interface>

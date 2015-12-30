@@ -1394,11 +1394,11 @@ gcal_window_class_init(GcalWindowClass *klass)
   g_object_class_install_property (
       object_class,
       PROP_MANAGER,
-      g_param_spec_pointer ("manager",
-                            "The manager object",
-                            "A weak reference to the app manager object",
-                            G_PARAM_CONSTRUCT_ONLY |
-                            G_PARAM_READWRITE));
+      g_param_spec_object ("manager",
+                           "The manager object",
+                           "A weak reference to the app manager object",
+                           GCAL_TYPE_MANAGER,
+                           G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
 
   g_object_class_install_property (
       object_class,
@@ -1420,6 +1420,7 @@ gcal_window_class_init(GcalWindowClass *klass)
                             G_PARAM_READWRITE));
 
   /* widgets */
+  gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, edit_dialog);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, header_bar);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, main_box);
   gtk_widget_class_bind_template_child_private (widget_class, GcalWindow, menu_button);
@@ -1478,6 +1479,9 @@ gcal_window_class_init(GcalWindowClass *klass)
 
   /* search related */
   gtk_widget_class_bind_template_callback (widget_class, search_event_selected);
+
+  /* Edit dialog related */
+  gtk_widget_class_bind_template_callback (widget_class, edit_dialog_closed);
 }
 
 static void
@@ -1485,17 +1489,14 @@ gcal_window_init (GcalWindow *self)
 {
   GcalWindowPrivate *priv = gcal_window_get_instance_private (self);
 
-  /* source dialog */
-  priv->source_dialog = gcal_source_dialog_new ();
-  gtk_window_set_transient_for (GTK_WINDOW (priv->source_dialog), GTK_WINDOW (self));
+  gtk_widget_init_template (GTK_WIDGET (self));
 
+  /* source dialog */
   g_object_bind_property (self, "application", priv->source_dialog, "application",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   priv->active_date = g_new0 (icaltimetype, 1);
   priv->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
-
-  gtk_widget_init_template (GTK_WIDGET (self));
 }
 
 static void
@@ -1543,13 +1544,6 @@ gcal_window_constructed (GObject *object)
 
   g_object_unref (builder);
 
-  /* edit dialog initialization */
-  priv->edit_dialog = gcal_edit_dialog_new (use_24h_format);
-  gtk_window_set_transient_for (GTK_WINDOW (priv->edit_dialog), GTK_WINDOW (object));
-  gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog), priv->manager);
-
-  g_signal_connect (priv->edit_dialog, "response", G_CALLBACK (edit_dialog_closed), object);
-
   /* XXX: Week view disabled until after the release when we restart the work on it*/
   //priv->views[GCAL_WINDOW_VIEW_WEEK] = gcal_week_view_new ();
   //gcal_week_view_set_manager (GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]), priv->manager);
@@ -1595,6 +1589,8 @@ gcal_window_finalize (GObject *object)
 
   priv = gcal_window_get_instance_private (GCAL_WINDOW (object));
 
+  g_clear_object (&priv->manager);
+
   g_free (priv->active_date);
   g_free (priv->current_date);
 
@@ -1629,14 +1625,19 @@ gcal_window_set_property (GObject      *object,
       set_new_event_mode (GCAL_WINDOW (object), g_value_get_boolean (value));
       return;
     case PROP_MANAGER:
-      priv->manager = g_value_get_pointer (value);
-      g_signal_connect (priv->manager, "source-added", G_CALLBACK (add_source), object);
-      g_signal_connect (priv->manager, "source-enabled", G_CALLBACK (source_enabled), object);
-      g_signal_connect (priv->manager, "source-removed", G_CALLBACK (remove_source), object);
+      if (g_set_object (&priv->manager, g_value_get_object (value)))
+        {
+          g_signal_connect (priv->manager, "source-added", G_CALLBACK (add_source), object);
+          g_signal_connect (priv->manager, "source-enabled", G_CALLBACK (source_enabled), object);
+          g_signal_connect (priv->manager, "source-removed", G_CALLBACK (remove_source), object);
 
-      gcal_year_view_set_manager (GCAL_YEAR_VIEW (priv->year_view), priv->manager);
-      gcal_source_dialog_set_manager (GCAL_SOURCE_DIALOG (priv->source_dialog), priv->manager);
-      update_current_date (GCAL_WINDOW (object));
+          gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (priv->edit_dialog), priv->manager);
+          gcal_year_view_set_manager (GCAL_YEAR_VIEW (priv->year_view), priv->manager);
+          gcal_source_dialog_set_manager (GCAL_SOURCE_DIALOG (priv->source_dialog), priv->manager);
+          update_current_date (GCAL_WINDOW (object));
+
+          g_object_notify (object, "manager");
+        }
       return;
     }
 
