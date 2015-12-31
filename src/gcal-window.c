@@ -1659,6 +1659,9 @@ gcal_window_get_property (GObject    *object,
     case PROP_ACTIVE_VIEW:
       g_value_set_enum (value, priv->active_view);
       return;
+    case PROP_MANAGER:
+      g_value_set_object (value, priv->manager);
+      return;
     case PROP_ACTIVE_DATE:
       g_value_set_boxed (value, priv->active_date);
       return;
