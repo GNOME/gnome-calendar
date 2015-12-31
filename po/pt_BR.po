@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-08-31 20:32+0000\n"
-"PO-Revision-Date: 2015-09-22 11:15-0300\n"
-"Last-Translator: Gabriel Speckhahn <gabspeck@gmail.com>\n"
+"POT-Creation-Date: 2015-12-29 08:08+0000\n"
+"PO-Revision-Date: 2015-12-29 18:14-0300\n"
+"Last-Translator: Enrico Nicoletto <liverig@gmail.com>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
@@ -268,12 +268,12 @@ msgstr "Editar agenda"
 #: ../data/ui/source-dialog.ui.h:20
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of you online accounts, you can add it through the <a href="
+"belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
 "Digite o endereço da agenda que você deseja adicionar. Se a agenda pertence a "
 "uma de suas contas on-line, você pode adicioná-la através das <a href=\"GOA"
-"\">configurações de contas on-line</a>"
+"\">configurações de contas on-line</a>."
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: ../data/ui/source-dialog.ui.h:21
@@ -345,7 +345,7 @@ msgstr "Editar detalhes"
 msgid "No events"
 msgstr "Nenhum evento"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
 msgid "Add Event…"
 msgstr "Adicionar evento…"
 
@@ -413,13 +413,6 @@ msgstr ""
 "Enrico Nicoletto <liverig@gmail.com>, 2014, 2015\n"
 "Gabriel Speckhahn <gabspeck@gmail.com>, 2015."
 
-#. This string represents day/month/year order for each of the different
-#. * languages. It could possibly be default value, %m/%d/%y placing the month
-#. * before, or any ordering according to the translator's environment.
-#: ../src/gcal-date-selector.c:239
-msgid "%m/%d/%y"
-msgstr "%d/%m/%y"
-
 #: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "Dia"
@@ -432,12 +425,12 @@ msgstr "Salvar"
 msgid "Unnamed event"
 msgstr "Evento sem nome"
 
-#: ../src/gcal-month-view.c:1035
+#: ../src/gcal-month-view.c:1043
 msgid "Other events"
 msgstr "Outros eventos"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1417
+#: ../src/gcal-month-view.c:1425
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -490,6 +483,9 @@ msgstr "Outro evento excluído"
 #: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "Evento excluído"
+
+#~ msgid "%m/%d/%y"
+#~ msgstr "%d/%m/%y"
 
 #~ msgid "Max Content Height"
 #~ msgstr "Altura máxima do conteúdo"
