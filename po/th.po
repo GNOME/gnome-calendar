@@ -1,15 +1,15 @@
 # Thai translation for gnome-calendar.
-# Copyright (C) 2015 Free Software Foundation, Inc.
+# Copyright (C) 2015-2016 Free Software Foundation, Inc.
 # This file is distributed under the same license as the gnome-calendar package.
-# Akom Chotiphantawanon <knight2000@gmail.com>, 2015.
+# Akom Chotiphantawanon <knight2000@gmail.com>, 2015-2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-07-18 18:20+0000\n"
-"PO-Revision-Date: 2015-07-29 15:06+0700\n"
+"POT-Creation-Date: 2015-12-31 02:19+0000\n"
+"PO-Revision-Date: 2016-01-03 16:26+0700\n"
 "Last-Translator: Akom Chotiphantawanon <knight2000@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
 "Language: th\n"
@@ -111,7 +111,7 @@ msgstr "แหล่งที่ถูกปิดใช้เมื่อคร
 msgid "Cancel"
 msgstr "ยกเลิก"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:673
 msgid "Done"
 msgstr "เสร็จแล้ว"
 
@@ -259,7 +259,7 @@ msgstr "แก้ไขปฏิทิน"
 #: ../data/ui/source-dialog.ui.h:20
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of you online accounts, you can add it through the <a href="
+"belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
 "ป้อนที่อยู่ของปฏิทินที่คุณต้องการเพิ่ม ถ้าปฏิทินที่ต้องการเพิ่มเป็นส่วนหนึ่งของบัญชีออนไลน์ของคุณ "
@@ -332,25 +332,9 @@ msgstr "แก้ไขรายละเอียด"
 msgid "No events"
 msgstr "ไม่มีงานกิจกรรม"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
 msgid "Add Event…"
 msgstr "เพิ่มงานกิจกรรม…"
-
-#: ../src/gb-scrolled-window.c:254
-msgid "Max Content Height"
-msgstr "ความสูงสูงสุดของเนื้อหา"
-
-#: ../src/gb-scrolled-window.c:255
-msgid "The maximum height request that can be made."
-msgstr "ความสูงสูงสุดที่สามารถร้องขอได้"
-
-#: ../src/gb-scrolled-window.c:263
-msgid "Max Content Width"
-msgstr "ความกว้างสูงสุดของเนื้อหา"
-
-#: ../src/gb-scrolled-window.c:264
-msgid "The maximum width request that can be made."
-msgstr "ความกว้างสูงสุดที่สามารถร้องขอได้"
 
 #. Dialog
 #: ../src/gcal-source-dialog.c:1128
@@ -412,31 +396,24 @@ msgstr "Copyright © %Id–%Id The Calendar authors"
 msgid "translator-credits"
 msgstr "Akom Chotiphantawanon <knight2000@gmail.com>"
 
-#. This string represents day/month/year order for each of the different
-#. * languages. It could possibly be default value, %m/%d/%y placing the month
-#. * before, or any ordering according to the translator's environment.
-#: ../src/gcal-date-selector.c:239
-msgid "%m/%d/%y"
-msgstr "%d/%m/%Ey"
-
 #: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "วันที่"
 
-#: ../src/gcal-edit-dialog.c:657
+#: ../src/gcal-edit-dialog.c:673
 msgid "Save"
 msgstr "บันทึก"
 
-#: ../src/gcal-edit-dialog.c:841
+#: ../src/gcal-edit-dialog.c:848
 msgid "Unnamed event"
 msgstr "งานกิจกรรมไม่มีชื่อ"
 
-#: ../src/gcal-month-view.c:1035
+#: ../src/gcal-month-view.c:1043
 msgid "Other events"
 msgstr "งานกิจกรรมอื่นๆ"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1417
+#: ../src/gcal-month-view.c:1425
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -488,6 +465,21 @@ msgstr "ลบงานกิจกรรมอื่นแล้ว"
 #: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "ลบงานกิจกรรมแล้ว"
+
+#~ msgid "Max Content Height"
+#~ msgstr "ความสูงสูงสุดของเนื้อหา"
+
+#~ msgid "The maximum height request that can be made."
+#~ msgstr "ความสูงสูงสุดที่สามารถร้องขอได้"
+
+#~ msgid "Max Content Width"
+#~ msgstr "ความกว้างสูงสุดของเนื้อหา"
+
+#~ msgid "The maximum width request that can be made."
+#~ msgstr "ความกว้างสูงสุดที่สามารถร้องขอได้"
+
+#~ msgid "%m/%d/%y"
+#~ msgstr "%d/%m/%Ey"
 
 #~ msgid "%.2d:%.2d %s"
 #~ msgstr "%.2d:%.2d %s"
