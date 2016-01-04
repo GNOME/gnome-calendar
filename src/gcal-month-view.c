@@ -1300,7 +1300,11 @@ gcal_month_view_draw (GtkWidget *widget,
   context = gtk_widget_get_style_context (widget);
   state = gtk_style_context_get_state (context);
 
+  /* Get font description */
+  gtk_style_context_save (context);
+  gtk_style_context_set_state (context, state | GTK_STATE_FLAG_SELECTED);
   gtk_style_context_get (context, state | GTK_STATE_FLAG_SELECTED, "font", &sfont_desc, NULL);
+  gtk_style_context_restore (context);
 
   gtk_widget_get_allocation (widget, &alloc);
   start_grid_y = get_start_grid_y (widget);
@@ -1569,7 +1573,12 @@ gcal_month_view_draw (GtkWidget *widget,
          last_mark = tmp;
        }
 
+     /* Retrieve the selection color */
+     gtk_style_context_save (context);
+     gtk_style_context_set_state (context, state | GTK_STATE_FLAG_SELECTED);
      gtk_style_context_get_color (context, state | GTK_STATE_FLAG_SELECTED, &color);
+     gtk_style_context_restore (context);
+
      gdk_cairo_set_source_rgba (cr, &color);
      cairo_set_line_width (cr, 0.4);
 
