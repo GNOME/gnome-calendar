@@ -672,6 +672,8 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
 
       gtk_button_set_label (GTK_BUTTON (dialog->done_button), writable ? _("Save") : _("Done"));
 
+      g_object_notify (G_OBJECT (dialog), "writable");
+
       if (!writable || (writable && gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check))))
         {
           gtk_widget_set_sensitive (dialog->start_time_selector, FALSE);
@@ -682,8 +684,6 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
           gtk_widget_set_sensitive (dialog->start_time_selector, TRUE);
           gtk_widget_set_sensitive (dialog->end_time_selector, TRUE);
         }
-
-      g_object_notify (G_OBJECT (dialog), "writable");
     }
 }
 
