@@ -9,17 +9,17 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-09-17 06:30+0000\n"
-"PO-Revision-Date: 2015-09-17 14:46+0300\n"
-"Last-Translator: Stas Solovey <whats_up@tut.by>\n"
+"POT-Creation-Date: 2015-12-22 08:12+0000\n"
+"PO-Revision-Date: 2015-12-22 13:19+0300\n"
+"Last-Translator: Aleksey Kabanov <ak099@mail.ru>\n"
 "Language-Team: Русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2)\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Poedit 1.6.4\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
@@ -261,12 +261,16 @@ msgid "Edit Calendar"
 msgstr "Редактировать календарь"
 
 #: ../data/ui/source-dialog.ui.h:20
+#| msgid ""
+#| "Enter the address of the calendar that you want to add. If the calendar "
+#| "belongs to one of you online accounts, you can add it through the <a href="
+#| "\"GOA\">online account settings</a>."
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of you online accounts, you can add it through the <a href="
+"belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
-"Введите адрес календаря который нужно добавить. Если календарь относится к "
+"Введите адрес календаря, который нужно добавить. Если календарь относится к "
 "одной из сетевых учётных записей, его можно добавить через <a href=\"GOA"
 "\">параметры сетевых учётных записей</a>."
 
@@ -337,7 +341,7 @@ msgstr "Редактировать подробности"
 msgid "No events"
 msgstr "Нет событий"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
 msgid "Add Event…"
 msgstr "Новое событие…"
 
@@ -403,13 +407,6 @@ msgstr ""
 "Юрий Мясоедов <ymyasoedov@yandex.ru>, 2012-2015.\n"
 "Станислав Соловей <whats_up@tut.by>, 2014-2015."
 
-#. This string represents day/month/year order for each of the different
-#. * languages. It could possibly be default value, %m/%d/%y placing the month
-#. * before, or any ordering according to the translator's environment.
-#: ../src/gcal-date-selector.c:239
-msgid "%m/%d/%y"
-msgstr "%d.%m.%y"
-
 #: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "День"
@@ -422,12 +419,12 @@ msgstr "Сохранить"
 msgid "Unnamed event"
 msgstr "Безымянное событие"
 
-#: ../src/gcal-month-view.c:1035
+#: ../src/gcal-month-view.c:1043
 msgid "Other events"
 msgstr "Другие события"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1417
+#: ../src/gcal-month-view.c:1425
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -481,6 +478,9 @@ msgstr "Ещё одно событие удалено"
 #: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "Событие удалено"
+
+#~ msgid "%m/%d/%y"
+#~ msgstr "%d.%m.%y"
 
 #~ msgid "Max Content Height"
 #~ msgstr "Максимальная высота содержимого"
