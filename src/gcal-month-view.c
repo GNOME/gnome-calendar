@@ -1533,7 +1533,7 @@ gcal_month_view_draw (GtkWidget *widget,
   gtk_style_context_add_class (context, "lines");
 
   gtk_style_context_get_color (context, state, &color);
-  cairo_set_line_width (cr, 0.2);
+  cairo_set_line_width (cr, 0.5);
   gdk_cairo_set_source_rgba (cr, &color);
   /* vertical lines, the easy ones */
   for (i = 0; i < 6; i++)
