@@ -7,9 +7,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-09-20 06:29+0000\n"
-"PO-Revision-Date: 2015-09-20 19:16+0900\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2015-12-29 08:08+0000\n"
+"PO-Revision-Date: 2015-12-29 18:32+0900\n"
 "Last-Translator: Jiro Matsuzawa <jmatsuzawa@gnome.org>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -30,12 +31,25 @@ msgid "Calendar for GNOME"
 msgstr "GNOME のカレンダー"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
-msgid "GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME desktop. By reusing the components which the GNOME desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr "GNOME カレンダーは、GNOME デスクトップ環境のために設計されたシンプルで美しいカレンダーアプリケーションです。GNOME デスクトップ環境を構築するコンポーネントを再利用することで、カレンダーが GNOME のエコシステムとシームレスに統合されています。"
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"GNOME カレンダーは、GNOME デスクトップ環境のために設計されたシンプルで美しい"
+"カレンダーアプリケーションです。GNOME デスクトップ環境を構築するコンポーネン"
+"トを再利用することで、カレンダーが GNOME のエコシステムとシームレスに統合され"
+"ています。"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
-msgid "We aim to find the perfect balance between nicely crafted features and user-centred usability. No excess, no lacks. You'll feel comfortable using Calendar, like you've been using it for ages!"
-msgstr "私たちは、うまく細工された機能とユーザー中心のユーザビリティの間の絶妙なバランスを取ることを目指しています。機能としては過不足なく、長年愛用してきたカレンダーのように心地よく感じることでしょう。"
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"私たちは、うまく細工された機能とユーザー中心のユーザビリティの間の絶妙なバラ"
+"ンスを取ることを目指しています。機能としては過不足なく、長年愛用してきたカレ"
+"ンダーのように心地よく感じることでしょう。"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
 msgid "Search for events"
@@ -244,8 +258,13 @@ msgid "Edit Calendar"
 msgstr "カレンダーの編集"
 
 #: ../data/ui/source-dialog.ui.h:20
-msgid "Enter the address of the calendar that you want to add. If the calendar belongs to one of you online accounts, you can add it through the <a href=\"GOA\">online account settings</a>."
-msgstr "追加するカレンダーのアドレスを入力してください。オンラインアカウントのカレンダーであれば、<a href=\"GOA\">オンラインアカウント設定</a>から追加できます。"
+msgid ""
+"Enter the address of the calendar that you want to add. If the calendar "
+"belongs to one of your online accounts, you can add it through the <a href="
+"\"GOA\">online account settings</a>."
+msgstr ""
+"追加するカレンダーのアドレスを入力してください。オンラインアカウントのカレン"
+"ダーであれば、<a href=\"GOA\">オンラインアカウント設定</a>から追加できます。"
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
@@ -314,7 +333,7 @@ msgstr "詳細を編集"
 msgid "No events"
 msgstr "イベントなし"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
 msgid "Add Event…"
 msgstr "新規イベント"
 
@@ -380,13 +399,6 @@ msgstr ""
 "Hajime Taira <htaira@redhat.com>\n"
 "松澤 二郎 <jmatsuzawa@gnome.org>"
 
-#. This string represents day/month/year order for each of the different
-#. * languages. It could possibly be default value, %m/%d/%y placing the month
-#. * before, or any ordering according to the translator's environment.
-#: ../src/gcal-date-selector.c:239
-msgid "%m/%d/%y"
-msgstr "%Y年%-m月%-d日"
-
 #: ../src/gcal-date-selector.c:315
 msgid "Day"
 msgstr "日"
@@ -399,12 +411,12 @@ msgstr "保存"
 msgid "Unnamed event"
 msgstr "イベント名称未設定"
 
-#: ../src/gcal-month-view.c:1035
+#: ../src/gcal-month-view.c:1043
 msgid "Other events"
 msgstr "その他のイベント"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1417
+#: ../src/gcal-month-view.c:1425
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -457,3 +469,6 @@ msgstr "他のイベントも削除しました"
 #: ../src/gcal-window.c:1244
 msgid "Event deleted"
 msgstr "イベントを削除しました"
+
+#~ msgid "%m/%d/%y"
+#~ msgstr "%Y年%-m月%-d日"
