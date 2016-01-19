@@ -27,34 +27,9 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_YEAR_VIEW            (gcal_year_view_get_type())
-#define GCAL_YEAR_VIEW(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), GCAL_TYPE_YEAR_VIEW, GcalYearView))
-#define GCAL_YEAR_VIEW_CONST(obj)      (G_TYPE_CHECK_INSTANCE_CAST ((obj), GCAL_TYPE_YEAR_VIEW, GcalYearView const))
-#define GCAL_YEAR_VIEW_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass),  GCAL_TYPE_YEAR_VIEW, GcalYearViewClass))
-#define GCAL_IS_YEAR_VIEW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GCAL_TYPE_YEAR_VIEW))
-#define GCAL_IS_YEAR_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass),  GCAL_TYPE_YEAR_VIEW))
-#define GCAL_YEAR_VIEW_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj),  GCAL_TYPE_YEAR_VIEW, GcalYearViewClass))
 
-typedef struct _GcalYearView        GcalYearView;
-typedef struct _GcalYearViewClass   GcalYearViewClass;
-typedef struct _GcalYearViewPrivate GcalYearViewPrivate;
+G_DECLARE_FINAL_TYPE (GcalYearView, gcal_year_view, GCAL, YEAR_VIEW, GtkBox)
 
-struct _GcalYearView
-{
-  GtkBox parent;
-
-  /*< private >*/
-  GcalYearViewPrivate *priv;
-};
-
-struct _GcalYearViewClass
-{
-  GtkBoxClass parent;
-
-  /*< signals >*/
-  void       (*event_activated)   (GcalYearView *year_view, GcalEventWidget *event_widget);
-};
-
-GType             gcal_year_view_get_type           (void);
 void              gcal_year_view_set_manager        (GcalYearView *year_view,
                                                      GcalManager  *manager);
 void              gcal_year_view_set_first_weekday  (GcalYearView *year_view,

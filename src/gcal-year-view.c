@@ -42,8 +42,10 @@ typedef struct
   GdkPoint coordinates [12];
 } GridData;
 
-struct _GcalYearViewPrivate
+struct _GcalYearView
 {
+  GtkBox        parent;
+
   /* composite, GtkBuilder's widgets */
   GtkWidget    *navigator;
   GtkWidget    *sidebar;
@@ -112,7 +114,6 @@ static void   gcal_view_interface_init (GcalViewIface *iface);
 static void   gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GTK_TYPE_BOX,
-                         G_ADD_PRIVATE (GcalYearView)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 gcal_data_model_subscriber_interface_init));
@@ -121,24 +122,21 @@ static void
 update_date (GcalYearView *year_view,
              icaltimetype *new_date)
 {
-  GcalYearViewPrivate *priv = year_view->priv;
-
-  if (priv->date != NULL && priv->date->year != new_date->year && priv->start_selected_date->day != 0)
+  if (year_view->date != NULL && year_view->date->year != new_date->year && year_view->start_selected_date->day != 0)
     reset_sidebar (year_view);
 
-  if (priv->date != NULL)
-    g_free (priv->date);
-  priv->date = new_date;
+  g_clear_pointer (&year_view->date, g_free);
+  year_view->date = new_date;
 }
 
 static void
 event_activated (GcalEventWidget *widget,
                  gpointer         user_data)
 {
-  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (user_data)->priv;
+  GcalYearView *view = GCAL_YEAR_VIEW (user_data);
 
-  if (priv->popover_mode)
-    gtk_widget_hide (priv->popover);
+  if (view->popover_mode)
+    gtk_widget_hide (view->popover);
   g_signal_emit (GCAL_YEAR_VIEW (user_data), signals[EVENT_ACTIVATED], 0, widget);
 }
 
@@ -167,69 +165,64 @@ order_selected_data (ButtonData *selected_data)
 static void
 update_selected_dates_from_button_data (GcalYearView *year_view)
 {
-  GcalYearViewPrivate *priv = year_view->priv;
-
-  if (priv->selected_data->start_day != 0)
+  if (year_view->selected_data->start_day != 0)
     {
-      ButtonData selected_data = *(priv->selected_data);
+      ButtonData selected_data = *(year_view->selected_data);
       order_selected_data (&selected_data);
 
-      priv->start_selected_date->day = selected_data.start_day;
-      priv->start_selected_date->month = selected_data.start_month + 1;
-      priv->start_selected_date->year = priv->date->year;
+      year_view->start_selected_date->day = selected_data.start_day;
+      year_view->start_selected_date->month = selected_data.start_month + 1;
+      year_view->start_selected_date->year = year_view->date->year;
 
-      priv->end_selected_date->day = selected_data.end_day;
-      priv->end_selected_date->month = selected_data.end_month + 1;
-      priv->end_selected_date->year = priv->date->year;
-      priv->end_selected_date->hour = 23;
-      priv->end_selected_date->minute = 59;
-      *(priv->end_selected_date) = icaltime_normalize (*(priv->end_selected_date));
+      year_view->end_selected_date->day = selected_data.end_day;
+      year_view->end_selected_date->month = selected_data.end_month + 1;
+      year_view->end_selected_date->year = year_view->date->year;
+      year_view->end_selected_date->hour = 23;
+      year_view->end_selected_date->minute = 59;
+      *(year_view->end_selected_date) = icaltime_normalize (*(year_view->end_selected_date));
     }
   else
     {
-      *(priv->start_selected_date) = *(priv->current_date);
-      priv->start_selected_date->hour = 0;
-      priv->start_selected_date->minute = 0;
+      *(year_view->start_selected_date) = *(year_view->current_date);
+      year_view->start_selected_date->hour = 0;
+      year_view->start_selected_date->minute = 0;
 
-      *(priv->end_selected_date) = *(priv->current_date);
-      priv->end_selected_date->hour = 23;
-      priv->end_selected_date->minute = 59;
-      *(priv->end_selected_date) = icaltime_normalize (*(priv->end_selected_date));
+      *(year_view->end_selected_date) = *(year_view->current_date);
+      year_view->end_selected_date->hour = 23;
+      year_view->end_selected_date->minute = 59;
+      *(year_view->end_selected_date) = icaltime_normalize (*(year_view->end_selected_date));
     }
 
-  if (priv->end_selected_date->year != priv->start_selected_date->year)
+  if (year_view->end_selected_date->year != year_view->start_selected_date->year)
     {
-      priv->end_selected_date->day = 31;
-      priv->end_selected_date->month = 12;
-      priv->end_selected_date->year = priv->start_selected_date->year;
+      year_view->end_selected_date->day = 31;
+      year_view->end_selected_date->month = 12;
+      year_view->end_selected_date->year = year_view->start_selected_date->year;
     }
 }
 
 static void
 update_no_events_page (GcalYearView *year_view)
 {
-  GcalYearViewPrivate *priv;
-
   gchar *title;
   gboolean has_range;
 
-  priv = year_view->priv;
-  has_range = (priv->start_selected_date->day != priv->end_selected_date->day ||
-               priv->start_selected_date->month != priv->end_selected_date->month);
+  has_range = (year_view->start_selected_date->day != year_view->end_selected_date->day ||
+               year_view->start_selected_date->month != year_view->end_selected_date->month);
 
-  if (icaltime_compare_date (priv->current_date, priv->start_selected_date) == 0)
+  if (icaltime_compare_date (year_view->current_date, year_view->start_selected_date) == 0)
     {
       title = g_strdup_printf ("%s%s", _("Today"), has_range ? "…" : "");
     }
   else
     {
       title = g_strdup_printf ("%s %d%s",
-                               gcal_get_month_name (priv->start_selected_date->month - 1),
-                               priv->start_selected_date->day,
+                               gcal_get_month_name (year_view->start_selected_date->month - 1),
+                               year_view->start_selected_date->day,
                                has_range ? "…" : "");
     }
 
-  gtk_label_set_text (GTK_LABEL (priv->no_events_title), title);
+  gtk_label_set_text (GTK_LABEL (year_view->no_events_title), title);
   g_free (title);
 }
 
@@ -239,7 +232,6 @@ add_event_to_day_array (GcalYearView  *year_view,
                         GList        **days_widgets_array,
                         gint           days_span)
 {
-  GcalYearViewPrivate *priv;
   GtkWidget *child_widget;
 
   const icaltimetype *dt_start, *dt_end;
@@ -248,17 +240,16 @@ add_event_to_day_array (GcalYearView  *year_view,
   gint i;
   gboolean child_widget_used = FALSE;
 
-  priv = year_view->priv;
   child_widget = gcal_event_widget_new_from_data (event_data);
   gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (child_widget),
-                                   !gcal_manager_is_client_writable (priv->manager, event_data->source));
+                                   !gcal_manager_is_client_writable (year_view->manager, event_data->source));
 
   dt_start = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (child_widget));
   dt_end = gcal_event_widget_peek_end_date (GCAL_EVENT_WIDGET (child_widget));
 
   /* normalize date on each new event */
-  date = *(priv->start_selected_date);
-  second_date = *(priv->start_selected_date);
+  date = *(year_view->start_selected_date);
+  second_date = *(year_view->start_selected_date);
   second_date.hour = 23;
   second_date.minute = 59;
 
@@ -314,8 +305,6 @@ add_event_to_day_array (GcalYearView  *year_view,
 static void
 update_sidebar (GcalYearView *year_view)
 {
-  GcalYearViewPrivate *priv = year_view->priv;
-
   GtkWidget *child_widget;
   GList *events, *l;
   GList **days_widgets_array;
@@ -323,21 +312,21 @@ update_sidebar (GcalYearView *year_view)
 
   update_selected_dates_from_button_data (year_view);
 
-  gtk_container_foreach (GTK_CONTAINER (priv->events_sidebar), (GtkCallback) gtk_widget_destroy, NULL);
+  gtk_container_foreach (GTK_CONTAINER (year_view->events_sidebar), (GtkCallback) gtk_widget_destroy, NULL);
 
-  days_span = icaltime_day_of_year(*(priv->end_selected_date)) - icaltime_day_of_year(*(priv->start_selected_date)) + 1;
+  days_span = icaltime_day_of_year(*(year_view->end_selected_date)) - icaltime_day_of_year(*(year_view->start_selected_date)) + 1;
   days_widgets_array = g_new0 (GList*, days_span);
 
-  events = gcal_manager_get_events (priv->manager, priv->start_selected_date, priv->end_selected_date);
+  events = gcal_manager_get_events (year_view->manager, year_view->start_selected_date, year_view->end_selected_date);
   if (events == NULL)
     {
       days_span = 0;
       update_no_events_page (year_view);
-      gtk_stack_set_visible_child_name (GTK_STACK (priv->navigator_stack), "no-events");
+      gtk_stack_set_visible_child_name (GTK_STACK (year_view->navigator_stack), "no-events");
     }
   else
     {
-      gtk_stack_set_visible_child_name (GTK_STACK (priv->navigator_stack), "events-list");
+      gtk_stack_set_visible_child_name (GTK_STACK (year_view->navigator_stack), "events-list");
     }
 
   for (l = events; l != NULL; l = g_list_next (l))
@@ -352,7 +341,7 @@ update_sidebar (GcalYearView *year_view)
           gtk_widget_show (child_widget);
           g_signal_connect (child_widget, "activate", G_CALLBACK (event_activated), year_view);
           g_object_set_data (G_OBJECT (child_widget), "shift", GINT_TO_POINTER (i));
-          gtk_container_add (GTK_CONTAINER (priv->events_sidebar), child_widget);
+          gtk_container_add (GTK_CONTAINER (year_view->events_sidebar), child_widget);
         }
 
       g_list_free (current_day);
@@ -365,7 +354,7 @@ update_sidebar (GcalYearView *year_view)
 static void
 reset_sidebar (GcalYearView *year_view)
 {
-  memset (year_view->priv->selected_data, 0, sizeof (ButtonData));
+  memset (year_view->selected_data, 0, sizeof (ButtonData));
   gtk_widget_queue_draw (GTK_WIDGET (year_view));
 
   update_sidebar (year_view);
@@ -376,13 +365,13 @@ update_sidebar_headers (GtkListBoxRow *row,
                         GtkListBoxRow *before,
                         gpointer user_data)
 {
-  GcalYearViewPrivate *priv;
+  GcalYearView *year_view;
   GtkWidget *row_child, *before_child = NULL, *row_header = NULL;
   const icaltimetype *row_date, *before_date = NULL;
   icaltimetype date;
   gint row_shift, before_shift =-1;
 
-  priv = GCAL_YEAR_VIEW (user_data)->priv;
+  year_view = GCAL_YEAR_VIEW (user_data);
   row_child = gtk_bin_get_child (GTK_BIN (row));
   if (row_child == NULL)
     return;
@@ -401,10 +390,10 @@ update_sidebar_headers (GtkListBoxRow *row,
       gchar *label_str;
 
       row_header = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-      date = *(priv->start_selected_date);
+      date = *(year_view->start_selected_date);
       icaltime_adjust (&date, row_shift, 0, 0, 0);
 
-      if (icaltime_compare_date (&date, priv->current_date) == 0)
+      if (icaltime_compare_date (&date, year_view->current_date) == 0)
         label_str = g_strdup (_("Today"));
       else
         label_str = g_strdup_printf ("%s %d", gcal_get_month_name (date.month  - 1), date.day);
@@ -424,7 +413,7 @@ update_sidebar_headers (GtkListBoxRow *row,
       gchar *time;
       GtkWidget *label;
 
-      if (priv->use_24h_format)
+      if (year_view->use_24h_format)
         time = g_strdup_printf ("%.2d:00", row_date->hour);
       else
         time = g_strdup_printf ("%.2d:00 %s", row_date->hour % 12, row_date->hour < 12 ? "AM" : "PM");
@@ -474,27 +463,26 @@ calculate_day_month_for_coord (GcalYearView *year_view,
                                gint         *out_day,
                                gint         *out_month)
 {
-  GcalYearViewPrivate *priv = year_view->priv;
   gint row, column, i, sw, clicked_cell, day, month;
   gdouble box_side;
 
   row = -1;
   column = -1;
-  box_side = priv->navigator_grid->box_side;
-  sw = 1 - 2 * priv->k;
+  box_side = year_view->navigator_grid->box_side;
+  sw = 1 - 2 * year_view->k;
 
   /* y selection */
   for (i = 0; i < 4 && ((row == -1) || (column == -1)); i++)
     {
       if (row == -1 &&
-          y > priv->navigator_grid->coordinates[i * 4].y + box_side &&
-          y < priv->navigator_grid->coordinates[i * 4].y + box_side * 7)
+          y > year_view->navigator_grid->coordinates[i * 4].y + box_side &&
+          y < year_view->navigator_grid->coordinates[i * 4].y + box_side * 7)
         {
           row = i;
         }
       if (column == -1 &&
-          x > priv->navigator_grid->coordinates[i].x + box_side * 0.5 &&
-          x < priv->navigator_grid->coordinates[i].x + box_side * 7.5)
+          x > year_view->navigator_grid->coordinates[i].x + box_side * 0.5 &&
+          x < year_view->navigator_grid->coordinates[i].x + box_side * 7.5)
         {
           column = i;
         }
@@ -504,13 +492,13 @@ calculate_day_month_for_coord (GcalYearView *year_view,
     return FALSE;
 
   month = row * 4 + column;
-  row = (y - (priv->navigator_grid->coordinates[month].y + box_side)) / box_side;
-  column = (x - (priv->navigator_grid->coordinates[month].x + box_side * 0.5)) / box_side;
+  row = (y - (year_view->navigator_grid->coordinates[month].y + box_side)) / box_side;
+  column = (x - (year_view->navigator_grid->coordinates[month].x + box_side * 0.5)) / box_side;
   clicked_cell = row * 7 + column;
-  day = 7 * ((clicked_cell + 7 * priv->k) / 7) + sw * (clicked_cell % 7) + (1 - priv->k);
-  day -= ((time_day_of_week (1, month, priv->date->year) - priv->first_weekday + 7) % 7);
+  day = 7 * ((clicked_cell + 7 * year_view->k) / 7) + sw * (clicked_cell % 7) + (1 - year_view->k);
+  day -= ((time_day_of_week (1, month, year_view->date->year) - year_view->first_weekday + 7) % 7);
 
-  if (day < 1 || day > time_days_in_month (priv->date->year, month))
+  if (day < 1 || day > time_days_in_month (year_view->date->year, month))
     return FALSE;
 
   *out_day = day;
@@ -525,8 +513,6 @@ draw_month_grid (GcalYearView *year_view,
                  gint          month_nr,
                  gint         *weeks_counter)
 {
-  GcalYearViewPrivate *priv = year_view->priv;
-
   GtkStyleContext *context;
   GtkStateFlags state_flags;
 
@@ -544,10 +530,10 @@ draw_month_grid (GcalYearView *year_view,
   cairo_save (cr);
   context = gtk_widget_get_style_context (widget);
   state_flags = gtk_style_context_get_state (context);
-  sw = 1 - 2 * priv->k;
-  box_side = priv->navigator_grid->box_side;
-  x = priv->navigator_grid->coordinates[month_nr].x;
-  y = priv->navigator_grid->coordinates[month_nr].y;
+  sw = 1 - 2 * year_view->k;
+  box_side = year_view->navigator_grid->box_side;
+  x = year_view->navigator_grid->coordinates[month_nr].x;
+  y = year_view->navigator_grid->coordinates[month_nr].y;
 
   /* Get the font description */
   gtk_style_context_save (context);
@@ -599,17 +585,17 @@ draw_month_grid (GcalYearView *year_view,
   gtk_style_context_get (context, state_flags, "font", &font_desc, NULL);
   pango_layout_set_font_description (layout, font_desc);
 
-  days_delay = (time_day_of_week (1, month_nr, priv->date->year) - priv->first_weekday + 7) % 7;
-  days = days_delay + icaltime_days_in_month (month_nr + 1, priv->date->year);
+  days_delay = (time_day_of_week (1, month_nr, year_view->date->year) - year_view->first_weekday + 7) % 7;
+  days = days_delay + icaltime_days_in_month (month_nr + 1, year_view->date->year);
   shown_rows = ceil (days / 7.0);
-  sunday_idx = priv->k * 6 + sw * ((7 - priv->first_weekday) % 7);
+  sunday_idx = year_view->k * 6 + sw * ((7 - year_view->first_weekday) % 7);
 
   for (i = 0; i < 7 * shown_rows; i++)
     {
       column = i % 7;
       row = i / 7;
 
-      j = 7 * ((i + 7 * priv->k) / 7) + sw * (i % 7) + (1 - priv->k);
+      j = 7 * ((i + 7 * year_view->k) / 7) + sw * (i % 7) + (1 - year_view->k);
       if (j <= days_delay)
         continue;
       else if (j > days)
@@ -623,9 +609,9 @@ draw_month_grid (GcalYearView *year_view,
       box_padding_start = (box_side - layout_width) / 2 > 0 ? (box_side - layout_width) / 2 : 0;
 
       selected_day = FALSE;
-      if (priv->selected_data->start_day != 0)
+      if (year_view->selected_data->start_day != 0)
         {
-          ButtonData selected_data = *(priv->selected_data);
+          ButtonData selected_data = *(year_view->selected_data);
           order_selected_data (&selected_data);
           if (month_nr > selected_data.start_month && month_nr < selected_data.end_month)
             {
@@ -645,8 +631,8 @@ draw_month_grid (GcalYearView *year_view,
             }
         }
 
-      if (priv->date->year == priv->current_date->year && month_nr + 1 == priv->current_date->month &&
-          j == priv->current_date->day)
+      if (year_view->date->year == year_view->current_date->year && month_nr + 1 == year_view->current_date->month &&
+          j == year_view->current_date->day)
         {
           PangoLayout *clayout;
           PangoFontDescription *cfont_desc;
@@ -663,11 +649,11 @@ draw_month_grid (GcalYearView *year_view,
 
           /* FIXME: hardcoded padding of the number background */
           gtk_render_background (context, cr,
-                                 box_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width - 2.0,
+                                 box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * layout_width - 2.0,
                                  box_side * (row + 1) + y + box_padding_top - 1.0,
                                  layout_width + 4.0, layout_height + 2.0);
           gtk_render_layout (context, cr,
-                             box_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
+                             box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * layout_width,
                              box_side * (row + 1) + y + box_padding_top,
                              clayout);
 
@@ -685,7 +671,7 @@ draw_month_grid (GcalYearView *year_view,
           box_padding_start = (box_side - layout_width) / 2 > 0 ? (box_side - layout_width) / 2 : 0;
 
           gtk_render_layout (context, cr,
-                             box_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
+                             box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * layout_width,
                              box_side * (row + 1) + y + box_padding_top,
                              slayout);
 
@@ -696,7 +682,7 @@ draw_month_grid (GcalYearView *year_view,
           gtk_style_context_save (context);
           gtk_style_context_add_class (context, "sunday");
           gtk_render_layout (context, cr,
-                             box_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
+                             box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * layout_width,
                              box_side * (row + 1) + y + box_padding_top,
                              layout);
           gtk_style_context_restore (context);
@@ -704,7 +690,7 @@ draw_month_grid (GcalYearView *year_view,
       else
         {
           gtk_render_layout (context, cr,
-                             box_side * (column + 0.5 + priv->k) + x + sw * box_padding_start - priv->k * layout_width,
+                             box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * layout_width,
                              box_side * (row + 1) + y + box_padding_top,
                              layout);
         }
@@ -724,10 +710,10 @@ draw_month_grid (GcalYearView *year_view,
   for (i = 0; i < shown_rows; i++)
     {
       /* special condition for first and last weeks of the year */
-      if (month_nr == 0 && priv->first_week_of_year > 1 && i == 1)
+      if (month_nr == 0 && year_view->first_week_of_year > 1 && i == 1)
         *weeks_counter = 1;
       else if (month_nr == 11 && (i + 1) == shown_rows)
-        *weeks_counter = priv->last_week_of_year;
+        *weeks_counter = year_view->last_week_of_year;
       /* other weeks */
       else if (i == 0)
         {
@@ -745,7 +731,7 @@ draw_month_grid (GcalYearView *year_view,
       box_padding_start = ((box_side / 2) - layout_width) / 2 > 0 ? ((box_side / 2) - layout_width) / 2 : 0;
 
       gtk_render_layout (context, cr,
-                         x + sw * box_padding_start + priv->k * (8 * box_side - layout_width),
+                         x + sw * box_padding_start + year_view->k * (8 * box_side - layout_width),
                          box_side * (i + 1) + y + box_padding_top,
                          layout);
 
@@ -766,8 +752,6 @@ draw_navigator (GcalYearView *year_view,
                 cairo_t      *cr,
                 GtkWidget    *widget)
 {
-  GcalYearViewPrivate *priv;
-
   GtkStyleContext *context;
   GtkStateFlags state_flags;
 
@@ -781,17 +765,16 @@ draw_navigator (GcalYearView *year_view,
   PangoLayout *header_layout;
   PangoFontDescription *font_desc;
 
-  priv = year_view->priv;
   context = gtk_widget_get_style_context (GTK_WIDGET (year_view));
   state_flags = gtk_style_context_get_state (context);
-  sw = 1 - 2 * priv->k;
+  sw = 1 - 2 * year_view->k;
   width = gtk_widget_get_allocated_width (widget);
 
   /* read header from CSS code related to the view */
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, "first-view-header");
 
-  header_str = g_strdup_printf ("%d", priv->date->year);
+  header_str = g_strdup_printf ("%d", year_view->date->year);
   gtk_style_context_get (context, state_flags,
                          "padding-left", &header_padding_left, "padding-top", &header_padding_top,
                          "font", &font_desc, NULL);
@@ -808,7 +791,7 @@ draw_navigator (GcalYearView *year_view,
   /* XXX: here the color of the text isn't read from year-view but from navigator widget,
    * which has the same color on the CSS file */
   gtk_render_layout (context, cr,
-                     priv->k * (width - layout_width) + sw * header_padding_left, header_padding_top, header_layout);
+                     year_view->k * (width - layout_width) + sw * header_padding_left, header_padding_top, header_layout);
 
   pango_font_description_free (font_desc);
   g_object_unref (header_layout);
@@ -825,21 +808,21 @@ draw_navigator (GcalYearView *year_view,
   real_padding_left = (width - (8 * 4 * box_side)) / 5.0;
   real_padding_top = (height - (7 * 3 * box_side)) / 4.0;
 
-  priv->navigator_grid->box_side = box_side;
+  year_view->navigator_grid->box_side = box_side;
 
   /* get first and last weeks of the year */
-  g_date_set_dmy (&day_of_year, 1, G_DATE_JANUARY, priv->date->year);
-  priv->first_week_of_year = g_date_get_iso8601_week_of_year (&day_of_year);
-  g_date_set_dmy (&day_of_year, 31, G_DATE_DECEMBER, priv->date->year);
-  priv->last_week_of_year = g_date_get_iso8601_week_of_year (&day_of_year);
-  weeks_counter = priv->first_week_of_year;
+  g_date_set_dmy (&day_of_year, 1, G_DATE_JANUARY, year_view->date->year);
+  year_view->first_week_of_year = g_date_get_iso8601_week_of_year (&day_of_year);
+  g_date_set_dmy (&day_of_year, 31, G_DATE_DECEMBER, year_view->date->year);
+  year_view->last_week_of_year = g_date_get_iso8601_week_of_year (&day_of_year);
+  weeks_counter = year_view->first_week_of_year;
   for (i = 0; i < 12; i++)
     {
       gint row = i / 4;
-      gint column = priv->k * 3 + sw * (i % 4);
+      gint column = year_view->k * 3 + sw * (i % 4);
 
-      priv->navigator_grid->coordinates[i].x = (column + 1) * real_padding_left + column * box_side * 8;
-      priv->navigator_grid->coordinates[i].y = (row + 1) * real_padding_top + row * box_side * 7 + header_height;
+      year_view->navigator_grid->coordinates[i].x = (column + 1) * real_padding_left + column * box_side * 8;
+      year_view->navigator_grid->coordinates[i].y = (row + 1) * real_padding_top + row * box_side * 7 + header_height;
       draw_month_grid (year_view, widget, cr, i, &weeks_counter);
     }
 
@@ -855,9 +838,9 @@ navigator_button_press_cb (GcalYearView   *year_view,
   if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month))
     return FALSE;
 
-  year_view->priv->button_pressed = TRUE;
-  year_view->priv->selected_data->start_day = day;
-  year_view->priv->selected_data->start_month = month;
+  year_view->button_pressed = TRUE;
+  year_view->selected_data->start_day = day;
+  year_view->selected_data->start_month = month;
 
   return TRUE;
 }
@@ -867,51 +850,50 @@ navigator_button_release_cb (GcalYearView   *year_view,
                              GdkEventButton *event,
                              GtkWidget      *widget)
 {
-  GcalYearViewPrivate *priv = year_view->priv;
   gint day, month;
 
-  if (!priv->button_pressed)
+  if (!year_view->button_pressed)
     return FALSE;
 
   if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month))
     goto fail;
 
-  priv->button_pressed = FALSE;
-  priv->selected_data->end_day = day;
-  priv->selected_data->end_month = month;
+  year_view->button_pressed = FALSE;
+  year_view->selected_data->end_day = day;
+  year_view->selected_data->end_month = month;
 
   /* update date and notify */
-  priv->date->day = day;
-  priv->date->month = month + 1;
+  year_view->date->day = day;
+  year_view->date->month = month + 1;
   g_object_notify (G_OBJECT (year_view), "active-date");
 
   gtk_widget_queue_draw (widget);
 
-  if (priv->popover_mode)
+  if (year_view->popover_mode)
     {
       GdkRectangle rect;
       GtkWidget *box;
 
       /* sizing */
-      box = gtk_bin_get_child (GTK_BIN (priv->popover));
-      gtk_widget_set_size_request (box, 200, priv->navigator_grid->box_side * 2 * 7);
+      box = gtk_bin_get_child (GTK_BIN (year_view->popover));
+      gtk_widget_set_size_request (box, 200, year_view->navigator_grid->box_side * 2 * 7);
 
       /* FIXME: improve rect */
       rect.x = event->x;
       rect.y = event->y;
       rect.width = rect.height = 1;
-      gtk_popover_set_pointing_to (GTK_POPOVER (priv->popover), &rect);
+      gtk_popover_set_pointing_to (GTK_POPOVER (year_view->popover), &rect);
 
       /* FIXME: do no show over selected days */
-      gtk_popover_set_position (GTK_POPOVER (priv->popover), GTK_POS_RIGHT);
-      gtk_widget_show (priv->popover);
+      gtk_popover_set_position (GTK_POPOVER (year_view->popover), GTK_POS_RIGHT);
+      gtk_widget_show (year_view->popover);
     }
 
   update_sidebar (year_view);
   return TRUE;
 
 fail:
-  priv->button_pressed = FALSE;
+  year_view->button_pressed = FALSE;
   reset_sidebar (year_view);
   return TRUE;
 }
@@ -921,23 +903,22 @@ navigator_motion_notify_cb (GcalYearView   *year_view,
                             GdkEventMotion *event,
                             GtkWidget      *widget)
 {
-  GcalYearViewPrivate *priv = year_view->priv;
   gint day, month;
 
-  if (!priv->button_pressed)
+  if (!year_view->button_pressed)
     return FALSE;
 
   if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month))
     goto fail;
 
-  priv->selected_data->end_day = day;
-  priv->selected_data->end_month = month;
+  year_view->selected_data->end_day = day;
+  year_view->selected_data->end_month = month;
   gtk_widget_queue_draw (widget);
   return TRUE;
 
 fail:
-  priv->selected_data->end_day = priv->selected_data->start_day;
-  priv->selected_data->end_month = priv->selected_data->start_month;
+  year_view->selected_data->end_day = year_view->selected_data->start_day;
+  year_view->selected_data->end_month = year_view->selected_data->start_month;
   gtk_widget_queue_draw (widget);
   return TRUE;
 }
@@ -946,24 +927,23 @@ static void
 add_event_clicked_cb (GcalYearView *year_view,
                       GtkButton    *button)
 {
-  GcalYearViewPrivate *priv = year_view->priv;
   icaltimetype *start_date, *end_date = NULL;
 
-  if (priv->start_selected_date->day == 0)
+  if (year_view->start_selected_date->day == 0)
     {
-      start_date = gcal_dup_icaltime (priv->current_date);
+      start_date = gcal_dup_icaltime (year_view->current_date);
     }
   else
     {
-      start_date = gcal_dup_icaltime (priv->start_selected_date);
-      end_date = gcal_dup_icaltime (priv->end_selected_date);
+      start_date = gcal_dup_icaltime (year_view->start_selected_date);
+      end_date = gcal_dup_icaltime (year_view->end_selected_date);
       end_date->day += 1;
       *end_date = icaltime_normalize (*end_date);
       end_date->is_date = 1;
     }
 
-  if (priv->popover_mode)
-    gtk_widget_hide (priv->popover);
+  if (year_view->popover_mode)
+    gtk_widget_hide (year_view->popover);
 
   start_date->is_date = 1;
   g_signal_emit_by_name (GCAL_VIEW (year_view), "create-event-detailed", start_date, end_date);
@@ -982,16 +962,15 @@ popover_closed_cb (GcalYearView *year_view,
 static void
 gcal_year_view_finalize (GObject *object)
 {
-  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (object)->priv;
+  GcalYearView *year_view = GCAL_YEAR_VIEW (object);
 
-  g_free (priv->navigator_grid);
-  g_free (priv->selected_data);
+  g_free (year_view->navigator_grid);
+  g_free (year_view->selected_data);
 
-  g_free (priv->start_selected_date);
-  g_free (priv->end_selected_date);
+  g_free (year_view->start_selected_date);
+  g_free (year_view->end_selected_date);
 
-  if (priv->date != NULL)
-    g_free (priv->date);
+  g_clear_pointer (&year_view->date, g_free);
 
   G_OBJECT_CLASS (gcal_year_view_parent_class)->finalize (object);
 }
@@ -1002,12 +981,12 @@ gcal_year_view_get_property (GObject    *object,
                              GValue     *value,
                              GParamSpec *pspec)
 {
-  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (object)->priv;
+  GcalYearView *self = GCAL_YEAR_VIEW (object);
 
   switch (prop_id)
     {
     case PROP_DATE:
-      g_value_set_boxed (value, priv->date);
+      g_value_set_boxed (value, self->date);
       break;
 
     default:
@@ -1037,11 +1016,11 @@ gcal_year_view_get_preferred_width (GtkWidget *widget,
                                     gint      *minimum,
                                     gint      *natural)
 {
-  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (widget)->priv;
+  GcalYearView *year_view = GCAL_YEAR_VIEW (widget);
   GtkStyleContext *context;
   gint padding_left;
 
-  context = gtk_widget_get_style_context (priv->navigator);
+  context = gtk_widget_get_style_context (year_view->navigator);
 
   gtk_style_context_get (context,
                          gtk_style_context_get_state (context),
@@ -1059,11 +1038,11 @@ gcal_year_view_get_preferred_height_for_width (GtkWidget *widget,
                                                gint      *minimum,
                                                gint      *natural)
 {
-  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (widget)->priv;
+  GcalYearView *year_view = GCAL_YEAR_VIEW (widget);
   GtkStyleContext *context;
   gint padding_top;
 
-  context = gtk_widget_get_style_context (priv->navigator);
+  context = gtk_widget_get_style_context (year_view->navigator);
 
   gtk_style_context_get (context,
                          gtk_style_context_get_state (context),
@@ -1079,7 +1058,7 @@ static void
 gcal_year_view_size_allocate (GtkWidget     *widget,
                               GtkAllocation *alloc)
 {
-  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (widget)->priv;
+  GcalYearView *year_view = GCAL_YEAR_VIEW (widget);
   GtkStyleContext *context;
   gint padding_left;
 
@@ -1089,32 +1068,32 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
   gtk_style_context_get (context, gtk_style_context_get_state (context), "padding-left", &padding_left, NULL);
   gtk_style_context_restore (context);
 
-  priv->popover_mode = (alloc->width < NAVIGATOR_CELL_WIDTH * 4 + padding_left * 8 + SIDEBAR_PREFERRED_WIDTH);
-  if (priv->popover_mode && !gtk_widget_is_ancestor (priv->events_sidebar, priv->popover))
+  year_view->popover_mode = (alloc->width < NAVIGATOR_CELL_WIDTH * 4 + padding_left * 8 + SIDEBAR_PREFERRED_WIDTH);
+  if (year_view->popover_mode && !gtk_widget_is_ancestor (year_view->events_sidebar, year_view->popover))
     {
-      g_object_ref (priv->sidebar);
+      g_object_ref (year_view->sidebar);
 
-      gtk_container_remove (GTK_CONTAINER (widget), priv->sidebar);
-      gtk_container_add (GTK_CONTAINER (priv->popover), priv->sidebar);
+      gtk_container_remove (GTK_CONTAINER (widget), year_view->sidebar);
+      gtk_container_add (GTK_CONTAINER (year_view->popover), year_view->sidebar);
 
-      g_object_unref (priv->sidebar);
+      g_object_unref (year_view->sidebar);
 
-      gtk_widget_show_all (priv->sidebar);
-      popover_closed_cb (GCAL_YEAR_VIEW (widget), GTK_POPOVER (priv->popover));
+      gtk_widget_show_all (year_view->sidebar);
+      popover_closed_cb (GCAL_YEAR_VIEW (widget), GTK_POPOVER (year_view->popover));
     }
-  else if (!priv->popover_mode && gtk_widget_is_ancestor (priv->events_sidebar, priv->popover))
+  else if (!year_view->popover_mode && gtk_widget_is_ancestor (year_view->events_sidebar, year_view->popover))
     {
-      g_object_ref (priv->sidebar);
+      g_object_ref (year_view->sidebar);
 
-      gtk_container_remove (GTK_CONTAINER (priv->popover), priv->sidebar);
-      gtk_box_pack_end (GTK_BOX (widget), priv->sidebar, FALSE, TRUE, 0);
+      gtk_container_remove (GTK_CONTAINER (year_view->popover), year_view->sidebar);
+      gtk_box_pack_end (GTK_BOX (widget), year_view->sidebar, FALSE, TRUE, 0);
 
-      g_object_unref (priv->sidebar);
+      g_object_unref (year_view->sidebar);
 
-      gtk_widget_show (priv->sidebar);
-      g_signal_handlers_block_by_func (priv->popover, popover_closed_cb, widget);
-      gtk_widget_hide (priv->popover);
-      g_signal_handlers_unblock_by_func (priv->popover, popover_closed_cb, widget);
+      gtk_widget_show (year_view->sidebar);
+      g_signal_handlers_block_by_func (year_view->popover, popover_closed_cb, widget);
+      gtk_widget_hide (year_view->popover);
+      g_signal_handlers_unblock_by_func (year_view->popover, popover_closed_cb, widget);
     }
 
   GTK_WIDGET_CLASS (gcal_year_view_parent_class)->size_allocate (widget, alloc);
@@ -1124,22 +1103,22 @@ static void
 gcal_year_view_direction_changed (GtkWidget        *widget,
                                   GtkTextDirection  previous_direction)
 {
-  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (widget)->priv;
+  GcalYearView *year_view = GCAL_YEAR_VIEW (widget);
 
   if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
-    priv->k = 0;
+    year_view->k = 0;
   else if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
-    priv->k = 1;
+    year_view->k = 1;
 }
 
 static GList*
 gcal_year_view_get_children_by_uuid (GcalView    *view,
                                      const gchar *uuid)
 {
-  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (view)->priv;
+  GcalYearView *year_view = GCAL_YEAR_VIEW (view);
   GList *children, *l, *result = NULL;
 
-  children = gtk_container_get_children (GTK_CONTAINER (priv->events_sidebar));
+  children = gtk_container_get_children (GTK_CONTAINER (year_view->events_sidebar));
   for (l = children; l != NULL; l = g_list_next (l))
     {
       GcalEventWidget *child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
@@ -1156,7 +1135,6 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
                                 ECalClient              *client,
                                 ECalComponent           *comp)
 {
-  GcalYearViewPrivate *priv;
   GcalYearView *year_view = GCAL_YEAR_VIEW (subscriber);
 
   GcalEventData *data;
@@ -1168,9 +1146,8 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
   time_t event_start, event_end, range_start, range_end;
   icaltimezone *zone;
 
-  priv = year_view->priv;
   update_selected_dates_from_button_data (year_view);
-  days_span = icaltime_day_of_year(*(priv->end_selected_date)) - icaltime_day_of_year(*(priv->start_selected_date)) + 1;
+  days_span = icaltime_day_of_year(*(year_view->end_selected_date)) - icaltime_day_of_year(*(year_view->start_selected_date)) + 1;
   days_widgets_array = g_new0 (GList*, days_span);
 
   data = g_new0 (GcalEventData, 1);
@@ -1178,9 +1155,9 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
   data->event_component = e_cal_component_clone (comp);
 
   /* check if event belongs to range */
-  zone = gcal_manager_get_system_timezone (priv->manager);
-  range_start = icaltime_as_timet_with_zone (*(priv->start_selected_date), zone);
-  range_end = icaltime_as_timet_with_zone (*(priv->end_selected_date), zone);
+  zone = gcal_manager_get_system_timezone (year_view->manager);
+  range_start = icaltime_as_timet_with_zone (*(year_view->start_selected_date), zone);
+  range_end = icaltime_as_timet_with_zone (*(year_view->end_selected_date), zone);
 
   e_cal_component_get_dtstart (comp, &date);
   event_start = icaltime_as_timet_with_zone (*(date.value), date.value->zone != NULL ? date.value->zone : zone);
@@ -1203,7 +1180,7 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
     }
 
   add_event_to_day_array (year_view, data, days_widgets_array, days_span);
-  gtk_stack_set_visible_child_name (GTK_STACK (priv->navigator_stack), "events-list");
+  gtk_stack_set_visible_child_name (GTK_STACK (year_view->navigator_stack), "events-list");
 
   for (i = 0; i < days_span; i++)
     {
@@ -1214,7 +1191,7 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
           gtk_widget_show (child_widget);
           g_signal_connect (child_widget, "activate", G_CALLBACK (event_activated), year_view);
           g_object_set_data (G_OBJECT (child_widget), "shift", GINT_TO_POINTER (i));
-          gtk_container_add (GTK_CONTAINER (priv->events_sidebar), child_widget);
+          gtk_container_add (GTK_CONTAINER (year_view->events_sidebar), child_widget);
         }
 
       g_list_free (current_day);
@@ -1230,12 +1207,12 @@ gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
                                   ECalClient              *client,
                                   ECalComponent           *comp)
 {
-  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (subscriber)->priv;
+  GcalYearView *year_view = GCAL_YEAR_VIEW (subscriber);
   GList *children, *l;
   gchar *uuid;
 
   uuid = get_uuid_from_component (e_client_get_source (E_CLIENT (client)), comp);
-  children = gtk_container_get_children (GTK_CONTAINER (priv->events_sidebar));
+  children = gtk_container_get_children (GTK_CONTAINER (year_view->events_sidebar));
   for (l = children; l != NULL; l = g_list_next (l))
     {
       GcalEventWidget *child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
@@ -1254,7 +1231,7 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
                                   const gchar             *uid,
                                   const gchar             *rid)
 {
-  GcalYearViewPrivate *priv = GCAL_YEAR_VIEW (subscriber)->priv;
+  GcalYearView *year_view = GCAL_YEAR_VIEW (subscriber);
   GList *children, *l;
   ESource *source;
   gchar *uuid;
@@ -1266,7 +1243,7 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
   else
     uuid = g_strdup_printf ("%s:%s", e_source_get_uid (source), uid);
 
-  children = gtk_container_get_children (GTK_CONTAINER (priv->events_sidebar));
+  children = gtk_container_get_children (GTK_CONTAINER (year_view->events_sidebar));
   for (l = children; l != NULL; l = g_list_next (l))
     {
       GcalEventWidget *child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
@@ -1283,7 +1260,7 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
   if (update_sidebar_needed)
     {
       update_no_events_page (GCAL_YEAR_VIEW (subscriber));
-      gtk_stack_set_visible_child_name (GTK_STACK (priv->navigator_stack), "no-events");
+      gtk_stack_set_visible_child_name (GTK_STACK (year_view->navigator_stack), "no-events");
     }
 }
 
@@ -1317,19 +1294,19 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
 
   /* FIXME: it will problably go back to GcalView */
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_YEAR_VIEW, G_SIGNAL_RUN_LAST,
-                                           G_STRUCT_OFFSET (GcalYearViewClass, event_activated),
+                                           0,
                                            NULL, NULL, NULL,
                                            G_TYPE_NONE, 1, GCAL_TYPE_EVENT_WIDGET);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/year-view.ui");
 
-  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, sidebar);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, events_sidebar);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator_stack);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, navigator_sidebar);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, no_events_title);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalYearView, popover);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, navigator);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, sidebar);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, events_sidebar);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, navigator_stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, navigator_sidebar);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, no_events_title);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, popover);
 
   gtk_widget_class_bind_template_callback (widget_class, draw_navigator);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_press_cb);
@@ -1344,25 +1321,23 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
 static void
 gcal_year_view_init (GcalYearView *self)
 {
-  self->priv = gcal_year_view_get_instance_private (self);
-
   gtk_widget_init_template (GTK_WIDGET (self));
 
   if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_LTR)
-    self->priv->k = 0;
+    self->k = 0;
   else if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
-    self->priv->k = 1;
+    self->k = 1;
 
-  self->priv->navigator_grid = g_new0 (GridData, 1);
-  self->priv->selected_data = g_new0 (ButtonData, 1);
+  self->navigator_grid = g_new0 (GridData, 1);
+  self->selected_data = g_new0 (ButtonData, 1);
 
-  self->priv->start_selected_date = g_new0 (icaltimetype, 1);
-  self->priv->start_selected_date->zone = e_cal_util_get_system_timezone ();
-  self->priv->end_selected_date = g_new0 (icaltimetype, 1);
-  self->priv->end_selected_date->zone = e_cal_util_get_system_timezone ();
+  self->start_selected_date = g_new0 (icaltimetype, 1);
+  self->start_selected_date->zone = e_cal_util_get_system_timezone ();
+  self->end_selected_date = g_new0 (icaltimetype, 1);
+  self->end_selected_date->zone = e_cal_util_get_system_timezone ();
 
-  gtk_list_box_set_header_func (GTK_LIST_BOX (self->priv->events_sidebar), update_sidebar_headers, self, NULL);
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->priv->events_sidebar), sidebar_sort_func, NULL, NULL);
+  gtk_list_box_set_header_func (GTK_LIST_BOX (self->events_sidebar), update_sidebar_headers, self, NULL);
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->events_sidebar), sidebar_sort_func, NULL, NULL);
 }
 
 static void
@@ -1387,28 +1362,28 @@ void
 gcal_year_view_set_manager (GcalYearView *year_view,
                             GcalManager  *manager)
 {
-  year_view->priv->manager = manager;
+  year_view->manager = manager;
 }
 
 void
 gcal_year_view_set_first_weekday (GcalYearView *year_view,
                                   gint          nr_day)
 {
-  year_view->priv->first_weekday = nr_day;
+  year_view->first_weekday = nr_day;
 }
 
 void
 gcal_year_view_set_use_24h_format (GcalYearView *year_view,
                                    gboolean      use_24h_format)
 {
-  year_view->priv->use_24h_format = use_24h_format;
+  year_view->use_24h_format = use_24h_format;
 }
 
 void
 gcal_year_view_set_current_date (GcalYearView *year_view,
                                  icaltimetype *current_date)
 {
-  year_view->priv->current_date = current_date;
+  year_view->current_date = current_date;
 
   /* Launches update */
   gtk_widget_queue_draw (GTK_WIDGET (year_view));
