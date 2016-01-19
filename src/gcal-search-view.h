@@ -28,29 +28,8 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_SEARCH_VIEW                       (gcal_search_view_get_type ())
-#define GCAL_SEARCH_VIEW(obj)                       (G_TYPE_CHECK_INSTANCE_CAST((obj), GCAL_TYPE_SEARCH_VIEW, GcalSearchView))
-#define GCAL_SEARCH_VIEW_CLASS(klass)               (G_TYPE_CHECK_CLASS_CAST((klass), GCAL_TYPE_SEARCH_VIEW, GcalSearchViewClass))
-#define GCAL_IS_SEARCH_VIEW(obj)                    (G_TYPE_CHECK_INSTANCE_TYPE((obj), GCAL_TYPE_SEARCH_VIEW))
-#define GCAL_IS_SEARCH_VIEW_CLASS(klass)            (G_TYPE_CHECK_CLASS_TYPE((klass), GCAL_TYPE_SEARCH_VIEW))
-#define GCAL_SEARCH_VIEW_GET_CLASS(obj)             (G_TYPE_INSTANCE_GET_CLASS((obj), GCAL_TYPE_SEARCH_VIEW, GcalSearchViewClass))
 
-typedef struct _GcalSearchView                       GcalSearchView;
-typedef struct _GcalSearchViewClass                  GcalSearchViewClass;
-
-struct _GcalSearchView
-{
-  GtkPopover parent;
-};
-
-struct _GcalSearchViewClass
-{
-  GtkPopoverClass parent_class;
-
-  /* signals */
-  void       (*event_activated)   (GcalSearchView *view, const icaltimetype *date);
-};
-
-GType          gcal_search_view_get_type         (void);
+G_DECLARE_FINAL_TYPE (GcalSearchView, gcal_search_view, GCAL, SEARCH_VIEW, GtkPopover)
 
 void           gcal_search_view_set_time_format  (GcalSearchView *view,
                                                   gboolean        format_24h);

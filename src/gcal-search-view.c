@@ -32,8 +32,10 @@ typedef struct
   gchar          *uuid;
 } RowEventData;
 
-typedef struct
+struct _GcalSearchView
 {
+  GtkPopover      parent;
+
   GtkWidget      *listbox;
   GtkWidget      *stack;
 
@@ -59,7 +61,7 @@ typedef struct
   /* flags */
   gboolean        format_24h;
   gboolean        subscribed;
-} GcalSearchViewPrivate;
+};
 
 enum
 {
@@ -141,7 +143,6 @@ static void           gcal_search_view_thaw                     (ECalDataModelSu
 G_DEFINE_TYPE_WITH_CODE (GcalSearchView,
                          gcal_search_view,
                          GTK_TYPE_POPOVER,
-                         G_ADD_PRIVATE (GcalSearchView)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 gcal_data_model_subscriber_interface_init));
 
@@ -220,11 +221,11 @@ sort_by_event (GtkListBoxRow *row1,
                GtkListBoxRow *row2,
                gpointer       user_data)
 {
-  GcalSearchViewPrivate *priv;
+  GcalSearchView *view;
   RowEventData *rd1, *rd2;
   GcalEventData *ev1, *ev2;
 
-  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (user_data));
+  view = GCAL_SEARCH_VIEW (user_data);
 
   /* retrieve event data */
   rd1 = g_object_get_data (G_OBJECT (row1), "event-data");
@@ -236,7 +237,7 @@ sort_by_event (GtkListBoxRow *row1,
   if (ev1 == NULL || ev2 == NULL)
       return 0;
 
-  return compare_events (ev1, ev2, &(priv->current_utc_date));
+  return compare_events (ev1, ev2, &(view->current_utc_date));
 }
 
 static gint
@@ -273,15 +274,12 @@ compare_events (GcalEventData *ev1,
 static gboolean
 show_no_results_page (GcalSearchView *view)
 {
-  GcalSearchViewPrivate *priv;
+  view->no_results_timeout_id = 0;
 
-  priv = gcal_search_view_get_instance_private (view);
-  priv->no_results_timeout_id = 0;
-
-  if (priv->query)
-    gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), priv->num_results != 0 ? "results" : "no_results");
+  if (view->query)
+    gtk_stack_set_visible_child_name (GTK_STACK (view->stack), view->num_results != 0 ? "results" : "no_results");
   else
-    gtk_stack_set_visible_child_name (GTK_STACK (priv->stack), "results");
+    gtk_stack_set_visible_child_name (GTK_STACK (view->stack), "results");
 
   return G_SOURCE_REMOVE;
 }
@@ -324,8 +322,6 @@ static GtkWidget*
 make_row_for_event_data (GcalSearchView  *view,
                          GcalEventData   *data)
 {
-  GcalSearchViewPrivate *priv;
-
   g_autoptr(GTimeZone) tz;
   g_autoptr (GDateTime) datetime;
   g_autoptr (GDateTime) local_datetime;
@@ -344,8 +340,6 @@ make_row_for_event_data (GcalSearchView  *view,
   GtkWidget *time_label;
   GtkWidget *name_label;
   GtkWidget *image;
-
-  priv = gcal_search_view_get_instance_private (view);
 
   /* get event color */
   get_color_name_from_source (data->source, &color);
@@ -398,7 +392,7 @@ make_row_for_event_data (GcalSearchView  *view,
   /* show 'all day' instead of 00:00 */
   if (comp_dt.value->is_date == 0)
     {
-      text = g_date_time_format (local_datetime, priv->format_24h ? "%R" : "%r");
+      text = g_date_time_format (local_datetime, view->format_24h ? "%R" : "%r");
       time_label = gtk_label_new (text);
       g_free (text);
     }
@@ -426,7 +420,7 @@ make_row_for_event_data (GcalSearchView  *view,
     }
 
   /* lock icon */
-  if (!gcal_manager_is_client_writable (priv->manager, data->source))
+  if (!gcal_manager_is_client_writable (view->manager, data->source))
     {
       GtkWidget *lock_icon;
 
@@ -462,13 +456,10 @@ make_row_for_event_data (GcalSearchView  *view,
 static void
 update_view (GcalSearchView *view)
 {
-  GcalSearchViewPrivate *priv;
-  priv = gcal_search_view_get_instance_private (view);
+  if (view->no_results_timeout_id != 0)
+    g_source_remove (view->no_results_timeout_id);
 
-  if (priv->no_results_timeout_id != 0)
-    g_source_remove (priv->no_results_timeout_id);
-
-  priv->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT, (GSourceFunc) show_no_results_page, view);
+  view->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT, (GSourceFunc) show_no_results_page, view);
 }
 
 static void
@@ -492,7 +483,7 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
    *
    */
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_SEARCH_VIEW, G_SIGNAL_RUN_LAST,
-                                           G_STRUCT_OFFSET (GcalSearchViewClass, event_activated),
+                                           0,
                                            NULL, NULL, NULL,
                                            G_TYPE_NONE, 1, ICAL_TIME_TYPE);
 
@@ -513,8 +504,8 @@ gcal_search_view_class_init (GcalSearchViewClass *klass)
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/search-view.ui");
 
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, stack);
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalSearchView, listbox);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalSearchView, stack);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalSearchView, listbox);
 
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), open_event);
 }
@@ -538,17 +529,17 @@ gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *ifa
 static void
 gcal_search_view_constructed (GObject *object)
 {
-  GcalSearchViewPrivate *priv;
+  GcalSearchView *view;
   GtkWidget *placeholder_label;
 
-  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
+  view = GCAL_SEARCH_VIEW (object);
 
   /* make the listbox sorted */
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->listbox), (GtkListBoxSortFunc) sort_by_event, object, NULL);
-  gtk_list_box_set_header_func (GTK_LIST_BOX (priv->listbox), display_header_func, NULL, NULL);
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (view->listbox), (GtkListBoxSortFunc) sort_by_event, object, NULL);
+  gtk_list_box_set_header_func (GTK_LIST_BOX (view->listbox), display_header_func, NULL, NULL);
 
   // (gchar)uuid -> (RowEventData)event Hash table
-  priv->uuid_to_event = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) free_row_data);
+  view->uuid_to_event = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) free_row_data);
 
   /* don't fill the list with all events on startup */
   gcal_search_view_search (GCAL_SEARCH_VIEW (object), NULL, NULL);
@@ -563,7 +554,7 @@ gcal_search_view_constructed (GObject *object)
                                     NULL);
   gtk_style_context_add_class (gtk_widget_get_style_context (placeholder_label), "dim-label");
 
-  gtk_list_box_set_placeholder (GTK_LIST_BOX (priv->listbox), placeholder_label);
+  gtk_list_box_set_placeholder (GTK_LIST_BOX (view->listbox), placeholder_label);
 }
 
 static void
@@ -572,18 +563,14 @@ gcal_search_view_set_property (GObject       *object,
                                const GValue  *value,
                                GParamSpec    *pspec)
 {
-  GcalSearchViewPrivate *priv;
-
-  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
+  GcalSearchView *self = GCAL_SEARCH_VIEW (object);
 
   switch (property_id)
     {
     case PROP_DATE:
       {
-        if (priv->date != NULL)
-          g_free (priv->date);
-
-        priv->date = g_value_dup_boxed (value);
+        g_clear_pointer (&self->date, g_free);
+        self->date = g_value_dup_boxed (value);
         break;
       }
     default:
@@ -598,14 +585,12 @@ gcal_search_view_get_property (GObject       *object,
                                GValue        *value,
                                GParamSpec    *pspec)
 {
-  GcalSearchViewPrivate *priv;
-
-  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
+  GcalSearchView *self = GCAL_SEARCH_VIEW (object);
 
   switch (property_id)
     {
     case PROP_DATE:
-      g_value_set_boxed (value, priv->date);
+      g_value_set_boxed (value, self->date);
       break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -614,15 +599,12 @@ gcal_search_view_get_property (GObject       *object,
 }
 
 static void
-gcal_search_view_finalize (GObject       *object)
+gcal_search_view_finalize (GObject *object)
 {
-  GcalSearchViewPrivate *priv;
-  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (object));
+  GcalSearchView *self = GCAL_SEARCH_VIEW (object);
 
-  if (priv->date != NULL)
-    g_free (priv->date);
-
-  g_hash_table_unref (priv->uuid_to_event);
+  g_clear_pointer (&self->date, g_free);
+  g_clear_pointer (&self->uuid_to_event, g_hash_table_unref);
 
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_search_view_parent_class)->finalize (object);
@@ -634,14 +616,14 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
                                   ECalClient              *client,
                                   ECalComponent           *comp)
 {
-  GcalSearchViewPrivate *priv;
+  GcalSearchView *view;
 
   RowEventData *row_data;
   GcalEventData *data;
   ECalComponentId *id;
   gchar *uuid;
 
-  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (subscriber));
+  view = GCAL_SEARCH_VIEW (subscriber);
 
   /* event data */
   data = g_new0 (GcalEventData, 1);
@@ -664,12 +646,12 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   g_signal_connect (row_data->row, "destroy", G_CALLBACK (gtk_widget_destroyed), &(row_data->row));
 
   g_object_set_data (G_OBJECT (row_data->row), "event-data", row_data);
-  g_hash_table_insert (priv->uuid_to_event, uuid, row_data);
+  g_hash_table_insert (view->uuid_to_event, uuid, row_data);
 
-  gtk_container_add (GTK_CONTAINER (priv->listbox), row_data->row);
+  gtk_container_add (GTK_CONTAINER (view->listbox), row_data->row);
 
   /* show 'no results' */
-  priv->num_results++;
+  view->num_results++;
 
   update_view (GCAL_SEARCH_VIEW (subscriber));
 }
@@ -688,12 +670,12 @@ gcal_search_view_component_removed (ECalDataModelSubscriber *subscriber,
                                     const gchar             *uid,
                                     const gchar             *rid)
 {
-  GcalSearchViewPrivate *priv;
+  GcalSearchView *view;
   ESource *source;
   RowEventData *row_data;
   gchar *uuid;
 
-  priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (subscriber));
+  view = GCAL_SEARCH_VIEW (subscriber);
 
   /* if the widget has recurrency, it's UUID is different */
   source = e_client_get_source (E_CLIENT (client));
@@ -704,19 +686,19 @@ gcal_search_view_component_removed (ECalDataModelSubscriber *subscriber,
     uuid = g_strdup_printf ("%s:%s", e_source_get_uid (source), uid);
 
   // Lookup the RowEventData
-  row_data = g_hash_table_lookup (priv->uuid_to_event, uuid);
+  row_data = g_hash_table_lookup (view->uuid_to_event, uuid);
 
   /* Removing the given RowEventData entry will
    * call free_row_data, which removes the row
    * from the listbox and also free the uuid.
    */
   if (row_data)
-    g_hash_table_remove (priv->uuid_to_event, uuid);
+    g_hash_table_remove (view->uuid_to_event, uuid);
 
   g_free (uuid);
 
   /* show 'no results' */
-  priv->num_results--;
+  view->num_results--;
 
   update_view (GCAL_SEARCH_VIEW (subscriber));
 }
@@ -759,11 +741,8 @@ void
 gcal_search_view_connect (GcalSearchView *search_view,
                           GcalManager    *manager)
 {
-  GcalSearchViewPrivate *priv;
-
-  priv = gcal_search_view_get_instance_private (search_view);
-  if (manager != NULL && manager != priv->manager)
-    priv->manager = manager;
+  if (manager != NULL && manager != search_view->manager)
+    search_view->manager = manager;
 }
 
 /**
@@ -779,10 +758,7 @@ void
 gcal_search_view_set_time_format (GcalSearchView *view,
                                   gboolean        format_24h)
 {
-  GcalSearchViewPrivate *priv;
-
-  priv = gcal_search_view_get_instance_private (view);
-  priv->format_24h = format_24h;
+  view->format_24h = format_24h;
 }
 
 /**
@@ -800,17 +776,11 @@ gcal_search_view_search (GcalSearchView *view,
                          const gchar    *field,
                          const gchar    *query)
 {
-  GcalSearchViewPrivate *priv;
+  g_clear_pointer (&view->query, g_free);
+  g_clear_pointer (&view->field, g_free);
 
-  priv = gcal_search_view_get_instance_private (view);
-
-  if (priv->query != NULL)
-    g_free (priv->query);
-  if (priv->field != NULL)
-    g_free (priv->field);
-
-  priv->query = g_strdup (query);
-  priv->field = g_strdup (field);
+  view->query = g_strdup (query);
+  view->field = g_strdup (field);
 
 
   /* Only perform search on valid non-empty strings */
@@ -819,22 +789,22 @@ gcal_search_view_search (GcalSearchView *view,
       gchar *search_query = g_strdup_printf ("(contains? \"%s\" \"%s\")", field != NULL? field : "summary",
                                              query != NULL? query : "");
 
-      if (!priv->subscribed)
+      if (!view->subscribed)
       {
-        gcal_manager_set_search_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view), 0, 0);
-        priv->subscribed = TRUE;
+        gcal_manager_set_search_subscriber (view->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view), 0, 0);
+        view->subscribed = TRUE;
       }
 
       /* update internal current time_t */
-      priv->current_utc_date = time (NULL);
+      view->current_utc_date = time (NULL);
 
-      gcal_manager_set_query (priv->manager, search_query);
+      gcal_manager_set_query (view->manager, search_query);
 
       g_free (search_query);
     }
   else
     {
-      g_hash_table_remove_all (priv->uuid_to_event);
+      g_hash_table_remove_all (view->uuid_to_event);
     }
 
   update_view (view);
