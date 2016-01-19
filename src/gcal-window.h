@@ -29,27 +29,9 @@ G_BEGIN_DECLS
 
 
 #define GCAL_TYPE_WINDOW                    (gcal_window_get_type ())
-#define GCAL_WINDOW(obj)                    (G_TYPE_CHECK_INSTANCE_CAST((obj), GCAL_TYPE_WINDOW, GcalWindow))
-#define GCAL_WINDOW_CLASS(klass)            (G_TYPE_CHECK_CLASS_CAST((klass), GCAL_TYPE_WINDOW, GcalWindowClass))
-#define GCAL_IS_WINDOW(obj)                 (G_TYPE_CHECK_INSTANCE_TYPE((obj), GCAL_TYPE_WINDOW))
-#define GCAL_IS_WINDOW_CLASS(klass)         (G_TYPE_CHECK_CLASS_TYPE((klass), GCAL_TYPE_WINDOW))
-#define GCAL_WINDOW_GET_CLASS(obj)          (G_TYPE_INSTANCE_GET_CLASS((obj), GCAL_TYPE_WINDOW, GcalWindowClass))
 
-typedef struct _GcalWindow                   GcalWindow;
-typedef struct _GcalWindowClass              GcalWindowClass;
+G_DECLARE_FINAL_TYPE (GcalWindow, gcal_window, GCAL, WINDOW, GtkApplicationWindow)
 
-struct _GcalWindow
-{
-  GtkApplicationWindow parent;
-};
-
-struct _GcalWindowClass
-{
-  GtkApplicationWindowClass parent_class;
-};
-
-
-GType        gcal_window_get_type             (void);
 GtkWidget*   gcal_window_new_with_view_and_date (GcalApplication    *app,
                                                  GcalWindowViewType  view_type,
                                                  icaltimetype       *date);
