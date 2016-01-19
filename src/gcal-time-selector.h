@@ -25,33 +25,8 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_TIME_SELECTOR             (gcal_time_selector_get_type ())
-#define GCAL_TIME_SELECTOR(obj)             (G_TYPE_CHECK_INSTANCE_CAST((obj), GCAL_TYPE_TIME_SELECTOR, GcalTimeSelector))
-#define GCAL_TIME_SELECTOR_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST((klass), GCAL_TYPE_TIME_SELECTOR, GcalTimeSelectorClass))
-#define GCAL_IS_TIME_SELECTOR(obj)          (G_TYPE_CHECK_INSTANCE_TYPE((obj), GCAL_TYPE_TIME_SELECTOR))
-#define GCAL_IS_TIME_SELECTOR_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE((klass), GCAL_TYPE_TIME_SELECTOR))
-#define GCAL_TIME_SELECTOR_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS((obj), GCAL_TYPE_TIME_SELECTOR, GcalTimeSelectorClass))
 
-typedef struct _GcalTimeSelector                GcalTimeSelector;
-typedef struct _GcalTimeSelectorClass           GcalTimeSelectorClass;
-typedef struct _GcalTimeSelectorPrivate         GcalTimeSelectorPrivate;
-
-struct _GcalTimeSelector
-{
-  GtkMenuButton parent;
-  /* add your public declarations here */
-
-  GcalTimeSelectorPrivate *priv;
-};
-
-struct _GcalTimeSelectorClass
-{
-  GtkMenuButtonClass parent_class;
-
-  /* signals */
-  void (*modified)  (GcalTimeSelector *selector);
-};
-
-GType            gcal_time_selector_get_type     (void);
+G_DECLARE_FINAL_TYPE (GcalTimeSelector, gcal_time_selector, GCAL, TIME_SELECTOR, GtkMenuButton)
 
 GtkWidget*       gcal_time_selector_new          (void);
 
