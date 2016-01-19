@@ -1,3 +1,17 @@
+Major changes in 3.19.4:
+* Updated translations for:
+    * Brazilian Portuguese
+    * German
+    * Japanese
+    * Lithuanian
+    * Russian
+    * Thai
+* Code cleanups
+* Use CSS names on classes
+* Add kudos
+* Make month view lines stronger
+* Fix week number in year view
+
 Major changes in 3.19.3:
 * Updated translations
 * Added symbolic app icon
