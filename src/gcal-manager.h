@@ -28,41 +28,14 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_MANAGER                            (gcal_manager_get_type ())
-#define GCAL_MANAGER(obj)                            (G_TYPE_CHECK_INSTANCE_CAST((obj), GCAL_TYPE_MANAGER, GcalManager))
-#define GCAL_MANAGER_CLASS(klass)                    (G_TYPE_CHECK_CLASS_CAST((klass), GCAL_TYPE_MANAGER, GcalManagerClass))
-#define GCAL_IS_MANAGER(obj)                         (G_TYPE_CHECK_INSTANCE_TYPE((obj), GCAL_TYPE_MANAGER))
-#define GCAL_IS_MANAGER_CLASS(klass)                 (G_TYPE_CHECK_CLASS_TYPE((klass), GCAL_TYPE_MANAGER))
-#define GCAL_MANAGER_GET_CLASS(obj)                  (G_TYPE_INSTANCE_GET_CLASS((obj), GCAL_TYPE_MANAGER, GcalManagerClass))
 
-typedef struct _GcalManager                           GcalManager;
-typedef struct _GcalManagerClass                      GcalManagerClass;
-
-struct _GcalManager
-{
-  GObject parent;
-};
-
-struct _GcalManagerClass
-{
-  GObjectClass parent_class;
-
-  /* signals */
-  void (*source_activated)  (GcalManager *manager, ESource *source, gboolean active);
-  void (*source_added)  (GcalManager *manager, ESource *source, gboolean enabled);
-  void (*source_removed)  (GcalManager *manager, ESource *source);
-  void (*source_enabled)  (GcalManager *manager, ESource *source, gboolean enabled);
-  void (*load_completed)  (GcalManager *manager);
-  void (*query_completed) (GcalManager *manager);
-  void (*goa_client_ready) (GcalManager *manager, GoaClient *client);
-};
+G_DECLARE_FINAL_TYPE (GcalManager, gcal_manager, GCAL, MANAGER, GObject)
 
 typedef struct
 {
   ESource       *source;
   ECalComponent *event_component;
 } GcalEventData;
-
-GType          gcal_manager_get_type                (void);
 
 GcalManager*   gcal_manager_new_with_settings       (GSettings          *settings);
 
