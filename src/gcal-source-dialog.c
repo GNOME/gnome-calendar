@@ -23,8 +23,10 @@
 #include <goa/goa.h>
 #include <libedataserverui/libedataserverui.h>
 
-typedef struct
+struct _GcalSourceDialog
 {
+  GtkDialog           parent;
+
   GtkWidget          *add_button;
   GtkWidget          *back_button;
   GtkWidget          *calendar_color_button;
@@ -92,14 +94,6 @@ typedef struct
 
   /* manager */
   GcalManager        *manager;
-} GcalSourceDialogPrivate;
-
-struct _GcalSourceDialog
-{
-  GtkDialog parent;
-
-  /*< private >*/
-  GcalSourceDialogPrivate *priv;
 };
 
 typedef enum
@@ -225,7 +219,7 @@ static void       discover_sources_cb                   (GObject             *so
                                                          GAsyncResult        *result,
                                                          gpointer             user_data);
 
-G_DEFINE_TYPE_WITH_PRIVATE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
+G_DEFINE_TYPE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
 GActionEntry actions[] = {
   {"file",  on_file_activated,  NULL, NULL, NULL},
@@ -238,28 +232,28 @@ static void
 add_button_clicked (GtkWidget *button,
                     gpointer   user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
 
-  if (priv->source != NULL)
+  if (self->source != NULL)
     {
       // Commit the new source
-      gcal_manager_save_source (priv->manager, priv->source);
+      gcal_manager_save_source (self->manager, self->source);
 
-      priv->source = NULL;
+      self->source = NULL;
 
       gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
     }
 
-  if (priv->remote_sources != NULL)
+  if (self->remote_sources != NULL)
     {
       GList *l;
 
       // Commit each new remote source
-      for (l = priv->remote_sources; l != NULL; l = l->next)
-        gcal_manager_save_source (priv->manager, l->data);
+      for (l = self->remote_sources; l != NULL; l = l->next)
+        gcal_manager_save_source (self->manager, l->data);
 
-      g_list_free (priv->remote_sources);
-      priv->remote_sources = NULL;
+      g_list_free (self->remote_sources);
+      self->remote_sources = NULL;
 
       // Go back to overview
       gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
@@ -272,12 +266,12 @@ add_source (GcalManager *manager,
             gboolean     enabled,
             gpointer     user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   GList *children, *l;
   gboolean contains_source;
 
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
-  children = gtk_container_get_children (GTK_CONTAINER (priv->calendars_listbox));
+  self = GCAL_SOURCE_DIALOG (user_data);
+  children = gtk_container_get_children (GTK_CONTAINER (self->calendars_listbox));
   contains_source = FALSE;
 
   for (l = children; l != NULL; l = l->next)
@@ -294,7 +288,7 @@ add_source (GcalManager *manager,
       GtkWidget *row;
       ESource *parent;
 
-      parent = gcal_manager_get_source (priv->manager, e_source_get_parent (source));
+      parent = gcal_manager_get_source (self->manager, e_source_get_parent (source));
 
       row = make_row_from_source (GCAL_SOURCE_DIALOG (user_data), source);
       g_object_set_data (G_OBJECT (row), "source", source);
@@ -306,7 +300,7 @@ add_source (GcalManager *manager,
           g_object_set_data (G_OBJECT (row), "account-id", (gpointer) e_source_goa_get_account_id (goa));
         }
 
-      gtk_container_add (GTK_CONTAINER (priv->calendars_listbox), row);
+      gtk_container_add (GTK_CONTAINER (self->calendars_listbox), row);
 
       g_object_unref (parent);
     }
@@ -328,10 +322,10 @@ static void
 action_widget_activated (GtkWidget *widget,
                          gpointer   user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
   gint response = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget), "response"));
 
-  priv->old_default_source = NULL;
+  self->old_default_source = NULL;
 
   gtk_dialog_response (GTK_DIALOG (user_data), response);
 }
@@ -347,15 +341,15 @@ static void
 back_button_clicked (GtkButton *button,
                      gpointer   user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
 
-  if (gtk_stack_get_visible_child (GTK_STACK (priv->stack)) == priv->edit_grid)
+  if (gtk_stack_get_visible_child (GTK_STACK (self->stack)) == self->edit_grid)
     {
       // Save the source before leaving
-      gcal_manager_save_source (priv->manager, priv->source);
+      gcal_manager_save_source (self->manager, self->source);
 
       // Release the source ref we acquired
-      g_clear_object (&priv->source);
+      g_clear_object (&self->source);
     }
 
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
@@ -366,12 +360,12 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
                             GtkListBoxRow *row2,
                             gpointer       user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   ESource *source1, *source2;
   gboolean is_goa1, is_goa2;
   gint retval;
 
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  self = GCAL_SOURCE_DIALOG (user_data);
 
   // first source
   source1 = g_object_get_data (G_OBJECT (row1), "source");
@@ -387,8 +381,8 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
       gchar *parent_name2 = NULL;
 
       // Retrieve parent names
-      get_source_parent_name_color (priv->manager, source1, &parent_name1, NULL);
-      get_source_parent_name_color (priv->manager, source2, &parent_name2, NULL);
+      get_source_parent_name_color (self->manager, source1, &parent_name1, NULL);
+      get_source_parent_name_color (self->manager, source2, &parent_name2, NULL);
 
       retval = g_strcmp0 (parent_name1, parent_name2);
 
@@ -413,31 +407,28 @@ calendar_visible_check_toggled (GObject    *object,
                                 GParamSpec *pspec,
                                 gpointer    user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
-
-  g_assert (priv->source != NULL);
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object)))
-    gcal_manager_enable_source (priv->manager, priv->source);
+    gcal_manager_enable_source (self->manager, self->source);
   else
-    gcal_manager_disable_source (priv->manager, priv->source);
+    gcal_manager_disable_source (self->manager, self->source);
 }
 
 static void
 cancel_button_clicked (GtkWidget *button,
                        gpointer   user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
 
   // Destroy the ongoing created source
-  if (priv->source != NULL)
-    g_clear_object (&priv->source);
+  g_clear_object (&self->source);
 
   // Cleanup detected remote sources that weren't added
-  if (priv->remote_sources != NULL)
+  if (self->remote_sources != NULL)
     {
-      g_list_free_full (priv->remote_sources, g_object_unref);
-      priv->remote_sources = NULL;
+      g_list_free_full (self->remote_sources, g_object_unref);
+      self->remote_sources = NULL;
     }
 
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
@@ -453,34 +444,31 @@ cancel_button_clicked (GtkWidget *button,
 static void
 clear_pages (GcalSourceDialog *dialog)
 {
-  GcalSourceDialogPrivate *priv;
   GList *list;
 
-  priv = dialog->priv;
-
-  gtk_entry_set_text (GTK_ENTRY (priv->calendar_address_entry), "");
-  gtk_widget_set_sensitive (priv->add_button, FALSE);
+  gtk_entry_set_text (GTK_ENTRY (dialog->calendar_address_entry), "");
+  gtk_widget_set_sensitive (dialog->add_button, FALSE);
 
   // Remove discovered web sources (if any)
-  list = gtk_container_get_children (GTK_CONTAINER (priv->web_sources_listbox));
+  list = gtk_container_get_children (GTK_CONTAINER (dialog->web_sources_listbox));
   g_list_free_full (list, (GDestroyNotify) gtk_widget_destroy);
 
-  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), FALSE);
-  gtk_widget_hide (priv->web_sources_revealer);
+  gtk_revealer_set_reveal_child (GTK_REVEALER (dialog->web_sources_revealer), FALSE);
+  gtk_widget_hide (dialog->web_sources_revealer);
 }
 
 static void
 color_set (GtkColorButton *button,
            gpointer        user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   ESourceSelectable *extension;
   GdkRGBA color;
 
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  self = GCAL_SOURCE_DIALOG (user_data);
   gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (button), &color);
 
-  extension = E_SOURCE_SELECTABLE (e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR));
+  extension = E_SOURCE_SELECTABLE (e_source_get_extension (self->source, E_SOURCE_EXTENSION_CALENDAR));
   e_source_selectable_set_color (extension, gdk_rgba_to_string (&color));
 }
 
@@ -489,13 +477,13 @@ default_check_toggled (GObject    *object,
                        GParamSpec *pspec,
                        gpointer    user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
 
   /* Retrieve the current default source */
-  if (priv->old_default_source == NULL)
+  if (self->old_default_source == NULL)
     {
-      priv->old_default_source = gcal_manager_get_default_source (priv->manager);
-      g_object_unref (priv->old_default_source);
+      self->old_default_source = gcal_manager_get_default_source (self->manager);
+      g_object_unref (self->old_default_source);
     }
 
   /**
@@ -504,9 +492,9 @@ default_check_toggled (GObject    *object,
    * default source.
    */
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object)))
-    gcal_manager_set_default_source (priv->manager, priv->source);
+    gcal_manager_set_default_source (self->manager, self->source);
   else
-    gcal_manager_set_default_source (priv->manager, priv->old_default_source);
+    gcal_manager_set_default_source (self->manager, self->old_default_source);
 }
 
 
@@ -561,14 +549,12 @@ static gboolean
 is_goa_source (GcalSourceDialog *dialog,
                ESource          *source)
 {
-  GcalSourceDialogPrivate *priv;
   ESource *parent;
   gboolean is_goa;
 
-  priv = dialog->priv;
   g_assert (source && E_IS_SOURCE (source));
 
-  parent = gcal_manager_get_source (priv->manager, e_source_get_parent (source));
+  parent = gcal_manager_get_source (dialog->manager, e_source_get_parent (source));
   is_goa = e_source_has_extension (parent, E_SOURCE_EXTENSION_GOA);
   g_object_unref (parent);
 
@@ -597,7 +583,6 @@ static GtkWidget*
 make_row_from_source (GcalSourceDialog *dialog,
                       ESource          *source)
 {
-  GcalSourceDialogPrivate *priv;
   GtkBuilder *builder;
   GtkWidget *bottom_label;
   GtkWidget *top_label;
@@ -607,8 +592,7 @@ make_row_from_source (GcalSourceDialog *dialog,
   GdkRGBA color;
   gchar *parent_name;
 
-  priv = dialog->priv;
-  get_source_parent_name_color (priv->manager, source, &parent_name, NULL);
+  get_source_parent_name_color (dialog->manager, source, &parent_name, NULL);
   builder = gtk_builder_new_from_resource ("/org/gnome/calendar/calendar-row.ui");
 
   /*
@@ -629,7 +613,7 @@ make_row_from_source (GcalSourceDialog *dialog,
   gtk_label_set_label (GTK_LABEL (top_label), e_source_get_display_name (source));
   g_object_bind_property (source, "display-name", top_label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_signal_connect (source, "notify::display-name", G_CALLBACK (invalidate_calendar_listbox_sort),
-                    priv->calendars_listbox);
+                    dialog->calendars_listbox);
 
   /* parent source name label */
   bottom_label = GTK_WIDGET (gtk_builder_get_object (builder, "subtitle"));
@@ -658,14 +642,14 @@ name_entry_text_changed (GObject    *object,
                          GParamSpec *pspec,
                          gpointer    user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
   gboolean valid = gtk_entry_get_text_length (GTK_ENTRY (object)) > 0;
 
-  gtk_widget_set_sensitive (priv->back_button, valid);
-  gtk_widget_set_sensitive (priv->add_button, valid);
+  gtk_widget_set_sensitive (self->back_button, valid);
+  gtk_widget_set_sensitive (self->add_button, valid);
 
   if (valid)
-    e_source_set_display_name (priv->source, gtk_entry_get_text (GTK_ENTRY (priv->name_entry)));
+    e_source_set_display_name (self->source, gtk_entry_get_text (GTK_ENTRY (self->name_entry)));
 }
 
 static void
@@ -688,17 +672,17 @@ online_accounts_listbox_row_activated (GtkListBox    *box,
                                        GtkListBoxRow *row,
                                        gpointer       user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
 
-  if ((GtkWidget*) row == priv->exchange_stub_row)
+  if ((GtkWidget*) row == self->exchange_stub_row)
     {
       spawn_goa_with_args ("add", "exchange");
     }
-  else if ((GtkWidget*) row == priv->google_stub_row)
+  else if ((GtkWidget*) row == self->google_stub_row)
     {
       spawn_goa_with_args ("add", "google");
     }
-  else if ((GtkWidget*) row == priv->owncloud_stub_row)
+  else if ((GtkWidget*) row == self->owncloud_stub_row)
     {
       spawn_goa_with_args ("add", "owncloud");
     }
@@ -730,33 +714,33 @@ response_signal (GtkDialog *dialog,
                  gint       response_id,
                  gpointer   user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (dialog)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (dialog);
 
   /* save the source */
-  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_EDIT && priv->source != NULL)
+  if (self->mode == GCAL_SOURCE_DIALOG_MODE_EDIT && self->source != NULL)
     {
-      gcal_manager_save_source (priv->manager, priv->source);
-      g_clear_object (&priv->source);
+      gcal_manager_save_source (self->manager, self->source);
+      g_clear_object (&self->source);
     }
 
   /* commit the new source; save the current page's source */
-  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_APPLY && priv->remote_sources != NULL)
+  if (self->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_APPLY && self->remote_sources != NULL)
       {
         GList *l;
 
         // Commit each new remote source
-        for (l = priv->remote_sources; l != NULL; l = l->next)
-          gcal_manager_save_source (priv->manager, l->data);
+        for (l = self->remote_sources; l != NULL; l = l->next)
+          gcal_manager_save_source (self->manager, l->data);
 
-        g_list_free (priv->remote_sources);
-        priv->remote_sources = NULL;
+        g_list_free (self->remote_sources);
+        self->remote_sources = NULL;
       }
 
   /* Destroy the source when the operation is cancelled */
-  if (priv->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_CANCEL && priv->remote_sources != NULL)
+  if (self->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_CANCEL && self->remote_sources != NULL)
     {
-      g_list_free_full (priv->remote_sources, g_object_unref);
-      priv->remote_sources = NULL;
+      g_list_free_full (self->remote_sources, g_object_unref);
+      self->remote_sources = NULL;
     }
 
   gtk_widget_hide (GTK_WIDGET (dialog));
@@ -804,12 +788,12 @@ static void
 settings_button_clicked (GtkWidget *button,
                          gpointer   user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   const gchar *account_id;
 
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  self = GCAL_SOURCE_DIALOG (user_data);
   /* Selects the account to open */
-  account_id = g_object_get_data (G_OBJECT (priv->account_label), "account-id");
+  account_id = g_object_get_data (G_OBJECT (self->account_label), "account-id");
 
   spawn_goa_with_args ((gchar*) account_id, NULL);
 }
@@ -819,20 +803,20 @@ stack_visible_child_name_changed (GObject    *object,
                                   GParamSpec *pspec,
                                   gpointer    user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   GtkWidget *visible_child;
 
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  self = GCAL_SOURCE_DIALOG (user_data);
   visible_child = gtk_stack_get_visible_child (GTK_STACK (object));
 
-  if (visible_child == priv->main_scrolledwindow)
+  if (visible_child == self->main_scrolledwindow)
     {
-      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Calendar Settings"));
-      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
-      gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->headerbar), TRUE);
-      gtk_widget_set_visible (priv->add_button, FALSE);
-      gtk_widget_set_visible (priv->cancel_button, FALSE);
-      gtk_widget_set_visible (priv->back_button, FALSE);
+      gtk_header_bar_set_title (GTK_HEADER_BAR (self->headerbar), _("Calendar Settings"));
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (self->headerbar), NULL);
+      gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (self->headerbar), TRUE);
+      gtk_widget_set_visible (self->add_button, FALSE);
+      gtk_widget_set_visible (self->cancel_button, FALSE);
+      gtk_widget_set_visible (self->back_button, FALSE);
     }
 
   /*
@@ -841,30 +825,30 @@ stack_visible_child_name_changed (GObject    *object,
    * source are updated, while indenpendent widgets
    * are updated at #gcal_source_dialog_set_mode
    */
-  if (visible_child == priv->edit_grid && priv->source != NULL)
+  if (visible_child == self->edit_grid && self->source != NULL)
     {
       ESource *default_source;
       gchar *parent_name;
       GdkRGBA color;
       gboolean creation_mode, is_goa, is_file, is_remote;
 
-      default_source = gcal_manager_get_default_source (priv->manager);
-      creation_mode = (priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE ||
-                       priv->mode == GCAL_SOURCE_DIALOG_MODE_CREATE_WEB);
-      is_goa = is_goa_source (GCAL_SOURCE_DIALOG (user_data), priv->source);
-      is_file = e_source_has_extension (priv->source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
-      is_remote = is_remote_source (priv->source);
+      default_source = gcal_manager_get_default_source (self->manager);
+      creation_mode = (self->mode == GCAL_SOURCE_DIALOG_MODE_CREATE ||
+                       self->mode == GCAL_SOURCE_DIALOG_MODE_CREATE_WEB);
+      is_goa = is_goa_source (GCAL_SOURCE_DIALOG (user_data), self->source);
+      is_file = e_source_has_extension (self->source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
+      is_remote = is_remote_source (self->source);
 
-      get_source_parent_name_color (priv->manager, priv->source, &parent_name, NULL);
+      get_source_parent_name_color (self->manager, self->source, &parent_name, NULL);
 
       // update headerbar buttons
-      gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->headerbar), !creation_mode);
-      gtk_widget_set_visible (priv->calendar_visible_check, !creation_mode);
-      gtk_widget_set_visible (priv->back_button, !creation_mode);
-      gtk_widget_set_visible (priv->add_button, creation_mode);
-      gtk_widget_set_visible (priv->cancel_button, creation_mode);
-      gtk_widget_set_visible (priv->account_box, is_goa);
-      gtk_widget_set_visible (priv->calendar_url_button, !is_goa && (is_file || is_remote));
+      gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (self->headerbar), !creation_mode);
+      gtk_widget_set_visible (self->calendar_visible_check, !creation_mode);
+      gtk_widget_set_visible (self->back_button, !creation_mode);
+      gtk_widget_set_visible (self->add_button, creation_mode);
+      gtk_widget_set_visible (self->cancel_button, creation_mode);
+      gtk_widget_set_visible (self->account_box, is_goa);
+      gtk_widget_set_visible (self->calendar_url_button, !is_goa && (is_file || is_remote));
 
       // If it's a file, set the file path
       if (is_file)
@@ -873,12 +857,12 @@ stack_visible_child_name_changed (GObject    *object,
           GFile *file;
           gchar *uri;
 
-          local = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
+          local = e_source_get_extension (self->source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
           file = e_source_local_get_custom_file (local);
           uri = g_file_get_uri (file);
 
-          gtk_link_button_set_uri (GTK_LINK_BUTTON (priv->calendar_url_button), uri);
-          gtk_button_set_label (GTK_BUTTON (priv->calendar_url_button), uri);
+          gtk_link_button_set_uri (GTK_LINK_BUTTON (self->calendar_url_button), uri);
+          gtk_button_set_label (GTK_BUTTON (self->calendar_url_button), uri);
 
           g_free (uri);
         }
@@ -890,13 +874,13 @@ stack_visible_child_name_changed (GObject    *object,
           ESourceWebdav *webdav;
           gchar *uri;
 
-          auth = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_AUTHENTICATION);
-          webdav = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
+          auth = e_source_get_extension (self->source, E_SOURCE_EXTENSION_AUTHENTICATION);
+          webdav = e_source_get_extension (self->source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
           uri = g_strdup_printf ("https://%s%s", e_source_authentication_get_host (auth),
                                  e_source_webdav_get_resource_path (webdav));
 
-          gtk_link_button_set_uri (GTK_LINK_BUTTON (priv->calendar_url_button), uri);
-          gtk_button_set_label (GTK_BUTTON (priv->calendar_url_button), uri);
+          gtk_link_button_set_uri (GTK_LINK_BUTTON (self->calendar_url_button), uri);
+          gtk_button_set_label (GTK_BUTTON (self->calendar_url_button), uri);
 
           g_free (uri);
         }
@@ -905,44 +889,44 @@ stack_visible_child_name_changed (GObject    *object,
         {
           gchar *name;
 
-          get_source_parent_name_color (priv->manager, priv->source, &name, NULL);
-          gtk_label_set_label (GTK_LABEL (priv->account_label), name);
+          get_source_parent_name_color (self->manager, self->source, &name, NULL);
+          gtk_label_set_label (GTK_LABEL (self->account_label), name);
         }
 
       /* block signals */
-      g_signal_handlers_block_by_func (priv->calendar_visible_check, calendar_visible_check_toggled, user_data);
-      g_signal_handlers_block_by_func (priv->calendar_color_button, color_set, user_data);
-      g_signal_handlers_block_by_func (priv->name_entry, name_entry_text_changed, user_data);
+      g_signal_handlers_block_by_func (self->calendar_visible_check, calendar_visible_check_toggled, user_data);
+      g_signal_handlers_block_by_func (self->calendar_color_button, color_set, user_data);
+      g_signal_handlers_block_by_func (self->name_entry, name_entry_text_changed, user_data);
 
       /* color button */
-      get_color_name_from_source (priv->source, &color);
-      gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (priv->calendar_color_button), &color);
+      get_color_name_from_source (self->source, &color);
+      gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (self->calendar_color_button), &color);
 
       /* entry */
-      gtk_entry_set_text (GTK_ENTRY (priv->name_entry), e_source_get_display_name (priv->source));
+      gtk_entry_set_text (GTK_ENTRY (self->name_entry), e_source_get_display_name (self->source));
 
       // enabled check
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->calendar_visible_check),
-                                    gcal_manager_source_enabled (priv->manager, priv->source));
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->calendar_visible_check),
+                                    gcal_manager_source_enabled (self->manager, self->source));
 
       /* default source check button */
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (priv->default_check), (priv->source == default_source));
-      gtk_widget_set_visible (priv->default_check, gcal_manager_is_client_writable (priv->manager, priv->source));
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->default_check), (self->source == default_source));
+      gtk_widget_set_visible (self->default_check, gcal_manager_is_client_writable (self->manager, self->source));
 
       /* title */
       if (!creation_mode)
         {
-          gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), e_source_get_display_name (priv->source));
-          gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), parent_name);
+          gtk_header_bar_set_title (GTK_HEADER_BAR (self->headerbar), e_source_get_display_name (self->source));
+          gtk_header_bar_set_subtitle (GTK_HEADER_BAR (self->headerbar), parent_name);
         }
 
       /* toggle the remove button */
-      gtk_widget_set_visible (priv->remove_button, e_source_get_removable (priv->source));
+      gtk_widget_set_visible (self->remove_button, e_source_get_removable (self->source));
 
       /* unblock signals */
-      g_signal_handlers_unblock_by_func (priv->calendar_visible_check, calendar_visible_check_toggled, user_data);
-      g_signal_handlers_unblock_by_func (priv->calendar_color_button, color_set, user_data);
-      g_signal_handlers_unblock_by_func (priv->name_entry, name_entry_text_changed, user_data);
+      g_signal_handlers_unblock_by_func (self->calendar_visible_check, calendar_visible_check_toggled, user_data);
+      g_signal_handlers_unblock_by_func (self->calendar_color_button, color_set, user_data);
+      g_signal_handlers_unblock_by_func (self->name_entry, name_entry_text_changed, user_data);
 
       g_object_unref (default_source);
       g_free (parent_name);
@@ -961,12 +945,12 @@ static void
 calendar_file_selected (GtkFileChooser *button,
                         gpointer        user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   ESourceExtension *ext;
   ESource *source;
   GFile *file;
 
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  self = GCAL_SOURCE_DIALOG (user_data);
   file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (button));
 
   if (file == NULL)
@@ -992,7 +976,7 @@ calendar_file_selected (GtkFileChooser *button,
   gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_CREATE);
 
-  gtk_widget_set_sensitive (priv->add_button, TRUE);
+  gtk_widget_set_sensitive (self->add_button, TRUE);
 }
 
 /**
@@ -1010,7 +994,7 @@ calendar_listbox_row_activated (GtkListBox    *box,
                                 GtkListBoxRow *row,
                                 gpointer       user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
 
   g_assert (row != NULL);
 
@@ -1018,7 +1002,7 @@ calendar_listbox_row_activated (GtkListBox    *box,
    * For non-GOA calendars, show the edit page
    * directly.
    */
-  if (GTK_WIDGET (box) == priv->calendars_listbox)
+  if (GTK_WIDGET (box) == self->calendars_listbox)
     {
       ESource *source = g_object_get_data (G_OBJECT (row), "source");
 
@@ -1037,11 +1021,9 @@ calendar_listbox_row_activated (GtkListBox    *box,
 static gboolean
 pulse_web_entry (GcalSourceDialog *dialog)
 {
-  GcalSourceDialogPrivate *priv = dialog->priv;
+  gtk_entry_progress_pulse (GTK_ENTRY (dialog->calendar_address_entry));
 
-  gtk_entry_progress_pulse (GTK_ENTRY (priv->calendar_address_entry));
-
-  priv->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
+  dialog->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
 
   return FALSE;
 }
@@ -1059,44 +1041,44 @@ url_entry_text_changed (GObject    *object,
                         GParamSpec *pspec,
                         gpointer    user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   const gchar* text;
 
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
-  text = gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry));
+  self = GCAL_SOURCE_DIALOG (user_data);
+  text = gtk_entry_get_text (GTK_ENTRY (self->calendar_address_entry));
 
-  if (priv->calendar_address_id != 0)
+  if (self->calendar_address_id != 0)
     {
-      g_source_remove (priv->calendar_address_id);
-      priv->calendar_address_id = 0;
+      g_source_remove (self->calendar_address_id);
+      self->calendar_address_id = 0;
 
-      gtk_entry_set_progress_fraction (GTK_ENTRY (priv->calendar_address_entry), 0);
+      gtk_entry_set_progress_fraction (GTK_ENTRY (self->calendar_address_entry), 0);
     }
 
-  if (priv->validate_url_resource_id != 0)
+  if (self->validate_url_resource_id != 0)
     {
-      g_source_remove (priv->validate_url_resource_id);
-      priv->validate_url_resource_id = 0;
+      g_source_remove (self->validate_url_resource_id);
+      self->validate_url_resource_id = 0;
     }
 
   if (g_utf8_strlen (text, -1) != 0)
     {
       // Remove any previous unreleased resource
-      if (priv->validate_url_resource_id != 0)
-        g_source_remove (priv->validate_url_resource_id);
+      if (self->validate_url_resource_id != 0)
+        g_source_remove (self->validate_url_resource_id);
 
       /*
        * At first, don't bother the user with
        * the login prompt. Only prompt it when
        * it fails.
        */
-      priv->prompt_password = FALSE;
+      self->prompt_password = FALSE;
 
-      priv->validate_url_resource_id = g_timeout_add (500, (GSourceFunc) validate_url_cb, user_data);
+      self->validate_url_resource_id = g_timeout_add (500, (GSourceFunc) validate_url_cb, user_data);
     }
   else
     {
-      gtk_entry_set_progress_fraction (GTK_ENTRY (priv->calendar_address_entry), 0);
+      gtk_entry_set_progress_fraction (GTK_ENTRY (self->calendar_address_entry), 0);
     }
 }
 
@@ -1159,11 +1141,11 @@ on_local_activated (GSimpleAction *action,
                     GVariant      *param,
                     gpointer       user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   ESourceExtension *ext;
   ESource *source;
 
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  self = GCAL_SOURCE_DIALOG (user_data);
   /**
    * Create the new source and add the needed
    * extensions.
@@ -1181,7 +1163,7 @@ on_local_activated (GSimpleAction *action,
   gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_CREATE);
 
-  gtk_widget_set_sensitive (priv->add_button, TRUE);
+  gtk_widget_set_sensitive (self->add_button, TRUE);
 }
 
 /**
@@ -1220,7 +1202,6 @@ calendar_address_activated (GtkEntry *entry,
 static gboolean
 validate_url_cb (GcalSourceDialog *dialog)
 {
-  GcalSourceDialogPrivate *priv;
   ESourceAuthentication *auth;
   ESourceExtension *ext;
   ESourceWebdav *webdav;
@@ -1228,30 +1209,29 @@ validate_url_cb (GcalSourceDialog *dialog)
   gchar *host, *path;
   gboolean uri_valid;
 
-  priv = dialog->priv;
-  priv->validate_url_resource_id = 0;
+  dialog->validate_url_resource_id = 0;
   host = path = NULL;
 
   /**
    * Remove any reminescent ESources
    * cached before.
    */
-  if (priv->remote_sources != NULL)
+  if (dialog->remote_sources != NULL)
     {
-      g_list_free_full (priv->remote_sources, g_object_unref);
-      priv->remote_sources = NULL;
+      g_list_free_full (dialog->remote_sources, g_object_unref);
+      dialog->remote_sources = NULL;
     }
 
   // Remove previous results
-  g_list_free_full (gtk_container_get_children (GTK_CONTAINER (priv->web_sources_listbox)),
+  g_list_free_full (gtk_container_get_children (GTK_CONTAINER (dialog->web_sources_listbox)),
                     (GDestroyNotify) gtk_widget_destroy);
-  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), FALSE);
+  gtk_revealer_set_reveal_child (GTK_REVEALER (dialog->web_sources_revealer), FALSE);
 
   // Clear the entry icon
-  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY, NULL);
+  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (dialog->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 
   // Get the hostname and file path from the server
-  uri_valid = uri_get_fields (gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)), NULL, &host, &path);
+  uri_valid = uri_get_fields (gtk_entry_get_text (GTK_ENTRY (dialog->calendar_address_entry)), NULL, &host, &path);
 
   g_debug ("[source-dialog] host: '%s', path: '%s'", host, path);
 
@@ -1284,17 +1264,17 @@ validate_url_cb (GcalSourceDialog *dialog)
   if (g_str_has_suffix (path, ".ics"))
     {
       // Set the private source so it saves at closing
-      priv->remote_sources = g_list_append (priv->remote_sources, source);
+      dialog->remote_sources = g_list_append (dialog->remote_sources, source);
 
       // Update buttons
-      gtk_widget_set_sensitive (priv->add_button, source != NULL);
+      gtk_widget_set_sensitive (dialog->add_button, source != NULL);
     }
   else
     {
       ENamedParameters *credentials;
 
       // Pulse the entry while it performs the check
-      priv->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
+      dialog->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
 
       /*
        * Try to retrieve the sources without prompting
@@ -1303,7 +1283,7 @@ validate_url_cb (GcalSourceDialog *dialog)
        */
       credentials = e_named_parameters_new ();
 
-      if (!priv->prompt_password)
+      if (!dialog->prompt_password)
         {
           g_debug ("[source-dialog] Trying to connect without credentials...");
 
@@ -1311,7 +1291,7 @@ validate_url_cb (GcalSourceDialog *dialog)
           e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, NULL);
           e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, NULL);
 
-          e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)),
+          e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (dialog->calendar_address_entry)),
                                      E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, credentials, NULL, discover_sources_cb,
                                      dialog);
         }
@@ -1335,7 +1315,7 @@ validate_url_cb (GcalSourceDialog *dialog)
               e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, user);
               e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, password);
 
-              e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (priv->calendar_address_entry)),
+              e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (dialog->calendar_address_entry)),
                                          E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, credentials, NULL, discover_sources_cb,
                                          dialog);
             }
@@ -1358,12 +1338,12 @@ static void
 credential_button_clicked (GtkWidget *button,
                            gpointer   user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG(user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG(user_data);
 
-  if (button == priv->credentials_cancel_button)
-    gtk_dialog_response (GTK_DIALOG (priv->credentials_dialog), GTK_RESPONSE_CANCEL);
+  if (button == self->credentials_cancel_button)
+    gtk_dialog_response (GTK_DIALOG (self->credentials_dialog), GTK_RESPONSE_CANCEL);
   else
-    gtk_dialog_response (GTK_DIALOG (priv->credentials_dialog), GTK_RESPONSE_OK);
+    gtk_dialog_response (GTK_DIALOG (self->credentials_dialog), GTK_RESPONSE_OK);
 }
 
 static void
@@ -1378,29 +1358,27 @@ prompt_credentials (GcalSourceDialog  *dialog,
                     gchar            **username,
                     gchar            **password)
 {
-  GcalSourceDialogPrivate *priv;
   gint response;
 
-  priv = dialog->priv;
   // Cleanup last credentials
-  gtk_entry_set_text (GTK_ENTRY (priv->credentials_password_entry), "");
-  gtk_entry_set_text (GTK_ENTRY (priv->credentials_user_entry), "");
+  gtk_entry_set_text (GTK_ENTRY (dialog->credentials_password_entry), "");
+  gtk_entry_set_text (GTK_ENTRY (dialog->credentials_user_entry), "");
 
-  gtk_widget_grab_focus (priv->credentials_user_entry);
+  gtk_widget_grab_focus (dialog->credentials_user_entry);
 
   // Show the dialog, then destroy it
-  response = gtk_dialog_run (GTK_DIALOG (priv->credentials_dialog));
+  response = gtk_dialog_run (GTK_DIALOG (dialog->credentials_dialog));
 
   if (response == GTK_RESPONSE_OK)
     {
       if (username != NULL)
-        *username = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->credentials_user_entry)));
+        *username = g_strdup (gtk_entry_get_text (GTK_ENTRY (dialog->credentials_user_entry)));
 
       if (password != NULL)
-        *password = g_strdup (gtk_entry_get_text (GTK_ENTRY (priv->credentials_password_entry)));
+        *password = g_strdup (gtk_entry_get_text (GTK_ENTRY (dialog->credentials_password_entry)));
     }
 
-  gtk_widget_hide (priv->credentials_dialog);
+  gtk_widget_hide (dialog->credentials_dialog);
 
   return response;
 }
@@ -1460,22 +1438,22 @@ check_activated_cb (GtkWidget  *check,
                     GParamSpec *spec,
                     gpointer    user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   GtkWidget *row;
   ESource *source;
 
   g_assert (user_data && GCAL_IS_SOURCE_DIALOG (user_data));
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  self = GCAL_SOURCE_DIALOG (user_data);
 
   row = gtk_widget_get_parent (check);
   source = g_object_get_data (G_OBJECT (row), "source");
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)))
-    priv->remote_sources = g_list_append (priv->remote_sources, source);
+    self->remote_sources = g_list_append (self->remote_sources, source);
   else
-    priv->remote_sources = g_list_remove (priv->remote_sources, source);
+    self->remote_sources = g_list_remove (self->remote_sources, source);
 
-  gtk_widget_set_sensitive (priv->add_button, g_list_length (priv->remote_sources) > 0);
+  gtk_widget_set_sensitive (self->add_button, g_list_length (self->remote_sources) > 0);
 }
 
 static void
@@ -1483,27 +1461,27 @@ discover_sources_cb (GObject      *source,
                      GAsyncResult *result,
                      gpointer      user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   EWebDAVDiscoveredSource *src;
   GSList *discovered_sources, *user_adresses, *aux;
   GError *error;
 
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  self = GCAL_SOURCE_DIALOG (user_data);
   error = NULL;
 
   // Stop the pulsing entry
-  if (priv->calendar_address_id != 0)
+  if (self->calendar_address_id != 0)
     {
-      gtk_entry_set_progress_fraction (GTK_ENTRY (priv->calendar_address_entry), 0);
-      g_source_remove (priv->calendar_address_id);
-      priv->calendar_address_id = 0;
+      gtk_entry_set_progress_fraction (GTK_ENTRY (self->calendar_address_entry), 0);
+      g_source_remove (self->calendar_address_id);
+      self->calendar_address_id = 0;
     }
 
   if (!e_webdav_discover_sources_finish (E_SOURCE (source), result, NULL, NULL, &discovered_sources, &user_adresses,
                                         &error))
     {
       // Don't add an source with errors
-      gtk_widget_set_sensitive (priv->add_button, FALSE);
+      gtk_widget_set_sensitive (self->add_button, FALSE);
 
       /*
        * If it's the first try and things went wrong,
@@ -1512,9 +1490,9 @@ discover_sources_cb (GObject      *source,
        * really want to retry things on unavailable
        * servers.
        */
-      if (!priv->prompt_password && error->code == 14)
+      if (!self->prompt_password && error->code == 14)
         {
-          priv->prompt_password = TRUE;
+          self->prompt_password = TRUE;
 
           validate_url_cb (GCAL_SOURCE_DIALOG (user_data));
         }
@@ -1528,16 +1506,16 @@ discover_sources_cb (GObject      *source,
     }
 
   // Add a success icon to the entry
-  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (priv->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY,
+  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (self->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY,
                                      "emblem-ok-symbolic");
 
   // Remove previous results
-  g_list_free_full (gtk_container_get_children (GTK_CONTAINER (priv->web_sources_listbox)),
+  g_list_free_full (gtk_container_get_children (GTK_CONTAINER (self->web_sources_listbox)),
                     (GDestroyNotify) gtk_widget_destroy);
 
   // Show the list of calendars
-  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->web_sources_revealer), TRUE);
-  gtk_widget_show (priv->web_sources_revealer);
+  gtk_revealer_set_reveal_child (GTK_REVEALER (self->web_sources_revealer), TRUE);
+  gtk_widget_show (self->web_sources_revealer);
 
   /* TODO: show a list of calendars */
   for (aux = discovered_sources; aux != NULL; aux = aux->next)
@@ -1574,7 +1552,7 @@ discover_sources_cb (GObject      *source,
           g_signal_connect (check, "notify::active", G_CALLBACK (check_activated_cb), user_data);
 
           gtk_container_add (GTK_CONTAINER (row), check);
-          gtk_container_add (GTK_CONTAINER (priv->web_sources_listbox), row);
+          gtk_container_add (GTK_CONTAINER (self->web_sources_listbox), row);
 
           g_object_set_data (G_OBJECT (row), "parent-source", source);
           g_object_set_data (G_OBJECT (row), "source", new_source);
@@ -1606,11 +1584,11 @@ remove_source (GcalManager *manager,
                ESource     *source,
                gpointer     user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   GList *children, *aux;
 
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
-  children = gtk_container_get_children (GTK_CONTAINER (priv->calendars_listbox));
+  self = GCAL_SOURCE_DIALOG (user_data);
+  children = gtk_container_get_children (GTK_CONTAINER (self->calendars_listbox));
 
   for (aux = children; aux != NULL; aux = aux->next)
     {
@@ -1639,24 +1617,24 @@ notification_child_revealed_changed (GtkWidget  *notification,
                                      GParamSpec *spec,
                                      gpointer    user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
 
   if (gtk_revealer_get_child_revealed (GTK_REVEALER (notification)))
       return;
 
   /* If we have any removed source, delete it */
-  if (priv->removed_source != NULL)
+  if (self->removed_source != NULL)
     {
       GError *error = NULL;
 
       /* We don't really want to remove non-removable sources */
-      if (!e_source_get_removable (priv->removed_source))
+      if (!e_source_get_removable (self->removed_source))
         return;
 
       // Enable the source again to remove it's name from disabled list
-      gcal_manager_enable_source (priv->manager, priv->removed_source);
+      gcal_manager_enable_source (self->manager, self->removed_source);
 
-      e_source_remove_sync (priv->removed_source, NULL, &error);
+      e_source_remove_sync (self->removed_source, NULL, &error);
 
       /**
        * If something goes wrong, throw
@@ -1666,10 +1644,10 @@ notification_child_revealed_changed (GtkWidget  *notification,
         {
           g_warning ("[source-dialog] Error removing source: %s", error->message);
 
-          add_source (priv->manager, priv->removed_source,
-                      gcal_manager_source_enabled (priv->manager, priv->removed_source), user_data);
+          add_source (self->manager, self->removed_source,
+                      gcal_manager_source_enabled (self->manager, self->removed_source), user_data);
 
-          gcal_manager_enable_source (priv->manager, priv->removed_source);
+          gcal_manager_enable_source (self->manager, self->removed_source);
 
           g_error_free (error);
         }
@@ -1687,25 +1665,25 @@ static void
 undo_remove_action (GtkButton *button,
                     gpointer   user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
 
   /* if there's any set source, unremove it */
-  if (priv->removed_source != NULL)
+  if (self->removed_source != NULL)
     {
       // Enable the source before adding it again
-      gcal_manager_enable_source (priv->manager, priv->removed_source);
+      gcal_manager_enable_source (self->manager, self->removed_source);
 
-      add_source (priv->manager, priv->removed_source,
-                  gcal_manager_source_enabled (priv->manager, priv->removed_source), user_data);
+      add_source (self->manager, self->removed_source,
+                  gcal_manager_source_enabled (self->manager, self->removed_source), user_data);
 
       /*
        * Don't clear the pointer, since we don't
        * want to erase the source at all.
        */
-      priv->removed_source = NULL;
+      self->removed_source = NULL;
 
       // Hide notification
-      gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), FALSE);
+      gtk_revealer_set_reveal_child (GTK_REVEALER (self->notification), FALSE);
     }
 }
 
@@ -1722,9 +1700,8 @@ static void
 hide_notification (GcalSourceDialog *dialog,
                    GtkWidget        *button)
 {
-  GcalSourceDialogPrivate *priv = dialog->priv;
-  gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), FALSE);
-  priv->notification_timeout_id = 0;
+  gtk_revealer_set_reveal_child (GTK_REVEALER (dialog->notification), FALSE);
+  dialog->notification_timeout_id = 0;
 }
 
 /**
@@ -1754,23 +1731,23 @@ static void
 remove_button_clicked (GtkWidget *button,
                        gpointer   user_data)
 {
-  GcalSourceDialogPrivate *priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
 
-  if (priv->source != NULL)
+  if (self->source != NULL)
     {
       GList *children, *l;
       gchar *str;
 
-      priv->removed_source = priv->source;
-      priv->source = NULL;
-      children = gtk_container_get_children (GTK_CONTAINER (priv->calendars_listbox));
+      self->removed_source = self->source;
+      self->source = NULL;
+      children = gtk_container_get_children (GTK_CONTAINER (self->calendars_listbox));
 
-      gtk_revealer_set_reveal_child (GTK_REVEALER (priv->notification), TRUE);
+      gtk_revealer_set_reveal_child (GTK_REVEALER (self->notification), TRUE);
 
       // Remove the listbox entry (if any)
       for (l = children; l != NULL; l = l->next)
         {
-          if (g_object_get_data (l->data, "source") == priv->removed_source)
+          if (g_object_get_data (l->data, "source") == self->removed_source)
             {
               gtk_widget_destroy (l->data);
               break;
@@ -1778,17 +1755,17 @@ remove_button_clicked (GtkWidget *button,
         }
 
       // Update notification label
-      str = g_strdup_printf (_("Calendar <b>%s</b> removed"), e_source_get_display_name (priv->removed_source));
-      gtk_label_set_markup (GTK_LABEL (priv->notification_label), str);
+      str = g_strdup_printf (_("Calendar <b>%s</b> removed"), e_source_get_display_name (self->removed_source));
+      gtk_label_set_markup (GTK_LABEL (self->notification_label), str);
 
       // Remove old notifications
-      if (priv->notification_timeout_id != 0)
-        g_source_remove (priv->notification_timeout_id);
+      if (self->notification_timeout_id != 0)
+        g_source_remove (self->notification_timeout_id);
 
-      priv->notification_timeout_id = g_timeout_add_seconds (5, hide_notification_scheduled, user_data);
+      self->notification_timeout_id = g_timeout_add_seconds (5, hide_notification_scheduled, user_data);
 
       // Disable the source, so it gets hidden
-      gcal_manager_disable_source (priv->manager, priv->removed_source);
+      gcal_manager_disable_source (self->manager, self->removed_source);
 
       g_list_free (children);
       g_free (str);
@@ -1806,44 +1783,44 @@ gcal_source_dialog_new (void)
 static void
 gcal_source_dialog_constructed (GObject *object)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   GtkBuilder *builder;
   GMenuModel *menu;
 
-  priv = gcal_source_dialog_get_instance_private (GCAL_SOURCE_DIALOG (object));
+  self = GCAL_SOURCE_DIALOG (object);
 
   G_OBJECT_CLASS (gcal_source_dialog_parent_class)->constructed (object);
 
   /* widget responses */
   gtk_dialog_set_default_response (GTK_DIALOG (object), GTK_RESPONSE_CANCEL);
 
-  g_object_set_data (G_OBJECT (priv->remove_button), "response", GINT_TO_POINTER (GCAL_RESPONSE_REMOVE_SOURCE));
+  g_object_set_data (G_OBJECT (self->remove_button), "response", GINT_TO_POINTER (GCAL_RESPONSE_REMOVE_SOURCE));
 
   // Setup listbox header functions
-  gtk_list_box_set_header_func (GTK_LIST_BOX (priv->calendars_listbox), display_header_func, NULL, NULL);
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->calendars_listbox), (GtkListBoxSortFunc) calendar_listbox_sort_func,
+  gtk_list_box_set_header_func (GTK_LIST_BOX (self->calendars_listbox), display_header_func, NULL, NULL);
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendars_listbox), (GtkListBoxSortFunc) calendar_listbox_sort_func,
                               object, NULL);
 
-  gtk_list_box_set_header_func (GTK_LIST_BOX (priv->online_accounts_listbox), display_header_func, NULL, NULL);
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (priv->online_accounts_listbox), (GtkListBoxSortFunc) online_accounts_listbox_sort_func,
+  gtk_list_box_set_header_func (GTK_LIST_BOX (self->online_accounts_listbox), display_header_func, NULL, NULL);
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->online_accounts_listbox), (GtkListBoxSortFunc) online_accounts_listbox_sort_func,
                               object, NULL);
 
   // Action group
-  priv->action_group = g_simple_action_group_new ();
-  gtk_widget_insert_action_group (GTK_WIDGET (object), "source", G_ACTION_GROUP (priv->action_group));
+  self->action_group = g_simple_action_group_new ();
+  gtk_widget_insert_action_group (GTK_WIDGET (object), "source", G_ACTION_GROUP (self->action_group));
 
-  g_action_map_add_action_entries (G_ACTION_MAP (priv->action_group), actions, G_N_ELEMENTS (actions), object);
+  g_action_map_add_action_entries (G_ACTION_MAP (self->action_group), actions, G_N_ELEMENTS (actions), object);
 
   // Load the "Add" button menu
   builder = gtk_builder_new_from_resource ("/org/gnome/calendar/menus.ui");
 
   menu = G_MENU_MODEL (gtk_builder_get_object (builder, "add-source-menu"));
-  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (priv->add_calendar_menu_button), menu);
+  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (self->add_calendar_menu_button), menu);
 
   g_object_unref (builder);
 
   /* setup titlebar */
-  gtk_window_set_titlebar (GTK_WINDOW (object), priv->headerbar);
+  gtk_window_set_titlebar (GTK_WINDOW (object), self->headerbar);
 }
 
 static void
@@ -1867,40 +1844,40 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
 
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, account_box);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, account_label);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, add_calendar_menu_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, back_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_address_entry);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_color_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_url_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendar_visible_check);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, calendars_listbox);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, cancel_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, credentials_cancel_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, credentials_connect_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, credentials_dialog);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, credentials_password_entry);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, credentials_user_entry);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, default_check);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, edit_grid);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, exchange_stub_row);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, google_stub_row);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, headerbar);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, location_dim_label);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, main_scrolledwindow);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, name_entry);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notification);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, notification_label);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, online_accounts_listbox);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, owncloud_stub_row);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, remove_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, settings_button);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, stack);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_source_grid);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_listbox);
-  gtk_widget_class_bind_template_child_private (widget_class, GcalSourceDialog, web_sources_revealer);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, account_box);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, account_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, add_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, add_calendar_menu_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, back_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_address_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_color_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_url_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_visible_check);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendars_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, cancel_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_cancel_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_connect_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_dialog);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_password_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_user_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, default_check);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, edit_grid);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, exchange_stub_row);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, google_stub_row);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, headerbar);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, location_dim_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, main_scrolledwindow);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, name_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, notification);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, notification_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, online_accounts_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, owncloud_stub_row);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, remove_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, settings_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, web_source_grid);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, web_sources_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, web_sources_revealer);
 
   gtk_widget_class_bind_template_callback (widget_class, add_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
@@ -1931,8 +1908,6 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
 static void
 gcal_source_dialog_init (GcalSourceDialog *self)
 {
-  self->priv = gcal_source_dialog_get_instance_private (self);
-
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
@@ -1991,7 +1966,6 @@ static void
 add_goa_account (GcalSourceDialog *dialog,
                  GoaAccount       *account)
 {
-  GcalSourceDialogPrivate *priv;
   GcalAccountType type;
   GtkBuilder *builder;
   GtkWidget *provider_label;
@@ -2001,7 +1975,6 @@ add_goa_account (GcalSourceDialog *dialog,
   GtkWidget *icon;
   gchar *icon_name = "goa";
 
-  priv = dialog->priv;
   type = get_account_type (account);
 
   if (type == GCAL_ACCOUNT_TYPE_NOT_SUPPORTED)
@@ -2018,17 +1991,17 @@ add_goa_account (GcalSourceDialog *dialog,
     {
     case GCAL_ACCOUNT_TYPE_EXCHANGE:
       icon_name = "goa";
-      gtk_widget_hide (priv->exchange_stub_row);
+      gtk_widget_hide (dialog->exchange_stub_row);
       break;
 
     case GCAL_ACCOUNT_TYPE_GOOGLE:
       icon_name = "goa-account-google";
-      gtk_widget_hide (priv->google_stub_row);
+      gtk_widget_hide (dialog->google_stub_row);
       break;
 
     case GCAL_ACCOUNT_TYPE_OWNCLOUD:
       icon_name = "goa-account-owncloud";
-      gtk_widget_hide (priv->owncloud_stub_row);
+      gtk_widget_hide (dialog->owncloud_stub_row);
       break;
 
     case GCAL_ACCOUNT_TYPE_NOT_SUPPORTED:
@@ -2047,7 +2020,7 @@ add_goa_account (GcalSourceDialog *dialog,
   g_signal_connect (account, "notify::calendar-disabled",
                     G_CALLBACK (account_calendar_disable_changed), enabled_label);
 
-  gtk_list_box_insert (GTK_LIST_BOX (priv->online_accounts_listbox), row, 0);
+  gtk_list_box_insert (GTK_LIST_BOX (dialog->online_accounts_listbox), row, 0);
 
   g_object_unref (builder);
 }
@@ -2065,20 +2038,20 @@ goa_account_removed_cb (GoaClient *client,
                         GoaObject *object,
                         gpointer   user_data)
 {
-  GcalSourceDialogPrivate *priv;
+  GcalSourceDialog *self;
   GoaAccount *account;
   GcalAccountType type;
   GList *children, *l;
   gint counter = 1;
 
-  priv = GCAL_SOURCE_DIALOG (user_data)->priv;
+  self = GCAL_SOURCE_DIALOG (user_data);
   account = goa_object_get_account (object);
   type = get_account_type (account);
 
   if (type == GCAL_ACCOUNT_TYPE_NOT_SUPPORTED)
     return;
 
-  children = gtk_container_get_children (GTK_CONTAINER (priv->online_accounts_listbox));
+  children = gtk_container_get_children (GTK_CONTAINER (self->online_accounts_listbox));
 
   for (l = children; l != NULL; l = l->next)
     {
@@ -2108,15 +2081,15 @@ goa_account_removed_cb (GoaClient *client,
       switch (type)
         {
         case GCAL_ACCOUNT_TYPE_EXCHANGE:
-          gtk_widget_show (priv->exchange_stub_row);
+          gtk_widget_show (self->exchange_stub_row);
           break;
 
         case GCAL_ACCOUNT_TYPE_GOOGLE:
-          gtk_widget_show (priv->google_stub_row);
+          gtk_widget_show (self->google_stub_row);
           break;
 
         case GCAL_ACCOUNT_TYPE_OWNCLOUD:
-          gtk_widget_show (priv->owncloud_stub_row);
+          gtk_widget_show (self->owncloud_stub_row);
           break;
 
         default:
@@ -2162,9 +2135,7 @@ void
 gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
                                 GcalManager      *manager)
 {
-  GcalSourceDialogPrivate *priv = dialog->priv;
-
-  priv->manager = manager;
+  dialog->manager = manager;
 
   /*
    * If the GoaClient is already loaded, fetch the online accounts
@@ -2179,18 +2150,18 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
       g_signal_connect_swapped (manager, "goa-client-ready", G_CALLBACK (goa_client_ready_cb), dialog);
     }
 
-  if (gcal_manager_load_completed (priv->manager))
+  if (gcal_manager_load_completed (dialog->manager))
     {
       GList *sources, *l;
 
-      sources = gcal_manager_get_sources_connected (priv->manager);
+      sources = gcal_manager_get_sources_connected (dialog->manager);
 
       for (l = sources; l != NULL; l = l->next)
-        add_source (priv->manager, l->data, gcal_manager_source_enabled (priv->manager, l->data), dialog);
+        add_source (dialog->manager, l->data, gcal_manager_source_enabled (dialog->manager, l->data), dialog);
     }
 
-  g_signal_connect (priv->manager, "source-added", G_CALLBACK (add_source), dialog);
-  g_signal_connect (priv->manager, "source-removed", G_CALLBACK (remove_source), dialog);
+  g_signal_connect (dialog->manager, "source-added", G_CALLBACK (add_source), dialog);
+  g_signal_connect (dialog->manager, "source-removed", G_CALLBACK (remove_source), dialog);
 }
 
 /**
@@ -2207,10 +2178,9 @@ void
 gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
                              GcalSourceDialogMode mode)
 {
-  GcalSourceDialogPrivate *priv = dialog->priv;
-  GcalSourceDialogMode previous_mode = priv->mode;
+  GcalSourceDialogMode previous_mode = dialog->mode;
 
-  priv->mode = mode;
+  dialog->mode = mode;
 
   // Cleanup old data
   clear_pages (dialog);
@@ -2218,42 +2188,38 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
   switch (mode)
     {
     case GCAL_SOURCE_DIALOG_MODE_CREATE:
-      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
-      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
-      gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->edit_grid);
+      gtk_header_bar_set_title (GTK_HEADER_BAR (dialog->headerbar), _("Add Calendar"));
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (dialog->headerbar), NULL);
+      gtk_stack_set_visible_child (GTK_STACK (dialog->stack), dialog->edit_grid);
       break;
 
     case GCAL_SOURCE_DIALOG_MODE_CREATE_WEB:
-      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Add Calendar"));
-      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
-      gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (priv->headerbar), FALSE);
-      gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->web_source_grid);
-      gtk_widget_set_visible (priv->add_button, TRUE);
-      gtk_widget_set_visible (priv->cancel_button, TRUE);
+      gtk_header_bar_set_title (GTK_HEADER_BAR (dialog->headerbar), _("Add Calendar"));
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (dialog->headerbar), NULL);
+      gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (dialog->headerbar), FALSE);
+      gtk_stack_set_visible_child (GTK_STACK (dialog->stack), dialog->web_source_grid);
+      gtk_widget_set_visible (dialog->add_button, TRUE);
+      gtk_widget_set_visible (dialog->cancel_button, TRUE);
       break;
 
     case GCAL_SOURCE_DIALOG_MODE_EDIT:
       // Bind title
-      if (priv->title_bind == NULL)
+      if (dialog->title_bind == NULL)
         {
-          priv->title_bind = g_object_bind_property (priv->name_entry, "text", priv->headerbar, "title",
-                                                     G_BINDING_DEFAULT);
+          dialog->title_bind = g_object_bind_property (dialog->name_entry, "text", dialog->headerbar, "title",
+                                                       G_BINDING_DEFAULT);
         }
 
-      gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->edit_grid);
+      gtk_stack_set_visible_child (GTK_STACK (dialog->stack), dialog->edit_grid);
       break;
 
     case GCAL_SOURCE_DIALOG_MODE_NORMAL:
       /* Free any bindings left behind */
-      if (priv->title_bind != NULL)
-        {
-          g_binding_unbind (priv->title_bind);
-          priv->title_bind = NULL;
-        }
+      g_clear_pointer (&dialog->title_bind, g_binding_unbind);
 
-      gtk_header_bar_set_title (GTK_HEADER_BAR (priv->headerbar), _("Calendar Settings"));
-      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (priv->headerbar), NULL);
-      gtk_stack_set_visible_child (GTK_STACK (priv->stack), priv->main_scrolledwindow);
+      gtk_header_bar_set_title (GTK_HEADER_BAR (dialog->headerbar), _("Calendar Settings"));
+      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (dialog->headerbar), NULL);
+      gtk_stack_set_visible_child (GTK_STACK (dialog->stack), dialog->main_scrolledwindow);
       break;
 
     default:
@@ -2261,8 +2227,7 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
     }
 
   if (previous_mode == mode)
-    stack_visible_child_name_changed (G_OBJECT (priv->stack), NULL, dialog);
-
+    stack_visible_child_name_changed (G_OBJECT (dialog->stack), NULL, dialog);
 }
 
 /**
@@ -2276,8 +2241,7 @@ void
 gcal_source_dialog_set_source (GcalSourceDialog *dialog,
                                ESource          *source)
 {
-  GcalSourceDialogPrivate *priv = dialog->priv;
+  g_return_if_fail (source && E_IS_SOURCE (source));
 
-  g_assert (source && E_IS_SOURCE (source));
-  priv->source = g_object_ref (source);
+  g_set_object (&dialog->source, source);
 }

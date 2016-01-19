@@ -35,11 +35,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalSourceDialog, gcal_source_dialog, GCAL, SOURCE_DIALOG, GtkDialog)
 
-struct _GcalSourceDialogClass
-{
-  GtkDialogClass parent;
-};
-
 typedef enum
 {
   GCAL_SOURCE_DIALOG_MODE_CREATE,
