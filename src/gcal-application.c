@@ -33,8 +33,10 @@
 
 #define CSS_FILE "resource:///org/gnome/calendar/gtk-styles.css"
 
-struct _GcalApplicationPrivate
+struct _GcalApplication
 {
+  GtkApplication  parent;
+
   GtkWidget      *window;
 
   GSettings      *settings;
@@ -89,7 +91,7 @@ static void     gcal_application_dbus_unregister     (GApplication             *
                                                       GDBusConnection          *connection,
                                                       const gchar              *object_path);
 
-G_DEFINE_TYPE_WITH_PRIVATE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
+G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 
 static gboolean show_version = FALSE;
 static gchar* date = NULL;
@@ -125,8 +127,6 @@ static const GActionEntry gcal_app_entries[] = {
 static void
 process_sources (GcalApplication *application)
 {
-  GcalApplicationPrivate *priv;
-
   GList *sources, *l;
   ESource *source;
 
@@ -140,9 +140,7 @@ process_sources (GcalApplication *application)
 
   GError *error = NULL;
 
-  priv = application->priv;
-
-  sources = gcal_manager_get_sources_connected (priv->manager);
+  sources = gcal_manager_get_sources_connected (application->manager);
   arr_length = g_list_length (sources);
   new_css_snippets = g_new0 (gchar*, arr_length + 2);
   for (l = sources; l != NULL; l = g_list_next (l), i++)
@@ -164,7 +162,7 @@ process_sources (GcalApplication *application)
   g_strfreev (new_css_snippets);
 
   error = NULL;
-  gtk_css_provider_load_from_data (priv->colors_provider, new_css_data, -1, &error);
+  gtk_css_provider_load_from_data (application->colors_provider, new_css_data, -1, &error);
   if (error != NULL)
     g_warning ("Error creating custom stylesheet. %s", error->message);
 
@@ -201,65 +199,60 @@ gcal_application_class_init (GcalApplicationClass *klass)
 static void
 gcal_application_init (GcalApplication *self)
 {
-  GcalApplicationPrivate *priv = gcal_application_get_instance_private (self);
+  self->settings = g_settings_new ("org.gnome.calendar");
+  self->colors_provider = gtk_css_provider_new ();
 
-  priv->settings = g_settings_new ("org.gnome.calendar");
-  priv->colors_provider = gtk_css_provider_new ();
+  self->manager = gcal_manager_new_with_settings (self->settings);
+  g_signal_connect_swapped (self->manager, "source-added", G_CALLBACK (sources_added_cb), self);
 
-  priv->manager = gcal_manager_new_with_settings (priv->settings);
-  g_signal_connect_swapped (priv->manager, "source-added", G_CALLBACK (sources_added_cb), self);
-
-  priv->search_provider = gcal_shell_search_provider_new ();
-  gcal_shell_search_provider_connect (priv->search_provider, priv->manager);
-
-  self->priv = priv;
+  self->search_provider = gcal_shell_search_provider_new ();
+  gcal_shell_search_provider_connect (self->search_provider, self->manager);
 }
 
 static void
 gcal_application_finalize (GObject *object)
 {
- GcalApplicationPrivate *priv = GCAL_APPLICATION (object)->priv;
+ GcalApplication *self = GCAL_APPLICATION (object);
 
-  g_free (priv->uuid);
-  if (priv->initial_date != NULL)
-    g_free (priv->initial_date);
+  g_free (self->uuid);
+  g_clear_pointer (&self->initial_date, g_free);
 
-  if (priv->provider != NULL)
+  if (self->provider != NULL)
     {
-      gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (priv->colors_provider));
+      gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (self->colors_provider));
 
-      gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (priv->provider));
-      g_clear_object (&(priv->provider));
+      gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (self->provider));
+      g_clear_object (&(self->provider));
     }
 
-  g_clear_object (&(priv->colors_provider));
-  g_clear_object (&(priv->settings));
+  g_clear_object (&self->colors_provider);
+  g_clear_object (&self->settings);
 
-  g_clear_object (&(priv->manager));
+  g_clear_object (&self->manager);
 
   G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
-  g_clear_object (&(priv->search_provider));
+  g_clear_object (&self->search_provider);
 }
 
 static void
 gcal_application_activate (GApplication *application)
 {
-  GcalApplicationPrivate *priv;
+  GcalApplication *self;
   GFile* css_file;
   GError *error;
 
-  priv = GCAL_APPLICATION (application)->priv;
+  self = GCAL_APPLICATION (application);
 
-  if (priv->provider == NULL)
+  if (self->provider == NULL)
    {
-     priv->provider = gtk_css_provider_new ();
+     self->provider = gtk_css_provider_new ();
      gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-                                                GTK_STYLE_PROVIDER (priv->provider),
+                                                GTK_STYLE_PROVIDER (self->provider),
                                                 GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
 
      error = NULL;
      css_file = g_file_new_for_uri (CSS_FILE);
-     gtk_css_provider_load_from_file (priv->provider, css_file, &error);
+     gtk_css_provider_load_from_file (self->provider, css_file, &error);
      if (error != NULL)
          g_warning ("Error loading stylesheet from file %s. %s", CSS_FILE, error->message);
 
@@ -268,46 +261,46 @@ gcal_application_activate (GApplication *application)
      g_object_unref (css_file);
    }
 
-  if (priv->colors_provider != NULL)
+  if (self->colors_provider != NULL)
     {
       gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-                                                 GTK_STYLE_PROVIDER (priv->colors_provider),
+                                                 GTK_STYLE_PROVIDER (self->colors_provider),
                                                  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
     }
 
   gcal_application_set_app_menu (application);
 
-  if (priv->window != NULL)
+  if (self->window != NULL)
     {
-      gtk_window_present (GTK_WINDOW (priv->window));
-      if (priv->initial_date != NULL)
-        g_object_set (priv->window, "active-date", priv->initial_date, NULL);
+      gtk_window_present (GTK_WINDOW (self->window));
+      if (self->initial_date != NULL)
+        g_object_set (self->window, "active-date", self->initial_date, NULL);
     }
   else
     {
-      if (priv->initial_date == NULL)
+      if (self->initial_date == NULL)
         {
-          priv->initial_date = g_new0 (icaltimetype, 1);
-          *(priv->initial_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (priv->manager));
-          *(priv->initial_date) = icaltime_set_timezone (priv->initial_date,
-                                                         gcal_manager_get_system_timezone (priv->manager));
+          self->initial_date = g_new0 (icaltimetype, 1);
+          *(self->initial_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (self->manager));
+          *(self->initial_date) = icaltime_set_timezone (self->initial_date,
+                                                         gcal_manager_get_system_timezone (self->manager));
         }
 
-      priv->window = gcal_window_new_with_view_and_date (GCAL_APPLICATION (application),
-                                                         g_settings_get_enum (priv->settings, "active-view"),
-                                                         priv->initial_date);
-      g_signal_connect (priv->window, "destroy", G_CALLBACK (gtk_widget_destroyed), &(priv->window));
-      g_settings_bind (priv->settings, "active-view", priv->window, "active-view",
+      self->window = gcal_window_new_with_view_and_date (GCAL_APPLICATION (application),
+                                                         g_settings_get_enum (self->settings, "active-view"),
+                                                         self->initial_date);
+      g_signal_connect (self->window, "destroy", G_CALLBACK (gtk_widget_destroyed), &(self->window));
+      g_settings_bind (self->settings, "active-view", self->window, "active-view",
                        G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
 
-      gtk_widget_show (priv->window);
+      gtk_widget_show (self->window);
     }
 
-    g_clear_pointer (&(priv->initial_date), g_free);
-    if (priv->uuid != NULL)
+    g_clear_pointer (&self->initial_date, g_free);
+    if (self->uuid != NULL)
       {
-        gcal_window_open_event_by_uuid (GCAL_WINDOW (priv->window), priv->uuid);
-        g_clear_pointer (&(priv->uuid), g_free);
+        gcal_window_open_event_by_uuid (GCAL_WINDOW (self->window), self->uuid);
+        g_clear_pointer (&(self->uuid), g_free);
       }
 }
 
@@ -325,14 +318,14 @@ static gint
 gcal_application_command_line (GApplication            *app,
                                GApplicationCommandLine *command_line)
 {
-  GcalApplicationPrivate *priv;
+  GcalApplication *self;
 
   GOptionContext *context;
   gchar **argv;
   GError *error;
   gint argc;
 
-  priv = GCAL_APPLICATION (app)->priv;
+  self = GCAL_APPLICATION (app);
   argv = g_application_command_line_get_arguments (command_line, &argc);
   context = g_option_context_new (N_("- Calendar management"));
   g_option_context_add_main_entries (context, gcal_application_goptions, GETTEXT_PACKAGE);
@@ -363,12 +356,12 @@ gcal_application_command_line (GApplication            *app,
 
       if (e_time_parse_date_and_time (date, &result) == E_TIME_PARSE_OK)
         {
-          if (priv->initial_date == NULL)
-            priv->initial_date = g_new0 (icaltimetype, 1);
-          *(priv->initial_date) = tm_to_icaltimetype (&result, FALSE);
+          if (self->initial_date == NULL)
+            self->initial_date = g_new0 (icaltimetype, 1);
+          *(self->initial_date) = tm_to_icaltimetype (&result, FALSE);
 
-          *(priv->initial_date) = icaltime_set_timezone (priv->initial_date,
-                                                         gcal_manager_get_system_timezone (priv->manager));
+          *(self->initial_date) = icaltime_set_timezone (self->initial_date,
+                                                         gcal_manager_get_system_timezone (self->manager));
         }
 
       g_clear_pointer (&date, g_free);
@@ -388,17 +381,17 @@ gcal_application_dbus_register (GApplication    *application,
                                 const gchar     *object_path,
                                 GError         **error)
 {
-  GcalApplicationPrivate *priv;
+  GcalApplication *self;
   gchar *search_provider_path = NULL;
   gboolean ret_val = FALSE;
 
-  priv = GCAL_APPLICATION (application)->priv;
+  self = GCAL_APPLICATION (application);
 
   if (!G_APPLICATION_CLASS (gcal_application_parent_class)->dbus_register (application, connection, object_path, error))
     goto out;
 
   search_provider_path = g_strconcat (object_path, "/SearchProvider", NULL);
-  if (!gcal_shell_search_provider_dbus_export (priv->search_provider, connection, search_provider_path, error))
+  if (!gcal_shell_search_provider_dbus_export (self->search_provider, connection, search_provider_path, error))
     goto out;
 
   ret_val = TRUE;
@@ -413,13 +406,13 @@ gcal_application_dbus_unregister (GApplication *application,
                                   GDBusConnection *connection,
                                   const gchar *object_path)
 {
-  GcalApplicationPrivate *priv;
+  GcalApplication *self;
   gchar *search_provider_path = NULL;
 
-  priv = GCAL_APPLICATION (application)->priv;
+  self = GCAL_APPLICATION (application);
 
   search_provider_path = g_strconcat (object_path, "/SearchProvider", NULL);
-  gcal_shell_search_provider_dbus_unexport (priv->search_provider, connection, search_provider_path);
+  gcal_shell_search_provider_dbus_unexport (self->search_provider, connection, search_provider_path);
 
   G_APPLICATION_CLASS (gcal_application_parent_class)->dbus_unregister (application, connection, object_path);
 
@@ -452,8 +445,8 @@ gcal_application_create_new_event (GSimpleAction *new_event,
                                    GVariant      *parameter,
                                    gpointer       app)
 {
-  GcalApplicationPrivate *priv = GCAL_APPLICATION (app)->priv;
-  gcal_window_new_event (GCAL_WINDOW (priv->window));
+  GcalApplication *self = GCAL_APPLICATION (app);
+  gcal_window_new_event (GCAL_WINDOW (self->window));
 }
 
 static void
@@ -461,8 +454,8 @@ gcal_application_sync (GSimpleAction *sync,
                        GVariant      *parameter,
                        gpointer       app)
 {
-  GcalApplicationPrivate *priv = GCAL_APPLICATION (app)->priv;
-  gcal_manager_refresh (priv->manager);
+  GcalApplication *self = GCAL_APPLICATION (app);
+  gcal_manager_refresh (self->manager);
 }
 
 static void
@@ -470,8 +463,8 @@ gcal_application_launch_search (GSimpleAction *search,
                                 GVariant      *parameter,
                                 gpointer       app)
 {
-  GcalApplicationPrivate *priv = GCAL_APPLICATION (app)->priv;
-  gcal_window_set_search_mode (GCAL_WINDOW (priv->window), TRUE);
+  GcalApplication *self = GCAL_APPLICATION (app);
+  gcal_window_set_search_mode (GCAL_WINDOW (self->window), TRUE);
 }
 
 static void
@@ -479,7 +472,7 @@ gcal_application_show_about (GSimpleAction *simple,
                              GVariant      *parameter,
                              gpointer       user_data)
 {
-  GcalApplicationPrivate *priv;
+  GcalApplication *self;
   char *copyright;
   GDateTime *date;
   int created_year = 2012;
@@ -496,7 +489,7 @@ gcal_application_show_about (GSimpleAction *simple,
     NULL
   };
 
-  priv = GCAL_APPLICATION (user_data)->priv;
+  self = GCAL_APPLICATION (user_data);
   date = g_date_time_new_now_local ();
 
   if (g_date_time_get_year (date) == created_year)
@@ -512,7 +505,7 @@ gcal_application_show_about (GSimpleAction *simple,
                                    created_year, g_date_time_get_year (date));
     }
 
-  gtk_show_about_dialog (GTK_WINDOW (priv->window),
+  gtk_show_about_dialog (GTK_WINDOW (self->window),
                          "program-name", _("Calendar"),
                          "version", VERSION,
                          "copyright", copyright,
@@ -531,9 +524,9 @@ gcal_application_quit (GSimpleAction *simple,
                        GVariant      *parameter,
                        gpointer       user_data)
 {
-  GcalApplicationPrivate *priv = GCAL_APPLICATION (user_data)->priv;
+  GcalApplication *self = GCAL_APPLICATION (user_data);
 
-  gtk_widget_destroy (priv->window);
+  gtk_widget_destroy (self->window);
 }
 
 /* Public API */
@@ -551,31 +544,27 @@ gcal_application_new (void)
 GcalManager*
 gcal_application_get_manager (GcalApplication *app)
 {
-  return app->priv->manager;
+  return app->manager;
 }
 
 GSettings*
 gcal_application_get_settings (GcalApplication *app)
 {
-  return app->priv->settings;
+  return app->settings;
 }
 
 void
 gcal_application_set_uuid (GcalApplication *application,
                            const gchar     *uuid)
 {
-  GcalApplicationPrivate *priv = application->priv;
-
-  g_free (priv->uuid);
-  priv->uuid = g_strdup (uuid);
+  g_free (application->uuid);
+  application->uuid = g_strdup (uuid);
 }
 
 void
 gcal_application_set_initial_date (GcalApplication *application,
                                    const icaltimetype *date)
 {
-  GcalApplicationPrivate *priv = application->priv;
-
-  g_free (priv->initial_date);
-  priv->initial_date = gcal_dup_icaltime (date);
+  g_free (application->initial_date);
+  application->initial_date = gcal_dup_icaltime (date);
 }

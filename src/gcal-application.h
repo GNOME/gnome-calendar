@@ -27,30 +27,9 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_APPLICATION               (gcal_application_get_type ())
-#define GCAL_APPLICATION(obj)               (G_TYPE_CHECK_INSTANCE_CAST ((obj), GCAL_TYPE_APPLICATION, GcalApplication))
-#define GCAL_APPLICATION_CLASS(klass)       (G_TYPE_CHECK_CLASS_CAST ((klass), GCAL_TYPE_APPLICATION, GcalApplicationClass))
-#define GCAL_IS_APPLICATION(obj)            (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GCAL_TYPE_APPLICATION))
-#define GCAL_IS_APPLICATION_CLASS(klass)    (G_TYPE_CHECK_CLASS_TYPE ((klass), GCAL_TYPE_APPLICATION))
-#define GCAL_APPLICATION_GET_CLASS(obj)     (G_TYPE_INSTANCE_GET_CLASS ((obj), GCAL_TYPE_APPLICATION, GcalApplicationClass))
 
-typedef struct _GcalApplicationClass         GcalApplicationClass;
-typedef struct _GcalApplication              GcalApplication;
-typedef struct _GcalApplicationPrivate       GcalApplicationPrivate;
+G_DECLARE_FINAL_TYPE (GcalApplication, gcal_application, GCAL, APPLICATION, GtkApplication)
 
-struct _GcalApplication
-{
-  GtkApplication parent;
-
-  /*< private >*/
-  GcalApplicationPrivate *priv;
-};
-
-struct _GcalApplicationClass
-{
-  GtkApplicationClass parent_class;
-};
-
-GType             gcal_application_get_type     (void) G_GNUC_CONST;
 GcalApplication*  gcal_application_new          (void);
 GcalManager*      gcal_application_get_manager  (GcalApplication *app);
 GSettings*        gcal_application_get_settings (GcalApplication *app);
