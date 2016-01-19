@@ -32,8 +32,10 @@ enum
   NUM_ENTRIES
 };
 
-struct _GcalDateSelectorPrivate
+struct _GcalDateSelector
 {
+  GtkMenuButton parent;
+
   /* widgets */
   GtkWidget   *date_label;
   GtkWidget   *calendar;
@@ -64,7 +66,7 @@ enum
 static guint signals[NUM_SIGNALS] = { 0, };
 
 static void     calendar_day_selected                             (GtkCalendar          *calendar,
-                                                                   gpointer              user_data);
+                                                                   GcalDateSelector     *selector);
 
 static gboolean date_entry_focus_out                              (GtkWidget            *widget,
                                                                    GdkEvent             *event,
@@ -83,27 +85,25 @@ static void     text_inserted                                     (GtkEditable  
 
 static void     gcal_date_selector_constructed                    (GObject              *object);
 
-G_DEFINE_TYPE_WITH_PRIVATE (GcalDateSelector, gcal_date_selector, GTK_TYPE_MENU_BUTTON);
+G_DEFINE_TYPE (GcalDateSelector, gcal_date_selector, GTK_TYPE_MENU_BUTTON);
 
 static void
-calendar_day_selected (GtkCalendar *calendar,
-                       gpointer     user_data)
+calendar_day_selected (GtkCalendar      *calendar,
+                       GcalDateSelector *selector)
 {
-  GcalDateSelectorPrivate *priv;
   guint day, month, year;
 
-  priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (user_data));
   gtk_calendar_get_date (calendar, &year, &month, &day);
 
   /**
    * Block signal handler to avoid an infinite
    * recursion, exploding the proccess stack.
    */
-  g_signal_handlers_block_by_func (priv->calendar, calendar_day_selected, user_data);
+  g_signal_handlers_block_by_func (selector->calendar, calendar_day_selected, selector);
 
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (user_data), day, month + 1, year);
+  gcal_date_selector_set_date (selector, day, month + 1, year);
 
-  g_signal_handlers_unblock_by_func (priv->calendar, calendar_day_selected, user_data);
+  g_signal_handlers_unblock_by_func (selector->calendar, calendar_day_selected, selector);
 }
 
 static gboolean
@@ -125,21 +125,18 @@ entry_activated (GtkEntry *entry,
 static void
 parse_entries (GcalDateSelector *selector)
 {
-  GcalDateSelectorPrivate *priv;
   gint day, month, year;
 
-  priv = gcal_date_selector_get_instance_private (selector);
-
-  day = atoi (gtk_entry_get_text (GTK_ENTRY (priv->entries[DAY])));
-  month = atoi (gtk_entry_get_text (GTK_ENTRY (priv->entries[MONTH])));
-  year = atoi (gtk_entry_get_text (GTK_ENTRY (priv->entries[YEAR])));
+  day = atoi (gtk_entry_get_text (GTK_ENTRY (selector->entries[DAY])));
+  month = atoi (gtk_entry_get_text (GTK_ENTRY (selector->entries[MONTH])));
+  year = atoi (gtk_entry_get_text (GTK_ENTRY (selector->entries[YEAR])));
 
   /* select the date */
-  g_signal_handlers_block_by_func (priv->calendar, calendar_day_selected, selector);
+  g_signal_handlers_block_by_func (selector->calendar, calendar_day_selected, selector);
 
   gcal_date_selector_set_date (selector, day, month, year);
 
-  g_signal_handlers_unblock_by_func (priv->calendar, calendar_day_selected, selector);
+  g_signal_handlers_unblock_by_func (selector->calendar, calendar_day_selected, selector);
 }
 
 static void
@@ -201,15 +198,15 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
   signals[MODIFIED] = g_signal_new ("modified",
                                     GCAL_TYPE_DATE_SELECTOR,
                                     G_SIGNAL_RUN_LAST,
-                                    G_STRUCT_OFFSET (GcalDateSelectorClass, modified),
+                                    0,
                                     NULL, NULL, NULL,
                                     G_TYPE_NONE, 0);
 
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/date-selector.ui");
 
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalDateSelector, date_label);
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalDateSelector, calendar);
-  gtk_widget_class_bind_template_child_private (GTK_WIDGET_CLASS (klass), GcalDateSelector, grid);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalDateSelector, date_label);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalDateSelector, calendar);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalDateSelector, grid);
 
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), text_inserted);
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), date_entry_focus_out);
@@ -220,36 +217,33 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
 static void
 gcal_date_selector_init (GcalDateSelector *self)
 {
-  GcalDateSelectorPrivate *priv;
   gint i, d_index, max;
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
-  priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (self));;
-
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  priv->day = 1;
-  priv->month = 1;
-  priv->year = 1970;
+  self->day = 1;
+  self->month = 1;
+  self->year = 1970;
 
   /* This string represents day/month/year order for each of the different
    * languages. It could possibly be default value, %m/%d/%y placing the month
    * before, or any ordering according to the translator's environment. */
-  priv->mask = g_dpgettext2 ("glib20", "GDateTime", "%m/%d/%y");
+  self->mask = g_dpgettext2 ("glib20", "GDateTime", "%m/%d/%y");
 
   /**
    * Translators: Select the day, month and year indexes. This will
    * be used later on to map the date entries to the
    * corresponding indexes. I should have added more validations here.
    */
-  max = strlen (priv->mask);
+  max = strlen (self->mask);
   if (max != 8)
     {
       /* I'll assume an error and bail out with the default values */
-      priv->day_pos = 0;
-      priv->month_pos = 1;
-      priv->year_pos = 2;
+      self->day_pos = 0;
+      self->month_pos = 1;
+      self->year_pos = 2;
       return;
     }
 
@@ -259,7 +253,7 @@ gcal_date_selector_init (GcalDateSelector *self)
     {
       gchar c;
 
-      c = *(priv->mask + i);
+      c = *(self->mask + i);
 
       /* No need to check these common separators */
       if (c == '%' || c == '-' || c == '/' || c == '.')
@@ -275,23 +269,23 @@ gcal_date_selector_init (GcalDateSelector *self)
           case 'j':
           case 'u':
           case 'w':
-            priv->day_pos = d_index++;
+            self->day_pos = d_index++;
             break;
 
           /* month */
           case 'b':
           case 'B':
           case 'm':
-            priv->month_pos = d_index++;
+            self->month_pos = d_index++;
             break;
 
           /* year */
           case 'y':
-            priv->year_pos = d_index++;
+            self->year_pos = d_index++;
             break;
 
           case 'Y':
-            priv->year_pos = d_index++;
+            self->year_pos = d_index++;
             break;
         }
     }
@@ -300,45 +294,45 @@ gcal_date_selector_init (GcalDateSelector *self)
 static void
 gcal_date_selector_constructed (GObject *object)
 {
-  GcalDateSelectorPrivate *priv;
+  GcalDateSelector *self;
 
   GtkWidget *label, *box;
   GList *l, *aux;
 
-  priv = gcal_date_selector_get_instance_private (GCAL_DATE_SELECTOR (object));
+  self = GCAL_DATE_SELECTOR (object);
 
   /* chaining up */
   G_OBJECT_CLASS (gcal_date_selector_parent_class)->constructed (object);
 
   /* set labels, on the first row */
-  label = gtk_grid_get_child_at (GTK_GRID (priv->grid), priv->day_pos, 0);
+  label = gtk_grid_get_child_at (GTK_GRID (self->grid), self->day_pos, 0);
   gtk_label_set_text (GTK_LABEL (label), _("Day"));
-  label = gtk_grid_get_child_at (GTK_GRID (priv->grid), priv->month_pos, 0);
+  label = gtk_grid_get_child_at (GTK_GRID (self->grid), self->month_pos, 0);
   gtk_label_set_text (GTK_LABEL (label), _("Month"));
-  label = gtk_grid_get_child_at (GTK_GRID (priv->grid), priv->year_pos, 0);
+  label = gtk_grid_get_child_at (GTK_GRID (self->grid), self->year_pos, 0);
   gtk_label_set_text (GTK_LABEL (label), _("Year"));
 
   /* retrieve components from UI definition: entries */
-  box = gtk_grid_get_child_at (GTK_GRID (priv->grid), 0, 1);
+  box = gtk_grid_get_child_at (GTK_GRID (self->grid), 0, 1);
   aux = gtk_container_get_children (GTK_CONTAINER (box));
   for (l = aux; l != NULL; l = g_list_next (l))
     {
       gint position;
       gtk_container_child_get (GTK_CONTAINER (box), l->data, "position", &position, NULL);
-      if (position == priv->day_pos)
-        priv->entries[DAY] = l->data;
-      if (position == priv->month_pos)
-        priv->entries[MONTH] = l->data;
-      if (position == priv->year_pos)
-        priv->entries[YEAR] = l->data;
+      if (position == self->day_pos)
+        self->entries[DAY] = l->data;
+      if (position == self->month_pos)
+        self->entries[MONTH] = l->data;
+      if (position == self->year_pos)
+        self->entries[YEAR] = l->data;
 
-      if (position == priv->day_pos || position == priv->month_pos)
+      if (position == self->day_pos || position == self->month_pos)
         gtk_entry_set_max_length (GTK_ENTRY (l->data), 2);
     }
   g_list_free (aux);
 
   gtk_widget_set_direction (box, GTK_TEXT_DIR_LTR);
-  gtk_widget_set_direction (priv->grid, GTK_TEXT_DIR_LTR);
+  gtk_widget_set_direction (self->grid, GTK_TEXT_DIR_LTR);
 }
 
 /* Public API */
@@ -363,12 +357,10 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
                              gint              month,
                              gint              year)
 {
-  GcalDateSelectorPrivate *priv;
   GDateTime *dt;
   gchar *label;
 
   g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
-  priv = gcal_date_selector_get_instance_private (selector);
   day = CLAMP (day, 1, 31);
   month = CLAMP (month, 1, 12);
   /* since we're dealing only with the date, the tz shouldn't be a problem */
@@ -382,40 +374,40 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
   if (dt == NULL)
     return;
 
-  priv->day = day;
-  priv->month = month;
-  priv->year = year;
+  selector->day = day;
+  selector->month = month;
+  selector->year = year;
 
   month =  CLAMP (month - 1, 0, 11);
 
   /* set calendar's date */
-  g_signal_handlers_block_by_func (priv->calendar, calendar_day_selected, selector);
-  g_object_set (priv->calendar, "day", day, "month", month, "year", year, NULL);
-  g_signal_handlers_unblock_by_func (priv->calendar, calendar_day_selected, selector);
+  g_signal_handlers_block_by_func (selector->calendar, calendar_day_selected, selector);
+  g_object_set (selector->calendar, "day", day, "month", month, "year", year, NULL);
+  g_signal_handlers_unblock_by_func (selector->calendar, calendar_day_selected, selector);
 
   /* rebuild the date label */
-  label = g_date_time_format (dt, priv->mask);
+  label = g_date_time_format (dt, selector->mask);
 
-  gtk_label_set_label (GTK_LABEL (priv->date_label), label);
+  gtk_label_set_label (GTK_LABEL (selector->date_label), label);
   g_free (label);
 
   /* set date entries' text */
   /* day entry */
   label = g_strdup_printf ("%.2d", day);
 
-  gtk_entry_set_text (GTK_ENTRY (priv->entries[DAY]), label);
+  gtk_entry_set_text (GTK_ENTRY (selector->entries[DAY]), label);
   g_free (label);
 
   /* month entry */
-  label = g_strdup_printf ("%.2d", priv->month);
+  label = g_strdup_printf ("%.2d", selector->month);
 
-  gtk_entry_set_text (GTK_ENTRY (priv->entries[MONTH]), label);
+  gtk_entry_set_text (GTK_ENTRY (selector->entries[MONTH]), label);
   g_free (label);
 
   /* year entry */
   label = g_strdup_printf ("%.4d", year);
 
-  gtk_entry_set_text (GTK_ENTRY (priv->entries[YEAR]), label);
+  gtk_entry_set_text (GTK_ENTRY (selector->entries[YEAR]), label);
 
   /* emit the MODIFIED signal */
   g_signal_emit (selector, signals[MODIFIED], 0);
@@ -439,15 +431,12 @@ gcal_date_selector_get_date (GcalDateSelector *selector,
                              gint             *month,
                              gint             *year)
 {
-  GcalDateSelectorPrivate *priv;
-
   g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
-  priv = gcal_date_selector_get_instance_private (selector);
 
   if (day != NULL)
-    *day = priv->day;
+    *day = selector->day;
   if (month != NULL)
-    *month = priv->month;
+    *month = selector->month;
   if (year != NULL)
-    *year = priv->year;
+    *year = selector->year;
 }

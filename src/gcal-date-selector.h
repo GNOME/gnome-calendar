@@ -25,32 +25,8 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_DATE_SELECTOR             (gcal_date_selector_get_type ())
-#define GCAL_DATE_SELECTOR(obj)             (G_TYPE_CHECK_INSTANCE_CAST((obj), GCAL_TYPE_DATE_SELECTOR, GcalDateSelector))
-#define GCAL_DATE_SELECTOR_CLASS(klass)     (G_TYPE_CHECK_CLASS_CAST((klass), GCAL_TYPE_DATE_SELECTOR, GcalDateSelectorClass))
-#define GCAL_IS_DATE_SELECTOR(obj)          (G_TYPE_CHECK_INSTANCE_TYPE((obj), GCAL_TYPE_DATE_SELECTOR))
-#define GCAL_IS_DATE_SELECTOR_CLASS(klass)  (G_TYPE_CHECK_CLASS_TYPE((klass), GCAL_TYPE_DATE_SELECTOR))
-#define GCAL_DATE_SELECTOR_GET_CLASS(obj)   (G_TYPE_INSTANCE_GET_CLASS((obj), GCAL_TYPE_DATE_SELECTOR, GcalDateSelectorClass))
 
-typedef struct _GcalTime GcalTime;
-
-typedef struct _GcalDateSelector             GcalDateSelector;
-typedef struct _GcalDateSelectorClass        GcalDateSelectorClass;
-typedef struct _GcalDateSelectorPrivate      GcalDateSelectorPrivate;
-
-struct _GcalDateSelector
-{
-  GtkMenuButton parent;
-};
-
-struct _GcalDateSelectorClass
-{
-  GtkMenuButtonClass parent_class;
-
-  /* signals */
-  void (*modified)  (GcalDateSelector *selector);
-};
-
-GType            gcal_date_selector_get_type        (void);
+G_DECLARE_FINAL_TYPE (GcalDateSelector, gcal_date_selector, GCAL, DATE_SELECTOR, GtkMenuButton)
 
 GtkWidget*       gcal_date_selector_new             (void);
 
