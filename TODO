@@ -1,7 +1,5 @@
 TODO
 
- - Rework toolbar, migrate to GtkHeaderBar
- - Update NewEvent widget to use GtkOverlay
  - Rework internal GcalWindow working
  - Clean GcalWindow compilation, no warnings
 
@@ -12,14 +10,10 @@ TODO
    e.g.: when removing a child is he view is hidden not update
  - Rework GcalViews as grid only (WeekView, MonthView, YearView)
  - Rework GcalViews to implement the new API (remove every "New API" comment)
- - Review views title string: "Year 2013", shouldn't say "Year"
- - Review gtk-styles.css file for actually working css definitions
- - Add css file and svg image to resources files
  - Reorder funcs inside GcalWindow
  - Fix nav-button css to matches pushed-down state (font-color goes white)
  - Review all-day checkbox and date/time fields interaction in GcalEditDialog
  - Check width of read-only layer in GcalEditDialog
- - Review the real need of GcalFloatingContainer
  - Review/check the adding of a new source live.
  - Review size/resize of GcalEventView widget
  - Review GcalWeekView implementation to follow Benjamin's advice of not composite
