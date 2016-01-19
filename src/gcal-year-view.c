@@ -74,7 +74,11 @@ struct _GcalYearViewPrivate
    * 0 for Sunday, 1 for Monday and so on */
   gint          first_weekday;
 
-  /**
+  /* first and last weeks of the year */
+  guint         first_week_of_year;
+  guint         last_week_of_year;
+
+    /**
    * clock format from GNOME desktop settings
    */
   gboolean      use_24h_format;
@@ -719,9 +723,15 @@ draw_month_grid (GcalYearView *year_view,
 
   for (i = 0; i < shown_rows; i++)
     {
-      if (i == 0)
+      /* special condition for first and last weeks of the year */
+      if (month_nr == 0 && priv->first_week_of_year > 1 && i == 1)
+        *weeks_counter = 1;
+      else if (month_nr == 11 && (i + 1) == shown_rows)
+        *weeks_counter = priv->last_week_of_year;
+      /* other weeks */
+      else if (i == 0)
         {
-          if (days_delay == 0)
+          if (days_delay == 0 && month_nr != 0)
             *weeks_counter = *weeks_counter + 1;
         }
       else
@@ -764,6 +774,7 @@ draw_navigator (GcalYearView *year_view,
   gint header_padding_left, header_padding_top, header_height, layout_width, layout_height;
   gint real_padding_left, real_padding_top, i, sw, weeks_counter;
   gdouble width, height, box_side;
+  GDate day_of_year;
 
   gchar *header_str;
 
@@ -815,7 +826,13 @@ draw_navigator (GcalYearView *year_view,
   real_padding_top = (height - (7 * 3 * box_side)) / 4.0;
 
   priv->navigator_grid->box_side = box_side;
-  weeks_counter = 1;
+
+  /* get first and last weeks of the year */
+  g_date_set_dmy (&day_of_year, 1, G_DATE_JANUARY, priv->date->year);
+  priv->first_week_of_year = g_date_get_iso8601_week_of_year (&day_of_year);
+  g_date_set_dmy (&day_of_year, 31, G_DATE_DECEMBER, priv->date->year);
+  priv->last_week_of_year = g_date_get_iso8601_week_of_year (&day_of_year);
+  weeks_counter = priv->first_week_of_year;
   for (i = 0; i < 12; i++)
     {
       gint row = i / 4;
