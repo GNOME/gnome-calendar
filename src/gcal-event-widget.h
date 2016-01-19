@@ -28,31 +28,9 @@
 
 G_BEGIN_DECLS
 
-
 #define GCAL_TYPE_EVENT_WIDGET                    (gcal_event_widget_get_type ())
-#define GCAL_EVENT_WIDGET(obj)                    (G_TYPE_CHECK_INSTANCE_CAST((obj), GCAL_TYPE_EVENT_WIDGET, GcalEventWidget))
-#define GCAL_EVENT_WIDGET_CLASS(klass)            (G_TYPE_CHECK_CLASS_CAST((klass), GCAL_TYPE_EVENT_WIDGET, GcalEventWidgetClass))
-#define GCAL_IS_EVENT_WIDGET(obj)                 (G_TYPE_CHECK_INSTANCE_TYPE((obj), GCAL_TYPE_EVENT_WIDGET))
-#define GCAL_IS_EVENT_WIDGET_CLASS(klass)         (G_TYPE_CHECK_CLASS_TYPE((klass), GCAL_TYPE_EVENT_WIDGET))
-#define GCAL_EVENT_WIDGET_GET_CLASS(obj)          (G_TYPE_INSTANCE_GET_CLASS((obj), GCAL_TYPE_EVENT_WIDGET, GcalEventWidgetClass))
 
-typedef struct _GcalEventWidget                   GcalEventWidget;
-typedef struct _GcalEventWidgetClass              GcalEventWidgetClass;
-
-struct _GcalEventWidget
-{
-  GtkWidget parent;
-};
-
-struct _GcalEventWidgetClass
-{
-  GtkWidgetClass parent_class;
-
-  /* signals */
-  void (*activate)  (GcalEventWidget *event_widget);
-};
-
-GType         gcal_event_widget_get_type                   (void);
+G_DECLARE_FINAL_TYPE (GcalEventWidget, gcal_event_widget, GCAL, EVENT_WIDGET, GtkWidget)
 
 GtkWidget*    gcal_event_widget_new                        (gchar              *uuid);
 
