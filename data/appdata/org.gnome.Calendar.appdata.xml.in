@@ -42,5 +42,5 @@
   <project_group>GNOME</project_group>
 
   <update_contact>ignatenko@src.gnome.org</update_contact>
-
+  <translation type="gettext">gnome-calendar</translation>
 </component>
