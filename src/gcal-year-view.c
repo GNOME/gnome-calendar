@@ -28,6 +28,7 @@
 #define NAVIGATOR_CELL_WIDTH (210 + 15)
 #define NAVIGATOR_CELL_HEIGHT 210
 #define SIDEBAR_PREFERRED_WIDTH 200
+#define VISUAL_CLUES_SIDE 3.0
 
 typedef struct
 {
@@ -526,6 +527,8 @@ draw_month_grid (GcalYearView *year_view,
   gint days_delay, days, shown_rows, sunday_idx;
   gchar *str, *nr_day, *nr_week;
   gboolean selected_day;
+  GList *events;
+  icaltimetype start_date, end_date;
 
   cairo_save (cr);
   context = gtk_widget_get_style_context (widget);
@@ -589,6 +592,19 @@ draw_month_grid (GcalYearView *year_view,
   days = days_delay + icaltime_days_in_month (month_nr + 1, year_view->date->year);
   shown_rows = ceil (days / 7.0);
   sunday_idx = year_view->k * 6 + sw * ((7 - year_view->first_weekday) % 7);
+
+  start_date.day    = 1;
+  start_date.month  = month_nr + 1;
+  start_date.year   = year_view->date->year;
+  start_date.hour   = 0;
+  start_date.minute = 0;
+  start_date.second = 0;
+  end_date.day    = 1;
+  end_date.month  = month_nr + 1;
+  end_date.year   = year_view->date->year;
+  end_date.hour   = 23;
+  end_date.minute = 59;
+  end_date.second = 59;
 
   for (i = 0; i < 7 * shown_rows; i++)
     {
@@ -693,6 +709,25 @@ draw_month_grid (GcalYearView *year_view,
                              box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * layout_width,
                              box_side * (row + 1) + y + box_padding_top,
                              layout);
+        }
+
+      start_date.day = end_date.day = j;
+      events = gcal_manager_get_events (year_view->manager, &start_date, &end_date);
+      if (events != NULL)
+        {
+          gtk_style_context_save (context);
+          gtk_style_context_add_class (context, "with-events");
+          if (selected_day)
+            gtk_style_context_add_class (context, "with-events-selected");
+          else if (column == sunday_idx)
+            gtk_style_context_add_class (context, "with-events-sunday");
+          box_padding_start = (box_side - VISUAL_CLUES_SIDE) / 2 > 0 ? (box_side - VISUAL_CLUES_SIDE) / 2 : 0;
+          gtk_render_background (context, cr,
+                                 box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * VISUAL_CLUES_SIDE,
+                                 box_side * (row + 1) + y + box_padding_top + layout_height + 2.0,
+                                 VISUAL_CLUES_SIDE, VISUAL_CLUES_SIDE);
+          gtk_style_context_restore (context);
+          g_list_free_full (events, g_free);
         }
 
       g_free (nr_day);

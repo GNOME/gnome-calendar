@@ -120,6 +120,19 @@ calendar-view.second-view-header {
     font-weight: bold;
 }
 
+.year-navigator.with-events {
+    background-color: @theme_fg_color;
+    border-radius: 3px;
+}
+
+.year-navigator.with-events-selected {
+    background-color: @theme_selected_bg_color;
+}
+
+.year-navigator.with-events-sunday {
+    background-color: alpha(@theme_fg_color, 0.5);
+}
+
 .sidebar-header {
     font-weight: bold;
     font-size: 11px;
