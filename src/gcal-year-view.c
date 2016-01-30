@@ -119,6 +119,26 @@ G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 gcal_data_model_subscriber_interface_init));
 
+static guint
+get_last_week_of_year_dmy (gint       first_weekday,
+                           GDateDay   day,
+                           GDateMonth month,
+                           GDateYear  year)
+{
+  GDate day_of_year;
+  gint day_of_week;
+
+  g_date_set_dmy (&day_of_year, day, month, year);
+  day_of_week = g_date_get_weekday (&day_of_year) % 7;
+
+  if (day_of_week >= first_weekday)
+    g_date_add_days (&day_of_year, (6 - day_of_week) + first_weekday);
+  else
+    g_date_add_days (&day_of_year, first_weekday - day_of_week - 1);
+
+  return g_date_get_iso8601_week_of_year (&day_of_year);
+}
+
 static void
 update_date (GcalYearView *year_view,
              icaltimetype *new_date)
@@ -128,6 +148,11 @@ update_date (GcalYearView *year_view,
 
   g_clear_pointer (&year_view->date, g_free);
   year_view->date = new_date;
+
+  year_view->first_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
+                                                             1, G_DATE_JANUARY,  year_view->date->year);;
+  year_view->last_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
+                                                            31, G_DATE_DECEMBER, year_view->date->year);
 }
 
 static void
@@ -793,7 +818,6 @@ draw_navigator (GcalYearView *year_view,
   gint header_padding_left, header_padding_top, header_height, layout_width, layout_height;
   gint real_padding_left, real_padding_top, i, sw, weeks_counter;
   gdouble width, height, box_side;
-  GDate day_of_year;
 
   gchar *header_str;
 
@@ -844,12 +868,6 @@ draw_navigator (GcalYearView *year_view,
   real_padding_top = (height - (7 * 3 * box_side)) / 4.0;
 
   year_view->navigator_grid->box_side = box_side;
-
-  /* get first and last weeks of the year */
-  g_date_set_dmy (&day_of_year, 1, G_DATE_JANUARY, year_view->date->year);
-  year_view->first_week_of_year = g_date_get_iso8601_week_of_year (&day_of_year);
-  g_date_set_dmy (&day_of_year, 31, G_DATE_DECEMBER, year_view->date->year);
-  year_view->last_week_of_year = g_date_get_iso8601_week_of_year (&day_of_year);
   weeks_counter = year_view->first_week_of_year;
   for (i = 0; i < 12; i++)
     {
