@@ -5,19 +5,19 @@ public_icons_themes = \
 	$(NULL)
 
 public_icons = \
-	hicolor_apps_16x16_gnome-calendar.png \
-	hicolor_apps_22x22_gnome-calendar.png \
-	hicolor_apps_24x24_gnome-calendar.png \
-	hicolor_apps_32x32_gnome-calendar.png \
-	hicolor_apps_48x48_gnome-calendar.png \
-	hicolor_apps_256x256_gnome-calendar.png \
-	hicolor_apps_512x512_gnome-calendar.png \
-  hicolor_apps_symbolic_gnome-calendar-symbolic.svg \
+	hicolor_apps_16x16_org.gnome.Calendar.png \
+	hicolor_apps_22x22_org.gnome.Calendar.png \
+	hicolor_apps_24x24_org.gnome.Calendar.png \
+	hicolor_apps_32x32_org.gnome.Calendar.png \
+	hicolor_apps_48x48_org.gnome.Calendar.png \
+	hicolor_apps_256x256_org.gnome.Calendar.png \
+	hicolor_apps_512x512_org.gnome.Calendar.png \
+  hicolor_apps_symbolic_org.gnome.Calendar-symbolic.svg \
 	$(NULL)
 
 noinst_DATA = \
-	gnome-calendar.svg \
-	gnome-calendar.blend \
+	org.gnome.Calendar.svg \
+	org.gnome.Calendar.blend \
 	$(NULL)
 
 EXTRA_DIST = \
