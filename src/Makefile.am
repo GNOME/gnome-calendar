@@ -30,37 +30,37 @@ gnome_calendar_SOURCES =                                  \
     css-code.h                                            \
     gcal-application.h                                    \
     gcal-application.c                                    \
+    gcal-date-selector.c                                  \
+    gcal-date-selector.h                                  \
+    gcal-edit-dialog.c                                    \
+    gcal-edit-dialog.h                                    \
+    gcal-event-widget.c                                   \
+    gcal-event-widget.h                                   \
+    gcal-manager.c                                        \
+    gcal-manager.h                                        \
+    gcal-month-view.c                                     \
+    gcal-month-view.h                                     \
+    gcal-search-view.h                                    \
+    gcal-search-view.c                                    \
     gcal-shell-search-provider.h                          \
     gcal-shell-search-provider.c                          \
-    gcal-window.h                                         \
-    gcal-window.c                                         \
-    gcal-view.c                                           \
-    gcal-view.h                                           \
+    gcal-source-dialog.c                                  \
+    gcal-source-dialog.h                                  \
     gcal-subscriber-view.c                                \
     gcal-subscriber-view.h                                \
     gcal-subscriber-view-private.h                        \
-    gcal-source-dialog.c                                  \
-    gcal-source-dialog.h                                  \
-    gcal-month-view.c                                     \
-    gcal-month-view.h                                     \
-    gcal-week-view.c                                      \
-    gcal-week-view.h                                      \
-    gcal-year-view.c                                      \
-    gcal-year-view.h                                      \
-    gcal-search-view.h                                    \
-    gcal-search-view.c                                    \
-    gcal-event-widget.c                                   \
-    gcal-event-widget.h                                   \
-    gcal-edit-dialog.c                                    \
-    gcal-edit-dialog.h                                    \
     gcal-time-selector.c                                  \
     gcal-time-selector.h                                  \
-    gcal-date-selector.c                                  \
-    gcal-date-selector.h                                  \
-    gcal-manager.c                                        \
-    gcal-manager.h                                        \
     gcal-utils.c                                          \
-    gcal-utils.h
+    gcal-utils.h                                          \
+    gcal-view.c                                           \
+    gcal-view.h                                           \
+    gcal-week-view.c                                      \
+    gcal-week-view.h                                      \
+    gcal-window.h                                         \
+    gcal-window.c                                         \
+    gcal-year-view.c                                      \
+    gcal-year-view.h
 
 gnome_calendar_LDFLAGS =                                  \
   -Wl,--export-dynamic
