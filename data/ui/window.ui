@@ -392,7 +392,7 @@
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <signal name="activate" handler="create_event" object="GcalWindow" swapped="yes"/>
-                <signal name="notify::text" handler="new_event_entry_text_changed" object="GcalWindow" swapped="yes"/>
+                <signal name="notify::text" handler="new_event_entry_text_changed" object="GcalWindow" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">0</property>

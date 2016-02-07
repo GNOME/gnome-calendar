@@ -793,12 +793,12 @@ gcal_edit_dialog_set_event_is_new (GcalEditDialog *dialog,
 }
 
 void
-gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
-                                 GcalEventData  *data)
+gcal_edit_dialog_set_event (GcalEditDialog *dialog,
+                            GcalEvent      *event)
 {
-
   GdkRGBA color;
   GdkPixbuf *pix;
+  ESource *source;
 
   const gchar *const_text = NULL;
   gboolean all_day;
@@ -810,13 +810,14 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
   ECalComponentDateTime dtend;
 
   all_day = FALSE;
+  source = gcal_event_get_source (event);
 
   dialog->setting_event = TRUE;
 
-  g_set_object (&dialog->source, data->source);
+  g_set_object (&dialog->source, source);
 
   g_clear_object (&dialog->component);
-  dialog->component = e_cal_component_clone (data->event_component);
+  dialog->component = e_cal_component_clone (gcal_event_get_component (event));
 
   g_clear_pointer (&dialog->source_uid, g_free);
   dialog->source_uid = e_source_dup_uid (dialog->source);
@@ -850,14 +851,14 @@ gcal_edit_dialog_set_event_data (GcalEditDialog *dialog,
     gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), e_summary.value);
 
   /* dialog titlebar's title & subtitle */
-  get_color_name_from_source (data->source, &color);
+  get_color_name_from_source (source, &color);
 
   pix = gcal_get_pixbuf_from_color (&color, 16);
   gtk_image_set_from_pixbuf (GTK_IMAGE (dialog->source_image), pix);
   g_object_unref (pix);
 
   gtk_header_bar_set_subtitle (GTK_HEADER_BAR (dialog->titlebar),
-                               e_source_get_display_name (data->source));
+                               e_source_get_display_name (source));
 
   /* retrieve start and end dates */
   e_cal_component_get_dtstart (dialog->component, &dtstart);

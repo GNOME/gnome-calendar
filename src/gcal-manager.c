@@ -17,6 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "gcal-event.h"
 #include "gcal-manager.h"
 #include "gcal-utils.h"
 
@@ -277,6 +278,25 @@ gather_components (ECalDataModel         *data_model,
   new_data->source = e_client_get_source (E_CLIENT (client));
   new_data->event_component = g_object_ref (comp);
   *result = g_list_append (*result, new_data);/* FIXME: add me sorted */
+
+  return TRUE;
+}
+
+static gboolean
+gather_events (ECalDataModel         *data_model,
+               ECalClient            *client,
+               const ECalComponentId *id,
+               ECalComponent         *comp,
+               time_t                 instance_start,
+               time_t                 instance_end,
+               gpointer               user_data)
+{
+  GList **result = user_data;
+  GcalEvent *event;
+
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp);
+
+  *result = g_list_append (*result, event);/* FIXME: add me sorted */
 
   return TRUE;
 }
@@ -1522,7 +1542,7 @@ gcal_manager_get_events (GcalManager  *manager,
   range_start = icaltime_as_timet_with_zone (*start_date, manager->system_timezone);
   range_end = icaltime_as_timet_with_zone (*end_date, manager->system_timezone);
 
-  e_cal_data_model_foreach_component (manager->e_data_model, range_start, range_end, gather_components, &list);
+  e_cal_data_model_foreach_component (manager->e_data_model, range_start, range_end, gather_events, &list);
   return list;
 }
 

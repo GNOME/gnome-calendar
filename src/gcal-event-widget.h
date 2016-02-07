@@ -20,6 +20,7 @@
 #ifndef __GCAL_EVENT_WIDGET_H__
 #define __GCAL_EVENT_WIDGET_H__
 
+#include "gcal-event.h"
 #include "gcal-manager.h"
 
 #include <gtk/gtk.h>
@@ -32,56 +33,33 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalEventWidget, gcal_event_widget, GCAL, EVENT_WIDGET, GtkWidget)
 
-GtkWidget*    gcal_event_widget_new                        (gchar              *uuid);
+GtkWidget*    gcal_event_widget_new                        (GcalEvent          *event);
 
-GtkWidget*    gcal_event_widget_new_from_data              (GcalEventData      *data);
+GcalEvent*    gcal_event_widget_get_event                  (GcalEventWidget    *self);
 
-GtkWidget*    gcal_event_widget_clone                      (GcalEventWidget    *widget);
+GDateTime*    gcal_event_widget_get_date_start             (GcalEventWidget    *self);
 
-const gchar*  gcal_event_widget_peek_uuid                  (GcalEventWidget    *event);
+void          gcal_event_widget_set_date_start             (GcalEventWidget    *self,
+                                                            GDateTime          *date_start);
+
+GDateTime*    gcal_event_widget_get_date_end               (GcalEventWidget    *self);
+
+void          gcal_event_widget_set_date_end               (GcalEventWidget    *self,
+                                                            GDateTime          *date_end);
 
 void          gcal_event_widget_set_read_only              (GcalEventWidget    *event,
                                                             gboolean            read_only);
 
 gboolean      gcal_event_widget_get_read_only              (GcalEventWidget    *event);
 
-void          gcal_event_widget_set_date                   (GcalEventWidget    *event,
-                                                            const icaltimetype *date);
-
-icaltimetype* gcal_event_widget_get_date                   (GcalEventWidget    *event);
-
-const icaltimetype* gcal_event_widget_peek_start_date            (GcalEventWidget    *event);
-
-void          gcal_event_widget_set_end_date               (GcalEventWidget    *event,
-                                                            const icaltimetype *date);
-
-icaltimetype* gcal_event_widget_get_end_date               (GcalEventWidget    *event);
-
-const icaltimetype* gcal_event_widget_peek_end_date              (GcalEventWidget    *event);
-
-void          gcal_event_widget_set_summary                (GcalEventWidget    *event,
-                                                            gchar              *summary);
-
-gchar*        gcal_event_widget_get_summary                (GcalEventWidget    *event);
-
-void          gcal_event_widget_set_color                  (GcalEventWidget    *event,
-                                                            GdkRGBA            *color);
-
-GdkRGBA*      gcal_event_widget_get_color                  (GcalEventWidget    *event);
-
-void          gcal_event_widget_set_all_day                (GcalEventWidget    *event,
-                                                            gboolean            all_day);
-
-gboolean     gcal_event_widget_get_all_day                 (GcalEventWidget    *event);
-
-gboolean     gcal_event_widget_is_multiday                 (GcalEventWidget    *event);
-
 void         gcal_event_widget_set_has_reminders           (GcalEventWidget    *event,
                                                             gboolean            has_reminders);
 
 gboolean     gcal_event_widget_get_has_reminders           (GcalEventWidget    *event);
 
-GcalEventData* gcal_event_widget_get_data                  (GcalEventWidget    *event);
+/* Utilities */
+
+GtkWidget*    gcal_event_widget_clone                      (GcalEventWidget    *widget);
 
 gboolean     gcal_event_widget_equal                       (GcalEventWidget    *widget1,
                                                             GcalEventWidget    *widget2);

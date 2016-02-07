@@ -475,11 +475,6 @@ rebuild_popover_for_day (GcalMonthView *view,
   GdkRectangle rect;
 
   gchar *label_title;
-
-  icaltimetype date, second_date;
-  const icaltimetype *dt_start, *dt_end;
-  gint start_comparison, end_comparison;
-
   /* placement helpers */
   gdouble start_grid_y, cell_width, cell_height;
 
@@ -504,36 +499,44 @@ rebuild_popover_for_day (GcalMonthView *view,
   gtk_container_foreach (GTK_CONTAINER (priv->events_list_box), (GtkCallback) gtk_widget_destroy, NULL);
 
   l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (priv->pressed_overflow_indicator));
+
+  /* Setup the start & end dates of the events as the begin & end of day */
   if (l != NULL)
     {
-      date = *(priv->date);
-      date.day = day;
+      GDateTime *current_date;
+      GDateTime *dt_start;
+      GDateTime *dt_end;
+      GTimeZone *tz;
 
-      second_date = date;
+      current_date = icaltime_to_datetime (priv->date, &tz);
+      dt_start = g_date_time_new (tz,
+                                  g_date_time_get_year (current_date),
+                                  g_date_time_get_month (current_date),
+                                  day,
+                                  0, 0, 0);
 
-      date.hour = 0;
-      date.minute = 0;
-      second_date.hour = 23;
-      second_date.minute =59;
-    }
-  for (; l != NULL; l = g_list_next (l))
-    {
-      child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (l->data));
-      gtk_container_add (GTK_CONTAINER (priv->events_list_box), child_widget);
-      _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (view), child_widget);
+      dt_end = g_date_time_new (tz,
+                                g_date_time_get_year (current_date),
+                                g_date_time_get_month (current_date),
+                                day + 1,
+                                0, 0, 0);
 
-      dt_start = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (child_widget));
-      dt_end = gcal_event_widget_peek_end_date (GCAL_EVENT_WIDGET (child_widget));
+      for (; l != NULL; l = g_list_next (l))
+        {
+          GtkWidget *cloned_event;
 
-      date.is_date = dt_start->is_date;
-      start_comparison = icaltime_compare (*dt_start, date);
-      end_comparison = icaltime_compare (second_date, *dt_end);
-      if (start_comparison == -1 && end_comparison == -1)
-        gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted");
-      else if (start_comparison == -1)
-        gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted-start");
-      else if (end_comparison == -1)
-        gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted-end");
+          cloned_event = gcal_event_widget_clone (l->data);
+          gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (cloned_event), dt_start);
+          gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (cloned_event), dt_end);
+
+          gtk_container_add (GTK_CONTAINER (priv->events_list_box), cloned_event);
+          _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (view), cloned_event);
+        }
+
+      g_clear_pointer (&current_date, g_date_time_unref);
+      g_clear_pointer (&dt_start, g_date_time_unref);
+      g_clear_pointer (&dt_end, g_date_time_unref);
+      g_clear_pointer (&tz, g_time_zone_unref);
     }
 
   /* placement calculation */
@@ -605,28 +608,33 @@ update_list_box_headers (GtkListBoxRow *row,
 {
   GcalMonthViewPrivate *priv;
   GtkWidget *row_child, *before_child = NULL;
-  const icaltimetype *row_date, *before_date = NULL;
+  GDateTime *row_date, *before_date = NULL;
+  GcalEvent *row_event;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (user_data));
   row_child = gtk_bin_get_child (GTK_BIN (row));
-  row_date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (row_child));
+  row_event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (row_child));
+  row_date = gcal_event_widget_get_date_start (GCAL_EVENT_WIDGET (row_child));
   if (before != NULL)
     {
       before_child = gtk_bin_get_child (GTK_BIN (before));
-      before_date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (before_child));
+      before_date = gcal_event_widget_get_date_start (GCAL_EVENT_WIDGET (before_child));
     }
 
-  if (!gcal_event_widget_is_multiday (GCAL_EVENT_WIDGET (row_child)) &&
-      !gcal_event_widget_get_all_day (GCAL_EVENT_WIDGET (row_child)) &&
-      (before_date == NULL || before_date->hour != row_date->hour))
+  if (!gcal_event_is_multiday (row_event) &&
+      !gcal_event_get_all_day (row_event) &&
+      (before_date == NULL || g_date_time_get_hour (before_date) != g_date_time_get_hour (row_date)))
     {
       gchar *time;
       GtkWidget *label, *vbox;
+      gint hour;
+
+      hour = g_date_time_get_hour (row_date);
 
       if (priv->use_24h_format)
-        time = g_strdup_printf ("%.2d:00", row_date->hour);
+        time = g_strdup_printf ("%.2d:00", hour);
       else
-        time = g_strdup_printf ("%.2d:00 %s", row_date->hour % 12, row_date->hour < 12 ? "AM" : "PM");
+        time = g_strdup_printf ("%.2d:00 %s", hour % 12, hour < 12 ? "AM" : "PM");
 
       label = gtk_label_new (time);
       gtk_style_context_add_class (gtk_widget_get_style_context (label), GTK_STYLE_CLASS_DIM_LABEL);
@@ -1066,11 +1074,14 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       gint first_cell, last_cell, first_row, last_row, start, end;
       gboolean visible, start_before = TRUE, end_after = TRUE;
 
-      const icaltimetype *date;
+      GDateTime *date;
+      GcalEvent *event;
       GArray *cells, *lengths;
 
       child_widget = (GtkWidget*) l->data;
-      uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child_widget));
+      event = gcal_event_widget_get_event (l->data);
+      uuid = gcal_event_get_uid (event);
+
       if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (ppriv->hidden_as_overflow, uuid))
         continue;
 
@@ -1078,30 +1089,30 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       gtk_widget_get_preferred_height (child_widget, NULL, &natural_height);
 
       j = 1;
-      date = gcal_event_widget_peek_start_date (GCAL_EVENT_WIDGET (child_widget));
-      if (date->month == priv->date->month)
+      date = gcal_event_widget_get_date_start (GCAL_EVENT_WIDGET (child_widget));
+      if (g_date_time_get_month (date) == priv->date->month)
         {
-          j = date->day;
+          j = g_date_time_get_day_of_month (date);
           start_before = FALSE;
         }
       j += priv->days_delay;
       first_cell = 7 * ((j - 1) / 7)+ 6 * priv->k + sw * ((j - 1) % 7);
 
       j = icaltime_days_in_month (priv->date->month, priv->date->year);
-      date = gcal_event_widget_peek_end_date (GCAL_EVENT_WIDGET (child_widget));
-      if (gcal_event_widget_get_all_day (GCAL_EVENT_WIDGET (child_widget)))
+      date = gcal_event_widget_get_date_end (GCAL_EVENT_WIDGET (child_widget));
+      if (gcal_event_get_all_day (event))
         {
-          if (date->month == priv->date->month)
+          if (g_date_time_get_month (date) == priv->date->month)
             {
-              j = date->day - 1;
+              j = g_date_time_get_day_of_month (date) - 1;
               end_after = FALSE;
             }
         }
       else
         {
-          if (date->month == priv->date->month)
+          if (g_date_time_get_month (date) == priv->date->month)
             {
-              j = date->day;
+              j = g_date_time_get_day_of_month (date);
               end_after = FALSE;
             }
         }
@@ -1221,7 +1232,8 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
         {
           child_widget = (GtkWidget*) aux->data;
 
-          uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child_widget));
+          uuid = gcal_event_get_uid (gcal_event_widget_get_event (GCAL_EVENT_WIDGET (child_widget)));
+
           if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (ppriv->hidden_as_overflow, uuid))
             continue;
 
@@ -1797,15 +1809,18 @@ static gboolean
 gcal_month_view_is_child_multiday (GcalSubscriberView *subscriber,
                                      GcalEventWidget    *child)
 {
-  return gcal_event_widget_is_multiday (child);
+  return gcal_event_is_multiday (gcal_event_widget_get_event (child));
 }
 
 static guint
 gcal_month_view_get_child_cell (GcalSubscriberView *subscriber,
                                 GcalEventWidget    *child)
 {
-  const icaltimetype *dt_start = gcal_event_widget_peek_start_date (child);
-  return dt_start->day;
+  GDateTime *dt;
+
+  dt = gcal_event_widget_get_date_start (child);
+
+  return g_date_time_get_day_of_month (dt);
 }
 
 static void

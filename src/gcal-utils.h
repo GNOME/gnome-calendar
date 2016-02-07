@@ -52,6 +52,9 @@ const gchar*  (*GcalTranslateFunc)                              (GtkWidget      
 
 GType           icaltime_get_type                               (void)            G_GNUC_CONST;
 
+gint            datetime_compare_date                           (GDateTime             *dt1,
+                                                                 GDateTime             *dt2);
+
 icaltimetype*   datetime_to_icaltime                            (GDateTime             *dt);
 
 gboolean        datetime_is_date                                (GDateTime             *dt);

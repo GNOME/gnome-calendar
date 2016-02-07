@@ -63,6 +63,29 @@ month_item[12] =
 
 G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
 
+gint
+datetime_compare_date (GDateTime *dt1,
+                       GDateTime *dt2)
+{
+  if (!dt1 && !dt2)
+    return 0;
+  else if (!dt1)
+    return -1;
+  else if (!dt2)
+    return 1;
+
+  if (g_date_time_get_year (dt1) != g_date_time_get_year (dt2))
+    return g_date_time_get_year (dt1) - g_date_time_get_year (dt2);
+
+  if (g_date_time_get_month (dt1) != g_date_time_get_month (dt2))
+    return g_date_time_get_month (dt1) - g_date_time_get_month (dt2);
+
+  if (g_date_time_get_day_of_month (dt1) != g_date_time_get_day_of_month (dt2))
+    return g_date_time_get_day_of_month (dt1) - g_date_time_get_day_of_month (dt2);
+
+  return 0;
+}
+
 icaltimetype*
 datetime_to_icaltime (GDateTime *dt)
 {
@@ -233,22 +256,18 @@ gcal_compare_event_widget_by_date (gconstpointer a,
   /* negative value if a < b; zero if a = b; positive value if a > b. */
   GcalViewChild *a_child;
   GcalViewChild *b_child;
-  icaltimetype *a_date;
-  icaltimetype *b_date;
+  GDateTime *a_date;
+  GDateTime *b_date;
 
   gint comparison;
 
   a_child = (GcalViewChild*) a;
   b_child = (GcalViewChild*) b;
 
-  a_date =
-    gcal_event_widget_get_date (GCAL_EVENT_WIDGET (a_child->widget));
-  b_date =
-    gcal_event_widget_get_date (GCAL_EVENT_WIDGET (b_child->widget));
+  a_date = gcal_event_get_date_start (gcal_event_widget_get_event (GCAL_EVENT_WIDGET (a_child->widget)));
+  b_date = gcal_event_get_date_start (gcal_event_widget_get_event (GCAL_EVENT_WIDGET (b_child->widget)));
 
-  comparison = icaltime_compare (*a_date, *b_date);
-  g_free (a_date);
-  g_free (b_date);
+  comparison = g_date_time_compare (a_date, b_date);
 
   return comparison;
 }

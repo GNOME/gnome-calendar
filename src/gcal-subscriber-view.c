@@ -21,8 +21,9 @@
 #include "gcal-subscriber-view.h"
 #include "gcal-subscriber-view-private.h"
 
-#include "gcal-view.h"
+#include "gcal-event.h"
 #include "gcal-event-widget.h"
+#include "gcal-view.h"
 
 enum
 {
@@ -169,13 +170,15 @@ gcal_subscriber_view_add (GtkContainer *container,
                           GtkWidget    *widget)
 {
   GcalSubscriberViewPrivate *priv;
+  GcalEvent *event;
   const gchar *uuid;
   GList *l = NULL;
 
   g_return_if_fail (GCAL_IS_EVENT_WIDGET (widget));
   g_return_if_fail (gtk_widget_get_parent (widget) == NULL);
   priv = gcal_subscriber_view_get_instance_private (GCAL_SUBSCRIBER_VIEW (container));
-  uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget));
+  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
+  uuid = gcal_event_get_uid (event);
 
   /* inserting in all children hash */
   if (g_hash_table_lookup (priv->children, uuid) != NULL)
@@ -215,6 +218,7 @@ gcal_subscriber_view_remove (GtkContainer *container,
                              GtkWidget    *widget)
 {
   GcalSubscriberViewPrivate *priv;
+  GcalEvent *event;
   const gchar *uuid;
 
   GList *l, *aux;
@@ -222,8 +226,8 @@ gcal_subscriber_view_remove (GtkContainer *container,
 
   g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
   priv = gcal_subscriber_view_get_instance_private (GCAL_SUBSCRIBER_VIEW (container));
-
-  uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (widget));
+  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
+  uuid = gcal_event_get_uid (event);
 
   l = g_hash_table_lookup (priv->children, uuid);
   if (l != NULL)
@@ -352,20 +356,17 @@ gcal_subscriber_view_component_added (ECalDataModelSubscriber *subscriber,
                                       ECalClient              *client,
                                       ECalComponent           *comp)
 {
-  GtkWidget *event;
-  GcalEventData *data;
+  GtkWidget *event_widget;
+  GcalEvent *event;
 
-  data = g_new0 (GcalEventData, 1);
-  data->source = e_client_get_source (E_CLIENT (client));
-  data->event_component = e_cal_component_clone (comp);
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp);
+  event_widget = gcal_event_widget_new (event);
+  gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event_widget), e_client_is_readonly (E_CLIENT (client)));
 
-  event = gcal_event_widget_new_from_data (data);
-  gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event), e_client_is_readonly (E_CLIENT (client)));
+  gtk_widget_show (event_widget);
+  gtk_container_add (GTK_CONTAINER (subscriber), event_widget);
 
-  gtk_widget_show (event);
-  gtk_container_add (GTK_CONTAINER (subscriber), event);
-
-  g_free (data);
+  g_clear_object (&event);
 }
 
 static void
@@ -376,17 +377,14 @@ gcal_subscriber_view_component_modified (ECalDataModelSubscriber *subscriber,
   GcalSubscriberViewPrivate *priv;
   GList *l;
   GtkWidget *new_widget;
-  GcalEventData *data;
+  GcalEvent *event;
 
   priv = gcal_subscriber_view_get_instance_private (GCAL_SUBSCRIBER_VIEW (subscriber));
-  data = g_new0 (GcalEventData, 1);
-  data->source = e_client_get_source (E_CLIENT (client));
-  data->event_component = e_cal_component_clone (comp);
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp);
+  new_widget = gcal_event_widget_new (event);
 
-  new_widget = gcal_event_widget_new_from_data (data);
-  g_free (data);
+  l = g_hash_table_lookup (priv->children, gcal_event_get_uid (event));
 
-  l = g_hash_table_lookup (priv->children, gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (new_widget)));
   if (l != NULL)
     {
       gtk_widget_destroy (l->data);
@@ -397,10 +395,12 @@ gcal_subscriber_view_component_modified (ECalDataModelSubscriber *subscriber,
   else
     {
       g_warning ("%s: Widget with uuid: %s not found in view: %s",
-                 G_STRFUNC, gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (new_widget)),
+                 G_STRFUNC, gcal_event_get_uid (event),
                  gtk_widget_get_name (GTK_WIDGET (subscriber)));
       gtk_widget_destroy (new_widget);
     }
+
+  g_clear_object (&event);
 }
 
 static void

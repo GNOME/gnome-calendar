@@ -20,28 +20,21 @@
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 
-#define INTENSITY(r, g, b) ((r) * 0.30 + (g) * 0.59 + (b) * 0.11)
+#define INTENSITY(c) ((c->red) * 0.30 + (c->green) * 0.59 + (c->blue) * 0.11)
 
 struct _GcalEventWidget
 {
   GtkWidget      parent;
 
   /* properties */
-  gchar         *uuid;
-  gchar         *summary;
-  GdkRGBA       *color;
-  icaltimetype  *dt_start;
-  icaltimetype  *dt_end; /* could be NULL, meaning dt_end is the same as start_date */
-  gboolean       all_day;
+  GDateTime     *dt_start;
+  GDateTime     *dt_end;
   gboolean       has_reminders;
 
   /* internal data */
   gboolean       read_only;
 
-  /* weak ESource reference */
-  ESource       *source;
-  /* ECalComponent data */
-  ECalComponent *component;
+  GcalEvent     *event;
 
   GdkWindow     *event_window;
   gboolean       button_pressed;
@@ -50,12 +43,9 @@ struct _GcalEventWidget
 enum
 {
   PROP_0,
-  PROP_UUID,
-  PROP_SUMMARY,
-  PROP_COLOR,
-  PROP_DTSTART,
-  PROP_DTEND,
-  PROP_ALL_DAY,
+  PROP_DATE_END,
+  PROP_DATE_START,
+  PROP_EVENT,
   PROP_HAS_REMINDERS
 };
 
@@ -67,144 +57,110 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-static void     gcal_event_widget_set_property         (GObject        *object,
-                                                        guint           property_id,
-                                                        const GValue   *value,
-                                                        GParamSpec     *pspec);
-
-static void     gcal_event_widget_get_property         (GObject        *object,
-                                                        guint           property_id,
-                                                        GValue         *value,
-                                                        GParamSpec     *pspec);
-
-static void     gcal_event_widget_finalize             (GObject        *object);
-
-static void     gcal_event_widget_get_preferred_width  (GtkWidget      *widget,
-                                                        gint           *minimum,
-                                                        gint           *natural);
-
-static void     gcal_event_widget_get_preferred_height (GtkWidget      *widget,
-                                                        gint           *minimum,
-                                                        gint           *natural);
-
-static void     gcal_event_widget_realize              (GtkWidget      *widget);
-
-static void     gcal_event_widget_unrealize            (GtkWidget      *widget);
-
-static void     gcal_event_widget_map                  (GtkWidget      *widget);
-
-static void     gcal_event_widget_unmap                (GtkWidget      *widget);
-
-static void     gcal_event_widget_size_allocate        (GtkWidget      *widget,
-                                                        GtkAllocation  *allocation);
-
-static gboolean gcal_event_widget_draw                 (GtkWidget      *widget,
-                                                        cairo_t        *cr);
-
-static gboolean gcal_event_widget_button_press_event   (GtkWidget      *widget,
-                                                        GdkEventButton *event);
-
-static gboolean gcal_event_widget_button_release_event (GtkWidget      *widget,
-                                                        GdkEventButton *event);
-
 G_DEFINE_TYPE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET)
 
 static void
-gcal_event_widget_class_init(GcalEventWidgetClass *klass)
+gcal_event_widget_update_style (GcalEventWidget *self)
 {
-  GObjectClass *object_class;
-  GtkWidgetClass *widget_class;
+  GtkStyleContext *context;
+  gboolean slanted_start, slanted_end;
 
-  object_class = G_OBJECT_CLASS (klass);
-  object_class->set_property = gcal_event_widget_set_property;
-  object_class->get_property = gcal_event_widget_get_property;
-  object_class->finalize = gcal_event_widget_finalize;
+  context = gtk_widget_get_style_context (GTK_WIDGET (self));
+  slanted_start = FALSE;
+  slanted_end = FALSE;
 
-  widget_class = GTK_WIDGET_CLASS (klass);
-  widget_class->get_preferred_width = gcal_event_widget_get_preferred_width;
-  widget_class->get_preferred_height = gcal_event_widget_get_preferred_height;
-  widget_class->realize = gcal_event_widget_realize;
-  widget_class->unrealize = gcal_event_widget_unrealize;
-  widget_class->map = gcal_event_widget_map;
-  widget_class->unmap = gcal_event_widget_unmap;
-  widget_class->size_allocate = gcal_event_widget_size_allocate;
-  widget_class->draw = gcal_event_widget_draw;
-  widget_class->button_press_event = gcal_event_widget_button_press_event;
-  widget_class->button_release_event = gcal_event_widget_button_release_event;
+  /* Clear previous style classes */
+  gtk_style_context_remove_class (context, "slanted");
+  gtk_style_context_remove_class (context, "slanted-start");
+  gtk_style_context_remove_class (context, "slanted-end");
 
-  g_object_class_install_property (object_class,
-                                   PROP_UUID,
-                                   g_param_spec_string ("uuid",
-                                                        "Unique uid",
-                                                        "The unique-unique id composed of source_uid:event_uid",
-                                                        NULL,
-                                                        G_PARAM_CONSTRUCT |
-                                                        G_PARAM_READWRITE));
+  /*
+   * If the event's dates differs from the widget's dates,
+   * add a slanted edge class at the widget.
+   */
 
-  g_object_class_install_property (object_class,
-                                   PROP_SUMMARY,
-                                   g_param_spec_string ("summary",
-                                                        "Summary",
-                                                        "The event summary",
-                                                        NULL,
-                                                        G_PARAM_CONSTRUCT |
-                                                        G_PARAM_READWRITE));
+  if (self->dt_start)
+    slanted_start = g_date_time_compare (gcal_event_get_date_start (self->event), self->dt_start) != 0;
 
-  g_object_class_install_property (object_class,
-                                   PROP_COLOR,
-                                   g_param_spec_boxed ("color",
-                                                       "Color",
-                                                       "The color to render",
-                                                       GDK_TYPE_RGBA,
-                                                       G_PARAM_CONSTRUCT |
-                                                       G_PARAM_READWRITE));
+  if (self->dt_end)
+    slanted_end = g_date_time_compare (gcal_event_get_date_end (self->event), self->dt_end) != 0;
 
-  g_object_class_install_property (object_class,
-                                   PROP_DTSTART,
-                                   g_param_spec_boxed ("date-start",
-                                                       "Date Start",
-                                                       "The starting date of the event",
-                                                       ICAL_TIME_TYPE,
-                                                       G_PARAM_CONSTRUCT |
-                                                       G_PARAM_READWRITE));
+  if (slanted_start && slanted_end)
+    gtk_style_context_add_class (context, "slanted");
+  else if (slanted_start)
+    gtk_style_context_add_class (context, "slanted-start");
+  else if (slanted_end)
+    gtk_style_context_add_class (context, "slanted-end");
+}
 
-  g_object_class_install_property (object_class,
-                                   PROP_DTEND,
-                                   g_param_spec_boxed ("date-end",
-                                                       "Date End",
-                                                       "The end date of the event",
-                                                       ICAL_TIME_TYPE,
-                                                       G_PARAM_CONSTRUCT |
-                                                       G_PARAM_READWRITE));
+static void
+update_color (GcalEventWidget *self)
+{
+  GtkStyleContext *context;
+  GdkRGBA *color;
+  GQuark color_id;
+  gchar *color_str;
+  gchar *css_class;
 
-  g_object_class_install_property (object_class,
-                                   PROP_ALL_DAY,
-                                   g_param_spec_boolean ("all-day",
-                                                         "All day",
-                                                         "Wheter the event is all-day or not",
-                                                         FALSE,
-                                                         G_PARAM_CONSTRUCT |
-                                                         G_PARAM_READWRITE));
+  context = gtk_widget_get_style_context (GTK_WIDGET (self));
+  color = gcal_event_get_color (self->event);
 
-  g_object_class_install_property (object_class,
-                                   PROP_HAS_REMINDERS,
-                                   g_param_spec_boolean ("has-reminders",
-                                                         "Event has reminders",
-                                                         "Wheter the event has reminders set or not",
-                                                         FALSE,
-                                                         G_PARAM_CONSTRUCT |
-                                                         G_PARAM_READWRITE));
+  color_str = gdk_rgba_to_string (color);
+  color_id = g_quark_from_string (color_str);
+  css_class = g_strdup_printf ("color-%d", color_id);
 
-  signals[ACTIVATE] = g_signal_new ("activate",
-                                     GCAL_TYPE_EVENT_WIDGET,
-                                     G_SIGNAL_RUN_LAST,
-                                     0,
-                                     NULL, NULL,
-                                     g_cclosure_marshal_VOID__VOID,
-                                     G_TYPE_NONE,
-                                     0);
+  gtk_style_context_add_class (context, css_class);
 
-  gtk_widget_class_set_css_name (widget_class, "event-widget");
+  if (INTENSITY (color) > 0.5)
+    {
+      gtk_style_context_remove_class (context, "color-dark");
+      gtk_style_context_add_class (context, "color-light");
+    }
+  else
+    {
+      gtk_style_context_remove_class (context, "color-light");
+      gtk_style_context_add_class (context, "color-dark");
+    }
+
+  g_free (color_str);
+  g_free (css_class);
+}
+
+static void
+gcal_event_widget_set_event_internal (GcalEventWidget *self,
+                                      GcalEvent       *event)
+{
+  /*
+   * This function is called only once, since the property is
+   * set as CONSTRUCT_ONLY. Any other attempt to set an event
+   * will be ignored.
+   *
+   * Because of that condition, we don't really have to care about
+   * disconnecting functions or cleaning up the previous event.
+   */
+
+  /* The event spawns with a floating reference, and we take it's ownership */
+  g_set_object (&self->event, event);
+
+  /*
+   * Initially, the widget's start and end dates are the same
+   * of the event's ones. We may change it afterwards.
+   */
+  gcal_event_widget_set_date_start (self, gcal_event_get_date_start (event));
+  gcal_event_widget_set_date_end (self, gcal_event_get_date_end (event));
+
+  /* Update color */
+  update_color (self);
+
+  g_signal_connect_swapped (event,
+                            "notify::color",
+                            G_CALLBACK (update_color),
+                            self);
+
+  g_signal_connect_swapped (event,
+                            "notify::summary",
+                            G_CALLBACK (gtk_widget_queue_draw),
+                            self);
 }
 
 static void
@@ -224,71 +180,29 @@ gcal_event_widget_set_property (GObject      *object,
 
   switch (property_id)
     {
-    case PROP_UUID:
-      g_clear_pointer (&self->uuid, g_free);
-      self->uuid = g_value_dup_string (value);
-      g_object_notify (object, "uuid");
-      return;
-    case PROP_SUMMARY:
-      g_clear_pointer (&self->summary, g_free);
-      self->summary = g_value_dup_string (value);
-      g_object_notify (object, "summary");
-      return;
-    case PROP_COLOR:
-      {
-        GtkStyleContext *context;
+    case PROP_DATE_END:
+      gcal_event_widget_set_date_end (self, g_value_get_boxed (value));
+      break;
 
-        context = gtk_widget_get_style_context (GTK_WIDGET (object));
+    case PROP_DATE_START:
+      gcal_event_widget_set_date_start (self, g_value_get_boxed (value));
+      break;
 
-        g_clear_pointer (&self->color, gdk_rgba_free);
-        self->color = g_value_dup_boxed (value);
+    case PROP_EVENT:
+      gcal_event_widget_set_event_internal (self, g_value_get_object (value));
+      break;
 
-        if (self->color == NULL)
-          return;
-
-        if (INTENSITY (self->color->red,
-                       self->color->green,
-                       self->color->blue) > 0.5)
-          {
-            gtk_style_context_remove_class (context, "color-dark");
-            gtk_style_context_add_class (context, "color-light");
-          }
-        else
-          {
-            gtk_style_context_remove_class (context, "color-light");
-            gtk_style_context_add_class (context, "color-dark");
-          }
-
-        g_object_notify (object, "color");
-        return;
-      }
-    case PROP_DTSTART:
-      g_clear_pointer (&self->dt_start, g_free);
-      self->dt_start = g_value_dup_boxed (value);
-      g_object_notify (object, "date-start");
-      return;
-    case PROP_DTEND:
-      g_clear_pointer (&self->dt_end, g_free);
-      self->dt_end = g_value_dup_boxed (value);
-      g_object_notify (object, "date-end");
-      return;
-    case PROP_ALL_DAY:
-      if (self->all_day != g_value_get_boolean (value))
-        {
-          self->all_day = g_value_get_boolean (value);
-          g_object_notify (object, "all-day");
-        }
-      return;
     case PROP_HAS_REMINDERS:
       if (self->has_reminders != g_value_get_boolean (value))
         {
           self->has_reminders = g_value_get_boolean (value);
-          g_object_notify (object, "all-day");
+          g_object_notify (object, "has-reminders");
         }
-      return;
-    }
+      break;
 
-  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    }
 }
 
 static void
@@ -301,30 +215,25 @@ gcal_event_widget_get_property (GObject      *object,
 
   switch (property_id)
     {
-    case PROP_UUID:
-      g_value_set_string (value, self->uuid);
-      return;
-    case PROP_SUMMARY:
-      g_value_set_string (value, self->summary);
-      return;
-    case PROP_COLOR:
-      g_value_set_boxed (value, self->color);
-      return;
-    case PROP_DTSTART:
-      g_value_set_boxed (value, self->dt_start);
-      return;
-    case PROP_DTEND:
+    case PROP_DATE_END:
       g_value_set_boxed (value, self->dt_end);
-      return;
-    case PROP_ALL_DAY:
-      g_value_set_boolean (value, self->all_day);
-      return;
+      break;
+
+    case PROP_DATE_START:
+      g_value_set_boxed (value, self->dt_start);
+      break;
+
+    case PROP_EVENT:
+      g_value_set_object (value, self->event);
+      break;
+
     case PROP_HAS_REMINDERS:
       g_value_set_boolean (value, self->has_reminders);
-      return;
-    }
+      break;
 
-  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    }
 }
 
 static void
@@ -334,14 +243,8 @@ gcal_event_widget_finalize (GObject *object)
 
   self = GCAL_EVENT_WIDGET (object);
 
-  g_clear_object (&self->component);
-
   /* releasing properties */
-  g_clear_pointer (&self->uuid, g_free);
-  g_clear_pointer (&self->summary, g_free);
-  g_clear_pointer (&self->color, gdk_rgba_free);
-  g_clear_pointer (&self->dt_start, g_free);
-  g_clear_pointer (&self->dt_end, g_free);
+  g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->finalize (object);
 }
@@ -533,7 +436,7 @@ gcal_event_widget_draw (GtkWidget *widget,
 
   /* FIXME for RTL alignment and icons positions */
   gtk_style_context_get (context, state, "font", &font_desc, NULL);
-  layout = gtk_widget_create_pango_layout (widget, self->summary);
+  layout = gtk_widget_create_pango_layout (widget, gcal_event_get_summary (self->event));
   pango_layout_set_font_description (layout, font_desc);
   pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
   pango_layout_set_width (layout, (width - (padding.left + padding.right) ) * PANGO_SCALE);
@@ -649,141 +552,107 @@ gcal_event_widget_button_release_event (GtkWidget      *widget,
   return FALSE;
 }
 
-GtkWidget*
-gcal_event_widget_new (gchar *uuid)
+
+static void
+gcal_event_widget_class_init(GcalEventWidgetClass *klass)
 {
-  return g_object_new (GCAL_TYPE_EVENT_WIDGET, "uuid", uuid, NULL);
+  GObjectClass *object_class;
+  GtkWidgetClass *widget_class;
+
+  object_class = G_OBJECT_CLASS (klass);
+  object_class->set_property = gcal_event_widget_set_property;
+  object_class->get_property = gcal_event_widget_get_property;
+  object_class->finalize = gcal_event_widget_finalize;
+
+  widget_class = GTK_WIDGET_CLASS (klass);
+  widget_class->get_preferred_width = gcal_event_widget_get_preferred_width;
+  widget_class->get_preferred_height = gcal_event_widget_get_preferred_height;
+  widget_class->realize = gcal_event_widget_realize;
+  widget_class->unrealize = gcal_event_widget_unrealize;
+  widget_class->map = gcal_event_widget_map;
+  widget_class->unmap = gcal_event_widget_unmap;
+  widget_class->size_allocate = gcal_event_widget_size_allocate;
+  widget_class->draw = gcal_event_widget_draw;
+  widget_class->button_press_event = gcal_event_widget_button_press_event;
+  widget_class->button_release_event = gcal_event_widget_button_release_event;
+
+  /**
+   * GcalEventWidget::date-end:
+   *
+   * The end date this widget represents. Notice that this may
+   * differ from the event's end date. For example, if the event
+   * spans more than one month and we're in Month View, the end
+   * date marks the last day this event is visible.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_DATE_END,
+                                   g_param_spec_boxed ("date-end",
+                                                       "End date",
+                                                       "The end date of the widget",
+                                                       G_TYPE_DATE_TIME,
+                                                       G_PARAM_READWRITE));
+
+  /**
+   * GcalEventWidget::date-start:
+   *
+   * The start date this widget represents. Notice that this may
+   * differ from the event's start date. For example, if the event
+   * spans more than one month and we're in Month View, the start
+   * date marks the first day this event is visible.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_DATE_START,
+                                   g_param_spec_boxed ("date-start",
+                                                       "Start date",
+                                                       "The start date of the widget",
+                                                       G_TYPE_DATE_TIME,
+                                                       G_PARAM_READWRITE));
+
+  /**
+   * GcalEventWidget::event:
+   *
+   * The event this widget represents.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_EVENT,
+                                   g_param_spec_object ("event",
+                                                        "Event",
+                                                        "The event this widget represents",
+                                                        GCAL_TYPE_EVENT,
+                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+
+  /**
+   * GcalEventWidget::has-reminders:
+   *
+   * Whether the event has reminders or not.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_HAS_REMINDERS,
+                                   g_param_spec_boolean ("has-reminders",
+                                                         "Event has reminders",
+                                                         "Wheter the event has reminders set or not",
+                                                         FALSE,
+                                                         G_PARAM_READWRITE));
+
+  signals[ACTIVATE] = g_signal_new ("activate",
+                                     GCAL_TYPE_EVENT_WIDGET,
+                                     G_SIGNAL_RUN_LAST,
+                                     0,
+                                     NULL, NULL,
+                                     g_cclosure_marshal_VOID__VOID,
+                                     G_TYPE_NONE,
+                                     0);
+
+  gtk_widget_class_set_css_name (widget_class, "event-widget");
 }
 
-/**
- * gcal_event_widget_new_from_data:
- * @data: a #GcalEventData instance
- *
- * Create an event widget by passing its #ECalComponent and #ESource
- *
- * Returns: a #GcalEventWidget as #GtkWidget
- **/
-GtkWidget*
-gcal_event_widget_new_from_data (GcalEventData *data)
-{
-  GtkWidget *widget;
-  GcalEventWidget *event;
-
-  gchar *uuid;
-  ECalComponentId *id;
-  ECalComponentText e_summary;
-
-  GQuark color_id;
-  GdkRGBA color;
-  gchar *color_str, *custom_css_class;
-
-  ECalComponentDateTime dt;
-  icaltimetype *date;
-  gboolean start_is_date, end_is_date;
-
-  id = e_cal_component_get_id (data->event_component);
-  if (id->rid != NULL)
-    {
-      uuid = g_strdup_printf ("%s:%s:%s",
-                              e_source_get_uid (data->source),
-                              id->uid,
-                              id->rid);
-    }
-  else
-    {
-      uuid = g_strdup_printf ("%s:%s",
-                              e_source_get_uid (data->source),
-                              id->uid);
-    }
-  widget = g_object_new (GCAL_TYPE_EVENT_WIDGET, "uuid", uuid, NULL);
-  e_cal_component_free_id (id);
-  g_free (uuid);
-
-  event = GCAL_EVENT_WIDGET (widget);
-  event->component = data->event_component;
-  event->source = data->source;
-
-  /* summary */
-  e_cal_component_get_summary (event->component, &e_summary);
-  gcal_event_widget_set_summary (event, (gchar*) e_summary.value);
-
-  /* color */
-  get_color_name_from_source (event->source, &color);
-  gcal_event_widget_set_color (event, &color);
-
-  color_str = gdk_rgba_to_string (&color);
-  color_id = g_quark_from_string (color_str);
-  custom_css_class = g_strdup_printf ("color-%d", color_id);
-  gtk_style_context_add_class (gtk_widget_get_style_context (widget), custom_css_class);
-  g_free (custom_css_class);
-  g_free (color_str);
-
-  /* start date */
-  e_cal_component_get_dtstart (event->component, &dt);
-  date = gcal_dup_icaltime (dt.value);
-
-  start_is_date = date->is_date == 1;
-  if (!start_is_date)
-    {
-      if (dt.tzid != NULL)
-        dt.value->zone = icaltimezone_get_builtin_timezone_from_tzid (dt.tzid);
-      *date = icaltime_convert_to_zone (*(dt.value),
-                                        e_cal_util_get_system_timezone ());
-    }
-
-  gcal_event_widget_set_date (event, date);
-  e_cal_component_free_datetime (&dt);
-  g_free (date);
-
-  /* end date */
-  e_cal_component_get_dtend (event->component, &dt);
-  if (dt.value != NULL)
-    {
-      date = gcal_dup_icaltime (dt.value);
-
-      end_is_date = date->is_date == 1;
-      if (!end_is_date)
-        {
-          if (dt.tzid != NULL)
-            dt.value->zone = icaltimezone_get_builtin_timezone_from_tzid (dt.tzid);
-          *date = icaltime_convert_to_zone (*(dt.value),
-                                            e_cal_util_get_system_timezone ());
-        }
-
-      gcal_event_widget_set_end_date (event, date);
-      e_cal_component_free_datetime (&dt);
-      g_free (date);
-
-      /* set_all_day */
-      gcal_event_widget_set_all_day (event, start_is_date && end_is_date);
-    }
-
-  /* set_has_reminders */
-  gcal_event_widget_set_has_reminders (event, e_cal_component_has_alarms (event->component));
-
-  return widget;
-}
 
 GtkWidget*
-gcal_event_widget_clone (GcalEventWidget *widget)
+gcal_event_widget_new (GcalEvent *event)
 {
-  GtkWidget *new_widget;
-  GcalEventData *data;
-
-  data = gcal_event_widget_get_data (widget);
-  g_object_ref (data->event_component);
-
-  new_widget = gcal_event_widget_new_from_data (data);
-  g_free (data);
-
-  gcal_event_widget_set_read_only(GCAL_EVENT_WIDGET (new_widget), gcal_event_widget_get_read_only (widget));
-  return new_widget;
-}
-
-const gchar*
-gcal_event_widget_peek_uuid (GcalEventWidget *event)
-{
-  return event->uuid;
+  return g_object_new (GCAL_TYPE_EVENT_WIDGET,
+                       "event", event,
+                       NULL);
 }
 
 void
@@ -801,172 +670,6 @@ gcal_event_widget_get_read_only (GcalEventWidget *event)
   return event->read_only;
 }
 
-/**
- * gcal_event_widget_set_date:
- * @event: a #GcalEventWidget
- * @date: a #icaltimetype object with the date
- *
- * Set the start-date of the event
- **/
-void
-gcal_event_widget_set_date (GcalEventWidget    *event,
-                            const icaltimetype *date)
-{
-  g_object_set (event, "date-start", date, NULL);
-}
-
-/**
- * gcal_event_widget_get_date:
- * @event: a #GcalEventWidget
- *
- * Return the starting date of the event
- *
- * Returns: (transfer full): Release with g_free()
- **/
-icaltimetype*
-gcal_event_widget_get_date (GcalEventWidget *event)
-{
-  icaltimetype *dt;
-
-  g_object_get (event, "date-start", &dt, NULL);
-  return dt;
-}
-
-/**
- * gcal_event_widget_peek_start_date:
- * @event:
- *
- * Return the starting date of the event.
- *
- * Returns: (Transfer none): An {@link icaltimetype} instance
- **/
-const icaltimetype*
-gcal_event_widget_peek_start_date (GcalEventWidget *event)
-{
-  return event->dt_start;
-}
-
-/**
- * gcal_event_widget_set_end_date:
- * @event: a #GcalEventWidget
- * @date: a #icaltimetype object with the date
- *
- * Set the end date of the event
- **/
-void
-gcal_event_widget_set_end_date (GcalEventWidget    *event,
-                                const icaltimetype *date)
-{
-  g_object_set (event, "date-end", date, NULL);
-}
-
-/**
- * gcal_event_widget_get_end_date:
- * @event: a #GcalEventWidget
- *
- * Return the end date of the event. If the event has no end_date
- * (as Google does on 0 sec events) %NULL will be returned
- *
- * Returns: (transfer full): Release with g_free()
- **/
-icaltimetype*
-gcal_event_widget_get_end_date (GcalEventWidget *event)
-{
-  icaltimetype *dt;
-
-  g_object_get (event, "date-end", &dt, NULL);
-  return dt;
-}
-
-/**
- * gcal_event_widget_peek_end_date:
- * @event:
- *
- * Return the end date of the event.
- *
- * Returns: (Transfer none): An {@link icaltimetype} instance
- **/
-const icaltimetype*
-gcal_event_widget_peek_end_date (GcalEventWidget *event)
-{
-  return event->dt_end != NULL ? event->dt_end : event->dt_start;
-}
-
-void
-gcal_event_widget_set_summary (GcalEventWidget *event,
-                               gchar           *summary)
-{
-  g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
-
-  g_object_set (event, "summary", summary, NULL);
-}
-
-gchar*
-gcal_event_widget_get_summary (GcalEventWidget *event)
-{
-  return g_strdup (event->summary);
-}
-
-void
-gcal_event_widget_set_color (GcalEventWidget *event,
-                             GdkRGBA         *color)
-{
-  g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
-
-  g_object_set (event, "color", color, NULL);
-}
-
-GdkRGBA*
-gcal_event_widget_get_color (GcalEventWidget *event)
-{
-  GdkRGBA *color;
-  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), NULL);
-
-  color = NULL;
-  g_object_get (event, "color", color, NULL);
-  return color;
-}
-
-void
-gcal_event_widget_set_all_day (GcalEventWidget *event,
-                               gboolean         all_day)
-{
-  g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
-
-  g_object_set (event, "all-day", all_day, NULL);
-}
-
-gboolean
-gcal_event_widget_get_all_day (GcalEventWidget *event)
-{
-  gboolean all_day;
-  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), FALSE);
-
-  g_object_get (event, "all-day", &all_day, NULL);
-  return all_day;
-}
-
-gboolean
-gcal_event_widget_is_multiday (GcalEventWidget *event)
-{
-  gint start_day_of_year, end_day_of_year;
-
-  if (event->dt_end == NULL)
-    return FALSE;
-
-  start_day_of_year = icaltime_day_of_year (*(event->dt_start));
-  end_day_of_year = icaltime_day_of_year (*(event->dt_end));
-
-  if (event->all_day && start_day_of_year + 1 == end_day_of_year)
-    return FALSE;
-
-  if (event->all_day && start_day_of_year == icaltime_days_in_year (event->dt_start->year) && end_day_of_year == 1 &&
-      event->dt_start->year + 1 == event->dt_end->year)
-    return FALSE;
-
-  return start_day_of_year != end_day_of_year;
-}
-
 void
 gcal_event_widget_set_has_reminders (GcalEventWidget *event,
                                      gboolean         has_reminders)
@@ -979,34 +682,134 @@ gcal_event_widget_set_has_reminders (GcalEventWidget *event,
 gboolean
 gcal_event_widget_get_has_reminders (GcalEventWidget *event)
 {
-  gboolean has_reminders;
   g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), FALSE);
 
-  g_object_get (event, "has-reminders", &has_reminders, NULL);
-  return has_reminders;
+  return event->has_reminders;
 }
 
 /**
- * gcal_event_widget_get_data:
- * @event: a #GcalEventWidget instance
+ * gcal_event_widget_get_date_end:
+ * @self: a #GcalEventWidget
  *
- * Returns a #GcalEventData with shallows members, meaning the members
- * are owned but the struct should be freed.
+ * Retrieves the visible end date of this widget. This
+ * may differ from the event's end date.
  *
- * Returns: (transfer full): a #GcalEventData
- **/
-GcalEventData*
-gcal_event_widget_get_data (GcalEventWidget *event)
+ * Returns: (transfer none): a #GDateTime
+ */
+GDateTime*
+gcal_event_widget_get_date_end (GcalEventWidget *self)
 {
-  GcalEventData *data;
+  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (self), NULL);
 
-  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), NULL);
+  return self->dt_end ? self->dt_end : self->dt_start;
+}
 
-  data = g_new0 (GcalEventData, 1);
-  data->source = event->source;
-  data->event_component = event->component;
+/**
+ * gcal_event_widget_set_date_end:
+ * @self: a #GcalEventWidget
+ * @date_end: the end date of this widget
+ *
+ * Sets the visible end date of this widget. This
+ * may differ from the event's end date, but cannot
+ * be after it.
+ */
+void
+gcal_event_widget_set_date_end (GcalEventWidget *self,
+                                GDateTime       *date_end)
+{
+  g_return_if_fail (GCAL_IS_EVENT_WIDGET (self));
 
-  return data;
+  if (self->dt_end != date_end &&
+      (!self->dt_end || !date_end ||
+       (self->dt_end && date_end && !g_date_time_equal (self->dt_end, date_end))))
+    {
+      /* The end date should never be after the event's end date */
+      if (date_end && g_date_time_compare (date_end, gcal_event_get_date_end (self->event)) > 0)
+        return;
+
+      g_clear_pointer (&self->dt_end, g_date_time_unref);
+      self->dt_end = g_date_time_ref (date_end);
+
+      gcal_event_widget_update_style (self);
+
+      g_object_notify (G_OBJECT (self), "date-end");
+    }
+}
+
+/**
+ * gcal_event_widget_get_date_start:
+ * @self: a #GcalEventWidget
+ *
+ * Retrieves the visible start date of this widget. This
+ * may differ from the event's start date.
+ *
+ * Returns: (transfer none): a #GDateTime
+ */
+GDateTime*
+gcal_event_widget_get_date_start (GcalEventWidget *self)
+{
+  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (self), NULL);
+
+  return self->dt_start;
+}
+
+/**
+ * gcal_event_widget_set_date_start:
+ * @self: a #GcalEventWidget
+ * @date_end: the start date of this widget
+ *
+ * Sets the visible start date of this widget. This
+ * may differ from the event's start date, but cannot
+ * be before it.
+ */
+void
+gcal_event_widget_set_date_start (GcalEventWidget *self,
+                                  GDateTime       *date_start)
+{
+  g_return_if_fail (GCAL_IS_EVENT_WIDGET (self));
+
+  if (self->dt_start != date_start &&
+      (!self->dt_start || !date_start ||
+       (self->dt_start && date_start && !g_date_time_equal (self->dt_start, date_start))))
+    {
+      /* The start date should never be before the event's start date */
+      if (date_start && g_date_time_compare (date_start, gcal_event_get_date_start (self->event)) < 0)
+        return;
+
+      g_clear_pointer (&self->dt_start, g_date_time_unref);
+      self->dt_start = g_date_time_ref (date_start);
+
+      gcal_event_widget_update_style (self);
+
+      g_object_notify (G_OBJECT (self), "date-start");
+    }
+}
+
+/**
+ * gcal_event_widget_get_event:
+ * @self: a #GcalEventWidget
+ *
+ * Retrieves the @GcalEvent this widget represents.
+ *
+ * Returns: (transfer none): a #GcalEvent
+ */
+GcalEvent*
+gcal_event_widget_get_event (GcalEventWidget *self)
+{
+  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (self), NULL);
+
+  return self->event;
+}
+
+GtkWidget*
+gcal_event_widget_clone (GcalEventWidget *widget)
+{
+  GtkWidget *new_widget;
+
+  new_widget = gcal_event_widget_new (widget->event);
+  gcal_event_widget_set_read_only(GCAL_EVENT_WIDGET (new_widget), gcal_event_widget_get_read_only (widget));
+
+  return new_widget;
 }
 
 /**
@@ -1023,22 +826,10 @@ gboolean
 gcal_event_widget_equal (GcalEventWidget *widget1,
                          GcalEventWidget *widget2)
 {
-  ECalComponentId *id1;
-  ECalComponentId *id2;
-
-  gboolean same_id = FALSE;
-
-  if (!e_source_equal (widget1->source, widget2->source))
+  if (!e_source_equal (gcal_event_get_source (widget1->event), gcal_event_get_source (widget2->event)))
     return FALSE;
 
-  id1 = e_cal_component_get_id (widget1->component);
-  id2 = e_cal_component_get_id (widget2->component);
-  same_id = e_cal_component_id_equal (id1, id2);
-
-  e_cal_component_free_id (id1);
-  e_cal_component_free_id (id2);
-
-  return same_id;
+  return g_strcmp0 (gcal_event_get_uid (widget1->event), gcal_event_get_uid (widget2->event)) == 0;
 }
 
 /**
@@ -1057,13 +848,13 @@ gcal_event_widget_compare_by_length (GcalEventWidget *widget1,
   time_t time_s1, time_s2;
   time_t time_e1, time_e2;
 
-  time_e1 = time_s1 = icaltime_as_timet (*(widget1->dt_start));
-  time_e2 = time_s2 = icaltime_as_timet (*(widget2->dt_start));
+  time_e1 = time_s1 = g_date_time_to_unix (widget1->dt_start);
+  time_e2 = time_s2 = g_date_time_to_unix (widget2->dt_start);
 
   if (widget1->dt_end != NULL)
-    time_e1 = icaltime_as_timet (*(widget1->dt_end));
+    time_e1 = g_date_time_to_unix (widget1->dt_end);
   if (widget2->dt_end)
-    time_e2 = icaltime_as_timet (*(widget2->dt_end));
+    time_e2 = g_date_time_to_unix (widget2->dt_end);
 
   return (time_e2 - time_s2) - (time_e1 - time_s1);
 }
@@ -1072,7 +863,7 @@ gint
 gcal_event_widget_compare_by_start_date (GcalEventWidget *widget1,
                                          GcalEventWidget *widget2)
 {
-  return icaltime_compare (*(widget1->dt_start), *(widget2->dt_start));
+  return g_date_time_compare (widget1->dt_start, widget2->dt_start);
 }
 
 /**
@@ -1089,39 +880,39 @@ gint
 gcal_event_widget_compare_for_single_day (GcalEventWidget *widget1,
                                           GcalEventWidget *widget2)
 {
-  if (gcal_event_widget_is_multiday (widget1) && gcal_event_widget_is_multiday (widget2))
+  if (gcal_event_is_multiday (widget1->event) && gcal_event_is_multiday (widget2->event))
     {
       time_t time_s1, time_s2;
       time_t time_e1, time_e2;
       time_t result;
 
-      time_s1 = icaltime_as_timet (*(widget1->dt_start));
-      time_s2 = icaltime_as_timet (*(widget2->dt_start));
-      time_e1 = icaltime_as_timet (*(widget1->dt_end));
-      time_e2 = icaltime_as_timet (*(widget2->dt_end));
+      time_s1 = g_date_time_to_unix (widget1->dt_start);
+      time_s2 = g_date_time_to_unix (widget2->dt_start);
+      time_e1 = g_date_time_to_unix (widget1->dt_end);
+      time_e2 = g_date_time_to_unix (widget2->dt_end);
 
       result = (time_e2 - time_s2) - (time_e1 - time_s1);
       if (result != 0)
         return result;
       else
-        return icaltime_compare (*(widget1->dt_start), *(widget2->dt_start));
+        return g_date_time_compare (widget1->dt_start, widget2->dt_start);
     }
   else
     {
-      if (gcal_event_widget_is_multiday (widget1))
+      if (gcal_event_is_multiday (widget1->event))
         return -1;
-      else if (gcal_event_widget_is_multiday (widget2))
+      else if (gcal_event_is_multiday (widget2->event))
         return 1;
       else
         {
-          if (widget1->all_day && widget2->all_day)
+          if (gcal_event_get_all_day (widget1->event) && gcal_event_get_all_day (widget2->event))
             return 0;
-          else if (widget1->all_day)
+          else if (gcal_event_get_all_day (widget1->event))
             return -1;
-          else if (widget2->all_day)
+          else if (gcal_event_get_all_day (widget2->event))
             return 1;
           else
-            return icaltime_compare (*(widget1->dt_start), *(widget2->dt_start));
+            return g_date_time_compare (widget1->dt_start, widget2->dt_start);
         }
     }
 }

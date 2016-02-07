@@ -20,6 +20,7 @@
 #ifndef __GCAL_EDIT_DIALOG_H__
 #define __GCAL_EDIT_DIALOG_H__
 
+#include "gcal-event.h"
 #include "gcal-manager.h"
 
 #include <gtk/gtk.h>
@@ -39,8 +40,8 @@ GtkWidget*           gcal_edit_dialog_new                     (gboolean format_2
 void                 gcal_edit_dialog_set_event_is_new        (GcalEditDialog *dialog,
                                                                gboolean       event_is_new);
 
-void                 gcal_edit_dialog_set_event_data          (GcalEditDialog *dialog,
-                                                               GcalEventData  *data);
+void                 gcal_edit_dialog_set_event               (GcalEditDialog *dialog,
+                                                               GcalEvent      *event);
 
 void                 gcal_edit_dialog_set_manager             (GcalEditDialog *dialog,
                                                                GcalManager    *manager);

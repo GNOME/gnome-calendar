@@ -773,7 +773,7 @@ new_event_entry_text_changed (GObject    *object,
   static gboolean blocked = TRUE;
   gint length;
 
-  length = g_utf8_strlen (gtk_entry_get_text (GTK_ENTRY (user_data)), -1);
+  length = g_utf8_strlen (gtk_entry_get_text (GTK_ENTRY (object)), -1);
 
   gtk_widget_set_sensitive (window->new_event_create_button, length > 0);
 
@@ -1083,18 +1083,13 @@ create_event (gpointer   user_data,
                                        window->event_creation_data->end_date);
   if (widget == window->new_event_details_button)
     {
-      GcalEventData *edata;
+      GcalEvent *event;
 
-      edata = g_new0 (GcalEventData, 1);
-      edata->source = source;
-      edata->event_component = comp;
+      event = gcal_event_new (source, comp);
 
-      gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog),
-                                         TRUE);
-      gcal_edit_dialog_set_event_data (GCAL_EDIT_DIALOG (window->edit_dialog),
-                                       edata);
+      gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
+      gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
       g_object_unref (comp);
-      g_free (edata);
 
       gtk_dialog_run (GTK_DIALOG (window->edit_dialog));
     }
@@ -1104,7 +1099,9 @@ create_event (gpointer   user_data,
       gcal_manager_create_event (window->manager, source, comp);
     }
 
-  g_object_unref (source);
+  g_clear_object (&source);
+  g_clear_object (&event);
+  g_clear_object (&comp);
 }
 
 static void
@@ -1114,19 +1111,18 @@ create_event_detailed_cb (GcalView *view,
                           gpointer  user_data)
 {
   GcalWindow *window = GCAL_WINDOW (user_data);
-  GcalEventData *edata;
+  ECalComponent *comp;
+  GcalEvent *event;
 
-  edata = g_new0 (GcalEventData, 1);
-  edata->source = gcal_manager_get_default_source (window->manager);
-  edata->event_component = build_component_from_details ("", (icaltimetype*) start_span, (icaltimetype*) end_span);
+  comp = build_component_from_details ("", (icaltimetype*) start_span, (icaltimetype*) end_span);
+  event = gcal_event_new (gcal_manager_get_default_source (window->manager), comp);
 
   gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
-  gcal_edit_dialog_set_event_data (GCAL_EDIT_DIALOG (window->edit_dialog), edata);
-
-  g_object_unref (edata->event_component);
-  g_free (edata);
+  gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
 
   gtk_dialog_run (GTK_DIALOG (window->edit_dialog));
+
+  g_clear_object (&comp);
 }
 
 static void
@@ -1135,16 +1131,11 @@ event_activated (GcalView        *view,
                  gpointer         user_data)
 {
   GcalWindow *window = GCAL_WINDOW (user_data);
-  GcalEventData *data;
+  GcalEvent *event;
 
-  data = gcal_event_widget_get_data (event_widget);
-  gcal_edit_dialog_set_event_is_new (
-      GCAL_EDIT_DIALOG (window->edit_dialog),
-      FALSE);
-  gcal_edit_dialog_set_event_data (
-      GCAL_EDIT_DIALOG (window->edit_dialog),
-      data);
-  g_free (data);
+  event = gcal_event_widget_get_event (event_widget);
+  gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), FALSE);
+  gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
 
   gtk_dialog_run (GTK_DIALOG (window->edit_dialog));
 }

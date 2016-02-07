@@ -1131,9 +1131,10 @@ gcal_week_view_add (GtkContainer *container,
   GList *l;
 
   gint day;
-  icaltimetype *date;
 
   GcalWeekViewChild *new_child;
+  GDateTime *date;
+  GcalEvent *event;
 
   g_return_if_fail (GCAL_IS_WEEK_VIEW (container));
   g_return_if_fail (GCAL_IS_EVENT_WIDGET (widget));
@@ -1141,8 +1142,9 @@ gcal_week_view_add (GtkContainer *container,
   priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (container));
 
   /* Check if it's already added for date */
-  date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
-  day = (icaltime_day_of_week (*date) - priv->first_weekday + 6) % 7;
+  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
+  date = gcal_event_get_date_start (event);
+  day = (g_date_time_get_day_of_week (date) - priv->first_weekday + 6) % 7;
 
   for (l = priv->days[day]; l != NULL; l = l->next)
     {
@@ -1164,7 +1166,7 @@ gcal_week_view_add (GtkContainer *container,
   new_child->widget = widget;
   new_child->hidden_by_me = FALSE;
 
-  if (gcal_event_widget_get_all_day (GCAL_EVENT_WIDGET (widget)))
+  if (gcal_event_get_all_day (event))
     {
       new_child->index = -1;
       if (gtk_widget_get_window (widget) != NULL)
@@ -1173,7 +1175,7 @@ gcal_week_view_add (GtkContainer *container,
     }
   else
     {
-      new_child->index = date->hour;
+      new_child->index = g_date_time_get_hour (date);
       if (priv->grid_window != NULL)
         gtk_widget_set_parent_window (widget, priv->grid_window);
     }
@@ -1185,7 +1187,6 @@ gcal_week_view_add (GtkContainer *container,
                     "activate",
                     G_CALLBACK (event_opened),
                     container);
-  g_free (date);
 }
 
 static void
@@ -1193,17 +1194,18 @@ gcal_week_view_remove (GtkContainer *container,
                         GtkWidget    *widget)
 {
   GcalWeekViewPrivate *priv;
+  GcalEvent *event;
+  GDateTime *date;
   GList *l;
-  icaltimetype *date;
   gint day;
   gboolean was_visible;
 
   g_return_if_fail (GCAL_IS_WEEK_VIEW (container));
   g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
   priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (container));
-
-  date = gcal_event_widget_get_date (GCAL_EVENT_WIDGET (widget));
-  day = (icaltime_day_of_week (*date) - priv->first_weekday + 6) % 7;
+  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
+  date = gcal_event_get_date_start (event);
+  day = (g_date_time_get_day_of_week (date) - priv->first_weekday + 6) % 7;
 
   for (l = priv->days[day]; l != NULL; l = l->next)
     {
@@ -1347,10 +1349,13 @@ gcal_week_view_get_by_uuid (GcalSubscriberView *subscriber_view,
       for (l = priv->days[i]; l != NULL; l = l->next)
         {
           GcalWeekViewChild *child;
+          GcalEvent *event;
           const gchar* widget_uuid;
 
           child = (GcalWeekViewChild*) l->data;
-          widget_uuid = gcal_event_widget_peek_uuid (GCAL_EVENT_WIDGET (child->widget));
+          event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (child->widget));
+          widget_uuid = gcal_event_get_uid (event);
+
           if (g_strcmp0 (uuid, widget_uuid) == 0)
             return child->widget;
         }
