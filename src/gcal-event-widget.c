@@ -765,18 +765,6 @@ gcal_event_widget_new_from_data (GcalEventData *data)
 }
 
 GtkWidget*
-gcal_event_widget_new_with_summary_and_color (const gchar   *summary,
-                                              const GdkRGBA *color)
-{
-  return g_object_new (GCAL_TYPE_EVENT_WIDGET,
-                       "summary",
-                       summary,
-                       "color",
-                       color,
-                       NULL);
-}
-
-GtkWidget*
 gcal_event_widget_clone (GcalEventWidget *widget)
 {
   GtkWidget *new_widget;
