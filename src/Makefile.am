@@ -34,6 +34,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-date-selector.h                                  \
     gcal-edit-dialog.c                                    \
     gcal-edit-dialog.h                                    \
+    gcal-event.c                                          \
+    gcal-event.h                                          \
     gcal-event-widget.c                                   \
     gcal-event-widget.h                                   \
     gcal-manager.c                                        \

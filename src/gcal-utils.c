@@ -64,6 +64,61 @@ month_item[12] =
 G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
 
 icaltimetype*
+datetime_to_icaltime (GDateTime *dt)
+{
+  icaltimetype *idt;
+
+  if (!dt)
+    return NULL;
+
+  idt = g_new0 (icaltimetype, 1);
+
+  idt->year = g_date_time_get_year (dt);
+  idt->month = g_date_time_get_month (dt);
+  idt->day = g_date_time_get_day_of_month (dt);
+  idt->hour = g_date_time_get_hour (dt);
+  idt->minute = g_date_time_get_minute (dt);
+  idt->second = g_date_time_get_seconds (dt);
+  idt->is_date = (idt->hour == 0 &&
+                  idt->minute == 0 &&
+                  idt->second == 0);
+
+  return idt;
+}
+
+GDateTime*
+icaltime_to_datetime (const icaltimetype  *date,
+                      GTimeZone          **timezone)
+{
+  GDateTime *dt;
+  GTimeZone *tz;
+
+  tz = date->zone ? g_time_zone_new (icaltime_get_tzid (*date)) : g_time_zone_new_utc ();
+  dt = g_date_time_new (tz,
+                        date->year,
+                        date->month,
+                        date->day,
+                        date->is_date ? 0 : date->hour,
+                        date->is_date ? 0 : date->minute,
+                        date->is_date ? 0 : date->second);
+
+  if (timezone)
+    *timezone = tz;
+  else
+    g_clear_pointer (&tz, g_time_zone_unref);
+
+  return dt;
+}
+
+gboolean
+datetime_is_date (GDateTime *dt)
+{
+  return g_date_time_get_hour (dt) == 0 &&
+         g_date_time_get_minute (dt) == 0 &&
+         g_date_time_get_seconds (dt) == 0;
+}
+
+icaltimetype*
 gcal_dup_icaltime (const icaltimetype *date)
 {
   icaltimetype *new_date;
@@ -351,15 +406,17 @@ build_component_from_details (const gchar        *summary,
                               const icaltimetype *final_date)
 {
   ECalComponent *event;
-
   ECalComponentDateTime dt;
   ECalComponentText summ;
+  GTimeZone *tz;
+
+  tz = g_time_zone_new_local ();
 
   event = e_cal_component_new ();
   e_cal_component_set_new_vtype (event, E_CAL_COMPONENT_EVENT);
 
   dt.value = (icaltimetype*) initial_date;
-  dt.tzid = NULL;
+  dt.tzid = g_time_zone_get_abbreviation (tz, 0);
   e_cal_component_set_dtstart (event, &dt);
 
   if (final_date != NULL)
@@ -381,6 +438,8 @@ build_component_from_details (const gchar        *summary,
   e_cal_component_set_summary (event, &summ);
 
   e_cal_component_commit_sequence (event);
+
+  g_clear_pointer (&tz, g_time_zone_unref);
 
   return event;
 }

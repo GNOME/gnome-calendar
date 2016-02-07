@@ -52,6 +52,13 @@ const gchar*  (*GcalTranslateFunc)                              (GtkWidget      
 
 GType           icaltime_get_type                               (void)            G_GNUC_CONST;
 
+icaltimetype*   datetime_to_icaltime                            (GDateTime             *dt);
+
+gboolean        datetime_is_date                                (GDateTime             *dt);
+
+GDateTime*      icaltime_to_datetime                            (const icaltimetype    *date,
+                                                                 GTimeZone            **timezone);
+
 icaltimetype*   gcal_dup_icaltime                               (const icaltimetype    *date);
 
 gchar*          gcal_get_weekday                                (gint                   i);
