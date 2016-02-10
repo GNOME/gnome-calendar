@@ -17,7 +17,6 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include "gcal-event.h"
 #include "gcal-manager.h"
 #include "gcal-utils.h"
 
@@ -261,25 +260,6 @@ free_unit_data (GcalManagerUnit *data)
 {
   g_object_unref (data->client);
   g_free (data);
-}
-
-static gboolean
-gather_components (ECalDataModel         *data_model,
-                   ECalClient            *client,
-                   const ECalComponentId *id,
-                   ECalComponent         *comp,
-                   time_t                 instance_start,
-                   time_t                 instance_end,
-                   gpointer               user_data)
-{
-  GList **result = user_data;
-  GcalEventData *new_data = g_new0 (GcalEventData, 1);
-
-  new_data->source = e_client_get_source (E_CLIENT (client));
-  new_data->event_component = g_object_ref (comp);
-  *result = g_list_append (*result, new_data);/* FIXME: add me sorted */
-
-  return TRUE;
 }
 
 static gboolean
@@ -1112,7 +1092,7 @@ gcal_manager_get_shell_search_events (GcalManager *manager)
 
   e_cal_data_model_get_subscriber_range (manager->shell_search_data_model, manager->search_view_data->subscriber,
                                          &range_start, &range_end);
-  e_cal_data_model_foreach_component (manager->shell_search_data_model, range_start, range_end, gather_components, &list);
+  e_cal_data_model_foreach_component (manager->shell_search_data_model, range_start, range_end, gather_events, &list);
   return list;
 }
 
@@ -1552,39 +1532,38 @@ gcal_manager_load_completed (GcalManager *manager)
   return manager->sources_at_launch == 0;
 }
 
-GcalEventData*
+GcalEvent*
 gcal_manager_get_event_from_shell_search (GcalManager *manager,
                                           const gchar *uuid)
 {
+  GcalEvent *new_event;
+  GList *l, *list;
   time_t range_start, range_end;
-  GList *l, *list = NULL;
-  GcalEventData *data, *new_data = NULL;
-  gchar *cuuid;
+
+  list = NULL;
+  new_event = NULL;
 
   e_cal_data_model_get_subscriber_range (manager->shell_search_data_model, manager->search_view_data->subscriber,
                                          &range_start, &range_end);
-  e_cal_data_model_foreach_component (manager->shell_search_data_model, range_start, range_end, gather_components, &list);
-  if (list != NULL)
-    new_data = g_new0 (GcalEventData, 1);
+  e_cal_data_model_foreach_component (manager->shell_search_data_model, range_start, range_end, gather_events, &list);
 
   for (l = list; l != NULL; l = g_list_next (l))
     {
-      data = l->data;
-      cuuid = get_uuid_from_component (data->source, data->event_component);
+      GcalEvent *event;
 
-      if (g_strcmp0 (cuuid, uuid) == 0)
+      event = l->data;
+
+      if (g_strcmp0 (gcal_event_get_uid (event), uuid) == 0)
         {
-          new_data->source = data->source;
-          new_data->event_component = g_object_ref (data->event_component);
+          new_event = event;
         }
 
-      g_object_unref (data->event_component);
-      g_free (data);
-      g_free (cuuid);
+      g_object_unref (event);
     }
+
   g_list_free (list);
 
-  return new_data;
+  return new_event;
 }
 
 gboolean

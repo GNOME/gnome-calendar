@@ -563,8 +563,8 @@ gcal_application_set_uuid (GcalApplication *application,
 
 void
 gcal_application_set_initial_date (GcalApplication *application,
-                                   const icaltimetype *date)
+                                   GDateTime       *date)
 {
   g_free (application->initial_date);
-  application->initial_date = gcal_dup_icaltime (date);
+  application->initial_date = datetime_to_icaltime (date);
 }

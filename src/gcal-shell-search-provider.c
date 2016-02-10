@@ -20,6 +20,7 @@
 #include "gcal-shell-search-provider-generated.h"
 
 #include "gcal-application.h"
+#include "gcal-event.h"
 #include "gcal-window.h"
 #include "gcal-utils.h"
 
@@ -54,40 +55,12 @@ G_DEFINE_TYPE_WITH_CODE (GcalShellSearchProvider, gcal_shell_search_provider, G_
                          G_ADD_PRIVATE (GcalShellSearchProvider)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER, gcal_subscriber_interface_init));
 
-static void
-free_event_data (gpointer data)
-{
-  GcalEventData *event_data = data;
-  g_object_unref (event_data->event_component);
-  g_free (event_data);
-}
-
 static gint
-sort_event_data (gconstpointer a,
-                 gconstpointer b,
-                 gpointer user_data)
+sort_event_data (GcalEvent *a,
+                 GcalEvent *b,
+                 gpointer   user_data)
 {
-  ECalComponent *comp1, *comp2;
-  ECalComponentDateTime date1, date2;
-  gint result;
-
-
-  comp1 = ((GcalEventData*) a)->event_component;
-  comp2 = ((GcalEventData*) b)->event_component;
-
-  e_cal_component_get_dtstart (comp1, &date1);
-  e_cal_component_get_dtstart (comp2, &date2);
-
-  if (date1.tzid != NULL)
-    date1.value->zone = icaltimezone_get_builtin_timezone_from_tzid (date1.tzid);
-  if (date2.tzid != NULL)
-    date2.value->zone = icaltimezone_get_builtin_timezone_from_tzid (date2.tzid);
-  result = icaltime_compare_with_current (date1.value, date2.value, user_data);
-
-  e_cal_component_free_datetime (&date1);
-  e_cal_component_free_datetime (&date2);
-
-  return result;
+  return gcal_event_compare_with_current (a, b, user_data);
 }
 
 static gboolean
@@ -214,22 +187,14 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
                      GcalShellSearchProvider2 *skel)
 {
   GcalShellSearchProviderPrivate *priv;
-  gint i;
-  gchar *uuid, *desc;
-  const gchar* location;
-
-  g_autoptr(GTimeZone) tz;
-  g_autoptr (GDateTime) datetime;
-  g_autoptr (GDateTime) local_datetime;
-  ECalComponentDateTime dtstart;
-  gchar *start_date;
-
-  ECalComponentText summary;
-  GdkRGBA color;
+  GDateTime *local_datetime;
   GVariantBuilder abuilder, builder;
   GVariant *icon_variant;
-  GcalEventData *data;
+  GcalEvent *event;
   GdkPixbuf *gicon;
+  gchar *uuid, *desc;
+  gchar *start_date;
+  gint i;
 
   priv = search_provider->priv;
 
@@ -237,50 +202,29 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
   for (i = 0; i < g_strv_length (results); i++)
     {
       uuid = results[i];
-      data = g_hash_table_lookup (priv->events, uuid);
+      event = g_hash_table_lookup (priv->events, uuid);
 
       g_variant_builder_init (&builder, G_VARIANT_TYPE ("a{sv}"));
       g_variant_builder_add (&builder, "{sv}", "id", g_variant_new_string (uuid));
+      g_variant_builder_add (&builder, "{sv}", "name", g_variant_new_string (gcal_event_get_summary (event)));
 
-      e_cal_component_get_summary (data->event_component, &summary);
-      g_variant_builder_add (&builder, "{sv}", "name", g_variant_new_string (summary.value));
-
-      get_color_name_from_source (data->source, &color);
-      gicon = get_circle_pixbuf_from_color (&color, 128);
+      gicon = get_circle_pixbuf_from_color (gcal_event_get_color (event), 128);
       icon_variant = g_icon_serialize (G_ICON (gicon));
       g_variant_builder_add (&builder, "{sv}", "icon", icon_variant);
       g_object_unref (gicon);
       g_variant_unref (icon_variant);
 
-      e_cal_component_get_dtstart (data->event_component, &dtstart);
-
-      if (dtstart.tzid != NULL)
-        tz = g_time_zone_new (dtstart.tzid);
-      else if (dtstart.value->zone != NULL)
-        tz = g_time_zone_new (icaltimezone_get_tzid ((icaltimezone*) dtstart.value->zone));
-      else
-        tz = g_time_zone_new_local ();
-
-      datetime = g_date_time_new (tz,
-                                  dtstart.value->year, dtstart.value->month, dtstart.value->day,
-                                  dtstart.value->hour, dtstart.value->minute, dtstart.value->second);
-      local_datetime = g_date_time_to_local (datetime);
+      local_datetime = g_date_time_to_local (gcal_event_get_date_start (event));
 
       /* FIXME: respect 24h time format */
-      start_date = g_date_time_format (local_datetime,
-                                       (dtstart.value->is_date == 1) ? "%x" : "%c");
-      e_cal_component_free_datetime (&dtstart);
+      start_date = g_date_time_format (local_datetime, gcal_event_get_all_day (event) ? "%x" : "%c");
 
-      e_cal_component_get_location (data->event_component, &location);
-      if (location != NULL)
-        desc = g_strconcat (start_date, ". ", location, NULL);
+      if (gcal_event_get_location (event))
+        desc = g_strconcat (start_date, ". ", gcal_event_get_location (event), NULL);
       else
         desc = g_strdup (start_date);
 
       g_variant_builder_add (&builder, "{sv}", "description", g_variant_new_string (desc));
-      g_free (start_date);
-      g_free (desc);
-
       g_variant_builder_add_value (&abuilder, g_variant_builder_end (&builder));
     }
   g_dbus_method_invocation_return_value (invocation, g_variant_new ("(aa{sv})", &abuilder));
@@ -298,25 +242,22 @@ activate_result_cb (GcalShellSearchProvider  *search_provider,
 {
   GcalShellSearchProviderPrivate *priv;
   GApplication *application;
-  GcalEventData *data;
-  ECalComponentDateTime dtstart;
+  GcalEvent *event;
+  GDateTime *dtstart;
 
   priv = search_provider->priv;
   application = g_application_get_default ();
 
-  data = gcal_manager_get_event_from_shell_search (priv->manager, result);
-  e_cal_component_get_dtstart (data->event_component, &dtstart);
-  if (dtstart.tzid != NULL)
-    dtstart.value->zone = icaltimezone_get_builtin_timezone_from_tzid (dtstart.tzid);
+  event = gcal_manager_get_event_from_shell_search (priv->manager, result);
+  dtstart = gcal_event_get_date_start (event);
 
   gcal_application_set_uuid (GCAL_APPLICATION (application), result);
-  gcal_application_set_initial_date (GCAL_APPLICATION (application), dtstart.value);
-  e_cal_component_free_datetime (&dtstart);
+  gcal_application_set_initial_date (GCAL_APPLICATION (application), dtstart);
 
   g_application_activate (application);
 
-  g_object_unref (data->event_component);
-  g_free (data);
+  g_clear_object (&event);
+
   return TRUE;
 }
 
@@ -355,9 +296,6 @@ query_completed_cb (GcalShellSearchProvider *search_provider,
   GcalShellSearchProviderPrivate *priv = search_provider->priv;
   GList *events, *l;
   GVariantBuilder builder;
-
-  GcalEventData *data;
-  gchar *uuid;
   time_t current_time_t;
 
   g_hash_table_remove_all (priv->events);
@@ -372,15 +310,19 @@ query_completed_cb (GcalShellSearchProvider *search_provider,
   g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
 
   current_time_t = time (NULL);
-  events = g_list_sort_with_data (events, sort_event_data, &current_time_t);
+  events = g_list_sort_with_data (events, (GCompareDataFunc) sort_event_data, &current_time_t);
   for (l = events; l != NULL; l = g_list_next (l))
     {
-      data = l->data;
-      uuid = get_uuid_from_component (data->source, data->event_component);
+      const gchar *uid;
 
-      g_variant_builder_add (&builder, "s", uuid);
+      uid = gcal_event_get_uid (l->data);
 
-      g_hash_table_insert (priv->events, uuid, data);
+      if (g_hash_table_contains (priv->events, uid))
+        continue;
+
+      g_variant_builder_add (&builder, "s", uid);
+
+      g_hash_table_insert (priv->events, g_strdup (uid), l->data);
     }
   g_list_free (events);
 
@@ -456,7 +398,7 @@ gcal_shell_search_provider_init (GcalShellSearchProvider *self)
 {
   GcalShellSearchProviderPrivate *priv = gcal_shell_search_provider_get_instance_private (self);
 
-  priv->events = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, free_event_data);
+  priv->events = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
   priv->skel = gcal_shell_search_provider2_skeleton_new ();
 
   g_signal_connect_swapped (priv->skel, "handle-get-initial-result-set", G_CALLBACK (get_initial_result_set_cb), self);
