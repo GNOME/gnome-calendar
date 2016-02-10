@@ -40,25 +40,17 @@ GtkWidget*           gcal_edit_dialog_new                     (gboolean format_2
 void                 gcal_edit_dialog_set_event_is_new        (GcalEditDialog *dialog,
                                                                gboolean       event_is_new);
 
+GcalEvent*           gcal_edit_dialog_get_event               (GcalEditDialog *dialog);
+
 void                 gcal_edit_dialog_set_event               (GcalEditDialog *dialog,
                                                                GcalEvent      *event);
 
 void                 gcal_edit_dialog_set_manager             (GcalEditDialog *dialog,
                                                                GcalManager    *manager);
 
-ECalComponent*       gcal_edit_dialog_get_component           (GcalEditDialog *dialog);
+GDateTime*           gcal_edit_dialog_get_date_end            (GcalEditDialog *dialog);
 
-ESource*             gcal_edit_dialog_get_source              (GcalEditDialog *dialog);
-
-const gchar*         gcal_edit_dialog_peek_source_uid         (GcalEditDialog *dialog);
-
-const gchar*         gcal_edit_dialog_peek_event_uid          (GcalEditDialog *dialog);
-
-gchar*               gcal_edit_dialog_get_event_uuid          (GcalEditDialog *dialog);
-
-icaltimetype*        gcal_edit_dialog_get_start_date          (GcalEditDialog *dialog);
-
-icaltimetype*        gcal_edit_dialog_get_end_date            (GcalEditDialog *dialog);
+GDateTime*           gcal_edit_dialog_get_date_start          (GcalEditDialog *dialog);
 
 G_END_DECLS
 

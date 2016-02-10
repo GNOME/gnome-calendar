@@ -1148,36 +1148,32 @@ edit_dialog_closed (GtkDialog *dialog,
   GcalWindow *window;
 
   GcalEditDialog *edit_dialog;
-  ECalComponent *component;
+  GcalEvent *event;
   GcalView *view;
 
   GList *widgets;
-  gchar *uuid;
+  const gchar *uuid;
 
   window = GCAL_WINDOW (user_data);
+  edit_dialog = GCAL_EDIT_DIALOG (dialog);
+  event = gcal_edit_dialog_get_event (edit_dialog);
+  view = GCAL_VIEW (window->views[window->active_view]);
 
   gtk_widget_hide (GTK_WIDGET (dialog));
-
-  view = GCAL_VIEW (window->views[window->active_view]);
-  edit_dialog = GCAL_EDIT_DIALOG (dialog);
 
   switch (response)
     {
     case GCAL_RESPONSE_CREATE_EVENT:
-      /* retrieve the component from the dialog*/
       gcal_manager_create_event (window->manager,
-                                 gcal_edit_dialog_get_source (edit_dialog),
-                                 gcal_edit_dialog_get_component (edit_dialog));
+                                 gcal_event_get_source (event),
+                                 g_object_ref (gcal_event_get_component (event)));
 
       break;
 
     case GCAL_RESPONSE_SAVE_EVENT:
-      /* retrieve the component from the dialog*/
-      component = gcal_edit_dialog_get_component (edit_dialog);
-
       gcal_manager_update_event (window->manager,
-                                 gcal_edit_dialog_get_source (edit_dialog),
-                                 component);
+                                 gcal_event_get_source (event),
+                                 g_object_ref (gcal_event_get_component (event)));
 
       break;
 
@@ -1200,15 +1196,16 @@ edit_dialog_closed (GtkDialog *dialog,
       window->notification_timeout = g_timeout_add_seconds (5, hide_notification_scheduled, user_data);
 
       window->event_to_delete = g_new0 (GcalEventData, 1);
-      window->event_to_delete->source = gcal_edit_dialog_get_source (edit_dialog);
-      window->event_to_delete->event_component = gcal_edit_dialog_get_component (edit_dialog);
+      window->event_to_delete->source = gcal_event_get_source (event);
+      window->event_to_delete->event_component = gcal_event_get_component (event);
 
-      uuid = gcal_edit_dialog_get_event_uuid (edit_dialog);
+      uuid = gcal_event_get_uid (event);
+
       /* hide widget of the event */
       widgets = gcal_view_get_children_by_uuid (view, uuid);
+
       g_list_foreach (widgets, (GFunc) gtk_widget_hide, NULL);
       g_list_free (widgets);
-      g_free (uuid);
       break;
 
     case GTK_RESPONSE_CANCEL:
