@@ -20,16 +20,15 @@
 
 #include "gcal-search-view.h"
 
-#include "gcal-event-widget.h"
+#include "gcal-event.h"
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
 
 typedef struct
 {
-  GcalEventData  *event_data;
-  GtkWidget      *row;
-  gchar          *uuid;
+  GcalEvent *event;
+  GtkWidget *row;
 } RowEventData;
 
 struct _GcalSearchView
@@ -92,17 +91,13 @@ static gint           sort_by_event                             (GtkListBoxRow  
                                                                  GtkListBoxRow        *row2,
                                                                  gpointer              user_data);
 
-static gint           compare_events                            (GcalEventData        *ev1,
-                                                                 GcalEventData        *ev2,
-                                                                 time_t               *utc);
-
 static gboolean       show_no_results_page                      (GcalSearchView       *view);
 
 /* private */
 static void           free_row_data                             (RowEventData          *data);
 
-static GtkWidget*     make_row_for_event_data                   (GcalSearchView       *view,
-                                                                 GcalEventData        *data);
+static GtkWidget*     make_row_for_event                        (GcalSearchView       *view,
+                                                                 GcalEvent            *event);
 
 static void           update_view                               (GcalSearchView       *view);
 
@@ -189,15 +184,14 @@ open_event (GtkListBox    *list,
             gpointer       user_data)
 {
   RowEventData *data;
-  ECalComponentDateTime dt;
+  icaltimetype *date_start;
 
   data = g_object_get_data (G_OBJECT (row), "event-data");
+  date_start = datetime_to_icaltime (gcal_event_get_date_start (data->event));
 
-  e_cal_component_get_dtstart (data->event_data->event_component, &dt);
+  g_signal_emit_by_name (user_data, "event-activated", date_start);
 
-  g_signal_emit_by_name (user_data, "event-activated", dt.value);
-
-  e_cal_component_free_datetime (&dt);
+  g_free (date_start);
 }
 
 /**
@@ -223,7 +217,7 @@ sort_by_event (GtkListBoxRow *row1,
 {
   GcalSearchView *view;
   RowEventData *rd1, *rd2;
-  GcalEventData *ev1, *ev2;
+  GcalEvent *ev1, *ev2;
 
   view = GCAL_SEARCH_VIEW (user_data);
 
@@ -231,36 +225,13 @@ sort_by_event (GtkListBoxRow *row1,
   rd1 = g_object_get_data (G_OBJECT (row1), "event-data");
   rd2 = g_object_get_data (G_OBJECT (row2), "event-data");
 
-  ev1 = rd1->event_data;
-  ev2 = rd2->event_data;
+  ev1 = rd1->event;
+  ev2 = rd2->event;
 
   if (ev1 == NULL || ev2 == NULL)
       return 0;
 
-  return compare_events (ev1, ev2, &(view->current_utc_date));
-}
-
-static gint
-compare_events (GcalEventData *ev1,
-                GcalEventData *ev2,
-                time_t        *utc)
-{
-  ECalComponentDateTime date1, date2;
-  gint result;
-
-  e_cal_component_get_dtstart (ev1->event_component, &date1);
-  e_cal_component_get_dtstart (ev2->event_component, &date2);
-
-  if (date1.tzid != NULL)
-    date1.value->zone = icaltimezone_get_builtin_timezone_from_tzid (date1.tzid);
-  if (date2.tzid != NULL)
-    date2.value->zone = icaltimezone_get_builtin_timezone_from_tzid (date2.tzid);
-  result = icaltime_compare_with_current (date1.value, date2.value, utc);
-
-  e_cal_component_free_datetime (&date1);
-  e_cal_component_free_datetime (&date2);
-
-  return result;
+  return gcal_event_compare_with_current (ev1, ev2, &(view->current_utc_date));
 }
 
 /**
@@ -301,10 +272,7 @@ free_row_data (RowEventData *data)
   if (data->row != NULL)
     gtk_widget_destroy (GTK_WIDGET (data->row));
 
-  g_object_unref (data->event_data->event_component);
-
-  g_free (data->event_data);
-  g_free (data->uuid);
+  g_object_unref (data->event);
   g_free (data);
 }
 
@@ -319,15 +287,11 @@ free_row_data (RowEventData *data)
  * Returns: the newly created #GtkListBoxRow with the event data
  */
 static GtkWidget*
-make_row_for_event_data (GcalSearchView  *view,
-                         GcalEventData   *data)
+make_row_for_event (GcalSearchView *view,
+                    GcalEvent      *event)
 {
-  g_autoptr(GTimeZone) tz;
-  g_autoptr (GDateTime) datetime;
-  g_autoptr (GDateTime) local_datetime;
-  ECalComponentDateTime comp_dt;
-  ECalComponentText summary;
-  GdkRGBA color;
+  GDateTime *local_datetime;
+  GDateTime *date_start;
   GdkPixbuf *pixbuf;
 
   GtkWidget *row;
@@ -342,15 +306,10 @@ make_row_for_event_data (GcalSearchView  *view,
   GtkWidget *image;
 
   /* get event color */
-  get_color_name_from_source (data->source, &color);
-  pixbuf = gcal_get_pixbuf_from_color (&color, 16);
+  pixbuf = gcal_get_pixbuf_from_color (gcal_event_get_color (event), 16);
 
   /* make an image of the color */
   image = gtk_image_new_from_pixbuf (pixbuf);
-
-  /* date */
-  e_cal_component_get_dtstart (data->event_component, &comp_dt);
-  e_cal_component_get_summary (data->event_component, &summary);
 
   /* grid & box*/
   row = gtk_list_box_row_new ();
@@ -373,24 +332,17 @@ make_row_for_event_data (GcalSearchView  *view,
   gtk_widget_set_hexpand (name_box, TRUE);
 
   /* start date & time */
-  if (comp_dt.tzid != NULL)
-    tz = g_time_zone_new (comp_dt.tzid);
-  else if (comp_dt.value->zone != NULL)
-    tz = g_time_zone_new (icaltimezone_get_tzid ((icaltimezone*) comp_dt.value->zone));
-  else
-    tz = g_time_zone_new_local ();
-
-  datetime = g_date_time_new (tz,
-                              comp_dt.value->year, comp_dt.value->month, comp_dt.value->day,
-                              comp_dt.value->hour, comp_dt.value->minute, comp_dt.value->second);
-  local_datetime = g_date_time_to_local (datetime);
+  date_start = gcal_event_get_date_start (event);
+  local_datetime = g_date_time_to_local (date_start);
   text = g_date_time_format (local_datetime, "%x");
+
+  /* Date label */
   date_label = gtk_label_new (text);
   gtk_label_set_width_chars (GTK_LABEL (date_label), 11);
   g_free (text);
 
   /* show 'all day' instead of 00:00 */
-  if (comp_dt.value->is_date == 0)
+  if (gcal_event_get_all_day (event))
     {
       text = g_date_time_format (local_datetime, view->format_24h ? "%R" : "%r");
       time_label = gtk_label_new (text);
@@ -405,13 +357,13 @@ make_row_for_event_data (GcalSearchView  *view,
   gtk_style_context_add_class (gtk_widget_get_style_context (time_label), "dim-label");
 
   /* name label */
-  name_label = gtk_label_new (summary.value);
+  name_label = gtk_label_new (gcal_event_get_summary (event));
   gtk_widget_set_hexpand (name_label, TRUE);
   gtk_widget_set_halign (name_label, GTK_ALIGN_START);
   gtk_label_set_ellipsize (GTK_LABEL (name_label), PANGO_ELLIPSIZE_END);
 
   /* alarm icon */
-  if (e_cal_component_has_alarms (data->event_component))
+  if (e_cal_component_has_alarms (gcal_event_get_component (event)))
     {
       GtkWidget *alarm_icon;
 
@@ -420,7 +372,7 @@ make_row_for_event_data (GcalSearchView  *view,
     }
 
   /* lock icon */
-  if (!gcal_manager_is_client_writable (view->manager, data->source))
+  if (!gcal_manager_is_client_writable (view->manager, gcal_event_get_source (event)))
     {
       GtkWidget *lock_icon;
 
@@ -439,8 +391,9 @@ make_row_for_event_data (GcalSearchView  *view,
 
   gtk_widget_show_all (row);
 
-  e_cal_component_free_datetime (&comp_dt);
+  g_clear_pointer (&local_datetime, g_date_time_unref);
   g_object_unref (pixbuf);
+
   return row;
 }
 
@@ -538,8 +491,8 @@ gcal_search_view_constructed (GObject *object)
   gtk_list_box_set_sort_func (GTK_LIST_BOX (view->listbox), (GtkListBoxSortFunc) sort_by_event, object, NULL);
   gtk_list_box_set_header_func (GTK_LIST_BOX (view->listbox), display_header_func, NULL, NULL);
 
-  // (gchar)uuid -> (RowEventData)event Hash table
-  view->uuid_to_event = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, (GDestroyNotify) free_row_data);
+  // gchar* -> RowEventData*
+  view->uuid_to_event = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) free_row_data);
 
   /* don't fill the list with all events on startup */
   gcal_search_view_search (GCAL_SEARCH_VIEW (object), NULL, NULL);
@@ -619,34 +572,25 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   GcalSearchView *view;
 
   RowEventData *row_data;
-  GcalEventData *data;
-  ECalComponentId *id;
-  gchar *uuid;
+  GcalEvent *event;
+  gchar *uid;
 
   view = GCAL_SEARCH_VIEW (subscriber);
 
-  /* event data */
-  data = g_new0 (GcalEventData, 1);
-  data->source = e_client_get_source (E_CLIENT (client));
-  data->event_component = e_cal_component_clone (comp);
-
-  /* build uuid */
-  id = e_cal_component_get_id (comp);
-
-  if (id->rid != NULL)
-    uuid = g_strdup_printf ("%s:%s:%s", e_source_get_uid (data->source), id->uid, id->rid);
-  else
-    uuid = g_strdup_printf ("%s:%s", e_source_get_uid (data->source), id->uid);
+  /* event */
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp);
 
   /* insert row_data at the hash of events */
   row_data = g_new0 (RowEventData, 1);
-  row_data->event_data = data;
-  row_data->uuid = uuid;
-  row_data->row = make_row_for_event_data (GCAL_SEARCH_VIEW (subscriber), data);
+  row_data->event = event;
+  row_data->row = make_row_for_event (GCAL_SEARCH_VIEW (subscriber), event);
   g_signal_connect (row_data->row, "destroy", G_CALLBACK (gtk_widget_destroyed), &(row_data->row));
 
+  /* Add to the hash table */
+  uid = g_strdup (gcal_event_get_uid (event));
+
   g_object_set_data (G_OBJECT (row_data->row), "event-data", row_data);
-  g_hash_table_insert (view->uuid_to_event, uuid, row_data);
+  g_hash_table_insert (view->uuid_to_event, uid, row_data);
 
   gtk_container_add (GTK_CONTAINER (view->listbox), row_data->row);
 
@@ -781,7 +725,6 @@ gcal_search_view_search (GcalSearchView *view,
 
   view->query = g_strdup (query);
   view->field = g_strdup (field);
-
 
   /* Only perform search on valid non-empty strings */
   if (query && g_utf8_strlen (query, -1) > 0)
