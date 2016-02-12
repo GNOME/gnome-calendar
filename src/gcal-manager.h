@@ -104,23 +104,19 @@ gboolean       gcal_manager_is_client_writable      (GcalManager        *manager
 
 /* Create method */
 void           gcal_manager_create_event            (GcalManager        *manager,
-                                                     ESource            *source,
-                                                     ECalComponent      *component);
+                                                     GcalEvent          *event);
 
 /* Update method */
 void           gcal_manager_update_event            (GcalManager        *manager,
-                                                     ESource            *source,
-                                                     ECalComponent      *component);
+                                                     GcalEvent          *event);
 
 /* Remove method */
 void           gcal_manager_remove_event            (GcalManager        *manager,
-                                                     ESource            *source,
-                                                     ECalComponent      *component);
+                                                     GcalEvent          *event);
 
 /* Set methods */
 void           gcal_manager_move_event_to_source    (GcalManager        *manager,
-                                                     ECalComponent      *component,
-                                                     ESource            *source,
+                                                     GcalEvent          *event,
                                                      ESource            *dest);
 
 GList*         gcal_manager_get_events              (GcalManager        *manager,

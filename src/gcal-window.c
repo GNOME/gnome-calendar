@@ -708,9 +708,8 @@ show_new_event_widget (GcalView *view,
   g_debug ("[show_new_event] position (%f, %f)", x, y);
 
   /* Setup new event widget data */
-  prepare_new_event_widget (GCAL_WINDOW (user_data));
-
-  place_new_event_widget (GCAL_WINDOW (user_data), x, y);
+  prepare_new_event_widget (window);
+  place_new_event_widget (window, x, y);
 }
 
 static void
@@ -1071,8 +1070,9 @@ create_event (gpointer   user_data,
               GtkWidget *widget)
 {
   GcalWindow *window = GCAL_WINDOW (user_data);
-  ESource *source;
   ECalComponent *comp;
+  GcalEvent *event;
+  ESource *source;
 
   /* reset and hide */
   set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
@@ -1081,22 +1081,19 @@ create_event (gpointer   user_data,
   comp = build_component_from_details (gtk_entry_get_text (GTK_ENTRY (window->new_event_what_entry)),
                                        window->event_creation_data->start_date,
                                        window->event_creation_data->end_date);
+  event = gcal_event_new (source, comp);
+
   if (widget == window->new_event_details_button)
     {
-      GcalEvent *event;
-
-      event = gcal_event_new (source, comp);
-
       gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
       gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
-      g_object_unref (comp);
 
       gtk_dialog_run (GTK_DIALOG (window->edit_dialog));
     }
   else
     {
       /* create the event */
-      gcal_manager_create_event (window->manager, source, comp);
+      gcal_manager_create_event (window->manager, event);
     }
 
   g_clear_object (&source);
@@ -1161,26 +1158,17 @@ edit_dialog_closed (GtkDialog *dialog,
   switch (response)
     {
     case GCAL_RESPONSE_CREATE_EVENT:
-      gcal_manager_create_event (window->manager,
-                                 gcal_event_get_source (event),
-                                 g_object_ref (gcal_event_get_component (event)));
-
+      gcal_manager_create_event (window->manager, event);
       break;
 
     case GCAL_RESPONSE_SAVE_EVENT:
-      gcal_manager_update_event (window->manager,
-                                 gcal_event_get_source (event),
-                                 g_object_ref (gcal_event_get_component (event)));
-
+      gcal_manager_update_event (window->manager, event);
       break;
 
     case GCAL_RESPONSE_DELETE_EVENT:
       if (window->event_to_delete != NULL)
         {
-          gcal_manager_remove_event (window->manager,
-                                     gcal_event_get_source (window->event_to_delete),
-                                     gcal_event_get_component (window->event_to_delete));
-
+          gcal_manager_remove_event (window->manager, window->event_to_delete);
           g_clear_object (&window->event_to_delete);
 
           create_notification (GCAL_WINDOW (user_data), _("Another event deleted"), _("Undo"));
@@ -1250,10 +1238,7 @@ remove_event (GtkWidget  *notification,
 
   if (window->event_to_delete != NULL)
     {
-      gcal_manager_remove_event (window->manager,
-                                 gcal_event_get_source (window->event_to_delete),
-                                 gcal_event_get_component (window->event_to_delete));
-
+      gcal_manager_remove_event (window->manager, window->event_to_delete);
       g_clear_object (&window->event_to_delete);
     }
 }

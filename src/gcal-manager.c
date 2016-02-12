@@ -24,8 +24,7 @@
 
 typedef struct
 {
-  ESource       *source;
-  ECalComponent *component;
+  GcalEvent     *event;
   GcalManager   *manager;
 } AsyncOpsData;
 
@@ -251,7 +250,7 @@ submit_thread_job (EThreadJobFunc func,
 static void
 free_async_ops_data (AsyncOpsData *data)
 {
-  g_object_unref (data->component);
+  g_object_unref (data->event);
   g_free (data);
 }
 
@@ -500,16 +499,18 @@ on_event_removed (GObject      *source_object,
   GError *error;
 
   client = E_CAL_CLIENT (source_object);
-
   error = NULL;
-  if (!e_cal_client_remove_object_finish (client, result, &error))
+
+  e_cal_client_remove_object_finish (client, result, &error);
+
+  if (error)
     {
       /* FIXME: Notify the user somehow */
       g_warning ("Error removing event: %s", error->message);
       g_error_free (error);
     }
 
-  g_object_unref (E_CAL_COMPONENT (user_data));
+  g_object_unref (user_data);
 }
 
 void
@@ -1380,20 +1381,22 @@ gcal_manager_is_client_writable (GcalManager *manager,
 
 void
 gcal_manager_create_event (GcalManager        *manager,
-                           ESource            *source,
-                           ECalComponent      *component)
+                           GcalEvent          *event)
 {
   GcalManagerUnit *unit;
   icalcomponent *new_event_icalcomp;
+  ECalComponent *component;
   AsyncOpsData *data;
+  ESource *source;
 
+  source = gcal_event_get_source (event);
+  component = gcal_event_get_component (event);
   unit = g_hash_table_lookup (manager->clients, source);
 
   new_event_icalcomp = e_cal_component_get_icalcomponent (component);
 
   data = g_new0 (AsyncOpsData, 1);
-  data->source = source;
-  data->component = component;
+  data->event = g_object_ref (event);
   data->manager = manager;
 
   e_cal_client_create_object (unit->client,
@@ -1404,13 +1407,21 @@ gcal_manager_create_event (GcalManager        *manager,
 }
 
 void
-gcal_manager_update_event (GcalManager   *manager,
-                           ESource       *source,
-                           ECalComponent *component)
+gcal_manager_update_event (GcalManager *manager,
+                           GcalEvent   *event)
 {
   GcalManagerUnit *unit;
+  ECalComponent *component;
 
-  unit = (GcalManagerUnit*) g_hash_table_lookup (manager->clients, source);
+  unit = g_hash_table_lookup (manager->clients, gcal_event_get_source (event));
+  component = gcal_event_get_component (event);
+
+  /*
+   * While we're updating the event, we don't want the component
+   * to be destroyed, so take a reference of the component while
+   * we're performing the update on it.
+   */
+  g_object_ref (component);
 
   e_cal_client_modify_object (unit->client,
                               e_cal_component_get_icalcomponent (component),
@@ -1422,14 +1433,22 @@ gcal_manager_update_event (GcalManager   *manager,
 
 void
 gcal_manager_remove_event (GcalManager   *manager,
-                           ESource       *source,
-                           ECalComponent *component)
+                           GcalEvent     *event)
 {
   GcalManagerUnit *unit;
   ECalComponentId *id;
+  ECalComponent *component;
 
-  unit = g_hash_table_lookup (manager->clients, source);
+  component = gcal_event_get_component (event);
+  unit = g_hash_table_lookup (manager->clients, gcal_event_get_source (event));
   id = e_cal_component_get_id (component);
+
+  /*
+   * While we're removing the event, we don't want the component
+   * to be destroyed, so take a reference of the component while
+   * we're deleting it.
+   */
+  g_object_ref (component);
 
   e_cal_client_remove_object (unit->client,
                               id->uid,
@@ -1443,11 +1462,11 @@ gcal_manager_remove_event (GcalManager   *manager,
 }
 
 void
-gcal_manager_move_event_to_source (GcalManager   *manager,
-                                   ECalComponent *component,
-                                   ESource       *source,
-                                   ESource       *dest)
+gcal_manager_move_event_to_source (GcalManager *manager,
+                                   GcalEvent   *event,
+                                   ESource     *dest)
 {
+  ECalComponent *ecomponent;
   ECalComponent *clone;
   icalcomponent *comp;
   GcalManagerUnit *unit;
@@ -1461,7 +1480,8 @@ gcal_manager_move_event_to_source (GcalManager   *manager,
   /* First, try to create the component on the destination source */
   unit = g_hash_table_lookup (manager->clients, dest);
 
-  clone = e_cal_component_clone (component);
+  ecomponent = gcal_event_get_component (event);
+  clone = e_cal_component_clone (ecomponent);
   comp = e_cal_component_get_icalcomponent (clone);
 
   e_cal_client_create_object_sync (unit->client,
@@ -1482,9 +1502,9 @@ gcal_manager_move_event_to_source (GcalManager   *manager,
    * created, try to remove the old component. Data loss it the last
    * thing we want to happen here.
    */
-  unit = g_hash_table_lookup (manager->clients, source);
+  unit = g_hash_table_lookup (manager->clients, gcal_event_get_source (event));
 
-  id = e_cal_component_get_id (component);
+  id = e_cal_component_get_id (ecomponent);
 
   e_cal_client_remove_object_sync (unit->client,
                                    id->uid,
