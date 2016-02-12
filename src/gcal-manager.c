@@ -1506,7 +1506,7 @@ gcal_manager_move_event_to_source (GcalManager   *manager,
 /**
  * gcal_manager_get_events:
  *
- * Returns a list with {@link GcalEventData} objects owned by the caller, the list and the objects.
+ * Returns a list with {@link GcalEvent} objects owned by the caller, the list and the objects.
  * The components inside the list are owned by the caller as well. So, don't ref the component.
  *
  * Returns: An {@link GList} object

@@ -108,7 +108,7 @@ struct _GcalWindow
 
   NewEventData        *event_creation_data;
 
-  GcalEventData       *event_to_delete;
+  GcalEvent           *event_to_delete;
 
   /* calendar management */
   GtkWidget           *calendar_popover;
@@ -1146,13 +1146,10 @@ edit_dialog_closed (GtkDialog *dialog,
                     gpointer   user_data)
 {
   GcalWindow *window;
-
   GcalEditDialog *edit_dialog;
   GcalEvent *event;
   GcalView *view;
-
   GList *widgets;
-  const gchar *uuid;
 
   window = GCAL_WINDOW (user_data);
   edit_dialog = GCAL_EDIT_DIALOG (dialog);
@@ -1180,8 +1177,11 @@ edit_dialog_closed (GtkDialog *dialog,
     case GCAL_RESPONSE_DELETE_EVENT:
       if (window->event_to_delete != NULL)
         {
-          gcal_manager_remove_event (window->manager, window->event_to_delete->source, window->event_to_delete->event_component);
-          g_clear_pointer (&(window->event_to_delete), g_free);
+          gcal_manager_remove_event (window->manager,
+                                     gcal_event_get_source (window->event_to_delete),
+                                     gcal_event_get_component (window->event_to_delete));
+
+          g_clear_object (&window->event_to_delete);
 
           create_notification (GCAL_WINDOW (user_data), _("Another event deleted"), _("Undo"));
         }
@@ -1191,18 +1191,16 @@ edit_dialog_closed (GtkDialog *dialog,
         }
 
       gtk_revealer_set_reveal_child (GTK_REVEALER (window->notification), TRUE);
+
       if (window->notification_timeout != 0)
         g_source_remove (window->notification_timeout);
+
       window->notification_timeout = g_timeout_add_seconds (5, hide_notification_scheduled, user_data);
 
-      window->event_to_delete = g_new0 (GcalEventData, 1);
-      window->event_to_delete->source = gcal_event_get_source (event);
-      window->event_to_delete->event_component = gcal_event_get_component (event);
-
-      uuid = gcal_event_get_uid (event);
+      g_set_object (&window->event_to_delete, event);
 
       /* hide widget of the event */
-      widgets = gcal_view_get_children_by_uuid (view, uuid);
+      widgets = gcal_view_get_children_by_uuid (view, gcal_event_get_uid (event));
 
       g_list_foreach (widgets, (GFunc) gtk_widget_hide, NULL);
       g_list_free (widgets);
@@ -1253,10 +1251,10 @@ remove_event (GtkWidget  *notification,
   if (window->event_to_delete != NULL)
     {
       gcal_manager_remove_event (window->manager,
-                                 window->event_to_delete->source,
-                                 window->event_to_delete->event_component);
+                                 gcal_event_get_source (window->event_to_delete),
+                                 gcal_event_get_component (window->event_to_delete));
 
-      g_clear_pointer (&window->event_to_delete, g_free);
+      g_clear_object (&window->event_to_delete);
     }
 }
 
@@ -1265,22 +1263,22 @@ undo_remove_action (GtkButton *button,
                     gpointer   user_data)
 {
   GcalWindow *window;
-  gchar *uuid;
+  GList *widgets;
 
   window = GCAL_WINDOW (user_data);
+  widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (window->views[window->active_view]),
+                                            gcal_event_get_uid (window->event_to_delete));
 
-  if (window->event_to_delete != NULL)
-    {
-      GList *widgets;
-      uuid = get_uuid_from_component (window->event_to_delete->source, window->event_to_delete->event_component);
-      widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (window->views[window->active_view]), uuid);
-      g_list_foreach (widgets, (GFunc) gtk_widget_show, NULL);
+  /* Show the hidden to-be-deleted events */
+  g_list_foreach (widgets, (GFunc) gtk_widget_show, NULL);
 
-      g_object_unref (window->event_to_delete->event_component);
-      g_clear_pointer (&window->event_to_delete, g_free);
-      g_list_free (widgets);
-      g_free (uuid);
-    }
+  /* Clear the event to delete */
+  g_clear_object (&window->event_to_delete);
+
+  /* Hide the notification */
+  hide_notification (window, NULL);
+
+  g_list_free (widgets);
 }
 
 static gboolean

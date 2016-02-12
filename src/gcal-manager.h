@@ -32,12 +32,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalManager, gcal_manager, GCAL, MANAGER, GObject)
 
-typedef struct
-{
-  ESource       *source;
-  ECalComponent *event_component;
-} GcalEventData;
-
 GcalManager*   gcal_manager_new_with_settings       (GSettings          *settings);
 
 ESource*       gcal_manager_get_source              (GcalManager        *manager,
