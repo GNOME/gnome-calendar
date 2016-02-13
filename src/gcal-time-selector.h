@@ -33,13 +33,10 @@ GtkWidget*       gcal_time_selector_new          (void);
 void             gcal_time_selector_set_time_format (GcalTimeSelector *selector,
                                                      gboolean          format_24h);
 
-void             gcal_time_selector_set_time     (GcalTimeSelector *selector,
-                                                  gint              hours,
-                                                  gint              minutes);
+GDateTime*       gcal_time_selector_get_time     (GcalTimeSelector *selector);
 
-void             gcal_time_selector_get_time     (GcalTimeSelector *selector,
-                                                  gint             *hours,
-                                                  gint             *minutes);
+void             gcal_time_selector_set_time     (GcalTimeSelector *selector,
+                                                  GDateTime        *time);
 
 G_END_DECLS
 

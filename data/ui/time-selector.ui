@@ -14,13 +14,13 @@
     <property name="upper">23</property>
     <property name="step_increment">1</property>
     <property name="page_increment">5</property>
-    <signal name="value-changed" handler="time_changed" object="GcalTimeSelector" swapped="no"/>
+    <signal name="value-changed" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
   </object>
   <object class="GtkAdjustment" id="minute_adjustment">
     <property name="upper">59</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
-    <signal name="value-changed" handler="time_changed" object="GcalTimeSelector" swapped="no"/>
+    <signal name="value-changed" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
   </object>
   <object class="GtkPopover" id="time_selector_popover">
     <property name="position">bottom</property>
@@ -73,7 +73,7 @@
           <object class="GtkComboBoxText" id="period_combo">
             <property name="valign">center</property>
             <property name="active">0</property>
-            <signal name="changed" handler="period_changed" object="GcalTimeSelector" swapped="no"/>
+            <signal name="changed" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
             <items>
               <item translatable="yes">AM</item>
               <item translatable="yes">PM</item>

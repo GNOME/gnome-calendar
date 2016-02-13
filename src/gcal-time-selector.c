@@ -26,19 +26,25 @@ struct _GcalTimeSelector
 {
   GtkMenuButton parent;
 
+  GtkAdjustment *hour_adjustment;
+  GtkAdjustment *minute_adjustment;
+
   GtkWidget *time_label;
   GtkWidget *hour_spin;
   GtkWidget *minute_spin;
   GtkWidget *period_combo;
   GtkWidget *grid;
 
+  GDateTime *time;
+
   gboolean   format_24h;
 };
 
 enum
 {
-  MODIFIED,
-  NUM_SIGNALS
+  PROP_0,
+  PROP_TIME,
+  LAST_PROP
 };
 
 enum
@@ -47,71 +53,89 @@ enum
   PM
 };
 
-static guint signals[NUM_SIGNALS] = { 0, };
-
-static void     format_date_label                              (GcalTimeSelector     *selector);
-
-static gboolean on_output                                      (GtkSpinButton        *button,
-                                                                gpointer              user_data);
-
-static void     period_changed                                 (GtkComboBox          *combo,
-                                                                gpointer              user_data);
-
-static void     time_changed                                   (GtkAdjustment        *adjustment,
-                                                                gpointer              user_data);
-
 static void     gcal_time_selector_constructed                 (GObject              *object);
 
 G_DEFINE_TYPE (GcalTimeSelector, gcal_time_selector, GTK_TYPE_MENU_BUTTON);
 
 static void
-format_date_label (GcalTimeSelector *selector)
+update_label (GcalTimeSelector *selector)
 {
-  GtkAdjustment *hour_adj;
-  GtkAdjustment *minute_adj;
-  gchar *new_time;
-  gint hour, minute;
+  gchar *new_label;
 
-  hour_adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin));
-  minute_adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->minute_spin));
-
-  /* get current time */
-  hour = (gint) gtk_adjustment_get_value (hour_adj);
-  minute = (gint) gtk_adjustment_get_value (minute_adj);
-
-  /* format time according to the system 12h/24h setting */
   if (selector->format_24h)
     {
-      new_time = g_strdup_printf ("%.2d:%.2d", hour, minute);
+      new_label = g_date_time_format (selector->time, "%H:%M");
     }
   else
     {
-      gint period;
+      gchar *time_str;
+      gint hour, minute, period;
+
+      hour = (gint) gtk_adjustment_get_value (selector->hour_adjustment);
+      minute = (gint) gtk_adjustment_get_value (selector->minute_adjustment);
+
 
       period = gtk_combo_box_get_active (GTK_COMBO_BOX (selector->period_combo));
+      time_str = g_strdup_printf ("%.2d:%.2d", hour, minute);
 
-      /* FIXME: we shouldn't expose print formatting code to translators */
       if (period == AM)
-        new_time = g_strdup_printf (_("%.2d:%.2d AM"), hour, minute);
+        new_label = g_strdup_printf (_("%s AM"), time_str);
       else
-        new_time = g_strdup_printf (_("%.2d:%.2d PM"), hour, minute);
+        new_label = g_strdup_printf (_("%s PM"), time_str);
+
+      g_free (time_str);
     }
 
-  gtk_label_set_label (GTK_LABEL (selector->time_label), new_time);
+  gtk_label_set_label (GTK_LABEL (selector->time_label), new_label);
 
-  g_free (new_time);
+  g_clear_pointer (&new_label, g_free);
+}
+
+static void
+update_time (GcalTimeSelector *selector)
+{
+  GDateTime *now, *new_time;
+  gint hour, minute;
+
+  /* Retrieve current time */
+  hour = (gint) gtk_adjustment_get_value (selector->hour_adjustment);
+  minute = (gint) gtk_adjustment_get_value (selector->minute_adjustment);
+
+  if (!selector->format_24h && gtk_combo_box_get_active (GTK_COMBO_BOX (selector->period_combo)) == PM)
+    {
+      g_signal_handlers_block_by_func (selector->period_combo, update_time, selector);
+
+      gtk_combo_box_set_active (GTK_COMBO_BOX (selector->period_combo), hour > 12);
+      hour *= 2;
+
+      g_signal_handlers_unblock_by_func (selector->period_combo, update_time, selector);
+    }
+
+  now = g_date_time_new_now_local ();
+  new_time = g_date_time_new_local (g_date_time_get_year (now),
+                                    g_date_time_get_month (now),
+                                    g_date_time_get_day_of_month (now),
+                                    hour, minute, 0);
+
+  /* Set the new time */
+  gcal_time_selector_set_time (selector, new_time);
+
+  g_clear_pointer (&new_time, g_date_time_unref);
+  g_clear_pointer (&now, g_date_time_unref);
 }
 
 static gboolean
-on_output (GtkSpinButton *button,
-           gpointer       user_data)
+on_output (GtkWidget        *widget,
+           GcalTimeSelector *selector)
 {
+  GtkAdjustment *adjustment;
   gchar *text;
   gint value;
 
-  value = (gint) gtk_adjustment_get_value (gtk_spin_button_get_adjustment (button));
+  adjustment = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (widget));
+  value = (gint) gtk_adjustment_get_value (adjustment);
   text = g_strdup_printf ("%02d", value);
-  gtk_entry_set_text (GTK_ENTRY (button), text);
+  gtk_entry_set_text (GTK_ENTRY (widget), text);
 
   g_free (text);
 
@@ -119,18 +143,49 @@ on_output (GtkSpinButton *button,
 }
 
 static void
-period_changed (GtkComboBox *combo,
-                gpointer     user_data)
+gcal_time_selector_get_property (GObject    *object,
+                                 guint       prop_id,
+                                 GValue     *value,
+                                 GParamSpec *pspec)
 {
-  format_date_label (GCAL_TIME_SELECTOR (user_data));
+  GcalTimeSelector *self = (GcalTimeSelector*) object;
 
-  g_signal_emit (user_data, signals[MODIFIED], 0);
+  switch (prop_id)
+    {
+    case PROP_TIME:
+      g_value_set_boxed (value, self->time);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_time_selector_set_property (GObject      *object,
+                                 guint         prop_id,
+                                 const GValue *value,
+                                 GParamSpec   *pspec)
+{
+  GcalTimeSelector *self = (GcalTimeSelector*) object;
+
+  switch (prop_id)
+    {
+    case PROP_TIME:
+      gcal_time_selector_set_time (self, g_value_get_boxed (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
 }
 
 void
 gcal_time_selector_set_time_format (GcalTimeSelector *selector,
                                     gboolean          format_24h)
 {
+  g_return_if_fail (GCAL_IS_TIME_SELECTOR (selector));
+
   selector->format_24h = format_24h;
   gtk_widget_set_visible (selector->period_combo, !format_24h);
 
@@ -141,47 +196,48 @@ gcal_time_selector_set_time_format (GcalTimeSelector *selector,
 }
 
 static void
-time_changed (GtkAdjustment *adjustment,
-              gpointer       user_data)
-{
-  format_date_label (GCAL_TIME_SELECTOR (user_data));
-
-  g_signal_emit (user_data, signals[MODIFIED], 0);
-}
-
-static void
 gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
 {
   GObjectClass *object_class;
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_time_selector_constructed;
+  object_class->get_property = gcal_time_selector_get_property;
+  object_class->set_property = gcal_time_selector_set_property;
 
-  signals[MODIFIED] = g_signal_new ("modified",
-                                    GCAL_TYPE_TIME_SELECTOR,
-                                    G_SIGNAL_RUN_LAST,
-                                    0,
-                                    NULL, NULL,
-                                    g_cclosure_marshal_VOID__VOID,
-                                    G_TYPE_NONE,
-                                    0);
+  /**
+   * GcalTimeSelector::time:
+   *
+   * The current time of the selector.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_TIME,
+                                   g_param_spec_boxed ("time",
+                                                       "Time of the selector",
+                                                       "The current time of the selector",
+                                                       G_TYPE_DATE_TIME,
+                                                       G_PARAM_READWRITE));
 
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/time-selector.ui");
 
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, time_label);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, hour_adjustment);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, hour_spin);
+  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, minute_adjustment);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, minute_spin);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, period_combo);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, grid);
 
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), on_output);
-  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), period_changed);
-  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), time_changed);
+  gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), update_time);
 }
 
 static void
 gcal_time_selector_init (GcalTimeSelector *self)
 {
+  self->format_24h = TRUE;
+  self->time = g_date_time_new_now_local ();
+
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
@@ -205,70 +261,55 @@ gcal_time_selector_new (void)
 
 void
 gcal_time_selector_set_time (GcalTimeSelector *selector,
-                             gint              hours,
-                             gint              minutes)
+                             GDateTime        *time)
 {
-  GtkAdjustment *hour_adj;
-  GtkAdjustment *minute_adj;
-
   g_return_if_fail (GCAL_IS_TIME_SELECTOR (selector));
 
-  hour_adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin));
-  minute_adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->minute_spin));
-  g_warn_if_fail (hours < 24);
-  g_warn_if_fail (minutes < 60);
-
-  /* setup spin buttons according to the format */
-  if (selector->format_24h)
+  if (selector->time != time)
     {
-      gtk_adjustment_set_value (hour_adj, hours < 24 ? hours : 0);
+      gint hour, minute;
+
+      g_clear_pointer (&selector->time, g_date_time_unref);
+      selector->time = g_date_time_new_local (g_date_time_get_year (time),
+                                              g_date_time_get_month (time),
+                                              g_date_time_get_day_of_month (time),
+                                              g_date_time_get_hour (time),
+                                              g_date_time_get_minute (time),
+                                              0);
+
+      /* Update the spinners */
+      g_signal_handlers_block_by_func (selector->hour_adjustment, update_time, selector);
+      g_signal_handlers_block_by_func (selector->minute_adjustment, update_time, selector);
+
+      hour = g_date_time_get_hour (time);
+      minute = g_date_time_get_minute (time);
+
+      if (!selector->format_24h)
+        {
+          g_signal_handlers_block_by_func (selector->period_combo, update_time, selector);
+
+          gtk_combo_box_set_active (GTK_COMBO_BOX (selector->period_combo), hour >= 12);
+          hour =  hour % 12;
+
+          g_signal_handlers_unblock_by_func (selector->period_combo, update_time, selector);
+        }
+
+      gtk_adjustment_set_value (selector->hour_adjustment, hour);
+      gtk_adjustment_set_value (selector->minute_adjustment, minute);
+
+      update_label (selector);
+
+      g_signal_handlers_unblock_by_func (selector->hour_adjustment, update_time, selector);
+      g_signal_handlers_unblock_by_func (selector->minute_adjustment, update_time, selector);
+
+      g_object_notify (G_OBJECT (selector), "time");
     }
-  else
-    {
-      gint period;
-
-      period = hours < 12? AM : PM;
-      hours = hours % 12;
-
-      gtk_combo_box_set_active (GTK_COMBO_BOX (selector->period_combo), period);
-      gtk_adjustment_set_value (hour_adj, hours);
-    }
-
-  gtk_adjustment_set_value (minute_adj, minutes < 60 ? minutes : 0);
-
-  /* format time label accordingly */
-  format_date_label (selector);
 }
 
-void
-gcal_time_selector_get_time (GcalTimeSelector *selector,
-                             gint             *hours,
-                             gint             *minutes)
+GDateTime*
+gcal_time_selector_get_time (GcalTimeSelector *selector)
 {
-  GtkAdjustment *hour_adj;
-  GtkAdjustment *minute_adj;
+  g_return_val_if_fail (GCAL_IS_TIME_SELECTOR (selector), NULL);
 
-  g_return_if_fail (GCAL_IS_TIME_SELECTOR (selector));
-
-  hour_adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin));
-  minute_adj = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->minute_spin));
-
-  /* 24h, the easy one*/
-  if (selector->format_24h)
-    {
-      *hours = (gint) gtk_adjustment_get_value (hour_adj);
-    }
-
-  /* 12h format must calculate the time
-   * according to the AM/PM combo box */
-  else
-    {
-      gint am_pm;
-
-      am_pm = gtk_combo_box_get_active (GTK_COMBO_BOX (selector->period_combo));
-      *hours = (gint) gtk_adjustment_get_value (hour_adj) + 12 * am_pm;
-    }
-
-  /* minute field isn't dependant on 12h/24h format */
-  *minutes = (gint) gtk_adjustment_get_value (minute_adj);
+  return selector->time;
 }
