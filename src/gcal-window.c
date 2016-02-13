@@ -1506,6 +1506,12 @@ gcal_window_finalize (GObject *object)
 {
   GcalWindow *window = GCAL_WINDOW (object);
 
+  if (window->save_geometry_timeout_id > 0)
+    {
+      g_source_remove (window->save_geometry_timeout_id);
+      window->save_geometry_timeout_id = 0;
+    }
+
   g_clear_object (&window->manager);
   g_clear_object (&window->views_switcher);
 
