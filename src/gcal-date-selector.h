@@ -30,15 +30,10 @@ G_DECLARE_FINAL_TYPE (GcalDateSelector, gcal_date_selector, GCAL, DATE_SELECTOR,
 
 GtkWidget*       gcal_date_selector_new             (void);
 
-void             gcal_date_selector_set_date        (GcalDateSelector *selector,
-                                                     gint              day,
-                                                     gint              month,
-                                                     gint              year);
+GDateTime*       gcal_date_selector_get_date        (GcalDateSelector *selector);
 
-void             gcal_date_selector_get_date        (GcalDateSelector *selector,
-                                                     gint             *day,
-                                                     gint             *month,
-                                                     gint             *year);
+void             gcal_date_selector_set_date        (GcalDateSelector *selector,
+                                                     GDateTime        *date);
 
 G_END_DECLS
 

@@ -44,9 +44,7 @@ struct _GcalDateSelector
   GtkWidget   *entries[NUM_ENTRIES];
 
   /* date */
-  gint         day;
-  gint         month;
-  gint         year;
+  GDateTime   *date;
 
   /* misc */
   const gchar *mask;
@@ -59,11 +57,10 @@ struct _GcalDateSelector
 
 enum
 {
-  MODIFIED,
-  NUM_SIGNALS
+  PROP_0,
+  PROP_DATE,
+  LAST_PROP
 };
-
-static guint signals[NUM_SIGNALS] = { 0, };
 
 static void     calendar_day_selected                             (GtkCalendar          *calendar,
                                                                    GcalDateSelector     *selector);
@@ -91,9 +88,12 @@ static void
 calendar_day_selected (GtkCalendar      *calendar,
                        GcalDateSelector *selector)
 {
+  GDateTime *new_date;
   guint day, month, year;
 
   gtk_calendar_get_date (calendar, &year, &month, &day);
+
+  new_date = g_date_time_new_local (year, month + 1, day, 0, 0, 0);
 
   /**
    * Block signal handler to avoid an infinite
@@ -101,9 +101,11 @@ calendar_day_selected (GtkCalendar      *calendar,
    */
   g_signal_handlers_block_by_func (selector->calendar, calendar_day_selected, selector);
 
-  gcal_date_selector_set_date (selector, day, month + 1, year);
+  gcal_date_selector_set_date (selector, new_date);
 
   g_signal_handlers_unblock_by_func (selector->calendar, calendar_day_selected, selector);
+
+  g_clear_pointer (&new_date, g_date_time_unref);
 }
 
 static gboolean
@@ -125,18 +127,23 @@ entry_activated (GtkEntry *entry,
 static void
 parse_entries (GcalDateSelector *selector)
 {
+  GDateTime *new_date;
   gint day, month, year;
 
   day = atoi (gtk_entry_get_text (GTK_ENTRY (selector->entries[DAY])));
   month = atoi (gtk_entry_get_text (GTK_ENTRY (selector->entries[MONTH])));
   year = atoi (gtk_entry_get_text (GTK_ENTRY (selector->entries[YEAR])));
 
+  new_date = g_date_time_new_local (year, month, day, 0, 0, 0);
+
   /* select the date */
   g_signal_handlers_block_by_func (selector->calendar, calendar_day_selected, selector);
 
-  gcal_date_selector_set_date (selector, day, month, year);
+  gcal_date_selector_set_date (selector, new_date);
 
   g_signal_handlers_unblock_by_func (selector->calendar, calendar_day_selected, selector);
+
+  g_clear_pointer (&new_date, g_date_time_unref);
 }
 
 static void
@@ -188,19 +195,65 @@ text_inserted (GtkEditable *editable,
 }
 
 static void
+gcal_date_selector_get_property (GObject    *object,
+                                 guint       prop_id,
+                                 GValue     *value,
+                                 GParamSpec *pspec)
+{
+  GcalDateSelector *self = (GcalDateSelector*) object;
+
+  switch (prop_id)
+    {
+    case PROP_DATE:
+      g_value_set_boxed (value, self->date);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_date_selector_set_property (GObject      *object,
+                                 guint         prop_id,
+                                 const GValue *value,
+                                 GParamSpec   *pspec)
+{
+  GcalDateSelector *self = (GcalDateSelector*) object;
+
+  switch (prop_id)
+    {
+    case PROP_DATE:
+      gcal_date_selector_set_date (self, g_value_get_boxed (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
 gcal_date_selector_class_init (GcalDateSelectorClass *klass)
 {
   GObjectClass *object_class;
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_date_selector_constructed;
+  object_class->get_property = gcal_date_selector_get_property;
+  object_class->set_property = gcal_date_selector_set_property;
 
-  signals[MODIFIED] = g_signal_new ("modified",
-                                    GCAL_TYPE_DATE_SELECTOR,
-                                    G_SIGNAL_RUN_LAST,
-                                    0,
-                                    NULL, NULL, NULL,
-                                    G_TYPE_NONE, 0);
+  /**
+   * GcalDateSelector::date:
+   *
+   * The current date of the selector.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_DATE,
+                                   g_param_spec_boxed ("date",
+                                                       "Date of the selector",
+                                                       "The current date of the selector",
+                                                       G_TYPE_DATE_TIME,
+                                                       G_PARAM_READWRITE));
 
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/date-selector.ui");
 
@@ -217,15 +270,18 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
 static void
 gcal_date_selector_init (GcalDateSelector *self)
 {
+  GDateTime *now;
   gint i, d_index, max;
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
-  self->day = 1;
-  self->month = 1;
-  self->year = 1970;
+  now = g_date_time_new_now_local ();
+  self->date = g_date_time_new_local (g_date_time_get_year (now),
+                                      g_date_time_get_month (now),
+                                      g_date_time_get_day_of_month (now),
+                                      0, 0, 0);
 
   /* This string represents day/month/year order for each of the different
    * languages. It could possibly be default value, %m/%d/%y placing the month
@@ -281,9 +337,6 @@ gcal_date_selector_init (GcalDateSelector *self)
 
           /* year */
           case 'y':
-            self->year_pos = d_index++;
-            break;
-
           case 'Y':
             self->year_pos = d_index++;
             break;
@@ -344,99 +397,80 @@ gcal_date_selector_new (void)
 
 /**
  * gcal_date_selector_set_date:
- * @selector:
- * @day:  (nullable): The day number.
- * @month: (nullable): The month number starting with 1
- * @year: (nullable): The year number
+ * @selector: a #GcalDateSelector
+ * @date: a valid #GDateTime
  *
- * Set the value of the date shown
- **/
+ * Set the value of the shown date.
+ */
 void
 gcal_date_selector_set_date (GcalDateSelector *selector,
-                             gint              day,
-                             gint              month,
-                             gint              year)
+                             GDateTime        *date)
 {
-  GDateTime *dt;
-  gchar *label;
-
   g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
-  day = CLAMP (day, 1, 31);
-  month = CLAMP (month, 1, 12);
-  /* since we're dealing only with the date, the tz shouldn't be a problem */
-  dt = g_date_time_new_local (year, month, day, 0, 0, 0);
 
-  /**
-   * When it fails to be instances, it's
-   * because edit dialog is cleaning it's
-   * data. Thus, we should stop here.
-   */
-  if (dt == NULL)
-    return;
+  if (selector->date != date)
+    {
+      gchar *label;
 
-  selector->day = day;
-  selector->month = month;
-  selector->year = year;
+      g_clear_pointer (&selector->date, g_date_time_unref);
+      selector->date = g_date_time_new_local (g_date_time_get_year (date),
+                                              g_date_time_get_month (date),
+                                              g_date_time_get_day_of_month (date),
+                                              0, 0, 0);
 
-  month =  CLAMP (month - 1, 0, 11);
+      /* set calendar's date */
+      g_signal_handlers_block_by_func (selector->calendar, calendar_day_selected, selector);
 
-  /* set calendar's date */
-  g_signal_handlers_block_by_func (selector->calendar, calendar_day_selected, selector);
-  g_object_set (selector->calendar, "day", day, "month", month, "year", year, NULL);
-  g_signal_handlers_unblock_by_func (selector->calendar, calendar_day_selected, selector);
+      g_object_set (selector->calendar,
+                    "day", g_date_time_get_day_of_month (date),
+                    "month", g_date_time_get_month (date) - 1,
+                    "year", g_date_time_get_year (date),
+                    NULL);
 
-  /* rebuild the date label */
-  label = g_date_time_format (dt, selector->mask);
+      g_signal_handlers_unblock_by_func (selector->calendar, calendar_day_selected, selector);
 
-  gtk_label_set_label (GTK_LABEL (selector->date_label), label);
-  g_free (label);
+      /* rebuild the date label */
+      label = g_date_time_format (date, selector->mask);
 
-  /* set date entries' text */
-  /* day entry */
-  label = g_strdup_printf ("%.2d", day);
+      gtk_label_set_label (GTK_LABEL (selector->date_label), label);
+      g_free (label);
 
-  gtk_entry_set_text (GTK_ENTRY (selector->entries[DAY]), label);
-  g_free (label);
+      /* set date entries' text */
+      /* day entry */
+      label = g_date_time_format (date, "%d");
 
-  /* month entry */
-  label = g_strdup_printf ("%.2d", selector->month);
+      gtk_entry_set_text (GTK_ENTRY (selector->entries[DAY]), label);
+      g_free (label);
 
-  gtk_entry_set_text (GTK_ENTRY (selector->entries[MONTH]), label);
-  g_free (label);
+      /* month entry */
+      label = g_date_time_format (date, "%m");
 
-  /* year entry */
-  label = g_strdup_printf ("%.4d", year);
+      gtk_entry_set_text (GTK_ENTRY (selector->entries[MONTH]), label);
+      g_free (label);
 
-  gtk_entry_set_text (GTK_ENTRY (selector->entries[YEAR]), label);
+      /* year entry */
+      label = g_date_time_format (date, "%Y");
 
-  /* emit the MODIFIED signal */
-  g_signal_emit (selector, signals[MODIFIED], 0);
+      gtk_entry_set_text (GTK_ENTRY (selector->entries[YEAR]), label);
+      g_free (label);
 
-  g_free (label);
-  g_date_time_unref (dt);
+      /* emit the MODIFIED signal */
+      g_object_notify (G_OBJECT (selector), "date");
+    }
 }
 
 /**
  * gcal_date_selector_get_date:
- * @selector:
- * @day:  (nullable): An out argument to hold the day number
- * @month: (nullable): An out argument to hold the month number starting with 1
- * @year: (nullable): An out argument to hold the year number
+ * @selector: a #GcalDateSelector
  *
  * Get the value of the date shown
- **/
-void
-gcal_date_selector_get_date (GcalDateSelector *selector,
-                             gint             *day,
-                             gint             *month,
-                             gint             *year)
+ *
+ * Returns: (transfer none): the date of the selector.
+ */
+GDateTime*
+gcal_date_selector_get_date (GcalDateSelector *selector)
 {
-  g_return_if_fail (GCAL_IS_DATE_SELECTOR (selector));
+  g_return_val_if_fail (GCAL_IS_DATE_SELECTOR (selector), NULL);
 
-  if (day != NULL)
-    *day = selector->day;
-  if (month != NULL)
-    *month = selector->month;
-  if (year != NULL)
-    *year = selector->year;
+  return selector->date;
 }

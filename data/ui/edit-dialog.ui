@@ -229,7 +229,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                    <signal name="modified" handler="update_date" object="GcalEditDialog" swapped="no"/>
+                    <signal name="notify::date" handler="update_date" object="GcalEditDialog" swapped="yes"/>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -265,7 +265,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                    <signal name="modified" handler="update_date" object="GcalEditDialog" swapped="no"/>
+                    <signal name="notify::date" handler="update_date" object="GcalEditDialog" swapped="yes"/>
                   </object>
                   <packing>
                     <property name="position">1</property>

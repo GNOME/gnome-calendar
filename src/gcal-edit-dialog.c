@@ -74,8 +74,7 @@ static void        on_calendar_selected                   (GtkWidget         *me
                                                            GVariant          *value,
                                                            gpointer           user_data);
 
-static void        update_date                            (GtkEntry          *entry,
-                                                           gpointer           user_data);
+static void        update_date                            (GcalEditDialog    *dialog);
 
 static void        update_location                        (GtkEntry          *entry,
                                                            GParamSpec        *pspec,
@@ -217,20 +216,16 @@ on_calendar_selected (GtkWidget *menu_item,
 }
 
 static void
-update_date (GtkEntry   *entry,
-             gpointer    user_data)
+update_date (GcalEditDialog *dialog)
 {
-  GcalEditDialog *dialog;
   GDateTime *start_date;
   GDateTime *end_date;
-
-  dialog = GCAL_EDIT_DIALOG (user_data);
 
   if (dialog->setting_event)
     return;
 
-  start_date = gcal_edit_dialog_get_date_start (GCAL_EDIT_DIALOG (user_data));
-  end_date = gcal_edit_dialog_get_date_end (GCAL_EDIT_DIALOG (user_data));
+  start_date = gcal_edit_dialog_get_date_start (dialog);
+  end_date = gcal_edit_dialog_get_date_end (dialog);
 
   /* update component */
   gcal_event_set_date_start (dialog->event, start_date);
@@ -553,9 +548,7 @@ gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
                                      dialog);
 
   /* date and time */
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->start_date_selector), 0, 0, 0);
   gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->start_time_selector), 0, 0);
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->end_date_selector), 0, 0, 0);
   gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->end_time_selector), 0, 0);
 
   /* location */
@@ -707,18 +700,11 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       date_start = gcal_event_get_date_start (event);
       date_end = gcal_event_get_date_end (event);
 
-      /* start date */
-      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->start_date_selector),
-                                   g_date_time_get_day_of_month (date_start),
-                                   g_date_time_get_month (date_start),
-                                   g_date_time_get_year (date_start));
+      /* date */
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->start_date_selector), date_start);
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->end_date_selector), date_end);
 
-      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->end_date_selector),
-                                   g_date_time_get_day_of_month (date_end),
-                                   g_date_time_get_month (date_end),
-                                   g_date_time_get_year (date_end));
-
-      /* start time */
+      /* time */
       if (!gcal_event_get_all_day (event))
         {
           gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->start_time_selector),
@@ -764,20 +750,20 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
 GDateTime*
 gcal_edit_dialog_get_date_start (GcalEditDialog *dialog)
 {
-  GDateTime *date;
-  gint year, month, day;
+  GDateTime *date, *aux;
   gint hour, minute;
-
-  gcal_date_selector_get_date (GCAL_DATE_SELECTOR (dialog->start_date_selector),
-                               &day,
-                               &month,
-                               &year);
 
   gcal_time_selector_get_time (GCAL_TIME_SELECTOR (dialog->start_time_selector),
                                &hour,
                                &minute);
 
-  date = g_date_time_new_local (year, month, day, hour, minute, 0);
+  aux = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (dialog->start_date_selector));
+
+  date = g_date_time_new (gcal_event_get_timezone (dialog->event),
+                          g_date_time_get_year (aux),
+                          g_date_time_get_month (aux),
+                          g_date_time_get_day_of_month (aux),
+                          hour, minute, 0);
 
   return date;
 }
@@ -785,20 +771,20 @@ gcal_edit_dialog_get_date_start (GcalEditDialog *dialog)
 GDateTime*
 gcal_edit_dialog_get_date_end (GcalEditDialog *dialog)
 {
-  GDateTime *date;
-  gint year, month, day;
+  GDateTime *date, *aux;
   gint hour, minute;
-
-  gcal_date_selector_get_date (GCAL_DATE_SELECTOR (dialog->end_date_selector),
-                               &day,
-                               &month,
-                               &year);
 
   gcal_time_selector_get_time (GCAL_TIME_SELECTOR (dialog->end_time_selector),
                                &hour,
                                &minute);
 
-  date = g_date_time_new_local (year, month, day, hour, minute, 0);
+  aux = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (dialog->end_date_selector));
+
+  date = g_date_time_new (gcal_event_get_timezone (dialog->event),
+                          g_date_time_get_year (aux),
+                          g_date_time_get_month (aux),
+                          g_date_time_get_day_of_month (aux),
+                          hour, minute, 0);
 
   return date;
 }
