@@ -74,20 +74,13 @@ static void        on_calendar_selected                   (GtkWidget         *me
                                                            GVariant          *value,
                                                            gpointer           user_data);
 
-static void        update_date                            (GcalEditDialog    *dialog);
-
 static void        update_location                        (GtkEntry          *entry,
                                                            GParamSpec        *pspec,
-                                                           gpointer           user_data);
-
-static void        update_notes                           (GtkTextBuffer     *buffer,
                                                            gpointer           user_data);
 
 static void        update_summary                         (GtkEntry          *entry,
                                                            GParamSpec        *pspec,
                                                            gpointer           user_data);
-
-static void        update_time                            (GcalEditDialog    *dialog);
 
 static void        gcal_edit_dialog_constructed           (GObject           *object);
 
@@ -215,27 +208,6 @@ on_calendar_selected (GtkWidget *menu_item,
 }
 
 static void
-update_date (GcalEditDialog *dialog)
-{
-  GDateTime *start_date;
-  GDateTime *end_date;
-
-  if (dialog->setting_event)
-    return;
-
-  start_date = gcal_edit_dialog_get_date_start (dialog);
-  end_date = gcal_edit_dialog_get_date_end (dialog);
-
-  /* update component */
-  gcal_event_set_date_start (dialog->event, start_date);
-  gcal_event_set_date_end (dialog->event, end_date);
-
-  g_clear_pointer (&start_date, g_date_time_unref);
-  g_clear_pointer (&end_date, g_date_time_unref);
-}
-
-
-static void
 update_location (GtkEntry   *entry,
                  GParamSpec *pspec,
                  gpointer    user_data)
@@ -248,24 +220,6 @@ update_location (GtkEntry   *entry,
 }
 
 static void
-update_notes (GtkTextBuffer *buffer,
-              gpointer       user_data)
-{
-  GcalEditDialog *dialog;
-  gchar *note_text;
-
-  dialog = GCAL_EDIT_DIALOG (user_data);
-
-  g_object_get (G_OBJECT (buffer),
-                "text", &note_text,
-                NULL);
-
-  gcal_event_set_description (dialog->event, note_text);
-
-  g_free (note_text);
-}
-
-static void
 update_summary (GtkEntry   *entry,
                 GParamSpec *pspec,
                 gpointer    user_data)
@@ -274,31 +228,7 @@ update_summary (GtkEntry   *entry,
 
   dialog = GCAL_EDIT_DIALOG (user_data);
 
-  gcal_event_set_summary (dialog->event, gtk_entry_get_text (entry));
-}
-
-static void
-update_time (GcalEditDialog *dialog)
-{
-  GDateTime *start_date;
-  GDateTime *end_date;
-
-  if (dialog->setting_event)
-    return;
-
-  start_date = gcal_edit_dialog_get_date_start (dialog);
-  end_date = gcal_edit_dialog_get_date_end (dialog);
-
-  // g_debug ("Updating date: %s -> %s",
-  //          icaltime_as_ical_string (*start_date),
-  //          icaltime_as_ical_string (*end_date));
-
-  /* update component */
-  gcal_event_set_date_start (dialog->event, start_date);
-  gcal_event_set_date_end (dialog->event, end_date);
-
-  g_clear_pointer (&start_date, g_date_time_unref);
-  g_clear_pointer (&end_date, g_date_time_unref);
+  gtk_widget_set_sensitive (dialog->done_button, gtk_entry_get_text_length (entry) > 0);
 }
 
 static void
@@ -434,8 +364,6 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_all_day_changed);
   gtk_widget_class_bind_template_callback (widget_class, update_summary);
   gtk_widget_class_bind_template_callback (widget_class, update_location);
-  gtk_widget_class_bind_template_callback (widget_class, update_date);
-  gtk_widget_class_bind_template_callback (widget_class, update_time);
 }
 
 static void
@@ -473,21 +401,6 @@ gcal_edit_dialog_constructed (GObject* object)
                     G_CALLBACK (on_calendar_selected), object);
 
   g_action_map_add_action (G_ACTION_MAP (dialog->action_group), G_ACTION (dialog->action));
-
-  /* action area, buttons */
-  g_object_set_data (G_OBJECT (dialog->cancel_button),
-                     "response",
-                     GINT_TO_POINTER (GTK_RESPONSE_CANCEL));
-  g_object_set_data (G_OBJECT (dialog->delete_button),
-                     "response",
-                     GINT_TO_POINTER (GCAL_RESPONSE_DELETE_EVENT));
-  g_object_set_data (G_OBJECT (dialog->done_button),
-                     "response",
-                     GINT_TO_POINTER (GCAL_RESPONSE_SAVE_EVENT));
-
-  g_signal_connect (gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text)), "changed", G_CALLBACK (update_notes),
-                    object);
-
 }
 
 static void
@@ -541,16 +454,10 @@ gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
                                      dialog);
 
   /* notes */
-  g_signal_handlers_block_by_func (gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text)),
-                                   update_notes,
-                                   dialog);
   gtk_text_buffer_set_text (
       gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text)),
       "",
       -1);
-  g_signal_handlers_unblock_by_func (gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text)),
-                                     update_notes,
-                                     dialog);
 }
 
 static void
@@ -558,20 +465,52 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
                                         gpointer   user_data)
 {
   GcalEditDialog *dialog;
-  gint response;
 
   dialog = GCAL_EDIT_DIALOG (user_data);
 
-  response = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget),
-                                                  "response"));
-
-  if (response == GCAL_RESPONSE_SAVE_EVENT &&
-      dialog->event_is_new)
+  if (widget == dialog->cancel_button)
     {
-      response = GCAL_RESPONSE_CREATE_EVENT;
+      gtk_dialog_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
     }
+  else if (widget == dialog->delete_button)
+    {
+      gtk_dialog_response (GTK_DIALOG (dialog), GCAL_RESPONSE_DELETE_EVENT);
+    }
+  else
+    {
+      GDateTime *start_date;
+      GDateTime *end_date;
+      gchar *note_text;
 
-  gtk_dialog_response (GTK_DIALOG (user_data), response);
+      /* Update summary */
+      gcal_event_set_summary (dialog->event, gtk_entry_get_text (GTK_ENTRY (dialog->summary_entry)));
+
+      /* Update description */
+      g_object_get (G_OBJECT (gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text))),
+                    "text", &note_text,
+                    NULL);
+
+      gcal_event_set_description (dialog->event, note_text);
+      g_free (note_text);
+
+      /* Update all day */
+      gcal_event_set_all_day (dialog->event,
+                              gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check)));
+
+      /* Update start & end dates */
+      start_date = gcal_edit_dialog_get_date_start (dialog);
+      end_date = gcal_edit_dialog_get_date_end (dialog);
+
+      gcal_event_set_date_start (dialog->event, start_date);
+      gcal_event_set_date_end (dialog->event, end_date);
+
+      g_clear_pointer (&start_date, g_date_time_unref);
+      g_clear_pointer (&end_date, g_date_time_unref);
+
+      /* Send the response */
+      gtk_dialog_response (GTK_DIALOG (dialog),
+                           dialog->event_is_new ? GCAL_RESPONSE_CREATE_EVENT : GCAL_RESPONSE_SAVE_EVENT);
+    }
 
   gcal_edit_dialog_set_event (dialog, NULL);
 }
@@ -586,8 +525,8 @@ gcal_edit_dialog_all_day_changed (GtkWidget *widget,
   dialog = GCAL_EDIT_DIALOG (user_data);
   active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
 
-  gtk_widget_set_sensitive (dialog->start_time_selector, active);
-  gtk_widget_set_sensitive (dialog->end_time_selector, active);
+  gtk_widget_set_sensitive (dialog->start_time_selector, !active);
+  gtk_widget_set_sensitive (dialog->end_time_selector, !active);
 }
 
 /* Public API */
@@ -640,6 +579,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       GdkPixbuf *pix;
       ESource *source;
       const gchar *summary;
+      gboolean all_day;
 
       dialog->setting_event = TRUE;
 
@@ -688,7 +628,11 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->end_time_selector), date_end);
 
       /* all_day  */
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->all_day_check), gcal_event_get_all_day (event));
+      all_day = gcal_event_get_all_day (event);
+
+      gtk_widget_set_sensitive (dialog->start_time_selector, !all_day);
+      gtk_widget_set_sensitive (dialog->end_time_selector, !all_day);
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->all_day_check), all_day);
 
       /* location */
       gtk_entry_set_text (GTK_ENTRY (dialog->location_entry), gcal_event_get_location (event));
