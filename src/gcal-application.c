@@ -170,15 +170,6 @@ process_sources (GcalApplication *application)
 }
 
 static void
-sources_added_cb (GcalApplication *application,
-                  ESource         *source,
-                  gboolean         enabled,
-                  GcalManager     *manager)
-{
-  process_sources (application);
-}
-
-static void
 gcal_application_class_init (GcalApplicationClass *klass)
 {
   GObjectClass *object_class;
@@ -203,7 +194,8 @@ gcal_application_init (GcalApplication *self)
   self->colors_provider = gtk_css_provider_new ();
 
   self->manager = gcal_manager_new_with_settings (self->settings);
-  g_signal_connect_swapped (self->manager, "source-added", G_CALLBACK (sources_added_cb), self);
+  g_signal_connect_swapped (self->manager, "source-added", G_CALLBACK (process_sources), self);
+  g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (process_sources), self);
 
   self->search_provider = gcal_shell_search_provider_new ();
   gcal_shell_search_provider_connect (self->search_provider, self->manager);

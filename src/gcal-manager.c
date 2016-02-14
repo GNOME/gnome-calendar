@@ -103,6 +103,7 @@ enum
 {
   SOURCE_ACTIVATED,
   SOURCE_ADDED,
+  SOURCE_CHANGED,
   SOURCE_REMOVED,
   SOURCE_ENABLED,
   LOAD_COMPLETED,
@@ -116,6 +117,9 @@ static guint signals[NUM_SIGNALS] = { 0, };
 static void     free_async_ops_data                       (AsyncOpsData    *data);
 
 static void     free_unit_data                            (GcalManagerUnit *data);
+
+static void     source_changed                            (GcalManager     *manager,
+                                                           ESource         *source);
 
 static void     load_source                               (GcalManager     *manager,
                                                            ESource         *source);
@@ -278,6 +282,17 @@ gather_events (ECalDataModel         *data_model,
   *result = g_list_append (*result, event);/* FIXME: add me sorted */
 
   return TRUE;
+}
+
+static void
+source_changed (GcalManager *manager,
+                ESource     *source)
+{
+  if (g_hash_table_lookup (manager->clients, source) != NULL &&
+      e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR))
+    {
+      g_signal_emit (manager, signals[SOURCE_CHANGED], 0, source);
+    }
 }
 
 /**
@@ -707,6 +722,11 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                         NULL, NULL, NULL,
                                         G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_BOOLEAN);
 
+  signals[SOURCE_CHANGED] = g_signal_new ("source-changed", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
+                                          0,
+                                          NULL, NULL, NULL,
+                                          G_TYPE_NONE, 1, E_TYPE_SOURCE);
+
   signals[SOURCE_REMOVED] = g_signal_new ("source-removed", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
                                           0,
                                           NULL, NULL, NULL,
@@ -850,6 +870,7 @@ gcal_manager_constructed (GObject *object)
 
   g_signal_connect_swapped (manager->source_registry, "source-added", G_CALLBACK (load_source), object);
   g_signal_connect_swapped (manager->source_registry, "source-removed", G_CALLBACK (remove_source), object);
+  g_signal_connect_swapped (manager->source_registry, "source-changed", G_CALLBACK (source_changed), object);
 
   /* create data model */
   manager->e_data_model = e_cal_data_model_new (submit_thread_job);
