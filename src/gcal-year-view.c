@@ -119,6 +119,13 @@ G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 gcal_data_model_subscriber_interface_init));
 
+static gint
+compare_events (GcalEventWidget *widget1,
+                GcalEventWidget *widget2)
+{
+  return gcal_event_compare (gcal_event_widget_get_event (widget1), gcal_event_widget_get_event (widget2));
+}
+
 static guint
 get_last_week_of_year_dmy (gint       first_weekday,
                            GDateDay   day,
@@ -268,7 +275,6 @@ add_event_to_day_array (GcalYearView  *year_view,
   GTimeZone *tz;
 
   gint i;
-  gboolean child_widget_used = FALSE;
 
   child_widget = gcal_event_widget_new (event);
   gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (child_widget),
@@ -285,46 +291,66 @@ add_event_to_day_array (GcalYearView  *year_view,
                                  g_date_time_get_day_of_month (date) + 1,
                                  0, 0, 0);
 
-  gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (child_widget), date);
-  gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (child_widget), second_date);
-
   /* marking and cloning */
   for (i = 0; i < days_span; i++)
     {
-      GDateTime *aux;
       GtkWidget *cloned_child;
-      gint start_comparison, end_comparison;
+      GDateTime *aux;
+      gint start_comparison;
 
       cloned_child = child_widget;
       start_comparison = datetime_compare_date (dt_start, date);
 
-      if (start_comparison <= 0)
+      if (start_comparison > 0)
         {
-          if (child_widget_used)
-            {
-              cloned_child = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
-              gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (cloned_child), date);
-              gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (cloned_child), second_date);
-            }
-          else
-            {
-              child_widget_used = TRUE;
-            }
+          /*
+           * The start date of the event is ahead of the current
+           * date being comparent, so we don't add it now.
+           */
+          cloned_child = NULL;
+        }
+      else if (start_comparison == 0)
+        {
+          /*
+           * This is the first day the event happens, so we just use
+           * the previously created event widget.
+           */
+          cloned_child = child_widget;
         }
       else
         {
-          cloned_child = NULL;
+          /*
+           * We're in the middle of the event and the dates are between
+           * the event start date > current date > event end date, so
+           * we keep cloning the event widget until we reach the end of
+           * the event.
+           */
+          cloned_child = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
         }
 
       if (cloned_child != NULL)
         {
+          gint end_comparison;
+
+          /*
+           * Setup the event widget's custom dates, so the slanted edges are
+           * applied properly
+           */
+          gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (cloned_child), date);
+          gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (cloned_child), second_date);
+
           days_widgets_array[i] = g_list_insert_sorted (days_widgets_array[i],
                                                         cloned_child,
-                                                        (GCompareFunc) gcal_event_widget_compare_for_single_day);
+                                                        (GCompareFunc) compare_events);
 
-          end_comparison = g_date_time_compare (second_date, dt_end);
+          end_comparison = datetime_compare_date (second_date, dt_end);
 
-          if (end_comparison == 0)
+          /*
+           * If the end date surpassed the event's end date, we reached the
+           * end of the event's time span and shall stop adding the event to
+           * the list.
+           */
+          if (end_comparison >= 0)
             break;
         }
 
@@ -337,6 +363,9 @@ add_event_to_day_array (GcalYearView  *year_view,
       second_date = g_date_time_add_days (second_date, 1);
       g_clear_pointer (&aux, g_date_time_unref);
     }
+
+  g_clear_pointer (&second_date, g_date_time_unref);
+  g_clear_pointer (&date, g_date_time_unref);
 }
 
 static void
@@ -497,7 +526,7 @@ sidebar_sort_func (GtkListBoxRow *row1,
 
   result = row1_shift - row2_shift;
   if (result == 0)
-    return gcal_event_widget_compare_for_single_day (GCAL_EVENT_WIDGET (row1_child), GCAL_EVENT_WIDGET (row2_child));
+    return compare_events (GCAL_EVENT_WIDGET (row1_child), GCAL_EVENT_WIDGET (row2_child));
 
   return result;
 }
