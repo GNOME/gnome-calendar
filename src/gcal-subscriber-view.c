@@ -239,7 +239,7 @@ gcal_subscriber_view_remove (GtkContainer *container,
       master_widget = (GtkWidget*) l->data;
       if (widget == master_widget)
         {
-          if (gcal_subscriber_view_is_child_multicell (GCAL_SUBSCRIBER_VIEW (container), GCAL_EVENT_WIDGET (widget)))
+          if (g_list_find (priv->multi_cell_children, widget) != NULL)
             {
               priv->multi_cell_children = g_list_remove (priv->multi_cell_children, widget);
 

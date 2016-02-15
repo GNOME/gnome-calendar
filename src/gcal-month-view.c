@@ -275,7 +275,6 @@ show_popover_for_position (GcalMonthView *view,
       end_date = gcal_dup_icaltime (priv->date);
       end_date->day = end_day;
       end_date->is_date = 1;
-
       if (start_date->day > end_date->day)
         {
           gint day = start_date->day;
@@ -1027,6 +1026,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   context = gtk_widget_get_style_context (widget);
   ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
 
+  /* No need to relayout stuff if nothing changed */
   if (!ppriv->children_changed &&
       allocation->height == gtk_widget_get_allocated_height (widget) &&
       allocation->width == gtk_widget_get_allocated_width (widget))
@@ -1045,12 +1045,17 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   /* clean overflow information */
   g_hash_table_remove_all (ppriv->overflow_cells);
 
+  /* Allocate the widget */
   gtk_widget_set_allocation (widget, allocation);
+
   if (gtk_widget_get_realized (widget))
     gdk_window_move_resize (priv->event_window, allocation->x, allocation->y, allocation->width, allocation->height);
 
-  gtk_style_context_get (context, gtk_style_context_get_state (context),
-                         "font", &font_desc, "padding-bottom", &padding_bottom, NULL);
+  gtk_style_context_get (context,
+                         gtk_style_context_get_state (context),
+                         "font", &font_desc,
+                         "padding-bottom", &padding_bottom,
+                         NULL);
 
   layout = gtk_widget_create_pango_layout (widget, _("Other events"));
   pango_layout_set_font_description (layout, font_desc);
@@ -1070,11 +1075,15 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   first_row_gap = (6 - shown_rows) * 0.5;
   sw = 1 - 2 * priv->k;
 
-  /* allocate multidays events */
+  /*
+   * Allocate multidays events before single day events, as they have a
+   * higher priority. Multiday events have a master event, and clones
+   * to represent the multiple sections of the event.
+   */
   for (l = ppriv->multi_cell_children; l != NULL; l = g_list_next (l))
     {
       gint first_cell, last_cell, first_row, last_row, start, end;
-      gboolean visible, start_before = TRUE, end_after = TRUE;
+      gboolean visible;
 
       GDateTime *date;
       GcalEvent *event;
@@ -1090,55 +1099,63 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       gtk_widget_show (child_widget);
       gtk_widget_get_preferred_height (child_widget, NULL, &natural_height);
 
+      /*
+       * If the month of the event's start date is equal to the month
+       * we're visualizing, the first cell is the event's day of the
+       * month. Otherwise, the first cell is the 1st day of the month.
+       */
       j = 1;
-      date = gcal_event_widget_get_date_start (GCAL_EVENT_WIDGET (child_widget));
+      date = gcal_event_widget_get_date_start (l->data);
+
+      if (g_date_time_get_month (date) == priv->date->month)
+        j = g_date_time_get_day_of_month (date);
+
+      j += priv->days_delay;
+
+      /*
+       * Calculate the first cell position according to the locale
+       * and the start date.
+       */
+      first_cell = 7 * ((j - 1) / 7)+ 6 * priv->k + sw * ((j - 1) % 7);
+
+      /*
+       * The logic for the end date is the same, except that we have to check
+       * if the event is all day or not.
+       */
+      j = icaltime_days_in_month (priv->date->month, priv->date->year);
+      date = gcal_event_widget_get_date_end (GCAL_EVENT_WIDGET (child_widget));
+
       if (g_date_time_get_month (date) == priv->date->month)
         {
           j = g_date_time_get_day_of_month (date);
-          start_before = FALSE;
-        }
-      j += priv->days_delay;
-      first_cell = 7 * ((j - 1) / 7)+ 6 * priv->k + sw * ((j - 1) % 7);
 
-      j = icaltime_days_in_month (priv->date->month, priv->date->year);
-      date = gcal_event_widget_get_date_end (GCAL_EVENT_WIDGET (child_widget));
-      if (gcal_event_get_all_day (event))
-        {
-          if (g_date_time_get_month (date) == priv->date->month)
-            {
-              j = g_date_time_get_day_of_month (date) - 1;
-              end_after = FALSE;
-            }
-        }
-      else
-        {
-          if (g_date_time_get_month (date) == priv->date->month)
-            {
-              j = g_date_time_get_day_of_month (date);
-              end_after = FALSE;
-            }
+          /* If the event is all day, we have to subtract 1 to find the the real date */
+          if (gcal_event_get_all_day (event))
+            j--;
         }
       j += priv->days_delay;
+
       last_cell = 7 * ((j - 1) / 7)+ 6 * priv->k + sw * ((j - 1) % 7);
 
+      /*
+       * Now that we found the start & end dates, we have to find out
+       * whether the event is visible or not.
+       */
       first_row = first_cell / 7;
       last_row = last_cell / 7;
       visible = TRUE;
       cells = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
       lengths = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
+
       for (i = first_row; i <= last_row && visible; i++)
         {
           start = i * 7 + priv->k * 6;
           end = i * 7 + (1 - priv->k) * 6;
 
           if (i == first_row)
-            {
-              start = first_cell;
-            }
+            start = first_cell;
           if (i == last_row)
-            {
-              end = last_cell;
-            }
+            end = last_cell;
 
           visible = get_widget_parts (start, end, natural_height, vertical_cell_space, size_left, cells, lengths);
         }
@@ -1147,9 +1164,12 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
         {
           for (i = 0; i < cells->len; i++)
             {
+              GDateTime *dt_start, *dt_end;
               gint cell_idx = g_array_index (cells, gint, i);
+              gint length = g_array_index (lengths, gint, i);
               gint row = cell_idx / 7;
               gint column = cell_idx % 7;
+              gint day = cell_idx - priv->days_delay + 1;
 
               if (i != 0)
                 {
@@ -1158,29 +1178,31 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                   _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (widget), child_widget);
                   gtk_widget_show (child_widget);
 
-                  if (i != cells->len - 1 || end_after)
-                    gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted");
-                  else
-                    gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted-start");
-
                   aux = g_hash_table_lookup (ppriv->children, uuid);
                   aux = g_list_append (aux, child_widget);
                 }
-              else if (i == 0 && cells->len == 1)
-                {
-                  if (start_before)
-                    gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted-start");
-                  if (end_after)
-                    gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted-end");
-                }
-              else if (i != cells->len - 1)
-                {
-                  if (start_before)
-                    gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted");
-                  else
-                    gtk_style_context_add_class (gtk_widget_get_style_context (child_widget), "slanted-end");
-                }
 
+              /* XXX: silence Gtk+ complaining about preferred size */
+              gtk_widget_get_preferred_height (child_widget, NULL, &natural_height);
+
+              /*
+               * Setup the widget's start date as the first day of the row,
+               * and the widget's end date as the last day of the row. We don't
+               * have to worry about the dates, since GcalEventWidget performs
+               * some checks and only applies the dates when it's valid.
+               */
+              dt_start = g_date_time_new (gcal_event_get_timezone (event),
+                                          priv->date->year,
+                                          priv->date->month,
+                                          day,
+                                          0, 0, 0);
+
+              dt_end = g_date_time_add_days (dt_start, length);
+
+              gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (child_widget), dt_start);
+              gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (child_widget), dt_end);
+
+              /* Position and allocate the child widget */
               gtk_style_context_get_margin (gtk_widget_get_style_context (child_widget),
                                             gtk_style_context_get_state (context),
                                             &margin);
@@ -1190,15 +1212,18 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
               child_allocation.x = pos_x;
               child_allocation.y = pos_y + vertical_cell_space - size_left[cell_idx];
-              child_allocation.width = cell_width * g_array_index (lengths, gint, i) - (margin.left + margin.right);
+              child_allocation.width = cell_width * length - (margin.left + margin.right);
               child_allocation.height = natural_height;
 
               gtk_widget_size_allocate (child_widget, &child_allocation);
               g_hash_table_remove (ppriv->hidden_as_overflow, uuid);
 
               /* update size_left */
-              for (j = 0; j < g_array_index (lengths, gint, i); j++)
+              for (j = 0; j < length; j++)
                 size_left[cell_idx + j] -= natural_height + margin.top + margin.bottom;
+
+              g_clear_pointer (&dt_start, g_date_time_unref);
+              g_clear_pointer (&dt_end, g_date_time_unref);
             }
         }
       else
@@ -1222,7 +1247,13 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       g_array_free (lengths, TRUE);
     }
 
+  /*
+   * Allocate single day events after multiday ones. For single
+   * day children, there's no need to calculate the start & end
+   * dates of the widgets.
+   */
   g_hash_table_iter_init (&iter, ppriv->single_cell_children);
+
   while (g_hash_table_iter_next (&iter, &key, &value))
     {
       j = GPOINTER_TO_INT (key);
@@ -1889,7 +1920,7 @@ gcal_month_view_get_final_date (GcalView *view)
   new_date->is_date = 0;
   new_date->hour = 23;
   new_date->minute = 59;
-  new_date->second = 0;
+  new_date->second = 59;
 
   return new_date;
 }
