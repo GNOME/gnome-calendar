@@ -856,8 +856,10 @@ gcal_month_view_set_property (GObject       *object,
                               const GValue  *value,
                               GParamSpec    *pspec)
 {
+  GcalSubscriberViewPrivate *ppriv;
   GcalMonthViewPrivate *priv;
 
+  ppriv = GCAL_SUBSCRIBER_VIEW (object)->priv;
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (object));
 
   switch (property_id)
@@ -872,7 +874,9 @@ gcal_month_view_set_property (GObject       *object,
         priv->keyboard_cell = priv->days_delay;
         priv->start_mark_cell = -1;
         priv->end_mark_cell = -1;
-        gtk_widget_queue_draw (GTK_WIDGET (object));
+
+        ppriv->children_changed = TRUE;
+        gtk_widget_queue_resize (GTK_WIDGET (object));
         break;
       }
     default:
