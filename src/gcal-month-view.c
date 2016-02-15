@@ -1105,7 +1105,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
        * month. Otherwise, the first cell is the 1st day of the month.
        */
       j = 1;
-      date = gcal_event_widget_get_date_start (l->data);
+      date = gcal_event_get_date_start (event);
 
       if (g_date_time_get_month (date) == priv->date->month)
         j = g_date_time_get_day_of_month (date);
@@ -1123,7 +1123,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
        * if the event is all day or not.
        */
       j = icaltime_days_in_month (priv->date->month, priv->date->year);
-      date = gcal_event_widget_get_date_end (GCAL_EVENT_WIDGET (child_widget));
+      date = gcal_event_get_date_end (event);
 
       if (g_date_time_get_month (date) == priv->date->month)
         {
