@@ -272,7 +272,6 @@ add_event_to_day_array (GcalYearView  *year_view,
 
   GDateTime *dt_start, *dt_end;
   GDateTime *date, *second_date;
-  GTimeZone *tz;
 
   gint i;
 
@@ -284,8 +283,8 @@ add_event_to_day_array (GcalYearView  *year_view,
   dt_end = gcal_event_get_date_end (event);
 
   /* normalize date on each new event */
-  date = icaltime_to_datetime (year_view->start_selected_date, &tz);
-  second_date = g_date_time_new (tz,
+  date = icaltime_to_datetime (year_view->start_selected_date);
+  second_date = g_date_time_new (gcal_event_get_timezone (event),
                                  g_date_time_get_year (date),
                                  g_date_time_get_month (date),
                                  g_date_time_get_day_of_month (date) + 1,

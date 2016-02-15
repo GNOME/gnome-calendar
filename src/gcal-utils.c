@@ -110,8 +110,7 @@ datetime_to_icaltime (GDateTime *dt)
 }
 
 GDateTime*
-icaltime_to_datetime (const icaltimetype  *date,
-                      GTimeZone          **timezone)
+icaltime_to_datetime (const icaltimetype  *date)
 {
   GDateTime *dt;
   GTimeZone *tz;
@@ -125,10 +124,7 @@ icaltime_to_datetime (const icaltimetype  *date,
                         date->is_date ? 0 : date->minute,
                         date->is_date ? 0 : date->second);
 
-  if (timezone)
-    *timezone = tz;
-  else
-    g_clear_pointer (&tz, g_time_zone_unref);
+  g_clear_pointer (&tz, g_time_zone_unref);
 
   return dt;
 }
@@ -427,15 +423,11 @@ build_component_from_details (const gchar        *summary,
   ECalComponent *event;
   ECalComponentDateTime dt;
   ECalComponentText summ;
-  GTimeZone *tz;
-
-  tz = g_time_zone_new_local ();
 
   event = e_cal_component_new ();
   e_cal_component_set_new_vtype (event, E_CAL_COMPONENT_EVENT);
 
   dt.value = (icaltimetype*) initial_date;
-  dt.tzid = g_time_zone_get_abbreviation (tz, 0);
   e_cal_component_set_dtstart (event, &dt);
 
   if (final_date != NULL)
@@ -457,8 +449,6 @@ build_component_from_details (const gchar        *summary,
   e_cal_component_set_summary (event, &summ);
 
   e_cal_component_commit_sequence (event);
-
-  g_clear_pointer (&tz, g_time_zone_unref);
 
   return event;
 }
@@ -784,4 +774,25 @@ get_source_parent_name_color (GcalManager  *manager,
 
       *color = gdk_rgba_to_string (&c);
     }
+}
+
+gchar*
+format_utc_offset (gint offset)
+{
+  const char *sign = "+";
+  gint hours, minutes, seconds;
+
+  if (offset < 0) {
+      offset = -offset;
+      sign = "-";
+  }
+
+  hours = offset / 3600;
+  minutes = (offset % 3600) / 60;
+  seconds = offset % 60;
+
+  if (seconds > 0)
+    return g_strdup_printf ("%s%02i%02i%02i", sign, hours, minutes, seconds);
+  else
+    return g_strdup_printf ("%s%02i%02i", sign, hours, minutes);
 }

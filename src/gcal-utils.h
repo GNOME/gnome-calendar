@@ -59,8 +59,7 @@ icaltimetype*   datetime_to_icaltime                            (GDateTime      
 
 gboolean        datetime_is_date                                (GDateTime             *dt);
 
-GDateTime*      icaltime_to_datetime                            (const icaltimetype    *date,
-                                                                 GTimeZone            **timezone);
+GDateTime*      icaltime_to_datetime                            (const icaltimetype    *date);
 
 icaltimetype*   gcal_dup_icaltime                               (const icaltimetype    *date);
 
@@ -121,5 +120,7 @@ void            get_source_parent_name_color                    (GcalManager    
                                                                  ESource               *source,
                                                                  gchar                **name,
                                                                  gchar                **color);
+
+gchar*          format_utc_offset                               (gint                   offset);
 
 #endif // __GCAL_UTILS_H__

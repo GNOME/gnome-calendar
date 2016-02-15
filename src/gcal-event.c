@@ -63,25 +63,69 @@ enum {
   N_PROPS
 };
 
+static GTimeZone*
+get_timezone_from_ical (ECalComponentDateTime *comp)
+{
+  GTimeZone *tz;
+
+  if (comp->value->is_date)
+    {
+      /*
+       * When loading an all day event, the timezone must not be taken into account
+       * when loading the date. Since all events in ical are UTC, we match it by
+       * setting the timezone as UTC as well.
+       */
+      tz = g_time_zone_new_utc ();
+    }
+  else if (icaltime_get_timezone (*comp->value))
+    {
+      gchar *tzid;
+      gint offset;
+
+      offset = icaltimezone_get_utc_offset ((icaltimezone*) icaltime_get_timezone (*comp->value),
+                                            comp->value, NULL);
+      tzid = format_utc_offset (offset);
+      tz = g_time_zone_new (tzid);
+
+      g_free (tzid);
+    }
+  else if (comp->tzid)
+    {
+      tz = g_time_zone_new (comp->tzid);
+    }
+  else
+    {
+      tz = g_time_zone_new_utc ();
+    }
+
+  return tz;
+}
+
 static ECalComponentDateTime*
 build_component_from_datetime (GcalEvent *self,
                                GDateTime *dt)
 {
   ECalComponentDateTime *comp_dt;
-  const gchar *tzid;
+  GDateTime *utf_dt;
 
   if (!dt)
     return NULL;
+
+  utf_dt = g_date_time_to_utc (dt);
 
   comp_dt = g_new0 (ECalComponentDateTime, 1);
   comp_dt->value = NULL;
   comp_dt->tzid = NULL;
 
-  tzid = g_date_time_get_timezone_abbreviation (dt);
-
-  comp_dt->value = datetime_to_icaltime (dt);
+  comp_dt->value = datetime_to_icaltime (utf_dt);
+  comp_dt->value->zone = NULL;
   comp_dt->value->is_date = self->all_day;
-  comp_dt->tzid = g_strdup (tzid ? tzid : "UTC");
+
+  /* All day events have no timezone */
+  if (!self->all_day)
+    comp_dt->tzid = format_utc_offset (g_date_time_get_utc_offset (dt));
+
+  g_clear_pointer (&utf_dt, g_date_time_unref);
 
   return comp_dt;
 }
@@ -138,31 +182,40 @@ gcal_event_set_component_internal (GcalEvent     *self,
       ECalComponentDateTime start;
       ECalComponentDateTime end;
       GDateTime *date_start;
+      GTimeZone *zone_start;
       GDateTime *date_end;
-      GTimeZone *tz;
+      GTimeZone *zone_end;
+      GDateTime *aux;
+      gboolean start_is_all_day, end_is_all_day;
       gchar *description;
 
       /* Setup start date */
       e_cal_component_get_dtstart (component, &start);
-      date_start = icaltime_to_datetime (start.value, &tz);
+      zone_start = get_timezone_from_ical (&start);
+      aux = icaltime_to_datetime (start.value);
+      date_start = g_date_time_to_timezone (aux, zone_start);
+      start_is_all_day = datetime_is_date (aux);
 
-      gcal_event_set_date_start (self, date_start);
+      self->dt_start = g_date_time_ref (date_start);
+
+      g_clear_pointer (&aux, g_date_time_unref);
+
+      /* The timezone of the event is the timezone of the start date */
+      self->timezone = g_time_zone_ref (zone_start);
 
       /* Setup end date */
       e_cal_component_get_dtend (component, &end);
-      date_end = icaltime_to_datetime (end.value, NULL);
+      zone_end = get_timezone_from_ical (&end);
+      aux = icaltime_to_datetime (end.value);
+      date_end = g_date_time_to_timezone (aux, zone_end);
+      end_is_all_day = datetime_is_date (aux);
 
-      gcal_event_set_date_end (self, date_end);
+      self->dt_end = g_date_time_ref (date_end);
 
-      /*
-       * Setup timezone. We use the timezone from the start
-       * date as the timezone of the event, and the end date
-       * is adjusted if necessary.
-       */
-      gcal_event_set_timezone (self, tz);
+      g_clear_pointer (&aux, g_date_time_unref);
 
       /* Setup all day */
-      gcal_event_set_all_day (self, datetime_is_date (date_start) && datetime_is_date (date_end));
+      self->all_day = start_is_all_day && end_is_all_day;
 
       /* Setup description */
       description = get_desc_from_component (component, "\n\n");
@@ -176,7 +229,9 @@ gcal_event_set_component_internal (GcalEvent     *self,
       g_object_notify (G_OBJECT (self), "summary");
 
       g_clear_pointer (&date_start, g_date_time_unref);
+      g_clear_pointer (&zone_start, g_time_zone_unref);
       g_clear_pointer (&date_end, g_date_time_unref);
+      g_clear_pointer (&zone_end, g_time_zone_unref);
       g_clear_pointer (&description, g_free);
     }
 }
@@ -583,48 +638,7 @@ gcal_event_set_all_day (GcalEvent *self,
       self->all_day = all_day;
 
       g_object_notify (G_OBJECT (self), "all-day");
-
-      /*
-       * If we just set an all day event, the hour & minute fields
-       * from the start & end date should be set to 0.
-       */
-      if (self->all_day)
-        {
-          GDateTime *dt;
-
-          /* Update start date */
-          if (self->dt_start)
-            {
-              dt = g_date_time_new (self->timezone,
-                                    g_date_time_get_year (self->dt_start),
-                                    g_date_time_get_month (self->dt_start),
-                                    g_date_time_get_day_of_month (self->dt_start),
-                                    self->all_day ? 0 : g_date_time_get_hour (self->dt_start),
-                                    self->all_day ? 0 : g_date_time_get_minute (self->dt_start),
-                                    0);
-
-              gcal_event_set_date_start (self, dt);
-
-              g_clear_pointer (&dt, g_date_time_unref);
-            }
-
-          /* Update end date */
-          if (self->dt_end)
-            {
-              dt = g_date_time_new (self->timezone,
-                                    g_date_time_get_year (self->dt_end),
-                                    g_date_time_get_month (self->dt_end),
-                                    g_date_time_get_day_of_month (self->dt_end),
-                                    self->all_day ? 0 : g_date_time_get_hour (self->dt_end),
-                                    self->all_day ? 0 : g_date_time_get_minute (self->dt_end),
-                                    0);
-
-              gcal_event_set_date_end (self, dt);
-
-              g_clear_pointer (&dt, g_date_time_unref);
-            }
-          }
-        }
+    }
 }
 
 /**

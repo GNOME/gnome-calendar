@@ -488,6 +488,8 @@ rebuild_popover_for_day (GcalMonthView *view,
   PangoFontDescription *ofont_desc;
   gint font_height, padding_bottom;
 
+  GTimeZone *tz;
+
   priv = gcal_month_view_get_instance_private (view);
   ppriv = GCAL_SUBSCRIBER_VIEW (view)->priv;
 
@@ -499,6 +501,7 @@ rebuild_popover_for_day (GcalMonthView *view,
   gtk_container_foreach (GTK_CONTAINER (priv->events_list_box), (GtkCallback) gtk_widget_destroy, NULL);
 
   l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (priv->pressed_overflow_indicator));
+  tz = g_time_zone_new_local ();
 
   /* Setup the start & end dates of the events as the begin & end of day */
   if (l != NULL)
@@ -506,9 +509,7 @@ rebuild_popover_for_day (GcalMonthView *view,
       GDateTime *current_date;
       GDateTime *dt_start;
       GDateTime *dt_end;
-      GTimeZone *tz;
-
-      current_date = icaltime_to_datetime (priv->date, &tz);
+      current_date = icaltime_to_datetime (priv->date);
       dt_start = g_date_time_new (tz,
                                   g_date_time_get_year (current_date),
                                   g_date_time_get_month (current_date),
@@ -536,8 +537,9 @@ rebuild_popover_for_day (GcalMonthView *view,
       g_clear_pointer (&current_date, g_date_time_unref);
       g_clear_pointer (&dt_start, g_date_time_unref);
       g_clear_pointer (&dt_end, g_date_time_unref);
-      g_clear_pointer (&tz, g_time_zone_unref);
     }
+
+  g_clear_pointer (&tz, g_time_zone_unref);
 
   /* placement calculation */
   start_grid_y = get_start_grid_y (GTK_WIDGET (view));
