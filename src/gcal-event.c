@@ -1034,7 +1034,7 @@ gcal_event_is_multiday (GcalEvent *self)
   g_return_val_if_fail (GCAL_IS_EVENT (self), FALSE);
 
   end_date = gcal_event_get_date_end (self);
-  n_days = g_date_time_difference (self->dt_start, end_date) / G_TIME_SPAN_DAY;
+  n_days = g_date_time_difference (end_date, self->dt_start) / G_TIME_SPAN_DAY;
 
   /*
    * An all-day event with only 1 day of time span is treated as a
