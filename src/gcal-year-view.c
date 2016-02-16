@@ -335,8 +335,11 @@ add_event_to_day_array (GcalYearView  *year_view,
            * Setup the event widget's custom dates, so the slanted edges are
            * applied properly
            */
-          gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (cloned_child), date);
-          gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (cloned_child), second_date);
+          if (gcal_event_is_multiday (event))
+            {
+              gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (cloned_child), date);
+              gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (cloned_child), second_date);
+            }
 
           days_widgets_array[i] = g_list_insert_sorted (days_widgets_array[i],
                                                         cloned_child,
