@@ -39,6 +39,7 @@
                 <child>
                   <object class="GtkListBox" id="events_sidebar">
                     <property name="visible">True</property>
+                    <property name="selection-mode">none</property>
                     <style>
                       <class name="sidebar"/>
                     </style>
