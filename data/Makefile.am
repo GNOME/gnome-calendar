@@ -52,6 +52,7 @@ EXTRA_DIST=                     \
   ui/calendar-row.ui            \
   ui/date-selector.ui           \
   ui/edit-dialog.ui             \
+  ui/help-overlay.ui            \
   ui/menus.ui                   \
   ui/quick-add-popover.ui       \
   ui/search-view.ui             \
