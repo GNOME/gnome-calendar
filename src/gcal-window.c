@@ -209,10 +209,8 @@ static void           source_row_activated               (GtkListBox          *l
                                                           GtkListBoxRow       *row,
                                                           gpointer             user_data);
 
-static void           source_enabled                     (GcalManager         *manager,
-                                                          ESource             *source,
-                                                          gboolean             enabled,
-                                                          gpointer             user_data);
+static void           source_changed                     (GcalWindow          *window,
+                                                          ESource             *source);
 
 
 static void           on_calendar_toggled                (GObject             *object,
@@ -899,15 +897,11 @@ source_row_activated (GtkListBox    *listbox,
 }
 
 static void
-source_enabled (GcalManager *manager,
-                ESource     *source,
-                gboolean     enabled,
-                gpointer     user_data)
+source_changed (GcalWindow *window,
+                ESource     *source)
 {
-  GcalWindow *window;
   GList *children, *aux;
 
-  window =GCAL_WINDOW (user_data);
   children = gtk_container_get_children (GTK_CONTAINER (window->calendar_listbox));
 
   for (aux = children; aux != NULL; aux = aux->next)
@@ -923,7 +917,7 @@ source_enabled (GcalManager *manager,
       if (child_source != NULL && child_source == source)
         {
           gtk_widget_destroy (aux->data);
-          add_source (manager, source, enabled, user_data);
+          add_source (window->manager, source, gcal_manager_source_enabled (window->manager, source), window);
           break;
         }
     }
@@ -1444,8 +1438,9 @@ gcal_window_set_property (GObject      *object,
       if (g_set_object (&self->manager, g_value_get_object (value)))
         {
           g_signal_connect (self->manager, "source-added", G_CALLBACK (add_source), object);
-          g_signal_connect (self->manager, "source-enabled", G_CALLBACK (source_enabled), object);
           g_signal_connect (self->manager, "source-removed", G_CALLBACK (remove_source), object);
+          g_signal_connect_swapped (self->manager, "source-enabled", G_CALLBACK (source_changed), object);
+          g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (source_changed), object);
 
           gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (self->edit_dialog), self->manager);
           gcal_year_view_set_manager (GCAL_YEAR_VIEW (self->year_view), self->manager);
