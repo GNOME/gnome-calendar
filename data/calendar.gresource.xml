@@ -16,5 +16,6 @@
 
   <gresource prefix="/org/gnome/calendar/gtk">
     <file alias="menus.ui" compressed="true" preprocess="xml-stripblanks">ui/menus.ui</file>
+    <file alias="help-overlay.ui" compressed="true" preprocess="xml-stripblanks">ui/help-overlay.ui</file>
   </gresource>
 </gresources>
