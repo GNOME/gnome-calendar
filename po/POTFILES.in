@@ -5,19 +5,21 @@ data/org.gnome.Calendar.desktop.in.in
 data/org.gnome.calendar.gschema.xml.in
 [type: gettext/glade]data/ui/edit-dialog.ui
 [type: gettext/glade]data/ui/menus.ui
+[type: gettext/glade]data/ui/quick-add-popover.ui
 [type: gettext/glade]data/ui/search-view.ui
 [type: gettext/glade]data/ui/source-dialog.ui
 [type: gettext/glade]data/ui/time-selector.ui
 [type: gettext/glade]data/ui/window.ui
 [type: gettext/glade]data/ui/year-view.ui
 src/gb-scrolled-window.c
-src/gcal-source-dialog.c
 src/gcal-application.c
 src/gcal-date-selector.c
 src/gcal-edit-dialog.c
 src/gcal-manager.c
 src/gcal-month-view.c
+src/gcal-quick-add-popover.c
 src/gcal-search-view.c
+src/gcal-source-dialog.c
 src/gcal-time-selector.c
 src/gcal-utils.c
 src/gcal-week-view.c
