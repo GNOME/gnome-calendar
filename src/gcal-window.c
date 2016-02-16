@@ -29,6 +29,7 @@
 #include "gcal-event-widget.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-enum-types.h"
+#include "gcal-quick-add-popover.h"
 #include "gcal-source-dialog.h"
 
 #include <glib/gi18n.h>
@@ -83,11 +84,7 @@ struct _GcalWindow
   GtkWidget           *views_switcher;
 
   /* new event popover widgets */
-  GtkWidget           *popover;
-  GtkWidget           *new_event_title_label;
-  GtkWidget           *new_event_create_button;
-  GtkWidget           *new_event_details_button;
-  GtkWidget           *new_event_what_entry;
+  GtkWidget           *quick_add_popover;
 
   GtkWidget           *search_view;
 
@@ -179,19 +176,9 @@ static void           show_new_event_widget              (GcalView            *v
                                                           gpointer             end_span,
                                                           gdouble              x,
                                                           gdouble              y,
-                                                          gpointer             user_data);
-
-static void           prepare_new_event_widget           (GcalWindow          *window);
-
-static void           place_new_event_widget             (GcalWindow          *window,
-                                                          gint                 x,
-                                                          gint                 y);
+                                                          GcalWindow          *window);
 
 static void           close_new_event_widget             (GtkButton           *button,
-                                                          gpointer             user_data);
-
-static void           new_event_entry_text_changed       (GObject             *object,
-                                                          GParamSpec          *pspec,
                                                           gpointer             user_data);
 
 static void           create_notification                (GcalWindow          *window,
@@ -239,8 +226,9 @@ static gboolean       window_state_changed               (GtkWidget           *w
                                                           gpointer             user_data);
 
 /* handling events interaction */
-static void           create_event                       (gpointer             user_data,
-                                                          GtkWidget           *widget);
+static void           edit_event                         (GcalQuickAddPopover *popover,
+                                                          GcalEvent           *event,
+                                                          GcalWindow          *self);
 
 static void           create_event_detailed_cb           (GcalView            *view,
                                                           gpointer             start_span,
@@ -671,26 +659,26 @@ set_new_event_mode (GcalWindow *window,
 
   /* XXX: here we could disable clicks from the views, yet */
   /* for now we relaunch the new-event widget */
-  if (!enabled &&
-      gtk_widget_is_visible (window->popover))
+  if (!enabled && gtk_widget_is_visible (window->quick_add_popover))
     {
-      gtk_widget_set_visible (window->popover, FALSE);
+      gtk_widget_set_visible (window->quick_add_popover, FALSE);
     }
 }
 
 /* new-event interaction: second variant */
 static void
-show_new_event_widget (GcalView *view,
-                       gpointer  start_span,
-                       gpointer  end_span,
-                       gdouble   x,
-                       gdouble   y,
-                       gpointer  user_data)
+show_new_event_widget (GcalView   *view,
+                       gpointer    start_span,
+                       gpointer    end_span,
+                       gdouble     x,
+                       gdouble     y,
+                       GcalWindow *window)
 {
-  GcalWindow *window = GCAL_WINDOW (user_data);
+  GdkRectangle rect;
+  gint out_x, out_y;
 
   /* 1st and 2nd steps */
-  set_new_event_mode (GCAL_WINDOW (user_data), TRUE);
+  set_new_event_mode (window, TRUE);
 
   if (window->event_creation_data != NULL)
     {
@@ -707,43 +695,11 @@ show_new_event_widget (GcalView *view,
     window->event_creation_data->end_date = g_date_time_ref (end_span);
   g_debug ("[show_new_event] position (%f, %f)", x, y);
 
-  /* Setup new event widget data */
-  prepare_new_event_widget (window);
-  place_new_event_widget (window, x, y);
-}
+  /* Setup the quick add popover's dates */
+  gcal_quick_add_popover_set_date_start (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover), start_span);
+  gcal_quick_add_popover_set_date_end (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover), end_span);
 
-static void
-prepare_new_event_widget (GcalWindow *window)
-{
-  struct tm tm_date;
-  gchar start[64];
-  gchar *title_date;
-
-  /* setting title */
-  tm_date = icaltimetype_to_tm (window->event_creation_data->start_date);
-  /* Translators:
-   * this is the format string for representing a date consisting of a month name
-   * and a date of month. */
-  e_utf8_strftime_fix_am_pm (start, 64, C_("event date format", "%B %d"), &tm_date);
-  title_date = g_strdup_printf (_("New Event on %s"), start);
-
-  gtk_label_set_text (GTK_LABEL (window->new_event_title_label),
-                      title_date);
-  g_free (title_date);
-
-  /* clear entry */
-  gtk_entry_set_text (GTK_ENTRY (window->new_event_what_entry), "");
-}
-
-static void
-place_new_event_widget (GcalWindow   *window,
-                        gint          x,
-                        gint          y)
-{
-  gint out_x, out_y;
-  GdkRectangle rect;
-
-  window = gcal_window_get_instance_private (window);
+  /* Position and place the quick add popover */
   gtk_widget_translate_coordinates (window->views[window->active_view], window->views_stack, x, y, &out_x, &out_y);
 
   /* Place popover over the given (x,y) position */
@@ -752,8 +708,8 @@ place_new_event_widget (GcalWindow   *window,
   rect.width = 1;
   rect.height = 1;
 
-  gtk_popover_set_pointing_to (GTK_POPOVER (window->popover), &rect);
-  gtk_widget_show_all (window->popover);
+  gtk_popover_set_pointing_to (GTK_POPOVER (window->quick_add_popover), &rect);
+  gtk_widget_show (window->quick_add_popover);
 }
 
 static void
@@ -761,31 +717,6 @@ close_new_event_widget (GtkButton *button,
                         gpointer   user_data)
 {
   set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
-}
-
-static void
-new_event_entry_text_changed (GObject    *object,
-                              GParamSpec *pspec,
-                              gpointer    user_data)
-{
-  GcalWindow *window = GCAL_WINDOW (user_data);
-  static gboolean blocked = TRUE;
-  gint length;
-
-  length = g_utf8_strlen (gtk_entry_get_text (GTK_ENTRY (object)), -1);
-
-  gtk_widget_set_sensitive (window->new_event_create_button, length > 0);
-
-  if (length > 0 && blocked)
-    {
-      g_signal_handlers_unblock_by_func (user_data, create_event, object);
-      blocked = FALSE;
-    }
-  else if (length < 1 && !blocked)
-    {
-      g_signal_handlers_block_by_func (user_data, create_event, object);
-      blocked = TRUE;
-    }
 }
 
 /**
@@ -1066,39 +997,14 @@ window_state_changed (GtkWidget *widget,
 }
 
 static void
-create_event (gpointer   user_data,
-              GtkWidget *widget)
+edit_event (GcalQuickAddPopover *popover,
+            GcalEvent           *event,
+            GcalWindow          *window)
 {
-  GcalWindow *window = GCAL_WINDOW (user_data);
-  ECalComponent *comp;
-  GcalEvent *event;
-  ESource *source;
+  gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
+  gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
 
-  /* reset and hide */
-  set_new_event_mode (GCAL_WINDOW (user_data), FALSE);
-
-  source = gcal_manager_get_default_source (window->manager);
-  comp = build_component_from_details (gtk_entry_get_text (GTK_ENTRY (window->new_event_what_entry)),
-                                       window->event_creation_data->start_date,
-                                       window->event_creation_data->end_date);
-  event = gcal_event_new (source, comp);
-
-  if (widget == window->new_event_details_button)
-    {
-      gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
-      gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
-
-      gtk_dialog_run (GTK_DIALOG (window->edit_dialog));
-    }
-  else
-    {
-      /* create the event */
-      gcal_manager_create_event (window->manager, event);
-    }
-
-  g_clear_object (&source);
-  g_clear_object (&event);
-  g_clear_object (&comp);
+  gtk_dialog_run (GTK_DIALOG (window->edit_dialog));
 }
 
 static void
@@ -1363,13 +1269,8 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, year_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, popover);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_view);
-
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, new_event_title_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, new_event_create_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, new_event_details_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, new_event_what_entry);
 
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_label);
@@ -1391,11 +1292,10 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, undo_remove_action);
 
   /* Event creation related */
-  gtk_widget_class_bind_template_callback (widget_class, create_event);
+  gtk_widget_class_bind_template_callback (widget_class, edit_event);
   gtk_widget_class_bind_template_callback (widget_class, create_event_detailed_cb);
   gtk_widget_class_bind_template_callback (widget_class, show_new_event_widget);
   gtk_widget_class_bind_template_callback (widget_class, close_new_event_widget);
-  gtk_widget_class_bind_template_callback (widget_class, new_event_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, event_activated);
 
   /* Syncronization related */
@@ -1441,9 +1341,6 @@ gcal_window_constructed (GObject *object)
   use_24h_format = (g_strcmp0 (clock_format, "24h") == 0);
   g_free (clock_format);
   g_object_unref (helper_settings);
-
-  // Prevents nameless events' creation
-  g_signal_handlers_block_by_func (window->new_event_what_entry, create_event, object);
 
   // Setup actions
   g_action_map_add_action_entries (G_ACTION_MAP (object),
@@ -1552,6 +1449,7 @@ gcal_window_set_property (GObject      *object,
 
           gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (self->edit_dialog), self->manager);
           gcal_year_view_set_manager (GCAL_YEAR_VIEW (self->year_view), self->manager);
+          gcal_quick_add_popover_set_manager (GCAL_QUICK_ADD_POPOVER (self->quick_add_popover), self->manager);
           gcal_source_dialog_set_manager (GCAL_SOURCE_DIALOG (self->source_dialog), self->manager);
           update_current_date (GCAL_WINDOW (object));
 
