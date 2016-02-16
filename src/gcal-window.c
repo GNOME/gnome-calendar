@@ -1569,29 +1569,28 @@ gcal_window_new_with_view_and_date (GcalApplication   *app,
 void
 gcal_window_new_event (GcalWindow *window)
 {
-  icaltimetype *start_date, *end_date;
+  GDateTime *start_date, *end_date;
+  icaltimetype date;
 
   /* 1st and 2nd steps */
   set_new_event_mode (window, TRUE);
 
-  start_date = gcal_dup_icaltime (window->current_date);
-  start_date->is_date = 1;
-  end_date = gcal_dup_icaltime (window->current_date);
-  end_date->is_date = 1;
+  date = *window->current_date;
+  date.is_date = 1;
+
+  start_date = icaltime_to_datetime (&date);
+  end_date = icaltime_to_datetime (&date);
 
   /* adjusting dates according to the actual view */
   switch (window->active_view)
     {
     case GCAL_WINDOW_VIEW_DAY:
     case GCAL_WINDOW_VIEW_WEEK:
-      end_date->hour += 1;
-      *end_date = icaltime_normalize (*end_date);
+      end_date = g_date_time_add_hours (start_date, 1);
       break;
     case GCAL_WINDOW_VIEW_MONTH:
     case GCAL_WINDOW_VIEW_YEAR:
-      end_date->day += 1;
-      end_date->is_date = 1;
-      *end_date = icaltime_normalize (*end_date);
+      end_date = g_date_time_add_days (start_date, 1);
       break;
     case GCAL_WINDOW_VIEW_LIST:
     case GCAL_WINDOW_VIEW_SEARCH:
