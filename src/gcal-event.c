@@ -181,6 +181,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
     {
       ECalComponentDateTime start;
       ECalComponentDateTime end;
+      icaltimetype normalized_date;
       GDateTime *date_start;
       GTimeZone *zone_start;
       GDateTime *date_end;
@@ -191,8 +192,9 @@ gcal_event_set_component_internal (GcalEvent     *self,
 
       /* Setup start date */
       e_cal_component_get_dtstart (component, &start);
+      normalized_date = icaltime_normalize (*start.value);
       zone_start = get_timezone_from_ical (&start);
-      aux = icaltime_to_datetime (start.value);
+      aux = icaltime_to_datetime (&normalized_date);
       date_start = g_date_time_to_timezone (aux, zone_start);
       start_is_all_day = datetime_is_date (aux);
 
@@ -205,8 +207,9 @@ gcal_event_set_component_internal (GcalEvent     *self,
 
       /* Setup end date */
       e_cal_component_get_dtend (component, &end);
+      normalized_date = icaltime_normalize (*end.value);
       zone_end = get_timezone_from_ical (&end);
-      aux = icaltime_to_datetime (end.value);
+      aux = icaltime_to_datetime (&normalized_date);
       date_end = g_date_time_to_timezone (aux, zone_end);
       end_is_all_day = datetime_is_date (aux);
 
