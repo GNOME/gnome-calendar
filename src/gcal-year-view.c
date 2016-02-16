@@ -1031,29 +1031,33 @@ static void
 add_event_clicked_cb (GcalYearView *year_view,
                       GtkButton    *button)
 {
-  icaltimetype *start_date, *end_date = NULL;
+  GDateTime *start_date, *end_date = NULL;
 
   if (year_view->start_selected_date->day == 0)
     {
-      start_date = gcal_dup_icaltime (year_view->current_date);
+      start_date = g_date_time_new_local (year_view->current_date->year,
+                                          year_view->current_date->month,
+                                          year_view->current_date->day,
+                                          0, 0, 0);
     }
   else
     {
-      start_date = gcal_dup_icaltime (year_view->start_selected_date);
-      end_date = gcal_dup_icaltime (year_view->end_selected_date);
-      end_date->day += 1;
-      *end_date = icaltime_normalize (*end_date);
-      end_date->is_date = 1;
+      icaltimetype *dtstart, *dtend;
+
+      dtstart = year_view->start_selected_date;
+      dtend = year_view->end_selected_date;
+
+      start_date = g_date_time_new_local (dtstart->year, dtstart->month, dtstart->day, 0, 0, 0);
+      end_date = g_date_time_new_local (dtend->year, dtend->month, dtend->day + 1, 0, 0, 0);
     }
 
   if (year_view->popover_mode)
     gtk_widget_hide (year_view->popover);
 
-  start_date->is_date = 1;
   g_signal_emit_by_name (GCAL_VIEW (year_view), "create-event-detailed", start_date, end_date);
-  g_free (start_date);
-  if (end_date != NULL)
-    g_free (end_date);
+
+  g_clear_pointer (&start_date, g_date_time_unref);
+  g_clear_pointer (&end_date, g_date_time_unref);
 }
 
 static void

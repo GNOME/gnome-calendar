@@ -88,8 +88,8 @@ gchar*          get_uuid_from_component                         (ESource        
 gint            get_first_weekday                               (void);
 
 ECalComponent*  build_component_from_details                    (const gchar           *summary,
-                                                                 const icaltimetype    *initial_date,
-                                                                 const icaltimetype    *final_date);
+                                                                 GDateTime             *initial_date,
+                                                                 GDateTime             *final_date);
 
 gint            icaltime_compare_date                           (const icaltimetype    *date1,
                                                                  const icaltimetype    *date2);

@@ -40,8 +40,8 @@ typedef struct
 {
   gint               x;
   gint               y;
-  icaltimetype      *start_date;
-  icaltimetype      *end_date;
+  GDateTime         *start_date;
+  GDateTime         *end_date;
 } NewEventData;
 
 typedef struct
@@ -694,17 +694,17 @@ show_new_event_widget (GcalView *view,
 
   if (window->event_creation_data != NULL)
     {
-      g_free (window->event_creation_data->start_date);
-      g_free (window->event_creation_data->end_date);
+      g_date_time_unref (window->event_creation_data->start_date);
+      g_date_time_unref (window->event_creation_data->end_date);
       g_free (window->event_creation_data);
     }
 
   window->event_creation_data = g_new0 (NewEventData, 1);
   window->event_creation_data->x = x;
   window->event_creation_data->y = y;
-  window->event_creation_data->start_date = gcal_dup_icaltime (start_span);
+  window->event_creation_data->start_date = g_date_time_ref (start_span);
   if (end_span != NULL)
-    window->event_creation_data->end_date = gcal_dup_icaltime (end_span);
+    window->event_creation_data->end_date = g_date_time_ref (end_span);
   g_debug ("[show_new_event] position (%f, %f)", x, y);
 
   /* Setup new event widget data */
@@ -1111,7 +1111,7 @@ create_event_detailed_cb (GcalView *view,
   ECalComponent *comp;
   GcalEvent *event;
 
-  comp = build_component_from_details ("", (icaltimetype*) start_span, (icaltimetype*) end_span);
+  comp = build_component_from_details ("", start_span, end_span);
   event = gcal_event_new (gcal_manager_get_default_source (window->manager), comp);
 
   gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);

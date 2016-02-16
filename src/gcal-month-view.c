@@ -239,9 +239,6 @@ show_popover_for_position (GcalMonthView *view,
 
   gint start_day, end_day;
 
-  icaltimetype *start_date;
-  icaltimetype *end_date = NULL;
-
   widget = GTK_WIDGET (view);
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
   ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
@@ -268,26 +265,23 @@ show_popover_for_position (GcalMonthView *view,
     }
   else
     {
-      start_date = gcal_dup_icaltime (priv->date);
-      start_date->day = start_day;
-      start_date->is_date = 1;
+      GDateTime *start_dt, *end_dt;
 
-      end_date = gcal_dup_icaltime (priv->date);
-      end_date->day = end_day;
-      end_date->is_date = 1;
-      if (start_date->day > end_date->day)
+      start_dt = g_date_time_new_local (priv->date->year, priv->date->month, start_day, 0, 0, 0);
+      end_dt = g_date_time_new_local (priv->date->year, priv->date->month, end_day + 1, 0, 0, 0);
+
+      /* Swap dates if start > end */
+      if (start_day > end_day)
         {
-          gint day = start_date->day;
-          start_date->day = end_date->day;
-          end_date->day = day;
+          GDateTime *aux = start_dt;
+          start_dt = end_dt;
+          end_dt = aux;
         }
 
-      end_date->day += 1;
+      g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_dt, end_dt, x, y);
 
-      g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_date, end_date, x, y);
-
-      g_free (start_date);
-      g_free (end_date);
+      g_date_time_unref (start_dt);
+      g_date_time_unref (end_dt);
     }
 
   gtk_widget_queue_draw (widget);
@@ -747,19 +741,18 @@ add_new_event_button_cb (GtkWidget *button,
 {
   GcalMonthViewPrivate *priv;
   gint day;
-  icaltimetype *start_date;
+  GDateTime *start_date;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (user_data));
 
   gtk_widget_hide (priv->overflow_popover);
 
   day = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (priv->overflow_popover), "selected-day"));
-  start_date = gcal_dup_icaltime (priv->date);
-  start_date->day = day;
-  start_date->is_date = 1;
+  start_date = g_date_time_new_local (priv->date->year, priv->date->month, day, 0, 0, 0);
 
   g_signal_emit_by_name (GCAL_VIEW (user_data), "create-event-detailed", start_date, NULL);
-  g_free (start_date);
+
+  g_date_time_unref (start_date);
 }
 
 static void

@@ -416,33 +416,49 @@ get_first_weekday (void)
  * Returns: (Transfer full): an {@link ECalComponent} object
  **/
 ECalComponent*
-build_component_from_details (const gchar        *summary,
-                              const icaltimetype *initial_date,
-                              const icaltimetype *final_date)
+build_component_from_details (const gchar *summary,
+                              GDateTime   *initial_date,
+                              GDateTime   *final_date)
 {
   ECalComponent *event;
   ECalComponentDateTime dt;
   ECalComponentText summ;
+  GDateTime *utc_start, *utc_end;
+  gboolean all_day;
 
   event = e_cal_component_new ();
   e_cal_component_set_new_vtype (event, E_CAL_COMPONENT_EVENT);
 
-  dt.value = (icaltimetype*) initial_date;
+  /*
+   * Check if the event is all day. Notice that it can be all day even
+   * without the final date.
+   */
+  all_day = datetime_is_date (initial_date) && (final_date ? datetime_is_date (final_date) : TRUE);
+
+  /* Start date */
+  utc_start = g_date_time_to_utc (initial_date);
+
+  dt.value = datetime_to_icaltime (utc_start);
+  dt.value->is_date = all_day;
+  dt.tzid = format_utc_offset (g_date_time_get_utc_offset (initial_date));
   e_cal_component_set_dtstart (event, &dt);
 
-  if (final_date != NULL)
-    {
-      dt.value = (icaltimetype*) final_date;
-      e_cal_component_set_dtend (event, &dt);
-    }
-  else
-    {
-      icaltimetype *dt_end = gcal_dup_icaltime (initial_date);
-      icaltime_adjust (dt_end, 1, 0, 0, 0);
-      dt.value = dt_end;
-      e_cal_component_set_dtend (event, &dt);
-      g_free (dt_end);
-    }
+  e_cal_component_free_datetime (&dt);
+  g_date_time_unref (utc_start);
+
+  /* End date */
+  if (!final_date)
+    final_date = g_date_time_add_days (initial_date, 1);
+
+  utc_end = g_date_time_to_utc (final_date);
+
+  dt.value = datetime_to_icaltime (utc_end);
+  dt.value->is_date = all_day;
+  dt.tzid = format_utc_offset (g_date_time_get_utc_offset (final_date));
+  e_cal_component_set_dtend (event, &dt);
+
+  e_cal_component_free_datetime (&dt);
+  g_date_time_unref (utc_end);
 
   summ.altrep = NULL;
   summ.value = summary;
