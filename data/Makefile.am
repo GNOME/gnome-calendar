@@ -53,6 +53,7 @@ EXTRA_DIST=                     \
   ui/date-selector.ui           \
   ui/edit-dialog.ui             \
   ui/menus.ui                   \
+  ui/quick-add-popover.ui       \
   ui/search-view.ui             \
   ui/source-dialog.ui           \
   ui/time-selector.ui           \

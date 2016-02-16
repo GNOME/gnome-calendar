@@ -42,6 +42,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-manager.h                                        \
     gcal-month-view.c                                     \
     gcal-month-view.h                                     \
+    gcal-quick-add-popover.c                              \
+    gcal-quick-add-popover.h                              \
     gcal-search-view.h                                    \
     gcal-search-view.c                                    \
     gcal-shell-search-provider.h                          \
