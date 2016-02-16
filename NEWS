@@ -1,3 +1,20 @@
+Major changes in 3.19.90:
+* Updated translations for:
+    * French (Alexandre Franke)
+    * German (Mario Blättermann)
+    * Hungarian (Balázs Meskó)
+    * Latvian (Rudolf Mazurs)
+    * Polish (Piotr Drag)
+    * Slovak (Dusan Kazik)
+    * Spanish (Daniel Mustieles)
+* Many classes are now final classes
+* Added visual clues for days with events on Year View (Isaque Galdino)
+* Renamed icon to match the application id (Cosimo Cecchi)
+* All interface elements that shows the calendar color are now updated accordingly
+* A huge rework on Calendar internals
+* Improved the quick add popover
+* Added a keyboard shortcuts window
+
 Major changes in 3.19.4:
 * Updated translations for:
     * Brazilian Portuguese
