@@ -33,6 +33,7 @@ struct _GcalEventWidget
 
   /* internal data */
   gboolean       read_only;
+  gchar         *css_class;
 
   GcalEvent     *event;
 
@@ -105,6 +106,13 @@ update_color (GcalEventWidget *self)
   context = gtk_widget_get_style_context (GTK_WIDGET (self));
   color = gcal_event_get_color (self->event);
 
+  /* Remove the old style class */
+  if (self->css_class)
+    {
+      gtk_style_context_remove_class (context, self->css_class);
+      g_clear_pointer (&self->css_class, g_free);
+    }
+
   color_str = gdk_rgba_to_string (color);
   color_id = g_quark_from_string (color_str);
   css_class = g_strdup_printf ("color-%d", color_id);
@@ -122,8 +130,10 @@ update_color (GcalEventWidget *self)
       gtk_style_context_add_class (context, "color-dark");
     }
 
+  /* Keep the current style around, so we can remove it later */
+  self->css_class = css_class;
+
   g_free (color_str);
-  g_free (css_class);
 }
 
 static void
@@ -244,6 +254,7 @@ gcal_event_widget_finalize (GObject *object)
   self = GCAL_EVENT_WIDGET (object);
 
   /* releasing properties */
+  g_clear_pointer (&self->css_class, g_free);
   g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->finalize (object);
