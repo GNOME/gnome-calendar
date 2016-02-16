@@ -60,8 +60,6 @@ static void     gcal_application_startup              (GApplication            *
 static gint     gcal_application_command_line         (GApplication            *app,
                                                        GApplicationCommandLine *command_line);
 
-static void     gcal_application_set_app_menu         (GApplication            *app);
-
 static void     gcal_application_create_new_event     (GSimpleAction           *new_event,
                                                        GVariant                *parameter,
                                                        gpointer                 app);
@@ -260,8 +258,6 @@ gcal_application_activate (GApplication *application)
                                                  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
     }
 
-  gcal_application_set_app_menu (application);
-
   if (self->window != NULL)
     {
       gtk_window_present (GTK_WINDOW (self->window));
@@ -299,6 +295,12 @@ gcal_application_activate (GApplication *application)
 static void
 gcal_application_startup (GApplication *app)
 {
+  /* add actions */
+  g_action_map_add_action_entries (G_ACTION_MAP (app),
+                                   gcal_app_entries,
+                                   G_N_ELEMENTS (gcal_app_entries),
+                                   app);
+
   G_APPLICATION_CLASS (gcal_application_parent_class)->startup (app);
 
   /* We're assuming the application is called as a service only by the shell search system */
@@ -412,27 +414,6 @@ gcal_application_dbus_unregister (GApplication *application,
 }
 
 static void
-gcal_application_set_app_menu (GApplication *app)
-{
-  GtkBuilder *builder;
-  GMenuModel *appmenu;
-
-  builder = gtk_builder_new ();
-  gtk_builder_add_from_resource (builder, "/org/gnome/calendar/menus.ui", NULL);
-
-  appmenu = (GMenuModel *)gtk_builder_get_object (builder, "appmenu");
-
-  g_action_map_add_action_entries (G_ACTION_MAP (app),
-                                   gcal_app_entries,
-                                   G_N_ELEMENTS (gcal_app_entries),
-                                   app);
-
-  gtk_application_set_app_menu (GTK_APPLICATION (app), appmenu);
-
-  g_object_unref (builder);
-}
-
-static void
 gcal_application_create_new_event (GSimpleAction *new_event,
                                    GVariant      *parameter,
                                    gpointer       app)
@@ -528,6 +509,7 @@ gcal_application_new (void)
   g_set_application_name ("Calendar");
 
   return g_object_new (gcal_application_get_type (),
+                       "resource-base-path", "/org/gnome/calendar",
                        "application-id", "org.gnome.Calendar",
                        "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
                        NULL);

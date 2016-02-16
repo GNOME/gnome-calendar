@@ -4,7 +4,6 @@
     <file alias="calendar-row.ui" compressed="true" preprocess="xml-stripblanks">ui/calendar-row.ui</file>
     <file alias="date-selector.ui" compressed="true" preprocess="xml-stripblanks">ui/date-selector.ui</file>
     <file alias="edit-dialog.ui" compressed="true" preprocess="xml-stripblanks">ui/edit-dialog.ui</file>
-    <file alias="menus.ui" compressed="true" preprocess="xml-stripblanks">ui/menus.ui</file>
     <file alias="online-account-row.ui" compressed="true" preprocess="xml-stripblanks">ui/online-account-row.ui</file>
     <file alias="quick-add-popover.ui" compressed="true" preprocess="xml-stripblanks">ui/quick-add-popover.ui</file>
     <file alias="search-view.ui" compressed="true" preprocess="xml-stripblanks">ui/search-view.ui</file>
@@ -13,5 +12,9 @@
     <file alias="window.ui" compressed="true" preprocess="xml-stripblanks">ui/window.ui</file>
     <file alias="year-view.ui" compressed="true" preprocess="xml-stripblanks">ui/year-view.ui</file>
     <file alias="gtk-styles.css" compressed="true">theme/gtk-styles.css</file>
+  </gresource>
+
+  <gresource prefix="/org/gnome/calendar/gtk">
+    <file alias="menus.ui" compressed="true" preprocess="xml-stripblanks">ui/menus.ui</file>
   </gresource>
 </gresources>

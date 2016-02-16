@@ -1305,6 +1305,12 @@ gcal_window_class_init(GcalWindowClass *klass)
 static void
 gcal_window_init (GcalWindow *self)
 {
+  /* Setup actions */
+  g_action_map_add_action_entries (G_ACTION_MAP (self),
+                                   actions,
+                                   G_N_ELEMENTS (actions),
+                                   self);
+
   gtk_widget_init_template (GTK_WIDGET (self));
 
   /* source dialog */
@@ -1336,19 +1342,13 @@ gcal_window_constructed (GObject *object)
   g_free (clock_format);
   g_object_unref (helper_settings);
 
-  // Setup actions
-  g_action_map_add_action_entries (G_ACTION_MAP (object),
-                                   actions,
-                                   G_N_ELEMENTS (actions),
-                                   object);
-
   /* header_bar: menu */
   builder = gtk_builder_new ();
   gtk_builder_add_from_resource (builder,
-                                 "/org/gnome/calendar/menus.ui",
+                                 "/org/gnome/calendar/gtk/menus.ui",
                                  NULL);
 
-  winmenu = (GMenuModel *)gtk_builder_get_object (builder, "winmenu");
+  winmenu = (GMenuModel *)gtk_builder_get_object (builder, "win-menu");
   gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (window->menu_button),
                                   winmenu);
 

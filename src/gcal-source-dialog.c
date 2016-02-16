@@ -1812,7 +1812,7 @@ gcal_source_dialog_constructed (GObject *object)
   g_action_map_add_action_entries (G_ACTION_MAP (self->action_group), actions, G_N_ELEMENTS (actions), object);
 
   // Load the "Add" button menu
-  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/menus.ui");
+  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/gtk/menus.ui");
 
   menu = G_MENU_MODEL (gtk_builder_get_object (builder, "add-source-menu"));
   gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (self->add_calendar_menu_button), menu);

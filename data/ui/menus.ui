@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <interface>
-  <menu id="appmenu">
+  <menu id="app-menu">
     <section>
       <item>
         <attribute name="label" translatable="yes">Add Eve_nt…</attribute>
@@ -25,7 +25,7 @@
       </item>
     </section>
   </menu>
-  <menu id="winmenu">
+  <menu id="win-menu">
     <section>
       <item>
         <attribute name="label" translatable="yes">Add Eve_nt…</attribute>
