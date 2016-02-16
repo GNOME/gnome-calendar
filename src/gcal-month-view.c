@@ -1175,6 +1175,10 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               gint column = cell_idx % 7;
               gint day = cell_idx - priv->days_delay + 1;
 
+              /* Day number is calculated differently on RTL languages */
+              if (priv->k)
+                day = 7 * row + MIRROR (day % 7, 0, 7) - length;
+
               if (i != 0)
                 {
                   child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
