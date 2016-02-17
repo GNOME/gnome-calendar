@@ -91,7 +91,17 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
     }
   else if (comp->tzid)
     {
-      tz = g_time_zone_new (comp->tzid);
+      icaltimezone *zone;
+      gchar *tzid;
+      gint offset;
+
+      zone = icaltimezone_get_builtin_timezone_from_tzid (comp->tzid);
+      offset = icaltimezone_get_utc_offset (zone, comp->value, NULL);
+      tzid = format_utc_offset (offset);
+
+      tz = g_time_zone_new (tzid);
+
+      g_free (tzid);
     }
   else
     {
@@ -181,41 +191,43 @@ gcal_event_set_component_internal (GcalEvent     *self,
     {
       ECalComponentDateTime start;
       ECalComponentDateTime end;
-      icaltimetype normalized_date;
+      icaltimetype date;
       GDateTime *date_start;
       GTimeZone *zone_start;
       GDateTime *date_end;
       GTimeZone *zone_end;
-      GDateTime *aux;
       gboolean start_is_all_day, end_is_all_day;
       gchar *description;
 
       /* Setup start date */
       e_cal_component_get_dtstart (component, &start);
-      normalized_date = icaltime_normalize (*start.value);
+      date = icaltime_normalize (*start.value);
       zone_start = get_timezone_from_ical (&start);
-      aux = icaltime_to_datetime (&normalized_date);
-      date_start = g_date_time_to_timezone (aux, zone_start);
-      start_is_all_day = datetime_is_date (aux);
+      date_start = g_date_time_new (zone_start,
+                                    date.year, date.month, date.day,
+                                    date.is_date ? 0 : date.hour,
+                                    date.is_date ? 0 : date.minute,
+                                    date.is_date ? 0 : date.second);
+      start_is_all_day = datetime_is_date (date_start);
 
-      self->dt_start = g_date_time_ref (date_start);
+      self->dt_start = date_start;
 
-      g_clear_pointer (&aux, g_date_time_unref);
 
       /* The timezone of the event is the timezone of the start date */
       self->timezone = g_time_zone_ref (zone_start);
 
       /* Setup end date */
       e_cal_component_get_dtend (component, &end);
-      normalized_date = icaltime_normalize (*end.value);
+      date = icaltime_normalize (*end.value);
       zone_end = get_timezone_from_ical (&end);
-      aux = icaltime_to_datetime (&normalized_date);
-      date_end = g_date_time_to_timezone (aux, zone_end);
-      end_is_all_day = datetime_is_date (aux);
+      date_end = g_date_time_new (zone_end,
+                                  date.year, date.month, date.day,
+                                  date.is_date ? 0 : date.hour,
+                                  date.is_date ? 0 : date.minute,
+                                  date.is_date ? 0 : date.second);
+      end_is_all_day = datetime_is_date (date_start);
 
       self->dt_end = g_date_time_ref (date_end);
-
-      g_clear_pointer (&aux, g_date_time_unref);
 
       /* Setup all day */
       self->all_day = start_is_all_day && end_is_all_day;
@@ -231,9 +243,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
       g_object_notify (G_OBJECT (self), "location");
       g_object_notify (G_OBJECT (self), "summary");
 
-      g_clear_pointer (&date_start, g_date_time_unref);
       g_clear_pointer (&zone_start, g_time_zone_unref);
-      g_clear_pointer (&date_end, g_date_time_unref);
       g_clear_pointer (&zone_end, g_time_zone_unref);
       g_clear_pointer (&description, g_free);
     }
