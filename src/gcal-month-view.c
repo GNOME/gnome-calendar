@@ -1264,9 +1264,11 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       l = (GList*) value;
       for (aux = l; aux != NULL; aux = g_list_next (aux))
         {
-          child_widget = (GtkWidget*) aux->data;
+          GcalEvent *event;
 
-          uuid = gcal_event_get_uid (gcal_event_widget_get_event (GCAL_EVENT_WIDGET (child_widget)));
+          child_widget = aux->data;
+          event = gcal_event_widget_get_event (aux->data);
+          uuid = gcal_event_get_uid (event);
 
           if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (ppriv->hidden_as_overflow, uuid))
             continue;
