@@ -367,13 +367,12 @@ update_active_date (GcalWindow   *window,
       date.minute = 0;
       date.second = 0;
       date.is_date = 0;
-      range_start = icaltime_as_timet_with_zone (date, default_zone);
+      date.zone = default_zone;
+      range_start = icaltime_as_timet (date);
 
-      date.day = 31;
-      date.month = 12;
-      date.hour = 23;
-      date.minute = 59;
-      range_end = icaltime_as_timet_with_zone (date, default_zone);
+      date.year++;
+      date = icaltime_normalize (date);
+      range_end = icaltime_as_timet (date);
 
       gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->year_view), range_start, range_end);
     }
@@ -387,12 +386,12 @@ update_active_date (GcalWindow   *window,
       date.minute = 0;
       date.second = 0;
       date.is_date = 0;
-      range_start = icaltime_as_timet_with_zone (date, default_zone);
+      date.zone = default_zone;
+      range_start = icaltime_as_timet (date);
 
-      date.day = time_days_in_month (new_date->year, new_date->month - 1);
-      date.hour = 23;
-      date.minute = 59;
-      range_end = icaltime_as_timet_with_zone (date, default_zone);
+      date.month++;
+      date = icaltime_normalize (date);
+      range_end = icaltime_as_timet (date);
 
       gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->month_view), range_start, range_end);
     }
