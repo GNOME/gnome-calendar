@@ -54,9 +54,6 @@ static void           gcal_subscriber_view_forall                    (GtkContain
                                                                       GtkCallback                       callback,
                                                                       gpointer                          callback_data);
 
-static gboolean       gcal_subscriber_view_is_child_multicell        (GcalSubscriberView               *subscriber,
-                                                                      GcalEventWidget                  *child);
-
 static guint          gcal_subscriber_view_get_child_cell            (GcalSubscriberView               *subscriber,
                                                                       GcalEventWidget                  *child);
 
@@ -106,7 +103,6 @@ gcal_subscriber_view_class_init (GcalSubscriberViewClass *klass)
 {
   GtkContainerClass *container_class;
 
-  klass->is_child_multicell = gcal_subscriber_view_is_child_multicell;
   klass->get_child_cell = gcal_subscriber_view_get_child_cell;
 
   G_OBJECT_CLASS (klass)->finalize = gcal_subscriber_view_finalize;
@@ -192,7 +188,7 @@ gcal_subscriber_view_add (GtkContainer *container,
   l = g_list_append (l, widget);
   g_hash_table_insert (priv->children, g_strdup (uuid), l);
 
-  if (gcal_subscriber_view_is_child_multicell (GCAL_SUBSCRIBER_VIEW (container), GCAL_EVENT_WIDGET (widget)))
+  if (gcal_event_is_multiday (event))
     {
       priv->multi_cell_children = g_list_insert_sorted (priv->multi_cell_children, widget,
                                                        (GCompareFunc) gcal_event_widget_compare_by_length);
@@ -302,23 +298,6 @@ gcal_subscriber_view_forall (GtkContainer *container,
       (*callback) (widget, callback_data);
     }
   g_list_free (l);
-}
-
-static gboolean
-gcal_subscriber_view_is_child_multicell (GcalSubscriberView  *subscriber,
-                                         GcalEventWidget *child)
-{
-  GcalSubscriberViewClass *klass;
-
-  g_return_val_if_fail (GCAL_IS_SUBSCRIBER_VIEW (subscriber), FALSE);
-  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (child), FALSE);
-
-  klass = GCAL_SUBSCRIBER_VIEW_GET_CLASS (subscriber);
-
-  if (klass->is_child_multicell)
-    return klass->is_child_multicell (subscriber, child);
-
-  return FALSE;
 }
 
 static guint

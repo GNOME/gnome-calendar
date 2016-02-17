@@ -53,7 +53,6 @@ struct _GcalSubscriberViewClass
   void       (*event_activated)   (GcalSubscriberView *subscriber_view, GcalEventWidget *event_widget);
 
   /*< public >*/
-  gboolean  (*is_child_multicell) (GcalSubscriberView *subscriber_view, GcalEventWidget *child);
   guint     (*get_child_cell)     (GcalSubscriberView *subscriber_view, GcalEventWidget *child);
   void      (*clear_state)        (GcalSubscriberView *subscriber_view);
 

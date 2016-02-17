@@ -161,9 +161,6 @@ static gboolean       gcal_month_view_button_release        (GtkWidget      *wid
 static void           gcal_month_view_direction_changed     (GtkWidget        *widget,
                                                              GtkTextDirection  previous_direction);
 
-static gboolean       gcal_month_view_is_child_multiday     (GcalSubscriberView  *subscriber,
-                                                             GcalEventWidget     *child);
-
 static guint          gcal_month_view_get_child_cell        (GcalSubscriberView *subscriber,
                                                              GcalEventWidget    *child);
 
@@ -781,7 +778,6 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   widget_class->key_press_event = gcal_month_view_key_press;
 
   subscriber_view_class = GCAL_SUBSCRIBER_VIEW_CLASS (klass);
-  subscriber_view_class->is_child_multicell = gcal_month_view_is_child_multiday;
   subscriber_view_class->get_child_cell = gcal_month_view_get_child_cell;
   subscriber_view_class->clear_state = gcal_month_view_clear_state;
 
@@ -1837,13 +1833,6 @@ gcal_month_view_direction_changed (GtkWidget        *widget,
     priv->k = 0;
   else if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
     priv->k = 1;
-}
-
-static gboolean
-gcal_month_view_is_child_multiday (GcalSubscriberView *subscriber,
-                                     GcalEventWidget    *child)
-{
-  return gcal_event_is_multiday (gcal_event_widget_get_event (child));
 }
 
 static guint
