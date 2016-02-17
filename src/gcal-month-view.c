@@ -1098,12 +1098,14 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
        * month. Otherwise, the first cell is the 1st day of the month.
        */
       j = 1;
-      date = gcal_event_get_date_start (event);
+      date = g_date_time_to_local (gcal_event_get_date_start (event));
 
       if (g_date_time_get_month (date) == priv->date->month)
         j = g_date_time_get_day_of_month (date);
 
       j += priv->days_delay;
+
+      g_clear_pointer (&date, g_date_time_unref);
 
       /*
        * Calculate the first cell position according to the locale
@@ -1116,7 +1118,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
        * if the event is all day or not.
        */
       j = icaltime_days_in_month (priv->date->month, priv->date->year);
-      date = gcal_event_get_date_end (event);
+      date = g_date_time_to_local (gcal_event_get_date_end (event));
 
       if (g_date_time_get_month (date) == priv->date->month)
         {
@@ -1127,6 +1129,8 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
             j--;
         }
       j += priv->days_delay;
+
+      g_clear_pointer (&date, g_date_time_unref);
 
       last_cell = 7 * ((j - 1) / 7)+ 6 * priv->k + sw * ((j - 1) % 7);
 
@@ -1839,11 +1843,18 @@ static guint
 gcal_month_view_get_child_cell (GcalSubscriberView *subscriber,
                                 GcalEventWidget    *child)
 {
+  GcalEvent *event;
   GDateTime *dt;
+  gint cell;
 
-  dt = gcal_event_widget_get_date_start (child);
+  event = gcal_event_widget_get_event (child);
+  dt = g_date_time_to_local (gcal_event_get_date_start (event));
 
-  return g_date_time_get_day_of_month (dt);
+  cell = g_date_time_get_day_of_month (dt);
+
+  g_clear_pointer (&dt, g_date_time_unref);
+
+  return cell;
 }
 
 static void
