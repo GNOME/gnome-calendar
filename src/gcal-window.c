@@ -346,12 +346,9 @@ static void
 update_active_date (GcalWindow   *window,
                     icaltimetype *new_date)
 {
+  GDateTime *date_start, *date_end;
   time_t range_start, range_end;
-  icaltimetype date;
   icaltimetype *previous_date;
-  icaltimezone* default_zone;
-
-  default_zone = gcal_manager_get_system_timezone (window->manager);
 
   previous_date = window->active_date;
   window->active_date = new_date;
@@ -360,40 +357,31 @@ update_active_date (GcalWindow   *window,
   /* year_view */
   if (previous_date->year != new_date->year)
     {
-      date = *new_date;
-      date.day = 1;
-      date.month = 1;
-      date.hour = 0;
-      date.minute = 0;
-      date.second = 0;
-      date.is_date = 0;
-      date.zone = default_zone;
-      range_start = icaltime_as_timet (date);
+      date_start = g_date_time_new_local (new_date->year, 1, 1, 0, 0, 0);
+      range_start = g_date_time_to_unix (date_start);
 
-      date.year++;
-      date = icaltime_normalize (date);
-      range_end = icaltime_as_timet (date);
+      date_end = g_date_time_add_years (date_start, 1);
+      range_end = g_date_time_to_unix (date_end);
 
       gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->year_view), range_start, range_end);
+
+      g_clear_pointer (&date_start, g_date_time_unref);
+      g_clear_pointer (&date_end, g_date_time_unref);
     }
 
   /* month_view */
   if (previous_date->month != new_date->month || previous_date->year != new_date->year)
     {
-      date = *new_date;
-      date.day = 1;
-      date.hour = 0;
-      date.minute = 0;
-      date.second = 0;
-      date.is_date = 0;
-      date.zone = default_zone;
-      range_start = icaltime_as_timet (date);
+      date_start = g_date_time_new_local (new_date->year, new_date->month, 1, 0, 0, 0);
+      range_start = g_date_time_to_unix (date_start);
 
-      date.month++;
-      date = icaltime_normalize (date);
-      range_end = icaltime_as_timet (date);
+      date_end = g_date_time_add_months (date_start, 1);
+      range_end = g_date_time_to_unix (date_end);
 
       gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->month_view), range_start, range_end);
+
+      g_clear_pointer (&date_start, g_date_time_unref);
+      g_clear_pointer (&date_end, g_date_time_unref);
     }
 
   g_free (previous_date);
