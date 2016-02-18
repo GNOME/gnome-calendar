@@ -1390,6 +1390,13 @@ gcal_window_finalize (GObject *object)
       window->save_geometry_timeout_id = 0;
     }
 
+  /* If we have a queued event to delete, remove it now */
+  if (window->event_to_delete)
+    {
+      gcal_manager_remove_event (window->manager, window->event_to_delete);
+      g_clear_object (&window->event_to_delete);
+    }
+
   g_clear_object (&window->manager);
   g_clear_object (&window->views_switcher);
 
