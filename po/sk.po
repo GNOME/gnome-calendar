@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-02-16 16:00+0000\n"
-"PO-Revision-Date: 2016-02-16 17:49+0100\n"
+"POT-Creation-Date: 2016-02-18 08:10+0000\n"
+"PO-Revision-Date: 2016-02-18 16:30+0100\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
 #: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:501
+#: ../src/gcal-application.c:482
 msgid "Calendar"
 msgstr "Kalendár"
 
@@ -147,6 +147,81 @@ msgstr "Celý deň"
 msgid "Delete event"
 msgstr "Odstrániť udalosť"
 
+#: ../data/ui/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Všeobecné"
+
+#: ../data/ui/help-overlay.ui.h:2
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "Nová udalosť"
+
+#: ../data/ui/help-overlay.ui.h:3
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Zatvorenie okna"
+
+#: ../data/ui/help-overlay.ui.h:4
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Vyhľadávanie"
+
+#: ../data/ui/help-overlay.ui.h:5
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Zobrazenie pomocníka"
+
+#: ../data/ui/help-overlay.ui.h:6
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Klávesové skratky"
+
+#: ../data/ui/help-overlay.ui.h:7
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Navigácia"
+
+#: ../data/ui/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "Prejdenie späť"
+
+#: ../data/ui/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "Prejdenie dopredu"
+
+#: ../data/ui/help-overlay.ui.h:10
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "Zobrazenie dnešného dňa"
+
+#: ../data/ui/help-overlay.ui.h:11
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "Nasledujúce zobrazenie"
+
+#: ../data/ui/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "Predchádzajúce zobrazenie"
+
+#: ../data/ui/help-overlay.ui.h:13
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Zobrazenie"
+
+#: ../data/ui/help-overlay.ui.h:14
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "Prehľad mesiaca"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "Prehľad roka"
+
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
 msgstr "Pridať udalosť…"
@@ -156,31 +231,34 @@ msgid "_Search…"
 msgstr "_Hľadať…"
 
 #: ../data/ui/menus.ui.h:3
+msgid "_Keyboard Shortcuts"
+msgstr "_Klávesové skratky"
+
+#: ../data/ui/menus.ui.h:4
 msgid "_About"
 msgstr "_O programe"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:5
 msgid "_Quit"
 msgstr "_Ukončiť"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:6
 msgid "_Synchronize"
 msgstr "_Synchronizovať"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:7
 msgid "From Web…"
 msgstr "Z webu…"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:8
 msgid "New Local Calendar…"
 msgstr "Nový miestny kalendár…"
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:9
 msgid "From File…"
 msgstr "Zo súboru…"
 
 #: ../data/ui/quick-add-popover.ui.h:1
-#| msgid "Edit Details"
 msgid "Edit Details…"
 msgstr "Upraviť podrobnosti…"
 
@@ -196,8 +274,8 @@ msgstr "Nenašli sa žiadne výsledky"
 msgid "Try a different search"
 msgstr "Skúste vyhľadať niečo iné"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1080
-#: ../src/gcal-window.c:1084
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1065
 msgid "Undo"
 msgstr "Vrátiť späť"
 
@@ -322,7 +400,7 @@ msgid "Year"
 msgstr "Rok"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:251 ../src/gcal-year-view.c:471
+#: ../src/gcal-year-view.c:251 ../src/gcal-year-view.c:473
 msgid "Today"
 msgstr "Dnes"
 
@@ -335,35 +413,35 @@ msgstr "Nastavenia kalendára"
 msgid "No events"
 msgstr "Žiadne udalosti"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:826
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:827
 msgid "Add Event…"
 msgstr "Pridať udalosť…"
 
-#: ../src/gcal-application.c:104
+#: ../src/gcal-application.c:102
 msgid "Display version number"
 msgstr "Vypíše číslo verzie"
 
-#: ../src/gcal-application.c:109
+#: ../src/gcal-application.c:107
 msgid "Open calendar on the passed date"
 msgstr "Otvorí kalendár na určenom dátume"
 
-#: ../src/gcal-application.c:114
+#: ../src/gcal-application.c:112
 msgid "Open calendar showing the passed event"
 msgstr "Otvorí kalendár zobrazujúc určenú udalosť"
 
-#: ../src/gcal-application.c:322
+#: ../src/gcal-application.c:324
 msgid "- Calendar management"
 msgstr "- Správa kalendára"
 
-#: ../src/gcal-application.c:489
+#: ../src/gcal-application.c:470
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Autorské práva © %Id Autori programu Kalendár"
 
-#: ../src/gcal-application.c:495
+#: ../src/gcal-application.c:476
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Autorské práva © %Id–%Id Autori programu Kalendár"
 
-#: ../src/gcal-application.c:508
+#: ../src/gcal-application.c:489
 msgid "translator-credits"
 msgstr "Dušan Kazik <prescott66@gmail.com>"
 
@@ -375,16 +453,16 @@ msgstr "Deň"
 msgid "Save"
 msgstr "Uložiť"
 
-#: ../src/gcal-edit-dialog.c:606 ../src/gcal-quick-add-popover.c:405
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:405
 msgid "Unnamed event"
 msgstr "Nepomenovaná udalosť"
 
-#: ../src/gcal-month-view.c:1057
+#: ../src/gcal-month-view.c:1058
 msgid "Other events"
 msgstr "Iné udalosti"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1477
+#: ../src/gcal-month-view.c:1487
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -470,11 +548,11 @@ msgstr "Poludnie"
 msgid "00:00 PM"
 msgstr "00:00 Popoludní"
 
-#: ../src/gcal-window.c:1080
+#: ../src/gcal-window.c:1061
 msgid "Another event deleted"
 msgstr "Iná udalosť bola odstránená"
 
-#: ../src/gcal-window.c:1084
+#: ../src/gcal-window.c:1065
 msgid "Event deleted"
 msgstr "Udalosť bola odstránená"
 
@@ -504,6 +582,3 @@ msgstr "Udalosť bola odstránená"
 
 #~ msgid "%.2d:%.2d %s"
 #~ msgstr "%.2d:%.2d %s"
-
-#~ msgid "_New Event"
-#~ msgstr "_Nová udalosť"
