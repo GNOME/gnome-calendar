@@ -480,6 +480,7 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
     {
       GDateTime *start_date;
       GDateTime *end_date;
+      gboolean all_day;
       gchar *note_text;
 
       /* Update summary */
@@ -494,8 +495,19 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
       g_free (note_text);
 
       /* Update all day */
-      gcal_event_set_all_day (dialog->event,
-                              gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check)));
+      all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
+
+      gcal_event_set_all_day (dialog->event, all_day);
+
+      /* By definition, all day events are always UTC */
+      if (all_day)
+        {
+          GTimeZone *utc = g_time_zone_new_utc ();
+
+          gcal_event_set_timezone (dialog->event, utc);
+
+          g_clear_pointer (&utc, g_time_zone_unref);
+        }
 
       /* Update start & end dates */
       start_date = gcal_edit_dialog_get_date_start (dialog);
