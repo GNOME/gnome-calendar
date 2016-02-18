@@ -148,7 +148,7 @@
 "  background-size: 100%% 100%%, 100%% 100%%;"\
 "  background-origin: padding-box, border-box;"\
 "  background-clip: padding-box, border-box;"\
-"  border-radius: 0 5px 4px 0;"\
+"  border-radius: 0 2px 2px 0;"\
 "  padding-right: 4px;"\
 "  padding-left: 24px;"\
 "  padding-top: 3px;"\
@@ -180,7 +180,7 @@
 "                                    @event_shadow_color	17px);"\
 "  border-bottom: 1px solid transparent; /* for the shadow displacement */"\
 "  background-position: right bottom, right bottom;"\
-"  border-radius: 4px 0 0 5px;"\
+"  border-radius: 2px 0 0 2px;"\
 "  padding-right: 24px;"\
 "  padding-left: 4px;"\
 "}"\
@@ -214,7 +214,7 @@
 "  background-size: 100%% 100%%, 100%% 100%%;"\
 "  background-origin: padding-box, border-box;"\
 "  background-clip: padding-box, border-box;"\
-"  border-radius: 4px 0 0 5px;"\
+"  border-radius: 2px 0 0 2px;"\
 "  padding-right: 24px;"\
 "  padding-left: 4px;"\
 "  padding-top: 3px;"\
@@ -245,7 +245,7 @@
 "                                    transparent         16px,"\
 "                                    @event_shadow_color	17px);"\
 "  background-position: left bottom, left bottom;"\
-"  border-radius: 0 4px 5px 0;"\
+"  border-radius: 0 2px 2px 0;"\
 "  padding-right: 4px;"\
 "  padding-left: 24px;"\
 "}"\
