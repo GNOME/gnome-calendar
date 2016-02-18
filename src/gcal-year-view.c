@@ -448,6 +448,7 @@ update_sidebar_headers (GtkListBoxRow *row,
 
   row_event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (row_child));
   row_date = gcal_event_get_date_start (row_event);
+  row_date = g_date_time_to_local (row_date);
   row_shift = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (row_child), "shift"));
 
   if (before != NULL)
@@ -455,6 +456,7 @@ update_sidebar_headers (GtkListBoxRow *row,
       before_child = gtk_bin_get_child (GTK_BIN (before));
       before_event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (before_child));
       before_date = gcal_event_get_date_start (before_event);
+      before_date = g_date_time_to_local (before_date);
       before_shift = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (before_child), "shift"));
     }
 
@@ -511,6 +513,9 @@ update_sidebar_headers (GtkListBoxRow *row,
   if (row_header != NULL)
     gtk_widget_show_all (row_header);
   gtk_list_box_row_set_header (row, row_header);
+
+  g_clear_pointer (&before_date, g_date_time_unref);
+  g_clear_pointer (&row_date, g_date_time_unref);
 }
 
 static gint
