@@ -1000,28 +1000,31 @@ gcal_event_set_timezone (GcalEvent *self,
 
   if (self->timezone != timezone)
     {
-      GDateTime *new_dtstart;
-
       g_clear_pointer (&self->timezone, g_time_zone_unref);
       self->timezone = g_time_zone_ref (timezone);
 
       /* Swap the timezone from the component start & end dates*/
-      new_dtstart = g_date_time_to_timezone (self->dt_start, timezone);
-      gcal_event_set_date_start (self, new_dtstart);
-
-      if (self->dt_end)
+      if (!self->all_day)
         {
-          GDateTime *new_dtend;
+          GDateTime *new_dtstart;
 
-          new_dtend = g_date_time_to_timezone (self->dt_end, timezone);
-          gcal_event_set_date_end (self, new_dtend);
+          new_dtstart = g_date_time_to_timezone (self->dt_start, timezone);
+          gcal_event_set_date_start (self, new_dtstart);
+
+          if (self->dt_end)
+            {
+              GDateTime *new_dtend;
+
+              new_dtend = g_date_time_to_timezone (self->dt_end, timezone);
+              gcal_event_set_date_end (self, new_dtend);
+
+              g_clear_pointer (&new_dtstart, g_date_time_unref);
+            }
 
           g_clear_pointer (&new_dtstart, g_date_time_unref);
         }
 
       g_object_notify (G_OBJECT (self), "timezone");
-
-      g_clear_pointer (&new_dtstart, g_date_time_unref);
     }
 }
 

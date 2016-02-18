@@ -607,6 +607,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       if (!event)
         goto out;
 
+      all_day = gcal_event_get_all_day (event);
       source = gcal_event_get_source (event);
 
       /* Clear event data */
@@ -636,8 +637,11 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
                                    e_source_get_display_name (source));
 
       /* retrieve start and end dates */
-      date_start = g_date_time_to_local (gcal_event_get_date_start (event));
-      date_end = g_date_time_to_local (gcal_event_get_date_end (event));
+      date_start = gcal_event_get_date_start (event);
+      date_start = all_day ? g_date_time_ref (date_start) : g_date_time_to_local (date_start);
+
+      date_end = gcal_event_get_date_end (event);
+      date_end = all_day ? g_date_time_ref (date_end) : g_date_time_to_local (date_end);
 
       /* date */
       gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->start_date_selector), date_start);
@@ -648,8 +652,6 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->end_time_selector), date_end);
 
       /* all_day  */
-      all_day = gcal_event_get_all_day (event);
-
       gtk_widget_set_sensitive (dialog->start_time_selector, dialog->writable && !all_day);
       gtk_widget_set_sensitive (dialog->end_time_selector, dialog->writable && !all_day);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->all_day_check), all_day);

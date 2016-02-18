@@ -264,8 +264,8 @@ show_popover_for_position (GcalMonthView *view,
     {
       GDateTime *start_dt, *end_dt;
 
-      start_dt = g_date_time_new_local (priv->date->year, priv->date->month, start_day, 0, 0, 0);
-      end_dt = g_date_time_new_local (priv->date->year, priv->date->month, end_day + 1, 0, 0, 0);
+      start_dt = g_date_time_new_utc (priv->date->year, priv->date->month, start_day, 0, 0, 0);
+      end_dt = g_date_time_new_utc (priv->date->year, priv->date->month, end_day + 1, 0, 0, 0);
 
       /* Swap dates if start > end */
       if (start_day > end_day)
@@ -750,7 +750,7 @@ add_new_event_button_cb (GtkWidget *button,
   gtk_widget_hide (priv->overflow_popover);
 
   day = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (priv->overflow_popover), "selected-day"));
-  start_date = g_date_time_new_local (priv->date->year, priv->date->month, day, 0, 0, 0);
+  start_date = g_date_time_new_utc (priv->date->year, priv->date->month, day, 0, 0, 0);
 
   g_signal_emit_by_name (GCAL_VIEW (user_data), "create-event-detailed", start_date, NULL);
 
@@ -1081,7 +1081,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   for (l = ppriv->multi_cell_children; l != NULL; l = g_list_next (l))
     {
       gint first_cell, last_cell, first_row, last_row, start, end;
-      gboolean visible;
+      gboolean visible, all_day;
 
       GDateTime *date;
       GcalEvent *event;
@@ -1090,6 +1090,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       child_widget = (GtkWidget*) l->data;
       event = gcal_event_widget_get_event (l->data);
       uuid = gcal_event_get_uid (event);
+      all_day = gcal_event_get_all_day (event);
 
       if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (ppriv->hidden_as_overflow, uuid))
         continue;
@@ -1103,7 +1104,8 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
        * month. Otherwise, the first cell is the 1st day of the month.
        */
       j = 1;
-      date = g_date_time_to_local (gcal_event_get_date_start (event));
+      date = gcal_event_get_date_start (event);
+      date = all_day ? g_date_time_ref (date) : g_date_time_to_local (date);
 
       if (g_date_time_get_month (date) == priv->date->month)
         j = g_date_time_get_day_of_month (date);
@@ -1123,14 +1125,15 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
        * if the event is all day or not.
        */
       j = icaltime_days_in_month (priv->date->month, priv->date->year);
-      date = g_date_time_to_local (gcal_event_get_date_end (event));
+      date = gcal_event_get_date_end (event);
+      date = all_day ? g_date_time_ref (date) : g_date_time_to_local (date);
 
       if (g_date_time_get_month (date) == priv->date->month)
         {
           j = g_date_time_get_day_of_month (date);
 
           /* If the event is all day, we have to subtract 1 to find the the real date */
-          if (gcal_event_get_all_day (event))
+          if (all_day)
             j--;
         }
       j += priv->days_delay;
@@ -1855,11 +1858,20 @@ gcal_month_view_get_child_cell (GcalSubscriberView *subscriber,
   gint cell;
 
   event = gcal_event_widget_get_event (child);
-  dt = g_date_time_to_local (gcal_event_get_date_start (event));
+  dt = gcal_event_get_date_start (event);
 
-  cell = g_date_time_get_day_of_month (dt);
+  /* Don't adjust the date when the event is all day */
+  if (gcal_event_get_all_day (event))
+    {
+      cell = g_date_time_get_day_of_month (dt);
+    }
+  else
+    {
+      dt = g_date_time_to_local (dt);
+      cell = g_date_time_get_day_of_month (dt);
 
-  g_clear_pointer (&dt, g_date_time_unref);
+      g_clear_pointer (&dt, g_date_time_unref);
+    }
 
   return cell;
 }

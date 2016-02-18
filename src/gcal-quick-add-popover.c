@@ -406,7 +406,9 @@ edit_or_create_event (GcalQuickAddPopover *self,
 
   /* Create an ECalComponent from the data above */
   component = build_component_from_details (summary, date_start, date_end);
+
   event = gcal_event_new (source, component);
+  gcal_event_set_all_day (event, TRUE);
 
   /* If we clicked edit button, send a signal; otherwise, create the event */
   if (button == self->add_button)
