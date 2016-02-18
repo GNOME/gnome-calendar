@@ -607,10 +607,12 @@ update_list_box_headers (GtkListBoxRow *row,
   row_child = gtk_bin_get_child (GTK_BIN (row));
   row_event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (row_child));
   row_date = gcal_event_widget_get_date_start (GCAL_EVENT_WIDGET (row_child));
+  row_date = g_date_time_to_local (row_date);
   if (before != NULL)
     {
       before_child = gtk_bin_get_child (GTK_BIN (before));
       before_date = gcal_event_widget_get_date_start (GCAL_EVENT_WIDGET (before_child));
+      before_date = g_date_time_to_local (before_date);
     }
 
   if (!gcal_event_is_multiday (row_event) &&
@@ -640,6 +642,9 @@ update_list_box_headers (GtkListBoxRow *row,
       gtk_list_box_row_set_header (row, vbox);
       g_free (time);
     }
+
+  g_clear_pointer (&before_date, g_date_time_unref);
+  g_clear_pointer (&row_date, g_date_time_unref);
 }
 
 static gboolean
