@@ -166,6 +166,9 @@ gcal_event_update_uid_internal (GcalEvent *self)
   source_id = self->source ? e_source_get_uid (self->source) : "";
   id = e_cal_component_get_id (self->component);
 
+  /* Clear the previous uid */
+  g_clear_pointer (&self->uid, g_free);
+
   if (id->rid != NULL)
     {
       self->uid = g_strdup_printf ("%s:%s:%s",
