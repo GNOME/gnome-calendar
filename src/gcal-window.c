@@ -858,7 +858,7 @@ show_source_dialog (GtkButton *button,
 
   gtk_widget_hide (window->calendar_popover);
 
-  gtk_dialog_run (GTK_DIALOG (window->source_dialog));
+  gtk_widget_show (window->source_dialog);
 }
 
 static void
@@ -880,7 +880,7 @@ source_row_activated (GtkListBox    *listbox,
 
   gtk_widget_hide (window->calendar_popover);
 
-  gtk_dialog_run (GTK_DIALOG (window->source_dialog));
+  gtk_widget_show (window->source_dialog);
 }
 
 static void
@@ -985,7 +985,7 @@ edit_event (GcalQuickAddPopover *popover,
   gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
   gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
 
-  gtk_dialog_run (GTK_DIALOG (window->edit_dialog));
+  gtk_widget_show (window->edit_dialog);
 }
 
 static void
@@ -1004,7 +1004,7 @@ create_event_detailed_cb (GcalView *view,
   gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
   gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
 
-  gtk_dialog_run (GTK_DIALOG (window->edit_dialog));
+  gtk_widget_show (window->edit_dialog);
 
   g_clear_object (&comp);
 }
@@ -1021,7 +1021,7 @@ event_activated (GcalView        *view,
   gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), FALSE);
   gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
 
-  gtk_dialog_run (GTK_DIALOG (window->edit_dialog));
+  gtk_widget_show (window->edit_dialog);
 }
 
 static void
