@@ -199,9 +199,9 @@ popover.events button {
 
 event-widget {
     border-radius: 2px;
-    margin: 2px;
-    padding: 4px;
-    font: 10;
+    margin: 2px 2px 1px;
+    padding: 3px 4px;
+    font: 9;
 }
 
 event-widget.color-dark {
