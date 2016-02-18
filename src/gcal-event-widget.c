@@ -253,6 +253,10 @@ gcal_event_widget_finalize (GObject *object)
 
   self = GCAL_EVENT_WIDGET (object);
 
+  /* disconnect signals */
+  g_signal_handlers_disconnect_by_func (self->event, update_color, self);
+  g_signal_handlers_disconnect_by_func (self->event, gtk_widget_queue_draw, self);
+
   /* releasing properties */
   g_clear_pointer (&self->css_class, g_free);
   g_clear_object (&self->event);
