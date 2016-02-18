@@ -380,18 +380,18 @@ edit_or_create_event (GcalQuickAddPopover *self,
   source = g_object_get_data (G_OBJECT (self->selected_row), "source");
 
   /* Gather start date */
-  date_start = g_date_time_new_local (g_date_time_get_year (self->date_start),
-                                      g_date_time_get_month (self->date_start),
-                                      g_date_time_get_day_of_month (self->date_start),
-                                      0, 0, 0);
+  date_start = g_date_time_new_utc (g_date_time_get_year (self->date_start),
+                                    g_date_time_get_month (self->date_start),
+                                    g_date_time_get_day_of_month (self->date_start),
+                                    0, 0, 0);
 
   /* Gather date end */
   if (self->date_end)
     {
-      date_end = g_date_time_new_local (g_date_time_get_year (self->date_end),
-                                        g_date_time_get_month (self->date_end),
-                                        g_date_time_get_day_of_month (self->date_end),
-                                        0, 0, 0);
+      date_end = g_date_time_new_utc (g_date_time_get_year (self->date_end),
+                                      g_date_time_get_month (self->date_end),
+                                      g_date_time_get_day_of_month (self->date_end),
+                                      0, 0, 0);
     }
   else
     {
@@ -410,9 +410,25 @@ edit_or_create_event (GcalQuickAddPopover *self,
 
   /* If we clicked edit button, send a signal; otherwise, create the event */
   if (button == self->add_button)
-    gcal_manager_create_event (self->manager, event);
+    {
+      gcal_manager_create_event (self->manager, event);
+    }
   else
-    g_signal_emit (self, signals[EDIT_EVENT], 0, event);
+    {
+      GTimeZone *local_tz = g_time_zone_new_local ();
+
+      /*
+       * When the user wants to edit the event, we want to make sure
+       * the event is in the user's timezone. It won't be a problem
+       * if the all day setting don't change, as we already handle this
+       * case at GcalEditDialog code.
+       */
+      gcal_event_set_timezone (event, local_tz);
+
+      g_signal_emit (self, signals[EDIT_EVENT], 0, event);
+
+      g_clear_pointer (&local_tz, g_time_zone_unref);
+    }
 
   gtk_widget_hide (GTK_WIDGET (self));
 
