@@ -1064,7 +1064,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   start_grid_y = get_start_grid_y (widget);
   cell_width = allocation->width / 7.0;
   cell_height = (allocation->height - start_grid_y) / 6.0;
-  vertical_cell_space = cell_height - (padding_bottom + font_height);
+  vertical_cell_space = cell_height - (padding_bottom * 2 + font_height);
 
   for (i = 0; i < 42; i++)
     size_left[i] = vertical_cell_space;
