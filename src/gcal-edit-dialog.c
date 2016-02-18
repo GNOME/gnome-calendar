@@ -690,19 +690,28 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
 GDateTime*
 gcal_edit_dialog_get_date_start (GcalEditDialog *dialog)
 {
+  GTimeZone *tz;
   GDateTime *date;
   GDateTime *time;
   GDateTime *retval;
+  gboolean all_day;
+
+  /* Use UTC timezone for All Day events, otherwise use the event's timezone */
+  all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
+  tz = all_day ? g_time_zone_new_utc () : g_time_zone_ref (gcal_event_get_timezone (dialog->event));
 
   date = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (dialog->start_date_selector));
   time = gcal_time_selector_get_time (GCAL_TIME_SELECTOR (dialog->start_time_selector));
 
-  retval = g_date_time_new_local (g_date_time_get_year (date),
-                                  g_date_time_get_month (date),
-                                  g_date_time_get_day_of_month (date),
-                                  g_date_time_get_hour (time),
-                                  g_date_time_get_minute (time),
-                                  0);
+  retval = g_date_time_new (tz,
+                            g_date_time_get_year (date),
+                            g_date_time_get_month (date),
+                            g_date_time_get_day_of_month (date),
+                            g_date_time_get_hour (time),
+                            g_date_time_get_minute (time),
+                            0);
+
+  g_clear_pointer (&tz, g_time_zone_unref);
 
   return retval;
 }
@@ -710,19 +719,28 @@ gcal_edit_dialog_get_date_start (GcalEditDialog *dialog)
 GDateTime*
 gcal_edit_dialog_get_date_end (GcalEditDialog *dialog)
 {
+  GTimeZone *tz;
   GDateTime *date;
   GDateTime *time;
   GDateTime *retval;
+  gboolean all_day;
+
+  /* Use UTC timezone for All Day events, otherwise use the event's timezone */
+  all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
+  tz = all_day ? g_time_zone_new_utc () : g_time_zone_ref (gcal_event_get_timezone (dialog->event));
 
   date = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (dialog->end_date_selector));
   time = gcal_time_selector_get_time (GCAL_TIME_SELECTOR (dialog->end_time_selector));
 
-  retval = g_date_time_new_local (g_date_time_get_year (date),
-                                  g_date_time_get_month (date),
-                                  g_date_time_get_day_of_month (date),
-                                  g_date_time_get_hour (time),
-                                  g_date_time_get_minute (time),
-                                  0);
+  retval = g_date_time_new (tz,
+                            g_date_time_get_year (date),
+                            g_date_time_get_month (date),
+                            g_date_time_get_day_of_month (date),
+                            g_date_time_get_hour (time),
+                            g_date_time_get_minute (time),
+                            0);
+
+  g_clear_pointer (&tz, g_time_zone_unref);
 
   return retval;
 }
