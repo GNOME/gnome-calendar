@@ -17,6 +17,8 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <glib/gi18n.h>
+
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 
@@ -31,6 +33,7 @@ struct _GcalEventWidget
   GDateTime     *dt_end;
 
   /* internal data */
+  gboolean       different_timezone : 1;
   gboolean       has_reminders : 1;
   gboolean       read_only : 1;
   gchar         *css_class;
@@ -140,6 +143,9 @@ static void
 gcal_event_widget_set_event_internal (GcalEventWidget *self,
                                       GcalEvent       *event)
 {
+  GDateTime *now_local;
+  gint local_offset, event_offset;
+
   /*
    * This function is called only once, since the property is
    * set as CONSTRUCT_ONLY. Any other attempt to set an event
@@ -161,6 +167,22 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
 
   /* Update color */
   update_color (self);
+
+  /*
+   * Check if this event is in a different timezone, except
+   * for all day events (which are always UTC).
+   */
+  now_local = g_date_time_new_now_local ();
+
+  local_offset = g_date_time_get_utc_offset (now_local);
+  event_offset = g_date_time_get_utc_offset (gcal_event_get_date_start (event));
+
+  self->different_timezone = !gcal_event_get_all_day (event) && local_offset != event_offset;
+
+  if (self->different_timezone)
+    gtk_widget_set_tooltip_text (GTK_WIDGET (self), _("This event is in a different timezone"));
+
+  g_clear_pointer (&now_local, g_date_time_unref);
 
   g_signal_connect_swapped (event,
                             "notify::color",
@@ -458,20 +480,7 @@ gcal_event_widget_draw (GtkWidget *widget,
   icon_size = 4 * (layout_height / 4);
 
   left_gap = 0;
-  if (self->has_reminders)
-    {
-      left_gap = icon_size + padding.left;
-      pango_layout_set_width (layout, (width - (left_gap + padding.left + padding.right) ) * PANGO_SCALE);
-    }
-
   right_gap = 0;
-  if (self->read_only)
-    {
-      right_gap = icon_size + padding.right;
-      pango_layout_set_width (layout, (width - (left_gap + padding.left + padding.right + right_gap) ) * PANGO_SCALE);
-    }
-
-  gtk_render_layout (context, cr, padding.left + left_gap, padding.top, layout);
 
   /* render reminder icon */
   if (self->has_reminders)
@@ -492,6 +501,11 @@ gcal_event_widget_draw (GtkWidget *widget,
                                                         NULL);
 
       gdk_cairo_set_source_pixbuf (cr, pixbuf, padding.left, padding.top);
+
+      /* Update the summary space */
+      left_gap += icon_size + padding.left;
+
+
       g_object_unref (pixbuf);
       cairo_paint (cr);
     }
@@ -509,6 +523,37 @@ gcal_event_widget_draw (GtkWidget *widget,
                                               "changes-prevent-symbolic",
                                               icon_size,
                                               0);
+      /* Update the summary space */
+      right_gap += icon_size + padding.right;
+
+      pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
+                                                        context,
+                                                        &was_symbolic,
+                                                        NULL);
+
+      gdk_cairo_set_source_pixbuf (cr, pixbuf, width - right_gap, padding.top);
+
+      g_object_unref (pixbuf);
+      cairo_paint (cr);
+    }
+
+  /* render the timezone icon */
+  if (self->different_timezone)
+    {
+      GtkIconTheme *icon_theme;
+      GtkIconInfo *icon_info;
+      GdkPixbuf *pixbuf;
+      gboolean was_symbolic;
+
+      icon_theme = gtk_icon_theme_get_default ();
+      icon_info = gtk_icon_theme_lookup_icon (icon_theme,
+                                              "find-location-symbolic",
+                                              icon_size,
+                                              0);
+
+      /* Update the summary space */
+      right_gap += icon_size + padding.right;
+
       pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
                                                         context,
                                                         &was_symbolic,
@@ -518,6 +563,10 @@ gcal_event_widget_draw (GtkWidget *widget,
       g_object_unref (pixbuf);
       cairo_paint (cr);
     }
+
+  /* Render the event summary */
+  pango_layout_set_width (layout, (width - (padding.left + left_gap + right_gap + padding.right)) * PANGO_SCALE);
+  gtk_render_layout (context, cr, padding.left + left_gap, padding.top, layout);
 
   pango_font_description_free (font_desc);
   g_object_unref (layout);
