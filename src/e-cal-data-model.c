@@ -619,7 +619,7 @@ cal_data_model_foreach_subscriber_in_range (ECalDataModel *data_model,
 
 		if ((in_range_start == (time_t) 0 && in_range_end == (time_t) 0) ||
 		    (subs_data->range_start == (time_t) 0 && subs_data->range_end == (time_t) 0) ||
-		    (subs_data->range_start <= in_range_end && subs_data->range_end >= in_range_start))
+		    (subs_data->range_start < in_range_end && subs_data->range_end > in_range_start))
 			func (data_model, client, subs_data->subscriber, user_data);
 	}
 
@@ -1083,9 +1083,6 @@ cal_data_model_instance_generated (ECalComponent *comp,
 	cal_comp_get_instance_times (gid->client, e_cal_component_get_icalcomponent (comp),
 		gid->zone, &instance_start, NULL, &instance_end, NULL, NULL);
 
-	if (instance_end > instance_start)
-		instance_end--;
-
 	comp_data = component_data_new (comp, instance_start, instance_end, FALSE);
 	*gid->pexpanded_recurrences = g_slist_prepend (*gid->pexpanded_recurrences, comp_data);
 
@@ -1238,9 +1235,6 @@ cal_data_model_process_modified_or_added_objects (ECalClientView *view,
 					continue;
 
 				cal_comp_get_instance_times (client, icomp, data_model->priv->zone, &instance_start, NULL, &instance_end, NULL, NULL);
-
-				if (instance_end > instance_start)
-					instance_end--;
 
 				comp_data = component_data_new (comp, instance_start, instance_end,
 					e_cal_util_component_is_instance (icomp));
@@ -1761,8 +1755,8 @@ cal_data_model_add_to_subscriber_except_its_range (ECalDataModel *data_model,
 	/* subs_data should have set the old time range, which
 	   means only components which didn't fit into the old
 	   time range will be added */
-	if (!(instance_start <= subs_data->range_end &&
-	    instance_end >= subs_data->range_start))
+	if (!(instance_start < subs_data->range_end &&
+	    instance_end > subs_data->range_start))
 		e_cal_data_model_subscriber_component_added (subs_data->subscriber, client, component);
 
 	return TRUE;
@@ -1785,8 +1779,8 @@ cal_data_model_remove_from_subscriber_except_its_range (ECalDataModel *data_mode
 	/* subs_data should have set the new time range, which
 	   means only components which don't fit into this new
 	   time range will be removed */
-	if (!(instance_start <= subs_data->range_end &&
-	    instance_end >= subs_data->range_start))
+	if (!(instance_start < subs_data->range_end &&
+	    instance_end > subs_data->range_start))
 		e_cal_data_model_subscriber_component_removed (subs_data->subscriber, client, id->uid, id->rid);
 
 	return TRUE;
