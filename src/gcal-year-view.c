@@ -29,6 +29,7 @@
 #define NAVIGATOR_CELL_HEIGHT 210
 #define SIDEBAR_PREFERRED_WIDTH 200
 #define VISUAL_CLUES_SIDE 3.0
+#define WEEK_NUMBER_PADDING 3.0
 
 typedef struct
 {
@@ -843,11 +844,16 @@ draw_month_grid (GcalYearView *year_view,
 
       pango_layout_set_text (layout, nr_week, -1);
       pango_layout_get_pixel_size (layout, &layout_width, &layout_height);
-      box_padding_top = (box_side - layout_height) / 2 > 0 ? (box_side - layout_height) / 2 : 0;
-      box_padding_start = ((box_side / 2) - layout_width) / 2 > 0 ? ((box_side / 2) - layout_width) / 2 : 0;
+      box_padding_top = (box_side - layout_height) / 2.0 > 0 ? (box_side - layout_height) / 2.0 : 0;
+      box_padding_start = (box_side - layout_width) / 2.0 > 0 ? (box_side - layout_width) / 2.0 : 0;
+
+      gtk_render_background (context, cr,
+                             box_side * (- 0.5) + x + sw * WEEK_NUMBER_PADDING + year_view->k * (8 * box_side + WEEK_NUMBER_PADDING * 2),
+                             box_side * (i + 1) + y + WEEK_NUMBER_PADDING,
+                             box_side - WEEK_NUMBER_PADDING * 2, box_side - WEEK_NUMBER_PADDING * 2);
 
       gtk_render_layout (context, cr,
-                         x + sw * box_padding_start + year_view->k * (8 * box_side - layout_width),
+                         box_side * (- 0.5) + x + sw * box_padding_start + year_view->k * (9 * box_side - layout_width),
                          box_side * (i + 1) + y + box_padding_top,
                          layout);
 
