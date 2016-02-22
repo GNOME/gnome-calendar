@@ -793,7 +793,7 @@ get_source_parent_name_color (GcalManager  *manager,
 }
 
 gchar*
-format_utc_offset (gint offset)
+format_utc_offset (gint64 offset)
 {
   const char *sign = "+";
   gint hours, minutes, seconds;
@@ -802,6 +802,10 @@ format_utc_offset (gint offset)
       offset = -offset;
       sign = "-";
   }
+
+  /* offset can be seconds or microseconds */
+  if (offset >= 1000000)
+    offset = offset / 1000000;
 
   hours = offset / 3600;
   minutes = (offset % 3600) / 60;

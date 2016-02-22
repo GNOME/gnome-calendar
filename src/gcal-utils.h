@@ -121,6 +121,6 @@ void            get_source_parent_name_color                    (GcalManager    
                                                                  gchar                **name,
                                                                  gchar                **color);
 
-gchar*          format_utc_offset                               (gint                   offset);
+gchar*          format_utc_offset                               (gint64                 offset);
 
 #endif // __GCAL_UTILS_H__
