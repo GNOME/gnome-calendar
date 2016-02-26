@@ -369,33 +369,50 @@ edit_or_create_event (GcalQuickAddPopover *self,
                       GtkWidget           *button)
 {
   ECalComponent *component;
-  GDateTime *date_start, *date_end;
+  GDateTime *date_start, *date_end, *now;
+  GTimeZone *tz;
   GcalEvent *event;
   ESource *source;
   const gchar *summary;
+  gboolean all_day;
 
   if (!self->selected_row)
     return;
 
   source = g_object_get_data (G_OBJECT (self->selected_row), "source");
 
+  /*
+   * We only consider all day events when talking about multiday events.
+   * Everything else starts now and lasts 1 hour.
+   */
+  all_day = datetime_compare_date (self->date_end, self->date_start) > 1;
+
+  tz = all_day ? g_time_zone_new_utc () : g_time_zone_new_local ();
+
   /* Gather start date */
-  date_start = g_date_time_new_utc (g_date_time_get_year (self->date_start),
-                                    g_date_time_get_month (self->date_start),
-                                    g_date_time_get_day_of_month (self->date_start),
-                                    0, 0, 0);
+  now = g_date_time_new_now_local ();
+  date_start = g_date_time_new (tz,
+                                g_date_time_get_year (self->date_start),
+                                g_date_time_get_month (self->date_start),
+                                g_date_time_get_day_of_month (self->date_start),
+                                all_day ? 0 : g_date_time_get_hour (now),
+                                all_day ? 0 : g_date_time_get_minute (now),
+                                all_day ? 0 : g_date_time_get_second (now));
 
   /* Gather date end */
   if (self->date_end)
     {
-      date_end = g_date_time_new_utc (g_date_time_get_year (self->date_end),
-                                      g_date_time_get_month (self->date_end),
-                                      g_date_time_get_day_of_month (self->date_end),
-                                      0, 0, 0);
+      date_end = g_date_time_new (tz,
+                                  g_date_time_get_year (self->date_end),
+                                  g_date_time_get_month (self->date_end),
+                                  g_date_time_get_day_of_month (self->date_end),
+                                  all_day ? 0 : g_date_time_get_hour (now) + 1,
+                                  all_day ? 0 : g_date_time_get_minute (now),
+                                  all_day ? 0 : g_date_time_get_second (now));
     }
   else
     {
-      date_end = g_date_time_add_days (date_start, 1);
+      date_end = g_date_time_add_hours (date_start, 1);
     }
 
   /* Gather the summary */
@@ -408,34 +425,20 @@ edit_or_create_event (GcalQuickAddPopover *self,
   component = build_component_from_details (summary, date_start, date_end);
 
   event = gcal_event_new (source, component);
-  gcal_event_set_all_day (event, TRUE);
+  gcal_event_set_all_day (event, all_day);
+  gcal_event_set_timezone (event, tz);
 
   /* If we clicked edit button, send a signal; otherwise, create the event */
   if (button == self->add_button)
-    {
-      gcal_manager_create_event (self->manager, event);
-    }
+    gcal_manager_create_event (self->manager, event);
   else
-    {
-      GTimeZone *local_tz = g_time_zone_new_local ();
-
-      /*
-       * When the user wants to edit the event, we want to make sure
-       * the event is in the user's timezone. It won't be a problem
-       * if the all day setting don't change, as we already handle this
-       * case at GcalEditDialog code.
-       */
-      gcal_event_set_timezone (event, local_tz);
-
-      g_signal_emit (self, signals[EDIT_EVENT], 0, event);
-
-      g_clear_pointer (&local_tz, g_time_zone_unref);
-    }
+    g_signal_emit (self, signals[EDIT_EVENT], 0, event);
 
   gtk_widget_hide (GTK_WIDGET (self));
 
   g_clear_pointer (&date_start, g_date_time_unref);
   g_clear_pointer (&date_end, g_date_time_unref);
+  g_clear_pointer (&tz, g_time_zone_unref);
   g_clear_object (&event);
 }
 
