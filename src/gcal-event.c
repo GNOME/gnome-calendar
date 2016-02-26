@@ -116,26 +116,24 @@ build_component_from_datetime (GcalEvent *self,
                                GDateTime *dt)
 {
   ECalComponentDateTime *comp_dt;
-  GDateTime *utf_dt;
+  gchar *tzid;
 
   if (!dt)
     return NULL;
-
-  utf_dt = g_date_time_to_utc (dt);
 
   comp_dt = g_new0 (ECalComponentDateTime, 1);
   comp_dt->value = NULL;
   comp_dt->tzid = NULL;
 
-  comp_dt->value = datetime_to_icaltime (utf_dt);
-  comp_dt->value->zone = NULL;
+  tzid = format_utc_offset (g_date_time_get_utc_offset (dt));
+
+  comp_dt->value = datetime_to_icaltime (dt);
+  comp_dt->value->zone = icaltimezone_get_builtin_timezone_from_tzid (tzid);
   comp_dt->value->is_date = self->all_day;
 
   /* All day events have no timezone */
   if (!self->all_day)
-    comp_dt->tzid = format_utc_offset (g_date_time_get_utc_offset (dt));
-
-  g_clear_pointer (&utf_dt, g_date_time_unref);
+    comp_dt->tzid = tzid;
 
   return comp_dt;
 }
