@@ -264,21 +264,28 @@ show_popover_for_position (GcalMonthView *view,
     {
       GDateTime *start_dt, *end_dt;
 
-      start_dt = g_date_time_new_utc (priv->date->year, priv->date->month, start_day, 0, 0, 0);
-      end_dt = g_date_time_new_utc (priv->date->year, priv->date->month, end_day + 1, 0, 0, 0);
+      start_dt = NULL;
+      end_dt = NULL;
 
       /* Swap dates if start > end */
       if (start_day > end_day)
         {
-          GDateTime *aux = start_dt;
-          start_dt = end_dt;
-          end_dt = aux;
+          gint aux;
+          aux = end_day;
+          end_day = start_day;
+          start_day = aux;
         }
+
+      start_dt = g_date_time_new_utc (priv->date->year, priv->date->month, start_day, 0, 0, 0);
+
+      /* Only setup an end date when days are different */
+      if (start_day != end_day)
+        end_dt = g_date_time_new_utc (priv->date->year, priv->date->month, end_day + 1, 0, 0, 0);
 
       g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_dt, end_dt, x, y);
 
-      g_date_time_unref (start_dt);
-      g_date_time_unref (end_dt);
+      g_clear_pointer (&start_dt, g_date_time_unref);
+      g_clear_pointer (&end_dt, g_date_time_unref);
     }
 
   gtk_widget_queue_draw (widget);
