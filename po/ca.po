@@ -2,15 +2,18 @@
 # Copyright (C) 2012 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 #
-# Jordi Mas i Hernandez <jmas@softcatala.org>, 2013.
+# Jordi Mas i Hernandez <jmas@softcatala.org>, 2013-2016
 #
+# N.T.
+#       Event -> cita
+
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-05-29 17:51+0200\n"
+"POT-Creation-Date: 2016-02-27 16:38+0100\n"
 "PO-Revision-Date: 2015-05-28 19:46+0100\n"
-"Last-Translator: David Medina <opensusecatala@gmail.com>\n"
+"Last-Translator: Jordi Mas <jmas@softcatala.org>\n"
 "Language-Team: Softcatalà\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
@@ -22,7 +25,8 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:482
 msgid "Calendar"
 msgstr "Calendari"
 
@@ -111,11 +115,11 @@ msgstr ""
 "calendari."
 
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1131
+#: ../src/gcal-source-dialog.c:1113
 msgid "Cancel"
 msgstr "Cancel·la"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
 msgid "Done"
 msgstr "Fet"
 
@@ -139,13 +143,88 @@ msgstr "Anotacions"
 msgid "Location"
 msgstr "Ubicació"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:406
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
 msgid "All day"
 msgstr "Tot el dia"
 
 #: ../data/ui/edit-dialog.ui.h:9
 msgid "Delete event"
 msgstr "Suprimeix la cita"
+
+#: ../data/ui/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "General"
+msgstr "General"
+
+#: ../data/ui/help-overlay.ui.h:2
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "Cita nova"
+
+#: ../data/ui/help-overlay.ui.h:3
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Tanca la finestra"
+
+#: ../data/ui/help-overlay.ui.h:4
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Cerca"
+
+#: ../data/ui/help-overlay.ui.h:5
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Mostra l'ajuda"
+
+#: ../data/ui/help-overlay.ui.h:6
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Dreceres"
+
+#: ../data/ui/help-overlay.ui.h:7
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Navegació"
+
+#: ../data/ui/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "Vés enrere"
+
+#: ../data/ui/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "Vés endavant"
+
+#: ../data/ui/help-overlay.ui.h:10
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "Mostra avui"
+
+#: ../data/ui/help-overlay.ui.h:11
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "Vista següent"
+
+#: ../data/ui/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "Vista anterior"
+
+#: ../data/ui/help-overlay.ui.h:13
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Vista"
+
+#: ../data/ui/help-overlay.ui.h:14
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "Vista mensual"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "Vista anual"
 
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
@@ -156,39 +235,51 @@ msgid "_Search…"
 msgstr "_Cerca..."
 
 #: ../data/ui/menus.ui.h:3
+msgid "_Keyboard Shortcuts"
+msgstr "_Dreceres de teclat"
+
+#: ../data/ui/menus.ui.h:4
 msgid "_About"
 msgstr "_Quant a"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:5
 msgid "_Quit"
 msgstr "_Surt"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:6
 msgid "_Synchronize"
 msgstr "_Sincronitza"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:7
 msgid "From Web…"
 msgstr "Des de la xarxa..."
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:8
 msgid "New Local Calendar…"
 msgstr "Calendari local nou..."
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:9
 msgid "From File…"
 msgstr "Des d'un fitxer..."
+
+#: ../data/ui/quick-add-popover.ui.h:1
+msgid "Edit Details…"
+msgstr "Edita els detalls…"
+
+#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "Afegeix"
 
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
 msgstr "No s'han trobat resultats"
 
 #: ../data/ui/search-view.ui.h:2
-msgid "Use the entry above to search for events."
-msgstr "Useu l'entrada de dalt per cercar cites."
+msgid "Try a different search"
+msgstr "Proveu una cerca diferent"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1175
-#: ../src/gcal-window.c:1179
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1065
 msgid "Undo"
 msgstr "Desfés"
 
@@ -220,17 +311,13 @@ msgstr "Microsoft Exchange"
 msgid "Calendars"
 msgstr "Calendaris"
 
-#: ../data/ui/source-dialog.ui.h:9
-msgid "Add"
-msgstr "Afegeix"
-
 #: ../data/ui/source-dialog.ui.h:10
 msgid "Overview"
 msgstr "Resum"
 
 #: ../data/ui/source-dialog.ui.h:11
 msgid "Add new events to this calendar by default"
-msgstr "Afegeix esdeveniments nous a aquest calendari per defecte"
+msgstr "Afegeix cites noves a aquest calendari per defecte"
 
 #: ../data/ui/source-dialog.ui.h:12
 msgid "Remove Calendar"
@@ -263,19 +350,19 @@ msgstr "Edita el calendari"
 #: ../data/ui/source-dialog.ui.h:20
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of you online accounts, you can add it through the <a href="
+"belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
 "Introduïu l'adreça del calendari que vulgueu afegir. Si el calendari pertany "
-"a un dels vostres comptes en línia, el podeu afegir a través dels paràmetres "
-"dels comptes en línia<a href=\"GOA\"></a>."
+"a un dels vostres comptes en línia, el podeu afegir a través dels "
+"<a href=\"GOA\">paràmetres dels comptes en línia</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
 msgstr "Adreça del calendari"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
-#: ../src/gcal-source-dialog.c:2227
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2191
+#: ../src/gcal-source-dialog.c:2197
 msgid "Add Calendar"
 msgstr "Afegeix un calendari"
 
@@ -307,87 +394,31 @@ msgstr "A. M."
 msgid "PM"
 msgstr "P. M."
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
 msgid "Month"
 msgstr "Mes"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
 msgid "Year"
 msgstr "Any"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
 msgid "Today"
 msgstr "Avui"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
-#: ../src/gcal-source-dialog.c:2254
+#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "Paràmetres del calendari"
-
-#: ../data/ui/window.ui.h:6
-msgid "Create"
-msgstr "Crea"
-
-#: ../data/ui/window.ui.h:7
-msgid "Edit Details"
-msgstr "Edita els detalls"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
 msgstr "Sense cites"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
 msgid "Add Event…"
 msgstr "Afegeix una cita..."
-
-#: ../src/gb-scrolled-window.c:254
-msgid "Max Content Height"
-msgstr "Alçada màx. de contingut"
-
-#: ../src/gb-scrolled-window.c:255
-msgid "The maximum height request that can be made."
-msgstr "L'alçada màxima que es pot sol·licitar."
-
-#: ../src/gb-scrolled-window.c:263
-msgid "Max Content Width"
-msgstr "Amplada màx. de contingut"
-
-#: ../src/gb-scrolled-window.c:264
-msgid "The maximum width request that can be made."
-msgstr "L'amplada màxima que es pot sol·licitar."
-
-#. Dialog
-#: ../src/gcal-source-dialog.c:1128
-msgid "Select a calendar file"
-msgstr "Seleccioneu un fitxer de calendari"
-
-#: ../src/gcal-source-dialog.c:1132
-msgid "Open"
-msgstr "Obre"
-
-#: ../src/gcal-source-dialog.c:1139
-msgid "Calendar files"
-msgstr "Fitxers del calendari"
-
-#. update the source properties
-#: ../src/gcal-source-dialog.c:1178
-msgid "Unnamed Calendar"
-msgstr "Calendari sense nom"
-
-#. Update notification label
-#: ../src/gcal-source-dialog.c:1781
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "S'ha suprimit el calendari <b>%s</b>"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "Off"
-msgstr "Apagat"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "On"
-msgstr "Engegat"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -401,55 +432,111 @@ msgstr "Obre el calendari a la data passada"
 msgid "Open calendar showing the passed event"
 msgstr "Obre el calendari i mostra la cita passada"
 
-#: ../src/gcal-application.c:337
+#: ../src/gcal-application.c:324
 msgid "- Calendar management"
 msgstr " - Gestió del calendari"
 
-#: ../src/gcal-application.c:504
+#: ../src/gcal-application.c:470
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Copyright © %Id Els autors del Calendari"
 
-#: ../src/gcal-application.c:510
+#: ../src/gcal-application.c:476
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Copyright © %Id–%Id Els autors del Calendari"
 
-#: ../src/gcal-application.c:523
+#: ../src/gcal-application.c:489
 msgid "translator-credits"
 msgstr "Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013"
 
-#: ../src/gcal-date-selector.c:303
+#: ../src/gcal-date-selector.c:362
 msgid "Day"
 msgstr "Dia"
 
-#: ../src/gcal-edit-dialog.c:657
+#: ../src/gcal-edit-dialog.c:429
 msgid "Save"
 msgstr "Desa"
 
-#: ../src/gcal-edit-dialog.c:841
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Cita sense nom"
 
-#: ../src/gcal-month-view.c:820
+#: ../src/gcal-month-view.c:1065
 msgid "Other events"
 msgstr "Altres cites"
 
-#. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1203
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/gcal-month-view.c:1494
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Una altra cita"
 msgstr[1] "Altres %d cites"
 
-#: ../src/gcal-time-selector.c:96
+#: ../src/gcal-quick-add-popover.c:113
 #, c-format
-msgid "%.2d:%.2d AM"
-msgstr "%.2d.%.2d AM"
+msgid "%s (this calendar is read-only)"
+msgstr "%s (aquest calendari és només de lectura)"
 
-#: ../src/gcal-time-selector.c:98
+#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%d %B"
+
+#: ../src/gcal-quick-add-popover.c:243
 #, c-format
-msgid "%.2d:%.2d PM"
-msgstr "%.2d.%.2d PM"
+msgid "New Event from %s to %s"
+msgstr "Cita nova des de %s fins al %s"
+
+#: ../src/gcal-quick-add-popover.c:249
+#, c-format
+msgid "New Event on %s"
+msgstr "Cita nova al %s"
+
+#: ../src/gcal-search-view.c:502
+msgid "Use the entry above to search for events."
+msgstr "Useu l'entrada de dalt per cercar cites."
+
+#. Dialog
+#: ../src/gcal-source-dialog.c:1110
+msgid "Select a calendar file"
+msgstr "Seleccioneu un fitxer de calendari"
+
+#: ../src/gcal-source-dialog.c:1114
+msgid "Open"
+msgstr "Obre"
+
+#: ../src/gcal-source-dialog.c:1121
+msgid "Calendar files"
+msgstr "Fitxers del calendari"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1160
+msgid "Unnamed Calendar"
+msgstr "Calendari sense nom"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1758
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "S'ha suprimit el calendari <b>%s</b>"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "Off"
+msgstr "Apagat"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "On"
+msgstr "Engegat"
+
+#: ../src/gcal-time-selector.c:82
+#, c-format
+msgid "%s AM"
+msgstr "%s AM"
+
+#: ../src/gcal-time-selector.c:84
+#, c-format
+msgid "%s PM"
+msgstr "%s PM"
 
 #: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
@@ -463,24 +550,31 @@ msgstr "Migdia"
 msgid "00:00 PM"
 msgstr "00.00 PM"
 
-#. Translators:
-#. * this is the format string for representing a date consisting of a month name
-#. * and a date of month.
-#: ../src/gcal-window.c:681
-msgctxt "event date format"
-msgid "%B %d"
-msgstr "%d %B "
-
-#: ../src/gcal-window.c:682
-#, c-format
-msgid "New Event on %s"
-msgstr "Cita nova al %s"
-
-#: ../src/gcal-window.c:1175
+#: ../src/gcal-window.c:1061
 msgid "Another event deleted"
 msgstr "S'ha suprimit una altra cita"
 
-#: ../src/gcal-window.c:1179
+#: ../src/gcal-window.c:1065
 msgid "Event deleted"
 msgstr "S'ha suprimit la cita"
 
+#~ msgid "Create"
+#~ msgstr "Crea"
+
+#~ msgid "Max Content Height"
+#~ msgstr "Alçada màx. de contingut"
+
+#~ msgid "The maximum height request that can be made."
+#~ msgstr "L'alçada màxima que es pot sol·licitar."
+
+#~ msgid "Max Content Width"
+#~ msgstr "Amplada màx. de contingut"
+
+#~ msgid "The maximum width request that can be made."
+#~ msgstr "L'amplada màxima que es pot sol·licitar."
+
+#~ msgid "%.2d:%.2d AM"
+#~ msgstr "%.2d.%.2d AM"
+
+#~ msgid "%.2d:%.2d PM"
+#~ msgstr "%.2d.%.2d PM"
