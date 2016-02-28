@@ -423,7 +423,7 @@ build_component_from_details (const gchar *summary,
   ECalComponent *event;
   ECalComponentDateTime dt;
   ECalComponentText summ;
-  GDateTime *utc_start, *utc_end;
+  icaltimezone *zone;
   gboolean all_day;
 
   event = e_cal_component_new ();
@@ -435,31 +435,45 @@ build_component_from_details (const gchar *summary,
    */
   all_day = datetime_is_date (initial_date) && (final_date ? datetime_is_date (final_date) : TRUE);
 
-  /* Start date */
-  utc_start = g_date_time_to_utc (initial_date);
+  /*
+   * When the event is all day, we consider UTC timezone by default. Otherwise,
+   * we always use the system timezone to create new events
+   */
+  if (all_day)
+    {
+      zone = icaltimezone_get_utc_timezone ();
+    }
+  else
+    {
+      gchar *system_tz = e_cal_system_timezone_get_location ();
 
-  dt.value = datetime_to_icaltime (utc_start);
+      zone = icaltimezone_get_builtin_timezone (system_tz);
+
+      g_free (system_tz);
+    }
+
+  /* Start date */
+  dt.value = datetime_to_icaltime (initial_date);
+  icaltime_set_timezone (dt.value, zone);
   dt.value->is_date = all_day;
-  dt.tzid = format_utc_offset (g_date_time_get_utc_offset (initial_date));
+  dt.tzid = icaltimezone_get_tzid (zone);
   e_cal_component_set_dtstart (event, &dt);
 
-  e_cal_component_free_datetime (&dt);
-  g_date_time_unref (utc_start);
+  g_free (dt.value);
 
   /* End date */
   if (!final_date)
     final_date = g_date_time_add_days (initial_date, 1);
 
-  utc_end = g_date_time_to_utc (final_date);
-
-  dt.value = datetime_to_icaltime (utc_end);
+  dt.value = datetime_to_icaltime (final_date);
+  icaltime_set_timezone (dt.value, zone);
   dt.value->is_date = all_day;
-  dt.tzid = format_utc_offset (g_date_time_get_utc_offset (final_date));
+  dt.tzid = icaltimezone_get_tzid (zone);
   e_cal_component_set_dtend (event, &dt);
 
-  e_cal_component_free_datetime (&dt);
-  g_date_time_unref (utc_end);
+  g_free (dt.value);
 
+  /* Summary */
   summ.altrep = NULL;
   summ.value = summary;
   e_cal_component_set_summary (event, &summ);
