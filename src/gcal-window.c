@@ -667,8 +667,8 @@ show_new_event_widget (GcalView   *view,
 
   if (window->event_creation_data != NULL)
     {
-      g_date_time_unref (window->event_creation_data->start_date);
-      g_date_time_unref (window->event_creation_data->end_date);
+      g_clear_pointer (&window->event_creation_data->start_date, g_date_time_unref);
+      g_clear_pointer (&window->event_creation_data->end_date, g_date_time_unref);
       g_free (window->event_creation_data);
     }
 
