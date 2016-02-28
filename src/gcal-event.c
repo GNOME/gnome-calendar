@@ -125,7 +125,7 @@ build_component_from_datetime (GcalEvent *self,
   comp_dt->value = NULL;
   comp_dt->tzid = NULL;
 
-  tzid = format_utc_offset (g_date_time_get_utc_offset (dt));
+  tzid = g_date_time_format (dt, "%Z");
 
   comp_dt->value = datetime_to_icaltime (dt);
   comp_dt->value->zone = icaltimezone_get_builtin_timezone_from_tzid (tzid);
