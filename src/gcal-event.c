@@ -112,11 +112,11 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
 }
 
 static ECalComponentDateTime*
-build_component_from_datetime (GcalEvent *self,
-                               GDateTime *dt)
+build_component_from_datetime (GcalEvent    *self,
+                               icaltimezone *current_tz,
+                               GDateTime    *dt)
 {
   ECalComponentDateTime *comp_dt;
-  gchar *tzid;
 
   if (!dt)
     return NULL;
@@ -125,15 +125,12 @@ build_component_from_datetime (GcalEvent *self,
   comp_dt->value = NULL;
   comp_dt->tzid = NULL;
 
-  tzid = g_date_time_format (dt, "%Z");
-
   comp_dt->value = datetime_to_icaltime (dt);
-  comp_dt->value->zone = icaltimezone_get_builtin_timezone_from_tzid (tzid);
+  comp_dt->value->zone = self->all_day ? icaltimezone_get_utc_timezone () : current_tz;
   comp_dt->value->is_date = self->all_day;
 
-  /* All day events have no timezone */
-  if (!self->all_day)
-    comp_dt->tzid = tzid;
+  /* All day events have UTC timezone */
+  comp_dt->tzid = g_strdup (self->all_day ? "UTC" : icaltimezone_get_tzid (current_tz));
 
   return comp_dt;
 }
@@ -689,13 +686,18 @@ gcal_event_set_date_end (GcalEvent *self,
       (!self->dt_end || !dt ||
        (self->dt_end && dt && !g_date_time_equal (self->dt_end, dt))))
     {
-      ECalComponentDateTime *component_dt;
+      ECalComponentDateTime *component_dt, current;
 
       g_clear_pointer (&self->dt_end, g_date_time_unref);
       self->dt_end = g_date_time_ref (dt);
 
+      /* Retrieve the current timezone */
+      e_cal_component_get_dtstart (self->component, &current);
+
       /* Setup the ECalComponent's datetime value */
-      component_dt = build_component_from_datetime (self, dt);
+      component_dt = build_component_from_datetime (self,
+                                                    icaltimezone_get_builtin_timezone_from_tzid (current.tzid),
+                                                    dt);
 
       e_cal_component_set_dtend (self->component, component_dt);
       e_cal_component_commit_sequence (self->component);
@@ -739,13 +741,20 @@ gcal_event_set_date_start (GcalEvent *self,
       (!self->dt_start || !dt ||
        (self->dt_start && dt && !g_date_time_equal (self->dt_start, dt))))
     {
-      ECalComponentDateTime *component_dt;
+      ECalComponentDateTime *component_dt, current;
 
       g_clear_pointer (&self->dt_start, g_date_time_unref);
       self->dt_start = g_date_time_ref (dt);
 
+      /* Retrieve the current timezone */
+      e_cal_component_get_dtstart (self->component, &current);
+
+      g_message ("start tzid is %s", current.tzid);
+
       /* Setup the ECalComponent's datetime value */
-      component_dt = build_component_from_datetime (self, dt);
+      component_dt = build_component_from_datetime (self,
+                                                    icaltimezone_get_builtin_timezone_from_tzid (current.tzid),
+                                                    dt);
 
       e_cal_component_set_dtstart (self->component, component_dt);
       e_cal_component_commit_sequence (self->component);
