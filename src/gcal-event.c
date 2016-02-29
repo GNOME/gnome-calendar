@@ -223,7 +223,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
                                   date.is_date ? 0 : date.hour,
                                   date.is_date ? 0 : date.minute,
                                   date.is_date ? 0 : date.second);
-      end_is_all_day = datetime_is_date (date_start);
+      end_is_all_day = datetime_is_date (date_end);
 
       self->dt_end = g_date_time_ref (date_end);
 
