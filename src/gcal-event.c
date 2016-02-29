@@ -749,8 +749,6 @@ gcal_event_set_date_start (GcalEvent *self,
       /* Retrieve the current timezone */
       e_cal_component_get_dtstart (self->component, &current);
 
-      g_message ("start tzid is %s", current.tzid);
-
       /* Setup the ECalComponent's datetime value */
       component_dt = build_component_from_datetime (self,
                                                     icaltimezone_get_builtin_timezone_from_tzid (current.tzid),
