@@ -85,7 +85,7 @@ msgstr "Mida de la finestra"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:4
 msgid "Window size (width and height)."
-msgstr "Mida de la finestra (amplada i alçada)"
+msgstr "Mida de la finestra (amplada i alçada)."
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:5
 msgid "Window position"
@@ -93,7 +93,7 @@ msgstr "Posició de la finestra"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:6
 msgid "Window position (x and y)."
-msgstr "Posició de la finestra (x i y)"
+msgstr "Posició de la finestra (x i y)."
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:7
 msgid "Type of the active view"
@@ -446,7 +446,7 @@ msgstr "Copyright © %Id–%Id Els autors del Calendari"
 
 #: ../src/gcal-application.c:489
 msgid "translator-credits"
-msgstr "Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013"
+msgstr "Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2016"
 
 #: ../src/gcal-date-selector.c:362
 msgid "Day"
