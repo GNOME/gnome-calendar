@@ -423,6 +423,7 @@ gcal_event_widget_draw (GtkWidget *widget,
 
   PangoLayout *layout;
   PangoFontDescription *font_desc;
+  gchar *display_text;
 
   self = GCAL_EVENT_WIDGET (widget);
   context = gtk_widget_get_style_context (widget);
@@ -436,9 +437,30 @@ gcal_event_widget_draw (GtkWidget *widget,
   gtk_render_background (context, cr, 0, 0, width, height);
   gtk_render_frame (context, cr, 0, 0, width, height);
 
+  /*
+   * The text displayed in the widget includes the time when the event
+   * is timed, or not if the event is all day.
+   */
+  if (gcal_event_get_all_day (self->event))
+    {
+      display_text = g_strdup (gcal_event_get_summary (self->event));
+    }
+  else
+    {
+      GDateTime *local_start_time;
+      gchar *start_time;
+
+      local_start_time = g_date_time_to_local (gcal_event_get_date_start (self->event));
+      start_time = g_date_time_format (local_start_time, "%R%p");
+      display_text = g_strdup_printf ("(%s) %s", start_time, gcal_event_get_summary (self->event));
+
+      g_clear_pointer (&local_start_time, g_date_time_unref);
+      g_clear_pointer (&start_time, g_free);
+    }
+
   /* FIXME for RTL alignment and icons positions */
   gtk_style_context_get (context, state, "font", &font_desc, NULL);
-  layout = gtk_widget_create_pango_layout (widget, gcal_event_get_summary (self->event));
+  layout = gtk_widget_create_pango_layout (widget, display_text);
   pango_layout_set_font_description (layout, font_desc);
   pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
   pango_layout_set_width (layout, (width - (padding.left + padding.right) ) * PANGO_SCALE);
@@ -512,6 +534,7 @@ gcal_event_widget_draw (GtkWidget *widget,
 
   pango_font_description_free (font_desc);
   g_object_unref (layout);
+  g_free (display_text);
 
   return FALSE;
 }
