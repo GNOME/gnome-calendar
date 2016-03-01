@@ -113,7 +113,7 @@ calendar-view.second-view-header {
 
 /* these two are supposed be changed in sync with .calendar-view */
 .year-navigator.current {
-    background-color: @theme_fg_color;
+    background-color: black;
     border-radius: 2px;
     color: white;
     font: bold;
