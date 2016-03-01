@@ -31,7 +31,6 @@ struct _GcalEventWidget
   GDateTime     *dt_end;
 
   /* internal data */
-  gboolean       has_reminders : 1;
   gboolean       read_only : 1;
   gchar         *css_class;
 
@@ -47,7 +46,7 @@ enum
   PROP_DATE_END,
   PROP_DATE_START,
   PROP_EVENT,
-  PROP_HAS_REMINDERS
+  NUM_PROPS
 };
 
 enum
@@ -202,14 +201,6 @@ gcal_event_widget_set_property (GObject      *object,
       gcal_event_widget_set_event_internal (self, g_value_get_object (value));
       break;
 
-    case PROP_HAS_REMINDERS:
-      if (self->has_reminders != g_value_get_boolean (value))
-        {
-          self->has_reminders = g_value_get_boolean (value);
-          g_object_notify (object, "has-reminders");
-        }
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -235,10 +226,6 @@ gcal_event_widget_get_property (GObject      *object,
 
     case PROP_EVENT:
       g_value_set_object (value, self->event);
-      break;
-
-    case PROP_HAS_REMINDERS:
-      g_value_set_boolean (value, self->has_reminders);
       break;
 
     default:
@@ -462,7 +449,7 @@ gcal_event_widget_draw (GtkWidget *widget,
   icon_size = 4 * (layout_height / 4);
 
   left_gap = 0;
-  if (self->has_reminders)
+  if (gcal_event_has_alarms (self->event))
     {
       left_gap = icon_size + padding.left;
       pango_layout_set_width (layout, (width - (left_gap + padding.left + padding.right) ) * PANGO_SCALE);
@@ -478,7 +465,7 @@ gcal_event_widget_draw (GtkWidget *widget,
   gtk_render_layout (context, cr, padding.left + left_gap, padding.top, layout);
 
   /* render reminder icon */
-  if (self->has_reminders)
+  if (gcal_event_has_alarms (self->event))
     {
       GtkIconTheme *icon_theme;
       GtkIconInfo *icon_info;
@@ -628,19 +615,6 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
                                                         GCAL_TYPE_EVENT,
                                                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
-  /**
-   * GcalEventWidget::has-reminders:
-   *
-   * Whether the event has reminders or not.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_HAS_REMINDERS,
-                                   g_param_spec_boolean ("has-reminders",
-                                                         "Event has reminders",
-                                                         "Wheter the event has reminders set or not",
-                                                         FALSE,
-                                                         G_PARAM_READWRITE));
-
   signals[ACTIVATE] = g_signal_new ("activate",
                                      GCAL_TYPE_EVENT_WIDGET,
                                      G_SIGNAL_RUN_LAST,
@@ -675,23 +649,6 @@ gboolean
 gcal_event_widget_get_read_only (GcalEventWidget *event)
 {
   return event->read_only;
-}
-
-void
-gcal_event_widget_set_has_reminders (GcalEventWidget *event,
-                                     gboolean         has_reminders)
-{
-  g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
-
-  g_object_set (event, "has-reminders", has_reminders, NULL);
-}
-
-gboolean
-gcal_event_widget_get_has_reminders (GcalEventWidget *event)
-{
-  g_return_val_if_fail (GCAL_IS_EVENT_WIDGET (event), FALSE);
-
-  return event->has_reminders;
 }
 
 /**

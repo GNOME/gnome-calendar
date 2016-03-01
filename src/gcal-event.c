@@ -813,6 +813,22 @@ gcal_event_set_description (GcalEvent   *self,
 }
 
 /**
+ * gcal_event_has_alarms:
+ * @self: a #GcalEvent
+ *
+ * Retrieves whether the event has alarms or not.
+ *
+ * Returns: %TRUE if @event has alarms, %FALSE otherwise.
+ */
+gboolean
+gcal_event_has_alarms (GcalEvent *self)
+{
+  g_return_val_if_fail (GCAL_IS_EVENT (self), FALSE);
+
+  return e_cal_component_has_alarms (self->component);
+}
+
+/**
  * gcal_event_get_location:
  * @self: a #GcalEvent
  *

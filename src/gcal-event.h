@@ -60,6 +60,8 @@ const gchar*         gcal_event_get_description                  (GcalEvent     
 void                 gcal_event_set_description                  (GcalEvent          *self,
                                                                   const gchar        *description);
 
+gboolean             gcal_event_has_alarms                       (GcalEvent          *self);
+
 const gchar*         gcal_event_get_location                     (GcalEvent          *self);
 
 void                 gcal_event_set_location                     (GcalEvent          *self,
