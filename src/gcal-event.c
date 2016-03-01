@@ -95,7 +95,7 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
       gchar *tzid;
       gint offset;
 
-      zone = icaltimezone_get_builtin_timezone_from_tzid (comp->tzid);
+      zone = icaltimezone_get_builtin_timezone (comp->tzid);
       offset = icaltimezone_get_utc_offset (zone, comp->value, NULL);
       tzid = format_utc_offset (offset);
 
