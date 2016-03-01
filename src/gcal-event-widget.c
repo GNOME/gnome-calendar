@@ -31,6 +31,7 @@ struct _GcalEventWidget
   GDateTime     *dt_end;
 
   /* internal data */
+  gboolean       clock_format_24h : 1;
   gboolean       read_only : 1;
   gchar         *css_class;
 
@@ -175,8 +176,18 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
 static void
 gcal_event_widget_init(GcalEventWidget *self)
 {
+  GSettings *settings;
+  gchar *clock_format;
+
+  settings = g_settings_new ("org.gnome.desktop.interface");
+  clock_format = g_settings_get_string (settings, "clock-format");
+  self->clock_format_24h = g_strcmp0 (clock_format, "24h") == 0;
+
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
   gtk_widget_set_can_focus (GTK_WIDGET (self), TRUE);
+
+  g_clear_object (&settings);
+  g_free (clock_format);
 }
 
 static void
@@ -418,8 +429,9 @@ gcal_event_widget_draw (GtkWidget *widget,
   GtkStateFlags state;
   GtkBorder padding;
 
-  gint width, height, layout_height;
-  gint left_gap, right_gap, icon_size = 0;
+  gint width, height, layout_height, x;
+  gint end_gap, icon_size = 0;
+  gboolean is_ltr;
 
   PangoLayout *layout;
   PangoFontDescription *font_desc;
@@ -428,6 +440,7 @@ gcal_event_widget_draw (GtkWidget *widget,
   self = GCAL_EVENT_WIDGET (widget);
   context = gtk_widget_get_style_context (widget);
   state = gtk_style_context_get_state (context);
+  is_ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   gtk_style_context_get_padding (context, state, &padding);
 
@@ -449,10 +462,17 @@ gcal_event_widget_draw (GtkWidget *widget,
     {
       GDateTime *local_start_time;
       gchar *start_time;
-
       local_start_time = g_date_time_to_local (gcal_event_get_date_start (self->event));
-      start_time = g_date_time_format (local_start_time, "%R%p");
-      display_text = g_strdup_printf ("(%s) %s", start_time, gcal_event_get_summary (self->event));
+
+      if (self->clock_format_24h)
+        start_time = g_date_time_format (local_start_time, "%R");
+      else
+        start_time = g_date_time_format (local_start_time, "%I:%M %P");
+
+      if (is_ltr)
+        display_text = g_strdup_printf ("(%s) %s", start_time, gcal_event_get_summary (self->event));
+      else
+        display_text = g_strdup_printf ("%s (%s)", gcal_event_get_summary (self->event), start_time);
 
       g_clear_pointer (&local_start_time, g_date_time_unref);
       g_clear_pointer (&start_time, g_free);
@@ -470,21 +490,20 @@ gcal_event_widget_draw (GtkWidget *widget,
   pango_layout_get_pixel_size (layout, NULL, &layout_height);
   icon_size = 4 * (layout_height / 4);
 
-  left_gap = 0;
+  end_gap = 0;
+
   if (gcal_event_has_alarms (self->event))
-    {
-      left_gap = icon_size + padding.left;
-      pango_layout_set_width (layout, (width - (left_gap + padding.left + padding.right) ) * PANGO_SCALE);
-    }
+    end_gap += icon_size + (is_ltr ? padding.left : padding.right);
 
-  right_gap = 0;
   if (self->read_only)
-    {
-      right_gap = icon_size + padding.right;
-      pango_layout_set_width (layout, (width - (left_gap + padding.left + padding.right + right_gap) ) * PANGO_SCALE);
-    }
+    end_gap += icon_size + (is_ltr ? padding.left : padding.right);
 
-  gtk_render_layout (context, cr, padding.left + left_gap, padding.top, layout);
+  x = is_ltr ? padding.left : padding.left + end_gap;
+
+  pango_layout_set_width (layout, (width - (padding.left + padding.right + end_gap)) * PANGO_SCALE);
+  gtk_render_layout (context, cr, x, padding.top, layout);
+
+  x += is_ltr ? (width - end_gap - padding.left - padding.right) : (- padding.right - padding.left - icon_size);
 
   /* render reminder icon */
   if (gcal_event_has_alarms (self->event))
@@ -504,7 +523,10 @@ gcal_event_widget_draw (GtkWidget *widget,
                                                         &was_symbolic,
                                                         NULL);
 
-      gdk_cairo_set_source_pixbuf (cr, pixbuf, padding.left, padding.top);
+      gdk_cairo_set_source_pixbuf (cr, pixbuf, x + padding.left, padding.top);
+
+      x += is_ltr ? (padding.left + icon_size) : (- padding.right - icon_size);
+
       g_object_unref (pixbuf);
       cairo_paint (cr);
     }
@@ -527,7 +549,7 @@ gcal_event_widget_draw (GtkWidget *widget,
                                                         &was_symbolic,
                                                         NULL);
 
-      gdk_cairo_set_source_pixbuf (cr, pixbuf, width - right_gap, padding.top);
+      gdk_cairo_set_source_pixbuf (cr, pixbuf, x + padding.left, padding.top);
       g_object_unref (pixbuf);
       cairo_paint (cr);
     }
