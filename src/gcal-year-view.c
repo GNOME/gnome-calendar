@@ -151,7 +151,7 @@ static void
 update_date (GcalYearView *year_view,
              icaltimetype *new_date)
 {
-  if (year_view->date != NULL && year_view->date->year != new_date->year && year_view->start_selected_date->day != 0)
+  if (year_view->date != NULL && icaltime_compare_date (year_view->date, new_date) && year_view->start_selected_date->day != 0)
     reset_sidebar (year_view);
 
   g_clear_pointer (&year_view->date, g_free);
