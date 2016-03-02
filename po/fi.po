@@ -1,15 +1,15 @@
 # Finnish translation for gnome-calendar.
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
-# Jiri Grönroos <jiri.gronroos+l10n@iki.fi>, 2013, 2015.
+# Jiri Grönroos <jiri.gronroos+l10n@iki.fi>, 2013, 2015, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-11-03 08:10+0000\n"
-"PO-Revision-Date: 2015-11-03 15:11+0200\n"
+"POT-Creation-Date: 2016-03-02 20:15+0000\n"
+"PO-Revision-Date: 2016-03-02 22:41+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
 "Language: fi\n"
@@ -22,7 +22,8 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:482
 msgid "Calendar"
 msgstr "Kalenteri"
 
@@ -107,11 +108,11 @@ msgstr ""
 "Kalenterin viimeisen käynnistyskerran aikana käytöstä poistetut lähteet"
 
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1131
+#: ../src/gcal-source-dialog.c:1113
 msgid "Cancel"
 msgstr "Peru"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
 msgid "Done"
 msgstr "Valmis"
 
@@ -135,13 +136,94 @@ msgstr "Kommentit"
 msgid "Location"
 msgstr "Sijainti"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
 msgid "All day"
 msgstr "Koko päivä"
 
 #: ../data/ui/edit-dialog.ui.h:9
 msgid "Delete event"
 msgstr "Poista tapahtuma"
+
+#: ../data/ui/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Yleiset"
+
+#: ../data/ui/help-overlay.ui.h:2
+#| msgid "No events"
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "Uusi tapahtuma"
+
+#: ../data/ui/help-overlay.ui.h:3
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Sulje ikkuna"
+
+#: ../data/ui/help-overlay.ui.h:4
+#| msgid "_Search…"
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Etsi"
+
+#: ../data/ui/help-overlay.ui.h:5
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Näytä ohje"
+
+#: ../data/ui/help-overlay.ui.h:6
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Pikanäppäimet"
+
+#: ../data/ui/help-overlay.ui.h:7
+#| msgid "Notification"
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Liikkuminen"
+
+#: ../data/ui/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "Takaisin"
+
+#: ../data/ui/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "Seuraava"
+
+#: ../data/ui/help-overlay.ui.h:10
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "Näytä kuluva päivä"
+
+#: ../data/ui/help-overlay.ui.h:11
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "Seuraava näkymä"
+
+#: ../data/ui/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "Edellinen näkymä"
+
+#: ../data/ui/help-overlay.ui.h:13
+#| msgid "View as"
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Näkymä"
+
+#: ../data/ui/help-overlay.ui.h:14
+#| msgid "Month"
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "Kuukausinäkymä"
+
+#: ../data/ui/help-overlay.ui.h:15
+#| msgid "Overview"
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "Vuosinäkymä"
 
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
@@ -152,28 +234,41 @@ msgid "_Search…"
 msgstr "_Etsi…"
 
 #: ../data/ui/menus.ui.h:3
+msgid "_Keyboard Shortcuts"
+msgstr "_Pikanäppäimet"
+
+#: ../data/ui/menus.ui.h:4
 msgid "_About"
 msgstr "_Tietoja"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:5
 msgid "_Quit"
 msgstr "_Lopeta"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:6
 msgid "_Synchronize"
 msgstr "_Synkronoi"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:7
 msgid "From Web…"
 msgstr "Verkosta…"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:8
 msgid "New Local Calendar…"
 msgstr "Uusi paikallinen kalenteri…"
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:9
 msgid "From File…"
 msgstr "Tiedostosta…"
+
+#: ../data/ui/quick-add-popover.ui.h:1
+#| msgid "Edit Details"
+msgid "Edit Details…"
+msgstr "Muokkaa tietoja…"
+
+#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "Lisää"
 
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
@@ -183,8 +278,8 @@ msgstr "Tuloksia ei löytynyt"
 msgid "Try a different search"
 msgstr "Kokeile eri hakuehtoja"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
-#: ../src/gcal-window.c:1244
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1065
 msgid "Undo"
 msgstr "Kumoa"
 
@@ -215,10 +310,6 @@ msgstr "Microsoft Exchange"
 #: ../data/ui/source-dialog.ui.h:8
 msgid "Calendars"
 msgstr "Kalenterit"
-
-#: ../data/ui/source-dialog.ui.h:9
-msgid "Add"
-msgstr "Lisää"
 
 #: ../data/ui/source-dialog.ui.h:10
 msgid "Overview"
@@ -257,10 +348,6 @@ msgid "Edit Calendar"
 msgstr "Muokkaa kalenteria"
 
 #: ../data/ui/source-dialog.ui.h:20
-#| msgid ""
-#| "Enter the address of the calendar that you want to add. If the calendar "
-#| "belongs to one of you online accounts, you can add it through the <a href="
-#| "\"GOA\">online account settings</a>."
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
 "belongs to one of your online accounts, you can add it through the <a href="
@@ -274,8 +361,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Kalenterin osoite"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
-#: ../src/gcal-source-dialog.c:2227
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2191
+#: ../src/gcal-source-dialog.c:2197
 msgid "Add Calendar"
 msgstr "Lisää kalenteri"
 
@@ -307,71 +394,31 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
 msgid "Month"
 msgstr "Kuukausi"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
 msgid "Year"
 msgstr "Vuosi"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
 msgid "Today"
 msgstr "Tänään"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
-#: ../src/gcal-source-dialog.c:2254
+#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "Kalenterin asetukset"
-
-#: ../data/ui/window.ui.h:6
-msgid "Create"
-msgstr "Luo"
-
-#: ../data/ui/window.ui.h:7
-msgid "Edit Details"
-msgstr "Muokkaa tietoja"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
 msgstr "Ei tapahtumia"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
 msgid "Add Event…"
 msgstr "Lisää tapahtuma…"
-
-#. Dialog
-#: ../src/gcal-source-dialog.c:1128
-msgid "Select a calendar file"
-msgstr "Valitse kalenteritiedosto"
-
-#: ../src/gcal-source-dialog.c:1132
-msgid "Open"
-msgstr "Avaa"
-
-#: ../src/gcal-source-dialog.c:1139
-msgid "Calendar files"
-msgstr "Kalenteritiedostot"
-
-#. update the source properties
-#: ../src/gcal-source-dialog.c:1178
-msgid "Unnamed Calendar"
-msgstr "Nimetön kalenteri"
-
-#. Update notification label
-#: ../src/gcal-source-dialog.c:1781
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "Kalenteri <b>%s</b> poistettu"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "Off"
-msgstr "Pois"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "On"
-msgstr "Päällä"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -385,59 +432,111 @@ msgstr "Avaa kalenteri menneeseen päivään"
 msgid "Open calendar showing the passed event"
 msgstr "Avaa kalenteri näyttäen mennyt tapahtuma"
 
-#: ../src/gcal-application.c:337
+#: ../src/gcal-application.c:324
 msgid "- Calendar management"
 msgstr "- Kalenterin hallinta"
 
-#: ../src/gcal-application.c:504
+#: ../src/gcal-application.c:470
 msgid "Copyright © %Id The Calendar authors"
 msgstr "Tekijänoikeus © %Id Kalenterin tekijät"
 
-#: ../src/gcal-application.c:510
+#: ../src/gcal-application.c:476
 msgid "Copyright © %Id–%Id The Calendar authors"
 msgstr "Tekijänoikeus © %Id–%Id Kalenterin tekijät"
 
-#: ../src/gcal-application.c:523
+#: ../src/gcal-application.c:489
 msgid "translator-credits"
 msgstr "Jiri Grönroos"
 
-#: ../src/gcal-date-selector.c:315
+#: ../src/gcal-date-selector.c:362
 msgid "Day"
 msgstr "Päivä"
 
-#: ../src/gcal-edit-dialog.c:657
+#: ../src/gcal-edit-dialog.c:429
 msgid "Save"
 msgstr "Tallenna"
 
-#: ../src/gcal-edit-dialog.c:841
+#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Nimetön tapahtuma"
 
-#: ../src/gcal-month-view.c:1043
+#: ../src/gcal-month-view.c:1065
 msgid "Other events"
 msgstr "Muut tapahtumat"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1425
+#: ../src/gcal-month-view.c:1494
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Muu tapahtuma"
 msgstr[1] "Muut %d tapahtumaa"
 
-#: ../src/gcal-search-view.c:558
+#: ../src/gcal-quick-add-popover.c:113
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (tämä kalenteri on vain lukumuodossa)"
+
+#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%e. %Bta"
+
+#: ../src/gcal-quick-add-popover.c:243
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "Uusi tapahtuma -  %s-%s"
+
+#: ../src/gcal-quick-add-popover.c:249
+#, c-format
+msgid "New Event on %s"
+msgstr "Uusi tapahtuma - %s"
+
+#: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
 msgstr "Etsi tapahtumia yläpuolelta."
 
-#: ../src/gcal-time-selector.c:96
-#, c-format
-msgid "%.2d:%.2d AM"
-msgstr "%.2d:%.2d AM"
+#. Dialog
+#: ../src/gcal-source-dialog.c:1110
+msgid "Select a calendar file"
+msgstr "Valitse kalenteritiedosto"
 
-#: ../src/gcal-time-selector.c:98
+#: ../src/gcal-source-dialog.c:1114
+msgid "Open"
+msgstr "Avaa"
+
+#: ../src/gcal-source-dialog.c:1121
+msgid "Calendar files"
+msgstr "Kalenteritiedostot"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1160
+msgid "Unnamed Calendar"
+msgstr "Nimetön kalenteri"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1758
 #, c-format
-msgid "%.2d:%.2d PM"
-msgstr "%.2d:%.2d PM"
+msgid "Calendar <b>%s</b> removed"
+msgstr "Kalenteri <b>%s</b> poistettu"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "Off"
+msgstr "Pois"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "On"
+msgstr "Päällä"
+
+#: ../src/gcal-time-selector.c:82
+#, c-format
+msgid "%s AM"
+msgstr "%s AM"
+
+#: ../src/gcal-time-selector.c:84
+#, c-format
+msgid "%s PM"
+msgstr "%s PM"
 
 #: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
@@ -451,26 +550,22 @@ msgstr "Keskipäivä"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#. Translators:
-#. * this is the format string for representing a date consisting of a month name
-#. * and a date of month.
-#: ../src/gcal-window.c:746
-msgctxt "event date format"
-msgid "%B %d"
-msgstr "%e. %Bta"
-
-#: ../src/gcal-window.c:747
-#, c-format
-msgid "New Event on %s"
-msgstr "Uusi tapahtuma - %s"
-
-#: ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1061
 msgid "Another event deleted"
 msgstr "Toinen tapahtuma poistettu"
 
-#: ../src/gcal-window.c:1244
+#: ../src/gcal-window.c:1065
 msgid "Event deleted"
 msgstr "Tapahtuma poistettu"
+
+#~ msgid "Create"
+#~ msgstr "Luo"
+
+#~ msgid "%.2d:%.2d AM"
+#~ msgstr "%.2d:%.2d AM"
+
+#~ msgid "%.2d:%.2d PM"
+#~ msgstr "%.2d:%.2d PM"
 
 #~ msgid "%m/%d/%y"
 #~ msgstr "%e.%m.%Y"
@@ -494,20 +589,11 @@ msgstr "Tapahtuma poistettu"
 #~ msgid "Years"
 #~ msgstr "Vuodet"
 
-#~ msgid "View as"
-#~ msgstr "Näytä"
-
 #~ msgid "Change the date"
 #~ msgstr "Vaihda päivää"
 
 #~ msgid "What (e.g. Alien Invasion)"
 #~ msgstr "Mitä (esim. muista maito)"
-
-#~ msgid "New Event from %s to %s"
-#~ msgstr "Uusi tapahtuma -  %s-%s"
-
-#~ msgid "Notification"
-#~ msgstr "Ilmoitus"
 
 #~ msgid "Email"
 #~ msgstr "Sähköposti"
