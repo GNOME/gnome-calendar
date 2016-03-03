@@ -452,6 +452,7 @@ gcal_application_show_about (GSimpleAction *simple,
   const gchar *authors[] = {
     "Erick Pérez Castellanos <erickpc@gnome.org>",
     "Georges Basile Stavracas Neto <georges.stavracas@gmail.com>",
+    "Isaque Galdino <igaldino@gmail.com>",
     NULL
   };
   const gchar *artists[] = {
@@ -467,13 +468,13 @@ gcal_application_show_about (GSimpleAction *simple,
 
   if (g_date_time_get_year (date) == created_year)
     {
-      copyright = g_strdup_printf (_("Copyright \xC2\xA9 %Id "
+      copyright = g_strdup_printf (_("Copyright \xC2\xA9 %d "
                                      "The Calendar authors"),
                                    created_year);
     }
   else
     {
-      copyright = g_strdup_printf (_("Copyright \xC2\xA9 %Id\xE2\x80\x93%Id "
+      copyright = g_strdup_printf (_("Copyright \xC2\xA9 %d\xE2\x80\x93%d "
                                      "The Calendar authors"),
                                    created_year, g_date_time_get_year (date));
     }

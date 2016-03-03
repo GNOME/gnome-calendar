@@ -1,3 +1,29 @@
+Major changes in 3.19.91:
+* Updated translations for:
+    * Brazilian Portuguese (Fábio Nogueira)
+    * Catalan (Jordi Mas)
+    * Chinese (Taiwan) (Chao-Hsiung Liao)
+    * Czech (Marek Černocký)
+    * Dutch (hanniendu)
+    * Finnish (Jiri Grönroos)
+    * Galician (Fran Dieguez)
+    * German (Mario Blättermann)
+    * Greek (Tom Tryfonidis)
+    * Hebrew (Yosef Or Boczko)
+    * Hungarian (Balázs Meskó)
+    * Latvian (Rudolf Mazurs)
+    * Occitan (Cédric Valmary)
+    * Norwegian bokmål (Kjartan Maraas)
+    * Polish (Piotr Drag)
+    * Slovak (Dusan Kazik)
+    * Spanish (Daniel Mustieles)
+    * Ukrainian (Daniel Korostil)
+* Fixed tons of issues with timezones
+* Style fixes (Isaque Galdino)
+* Permanently remove the deleted event when closing the window
+* Show start time of event when it's a timed event
+
+
 Major changes in 3.19.90:
 * Updated translations for:
     * French (Alexandre Franke)
