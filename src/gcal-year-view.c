@@ -285,11 +285,7 @@ add_event_to_day_array (GcalYearView  *year_view,
 
   /* normalize date on each new event */
   date = icaltime_to_datetime (year_view->start_selected_date);
-  second_date = g_date_time_new (gcal_event_get_timezone (event),
-                                 g_date_time_get_year (date),
-                                 g_date_time_get_month (date),
-                                 g_date_time_get_day_of_month (date) + 1,
-                                 0, 0, 0);
+  second_date = g_date_time_add_days (date, 1);
 
   /* marking and cloning */
   for (i = 0; i < days_span; i++)
@@ -1054,12 +1050,16 @@ add_event_clicked_cb (GcalYearView *year_view,
   else
     {
       icaltimetype *dtstart, *dtend;
+      GDateTime *tmp_date;
 
       dtstart = year_view->start_selected_date;
       dtend = year_view->end_selected_date;
 
       start_date = g_date_time_new_local (dtstart->year, dtstart->month, dtstart->day, 0, 0, 0);
-      end_date = g_date_time_new_local (dtend->year, dtend->month, dtend->day + 1, 0, 0, 0);
+      tmp_date = g_date_time_new_local (dtend->year, dtend->month, dtend->day, 0, 0, 0);
+      end_date = g_date_time_add_days (tmp_date, 1);
+
+      g_clear_pointer (&tmp_date, g_date_time_unref);
     }
 
   if (year_view->popover_mode)
