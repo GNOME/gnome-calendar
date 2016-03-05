@@ -872,7 +872,7 @@ gcal_month_view_set_property (GObject       *object,
 
         priv->date = g_value_dup_boxed (value);
         priv->days_delay = (time_day_of_week (1, priv->date->month - 1, priv->date->year) - priv->first_weekday + 7) % 7;
-        priv->keyboard_cell = priv->days_delay;
+        priv->keyboard_cell = priv->days_delay + (priv->date->day - 1);
         priv->start_mark_cell = -1;
         priv->end_mark_cell = -1;
 
