@@ -468,7 +468,7 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
 
   dialog = GCAL_EDIT_DIALOG (user_data);
 
-  if (widget == dialog->cancel_button)
+  if (widget == dialog->cancel_button || (widget == dialog->done_button && !dialog->writable))
     {
       gtk_dialog_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
     }
