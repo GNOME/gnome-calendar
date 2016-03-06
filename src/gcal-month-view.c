@@ -282,7 +282,14 @@ show_popover_for_position (GcalMonthView *view,
 
       /* Only setup an end date when days are different */
       if (start_day != end_day)
-        end_dt = g_date_time_new_local (priv->date->year, priv->date->month, end_day + 1, 0, 0, 0);
+        {
+          GDateTime *tmp_dt;
+
+          tmp_dt = g_date_time_new_local (priv->date->year, priv->date->month, end_day, 0, 0, 0);
+          end_dt = g_date_time_add_days (tmp_dt, 1);
+
+          g_clear_pointer (&tmp_dt, g_date_time_unref);
+        }
 
       g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_dt, end_dt, x, y);
 
