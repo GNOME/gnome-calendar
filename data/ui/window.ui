@@ -55,6 +55,7 @@
                 <child>
                   <object class="GcalMonthView" id="month_view">
                     <property name="visible">True</property>
+                    <property name="can_focus">True</property>
                     <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
                     <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
                     <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
