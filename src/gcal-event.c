@@ -19,6 +19,8 @@
 #include "gcal-event.h"
 #include "gcal-utils.h"
 
+#define LIBICAL_TZID_PREFIX "/freeassociation.sourceforge.net/"
+
 struct _GcalEvent
 {
   GObject             parent;
@@ -95,7 +97,11 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
       gchar *tzid;
       gint offset;
 
-      zone = icaltimezone_get_builtin_timezone (comp->tzid);
+      if (g_str_has_prefix (comp->tzid, LIBICAL_TZID_PREFIX))
+          zone = icaltimezone_get_builtin_timezone_from_tzid (comp->tzid);
+      else
+          zone = icaltimezone_get_builtin_timezone (comp->tzid);
+
       offset = icaltimezone_get_utc_offset (zone, comp->value, NULL);
       tzid = format_utc_offset (offset);
 
