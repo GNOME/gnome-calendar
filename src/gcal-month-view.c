@@ -31,6 +31,8 @@
 
 #include <math.h>
 
+#define LINE_WIDTH 0.5
+
 typedef struct
 {
   GtkWidget      *overflow_popover;
@@ -1622,25 +1624,25 @@ gcal_month_view_draw (GtkWidget *widget,
   gtk_style_context_add_class (context, "lines");
 
   gtk_style_context_get_color (context, state, &color);
-  cairo_set_line_width (cr, 0.5);
+  cairo_set_line_width (cr, LINE_WIDTH);
   gdk_cairo_set_source_rgba (cr, &color);
   /* vertical lines, the easy ones */
   for (i = 0; i < 6; i++)
     {
       pos_x = cell_width * (i + 1);
-      cairo_move_to (cr, pos_x + 0.4, start_grid_y);
+      cairo_move_to (cr, pos_x + (LINE_WIDTH / 2), start_grid_y);
       cairo_rel_line_to (cr, 0, alloc.height - start_grid_y);
     }
 
   /* top horizontal line */
-  cairo_move_to (cr, 0, start_grid_y + 0.4);
+  cairo_move_to (cr, 0, start_grid_y + (LINE_WIDTH / 2));
   cairo_rel_line_to (cr, alloc.width, 0);
 
   /* drawing weeks lines */
   for (i = 0; i < (shown_rows % 2) + 5; i++)
     {
       pos_y = cell_height * (i + 0.5 * (2.0 - (shown_rows % 2))) + start_grid_y;
-      cairo_move_to (cr, 0, pos_y + 0.4);
+      cairo_move_to (cr, 0, pos_y + (LINE_WIDTH / 2));
       cairo_rel_line_to (cr, alloc.width, 0);
     }
   cairo_stroke (cr);
@@ -1668,7 +1670,7 @@ gcal_month_view_draw (GtkWidget *widget,
      gtk_style_context_restore (context);
 
      gdk_cairo_set_source_rgba (cr, &color);
-     cairo_set_line_width (cr, 0.4);
+     cairo_set_line_width (cr, LINE_WIDTH);
 
      /* horizontals */
      if ((first_mark / 7) == (last_mark / 7))
@@ -1681,7 +1683,8 @@ gcal_month_view_draw (GtkWidget *widget,
          pos_x2 = cell_width * (last_column + 1);
          pos_y = cell_height * (row + first_row_gap) + start_grid_y;
          pos_y2 = cell_height * (row + 1.0 + first_row_gap) + start_grid_y;
-         cairo_rectangle (cr, pos_x + 0.3, pos_y + 0.3, pos_x2 - pos_x + 0.6, pos_y2 - pos_y + 0.6);
+         cairo_rectangle (cr, pos_x + (LINE_WIDTH / 2), pos_y + (LINE_WIDTH / 2),
+                          pos_x2 - pos_x + (LINE_WIDTH / 2), pos_y2 - pos_y + (LINE_WIDTH / 2));
        }
      else
        {
@@ -1711,7 +1714,8 @@ gcal_month_view_draw (GtkWidget *widget,
 
              pos_y = cell_height * (i + first_row_gap) + start_grid_y;
              pos_y2 = cell_height * (i + 1.0 + first_row_gap) + start_grid_y;
-             cairo_rectangle (cr, pos_x + 0.3, pos_y + 0.3, ((gint)end) + 0.6, pos_y2 - pos_y + 0.6);
+             cairo_rectangle (cr, pos_x + (LINE_WIDTH / 2), pos_y + (LINE_WIDTH / 2),
+                              (gint)end + (LINE_WIDTH / 2), pos_y2 - pos_y + (LINE_WIDTH / 2));
            }
        }
 
