@@ -3,32 +3,35 @@
 # This file is distributed under the same license as the PACKAGE package.
 # Fran Diéguez <frandieguez@gnome.org>, 2012.
 # Fran Dieguez <frandieguez@gnome.org>, 2012, 2013, 2015, 2016.
+# Marcos Lans <marcoslansgarza@gmail.com>, 2016.
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-02-23 20:22+0100\n"
-"PO-Revision-Date: 2016-02-23 20:25+0200\n"
-"Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2016-03-03 08:07+0000\n"
+"PO-Revision-Date: 2016-03-03 19:33+0100\n"
+"Last-Translator: marcos <marcoslansgarza@gmail.com>\n"
 "Language-Team: gnome-l10n-gl@gnome.org\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"X-Launchpad-Export-Date: 2016-03-03 10:20+0000\n"
+"X-Generator: Poedit 1.5.4\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
 #: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:482
+#: ../src/gcal-application.c:483
 msgid "Calendar"
-msgstr "Calendar"
+msgstr "Calendario"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
 msgid "Calendar for GNOME"
-msgstr "Calendar de GNOME"
+msgstr "Calendario de GNOME"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
 msgid ""
@@ -39,7 +42,7 @@ msgstr ""
 "Calendario de GNOME é un aplicativo de calendario simple e bonito deseñado "
 "para adaptarse perfectamente ao escritorio GNOME. Ao reusar os compoñentes "
 "nos que está construído o escritorio GNOME, o Calendario intégrase "
-"perfectamente co ecosystema GNOME."
+"perfectamente co ecosistema GNOME."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
@@ -49,7 +52,7 @@ msgid ""
 msgstr ""
 "Tentamos buscar o equilibro entre características ben elaboradas e a "
 "usabilidade centrada no usuario. Non hai excesos nin carencias. Sentirase "
-"cómodo usando Calendario, como se levara anos usándoo."
+"cómodo usando Calendario, como se levase anos usándoo."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
 msgid "Search for events"
@@ -61,7 +64,7 @@ msgstr "Xestión do calendario"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
-msgstr "Acceder e xestionar calendarios"
+msgstr "Acceder e xestionar un calendario"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:3
 msgid "Calendar;Event;Reminder;"
@@ -81,7 +84,7 @@ msgstr "Tamaño da xanela"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:4
 msgid "Window size (width and height)."
-msgstr "Tamaño da xanela (ancho e alto)."
+msgstr "Tamaño da xanela (largo e alto)."
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:5
 msgid "Window position"
@@ -97,7 +100,8 @@ msgstr "Tipo da vista activa"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
-msgstr "Tipo da vista da xanela activa, o valor por omisión é: vista mensual"
+msgstr ""
+"Tipo da vista da xanela activa, o valor predeterminado é: vista mensual"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:9
 msgid "List of the disabled sources"
@@ -245,7 +249,7 @@ msgstr "_Sincronizar"
 
 #: ../data/ui/menus.ui.h:7
 msgid "From Web…"
-msgstr "Desde Web…"
+msgstr "Desde a web…"
 
 #: ../data/ui/menus.ui.h:8
 msgid "New Local Calendar…"
@@ -253,7 +257,7 @@ msgstr "Novo calendario local…"
 
 #: ../data/ui/menus.ui.h:9
 msgid "From File…"
-msgstr "Desde Ficheiros…"
+msgstr "Desde un ficheiro…"
 
 #: ../data/ui/quick-add-popover.ui.h:1
 msgid "Edit Details…"
@@ -310,11 +314,11 @@ msgstr "Vista xeral"
 
 #: ../data/ui/source-dialog.ui.h:11
 msgid "Add new events to this calendar by default"
-msgstr "Engadir novos eventos a este calendario por omisión"
+msgstr "Engadir predeterminadamente novos eventos a este calendario"
 
 #: ../data/ui/source-dialog.ui.h:12
 msgid "Remove Calendar"
-msgstr "Quitar calendario"
+msgstr "Eliminar calendario"
 
 #: ../data/ui/source-dialog.ui.h:13
 msgid "Display calendar"
@@ -338,7 +342,7 @@ msgstr "Preferencias"
 
 #: ../data/ui/source-dialog.ui.h:19
 msgid "Edit Calendar"
-msgstr "Editar calendar"
+msgstr "Editar calendario"
 
 #: ../data/ui/source-dialog.ui.h:20
 msgid ""
@@ -347,8 +351,8 @@ msgid ""
 "\"GOA\">online account settings</a>."
 msgstr ""
 "Escriba o enderezo do calendario que quere engadir. Se o calendario pertence "
-"a unha das súas contas en liña pode engadilo mediante as <a href=\"GOA\">"
-"preferencias de contas en liña</a>."
+"a unha das súas contas en liña pode engadilo mediante as <a href=\"GOA"
+"\">preferencias de contas en liña</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
@@ -403,13 +407,13 @@ msgstr "Hoxe"
 #: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
 #: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
-msgstr "Preferencias de calendario"
+msgstr "Preferencias de Calendario"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
 msgstr "Non hai eventos"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:827
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
 msgid "Add Event…"
 msgstr "Engadir evento…"
 
@@ -423,21 +427,25 @@ msgstr "Abrir calendario nunha data pasada"
 
 #: ../src/gcal-application.c:112
 msgid "Open calendar showing the passed event"
-msgstr "Abrir calendarios mostrando un evento pasado"
+msgstr "Abrir calendario mostrando o evento pasado"
 
 #: ../src/gcal-application.c:324
 msgid "- Calendar management"
 msgstr "- Xestión de calendarios"
 
-#: ../src/gcal-application.c:470
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Copyright © %Id Os autores de Calendario"
+#: ../src/gcal-application.c:471
+#, c-format
+#| msgid "Copyright © %Id The Calendar authors"
+msgid "Copyright © %d The Calendar authors"
+msgstr "Dereitos de autor © %Id Os autores de Calendario"
 
-#: ../src/gcal-application.c:476
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Copyright © %Id–%Id Os autores de Calendario"
+#: ../src/gcal-application.c:477
+#, c-format
+#| msgid "Copyright © %Id–%Id The Calendar authors"
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Dereitos de autor © %Id–%Id Os autores de Calendario"
 
-#: ../src/gcal-application.c:489
+#: ../src/gcal-application.c:490
 msgid "translator-credits"
 msgstr "Fran Dieguez <frandieguez@gnome.org>, 2012-2015"
 
@@ -449,16 +457,16 @@ msgstr "Día"
 msgid "Save"
 msgstr "Gardar"
 
-#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:405
+#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Evento sen nome"
 
-#: ../src/gcal-month-view.c:1058
+#: ../src/gcal-month-view.c:1065
 msgid "Other events"
 msgstr "Outros eventos"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1487
+#: ../src/gcal-month-view.c:1494
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -473,7 +481,7 @@ msgstr "%s (este calendario é de só lectura)"
 #: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
 msgctxt "event date format"
 msgid "%B %d"
-msgstr "%B de %d"
+msgstr "%d de %B"
 
 #: ../src/gcal-quick-add-popover.c:243
 #, c-format
@@ -492,7 +500,7 @@ msgstr "Use a entrada de arriba para buscar eventos."
 #. Dialog
 #: ../src/gcal-source-dialog.c:1110
 msgid "Select a calendar file"
-msgstr "Seleccione un tipo de calendario"
+msgstr "Seleccione un ficheiro co calendario"
 
 #: ../src/gcal-source-dialog.c:1114
 msgid "Open"
@@ -515,11 +523,11 @@ msgstr "Calendario <b>%s</b> eliminado"
 
 #: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
 msgid "Off"
-msgstr "Activar"
+msgstr "Desactivar"
 
 #: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
 msgid "On"
-msgstr "Desactivar"
+msgstr "Activar"
 
 #: ../src/gcal-time-selector.c:82
 #, c-format
