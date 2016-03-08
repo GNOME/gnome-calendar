@@ -222,6 +222,13 @@ gcal_event_set_component_internal (GcalEvent     *self,
 
       /* Setup end date */
       e_cal_component_get_dtend (component, &end);
+
+      if(!end.value)
+        {
+          end = start;
+          end.value->day = start.value->day + 1;
+        }
+
       date = icaltime_normalize (*end.value);
       zone_end = get_timezone_from_ical (&end);
       date_end = g_date_time_new (zone_end,
@@ -250,6 +257,9 @@ gcal_event_set_component_internal (GcalEvent     *self,
       g_clear_pointer (&zone_start, g_time_zone_unref);
       g_clear_pointer (&zone_end, g_time_zone_unref);
       g_clear_pointer (&description, g_free);
+
+      e_cal_component_free_datetime(&start);
+      e_cal_component_free_datetime(&end);
     }
 }
 
