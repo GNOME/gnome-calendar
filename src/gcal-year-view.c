@@ -545,7 +545,12 @@ draw_month_grid (GcalYearView *year_view,
   x = priv->navigator_grid->coordinates[month_nr].x;
   y = priv->navigator_grid->coordinates[month_nr].y;
 
+  /* Get the font description */
+  gtk_style_context_save (context);
+  gtk_style_context_set_state (context, state_flags | GTK_STATE_FLAG_SELECTED);
   gtk_style_context_get (context, state_flags | GTK_STATE_FLAG_SELECTED, "font", &sfont_desc, NULL);
+  gtk_style_context_restore (context);
+
   slayout = gtk_widget_create_pango_layout (widget, NULL);
   pango_layout_set_font_description (slayout, sfont_desc);
 
