@@ -381,7 +381,7 @@ make_row_for_event_data (GcalSearchView  *view,
   /* start date & time */
   if (comp_dt.tzid != NULL)
     tz = g_time_zone_new (comp_dt.tzid);
-  else if (comp_dt.value->zone != NULL)
+  else if (comp_dt.value && comp_dt.value->zone)
     tz = g_time_zone_new (icaltimezone_get_tzid ((icaltimezone*) comp_dt.value->zone));
   else
     tz = g_time_zone_new_local ();
