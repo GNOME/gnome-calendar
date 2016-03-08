@@ -1762,8 +1762,11 @@ gcal_month_view_draw (GtkWidget *widget,
          cairo_line_to (cr, start_x, start_y);
        }
 
-     cairo_stroke (cr);
-   }
+     cairo_stroke_preserve (cr);
+     /* selection background fill */
+     cairo_set_source_rgba(cr, color.red, color.green, color.blue, 0.1);
+     cairo_fill(cr);
+  }
 
   /* Draw focus rectangle */
   if (priv->keyboard_cell > priv->days_delay - 1)
