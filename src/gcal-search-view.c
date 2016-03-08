@@ -378,6 +378,13 @@ make_row_for_event_data (GcalSearchView  *view,
   gtk_widget_set_margin_end (box, 6);
   gtk_widget_set_hexpand (name_box, TRUE);
 
+  /* Protect against NULL date */
+  if (comp_dt.value == NULL)
+    {
+      icaltimetype null_date = icaltime_null_date ();
+      comp_dt.value = gcal_dup_icaltime (&null_date);
+    }
+
   /* start date & time */
   if (comp_dt.tzid != NULL)
     tz = g_time_zone_new (comp_dt.tzid);
