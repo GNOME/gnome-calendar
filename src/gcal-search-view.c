@@ -378,13 +378,6 @@ make_row_for_event_data (GcalSearchView  *view,
   gtk_widget_set_margin_end (box, 6);
   gtk_widget_set_hexpand (name_box, TRUE);
 
-  /* Protect against NULL date */
-  if (comp_dt.value == NULL)
-    {
-      icaltimetype null_date = icaltime_null_date ();
-      comp_dt.value = gcal_dup_icaltime (&null_date);
-    }
-
   /* start date & time */
   if (comp_dt.tzid != NULL)
     tz = g_time_zone_new (comp_dt.tzid);
@@ -646,9 +639,16 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   RowEventData *row_data;
   GcalEventData *data;
   ECalComponentId *id;
+  ECalComponentDateTime dt;
   gchar *uuid;
 
   priv = gcal_search_view_get_instance_private (GCAL_SEARCH_VIEW (subscriber));
+
+  e_cal_component_get_dtstart (comp, &dt);
+
+  /* Protect against NULL start date */
+  if (dt.value == NULL)
+    return;
 
   /* event data */
   data = g_new0 (GcalEventData, 1);
@@ -679,6 +679,8 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   priv->num_results++;
 
   update_view (GCAL_SEARCH_VIEW (subscriber));
+
+  e_cal_component_free_datetime (&dt);
 }
 
 static void
