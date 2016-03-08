@@ -197,9 +197,9 @@ gcal_event_set_component_internal (GcalEvent     *self,
       ECalComponentDateTime end;
       icaltimetype date;
       GDateTime *date_start;
-      GTimeZone *zone_start;
+      GTimeZone *zone_start = NULL;
       GDateTime *date_end;
-      GTimeZone *zone_end;
+      GTimeZone *zone_end = NULL;
       gboolean start_is_all_day, end_is_all_day;
       gchar *description;
 
@@ -225,23 +225,26 @@ gcal_event_set_component_internal (GcalEvent     *self,
 
       if(!end.value)
         {
-          end = start;
-          end.value->day = start.value->day + 1;
+            self->all_day = TRUE;
         }
+      else
+        {
+          date = icaltime_normalize (*end.value);
+          zone_end = get_timezone_from_ical (&end);
+          date_end = g_date_time_new (zone_end,
+                                      date.year, date.month, date.day,
+                                      date.is_date ? 0 : date.hour,
+                                      date.is_date ? 0 : date.minute,
+                                      date.is_date ? 0 : date.second);
+          end_is_all_day = datetime_is_date (date_end);
 
-      date = icaltime_normalize (*end.value);
-      zone_end = get_timezone_from_ical (&end);
-      date_end = g_date_time_new (zone_end,
-                                  date.year, date.month, date.day,
-                                  date.is_date ? 0 : date.hour,
-                                  date.is_date ? 0 : date.minute,
-                                  date.is_date ? 0 : date.second);
-      end_is_all_day = datetime_is_date (date_end);
+          self->dt_end = g_date_time_ref (date_end);
 
-      self->dt_end = g_date_time_ref (date_end);
+          /* Setup all day */
+          self->all_day = start_is_all_day && end_is_all_day;
 
-      /* Setup all day */
-      self->all_day = start_is_all_day && end_is_all_day;
+          e_cal_component_free_datetime (&end);
+        }
 
       /* Setup description */
       description = get_desc_from_component (component, "\n\n");
@@ -258,8 +261,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
       g_clear_pointer (&zone_end, g_time_zone_unref);
       g_clear_pointer (&description, g_free);
 
-      e_cal_component_free_datetime(&start);
-      e_cal_component_free_datetime(&end);
+      e_cal_component_free_datetime (&start);
     }
 }
 
