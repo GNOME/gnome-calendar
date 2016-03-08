@@ -570,12 +570,19 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
                                   ECalComponent           *comp)
 {
   GcalSearchView *view;
+  ECalComponentDateTime dt;
 
   RowEventData *row_data;
   GcalEvent *event;
   gchar *uid;
 
   view = GCAL_SEARCH_VIEW (subscriber);
+
+  e_cal_component_get_dtstart (comp, &dt);
+
+  /* Protect against NULL start date */
+  if (dt.value == NULL)
+    return;
 
   /* event */
   event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp);
@@ -598,6 +605,8 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   view->num_results++;
 
   update_view (GCAL_SEARCH_VIEW (subscriber));
+
+  e_cal_component_free_datetime (&dt);
 }
 
 static void
