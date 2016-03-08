@@ -396,7 +396,7 @@ make_row_for_event_data (GcalSearchView  *view,
   g_free (text);
 
   /* show 'all day' instead of 00:00 */
-  if (comp_dt.value->is_date == 0)
+  if (comp_dt.value && comp_dt.value->is_date == 0)
     {
       text = g_date_time_format (local_datetime, priv->format_24h ? "%R" : "%r");
       time_label = gtk_label_new (text);
