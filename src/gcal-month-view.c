@@ -1381,7 +1381,8 @@ gcal_month_view_draw (GtkWidget *widget,
 
   gint font_width, font_height, pos_x, pos_y, shown_rows;
   gint i, j, sw, lower_mark = 43, upper_mark = -2;
-  gdouble start_grid_y, cell_width, cell_height, first_row_gap = 0.0;
+  gint cell_width, cell_height;
+  gdouble start_grid_y, first_row_gap = 0.0;
   gdouble days;
 
   priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
@@ -1672,9 +1673,9 @@ gcal_month_view_draw (GtkWidget *widget,
      gdk_cairo_set_source_rgba (cr, &color);
      cairo_set_line_width (cr, LINE_WIDTH);
 
-     /* horizontals */
      if ((first_mark / 7) == (last_mark / 7))
        {
+         /* selection in 1 row with 1 rectangular outline */
          gint row = first_mark / 7;
          gint first_column = first_mark % 7;
          gint last_column = last_mark % 7;
@@ -1686,8 +1687,9 @@ gcal_month_view_draw (GtkWidget *widget,
          cairo_rectangle (cr, pos_x + (LINE_WIDTH / 2), pos_y + (LINE_WIDTH / 2),
                           pos_x2 - pos_x + (LINE_WIDTH / 2), pos_y2 - pos_y + (LINE_WIDTH / 2));
        }
-     else
+     else if ((first_mark / 7) == ((last_mark / 7) - 1) && (first_mark % 7) > ((last_mark % 7) + 1))
        {
+         /* selection in 2 rows with 2 seperate rectangular outlines */
          gint first_row = first_mark / 7;
          gint last_row = last_mark / 7;
          gint first_column = first_mark % 7;
@@ -1717,6 +1719,47 @@ gcal_month_view_draw (GtkWidget *widget,
              cairo_rectangle (cr, pos_x + (LINE_WIDTH / 2), pos_y + (LINE_WIDTH / 2),
                               (gint)end + (LINE_WIDTH / 2), pos_y2 - pos_y + (LINE_WIDTH / 2));
            }
+       }
+     else
+       {
+         /* multi-row selection with a single outline */
+         gint first_row = first_mark / 7;
+         gint last_row = last_mark / 7;
+         gint first_column = first_mark % 7;
+         gint last_column = last_mark % 7;
+         gdouble start_x = (cell_width * first_column) + (LINE_WIDTH / 2);
+         gdouble start_y = (cell_height * (first_row + first_row_gap)) + start_grid_y + (LINE_WIDTH / 2);
+         gdouble end_x = (cell_width * (last_column + 1.0)) + (LINE_WIDTH / 2);
+         gdouble end_y = (cell_height * (last_row + first_row_gap + 1.0)) + start_grid_y + (LINE_WIDTH / 2);
+         gdouble max_x = alloc.width - (LINE_WIDTH / 2);
+
+         /* Draw the irregular shaped selection box starting from the
+          * top-left corner of the start date (start_{x,y}) clock-wise
+          * to the right-bottom corner of the end date (end_{x,y}) and
+          * on finishing at the start date again.
+          */
+         cairo_move_to (cr, start_x, start_y);
+         cairo_line_to (cr, max_x, start_y);
+
+         /* Skip intermediate drawing steps if end_{x,y} are at the
+          * last column in the row, this makes sure we always draw the
+          * outline within the visible drawing area.
+          */
+         if (last_column == 6)
+           {
+             cairo_line_to (cr, max_x, end_y);
+           }
+         else
+           {
+             cairo_line_to (cr, max_x, end_y - cell_height);
+             cairo_line_to (cr, end_x, end_y - cell_height);
+             cairo_line_to (cr, end_x, end_y);
+           }
+
+         cairo_line_to (cr, (LINE_WIDTH / 2), end_y);
+         cairo_line_to (cr, (LINE_WIDTH / 2), start_y + cell_height);
+         cairo_line_to (cr, start_x, start_y + cell_height);
+         cairo_line_to (cr, start_x, start_y);
        }
 
      cairo_stroke (cr);
