@@ -478,7 +478,7 @@ gcal_event_widget_draw (GtkWidget *widget,
       g_clear_pointer (&start_time, g_free);
     }
 
-  /* FIXME for RTL alignment and icons positions */
+  /* Retrieve the font description */
   gtk_style_context_get (context, state, "font", &font_desc, NULL);
   layout = gtk_widget_create_pango_layout (widget, display_text);
   pango_layout_set_font_description (layout, font_desc);
