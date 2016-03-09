@@ -4,28 +4,30 @@
 # Tiagosdot <almosthumane@portugalmail.pt>, 2014.
 # Tiago S. <almosthumane@portugalmail.pt>, 2014, 2015.
 # Pedro Albuquerque <palbuquerque73o@gmail.com>, 2015.
+# Sérgio Cardeira <cardeira.sergio@gmail.com>, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-11-02 13:15+0000\n"
-"PO-Revision-Date: 2015-11-03 09:45+0000\n"
-"Last-Translator:  <>\n"
-"Language-Team: Português <>\n"
+"POT-Creation-Date: 2016-03-03 01:29+0000\n"
+"PO-Revision-Date: 2016-02-19 18:11-0100\n"
+"Last-Translator: Sérgio Cardeira <cardeira.sergio@gmail.com>\n"
+"Language-Team: Português <gnome_pt@yahoogroups.com>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.5.4\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Gtranslator 2.91.7\n"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:483
 msgid "Calendar"
 msgstr "Agenda"
 
@@ -111,11 +113,11 @@ msgid "Sources disabled last time Calendar ran"
 msgstr "Origens desativadas desde a última execução da Agenda"
 
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1131
+#: ../src/gcal-source-dialog.c:1113
 msgid "Cancel"
 msgstr "Cancelar"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
 msgid "Done"
 msgstr "Terminado"
 
@@ -139,7 +141,7 @@ msgstr "Notas"
 msgid "Location"
 msgstr "Localização"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
 msgid "All day"
 msgstr "Dia completo"
 
@@ -147,37 +149,124 @@ msgstr "Dia completo"
 msgid "Delete event"
 msgstr "Eliminar evento"
 
+#: ../data/ui/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Geral"
+
+#: ../data/ui/help-overlay.ui.h:2
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "Novo evento"
+
+#: ../data/ui/help-overlay.ui.h:3
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Fechar a janela"
+
+#: ../data/ui/help-overlay.ui.h:4
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Procurar"
+
+#: ../data/ui/help-overlay.ui.h:5
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Mostrar ajuda"
+
+#: ../data/ui/help-overlay.ui.h:6
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Atalhos"
+
+#: ../data/ui/help-overlay.ui.h:7
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Navegação"
+
+#: ../data/ui/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "Recuar"
+
+#: ../data/ui/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "Avançar"
+
+#: ../data/ui/help-overlay.ui.h:10
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "Mostrar hoje"
+
+#: ../data/ui/help-overlay.ui.h:11
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "Próxima vista"
+
+#: ../data/ui/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "Vista anterior"
+
+#: ../data/ui/help-overlay.ui.h:13
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Ver"
+
+#: ../data/ui/help-overlay.ui.h:14
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "Vista do mês"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "Vista de ano"
+
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
-msgstr "Adicionar eve_Nto…"
+msgstr "Adicionar eve_nto…"
 
 #: ../data/ui/menus.ui.h:2
 msgid "_Search…"
 msgstr "_Procurar…"
 
 #: ../data/ui/menus.ui.h:3
+msgid "_Keyboard Shortcuts"
+msgstr "Atalhos de _teclado"
+
+#: ../data/ui/menus.ui.h:4
 msgid "_About"
 msgstr "_Sobre"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:5
 msgid "_Quit"
 msgstr "_Sair"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:6
 msgid "_Synchronize"
 msgstr "_Sincronizar"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:7
 msgid "From Web…"
 msgstr "Com a Web…"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:8
 msgid "New Local Calendar…"
 msgstr "Nova agenda local…"
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:9
 msgid "From File…"
 msgstr "Com ficheiro…"
+
+#: ../data/ui/quick-add-popover.ui.h:1
+msgid "Edit Details…"
+msgstr "Editar detalhes…"
+
+#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "Adicionar"
 
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
@@ -187,8 +276,8 @@ msgstr "Sem resultados"
 msgid "Try a different search"
 msgstr "Tente uma procura diferente"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
-#: ../src/gcal-window.c:1244
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1065
 msgid "Undo"
 msgstr "Desfazer"
 
@@ -220,10 +309,6 @@ msgstr "Microsoft Exchange"
 #: ../data/ui/source-dialog.ui.h:8
 msgid "Calendars"
 msgstr "Agendas"
-
-#: ../data/ui/source-dialog.ui.h:9
-msgid "Add"
-msgstr "Adicionar"
 
 #: ../data/ui/source-dialog.ui.h:10
 msgid "Overview"
@@ -279,8 +364,8 @@ msgid "Calendar Address"
 msgstr "Endereço da agenda"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
-#: ../src/gcal-source-dialog.c:2227
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2191
+#: ../src/gcal-source-dialog.c:2197
 msgid "Add Calendar"
 msgstr "Adicionar agenda"
 
@@ -312,74 +397,32 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
 msgid "Month"
 msgstr "Mês"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
 msgid "Year"
 msgstr "Ano"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
 msgid "Today"
 msgstr "Hoje"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
-#: ../src/gcal-source-dialog.c:2254
+#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "Definições da agenda"
-
-#: ../data/ui/window.ui.h:6
-msgid "Create"
-msgstr "Criar"
-
-#: ../data/ui/window.ui.h:7
-msgid "Edit Details"
-msgstr "Editar detalhes"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
 msgstr "Sem eventos"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
 msgid "Add Event…"
 msgstr "Adicionar evento…"
-
-#. Dialog
-#: ../src/gcal-source-dialog.c:1128
-msgid "Select a calendar file"
-msgstr "Selecione um ficheiro de agenda"
-
-#: ../src/gcal-source-dialog.c:1132
-msgid "Open"
-msgstr "Abrir"
-
-# Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
-#: ../src/gcal-source-dialog.c:1139
-msgid "Calendar files"
-msgstr "Ficheiros de agenda"
-
-# Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
-#. update the source properties
-#: ../src/gcal-source-dialog.c:1178
-msgid "Unnamed Calendar"
-msgstr "Agenda sem nome"
-
-#. Update notification label
-#: ../src/gcal-source-dialog.c:1781
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "Agenda <b>%s</b> removida"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "Off"
-msgstr "Desligado"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "On"
-msgstr "Ligado"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -393,61 +436,117 @@ msgstr "Abrir agenda em data passada"
 msgid "Open calendar showing the passed event"
 msgstr "Abrir a agenda mostrando um evento passado"
 
-#: ../src/gcal-application.c:337
+#: ../src/gcal-application.c:324
 msgid "- Calendar management"
 msgstr "- gestão de agenda"
 
-#: ../src/gcal-application.c:504
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Copyright © %Id os autores da Agenda"
+#: ../src/gcal-application.c:471
+#, c-format
+msgid "Copyright © %d The Calendar authors"
+msgstr "Copyright © %d Os autores da Agenda"
 
-#: ../src/gcal-application.c:510
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Copyright © %Id–%Id os autores da Agenda"
+#: ../src/gcal-application.c:477
+#, c-format
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Copyright © %d–%d Os autores da Agenda"
 
-#: ../src/gcal-application.c:523
+#: ../src/gcal-application.c:490
 msgid "translator-credits"
 msgstr ""
 "Tiago S. <almosthumane@portugalmail.pt>, 2014.\n"
 "Pedro Albuquerque <palbuquerque73@gmail.com>"
 
-#: ../src/gcal-date-selector.c:315
+#: ../src/gcal-date-selector.c:362
 msgid "Day"
 msgstr "Dia"
 
-#: ../src/gcal-edit-dialog.c:657
+#: ../src/gcal-edit-dialog.c:429
 msgid "Save"
 msgstr "Gravar"
 
-#: ../src/gcal-edit-dialog.c:841
+#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Evento sem nome"
 
-#: ../src/gcal-month-view.c:1043
+#: ../src/gcal-month-view.c:1065
 msgid "Other events"
 msgstr "Outros eventos"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1425
+#: ../src/gcal-month-view.c:1494
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Outro evento"
 msgstr[1] "Outros %d eventos"
 
-#: ../src/gcal-search-view.c:558
+#: ../src/gcal-quick-add-popover.c:113
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (esta agenda é só de leitura)"
+
+#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%B %d"
+
+#: ../src/gcal-quick-add-popover.c:243
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "Novo Evento de %s até %s"
+
+#: ../src/gcal-quick-add-popover.c:249
+#, c-format
+msgid "New Event on %s"
+msgstr "Novo evento em %s"
+
+#: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
 msgstr "Use a caixa acima para procurar eventos."
 
-#: ../src/gcal-time-selector.c:96
-#, c-format
-msgid "%.2d:%.2d AM"
-msgstr "%.2d:%.2d AM"
+#. Dialog
+#: ../src/gcal-source-dialog.c:1110
+msgid "Select a calendar file"
+msgstr "Selecione um ficheiro de agenda"
 
-#: ../src/gcal-time-selector.c:98
+#: ../src/gcal-source-dialog.c:1114
+msgid "Open"
+msgstr "Abrir"
+
+# Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
+#: ../src/gcal-source-dialog.c:1121
+msgid "Calendar files"
+msgstr "Ficheiros de agenda"
+
+# Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1160
+msgid "Unnamed Calendar"
+msgstr "Agenda sem nome"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1758
 #, c-format
-msgid "%.2d:%.2d PM"
-msgstr "%.2d:%.2d PM"
+msgid "Calendar <b>%s</b> removed"
+msgstr "Agenda <b>%s</b> removida"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "Off"
+msgstr "Desligado"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "On"
+msgstr "Ligado"
+
+#: ../src/gcal-time-selector.c:82
+#, c-format
+msgid "%s AM"
+msgstr "%s AM"
+
+#: ../src/gcal-time-selector.c:84
+#, c-format
+msgid "%s PM"
+msgstr "%s PM"
 
 #: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
@@ -461,26 +560,22 @@ msgstr "Meio dia"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#. Translators:
-#. * this is the format string for representing a date consisting of a month name
-#. * and a date of month.
-#: ../src/gcal-window.c:746
-msgctxt "event date format"
-msgid "%B %d"
-msgstr "%B %d"
-
-#: ../src/gcal-window.c:747
-#, c-format
-msgid "New Event on %s"
-msgstr "Novo evento em %s"
-
-#: ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1061
 msgid "Another event deleted"
 msgstr "Outro evento eliminado"
 
-#: ../src/gcal-window.c:1244
+#: ../src/gcal-window.c:1065
 msgid "Event deleted"
 msgstr "Evento eliminado"
+
+#~ msgid "Create"
+#~ msgstr "Criar"
+
+#~ msgid "%.2d:%.2d AM"
+#~ msgstr "%.2d:%.2d AM"
+
+#~ msgid "%.2d:%.2d PM"
+#~ msgstr "%.2d:%.2d PM"
 
 #~ msgid "Max Content Height"
 #~ msgstr "Altura máxima de conteúdo"
@@ -509,9 +604,6 @@ msgstr "Evento eliminado"
 #~ msgid "Years"
 #~ msgstr "Anos"
 
-#~ msgid "View as"
-#~ msgstr "Ver como"
-
 #~ msgid "Change the date"
 #~ msgstr "Alterar a data"
 
@@ -520,12 +612,6 @@ msgstr "Evento eliminado"
 
 #~ msgid "What (e.g. Alien Invasion)"
 #~ msgstr "O quê (ex: Invasão de alienígenas)"
-
-#~ msgid "New Event from %s to %s"
-#~ msgstr "Novo Evento de %s até %s"
-
-#~ msgid "Notification"
-#~ msgstr "Notificação"
 
 #~ msgid "Email"
 #~ msgstr "Email"
