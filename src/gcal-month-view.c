@@ -1293,9 +1293,11 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
           if (size_left[i] > natural_height)
             {
-              gtk_style_context_get_margin (gtk_widget_get_style_context (child_widget),
-                                            gtk_style_context_get_state (context),
-                                            &margin);
+              GtkStyleContext *child_context;
+
+              child_context = gtk_widget_get_style_context (child_widget);
+
+              gtk_style_context_get_margin (child_context, gtk_style_context_get_state (child_context), &margin);
 
               pos_x = cell_width * (i % 7) + margin.left;
               pos_y = cell_height * ((i / 7) + first_row_gap) + start_grid_y + margin.top;
