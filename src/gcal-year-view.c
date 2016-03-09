@@ -558,14 +558,14 @@ calculate_day_month_for_coord (GcalYearView *year_view,
   for (i = 0; i < 4 && ((row == -1) || (column == -1)); i++)
     {
       if (row == -1 &&
-          y > year_view->navigator_grid->coordinates[i * 4].y + box_side &&
+          y > year_view->navigator_grid->coordinates[i * 4].y &&
           y < year_view->navigator_grid->coordinates[i * 4].y + box_side * 7)
         {
           row = i;
         }
       if (column == -1 &&
-          x > year_view->navigator_grid->coordinates[i].x + box_side * 0.5 &&
-          x < year_view->navigator_grid->coordinates[i].x + box_side * 7.5)
+          x > year_view->navigator_grid->coordinates[i].x + box_side * (1 - year_view->k) &&
+          x < year_view->navigator_grid->coordinates[i].x + box_side * (8 - year_view->k))
         {
           column = i;
         }
@@ -576,7 +576,7 @@ calculate_day_month_for_coord (GcalYearView *year_view,
 
   month = row * 4 + column;
   row = (y - (year_view->navigator_grid->coordinates[month].y + box_side)) / box_side;
-  column = (x - (year_view->navigator_grid->coordinates[month].x + box_side * 0.5)) / box_side;
+  column = (x - (year_view->navigator_grid->coordinates[month].x + box_side * (1 - year_view->k))) / box_side;
   clicked_cell = row * 7 + column;
   day = 7 * ((clicked_cell + 7 * year_view->k) / 7) + sw * (clicked_cell % 7) + (1 - year_view->k);
   day -= ((time_day_of_week (1, month, year_view->date->year) - year_view->first_weekday + 7) % 7);
@@ -657,7 +657,7 @@ draw_month_grid (GcalYearView *year_view,
   gtk_style_context_get_color (context, state_flags, &color);
   cairo_set_line_width (cr, 0.2);
   gdk_cairo_set_source_rgba (cr, &color);
-  cairo_move_to (cr, x + box_side / 2, y + box_side + 0.4);
+  cairo_move_to (cr, x + box_side * (1 - year_view->k), y + box_side + 0.4);
   cairo_rel_line_to (cr, 7.0 * box_side, 0);
   cairo_stroke (cr);
 
@@ -673,7 +673,7 @@ draw_month_grid (GcalYearView *year_view,
   days_delay = (time_day_of_week (1, month_nr, year_view->date->year) - year_view->first_weekday + 7) % 7;
   days = days_delay + icaltime_days_in_month (month_nr + 1, year_view->date->year);
   shown_rows = ceil (days / 7.0);
-  sunday_idx = year_view->k * 6 + sw * ((7 - year_view->first_weekday) % 7);
+  sunday_idx = year_view->k * 6 + sw * ((7 - year_view->first_weekday) % 7) + 1;
 
   start_date.day    = 1;
   start_date.month  = month_nr + 1;
@@ -690,7 +690,7 @@ draw_month_grid (GcalYearView *year_view,
 
   for (i = 0; i < 7 * shown_rows; i++)
     {
-      column = i % 7;
+      column = (i % 7) + 1;
       row = i / 7;
 
       j = 7 * ((i + 7 * year_view->k) / 7) + sw * (i % 7) + (1 - year_view->k);
@@ -747,11 +747,11 @@ draw_month_grid (GcalYearView *year_view,
 
           /* FIXME: hardcoded padding of the number background */
           gtk_render_background (context, cr,
-                                 box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * layout_width - 2.0,
+                                 box_side * column + x + sw * box_padding_start - year_view->k * layout_width - 2.0,
                                  box_side * (row + 1) + y + box_padding_top - 1.0,
                                  layout_width + 4.0, layout_height + 2.0);
           gtk_render_layout (context, cr,
-                             box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * layout_width,
+                             box_side * column + x + sw * box_padding_start - year_view->k * layout_width,
                              box_side * (row + 1) + y + box_padding_top,
                              clayout);
 
@@ -769,7 +769,7 @@ draw_month_grid (GcalYearView *year_view,
           box_padding_start = (box_side - layout_width) / 2 > 0 ? (box_side - layout_width) / 2 : 0;
 
           gtk_render_layout (context, cr,
-                             box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * layout_width,
+                             box_side * column + x + sw * box_padding_start - year_view->k * layout_width,
                              box_side * (row + 1) + y + box_padding_top,
                              slayout);
 
@@ -780,7 +780,7 @@ draw_month_grid (GcalYearView *year_view,
           gtk_style_context_save (context);
           gtk_style_context_add_class (context, "sunday");
           gtk_render_layout (context, cr,
-                             box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * layout_width,
+                             box_side * column + x + sw * box_padding_start - year_view->k * layout_width,
                              box_side * (row + 1) + y + box_padding_top,
                              layout);
           gtk_style_context_restore (context);
@@ -788,7 +788,7 @@ draw_month_grid (GcalYearView *year_view,
       else
         {
           gtk_render_layout (context, cr,
-                             box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * layout_width,
+                             box_side * column + x + sw * box_padding_start - year_view->k * layout_width,
                              box_side * (row + 1) + y + box_padding_top,
                              layout);
         }
@@ -805,7 +805,7 @@ draw_month_grid (GcalYearView *year_view,
             gtk_style_context_add_class (context, "with-events-sunday");
           box_padding_start = (box_side - VISUAL_CLUES_SIDE) / 2 > 0 ? (box_side - VISUAL_CLUES_SIDE) / 2 : 0;
           gtk_render_background (context, cr,
-                                 box_side * (column + 0.5 + year_view->k) + x + sw * box_padding_start - year_view->k * VISUAL_CLUES_SIDE,
+                                 box_side * column + x + sw * box_padding_start - year_view->k * VISUAL_CLUES_SIDE,
                                  box_side * (row + 1) + y + box_padding_top + layout_height + 2.0,
                                  VISUAL_CLUES_SIDE, VISUAL_CLUES_SIDE);
           gtk_style_context_restore (context);
@@ -848,12 +848,12 @@ draw_month_grid (GcalYearView *year_view,
       box_padding_start = (box_side - layout_width) / 2.0 > 0 ? (box_side - layout_width) / 2.0 : 0;
 
       gtk_render_background (context, cr,
-                             box_side * (- 0.5) + x + sw * WEEK_NUMBER_PADDING + year_view->k * (8 * box_side + WEEK_NUMBER_PADDING * 2),
+                             x + sw * WEEK_NUMBER_PADDING + year_view->k * (7 * box_side + WEEK_NUMBER_PADDING * 2),
                              box_side * (i + 1) + y + WEEK_NUMBER_PADDING,
                              box_side - WEEK_NUMBER_PADDING * 2, box_side - WEEK_NUMBER_PADDING * 2);
 
       gtk_render_layout (context, cr,
-                         box_side * (- 0.5) + x + sw * box_padding_start + year_view->k * (9 * box_side - layout_width),
+                         x + sw * box_padding_start + year_view->k * (8 * box_side - layout_width),
                          box_side * (i + 1) + y + box_padding_top,
                          layout);
 
