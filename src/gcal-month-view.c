@@ -1006,7 +1006,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 {
   GcalSubscriberViewPrivate *ppriv;
   GcalMonthViewPrivate *priv;
-  GtkStyleContext *context;
+  GtkStyleContext *context, *child_context;
 
   gint i, j, sw, shown_rows;
 
@@ -1098,6 +1098,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       event = gcal_event_widget_get_event (l->data);
       uuid = gcal_event_get_uid (event);
       all_day = gcal_event_get_all_day (event);
+      child_context = gtk_widget_get_style_context (l->data);
 
       if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (ppriv->hidden_as_overflow, uuid))
         continue;
@@ -1194,6 +1195,8 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                   _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (widget), child_widget);
                   gtk_widget_show (child_widget);
 
+                  child_context = gtk_widget_get_style_context (child_widget);
+
                   aux = g_hash_table_lookup (ppriv->children, uuid);
                   aux = g_list_append (aux, child_widget);
                 }
@@ -1220,7 +1223,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
               /* Position and allocate the child widget */
               gtk_style_context_get_margin (gtk_widget_get_style_context (child_widget),
-                                            gtk_style_context_get_state (context),
+                                            gtk_style_context_get_state (child_context),
                                             &margin);
 
               pos_x = cell_width * column + margin.left;
@@ -1293,8 +1296,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
           if (size_left[i] > natural_height)
             {
-              GtkStyleContext *child_context;
-
               child_context = gtk_widget_get_style_context (child_widget);
 
               gtk_style_context_get_margin (child_context, gtk_style_context_get_state (child_context), &margin);
