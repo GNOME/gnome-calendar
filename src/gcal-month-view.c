@@ -276,11 +276,11 @@ show_popover_for_position (GcalMonthView *view,
           start_day = aux;
         }
 
-      start_dt = g_date_time_new_utc (priv->date->year, priv->date->month, start_day, 0, 0, 0);
+      start_dt = g_date_time_new_local (priv->date->year, priv->date->month, start_day, 0, 0, 0);
 
       /* Only setup an end date when days are different */
       if (start_day != end_day)
-        end_dt = g_date_time_new_utc (priv->date->year, priv->date->month, end_day + 1, 0, 0, 0);
+        end_dt = g_date_time_new_local (priv->date->year, priv->date->month, end_day + 1, 0, 0, 0);
 
       g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_dt, end_dt, x, y);
 
@@ -757,7 +757,7 @@ add_new_event_button_cb (GtkWidget *button,
   gtk_widget_hide (priv->overflow_popover);
 
   day = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (priv->overflow_popover), "selected-day"));
-  start_date = g_date_time_new_utc (priv->date->year, priv->date->month, day, 0, 0, 0);
+  start_date = g_date_time_new_local (priv->date->year, priv->date->month, day, 0, 0, 0);
 
   g_signal_emit_by_name (GCAL_VIEW (user_data), "create-event-detailed", start_date, NULL);
 
