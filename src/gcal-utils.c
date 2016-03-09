@@ -245,29 +245,6 @@ get_color_name_from_source (ESource *source, GdkRGBA *out_color)
     gdk_rgba_parse (out_color, "#becedd"); /* calendar default colour */
 }
 
-gint
-gcal_compare_event_widget_by_date (gconstpointer a,
-                                   gconstpointer b)
-{
-  /* negative value if a < b; zero if a = b; positive value if a > b. */
-  GcalViewChild *a_child;
-  GcalViewChild *b_child;
-  GDateTime *a_date;
-  GDateTime *b_date;
-
-  gint comparison;
-
-  a_child = (GcalViewChild*) a;
-  b_child = (GcalViewChild*) b;
-
-  a_date = gcal_event_get_date_start (gcal_event_widget_get_event (GCAL_EVENT_WIDGET (a_child->widget)));
-  b_date = gcal_event_get_date_start (gcal_event_widget_get_event (GCAL_EVENT_WIDGET (b_child->widget)));
-
-  comparison = g_date_time_compare (a_date, b_date);
-
-  return comparison;
-}
-
 /**
  * get_desc_from_component:
  * @component:

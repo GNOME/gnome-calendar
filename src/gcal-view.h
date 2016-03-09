@@ -24,42 +24,34 @@
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_VIEW                 (gcal_view_get_type ())
-#define GCAL_VIEW(obj)                 (G_TYPE_CHECK_INSTANCE_CAST ((obj), GCAL_TYPE_VIEW, GcalView))
-#define GCAL_IS_VIEW(obj)              (G_TYPE_CHECK_INSTANCE_TYPE ((obj), GCAL_TYPE_VIEW))
-#define GCAL_VIEW_GET_INTERFACE(inst)  (G_TYPE_INSTANCE_GET_INTERFACE ((inst), GCAL_TYPE_VIEW, GcalViewIface))
+#define GCAL_TYPE_VIEW (gcal_view_get_type ())
 
-struct _GcalViewChild
+G_DECLARE_INTERFACE (GcalView, gcal_view, GCAL, VIEW, GtkWidget)
+
+struct _GcalViewInterface
 {
-  GtkWidget *widget;
-  gboolean   hidden;
-};
-
-typedef struct _GcalViewChild GcalViewChild;
-
-typedef struct _GcalView                GcalView;
-typedef struct _GcalViewIface           GcalViewIface;
-
-struct _GcalViewIface
-{
-  GTypeInterface parent_iface;
+  GTypeInterface parent;
 
   /* signals */
-  void            (*create_event)                       (GcalView *view, icaltimetype *start_span, icaltimetype *end_span, gdouble x, gdouble y);
-  void            (*create_event_detailed)              (GcalView *view, icaltimetype *start_span, icaltimetype *end_span);
+  void           (*create_event)                       (GcalView     *view,
+                                                        icaltimetype *start_span,
+                                                        icaltimetype *end_span,
+                                                        gdouble       x,
+                                                        gdouble       y);
+  void           (*create_event_detailed)              (GcalView     *view,
+                                                        icaltimetype *start_span,
+                                                        icaltimetype *end_span);
 
   /* Time handling related API */
-  icaltimetype*   (*get_initial_date)                   (GcalView *view);
-  icaltimetype*   (*get_final_date)                     (GcalView *view);
+  icaltimetype*  (*get_initial_date)                   (GcalView    *view);
+  icaltimetype*  (*get_final_date)                     (GcalView    *view);
 
   /* Marks related API */
-  void            (*clear_marks)                        (GcalView     *view);
+  void           (*clear_marks)                        (GcalView    *view);
 
-  GList*          (*get_children_by_uuid)               (GcalView     *view, const gchar *uuid);
+  GList*         (*get_children_by_uuid)               (GcalView    *view,
+                                                        const gchar *uuid);
 };
-
-GType         gcal_view_get_type                      (void);
-
 
 void          gcal_view_set_date                      (GcalView     *view,
                                                        icaltimetype *date);

@@ -112,7 +112,7 @@ enum
 static guint signals[NUM_SIGNALS] = { 0, };
 
 static void   reset_sidebar (GcalYearView *year_view);
-static void   gcal_view_interface_init (GcalViewIface *iface);
+static void   gcal_view_interface_init (GcalViewInterface *iface);
 static void   gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GTK_TYPE_BOX,
@@ -1474,7 +1474,7 @@ gcal_year_view_init (GcalYearView *self)
 }
 
 static void
-gcal_view_interface_init (GcalViewIface *iface)
+gcal_view_interface_init (GcalViewInterface *iface)
 {
   /* FIXME: implement what's needed */
   iface->get_children_by_uuid = gcal_year_view_get_children_by_uuid;

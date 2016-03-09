@@ -76,9 +76,6 @@ GdkPixbuf*      get_circle_pixbuf_from_color                    (GdkRGBA        
 void            get_color_name_from_source                      (ESource               *source,
                                                                  GdkRGBA               *out_color);
 
-gint            gcal_compare_event_widget_by_date               (gconstpointer          a,
-                                                                 gconstpointer          b);
-
 gchar*          get_desc_from_component                         (ECalComponent         *component,
                                                                  const gchar           *joint_char);
 

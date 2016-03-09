@@ -102,8 +102,6 @@ static void           draw_grid_window                     (GcalWeekView   *view
 
 static gint           get_sidebar_width                    (GtkWidget      *widget);
 
-static void           gcal_view_interface_init             (GcalViewIface  *iface);
-
 static void           gcal_week_view_constructed           (GObject        *object);
 
 static void           gcal_week_view_finalize              (GObject        *object);
@@ -157,6 +155,8 @@ static icaltimetype*  gcal_week_view_get_final_date        (GcalView       *view
 
 static GtkWidget*     gcal_week_view_get_by_uuid           (GcalSubscriberView *view,
                                                             const gchar        *uuid);
+
+static void           gcal_view_interface_init             (GcalViewInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GCAL_TYPE_SUBSCRIBER_VIEW,
                          G_ADD_PRIVATE (GcalWeekView)
@@ -553,7 +553,7 @@ gcal_week_view_init (GcalWeekView *self)
 }
 
 static void
-gcal_view_interface_init (GcalViewIface *iface)
+gcal_view_interface_init (GcalViewInterface *iface)
 {
   iface->get_initial_date = gcal_week_view_get_initial_date;
   iface->get_final_date = gcal_week_view_get_final_date;

@@ -121,8 +121,6 @@ static gboolean       gcal_month_view_key_press             (GtkWidget      *wid
 static void           add_new_event_button_cb               (GtkWidget      *button,
                                                              gpointer        user_data);
 
-static void           gcal_view_interface_init              (GcalViewIface  *iface);
-
 static void           gcal_month_view_set_property          (GObject        *object,
                                                              guint           property_id,
                                                              const GValue   *value,
@@ -174,6 +172,8 @@ static void           gcal_month_view_clear_marks           (GcalView       *vie
 
 static GList*         gcal_month_view_get_children_by_uuid  (GcalView       *view,
                                                              const gchar    *uuid);
+
+static void           gcal_view_interface_init              (GcalViewInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view,GCAL_TYPE_SUBSCRIBER_VIEW,
                          G_ADD_PRIVATE (GcalMonthView)
@@ -841,7 +841,7 @@ gcal_month_view_init (GcalMonthView *self)
 }
 
 static void
-gcal_view_interface_init (GcalViewIface *iface)
+gcal_view_interface_init (GcalViewInterface *iface)
 {
   iface->get_initial_date = gcal_month_view_get_initial_date;
   iface->get_final_date = gcal_month_view_get_final_date;
