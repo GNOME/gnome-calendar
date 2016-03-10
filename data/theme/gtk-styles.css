@@ -107,8 +107,8 @@ calendar-view.second-view-header {
     font-size: 70%;
     font-weight: bold;
     border-radius: 2px;
-    background-color: alpha(@theme_fg_color, 0.55);
-    color: @theme_bg_color;
+    background-color: alpha(@theme_fg_color, 0.05);
+    color: alpha(@theme_fg_color, 0.4);
 }
 
 /* these two are supposed be changed in sync with .calendar-view */
