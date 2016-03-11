@@ -1738,7 +1738,7 @@ gcal_month_view_button_press (GtkWidget      *widget,
 
   clicked_cell = real_cell (clicked_cell, priv->k);
 
-  if (clicked_cell >= priv->days_delay && clicked_cell <= days)
+  if (clicked_cell >= priv->days_delay && clicked_cell < days)
     {
       priv->start_mark_cell = clicked_cell;
       priv->keyboard_cell = clicked_cell;
