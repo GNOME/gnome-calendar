@@ -661,7 +661,7 @@ gcal_month_view_key_press (GtkWidget   *widget,
   GcalMonthViewPrivate *priv;
   gboolean selection, valid_key;
   gdouble x, y;
-  gint min, max, diff;
+  gint min, max, diff, month_change;
 
   g_return_val_if_fail (GCAL_IS_MONTH_VIEW (widget), FALSE);
 
@@ -669,6 +669,7 @@ gcal_month_view_key_press (GtkWidget   *widget,
   selection = event->state & GDK_SHIFT_MASK;
   valid_key = FALSE;
   diff = 0;
+  month_change = 0;
   min = priv->days_delay;
   max = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year) - 1;
 
@@ -727,6 +728,28 @@ gcal_month_view_key_press (GtkWidget   *widget,
   if (priv->keyboard_cell + diff <= max && priv->keyboard_cell + diff >= min)
     {
       priv->keyboard_cell += diff;
+    }
+  else
+    {
+      month_change = priv->keyboard_cell + diff > max ? 1 : -1;
+      priv->date->month += month_change;
+      *(priv->date) = icaltime_normalize(*(priv->date));
+
+      priv->days_delay = (time_day_of_week (1, priv->date->month - 1, priv->date->year) - priv->first_weekday + 7) % 7;
+
+      /*
+       * Set keyboard cell value to the sum or difference of days delay of successive
+       * month or last day of preceeding month and overload value depending on
+       * month_change. Overload value is the equal to the deviation of the value
+       * of keboard_cell from the min or max value of the current month depending
+       * on the overload point.
+       */
+      if (month_change == 1)
+        priv->keyboard_cell = priv->days_delay + priv->keyboard_cell + diff - max - 1;
+      else
+        priv->keyboard_cell = priv->days_delay + icaltime_days_in_month (priv->date->month, priv->date->year) - min + priv->keyboard_cell + diff;
+
+      g_object_notify (G_OBJECT (widget), "active-date");
     }
 
   if (selection)
