@@ -231,7 +231,7 @@ update_header (GcalQuickAddPopover *self)
       dtend = datetime_to_icaltime (self->date_end);
 
       if (dtend->is_date)
-        dtend->day--;
+        icaltime_adjust (dtend, -1, 0, 0, 0);
 
       /* Translators:
        * this is the format string for representing a date consisting of a month name
