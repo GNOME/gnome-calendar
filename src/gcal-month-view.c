@@ -515,11 +515,7 @@ rebuild_popover_for_day (GcalMonthView *view,
                                   day,
                                   0, 0, 0);
 
-      dt_end = g_date_time_new (tz,
-                                g_date_time_get_year (current_date),
-                                g_date_time_get_month (current_date),
-                                day + 1,
-                                0, 0, 0);
+      dt_end = g_date_time_add_days (dt_start, 1);
 
       for (; l != NULL; l = g_list_next (l))
         {
