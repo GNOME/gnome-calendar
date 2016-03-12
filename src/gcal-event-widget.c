@@ -102,9 +102,16 @@ update_color (GcalEventWidget *self)
   GQuark color_id;
   gchar *color_str;
   gchar *css_class;
+  GDateTime *now;
+  gboolean date_compare;
 
   context = gtk_widget_get_style_context (GTK_WIDGET (self));
   color = gcal_event_get_color (self->event);
+  now = g_date_time_new_now_local ();
+  date_compare = g_date_time_compare (self->dt_end, now);
+
+  /* Fades out an event that's earlier than the current date */
+  gtk_widget_set_opacity (GTK_WIDGET (self), date_compare < 0 ? 0.6 : 1.0);
 
   /* Remove the old style class */
   if (self->css_class)
@@ -133,6 +140,7 @@ update_color (GcalEventWidget *self)
   /* Keep the current style around, so we can remove it later */
   self->css_class = css_class;
 
+  g_clear_pointer (&now, g_date_time_unref);
   g_free (color_str);
 }
 
