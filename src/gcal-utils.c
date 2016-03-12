@@ -75,10 +75,10 @@ datetime_compare_date (GDateTime *dt1,
     return 1;
 
   if (g_date_time_get_year (dt1) != g_date_time_get_year (dt2))
-    return g_date_time_get_year (dt1) - g_date_time_get_year (dt2);
+    return (g_date_time_get_year (dt1) - g_date_time_get_year (dt2)) * 360;
 
   if (g_date_time_get_month (dt1) != g_date_time_get_month (dt2))
-    return g_date_time_get_month (dt1) - g_date_time_get_month (dt2);
+    return (g_date_time_get_month (dt1) - g_date_time_get_month (dt2)) * 30;
 
   if (g_date_time_get_day_of_month (dt1) != g_date_time_get_day_of_month (dt2))
     return g_date_time_get_day_of_month (dt1) - g_date_time_get_day_of_month (dt2);
