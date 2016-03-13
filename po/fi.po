@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-02 20:15+0000\n"
-"PO-Revision-Date: 2016-03-02 22:41+0200\n"
+"POT-Creation-Date: 2016-03-13 08:11+0000\n"
+"PO-Revision-Date: 2016-03-13 12:49+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
 "Language: fi\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
 #: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:482
+#: ../src/gcal-application.c:483
 msgid "Calendar"
 msgstr "Kalenteri"
 
@@ -150,7 +150,6 @@ msgid "General"
 msgstr "Yleiset"
 
 #: ../data/ui/help-overlay.ui.h:2
-#| msgid "No events"
 msgctxt "shortcut window"
 msgid "New event"
 msgstr "Uusi tapahtuma"
@@ -161,7 +160,6 @@ msgid "Close window"
 msgstr "Sulje ikkuna"
 
 #: ../data/ui/help-overlay.ui.h:4
-#| msgid "_Search…"
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Etsi"
@@ -177,7 +175,6 @@ msgid "Shortcuts"
 msgstr "Pikanäppäimet"
 
 #: ../data/ui/help-overlay.ui.h:7
-#| msgid "Notification"
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "Liikkuminen"
@@ -208,19 +205,16 @@ msgid "Previous view"
 msgstr "Edellinen näkymä"
 
 #: ../data/ui/help-overlay.ui.h:13
-#| msgid "View as"
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Näkymä"
 
 #: ../data/ui/help-overlay.ui.h:14
-#| msgid "Month"
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Kuukausinäkymä"
 
 #: ../data/ui/help-overlay.ui.h:15
-#| msgid "Overview"
 msgctxt "shortcut window"
 msgid "Year view"
 msgstr "Vuosinäkymä"
@@ -262,7 +256,6 @@ msgid "From File…"
 msgstr "Tiedostosta…"
 
 #: ../data/ui/quick-add-popover.ui.h:1
-#| msgid "Edit Details"
 msgid "Edit Details…"
 msgstr "Muokkaa tietoja…"
 
@@ -416,7 +409,7 @@ msgstr "Kalenterin asetukset"
 msgid "No events"
 msgstr "Ei tapahtumia"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:859
 msgid "Add Event…"
 msgstr "Lisää tapahtuma…"
 
@@ -436,15 +429,19 @@ msgstr "Avaa kalenteri näyttäen mennyt tapahtuma"
 msgid "- Calendar management"
 msgstr "- Kalenterin hallinta"
 
-#: ../src/gcal-application.c:470
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Tekijänoikeus © %Id Kalenterin tekijät"
+#: ../src/gcal-application.c:471
+#, c-format
+#| msgid "Copyright © %Id The Calendar authors"
+msgid "Copyright © %d The Calendar authors"
+msgstr "Tekijänoikeus © %d Kalenterin tekijät"
 
-#: ../src/gcal-application.c:476
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Tekijänoikeus © %Id–%Id Kalenterin tekijät"
+#: ../src/gcal-application.c:477
+#, c-format
+#| msgid "Copyright © %Id–%Id The Calendar authors"
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Tekijänoikeus © %d–%d Kalenterin tekijät"
 
-#: ../src/gcal-application.c:489
+#: ../src/gcal-application.c:490
 msgid "translator-credits"
 msgstr "Jiri Grönroos"
 
@@ -460,12 +457,12 @@ msgstr "Tallenna"
 msgid "Unnamed event"
 msgstr "Nimetön tapahtuma"
 
-#: ../src/gcal-month-view.c:1065
+#: ../src/gcal-month-view.c:1090
 msgid "Other events"
 msgstr "Muut tapahtumat"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1494
+#: ../src/gcal-month-view.c:1523
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
