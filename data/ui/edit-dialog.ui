@@ -168,7 +168,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="draw_indicator">True</property>
-                <property name="label" translatable="yes">All day</property>
+                <property name="label" translatable="yes">All Day</property>
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <signal name="toggled" handler="gcal_edit_dialog_all_day_changed" object="GcalEditDialog" swapped="no"/>
               </object>
@@ -294,7 +294,7 @@
                 <child>
                   <object class="GtkLabel" id="delete_label">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Delete event</property>
+                    <property name="label" translatable="yes">Delete Event</property>
                   </object>
                 </child>
                 <style>
