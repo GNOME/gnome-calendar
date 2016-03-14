@@ -235,7 +235,6 @@ gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
 static void
 gcal_time_selector_init (GcalTimeSelector *self)
 {
-  self->format_24h = TRUE;
   self->time = g_date_time_new_now_local ();
 
   gtk_widget_init_template (GTK_WIDGET (self));

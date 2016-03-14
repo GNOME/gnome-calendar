@@ -545,18 +545,24 @@ gcal_edit_dialog_all_day_changed (GtkWidget *widget,
 
 /* Public API */
 GtkWidget*
-gcal_edit_dialog_new (gboolean format_24h)
+gcal_edit_dialog_new (void)
 {
-  GcalEditDialog *dialog;
+  return g_object_new (GCAL_TYPE_EDIT_DIALOG, NULL);
+}
 
-  dialog = g_object_new (GCAL_TYPE_EDIT_DIALOG, NULL);
+void
+gcal_edit_dialog_set_time_format (GcalEditDialog *dialog,
+                                  gboolean        use_24h_format)
+{
+  g_return_if_fail (GCAL_IS_EDIT_DIALOG (dialog));
 
-  dialog->format_24h = format_24h;
+  if (dialog->format_24h != use_24h_format)
+  {
+    dialog->format_24h = use_24h_format;
 
-  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->start_time_selector), format_24h);
-  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->end_time_selector), format_24h);
-
-  return GTK_WIDGET (dialog);
+    gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->start_time_selector), dialog->format_24h);
+    gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->end_time_selector), dialog->format_24h);
+  }
 }
 
 void

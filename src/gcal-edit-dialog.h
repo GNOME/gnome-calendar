@@ -35,7 +35,7 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalEditDialog, gcal_edit_dialog, GCAL, EDIT_DIALOG, GtkDialog);
 
-GtkWidget*           gcal_edit_dialog_new                     (gboolean format_24h);
+GtkWidget*           gcal_edit_dialog_new                     (void);
 
 void                 gcal_edit_dialog_set_event_is_new        (GcalEditDialog *dialog,
                                                                gboolean       event_is_new);
@@ -47,6 +47,9 @@ void                 gcal_edit_dialog_set_event               (GcalEditDialog *d
 
 void                 gcal_edit_dialog_set_manager             (GcalEditDialog *dialog,
                                                                GcalManager    *manager);
+
+void                 gcal_edit_dialog_set_time_format         (GcalEditDialog *dialog,
+                                                               gboolean        use_24h_format);
 
 GDateTime*           gcal_edit_dialog_get_date_end            (GcalEditDialog *dialog);
 

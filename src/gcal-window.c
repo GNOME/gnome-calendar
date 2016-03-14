@@ -1351,6 +1351,8 @@ gcal_window_constructed (GObject *object)
   window->views[GCAL_WINDOW_VIEW_MONTH] = window->month_view;
   window->views[GCAL_WINDOW_VIEW_YEAR] = window->year_view;
 
+  gcal_edit_dialog_set_time_format (GCAL_EDIT_DIALOG (window->edit_dialog), use_24h_format);
+
   gcal_month_view_set_first_weekday (GCAL_MONTH_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), get_first_weekday ());
   gcal_month_view_set_use_24h_format (GCAL_MONTH_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), use_24h_format);
 
