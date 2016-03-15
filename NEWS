@@ -1,3 +1,37 @@
+Major changes in 3.19.92:
+* Updated translations for:
+    * Brazilian Portuguese (Enrico Nicoletto)
+    * Czech (Marek Černocký)
+    * Finnish (Jiri Grönroos)
+    * Galician (Marcos Lans)
+    * German (Bernd Homuth)
+    * Greek (Efstathios  Iosifidis)
+    * Hungarian (Balázs Úr)
+    * Kazakh (Baurzhan Muftakhidinov)
+    * Korean (Seong-ho Cho)
+    * Latvian (Rūdolfs Mazurs)
+    * Lithuanian (Aurimas Černius)
+    * Polish (Piotr Drag)
+    * Portuguese (Duarte Loreto)
+    * Russian (Stas Solovey)
+    * Serbian (Марко М. Костић)
+    * Slovak (Dusan Kazik)
+    * Slovenian (Matej Urbančič)
+    * Spanish (Daniel Mustieles)
+    * Swedish (Anders Jonsson)
+* Don't attempt to update read-only events (Fosero)
+* Timezone handling improvements (Fosero)
+* Fix crashes when no end date is passed (Monique Faria, Iain Lane)
+* Improved week numbers in Year View (Isaque Galdino)
+* Make year view respect Shell's 'show-weeknumber' setting (Isaque Galdino)
+* Change month when keynav moves the previous/next month (pandunonu2)
+* Improve month view drawing (Fosero)
+* Draw a background to the selected days in month view (Fosero)
+* Respect 12/24h hour format (Anwar Sadath)
+* Fade out past events (Monique Faria)
+* Smaller code fixes and updates
+
+
 Major changes in 3.19.91:
 * Updated translations for:
     * Brazilian Portuguese (Fábio Nogueira)
