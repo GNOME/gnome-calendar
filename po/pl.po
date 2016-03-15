@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-03 16:59+0100\n"
-"PO-Revision-Date: 2016-03-03 17:00+0100\n"
+"POT-Creation-Date: 2016-03-15 23:59+0100\n"
+"PO-Revision-Date: 2016-03-16 00:00+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <gnomepl@aviary.pl>\n"
 "Language: pl\n"
@@ -55,6 +55,7 @@ msgstr ""
 "użytecznością skierowaną na użytkownika."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Wyszukiwanie wydarzeń"
 
@@ -401,11 +402,15 @@ msgid "Year"
 msgstr "Rok"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
+#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
 msgid "Today"
 msgstr "Dzisiaj"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Zarządzanie kalendarzami"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
 #: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "Ustawienia kalendarza"
@@ -414,7 +419,7 @@ msgstr "Ustawienia kalendarza"
 msgid "No events"
 msgstr "Brak wydarzeń"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
 msgid "Add Event…"
 msgstr "Dodaj wydarzenie…"
 
@@ -458,16 +463,16 @@ msgstr "Dzień"
 msgid "Save"
 msgstr "Zapisz"
 
-#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Wydarzenie bez nazwy"
 
-#: ../src/gcal-month-view.c:1065
+#: ../src/gcal-month-view.c:1093
 msgid "Other events"
 msgstr "Inne wydarzenia"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1494
+#: ../src/gcal-month-view.c:1526
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
