@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-13 08:11+0000\n"
-"PO-Revision-Date: 2016-03-13 12:49+0200\n"
+"POT-Creation-Date: 2016-03-16 08:11+0000\n"
+"PO-Revision-Date: 2016-03-16 18:26+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <gnome-fi-laatu@lists.sourceforge.net>\n"
 "Language: fi\n"
@@ -51,6 +51,7 @@ msgstr ""
 "helppoa kuin aina ennenkin!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Etsi tapahtumia"
 
@@ -396,11 +397,15 @@ msgid "Year"
 msgstr "Vuosi"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
+#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
 msgid "Today"
 msgstr "Tänään"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Hallitse kalentereitasi"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
 #: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "Kalenterin asetukset"
@@ -409,7 +414,7 @@ msgstr "Kalenterin asetukset"
 msgid "No events"
 msgstr "Ei tapahtumia"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:859
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
 msgid "Add Event…"
 msgstr "Lisää tapahtuma…"
 
@@ -431,13 +436,11 @@ msgstr "- Kalenterin hallinta"
 
 #: ../src/gcal-application.c:471
 #, c-format
-#| msgid "Copyright © %Id The Calendar authors"
 msgid "Copyright © %d The Calendar authors"
 msgstr "Tekijänoikeus © %d Kalenterin tekijät"
 
 #: ../src/gcal-application.c:477
 #, c-format
-#| msgid "Copyright © %Id–%Id The Calendar authors"
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Tekijänoikeus © %d–%d Kalenterin tekijät"
 
@@ -453,16 +456,16 @@ msgstr "Päivä"
 msgid "Save"
 msgstr "Tallenna"
 
-#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Nimetön tapahtuma"
 
-#: ../src/gcal-month-view.c:1090
+#: ../src/gcal-month-view.c:1093
 msgid "Other events"
 msgstr "Muut tapahtumat"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1523
+#: ../src/gcal-month-view.c:1526
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
