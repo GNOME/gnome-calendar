@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-03 01:29+0000\n"
-"PO-Revision-Date: 2016-03-03 10:57+0500\n"
+"POT-Creation-Date: 2016-03-16 20:14+0000\n"
+"PO-Revision-Date: 2016-03-17 08:27+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -53,6 +53,7 @@ msgstr ""
 "қолдануды ыңғайлы екенін өзіңіз де көресіз!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Оқиғаларды іздеу"
 
@@ -397,11 +398,15 @@ msgid "Year"
 msgstr "Жыл"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
+#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
 msgid "Today"
 msgstr "Бүгін"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Күнтізбелеріңізді басқарыңыз"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
 #: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "Күнтізбе баптаулары"
@@ -410,7 +415,7 @@ msgstr "Күнтізбе баптаулары"
 msgid "No events"
 msgstr "Оқиғалар жоқ"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
 msgid "Add Event…"
 msgstr "Оқиғаны қосу…"
 
@@ -432,13 +437,11 @@ msgstr "- Күнтізбені басқару"
 
 #: ../src/gcal-application.c:471
 #, c-format
-#| msgid "Copyright © %Id The Calendar authors"
 msgid "Copyright © %d The Calendar authors"
 msgstr "Copyright © %d Calendar authors"
 
 #: ../src/gcal-application.c:477
 #, c-format
-#| msgid "Copyright © %Id–%Id The Calendar authors"
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Copyright © %d–%d Calendar authors"
 
@@ -454,16 +457,16 @@ msgstr "Күн"
 msgid "Save"
 msgstr "Сақтау"
 
-#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Атаусыз оқиға"
 
-#: ../src/gcal-month-view.c:1065
+#: ../src/gcal-month-view.c:1093
 msgid "Other events"
 msgstr "Басқа оқиғалар"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1494
+#: ../src/gcal-month-view.c:1526
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
