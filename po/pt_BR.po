@@ -6,22 +6,23 @@
 # Felipe Braga <fbobraga@gmail.com>, 2015.
 # Gabriel Speckhahn <gabspeck@gmail.com>, 2015.
 # Fábio Nogueira <fnogueira@gnome.org>, 2016.
+# Antonio Fernandes C. Neto <fernandesn@gnome.org>, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-03 01:29+0000\n"
-"PO-Revision-Date: 2016-03-02 22:44-0300\n"
-"Last-Translator: Enrico Nicoletto <liverig@gmail.com>\n"
+"POT-Creation-Date: 2016-03-16 20:14+0000\n"
+"PO-Revision-Date: 2016-03-16 21:34-0300\n"
+"Last-Translator: Antonio Fernandes C. Neto <fernandesn@gnome.org>\n"
 "Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 1.8.5\n"
+"X-Generator: Poedit 1.6.10\n"
 "X-Project-Style: gnome\n"
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
@@ -45,8 +46,8 @@ msgid ""
 "desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "O GNOME Agenda é um aplicativo de agenda simples e bonito projetado para se "
-"encaixar perfeitamente ao ambiente GNOME. Por reutilizar os componentes com o "
-"qual GNOME é construído, Agenda se integra muito bem à esse ecossistema."
+"encaixar perfeitamente ao ambiente GNOME. Por reutilizar os componentes com "
+"o qual GNOME é construído, Agenda se integra muito bem à esse ecossistema."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
@@ -59,6 +60,7 @@ msgstr ""
 "se sentirá confortável usando Agenda, como se usasse-o por anos!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Pesquisa por eventos"
 
@@ -356,8 +358,8 @@ msgid ""
 "belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
-"Digite o endereço da agenda que você deseja adicionar. Se a agenda pertence a "
-"uma de suas contas on-line, você pode adicioná-la através das <a href=\"GOA"
+"Digite o endereço da agenda que você deseja adicionar. Se a agenda pertence "
+"a uma de suas contas on-line, você pode adicioná-la através das <a href=\"GOA"
 "\">configurações de contas on-line</a>."
 
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
@@ -408,12 +410,16 @@ msgid "Year"
 msgstr "Ano"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
+#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
 msgid "Today"
 msgstr "Hoje"
 
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Gerenciar suas agendas"
+
 # Calendar deve ser traduzido como Agenda. Contribuição de Florêncio Neves.
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
 #: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "Configurações da agenda"
@@ -422,7 +428,7 @@ msgstr "Configurações da agenda"
 msgid "No events"
 msgstr "Nenhum evento"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
 msgid "Add Event…"
 msgstr "Adicionar evento…"
 
@@ -444,13 +450,11 @@ msgstr "- Gerenciamento de agenda"
 
 #: ../src/gcal-application.c:471
 #, c-format
-#| msgid "Copyright © %Id The Calendar authors"
 msgid "Copyright © %d The Calendar authors"
 msgstr "Copyright © %d Os autores do Agenda"
 
 #: ../src/gcal-application.c:477
 #, c-format
-#| msgid "Copyright © %Id–%Id The Calendar authors"
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Copyright © %d–%d Os autores do Agenda"
 
@@ -470,16 +474,16 @@ msgstr "Dia"
 msgid "Save"
 msgstr "Salvar"
 
-#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Evento sem nome"
 
-#: ../src/gcal-month-view.c:1065
+#: ../src/gcal-month-view.c:1093
 msgid "Other events"
 msgstr "Outros eventos"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1494
+#: ../src/gcal-month-view.c:1526
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
