@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-06 08:06+0000\n"
-"PO-Revision-Date: 2016-03-06 09:14+0100\n"
+"POT-Creation-Date: 2016-03-17 20:11+0000\n"
+"PO-Revision-Date: 2016-03-18 07:33+0100\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -53,6 +53,7 @@ msgstr ""
 "Kalendár sa budete cítiť pohodlne, ako keby ste ho už používali roky!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Vyhľadať udalosti"
 
@@ -400,11 +401,15 @@ msgid "Year"
 msgstr "Rok"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
+#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
 msgid "Today"
 msgstr "Dnes"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Spravuje vaše kalendáre"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
 #: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "Nastavenia kalendára"
@@ -413,7 +418,7 @@ msgstr "Nastavenia kalendára"
 msgid "No events"
 msgstr "Žiadne udalosti"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
 msgid "Add Event…"
 msgstr "Pridať udalosť…"
 
@@ -455,16 +460,16 @@ msgstr "Deň"
 msgid "Save"
 msgstr "Uložiť"
 
-#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Nepomenovaná udalosť"
 
-#: ../src/gcal-month-view.c:1065
+#: ../src/gcal-month-view.c:1093
 msgid "Other events"
 msgstr "Iné udalosti"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1494
+#: ../src/gcal-month-view.c:1526
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
