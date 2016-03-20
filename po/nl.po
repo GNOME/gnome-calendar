@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-16\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-02-29 18:50+0000\n"
-"PO-Revision-Date: 2016-03-02 10:14+0100\n"
+"POT-Creation-Date: 2016-03-20 08:15+0000\n"
+"PO-Revision-Date: 2016-03-20 11:03+0100\n"
 "Last-Translator: Hannie Dumoleyn <hannie@ubuntu-nl.org>\n"
 "Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
 "Language: nl\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
 #: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:482
+#: ../src/gcal-application.c:483
 msgid "Calendar"
 msgstr "Agenda"
 
@@ -39,8 +39,9 @@ msgid ""
 "desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "Gnome Agenda is een eenvoudig en mooi agendaprogramma dat perfect aansluit "
-"bij de Gnome-werkomgeving. Door de onderdelen waarop de Gnome-werkomgeving is "
-"gebouwd opnieuw te gebruiken, integreert Agenda mooi binnen het Gnome-systeem."
+"bij de Gnome-werkomgeving. Door de onderdelen waarop de Gnome-werkomgeving "
+"is gebouwd opnieuw te gebruiken, integreert Agenda mooi binnen het Gnome-"
+"systeem."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
@@ -54,6 +55,7 @@ msgstr ""
 "gebruikt!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Zoeken naar gebeurtenissen"
 
@@ -399,11 +401,15 @@ msgid "Year"
 msgstr "Jaar"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
+#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
 msgid "Today"
 msgstr "Vandaag"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Uw agenda's beheren"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
 #: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "Agenda-instellingen"
@@ -412,7 +418,7 @@ msgstr "Agenda-instellingen"
 msgid "No events"
 msgstr "Geen gebeurtenissen"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
 msgid "Add Event…"
 msgstr "Gebeurtenis toevoegen…"
 
@@ -432,15 +438,19 @@ msgstr "Agenda openen en verstreken gebeurtenis tonen"
 msgid "- Calendar management"
 msgstr "- Agendabeheer"
 
-#: ../src/gcal-application.c:470
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Copyright © %Id De auteurs van Agenda"
+#: ../src/gcal-application.c:471
+#, c-format
+#| msgid "Copyright © %Id The Calendar authors"
+msgid "Copyright © %d The Calendar authors"
+msgstr "Copyright © %d De auteurs van Agenda"
 
-#: ../src/gcal-application.c:476
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Copyright © %Id–%Id De auteurs van Agenda"
+#: ../src/gcal-application.c:477
+#, c-format
+#| msgid "Copyright © %Id–%Id The Calendar authors"
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Copyright © %d–%d De auteurs van Agenda"
 
-#: ../src/gcal-application.c:489
+#: ../src/gcal-application.c:490
 msgid "translator-credits"
 msgstr ""
 "Nathan Follens\n"
@@ -456,16 +466,16 @@ msgstr "Dag"
 msgid "Save"
 msgstr "Opslaan"
 
-#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Naamloze gebeurtenis"
 
-#: ../src/gcal-month-view.c:1065
+#: ../src/gcal-month-view.c:1093
 msgid "Other events"
 msgstr "Andere gebeurtenissen"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1494
+#: ../src/gcal-month-view.c:1526
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
