@@ -2,15 +2,14 @@
 # Copyright (C) 2015 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Hajime Taira <htaira@redhat.com>, 2015.
-# Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2015.
+# Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2015-2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-12-29 08:08+0000\n"
-"PO-Revision-Date: 2015-12-29 18:32+0900\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2016-03-20 22:32+0000\n"
+"PO-Revision-Date: 2016-03-21 12:03+0900\n"
 "Last-Translator: Jiro Matsuzawa <jmatsuzawa@gnome.org>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -22,7 +21,8 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:483
 msgid "Calendar"
 msgstr "カレンダー"
 
@@ -31,27 +31,15 @@ msgid "Calendar for GNOME"
 msgstr "GNOME のカレンダー"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
-msgid ""
-"GNOME Calendar is a simple and beautiful calendar application designed to "
-"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr ""
-"GNOME カレンダーは、GNOME デスクトップ環境のために設計されたシンプルで美しい"
-"カレンダーアプリケーションです。GNOME デスクトップ環境を構築するコンポーネン"
-"トを再利用することで、カレンダーが GNOME のエコシステムとシームレスに統合され"
-"ています。"
+msgid "GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME desktop. By reusing the components which the GNOME desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr "GNOME カレンダーは、GNOME デスクトップ環境のために設計されたシンプルで美しいカレンダーアプリケーションです。GNOME デスクトップ環境を構築するコンポーネントを再利用することで、カレンダーが GNOME のエコシステムとシームレスに統合されています。"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
-msgid ""
-"We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You'll feel comfortable using "
-"Calendar, like you've been using it for ages!"
-msgstr ""
-"私たちは、うまく細工された機能とユーザー中心のユーザビリティの間の絶妙なバラ"
-"ンスを取ることを目指しています。機能としては過不足なく、長年愛用してきたカレ"
-"ンダーのように心地よく感じることでしょう。"
+msgid "We aim to find the perfect balance between nicely crafted features and user-centred usability. No excess, no lacks. You'll feel comfortable using Calendar, like you've been using it for ages!"
+msgstr "私たちは、うまく細工された機能とユーザー中心のユーザビリティの間の絶妙なバランスを取ることを目指しています。機能としては過不足なく、長年愛用してきたカレンダーのように心地よく感じることでしょう。"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "イベントの検索"
 
@@ -108,11 +96,11 @@ msgid "Sources disabled last time Calendar ran"
 msgstr "無効なソースの前回のカレンダー同期"
 
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1131
+#: ../src/gcal-source-dialog.c:1113
 msgid "Cancel"
 msgstr "キャンセル"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
 msgid "Done"
 msgstr "完了"
 
@@ -136,13 +124,88 @@ msgstr "メモ"
 msgid "Location"
 msgstr "場所"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
 msgid "All day"
 msgstr "終日"
 
 #: ../data/ui/edit-dialog.ui.h:9
 msgid "Delete event"
 msgstr "イベントを削除"
+
+#: ../data/ui/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "General"
+msgstr "全般"
+
+#: ../data/ui/help-overlay.ui.h:2
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "新しいイベントを登録する"
+
+#: ../data/ui/help-overlay.ui.h:3
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "ウィンドウを閉じる"
+
+#: ../data/ui/help-overlay.ui.h:4
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "検索する"
+
+#: ../data/ui/help-overlay.ui.h:5
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "ヘルプを表示する"
+
+#: ../data/ui/help-overlay.ui.h:6
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "ショートカット"
+
+#: ../data/ui/help-overlay.ui.h:7
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "移動"
+
+#: ../data/ui/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "戻る"
+
+#: ../data/ui/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "進む"
+
+#: ../data/ui/help-overlay.ui.h:10
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "今日のカレンダーを表示する"
+
+#: ../data/ui/help-overlay.ui.h:11
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "次の表示モードへ切り替える"
+
+#: ../data/ui/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "前の表示モードへ切り替える"
+
+#: ../data/ui/help-overlay.ui.h:13
+msgctxt "shortcut window"
+msgid "View"
+msgstr "表示"
+
+#: ../data/ui/help-overlay.ui.h:14
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "月表示"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "年表示"
 
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
@@ -153,28 +216,40 @@ msgid "_Search…"
 msgstr "検索(_S)…"
 
 #: ../data/ui/menus.ui.h:3
+msgid "_Keyboard Shortcuts"
+msgstr "キーボードショートカット(_K)"
+
+#: ../data/ui/menus.ui.h:4
 msgid "_About"
 msgstr "このアプリケーションについて(_A)"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:5
 msgid "_Quit"
 msgstr "終了(_Q)"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:6
 msgid "_Synchronize"
 msgstr "同期(_S)"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:7
 msgid "From Web…"
 msgstr "Web から…"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:8
 msgid "New Local Calendar…"
 msgstr "新しいローカルカレンダー…"
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:9
 msgid "From File…"
 msgstr "ファイルから…"
+
+#: ../data/ui/quick-add-popover.ui.h:1
+msgid "Edit Details…"
+msgstr "詳細を編集…"
+
+#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "追加"
 
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
@@ -184,8 +259,8 @@ msgstr "見つかりませんでした"
 msgid "Try a different search"
 msgstr "他のキーワードを試してください"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
-#: ../src/gcal-window.c:1244
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1065
 msgid "Undo"
 msgstr "元に戻す"
 
@@ -216,10 +291,6 @@ msgstr "Microsoft Exchange"
 #: ../data/ui/source-dialog.ui.h:8
 msgid "Calendars"
 msgstr "カレンダー"
-
-#: ../data/ui/source-dialog.ui.h:9
-msgid "Add"
-msgstr "追加"
 
 #: ../data/ui/source-dialog.ui.h:10
 msgid "Overview"
@@ -258,20 +329,15 @@ msgid "Edit Calendar"
 msgstr "カレンダーの編集"
 
 #: ../data/ui/source-dialog.ui.h:20
-msgid ""
-"Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of your online accounts, you can add it through the <a href="
-"\"GOA\">online account settings</a>."
-msgstr ""
-"追加するカレンダーのアドレスを入力してください。オンラインアカウントのカレン"
-"ダーであれば、<a href=\"GOA\">オンラインアカウント設定</a>から追加できます。"
+msgid "Enter the address of the calendar that you want to add. If the calendar belongs to one of your online accounts, you can add it through the <a href=\"GOA\">online account settings</a>."
+msgstr "追加するカレンダーのアドレスを入力してください。オンラインアカウントのカレンダーであれば、<a href=\"GOA\">オンラインアカウント設定</a>から追加できます。"
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
 msgstr "カレンダーのアドレス"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
-#: ../src/gcal-source-dialog.c:2227
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2191
+#: ../src/gcal-source-dialog.c:2197
 msgid "Add Calendar"
 msgstr "カレンダーの追加"
 
@@ -303,71 +369,35 @@ msgstr "午前"
 msgid "PM"
 msgstr "午後"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
 msgid "Month"
 msgstr "月"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
 msgid "Year"
 msgstr "年"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
 msgid "Today"
 msgstr "今日"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
-#: ../src/gcal-source-dialog.c:2254
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "カレンダーを管理する"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "カレンダー設定"
-
-#: ../data/ui/window.ui.h:6
-msgid "Create"
-msgstr "作成"
-
-#: ../data/ui/window.ui.h:7
-msgid "Edit Details"
-msgstr "詳細を編集"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
 msgstr "イベントなし"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
 msgid "Add Event…"
 msgstr "新規イベント"
-
-#. Dialog
-#: ../src/gcal-source-dialog.c:1128
-msgid "Select a calendar file"
-msgstr "カレンダーファイルの選択"
-
-#: ../src/gcal-source-dialog.c:1132
-msgid "Open"
-msgstr "開く"
-
-#: ../src/gcal-source-dialog.c:1139
-msgid "Calendar files"
-msgstr "カレンダーファイル"
-
-#. update the source properties
-#: ../src/gcal-source-dialog.c:1178
-msgid "Unnamed Calendar"
-msgstr "カレンダー名未設定"
-
-#. Update notification label
-#: ../src/gcal-source-dialog.c:1781
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "カレンダー <b>%s</b> を削除しました"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "Off"
-msgstr "オフ"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "On"
-msgstr "オン"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -381,60 +411,114 @@ msgstr "指定された日のカレンダーを開く"
 msgid "Open calendar showing the passed event"
 msgstr "指定されたイベントのカレンダーを開く"
 
-#: ../src/gcal-application.c:337
+#: ../src/gcal-application.c:324
 msgid "- Calendar management"
 msgstr "- カレンダー管理"
 
-#: ../src/gcal-application.c:504
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Copyright © %Id The Calendar authors"
+#: ../src/gcal-application.c:471
+#, c-format
+msgid "Copyright © %d The Calendar authors"
+msgstr "Copyright © %d The Calendar authors"
 
-#: ../src/gcal-application.c:510
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Copyright © %Id–%Id The Calendar authors"
+#: ../src/gcal-application.c:477
+#, c-format
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Copyright © %d–%d The Calendar authors"
 
-#: ../src/gcal-application.c:523
+#: ../src/gcal-application.c:490
 msgid "translator-credits"
 msgstr ""
 "Hajime Taira <htaira@redhat.com>\n"
 "松澤 二郎 <jmatsuzawa@gnome.org>"
 
-#: ../src/gcal-date-selector.c:315
+#: ../src/gcal-date-selector.c:362
 msgid "Day"
 msgstr "日"
 
-#: ../src/gcal-edit-dialog.c:657
+#: ../src/gcal-edit-dialog.c:429
 msgid "Save"
 msgstr "保存"
 
-#: ../src/gcal-edit-dialog.c:841
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "イベント名称未設定"
 
-#: ../src/gcal-month-view.c:1043
+#: ../src/gcal-month-view.c:1093
 msgid "Other events"
 msgstr "その他のイベント"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1425
+#: ../src/gcal-month-view.c:1526
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "その他%d個のイベント"
 
-#: ../src/gcal-search-view.c:558
+#: ../src/gcal-quick-add-popover.c:113
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (このカレンダーは読み取り専用です)"
+
+#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%-m月%-d日"
+
+#: ../src/gcal-quick-add-popover.c:243
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "%sから%sまでの新規イベント"
+
+#: ../src/gcal-quick-add-popover.c:249
+#, c-format
+msgid "New Event on %s"
+msgstr "%sの新規イベント"
+
+#: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
 msgstr "上のエントリにキーワードを入力してイベントを検索してください。"
 
-#: ../src/gcal-time-selector.c:96
-#, c-format
-msgid "%.2d:%.2d AM"
-msgstr "午前 %.2d:%.2d"
+#. Dialog
+#: ../src/gcal-source-dialog.c:1110
+msgid "Select a calendar file"
+msgstr "カレンダーファイルの選択"
 
-#: ../src/gcal-time-selector.c:98
+#: ../src/gcal-source-dialog.c:1114
+msgid "Open"
+msgstr "開く"
+
+#: ../src/gcal-source-dialog.c:1121
+msgid "Calendar files"
+msgstr "カレンダーファイル"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1160
+msgid "Unnamed Calendar"
+msgstr "カレンダー名未設定"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1758
 #, c-format
-msgid "%.2d:%.2d PM"
-msgstr "午後 %.2d:%.2d"
+msgid "Calendar <b>%s</b> removed"
+msgstr "カレンダー <b>%s</b> を削除しました"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "Off"
+msgstr "オフ"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "On"
+msgstr "オン"
+
+#: ../src/gcal-time-selector.c:82
+#, c-format
+msgid "%s AM"
+msgstr "午前%s"
+
+#: ../src/gcal-time-selector.c:84
+#, c-format
+msgid "%s PM"
+msgstr "午後%s"
 
 #: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
@@ -448,27 +532,23 @@ msgstr "正午"
 msgid "00:00 PM"
 msgstr "午後 00:00"
 
-#. Translators:
-#. * this is the format string for representing a date consisting of a month name
-#. * and a date of month.
-#: ../src/gcal-window.c:746
-msgctxt "event date format"
-msgid "%B %d"
-msgstr "%-m月%-d日"
-
-#: ../src/gcal-window.c:747
-#, c-format
-msgid "New Event on %s"
-msgstr "%sの新規イベント"
-
 # 表示方法: "Event deleted"通知表示中にイベントをもうひとつ削除する
-#: ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1061
 msgid "Another event deleted"
 msgstr "他のイベントも削除しました"
 
-#: ../src/gcal-window.c:1244
+#: ../src/gcal-window.c:1065
 msgid "Event deleted"
 msgstr "イベントを削除しました"
+
+#~ msgid "Create"
+#~ msgstr "作成"
+
+#~ msgid "%.2d:%.2d AM"
+#~ msgstr "午前 %.2d:%.2d"
+
+#~ msgid "%.2d:%.2d PM"
+#~ msgstr "午後 %.2d:%.2d"
 
 #~ msgid "%m/%d/%y"
 #~ msgstr "%Y年%-m月%-d日"
