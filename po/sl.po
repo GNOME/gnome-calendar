@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-12 21:09+0100\n"
-"PO-Revision-Date: 2016-03-12 21:12+0100\n"
+"POT-Creation-Date: 2016-03-22 21:37+0100\n"
+"PO-Revision-Date: 2016-03-22 21:39+0100\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -54,6 +54,7 @@ msgstr ""
 "kot je od nekdaj bila."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Iskanje dogodkov"
 
@@ -348,6 +349,8 @@ msgid ""
 "belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
+"Vnesite naslov koledarja za dodajanje. Če je koledar dostopen prek spletnega "
+"računa, ga lahko dodate v <a href=\"GOA\">nastavitvah koledarja</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
@@ -395,11 +398,15 @@ msgid "Year"
 msgstr "Leto"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
+#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
 msgid "Today"
 msgstr "Danes"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Upravljanje s koledarji"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
 #: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "Nastavitve koledarja"
@@ -408,7 +415,7 @@ msgstr "Nastavitve koledarja"
 msgid "No events"
 msgstr "Ni dogodkov"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:857
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
 msgid "Add Event…"
 msgstr "Dodaj dogodek ..."
 
@@ -450,16 +457,16 @@ msgstr "Dan"
 msgid "Save"
 msgstr "Shrani"
 
-#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Neimenovan dogodek"
 
-#: ../src/gcal-month-view.c:1088
+#: ../src/gcal-month-view.c:1093
 msgid "Other events"
 msgstr "Drugi dogodki"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1520
+#: ../src/gcal-month-view.c:1526
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
