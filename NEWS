@@ -1,3 +1,28 @@
+Major changes in 3.20.0:
+* Updated translations for:
+    * Brazilian Portuguese (Antonio Fernandes C. Neto)
+    * Czech (Marek Černocký)
+    * Danish (scootergrisen, Ask Hjorth Larsen)
+    * Finnish (Jiri Grönroos)
+    * Friulan (Fabio Tomat)
+    * French (Guillaume Bernard)
+    * Galician (Fran Dieguez)
+    * German (Mario Blättermann)
+    * Hungarian (Balázs Meskó)
+    * Italian (Milo Casagrande)
+    * Japanese (Jiro Matsuzawa)
+    * Kazakh (Baurzhan Muftakhidinov)
+    * Korean (Seong-ho Cho)
+    * Lithuanian (Aurimas Černius)
+    * Polish (Piotr Drąg)
+    * Russian (Stas Solovey)
+    * Serbian (Марко Костић)
+    * Serbian Latin (Милош Поповић)
+    * Slovak (Dušan Kazik)
+    * Spanish (Daniel Mustieles)
+    * Swedish (Anders Jonsson)
+
+
 Major changes in 3.19.92:
 * Updated translations for:
     * Brazilian Portuguese (Enrico Nicoletto)
