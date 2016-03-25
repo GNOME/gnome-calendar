@@ -383,7 +383,14 @@ update_active_date (GcalWindow   *window,
       g_clear_pointer (&date_start, g_date_time_unref);
       g_clear_pointer (&date_end, g_date_time_unref);
     }
-
+  if((window->current_date->year== window->active_date->year) && (window->current_date->month== window->active_date->month) && (window->current_date->day== window->active_date->day))
+    {
+      gtk_widget_set_sensitive(window->today_button, FALSE);
+    }
+  else
+    {
+      gtk_widget_set_sensitive(window->today_button, TRUE);
+    }
   g_free (previous_date);
 }
 
