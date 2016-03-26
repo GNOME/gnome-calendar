@@ -149,6 +149,8 @@ static gboolean       key_pressed                        (GtkWidget           *w
                                                           GdkEvent            *event,
                                                           gpointer             user_data);
 
+static void           update_today_button_sensitive      (GcalWindow          *window);
+
 static void           date_updated                       (GtkButton           *buttton,
                                                           gpointer             user_data);
 
@@ -384,6 +386,8 @@ update_active_date (GcalWindow   *window,
       g_clear_pointer (&date_end, g_date_time_unref);
     }
 
+  update_today_button_sensitive (window);
+
   g_free (previous_date);
 }
 
@@ -404,6 +408,41 @@ update_current_date (GcalWindow *window)
   seconds = 24 * 60 * 60 - (icaltime_as_timet (*(window->current_date)) % (24 * 60 * 60));
   g_timeout_add_seconds (seconds, (GSourceFunc) update_current_date, window);
   return FALSE;
+}
+
+static void
+update_today_button_sensitive (GcalWindow *window)
+{
+  gboolean sensitive;
+
+  switch (window->active_view)
+    {
+    case GCAL_WINDOW_VIEW_DAY:
+      sensitive = window->active_date->year != window->current_date->year ||
+                  window->active_date->month != window->current_date->month ||
+                  window->active_date->day != window->current_date->day;
+      break;
+
+    case GCAL_WINDOW_VIEW_WEEK:
+      /* TODO: determine when the today button would be sensitive on week view */
+      sensitive = TRUE;
+      break;
+
+    case GCAL_WINDOW_VIEW_MONTH:
+      sensitive = window->active_date->year != window->current_date->year ||
+                  window->active_date->month != window->current_date->month;
+      break;
+
+    case GCAL_WINDOW_VIEW_YEAR:
+      sensitive = window->active_date->year != window->current_date->year;
+      break;
+
+    default:
+      sensitive = TRUE;
+      break;
+    }
+
+  gtk_widget_set_sensitive (window->today_button, sensitive);
 }
 
 static void
@@ -629,6 +668,7 @@ view_changed (GObject    *object,
     return;
 
   window->active_view = view_type;
+  update_today_button_sensitive (window);
   g_object_notify (G_OBJECT (user_data), "active-view");
 }
 
