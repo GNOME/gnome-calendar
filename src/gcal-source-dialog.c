@@ -1463,7 +1463,7 @@ discover_sources_cb (GObject      *source,
 {
   GcalSourceDialog *self;
   EWebDAVDiscoveredSource *src;
-  GSList *discovered_sources, *user_adresses, *aux;
+  GSList *discovered_sources, *user_addresses, *aux;
   GError *error;
 
   self = GCAL_SOURCE_DIALOG (user_data);
@@ -1477,7 +1477,7 @@ discover_sources_cb (GObject      *source,
       self->calendar_address_id = 0;
     }
 
-  if (!e_webdav_discover_sources_finish (E_SOURCE (source), result, NULL, NULL, &discovered_sources, &user_adresses,
+  if (!e_webdav_discover_sources_finish (E_SOURCE (source), result, NULL, NULL, &discovered_sources, &user_addresses,
                                         &error))
     {
       // Don't add an source with errors
@@ -1542,7 +1542,9 @@ discover_sources_cb (GObject      *source,
           webdav = e_source_get_extension (new_source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
           e_source_webdav_set_resource_path (webdav, resource_path);
           e_source_webdav_set_display_name (webdav, src->display_name);
-          e_source_webdav_set_email_address (webdav, user_adresses->data);
+
+          if (user_addresses)
+            e_source_webdav_set_email_address (webdav, user_addresses->data);
 
           /* create the new row */
           row = gtk_list_box_row_new ();
@@ -1568,7 +1570,7 @@ discover_sources_cb (GObject      *source,
 
   // Free things up
   e_webdav_discover_free_discovered_sources (discovered_sources);
-  g_slist_free_full (user_adresses, g_free);
+  g_slist_free_full (user_addresses, g_free);
 }
 
 /**
