@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-15 22:58+0000\n"
-"PO-Revision-Date: 2016-03-17 20:40+0100\n"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-04-04 07:27+0000\n"
+"PO-Revision-Date: 2016-04-04 21:25+0200\n"
 "Last-Translator: Milo Casagrande <milo@milo.name>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -275,8 +275,8 @@ msgstr "Nessun risultato trovato"
 msgid "Try a different search"
 msgstr "Provare con un'altra ricerca"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
-#: ../src/gcal-window.c:1065
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1101
+#: ../src/gcal-window.c:1105
 msgid "Undo"
 msgstr "Annulla"
 
@@ -352,7 +352,8 @@ msgid ""
 msgstr ""
 "Inserire l’indirizzo del calendario da aggiungere. Se il calendario "
 "appartiene a uno dei propri account online, è possibile aggiungerlo "
-"direttamente tramite <a href=“GOA”>le impostazioni di «Account online»</a>."
+"direttamente tramite <a href=\"GOA\">le impostazioni di «Account online»</"
+"a>."
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
@@ -417,7 +418,7 @@ msgstr "Impostazioni calendario"
 msgid "No events"
 msgstr "Nessun evento"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:871
 msgid "Add Event…"
 msgstr "Aggiungi evento…"
 
@@ -463,12 +464,12 @@ msgstr "Salva"
 msgid "Unnamed event"
 msgstr "Evento senza nome"
 
-#: ../src/gcal-month-view.c:1093
+#: ../src/gcal-month-view.c:1102
 msgid "Other events"
 msgstr "Altri eventi"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1526
+#: ../src/gcal-month-view.c:1553
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -553,10 +554,10 @@ msgstr "Mezzogiorno"
 msgid "00:00 PM"
 msgstr "00:00 pm"
 
-#: ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1101
 msgid "Another event deleted"
 msgstr "Un altro evento eliminato"
 
-#: ../src/gcal-window.c:1065
+#: ../src/gcal-window.c:1105
 msgid "Event deleted"
 msgstr "Evento eliminato"
