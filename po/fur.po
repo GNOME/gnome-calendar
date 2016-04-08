@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-20 20:11+0000\n"
-"PO-Revision-Date: 2016-03-20 22:44+0100\n"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-04-08 07:25+0000\n"
+"PO-Revision-Date: 2016-04-08 18:16+0200\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
@@ -39,7 +39,7 @@ msgid ""
 msgstr ""
 "GNOME Calendari a je une semplice e biele aplicazion calendari progjetade par "
 "incjastrâsi ben tal desktop GNOME. Doprant i components cun la cuâl il "
-"desktop GNOME al è costruît, Calendari a si integre ben cul ecosisteme GNOME."
+"desktop GNOME al è costruît, Calendari si integre ben cul ecosisteme GNOME."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
@@ -272,8 +272,8 @@ msgstr "Nissun risultât cjatât"
 msgid "Try a different search"
 msgstr "Prove une ricercje diferente"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
-#: ../src/gcal-window.c:1065
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1101
+#: ../src/gcal-window.c:1105
 msgid "Undo"
 msgstr "Anule"
 
@@ -414,7 +414,7 @@ msgstr "Impostazions calendari"
 msgid "No events"
 msgstr "Nissun event"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:871
 msgid "Add Event…"
 msgstr "Zonte event..."
 
@@ -460,12 +460,12 @@ msgstr "Salve"
 msgid "Unnamed event"
 msgstr "Event cence non"
 
-#: ../src/gcal-month-view.c:1093
+#: ../src/gcal-month-view.c:1102
 msgid "Other events"
 msgstr "Altris events"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1526
+#: ../src/gcal-month-view.c:1553
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -485,7 +485,7 @@ msgstr "%d %B"
 #: ../src/gcal-quick-add-popover.c:243
 #, c-format
 msgid "New Event from %s to %s"
-msgstr "Gnûf event da %s a %s"
+msgstr "Gnûf event di %s a %s"
 
 #: ../src/gcal-quick-add-popover.c:249
 #, c-format
@@ -550,11 +550,11 @@ msgstr "Misdì"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#: ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1101
 msgid "Another event deleted"
 msgstr "Un altri event eliminât"
 
-#: ../src/gcal-window.c:1065
+#: ../src/gcal-window.c:1105
 msgid "Event deleted"
 msgstr "Event eliminât"
 
