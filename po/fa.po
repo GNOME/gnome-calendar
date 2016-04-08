@@ -2,28 +2,29 @@
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Amir Farsi <amir_farsi@ymail.com>, 2013.
-# Arash Mousavi <mousavi.arash@gmail.com>, 2013, 2015.
+# Arash Mousavi <mousavi.arash@gmail.com>, 2013, 2015, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-08-31 20:32+0000\n"
-"PO-Revision-Date: 2015-09-12 22:18+0430\n"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-04-08 07:25+0000\n"
+"PO-Revision-Date: 2016-04-09 01:45+0430\n"
 "Last-Translator: Arash Mousavi <mousavi.arash@gmail.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
 "Language: fa\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Generator: Poedit 1.8.7.1\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:483
 msgid "Calendar"
 msgstr "تقویم"
 
@@ -52,6 +53,7 @@ msgstr ""
 "داشت، انگار که سال‌هاست از آن استفاده می‌کنید."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "جست‌وجو برای رویدادها"
 
@@ -108,11 +110,11 @@ msgid "Sources disabled last time Calendar ran"
 msgstr "منابعی که در آخر اجرا تقویم غیرفعال شدند"
 
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1131
+#: ../src/gcal-source-dialog.c:1113
 msgid "Cancel"
 msgstr "لغو"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
 msgid "Done"
 msgstr "انجام شد"
 
@@ -136,13 +138,88 @@ msgstr "یادداشت‌ها"
 msgid "Location"
 msgstr "مکان"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
 msgid "All day"
 msgstr "تمام روز"
 
 #: ../data/ui/edit-dialog.ui.h:9
 msgid "Delete event"
 msgstr "حذف رویداد"
+
+#: ../data/ui/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "General"
+msgstr "عمومی"
+
+#: ../data/ui/help-overlay.ui.h:2
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "رویداد جدید"
+
+#: ../data/ui/help-overlay.ui.h:3
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "بستن پنجره"
+
+#: ../data/ui/help-overlay.ui.h:4
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "جست‌وجو"
+
+#: ../data/ui/help-overlay.ui.h:5
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "نمایش راهنما"
+
+#: ../data/ui/help-overlay.ui.h:6
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "میانبرها"
+
+#: ../data/ui/help-overlay.ui.h:7
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "ناوبری"
+
+#: ../data/ui/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "عقب رفتن"
+
+#: ../data/ui/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "جلو رفتن"
+
+#: ../data/ui/help-overlay.ui.h:10
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "نمایش امروز"
+
+#: ../data/ui/help-overlay.ui.h:11
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "نما بعدی"
+
+#: ../data/ui/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "نما قبلی"
+
+#: ../data/ui/help-overlay.ui.h:13
+msgctxt "shortcut window"
+msgid "View"
+msgstr "نما"
+
+#: ../data/ui/help-overlay.ui.h:14
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "نما ماه"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "نما سال"
 
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
@@ -153,28 +230,40 @@ msgid "_Search…"
 msgstr "_جستجو..."
 
 #: ../data/ui/menus.ui.h:3
+msgid "_Keyboard Shortcuts"
+msgstr "_میانبرهای صفحه‌کلید"
+
+#: ../data/ui/menus.ui.h:4
 msgid "_About"
 msgstr "_درباره"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:5
 msgid "_Quit"
 msgstr "_خروج"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:6
 msgid "_Synchronize"
 msgstr "_همگام‌سازی"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:7
 msgid "From Web…"
 msgstr "از طریق وب..."
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:8
 msgid "New Local Calendar…"
 msgstr "تقویم محلی جدید..."
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:9
 msgid "From File…"
 msgstr "از پرونده..."
+
+#: ../data/ui/quick-add-popover.ui.h:1
+msgid "Edit Details…"
+msgstr "ویرایش جزئیات…"
+
+#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "اضافه کردن"
 
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
@@ -184,8 +273,8 @@ msgstr "هیچ نتیجه‌ای پیدا نشد"
 msgid "Try a different search"
 msgstr "یک جست‌وجو دیگر را امتحان کنید"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
-#: ../src/gcal-window.c:1244
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1101
+#: ../src/gcal-window.c:1105
 msgid "Undo"
 msgstr "برگردان"
 
@@ -216,10 +305,6 @@ msgstr "مایکروسافت Exchange"
 #: ../data/ui/source-dialog.ui.h:8
 msgid "Calendars"
 msgstr "تقویم‌ها"
-
-#: ../data/ui/source-dialog.ui.h:9
-msgid "Add"
-msgstr "اضافه کردن"
 
 #: ../data/ui/source-dialog.ui.h:10
 msgid "Overview"
@@ -260,7 +345,7 @@ msgstr "ویرایش تقویم"
 #: ../data/ui/source-dialog.ui.h:20
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of you online accounts, you can add it through the <a href="
+"belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
 "آدرس تقویمی که میخواهید اضافه کنید را وارد کنید. اگر تقویم مربوط به یکی از "
@@ -271,8 +356,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "آدرس تقویم"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
-#: ../src/gcal-source-dialog.c:2227
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2191
+#: ../src/gcal-source-dialog.c:2197
 msgid "Add Calendar"
 msgstr "اضافه کردن تقویم"
 
@@ -304,71 +389,35 @@ msgstr "صبح"
 msgid "PM"
 msgstr "عصر"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
 msgid "Month"
 msgstr "ماه"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
 msgid "Year"
 msgstr "سال"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
 msgid "Today"
 msgstr "امروز"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
-#: ../src/gcal-source-dialog.c:2254
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "مدیریت تقویم‌ها"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2220
 msgid "Calendar Settings"
 msgstr "تنظیمات تقویم"
-
-#: ../data/ui/window.ui.h:6
-msgid "Create"
-msgstr "ایجاد"
-
-#: ../data/ui/window.ui.h:7
-msgid "Edit Details"
-msgstr "ویرایش جزئیات"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
 msgstr "بدون رویداد"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:871
 msgid "Add Event…"
-msgstr "اضافه‌کردن رویداد..."
-
-#. Dialog
-#: ../src/gcal-source-dialog.c:1128
-msgid "Select a calendar file"
-msgstr "انتخاب یک پرونده تقویم"
-
-#: ../src/gcal-source-dialog.c:1132
-msgid "Open"
-msgstr "بازکردن"
-
-#: ../src/gcal-source-dialog.c:1139
-msgid "Calendar files"
-msgstr "پرونده‌های تقویم"
-
-#. update the source properties
-#: ../src/gcal-source-dialog.c:1178
-msgid "Unnamed Calendar"
-msgstr "تقویم بدون نام"
-
-#. Update notification label
-#: ../src/gcal-source-dialog.c:1781
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "تقویم <b>%s</b> حذف شد"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "Off"
-msgstr "خاموش"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "On"
-msgstr "روشن"
+msgstr "اضافه‌کردن رویداد…"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -382,67 +431,114 @@ msgstr "باز کردن تقویم در تاریخ ارائه شده"
 msgid "Open calendar showing the passed event"
 msgstr "بازکردن تقویم و نمایش تاریخ ارائه شده"
 
-#: ../src/gcal-application.c:337
+#: ../src/gcal-application.c:324
 msgid "- Calendar management"
 msgstr "- مدیریت تقویم"
 
-#: ../src/gcal-application.c:504
-msgid "Copyright © %Id The Calendar authors"
-msgstr "حق کپی محفوظ © %Id مؤلفان تقویم"
+#: ../src/gcal-application.c:471
+#, c-format
+msgid "Copyright © %d The Calendar authors"
+msgstr "حق رونوشت محفوظ © %Id مؤلفان تقویم"
 
-#: ../src/gcal-application.c:510
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "حق کپی محفوظ © %Id-%Id l مؤلفان تقویم"
+#: ../src/gcal-application.c:477
+#, c-format
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "حق رونوشت محفوظ © %Id-%Id l مؤلفان تقویم"
 
-#: ../src/gcal-application.c:523
+#: ../src/gcal-application.c:490
 msgid "translator-credits"
 msgstr ""
-"Amir Farsi <amir_farsi@ymail.com>\n"
-"Arash Mousavi <mousavi.arash@gmail.com>"
+"Arash Mousavi <mousavi.arash@gmail.com>\n"
+"Amir Farsi <amir_farsi@ymail.com>"
 
-#. This string represents day/month/year order for each of the different
-#. * languages. It could possibly be default value, %m/%d/%y placing the month
-#. * before, or any ordering according to the translator's environment.
-#: ../src/gcal-date-selector.c:239
-msgid "%m/%d/%y"
-msgstr "%Om/%Od/%Oy"
-
-#: ../src/gcal-date-selector.c:315
+#: ../src/gcal-date-selector.c:362
 msgid "Day"
 msgstr "روز"
 
-#: ../src/gcal-edit-dialog.c:657
+#: ../src/gcal-edit-dialog.c:429
 msgid "Save"
 msgstr "ذخیره"
 
-#: ../src/gcal-edit-dialog.c:841
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "رویداد نام‌گذاری نشده"
 
-#: ../src/gcal-month-view.c:1035
+#: ../src/gcal-month-view.c:1102
 msgid "Other events"
 msgstr "رویدادهای دیگر"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1417
+#: ../src/gcal-month-view.c:1553
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "%Id رویداد دیگر"
 
-#: ../src/gcal-search-view.c:558
+#: ../src/gcal-quick-add-popover.c:113
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (این تقویم فقط-خواندنی است)"
+
+#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%Od %B"
+
+#: ../src/gcal-quick-add-popover.c:243
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "رویداد جدید از %s تا %s"
+
+#: ../src/gcal-quick-add-popover.c:249
+#, c-format
+msgid "New Event on %s"
+msgstr "رویداد جدید روی %s"
+
+#: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
 msgstr "استفاده از رویداد بالا برای جست‌وجو برای رویدادها."
 
-#: ../src/gcal-time-selector.c:96
-#, c-format
-msgid "%.2d:%.2d AM"
-msgstr "%I.2d:%I.2d ق.ظ"
+#. Dialog
+#: ../src/gcal-source-dialog.c:1110
+msgid "Select a calendar file"
+msgstr "انتخاب یک پرونده تقویم"
 
-#: ../src/gcal-time-selector.c:98
+#: ../src/gcal-source-dialog.c:1114
+msgid "Open"
+msgstr "بازکردن"
+
+#: ../src/gcal-source-dialog.c:1121
+msgid "Calendar files"
+msgstr "پرونده‌های تقویم"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1160
+msgid "Unnamed Calendar"
+msgstr "تقویم بدون نام"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1758
 #, c-format
-msgid "%.2d:%.2d PM"
-msgstr "%I.2d:I%.2d ب.ظ"
+msgid "Calendar <b>%s</b> removed"
+msgstr "تقویم <b>%s</b> حذف شد"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "Off"
+msgstr "خاموش"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "On"
+msgstr "روشن"
+
+#: ../src/gcal-time-selector.c:82
+#, c-format
+msgid "%s AM"
+msgstr "%s ق.ظ"
+
+#: ../src/gcal-time-selector.c:84
+#, c-format
+msgid "%s PM"
+msgstr "%s ب.ظ"
 
 #: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
@@ -456,26 +552,25 @@ msgstr "ظهر"
 msgid "00:00 PM"
 msgstr "۰۰:۰۰ ب.ط"
 
-#. Translators:
-#. * this is the format string for representing a date consisting of a month name
-#. * and a date of month.
-#: ../src/gcal-window.c:746
-msgctxt "event date format"
-msgid "%B %d"
-msgstr "%Od %B"
-
-#: ../src/gcal-window.c:747
-#, c-format
-msgid "New Event on %s"
-msgstr "رویداد جدید روی %s"
-
-#: ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1101
 msgid "Another event deleted"
 msgstr "رویداد دیگری حذف شد"
 
-#: ../src/gcal-window.c:1244
+#: ../src/gcal-window.c:1105
 msgid "Event deleted"
 msgstr "رویداد حذف شد"
+
+#~ msgid "Create"
+#~ msgstr "ایجاد"
+
+#~ msgid "%m/%d/%y"
+#~ msgstr "%Om/%Od/%Oy"
+
+#~ msgid "%.2d:%.2d AM"
+#~ msgstr "%I.2d:%I.2d ق.ظ"
+
+#~ msgid "%.2d:%.2d PM"
+#~ msgstr "%I.2d:I%.2d ب.ظ"
 
 #~ msgid "Unable to initialize GtkClutter"
 #~ msgstr "قادر به مقداردهی اولیه GtkClutter نمی‌باشد"
@@ -489,9 +584,6 @@ msgstr "رویداد حذف شد"
 #~ msgid "Years"
 #~ msgstr "سال‌ها"
 
-#~ msgid "View as"
-#~ msgstr "نمایش به عنوان"
-
 #~ msgid "Change the date"
 #~ msgstr "تغییر تاریخ"
 
@@ -500,12 +592,6 @@ msgstr "رویداد حذف شد"
 
 #~ msgid "What (e.g. Alien Invasion)"
 #~ msgstr "چی شده (به عنوان مثال. تهاجم فضایی‌ها)"
-
-#~ msgid "New Event from %s to %s"
-#~ msgstr "رویداد جدید از %s تا %s"
-
-#~ msgid "Notification"
-#~ msgstr "اعلان"
 
 #~ msgid "Email"
 #~ msgstr "پست‌الکترونیکی"
