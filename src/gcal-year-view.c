@@ -1499,10 +1499,14 @@ gcal_year_view_init (GcalYearView *self)
   self->end_selected_date = g_new0 (icaltimetype, 1);
   self->end_selected_date->zone = e_cal_util_get_system_timezone ();
 
-  /* bind GNOME Shell' show week numbers property to GNOME Calendar's one */
-  self->shell_settings = g_settings_new ("org.gnome.shell.calendar");
-  g_settings_bind (self->shell_settings, "show-weekdate", self, "show-week-numbers", G_SETTINGS_BIND_DEFAULT);
-  g_signal_connect_swapped (self->shell_settings, "changed::show-weekdate", G_CALLBACK (gtk_widget_queue_draw), self);
+  /* FIXME: this setting should be moved to gsettings-desktop-schemas */
+  if (g_strcmp0 (g_getenv ("XDG_CURRENT_DESKTOP"), "GNOME") == 0)
+    {
+      /* bind GNOME Shell' show week numbers property to GNOME Calendar's one */
+      self->shell_settings = g_settings_new ("org.gnome.shell.calendar");
+      g_settings_bind (self->shell_settings, "show-weekdate", self, "show-week-numbers", G_SETTINGS_BIND_DEFAULT);
+      g_signal_connect_swapped (self->shell_settings, "changed::show-weekdate", G_CALLBACK (gtk_widget_queue_allocate), self);
+    }
 
   /* default number_of_columns and number_of_rows */
   self->number_of_columns = 4;
