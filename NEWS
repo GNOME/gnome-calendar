@@ -1,3 +1,18 @@
+Major changes in 3.20.1:
+* Updated translations for:
+    * Basque (Inaki Larranaga Murgoitio)
+    * Chinese (China) (Shi Jing)
+    * Chinese (Taiwan) (Cheng-Chia Tseng)
+    * Italian (Milo Casagrande)
+    * Slovak (Dušan Kazik)
+    * Slovenian (Matej Urbančič)
+    * Turkish (Muhammet Kara)
+    * Ukrainian (Daniel Korostil)
+* Fix untranslated strings
+* Make Year view spam multiple columns (Isaque Galdino)
+* Fix issue on the Calendars dialog
+* Fix crash on non GNOME Shell environments
+
 Major changes in 3.20.0:
 * Updated translations for:
     * Brazilian Portuguese (Antonio Fernandes C. Neto)
