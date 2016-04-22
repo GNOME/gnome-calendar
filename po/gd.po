@@ -1,14 +1,14 @@
 # Scottish Gaelic translation for gnome-calendar.
 # Copyright (C) 2015 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
-# GunChleoc <fios@foramnagaidhlig.net>, 2015.
+# GunChleoc <fios@foramnagaidhlig.net>, 2015, 2016.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-11-17 18:01+0000\n"
-"PO-Revision-Date: 2015-11-17 18:13+0100\n"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-04-22 07:31+0000\n"
+"PO-Revision-Date: 2016-04-22 10:00+0100\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Fòram na Gàidhlig\n"
 "Language: gd\n"
@@ -18,18 +18,19 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n==1 || n==11) ? 0 : (n==2 || n==12) ? 1 : "
 "(n > 2 && n < 20) ? 2 : 3;\n"
 "X-Generator: Virtaal 0.7.1\n"
-"X-DamnedLies-Scope: partial\n"
+"X-Launchpad-Export-Date: 2016-04-20 13:08+0000\n"
 "X-Project-Style: gnome\n"
+"X-DamnedLies-Scope: partial\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:483
 msgid "Calendar"
 msgstr "Am mìosachan"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
-#| msgid "Calendar"
 msgid "Calendar for GNOME"
 msgstr "Mìosachan airson GNOME"
 
@@ -39,6 +40,10 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
+"'S e aplacaid mìosachain àlainn simplidh a tha sa Mhìosachan GNOME a chaidh "
+"a dhealbhachadh ach am freagair i ri deasg GNOME. On a chleachdas i na "
+"dearbh cho-phàirtean leis a chaidh deasg GNOME fhèin a thogail, tha am "
+"Mìosachan 'ga fhilleadh a-steach leis an àrainneachd GNOME gun duilgheadas."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
@@ -46,8 +51,12 @@ msgid ""
 "centred usability. No excess, no lacks. You'll feel comfortable using "
 "Calendar, like you've been using it for ages!"
 msgstr ""
+"Tha sinn ag amas am meidh as fhearr a lorg eadar feartan air an dèanamh gu "
+"math agus an so-chleachdadh. Gun leisgeul, gun dìth. Bidh thu cofhurtail a' "
+"cleachdadh Mìosachan mar an robh thu air a chleachdadh fad linntean mar-thà!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Lorg tachartasan"
 
@@ -108,11 +117,11 @@ msgstr ""
 "ruith"
 
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1131
+#: ../src/gcal-source-dialog.c:1113
 msgid "Cancel"
 msgstr "Sguir dheth"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
 msgid "Done"
 msgstr "Dèanta"
 
@@ -136,7 +145,7 @@ msgstr "Nòtaichean"
 msgid "Location"
 msgstr "Àite"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
 msgid "All day"
 msgstr "Fad an latha"
 
@@ -144,40 +153,126 @@ msgstr "Fad an latha"
 msgid "Delete event"
 msgstr "Sguab às an tachartas"
 
+#: ../data/ui/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Coitcheann"
+
+#: ../data/ui/help-overlay.ui.h:2
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "Tachartas ùr"
+
+#: ../data/ui/help-overlay.ui.h:3
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Dùin an uinneag"
+
+#: ../data/ui/help-overlay.ui.h:4
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Lorg"
+
+#: ../data/ui/help-overlay.ui.h:5
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Seall a' chobhair"
+
+#: ../data/ui/help-overlay.ui.h:6
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Ath-ghoiridean"
+
+#: ../data/ui/help-overlay.ui.h:7
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Seòladaireachd"
+
+#: ../data/ui/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "Air ais"
+
+#: ../data/ui/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "Gluais air adhart"
+
+#: ../data/ui/help-overlay.ui.h:10
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "Seall an-diugh"
+
+#: ../data/ui/help-overlay.ui.h:11
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "An ath-shealladh"
+
+#: ../data/ui/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "An sealladh roimhe"
+
+#: ../data/ui/help-overlay.ui.h:13
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Sealladh"
+
+#: ../data/ui/help-overlay.ui.h:14
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "Seall mìos"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "Seall bliadhna"
+
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
 msgstr "Cuir _tachartas ris…"
 
 #: ../data/ui/menus.ui.h:2
-#| msgid "Search ..."
 msgid "_Search…"
 msgstr "_Lorg…"
 
 #: ../data/ui/menus.ui.h:3
-#| msgid "About"
+#| msgctxt "shortcut window"
+#| msgid "Shortcuts"
+msgid "_Keyboard Shortcuts"
+msgstr "Ath-ghoiridean a' _mheur-chlàir"
+
+#: ../data/ui/menus.ui.h:4
 msgid "_About"
 msgstr "_Mu dhèidhinn"
 
-#: ../data/ui/menus.ui.h:4
-#| msgid "Quit"
+#: ../data/ui/menus.ui.h:5
 msgid "_Quit"
 msgstr "_Fàg an-seo"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:6
 msgid "_Synchronize"
 msgstr "_Sioncronaich"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:7
 msgid "From Web…"
 msgstr "On lìon…"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:8
 msgid "New Local Calendar…"
 msgstr "Mìosachan ionadail ùr…"
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:9
 msgid "From File…"
 msgstr "O fhaidhle…"
+
+#: ../data/ui/quick-add-popover.ui.h:1
+msgid "Edit Details…"
+msgstr "Deasaich am fiosrachadh…"
+
+#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "Cuir ris"
 
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
@@ -187,8 +282,8 @@ msgstr "Cha deach toradh a lorg"
 msgid "Try a different search"
 msgstr "Feuch lorg eile"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
-#: ../src/gcal-window.c:1244
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1101
+#: ../src/gcal-window.c:1105
 msgid "Undo"
 msgstr "Neo-dhèan"
 
@@ -217,13 +312,8 @@ msgid "Microsoft Exchange"
 msgstr "Microsoft Exchange"
 
 #: ../data/ui/source-dialog.ui.h:8
-#| msgid "Calendar"
 msgid "Calendars"
 msgstr "Mìosachain"
-
-#: ../data/ui/source-dialog.ui.h:9
-msgid "Add"
-msgstr "Cuir ris"
 
 #: ../data/ui/source-dialog.ui.h:10
 msgid "Overview"
@@ -234,7 +324,6 @@ msgid "Add new events to this calendar by default"
 msgstr "Cuir tachartasan ùra ris a' mhìosachan seo a ghnàth"
 
 #: ../data/ui/source-dialog.ui.h:12
-#| msgid "Calendar"
 msgid "Remove Calendar"
 msgstr "Thoir am mìosachan air falbh"
 
@@ -243,7 +332,6 @@ msgid "Display calendar"
 msgstr "Seall am mìosachan"
 
 #: ../data/ui/source-dialog.ui.h:14
-#| msgid "Calendar"
 msgid "Calendar name"
 msgstr "Ainm a' mhìosachain"
 
@@ -260,7 +348,6 @@ msgid "Settings"
 msgstr "Roghainnean"
 
 #: ../data/ui/source-dialog.ui.h:19
-#| msgid "Calendar"
 msgid "Edit Calendar"
 msgstr "Deasaich am mìosachan"
 
@@ -275,13 +362,11 @@ msgstr ""
 "dhut a chur ris le <a href=\"GOA\">roghainnean a' chunntais air loidhne</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
-#| msgid "Calendar"
 msgid "Calendar Address"
 msgstr "Seòladh a' mhìosachain"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
-#: ../src/gcal-source-dialog.c:2227
-#| msgid "Calendar"
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2193
+#: ../src/gcal-source-dialog.c:2199
 msgid "Add Calendar"
 msgstr "Cuir mìosachan ris"
 
@@ -313,76 +398,35 @@ msgstr "m"
 msgid "PM"
 msgstr "f"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
 msgid "Month"
 msgstr "Mìos"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
 msgid "Year"
 msgstr "Bliadhna"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
 msgid "Today"
 msgstr "An-diugh"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
-#: ../src/gcal-source-dialog.c:2254
-#| msgid "Calendar"
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Stiùirich na mìosachain agad"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2222
 msgid "Calendar Settings"
 msgstr "Roghainnean a' mhìosachain"
 
-#: ../data/ui/window.ui.h:6
-msgid "Create"
-msgstr "Cruthaich"
-
-#: ../data/ui/window.ui.h:7
-#| msgid "Event Details"
-msgid "Edit Details"
-msgstr "Deasaich am fiosrachadh"
-
 #: ../data/ui/year-view.ui.h:2
-#| msgid "New Event"
 msgid "No events"
 msgstr "Chan eil tachartas ann"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:871
 msgid "Add Event…"
 msgstr "Cuir tachartas ris…"
-
-#. Dialog
-#: ../src/gcal-source-dialog.c:1128
-msgid "Select a calendar file"
-msgstr "Tagh faidhle mìosachain"
-
-#: ../src/gcal-source-dialog.c:1132
-msgid "Open"
-msgstr "Fosgail"
-
-#: ../src/gcal-source-dialog.c:1139
-#| msgid "Calendar"
-msgid "Calendar files"
-msgstr "Faidhlichean mìosachain"
-
-#. update the source properties
-#: ../src/gcal-source-dialog.c:1178
-#| msgid "Calendar"
-msgid "Unnamed Calendar"
-msgstr "Mìosachan gun ainm"
-
-#. Update notification label
-#: ../src/gcal-source-dialog.c:1781
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "Chaidh am mìosachan <b>%s</b> a thoirt air falbh"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "Off"
-msgstr "Dheth"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "On"
-msgstr "Air"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -396,42 +440,47 @@ msgstr "Fosgail am mìosachain air a' cheann-là"
 msgid "Open calendar showing the passed event"
 msgstr "Fosgail am mìosachain a' sealltainn an tachartais"
 
-#: ../src/gcal-application.c:337
+#: ../src/gcal-application.c:324
 msgid "- Calendar management"
 msgstr "- Stiùireadh a' mhìosachain"
 
-#: ../src/gcal-application.c:504
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Còir-lethbhreac © %Id Ùghdaran a' mhìosachain"
+#: ../src/gcal-application.c:471
+#, c-format
+msgid "Copyright © %d The Calendar authors"
+msgstr "Còir-lethbhreac © %d Ùghdaran a' mhìosachain"
 
-#: ../src/gcal-application.c:510
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Còir-lethbhreac © %Id–%Id Ùghdaran a' mhìosachain"
+#: ../src/gcal-application.c:477
+#, c-format
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Còir-lethbhreac © %d-%d Ùghdaran a' mhìosachain"
 
-#: ../src/gcal-application.c:523
+#: ../src/gcal-application.c:490
 msgid "translator-credits"
-msgstr "GunChleoc fios@foramnagaidhlig.net"
+msgstr ""
+"GunChleoc fios@foramnagaidhlig.net\n"
+"\n"
+"Launchpad Contributions:\n"
+"  GunChleoc https://launchpad.net/~gunchleoc"
 
-#: ../src/gcal-date-selector.c:315
+#: ../src/gcal-date-selector.c:362
 msgid "Day"
 msgstr "Latha"
 
-#: ../src/gcal-edit-dialog.c:657
+#: ../src/gcal-edit-dialog.c:429
 msgid "Save"
 msgstr "Sàbhail"
 
-#: ../src/gcal-edit-dialog.c:841
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Tachartas gun ainm"
 
-#: ../src/gcal-month-view.c:1043
+#: ../src/gcal-month-view.c:1102
 msgid "Other events"
 msgstr "Tachartasan eile"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1425
+#: ../src/gcal-month-view.c:1553
 #, c-format
-#| msgid "New Event"
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "%d tachartas eile"
@@ -439,19 +488,71 @@ msgstr[1] "%d thachartas eile"
 msgstr[2] "%d tachartasan eile"
 msgstr[3] "%d tachartas eile"
 
-#: ../src/gcal-search-view.c:558
+#: ../src/gcal-quick-add-popover.c:113
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (tha am mìosachan seo ri leughadh a-mhàin)"
+
+#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%d %B"
+
+#: ../src/gcal-quick-add-popover.c:243
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "Tachartas ùr o %s gu %s"
+
+#: ../src/gcal-quick-add-popover.c:249
+#, c-format
+msgid "New Event on %s"
+msgstr "Tachartas ùr %s"
+
+#: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
 msgstr "Cleachd an t-innteart gu h-àrd gus tachartasan a lorg."
 
-#: ../src/gcal-time-selector.c:96
-#, c-format
-msgid "%.2d:%.2d AM"
-msgstr "%.2d:%.2dm"
+#. Dialog
+#: ../src/gcal-source-dialog.c:1110
+msgid "Select a calendar file"
+msgstr "Tagh faidhle mìosachain"
 
-#: ../src/gcal-time-selector.c:98
+#: ../src/gcal-source-dialog.c:1114
+msgid "Open"
+msgstr "Fosgail"
+
+#: ../src/gcal-source-dialog.c:1121
+msgid "Calendar files"
+msgstr "Faidhlichean mìosachain"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1160
+msgid "Unnamed Calendar"
+msgstr "Mìosachan gun ainm"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1760
 #, c-format
-msgid "%.2d:%.2d PM"
-msgstr "%.2d:%.2df"
+msgid "Calendar <b>%s</b> removed"
+msgstr "Chaidh am mìosachan <b>%s</b> a thoirt air falbh"
+
+#: ../src/gcal-source-dialog.c:1963 ../src/gcal-source-dialog.c:2017
+msgid "Off"
+msgstr "Dheth"
+
+#: ../src/gcal-source-dialog.c:1963 ../src/gcal-source-dialog.c:2017
+msgid "On"
+msgstr "Air"
+
+#: ../src/gcal-time-selector.c:82
+#, c-format
+msgid "%s AM"
+msgstr "%sm"
+
+#: ../src/gcal-time-selector.c:84
+#, c-format
+msgid "%s PM"
+msgstr "%sf"
 
 #: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
@@ -465,93 +566,10 @@ msgstr "Meadhan-latha"
 msgid "00:00 PM"
 msgstr "00:00f"
 
-#. Translators:
-#. * this is the format string for representing a date consisting of a month name
-#. * and a date of month.
-#: ../src/gcal-window.c:746
-msgctxt "event date format"
-msgid "%B %d"
-msgstr "%d %B"
-
-#: ../src/gcal-window.c:747
-#, c-format
-msgid "New Event on %s"
-msgstr "Tachartas ùr %s"
-
-#: ../src/gcal-window.c:1240
-#| msgid "Event deleted"
+#: ../src/gcal-window.c:1101
 msgid "Another event deleted"
 msgstr "Chaidh tachartas eile a sguabadh às"
 
-#: ../src/gcal-window.c:1244
+#: ../src/gcal-window.c:1105
 msgid "Event deleted"
 msgstr "Chaidh an tachartas a sguabadh às"
-
-#~ msgid "Unable to initialize GtkClutter"
-#~ msgstr "Cha deach leinn GtkClutter a thòiseachadh"
-
-#~ msgid "Weeks"
-#~ msgstr "Seachdainean"
-
-#~ msgid "Months"
-#~ msgstr "Mìosan"
-
-#~ msgid "Years"
-#~ msgstr "Bliadhnaichean"
-
-#~ msgid "View as"
-#~ msgstr "Seall mar"
-
-#~ msgid "Change the date"
-#~ msgstr "Atharraich an ceann-latha"
-
-#~ msgid "More details"
-#~ msgstr "Barrachd fiosrachaidh"
-
-#~ msgid "What (e.g. Alien Invasion)"
-#~ msgstr "Dè (can Am Mòd)"
-
-#~ msgid "New Event from %s to %s"
-#~ msgstr "Tachartas ùr o %s gu %s"
-
-#~ msgid "Notification"
-#~ msgstr "Brath"
-
-#~ msgid "Email"
-#~ msgstr "Post-d"
-
-#~ msgid "days"
-#~ msgstr "latha"
-
-#~ msgid "weeks"
-#~ msgstr "seachdain"
-
-#~ msgid "hours"
-#~ msgstr "uair"
-
-#~ msgid "minutes"
-#~ msgstr "mionaid"
-
-#~ msgid "before"
-#~ msgstr "ro"
-
-#~ msgid "WWW 99 - WWW 99"
-#~ msgstr "WWW 99 - WWW 99"
-
-#~ msgid "Change the time"
-#~ msgstr "Atharraich an t-àm"
-
-#~ msgid "Week"
-#~ msgstr "Seachdain"
-
-#~ msgid "List"
-#~ msgstr "Liosta"
-
-#~ msgid "Back"
-#~ msgstr "Air ais"
-
-#~ msgid "Edit"
-#~ msgstr "Deasaich"
-
-#~ msgid "Year %d"
-#~ msgstr "Bliadhna %d"
