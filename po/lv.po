@@ -5,10 +5,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-ca"
-"lendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-05 08:11+0000\n"
-"PO-Revision-Date: 2016-03-05 15:44+0200\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-04-24 07:26+0000\n"
+"PO-Revision-Date: 2016-04-24 16:19+0200\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "Language: lv\n"
@@ -53,6 +53,7 @@ msgstr ""
 "jums liksies, ka esat to lietojuši jau mūžību."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Meklēt notikumus"
 
@@ -272,8 +273,8 @@ msgstr "Nav atrastu rezultātu"
 msgid "Try a different search"
 msgstr "Mēģiniet ar citu meklējamo vārdu"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
-#: ../src/gcal-window.c:1065
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1101
+#: ../src/gcal-window.c:1105
 msgid "Undo"
 msgstr "Atsaukt"
 
@@ -355,8 +356,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Kalendāra adrese"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2191
-#: ../src/gcal-source-dialog.c:2197
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2193
+#: ../src/gcal-source-dialog.c:2199
 msgid "Add Calendar"
 msgstr "Pievienot kalendāru"
 
@@ -397,12 +398,16 @@ msgid "Year"
 msgstr "Gads"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
+#: ../src/gcal-year-view.c:261 ../src/gcal-year-view.c:479
 msgid "Today"
 msgstr "Šodien"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
-#: ../src/gcal-source-dialog.c:2220
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Pārvaldiet savus kalendārus"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2222
 msgid "Calendar Settings"
 msgstr "Kalendāra iestatījumi"
 
@@ -410,7 +415,7 @@ msgstr "Kalendāra iestatījumi"
 msgid "No events"
 msgstr "Nav notikumu"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:871
 msgid "Add Event…"
 msgstr "Pievienot notikumu…"
 
@@ -432,13 +437,11 @@ msgstr "- Kalendāra pārvaldība"
 
 #: ../src/gcal-application.c:471
 #, c-format
-#| msgid "Copyright © %Id The Calendar authors"
 msgid "Copyright © %d The Calendar authors"
 msgstr "Autortiesības © %d Kalendāra autori"
 
 #: ../src/gcal-application.c:477
 #, c-format
-#| msgid "Copyright © %Id–%Id The Calendar authors"
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Autortiesības © %d–%d Kalendāra autori"
 
@@ -454,16 +457,16 @@ msgstr "Diena"
 msgid "Save"
 msgstr "Saglabāt"
 
-#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Nenosaukts notikums"
 
-#: ../src/gcal-month-view.c:1065
+#: ../src/gcal-month-view.c:1102
 msgid "Other events"
 msgstr "Citi notikumi"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1494
+#: ../src/gcal-month-view.c:1553
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -514,16 +517,16 @@ msgid "Unnamed Calendar"
 msgstr "Nenosaukts kalendārs"
 
 #. Update notification label
-#: ../src/gcal-source-dialog.c:1758
+#: ../src/gcal-source-dialog.c:1760
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalendārs <b>%s</b> ir izņemts"
 
-#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+#: ../src/gcal-source-dialog.c:1963 ../src/gcal-source-dialog.c:2017
 msgid "Off"
 msgstr "Izslēgts"
 
-#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+#: ../src/gcal-source-dialog.c:1963 ../src/gcal-source-dialog.c:2017
 msgid "On"
 msgstr "ieslēgts"
 
@@ -549,11 +552,11 @@ msgstr "Pusdiena"
 msgid "00:00 PM"
 msgstr "00.00 PM"
 
-#: ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1101
 msgid "Another event deleted"
 msgstr "Cits notikums ir izdzēsts"
 
-#: ../src/gcal-window.c:1065
+#: ../src/gcal-window.c:1105
 msgid "Event deleted"
 msgstr "Notikums ir izdzēsts"
 
