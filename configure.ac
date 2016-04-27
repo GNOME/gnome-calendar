@@ -26,6 +26,17 @@ AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
 AS_IF([test "x$USE_NLS" != "xno"],
       [AC_DEFINE([ENABLE_NLS], [1], [Native language support is enabled])])
 
+# _NL_TIME_FIRST_WEEKDAY is an enum and not a define
+AC_MSG_CHECKING([for _NL_TIME_FIRST_WEEKDAY])
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <langinfo.h>]],
+                                   [[nl_langinfo(_NL_TIME_FIRST_WEEKDAY);]])],
+               [langinfo_ok=yes], [langinfo_ok=no])
+AC_MSG_RESULT($langinfo_ok)
+if test "$langinfo_ok" = "yes"; then
+  AC_DEFINE([HAVE__NL_TIME_FIRST_WEEKDAY], [1],
+            [Define if _NL_TIME_FIRST_WEEKDAY is available])
+fi
+
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
 

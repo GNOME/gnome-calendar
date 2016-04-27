@@ -18,6 +18,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
+
 #include "gcal-utils.h"
 #include "gcal-event-widget.h"
 #include "gcal-view.h"
