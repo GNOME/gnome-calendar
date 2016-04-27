@@ -7,19 +7,21 @@
 
 /* nav-bar labels */
 .start-header {
-    font: bold 18;
+    font-size: 18pt;
+    font-weight: bold;
     color: @theme_selected_bg_color;
     padding: 12px;
 }
 
 .end-header {
-    font: bold 18;
+    font-size: 18pt;
+    font-weight: bold;
     padding: 12px;
 }
 
 calendar-view {
     padding: 6px;
-    font: 10;
+    font-size: 10pt;
 }
 
 calendar-view.header {
@@ -30,7 +32,7 @@ calendar-view.current {
     background-color: black;
     border-radius: 2px;
     color: white;
-    font: bold;
+    font-weight: bold;
 }
 
 calendar-view:selected {
@@ -46,7 +48,7 @@ calendar-view.overflow:hover {
 }
 
 calendar-view.overflow {
-    font: 8;
+    font-size: 8pt;
 }
 
 calendar-view.lines {
@@ -54,13 +56,15 @@ calendar-view.lines {
 }
 
 calendar-view.first-view-header {
-    font: bold 16;
+    font-size: 16pt;
+    font-weight: bold;
     color: @theme_selected_bg_color;
     padding: 12px;
 }
 
 calendar-view.second-view-header {
-    font: bold 16;
+    font-size: 16pt;
+    font-weight: bold;
     padding: 12px;
     color: alpha(@theme_fg_color, 0.55);
 }
@@ -91,7 +95,7 @@ calendar-view.second-view-header {
 .year-navigator.days {
     padding: 5px;
     color: @theme_fg_color;
-    font: 9;
+    font-size: 9pt;
 }
 
 .year-navigator.sunday {
@@ -111,7 +115,7 @@ calendar-view.second-view-header {
     background-color: black;
     border-radius: 2px;
     color: white;
-    font: bold;
+    font-weight: bold;
 }
 .year-navigator:selected {
     color: @theme_selected_bg_color;
@@ -133,7 +137,7 @@ calendar-view.second-view-header {
 
 .sidebar-header {
     font-weight: bold;
-    font-size: 11px;
+    font-size: 11pt;
 }
 
 .italic-label {
@@ -199,7 +203,7 @@ event-widget {
     border-radius: 2px;
     margin: 2px 2px 1px;
     padding: 3px 4px;
-    font: 9;
+    font-size: 9pt;
 }
 
 event-widget.color-dark {
