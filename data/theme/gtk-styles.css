@@ -89,6 +89,7 @@ calendar-view.second-view-header {
 }
 
 .year-navigator.days {
+    padding: 5px;
     color: @theme_fg_color;
     font: 9;
 }
