@@ -329,7 +329,7 @@ gather_button_event_data (GcalMonthView *view,
 
   PangoLayout *overflow_layout;
   PangoFontDescription *ofont_desc;
-  gint font_height, padding_bottom;
+  gint font_height, padding_bottom, padding_top;
 
   priv = gcal_month_view_get_instance_private (view);
   widget = GTK_WIDGET (view);
@@ -346,7 +346,11 @@ gather_button_event_data (GcalMonthView *view,
   state = gtk_style_context_get_state (context);
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, "overflow");
-  gtk_style_context_get (context, state, "font", &ofont_desc, "padding-bottom", &padding_bottom, NULL);
+  gtk_style_context_get (context, state,
+                         "font", &ofont_desc,
+                         "padding-bottom", &padding_bottom,
+                         "padding-top", &padding_top,
+                         NULL);
 
   overflow_layout = gtk_widget_create_pango_layout (widget, NULL);
   pango_layout_set_font_description (overflow_layout, ofont_desc);
@@ -370,7 +374,7 @@ gather_button_event_data (GcalMonthView *view,
       gdouble upper_border = cell_height * ((gint) y / (gint) cell_height);
       y = y - upper_border;
 
-      *out_on_indicator = (cell_height - font_height - padding_bottom < y && y < cell_height);
+      *out_on_indicator = (cell_height - font_height - padding_bottom - padding_top < y && y < cell_height);
     }
 
   if (out_x != NULL)
