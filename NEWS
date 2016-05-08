@@ -1,3 +1,12 @@
+Major changes in 3.20.2:
+* Updates translations for:
+    * Latvian (Rūdolfs Mazurs)
+    * Norwegian bokmål (Kjartan Maraas)
+    * Portuguese (Tiago Santos)
+* Revert some changes because of instabilities
+* Use the theme's CSS instead of our custom one
+* Fix the first week day detection (Isaque Galdino)
+
 Major changes in 3.20.1:
 * Updated translations for:
     * Basque (Inaki Larranaga Murgoitio)
