@@ -50,7 +50,7 @@
                 <property name="transition_type">crossfade</property>
                 <signal name="notify::visible-child" handler="view_changed" object="GcalWindow" swapped="no"/>
                 <style>
-                  <class name="views"/>
+                  <class name="view"/>
                 </style>
                 <child>
                   <object class="GcalMonthView" id="month_view">
@@ -276,9 +276,6 @@
         </child>
       </object>
     </child>
-    <style>
-      <class name="views"/>
-    </style>
   </template>
   <object class="GcalSearchView" id="search_view">
     <property name="visible" bind-source="search_bar" bind-property="search-mode-enabled" bind-flags="default | sync-create" />

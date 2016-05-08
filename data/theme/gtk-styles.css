@@ -1,11 +1,5 @@
 @define-color event_shadow_color alpha(black, 0.2);
 
-.views {
-    /* background color of every view */
-    background-color: @theme_base_color;
-    background-image: none;
-}
-
 .nav-button {
     background-color: transparent;
     background-image: none;
