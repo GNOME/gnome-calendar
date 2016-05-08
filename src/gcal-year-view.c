@@ -27,7 +27,6 @@
 
 #define NAVIGATOR_CELL_WIDTH (210 + 15)
 #define NAVIGATOR_CELL_HEIGHT 210
-#define NAVIGATOR_HEADER_HEIGHT 52
 #define SIDEBAR_PREFERRED_WIDTH 200
 #define VISUAL_CLUES_SIDE 3.0
 #define WEEK_NUMBER_MARGIN 3.0
@@ -68,9 +67,6 @@ struct _GcalYearView
 
   /* geometry info */
   GridData     *navigator_grid;
-  guint         number_of_columns;
-  guint         number_of_rows;
-
 
   /* state flags */
   gboolean      popover_mode;
@@ -551,7 +547,7 @@ calculate_day_month_for_coord (GcalYearView *year_view,
                                gint         *out_day,
                                gint         *out_month)
 {
-  gint row, column, i, sw, clicked_cell, day, month, columns_or_rows;
+  gint row, column, i, sw, clicked_cell, day, month;
   gdouble box_side;
 
   row = -1;
@@ -559,13 +555,12 @@ calculate_day_month_for_coord (GcalYearView *year_view,
   box_side = year_view->navigator_grid->box_side;
   sw = 1 - 2 * year_view->k;
 
-  columns_or_rows = year_view->number_of_columns > year_view->number_of_rows ? year_view->number_of_columns : year_view->number_of_rows;
-
-  for (i = 0; i < columns_or_rows && ((row == -1) || (column == -1)); i++)
+  /* y selection */
+  for (i = 0; i < 4 && ((row == -1) || (column == -1)); i++)
     {
       if (row == -1 &&
-          y > year_view->navigator_grid->coordinates[i * year_view->number_of_columns].y &&
-          y < year_view->navigator_grid->coordinates[i * year_view->number_of_columns].y + box_side * 7)
+          y > year_view->navigator_grid->coordinates[i * 4].y &&
+          y < year_view->navigator_grid->coordinates[i * 4].y + box_side * 7)
         {
           row = i;
         }
@@ -580,7 +575,7 @@ calculate_day_month_for_coord (GcalYearView *year_view,
   if (row == -1 || column == -1)
     return FALSE;
 
-  month = row * year_view->number_of_columns + column;
+  month = row * 4 + column;
   row = (y - (year_view->navigator_grid->coordinates[month].y + box_side)) / box_side;
   column = (x - (year_view->navigator_grid->coordinates[month].x + box_side * (1 - year_view->k))) / box_side;
   clicked_cell = row * 7 + column;
@@ -930,23 +925,23 @@ draw_navigator (GcalYearView *year_view,
   header_height = header_padding_top * 2 + layout_height;
   height = gtk_widget_get_allocated_height (widget) - header_height;
 
-  box_side = NAVIGATOR_CELL_WIDTH / 8.0;
+  if (((width / 4.0) / 8.0) < ((height / 3.0) / 7.0))
+    box_side = (width / 4.0) / 8.0;
+  else
+    box_side = (height / 3.0) / 7.0;
 
-  real_padding_left = (width - NAVIGATOR_CELL_WIDTH * year_view->number_of_columns) / (year_view->number_of_columns + 1);
-  real_padding_top = (height - NAVIGATOR_CELL_HEIGHT * year_view->number_of_rows) / (year_view->number_of_rows + 1);
-
-  if (real_padding_top < 0)
-    real_padding_top = 0;
+  real_padding_left = (width - (8 * 4 * box_side)) / 5.0;
+  real_padding_top = (height - (7 * 3 * box_side)) / 4.0;
 
   year_view->navigator_grid->box_side = box_side;
   weeks_counter = year_view->first_week_of_year;
   for (i = 0; i < 12; i++)
     {
-      gint row = i / year_view->number_of_columns;
-      gint column = year_view->k * (year_view->number_of_columns - 1) + sw * (i % year_view->number_of_columns);
+      gint row = i / 4;
+      gint column = year_view->k * 3 + sw * (i % 4);
 
-      year_view->navigator_grid->coordinates[i].x = (column + 1) * real_padding_left + column * NAVIGATOR_CELL_WIDTH;
-      year_view->navigator_grid->coordinates[i].y = row * real_padding_top + row * NAVIGATOR_CELL_HEIGHT + header_height;
+      year_view->navigator_grid->coordinates[i].x = (column + 1) * real_padding_left + column * box_side * 8;
+      year_view->navigator_grid->coordinates[i].y = (row + 1) * real_padding_top + row * box_side * 7 + header_height;
       draw_month_grid (year_view, widget, cr, i, &weeks_counter);
     }
 
@@ -1166,20 +1161,40 @@ gcal_year_view_get_preferred_width (GtkWidget *widget,
 {
   GcalYearView *year_view = GCAL_YEAR_VIEW (widget);
   GtkStyleContext *context;
-  gint padding_left, padding_right, hpadding;
+  gint padding_left;
 
   context = gtk_widget_get_style_context (year_view->navigator);
 
   gtk_style_context_get (context,
                          gtk_style_context_get_state (context),
-                         "padding-left", &padding_left,
-                         "padding-right", &padding_right, NULL);
+                         "padding-left", &padding_left, NULL);
 
-  hpadding = padding_left + padding_right;
   if (minimum != NULL)
-    *minimum = hpadding + NAVIGATOR_CELL_WIDTH;
+    *minimum = NAVIGATOR_CELL_WIDTH * 4 + padding_left * 8;
   if (natural != NULL)
-    *natural = hpadding + NAVIGATOR_CELL_WIDTH + SIDEBAR_PREFERRED_WIDTH;
+    *natural = NAVIGATOR_CELL_WIDTH * 4 + padding_left * 8 + SIDEBAR_PREFERRED_WIDTH;
+}
+
+static void
+gcal_year_view_get_preferred_height_for_width (GtkWidget *widget,
+                                               gint       width,
+                                               gint      *minimum,
+                                               gint      *natural)
+{
+  GcalYearView *year_view = GCAL_YEAR_VIEW (widget);
+  GtkStyleContext *context;
+  gint padding_top;
+
+  context = gtk_widget_get_style_context (year_view->navigator);
+
+  gtk_style_context_get (context,
+                         gtk_style_context_get_state (context),
+                         "padding-top", &padding_top, NULL);
+
+  if (minimum != NULL)
+    *minimum = NAVIGATOR_CELL_HEIGHT * 3 + padding_top * 6;
+  if (natural != NULL)
+    *natural = NAVIGATOR_CELL_HEIGHT * 3 + padding_top * 6;
 }
 
 static void
@@ -1188,29 +1203,15 @@ gcal_year_view_size_allocate (GtkWidget     *widget,
 {
   GcalYearView *year_view = GCAL_YEAR_VIEW (widget);
   GtkStyleContext *context;
-  gint padding_left, padding_right, padding_top, padding_bottom, hpadding, vpadding;
+  gint padding_left;
 
   context = gtk_widget_get_style_context (widget);
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, "year-navigator");
-  gtk_style_context_get (context,
-                         gtk_style_context_get_state (context),
-                         "padding-left", &padding_left,
-                         "padding-right", &padding_right,
-                         "padding-top", &padding_top,
-                         "padding-bottom", &padding_bottom, NULL);
+  gtk_style_context_get (context, gtk_style_context_get_state (context), "padding-left", &padding_left, NULL);
   gtk_style_context_restore (context);
 
-  year_view->number_of_columns = (alloc->width - SIDEBAR_PREFERRED_WIDTH) / NAVIGATOR_CELL_WIDTH;
-  year_view->number_of_rows = ceil (12.0 / year_view->number_of_columns);
-
-  hpadding = padding_left + padding_right;
-  vpadding = padding_top + padding_bottom;
-  gtk_widget_set_size_request (year_view->navigator,
-                               hpadding + NAVIGATOR_CELL_WIDTH * year_view->number_of_columns,
-                               vpadding + NAVIGATOR_CELL_HEIGHT * year_view->number_of_rows + NAVIGATOR_HEADER_HEIGHT);
-
-  year_view->popover_mode = (alloc->width < padding_left + NAVIGATOR_CELL_WIDTH * year_view->number_of_columns + padding_right + SIDEBAR_PREFERRED_WIDTH);
+  year_view->popover_mode = (alloc->width < NAVIGATOR_CELL_WIDTH * 4 + padding_left * 8 + SIDEBAR_PREFERRED_WIDTH);
   if (year_view->popover_mode && !gtk_widget_is_ancestor (year_view->events_sidebar, year_view->popover))
     {
       g_object_ref (year_view->sidebar);
@@ -1442,6 +1443,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   object_class->set_property = gcal_year_view_set_property;
 
   widget_class->get_preferred_width = gcal_year_view_get_preferred_width;
+  widget_class->get_preferred_height_for_width = gcal_year_view_get_preferred_height_for_width;
   widget_class->size_allocate = gcal_year_view_size_allocate;
   widget_class->direction_changed = gcal_year_view_direction_changed;
 
@@ -1503,10 +1505,6 @@ gcal_year_view_init (GcalYearView *self)
   self->shell_settings = g_settings_new ("org.gnome.shell.calendar");
   g_settings_bind (self->shell_settings, "show-weekdate", self, "show-week-numbers", G_SETTINGS_BIND_DEFAULT);
   g_signal_connect_swapped (self->shell_settings, "changed::show-weekdate", G_CALLBACK (gtk_widget_queue_draw), self);
-
-  /* default number_of_columns and number_of_rows */
-  self->number_of_columns = 4;
-  self->number_of_rows = 3;
 
   gtk_list_box_set_header_func (GTK_LIST_BOX (self->events_sidebar), update_sidebar_headers, self, NULL);
   gtk_list_box_set_sort_func (GTK_LIST_BOX (self->events_sidebar), sidebar_sort_func, NULL, NULL);
