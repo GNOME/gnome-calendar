@@ -1,0 +1,553 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# renemanasse <renemanasse@gmail.com>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=general\n"
+"POT-Creation-Date: 2016-03-04 08:10+0000\n"
+"PO-Revision-Date: 2016-05-10 12:47+0100\n"
+"Last-Translator: renemanasse <renemanasse@gmail.com>\n"
+"Language-Team: Lingala <ubuntu-cd@lists.ubuntu.com>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"X-Generator: Gtranslator 2.91.7\n"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
+#: ../data/org.gnome.Calendar.desktop.in.in.h:1
+#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:483
+msgid "Calendar"
+msgstr "Manáka"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+msgid "Calendar for GNOME"
+msgstr "Manáka ya GNOME"
+
+# Ecosystème à vérifier
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"Manáka ya GNOME ezali kitoko, pasi te mpo na kosalela mpe ezali kotambwisama "
+"na bilo ya GNOME.Esaliseli oyo ezali kotambwisama na kati ya bilo nyonso ya "
+"GNOME."
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"Ngbangbata na biso ezali bozui bokokani kati ya lolenge ya bokeli mpe "
+"kosalela Manáka.Bokozala pepele na bosaleli Manáka oyo lokola bomesana "
+"kosalela. "
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+msgid "Search for events"
+msgstr "Luka ba événema"
+
+#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+msgid "Calendar management"
+msgstr "Boyángeli Manáka"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:2
+msgid "Access, and manage calendar"
+msgstr "Yíngela, mpe yángela Manáka"
+
+#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+msgid "Calendar;Event;Reminder;"
+msgstr "Manáka;Ba événema;Bokundoli;"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+msgid "Window maximized"
+msgstr "Lininísa ya kongangola"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+msgid "Window maximized state"
+msgstr "Ezaleli ya lininísa ya kongangolama"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+msgid "Window size"
+msgstr "Bonɛ́nɛ ya lininísa"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+msgid "Window size (width and height)."
+msgstr "Táye ya lininísa (bonɛ́nɛ na bolaí)"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+msgid "Window position"
+msgstr "Botɛ́lɛmi ya lininísa"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+msgid "Window position (x and y)."
+msgstr "Botɛ́lɛmi ya lininísa (x na y)."
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:7
+msgid "Type of the active view"
+msgstr "Ndéngé ya kominisa ngâ"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:8
+msgid "Type of the active window view, default value is: monthly view"
+msgstr "Ndéngé ya kominisa ngâ, mbenza ya bozángi: Komonisa sánzá"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:9
+msgid "List of the disabled sources"
+msgstr "Lístɛ ya bisika biwuti oyo etendisami"
+
+#: ../data/org.gnome.calendar.gschema.xml.in.h:10
+msgid "Sources disabled last time Calendar ran"
+msgstr "Bisika biwuti oyo etendisami na botambwisi Manáka na tango ya suka"
+
+#: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
+#: ../src/gcal-source-dialog.c:1113
+msgid "Cancel"
+msgstr "Boma"
+
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
+msgid "Done"
+msgstr "Esálémí"
+
+#: ../data/ui/edit-dialog.ui.h:3
+msgid "Title"
+msgstr "Títɛlɛ"
+
+#: ../data/ui/edit-dialog.ui.h:4
+msgid "Starts"
+msgstr "Banda"
+
+#: ../data/ui/edit-dialog.ui.h:5
+msgid "Ends"
+msgstr "Súka"
+
+#: ../data/ui/edit-dialog.ui.h:6
+msgid "Notes"
+msgstr "notí"
+
+#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
+msgid "Location"
+msgstr "Esika"
+
+#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
+msgid "All day"
+msgstr "Mikolo minso"
+
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Delete event"
+msgstr "Límuisa ba événema"
+
+#: ../data/ui/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Nyonso"
+
+#: ../data/ui/help-overlay.ui.h:2
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "Evénema ya sika"
+
+#: ../data/ui/help-overlay.ui.h:3
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Kanga lininísa"
+
+#: ../data/ui/help-overlay.ui.h:4
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Boluki"
+
+#: ../data/ui/help-overlay.ui.h:5
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Monisa lisungi"
+
+#: ../data/ui/help-overlay.ui.h:6
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Nzela mukuse"
+
+#: ../data/ui/help-overlay.ui.h:7
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Botamboli"
+
+#: ../data/ui/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "Kozonga"
+
+#: ../data/ui/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "Liboso"
+
+#: ../data/ui/help-overlay.ui.h:10
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "Monisa lelo"
+
+#: ../data/ui/help-overlay.ui.h:11
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "Monisa oyo elandi"
+
+#: ../data/ui/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "Monisa oyo elekaki"
+
+#: ../data/ui/help-overlay.ui.h:13
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Monisa"
+
+#: ../data/ui/help-overlay.ui.h:14
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "Komonisa Sanza"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "Komonisa Mobu"
+
+#: ../data/ui/menus.ui.h:1
+msgid "Add Eve_nt…"
+msgstr "Bakisa Evéne_ma..."
+
+#: ../data/ui/menus.ui.h:2
+msgid "_Search…"
+msgstr "_Boluki..."
+
+#: ../data/ui/menus.ui.h:3
+msgid "_Keyboard Shortcuts"
+msgstr "Nzela mokuse ya _ekomelo"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_About"
+msgstr "_etali"
+
+#: ../data/ui/menus.ui.h:5
+msgid "_Quit"
+msgstr "_Kanga"
+
+#: ../data/ui/menus.ui.h:6
+msgid "_Synchronize"
+msgstr "_Sékrɔnizé"
+
+#: ../data/ui/menus.ui.h:7
+msgid "From Web…"
+msgstr "Na Wɛbɛ..."
+
+#: ../data/ui/menus.ui.h:8
+msgid "New Local Calendar…"
+msgstr "Manáka ya sika..."
+
+#: ../data/ui/menus.ui.h:9
+msgid "From File…"
+msgstr "Na fisyé..."
+
+#: ../data/ui/quick-add-popover.ui.h:1
+msgid "Edit Details…"
+msgstr "Bongisa ba détayɛ..."
+
+#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "Bakisa"
+
+#: ../data/ui/search-view.ui.h:1
+msgid "No results found"
+msgstr "Eyano emonani te"
+
+#: ../data/ui/search-view.ui.h:2
+msgid "Try a different search"
+msgstr "Meka moluki mosusu"
+
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1065
+msgid "Undo"
+msgstr "Bwákisa"
+
+#: ../data/ui/source-dialog.ui.h:2
+msgid "Online Accounts"
+msgstr "Konti na Wɛbɛ"
+
+#: ../data/ui/source-dialog.ui.h:3
+msgid "Open online account settings"
+msgstr "Fungola mabongisi ya Konti na Wɛbɛ"
+
+#: ../data/ui/source-dialog.ui.h:4
+msgid "Google"
+msgstr "Google"
+
+#: ../data/ui/source-dialog.ui.h:5
+msgid "Click to set up"
+msgstr "Klikɛ mpo na kofándisa"
+
+#: ../data/ui/source-dialog.ui.h:6
+msgid "ownCloud"
+msgstr "ownCloud"
+
+#: ../data/ui/source-dialog.ui.h:7
+msgid "Microsoft Exchange"
+msgstr "Microsoft Exchange"
+
+#: ../data/ui/source-dialog.ui.h:8
+msgid "Calendars"
+msgstr "Manáka"
+
+#: ../data/ui/source-dialog.ui.h:10
+msgid "Overview"
+msgstr "Mona nyonso"
+
+#: ../data/ui/source-dialog.ui.h:11
+msgid "Add new events to this calendar by default"
+msgstr "Bakisa événema na Manáka oyo na ntango ya bozangi"
+
+#: ../data/ui/source-dialog.ui.h:12
+msgid "Remove Calendar"
+msgstr "Limuisa Manáka"
+
+#: ../data/ui/source-dialog.ui.h:13
+msgid "Display calendar"
+msgstr "Mónisa Manáka"
+
+#: ../data/ui/source-dialog.ui.h:14
+msgid "Calendar name"
+msgstr "Nkómbó ya Manáka"
+
+#: ../data/ui/source-dialog.ui.h:15
+msgid "Color"
+msgstr "Langi"
+
+#: ../data/ui/source-dialog.ui.h:16
+msgid "Account"
+msgstr "Konti"
+
+#: ../data/ui/source-dialog.ui.h:18
+msgid "Settings"
+msgstr "Palamɛ́tɛlɛ"
+
+#: ../data/ui/source-dialog.ui.h:19
+msgid "Edit Calendar"
+msgstr "Bongisa Manáka"
+
+#: ../data/ui/source-dialog.ui.h:20
+msgid ""
+"Enter the address of the calendar that you want to add. If the calendar "
+"belongs to one of your online accounts, you can add it through the <a href="
+"\"GOA\">online account settings</a>."
+msgstr "Kotisa adélese ya Manaka oyo olingi kobakisa."
+
+#: ../data/ui/source-dialog.ui.h:21
+msgid "Calendar Address"
+msgstr "Adɛ́lɛsɛ ya Manáka"
+
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2191
+#: ../src/gcal-source-dialog.c:2197
+msgid "Add Calendar"
+msgstr "Bakisa Manáka"
+
+#: ../data/ui/source-dialog.ui.h:24
+msgid "User"
+msgstr "Mosaleli"
+
+#: ../data/ui/source-dialog.ui.h:25
+msgid "Password"
+msgstr "Liloba-nzelá"
+
+#: ../data/ui/source-dialog.ui.h:26
+msgid "Connect"
+msgstr "Kangisa"
+
+#: ../data/ui/time-selector.ui.h:1
+msgid "00:00"
+msgstr "00:00"
+
+#: ../data/ui/time-selector.ui.h:2
+msgid ":"
+msgstr ":"
+
+#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
+msgid "AM"
+msgstr "liboso ya nzánga"
+
+#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
+msgid "PM"
+msgstr "Nsima ya nzánga"
+
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
+msgid "Month"
+msgstr "Sánzá"
+
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
+msgid "Year"
+msgstr "Mobú"
+
+#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
+#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
+msgid "Today"
+msgstr "Lelo"
+
+#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2220
+msgid "Calendar Settings"
+msgstr "Palamɛ́tɛlɛ ya Manáka"
+
+#: ../data/ui/year-view.ui.h:2
+msgid "No events"
+msgstr "Evénema eza te"
+
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
+msgid "Add Event…"
+msgstr "Bakisa événema..."
+
+#: ../src/gcal-application.c:102
+msgid "Display version number"
+msgstr "Mónisa limeló ya versió"
+
+#: ../src/gcal-application.c:107
+msgid "Open calendar on the passed date"
+msgstr "Fúngola Manáka na Mokɔlɔ elaka"
+
+#: ../src/gcal-application.c:112
+msgid "Open calendar showing the passed event"
+msgstr "Fúngola Manáka mpo na kolakisa événema eleka"
+
+#: ../src/gcal-application.c:324
+msgid "- Calendar management"
+msgstr "- Boyángeli Manáka"
+
+#: ../src/gcal-application.c:471
+#, c-format
+msgid "Copyright © %d The Calendar authors"
+msgstr "Kopíraíti © %d Bakeli Manáka"
+
+#: ../src/gcal-application.c:477
+#, c-format
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Kopíraíti © %d–%d Bakeli Manáka"
+
+#: ../src/gcal-application.c:490
+msgid "translator-credits"
+msgstr "Litómba ya mobóngolisi"
+
+#: ../src/gcal-date-selector.c:362
+msgid "Day"
+msgstr "Mokɔlɔ"
+
+#: ../src/gcal-edit-dialog.c:429
+msgid "Save"
+msgstr "Bomba"
+
+#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
+msgid "Unnamed event"
+msgstr "Evénema ezangi nkómbó"
+
+#: ../src/gcal-month-view.c:1065
+msgid "Other events"
+msgstr "Ba événema misusu"
+
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/gcal-month-view.c:1494
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Evénema mosusu"
+msgstr[1] "Ba événema misusu %d"
+
+#: ../src/gcal-quick-add-popover.c:113
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (Manáka oyo ezali kaka na botangi)"
+
+#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%B %d"
+
+#: ../src/gcal-quick-add-popover.c:243
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "Evénema ya sika na mwa %s kino %s"
+
+#: ../src/gcal-quick-add-popover.c:249
+#, c-format
+msgid "New Event on %s"
+msgstr "Evénema ya sika na %s"
+
+#: ../src/gcal-search-view.c:502
+msgid "Use the entry above to search for events."
+msgstr "Salela bokɔ́ti ya nsé po na boluki ba événema."
+
+#. Dialog
+#: ../src/gcal-source-dialog.c:1110
+msgid "Select a calendar file"
+msgstr "Pɔnɔ fisyé ya Manáka"
+
+#: ../src/gcal-source-dialog.c:1114
+msgid "Open"
+msgstr "Fúngola"
+
+#: ../src/gcal-source-dialog.c:1121
+msgid "Calendar files"
+msgstr "Ba fisyé ya Manáka"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1160
+msgid "Unnamed Calendar"
+msgstr "Manáka ezangi nkómbó"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1758
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "Manáka <b>%s</b> elímuísámí"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "Off"
+msgstr "Boma"
+
+#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+msgid "On"
+msgstr "Pelisa"
+
+#: ../src/gcal-time-selector.c:82
+#, c-format
+msgid "%s AM"
+msgstr "%s liboso ya nzánga"
+
+#: ../src/gcal-time-selector.c:84
+#, c-format
+msgid "%s PM"
+msgstr "%s nsima ya nzánga"
+
+#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
+msgid "Midnight"
+msgstr "Midí ya butú"
+
+#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
+msgid "Noon"
+msgstr "Nzánga"
+
+#: ../src/gcal-week-view.c:499
+msgid "00:00 PM"
+msgstr "00:00 nsima ya nzánga"
+
+#: ../src/gcal-window.c:1061
+msgid "Another event deleted"
+msgstr "Evénema mosusu elímuísámí"
+
+#: ../src/gcal-window.c:1065
+msgid "Event deleted"
+msgstr "Evénema elímuísámí"
