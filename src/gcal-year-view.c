@@ -93,7 +93,7 @@ struct _GcalYearView
   gboolean      use_24h_format;
 
   /* show week numbers from GNOME Shell settings */
-  GSettings    *shell_settings;
+  GSettings    *calendar_settings;
   gboolean      show_week_numbers;
 
   /* text direction factors */
@@ -1401,7 +1401,7 @@ gcal_year_view_finalize (GObject *object)
 
   g_clear_pointer (&year_view->date, g_free);
 
-  g_clear_object (&year_view->shell_settings);
+  g_clear_object (&year_view->calendar_settings);
 
   G_OBJECT_CLASS (gcal_year_view_parent_class)->finalize (object);
 }
@@ -1811,9 +1811,9 @@ gcal_year_view_init (GcalYearView *self)
   self->end_selected_date->zone = e_cal_util_get_system_timezone ();
 
   /* bind GNOME Shell' show week numbers property to GNOME Calendar's one */
-  self->shell_settings = g_settings_new ("org.gnome.shell.calendar");
-  g_settings_bind (self->shell_settings, "show-weekdate", self, "show-week-numbers", G_SETTINGS_BIND_DEFAULT);
-  g_signal_connect_swapped (self->shell_settings, "changed::show-weekdate", G_CALLBACK (gtk_widget_queue_draw), self);
+  self->calendar_settings = g_settings_new ("org.gnome.desktop.calendar");
+  g_settings_bind (self->calendar_settings, "show-weekdate", self, "show-week-numbers", G_SETTINGS_BIND_DEFAULT);
+  g_signal_connect_swapped (self->calendar_settings, "changed::show-weekdate", G_CALLBACK (gtk_widget_queue_draw), self);
 
   /* layout */
   self->number_of_columns = 4;

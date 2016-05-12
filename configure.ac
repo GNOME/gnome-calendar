@@ -100,6 +100,7 @@ EDATASERVER_REQUIRED=3.17.1
 EDATASERVERUI_REQUIRED=3.17.1
 LIBICAL_REQUIRED=1.0
 GOA_MIN_VERSION=3.2.0
+GSETTINGS_DESKTOP_SCHEMAS_REQUIRED=3.21.2
 
 PKG_CHECK_MODULES(CALENDAR,
                   gmodule-export-2.0
@@ -110,7 +111,8 @@ PKG_CHECK_MODULES(CALENDAR,
                   libecal-1.2 >= $ECAL_REQUIRED
                   libedataserver-1.2 >= $EDATASERVER_REQUIRED
                   libedataserverui-1.2 >= $EDATASERVERUI_REQUIRED
-                  libical >= $LIBICAL_REQUIRED)
+                  libical >= $LIBICAL_REQUIRED
+                  gsettings-desktop-schemas >= $GSETTINGS_DESKTOP_SCHEMAS_REQUIRED)
 
 AC_CHECK_LIB(ical, icaltime_days_in_year, [],
                 AC_MSG_ERROR([Error: icaltime_days_in_year() not found in libical!. Upgrade your libical library.]))
