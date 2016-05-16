@@ -25,7 +25,7 @@
 #include <math.h>
 #include <string.h>
 
-#define NAVIGATOR_MAX_GRID_SIZE 6
+#define NAVIGATOR_MAX_GRID_SIZE 4
 #define VISUAL_CLUES_SIDE 3.0
 #define WEEK_NUMBER_MARGIN 3.0
 
