@@ -546,12 +546,14 @@ sidebar_sort_func (GtkListBoxRow *row1,
   return result;
 }
 
+
 static gboolean
 calculate_day_month_for_coord (GcalYearView *year_view,
                                gdouble       x,
                                gdouble       y,
                                gint         *out_day,
-                               gint         *out_month)
+                               gint         *out_month,
+                               gboolean     *is_title)
 {
   gint row, column, i, sw, clicked_cell, day, month, columns_or_rows;
   gdouble box_side;
@@ -561,14 +563,17 @@ calculate_day_month_for_coord (GcalYearView *year_view,
   box_side = year_view->navigator_grid->box_side;
   sw = 1 - 2 * year_view->k;
 
+  *is_title = FALSE;
   columns_or_rows = year_view->number_of_columns > year_view->number_of_rows ? year_view->number_of_columns : year_view->number_of_rows;
 
   for (i = 0; i < columns_or_rows && ((row == -1) || (column == -1)); i++)
     {
       if (row == -1 &&
-          y > year_view->navigator_grid->coordinates[i * year_view->number_of_columns].y + box_side &&
+          y > year_view->navigator_grid->coordinates[i * year_view->number_of_columns].y &&
           y < year_view->navigator_grid->coordinates[i * year_view->number_of_columns].y + year_view->row_height)
         {
+          if (y < year_view->navigator_grid->coordinates[i * year_view->number_of_columns].y + box_side)
+            *is_title = TRUE;
           row = i;
         }
       if (column == -1 &&
@@ -587,6 +592,11 @@ calculate_day_month_for_coord (GcalYearView *year_view,
   if (month < 0 || month > 11)
     return FALSE;
 
+  *out_month = month;
+
+  if (*is_title)
+    return TRUE;
+
   row = (y - (year_view->navigator_grid->coordinates[month].y + box_side)) / box_side;
   column = (x - (year_view->navigator_grid->coordinates[month].x + box_side * year_view->show_week_numbers * (1 - year_view->k))) / box_side;
   clicked_cell = row * 7 + column;
@@ -597,7 +607,6 @@ calculate_day_month_for_coord (GcalYearView *year_view,
     return FALSE;
 
   *out_day = day;
-  *out_month = month;
   return TRUE;
 }
 
@@ -963,8 +972,13 @@ navigator_button_press_cb (GcalYearView   *year_view,
                            GtkWidget      *widget)
 {
   gint day, month;
-  if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month))
+  gboolean is_title = FALSE;
+
+  if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month, &is_title))
     return FALSE;
+
+  if (is_title)
+    day = 1;
 
   year_view->button_pressed = TRUE;
   year_view->selected_data->start_day = day;
@@ -979,12 +993,16 @@ navigator_button_release_cb (GcalYearView   *year_view,
                              GtkWidget      *widget)
 {
   gint day, month;
+  gboolean is_title = FALSE;
 
   if (!year_view->button_pressed)
     return FALSE;
 
-  if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month))
+  if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month, &is_title))
     goto fail;
+
+  if (is_title)
+    day = g_date_get_days_in_month (month + 1, year_view->date->year);
 
   year_view->button_pressed = FALSE;
   year_view->selected_data->end_day = day;
@@ -1032,12 +1050,16 @@ navigator_motion_notify_cb (GcalYearView   *year_view,
                             GtkWidget      *widget)
 {
   gint day, month;
+  gboolean is_title = FALSE;
 
   if (!year_view->button_pressed)
     return FALSE;
 
-  if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month))
+  if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month, &is_title))
     goto fail;
+
+  if (is_title)
+    day = g_date_get_days_in_month (month + 1, year_view->date->year);
 
   year_view->selected_data->end_day = day;
   year_view->selected_data->end_month = month;
