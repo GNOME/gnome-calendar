@@ -288,7 +288,7 @@ show_popover_for_position (GcalMonthView *view,
         }
 
       /* Only setup an end date when days are different */
-      if (!g_date_time_compare (start_dt, end_dt))
+      if (!g_date_time_equal (start_dt, end_dt))
         {
           GDateTime *tmp_dt;
 
