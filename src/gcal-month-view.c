@@ -277,6 +277,8 @@ show_popover_for_position (GcalMonthView *view,
     }
   else
     {
+      gboolean should_clear_end = FALSE;
+
       /* Swap dates if start > end */
       if (g_date_time_compare (start_dt, end_dt) > 0)
         {
@@ -297,10 +299,15 @@ show_popover_for_position (GcalMonthView *view,
                                           0, 0, 0);
           end_dt = g_date_time_add_days (tmp_dt, 1);
 
+          should_clear_end = TRUE;
+
           g_clear_pointer (&tmp_dt, g_date_time_unref);
         }
 
       g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_dt, end_dt, x, y);
+
+      if (should_clear_end)
+        g_clear_pointer (&end_dt, g_date_time_unref);
     }
 
   gtk_widget_queue_draw (widget);
