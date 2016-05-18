@@ -41,7 +41,7 @@ typedef struct
 
   GdkWindow      *event_window;
 
-  /**
+  /*
    * the cell on which its drawn the first day of the month, in the first row, 0 for the first cell, 1 for the second,
    * and so on, this takes first_weekday into account already.
    */
@@ -52,18 +52,17 @@ typedef struct
    */
   gint            keyboard_cell;
 
-  /**
+  /*
    * first day of the week according to user locale, being
    * 0 for Sunday, 1 for Monday and so on */
   gint            first_weekday;
 
-  /**
-   * button_down/up flag
-   * These keeps the cell index, meaning 0 for left top, 1 for the next in the row from left to right, etc.
-   * Note that this does not take into account the disabled row before the first active row.
+  /*
+   * The start & end dates of the selection. We use datetimes to allow the user to navigate between months using
+   * the keyboard.
    */
-  GDateTime       *start_mark_cell;
-  GDateTime       *end_mark_cell;
+  GDateTime      *start_mark_cell;
+  GDateTime      *end_mark_cell;
 
   /**
    * This flags signals when the cursor is over an overflow indicator and when once has been clicked
