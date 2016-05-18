@@ -261,12 +261,13 @@ show_popover_for_position (GcalMonthView *view,
   if (priv->start_mark_cell == NULL)
     return FALSE;
 
-  if (priv->pressed_overflow_indicator != -1 && !g_date_time_equal (priv->start_mark_cell, priv->end_mark_cell) &&
+  if (priv->pressed_overflow_indicator != -1 &&
+      g_date_time_equal (start_dt, end_dt) &&
       g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (priv->pressed_overflow_indicator)))
     {
       priv->hovered_overflow_indicator = priv->pressed_overflow_indicator;
 
-      rebuild_popover_for_day (GCAL_MONTH_VIEW (widget), g_date_time_get_day_of_month (priv->end_mark_cell));
+      rebuild_popover_for_day (GCAL_MONTH_VIEW (widget), g_date_time_get_day_of_month (end_dt));
       gtk_widget_show_all (priv->overflow_popover);
 
       gtk_widget_queue_draw (widget);
@@ -287,7 +288,7 @@ show_popover_for_position (GcalMonthView *view,
         }
 
       /* Only setup an end date when days are different */
-      if (g_date_time_compare (priv->start_mark_cell, priv->end_mark_cell))
+      if (!g_date_time_compare (start_dt, end_dt))
         {
           GDateTime *tmp_dt;
 
@@ -301,9 +302,6 @@ show_popover_for_position (GcalMonthView *view,
         }
 
       g_signal_emit_by_name (GCAL_VIEW (widget), "create-event", start_dt, end_dt, x, y);
-
-      g_clear_pointer (&start_dt, g_date_time_unref);
-      g_clear_pointer (&end_dt, g_date_time_unref);
     }
 
   gtk_widget_queue_draw (widget);
@@ -1870,10 +1868,13 @@ gcal_month_view_button_press (GtkWidget      *widget,
 
   if (clicked_cell >= priv->days_delay && clicked_cell < days)
     {
+      g_clear_pointer (&priv->start_mark_cell, g_date_time_unref);
+
       priv->keyboard_cell = clicked_cell;
       priv->start_mark_cell = g_date_time_new_local (priv->date->year, priv->date->month,
-                                                    priv->keyboard_cell - priv->days_delay + 1,
-                                                    0, 0, 0);
+                                                     priv->keyboard_cell - priv->days_delay + 1,
+                                                     0, 0, 0);
+      gtk_widget_queue_draw (widget);
     }
 
   if (pressed_indicator && g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (clicked_cell)))
@@ -1916,14 +1917,39 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
 
       if (new_end_cell >= priv->days_delay && new_end_cell < days)
         {
+          guint previous_end_cell;
+
+          previous_end_cell = new_end_cell;
+
+          /* Let the keyboard focus track the pointer */
           priv->keyboard_cell = new_end_cell;
 
-          if (g_date_time_compare (priv->start_mark_cell, priv->end_mark_cell))
-            priv->hovered_overflow_indicator = -1;
-          if (g_date_time_get_day_of_month (priv->end_mark_cell) + priv->days_delay - 1 != new_end_cell)
+          /*
+           * When there is a previously set end mark, it should be
+           * cleared before assigning a new one.
+           */
+          if (priv->end_mark_cell)
+            {
+              previous_end_cell = g_date_time_get_day_of_month (priv->end_mark_cell) - 1;
+
+              g_clear_pointer (&priv->end_mark_cell, g_date_time_unref);
+            }
+
+          if (priv->start_mark_cell &&
+              priv->end_mark_cell &&
+              !g_date_time_equal (priv->start_mark_cell, priv->end_mark_cell))
+            {
+              priv->hovered_overflow_indicator = -1;
+            }
+
+          if (previous_end_cell != new_end_cell)
             gtk_widget_queue_draw (widget);
 
-          priv->end_mark_cell = g_date_time_new_local (priv->date->year, priv->date->month, new_end_cell - priv->days_delay + 1, 0, 0, 0);
+          priv->end_mark_cell = g_date_time_new_local (priv->date->year,
+                                                       priv->date->month,
+                                                       new_end_cell - priv->days_delay + 1,
+                                                       0, 0, 0);
+
           return TRUE;
         }
     }
@@ -1965,6 +1991,8 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   if (current_day >= priv->days_delay && current_day < days)
     {
+      g_clear_pointer (&priv->end_mark_cell, g_date_time_unref);
+
       priv->keyboard_cell = current_day;
       priv->end_mark_cell = g_date_time_new_local (priv->date->year, priv->date->month, current_day - priv->days_delay + 1, 0, 0, 0);
       return show_popover_for_position (GCAL_MONTH_VIEW (widget), x, y, released_indicator);
