@@ -211,10 +211,6 @@ static void           source_row_activated               (GtkListBox          *l
                                                           GtkListBoxRow       *row,
                                                           gpointer             user_data);
 
-static void           source_changed                     (GcalWindow          *window,
-                                                          ESource             *source);
-
-
 static void           on_calendar_toggled                (GObject             *object,
                                                           GParamSpec          *pspec,
                                                           gpointer             user_data);
@@ -799,7 +795,6 @@ add_source (GcalManager *manager,
   window = GCAL_WINDOW (user_data);
 
   row = make_row_from_source (GCAL_WINDOW (user_data), source);
-  g_object_set_data (G_OBJECT (row), "source", source);
 
   gtk_container_add (GTK_CONTAINER (window->calendar_listbox), row);
 }
@@ -856,6 +851,9 @@ make_row_from_source (GcalWindow *window,
   gtk_container_add (GTK_CONTAINER (box), separator);
   gtk_container_add (GTK_CONTAINER (box), checkbox);
   gtk_container_add (GTK_CONTAINER (row), box);
+
+  g_object_set_data (G_OBJECT (row), "check", checkbox);
+  g_object_set_data (G_OBJECT (row), "source", source);
 
   gtk_widget_show_all (row);
 
@@ -924,8 +922,36 @@ source_row_activated (GtkListBox    *listbox,
 }
 
 static void
+source_enabled (GcalWindow *self,
+                ESource    *source,
+                gboolean    enabled)
+{
+  GList *children, *aux;
+
+  children = gtk_container_get_children (GTK_CONTAINER (self->calendar_listbox));
+
+  for (aux = children; aux != NULL; aux = aux->next)
+    {
+      ESource *child_source = g_object_get_data (G_OBJECT (aux->data), "source");
+
+      if (child_source != NULL && child_source == source)
+        {
+          GtkToggleButton *button = g_object_get_data (G_OBJECT (aux->data), "check");
+
+          g_signal_handlers_block_by_func (button, on_calendar_toggled, self);
+          gtk_toggle_button_set_active (button, enabled);
+          g_signal_handlers_unblock_by_func (button, on_calendar_toggled, self);
+
+          break;
+        }
+    }
+
+  g_list_free (children);
+}
+
+static void
 source_changed (GcalWindow *window,
-                ESource     *source)
+                ESource    *source)
 {
   GList *children, *aux;
 
@@ -1475,7 +1501,7 @@ gcal_window_set_property (GObject      *object,
         {
           g_signal_connect (self->manager, "source-added", G_CALLBACK (add_source), object);
           g_signal_connect (self->manager, "source-removed", G_CALLBACK (remove_source), object);
-          g_signal_connect_swapped (self->manager, "source-enabled", G_CALLBACK (source_changed), object);
+          g_signal_connect_swapped (self->manager, "source-enabled", G_CALLBACK (source_enabled), object);
           g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (source_changed), object);
 
           gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (self->edit_dialog), self->manager);
