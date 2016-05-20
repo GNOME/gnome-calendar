@@ -22,8 +22,8 @@
 
 #include "gcal-manager.h"
 #include "gcal-view.h"
-#include "gcal-month-view.h"
 #include "gcal-week-view.h"
+#include "gcal-month-view.h"
 #include "gcal-year-view.h"
 #include "gcal-search-view.h"
 #include "gcal-event-widget.h"
@@ -66,6 +66,7 @@ struct _GcalWindow
   GtkWidget           *search_bar;
   GtkWidget           *views_overlay;
   GtkWidget           *views_stack;
+  GtkWidget           *week_view;
   GtkWidget           *month_view;
   GtkWidget           *year_view;
   GtkWidget           *notification;
@@ -1311,6 +1312,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, forward_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, week_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, year_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
@@ -1404,17 +1406,14 @@ gcal_window_constructed (GObject *object)
 
   g_object_unref (builder);
 
-  /* XXX: Week view disabled until after the release when we restart the work on it*/
-  //priv->views[GCAL_WINDOW_VIEW_WEEK] = gcal_week_view_new ();
-  //gcal_week_view_set_manager (GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]), priv->manager);
-  //gcal_week_view_set_first_weekday (GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]), get_first_weekday ());
-  //gcal_week_view_set_use_24h_format (GCAL_WEEK_VIEW (priv->views[GCAL_WINDOW_VIEW_WEEK]), use_24h_format);
-  //gtk_stack_add_titled (GTK_STACK (priv->views_stack), priv->views[GCAL_WINDOW_VIEW_WEEK], "week", _("Week"));
-
+  window->views[GCAL_WINDOW_VIEW_WEEK] = window->week_view;
   window->views[GCAL_WINDOW_VIEW_MONTH] = window->month_view;
   window->views[GCAL_WINDOW_VIEW_YEAR] = window->year_view;
 
   gcal_edit_dialog_set_time_format (GCAL_EDIT_DIALOG (window->edit_dialog), use_24h_format);
+
+  gcal_week_view_set_first_weekday (GCAL_WEEK_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), get_first_weekday ());
+  gcal_week_view_set_use_24h_format (GCAL_WEEK_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), use_24h_format);
 
   gcal_month_view_set_first_weekday (GCAL_MONTH_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), get_first_weekday ());
   gcal_month_view_set_use_24h_format (GCAL_MONTH_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), use_24h_format);
@@ -1515,6 +1514,7 @@ gcal_window_set_property (GObject      *object,
           g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (source_changed), object);
 
           gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (self->edit_dialog), self->manager);
+          gcal_week_view_set_manager (GCAL_WEEK_VIEW (self->week_view), self->manager);
           gcal_month_view_set_manager (GCAL_MONTH_VIEW (self->month_view), self->manager);
           gcal_year_view_set_manager (GCAL_YEAR_VIEW (self->year_view), self->manager);
           gcal_quick_add_popover_set_manager (GCAL_QUICK_ADD_POPOVER (self->quick_add_popover), self->manager);

@@ -53,6 +53,16 @@
                   <class name="view"/>
                 </style>
                 <child>
+                  <object class="GcalWeekView" id="week_view">
+                    <property name="visible">True</property>
+                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                  </object>
+                  <packing>
+                    <property name="name">week</property>
+                    <property name="title" translatable="yes">Week</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GcalMonthView" id="month_view">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
@@ -62,6 +72,7 @@
                     <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
                   </object>
                   <packing>
+                    <property name="position">1</property>
                     <property name="name">month</property>
                     <property name="title" translatable="yes">Month</property>
                   </packing>
@@ -75,7 +86,7 @@
                     <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
                   </object>
                   <packing>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                     <property name="name">year</property>
                     <property name="title" translatable="yes">Year</property>
                   </packing>
