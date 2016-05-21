@@ -15,6 +15,12 @@
     </section>
     <section>
       <item>
+        <attribute name="label" translatable="yes">_Calendars…</attribute>
+        <attribute name="action">win.show-calendars</attribute>
+      </item>
+    </section>
+    <section>
+      <item>
         <attribute name="label" translatable="yes">_Keyboard Shortcuts</attribute>
         <attribute name="action">win.show-help-overlay</attribute>
       </item>

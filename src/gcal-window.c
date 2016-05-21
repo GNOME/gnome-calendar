@@ -137,6 +137,10 @@ enum
 }
 
 
+static void           on_show_calendars_action_activated (GSimpleAction       *action,
+                                                          GVariant            *param,
+                                                          gpointer             user_data);
+
 static void           on_date_action_activated           (GSimpleAction       *action,
                                                           GVariant            *param,
                                                           gpointer             user_data);
@@ -202,9 +206,6 @@ static GtkWidget*     make_row_from_source               (GcalWindow          *w
 
 static void           remove_source                      (GcalManager         *manager,
                                                           ESource             *source,
-                                                          gpointer             user_data);
-
-static void           show_source_dialog                 (GtkButton           *button,
                                                           gpointer             user_data);
 
 static void           source_row_activated               (GtkListBox          *listbox,
@@ -280,7 +281,22 @@ static const GActionEntry actions[] = {
   {"previous", on_date_action_activated },
   {"today",    on_date_action_activated },
   {"change-view", on_view_action_activated, "i" },
+  {"show-calendars", on_show_calendars_action_activated },
 };
+
+static void
+on_show_calendars_action_activated (GSimpleAction *action,
+                                    GVariant      *param,
+                                    gpointer       user_data)
+{
+  GcalWindow *window = GCAL_WINDOW (user_data);
+
+  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (window->source_dialog), GCAL_SOURCE_DIALOG_MODE_NORMAL);
+
+  gtk_widget_hide (window->calendar_popover);
+
+  gtk_widget_show (window->source_dialog);
+}
 
 static void
 on_date_action_activated (GSimpleAction *action,
@@ -887,19 +903,6 @@ remove_source (GcalManager *manager,
 }
 
 static void
-show_source_dialog (GtkButton *button,
-                    gpointer   user_data)
-{
-  GcalWindow *window = GCAL_WINDOW (user_data);
-
-  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (window->source_dialog), GCAL_SOURCE_DIALOG_MODE_NORMAL);
-
-  gtk_widget_hide (window->calendar_popover);
-
-  gtk_widget_show (window->source_dialog);
-}
-
-static void
 source_row_activated (GtkListBox    *listbox,
                       GtkListBoxRow *row,
                       gpointer       user_data)
@@ -1324,7 +1327,6 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_action_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_close_button);
 
-  gtk_widget_class_bind_template_callback (widget_class, show_source_dialog);
   gtk_widget_class_bind_template_callback (widget_class, source_row_activated);
 
   gtk_widget_class_bind_template_callback (widget_class, key_pressed);

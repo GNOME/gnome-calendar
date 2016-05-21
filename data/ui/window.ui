@@ -315,7 +315,7 @@
             <property name="can_focus">True</property>
             <property name="relief">none</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="show_source_dialog" object="GcalWindow" swapped="no"/>
+            <property name="action_name">win.show-calendars</property>
             <child>
               <object class="GtkLabel" id="calendar_settings_label">
                 <property name="visible">True</property>
