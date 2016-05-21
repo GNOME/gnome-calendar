@@ -810,7 +810,7 @@ get_dnd_cell (GtkWidget *widget,
   cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), x, y, NULL, NULL, NULL);
   cell = real_cell (cell, priv->k);
 
-  if (cell < g_date_get_days_in_month (priv->date->month, priv->date->year))
+  if (cell - priv->days_delay < g_date_get_days_in_month (priv->date->month, priv->date->year))
     return cell;
 
   return -1;
@@ -868,7 +868,7 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
   start_dt = gcal_event_get_date_start (event);
   end_dt = gcal_event_get_date_end (event);
 
-  diff = cell - g_date_time_get_day_of_month (start_dt) + 1;
+  diff = cell - priv->days_delay - g_date_time_get_day_of_month (start_dt) + 1;
 
   if (diff != 0)
     {
