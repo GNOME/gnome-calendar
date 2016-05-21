@@ -847,6 +847,74 @@ gcal_month_view_drag_motion (GtkWidget      *widget,
   return priv->dnd_cell != -1;
 }
 
+static gboolean
+gcal_month_view_drag_drop (GtkWidget      *widget,
+                           GdkDragContext *context,
+                           gint            x,
+                           gint            y,
+                           guint           time)
+{
+  GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
+  GtkWidget *event_widget;
+  GDateTime *start_dt, *end_dt;
+  GcalEvent *event;
+  gint cell, diff;
+
+  cell = get_dnd_cell (widget, x, y);
+  event_widget = gtk_drag_get_source_widget (context);
+  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
+
+  /* Move the event's date */
+  start_dt = gcal_event_get_date_start (event);
+  end_dt = gcal_event_get_date_end (event);
+
+  diff = cell - g_date_time_get_day_of_month (start_dt) + 1;
+
+  if (diff != 0)
+    {
+      GDateTime *new_start = g_date_time_add_days (start_dt, diff);
+
+      gcal_event_set_date_start (event, new_start);
+
+      /* The event may have a NULL end date, so we have to check it here */
+      if (end_dt)
+        {
+          GDateTime *new_end = g_date_time_add_days (end_dt, diff);
+
+          gcal_event_set_date_end (event, new_end);
+          g_clear_pointer (&new_end, g_date_time_unref);
+        }
+
+      gcal_manager_update_event (priv->manager, event);
+
+      g_clear_pointer (&new_start, g_date_time_unref);
+    }
+
+  /* Cancel the DnD */
+  priv->dnd_cell = -1;
+  gtk_drag_unhighlight (widget);
+
+  gtk_drag_finish (context, TRUE, FALSE, time);
+
+  gtk_widget_queue_draw (widget);
+
+  return TRUE;
+}
+
+static void
+gcal_month_view_drag_leave (GtkWidget      *widget,
+                            GdkDragContext *context,
+                            guint           time)
+{
+  GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
+
+  /* Cancel the drag */
+  priv->dnd_cell = -1;
+  gtk_drag_unhighlight (widget);
+
+  gtk_widget_queue_draw (widget);
+}
+
 static void
 add_new_event_button_cb (GtkWidget *button,
                          gpointer   user_data)
@@ -892,6 +960,8 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   widget_class->direction_changed = gcal_month_view_direction_changed;
   widget_class->key_press_event = gcal_month_view_key_press;
   widget_class->drag_motion = gcal_month_view_drag_motion;
+  widget_class->drag_drop = gcal_month_view_drag_drop;
+  widget_class->drag_leave = gcal_month_view_drag_leave;
 
   subscriber_view_class = GCAL_SUBSCRIBER_VIEW_CLASS (klass);
   subscriber_view_class->get_child_cell = gcal_month_view_get_child_cell;
