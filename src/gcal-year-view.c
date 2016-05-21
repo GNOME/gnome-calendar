@@ -1663,6 +1663,13 @@ gcal_year_view_init (GcalYearView *self)
 
   gtk_list_box_set_header_func (GTK_LIST_BOX (self->events_sidebar), update_sidebar_headers, self, NULL);
   gtk_list_box_set_sort_func (GTK_LIST_BOX (self->events_sidebar), sidebar_sort_func, NULL, NULL);
+
+  /* The year navigator is a DnD destination */
+  gtk_drag_dest_set (self->navigator,
+                     0,
+                     NULL,
+                     0,
+                     GDK_ACTION_COPY);
 }
 
 static void
