@@ -184,15 +184,26 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
 static void
 gcal_event_widget_init (GcalEventWidget *self)
 {
+  GtkWidget *widget;
   GSettings *settings;
   gchar *clock_format;
 
+  widget = GTK_WIDGET (self);
   settings = g_settings_new ("org.gnome.desktop.interface");
   clock_format = g_settings_get_string (settings, "clock-format");
   self->clock_format_24h = g_strcmp0 (clock_format, "24h") == 0;
 
-  gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
-  gtk_widget_set_can_focus (GTK_WIDGET (self), TRUE);
+  gtk_widget_set_has_window (widget, FALSE);
+  gtk_widget_set_can_focus (widget, TRUE);
+
+  /* Setup the event widget as a drag source */
+  gtk_drag_source_set (widget,
+                       GDK_BUTTON1_MASK,
+                       NULL,
+                       0,
+                       GDK_ACTION_COPY);
+
+  gtk_drag_source_add_text_targets (widget);
 
   g_clear_object (&settings);
   g_free (clock_format);
