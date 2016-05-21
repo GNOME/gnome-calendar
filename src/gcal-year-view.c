@@ -34,6 +34,7 @@ typedef struct
   /* month span from 0 to 11 */
   gint start_day, start_month;
   gint end_day, end_month;
+  gint hovered_day, hovered_month;
 } ButtonData;
 
 typedef struct
@@ -729,6 +730,27 @@ draw_month_grid (GcalYearView *year_view,
       box_padding_top = (box_side - layout_height) / 2 > 0 ? (box_side - layout_height) / 2 : 0;
       box_padding_start = (box_side - layout_width) / 2 > 0 ? (box_side - layout_width) / 2 : 0;
 
+      /* Draw the hover background */
+      if (year_view->selected_data->hovered_day == j &&
+          year_view->selected_data->hovered_month == month_nr)
+        {
+          gint hover_x, hover_y;
+
+          hover_x = box_side * column + x + sw * box_padding_start / 2.0 - year_view->k * box_side - 2.0;
+          hover_y = box_side * (row + 1) + y + box_padding_top - 1.0;
+
+          gtk_style_context_set_state (context, state_flags | GTK_STATE_FLAG_PRELIGHT);
+
+          gtk_render_background (context,
+                                 cr,
+                                 hover_x,
+                                 hover_y,
+                                 box_side - box_padding_start / 2.0,
+                                 box_side);
+
+          gtk_style_context_set_state (context, state_flags);
+        }
+
       selected_day = FALSE;
       if (year_view->selected_data->start_day != 0)
         {
@@ -1054,25 +1076,43 @@ navigator_motion_notify_cb (GcalYearView   *year_view,
   gint day, month;
   gboolean is_title = FALSE;
 
-  if (!year_view->button_pressed)
-    return FALSE;
+  if (calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month, &is_title))
+    {
+      if (year_view->button_pressed)
+        {
+          /* Cancel the hover when selecting a date range */
+          year_view->selected_data->hovered_day = -1;
+          year_view->selected_data->hovered_month = -1;
 
-  if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month, &is_title))
-    goto fail;
+          if (is_title)
+            day = g_date_get_days_in_month (month + 1, year_view->date->year);
 
-  if (is_title)
-    day = g_date_get_days_in_month (month + 1, year_view->date->year);
+          year_view->selected_data->end_day = day;
+          year_view->selected_data->end_month = month;
+          gtk_widget_queue_draw (widget);
 
-  year_view->selected_data->end_day = day;
-  year_view->selected_data->end_month = month;
-  gtk_widget_queue_draw (widget);
-  return TRUE;
+          return GDK_EVENT_STOP;
+        }
+      else
+        {
+          /* We only deal with the hover effect when the button is not pressed */
+          year_view->selected_data->hovered_day = day;
+          year_view->selected_data->hovered_month = month;
+          gtk_widget_queue_draw (widget);
 
-fail:
-  year_view->selected_data->end_day = year_view->selected_data->start_day;
-  year_view->selected_data->end_month = year_view->selected_data->start_month;
-  gtk_widget_queue_draw (widget);
-  return TRUE;
+          return GDK_EVENT_PROPAGATE;
+        }
+    }
+  else
+    {
+      /* Reset the end day */
+      year_view->selected_data->end_day = year_view->selected_data->start_day;
+      year_view->selected_data->end_month = year_view->selected_data->start_month;
+
+      gtk_widget_queue_draw (widget);
+
+      return GDK_EVENT_STOP;
+    }
 }
 
 static void
