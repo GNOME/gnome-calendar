@@ -1668,10 +1668,10 @@ gcal_month_view_draw (GtkWidget *widget,
     {
       gtk_render_background (context,
                              cr,
-                             cell_width * real_cell (priv->dnd_cell % 7, priv->k),
-                             cell_height * (priv->dnd_cell / 7 + first_row_gap) + start_grid_y,
-                             cell_width,
-                             cell_height);
+                             floor (cell_width * real_cell (priv->dnd_cell % 7, priv->k)),
+                             floor (cell_height * (priv->dnd_cell / 7 + first_row_gap) + start_grid_y),
+                             cell_width + 1,
+                             cell_height + 1);
     }
 
   /* grid numbers */
