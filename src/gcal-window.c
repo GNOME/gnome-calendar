@@ -1507,6 +1507,7 @@ gcal_window_set_property (GObject      *object,
           g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (source_changed), object);
 
           gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (self->edit_dialog), self->manager);
+          gcal_month_view_set_manager (GCAL_MONTH_VIEW (self->month_view), self->manager);
           gcal_year_view_set_manager (GCAL_YEAR_VIEW (self->year_view), self->manager);
           gcal_quick_add_popover_set_manager (GCAL_QUICK_ADD_POPOVER (self->quick_add_popover), self->manager);
           gcal_source_dialog_set_manager (GCAL_SOURCE_DIALOG (self->source_dialog), self->manager);

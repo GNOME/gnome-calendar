@@ -53,6 +53,9 @@ void           gcal_month_view_set_first_weekday  (GcalMonthView *view,
 void           gcal_month_view_set_use_24h_format (GcalMonthView *view,
                                                    gboolean       use_24h);
 
+void           gcal_month_view_set_manager        (GcalMonthView *view,
+                                                   GcalManager   *manager);
+
 G_END_DECLS
 
 #endif /* __GCAL_MONTH_VIEW_H__ */

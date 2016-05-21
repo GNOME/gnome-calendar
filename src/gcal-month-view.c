@@ -85,6 +85,7 @@ typedef struct
 
   /* property */
   icaltimetype   *date;
+  GcalManager    *manager;
 } GcalMonthViewPrivate;
 
 enum
@@ -2266,4 +2267,13 @@ gcal_month_view_set_use_24h_format (GcalMonthView *view,
 
   priv = gcal_month_view_get_instance_private (view);
   priv->use_24h_format = use_24h;
+}
+
+void
+gcal_month_view_set_manager (GcalMonthView *view,
+                             GcalManager   *manager)
+{
+  GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (view);
+
+  priv->manager = manager;
 }
