@@ -37,6 +37,9 @@ struct _GcalEventWidget
 
   GcalEvent     *event;
 
+  /* Drag n' Drop icon */
+  GdkPixbuf     *dnd_pixbuf;
+
   GdkWindow     *event_window;
   gboolean       button_pressed;
 };
@@ -276,6 +279,7 @@ gcal_event_widget_finalize (GObject *object)
 
   /* releasing properties */
   g_clear_pointer (&self->css_class, g_free);
+  g_clear_object (&self->dnd_pixbuf);
   g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->finalize (object);
@@ -573,6 +577,15 @@ gcal_event_widget_draw (GtkWidget *widget,
       cairo_paint (cr);
     }
 
+  /* Setup the drag n' drop icon */
+  g_clear_object (&self->dnd_pixbuf);
+
+  self->dnd_pixbuf = gdk_pixbuf_get_from_window (self->event_window,
+                                                 0,
+                                                 0,
+                                                 width,
+                                                 height);
+
   pango_font_description_free (font_desc);
   g_object_unref (layout);
   g_free (display_text);
@@ -610,6 +623,14 @@ gcal_event_widget_button_release_event (GtkWidget      *widget,
   return FALSE;
 }
 
+static void
+gcal_event_widget_drag_begin (GtkWidget      *widget,
+                              GdkDragContext *context)
+{
+  GcalEventWidget *self = GCAL_EVENT_WIDGET (widget);
+
+  gtk_drag_set_icon_pixbuf (context, self->dnd_pixbuf, 0, 0);
+}
 
 static void
 gcal_event_widget_class_init(GcalEventWidgetClass *klass)
@@ -633,6 +654,7 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
   widget_class->draw = gcal_event_widget_draw;
   widget_class->button_press_event = gcal_event_widget_button_press_event;
   widget_class->button_release_event = gcal_event_widget_button_release_event;
+  widget_class->drag_begin = gcal_event_widget_drag_begin;
 
   /**
    * GcalEventWidget::date-end:
