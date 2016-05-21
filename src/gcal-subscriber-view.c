@@ -250,14 +250,48 @@ gcal_subscriber_view_remove (GtkContainer *container,
             }
           else
             {
-              guint cell_idx = gcal_subscriber_view_get_child_cell (GCAL_SUBSCRIBER_VIEW (container), GCAL_EVENT_WIDGET (widget));
+              GHashTableIter iter;
+              gpointer key, value;
 
-              aux = g_hash_table_lookup (priv->single_cell_children, GINT_TO_POINTER (cell_idx));
-              aux = g_list_remove (g_list_copy (aux), widget);
-              if (aux == NULL)
-                g_hash_table_remove (priv->single_cell_children, GINT_TO_POINTER (cell_idx));
-              else
-                g_hash_table_replace (priv->single_cell_children, GINT_TO_POINTER (cell_idx), aux);
+              /*
+               * When an event is changed, we can't rely on it's old date
+               * to remove the corresponding widget. Because of that, we have
+               * to iter through all the widgets to see which one matches
+               */
+              g_hash_table_iter_init (&iter, priv->single_cell_children);
+
+              while (g_hash_table_iter_next (&iter, &key, &value))
+                {
+                  GList *aux;
+                  gboolean should_break;
+
+                  should_break = FALSE;
+
+                  for (aux = value; aux != NULL; aux = aux->next)
+                    {
+                      if (aux->data == widget)
+                        {
+                          aux = g_list_remove (g_list_copy (value), widget);
+
+                          /*
+                           * If we removed the event and there's no event left for
+                           * the day, remove the key from the table. If there are
+                           * events for that day, replace the list.
+                           */
+                          if (aux == NULL)
+                            g_hash_table_remove (priv->single_cell_children, key);
+                          else
+                            g_hash_table_replace (priv->single_cell_children, key, aux);
+
+                          should_break = TRUE;
+
+                          break;
+                        }
+                    }
+
+                  if (should_break)
+                    break;
+                }
             }
         }
 
