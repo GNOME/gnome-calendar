@@ -1376,6 +1376,19 @@ navigator_drag_drop_cb (GcalYearView   *self,
 }
 
 static void
+navigator_drag_leave_cb (GcalYearView   *self,
+                         GdkDragContext *context,
+                         guint           time,
+                         GtkWidget      *navigator)
+{
+  /* Cancel the DnD after the event is dropped */
+  self->selected_data->dnd_day = -1;
+  self->selected_data->dnd_month = -1;
+
+  gtk_widget_queue_draw (navigator);
+}
+
+static void
 gcal_year_view_finalize (GObject *object)
 {
   GcalYearView *year_view = GCAL_YEAR_VIEW (object);
@@ -1770,6 +1783,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_press_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_release_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_drag_drop_cb);
+  gtk_widget_class_bind_template_callback (widget_class, navigator_drag_leave_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_drag_motion_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_motion_notify_cb);
   gtk_widget_class_bind_template_callback (widget_class, add_event_clicked_cb);

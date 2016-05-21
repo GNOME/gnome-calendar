@@ -26,6 +26,7 @@
                 <signal name="motion-notify-event" handler="navigator_motion_notify_cb" object="GcalYearView" swapped="yes"/>
                 <signal name="drag-motion" handler="navigator_drag_motion_cb" object="GcalYearView" swapped="yes"/>
                 <signal name="drag-drop" handler="navigator_drag_drop_cb" object="GcalYearView" swapped="yes"/>
+                <signal name="drag-leave" handler="navigator_drag_leave_cb" object="GcalYearView" swapped="yes"/>
                 <style>
                   <class name="year-navigator"/>
                 </style>
