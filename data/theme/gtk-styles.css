@@ -131,6 +131,11 @@ calendar-view.second-view-header {
     border-radius: 2px;
 }
 
+.year-navigator.dnd {
+    border: solid 1px #4e9a06;
+    box-shadow: inset 0 0 0 1px #4e9a06;
+}
+
 .year-navigator.with-events {
     background-color: @theme_fg_color;
     border-radius: 3px;

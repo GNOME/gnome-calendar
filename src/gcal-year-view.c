@@ -35,6 +35,7 @@ typedef struct
   gint start_day, start_month;
   gint end_day, end_month;
   gint hovered_day, hovered_month;
+  gint dnd_day, dnd_month;
 } ButtonData;
 
 typedef struct
@@ -751,6 +752,28 @@ draw_month_grid (GcalYearView *year_view,
           gtk_style_context_set_state (context, state_flags);
         }
 
+      /* Draw the Drag n' Drop indicator */
+      if (year_view->selected_data->dnd_day == j &&
+          year_view->selected_data->dnd_month == month_nr)
+        {
+          gint dnd_x, dnd_y;
+
+          dnd_x = box_side * column + x + sw * box_padding_start / 2.0 - year_view->k * box_side - 2.0;
+          dnd_y = box_side * (row + 1) + y + box_padding_top - 1.0;
+
+          gtk_style_context_save (context);
+          gtk_style_context_add_class (context, "dnd");
+
+          gtk_render_background (context,
+                                 cr,
+                                 dnd_x,
+                                 dnd_y,
+                                 box_side - box_padding_start / 2.0,
+                                 box_side);
+
+          gtk_style_context_restore (context);
+        }
+
       selected_day = FALSE;
       if (year_view->selected_data->start_day != 0)
         {
@@ -1233,6 +1256,48 @@ calculate_sizes (GcalYearView *self)
   calculate_grid_sizes (self);
 }
 
+/*
+ * Drag and Drop functions
+ */
+static gboolean
+navigator_drag_motion_cb (GcalYearView   *self,
+                          GdkDragContext *context,
+                          gint            x,
+                          gint            y,
+                          guint           time,
+                          GtkWidget      *navigator)
+{
+  gint day, month;
+  gboolean is_title, retval;
+
+  retval = FALSE;
+
+  self->selected_data->dnd_day = -1;
+  self->selected_data->dnd_month = -1;
+
+  if (calculate_day_month_for_coord (self, x, y, &day, &month, &is_title))
+    {
+      /* For now, don't allow dropping events on the month title */
+      if (!is_title)
+        {
+          self->selected_data->dnd_day = day;
+          self->selected_data->dnd_month = month;
+
+          gdk_drag_status (context, GDK_ACTION_COPY, time);
+
+          retval = TRUE;
+        }
+    }
+  else
+    {
+      gdk_drag_status (context, 0, time);
+    }
+
+  gtk_widget_queue_draw (self->navigator);
+
+  return retval;
+}
+
 static void
 gcal_year_view_finalize (GObject *object)
 {
@@ -1627,6 +1692,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, draw_navigator);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_press_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_release_cb);
+  gtk_widget_class_bind_template_callback (widget_class, navigator_drag_motion_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_motion_notify_cb);
   gtk_widget_class_bind_template_callback (widget_class, add_event_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, popover_closed_cb);
