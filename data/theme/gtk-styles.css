@@ -35,6 +35,10 @@ calendar-view.current {
     font-weight: bold;
 }
 
+calendar-view.current:drop(active) {
+    background-color: black;
+}
+
 calendar-view:selected {
     color: @theme_selected_bg_color;
     font-weight: bold;

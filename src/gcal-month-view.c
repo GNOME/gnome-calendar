@@ -80,6 +80,9 @@ typedef struct
 
   icaltimetype   *current_date;
 
+  /* The cell hovered during Drag and Drop */
+  gint            dnd_cell;
+
   /* property */
   icaltimetype   *date;
 } GcalMonthViewPrivate;
@@ -790,6 +793,59 @@ gcal_month_view_key_press (GtkWidget   *widget,
   return TRUE;
 }
 
+/*
+ * Drag and Drop functions
+ */
+static gint
+get_dnd_cell (GtkWidget *widget,
+              gint       x,
+              gint       y)
+{
+  GcalMonthViewPrivate *priv;
+  gint cell;
+
+  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
+
+  cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), x, y, NULL, NULL, NULL);
+  cell = real_cell (cell, priv->k);
+
+  if (cell < g_date_get_days_in_month (priv->date->month, priv->date->year))
+    return cell;
+
+  return -1;
+}
+
+static gboolean
+gcal_month_view_drag_motion (GtkWidget      *widget,
+                             GdkDragContext *context,
+                             gint            x,
+                             gint            y,
+                             guint           time)
+{
+  GcalMonthViewPrivate *priv;
+
+  priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
+  priv->dnd_cell = get_dnd_cell (widget, x, y);
+
+  /* Setup the drag highlight */
+  if (priv->dnd_cell != -1)
+    gtk_drag_highlight (widget);
+  else
+    gtk_drag_unhighlight (widget);
+
+  /*
+   * Sets the status of the drag - if it fails, sets the action to 0 and
+   * aborts the drag with FALSE.
+   */
+  gdk_drag_status (context,
+                   priv->dnd_cell == -1 ? 0 : GDK_ACTION_COPY,
+                   time);
+
+  gtk_widget_queue_draw (widget);
+
+  return priv->dnd_cell != -1;
+}
+
 static void
 add_new_event_button_cb (GtkWidget *button,
                          gpointer   user_data)
@@ -834,6 +890,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   widget_class->button_release_event = gcal_month_view_button_release;
   widget_class->direction_changed = gcal_month_view_direction_changed;
   widget_class->key_press_event = gcal_month_view_key_press;
+  widget_class->drag_motion = gcal_month_view_drag_motion;
 
   subscriber_view_class = GCAL_SUBSCRIBER_VIEW_CLASS (klass);
   subscriber_view_class->get_child_cell = gcal_month_view_get_child_cell;
@@ -1534,6 +1591,17 @@ gcal_month_view_draw (GtkWidget *widget,
 
   pango_font_description_free (font_desc);
   gtk_style_context_restore (context);
+
+  /* Drag and Drop highlight */
+  if (priv->dnd_cell != -1)
+    {
+      gtk_render_background (context,
+                             cr,
+                             cell_width * real_cell (priv->dnd_cell % 7, priv->k),
+                             cell_height * (priv->dnd_cell / 7 + first_row_gap) + start_grid_y,
+                             cell_width,
+                             cell_height);
+    }
 
   /* grid numbers */
   gtk_style_context_get (context, state, "font", &font_desc, NULL);
