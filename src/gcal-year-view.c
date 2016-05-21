@@ -737,7 +737,7 @@ draw_month_grid (GcalYearView *year_view,
         {
           gint hover_x, hover_y;
 
-          hover_x = box_side * column + x + sw * box_padding_start / 2.0 - year_view->k * box_side - 2.0;
+          hover_x = box_side * column + x + box_padding_start / 2.0 - year_view->k * box_side - 2.0;
           hover_y = box_side * (row + 1) + y + box_padding_top - 1.0;
 
           gtk_style_context_set_state (context, state_flags | GTK_STATE_FLAG_PRELIGHT);
@@ -758,7 +758,7 @@ draw_month_grid (GcalYearView *year_view,
         {
           gint dnd_x, dnd_y;
 
-          dnd_x = box_side * column + x + sw * box_padding_start / 2.0 - year_view->k * box_side - 2.0;
+          dnd_x = box_side * column + x + box_padding_start / 2.0 - year_view->k * box_side - 2.0;
           dnd_y = box_side * (row + 1) + y + box_padding_top - 1.0;
 
           gtk_style_context_save (context);
