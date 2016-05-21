@@ -182,7 +182,7 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
 }
 
 static void
-gcal_event_widget_init(GcalEventWidget *self)
+gcal_event_widget_init (GcalEventWidget *self)
 {
   GSettings *settings;
   gchar *clock_format;
