@@ -1076,14 +1076,14 @@ navigator_motion_notify_cb (GcalYearView   *year_view,
   gint day, month;
   gboolean is_title = FALSE;
 
+  /* Cancel the hover when selecting a date range */
+  year_view->selected_data->hovered_day = -1;
+  year_view->selected_data->hovered_month = -1;
+
   if (calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month, &is_title))
     {
       if (year_view->button_pressed)
         {
-          /* Cancel the hover when selecting a date range */
-          year_view->selected_data->hovered_day = -1;
-          year_view->selected_data->hovered_month = -1;
-
           if (is_title)
             day = g_date_get_days_in_month (month + 1, year_view->date->year);
 
@@ -1103,16 +1103,10 @@ navigator_motion_notify_cb (GcalYearView   *year_view,
           return GDK_EVENT_PROPAGATE;
         }
     }
-  else
-    {
-      /* Reset the end day */
-      year_view->selected_data->end_day = year_view->selected_data->start_day;
-      year_view->selected_data->end_month = year_view->selected_data->start_month;
 
-      gtk_widget_queue_draw (widget);
+  gtk_widget_queue_draw (widget);
 
-      return GDK_EVENT_STOP;
-    }
+  return GDK_EVENT_STOP;
 }
 
 static void
