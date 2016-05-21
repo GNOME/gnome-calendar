@@ -106,7 +106,7 @@ update_color (GcalEventWidget *self)
   gchar *color_str;
   gchar *css_class;
   GDateTime *now;
-  gboolean date_compare;
+  gint date_compare;
 
   context = gtk_widget_get_style_context (GTK_WIDGET (self));
   color = gcal_event_get_color (self->event);
