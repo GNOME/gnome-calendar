@@ -810,8 +810,11 @@ get_dnd_cell (GtkWidget *widget,
   cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), x, y, NULL, NULL, NULL);
   cell = real_cell (cell, priv->k);
 
-  if (cell - priv->days_delay < g_date_get_days_in_month (priv->date->month, priv->date->year))
-    return cell;
+  if (cell >= priv->days_delay &&
+      cell < g_date_get_days_in_month (priv->date->month, priv->date->year) + priv->days_delay)
+    {
+      return cell;
+    }
 
   return -1;
 }
