@@ -1298,6 +1298,83 @@ navigator_drag_motion_cb (GcalYearView   *self,
   return retval;
 }
 
+static gboolean
+navigator_drag_drop_cb (GcalYearView   *self,
+                        GdkDragContext *context,
+                        gint            x,
+                        gint            y,
+                        guint           time,
+                        GtkWidget      *navigator)
+{
+  gint day, month, diff;
+  gboolean is_title;
+
+  if (calculate_day_month_for_coord (self, x, y, &day, &month, &is_title))
+    {
+      if (!is_title)
+        {
+          GcalEventWidget *event_widget;
+          GcalEvent *event;
+          GDateTime *start_dt, *end_dt;
+          GDateTime *drop_date;
+
+          event_widget = GCAL_EVENT_WIDGET (gtk_drag_get_source_widget (context));
+          event = gcal_event_widget_get_event (event_widget);
+          start_dt = gcal_event_get_date_start (event);
+          end_dt = gcal_event_get_date_end (event);
+
+          /*
+           * The difference is calculated in number of days. Here we have to
+           * use the start_dt's hour/minute/second since otherwise we may not
+           * calculate the difference correctly.
+           */
+          drop_date = g_date_time_new_local (self->date->year,
+                                             month + 1,
+                                             day,
+                                             g_date_time_get_hour (start_dt),
+                                             g_date_time_get_minute (start_dt),
+                                             g_date_time_get_second (start_dt));
+
+          diff = g_date_time_difference (drop_date, start_dt) / G_TIME_SPAN_DAY;
+
+          if (diff != 0)
+            {
+              GDateTime *new_start;
+
+              new_start = g_date_time_add_days (start_dt, diff);
+              gcal_event_set_date_start (event, new_start);
+
+              /* The event may have a NULL end date, so we have to check it here */
+              if (end_dt)
+                {
+                  GDateTime *new_end;
+
+                  new_end = g_date_time_add_days (end_dt, diff);
+                  gcal_event_set_date_end (event, new_start);
+
+                  g_clear_pointer (&new_end, g_date_time_unref);
+                }
+
+              gcal_manager_update_event (self->manager, event);
+
+              g_clear_pointer (&new_start, g_date_time_unref);
+            }
+
+          g_clear_pointer (&drop_date, g_date_time_unref);
+        }
+    }
+
+  /* Cancel the DnD after the event is dropped */
+  self->selected_data->dnd_day = -1;
+  self->selected_data->dnd_month = -1;
+
+  gtk_drag_finish (context, TRUE, FALSE, time);
+
+  gtk_widget_queue_draw (navigator);
+
+  return TRUE;
+}
+
 static void
 gcal_year_view_finalize (GObject *object)
 {
@@ -1692,6 +1769,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, draw_navigator);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_press_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_release_cb);
+  gtk_widget_class_bind_template_callback (widget_class, navigator_drag_drop_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_drag_motion_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_motion_notify_cb);
   gtk_widget_class_bind_template_callback (widget_class, add_event_clicked_cb);
