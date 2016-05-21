@@ -883,6 +883,13 @@ gcal_month_view_init (GcalMonthView *self)
   gtk_container_add (GTK_CONTAINER (grid), priv->popover_title);
   gtk_container_add (GTK_CONTAINER (grid), priv->events_list_box);
   gtk_container_add (GTK_CONTAINER (grid), button);
+
+  /* Setup the month view as a drag n' drop destination */
+  gtk_drag_dest_set (GTK_WIDGET (self),
+                     0,
+                     NULL,
+                     0,
+                     GDK_ACTION_MOVE);
 }
 
 static void
