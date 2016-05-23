@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-12-31 02:19+0000\n"
-"PO-Revision-Date: 2016-01-03 16:26+0700\n"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-05-21 22:16+0000\n"
+"PO-Revision-Date: 2016-05-23 14:25+0700\n"
 "Last-Translator: Akom Chotiphantawanon <knight2000@gmail.com>\n"
 "Language-Team: Thai <thai-l10n@googlegroups.com>\n"
 "Language: th\n"
@@ -22,7 +22,8 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:483
 msgid "Calendar"
 msgstr "ปฏิทิน"
 
@@ -51,6 +52,7 @@ msgstr ""
 "เหมือนที่คุณเคยใช้มาแต่เล็กแต่น้อย!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "ค้นหางานกิจกรรม"
 
@@ -107,11 +109,11 @@ msgid "Sources disabled last time Calendar ran"
 msgstr "แหล่งที่ถูกปิดใช้เมื่อครั้งสุดท้ายที่ปฏิทินทำงาน"
 
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1131
+#: ../src/gcal-source-dialog.c:1113
 msgid "Cancel"
 msgstr "ยกเลิก"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:673
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
 msgid "Done"
 msgstr "เสร็จแล้ว"
 
@@ -135,13 +137,88 @@ msgstr "หมายเหตุ"
 msgid "Location"
 msgstr "สถานที่"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
-msgid "All day"
-msgstr "ทุกวัน"
+#: ../data/ui/edit-dialog.ui.h:8
+msgid "All Day"
+msgstr "ทั้งวัน"
 
 #: ../data/ui/edit-dialog.ui.h:9
-msgid "Delete event"
+msgid "Delete Event"
 msgstr "ลบงานกิจกรรม"
+
+#: ../data/ui/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "General"
+msgstr "ทั่วไป"
+
+#: ../data/ui/help-overlay.ui.h:2
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "งานกิจกรรมใหม่"
+
+#: ../data/ui/help-overlay.ui.h:3
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "ปิดหน้าต่าง"
+
+#: ../data/ui/help-overlay.ui.h:4
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "ค้นหา"
+
+#: ../data/ui/help-overlay.ui.h:5
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "แสดงวิธีใช้"
+
+#: ../data/ui/help-overlay.ui.h:6
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "ปุ่มลัด"
+
+#: ../data/ui/help-overlay.ui.h:7
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "การท่องดู"
+
+#: ../data/ui/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "ย้อนกลับ"
+
+#: ../data/ui/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "ต่อไป"
+
+#: ../data/ui/help-overlay.ui.h:10
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "แสดงวันนี้"
+
+#: ../data/ui/help-overlay.ui.h:11
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "มุมมองถัดไป"
+
+#: ../data/ui/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "มุมมองก่อนหน้า"
+
+#: ../data/ui/help-overlay.ui.h:13
+msgctxt "shortcut window"
+msgid "View"
+msgstr "มุมมอง"
+
+#: ../data/ui/help-overlay.ui.h:14
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "มุมมองเดือน"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "มุมมองปี"
 
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
@@ -152,28 +229,44 @@ msgid "_Search…"
 msgstr "_ค้นหา…"
 
 #: ../data/ui/menus.ui.h:3
+msgid "_Calendars…"
+msgstr "_ปฏิทิน…"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Keyboard Shortcuts"
+msgstr "ปุ่ม_ลัดแป้นพิมพ์"
+
+#: ../data/ui/menus.ui.h:5
 msgid "_About"
 msgstr "เ_กี่ยวกับ"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:6
 msgid "_Quit"
 msgstr "_ออก"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:7
 msgid "_Synchronize"
 msgstr "_ปรับข้อมูลให้ตรงกัน"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:8
 msgid "From Web…"
 msgstr "จากเว็บ…"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:9
 msgid "New Local Calendar…"
 msgstr "ปฏิทินในเครื่องรายการใหม่…"
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:10
 msgid "From File…"
 msgstr "จากแฟ้ม…"
+
+#: ../data/ui/quick-add-popover.ui.h:1
+msgid "Edit Details…"
+msgstr "แก้ไขรายละเอียด…"
+
+#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "เพิ่ม"
 
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
@@ -183,8 +276,8 @@ msgstr "ไม่พบผลลัพธ์"
 msgid "Try a different search"
 msgstr "ลองค้นหาด้วยคำอื่น"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
-#: ../src/gcal-window.c:1244
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1130
+#: ../src/gcal-window.c:1134
 msgid "Undo"
 msgstr "เรียกคืน"
 
@@ -215,10 +308,6 @@ msgstr "Microsoft Exchange"
 #: ../data/ui/source-dialog.ui.h:8
 msgid "Calendars"
 msgstr "ปฏิทิน"
-
-#: ../data/ui/source-dialog.ui.h:9
-msgid "Add"
-msgstr "เพิ่ม"
 
 #: ../data/ui/source-dialog.ui.h:10
 msgid "Overview"
@@ -269,8 +358,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "ที่อยู่ปฏิทิน"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
-#: ../src/gcal-source-dialog.c:2227
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2193
+#: ../src/gcal-source-dialog.c:2199
 msgid "Add Calendar"
 msgstr "เพิ่มปฏิทิน"
 
@@ -302,71 +391,35 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
 msgid "Month"
 msgstr "เดือน"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
 msgid "Year"
 msgstr "ปี"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
 msgid "Today"
 msgstr "วันนี้"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
-#: ../src/gcal-source-dialog.c:2254
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "จัดการปฏิทินต่างๆ ของคุณ"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2222
 msgid "Calendar Settings"
 msgstr "ค่าตั้งปฏิทิน"
-
-#: ../data/ui/window.ui.h:6
-msgid "Create"
-msgstr "สร้าง"
-
-#: ../data/ui/window.ui.h:7
-msgid "Edit Details"
-msgstr "แก้ไขรายละเอียด"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
 msgstr "ไม่มีงานกิจกรรม"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:824
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1010
 msgid "Add Event…"
 msgstr "เพิ่มงานกิจกรรม…"
-
-#. Dialog
-#: ../src/gcal-source-dialog.c:1128
-msgid "Select a calendar file"
-msgstr "เลือกแฟ้มปฏิทิน"
-
-#: ../src/gcal-source-dialog.c:1132
-msgid "Open"
-msgstr "เปิด"
-
-#: ../src/gcal-source-dialog.c:1139
-msgid "Calendar files"
-msgstr "แฟ้มปฏิทิน"
-
-#. update the source properties
-#: ../src/gcal-source-dialog.c:1178
-msgid "Unnamed Calendar"
-msgstr "ปฏิทินไม่มีชื่อ"
-
-#. Update notification label
-#: ../src/gcal-source-dialog.c:1781
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "ลบปฏิทิน <b>%s</b> แล้ว"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "Off"
-msgstr "ปิด"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "On"
-msgstr "เปิด"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -380,58 +433,116 @@ msgstr "เปิดปฏิทินในวันที่กำหนด"
 msgid "Open calendar showing the passed event"
 msgstr "เปิดปฏิทินแสดงงานกิจกรรมที่กำหนด"
 
-#: ../src/gcal-application.c:337
+#: ../src/gcal-application.c:324
 msgid "- Calendar management"
 msgstr "- การจัดการปฏิทิน"
 
-#: ../src/gcal-application.c:504
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Copyright © %Id The Calendar authors"
+#: ../src/gcal-application.c:471
+#, c-format
+msgid "Copyright © %d The Calendar authors"
+msgstr "Copyright © %d The Calendar authors"
 
-#: ../src/gcal-application.c:510
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Copyright © %Id–%Id The Calendar authors"
+#: ../src/gcal-application.c:477
+#, c-format
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Copyright © %d–%d The Calendar authors"
 
-#: ../src/gcal-application.c:523
+#: ../src/gcal-application.c:490
 msgid "translator-credits"
 msgstr "Akom Chotiphantawanon <knight2000@gmail.com>"
 
-#: ../src/gcal-date-selector.c:315
+#: ../src/gcal-date-selector.c:362
 msgid "Day"
 msgstr "วันที่"
 
-#: ../src/gcal-edit-dialog.c:673
+#: ../src/gcal-edit-dialog.c:429
 msgid "Save"
 msgstr "บันทึก"
 
-#: ../src/gcal-edit-dialog.c:848
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "งานกิจกรรมไม่มีชื่อ"
 
-#: ../src/gcal-month-view.c:1043
+#: ../src/gcal-month-view.c:1248
 msgid "Other events"
 msgstr "งานกิจกรรมอื่นๆ"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1425
+#: ../src/gcal-month-view.c:1710
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "งานกิจกรรมอื่น %d งาน"
 
-#: ../src/gcal-search-view.c:558
+#: ../src/gcal-quick-add-popover.c:113
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (ปฏิทินนี้อ่านได้อย่างเดียว)"
+
+#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%d %B"
+
+#: ../src/gcal-quick-add-popover.c:243
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "งานกิจกรรมใหม่ตั้งแต่ %s ถึง %s"
+
+#: ../src/gcal-quick-add-popover.c:249
+#, c-format
+msgid "New Event on %s"
+msgstr "งานกิจกรรมใหม่ในวันที่ %s"
+
+#: ../src/gcal-search-view.c:353
+msgid "All day"
+msgstr "ทุกวัน"
+
+#: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
 msgstr "ใช้ช่องข้างบนเพื่อค้นหางานกิจกรรม"
 
-#: ../src/gcal-time-selector.c:96
-#, c-format
-msgid "%.2d:%.2d AM"
-msgstr "%.2d:%.2d AM"
+#. Dialog
+#: ../src/gcal-source-dialog.c:1110
+msgid "Select a calendar file"
+msgstr "เลือกแฟ้มปฏิทิน"
 
-#: ../src/gcal-time-selector.c:98
+#: ../src/gcal-source-dialog.c:1114
+msgid "Open"
+msgstr "เปิด"
+
+#: ../src/gcal-source-dialog.c:1121
+msgid "Calendar files"
+msgstr "แฟ้มปฏิทิน"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1160
+msgid "Unnamed Calendar"
+msgstr "ปฏิทินไม่มีชื่อ"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1760
 #, c-format
-msgid "%.2d:%.2d PM"
-msgstr "%.2d:%.2d PM"
+msgid "Calendar <b>%s</b> removed"
+msgstr "ลบปฏิทิน <b>%s</b> แล้ว"
+
+#: ../src/gcal-source-dialog.c:1963 ../src/gcal-source-dialog.c:2017
+msgid "Off"
+msgstr "ปิด"
+
+#: ../src/gcal-source-dialog.c:1963 ../src/gcal-source-dialog.c:2017
+msgid "On"
+msgstr "เปิด"
+
+#: ../src/gcal-time-selector.c:82
+#, c-format
+msgid "%s AM"
+msgstr "%s AM"
+
+#: ../src/gcal-time-selector.c:84
+#, c-format
+msgid "%s PM"
+msgstr "%s PM"
 
 #: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
@@ -445,26 +556,22 @@ msgstr "เที่ยงวัน"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#. Translators:
-#. * this is the format string for representing a date consisting of a month name
-#. * and a date of month.
-#: ../src/gcal-window.c:746
-msgctxt "event date format"
-msgid "%B %d"
-msgstr "%d %B"
-
-#: ../src/gcal-window.c:747
-#, c-format
-msgid "New Event on %s"
-msgstr "งานกิจกรรมใหม่ใน %s"
-
-#: ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1130
 msgid "Another event deleted"
 msgstr "ลบงานกิจกรรมอื่นแล้ว"
 
-#: ../src/gcal-window.c:1244
+#: ../src/gcal-window.c:1134
 msgid "Event deleted"
 msgstr "ลบงานกิจกรรมแล้ว"
+
+#~ msgid "Create"
+#~ msgstr "สร้าง"
+
+#~ msgid "%.2d:%.2d AM"
+#~ msgstr "%.2d:%.2d AM"
+
+#~ msgid "%.2d:%.2d PM"
+#~ msgstr "%.2d:%.2d PM"
 
 #~ msgid "Max Content Height"
 #~ msgstr "ความสูงสูงสุดของเนื้อหา"
