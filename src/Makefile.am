@@ -1,4 +1,5 @@
 AM_CPPFLAGS =                                             \
+    -I$(srcdir)/views                                     \
     -DPACKAGE_LOCALE_DIR=\""$(localedir)"\"               \
     -DPACKAGE_SRC_DIR=\""$(srcdir)"\"                     \
     -DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\"                \
@@ -66,8 +67,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-utils.h                                          \
     gcal-view.c                                           \
     gcal-view.h                                           \
-    gcal-week-view.c                                      \
-    gcal-week-view.h                                      \
+    views/gcal-week-view.c                                \
+    views/gcal-week-view.h                                \
     gcal-window.h                                         \
     gcal-window.c                                         \
     gcal-year-view.c                                      \

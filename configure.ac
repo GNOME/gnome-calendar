@@ -12,7 +12,7 @@ AC_CONFIG_AUX_DIR([build-aux])
 AM_SILENT_RULES([yes])
 
 # require automake 1.13
-AM_INIT_AUTOMAKE([1.13 dist-xz no-dist-gzip tar-ustar])
+AM_INIT_AUTOMAKE([1.13 dist-xz no-dist-gzip tar-ustar subdir-objects])
 AM_MAINTAINER_MODE([enable])
 
 dnl ***************************************************************************
