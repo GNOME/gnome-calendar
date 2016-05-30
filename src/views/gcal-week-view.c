@@ -22,6 +22,7 @@
 #include "gcal-utils.h"
 #include "gcal-view.h"
 #include "gcal-event-widget.h"
+#include "gcal-week-header.h"
 
 #include <glib/gi18n.h>
 
@@ -87,8 +88,6 @@ typedef struct
   gint            clicked_cell;
 } GcalWeekViewPrivate;
 
-static gint           get_start_grid_y                     (GtkWidget      *widget);
-
 static void           event_opened                         (GcalEventWidget *event_widget,
                                                             gpointer         user_data);
 
@@ -99,8 +98,6 @@ static void           draw_header                          (GcalWeekView   *view
 
 static void           draw_grid_window                     (GcalWeekView   *view,
                                                             cairo_t        *cr);
-
-static gint           get_sidebar_width                    (GtkWidget      *widget);
 
 static void           gcal_week_view_constructed           (GObject        *object);
 
@@ -149,8 +146,6 @@ static void           gcal_week_view_forall                (GtkContainer   *cont
 static void           gcal_week_view_scroll_value_changed  (GtkAdjustment  *adjusment,
                                                             gpointer        user_data);
 
-static icaltimetype*  gcal_week_view_get_initial_date      (GcalView       *view);
-
 static icaltimetype*  gcal_week_view_get_final_date        (GcalView       *view);
 
 static GtkWidget*     gcal_week_view_get_by_uuid           (GcalSubscriberView *view,
@@ -163,7 +158,7 @@ G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GCAL_TYPE_SUBSCRIBER_VIEW
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
 
 /**
- * get_start_grid_y:
+ * gcal_week_view_get_start_grid_y:
  *
  * In GcalMonthView this method returns the height of the headers of the view
  * and the grid. Here this points just the place where the grid_window hides
@@ -173,8 +168,8 @@ G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GCAL_TYPE_SUBSCRIBER_VIEW
  *  - The grid header dislaying weekdays
  *  - The cell containing all-day events.
  */
-static gint
-get_start_grid_y (GtkWidget *widget)
+gint
+gcal_week_view_get_start_grid_y (GtkWidget *widget)
 {
   GtkStyleContext *context;
   GtkStateFlags flags;
@@ -250,7 +245,7 @@ draw_header (GcalWeekView  *view,
   widget = GTK_WIDGET (view);
 
   cairo_save (cr);
-  start_grid_y = get_start_grid_y (widget);
+  start_grid_y = gcal_week_view_get_start_grid_y (widget);
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
 
@@ -280,7 +275,7 @@ draw_header (GcalWeekView  *view,
   current_cell = icaltime_day_of_week (*(priv->date)) - 1;
   current_cell = (7 + current_cell - priv->first_weekday) % 7;
 
-  sidebar_width = get_sidebar_width (widget);
+  sidebar_width = gcal_week_view_get_sidebar_width (widget);
   cell_width = (alloc->width - sidebar_width) / 7;
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
@@ -381,7 +376,7 @@ draw_grid_window (GcalWeekView  *view,
   pango_layout_set_font_description (layout, font_desc);
   gdk_cairo_set_source_rgba (cr, &color);
 
-  sidebar_width = get_sidebar_width (widget);
+  sidebar_width = gcal_week_view_get_sidebar_width (widget);
   width = gdk_window_get_width (priv->grid_window);
   height = gdk_window_get_height (priv->grid_window);
 
@@ -463,8 +458,8 @@ draw_grid_window (GcalWeekView  *view,
   g_object_unref (layout);
 }
 
-static gint
-get_sidebar_width (GtkWidget *widget)
+gint
+gcal_week_view_get_sidebar_width (GtkWidget *widget)
 {
   GtkStyleContext *context;
   GtkBorder padding;
@@ -824,7 +819,7 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
       gtk_widget_get_state_flags (widget),
       &padding);
 
-  start_grid_y = get_start_grid_y (widget);
+  start_grid_y = gcal_week_view_get_start_grid_y (widget);
 
   gdk_window_move_resize (priv->event_window,
                           allocation->x,
@@ -890,7 +885,7 @@ gcal_week_view_size_allocate (GtkWidget     *widget,
       gtk_widget_hide (priv->vscrollbar);
     }
 
-  sidebar_width = get_sidebar_width (widget);
+  sidebar_width = gcal_week_view_get_sidebar_width (widget);
   horizontal_block = (allocation->width - sidebar_width) / 7.0;
   vertical_block = gdk_window_get_height (priv->grid_window) / 24.0;
 
@@ -1088,7 +1083,7 @@ gcal_week_view_button_press_event (GtkWidget      *widget,
 
   y = event->y;
 
-  start_grid_y = get_start_grid_y (widget);
+  start_grid_y = gcal_week_view_get_start_grid_y (widget);
 
   if (y - start_grid_y < 0)
     {
@@ -1110,7 +1105,7 @@ gcal_week_view_button_release_event (GtkWidget      *widget,
 
   y = event->y;
 
-  start_grid_y = get_start_grid_y (widget);
+  start_grid_y = gcal_week_view_get_start_grid_y (widget);
 
   if (y - start_grid_y < 0)
     {
@@ -1286,7 +1281,7 @@ gcal_week_view_scroll_value_changed (GtkAdjustment *adjusment,
  * Return value: the first day of the week
  * Returns: (transfer full): Release with g_free()
  **/
-static icaltimetype*
+icaltimetype*
 gcal_week_view_get_initial_date (GcalView *view)
 {
   GcalWeekViewPrivate *priv;

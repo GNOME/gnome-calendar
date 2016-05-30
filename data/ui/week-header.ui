@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<interface>
+  <template class="GcalWeekHeader" parent="GtkScrolledWindow">
+    <property name="visible">True</property>
+    <property name="shadow_type">out</property>
+    <property name="hexpand">True</property>
+    <child>
+      <object class="GtkViewport">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkOverlay">
+            <property name="visible">True</property>
+            <child>
+              <object class="GtkDrawingArea">
+                <property name="visible">True</property>
+                <signal name="draw" handler="gcal_week_header_draw" object="GcalWeekHeader" swapped="yes"/>
+              </object>
+            </child>
+            <child type="overlay">
+              <object class="GtkGrid" id="grid">
+                <property name="visible">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
