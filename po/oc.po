@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-04-29 07:30+0000\n"
+"POT-Creation-Date: 2016-05-23 07:37+0000\n"
 "PO-Revision-Date: 2016-05-08 19:03+0200\n"
 "Last-Translator: Cédric Valmary (totenoc.eu) <cvalmary@yahoo.fr>\n"
 "Language-Team: Tot En Òc\n"
@@ -139,12 +139,16 @@ msgstr "Nòtas"
 msgid "Location"
 msgstr "Emplaçament"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
-msgid "All day"
+#: ../data/ui/edit-dialog.ui.h:8
+#, fuzzy
+#| msgid "All day"
+msgid "All Day"
 msgstr "Tota la jornada"
 
 #: ../data/ui/edit-dialog.ui.h:9
-msgid "Delete event"
+#, fuzzy
+#| msgid "Delete event"
+msgid "Delete Event"
 msgstr "Suprimir l'eveniment"
 
 #: ../data/ui/help-overlay.ui.h:1
@@ -231,30 +235,36 @@ msgid "_Search…"
 msgstr "_Recèrca…"
 
 #: ../data/ui/menus.ui.h:3
+#, fuzzy
+#| msgid "Calendars"
+msgid "_Calendars…"
+msgstr "Agendas"
+
+#: ../data/ui/menus.ui.h:4
 msgid "_Keyboard Shortcuts"
 msgstr "_Acorchis de clavièr"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:5
 msgid "_About"
 msgstr "A _prepaus"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:6
 msgid "_Quit"
 msgstr "_Quitar"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:7
 msgid "_Synchronize"
 msgstr "_Sincronizar"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:8
 msgid "From Web…"
 msgstr "Dempuèi internet..."
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:9
 msgid "New Local Calendar…"
 msgstr "Novèl Agenda local..."
 
-#: ../data/ui/menus.ui.h:9
+#: ../data/ui/menus.ui.h:10
 msgid "From File…"
 msgstr "Dempuèi un fichièr..."
 
@@ -274,8 +284,8 @@ msgstr "Cap de resultat pas trobat"
 msgid "Try a different search"
 msgstr "Ensajatz una recèrca diferenta"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1101
-#: ../src/gcal-window.c:1105
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1130
+#: ../src/gcal-window.c:1134
 msgid "Undo"
 msgstr "Anullar"
 
@@ -396,7 +406,7 @@ msgid "Year"
 msgstr "Annada"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
+#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
 msgid "Today"
 msgstr "Uèi"
 
@@ -413,7 +423,7 @@ msgstr "Paramètres de l'agenda"
 msgid "No events"
 msgstr "Pas cap d'eveniment"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:871
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1010
 msgid "Add Event…"
 msgstr "Apondre un eveniment…"
 
@@ -435,13 +445,11 @@ msgstr "- Gestion de l'agenda"
 
 #: ../src/gcal-application.c:471
 #, c-format
-#| msgid "Copyright © %Id The Calendar authors"
 msgid "Copyright © %d The Calendar authors"
 msgstr "Copyright © %d Los autors d'Agenda"
 
 #: ../src/gcal-application.c:477
 #, c-format
-#| msgid "Copyright © %Id–%Id The Calendar authors"
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Copyright © %d–%d Los autors d'Agenda"
 
@@ -461,12 +469,12 @@ msgstr "Enregistrar"
 msgid "Unnamed event"
 msgstr "Eveniment anonim"
 
-#: ../src/gcal-month-view.c:1102
+#: ../src/gcal-month-view.c:1248
 msgid "Other events"
 msgstr "Autres eveniments"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1553
+#: ../src/gcal-month-view.c:1710
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -492,6 +500,10 @@ msgstr "Eveniment novèl del %s al %s"
 #, c-format
 msgid "New Event on %s"
 msgstr "Eveniment novèl lo %s"
+
+#: ../src/gcal-search-view.c:353
+msgid "All day"
+msgstr "Tota la jornada"
 
 #: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
@@ -551,11 +563,11 @@ msgstr "Miègjorn"
 msgid "00:00 PM"
 msgstr "00:00"
 
-#: ../src/gcal-window.c:1101
+#: ../src/gcal-window.c:1130
 msgid "Another event deleted"
 msgstr "Autre eveniment suprimit"
 
-#: ../src/gcal-window.c:1105
+#: ../src/gcal-window.c:1134
 msgid "Event deleted"
 msgstr "Eveniment suprimit"
 
