@@ -1,3 +1,53 @@
+Major changes in 3.21.2:
+* Updated translations for:
+    * Basque (Inaki Larranaga Murgoitio)
+    * Brazilian Portuguese (Enrico Nicoletto)
+    * Chinese (Cheng-Chia Tseng)
+    * Czech (Marek Černocký)
+    * Danish (Ask Hjorth Larsen)
+    * Dutch (Hannie Dumoleyn)
+    * Finnish (Jiri Grönroos)
+    * French (Guillaume Bernard)
+    * Friulian (Fabio Tomat)
+    * Galician (Marcos Lans)
+    * German (Bernd Homuth)
+    * Greek (Efstathios  Iosifidis)
+    * Hungarian (Balázs Úr)
+    * Icelandic (Sveinn í Felli)
+    * Italian (Milo Casagrande)
+    * Japanese (Jiro Matsuzawa)
+    * Kazakh (Baurzhan Muftakhidinov)
+    * Korean (Seong-ho Cho)
+    * Latvian (Rūdolfs Mazurs)
+    * Lithuanian (Aurimas Černius)
+    * Occitan (Cédric Valmary)
+    * Persian (Arash Mousavi)
+    * Polish (Piotr Drag)
+    * Portuguese (Duarte Loreto, Tiago Santos)
+    * Russian (Stas Solovey)
+    * Scottish Gaelic (GunChleoc)
+    * Serbian (Марко М. Костић)
+    * Slovak (Dusan Kazik)
+    * Slovenian (Matej Urbančič)
+    * Spanish (Daniel Mustieles)
+    * Swedish (Anders Jonsson)
+    * Thai (Akom Chotiphantawanon)
+    * Turkish (Muhammet Kara)
+    * Ukrainian (Daniel Korostil)
+* Add the ability to change the month when navigating with keyboard (pandusonu2)
+* Make the "Today" button insensitive when the current day is visible (Javier Sánches Ochango)
+* Keep the Sources dialog alive after closing it (fosero)
+* Adapt the CSS to Gtk+ 3.21 strictness (fosero)
+* Define the first week day in the build script (Isaque Galdino)
+* Show all events of a month when clicking in the month name (Isaque Galdino)
+* Vastly improve the Year view's navigator (Isaque Galdino)
+* Correct the header capitalization (Anwar Sadath)
+* Define ABOUT_NLS when configuring the project
+* Fix various miscalculations in Month View
+* Drop the usage of our custom .views CSS class
+* Various GDateTime reference fixes
+* Add Drag n' Drop capabilities to Month and Year View
+
 Major changes in 3.19.92:
 * Updated translations for:
     * Brazilian Portuguese (Enrico Nicoletto)
