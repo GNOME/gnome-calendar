@@ -1105,6 +1105,7 @@ on_file_activated (GSimpleAction *action,
 {
   GtkWidget *dialog;
   GtkFileFilter *filter;
+  gint response;
 
   // Dialog
   dialog = gtk_file_chooser_dialog_new (_("Select a calendar file"),
@@ -1123,7 +1124,10 @@ on_file_activated (GSimpleAction *action,
 
   gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
 
-  gtk_dialog_run (GTK_DIALOG (dialog));
+  response = gtk_dialog_run (GTK_DIALOG (dialog));
+
+  if (response == GTK_RESPONSE_OK)
+    calendar_file_selected (GTK_FILE_CHOOSER (dialog), user_data);
 
   gtk_widget_destroy (dialog);
 }
