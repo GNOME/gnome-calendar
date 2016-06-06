@@ -41,6 +41,7 @@ struct _GcalWeekHeader
 
   gboolean          use_24h_format;
 
+  icaltimetype     *active_date;
   icaltimetype     *current_date;
 };
 
@@ -59,6 +60,12 @@ static void           gcal_week_header_set_property         (GObject      *objec
 static gboolean       gcal_week_header_draw                 (GcalWeekHeader *self,
                                                              cairo_t        *cr,
                                                              GtkWidget      *widget);
+
+enum
+{
+  PROP_0,
+  PROP_ACTIVE_DATE
+};
 
 G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_SCROLLED_WINDOW);
 
@@ -95,6 +102,10 @@ gcal_week_header_set_property (GObject      *object,
 
   switch (prop_id)
     {
+    case PROP_ACTIVE_DATE:
+      self->active_date = g_value_dup_boxed (value);
+      return;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -155,7 +166,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
   pango_layout_set_font_description (layout, bold_font);
 
-  start_of_week = gcal_week_view_get_initial_date (GCAL_VIEW (widget));
+  start_of_week = self->active_date;
   current_cell = icaltime_day_of_week (*(self->current_date)) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
 
@@ -239,6 +250,14 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   object_class->set_property = gcal_week_header_set_property;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-header.ui");
+
+  g_object_class_install_property (object_class,
+                                   PROP_ACTIVE_DATE,
+                                   g_param_spec_boxed ("active-date",
+                                                       "Date",
+                                                       "The active selected date",
+                                                       ICAL_TIME_TYPE,
+                                                       G_PARAM_CONSTRUCT | G_PARAM_READWRITE));
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, grid);
 

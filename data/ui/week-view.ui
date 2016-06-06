@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<interface>
+  <template class="GcalWeekView" parent="GtkBox">
+    <property name="visible">True</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GcalWeekHeader" id="header">
+        <property name="visible">True</property>
+        <property name="active-date" bind-source="GcalWeekView" bind-property="active-date" bind-flags="default|sync-create" />
+      </object>
+    </child>
+    <child>
+      <object class="GtkScrolledWindow">
+        <property name="visible">True</property>
+        <child>
+          <object class="GtkViewport">
+            <property name="visible">True</property>
+            <child>
+              <object class="GcalWeekGrid">
+                <property name="visible">True</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

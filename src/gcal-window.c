@@ -437,6 +437,7 @@ update_current_date (GcalWindow *window)
   *(window->current_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (window->manager));
   *(window->current_date) = icaltime_set_timezone (window->current_date, gcal_manager_get_system_timezone (window->manager));
 
+  gcal_week_view_set_current_date (GCAL_WEEK_VIEW (window->week_view), window->current_date);
   gcal_month_view_set_current_date (GCAL_MONTH_VIEW (window->month_view), window->current_date);
   gcal_year_view_set_current_date (GCAL_YEAR_VIEW (window->year_view), window->current_date);
 

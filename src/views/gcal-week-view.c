@@ -54,7 +54,7 @@ struct _GcalWeekViewChild
 
 typedef struct _GcalWeekViewChild GcalWeekViewChild;
 
-typedef struct
+struct _GcalWeekView
 {
   GtkBox          parent;
 
@@ -71,10 +71,11 @@ typedef struct
 
   /* property */
   icaltimetype   *date;
+  icaltimetype   *current_date;
   GcalManager    *manager; /* weak referenced */
 
   gint            clicked_cell;
-} GcalWeekViewPrivate;
+};
 
 static void           gcal_week_view_constructed           (GObject        *object);
 
@@ -94,8 +95,7 @@ static icaltimetype*  gcal_week_view_get_final_date        (GcalView       *view
 
 static void           gcal_view_interface_init             (GcalViewInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GCAL_TYPE_SUBSCRIBER_VIEW,
-                         G_ADD_PRIVATE (GcalWeekView)
+G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
 
 /*
@@ -195,12 +195,9 @@ gcal_week_view_get_sidebar_width (GtkWidget *widget)
 static void
 gcal_week_view_class_init (GcalWeekViewClass *klass)
 {
-  GtkWidgetClass *widget_class;
-  GObjectClass *object_class;
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  widget_class = GTK_WIDGET_CLASS (klass);
-
-  object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_week_view_constructed;
   object_class->finalize = gcal_week_view_finalize;
   object_class->set_property = gcal_week_view_set_property;
@@ -208,13 +205,16 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   g_object_class_override_property (object_class,
                                     PROP_DATE, "active-date");
+
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
+
+  gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
 
 static void
 gcal_week_view_init (GcalWeekView *self)
 {
-  gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
-  gtk_style_context_add_class (gtk_widget_get_style_context (GTK_WIDGET (self)), "calendar-view");
+  gtk_widget_init_template (GTK_WIDGET (self));
 }
 
 static void
@@ -229,10 +229,10 @@ gcal_view_interface_init (GcalViewInterface *iface)
 static void
 gcal_week_view_constructed (GObject *object)
 {
-  GcalWeekViewPrivate *priv;
+  GcalWeekView *self;
 
   g_return_if_fail (GCAL_IS_WEEK_VIEW (object));
-  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (object));
+  self = GCAL_WEEK_VIEW (object);
 
   if (G_OBJECT_CLASS (gcal_week_view_parent_class)->constructed != NULL)
       G_OBJECT_CLASS (gcal_week_view_parent_class)->constructed (object);
@@ -241,12 +241,11 @@ gcal_week_view_constructed (GObject *object)
 static void
 gcal_week_view_finalize (GObject       *object)
 {
-  GcalWeekViewPrivate *priv;
+  GcalWeekView *self;
 
-  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (object));
+  self = GCAL_WEEK_VIEW (object);
 
-  if (priv->date != NULL)
-    g_free (priv->date);
+  g_clear_pointer (&self->date, g_free);
 
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_week_view_parent_class)->finalize (object);
@@ -258,9 +257,9 @@ gcal_week_view_set_property (GObject       *object,
                              const GValue  *value,
                              GParamSpec    *pspec)
 {
-  GcalWeekViewPrivate *priv;
+  GcalWeekView *self;
 
-  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (object));
+  self = GCAL_WEEK_VIEW (object);
 
   switch (property_id)
     {
@@ -270,13 +269,11 @@ gcal_week_view_set_property (GObject       *object,
         icaltimetype *date;
         icaltimezone* default_zone;
 
-        if (priv->date != NULL)
-          g_free (priv->date);
+        g_clear_pointer (&self->date, g_free);
 
-        priv->date = g_value_dup_boxed (value);
+        self->date = g_value_dup_boxed (value);
 
-        default_zone =
-          gcal_manager_get_system_timezone (priv->manager);
+        default_zone = gcal_manager_get_system_timezone (self->manager);
         date = gcal_view_get_initial_date (GCAL_VIEW (object));
         range_start = icaltime_as_timet_with_zone (*date,
                                                    default_zone);
@@ -285,13 +282,14 @@ gcal_week_view_set_property (GObject       *object,
         range_end = icaltime_as_timet_with_zone (*date,
                                                  default_zone);
         g_free (date);
-        gcal_manager_set_subscriber (priv->manager,
+        gcal_manager_set_subscriber (self->manager,
                                      E_CAL_DATA_MODEL_SUBSCRIBER (object),
                                      range_start,
                                      range_end);
         gtk_widget_queue_draw (GTK_WIDGET (object));
         break;
       }
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -300,20 +298,21 @@ gcal_week_view_set_property (GObject       *object,
 
 static void
 gcal_week_view_get_property (GObject       *object,
-                              guint          property_id,
-                              GValue        *value,
-                              GParamSpec    *pspec)
+                             guint          property_id,
+                             GValue        *value,
+                             GParamSpec    *pspec)
 {
-  GcalWeekViewPrivate *priv;
+  GcalWeekView *self;
 
   g_return_if_fail (GCAL_IS_WEEK_VIEW (object));
-  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW (object));
+  self = GCAL_WEEK_VIEW (object);
 
   switch (property_id)
     {
     case PROP_DATE:
-      g_value_set_boxed (value, priv->date);
+      g_value_set_boxed (value, self->date);
       break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -331,20 +330,20 @@ gcal_week_view_get_property (GObject       *object,
 icaltimetype*
 gcal_week_view_get_initial_date (GcalView *view)
 {
-  GcalWeekViewPrivate *priv;
+  GcalWeekView *self;
   icaltimetype *new_date;
 
   g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW(view));
+  self = GCAL_WEEK_VIEW(view);
   new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (
-                  icaltime_start_doy_week (*(priv->date), priv->first_weekday + 1),
-                  priv->date->year);
+  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(self->date),
+                                                                  self->first_weekday + 1),
+                                         self->date->year);
   new_date->is_date = 0;
   new_date->hour = 0;
   new_date->minute = 0;
   new_date->second = 0;
-  *new_date = icaltime_set_timezone (new_date, priv->date->zone);
+  *new_date = icaltime_set_timezone (new_date, self->date->zone);
   return new_date;
 }
 
@@ -358,20 +357,20 @@ gcal_week_view_get_initial_date (GcalView *view)
 static icaltimetype*
 gcal_week_view_get_final_date (GcalView *view)
 {
-  GcalWeekViewPrivate *priv;
+  GcalWeekView *self;
   icaltimetype *new_date;
 
   g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  priv = gcal_week_view_get_instance_private (GCAL_WEEK_VIEW(view));
+  self = GCAL_WEEK_VIEW(view);
   new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (
-                  icaltime_start_doy_week (*(priv->date), priv->first_weekday + 1) + 6,
-                  priv->date->year);
+  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(self->date),
+                                                                  self->first_weekday + 1) + 6,
+                                         self->date->year);
   new_date->is_date = 0;
   new_date->hour = 23;
   new_date->minute = 59;
   new_date->second = 0;
-  *new_date = icaltime_set_timezone (new_date, priv->date->zone);
+  *new_date = icaltime_set_timezone (new_date, self->date->zone);
   return new_date;
 }
 
@@ -390,12 +389,12 @@ gcal_week_view_new (void)
 }
 
 void
-gcal_week_view_set_manager (GcalWeekView *week_view,
+gcal_week_view_set_manager (GcalWeekView *self,
                             GcalManager  *manager)
 {
-  GcalWeekViewPrivate *priv = gcal_week_view_get_instance_private (week_view);
+  g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
 
-  priv->manager = manager;
+  self->manager = manager;
 }
 
 /**
@@ -407,13 +406,12 @@ gcal_week_view_set_manager (GcalWeekView *week_view,
  * 0 for Sunday, 1 for Monday and so on.
  **/
 void
-gcal_week_view_set_first_weekday (GcalWeekView *view,
+gcal_week_view_set_first_weekday (GcalWeekView *self,
                                   gint          day_nr)
 {
-  GcalWeekViewPrivate *priv;
+  g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
 
-  priv = gcal_week_view_get_instance_private (view);
-  priv->first_weekday = day_nr;
+  self->first_weekday = day_nr;
 }
 
 /**
@@ -424,11 +422,19 @@ gcal_week_view_set_first_weekday (GcalWeekView *view,
  * Whether the view will show time using 24h or 12h format
  **/
 void
-gcal_week_view_set_use_24h_format (GcalWeekView *view,
+gcal_week_view_set_use_24h_format (GcalWeekView *self,
                                    gboolean      use_24h)
 {
-  GcalWeekViewPrivate *priv;
+  g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
 
-  priv = gcal_week_view_get_instance_private (view);
-  priv->use_24h_format = use_24h;
+  self->use_24h_format = use_24h;
+}
+
+void
+gcal_week_view_set_current_date (GcalWeekView *self,
+                                 icaltimetype *current_date)
+{
+  g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
+
+  self->current_date = current_date;
 }
