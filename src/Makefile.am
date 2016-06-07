@@ -67,6 +67,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-utils.h                                          \
     gcal-view.c                                           \
     gcal-view.h                                           \
+    views/gcal-week-grid.c                                \
+    views/gcal-week-grid.h                                \
     views/gcal-week-header.c                              \
     views/gcal-week-header.h                              \
     views/gcal-week-view.c                                \

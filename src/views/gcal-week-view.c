@@ -23,6 +23,7 @@
 #include "gcal-view.h"
 #include "gcal-event-widget.h"
 #include "gcal-week-header.h"
+#include "gcal-week-grid.h"
 
 #include <glib/gi18n.h>
 
