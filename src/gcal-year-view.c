@@ -527,6 +527,40 @@ update_sidebar_headers (GtkListBoxRow *row,
   g_clear_pointer (&row_date, g_date_time_unref);
 }
 
+static void
+calculate_coord_for_date (GcalYearView *year_view,
+                          gint          day,
+                          gint          month,
+                          gboolean      is_title,
+                          GdkRectangle *rect)
+{
+  gint cell_x, cell_y, clicked_cell, sw;
+
+  if (is_title ||
+      year_view->selected_data->start_day != year_view->selected_data->end_day ||
+      year_view->selected_data->start_month != year_view->selected_data->end_month)
+    {
+      rect->x = year_view->navigator_grid->coordinates[month].x;
+      rect->y = year_view->navigator_grid->coordinates[month].y;
+      rect->width = year_view->column_width;
+      rect->height =  year_view->row_height;
+
+      return;
+    }
+
+  /* else */
+  sw = 1 - 2 * year_view->k;
+  clicked_cell = day + ((time_day_of_week (1, month, year_view->date->year) - year_view->first_weekday + 7) % 7) - 1;
+
+  cell_x = (clicked_cell % 7 + year_view->k + year_view->show_week_numbers) * year_view->navigator_grid->box_side * sw;
+  cell_x += (year_view->k * year_view->navigator_grid->box_side * (7 + year_view->show_week_numbers));
+  cell_y = ((clicked_cell / 7 + 1) * year_view->navigator_grid->box_side);
+
+  rect->x = cell_x + year_view->navigator_grid->coordinates[month].x;
+  rect->y = cell_y + year_view->navigator_grid->coordinates[month].y;
+  rect->width = rect->height =  year_view->navigator_grid->box_side;
+}
+
 static gint
 sidebar_sort_func (GtkListBoxRow *row1,
                    GtkListBoxRow *row2,
@@ -1071,10 +1105,7 @@ navigator_button_release_cb (GcalYearView   *year_view,
       box = gtk_bin_get_child (GTK_BIN (year_view->popover));
       gtk_widget_set_size_request (box, 200, year_view->navigator_grid->box_side * 2 * 7);
 
-      /* FIXME: improve rect */
-      rect.x = event->x;
-      rect.y = event->y;
-      rect.width = rect.height = 1;
+      calculate_coord_for_date (year_view, day, month, is_title, &rect);
       gtk_popover_set_pointing_to (GTK_POPOVER (year_view->popover), &rect);
 
       /* FIXME: do no show over selected days */
