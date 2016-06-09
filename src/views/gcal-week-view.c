@@ -77,26 +77,47 @@ struct _GcalWeekView
   gint            clicked_cell;
 };
 
-static void           gcal_week_view_constructed           (GObject        *object);
+static void           gcal_week_view_component_added            (ECalDataModelSubscriber *subscriber,
+                                                                 ECalClient              *client,
+                                                                 ECalComponent           *comp);
 
-static void           gcal_week_view_finalize              (GObject        *object);
+static void           gcal_week_view_component_modified         (ECalDataModelSubscriber *subscriber,
+                                                                 ECalClient              *client,
+                                                                 ECalComponent           *comp);
 
-static void           gcal_week_view_set_property          (GObject        *object,
-                                                            guint           property_id,
-                                                            const GValue   *value,
-                                                            GParamSpec     *pspec);
+static void           gcal_week_view_component_removed          (ECalDataModelSubscriber *subscriber,
+                                                                 ECalClient              *client,
+                                                                 const gchar             *uid,
+                                                                 const gchar             *rid);
 
-static void           gcal_week_view_get_property          (GObject        *object,
-                                                            guint           property_id,
-                                                            GValue         *value,
-                                                            GParamSpec     *pspec);
+static void           gcal_week_view_freeze                     (ECalDataModelSubscriber *subscriber);
 
-static icaltimetype*  gcal_week_view_get_final_date        (GcalView       *view);
+static void           gcal_week_view_thaw                       (ECalDataModelSubscriber *subscriber);
 
-static void           gcal_view_interface_init             (GcalViewInterface *iface);
+static void           gcal_view_interface_init                  (GcalViewInterface *iface);
+
+static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
+
+static void           gcal_week_view_constructed                (GObject        *object);
+
+static void           gcal_week_view_finalize                   (GObject        *object);
+
+static void           gcal_week_view_set_property               (GObject        *object,
+                                                                 guint           property_id,
+                                                                 const GValue   *value,
+                                                                 GParamSpec     *pspec);
+
+static void           gcal_week_view_get_property               (GObject        *object,
+                                                                 guint           property_id,
+                                                                 GValue         *value,
+                                                                 GParamSpec     *pspec);
+
+static icaltimetype*  gcal_week_view_get_final_date             (GcalView       *view);
 
 G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GTK_TYPE_BOX,
-                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
+                         G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
+                                                gcal_data_model_subscriber_interface_init));
 
 /*
  * gcal_week_view_get_start_grid_y:
@@ -193,6 +214,60 @@ gcal_week_view_get_sidebar_width (GtkWidget *widget)
 }
 
 static void
+gcal_week_view_component_added (ECalDataModelSubscriber *subscriber,
+                                ECalClient              *client,
+                                ECalComponent           *comp)
+{
+  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
+
+  GcalEvent *event;
+
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, NULL);
+}
+
+static void
+gcal_week_view_component_modified (ECalDataModelSubscriber *subscriber,
+                                   ECalClient              *client,
+                                   ECalComponent           *comp)
+{
+  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
+  gchar *uuid;
+
+  uuid = get_uuid_from_component (e_client_get_source (E_CLIENT (client)), comp);
+  /* TODO: Implement for week_header and week_grid with if */
+}
+
+static void
+gcal_week_view_component_removed (ECalDataModelSubscriber *subscriber,
+                                  ECalClient              *client,
+                                  const gchar             *uid,
+                                  const gchar             *rid)
+{
+  GcalWeekView *week_view = GCAL_WEEK_VIEW (subscriber);
+  GList *children, *l;
+  ESource *source;
+  gchar *uuid;
+
+  source = e_client_get_source (E_CLIENT (client));
+  if (rid != NULL)
+    uuid = g_strdup_printf ("%s:%s:%s", e_source_get_uid (source), uid, rid);
+  else
+    uuid = g_strdup_printf ("%s:%s", e_source_get_uid (source), uid);
+
+  /* TODO: Implement for week_header and week_grid with if */
+}
+
+static void
+gcal_week_view_freeze (ECalDataModelSubscriber *subscriber)
+{
+}
+
+static void
+gcal_week_view_thaw (ECalDataModelSubscriber *subscriber)
+{
+}
+
+static void
 gcal_week_view_class_init (GcalWeekViewClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
@@ -224,6 +299,16 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->get_final_date = gcal_week_view_get_final_date;
 
   /* iface->clear_marks = gcal_week_view_clear_marks; */
+}
+
+static void
+gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
+{
+  iface->component_added = gcal_week_view_component_added;
+  iface->component_modified = gcal_week_view_component_modified;
+  iface->component_removed = gcal_week_view_component_removed;
+  iface->freeze = gcal_week_view_freeze;
+  iface->thaw = gcal_week_view_thaw;
 }
 
 static void
