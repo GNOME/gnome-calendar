@@ -58,6 +58,8 @@ struct _GcalWeekView
 {
   GtkBox          parent;
 
+  GtkWidget      *header;
+
   /*
    * first day of the week according to user locale, being
    * 0 for Sunday, 1 for Monday and so on 
@@ -282,6 +284,8 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
                                     PROP_DATE, "active-date");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
+
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, header);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
@@ -520,6 +524,8 @@ gcal_week_view_set_current_date (GcalWeekView *self,
                                  icaltimetype *current_date)
 {
   g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
+
+  gcal_week_header_set_current_date (GCAL_WEEK_HEADER (self->header), current_date);
 
   self->current_date = current_date;
 }

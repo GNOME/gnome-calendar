@@ -16,9 +16,9 @@
           <object class="GtkViewport">
             <property name="visible">True</property>
             <child>
-              <object class="GcalWeekGrid">
+              <!--<object class="GcalWeekGrid">
                 <property name="visible">True</property>
-              </object>
+              </object>-->
             </child>
           </object>
         </child>

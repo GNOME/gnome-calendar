@@ -119,8 +119,8 @@ gcal_week_header_draw (GcalWeekHeader *self,
   GtkStyleContext *context;
   GtkStateFlags state;
   GdkRGBA color;
-  GtkAllocation *alloc;
-  GtkBorder *padding;
+  GtkAllocation alloc;
+  GtkBorder padding;
 
   PangoLayout *layout;
   PangoFontDescription *bold_font;
@@ -143,8 +143,8 @@ gcal_week_header_draw (GcalWeekHeader *self,
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
 
-  gtk_style_context_get_padding (context, state, padding);
-  gtk_widget_get_allocation (widget, alloc);
+  gtk_style_context_get_padding (context, state, &padding);
+  gtk_widget_get_allocation (widget, &alloc);
 
   pattern = cairo_pattern_create_linear (0, start_grid_y - 18,
                                          0, start_grid_y + 6);
@@ -155,7 +155,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
   cairo_set_source (cr, pattern);
   cairo_pattern_destroy (pattern);
 
-  cairo_rectangle (cr, 0, start_grid_y, alloc->width, 6);
+  cairo_rectangle (cr, 0, start_grid_y, alloc.width, 6);
   cairo_fill (cr);
 
   gtk_style_context_get_color (context, state, &color);
@@ -171,14 +171,14 @@ gcal_week_header_draw (GcalWeekHeader *self,
   current_cell = (7 + current_cell - self->first_weekday) % 7;
 
   sidebar_width = gcal_week_view_get_sidebar_width (widget);
-  cell_width = (alloc->width - sidebar_width) / 7;
+  cell_width = (alloc.width - sidebar_width) / 7;
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, "current");
   gtk_render_background (context, cr,
                          cell_width * current_cell + sidebar_width,
-                         font_height + padding->bottom,
+                         font_height + padding.bottom,
                          cell_width,
                          ALL_DAY_CELLS_HEIGHT);
   gtk_style_context_remove_class (context, "current");
@@ -204,7 +204,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
 
       pango_layout_set_text (layout, weekday_header, -1);
       cairo_move_to (cr,
-                     padding->left + cell_width * i + sidebar_width,
+                     padding.left + cell_width * i + sidebar_width,
                      0.0);
       pango_cairo_show_layout (cr, layout);
 
@@ -212,7 +212,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
       cairo_save (cr);
       cairo_move_to (cr,
                      cell_width * i + sidebar_width + 0.3,
-                     font_height + padding->bottom);
+                     font_height + padding.bottom);
       cairo_rel_line_to (cr, 0.0, ALL_DAY_CELLS_HEIGHT);
       cairo_stroke (cr);
       cairo_restore (cr);
@@ -224,9 +224,9 @@ gcal_week_header_draw (GcalWeekHeader *self,
                                state | GTK_STATE_FLAG_INSENSITIVE,
                                &color);
   gdk_cairo_set_source_rgba (cr, &color);
-  pos_i = font_height + padding->bottom;
+  pos_i = font_height + padding.bottom;
   cairo_move_to (cr, sidebar_width, pos_i + 0.3);
-  cairo_rel_line_to (cr, alloc->width - sidebar_width, 0);
+  cairo_rel_line_to (cr, alloc.width - sidebar_width, 0);
 
   cairo_stroke (cr);
 
