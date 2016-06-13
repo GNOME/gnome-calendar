@@ -52,14 +52,14 @@ calendar-view.lines {
     color: alpha(@theme_fg_color, 0.4);
 }
 
-calendar-view.first-view-header {
+calendar-view .first-view-header {
     font-size: 16pt;
     font-weight: bold;
     color: @theme_selected_bg_color;
     padding: 12px;
 }
 
-calendar-view.second-view-header {
+calendar-view .second-view-header {
     font-size: 16pt;
     font-weight: bold;
     padding: 12px;

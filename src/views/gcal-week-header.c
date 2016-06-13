@@ -34,6 +34,10 @@ struct _GcalWeekHeader
   GtkScrolledWindow parent;
 
   GtkWidget        *grid;
+  GtkWidget        *draw_area;
+  GtkWidget        *month_label;
+  GtkWidget        *week_label;
+  GtkWidget        *year_label;
 
   GcalManager      *manager;
 
@@ -87,6 +91,10 @@ gcal_week_header_get_property (GObject    *object,
 
   switch (prop_id)
     {
+    case PROP_ACTIVE_DATE:
+      g_value_set_boxed (value, self->active_date);
+      return;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -103,7 +111,11 @@ gcal_week_header_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_ACTIVE_DATE:
+      g_clear_pointer (&self->active_date, g_free);
       self->active_date = g_value_dup_boxed (value);
+
+      gtk_widget_queue_draw (self->draw_area);
+
       return;
 
     default:
@@ -123,16 +135,13 @@ gcal_week_header_draw (GcalWeekHeader *self,
   GtkBorder padding;
 
   PangoLayout *layout;
-  PangoFontDescription *bold_font;
+  PangoFontDescription *bold_font, *font_desc;
 
-  gint i;
-  gint pos_i;
-  gint start_grid_y;
-  gint font_height;
-  gdouble sidebar_width;
-  gdouble cell_width;
-  icaltimetype *start_of_week;
-  gint current_cell;
+  gint i, pos_i, start_grid_y, current_cell;
+  gint font_height, header_width;
+  gdouble sidebar_width, cell_width;
+  icaltimetype *start_of_week, *end_of_week;
+  gchar *month_name, *week_number, *year, *header;
 
   cairo_pattern_t *pattern;
 
@@ -155,9 +164,6 @@ gcal_week_header_draw (GcalWeekHeader *self,
   cairo_set_source (cr, pattern);
   cairo_pattern_destroy (pattern);
 
-  cairo_rectangle (cr, 0, start_grid_y, alloc.width, 6);
-  cairo_fill (cr);
-
   gtk_style_context_get_color (context, state, &color);
   gdk_cairo_set_source_rgba (cr, &color);
 
@@ -167,6 +173,8 @@ gcal_week_header_draw (GcalWeekHeader *self,
   pango_layout_set_font_description (layout, bold_font);
 
   start_of_week = self->active_date;
+  end_of_week = gcal_dup_icaltime (self->active_date);
+  icaltime_adjust (end_of_week, 6, 0, 0, 0);
   current_cell = icaltime_day_of_week (*(self->current_date)) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
 
@@ -184,13 +192,39 @@ gcal_week_header_draw (GcalWeekHeader *self,
   gtk_style_context_remove_class (context, "current");
   gtk_style_context_restore (context);
 
+  if (start_of_week->month == end_of_week->month)
+    month_name = g_strdup_printf ("%s ", gcal_get_month_name (start_of_week->month - 1));
+  else
+    month_name = g_strdup_printf("%s - %s ",
+                                 gcal_get_month_name (start_of_week->month -1),
+                                 gcal_get_month_name (end_of_week->month - 1));
+
+  if (start_of_week->year == end_of_week->year)
+    {
+      week_number = g_strdup_printf ("week %d", icaltime_week_number (*start_of_week));
+      year = g_strdup_printf ("%d", start_of_week->year);
+    }
+  else
+    {
+      week_number = g_strdup_printf ("week %d/%d",
+                                     icaltime_week_number (*start_of_week),
+                                     icaltime_week_number (*end_of_week));
+      year = g_strdup_printf ("%d-%d",
+                              start_of_week->year,
+                              end_of_week->year);
+    }
+
+    gtk_label_set_label (self->month_label, month_name);
+    gtk_label_set_label (self->week_label, week_number);
+    gtk_label_set_label (self->year_label, year);
+
   for (i = 0; i < 7; i++)
     {
-      gchar *weekday_header;
-      gchar *weekday_abv;
+      gchar *weekday_date, *weekday_abv;
       gint n_day;
 
       n_day = start_of_week->day + i;
+
       if (n_day > icaltime_days_in_month (start_of_week->month,
                                           start_of_week->year))
         {
@@ -198,26 +232,39 @@ gcal_week_header_draw (GcalWeekHeader *self,
                                                   start_of_week->year);
         }
 
-      /* Draw the week days with dates */
-      weekday_abv = gcal_get_weekday ((i + self->first_weekday) % 7);
-      weekday_header = g_strdup_printf ("%s %d", weekday_abv, n_day);
+      /* Draws the date of days in the week */
+      weekday_date = g_strdup_printf ("%d", n_day);
 
-      pango_layout_set_text (layout, weekday_header, -1);
+      pango_font_description_set_size (bold_font, 1.5 * pango_font_description_get_size (bold_font));
+      pango_layout_set_font_description (layout, bold_font);
+      pango_layout_set_text (layout, weekday_date, -1);
       cairo_move_to (cr,
                      padding.left + cell_width * i + sidebar_width,
-                     0.0);
+                     font_height + padding.bottom);
+      pango_cairo_show_layout (cr,layout);
+
+      /* Draws the days name */
+      weekday_abv = g_strdup_printf ("%s", gcal_get_weekday ((i + self->first_weekday) % 7));
+
+      pango_font_description_set_size (bold_font, pango_font_description_get_size (bold_font)/1.5);
+      pango_layout_set_font_description (layout, bold_font);
+      pango_layout_set_text (layout, weekday_abv, -1);
+      cairo_move_to (cr,
+                     padding.left + cell_width * i + sidebar_width,
+                     0);
       pango_cairo_show_layout (cr, layout);
 
       /* Draws the lines after each day of the week */
       cairo_save (cr);
       cairo_move_to (cr,
-                     cell_width * i + sidebar_width + 0.3,
-                     font_height + padding.bottom);
+                     cell_width * i + sidebar_width - 3,
+                     font_height + padding.bottom + 3);
       cairo_rel_line_to (cr, 0.0, ALL_DAY_CELLS_HEIGHT);
       cairo_stroke (cr);
       cairo_restore (cr);
 
-      g_free (weekday_header);
+      g_free (weekday_date);
+      g_free (weekday_abv);
     }
 
   gtk_style_context_get_color (context,
@@ -226,7 +273,6 @@ gcal_week_header_draw (GcalWeekHeader *self,
   gdk_cairo_set_source_rgba (cr, &color);
   pos_i = font_height + padding.bottom;
   cairo_move_to (cr, sidebar_width, pos_i + 0.3);
-  cairo_rel_line_to (cr, alloc.width - sidebar_width, 0);
 
   cairo_stroke (cr);
 
@@ -260,6 +306,10 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
                                                        G_PARAM_CONSTRUCT | G_PARAM_READWRITE));
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, grid);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, month_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, year_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, week_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, draw_area);
 
   gtk_widget_class_bind_template_callback (widget_class, gcal_week_header_draw);
 
@@ -306,7 +356,8 @@ gcal_week_header_set_current_date (GcalWeekHeader *self,
 {
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
-  self->current_date = current_date;
+  g_clear_pointer (&self->current_date, g_free);
+  self->current_date = gcal_dup_icaltime (current_date);
 
-  gtk_widget_queue_draw (GTK_WIDGET (self));
+  gtk_widget_queue_draw (self->draw_area);
 }

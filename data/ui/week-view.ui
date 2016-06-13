@@ -6,7 +6,7 @@
     <child>
       <object class="GcalWeekHeader" id="header">
         <property name="visible">True</property>
-        <property name="active-date" bind-source="GcalWeekView" bind-property="active-date" bind-flags="default|sync-create" />
+        <property name="active-date" bind-source="GcalWeekView" bind-property="active-date" bind-flags="default" />
       </object>
     </child>
     <child>
