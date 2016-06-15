@@ -365,6 +365,7 @@ update_active_date (GcalWindow   *window,
   GDateTime *date_start, *date_end;
   time_t range_start, range_end;
   icaltimetype *previous_date;
+  GDate old_week, new_week;
 
   previous_date = window->active_date;
   window->active_date = new_date;
@@ -395,6 +396,26 @@ update_active_date (GcalWindow   *window,
       range_end = g_date_time_to_unix (date_end);
 
       gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->month_view), range_start, range_end);
+
+      g_clear_pointer (&date_start, g_date_time_unref);
+      g_clear_pointer (&date_end, g_date_time_unref);
+    }
+
+  /* week_view */
+  g_date_set_dmy (&old_week, previous_date->day, previous_date->month, previous_date->year);
+  g_date_set_dmy (&new_week, new_date->day, new_date->month, new_date->year);
+
+  if (previous_date->year != new_date->year ||
+      g_date_get_iso8601_week_of_year (&old_week) != g_date_get_iso8601_week_of_year(&new_week))
+    {
+      date_start = g_date_time_new_local (new_date->year, new_date->month, new_date->day, 0, 0, 0);
+      date_start = g_date_time_add_days (date_start, (get_first_weekday() - g_date_time_get_day_of_week (date_start) + 7) % 7 - 8);
+      range_start = g_date_time_to_unix (date_start);
+
+      date_end = g_date_time_add_days (date_start, 6);
+      range_end = g_date_time_to_unix (date_end);
+
+      gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->week_view), range_start, range_end);
 
       g_clear_pointer (&date_start, g_date_time_unref);
       g_clear_pointer (&date_end, g_date_time_unref);
