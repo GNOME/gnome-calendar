@@ -49,6 +49,8 @@ struct _GcalWeekHeader
   icaltimetype     *current_date;
 };
 
+static void           update_headers                        (GcalWeekHeader *self);
+
 static void           gcal_week_header_finalize             (GObject *object);
 
 static void           gcal_week_header_get_property         (GObject    *object,
@@ -72,6 +74,55 @@ enum
 };
 
 G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_SCROLLED_WINDOW);
+
+static void
+update_headers (GcalWeekHeader *self)
+{
+  GDateTime *week_start, *week_end;
+  gchar *year_label, *month_label, *week_label;
+
+  if(!self->active_date)
+    return;
+
+  week_start = icaltime_to_datetime (self->active_date);
+  week_end = g_date_time_add_days (week_start, 6);
+
+  if (g_date_time_get_month (week_start) == g_date_time_get_month (week_end))
+    {
+      month_label = g_strdup_printf ("%s ", gcal_get_month_name (g_date_time_get_month (week_start) - 1));
+    }
+  else
+    {
+      month_label = g_strdup_printf("%s - %s ",
+                                    gcal_get_month_name (g_date_time_get_month (week_start) -1),
+                                    gcal_get_month_name (g_date_time_get_month (week_end) - 1));
+    }
+
+  if (g_date_time_get_year (week_start) == g_date_time_get_year (week_end))
+    {
+      week_label = g_strdup_printf ("Week %d", g_date_time_get_week_of_year (week_start));
+      year_label = g_strdup_printf ("%d", g_date_time_get_year (week_start));
+    }
+  else
+    {
+      week_label = g_strdup_printf ("Week %d/%d",
+                                    g_date_time_get_week_of_year (week_start),
+                                    g_date_time_get_week_of_year (week_end));
+      year_label = g_strdup_printf ("%d-%d",
+                                    g_date_time_get_year (week_start),
+                                    g_date_time_get_year (week_end));
+    }
+
+  gtk_label_set_label (GTK_LABEL (self->month_label), month_label);
+  gtk_label_set_label (GTK_LABEL (self->week_label), week_label);
+  gtk_label_set_label (GTK_LABEL (self->year_label), year_label);
+
+  g_clear_pointer (&week_start, g_date_time_unref);
+  g_clear_pointer (&week_end, g_date_time_unref);
+  g_clear_pointer (&month_label, g_free);
+  g_clear_pointer (&week_label, g_free);
+  g_clear_pointer (&year_label, g_free);
+}
 
 static void
 gcal_week_header_finalize (GObject *object)
@@ -114,6 +165,8 @@ gcal_week_header_set_property (GObject      *object,
       g_clear_pointer (&self->active_date, g_free);
       self->active_date = g_value_dup_boxed (value);
 
+      update_headers (self);
+
       gtk_widget_queue_draw (self->draw_area);
 
       return;
@@ -135,13 +188,12 @@ gcal_week_header_draw (GcalWeekHeader *self,
   GtkBorder padding;
 
   PangoLayout *layout;
-  PangoFontDescription *bold_font, *font_desc;
+  PangoFontDescription *bold_font;
 
   gint i, pos_i, start_grid_y, current_cell;
-  gint font_height, header_width;
+  gint font_height;
   gdouble sidebar_width, cell_width;
   icaltimetype *start_of_week, *end_of_week;
-  gchar *month_name, *week_number, *year, *header;
 
   cairo_pattern_t *pattern;
 
@@ -191,32 +243,6 @@ gcal_week_header_draw (GcalWeekHeader *self,
                          ALL_DAY_CELLS_HEIGHT);
   gtk_style_context_remove_class (context, "current");
   gtk_style_context_restore (context);
-
-  if (start_of_week->month == end_of_week->month)
-    month_name = g_strdup_printf ("%s ", gcal_get_month_name (start_of_week->month - 1));
-  else
-    month_name = g_strdup_printf("%s - %s ",
-                                 gcal_get_month_name (start_of_week->month -1),
-                                 gcal_get_month_name (end_of_week->month - 1));
-
-  if (start_of_week->year == end_of_week->year)
-    {
-      week_number = g_strdup_printf ("week %d", icaltime_week_number (*start_of_week));
-      year = g_strdup_printf ("%d", start_of_week->year);
-    }
-  else
-    {
-      week_number = g_strdup_printf ("week %d/%d",
-                                     icaltime_week_number (*start_of_week),
-                                     icaltime_week_number (*end_of_week));
-      year = g_strdup_printf ("%d-%d",
-                              start_of_week->year,
-                              end_of_week->year);
-    }
-
-    gtk_label_set_label (self->month_label, month_name);
-    gtk_label_set_label (self->week_label, week_number);
-    gtk_label_set_label (self->year_label, year);
 
   for (i = 0; i < 7; i++)
     {
@@ -358,6 +384,8 @@ gcal_week_header_set_current_date (GcalWeekHeader *self,
 
   g_clear_pointer (&self->current_date, g_free);
   self->current_date = gcal_dup_icaltime (current_date);
+
+  update_headers (self);
 
   gtk_widget_queue_draw (self->draw_area);
 }
