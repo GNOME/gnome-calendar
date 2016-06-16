@@ -187,6 +187,8 @@ gcal_week_header_draw (GcalWeekHeader *self,
   GtkAllocation alloc;
   GtkBorder padding;
 
+  GDateTime *week_start, *week_end;
+
   PangoLayout *layout;
   PangoFontDescription *bold_font;
 
@@ -224,10 +226,9 @@ gcal_week_header_draw (GcalWeekHeader *self,
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
   pango_layout_set_font_description (layout, bold_font);
 
-  start_of_week = self->active_date;
-  end_of_week = gcal_dup_icaltime (self->active_date);
-  icaltime_adjust (end_of_week, 6, 0, 0, 0);
-  current_cell = icaltime_day_of_week (*(self->current_date)) - 1;
+  week_start = icaltime_to_datetime (self->active_date);
+  week_end = g_date_time_add_days (week_start, 6);
+  current_cell = icaltime_day_of_week (*(self->active_date)) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
 
   sidebar_width = gcal_week_view_get_sidebar_width (widget);
@@ -249,14 +250,10 @@ gcal_week_header_draw (GcalWeekHeader *self,
       gchar *weekday_date, *weekday_abv;
       gint n_day;
 
-      n_day = start_of_week->day + i;
+      n_day = g_date_time_get_day_of_month (week_start) + i;
 
-      if (n_day > icaltime_days_in_month (start_of_week->month,
-                                          start_of_week->year))
-        {
-          n_day = n_day - icaltime_days_in_month (start_of_week->month,
-                                                  start_of_week->year);
-        }
+      if (n_day > g_date_get_days_in_month (g_date_time_get_month (week_start), g_date_time_get_year (week_start)))
+        n_day = n_day - g_date_get_days_in_month (g_date_time_get_month (week_start), g_date_time_get_year (week_start));
 
       /* Draws the date of days in the week */
       weekday_date = g_strdup_printf ("%d", n_day);
@@ -304,9 +301,11 @@ gcal_week_header_draw (GcalWeekHeader *self,
 
   cairo_restore (cr);
 
-  g_free (start_of_week);
   pango_font_description_free (bold_font);
   g_object_unref (layout);
+
+  g_clear_pointer (&week_start, g_date_time_unref);
+  g_clear_pointer (&week_end, g_date_time_unref);
 
   return FALSE;
 }
