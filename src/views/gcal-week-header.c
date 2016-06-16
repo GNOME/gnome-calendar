@@ -49,6 +49,8 @@ struct _GcalWeekHeader
   icaltimetype     *current_date;
 };
 
+static GDateTime*     get_start_of_week                     (GcalWeekHeader *self);
+
 static void           update_headers                        (GcalWeekHeader *self);
 
 static void           gcal_week_header_finalize             (GObject *object);
@@ -75,6 +77,26 @@ enum
 
 G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_SCROLLED_WINDOW);
 
+static GDateTime*
+get_start_of_week (GcalWeekHeader *self)
+{
+  icaltimetype *new_date;
+
+  g_return_val_if_fail (GCAL_IS_WEEK_HEADER (self), NULL);
+  new_date = g_new0 (icaltimetype, 1);
+  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(self->active_date),
+                                                                  self->first_weekday + 1),
+                                                                  self->active_date->year);
+  new_date->is_date = 0;
+  new_date->hour = 0;
+  new_date->minute = 0;
+  new_date->second = 0;
+
+  *new_date = icaltime_set_timezone (new_date, self->active_date->zone);
+
+  return icaltime_to_datetime (new_date);
+}
+
 static void
 update_headers (GcalWeekHeader *self)
 {
@@ -84,7 +106,7 @@ update_headers (GcalWeekHeader *self)
   if(!self->active_date)
     return;
 
-  week_start = icaltime_to_datetime (self->active_date);
+  week_start = get_start_of_week (self);
   week_end = g_date_time_add_days (week_start, 6);
 
   if (g_date_time_get_month (week_start) == g_date_time_get_month (week_end))
@@ -226,7 +248,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
   pango_layout_set_font_description (layout, bold_font);
 
-  week_start = icaltime_to_datetime (self->active_date);
+  week_start = get_start_of_week (self);
   week_end = g_date_time_add_days (week_start, 6);
   current_cell = icaltime_day_of_week (*(self->active_date)) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
