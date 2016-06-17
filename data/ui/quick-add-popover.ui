@@ -12,6 +12,7 @@
         <property name="vexpand">True</property>
         <property name="border_width">12</property>
         <property name="hhomogeneous">False</property>
+        <property name="vhomogeneous">False</property>
         <property name="transition_type">slide-left-right</property>
         <property name="interpolate_size">True</property>
         <child>
