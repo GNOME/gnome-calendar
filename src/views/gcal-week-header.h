@@ -39,6 +39,10 @@ void              gcal_week_header_set_use_24h_format (GcalWeekHeader *self,
                                                        gboolean        use_24h_format);
 void              gcal_week_header_set_current_date   (GcalWeekHeader *self,
                                                        icaltimetype   *current_date);
+void              gcal_week_header_add_event          (GcalWeekHeader *header,
+                                                       GcalEvent      *event);
+void              gcal_week_header_remove_event       (GcalWeekHeader *header,
+                                                       gchar          *uuid);
 
 G_END_DECLS
 

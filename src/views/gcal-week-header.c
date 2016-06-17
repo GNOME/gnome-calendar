@@ -154,6 +154,79 @@ gcal_week_header_finalize (GObject *object)
   g_clear_pointer (&self->current_date, g_free);
 }
 
+void
+gcal_week_header_add_event (GcalWeekHeader *self,
+                            GcalEvent      *event)
+{
+  GDateTime *week_start, *week_end, *event_start, *event_end;
+  GtkWidget *child_widget, *place_holder_left, *place_holder_right;
+  gint start, end;
+
+  start = -1;
+  end = -1;
+  week_start = get_start_of_week (self);
+  week_end = g_date_time_add_days (week_start, 7);
+  event_start = gcal_event_get_date_start (event);
+  event_end = gcal_event_get_date_end (event);
+  child_widget = gcal_event_widget_new (event);
+  place_holder_left = gtk_invisible_new ();
+  place_holder_right = gtk_invisible_new ();
+
+  gtk_widget_set_visible (child_widget, TRUE);
+  gtk_widget_set_visible (place_holder_left, TRUE);
+  gtk_widget_set_visible (place_holder_right, TRUE);
+
+  start = (g_date_time_get_day_of_week (event_start) - self->first_weekday + 7) % 7;
+  end = (g_date_time_get_day_of_week (event_end) - self->first_weekday + 7) % 7;
+
+  if (g_date_time_compare (event_start, week_start) < 0)
+    start = 0;
+
+  if (g_date_time_compare (event_end, week_end) >= 0)
+    end = 6;
+
+  gtk_grid_insert_row (GTK_GRID (self->grid), 0);
+
+  if (gcal_event_get_all_day (event))
+    {
+      start = (g_date_time_get_day_of_week (event_start) - self->first_weekday + 7) % 7;
+      end = start;
+    }
+
+  gtk_grid_attach (GTK_GRID (self->grid),
+                   child_widget,
+                   start,
+                   0,
+                   end - start + 1,
+                   1);
+}
+
+void
+gcal_week_header_remove_event (GcalWeekHeader *header,
+                               gchar          *uuid)
+{
+  GList *children, *l;
+
+  children = gtk_container_get_children (GTK_CONTAINER (header->grid));
+
+  for (l = children; l != NULL; l = g_list_next (l))
+    {
+      GcalEventWidget *child_widget;
+      GcalEvent *event;
+
+      if (!GCAL_IS_EVENT_WIDGET(l->data))
+        continue;
+
+      child_widget = GCAL_EVENT_WIDGET (l->data);
+      event = gcal_event_widget_get_event (child_widget);
+
+      if(child_widget != NULL && g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
+        gtk_widget_destroy (GTK_WIDGET (l->data));
+    }
+
+  g_list_free (children);
+}
+
 static void
 gcal_week_header_get_property (GObject    *object,
                                guint       prop_id,
@@ -366,7 +439,12 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 static void
 gcal_week_header_init (GcalWeekHeader *self)
 {
+  gint i;
+
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  for (i = 1; i <= 7; i++)
+    gtk_grid_insert_column (GTK_GRID (self->grid), 0);
 }
 
 /* Public API */

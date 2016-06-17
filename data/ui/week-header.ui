@@ -61,6 +61,8 @@
                   <object class="GtkGrid" id="grid">
                     <property name="visible">True</property>
                     <property name="height-request">100</property>
+                    <property name="column-homogeneous">True</property>
+                    <property name="row-homogeneous">True</property>
                   </object>
                 </child>
               </object>

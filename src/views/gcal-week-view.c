@@ -225,6 +225,9 @@ gcal_week_view_component_added (ECalDataModelSubscriber *subscriber,
   GcalEvent *event;
 
   event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, NULL);
+
+  if (gcal_event_is_multiday (event) || gcal_event_get_all_day (event))
+    gcal_week_header_add_event (GCAL_WEEK_HEADER (self->header), event);
 }
 
 static void
@@ -233,10 +236,21 @@ gcal_week_view_component_modified (ECalDataModelSubscriber *subscriber,
                                    ECalComponent           *comp)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
+  GcalEvent *event;
+  GcalWeekHeader *header;
   gchar *uuid;
 
+  header = GCAL_WEEK_HEADER (self->header);
+
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, NULL);
   uuid = get_uuid_from_component (e_client_get_source (E_CLIENT (client)), comp);
-  /* TODO: Implement for week_header and week_grid with if */
+
+  if (gcal_event_is_multiday (event) || gcal_event_get_all_day (event))
+    gcal_week_header_remove_event (header, uuid);
+
+  g_free (uuid);
+
+  gcal_week_view_component_added (subscriber, client, comp);
 }
 
 static void
@@ -245,18 +259,23 @@ gcal_week_view_component_removed (ECalDataModelSubscriber *subscriber,
                                   const gchar             *uid,
                                   const gchar             *rid)
 {
-  GcalWeekView *week_view = GCAL_WEEK_VIEW (subscriber);
-  GList *children, *l;
+  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
+  GcalWeekHeader *header;
   ESource *source;
   gchar *uuid;
 
+  header = GCAL_WEEK_HEADER (self->header);
+
   source = e_client_get_source (E_CLIENT (client));
+
   if (rid != NULL)
     uuid = g_strdup_printf ("%s:%s:%s", e_source_get_uid (source), uid, rid);
   else
     uuid = g_strdup_printf ("%s:%s", e_source_get_uid (source), uid);
 
-  /* TODO: Implement for week_header and week_grid with if */
+  gcal_week_header_remove_event (header, uuid);
+
+  g_free (uuid);
 }
 
 static void
