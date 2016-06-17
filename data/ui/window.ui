@@ -291,11 +291,10 @@
         <property name="orientation">vertical</property>
         <property name="spacing">6</property>
         <child>
-          <object class="GbScrolledWindow">
+          <object class="GtkScrolledWindow">
             <property name="visible">True</property>
             <property name="hscrollbar_policy">never</property>
-            <property name="min_content_height">80</property>
-            <property name="max_content_height">500</property>
+            <property name="max_content_height">450</property>
             <child>
               <object class="GtkListBox" id="calendar_listbox">
                 <property name="visible">True</property>
