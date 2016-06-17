@@ -12,7 +12,6 @@ data/org.gnome.calendar.gschema.xml.in
 [type: gettext/glade]data/ui/time-selector.ui
 [type: gettext/glade]data/ui/window.ui
 [type: gettext/glade]data/ui/year-view.ui
-src/gb-scrolled-window.c
 src/gcal-application.c
 src/gcal-date-selector.c
 src/gcal-edit-dialog.c
