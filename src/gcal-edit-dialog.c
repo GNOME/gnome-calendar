@@ -56,7 +56,6 @@ struct _GcalEditDialog
 
   /* actions */
   GMenu              *sources_menu;
-  GSimpleAction      *action;
   GSimpleActionGroup *action_group;
 
   /* new data holders */
@@ -70,7 +69,7 @@ struct _GcalEditDialog
 
 static void        fill_sources_menu                      (GcalEditDialog    *dialog);
 
-static void        on_calendar_selected                   (GtkWidget         *menu_item,
+static void        on_calendar_selected                   (GSimpleAction     *menu_item,
                                                            GVariant          *value,
                                                            gpointer           user_data);
 
@@ -108,6 +107,11 @@ enum
   LAST_PROP
 };
 
+const GActionEntry action_entries[] =
+{
+  { "select-calendar", on_calendar_selected, "s" },
+};
+
 static void
 fill_sources_menu (GcalEditDialog *dialog)
 {
@@ -134,17 +138,17 @@ fill_sources_menu (GcalEditDialog *dialog)
       pix = gcal_get_pixbuf_from_color (&color, 16);;
 
       /* menu item */
-      item = g_menu_item_new (e_source_get_display_name (source), "select_calendar");
+      item = g_menu_item_new (e_source_get_display_name (source), "select-calendar");
       g_menu_item_set_icon (item, G_ICON (pix));
 
       /* set insensitive for read-only calendars */
       if (!gcal_manager_is_client_writable (dialog->manager, source))
         {
-          g_menu_item_set_action_and_target_value (item, "select_calendar", NULL);
+          g_menu_item_set_action_and_target_value (item, "select-calendar", NULL);
         }
       else
         {
-          g_menu_item_set_action_and_target_value (item, "select_calendar",
+          g_menu_item_set_action_and_target_value (item, "select-calendar",
                                                    g_variant_new_string (e_source_get_uid (source)));
         }
 
@@ -163,9 +167,9 @@ fill_sources_menu (GcalEditDialog *dialog)
 }
 
 static void
-on_calendar_selected (GtkWidget *menu_item,
-                      GVariant  *value,
-                      gpointer   user_data)
+on_calendar_selected (GSimpleAction *action,
+                      GVariant      *value,
+                      gpointer       user_data)
 {
   GcalEditDialog *dialog;
   GList *list;
@@ -377,9 +381,9 @@ gcal_edit_dialog_init (GcalEditDialog *self)
 static void
 gcal_edit_dialog_constructed (GObject* object)
 {
-  GcalEditDialog *dialog;
+  GcalEditDialog *self;
 
-  dialog = GCAL_EDIT_DIALOG (object);
+  self = GCAL_EDIT_DIALOG (object);
 
   /* chaining up */
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->constructed (object);
@@ -387,20 +391,18 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_window_set_title (GTK_WINDOW (object), "");
 
   /* titlebar */
-  gtk_window_set_titlebar (GTK_WINDOW (object), dialog->titlebar);
+  gtk_window_set_titlebar (GTK_WINDOW (object), self->titlebar);
 
-  /* actions */
-  dialog->action_group = g_simple_action_group_new ();
-  gtk_widget_insert_action_group (GTK_WIDGET (object),
+  /* Actions */
+  self->action_group = g_simple_action_group_new ();
+  g_action_map_add_action_entries (G_ACTION_MAP (self->action_group),
+                                   action_entries,
+                                   G_N_ELEMENTS (action_entries),
+                                   self);
+
+  gtk_widget_insert_action_group (GTK_WIDGET (self),
                                   "edit",
-                                  G_ACTION_GROUP (dialog->action_group));
-
-  dialog->action = g_simple_action_new ("select_calendar", G_VARIANT_TYPE_STRING);
-  g_signal_connect (dialog->action,
-                    "activate",
-                    G_CALLBACK (on_calendar_selected), object);
-
-  g_action_map_add_action (G_ACTION_MAP (dialog->action_group), G_ACTION (dialog->action));
+                                  G_ACTION_GROUP (self->action_group));
 }
 
 static void
@@ -411,7 +413,6 @@ gcal_edit_dialog_finalize (GObject *object)
   dialog = GCAL_EDIT_DIALOG (object);
 
   g_clear_object (&dialog->action_group);
-  g_clear_object (&dialog->action);
   g_clear_object (&dialog->manager);
   g_clear_object (&dialog->event);
 
