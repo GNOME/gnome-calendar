@@ -43,6 +43,9 @@ struct _GcalEvent
 
   gboolean            all_day;
 
+  /* A map of GcalAlarmType */
+  GHashTable         *alarms;
+
   ECalComponent      *component;
   ESource            *source;
 };
@@ -187,6 +190,65 @@ gcal_event_update_uid_internal (GcalEvent *self)
   g_object_notify (G_OBJECT (self), "uid");
 }
 
+static gint
+get_trigger_minutes (GcalEvent          *self,
+                     ECalComponentAlarm *alarm)
+{
+  ECalComponentAlarmTrigger trigger;
+  GDateTime *alarm_dt;
+  gint diff;
+
+  e_cal_component_alarm_get_trigger (alarm, &trigger);
+
+  /*
+   * We only support alarms relative to the start date, and solely
+   * ignore whetever different it may be.
+   */
+  if (trigger.type != E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START)
+    return -1;
+
+  alarm_dt = g_date_time_add_full (self->dt_start,
+                                   0,
+                                   0,
+                                   - (trigger.u.rel_duration.days + trigger.u.rel_duration.weeks * 7),
+                                   - trigger.u.rel_duration.hours,
+                                   - trigger.u.rel_duration.minutes,
+                                   - trigger.u.rel_duration.seconds);
+
+  diff = g_date_time_difference (self->dt_start, alarm_dt) / G_TIME_SPAN_MINUTE;
+
+  return diff;
+}
+
+static void
+load_alarms (GcalEvent *self)
+{
+  GList *alarm_uids, *l;
+
+  alarm_uids = e_cal_component_get_alarm_uids (self->component);
+
+  for (l = alarm_uids; l != NULL; l = l->next)
+    {
+      ECalComponentAlarm *alarm;
+      gint trigger_minutes;
+
+      alarm = e_cal_component_get_alarm (self->component, l->data);
+      trigger_minutes = get_trigger_minutes (self, alarm);
+
+      /* We only support a single alarm for a given time */
+      if (!g_hash_table_contains (self->alarms, GINT_TO_POINTER (trigger_minutes)))
+        {
+          g_hash_table_insert (self->alarms,
+                               GINT_TO_POINTER (trigger_minutes),
+                               g_strdup (e_cal_component_alarm_get_uid (alarm)));
+        }
+
+      e_cal_component_alarm_free (alarm);
+    }
+
+  cal_obj_uid_list_free (alarm_uids);
+}
+
 static void
 gcal_event_set_component_internal (GcalEvent     *self,
                                    ECalComponent *component)
@@ -252,6 +314,9 @@ gcal_event_set_component_internal (GcalEvent     *self,
 
       /* Setup UID */
       gcal_event_update_uid_internal (self);
+
+      /* Load and setup the alarms */
+      load_alarms (self);
 
       g_object_notify (G_OBJECT (self), "component");
       g_object_notify (G_OBJECT (self), "location");
@@ -555,6 +620,9 @@ gcal_event_init (GcalEvent *self)
   /* Default color of events */
   gdk_rgba_parse (&rgba, "#ffffff");
   self->color = gdk_rgba_copy (&rgba);
+
+  /* Alarms */
+  self->alarms = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, g_free);
 }
 
 /**
@@ -845,6 +913,147 @@ gcal_event_has_alarms (GcalEvent *self)
 
   return e_cal_component_has_alarms (self->component);
 }
+
+/**
+ * gcal_event_get_alarms:
+ * @self: a #GcalEvent
+ *
+ * Retrieves the alarms available for @self.
+ *
+ * Returns: (transfer full): a #GList of #ECalComponentAlarm.
+ */
+GList*
+gcal_event_get_alarms (GcalEvent *self)
+{
+  GHashTable *tmp;
+  GList *alarm_uids, *alarms, *l;
+
+  g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
+
+  tmp = g_hash_table_new (g_direct_hash, g_direct_equal);
+  alarms = NULL;
+  alarm_uids = e_cal_component_get_alarm_uids (self->component);
+
+  for (l = alarm_uids; l != NULL; l = l->next)
+    {
+      ECalComponentAlarm *alarm;
+      gint trigger_minutes;
+
+      alarm = e_cal_component_get_alarm (self->component, l->data);
+      trigger_minutes = get_trigger_minutes (self, alarm);
+
+      /* We only support a single alarm for a given time */
+      if (!g_hash_table_contains (tmp, GINT_TO_POINTER (trigger_minutes)))
+        {
+          alarms = g_list_prepend (alarms, alarm);
+
+          g_hash_table_insert (tmp, GINT_TO_POINTER (trigger_minutes), NULL);
+        }
+      else
+        {
+          e_cal_component_alarm_free (alarm);
+        }
+    }
+
+  cal_obj_uid_list_free (alarm_uids);
+  g_hash_table_destroy (tmp);
+
+  return alarms;
+}
+
+/**
+ * gcal_event_add_alarm:
+ * @self: a #GcalEvent
+ * @type: the minutes before the start date to trigger the alarm
+ * @has_sound: whether the alarm plays a sound or not
+ *
+ * Adds an alarm to @self that triggers @type minutes before the event's
+ * start date.
+ *
+ * If there's already an alarm for @type, it'll be replaced.
+ */
+void
+gcal_event_add_alarm (GcalEvent *self,
+                      guint      type,
+                      gboolean   has_sound)
+{
+  ECalComponentAlarmTrigger trigger;
+  ECalComponentAlarmAction action;
+  ECalComponentAlarm *alarm;
+  gchar *alarm_uid;
+
+  g_return_if_fail (GCAL_IS_EVENT (self));
+
+  /* Only 1 alarm per relative time */
+  if (g_hash_table_contains (self->alarms, GINT_TO_POINTER (type)))
+    {
+      const gchar *alarm_uid;
+
+      alarm_uid = g_hash_table_lookup (self->alarms, GINT_TO_POINTER (type));
+
+      e_cal_component_remove_alarm (self->component, alarm_uid);
+    }
+
+  /* Alarm */
+  alarm = e_cal_component_alarm_new ();
+
+  /* Setup the alarm trigger */
+  trigger.type = E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START;
+
+  trigger.u.rel_duration = icaldurationtype_null_duration ();
+  trigger.u.rel_duration.is_neg = TRUE;
+  trigger.u.rel_duration.minutes = type;
+
+  e_cal_component_alarm_set_trigger (alarm, trigger);
+
+  /* Action */
+  if (has_sound)
+    action = E_CAL_COMPONENT_ALARM_AUDIO;
+  else
+    action = E_CAL_COMPONENT_ALARM_DISPLAY;
+
+  e_cal_component_alarm_set_action (alarm, action);
+
+  /* Add the alarm to the component */
+  e_cal_component_add_alarm (self->component, alarm);
+
+  /* Add to the hash table */
+  alarm_uid = g_strdup (e_cal_component_alarm_get_uid (alarm));
+
+  g_hash_table_insert (self->alarms, GINT_TO_POINTER (type), alarm_uid);
+
+  e_cal_component_alarm_free (alarm);
+}
+
+/**
+ * gcal_event_remove_alarm:
+ * @self: a #GcalEvent
+ * @type: the minutes before the start date to trigger the alarm
+ *
+ * Removes an alarm from @self that triggers @type minutes before the event's
+ * start date.
+ *
+ * If there's no alarm set for @type, nothing happens.
+ */
+void
+gcal_event_remove_alarm (GcalEvent *self,
+                         guint      type)
+{
+  g_return_if_fail (GCAL_IS_EVENT (self));
+
+  /* Only 1 alarm per relative time */
+  if (g_hash_table_contains (self->alarms, GINT_TO_POINTER (type)))
+    {
+      const gchar *alarm_uid;
+
+      alarm_uid = g_hash_table_lookup (self->alarms, GINT_TO_POINTER (type));
+
+      e_cal_component_remove_alarm (self->component, alarm_uid);
+
+      g_hash_table_remove (self->alarms, GINT_TO_POINTER (type));
+    }
+}
+
 
 /**
  * gcal_event_get_location:

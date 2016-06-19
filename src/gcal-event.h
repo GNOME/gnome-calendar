@@ -62,6 +62,15 @@ void                 gcal_event_set_description                  (GcalEvent     
 
 gboolean             gcal_event_has_alarms                       (GcalEvent          *self);
 
+GList*               gcal_event_get_alarms                       (GcalEvent          *self);
+
+void                 gcal_event_add_alarm                        (GcalEvent          *self,
+                                                                  guint               type,
+                                                                  gboolean            has_sound);
+
+void                 gcal_event_remove_alarm                     (GcalEvent          *self,
+                                                                  guint               type);
+
 const gchar*         gcal_event_get_location                     (GcalEvent          *self);
 
 void                 gcal_event_set_location                     (GcalEvent          *self,
