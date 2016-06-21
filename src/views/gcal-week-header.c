@@ -403,7 +403,8 @@ gcal_week_header_draw (GcalWeekHeader *self,
       cairo_move_to (cr,
                      cell_width * i + sidebar_width - 3,
                      font_height + padding.bottom + 3);
-      cairo_rel_line_to (cr, 0.0, ALL_DAY_CELLS_HEIGHT);
+      cairo_set_line_width (cr, 0.25);
+      cairo_rel_line_to (cr, 0.0, gtk_widget_get_allocated_height (self->draw_area));
       cairo_stroke (cr);
       cairo_restore (cr);
 
