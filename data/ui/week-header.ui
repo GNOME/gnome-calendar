@@ -1,9 +1,8 @@
 <?xml version="1.0"?>
 <interface>
-  <template class="GcalWeekHeader" parent="GtkScrolledWindow">
+  <template class="GcalWeekHeader" parent="GtkGrid">
     <property name="visible">True</property>
     <property name="hexpand">True</property>
-    <property name="max-content-height">200</property>
     <child>
       <object class="GtkGrid">
         <property name="visible">True</property>
@@ -44,25 +43,30 @@
           </object>
         </child>
         <child>
-          <object class="GtkViewport">
+          <object class="GtkOverlay">
             <property name="visible">True</property>
-            <property name="shadow_type">none</property>
             <child>
-              <object class="GtkOverlay">
+              <object class="GtkDrawingArea" id="draw_area">
                 <property name="visible">True</property>
+                <property name="height-request">100</property>
+                <signal name="draw" handler="gcal_week_header_draw" object="GcalWeekHeader" swapped="yes"/>
+              </object>
+            </child>
+            <child type="overlay">
+              <object class="GtkScrolledWindow" id="scrolledwindow">
+                <property name="visible">True</property>
+                <property name="max-content-height">150</property>
                 <child>
-                  <object class="GtkDrawingArea" id="draw_area">
+                  <object class="GtkViewport">
                     <property name="visible">True</property>
-                    <property name="height-request">100</property>
-                    <signal name="draw" handler="gcal_week_header_draw" object="GcalWeekHeader" swapped="yes"/>
-                  </object>
-                </child>
-                <child type="overlay">
-                  <object class="GtkGrid" id="grid">
-                    <property name="visible">True</property>
-                    <property name="height-request">100</property>
-                    <property name="column-homogeneous">True</property>
-                    <property name="row-homogeneous">True</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <object class="GtkGrid" id="grid">
+                        <property name="visible">True</property>
+                        <property name="column-homogeneous">True</property>
+                        <property name="row-homogeneous">True</property>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>

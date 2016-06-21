@@ -29,7 +29,7 @@ G_BEGIN_DECLS
 
 #define GCAL_TYPE_WEEK_HEADER (gcal_week_header_get_type())
 
-G_DECLARE_FINAL_TYPE (GcalWeekHeader, gcal_week_header, GCAL, WEEK_HEADER, GtkScrolledWindow)
+G_DECLARE_FINAL_TYPE (GcalWeekHeader, gcal_week_header, GCAL, WEEK_HEADER, GtkGrid)
 
 void              gcal_week_header_set_manager        (GcalWeekHeader *self,
                                                        GcalManager    *manager);

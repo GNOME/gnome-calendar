@@ -31,13 +31,14 @@
 
 struct _GcalWeekHeader
 {
-  GtkScrolledWindow parent;
+  GtkGrid           parent;
 
   GtkWidget        *grid;
   GtkWidget        *draw_area;
   GtkWidget        *month_label;
   GtkWidget        *week_label;
   GtkWidget        *year_label;
+  GtkWidget        *scrolledwindow;
 
   GcalManager      *manager;
 
@@ -78,7 +79,7 @@ enum
   PROP_ACTIVE_DATE
 };
 
-G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_SCROLLED_WINDOW);
+G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_GRID);
 
 static GDateTime*
 get_start_of_week (GcalWeekHeader *self)
@@ -290,7 +291,8 @@ gcal_week_header_size_allocate (GtkWidget     *widget,
   gtk_style_context_get (context, state, "font", &bold_font, NULL);
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
 
-  gtk_widget_set_margin_top (self->grid, (4 * pango_font_description_get_size (bold_font)) / PANGO_SCALE);
+  gtk_widget_set_margin_top (self->scrolledwindow,
+                             (4 * pango_font_description_get_size (bold_font)) / PANGO_SCALE);
 
   GTK_WIDGET_CLASS (gcal_week_header_parent_class)->size_allocate (widget, alloc);
 }
@@ -456,6 +458,7 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, year_label);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, week_label);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, draw_area);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, scrolledwindow);
 
   gtk_widget_class_bind_template_callback (widget_class, gcal_week_header_draw);
 
