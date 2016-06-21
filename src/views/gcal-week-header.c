@@ -65,6 +65,9 @@ static void           gcal_week_header_set_property         (GObject      *objec
                                                              const GValue *value,
                                                              GParamSpec   *pspec);
 
+static void           gcal_week_header_size_allocate        (GtkWidget     *widget,
+                                                             GtkAllocation *alloc);
+
 static gboolean       gcal_week_header_draw                 (GcalWeekHeader *self,
                                                              cairo_t        *cr,
                                                              GtkWidget      *widget);
@@ -271,6 +274,27 @@ gcal_week_header_set_property (GObject      *object,
     }
 }
 
+static void
+gcal_week_header_size_allocate (GtkWidget     *widget,
+                                GtkAllocation *alloc)
+{
+  GcalWeekHeader *self = GCAL_WEEK_HEADER (widget);
+  GtkStyleContext *context;
+  GtkStateFlags state;
+
+  PangoFontDescription *bold_font;
+
+  context = gtk_widget_get_style_context (self->draw_area);
+  state = gtk_widget_get_state_flags (self->draw_area);
+
+  gtk_style_context_get (context, state, "font", &bold_font, NULL);
+  pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
+
+  gtk_widget_set_margin_top (self->grid, (4 * pango_font_description_get_size (bold_font)) / PANGO_SCALE);
+
+  GTK_WIDGET_CLASS (gcal_week_header_parent_class)->size_allocate (widget, alloc);
+}
+
 static gboolean
 gcal_week_header_draw (GcalWeekHeader *self,
                        cairo_t        *cr,
@@ -414,6 +438,8 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   object_class->finalize = gcal_week_header_finalize;
   object_class->get_property = gcal_week_header_get_property;
   object_class->set_property = gcal_week_header_set_property;
+
+  widget_class->size_allocate = gcal_week_header_size_allocate;
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-header.ui");
 
