@@ -42,6 +42,13 @@ struct _GcalWeekHeader
 
   GcalManager      *manager;
 
+  /*
+   * Stores the events as they come from the week-view
+   * The list will later be iterated after the active date is changed
+   * and the events will be placed
+   */
+  GList            *events;
+
   gint              first_weekday;
 
   gboolean          use_24h_format;
@@ -53,6 +60,8 @@ struct _GcalWeekHeader
 static GDateTime*     get_start_of_week                     (GcalWeekHeader *self);
 
 static void           update_headers                        (GcalWeekHeader *self);
+
+static void           place_events                          (GcalWeekHeader *self);
 
 static void           gcal_week_header_finalize             (GObject *object);
 
@@ -151,67 +160,106 @@ update_headers (GcalWeekHeader *self)
 }
 
 static void
+place_events (GcalWeekHeader *self)
+{
+  GList *l, *iter;
+  GDateTime *week_start;
+
+  if (!self->active_date)
+    return;
+
+  week_start = get_start_of_week (self);
+  iter = g_list_copy (self->events);
+
+  for (l = iter; l != NULL; l = l->next)
+    {
+      GcalEvent *event;
+      GtkWidget *widget;
+      GDateTime *event_start, *event_end;
+      gint start, end, i;
+
+      start = -1;
+      end = -1;
+      event = GCAL_EVENT (l->data);
+      widget = gcal_event_widget_new (event);
+      event_start = gcal_event_get_date_start (event);
+      event_end = gcal_event_get_date_end (event);
+
+      gtk_widget_set_visible (widget, TRUE);
+
+      for (i = 0; i < 7; i++)
+        {
+          GDateTime *day_start, *day_end;
+
+          day_start = g_date_time_add_days (week_start, i);
+          day_end = g_date_time_add_days (day_start, 1);
+
+          /* Checks if the event is present on the i-th day of the week */
+          if ((g_date_time_compare (event_start, day_start) < 0 && g_date_time_compare (event_end, day_end) >= 0) ||
+              (g_date_time_compare (event_start, day_start) >= 0 && g_date_time_compare (event_end, day_end) < 0) ||
+              (g_date_time_compare (event_start, day_start) >= 0 && g_date_time_compare (event_start, day_end) < 0) ||
+              (g_date_time_compare (event_end, day_start) > 0 && g_date_time_compare (event_end, day_end) < 0))
+            {
+              if (start == -1)
+                start = i;
+
+              end = i;
+            }
+        }
+
+      self->events = g_list_remove_all (self->events, l->data);
+
+      if (start == -1)
+        continue;
+
+      for (i = 1 ; ; i++)
+        {
+          gint j;
+          gboolean present;
+
+          present = FALSE;
+
+          /*
+           * Checks if the columns required for the event
+           * are free in the i-th row
+           */
+          for (j = start; j < end + 1; j++)
+            present = present || gtk_grid_get_child_at (GTK_GRID (self->grid), j, i);
+
+          if (!present)
+            {
+              gtk_grid_attach (GTK_GRID (self->grid), widget, start, i, end - start + 1, 1);
+              break;
+            }
+        }
+    }
+
+    g_list_free (iter);
+}
+
+static void
 gcal_week_header_finalize (GObject *object)
 {
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
 
   g_clear_pointer (&self->current_date, g_free);
+  g_list_free (self->events);
 }
 
 void
 gcal_week_header_add_event (GcalWeekHeader *self,
                             GcalEvent      *event)
 {
-  GDateTime *week_start, *week_end, *event_start, *event_end;
-  GtkWidget *child_widget, *place_holder_left, *place_holder_right;
-  gint start, end;
-
-  start = -1;
-  end = -1;
-  week_start = get_start_of_week (self);
-  week_end = g_date_time_add_days (week_start, 7);
-  event_start = gcal_event_get_date_start (event);
-  event_end = gcal_event_get_date_end (event);
-  child_widget = gcal_event_widget_new (event);
-  place_holder_left = gtk_invisible_new ();
-  place_holder_right = gtk_invisible_new ();
-
-  gtk_widget_set_visible (child_widget, TRUE);
-  gtk_widget_set_visible (place_holder_left, TRUE);
-  gtk_widget_set_visible (place_holder_right, TRUE);
-
-  start = (g_date_time_get_day_of_week (event_start) - self->first_weekday + 7) % 7;
-  end = (g_date_time_get_day_of_week (event_end) - self->first_weekday + 7) % 7;
-
-  if (g_date_time_compare (event_start, week_start) < 0)
-    start = 0;
-
-  if (g_date_time_compare (event_end, week_end) >= 0)
-    end = 6;
-
-  gtk_grid_insert_row (GTK_GRID (self->grid), 0);
-
-  if (gcal_event_get_all_day (event))
-    {
-      start = (g_date_time_get_day_of_week (event_start) - self->first_weekday + 7) % 7;
-      end = start;
-    }
-
-  gtk_grid_attach (GTK_GRID (self->grid),
-                   child_widget,
-                   start,
-                   0,
-                   end - start + 1,
-                   1);
+  self->events = g_list_append (self->events, event);
 }
 
 void
-gcal_week_header_remove_event (GcalWeekHeader *header,
+gcal_week_header_remove_event (GcalWeekHeader *self,
                                gchar          *uuid)
 {
   GList *children, *l;
 
-  children = gtk_container_get_children (GTK_CONTAINER (header->grid));
+  children = gtk_container_get_children (GTK_CONTAINER (self->grid));
 
   for (l = children; l != NULL; l = g_list_next (l))
     {
@@ -265,6 +313,7 @@ gcal_week_header_set_property (GObject      *object,
       self->active_date = g_value_dup_boxed (value);
 
       update_headers (self);
+      place_events (self);
 
       gtk_widget_queue_draw (self->draw_area);
 
@@ -469,12 +518,7 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 static void
 gcal_week_header_init (GcalWeekHeader *self)
 {
-  gint i;
-
   gtk_widget_init_template (GTK_WIDGET (self));
-
-  for (i = 1; i <= 7; i++)
-    gtk_grid_insert_column (GTK_GRID (self->grid), 0);
 }
 
 /* Public API */
@@ -515,6 +559,7 @@ gcal_week_header_set_current_date (GcalWeekHeader *self,
   self->current_date = gcal_dup_icaltime (current_date);
 
   update_headers (self);
+  place_events (self);
 
   gtk_widget_queue_draw (self->draw_area);
 }
