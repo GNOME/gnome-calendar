@@ -331,14 +331,28 @@ gcal_week_header_size_allocate (GtkWidget     *widget,
   GcalWeekHeader *self = GCAL_WEEK_HEADER (widget);
   GtkStyleContext *context;
   GtkStateFlags state;
+  GtkAllocation draw_alloc;
+
+  gdouble sidebar_width, cell_width;
 
   PangoFontDescription *bold_font;
 
   context = gtk_widget_get_style_context (self->draw_area);
   state = gtk_widget_get_state_flags (self->draw_area);
+  sidebar_width = gcal_week_view_get_sidebar_width (self->draw_area);
+
+  gtk_widget_get_allocation (self->draw_area, &draw_alloc);
+
+  cell_width = (draw_alloc.width - sidebar_width) / 7;
 
   gtk_style_context_get (context, state, "font", &bold_font, NULL);
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
+
+  gtk_widget_set_margin_start (self->scrolledwindow,
+                               gcal_week_view_get_sidebar_width (self->draw_area) + 1);
+
+  gtk_widget_set_margin_end (self->scrolledwindow,
+                             gtk_widget_get_allocated_width (self->draw_area) - cell_width * 7 - sidebar_width + 7);
 
   gtk_widget_set_margin_top (self->scrolledwindow,
                              (4 * pango_font_description_get_size (bold_font)) / PANGO_SCALE);
