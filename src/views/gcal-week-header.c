@@ -63,6 +63,8 @@ static void           update_headers                        (GcalWeekHeader *sel
 
 static void           place_events                          (GcalWeekHeader *self);
 
+static void           clear_current_events                  (GcalWeekHeader *self);
+
 static void           gcal_week_header_finalize             (GObject *object);
 
 static void           gcal_week_header_get_property         (GObject    *object,
@@ -238,6 +240,28 @@ place_events (GcalWeekHeader *self)
 }
 
 static void
+clear_current_events (GcalWeekHeader *self)
+{
+  GList *children, *l;
+
+  children = g_list_copy (gtk_container_get_children (GTK_CONTAINER (self->grid)));
+
+  for (l = children; l != NULL; l = l->next)
+    {
+      if (!GCAL_IS_EVENT_WIDGET (l->data))
+        continue;
+
+      /* Add current events to events list to add later if necessary */
+      self->events = g_list_append (self->events,
+                                    gcal_event_widget_get_event (l->data));
+
+      gtk_widget_destroy (l->data);
+    }
+
+  g_list_free (children);
+}
+
+static void
 gcal_week_header_finalize (GObject *object)
 {
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
@@ -313,6 +337,7 @@ gcal_week_header_set_property (GObject      *object,
       self->active_date = g_value_dup_boxed (value);
 
       update_headers (self);
+      clear_current_events (self);
       place_events (self);
 
       gtk_widget_queue_draw (self->draw_area);
@@ -573,6 +598,7 @@ gcal_week_header_set_current_date (GcalWeekHeader *self,
   self->current_date = gcal_dup_icaltime (current_date);
 
   update_headers (self);
+  clear_current_events (self);
   place_events (self);
 
   gtk_widget_queue_draw (self->draw_area);
