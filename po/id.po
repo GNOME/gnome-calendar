@@ -7,22 +7,23 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2015-04-02 15:59+0000\n"
-"PO-Revision-Date: 2016-02-15 17:02+0700\n"
-"Last-Translator: Cahaya Maulidian Caturlipita <winluxhuman@gmail.com>\n"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-06-17 21:42+0000\n"
+"PO-Revision-Date: 2016-06-30 06:09+0700\n"
+"Last-Translator: Andika Triwidada <andika@gmail.com>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.6\n"
+"X-Generator: Poedit 1.8.8\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:515
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:483
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -36,10 +37,10 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"Kalender GNOME adalah aplikasi kalender yang indah dan sederhana yang "
-"didesain untuk menyatu sempurna dengan desktop GNOME. Dengan menggunakan "
-"ulang komponen-komponen yang digunakan untuk membangun desktop GNOME, "
-"Kalender terintegrasi dengan baik dengan ekosistem GNOME."
+"GNOME Calendar adalah aplikasi kalender yang sederhana dan indah, dirancang "
+"untuk secara sempurna pas dengan desktop GNOME. Dengan memakai ulang "
+"komponen pembangun desktop GNOME, Calendar terintegrasi secara baik dengan "
+"ekosistem GNOME."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
@@ -47,12 +48,13 @@ msgid ""
 "centred usability. No excess, no lacks. You'll feel comfortable using "
 "Calendar, like you've been using it for ages!"
 msgstr ""
-"Kami menargetkan untuk menemukan keseimbangan yang sempurna antara keunggulan-"
-"keunggulan yang dirangkai dengan baik dan kemudahan penggunaan yang berfokus "
-"pada pengguna. Tidak lebih, tidak kurang. Anda akan merasa nyaman menggunakan "
-"Kalender, seperti anda telah menggunakannya dalam waktu yang lama!"
+"Kami berupaya mencari keseimbangan sempurna antara fitur yang dibuat dengan "
+"baik dan usabilitas yang terpusat pengguna. Tak ada yang berlebihan, tak ada "
+"kekurangan. Anda akan merasa nyaman memakai Calendar, serasa Anda sudah "
+"memakainya bertahun-tahun!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Cari acara"
 
@@ -62,7 +64,7 @@ msgstr "Manajemen kalender"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
-msgstr "Akses, dan kelola kalender"
+msgstr "Mengakses dan mengelola kalender"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:3
 msgid "Calendar;Event;Reminder;"
@@ -74,7 +76,7 @@ msgstr "Jendela dimaksimalkan"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:2
 msgid "Window maximized state"
-msgstr "Keadaan jendela termaksimalkan"
+msgstr "Keadaan termaksimalkan jendela"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:3
 msgid "Window size"
@@ -94,12 +96,12 @@ msgstr "Posisi jendela (x dan y)."
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:7
 msgid "Type of the active view"
-msgstr "Tipe dari tampilan yang aktif"
+msgstr "Tipe dari tilikan yang aktif"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
-"Tipe dari tampilan jendela yang aktif, nilai baku adalah: tampilan bulanan"
+"Tipe dari tilikan jendela yang aktif, nilai baku adalah: tilikan bulanan"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:9
 msgid "List of the disabled sources"
@@ -107,13 +109,14 @@ msgstr "Daftar sumber yang dinonaktifkan"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:10
 msgid "Sources disabled last time Calendar ran"
-msgstr "Sumber dinonaktifkan saat terakhir Kalender dijalankan"
+msgstr "Sumber dimatikan terakhir kali Calendar dijalankan"
 
-#: ../data/ui/edit-dialog.ui.h:1
+#: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
+#: ../src/gcal-source-dialog.c:1114
 msgid "Cancel"
 msgstr "Batal"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
 msgid "Done"
 msgstr "Selesai"
 
@@ -133,45 +136,248 @@ msgstr "Berakhir"
 msgid "Notes"
 msgstr "Catatan"
 
-#: ../data/ui/edit-dialog.ui.h:7
+#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "Lokasi"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:385
-msgid "All day"
-msgstr "Sepanjang hari"
+#: ../data/ui/edit-dialog.ui.h:8
+msgid "All Day"
+msgstr "Sepanjang Hari"
 
 #: ../data/ui/edit-dialog.ui.h:9
-msgid "Delete event"
-msgstr "Hapus acara"
+msgid "Delete Event"
+msgstr "Hapus Acara"
+
+#: ../data/ui/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Umum"
+
+#: ../data/ui/help-overlay.ui.h:2
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "Acara baru"
+
+#: ../data/ui/help-overlay.ui.h:3
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Tutup jendela"
+
+#: ../data/ui/help-overlay.ui.h:4
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Cari"
+
+#: ../data/ui/help-overlay.ui.h:5
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Tampilkan bantuan"
+
+#: ../data/ui/help-overlay.ui.h:6
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Pintasan"
+
+#: ../data/ui/help-overlay.ui.h:7
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Navigasi"
+
+#: ../data/ui/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "Mundur"
+
+#: ../data/ui/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "Maju"
+
+#: ../data/ui/help-overlay.ui.h:10
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "Tampilkan hari ini"
+
+#: ../data/ui/help-overlay.ui.h:11
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "Tilikan selanjutnya"
+
+#: ../data/ui/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "Tilikan sebelumnya"
+
+#: ../data/ui/help-overlay.ui.h:13
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Tilik"
+
+#: ../data/ui/help-overlay.ui.h:14
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "Tilikan bulan"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "Tilikan tahun"
 
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
-msgstr "Tambah A_cara..."
+msgstr "Ta_mbah Acara…"
 
 #: ../data/ui/menus.ui.h:2
 msgid "_Search…"
-msgstr "Ca_ri..."
+msgstr "_Cari…"
 
 #: ../data/ui/menus.ui.h:3
+msgid "_Calendars…"
+msgstr "_Kalender…"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Keyboard Shortcuts"
+msgstr "Pintasan Papan Ti_k"
+
+#: ../data/ui/menus.ui.h:5
 msgid "_About"
 msgstr "Tent_ang"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:6
 msgid "_Quit"
 msgstr "_Keluar"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:7
 msgid "_Synchronize"
 msgstr "_Selaraskan"
 
+#: ../data/ui/menus.ui.h:8
+msgid "From Web…"
+msgstr "Dari Web…"
+
+#: ../data/ui/menus.ui.h:9
+msgid "New Local Calendar…"
+msgstr "Kalender Lokal Baru…"
+
+#: ../data/ui/menus.ui.h:10
+msgid "From File…"
+msgstr "Dari Berkas…"
+
+#: ../data/ui/quick-add-popover.ui.h:1
+msgid "Edit Details…"
+msgstr "Sunting Rincian…"
+
+#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "Tambah"
+
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
-msgstr "Tidak ada hasil yang ditemukan"
+msgstr "Tak ditemukan hasil"
 
 #: ../data/ui/search-view.ui.h:2
-msgid "Use the entry above to search for events."
-msgstr "Gunakan masukan di atas untuk mencari peristiwa."
+msgid "Try a different search"
+msgstr "Cobalah pencarian lain"
+
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1130
+#: ../src/gcal-window.c:1134
+msgid "Undo"
+msgstr "Tak jadi"
+
+#: ../data/ui/source-dialog.ui.h:2
+msgid "Online Accounts"
+msgstr "Akun Daring"
+
+#: ../data/ui/source-dialog.ui.h:3
+msgid "Open online account settings"
+msgstr "Buka pengaturan akun daring"
+
+#: ../data/ui/source-dialog.ui.h:4
+msgid "Google"
+msgstr "Google"
+
+#: ../data/ui/source-dialog.ui.h:5
+msgid "Click to set up"
+msgstr "Klik untuk menyiapkan"
+
+#: ../data/ui/source-dialog.ui.h:6
+msgid "ownCloud"
+msgstr "ownCloud"
+
+#: ../data/ui/source-dialog.ui.h:7
+msgid "Microsoft Exchange"
+msgstr "Microsoft Exchange"
+
+#: ../data/ui/source-dialog.ui.h:8
+msgid "Calendars"
+msgstr "Kalender"
+
+#: ../data/ui/source-dialog.ui.h:10
+msgid "Overview"
+msgstr "Ringkasan"
+
+#: ../data/ui/source-dialog.ui.h:11
+msgid "Add new events to this calendar by default"
+msgstr "Secara baku tambahkan acara baru ke kalender ini"
+
+#: ../data/ui/source-dialog.ui.h:12
+msgid "Remove Calendar"
+msgstr "Hapus Kalender"
+
+#: ../data/ui/source-dialog.ui.h:13
+msgid "Display calendar"
+msgstr "Tampilkan kalender"
+
+#: ../data/ui/source-dialog.ui.h:14
+msgid "Calendar name"
+msgstr "Nama kalender"
+
+#: ../data/ui/source-dialog.ui.h:15
+msgid "Color"
+msgstr "Warna"
+
+#: ../data/ui/source-dialog.ui.h:16
+msgid "Account"
+msgstr "Akun"
+
+#: ../data/ui/source-dialog.ui.h:18
+msgid "Settings"
+msgstr "Pengaturan"
+
+#: ../data/ui/source-dialog.ui.h:19
+msgid "Edit Calendar"
+msgstr "Sunting Kalender"
+
+#: ../data/ui/source-dialog.ui.h:20
+msgid ""
+"Enter the address of the calendar that you want to add. If the calendar "
+"belongs to one of your online accounts, you can add it through the <a href="
+"\"GOA\">online account settings</a>."
+msgstr ""
+"Masukkan alamat kalender yang ingin Anda tambahkan. Bila kalender adalah "
+"milik satu dari akun daring Anda, Anda dapat menambahkannya melalui <a href="
+"\"GOA\">Pengaturan akun daring</a>."
+
+#: ../data/ui/source-dialog.ui.h:21
+msgid "Calendar Address"
+msgstr "Alamat Kalender"
+
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2197
+#: ../src/gcal-source-dialog.c:2203
+msgid "Add Calendar"
+msgstr "Tambah Kalender"
+
+#: ../data/ui/source-dialog.ui.h:24
+msgid "User"
+msgstr "Pengguna"
+
+#: ../data/ui/source-dialog.ui.h:25
+msgid "Password"
+msgstr "Kata Sandi"
+
+#: ../data/ui/source-dialog.ui.h:26
+msgid "Connect"
+msgstr "Sambung"
 
 #: ../data/ui/time-selector.ui.h:1
 msgid "00:00"
@@ -189,34 +395,35 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:305
+#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
 msgid "Month"
 msgstr "Bulan"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:307
+#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
 msgid "Year"
 msgstr "Tahun"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
 msgid "Today"
 msgstr "Hari ini"
 
 #: ../data/ui/window.ui.h:5
-msgid "Create"
-msgstr "Buat"
+msgid "Manage your calendars"
+msgstr "Kelola kalender Anda"
 
-#: ../data/ui/window.ui.h:6
-msgid "More Details"
-msgstr "Lebih Detail"
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2226
+msgid "Calendar Settings"
+msgstr "Pengaturan Kalender"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
 msgstr "Tidak ada acara"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:604
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1010
 msgid "Add Event…"
-msgstr "Tambah Peristiwa..."
+msgstr "Tambah Acara…"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -224,60 +431,122 @@ msgstr "Tampilkan nomor versi"
 
 #: ../src/gcal-application.c:107
 msgid "Open calendar on the passed date"
-msgstr "Buka kalender pada tanggal yang terlewat"
+msgstr "Buka kalender pada tanggal yang diberikan"
 
 #: ../src/gcal-application.c:112
 msgid "Open calendar showing the passed event"
 msgstr "Buka kalender yang menampilkan acara yang telah lewat"
 
-#: ../src/gcal-application.c:336
+#: ../src/gcal-application.c:324
 msgid "- Calendar management"
 msgstr "- Manajemen kalender"
 
-#: ../src/gcal-application.c:503
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Hak Cipta © %Id para penulis Kalender"
+#: ../src/gcal-application.c:471
+#, c-format
+msgid "Copyright © %d The Calendar authors"
+msgstr "Hak Cipta © %d para penulis Kalender"
 
-#: ../src/gcal-application.c:509
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Hak Cipta © %Id–%Id para penulis Kalender"
+#: ../src/gcal-application.c:477
+#, c-format
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Hak Cipta © %d–%d para penulis Kalender"
 
-#: ../src/gcal-application.c:522
+#: ../src/gcal-application.c:490
 msgid "translator-credits"
-msgstr "Andika Triwidada <andika@gmail.com>, 2013"
+msgstr "Andika Triwidada <andika@gmail.com>, 2013, 2016"
 
-#: ../src/gcal-date-selector.c:303
+#: ../src/gcal-date-selector.c:362
 msgid "Day"
 msgstr "Hari"
 
-#: ../src/gcal-edit-dialog.c:657
+#: ../src/gcal-edit-dialog.c:429
 msgid "Save"
 msgstr "Simpan"
 
-#: ../src/gcal-edit-dialog.c:841
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
-msgstr "Acara tak berjudul"
+msgstr "Acara tanpa nama"
 
-#: ../src/gcal-month-view.c:820
+#: ../src/gcal-month-view.c:1248
 msgid "Other events"
-msgstr "Acara lainnya"
+msgstr "Acara lain"
 
-#. TODO: Warning in some languages this string can be too long and may overlap wit the number
-#: ../src/gcal-month-view.c:1203
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/gcal-month-view.c:1710
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
-msgstr[0] "%d Acara lainnya"
+msgstr[0] "%d acara lain"
 
-#: ../src/gcal-time-selector.c:96
+#: ../src/gcal-quick-add-popover.c:113
 #, c-format
-msgid "%.2d:%.2d AM"
-msgstr "%.2d:%.2d AM"
+msgid "%s (this calendar is read-only)"
+msgstr "%s (kalender ini hanya-baca)"
 
-#: ../src/gcal-time-selector.c:98
+#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%d %B"
+
+#: ../src/gcal-quick-add-popover.c:243
 #, c-format
-msgid "%.2d:%.2d PM"
-msgstr "%.2d:%.2d PM"
+msgid "New Event from %s to %s"
+msgstr "Kejadian Baru dari %s sampai %s"
+
+#: ../src/gcal-quick-add-popover.c:249
+#, c-format
+msgid "New Event on %s"
+msgstr "Kejadian Baru pada %s"
+
+#: ../src/gcal-search-view.c:353
+msgid "All day"
+msgstr "Sepanjang hari"
+
+#: ../src/gcal-search-view.c:502
+msgid "Use the entry above to search for events."
+msgstr "Pakai entri di atas untuk mencari acara."
+
+#. Dialog
+#: ../src/gcal-source-dialog.c:1111
+msgid "Select a calendar file"
+msgstr "Pilih sebuah berkas kalender"
+
+#: ../src/gcal-source-dialog.c:1115
+msgid "Open"
+msgstr "Buka"
+
+#: ../src/gcal-source-dialog.c:1122
+msgid "Calendar files"
+msgstr "Berkas kalender"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1164
+msgid "Unnamed Calendar"
+msgstr "Kalender Tanpa Nama"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1764
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "Kalender <b>%s</b> dihapus"
+
+#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
+msgid "Off"
+msgstr "Mati"
+
+#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
+msgid "On"
+msgstr "Nyala"
+
+#: ../src/gcal-time-selector.c:82
+#, c-format
+msgid "%s AM"
+msgstr "%s AM"
+
+#: ../src/gcal-time-selector.c:84
+#, c-format
+msgid "%s PM"
+msgstr "%s PM"
 
 #: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
@@ -291,88 +560,10 @@ msgstr "Siang"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#: ../src/gcal-window.c:636
-#, c-format
-msgid "New Event on %s"
-msgstr "Acara Baru pada %s"
-
-#: ../src/gcal-window.c:1036
+#: ../src/gcal-window.c:1130
 msgid "Another event deleted"
-msgstr "Acara lainnya dihapus"
+msgstr "Acara lain dihapus"
 
-#: ../src/gcal-window.c:1036 ../src/gcal-window.c:1040
-msgid "Undo"
-msgstr "Urungkan"
-
-#: ../src/gcal-window.c:1040
+#: ../src/gcal-window.c:1134
 msgid "Event deleted"
-msgstr "Acara dihapus"
-
-#~ msgid "Unable to initialize GtkClutter"
-#~ msgstr "Tak bisa menginisialisasi GtkClutter"
-
-#~ msgid "Weeks"
-#~ msgstr "Mingguan"
-
-#~ msgid "Months"
-#~ msgstr "Bulanan"
-
-#~ msgid "Years"
-#~ msgstr "Tahunan"
-
-#~ msgid "View as"
-#~ msgstr "Tilik sebagai"
-
-#~ msgid "Change the date"
-#~ msgstr "Ubah tanggal"
-
-#~ msgid "Event Details"
-#~ msgstr "Rincian Kejadian"
-
-#~ msgid "What (e.g. Alien Invasion)"
-#~ msgstr "Apa (mis. Invasi Mahluk Asing)"
-
-#~ msgid "New Event from %s to %s"
-#~ msgstr "Kejadian Baru dari %s sampai %s"
-
-#~ msgid "Notification"
-#~ msgstr "Pemberitahuan"
-
-#~ msgid "Email"
-#~ msgstr "Surel"
-
-#~ msgid "days"
-#~ msgstr "hari"
-
-#~ msgid "weeks"
-#~ msgstr "minggu"
-
-#~ msgid "hours"
-#~ msgstr "jam"
-
-#~ msgid "minutes"
-#~ msgstr "menit"
-
-#~ msgid "before"
-#~ msgstr "sebelum"
-
-#~ msgid "WWW 99 - WWW 99"
-#~ msgstr "WWW 99 - WWW 99"
-
-#~ msgid "Change the time"
-#~ msgstr "Ubah waktu"
-
-#~ msgid "Week"
-#~ msgstr "Minggu"
-
-#~ msgid "List"
-#~ msgstr "Daftar"
-
-#~ msgid "Back"
-#~ msgstr "Mundur"
-
-#~ msgid "Edit"
-#~ msgstr "Sunting"
-
-#~ msgid "Year %d"
-#~ msgstr "Tahun %d"
+msgstr "Kejadian dihapus"
