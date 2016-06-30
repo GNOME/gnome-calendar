@@ -59,6 +59,9 @@ struct _GcalWeekHeader
 
 static GDateTime*     get_start_of_week                     (GcalWeekHeader *self);
 
+static gint           events_compare_func                   (GcalEvent *first,
+                                                             GcalEvent *second);
+
 static void           update_headers                        (GcalWeekHeader *self);
 
 static void           place_events                          (GcalWeekHeader *self);
@@ -110,6 +113,27 @@ get_start_of_week (GcalWeekHeader *self)
   *new_date = icaltime_set_timezone (new_date, self->active_date->zone);
 
   return icaltime_to_datetime (new_date);
+}
+
+static gint
+events_compare_func (GcalEvent *first,
+                     GcalEvent *second)
+{
+  gint retval;
+
+  /* Multiday events should come before single day events */
+  if (gcal_event_is_multiday (first) != gcal_event_is_multiday (second))
+    return gcal_event_is_multiday (second) - gcal_event_is_multiday (first);
+
+  /* Compare with respect to start day */
+  retval = g_date_time_compare (gcal_event_get_date_start (first),
+                                gcal_event_get_date_start (second));
+
+  if (retval != 0)
+    return retval;
+
+  /* Compare with respect to end day effectively comparing with respect to duration */
+  return g_date_time_compare (gcal_event_get_date_end (second), gcal_event_get_date_end (first));
 }
 
 static void
@@ -172,6 +196,8 @@ place_events (GcalWeekHeader *self)
 
   week_start = get_start_of_week (self);
   iter = g_list_copy (self->events);
+
+  iter = g_list_sort (iter, (GCompareFunc) events_compare_func);
 
   for (l = iter; l != NULL; l = l->next)
     {
