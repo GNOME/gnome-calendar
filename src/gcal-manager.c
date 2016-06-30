@@ -1594,12 +1594,11 @@ gcal_manager_get_event_from_shell_search (GcalManager *manager,
 
       event = l->data;
 
+      /* Found the event */
       if (g_strcmp0 (gcal_event_get_uid (event), uuid) == 0)
-        {
-          new_event = event;
-        }
-
-      g_object_unref (event);
+        new_event = event;
+      else
+        g_object_unref (event);
     }
 
   g_list_free (list);
