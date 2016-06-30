@@ -113,6 +113,7 @@ struct _GcalWindow
   GtkWidget           *source_dialog;
   gint                 refresh_timeout;
   gint                 refresh_timeout_id;
+  gint                 open_edit_dialog_timeout_id;
 
   /* temp to keep event_creation */
   gboolean             open_edit_dialog;
@@ -1203,16 +1204,17 @@ schedule_open_edit_dialog_by_uuid (OpenEditDialogData *edit_dialog_data)
   widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (window->month_view), edit_dialog_data->uuid);
   if (widgets != NULL)
     {
+      window->open_edit_dialog_timeout_id = 0;
+
       event_activated (NULL, widgets->data, edit_dialog_data->window);
       g_list_free (widgets);
       g_free (edit_dialog_data->uuid);
       g_free (edit_dialog_data);
-      return FALSE;
+
+      return G_SOURCE_REMOVE;
     }
-  else
-    {
-      return TRUE;
-    }
+
+  return G_SOURCE_CONTINUE;
 }
 
 static void
@@ -1430,6 +1432,12 @@ gcal_window_finalize (GObject *object)
     {
       g_source_remove (window->save_geometry_timeout_id);
       window->save_geometry_timeout_id = 0;
+    }
+
+  if (window->open_edit_dialog_timeout_id > 0)
+    {
+      g_source_remove (window->open_edit_dialog_timeout_id);
+      window->open_edit_dialog_timeout_id = 0;
     }
 
   /* If we have a queued event to delete, remove it now */
@@ -1674,6 +1682,8 @@ gcal_window_open_event_by_uuid (GcalWindow  *window,
       OpenEditDialogData *edit_dialog_data = g_new0 (OpenEditDialogData, 1);
       edit_dialog_data->window = window;
       edit_dialog_data->uuid = g_strdup (uuid);
-      g_timeout_add_seconds (2, (GSourceFunc) schedule_open_edit_dialog_by_uuid, edit_dialog_data);
+      window->open_edit_dialog_timeout_id = g_timeout_add_seconds (2,
+                                                                   (GSourceFunc) schedule_open_edit_dialog_by_uuid,
+                                                                   edit_dialog_data);
     }
 }
