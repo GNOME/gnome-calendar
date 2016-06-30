@@ -161,12 +161,12 @@ update_headers (GcalWeekHeader *self)
 
   if (g_date_time_get_year (week_start) == g_date_time_get_year (week_end))
     {
-      week_label = g_strdup_printf ("Week %d", g_date_time_get_week_of_year (week_start));
+      week_label = g_strdup_printf ("week %d", g_date_time_get_week_of_year (week_start));
       year_label = g_strdup_printf ("%d", g_date_time_get_year (week_start));
     }
   else
     {
-      week_label = g_strdup_printf ("Week %d/%d",
+      week_label = g_strdup_printf ("week %d/%d",
                                     g_date_time_get_week_of_year (week_start),
                                     g_date_time_get_week_of_year (week_end));
       year_label = g_strdup_printf ("%d-%d",
@@ -427,7 +427,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
   PangoLayout *layout;
   PangoFontDescription *bold_font;
 
-  gint i, pos_i, start_grid_y, current_cell;
+  gint i, pos_i, start_grid_y;
   gint font_height;
   gdouble sidebar_width, cell_width;
   icaltimetype *start_of_week, *end_of_week;
@@ -458,7 +458,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
 
   layout = pango_cairo_create_layout (cr);
   gtk_style_context_get (context, state, "font", &bold_font, NULL);
-  pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
+  pango_font_description_set_weight (bold_font, PANGO_WEIGHT_MEDIUM);
   pango_layout_set_font_description (layout, bold_font);
 
   week_start = get_start_of_week (self);
@@ -493,7 +493,12 @@ gcal_week_header_draw (GcalWeekHeader *self,
       /* Draws the date of days in the week */
       weekday_date = g_strdup_printf ("%d", n_day);
 
-      pango_font_description_set_size (bold_font, 1.5 * pango_font_description_get_size (bold_font));
+      gtk_style_context_save (context);
+      gtk_style_context_add_class (context, "week-dates");
+      gtk_style_context_get (context, state, "font", &bold_font, NULL);
+      gtk_style_context_get_color (context, state, &color);
+      gdk_cairo_set_source_rgba (cr, &color);
+
       pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, weekday_date, -1);
       cairo_move_to (cr,
@@ -501,16 +506,23 @@ gcal_week_header_draw (GcalWeekHeader *self,
                      font_height + padding.bottom);
       pango_cairo_show_layout (cr,layout);
 
-      /* Draws the days name */
-      weekday_abv = g_strdup_printf ("%s", gcal_get_weekday ((i + self->first_weekday) % 7));
+      gtk_style_context_restore (context);
 
-      pango_font_description_set_size (bold_font, pango_font_description_get_size (bold_font)/1.5);
+      /* Draws the days name */
+      weekday_abv = g_strdup_printf ("%s", g_utf8_strup (gcal_get_weekday ((i + self->first_weekday) % 7), -1));
+
+      gtk_style_context_save (context);
+      gtk_style_context_add_class (context, "week-names");
+      gtk_style_context_get (context, state, "font", &bold_font, NULL);
+
       pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, weekday_abv, -1);
       cairo_move_to (cr,
                      padding.left + cell_width * i + sidebar_width,
                      0);
       pango_cairo_show_layout (cr, layout);
+
+      gtk_style_context_restore (context);
 
       /* Draws the lines after each day of the week */
       cairo_save (cr);
@@ -526,12 +538,21 @@ gcal_week_header_draw (GcalWeekHeader *self,
       g_free (weekday_abv);
     }
 
-  gtk_style_context_get_color (context,
-                               state | GTK_STATE_FLAG_INSENSITIVE,
-                               &color);
+  cairo_save (cr);
+  cairo_move_to (cr,
+                 cell_width * 7 + sidebar_width - 3,
+                 font_height + padding.bottom + 3);
+  cairo_set_line_width (cr, 0.25);
+  cairo_rel_line_to (cr, 0.0, gtk_widget_get_allocated_height (self->draw_area));
+  cairo_stroke (cr);
+  cairo_restore (cr);
+
+  gtk_style_context_add_class (context, "margin");
+
+  gtk_style_context_get_color (context, state, &color);
   gdk_cairo_set_source_rgba (cr, &color);
-  pos_i = font_height + padding.bottom;
-  cairo_move_to (cr, sidebar_width, pos_i + 0.3);
+  cairo_move_to (cr, 0, gtk_widget_get_allocated_height (self->draw_area));
+  cairo_rel_line_to (cr, gtk_widget_get_allocated_width (self->draw_area), 0);
 
   cairo_stroke (cr);
 
