@@ -16,6 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
 
 #include "gcal-week-header.h"
 #include "gcal-week-view.h"
@@ -39,6 +40,8 @@ struct _GcalWeekHeader
   GtkWidget        *week_label;
   GtkWidget        *year_label;
   GtkWidget        *scrolledwindow;
+  GtkWidget        *expand_button;
+  GtkWidget        *expand_button_image;
 
   GcalManager      *manager;
 
@@ -50,6 +53,12 @@ struct _GcalWeekHeader
   GList            *events;
 
   gint              first_weekday;
+
+  /*
+   * Used for checking if the header is in collapsed state or expand state
+   * false is collapse state true is expand state
+   */
+  gboolean          expanded;
 
   gboolean          use_24h_format;
 
@@ -67,6 +76,13 @@ static void           update_headers                        (GcalWeekHeader *sel
 static void           place_events                          (GcalWeekHeader *self);
 
 static void           clear_current_events                  (GcalWeekHeader *self);
+
+static void           header_collapse                       (GcalWeekHeader *self);
+
+static void           header_expand                         (GcalWeekHeader *self);
+
+static void           on_expand_action_activated            (GcalWeekHeader *self,
+                                                             gpointer        user_data);
 
 static void           gcal_week_header_finalize             (GObject *object);
 
@@ -189,13 +205,19 @@ static void
 place_events (GcalWeekHeader *self)
 {
   GList *l, *iter;
-  GDateTime *week_start;
+  GDateTime *week_start, *week_end;
+  gint i;
+  gint hidden_events[7];
 
   if (!self->active_date)
     return;
 
   week_start = get_start_of_week (self);
+  week_end = g_date_time_add_days (week_start, 6);
   iter = g_list_copy (self->events);
+
+  for (i = 0; i < 7; i++)
+    hidden_events[i] = 0;
 
   iter = g_list_sort (iter, (GCompareFunc) events_compare_func);
 
@@ -204,10 +226,12 @@ place_events (GcalWeekHeader *self)
       GcalEvent *event;
       GtkWidget *widget;
       GDateTime *event_start, *event_end;
-      gint start, end, i;
+      gint start, end;
+      gboolean placed;
 
       start = -1;
       end = -1;
+      placed = FALSE;
       event = GCAL_EVENT (l->data);
       widget = gcal_event_widget_new (event);
       event_start = gcal_event_get_date_start (event);
@@ -245,6 +269,9 @@ place_events (GcalWeekHeader *self)
           gint j;
           gboolean present;
 
+          if (!(self->expanded) && i >=4)
+            break;
+
           present = FALSE;
 
           /*
@@ -256,11 +283,44 @@ place_events (GcalWeekHeader *self)
 
           if (!present)
             {
+              gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (widget),
+                                                MAX (week_start, event_start));
+              gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget),
+                                              MIN(week_end, event_end));
+
               gtk_grid_attach (GTK_GRID (self->grid), widget, start, i, end - start + 1, 1);
+              placed = TRUE;
               break;
             }
         }
+
+      if (!placed)
+        {
+          for (i = start; i <= end; i++)
+            hidden_events[i]++;
+
+          self->events = g_list_append (self->events, event);
+        }
     }
+
+    if (!(self->expanded))
+      {
+        gtk_grid_remove_row (GTK_GRID (self->grid), 4);
+
+        for (i = 0; i < 7; i++)
+          {
+            if (hidden_events[i])
+              {
+                GtkWidget *widget;
+
+                widget = gtk_label_new (g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", hidden_events[i]),
+                                                         hidden_events[i]));
+
+                gtk_widget_set_visible (widget, TRUE);
+                gtk_grid_attach (GTK_GRID (self->grid), widget, i, 4, 1, 1);
+              }
+          }
+      }
 
     g_list_free (iter);
 }
@@ -288,6 +348,106 @@ clear_current_events (GcalWeekHeader *self)
 }
 
 static void
+header_collapse (GcalWeekHeader *self)
+{
+  gint hidden_events[7], row, i;
+
+  self->expanded = FALSE;
+
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (self->scrolledwindow),
+                                  GTK_POLICY_NEVER,
+                                  GTK_POLICY_NEVER);
+  gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolledwindow), -1);
+  gtk_image_set_from_icon_name (GTK_IMAGE (self->expand_button_image), "go-down-symbolic", 4);
+
+  for (i = 0; i < 7; i++)
+    hidden_events[i] = 0;
+
+  /* Gets count of number of extra events in each column */
+  for (row = 4; ; row++)
+    {
+      gboolean empty;
+
+      empty = TRUE;
+
+      for (i = 0; i < 7; i++)
+        {
+          if (gtk_grid_get_child_at (GTK_GRID (self->grid), i, row))
+            {
+              hidden_events[i]++;
+              empty = FALSE;
+            }
+        }
+
+      if (empty)
+        break;
+    }
+
+  /* Removes the excess events and adds them to the object list of events */
+  for ( ; row >= 4; row--)
+    {
+      for (i = 0; i < 7; i++)
+      {
+        if (gtk_grid_get_child_at (GTK_GRID (self->grid), i, row))
+          {
+            GcalEventWidget *widget;
+
+            widget = GCAL_EVENT_WIDGET (gtk_grid_get_child_at (GTK_GRID (self->grid), i, row));
+
+            self->events = g_list_append (self->events, gcal_event_widget_get_event (widget));
+
+            gtk_widget_destroy (GTK_WIDGET (widget));
+          }
+      }
+    }
+
+  /* Adds labels in the last row */
+  for (i = 0; i < 7; i++)
+    {
+      if (hidden_events[i])
+        {
+          GtkWidget *widget;
+
+          widget = gtk_label_new (g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", hidden_events[i]),
+                                                   hidden_events[i]));
+
+          gtk_widget_set_visible (widget, TRUE);
+          gtk_grid_attach (GTK_GRID (self->grid), widget, i, 4, 1, 1);
+        }
+    }
+}
+
+static void
+header_expand (GcalWeekHeader *self)
+{
+  GtkWidget *week_view;
+
+  week_view = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_WEEK_VIEW);
+
+  self->expanded = TRUE;
+
+  gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (self->scrolledwindow),
+                                  GTK_POLICY_NEVER,
+                                  GTK_POLICY_AUTOMATIC);
+  gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolledwindow),
+                                              gtk_widget_get_allocated_height (week_view)/2);
+  gtk_image_set_from_icon_name (GTK_IMAGE (self->expand_button_image), "go-up-symbolic", 4);
+
+  gtk_grid_remove_row (GTK_GRID (self->grid), 4);
+  place_events (self);
+}
+
+static void
+on_expand_action_activated (GcalWeekHeader *self,
+                            gpointer        user_data)
+{
+  if (self->expanded)
+    header_collapse (self);
+  else
+    header_expand (self);
+}
+
+static void
 gcal_week_header_finalize (GObject *object)
 {
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
@@ -307,7 +467,7 @@ void
 gcal_week_header_remove_event (GcalWeekHeader *self,
                                gchar          *uuid)
 {
-  GList *children, *l;
+  GList *children, *l, *iter;
 
   children = gtk_container_get_children (GTK_CONTAINER (self->grid));
 
@@ -326,7 +486,19 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
         gtk_widget_destroy (GTK_WIDGET (l->data));
     }
 
+  iter = g_list_copy (self->events);
+
+  for (l = iter; l != NULL; l = g_list_next (l))
+    {
+      if (!GCAL_IS_EVENT (l->data))
+        continue;
+
+      if (l->data != NULL && g_strcmp0 (uuid, gcal_event_get_uid (l->data)) == 0)
+        self->events = g_list_remove_all (self->events, l->data);
+    }
+
   g_list_free (children);
+  g_list_free (iter);
 }
 
 static void
@@ -384,13 +556,14 @@ gcal_week_header_size_allocate (GtkWidget     *widget,
   GtkStateFlags state;
   GtkAllocation draw_alloc;
 
-  gdouble sidebar_width, cell_width;
+  gdouble sidebar_width, cell_width, button_width;
 
   PangoFontDescription *bold_font;
 
   context = gtk_widget_get_style_context (self->draw_area);
   state = gtk_widget_get_state_flags (self->draw_area);
   sidebar_width = gcal_week_view_get_sidebar_width (self->draw_area);
+  button_width = gtk_widget_get_allocated_width (self->expand_button);
 
   gtk_widget_get_allocation (self->draw_area, &draw_alloc);
 
@@ -400,7 +573,7 @@ gcal_week_header_size_allocate (GtkWidget     *widget,
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
 
   gtk_widget_set_margin_start (self->scrolledwindow,
-                               gcal_week_view_get_sidebar_width (self->draw_area) + 1);
+                               gcal_week_view_get_sidebar_width (self->draw_area) + 1 - button_width);
 
   gtk_widget_set_margin_end (self->scrolledwindow,
                              gtk_widget_get_allocated_width (self->draw_area) - cell_width * 7 - sidebar_width + 7);
@@ -595,8 +768,11 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, week_label);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, draw_area);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, scrolledwindow);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button_image);
 
   gtk_widget_class_bind_template_callback (widget_class, gcal_week_header_draw);
+  gtk_widget_class_bind_template_callback (widget_class, on_expand_action_activated);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
@@ -604,6 +780,8 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 static void
 gcal_week_header_init (GcalWeekHeader *self)
 {
+  self->expanded = FALSE;
+
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
