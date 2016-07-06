@@ -77,6 +77,7 @@ struct _GcalEditDialog
 
   /* new data holders */
   GcalEvent        *event;
+  ESource          *selected_source;
 
   /* flags */
   gboolean          format_24h;
@@ -191,13 +192,13 @@ on_calendar_selected (GSimpleAction *action,
                       GVariant      *value,
                       gpointer       user_data)
 {
-  GcalEditDialog *dialog;
+  GcalEditDialog *self;
   GList *list;
   GList *aux;
   gchar *uid;
 
-  dialog = GCAL_EDIT_DIALOG (user_data);
-  list = gcal_manager_get_sources (dialog->manager);
+  self = GCAL_EDIT_DIALOG (user_data);
+  list = gcal_manager_get_sources (self->manager);
 
   /* retrieve selected calendar uid */
   g_variant_get (value, "s", &uid);
@@ -217,11 +218,12 @@ on_calendar_selected (GSimpleAction *action,
         get_color_name_from_source (source, &color);
 
         pix = gcal_get_pixbuf_from_color (&color, 16);
-        gtk_image_set_from_pixbuf (GTK_IMAGE (dialog->source_image), pix);
+        gtk_image_set_from_pixbuf (GTK_IMAGE (self->source_image), pix);
         g_object_unref (pix);
 
-        gcal_event_set_source (dialog->event, source);
-        gtk_header_bar_set_subtitle (GTK_HEADER_BAR (dialog->titlebar),
+        self->selected_source = source;
+
+        gtk_header_bar_set_subtitle (GTK_HEADER_BAR (self->titlebar),
                                      e_source_get_display_name (source));
         break;
       }
@@ -589,6 +591,29 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
       g_clear_pointer (&start_date, g_date_time_unref);
       g_clear_pointer (&end_date, g_date_time_unref);
 
+      /* Update the source if needed */
+      if (dialog->selected_source &&
+          gcal_event_get_source (dialog->event) != dialog->selected_source)
+        {
+          /*
+           * When we're creating the event, it has no source set, so we simply
+           * set the source. When editing the event, however, we're actually
+           * moving it from one source to another.
+           */
+          if (!gcal_event_get_source (dialog->event))
+            {
+              gcal_event_set_source (dialog->event, dialog->selected_source);
+            }
+          else
+            {
+              gcal_manager_move_event_to_source (dialog->manager,
+                                                 dialog->event,
+                                                 dialog->selected_source);
+            }
+        }
+
+      dialog->selected_source = NULL;
+
       /* Send the response */
       gtk_dialog_response (GTK_DIALOG (dialog),
                            dialog->event_is_new ? GCAL_RESPONSE_CREATE_EVENT : GCAL_RESPONSE_SAVE_EVENT);
@@ -955,10 +980,6 @@ gcal_edit_dialog_set_event_is_new (GcalEditDialog *dialog,
   dialog->event_is_new = event_is_new;
 
   gtk_widget_set_visible (dialog->delete_button, !event_is_new);
-
-  /* FIXME: implement moving events to other sources */
-  gtk_widget_set_sensitive (dialog->sources_button, event_is_new);
-  gtk_button_set_relief (GTK_BUTTON (dialog->sources_button), event_is_new ? GTK_RELIEF_NORMAL : GTK_RELIEF_NONE);
 }
 
 GcalEvent*
