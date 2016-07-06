@@ -251,6 +251,26 @@ update_summary (GtkEntry   *entry,
   gtk_widget_set_sensitive (dialog->done_button, gtk_entry_get_text_length (entry) > 0);
 }
 
+static gint
+sort_alarms_func (GtkListBoxRow *a,
+                  GtkListBoxRow *b,
+                  gpointer       user_data)
+{
+  ECalComponentAlarm *alarm_a, *alarm_b;
+  GcalEvent *event_a, *event_b;
+  gint minutes_a, minutes_b;
+
+  alarm_a = g_object_get_data (G_OBJECT (a), "alarm");
+  alarm_b = g_object_get_data (G_OBJECT (b), "alarm");
+  event_a = g_object_get_data (G_OBJECT (a), "event");
+  event_b = g_object_get_data (G_OBJECT (b), "event");
+
+  minutes_a = get_alarm_trigger_minutes (event_a, alarm_a);
+  minutes_b = get_alarm_trigger_minutes (event_b, alarm_b);
+
+  return minutes_a - minutes_b;
+}
+
 static void
 gcal_edit_dialog_get_property (GObject    *object,
                                guint       prop_id,
@@ -403,6 +423,11 @@ gcal_edit_dialog_init (GcalEditDialog *self)
   self->writable = TRUE;
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->alarms_listbox),
+                              sort_alarms_func,
+                              self,
+                              NULL);
 }
 
 static void
