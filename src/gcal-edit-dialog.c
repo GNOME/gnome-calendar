@@ -156,7 +156,7 @@ fill_sources_menu (GcalEditDialog *dialog)
 
       /* retrieve color */
       get_color_name_from_source (source, &color);
-      pix = gcal_get_pixbuf_from_color (&color, 16);;
+      pix = get_circle_pixbuf_from_color (&color, 16);;
 
       /* menu item */
       item = g_menu_item_new (e_source_get_display_name (source), "select-calendar");
@@ -217,7 +217,7 @@ on_calendar_selected (GSimpleAction *action,
         /* retrieve color */
         get_color_name_from_source (source, &color);
 
-        pix = gcal_get_pixbuf_from_color (&color, 16);
+        pix = get_circle_pixbuf_from_color (&color, 16);
         gtk_image_set_from_pixbuf (GTK_IMAGE (self->source_image), pix);
         g_object_unref (pix);
 
@@ -1033,7 +1033,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
         gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), summary);
 
       /* dialog titlebar's title & subtitle */
-      pix = gcal_get_pixbuf_from_color (gcal_event_get_color (event), 16);
+      pix = get_circle_pixbuf_from_color (gcal_event_get_color (event), 16);
       gtk_image_set_from_pixbuf (GTK_IMAGE (dialog->source_image), pix);
       g_object_unref (pix);
 
