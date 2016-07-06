@@ -1724,7 +1724,7 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
   GList *children, *l;
   ESource *source;
   gchar *uuid;
-  gboolean update_sidebar_needed = FALSE;
+  gint number_of_children;
 
   source = e_client_get_source (E_CLIENT (client));
   if (rid != NULL)
@@ -1733,6 +1733,8 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
     uuid = g_strdup_printf ("%s:%s", e_source_get_uid (source), uid);
 
   children = gtk_container_get_children (GTK_CONTAINER (year_view->events_sidebar));
+  number_of_children = g_list_length (children);
+
   for (l = children; l != NULL; l = g_list_next (l))
     {
       GcalEventWidget *child_widget;
@@ -1741,22 +1743,25 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
       child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
       event = gcal_event_widget_get_event (child_widget);
 
-
-      if (child_widget != NULL && g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
+      if (g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
         {
-          if (g_list_length (children) == 1)
-            update_sidebar_needed = TRUE;
           gtk_widget_destroy (GTK_WIDGET (l->data));
+          number_of_children--;
         }
     }
-  g_list_free (children);
-  g_free (uuid);
 
-  if (update_sidebar_needed)
+  /*
+   * No children left visible, all the events were removed and now we have to show the
+   * 'No Events' placeholder.
+   */
+  if (number_of_children == 0)
     {
       update_no_events_page (GCAL_YEAR_VIEW (subscriber));
       gtk_stack_set_visible_child_name (GTK_STACK (year_view->navigator_stack), "no-events");
     }
+
+  g_list_free (children);
+  g_free (uuid);
 }
 
 static void
