@@ -334,6 +334,7 @@
                 <property name="spacing">6</property>
                 <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
+                <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <child>
                   <object class="GtkListBox" id="alarms_listbox">
                     <property name="visible">False</property>
