@@ -729,6 +729,22 @@ static void
 setup_alarms (GcalEditDialog *self)
 {
   GList *alarms, *l;
+  gint i;
+
+  struct
+  {
+    gint       minutes;
+    GtkWidget *button;
+  } minutes_button[] = {
+      { 5,     self->five_minutes_button },
+      { 10,    self->ten_minutes_button },
+      { 30,    self->thirty_minutes_button },
+      { 60,    self->one_hour_button },
+      { 1440,  self->one_day_button },
+      { 2880,  self->two_days_button },
+      { 4320,  self->three_days_button },
+      { 10080, self->one_week_button }
+  };
 
   gtk_widget_set_visible (self->alarms_listbox, gcal_event_has_alarms (self->event));
 
@@ -739,15 +755,33 @@ setup_alarms (GcalEditDialog *self)
                          (GtkCallback) gtk_widget_destroy,
                          NULL);
 
+  /*
+   * We start by making all alarm buttons sensitive,
+   * and only make them insensitive when needed.
+   */
+  for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
+    gtk_widget_set_sensitive (minutes_button[i].button, TRUE);
+
   for (l = alarms; l != NULL; l = l->next)
     {
       GtkWidget *row;
+      gint minutes;
 
       row = create_row_for_alarm (self->event, l->data);
 
       if (!row)
         continue;
 
+      /* Make already-added alarm buttons insensitive */
+      minutes = get_alarm_trigger_minutes (self->event, l->data);
+
+      for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
+        {
+          if (minutes_button[i].minutes == minutes)
+            gtk_widget_set_sensitive (minutes_button[i].button, FALSE);
+        }
+
+      /* Add the row */
       gtk_container_add (GTK_CONTAINER (self->alarms_listbox), row);
     }
 
