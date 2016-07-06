@@ -102,6 +102,21 @@
               </packing>
             </child>
             <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="halign">end</property>
+                <property name="label" translatable="yes">Reminders</property>
+                <property name="ellipsize">end</property>
+                <style>
+                  <class name="dim-label"/>
+                </style>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">3</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkLabel" id="notes_label">
                 <property name="visible">True</property>
                 <property name="halign">end</property>
@@ -113,7 +128,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">4</property>
+                <property name="top_attach">5</property>
               </packing>
             </child>
             <child>
@@ -127,7 +142,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">4</property>
               </packing>
             </child>
             <child>
@@ -188,7 +203,7 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">3</property>
+                <property name="top_attach">4</property>
                 <property name="width">4</property>
               </packing>
             </child>
@@ -213,7 +228,7 @@
               </object>
               <packing>
                 <property name="left_attach">1</property>
-                <property name="top_attach">4</property>
+                <property name="top_attach">5</property>
                 <property name="width">4</property>
               </packing>
             </child>
@@ -286,6 +301,60 @@
               </packing>
             </child>
             <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="spacing">6</property>
+                <property name="hexpand">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkListBox" id="alarms_listbox">
+                    <property name="visible">False</property>
+                    <property name="can_focus">False</property>
+                    <property name="selection_mode">none</property>
+                    <style>
+                      <class name="background" />
+                    </style>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkMenuButton" id="alarms_button">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="orientation">horizontal</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="hexpand">True</property>
+                            <property name="xalign">0.0</property>
+                            <property name="label">Add reminder…</property>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="icon_name">pan-down-symbolic</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">3</property>
+                <property name="width">4</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkButton" id="delete_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
@@ -303,7 +372,7 @@
               </object>
               <packing>
                 <property name="left_attach">0</property>
-                <property name="top_attach">5</property>
+                <property name="top_attach">6</property>
               </packing>
             </child>
           </object>
