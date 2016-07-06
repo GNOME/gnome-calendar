@@ -265,3 +265,24 @@ event-widget.color-light:backdrop {
 .calendar-list > list {
     border-radius: 4px;
 }
+
+/* Edit dialog's header button */
+button.sources-button {
+    border: none;
+    background: transparent;
+    box-shadow: none;
+    padding-bottom: 0;
+    padding-top: 0;
+}
+
+button.sources-button:hover {
+    background: @theme_bg_color;
+    border-bottom: solid 2px @theme_selected_bg_color;
+    box-shadow: none;
+}
+
+button.sources-button:checked {
+    background: @theme_bg_color;
+    border-bottom: solid 2px @theme_selected_bg_color;
+    box-shadow: none;
+}

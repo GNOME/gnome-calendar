@@ -34,7 +34,11 @@ struct _GcalEditDialog
 
   GcalManager      *manager;
 
+  /* titlebar */
   GtkWidget        *titlebar;
+  GtkWidget        *title_label;
+  GtkWidget        *subtitle_label;
+
   GtkWidget        *lock;
   GtkWidget        *source_image;
   GtkWidget        *source_label;
@@ -413,6 +417,8 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, notes_text);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, all_day_check);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, titlebar);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, title_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, subtitle_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, lock);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, source_image);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, sources_popover);
@@ -1010,8 +1016,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       gtk_image_set_from_pixbuf (GTK_IMAGE (dialog->source_image), pix);
       g_object_unref (pix);
 
-      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (dialog->titlebar),
-                                   e_source_get_display_name (source));
+      gtk_label_set_label (GTK_LABEL (dialog->subtitle_label), e_source_get_display_name (source));
 
       /* retrieve start and end dates */
       date_start = gcal_event_get_date_start (event);

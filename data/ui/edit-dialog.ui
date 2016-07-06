@@ -15,7 +15,6 @@
     <child type="titlebar">
       <object class="GtkHeaderBar" id="titlebar">
         <property name="visible">True</property>
-        <property name="title" bind-source="summary_entry" bind-property="text" bind-flags="default" />
         <child>
           <object class="GtkButton" id="cancel_button">
             <property name="label" translatable="yes">Cancel</property>
@@ -29,6 +28,66 @@
             <property name="visible" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default|invert-boolean" />
             <property name="icon_name">changes-prevent-symbolic</property>
             <property name="icon_size">1</property>
+          </object>
+        </child>
+        <child type="title">
+          <object class="GtkMenuButton" id="sources_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="popover">sources_popover</property>
+            <style>
+              <class name="flat"/>
+              <class name="sources-button"/>
+            </style>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkImage" id="source_image">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="valign">start</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkBox" id="title_label_box">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkLabel" id="title_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" bind-source="summary_entry" bind-property="text" bind-flags="default" />
+                        <style>
+                          <class name="title"/>
+                        </style>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="subtitle_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <style>
+                          <class name="subtitle"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkImage" id="pan_down_image">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="valign">start</property>
+                    <property name="icon_name">pan-down-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
           </object>
         </child>
         <child>
@@ -160,24 +219,6 @@
                 <property name="left_attach">1</property>
                 <property name="top_attach">0</property>
                 <property name="width">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkMenuButton" id="sources_button">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="halign">start</property>
-                <property name="popover">sources_popover</property>
-                <child>
-                  <object class="GtkImage" id="source_image">
-                    <property name="visible">True</property>
-                    <property name="halign">start</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="left_attach">3</property>
-                <property name="top_attach">0</property>
               </packing>
             </child>
             <child>
@@ -470,5 +511,21 @@
         </child>
       </object>
     </child>
+  </object>
+  <object class="GtkSizeGroup">
+    <property name="mode">vertical</property>
+    <widgets>
+      <widget name="cancel_button" />
+      <widget name="done_button" />
+      <widget name="sources_button" />
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup">
+    <property name="mode">vertical</property>
+    <widgets>
+      <widget name="source_image" />
+      <widget name="pan_down_image" />
+      <widget name="title_label_box" />
+    </widgets>
   </object>
 </interface>
