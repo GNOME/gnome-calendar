@@ -286,6 +286,15 @@ fix_reminders_label_height_cb (GtkWidget    *summary_label,
 }
 
 static void
+update_revealer_visibility_cb (GtkRevealer *revealer)
+{
+  if (gtk_revealer_get_reveal_child (revealer))
+    gtk_widget_set_visible (GTK_WIDGET (revealer), TRUE);
+  else if (!gtk_revealer_get_child_revealed (revealer))
+    gtk_widget_set_visible (GTK_WIDGET (revealer), FALSE);
+}
+
+static void
 gcal_edit_dialog_get_property (GObject    *object,
                                guint       prop_id,
                                GValue     *value,
@@ -432,6 +441,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_all_day_changed);
   gtk_widget_class_bind_template_callback (widget_class, update_summary);
   gtk_widget_class_bind_template_callback (widget_class, update_location);
+  gtk_widget_class_bind_template_callback (widget_class, update_revealer_visibility_cb);
 }
 
 static void
