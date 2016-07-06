@@ -1,8 +1,10 @@
 # List of source files containing translatable strings.
+# Please keep this file sorted alphabetically.
 data/appdata/org.gnome.Calendar.appdata.xml.in
 data/org.gnome.Calendar.desktop.in.in
-[type: gettext/ini]data/org.gnome.Calendar.search-provider.ini.in.in
 data/org.gnome.calendar.gschema.xml.in
+[type: gettext/ini]data/org.gnome.Calendar.search-provider.ini.in.in
+[type: gettext/glade]data/ui/alarm-row.ui
 [type: gettext/glade]data/ui/edit-dialog.ui
 [type: gettext/glade]data/ui/help-overlay.ui
 [type: gettext/glade]data/ui/menus.ui
