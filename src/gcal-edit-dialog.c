@@ -57,6 +57,16 @@ struct _GcalEditDialog
 
   GtkWidget        *alarms_listbox;
 
+  /* Add Alarms popover buttons */
+  GtkWidget        *five_minutes_button;
+  GtkWidget        *ten_minutes_button;
+  GtkWidget        *thirty_minutes_button;
+  GtkWidget        *one_hour_button;
+  GtkWidget        *one_day_button;
+  GtkWidget        *two_days_button;
+  GtkWidget        *three_days_button;
+  GtkWidget        *one_week_button;
+
   /* actions */
   GMenu              *sources_menu;
   GSimpleActionGroup *action_group;
@@ -98,6 +108,9 @@ static void        gcal_edit_dialog_action_button_clicked (GtkWidget         *wi
 
 static void        gcal_edit_dialog_all_day_changed       (GtkWidget         *widget,
                                                            gpointer           user_data);
+
+static void        add_alarm_button_clicked               (GtkWidget         *button,
+                                                           GcalEditDialog    *self);
 
 G_DEFINE_TYPE (GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
 
@@ -346,6 +359,15 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
                                                          TRUE,
                                                          G_PARAM_READWRITE));
 
+  /* Alarms */
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, five_minutes_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, ten_minutes_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, thirty_minutes_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, one_hour_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, one_day_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, two_days_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, three_days_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, one_week_button);
   /* Buttons */
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, done_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, cancel_button);
@@ -368,6 +390,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, sources_popover);
 
   /* callbacks */
+  gtk_widget_class_bind_template_callback (widget_class, add_alarm_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_action_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_all_day_changed);
   gtk_widget_class_bind_template_callback (widget_class, update_summary);
@@ -729,6 +752,59 @@ setup_alarms (GcalEditDialog *self)
     }
 
   g_list_free (alarms);
+}
+
+static void
+add_alarm_button_clicked (GtkWidget      *button,
+                          GcalEditDialog *self)
+{
+  gint i, minutes;
+
+  struct
+  {
+    GtkWidget *button;
+    gint       minutes;
+  } button_minutes[] = {
+      { self->five_minutes_button,   5 },
+      { self->ten_minutes_button,    10 },
+      { self->thirty_minutes_button, 30 },
+      { self->one_hour_button,       60 },
+      { self->one_day_button,        1440 },
+      { self->two_days_button,       2880 },
+      { self->three_days_button,     4320 },
+      { self->one_week_button,       10080 },
+      { NULL, 0 }
+  };
+
+  /* Search for the button minute */
+  minutes = 0;
+
+  for (i = 0; i < G_N_ELEMENTS (button_minutes); i++)
+    {
+      if (button_minutes[i].button == button)
+        {
+          minutes = button_minutes[i].minutes;
+          break;
+        }
+    }
+
+  if (minutes == 0)
+    return;
+
+  /* Add the alarm */
+  gcal_event_add_alarm (self->event, minutes, FALSE);
+
+  /*
+   * Instead of manually handling stuff, simply remove all alarms and
+   * add back again.
+   */
+  setup_alarms (self);
+
+  /*
+   * Since we don't allow more than 1 alarm per time, set the button
+   * to insensitive so it cannot be triggered anymore.
+   */
+  gtk_widget_set_sensitive (button, FALSE);
 }
 
 /* Public API */

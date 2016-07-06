@@ -322,6 +322,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
+                    <property name="popover">alarms_popover</property>
                     <child>
                       <object class="GtkBox">
                         <property name="visible">True</property>
@@ -385,5 +386,87 @@
     </child>
   </template>
   <object class="GtkPopover" id="sources_popover">
+  </object>
+  <object class="GtkPopoverMenu" id="alarms_popover">
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="border_width">12</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkModelButton" id="five_minutes_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">5 minutes</property>
+            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="ten_minutes_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">10 minutes</property>
+            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="thirty_minutes_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">30 minutes</property>
+            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="one_hour_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">1 hour</property>
+            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="one_day_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="text" translatable="yes">1 day</property>
+            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="two_days_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">2 days</property>
+            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="three_days_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">3 days</property>
+            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkModelButton" id="one_week_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">1 week</property>
+            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+          </object>
+        </child>
+      </object>
+    </child>
   </object>
 </interface>
