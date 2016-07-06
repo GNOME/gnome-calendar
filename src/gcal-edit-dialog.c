@@ -599,12 +599,42 @@ gcal_edit_dialog_all_day_changed (GtkWidget *widget,
 /*
  * Alarm related functions
  */
+static GtkWidget*
+get_row_fow_alarm_trigger_minutes (GcalEditDialog *self,
+                                   gint            minutes)
+{
+  gint i;
+
+  struct
+  {
+    gint       minutes;
+    GtkWidget *button;
+  } minutes_button[] = {
+      { 5,     self->five_minutes_button },
+      { 10,    self->ten_minutes_button },
+      { 30,    self->thirty_minutes_button },
+      { 60,    self->one_hour_button },
+      { 1440,  self->one_day_button },
+      { 2880,  self->two_days_button },
+      { 4320,  self->three_days_button },
+      { 10080, self->one_week_button }
+  };
+
+  for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
+    {
+      if (minutes_button[i].minutes == minutes)
+        return minutes_button[i].button;
+    }
+
+  return NULL;
+}
 static void
 remove_button_clicked (GtkButton *button,
                        GtkWidget *row)
 {
   ECalComponentAlarm *alarm;
   GcalEditDialog *self;
+  GtkWidget *alarm_button;
   GcalEvent *event;
   gint trigger_minutes;
 
@@ -612,6 +642,14 @@ remove_button_clicked (GtkButton *button,
   alarm = g_object_get_data (G_OBJECT (row), "alarm");
   event = g_object_get_data (G_OBJECT (row), "event");
   trigger_minutes = get_alarm_trigger_minutes (event, alarm);
+
+  /*
+   * Make the button sensitive again
+   */
+  alarm_button = get_row_fow_alarm_trigger_minutes (self, trigger_minutes);
+
+  if (alarm_button)
+    gtk_widget_set_sensitive (alarm_button, TRUE);
 
   gcal_event_remove_alarm (event, trigger_minutes);
 
