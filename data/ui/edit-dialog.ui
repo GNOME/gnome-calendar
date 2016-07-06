@@ -64,6 +64,7 @@
                 <property name="halign">end</property>
                 <property name="label" translatable="yes">Title</property>
                 <property name="ellipsize">end</property>
+                <signal name="size-allocate" handler="fix_reminders_label_height_cb" object="reminders_label" swapped="no" after="yes" />
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -102,9 +103,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel">
+              <object class="GtkLabel" id="reminders_label">
                 <property name="visible">True</property>
                 <property name="halign">end</property>
+                <property name="valign">start</property>
                 <property name="label" translatable="yes">Reminders</property>
                 <property name="ellipsize">end</property>
                 <style>

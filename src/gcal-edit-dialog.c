@@ -272,6 +272,14 @@ sort_alarms_func (GtkListBoxRow *a,
 }
 
 static void
+fix_reminders_label_height_cb (GtkWidget    *summary_label,
+                               GdkRectangle *allocation,
+                               GtkWidget    *reminders_label)
+{
+  gtk_widget_set_size_request (reminders_label, -1, allocation->height);
+}
+
+static void
 gcal_edit_dialog_get_property (GObject    *object,
                                guint       prop_id,
                                GValue     *value,
@@ -411,6 +419,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
 
   /* callbacks */
   gtk_widget_class_bind_template_callback (widget_class, add_alarm_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, fix_reminders_label_height_cb);
   gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_action_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_all_day_changed);
   gtk_widget_class_bind_template_callback (widget_class, update_summary);
@@ -656,6 +665,13 @@ remove_button_clicked (GtkButton *button,
   gcal_manager_update_event (self->manager, event);
 
   gtk_widget_destroy (row);
+
+  /*
+   * In order to not allocate a spacing between the listbox and the
+   * add alarms button, we should always keep the listbox:visible property
+   * updated.
+   */
+  gtk_widget_set_visible (self->alarms_listbox, gcal_event_has_alarms (self->event));
 }
 
 static void
