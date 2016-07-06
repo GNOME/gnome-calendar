@@ -577,15 +577,6 @@ gcal_event_widget_draw (GtkWidget *widget,
       cairo_paint (cr);
     }
 
-  /* Setup the drag n' drop icon */
-  g_clear_object (&self->dnd_pixbuf);
-
-  self->dnd_pixbuf = gdk_pixbuf_get_from_window (self->event_window,
-                                                 0,
-                                                 0,
-                                                 width,
-                                                 height);
-
   pango_font_description_free (font_desc);
   g_object_unref (layout);
   g_free (display_text);
@@ -628,6 +619,15 @@ gcal_event_widget_drag_begin (GtkWidget      *widget,
                               GdkDragContext *context)
 {
   GcalEventWidget *self = GCAL_EVENT_WIDGET (widget);
+
+  /* Setup the drag n' drop icon */
+  g_clear_object (&self->dnd_pixbuf);
+
+  self->dnd_pixbuf = gdk_pixbuf_get_from_window (self->event_window,
+                                                 0,
+                                                 0,
+                                                 gtk_widget_get_allocated_width (widget),
+                                                 gtk_widget_get_allocated_height (widget));
 
   gtk_drag_set_icon_pixbuf (context, self->dnd_pixbuf, 0, 0);
 }
