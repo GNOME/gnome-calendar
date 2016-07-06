@@ -134,10 +134,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="starts_label">
+              <object class="GtkLabel" id="dates_label">
                 <property name="visible">True</property>
                 <property name="halign">end</property>
-                <property name="label" translatable="yes">Starts</property>
+                <property name="label" translatable="yes">Date</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -148,10 +148,10 @@
               </packing>
             </child>
             <child>
-              <object class="GtkLabel" id="ends_label">
+              <object class="GtkLabel" id="times_label">
                 <property name="visible">True</property>
                 <property name="halign">end</property>
-                <property name="label" translatable="yes">Ends</property>
+                <property name="label" translatable="yes">Time</property>
                 <style>
                   <class name="dim-label"/>
                 </style>
@@ -278,69 +278,70 @@
             <child>
               <object class="GtkBox" id="start_date_box">
                 <property name="visible">True</property>
-                <property name="homogeneous">True</property>
-                <style>
-                  <class name="linked"/>
-                </style>
+                <property name="hexpand">True</property>
+                <property name="spacing">6</property>
                 <child>
                   <object class="GcalDateSelector" id="start_date_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                   </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
                 </child>
                 <child>
-                  <object class="GcalTimeSelector" id="start_time_selector">
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label">-</property>
+                  </object>
+                </child>
+                <child>
+                  <object class="GcalDateSelector" id="end_date_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                   </object>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
                 </child>
               </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="top_attach">1</property>
-                <property name="width">2</property>
+                <property name="width">4</property>
               </packing>
             </child>
             <child>
-              <object class="GtkBox" id="end_date_box">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="homogeneous">True</property>
-                <style>
-                  <class name="linked"/>
-                </style>
+                <property name="spacing">6</property>
                 <child>
-                  <object class="GcalDateSelector" id="end_date_selector">
+                  <object class="GcalTimeSelector" id="start_time_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                   </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="label">-</property>
+                  </object>
                 </child>
                 <child>
                   <object class="GcalTimeSelector" id="end_time_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                   </object>
-                  <packing>
-                    <property name="position">2</property>
-                  </packing>
                 </child>
               </object>
               <packing>
                 <property name="left_attach">1</property>
                 <property name="top_attach">2</property>
-                <property name="width">2</property>
+                <property name="width">3</property>
               </packing>
             </child>
             <child>
@@ -526,6 +527,15 @@
       <widget name="source_image" />
       <widget name="pan_down_image" />
       <widget name="title_label_box" />
+    </widgets>
+  </object>
+  <object class="GtkSizeGroup">
+    <property name="mode">horizontal</property>
+    <widgets>
+      <widget name="end_date_selector" />
+      <widget name="end_time_selector" />
+      <widget name="start_date_selector" />
+      <widget name="start_time_selector" />
     </widgets>
   </object>
 </interface>
