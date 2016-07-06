@@ -8,9 +8,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-07-06 15:38+0000\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-ca"
+"lendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-06-01 15:00+0000\n"
 "PO-Revision-Date: ٢٠١٦-٠٦-٢١ ١٧:٤٤+0300\n"
 "Last-Translator: Safa Alfulaij <safa1996alfulaij@gmail.com>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
@@ -18,8 +18,8 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 "
-"&& n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
+"Plural-Forms: nplurals=6; plural=n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 &&"
+" n%100<=10 ? 3 : n%100>=11 ? 4 : 5;\n"
 "X-Generator: Lokalize 2.0\n"
 "X-Project-Style: gnome\n"
 "X-Poedit-Bookmarks: -1,-1,-1,-1,-1,37,-1,-1,-1,-1\n"
@@ -117,7 +117,7 @@ msgstr "عُطّلت المصادر منذ آخر تشغيل للتقويم"
 msgid "Cancel"
 msgstr "ألغِ"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:491
+#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
 msgid "Done"
 msgstr "تمّ"
 
@@ -134,62 +134,22 @@ msgid "Ends"
 msgstr "ينتهي في"
 
 #: ../data/ui/edit-dialog.ui.h:6
-msgid "Reminders"
-msgstr ""
-
-#: ../data/ui/edit-dialog.ui.h:7
 msgid "Notes"
 msgstr "ملاحظات"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../data/ui/source-dialog.ui.h:17
+#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "المكان"
 
-#: ../data/ui/edit-dialog.ui.h:9
+#: ../data/ui/edit-dialog.ui.h:8
+#| msgid "All day"
 msgid "All Day"
 msgstr "طول اليوم"
 
-#: ../data/ui/edit-dialog.ui.h:10
+#: ../data/ui/edit-dialog.ui.h:9
+#| msgid "Delete event"
 msgid "Delete Event"
 msgstr "احذف الحدث"
-
-#: ../data/ui/edit-dialog.ui.h:11
-msgid "5 minutes"
-msgstr ""
-
-#: ../data/ui/edit-dialog.ui.h:12
-msgid "10 minutes"
-msgstr ""
-
-#: ../data/ui/edit-dialog.ui.h:13
-msgid "30 minutes"
-msgstr ""
-
-#: ../data/ui/edit-dialog.ui.h:14
-msgid "1 hour"
-msgstr ""
-
-#: ../data/ui/edit-dialog.ui.h:15
-#, fuzzy
-#| msgid "All day"
-msgid "1 day"
-msgstr "طوال اليوم"
-
-#: ../data/ui/edit-dialog.ui.h:16
-#, fuzzy
-#| msgid "All day"
-msgid "2 days"
-msgstr "طوال اليوم"
-
-#: ../data/ui/edit-dialog.ui.h:17
-#, fuzzy
-#| msgid "All day"
-msgid "3 days"
-msgstr "طوال اليوم"
-
-#: ../data/ui/edit-dialog.ui.h:18
-msgid "1 week"
-msgstr ""
 
 #: ../data/ui/help-overlay.ui.h:1
 msgctxt "shortcut window"
@@ -275,6 +235,7 @@ msgid "_Search…"
 msgstr "ا_بحث…"
 
 #: ../data/ui/menus.ui.h:3
+#| msgid "Calendars"
 msgid "_Calendars…"
 msgstr "الت_قاويم..."
 
@@ -322,8 +283,8 @@ msgstr "لم يُعثر على أي نتائج"
 msgid "Try a different search"
 msgstr "جرب بحثًا آخر"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1131
-#: ../src/gcal-window.c:1135
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1130
+#: ../src/gcal-window.c:1134
 msgid "Undo"
 msgstr "تراجع"
 
@@ -505,55 +466,11 @@ msgstr ""
 msgid "Day"
 msgstr "اليوم"
 
-#: ../src/gcal-edit-dialog.c:491
+#: ../src/gcal-edit-dialog.c:429
 msgid "Save"
 msgstr "احفظ"
 
-#: ../src/gcal-edit-dialog.c:723
-#, c-format
-msgid "%d minute before"
-msgid_plural "%d minutes before"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-#: ../src/gcal-edit-dialog.c:731
-#, c-format
-msgid "%d hour before"
-msgid_plural "%d hours before"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-#: ../src/gcal-edit-dialog.c:739
-#, c-format
-msgid "%d day before"
-msgid_plural "%d days before"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-#: ../src/gcal-edit-dialog.c:747
-#, c-format
-msgid "%d week before"
-msgid_plural "%d weeks before"
-msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
-msgstr[4] ""
-msgstr[5] ""
-
-#: ../src/gcal-edit-dialog.c:1004 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "حدث غير مُعنوَن"
 
@@ -655,11 +572,11 @@ msgstr "منتصف النّهار"
 msgid "00:00 PM"
 msgstr "00:00 م"
 
-#: ../src/gcal-window.c:1131
+#: ../src/gcal-window.c:1130
 msgid "Another event deleted"
 msgstr "حُذف حدث آخر"
 
-#: ../src/gcal-window.c:1135
+#: ../src/gcal-window.c:1134
 msgid "Event deleted"
 msgstr "حُذف الحدث"
 
