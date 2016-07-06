@@ -190,36 +190,6 @@ gcal_event_update_uid_internal (GcalEvent *self)
   g_object_notify (G_OBJECT (self), "uid");
 }
 
-static gint
-get_trigger_minutes (GcalEvent          *self,
-                     ECalComponentAlarm *alarm)
-{
-  ECalComponentAlarmTrigger trigger;
-  GDateTime *alarm_dt;
-  gint diff;
-
-  e_cal_component_alarm_get_trigger (alarm, &trigger);
-
-  /*
-   * We only support alarms relative to the start date, and solely
-   * ignore whetever different it may be.
-   */
-  if (trigger.type != E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START)
-    return -1;
-
-  alarm_dt = g_date_time_add_full (self->dt_start,
-                                   0,
-                                   0,
-                                   - (trigger.u.rel_duration.days + trigger.u.rel_duration.weeks * 7),
-                                   - trigger.u.rel_duration.hours,
-                                   - trigger.u.rel_duration.minutes,
-                                   - trigger.u.rel_duration.seconds);
-
-  diff = g_date_time_difference (self->dt_start, alarm_dt) / G_TIME_SPAN_MINUTE;
-
-  return diff;
-}
-
 static void
 load_alarms (GcalEvent *self)
 {
@@ -233,7 +203,7 @@ load_alarms (GcalEvent *self)
       gint trigger_minutes;
 
       alarm = e_cal_component_get_alarm (self->component, l->data);
-      trigger_minutes = get_trigger_minutes (self, alarm);
+      trigger_minutes = get_alarm_trigger_minutes (self, alarm);
 
       /* We only support a single alarm for a given time */
       if (!g_hash_table_contains (self->alarms, GINT_TO_POINTER (trigger_minutes)))
@@ -940,7 +910,7 @@ gcal_event_get_alarms (GcalEvent *self)
       gint trigger_minutes;
 
       alarm = e_cal_component_get_alarm (self->component, l->data);
-      trigger_minutes = get_trigger_minutes (self, alarm);
+      trigger_minutes = get_alarm_trigger_minutes (self, alarm);
 
       /* We only support a single alarm for a given time */
       if (!g_hash_table_contains (tmp, GINT_TO_POINTER (trigger_minutes)))

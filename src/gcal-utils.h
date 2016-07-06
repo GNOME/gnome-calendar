@@ -120,4 +120,7 @@ void            get_source_parent_name_color                    (GcalManager    
 
 gchar*          format_utc_offset                               (gint64                 offset);
 
+gint            get_alarm_trigger_minutes                       (GcalEvent             *event,
+                                                                 ECalComponentAlarm    *alarm);
+
 #endif // __GCAL_UTILS_H__

@@ -809,3 +809,35 @@ format_utc_offset (gint64 offset)
   else
     return g_strdup_printf ("%s%02i%02i", sign, hours, minutes);
 }
+
+gint
+get_alarm_trigger_minutes (GcalEvent          *event,
+                           ECalComponentAlarm *alarm)
+{
+  ECalComponentAlarmTrigger trigger;
+  GDateTime *alarm_dt;
+  gint diff;
+
+  e_cal_component_alarm_get_trigger (alarm, &trigger);
+
+  /*
+   * We only support alarms relative to the start date, and solely
+   * ignore whetever different it may be.
+   */
+  if (trigger.type != E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START)
+    return -1;
+
+  alarm_dt = g_date_time_add_full (gcal_event_get_date_start (event),
+                                   0,
+                                   0,
+                                   - (trigger.u.rel_duration.days + trigger.u.rel_duration.weeks * 7),
+                                   - trigger.u.rel_duration.hours,
+                                   - trigger.u.rel_duration.minutes,
+                                   - trigger.u.rel_duration.seconds);
+
+  diff = g_date_time_difference (gcal_event_get_date_start (event), alarm_dt) / G_TIME_SPAN_MINUTE;
+
+  g_clear_pointer (&alarm_dt, g_date_time_unref);
+
+  return diff;
+}
