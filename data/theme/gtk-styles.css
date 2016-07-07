@@ -291,9 +291,9 @@ event-widget.color-light:backdrop {
 .sources-button:hover:not(:backdrop) {
     background-image: none;
     text-shadow: none;
-    icon-shadow: 0 1px alpha(black, 0.1);
+    -gtk-icon-shadow: 0 1px alpha(black, 0.1);
 }
 
 .sources-button:not(:backdrop) {
-    icon-shadow: 0 1px alpha(black, 0.1);
+    -gtk-icon-shadow: 0 1px alpha(black, 0.1);
 }
