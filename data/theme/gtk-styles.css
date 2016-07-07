@@ -175,7 +175,7 @@ calendar-view.second-view-header {
 }
 
 /* no events label */
-.year-view box.sidebar:nth-child(2) {
+.year-view box.sidebar label:nth-child(2) {
     margin-top: 4px;
 }
 
