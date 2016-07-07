@@ -159,6 +159,7 @@ calendar-view.second-view-header {
 }
 
 .year-view .sidebar {
+    padding: 4px;
     border: 1px none @borders;
 }
 
@@ -171,6 +172,11 @@ calendar-view.second-view-header {
 }
 .year-view .sidebar:dir(rtl) {
     border-right-style: solid;
+}
+
+/* no events label */
+.year-view box.sidebar:nth-child(2) {
+    margin-top: 4px;
 }
 
 .year-view button {
