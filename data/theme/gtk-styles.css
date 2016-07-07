@@ -173,13 +173,22 @@ calendar-view.second-view-header {
     border-right-style: solid;
 }
 
-.year-view scrolledwindow {
-    border-top-width: 0;
-    border-bottom-width: 0;
-}
-
 .year-view button {
     border-radius: 0;
+    border-bottom-style: none;
+}
+
+.year-view button:dir(ltr) {
+    border-right-style: none;
+}
+
+.year-view button:dir(rtl) {
+    border-left-style: none;
+}
+
+
+.year-view scrolledwindow {
+    border-top-width: 0;
     border-bottom-width: 0;
 }
 
