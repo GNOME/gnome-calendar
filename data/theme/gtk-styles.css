@@ -158,22 +158,19 @@ calendar-view.second-view-header {
     font-style: italic;
 }
 
-list.sidebar {
-    background-color: @theme_bg_color;
+.year-view .sidebar {
+    border: 1px none @borders;
 }
 
-box.sidebar {
-    background-color: @theme_bg_color;
-    border-color: @borders;
-    border-style: solid;
+.year-view .sidebar:backdrop {
+    border-color: @unfocused_borders;
 }
 
-.year-view box.sidebar:dir(ltr) {
-    border-left-width: 1px;
+.year-view .sidebar:dir(ltr) {
+    border-left-style: solid;
 }
-
-.year-view box.sidebar:dir(rtl) {
-    border-right-width: 1px;
+.year-view .sidebar:dir(rtl) {
+    border-right-style: solid;
 }
 
 .year-view scrolledwindow {
