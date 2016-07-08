@@ -300,10 +300,8 @@ event-widget.color-light:backdrop {
 /* adds a subtle shadow to the calendar color dot when it makes sense */
 button:active:not(:backdrop) .calendar-color-image,
 button:checked:not(:backdrop) .calendar-color-image,
-.calendars-list modelbutton image:dir(ltr):first-child:not(:backdrop):not(:disabled),
-.calendars-list modelbutton image:dir(ltr):last-child:not(:backdrop):not(:disabled),
-.calendars-list row image:dir(ltr):first-child:not(:backdrop):not(:disabled),
-.calendars-list row image:dir(ltr):last-child:not(:backdrop):not(:disabled),
+.calendars-list .calendar-color-image:not(:backdrop):not(:disabled),
+.calendar-list .calendar-color-image:not(:backdrop):not(:disabled),
 .sources-button:not(:backdrop):not(:disabled) .calendar-color-image {
     -gtk-icon-shadow: 0 1px alpha(black, 0.1);
 }
