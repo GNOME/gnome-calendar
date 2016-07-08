@@ -456,6 +456,9 @@
     </child>
   </template>
   <object class="GtkPopover" id="sources_popover">
+  <style>
+    <class name="calendars-list"/>
+  </style>
   </object>
   <object class="GtkPopoverMenu" id="alarms_popover">
     <property name="can_focus">False</property>
