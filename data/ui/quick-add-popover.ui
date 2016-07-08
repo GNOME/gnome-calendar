@@ -219,6 +219,9 @@
                         <property name="can_focus">False</property>
                         <property name="selection_mode">none</property>
                         <signal name="row-activated" handler="select_row" object="GcalQuickAddPopover" swapped="yes" />
+                        <style>
+                          <class name="calendars-list"/>
+                        </style>
                       </object>
                     </child>
                   </object>
