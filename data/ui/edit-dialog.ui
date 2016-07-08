@@ -51,7 +51,6 @@
                   <object class="GtkImage" id="source_image">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="valign">start</property>
                     <style>
                       <class name="calendar-color-image"/>
                     </style>
@@ -62,6 +61,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="orientation">vertical</property>
+                    <property name="valign">center</property>
                     <child>
                       <object class="GtkLabel" id="title_label">
                         <property name="visible">True</property>
@@ -87,7 +87,6 @@
                   <object class="GtkImage" id="pan_down_image">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="valign">start</property>
                     <property name="icon_name">pan-down-symbolic</property>
                   </object>
                 </child>
