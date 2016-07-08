@@ -67,6 +67,9 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="stock">gtk-missing-image</property>
+                        <style>
+                          <class name="calendar-color-image"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="expand">False</property>
