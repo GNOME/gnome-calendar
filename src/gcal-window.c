@@ -850,6 +850,8 @@ make_row_from_source (GcalWindow *window,
   pixbuf = get_circle_pixbuf_from_color (&color, 16);
   icon = gtk_image_new_from_pixbuf (pixbuf);
 
+  gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
+
   /* source name label */
   label = gtk_label_new (e_source_get_display_name (source));
   gtk_label_set_xalign (GTK_LABEL (label), 0.0);
