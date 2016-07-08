@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
 "POT-Creation-Date: 2016-07-06 21:54+0000\n"
-"PO-Revision-Date: 2016-07-08 09:22+0200\n"
+"PO-Revision-Date: 2016-07-08 09:25+0200\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
@@ -562,7 +562,7 @@ msgstr "%s (chest calendari al è di nome-leture)"
 #: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
 msgctxt "event date format"
 msgid "%B %d"
-msgstr "%d %B"
+msgstr "%d di %B"
 
 #: ../src/gcal-quick-add-popover.c:243
 #, c-format
