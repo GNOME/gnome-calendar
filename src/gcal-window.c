@@ -847,7 +847,7 @@ make_row_from_source (GcalWindow *window,
 
   /* source color icon */
   get_color_name_from_source (source, &color);
-  pixbuf = gcal_get_pixbuf_from_color (&color, 16);
+  pixbuf = get_circle_pixbuf_from_color (&color, 16);
   icon = gtk_image_new_from_pixbuf (pixbuf);
 
   /* source name label */
