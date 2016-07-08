@@ -743,8 +743,22 @@ gcal_search_view_search (GcalSearchView *view,
 
       if (!view->subscribed)
       {
-        gcal_manager_set_search_subscriber (view->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view), 0, 0);
+        GDateTime *now, *start, *end;
+
+        now = g_date_time_new_now_local ();
+        start = g_date_time_add_years (now, -5);
+        end = g_date_time_add_years (now, 5);
+
+        gcal_manager_set_search_subscriber (view->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view),
+                                            g_date_time_to_unix (start),
+                                            g_date_time_to_unix (end));
+
+        /* Mark the view as subscribed */
         view->subscribed = TRUE;
+
+        g_clear_pointer (&start, g_date_time_unref);
+        g_clear_pointer (&end, g_date_time_unref);
+        g_clear_pointer (&now, g_date_time_unref);
       }
 
       /* update internal current time_t */
