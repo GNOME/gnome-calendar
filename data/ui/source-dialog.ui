@@ -362,6 +362,9 @@
                                         <property name="visible">True</property>
                                         <property name="selection_mode">none</property>
                                         <signal name="row-activated" handler="calendar_listbox_row_activated" object="GcalSourceDialog" swapped="no"/>
+                                        <style>
+                                          <class name="calendars-list"/>
+                                        </style>
                                       </object>
                                     </child>
                                   </object>
