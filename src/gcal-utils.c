@@ -661,6 +661,8 @@ fix_popover_menu_icons (GtkPopover *popover)
   menu_section_box = menu_section_children->data;
   menu_section_box_children = gtk_container_get_children (GTK_CONTAINER (menu_section_box));
 
+  gtk_style_context_add_class (gtk_widget_get_style_context (menu_section_box), "calendars-list");
+
   /**
    * Iterate through the GtkModelButtons inside the menu section box.
    */
