@@ -828,7 +828,7 @@ static GtkWidget*
 make_row_from_source (GcalWindow *window,
                       ESource    *source)
 {
-  GtkWidget *label, *icon, *separator, *checkbox, *box, *row;
+  GtkWidget *label, *icon, *checkbox, *box, *row;
   GtkStyleContext *context;
   GdkPixbuf *pixbuf;
   GdkRGBA color;
@@ -857,9 +857,6 @@ make_row_from_source (GcalWindow *window,
   gtk_label_set_xalign (GTK_LABEL (label), 0.0);
   gtk_widget_set_hexpand (label, TRUE);
 
-  /* vertical separator */
-  separator = gtk_separator_new (GTK_ORIENTATION_VERTICAL);
-
   /* checkbox */
   checkbox = gtk_check_button_new ();
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbox), gcal_manager_source_enabled (window->manager, source));
@@ -867,7 +864,6 @@ make_row_from_source (GcalWindow *window,
 
   gtk_container_add (GTK_CONTAINER (box), icon);
   gtk_container_add (GTK_CONTAINER (box), label);
-  gtk_container_add (GTK_CONTAINER (box), separator);
   gtk_container_add (GTK_CONTAINER (box), checkbox);
   gtk_container_add (GTK_CONTAINER (row), box);
 
