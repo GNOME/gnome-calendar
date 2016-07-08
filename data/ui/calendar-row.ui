@@ -17,6 +17,9 @@
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="pixel_size">24</property>
+            <style>
+              <class name="calendar-color-image"/>
+            </style>
           </object>
           <packing>
             <property name="left_attach">0</property>
