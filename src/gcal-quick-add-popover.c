@@ -88,6 +88,8 @@ create_row_for_source (GcalManager *manager,
 
   gtk_container_add (GTK_CONTAINER (box), icon);
 
+  gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
+
   /* Source name label */
   label = gtk_label_new (e_source_get_display_name (source));
   gtk_widget_set_margin_end (label, 12);
