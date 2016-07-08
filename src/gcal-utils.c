@@ -684,6 +684,7 @@ fix_popover_menu_icons (GtkPopover *popover)
 
           if (g_type_is_a (G_OBJECT_TYPE (button_box_child), GTK_TYPE_IMAGE))
             {
+              gtk_style_context_add_class (gtk_widget_get_style_context (button_box_child), "calendar-color-image");
               gtk_widget_show (button_box_child);
               break;
             }
