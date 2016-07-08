@@ -910,21 +910,12 @@ source_row_activated (GtkListBox    *listbox,
                       GtkListBoxRow *row,
                       gpointer       user_data)
 {
-  GcalWindow *window;
-  ESource *source;
+  GtkWidget *check;
 
-  window = GCAL_WINDOW (user_data);
-  source = g_object_get_data (G_OBJECT (row), "source");
+  check = g_object_get_data (G_OBJECT (row), "check");
 
-  if (source == NULL)
-    return;
-
-  gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (window->source_dialog), source);
-  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (window->source_dialog), GCAL_SOURCE_DIALOG_MODE_EDIT);
-
-  gtk_widget_hide (window->calendar_popover);
-
-  gtk_widget_show (window->source_dialog);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check),
+                                !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)));
 }
 
 static void
