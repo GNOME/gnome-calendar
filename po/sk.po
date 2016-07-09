@@ -6,9 +6,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-06-08 20:00+0000\n"
-"PO-Revision-Date: 2016-06-12 12:11+0200\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-07-06 21:54+0000\n"
+"PO-Revision-Date: 2016-07-09 10:39+0200\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -31,12 +32,25 @@ msgid "Calendar for GNOME"
 msgstr "Kalendár prostredia GNOME"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
-msgid "GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME desktop. By reusing the components which the GNOME desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr "Kalendár prostredia GNOME je jednoduchá a nádherná aplikácia s kalendárom navrhnutá tak, aby perfektne zapasovala do prostredia GNOME. Použitím komponentov, na ktorých je zostavené prostredie GNOME, je Kalendár integrovaný s ekosystémom prostredia GNOME."
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"Kalendár prostredia GNOME je jednoduchá a nádherná aplikácia s kalendárom "
+"navrhnutá tak, aby perfektne zapasovala do prostredia GNOME. Použitím "
+"komponentov, na ktorých je zostavené prostredie GNOME, je Kalendár "
+"integrovaný s ekosystémom prostredia GNOME."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
-msgid "We aim to find the perfect balance between nicely crafted features and user-centred usability. No excess, no lacks. You'll feel comfortable using Calendar, like you've been using it for ages!"
-msgstr "Našim cieľom je nájsť dokonalé vyváženie medzi užitočnými funkciami a použiteľnosťou. Bez zbytočností, bez nedostatkov. Pri používaní programu Kalendár sa budete cítiť pohodlne, ako keby ste ho už používali roky!"
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You'll feel comfortable using "
+"Calendar, like you've been using it for ages!"
+msgstr ""
+"Našim cieľom je nájsť dokonalé vyváženie medzi užitočnými funkciami a "
+"použiteľnosťou. Bez zbytočností, bez nedostatkov. Pri používaní programu "
+"Kalendár sa budete cítiť pohodlne, ako keby ste ho už používali roky!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
 #: ../data/ui/window.ui.h:6
@@ -85,7 +99,9 @@ msgstr "Typ aktívneho zobrazenia"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
-msgstr "Typ zobrazenia aktívneho okna. Predvolená hodnota je: monthly view(prehľad mesiaca)"
+msgstr ""
+"Typ zobrazenia aktívneho okna. Predvolená hodnota je: monthly view(prehľad "
+"mesiaca)"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:9
 msgid "List of the disabled sources"
@@ -95,42 +111,92 @@ msgstr "Zoznam zakázaných zdrojov"
 msgid "Sources disabled last time Calendar ran"
 msgstr "Zdroje zakázané pri poslednom spustení kalendára"
 
+#: ../data/ui/alarm-row.ui.h:1
+msgid "Toggles the sound of the alarm"
+msgstr "Prepína zvuk upozornenia"
+
+# tooltip
+#: ../data/ui/alarm-row.ui.h:2
+msgid "Remove the alarm"
+msgstr "Odstráni upozornenie"
+
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
 #: ../src/gcal-source-dialog.c:1114
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
+# tooltip
+#: ../data/ui/edit-dialog.ui.h:2
+msgid "Click to select the event's agenda"
+msgstr "Kliknutím vyberiete agendu udalosti"
+
+#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:509
 msgid "Done"
 msgstr "Hotovo"
 
-#: ../data/ui/edit-dialog.ui.h:3
+#: ../data/ui/edit-dialog.ui.h:4
 msgid "Title"
 msgstr "Názov"
 
-#: ../data/ui/edit-dialog.ui.h:4
-msgid "Starts"
-msgstr "Začiatok"
-
 #: ../data/ui/edit-dialog.ui.h:5
-msgid "Ends"
-msgstr "Koniec"
+msgid "Date"
+msgstr "Dátum"
 
 #: ../data/ui/edit-dialog.ui.h:6
+msgid "Reminders"
+msgstr "Pripomenutia"
+
+#: ../data/ui/edit-dialog.ui.h:7
 msgid "Notes"
 msgstr "Poznámky"
 
-#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
+#: ../data/ui/edit-dialog.ui.h:8 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "Umiestnenie"
 
-#: ../data/ui/edit-dialog.ui.h:8
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Time"
+msgstr "Čas"
+
+#: ../data/ui/edit-dialog.ui.h:10
 msgid "All Day"
 msgstr "Celý deň"
 
-#: ../data/ui/edit-dialog.ui.h:9
+#: ../data/ui/edit-dialog.ui.h:11
 msgid "Delete Event"
 msgstr "Odstrániť udalosť"
+
+#: ../data/ui/edit-dialog.ui.h:12
+msgid "5 minutes"
+msgstr "5 minút"
+
+#: ../data/ui/edit-dialog.ui.h:13
+msgid "10 minutes"
+msgstr "10 minút"
+
+#: ../data/ui/edit-dialog.ui.h:14
+msgid "30 minutes"
+msgstr "30 minút"
+
+#: ../data/ui/edit-dialog.ui.h:15
+msgid "1 hour"
+msgstr "1 hodina"
+
+#: ../data/ui/edit-dialog.ui.h:16
+msgid "1 day"
+msgstr "1 deň"
+
+#: ../data/ui/edit-dialog.ui.h:17
+msgid "2 days"
+msgstr "2 dni"
+
+#: ../data/ui/edit-dialog.ui.h:18
+msgid "3 days"
+msgstr "3 dni"
+
+#: ../data/ui/edit-dialog.ui.h:19
+msgid "1 week"
+msgstr "1 týždeň"
 
 #: ../data/ui/help-overlay.ui.h:1
 msgctxt "shortcut window"
@@ -263,8 +329,8 @@ msgstr "Nenašli sa žiadne výsledky"
 msgid "Try a different search"
 msgstr "Skúste vyhľadať niečo iné"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1130
-#: ../src/gcal-window.c:1134
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1131
+#: ../src/gcal-window.c:1135
 msgid "Undo"
 msgstr "Vrátiť späť"
 
@@ -334,8 +400,14 @@ msgid "Edit Calendar"
 msgstr "Pridať kalendár"
 
 #: ../data/ui/source-dialog.ui.h:20
-msgid "Enter the address of the calendar that you want to add. If the calendar belongs to one of your online accounts, you can add it through the <a href=\"GOA\">online account settings</a>."
-msgstr "Zadajte adresu kalendára, ktorý chcete pridať. Ak kalendár patrí do jedného z vašich účtov služieb, môžete ho pridať cez <a href=\"GOA\">nastavenia účtov služieb</a>."
+msgid ""
+"Enter the address of the calendar that you want to add. If the calendar "
+"belongs to one of your online accounts, you can add it through the <a href="
+"\"GOA\">online account settings</a>."
+msgstr ""
+"Zadajte adresu kalendára, ktorý chcete pridať. Ak kalendár patrí do jedného "
+"z vašich účtov služieb, môžete ho pridať cez <a href=\"GOA\">nastavenia "
+"účtov služieb</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
@@ -438,11 +510,43 @@ msgstr "Dušan Kazik <prescott66@gmail.com>"
 msgid "Day"
 msgstr "Deň"
 
-#: ../src/gcal-edit-dialog.c:429
+#: ../src/gcal-edit-dialog.c:509
 msgid "Save"
 msgstr "Uložiť"
 
-#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:764
+#, c-format
+msgid "%d minute before"
+msgid_plural "%d minutes before"
+msgstr[0] "Pred %d minútami"
+msgstr[1] "Pred %d minútou"
+msgstr[2] "Pred %d minútami"
+
+#: ../src/gcal-edit-dialog.c:772
+#, c-format
+msgid "%d hour before"
+msgid_plural "%d hours before"
+msgstr[0] "Pred %d hodinami"
+msgstr[1] "Pred %d hodinou"
+msgstr[2] "Pred %d hodinami"
+
+#: ../src/gcal-edit-dialog.c:780
+#, c-format
+msgid "%d day before"
+msgid_plural "%d days before"
+msgstr[0] "Pred %d dňami"
+msgstr[1] "Pred %d dňom"
+msgstr[2] "Pred %d dňami"
+
+#: ../src/gcal-edit-dialog.c:788
+#, c-format
+msgid "%d week before"
+msgid_plural "%d weeks before"
+msgstr[0] "Pred %d týždňami"
+msgstr[1] "Pred %d týždňom"
+msgstr[2] "Pred %d týždňami"
+
+#: ../src/gcal-edit-dialog.c:1041 ../src/gcal-quick-add-popover.c:422
 msgid "Unnamed event"
 msgstr "Nepomenovaná udalosť"
 
@@ -541,13 +645,19 @@ msgstr "Poludnie"
 msgid "00:00 PM"
 msgstr "00:00 Popoludní"
 
-#: ../src/gcal-window.c:1130
+#: ../src/gcal-window.c:1131
 msgid "Another event deleted"
 msgstr "Iná udalosť bola odstránená"
 
-#: ../src/gcal-window.c:1134
+#: ../src/gcal-window.c:1135
 msgid "Event deleted"
 msgstr "Udalosť bola odstránená"
+
+#~ msgid "Starts"
+#~ msgstr "Začiatok"
+
+#~ msgid "Ends"
+#~ msgstr "Koniec"
 
 #~ msgid "Create"
 #~ msgstr "Vytvoriť"
