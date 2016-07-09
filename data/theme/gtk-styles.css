@@ -250,21 +250,6 @@ event-widget.color-light:backdrop {
     color: rgba(0, 0, 0, 0.3);
 }
 
-.middle-entry {
-    border-bottom-left-radius: 0px;
-    border-top-left-radius: 0px;
-    border-bottom-right-radius: 0px;
-    border-top-right-radius: 0px;
-}
-
-.middle-entry:dir(ltr) {
-    border-left: 0px;
-}
-
-.middle-entry:dir(rtl) {
-    border-right: 0px;
-}
-
 .search-viewport {
   background-color: @theme_base_color;
 }
