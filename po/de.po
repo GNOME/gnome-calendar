@@ -6,15 +6,16 @@
 # Benjamin Steinwender <b@stbe.at>, 2015.
 # Bernd Homuth <dev@hmt.im>, 2015.
 # Paul Seyfert <pseyfert@mathphys.fsk.uni-heidelberg.de>, 2015.
+# Franco Della-Monica <franco.della.monica@gmail.com>, 2016.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-06-06 06:08+0000\n"
-"PO-Revision-Date: 2016-06-07 14:50-0400\n"
-"Last-Translator: Florian Heiser <gnu.l10n.de@gmail.com>\n"
+"POT-Creation-Date: 2016-07-16 02:39+0000\n"
+"PO-Revision-Date: 2016-07-17 16:54+0200\n"
+"Last-Translator: Christian Kirbach <christian.kirbach@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -114,42 +115,90 @@ msgstr "Liste der deaktivierten Datenquellen"
 msgid "Sources disabled last time Calendar ran"
 msgstr "Deaktivierte Quellen seit dem letzten Aufruf von Kalender"
 
+#: ../data/ui/alarm-row.ui.h:1
+msgid "Toggles the sound of the alarm"
+msgstr "Schaltet den Alarmton um"
+
+#: ../data/ui/alarm-row.ui.h:2
+msgid "Remove the alarm"
+msgstr "Alarm entfernen"
+
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
 #: ../src/gcal-source-dialog.c:1114
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
+#: ../data/ui/edit-dialog.ui.h:2
+msgid "Click to select the event's agenda"
+msgstr "Klicken, um die Agenda des Termins zu wählen"
+
+#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:509
 msgid "Done"
 msgstr "Fertig"
 
-#: ../data/ui/edit-dialog.ui.h:3
+#: ../data/ui/edit-dialog.ui.h:4
 msgid "Title"
 msgstr "Titel"
 
-#: ../data/ui/edit-dialog.ui.h:4
-msgid "Starts"
-msgstr "Beginnt"
-
 #: ../data/ui/edit-dialog.ui.h:5
-msgid "Ends"
-msgstr "Endet"
+msgid "Date"
+msgstr "Datum"
 
 #: ../data/ui/edit-dialog.ui.h:6
+msgid "Reminders"
+msgstr "Erinnerungen"
+
+#: ../data/ui/edit-dialog.ui.h:7
 msgid "Notes"
 msgstr "Notizen"
 
-#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
+#: ../data/ui/edit-dialog.ui.h:8 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "Ort"
 
-#: ../data/ui/edit-dialog.ui.h:8
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Time"
+msgstr "Zeit"
+
+#: ../data/ui/edit-dialog.ui.h:10
 msgid "All Day"
 msgstr "Ganztägig"
 
-#: ../data/ui/edit-dialog.ui.h:9
+#: ../data/ui/edit-dialog.ui.h:11
 msgid "Delete Event"
 msgstr "Termin löschen"
+
+#: ../data/ui/edit-dialog.ui.h:12
+msgid "5 minutes"
+msgstr "5 Minuten"
+
+#: ../data/ui/edit-dialog.ui.h:13
+msgid "10 minutes"
+msgstr "10 Minuten"
+
+#: ../data/ui/edit-dialog.ui.h:14
+msgid "30 minutes"
+msgstr "30 Minuten"
+
+#: ../data/ui/edit-dialog.ui.h:15
+msgid "1 hour"
+msgstr "1 Stunde"
+
+#: ../data/ui/edit-dialog.ui.h:16
+msgid "1 day"
+msgstr "1 Tag"
+
+#: ../data/ui/edit-dialog.ui.h:17
+msgid "2 days"
+msgstr "2 Tage"
+
+#: ../data/ui/edit-dialog.ui.h:18
+msgid "3 days"
+msgstr "3 Tage"
+
+#: ../data/ui/edit-dialog.ui.h:19
+msgid "1 week"
+msgstr "1 Woche"
 
 #: ../data/ui/help-overlay.ui.h:1
 msgctxt "shortcut window"
@@ -282,8 +331,8 @@ msgstr "Keine Ergebnisse gefunden"
 msgid "Try a different search"
 msgstr "Mit veränderter Suche erneut versuchen"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1130
-#: ../src/gcal-window.c:1134
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1120
+#: ../src/gcal-window.c:1124
 msgid "Undo"
 msgstr "Rückgängig"
 
@@ -457,6 +506,7 @@ msgstr "Copyright © %d–%d Die Kalender-Autoren"
 #: ../src/gcal-application.c:490
 msgid "translator-credits"
 msgstr ""
+"Franco Della-Monica <franco.della.monica@gmail.com>\n"
 "Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Benjamin Steinwender <b@stbe.at>"
 
@@ -464,11 +514,39 @@ msgstr ""
 msgid "Day"
 msgstr "Tag"
 
-#: ../src/gcal-edit-dialog.c:429
+#: ../src/gcal-edit-dialog.c:509
 msgid "Save"
 msgstr "Speichern"
 
-#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:764
+#, c-format
+msgid "%d minute before"
+msgid_plural "%d minutes before"
+msgstr[0] "%d Minute vorher"
+msgstr[1] "%d Minuten vorher"
+
+#: ../src/gcal-edit-dialog.c:772
+#, c-format
+msgid "%d hour before"
+msgid_plural "%d hours before"
+msgstr[0] "%d Stunde vorher"
+msgstr[1] "%d Stunden vorher"
+
+#: ../src/gcal-edit-dialog.c:780
+#, c-format
+msgid "%d day before"
+msgid_plural "%d days before"
+msgstr[0] "%d Tag vorher"
+msgstr[1] "%d Tage vorher"
+
+#: ../src/gcal-edit-dialog.c:788
+#, c-format
+msgid "%d week before"
+msgid_plural "%d weeks before"
+msgstr[0] "%d Woche vorher"
+msgstr[1] "%d Wochen vorher"
+
+#: ../src/gcal-edit-dialog.c:1041 ../src/gcal-quick-add-popover.c:424
 msgid "Unnamed event"
 msgstr "Unbenannter Termin"
 
@@ -484,22 +562,22 @@ msgid_plural "Other %d events"
 msgstr[0] "Weiterer Termin"
 msgstr[1] "Weitere %d Termine"
 
-#: ../src/gcal-quick-add-popover.c:113
+#: ../src/gcal-quick-add-popover.c:115
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (dieser Kalender ist schreibgeschützt)"
 
-#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+#: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%e. %B"
 
-#: ../src/gcal-quick-add-popover.c:243
+#: ../src/gcal-quick-add-popover.c:245
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Neues Ereignis von %s bis %s"
 
-#: ../src/gcal-quick-add-popover.c:249
+#: ../src/gcal-quick-add-popover.c:251
 #, c-format
 msgid "New Event on %s"
 msgstr "Neuer Termin am %s"
@@ -567,10 +645,16 @@ msgstr "Mittag"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#: ../src/gcal-window.c:1130
+#: ../src/gcal-window.c:1120
 msgid "Another event deleted"
 msgstr "Weiteren Termin gelöscht"
 
-#: ../src/gcal-window.c:1134
+#: ../src/gcal-window.c:1124
 msgid "Event deleted"
 msgstr "Termin gelöscht"
+
+#~ msgid "Starts"
+#~ msgstr "Beginnt"
+
+#~ msgid "Ends"
+#~ msgstr "Endet"
