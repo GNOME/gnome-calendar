@@ -1,3 +1,18 @@
+Major changes in 3.21.4:
+* Updated translations for:
+    * Arabic (Safa Alfulaij)
+    * Chinese (Taiwan) (Chao-Hsiung Liao)
+    * Friulian (Fabio Tomat)
+    * German (Christian Kirbach)
+    * Spanish (Daniel Mustieles)
+    * Slovak (Dušan Kazik)
+* Share the 'show-weekdate' with GNOME Shell
+* Fix issue in the calendar management dialog
+* Add support for alarms
+* Major updates on the edit dialog
+* Style fixes and updates (Lapo Calamandrei)
+* Fix year view popover positioning (Isaque Galdino)
+
 Major changes in 3.21.2:
 * Updated translations for:
     * Basque (Inaki Larranaga Murgoitio)
