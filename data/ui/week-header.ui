@@ -95,6 +95,7 @@
                             <property name="hexpand">True</property>
                             <property name="column-spacing">8</property>
                             <property name="row-spacing">2</property>
+                            <signal name="size-allocate" handler="fix_background_size_request" object="GcalWeekHeader" swapped="yes" />
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>

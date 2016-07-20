@@ -84,6 +84,10 @@ static void           header_expand                         (GcalWeekHeader *sel
 static void           on_expand_action_activated            (GcalWeekHeader *self,
                                                              gpointer        user_data);
 
+static void           fix_background_size_request           (GcalWeekHeader *self,
+                                                             GdkRectangle   *allocation,
+                                                             GtkWidget      *widget);
+
 static void           gcal_week_header_finalize             (GObject *object);
 
 static void           gcal_week_header_get_property         (GObject    *object,
@@ -448,6 +452,14 @@ on_expand_action_activated (GcalWeekHeader *self,
 }
 
 static void
+fix_background_size_request (GcalWeekHeader *self,
+                             GdkRectangle   *allocation,
+                             GtkWidget      *widget)
+{
+  gtk_widget_set_size_request (self->draw_area, -1, allocation->height + gtk_widget_get_margin_top (self->scrolledwindow));
+}
+
+static void
 gcal_week_header_finalize (GObject *object)
 {
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
@@ -773,6 +785,7 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 
   gtk_widget_class_bind_template_callback (widget_class, gcal_week_header_draw);
   gtk_widget_class_bind_template_callback (widget_class, on_expand_action_activated);
+  gtk_widget_class_bind_template_callback (widget_class, fix_background_size_request);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
