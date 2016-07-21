@@ -3,8 +3,10 @@
   <gresource prefix="/org/gnome/calendar">
     <file alias="alarm-row.ui" compressed="true" preprocess="xml-stripblanks">ui/alarm-row.ui</file>
     <file alias="calendar-row.ui" compressed="true" preprocess="xml-stripblanks">ui/calendar-row.ui</file>
+    <file alias="date-chooser.ui" compressed="true" preprocess="xml-stripblanks">ui/date-chooser.ui</file>
     <file alias="date-selector.ui" compressed="true" preprocess="xml-stripblanks">ui/date-selector.ui</file>
     <file alias="edit-dialog.ui" compressed="true" preprocess="xml-stripblanks">ui/edit-dialog.ui</file>
+    <file alias="multi-choice.ui" compressed="true" preprocess="xml-stripblanks">ui/multi-choice.ui</file>
     <file alias="online-account-row.ui" compressed="true" preprocess="xml-stripblanks">ui/online-account-row.ui</file>
     <file alias="quick-add-popover.ui" compressed="true" preprocess="xml-stripblanks">ui/quick-add-popover.ui</file>
     <file alias="search-view.ui" compressed="true" preprocess="xml-stripblanks">ui/search-view.ui</file>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.16"/>
+  <template class="GcalDateChooser" parent="GtkBin">
+    <child>
+      <object class="GtkGrid">
+        <property name="visible">True</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GcalMultiChoice" id="month_choice">
+            <property name="visible" bind-source="GcalDateChooser" bind-property="show-heading" bind-flags="sync-create"/>
+            <property name="halign">fill</property>
+            <property name="min-value">0</property>
+            <property name="max-value">11</property>
+            <property name="animate">False</property>
+            <property name="value">0</property>
+            <signal name="notify::value" handler="multi_choice_changed" swapped="yes"/>
+          </object>
+          <packing>
+            <property name="left-attach">0</property>
+            <property name="top-attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GcalMultiChoice" id="year_choice">
+            <property name="visible" bind-source="GcalDateChooser" bind-property="show-heading" bind-flags="sync-create"/>
+            <property name="halign">fill</property>
+            <property name="min-value">0</property>
+            <property name="max-value">120000</property>
+            <property name="animate">False</property>
+            <property name="value">0</property>
+            <signal name="notify::value" handler="multi_choice_changed" swapped="yes"/>
+          </object>
+          <packing>
+            <property name="left-attach">1</property>
+            <property name="top-attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkGrid" id="grid">
+            <property name="visible">True</property>
+            <property name="row-homogeneous">True</property>
+            <property name="column-homogeneous">True</property>
+          </object>
+          <packing>
+            <property name="left-attach">0</property>
+            <property name="top-attach">1</property>
+            <property name="width">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

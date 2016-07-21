@@ -51,10 +51,12 @@ EXTRA_DIST=                     \
   shell-search-provider-dbus-interfaces.xml \
   ui/alarm-row.ui               \
   ui/calendar-row.ui            \
+  ui/date-chooser.ui            \
   ui/date-selector.ui           \
   ui/edit-dialog.ui             \
   ui/help-overlay.ui            \
   ui/menus.ui                   \
+  ui/multi-choice.ui            \
   ui/quick-add-popover.ui       \
   ui/search-view.ui             \
   ui/source-dialog.ui           \

@@ -28,6 +28,10 @@ gnome_calendar_SOURCES =                                  \
     css-code.h                                            \
     gcal-application.h                                    \
     gcal-application.c                                    \
+    gcal-date-chooser-day.c                               \
+    gcal-date-chooser-day.h                               \
+    gcal-date-chooser.c                                   \
+    gcal-date-chooser.h                                   \
     gcal-date-selector.c                                  \
     gcal-date-selector.h                                  \
     gcal-edit-dialog.c                                    \
@@ -40,6 +44,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-manager.h                                        \
     gcal-month-view.c                                     \
     gcal-month-view.h                                     \
+    gcal-multi-choice.c                                   \
+    gcal-multi-choice.h                                   \
     gcal-quick-add-popover.c                              \
     gcal-quick-add-popover.h                              \
     gcal-search-view.h                                    \

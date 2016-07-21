@@ -290,3 +290,34 @@ button:checked:not(:backdrop) .calendar-color-image,
 .sources-button:not(:backdrop):not(:disabled) .calendar-color-image {
     -gtk-icon-shadow: 0 1px alpha(black, 0.1);
 }
+
+/* Date chooser */
+datechooser .weeknum,
+datechooser .weekday {
+    color: alpha(@theme_fg_color, 0.55);;
+    font-size: 80%;
+}
+
+navigator button {
+    padding: 0;
+}
+
+navigator label {
+    font-weight: bold;
+}
+
+datechooser day {
+    color: @theme_fg_color;
+    min-width: 32px;
+    min-height: 32px;
+}
+
+datechooser day.other-month {
+    color: @theme_insensitive_fg_color;
+}
+
+datechooser day:selected {
+    color: @theme_selected_fg_color;
+    background-color: @theme_selected_bg_color;
+    border-radius: 50%;
+}
