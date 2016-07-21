@@ -3,6 +3,9 @@
   <template class="GcalWeekView" parent="GtkBox">
     <property name="visible">True</property>
     <property name="orientation">vertical</property>
+    <style>
+      <class name="week-view" />
+    </style>
     <child>
       <object class="GcalWeekHeader" id="header">
         <property name="visible">True</property>
@@ -16,9 +19,22 @@
           <object class="GtkViewport">
             <property name="visible">True</property>
             <child>
-              <!--<object class="GcalWeekGrid">
+              <object class="GtkBox">
                 <property name="visible">True</property>
-              </object>-->
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkDrawingArea">
+                    <property name="visible">True</property>
+                    <property name="height-request">2568</property>
+                    <signal name="draw" handler="gcal_week_view_draw_hours" object="GcalWeekView" swapped="yes" />
+                  </object>
+                </child>
+                <!--<child>
+                  <object class="GcalWeekGrid">
+                    <property name="visible">True</property>
+                  </object>
+                </child>-->
+              </object>
             </child>
           </object>
         </child>

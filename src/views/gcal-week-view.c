@@ -33,8 +33,8 @@
 
 static const double dashed [] =
 {
-  1.0,
-  1.0
+  5.0,
+  6.0
 };
 
 enum
@@ -95,6 +95,10 @@ static void           gcal_week_view_component_removed          (ECalDataModelSu
 static void           gcal_week_view_freeze                     (ECalDataModelSubscriber *subscriber);
 
 static void           gcal_week_view_thaw                       (ECalDataModelSubscriber *subscriber);
+
+static gboolean       gcal_week_view_draw_hours                 (GcalWeekView *self,
+                                                                 cairo_t      *cr,
+                                                                 GtkWidget    *widget);
 
 static void           gcal_view_interface_init                  (GcalViewInterface *iface);
 
@@ -288,6 +292,95 @@ gcal_week_view_thaw (ECalDataModelSubscriber *subscriber)
 {
 }
 
+static gboolean
+gcal_week_view_draw_hours (GcalWeekView *self,
+                           cairo_t      *cr,
+                           GtkWidget    *widget)
+{
+  GtkStyleContext *context;
+  GtkStateFlags state;
+  GtkBorder padding;
+  GdkRGBA color;
+
+  gint i, width, height;
+
+  PangoLayout *layout;
+  PangoFontDescription *font_desc;
+
+  context = gtk_widget_get_style_context (widget);
+  state = gtk_widget_get_state_flags (widget);
+
+  gtk_style_context_add_class (context, "hours");
+  gtk_style_context_get_color (context, state, &color);
+  gtk_style_context_get_padding (context, state, &padding);
+  gtk_style_context_get (context, state, "font", &font_desc, NULL);
+
+  layout = pango_cairo_create_layout (cr);
+  pango_layout_set_font_description (layout, font_desc);
+  gdk_cairo_set_source_rgba (cr, &color);
+
+  /* Gets the size of the widget */
+  width = gtk_widget_get_allocated_width (widget);
+  height = gtk_widget_get_allocated_height (widget);
+
+  /* Draws the hours in the sidebar */
+  for (i = 0; i < 24; i++)
+    {
+      gchar *hours;
+
+      if (self->use_24h_format)
+        {
+          hours = g_strdup_printf ("%02d:00", i);
+          pango_layout_set_text (layout, hours, -1);
+        }
+      else
+        {
+          hours = g_strdup_printf ("%d %s",
+                                   i % 12,
+                                   i < 12 ? _("AM") : _("PM"));
+
+          if (i == 0)
+            pango_layout_set_text (layout, _("12 PM"), -1);
+          else if (i == 12)
+            pango_layout_set_text (layout, _("12 AM"), -1);
+          else
+            pango_layout_set_text (layout, hours, -1);
+        }
+
+      cairo_move_to (cr, padding.left, (height / 24) * i + (height / 120));
+      pango_cairo_show_layout (cr, layout);
+
+      g_free (hours);
+    }
+
+  cairo_set_line_width (cr, 0.65);
+
+  /* Draws the horizontal complete lines */
+  for (i = 0; i < 24; i++)
+    {
+      cairo_move_to (cr, 0, (height / 24) * i + 0.4);
+      cairo_rel_line_to (cr, width, 0);
+    }
+
+  cairo_stroke (cr);
+
+  cairo_set_dash (cr, dashed, 2, 0);
+
+  /* Draws the horizontal dashed lines */
+  for (i = 0; i < 24; i++)
+    {
+      cairo_move_to (cr, 0, (height / 24) * i + (height / 48) + 0.4);
+      cairo_rel_line_to (cr, width, 0);
+    }
+
+  cairo_stroke (cr);
+
+  pango_font_description_free (font_desc);
+  g_object_unref (layout);
+
+  return FALSE;
+}
+
 static void
 gcal_week_view_class_init (GcalWeekViewClass *klass)
 {
@@ -305,6 +398,8 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, header);
+
+  gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_draw_hours);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }

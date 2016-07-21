@@ -398,3 +398,14 @@ datechooser day:selected:hover {
 .week-header .margin {
     color: alpha(@theme_fg_color, 0.6);
 }
+
+.week-view {
+    padding: 0px;
+}
+
+.week-view .hours {
+    font-size: 12pt;
+    font-weight: normal;
+    color: alpha(@theme_fg_color, 0.25);
+    padding: 8px;
+}

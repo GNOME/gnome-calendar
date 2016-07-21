@@ -184,34 +184,6 @@ gcal_week_grid_draw (GtkWidget *widget,
   gtk_style_context_remove_class (context, "current");
   gtk_style_context_restore (context);
 
-  for (i = 0; i < 24; i++)
-    {
-      gchar *hours;
-      if (self->use_24h_format)
-        {
-          hours = g_strdup_printf ("%02d:00", i);
-          pango_layout_set_text (layout, hours, -1);
-        }
-      else
-        {
-          hours = g_strdup_printf ("%02d:00 %s",
-                                   i % 12,
-                                   i < 12 ? _("AM") : _("PM"));
-
-          if (i == 0)
-            pango_layout_set_text (layout, _("Midnight"), -1);
-          else if (i == 12)
-            pango_layout_set_text (layout, _("Noon"), -1);
-          else
-            pango_layout_set_text (layout, hours, -1);
-        }
-
-      cairo_move_to (cr, padding.left, padding.top + (height / 24) * i);
-      pango_cairo_show_layout (cr, layout);
-
-      g_free (hours);
-    }
-
   for (i = 0; i < 7; i++)
     {
       cairo_move_to (cr,
