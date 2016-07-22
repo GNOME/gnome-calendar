@@ -32,6 +32,8 @@ struct _GcalDateSelector
   /* widgets */
   GtkWidget   *date_chooser;
   GtkWidget   *date_selector_popover;
+
+  GSettings   *settings;
 };
 
 enum
@@ -110,6 +112,16 @@ icon_pressed_cb (GcalDateSelector     *self,
 }
 
 static void
+gcal_date_selector_finalize (GObject *object)
+{
+  GcalDateSelector *self = GCAL_DATE_SELECTOR (object);
+
+  g_clear_object (&self->settings);
+
+  G_OBJECT_CLASS (gcal_date_selector_parent_class)->finalize (object);
+}
+
+static void
 gcal_date_selector_get_property (GObject    *object,
                                  guint       prop_id,
                                  GValue     *value,
@@ -178,6 +190,7 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
   GtkEntryClass *entry_class = GTK_ENTRY_CLASS (klass);
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+  object_class->finalize = gcal_date_selector_finalize;
   object_class->get_property = gcal_date_selector_get_property;
   object_class->set_property = gcal_date_selector_set_property;
 
@@ -214,6 +227,14 @@ gcal_date_selector_init (GcalDateSelector *self)
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  self->settings = g_settings_new ("org.gnome.desktop.calendar");
+
+  g_settings_bind (self->settings,
+                   "show-weekdate",
+                   self->date_chooser,
+                   "show-week-numbers",
+                   G_SETTINGS_BIND_DEFAULT);
 }
 
 /* Public API */
