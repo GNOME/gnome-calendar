@@ -10,8 +10,6 @@
     <property name="use_header_bar">0</property>
     <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
-    <property name="width_request">550</property>
-    <property name="height_request">550</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="titlebar">
         <property name="visible">True</property>
@@ -220,7 +218,6 @@
                   <object class="GcalDateSelector" id="start_date_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="hexpand">True</property>
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                   </object>
                 </child>
@@ -235,7 +232,6 @@
                   <object class="GcalDateSelector" id="end_date_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="hexpand">True</property>
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                   </object>
                 </child>
