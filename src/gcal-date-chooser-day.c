@@ -337,6 +337,9 @@ gcal_date_chooser_day_init (GcalDateChooserDay *self)
 {
   GtkWidget *widget = GTK_WIDGET (self);
 
+  gtk_widget_set_halign (widget, GTK_ALIGN_CENTER);
+  gtk_widget_set_valign (widget, GTK_ALIGN_CENTER);
+
   gtk_widget_set_can_focus (widget, TRUE);
   gtk_style_context_add_class (gtk_widget_get_style_context (widget), "day");
 

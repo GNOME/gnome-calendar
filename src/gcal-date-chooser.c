@@ -205,11 +205,19 @@ static gchar *
 calendar_get_weekday_name (gint i)
 {
   GDateTime *date;
+  gchar *formatted_date;
+  gchar *upcased_date;
   gchar *text;
 
   date = g_date_time_new_local (2015, 1, 4 + i, 1, 1, 1);
-  text = g_date_time_format (date, "%a");
+  formatted_date = g_date_time_format (date, "%a");
   g_date_time_unref (date);
+
+  upcased_date = g_utf8_strup (formatted_date, -1);
+  g_free (formatted_date);
+
+  text = g_utf8_substring (upcased_date, 0, 1);
+  g_free (upcased_date);
 
   return text;
 }
