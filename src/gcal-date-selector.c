@@ -259,6 +259,7 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
 
   /* set calendar's date */
   gcal_date_chooser_set_date (GCAL_DATE_CHOOSER (selector->date_chooser), date);
+  update_text (selector);
 
   /* emit the MODIFIED signal */
   g_object_notify (G_OBJECT (selector), "date");
