@@ -167,7 +167,9 @@ gcal_date_chooser_day_realize (GtkWidget *widget)
   attributes.event_mask = gtk_widget_get_events (widget);
   attributes.event_mask |= GDK_BUTTON_PRESS_MASK
                            | GDK_BUTTON_RELEASE_MASK
-                           | GDK_TOUCH_MASK;
+                           | GDK_TOUCH_MASK
+                           | GDK_ENTER_NOTIFY_MASK
+                           | GDK_LEAVE_NOTIFY_MASK;
 
   attributes_mask = GDK_WA_X | GDK_WA_Y;
 
@@ -301,6 +303,36 @@ gcal_date_chooser_day_get_preferred_height (GtkWidget *widget,
     *natural = MAX (nat, min_height);
 }
 
+static gboolean
+gcal_date_chooser_day_enter_notify_event (GtkWidget        *widget,
+                                          GdkEventCrossing *event)
+{
+  GtkStyleContext *context;
+  GtkStateFlags state;
+
+  context = gtk_widget_get_style_context (widget);
+  state = gtk_style_context_get_state (context);
+
+  gtk_style_context_set_state (context, state | GTK_STATE_FLAG_PRELIGHT);
+
+  return GDK_EVENT_PROPAGATE;
+}
+
+static gboolean
+gcal_date_chooser_day_leave_notify_event (GtkWidget        *widget,
+                                          GdkEventCrossing *event)
+{
+  GtkStyleContext *context;
+  GtkStateFlags state;
+
+  context = gtk_widget_get_style_context (widget);
+  state = gtk_style_context_get_state (context);
+
+  gtk_style_context_set_state (context, state & ~GTK_STATE_FLAG_PRELIGHT);
+
+  return GDK_EVENT_PROPAGATE;
+}
+
 static void
 gcal_date_chooser_day_class_init (GcalDateChooserDayClass *class)
 {
@@ -319,6 +351,8 @@ gcal_date_chooser_day_class_init (GcalDateChooserDayClass *class)
   widget_class->drag_data_get = gcal_date_chooser_day_drag_data_get;
   widget_class->get_preferred_width = gcal_date_chooser_day_get_preferred_width;
   widget_class->get_preferred_height = gcal_date_chooser_day_get_preferred_height;
+  widget_class->enter_notify_event = gcal_date_chooser_day_enter_notify_event;
+  widget_class->leave_notify_event = gcal_date_chooser_day_leave_notify_event;
 
   signals[SELECTED] = g_signal_new ("selected",
                                     GCAL_TYPE_DATE_CHOOSER_DAY,
