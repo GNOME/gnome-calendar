@@ -291,41 +291,71 @@ button:checked:not(:backdrop) .calendar-color-image,
     -gtk-icon-shadow: 0 1px alpha(black, 0.1);
 }
 
+
 /* Date chooser */
+
+/* month/year controls */
+datechooser navigator { /* add some space between the two controls */
+  margin-right: 6px;
+  margin-left: 6px;
+  margin-bottom: 6px;
+}
+
+datechooser navigator label {
+  font-weight: bold;
+}
+
+datechooser navigator button {
+  padding: 0;
+}
+
+/* day names and week numbers*/
 datechooser .weeknum,
 datechooser .weekday {
-    color: alpha(@theme_fg_color, 0.55);;
-    font-size: 80%;
+  color: @insensitive_fg_color;
+  font-size: smaller;
 }
 
-navigator button {
-    padding: 0;
+datechooser .weeknum:backdrop,
+datechooser .weekday:backdrop {
+  color: @unfocused_insensitive_color;
 }
 
-navigator label {
-    font-weight: bold;
-}
-
+/* days */
 datechooser day {
-    color: @theme_fg_color;
-    min-width: 32px;
-    min-height: 32px;
+  min-height: 32px;
+  min-width: 32px;
+  border-radius: 50%;
 }
 
-datechooser day.other-month {
-    color: @theme_insensitive_fg_color;
+datechooser day.dim-label { /* FIXME: use a better class name */
+  opacity: 1;
 }
 
-datechooser day:hover,
-datechooser day:selected {
-    border-radius: 50%;
+datechooser day.dim-label:not(:hover),
+datechooser day.dim-label:backdrop {
+  color: alpha(currentColor, 0.1);
 }
 
-datechooser day:hover {
-    background-color: alpha(@theme_fg_color, 0.1);
+/* avoid the theme interfering with label colors */
+datechooser day:selected label,
+datechooser day.dim-label label:hover,
+datechooser day.dim-label label:backdrop {
+  color: currentColor;
 }
 
-datechooser day:selected {
-    color: @theme_selected_fg_color;
-    background-color: @theme_selected_bg_color;
+/* hovered days style */
+datechooser day:hover:not(:backdrop) {
+  background-color: alpha(currentColor, 0.1);
+}
+
+datechooser day.dim-label:hover:not(:backdrop) {
+  color: @insensitive_fg_color;
+}
+
+datechooser day:selected,
+datechooser day:selected:hover {
+  color: @theme_selected_fg_color;
+  background-color: @theme_selected_bg_color;
+  font-weight: bold;
 }
