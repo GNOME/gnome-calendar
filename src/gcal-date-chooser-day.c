@@ -431,12 +431,12 @@ gcal_date_chooser_day_set_other_month (GcalDateChooserDay *self,
 
   if (other_month)
     {
-      gtk_style_context_add_class (context, GTK_STYLE_CLASS_DIM_LABEL);
+      gtk_style_context_add_class (context, "other-month");
       gtk_drag_source_unset (GTK_WIDGET (self));
     }
   else
     {
-      gtk_style_context_remove_class (context, GTK_STYLE_CLASS_DIM_LABEL);
+      gtk_style_context_remove_class (context, "other-month");
       gtk_drag_source_set (GTK_WIDGET (self),
                            GDK_BUTTON1_MASK | GDK_BUTTON3_MASK,
                            NULL, 0,

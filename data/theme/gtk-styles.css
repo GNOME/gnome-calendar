@@ -328,19 +328,15 @@ datechooser day {
   border-radius: 50%;
 }
 
-datechooser day.dim-label { /* FIXME: use a better class name */
-  opacity: 1;
-}
-
-datechooser day.dim-label:not(:hover),
-datechooser day.dim-label:backdrop {
+datechooser day.other-month:not(:hover),
+datechooser day.other-month:backdrop {
   color: alpha(currentColor, 0.1);
 }
 
 /* avoid the theme interfering with label colors */
 datechooser day:selected label,
-datechooser day.dim-label label:hover,
-datechooser day.dim-label label:backdrop {
+datechooser day.other-month label:hover,
+datechooser day.other-month label:backdrop {
   color: currentColor;
 }
 
@@ -349,7 +345,7 @@ datechooser day:hover:not(:backdrop) {
   background-color: alpha(currentColor, 0.1);
 }
 
-datechooser day.dim-label:hover:not(:backdrop) {
+datechooser day.other-month:hover:not(:backdrop) {
   color: @insensitive_fg_color;
 }
 
