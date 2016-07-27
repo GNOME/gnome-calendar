@@ -101,14 +101,19 @@ update_time (GcalTimeSelector *selector)
   hour = (gint) gtk_adjustment_get_value (selector->hour_adjustment);
   minute = (gint) gtk_adjustment_get_value (selector->minute_adjustment);
 
-  if (!selector->format_24h && gtk_combo_box_get_active (GTK_COMBO_BOX (selector->period_combo)) == PM)
+  if (!selector->format_24h)
     {
-      g_signal_handlers_block_by_func (selector->period_combo, update_time, selector);
+      hour = hour % 12;
 
-      gtk_combo_box_set_active (GTK_COMBO_BOX (selector->period_combo), hour > 12);
-      hour += 12;
+      if (gtk_combo_box_get_active (GTK_COMBO_BOX (selector->period_combo)) == PM)
+        {
+          g_signal_handlers_block_by_func (selector->period_combo, update_time, selector);
 
-      g_signal_handlers_unblock_by_func (selector->period_combo, update_time, selector);
+          gtk_combo_box_set_active (GTK_COMBO_BOX (selector->period_combo), hour >= 12);
+          hour += 12;
+
+          g_signal_handlers_unblock_by_func (selector->period_combo, update_time, selector);
+        }
     }
 
   now = g_date_time_new_now_local ();
@@ -190,9 +195,15 @@ gcal_time_selector_set_time_format (GcalTimeSelector *selector,
   gtk_widget_set_visible (selector->period_combo, !format_24h);
 
   if (format_24h)
-    gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin)), 23.0);
+    {
+      gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin)), 0.0);
+      gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin)), 23.0);
+    }
   else
-    gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin)), 11.0);
+    {
+      gtk_adjustment_set_lower (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin)), 1.0);
+      gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin)), 12.0);
+    }
 }
 
 static void
@@ -289,6 +300,7 @@ gcal_time_selector_set_time (GcalTimeSelector *selector,
 
           gtk_combo_box_set_active (GTK_COMBO_BOX (selector->period_combo), hour >= 12);
           hour =  hour % 12;
+          hour = (hour == 0)? 12 : hour;
 
           g_signal_handlers_unblock_by_func (selector->period_combo, update_time, selector);
         }
