@@ -327,29 +327,6 @@ calendar_update_selected_day (GcalDateChooser *self)
     }
 }
 
-static gint
-calendar_get_week_start (void)
-{
-  union { unsigned int word; char *string; } langinfo;
-  gint week_1stday = 0;
-  gint first_weekday = 1;
-  guint week_origin;
-
-  langinfo.string = nl_langinfo (_NL_TIME_FIRST_WEEKDAY);
-  first_weekday = langinfo.string[0];
-  langinfo.string = nl_langinfo (_NL_TIME_WEEK_1STDAY);
-  week_origin = langinfo.word;
-
-  if (week_origin == 19971130) /* Sunday */
-    week_1stday = 0;
-  else if (week_origin == 19971201) /* Monday */
-    week_1stday = 1;
-  else
-    g_warning ("Unknown value of _NL_TIME_WEEK_1STDAY.");
-
-  return (week_1stday + first_weekday - 1) % 7;
-}
-
 static void
 day_selected_cb (GcalDateChooserDay *d,
                  GcalDateChooser    *self)
@@ -577,7 +554,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
   self->date = g_date_time_new_now_local ();
   g_date_time_get_ymd (self->date, &self->this_year, NULL, NULL);
 
-  self->week_start = calendar_get_week_start ();
+  self->week_start = get_first_weekday ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
