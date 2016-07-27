@@ -106,7 +106,7 @@ update_time (GcalTimeSelector *selector)
       g_signal_handlers_block_by_func (selector->period_combo, update_time, selector);
 
       gtk_combo_box_set_active (GTK_COMBO_BOX (selector->period_combo), hour > 12);
-      hour *= 2;
+      hour += 12;
 
       g_signal_handlers_unblock_by_func (selector->period_combo, update_time, selector);
     }
