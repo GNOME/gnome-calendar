@@ -148,7 +148,6 @@ gcal_week_grid_draw (GtkWidget *widget,
   gint i;
   gint width;
   gint height;
-  gdouble sidebar_width;
   gint current_cell;
 
   PangoLayout *layout;
@@ -167,7 +166,6 @@ gcal_week_grid_draw (GtkWidget *widget,
   pango_layout_set_font_description (layout, font_desc);
   gdk_cairo_set_source_rgba (cr, &color);
 
-  sidebar_width = gcal_week_view_get_sidebar_width (widget);
   width = gtk_widget_get_allocated_width (widget);
   height = gtk_widget_get_allocated_height (widget);
 
@@ -177,9 +175,9 @@ gcal_week_grid_draw (GtkWidget *widget,
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, "current");
   gtk_render_background (context, cr,
-                         ((width - sidebar_width)/ 7.0) * current_cell + sidebar_width,
+                         (width / 7.0) * current_cell,
                          0,
-                         ((width  - sidebar_width)/ 7.0),
+                         (width / 7.0),
                          height);
   gtk_style_context_remove_class (context, "current");
   gtk_style_context_restore (context);
@@ -187,7 +185,7 @@ gcal_week_grid_draw (GtkWidget *widget,
   for (i = 0; i < 7; i++)
     {
       cairo_move_to (cr,
-                     sidebar_width + ((width - sidebar_width) / 7) * i + 0.4,
+                     ((width) / 7) * i + 0.4,
                      0);
       cairo_rel_line_to (cr, 0, height);
     }
@@ -203,8 +201,8 @@ gcal_week_grid_draw (GtkWidget *widget,
   cairo_set_dash (cr, dashed, 2, 0);
   for (i = 0; i < 24; i++)
     {
-      cairo_move_to (cr, sidebar_width, (height / 24) * i + (height / 48) + 0.4);
-      cairo_rel_line_to (cr, width - sidebar_width, 0);
+      cairo_move_to (cr, 0, (height / 24) * i + (height / 48) + 0.4);
+      cairo_rel_line_to (cr, width, 0);
     }
 
   cairo_stroke (cr);

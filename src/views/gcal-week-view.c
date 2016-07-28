@@ -40,7 +40,8 @@ static const double dashed [] =
 enum
 {
   PROP_0,
-  PROP_DATE
+  PROP_DATE,
+  PROP_SIDEBAR_WIDTH
 };
 
 struct _GcalWeekView
@@ -48,12 +49,15 @@ struct _GcalWeekView
   GtkBox          parent;
 
   GtkWidget      *header;
+  GtkWidget      *hours_bar;
 
   /*
    * first day of the week according to user locale, being
    * 0 for Sunday, 1 for Monday and so on 
    */
   gint            first_weekday;
+
+  gint            sidebar_width_offset;
 
   /*
    * clock format from GNOME desktop settings
@@ -168,45 +172,41 @@ gcal_week_view_get_final_date (GcalView *view)
   return new_date;
 }
 
-gint
+static gint
 gcal_week_view_get_sidebar_width (GtkWidget *widget)
 {
   GtkStyleContext *context;
+  GtkStateFlags state;
   GtkBorder padding;
 
   PangoLayout *layout;
   PangoFontDescription *font_desc;
-  gint mid_width;
-  gint noon_width;
-  gint hours_width;
-  gint sidebar_width;
+
+  gint hours_12_width, hours_24_width, sidebar_width;
 
   context = gtk_widget_get_style_context (widget);
+  state = gtk_style_context_get_state (context);
 
-  gtk_style_context_get_padding (
-      gtk_widget_get_style_context (widget),
-      gtk_widget_get_state_flags (widget),
-      &padding);
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "hours");
 
-  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
-  gtk_style_context_get (context,
-                         gtk_widget_get_state_flags(widget),
+  gtk_style_context_get (context, state,
                          "font", &font_desc,
                          NULL);
+  gtk_style_context_get_padding (context, state, &padding);
+
+  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
   pango_layout_set_font_description (layout, font_desc);
 
-  pango_layout_set_text (layout, _("Midnight"), -1);
-  pango_layout_get_pixel_size (layout, &mid_width, NULL);
+  pango_layout_set_text (layout, _("00 AM"), -1);
+  pango_layout_get_pixel_size (layout, &hours_12_width, NULL);
 
-  pango_layout_set_text (layout, _("Noon"), -1);
-  pango_layout_get_pixel_size (layout, &noon_width, NULL);
+  pango_layout_set_text (layout, _("00:00"), -1);
+  pango_layout_get_pixel_size (layout, &hours_24_width, NULL);
 
-  pango_layout_set_text (layout, _("00:00 PM"), -1);
-  pango_layout_get_pixel_size (layout, &hours_width, NULL);
+  sidebar_width = MAX (hours_12_width, hours_24_width) + padding.left + padding.right;
 
-  sidebar_width = noon_width > mid_width ? noon_width : mid_width;
-  sidebar_width = sidebar_width > hours_width ? 0 : hours_width;
-  sidebar_width += padding.left + padding.right;
+  gtk_style_context_restore (context);
 
   pango_font_description_free (font_desc);
   g_object_unref (layout);
@@ -287,6 +287,25 @@ gcal_week_view_thaw (ECalDataModelSubscriber *subscriber)
 {
 }
 
+static void
+gcal_week_view_hours_bar_size_allocate (GtkWidget     *widget,
+                                        GtkAllocation *alloc)
+{
+  GcalWeekView *self;
+
+  self = GCAL_WEEK_VIEW (widget);
+
+  if (gcal_week_view_get_sidebar_width (GTK_WIDGET (self)) > self->sidebar_width_offset)
+    {
+      self->sidebar_width_offset = gcal_week_view_get_sidebar_width (GTK_WIDGET (self));
+      g_object_notify (G_OBJECT (self), "sidebar-width-offset");
+    }
+
+  gtk_widget_set_size_request (self->hours_bar, self->sidebar_width_offset, 2568);
+
+  GTK_WIDGET_CLASS (gcal_week_view_parent_class)->size_allocate (widget, alloc);
+}
+
 static gboolean
 gcal_week_view_draw_hours (GcalWeekView *self,
                            cairo_t      *cr,
@@ -350,6 +369,9 @@ gcal_week_view_draw_hours (GcalWeekView *self,
 
   cairo_set_line_width (cr, 0.65);
 
+  cairo_move_to (cr, self->sidebar_width_offset, 0);
+  cairo_rel_line_to (cr, 0, height);
+
   /* Draws the horizontal complete lines */
   for (i = 0; i < 24; i++)
     {
@@ -389,12 +411,21 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   g_object_class_override_property (object_class,
                                     PROP_DATE, "active-date");
+  g_object_class_install_property (object_class,
+                                   PROP_SIDEBAR_WIDTH,
+                                   g_param_spec_int ("sidebar-width-offset",
+                                                     "Sidebar Width",
+                                                     "The width of the sidebar",
+                                                     G_MININT, G_MAXINT, 10,
+                                                     G_PARAM_READWRITE));
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, header);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, hours_bar);
 
   gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_draw_hours);
+  gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_hours_bar_size_allocate);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
@@ -402,6 +433,8 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 static void
 gcal_week_view_init (GcalWeekView *self)
 {
+  self->sidebar_width_offset = 10;
+
   gtk_widget_init_template (GTK_WIDGET (self));
 }
 
@@ -488,6 +521,14 @@ gcal_week_view_set_property (GObject       *object,
         break;
       }
 
+    case PROP_SIDEBAR_WIDTH:
+      {
+        self->sidebar_width_offset = g_value_get_int (value);
+
+        gtk_widget_set_size_request (self->hours_bar, self->sidebar_width_offset, 2568);
+        break;
+      }
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -509,6 +550,10 @@ gcal_week_view_get_property (GObject       *object,
     {
     case PROP_DATE:
       g_value_set_boxed (value, self->date);
+      break;
+
+    case PROP_SIDEBAR_WIDTH:
+      g_value_set_int (value, self->sidebar_width_offset);
       break;
 
     default:

@@ -54,6 +54,8 @@ struct _GcalWeekHeader
 
   gint              first_weekday;
 
+  gint              sidebar_width_offset;
+
   /*
    * Used for checking if the header is in collapsed state or expand state
    * false is collapse state true is expand state
@@ -110,7 +112,8 @@ static gboolean       gcal_week_header_draw                 (GcalWeekHeader *sel
 enum
 {
   PROP_0,
-  PROP_ACTIVE_DATE
+  PROP_ACTIVE_DATE,
+  PROP_SIDEBAR_WIDTH
 };
 
 G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_GRID);
@@ -527,6 +530,10 @@ gcal_week_header_get_property (GObject    *object,
       g_value_set_boxed (value, self->active_date);
       return;
 
+    case PROP_SIDEBAR_WIDTH:
+      g_value_set_int (value, self->sidebar_width_offset);
+      return;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -554,6 +561,13 @@ gcal_week_header_set_property (GObject      *object,
 
       return;
 
+    case PROP_SIDEBAR_WIDTH:
+      self->sidebar_width_offset = MAX (g_value_get_int (value),
+                                        gtk_widget_get_allocated_width (self->expand_button));
+
+      gtk_widget_queue_draw (self->draw_area);
+      return;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -568,14 +582,19 @@ gcal_week_header_size_allocate (GtkWidget     *widget,
   GtkStateFlags state;
   GtkAllocation draw_alloc;
 
-  gdouble sidebar_width, cell_width, button_width;
+  gint sidebar_width, cell_width;
 
   PangoFontDescription *bold_font;
 
+  if (gtk_widget_get_allocated_width (self->expand_button) > self->sidebar_width_offset)
+    {
+      self->sidebar_width_offset = gtk_widget_get_allocated_width (self->expand_button);
+      g_object_notify (G_OBJECT (self), "sidebar-width-offset");
+    }
+
   context = gtk_widget_get_style_context (self->draw_area);
   state = gtk_widget_get_state_flags (self->draw_area);
-  sidebar_width = gcal_week_view_get_sidebar_width (self->draw_area);
-  button_width = gtk_widget_get_allocated_width (self->expand_button);
+  sidebar_width = self->sidebar_width_offset;
 
   gtk_widget_get_allocation (self->draw_area, &draw_alloc);
 
@@ -585,10 +604,10 @@ gcal_week_header_size_allocate (GtkWidget     *widget,
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
 
   gtk_widget_set_margin_start (self->scrolledwindow,
-                               gcal_week_view_get_sidebar_width (self->draw_area) + 1 - button_width);
+                               self->sidebar_width_offset - gtk_widget_get_allocated_width (self->expand_button) + 4);
 
   gtk_widget_set_margin_end (self->scrolledwindow,
-                             gtk_widget_get_allocated_width (self->draw_area) - cell_width * 7 - sidebar_width + 7);
+                             gtk_widget_get_allocated_width (self->draw_area) - cell_width * 7 - sidebar_width);
 
   gtk_widget_set_margin_top (self->scrolledwindow,
                              (4 * pango_font_description_get_size (bold_font)) / PANGO_SCALE);
@@ -637,7 +656,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
   current_cell = icaltime_day_of_week (*(self->active_date)) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
 
-  sidebar_width = gcal_week_view_get_sidebar_width (widget);
+  sidebar_width = self->sidebar_width_offset;
   cell_width = (alloc.width - sidebar_width) / 7;
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
@@ -673,7 +692,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
       pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, weekday_date, -1);
       cairo_move_to (cr,
-                     padding.left + cell_width * i + sidebar_width,
+                     padding.left + cell_width * i + sidebar_width + 3,
                      font_height + padding.bottom);
       pango_cairo_show_layout (cr,layout);
 
@@ -689,7 +708,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
       pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, weekday_abv, -1);
       cairo_move_to (cr,
-                     padding.left + cell_width * i + sidebar_width,
+                     padding.left + cell_width * i + sidebar_width + 3,
                      0);
       pango_cairo_show_layout (cr, layout);
 
@@ -698,7 +717,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
       /* Draws the lines after each day of the week */
       cairo_save (cr);
       cairo_move_to (cr,
-                     cell_width * i + sidebar_width - 3,
+                     cell_width * i + sidebar_width,
                      font_height + padding.bottom + 3);
       cairo_set_line_width (cr, 0.25);
       cairo_rel_line_to (cr, 0.0, gtk_widget_get_allocated_height (self->draw_area));
@@ -759,6 +778,13 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
                                                        "The active selected date",
                                                        ICAL_TIME_TYPE,
                                                        G_PARAM_CONSTRUCT | G_PARAM_READWRITE));
+  g_object_class_install_property (object_class,
+                                   PROP_SIDEBAR_WIDTH,
+                                   g_param_spec_int ("sidebar-width-offset",
+                                                     "Sidebar Width",
+                                                     "The width of the sidebar",
+                                                     G_MININT, G_MAXINT, 10,
+                                                     G_PARAM_READWRITE));
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, grid);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, month_label);
