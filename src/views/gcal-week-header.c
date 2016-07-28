@@ -612,15 +612,10 @@ gcal_week_header_draw (GcalWeekHeader *self,
   PangoLayout *layout;
   PangoFontDescription *bold_font;
 
-  gint i, pos_i, start_grid_y;
-  gint font_height;
+  gint i, font_height, current_cell;
   gdouble sidebar_width, cell_width;
-  icaltimetype *start_of_week, *end_of_week;
-
-  cairo_pattern_t *pattern;
 
   cairo_save(cr);
-  start_grid_y = gcal_week_view_get_start_grid_y (widget);
 
   /* Fonts and colour selection */
   context = gtk_widget_get_style_context (widget);
@@ -628,15 +623,6 @@ gcal_week_header_draw (GcalWeekHeader *self,
 
   gtk_style_context_get_padding (context, state, &padding);
   gtk_widget_get_allocation (widget, &alloc);
-
-  pattern = cairo_pattern_create_linear (0, start_grid_y - 18,
-                                         0, start_grid_y + 6);
-
-  cairo_pattern_add_color_stop_rgba (pattern, 0.0, 0, 0, 0, 0.6);
-  cairo_pattern_add_color_stop_rgba (pattern, 1.0, 0, 0, 0, 0.0);
-
-  cairo_set_source (cr, pattern);
-  cairo_pattern_destroy (pattern);
 
   gtk_style_context_get_color (context, state, &color);
   gdk_cairo_set_source_rgba (cr, &color);

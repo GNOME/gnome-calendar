@@ -39,8 +39,6 @@ void           gcal_week_view_set_use_24h_format (GcalWeekView *view,
 void           gcal_week_view_set_current_date   (GcalWeekView *week_header,
                                                   icaltimetype *current_date);
 gint           gcal_week_view_get_sidebar_width  (GtkWidget *widget);
-icaltimetype*  gcal_week_view_get_initial_date   (GcalView *view);
-gint           gcal_week_view_get_start_grid_y   (GtkWidget *widget);
 
 G_END_DECLS
 

@@ -43,17 +43,6 @@ enum
   PROP_DATE
 };
 
-struct _GcalWeekViewChild
-{
-  GtkWidget *widget;
-  gboolean   hidden_by_me;
-
-  /* vertical index */
-  gint       index;
-};
-
-typedef struct _GcalWeekViewChild GcalWeekViewChild;
-
 struct _GcalWeekView
 {
   GtkBox          parent;
@@ -125,52 +114,58 @@ G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 gcal_data_model_subscriber_interface_init));
 
-/*
- * gcal_week_view_get_start_grid_y:
+/**
+ * gcal_week_view_get_initial_date:
  *
- * In GcalMonthView this method returns the height of the headers of the view
- * and the grid. Here this points just the place where the grid_window hides
- * behind the header
- * Here this height includes:
- *  - The big header of the view
- *  - The grid header dislaying weekdays
- *  - The cell containing all-day events.
- */
-gint
-gcal_week_view_get_start_grid_y (GtkWidget *widget)
+ * Since: 0.1
+ * Return value: the first day of the week
+ * Returns: (transfer full): Release with g_free()
+ **/
+static icaltimetype*
+gcal_week_view_get_initial_date (GcalView *view)
 {
-  GtkStyleContext *context;
-  GtkStateFlags flags;
-  GtkBorder padding;
+  GcalWeekView *self;
+  icaltimetype *new_date;
 
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
-  gint font_height;
-  gdouble start_grid_y;
+  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
+  self = GCAL_WEEK_VIEW(view);
+  new_date = g_new0 (icaltimetype, 1);
+  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(self->date),
+                                                                  self->first_weekday + 1),
+                                         self->date->year);
+  new_date->is_date = 0;
+  new_date->hour = 0;
+  new_date->minute = 0;
+  new_date->second = 0;
+  *new_date = icaltime_set_timezone (new_date, self->date->zone);
+  return new_date;
+}
 
-  context = gtk_widget_get_style_context (widget);
-  flags = gtk_widget_get_state_flags (widget);
+/**
+ * gcal_week_view_get_final_date:
+ *
+ * Since: 0.1
+ * Return value: the last day of the week
+ * Returns: (transfer full): Release with g_free()
+ **/
+static icaltimetype*
+gcal_week_view_get_final_date (GcalView *view)
+{
+  GcalWeekView *self;
+  icaltimetype *new_date;
 
-  layout = gtk_widget_create_pango_layout (widget, NULL);
-
-  /* init header values */
-  gtk_style_context_get_padding (context, flags, &padding);
-
-  gtk_style_context_get (context, flags, "font", &font_desc, NULL);
-
-  pango_font_description_set_weight (font_desc, PANGO_WEIGHT_SEMIBOLD);
-  pango_layout_set_font_description (layout, font_desc);
-  pango_layout_get_pixel_size (layout, NULL, &font_height);
-  pango_font_description_free (font_desc);
-
-  /* 6: is padding around the header */
-  start_grid_y = font_height + padding.bottom;
-
-  /* for including the all-day cells */
-  start_grid_y += ALL_DAY_CELLS_HEIGHT;
-
-  g_object_unref (layout);
-  return start_grid_y;
+  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
+  self = GCAL_WEEK_VIEW(view);
+  new_date = g_new0 (icaltimetype, 1);
+  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(self->date),
+                                                                  self->first_weekday + 1) + 6,
+                                         self->date->year);
+  new_date->is_date = 0;
+  new_date->hour = 23;
+  new_date->minute = 59;
+  new_date->second = 0;
+  *new_date = icaltime_set_timezone (new_date, self->date->zone);
+  return new_date;
 }
 
 gint
@@ -520,61 +515,6 @@ gcal_week_view_get_property (GObject       *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
     }
-}
-
-/* GcalView Interface API */
-/**
- * gcal_week_view_get_initial_date:
- *
- * Since: 0.1
- * Return value: the first day of the week
- * Returns: (transfer full): Release with g_free()
- **/
-icaltimetype*
-gcal_week_view_get_initial_date (GcalView *view)
-{
-  GcalWeekView *self;
-  icaltimetype *new_date;
-
-  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  self = GCAL_WEEK_VIEW(view);
-  new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(self->date),
-                                                                  self->first_weekday + 1),
-                                         self->date->year);
-  new_date->is_date = 0;
-  new_date->hour = 0;
-  new_date->minute = 0;
-  new_date->second = 0;
-  *new_date = icaltime_set_timezone (new_date, self->date->zone);
-  return new_date;
-}
-
-/**
- * gcal_week_view_get_final_date:
- *
- * Since: 0.1
- * Return value: the last day of the week
- * Returns: (transfer full): Release with g_free()
- **/
-static icaltimetype*
-gcal_week_view_get_final_date (GcalView *view)
-{
-  GcalWeekView *self;
-  icaltimetype *new_date;
-
-  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  self = GCAL_WEEK_VIEW(view);
-  new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(self->date),
-                                                                  self->first_weekday + 1) + 6,
-                                         self->date->year);
-  new_date->is_date = 0;
-  new_date->hour = 23;
-  new_date->minute = 59;
-  new_date->second = 0;
-  *new_date = icaltime_set_timezone (new_date, self->date->zone);
-  return new_date;
 }
 
 /* Public API */
