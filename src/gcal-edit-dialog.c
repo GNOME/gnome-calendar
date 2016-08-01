@@ -516,6 +516,19 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
       start_date = gcal_edit_dialog_get_date_start (dialog);
       end_date = gcal_edit_dialog_get_date_end (dialog);
 
+      /*
+       * The end date for multi-day events is exclusive, so we bump it by a day.
+       * This fixes the discrepancy between the end day of the event and how it
+       * is displayed in the month view. See bug 769300.
+       */
+      if (all_day)
+        {
+          GDateTime *fake_end_date = g_date_time_add_days (end_date, 1);
+
+          g_clear_pointer (&end_date, g_date_time_unref);
+          end_date = fake_end_date;
+        }
+
       gcal_event_set_date_start (dialog->event, start_date);
       gcal_event_set_date_end (dialog->event, end_date);
 
@@ -639,7 +652,11 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       date_start = all_day ? g_date_time_ref (date_start) : g_date_time_to_local (date_start);
 
       date_end = gcal_event_get_date_end (event);
-      date_end = all_day ? g_date_time_ref (date_end) : g_date_time_to_local (date_end);
+      /*
+       * This is subtracting what has been added in gcal_edit_dialog_action_button_clicked ().
+       * See bug 769300.
+       */
+      date_end = all_day ? g_date_time_add_days (date_end, -1) : g_date_time_to_local (date_end);
 
       /* date */
       gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->start_date_selector), date_start);
