@@ -10,7 +10,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-07-06 21:54+0000\n"
+"POT-Creation-Date: 2016-07-23 21:15+0000\n"
 "PO-Revision-Date: 2016-07-07 10:04+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: Español; Castellano <gnome-es-list@gnome.org>\n"
@@ -116,7 +116,6 @@ msgid "Toggles the sound of the alarm"
 msgstr "Conmuta el sonido de la alarma"
 
 #: ../data/ui/alarm-row.ui.h:2
-#| msgid "Remove Calendar"
 msgid "Remove the alarm"
 msgstr "Quitar la alarma"
 
@@ -328,8 +327,8 @@ msgstr "No se encontraron resultados."
 msgid "Try a different search"
 msgstr "Pruebe una búsqueda diferente"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1131
-#: ../src/gcal-window.c:1135
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1120
+#: ../src/gcal-window.c:1124
 msgid "Undo"
 msgstr "Deshacer"
 
@@ -444,11 +443,11 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
+#: ../data/ui/window.ui.h:1
 msgid "Month"
 msgstr "Mes"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
+#: ../data/ui/window.ui.h:2
 msgid "Year"
 msgstr "Año"
 
@@ -504,10 +503,6 @@ msgstr "Copyright © %d–%d Los autores de Calendario"
 msgid "translator-credits"
 msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2012 - 2015"
 
-#: ../src/gcal-date-selector.c:362
-msgid "Day"
-msgstr "Día"
-
 #: ../src/gcal-edit-dialog.c:509
 msgid "Save"
 msgstr "Guardar"
@@ -540,7 +535,7 @@ msgid_plural "%d weeks before"
 msgstr[0] "%d semana antes"
 msgstr[1] "%d semanas antes"
 
-#: ../src/gcal-edit-dialog.c:1041 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:1041 ../src/gcal-quick-add-popover.c:424
 msgid "Unnamed event"
 msgstr "Evento sin nombre"
 
@@ -556,22 +551,22 @@ msgid_plural "Other %d events"
 msgstr[0] "Otro evento"
 msgstr[1] "Otros %d eventos"
 
-#: ../src/gcal-quick-add-popover.c:113
+#: ../src/gcal-quick-add-popover.c:115
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (este calendario es de sólo lectura)"
 
-#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+#: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%d de %B"
 
-#: ../src/gcal-quick-add-popover.c:243
+#: ../src/gcal-quick-add-popover.c:245
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Evento nuevo de %s a %s"
 
-#: ../src/gcal-quick-add-popover.c:249
+#: ../src/gcal-quick-add-popover.c:251
 #, c-format
 msgid "New Event on %s"
 msgstr "Evento nuevo en %s"
@@ -638,13 +633,16 @@ msgstr "MEdiodía"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#: ../src/gcal-window.c:1131
+#: ../src/gcal-window.c:1120
 msgid "Another event deleted"
 msgstr "Otro evento eliminado"
 
-#: ../src/gcal-window.c:1135
+#: ../src/gcal-window.c:1124
 msgid "Event deleted"
 msgstr "Evento eliminado"
+
+#~ msgid "Day"
+#~ msgstr "Día"
 
 #~ msgid "Starts"
 #~ msgstr "Empieza"
