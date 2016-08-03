@@ -859,9 +859,12 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
 {
   GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
   GtkWidget *event_widget;
-  GDateTime *start_dt, *end_dt;
+  GDateTime *start_dt, *end_dt, *current_dt;
   GcalEvent *event;
   gint cell, diff;
+  gint start_month, current_month;
+  gint start_year, current_year;
+  GTimeSpan timespan;
 
   cell = get_dnd_cell (widget, x, y);
   event_widget = gtk_drag_get_source_widget (context);
@@ -871,9 +874,28 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
   start_dt = gcal_event_get_date_start (event);
   end_dt = gcal_event_get_date_end (event);
 
-  diff = cell - priv->days_delay - g_date_time_get_day_of_month (start_dt) + 1;
+  start_month = g_date_time_get_month (start_dt);
+  start_year = g_date_time_get_year (start_dt);
 
-  if (diff != 0)
+  current_dt = icaltime_to_datetime (priv->date);
+
+  current_month = g_date_time_get_month (current_dt);
+  current_year = g_date_time_get_year (current_dt);
+
+  g_clear_pointer (&current_dt, g_date_time_unref);
+
+  if (end_dt)
+    timespan = g_date_time_difference (end_dt, start_dt);
+
+  start_dt = g_date_time_add_full (start_dt,
+                                   current_year - start_year,
+                                   current_month - start_month,
+                                   0, 0, 0, 0);
+
+  diff = cell - priv->days_delay - g_date_time_get_day_of_month (start_dt) + 1;
+  if (diff != 0 ||
+      current_month != start_month ||
+      current_year != start_year)
     {
       GDateTime *new_start = g_date_time_add_days (start_dt, diff);
 
@@ -882,7 +904,7 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
       /* The event may have a NULL end date, so we have to check it here */
       if (end_dt)
         {
-          GDateTime *new_end = g_date_time_add_days (end_dt, diff);
+          GDateTime *new_end = g_date_time_add (new_start, timespan);
 
           gcal_event_set_date_end (event, new_end);
           g_clear_pointer (&new_end, g_date_time_unref);
@@ -892,6 +914,8 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
 
       g_clear_pointer (&new_start, g_date_time_unref);
     }
+
+  g_clear_pointer (&start_dt, g_date_time_unref);
 
   /* Cancel the DnD */
   priv->dnd_cell = -1;
