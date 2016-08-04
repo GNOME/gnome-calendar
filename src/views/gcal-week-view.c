@@ -50,6 +50,7 @@ struct _GcalWeekView
 
   GtkWidget      *header;
   GtkWidget      *hours_bar;
+  GtkWidget      *week_grid;
 
   /*
    * first day of the week according to user locale, being
@@ -302,6 +303,9 @@ gcal_week_view_hours_bar_size_allocate (GtkWidget     *widget,
     }
 
   gtk_widget_set_size_request (self->hours_bar, self->sidebar_width_offset, 2568);
+  gtk_widget_set_size_request (self->week_grid,
+                               gtk_widget_get_allocated_width (GTK_WIDGET (self)) - self->sidebar_width_offset,
+                               2568);
 
   GTK_WIDGET_CLASS (gcal_week_view_parent_class)->size_allocate (widget, alloc);
 }
@@ -423,6 +427,7 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, header);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, hours_bar);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_grid);
 
   gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_draw_hours);
   gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_hours_bar_size_allocate);

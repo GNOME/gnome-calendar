@@ -22,7 +22,7 @@
             <child>
               <object class="GtkBox">
                 <property name="visible">True</property>
-                <property name="orientation">vertical</property>
+                <property name="orientation">horizontal</property>
                 <child>
                   <object class="GtkDrawingArea" id="hours_bar">
                     <property name="visible">True</property>
@@ -31,11 +31,11 @@
                     <signal name="size-allocate" handler="gcal_week_view_hours_bar_size_allocate" object="GcalWeekView" swapped="yes" />
                   </object>
                 </child>
-                <!--<child>
-                  <object class="GcalWeekGrid">
+                <child>
+                  <object class="GcalWeekGrid" id="week_grid">
                     <property name="visible">True</property>
                   </object>
-                </child>-->
+                </child>
               </object>
             </child>
           </object>
