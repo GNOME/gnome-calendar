@@ -1337,7 +1337,7 @@ navigator_drag_drop_cb (GcalYearView   *self,
                         guint           time,
                         GtkWidget      *navigator)
 {
-  gint day, month, diff;
+  gint day, month;
   gboolean is_title;
 
   if (calculate_day_month_for_coord (self, x, y, &day, &month, &is_title))
@@ -1354,25 +1354,18 @@ navigator_drag_drop_cb (GcalYearView   *self,
           start_dt = gcal_event_get_date_start (event);
           end_dt = gcal_event_get_date_end (event);
 
-          /*
-           * The difference is calculated in number of days. Here we have to
-           * use the start_dt's hour/minute/second since otherwise we may not
-           * calculate the difference correctly.
-           */
-          drop_date = g_date_time_new_local (self->date->year,
-                                             month + 1,
-                                             day,
-                                             g_date_time_get_hour (start_dt),
-                                             g_date_time_get_minute (start_dt),
-                                             g_date_time_get_second (start_dt));
+          drop_date = g_date_time_add_full (start_dt,
+                                            self->date->year - g_date_time_get_year (start_dt),
+                                            (month + 1) - g_date_time_get_month (start_dt),
+                                            day - g_date_time_get_day_of_month (start_dt),
+                                            0, 0, 0);
 
-          diff = g_date_time_difference (drop_date, start_dt) / G_TIME_SPAN_DAY;
-
-          if (diff != 0)
+          if (!g_date_time_equal (start_dt, drop_date))
             {
+              GTimeSpan diff = g_date_time_difference (drop_date, start_dt);
               GDateTime *new_start;
 
-              new_start = g_date_time_add_days (start_dt, diff);
+              new_start = g_date_time_add (start_dt, diff);
               gcal_event_set_date_start (event, new_start);
 
               /* The event may have a NULL end date, so we have to check it here */
@@ -1380,8 +1373,8 @@ navigator_drag_drop_cb (GcalYearView   *self,
                 {
                   GDateTime *new_end;
 
-                  new_end = g_date_time_add_days (end_dt, diff);
-                  gcal_event_set_date_end (event, new_start);
+                  new_end = g_date_time_add (end_dt, diff);
+                  gcal_event_set_date_end (event, new_end);
 
                   g_clear_pointer (&new_end, g_date_time_unref);
                 }
