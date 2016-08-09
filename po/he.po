@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 0.0.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-09 17:36+0300\n"
-"PO-Revision-Date: 2016-08-09 17:48+0300\n"
+"POT-Creation-Date: 2016-08-09 17:54+0300\n"
+"PO-Revision-Date: 2016-08-09 17:55+0300\n"
 "Last-Translator: Yosef Or Boczko <yoseforb@gmail.com>\n"
 "Language-Team: עברית <>\n"
 "Language: he\n"
@@ -158,38 +158,42 @@ msgid "All Day"
 msgstr "כל היום"
 
 #: ../data/ui/edit-dialog.ui.h:11
+msgid "Add reminder…"
+msgstr "הוספת תזכורת…"
+
+#: ../data/ui/edit-dialog.ui.h:12
 msgid "Delete Event"
 msgstr "מחיקת אירוע"
 
-#: ../data/ui/edit-dialog.ui.h:12
+#: ../data/ui/edit-dialog.ui.h:13
 msgid "5 minutes"
 msgstr "חמש דקות"
 
-#: ../data/ui/edit-dialog.ui.h:13
+#: ../data/ui/edit-dialog.ui.h:14
 msgid "10 minutes"
 msgstr "עשר דקות"
 
-#: ../data/ui/edit-dialog.ui.h:14
+#: ../data/ui/edit-dialog.ui.h:15
 msgid "30 minutes"
 msgstr "חצי שעה"
 
-#: ../data/ui/edit-dialog.ui.h:15
+#: ../data/ui/edit-dialog.ui.h:16
 msgid "1 hour"
 msgstr "שעה"
 
-#: ../data/ui/edit-dialog.ui.h:16
+#: ../data/ui/edit-dialog.ui.h:17
 msgid "1 day"
 msgstr "יום"
 
-#: ../data/ui/edit-dialog.ui.h:17
+#: ../data/ui/edit-dialog.ui.h:18
 msgid "2 days"
 msgstr "יומיים"
 
-#: ../data/ui/edit-dialog.ui.h:18
+#: ../data/ui/edit-dialog.ui.h:19
 msgid "3 days"
 msgstr "שלושה ימים"
 
-#: ../data/ui/edit-dialog.ui.h:19
+#: ../data/ui/edit-dialog.ui.h:20
 msgid "1 week"
 msgstr "שבוע"
 
