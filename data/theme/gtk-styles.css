@@ -29,10 +29,7 @@ calendar-view.header {
 }
 
 calendar-view.current {
-    background-color: black;
-    border-radius: 2px;
-    color: white;
-    font-weight: bold;
+    background-color: alpha(@theme_selected_bg_color, 0.3);
 }
 
 calendar-view.current:drop(active) {

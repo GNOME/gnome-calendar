@@ -1789,9 +1789,9 @@ gcal_month_view_draw (GtkWidget *widget,
 
           /* FIXME: hardcoded padding of the number background */
           gtk_render_background (context, cr,
-                                 cell_width * (column + 1 - priv->k) - sw * padding.right + (priv->k - 1) * font_width - 2.0,
-                                 cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y,
-                                 font_width + 4, font_height + 2);
+                                 cell_width * (column - priv->k),
+                                 cell_height * (row + first_row_gap) + start_grid_y,
+                                 cell_width, cell_height);
           gtk_render_layout (context, cr,
                              cell_width * (column + 1 - priv->k) - sw * padding.right + (priv->k - 1) * font_width,
                              cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y,
