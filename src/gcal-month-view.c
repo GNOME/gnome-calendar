@@ -857,6 +857,7 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
                            gint            y,
                            guint           time)
 {
+  GcalSubscriberViewPrivate *ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
   GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
   GtkWidget *event_widget;
   GDateTime *start_dt, *end_dt, *current_dt;
@@ -913,6 +914,8 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
       gcal_manager_update_event (priv->manager, event);
 
       g_clear_pointer (&new_start, g_date_time_unref);
+
+      ppriv->children_changed = TRUE;
     }
 
   g_clear_pointer (&start_dt, g_date_time_unref);
