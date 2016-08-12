@@ -604,13 +604,16 @@ gcal_week_header_size_allocate (GtkWidget     *widget,
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
 
   gtk_widget_set_margin_start (self->scrolledwindow,
-                               self->sidebar_width_offset - gtk_widget_get_allocated_width (self->expand_button) + 4);
+                               self->sidebar_width_offset - gtk_widget_get_allocated_width (self->expand_button));
 
   gtk_widget_set_margin_end (self->scrolledwindow,
                              gtk_widget_get_allocated_width (self->draw_area) - cell_width * 7 - sidebar_width);
 
   gtk_widget_set_margin_top (self->scrolledwindow,
                              (4 * pango_font_description_get_size (bold_font)) / PANGO_SCALE);
+
+  gtk_widget_set_margin_start (self->expand_button, 6);
+  gtk_widget_set_margin_bottom (self->expand_button, 6);
 
   GTK_WIDGET_CLASS (gcal_week_header_parent_class)->size_allocate (widget, alloc);
 }
@@ -727,15 +730,6 @@ gcal_week_header_draw (GcalWeekHeader *self,
       g_free (weekday_date);
       g_free (weekday_abv);
     }
-
-  cairo_save (cr);
-  cairo_move_to (cr,
-                 cell_width * 7 + sidebar_width - 3,
-                 font_height + padding.bottom + 3);
-  cairo_set_line_width (cr, 0.25);
-  cairo_rel_line_to (cr, 0.0, gtk_widget_get_allocated_height (self->draw_area));
-  cairo_stroke (cr);
-  cairo_restore (cr);
 
   gtk_style_context_add_class (context, "margin");
 
