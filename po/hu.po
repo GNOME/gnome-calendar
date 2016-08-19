@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-07-23 21:15+0000\n"
-"PO-Revision-Date: 2016-08-04 23:39+0200\n"
+"POT-Creation-Date: 2016-08-09 14:56+0000\n"
+"PO-Revision-Date: 2016-08-19 23:06+0200\n"
 "Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -115,7 +115,6 @@ msgid "Toggles the sound of the alarm"
 msgstr "Ki- és bekapcsolja a riasztás hangját"
 
 #: ../data/ui/alarm-row.ui.h:2
-#| msgid "Remove Calendar"
 msgid "Remove the alarm"
 msgstr "A riasztás eltávolítása"
 
@@ -157,52 +156,47 @@ msgid "Time"
 msgstr "Idő"
 
 #: ../data/ui/edit-dialog.ui.h:10
-#| msgid "All day"
 msgid "All Day"
 msgstr "Egész nap"
 
 #: ../data/ui/edit-dialog.ui.h:11
-#| msgid "Delete event"
+#| msgid "Add Event…"
+msgid "Add reminder…"
+msgstr "Emlékeztető hozzáadása…"
+
+#: ../data/ui/edit-dialog.ui.h:12
 msgid "Delete Event"
 msgstr "Esemény törlése"
 
-#: ../data/ui/edit-dialog.ui.h:12
-#| msgid "minutes"
+#: ../data/ui/edit-dialog.ui.h:13
 msgid "5 minutes"
 msgstr "5 perc"
 
-#: ../data/ui/edit-dialog.ui.h:13
-#| msgid "minutes"
+#: ../data/ui/edit-dialog.ui.h:14
 msgid "10 minutes"
 msgstr "10 perc"
 
-#: ../data/ui/edit-dialog.ui.h:14
-#| msgid "minutes"
+#: ../data/ui/edit-dialog.ui.h:15
 msgid "30 minutes"
 msgstr "30 perc"
 
-#: ../data/ui/edit-dialog.ui.h:15
-#| msgid "hours"
+#: ../data/ui/edit-dialog.ui.h:16
 msgid "1 hour"
 msgstr "1 óra"
 
-#: ../data/ui/edit-dialog.ui.h:16
-#| msgid "All day"
+#: ../data/ui/edit-dialog.ui.h:17
 msgid "1 day"
 msgstr "1 nap"
 
-#: ../data/ui/edit-dialog.ui.h:17
-#| msgid "days"
+#: ../data/ui/edit-dialog.ui.h:18
 msgid "2 days"
 msgstr "2 nap"
 
-#: ../data/ui/edit-dialog.ui.h:18
-#| msgid "days"
+#: ../data/ui/edit-dialog.ui.h:19
 msgid "3 days"
 msgstr "3 nap"
 
-#: ../data/ui/edit-dialog.ui.h:19
-#| msgid "weeks"
+#: ../data/ui/edit-dialog.ui.h:20
 msgid "1 week"
 msgstr "1 hét"
 
@@ -290,7 +284,6 @@ msgid "_Search…"
 msgstr "_Keresés…"
 
 #: ../data/ui/menus.ui.h:3
-#| msgid "Calendars"
 msgid "_Calendars…"
 msgstr "_Naptárak…"
 
@@ -518,38 +511,35 @@ msgstr "Úr Balázs <urbalazs@gmail.com>"
 msgid "Save"
 msgstr "Mentés"
 
-#: ../src/gcal-edit-dialog.c:764
+#: ../src/gcal-edit-dialog.c:777
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d perccel előtte"
 msgstr[1] "%d perccel előtte"
 
-#: ../src/gcal-edit-dialog.c:772
+#: ../src/gcal-edit-dialog.c:785
 #, c-format
-#| msgid "before"
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d órával előtte"
 msgstr[1] "%d órával előtte"
 
-#: ../src/gcal-edit-dialog.c:780
+#: ../src/gcal-edit-dialog.c:793
 #, c-format
-#| msgid "before"
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d nappal előtte"
 msgstr[1] "%d nappal előtte"
 
-#: ../src/gcal-edit-dialog.c:788
+#: ../src/gcal-edit-dialog.c:801
 #, c-format
-#| msgid "before"
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d héttel előtte"
 msgstr[1] "%d héttel előtte"
 
-#: ../src/gcal-edit-dialog.c:1041 ../src/gcal-quick-add-popover.c:424
+#: ../src/gcal-edit-dialog.c:1051 ../src/gcal-quick-add-popover.c:424
 msgid "Unnamed event"
 msgstr "Névtelen esemény"
 
