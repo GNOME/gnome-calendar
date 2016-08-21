@@ -337,7 +337,7 @@ on_view_action_activated (GSimpleAction *action,
   else if (view == -2)
     view = --(window->active_view);
 
-  window->active_view = CLAMP (view, GCAL_WINDOW_VIEW_MONTH, GCAL_WINDOW_VIEW_YEAR);
+  window->active_view = CLAMP (view, CLAMP(view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_MONTH), GCAL_WINDOW_VIEW_YEAR);
   gtk_stack_set_visible_child (GTK_STACK (window->views_stack), window->views[window->active_view]);
 
   g_object_notify (G_OBJECT (user_data), "active-view");
@@ -1650,6 +1650,7 @@ gcal_window_new_with_view_and_date (GcalApplication   *app,
 
   gcal_window_add_accelerator (app, "win.change-view(-1)", "<Ctrl>Page_Down");
   gcal_window_add_accelerator (app, "win.change-view(-2)", "<Ctrl>Page_Up");
+  gcal_window_add_accelerator (app, "win.change-view(1)",  "<Ctrl>1")
   gcal_window_add_accelerator (app, "win.change-view(2)",  "<Ctrl>2");
   gcal_window_add_accelerator (app, "win.change-view(3)",  "<Ctrl>3");
 
