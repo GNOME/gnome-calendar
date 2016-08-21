@@ -13,16 +13,16 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-07-16 02:39+0000\n"
-"PO-Revision-Date: 2016-07-17 16:54+0200\n"
-"Last-Translator: Christian Kirbach <christian.kirbach@gmail.com>\n"
+"POT-Creation-Date: 2016-08-09 14:56+0000\n"
+"PO-Revision-Date: 2016-08-21 11:25+0200\n"
+"Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 1.8.8\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
@@ -165,38 +165,42 @@ msgid "All Day"
 msgstr "Ganztägig"
 
 #: ../data/ui/edit-dialog.ui.h:11
+msgid "Add reminder…"
+msgstr "Erinnerung hinzufügen …"
+
+#: ../data/ui/edit-dialog.ui.h:12
 msgid "Delete Event"
 msgstr "Termin löschen"
 
-#: ../data/ui/edit-dialog.ui.h:12
+#: ../data/ui/edit-dialog.ui.h:13
 msgid "5 minutes"
 msgstr "5 Minuten"
 
-#: ../data/ui/edit-dialog.ui.h:13
+#: ../data/ui/edit-dialog.ui.h:14
 msgid "10 minutes"
 msgstr "10 Minuten"
 
-#: ../data/ui/edit-dialog.ui.h:14
+#: ../data/ui/edit-dialog.ui.h:15
 msgid "30 minutes"
 msgstr "30 Minuten"
 
-#: ../data/ui/edit-dialog.ui.h:15
+#: ../data/ui/edit-dialog.ui.h:16
 msgid "1 hour"
 msgstr "1 Stunde"
 
-#: ../data/ui/edit-dialog.ui.h:16
+#: ../data/ui/edit-dialog.ui.h:17
 msgid "1 day"
 msgstr "1 Tag"
 
-#: ../data/ui/edit-dialog.ui.h:17
+#: ../data/ui/edit-dialog.ui.h:18
 msgid "2 days"
 msgstr "2 Tage"
 
-#: ../data/ui/edit-dialog.ui.h:18
+#: ../data/ui/edit-dialog.ui.h:19
 msgid "3 days"
 msgstr "3 Tage"
 
-#: ../data/ui/edit-dialog.ui.h:19
+#: ../data/ui/edit-dialog.ui.h:20
 msgid "1 week"
 msgstr "1 Woche"
 
@@ -447,11 +451,11 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
+#: ../data/ui/window.ui.h:1
 msgid "Month"
 msgstr "Monat"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
+#: ../data/ui/window.ui.h:2
 msgid "Year"
 msgstr "Jahr"
 
@@ -510,43 +514,39 @@ msgstr ""
 "Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Benjamin Steinwender <b@stbe.at>"
 
-#: ../src/gcal-date-selector.c:362
-msgid "Day"
-msgstr "Tag"
-
 #: ../src/gcal-edit-dialog.c:509
 msgid "Save"
 msgstr "Speichern"
 
-#: ../src/gcal-edit-dialog.c:764
+#: ../src/gcal-edit-dialog.c:777
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d Minute vorher"
 msgstr[1] "%d Minuten vorher"
 
-#: ../src/gcal-edit-dialog.c:772
+#: ../src/gcal-edit-dialog.c:785
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d Stunde vorher"
 msgstr[1] "%d Stunden vorher"
 
-#: ../src/gcal-edit-dialog.c:780
+#: ../src/gcal-edit-dialog.c:793
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d Tag vorher"
 msgstr[1] "%d Tage vorher"
 
-#: ../src/gcal-edit-dialog.c:788
+#: ../src/gcal-edit-dialog.c:801
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d Woche vorher"
 msgstr[1] "%d Wochen vorher"
 
-#: ../src/gcal-edit-dialog.c:1041 ../src/gcal-quick-add-popover.c:424
+#: ../src/gcal-edit-dialog.c:1051 ../src/gcal-quick-add-popover.c:424
 msgid "Unnamed event"
 msgstr "Unbenannter Termin"
 
@@ -652,6 +652,9 @@ msgstr "Weiteren Termin gelöscht"
 #: ../src/gcal-window.c:1124
 msgid "Event deleted"
 msgstr "Termin gelöscht"
+
+#~ msgid "Day"
+#~ msgstr "Tag"
 
 #~ msgid "Starts"
 #~ msgstr "Beginnt"
