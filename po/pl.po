@@ -1,27 +1,23 @@
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
-# Aviary.pl
-# Jeśli masz jakiekolwiek uwagi odnoszące się do tłumaczenia lub chcesz
-# pomóc w jego rozwijaniu i pielęgnowaniu, napisz do nas:
-# gnomepl@aviary.pl
-# -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-
+# Polish translation for gnome-calendar.
+# Copyright © 2012-2016 the gnome-calendar authors.
+# This file is distributed under the same license as the gnome-calendar package.
 # Piotr Drąg <piotrdrag@gmail.com>, 2012-2016.
-# Aviary.pl <gnomepl@aviary.pl>, 2012-2016.
+# Aviary.pl <community-poland@mozilla.org>, 2012-2016.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-03-15 23:59+0100\n"
-"PO-Revision-Date: 2016-03-16 00:00+0100\n"
+"POT-Creation-Date: 2016-08-22 16:45+0200\n"
+"PO-Revision-Date: 2016-08-22 16:47+0200\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
-"Language-Team: Polish <gnomepl@aviary.pl>\n"
+"Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2);\n"
-"X-Poedit-Language: Polish\n"
-"X-Poedit-Country: Poland\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
@@ -41,9 +37,9 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"Kalendarz GNOME jest prostym i ładnym kalendarzem zaprojektowanym tak, aby "
+"Kalendarz GNOME jest prostym i ładnym kalendarzem zaprojektowanym tak, aby "
 "jak najlepiej pasował do środowiska GNOME. Dzięki użyciu oprogramowania, na "
-"którym oparte jest środowisko GNOME, Kalendarz dobrze się z nim integruje."
+"którym oparte jest środowisko GNOME, Kalendarz dobrze się z nim integruje."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
@@ -51,8 +47,8 @@ msgid ""
 "centred usability. No excess, no lacks. You'll feel comfortable using "
 "Calendar, like you've been using it for ages!"
 msgstr ""
-"Celem jest znalezienie idealnej równowagi między przydatnymi funkcjami a "
-"użytecznością skierowaną na użytkownika."
+"Celem jest znalezienie idealnej równowagi między przydatnymi funkcjami "
+"a użytecznością skierowaną na użytkownika."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
 #: ../data/ui/window.ui.h:6
@@ -65,7 +61,7 @@ msgstr "Zarządzenie kalendarzem"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:2
 msgid "Access, and manage calendar"
-msgstr "Wyświetlanie i zarządzanie kalendarzem"
+msgstr "Wyświetlanie i zarządzanie kalendarzem"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:3
 msgid "Calendar;Event;Reminder;"
@@ -85,7 +81,7 @@ msgstr "Rozmiar okna"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:4
 msgid "Window size (width and height)."
-msgstr "Rozmiar okna (szerokość i wysokość)."
+msgstr "Rozmiar okna (szerokość i wysokość)."
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:5
 msgid "Window position"
@@ -113,42 +109,94 @@ msgstr "Lista wyłączonych źródeł"
 msgid "Sources disabled last time Calendar ran"
 msgstr "Źródła wyłączone podczas ostatniego uruchomienia Kalendarza"
 
+#: ../data/ui/alarm-row.ui.h:1
+msgid "Toggles the sound of the alarm"
+msgstr "Przełącza dźwięk budzika"
+
+#: ../data/ui/alarm-row.ui.h:2
+msgid "Remove the alarm"
+msgstr "Usuwa budzik"
+
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1113
+#: ../src/gcal-source-dialog.c:1114
 msgid "Cancel"
 msgstr "Anuluj"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
+#: ../data/ui/edit-dialog.ui.h:2
+msgid "Click to select the event's agenda"
+msgstr "Kliknięcie zaznacza plan wydarzenia"
+
+#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:509
 msgid "Done"
 msgstr "Gotowe"
 
-#: ../data/ui/edit-dialog.ui.h:3
+#: ../data/ui/edit-dialog.ui.h:4
 msgid "Title"
 msgstr "Tytuł"
 
-#: ../data/ui/edit-dialog.ui.h:4
-msgid "Starts"
-msgstr "Zaczyna się"
-
 #: ../data/ui/edit-dialog.ui.h:5
-msgid "Ends"
-msgstr "Kończy się"
+msgid "Date"
+msgstr "Data"
 
 #: ../data/ui/edit-dialog.ui.h:6
+msgid "Reminders"
+msgstr "Przypomnienia"
+
+#: ../data/ui/edit-dialog.ui.h:7
 msgid "Notes"
 msgstr "Uwagi"
 
-#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
+#: ../data/ui/edit-dialog.ui.h:8 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "Położenie"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
-msgid "All day"
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Time"
+msgstr "Czas"
+
+#: ../data/ui/edit-dialog.ui.h:10
+msgid "All Day"
 msgstr "Cały dzień"
 
-#: ../data/ui/edit-dialog.ui.h:9
-msgid "Delete event"
+#: ../data/ui/edit-dialog.ui.h:11
+msgid "Add reminder…"
+msgstr "Dodaj przypomnienie…"
+
+#: ../data/ui/edit-dialog.ui.h:12
+msgid "Delete Event"
 msgstr "Usuń wydarzenie"
+
+#: ../data/ui/edit-dialog.ui.h:13
+msgid "5 minutes"
+msgstr "5 minut"
+
+#: ../data/ui/edit-dialog.ui.h:14
+msgid "10 minutes"
+msgstr "10 minut"
+
+#: ../data/ui/edit-dialog.ui.h:15
+msgid "30 minutes"
+msgstr "30 minut"
+
+#: ../data/ui/edit-dialog.ui.h:16
+msgid "1 hour"
+msgstr "1 godzina"
+
+#: ../data/ui/edit-dialog.ui.h:17
+msgid "1 day"
+msgstr "1 dzień"
+
+#: ../data/ui/edit-dialog.ui.h:18
+msgid "2 days"
+msgstr "2 dni"
+
+#: ../data/ui/edit-dialog.ui.h:19
+msgid "3 days"
+msgstr "3 dni"
+
+#: ../data/ui/edit-dialog.ui.h:20
+msgid "1 week"
+msgstr "1 tydzień"
 
 #: ../data/ui/help-overlay.ui.h:1
 msgctxt "shortcut window"
@@ -234,32 +282,36 @@ msgid "_Search…"
 msgstr "_Wyszukaj…"
 
 #: ../data/ui/menus.ui.h:3
+msgid "_Calendars…"
+msgstr "K_alendarze…"
+
+#: ../data/ui/menus.ui.h:4
 msgid "_Keyboard Shortcuts"
 msgstr "_Skróty klawiszowe"
 
-#: ../data/ui/menus.ui.h:4
-msgid "_About"
-msgstr "_O programie"
-
 #: ../data/ui/menus.ui.h:5
+msgid "_About"
+msgstr "_O programie"
+
+#: ../data/ui/menus.ui.h:6
 msgid "_Quit"
 msgstr "Za_kończ"
 
-#: ../data/ui/menus.ui.h:6
-msgid "_Synchronize"
-msgstr "Z_synchronizuj"
-
 #: ../data/ui/menus.ui.h:7
-msgid "From Web…"
-msgstr "Z sieci…"
+msgid "_Synchronize"
+msgstr "_Zsynchronizuj"
 
 #: ../data/ui/menus.ui.h:8
+msgid "From Web…"
+msgstr "Z sieci…"
+
+#: ../data/ui/menus.ui.h:9
 msgid "New Local Calendar…"
 msgstr "Nowy lokalny kalendarz…"
 
-#: ../data/ui/menus.ui.h:9
+#: ../data/ui/menus.ui.h:10
 msgid "From File…"
-msgstr "Z pliku…"
+msgstr "Z pliku…"
 
 #: ../data/ui/quick-add-popover.ui.h:1
 msgid "Edit Details…"
@@ -277,8 +329,8 @@ msgstr "Brak wyników"
 msgid "Try a different search"
 msgstr "Proszę spróbować innych słów"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
-#: ../src/gcal-window.c:1065
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1120
+#: ../src/gcal-window.c:1124
 msgid "Undo"
 msgstr "Cofnij"
 
@@ -353,15 +405,15 @@ msgid ""
 "\"GOA\">online account settings</a>."
 msgstr ""
 "Proszę podać adres dodawanego kalendarza. Jeśli kalendarz należy do jednego "
-"z kont online, to można go dodać przez <a href=\"GOA\">ustawienia kont "
+"z kont online, to można go dodać przez <a href=\"GOA\">ustawienia kont "
 "online</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
 msgstr "Adres kalendarza"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2191
-#: ../src/gcal-source-dialog.c:2197
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2197
+#: ../src/gcal-source-dialog.c:2203
 msgid "Add Calendar"
 msgstr "Dodaj kalendarz"
 
@@ -393,16 +445,16 @@ msgstr "Przed południem"
 msgid "PM"
 msgstr "Po południu"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
+#: ../data/ui/window.ui.h:1
 msgid "Month"
 msgstr "Miesiąc"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
+#: ../data/ui/window.ui.h:2
 msgid "Year"
 msgstr "Rok"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
+#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
 msgid "Today"
 msgstr "Dzisiaj"
 
@@ -411,7 +463,7 @@ msgid "Manage your calendars"
 msgstr "Zarządzanie kalendarzami"
 
 #: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
-#: ../src/gcal-source-dialog.c:2220
+#: ../src/gcal-source-dialog.c:2226
 msgid "Calendar Settings"
 msgstr "Ustawienia kalendarza"
 
@@ -419,7 +471,7 @@ msgstr "Ustawienia kalendarza"
 msgid "No events"
 msgstr "Brak wydarzeń"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1037
 msgid "Add Event…"
 msgstr "Dodaj wydarzenie…"
 
@@ -453,26 +505,54 @@ msgstr "Copyright © %d-%d Autorzy Kalendarza"
 msgid "translator-credits"
 msgstr ""
 "Piotr Drąg <piotrdrag@gmail.com>, 2012-2016\n"
-"Aviary.pl <gnomepl@aviary.pl>, 2012-2016"
+"Aviary.pl <community-poland@mozilla.org>, 2012-2016"
 
-#: ../src/gcal-date-selector.c:362
-msgid "Day"
-msgstr "Dzień"
-
-#: ../src/gcal-edit-dialog.c:429
+#: ../src/gcal-edit-dialog.c:509
 msgid "Save"
 msgstr "Zapisz"
 
-#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:777
+#, c-format
+msgid "%d minute before"
+msgid_plural "%d minutes before"
+msgstr[0] "%d minuta przed"
+msgstr[1] "%d minuty przed"
+msgstr[2] "%d minut przed"
+
+#: ../src/gcal-edit-dialog.c:785
+#, c-format
+msgid "%d hour before"
+msgid_plural "%d hours before"
+msgstr[0] "%d godzina przed"
+msgstr[1] "%d godziny przed"
+msgstr[2] "%d godzin przed"
+
+#: ../src/gcal-edit-dialog.c:793
+#, c-format
+msgid "%d day before"
+msgid_plural "%d days before"
+msgstr[0] "%d dzień przed"
+msgstr[1] "%d dni przed"
+msgstr[2] "%d dni przed"
+
+#: ../src/gcal-edit-dialog.c:801
+#, c-format
+msgid "%d week before"
+msgid_plural "%d weeks before"
+msgstr[0] "%d tydzień przed"
+msgstr[1] "%d tygodnie przed"
+msgstr[2] "%d tygodni przed"
+
+#: ../src/gcal-edit-dialog.c:1051 ../src/gcal-quick-add-popover.c:424
 msgid "Unnamed event"
 msgstr "Wydarzenie bez nazwy"
 
-#: ../src/gcal-month-view.c:1093
+#: ../src/gcal-month-view.c:1275
 msgid "Other events"
 msgstr "Inne wydarzenia"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1526
+#: ../src/gcal-month-view.c:1737
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -480,59 +560,63 @@ msgstr[0] "Inne wydarzenie"
 msgstr[1] "Pozostałe %d wydarzenia"
 msgstr[2] "Pozostałe %d wydarzeń"
 
-#: ../src/gcal-quick-add-popover.c:113
+#: ../src/gcal-quick-add-popover.c:115
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (ten kalendarz jest tylko do odczytu)"
 
-#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+#: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%d %B"
 
-#: ../src/gcal-quick-add-popover.c:243
+#: ../src/gcal-quick-add-popover.c:245
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Nowe wydarzenie od %s do %s"
 
-#: ../src/gcal-quick-add-popover.c:249
+#: ../src/gcal-quick-add-popover.c:251
 #, c-format
 msgid "New Event on %s"
-msgstr "Nowe wydarzenie w dniu %s"
+msgstr "Nowe wydarzenie w dniu %s"
+
+#: ../src/gcal-search-view.c:353
+msgid "All day"
+msgstr "Cały dzień"
 
 #: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
 msgstr "Można wyszukiwać wydarzenia za pomocą pola powyżej."
 
 #. Dialog
-#: ../src/gcal-source-dialog.c:1110
+#: ../src/gcal-source-dialog.c:1111
 msgid "Select a calendar file"
 msgstr "Wybór pliku kalendarza"
 
-#: ../src/gcal-source-dialog.c:1114
+#: ../src/gcal-source-dialog.c:1115
 msgid "Open"
 msgstr "Otwórz"
 
-#: ../src/gcal-source-dialog.c:1121
+#: ../src/gcal-source-dialog.c:1122
 msgid "Calendar files"
 msgstr "Pliki kalendarza"
 
 #. update the source properties
-#: ../src/gcal-source-dialog.c:1160
+#: ../src/gcal-source-dialog.c:1164
 msgid "Unnamed Calendar"
 msgstr "Kalendarz bez nazwy"
 
 #. Update notification label
-#: ../src/gcal-source-dialog.c:1758
+#: ../src/gcal-source-dialog.c:1764
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Usunięto kalendarz <b>%s</b>"
 
-#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
 msgid "Off"
 msgstr "Wyłączony"
 
-#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
 msgid "On"
 msgstr "Włączony"
 
@@ -558,10 +642,10 @@ msgstr "Południe"
 msgid "00:00 PM"
 msgstr "00∶00 PM"
 
-#: ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1120
 msgid "Another event deleted"
 msgstr "Usunięto kolejne wydarzenie"
 
-#: ../src/gcal-window.c:1065
+#: ../src/gcal-window.c:1124
 msgid "Event deleted"
 msgstr "Usunięto wydarzenie"
