@@ -2,6 +2,8 @@ dnl -*- mode: m4 -*-
 AC_PREREQ([2.69])
 AC_INIT([gnome-calendar],[3.21.4],[http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar],[gnome-calendar],[https://wiki.gnome.org/Apps/Calendar])
 
+AX_IS_RELEASE([minor-version])
+
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_MACRO_DIR([m4])
@@ -20,8 +22,8 @@ IT_PROG_INTLTOOL([0.40.6])
 PKG_PROG_PKG_CONFIG([0.22])
 
 GETTEXT_PACKAGE=AC_PACKAGE_TARNAME
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [GETTEXT package name])
+AC_SUBST([GETTEXT_PACKAGE])
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [GETTEXT package name])
 
 AS_IF([test "x$USE_NLS" != "xno"],
       [AC_DEFINE([ENABLE_NLS], [1], [Native language support is enabled])])
@@ -31,7 +33,7 @@ AC_MSG_CHECKING([for _NL_TIME_FIRST_WEEKDAY])
 AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <langinfo.h>]],
                                    [[nl_langinfo(_NL_TIME_FIRST_WEEKDAY);]])],
                [langinfo_ok=yes], [langinfo_ok=no])
-AC_MSG_RESULT($langinfo_ok)
+AC_MSG_RESULT([$langinfo_ok])
 if test "$langinfo_ok" = "yes"; then
   AC_DEFINE([HAVE__NL_TIME_FIRST_WEEKDAY], [1],
             [Define if _NL_TIME_FIRST_WEEKDAY is available])
@@ -40,20 +42,14 @@ fi
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
 
-AC_PROG_CC
-AM_PROG_CC_C_O
-AC_PROG_CXX
-AC_PROG_INSTALL
 AC_PROG_INSTALL
 AC_SEARCH_LIBS([strerror],[cposix])
 AC_HEADER_STDC
 
-# no stupid static libraries
-AC_DISABLE_STATIC([])
-
 # enable libtool
 LT_PREREQ([2.2.6])
-LT_INIT
+LT_INIT([disable-static])
+LT_LANG([C])
 
 ## don't rerun to this point if we abort
 AC_CACHE_SAVE
@@ -75,23 +71,9 @@ GLIB_GSETTINGS
 dnl ================================================================
 dnl Misc
 dnl ================================================================
-AC_PATH_PROG(GLIB_MKENUMS, glib-mkenums)
+AC_PATH_PROG([GLIB_MKENUMS], [glib-mkenums])
 
-GNOME_COMPILE_WARNINGS(maximum)
-
-MAINTAINER_COMPILER_FLAGS="\
-  $MAINTAINER_COMPILER_FLAGS\
- -Wall -Wcast-align -Wuninitialized\
- -Wno-strict-aliasing -Wempty-body -Wformat\
- -Wformat-security -Wformat-nonliteral -Winit-self\
- -Wdeclaration-after-statement -Wvla\
- -Wpointer-arith -Wmissing-declarations\
- -Wcast-align -Wmissing-prototypes\
- -Wredundant-decls"
-
-# strip leading spaces
-MAINTAINER_COMPILER_FLAGS=${MAINTAINER_COMPILER_FLAGS#*  }
-AC_SUBST(MAINTAINER_COMPILER_FLAGS)
+AX_COMPILER_FLAGS
 
 GLIB_MIN_VERSION=2.43.4
 GTK_MIN_VERSION=3.21.1
@@ -102,7 +84,7 @@ LIBICAL_REQUIRED=1.0
 GOA_MIN_VERSION=3.2.0
 GSETTINGS_DESKTOP_SCHEMAS_REQUIRED=3.21.2
 
-PKG_CHECK_MODULES(CALENDAR,
+PKG_CHECK_MODULES([CALENDAR], [
                   gmodule-export-2.0
                   gio-2.0 >= $GLIB_MIN_VERSION
                   glib-2.0 >= $GLIB_MIN_VERSION
@@ -112,11 +94,12 @@ PKG_CHECK_MODULES(CALENDAR,
                   libedataserver-1.2 >= $EDATASERVER_REQUIRED
                   libedataserverui-1.2 >= $EDATASERVERUI_REQUIRED
                   libical >= $LIBICAL_REQUIRED
-                  gsettings-desktop-schemas >= $GSETTINGS_DESKTOP_SCHEMAS_REQUIRED)
+                  gsettings-desktop-schemas >= $GSETTINGS_DESKTOP_SCHEMAS_REQUIRED])
 
-AC_CHECK_LIB(ical, icaltime_days_in_year, [],
-                AC_MSG_ERROR([Error: icaltime_days_in_year() not found in libical!. Upgrade your libical library.]))
+AC_CHECK_LIB([ical], [icaltime_days_in_year], [],
+                [AC_MSG_ERROR([Error: icaltime_days_in_year() not found in libical!. Upgrade your libical library.])])
 
+AX_REQUIRE_DEFINED([APPSTREAM_XML])
 APPSTREAM_XML
 
 AC_CONFIG_FILES([
@@ -140,9 +123,9 @@ echo "
         source at: ${srcdir}
         prefix:    ${prefix}
         compiler:  ${CC}
-	flags:     ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
-	flags:     ${MAINTAINER_COMPILER_FLAGS}
-	flags:     ${CALENDAR_CFLAGS} ${CALENDAR_LIBS} ${LIBS}
+        flags:     ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
+        flags:     ${WARN_CFLAGS} ${WARN_LDFLAGS}
+        flags:     ${CALENDAR_CFLAGS} ${CALENDAR_LIBS} ${LIBS}
 
         Now type 'make' to build $PACKAGE
 "

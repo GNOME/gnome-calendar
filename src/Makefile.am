@@ -3,11 +3,13 @@ AM_CPPFLAGS =                                             \
     -DPACKAGE_SRC_DIR=\""$(srcdir)"\"                     \
     -DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\"                \
     -DUI_DATA_DIR=\""$(pkgdatadir)/style"\"               \
-    $(MAINTAINER_COMPILER_FLAGS)                          \
     $(WARN_CFLAGS)                                        \
     -DEDS_DISABLE_DEPRECATED                              \
     -DGOA_API_IS_SUBJECT_TO_CHANGE                        \
     $(CALENDAR_CFLAGS)
+
+AM_LDFLAGS = \
+	$(WARN_LDFLAGS)
 
 bin_PROGRAMS = gnome-calendar
 
