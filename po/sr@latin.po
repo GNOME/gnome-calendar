@@ -1,18 +1,20 @@
 # Serbian translation for gnome-calendar.
 # Courtesy of Prevod.org team (http://prevod.org/) -- 2013—2016.
+# Translators:
 # This file is distributed under the same license as the gnome-calendar package.
-# Miroslav Nikolić <miroslavnikolic@rocketmail.com>, 2013—2016.
+# Miroslav Nikolić <miroslavnikolic@rocketmail.com>, 2013—2015, 2016.
 # Miloš Popović <gpopac@gmail.com>, 2015.
+# Marko M. Kostić <marko.m.kostic@gmail.com>, 2016.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-02-18 08:10+0000\n"
-"PO-Revision-Date: 2016-02-18 18:55+0200\n"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-08-09 14:56+0000\n"
+"PO-Revision-Date: 2016-08-28 06:27+0200\n"
 "Last-Translator: Miroslav Nikolić <miroslavnikolic@rocketmail.com>\n"
-"Language-Team: Serbian <gnom@prevod.org>\n"
-"Language: sr@latin\n"
+"Language-Team: srpski <gnome-sr@googlegroups.org>\n"
+"Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -24,7 +26,7 @@ msgstr ""
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
 #: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:482
+#: ../src/gcal-application.c:483
 msgid "Calendar"
 msgstr "Kalendar"
 
@@ -54,6 +56,7 @@ msgstr ""
 "što ste ga već godinama koristili."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Traži događaje"
 
@@ -109,42 +112,106 @@ msgstr "Spisak isključenih izvora"
 msgid "Sources disabled last time Calendar ran"
 msgstr "Izvori koji su isključeni prilikom poslednjeg pokretanja kalendara"
 
+#: ../data/ui/alarm-row.ui.h:1
+msgid "Toggles the sound of the alarm"
+msgstr ""
+
+#: ../data/ui/alarm-row.ui.h:2
+#| msgid "Remove Calendar"
+msgid "Remove the alarm"
+msgstr "Ukloni alarm"
+
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1113
+#: ../src/gcal-source-dialog.c:1114
 msgid "Cancel"
 msgstr "Otkaži"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
+#: ../data/ui/edit-dialog.ui.h:2
+msgid "Click to select the event's agenda"
+msgstr "Kliknite da izaberete dnevni red događaja"
+
+#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:509
 msgid "Done"
 msgstr "Urađeno"
 
-#: ../data/ui/edit-dialog.ui.h:3
+#: ../data/ui/edit-dialog.ui.h:4
 msgid "Title"
 msgstr "Naziv"
 
-#: ../data/ui/edit-dialog.ui.h:4
-msgid "Starts"
-msgstr "Počinje"
-
 #: ../data/ui/edit-dialog.ui.h:5
-msgid "Ends"
-msgstr "Završava"
+msgid "Date"
+msgstr "Datum"
 
 #: ../data/ui/edit-dialog.ui.h:6
+msgid "Reminders"
+msgstr "Podsetnici"
+
+#: ../data/ui/edit-dialog.ui.h:7
 msgid "Notes"
 msgstr "Beleške"
 
-#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
+#: ../data/ui/edit-dialog.ui.h:8 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "Mesto"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
-msgid "All day"
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Time"
+msgstr "Vreme"
+
+#: ../data/ui/edit-dialog.ui.h:10
+#| msgid "All day"
+msgid "All Day"
 msgstr "Čitav dan"
 
-#: ../data/ui/edit-dialog.ui.h:9
-msgid "Delete event"
+#: ../data/ui/edit-dialog.ui.h:11
+#| msgid "Add Event…"
+msgid "Add reminder…"
+msgstr "Dodaj podsetnik…"
+
+#: ../data/ui/edit-dialog.ui.h:12
+#| msgid "Delete event"
+msgid "Delete Event"
 msgstr "Obriši događaj"
+
+#: ../data/ui/edit-dialog.ui.h:13
+#| msgid "minutes"
+msgid "5 minutes"
+msgstr "5 minuta"
+
+#: ../data/ui/edit-dialog.ui.h:14
+#| msgid "minutes"
+msgid "10 minutes"
+msgstr "10 minuta"
+
+#: ../data/ui/edit-dialog.ui.h:15
+#| msgid "minutes"
+msgid "30 minutes"
+msgstr "30 minuta"
+
+#: ../data/ui/edit-dialog.ui.h:16
+#| msgid "hours"
+msgid "1 hour"
+msgstr "1 sat"
+
+#: ../data/ui/edit-dialog.ui.h:17
+#| msgid "All day"
+msgid "1 day"
+msgstr "1 dan"
+
+#: ../data/ui/edit-dialog.ui.h:18
+#| msgid "days"
+msgid "2 days"
+msgstr "2 dana"
+
+#: ../data/ui/edit-dialog.ui.h:19
+#| msgid "days"
+msgid "3 days"
+msgstr "3 dana"
+
+#: ../data/ui/edit-dialog.ui.h:20
+#| msgid "weeks"
+msgid "1 week"
+msgstr "1 nedelja"
 
 #: ../data/ui/help-overlay.ui.h:1
 msgctxt "shortcut window"
@@ -152,7 +219,6 @@ msgid "General"
 msgstr "Opšte"
 
 #: ../data/ui/help-overlay.ui.h:2
-#| msgid "_New Event"
 msgctxt "shortcut window"
 msgid "New event"
 msgstr "Novi događaj"
@@ -160,10 +226,9 @@ msgstr "Novi događaj"
 #: ../data/ui/help-overlay.ui.h:3
 msgctxt "shortcut window"
 msgid "Close window"
-msgstr "Zatvara prozor"
+msgstr "Zatvori prozor"
 
 #: ../data/ui/help-overlay.ui.h:4
-#| msgid "_Search…"
 msgctxt "shortcut window"
 msgid "Search"
 msgstr "Pretraga"
@@ -171,7 +236,7 @@ msgstr "Pretraga"
 #: ../data/ui/help-overlay.ui.h:5
 msgctxt "shortcut window"
 msgid "Show help"
-msgstr "Prikazuje pomoć"
+msgstr "Prikaži pomoć"
 
 #: ../data/ui/help-overlay.ui.h:6
 msgctxt "shortcut window"
@@ -179,25 +244,24 @@ msgid "Shortcuts"
 msgstr "Prečice"
 
 #: ../data/ui/help-overlay.ui.h:7
-#| msgid "Notification"
 msgctxt "shortcut window"
 msgid "Navigation"
-msgstr "Kretanje"
+msgstr "Navigacija"
 
 #: ../data/ui/help-overlay.ui.h:8
 msgctxt "shortcut window"
 msgid "Go back"
-msgstr "Ide nazad"
+msgstr "Idi nazad"
 
 #: ../data/ui/help-overlay.ui.h:9
 msgctxt "shortcut window"
 msgid "Go forward"
-msgstr "Ide napred"
+msgstr "Idi napred"
 
 #: ../data/ui/help-overlay.ui.h:10
 msgctxt "shortcut window"
 msgid "Show today"
-msgstr "Prikazuje danas"
+msgstr "Prikaži današnje"
 
 #: ../data/ui/help-overlay.ui.h:11
 msgctxt "shortcut window"
@@ -210,22 +274,19 @@ msgid "Previous view"
 msgstr "Prethodni pregled"
 
 #: ../data/ui/help-overlay.ui.h:13
-#| msgid "View as"
 msgctxt "shortcut window"
 msgid "View"
 msgstr "Pregled"
 
 #: ../data/ui/help-overlay.ui.h:14
-#| msgid "Month"
 msgctxt "shortcut window"
 msgid "Month view"
-msgstr "Pregled meseca"
+msgstr "Mesečni pregled"
 
 #: ../data/ui/help-overlay.ui.h:15
-#| msgid "Overview"
 msgctxt "shortcut window"
 msgid "Year view"
-msgstr "Pregled godine"
+msgstr "Godišnji pregled"
 
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
@@ -236,35 +297,39 @@ msgid "_Search…"
 msgstr "_Pretraži…"
 
 #: ../data/ui/menus.ui.h:3
-msgid "_Keyboard Shortcuts"
-msgstr "_Prečice tastature"
+#| msgid "Calendars"
+msgid "_Calendars…"
+msgstr "_Kalendari…"
 
 #: ../data/ui/menus.ui.h:4
+msgid "_Keyboard Shortcuts"
+msgstr "Prečice _tastature"
+
+#: ../data/ui/menus.ui.h:5
 msgid "_About"
 msgstr "_O programu"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:6
 msgid "_Quit"
 msgstr "_Izađi"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:7
 msgid "_Synchronize"
 msgstr "_Usaglasi"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:8
 msgid "From Web…"
 msgstr "Sa veba…"
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:9
 msgid "New Local Calendar…"
 msgstr "Novi lokalni kalendar…"
 
-#: ../data/ui/menus.ui.h:9
+#: ../data/ui/menus.ui.h:10
 msgid "From File…"
 msgstr "Iz datoteke…"
 
 #: ../data/ui/quick-add-popover.ui.h:1
-#| msgid "Edit Details"
 msgid "Edit Details…"
 msgstr "Uredi pojedinosti…"
 
@@ -280,8 +345,8 @@ msgstr "Nema rezultata"
 msgid "Try a different search"
 msgstr "Pokušajte drugačiju pretragu"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
-#: ../src/gcal-window.c:1065
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1120
+#: ../src/gcal-window.c:1124
 msgid "Undo"
 msgstr "Opozovi"
 
@@ -299,11 +364,11 @@ msgstr "Gugl"
 
 #: ../data/ui/source-dialog.ui.h:5
 msgid "Click to set up"
-msgstr "Pritisnite za podešavanje"
+msgstr "Kliknite za podešavanje"
 
 #: ../data/ui/source-dialog.ui.h:6
 msgid "ownCloud"
-msgstr "mojOblak"
+msgstr "mojOblak (ownCloud)"
 
 #: ../data/ui/source-dialog.ui.h:7
 msgid "Microsoft Exchange"
@@ -350,10 +415,6 @@ msgid "Edit Calendar"
 msgstr "Uredi kalendar"
 
 #: ../data/ui/source-dialog.ui.h:20
-#| msgid ""
-#| "Enter the address of the calendar that you want to add. If the calendar "
-#| "belongs to one of you online accounts, you can add it through the <a href="
-#| "\"GOA\">online account settings</a>."
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
 "belongs to one of your online accounts, you can add it through the <a href="
@@ -367,8 +428,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Adresa kalendara"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2191
-#: ../src/gcal-source-dialog.c:2197
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2197
+#: ../src/gcal-source-dialog.c:2203
 msgid "Add Calendar"
 msgstr "Dodaj kalendar"
 
@@ -400,21 +461,25 @@ msgstr "PrP"
 msgid "PM"
 msgstr "PoP"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
+#: ../data/ui/window.ui.h:1
 msgid "Month"
 msgstr "Mesec"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
+#: ../data/ui/window.ui.h:2
 msgid "Year"
 msgstr "Godina"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:251 ../src/gcal-year-view.c:473
+#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
 msgid "Today"
 msgstr "Danas"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
-#: ../src/gcal-source-dialog.c:2220
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Upravljajte vašim kalendarima"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2226
 msgid "Calendar Settings"
 msgstr "Podešavanje kalendara"
 
@@ -422,7 +487,7 @@ msgstr "Podešavanje kalendara"
 msgid "No events"
 msgstr "Bez događaja"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:827
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1010
 msgid "Add Event…"
 msgstr "Dodaj događaj…"
 
@@ -442,39 +507,78 @@ msgstr "Otvara kalendar koji prikazuje prošli događaj"
 msgid "- Calendar management"
 msgstr "— Upravljanje kalendarom"
 
-#: ../src/gcal-application.c:470
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Autorska prava © %Id autori Kalendara"
+#: ../src/gcal-application.c:471
+#, c-format
+msgid "Copyright © %d The Calendar authors"
+msgstr "Autorska prava © %d autori Kalendara"
 
-#: ../src/gcal-application.c:476
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Autorska prava © %Id–%Id autori Kalendara"
+#: ../src/gcal-application.c:477
+#, c-format
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Autorska prava © %d–%d autori Kalendara"
 
-#: ../src/gcal-application.c:489
+#: ../src/gcal-application.c:490
 msgid "translator-credits"
 msgstr ""
-"  Miroslav Nikolić\n"
+"Miroslav Nikolić <miroslavnikolic@rocketmail.com>\n"
+"Miloš Popović <gpopac@gmail.com>\n"
+"Marko M. Kostić <marko.m.kostic@gmail.com>\n"
 "\n"
 "  http://prevod.org — prevod na srpski jezik"
 
-#: ../src/gcal-date-selector.c:362
-msgid "Day"
-msgstr "Dan"
-
-#: ../src/gcal-edit-dialog.c:429
+#: ../src/gcal-edit-dialog.c:509
 msgid "Save"
 msgstr "Sačuvaj"
 
-#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:405
+#: ../src/gcal-edit-dialog.c:777
+#, c-format
+msgid "%d minute before"
+msgid_plural "%d minutes before"
+msgstr[0] "Pre %d minut"
+msgstr[1] "Pre %d minuta"
+msgstr[2] "Pre %d minuta"
+msgstr[3] "Pre %d minut"
+
+#: ../src/gcal-edit-dialog.c:785
+#, c-format
+#| msgid "before"
+msgid "%d hour before"
+msgid_plural "%d hours before"
+msgstr[0] "Pre %d sat"
+msgstr[1] "Pre %d sata"
+msgstr[2] "Pre %d sati"
+msgstr[3] "Pre %d sat"
+
+#: ../src/gcal-edit-dialog.c:793
+#, c-format
+#| msgid "before"
+msgid "%d day before"
+msgid_plural "%d days before"
+msgstr[0] "Pre %d dan"
+msgstr[1] "Pre %d dana"
+msgstr[2] "Pre %d dana"
+msgstr[3] "Pre %d dan"
+
+#: ../src/gcal-edit-dialog.c:801
+#, c-format
+#| msgid "before"
+msgid "%d week before"
+msgid_plural "%d weeks before"
+msgstr[0] "Pre %d nedelju"
+msgstr[1] "Pre %d nedelje"
+msgstr[2] "Pre %d nedelja"
+msgstr[3] "Pre %d nedelju"
+
+#: ../src/gcal-edit-dialog.c:1051 ../src/gcal-quick-add-popover.c:424
 msgid "Unnamed event"
 msgstr "Neimenovani događaj"
 
-#: ../src/gcal-month-view.c:1058
+#: ../src/gcal-month-view.c:1248
 msgid "Other events"
 msgstr "Drugi događaji"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1487
+#: ../src/gcal-month-view.c:1710
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -483,59 +587,63 @@ msgstr[1] "Druga %d događaja"
 msgstr[2] "Drugih %d događaja"
 msgstr[3] "Drugi događaj"
 
-#: ../src/gcal-quick-add-popover.c:113
+#: ../src/gcal-quick-add-popover.c:115
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (ovaj kalendar je samo za čitanje)"
 
-#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+#: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%d. %B"
 
-#: ../src/gcal-quick-add-popover.c:243
+#: ../src/gcal-quick-add-popover.c:245
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Novi događaj od %s do %s"
 
-#: ../src/gcal-quick-add-popover.c:249
+#: ../src/gcal-quick-add-popover.c:251
 #, c-format
 msgid "New Event on %s"
 msgstr "Novi događaj „%s“"
+
+#: ../src/gcal-search-view.c:353
+msgid "All day"
+msgstr "Čitav dan"
 
 #: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
 msgstr "Koristite unos iznad da potražite događaje."
 
 #. Dialog
-#: ../src/gcal-source-dialog.c:1110
+#: ../src/gcal-source-dialog.c:1111
 msgid "Select a calendar file"
 msgstr "Izaberite datoteku s kalendarom"
 
-#: ../src/gcal-source-dialog.c:1114
+#: ../src/gcal-source-dialog.c:1115
 msgid "Open"
 msgstr "Otvori"
 
-#: ../src/gcal-source-dialog.c:1121
+#: ../src/gcal-source-dialog.c:1122
 msgid "Calendar files"
 msgstr "Datoteke kalendara"
 
 #. update the source properties
-#: ../src/gcal-source-dialog.c:1160
+#: ../src/gcal-source-dialog.c:1164
 msgid "Unnamed Calendar"
 msgstr "Neimenovani kalendar"
 
 #. Update notification label
-#: ../src/gcal-source-dialog.c:1758
+#: ../src/gcal-source-dialog.c:1764
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalendar <b>%s</b> je uklonjen"
 
-#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
 msgid "Off"
 msgstr "Isklj."
 
-#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
 msgid "On"
 msgstr "Uklj."
 
@@ -561,25 +669,34 @@ msgstr "Podne"
 msgid "00:00 PM"
 msgstr "00:00"
 
-#: ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1120
 msgid "Another event deleted"
 msgstr "Drugi događaj je obrisan"
 
-#: ../src/gcal-window.c:1065
+#: ../src/gcal-window.c:1124
 msgid "Event deleted"
 msgstr "Događaj je obrisan"
 
+#~ msgid "Starts"
+#~ msgstr "Počinje"
+
+#~ msgid "Ends"
+#~ msgstr "Završava"
+
+#~ msgid "Day"
+#~ msgstr "Dan"
+
 #~ msgid "Create"
 #~ msgstr "Napravi"
-
-#~ msgid "%m/%d/%y"
-#~ msgstr "%d.%m.%y."
 
 #~ msgid "%.2d:%.2d AM"
 #~ msgstr "%.2d:%.2d AM"
 
 #~ msgid "%.2d:%.2d PM"
 #~ msgstr "%.2d:%.2d PM"
+
+#~ msgid "%m/%d/%y"
+#~ msgstr "%d.%m.%y."
 
 #~ msgid "More Details"
 #~ msgstr "Više pojedinosti"
@@ -617,21 +734,6 @@ msgstr "Događaj je obrisan"
 
 #~ msgid "Email"
 #~ msgstr "El. pošta"
-
-#~ msgid "days"
-#~ msgstr "dana"
-
-#~ msgid "weeks"
-#~ msgstr "nedelja"
-
-#~ msgid "hours"
-#~ msgstr "sata"
-
-#~ msgid "minutes"
-#~ msgstr "minuta"
-
-#~ msgid "before"
-#~ msgstr "pre"
 
 #~ msgid "WWW 99 - WWW 99"
 #~ msgstr "ŠŠŠ 99 — ŠŠŠ 99"
