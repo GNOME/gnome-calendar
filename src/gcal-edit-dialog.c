@@ -295,6 +295,61 @@ update_revealer_visibility_cb (GtkRevealer *revealer)
 }
 
 static void
+sync_datetimes (GcalEditDialog *self,
+                GParamSpec     *pspec,
+                GtkWidget      *widget)
+{
+  GDateTime *start, *end, *new_date;
+  GtkWidget *date_widget, *time_widget;
+  gboolean is_start;
+  gint hour_to_add;
+
+  is_start = (widget == self->start_time_selector || widget == self->start_date_selector);
+  start = gcal_edit_dialog_get_date_start (self);
+  end = gcal_edit_dialog_get_date_end (self);
+
+  /* The date is valid, no need to update the fields */
+  if (g_date_time_compare (end, start) >= 0)
+    goto out;
+
+  /*
+   * If the user is changing the start date or time, we change the end
+   * date or time (and vice versa).
+   */
+  hour_to_add = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check)) ? 0 : 1;
+
+  if (is_start)
+    {
+      new_date = g_date_time_add_hours (start, hour_to_add);
+
+      date_widget = self->end_date_selector;
+      time_widget = self->end_time_selector;
+    }
+  else
+    {
+      new_date = g_date_time_add_hours (end, hour_to_add);
+
+      date_widget = self->start_date_selector;
+      time_widget = self->start_time_selector;
+    }
+
+  g_signal_handlers_block_by_func (date_widget, sync_datetimes, self);
+  g_signal_handlers_block_by_func (time_widget, sync_datetimes, self);
+
+  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (date_widget), new_date);
+  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (time_widget), new_date);
+
+  g_signal_handlers_unblock_by_func (date_widget, sync_datetimes, self);
+  g_signal_handlers_unblock_by_func (time_widget, sync_datetimes, self);
+
+  g_clear_pointer (&new_date, g_date_time_unref);
+
+out:
+  g_clear_pointer (&start, g_date_time_unref);
+  g_clear_pointer (&end, g_date_time_unref);
+}
+
+static void
 gcal_edit_dialog_get_property (GObject    *object,
                                guint       prop_id,
                                GValue     *value,
@@ -442,6 +497,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, update_summary);
   gtk_widget_class_bind_template_callback (widget_class, update_location);
   gtk_widget_class_bind_template_callback (widget_class, update_revealer_visibility_cb);
+  gtk_widget_class_bind_template_callback (widget_class, sync_datetimes);
 }
 
 static void
@@ -1044,12 +1100,24 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       date_end = all_day ? g_date_time_add_days (date_end, -1) : g_date_time_to_local (date_end);
 
       /* date */
+      g_signal_handlers_block_by_func (dialog->end_date_selector, sync_datetimes, dialog);
+      g_signal_handlers_block_by_func (dialog->start_date_selector, sync_datetimes, dialog);
+
       gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->start_date_selector), date_start);
       gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->end_date_selector), date_end);
 
+      g_signal_handlers_unblock_by_func (dialog->start_date_selector, sync_datetimes, dialog);
+      g_signal_handlers_unblock_by_func (dialog->end_date_selector, sync_datetimes, dialog);
+
       /* time */
+      g_signal_handlers_block_by_func (dialog->end_time_selector, sync_datetimes, dialog);
+      g_signal_handlers_block_by_func (dialog->start_time_selector, sync_datetimes, dialog);
+
       gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->start_time_selector), date_start);
       gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->end_time_selector), date_end);
+
+      g_signal_handlers_unblock_by_func (dialog->start_time_selector, sync_datetimes, dialog);
+      g_signal_handlers_unblock_by_func (dialog->end_time_selector, sync_datetimes, dialog);
 
       /* all_day  */
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->all_day_check), all_day);
