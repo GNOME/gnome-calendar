@@ -662,31 +662,35 @@ gcal_edit_dialog_all_day_changed (GtkWidget *widget,
 /*
  * Alarm related functions
  */
+
+#define OFFSET(x)             (G_STRUCT_OFFSET (GcalEditDialog, x))
+#define WIDGET_FROM_OFFSET(x) (G_STRUCT_MEMBER (GtkWidget*, self, x))
+
+struct
+{
+  gint minutes;
+  gint button_offset;
+} minutes_button[] = {
+    { 5,     OFFSET (five_minutes_button) },
+    { 10,    OFFSET (ten_minutes_button) },
+    { 30,    OFFSET (thirty_minutes_button) },
+    { 60,    OFFSET (one_hour_button) },
+    { 1440,  OFFSET (one_day_button) },
+    { 2880,  OFFSET (two_days_button) },
+    { 4320,  OFFSET (three_days_button) },
+    { 10080, OFFSET (one_week_button) }
+};
+
 static GtkWidget*
 get_row_fow_alarm_trigger_minutes (GcalEditDialog *self,
                                    gint            minutes)
 {
-  gint i;
-
-  struct
-  {
-    gint       minutes;
-    GtkWidget *button;
-  } minutes_button[] = {
-      { 5,     self->five_minutes_button },
-      { 10,    self->ten_minutes_button },
-      { 30,    self->thirty_minutes_button },
-      { 60,    self->one_hour_button },
-      { 1440,  self->one_day_button },
-      { 2880,  self->two_days_button },
-      { 4320,  self->three_days_button },
-      { 10080, self->one_week_button }
-  };
+  guint i;
 
   for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
     {
       if (minutes_button[i].minutes == minutes)
-        return minutes_button[i].button;
+        return WIDGET_FROM_OFFSET (minutes_button[i].button_offset);
     }
 
   return NULL;
@@ -862,22 +866,7 @@ static void
 setup_alarms (GcalEditDialog *self)
 {
   GList *alarms, *l;
-  gint i;
-
-  struct
-  {
-    gint       minutes;
-    GtkWidget *button;
-  } minutes_button[] = {
-      { 5,     self->five_minutes_button },
-      { 10,    self->ten_minutes_button },
-      { 30,    self->thirty_minutes_button },
-      { 60,    self->one_hour_button },
-      { 1440,  self->one_day_button },
-      { 2880,  self->two_days_button },
-      { 4320,  self->three_days_button },
-      { 10080, self->one_week_button }
-  };
+  guint i;
 
   gtk_widget_set_visible (self->alarms_listbox, gcal_event_has_alarms (self->event));
 
@@ -893,7 +882,7 @@ setup_alarms (GcalEditDialog *self)
    * and only make them insensitive when needed.
    */
   for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
-    gtk_widget_set_sensitive (minutes_button[i].button, TRUE);
+    gtk_widget_set_sensitive (WIDGET_FROM_OFFSET (minutes_button[i].button_offset), TRUE);
 
   for (l = alarms; l != NULL; l = l->next)
     {
@@ -911,7 +900,7 @@ setup_alarms (GcalEditDialog *self)
       for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
         {
           if (minutes_button[i].minutes == minutes)
-            gtk_widget_set_sensitive (minutes_button[i].button, FALSE);
+            gtk_widget_set_sensitive (WIDGET_FROM_OFFSET (minutes_button[i].button_offset), FALSE);
         }
 
       /* Add the row */
@@ -925,32 +914,16 @@ static void
 add_alarm_button_clicked (GtkWidget      *button,
                           GcalEditDialog *self)
 {
-  gint i, minutes;
-
-  struct
-  {
-    GtkWidget *button;
-    gint       minutes;
-  } button_minutes[] = {
-      { self->five_minutes_button,   5 },
-      { self->ten_minutes_button,    10 },
-      { self->thirty_minutes_button, 30 },
-      { self->one_hour_button,       60 },
-      { self->one_day_button,        1440 },
-      { self->two_days_button,       2880 },
-      { self->three_days_button,     4320 },
-      { self->one_week_button,       10080 },
-      { NULL, 0 }
-  };
+  guint i, minutes;
 
   /* Search for the button minute */
   minutes = 0;
 
-  for (i = 0; i < G_N_ELEMENTS (button_minutes); i++)
+  for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
     {
-      if (button_minutes[i].button == button)
+      if (WIDGET_FROM_OFFSET (minutes_button[i].button_offset) == button)
         {
-          minutes = button_minutes[i].minutes;
+          minutes = minutes_button[i].minutes;
           break;
         }
     }

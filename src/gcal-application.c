@@ -447,7 +447,7 @@ gcal_application_show_about (GSimpleAction *simple,
 {
   GcalApplication *self;
   char *copyright;
-  GDateTime *date;
+  GDateTime *dt;
   int created_year = 2012;
   const gchar *authors[] = {
     "Erick Pérez Castellanos <erickpc@gnome.org>",
@@ -464,9 +464,9 @@ gcal_application_show_about (GSimpleAction *simple,
   };
 
   self = GCAL_APPLICATION (user_data);
-  date = g_date_time_new_now_local ();
+  dt = g_date_time_new_now_local ();
 
-  if (g_date_time_get_year (date) == created_year)
+  if (g_date_time_get_year (dt) == created_year)
     {
       copyright = g_strdup_printf (_("Copyright \xC2\xA9 %d "
                                      "The Calendar authors"),
@@ -476,7 +476,7 @@ gcal_application_show_about (GSimpleAction *simple,
     {
       copyright = g_strdup_printf (_("Copyright \xC2\xA9 %d\xE2\x80\x93%d "
                                      "The Calendar authors"),
-                                   created_year, g_date_time_get_year (date));
+                                   created_year, g_date_time_get_year (dt));
     }
 
   gtk_show_about_dialog (GTK_WINDOW (self->window),
@@ -489,8 +489,9 @@ gcal_application_show_about (GSimpleAction *simple,
                          "logo-icon-name", "org.gnome.Calendar",
                          "translator-credits", _("translator-credits"),
                          NULL);
-  g_free (copyright);
-  g_date_time_unref (date);
+
+  g_clear_pointer (&copyright, g_free);
+  g_clear_pointer (&dt, g_date_time_unref);
 }
 
 static void
@@ -530,16 +531,16 @@ gcal_application_get_settings (GcalApplication *app)
 
 void
 gcal_application_set_uuid (GcalApplication *application,
-                           const gchar     *uuid)
+                           const gchar     *app_uuid)
 {
   g_free (application->uuid);
-  application->uuid = g_strdup (uuid);
+  application->uuid = g_strdup (app_uuid);
 }
 
 void
 gcal_application_set_initial_date (GcalApplication *application,
-                                   GDateTime       *date)
+                                   GDateTime       *initial_date)
 {
-  g_free (application->initial_date);
-  application->initial_date = datetime_to_icaltime (date);
+  g_clear_pointer (&application->initial_date, g_date_time_unref);
+  application->initial_date = datetime_to_icaltime (initial_date);
 }

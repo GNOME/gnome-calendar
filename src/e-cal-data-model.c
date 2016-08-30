@@ -1248,7 +1248,7 @@ cal_data_model_process_modified_or_added_objects (ECalClientView *view,
 		cal_data_model_thaw_all_subscribers (data_model);
 
 		if (to_expand_recurrences) {
-			ECalClient *client = e_cal_client_view_ref_client (view);
+			ECalClient *rclient = e_cal_client_view_ref_client (view);
 
 			view_data_lock (view_data);
 			view_data->to_expand_recurrences = g_slist_concat (
@@ -1257,7 +1257,7 @@ cal_data_model_process_modified_or_added_objects (ECalClientView *view,
 			view_data_unlock (view_data);
 
 			cal_data_model_submit_internal_thread_job (data_model,
-				cal_data_model_expand_recurrences_thread, client);
+				cal_data_model_expand_recurrences_thread, rclient);
 		}
 	}
 
@@ -1881,9 +1881,9 @@ cal_data_model_set_property (GObject *object,
 				E_CAL_DATA_MODEL (object),
 				g_value_get_pointer (value));
 			return;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 	}
-
-	G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
 static void
@@ -1906,9 +1906,9 @@ cal_data_model_get_property (GObject *object,
 				e_cal_data_model_get_timezone (
 				E_CAL_DATA_MODEL (object)));
 			return;
+		default:
+			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 	}
-
-	G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
 static void
@@ -2646,7 +2646,7 @@ e_cal_data_model_subscribe (ECalDataModel *data_model,
 	LOCK_PROPS ();
 
 	for (link = data_model->priv->subscribers; link; link = g_slist_next (link)) {
-		SubscriberData *subs_data = link->data;
+		subs_data = link->data;
 
 		if (!subs_data)
 			continue;

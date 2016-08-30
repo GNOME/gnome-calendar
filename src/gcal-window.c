@@ -450,6 +450,8 @@ update_today_button_sensitive (GcalWindow *window)
       sensitive = window->active_date->year != window->current_date->year;
       break;
 
+    case GCAL_WINDOW_VIEW_LIST:
+    case GCAL_WINDOW_VIEW_SEARCH:
     default:
       sensitive = TRUE;
       break;
@@ -498,6 +500,7 @@ date_updated (GtkButton  *button,
           break;
         case GCAL_WINDOW_VIEW_LIST:
         case GCAL_WINDOW_VIEW_SEARCH:
+        default:
           break;
         }
 
@@ -1141,6 +1144,7 @@ edit_dialog_closed (GtkDialog *dialog,
       break;
 
     case GTK_RESPONSE_CANCEL:
+    default:
       break;
 
     }
@@ -1513,9 +1517,10 @@ gcal_window_set_property (GObject      *object,
           g_object_notify (object, "manager");
         }
       return;
-    }
 
-  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    }
 }
 
 static void
@@ -1540,9 +1545,10 @@ gcal_window_get_property (GObject    *object,
     case PROP_NEW_EVENT_MODE:
       g_value_set_boolean (value, self->new_event_mode);
       return;
-    }
 
-  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    }
 }
 
 static gboolean
@@ -1656,6 +1662,7 @@ gcal_window_new_event (GcalWindow *window)
       break;
     case GCAL_WINDOW_VIEW_LIST:
     case GCAL_WINDOW_VIEW_SEARCH:
+    default:
       break;
     }
 

@@ -34,10 +34,10 @@ GcalApplication*  gcal_application_new          (void);
 GcalManager*      gcal_application_get_manager  (GcalApplication *app);
 GSettings*        gcal_application_get_settings (GcalApplication *app);
 void              gcal_application_set_uuid     (GcalApplication *application,
-                                                 const gchar     *uuid);
+                                                 const gchar     *app_uuid);
 
 void              gcal_application_set_initial_date (GcalApplication *application,
-                                                     GDateTime       *date);
+                                                     GDateTime       *initial_date);
 
 G_END_DECLS
 

@@ -2099,7 +2099,7 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
 
       if (new_end_cell >= priv->days_delay && new_end_cell < days)
         {
-          guint previous_end_cell;
+          gint previous_end_cell;
 
           previous_end_cell = new_end_cell;
 

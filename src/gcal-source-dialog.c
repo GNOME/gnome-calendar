@@ -511,8 +511,8 @@ description_label_link_activated (GtkWidget *widget,
                                   gchar     *uri,
                                   gpointer   user_data)
 {
-  gchar *command[] = {"gnome-control-center", "online-accounts", NULL};
-  g_spawn_async (NULL, command, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
+  const gchar* const command[] = { "gnome-control-center", "online-accounts", NULL };
+  g_spawn_async (NULL, (gchar**) command, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
 
   return TRUE;
 }
@@ -653,11 +653,14 @@ name_entry_text_changed (GObject    *object,
 }
 
 static void
-spawn_goa_with_args (gchar *action,
-                     gchar *arg)
+spawn_goa_with_args (const gchar *action,
+                     const gchar *arg)
 {
-  gchar *command[] = {"gnome-control-center", "online-accounts", action, arg, NULL};
-  g_spawn_async (NULL, command, NULL, G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL, NULL, NULL, NULL, NULL);
+  const gchar* const command[] = { "gnome-control-center", "online-accounts", action, arg, NULL };
+  g_spawn_async (NULL, (gchar**) command,
+                 NULL,
+                 G_SPAWN_SEARCH_PATH | G_SPAWN_STDOUT_TO_DEV_NULL,
+                 NULL, NULL, NULL, NULL);
 }
 
 /**
@@ -1094,8 +1097,7 @@ static void
 online_accounts_settings_button_clicked (GtkWidget *button,
                                          gpointer   user_data)
 {
-  gchar *command[] = {"gnome-control-center", "online-accounts", NULL};
-  g_spawn_async (NULL, command, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, NULL);
+  spawn_goa_with_args (NULL, NULL);
 }
 
 static void
@@ -1979,7 +1981,7 @@ add_goa_account (GcalSourceDialog *dialog,
   GtkWidget *enabled_label;
   GtkWidget *row;
   GtkWidget *icon;
-  gchar *icon_name = "goa";
+  const gchar *icon_name;
 
   type = get_account_type (account);
 
@@ -2011,6 +2013,8 @@ add_goa_account (GcalSourceDialog *dialog,
       break;
 
     case GCAL_ACCOUNT_TYPE_NOT_SUPPORTED:
+    default:
+      icon_name = "goa";
       g_assert_not_reached ();
     }
 
@@ -2098,6 +2102,7 @@ goa_account_removed_cb (GoaClient *client,
           gtk_widget_show (self->owncloud_stub_row);
           break;
 
+        case GCAL_ACCOUNT_TYPE_NOT_SUPPORTED:
         default:
           g_assert_not_reached ();
         }

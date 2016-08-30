@@ -4,6 +4,7 @@ AM_CPPFLAGS =                                             \
     -DPACKAGE_DATA_DIR=\""$(pkgdatadir)"\"                \
     -DUI_DATA_DIR=\""$(pkgdatadir)/style"\"               \
     $(WARN_CFLAGS)                                        \
+    -Wno-sign-compare                                     \
     -DEDS_DISABLE_DEPRECATED                              \
     -DGOA_API_IS_SUBJECT_TO_CHANGE                        \
     $(CALENDAR_CFLAGS)

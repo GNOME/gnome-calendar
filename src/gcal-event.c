@@ -957,8 +957,6 @@ gcal_event_add_alarm (GcalEvent *self,
   /* Only 1 alarm per relative time */
   if (g_hash_table_contains (self->alarms, GINT_TO_POINTER (type)))
     {
-      const gchar *alarm_uid;
-
       alarm_uid = g_hash_table_lookup (self->alarms, GINT_TO_POINTER (type));
 
       e_cal_component_remove_alarm (self->component, alarm_uid);

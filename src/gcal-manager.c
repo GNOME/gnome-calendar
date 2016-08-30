@@ -925,9 +925,10 @@ gcal_manager_set_property (GObject      *object,
       if (g_set_object (&self->settings, g_value_get_object (value)))
         g_object_notify (object, "settings");
       return;
-    }
 
-  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    }
 }
 
 static void
@@ -943,6 +944,9 @@ gcal_manager_get_property (GObject    *object,
     case PROP_SETTINGS:
       g_value_set_object (value, self->settings);
       return;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
 
   G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -1250,7 +1254,7 @@ gcal_manager_enable_source (GcalManager *manager,
 {
   GcalManagerUnit *unit;
   gchar **new_disabled_sources;
-  gint i;
+  guint i;
 
   unit = g_hash_table_lookup (manager->clients, source);
 
@@ -1293,7 +1297,7 @@ gcal_manager_disable_source (GcalManager *manager,
 {
   GcalManagerUnit *unit;
   gchar **new_disabled_sources;
-  gint i;
+  guint i;
   const gchar *source_uid;
 
   unit = g_hash_table_lookup (manager->clients, source);

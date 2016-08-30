@@ -1148,11 +1148,11 @@ gcal_week_view_add (GtkContainer *container,
 
   for (l = priv->days[day]; l != NULL; l = l->next)
     {
-      GtkWidget *event;
+      GtkWidget *event_widget;
 
-      event = GTK_WIDGET (((GcalWeekViewChild*) l->data)->widget);
+      event_widget = GTK_WIDGET (((GcalWeekViewChild*) l->data)->widget);
       if (gcal_event_widget_equal (GCAL_EVENT_WIDGET (widget),
-                                   GCAL_EVENT_WIDGET (event)))
+                                   GCAL_EVENT_WIDGET (event_widget)))
         {
           //TODO: remove once the main-dev phase its over
           g_warning ("Trying to add an event with the same uuid to the view");

@@ -262,7 +262,6 @@ gcal_subscriber_view_remove (GtkContainer *container,
 
               while (g_hash_table_iter_next (&iter, &key, &value))
                 {
-                  GList *aux;
                   gboolean should_break;
 
                   should_break = FALSE;
