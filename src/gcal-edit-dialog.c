@@ -1052,8 +1052,6 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->end_time_selector), date_end);
 
       /* all_day  */
-      gtk_widget_set_sensitive (dialog->start_time_selector, dialog->writable && !all_day);
-      gtk_widget_set_sensitive (dialog->end_time_selector, dialog->writable && !all_day);
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->all_day_check), all_day);
 
       /* location */
