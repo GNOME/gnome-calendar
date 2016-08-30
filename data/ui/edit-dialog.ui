@@ -113,6 +113,7 @@
       <object class="GtkBox" id="dialog-vbox">
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
+        <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
         <child>
           <object class="GtkGrid" id="main_grid">
             <property name="visible">True</property>
@@ -218,7 +219,6 @@
                   <object class="GcalDateSelector" id="start_date_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                   </object>
                 </child>
                 <child>
@@ -232,7 +232,6 @@
                   <object class="GcalDateSelector" id="end_date_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                   </object>
                 </child>
               </object>
@@ -282,7 +281,6 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="hexpand">True</property>
-                            <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                           </object>
                         </child>
                         <child>
@@ -297,7 +295,6 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="hexpand">True</property>
-                            <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                           </object>
                         </child>
                       </object>
@@ -317,7 +314,6 @@
                 <property name="can_focus">True</property>
                 <property name="draw_indicator">True</property>
                 <property name="label" translatable="yes">All Day</property>
-                <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <signal name="toggled" handler="gcal_edit_dialog_all_day_changed" object="GcalEditDialog" swapped="no"/>
               </object>
               <packing>
@@ -332,7 +328,6 @@
                 <property name="spacing">6</property>
                 <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
-                <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <child>
                   <object class="GtkListBox" id="alarms_listbox">
                     <property name="visible">False</property>
@@ -424,7 +419,6 @@
               <object class="GtkButton" id="delete_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <signal name="clicked" handler="gcal_edit_dialog_action_button_clicked" object="GcalEditDialog" swapped="no"/>
                 <child>
                   <object class="GtkLabel" id="delete_label">
