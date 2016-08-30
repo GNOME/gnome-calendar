@@ -1,3 +1,26 @@
+Major changes in 3.21.91:
+* Updated translations for:
+    * Brazilian Portuguese (Enrico Nicoletto)
+    * Catalan (Jordi Mas)
+    * Czech (Marek Černocký)
+    * Finnish (Jiri Grönroos)
+    * French (Alexandre Franke)
+    * Friulian (Fabio Tomat)
+    * German (Mario Blättermann)
+    * Hebrew (Yosef Or Boczko)
+    * Hungarian (Balázs Úr)
+    * Indonesian (Andika Triwidada)
+    * Kazakh (Baurzhan Muftakhidinov)
+    * Lithuanian (Aurimas Černius)
+    * Polish (Piotr Drąg)
+    * Portuguese (Tiago Santos)
+    * Serbian (Мирослав Николић)
+    * Slovak (Dušan Kazik)
+    * Spanish (Daniel Mustieles)
+    * Thai (Akom Chotiphantawanon)
+* New date chooser calendar
+* Deprecate GNOME_COMPILE_WARNINGS (Ernestas Kulik)
+
 Major changes in 3.21.4:
 * Updated translations for:
     * Arabic (Safa Alfulaij)
