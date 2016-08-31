@@ -370,6 +370,7 @@ static void
 gcal_edit_dialog_init (GcalEditDialog *self)
 {
   self->writable = TRUE;
+  self->format_24h = TRUE;
 
   gtk_widget_init_template (GTK_WIDGET (self));
 }
