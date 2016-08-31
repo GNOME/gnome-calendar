@@ -865,7 +865,7 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
   gint cell, diff;
   gint start_month, current_month;
   gint start_year, current_year;
-  GTimeSpan timespan;
+  GTimeSpan timespan = 0;
 
   cell = get_dnd_cell (widget, x, y);
   event_widget = gtk_drag_get_source_widget (context);
