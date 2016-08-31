@@ -1,3 +1,12 @@
+Major changes in 3.20.3:
+* Fix crashes
+* Fix AM/PM selector not showing
+* Updated translations for:
+    * Icelandic (Sveinn í Felli)
+    * Indonesian (Andika Triwidada)
+    * Lingala (René Manassé GALEKWA)
+    * Thai (Akom Chotiphantawanon)
+
 Major changes in 3.20.2:
 * Updates translations for:
     * Latvian (Rūdolfs Mazurs)
