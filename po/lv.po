@@ -6,17 +6,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-ca"
-"lendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-05 08:11+0000\n"
-"PO-Revision-Date: 2016-03-05 15:44+0200\n"
+"lendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-08-09 14:56+0000\n"
+"PO-Revision-Date: 2016-09-01 22:14+0200\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "Language: lv\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : "
-"2);\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 :"
+" 2);\n"
 "X-Generator: Lokalize 2.0\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
@@ -53,6 +53,7 @@ msgstr ""
 "jums liksies, ka esat to lietojuši jau mūžību."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Meklēt notikumus"
 
@@ -108,42 +109,101 @@ msgstr "Izslēgto avotu saraksts"
 msgid "Sources disabled last time Calendar ran"
 msgstr "Avoti, kas tika izslēgti pēdējo reizi palaižot kalendāru"
 
+#: ../data/ui/alarm-row.ui.h:1
+msgid "Toggles the sound of the alarm"
+msgstr "Pārslēdz skaņu trauksmei"
+
+#: ../data/ui/alarm-row.ui.h:2
+#| msgid "Remove Calendar"
+msgid "Remove the alarm"
+msgstr "Izņemt trauksmi"
+
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1113
+#: ../src/gcal-source-dialog.c:1114
 msgid "Cancel"
 msgstr "Atcelt"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
+#: ../data/ui/edit-dialog.ui.h:2
+msgid "Click to select the event's agenda"
+msgstr "Spiediet, lai izvēlētos notikuma kārtību"
+
+#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:509
 msgid "Done"
 msgstr "Pabeigts"
 
-#: ../data/ui/edit-dialog.ui.h:3
+#: ../data/ui/edit-dialog.ui.h:4
 msgid "Title"
 msgstr "Nosaukums"
 
-#: ../data/ui/edit-dialog.ui.h:4
-msgid "Starts"
-msgstr "Sākas"
-
 #: ../data/ui/edit-dialog.ui.h:5
-msgid "Ends"
-msgstr "Beidzas"
+msgid "Date"
+msgstr "Datums"
 
 #: ../data/ui/edit-dialog.ui.h:6
+msgid "Reminders"
+msgstr "Atgādinājumi"
+
+#: ../data/ui/edit-dialog.ui.h:7
 msgid "Notes"
 msgstr "Piezīmes"
 
-#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
+#: ../data/ui/edit-dialog.ui.h:8 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "Vieta"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
-msgid "All day"
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Time"
+msgstr "Laiks"
+
+#: ../data/ui/edit-dialog.ui.h:10
+#| msgid "All day"
+msgid "All Day"
 msgstr "Visu dienu"
 
-#: ../data/ui/edit-dialog.ui.h:9
-msgid "Delete event"
+#: ../data/ui/edit-dialog.ui.h:11
+#| msgid "Add Event…"
+msgid "Add reminder…"
+msgstr "Pievienot atgādinājumu…"
+
+#: ../data/ui/edit-dialog.ui.h:12
+#| msgid "Delete event"
+msgid "Delete Event"
 msgstr "Dzēst notikumu"
+
+#: ../data/ui/edit-dialog.ui.h:13
+msgid "5 minutes"
+msgstr "5 minūtes"
+
+#: ../data/ui/edit-dialog.ui.h:14
+msgid "10 minutes"
+msgstr "10 minūtes"
+
+#: ../data/ui/edit-dialog.ui.h:15
+msgid "30 minutes"
+msgstr "30 minūtes"
+
+#: ../data/ui/edit-dialog.ui.h:16
+msgid "1 hour"
+msgstr "1 stunda"
+
+#: ../data/ui/edit-dialog.ui.h:17
+#| msgid "All day"
+msgid "1 day"
+msgstr "1 diena"
+
+#: ../data/ui/edit-dialog.ui.h:18
+#| msgid "All day"
+msgid "2 days"
+msgstr "2 dienas"
+
+#: ../data/ui/edit-dialog.ui.h:19
+#| msgid "All day"
+msgid "3 days"
+msgstr "3 dienas"
+
+#: ../data/ui/edit-dialog.ui.h:20
+msgid "1 week"
+msgstr "1 nedēļa"
 
 #: ../data/ui/help-overlay.ui.h:1
 msgctxt "shortcut window"
@@ -229,30 +289,35 @@ msgid "_Search…"
 msgstr "_Meklēt…"
 
 #: ../data/ui/menus.ui.h:3
+#| msgid "Calendars"
+msgid "_Calendars…"
+msgstr "_Kalendāri…"
+
+#: ../data/ui/menus.ui.h:4
 msgid "_Keyboard Shortcuts"
 msgstr "_Tastatūras īsinājumtaustiņi"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:5
 msgid "_About"
 msgstr "P_ar"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:6
 msgid "_Quit"
 msgstr "_Iziet"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:7
 msgid "_Synchronize"
 msgstr "_Sinhronizēt"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:8
 msgid "From Web…"
 msgstr "No tīmekļa…"
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:9
 msgid "New Local Calendar…"
 msgstr "Jauns lokāls kalendārs…"
 
-#: ../data/ui/menus.ui.h:9
+#: ../data/ui/menus.ui.h:10
 msgid "From File…"
 msgstr "No datnes…"
 
@@ -272,8 +337,8 @@ msgstr "Nav atrastu rezultātu"
 msgid "Try a different search"
 msgstr "Mēģiniet ar citu meklējamo vārdu"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
-#: ../src/gcal-window.c:1065
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1120
+#: ../src/gcal-window.c:1124
 msgid "Undo"
 msgstr "Atsaukt"
 
@@ -355,8 +420,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Kalendāra adrese"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2191
-#: ../src/gcal-source-dialog.c:2197
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2197
+#: ../src/gcal-source-dialog.c:2203
 msgid "Add Calendar"
 msgstr "Pievienot kalendāru"
 
@@ -388,21 +453,25 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
+#: ../data/ui/window.ui.h:1
 msgid "Month"
 msgstr "Mēnesis"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
+#: ../data/ui/window.ui.h:2
 msgid "Year"
 msgstr "Gads"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:252 ../src/gcal-year-view.c:474
+#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
 msgid "Today"
 msgstr "Šodien"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:814
-#: ../src/gcal-source-dialog.c:2220
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Pārvaldiet savus kalendārus"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
+#: ../src/gcal-source-dialog.c:2226
 msgid "Calendar Settings"
 msgstr "Kalendāra iestatījumi"
 
@@ -410,7 +479,7 @@ msgstr "Kalendāra iestatījumi"
 msgid "No events"
 msgstr "Nav notikumu"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:834
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1010
 msgid "Add Event…"
 msgstr "Pievienot notikumu…"
 
@@ -432,13 +501,11 @@ msgstr "- Kalendāra pārvaldība"
 
 #: ../src/gcal-application.c:471
 #, c-format
-#| msgid "Copyright © %Id The Calendar authors"
 msgid "Copyright © %d The Calendar authors"
 msgstr "Autortiesības © %d Kalendāra autori"
 
 #: ../src/gcal-application.c:477
 #, c-format
-#| msgid "Copyright © %Id–%Id The Calendar authors"
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Autortiesības © %d–%d Kalendāra autori"
 
@@ -446,24 +513,52 @@ msgstr "Autortiesības © %d–%d Kalendāra autori"
 msgid "translator-credits"
 msgstr "Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>"
 
-#: ../src/gcal-date-selector.c:362
-msgid "Day"
-msgstr "Diena"
-
-#: ../src/gcal-edit-dialog.c:429
+#: ../src/gcal-edit-dialog.c:509
 msgid "Save"
 msgstr "Saglabāt"
 
-#: ../src/gcal-edit-dialog.c:621 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:777
+#, c-format
+msgid "%d minute before"
+msgid_plural "%d minutes before"
+msgstr[0] "%d minūti pirms"
+msgstr[1] "%d minūtes pirms"
+msgstr[2] "%d minūšu pirms"
+
+#: ../src/gcal-edit-dialog.c:785
+#, c-format
+msgid "%d hour before"
+msgid_plural "%d hours before"
+msgstr[0] "%d stundu pirms"
+msgstr[1] "%d stundas pirms"
+msgstr[2] "%d stundu pirms"
+
+#: ../src/gcal-edit-dialog.c:793
+#, c-format
+msgid "%d day before"
+msgid_plural "%d days before"
+msgstr[0] "%d dienu pirms"
+msgstr[1] "%d dienas pirms"
+msgstr[2] "%d dienu pirms"
+
+#: ../src/gcal-edit-dialog.c:801
+#, c-format
+msgid "%d week before"
+msgid_plural "%d weeks before"
+msgstr[0] "%d nedēļu pirms"
+msgstr[1] "%d nedēļas pirms"
+msgstr[2] "%d nedēļu pirms"
+
+#: ../src/gcal-edit-dialog.c:1051 ../src/gcal-quick-add-popover.c:424
 msgid "Unnamed event"
 msgstr "Nenosaukts notikums"
 
-#: ../src/gcal-month-view.c:1065
+#: ../src/gcal-month-view.c:1248
 msgid "Other events"
 msgstr "Citi notikumi"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1494
+#: ../src/gcal-month-view.c:1710
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -471,59 +566,63 @@ msgstr[0] "Cits %d notikums"
 msgstr[1] "Citi %d notikumi"
 msgstr[2] "Citi %d notikumi"
 
-#: ../src/gcal-quick-add-popover.c:113
+#: ../src/gcal-quick-add-popover.c:115
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (šis kalendārs ir tikai lasāms)"
 
-#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+#: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%d. %B"
 
-#: ../src/gcal-quick-add-popover.c:243
+#: ../src/gcal-quick-add-popover.c:245
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Jauns notikums no %s līdz %s"
 
-#: ../src/gcal-quick-add-popover.c:249
+#: ../src/gcal-quick-add-popover.c:251
 #, c-format
 msgid "New Event on %s"
 msgstr "Jauns notikums  %s"
+
+#: ../src/gcal-search-view.c:353
+msgid "All day"
+msgstr "Visu dienu"
 
 #: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
 msgstr "Izmantojiet augšējo ieraktu, lai meklētu notikumus."
 
 #. Dialog
-#: ../src/gcal-source-dialog.c:1110
+#: ../src/gcal-source-dialog.c:1111
 msgid "Select a calendar file"
 msgstr "Izvēlieties kalendāra datni"
 
-#: ../src/gcal-source-dialog.c:1114
+#: ../src/gcal-source-dialog.c:1115
 msgid "Open"
 msgstr "Atvērt"
 
-#: ../src/gcal-source-dialog.c:1121
+#: ../src/gcal-source-dialog.c:1122
 msgid "Calendar files"
 msgstr "Kalendāra datnes"
 
 #. update the source properties
-#: ../src/gcal-source-dialog.c:1160
+#: ../src/gcal-source-dialog.c:1164
 msgid "Unnamed Calendar"
 msgstr "Nenosaukts kalendārs"
 
 #. Update notification label
-#: ../src/gcal-source-dialog.c:1758
+#: ../src/gcal-source-dialog.c:1764
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalendārs <b>%s</b> ir izņemts"
 
-#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
 msgid "Off"
 msgstr "Izslēgts"
 
-#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
 msgid "On"
 msgstr "ieslēgts"
 
@@ -549,11 +648,19 @@ msgstr "Pusdiena"
 msgid "00:00 PM"
 msgstr "00.00 PM"
 
-#: ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1120
 msgid "Another event deleted"
 msgstr "Cits notikums ir izdzēsts"
 
-#: ../src/gcal-window.c:1065
+#: ../src/gcal-window.c:1124
 msgid "Event deleted"
 msgstr "Notikums ir izdzēsts"
 
+#~ msgid "Starts"
+#~ msgstr "Sākas"
+
+#~ msgid "Ends"
+#~ msgstr "Beidzas"
+
+#~ msgid "Day"
+#~ msgstr "Diena"
