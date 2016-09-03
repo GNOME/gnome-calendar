@@ -7,17 +7,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=general\n"
-"POT-Creation-Date: 2016-03-15 22:58+0000\n"
-"PO-Revision-Date: 2016-03-16 11:30+0900\n"
-"Last-Translator: Seong-ho Cho <shcho@gnome.org>\n"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-08-09 14:56+0000\n"
+"PO-Revision-Date: 2016-09-02 02:26+0900\n"
+"Last-Translator: Seong-ho Cho <darkcircle.0426@gmail.com>\n"
 "Language-Team: GNOME Korea <gnome-kr@googlegroups.com>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Poedit 1.8.7\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
@@ -38,8 +38,8 @@ msgid ""
 "desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "그놈 달력은 그놈 데스크톱에 완벽하게 맞춰 설계한 단순하고 아름다운 달력 프로"
-"그램입니다. 그놈 달력은 그놈 데스크톱에 내장한 구성 요소를 재사용하여 그놈 환"
-"경에 멋지게 어우러집니다."
+"그램입니다. 그놈 달력은 그놈 데스크톱에 내장한 구성 요소를 재사용하여 그놈 "
+"환경에 멋지게 어우러집니다."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
@@ -108,42 +108,94 @@ msgstr "비활성화 원본 검색"
 msgid "Sources disabled last time Calendar ran"
 msgstr "최근 달력을 실행한 후 사용하지 않기로 설정한 원본입니다"
 
+#: ../data/ui/alarm-row.ui.h:1
+msgid "Toggles the sound of the alarm"
+msgstr "알림 소리를 바꿉니다"
+
+#: ../data/ui/alarm-row.ui.h:2
+msgid "Remove the alarm"
+msgstr "알림 제거"
+
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1113
+#: ../src/gcal-source-dialog.c:1114
 msgid "Cancel"
 msgstr "취소"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:429
+#: ../data/ui/edit-dialog.ui.h:2
+msgid "Click to select the event's agenda"
+msgstr "눌러서 행사 내용을 선택하십시오."
+
+#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:509
 msgid "Done"
 msgstr "완료"
 
-#: ../data/ui/edit-dialog.ui.h:3
+#: ../data/ui/edit-dialog.ui.h:4
 msgid "Title"
 msgstr "제목"
 
-#: ../data/ui/edit-dialog.ui.h:4
-msgid "Starts"
-msgstr "시작"
-
 #: ../data/ui/edit-dialog.ui.h:5
-msgid "Ends"
-msgstr "끝"
+msgid "Date"
+msgstr "날짜"
 
 #: ../data/ui/edit-dialog.ui.h:6
+msgid "Reminders"
+msgstr "알림"
+
+#: ../data/ui/edit-dialog.ui.h:7
 msgid "Notes"
 msgstr "참고"
 
-#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
+#: ../data/ui/edit-dialog.ui.h:8 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "위치"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:353
-msgid "All day"
+#: ../data/ui/edit-dialog.ui.h:9
+msgid "Time"
+msgstr "시간"
+
+#: ../data/ui/edit-dialog.ui.h:10
+msgid "All Day"
 msgstr "매일"
 
-#: ../data/ui/edit-dialog.ui.h:9
-msgid "Delete event"
+#: ../data/ui/edit-dialog.ui.h:11
+msgid "Add reminder…"
+msgstr "알림 추가…"
+
+#: ../data/ui/edit-dialog.ui.h:12
+msgid "Delete Event"
 msgstr "행사 삭제"
+
+#: ../data/ui/edit-dialog.ui.h:13
+msgid "5 minutes"
+msgstr "5분"
+
+#: ../data/ui/edit-dialog.ui.h:14
+msgid "10 minutes"
+msgstr "10분"
+
+#: ../data/ui/edit-dialog.ui.h:15
+msgid "30 minutes"
+msgstr "30분"
+
+#: ../data/ui/edit-dialog.ui.h:16
+msgid "1 hour"
+msgstr "1시간"
+
+#: ../data/ui/edit-dialog.ui.h:17
+msgid "1 day"
+msgstr "1일"
+
+#: ../data/ui/edit-dialog.ui.h:18
+msgid "2 days"
+msgstr "2일"
+
+#: ../data/ui/edit-dialog.ui.h:19
+msgid "3 days"
+msgstr "3일"
+
+#: ../data/ui/edit-dialog.ui.h:20
+msgid "1 week"
+msgstr "1주"
 
 #: ../data/ui/help-overlay.ui.h:1
 msgctxt "shortcut window"
@@ -229,30 +281,34 @@ msgid "_Search…"
 msgstr "검색(_S)…"
 
 #: ../data/ui/menus.ui.h:3
+msgid "_Calendars…"
+msgstr "달력(_C)…"
+
+#: ../data/ui/menus.ui.h:4
 msgid "_Keyboard Shortcuts"
 msgstr "키보드 바로 가기 키(_K)"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:5
 msgid "_About"
 msgstr "정보(_A)"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:6
 msgid "_Quit"
 msgstr "끝내기(_Q)"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:7
 msgid "_Synchronize"
 msgstr "동기화(_S)"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:8
 msgid "From Web…"
 msgstr "웹에서 가져오기…"
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:9
 msgid "New Local Calendar…"
 msgstr "새 로컬 달력…"
 
-#: ../data/ui/menus.ui.h:9
+#: ../data/ui/menus.ui.h:10
 msgid "From File…"
 msgstr "파일 가져오기…"
 
@@ -272,8 +328,8 @@ msgstr "결과가 없습니다"
 msgid "Try a different search"
 msgstr "다른 방법으로 검색 시도"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
-#: ../src/gcal-window.c:1065
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1120
+#: ../src/gcal-window.c:1124
 msgid "Undo"
 msgstr "실행 취소"
 
@@ -354,8 +410,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "달력 주소"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2191
-#: ../src/gcal-source-dialog.c:2197
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2197
+#: ../src/gcal-source-dialog.c:2203
 msgid "Add Calendar"
 msgstr "달력 추가"
 
@@ -387,16 +443,16 @@ msgstr "오전"
 msgid "PM"
 msgstr "오후"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:364
+#: ../data/ui/window.ui.h:1
 msgid "Month"
 msgstr "월"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:366
+#: ../data/ui/window.ui.h:2
 msgid "Year"
 msgstr "연"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:257 ../src/gcal-year-view.c:475
+#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
 msgid "Today"
 msgstr "오늘"
 
@@ -405,7 +461,7 @@ msgid "Manage your calendars"
 msgstr "달력을 관리합니다"
 
 #: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
-#: ../src/gcal-source-dialog.c:2220
+#: ../src/gcal-source-dialog.c:2226
 msgid "Calendar Settings"
 msgstr "달력 설정"
 
@@ -413,7 +469,7 @@ msgstr "달력 설정"
 msgid "No events"
 msgstr "행사 없음"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:862
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1010
 msgid "Add Event…"
 msgstr "행사 추가…"
 
@@ -447,82 +503,106 @@ msgstr "Copyright © %d–%d The Calendar authors"
 msgid "translator-credits"
 msgstr "조성호 <shcho@gnome.org>"
 
-#: ../src/gcal-date-selector.c:362
-msgid "Day"
-msgstr "일"
-
-#: ../src/gcal-edit-dialog.c:429
+#: ../src/gcal-edit-dialog.c:509
 msgid "Save"
 msgstr "저장"
 
-#: ../src/gcal-edit-dialog.c:627 ../src/gcal-quick-add-popover.c:422
+#: ../src/gcal-edit-dialog.c:777
+#, c-format
+msgid "%d minute before"
+msgid_plural "%d minutes before"
+msgstr[0] "%d분 전"
+
+#: ../src/gcal-edit-dialog.c:785
+#, c-format
+msgid "%d hour before"
+msgid_plural "%d hours before"
+msgstr[0] "%d시간 전"
+
+#: ../src/gcal-edit-dialog.c:793
+#, c-format
+msgid "%d day before"
+msgid_plural "%d days before"
+msgstr[0] "%d일 전"
+
+#: ../src/gcal-edit-dialog.c:801
+#, c-format
+msgid "%d week before"
+msgid_plural "%d weeks before"
+msgstr[0] "%d주 전"
+
+#: ../src/gcal-edit-dialog.c:1051 ../src/gcal-quick-add-popover.c:424
 msgid "Unnamed event"
 msgstr "이름 없는 행사"
 
-#: ../src/gcal-month-view.c:1093
+#: ../src/gcal-month-view.c:1248
 msgid "Other events"
 msgstr "다른 행사"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1526
+#: ../src/gcal-month-view.c:1710
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "다른 행사 %d개"
 
-#: ../src/gcal-quick-add-popover.c:113
+#: ../src/gcal-quick-add-popover.c:115
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s(읽기 전용 달력)"
 
-#: ../src/gcal-quick-add-popover.c:223 ../src/gcal-quick-add-popover.c:241
+#: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%B %d일"
 
-#: ../src/gcal-quick-add-popover.c:243
+#: ../src/gcal-quick-add-popover.c:245
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "%s부터 %s까지의 새 행사"
 
-#: ../src/gcal-quick-add-popover.c:249
+#: ../src/gcal-quick-add-popover.c:251
 #, c-format
 msgid "New Event on %s"
 msgstr "%s의 새 행사"
+
+#: ../src/gcal-search-view.c:353
+msgid "All day"
+msgstr "매일"
 
 #: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
 msgstr "행사를 검색하려면 상단의 항목을 사용하십시오."
 
 #. Dialog
-#: ../src/gcal-source-dialog.c:1110
+#: ../src/gcal-source-dialog.c:1111
 msgid "Select a calendar file"
 msgstr "달력 파일을 선택하십시오"
 
-#: ../src/gcal-source-dialog.c:1114
+#: ../src/gcal-source-dialog.c:1115
 msgid "Open"
 msgstr "열기"
 
-#: ../src/gcal-source-dialog.c:1121
+#: ../src/gcal-source-dialog.c:1122
 msgid "Calendar files"
 msgstr "달력 파일"
 
 #. update the source properties
-#: ../src/gcal-source-dialog.c:1160
+#: ../src/gcal-source-dialog.c:1164
 msgid "Unnamed Calendar"
 msgstr "이름 없는 달력"
 
 #. Update notification label
-#: ../src/gcal-source-dialog.c:1758
+#: ../src/gcal-source-dialog.c:1764
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "<b>%s</b> 달력을 제거했습니다"
 
-#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
 msgid "Off"
 msgstr "끔"
 
-#: ../src/gcal-source-dialog.c:1961 ../src/gcal-source-dialog.c:2015
+#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
 msgid "On"
 msgstr "켬"
 
@@ -548,13 +628,22 @@ msgstr "정오"
 msgid "00:00 PM"
 msgstr "오후 00:00"
 
-#: ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1120
 msgid "Another event deleted"
 msgstr "삭제한 다른 행사"
 
-#: ../src/gcal-window.c:1065
+#: ../src/gcal-window.c:1124
 msgid "Event deleted"
 msgstr "삭제한 행사"
+
+#~ msgid "Starts"
+#~ msgstr "시작"
+
+#~ msgid "Ends"
+#~ msgstr "끝"
+
+#~ msgid "Day"
+#~ msgstr "일"
 
 #~ msgid "Create"
 #~ msgstr "만들기"
@@ -594,21 +683,6 @@ msgstr "삭제한 행사"
 
 #~ msgid "Email"
 #~ msgstr "전자메일"
-
-#~ msgid "days"
-#~ msgstr "일"
-
-#~ msgid "weeks"
-#~ msgstr "주"
-
-#~ msgid "hours"
-#~ msgstr "시간"
-
-#~ msgid "minutes"
-#~ msgstr "분"
-
-#~ msgid "before"
-#~ msgstr "전"
 
 #~ msgid "WWW 99 - WWW 99"
 #~ msgstr "WWW 99 - WWW 99"
