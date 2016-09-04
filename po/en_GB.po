@@ -122,7 +122,7 @@ msgstr "Cancel"
 
 #: ../data/ui/edit-dialog.ui.h:2
 msgid "Click to select the event's agenda"
-msgstr "Click to select the event's agenda"
+msgstr "Click to select the agenda of the event"
 
 #: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:565
 msgid "Done"
@@ -561,7 +561,7 @@ msgstr "%s (this calendar is read-only)"
 #: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
 msgctxt "event date format"
 msgid "%B %d"
-msgstr "%B %d"
+msgstr "%d %B"
 
 #: ../src/gcal-quick-add-popover.c:245
 #, c-format
