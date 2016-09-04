@@ -1,15 +1,16 @@
 # English (British) translation.
 # Copyright (C) 2015 THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
+# This file is distributed under the same license as the gnome-calendar package.
 # Abigail Brady <morwen@evilmagic.org>, Bastien Nocera <hadess@hadess.net>, 2015.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-10-20 12:32+0200\n"
-"PO-Revision-Date: 2015-10-20 13:30+0000\n"
-"Last-Translator: Abigail Brady <morwen@evilmagic.org>\n"
+"Project-Id-Version: gnome-calendar 3.21.91\n"
+"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2016-09-01 19:15+0000\n"
+"PO-Revision-Date: 2016-09-04 11:57+0200\n"
+"Last-Translator: David King <amigadave@amigadave.com>\n"
 "Language-Team: \n"
 "Language: en_GB\n"
 "MIME-Version: 1.0\n"
@@ -20,7 +21,8 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/window.ui.h:3 ../src/gcal-application.c:516
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
+#: ../src/gcal-application.c:483
 msgid "Calendar"
 msgstr "Calendar"
 
@@ -49,6 +51,7 @@ msgstr ""
 "Calendar, like you've been using it for ages!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Search for events"
 msgstr "Search for events"
 
@@ -104,42 +107,169 @@ msgstr "List of the disabled sources"
 msgid "Sources disabled last time Calendar ran"
 msgstr "Sources disabled last time Calendar ran"
 
+#: ../data/ui/alarm-row.ui.h:1
+msgid "Toggles the sound of the alarm"
+msgstr "Toggles the sound of the alarm"
+
+#: ../data/ui/alarm-row.ui.h:2
+msgid "Remove the alarm"
+msgstr "Remove the alarm"
+
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1131
+#: ../src/gcal-source-dialog.c:1116
 msgid "Cancel"
 msgstr "Cancel"
 
-#: ../data/ui/edit-dialog.ui.h:2 ../src/gcal-edit-dialog.c:657
+#: ../data/ui/edit-dialog.ui.h:2
+msgid "Click to select the event's agenda"
+msgstr "Click to select the event's agenda"
+
+#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:565
 msgid "Done"
 msgstr "Done"
 
-#: ../data/ui/edit-dialog.ui.h:3
+#: ../data/ui/edit-dialog.ui.h:4
 msgid "Title"
 msgstr "Title"
 
-#: ../data/ui/edit-dialog.ui.h:4
-msgid "Starts"
-msgstr "Starts"
-
 #: ../data/ui/edit-dialog.ui.h:5
-msgid "Ends"
-msgstr "Ends"
+msgid "Date"
+msgstr "Date"
 
 #: ../data/ui/edit-dialog.ui.h:6
+msgid "Reminders"
+msgstr "Reminders"
+
+#: ../data/ui/edit-dialog.ui.h:7
 msgid "Notes"
 msgstr "Notes"
 
-#: ../data/ui/edit-dialog.ui.h:7 ../data/ui/source-dialog.ui.h:17
+#: ../data/ui/edit-dialog.ui.h:8 ../data/ui/source-dialog.ui.h:17
 msgid "Location"
 msgstr "Location"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../src/gcal-search-view.c:407
-msgid "All day"
-msgstr "All day"
-
 #: ../data/ui/edit-dialog.ui.h:9
-msgid "Delete event"
-msgstr "Delete event"
+msgid "Time"
+msgstr "Time"
+
+#: ../data/ui/edit-dialog.ui.h:10
+msgid "All Day"
+msgstr "All Day"
+
+#: ../data/ui/edit-dialog.ui.h:11
+msgid "Add reminder…"
+msgstr "Add reminder…"
+
+#: ../data/ui/edit-dialog.ui.h:12
+msgid "Delete Event"
+msgstr "Delete Event"
+
+#: ../data/ui/edit-dialog.ui.h:13
+msgid "5 minutes"
+msgstr "5 minutes"
+
+#: ../data/ui/edit-dialog.ui.h:14
+msgid "10 minutes"
+msgstr "10 minutes"
+
+#: ../data/ui/edit-dialog.ui.h:15
+msgid "30 minutes"
+msgstr "30 minutes"
+
+#: ../data/ui/edit-dialog.ui.h:16
+msgid "1 hour"
+msgstr "1 hour"
+
+#: ../data/ui/edit-dialog.ui.h:17
+msgid "1 day"
+msgstr "1 day"
+
+#: ../data/ui/edit-dialog.ui.h:18
+msgid "2 days"
+msgstr "2 days"
+
+#: ../data/ui/edit-dialog.ui.h:19
+msgid "3 days"
+msgstr "3 days"
+
+#: ../data/ui/edit-dialog.ui.h:20
+msgid "1 week"
+msgstr "1 week"
+
+#: ../data/ui/help-overlay.ui.h:1
+msgctxt "shortcut window"
+msgid "General"
+msgstr "General"
+
+#: ../data/ui/help-overlay.ui.h:2
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "New event"
+
+#: ../data/ui/help-overlay.ui.h:3
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Close window"
+
+#: ../data/ui/help-overlay.ui.h:4
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Search"
+
+#: ../data/ui/help-overlay.ui.h:5
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Show help"
+
+#: ../data/ui/help-overlay.ui.h:6
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Shortcuts"
+
+#: ../data/ui/help-overlay.ui.h:7
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Navigation"
+
+#: ../data/ui/help-overlay.ui.h:8
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "Go back"
+
+#: ../data/ui/help-overlay.ui.h:9
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "Go forward"
+
+#: ../data/ui/help-overlay.ui.h:10
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "Show today"
+
+#: ../data/ui/help-overlay.ui.h:11
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "Next view"
+
+#: ../data/ui/help-overlay.ui.h:12
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "Previous view"
+
+#: ../data/ui/help-overlay.ui.h:13
+msgctxt "shortcut window"
+msgid "View"
+msgstr "View"
+
+#: ../data/ui/help-overlay.ui.h:14
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "Month view"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "Year view"
 
 #: ../data/ui/menus.ui.h:1
 msgid "Add Eve_nt…"
@@ -150,28 +280,44 @@ msgid "_Search…"
 msgstr "_Search…"
 
 #: ../data/ui/menus.ui.h:3
+msgid "_Calendars…"
+msgstr "_Calendars…"
+
+#: ../data/ui/menus.ui.h:4
+msgid "_Keyboard Shortcuts"
+msgstr "_Keyboard Shortcuts"
+
+#: ../data/ui/menus.ui.h:5
 msgid "_About"
 msgstr "_About"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:6
 msgid "_Quit"
 msgstr "_Quit"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:7
 msgid "_Synchronize"
 msgstr "_Synchronise"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:8
 msgid "From Web…"
 msgstr "From Web…"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:9
 msgid "New Local Calendar…"
 msgstr "New Local Calendar…"
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:10
 msgid "From File…"
 msgstr "From File…"
+
+#: ../data/ui/quick-add-popover.ui.h:1
+msgid "Edit Details…"
+msgstr "Edit Details…"
+
+#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
+msgid "Add"
+msgstr "Add"
 
 #: ../data/ui/search-view.ui.h:1
 msgid "No results found"
@@ -181,8 +327,8 @@ msgstr "No results found"
 msgid "Try a different search"
 msgstr "Try a different search"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1240
-#: ../src/gcal-window.c:1244
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1123
+#: ../src/gcal-window.c:1127
 msgid "Undo"
 msgstr "Undo"
 
@@ -213,10 +359,6 @@ msgstr "Microsoft Exchange"
 #: ../data/ui/source-dialog.ui.h:8
 msgid "Calendars"
 msgstr "Calendars"
-
-#: ../data/ui/source-dialog.ui.h:9
-msgid "Add"
-msgstr "Add"
 
 #: ../data/ui/source-dialog.ui.h:10
 msgid "Overview"
@@ -257,19 +399,19 @@ msgstr "Edit Calendar"
 #: ../data/ui/source-dialog.ui.h:20
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of you online accounts, you can add it through the <a href="
+"belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of you online accounts, you can add it through the <a href="
+"belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
 msgstr "Calendar Address"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2221
-#: ../src/gcal-source-dialog.c:2227
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2202
+#: ../src/gcal-source-dialog.c:2208
 msgid "Add Calendar"
 msgstr "Add Calendar"
 
@@ -301,71 +443,35 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: ../data/ui/window.ui.h:1 ../src/gcal-date-selector.c:317
+#: ../data/ui/window.ui.h:1
 msgid "Month"
 msgstr "Month"
 
-#: ../data/ui/window.ui.h:2 ../src/gcal-date-selector.c:319
+#: ../data/ui/window.ui.h:2
 msgid "Year"
 msgstr "Year"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:218 ../src/gcal-year-view.c:404
+#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
 msgid "Today"
 msgstr "Today"
 
-#: ../data/ui/window.ui.h:5 ../src/gcal-source-dialog.c:830
-#: ../src/gcal-source-dialog.c:2254
+#: ../data/ui/window.ui.h:5
+msgid "Manage your calendars"
+msgstr "Manage your calendars"
+
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:817
+#: ../src/gcal-source-dialog.c:2231
 msgid "Calendar Settings"
 msgstr "Calendar Settings"
-
-#: ../data/ui/window.ui.h:6
-msgid "Create"
-msgstr "Create"
-
-#: ../data/ui/window.ui.h:7
-msgid "Edit Details"
-msgstr "Edit Details"
 
 #: ../data/ui/year-view.ui.h:2
 msgid "No events"
 msgstr "No events"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:816
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1037
 msgid "Add Event…"
 msgstr "Add Event…"
-
-#. Dialog
-#: ../src/gcal-source-dialog.c:1128
-msgid "Select a calendar file"
-msgstr "Select a calendar file"
-
-#: ../src/gcal-source-dialog.c:1132
-msgid "Open"
-msgstr "Open"
-
-#: ../src/gcal-source-dialog.c:1139
-msgid "Calendar files"
-msgstr "Calendar files"
-
-#. update the source properties
-#: ../src/gcal-source-dialog.c:1178
-msgid "Unnamed Calendar"
-msgstr "Unnamed Calendar"
-
-#. Update notification label
-#: ../src/gcal-source-dialog.c:1781
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "Calendar <b>%s</b> removed"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "Off"
-msgstr "Off"
-
-#: ../src/gcal-source-dialog.c:1986 ../src/gcal-source-dialog.c:2042
-msgid "On"
-msgstr "On"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -379,66 +485,143 @@ msgstr "Open calendar on the passed date"
 msgid "Open calendar showing the passed event"
 msgstr "Open calendar showing the passed event"
 
-#: ../src/gcal-application.c:337
+#: ../src/gcal-application.c:324
 msgid "- Calendar management"
 msgstr "- Calendar management"
 
-#: ../src/gcal-application.c:504
-msgid "Copyright © %Id The Calendar authors"
-msgstr "Copyright © %Id The Calendar authors"
+#: ../src/gcal-application.c:471
+#, c-format
+msgid "Copyright © %d The Calendar authors"
+msgstr "Copyright © %d The Calendar authors"
 
-#: ../src/gcal-application.c:510
-msgid "Copyright © %Id–%Id The Calendar authors"
-msgstr "Copyright © %Id–%Id The Calendar authors"
+#: ../src/gcal-application.c:477
+#, c-format
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Copyright © %d–%d The Calendar authors"
 
-#: ../src/gcal-application.c:523
+#: ../src/gcal-application.c:490
 msgid "translator-credits"
-msgstr "translator-credits"
+msgstr ""
+"Bastien Nocera <hadess@hadess.net>\n"
+"David King <amigadave@amigadave.com>"
 
-#. This string represents day/month/year order for each of the different
-#. * languages. It could possibly be default value, %m/%d/%y placing the month
-#. * before, or any ordering according to the translator's environment.
-#: ../src/gcal-date-selector.c:239
-msgid "%m/%d/%y"
-msgstr "%m/%d/%y"
-
-#: ../src/gcal-date-selector.c:315
-msgid "Day"
-msgstr "Day"
-
-#: ../src/gcal-edit-dialog.c:657
+#: ../src/gcal-edit-dialog.c:565
 msgid "Save"
 msgstr "Save"
 
-#: ../src/gcal-edit-dialog.c:841
+#: ../src/gcal-edit-dialog.c:837
+#, c-format
+msgid "%d minute before"
+msgid_plural "%d minutes before"
+msgstr[0] "%d minute before"
+msgstr[1] "%d minutes before"
+
+#: ../src/gcal-edit-dialog.c:845
+#, c-format
+msgid "%d hour before"
+msgid_plural "%d hours before"
+msgstr[0] "%d hour before"
+msgstr[1] "%d hours before"
+
+#: ../src/gcal-edit-dialog.c:853
+#, c-format
+msgid "%d day before"
+msgid_plural "%d days before"
+msgstr[0] "%d day before"
+msgstr[1] "%d days before"
+
+#: ../src/gcal-edit-dialog.c:861
+#, c-format
+msgid "%d week before"
+msgid_plural "%d weeks before"
+msgstr[0] "%d week before"
+msgstr[1] "%d weeks before"
+
+#: ../src/gcal-edit-dialog.c:1080 ../src/gcal-quick-add-popover.c:424
 msgid "Unnamed event"
 msgstr "Unnamed event"
 
-#: ../src/gcal-month-view.c:1035
+#: ../src/gcal-month-view.c:1275
 msgid "Other events"
 msgstr "Other events"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1417
+#: ../src/gcal-month-view.c:1737
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Other event"
 msgstr[1] "Other %d events"
 
-#: ../src/gcal-search-view.c:558
+#: ../src/gcal-quick-add-popover.c:115
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (this calendar is read-only)"
+
+#: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
+msgctxt "event date format"
+msgid "%B %d"
+msgstr "%B %d"
+
+#: ../src/gcal-quick-add-popover.c:245
+#, c-format
+msgid "New Event from %s to %s"
+msgstr "New Event from %s to %s"
+
+#: ../src/gcal-quick-add-popover.c:251
+#, c-format
+msgid "New Event on %s"
+msgstr "New Event on %s"
+
+#: ../src/gcal-search-view.c:353
+msgid "All day"
+msgstr "All day"
+
+#: ../src/gcal-search-view.c:502
 msgid "Use the entry above to search for events."
 msgstr "Use the entry above to search for events."
 
-#: ../src/gcal-time-selector.c:96
-#, c-format
-msgid "%.2d:%.2d AM"
-msgstr "%.2d:%.2d AM"
+#. Dialog
+#: ../src/gcal-source-dialog.c:1113
+msgid "Select a calendar file"
+msgstr "Select a calendar file"
 
-#: ../src/gcal-time-selector.c:98
+#: ../src/gcal-source-dialog.c:1117
+msgid "Open"
+msgstr "Open"
+
+#: ../src/gcal-source-dialog.c:1124
+msgid "Calendar files"
+msgstr "Calendar files"
+
+#. update the source properties
+#: ../src/gcal-source-dialog.c:1166
+msgid "Unnamed Calendar"
+msgstr "Unnamed Calendar"
+
+#. Update notification label
+#: ../src/gcal-source-dialog.c:1766
 #, c-format
-msgid "%.2d:%.2d PM"
-msgstr "%.2d:%.2d PM"
+msgid "Calendar <b>%s</b> removed"
+msgstr "Calendar <b>%s</b> removed"
+
+#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
+msgid "Off"
+msgstr "Off"
+
+#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
+msgid "On"
+msgstr "On"
+
+#: ../src/gcal-time-selector.c:82
+#, c-format
+msgid "%s AM"
+msgstr "%s AM"
+
+#: ../src/gcal-time-selector.c:84
+#, c-format
+msgid "%s PM"
+msgstr "%s PM"
 
 #: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
 msgid "Midnight"
@@ -452,23 +635,31 @@ msgstr "Noon"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#. Translators:
-#. * this is the format string for representing a date consisting of a month name
-#. * and a date of month.
-#: ../src/gcal-window.c:746
-msgctxt "event date format"
-msgid "%B %d"
-msgstr "%B %d"
-
-#: ../src/gcal-window.c:747
-#, c-format
-msgid "New Event on %s"
-msgstr "New Event on %s"
-
-#: ../src/gcal-window.c:1240
+#: ../src/gcal-window.c:1123
 msgid "Another event deleted"
 msgstr "Another event deleted"
 
-#: ../src/gcal-window.c:1244
+#: ../src/gcal-window.c:1127
 msgid "Event deleted"
 msgstr "Event deleted"
+
+#~ msgid "Starts"
+#~ msgstr "Starts"
+
+#~ msgid "Ends"
+#~ msgstr "Ends"
+
+#~ msgid "Create"
+#~ msgstr "Create"
+
+#~ msgid "%m/%d/%y"
+#~ msgstr "%m/%d/%y"
+
+#~ msgid "Day"
+#~ msgstr "Day"
+
+#~ msgid "%.2d:%.2d AM"
+#~ msgstr "%.2d:%.2d AM"
+
+#~ msgid "%.2d:%.2d PM"
+#~ msgstr "%.2d:%.2d PM"
