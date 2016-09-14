@@ -102,9 +102,6 @@ icon_pressed_cb (GcalDateSelector     *self,
 
   gtk_entry_get_icon_area (GTK_ENTRY (self), position, &icon_bounds);
 
-  /* HACK: seems like the popover is 2.5 px misplaced */
-  icon_bounds.x += 3;
-
   gtk_popover_set_relative_to (GTK_POPOVER (self->date_selector_popover), GTK_WIDGET (self));
   gtk_popover_set_pointing_to (GTK_POPOVER (self->date_selector_popover), &icon_bounds);
 
