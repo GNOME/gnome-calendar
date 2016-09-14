@@ -620,9 +620,15 @@ gcal_event_widget_drag_begin (GtkWidget      *widget,
 {
   GcalEventWidget *self = GCAL_EVENT_WIDGET (widget);
 
-  /* Setup the drag n' drop icon */
   g_clear_object (&self->dnd_pixbuf);
 
+  if (self->read_only)
+    {
+      gtk_drag_cancel (context);
+      return;
+    }
+
+  /* Setup the drag n' drop icon */
   self->dnd_pixbuf = gdk_pixbuf_get_from_window (self->event_window,
                                                  0,
                                                  0,
@@ -727,6 +733,20 @@ gcal_event_widget_set_read_only (GcalEventWidget *event,
                                  gboolean         read_only)
 {
   g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
+
+  if (read_only)
+    {
+      GtkWidget *widget = GTK_WIDGET (event);
+
+      /* Setup the event widget as a drag source */
+      gtk_drag_source_set (widget,
+                           0,
+                           NULL,
+                           0,
+                           GDK_ACTION_COPY);
+
+      gtk_drag_source_add_text_targets (widget);
+    }
 
   event->read_only = read_only;
 }
