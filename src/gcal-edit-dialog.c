@@ -738,7 +738,7 @@ struct
 };
 
 static GtkWidget*
-get_row_fow_alarm_trigger_minutes (GcalEditDialog *self,
+get_row_for_alarm_trigger_minutes (GcalEditDialog *self,
                                    gint            minutes)
 {
   guint i;
@@ -769,7 +769,7 @@ remove_button_clicked (GtkButton *button,
   /*
    * Make the button sensitive again
    */
-  alarm_button = get_row_fow_alarm_trigger_minutes (self, trigger_minutes);
+  alarm_button = get_row_for_alarm_trigger_minutes (self, trigger_minutes);
 
   if (alarm_button)
     gtk_widget_set_sensitive (alarm_button, TRUE);
