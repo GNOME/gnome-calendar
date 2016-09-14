@@ -238,7 +238,6 @@
                   <object class="GcalTimeSelector" id="start_time_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                   </object>
                   <packing>
                     <property name="position">2</property>
@@ -272,7 +271,6 @@
                   <object class="GcalTimeSelector" id="end_time_selector">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                   </object>
                   <packing>
                     <property name="position">2</property>

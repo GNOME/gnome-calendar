@@ -631,6 +631,8 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       fill_sources_menu (dialog);
 
       /* Load new event data */
+      gcal_edit_dialog_set_writable (dialog, gcal_manager_is_client_writable (dialog->manager, source));
+
       /* summary */
       summary = gcal_event_get_summary (event);
 
@@ -667,9 +669,9 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->end_time_selector), date_end);
 
       /* all_day  */
+      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->all_day_check), all_day);
       gtk_widget_set_sensitive (dialog->start_time_selector, dialog->writable && !all_day);
       gtk_widget_set_sensitive (dialog->end_time_selector, dialog->writable && !all_day);
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->all_day_check), all_day);
 
       /* location */
       gtk_entry_set_text (GTK_ENTRY (dialog->location_entry), gcal_event_get_location (event));
@@ -678,8 +680,6 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
       gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text)),
                                 gcal_event_get_description (event),
                                 -1);
-
-      gcal_edit_dialog_set_writable (dialog, gcal_manager_is_client_writable (dialog->manager, source));
 
       g_clear_pointer (&date_start, g_date_time_unref);
       g_clear_pointer (&date_end, g_date_time_unref);
