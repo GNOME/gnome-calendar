@@ -32,10 +32,6 @@ calendar-view.current {
     background-color: alpha(@theme_selected_bg_color, 0.3);
 }
 
-calendar-view.current:drop(active) {
-    background-color: black;
-}
-
 calendar-view:selected {
     color: @theme_selected_bg_color;
     font-weight: bold;

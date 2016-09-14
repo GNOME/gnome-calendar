@@ -1776,11 +1776,19 @@ gcal_month_view_draw (GtkWidget *widget,
       if (priv->date->year == priv->current_date->year && priv->date->month == priv->current_date->month &&
           j == priv->current_date->day)
         {
-          PangoLayout *clayout;
           PangoFontDescription *cfont_desc;
+          PangoLayout *clayout;
 
           gtk_style_context_save (context);
           gtk_style_context_add_class (context, "current");
+
+          /*
+           * If the current day is not under a DnD, it's actually not possible
+           * to *not* show the DnD indicator using only CSS. So we have to fake
+           * the "I'm not under DnD" state.
+           */
+          if (j != priv->dnd_cell)
+            gtk_style_context_set_state (context, state & ~GTK_STATE_FLAG_DROP_ACTIVE);
 
           clayout = gtk_widget_create_pango_layout (widget, nr_day);
           gtk_style_context_get (context, state, "font", &cfont_desc, NULL);
