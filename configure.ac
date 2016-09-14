@@ -1,6 +1,6 @@
 dnl -*- mode: m4 -*-
 AC_PREREQ([2.69])
-AC_INIT([gnome-calendar],[3.21.91],[http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar],[gnome-calendar],[https://wiki.gnome.org/Apps/Calendar])
+AC_INIT([gnome-calendar],[3.21.92],[http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar],[gnome-calendar],[https://wiki.gnome.org/Apps/Calendar])
 
 AX_IS_RELEASE([minor-version])
 

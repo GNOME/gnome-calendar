@@ -1,3 +1,20 @@
+Major changes in 3.21.92:
+* Fix compiler warning (Dominique Leuenberger)
+* Fix various places to work with Gtk+ 3.21.6
+* Forbid dragging read-only events
+* Updates translations for:
+    * British English (David King)
+    * Dutch (Hannie Dumoleyn)
+    * French (Charles Monzat)
+    * Gaelic (Fran Dieguez)
+    * Korean (Seong-ho Cho)
+    * Latvian (Rūdolfs Mazurs)
+    * Lithuanian (Aurimas Černius)
+    * Persian (Arash Mousavi)
+    * Portuguese (Tiago Santos)
+    * Scottish Gaelic (GunChleoc)
+    * Swedish (Anders Jonsson)
+
 Major changes in 3.21.91:
 * Updated translations for:
     * Brazilian Portuguese (Enrico Nicoletto)
