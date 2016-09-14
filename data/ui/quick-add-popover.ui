@@ -12,7 +12,7 @@
         <property name="vexpand">True</property>
         <property name="border_width">12</property>
         <property name="hhomogeneous">False</property>
-        <property name="vhomogeneous">False</property>
+        <property name="vhomogeneous">True</property>
         <property name="transition_type">slide-left-right</property>
         <property name="interpolate_size">True</property>
         <child>
@@ -208,8 +208,6 @@
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
                 <property name="shadow_type">in</property>
-                <property name="propagate-natural-height">True</property>
-                <property name="max-content-height">200</property>
                 <child>
                   <object class="GtkViewport">
                     <property name="visible">True</property>
