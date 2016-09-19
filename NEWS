@@ -1,3 +1,11 @@
+Major changes in 3.22.0:
+* Updated translations for:
+    * Basque (Inaki Larranaga Murgoitio)
+    * Danish (Alan Mortensen)
+    * Greek (Tom Tryfonidis)
+    * Russian (Stas Solovey)
+    * Ukranian (Daniel Korostil)
+
 Major changes in 3.21.92:
 * Fix compiler warning (Dominique Leuenberger)
 * Fix various places to work with Gtk+ 3.21.6
