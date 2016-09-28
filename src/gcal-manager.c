@@ -96,6 +96,7 @@ typedef struct _MoveEventData MoveEventData;
 enum
 {
   PROP_0,
+  PROP_DEFAULT_CALENDAR,
   PROP_SETTINGS,
 };
 
@@ -697,13 +698,24 @@ source_get_last_credentials_required_arguments_cb (GObject      *source_object,
 static void
 gcal_manager_class_init (GcalManagerClass *klass)
 {
-  G_OBJECT_CLASS (klass)->constructed = gcal_manager_constructed;
-  G_OBJECT_CLASS (klass)->finalize = gcal_manager_finalize;
-  G_OBJECT_CLASS (klass)->set_property = gcal_manager_set_property;
-  G_OBJECT_CLASS (klass)->get_property = gcal_manager_get_property;
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+  object_class->finalize = gcal_manager_finalize;
+  object_class->constructed = gcal_manager_constructed;
+  object_class->set_property = gcal_manager_set_property;
+  object_class->get_property = gcal_manager_get_property;
 
   /* properties */
-  g_object_class_install_property (G_OBJECT_CLASS (klass), PROP_SETTINGS,
+  g_object_class_install_property (object_class,
+                                   PROP_DEFAULT_CALENDAR,
+                                   g_param_spec_object ("default-calendar",
+                                                        "Default calendar",
+                                                        "The default calendar",
+                                                        E_TYPE_SOURCE,
+                                                        G_PARAM_READWRITE));
+
+  g_object_class_install_property (object_class,
+                                   PROP_SETTINGS,
                                    g_param_spec_object ("settings",
                                                         "Application settings",
                                                         "The settings of the application passed down from GcalApplication",
@@ -808,6 +820,12 @@ gcal_manager_constructed (GObject *object)
       g_error_free (error);
       return;
     }
+
+  g_object_bind_property (manager->source_registry,
+                          "default-calendar",
+                          manager,
+                          "default-calendar",
+                          G_BINDING_DEFAULT);
 
   manager->credentials_prompter = e_credentials_prompter_new (manager->source_registry);
 
@@ -915,6 +933,22 @@ gcal_manager_set_property (GObject      *object,
 
   switch (property_id)
     {
+    case PROP_DEFAULT_CALENDAR:
+        {
+          ESource *source;
+
+          source = e_source_registry_ref_default_calendar (self->source_registry);
+          g_object_unref (source);
+
+          /* Only notify a change when they're different, otherwise we'll end up in a notify loop */
+          if (g_value_get_object (value) == source)
+            break;
+
+          e_source_registry_set_default_calendar (self->source_registry, g_value_get_object (value));
+          g_object_notify (object, "default-calendar");
+        }
+      break;
+
     case PROP_SETTINGS:
       if (g_set_object (&self->settings, g_value_get_object (value)))
         g_object_notify (object, "settings");
@@ -935,6 +969,10 @@ gcal_manager_get_property (GObject    *object,
 
   switch (property_id)
     {
+    case PROP_DEFAULT_CALENDAR:
+      g_value_take_object (value, e_source_registry_ref_default_calendar (self->source_registry));
+      break;
+
     case PROP_SETTINGS:
       g_value_set_object (value, self->settings);
       return;
