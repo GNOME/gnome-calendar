@@ -4,6 +4,7 @@
   <template class="GcalQuickAddPopover" parent="GtkPopover">
     <property name="width_request">350</property>
     <property name="can_focus">False</property>
+    <signal name="show" handler="gtk_widget_grab_focus" object="summary_entry" swapped="yes" />
     <child>
       <object class="GtkStack" id="stack">
         <property name="visible">True</property>
