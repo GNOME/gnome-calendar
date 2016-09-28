@@ -292,7 +292,6 @@
                           <object class="GcalTimeSelector" id="start_time_selector">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="hexpand">True</property>
                             <signal name="notify::time" handler="sync_datetimes" object="GcalEditDialog" swapped="yes" />
                           </object>
                         </child>
@@ -307,7 +306,6 @@
                           <object class="GcalTimeSelector" id="end_time_selector">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="hexpand">True</property>
                             <signal name="notify::time" handler="sync_datetimes" object="GcalEditDialog" swapped="yes" />
                           </object>
                         </child>
