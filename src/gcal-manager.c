@@ -101,7 +101,6 @@ enum
 
 enum
 {
-  SOURCE_ACTIVATED,
   SOURCE_ADDED,
   SOURCE_CHANGED,
   SOURCE_REMOVED,
@@ -415,7 +414,7 @@ on_client_readonly_changed (EClient    *client,
 
   unit = g_hash_table_lookup (manager->clients, source);
   if (unit && unit->enabled)
-    g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ACTIVATED], 0, source, !e_client_is_readonly (client));
+    source_changed (manager, source);
 }
 
 
@@ -712,11 +711,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                                         G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
 
   /* signals */
-  signals[SOURCE_ACTIVATED] = g_signal_new ("source-activated", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
-                                           0,
-                                           NULL, NULL, NULL,
-                                           G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_BOOLEAN);
-
   signals[SOURCE_ADDED] = g_signal_new ("source-added", GCAL_TYPE_MANAGER, G_SIGNAL_RUN_LAST,
                                         0,
                                         NULL, NULL, NULL,
