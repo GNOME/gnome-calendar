@@ -515,8 +515,6 @@ rebuild_popover_for_day (GcalMonthView *view,
   PangoFontDescription *ofont_desc;
   gint font_height, padding_bottom;
 
-  GTimeZone *tz;
-
   priv = gcal_month_view_get_instance_private (view);
   ppriv = GCAL_SUBSCRIBER_VIEW (view)->priv;
 
@@ -528,26 +526,34 @@ rebuild_popover_for_day (GcalMonthView *view,
   gtk_container_foreach (GTK_CONTAINER (priv->events_list_box), (GtkCallback) gtk_widget_destroy, NULL);
 
   l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (priv->pressed_overflow_indicator));
-  tz = g_time_zone_new_local ();
 
   /* Setup the start & end dates of the events as the begin & end of day */
-  if (l != NULL)
+  if (l)
     {
-      GDateTime *current_date;
-      GDateTime *dt_start;
-      GDateTime *dt_end;
-      current_date = icaltime_to_datetime (priv->date);
-      dt_start = g_date_time_new (tz,
-                                  g_date_time_get_year (current_date),
-                                  g_date_time_get_month (current_date),
-                                  day,
-                                  0, 0, 0);
-
-      dt_end = g_date_time_add_days (dt_start, 1);
-
       for (; l != NULL; l = g_list_next (l))
         {
           GtkWidget *cloned_event;
+          GDateTime *current_date;
+          GDateTime *dt_start;
+          GDateTime *dt_end;
+          GcalEvent *event;
+          GTimeZone *tz;
+
+          event = gcal_event_widget_get_event (l->data);
+
+          if (gcal_event_get_all_day (event))
+            tz = g_time_zone_new_utc ();
+          else
+            tz = g_time_zone_new_local ();
+
+          current_date = icaltime_to_datetime (priv->date);
+          dt_start = g_date_time_new (tz,
+                                      g_date_time_get_year (current_date),
+                                      g_date_time_get_month (current_date),
+                                      day,
+                                      0, 0, 0);
+
+          dt_end = g_date_time_add_days (dt_start, 1);
 
           cloned_event = gcal_event_widget_clone (l->data);
           gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (cloned_event), dt_start);
@@ -555,14 +561,13 @@ rebuild_popover_for_day (GcalMonthView *view,
 
           gtk_container_add (GTK_CONTAINER (priv->events_list_box), cloned_event);
           _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (view), cloned_event);
+
+          g_clear_pointer (&current_date, g_date_time_unref);
+          g_clear_pointer (&dt_start, g_date_time_unref);
+          g_clear_pointer (&dt_end, g_date_time_unref);
+          g_clear_pointer (&tz, g_time_zone_unref);
         }
-
-      g_clear_pointer (&current_date, g_date_time_unref);
-      g_clear_pointer (&dt_start, g_date_time_unref);
-      g_clear_pointer (&dt_end, g_date_time_unref);
     }
-
-  g_clear_pointer (&tz, g_time_zone_unref);
 
   /* placement calculation */
   start_grid_y = get_start_grid_y (GTK_WIDGET (view));
