@@ -838,9 +838,14 @@ gcal_month_view_drag_motion (GtkWidget      *widget,
 
   /* Setup the drag highlight */
   if (priv->dnd_cell != -1)
-    gtk_drag_highlight (widget);
+    {
+      gtk_drag_highlight (widget);
+      gtk_widget_hide (priv->overflow_popover);
+    }
   else
-    gtk_drag_unhighlight (widget);
+    {
+      gtk_drag_unhighlight (widget);
+    }
 
   /*
    * Sets the status of the drag - if it fails, sets the action to 0 and
@@ -950,6 +955,14 @@ gcal_month_view_drag_leave (GtkWidget      *widget,
   gtk_widget_queue_draw (widget);
 }
 
+static gboolean
+cancel_dnd_from_overflow_popover (GtkWidget *popover)
+{
+  gtk_widget_hide (popover);
+
+  return FALSE;
+}
+
 static void
 add_new_event_button_cb (GtkWidget *button,
                          gpointer   user_data)
@@ -1028,6 +1041,10 @@ gcal_month_view_init (GcalMonthView *self)
   priv->overflow_popover = gtk_popover_new (GTK_WIDGET (self));
   gtk_style_context_add_class (gtk_widget_get_style_context (priv->overflow_popover), "events");
   g_signal_connect (priv->overflow_popover, "hide", G_CALLBACK (overflow_popover_hide), self);
+  g_signal_connect_swapped (priv->overflow_popover,
+                            "drag-motion",
+                            G_CALLBACK (cancel_dnd_from_overflow_popover),
+                            priv->overflow_popover);
 
   grid = gtk_grid_new ();
   g_object_set (grid, "row-spacing", 6, "orientation", GTK_ORIENTATION_VERTICAL, NULL);
@@ -1049,6 +1066,17 @@ gcal_month_view_init (GcalMonthView *self)
 
   /* Setup the month view as a drag n' drop destination */
   gtk_drag_dest_set (GTK_WIDGET (self),
+                     0,
+                     NULL,
+                     0,
+                     GDK_ACTION_MOVE);
+
+  /*
+   * Also set the overflow popover as a drop destination, so we can hide
+   * it when the user starts dragging an event that is inside the overflow
+   * list.
+   */
+  gtk_drag_dest_set (GTK_WIDGET (priv->overflow_popover),
                      0,
                      NULL,
                      0,
