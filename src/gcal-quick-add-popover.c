@@ -448,7 +448,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
       date_end = g_date_time_new (tz,
                                   g_date_time_get_year (self->date_end),
                                   g_date_time_get_month (self->date_end),
-                                  g_date_time_get_day_of_month (self->date_end)+ (all_day ? 1 : 0),
+                                  g_date_time_get_day_of_month (self->date_end) + (single_day && all_day ? 1 : 0),
                                   all_day ? 0 : g_date_time_get_hour (now) + (is_today ? 1 : 0),
                                   all_day ? 0 : g_date_time_get_minute (now),
                                   all_day ? 0 : g_date_time_get_second (now));
