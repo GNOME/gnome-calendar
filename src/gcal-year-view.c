@@ -1342,6 +1342,9 @@ navigator_drag_drop_cb (GcalYearView   *self,
 
   if (calculate_day_month_for_coord (self, x, y, &day, &month, &is_title))
     {
+      if (!GCAL_IS_EVENT_WIDGET (gtk_drag_get_source_widget (context)))
+        return FALSE;
+
       if (!is_title)
         {
           GcalEventWidget *event_widget;

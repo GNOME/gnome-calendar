@@ -879,6 +879,10 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
 
   cell = get_dnd_cell (widget, x, y);
   event_widget = gtk_drag_get_source_widget (context);
+
+  if (!GCAL_IS_EVENT_WIDGET (event_widget))
+    return FALSE;
+
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
 
   /* Move the event's date */
