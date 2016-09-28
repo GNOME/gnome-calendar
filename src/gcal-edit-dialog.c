@@ -223,8 +223,7 @@ on_calendar_selected (GSimpleAction *action,
 
         self->selected_source = source;
 
-        gtk_header_bar_set_subtitle (GTK_HEADER_BAR (self->titlebar),
-                                     e_source_get_display_name (source));
+        gtk_label_set_label (GTK_LABEL (self->subtitle_label), e_source_get_display_name (source));
         break;
       }
     }
