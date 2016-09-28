@@ -1061,7 +1061,7 @@ create_event_detailed_cb (GcalView *view,
   GcalEvent *event;
 
   comp = build_component_from_details ("", start_span, end_span);
-  event = gcal_event_new (gcal_manager_get_default_source (window->manager), comp);
+  event = gcal_event_new (gcal_manager_get_default_source (window->manager), comp, NULL);
 
   gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
   gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);

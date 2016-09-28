@@ -274,10 +274,20 @@ gather_events (ECalDataModel         *data_model,
                time_t                 instance_end,
                gpointer               user_data)
 {
-  GList **result = user_data;
   GcalEvent *event;
+  GError *error;
+  GList **result;
 
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp);
+  error = NULL;
+  result = user_data;
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+
+  if (error)
+    {
+      g_warning ("Error: %s", error->message);
+      g_clear_error (&error);
+      return TRUE;
+    }
 
   *result = g_list_append (*result, event);/* FIXME: add me sorted */
 

@@ -574,18 +574,21 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
 
   RowEventData *row_data;
   GcalEvent *event;
+  GError *error;
   gchar *uid;
 
   view = GCAL_SEARCH_VIEW (subscriber);
-
-  e_cal_component_get_dtstart (comp, &dt);
-
-  /* Protect against NULL start date */
-  if (dt.value == NULL)
-    return;
+  error = NULL;
 
   /* event */
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp);
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+
+  if (error)
+    {
+      g_warning ("Error creating event: %s", error->message);
+      g_clear_error (&error);
+      return;
+    }
 
   /* insert row_data at the hash of events */
   row_data = g_new0 (RowEventData, 1);

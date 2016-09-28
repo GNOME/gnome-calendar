@@ -370,8 +370,18 @@ gcal_subscriber_view_component_added (ECalDataModelSubscriber *subscriber,
 {
   GtkWidget *event_widget;
   GcalEvent *event;
+  GError *error;
 
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp);
+  error = NULL;
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+
+  if (error)
+    {
+      g_message ("Error creating event: %s", error->message);
+      g_clear_error (&error);
+      return;
+    }
+
   event_widget = gcal_event_widget_new (event);
   gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event_widget), e_client_is_readonly (E_CLIENT (client)));
 
@@ -390,9 +400,19 @@ gcal_subscriber_view_component_modified (ECalDataModelSubscriber *subscriber,
   GList *l;
   GtkWidget *new_widget;
   GcalEvent *event;
+  GError *error;
 
+  error = NULL;
   priv = gcal_subscriber_view_get_instance_private (GCAL_SUBSCRIBER_VIEW (subscriber));
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp);
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+
+  if (error)
+    {
+      g_message ("Error creating event: %s", error->message);
+      g_clear_error (&error);
+      return;
+    }
+
   new_widget = gcal_event_widget_new (event);
 
   l = g_hash_table_lookup (priv->children, gcal_event_get_uid (event));

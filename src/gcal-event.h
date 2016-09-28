@@ -26,12 +26,22 @@
 
 G_BEGIN_DECLS
 
+typedef enum
+{
+  GCAL_EVENT_ERROR_INVALID_START_DATE
+} GcalEventError;
+
+#define GCAL_EVENT_ERROR gcal_event_error_quark ()
+
 #define GCAL_TYPE_EVENT (gcal_event_get_type())
 
 G_DECLARE_FINAL_TYPE (GcalEvent, gcal_event, GCAL, EVENT, GObject)
 
+GQuark               gcal_event_error_quark                      (void);
+
 GcalEvent*           gcal_event_new                              (ESource            *source,
-                                                                  ECalComponent      *component);
+                                                                  ECalComponent      *component,
+                                                                  GError            **error);
 
 gboolean             gcal_event_get_all_day                      (GcalEvent          *self);
 

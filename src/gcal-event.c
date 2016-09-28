@@ -48,9 +48,16 @@ struct _GcalEvent
 
   ECalComponent      *component;
   ESource            *source;
+
+  gboolean            is_valid : 1;
+  gboolean            is_initialized : 1;
+  GError             *initialization_error;
 };
 
-G_DEFINE_TYPE (GcalEvent, gcal_event, G_TYPE_OBJECT)
+static void          gcal_event_initable_iface_init              (GInitableIface *iface);
+
+G_DEFINE_TYPE_WITH_CODE (GcalEvent, gcal_event, G_TYPE_OBJECT,
+                         G_IMPLEMENT_INTERFACE (G_TYPE_INITABLE, gcal_event_initable_iface_init))
 
 enum {
   PROP_0,
@@ -237,6 +244,23 @@ gcal_event_set_component_internal (GcalEvent     *self,
 
       /* Setup start date */
       e_cal_component_get_dtstart (component, &start);
+
+      /*
+       * A NULL start date is invalid. We set something bogus to procceed, and make
+       * it set a GError and return NULL.
+       */
+      if (!start.value)
+        {
+          self->is_valid = FALSE;
+          g_set_error (&self->initialization_error,
+                       GCAL_EVENT_ERROR,
+                       GCAL_EVENT_ERROR_INVALID_START_DATE,
+                       "Event '%s' has an invalid start date", gcal_event_get_uid (self));
+
+          start.value = g_new0 (icaltimetype, 1);
+          *start.value = icaltime_today ();
+        }
+
       date = icaltime_normalize (*start.value);
       zone_start = get_timezone_from_ical (&start);
       date_start = g_date_time_new (zone_start,
@@ -298,6 +322,44 @@ gcal_event_set_component_internal (GcalEvent     *self,
 
       e_cal_component_free_datetime (&start);
     }
+}
+
+/*
+ * GInitable iface implementation
+ */
+
+G_LOCK_DEFINE_STATIC (init_lock);
+
+static gboolean
+gcal_event_initable_init (GInitable     *initable,
+                          GCancellable  *cancellable,
+                          GError       **error)
+{
+  GcalEvent *self;
+
+  self = GCAL_EVENT (initable);
+
+  G_LOCK (init_lock);
+
+  if (self->is_initialized)
+    goto out;
+
+
+out:
+  self->is_initialized = TRUE;
+
+  if (!self->is_valid)
+    g_propagate_error (error, g_error_copy (self->initialization_error));
+
+  G_UNLOCK (init_lock);
+
+  return self->is_valid;
+}
+
+static void
+gcal_event_initable_iface_init (GInitableIface *iface)
+{
+  iface->init = gcal_event_initable_init;
 }
 
 static void
@@ -593,27 +655,44 @@ gcal_event_init (GcalEvent *self)
 
   /* Alarms */
   self->alarms = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, g_free);
+
+  self->is_valid = TRUE;
+}
+
+/**
+ * gcal_event_error_quark:
+ *
+ * Error quark for event creating.
+ */
+GQuark
+gcal_event_error_quark (void)
+{
+  return g_quark_from_static_string ("Invalid start date");
 }
 
 /**
  * gcal_event_new:
  * @source: (nullable): an #ESource
  * @component: a #ECalComponent
+ * @error: (nullable): return location for a #GError
  *
  * Creates a new event which belongs to @source and
  * is represented by @component. New events will have
  * a %NULL @source.
  *
- * Returns: (transfer full): a #GcalEvent
+ * Returns: (transfer full)(nullable): a #GcalEvent
  */
 GcalEvent*
-gcal_event_new (ESource       *source,
-                ECalComponent *component)
+gcal_event_new (ESource        *source,
+                ECalComponent  *component,
+                GError        **error)
 {
-  return g_object_new (GCAL_TYPE_EVENT,
-                       "source", source,
-                       "component", component,
-                       NULL);
+  return g_initable_new (GCAL_TYPE_EVENT,
+                         NULL,
+                         error,
+                         "source", source,
+                         "component", component,
+                         NULL);
 }
 
 /**

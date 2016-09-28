@@ -1619,6 +1619,7 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
   GcalYearView *year_view = GCAL_YEAR_VIEW (subscriber);
 
   GcalEvent *event;
+  GError *error;
   GList **days_widgets_array;
   GList *l;
   gint i, days_span;
@@ -1627,11 +1628,19 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
   time_t event_start, event_end, range_start, range_end;
   icaltimezone *zone;
 
+  error = NULL;
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+
+  if (error)
+    {
+      g_warning ("Error creating event: %s", error->message);
+      g_clear_error (&error);
+      return;
+    }
+
   update_selected_dates_from_button_data (year_view);
   days_span = icaltime_day_of_year(*(year_view->end_selected_date)) - icaltime_day_of_year(*(year_view->start_selected_date)) + 1;
   days_widgets_array = g_new0 (GList*, days_span);
-
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp);
 
   /* check if event belongs to range */
   zone = gcal_manager_get_system_timezone (year_view->manager);
