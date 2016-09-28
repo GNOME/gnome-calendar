@@ -461,7 +461,11 @@ on_event_created (GObject      *source_object,
       g_warning ("Error creating object: %s", error->message);
       g_error_free (error);
     }
-  g_debug ("Event: %s created successfully", new_uid);
+  else
+    {
+      gcal_manager_set_default_source (data->manager, gcal_event_get_source (data->event));
+      g_debug ("Event: %s created successfully", new_uid);
+    }
 
   g_free (new_uid);
   free_async_ops_data (data);
