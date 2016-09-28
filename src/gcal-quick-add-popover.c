@@ -270,6 +270,10 @@ on_source_added (GcalManager         *manager,
   ESource *default_source;
   GtkWidget *row;
 
+  /* Since we can't add on read-only calendars, lets not show them at all */
+  if (!gcal_manager_is_client_writable (manager, source))
+    return;
+
   default_source = gcal_manager_get_default_source (manager);
   row = create_row_for_source (manager, source, gcal_manager_is_client_writable (manager, source));
 
@@ -292,6 +296,23 @@ on_source_changed (GcalManager         *manager,
   GdkRGBA color;
 
   row = get_row_for_source (self, source);
+
+  /* If the calendar changed from/to read-only, we add or remove it here */
+  if (!gcal_manager_is_client_writable (self->manager, source))
+    {
+      gtk_container_remove (GTK_CONTAINER (self->calendars_listbox), row);
+      return;
+    }
+  else if (!row)
+    {
+      on_source_added (self->manager,
+                       source,
+                       gcal_manager_source_enabled (self->manager, source),
+                       self);
+
+      row = get_row_for_source (self, source);
+    }
+
   color_icon = g_object_get_data (G_OBJECT (row), "color-icon");
   name_label = g_object_get_data (G_OBJECT (row), "name-label");
 
@@ -326,6 +347,9 @@ on_source_removed (GcalManager         *manager,
   GtkWidget *row;
 
   row = get_row_for_source (self, source);
+
+  if (!row)
+    return;
 
   gtk_container_remove (GTK_CONTAINER (self->calendars_listbox), row);
 }
