@@ -420,18 +420,19 @@ edit_or_create_event (GcalQuickAddPopover *self,
   if (!self->selected_row)
     return;
 
+  now = g_date_time_new_now_local ();
   source = g_object_get_data (G_OBJECT (self->selected_row), "source");
 
   /*
-   * We only consider all day events when talking about multiday events.
-   * Everything else starts now and lasts 1 hour.
+   * We consider all day events multiday and/or non-today events.
+   * Events on today starts now and lasts 1 hour.
    */
-  all_day = datetime_compare_date (self->date_end, self->date_start) > 1;
+  all_day = datetime_compare_date (self->date_end, self->date_start) > 1 ||
+            datetime_compare_date (now, self->date_start) != 0;
 
   tz = all_day ? g_time_zone_new_utc () : g_time_zone_new_local ();
 
   /* Gather start date */
-  now = g_date_time_new_now_local ();
   date_start = g_date_time_new (tz,
                                 g_date_time_get_year (self->date_start),
                                 g_date_time_get_month (self->date_start),
