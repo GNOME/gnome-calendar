@@ -257,6 +257,21 @@ update_header (GcalQuickAddPopover *self)
   g_free (dtstart);
 }
 
+static void
+update_default_calendar_row (GcalQuickAddPopover *self)
+{
+  GtkWidget *row;
+  ESource *default_source;
+
+  default_source = gcal_manager_get_default_source (self->manager);
+
+  row = get_row_for_source (self, default_source);
+  select_row (self, GTK_LIST_BOX_ROW (row));
+
+  g_clear_object (&default_source);
+}
+
+
 /*
  * Callbacks
  */
@@ -557,22 +572,17 @@ static void
 gcal_quick_add_popover_closed (GtkPopover *popover)
 {
   GcalQuickAddPopover *self;
-  GtkWidget *default_row;
-  ESource *default_source;
 
   self = GCAL_QUICK_ADD_POPOVER (popover);
-  default_source = gcal_manager_get_default_source (self->manager);
 
   /* Clear text */
   gtk_entry_set_text (GTK_ENTRY (self->summary_entry), "");
 
   /* Select the default row again */
-  default_row = get_row_for_source (self, default_source);
-  select_row (self, GTK_LIST_BOX_ROW (default_row));
+  update_default_calendar_row (self);
 
   g_clear_pointer (&self->date_start, g_date_time_unref);
   g_clear_pointer (&self->date_end, g_date_time_unref);
-  g_clear_object (&default_source);
 }
 
 static void
@@ -703,6 +713,7 @@ gcal_quick_add_popover_set_manager (GcalQuickAddPopover *self,
       g_signal_connect (manager, "source-added", G_CALLBACK (on_source_added), self);
       g_signal_connect (manager, "source-changed", G_CALLBACK (on_source_changed), self);
       g_signal_connect (manager, "source-removed", G_CALLBACK (on_source_removed), self);
+      g_signal_connect_swapped (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self);
 
       g_object_notify (G_OBJECT (self), "manager");
     }
