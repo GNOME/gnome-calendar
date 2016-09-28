@@ -415,7 +415,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
   GcalEvent *event;
   ESource *source;
   const gchar *summary;
-  gboolean all_day;
+  gboolean all_day, single_day, is_today;
 
   if (!self->selected_row)
     return;
@@ -427,8 +427,9 @@ edit_or_create_event (GcalQuickAddPopover *self,
    * We consider all day events multiday and/or non-today events.
    * Events on today starts now and lasts 1 hour.
    */
-  all_day = datetime_compare_date (self->date_end, self->date_start) > 1 ||
-            datetime_compare_date (now, self->date_start) != 0;
+  single_day = datetime_compare_date (self->date_end, self->date_start) == 0;
+  is_today = single_day && datetime_compare_date (now, self->date_start) == 0;
+  all_day = datetime_compare_date (self->date_end, self->date_start) > 1 || !is_today;
 
   tz = all_day ? g_time_zone_new_utc () : g_time_zone_new_local ();
 
@@ -447,14 +448,14 @@ edit_or_create_event (GcalQuickAddPopover *self,
       date_end = g_date_time_new (tz,
                                   g_date_time_get_year (self->date_end),
                                   g_date_time_get_month (self->date_end),
-                                  g_date_time_get_day_of_month (self->date_end),
-                                  all_day ? 0 : g_date_time_get_hour (now) + 1,
+                                  g_date_time_get_day_of_month (self->date_end)+ (all_day ? 1 : 0),
+                                  all_day ? 0 : g_date_time_get_hour (now) + (is_today ? 1 : 0),
                                   all_day ? 0 : g_date_time_get_minute (now),
                                   all_day ? 0 : g_date_time_get_second (now));
     }
   else
     {
-      date_end = g_date_time_add_hours (date_start, 1);
+      date_end = all_day ? g_date_time_add_days (date_start, 1) : g_date_time_add_hours (date_start, 1);
     }
 
   /* Gather the summary */
