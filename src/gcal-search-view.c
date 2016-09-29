@@ -570,7 +570,6 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
                                   ECalComponent           *comp)
 {
   GcalSearchView *view;
-  ECalComponentDateTime dt;
 
   RowEventData *row_data;
   GcalEvent *event;
@@ -608,8 +607,6 @@ gcal_search_view_component_added (ECalDataModelSubscriber *subscriber,
   view->num_results++;
 
   update_view (GCAL_SEARCH_VIEW (subscriber));
-
-  e_cal_component_free_datetime (&dt);
 }
 
 static void
