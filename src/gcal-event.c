@@ -371,6 +371,7 @@ gcal_event_finalize (GObject *object)
   g_clear_pointer (&self->dt_end, g_date_time_unref);
   g_clear_pointer (&self->timezone, g_time_zone_unref);
   g_clear_pointer (&self->description, g_free);
+  g_clear_pointer (&self->alarms, g_hash_table_unref);
   g_clear_object (&self->component);
   g_clear_object (&self->source);
 
