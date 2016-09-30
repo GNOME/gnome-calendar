@@ -374,6 +374,7 @@ gcal_event_finalize (GObject *object)
   g_clear_pointer (&self->description, g_free);
   g_clear_pointer (&self->alarms, g_hash_table_unref);
   g_clear_pointer (&self->uid, g_free);
+  g_clear_pointer (&self->color, gdk_rgba_free);
   g_clear_object (&self->component);
   g_clear_object (&self->source);
 
