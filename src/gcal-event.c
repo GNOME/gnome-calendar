@@ -194,6 +194,7 @@ gcal_event_update_uid_internal (GcalEvent *self)
                                    id->uid);
     }
 
+  e_cal_component_free_id (id);
   g_object_notify (G_OBJECT (self), "uid");
 }
 
