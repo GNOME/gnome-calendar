@@ -467,6 +467,21 @@ calendar_drag_data_received (GtkWidget        *widget,
 }
 
 static void
+gcal_date_chooser_finalize (GObject *object)
+{
+  GcalDateChooser *self = GCAL_DATE_CHOOSER (object);
+
+  g_clear_pointer (&self->date, g_date_time_unref);
+  G_OBJECT_CLASS (gcal_date_chooser_parent_class)->finalize (object);
+}
+
+static void
+gcal_date_chooser_dispose (GObject *object)
+{
+  G_OBJECT_CLASS (gcal_date_chooser_parent_class)->dispose (object);
+}
+
+static void
 gcal_date_chooser_class_init (GcalDateChooserClass *class)
 {
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (class);
@@ -474,6 +489,8 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
 
   g_type_ensure (GCAL_TYPE_MULTI_CHOICE);
 
+  object_class->dispose = gcal_date_chooser_dispose;
+  object_class->finalize = gcal_date_chooser_finalize;
   object_class->set_property = calendar_set_property;
   object_class->get_property = calendar_get_property;
 
