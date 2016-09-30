@@ -207,12 +207,29 @@ gcal_time_selector_set_time_format (GcalTimeSelector *selector,
 }
 
 static void
+gcal_time_selector_finalize (GObject *object)
+{
+  GcalTimeSelector *self = GCAL_TIME_SELECTOR (object);
+
+  g_clear_pointer (&self->time, g_date_time_unref);
+  G_OBJECT_CLASS (gcal_time_selector_parent_class)->finalize (object);
+}
+
+static void
+gcal_time_selector_dispose (GObject *object)
+{
+  G_OBJECT_CLASS (gcal_time_selector_parent_class)->dispose (object);
+}
+
+static void
 gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
 {
   GObjectClass *object_class;
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_time_selector_constructed;
+  object_class->dispose = gcal_time_selector_dispose;
+  object_class->finalize = gcal_time_selector_finalize;
   object_class->get_property = gcal_time_selector_get_property;
   object_class->set_property = gcal_time_selector_set_property;
 
