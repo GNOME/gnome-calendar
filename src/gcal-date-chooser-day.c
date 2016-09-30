@@ -88,6 +88,7 @@ gcal_date_chooser_day_dispose (GObject *object)
   GcalDateChooserDay *self = GCAL_DATE_CHOOSER_DAY (object);
 
   g_clear_object (&self->multipress_gesture);
+  g_clear_pointer (&self->date, g_date_time_unref);
 
   G_OBJECT_CLASS (gcal_date_chooser_day_parent_class)->dispose (object);
 }
