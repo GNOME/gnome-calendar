@@ -443,7 +443,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
                                 g_date_time_get_day_of_month (self->date_start),
                                 all_day ? 0 : g_date_time_get_hour (now),
                                 all_day ? 0 : g_date_time_get_minute (now),
-                                all_day ? 0 : g_date_time_get_second (now));
+                                0);
 
   /* Gather date end */
   if (self->date_end)
@@ -454,7 +454,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
                                   g_date_time_get_day_of_month (self->date_end) + (single_day && all_day ? 1 : 0),
                                   all_day ? 0 : g_date_time_get_hour (now) + (is_today ? 1 : 0),
                                   all_day ? 0 : g_date_time_get_minute (now),
-                                  all_day ? 0 : g_date_time_get_second (now));
+                                  0);
     }
   else
     {
