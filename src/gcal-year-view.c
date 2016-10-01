@@ -55,6 +55,7 @@ struct _GcalYearView
   GtkWidget    *navigator_stack;
   GtkWidget    *no_events_title;
   GtkWidget    *navigator_sidebar;
+  GtkWidget    *scrolled_window;
 
   GtkWidget    *popover; /* Popover for popover_mode */
 
@@ -86,6 +87,9 @@ struct _GcalYearView
   /* first and last weeks of the year */
   guint         first_week_of_year;
   guint         last_week_of_year;
+
+  /* Storage for the accumulated scrolling */
+  gdouble         scroll_value;
 
     /**
    * clock format from GNOME desktop settings
@@ -1164,6 +1168,60 @@ navigator_motion_notify_cb (GcalYearView   *year_view,
 }
 
 static void
+navigator_edge_overshot_cb (GcalYearView    *self,
+                            GtkPositionType  position_type)
+{
+  GtkAdjustment *adjustment;
+
+  /* Ignore horizontal scrolling (and the year view never scrolls horizontally anyway) */
+  if (position_type == GTK_POS_LEFT || position_type == GTK_POS_RIGHT)
+    return;
+
+  adjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
+
+  self->date->year += position_type == GTK_POS_BOTTOM ? 1 : -1;
+  *self->date = icaltime_normalize (*self->date);
+
+  gtk_adjustment_set_value (adjustment, 0.0);
+  gtk_widget_queue_draw (self->navigator);
+
+  g_object_notify (G_OBJECT (self), "active-date");
+}
+
+static gboolean
+navigator_scroll_event_cb (GcalYearView   *self,
+                           GdkEventScroll *scroll_event)
+{
+  GtkWidget *vscrollbar;
+
+  vscrollbar = gtk_scrolled_window_get_vscrollbar (GTK_SCROLLED_WINDOW (self->scrolled_window));
+
+  /*
+   * If the vertical scrollbar is visible, delegate the year changing check
+   * to GtkScrolledWindow:edge-overshot callback.
+   */
+  if (gtk_widget_get_child_visible (vscrollbar))
+    return GDK_EVENT_PROPAGATE;
+
+  /*
+   * If we accumulated enough scrolling, change the month. Otherwise, we'd scroll
+   * waaay too fast.
+   */
+  if (should_change_date_for_scroll (&self->scroll_value, scroll_event))
+    {
+      self->date->year += self->scroll_value > 0 ? 1 : -1;
+      *self->date = icaltime_normalize (*self->date);
+      self->scroll_value = 0;
+
+      gtk_widget_queue_draw (self->navigator);
+
+      g_object_notify (G_OBJECT (self), "active-date");
+    }
+
+  return GDK_EVENT_STOP;
+}
+
+static void
 add_event_clicked_cb (GcalYearView *year_view,
                       GtkButton    *button)
 {
@@ -1819,6 +1877,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, navigator_sidebar);
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, no_events_title);
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, popover);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, scrolled_window);
 
   gtk_widget_class_bind_template_callback (widget_class, draw_navigator);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_press_cb);
@@ -1826,7 +1885,9 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, navigator_drag_drop_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_drag_leave_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_drag_motion_cb);
+  gtk_widget_class_bind_template_callback (widget_class, navigator_edge_overshot_cb);
   gtk_widget_class_bind_template_callback (widget_class, navigator_motion_notify_cb);
+  gtk_widget_class_bind_template_callback (widget_class, navigator_scroll_event_cb);
   gtk_widget_class_bind_template_callback (widget_class, add_event_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, popover_closed_cb);
 
