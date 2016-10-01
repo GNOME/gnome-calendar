@@ -123,4 +123,7 @@ gchar*          format_utc_offset                               (gint64         
 gint            get_alarm_trigger_minutes                       (GcalEvent             *event,
                                                                  ECalComponentAlarm    *alarm);
 
+gboolean        should_change_date_for_scroll                   (gdouble               *scroll_value,
+                                                                 GdkEventScroll        *scroll_event);
+
 #endif // __GCAL_UTILS_H__

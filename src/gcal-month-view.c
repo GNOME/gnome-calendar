@@ -31,7 +31,7 @@
 
 #include <math.h>
 
-#define LINE_WIDTH 0.5
+#define LINE_WIDTH      0.5
 
 typedef struct
 {
@@ -82,6 +82,9 @@ typedef struct
 
   /* The cell hovered during Drag and Drop */
   gint            dnd_cell;
+
+  /* Storage for the accumulated scrolling */
+  gdouble         scroll_value;
 
   /* property */
   icaltimetype   *date;
@@ -967,6 +970,29 @@ cancel_dnd_from_overflow_popover (GtkWidget *popover)
   return FALSE;
 }
 
+static gboolean
+gcal_month_view_scroll_event (GtkWidget      *widget,
+                              GdkEventScroll *scroll_event)
+{
+  GcalMonthView *self = GCAL_MONTH_VIEW (widget);
+  GcalMonthViewPrivate *priv = gcal_month_view_get_instance_private (self);
+
+  /*
+   * If we accumulated enough scrolling, change the month. Otherwise, we'd scroll
+   * waaay too fast.
+   */
+  if (should_change_date_for_scroll (&priv->scroll_value, scroll_event))
+    {
+      priv->date->month += priv->scroll_value > 0 ? 1 : -1;
+      *priv->date = icaltime_normalize (*priv->date);
+      priv->scroll_value = 0;
+
+      g_object_notify (G_OBJECT (widget), "active-date");
+    }
+
+  return GDK_EVENT_STOP;
+}
+
 static void
 add_new_event_button_cb (GtkWidget *button,
                          gpointer   user_data)
@@ -1014,6 +1040,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   widget_class->drag_motion = gcal_month_view_drag_motion;
   widget_class->drag_drop = gcal_month_view_drag_drop;
   widget_class->drag_leave = gcal_month_view_drag_leave;
+  widget_class->scroll_event = gcal_month_view_scroll_event;
 
   subscriber_view_class = GCAL_SUBSCRIBER_VIEW_CLASS (klass);
   subscriber_view_class->get_child_cell = gcal_month_view_get_child_cell;
@@ -1198,7 +1225,9 @@ gcal_month_view_realize (GtkWidget *widget)
                             GDK_POINTER_MOTION_HINT_MASK |
                             GDK_POINTER_MOTION_MASK |
                             GDK_ENTER_NOTIFY_MASK |
-                            GDK_LEAVE_NOTIFY_MASK);
+                            GDK_LEAVE_NOTIFY_MASK |
+                            GDK_SCROLL_MASK |
+                            GDK_SMOOTH_SCROLL_MASK);
   attributes_mask = GDK_WA_X | GDK_WA_Y;
 
   priv->event_window = gdk_window_new (parent_window,

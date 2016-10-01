@@ -63,6 +63,8 @@ month_item[12] =
   MON_12
 };
 
+#define SCROLL_HARDNESS 10.0
+
 G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
 
 gint
@@ -843,4 +845,38 @@ get_alarm_trigger_minutes (GcalEvent          *event,
   g_clear_pointer (&alarm_dt, g_date_time_unref);
 
   return diff;
+}
+
+gboolean
+should_change_date_for_scroll (gdouble        *scroll_value,
+                               GdkEventScroll *scroll_event)
+{
+  gdouble delta_y;
+
+  switch (scroll_event->direction)
+    {
+    case GDK_SCROLL_DOWN:
+      *scroll_value = SCROLL_HARDNESS;
+      break;
+
+    case GDK_SCROLL_UP:
+      *scroll_value = -SCROLL_HARDNESS;
+      break;
+
+    case GDK_SCROLL_SMOOTH:
+      gdk_event_get_scroll_deltas ((GdkEvent*) scroll_event, NULL, &delta_y);
+      *scroll_value += delta_y;
+      break;
+
+    /* Ignore horizontal scrolling for now */
+    case GDK_SCROLL_LEFT:
+    case GDK_SCROLL_RIGHT:
+    default:
+      break;
+    }
+
+  if (*scroll_value <= -SCROLL_HARDNESS || *scroll_value >= SCROLL_HARDNESS)
+    return TRUE;
+
+  return FALSE;
 }
