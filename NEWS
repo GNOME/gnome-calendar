@@ -1,3 +1,11 @@
+Major changes in 3.22.1:
+* Ablility to change months/years through mouse and touchpad scroll
+* A huge number of bugfixes
+* Many memory leaks were fixed (Victor Toso)
+* Updated translations for:
+    * Arabic (Khaled Hosny)
+    * Croatian (gogo)
+
 Major changes in 3.22.0:
 * Updated translations for:
     * Basque (Inaki Larranaga Murgoitio)
