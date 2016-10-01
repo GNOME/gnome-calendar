@@ -1360,34 +1360,39 @@ gcal_event_get_uid (GcalEvent *self)
 gboolean
 gcal_event_is_multiday (GcalEvent *self)
 {
-  GDateTime *end_date;
+  GDateTime *end_date, *real_end_date;
+  gboolean is_multiday;
   gint n_days;
 
   g_return_val_if_fail (GCAL_IS_EVENT (self), FALSE);
 
   end_date = gcal_event_get_date_end (self);
-  n_days = g_date_time_difference (end_date, self->dt_start) / G_TIME_SPAN_DAY;
+  real_end_date = g_date_time_add_seconds (end_date, -1);
+  is_multiday = FALSE;
+  n_days = g_date_time_difference (real_end_date, self->dt_start) / G_TIME_SPAN_DAY;
 
   /*
    * An all-day event with only 1 day of time span is treated as a
    * single-day event.
    */
   if (self->all_day && n_days == 1)
-    return FALSE;
+    is_multiday = FALSE;
 
   /*
    * If any of the following fields are different, we're certain that
    * it's a multiday event. Otherwise, we're certain it's NOT a multiday
    * event.
    */
-  if (g_date_time_get_year (self->dt_start) != g_date_time_get_year (end_date) ||
-      g_date_time_get_month (self->dt_start) != g_date_time_get_month (end_date) ||
-      g_date_time_get_day_of_month (self->dt_start) != g_date_time_get_day_of_month (end_date))
+  if (g_date_time_get_year (self->dt_start) != g_date_time_get_year (real_end_date) ||
+      g_date_time_get_month (self->dt_start) != g_date_time_get_month (real_end_date) ||
+      g_date_time_get_day_of_month (self->dt_start) != g_date_time_get_day_of_month (real_end_date))
     {
-      return TRUE;
+      is_multiday = TRUE;
     }
 
-  return FALSE;
+  g_clear_pointer (&real_end_date, g_date_time_unref);
+
+  return is_multiday;
 }
 
 /**
