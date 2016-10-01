@@ -25,27 +25,11 @@
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_MONTH_VIEW                       (gcal_month_view_get_type ())
-#define GCAL_MONTH_VIEW(obj)                       (G_TYPE_CHECK_INSTANCE_CAST((obj), GCAL_TYPE_MONTH_VIEW, GcalMonthView))
-#define GCAL_MONTH_VIEW_CLASS(klass)               (G_TYPE_CHECK_CLASS_CAST((klass), GCAL_TYPE_MONTH_VIEW, GcalMonthViewClass))
-#define GCAL_IS_MONTH_VIEW(obj)                    (G_TYPE_CHECK_INSTANCE_TYPE((obj), GCAL_TYPE_MONTH_VIEW))
-#define GCAL_IS_MONTH_VIEW_CLASS(klass)            (G_TYPE_CHECK_CLASS_TYPE((klass), GCAL_TYPE_MONTH_VIEW))
-#define GCAL_MONTH_VIEW_GET_CLASS(obj)             (G_TYPE_INSTANCE_GET_CLASS((obj), GCAL_TYPE_MONTH_VIEW, GcalMonthViewClass))
+#define GCAL_TYPE_MONTH_VIEW  (gcal_month_view_get_type ())
 
-typedef struct _GcalMonthView                       GcalMonthView;
-typedef struct _GcalMonthViewClass                  GcalMonthViewClass;
+G_DECLARE_FINAL_TYPE (GcalMonthView, gcal_month_view, GCAL, MONTH_VIEW, GcalSubscriberView)
 
-struct _GcalMonthView
-{
-  GcalSubscriberView parent;
-};
 
-struct _GcalMonthViewClass
-{
-  GcalSubscriberViewClass parent_class;
-};
-
-GType          gcal_month_view_get_type           (void);
 void           gcal_month_view_set_current_date   (GcalMonthView *month_view,
                                                    icaltimetype  *current_date);
 void           gcal_month_view_set_first_weekday  (GcalMonthView *view,
