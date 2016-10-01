@@ -202,6 +202,9 @@ select_row (GcalQuickAddPopover *self,
   /* Return to the events page */
   gtk_stack_set_visible_child_name (GTK_STACK (self->stack), "events");
 
+  /* Focus back the "Create" button */
+  gtk_widget_grab_focus (self->add_button);
+
   g_clear_object (&circle_pixbuf);
 }
 
