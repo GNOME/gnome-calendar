@@ -366,7 +366,9 @@ gcal_event_widget_realize (GtkWidget *widget)
                             GDK_POINTER_MOTION_HINT_MASK |
                             GDK_POINTER_MOTION_MASK |
                             GDK_ENTER_NOTIFY_MASK |
-                            GDK_LEAVE_NOTIFY_MASK);
+                            GDK_LEAVE_NOTIFY_MASK |
+                            GDK_SMOOTH_SCROLL_MASK |
+                            GDK_SCROLL_MASK);
   attributes_mask = GDK_WA_X | GDK_WA_Y;
 
   self->event_window = gdk_window_new (parent_window,
@@ -638,6 +640,13 @@ gcal_event_widget_drag_begin (GtkWidget      *widget,
   gtk_drag_set_icon_pixbuf (context, self->dnd_pixbuf, 0, 0);
 }
 
+static gboolean
+gcal_event_widget_scroll_event (GtkWidget      *widget,
+                                GdkEventScroll *scroll_event)
+{
+  return GDK_EVENT_PROPAGATE;
+}
+
 static void
 gcal_event_widget_class_init(GcalEventWidgetClass *klass)
 {
@@ -661,6 +670,7 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
   widget_class->button_press_event = gcal_event_widget_button_press_event;
   widget_class->button_release_event = gcal_event_widget_button_release_event;
   widget_class->drag_begin = gcal_event_widget_drag_begin;
+  widget_class->scroll_event = gcal_event_widget_scroll_event;
 
   /**
    * GcalEventWidget::date-end:
