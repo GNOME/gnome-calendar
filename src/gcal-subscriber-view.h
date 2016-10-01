@@ -60,6 +60,8 @@ struct _GcalSubscriberViewClass
   GtkWidget*     (*get_child_by_uuid)        (GcalSubscriberView *subscriber_view, const gchar *uuid);
 };
 
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalSubscriberView, g_object_unref)
+
 GType          gcal_subscriber_view_get_type           (void);
 
 GtkWidget*     gcal_subscriber_view_get_child_by_uuid  (GcalSubscriberView *subscriber_view,
