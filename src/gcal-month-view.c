@@ -970,6 +970,8 @@ gcal_month_view_scroll_event (GtkWidget      *widget,
       *self->date = icaltime_normalize (*self->date);
       self->scroll_value = 0;
 
+      gtk_widget_queue_draw (widget);
+
       g_object_notify (G_OBJECT (widget), "active-date");
     }
 
