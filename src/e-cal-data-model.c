@@ -1109,6 +1109,10 @@ cal_data_model_expand_recurrences_thread (ECalDataModel *data_model,
 
 	range_start = data_model->priv->range_start;
 	range_end = data_model->priv->range_end;
+	if (range_end <= range_start) {
+		range_start = 0;
+		range_end = time (NULL);
+	}
 
 	UNLOCK_PROPS ();
 
