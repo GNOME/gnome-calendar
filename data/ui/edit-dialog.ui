@@ -35,7 +35,7 @@
             <property name="receives_default">True</property>
             <property name="popover">sources_popover</property>
             <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-            <property name="tooltip-text" translatable="yes">Click to select the event's agenda</property>
+            <property name="tooltip-text" translatable="yes">Click to select the calendar</property>
             <style>
               <class name="flat"/>
               <class name="sources-button"/>
