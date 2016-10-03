@@ -340,13 +340,11 @@ on_client_connected (GObject      *source_object,
                      GAsyncResult *result,
                      gpointer      user_data)
 {
+  GcalManagerUnit *unit;
   GcalManager *manager;
   ECalClient *client;
-  GError *error;
-
   ESource *source;
-
-  GcalManagerUnit *unit;
+  GError *error;
 
   manager = GCAL_MANAGER (user_data);
   source = e_client_get_source (E_CLIENT (source_object));
@@ -357,48 +355,9 @@ on_client_connected (GObject      *source_object,
 
   error = NULL;
   client = E_CAL_CLIENT (e_cal_client_connect_finish (result, &error));
-  if (error == NULL)
+
+  if (error)
     {
-      unit = g_new0 (GcalManagerUnit, 1);
-      unit->connected = TRUE;
-      unit->client = g_object_ref (client);
-
-      g_hash_table_insert (manager->clients, source, unit);
-
-      g_debug ("Source %s (%s) connected",
-               e_source_get_display_name (source),
-               e_source_get_uid (source));
-
-      /* notify the readonly property */
-      g_signal_connect (client, "notify::readonly", G_CALLBACK (on_client_readonly_changed), user_data);
-
-      if (g_strv_contains ((const gchar * const *) manager->disabled_sources, e_source_get_uid (source)))
-        {
-          unit->enabled = FALSE;
-        }
-      else
-        {
-          unit->enabled = TRUE;
-
-          e_cal_data_model_add_client (manager->e_data_model, client);
-          e_cal_data_model_add_client (manager->search_data_model, client);
-          if (manager->shell_search_data_model != NULL)
-            e_cal_data_model_add_client (manager->shell_search_data_model, client);
-        }
-
-      /* refresh client when it's added */
-      if (unit->enabled && e_client_check_refresh_supported (E_CLIENT (client)))
-      {
-        e_client_refresh (E_CLIENT (client), NULL, on_client_refreshed, user_data);
-      }
-
-      g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ADDED], 0, source, unit->enabled);
-
-      g_clear_object (&client);
-    }
-  else
-    {
-      /* in any other case, remove it*/
       remove_source (GCAL_MANAGER (user_data), source);
       g_warning ("%s: Failed to open/connect '%s': %s",
                  G_STRFUNC,
@@ -409,6 +368,43 @@ on_client_connected (GObject      *source_object,
       g_error_free (error);
       return;
     }
+
+  unit = g_new0 (GcalManagerUnit, 1);
+  unit->connected = TRUE;
+  unit->client = g_object_ref (client);
+
+  g_hash_table_insert (manager->clients, source, unit);
+
+  g_debug ("Source %s (%s) connected",
+           e_source_get_display_name (source),
+           e_source_get_uid (source));
+
+  /* notify the readonly property */
+  g_signal_connect (client, "notify::readonly", G_CALLBACK (on_client_readonly_changed), user_data);
+
+  if (g_strv_contains ((const gchar * const *) manager->disabled_sources, e_source_get_uid (source)))
+    {
+      unit->enabled = FALSE;
+    }
+  else
+    {
+      unit->enabled = TRUE;
+
+      e_cal_data_model_add_client (manager->e_data_model, client);
+      e_cal_data_model_add_client (manager->search_data_model, client);
+      if (manager->shell_search_data_model != NULL)
+        e_cal_data_model_add_client (manager->shell_search_data_model, client);
+    }
+
+  /* refresh client when it's added */
+  if (unit->enabled && e_client_check_refresh_supported (E_CLIENT (client)))
+  {
+    e_client_refresh (E_CLIENT (client), NULL, on_client_refreshed, user_data);
+  }
+
+  g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ADDED], 0, source, unit->enabled);
+
+  g_clear_object (&client);
 }
 
 static void
