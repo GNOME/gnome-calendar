@@ -341,6 +341,7 @@ on_client_connected (GObject      *source_object,
                      gpointer      user_data)
 {
   GcalManagerUnit *unit;
+  ESourceOffline *offline_extension;
   GcalManager *manager;
   ECalClient *client;
   ESource *source;
@@ -401,6 +402,16 @@ on_client_connected (GObject      *source_object,
   {
     e_client_refresh (E_CLIENT (client), NULL, on_client_refreshed, user_data);
   }
+
+  /* Cache all the online calendars, so the user can see them offline */
+  offline_extension = e_source_get_extension (source, E_SOURCE_EXTENSION_OFFLINE);
+  e_source_offline_set_stay_synchronized (offline_extension, TRUE);
+
+  e_source_registry_commit_source (manager->source_registry,
+                                   source,
+                                   NULL,
+                                   NULL,
+                                   NULL);
 
   g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ADDED], 0, source, unit->enabled);
 
