@@ -417,6 +417,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="hexpand">True</property>
+                    <property name="top_margin">6</property>
+                    <property name="bottom_margin">6</property>
                     <property name="left_margin">6</property>
                     <property name="right_margin">6</property>
                     <property name="sensitive">True</property>
