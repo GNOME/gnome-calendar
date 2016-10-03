@@ -725,7 +725,7 @@ show_new_event_widget (GcalView   *view,
     {
       g_clear_pointer (&window->event_creation_data->start_date, g_date_time_unref);
       g_clear_pointer (&window->event_creation_data->end_date, g_date_time_unref);
-      g_free (window->event_creation_data);
+      g_clear_pointer (&window->event_creation_data, g_free);
     }
 
   window->event_creation_data = g_new0 (NewEventData, 1);
@@ -1466,6 +1466,13 @@ gcal_window_finalize (GObject *object)
     {
       gcal_manager_remove_event (window->manager, window->event_to_delete);
       g_clear_object (&window->event_to_delete);
+    }
+
+  if (window->event_creation_data != NULL)
+    {
+      g_clear_pointer (&window->event_creation_data->start_date, g_date_time_unref);
+      g_clear_pointer (&window->event_creation_data->end_date, g_date_time_unref);
+      g_clear_pointer (&window->event_creation_data, g_free);
     }
 
   g_clear_object (&window->manager);
