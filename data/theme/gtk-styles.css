@@ -316,6 +316,16 @@ datechooser .weekday:backdrop {
 
 /* days */
 datechooser day {
+  transition-property: background-color;
+  transition-duration: 200ms;
+}
+
+datechooser day label {
+  transition-property: color;
+  transition-duration: 200ms;
+}
+
+datechooser day {
   min-height: 32px;
   min-width: 32px;
   border-radius: 50%;
