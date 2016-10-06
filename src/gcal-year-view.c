@@ -165,8 +165,9 @@ static void
 update_date (GcalYearView *year_view,
              icaltimetype *new_date)
 {
+  gboolean needs_reset = FALSE;
   if (year_view->date != NULL && icaltime_compare_date (year_view->date, new_date) && year_view->start_selected_date->day != 0)
-    reset_sidebar (year_view);
+    needs_reset = TRUE;
 
   g_clear_pointer (&year_view->date, g_free);
   year_view->date = new_date;
@@ -175,6 +176,9 @@ update_date (GcalYearView *year_view,
                                                              1, G_DATE_JANUARY,  year_view->date->year);;
   year_view->last_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
                                                             31, G_DATE_DECEMBER, year_view->date->year);
+
+  if (needs_reset)
+    reset_sidebar (year_view);
 }
 
 static void
@@ -233,15 +237,20 @@ update_selected_dates_from_button_data (GcalYearView *year_view)
     }
   else
     {
-      *(year_view->start_selected_date) = *(year_view->current_date);
+      *(year_view->start_selected_date) = year_view->date ? *(year_view->date) : *(year_view->current_date);
       year_view->start_selected_date->hour = 0;
       year_view->start_selected_date->minute = 0;
       year_view->start_selected_date->second = 0;
 
-      *(year_view->end_selected_date) = *(year_view->current_date);
+      *(year_view->end_selected_date) = *(year_view->start_selected_date);
       year_view->end_selected_date->hour = 23;
       year_view->end_selected_date->minute = 59;
       *(year_view->end_selected_date) = icaltime_normalize (*(year_view->end_selected_date));
+
+      year_view->selected_data->start_day = year_view->start_selected_date->day;
+      year_view->selected_data->start_month = year_view->start_selected_date->month - 1;
+      year_view->selected_data->end_day = year_view->end_selected_date->day;
+      year_view->selected_data->end_month = year_view->end_selected_date->month -1;
     }
 
   if (year_view->end_selected_date->year != year_view->start_selected_date->year)

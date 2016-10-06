@@ -766,11 +766,11 @@ gcal_month_view_key_press (GtkWidget   *widget,
         self->keyboard_cell = self->days_delay + self->keyboard_cell + diff - max - 1;
       else
         self->keyboard_cell = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year) - min + self->keyboard_cell + diff;
-
-      g_object_notify (G_OBJECT (widget), "active-date");
     }
 
   current_day = self->keyboard_cell - self->days_delay + 1;
+  self->date->day = current_day;
+  g_object_notify (G_OBJECT (widget), "active-date");
 
   if (selection)
     {
@@ -2228,6 +2228,10 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
       self->keyboard_cell = current_day;
       self->end_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day - self->days_delay + 1, 0, 0, 0);
+
+      self->date->day = g_date_time_get_day_of_month (self->end_mark_cell);
+      g_object_notify (G_OBJECT (self), "active-date");
+
       return show_popover_for_position (GCAL_MONTH_VIEW (widget), x, y, released_indicator);
     }
   else
