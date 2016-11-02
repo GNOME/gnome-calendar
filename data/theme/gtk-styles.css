@@ -363,6 +363,7 @@ datechooser day:selected:hover {
 
 .week-header {
     padding: 0px;
+    border-bottom: solid @borders 1px;
 }
 
 .week-header .month-name {
