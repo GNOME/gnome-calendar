@@ -7,40 +7,74 @@
       <class name="week-header" />
     </style>
     <child>
-      <object class="GtkGrid">
+      <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="orientation">vertical</property>
+        <property name="orientation">horizontal</property>
         <child>
-          <object class="GtkGrid">
+          <object class="GtkLabel" id="month_label">
             <property name="visible">True</property>
-            <property name="orientation">horizontal</property>
+            <property name="label">Month</property>
+            <style>
+              <class name="month-name" />
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="week_label">
+            <property name="visible">True</property>
+            <property name="hexpand">True</property>
+            <property name="xalign">0</property>
+            <property name="label">Week</property>
+            <style>
+              <class name="week-number" />
+            </style>
+          </object>
+        </child>
+        <child>
+          <object class="GtkLabel" id="year_label">
+            <property name="visible">True</property>
+            <property name="label">Year</property>
+            <style>
+              <class name="week-number" />
+            </style>
+          </object>
+        </child>
+      </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">0</property>
+        <property name="width">1</property>
+        <property name="height">1</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="orientation">horizontal</property>
+        <child>
+          <object class="GtkBox" id="expand_button_box">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">False</property>
             <child>
-              <object class="GtkLabel" id="month_label">
+              <object class="GtkButton" id="expand_button">
                 <property name="visible">True</property>
-                <property name="label">Month</property>
-                <style>
-                  <class name="month-name" />
-                </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="week_label">
-                <property name="visible">True</property>
+                <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
-                <property name="xalign">0</property>
-                <property name="label">Week</property>
+                <property name="halign">center</property>
+                <property name="valign">end</property>
+                <property name="margin-bottom">6</property>
+                <signal name="clicked" handler="on_expand_action_activated" object="GcalWeekHeader" swapped="yes"/>
                 <style>
-                  <class name="week-number" />
+                  <class name="flat" />
+                  <class name="circular" />
                 </style>
-              </object>
-            </child>
-            <child>
-              <object class="GtkLabel" id="year_label">
-                <property name="visible">True</property>
-                <property name="label">Year</property>
-                <style>
-                  <class name="week-number" />
-                </style>
+                <child>
+                  <object class="GtkImage" id="expand_button_image">
+                    <property name="visible">True</property>
+                    <property name="icon_name">go-down-symbolic</property>
+                  </object>
+                </child>
               </object>
             </child>
           </object>
@@ -59,131 +93,97 @@
               </object>
             </child>
             <child type="overlay">
-              <object class="GtkBox">
+              <object class="GtkScrolledWindow" id="scrolledwindow">
                 <property name="visible">True</property>
-                <property name="orientation">horizontal</property>
+                <property name="max-content-height">150</property>
                 <child>
-                  <object class="GtkBox" id="expand_button_box">
+                  <object class="GtkViewport">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="hexpand">False</property>
+                    <property name="shadow_type">none</property>
                     <child>
-                      <object class="GtkButton" id="expand_button">
+                      <object class="GtkGrid" id="grid">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
+                        <property name="column-homogeneous">True</property>
                         <property name="hexpand">True</property>
-                        <property name="halign">center</property>
-                        <property name="valign">end</property>
-                        <property name="margin-bottom">6</property>
-                        <signal name="clicked" handler="on_expand_action_activated" object="GcalWeekHeader" swapped="yes"/>
-                        <style>
-                          <class name="flat" />
-                          <class name="circular" />
-                        </style>
+                        <property name="column-spacing">8</property>
+                        <property name="row-spacing">2</property>
+                        <property name="margin-start">6</property>
                         <child>
-                          <object class="GtkImage" id="expand_button_image">
+                          <object class="GtkBox">
                             <property name="visible">True</property>
-                            <property name="icon_name">go-down-symbolic</property>
                           </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
                         </child>
-                      </object>
-                    </child>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkScrolledWindow" id="scrolledwindow">
-                    <property name="visible">True</property>
-                    <property name="max-content-height">150</property>
-                    <child>
-                      <object class="GtkViewport">
-                        <property name="visible">True</property>
-                        <property name="shadow_type">none</property>
                         <child>
-                          <object class="GtkGrid" id="grid">
+                          <object class="GtkBox">
                             <property name="visible">True</property>
-                            <property name="column-homogeneous">True</property>
-                            <property name="hexpand">True</property>
-                            <property name="column-spacing">8</property>
-                            <property name="row-spacing">2</property>
-                            <signal name="size-allocate" handler="fix_background_size_request" object="GcalWeekHeader" swapped="yes" />
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">0</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">2</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">3</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">4</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">5</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">6</property>
-                                <property name="top_attach">0</property>
-                                <property name="width">1</property>
-                                <property name="height">1</property>
-                              </packing>
-                            </child>
                           </object>
+                          <packing>
+                            <property name="left_attach">1</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">2</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">3</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">4</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">5</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">6</property>
+                            <property name="top_attach">0</property>
+                            <property name="width">1</property>
+                            <property name="height">1</property>
+                          </packing>
                         </child>
                       </object>
                     </child>
@@ -194,6 +194,10 @@
           </object>
         </child>
       </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">1</property>
+      </packing>
     </child>
   </template>
   <object class="GtkSizeGroup" id="sizegroup">
