@@ -41,6 +41,7 @@ struct _GcalWeekHeader
   GtkWidget        *year_label;
   GtkWidget        *scrolledwindow;
   GtkWidget        *expand_button;
+  GtkWidget        *expand_button_box;
   GtkWidget        *expand_button_image;
 
   GcalManager      *manager;
@@ -54,8 +55,6 @@ struct _GcalWeekHeader
 
   gint              first_weekday;
 
-  gint              sidebar_width_offset;
-
   /*
    * Used for checking if the header is in collapsed state or expand state
    * false is collapse state true is expand state
@@ -66,6 +65,8 @@ struct _GcalWeekHeader
 
   icaltimetype     *active_date;
   icaltimetype     *current_date;
+
+  GtkSizeGroup     *sizegroup;
 };
 
 static GDateTime*     get_start_of_week                     (GcalWeekHeader *self);
@@ -112,8 +113,7 @@ static gboolean       gcal_week_header_draw                 (GcalWeekHeader *sel
 enum
 {
   PROP_0,
-  PROP_ACTIVE_DATE,
-  PROP_SIDEBAR_WIDTH
+  PROP_ACTIVE_DATE
 };
 
 G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_GRID);
@@ -530,10 +530,6 @@ gcal_week_header_get_property (GObject    *object,
       g_value_set_boxed (value, self->active_date);
       return;
 
-    case PROP_SIDEBAR_WIDTH:
-      g_value_set_int (value, self->sidebar_width_offset);
-      return;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -561,13 +557,6 @@ gcal_week_header_set_property (GObject      *object,
 
       return;
 
-    case PROP_SIDEBAR_WIDTH:
-      self->sidebar_width_offset = MAX (g_value_get_int (value),
-                                        gtk_widget_get_allocated_width (self->expand_button));
-
-      gtk_widget_queue_draw (self->draw_area);
-      return;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -578,42 +567,21 @@ gcal_week_header_size_allocate (GtkWidget     *widget,
                                 GtkAllocation *alloc)
 {
   GcalWeekHeader *self = GCAL_WEEK_HEADER (widget);
+  PangoFontDescription *bold_font;
   GtkStyleContext *context;
   GtkStateFlags state;
   GtkAllocation draw_alloc;
 
-  gint sidebar_width, cell_width;
-
-  PangoFontDescription *bold_font;
-
-  if (gtk_widget_get_allocated_width (self->expand_button) > self->sidebar_width_offset)
-    {
-      self->sidebar_width_offset = gtk_widget_get_allocated_width (self->expand_button);
-      g_object_notify (G_OBJECT (self), "sidebar-width-offset");
-    }
-
   context = gtk_widget_get_style_context (self->draw_area);
   state = gtk_widget_get_state_flags (self->draw_area);
-  sidebar_width = self->sidebar_width_offset;
 
   gtk_widget_get_allocation (self->draw_area, &draw_alloc);
-
-  cell_width = (draw_alloc.width - sidebar_width) / 7;
 
   gtk_style_context_get (context, state, "font", &bold_font, NULL);
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
 
-  gtk_widget_set_margin_start (self->scrolledwindow,
-                               self->sidebar_width_offset - gtk_widget_get_allocated_width (self->expand_button));
-
-  gtk_widget_set_margin_end (self->scrolledwindow,
-                             gtk_widget_get_allocated_width (self->draw_area) - cell_width * 7 - sidebar_width);
-
   gtk_widget_set_margin_top (self->scrolledwindow,
                              (4 * pango_font_description_get_size (bold_font)) / PANGO_SCALE);
-
-  gtk_widget_set_margin_start (self->expand_button, 6);
-  gtk_widget_set_margin_bottom (self->expand_button, 6);
 
   GTK_WIDGET_CLASS (gcal_week_header_parent_class)->size_allocate (widget, alloc);
 }
@@ -659,7 +627,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
   current_cell = icaltime_day_of_week (*(self->active_date)) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
 
-  sidebar_width = self->sidebar_width_offset;
+  sidebar_width = gtk_widget_get_allocated_width (self->expand_button_box);
   cell_width = (alloc.width - sidebar_width) / 7;
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
@@ -763,8 +731,6 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 
   widget_class->size_allocate = gcal_week_header_size_allocate;
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-header.ui");
-
   g_object_class_install_property (object_class,
                                    PROP_ACTIVE_DATE,
                                    g_param_spec_boxed ("active-date",
@@ -772,26 +738,23 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
                                                        "The active selected date",
                                                        ICAL_TIME_TYPE,
                                                        G_PARAM_CONSTRUCT | G_PARAM_READWRITE));
-  g_object_class_install_property (object_class,
-                                   PROP_SIDEBAR_WIDTH,
-                                   g_param_spec_int ("sidebar-width-offset",
-                                                     "Sidebar Width",
-                                                     "The width of the sidebar",
-                                                     G_MININT, G_MAXINT, 10,
-                                                     G_PARAM_READWRITE));
 
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-header.ui");
+
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, draw_area);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button_box);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button_image);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, grid);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, month_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, year_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, week_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, draw_area);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, scrolledwindow);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button_image);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, sizegroup);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, week_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, year_label);
 
+  gtk_widget_class_bind_template_callback (widget_class, fix_background_size_request);
   gtk_widget_class_bind_template_callback (widget_class, gcal_week_header_draw);
   gtk_widget_class_bind_template_callback (widget_class, on_expand_action_activated);
-  gtk_widget_class_bind_template_callback (widget_class, fix_background_size_request);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
@@ -846,4 +809,12 @@ gcal_week_header_set_current_date (GcalWeekHeader *self,
   place_events (self);
 
   gtk_widget_queue_draw (self->draw_area);
+}
+
+GtkSizeGroup*
+gcal_week_header_get_sidebar_size_group (GcalWeekHeader *self)
+{
+  g_return_val_if_fail (GCAL_IS_WEEK_HEADER (self), NULL);
+
+  return self->sizegroup;
 }

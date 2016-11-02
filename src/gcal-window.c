@@ -402,10 +402,16 @@ update_active_date (GcalWindow   *window,
     }
 
   /* week_view */
-  g_date_set_dmy (&old_week, previous_date->day, previous_date->month, previous_date->year);
+  g_date_clear (&old_week, 1);
+
+  if (previous_date->day > 0 && previous_date->month > 0 && previous_date->year)
+    g_date_set_dmy (&old_week, previous_date->day, previous_date->month, previous_date->year);
+
+  g_date_clear (&new_week, 1);
   g_date_set_dmy (&new_week, new_date->day, new_date->month, new_date->year);
 
   if (previous_date->year != new_date->year ||
+      !g_date_valid (&old_week) ||
       g_date_get_iso8601_week_of_year (&old_week) != g_date_get_iso8601_week_of_year(&new_week))
     {
       date_start = g_date_time_new_local (new_date->year, new_date->month, new_date->day, 0, 0, 0);

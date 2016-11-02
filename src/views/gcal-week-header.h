@@ -31,18 +31,25 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalWeekHeader, gcal_week_header, GCAL, WEEK_HEADER, GtkGrid)
 
-void              gcal_week_header_set_manager        (GcalWeekHeader *self,
-                                                       GcalManager    *manager);
-void              gcal_week_header_set_first_weekday  (GcalWeekHeader *self,
-                                                       gint            nr_day);
-void              gcal_week_header_set_use_24h_format (GcalWeekHeader *self,
-                                                       gboolean        use_24h_format);
-void              gcal_week_header_set_current_date   (GcalWeekHeader *self,
-                                                       icaltimetype   *current_date);
-void              gcal_week_header_add_event          (GcalWeekHeader *self,
-                                                       GcalEvent      *event);
-void              gcal_week_header_remove_event       (GcalWeekHeader *self,
-                                                       gchar          *uuid);
+void                 gcal_week_header_set_manager                (GcalWeekHeader     *self,
+                                                                  GcalManager        *manager);
+
+void                 gcal_week_header_set_first_weekday          (GcalWeekHeader     *self,
+                                                                  gint                nr_day);
+
+void                 gcal_week_header_set_use_24h_format         (GcalWeekHeader     *self,
+                                                                  gboolean            use_24h_format);
+
+void                 gcal_week_header_set_current_date           (GcalWeekHeader     *self,
+                                                                  icaltimetype       *current_date);
+
+void                 gcal_week_header_add_event                  (GcalWeekHeader     *self,
+                                                                  GcalEvent          *event);
+
+void                 gcal_week_header_remove_event               (GcalWeekHeader     *self,
+                                                                  gchar              *uuid);
+
+GtkSizeGroup*        gcal_week_header_get_sidebar_size_group     (GcalWeekHeader     *self);
 
 G_END_DECLS
 

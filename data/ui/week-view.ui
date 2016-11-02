@@ -10,12 +10,13 @@
       <object class="GcalWeekHeader" id="header">
         <property name="visible">True</property>
         <property name="active-date" bind-source="GcalWeekView" bind-property="active-date" bind-flags="default" />
-        <property name="sidebar-width-offset" bind-source="GcalWeekView" bind-property="sidebar-width-offset" bind-flags="default" />
       </object>
     </child>
     <child>
       <object class="GtkScrolledWindow">
         <property name="visible">True</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
         <child>
           <object class="GtkViewport">
             <property name="visible">True</property>
@@ -28,12 +29,13 @@
                     <property name="visible">True</property>
                     <property name="height-request">2568</property>
                     <signal name="draw" handler="gcal_week_view_draw_hours" object="GcalWeekView" swapped="yes" />
-                    <signal name="size-allocate" handler="gcal_week_view_hours_bar_size_allocate" object="GcalWeekView" swapped="yes" />
                   </object>
                 </child>
                 <child>
                   <object class="GcalWeekGrid" id="week_grid">
                     <property name="visible">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
                   </object>
                 </child>
               </object>

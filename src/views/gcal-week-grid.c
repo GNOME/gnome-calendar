@@ -113,13 +113,7 @@ gcal_week_grid_get_property (GObject    *object,
                              GValue     *value,
                              GParamSpec *pspec)
 {
-  GcalWeekGrid *self = GCAL_WEEK_GRID (object);
-
-  switch (prop_id)
-    {
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
+  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 static void
@@ -128,13 +122,7 @@ gcal_week_grid_set_property (GObject      *object,
                              const GValue *value,
                              GParamSpec   *pspec)
 {
-  GcalWeekGrid *self = GCAL_WEEK_GRID (object);
-
-  switch (prop_id)
-   {
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-   }
+  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 static void
@@ -147,11 +135,9 @@ gcal_week_grid_realize (GtkWidget *widget)
   GtkAllocation allocation;
 
   self = GCAL_WEEK_GRID (widget);
-
-  gtk_widget_set_realized (widget, TRUE);
-
   parent_window = gtk_widget_get_parent_window (widget);
 
+  gtk_widget_set_realized (widget, TRUE);
   gtk_widget_set_window (widget, parent_window);
   g_object_ref (parent_window);
 
@@ -164,6 +150,15 @@ gcal_week_grid_realize (GtkWidget *widget)
   attributes.width = allocation.width;
   attributes.height = allocation.height;
   attributes.event_mask = gtk_widget_get_events (widget);
+  attributes.event_mask |= (GDK_BUTTON_PRESS_MASK |
+                            GDK_BUTTON_RELEASE_MASK |
+                            GDK_BUTTON1_MOTION_MASK |
+                            GDK_POINTER_MOTION_HINT_MASK |
+                            GDK_POINTER_MOTION_MASK |
+                            GDK_ENTER_NOTIFY_MASK |
+                            GDK_LEAVE_NOTIFY_MASK |
+                            GDK_SCROLL_MASK |
+                            GDK_SMOOTH_SCROLL_MASK);
   attributes_mask = GDK_WA_X | GDK_WA_Y;
 
   self->event_window = gdk_window_new (parent_window,
@@ -179,7 +174,7 @@ gcal_week_grid_unrealize (GtkWidget *widget)
 
   self = GCAL_WEEK_GRID (widget);
 
-  if (self->event_window != NULL)
+  if (self->event_window)
     {
       gtk_widget_unregister_window (widget, self->event_window);
       gdk_window_destroy (self->event_window);
@@ -196,7 +191,7 @@ gcal_week_grid_map (GtkWidget *widget)
 
   self = GCAL_WEEK_GRID (widget);
 
-  if (self->event_window != NULL)
+  if (self->event_window)
     gdk_window_show (self->event_window);
 
   GTK_WIDGET_CLASS (gcal_week_grid_parent_class)->map (widget);
@@ -209,7 +204,7 @@ gcal_week_grid_unmap (GtkWidget *widget)
 
   self = GCAL_WEEK_GRID (widget);
 
-  if (self->event_window != NULL)
+  if (self->event_window)
     gdk_window_hide (self->event_window);
 
   GTK_WIDGET_CLASS (gcal_week_grid_parent_class)->unmap (widget);
@@ -219,7 +214,6 @@ static gboolean
 gcal_week_grid_draw (GtkWidget *widget,
                      cairo_t   *cr)
 {
-  GcalWeekGrid *self;
   GtkStyleContext *context;
   GtkStateFlags state;
   GtkBorder padding;
@@ -229,8 +223,6 @@ gcal_week_grid_draw (GtkWidget *widget,
 
   PangoLayout *layout;
   PangoFontDescription *font_desc;
-
-  self = GCAL_WEEK_GRID (widget);
 
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
@@ -280,11 +272,87 @@ gcal_week_grid_draw (GtkWidget *widget,
 }
 
 static void
+gcal_week_grid_size_allocate (GtkWidget     *widget,
+                              GtkAllocation *allocation)
+{
+  GcalWeekGrid *self = GCAL_WEEK_GRID (widget);
+
+  /* No need to relayout stuff if nothing changed */
+  if (allocation->height == gtk_widget_get_allocated_height (widget) &&
+      allocation->width == gtk_widget_get_allocated_width (widget))
+    {
+      return;
+    }
+
+  /* Allocate the widget */
+  gtk_widget_set_allocation (widget, allocation);
+
+  if (gtk_widget_get_realized (widget))
+    {
+      gdk_window_move_resize (self->event_window,
+                              allocation->x,
+                              allocation->y,
+                              allocation->width,
+                              allocation->height);
+    }
+}
+
+static void
+gcal_week_grid_get_preferred_height (GtkWidget *widget,
+                                     gint      *minimum_height,
+                                     gint      *natural_height)
+{
+  GtkStyleContext *context;
+  GtkStateFlags state;
+  GtkBorder padding;
+
+  PangoLayout *layout;
+  PangoFontDescription *font_desc;
+
+  gint hours_12_height, hours_24_height, cell_height, height;
+
+  context = gtk_widget_get_style_context (widget);
+  state = gtk_style_context_get_state (context);
+
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "hours");
+
+  gtk_style_context_get (context, state,
+                         "font", &font_desc,
+                         NULL);
+  gtk_style_context_get_padding (context, state, &padding);
+
+  layout = pango_layout_new (gtk_widget_get_pango_context (widget));
+  pango_layout_set_font_description (layout, font_desc);
+
+  pango_layout_set_text (layout, _("00 AM"), -1);
+  pango_layout_get_pixel_size (layout, NULL, &hours_12_height);
+
+  pango_layout_set_text (layout, _("00:00"), -1);
+  pango_layout_get_pixel_size (layout, NULL, &hours_24_height);
+
+  cell_height = MAX (hours_12_height, hours_24_height) + padding.top + padding.bottom;
+  height = cell_height * 48;
+
+  gtk_style_context_restore (context);
+
+  pango_font_description_free (font_desc);
+  g_object_unref (layout);
+
+  /* Report the height */
+  if (minimum_height)
+    *minimum_height = height;
+
+  if (natural_height)
+    *natural_height = height;
+}
+
+static void
 gcal_week_grid_class_init (GcalWeekGridClass *klass)
 {
   GtkContainerClass *contianer_class = GTK_CONTAINER_CLASS (klass);
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   contianer_class->add = gcal_week_grid_add;
   contianer_class->remove = gcal_week_grid_remove;
@@ -295,10 +363,12 @@ gcal_week_grid_class_init (GcalWeekGridClass *klass)
   object_class->set_property = gcal_week_grid_set_property;
 
   widget_class->draw = gcal_week_grid_draw;
+  widget_class->size_allocate = gcal_week_grid_size_allocate;
   widget_class->realize = gcal_week_grid_realize;
   widget_class->unrealize = gcal_week_grid_unrealize;
   widget_class->map = gcal_week_grid_map;
   widget_class->unmap = gcal_week_grid_unmap;
+  widget_class->get_preferred_height = gcal_week_grid_get_preferred_height;
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
@@ -306,7 +376,7 @@ gcal_week_grid_class_init (GcalWeekGridClass *klass)
 static void
 gcal_week_grid_init (GcalWeekGrid *self)
 {
-  gtk_widget_init_template (GTK_WIDGET (self));
+  gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 }
 
 /* Public API */

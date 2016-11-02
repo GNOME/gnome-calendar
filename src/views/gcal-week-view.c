@@ -40,8 +40,7 @@ static const double dashed [] =
 enum
 {
   PROP_0,
-  PROP_DATE,
-  PROP_SIDEBAR_WIDTH
+  PROP_DATE
 };
 
 struct _GcalWeekView
@@ -57,8 +56,6 @@ struct _GcalWeekView
    * 0 for Sunday, 1 for Monday and so on 
    */
   gint            first_weekday;
-
-  gint            sidebar_width_offset;
 
   /*
    * clock format from GNOME desktop settings
@@ -97,8 +94,6 @@ static gboolean       gcal_week_view_draw_hours                 (GcalWeekView *s
 static void           gcal_view_interface_init                  (GcalViewInterface *iface);
 
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
-
-static void           gcal_week_view_constructed                (GObject        *object);
 
 static void           gcal_week_view_finalize                   (GObject        *object);
 
@@ -173,18 +168,22 @@ gcal_week_view_get_final_date (GcalView *view)
   return new_date;
 }
 
-static gint
-gcal_week_view_get_sidebar_width (GtkWidget *widget)
+static void
+update_hours_sidebar_size (GcalWeekView *self)
 {
   GtkStyleContext *context;
   GtkStateFlags state;
+  GtkSizeGroup *sidebar_sizegroup;
+  GtkWidget *widget;
   GtkBorder padding;
 
   PangoLayout *layout;
   PangoFontDescription *font_desc;
 
   gint hours_12_width, hours_24_width, sidebar_width;
+  gint hours_12_height, hours_24_height, cell_height;
 
+  widget = GTK_WIDGET (self);
   context = gtk_widget_get_style_context (widget);
   state = gtk_style_context_get_state (context);
 
@@ -200,19 +199,27 @@ gcal_week_view_get_sidebar_width (GtkWidget *widget)
   pango_layout_set_font_description (layout, font_desc);
 
   pango_layout_set_text (layout, _("00 AM"), -1);
-  pango_layout_get_pixel_size (layout, &hours_12_width, NULL);
+  pango_layout_get_pixel_size (layout, &hours_12_width, &hours_12_height);
 
   pango_layout_set_text (layout, _("00:00"), -1);
-  pango_layout_get_pixel_size (layout, &hours_24_width, NULL);
+  pango_layout_get_pixel_size (layout, &hours_24_width, &hours_24_height);
 
   sidebar_width = MAX (hours_12_width, hours_24_width) + padding.left + padding.right;
+  cell_height = MAX (hours_12_height, hours_24_height) + padding.top + padding.bottom;
 
   gtk_style_context_restore (context);
 
+  /* Update the size requests */
+  gtk_widget_set_size_request (self->hours_bar,
+                               sidebar_width,
+                               48 * cell_height);
+
+  /* Sync with the week header sidebar */
+  sidebar_sizegroup = gcal_week_header_get_sidebar_size_group (GCAL_WEEK_HEADER (self->header));
+  gtk_size_group_add_widget (sidebar_sizegroup, self->hours_bar);
+
   pango_font_description_free (font_desc);
   g_object_unref (layout);
-
-  return sidebar_width;
 }
 
 static void
@@ -288,28 +295,6 @@ gcal_week_view_thaw (ECalDataModelSubscriber *subscriber)
 {
 }
 
-static void
-gcal_week_view_hours_bar_size_allocate (GtkWidget     *widget,
-                                        GtkAllocation *alloc)
-{
-  GcalWeekView *self;
-
-  self = GCAL_WEEK_VIEW (widget);
-
-  if (gcal_week_view_get_sidebar_width (GTK_WIDGET (self)) > self->sidebar_width_offset)
-    {
-      self->sidebar_width_offset = gcal_week_view_get_sidebar_width (GTK_WIDGET (self));
-      g_object_notify (G_OBJECT (self), "sidebar-width-offset");
-    }
-
-  gtk_widget_set_size_request (self->hours_bar, self->sidebar_width_offset, 2568);
-  gtk_widget_set_size_request (self->week_grid,
-                               gtk_widget_get_allocated_width (GTK_WIDGET (self)) - self->sidebar_width_offset,
-                               2568);
-
-  GTK_WIDGET_CLASS (gcal_week_view_parent_class)->size_allocate (widget, alloc);
-}
-
 static gboolean
 gcal_week_view_draw_hours (GcalWeekView *self,
                            cairo_t      *cr,
@@ -373,7 +358,7 @@ gcal_week_view_draw_hours (GcalWeekView *self,
 
   cairo_set_line_width (cr, 0.65);
 
-  cairo_move_to (cr, self->sidebar_width_offset, 0);
+  cairo_move_to (cr, gtk_widget_get_allocated_width (self->hours_bar), 0);
   cairo_rel_line_to (cr, 0, height);
 
   /* Draws the horizontal complete lines */
@@ -408,20 +393,11 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
-  object_class->constructed = gcal_week_view_constructed;
   object_class->finalize = gcal_week_view_finalize;
   object_class->set_property = gcal_week_view_set_property;
   object_class->get_property = gcal_week_view_get_property;
 
-  g_object_class_override_property (object_class,
-                                    PROP_DATE, "active-date");
-  g_object_class_install_property (object_class,
-                                   PROP_SIDEBAR_WIDTH,
-                                   g_param_spec_int ("sidebar-width-offset",
-                                                     "Sidebar Width",
-                                                     "The width of the sidebar",
-                                                     G_MININT, G_MAXINT, 10,
-                                                     G_PARAM_READWRITE));
+  g_object_class_override_property (object_class, PROP_DATE, "active-date");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
 
@@ -430,7 +406,6 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_grid);
 
   gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_draw_hours);
-  gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_hours_bar_size_allocate);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
@@ -438,9 +413,9 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 static void
 gcal_week_view_init (GcalWeekView *self)
 {
-  self->sidebar_width_offset = 10;
-
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  update_hours_sidebar_size (self);
 }
 
 static void
@@ -460,18 +435,6 @@ gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *ifa
   iface->component_removed = gcal_week_view_component_removed;
   iface->freeze = gcal_week_view_freeze;
   iface->thaw = gcal_week_view_thaw;
-}
-
-static void
-gcal_week_view_constructed (GObject *object)
-{
-  GcalWeekView *self;
-
-  g_return_if_fail (GCAL_IS_WEEK_VIEW (object));
-  self = GCAL_WEEK_VIEW (object);
-
-  if (G_OBJECT_CLASS (gcal_week_view_parent_class)->constructed != NULL)
-      G_OBJECT_CLASS (gcal_week_view_parent_class)->constructed (object);
 }
 
 static void
@@ -526,14 +489,6 @@ gcal_week_view_set_property (GObject       *object,
         break;
       }
 
-    case PROP_SIDEBAR_WIDTH:
-      {
-        self->sidebar_width_offset = g_value_get_int (value);
-
-        gtk_widget_set_size_request (self->hours_bar, self->sidebar_width_offset, 2568);
-        break;
-      }
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -555,10 +510,6 @@ gcal_week_view_get_property (GObject       *object,
     {
     case PROP_DATE:
       g_value_set_boxed (value, self->date);
-      break;
-
-    case PROP_SIDEBAR_WIDTH:
-      g_value_set_int (value, self->sidebar_width_offset);
       break;
 
     default:

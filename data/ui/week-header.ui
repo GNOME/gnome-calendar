@@ -63,19 +63,29 @@
                 <property name="visible">True</property>
                 <property name="orientation">horizontal</property>
                 <child>
-                  <object class="GtkButton" id="expand_button">
+                  <object class="GtkBox" id="expand_button_box">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="valign">GTK_ALIGN_END</property>
-                    <signal name="clicked" handler="on_expand_action_activated" object="GcalWeekHeader" swapped="yes"/>
-                    <style>
-                      <class name="flat" />
-                      <class name="circular" />
-                    </style>
+                    <property name="can_focus">False</property>
+                    <property name="hexpand">False</property>
                     <child>
-                      <object class="GtkImage" id="expand_button_image">
+                      <object class="GtkButton" id="expand_button">
                         <property name="visible">True</property>
-                        <property name="icon_name">go-down-symbolic</property>
+                        <property name="can_focus">True</property>
+                        <property name="hexpand">True</property>
+                        <property name="halign">center</property>
+                        <property name="valign">end</property>
+                        <property name="margin-bottom">6</property>
+                        <signal name="clicked" handler="on_expand_action_activated" object="GcalWeekHeader" swapped="yes"/>
+                        <style>
+                          <class name="flat" />
+                          <class name="circular" />
+                        </style>
+                        <child>
+                          <object class="GtkImage" id="expand_button_image">
+                            <property name="visible">True</property>
+                            <property name="icon_name">go-down-symbolic</property>
+                          </object>
+                        </child>
                       </object>
                     </child>
                   </object>
@@ -186,4 +196,10 @@
       </object>
     </child>
   </template>
+  <object class="GtkSizeGroup" id="sizegroup">
+    <property name="mode">horizontal</property>
+    <widgets>
+      <widget name="expand_button_box"/>
+    </widgets>
+</object>
 </interface>
