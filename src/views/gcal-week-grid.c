@@ -241,13 +241,15 @@ gcal_week_grid_draw (GtkWidget *widget,
 
   cairo_set_line_width (cr, 0.65);
 
+  /* Vertical lines */
   for (i = 0; i < 7; i++)
     {
       cairo_move_to (cr, ((width) / 7) * i + 0.4, 0);
       cairo_rel_line_to (cr, 0, height);
     }
 
-  for (i = 0; i < 24; i++)
+  /* Horizontal lines */
+  for (i = 1; i < 24; i++)
     {
       cairo_move_to (cr, 0, (height / 24) * i + 0.4);
       cairo_rel_line_to (cr, width, 0);
@@ -255,6 +257,7 @@ gcal_week_grid_draw (GtkWidget *widget,
 
   cairo_stroke (cr);
 
+  /* Dashed lines between the vertical lines */
   cairo_set_dash (cr, dashed, 2, 0);
 
   for (i = 0; i < 24; i++)

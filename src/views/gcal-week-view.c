@@ -53,7 +53,7 @@ struct _GcalWeekView
 
   /*
    * first day of the week according to user locale, being
-   * 0 for Sunday, 1 for Monday and so on 
+   * 0 for Sunday, 1 for Monday and so on
    */
   gint            first_weekday;
 
@@ -205,7 +205,7 @@ update_hours_sidebar_size (GcalWeekView *self)
   pango_layout_get_pixel_size (layout, &hours_24_width, &hours_24_height);
 
   sidebar_width = MAX (hours_12_width, hours_24_width) + padding.left + padding.right;
-  cell_height = MAX (hours_12_height, hours_24_height) + padding.top + padding.bottom;
+  cell_height = MAX (hours_12_height, hours_24_height) + padding.top + padding.bottom + 1;
 
   gtk_style_context_restore (context);
 
@@ -339,18 +339,13 @@ gcal_week_view_draw_hours (GcalWeekView *self,
       else
         {
           hours = g_strdup_printf ("%d %s",
-                                   i % 12,
-                                   i < 12 ? _("AM") : _("PM"));
+                                   i % 12 == 0 ? 12 : i % 12,
+                                   i > 12 ? _("PM") : _("AM"));
 
-          if (i == 0)
-            pango_layout_set_text (layout, _("12 PM"), -1);
-          else if (i == 12)
-            pango_layout_set_text (layout, _("12 AM"), -1);
-          else
-            pango_layout_set_text (layout, hours, -1);
+          pango_layout_set_text (layout, hours, -1);
         }
 
-      cairo_move_to (cr, padding.left, (height / 24) * i + (height / 120));
+      cairo_move_to (cr, padding.left, (height / 24) * i + padding.top);
       pango_cairo_show_layout (cr, layout);
 
       g_free (hours);
@@ -358,11 +353,8 @@ gcal_week_view_draw_hours (GcalWeekView *self,
 
   cairo_set_line_width (cr, 0.65);
 
-  cairo_move_to (cr, gtk_widget_get_allocated_width (self->hours_bar), 0);
-  cairo_rel_line_to (cr, 0, height);
-
   /* Draws the horizontal complete lines */
-  for (i = 0; i < 24; i++)
+  for (i = 1; i < 24; i++)
     {
       cairo_move_to (cr, 0, (height / 24) * i + 0.4);
       cairo_rel_line_to (cr, width, 0);
