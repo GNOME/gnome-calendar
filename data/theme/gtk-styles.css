@@ -408,5 +408,5 @@ datechooser day:selected:hover {
     font-size: 12pt;
     font-weight: normal;
     color: alpha(@theme_fg_color, 0.25);
-    padding: 8px;
+    padding: 18px 12px;
 }
