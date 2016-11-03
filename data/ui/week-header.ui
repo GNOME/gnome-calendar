@@ -105,9 +105,10 @@
                         <property name="visible">True</property>
                         <property name="column-homogeneous">True</property>
                         <property name="hexpand">True</property>
-                        <property name="column-spacing">8</property>
+                        <property name="column-spacing">6</property>
                         <property name="row-spacing">2</property>
                         <property name="margin-start">6</property>
+                        <property name="margin-end">6</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
