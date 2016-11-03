@@ -29,8 +29,6 @@
 #include <string.h>
 #include <math.h>
 
-#define ALL_DAY_CELLS_HEIGHT 40
-
 #define COLUMN_PADDING       6
 
 struct _GcalWeekHeader
@@ -700,16 +698,6 @@ gcal_week_header_draw (GcalWeekHeader *self,
 
   cell_width = alloc.width / 7;
   pango_layout_get_pixel_size (layout, NULL, &font_height);
-
-  gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "current");
-  gtk_render_background (context, cr,
-                         cell_width * current_cell,
-                         font_height + padding.bottom,
-                         cell_width,
-                         ALL_DAY_CELLS_HEIGHT);
-  gtk_style_context_remove_class (context, "current");
-  gtk_style_context_restore (context);
 
   for (i = 0; i < 7; i++)
     {
