@@ -456,27 +456,11 @@ gcal_week_view_set_property (GObject       *object,
     {
     case PROP_DATE:
       {
-        time_t range_start, range_end;
-        icaltimetype *date;
-        icaltimezone* default_zone;
-
         g_clear_pointer (&self->date, g_free);
-
         self->date = g_value_dup_boxed (value);
 
-        default_zone = gcal_manager_get_system_timezone (self->manager);
-        date = gcal_view_get_initial_date (GCAL_VIEW (object));
-        range_start = icaltime_as_timet_with_zone (*date,
-                                                   default_zone);
-        g_free (date);
-        date = gcal_view_get_final_date (GCAL_VIEW (object));
-        range_end = icaltime_as_timet_with_zone (*date,
-                                                 default_zone);
-        g_free (date);
-        gcal_manager_set_subscriber (self->manager,
-                                     E_CAL_DATA_MODEL_SUBSCRIBER (object),
-                                     range_start,
-                                     range_end);
+        gcal_week_header_set_current_date (GCAL_WEEK_HEADER (self->header), self->date);
+
         gtk_widget_queue_draw (GTK_WIDGET (object));
         break;
       }
