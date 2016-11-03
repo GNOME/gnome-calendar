@@ -47,7 +47,7 @@ void                 gcal_week_header_add_event                  (GcalWeekHeader
                                                                   GcalEvent          *event);
 
 void                 gcal_week_header_remove_event               (GcalWeekHeader     *self,
-                                                                  gchar              *uuid);
+                                                                  const gchar        *uuid);
 
 GtkSizeGroup*        gcal_week_header_get_sidebar_size_group     (GcalWeekHeader     *self);
 
