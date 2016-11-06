@@ -1,6 +1,7 @@
 /* gcal-week-grid.c
  *
- * Copyright (C) 2016 Vamsi Krishna Gollapudi <pandu.sonu@yahoo.com>
+ * Copyright (C) 2016 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ *                    Vamsi Krishna Gollapudi <pandu.sonu@yahoo.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,47 +35,20 @@ static const double dashed [] =
 
 struct _GcalWeekGrid
 {
-  GtkContainer  parent;
+  GtkContainer        parent;
 
-  GtkWidget    *hours_sidebar;
+  GtkWidget          *hours_sidebar;
 
-  GdkWindow    *event_window;
+  GdkWindow          *event_window;
 
-  gint          first_weekday;
+  gint                first_weekday;
+  gboolean            use_24h_format : 1;
 
-  gboolean      use_24h_format;
+  icaltimetype       *active_date;
+  icaltimetype       *current_date;
 
-  icaltimetype *active_date;
-  icaltimetype *current_date;
-
-  GcalManager  *manager;
+  GcalManager        *manager;
 };
-
-static void           gcal_week_grid_finalize               (GObject *object);
-
-static void           gcal_week_grid_add                    (GtkContainer *container,
-                                                             GtkWidget    *widget);
-
-static void           gcal_week_grid_remove                 (GtkContainer *container,
-                                                             GtkWidget    *widget);
-
-static void           gcal_week_grid_forall                 (GtkContainer *container,
-                                                             gboolean      include_internals,
-                                                             GtkCallback   callback,
-                                                             gpointer      callback_data);
-
-static void           gcal_week_grid_get_property           (GObject    *object,
-                                                             guint       prop_id,
-                                                             GValue     *value,
-                                                             GParamSpec *psec);
-
-static void           gcal_week_grid_set_property           (GObject      *object,
-                                                             guint         prop_id,
-                                                             const GValue *value,
-                                                             GParamSpec   *pspec);
-
-static gboolean       gcal_week_grid_draw                   (GtkWidget *widget,
-                                                             cairo_t   *cr);
 
 G_DEFINE_TYPE (GcalWeekGrid, gcal_week_grid, GTK_TYPE_CONTAINER);
 

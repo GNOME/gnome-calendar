@@ -31,14 +31,17 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalWeekGrid, gcal_week_grid, GCAL, WEEK_GRID, GtkContainer)
 
-void              gcal_week_grid_set_manager        (GcalWeekGrid *week_grid,
-                                                     GcalManager  *manager);
-void              gcal_week_grid_set_first_weekday  (GcalWeekGrid *week_grid,
-                                                     gint          nr_day);
-void              gcal_week_grid_set_use_24h_format (GcalWeekGrid *week_grid,
-                                                     gboolean      use_24h_format);
-void              gcal_week_grid_set_current_date   (GcalWeekGrid *week_grid,
-                                                     icaltimetype *current_date);
+void                 gcal_week_grid_set_manager                  (GcalWeekGrid       *week_grid,
+                                                                  GcalManager        *manager);
+
+void                 gcal_week_grid_set_first_weekday            (GcalWeekGrid       *week_grid,
+                                                                  gint                nr_day);
+
+void                 gcal_week_grid_set_use_24h_format           (GcalWeekGrid       *week_grid,
+                                                                  gboolean            use_24h_format);
+
+void                 gcal_week_grid_set_current_date             (GcalWeekGrid       *week_grid,
+                                                                  icaltimetype       *current_date);
 
 G_END_DECLS
 
