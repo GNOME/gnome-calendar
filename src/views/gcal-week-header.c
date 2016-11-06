@@ -185,6 +185,205 @@ add_event_to_weekday (GcalWeekHeader *self,
   self->events[weekday] = l;
 }
 
+static gint
+merge_events (GcalWeekHeader *self,
+              GtkWidget      *event,
+              GtkWidget      *to_be_removed)
+{
+  gint deleted_width, current_width;
+
+  /* Retrieve the current sizes */
+  gtk_container_child_get (GTK_CONTAINER (self->grid),
+                           to_be_removed,
+                           "width", &deleted_width,
+                           NULL);
+
+  if (event == to_be_removed)
+    goto out;
+
+  gtk_container_child_get (GTK_CONTAINER (self->grid),
+                           event,
+                           "width", &current_width,
+                           NULL);
+
+  gtk_widget_destroy (to_be_removed);
+
+  /* Update the event's size */
+  gtk_container_child_set (GTK_CONTAINER (self->grid),
+                           event,
+                           "width", current_width + deleted_width,
+                           NULL);
+
+out:
+  return deleted_width;
+}
+
+static void
+check_mergeable_events (GcalWeekHeader *self)
+{
+  gint weekday;
+
+  /* We don't need to check the last column */
+  for (weekday = 0; weekday < 6; weekday++)
+    {
+      GList *events_at_weekday, *l;
+      gint index;
+
+      index = 0;
+      events_at_weekday = self->events[weekday];
+
+      for (l = events_at_weekday; l != NULL; l = l->next)
+        {
+          GcalEvent *current_event;
+          gint events_to_merge, i;
+
+          current_event = l->data;
+          events_to_merge = 0;
+
+          /* No need to continue if we're hiding the events */
+          if (!self->expanded && index > 3)
+            break;
+
+          /*
+           * Horizontally check if the next cells have the same event
+           * than the current cell.
+           */
+          for (i = 1; i < 7 - weekday; i++)
+            {
+              GcalEvent *next_event;
+
+              next_event = g_list_nth_data (self->events[weekday + 1], index);
+
+              if (next_event != current_event)
+                break;
+
+              events_to_merge++;
+            }
+
+          /* We found events to merge. Lets merge them */
+          i = 0;
+
+          while (events_to_merge > 0)
+            {
+              GtkWidget *current_widget, *to_be_removed;
+              gint removed_cells;
+
+              current_widget = gtk_grid_get_child_at (GTK_GRID (self->grid), weekday + i, index);
+              to_be_removed = gtk_grid_get_child_at (GTK_GRID (self->grid), weekday + i + 1, index);
+
+              /* First, remove the events from the cells */
+              removed_cells = merge_events (self, current_widget, to_be_removed);
+
+              events_to_merge -= removed_cells;
+              i += removed_cells;
+            }
+
+          index++;
+        }
+    }
+}
+
+static void
+split_event_widget_at_column (GcalWeekHeader *self,
+                              GtkWidget      *widget,
+                              gint            column)
+{
+  GDateTime *week_start, *column_date, *end_column_date;
+  GcalEvent *event;
+  gboolean create_before;
+  gboolean create_after;
+  gint left_attach;
+  gint top_attach;
+  gint new_width;
+  gint old_width;
+
+  week_start = get_start_of_week (self->active_date);
+  column_date = g_date_time_add_days (week_start, column);
+  end_column_date = g_date_time_add_days (column_date, 1);
+  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
+
+  create_before = column > 0 && g_date_time_compare (gcal_event_get_date_start (event), column_date) < 0;
+  create_after = column < 6 && g_date_time_compare (gcal_event_get_date_end (event), end_column_date) >= 0;
+
+  gtk_container_child_get (GTK_CONTAINER (self->grid),
+                           widget,
+                           "top_attach", &top_attach,
+                           "left_attach", &left_attach,
+                           "width", &old_width,
+                           NULL);
+
+
+  g_message ("  -  -  -  breaking event '%s'", gcal_event_get_summary (event));
+
+  if (create_before)
+    {
+      GtkWidget *widget_before;
+
+      g_message ("  -  -  -  -  creating new widget before");
+
+      widget_before = gcal_event_widget_clone (GCAL_EVENT_WIDGET (widget));
+
+      gtk_grid_attach (GTK_GRID (self->grid),
+                       widget_before,
+                       left_attach,
+                       top_attach,
+                       column - left_attach,
+                       1);
+
+      new_width = old_width - column + left_attach;
+      old_width = new_width;
+      left_attach = column;
+
+      /* Update the current event position and size */
+      gtk_container_child_set (GTK_CONTAINER (self->grid),
+                               widget,
+                               "left_attach", left_attach,
+                               "width", new_width,
+                               NULL);
+
+      gtk_widget_show (widget_before);
+    }
+
+  /* Create a new widget after the current widget */
+  if (create_after)
+    {
+      GtkWidget *widget_after;
+
+      g_message ("  -  -  -  -  creating new widget after");
+
+      widget_after = gcal_event_widget_clone (GCAL_EVENT_WIDGET (widget));
+      gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (widget_after), end_column_date);
+      gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget_after),
+                                      gcal_event_widget_get_date_end (GCAL_EVENT_WIDGET (widget)));
+
+      gtk_grid_attach (GTK_GRID (self->grid),
+                       widget_after,
+                       column + 1,
+                       top_attach,
+                       old_width - 1,
+                       1);
+
+      new_width = old_width - (column - left_attach + 1);
+
+      g_message ("  -  -  -  -  placing new widget at (x: %d, y: %d, w: %d)",
+                 column + 1,
+                 top_attach,
+                 new_width);
+
+      /* Only update the current widget's width */
+      gtk_container_child_set (GTK_CONTAINER (self->grid),
+                               widget,
+                               "width", new_width,
+                               NULL);
+
+      gtk_widget_show (widget_after);
+    }
+
+  g_clear_pointer (&end_column_date, g_date_time_unref);
+  g_clear_pointer (&column_date, g_date_time_unref);
+  g_clear_pointer (&week_start, g_date_time_unref);
+}
+
 static void
 move_events_at_column (GcalWeekHeader *self,
                        gint            column,
@@ -234,15 +433,21 @@ move_events_at_column (GcalWeekHeader *self,
    */
   for (l = found_widgets; l != NULL; l = l->next)
     {
-      gint top_attach;
+      gint top_attach, left_attach, width;
 
       /* Get the widget's current position... */
       gtk_container_child_get (GTK_CONTAINER (self->grid),
                                l->data,
                                "top_attach", &top_attach,
+                               "left_attach", &left_attach,
+                               "width", &width,
                                NULL);
 
       g_message ("  -  -  -  setting top_attach to %d", top_attach + 1);
+
+      /* If this is a multiday event, break it */
+      if (width > 1)
+        split_event_widget_at_column (self, l->data, column);
 
       /* And move it to position + 1 */
       gtk_container_child_set (GTK_CONTAINER (self->grid),
@@ -250,6 +455,9 @@ move_events_at_column (GcalWeekHeader *self,
                                "top_attach", top_attach + 1,
                                NULL);
     }
+
+  /* Check if we eventually can merge events */
+  check_mergeable_events (self);
 
   g_clear_pointer (&found_widgets, g_list_free);
 }
@@ -260,7 +468,7 @@ add_event_to_grid (GcalWeekHeader *self,
                    gint            start,
                    gint            end)
 {
-  GDateTime *widget_start_dt, *widget_end_dt;
+  GDateTime *week_start, *week_end, *widget_end_dt;
   GtkWidget *widget;
   gint events_at_weekday;
   gint position;
@@ -307,14 +515,14 @@ add_event_to_grid (GcalWeekHeader *self,
   if (!gcal_event_is_multiday (event))
     return;
 
+  week_start = get_start_of_week (self->active_date);
+  week_end = get_end_of_week (self->active_date);
+
   /* Setup the event's start date */
-  widget_start_dt = get_start_of_week (self->active_date);
-  widget_end_dt = g_date_time_add_days (widget_start_dt, 1);
+  widget_end_dt = g_date_time_add_days (week_start, 1);
 
-  gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (widget), widget_start_dt);
+  gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (widget), week_start);
   gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget), widget_end_dt);
-
-  g_clear_pointer (&widget_start_dt, g_date_time_unref);
 
   /*
    * In addition to moving the current column's events below, multiday
@@ -323,16 +531,17 @@ add_event_to_grid (GcalWeekHeader *self,
    */
   for (i = start + 1; i <= end; i++)
     {
+      GDateTime *new_widget_end_dt;
       gint new_position;
 
       events_at_weekday = g_list_length (self->events[i]);
+      new_widget_end_dt = g_date_time_add_days (widget_end_dt, 1);
 
       /* Add the event to that day */
       add_event_to_weekday (self, event, i);
 
       g_message ("  -  -  adding event to column %d", i);
       g_message ("  -  -  -  there are %d events in this column", events_at_weekday);
-
 
       /* Check the event position at this weekday */
       new_position = g_list_index (self->events[i], event) + 1;
@@ -344,28 +553,49 @@ add_event_to_grid (GcalWeekHeader *self,
       /* Add the event to the grid */
       if (new_position == position)
         {
-          GDateTime *new_widget_end_dt;
-
-          new_widget_end_dt = g_date_time_add_days (widget_end_dt, 1);
-
-          /* Update the widget's end date */
-          gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget), new_widget_end_dt);
-
           gtk_container_child_set (GTK_CONTAINER (self->grid),
                                    widget,
                                    "width", i - start + 1,
                                    NULL);
-
-          g_clear_pointer (&widget_end_dt, g_date_time_unref);
-          widget_end_dt = new_widget_end_dt;
         }
       else
         {
-          /* TODO: clone the widget */
+          GDateTime *cloned_widget_start_dt;
+          GtkWidget *cloned_widget;
+
+          cloned_widget_start_dt = g_date_time_add_days (week_start, i);
+          cloned_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (widget));
+
+          g_message ("  -  -  -  -  cloning event");
+
+          gtk_grid_attach (GTK_GRID (self->grid),
+                           cloned_widget,
+                           i,
+                           new_position,
+                           1,
+                           1);
+
+          gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (cloned_widget), cloned_widget_start_dt);
+
+          /* From now on, let's modify this widget */
+          widget = cloned_widget;
+
+          g_clear_pointer (&cloned_widget_start_dt, g_date_time_unref);
         }
+
+      /* Update the widget's end date */
+      gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget), new_widget_end_dt);
+
+      g_clear_pointer (&widget_end_dt, g_date_time_unref);
+
+      widget_end_dt = new_widget_end_dt;
     }
 
   gtk_widget_show (widget);
+
+  g_clear_pointer (&widget_end_dt, g_date_time_unref);
+  g_clear_pointer (&week_start, g_date_time_unref);
+  g_clear_pointer (&week_end, g_date_time_unref);
 }
 
 static void
