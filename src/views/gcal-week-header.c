@@ -1097,6 +1097,8 @@ gcal_week_header_add_event (GcalWeekHeader *self,
   if (g_date_time_compare (week_end, end_date) < 0)
     width -= ceil (g_date_time_difference (end_date, week_end) / G_TIME_SPAN_DAY);
 
+  width = MAX (width, 1);
+
   g_message ("ADD: '%s' (pos: %d, width: %d)", gcal_event_get_summary (event), weekday, width);
 
   add_event_to_grid (self, event, weekday, weekday + width - 1);
