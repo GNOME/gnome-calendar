@@ -319,7 +319,7 @@ gcal_application_command_line (GApplication            *app,
 
   self = GCAL_APPLICATION (app);
   argv = g_application_command_line_get_arguments (command_line, &argc);
-  context = g_option_context_new (N_("- Calendar management"));
+  context = g_option_context_new (N_("— Calendar management"));
   g_option_context_add_main_entries (context, gcal_application_goptions, GETTEXT_PACKAGE);
 
   error = NULL;
