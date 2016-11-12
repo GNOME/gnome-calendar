@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-10-03 22:01+0000\n"
-"PO-Revision-Date: 2016-10-28 10:37+0200\n"
+"POT-Creation-Date: 2016-11-11 16:22+0000\n"
+"PO-Revision-Date: 2016-11-12 11:37+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -47,8 +47,8 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You'll feel comfortable using "
-"Calendar, like you've been using it for ages!"
+"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Cílem vývojářů bylo najít rovnováhu mezi propracovanými funkcemi a "
 "použitelností pro uživatele. Nic nepřebývá, nic neschází. Používání "
@@ -458,7 +458,7 @@ msgid "Year"
 msgstr "Rok"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:266 ../src/gcal-year-view.c:486
+#: ../src/gcal-year-view.c:275 ../src/gcal-year-view.c:495
 msgid "Today"
 msgstr "Dnes"
 
@@ -492,7 +492,7 @@ msgid "Open calendar showing the passed event"
 msgstr "Otevřít kalendář na zadané události"
 
 #: ../src/gcal-application.c:322
-msgid "- Calendar management"
+msgid "— Calendar management"
 msgstr "– Správa kalendáře"
 
 #: ../src/gcal-application.c:469
