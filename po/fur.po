@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-10-03 22:01+0000\n"
-"PO-Revision-Date: 2016-10-24 22:17+0200\n"
+"POT-Creation-Date: 2016-11-11 16:22+0000\n"
+"PO-Revision-Date: 2016-11-13 22:39+0100\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
@@ -44,8 +44,8 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You'll feel comfortable using "
-"Calendar, like you've been using it for ages!"
+"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Il nestri obietîf al è chel di cjatâ il perfet belançament tra "
 "funzionalitâts ben fatis e doprabilitât utent: nie di plui, nie di mancul. "
@@ -455,7 +455,7 @@ msgid "Year"
 msgstr "An"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:266 ../src/gcal-year-view.c:486
+#: ../src/gcal-year-view.c:275 ../src/gcal-year-view.c:495
 msgid "Today"
 msgstr "Vuê"
 
@@ -489,8 +489,8 @@ msgid "Open calendar showing the passed event"
 msgstr "Vierç il calendari mostrant l'event dât"
 
 #: ../src/gcal-application.c:322
-msgid "- Calendar management"
-msgstr "- Gjestion calendari"
+msgid "— Calendar management"
+msgstr "— Gjestion calendari"
 
 #: ../src/gcal-application.c:469
 #, c-format
