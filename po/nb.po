@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 3.23.x\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-15 13:50+0200\n"
-"PO-Revision-Date: 2016-10-15 13:51+0200\n"
+"POT-Creation-Date: 2016-11-20 17:40+0100\n"
+"PO-Revision-Date: 2016-11-20 17:41+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: nb\n"
@@ -43,8 +43,8 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You'll feel comfortable using "
-"Calendar, like you've been using it for ages!"
+"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Vi prøver å finne en perfekt balanse mellom velbygde funksjoner og "
 "brukskvalitet. Ikke for mye, og ikke for lite. Du skal føle deg komfortabel "
@@ -486,8 +486,8 @@ msgid "Open calendar showing the passed event"
 msgstr "Åpne kalender som viser passert hendelse"
 
 #: ../src/gcal-application.c:322
-msgid "- Calendar management"
-msgstr "- Kalenderbehandling"
+msgid "— Calendar management"
+msgstr "– Kalenderhåndtering"
 
 #: ../src/gcal-application.c:469
 #, c-format
