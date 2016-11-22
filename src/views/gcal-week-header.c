@@ -104,6 +104,12 @@ enum
   PROP_ACTIVE_DATE
 };
 
+typedef enum
+{
+  UP,
+  DOWN
+} MoveDirection;
+
 G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_GRID);
 
 static GDateTime*
@@ -386,13 +392,16 @@ split_event_widget_at_column (GcalWeekHeader *self,
 
 static void
 move_events_at_column (GcalWeekHeader *self,
+                       MoveDirection   direction,
                        gint            column,
-                       gint            start_at,
-                       gint            n_events)
+                       gint            start_at)
 {
   GList *found_widgets, *l;
+  gint n_events;
   gint counter;
   gint i;
+
+  n_events = g_list_length (self->events[column]) - start_at;
 
   if (n_events == 0)
     return;
@@ -452,7 +461,7 @@ move_events_at_column (GcalWeekHeader *self,
       /* And move it to position + 1 */
       gtk_container_child_set (GTK_CONTAINER (self->grid),
                                l->data,
-                               "top_attach", top_attach + 1,
+                               "top_attach", top_attach + (direction == DOWN ? 1 : -1),
                                NULL);
     }
 
@@ -496,7 +505,7 @@ add_event_to_grid (GcalWeekHeader *self,
   g_message ("  -  -  adding event to column %d", start);
   g_message ("  -  -  -  there are %d events in this column", events_at_weekday);
 
-  move_events_at_column (self, start, position, events_at_weekday - position + 1);
+  move_events_at_column (self, DOWN, start, position);
 
   /* Add the event to the grid */
   widget = gcal_event_widget_new (event);
@@ -548,7 +557,7 @@ add_event_to_grid (GcalWeekHeader *self,
 
       g_message ("  -  -  -  adding event to position %d", new_position);
 
-      move_events_at_column (self, i, new_position, events_at_weekday - new_position + 1);
+      move_events_at_column (self, DOWN, i, new_position);
 
       /* Add the event to the grid */
       if (new_position == position)
