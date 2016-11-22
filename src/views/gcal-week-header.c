@@ -771,9 +771,11 @@ header_collapse (GcalWeekHeader *self)
       if (hidden_events[i])
         {
           GtkWidget *widget;
+          gchar *other_events_label;
 
-          widget = gtk_label_new (g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", hidden_events[i]),
-                                                   hidden_events[i]));
+          other_events_label = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", hidden_events[i]),
+                                                hidden_events[i]);
+          widget = gtk_label_new (other_events_label);
 
           gtk_widget_set_visible (widget, TRUE);
           gtk_grid_attach (GTK_GRID (self->grid), widget, i, 4, 1, 1);
