@@ -673,12 +673,7 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
       if (dialog->selected_source &&
           gcal_event_get_source (dialog->event) != dialog->selected_source)
         {
-          /*
-           * When we're creating the event, it has no source set, so we simply
-           * set the source. When editing the event, however, we're actually
-           * moving it from one source to another.
-           */
-          if (!gcal_event_get_source (dialog->event))
+          if (dialog->event_is_new)
             {
               gcal_event_set_source (dialog->event, dialog->selected_source);
             }
