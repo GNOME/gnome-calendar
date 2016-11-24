@@ -70,8 +70,6 @@ struct _GcalWeekHeader
   GtkSizeGroup     *sizegroup;
 };
 
-static void           update_headers                        (GcalWeekHeader *self);
-
 static void           header_collapse                       (GcalWeekHeader *self);
 
 static void           header_expand                         (GcalWeekHeader *self);
@@ -629,7 +627,7 @@ update_events_for_date (GcalWeekHeader *self,
 }
 
 static void
-update_headers (GcalWeekHeader *self)
+update_title (GcalWeekHeader *self)
 {
   GDateTime *week_start, *week_end;
   gchar *year_label, *month_label, *week_label;
@@ -822,7 +820,7 @@ gcal_week_header_set_property (GObject      *object,
       old_date = self->active_date;
       self->active_date = g_value_dup_boxed (value);
 
-      update_headers (self);
+      update_title (self);
       gtk_widget_queue_draw (self->draw_area);
 
       if (old_date)
@@ -1156,7 +1154,7 @@ gcal_week_header_set_current_date (GcalWeekHeader *self,
 
   g_message ("-----");
 
-  update_headers (self);
+  update_title (self);
 
   gtk_widget_queue_draw (self->draw_area);
 }
