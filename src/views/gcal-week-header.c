@@ -1151,19 +1151,28 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
   if (!removed_event)
     goto out;
 
+  g_message ("DEL: '%s'", gcal_event_get_summary (removed_event));
+
   /* Remove from the weekday's GList */
   for (weekday = 0; weekday < 7; weekday++)
     {
+      gint event_position;
+
       l = self->events[weekday];
+      event_position = g_list_index (self->events[weekday], removed_event);
+
+      if (event_position == -1)
+        continue;
+
+      g_message ("  -  Column %d has event at %d (length: %d)", weekday, event_position, g_list_length (l) - 1);
+
+      /* Remove from the current weekday */
       l = g_list_remove (l, removed_event);
-
       self->events[weekday] = l;
-    }
 
-  g_message ("DEL: '%s' (length of %d: %d)",
-             gcal_event_get_summary (removed_event),
-             weekday,
-             g_list_length (l));
+      /* Move remaining events up */
+      move_events_at_column (self, UP, weekday, event_position);
+    }
 
 out:
   g_clear_pointer (&children, g_list_free);
