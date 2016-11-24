@@ -396,48 +396,12 @@ move_events_at_column (GcalWeekHeader *self,
                        gint            column,
                        gint            start_at)
 {
-  GList *found_widgets, *l;
-  gint n_events;
-  gint counter;
-  gint i;
+  GList *children, *l;
 
-  found_widgets = NULL;
-  n_events = g_list_length (self->events[column]) - start_at - 1;
-  counter = 0;
-  i = start_at + 1;
-
-  /* No events to move, simply quit */
-  if (n_events < 1)
-    return;
+  children = gtk_container_get_children (GTK_CONTAINER (self->grid));
 
   /* First, lets find the widgets at this column */
-  do
-    {
-      GtkWidget *widget_at_y;
-
-      /*
-       * The first element is the column is always a placeholder GtkBox,
-       * which we disconsider by starting the counter at 1.
-       */
-      widget_at_y = gtk_grid_get_child_at (GTK_GRID (self->grid), column, i);
-
-      /* Move the events to below */
-      if (widget_at_y)
-        {
-          found_widgets = g_list_prepend (found_widgets, widget_at_y);
-          counter++;
-          g_message ("  -  -  -  found an event widget (%d)", counter);
-        }
-
-      i++;
-    }
-  while (counter < n_events);
-
-  /*
-   * Now the we discovered all the widgets at that column,
-   * move them below, one by one.
-   */
-  for (l = found_widgets; l != NULL; l = l->next)
+  for (l = children; l != NULL; l = l->next)
     {
       gint top_attach, left_attach, width;
 
@@ -449,13 +413,14 @@ move_events_at_column (GcalWeekHeader *self,
                                "width", &width,
                                NULL);
 
+      if (left_attach != column || start_at > top_attach - 1 || !GCAL_IS_EVENT_WIDGET (l->data))
+        continue;
+
       /* If this is a multiday event, break it */
       if (width > 1)
         split_event_widget_at_column (self, l->data, column);
 
       top_attach = top_attach + (direction == DOWN ? 1 : -1);
-
-      g_message ("  -  -  -  setting top_attach to %d", top_attach);
 
       /* And move it to position + 1 */
       gtk_container_child_set (GTK_CONTAINER (self->grid),
@@ -467,7 +432,7 @@ move_events_at_column (GcalWeekHeader *self,
   /* Check if we eventually can merge events */
   check_mergeable_events (self);
 
-  g_clear_pointer (&found_widgets, g_list_free);
+  g_clear_pointer (&children, g_list_free);
 }
 
 static void
@@ -1166,12 +1131,13 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
 
       g_message ("  -  Column %d has event at %d (length: %d)", weekday, event_position, g_list_length (l) - 1);
 
+      /* Move remaining events up */
+      move_events_at_column (self, UP, weekday, event_position);
+
       /* Remove from the current weekday */
       l = g_list_remove (l, removed_event);
       self->events[weekday] = l;
 
-      /* Move remaining events up */
-      move_events_at_column (self, UP, weekday, event_position);
     }
 
 out:
