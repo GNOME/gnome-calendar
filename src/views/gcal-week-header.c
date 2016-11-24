@@ -401,17 +401,14 @@ move_events_at_column (GcalWeekHeader *self,
   gint counter;
   gint i;
 
-  n_events = g_list_length (self->events[column]) - start_at;
-
-  if (n_events == 0)
-    return;
-
   found_widgets = NULL;
+  n_events = g_list_length (self->events[column]) - start_at - 1;
   counter = 0;
-  i = start_at;
+  i = start_at + 1;
 
-  g_message ("  -  -  moving %d events below %d from column %d",
-             n_events, column, n_events);
+  /* No events to move, simply quit */
+  if (n_events < 1)
+    return;
 
   /* First, lets find the widgets at this column */
   do
@@ -452,16 +449,18 @@ move_events_at_column (GcalWeekHeader *self,
                                "width", &width,
                                NULL);
 
-      g_message ("  -  -  -  setting top_attach to %d", top_attach + 1);
-
       /* If this is a multiday event, break it */
       if (width > 1)
         split_event_widget_at_column (self, l->data, column);
 
+      top_attach = top_attach + (direction == DOWN ? 1 : -1);
+
+      g_message ("  -  -  -  setting top_attach to %d", top_attach);
+
       /* And move it to position + 1 */
       gtk_container_child_set (GTK_CONTAINER (self->grid),
                                l->data,
-                               "top_attach", top_attach + (direction == DOWN ? 1 : -1),
+                               "top_attach", top_attach,
                                NULL);
     }
 
@@ -490,13 +489,13 @@ add_event_to_grid (GcalWeekHeader *self,
   /* Add at least at the first weekday */
   add_event_to_weekday (self, event, start);
 
-  position = g_list_index (self->events[start], event) + 1;
+  position = g_list_index (self->events[start], event);
 
   /*
    * This event is not visible until the header is expanded, so it
    * only goes to the overlow list.
    */
-  if (position > 3 && !self->expanded)
+  if (position > 2 && !self->expanded)
     {
       /* TODO: hide the last event, and show the "Other Events" label */
       return;
@@ -514,7 +513,7 @@ add_event_to_grid (GcalWeekHeader *self,
   gtk_grid_attach (GTK_GRID (self->grid),
                    widget,
                    start,
-                   position,
+                   position + 1,
                    1,
                    1);
 
@@ -553,7 +552,7 @@ add_event_to_grid (GcalWeekHeader *self,
       g_message ("  -  -  -  there are %d events in this column", events_at_weekday);
 
       /* Check the event position at this weekday */
-      new_position = g_list_index (self->events[i], event) + 1;
+      new_position = g_list_index (self->events[i], event);
 
       g_message ("  -  -  -  adding event to position %d", new_position);
 
@@ -580,7 +579,7 @@ add_event_to_grid (GcalWeekHeader *self,
           gtk_grid_attach (GTK_GRID (self->grid),
                            cloned_widget,
                            i,
-                           new_position,
+                           new_position + 1,
                            1,
                            1);
 
