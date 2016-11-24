@@ -1757,7 +1757,7 @@ remove_button_clicked (GtkWidget *button,
         }
 
       // Update notification label
-      str = g_strdup_printf (_("Calendar <b>%s</b> removed"), e_source_get_display_name (self->removed_source));
+      str = g_markup_printf_escaped (_("Calendar <b>%s</b> removed"), e_source_get_display_name (self->removed_source));
       gtk_label_set_markup (GTK_LABEL (self->notification_label), str);
 
       // Remove old notifications
