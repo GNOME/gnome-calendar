@@ -441,31 +441,17 @@ add_event_to_grid (GcalWeekHeader *self,
 {
   GDateTime *week_start, *week_end, *widget_end_dt;
   GtkWidget *widget;
-  gint events_at_weekday;
   gint position;
   gint i;
 
   g_message ("  -  adding %s event", gcal_event_is_multiday (event) ? "multiday" : "single day");
-
-  events_at_weekday = g_list_length (self->events[start]);
 
   /* Add at least at the first weekday */
   add_event_to_weekday (self, event, start);
 
   position = g_list_index (self->events[start], event);
 
-  /*
-   * This event is not visible until the header is expanded, so it
-   * only goes to the overlow list.
-   */
-  if (position > 2 && !self->expanded)
-    {
-      /* TODO: hide the last event, and show the "Other Events" label */
-      return;
-    }
-
   g_message ("  -  -  adding event to column %d", start);
-  g_message ("  -  -  -  there are %d events in this column", events_at_weekday);
 
   move_events_at_column (self, DOWN, start, position);
 
@@ -505,14 +491,12 @@ add_event_to_grid (GcalWeekHeader *self,
       GDateTime *new_widget_end_dt;
       gint new_position;
 
-      events_at_weekday = g_list_length (self->events[i]);
       new_widget_end_dt = g_date_time_add_days (widget_end_dt, 1);
 
       /* Add the event to that day */
       add_event_to_weekday (self, event, i);
 
       g_message ("  -  -  adding event to column %d", i);
-      g_message ("  -  -  -  there are %d events in this column", events_at_weekday);
 
       /* Check the event position at this weekday */
       new_position = g_list_index (self->events[i], event);
