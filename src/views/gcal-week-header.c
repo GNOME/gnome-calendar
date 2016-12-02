@@ -110,6 +110,26 @@ typedef enum
 
 G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_GRID);
 
+static GcalEvent*
+get_event_by_uuid (GcalWeekHeader *self,
+                   const gchar    *uuid)
+{
+  gint weekday;
+
+  for (weekday = 0; weekday < 7; weekday++)
+    {
+      GList *l;
+
+      for (l = self->events[weekday]; l != NULL; l = l->next)
+        {
+          if (g_strcmp0 (gcal_event_get_uid (l->data), uuid) == 0)
+            return l->data;
+        }
+    }
+
+  return NULL;
+}
+
 static GDateTime*
 get_start_of_week (icaltimetype *date)
 {
@@ -1042,8 +1062,12 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
 
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
+  removed_event = get_event_by_uuid (self, uuid);
+
+  if (!removed_event)
+    return;
+
   children = gtk_container_get_children (GTK_CONTAINER (self->grid));
-  removed_event = NULL;
 
   for (l = children; l != NULL; l = l->next)
     {
@@ -1057,14 +1081,8 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
       event = gcal_event_widget_get_event (child_widget);
 
       if (g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
-        {
-          removed_event = g_object_ref (event);
-          gtk_widget_destroy (l->data);
-        }
+        gtk_widget_destroy (l->data);
     }
-
-  if (!removed_event)
-    goto out;
 
   /* Remove from the weekday's GList */
   for (weekday = 0; weekday < 7; weekday++)
@@ -1089,9 +1107,7 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
   /* Check if we eventually can merge events */
   check_mergeable_events (self);
 
-out:
   g_clear_pointer (&children, g_list_free);
-  g_clear_object (&removed_event);
 }
 
 void
