@@ -53,6 +53,7 @@ struct _GcalWeekHeader
    * and the events will be placed
    */
   GList            *events[7];
+  GtkWidget        *overflow_label[7];
 
   gint              first_weekday;
 
@@ -209,6 +210,68 @@ add_event_to_weekday (GcalWeekHeader *self,
   return g_list_index (l, event);
 }
 
+static gboolean
+is_event_visible (GcalWeekHeader *self,
+                  gint            weekday,
+                  gint            position)
+{
+  gboolean show_label;
+
+  if (self->expanded)
+    return TRUE;
+
+  show_label = g_list_length (self->events[weekday]) > 3;
+
+  return show_label ? position < 2 : position < 3;
+}
+
+static void
+update_overflow_labels (GcalWeekHeader *self)
+{
+  gint i;
+
+  for (i = 0; i < 7; i++)
+    {
+      GtkWidget *label;
+      gboolean show_label;
+      gint n_events;
+
+      n_events = g_list_length (self->events[i]);
+      show_label = n_events > 3;
+      label = self->overflow_label[i];
+
+      if (show_label)
+        {
+          gchar *text;
+
+          text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", n_events - 2), n_events - 2);
+
+          /* TODO: use a button and show an overflow popover */
+          if (!label)
+            {
+              label = gtk_label_new ("");
+              gtk_grid_attach (GTK_GRID (self->grid),
+                               label,
+                               i,
+                               3,
+                               1,
+                               1);
+
+              self->overflow_label[i] = label;
+
+              gtk_widget_show (label);
+            }
+
+          gtk_label_set_label (GTK_LABEL (label), text);
+          g_free (text);
+        }
+      else
+        {
+          g_clear_pointer (&self->overflow_label[i], gtk_widget_destroy);
+        }
+    }
+}
+
 static void
 merge_events (GcalWeekHeader *self,
               GtkWidget      *event,
@@ -301,6 +364,8 @@ check_mergeable_events (GcalWeekHeader *self)
                 continue;
 
               merge_events (self, current_widget, to_be_removed);
+
+              gtk_widget_set_visible (current_widget, is_event_visible (self, weekday + i, index));
             }
 
           index++;
@@ -435,6 +500,8 @@ move_events_at_column (GcalWeekHeader *self,
                                l->data,
                                "top_attach", top_attach,
                                NULL);
+
+      gtk_widget_set_visible (l->data, is_event_visible (self, left_attach, top_attach - 1));
     }
 
   g_clear_pointer (&children, g_list_free);
@@ -467,7 +534,7 @@ add_event_to_grid (GcalWeekHeader *self,
                    1,
                    1);
 
-  gtk_widget_show (widget);
+  gtk_widget_set_visible (widget, is_event_visible (self, start, position));
 
   /* Single-day events are the simplest case, and the code above is enough to deal with them */
   if (!gcal_event_is_multiday (event))
@@ -526,6 +593,8 @@ add_event_to_grid (GcalWeekHeader *self,
 
           /* From now on, let's modify this widget */
           widget = cloned_widget;
+
+          gtk_widget_set_visible (widget, is_event_visible (self, i, new_position));
 
           g_clear_pointer (&cloned_widget_start_dt, g_date_time_unref);
         }
@@ -655,7 +724,9 @@ update_title (GcalWeekHeader *self)
 static void
 header_collapse (GcalWeekHeader *self)
 {
-  gint hidden_events[7], row, i;
+  GList *children, *l;
+
+  children = gtk_container_get_children (GTK_CONTAINER (self->grid));
 
   self->expanded = FALSE;
 
@@ -665,68 +736,31 @@ header_collapse (GcalWeekHeader *self)
   gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolledwindow), -1);
   gtk_image_set_from_icon_name (GTK_IMAGE (self->expand_button_image), "go-down-symbolic", 4);
 
-  for (i = 0; i < 7; i++)
-    hidden_events[i] = 0;
-
-  /* Gets count of number of extra events in each column */
-  for (row = 4; ; row++)
+  for (l = children; l != NULL; l = l->next)
     {
-      gboolean empty;
+      gint top_attach, left_attach;
 
-      empty = TRUE;
+      gtk_container_child_get (GTK_CONTAINER (self->grid),
+                               l->data,
+                               "top-attach", &top_attach,
+                               "left_attach", &left_attach,
+                               NULL);
 
-      for (i = 0; i < 7; i++)
-        {
-          if (gtk_grid_get_child_at (GTK_GRID (self->grid), i, row))
-            {
-              hidden_events[i]++;
-              empty = FALSE;
-            }
-        }
-
-      if (empty)
-        break;
+      gtk_widget_set_visible (l->data, is_event_visible (self, left_attach, top_attach - 1));
     }
 
-  /* Removes the excess events and adds them to the object list of events */
-  for ( ; row >= 4; row--)
-    {
-      for (i = 0; i < 7; i++)
-      {
-        if (gtk_grid_get_child_at (GTK_GRID (self->grid), i, row))
-          {
-            GcalEventWidget *widget;
+  update_overflow_labels (self);
 
-            widget = GCAL_EVENT_WIDGET (gtk_grid_get_child_at (GTK_GRID (self->grid), i, row));
-
-            gtk_widget_destroy (GTK_WIDGET (widget));
-          }
-      }
-    }
-
-  /* Adds labels in the last row */
-  for (i = 0; i < 7; i++)
-    {
-      if (hidden_events[i])
-        {
-          GtkWidget *widget;
-          gchar *other_events_label;
-
-          other_events_label = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", hidden_events[i]),
-                                                hidden_events[i]);
-          widget = gtk_label_new (other_events_label);
-
-          gtk_widget_set_visible (widget, TRUE);
-          gtk_grid_attach (GTK_GRID (self->grid), widget, i, 4, 1, 1);
-        }
-    }
+  g_clear_pointer (&children, g_list_free);
 }
 
 static void
 header_expand (GcalWeekHeader *self)
 {
   GtkWidget *week_view;
+  GList *children, *l;
 
+  children = gtk_container_get_children (GTK_CONTAINER (self->grid));
   week_view = gtk_widget_get_ancestor (GTK_WIDGET (self), GCAL_TYPE_WEEK_VIEW);
 
   self->expanded = TRUE;
@@ -734,11 +768,35 @@ header_expand (GcalWeekHeader *self)
   gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (self->scrolledwindow),
                                   GTK_POLICY_NEVER,
                                   GTK_POLICY_AUTOMATIC);
+
+  /* TODO: animate this transition */
   gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolledwindow),
-                                              gtk_widget_get_allocated_height (week_view)/2);
+                                              3 * gtk_widget_get_allocated_height (week_view) / 2);
+
   gtk_image_set_from_icon_name (GTK_IMAGE (self->expand_button_image), "go-up-symbolic", 4);
 
-  gtk_grid_remove_row (GTK_GRID (self->grid), 4);
+  for (l = children; l != NULL; l = l->next)
+    {
+      /* Remove any remaining labels */
+      if (GTK_IS_LABEL (l->data))
+        {
+          gint left_attach;
+
+          gtk_container_child_get (GTK_CONTAINER (self->grid),
+                                   l->data,
+                                   "left_attach", &left_attach,
+                                   NULL);
+
+          self->overflow_label[left_attach] = NULL;
+          gtk_widget_destroy (l->data);
+        }
+      else
+        {
+          gtk_widget_show (l->data);
+        }
+    }
+
+  g_clear_pointer (&children, g_list_free);
 }
 
 static void
@@ -1052,6 +1110,9 @@ gcal_week_header_add_event (GcalWeekHeader *self,
   /* Check if we eventually can merge events */
   check_mergeable_events (self);
 
+  /* And also update the overflow labels */
+  update_overflow_labels (self);
+
   g_clear_pointer (&week_end, g_date_time_unref);
   g_clear_pointer (&week_start, g_date_time_unref);
 }
@@ -1110,6 +1171,9 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
 
   /* Check if we eventually can merge events */
   check_mergeable_events (self);
+
+  /* And also update the overflow labels */
+  update_overflow_labels (self);
 
   g_clear_pointer (&children, g_list_free);
 }
