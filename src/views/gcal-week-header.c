@@ -209,7 +209,7 @@ add_event_to_weekday (GcalWeekHeader *self,
   return g_list_index (l, event);
 }
 
-static gint
+static void
 merge_events (GcalWeekHeader *self,
               GtkWidget      *event,
               GtkWidget      *to_be_removed)
@@ -221,9 +221,6 @@ merge_events (GcalWeekHeader *self,
                            to_be_removed,
                            "width", &deleted_width,
                            NULL);
-
-  if (event == to_be_removed)
-    goto out;
 
   gtk_container_child_get (GTK_CONTAINER (self->grid),
                            event,
@@ -237,26 +234,23 @@ merge_events (GcalWeekHeader *self,
                            event,
                            "width", current_width + deleted_width,
                            NULL);
-
-out:
-  return deleted_width;
 }
 
 static void
 check_mergeable_events (GcalWeekHeader *self)
 {
+  GList *checked_events[7] = { NULL, };
   gint weekday;
 
   /* We don't need to check the last column */
   for (weekday = 0; weekday < 6; weekday++)
     {
-      GList *events_at_weekday, *l;
+      GList *l;
       gint index;
 
       index = 0;
-      events_at_weekday = self->events[weekday];
 
-      for (l = events_at_weekday; l != NULL; l = l->next)
+      for (l = self->events[weekday]; l != NULL; l = l->next)
         {
           GcalEvent *current_event;
           gint events_to_merge, i;
@@ -264,9 +258,15 @@ check_mergeable_events (GcalWeekHeader *self)
           current_event = l->data;
           events_to_merge = 0;
 
-          /* No need to continue if we're hiding the events */
-          if (!self->expanded && index > 2)
-            break;
+          if (g_list_find (checked_events[weekday], current_event))
+            {
+              index++;
+              continue;
+            }
+          else
+            {
+              checked_events[weekday] = g_list_prepend (checked_events[weekday], current_event);
+            }
 
           /*
            * Horizontally check if the next cells have the same event
@@ -282,28 +282,32 @@ check_mergeable_events (GcalWeekHeader *self)
                 break;
 
               events_to_merge++;
+
+              /* Add to the list of checked days so we don't check it more times than necessary */
+              checked_events[weekday + i] = g_list_prepend (checked_events[weekday + i], current_event);
             }
 
           /* We found events to merge. Lets merge them */
           i = 0;
 
-          while (events_to_merge > 0)
+          for (i = 0; i < events_to_merge; i++)
             {
               GtkWidget *current_widget, *to_be_removed;
-              gint removed_cells;
 
-              current_widget = gtk_grid_get_child_at (GTK_GRID (self->grid), weekday + i, index);
-              to_be_removed = gtk_grid_get_child_at (GTK_GRID (self->grid), weekday + i + 1, index);
+              current_widget = gtk_grid_get_child_at (GTK_GRID (self->grid), weekday + i, index + 1);
+              to_be_removed = gtk_grid_get_child_at (GTK_GRID (self->grid), weekday + i + 1, index + 1);
 
-              /* First, remove the events from the cells */
-              removed_cells = merge_events (self, current_widget, to_be_removed);
+              if (current_widget == to_be_removed)
+                continue;
 
-              events_to_merge -= removed_cells;
-              i += removed_cells;
+              merge_events (self, current_widget, to_be_removed);
             }
 
           index++;
         }
+
+      /* We can get rid of the checked list here */
+      g_list_free (checked_events[weekday]);
     }
 }
 
@@ -378,7 +382,7 @@ split_event_widget_at_column (GcalWeekHeader *self,
                        old_width - 1,
                        1);
 
-      new_width = old_width - (column - left_attach + 1);
+      new_width = column - left_attach + 1;
 
       /* Only update the current widget's width */
       gtk_container_child_set (GTK_CONTAINER (self->grid),
