@@ -235,6 +235,8 @@ gcal_week_view_component_added (ECalDataModelSubscriber *subscriber,
 
   if (gcal_event_is_multiday (event) || gcal_event_get_all_day (event))
     gcal_week_header_add_event (GCAL_WEEK_HEADER (self->header), event);
+  else
+    gcal_week_grid_add_event (GCAL_WEEK_GRID (self->week_grid), event);
 }
 
 static void
@@ -252,12 +254,12 @@ gcal_week_view_component_modified (ECalDataModelSubscriber *subscriber,
   event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, NULL);
   uuid = get_uuid_from_component (e_client_get_source (E_CLIENT (client)), comp);
 
-  if (gcal_event_is_multiday (event) || gcal_event_get_all_day (event))
-    gcal_week_header_remove_event (header, uuid);
-
-  g_free (uuid);
+  gcal_week_header_remove_event (header, uuid);
+  gcal_week_grid_remove_event (GCAL_WEEK_GRID (self->week_grid), uuid);
 
   gcal_week_view_component_added (subscriber, client, comp);
+
+  g_free (uuid);
 }
 
 static void
@@ -267,11 +269,8 @@ gcal_week_view_component_removed (ECalDataModelSubscriber *subscriber,
                                   const gchar             *rid)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
-  GcalWeekHeader *header;
   ESource *source;
   gchar *uuid;
-
-  header = GCAL_WEEK_HEADER (self->header);
 
   source = e_client_get_source (E_CLIENT (client));
 
@@ -280,7 +279,8 @@ gcal_week_view_component_removed (ECalDataModelSubscriber *subscriber,
   else
     uuid = g_strdup_printf ("%s:%s", e_source_get_uid (source), uid);
 
-  gcal_week_header_remove_event (header, uuid);
+  gcal_week_header_remove_event (GCAL_WEEK_HEADER (self->header), uuid);
+  gcal_week_grid_remove_event (GCAL_WEEK_GRID (self->week_grid), uuid);
 
   g_free (uuid);
 }
@@ -456,12 +456,7 @@ gcal_week_view_set_property (GObject       *object,
     {
     case PROP_DATE:
       {
-        g_clear_pointer (&self->date, g_free);
-        self->date = g_value_dup_boxed (value);
-
-        gcal_week_header_set_current_date (GCAL_WEEK_HEADER (self->header), self->date);
-
-        gtk_widget_queue_draw (GTK_WIDGET (object));
+        gcal_week_view_set_current_date (self, g_value_dup_boxed (value));
         break;
       }
 
@@ -556,7 +551,13 @@ gcal_week_view_set_current_date (GcalWeekView *self,
 {
   g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
 
+  g_clear_pointer (&self->current_date, g_free);
+  self->date = current_date;
+
   gcal_week_header_set_current_date (GCAL_WEEK_HEADER (self->header), current_date);
+  gcal_week_grid_set_current_date (GCAL_WEEK_GRID (self->week_grid), current_date);
 
   self->current_date = current_date;
+
+  g_object_notify (G_OBJECT (self), "active-date");
 }
