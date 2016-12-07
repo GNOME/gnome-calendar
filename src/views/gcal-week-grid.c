@@ -28,6 +28,7 @@
 #include <string.h>
 #include <math.h>
 
+#define ALIGNED(x)      (round (x) + 0.5)
 #define MINUTES_PER_DAY 1440
 #define MAX_MINUTES     (7 * MINUTES_PER_DAY)
 
@@ -370,14 +371,14 @@ gcal_week_grid_draw (GtkWidget *widget,
   /* Vertical lines */
   for (i = 0; i < 7; i++)
     {
-      cairo_move_to (cr, ((width) / 7) * i + 0.4, 0);
+      cairo_move_to (cr, ALIGNED (((width) / 7.0) * i), 0);
       cairo_rel_line_to (cr, 0, height);
     }
 
   /* Horizontal lines */
   for (i = 1; i < 24; i++)
     {
-      cairo_move_to (cr, 0, (height / 24) * i + 0.4);
+      cairo_move_to (cr, 0, ALIGNED ((height / 24.0) * i));
       cairo_rel_line_to (cr, width, 0);
     }
 
@@ -388,7 +389,7 @@ gcal_week_grid_draw (GtkWidget *widget,
 
   for (i = 0; i < 24; i++)
     {
-      cairo_move_to (cr, 0, (height / 24) * i + (height / 48) + 0.4);
+      cairo_move_to (cr, 0, ALIGNED ((height / 24.0) * i + (height / 48.0)));
       cairo_rel_line_to (cr, width, 0);
     }
 

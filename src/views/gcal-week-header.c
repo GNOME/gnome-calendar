@@ -29,6 +29,7 @@
 #include <string.h>
 #include <math.h>
 
+#define ALIGNED(x)           (round (x) + 0.5)
 #define COLUMN_PADDING       6
 
 struct _GcalWeekHeader
@@ -934,7 +935,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
   current_cell = icaltime_day_of_week (*(self->active_date)) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
 
-  cell_width = alloc.width / 7;
+  cell_width = alloc.width / 7.0;
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
   for (i = 0; i < 7; i++)
@@ -983,7 +984,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
 
       /* Draws the lines after each day of the week */
       cairo_move_to (cr,
-                     cell_width * i + 0.5,
+                     ALIGNED (cell_width * i),
                      font_height + padding.bottom);
 
       cairo_set_line_width (cr, 0.25);
