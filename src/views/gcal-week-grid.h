@@ -43,6 +43,12 @@ void                 gcal_week_grid_set_use_24h_format           (GcalWeekGrid  
 void                 gcal_week_grid_set_current_date             (GcalWeekGrid       *week_grid,
                                                                   icaltimetype       *current_date);
 
+void                 gcal_week_grid_add_event                    (GcalWeekGrid       *self,
+                                                                  GcalEvent          *event);
+
+void                 gcal_week_grid_remove_event                 (GcalWeekGrid       *self,
+                                                                  const gchar        *uid);
+
 G_END_DECLS
 
 #endif /* GCAL_WEEK_GRID_H */

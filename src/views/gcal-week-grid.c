@@ -52,6 +52,15 @@ struct _GcalWeekGrid
 
 G_DEFINE_TYPE (GcalWeekGrid, gcal_week_grid, GTK_TYPE_CONTAINER);
 
+enum
+{
+  PROP_0,
+  PROP_ACTIVE_DATE,
+  LAST_PROP
+};
+
+static GParamSpec* properties[LAST_PROP] = { NULL, };
+
 static void
 gcal_week_grid_finalize (GObject *object)
 {
@@ -87,7 +96,17 @@ gcal_week_grid_get_property (GObject    *object,
                              GValue     *value,
                              GParamSpec *pspec)
 {
-  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+  GcalWeekGrid *self = GCAL_WEEK_GRID (object);
+
+  switch (prop_id)
+    {
+    case PROP_ACTIVE_DATE:
+      g_value_set_boxed (value, self->active_date);
+      return;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
 }
 
 static void
@@ -96,7 +115,26 @@ gcal_week_grid_set_property (GObject      *object,
                              const GValue *value,
                              GParamSpec   *pspec)
 {
-  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+  GcalWeekGrid *self = GCAL_WEEK_GRID (object);
+  icaltimetype *old_date;
+
+  switch (prop_id)
+    {
+    case PROP_ACTIVE_DATE:
+      old_date = self->active_date;
+      self->active_date = g_value_dup_boxed (value);
+
+      //if (old_date)
+      //  update_unchanged_events (self, old_date, self->active_date);
+
+      gtk_widget_queue_resize (GTK_WIDGET (self));
+
+      g_clear_pointer (&old_date, g_free);
+      return;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
 }
 
 static void
@@ -347,6 +385,14 @@ gcal_week_grid_class_init (GcalWeekGridClass *klass)
   widget_class->unmap = gcal_week_grid_unmap;
   widget_class->get_preferred_height = gcal_week_grid_get_preferred_height;
 
+  properties[PROP_ACTIVE_DATE] = g_param_spec_boxed ("active-date",
+                                                     "Date",
+                                                     "The active selected date",
+                                                     ICAL_TIME_TYPE,
+                                                     G_PARAM_CONSTRUCT | G_PARAM_READWRITE);
+
+  g_object_class_install_properties (object_class, G_N_ELEMENTS (properties), properties);
+
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
 
@@ -393,4 +439,21 @@ gcal_week_grid_set_current_date (GcalWeekGrid *self,
   self->current_date = gcal_dup_icaltime (current_date);
 
   gtk_widget_queue_draw (GTK_WIDGET (self));
+}
+
+void
+gcal_week_grid_add_event (GcalWeekGrid *self,
+                          GcalEvent    *event)
+{
+  g_return_if_fail (GCAL_IS_WEEK_GRID (self));
+
+  g_message ("Adding event '%s'", gcal_event_get_summary (event));
+}
+
+void
+gcal_week_grid_remove_event (GcalWeekGrid *self,
+                             const gchar  *uid)
+{
+  g_return_if_fail (GCAL_IS_WEEK_GRID (self));
+  g_message ("Removing event '%s'", uid);
 }
