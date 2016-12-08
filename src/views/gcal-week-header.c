@@ -64,6 +64,7 @@ struct _GcalWeekHeader
   gboolean          expanded;
 
   gboolean          use_24h_format;
+  gint              redraw_timeout_id;
 
   icaltimetype     *active_date;
   icaltimetype     *current_date;
@@ -921,6 +922,12 @@ gcal_week_header_finalize (GObject *object)
   g_clear_pointer (&self->active_date, g_free);
   g_clear_pointer (&self->current_date, g_free);
 
+  if (self->redraw_timeout_id > 0)
+    {
+      g_source_remove (self->redraw_timeout_id);
+      self->redraw_timeout_id = 0;
+    }
+
   for (i = 0; i < 7; i++)
     g_list_free (self->events[i]);
 }
@@ -1142,6 +1149,14 @@ gcal_week_header_draw (GtkWidget      *widget,
   g_object_unref (layout);
 
   GTK_WIDGET_CLASS (gcal_week_header_parent_class)->draw (widget, cr);
+
+  /* Fire the redraw timeout if needed */
+  if (self->redraw_timeout_id == 0)
+    {
+      self->redraw_timeout_id = g_timeout_add_seconds (5,
+                                                       (GSourceFunc) gtk_widget_queue_draw,
+                                                       self);
+    }
 
   g_clear_pointer (&week_start, g_date_time_unref);
   g_clear_pointer (&week_end, g_date_time_unref);

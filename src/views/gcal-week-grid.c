@@ -58,6 +58,7 @@ struct _GcalWeekGrid
   GcalRangeTree      *events;
 
   gboolean            children_changed;
+  gint                redraw_timeout_id;
 
   GcalManager        *manager;
 };
@@ -171,6 +172,12 @@ gcal_week_grid_finalize (GObject *object)
   g_clear_pointer (&self->events, gcal_range_tree_unref);
   g_clear_pointer (&self->active_date, g_free);
   g_clear_pointer (&self->current_date, g_free);
+
+  if (self->redraw_timeout_id > 0)
+    {
+      g_source_remove (self->redraw_timeout_id);
+      self->redraw_timeout_id = 0;
+    }
 
   G_OBJECT_CLASS (gcal_week_grid_parent_class)->finalize (object);
 }
@@ -364,6 +371,7 @@ gcal_week_grid_draw (GtkWidget *widget,
 {
   GtkStyleContext *context;
   GtkStateFlags state;
+  GcalWeekGrid *self;
   GtkBorder padding;
   GdkRGBA color;
 
@@ -372,6 +380,7 @@ gcal_week_grid_draw (GtkWidget *widget,
   PangoLayout *layout;
   PangoFontDescription *font_desc;
 
+  self = GCAL_WEEK_GRID (widget);
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
 
@@ -449,6 +458,14 @@ gcal_week_grid_draw (GtkWidget *widget,
   g_object_unref (layout);
 
   GTK_WIDGET_CLASS (gcal_week_grid_parent_class)->draw (widget, cr);
+
+  /* Fire the redraw timeout if needed */
+  if (self->redraw_timeout_id == 0)
+    {
+      self->redraw_timeout_id = g_timeout_add_seconds (5,
+                                                       (GSourceFunc) gtk_widget_queue_draw,
+                                                       self);
+    }
 
   return FALSE;
 }
