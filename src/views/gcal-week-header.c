@@ -289,7 +289,12 @@ merge_events (GcalWeekHeader *self,
               GtkWidget      *event,
               GtkWidget      *to_be_removed)
 {
+  GDateTime *end_date;
   gint deleted_width, current_width;
+
+  /* Setup the new end date of the merged event */
+  end_date = gcal_event_widget_get_date_end (GCAL_EVENT_WIDGET (to_be_removed));
+  gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (event), end_date);
 
   /* Retrieve the current sizes */
   gtk_container_child_get (GTK_CONTAINER (self->grid),
@@ -431,6 +436,7 @@ split_event_widget_at_column (GcalWeekHeader *self,
       GtkWidget *widget_before;
 
       widget_before = gcal_event_widget_clone (GCAL_EVENT_WIDGET (widget));
+      gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget_before), column_date);
 
       gtk_grid_attach (GTK_GRID (self->grid),
                        widget_before,
@@ -445,13 +451,14 @@ split_event_widget_at_column (GcalWeekHeader *self,
       old_width = new_width;
       left_attach = column;
 
-      /* Update the current event position and size */
+      /* Update the current event position, size and start date */
       gtk_container_child_set (GTK_CONTAINER (self->grid),
                                widget,
                                "left_attach", left_attach,
                                "width", new_width,
                                NULL);
 
+      gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (widget), column_date);
       gtk_widget_set_visible (widget, is_event_visible (self, left_attach, top_attach - 1));
     }
 
@@ -639,6 +646,7 @@ add_event_to_grid (GcalWeekHeader *self,
                            1,
                            1);
 
+          gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget), cloned_widget_start_dt);
           gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (cloned_widget), cloned_widget_start_dt);
 
           /* From now on, let's modify this widget */
