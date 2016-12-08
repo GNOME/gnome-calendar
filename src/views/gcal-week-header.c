@@ -37,7 +37,6 @@ struct _GcalWeekHeader
   GtkGrid           parent;
 
   GtkWidget        *grid;
-  GtkWidget        *draw_area;
   GtkWidget        *month_label;
   GtkWidget        *week_label;
   GtkWidget        *year_label;
@@ -45,6 +44,7 @@ struct _GcalWeekHeader
   GtkWidget        *expand_button;
   GtkWidget        *expand_button_box;
   GtkWidget        *expand_button_image;
+  GtkWidget        *header_labels_box;
 
   GcalManager      *manager;
 
@@ -94,10 +94,6 @@ static void           gcal_week_header_set_property         (GObject      *objec
 static void           gcal_week_header_size_allocate        (GtkWidget     *widget,
                                                              GtkAllocation *alloc);
 
-static gboolean       gcal_week_header_draw                 (GcalWeekHeader *self,
-                                                             cairo_t        *cr,
-                                                             GtkWidget      *widget);
-
 enum
 {
   PROP_0,
@@ -112,6 +108,7 @@ typedef enum
 
 G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_GRID);
 
+/* Auxiliary methods */
 static GcalEvent*
 get_event_by_uuid (GcalWeekHeader *self,
                    const gchar    *uuid)
@@ -247,6 +244,7 @@ is_event_visible (GcalWeekHeader *self,
   return show_label ? position < 2 : position < 3;
 }
 
+/* Grid management */
 static void
 update_overflow (GcalWeekHeader *self)
 {
@@ -689,6 +687,7 @@ update_unchanged_events (GcalWeekHeader *self,
   g_clear_pointer (&old_week_end, g_date_time_unref);
 }
 
+/* Header */
 static void
 update_title (GcalWeekHeader *self)
 {
@@ -788,7 +787,7 @@ header_expand (GcalWeekHeader *self)
 
   /* TODO: animate this transition */
   gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolledwindow),
-                                              3 * gtk_widget_get_allocated_height (week_view) / 2);
+                                              gtk_widget_get_allocated_height (week_view) / 2);
 
   gtk_image_set_from_icon_name (GTK_IMAGE (self->expand_button_image), "go-up-symbolic", 4);
 
@@ -824,6 +823,52 @@ on_expand_action_activated (GcalWeekHeader *self,
     header_collapse (self);
   else
     header_expand (self);
+}
+
+/* Drawing area content and size */
+static gdouble
+get_weekday_names_height (GtkWidget *widget)
+{
+  PangoFontDescription *font_desc;
+  GtkStyleContext* context;
+  GtkStateFlags state_flags;
+  PangoLayout *layout;
+  GtkBorder padding;
+  gint final_height;
+  gint font_height;
+
+  context = gtk_widget_get_style_context (widget);
+  state_flags = gtk_style_context_get_state (context);
+
+  layout = gtk_widget_create_pango_layout (widget, "A");
+
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "week-dates");
+  gtk_style_context_get (context, state_flags, "font", &font_desc, NULL);
+  gtk_style_context_get_padding (context, state_flags, &padding);
+
+  pango_layout_set_font_description (layout, font_desc);
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+
+  pango_font_description_free (font_desc);
+  gtk_style_context_restore (context);
+
+  final_height = padding.top + font_height + padding.bottom;
+
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "week-names");
+  gtk_style_context_get (context, state_flags, "font", &font_desc, NULL);
+  gtk_style_context_get_padding (context, state_flags, &padding);
+
+  pango_layout_set_font_description (layout, font_desc);
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+
+  pango_font_description_free (font_desc);
+  gtk_style_context_restore (context);
+
+  final_height += padding.top + font_height + padding.bottom;
+
+  return final_height;
 }
 
 static void
@@ -873,7 +918,7 @@ gcal_week_header_set_property (GObject      *object,
       self->active_date = g_value_dup_boxed (value);
 
       update_title (self);
-      gtk_widget_queue_draw (self->draw_area);
+      gtk_widget_queue_draw (GTK_WIDGET (self));
 
       if (old_date)
         update_unchanged_events (self, old_date, self->active_date);
@@ -891,31 +936,22 @@ gcal_week_header_size_allocate (GtkWidget     *widget,
                                 GtkAllocation *alloc)
 {
   GcalWeekHeader *self = GCAL_WEEK_HEADER (widget);
-  PangoFontDescription *bold_font;
-  GtkStyleContext *context;
-  GtkStateFlags state;
-  GtkAllocation draw_alloc;
+  gint min_header_height;
 
-  context = gtk_widget_get_style_context (self->draw_area);
-  state = gtk_widget_get_state_flags (self->draw_area);
+  min_header_height = get_weekday_names_height (widget);
 
-  gtk_widget_get_allocation (self->draw_area, &draw_alloc);
-
-  gtk_style_context_get (context, state, "font", &bold_font, NULL);
-  pango_font_description_set_weight (bold_font, PANGO_WEIGHT_SEMIBOLD);
-
-  gtk_widget_set_margin_top (self->scrolledwindow,
-                             (4 * pango_font_description_get_size (bold_font)) / PANGO_SCALE);
+  gtk_scrolled_window_set_min_content_height (GTK_SCROLLED_WINDOW (self->scrolledwindow), min_header_height);
+  gtk_widget_set_margin_top (self->scrolledwindow, min_header_height);
 
   GTK_WIDGET_CLASS (gcal_week_header_parent_class)->size_allocate (widget, alloc);
 }
 
 static gboolean
-gcal_week_header_draw (GcalWeekHeader *self,
-                       cairo_t        *cr,
-                       GtkWidget      *widget)
+gcal_week_header_draw (GtkWidget      *widget,
+                       cairo_t        *cr)
 {
   GtkStyleContext *context;
+  GcalWeekHeader *self;
   GtkStateFlags state;
   GdkRGBA color;
   GtkAllocation alloc;
@@ -926,14 +962,19 @@ gcal_week_header_draw (GcalWeekHeader *self,
   PangoLayout *layout;
   PangoFontDescription *bold_font;
 
-  gint i, font_height, current_cell, today_column;
   gdouble cell_width;
+  gint i, font_height, current_cell, today_column;
+  gint start_x, start_y;
 
-  cairo_save(cr);
+  cairo_save (cr);
 
   /* Fonts and colour selection */
+  self = GCAL_WEEK_HEADER (widget);
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
+
+  start_x = gtk_widget_get_allocated_width (self->expand_button_box);
+  start_y = gtk_widget_get_allocated_height (self->header_labels_box);
 
   gtk_style_context_get_padding (context, state, &padding);
   gtk_widget_get_allocation (widget, &alloc);
@@ -952,7 +993,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
   current_cell = (7 + current_cell - self->first_weekday) % 7;
   today_column = get_today_column (self);
 
-  cell_width = alloc.width / 7.0;
+  cell_width = (alloc.width - start_x) / 7.0;
 
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
@@ -981,8 +1022,8 @@ gcal_week_header_draw (GcalWeekHeader *self,
 
       gtk_render_layout (context,
                          cr,
-                         padding.left + cell_width * i + COLUMN_PADDING,
-                         font_height + padding.bottom,
+                         padding.left + cell_width * i + COLUMN_PADDING+ start_x,
+                         font_height + padding.bottom + start_y,
                          layout);
 
       gtk_style_context_restore (context);
@@ -1002,8 +1043,8 @@ gcal_week_header_draw (GcalWeekHeader *self,
 
       gtk_render_layout (context,
                          cr,
-                         padding.left + cell_width * i + COLUMN_PADDING,
-                         0.0,
+                         padding.left + cell_width * i + COLUMN_PADDING + start_x,
+                         start_y,
                          layout);
 
       gtk_style_context_restore (context);
@@ -1018,10 +1059,12 @@ gcal_week_header_draw (GcalWeekHeader *self,
       cairo_set_line_width (cr, 0.25);
 
       cairo_move_to (cr,
-                     ALIGNED (cell_width * i),
-                     font_height + padding.bottom);
+                     ALIGNED (cell_width * i + start_x),
+                     font_height + padding.bottom + start_y);
 
-      cairo_rel_line_to (cr, 0.0, gtk_widget_get_allocated_height (self->draw_area) - font_height + padding.bottom);
+      cairo_rel_line_to (cr,
+                         0.0,
+                         gtk_widget_get_allocated_height (widget) - font_height - start_y + padding.bottom);
       cairo_stroke (cr);
 
       gtk_style_context_restore (context);
@@ -1034,6 +1077,8 @@ gcal_week_header_draw (GcalWeekHeader *self,
 
   pango_font_description_free (bold_font);
   g_object_unref (layout);
+
+  GTK_WIDGET_CLASS (gcal_week_header_parent_class)->draw (widget, cr);
 
   g_clear_pointer (&week_start, g_date_time_unref);
   g_clear_pointer (&week_end, g_date_time_unref);
@@ -1051,6 +1096,7 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   object_class->get_property = gcal_week_header_get_property;
   object_class->set_property = gcal_week_header_set_property;
 
+  widget_class->draw = gcal_week_header_draw;
   widget_class->size_allocate = gcal_week_header_size_allocate;
 
   g_object_class_install_property (object_class,
@@ -1063,18 +1109,17 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-header.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, draw_area);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button_image);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, grid);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, header_labels_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, month_label);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, scrolledwindow);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, sizegroup);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, week_label);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, year_label);
 
-  gtk_widget_class_bind_template_callback (widget_class, gcal_week_header_draw);
   gtk_widget_class_bind_template_callback (widget_class, on_expand_action_activated);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
@@ -1225,7 +1270,7 @@ gcal_week_header_set_current_date (GcalWeekHeader *self,
 
   update_title (self);
 
-  gtk_widget_queue_draw (self->draw_area);
+  gtk_widget_queue_draw (GTK_WIDGET (self));
 }
 
 GtkSizeGroup*

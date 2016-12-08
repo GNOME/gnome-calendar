@@ -377,7 +377,7 @@ datechooser day:selected:hover {
 .week-header .week-number {
     font-size: 16pt;
     font-weight: bold;
-    padding: 12px;
+    padding: 12px 12px 18px 12px;
     color: alpha(@theme_fg_color, 0.25);
 }
 
