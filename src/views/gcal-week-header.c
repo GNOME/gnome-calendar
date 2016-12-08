@@ -1029,6 +1029,14 @@ gcal_week_header_draw (GtkWidget      *widget,
 
   cell_width = (alloc.width - start_x) / 7.0;
 
+  /* Start by redrawing the entire background */
+  gtk_render_background (context,
+                         cr,
+                         alloc.x,
+                         alloc.y,
+                         alloc.width,
+                         alloc.height);
+
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
   for (i = 0; i < 7; i++)
