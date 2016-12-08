@@ -456,7 +456,8 @@ gcal_week_view_set_property (GObject       *object,
     {
     case PROP_DATE:
       {
-        gcal_week_view_set_current_date (self, g_value_dup_boxed (value));
+        g_clear_pointer (&self->date, g_free);
+        self->date = g_value_dup_boxed (value);
         break;
       }
 
@@ -552,12 +553,8 @@ gcal_week_view_set_current_date (GcalWeekView *self,
   g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
 
   g_clear_pointer (&self->current_date, g_free);
-  self->date = current_date;
+  self->current_date = current_date;
 
   gcal_week_header_set_current_date (GCAL_WEEK_HEADER (self->header), current_date);
   gcal_week_grid_set_current_date (GCAL_WEEK_GRID (self->week_grid), current_date);
-
-  self->current_date = current_date;
-
-  g_object_notify (G_OBJECT (self), "active-date");
 }

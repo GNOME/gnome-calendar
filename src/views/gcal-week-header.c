@@ -857,6 +857,7 @@ gcal_week_header_finalize (GObject *object)
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
   gint i;
 
+  g_clear_pointer (&self->active_date, g_free);
   g_clear_pointer (&self->current_date, g_free);
 
   for (i = 0; i < 7; i++)
