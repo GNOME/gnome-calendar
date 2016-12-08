@@ -1028,18 +1028,24 @@ gcal_week_header_draw (GtkWidget      *widget,
   gint i, font_height, current_cell, today_column;
   gint start_x, start_y;
 
+  gboolean ltr;
+
   cairo_save (cr);
 
   /* Fonts and colour selection */
   self = GCAL_WEEK_HEADER (widget);
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
+  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
-  start_x = gtk_widget_get_allocated_width (self->expand_button_box);
+  start_x = ltr ? gtk_widget_get_allocated_width (self->expand_button_box) : 0;
   start_y = gtk_widget_get_allocated_height (self->header_labels_box);
 
   gtk_style_context_get_padding (context, state, &padding);
   gtk_widget_get_allocation (widget, &alloc);
+
+  if (!ltr)
+    alloc.width -= gtk_widget_get_allocated_width (self->expand_button_box);
 
   gtk_style_context_get_color (context, state, &color);
   gdk_cairo_set_source_rgba (cr, &color);
@@ -1070,6 +1076,8 @@ gcal_week_header_draw (GtkWidget      *widget,
   for (i = 0; i < 7; i++)
     {
       gchar *weekday_date, *weekday_abv;
+      gdouble x;
+      gint font_width;
       gint n_day;
 
       n_day = g_date_time_get_day_of_month (week_start) + i;
@@ -1090,9 +1098,16 @@ gcal_week_header_draw (GtkWidget      *widget,
       pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, weekday_date, -1);
 
+      pango_layout_get_pixel_size (layout, &font_width, NULL);
+
+      if (ltr)
+        x = padding.left + cell_width * i + COLUMN_PADDING + start_x;
+      else
+        x = alloc.width - (cell_width * i + font_width + COLUMN_PADDING + start_x);
+
       gtk_render_layout (context,
                          cr,
-                         padding.left + cell_width * i + COLUMN_PADDING+ start_x,
+                         x,
                          font_height + padding.bottom + start_y,
                          layout);
 
@@ -1111,9 +1126,16 @@ gcal_week_header_draw (GtkWidget      *widget,
       pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, weekday_abv, -1);
 
+      pango_layout_get_pixel_size (layout, &font_width, NULL);
+
+      if (ltr)
+        x = padding.left + cell_width * i + COLUMN_PADDING + start_x;
+      else
+        x = alloc.width - (cell_width * i + font_width + COLUMN_PADDING + start_x);
+
       gtk_render_layout (context,
                          cr,
-                         padding.left + cell_width * i + COLUMN_PADDING + start_x,
+                         x,
                          start_y,
                          layout);
 
@@ -1129,7 +1151,7 @@ gcal_week_header_draw (GtkWidget      *widget,
       cairo_set_line_width (cr, 0.25);
 
       cairo_move_to (cr,
-                     ALIGNED (cell_width * i + start_x),
+                     ALIGNED (ltr ? (cell_width * i + start_x) : (alloc.width - (cell_width * i + start_x))),
                      font_height + padding.bottom + start_y);
 
       cairo_rel_line_to (cr,

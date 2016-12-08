@@ -370,13 +370,16 @@ gcal_week_view_draw_hours (GcalWeekView *self,
   GtkBorder padding;
   GdkRGBA color;
 
+  gboolean ltr;
   gint i, width, height;
+  gint font_width;
 
   PangoLayout *layout;
   PangoFontDescription *font_desc;
 
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
+  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   gtk_style_context_add_class (context, "hours");
   gtk_style_context_get_color (context, state, &color);
@@ -399,24 +402,33 @@ gcal_week_view_draw_hours (GcalWeekView *self,
       if (self->use_24h_format)
         {
           hours = g_strdup_printf ("%02d:00", i);
-          pango_layout_set_text (layout, hours, -1);
         }
       else
         {
           hours = g_strdup_printf ("%d %s",
                                    i % 12 == 0 ? 12 : i % 12,
                                    i > 12 ? _("PM") : _("AM"));
-
-          pango_layout_set_text (layout, hours, -1);
         }
 
-      cairo_move_to (cr, padding.left, (height / 24) * i + padding.top);
+      pango_layout_set_text (layout, hours, -1);
+      pango_layout_get_pixel_size (layout, &font_width, NULL);
+
+      cairo_move_to (cr,
+                     ltr ? padding.left : width - font_width - padding.right,
+                     (height / 24) * i + padding.top);
+
       pango_cairo_show_layout (cr, layout);
 
       g_free (hours);
     }
 
   cairo_set_line_width (cr, 0.65);
+
+  if (!ltr)
+    {
+      cairo_move_to (cr, 0.5, 0);
+      cairo_rel_line_to (cr, 0, height);
+    }
 
   /* Draws the horizontal complete lines */
   for (i = 1; i < 24; i++)

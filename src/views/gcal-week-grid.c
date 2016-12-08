@@ -375,6 +375,8 @@ gcal_week_grid_draw (GtkWidget *widget,
   GtkBorder padding;
   GdkRGBA color;
 
+  gboolean ltr;
+  gdouble x, column_width;
   gint i, width, height, today_column;
 
   PangoLayout *layout;
@@ -383,6 +385,7 @@ gcal_week_grid_draw (GtkWidget *widget,
   self = GCAL_WEEK_GRID (widget);
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
+  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   gtk_style_context_add_class (context, "hours");
   gtk_style_context_get_color (context, state, &color);
@@ -395,6 +398,7 @@ gcal_week_grid_draw (GtkWidget *widget,
 
   width = gtk_widget_get_allocated_width (widget);
   height = gtk_widget_get_allocated_height (widget);
+  column_width = width / 7.0;
 
   cairo_set_line_width (cr, 0.65);
 
@@ -405,6 +409,7 @@ gcal_week_grid_draw (GtkWidget *widget,
     {
       g_autoptr (GDateTime) now;
       GtkBorder margin;
+      gdouble strip_width;
       guint minutes_from_midnight;
       gint min_stip_height;
 
@@ -417,11 +422,18 @@ gcal_week_grid_draw (GtkWidget *widget,
       gtk_style_context_get (context, state, "min-height", &min_stip_height, NULL);
       gtk_style_context_get_margin (context, state, &margin);
 
+      strip_width = column_width - margin.left - margin.right;
+
+      if (ltr)
+        x = today_column * column_width + margin.left;
+      else
+        x = width - (today_column * column_width + margin.right) - strip_width;
+
       gtk_render_background (context,
                              cr,
-                             today_column * width / 7.0 + margin.left,
+                             x,
                              round (minutes_from_midnight * ((gdouble) height / MINUTES_PER_DAY) + margin.top),
-                             width / 7.0 - margin.left - margin.right,
+                             strip_width,
                              MAX (1, min_stip_height - margin.top - margin.bottom));
 
       gtk_style_context_restore (context);
@@ -430,7 +442,12 @@ gcal_week_grid_draw (GtkWidget *widget,
   /* Vertical lines */
   for (i = 0; i < 7; i++)
     {
-      cairo_move_to (cr, ALIGNED (((width) / 7.0) * i), 0);
+      if (ltr)
+        x = column_width * i;
+      else
+        x = width - column_width * i;
+
+      cairo_move_to (cr, ALIGNED (x), 0);
       cairo_rel_line_to (cr, 0, height);
     }
 
@@ -475,9 +492,11 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
                               GtkAllocation *allocation)
 {
   GcalWeekGrid *self = GCAL_WEEK_GRID (widget);
+  gboolean ltr;
   gdouble minutes_height;
   gdouble column_width;
   guint i;
+  guint x;
 
   /* No need to relayout stuff if nothing changed */
   if (allocation->height == gtk_widget_get_allocated_height (widget) &&
@@ -489,6 +508,8 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
 
   /* Allocate the widget */
   gtk_widget_set_allocation (widget, allocation);
+
+  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   if (gtk_widget_get_realized (widget))
     {
@@ -550,8 +571,13 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           width = column_width / events_at_range - margin.left - margin.right;
           height = MAX ((data->end - data->start) * minutes_height - margin.top - margin.bottom, natural_height);
 
+          if (ltr)
+            x = column_width * i + allocation->x + margin.left + 1;
+          else
+            x = allocation->width - width - (column_width * i + allocation->x + margin.left + 1);
+
           /* Setup the child position and size */
-          child_allocation.x = column_width * i + allocation->x + margin.left + 1;
+          child_allocation.x = x;
           child_allocation.y = (data->start % MINUTES_PER_DAY) * minutes_height + margin.top;
           child_allocation.width = width;
           child_allocation.height = height;
