@@ -367,8 +367,19 @@ check_mergeable_events (GcalWeekHeader *self)
               current_widget = gtk_grid_get_child_at (GTK_GRID (self->grid), weekday + i, index + 1);
               to_be_removed = gtk_grid_get_child_at (GTK_GRID (self->grid), weekday + i + 1, index + 1);
 
-              if (current_widget == to_be_removed)
-                continue;
+              /*
+               * We don't want to merge:
+               *  - Overflow labels
+               *  - The same widget
+               *  - Widgets with different visibilities (i.e. broken by overflow
+               */
+              if (!GCAL_IS_EVENT_WIDGET (current_widget) ||
+                  !GCAL_IS_EVENT_WIDGET (to_be_removed) ||
+                  current_widget == to_be_removed ||
+                  gtk_widget_get_visible (current_widget) != gtk_widget_get_visible (to_be_removed))
+                {
+                  continue;
+                }
 
               merge_events (self, current_widget, to_be_removed);
 
@@ -423,6 +434,8 @@ split_event_widget_at_column (GcalWeekHeader *self,
                        column - left_attach,
                        1);
 
+      gtk_widget_set_visible (widget_before, is_event_visible (self, left_attach, top_attach - 1));
+
       new_width = old_width - column + left_attach;
       old_width = new_width;
       left_attach = column;
@@ -434,7 +447,7 @@ split_event_widget_at_column (GcalWeekHeader *self,
                                "width", new_width,
                                NULL);
 
-      gtk_widget_show (widget_before);
+      gtk_widget_set_visible (widget, is_event_visible (self, left_attach, top_attach - 1));
     }
 
   /* Create a new widget after the current widget */
@@ -464,7 +477,7 @@ split_event_widget_at_column (GcalWeekHeader *self,
                                "width", new_width,
                                NULL);
 
-      gtk_widget_show (widget_after);
+      gtk_widget_set_visible (widget_after, is_event_visible (self, column + 1, top_attach - 1));
     }
 
   g_clear_pointer (&end_column_date, g_date_time_unref);
@@ -517,6 +530,25 @@ move_events_at_column (GcalWeekHeader *self,
 }
 
 static void
+apply_overflow_at_weekday (GcalWeekHeader *self,
+                           guint           weekday)
+{
+  GtkWidget *child;
+
+  /*
+   * If we don't need overflow, or we already applied the overflow,
+   * we don't need to do anything els.
+   */
+  if (self->expanded || self->overflow_label[weekday] || g_list_length (self->events[weekday]) < 4)
+    return;
+
+  child = gtk_grid_get_child_at (GTK_GRID (self->grid), weekday, 3);
+
+  split_event_widget_at_column (self, child, weekday);
+  gtk_widget_hide (child);
+}
+
+static void
 add_event_to_grid (GcalWeekHeader *self,
                    GcalEvent      *event,
                    gint            start,
@@ -525,6 +557,7 @@ add_event_to_grid (GcalWeekHeader *self,
   g_autoptr (GDateTime) week_start = NULL;
   g_autoptr (GDateTime) week_end = NULL;
   GtkWidget *widget;
+  gboolean is_visible, was_visible;
   gint position;
   gint i;
 
@@ -543,7 +576,13 @@ add_event_to_grid (GcalWeekHeader *self,
                    1,
                    1);
 
-  gtk_widget_set_visible (widget, is_event_visible (self, start, position));
+  /* Setup event visibility */
+  is_visible = is_event_visible (self, start, position);
+
+  gtk_widget_set_visible (widget, is_visible);
+
+  /* Eventually apply the overflow rules */
+  apply_overflow_at_weekday (self, start);
 
   /* Single-day events are the simplest case, and the code above is enough to deal with them */
   if (!gcal_event_is_multiday (event))
@@ -567,10 +606,13 @@ add_event_to_grid (GcalWeekHeader *self,
       /* Add the event to that day */
       new_position = add_event_to_weekday (self, event, i);
 
+      was_visible = is_visible;
+      is_visible = is_event_visible (self, i, new_position);
+
       move_events_at_column (self, DOWN, i, new_position);
 
       /* Add the event to the grid */
-      if (new_position == position)
+      if (new_position == position && was_visible == is_visible)
         {
           gtk_container_child_set (GTK_CONTAINER (self->grid),
                                    widget,
@@ -597,16 +639,17 @@ add_event_to_grid (GcalWeekHeader *self,
           /* From now on, let's modify this widget */
           widget = cloned_widget;
 
-          gtk_widget_set_visible (widget, is_event_visible (self, i, new_position));
+          gtk_widget_set_visible (widget, is_visible);
 
           g_clear_pointer (&cloned_widget_start_dt, g_date_time_unref);
         }
 
+      /* Eventually apply the overflow rules */
+      apply_overflow_at_weekday (self, i);
+
       /* Update the widget's end date */
       gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget), week_end);
     }
-
-  gtk_widget_show (widget);
 }
 
 static void
@@ -743,6 +786,8 @@ header_collapse (GcalWeekHeader *self)
                                NULL);
 
       gtk_widget_set_visible (l->data, is_event_visible (self, left_attach, top_attach - 1));
+
+      apply_overflow_at_weekday (self, left_attach);
     }
 
   update_overflow (self);
@@ -791,6 +836,9 @@ header_expand (GcalWeekHeader *self)
           gtk_widget_show (l->data);
         }
     }
+
+  /* Merge events that were broken because of the overflow label */
+  check_mergeable_events (self);
 
   g_clear_pointer (&children, g_list_free);
 }
