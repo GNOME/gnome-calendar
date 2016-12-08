@@ -49,6 +49,7 @@ struct _GcalWeekView
 
   GtkWidget      *header;
   GtkWidget      *hours_bar;
+  GtkWidget      *scrolled_window;
   GtkWidget      *week_grid;
 
   /*
@@ -128,6 +129,42 @@ on_event_activated (GcalWeekView *self,
                     GtkWidget    *widget)
 {
   g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
+}
+
+/* Auxiliary methods */
+static void
+update_grid_scroll_position (GcalWeekView *self)
+{
+  g_autoptr(GDateTime) now, week_start, week_end;
+  GtkAdjustment *vadjustment;
+  gdouble minutes, real_value;
+  gdouble max, page, page_increment, value;
+
+  now = g_date_time_new_now_local ();
+  week_start = get_start_of_week (self->date);
+  week_end = get_end_of_week (self->date);
+
+  /* Don't animate when not today */
+  if (datetime_compare_date (now, week_start) < 0 || datetime_compare_date (now, week_end) >= 0)
+    return;
+
+  vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
+  minutes = g_date_time_get_hour (now) * 60 + g_date_time_get_minute (now);
+  page = gtk_adjustment_get_page_size (vadjustment);
+  max = gtk_adjustment_get_upper (vadjustment);
+
+  real_value = max / MINUTES_PER_DAY * minutes - (page / 2.0);
+  page_increment = gtk_adjustment_get_page_increment (vadjustment);
+  value = gtk_adjustment_get_value (vadjustment);
+
+  gtk_adjustment_set_page_increment (vadjustment, real_value - value);
+
+  g_signal_emit_by_name (self->scrolled_window,
+                         "scroll-child",
+                         GTK_SCROLL_PAGE_FORWARD,
+                         FALSE);
+
+  gtk_adjustment_set_page_increment (vadjustment, page_increment);
 }
 
 /**
@@ -431,6 +468,7 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, header);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, hours_bar);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, scrolled_window);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_grid);
 
   gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_draw_hours);
@@ -495,6 +533,9 @@ gcal_week_view_set_property (GObject       *object,
     case PROP_DATE:
       g_clear_pointer (&self->date, g_free);
       self->date = g_value_dup_boxed (value);
+
+      update_grid_scroll_position (self);
+
       break;
 
     default:
