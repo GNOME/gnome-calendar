@@ -982,7 +982,6 @@ gcal_week_header_size_allocate (GtkWidget     *widget,
 
   min_header_height = get_weekday_names_height (widget);
 
-  gtk_scrolled_window_set_min_content_height (GTK_SCROLLED_WINDOW (self->scrolledwindow), min_header_height);
   gtk_widget_set_margin_top (self->scrolledwindow, min_header_height);
 
   GTK_WIDGET_CLASS (gcal_week_header_parent_class)->size_allocate (widget, alloc);
