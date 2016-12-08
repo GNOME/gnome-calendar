@@ -466,8 +466,8 @@ update_today_button_sensitive (GcalWindow *window)
       break;
 
     case GCAL_WINDOW_VIEW_WEEK:
-      /* TODO: determine when the today button would be sensitive on week view */
-      sensitive = TRUE;
+      sensitive = window->active_date->year != window->current_date->year ||
+                  icaltime_week_number (*window->active_date) !=  icaltime_week_number (*window->current_date);
       break;
 
     case GCAL_WINDOW_VIEW_MONTH:
