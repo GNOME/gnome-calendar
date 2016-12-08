@@ -275,13 +275,11 @@ gcal_week_view_component_modified (ECalDataModelSubscriber *subscriber,
                                    ECalComponent           *comp)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
-  GcalEvent *event;
   GcalWeekHeader *header;
   gchar *uuid;
 
   header = GCAL_WEEK_HEADER (self->header);
 
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, NULL);
   uuid = get_uuid_from_component (e_client_get_source (E_CLIENT (client)), comp);
 
   gcal_week_header_remove_event (header, uuid);
