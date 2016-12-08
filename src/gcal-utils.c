@@ -524,6 +524,43 @@ icaltime_compare_with_current (const icaltimetype *date1,
   return result;
 }
 
+GDateTime*
+get_start_of_week (icaltimetype *date)
+{
+  icaltimetype *new_date;
+  GDateTime *dt;
+
+  new_date = g_new0 (icaltimetype, 1);
+  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*date, get_first_weekday () + 1),
+                                         date->year);
+  new_date->is_date = 0;
+  new_date->hour = 0;
+  new_date->minute = 0;
+  new_date->second = 0;
+
+  dt = g_date_time_new_local (new_date->year,
+                              new_date->month,
+                              new_date->day,
+                              0, 0, 0);
+
+  g_clear_pointer (&new_date, g_free);
+
+  return dt;
+}
+
+GDateTime*
+get_end_of_week (icaltimetype *date)
+{
+  GDateTime *week_start, *week_end;
+
+  week_start = get_start_of_week (date);
+  week_end = g_date_time_add_days (week_start, 7);
+
+  g_clear_pointer (&week_start, g_date_time_unref);
+
+  return week_end;
+}
+
 /* Function to do a last minute fixup of the AM/PM stuff if the locale
  * and gettext haven't done it right. Most English speaking countries
  * except the USA use the 24 hour clock (UK, Australia etc). However

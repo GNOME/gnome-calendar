@@ -28,10 +28,6 @@
 #include <string.h>
 #include <math.h>
 
-#define ALIGNED(x)      (round (x) + 0.5)
-#define MINUTES_PER_DAY 1440
-#define MAX_MINUTES     (7 * MINUTES_PER_DAY)
-
 static const double dashed [] =
 {
   5.0,
@@ -125,30 +121,6 @@ destroy_event_widget (GcalWeekGrid *self,
 }
 
 /* Auxiliary methods */
-static GDateTime*
-get_start_of_week (icaltimetype *date)
-{
-  icaltimetype *new_date;
-  GDateTime *dt;
-
-  new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*date, get_first_weekday () + 1),
-                                         date->year);
-  new_date->is_date = 0;
-  new_date->hour = 0;
-  new_date->minute = 0;
-  new_date->second = 0;
-
-  dt = g_date_time_new_local (new_date->year,
-                              new_date->month,
-                              new_date->day,
-                              0, 0, 0);
-
-  g_clear_pointer (&new_date, g_free);
-
-  return dt;
-}
-
 static void
 get_event_range (GcalWeekGrid *self,
                  GcalEvent    *event,

@@ -29,7 +29,6 @@
 #include <string.h>
 #include <math.h>
 
-#define ALIGNED(x)           (round (x) + 0.5)
 #define COLUMN_PADDING       6
 
 struct _GcalWeekHeader
@@ -159,43 +158,6 @@ get_event_by_uuid (GcalWeekHeader *self,
     }
 
   return NULL;
-}
-
-static GDateTime*
-get_start_of_week (icaltimetype *date)
-{
-  icaltimetype *new_date;
-  GDateTime *dt;
-
-  new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*date, get_first_weekday () + 1),
-                                         date->year);
-  new_date->is_date = 0;
-  new_date->hour = 0;
-  new_date->minute = 0;
-  new_date->second = 0;
-
-  dt = g_date_time_new_local (new_date->year,
-                              new_date->month,
-                              new_date->day,
-                              0, 0, 0);
-
-  g_clear_pointer (&new_date, g_free);
-
-  return dt;
-}
-
-static GDateTime*
-get_end_of_week (icaltimetype *date)
-{
-  GDateTime *week_start, *week_end;
-
-  week_start = get_start_of_week (date);
-  week_end = g_date_time_add_days (week_start, 7);
-
-  g_clear_pointer (&week_start, g_date_time_unref);
-
-  return week_end;
 }
 
 static inline gint

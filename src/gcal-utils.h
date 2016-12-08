@@ -27,6 +27,10 @@
 
 #define ICAL_TIME_TYPE (icaltime_get_type ())
 
+#define ALIGNED(x)      (round (x) + 0.5)
+#define MINUTES_PER_DAY 1440
+#define MAX_MINUTES     (7 * MINUTES_PER_DAY)
+
 typedef enum
 {
   GCAL_WINDOW_VIEW_DAY,
@@ -94,6 +98,10 @@ gint            icaltime_compare_date                           (const icaltimet
 gint            icaltime_compare_with_current                   (const icaltimetype    *date1,
                                                                  const icaltimetype    *date2,
                                                                  time_t                *current_time_t);
+
+GDateTime*      get_start_of_week                               (icaltimetype          *date);
+
+GDateTime*      get_end_of_week                                 (icaltimetype          *date);
 
 /* code brought from evolution */
 gsize           e_strftime_fix_am_pm                            (gchar                 *str,
