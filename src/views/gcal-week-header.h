@@ -49,6 +49,9 @@ void                 gcal_week_header_add_event                  (GcalWeekHeader
 void                 gcal_week_header_remove_event               (GcalWeekHeader     *self,
                                                                   const gchar        *uuid);
 
+GList*               gcal_week_header_get_children_by_uuid       (GcalWeekHeader     *self,
+                                                                  const gchar        *uuid);
+
 GtkSizeGroup*        gcal_week_header_get_sidebar_size_group     (GcalWeekHeader     *self);
 
 G_END_DECLS

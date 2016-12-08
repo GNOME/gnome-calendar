@@ -75,6 +75,13 @@ enum
   LAST_PROP
 };
 
+enum
+{
+  EVENT_ACTIVATED,
+  LAST_SIGNAL
+};
+
+static guint signals[LAST_SIGNAL] = { 0, };
 static GParamSpec* properties[LAST_PROP] = { NULL, };
 
 /* ChildData methods */
@@ -91,6 +98,30 @@ child_data_new (GtkWidget *widget,
   data->end = end;
 
   return data;
+}
+
+/* Event activation methods */
+static void
+on_event_widget_activated (GcalEventWidget *widget,
+                           GcalWeekGrid    *self)
+{
+  g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
+}
+
+
+static inline void
+setup_event_widget (GcalWeekGrid *self,
+                    GtkWidget    *widget)
+{
+  g_signal_connect (widget, "activate", G_CALLBACK (on_event_widget_activated), self);
+}
+
+static inline void
+destroy_event_widget (GcalWeekGrid *self,
+                      GtkWidget    *widget)
+{
+  g_signal_handlers_disconnect_by_func (widget, on_event_widget_activated, self);
+  gtk_widget_destroy (widget);
 }
 
 /* Auxiliary methods */
@@ -624,6 +655,15 @@ gcal_week_grid_class_init (GcalWeekGridClass *klass)
                                                      ICAL_TIME_TYPE,
                                                      G_PARAM_CONSTRUCT | G_PARAM_READWRITE);
 
+
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
+                                           GCAL_TYPE_WEEK_GRID,
+                                           G_SIGNAL_RUN_FIRST,
+                                           0,  NULL, NULL, NULL,
+                                           G_TYPE_NONE,
+                                           1,
+                                           GCAL_TYPE_EVENT_WIDGET);
+
   g_object_class_install_properties (object_class, G_N_ELEMENTS (properties), properties);
 
   gtk_widget_class_set_css_name (widget_class, "weekgrid");
@@ -699,6 +739,7 @@ gcal_week_grid_add_event (GcalWeekGrid *self,
                              end,
                              child_data_new (widget, start, end));
 
+  setup_event_widget (self, widget);
   gtk_widget_show (widget);
 
   gtk_container_add (GTK_CONTAINER (self), widget);
@@ -733,9 +774,38 @@ gcal_week_grid_remove_event (GcalWeekGrid *self,
       get_event_range (self, event, &event_start, &event_end);
 
       gcal_range_tree_remove_range (self->events, data->start, data->end, data);
-      gtk_widget_destroy (data->widget);
+      destroy_event_widget (self, data->widget);
       g_free (data);
     }
 
   g_clear_pointer (&widgets, g_ptr_array_unref);
+}
+
+GList*
+gcal_week_grid_get_children_by_uuid (GcalWeekGrid *self,
+                                     const gchar  *uid)
+{
+  GPtrArray *widgets;
+  GList *result;
+  guint i;
+
+  result = NULL;
+  widgets = gcal_range_tree_get_data_at_range (self->events, 0, MAX_MINUTES);
+
+  for (i = 0; widgets && i < widgets->len; i++)
+    {
+      ChildData *data;
+      GcalEvent *event;
+
+      data = g_ptr_array_index (widgets, i);
+      event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (data->widget));
+
+      if (g_strcmp0 (gcal_event_get_uid (event), uid) == 0)
+        result = g_list_prepend (result, data->widget);
+
+    }
+
+  g_clear_pointer (&widgets, g_ptr_array_unref);
+
+  return result;
 }

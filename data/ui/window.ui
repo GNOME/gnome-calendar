@@ -56,6 +56,7 @@
                   <object class="GcalWeekView" id="week_view">
                     <property name="visible">True</property>
                     <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
+                    <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
                   </object>
                   <packing>
                     <property name="name">week</property>

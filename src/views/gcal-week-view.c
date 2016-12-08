@@ -109,10 +109,26 @@ static void           gcal_week_view_get_property               (GObject        
 
 static icaltimetype*  gcal_week_view_get_final_date             (GcalView       *view);
 
+enum
+{
+  EVENT_ACTIVATED,
+  LAST_SIGNAL
+};
+
+static guint signals[LAST_SIGNAL] = { 0, };
+
 G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 gcal_data_model_subscriber_interface_init));
+
+/* Callbacks */
+static void
+on_event_activated (GcalWeekView *self,
+                    GtkWidget    *widget)
+{
+  g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
+}
 
 /**
  * gcal_week_view_get_initial_date:
@@ -166,6 +182,20 @@ gcal_week_view_get_final_date (GcalView *view)
   new_date->second = 0;
   *new_date = icaltime_set_timezone (new_date, self->date->zone);
   return new_date;
+}
+
+static GList*
+gcal_week_view_get_children_by_uuid (GcalView    *view,
+                                     const gchar *uuid)
+{
+  GcalWeekView *self;
+  GList *grid, *header;
+
+  self = GCAL_WEEK_VIEW (view);
+  grid = gcal_week_grid_get_children_by_uuid (GCAL_WEEK_GRID (self->week_grid), uuid);
+  header = gcal_week_header_get_children_by_uuid (GCAL_WEEK_HEADER (self->header), uuid);
+
+  return g_list_concat (grid, header);
 }
 
 static void
@@ -391,6 +421,14 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
 
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
+                                           GCAL_TYPE_WEEK_VIEW,
+                                           G_SIGNAL_RUN_FIRST,
+                                           0,  NULL, NULL, NULL,
+                                           G_TYPE_NONE,
+                                           1,
+                                           GCAL_TYPE_EVENT_WIDGET);
+
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, header);
@@ -398,6 +436,7 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_grid);
 
   gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_draw_hours);
+  gtk_widget_class_bind_template_callback (widget_class, on_event_activated);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
@@ -415,6 +454,7 @@ gcal_view_interface_init (GcalViewInterface *iface)
 {
   iface->get_initial_date = gcal_week_view_get_initial_date;
   iface->get_final_date = gcal_week_view_get_final_date;
+  iface->get_children_by_uuid = gcal_week_view_get_children_by_uuid;
 
   /* iface->clear_marks = gcal_week_view_clear_marks; */
 }
@@ -455,11 +495,9 @@ gcal_week_view_set_property (GObject       *object,
   switch (property_id)
     {
     case PROP_DATE:
-      {
-        g_clear_pointer (&self->date, g_free);
-        self->date = g_value_dup_boxed (value);
-        break;
-      }
+      g_clear_pointer (&self->date, g_free);
+      self->date = g_value_dup_boxed (value);
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);

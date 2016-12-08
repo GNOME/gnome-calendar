@@ -94,19 +94,51 @@ static void           gcal_week_header_set_property         (GObject      *objec
 static void           gcal_week_header_size_allocate        (GtkWidget     *widget,
                                                              GtkAllocation *alloc);
 
-enum
-{
-  PROP_0,
-  PROP_ACTIVE_DATE
-};
-
 typedef enum
 {
   UP,
   DOWN
 } MoveDirection;
 
+enum
+{
+  PROP_0,
+  PROP_ACTIVE_DATE
+};
+
+enum
+{
+  EVENT_ACTIVATED,
+  LAST_SIGNAL
+};
+
+static guint signals[LAST_SIGNAL] = { 0, };
+
 G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_GRID);
+
+/* Event activation methods */
+static void
+on_event_widget_activated (GcalEventWidget *widget,
+                           GcalWeekHeader  *self)
+{
+  g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
+}
+
+
+static inline void
+setup_event_widget (GcalWeekHeader *self,
+                    GtkWidget      *widget)
+{
+  g_signal_connect (widget, "activate", G_CALLBACK (on_event_widget_activated), self);
+}
+
+static inline void
+destroy_event_widget (GcalWeekHeader *self,
+                      GtkWidget      *widget)
+{
+  g_signal_handlers_disconnect_by_func (widget, on_event_widget_activated, self);
+  gtk_widget_destroy (widget);
+}
 
 /* Auxiliary methods */
 static GcalEvent*
@@ -307,7 +339,7 @@ merge_events (GcalWeekHeader *self,
                            "width", &current_width,
                            NULL);
 
-  gtk_widget_destroy (to_be_removed);
+  destroy_event_widget (self, to_be_removed);
 
   /* Update the event's size */
   gtk_container_child_set (GTK_CONTAINER (self->grid),
@@ -438,6 +470,8 @@ split_event_widget_at_column (GcalWeekHeader *self,
       widget_before = gcal_event_widget_clone (GCAL_EVENT_WIDGET (widget));
       gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget_before), column_date);
 
+      setup_event_widget (self, widget_before);
+
       gtk_grid_attach (GTK_GRID (self->grid),
                        widget_before,
                        left_attach,
@@ -473,6 +507,8 @@ split_event_widget_at_column (GcalWeekHeader *self,
       widget_after = gcal_event_widget_clone (GCAL_EVENT_WIDGET (widget));
       gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (widget_after), end_column_date);
       gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget_after), event_end);
+
+      setup_event_widget (self, widget_after);
 
       gtk_grid_attach (GTK_GRID (self->grid),
                        widget_after,
@@ -580,6 +616,7 @@ add_event_to_grid (GcalWeekHeader *self,
 
   /* Add the event to the grid */
   widget = gcal_event_widget_new (event);
+  setup_event_widget (self, widget);
 
   gtk_grid_attach (GTK_GRID (self->grid),
                    widget,
@@ -638,6 +675,7 @@ add_event_to_grid (GcalWeekHeader *self,
 
           cloned_widget_start_dt = g_date_time_add_days (week_start, i);
           cloned_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (widget));
+          setup_event_widget (self, cloned_widget);
 
           gtk_grid_attach (GTK_GRID (self->grid),
                            cloned_widget,
@@ -1170,6 +1208,14 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
                                                        ICAL_TIME_TYPE,
                                                        G_PARAM_CONSTRUCT | G_PARAM_READWRITE));
 
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
+                                           GCAL_TYPE_WEEK_HEADER,
+                                           G_SIGNAL_RUN_FIRST,
+                                           0,  NULL, NULL, NULL,
+                                           G_TYPE_NONE,
+                                           1,
+                                           GCAL_TYPE_EVENT_WIDGET);
+
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-header.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button);
@@ -1304,7 +1350,7 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
       event = gcal_event_widget_get_event (child_widget);
 
       if (g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
-        gtk_widget_destroy (l->data);
+        destroy_event_widget (self, l->data);
     }
 
   /* Remove from the weekday's GList */
@@ -1334,6 +1380,35 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
   update_overflow (self);
 
   g_clear_pointer (&children, g_list_free);
+}
+
+GList*
+gcal_week_header_get_children_by_uuid (GcalWeekHeader *self,
+                                       const gchar    *uuid)
+{
+  GList *children, *l, *result;
+
+  result = NULL;
+  children = gtk_container_get_children (GTK_CONTAINER (self->grid));
+
+  for (l = children; l != NULL; l = l->next)
+    {
+      GcalEventWidget *child_widget;
+      GcalEvent *event;
+
+      if (!GCAL_IS_EVENT_WIDGET (l->data))
+        continue;
+
+      child_widget = GCAL_EVENT_WIDGET (l->data);
+      event = gcal_event_widget_get_event (child_widget);
+
+      if (g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
+        result = g_list_prepend (result, l->data);
+    }
+
+  g_list_free (children);
+
+  return result;
 }
 
 void
