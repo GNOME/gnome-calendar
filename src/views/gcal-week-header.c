@@ -1159,6 +1159,7 @@ gcal_week_header_add_event (GcalWeekHeader *self,
   week_start = get_start_of_week (self->active_date);
   week_end = get_end_of_week (self->active_date);
 
+  /* Retrieve the real start and end dates */
   if (all_day)
     {
       start_date = g_date_time_ref (gcal_event_get_date_start (event));
@@ -1170,16 +1171,19 @@ gcal_week_header_add_event (GcalWeekHeader *self,
       end_date = g_date_time_to_local (gcal_event_get_date_end (event));
     }
 
+  /* Start position */
   if (datetime_compare_date (start_date, week_start) >= 0)
     start = (g_date_time_get_day_of_week (start_date) - get_first_weekday ()) % 7;
   else
     start = 0;
 
+  /* End position */
   if (g_date_time_compare (end_date, week_end) <= 0)
-    end = (g_date_time_get_day_of_week (end_date) - get_first_weekday ()) % 7 - all_day;
+    end = (g_date_time_get_day_of_week (end_date) - get_first_weekday ()  - all_day) % 7;
   else
     end = 6;
 
+  /* Add the event widget to the grid */
   add_event_to_grid (self, event, start, end);
 
   /* Check if we eventually can merge events */
