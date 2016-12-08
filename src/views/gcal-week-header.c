@@ -951,13 +951,27 @@ gcal_week_header_set_property (GObject      *object,
                                GParamSpec   *pspec)
 {
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
-  icaltimetype *old_date;
+  icaltimetype *old_date, *new_date;
 
   switch (prop_id)
     {
     case PROP_ACTIVE_DATE:
       old_date = self->active_date;
-      self->active_date = g_value_dup_boxed (value);
+      new_date = g_value_dup_boxed (value);
+
+      /*
+       * If the active date changed, but we're still in the same week,
+       * there's no need to recalculate visible events.
+       */
+      if (old_date && new_date &&
+          old_date->year == new_date->year &&
+          icaltime_week_number (*old_date) == icaltime_week_number (*new_date))
+        {
+          g_free (new_date);
+          break;
+        }
+
+      self->active_date = new_date;
 
       update_title (self);
       gtk_widget_queue_draw (GTK_WIDGET (self));
@@ -966,7 +980,7 @@ gcal_week_header_set_property (GObject      *object,
         update_unchanged_events (self, old_date, self->active_date);
 
       g_clear_pointer (&old_date, g_free);
-      return;
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
