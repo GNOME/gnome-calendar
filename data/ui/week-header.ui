@@ -85,6 +85,7 @@
             <property name="hscrollbar-policy">never</property>
             <property name="vscrollbar-policy">never</property>
             <property name="propagate-natural-height">True</property>
+            <property name="margin-bottom">2</property>
             <child>
               <object class="GtkViewport">
                 <property name="visible">True</property>
