@@ -184,25 +184,6 @@ get_today_column (GcalWeekHeader *self)
 }
 
 static gint
-get_event_start_weekday (GcalWeekHeader *self,
-                         GcalEvent      *event)
-{
-  g_autoptr (GDateTime) week_start, event_start;
-  gint start_weekday;
-
-  week_start = get_start_of_week (self->current_date);
-  event_start = g_date_time_to_local (gcal_event_get_date_start (event));
-
-  /* Only calculate the start day if it starts in the current week */
-  if (g_date_time_compare (event_start, week_start) >= 0)
-    start_weekday = (g_date_time_get_day_of_week (event_start) - get_first_weekday ()) % 7;
-  else
-    start_weekday = 0;
-
-  return start_weekday;
-}
-
-static gint
 compare_events_by_length (GcalEvent *event1,
                           GcalEvent *event2)
 {
@@ -1169,27 +1150,37 @@ gcal_week_header_add_event (GcalWeekHeader *self,
   g_autoptr (GDateTime) end_date = NULL;
   g_autoptr (GDateTime) week_start = NULL;
   g_autoptr (GDateTime) week_end = NULL;
-  gint weekday;
-  gint width;
+  gboolean all_day;
+  gint start, end;
 
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
+  all_day = gcal_event_get_all_day (event);
   week_start = get_start_of_week (self->active_date);
   week_end = get_end_of_week (self->active_date);
-  start_date = g_date_time_to_local (gcal_event_get_date_start (event));
-  end_date = g_date_time_to_local (gcal_event_get_date_end (event));
-  weekday = get_event_start_weekday (self, event);
 
-  /* Calculate the real width of this event */
-  width = ceil (g_date_time_difference (end_date, start_date) / G_TIME_SPAN_DAY);
+  if (all_day)
+    {
+      start_date = g_date_time_ref (gcal_event_get_date_start (event));
+      end_date = g_date_time_ref (gcal_event_get_date_end (event));
+    }
+  else
+    {
+      start_date = g_date_time_to_local (gcal_event_get_date_start (event));
+      end_date = g_date_time_to_local (gcal_event_get_date_end (event));
+    }
 
-  if (g_date_time_compare (start_date, week_start) < 0)
-    width -= ceil (g_date_time_difference (week_start, start_date) / G_TIME_SPAN_DAY);
+  if (datetime_compare_date (start_date, week_start) >= 0)
+    start = (g_date_time_get_day_of_week (start_date) - get_first_weekday ()) % 7;
+  else
+    start = 0;
 
-  if (g_date_time_compare (week_end, end_date) < 0)
-    width -= ceil (g_date_time_difference (end_date, week_end) / G_TIME_SPAN_DAY);
+  if (g_date_time_compare (end_date, week_end) <= 0)
+    end = (g_date_time_get_day_of_week (end_date) - get_first_weekday ()) % 7 - all_day;
+  else
+    end = 6;
 
-  add_event_to_grid (self, event, weekday, weekday + width - 1);
+  add_event_to_grid (self, event, start, end);
 
   /* Check if we eventually can merge events */
   check_mergeable_events (self);
