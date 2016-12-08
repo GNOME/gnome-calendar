@@ -229,9 +229,10 @@ is_event_visible (GcalWeekHeader *self,
 static void
 update_overflow (GcalWeekHeader *self)
 {
+  gboolean show_expand;
   gint i;
 
-  gtk_widget_hide (self->expand_button);
+  show_expand = FALSE;
 
   for (i = 0; i < 7; i++)
     {
@@ -243,7 +244,9 @@ update_overflow (GcalWeekHeader *self)
       show_label = n_events > 3;
       label = self->overflow_label[i];
 
-      if (show_label)
+      show_expand = show_expand || show_label;
+
+      if (show_label && !self->expanded)
         {
           gchar *text;
 
@@ -277,6 +280,8 @@ update_overflow (GcalWeekHeader *self)
           g_clear_pointer (&self->overflow_label[i], gtk_widget_destroy);
         }
     }
+
+  gtk_widget_set_visible (self->expand_button, show_expand);
 }
 
 static void
