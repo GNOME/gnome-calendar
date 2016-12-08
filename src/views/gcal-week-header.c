@@ -535,7 +535,6 @@ add_event_to_grid (GcalWeekHeader *self,
 
   /* Add the event to the grid */
   widget = gcal_event_widget_new (event);
-  gtk_widget_set_margin_end (widget, end == 6 ? 0 : 6);
 
   gtk_grid_attach (GTK_GRID (self->grid),
                    widget,
