@@ -28,7 +28,8 @@ calendar-view.header {
     font-weight: bold;
 }
 
-calendar-view.current {
+calendar-view.current,
+weekgrid.current {
     background-color: alpha(@theme_selected_bg_color, 0.3);
 }
 
@@ -400,6 +401,10 @@ datechooser day:selected:hover {
     color: alpha(@theme_fg_color, 0.6);
 }
 
+.week-header .today {
+    color: @theme_selected_bg_color;
+}
+
 .week-view {
     padding: 0px;
 }
@@ -409,4 +414,10 @@ datechooser day:selected:hover {
     font-weight: normal;
     color: alpha(@theme_fg_color, 0.25);
     padding: 18px 12px;
+}
+
+weekgrid.now-strip {
+    background-color: alpha(@theme_selected_bg_color, 0.8);
+    margin: 0 0 0 1px;
+    min-height: 2px;
 }

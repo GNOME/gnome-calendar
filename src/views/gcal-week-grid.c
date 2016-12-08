@@ -245,6 +245,7 @@ gcal_week_grid_set_property (GObject      *object,
       self->active_date = g_value_dup_boxed (value);
 
       gtk_widget_queue_resize (GTK_WIDGET (self));
+      gtk_widget_queue_draw (GTK_WIDGET (self));
       return;
 
     default:
@@ -337,6 +338,23 @@ gcal_week_grid_unmap (GtkWidget *widget)
   GTK_WIDGET_CLASS (gcal_week_grid_parent_class)->unmap (widget);
 }
 
+static inline gint
+get_today_column (GcalWeekGrid *self)
+{
+  g_autoptr(GDateTime) today, week_start;
+  gint days_diff;
+
+  today = g_date_time_new_now_local ();
+  week_start = get_start_of_week (self->active_date);
+  days_diff = g_date_time_difference (today, week_start) / G_TIME_SPAN_DAY;
+
+  /* Today is out of range */
+  if (g_date_time_compare (today, week_start) < 0 || days_diff > 7)
+    return -1;
+
+  return days_diff;
+}
+
 static gboolean
 gcal_week_grid_draw (GtkWidget *widget,
                      cairo_t   *cr)
@@ -346,7 +364,7 @@ gcal_week_grid_draw (GtkWidget *widget,
   GtkBorder padding;
   GdkRGBA color;
 
-  gint i, width, height;
+  gint i, width, height, today_column;
 
   PangoLayout *layout;
   PangoFontDescription *font_desc;
@@ -367,6 +385,35 @@ gcal_week_grid_draw (GtkWidget *widget,
   height = gtk_widget_get_allocated_height (widget);
 
   cairo_set_line_width (cr, 0.65);
+
+  /* Today column */
+  today_column = get_today_column (GCAL_WEEK_GRID (widget));
+
+  if (today_column != -1)
+    {
+      g_autoptr (GDateTime) now;
+      GtkBorder margin;
+      guint minutes_from_midnight;
+      gint min_stip_height;
+
+      now = g_date_time_new_now_local ();
+      minutes_from_midnight = g_date_time_get_hour (now) * 60 + g_date_time_get_minute (now);
+
+      gtk_style_context_save (context);
+      gtk_style_context_add_class (context, "now-strip");
+
+      gtk_style_context_get (context, state, "min-height", &min_stip_height, NULL);
+      gtk_style_context_get_margin (context, state, &margin);
+
+      gtk_render_background (context,
+                             cr,
+                             today_column * width / 7.0 + margin.left,
+                             round (minutes_from_midnight * ((gdouble) height / MINUTES_PER_DAY) + margin.top),
+                             width / 7.0 - margin.left - margin.right,
+                             MAX (1, min_stip_height - margin.top - margin.bottom));
+
+      gtk_style_context_restore (context);
+    }
 
   /* Vertical lines */
   for (i = 0; i < 7; i++)

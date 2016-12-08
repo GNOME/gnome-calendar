@@ -163,6 +163,23 @@ get_end_of_week (icaltimetype *date)
   return week_end;
 }
 
+static inline gint
+get_today_column (GcalWeekHeader *self)
+{
+  g_autoptr(GDateTime) today, week_start;
+  gint days_diff;
+
+  today = g_date_time_new_now_local ();
+  week_start = get_start_of_week (self->active_date);
+  days_diff = g_date_time_difference (today, week_start) / G_TIME_SPAN_DAY;
+
+  /* Today is out of range */
+  if (g_date_time_compare (today, week_start) < 0 || days_diff > 7)
+    return -1;
+
+  return days_diff;
+}
+
 static gint
 get_event_start_weekday (GcalWeekHeader *self,
                          GcalEvent      *event)
@@ -910,7 +927,7 @@ gcal_week_header_draw (GcalWeekHeader *self,
   PangoLayout *layout;
   PangoFontDescription *bold_font;
 
-  gint i, font_height, current_cell;
+  gint i, font_height, current_cell, today_column;
   gdouble cell_width;
 
   cairo_save(cr);
@@ -934,8 +951,10 @@ gcal_week_header_draw (GcalWeekHeader *self,
   week_end = g_date_time_add_days (week_start, 6);
   current_cell = icaltime_day_of_week (*(self->active_date)) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
+  today_column = get_today_column (self);
 
   cell_width = alloc.width / 7.0;
+
   pango_layout_get_pixel_size (layout, NULL, &font_height);
 
   for (i = 0; i < 7; i++)
@@ -954,15 +973,18 @@ gcal_week_header_draw (GcalWeekHeader *self,
       gtk_style_context_save (context);
       gtk_style_context_add_class (context, "week-dates");
       gtk_style_context_get (context, state, "font", &bold_font, NULL);
-      gtk_style_context_get_color (context, state, &color);
-      gdk_cairo_set_source_rgba (cr, &color);
+
+      if (i == today_column)
+        gtk_style_context_add_class (context, "today");
 
       pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, weekday_date, -1);
-      cairo_move_to (cr,
-                     padding.left + cell_width * i + COLUMN_PADDING,
-                     font_height + padding.bottom);
-      pango_cairo_show_layout (cr,layout);
+
+      gtk_render_layout (context,
+                         cr,
+                         padding.left + cell_width * i + COLUMN_PADDING,
+                         font_height + padding.bottom,
+                         layout);
 
       gtk_style_context_restore (context);
 
@@ -973,23 +995,37 @@ gcal_week_header_draw (GcalWeekHeader *self,
       gtk_style_context_add_class (context, "week-names");
       gtk_style_context_get (context, state, "font", &bold_font, NULL);
 
+      if (i == today_column)
+        gtk_style_context_add_class (context, "today");
+
       pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, weekday_abv, -1);
-      cairo_move_to (cr,
-                     padding.left + cell_width * i + COLUMN_PADDING,
-                     0);
-      pango_cairo_show_layout (cr, layout);
+
+      gtk_render_layout (context,
+                         cr,
+                         padding.left + cell_width * i + COLUMN_PADDING,
+                         0.0,
+                         layout);
 
       gtk_style_context_restore (context);
 
       /* Draws the lines after each day of the week */
+      gtk_style_context_save (context);
+      gtk_style_context_add_class (context, "lines");
+
+      gtk_style_context_get_color (context, state, &color);
+      gdk_cairo_set_source_rgba (cr, &color);
+
+      cairo_set_line_width (cr, 0.25);
+
       cairo_move_to (cr,
                      ALIGNED (cell_width * i),
                      font_height + padding.bottom);
 
-      cairo_set_line_width (cr, 0.25);
       cairo_rel_line_to (cr, 0.0, gtk_widget_get_allocated_height (self->draw_area) - font_height + padding.bottom);
       cairo_stroke (cr);
+
+      gtk_style_context_restore (context);
 
       g_free (weekday_date);
       g_free (weekday_abv);
