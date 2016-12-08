@@ -136,18 +136,24 @@ static GDateTime*
 get_start_of_week (icaltimetype *date)
 {
   icaltimetype *new_date;
+  GDateTime *dt;
 
   new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(date), get_first_weekday () + 1),
+  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*date, get_first_weekday () + 1),
                                          date->year);
   new_date->is_date = 0;
   new_date->hour = 0;
   new_date->minute = 0;
   new_date->second = 0;
 
-  *new_date = icaltime_set_timezone (new_date, date->zone);
+  dt = g_date_time_new_local (new_date->year,
+                              new_date->month,
+                              new_date->day,
+                              0, 0, 0);
 
-  return icaltime_to_datetime (new_date);
+  g_clear_pointer (&new_date, g_free);
+
+  return dt;
 }
 
 static GDateTime*
@@ -184,19 +190,17 @@ static gint
 get_event_start_weekday (GcalWeekHeader *self,
                          GcalEvent      *event)
 {
-  GDateTime *week_start, *event_start;
+  g_autoptr (GDateTime) week_start, event_start;
   gint start_weekday;
 
   week_start = get_start_of_week (self->current_date);
-  event_start = gcal_event_get_date_start (event);
+  event_start = g_date_time_to_local (gcal_event_get_date_start (event));
 
   /* Only calculate the start day if it starts in the current week */
   if (g_date_time_compare (event_start, week_start) >= 0)
     start_weekday = (g_date_time_get_day_of_week (event_start) - get_first_weekday ()) % 7;
   else
     start_weekday = 0;
-
-  g_clear_pointer (&week_start, g_date_time_unref);
 
   return start_weekday;
 }
@@ -244,7 +248,7 @@ is_event_visible (GcalWeekHeader *self,
 }
 
 static void
-update_overflow_labels (GcalWeekHeader *self)
+update_overflow (GcalWeekHeader *self)
 {
   gint i;
 
@@ -451,12 +455,14 @@ split_event_widget_at_column (GcalWeekHeader *self,
   /* Create a new widget after the current widget */
   if (create_after)
     {
+      g_autoptr (GDateTime) event_end;
       GtkWidget *widget_after;
+
+      event_end = g_date_time_to_local (gcal_event_widget_get_date_end (GCAL_EVENT_WIDGET (widget)));
 
       widget_after = gcal_event_widget_clone (GCAL_EVENT_WIDGET (widget));
       gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (widget_after), end_column_date);
-      gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget_after),
-                                      gcal_event_widget_get_date_end (GCAL_EVENT_WIDGET (widget)));
+      gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget_after), event_end);
 
       gtk_grid_attach (GTK_GRID (self->grid),
                        widget_after,
@@ -531,7 +537,8 @@ add_event_to_grid (GcalWeekHeader *self,
                    gint            start,
                    gint            end)
 {
-  GDateTime *week_start, *week_end, *widget_end_dt;
+  g_autoptr (GDateTime) week_start = NULL;
+  g_autoptr (GDateTime) week_end = NULL;
   GtkWidget *widget;
   gint position;
   gint i;
@@ -561,11 +568,8 @@ add_event_to_grid (GcalWeekHeader *self,
   week_start = get_start_of_week (self->active_date);
   week_end = get_end_of_week (self->active_date);
 
-  /* Setup the event's start date */
-  widget_end_dt = g_date_time_add_days (week_start, 1);
-
   gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (widget), week_start);
-  gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget), widget_end_dt);
+  gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget), week_end);
 
   /*
    * In addition to moving the current column's events below, multiday
@@ -574,10 +578,7 @@ add_event_to_grid (GcalWeekHeader *self,
    */
   for (i = start + 1; i <= end; i++)
     {
-      GDateTime *new_widget_end_dt;
       gint new_position;
-
-      new_widget_end_dt = g_date_time_add_days (widget_end_dt, 1);
 
       /* Add the event to that day */
       new_position = add_event_to_weekday (self, event, i);
@@ -618,18 +619,10 @@ add_event_to_grid (GcalWeekHeader *self,
         }
 
       /* Update the widget's end date */
-      gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget), new_widget_end_dt);
-
-      g_clear_pointer (&widget_end_dt, g_date_time_unref);
-
-      widget_end_dt = new_widget_end_dt;
+      gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget), week_end);
     }
 
   gtk_widget_show (widget);
-
-  g_clear_pointer (&widget_end_dt, g_date_time_unref);
-  g_clear_pointer (&week_start, g_date_time_unref);
-  g_clear_pointer (&week_end, g_date_time_unref);
 }
 
 static void
@@ -658,10 +651,10 @@ update_unchanged_events (GcalWeekHeader *self,
 
       for (l = events; l != NULL; l = l->next)
         {
-          GDateTime *event_start, *event_end;
+          g_autoptr (GDateTime) event_start, event_end;
 
-          event_start = gcal_event_get_date_start (l->data);
-          event_end = gcal_event_get_date_end (l->data);
+          event_start = g_date_time_to_local (gcal_event_get_date_start (l->data));
+          event_end = g_date_time_to_local (gcal_event_get_date_end (l->data));
 
           /*
            * Check if the event must be updated. If we're going to the future, updatable events
@@ -767,7 +760,7 @@ header_collapse (GcalWeekHeader *self)
       gtk_widget_set_visible (l->data, is_event_visible (self, left_attach, top_attach - 1));
     }
 
-  update_overflow_labels (self);
+  update_overflow (self);
 
   g_clear_pointer (&children, g_list_free);
 }
@@ -1121,7 +1114,10 @@ void
 gcal_week_header_add_event (GcalWeekHeader *self,
                             GcalEvent      *event)
 {
-  GDateTime *start_date, *end_date, *week_start, *week_end;
+  g_autoptr (GDateTime) start_date = NULL;
+  g_autoptr (GDateTime) end_date = NULL;
+  g_autoptr (GDateTime) week_start = NULL;
+  g_autoptr (GDateTime) week_end = NULL;
   gint weekday;
   gint width;
 
@@ -1129,8 +1125,8 @@ gcal_week_header_add_event (GcalWeekHeader *self,
 
   week_start = get_start_of_week (self->active_date);
   week_end = get_end_of_week (self->active_date);
-  start_date = gcal_event_get_date_start (event);
-  end_date = gcal_event_get_date_end (event);
+  start_date = g_date_time_to_local (gcal_event_get_date_start (event));
+  end_date = g_date_time_to_local (gcal_event_get_date_end (event));
   weekday = get_event_start_weekday (self, event);
 
   /* Calculate the real width of this event */
@@ -1148,10 +1144,7 @@ gcal_week_header_add_event (GcalWeekHeader *self,
   check_mergeable_events (self);
 
   /* And also update the overflow labels */
-  update_overflow_labels (self);
-
-  g_clear_pointer (&week_end, g_date_time_unref);
-  g_clear_pointer (&week_start, g_date_time_unref);
+  update_overflow (self);
 }
 
 void
@@ -1210,7 +1203,7 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
   check_mergeable_events (self);
 
   /* And also update the overflow labels */
-  update_overflow_labels (self);
+  update_overflow (self);
 
   g_clear_pointer (&children, g_list_free);
 }
