@@ -58,7 +58,6 @@
             <property name="hexpand">False</property>
             <child>
               <object class="GtkButton" id="expand_button">
-                <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="halign">center</property>

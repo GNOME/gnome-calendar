@@ -252,6 +252,8 @@ update_overflow (GcalWeekHeader *self)
 {
   gint i;
 
+  gtk_widget_hide (self->expand_button);
+
   for (i = 0; i < 7; i++)
     {
       GtkWidget *label;
@@ -267,6 +269,10 @@ update_overflow (GcalWeekHeader *self)
           gchar *text;
 
           text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", n_events - 2), n_events - 2);
+
+          /* Show the button if not visible yet */
+          if (!gtk_widget_get_visible (self->expand_button))
+            gtk_widget_show (self->expand_button);
 
           /* TODO: use a button and show an overflow popover */
           if (!label)
