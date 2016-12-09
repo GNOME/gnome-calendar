@@ -148,6 +148,9 @@ update_grid_scroll_position (GcalWeekView *self)
   if (datetime_compare_date (now, week_start) < 0 || datetime_compare_date (now, week_end) >= 0)
     return;
 
+  if (!gtk_widget_get_mapped (self->scrolled_window))
+    return;
+
   vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
   minutes = g_date_time_get_hour (now) * 60 + g_date_time_get_minute (now);
   page = gtk_adjustment_get_page_size (vadjustment);
