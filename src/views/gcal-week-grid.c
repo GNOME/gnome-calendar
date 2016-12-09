@@ -164,6 +164,65 @@ get_event_range (GcalWeekGrid *self,
   g_clear_pointer (&week_start, g_date_time_unref);
 }
 
+static inline gint
+int16_compare (gconstpointer a,
+               gconstpointer b)
+{
+  return GPOINTER_TO_INT (a) - GPOINTER_TO_INT (b);
+}
+
+static inline guint
+get_event_index (GcalRangeTree *tree,
+                 guint16        start,
+                 guint16        end)
+{
+  g_autoptr (GPtrArray) array;
+  gint idx, i;
+
+  i = idx = 0;
+  array = gcal_range_tree_get_data_at_range (tree, start, end);
+
+  if (!array)
+    return 0;
+
+  g_ptr_array_sort (array, int16_compare);
+
+  for (i = 0; array && i < array->len; i++)
+    {
+      if (idx == GPOINTER_TO_INT (g_ptr_array_index (array, i)))
+        idx++;
+      else
+        break;
+    }
+
+
+  return idx;
+}
+
+static guint
+count_overlaps_at_range (GcalRangeTree *self,
+                         guint16        start,
+                         guint16        end)
+{
+  guint64 i, counter;
+
+  g_return_val_if_fail (self, 0);
+  g_return_val_if_fail (end >= start, 0);
+
+  counter = 0;
+
+  for (i = start; i < end; i++)
+    {
+      guint n_events;
+
+      n_events = gcal_range_tree_count_entries_at_range (self, i, i + 1);
+
+      counter = MAX (counter, n_events);
+    }
+
+  return counter;
+}
+
 static void
 gcal_week_grid_finalize (GObject *object)
 {
@@ -492,6 +551,7 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
                               GtkAllocation *allocation)
 {
   GcalWeekGrid *self = GCAL_WEEK_GRID (widget);
+  GcalRangeTree *overlaps;
   gboolean ltr;
   gdouble minutes_height;
   gdouble column_width;
@@ -525,6 +585,9 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
   minutes_height = (gdouble) allocation->height / MINUTES_PER_DAY;
   column_width = (gdouble) allocation->width / 7.0;
 
+  /* Temporary range tree to hold positioned events' indexes */
+  overlaps = gcal_range_tree_new ();
+
   /*
    * Iterate through weekdays; we don't have to worry about events that
    * jump between days because they're already handled by GcalWeekHeader.
@@ -549,6 +612,8 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           GtkBorder margin;
           guint64 events_at_range;
           gint natural_height;
+          gint widget_index;
+          gint offset;
           gint height;
           gint width;
 
@@ -556,9 +621,11 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           event_widget = data->widget;
           context = gtk_widget_get_style_context (event_widget);
 
-          events_at_range = gcal_range_tree_count_entries_at_range (self->events,
-                                                                    data->start,
-                                                                    data->end);
+          /* The total number of events available in this range */
+          events_at_range = count_overlaps_at_range (self->events, data->start, data->end);
+
+          /* The real horizontal position of this event */
+          widget_index = get_event_index (overlaps, data->start, data->end);
 
           /* Gtk complains about that */
           gtk_widget_get_preferred_height (event_widget, NULL, &natural_height);
@@ -570,11 +637,12 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
 
           width = column_width / events_at_range - margin.left - margin.right;
           height = MAX ((data->end - data->start) * minutes_height - margin.top - margin.bottom, natural_height);
+          offset = (width + margin.left + margin.right) * widget_index;
 
           if (ltr)
-            x = column_width * i + allocation->x + margin.left + 1;
+            x = column_width * i + offset + allocation->x + margin.left + 1;
           else
-            x = allocation->width - width - (column_width * i + allocation->x + margin.left + 1);
+            x = allocation->width - width - (column_width * i + offset + allocation->x + margin.left + 1);
 
           /* Setup the child position and size */
           child_allocation.x = x;
@@ -583,12 +651,23 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           child_allocation.height = height;
 
           gtk_widget_size_allocate (event_widget, &child_allocation);
+
+          /*
+           * Add the current event to the temporary overlaps tree so we have a way to
+           * know how many events are already positioned in the current column.
+           */
+          gcal_range_tree_add_range (overlaps,
+                                     data->start,
+                                     data->end,
+                                     GINT_TO_POINTER (widget_index));
         }
 
       g_clear_pointer (&widgets_data, g_ptr_array_unref);
     }
 
   self->children_changed = FALSE;
+
+  g_clear_pointer (&overlaps, gcal_range_tree_unref);
 }
 
 static void
