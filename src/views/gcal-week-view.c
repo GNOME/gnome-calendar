@@ -236,6 +236,14 @@ gcal_week_view_get_children_by_uuid (GcalView    *view,
 }
 
 static void
+gcal_week_view_clear_marks (GcalView *view)
+{
+  GcalWeekView *self = GCAL_WEEK_VIEW (view);
+
+  gcal_week_grid_clear_marks (GCAL_WEEK_GRID (self->week_grid));
+}
+
+static void
 update_hours_sidebar_size (GcalWeekView *self)
 {
   GtkStyleContext *context;
@@ -503,8 +511,7 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->get_initial_date = gcal_week_view_get_initial_date;
   iface->get_final_date = gcal_week_view_get_final_date;
   iface->get_children_by_uuid = gcal_week_view_get_children_by_uuid;
-
-  /* iface->clear_marks = gcal_week_view_clear_marks; */
+  iface->clear_marks = gcal_week_view_clear_marks;
 }
 
 static void

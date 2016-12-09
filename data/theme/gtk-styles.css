@@ -421,3 +421,7 @@ weekgrid.now-strip {
     margin: 0 0 0 1px;
     min-height: 2px;
 }
+
+weekgrid:selected {
+    background-color: alpha(@theme_selected_bg_color, 0.4);
+}

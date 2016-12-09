@@ -60,6 +60,13 @@ struct _GcalWeekGrid
   gboolean            children_changed;
   gint                redraw_timeout_id;
 
+  /*
+   * These fields are "cells" rather than minutes. Each cell
+   * correspond to 30 minutes.
+   */
+  gint                selection_start;
+  gint                selection_end;
+
   GcalManager        *manager;
 };
 
@@ -461,6 +468,45 @@ gcal_week_grid_draw (GtkWidget *widget,
 
   cairo_set_line_width (cr, 0.65);
 
+  /* First, draw the selection */
+  if (self->selection_start != -1 && self->selection_end != -1)
+    {
+      gdouble minutes_height;
+      gint selection_height;
+      gint column;
+      gint start;
+      gint end;
+
+      start = self->selection_start;
+      end = self->selection_end;
+
+      /* Swap cells if needed */
+      if (start > end)
+        {
+          start = start + end;
+          end = start - end;
+          start = start - end;
+        }
+
+      minutes_height = (gdouble) height / MINUTES_PER_DAY;
+      column = start * 30 / MINUTES_PER_DAY;
+      selection_height = (end - start + 1) * 30 * minutes_height;
+
+      x = column * column_width;
+
+      gtk_style_context_save (context);
+      gtk_style_context_set_state (context, state | GTK_STATE_FLAG_SELECTED);
+
+      gtk_render_background (context,
+                             cr,
+                             ALIGNED (x),
+                             round ((start * 30 % MINUTES_PER_DAY) * minutes_height),
+                             column_width,
+                             selection_height);
+
+      gtk_style_context_restore (context);
+    }
+
   /* Today column */
   today_column = get_today_column (GCAL_WEEK_GRID (widget));
 
@@ -720,6 +766,135 @@ gcal_week_grid_get_preferred_height (GtkWidget *widget,
     *natural_height = height;
 }
 
+static gboolean
+gcal_week_grid_button_press (GtkWidget      *widget,
+                             GdkEventButton *event_button)
+{
+  GcalWeekGrid *self;
+  GtkAllocation alloc;
+  gboolean ltr;
+  gdouble minute_height;
+  gint column_width;
+  gint column;
+  gint minute;
+
+  self = GCAL_WEEK_GRID (widget);
+  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
+
+  gtk_widget_get_allocation (widget, &alloc);
+  minute_height = (gdouble) alloc.height / MINUTES_PER_DAY;
+  column_width = floor (alloc.width / 7);
+  column = (gint) event_button->x / column_width;
+  minute = event_button->y / minute_height;
+  minute = minute - (minute % 30);
+
+  self->selection_start = (column * MINUTES_PER_DAY + minute) / 30;
+  self->selection_end = self->selection_start;
+
+  gtk_widget_queue_draw (widget);
+
+  return GDK_EVENT_STOP;
+}
+
+static gboolean
+gcal_week_grid_motion_notify_event (GtkWidget      *widget,
+                                    GdkEventMotion *event)
+{
+  GcalWeekGrid *self;
+  GtkAllocation alloc;
+  gboolean ltr;
+  gdouble minute_height;
+  gint column;
+  gint minute;
+
+  if (!(event->state & GDK_BUTTON_PRESS_MASK))
+    return GDK_EVENT_PROPAGATE;
+
+  self = GCAL_WEEK_GRID (widget);
+  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
+
+  gtk_widget_get_allocation (widget, &alloc);
+  minute_height = (gdouble) alloc.height / MINUTES_PER_DAY;
+  column = self->selection_start * 30 / MINUTES_PER_DAY;
+  minute = event->y / minute_height;
+  minute = minute - (minute % 30);
+
+  self->selection_end = (column * MINUTES_PER_DAY + minute) / 30;
+
+  gtk_widget_queue_draw (widget);
+
+  return GDK_EVENT_STOP;
+}
+
+static gboolean
+gcal_week_grid_button_release (GtkWidget      *widget,
+                               GdkEventButton *event)
+{
+  GcalWeekGrid *self;
+  GtkAllocation alloc;
+  GDateTime *week_start;
+  GDateTime *start, *end;
+  GtkWidget *weekview;
+  gboolean ltr;
+  gdouble minute_height;
+  gdouble x, y;
+  gint column;
+  gint minute;
+  gint out_x;
+  gint out_y;
+
+  self = GCAL_WEEK_GRID (widget);
+  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
+
+  gtk_widget_get_allocation (widget, &alloc);
+  minute_height = (gdouble) alloc.height / MINUTES_PER_DAY;
+  column = self->selection_start * 30 / MINUTES_PER_DAY;
+  minute = event->y / minute_height;
+  minute = minute - (minute % 30);
+
+  self->selection_end = (column * MINUTES_PER_DAY + minute) / 30;
+
+  gtk_widget_queue_draw (widget);
+
+  /* Fake the week view's event so we can control the X and Y values */
+  weekview = gtk_widget_get_ancestor (widget, GCAL_TYPE_WEEK_VIEW);
+  week_start = get_start_of_week (self->active_date);
+
+  if (ltr)
+    {
+      start = g_date_time_add_minutes (week_start, self->selection_start * 30);
+      end = g_date_time_add_minutes (week_start, (self->selection_end + 1) * 30);
+    }
+  else
+    {
+      start = g_date_time_add_minutes (week_start, MAX_MINUTES - column * MINUTES_PER_DAY + minute);
+      end = g_date_time_add_minutes (week_start, MAX_MINUTES - column * MINUTES_PER_DAY + (self->selection_end + 1) * 30);
+    }
+
+  x = round ((column + 0.5) * (alloc.width / 7.0));
+  y = (minute + 15) * minute_height;
+
+  gtk_widget_translate_coordinates (widget,
+                                    weekview,
+                                    x,
+                                    y,
+                                    &out_x,
+                                    &out_y);
+
+  g_signal_emit_by_name (weekview,
+                         "create-event",
+                         start,
+                         end,
+                         (gdouble) out_x,
+                         (gdouble) out_y);
+
+  gcal_clear_datetime (&week_start);
+  gcal_clear_datetime (&start);
+  gcal_clear_datetime (&end);
+
+  return GDK_EVENT_STOP;
+}
+
 static void
 gcal_week_grid_class_init (GcalWeekGridClass *klass)
 {
@@ -742,6 +917,9 @@ gcal_week_grid_class_init (GcalWeekGridClass *klass)
   widget_class->map = gcal_week_grid_map;
   widget_class->unmap = gcal_week_grid_unmap;
   widget_class->get_preferred_height = gcal_week_grid_get_preferred_height;
+  widget_class->button_press_event = gcal_week_grid_button_press;
+  widget_class->motion_notify_event = gcal_week_grid_motion_notify_event;
+  widget_class->button_release_event = gcal_week_grid_button_release;
 
   properties[PROP_ACTIVE_DATE] = g_param_spec_boxed ("active-date",
                                                      "Date",
@@ -767,6 +945,9 @@ static void
 gcal_week_grid_init (GcalWeekGrid *self)
 {
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
+
+  self->selection_start = -1;
+  self->selection_end = -1;
 
   self->events = gcal_range_tree_new ();
 }
@@ -902,4 +1083,15 @@ gcal_week_grid_get_children_by_uuid (GcalWeekGrid *self,
   g_clear_pointer (&widgets, g_ptr_array_unref);
 
   return result;
+}
+
+void
+gcal_week_grid_clear_marks (GcalWeekGrid *self)
+{
+  g_return_if_fail (GCAL_IS_WEEK_GRID (self));
+
+  self->selection_start = -1;
+  self->selection_end = -1;
+
+  gtk_widget_queue_draw (GTK_WIDGET (self));
 }
