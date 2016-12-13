@@ -105,6 +105,8 @@ GDateTime*      get_start_of_week                               (icaltimetype   
 
 GDateTime*      get_end_of_week                                 (icaltimetype          *date);
 
+gboolean        is_clock_format_24h                             (void);
+
 /* code brought from evolution */
 gsize           e_strftime_fix_am_pm                            (gchar                 *str,
                                                                  gsize                  max,

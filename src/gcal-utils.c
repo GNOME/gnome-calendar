@@ -561,6 +561,20 @@ get_end_of_week (icaltimetype *date)
   return week_end;
 }
 
+gboolean
+is_clock_format_24h (void)
+{
+  static GSettings *settings = NULL;
+  g_autofree gchar *clock_format = NULL;
+
+  if (!settings)
+    settings = g_settings_new ("org.gnome.desktop.interface");
+
+  clock_format = g_settings_get_string (settings, "clock-format");
+
+  return g_strcmp0 (clock_format, "24h") == 0;
+}
+
 /* Function to do a last minute fixup of the AM/PM stuff if the locale
  * and gettext haven't done it right. Most English speaking countries
  * except the USA use the 24 hour clock (UK, Australia etc). However

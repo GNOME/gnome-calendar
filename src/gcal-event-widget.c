@@ -188,13 +188,9 @@ static void
 gcal_event_widget_init (GcalEventWidget *self)
 {
   GtkWidget *widget;
-  GSettings *settings;
-  gchar *clock_format;
 
   widget = GTK_WIDGET (self);
-  settings = g_settings_new ("org.gnome.desktop.interface");
-  clock_format = g_settings_get_string (settings, "clock-format");
-  self->clock_format_24h = g_strcmp0 (clock_format, "24h") == 0;
+  self->clock_format_24h = is_clock_format_24h ();
 
   gtk_widget_set_has_window (widget, FALSE);
   gtk_widget_set_can_focus (widget, TRUE);
@@ -207,9 +203,6 @@ gcal_event_widget_init (GcalEventWidget *self)
                        GDK_ACTION_COPY);
 
   gtk_drag_source_add_text_targets (widget);
-
-  g_clear_object (&settings);
-  g_free (clock_format);
 }
 
 static void
