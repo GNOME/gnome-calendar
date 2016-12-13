@@ -68,6 +68,8 @@ struct _GcalWeekView
   icaltimetype   *current_date;
   GcalManager    *manager; /* weak referenced */
 
+  guint           scroll_grid_timeout_id;
+
   gint            clicked_cell;
 };
 
@@ -132,13 +134,19 @@ on_event_activated (GcalWeekView *self,
 }
 
 /* Auxiliary methods */
-static void
+static gboolean
 update_grid_scroll_position (GcalWeekView *self)
 {
-  g_autoptr(GDateTime) now, week_start, week_end;
+  g_autoptr(GDateTime) week_start = NULL;
+  g_autoptr(GDateTime) week_end = NULL;
+  g_autoptr(GDateTime) now = NULL;
   GtkAdjustment *vadjustment;
   gdouble minutes, real_value;
   gdouble max, page, page_increment, value;
+
+  /* While the scrolled window is not mapped, we keep waiting */
+  if (!gtk_widget_get_mapped (self->scrolled_window))
+    return G_SOURCE_CONTINUE;
 
   now = g_date_time_new_now_local ();
   week_start = get_start_of_week (self->date);
@@ -146,10 +154,7 @@ update_grid_scroll_position (GcalWeekView *self)
 
   /* Don't animate when not today */
   if (datetime_compare_date (now, week_start) < 0 || datetime_compare_date (now, week_end) >= 0)
-    return;
-
-  if (!gtk_widget_get_mapped (self->scrolled_window))
-    return;
+    goto out;
 
   vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
   minutes = g_date_time_get_hour (now) * 60 + g_date_time_get_minute (now);
@@ -168,6 +173,22 @@ update_grid_scroll_position (GcalWeekView *self)
                          FALSE);
 
   gtk_adjustment_set_page_increment (vadjustment, page_increment);
+
+out:
+  self->scroll_grid_timeout_id = 0;
+  return G_SOURCE_REMOVE;
+}
+
+static void
+schedule_position_scroll (GcalWeekView *self)
+{
+  /* Nothing is scheduled, we should do it now */
+  if (self->scroll_grid_timeout_id > 0)
+    g_source_remove (self->scroll_grid_timeout_id);
+
+  self->scroll_grid_timeout_id = g_timeout_add (200,
+                                                (GSourceFunc) update_grid_scroll_position,
+                                                self);
 }
 
 /**
@@ -556,7 +577,7 @@ gcal_week_view_set_property (GObject       *object,
       g_clear_pointer (&self->date, g_free);
       self->date = g_value_dup_boxed (value);
 
-      update_grid_scroll_position (self);
+      schedule_position_scroll (self);
 
       break;
 
