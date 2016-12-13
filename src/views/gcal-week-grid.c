@@ -175,7 +175,7 @@ static inline gint
 int16_compare (gconstpointer a,
                gconstpointer b)
 {
-  return GPOINTER_TO_INT (a) - GPOINTER_TO_INT (b);
+  return GPOINTER_TO_INT (b) - GPOINTER_TO_INT (a);
 }
 
 static inline guint
@@ -1050,6 +1050,7 @@ gcal_week_grid_remove_event (GcalWeekGrid *self,
 
       gcal_range_tree_remove_range (self->events, data->start, data->end, data);
       destroy_event_widget (self, data->widget);
+      gtk_widget_queue_allocate (GTK_WIDGET (self));
       g_free (data);
     }
 
