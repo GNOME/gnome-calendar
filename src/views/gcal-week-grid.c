@@ -840,6 +840,8 @@ gcal_week_grid_button_release (GtkWidget      *widget,
   gdouble x, y;
   gint column;
   gint minute;
+  gint start_cell;
+  gint end_cell;
   gint out_x;
   gint out_y;
 
@@ -854,6 +856,16 @@ gcal_week_grid_button_release (GtkWidget      *widget,
 
   self->selection_end = (column * MINUTES_PER_DAY + minute) / 30;
 
+  start_cell = self->selection_start;
+  end_cell = self->selection_end;
+
+  if (start_cell > end_cell)
+    {
+      start_cell = start_cell + end_cell;
+      end_cell = start_cell - end_cell;
+      start_cell = start_cell - end_cell;
+    }
+
   gtk_widget_queue_draw (widget);
 
   /* Fake the week view's event so we can control the X and Y values */
@@ -862,13 +874,13 @@ gcal_week_grid_button_release (GtkWidget      *widget,
 
   if (ltr)
     {
-      start = g_date_time_add_minutes (week_start, self->selection_start * 30);
-      end = g_date_time_add_minutes (week_start, (self->selection_end + 1) * 30);
+      start = g_date_time_add_minutes (week_start, start_cell * 30);
+      end = g_date_time_add_minutes (week_start, (end_cell + 1) * 30);
     }
   else
     {
       start = g_date_time_add_minutes (week_start, MAX_MINUTES - column * MINUTES_PER_DAY + minute);
-      end = g_date_time_add_minutes (week_start, MAX_MINUTES - column * MINUTES_PER_DAY + (self->selection_end + 1) * 30);
+      end = g_date_time_add_minutes (week_start, MAX_MINUTES - column * MINUTES_PER_DAY + (end_cell + 1) * 30);
     }
 
   x = round ((column + 0.5) * (alloc.width / 7.0));
