@@ -54,6 +54,8 @@ GList*               gcal_week_header_get_children_by_uuid       (GcalWeekHeader
 
 GtkSizeGroup*        gcal_week_header_get_sidebar_size_group     (GcalWeekHeader     *self);
 
+void                 gcal_week_header_clear_marks                (GcalWeekHeader     *self);
+
 G_END_DECLS
 
 #endif /* GCAL_WEEK_HEADER_H */

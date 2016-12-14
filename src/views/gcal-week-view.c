@@ -264,6 +264,7 @@ gcal_week_view_clear_marks (GcalView *view)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (view);
 
+  gcal_week_header_clear_marks (GCAL_WEEK_HEADER (self->header));
   gcal_week_grid_clear_marks (GCAL_WEEK_GRID (self->week_grid));
 }
 
