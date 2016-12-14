@@ -231,7 +231,7 @@ on_button_released (GcalWeekHeader *self,
 
   week_start = get_start_of_week (self->active_date);
   selection_start = g_date_time_add_days (week_start, start);
-  selection_end = g_date_time_add_days (week_start, end + 1);
+  selection_end = end == start ? g_date_time_ref (selection_start) : g_date_time_add_days (week_start, end + 1);
 
   out_x = ltr ? (column_width * (column + 0.5)) : (width - column_width * (column + 0.5));
 
@@ -1212,7 +1212,7 @@ gcal_week_header_draw (GtkWidget      *widget,
       gtk_render_background (context, cr,
                              ALIGNED (start_x + selection_x),
                              start_y,
-                             selection_width,
+                             ALIGNED (selection_width),
                              alloc.height - start_y);
 
       gtk_style_context_restore (context);
