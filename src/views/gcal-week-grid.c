@@ -772,14 +772,12 @@ gcal_week_grid_button_press (GtkWidget      *widget,
 {
   GcalWeekGrid *self;
   GtkAllocation alloc;
-  gboolean ltr;
   gdouble minute_height;
   gint column_width;
   gint column;
   gint minute;
 
   self = GCAL_WEEK_GRID (widget);
-  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   gtk_widget_get_allocation (widget, &alloc);
   minute_height = (gdouble) alloc.height / MINUTES_PER_DAY;
@@ -802,7 +800,6 @@ gcal_week_grid_motion_notify_event (GtkWidget      *widget,
 {
   GcalWeekGrid *self;
   GtkAllocation alloc;
-  gboolean ltr;
   gdouble minute_height;
   gint column;
   gint minute;
@@ -811,7 +808,6 @@ gcal_week_grid_motion_notify_event (GtkWidget      *widget,
     return GDK_EVENT_PROPAGATE;
 
   self = GCAL_WEEK_GRID (widget);
-  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   gtk_widget_get_allocation (widget, &alloc);
   minute_height = (gdouble) alloc.height / MINUTES_PER_DAY;
