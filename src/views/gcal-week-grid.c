@@ -1009,9 +1009,13 @@ gcal_week_grid_add_event (GcalWeekGrid *self,
 
   g_return_if_fail (GCAL_IS_WEEK_GRID (self));
 
-  widget = gcal_event_widget_new (event);
-  start = 0;
   end = 0;
+  start = 0;
+
+  widget = g_object_new (GCAL_TYPE_EVENT_WIDGET,
+                         "event", event,
+                         "orientation", GTK_ORIENTATION_VERTICAL,
+                         NULL);
 
   self->children_changed = TRUE;
 
