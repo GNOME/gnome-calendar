@@ -1210,11 +1210,19 @@ gcal_week_header_draw (GtkWidget      *widget,
       selection_width = (end - start + 1) * cell_width;
       selection_x = ltr ? (start * cell_width) : (alloc.width - (start * cell_width + selection_width));
 
-      gtk_render_background (context, cr,
-                             ALIGNED (start_x + selection_x),
-                             start_y,
-                             ALIGNED (selection_width),
-                             alloc.height - start_y);
+      gtk_render_background (context,
+                             cr,
+                             ALIGNED (start_x + selection_x) + 0.33,
+                             start_y - 6,
+                             ALIGNED (selection_width + 1),
+                             alloc.height - start_y + 6);
+
+      gtk_render_frame (context,
+                        cr,
+                        ALIGNED (start_x + selection_x) + 0.33,
+                        start_y - 6,
+                        ALIGNED (selection_width + 1),
+                        alloc.height - start_y + 6);
 
       gtk_style_context_restore (context);
     }
