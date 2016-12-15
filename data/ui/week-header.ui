@@ -104,7 +104,6 @@
                         <property name="column-spacing">6</property>
                         <property name="row-spacing">2</property>
                         <property name="margin-start">6</property>
-                        <property name="margin-end">6</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
