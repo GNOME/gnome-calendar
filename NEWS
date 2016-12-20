@@ -1,3 +1,13 @@
+Major changes in 3.22.2:
+* Online calendars are now downloaded offline and synchronized
+* Correctly draw the month view on mouse scroll
+* A memory leaks was fixed (Victor Toso)
+* Updated translations for:
+    * Chinese (Cheng Lu)
+    * Chinese (Taiwan) (Cheng-Chia Tseng)
+    * Italian (Milo Casagrande)
+    * Norwegian bokmål (Kjartan Maraas)
+
 Major changes in 3.22.1:
 * Ablility to change months/years through mouse and touchpad scroll
 * A huge number of bugfixes

@@ -41,6 +41,26 @@
   <url type="bugtracker">https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar</url>
   <project_group>GNOME</project_group>
 
-  <update_contact>ignatenko@src.gnome.org</update_contact>
+  <releases>
+    <release date="2016-12-19" version="3.22.2">
+      <description>
+        <p>
+          This is the third stable release for GNOME Calendar 3.22, and focuses on
+          bugfixes and stability issues.
+          <ul>
+            <li>Online calendars are now downloaded offline and synchronized</li>
+            <li>Properly draw the current month after scrolling</li>
+            <li>Add an animation on the new month chooser widget</li>
+            <li>Correctly escape strings</li>
+            <li>Plug a memory leak</li>
+          </ul>
+        </p>
+        <p>This release also updates translations, and adds new translations.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+  </releases>
+
+  <update_contact>gbsneto@gnome.org</update_contact>
   <translation type="gettext">gnome-calendar</translation>
 </component>
