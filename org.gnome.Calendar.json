@@ -1,0 +1,102 @@
+{
+    "app-id": "org.gnome.Calendar",
+    "runtime": "org.gnome.Platform",
+    "runtime-version": "master",
+    "sdk": "org.gnome.Sdk",
+    "command": "gnome-calendar",
+    "tags": ["devel"],
+    "desktop-file-name-prefix": "(Development) ",
+    "finish-args": [
+        /* X11 + XShm access */
+        "--share=ipc", "--socket=x11",
+        /* Wayland access */
+        "--socket=wayland",
+        /* Needs to talk to the network: */
+        "--share=network",
+        /* Evolution data server access */
+        "--talk-name=org.gnome.OnlineAccounts",
+        "--talk-name=org.gnome.evolution.dataserver.AddressBook9",
+        "--talk-name=org.gnome.evolution.dataserver.Calendar7",
+        "--talk-name=org.gnome.evolution.dataserver.Sources5",
+        "--talk-name=org.gnome.evolution.dataserver.Subprocess.Backend.*",
+        /* Needed for dconf to work */
+        "--filesystem=xdg-run/dconf", "--filesystem=~/.config/dconf:ro",
+        "--talk-name=ca.desrt.dconf", "--env=DCONF_USER_CONFIG_DIR=.config/dconf"
+    ],
+    "build-options" : {
+        "cflags": "-O2 -g",
+        "cxxflags": "-O2 -g",
+        "env": {
+            "V": "1"
+        }
+    },
+    "cleanup": ["/include", "/lib/pkgconfig",
+                "/share/pkgconfig", "/share/aclocal",
+                "/man", "/share/man", "/share/gtk-doc",
+                "/share/vala",
+                "*.la", "*.a"],
+    "modules": [
+        {
+            "name": "gnome-online-accounts",
+            "config-opts": ["--disable-telepathy", "--disable-documentation", "--disable-backend"],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "git://git.gnome.org/gnome-online-accounts"
+                }
+            ]
+        },
+        {
+            "name": "libical",
+            "cleanup": [ "/lib/cmake"],
+            "cmake": true,
+            "config-opts": [ "-DCMAKE_INSTALL_LIBDIR:PATH=/app/lib",
+                             "-DBUILD_SHARED_LIBS:BOOL=ON" ],
+            "sources": [
+                {
+                    "type": "archive",
+                    "url": "https://github.com/libical/libical/releases/download/v1.0.1/libical-1.0.1.tar.gz",
+                    "sha256": "089ce3c42d97fbd7a5d4b3c70adbdd82115dd306349c1f5c46a8fb3f8c949592"
+                }
+            ]
+        },
+        {
+            "name": "evolution-data-server",
+            "cleanup": [
+                "/lib/cmake",
+                "/lib/evolution-data-server/*-backends",
+                "/libexec",
+                "/share/dbus-1/services"
+	    ],
+            "config-opts": [
+                "-DENABLE_GTK=ON",
+                "-DENABLE_GOOGLE_AUTH=OFF",
+                "-DENABLE_UOA=OFF",
+                "-DENABLE_GOOGLE=OFF",
+                "-DENABLE_VALA_BINDINGS=ON",
+                "-DENABLE_WEATHER=OFF",
+                "-DWITH_OPENLDAP=OFF",
+                "-DENABLE_INTROSPECTION=ON",
+                "-DENABLE_INSTALLED_TESTS=OFF",
+                "-DENABLE_GTK_DOC=OFF",
+                "-DENABLE_EXAMPLES=OFF"
+            ],
+            "cmake": true,
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "git://git.gnome.org/evolution-data-server"
+                }
+            ]
+        },
+        {
+            "name": "gnome-calendar",
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "git://git.gnome.org/gnome-calendar"
+                }
+            ]
+        }
+    ]
+}
