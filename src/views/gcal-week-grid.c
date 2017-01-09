@@ -175,7 +175,7 @@ static inline gint
 int16_compare (gconstpointer a,
                gconstpointer b)
 {
-  return GPOINTER_TO_INT (b) - GPOINTER_TO_INT (a);
+  return GPOINTER_TO_INT (a) - GPOINTER_TO_INT (b);
 }
 
 static inline guint
@@ -201,7 +201,6 @@ get_event_index (GcalRangeTree *tree,
       else
         break;
     }
-
 
   return idx;
 }
