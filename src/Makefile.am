@@ -30,6 +30,18 @@ gnome_calendar_SOURCES =                                  \
     e-cal-data-model.c                                    \
     main.c                                                \
     css-code.h                                            \
+    views/gcal-month-view.c                               \
+    views/gcal-month-view.h                               \
+    views/gcal-range-tree.c                               \
+    views/gcal-range-tree.h                               \
+    views/gcal-week-grid.c                                \
+    views/gcal-week-grid.h                                \
+    views/gcal-week-header.c                              \
+    views/gcal-week-header.h                              \
+    views/gcal-week-view.c                                \
+    views/gcal-week-view.h                                \
+    views/gcal-year-view.c                                \
+    views/gcal-year-view.h                                \
     gcal-application.h                                    \
     gcal-application.c                                    \
     gcal-date-chooser-day.c                               \
@@ -46,8 +58,6 @@ gnome_calendar_SOURCES =                                  \
     gcal-event-widget.h                                   \
     gcal-manager.c                                        \
     gcal-manager.h                                        \
-    gcal-month-view.c                                     \
-    gcal-month-view.h                                     \
     gcal-multi-choice.c                                   \
     gcal-multi-choice.h                                   \
     gcal-quick-add-popover.c                              \
@@ -67,18 +77,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-utils.h                                          \
     gcal-view.c                                           \
     gcal-view.h                                           \
-    views/gcal-range-tree.c                               \
-    views/gcal-range-tree.h                               \
-    views/gcal-week-grid.c                                \
-    views/gcal-week-grid.h                                \
-    views/gcal-week-header.c                              \
-    views/gcal-week-header.h                              \
-    views/gcal-week-view.c                                \
-    views/gcal-week-view.h                                \
     gcal-window.h                                         \
-    gcal-window.c                                         \
-    gcal-year-view.c                                      \
-    gcal-year-view.h
+    gcal-window.c
 
 gnome_calendar_LDFLAGS =                                  \
   -Wl,--export-dynamic
