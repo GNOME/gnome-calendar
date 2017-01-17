@@ -632,6 +632,9 @@ gcal_week_view_set_manager (GcalWeekView *self,
   g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
 
   self->manager = manager;
+
+  gcal_week_grid_set_manager (GCAL_WEEK_GRID (self->week_grid), manager);
+  gcal_week_header_set_manager (GCAL_WEEK_HEADER (self->header), manager);
 }
 
 /**
