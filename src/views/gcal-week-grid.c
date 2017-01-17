@@ -66,6 +66,7 @@ struct _GcalWeekGrid
    */
   gint                selection_start;
   gint                selection_end;
+  gint                dnd_cell;
 
   GcalManager        *manager;
 };
@@ -441,6 +442,7 @@ gcal_week_grid_draw (GtkWidget *widget,
   GdkRGBA color;
 
   gboolean ltr;
+  gdouble minutes_height;
   gdouble x, column_width;
   gint i, width, height, today_column;
 
@@ -464,13 +466,13 @@ gcal_week_grid_draw (GtkWidget *widget,
   width = gtk_widget_get_allocated_width (widget);
   height = gtk_widget_get_allocated_height (widget);
   column_width = width / 7.0;
+  minutes_height = (gdouble) height / MINUTES_PER_DAY;
 
   cairo_set_line_width (cr, 0.65);
 
   /* First, draw the selection */
   if (self->selection_start != -1 && self->selection_end != -1)
     {
-      gdouble minutes_height;
       gint selection_height;
       gint column;
       gint start;
@@ -487,7 +489,6 @@ gcal_week_grid_draw (GtkWidget *widget,
           start = start - end;
         }
 
-      minutes_height = (gdouble) height / MINUTES_PER_DAY;
       column = start * 30 / MINUTES_PER_DAY;
       selection_height = (end - start + 1) * 30 * minutes_height;
 
@@ -504,6 +505,24 @@ gcal_week_grid_draw (GtkWidget *widget,
                              selection_height);
 
       gtk_style_context_restore (context);
+    }
+
+  /* Drag and Drop highlight */
+  if (self->dnd_cell != -1)
+    {
+      gdouble cell_height;
+      gint column, row;
+
+      cell_height = minutes_height * 30;
+      column = self->dnd_cell / (MINUTES_PER_DAY / 30);
+      row = self->dnd_cell - column * 48;
+
+      gtk_render_background (context,
+                             cr,
+                             column * column_width,
+                             row * cell_height,
+                             column_width,
+                             cell_height);
     }
 
   /* Today column */
@@ -902,6 +921,146 @@ gcal_week_grid_button_release (GtkWidget      *widget,
   return GDK_EVENT_STOP;
 }
 
+static gint
+get_dnd_cell (GtkWidget *widget,
+              gint       x,
+              gint       y)
+{
+  GtkAllocation alloc;
+  gdouble column_width, cell_height;
+  gint column, row;
+
+  gtk_widget_get_allocation (widget, &alloc);
+
+  column_width = alloc.width / 7.0;
+  cell_height = alloc.height / 48.0;
+  column = floor (x / column_width);
+  row = y / cell_height;
+
+  return column * 48 + row;
+}
+
+static gboolean
+gcal_week_grid_drag_motion (GtkWidget      *widget,
+                            GdkDragContext *context,
+                            gint            x,
+                            gint            y,
+                            guint           time)
+{
+  GcalWeekGrid *self;
+
+  self = GCAL_WEEK_GRID (widget);
+  self->dnd_cell = get_dnd_cell (widget, x, y);
+
+  /* Setup the drag highlight */
+  if (self->dnd_cell != -1)
+    gtk_drag_highlight (widget);
+  else
+    gtk_drag_unhighlight (widget);
+
+  /*
+   * Sets the status of the drag - if it fails, sets the action to 0 and
+   * aborts the drag with FALSE.
+   */
+  gdk_drag_status (context,
+                   self->dnd_cell == -1 ? 0 : GDK_ACTION_COPY,
+                   time);
+
+  gtk_widget_queue_draw (widget);
+
+  return self->dnd_cell != -1;
+}
+
+static gboolean
+gcal_week_grid_drag_drop (GtkWidget      *widget,
+                          GdkDragContext *context,
+                          gint            x,
+                          gint            y,
+                          guint           time)
+{
+  GcalWeekGrid *self;
+  g_autoptr (GDateTime) week_start;
+  g_autoptr (GDateTime) dnd_date;
+  GtkWidget *event_widget;
+  GcalEvent *event;
+  GTimeSpan timespan = 0;
+  gboolean ltr;
+  gint drop_cell;
+
+  self = GCAL_WEEK_GRID (widget);
+  ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
+  drop_cell = get_dnd_cell (widget, x, y);
+  event_widget = gtk_drag_get_source_widget (context);
+
+  week_start = dnd_date = NULL;
+
+  if (!GCAL_IS_EVENT_WIDGET (event_widget))
+    return FALSE;
+
+  /* RTL languages swap the drop cell column */
+  if (!ltr)
+    {
+      gint column, row;
+
+      column = drop_cell / (MINUTES_PER_DAY / 30);
+      row = drop_cell - column * 48;
+
+      drop_cell = (6 - column) * 48 + row;
+    }
+
+  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
+  week_start = get_start_of_week (self->active_date);
+  dnd_date = g_date_time_add_minutes (week_start, drop_cell * 30);
+
+  /*
+   * Calculate the diff between the dropped cell and the event's start date,
+   * so we can update the end date accordingly.
+   */
+  if (gcal_event_get_date_end (event))
+    timespan = g_date_time_difference (gcal_event_get_date_end (event), gcal_event_get_date_start (event));
+
+  /*
+   * Set the event's start and end dates. Since the event may have a
+   * NULL end date, so we have to check it here
+   */
+  gcal_event_set_all_day (event, FALSE);
+  gcal_event_set_date_start (event, dnd_date);
+
+  if (gcal_event_get_date_end (event))
+    {
+      g_autoptr (GDateTime) new_end = g_date_time_add (dnd_date, timespan);
+
+      gcal_event_set_date_end (event, new_end);
+    }
+
+  /* Commit the changes */
+  gcal_manager_update_event (self->manager, event);
+
+  /* Cancel the DnD */
+  self->dnd_cell = -1;
+  gtk_drag_unhighlight (widget);
+
+  gtk_drag_finish (context, TRUE, FALSE, time);
+
+  gtk_widget_queue_draw (widget);
+
+  return TRUE;
+}
+
+static void
+gcal_week_grid_drag_leave (GtkWidget      *widget,
+                           GdkDragContext *context,
+                           guint           time)
+{
+  GcalWeekGrid *self = GCAL_WEEK_GRID (widget);
+
+  /* Cancel the drag */
+  self->dnd_cell = -1;
+  gtk_drag_unhighlight (widget);
+
+  gtk_widget_queue_draw (widget);
+}
+
 static void
 gcal_week_grid_class_init (GcalWeekGridClass *klass)
 {
@@ -927,6 +1086,9 @@ gcal_week_grid_class_init (GcalWeekGridClass *klass)
   widget_class->button_press_event = gcal_week_grid_button_press;
   widget_class->motion_notify_event = gcal_week_grid_motion_notify_event;
   widget_class->button_release_event = gcal_week_grid_button_release;
+  widget_class->drag_motion = gcal_week_grid_drag_motion;
+  widget_class->drag_leave = gcal_week_grid_drag_leave;
+  widget_class->drag_drop = gcal_week_grid_drag_drop;
 
   properties[PROP_ACTIVE_DATE] = g_param_spec_boxed ("active-date",
                                                      "Date",
@@ -955,8 +1117,16 @@ gcal_week_grid_init (GcalWeekGrid *self)
 
   self->selection_start = -1;
   self->selection_end = -1;
+  self->dnd_cell = -1;
 
   self->events = gcal_range_tree_new ();
+
+  /* Setup the week view as a drag n' drop destination */
+  gtk_drag_dest_set (GTK_WIDGET (self),
+                     0,
+                     NULL,
+                     0,
+                     GDK_ACTION_MOVE);
 }
 
 /* Public API */
