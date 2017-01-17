@@ -39,6 +39,8 @@ struct _GcalQuickAddPopover
 
   GtkWidget          *selected_row;
 
+  gboolean            clock_format_24h;
+
   GcalManager        *manager;
 };
 
@@ -213,6 +215,7 @@ update_header (GcalQuickAddPopover *self)
 {
   icaltimetype *dtstart;
   struct tm stm_date, etm_date;
+  gboolean multiday_or_timed;
   gboolean all_day;
   gchar start[64], end[64];
   gchar *title_date;
@@ -227,9 +230,17 @@ update_header (GcalQuickAddPopover *self)
   stm_date = icaltimetype_to_tm (dtstart);
   e_utf8_strftime_fix_am_pm (start, 64, C_("event date format", "%B %d"), &stm_date);
 
-  if (self->date_end &&
-      (!all_day ||
-       (all_day && g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_DAY > 1)))
+  if (self->date_end)
+    {
+      multiday_or_timed = g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_DAY > 1 ||
+                          g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_MINUTE > 1;
+    }
+  else
+    {
+      multiday_or_timed = FALSE;
+    }
+
+  if (multiday_or_timed)
     {
       icaltimetype *dtend;
 
@@ -238,14 +249,39 @@ update_header (GcalQuickAddPopover *self)
       if (dtend->is_date)
         icaltime_adjust (dtend, -1, 0, 0, 0);
 
-      /* Translators:
-       * this is the format string for representing a date consisting of a month name
-       * and a date of month.
-       */
-      etm_date = icaltimetype_to_tm (dtend);
-      e_utf8_strftime_fix_am_pm (end, 64, C_("event date format", "%B %d"), &etm_date);
+      if (all_day &&
+          (g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_DAY > 1 &&
+           g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_MINUTE > 1))
+        {
+          /* Translators:
+           * this is the format string for representing a date consisting of a month name
+           * and a date of month.
+           */
+          etm_date = icaltimetype_to_tm (dtend);
+          e_utf8_strftime_fix_am_pm (end, 64, C_("event date format", "%B %d"), &etm_date);
 
-      title_date = g_strdup_printf (_("New Event from %s to %s"), start, end);
+          title_date = g_strdup_printf (_("New Event from %s to %s"), start, end);
+        }
+      else
+        {
+          g_autofree gchar *start_hour, *end_hour;
+
+          if (self->clock_format_24h)
+            {
+              start_hour = g_date_time_format (self->date_start, "%R");
+              end_hour = g_date_time_format (self->date_end, "%R");
+            }
+          else
+            {
+              start_hour = g_date_time_format (self->date_start, "%I:%M %P");
+              end_hour = g_date_time_format (self->date_end, "%I:%M %P");
+            }
+
+          title_date = g_strdup_printf (_("New Event on %s, %s - %s"),
+                                        start,
+                                        start_hour,
+                                        end_hour);
+        }
 
       g_free (dtend);
     }
@@ -413,27 +449,21 @@ edit_or_create_event (GcalQuickAddPopover *self,
                       GtkWidget           *button)
 {
   ECalComponent *component;
-  GDateTime *date_start, *date_end, *now;
+  GDateTime *date_start, *date_end;
   GTimeZone *tz;
   GcalEvent *event;
   ESource *source;
   const gchar *summary;
-  gboolean all_day, single_day, is_today;
+  gboolean all_day, single_day;
 
   if (!self->selected_row)
     return;
 
-  now = g_date_time_new_now_local ();
   source = g_object_get_data (G_OBJECT (self->selected_row), "source");
 
-  /*
-   * We consider all day events multiday and/or non-today events.
-   * Events on today starts now and lasts 1 hour.
-   */
   single_day = datetime_compare_date (self->date_end, self->date_start) == 0;
-  is_today = single_day && datetime_compare_date (now, self->date_start) == 0;
-  all_day = datetime_compare_date (self->date_end, self->date_start) > 1 || !is_today;
-
+  all_day = datetime_compare_date (self->date_end, self->date_start) > 1 ||
+            g_date_time_compare (self->date_end, self->date_start) == 0;
   tz = all_day ? g_time_zone_new_utc () : g_time_zone_new_local ();
 
   /* Gather start date */
@@ -441,8 +471,8 @@ edit_or_create_event (GcalQuickAddPopover *self,
                                 g_date_time_get_year (self->date_start),
                                 g_date_time_get_month (self->date_start),
                                 g_date_time_get_day_of_month (self->date_start),
-                                all_day ? 0 : g_date_time_get_hour (now),
-                                all_day ? 0 : g_date_time_get_minute (now),
+                                g_date_time_get_hour (self->date_start),
+                                g_date_time_get_minute (self->date_start),
                                 0);
 
   /* Gather date end */
@@ -452,8 +482,8 @@ edit_or_create_event (GcalQuickAddPopover *self,
                                   g_date_time_get_year (self->date_end),
                                   g_date_time_get_month (self->date_end),
                                   g_date_time_get_day_of_month (self->date_end) + (single_day && all_day ? 1 : 0),
-                                  all_day ? 0 : g_date_time_get_hour (now) + (is_today ? 1 : 0),
-                                  all_day ? 0 : g_date_time_get_minute (now),
+                                  g_date_time_get_hour (self->date_end),
+                                  g_date_time_get_minute (self->date_end),
                                   0);
     }
   else
@@ -681,6 +711,8 @@ gcal_quick_add_popover_init (GcalQuickAddPopover *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendars_listbox), sort_func, NULL, NULL);
+
+  self->clock_format_24h = is_clock_format_24h ();
 }
 
 GtkWidget*

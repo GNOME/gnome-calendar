@@ -17,10 +17,13 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include <string.h>
+
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 
 #define INTENSITY(c) ((c->red) * 0.30 + (c->green) * 0.59 + (c->blue) * 0.11)
+#define ICON_SIZE    16
 
 struct _GcalEventWidget
 {
@@ -37,8 +40,7 @@ struct _GcalEventWidget
 
   GcalEvent     *event;
 
-  /* Drag n' Drop icon */
-  GdkPixbuf     *dnd_pixbuf;
+  GtkOrientation orientation;
 
   GdkWindow     *event_window;
   gboolean       button_pressed;
@@ -50,6 +52,7 @@ enum
   PROP_DATE_END,
   PROP_DATE_START,
   PROP_EVENT,
+  PROP_ORIENTATION,
   NUM_PROPS
 };
 
@@ -61,7 +64,8 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-G_DEFINE_TYPE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET)
+G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET,
+                         G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL));
 
 static void
 gcal_event_widget_update_style (GcalEventWidget *self)
@@ -188,13 +192,10 @@ static void
 gcal_event_widget_init (GcalEventWidget *self)
 {
   GtkWidget *widget;
-  GSettings *settings;
-  gchar *clock_format;
 
   widget = GTK_WIDGET (self);
-  settings = g_settings_new ("org.gnome.desktop.interface");
-  clock_format = g_settings_get_string (settings, "clock-format");
-  self->clock_format_24h = g_strcmp0 (clock_format, "24h") == 0;
+  self->clock_format_24h = is_clock_format_24h ();
+  self->orientation = GTK_ORIENTATION_HORIZONTAL;
 
   gtk_widget_set_has_window (widget, FALSE);
   gtk_widget_set_can_focus (widget, TRUE);
@@ -207,9 +208,6 @@ gcal_event_widget_init (GcalEventWidget *self)
                        GDK_ACTION_COPY);
 
   gtk_drag_source_add_text_targets (widget);
-
-  g_clear_object (&settings);
-  g_free (clock_format);
 }
 
 static void
@@ -232,6 +230,12 @@ gcal_event_widget_set_property (GObject      *object,
 
     case PROP_EVENT:
       gcal_event_widget_set_event_internal (self, g_value_get_object (value));
+      break;
+
+    case PROP_ORIENTATION:
+      self->orientation = g_value_get_enum (value);
+      gtk_widget_queue_draw (GTK_WIDGET (object));
+      g_object_notify (object, "orientation");
       break;
 
     default:
@@ -261,6 +265,10 @@ gcal_event_widget_get_property (GObject      *object,
       g_value_set_object (value, self->event);
       break;
 
+    case PROP_ORIENTATION:
+      g_value_set_enum (value, self->orientation);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -279,7 +287,6 @@ gcal_event_widget_finalize (GObject *object)
 
   /* releasing properties */
   g_clear_pointer (&self->css_class, g_free);
-  g_clear_object (&self->dnd_pixbuf);
   g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->finalize (object);
@@ -314,11 +321,14 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
                                         gint      *minimum,
                                         gint      *natural)
 {
+  GcalEventWidget *self;
   GtkBorder border, padding;
   GtkStyleContext *context;
   PangoLayout *layout;
   gint layout_height;
+  gint factor;
 
+  self = GCAL_EVENT_WIDGET (widget);
   context = gtk_widget_get_style_context (widget);
   layout = gtk_widget_create_pango_layout (widget, NULL);
   pango_layout_get_pixel_size (layout, NULL, &layout_height);
@@ -327,10 +337,12 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
   gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
   gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
 
+  factor = self->orientation == GTK_ORIENTATION_HORIZONTAL ? 1 : 2;
+
   if (minimum != NULL)
-    *minimum = layout_height + padding.top + padding.bottom + border.top + border.bottom;
+    *minimum = (factor * layout_height) + padding.top + padding.bottom + border.top + border.bottom;
   if (natural != NULL)
-    *natural = layout_height + padding.top + padding.bottom + border.top + border.bottom;
+    *natural = (factor * layout_height) + padding.top + padding.bottom + border.top + border.bottom;
 }
 
 static void
@@ -494,10 +506,22 @@ gcal_event_widget_draw (GtkWidget *widget,
       else
         start_time = g_date_time_format (local_start_time, "%I:%M %P");
 
-      if (is_ltr)
-        display_text = g_strdup_printf ("(%s) %s", start_time, gcal_event_get_summary (self->event));
+      /*
+       * When in horizontal, draw the elements sequentially; otherwise,
+       * draw the time in the first line, and the title in subsequent
+       * lines.
+       */
+      if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          if (is_ltr)
+            display_text = g_strdup_printf ("(%s) %s", start_time, gcal_event_get_summary (self->event));
+          else
+            display_text = g_strdup_printf ("%s (%s)", gcal_event_get_summary (self->event), start_time);
+        }
       else
-        display_text = g_strdup_printf ("%s (%s)", gcal_event_get_summary (self->event), start_time);
+        {
+          display_text = g_strdup_printf ("<b>%s</b>\n%s", start_time, gcal_event_get_summary (self->event));
+        }
 
       g_clear_pointer (&local_start_time, g_date_time_unref);
       g_clear_pointer (&start_time, g_free);
@@ -505,16 +529,13 @@ gcal_event_widget_draw (GtkWidget *widget,
 
   /* Retrieve the font description */
   gtk_style_context_get (context, state, "font", &font_desc, NULL);
-  layout = gtk_widget_create_pango_layout (widget, display_text);
+  layout = gtk_widget_create_pango_layout (widget, "");
+  pango_layout_set_markup (layout, display_text, -1);
   pango_layout_set_font_description (layout, font_desc);
   pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
-  pango_layout_set_width (layout, (width - (padding.left + padding.right) ) * PANGO_SCALE);
-  pango_cairo_update_layout (cr, layout);
 
   /* Icon size */
-  pango_layout_get_pixel_size (layout, NULL, &layout_height);
-  icon_size = 4 * (layout_height / 4);
-
+  icon_size = ICON_SIZE;
   end_gap = 0;
 
   if (gcal_event_has_alarms (self->event))
@@ -526,7 +547,35 @@ gcal_event_widget_draw (GtkWidget *widget,
   x = is_ltr ? padding.left : padding.left + end_gap;
 
   pango_layout_set_width (layout, (width - (padding.left + padding.right + end_gap)) * PANGO_SCALE);
+  pango_layout_get_pixel_size (layout, NULL, &layout_height);
   gtk_render_layout (context, cr, x, padding.top, layout);
+
+#if 0
+  /* TODO: find out a good way to handle this */
+  /*
+   * On vertical event widgets, we assume we might have space to draw the
+   * event's detail (or at least part of it).
+   */
+  if (self->orientation == GTK_ORIENTATION_VERTICAL &&
+      2 * padding.top + layout_height + padding.bottom < height &&
+      strlen (gcal_event_get_description (self->event)) > 0)
+    {
+      g_autofree gchar *description;
+
+      description = g_strdup_printf ("<small>%s</small>", gcal_event_get_description (self->event));
+      pango_layout_set_markup (layout, description, -1);
+      pango_layout_set_width (layout, (width - (padding.left + padding.right) ) * PANGO_SCALE);
+      pango_layout_set_height (layout, (height - (2 * padding.top + layout_height + padding.bottom) ) * PANGO_SCALE);
+      pango_layout_set_font_description (layout, font_desc);
+      pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
+
+      gtk_render_layout (context,
+                         cr,
+                         x,
+                         2 * padding.top + layout_height + padding.bottom,
+                         layout);
+    }
+#endif
 
   x += is_ltr ? (width - end_gap - padding.left - padding.right) : (- padding.right - padding.left - icon_size);
 
@@ -548,7 +597,11 @@ gcal_event_widget_draw (GtkWidget *widget,
                                                         &was_symbolic,
                                                         NULL);
 
-      gdk_cairo_set_source_pixbuf (cr, pixbuf, x + padding.left, padding.top);
+      gtk_render_icon (context,
+                       cr,
+                       pixbuf,
+                       x + padding.left,
+                       padding.top);
 
       x += is_ltr ? (padding.left + icon_size) : (- padding.right - icon_size);
 
@@ -574,7 +627,12 @@ gcal_event_widget_draw (GtkWidget *widget,
                                                         &was_symbolic,
                                                         NULL);
 
-      gdk_cairo_set_source_pixbuf (cr, pixbuf, x + padding.left, padding.top);
+      gtk_render_icon (context,
+                       cr,
+                       pixbuf,
+                       x + padding.left,
+                       padding.top);
+
       g_object_unref (pixbuf);
       cairo_paint (cr);
     }
@@ -616,13 +674,30 @@ gcal_event_widget_button_release_event (GtkWidget      *widget,
   return FALSE;
 }
 
+static cairo_surface_t*
+get_dnd_icon (GtkWidget *widget)
+{
+  cairo_surface_t *surface;
+  cairo_t *cr;
+
+  /* Make it transparent */
+  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+                                        gtk_widget_get_allocated_width (widget),
+                                        gtk_widget_get_allocated_height (widget));
+
+  cr = cairo_create (surface);
+
+  gtk_widget_draw (widget, cr);
+
+  return surface;
+}
+
 static void
 gcal_event_widget_drag_begin (GtkWidget      *widget,
                               GdkDragContext *context)
 {
   GcalEventWidget *self = GCAL_EVENT_WIDGET (widget);
-
-  g_clear_object (&self->dnd_pixbuf);
+  cairo_surface_t *surface;
 
   if (self->read_only)
     {
@@ -631,13 +706,11 @@ gcal_event_widget_drag_begin (GtkWidget      *widget,
     }
 
   /* Setup the drag n' drop icon */
-  self->dnd_pixbuf = gdk_pixbuf_get_from_window (self->event_window,
-                                                 0,
-                                                 0,
-                                                 gtk_widget_get_allocated_width (widget),
-                                                 gtk_widget_get_allocated_height (widget));
+  surface = get_dnd_icon (widget);
 
-  gtk_drag_set_icon_pixbuf (context, self->dnd_pixbuf, 0, 0);
+  gtk_drag_set_icon_surface (context, surface);
+
+  g_clear_pointer (&surface, cairo_surface_destroy);
 }
 
 static gboolean
@@ -716,6 +789,13 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
                                                         "The event this widget represents",
                                                         GCAL_TYPE_EVENT,
                                                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+
+  /**
+   * GcalEventWidget::orientation:
+   *
+   * The orientation of the event widget.
+   */
+  g_object_class_override_property (object_class, PROP_ORIENTATION, "orientation");
 
   signals[ACTIVATE] = g_signal_new ("activate",
                                      GCAL_TYPE_EVENT_WIDGET,

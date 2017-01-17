@@ -96,6 +96,13 @@
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
+                <property name="title" translatable="yes" context="shortcut window">Week view</property>
+                <property name="accelerator">&lt;Primary&gt;1</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkShortcutsShortcut">
+                <property name="visible">True</property>
                 <property name="title" translatable="yes" context="shortcut window">Month view</property>
                 <property name="accelerator">&lt;Primary&gt;2</property>
               </object>

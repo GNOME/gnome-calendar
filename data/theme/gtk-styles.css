@@ -28,7 +28,8 @@ calendar-view.header {
     font-weight: bold;
 }
 
-calendar-view.current {
+calendar-view.current,
+weekgrid.current {
     background-color: alpha(@theme_selected_bg_color, 0.3);
 }
 
@@ -52,14 +53,14 @@ calendar-view.lines {
     color: alpha(@theme_fg_color, 0.4);
 }
 
-calendar-view.first-view-header {
+calendar-view .first-view-header {
     font-size: 16pt;
     font-weight: bold;
     color: @theme_selected_bg_color;
     padding: 12px;
 }
 
-calendar-view.second-view-header {
+calendar-view .second-view-header {
     font-size: 16pt;
     font-weight: bold;
     padding: 12px;
@@ -357,4 +358,75 @@ datechooser day:selected:hover {
   color: @theme_selected_fg_color;
   background-color: @theme_selected_bg_color;
   font-weight: bold;
+}
+
+/* Week View CSS */
+
+.week-header {
+    padding: 0px;
+    border-bottom: solid @borders 1px;
+}
+
+.week-header .month-name {
+    font-size: 16pt;
+    font-weight: bold;
+    color: alpha(@theme_selected_bg_color, 0.75);
+    padding: 12px;
+}
+
+.week-header .week-number {
+    font-size: 16pt;
+    font-weight: bold;
+    padding: 12px 12px 18px 12px;
+    color: alpha(@theme_fg_color, 0.25);
+}
+
+.week-header.week-names {
+    font-size: 10pt;
+    font-weight: bold;
+    color: alpha(@theme_fg_color, 0.55);
+}
+
+.week-header.week-dates {
+    font-size: 16pt;
+    font-weight: bold;
+    color: alpha(@theme_fg_color, 0.70);
+}
+
+.week-header.lines {
+    color: alpha(@theme_fg_color, 0.4);
+}
+
+.week-header .margin {
+    color: alpha(@theme_fg_color, 0.6);
+}
+
+.week-header .today {
+    color: @theme_selected_bg_color;
+}
+
+.week-view {
+    padding: 0px;
+}
+
+.week-view .hours {
+    font-size: 11pt;
+    font-weight: normal;
+    color: alpha(@theme_fg_color, 0.25);
+    padding: 18px 12px;
+}
+
+weekgrid.now-strip {
+    background-color: alpha(@theme_selected_bg_color, 0.8);
+    margin: 0 0 0 1px;
+    min-height: 2px;
+}
+
+weekgrid:selected,
+.week-header:selected {
+    background-color: alpha(@theme_selected_bg_color, 0.25);
+}
+
+.week-header:selected {
+    border: solid 1px alpha(@theme_selected_bg_color, 0.8);
 }

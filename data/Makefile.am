@@ -61,6 +61,8 @@ EXTRA_DIST=                     \
   ui/search-view.ui             \
   ui/source-dialog.ui           \
   ui/time-selector.ui           \
+  ui/week-header.ui             \
+  ui/week-view.ui               \
   ui/window.ui                  \
   ui/year-view.ui               \
   theme/gtk-styles.css          \
