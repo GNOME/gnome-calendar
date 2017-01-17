@@ -277,7 +277,7 @@ update_header (GcalQuickAddPopover *self)
               end_hour = g_date_time_format (self->date_end, "%I:%M %P");
             }
 
-          title_date = g_strdup_printf (_("New Event on %s, %s - %s"),
+          title_date = g_strdup_printf (_("New Event on %s, %s – %s"),
                                         start,
                                         start_hour,
                                         end_hour);
