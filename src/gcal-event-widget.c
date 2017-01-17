@@ -40,9 +40,6 @@ struct _GcalEventWidget
 
   GcalEvent     *event;
 
-  /* Drag n' Drop icon */
-  GdkPixbuf     *dnd_pixbuf;
-
   GtkOrientation orientation;
 
   GdkWindow     *event_window;
@@ -290,7 +287,6 @@ gcal_event_widget_finalize (GObject *object)
 
   /* releasing properties */
   g_clear_pointer (&self->css_class, g_free);
-  g_clear_object (&self->dnd_pixbuf);
   g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->finalize (object);
@@ -678,13 +674,30 @@ gcal_event_widget_button_release_event (GtkWidget      *widget,
   return FALSE;
 }
 
+static cairo_surface_t*
+get_dnd_icon (GtkWidget *widget)
+{
+  cairo_surface_t *surface;
+  cairo_t *cr;
+
+  /* Make it transparent */
+  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+                                        gtk_widget_get_allocated_width (widget),
+                                        gtk_widget_get_allocated_height (widget));
+
+  cr = cairo_create (surface);
+
+  gtk_widget_draw (widget, cr);
+
+  return surface;
+}
+
 static void
 gcal_event_widget_drag_begin (GtkWidget      *widget,
                               GdkDragContext *context)
 {
   GcalEventWidget *self = GCAL_EVENT_WIDGET (widget);
-
-  g_clear_object (&self->dnd_pixbuf);
+  cairo_surface_t *surface;
 
   if (self->read_only)
     {
@@ -693,13 +706,11 @@ gcal_event_widget_drag_begin (GtkWidget      *widget,
     }
 
   /* Setup the drag n' drop icon */
-  self->dnd_pixbuf = gdk_pixbuf_get_from_window (self->event_window,
-                                                 0,
-                                                 0,
-                                                 gtk_widget_get_allocated_width (widget),
-                                                 gtk_widget_get_allocated_height (widget));
+  surface = get_dnd_icon (widget);
 
-  gtk_drag_set_icon_pixbuf (context, self->dnd_pixbuf, 0, 0);
+  gtk_drag_set_icon_surface (context, surface);
+
+  g_clear_pointer (&surface, cairo_surface_destroy);
 }
 
 static gboolean
