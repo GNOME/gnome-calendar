@@ -14,19 +14,18 @@ data/org.gnome.calendar.gschema.xml.in
 [type: gettext/glade]data/ui/time-selector.ui
 [type: gettext/glade]data/ui/window.ui
 [type: gettext/glade]data/ui/year-view.ui
+src/views/gcal-month-view.c
 src/views/gcal-week-header.c
 src/views/gcal-week-view.c
+src/views/gcal-year-view.c
 src/gcal-application.c
 src/gcal-date-selector.c
 src/gcal-edit-dialog.c
 src/gcal-manager.c
-src/gcal-month-view.c
 src/gcal-quick-add-popover.c
 src/gcal-search-view.c
 src/gcal-source-dialog.c
 src/gcal-time-selector.c
 src/gcal-utils.c
-src/gcal-week-view.c
 src/gcal-window.c
-src/gcal-year-view.c
 src/main.c
