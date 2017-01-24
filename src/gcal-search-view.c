@@ -638,22 +638,27 @@ gcal_search_view_component_removed (ECalDataModelSubscriber *subscriber,
   else
     uuid = g_strdup_printf ("%s:%s", e_source_get_uid (source), uid);
 
-  // Lookup the RowEventData
+  /* Lookup the RowEventData */
   row_data = g_hash_table_lookup (view->uuid_to_event, uuid);
 
-  /* Removing the given RowEventData entry will
-   * call free_row_data, which removes the row
-   * from the listbox and also free the uuid.
-   */
-  if (row_data)
-    g_hash_table_remove (view->uuid_to_event, uuid);
+  /* We didn't add this event, so there's nothing to do */
+  if (!row_data)
+    goto out;
 
-  g_free (uuid);
+  /*
+   * Removing the given RowEventData entry will call free_row_data(),
+   * which removes the row from the listbox and also frees the hashtable's
+   * uuid.
+   */
+  g_hash_table_remove (view->uuid_to_event, uuid);
 
   /* show 'no results' */
   view->num_results--;
 
   update_view (GCAL_SEARCH_VIEW (subscriber));
+
+out:
+  g_free (uuid);
 }
 
 static void
