@@ -737,34 +737,31 @@ gcal_search_view_search (GcalSearchView *view,
   g_clear_pointer (&view->query, g_free);
   g_clear_pointer (&view->field, g_free);
 
-  view->query = g_strdup (query);
-  view->field = g_strdup (field);
-
   /* Only perform search on valid non-empty strings */
   if (query && g_utf8_strlen (query, -1) > 0)
     {
-      gchar *search_query = g_strdup_printf ("(contains? \"%s\" \"%s\")", field != NULL? field : "summary",
-                                             query != NULL? query : "");
+      gchar *search_query = g_strdup_printf ("(contains? \"%s\" \"%s\")",
+                                             field ? field : "summary",
+                                             query ? query : "");
+
+      view->query = g_strdup (query);
+      view->field = g_strdup (field);
 
       if (!view->subscribed)
-      {
-        GDateTime *now, *start, *end;
+        {
+          g_autoptr (GDateTime) now, start, end;
 
-        now = g_date_time_new_now_local ();
-        start = g_date_time_add_years (now, -5);
-        end = g_date_time_add_years (now, 5);
+          now = g_date_time_new_now_local ();
+          start = g_date_time_add_years (now, -5);
+          end = g_date_time_add_years (now, 5);
 
-        gcal_manager_set_search_subscriber (view->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view),
-                                            g_date_time_to_unix (start),
-                                            g_date_time_to_unix (end));
+          gcal_manager_set_search_subscriber (view->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view),
+                                              g_date_time_to_unix (start),
+                                              g_date_time_to_unix (end));
 
-        /* Mark the view as subscribed */
-        view->subscribed = TRUE;
-
-        g_clear_pointer (&start, g_date_time_unref);
-        g_clear_pointer (&end, g_date_time_unref);
-        g_clear_pointer (&now, g_date_time_unref);
-      }
+          /* Mark the view as subscribed */
+          view->subscribed = TRUE;
+        }
 
       /* update internal current time_t */
       view->current_utc_date = time (NULL);
@@ -776,6 +773,7 @@ gcal_search_view_search (GcalSearchView *view,
   else
     {
       g_hash_table_remove_all (view->uuid_to_event);
+      view->num_results = 0;
     }
 
   update_view (view);
