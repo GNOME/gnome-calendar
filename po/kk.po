@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-08-09 14:56+0000\n"
-"PO-Revision-Date: 2016-08-28 15:15+0500\n"
+"POT-Creation-Date: 2017-01-10 06:55+0000\n"
+"PO-Revision-Date: 2017-01-25 13:54+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -17,13 +17,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 1.8.8\n"
+"X-Generator: Poedit 1.8.11\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
 #: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:483
+#: ../src/gcal-application.c:481
 msgid "Calendar"
 msgstr "Күнтізбе"
 
@@ -67,7 +67,7 @@ msgstr "Күнтізбелерге қатынау және басқару"
 
 #: ../data/org.gnome.Calendar.desktop.in.in.h:3
 msgid "Calendar;Event;Reminder;"
-msgstr "Күнтізбе;Оқиға;Естелік;"
+msgstr "Calendar;Event;Reminder;Күнтізбе;Оқиға;Естелік;"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:1
 msgid "Window maximized"
@@ -118,7 +118,7 @@ msgid "Remove the alarm"
 msgstr "Оятқышты өшіру"
 
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1114
+#: ../src/gcal-source-dialog.c:1116
 msgid "Cancel"
 msgstr "Бас тарту"
 
@@ -126,7 +126,7 @@ msgstr "Бас тарту"
 msgid "Click to select the event's agenda"
 msgstr "Оқиға анықтамасын қарау үшін шертіңіз"
 
-#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:509
+#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:564
 msgid "Done"
 msgstr "Дайын"
 
@@ -183,17 +183,14 @@ msgid "1 hour"
 msgstr "1 сағат"
 
 #: ../data/ui/edit-dialog.ui.h:17
-#| msgid "All day"
 msgid "1 day"
 msgstr "1 күн"
 
 #: ../data/ui/edit-dialog.ui.h:18
-#| msgid "All day"
 msgid "2 days"
 msgstr "2 күн"
 
 #: ../data/ui/edit-dialog.ui.h:19
-#| msgid "All day"
 msgid "3 days"
 msgstr "3 күн"
 
@@ -332,8 +329,8 @@ msgstr "Нәтижелер табылмады"
 msgid "Try a different search"
 msgstr "Басқа сөздерді іздеп көріңіз"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1120
-#: ../src/gcal-window.c:1124
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1123
+#: ../src/gcal-window.c:1127
 msgid "Undo"
 msgstr "Болдырмау"
 
@@ -383,7 +380,7 @@ msgstr "Күнтізбені көрсету"
 
 #: ../data/ui/source-dialog.ui.h:14
 msgid "Calendar name"
-msgstr "Күнтізбені атауы"
+msgstr "Күнтізбе атауы"
 
 #: ../data/ui/source-dialog.ui.h:15
 msgid "Color"
@@ -415,8 +412,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Күнтізбе адресі"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2197
-#: ../src/gcal-source-dialog.c:2203
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2202
+#: ../src/gcal-source-dialog.c:2208
 msgid "Add Calendar"
 msgstr "Күнтізбені қосу"
 
@@ -457,7 +454,7 @@ msgid "Year"
 msgstr "Жыл"
 
 #: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
+#: ../src/gcal-year-view.c:266 ../src/gcal-year-view.c:486
 msgid "Today"
 msgstr "Бүгін"
 
@@ -465,8 +462,8 @@ msgstr "Бүгін"
 msgid "Manage your calendars"
 msgstr "Күнтізбелеріңізді басқарыңыз"
 
-#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
-#: ../src/gcal-source-dialog.c:2226
+#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:817
+#: ../src/gcal-source-dialog.c:2231
 msgid "Calendar Settings"
 msgstr "Күнтізбе баптаулары"
 
@@ -474,7 +471,7 @@ msgstr "Күнтізбе баптаулары"
 msgid "No events"
 msgstr "Оқиғалар жоқ"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1010
+#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1074
 msgid "Add Event…"
 msgstr "Оқиғаны қосу…"
 
@@ -490,62 +487,62 @@ msgstr "Күнтізбені өткен күнде ашу"
 msgid "Open calendar showing the passed event"
 msgstr "Күнтізбені өткен оқиғада ашу"
 
-#: ../src/gcal-application.c:324
+#: ../src/gcal-application.c:322
 msgid "- Calendar management"
 msgstr "- Күнтізбені басқару"
 
-#: ../src/gcal-application.c:471
+#: ../src/gcal-application.c:469
 #, c-format
 msgid "Copyright © %d The Calendar authors"
 msgstr "Copyright © %d Calendar authors"
 
-#: ../src/gcal-application.c:477
+#: ../src/gcal-application.c:475
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Copyright © %d–%d Calendar authors"
 
-#: ../src/gcal-application.c:490
+#: ../src/gcal-application.c:488
 msgid "translator-credits"
 msgstr "Baurzhan Muftakhidinov <baurthefirst@gmail.com>"
 
-#: ../src/gcal-edit-dialog.c:509
+#: ../src/gcal-edit-dialog.c:564
 msgid "Save"
 msgstr "Сақтау"
 
-#: ../src/gcal-edit-dialog.c:777
+#: ../src/gcal-edit-dialog.c:831
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d минут бұрын"
 
-#: ../src/gcal-edit-dialog.c:785
+#: ../src/gcal-edit-dialog.c:839
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d сағат бұрын"
 
-#: ../src/gcal-edit-dialog.c:793
+#: ../src/gcal-edit-dialog.c:847
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d күн бұрын"
 
-#: ../src/gcal-edit-dialog.c:801
+#: ../src/gcal-edit-dialog.c:855
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d апта бұрын"
 
-#: ../src/gcal-edit-dialog.c:1051 ../src/gcal-quick-add-popover.c:424
+#: ../src/gcal-edit-dialog.c:1074 ../src/gcal-quick-add-popover.c:468
 msgid "Unnamed event"
 msgstr "Атаусыз оқиға"
 
-#: ../src/gcal-month-view.c:1248
+#: ../src/gcal-month-view.c:1318
 msgid "Other events"
 msgstr "Басқа оқиғалар"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1710
+#: ../src/gcal-month-view.c:1780
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -556,17 +553,17 @@ msgstr[0] "Басқа %d оқиға"
 msgid "%s (this calendar is read-only)"
 msgstr "%s (бұл күнтізбе тек оқу үшін)"
 
-#: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
+#: ../src/gcal-quick-add-popover.c:228 ../src/gcal-quick-add-popover.c:246
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%B %d"
 
-#: ../src/gcal-quick-add-popover.c:245
+#: ../src/gcal-quick-add-popover.c:248
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Жаңа оқиға, %s - %s"
 
-#: ../src/gcal-quick-add-popover.c:251
+#: ../src/gcal-quick-add-popover.c:254
 #, c-format
 msgid "New Event on %s"
 msgstr "Жаңа оқиға, %s"
@@ -580,34 +577,34 @@ msgid "Use the entry above to search for events."
 msgstr "Оқиғаларды іздеу үшін жоғарыдағы өрісті қолданыңыз."
 
 #. Dialog
-#: ../src/gcal-source-dialog.c:1111
+#: ../src/gcal-source-dialog.c:1113
 msgid "Select a calendar file"
 msgstr "Күнтізбе файлын тандаңыз"
 
-#: ../src/gcal-source-dialog.c:1115
+#: ../src/gcal-source-dialog.c:1117
 msgid "Open"
 msgstr "Ашу"
 
-#: ../src/gcal-source-dialog.c:1122
+#: ../src/gcal-source-dialog.c:1124
 msgid "Calendar files"
 msgstr "Күнтізбелер файлдары"
 
 #. update the source properties
-#: ../src/gcal-source-dialog.c:1164
+#: ../src/gcal-source-dialog.c:1166
 msgid "Unnamed Calendar"
 msgstr "Атаусыз күнтізбе"
 
 #. Update notification label
-#: ../src/gcal-source-dialog.c:1764
+#: ../src/gcal-source-dialog.c:1766
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "<b>%s</b> күнтізбесі өшірілген"
 
-#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
+#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
 msgid "Off"
 msgstr "Сөнд."
 
-#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
+#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
 msgid "On"
 msgstr "Іске қос."
 
@@ -633,11 +630,11 @@ msgstr "Талтүс"
 msgid "00:00 PM"
 msgstr "00:00 PM"
 
-#: ../src/gcal-window.c:1120
+#: ../src/gcal-window.c:1123
 msgid "Another event deleted"
 msgstr "Басқа оқиға өшірілді"
 
-#: ../src/gcal-window.c:1124
+#: ../src/gcal-window.c:1127
 msgid "Event deleted"
 msgstr "Оқиға өшірілді"
 
