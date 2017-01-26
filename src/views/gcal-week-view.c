@@ -414,6 +414,8 @@ gcal_week_view_draw_hours (GcalWeekView *self,
   state = gtk_widget_get_state_flags (widget);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
+  gtk_style_context_save (context);
+
   gtk_style_context_add_class (context, "hours");
   gtk_style_context_get_color (context, state, &color);
   gtk_style_context_get_padding (context, state, &padding);
@@ -446,15 +448,22 @@ gcal_week_view_draw_hours (GcalWeekView *self,
       pango_layout_set_text (layout, hours, -1);
       pango_layout_get_pixel_size (layout, &font_width, NULL);
 
-      cairo_move_to (cr,
-                     ltr ? padding.left : width - font_width - padding.right,
-                     (height / 24) * i + padding.top);
-
-      pango_cairo_show_layout (cr, layout);
+      gtk_render_layout (context,
+                         cr,
+                         ltr ? padding.left : width - font_width - padding.right,
+                         (height / 24) * i + padding.top,
+                         layout);
 
       g_free (hours);
     }
 
+  gtk_style_context_restore (context);
+
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "lines");
+  gtk_style_context_get_color (context, state, &color);
+
+  gdk_cairo_set_source_rgba (cr, &color);
   cairo_set_line_width (cr, 0.65);
 
   if (!ltr)
@@ -482,6 +491,8 @@ gcal_week_view_draw_hours (GcalWeekView *self,
     }
 
   cairo_stroke (cr);
+
+  gtk_style_context_restore (context);
 
   pango_font_description_free (font_desc);
   g_object_unref (layout);

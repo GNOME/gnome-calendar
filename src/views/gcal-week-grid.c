@@ -460,7 +460,7 @@ gcal_week_grid_draw (GtkWidget *widget,
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "hours");
+  gtk_style_context_add_class (context, "lines");
   gtk_style_context_get_color (context, state, &color);
   gtk_style_context_get_padding (context, state, &padding);
 
