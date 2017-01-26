@@ -166,6 +166,14 @@ get_event_range (GcalWeekGrid *self,
       diff = g_date_time_difference (event_end, week_start);
       *end = CLAMP (diff / G_TIME_SPAN_MINUTE, 0, MAX_MINUTES);
 
+      /*
+       * XXX: it may happen that the event has the same start and end
+       * dates. For this case, just enforce that the event is at least
+       * 1 minute long.
+       */
+      if (start && *start == *end)
+        *end = *end + 1;
+
       g_clear_pointer (&event_end, g_date_time_unref);
     }
 
