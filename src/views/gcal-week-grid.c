@@ -454,21 +454,16 @@ gcal_week_grid_draw (GtkWidget *widget,
   gdouble x, column_width;
   gint i, width, height, today_column;
 
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
-
   self = GCAL_WEEK_GRID (widget);
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
+  gtk_style_context_save (context);
   gtk_style_context_add_class (context, "hours");
   gtk_style_context_get_color (context, state, &color);
   gtk_style_context_get_padding (context, state, &padding);
-  gtk_style_context_get (context, state, "font", &font_desc, NULL);
 
-  layout = pango_cairo_create_layout (cr);
-  pango_layout_set_font_description (layout, font_desc);
   gdk_cairo_set_source_rgba (cr, &color);
 
   width = gtk_widget_get_allocated_width (widget);
@@ -602,8 +597,7 @@ gcal_week_grid_draw (GtkWidget *widget,
 
   cairo_stroke (cr);
 
-  pango_font_description_free (font_desc);
-  g_object_unref (layout);
+  gtk_style_context_restore (context);
 
   GTK_WIDGET_CLASS (gcal_week_grid_parent_class)->draw (widget, cr);
 
