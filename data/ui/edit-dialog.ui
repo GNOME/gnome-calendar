@@ -46,15 +46,6 @@
                 <property name="can_focus">False</property>
                 <property name="spacing">6</property>
                 <child>
-                  <object class="GtkImage" id="source_image">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <style>
-                      <class name="calendar-color-image"/>
-                    </style>
-                  </object>
-                </child>
-                <child>
                   <object class="GtkBox" id="title_label_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
@@ -73,9 +64,29 @@
                       </object>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="subtitle_label">
+                      <object class="GtkBox" id="subtitle_box">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="orientation">horizontal</property>
+                        <property name="halign">center</property>
+                        <child>
+                          <object class="GtkImage" id="source_image">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <style>
+                              <class name="calendar-color-image"/>
+                            </style>
+                          </object>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="subtitle_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <style>
+                              <class name="subtitle"/>
+                            </style>
+                          </object>
+                        </child>
                         <style>
                           <class name="subtitle"/>
                         </style>
@@ -560,7 +571,6 @@
   <object class="GtkSizeGroup">
     <property name="mode">vertical</property>
     <widgets>
-      <widget name="source_image" />
       <widget name="pan_down_image" />
       <widget name="title_label_box" />
     </widgets>
