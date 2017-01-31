@@ -20,6 +20,7 @@
 #include "gcal-year-view.h"
 #include "gcal-view.h"
 #include "gcal-utils.h"
+#include "gcal-date-chooser.h"
 
 #include <glib/gi18n.h>
 #include <math.h>
@@ -50,6 +51,8 @@ struct _GcalYearView
 
   /* composite, GtkBuilder's widgets */
   GtkWidget    *navigator;
+  GtkWidget    *year_label;
+  GtkWidget    *flowbox;
   GtkWidget    *sidebar;
   GtkWidget    *events_sidebar;
   GtkWidget    *navigator_stack;
@@ -165,7 +168,12 @@ static void
 update_date (GcalYearView *year_view,
              icaltimetype *new_date)
 {
+  gchar *year_str = NULL;
   gboolean needs_reset = FALSE;
+  GtkFlowBoxChild *month_box = NULL;
+  GtkWidget *month = NULL;
+  GDateTime *date_for_month = NULL;
+
   if (year_view->date != NULL && icaltime_compare_date (year_view->date, new_date) && year_view->start_selected_date->day != 0)
     needs_reset = TRUE;
 
@@ -176,6 +184,23 @@ update_date (GcalYearView *year_view,
                                                              1, G_DATE_JANUARY,  year_view->date->year);;
   year_view->last_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
                                                             31, G_DATE_DECEMBER, year_view->date->year);
+
+  year_str = g_strdup_printf ("%d", year_view->date->year);
+  gtk_label_set_text (GTK_LABEL (year_view->year_label), year_str);
+  g_clear_pointer (&year_str, g_free);
+
+  for (int i = 0; i < 12; i++)
+    {
+      date_for_month = g_date_time_new_local (year_view->date->year, i + 1, 1, 0, 0, 0);
+      month_box = gtk_flow_box_get_child_at_index (GTK_FLOW_BOX (year_view->flowbox), i);
+      if (month_box)
+        {
+          month = gtk_bin_get_child (GTK_BIN (month_box));
+          if (month)
+            gcal_date_chooser_set_date (GCAL_DATE_CHOOSER (month), date_for_month);
+        }
+      g_clear_pointer (&date_for_month, g_date_time_unref);
+    }
 
   if (needs_reset)
     reset_sidebar (year_view);
@@ -1878,6 +1903,8 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/year-view.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, navigator);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, year_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, flowbox);
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, sidebar);
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, events_sidebar);
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, navigator_stack);
@@ -1904,6 +1931,8 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
 static void
 gcal_year_view_init (GcalYearView *self)
 {
+  GtkWidget *month = NULL;
+
   gtk_widget_init_template (GTK_WIDGET (self));
 
   if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_LTR)
@@ -1923,6 +1952,20 @@ gcal_year_view_init (GcalYearView *self)
   self->calendar_settings = g_settings_new ("org.gnome.desktop.calendar");
   g_settings_bind (self->calendar_settings, "show-weekdate", self, "show-week-numbers", G_SETTINGS_BIND_DEFAULT);
   g_signal_connect_swapped (self->calendar_settings, "changed::show-weekdate", G_CALLBACK (gtk_widget_queue_draw), self);
+
+  /* Months */
+  for (int i = 0; i < 12; i++)
+    {
+      month = gcal_date_chooser_new ();
+
+      g_settings_bind (self->calendar_settings, "show-weekdate", month, "show-week-numbers", G_SETTINGS_BIND_DEFAULT);
+      g_signal_connect_swapped (self->calendar_settings, "changed::show-weekdate", G_CALLBACK (gtk_widget_queue_draw), month);
+      gtk_widget_set_visible (month, TRUE);
+      gcal_date_chooser_set_show_month_only (GCAL_DATE_CHOOSER (month), TRUE);
+      gcal_date_chooser_set_show_day_names (GCAL_DATE_CHOOSER (month), FALSE);
+
+      gtk_container_add (GTK_CONTAINER (self->flowbox), month);
+    }
 
   /* layout */
   self->number_of_columns = 4;

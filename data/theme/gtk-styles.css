@@ -76,25 +76,18 @@ calendar-view.lines {
 }
 
 .year-navigator.lines {
-    color: alpha(@theme_fg_color, 0.4);
+    color: alpha(@theme_fg_color, 0.6);
 }
 
+.year-navigator.week-numbers,
 .year-navigator.days {
+    color: @insensitive_fg_color;
+    font-size: smaller;
     padding: 5px;
-    color: @theme_fg_color;
-    font-size: 9pt;
 }
 
 .year-navigator.sunday {
     color: alpha(@theme_fg_color, 0.5);
-}
-
-.year-navigator.week-numbers {
-    font-size: 70%;
-    font-weight: bold;
-    border-radius: 2px;
-    background-color: alpha(@theme_fg_color, 0.05);
-    color: alpha(@theme_fg_color, 0.4);
 }
 
 /* these two are supposed be changed in sync with .calendar-view */
@@ -105,7 +98,8 @@ calendar-view.lines {
     font-weight: bold;
 }
 .year-navigator:selected {
-    color: @theme_selected_bg_color;
+    color: @theme_selected_fg_color;
+    background-color: @theme_selected_fg_color;
     font-weight: bold;
 }
 

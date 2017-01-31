@@ -32,6 +32,7 @@ struct _GcalDateChooser
 
   GtkWidget          *month_choice;
   GtkWidget          *year_choice;
+  GtkWidget          *month_label;
   GtkWidget          *grid;
 
   GtkWidget          *day_grid;
@@ -49,6 +50,7 @@ struct _GcalDateChooser
   gboolean            show_day_names;
   gboolean            show_week_numbers;
   gboolean            no_month_change;
+  gboolean            show_month_only;
 
   GcalDateChooserDayOptionsCallback day_options_cb;
   gpointer            day_options_data;
@@ -72,6 +74,7 @@ enum
   PROP_SHOW_DAY_NAMES,
   PROP_SHOW_WEEK_NUMBERS,
   PROP_NO_MONTH_CHANGE,
+  PROP_SHOW_MONTH_ONLY,
   NUM_PROPERTIES
 };
 
@@ -237,6 +240,17 @@ calendar_get_month_name (gint i)
 }
 
 static void
+calendar_set_month_label (GcalDateChooser *self,
+                          gint i)
+{
+  gchar *text;
+
+  text = calendar_get_month_name (i);
+  gtk_label_set_label (GTK_LABEL (self->month_label), text);
+  g_clear_pointer (&text, g_free);
+}
+
+static void
 calendar_init_weekday_display (GcalDateChooser *self)
 {
   gint i;
@@ -364,6 +378,10 @@ calendar_set_property (GObject      *obj,
       gcal_date_chooser_set_no_month_change (self, g_value_get_boolean (value));
       break;
 
+    case PROP_SHOW_MONTH_ONLY:
+      gcal_date_chooser_set_show_month_only (self, g_value_get_boolean (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, property_id, pspec);
       break;
@@ -398,6 +416,10 @@ calendar_get_property (GObject    *obj,
 
     case PROP_NO_MONTH_CHANGE:
       g_value_set_boolean (value, self->no_month_change);
+      break;
+
+    case PROP_SHOW_MONTH_ONLY:
+      g_value_set_boolean (value, self->show_month_only);
       break;
 
     default:
@@ -528,6 +550,12 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
                                                            FALSE,
                                                            G_PARAM_READWRITE);
 
+  properties[PROP_SHOW_MONTH_ONLY] = g_param_spec_boolean ("show-month-only",
+                                                           "Show Month Only",
+                                                           "If TRUE, the heading will only display the month name",
+                                                           FALSE,
+                                                           G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
+
   g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
 
   signals[MONTH_CHANGED] = g_signal_new ("month-changed",
@@ -548,6 +576,7 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
 
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, month_choice);
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, year_choice);
+  gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, month_label);
   gtk_widget_class_bind_template_child (widget_class, GcalDateChooser, grid);
 
   gtk_widget_class_bind_template_callback (widget_class, multi_choice_changed);
@@ -567,6 +596,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
   self->show_day_names = TRUE;
   self->show_week_numbers = TRUE;
   self->no_month_change = FALSE;
+  self->show_month_only = FALSE;
 
   self->date = g_date_time_new_now_local ();
   g_date_time_get_ymd (self->date, &self->this_year, NULL, NULL);
@@ -649,8 +679,17 @@ gcal_date_chooser_init (GcalDateChooser *self)
 
   calendar_compute_days (self);
   g_date_time_get_ymd (self->date, &year, &month, NULL);
+
+  if (year == 0)
+    gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->year_choice), 1);
   gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->year_choice), year);
+
+  if (month == 1)
+    gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->month_choice), 1);
   gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->month_choice), month - 1);
+
+  calendar_set_month_label (self, month - 1);
+
   calendar_update_selected_day_display (self);
 
   gtk_drag_dest_set (GTK_WIDGET (self), GTK_DEST_DEFAULT_ALL, NULL, 0, GDK_ACTION_COPY);
@@ -673,6 +712,9 @@ gcal_date_chooser_set_show_heading (GcalDateChooser *self,
   self->show_heading = setting;
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SHOW_HEADING]);
+
+  if (setting == TRUE && self->show_month_only == TRUE)
+    gcal_date_chooser_set_show_month_only (self, FALSE);
 }
 
 gboolean
@@ -740,6 +782,27 @@ gcal_date_chooser_get_no_month_change (GcalDateChooser *self)
 }
 
 void
+gcal_date_chooser_set_show_month_only (GcalDateChooser *self,
+                                       gboolean         setting)
+{
+  if (self->show_month_only == setting)
+    return;
+
+  self->show_month_only = setting;
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SHOW_MONTH_ONLY]);
+
+  if (setting == TRUE && self->show_heading == TRUE)
+    gcal_date_chooser_set_show_heading (self, FALSE);
+}
+
+gboolean
+gcal_date_chooser_get_show_month_only (GcalDateChooser *self)
+{
+  return self->show_month_only;
+}
+
+void
 gcal_date_chooser_set_date (GcalDateChooser *self,
                             GDateTime       *date)
 {
@@ -757,6 +820,7 @@ gcal_date_chooser_set_date (GcalDateChooser *self,
     {
       gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->year_choice), y2);
       gcal_multi_choice_set_value (GCAL_MULTI_CHOICE (self->month_choice), m2 - 1);
+      calendar_set_month_label (self, m2 - 1);
       calendar_compute_days (self);
     }
 
