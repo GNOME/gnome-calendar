@@ -20,12 +20,14 @@
 #define G_LOG_DOMAIN "GcalEventWidget"
 
 #include <string.h>
+#include <glib/gi18n.h>
 
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 
-#define INTENSITY(c) ((c->red) * 0.30 + (c->green) * 0.59 + (c->blue) * 0.11)
-#define ICON_SIZE    16
+#define DESC_MAX_CHAR 200
+#define INTENSITY(c)  ((c->red) * 0.30 + (c->green) * 0.59 + (c->blue) * 0.11)
+#define ICON_SIZE     16
 
 struct _GcalEventWidget
 {
@@ -241,6 +243,147 @@ update_color (GcalEventWidget *self)
 }
 
 static void
+gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
+                                     GcalEvent       *event)
+{
+  g_autoptr (GDateTime) tooltip_start, tooltip_end;
+  g_autofree gchar *start, *end, *escaped_summary, *escaped_description;
+  gboolean allday, multiday, is_ltr;
+  GString *tooltip_desc, *tooltip_mesg;
+
+  tooltip_mesg = g_string_new (NULL);
+  escaped_summary = g_markup_escape_text (gcal_event_get_summary (event), -1);
+  g_string_append_printf (tooltip_mesg, "<b>%s</b>", escaped_summary);
+
+  tooltip_start = g_date_time_to_local (gcal_event_get_date_start (event));
+  tooltip_end = g_date_time_to_local (gcal_event_get_date_end (event));
+
+  allday = gcal_event_get_all_day (event);
+  multiday = gcal_event_is_multiday (event);
+
+  is_ltr = gtk_widget_get_direction (GTK_WIDGET (self)) != GTK_TEXT_DIR_RTL;
+
+  if (allday)
+    {
+      if (multiday)
+        {
+          start = g_date_time_format (tooltip_start, "%x");
+          end = g_date_time_format (tooltip_end, "%x");
+        }
+      else
+        {
+          start = g_date_time_format (tooltip_start, "%x");
+          end = NULL;
+        }
+    }
+  else
+    {
+      if (multiday)
+        {
+          if (self->clock_format_24h)
+            {
+              if (is_ltr)
+                {
+                  start = g_date_time_format (tooltip_start, "%x %R");
+                  end = g_date_time_format (tooltip_end, "%x %R");
+                }
+              else
+                {
+                  start = g_date_time_format (tooltip_start, "%R %x");
+                  end = g_date_time_format (tooltip_end, "%R %x");
+                }
+            }
+          else
+            {
+              if (is_ltr)
+                {
+                  start = g_date_time_format (tooltip_start, "%x I:%M %P");
+                  end = g_date_time_format (tooltip_end, "%x I:%M %P");
+                }
+              else
+                {
+                  start = g_date_time_format (tooltip_start, "%P %M:%I %x");
+                  end = g_date_time_format (tooltip_end, "%P %M:%I %x");
+                }
+            }
+        }
+      else
+        {
+          if (self->clock_format_24h)
+            {
+              if (is_ltr)
+                {
+                  start = g_date_time_format (tooltip_start, "%x, %R");
+                  end = g_date_time_format (tooltip_end, "%R");
+                }
+              else
+                {
+                  start = g_date_time_format (tooltip_start, "%R ,%x");
+                  end = g_date_time_format (tooltip_end, "%R");
+                }
+            }
+          else
+            {
+              if (is_ltr)
+                {
+                  start = g_date_time_format (tooltip_start, "%x, I:%M %P");
+                  end = g_date_time_format (tooltip_end, "I:%M %P");
+                }
+              else
+                {
+                  start = g_date_time_format (tooltip_start, "%P %M:%I ,%x");
+                  end = g_date_time_format (tooltip_end, "%P %M:%I");
+                }
+            }
+        }
+    }
+
+  if (allday && !multiday)
+    {
+      g_string_append_printf (tooltip_mesg,
+                              "\n%s",
+                              start);
+    }
+  else
+    {
+      g_string_append_printf (tooltip_mesg,
+                              "\n%s - %s",
+                              is_ltr ? start : end,
+                              is_ltr ? end : start);
+    }
+
+  /* Append event location */
+  if (g_utf8_strlen (gcal_event_get_location (event), -1) > 0)
+    {
+      g_string_append (tooltip_mesg, "\n\n");
+      g_string_append_printf (tooltip_mesg,
+                              "%s",
+                              gcal_event_get_location (event));
+    }
+
+  escaped_description = g_markup_escape_text (gcal_event_get_description (event), -1);
+  tooltip_desc = g_string_new (escaped_description);
+
+  /* Truncate long descriptions at a white space and ellipsize */
+  if (tooltip_desc->len > 0)
+    {
+      /* If the description is larger than DESC_MAX_CHAR, ellipsize it */
+      if (g_utf8_strlen (tooltip_desc->str, -1) > DESC_MAX_CHAR)
+        {
+          g_string_truncate (tooltip_desc, DESC_MAX_CHAR - 1);
+          g_string_append (tooltip_desc, "…");
+        }
+
+      g_string_append_printf (tooltip_mesg, "\n\n%s", tooltip_desc->str);
+    }
+
+  gtk_widget_set_tooltip_markup (GTK_WIDGET (self), tooltip_mesg->str);
+
+  g_string_free (tooltip_desc, TRUE);
+  g_string_free (tooltip_mesg, TRUE);
+}
+
+static void
 gcal_event_widget_set_event_internal (GcalEventWidget *self,
                                       GcalEvent       *event)
 {
@@ -275,6 +418,8 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
                             "notify::summary",
                             G_CALLBACK (gtk_widget_queue_draw),
                             self);
+
+  gcal_event_widget_set_event_tooltip (self, event);
 }
 
 static void
