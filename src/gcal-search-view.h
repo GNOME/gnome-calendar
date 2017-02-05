@@ -43,6 +43,7 @@ GtkWidget*     gcal_search_view_new              (void);
 void           gcal_search_view_connect          (GcalSearchView *search_view,
                                                   GcalManager    *manager);
 
+
 G_END_DECLS
 
 #endif /* __GCAL_SEARCH_VIEW_H__ */

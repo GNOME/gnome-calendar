@@ -52,6 +52,7 @@ struct _GcalSearchView
   gchar          *field;
   gchar          *query;
   time_t          current_utc_date;
+  guint           search_timeout_id;
 
   /* property */
   icaltimetype   *date;
@@ -100,6 +101,8 @@ static GtkWidget*     make_row_for_event                        (GcalSearchView 
                                                                  GcalEvent            *event);
 
 static void           update_view                               (GcalSearchView       *view);
+
+static gboolean       gcal_search_view_do_search                (gpointer             user_data);
 
 /* prefixed */
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
@@ -415,6 +418,55 @@ update_view (GcalSearchView *view)
   view->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT, (GSourceFunc) show_no_results_page, view);
 }
 
+/**
+ * gcal_search_view_do_search:
+ * @view: a #GcalSearchView instance.
+ *
+ * Called after 500ms since last typed character
+ * in the search field.
+ *
+ * Returns: @G_SOURCE_REMOVE
+ */
+static gboolean
+gcal_search_view_do_search (gpointer user_data)
+{
+  GcalSearchView *view;
+  gchar *search_query;
+
+  view = GCAL_SEARCH_VIEW (user_data);
+
+  search_query = g_strdup_printf ("(contains? \"%s\" \"%s\")",
+                                             view->field ? view->field : "summary",
+                                             view->query ? view->query : "");
+
+  if (!view->subscribed)
+        {
+          g_autoptr (GDateTime) now, start, end;
+
+          now = g_date_time_new_now_local ();
+          start = g_date_time_add_years (now, -5);
+          end = g_date_time_add_years (now, 5);
+
+          gcal_manager_set_search_subscriber (view->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view),
+                                              g_date_time_to_unix (start),
+                                              g_date_time_to_unix (end));
+
+          /* Mark the view as subscribed */
+          view->subscribed = TRUE;
+        }
+
+      /* update internal current time_t */
+      view->current_utc_date = time (NULL);
+
+      gcal_manager_set_query (view->manager, search_query);
+
+      view->search_timeout_id = 0;
+      g_free (search_query);
+
+
+  return G_SOURCE_REMOVE;
+}
+
 static void
 gcal_search_view_class_init (GcalSearchViewClass *klass)
 {
@@ -719,6 +771,7 @@ gcal_search_view_set_time_format (GcalSearchView *view,
   view->format_24h = format_24h;
 }
 
+
 /**
  * gcal_search_view_set_search:
  * @view: a #GcalSearchView instance
@@ -737,38 +790,16 @@ gcal_search_view_search (GcalSearchView *view,
   g_clear_pointer (&view->query, g_free);
   g_clear_pointer (&view->field, g_free);
 
-  /* Only perform search on valid non-empty strings */
-  if (query && g_utf8_strlen (query, -1) > 0)
-    {
-      gchar *search_query = g_strdup_printf ("(contains? \"%s\" \"%s\")",
-                                             field ? field : "summary",
-                                             query ? query : "");
+  if (view->search_timeout_id != 0)
+    g_source_remove (view->search_timeout_id);
 
+
+  /* Only perform search on valid non-empty strings */
+  if (query && g_utf8_strlen (query, -1) >= 3)
+    {
       view->query = g_strdup (query);
       view->field = g_strdup (field);
-
-      if (!view->subscribed)
-        {
-          g_autoptr (GDateTime) now, start, end;
-
-          now = g_date_time_new_now_local ();
-          start = g_date_time_add_years (now, -5);
-          end = g_date_time_add_years (now, 5);
-
-          gcal_manager_set_search_subscriber (view->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view),
-                                              g_date_time_to_unix (start),
-                                              g_date_time_to_unix (end));
-
-          /* Mark the view as subscribed */
-          view->subscribed = TRUE;
-        }
-
-      /* update internal current time_t */
-      view->current_utc_date = time (NULL);
-
-      gcal_manager_set_query (view->manager, search_query);
-
-      g_free (search_query);
+      view->search_timeout_id = g_timeout_add (500, gcal_search_view_do_search, view);
     }
   else
     {
