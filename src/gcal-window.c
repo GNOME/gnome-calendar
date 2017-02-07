@@ -326,7 +326,7 @@ on_view_action_activated (GSimpleAction *action,
                           gpointer       user_data)
 {
   GcalWindow *window = GCAL_WINDOW (user_data);
-  guint view;
+  gint32 view;
 
   view = g_variant_get_int32 (param);
 
