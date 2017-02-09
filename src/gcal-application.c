@@ -207,8 +207,15 @@ gcal_application_finalize (GObject *object)
   g_free (self->uuid);
   g_clear_pointer (&self->initial_date, g_free);
 
+  if (self->provider != NULL)
+    {
+      gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (self->colors_provider));
+
+      gtk_style_context_remove_provider_for_screen (gdk_screen_get_default (), GTK_STYLE_PROVIDER (self->provider));
+      g_clear_object (&(self->provider));
+    }
+
   g_clear_object (&self->colors_provider);
-  g_clear_object (&(self->provider));
   g_clear_object (&self->settings);
 
   g_clear_object (&self->manager);
