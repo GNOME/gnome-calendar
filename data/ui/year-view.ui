@@ -34,6 +34,10 @@
                   <object class="GtkFlowBox" id="flowbox">
                     <property name="visible">True</property>
                     <property name="homogeneous">True</property>
+                    <property name="selection-mode">GTK_SELECTION_NONE</property>
+                    <property name="column-spacing">18</property>
+                    <property name="row-spacing">18</property>
+                    <property name="margin">18</property>
                   </object>
                 </child>
               </object>
