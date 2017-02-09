@@ -413,7 +413,7 @@ get_start_grid_y (GtkWidget *widget)
   layout = gtk_widget_create_pango_layout (widget, NULL);
 
   gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "first-view-header");
+  gtk_style_context_add_class (context, "start-header");
   gtk_style_context_get (context, state_flags, "padding-top", &padding_top, "font", &font_desc, NULL);
 
   pango_layout_set_font_description (layout, font_desc);
@@ -1675,7 +1675,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
   /* view headers */
   gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "first-view-header");
+  gtk_style_context_add_class (context, "start-header");
 
   gtk_style_context_get (context, state, "font", &font_desc, NULL);
   gtk_style_context_get_padding (context, state, &padding);
@@ -1692,7 +1692,7 @@ gcal_month_view_draw (GtkWidget *widget,
   gtk_style_context_restore (context);
 
   gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "second-view-header");
+  gtk_style_context_add_class (context, "end-header");
 
   gtk_style_context_get (context, state, "font", &font_desc, NULL);
   gtk_style_context_get_padding (context, state, &padding);

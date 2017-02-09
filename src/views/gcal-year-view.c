@@ -994,8 +994,9 @@ draw_navigator (GcalYearView *year_view,
 {
   GtkStyleContext *context;
   GtkStateFlags state_flags;
+  GtkBorder padding;
 
-  gint header_padding_left, header_padding_top, header_height, layout_width, layout_height;
+  gint header_height, layout_width, layout_height;
   gint real_padding_left, real_padding_top, i, sw, weeks_counter, number_of_rows;
   gdouble width, height;
 
@@ -1004,7 +1005,7 @@ draw_navigator (GcalYearView *year_view,
   PangoLayout *header_layout;
   PangoFontDescription *font_desc;
 
-  context = gtk_widget_get_style_context (GTK_WIDGET (year_view));
+  context = gtk_widget_get_style_context (widget);
   state_flags = gtk_style_context_get_state (context);
   sw = 1 - 2 * year_view->k;
   width = gtk_widget_get_allocated_width (widget);
@@ -1012,18 +1013,13 @@ draw_navigator (GcalYearView *year_view,
 
   /* read header from CSS code related to the view */
   gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "first-view-header");
+  gtk_style_context_add_class (context, "start-header");
 
   header_str = g_strdup_printf ("%d", year_view->date->year);
-  gtk_style_context_get (context, state_flags,
-                         "padding-left", &header_padding_left, "padding-top", &header_padding_top,
-                         "font", &font_desc, NULL);
+  gtk_style_context_get (context, state_flags, "font", &font_desc, NULL);
+  gtk_style_context_get_padding (context, state_flags, &padding);
 
   gtk_style_context_restore (context);
-
-  /* draw header on navigator */
-  context = gtk_widget_get_style_context (widget);
-  state_flags = gtk_style_context_get_state (context);
 
   header_layout = gtk_widget_create_pango_layout (widget, header_str);
   pango_layout_set_font_description (header_layout, font_desc);
@@ -1031,13 +1027,15 @@ draw_navigator (GcalYearView *year_view,
   /* XXX: here the color of the text isn't read from year-view but from navigator widget,
    * which has the same color on the CSS file */
   gtk_render_layout (context, cr,
-                     year_view->k * (width - layout_width) + sw * header_padding_left, header_padding_top, header_layout);
+                     year_view->k * (width - layout_width) + sw * padding.left,
+                     padding.top,
+                     header_layout);
 
   pango_font_description_free (font_desc);
   g_object_unref (header_layout);
   g_free (header_str);
 
-  header_height = header_padding_top * 2 + layout_height;
+  header_height = padding.top * 2 + layout_height;
   height = gtk_widget_get_allocated_height (widget) - header_height;
 
   real_padding_left = (width - year_view->column_width * year_view->number_of_columns) / (year_view->number_of_columns + 1);
@@ -1301,7 +1299,7 @@ calculate_sizes (GcalYearView *self)
   /* get header info from CSS */
   context = gtk_widget_get_style_context (GTK_WIDGET (self));
   gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "first-view-header");
+  gtk_style_context_add_class (context, "start-header");
   gtk_style_context_get (context, gtk_style_context_get_state (context),
                          "padding-top", &padding_top,
                          "padding-bottom", &padding_bottom,

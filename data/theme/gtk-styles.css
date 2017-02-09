@@ -7,16 +7,17 @@
 
 /* nav-bar labels */
 .start-header {
-    font-size: 18pt;
+    font-size: 16pt;
     font-weight: bold;
     color: @theme_selected_bg_color;
     padding: 12px;
 }
 
 .end-header {
-    font-size: 18pt;
+    font-size: 16pt;
     font-weight: bold;
     padding: 12px;
+    color: alpha(@theme_fg_color, 0.55);
 }
 
 calendar-view {
@@ -25,7 +26,9 @@ calendar-view {
 }
 
 calendar-view.header {
+    font-size: 10pt;
     font-weight: bold;
+    color: alpha(@theme_fg_color, 0.55);
 }
 
 calendar-view.current,
@@ -53,20 +56,6 @@ calendar-view.lines {
     color: alpha(@theme_fg_color, 0.4);
 }
 
-calendar-view .first-view-header {
-    font-size: 16pt;
-    font-weight: bold;
-    color: @theme_selected_bg_color;
-    padding: 12px;
-}
-
-calendar-view .second-view-header {
-    font-size: 16pt;
-    font-weight: bold;
-    padding: 12px;
-    color: alpha(@theme_fg_color, 0.55);
-}
-
 /* Year View CSS */
 .year-view {
     padding: 0px;
@@ -75,9 +64,9 @@ calendar-view .second-view-header {
 /* Header the padding if for sizing, on drawing the spacing between cells,
  * and the padding will be automatically calculated
  * Because of year-view widget internals, the color property should be the same
- * of .calendar-view.first-view-header selector */
+ * of .start-header selector */
 .year-navigator {
-    padding: 6px 12px;
+    padding: 12px;
     color: @theme_selected_bg_color;
 }
 
