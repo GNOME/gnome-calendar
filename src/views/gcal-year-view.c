@@ -191,13 +191,24 @@ update_date (GcalYearView *year_view,
 
   for (int i = 0; i < 12; i++)
     {
-      date_for_month = g_date_time_new_local (year_view->date->year, i + 1, 1, 0, 0, 0);
       month_box = gtk_flow_box_get_child_at_index (GTK_FLOW_BOX (year_view->flowbox), i);
       if (month_box)
         {
           month = gtk_bin_get_child (GTK_BIN (month_box));
           if (month)
-            gcal_date_chooser_set_date (GCAL_DATE_CHOOSER (month), date_for_month);
+            {
+              if (year_view->date->month == (i + 1))
+                {
+                  date_for_month = g_date_time_new_local (year_view->date->year, year_view->date->month, year_view->date->day, 0, 0, 0);
+                  gcal_date_chooser_set_show_selected_day (GCAL_DATE_CHOOSER (month), TRUE);
+                }
+              else
+                {
+                  date_for_month = g_date_time_new_local (year_view->date->year, i + 1, 1, 0, 0, 0);
+                  gcal_date_chooser_set_show_selected_day (GCAL_DATE_CHOOSER (month), FALSE);
+                }
+              gcal_date_chooser_set_date (GCAL_DATE_CHOOSER (month), date_for_month);
+            }
         }
       g_clear_pointer (&date_for_month, g_date_time_unref);
     }

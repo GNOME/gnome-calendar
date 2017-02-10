@@ -51,6 +51,7 @@ struct _GcalDateChooser
   gboolean            show_week_numbers;
   gboolean            no_month_change;
   gboolean            show_month_only;
+  gboolean            show_selected_day;
 
   GcalDateChooserDayOptionsCallback day_options_cb;
   gpointer            day_options_data;
@@ -75,6 +76,7 @@ enum
   PROP_SHOW_WEEK_NUMBERS,
   PROP_NO_MONTH_CHANGE,
   PROP_SHOW_MONTH_ONLY,
+  PROP_SHOW_SELECTED_DAY,
   NUM_PROPERTIES
 };
 
@@ -313,7 +315,10 @@ calendar_update_selected_day_display (GcalDateChooser *self)
       {
         d = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
         date = gcal_date_chooser_day_get_date (d);
-        gcal_date_chooser_day_set_selected (d, datetime_compare_date (date, self->date) == 0);
+        if (self->show_selected_day)
+          gcal_date_chooser_day_set_selected (d, datetime_compare_date (date, self->date) == 0);
+        else
+          gcal_date_chooser_day_set_selected (d, FALSE);
       }
     }
 }
@@ -382,6 +387,10 @@ calendar_set_property (GObject      *obj,
       gcal_date_chooser_set_show_month_only (self, g_value_get_boolean (value));
       break;
 
+    case PROP_SHOW_SELECTED_DAY:
+      gcal_date_chooser_set_show_selected_day (self, g_value_get_boolean (value));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (obj, property_id, pspec);
       break;
@@ -420,6 +429,10 @@ calendar_get_property (GObject    *obj,
 
     case PROP_SHOW_MONTH_ONLY:
       g_value_set_boolean (value, self->show_month_only);
+      break;
+
+    case PROP_SHOW_SELECTED_DAY:
+      g_value_set_boolean (value, self->show_selected_day);
       break;
 
     default:
@@ -556,6 +569,12 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
                                                            FALSE,
                                                            G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
 
+  properties[PROP_SHOW_SELECTED_DAY] = g_param_spec_boolean ("show-selected-day",
+                                                           "Show Selected Day",
+                                                           "If TRUE, it will display the selected day",
+                                                           TRUE,
+                                                           G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY);
+
   g_object_class_install_properties (object_class, NUM_PROPERTIES, properties);
 
   signals[MONTH_CHANGED] = g_signal_new ("month-changed",
@@ -597,6 +616,7 @@ gcal_date_chooser_init (GcalDateChooser *self)
   self->show_week_numbers = TRUE;
   self->no_month_change = FALSE;
   self->show_month_only = FALSE;
+  self->show_selected_day = TRUE;
 
   self->date = g_date_time_new_now_local ();
   g_date_time_get_ymd (self->date, &self->this_year, NULL, NULL);
@@ -800,6 +820,24 @@ gboolean
 gcal_date_chooser_get_show_month_only (GcalDateChooser *self)
 {
   return self->show_month_only;
+}
+
+void
+gcal_date_chooser_set_show_selected_day (GcalDateChooser *self,
+                                         gboolean         setting)
+{
+  if (self->show_selected_day == setting)
+    return;
+
+  self->show_selected_day = setting;
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SHOW_SELECTED_DAY]);
+}
+
+gboolean
+gcal_date_chooser_get_show_selected_day (GcalDateChooser *self)
+{
+  return self->show_selected_day;
 }
 
 void
