@@ -2,28 +2,28 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2015, 2016.
 #
+# Iñaki Larrañaga Murgoitio <dooteo@zundan.com>, 2015, 2016, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-09-16 09:11+0200\n"
-"PO-Revision-Date: 2016-09-15 19:02+0100\n"
-"Last-Translator: dooteo <dooteo@zundan.com>\n"
-"Language-Team: Basque <librezale@librezale.org>\n"
+"POT-Creation-Date: 2017-02-11 20:36+0100\n"
+"PO-Revision-Date: 2017-01-27 08:49+0100\n"
+"Last-Translator: Iñaki Larrañaga Murgoitio <dooteo@zundan.com>\n"
+"Language-Team: Basque <librezale@librezale.eus>\n"
 "Language: eu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Lokalize 2.0\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Lokalize 1.5\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:483
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:4
+#: ../src/gcal-application.c:474
 msgid "Calendar"
 msgstr "Egutegia"
 
@@ -44,16 +44,16 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You'll feel comfortable using "
-"Calendar, like you've been using it for ages!"
+"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Ongi garatutako eginbideen eta erabiltzailearen erabilgarritasunaren arteko "
-"oreka lortzen saiatu da. Ez dauka gehiegikeririk ez eta gabezirik ere. "
+"oreka lortzen saiatu da. Ez dauka gehiegikeriarik ez eta gabeziarik ere. "
 "Egutegia erabiltzean eroso sentituko zara, urte askotan zehar erabiliko "
 "bazenu bezala."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
-#: ../data/ui/window.ui.h:6
+#: ../data/ui/window.ui.h:7
 msgid "Search for events"
 msgstr "Bilatu gertaerak"
 
@@ -123,10 +123,10 @@ msgid "Cancel"
 msgstr "Utzi"
 
 #: ../data/ui/edit-dialog.ui.h:2
-msgid "Click to select the event's agenda"
-msgstr "Egin klik gertaeraren agenda hautatzeko"
+msgid "Click to select the calendar"
+msgstr "Egin klik egutegia hautatzeko"
 
-#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:565
+#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:564
 msgid "Done"
 msgstr "Eginda"
 
@@ -265,10 +265,15 @@ msgstr "Ikuspegia"
 
 #: ../data/ui/help-overlay.ui.h:14
 msgctxt "shortcut window"
+msgid "Week view"
+msgstr "Asteko ikuspegia"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Hileko ikuspegia"
 
-#: ../data/ui/help-overlay.ui.h:15
+#: ../data/ui/help-overlay.ui.h:16
 msgctxt "shortcut window"
 msgid "Year view"
 msgstr "Urtearen ikuspegia"
@@ -329,8 +334,8 @@ msgstr "Ez da emaitzarik aurkitu"
 msgid "Try a different search"
 msgstr "Saiatu bestelako bilaketa"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1123
-#: ../src/gcal-window.c:1127
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1152
+#: ../src/gcal-window.c:1156
 msgid "Undo"
 msgstr "Desegin"
 
@@ -429,7 +434,8 @@ msgstr "Pasahitza"
 msgid "Connect"
 msgstr "Konektatu"
 
-#: ../data/ui/time-selector.ui.h:1
+#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:772
+#: ../src/views/gcal-week-view.c:304
 msgid "00:00"
 msgstr "00:00"
 
@@ -437,32 +443,36 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:445
 msgid "AM"
 msgstr "AM"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:445
 msgid "PM"
 msgstr "PM"
 
 #: ../data/ui/window.ui.h:1
+msgid "Week"
+msgstr "Astea"
+
+#: ../data/ui/window.ui.h:2
 msgid "Month"
 msgstr "Hila"
 
-#: ../data/ui/window.ui.h:2
+#: ../data/ui/window.ui.h:3
 msgid "Year"
 msgstr "Urtea"
 
-#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
+#: ../data/ui/window.ui.h:5 ../data/ui/year-view.ui.h:1
+#: ../src/views/gcal-year-view.c:275 ../src/views/gcal-year-view.c:495
 msgid "Today"
 msgstr "Gaur"
 
-#: ../data/ui/window.ui.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Manage your calendars"
 msgstr "Kudeatu zure egutegiak"
 
-#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:817
+#: ../data/ui/window.ui.h:8 ../src/gcal-source-dialog.c:817
 #: ../src/gcal-source-dialog.c:2231
 msgid "Calendar Settings"
 msgstr "Egutegiaren ezarpenak"
@@ -471,9 +481,25 @@ msgstr "Egutegiaren ezarpenak"
 msgid "No events"
 msgstr "Gertaerarik ez"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1037
+#: ../data/ui/year-view.ui.h:3 ../src/views/gcal-month-view.c:1074
 msgid "Add Event…"
 msgstr "Gehitu gertaera…"
+
+#: ../src/views/gcal-month-view.c:1318
+msgid "Other events"
+msgstr "Beste gertaerak"
+
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/views/gcal-month-view.c:1780 ../src/views/gcal-week-header.c:365
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Beste gertaera"
+msgstr[1] "Beste %d gertaera"
+
+#: ../src/views/gcal-week-grid.c:769 ../src/views/gcal-week-view.c:301
+msgid "00 AM"
+msgstr "00 AM"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -487,88 +513,85 @@ msgstr "Ireki egutegia igarotako datan"
 msgid "Open calendar showing the passed event"
 msgstr "Ireki egutegia igarotako gertaera erakutsiz"
 
-#: ../src/gcal-application.c:324
-msgid "- Calendar management"
-msgstr "- Egutegiaren kudeaketa"
+#: ../src/gcal-application.c:315
+msgid "— Calendar management"
+msgstr "— Egutegiaren kudeaketa"
 
-#: ../src/gcal-application.c:471
+#: ../src/gcal-application.c:462
 #, c-format
 msgid "Copyright © %d The Calendar authors"
 msgstr "Copyright-a © %d Egutegia-ren egileak"
 
-#: ../src/gcal-application.c:477
+#: ../src/gcal-application.c:468
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Copyright-a © %d-%d Egutegia-ren egileak"
 
-#: ../src/gcal-application.c:490
+#: ../src/gcal-application.c:481
 msgid "translator-credits"
 msgstr "Iñaki Larrañaga Murgoitio <dooteo@zundan.com>"
 
-#: ../src/gcal-edit-dialog.c:565
+#: ../src/gcal-edit-dialog.c:564
 msgid "Save"
 msgstr "Gorde"
 
-#: ../src/gcal-edit-dialog.c:837
+#: ../src/gcal-edit-dialog.c:831
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "Minutu 1 lehenago"
 msgstr[1] "%d minutu lehenago"
 
-#: ../src/gcal-edit-dialog.c:845
+#: ../src/gcal-edit-dialog.c:839
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "Ordu 1 lehenago"
 msgstr[1] "%d ordu lehenago"
 
-#: ../src/gcal-edit-dialog.c:853
+#: ../src/gcal-edit-dialog.c:847
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "Egun 1 lehenago"
 msgstr[1] "%d egun lehenago"
 
-#: ../src/gcal-edit-dialog.c:861
+#: ../src/gcal-edit-dialog.c:855
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "Aste 1 lehenago"
 msgstr[1] "%d aste lehenago"
 
-#: ../src/gcal-edit-dialog.c:1080 ../src/gcal-quick-add-popover.c:424
+#: ../src/gcal-edit-dialog.c:1074 ../src/gcal-quick-add-popover.c:498
 msgid "Unnamed event"
 msgstr "Gertaera izengabea"
 
-#: ../src/gcal-month-view.c:1275
-msgid "Other events"
-msgstr "Beste gertaerak"
-
-#. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1737
-#, c-format
-msgid "Other event"
-msgid_plural "Other %d events"
-msgstr[0] "Beste gertaera"
-msgstr[1] "Beste %d gertaera"
-
-#: ../src/gcal-quick-add-popover.c:115
+#: ../src/gcal-quick-add-popover.c:117
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (egutegi hau irakurtzeko soilik da)"
 
-#: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#.
+#: ../src/gcal-quick-add-popover.c:231 ../src/gcal-quick-add-popover.c:261
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%B %d"
 
-#: ../src/gcal-quick-add-popover.c:245
+#: ../src/gcal-quick-add-popover.c:263
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Gertaera berria: %s --> %s"
 
-#: ../src/gcal-quick-add-popover.c:251
+#: ../src/gcal-quick-add-popover.c:280
+#, c-format
+msgid "New Event on %s, %s – %s"
+msgstr "Gertaera berria: %s, %s - %s"
+
+#: ../src/gcal-quick-add-popover.c:290
 #, c-format
 msgid "New Event on %s"
 msgstr "Gertaera berria: %s"
@@ -623,25 +646,22 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
-msgid "Midnight"
-msgstr "Gauerdia"
-
-#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
-msgid "Noon"
-msgstr "Eguerdia"
-
-#: ../src/gcal-week-view.c:499
-msgid "00:00 PM"
-msgstr "00:00 PM"
-
-#: ../src/gcal-window.c:1123
+#: ../src/gcal-window.c:1152
 msgid "Another event deleted"
 msgstr "Beste gertaera ezabatuta"
 
-#: ../src/gcal-window.c:1127
+#: ../src/gcal-window.c:1156
 msgid "Event deleted"
 msgstr "Gertaera ezabatuta"
+
+#~ msgid "Midnight"
+#~ msgstr "Gauerdia"
+
+#~ msgid "Noon"
+#~ msgstr "Eguerdia"
+
+#~ msgid "00:00 PM"
+#~ msgstr "00:00 PM"
 
 #~ msgid "Starts"
 #~ msgstr "Hasten da"
