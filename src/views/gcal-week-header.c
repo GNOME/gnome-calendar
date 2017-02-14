@@ -1183,12 +1183,15 @@ gcal_week_header_draw (GtkWidget      *widget,
   /* Drag and Drop highlight */
   if (self->dnd_cell != -1)
     {
+      gtk_drag_highlight (widget);
       gtk_render_background (context,
                              cr,
                              start_x + self->dnd_cell * cell_width,
                              start_y,
                              cell_width,
                              alloc.height - start_y + 6);
+
+      gtk_drag_unhighlight (widget);
     }
 
   /* Draw the selection background */
@@ -1371,12 +1374,6 @@ gcal_week_header_drag_motion (GtkWidget      *widget,
   self = GCAL_WEEK_HEADER (widget);
   self->dnd_cell = get_dnd_cell (widget, x, y);
 
-  /* Setup the drag highlight */
-  if (self->dnd_cell != -1)
-    gtk_drag_highlight (widget);
-  else
-    gtk_drag_unhighlight (widget);
-
   /*
    * Sets the status of the drag - if it fails, sets the action to 0 and
    * aborts the drag with FALSE.
@@ -1446,7 +1443,6 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
 
   /* Cancel the DnD */
   self->dnd_cell = -1;
-  gtk_drag_unhighlight (widget);
 
   gtk_drag_finish (context, TRUE, FALSE, time);
 
@@ -1464,7 +1460,6 @@ gcal_week_header_drag_leave (GtkWidget      *widget,
 
   /* Cancel the drag */
   self->dnd_cell = -1;
-  gtk_drag_unhighlight (widget);
 
   gtk_widget_queue_draw (widget);
 }
