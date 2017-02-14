@@ -41,6 +41,28 @@
   <url type="bugtracker">https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar</url>
   <project_group>GNOME</project_group>
 
+  <releases>
+    <release date="2017-02-14" version="3.23.90">
+      <description>
+        <p>
+          This release candidate for GNOME 3.24 adds many new features and improvements. The
+          major highlight is the new Week view, besides the many stability and bugs that
+          were fixed.
+          <ul>
+            <li>The new Week view is here!</li>
+            <li>GNOME Calendar now has an official Flatpak manifest</li>
+            <li>Keyboard interaction was improved</li>
+          </ul>
+        </p>
+        <p>
+          This release also updates translations, and adds new translations. GNOME Calendar
+          if officially supported on more then 50 languages now.
+        </p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+  </releases>
+
   <update_contact>ignatenko@src.gnome.org</update_contact>
   <translation type="gettext">gnome-calendar</translation>
 </component>

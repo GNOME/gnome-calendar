@@ -1,3 +1,34 @@
+Major changes in 3.23.90:
+* Week view (pandunonu2, Georges Basile Stavracas Neto)
+* Improvements on the search popover
+* Fix Year view not synchronized with Month view (Isaque Galdino)
+* Correctly check if Edit dialog is editing a new event (Mohammed Sadiq)
+* Improve focus tracking on the quick add popover (Mohammed Sadiq)
+* Add a Flatpak manifest (Christian Hergert)
+* Align circle with subtitle in Edit dialog (Andrei Ceapa)
+* Updates translations for:
+    * Basque (Inaki Larranaga Murgoitio)
+    * Brazilian Portuguese (Fábio Nogueira)
+    * Catalan (Jordi Mas)
+    * Chinese (Cheng Lu)
+    * Chinese (Taiwan) (Cheng-Chia Tseng)
+    * Czech (Marek Černocký)
+    * Finnish (Jiri Grönroos)
+    * French (Charles Monzat)
+    * Friulian (Fabio Tomat)
+    * German (Mario Blättermann, Bernd Homuth)
+    * Greek (Efstathios Iosifidis)
+    * Hungarian (Gábor Kelemen)
+    * Icelandic (Sveinn í Felli)
+    * Indonesian (Kukuh Syafaat)
+    * Italian (Milo Casagrande)
+    * Kazakh (Baurzhan Muftakhidinov)
+    * Norwegian bokmål (Kjartan Maraas)
+    * Polish (Piotr Drąg)
+    * Slovak (Dušan Kazik)
+    * Spanish (Daniel Mustieles)
+    * Swedish (Anders Jonsson)
+
 Major changes in 3.22.1:
 * Ablility to change months/years through mouse and touchpad scroll
 * A huge number of bugfixes
