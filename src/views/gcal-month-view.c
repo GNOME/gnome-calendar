@@ -1055,7 +1055,7 @@ gcal_month_view_init (GcalMonthView *self)
 
   self->overflow_popover = gtk_popover_new (GTK_WIDGET (self));
   gtk_style_context_add_class (gtk_widget_get_style_context (self->overflow_popover), "events");
-  g_signal_connect (self->overflow_popover, "hide", G_CALLBACK (overflow_popover_hide), self);
+  g_signal_connect_swapped (self->overflow_popover, "hide", G_CALLBACK (overflow_popover_hide), self);
   g_signal_connect_swapped (self->overflow_popover,
                             "drag-motion",
                             G_CALLBACK (cancel_dnd_from_overflow_popover),
