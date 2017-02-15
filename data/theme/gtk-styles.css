@@ -286,6 +286,11 @@ datechooser navigator button {
   padding: 0;
 }
 
+/* month label */
+datechooser .month-label {
+  font-weight: bold;
+}
+
 /* day names and week numbers*/
 datechooser .weeknum,
 datechooser .weekday {
