@@ -1,15 +1,14 @@
 # Ukrainian translation for gnome-calendar.
 # Copyright (C) 2015 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
-# Daniel Korostil <ted.korostiled@gmail.com>, 2015, 2016.
+# Daniel Korostil <ted.korostiled@gmail.com>, 2015, 2016, 2017.
 # Mykola Tkach <Stuartlittle1970@gmail.com>, 2016.
 msgid ""
 msgstr ""
 "Project-Id-Version: 1.0\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-08-09 14:56+0000\n"
-"PO-Revision-Date: 2016-09-17 19:49+0300\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-02-20 13:03+0200\n"
+"PO-Revision-Date: 2017-02-20 13:05+0300\n"
 "Last-Translator: Daniel Korostil <ted.korostiled@gmail.com>\n"
 "Language-Team: linux.org.ua\n"
 "Language: uk\n"
@@ -24,8 +23,8 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:483
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:4
+#: ../src/gcal-application.c:474
 msgid "Calendar"
 msgstr "Календар"
 
@@ -46,15 +45,15 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You'll feel comfortable using "
-"Calendar, like you've been using it for ages!"
+"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Ми намагаємось знайти досконалий баланс між зручністю у використання та "
 "продуманою функціональністю. Все потрібне й нічого зайвого. Вам буде зручно "
-"користуватись календарем, неначе ви ним користувались роками."
+"користуватись календарем, неначе ви ним користувались роками!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
-#: ../data/ui/window.ui.h:6
+#: ../data/ui/window.ui.h:7
 msgid "Search for events"
 msgstr "Пошук подій"
 
@@ -115,20 +114,19 @@ msgid "Toggles the sound of the alarm"
 msgstr "Перемикає звук нагадування"
 
 #: ../data/ui/alarm-row.ui.h:2
-#| msgid "Remove Calendar"
 msgid "Remove the alarm"
 msgstr "Вилучити нагадування"
 
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1114
+#: ../src/gcal-source-dialog.c:1116
 msgid "Cancel"
 msgstr "Скасувати"
 
 #: ../data/ui/edit-dialog.ui.h:2
-msgid "Click to select the event's agenda"
-msgstr "Натисніть, щоб вибрати порядок денний подій"
+msgid "Click to select the calendar"
+msgstr "Натисніть, щоб вибрати календар"
 
-#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:509
+#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:564
 msgid "Done"
 msgstr "Зроблено"
 
@@ -157,17 +155,14 @@ msgid "Time"
 msgstr "Час"
 
 #: ../data/ui/edit-dialog.ui.h:10
-#| msgid "All day"
 msgid "All Day"
 msgstr "Увесь день"
 
 #: ../data/ui/edit-dialog.ui.h:11
-#| msgid "Add Event…"
 msgid "Add reminder…"
 msgstr "Додати нагадування…"
 
 #: ../data/ui/edit-dialog.ui.h:12
-#| msgid "Delete event"
 msgid "Delete Event"
 msgstr "Вилучити подію"
 
@@ -188,17 +183,14 @@ msgid "1 hour"
 msgstr "1 година"
 
 #: ../data/ui/edit-dialog.ui.h:17
-#| msgid "All day"
 msgid "1 day"
 msgstr "1 день"
 
 #: ../data/ui/edit-dialog.ui.h:18
-#| msgid "All day"
 msgid "2 days"
 msgstr "2 дні"
 
 #: ../data/ui/edit-dialog.ui.h:19
-#| msgid "All day"
 msgid "3 days"
 msgstr "3 дні"
 
@@ -273,10 +265,15 @@ msgstr "Переглянути"
 
 #: ../data/ui/help-overlay.ui.h:14
 msgctxt "shortcut window"
+msgid "Week view"
+msgstr "Перегляд тижня"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Перегляд місяця"
 
-#: ../data/ui/help-overlay.ui.h:15
+#: ../data/ui/help-overlay.ui.h:16
 msgctxt "shortcut window"
 msgid "Year view"
 msgstr "Перегляд року"
@@ -290,7 +287,6 @@ msgid "_Search…"
 msgstr "По_шук…"
 
 #: ../data/ui/menus.ui.h:3
-#| msgid "Calendars"
 msgid "_Calendars…"
 msgstr "_Календарі…"
 
@@ -338,8 +334,8 @@ msgstr "Не знайдено жодного результату"
 msgid "Try a different search"
 msgstr "Спробуйте пошукати по-інакшому"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1120
-#: ../src/gcal-window.c:1124
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1152
+#: ../src/gcal-window.c:1156
 msgid "Undo"
 msgstr "Повернути"
 
@@ -421,8 +417,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Адреса календаря"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2197
-#: ../src/gcal-source-dialog.c:2203
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2202
+#: ../src/gcal-source-dialog.c:2208
 msgid "Add Calendar"
 msgstr "Додати календар"
 
@@ -438,7 +434,8 @@ msgstr "Пароль"
 msgid "Connect"
 msgstr "З'єднатись"
 
-#: ../data/ui/time-selector.ui.h:1
+#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:772
+#: ../src/views/gcal-week-view.c:304
 msgid "00:00"
 msgstr "00:00"
 
@@ -446,33 +443,37 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:445
 msgid "AM"
 msgstr "AM"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:445
 msgid "PM"
 msgstr "PM"
 
 #: ../data/ui/window.ui.h:1
+msgid "Week"
+msgstr "Тиждень"
+
+#: ../data/ui/window.ui.h:2
 msgid "Month"
 msgstr "Місяць"
 
-#: ../data/ui/window.ui.h:2
+#: ../data/ui/window.ui.h:3
 msgid "Year"
 msgstr "Рік"
 
-#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
+#: ../data/ui/window.ui.h:5 ../data/ui/year-view.ui.h:1
+#: ../src/views/gcal-year-view.c:275 ../src/views/gcal-year-view.c:495
 msgid "Today"
 msgstr "Сьогодні"
 
-#: ../data/ui/window.ui.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Manage your calendars"
 msgstr "Керування календарями"
 
-#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:814
-#: ../src/gcal-source-dialog.c:2226
+#: ../data/ui/window.ui.h:8 ../src/gcal-source-dialog.c:817
+#: ../src/gcal-source-dialog.c:2231
 msgid "Calendar Settings"
 msgstr "Параметри календаря"
 
@@ -480,9 +481,26 @@ msgstr "Параметри календаря"
 msgid "No events"
 msgstr "Немає подій"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1010
+#: ../data/ui/year-view.ui.h:3 ../src/views/gcal-month-view.c:1074
 msgid "Add Event…"
 msgstr "Додати подію…"
+
+#: ../src/views/gcal-month-view.c:1318
+msgid "Other events"
+msgstr "Інші події"
+
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/views/gcal-month-view.c:1780 ../src/views/gcal-week-header.c:365
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Інша %d подія"
+msgstr[1] "Інші %d події"
+msgstr[2] "Інші %d подій"
+
+#: ../src/views/gcal-week-grid.c:769 ../src/views/gcal-week-view.c:301
+msgid "00 AM"
+msgstr "00 AM"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -496,31 +514,31 @@ msgstr "Відкрити календар на дату, що минула"
 msgid "Open calendar showing the passed event"
 msgstr "Відкрити календар з подіями, що минули"
 
-#: ../src/gcal-application.c:324
-msgid "- Calendar management"
+#: ../src/gcal-application.c:315
+msgid "— Calendar management"
 msgstr "— керування календарем"
 
-#: ../src/gcal-application.c:471
+#: ../src/gcal-application.c:462
 #, c-format
 msgid "Copyright © %d The Calendar authors"
 msgstr "© %d автора Календаря"
 
-#: ../src/gcal-application.c:477
+#: ../src/gcal-application.c:468
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "© %d–%d автори Календаря"
 
-#: ../src/gcal-application.c:490
+#: ../src/gcal-application.c:481
 msgid "translator-credits"
 msgstr ""
 "Daniel Korostil <ted.korostiled@gmail.com>, 2015-2016.\n"
 "Mykola Tkach <Stuartlittle1970@gmail.com>, 2014-2016."
 
-#: ../src/gcal-edit-dialog.c:509
+#: ../src/gcal-edit-dialog.c:564
 msgid "Save"
 msgstr "Зберегти"
 
-#: ../src/gcal-edit-dialog.c:777
+#: ../src/gcal-edit-dialog.c:831
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
@@ -528,7 +546,7 @@ msgstr[0] "За %d хвилину"
 msgstr[1] "За %d хвилини"
 msgstr[2] "За %d хвилин"
 
-#: ../src/gcal-edit-dialog.c:785
+#: ../src/gcal-edit-dialog.c:839
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
@@ -536,7 +554,7 @@ msgstr[0] "За %d годину"
 msgstr[1] "За %d години"
 msgstr[2] "За %d годин"
 
-#: ../src/gcal-edit-dialog.c:793
+#: ../src/gcal-edit-dialog.c:847
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
@@ -544,7 +562,7 @@ msgstr[0] "За %d день"
 msgstr[1] "За %d дні"
 msgstr[2] "За %d днів"
 
-#: ../src/gcal-edit-dialog.c:801
+#: ../src/gcal-edit-dialog.c:855
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
@@ -552,39 +570,35 @@ msgstr[0] "За %d тиждень"
 msgstr[1] "За %d тижні"
 msgstr[2] "За %d тижнів"
 
-#: ../src/gcal-edit-dialog.c:1051 ../src/gcal-quick-add-popover.c:424
+#: ../src/gcal-edit-dialog.c:1074 ../src/gcal-quick-add-popover.c:498
 msgid "Unnamed event"
 msgstr "Безіменна подія"
 
-#: ../src/gcal-month-view.c:1248
-msgid "Other events"
-msgstr "Інші події"
-
-#. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1710
-#, c-format
-msgid "Other event"
-msgid_plural "Other %d events"
-msgstr[0] "Інша %d подія"
-msgstr[1] "Інші %d події"
-msgstr[2] "Інші %d подій"
-
-#: ../src/gcal-quick-add-popover.c:115
+#: ../src/gcal-quick-add-popover.c:117
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (цей календар лише для читання)"
 
-#: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#.
+#: ../src/gcal-quick-add-popover.c:231 ../src/gcal-quick-add-popover.c:261
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%B %d"
 
-#: ../src/gcal-quick-add-popover.c:245
+#: ../src/gcal-quick-add-popover.c:263
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Створити подію від %s до %s"
 
-#: ../src/gcal-quick-add-popover.c:251
+#: ../src/gcal-quick-add-popover.c:280
+#, c-format
+msgid "New Event on %s, %s – %s"
+msgstr "Створити подію на %s, %s — %s"
+
+#: ../src/gcal-quick-add-popover.c:290
 #, c-format
 msgid "New Event on %s"
 msgstr "Створити подію на %s"
@@ -598,34 +612,34 @@ msgid "Use the entry above to search for events."
 msgstr "Скористайтесь полем зверху для пошуку подій."
 
 #. Dialog
-#: ../src/gcal-source-dialog.c:1111
+#: ../src/gcal-source-dialog.c:1113
 msgid "Select a calendar file"
 msgstr "Виберіть файл календаря"
 
-#: ../src/gcal-source-dialog.c:1115
+#: ../src/gcal-source-dialog.c:1117
 msgid "Open"
 msgstr "Відкрити"
 
-#: ../src/gcal-source-dialog.c:1122
+#: ../src/gcal-source-dialog.c:1124
 msgid "Calendar files"
 msgstr "Файл календаря"
 
 #. update the source properties
-#: ../src/gcal-source-dialog.c:1164
+#: ../src/gcal-source-dialog.c:1166
 msgid "Unnamed Calendar"
 msgstr "Неназваний календар"
 
 #. Update notification label
-#: ../src/gcal-source-dialog.c:1764
+#: ../src/gcal-source-dialog.c:1766
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Календар <b>%s</b> вилучено"
 
-#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
+#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
 msgid "Off"
 msgstr "Вимкнено"
 
-#: ../src/gcal-source-dialog.c:1967 ../src/gcal-source-dialog.c:2021
+#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
 msgid "On"
 msgstr "Увімкнено"
 
@@ -639,25 +653,22 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
-msgid "Midnight"
-msgstr "Північ"
-
-#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
-msgid "Noon"
-msgstr "Південь"
-
-#: ../src/gcal-week-view.c:499
-msgid "00:00 PM"
-msgstr "00:00 PM"
-
-#: ../src/gcal-window.c:1120
+#: ../src/gcal-window.c:1152
 msgid "Another event deleted"
 msgstr "Іншу подію вилучено"
 
-#: ../src/gcal-window.c:1124
+#: ../src/gcal-window.c:1156
 msgid "Event deleted"
 msgstr "Подію вилучено"
+
+#~ msgid "Midnight"
+#~ msgstr "Північ"
+
+#~ msgid "Noon"
+#~ msgstr "Південь"
+
+#~ msgid "00:00 PM"
+#~ msgstr "00:00 PM"
 
 #~ msgid "Starts"
 #~ msgstr "Початки"
