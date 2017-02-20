@@ -856,7 +856,7 @@ update_title (GcalWeekHeader *self)
 
   if (g_date_time_get_month (week_start) == g_date_time_get_month (week_end))
     {
-      month_label = g_strdup_printf ("%s ", gcal_get_month_name (g_date_time_get_month (week_start) - 1));
+      month_label = g_strdup_printf ("%s", gcal_get_month_name (g_date_time_get_month (week_start) - 1));
     }
   else
     {
@@ -867,15 +867,15 @@ update_title (GcalWeekHeader *self)
 
   if (g_date_time_get_year (week_start) == g_date_time_get_year (week_end))
     {
-      week_label = g_strdup_printf ("week %d", g_date_time_get_week_of_year (week_start));
+      week_label = g_strdup_printf (_("week %d"), g_date_time_get_week_of_year (week_start));
       year_label = g_strdup_printf ("%d", g_date_time_get_year (week_start));
     }
   else
     {
-      week_label = g_strdup_printf ("week %d/%d",
+      week_label = g_strdup_printf (_("week %d / %d"),
                                     g_date_time_get_week_of_year (week_start),
                                     g_date_time_get_week_of_year (week_end));
-      year_label = g_strdup_printf ("%d-%d",
+      year_label = g_strdup_printf ("%d - %d",
                                     g_date_time_get_year (week_start),
                                     g_date_time_get_year (week_end));
     }
