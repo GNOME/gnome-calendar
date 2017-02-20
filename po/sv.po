@@ -1,17 +1,17 @@
 # Swedish translation for gnome-calendar.
-# Copyright © 2014-2016 gnome-calendar's COPYRIGHT HOLDER
+# Copyright © 2014-2017 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Marcus Lundblad <ml@update.uu.se>, 2014.
 # Mattias Eriksson <snaggen@gmail.com>, 2015.
-# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2015, 2016.
+# Anders Jonsson <anders.jonsson@norsjovallen.se>, 2015, 2016, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-11-11 16:22+0000\n"
-"PO-Revision-Date: 2016-11-28 19:18+0100\n"
+"POT-Creation-Date: 2017-01-25 08:57+0000\n"
+"PO-Revision-Date: 2017-02-05 23:00+0100\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -24,7 +24,7 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:4
 #: ../src/gcal-application.c:481
 msgid "Calendar"
 msgstr "Kalender"
@@ -56,7 +56,7 @@ msgstr ""
 "använt den i åratal!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
-#: ../data/ui/window.ui.h:6
+#: ../data/ui/window.ui.h:7
 msgid "Search for events"
 msgstr "Sök efter händelser"
 
@@ -268,10 +268,15 @@ msgstr "Vy"
 
 #: ../data/ui/help-overlay.ui.h:14
 msgctxt "shortcut window"
+msgid "Week view"
+msgstr "Veckovy"
+
+#: ../data/ui/help-overlay.ui.h:15
+msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Månadsvy"
 
-#: ../data/ui/help-overlay.ui.h:15
+#: ../data/ui/help-overlay.ui.h:16
 msgctxt "shortcut window"
 msgid "Year view"
 msgstr "Årsvy"
@@ -332,8 +337,8 @@ msgstr "Inga resultat hittades"
 msgid "Try a different search"
 msgstr "Försök med en annan sökning"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1123
-#: ../src/gcal-window.c:1127
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1152
+#: ../src/gcal-window.c:1156
 msgid "Undo"
 msgstr "Ångra"
 
@@ -432,7 +437,8 @@ msgstr "Lösenord"
 msgid "Connect"
 msgstr "Anslut"
 
-#: ../data/ui/time-selector.ui.h:1
+#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:768
+#: ../src/views/gcal-week-view.c:304
 msgid "00:00"
 msgstr "00:00"
 
@@ -440,32 +446,36 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:443
 msgid "AM"
 msgstr "f.m."
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:443
 msgid "PM"
 msgstr "e.m."
 
 #: ../data/ui/window.ui.h:1
+msgid "Week"
+msgstr "Vecka"
+
+#: ../data/ui/window.ui.h:2
 msgid "Month"
 msgstr "Månad"
 
-#: ../data/ui/window.ui.h:2
+#: ../data/ui/window.ui.h:3
 msgid "Year"
 msgstr "År"
 
-#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:275 ../src/gcal-year-view.c:495
+#: ../data/ui/window.ui.h:5 ../data/ui/year-view.ui.h:1
+#: ../src/views/gcal-year-view.c:275 ../src/views/gcal-year-view.c:495
 msgid "Today"
 msgstr "Idag"
 
-#: ../data/ui/window.ui.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Manage your calendars"
 msgstr "Hantera dina kalendrar"
 
-#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:817
+#: ../data/ui/window.ui.h:8 ../src/gcal-source-dialog.c:817
 #: ../src/gcal-source-dialog.c:2231
 msgid "Calendar Settings"
 msgstr "Kalenderinställningar"
@@ -474,9 +484,25 @@ msgstr "Kalenderinställningar"
 msgid "No events"
 msgstr "Inga händelser"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1074
+#: ../data/ui/year-view.ui.h:3 ../src/views/gcal-month-view.c:1074
 msgid "Add Event…"
 msgstr "Lägg till händelse…"
+
+#: ../src/views/gcal-month-view.c:1318
+msgid "Other events"
+msgstr "Andra händelser"
+
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/views/gcal-month-view.c:1780 ../src/views/gcal-week-header.c:365
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Annan händelse"
+msgstr[1] "%d andra händelser"
+
+#: ../src/views/gcal-week-grid.c:765 ../src/views/gcal-week-view.c:301
+msgid "00 AM"
+msgstr "00 f.m."
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -515,69 +541,63 @@ msgstr ""
 msgid "Save"
 msgstr "Spara"
 
-#: ../src/gcal-edit-dialog.c:836
+#: ../src/gcal-edit-dialog.c:831
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minut i förväg"
 msgstr[1] "%d minuter i förväg"
 
-#: ../src/gcal-edit-dialog.c:844
+#: ../src/gcal-edit-dialog.c:839
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d timme i förväg"
 msgstr[1] "%d timmar i förväg"
 
-#: ../src/gcal-edit-dialog.c:852
+#: ../src/gcal-edit-dialog.c:847
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d dag i förväg"
 msgstr[1] "%d dagar i förväg"
 
-#: ../src/gcal-edit-dialog.c:860
+#: ../src/gcal-edit-dialog.c:855
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d vecka i förväg"
 msgstr[1] "%d veckor i förväg"
 
-#: ../src/gcal-edit-dialog.c:1079 ../src/gcal-quick-add-popover.c:468
+#: ../src/gcal-edit-dialog.c:1074 ../src/gcal-quick-add-popover.c:498
 msgid "Unnamed event"
 msgstr "Namnlös händelse"
 
-#: ../src/gcal-month-view.c:1318
-msgid "Other events"
-msgstr "Andra händelser"
-
-#. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1780
-#, c-format
-msgid "Other event"
-msgid_plural "Other %d events"
-msgstr[0] "Annan händelse"
-msgstr[1] "%d andra händelser"
-
-#: ../src/gcal-quick-add-popover.c:115
+#: ../src/gcal-quick-add-popover.c:117
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (denna kalender är skrivskyddad)"
 
-#: ../src/gcal-quick-add-popover.c:228 ../src/gcal-quick-add-popover.c:246
+#: ../src/gcal-quick-add-popover.c:231 ../src/gcal-quick-add-popover.c:261
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%d %B"
 
-#: ../src/gcal-quick-add-popover.c:248
+#: ../src/gcal-quick-add-popover.c:263
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Ny händelse från %s till %s"
 
-#: ../src/gcal-quick-add-popover.c:254
+# Första variabeln är "dag månad"
+#: ../src/gcal-quick-add-popover.c:280
+#, c-format
+msgid "New Event on %s, %s – %s"
+msgstr "Ny händelse %s, %s – %s"
+
+#: ../src/gcal-quick-add-popover.c:290
 #, c-format
 msgid "New Event on %s"
-msgstr "Ny händelse på %s"
+msgstr "Ny händelse %s"
 
 #: ../src/gcal-search-view.c:353
 msgid "All day"
@@ -629,25 +649,22 @@ msgstr "%s f.m."
 msgid "%s PM"
 msgstr "%s e.m."
 
-#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
-msgid "Midnight"
-msgstr "Midnatt"
-
-#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
-msgid "Noon"
-msgstr "Mitt på dagen"
-
-#: ../src/gcal-week-view.c:499
-msgid "00:00 PM"
-msgstr "00:00 e.m."
-
-#: ../src/gcal-window.c:1123
+#: ../src/gcal-window.c:1152
 msgid "Another event deleted"
 msgstr "En annan händelse raderad"
 
-#: ../src/gcal-window.c:1127
+#: ../src/gcal-window.c:1156
 msgid "Event deleted"
 msgstr "Händelse raderad"
+
+#~ msgid "Midnight"
+#~ msgstr "Midnatt"
+
+#~ msgid "Noon"
+#~ msgstr "Mitt på dagen"
+
+#~ msgid "00:00 PM"
+#~ msgstr "00:00 e.m."
 
 #~ msgid "Starts"
 #~ msgstr "Börjar"
@@ -714,9 +731,6 @@ msgstr "Händelse raderad"
 
 #~ msgid "Change the time"
 #~ msgstr "Ändra tiden"
-
-#~ msgid "Week"
-#~ msgstr "Vecka"
 
 #~ msgid "List"
 #~ msgstr "Lista"
