@@ -1974,6 +1974,7 @@ gcal_year_view_init (GcalYearView *self)
       gtk_widget_set_visible (month, TRUE);
       gcal_date_chooser_set_show_month_only (GCAL_DATE_CHOOSER (month), TRUE);
       gcal_date_chooser_set_show_day_names (GCAL_DATE_CHOOSER (month), FALSE);
+      gcal_date_chooser_set_show_other_months (GCAL_DATE_CHOOSER (month), FALSE);
 
       gtk_container_add (GTK_CONTAINER (self->flowbox), month);
     }

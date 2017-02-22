@@ -82,6 +82,11 @@ gboolean             gcal_date_chooser_get_show_selected_day     (GcalDateChoose
 void                 gcal_date_chooser_set_show_selected_day     (GcalDateChooser    *self,
                                                                   gboolean            setting);
 
+gboolean             gcal_date_chooser_get_show_other_months     (GcalDateChooser    *self);
+
+void                 gcal_date_chooser_set_show_other_months     (GcalDateChooser    *self,
+                                                                  gboolean            setting);
+
 G_END_DECLS
 
 #endif /* __GCAL_DATE_CHOOSER_H__ */
