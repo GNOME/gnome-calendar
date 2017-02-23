@@ -187,6 +187,15 @@ button_timeout (gpointer user_data)
   if (self->click_id == 0)
     return G_SOURCE_REMOVE;
 
+  if (!gtk_widget_get_mapped (self->down_button) && !gtk_widget_get_mapped (self->up_button))
+    {
+      if (self->click_id)
+        g_source_remove (self->click_id);
+      self->click_id = 0;
+      self->active = NULL;
+      return G_SOURCE_REMOVE;
+    }
+
   res = button_activate (self, self->active);
   if (!res)
     {
