@@ -8,9 +8,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-26 22:34+0100\n"
-"PO-Revision-Date: 2017-02-26 22:34+0100\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2017-02-26 21:35+0000\n"
+"PO-Revision-Date: 2017-02-26 22:45+0100\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: Galician <gnome-l10n-gl@gnome.org>\n"
 "Language: gl\n"
@@ -126,9 +127,8 @@ msgid "Cancel"
 msgstr "Cancelar"
 
 #: ../data/ui/edit-dialog.ui.h:2
-#, fuzzy
 msgid "Click to select the calendar"
-msgstr "Prema para seleccionar a axenda de eventos"
+msgstr "Prema para seleccionar o calendario"
 
 #: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:564
 msgid "Done"
@@ -268,10 +268,9 @@ msgid "View"
 msgstr "Vista"
 
 #: ../data/ui/help-overlay.ui.h:14
-#, fuzzy
 msgctxt "shortcut window"
 msgid "Week view"
-msgstr "Seguinte vista"
+msgstr "Vista de semana"
 
 #: ../data/ui/help-overlay.ui.h:15
 msgctxt "shortcut window"
@@ -504,7 +503,7 @@ msgstr[1] "Outros %d eventos"
 
 #: ../src/views/gcal-week-grid.c:769 ../src/views/gcal-week-view.c:301
 msgid "00 AM"
-msgstr ""
+msgstr "00 AM"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -519,9 +518,8 @@ msgid "Open calendar showing the passed event"
 msgstr "Abrir calendario mostrando o evento pasado"
 
 #: ../src/gcal-application.c:315
-#, fuzzy
 msgid "— Calendar management"
-msgstr "- Xestión de calendarios"
+msgstr "— Xestión de calendarios"
 
 #: ../src/gcal-application.c:462
 #, c-format
@@ -593,9 +591,9 @@ msgid "New Event from %s to %s"
 msgstr "Novo evento desde %s até %s"
 
 #: ../src/gcal-quick-add-popover.c:280
-#, fuzzy, c-format
+#, c-format
 msgid "New Event on %s, %s – %s"
-msgstr "Novo evento desde %s até %s"
+msgstr "Novo evento o %s, %s – %s"
 
 #: ../src/gcal-quick-add-popover.c:290
 #, c-format
