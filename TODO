@@ -1,28 +1,18 @@
 TODO
 
  - Rework internal GcalWindow working
- - Clean GcalWindow compilation, no warnings
 
- - Add scroll_to_unit in day-view and week-view. Meaning, scroll to the actual
-   hour.
  - Add disable/enable of views
- - Handle GObject bindings update to not work on hidden views
-   e.g.: when removing a child is he view is hidden not update
  - Rework GcalViews as grid only (WeekView, MonthView, YearView)
  - Rework GcalViews to implement the new API (remove every "New API" comment)
  - Reorder funcs inside GcalWindow
  - Fix nav-button css to matches pushed-down state (font-color goes white)
  - Review all-day checkbox and date/time fields interaction in GcalEditDialog
  - Check width of read-only layer in GcalEditDialog
- - Review/check the adding of a new source live.
- - Review size/resize of GcalEventView widget
- - Review GcalWeekView implementation to follow Benjamin's advice of not composite
-   with Gtk+ widgets other than GtkOverlay.
  - Rethink signals from GcalManager
  - Order events chronologically in views
  - Change ordering of events in all-day views (use a custom ordering)
  - Add different triggers for hiding the sources view.
- - Connect keyboard-shortcuts like Ctrl+Q
  - Check for the real need of adding timezone, and check everywhere
  - Connect all dconf options to the program
  - Clear/reorder #include in every header file.
@@ -38,13 +28,6 @@ Design stuff
      - When to show/hide new-event overlay
      - Random stuff I don't remember now
 
-Roadmap
-
- - Check MonthView is fully functional
- - Add new-event mark to week-view
- - Scroll week-view to the actual-hour
-
 Wish-list
 
  - Add resize-by-handlers capabilities to GcalEventWidget
- - Add drag-to-move capabilities to events on views
