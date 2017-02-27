@@ -6,10 +6,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-01-17 14:23+0000\n"
-"PO-Revision-Date: 2017-01-25 13:56+0500\n"
+"POT-Creation-Date: 2017-02-27 11:47+0000\n"
+"PO-Revision-Date: 2017-02-27 17:43+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
 #: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:4
-#: ../src/gcal-application.c:481
+#: ../src/gcal-application.c:474
 msgid "Calendar"
 msgstr "Күнтізбе"
 
@@ -334,8 +334,8 @@ msgstr "Нәтижелер табылмады"
 msgid "Try a different search"
 msgstr "Басқа сөздерді іздеп көріңіз"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1152
-#: ../src/gcal-window.c:1156
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1153
+#: ../src/gcal-window.c:1157
 msgid "Undo"
 msgstr "Болдырмау"
 
@@ -434,7 +434,7 @@ msgstr "Пароль"
 msgid "Connect"
 msgstr "Байланысу"
 
-#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:768
+#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:772
 #: ../src/views/gcal-week-view.c:304
 msgid "00:00"
 msgstr "00:00"
@@ -443,11 +443,11 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:443
+#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:445
 msgid "AM"
 msgstr "AM"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:443
+#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:445
 msgid "PM"
 msgstr "PM"
 
@@ -496,9 +496,20 @@ msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Басқа %d оқиға"
 
-#: ../src/views/gcal-week-grid.c:765 ../src/views/gcal-week-view.c:301
+#: ../src/views/gcal-week-grid.c:769 ../src/views/gcal-week-view.c:301
 msgid "00 AM"
 msgstr "00 AM"
+
+#: ../src/views/gcal-week-header.c:870
+#, c-format
+#| msgid "1 week"
+msgid "week %d"
+msgstr "апта %d"
+
+#: ../src/views/gcal-week-header.c:875
+#, c-format
+msgid "week %d / %d"
+msgstr "апта %d / %d"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -512,21 +523,21 @@ msgstr "Күнтізбені өткен күнде ашу"
 msgid "Open calendar showing the passed event"
 msgstr "Күнтізбені өткен оқиғада ашу"
 
-#: ../src/gcal-application.c:322
+#: ../src/gcal-application.c:315
 msgid "— Calendar management"
 msgstr "— Күнтізбені басқару"
 
-#: ../src/gcal-application.c:469
+#: ../src/gcal-application.c:462
 #, c-format
 msgid "Copyright © %d The Calendar authors"
 msgstr "Copyright © %d Calendar authors"
 
-#: ../src/gcal-application.c:475
+#: ../src/gcal-application.c:468
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Copyright © %d–%d Calendar authors"
 
-#: ../src/gcal-application.c:488
+#: ../src/gcal-application.c:481
 msgid "translator-credits"
 msgstr "Baurzhan Muftakhidinov <baurthefirst@gmail.com>"
 
@@ -567,6 +578,10 @@ msgstr "Атаусыз оқиға"
 msgid "%s (this calendar is read-only)"
 msgstr "%s (бұл күнтізбе тек оқу үшін)"
 
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#.
 #: ../src/gcal-quick-add-popover.c:231 ../src/gcal-quick-add-popover.c:261
 msgctxt "event date format"
 msgid "%B %d"
@@ -637,11 +652,11 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: ../src/gcal-window.c:1152
+#: ../src/gcal-window.c:1153
 msgid "Another event deleted"
 msgstr "Басқа оқиға өшірілді"
 
-#: ../src/gcal-window.c:1156
+#: ../src/gcal-window.c:1157
 msgid "Event deleted"
 msgstr "Оқиға өшірілді"
 
