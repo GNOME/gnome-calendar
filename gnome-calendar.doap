@@ -27,4 +27,11 @@
       <gnome:userid>gbsneto</gnome:userid>
     </foaf:Person>
   </maintainer>
+  <maintainer>
+    <foaf:Person>
+      <foaf:name>Isaque Galdino</foaf:name>
+      <foaf:mbox rdf:resource="mailto:igaldino@gmail.com" />
+      <gnome:userid>igaldino</gnome:userid>
+    </foaf:Person>
+  </maintainer>
 </Project>
