@@ -29,6 +29,16 @@ Major changes in 3.23.90:
     * Spanish (Daniel Mustieles)
     * Swedish (Anders Jonsson)
 
+Major changes in 3.22.2:
+* Online calendars are now downloaded offline and synchronized
+* Correctly draw the month view on mouse scroll
+* A memory leaks was fixed (Victor Toso)
+* Updated translations for:
+    * Chinese (Cheng Lu)
+    * Chinese (Taiwan) (Cheng-Chia Tseng)
+    * Italian (Milo Casagrande)
+    * Norwegian bokmål (Kjartan Maraas)
+
 Major changes in 3.22.1:
 * Ablility to change months/years through mouse and touchpad scroll
 * A huge number of bugfixes
@@ -150,6 +160,70 @@ Major changes in 3.21.2:
 * Various GDateTime reference fixes
 * Add Drag n' Drop capabilities to Month and Year View
 
+Major changes in 3.20.4:
+* Improvements on 12h systems
+* Updates translations for:
+    * Scottish Gaelic (GunChleoc)
+
+Major changes in 3.20.3:
+* Fix crashes
+* Fix AM/PM selector not showing
+* Updated translations for:
+    * Icelandic (Sveinn í Felli)
+    * Indonesian (Andika Triwidada)
+    * Lingala (René Manassé GALEKWA)
+    * Thai (Akom Chotiphantawanon)
+
+Major changes in 3.20.2:
+* Updates translations for:
+    * Latvian (Rūdolfs Mazurs)
+    * Norwegian bokmål (Kjartan Maraas)
+    * Portuguese (Tiago Santos)
+* Revert some changes because of instabilities
+* Use the theme's CSS instead of our custom one
+* Fix the first week day detection (Isaque Galdino)
+
+Major changes in 3.20.1:
+* Updated translations for:
+    * Basque (Inaki Larranaga Murgoitio)
+    * Chinese (China) (Shi Jing)
+    * Chinese (Taiwan) (Cheng-Chia Tseng)
+    * Friulan (Fabio Tomat)
+    * Italian (Milo Casagrande)
+    * Persian (Arash Mousavi)
+    * Slovak (Dušan Kazik)
+    * Slovenian (Matej Urbančič)
+    * Turkish (Muhammet Kara)
+    * Ukrainian (Daniel Korostil)
+* Fix untranslated strings
+* Make Year view spam multiple columns (Isaque Galdino)
+* Fix issue on the Calendars dialog
+* Fix crash on non GNOME Shell environments
+
+Major changes in 3.20.0:
+* Updated translations for:
+    * Brazilian Portuguese (Antonio Fernandes C. Neto)
+    * Czech (Marek Černocký)
+    * Danish (scootergrisen, Ask Hjorth Larsen)
+    * Finnish (Jiri Grönroos)
+    * Friulan (Fabio Tomat)
+    * French (Guillaume Bernard)
+    * Galician (Fran Dieguez)
+    * German (Mario Blättermann)
+    * Hungarian (Balázs Meskó)
+    * Italian (Milo Casagrande)
+    * Japanese (Jiro Matsuzawa)
+    * Kazakh (Baurzhan Muftakhidinov)
+    * Korean (Seong-ho Cho)
+    * Lithuanian (Aurimas Černius)
+    * Polish (Piotr Drąg)
+    * Russian (Stas Solovey)
+    * Serbian (Марко Костић)
+    * Serbian Latin (Милош Поповић)
+    * Slovak (Dušan Kazik)
+    * Spanish (Daniel Mustieles)
+    * Swedish (Anders Jonsson)
+
 Major changes in 3.19.92:
 * Updated translations for:
     * Brazilian Portuguese (Enrico Nicoletto)
@@ -245,6 +319,21 @@ Major changes in 3.19.3:
 * Updated translations
 * Added symbolic app icon
 * Fixed minors UI bugs
+
+Major changes in 3.18.3:
+* Fix crasher in search
+* Provide a symbolic icon
+* Updated translations for:
+  * Latvian
+  * Occitan
+  * Scottish Gaelic
+  * Slovenian
+
+Major changes in 3.18.2:
+* Bug fixes
+
+Major changes in 3.18.1:
+* Updated translations
 
 Major changes in 3.18.0:
 * Updated translations for:
