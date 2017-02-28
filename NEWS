@@ -1,3 +1,7 @@
+Major changes in 3.23.91.1:
+* Fix compiler flags
+* Add the co-maintainer to the DOAP file
+
 Major changes in 3.23.91:
 * Minor bugfixes
 * Updated translations for:

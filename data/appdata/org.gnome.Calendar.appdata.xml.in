@@ -42,6 +42,16 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2017-02-28" version="3.23.91.1">
+      <description>
+        <p>
+          In this release, a couple of minor bugs were fixed. GNOME Calendar is
+          gaining stability fixes until the next stable release now.
+        </p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2017-02-27" version="3.23.91">
       <description>
         <p>

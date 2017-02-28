@@ -1,6 +1,6 @@
 dnl -*- mode: m4 -*-
 AC_PREREQ([2.69])
-AC_INIT([gnome-calendar],[3.23.91],[http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar],[gnome-calendar],[https://wiki.gnome.org/Apps/Calendar])
+AC_INIT([gnome-calendar],[3.23.91.1],[http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar],[gnome-calendar],[https://wiki.gnome.org/Apps/Calendar])
 
 AX_IS_RELEASE([minor-version])
 
@@ -72,8 +72,6 @@ dnl ================================================================
 dnl Misc
 dnl ================================================================
 AC_PATH_PROG([GLIB_MKENUMS], [glib-mkenums])
-
-AX_COMPILER_FLAGS
 
 GLIB_MIN_VERSION=2.43.4
 GTK_MIN_VERSION=3.21.6
