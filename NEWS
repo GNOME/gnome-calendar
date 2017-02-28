@@ -1,3 +1,19 @@
+Major changes in 3.23.91:
+* Minor bugfixes
+* Updated translations for:
+    * Brazilian Portuguese (Rafael Fontenelle)
+    * Chinese (Taiwan) (Chao-Hsiung Liao)
+    * Danish (Ask Hjorth Larsen)
+    * Friulian (Fabio Tomat)
+    * Galician (Fran Dieguez)
+    * Hungarian (Balázs Meskó)
+    * Indonesian (Kukuh Syafaat)
+    * Italian (Milo Casagrande)
+    * Kazakh (Baurzhan Muftakhidinov)
+    * Serbian (Мирослав Николић)
+    * Swedish (Anders Jonsson)
+    * Ukrainian (Daniel Korostil)
+
 Major changes in 3.23.90:
 * Week view (pandunonu2, Georges Basile Stavracas Neto)
 * Improvements on the search popover
