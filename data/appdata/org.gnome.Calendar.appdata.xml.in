@@ -42,6 +42,25 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2017-02-28" version="3.22.3">
+      <description>
+        <p>
+          This is the fourth stable release for GNOME Calendar 3.22, and focuses on
+          bugfixes and stability issues.
+          <ul>
+            <li>Only decrease search counter when something is removed</li>
+            <li>Focus entry after calendar selection in quick popover</li>
+            <li>Declare 'view' as type guint32</li>
+            <li>Fix warning on closing overflow popover</li>
+            <li>Reset edit dialog's event</li>
+            <li>Fix endless timeout issue</li>
+          </ul>
+        </p>
+        <p>This release also updates Icelandic and Kazakh translations.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2016-12-19" version="3.22.2">
       <description>
         <p>

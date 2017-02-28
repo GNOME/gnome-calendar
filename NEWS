@@ -1,3 +1,14 @@
+Major changes in 3.22.3:
+* Only decrease search counter when something is removed (Georges Basile Stavracas Neto)
+* Focus entry after calendar selection in quick popover (Mohammed Sadiq)
+* Declare 'view' as type guint32 (Yash Singh)
+* Fix warning on closing overflow popover (Georges Basile Stavracas Neto)
+* Reset edit dialog's event (Georges Basile Stavracas Neto)
+* Fix endless timeout issue (Isaque Galdino)
+* Updated translations for:
+    * Icelandic (Sveinn í Felli)
+    * Kazakh (Baurzhan Muftakhidinov)
+
 Major changes in 3.22.2:
 * Online calendars are now downloaded offline and synchronized
 * Correctly draw the month view on mouse scroll
