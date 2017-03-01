@@ -562,6 +562,31 @@ is_goa_source (GcalSourceDialog *dialog,
 }
 
 static void
+source_color_changed (GObject    *source,
+                      GParamSpec *pspec,
+                      GtkImage *icon)
+{
+  ESourceSelectable *extension;
+  GdkPixbuf *pixbuf;
+  GdkRGBA out_color;
+
+  extension = E_SOURCE_SELECTABLE (source);
+
+  if (!gdk_rgba_parse (&out_color, e_source_selectable_get_color (extension)))
+    {
+      g_warning ("Error parsing color");
+      return;
+    }
+
+  if (gdk_rgba_parse (&out_color, e_source_selectable_get_color (extension)))
+    {
+      pixbuf = get_circle_pixbuf_from_color (&out_color, 24);
+      gtk_image_set_from_pixbuf (GTK_IMAGE (icon), pixbuf);
+      g_object_unref (pixbuf);
+    }
+}
+
+static void
 invalidate_calendar_listbox_sort (GObject    *source,
                                   GParamSpec *pspec,
                                   gpointer    user_data)
@@ -592,6 +617,7 @@ make_row_from_source (GcalSourceDialog *dialog,
   GdkRGBA color;
   gchar *parent_name;
 
+  ESourceSelectable *extension;
   get_source_parent_name_color (dialog->manager, source, &parent_name, NULL);
   builder = gtk_builder_new_from_resource ("/org/gnome/calendar/calendar-row.ui");
 
@@ -614,6 +640,9 @@ make_row_from_source (GcalSourceDialog *dialog,
   g_object_bind_property (source, "display-name", top_label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_signal_connect (source, "notify::display-name", G_CALLBACK (invalidate_calendar_listbox_sort),
                     dialog->calendars_listbox);
+
+  extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
+  g_signal_connect (extension, "notify::color", G_CALLBACK (source_color_changed), icon);
 
   /* parent source name label */
   bottom_label = GTK_WIDGET (gtk_builder_get_object (builder, "subtitle"));
