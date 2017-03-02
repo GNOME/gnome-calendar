@@ -663,6 +663,9 @@ gcal_week_view_set_first_weekday (GcalWeekView *self,
   g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
 
   self->first_weekday = day_nr;
+
+  gcal_week_header_set_first_weekday (GCAL_WEEK_HEADER (self->header), self->first_weekday);
+  gcal_week_grid_set_first_weekday (GCAL_WEEK_GRID (self->week_grid), self->first_weekday);
 }
 
 /**
