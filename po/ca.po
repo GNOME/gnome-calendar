@@ -544,7 +544,7 @@ msgstr "Copyright © %d–%d els autors del Calendari"
 
 #: ../src/gcal-application.c:481
 msgid "translator-credits"
-msgstr "Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2016"
+msgstr "Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2017"
 
 #: ../src/gcal-edit-dialog.c:564
 msgid "Save"
