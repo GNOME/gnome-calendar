@@ -8,25 +8,26 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-01-17 14:23+0000\n"
-"PO-Revision-Date: 2017-02-25 19:36+0200\n"
-"Last-Translator: Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
+"POT-Creation-Date: 2017-03-04 19:06+0000\n"
+"PO-Revision-Date: 2017-03-05 10:53+0100\n"
+"Last-Translator: Марко М. Костић <marko.m.kostic@gmail.com>\n"
 "Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : "
-"n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : n"
+"%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Project-Style: gnome\n"
+"X-Generator: Poedit 1.8.12\n"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
 #: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:4
-#: ../src/gcal-application.c:481
+#: ../src/gcal-application.c:474
 msgid "Calendar"
 msgstr "Календар"
 
@@ -45,10 +46,6 @@ msgstr ""
 "Гномова радна површ, Календар се одлично уклапа у Гномов екосистем."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
-#| msgid ""
-#| "We aim to find the perfect balance between nicely crafted features and "
-#| "user-centred usability. No excess, no lacks. You'll feel comfortable "
-#| "using Calendar, like you've been using it for ages!"
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, no lacks. You’ll feel comfortable using "
@@ -130,7 +127,6 @@ msgid "Cancel"
 msgstr "Откажи"
 
 #: ../data/ui/edit-dialog.ui.h:2
-#| msgid "Click to select the event's agenda"
 msgid "Click to select the calendar"
 msgstr "Кликните да изаберете календар"
 
@@ -272,8 +268,6 @@ msgid "View"
 msgstr "Преглед"
 
 #: ../data/ui/help-overlay.ui.h:14
-#| msgctxt "shortcut window"
-#| msgid "Next view"
 msgctxt "shortcut window"
 msgid "Week view"
 msgstr "Недељни преглед"
@@ -344,8 +338,8 @@ msgstr "Нема резултата"
 msgid "Try a different search"
 msgstr "Покушајте другачију претрагу"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1152
-#: ../src/gcal-window.c:1156
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1153
+#: ../src/gcal-window.c:1157
 msgid "Undo"
 msgstr "Опозови"
 
@@ -444,7 +438,7 @@ msgstr "Лозинка"
 msgid "Connect"
 msgstr "Повежи се"
 
-#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:768
+#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:772
 #: ../src/views/gcal-week-view.c:304
 msgid "00:00"
 msgstr "00:00"
@@ -453,11 +447,11 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:443
+#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:445
 msgid "AM"
 msgstr "ПрП"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:443
+#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:445
 msgid "PM"
 msgstr "ПоП"
 
@@ -509,9 +503,19 @@ msgstr[1] "Друга %d догађаја"
 msgstr[2] "Других %d догађаја"
 msgstr[3] "Други догађај"
 
-#: ../src/views/gcal-week-grid.c:765 ../src/views/gcal-week-view.c:301
+#: ../src/views/gcal-week-grid.c:769 ../src/views/gcal-week-view.c:301
 msgid "00 AM"
 msgstr "00 ПрП"
+
+#: ../src/views/gcal-week-header.c:870
+#, c-format
+msgid "week %d"
+msgstr "недеља %d"
+
+#: ../src/views/gcal-week-header.c:875
+#, c-format
+msgid "week %d / %d"
+msgstr "недеља %d од %d"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -525,22 +529,21 @@ msgstr "Отвара календар за прошли датум"
 msgid "Open calendar showing the passed event"
 msgstr "Отвара календар који приказује прошли догађај"
 
-#: ../src/gcal-application.c:322
-#| msgid "- Calendar management"
+#: ../src/gcal-application.c:315
 msgid "— Calendar management"
 msgstr "— Управљање календаром"
 
-#: ../src/gcal-application.c:469
+#: ../src/gcal-application.c:462
 #, c-format
 msgid "Copyright © %d The Calendar authors"
 msgstr "Ауторска права © %d аутори Календара"
 
-#: ../src/gcal-application.c:475
+#: ../src/gcal-application.c:468
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Ауторска права © %d–%d аутори Календара"
 
-#: ../src/gcal-application.c:488
+#: ../src/gcal-application.c:481
 msgid "translator-credits"
 msgstr ""
 "Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
@@ -598,6 +601,10 @@ msgstr "Неименовани догађај"
 msgid "%s (this calendar is read-only)"
 msgstr "%s (овај календар је само за читање)"
 
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#.
 #: ../src/gcal-quick-add-popover.c:231 ../src/gcal-quick-add-popover.c:261
 msgctxt "event date format"
 msgid "%B %d"
@@ -610,7 +617,6 @@ msgstr "Нови догађај од %s до %s"
 
 #: ../src/gcal-quick-add-popover.c:280
 #, c-format
-#| msgid "New Event from %s to %s"
 msgid "New Event on %s, %s – %s"
 msgstr "Нови догађај %s, %s – %s"
 
@@ -619,11 +625,11 @@ msgstr "Нови догађај %s, %s – %s"
 msgid "New Event on %s"
 msgstr "Нови догађај „%s“"
 
-#: ../src/gcal-search-view.c:353
+#: ../src/gcal-search-view.c:356
 msgid "All day"
 msgstr "Читав дан"
 
-#: ../src/gcal-search-view.c:502
+#: ../src/gcal-search-view.c:554
 msgid "Use the entry above to search for events."
 msgstr "Користите унос изнад да потражите догађаје."
 
@@ -669,11 +675,11 @@ msgstr "%s ПрП"
 msgid "%s PM"
 msgstr "%s ПоП"
 
-#: ../src/gcal-window.c:1152
+#: ../src/gcal-window.c:1153
 msgid "Another event deleted"
 msgstr "Други догађај је обрисан"
 
-#: ../src/gcal-window.c:1156
+#: ../src/gcal-window.c:1157
 msgid "Event deleted"
 msgstr "Догађај је обрисан"
 
