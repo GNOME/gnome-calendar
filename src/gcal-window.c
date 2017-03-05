@@ -382,8 +382,8 @@ update_active_date (GcalWindow   *window,
 
       gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->year_view), range_start, range_end);
 
-      g_clear_pointer (&date_start, g_date_time_unref);
-      g_clear_pointer (&date_end, g_date_time_unref);
+      gcal_clear_datetime (&date_start);
+      gcal_clear_datetime (&date_end);
     }
 
   /* month_view */
@@ -397,8 +397,8 @@ update_active_date (GcalWindow   *window,
 
       gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->month_view), range_start, range_end);
 
-      g_clear_pointer (&date_start, g_date_time_unref);
-      g_clear_pointer (&date_end, g_date_time_unref);
+      gcal_clear_datetime (&date_start);
+      gcal_clear_datetime (&date_end);
     }
 
   /* week_view */
@@ -423,8 +423,8 @@ update_active_date (GcalWindow   *window,
 
       gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->week_view), range_start, range_end);
 
-      g_clear_pointer (&date_start, g_date_time_unref);
-      g_clear_pointer (&date_end, g_date_time_unref);
+      gcal_clear_datetime (&date_start);
+      gcal_clear_datetime (&date_end);
     }
 
   update_today_button_sensitive (window);
