@@ -416,9 +416,9 @@ update_active_date (GcalWindow   *window,
     {
       gint offset;
 
+      date_start = g_date_time_new_local (new_date->year, new_date->month, new_date->day, 0, 0, 0);
       offset = g_date_time_get_day_of_week (date_start) % 7 + get_first_weekday ();
 
-      date_start = g_date_time_new_local (new_date->year, new_date->month, new_date->day, 0, 0, 0);
       date_start = g_date_time_add_days (date_start, offset);
       range_start = g_date_time_to_unix (date_start);
 
