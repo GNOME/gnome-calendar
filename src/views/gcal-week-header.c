@@ -1572,11 +1572,13 @@ gcal_week_header_add_event (GcalWeekHeader *self,
   g_autoptr (GDateTime) week_start = NULL;
   g_autoptr (GDateTime) week_end = NULL;
   gboolean all_day;
+  gint first_weekday;
   gint start, end;
 
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
   all_day = gcal_event_get_all_day (event);
+  first_weekday = get_first_weekday ();
   week_start = get_start_of_week (self->active_date);
   week_end = get_end_of_week (self->active_date);
 
@@ -1594,13 +1596,13 @@ gcal_week_header_add_event (GcalWeekHeader *self,
 
   /* Start position */
   if (datetime_compare_date (start_date, week_start) >= 0)
-    start = (g_date_time_get_day_of_week (start_date) - get_first_weekday ()) % 7;
+    start = g_date_time_get_day_of_week (start_date) % 7 + first_weekday;
   else
     start = 0;
 
   /* End position */
   if (g_date_time_compare (end_date, week_end) <= 0)
-    end = (g_date_time_get_day_of_week (end_date) - get_first_weekday ()  - all_day) % 7;
+    end = (g_date_time_get_day_of_week (end_date) - all_day) % 7 + first_weekday;
   else
     end = 6;
 
