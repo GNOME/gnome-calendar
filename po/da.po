@@ -5,14 +5,14 @@
 # Kenneth Nielsen <k.nielsen81@gmail.com>, 2015.
 # Ask Hjorth Larsen <asklarsen@gmail.com>, 2015, 2016.
 # scootergrisen, 2016.
-# Alan Mortensen <alanmortensen.am@gmail.com>, 2016
+# Alan Mortensen <alanmortensen.am@gmail.com>, 2016, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: "
-"http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-01-17 14:23+0000\n"
-"PO-Revision-Date: 2016-09-14 20:43+0200\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2017-02-28 15:24+0000\n"
+"PO-Revision-Date: 2017-03-04 11:47+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -27,7 +27,7 @@ msgstr ""
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
 #: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:4
-#: ../src/gcal-application.c:481
+#: ../src/gcal-application.c:474
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -42,14 +42,13 @@ msgid ""
 "desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "GNOME Kalender er et simpelt og smukt kalenderprogram designet til at passe "
-"nøjagtigt til GNOME-skrivebordet. Ved at genbruge komponenterne, som "
-"GNOME-skrivebordet er bygget med, er Kalender pænt integreret i "
-"GNOME-økosystemet."
+"nøjagtigt til GNOME-skrivebordet. Ved at genbruge komponenterne, som GNOME-"
+"skrivebordet er bygget med, er Kalender pænt integreret i GNOME-økosystemet."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
 msgid ""
-"We aim to find the perfect balance between nicely crafted features and "
-"user-centred usability. No excess, no lacks. You’ll feel comfortable using "
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Vi forsøger at finde den perfekte balance mellem fint udarbejdede funktioner "
@@ -103,8 +102,7 @@ msgstr "Typen af den aktive visning"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:8
 msgid "Type of the active window view, default value is: monthly view"
-msgstr ""
-"Typen for den aktive vinduesvisning, standardværdien er: månedsvisning"
+msgstr "Typen for den aktive vinduesvisning, standardværdien er: månedsvisning"
 
 #: ../data/org.gnome.calendar.gschema.xml.in.h:9
 msgid "List of the disabled sources"
@@ -128,10 +126,8 @@ msgid "Cancel"
 msgstr "Annullér"
 
 #: ../data/ui/edit-dialog.ui.h:2
-#, fuzzy
-#| msgid "Click to select the event's agenda"
 msgid "Click to select the calendar"
-msgstr "Klik for at vælge begivenhedens dagsorden"
+msgstr "Klik for at vælge kalenderen"
 
 #: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:564
 msgid "Done"
@@ -271,12 +267,9 @@ msgid "View"
 msgstr "Vis"
 
 #: ../data/ui/help-overlay.ui.h:14
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Next view"
 msgctxt "shortcut window"
 msgid "Week view"
-msgstr "Næste visning"
+msgstr "Ugevisning"
 
 #: ../data/ui/help-overlay.ui.h:15
 msgctxt "shortcut window"
@@ -344,8 +337,8 @@ msgstr "Ingen resultater fundet"
 msgid "Try a different search"
 msgstr "Prøv en anden søgning"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1152
-#: ../src/gcal-window.c:1156
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1153
+#: ../src/gcal-window.c:1157
 msgid "Undo"
 msgstr "Fortryd"
 
@@ -416,12 +409,12 @@ msgstr "Redigér kalender"
 #: ../data/ui/source-dialog.ui.h:20
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of your online accounts, you can add it through the <a "
-"href=\"GOA\">online account settings</a>."
+"belongs to one of your online accounts, you can add it through the <a href="
+"\"GOA\">online account settings</a>."
 msgstr ""
 "Indtast adressen for den kalender som du vil tilføje. Hvis kalenderen "
-"tilhører en af dine onlinekonti, kan du tilføje den gennem <a "
-"href=\"GOA\">indstillinger for onlinekonti</a>."
+"tilhører en af dine onlinekonti, kan du tilføje den gennem <a href=\"GOA"
+"\">indstillinger for onlinekonti</a>."
 
 #: ../data/ui/source-dialog.ui.h:21
 msgid "Calendar Address"
@@ -444,7 +437,7 @@ msgstr "Adgangskode"
 msgid "Connect"
 msgstr "Tilslut"
 
-#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:768
+#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:772
 #: ../src/views/gcal-week-view.c:304
 msgid "00:00"
 msgstr "00:00"
@@ -453,11 +446,11 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:443
+#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:445
 msgid "AM"
 msgstr "AM"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:443
+#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:445
 msgid "PM"
 msgstr "PM"
 
@@ -507,9 +500,19 @@ msgid_plural "Other %d events"
 msgstr[0] "Anden begivenhed"
 msgstr[1] "%d andre begivenheder"
 
-#: ../src/views/gcal-week-grid.c:765 ../src/views/gcal-week-view.c:301
+#: ../src/views/gcal-week-grid.c:769 ../src/views/gcal-week-view.c:301
 msgid "00 AM"
-msgstr ""
+msgstr "00 AM"
+
+#: ../src/views/gcal-week-header.c:870
+#, c-format
+msgid "week %d"
+msgstr "uge %d"
+
+#: ../src/views/gcal-week-header.c:875
+#, c-format
+msgid "week %d / %d"
+msgstr "uge %d / %d"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -523,29 +526,28 @@ msgstr "Åbn kalender for foregående dato"
 msgid "Open calendar showing the passed event"
 msgstr "Åbn kalender som viser den foregående begivenhed"
 
-#: ../src/gcal-application.c:322
-#, fuzzy
-#| msgid "- Calendar management"
+#: ../src/gcal-application.c:315
 msgid "— Calendar management"
-msgstr "- Kalenderhåndtering"
+msgstr "— Kalenderhåndtering"
 
-#: ../src/gcal-application.c:469
+#: ../src/gcal-application.c:462
 #, c-format
 msgid "Copyright © %d The Calendar authors"
 msgstr "Ophavsret © %d Kalenderens forfattere"
 
-#: ../src/gcal-application.c:475
+#: ../src/gcal-application.c:468
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Ophavsret © %d–%d Kalenderens forfattere"
 
-#: ../src/gcal-application.c:488
+#: ../src/gcal-application.c:481
 msgid "translator-credits"
 msgstr ""
 "Kris Thomsen\n"
 "Kenneth Nielsen\n"
 "Ask Hjorth Larsen\n"
 "scootergrisen\n"
+"Alan Mortensen\n"
 "\n"
 "Dansk-gruppen <dansk@dansk-gruppen.dk>\n"
 "Mere info: http://www.dansk-gruppen.dk"
@@ -591,26 +593,34 @@ msgstr "Unavngivet begivenhed"
 msgid "%s (this calendar is read-only)"
 msgstr "%s (denne kalender er skrivebeskyttet)"
 
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#.
 #: ../src/gcal-quick-add-popover.c:231 ../src/gcal-quick-add-popover.c:261
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%d. %B"
 
+# %s: dag og måned
 #: ../src/gcal-quick-add-popover.c:263
 #, c-format
 msgid "New Event from %s to %s"
-msgstr "Ny begivenhed fra %s til %s"
+msgstr "Ny begivenhed fra den %s til den %s"
 
+# %s(1): dag og måned
+# %s(2): starttidspunkt
+# %2(3): sluttidspunkt
 #: ../src/gcal-quick-add-popover.c:280
-#, c-format, fuzzy
-#| msgid "New Event from %s to %s"
+#, c-format
 msgid "New Event on %s, %s – %s"
-msgstr "Ny begivenhed fra %s til %s"
+msgstr "Ny begivenhed den %s, %s – %s"
 
+# %s: dag og måned
 #: ../src/gcal-quick-add-popover.c:290
 #, c-format
 msgid "New Event on %s"
-msgstr "Ny begivenhed d. %s"
+msgstr "Ny begivenhed den %s"
 
 #: ../src/gcal-search-view.c:353
 msgid "All day"
@@ -664,11 +674,11 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: ../src/gcal-window.c:1152
+#: ../src/gcal-window.c:1153
 msgid "Another event deleted"
 msgstr "Anden begivenhed slettet"
 
-#: ../src/gcal-window.c:1156
+#: ../src/gcal-window.c:1157
 msgid "Event deleted"
 msgstr "Begivenhed slettet"
 
@@ -696,11 +706,11 @@ msgstr "Begivenhed slettet"
 #~ msgid "%m/%d/%y"
 #~ msgstr "%d/%m/%y"
 
-#~ # Det er nok en fejl at de ikke bruger strftime.  Regionsindstillingerne bør forhindre at der kommer 12-timers-klokkeslæt ud til brugeren
+# Det er nok en fejl at de ikke bruger strftime.  Regionsindstillingerne bør forhindre at der kommer 12-timers-klokkeslæt ud til brugeren
 #~ msgid "%.2d:%.2d AM"
 #~ msgstr "%.2d:%.2d AM"
 
-#~ # Det er nok en fejl at de ikke bruger strftime
+# Det er nok en fejl at de ikke bruger strftime
 #~ msgid "%.2d:%.2d PM"
 #~ msgstr "%.2d:%.2d PM"
 
@@ -748,4 +758,3 @@ msgstr "Begivenhed slettet"
 
 #~ msgid "Year %d"
 #~ msgstr "År %d"
-
