@@ -300,12 +300,10 @@ sync_datetimes (GcalEditDialog *self,
 {
   GDateTime *start, *end, *new_date;
   GtkWidget *date_widget, *time_widget;
-  gboolean is_start_time, is_start_date;
+  gboolean is_start;
   gint hour_to_add;
 
-  is_start_time = (widget == self->start_time_selector);
-  is_start_date = (widget == self->start_date_selector);
-
+  is_start = (widget == self->start_time_selector || widget == self->start_date_selector);
   start = gcal_edit_dialog_get_date_start (self);
   end = gcal_edit_dialog_get_date_end (self);
 
@@ -319,36 +317,9 @@ sync_datetimes (GcalEditDialog *self,
    */
   hour_to_add = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check)) ? 0 : 1;
 
-  if (is_start_date)
+  if (is_start)
     {
-      if (hour_to_add)
-        {
-          if (g_date_time_difference(end, start) < 0)
-            {
-              new_date = g_date_time_add_hours (start, hour_to_add + 24);
-
-              date_widget = self->end_date_selector;
-              time_widget = self->end_time_selector;
-            }
-          else
-            {
-              new_date = g_date_time_add_hours (start, hour_to_add);
-
-              date_widget = self->end_date_selector;
-              time_widget = self->end_time_selector;
-            }
-        }
-      else
-        {
-          new_date = g_date_time_add_hours (start, hour_to_add);
-
-          date_widget = self->end_date_selector;
-          time_widget = self->end_time_selector;
-        }
-    }
-  else if (is_start_time)
-    {
-      new_date = g_date_time_add_hours (start, hour_to_add + 24);
+      new_date = g_date_time_add_hours (start, hour_to_add);
 
       date_widget = self->end_date_selector;
       time_widget = self->end_time_selector;
