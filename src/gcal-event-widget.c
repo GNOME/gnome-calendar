@@ -473,6 +473,7 @@ gcal_event_widget_draw (GtkWidget *widget,
   PangoLayout *layout;
   PangoFontDescription *font_desc;
   gchar *display_text;
+  gchar *escaped_text;
 
   self = GCAL_EVENT_WIDGET (widget);
   context = gtk_widget_get_style_context (widget);
@@ -488,12 +489,18 @@ gcal_event_widget_draw (GtkWidget *widget,
   gtk_render_frame (context, cr, 0, 0, width, height);
 
   /*
+   * Since we set markup labels, we have to escape text before
+   * using it, or we get empty event widgets.
+   */
+  escaped_text = g_markup_escape_text (gcal_event_get_summary (self->event), -1);
+
+  /*
    * The text displayed in the widget includes the time when the event
    * is timed, or not if the event is all day.
    */
   if (gcal_event_get_all_day (self->event))
     {
-      display_text = g_strdup (gcal_event_get_summary (self->event));
+      display_text = escaped_text;
     }
   else
     {
@@ -514,16 +521,17 @@ gcal_event_widget_draw (GtkWidget *widget,
       if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
         {
           if (is_ltr)
-            display_text = g_strdup_printf ("(%s) %s", start_time, gcal_event_get_summary (self->event));
+            display_text = g_strdup_printf ("(%s) %s", start_time, escaped_text);
           else
-            display_text = g_strdup_printf ("%s (%s)", gcal_event_get_summary (self->event), start_time);
+            display_text = g_strdup_printf ("%s (%s)", escaped_text, start_time);
         }
       else
         {
-          display_text = g_strdup_printf ("<b>%s</b>\n%s", start_time, gcal_event_get_summary (self->event));
+          display_text = g_strdup_printf ("<b>%s</b>\n%s", start_time, escaped_text);
         }
 
       g_clear_pointer (&local_start_time, g_date_time_unref);
+      g_clear_pointer (&escaped_text, g_free);
       g_clear_pointer (&start_time, g_free);
     }
 
