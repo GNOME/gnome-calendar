@@ -6,10 +6,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-01-17 14:23+0000\n"
-"PO-Revision-Date: 2017-01-18 19:59+0100\n"
+"POT-Creation-Date: 2017-02-28 15:24+0000\n"
+"PO-Revision-Date: 2017-03-08 20:47+0100\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
 #: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:4
-#: ../src/gcal-application.c:481
+#: ../src/gcal-application.c:474
 msgid "Calendar"
 msgstr "Kalendár"
 
@@ -338,8 +338,8 @@ msgstr "Nenašli sa žiadne výsledky"
 msgid "Try a different search"
 msgstr "Skúste vyhľadať niečo iné"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1152
-#: ../src/gcal-window.c:1156
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1153
+#: ../src/gcal-window.c:1157
 msgid "Undo"
 msgstr "Vrátiť späť"
 
@@ -439,7 +439,7 @@ msgstr "Heslo"
 msgid "Connect"
 msgstr "Pripojiť"
 
-#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:768
+#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:772
 #: ../src/views/gcal-week-view.c:304
 msgid "00:00"
 msgstr "00:00"
@@ -448,11 +448,11 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:443
+#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:445
 msgid "AM"
 msgstr "Dopoludnia"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:443
+#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:445
 msgid "PM"
 msgstr "Popoludní"
 
@@ -503,9 +503,19 @@ msgstr[0] "%d iných udalostíIná udalosť"
 msgstr[1] "Iná udalosť"
 msgstr[2] "%d iné udalosti"
 
-#: ../src/views/gcal-week-grid.c:765 ../src/views/gcal-week-view.c:301
+#: ../src/views/gcal-week-grid.c:769 ../src/views/gcal-week-view.c:301
 msgid "00 AM"
 msgstr "00 dopoludnia"
+
+#: ../src/views/gcal-week-header.c:870
+#, c-format
+msgid "week %d"
+msgstr "týždeň č. %d"
+
+#: ../src/views/gcal-week-header.c:875
+#, c-format
+msgid "week %d / %d"
+msgstr "týždeň č. %d / %d"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -519,21 +529,21 @@ msgstr "Otvorí kalendár na určenom dátume"
 msgid "Open calendar showing the passed event"
 msgstr "Otvorí kalendár zobrazujúc určenú udalosť"
 
-#: ../src/gcal-application.c:322
+#: ../src/gcal-application.c:315
 msgid "— Calendar management"
 msgstr "- Správa kalendára"
 
-#: ../src/gcal-application.c:469
+#: ../src/gcal-application.c:462
 #, c-format
 msgid "Copyright © %d The Calendar authors"
 msgstr "Autorské práva © %d Autori aplikácie Kalendár"
 
-#: ../src/gcal-application.c:475
+#: ../src/gcal-application.c:468
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Autorské práva © %d–%d Autori aplikácie Kalendár"
 
-#: ../src/gcal-application.c:488
+#: ../src/gcal-application.c:481
 msgid "translator-credits"
 msgstr "Dušan Kazik <prescott66@gmail.com>"
 
@@ -582,6 +592,10 @@ msgstr "Nepomenovaná udalosť"
 msgid "%s (this calendar is read-only)"
 msgstr "%s (tento kalendár je iba na čítanie)"
 
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#.
 #: ../src/gcal-quick-add-popover.c:231 ../src/gcal-quick-add-popover.c:261
 msgctxt "event date format"
 msgid "%B %d"
@@ -652,11 +666,11 @@ msgstr "%s dopoludnia"
 msgid "%s PM"
 msgstr "%s popoludní"
 
-#: ../src/gcal-window.c:1152
+#: ../src/gcal-window.c:1153
 msgid "Another event deleted"
 msgstr "Iná udalosť bola odstránená"
 
-#: ../src/gcal-window.c:1156
+#: ../src/gcal-window.c:1157
 msgid "Event deleted"
 msgstr "Udalosť bola odstránená"
 
