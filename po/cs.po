@@ -8,10 +8,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-02-10 17:54+0000\n"
-"PO-Revision-Date: 2017-02-11 15:42+0100\n"
+"POT-Creation-Date: 2017-02-28 15:24+0000\n"
+"PO-Revision-Date: 2017-03-08 17:11+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -338,8 +338,8 @@ msgstr "Nebylo nic nalezeno"
 msgid "Try a different search"
 msgstr "Zkuste hledat nějak jinak"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1152
-#: ../src/gcal-window.c:1156
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1153
+#: ../src/gcal-window.c:1157
 msgid "Undo"
 msgstr "Zpět"
 
@@ -506,6 +506,16 @@ msgstr[2] "Další %d událostí"
 msgid "00 AM"
 msgstr "0"
 
+#: ../src/views/gcal-week-header.c:870
+#, c-format
+msgid "week %d"
+msgstr "%d. týden"
+
+#: ../src/views/gcal-week-header.c:875
+#, c-format
+msgid "week %d / %d"
+msgstr "%d. týden z %d"
+
 #: ../src/gcal-application.c:102
 msgid "Display version number"
 msgstr "Zobrazit číslo verze"
@@ -657,10 +667,11 @@ msgstr "%s odp."
 msgid "%s PM"
 msgstr "%s dop."
 
-#: ../src/gcal-window.c:1152
+#: ../src/gcal-window.c:1153
 msgid "Another event deleted"
 msgstr "Smazána ještě jedna událost"
 
-#: ../src/gcal-window.c:1156
+#: ../src/gcal-window.c:1157
 msgid "Event deleted"
 msgstr "Událost smazána"
+
