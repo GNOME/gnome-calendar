@@ -6,10 +6,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-01-17 14:23+0000\n"
-"PO-Revision-Date: 2017-02-19 18:59+0100\n"
+"POT-Creation-Date: 2017-02-28 15:24+0000\n"
+"PO-Revision-Date: 2017-03-09 23:23+0100\n"
 "Last-Translator: Milo Casagrande <milo@milo.name>\n"
 "Language-Team: Italian <tp@lists.linux.it>\n"
 "Language: it\n"
@@ -23,7 +23,7 @@ msgstr ""
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
 #: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:4
-#: ../src/gcal-application.c:481
+#: ../src/gcal-application.c:474
 msgid "Calendar"
 msgstr "Calendario"
 
@@ -336,8 +336,8 @@ msgstr "Nessun risultato trovato"
 msgid "Try a different search"
 msgstr "Provare con un'altra ricerca"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1152
-#: ../src/gcal-window.c:1156
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1153
+#: ../src/gcal-window.c:1157
 msgid "Undo"
 msgstr "Annulla"
 
@@ -436,7 +436,7 @@ msgstr "Password"
 msgid "Connect"
 msgstr "Connetti"
 
-#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:768
+#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:772
 #: ../src/views/gcal-week-view.c:304
 msgid "00:00"
 msgstr "00:00"
@@ -445,11 +445,11 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:443
+#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:445
 msgid "AM"
 msgstr "am"
 
-#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:443
+#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:445
 msgid "PM"
 msgstr "pm"
 
@@ -499,9 +499,19 @@ msgid_plural "Other %d events"
 msgstr[0] "Altro evento"
 msgstr[1] "Altri %d eventi"
 
-#: ../src/views/gcal-week-grid.c:765 ../src/views/gcal-week-view.c:301
+#: ../src/views/gcal-week-grid.c:769 ../src/views/gcal-week-view.c:301
 msgid "00 AM"
 msgstr "00 am"
+
+#: ../src/views/gcal-week-header.c:870
+#, c-format
+msgid "week %d"
+msgstr "settimana %d"
+
+#: ../src/views/gcal-week-header.c:875
+#, c-format
+msgid "week %d / %d"
+msgstr "settimana %d / %d"
 
 #: ../src/gcal-application.c:102
 msgid "Display version number"
@@ -515,21 +525,21 @@ msgstr "Apre il calendario alla data fornita"
 msgid "Open calendar showing the passed event"
 msgstr "Apre il calendario mostrando l'evento fornito"
 
-#: ../src/gcal-application.c:322
+#: ../src/gcal-application.c:315
 msgid "— Calendar management"
 msgstr "— Gestione calendario"
 
-#: ../src/gcal-application.c:469
+#: ../src/gcal-application.c:462
 #, c-format
 msgid "Copyright © %d The Calendar authors"
 msgstr "Copyright © %d gli autori di Calendario"
 
-#: ../src/gcal-application.c:475
+#: ../src/gcal-application.c:468
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Copyright © %d–%d gli autori di Calendario"
 
-#: ../src/gcal-application.c:488
+#: ../src/gcal-application.c:481
 msgid "translator-credits"
 msgstr "Milo Casagrande <milo@milo.name>"
 
@@ -574,6 +584,10 @@ msgstr "Evento senza nome"
 msgid "%s (this calendar is read-only)"
 msgstr "%s (calendario in sola lettura)"
 
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#.
 #: ../src/gcal-quick-add-popover.c:231 ../src/gcal-quick-add-popover.c:261
 msgctxt "event date format"
 msgid "%B %d"
@@ -644,11 +658,11 @@ msgstr "%s am"
 msgid "%s PM"
 msgstr "%s pm"
 
-#: ../src/gcal-window.c:1152
+#: ../src/gcal-window.c:1153
 msgid "Another event deleted"
 msgstr "Un altro evento eliminato"
 
-#: ../src/gcal-window.c:1156
+#: ../src/gcal-window.c:1157
 msgid "Event deleted"
 msgstr "Evento eliminato"
 
