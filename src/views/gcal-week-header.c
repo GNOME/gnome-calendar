@@ -984,6 +984,14 @@ on_expand_action_activated (GcalWeekHeader *self,
     header_expand (self);
 }
 
+static gboolean
+on_redraw_timeout_cb (gpointer data)
+{
+  gtk_widget_queue_draw (data);
+
+  return G_SOURCE_CONTINUE;
+}
+
 /* Drawing area content and size */
 static gdouble
 get_weekday_names_height (GtkWidget *widget)
@@ -1339,7 +1347,7 @@ gcal_week_header_draw (GtkWidget      *widget,
   if (self->redraw_timeout_id == 0)
     {
       self->redraw_timeout_id = g_timeout_add_seconds (5,
-                                                       (GSourceFunc) gtk_widget_queue_draw,
+                                                       (GSourceFunc) on_redraw_timeout_cb,
                                                        self);
     }
 
