@@ -2058,6 +2058,7 @@ add_goa_account (GcalSourceDialog *dialog,
   gtk_label_set_label (GTK_LABEL (provider_label), goa_account_get_provider_name (account));
   gtk_label_set_label (GTK_LABEL (account_label), goa_account_get_identity (account));
   gtk_label_set_label (GTK_LABEL (enabled_label),
+                       goa_account_get_attention_needed (account) ? _("Expired") :
                        goa_account_get_calendar_disabled (account) ? _("Off") : _("On"));
   gtk_image_set_from_icon_name (GTK_IMAGE (icon), icon_name, GTK_ICON_SIZE_DIALOG);
   gtk_image_set_pixel_size (GTK_IMAGE (icon), 32);
