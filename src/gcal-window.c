@@ -414,15 +414,10 @@ update_active_date (GcalWindow   *window,
       !g_date_valid (&old_week) ||
       g_date_get_iso8601_week_of_year (&old_week) != g_date_get_iso8601_week_of_year (&new_week))
     {
-      gint offset;
-
-      date_start = g_date_time_new_local (new_date->year, new_date->month, new_date->day, 0, 0, 0);
-      offset = g_date_time_get_day_of_week (date_start) % 7 + get_first_weekday ();
-
-      date_start = g_date_time_add_days (date_start, offset);
+      date_start = get_start_of_week (new_date);
       range_start = g_date_time_to_unix (date_start);
 
-      date_end = g_date_time_add_days (date_start, 7);
+      date_end = get_end_of_week (new_date);
       range_end = g_date_time_to_unix (date_end);
 
       gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->week_view), range_start, range_end);
