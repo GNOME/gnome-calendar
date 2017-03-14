@@ -687,7 +687,6 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           guint64 events_at_range;
           gint natural_height;
           gint widget_index;
-          gint min_width;
           gint offset;
           gint height;
           gint width;
@@ -703,7 +702,6 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           widget_index = get_event_index (overlaps, data->start, data->end);
 
           /* Gtk complains about that */
-          gtk_widget_get_preferred_width (event_widget, &min_width, NULL);
           gtk_widget_get_preferred_height (event_widget, NULL, &natural_height);
 
           /* Consider the margins of the child */
@@ -723,7 +721,7 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           /* Setup the child position and size */
           child_allocation.x = x;
           child_allocation.y = (data->start % MINUTES_PER_DAY) * minutes_height + margin.top;
-          child_allocation.width = MAX (width, min_width);
+          child_allocation.width = width;
           child_allocation.height = height;
 
           gtk_widget_size_allocate (event_widget, &child_allocation);
