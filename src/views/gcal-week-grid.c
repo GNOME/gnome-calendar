@@ -440,6 +440,14 @@ get_today_column (GcalWeekGrid *self)
 }
 
 static gboolean
+on_redraw_timeout_cb (gpointer data)
+{
+  gtk_widget_queue_draw (data);
+
+  return G_SOURCE_CONTINUE;
+}
+
+static gboolean
 gcal_week_grid_draw (GtkWidget *widget,
                      cairo_t   *cr)
 {
@@ -605,7 +613,7 @@ gcal_week_grid_draw (GtkWidget *widget,
   if (self->redraw_timeout_id == 0)
     {
       self->redraw_timeout_id = g_timeout_add_seconds (5,
-                                                       (GSourceFunc) gtk_widget_queue_draw,
+                                                       on_redraw_timeout_cb,
                                                        self);
     }
 
