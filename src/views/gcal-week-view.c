@@ -145,8 +145,11 @@ update_grid_scroll_position (GcalWeekView *self)
   gdouble max, page, page_increment, value;
 
   /* While the scrolled window is not mapped, we keep waiting */
-  if (!gtk_widget_get_mapped (self->scrolled_window))
-    return G_SOURCE_CONTINUE;
+  if (!gtk_widget_get_realized (self->scrolled_window) ||
+      !gtk_widget_get_mapped (self->scrolled_window))
+    {
+      return G_SOURCE_CONTINUE;
+    }
 
   now = g_date_time_new_now_local ();
   week_start = get_start_of_week (self->date);
