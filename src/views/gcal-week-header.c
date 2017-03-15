@@ -845,7 +845,7 @@ update_unchanged_events (GcalWeekHeader *self,
 static void
 update_title (GcalWeekHeader *self)
 {
-  GDateTime *week_start, *week_end;
+  GDateTime *week_start, *week_end, *week_mid;
   gchar *year_label, *month_label, *week_label;
 
   if(!self->active_date)
@@ -853,6 +853,7 @@ update_title (GcalWeekHeader *self)
 
   week_start = get_start_of_week (self->active_date);
   week_end = g_date_time_add_days (week_start, 6);
+  week_mid = g_date_time_add_days (week_start, 3);
 
   if (g_date_time_get_month (week_start) == g_date_time_get_month (week_end))
     {
@@ -867,18 +868,16 @@ update_title (GcalWeekHeader *self)
 
   if (g_date_time_get_year (week_start) == g_date_time_get_year (week_end))
     {
-      week_label = g_strdup_printf (_("week %d"), g_date_time_get_week_of_year (week_start));
       year_label = g_strdup_printf ("%d", g_date_time_get_year (week_start));
     }
   else
     {
-      week_label = g_strdup_printf (_("week %d / %d"),
-                                    g_date_time_get_week_of_year (week_start),
-                                    g_date_time_get_week_of_year (week_end));
       year_label = g_strdup_printf ("%d - %d",
                                     g_date_time_get_year (week_start),
                                     g_date_time_get_year (week_end));
     }
+
+  week_label = g_strdup_printf (_("week %d"), g_date_time_get_week_of_year (week_mid));
 
   gtk_label_set_label (GTK_LABEL (self->month_label), month_label);
   gtk_label_set_label (GTK_LABEL (self->week_label), week_label);
@@ -886,6 +885,7 @@ update_title (GcalWeekHeader *self)
 
   g_clear_pointer (&week_start, g_date_time_unref);
   g_clear_pointer (&week_end, g_date_time_unref);
+  g_clear_pointer (&week_mid, g_date_time_unref);
   g_clear_pointer (&month_label, g_free);
   g_clear_pointer (&week_label, g_free);
   g_clear_pointer (&year_label, g_free);
