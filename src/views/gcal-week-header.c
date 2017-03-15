@@ -1619,8 +1619,32 @@ gcal_week_header_add_event (GcalWeekHeader *self,
   /* Retrieve the real start and end dates */
   if (all_day)
     {
+      GDateTime *utc_week_start, *utc_week_end, *aux;
+
+      utc_week_start = g_date_time_new_utc (g_date_time_get_year (week_start),
+                                            g_date_time_get_month (week_start),
+                                            g_date_time_get_day_of_month (week_start),
+                                            0, 0, 0);
+      utc_week_end = g_date_time_new_utc (g_date_time_get_year (week_end),
+                                          g_date_time_get_month (week_end),
+                                          g_date_time_get_day_of_month (week_end),
+                                          0, 0, 0);
+
       start_date = g_date_time_ref (gcal_event_get_date_start (event));
       end_date = g_date_time_ref (gcal_event_get_date_end (event));
+
+      /*
+       * Switch the week start and end by the UTC variants, in
+       * order to correctly compare all-day events.
+       */
+      aux = week_start;
+      week_start = utc_week_start;
+      gcal_clear_datetime (&aux);
+
+      aux = week_end;
+      week_end = utc_week_end;
+      gcal_clear_datetime (&aux);
+
     }
   else
     {
