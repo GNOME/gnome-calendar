@@ -138,20 +138,26 @@ get_event_range (GcalWeekGrid *self,
 {
   GDateTime *week_start;
   GTimeSpan diff;
+  gboolean week_start_dst;
 
   if (!self->active_date)
     return;
 
   week_start = get_start_of_week (self->active_date);
+  week_start_dst = g_date_time_is_daylight_savings (week_start);
 
   if (start)
     {
       GDateTime *event_start;
+      gboolean event_start_dst;
 
       event_start = g_date_time_to_local (gcal_event_get_date_start (event));
+      event_start_dst = g_date_time_is_daylight_savings (event_start);
 
       diff = g_date_time_difference (event_start, week_start);
+
       *start = CLAMP (diff / G_TIME_SPAN_MINUTE, 0, MAX_MINUTES);
+      *start += 60 * (event_start_dst - week_start_dst);
 
       g_clear_pointer (&event_start, g_date_time_unref);
     }
@@ -160,11 +166,15 @@ get_event_range (GcalWeekGrid *self,
     {
 
       GDateTime *event_end;
+      gboolean event_end_dst;
 
       event_end = g_date_time_to_local (gcal_event_get_date_end (event));
+      event_end_dst = g_date_time_is_daylight_savings (event_end);
 
       diff = g_date_time_difference (event_end, week_start);
+
       *end = CLAMP (diff / G_TIME_SPAN_MINUTE, 0, MAX_MINUTES);
+      *end += 60 * (event_end_dst - week_start_dst);
 
       /*
        * XXX: it may happen that the event has the same start and end
