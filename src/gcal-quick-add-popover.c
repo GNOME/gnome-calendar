@@ -205,7 +205,8 @@ select_row (GcalQuickAddPopover *self,
   gtk_stack_set_visible_child_name (GTK_STACK (self->stack), "events");
 
   /* Focus back the event Entry */
-  gtk_entry_grab_focus_without_selecting (GTK_ENTRY (self->summary_entry));
+  if (gtk_widget_get_visible (GTK_WIDGET (self)))
+    gtk_entry_grab_focus_without_selecting (GTK_ENTRY (self->summary_entry));
 
   g_clear_object (&circle_pixbuf);
 }
