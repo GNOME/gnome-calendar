@@ -1197,12 +1197,24 @@ search_changed (GtkEditable *editable,
                 gpointer     user_data)
 {
   GcalWindow *window = GCAL_WINDOW (user_data);
+  gint search_length;
 
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (window->search_bar)))
     {
-      /* perform the search */
-      gcal_search_view_search (GCAL_SEARCH_VIEW (window->search_view),
-                               "summary", gtk_entry_get_text (GTK_ENTRY (window->search_entry)));
+      /* perform the search or hide when the field is empty */
+
+      search_length = gtk_entry_get_text_length (GTK_ENTRY (window->search_entry));
+
+      if (search_length)
+        {
+          gtk_popover_popup (GTK_POPOVER (window->search_view));
+          gcal_search_view_search (GCAL_SEARCH_VIEW (window->search_view),
+                                   "summary", gtk_entry_get_text (GTK_ENTRY (window->search_entry)));
+        }
+      else
+        {
+          gtk_popover_popdown (GTK_POPOVER (window->search_view));
+        }
     }
 }
 
