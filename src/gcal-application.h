@@ -26,18 +26,21 @@
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_APPLICATION               (gcal_application_get_type ())
+#define GCAL_TYPE_APPLICATION                                    (gcal_application_get_type ())
 
 G_DECLARE_FINAL_TYPE (GcalApplication, gcal_application, GCAL, APPLICATION, GtkApplication)
 
-GcalApplication*  gcal_application_new          (void);
-GcalManager*      gcal_application_get_manager  (GcalApplication *app);
-GSettings*        gcal_application_get_settings (GcalApplication *app);
-void              gcal_application_set_uuid     (GcalApplication *application,
-                                                 const gchar     *app_uuid);
+GcalApplication*     gcal_application_new                        (void);
 
-void              gcal_application_set_initial_date (GcalApplication *application,
-                                                     GDateTime       *initial_date);
+GcalManager*         gcal_application_get_manager                (GcalApplication    *self);
+
+GSettings*           gcal_application_get_settings               (GcalApplication    *self);
+
+void                 gcal_application_set_uuid                   (GcalApplication    *self,
+                                                                  const gchar        *app_uuid);
+
+void                 gcal_application_set_initial_date           (GcalApplication    *self,
+                                                                  GDateTime          *initial_date);
 
 G_END_DECLS
 
