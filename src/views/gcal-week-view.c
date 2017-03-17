@@ -39,12 +39,6 @@ static const double dashed [] =
   6.0
 };
 
-enum
-{
-  PROP_0,
-  PROP_DATE
-};
-
 struct _GcalWeekView
 {
   GtkBox          parent;
@@ -75,49 +69,21 @@ struct _GcalWeekView
   gint            clicked_cell;
 };
 
-static void           gcal_week_view_component_added            (ECalDataModelSubscriber *subscriber,
-                                                                 ECalClient              *client,
-                                                                 ECalComponent           *comp);
-
-static void           gcal_week_view_component_modified         (ECalDataModelSubscriber *subscriber,
-                                                                 ECalClient              *client,
-                                                                 ECalComponent           *comp);
-
-static void           gcal_week_view_component_removed          (ECalDataModelSubscriber *subscriber,
-                                                                 ECalClient              *client,
-                                                                 const gchar             *uid,
-                                                                 const gchar             *rid);
-
-static void           gcal_week_view_freeze                     (ECalDataModelSubscriber *subscriber);
-
-static void           gcal_week_view_thaw                       (ECalDataModelSubscriber *subscriber);
-
-static gboolean       gcal_week_view_draw_hours                 (GcalWeekView *self,
-                                                                 cairo_t      *cr,
-                                                                 GtkWidget    *widget);
-
 static void           gcal_view_interface_init                  (GcalViewInterface *iface);
 
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
-
-static void           gcal_week_view_finalize                   (GObject        *object);
-
-static void           gcal_week_view_set_property               (GObject        *object,
-                                                                 guint           property_id,
-                                                                 const GValue   *value,
-                                                                 GParamSpec     *pspec);
-
-static void           gcal_week_view_get_property               (GObject        *object,
-                                                                 guint           property_id,
-                                                                 GValue         *value,
-                                                                 GParamSpec     *pspec);
-
-static icaltimetype*  gcal_week_view_get_final_date             (GcalView       *view);
 
 enum
 {
   EVENT_ACTIVATED,
   LAST_SIGNAL
+};
+
+enum
+{
+  PROP_0,
+  PROP_DATE,
+  NUM_PROPS
 };
 
 static guint signals[LAST_SIGNAL] = { 0, };
@@ -506,47 +472,6 @@ gcal_week_view_draw_hours (GcalWeekView *self,
 }
 
 static void
-gcal_week_view_class_init (GcalWeekViewClass *klass)
-{
-  GObjectClass *object_class = G_OBJECT_CLASS (klass);
-  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
-
-  object_class->finalize = gcal_week_view_finalize;
-  object_class->set_property = gcal_week_view_set_property;
-  object_class->get_property = gcal_week_view_get_property;
-
-  g_object_class_override_property (object_class, PROP_DATE, "active-date");
-
-  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
-                                           GCAL_TYPE_WEEK_VIEW,
-                                           G_SIGNAL_RUN_FIRST,
-                                           0,  NULL, NULL, NULL,
-                                           G_TYPE_NONE,
-                                           1,
-                                           GCAL_TYPE_EVENT_WIDGET);
-
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
-
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, header);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, hours_bar);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, scrolled_window);
-  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_grid);
-
-  gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_draw_hours);
-  gtk_widget_class_bind_template_callback (widget_class, on_event_activated);
-
-  gtk_widget_class_set_css_name (widget_class, "calendar-view");
-}
-
-static void
-gcal_week_view_init (GcalWeekView *self)
-{
-  gtk_widget_init_template (GTK_WIDGET (self));
-
-  update_hours_sidebar_size (self);
-}
-
-static void
 gcal_view_interface_init (GcalViewInterface *iface)
 {
   iface->get_initial_date = gcal_week_view_get_initial_date;
@@ -625,6 +550,47 @@ gcal_week_view_get_property (GObject       *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
     }
+}
+
+static void
+gcal_week_view_class_init (GcalWeekViewClass *klass)
+{
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+
+  object_class->finalize = gcal_week_view_finalize;
+  object_class->set_property = gcal_week_view_set_property;
+  object_class->get_property = gcal_week_view_get_property;
+
+  g_object_class_override_property (object_class, PROP_DATE, "active-date");
+
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
+                                           GCAL_TYPE_WEEK_VIEW,
+                                           G_SIGNAL_RUN_FIRST,
+                                           0,  NULL, NULL, NULL,
+                                           G_TYPE_NONE,
+                                           1,
+                                           GCAL_TYPE_EVENT_WIDGET);
+
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
+
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, header);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, hours_bar);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, scrolled_window);
+  gtk_widget_class_bind_template_child (widget_class, GcalWeekView, week_grid);
+
+  gtk_widget_class_bind_template_callback (widget_class, gcal_week_view_draw_hours);
+  gtk_widget_class_bind_template_callback (widget_class, on_event_activated);
+
+  gtk_widget_class_set_css_name (widget_class, "calendar-view");
+}
+
+static void
+gcal_week_view_init (GcalWeekView *self)
+{
+  gtk_widget_init_template (GTK_WIDGET (self));
+
+  update_hours_sidebar_size (self);
 }
 
 /* Public API */

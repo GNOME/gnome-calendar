@@ -78,28 +78,6 @@ struct _GcalWeekHeader
   GtkSizeGroup     *sizegroup;
 };
 
-static void           header_collapse                       (GcalWeekHeader *self);
-
-static void           header_expand                         (GcalWeekHeader *self);
-
-static void           on_expand_action_activated            (GcalWeekHeader *self,
-                                                             gpointer        user_data);
-
-static void           gcal_week_header_finalize             (GObject *object);
-
-static void           gcal_week_header_get_property         (GObject    *object,
-                                                             guint       prop_id,
-                                                             GValue     *value,
-                                                             GParamSpec *psec);
-
-static void           gcal_week_header_set_property         (GObject      *object,
-                                                             guint         prop_id,
-                                                             const GValue *value,
-                                                             GParamSpec   *pspec);
-
-static void           gcal_week_header_size_allocate        (GtkWidget     *widget,
-                                                             GtkAllocation *alloc);
-
 typedef enum
 {
   UP,
