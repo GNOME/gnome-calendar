@@ -40,9 +40,6 @@ void                 gcal_week_grid_set_first_weekday            (GcalWeekGrid  
 void                 gcal_week_grid_set_use_24h_format           (GcalWeekGrid       *week_grid,
                                                                   gboolean            use_24h_format);
 
-void                 gcal_week_grid_set_current_date             (GcalWeekGrid       *week_grid,
-                                                                  icaltimetype       *current_date);
-
 void                 gcal_week_grid_add_event                    (GcalWeekGrid       *self,
                                                                   GcalEvent          *event);
 

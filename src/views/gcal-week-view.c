@@ -62,7 +62,6 @@ struct _GcalWeekView
 
   /* property */
   icaltimetype   *date;
-  icaltimetype   *current_date;
   GcalManager    *manager; /* weak referenced */
 
   guint           scroll_grid_timeout_id;
@@ -654,17 +653,4 @@ gcal_week_view_set_use_24h_format (GcalWeekView *self,
   g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
 
   self->use_24h_format = use_24h;
-}
-
-void
-gcal_week_view_set_current_date (GcalWeekView *self,
-                                 icaltimetype *current_date)
-{
-  g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
-
-  g_clear_pointer (&self->current_date, g_free);
-  self->current_date = current_date;
-
-  gcal_week_header_set_current_date (GCAL_WEEK_HEADER (self->header), current_date);
-  gcal_week_grid_set_current_date (GCAL_WEEK_GRID (self->week_grid), current_date);
 }

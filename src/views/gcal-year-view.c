@@ -105,9 +105,6 @@ struct _GcalYearView
   /* text direction factors */
   gint          k;
 
-  /* weak ref to current date */
-  icaltimetype *current_date;
-
   /* date property */
   icaltimetype *date;
 };
@@ -218,7 +215,17 @@ update_selected_dates_from_button_data (GcalYearView *year_view)
     }
   else
     {
-      *(year_view->start_selected_date) = year_view->date ? *(year_view->date) : *(year_view->current_date);
+      g_autofree icaltimetype *current_date;
+      g_autoptr (GDateTime) now;
+
+      now = g_date_time_new_now_local ();
+      current_date = datetime_to_icaltime (now);
+
+      if (year_view->date)
+        *(year_view->start_selected_date) = *year_view->date;
+      else
+        *(year_view->start_selected_date) = *current_date;
+
       year_view->start_selected_date->hour = 0;
       year_view->start_selected_date->minute = 0;
       year_view->start_selected_date->second = 0;
@@ -245,13 +252,17 @@ update_selected_dates_from_button_data (GcalYearView *year_view)
 static void
 update_no_events_page (GcalYearView *year_view)
 {
-  gchar *title;
+  g_autoptr (GDateTime) start_selected_date, now;
   gboolean has_range;
+  gchar *title;
+
+  now = g_date_time_new_now_local ();
+  start_selected_date = icaltime_to_datetime (year_view->start_selected_date);
 
   has_range = (year_view->start_selected_date->day != year_view->end_selected_date->day ||
                year_view->start_selected_date->month != year_view->end_selected_date->month);
 
-  if (icaltime_compare_date (year_view->current_date, year_view->start_selected_date) == 0)
+  if (datetime_compare_date (now, start_selected_date) == 0)
     {
       title = g_strdup_printf ("%s%s", _("Today"), has_range ? "…" : "");
     }
@@ -465,14 +476,19 @@ update_sidebar_headers (GtkListBoxRow *row,
 
   if (before_shift == -1 || before_shift != row_shift)
     {
+      g_autoptr (GDateTime) now, dt;
       GtkWidget *label;
       gchar *label_str;
 
       row_header = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
+      now = g_date_time_new_now_local ();
+
       date = *(year_view->start_selected_date);
       icaltime_adjust (&date, row_shift, 0, 0, 0);
 
-      if (icaltime_compare_date (&date, year_view->current_date) == 0)
+      dt = icaltime_to_datetime (&date);
+
+      if (datetime_compare_date (dt, now) == 0)
         label_str = g_strdup (_("Today"));
       else
         label_str = g_strdup_printf ("%s %d", gcal_get_month_name (date.month  - 1), date.day);
@@ -674,6 +690,8 @@ draw_month_grid (GcalYearView *year_view,
   PangoLayout *layout, *slayout;
   PangoFontDescription *font_desc, *sfont_desc;
 
+  g_autoptr (GDateTime) now;
+
   GdkRGBA color;
   gint layout_width, layout_height, i, j, sw;
   gint column, row;
@@ -683,6 +701,8 @@ draw_month_grid (GcalYearView *year_view,
   gboolean selected_day;
   GList *events;
   icaltimetype start_date, end_date;
+
+  now = g_date_time_new_now_local ();
 
   cairo_save (cr);
   context = gtk_widget_get_style_context (widget);
@@ -845,8 +865,9 @@ draw_month_grid (GcalYearView *year_view,
             }
         }
 
-      if (year_view->date->year == year_view->current_date->year && month_nr + 1 == year_view->current_date->month &&
-          j == year_view->current_date->day)
+      if (year_view->date->year == g_date_time_get_year (now) &&
+          month_nr + 1 == g_date_time_get_month (now) &&
+          j == g_date_time_get_day_of_month (now))
         {
           PangoLayout *clayout;
           PangoFontDescription *cfont_desc;
@@ -1237,10 +1258,7 @@ add_event_clicked_cb (GcalYearView *year_view,
 
   if (year_view->start_selected_date->day == 0)
     {
-      start_date = g_date_time_new_local (year_view->current_date->year,
-                                          year_view->current_date->month,
-                                          year_view->current_date->day,
-                                          0, 0, 0);
+      start_date = g_date_time_new_now_local ();
     }
   else
     {
@@ -1977,15 +1995,4 @@ gcal_year_view_set_use_24h_format (GcalYearView *year_view,
                                    gboolean      use_24h_format)
 {
   year_view->use_24h_format = use_24h_format;
-}
-
-void
-gcal_year_view_set_current_date (GcalYearView *year_view,
-                                 icaltimetype *current_date)
-{
-  year_view->current_date = current_date;
-
-  /* Launches update */
-  gtk_widget_queue_draw (GTK_WIDGET (year_view));
-  update_sidebar (year_view);
 }

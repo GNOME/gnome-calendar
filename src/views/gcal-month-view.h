@@ -29,10 +29,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalMonthView, gcal_month_view, GCAL, MONTH_VIEW, GcalSubscriberView)
 
-
-void                 gcal_month_view_set_current_date            (GcalMonthView      *self,
-                                                                  icaltimetype       *current_date);
-
 void                 gcal_month_view_set_first_weekday           (GcalMonthView      *self,
                                                                   gint                day_nr);
 
