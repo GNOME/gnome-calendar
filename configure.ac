@@ -1,8 +1,28 @@
 dnl -*- mode: m4 -*-
 AC_PREREQ([2.69])
-AC_INIT([gnome-calendar],[3.25.0],[http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar],[gnome-calendar],[https://wiki.gnome.org/Apps/Calendar])
 
-AX_IS_RELEASE([minor-version])
+dnl ***********************************************************************
+dnl Define Versioning Information
+dnl ***********************************************************************
+m4_define([calendar_major_version],[3])
+m4_define([calendar_minor_version],[25])
+m4_define([calendar_micro_version],[0])
+m4_define([calendar_version],[calendar_major_version.calendar_minor_version.calendar_micro_version])
+m4_define([calendar_interface_age],[0])
+m4_define([calendar_bugreport_url],
+	  [https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar])
+m4_define([calendar_debug_default],
+          [m4_if(m4_eval(calendar_minor_version % 2), [1], [yes], [minimum])])
+
+
+dnl ***********************************************************************
+dnl Initialize Autoconf
+dnl ***********************************************************************
+AC_INIT([gnome-calendar],
+        [calendar_version],
+        [calendar_bugreport_url],
+        [gnome-calendar],
+        [https://wiki.gnome.org/Apps/Calendar])
 
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_SRCDIR([src/main.c])
@@ -69,7 +89,7 @@ AC_CHECK_FUNCS([strstr])
 GLIB_GSETTINGS
 
 dnl ***********************************************************************
-dnl Setup Tracing Support
+dnl Setup Debug and Tracing Support
 dnl ***********************************************************************
 AC_ARG_ENABLE(tracing,
               AS_HELP_STRING([--enable-tracing=@<:@no/yes@:>@],
@@ -79,7 +99,28 @@ AC_ARG_ENABLE(tracing,
 AS_IF([test "x$enable_tracing" = "xyes"],[enable_debug=yes ENABLE_TRACING=1],[ENABLE_TRACING=0])
 AC_SUBST(ENABLE_TRACING)
 
-BUGREPORT_URL=builder_bugreport_url
+AC_ARG_ENABLE(debug,
+              AS_HELP_STRING([--enable-debug=@<:@no/minimum/yes@:>@],
+                             [turn on debugging @<:@default=calendar_debug_default@:>@]),
+              ,
+              enable_debug=calendar_debug_default)
+AS_CASE(["$enable_debug"],
+        [yes],[
+            DEBUG_CFLAGS="$DEBUG_CFLAGS -O0"
+            DEBUG_CFLAGS="$DEBUG_CFLAGS -g"
+        ],
+        [minimum],[
+            DEBUG_CFLAGS="$DEBUG_CFLAGS -DG_DISABLE_CAST_CHECKS"
+        ],
+        [no],[
+            DEBUG_CFLAGS="$DEBUG_CFLAGS -DG_DISABLE_ASSERT"
+            DEBUG_CFLAGS="$DEBUG_CFLAGS -DG_DISABLE_CHECKS"
+            DEBUG_CFLAGS="$DEBUG_CFLAGS -DG_DISABLE_CAST_CHECKS"
+        ],
+        [])
+AC_SUBST(DEBUG_CFLAGS)
+
+BUGREPORT_URL=calendar_bugreport_url
 AC_SUBST(BUGREPORT_URL)
 
 dnl ================================================================
@@ -130,16 +171,16 @@ AC_OUTPUT
 dnl ==========================================================================
 echo "
 
-        gnome-calendar $VERSION
-        ==================
+    GNOME Calendar $VERSION
+    =========================
 
-        source at: ${srcdir}
-        prefix:    ${prefix}
-        compiler:  ${CC}
-        flags:     ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
-        flags:     ${WARN_CFLAGS} ${WARN_LDFLAGS}
-        flags:     ${CALENDAR_CFLAGS} ${CALENDAR_LIBS} ${LIBS}
-        tracing:   ${enable_tracing}
+        Source ...........................  ${srcdir}
+        Prefix ...........................  ${prefix}
+        Compiler .........................  ${CC}
 
-        Now type 'make' to build $PACKAGE
+    Development options
+        Enable Debug .....................  ${enable_debug}
+        Enable Tracing ...................  ${enable_tracing}
+
+    Now type 'make' to build $PACKAGE
 "
