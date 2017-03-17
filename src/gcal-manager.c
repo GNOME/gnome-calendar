@@ -100,7 +100,9 @@ enum
 {
   PROP_0,
   PROP_DEFAULT_CALENDAR,
+  PROP_LOADING,
   PROP_SETTINGS,
+  NUM_PROPS
 };
 
 enum
@@ -109,13 +111,12 @@ enum
   SOURCE_CHANGED,
   SOURCE_REMOVED,
   SOURCE_ENABLED,
-  LOAD_COMPLETED,
   QUERY_COMPLETED,
-  GOA_CLIENT_READY,
   NUM_SIGNALS
 };
 
-static guint signals[NUM_SIGNALS] = { 0, };
+static guint       signals[NUM_SIGNALS] = { 0, };
+static GParamSpec *properties[NUM_PROPS] = { NULL, };
 
 /* -- start: threading related code provided by Milan Crha */
 typedef struct {
@@ -346,8 +347,9 @@ on_client_connected (GObject      *source_object,
   source = e_client_get_source (E_CLIENT (source_object));
 
   manager->sources_at_launch--;
+
   if (manager->sources_at_launch == 0)
-    g_signal_emit (user_data, signals[LOAD_COMPLETED], 0);
+    g_object_notify_by_pspec (G_OBJECT (manager), properties[PROP_LOADING]);
 
   error = NULL;
   client = E_CAL_CLIENT (e_cal_client_connect_finish (result, &error));
@@ -746,8 +748,6 @@ gcal_manager_client_ready_cb (GObject      *source,
   manager->goa_client = goa_client_new_finish (result, &error);
   manager->goa_client_ready = TRUE;
 
-  g_signal_emit (user_data, signals[GOA_CLIENT_READY], 0, manager->goa_client);
-
   if (error != NULL)
     {
       g_warning ("%s: Error retrieving GoaClient: %s",
@@ -756,6 +756,8 @@ gcal_manager_client_ready_cb (GObject      *source,
 
       g_error_free (error);
     }
+
+  g_object_notify_by_pspec (G_OBJECT (manager), properties[PROP_LOADING]);
 
   GCAL_EXIT;
 }
@@ -972,6 +974,10 @@ gcal_manager_get_property (GObject    *object,
       g_value_take_object (value, e_source_registry_ref_default_calendar (self->source_registry));
       break;
 
+    case PROP_LOADING:
+      g_value_set_boolean (value, gcal_manager_get_loading (self));
+      break;
+
     case PROP_SETTINGS:
       g_value_set_object (value, self->settings);
       return;
@@ -995,22 +1001,40 @@ gcal_manager_class_init (GcalManagerClass *klass)
   object_class->set_property = gcal_manager_set_property;
   object_class->get_property = gcal_manager_get_property;
 
-  /* properties */
-  g_object_class_install_property (object_class,
-                                   PROP_DEFAULT_CALENDAR,
-                                   g_param_spec_object ("default-calendar",
-                                                        "Default calendar",
-                                                        "The default calendar",
-                                                        E_TYPE_SOURCE,
-                                                        G_PARAM_READWRITE));
+  /**
+   * GcalManager:default-calendar:
+   *
+   * The default calendar.
+   */
+  properties[PROP_DEFAULT_CALENDAR] = g_param_spec_object ("default-calendar",
+                                                           "Default calendar",
+                                                           "The default calendar",
+                                                           E_TYPE_SOURCE,
+                                                           G_PARAM_READWRITE);
 
-  g_object_class_install_property (object_class,
-                                   PROP_SETTINGS,
-                                   g_param_spec_object ("settings",
-                                                        "Application settings",
-                                                        "The settings of the application passed down from GcalApplication",
-                                                        G_TYPE_SETTINGS,
-                                                        G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+  /**
+   * GcalManager:loading:
+   *
+   * Whether the manager is loading or not.
+   */
+  properties[PROP_LOADING] = g_param_spec_boolean ("loading",
+                                                   "Loading",
+                                                   "Whether it's still loading or not",
+                                                   TRUE,
+                                                   G_PARAM_READABLE);
+
+  /**
+   * GcalManager:settings:
+   *
+   * The settings.
+   */
+  properties[PROP_SETTINGS] = g_param_spec_object ("settings",
+                                                   "Application settings",
+                                                   "The settings of the application passed down from GcalApplication",
+                                                   G_TYPE_SETTINGS,
+                                                   G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE);
+
+  g_object_class_install_properties (object_class, NUM_PROPS, properties);
 
   /* signals */
   signals[SOURCE_ADDED] = g_signal_new ("source-added",
@@ -1047,13 +1071,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                           E_TYPE_SOURCE,
                                           G_TYPE_BOOLEAN);
 
-  signals[LOAD_COMPLETED] = g_signal_new ("load-completed",
-                                          GCAL_TYPE_MANAGER,
-                                          G_SIGNAL_RUN_LAST,
-                                          0, NULL, NULL, NULL,
-                                          G_TYPE_NONE,
-                                          0);
-
   signals[QUERY_COMPLETED] = g_signal_new ("query-completed",
                                            GCAL_TYPE_MANAGER,
                                            G_SIGNAL_RUN_LAST,
@@ -1061,14 +1078,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                            NULL, NULL, NULL,
                                            G_TYPE_NONE,
                                            0);
-
-  signals[GOA_CLIENT_READY] = g_signal_new ("goa-client-ready",
-                                            GCAL_TYPE_MANAGER,
-                                            G_SIGNAL_RUN_LAST,
-                                            0, NULL, NULL, NULL,
-                                            G_TYPE_NONE,
-                                            1,
-                                            GOA_TYPE_CLIENT);
 }
 
 static void
@@ -1805,11 +1814,11 @@ gcal_manager_get_events (GcalManager  *manager,
 }
 
 gboolean
-gcal_manager_load_completed (GcalManager *self)
+gcal_manager_get_loading (GcalManager *self)
 {
   g_return_val_if_fail (GCAL_IS_MANAGER (self), FALSE);
 
-  return self->sources_at_launch == 0;
+  return !self->goa_client_ready || self->sources_at_launch > 0;
 }
 
 GcalEvent*
@@ -1845,16 +1854,6 @@ gcal_manager_get_event_from_shell_search (GcalManager *manager,
   g_list_free (list);
 
   GCAL_RETURN (new_event);
-}
-
-gboolean
-gcal_manager_is_goa_client_ready (GcalManager *manager)
-{
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
-
-  GCAL_ENTRY;
-
-  GCAL_RETURN (manager->goa_client_ready);
 }
 
 GoaClient*

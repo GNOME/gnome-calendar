@@ -16,8 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define G_LOG_DOMAIN "GcaçSourceDialog"
+#define G_LOG_DOMAIN "GcalSourceDialog"
 
+#include "gcal-debug.h"
 #include "gcal-source-dialog.h"
 #include "gcal-utils.h"
 
@@ -2143,16 +2144,24 @@ goa_account_removed_cb (GoaClient *client,
 }
 
 static void
-goa_client_ready_cb (GcalSourceDialog *dialog,
-                     GoaClient        *client,
-                     gpointer          user_data)
+loading_changed_cb (GcalSourceDialog *dialog)
 {
+  GoaClient *client;
   GList *accounts, *l;
 
+  GCAL_ENTRY;
+
   g_return_if_fail (GCAL_IS_SOURCE_DIALOG (dialog));
-  g_return_if_fail (GOA_IS_CLIENT (client));
+
+  if (gcal_manager_get_loading (dialog->manager))
+    {
+      GCAL_TRACE_MSG ("Not loaded yet");
+      GCAL_EXIT;
+      return;
+    }
 
   /* Add already fetched accounts */
+  client = gcal_manager_get_goa_client (dialog->manager);
   accounts = goa_client_get_accounts (client);
 
   for (l = accounts; l != NULL; l = l->next)
@@ -2162,7 +2171,12 @@ goa_client_ready_cb (GcalSourceDialog *dialog,
   g_signal_connect (client, "account-added", G_CALLBACK (goa_account_added_cb), dialog);
   g_signal_connect (client, "account-removed", G_CALLBACK (goa_account_removed_cb), dialog);
 
+  /* Once we loaded, no need to track it down again */
+  g_signal_handlers_disconnect_by_func (dialog->manager, loading_changed_cb, dialog);
+
   g_list_free (accounts);
+
+  GCAL_EXIT;
 }
 
 /**
@@ -2179,20 +2193,7 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
 {
   dialog->manager = manager;
 
-  /*
-   * If the GoaClient is already loaded, fetch the online accounts
-   * directly. Otherwise, wait for it to be ready.
-   */
-  if (gcal_manager_is_goa_client_ready (manager))
-    {
-      goa_client_ready_cb (dialog, gcal_manager_get_goa_client (manager), NULL);
-    }
-  else
-    {
-      g_signal_connect_swapped (manager, "goa-client-ready", G_CALLBACK (goa_client_ready_cb), dialog);
-    }
-
-  if (gcal_manager_load_completed (dialog->manager))
+  if (!gcal_manager_get_loading (dialog->manager))
     {
       GList *sources, *l;
 
@@ -2200,6 +2201,13 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
 
       for (l = sources; l != NULL; l = l->next)
         add_source (dialog->manager, l->data, gcal_manager_source_enabled (dialog->manager, l->data), dialog);
+    }
+  else
+    {
+      g_signal_connect_swapped (manager,
+                                "notify::loading",
+                                G_CALLBACK (loading_changed_cb),
+                                dialog);
     }
 
   g_signal_connect (dialog->manager, "source-added", G_CALLBACK (add_source), dialog);

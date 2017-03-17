@@ -104,11 +104,9 @@ GList*               gcal_manager_get_events                     (GcalManager   
                                                                   icaltimetype       *range_start,
                                                                   icaltimetype       *range_end);
 
-gboolean             gcal_manager_load_completed                 (GcalManager        *self);
+gboolean             gcal_manager_get_loading                    (GcalManager        *self);
 
 /* Online Accounts */
-gboolean             gcal_manager_is_goa_client_ready            (GcalManager        *manager);
-
 GoaClient*           gcal_manager_get_goa_client                 (GcalManager        *manager);
 
 

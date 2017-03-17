@@ -78,7 +78,7 @@ execute_search (GcalShellSearchProvider *search_provider)
 
   priv = search_provider->priv;
 
-  if (!gcal_manager_load_completed (priv->manager))
+  if (gcal_manager_get_loading (priv->manager))
     return TRUE;
 
   zone = gcal_manager_get_system_timezone (priv->manager);
@@ -151,7 +151,7 @@ schedule_search (GcalShellSearchProvider *search_provider,
   priv->pending_search->invocation = g_object_ref (invocation);
   priv->pending_search->terms = g_strdupv (terms);
 
-  if (!gcal_manager_load_completed (priv->manager))
+  if (gcal_manager_get_loading (priv->manager))
     {
       priv->scheduled_search_id = g_timeout_add_seconds (1, (GSourceFunc) execute_search, search_provider);
       return;
