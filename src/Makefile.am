@@ -50,6 +50,7 @@ gnome_calendar_SOURCES =                                  \
     gcal-date-chooser.h                                   \
     gcal-date-selector.c                                  \
     gcal-date-selector.h                                  \
+    gcal-debug.h                                          \
     gcal-edit-dialog.c                                    \
     gcal-edit-dialog.h                                    \
     gcal-event.c                                          \

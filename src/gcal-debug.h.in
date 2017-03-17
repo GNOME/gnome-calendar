@@ -1,0 +1,99 @@
+/* gcal-debug.h.in
+ *
+ * Copyright (C) 2017 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef GCAL_DEBUG_H
+#define GCAL_DEBUG_H
+
+#include <glib.h>
+
+G_BEGIN_DECLS
+
+#ifndef GCAL_ENABLE_TRACE
+# define GCAL_ENABLE_TRACE @ENABLE_TRACING@
+#endif
+#if GCAL_ENABLE_TRACE != 1
+# undef GCAL_ENABLE_TRACE
+#endif
+
+/**
+ * GCAL_LOG_LEVEL_TRACE: (skip)
+ */
+#ifndef GCAL_LOG_LEVEL_TRACE
+# define GCAL_LOG_LEVEL_TRACE ((GLogLevelFlags)(1 << G_LOG_LEVEL_USER_SHIFT))
+#endif
+
+#ifdef GCAL_ENABLE_TRACE
+# define GCAL_TRACE_MSG(fmt, ...)                                        \
+   g_log(G_LOG_DOMAIN, GCAL_LOG_LEVEL_TRACE, "  MSG: %s():%d: " fmt,     \
+         G_STRFUNC, __LINE__, ##__VA_ARGS__)
+# define GCAL_PROBE                                                      \
+   g_log(G_LOG_DOMAIN, GCAL_LOG_LEVEL_TRACE, "PROBE: %s():%d",           \
+         G_STRFUNC, __LINE__)
+# define GCAL_TODO(_msg)                                                 \
+   g_log(G_LOG_DOMAIN, GCAL_LOG_LEVEL_TRACE, " TODO: %s():%d: %s",       \
+         G_STRFUNC, __LINE__, _msg)
+# define GCAL_ENTRY                                                      \
+   g_log(G_LOG_DOMAIN, GCAL_LOG_LEVEL_TRACE, "ENTRY: %s():%d",           \
+         G_STRFUNC, __LINE__)
+# define GCAL_EXIT                                                       \
+   G_STMT_START {                                                        \
+      g_log(G_LOG_DOMAIN, GCAL_LOG_LEVEL_TRACE, " EXIT: %s():%d",        \
+            G_STRFUNC, __LINE__);                                        \
+      return;                                                            \
+   } G_STMT_END
+# define GCAL_GOTO(_l)                                                   \
+   G_STMT_START {                                                        \
+      g_log(G_LOG_DOMAIN, GCAL_LOG_LEVEL_TRACE, " GOTO: %s():%d ("#_l")",\
+            G_STRFUNC, __LINE__);                                        \
+      goto _l;                                                           \
+   } G_STMT_END
+# define GCAL_RETURN(_r)                                                 \
+   G_STMT_START {                                                        \
+      g_log(G_LOG_DOMAIN, GCAL_LOG_LEVEL_TRACE, " EXIT: %s():%d ",       \
+            G_STRFUNC, __LINE__);                                        \
+      return _r;                                                         \
+   } G_STMT_END
+#else
+# define GCAL_TODO(_msg)
+# define GCAL_PROBE
+# define GCAL_TRACE_MSG(fmt, ...)
+# define GCAL_ENTRY
+# define GCAL_GOTO(_l)   goto _l
+# define GCAL_EXIT       return
+# define GCAL_RETURN(_r) return _r
+#endif
+
+#define _GCAL_BUG(Component, Description, File, Line, Func, ...)                        \
+  G_STMT_START {                                                                        \
+    g_printerr ("-----------------------------------------------------------------\n"); \
+    g_printerr ("You've found a bug in Calendar or one of its dependent libraries.\n"); \
+    g_printerr ("Please help us help you by filing a bug report at:\n");                \
+    g_printerr ("\n");                                                                  \
+    g_printerr ("@BUGREPORT_URL@&component=%s\n", Component);                           \
+    g_printerr ("\n");                                                                  \
+    g_printerr ("%s:%d in function %s()\n", File, Line, Func);                          \
+    g_printerr ("\n");                                                                  \
+    g_printerr (Description"\n", ##__VA_ARGS__);                                        \
+    g_printerr ("-----------------------------------------------------------------\n"); \
+  } G_STMT_END
+#define GCAL_BUG(Component, Description, ...) \
+  _GCAL_BUG(Component, Description, __FILE__, __LINE__, G_STRFUNC, ##__VA_ARGS__)
+
+G_END_DECLS
+
+#endif /* GCAL_DEBUG_H */
