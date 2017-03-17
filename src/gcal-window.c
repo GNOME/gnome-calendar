@@ -171,6 +171,8 @@ update_today_button_sensitive (GcalWindow *window)
   g_autoptr (GDateTime) now;
   gboolean sensitive;
 
+  GCAL_ENTRY;
+
   now = g_date_time_new_now_local ();
 
   switch (window->active_view)
@@ -183,7 +185,11 @@ update_today_button_sensitive (GcalWindow *window)
 
     case GCAL_WINDOW_VIEW_WEEK:
       sensitive = window->active_date->year != g_date_time_get_year (now) ||
-                  icaltime_week_number (*window->active_date) !=  g_date_time_get_week_of_year (now);
+                  icaltime_week_number (*window->active_date) !=  g_date_time_get_week_of_year (now) - 1;
+
+      GCAL_TRACE_MSG ("Week: active date's week is %d, current week is %d",
+                      icaltime_week_number (*window->active_date) + 1,
+                      g_date_time_get_week_of_year (now));
       break;
 
     case GCAL_WINDOW_VIEW_MONTH:
@@ -203,6 +209,8 @@ update_today_button_sensitive (GcalWindow *window)
     }
 
   gtk_widget_set_sensitive (window->today_button, sensitive);
+
+  GCAL_EXIT;
 }
 
 static void
