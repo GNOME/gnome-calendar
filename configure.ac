@@ -68,6 +68,20 @@ AC_CHECK_FUNCS([strstr])
 
 GLIB_GSETTINGS
 
+dnl ***********************************************************************
+dnl Setup Tracing Support
+dnl ***********************************************************************
+AC_ARG_ENABLE(tracing,
+              AS_HELP_STRING([--enable-tracing=@<:@no/yes@:>@],
+                             [add extra debugging information @<:@default=no@:>@]),
+              ,
+              enable_tracing=no)
+AS_IF([test "x$enable_tracing" = "xyes"],[enable_debug=yes ENABLE_TRACING=1],[ENABLE_TRACING=0])
+AC_SUBST(ENABLE_TRACING)
+
+BUGREPORT_URL=builder_bugreport_url
+AC_SUBST(BUGREPORT_URL)
+
 dnl ================================================================
 dnl Misc
 dnl ================================================================
@@ -103,6 +117,7 @@ APPSTREAM_XML
 AC_CONFIG_FILES([
       Makefile
       src/Makefile
+      src/gcal-debug.h
       data/Makefile
       data/org.gnome.Calendar.desktop.in
       data/org.gnome.Calendar.search-provider.ini.in
@@ -124,6 +139,7 @@ echo "
         flags:     ${CFLAGS} ${CPPFLAGS} ${LDFLAGS}
         flags:     ${WARN_CFLAGS} ${WARN_LDFLAGS}
         flags:     ${CALENDAR_CFLAGS} ${CALENDAR_LIBS} ${LIBS}
+        tracing:   ${enable_tracing}
 
         Now type 'make' to build $PACKAGE
 "
