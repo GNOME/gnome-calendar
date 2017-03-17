@@ -765,21 +765,23 @@ add_event_to_grid (GcalWeekHeader *self,
 
 static void
 update_unchanged_events (GcalWeekHeader *self,
-                         icaltimetype   *old_icaldt,
                          icaltimetype   *new_icaldt)
 {
-  GDateTime *old_week_start, *old_week_end;
-  GDateTime *new_week_start, *new_week_end;
+  g_autoptr (GDateTime) new_week_start, new_week_end;
+  g_autoptr (GDateTime) utc_week_start, utc_week_end;
   GList *events_to_update, *l;
   gint weekday;
 
   events_to_update = NULL;
 
-  old_week_start = get_start_of_week (old_icaldt);
-  old_week_end = get_end_of_week (old_icaldt);
-
   new_week_start = get_start_of_week (new_icaldt);
   new_week_end = get_end_of_week (new_icaldt);
+
+  utc_week_start = g_date_time_new_utc (g_date_time_get_year (new_week_start),
+                                        g_date_time_get_month (new_week_start),
+                                        g_date_time_get_day_of_month (new_week_start),
+                                        0, 0, 0);
+  utc_week_end = g_date_time_add_days (utc_week_start, 7);
 
   for (weekday = 0; weekday < 7; weekday++)
     {
@@ -790,17 +792,36 @@ update_unchanged_events (GcalWeekHeader *self,
       for (l = events; l != NULL; l = l->next)
         {
           g_autoptr (GDateTime) event_start, event_end;
+          GDateTime *week_start, *week_end;
 
-          event_start = g_date_time_to_local (gcal_event_get_date_start (l->data));
-          event_end = g_date_time_to_local (gcal_event_get_date_end (l->data));
+          /*
+           * When the event is all day, we must be careful to compare its dates
+           * against the UTC variants of the week start and end dates.
+           */
+          if (gcal_event_get_all_day (l->data))
+            {
+              event_start = g_date_time_ref (gcal_event_get_date_start (l->data));
+              event_end = g_date_time_ref (gcal_event_get_date_end (l->data));
+
+              week_start = utc_week_start;
+              week_end = utc_week_end;
+            }
+          else
+            {
+              event_start = g_date_time_to_local (gcal_event_get_date_start (l->data));
+              event_end = g_date_time_to_local (gcal_event_get_date_end (l->data));
+
+              week_start = new_week_start;
+              week_end = new_week_end;
+            }
 
           /*
            * Check if the event must be updated. If we're going to the future, updatable events
            * are events that started somewhere in the past, and are still present. If we're
            * going to the past, updatable events are events that started
            */
-          if (g_date_time_compare (event_start, new_week_end) <= 0 &&
-              g_date_time_compare (event_end, new_week_start) > 0 &&
+          if (g_date_time_compare (event_start, week_end) < 0 &&
+              g_date_time_compare (event_end, week_start) > 0 &&
               !g_list_find (events_to_update, l->data))
             {
               events_to_update = g_list_append (events_to_update, l->data);
@@ -815,10 +836,6 @@ update_unchanged_events (GcalWeekHeader *self,
     }
 
   g_clear_pointer (&events_to_update, g_list_free);
-  g_clear_pointer (&new_week_start, g_date_time_unref);
-  g_clear_pointer (&old_week_start, g_date_time_unref);
-  g_clear_pointer (&new_week_end, g_date_time_unref);
-  g_clear_pointer (&old_week_end, g_date_time_unref);
 }
 
 /* Header */
@@ -1088,7 +1105,7 @@ gcal_week_header_set_property (GObject      *object,
       gtk_widget_queue_draw (GTK_WIDGET (self));
 
       if (old_date)
-        update_unchanged_events (self, old_date, self->active_date);
+        update_unchanged_events (self, self->active_date);
 
       g_clear_pointer (&old_date, g_free);
       break;
