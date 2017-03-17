@@ -1,3 +1,29 @@
+Major changes in 3.23.92:
+* Fix first weekday in Week view (Joyjit Choudhury)
+* Start searching after 3 characters (George Willian Condomitti)
+* Make sure calendar colors are in sync in Edit dialog (Valentin Negoescu)
+* Don't show search popover for empty searcher (Kevin Lopez)
+* Minor fixups to Week view
+* Updated translations for:
+    * Basque (Inaki Larranaga Murgoitio)
+    * Brazilian Portuguese (Rafael Fontenelle)
+    * Catalan (Jordi Mas)
+    * Chinese (Taiwan) (Chao-Hsiung Liao)
+    * Czech (Marek Cernocky)
+    * Danish (Alan Mortensen)
+    * Galician (Fran Dieguez)
+    * German (Paul Seyfert)
+    * Finnish (Jiri Grönroos)
+    * Indonesian (Kukuh Syafaat)
+    * Italian (Milo Casagrande)
+    * Korean (Seong-ho Cho)
+    * Lithuanian (Aurimas Černius)
+    * Occitan (Cédric Valmary)
+    * Polish (Piotr Drąg)
+    * Russian (Yuri Myasoedov)
+    * Serbian (Мирослав Николић)
+    * Slovak (Dušan Kazik)
+
 Major changes in 3.23.91.1:
 * Fix compiler flags
 * Add the co-maintainer to the DOAP file
