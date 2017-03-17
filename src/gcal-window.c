@@ -20,19 +20,19 @@
 
 #define G_LOG_DOMAIN "GcalWindow"
 
-#include "gcal-window.h"
-
-#include "gcal-manager.h"
-#include "gcal-view.h"
-#include "gcal-week-view.h"
-#include "gcal-month-view.h"
-#include "gcal-year-view.h"
-#include "gcal-search-view.h"
-#include "gcal-event-widget.h"
+#include "gcal-debug.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-enum-types.h"
+#include "gcal-event-widget.h"
+#include "gcal-manager.h"
+#include "gcal-month-view.h"
 #include "gcal-quick-add-popover.h"
+#include "gcal-search-view.h"
 #include "gcal-source-dialog.h"
+#include "gcal-view.h"
+#include "gcal-week-view.h"
+#include "gcal-window.h"
+#include "gcal-year-view.h"
 
 #include <glib/gi18n.h>
 
@@ -369,6 +369,8 @@ update_active_date (GcalWindow   *window,
   icaltimetype *previous_date;
   GDate old_week, new_week;
 
+  GCAL_ENTRY;
+
   previous_date = window->active_date;
   window->active_date = new_date;
   g_object_notify (G_OBJECT (window), "active-date");
@@ -431,12 +433,16 @@ update_active_date (GcalWindow   *window,
   update_today_button_sensitive (window);
 
   g_free (previous_date);
+
+  GCAL_EXIT;
 }
 
 static gboolean
 update_current_date (GcalWindow *window)
 {
   guint seconds;
+
+  GCAL_ENTRY;
 
   if (window->current_date == NULL)
     window->current_date = g_new0 (icaltimetype, 1);
@@ -450,7 +456,8 @@ update_current_date (GcalWindow *window)
 
   seconds = 24 * 60 * 60 - (icaltime_as_timet (*(window->current_date)) % (24 * 60 * 60));
   g_timeout_add_seconds (seconds, (GSourceFunc) update_current_date, window);
-  return FALSE;
+
+  GCAL_RETURN (FALSE);
 }
 
 static void
@@ -500,6 +507,8 @@ date_updated (GtkButton  *button,
   gboolean move_back, move_today;
   gint factor;
 
+  GCAL_ENTRY;
+
   factor = window->rtl ? - 1 : 1;
 
   move_today = window->today_button == (GtkWidget*) button;
@@ -538,6 +547,8 @@ date_updated (GtkButton  *button,
     }
 
   update_active_date (user_data, new_date);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -576,6 +587,8 @@ load_geometry (GcalWindow *window)
   const gint32 *size;
   gsize n_elements;
 
+  GCAL_ENTRY;
+
   app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
   settings = gcal_application_get_settings (app);
 
@@ -609,6 +622,8 @@ load_geometry (GcalWindow *window)
                                       "window-maximized");
   if (maximized)
     gtk_window_maximize (GTK_WINDOW (window));
+
+  GCAL_EXIT;
 }
 
 static gboolean
@@ -624,6 +639,8 @@ save_geometry (gpointer user_data)
   GVariant *variant;
   gint32 size[2];
   gint32 position[2];
+
+  GCAL_ENTRY;
 
   self = GTK_WINDOW (user_data);
   window = GCAL_WINDOW (self);
@@ -643,7 +660,7 @@ save_geometry (gpointer user_data)
   if (maximized)
     {
       window->save_geometry_timeout_id = 0;
-      return FALSE;
+      GCAL_RETURN (G_SOURCE_REMOVE);
     }
 
   /* save window's size */
@@ -672,7 +689,7 @@ save_geometry (gpointer user_data)
 
   window->save_geometry_timeout_id = 0;
 
-  return FALSE;
+  GCAL_RETURN (G_SOURCE_REMOVE);
 }
 
 /**
@@ -722,10 +739,12 @@ static void
 set_new_event_mode (GcalWindow *window,
                     gboolean    enabled)
 {
+  GCAL_ENTRY;
+
   window->new_event_mode = enabled;
   g_object_notify (G_OBJECT (window), "new-event-mode");
 
-  if (! enabled && window->views[window->active_view] != NULL)
+  if (!enabled && window->views[window->active_view])
     gcal_view_clear_marks (GCAL_VIEW (window->views[window->active_view]));
 
   /* XXX: here we could disable clicks from the views, yet */
@@ -734,6 +753,8 @@ set_new_event_mode (GcalWindow *window,
     {
       gtk_widget_set_visible (window->quick_add_popover, FALSE);
     }
+
+  GCAL_EXIT;
 }
 
 /* new-event interaction: second variant */
@@ -747,6 +768,8 @@ show_new_event_widget (GcalView   *view,
 {
   GdkRectangle rect;
   gint out_x, out_y;
+
+  GCAL_ENTRY;
 
   /* 1st and 2nd steps */
   set_new_event_mode (window, TRUE);
@@ -781,6 +804,8 @@ show_new_event_widget (GcalView   *view,
 
   gtk_popover_set_pointing_to (GTK_POPOVER (window->quick_add_popover), &rect);
   gtk_widget_show (window->quick_add_popover);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -1127,6 +1152,8 @@ edit_dialog_closed (GtkDialog *dialog,
   GcalView *view;
   GList *widgets;
 
+  GCAL_ENTRY;
+
   window = GCAL_WINDOW (user_data);
   edit_dialog = GCAL_EDIT_DIALOG (dialog);
   event = gcal_edit_dialog_get_event (edit_dialog);
@@ -1180,6 +1207,8 @@ edit_dialog_closed (GtkDialog *dialog,
     }
 
   gcal_edit_dialog_set_event (edit_dialog, NULL);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -1491,6 +1520,8 @@ gcal_window_finalize (GObject *object)
 {
   GcalWindow *window = GCAL_WINDOW (object);
 
+  GCAL_ENTRY;
+
   if (window->save_geometry_timeout_id > 0)
     {
       g_source_remove (window->save_geometry_timeout_id);
@@ -1524,6 +1555,8 @@ gcal_window_finalize (GObject *object)
   g_free (window->current_date);
 
   G_OBJECT_CLASS (gcal_window_parent_class)->finalize (object);
+
+  GCAL_EXIT;
 }
 
 static void

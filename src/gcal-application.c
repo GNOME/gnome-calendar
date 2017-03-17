@@ -23,10 +23,11 @@
 
 #define G_LOG_DOMAIN "GcalApplication"
 
-#include "gcal-application.h"
 #include "css-code.h"
-#include "gcal-window.h"
+#include "gcal-application.h"
+#include "gcal-debug.h"
 #include "gcal-shell-search-provider.h"
+#include "gcal-window.h"
 
 #include <glib.h>
 #include <glib-object.h>
@@ -206,6 +207,8 @@ gcal_application_finalize (GObject *object)
 {
  GcalApplication *self = GCAL_APPLICATION (object);
 
+  GCAL_ENTRY;
+
   g_free (self->uuid);
   g_clear_pointer (&self->initial_date, g_free);
 
@@ -214,9 +217,11 @@ gcal_application_finalize (GObject *object)
   g_clear_object (&self->settings);
 
   g_clear_object (&self->manager);
+  g_clear_object (&self->search_provider);
 
   G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
-  g_clear_object (&self->search_provider);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -225,6 +230,8 @@ gcal_application_activate (GApplication *application)
   GcalApplication *self;
   GFile* css_file;
   GError *error;
+
+  GCAL_ENTRY;
 
   self = GCAL_APPLICATION (application);
 
@@ -277,17 +284,22 @@ gcal_application_activate (GApplication *application)
       gtk_widget_show (self->window);
     }
 
-    g_clear_pointer (&self->initial_date, g_free);
-    if (self->uuid != NULL)
-      {
-        gcal_window_open_event_by_uuid (GCAL_WINDOW (self->window), self->uuid);
-        g_clear_pointer (&(self->uuid), g_free);
-      }
+  g_clear_pointer (&self->initial_date, g_free);
+
+  if (self->uuid != NULL)
+    {
+      gcal_window_open_event_by_uuid (GCAL_WINDOW (self->window), self->uuid);
+      g_clear_pointer (&(self->uuid), g_free);
+    }
+
+  GCAL_EXIT;
 }
 
 static void
 gcal_application_startup (GApplication *app)
 {
+  GCAL_ENTRY;
+
   /* add actions */
   g_action_map_add_action_entries (G_ACTION_MAP (app),
                                    gcal_app_entries,
@@ -299,6 +311,8 @@ gcal_application_startup (GApplication *app)
   /* We're assuming the application is called as a service only by the shell search system */
   if ((g_application_get_flags (app) & G_APPLICATION_IS_SERVICE) != 0)
     g_application_set_inactivity_timeout (app, 3 * 60 * 1000);
+
+  GCAL_EXIT;
 }
 
 static gint
