@@ -16,7 +16,7 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-
+#include "gcal-debug.h"
 #include "gcal-log.h"
 
 #include <unistd.h>
@@ -37,6 +37,7 @@ log_level_str (GLogLevelFlags log_level)
     case G_LOG_LEVEL_MESSAGE:  return " \033[1;34mMESSAGE\033[0m";
     case G_LOG_LEVEL_INFO:     return "    \033[1;32mINFO\033[0m";
     case G_LOG_LEVEL_DEBUG:    return "   \033[1;32mDEBUG\033[0m";
+    case GCAL_LOG_LEVEL_TRACE: return "   \033[1;36mTRACE\033[0m";
 
     default:
       return " UNKNOWN";

@@ -20,9 +20,10 @@
 
 #define G_LOG_DOMAIN "GcalEditDialog"
 
+#include "gcal-date-selector.h"
+#include "gcal-debug.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-time-selector.h"
-#include "gcal-date-selector.h"
 #include "gcal-utils.h"
 
 #include <libecal/libecal.h>
@@ -199,6 +200,8 @@ on_calendar_selected (GSimpleAction *action,
   GList *aux;
   gchar *uid;
 
+  GCAL_ENTRY;
+
   self = GCAL_EDIT_DIALOG (user_data);
   list = gcal_manager_get_sources (self->manager);
 
@@ -232,6 +235,8 @@ on_calendar_selected (GSimpleAction *action,
 
   g_free (uid);
   g_list_free (list);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -305,13 +310,15 @@ sync_datetimes (GcalEditDialog *self,
   gboolean is_start;
   gint hour_to_add;
 
+  GCAL_ENTRY;
+
   is_start = (widget == self->start_time_selector || widget == self->start_date_selector);
   start = gcal_edit_dialog_get_date_start (self);
   end = gcal_edit_dialog_get_date_end (self);
 
   /* The date is valid, no need to update the fields */
   if (g_date_time_compare (end, start) >= 0)
-    goto out;
+    GCAL_GOTO (out);
 
   /*
    * If the user is changing the start date or time, we change the end
@@ -348,6 +355,8 @@ sync_datetimes (GcalEditDialog *self,
 out:
   g_clear_pointer (&start, g_date_time_unref);
   g_clear_pointer (&end, g_date_time_unref);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -546,6 +555,8 @@ gcal_edit_dialog_finalize (GObject *object)
 {
   GcalEditDialog *dialog;
 
+  GCAL_ENTRY;
+
   dialog = GCAL_EDIT_DIALOG (object);
 
   g_clear_object (&dialog->action_group);
@@ -553,6 +564,8 @@ gcal_edit_dialog_finalize (GObject *object)
   g_clear_object (&dialog->event);
 
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->finalize (object);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -602,6 +615,8 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
                                         gpointer   user_data)
 {
   GcalEditDialog *dialog;
+
+  GCAL_ENTRY;
 
   dialog = GCAL_EDIT_DIALOG (user_data);
 
@@ -694,7 +709,7 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
                            dialog->event_is_new ? GCAL_RESPONSE_CREATE_EVENT : GCAL_RESPONSE_SAVE_EVENT);
     }
 
-  gcal_edit_dialog_set_event (dialog, NULL);
+  GCAL_EXIT;
 }
 
 static void
@@ -1039,6 +1054,8 @@ void
 gcal_edit_dialog_set_event (GcalEditDialog *dialog,
                             GcalEvent      *event)
 {
+  GCAL_ENTRY;
+
   g_return_if_fail (GCAL_IS_EDIT_DIALOG (dialog));
 
   if (g_set_object (&dialog->event, event))
@@ -1054,7 +1071,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 
       /* If we just set the event to NULL, simply send a property notify */
       if (!event)
-        goto out;
+        GCAL_GOTO (out);
 
       all_day = gcal_event_get_all_day (event);
       source = gcal_event_get_source (event);
@@ -1139,6 +1156,8 @@ out:
 
       dialog->setting_event = FALSE;
     }
+
+  GCAL_EXIT;
 }
 
 void

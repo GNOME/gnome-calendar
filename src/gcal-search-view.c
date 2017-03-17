@@ -20,9 +20,9 @@
 
 #define G_LOG_DOMAIN "GcalSearchView"
 
-#include "gcal-search-view.h"
-
+#include "gcal-debug.h"
 #include "gcal-event.h"
+#include "gcal-search-view.h"
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
@@ -414,10 +414,16 @@ make_row_for_event (GcalSearchView *view,
 static void
 update_view (GcalSearchView *view)
 {
+  GCAL_ENTRY;
+
   if (view->no_results_timeout_id != 0)
     g_source_remove (view->no_results_timeout_id);
 
-  view->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT, (GSourceFunc) show_no_results_page, view);
+  view->no_results_timeout_id = g_timeout_add (NO_RESULT_TIMEOUT,
+                                               (GSourceFunc) show_no_results_page,
+                                               view);
+
+  GCAL_EXIT;
 }
 
 /**
@@ -435,6 +441,8 @@ gcal_search_view_do_search (gpointer user_data)
   GcalSearchView *view;
   gchar *search_query;
 
+  GCAL_ENTRY;
+
   view = GCAL_SEARCH_VIEW (user_data);
 
   search_query = g_strdup_printf ("(contains? \"%s\" \"%s\")",
@@ -442,31 +450,30 @@ gcal_search_view_do_search (gpointer user_data)
                                              view->query ? view->query : "");
 
   if (!view->subscribed)
-        {
-          g_autoptr (GDateTime) now, start, end;
+    {
+      g_autoptr (GDateTime) now, start, end;
 
-          now = g_date_time_new_now_local ();
-          start = g_date_time_add_years (now, -5);
-          end = g_date_time_add_years (now, 5);
+      now = g_date_time_new_now_local ();
+      start = g_date_time_add_years (now, -5);
+      end = g_date_time_add_years (now, 5);
 
-          gcal_manager_set_search_subscriber (view->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view),
-                                              g_date_time_to_unix (start),
-                                              g_date_time_to_unix (end));
+      gcal_manager_set_search_subscriber (view->manager, E_CAL_DATA_MODEL_SUBSCRIBER (view),
+                                          g_date_time_to_unix (start),
+                                          g_date_time_to_unix (end));
 
-          /* Mark the view as subscribed */
-          view->subscribed = TRUE;
-        }
+      /* Mark the view as subscribed */
+      view->subscribed = TRUE;
+    }
 
-      /* update internal current time_t */
-      view->current_utc_date = time (NULL);
+  /* update internal current time_t */
+  view->current_utc_date = time (NULL);
 
-      gcal_manager_set_query (view->manager, search_query);
+  gcal_manager_set_query (view->manager, search_query);
 
-      view->search_timeout_id = 0;
-      g_free (search_query);
+  view->search_timeout_id = 0;
+  g_free (search_query);
 
-
-  return G_SOURCE_REMOVE;
+  GCAL_RETURN (G_SOURCE_REMOVE);
 }
 
 static void
@@ -789,12 +796,13 @@ gcal_search_view_search (GcalSearchView *view,
                          const gchar    *field,
                          const gchar    *query)
 {
+  GCAL_ENTRY;
+
   g_clear_pointer (&view->query, g_free);
   g_clear_pointer (&view->field, g_free);
 
   if (view->search_timeout_id != 0)
     g_source_remove (view->search_timeout_id);
-
 
   /* Only perform search on valid non-empty strings */
   if (query && g_utf8_strlen (query, -1) >= 3)
@@ -810,5 +818,7 @@ gcal_search_view_search (GcalSearchView *view,
     }
 
   update_view (view);
+
+  GCAL_EXIT;
 }
 
