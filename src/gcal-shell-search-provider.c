@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define G_LOG_DOMAIN "GcalShellSearchProvider"
+
 #include "gcal-shell-search-provider.h"
 #include "gcal-shell-search-provider-generated.h"
 

@@ -17,6 +17,8 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define G_LOG_DOMAIN "GcalEventWidget"
+
 #include <string.h>
 
 #include "gcal-event-widget.h"

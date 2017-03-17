@@ -22,6 +22,8 @@
 #include "config.h"
 #endif
 
+#define G_LOG_DOMAIN "GcalMonthView"
+
 #include "gcal-month-view.h"
 #include "gcal-subscriber-view-private.h"
 #include "gcal-utils.h"

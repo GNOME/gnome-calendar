@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define G_LOG_DOMAIN "GcaçSourceDialog"
+
 #include "gcal-source-dialog.h"
 #include "gcal-utils.h"
 

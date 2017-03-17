@@ -17,6 +17,8 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define G_LOG_DOMAIN "GcalDateSelector"
+
 #include "gcal-date-chooser.h"
 #include "gcal-date-selector.h"
 

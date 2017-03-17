@@ -17,6 +17,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define G_LOG_DOMAIN "GcalWeekGrid"
+
 #include "gcal-week-grid.h"
 #include "gcal-week-view.h"
 #include "gcal-utils.h"

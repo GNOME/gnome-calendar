@@ -18,6 +18,8 @@
 
 #include "config.h"
 
+#define G_LOG_DOMAIN "GcalMultiChoice"
+
 #include "gcal-multi-choice.h"
 
 struct _GcalMultiChoice
