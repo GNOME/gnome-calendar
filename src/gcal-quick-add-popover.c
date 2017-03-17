@@ -73,8 +73,8 @@ create_row_for_source (GcalManager *manager,
                        ESource     *source,
                        gboolean     writable)
 {
+  cairo_surface_t *surface;
   GtkWidget *row, *box, *icon, *label, *selected_icon;
-  GdkPixbuf *circle_pixbuf;
   GdkRGBA color;
   gchar *tooltip, *parent_name;
 
@@ -87,8 +87,8 @@ create_row_for_source (GcalManager *manager,
 
   /* The icon with the source color */
   get_color_name_from_source (source, &color);
-  circle_pixbuf = get_circle_pixbuf_from_color (&color, 16);
-  icon = gtk_image_new_from_pixbuf (circle_pixbuf);
+  surface = get_circle_surface_from_color (&color, 16);
+  icon = gtk_image_new_from_surface (surface);
 
   gtk_container_add (GTK_CONTAINER (box), icon);
 
@@ -135,7 +135,7 @@ create_row_for_source (GcalManager *manager,
   gtk_widget_show (box);
   gtk_widget_show (row);
 
-  g_clear_object (&circle_pixbuf);
+  g_clear_pointer (&surface, cairo_surface_destroy);
   g_free (parent_name);
   g_free (tooltip);
 
@@ -176,8 +176,8 @@ static void
 select_row (GcalQuickAddPopover *self,
             GtkListBoxRow       *row)
 {
+  cairo_surface_t *surface;
   GtkWidget *icon;
-  GdkPixbuf *circle_pixbuf;
   ESource *source;
   GdkRGBA color;
 
@@ -200,8 +200,8 @@ select_row (GcalQuickAddPopover *self,
   gtk_label_set_label (GTK_LABEL (self->calendar_name_label), e_source_get_display_name (source));
 
   get_color_name_from_source (source, &color);
-  circle_pixbuf = get_circle_pixbuf_from_color (&color, 16);
-  gtk_image_set_from_pixbuf (GTK_IMAGE (self->color_image), circle_pixbuf);
+  surface = get_circle_surface_from_color (&color, 16);
+  gtk_image_set_from_surface (GTK_IMAGE (self->color_image), surface);
 
   /* Return to the events page */
   gtk_stack_set_visible_child_name (GTK_STACK (self->stack), "events");
@@ -210,7 +210,7 @@ select_row (GcalQuickAddPopover *self,
   if (gtk_widget_get_visible (GTK_WIDGET (self)))
     gtk_entry_grab_focus_without_selecting (GTK_ENTRY (self->summary_entry));
 
-  g_clear_object (&circle_pixbuf);
+  g_clear_pointer (&surface, cairo_surface_destroy);
 }
 
 static void
@@ -348,8 +348,8 @@ on_source_changed (GcalManager         *manager,
                    ESource             *source,
                    GcalQuickAddPopover *self)
 {
+  cairo_surface_t *surface;
   GtkWidget *row, *color_icon, *name_label;
-  GdkPixbuf *circle_pixbuf;
   GdkRGBA color;
 
   row = get_row_for_source (self, source);
@@ -378,10 +378,10 @@ on_source_changed (GcalManager         *manager,
 
   /* Setup the source color, in case it changed */
   get_color_name_from_source (source, &color);
-  circle_pixbuf = get_circle_pixbuf_from_color (&color, 16);
-  gtk_image_set_from_pixbuf (GTK_IMAGE (color_icon), circle_pixbuf);
+  surface = get_circle_surface_from_color (&color, 16);
+  gtk_image_set_from_surface (GTK_IMAGE (color_icon), surface);
 
-  g_clear_object (&circle_pixbuf);
+  g_clear_pointer (&surface, cairo_surface_destroy);
 
   /* Also setup the row name, in case we just changed the source name */
   gtk_label_set_text (GTK_LABEL (name_label), e_source_get_display_name (source));

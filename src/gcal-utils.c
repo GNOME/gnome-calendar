@@ -187,13 +187,12 @@ gcal_get_month_name (gint i)
  *
  * Returns: (Transfer full): An instance of {@link GdkPixbuf} to be freed with g_object_unref()
  **/
-GdkPixbuf*
-gcal_get_pixbuf_from_color (GdkRGBA  *color,
-                            gint      size)
+cairo_surface_t*
+gcal_get_surface_from_color (GdkRGBA  *color,
+                             gint      size)
 {
   cairo_surface_t *surface;
   cairo_t *cr;
-  GdkPixbuf *pix;
 
   /* TODO: review size here, maybe not hardcoded */
   surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, size, size);
@@ -207,22 +206,17 @@ gcal_get_pixbuf_from_color (GdkRGBA  *color,
   cairo_rectangle (cr, 0, 0, size, size);
   cairo_fill (cr);
   cairo_destroy (cr);
-  pix = gdk_pixbuf_get_from_surface (surface,
-                                     0, 0,
-                                     size, size);
-  cairo_surface_destroy (surface);
-  return pix;
+
+  return surface;
 }
 
-GdkPixbuf*
-get_circle_pixbuf_from_color (GdkRGBA *color,
-                              gint     size)
+cairo_surface_t*
+get_circle_surface_from_color (GdkRGBA *color,
+                               gint     size)
 {
   cairo_surface_t *surface;
   cairo_t *cr;
-  GdkPixbuf *pix;
 
-  /* TODO: review size here, maybe not hardcoded */
   surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, size, size);
   cr = cairo_create (surface);
 
@@ -234,11 +228,8 @@ get_circle_pixbuf_from_color (GdkRGBA *color,
   cairo_arc (cr, size / 2.0, size / 2.0, size / 2.0, 0., 2 * M_PI);
   cairo_fill (cr);
   cairo_destroy (cr);
-  pix = gdk_pixbuf_get_from_surface (surface,
-                                     0, 0,
-                                     size, size);
-  cairo_surface_destroy (surface);
-  return pix;
+
+  return surface;
 }
 
 void

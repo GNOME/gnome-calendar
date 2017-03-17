@@ -203,6 +203,8 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
   g_variant_builder_init (&abuilder, G_VARIANT_TYPE ("aa{sv}"));
   for (i = 0; i < g_strv_length (results); i++)
     {
+      cairo_surface_t *surface;
+
       uuid = results[i];
       event = g_hash_table_lookup (priv->events, uuid);
 
@@ -210,7 +212,8 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
       g_variant_builder_add (&builder, "{sv}", "id", g_variant_new_string (uuid));
       g_variant_builder_add (&builder, "{sv}", "name", g_variant_new_string (gcal_event_get_summary (event)));
 
-      gicon = get_circle_pixbuf_from_color (gcal_event_get_color (event), 128);
+      surface = get_circle_surface_from_color (gcal_event_get_color (event), 96);
+      gicon = gdk_pixbuf_get_from_surface (surface, 0, 0, 96, 96);
       icon_variant = g_icon_serialize (G_ICON (gicon));
       g_variant_builder_add (&builder, "{sv}", "icon", icon_variant);
       g_object_unref (gicon);
@@ -228,6 +231,8 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
 
       g_variant_builder_add (&builder, "{sv}", "description", g_variant_new_string (desc));
       g_variant_builder_add_value (&abuilder, g_variant_builder_end (&builder));
+
+      g_clear_pointer (&surface, cairo_surface_destroy);
     }
   g_dbus_method_invocation_return_value (invocation, g_variant_new ("(aa{sv})", &abuilder));
 

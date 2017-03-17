@@ -153,13 +153,15 @@ fill_sources_menu (GcalEditDialog *dialog)
       ESource *source;
       GMenuItem *item;
       GdkRGBA color;
+      cairo_surface_t *surface;
       GdkPixbuf *pix;
 
       source = E_SOURCE (aux->data);
 
       /* retrieve color */
       get_color_name_from_source (source, &color);
-      pix = get_circle_pixbuf_from_color (&color, 16);;
+      surface = get_circle_surface_from_color (&color, 16);
+      pix = gdk_pixbuf_get_from_surface (surface, 0, 0, 16, 16);
 
       /* menu item */
       item = g_menu_item_new (e_source_get_display_name (source), "select-calendar");
@@ -178,6 +180,7 @@ fill_sources_menu (GcalEditDialog *dialog)
 
       g_menu_append_item (dialog->sources_menu, item);
 
+      g_clear_pointer (&surface, cairo_surface_destroy);
       g_object_unref (pix);
       g_object_unref (item);
     }
@@ -217,18 +220,19 @@ on_calendar_selected (GSimpleAction *action,
       if (g_strcmp0 (e_source_get_uid (source), uid) == 0)
       {
         GdkRGBA color;
-        GdkPixbuf *pix;
+        cairo_surface_t *surface;
 
         /* retrieve color */
         get_color_name_from_source (source, &color);
 
-        pix = get_circle_pixbuf_from_color (&color, 16);
-        gtk_image_set_from_pixbuf (GTK_IMAGE (self->source_image), pix);
-        g_object_unref (pix);
+        surface = get_circle_surface_from_color (&color, 16);
+        gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
 
         self->selected_source = source;
 
         gtk_label_set_label (GTK_LABEL (self->subtitle_label), e_source_get_display_name (source));
+
+        g_clear_pointer (&surface, cairo_surface_destroy);
         break;
       }
     }
@@ -1062,7 +1066,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
     {
       GDateTime *date_start;
       GDateTime *date_end;
-      GdkPixbuf *pix;
+      cairo_surface_t *surface;
       ESource *source;
       const gchar *summary;
       gboolean all_day;
@@ -1095,9 +1099,9 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
         gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), summary);
 
       /* dialog titlebar's title & subtitle */
-      pix = get_circle_pixbuf_from_color (gcal_event_get_color (event), 16);
-      gtk_image_set_from_pixbuf (GTK_IMAGE (dialog->source_image), pix);
-      g_object_unref (pix);
+      surface = get_circle_surface_from_color (gcal_event_get_color (event), 16);
+      gtk_image_set_from_surface (GTK_IMAGE (dialog->source_image), surface);
+      g_clear_pointer (&surface, cairo_surface_destroy);
 
       gtk_label_set_label (GTK_LABEL (dialog->subtitle_label), e_source_get_display_name (source));
 

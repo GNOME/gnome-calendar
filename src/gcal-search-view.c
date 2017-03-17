@@ -297,7 +297,7 @@ make_row_for_event (GcalSearchView *view,
 {
   GDateTime *local_datetime;
   GDateTime *date_start;
-  GdkPixbuf *pixbuf;
+  cairo_surface_t *surface;
 
   GtkWidget *row;
   GtkWidget *grid;
@@ -311,10 +311,10 @@ make_row_for_event (GcalSearchView *view,
   GtkWidget *image;
 
   /* get event color */
-  pixbuf = gcal_get_pixbuf_from_color (gcal_event_get_color (event), 16);
+  surface = gcal_get_surface_from_color (gcal_event_get_color (event), 16);
 
   /* make an image of the color */
-  image = gtk_image_new_from_pixbuf (pixbuf);
+  image = gtk_image_new_from_surface (surface);
 
   /* grid & box*/
   row = gtk_list_box_row_new ();
@@ -397,7 +397,7 @@ make_row_for_event (GcalSearchView *view,
   gtk_widget_show_all (row);
 
   g_clear_pointer (&local_datetime, g_date_time_unref);
-  g_object_unref (pixbuf);
+  g_clear_pointer (&surface, cairo_surface_destroy);
 
   return row;
 }
