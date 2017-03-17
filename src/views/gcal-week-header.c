@@ -21,11 +21,12 @@
 
 #define G_LOG_DOMAIN "GcalWeekHeader"
 
-#include "gcal-week-header.h"
-#include "gcal-week-view.h"
+#include "gcal-debug.h"
+#include "gcal-event-widget.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
-#include "gcal-event-widget.h"
+#include "gcal-week-header.h"
+#include "gcal-week-view.h"
 
 #include <glib/gi18n.h>
 #include <string.h>
@@ -1390,6 +1391,8 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   gboolean ltr;
   gint drop_cell;
 
+  GCAL_ENTRY;
+
   self = GCAL_WEEK_HEADER (widget);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
   drop_cell = get_dnd_cell (widget, x, y);
@@ -1462,7 +1465,7 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
 
   gtk_widget_queue_draw (widget);
 
-  return TRUE;
+  GCAL_RETURN (TRUE);
 }
 
 static void

@@ -302,12 +302,16 @@ gcal_week_view_component_added (ECalDataModelSubscriber *subscriber,
 
   GcalEvent *event;
 
+  GCAL_ENTRY;
+
   event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, NULL);
 
   if (gcal_event_is_multiday (event) || gcal_event_get_all_day (event))
     gcal_week_header_add_event (GCAL_WEEK_HEADER (self->header), event);
   else
     gcal_week_grid_add_event (GCAL_WEEK_GRID (self->week_grid), event);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -319,6 +323,8 @@ gcal_week_view_component_modified (ECalDataModelSubscriber *subscriber,
   GcalWeekHeader *header;
   gchar *uuid;
 
+  GCAL_ENTRY;
+
   header = GCAL_WEEK_HEADER (self->header);
 
   uuid = get_uuid_from_component (e_client_get_source (E_CLIENT (client)), comp);
@@ -329,6 +335,8 @@ gcal_week_view_component_modified (ECalDataModelSubscriber *subscriber,
   gcal_week_view_component_added (subscriber, client, comp);
 
   g_free (uuid);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -341,6 +349,8 @@ gcal_week_view_component_removed (ECalDataModelSubscriber *subscriber,
   ESource *source;
   gchar *uuid;
 
+  GCAL_ENTRY;
+
   source = e_client_get_source (E_CLIENT (client));
 
   if (rid != NULL)
@@ -352,6 +362,8 @@ gcal_week_view_component_removed (ECalDataModelSubscriber *subscriber,
   gcal_week_grid_remove_event (GCAL_WEEK_GRID (self->week_grid), uuid);
 
   g_free (uuid);
+
+  GCAL_EXIT;
 }
 
 static void
