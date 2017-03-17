@@ -55,7 +55,6 @@ struct _GcalWeekGrid
   gboolean            use_24h_format : 1;
 
   icaltimetype       *active_date;
-  icaltimetype       *current_date;
 
   GcalRangeTree      *events;
 
@@ -257,7 +256,6 @@ gcal_week_grid_finalize (GObject *object)
 
   g_clear_pointer (&self->events, gcal_range_tree_unref);
   g_clear_pointer (&self->active_date, g_free);
-  g_clear_pointer (&self->current_date, g_free);
 
   if (self->redraw_timeout_id > 0)
     {
@@ -1177,18 +1175,6 @@ gcal_week_grid_set_use_24h_format (GcalWeekGrid *self,
   g_return_if_fail (GCAL_IS_WEEK_GRID (self));
 
   self->use_24h_format = use_24h_format;
-}
-
-void
-gcal_week_grid_set_current_date (GcalWeekGrid *self,
-                                 icaltimetype *current_date)
-{
-  g_return_if_fail (GCAL_IS_WEEK_GRID (self));
-
-  g_clear_pointer (&self->current_date, g_free);
-  self->current_date = gcal_dup_icaltime (current_date);
-
-  gtk_widget_queue_draw (GTK_WIDGET (self));
 }
 
 void

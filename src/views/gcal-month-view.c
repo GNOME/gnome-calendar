@@ -82,8 +82,6 @@ struct _GcalMonthView
   /* text direction factors */
   gboolean        k;
 
-  icaltimetype   *current_date;
-
   /* The cell hovered during Drag and Drop */
   gint            dnd_cell;
 
@@ -1496,6 +1494,8 @@ gcal_month_view_draw (GtkWidget *widget,
   PangoLayout *layout;
   PangoFontDescription *font_desc, *sfont_desc;
 
+  g_autoptr (GDateTime) today;
+
   gint font_width, font_height, pos_x, pos_y, shown_rows;
   gint i, j, sw, lower_mark = 43, upper_mark = -2;
   gint cell_width, cell_height;
@@ -1504,6 +1504,8 @@ gcal_month_view_draw (GtkWidget *widget,
 
   self = GCAL_MONTH_VIEW (widget);
   ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
+
+  today = g_date_time_new_now_local ();
 
   /* fonts and colors selection */
   context = gtk_widget_get_style_context (widget);
@@ -1705,8 +1707,9 @@ gcal_month_view_draw (GtkWidget *widget,
           g_object_unref (overflow_layout);
         }
 
-      if (self->date->year == self->current_date->year && self->date->month == self->current_date->month &&
-          j == self->current_date->day)
+      if (self->date->year == g_date_time_get_year (today) &&
+          self->date->month == g_date_time_get_month (today) &&
+          j == g_date_time_get_day_of_month (today))
         {
           PangoFontDescription *cfont_desc;
           PangoLayout *clayout;
@@ -2286,15 +2289,6 @@ gcal_month_view_init (GcalMonthView *self)
 }
 
 /* Public API */
-void
-gcal_month_view_set_current_date (GcalMonthView *self,
-                                  icaltimetype  *current_date)
-{
-  g_return_if_fail (GCAL_IS_MONTH_VIEW (self));
-
-  self->current_date = current_date;
-  gtk_widget_queue_draw (GTK_WIDGET (self));
-}
 
 /**
  * gcal_month_view_set_first_weekday:

@@ -40,9 +40,6 @@ void                 gcal_week_view_set_first_weekday            (GcalWeekView  
 void                 gcal_week_view_set_use_24h_format           (GcalWeekView       *self,
                                                                   gboolean            use_24h);
 
-void                 gcal_week_view_set_current_date             (GcalWeekView       *self,
-                                                                  icaltimetype       *current_date);
-
 G_END_DECLS
 
 #endif /* __GCAL_WEEK_VIEW_H__ */

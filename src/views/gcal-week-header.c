@@ -69,7 +69,6 @@ struct _GcalWeekHeader
   gint              redraw_timeout_id;
 
   icaltimetype     *active_date;
-  icaltimetype     *current_date;
 
   gint              selection_start;
   gint              selection_end;
@@ -1025,7 +1024,6 @@ gcal_week_header_finalize (GObject *object)
   gint i;
 
   g_clear_pointer (&self->active_date, g_free);
-  g_clear_pointer (&self->current_date, g_free);
 
   if (self->redraw_timeout_id > 0)
     {
@@ -1742,20 +1740,6 @@ gcal_week_header_get_children_by_uuid (GcalWeekHeader *self,
   g_list_free (children);
 
   return result;
-}
-
-void
-gcal_week_header_set_current_date (GcalWeekHeader *self,
-                                   icaltimetype   *current_date)
-{
-  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
-
-  g_clear_pointer (&self->current_date, g_free);
-  self->current_date = gcal_dup_icaltime (current_date);
-
-  update_title (self);
-
-  gtk_widget_queue_draw (GTK_WIDGET (self));
 }
 
 GtkSizeGroup*
