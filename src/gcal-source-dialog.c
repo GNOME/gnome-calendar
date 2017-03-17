@@ -569,7 +569,7 @@ source_color_changed (GObject    *source,
                       GtkImage *icon)
 {
   ESourceSelectable *extension;
-  GdkPixbuf *pixbuf;
+  cairo_surface_t *surface;
   GdkRGBA out_color;
 
   extension = E_SOURCE_SELECTABLE (source);
@@ -582,9 +582,9 @@ source_color_changed (GObject    *source,
 
   if (gdk_rgba_parse (&out_color, e_source_selectable_get_color (extension)))
     {
-      pixbuf = get_circle_pixbuf_from_color (&out_color, 24);
-      gtk_image_set_from_pixbuf (GTK_IMAGE (icon), pixbuf);
-      g_object_unref (pixbuf);
+      surface = get_circle_surface_from_color (&out_color, 24);
+      gtk_image_set_from_surface (GTK_IMAGE (icon), surface);
+      g_clear_pointer (&surface, cairo_surface_destroy);
     }
 }
 
@@ -610,10 +610,10 @@ static GtkWidget*
 make_row_from_source (GcalSourceDialog *dialog,
                       ESource          *source)
 {
+  cairo_surface_t *surface;
   GtkBuilder *builder;
   GtkWidget *bottom_label;
   GtkWidget *top_label;
-  GdkPixbuf *pixbuf;
   GtkWidget *icon;
   GtkWidget *row;
   GdkRGBA color;
@@ -632,9 +632,9 @@ make_row_from_source (GcalSourceDialog *dialog,
 
   /* source color icon */
   get_color_name_from_source (source, &color);
-  pixbuf = get_circle_pixbuf_from_color (&color, 24);
+  surface = get_circle_surface_from_color (&color, 24);
   icon = GTK_WIDGET (gtk_builder_get_object (builder, "icon"));
-  gtk_image_set_from_pixbuf (GTK_IMAGE (icon), pixbuf);
+  gtk_image_set_from_surface (GTK_IMAGE (icon), surface);
 
   /* source name label */
   top_label = GTK_WIDGET (gtk_builder_get_object (builder, "title"));
@@ -650,8 +650,8 @@ make_row_from_source (GcalSourceDialog *dialog,
   bottom_label = GTK_WIDGET (gtk_builder_get_object (builder, "subtitle"));
   gtk_label_set_label (GTK_LABEL (bottom_label), parent_name);
 
+  g_clear_pointer (&surface, cairo_surface_destroy);
   g_object_unref (builder);
-  g_object_unref (pixbuf);
   g_free (parent_name);
 
   return row;

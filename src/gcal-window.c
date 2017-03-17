@@ -888,7 +888,7 @@ make_row_from_source (GcalWindow *window,
 {
   GtkWidget *label, *icon, *checkbox, *box, *row;
   GtkStyleContext *context;
-  GdkPixbuf *pixbuf;
+  cairo_surface_t *surface;
   GdkRGBA color;
 
   row = gtk_list_box_row_new ();
@@ -905,8 +905,8 @@ make_row_from_source (GcalWindow *window,
 
   /* source color icon */
   get_color_name_from_source (source, &color);
-  pixbuf = get_circle_pixbuf_from_color (&color, 16);
-  icon = gtk_image_new_from_pixbuf (pixbuf);
+  surface = get_circle_surface_from_color (&color, 16);
+  icon = gtk_image_new_from_surface (surface);
 
   gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
 
@@ -930,7 +930,7 @@ make_row_from_source (GcalWindow *window,
 
   gtk_widget_show_all (row);
 
-  g_object_unref (pixbuf);
+  g_clear_pointer (&surface, cairo_surface_destroy);
 
   return row;
 }
