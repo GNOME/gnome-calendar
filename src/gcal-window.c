@@ -153,131 +153,6 @@ static void           on_view_action_activated           (GSimpleAction       *a
                                                           GVariant            *param,
                                                           gpointer             user_data);
 
-static gboolean       key_pressed                        (GtkWidget           *widget,
-                                                          GdkEvent            *event,
-                                                          gpointer             user_data);
-
-static void           update_today_button_sensitive      (GcalWindow          *window);
-
-static void           date_updated                       (GtkButton           *buttton,
-                                                          gpointer             user_data);
-
-static void           search_event_selected              (GcalSearchView      *search_view,
-                                                          icaltimetype        *date,
-                                                          gpointer             user_data);
-
-static gint           calendar_listbox_sort_func         (GtkListBoxRow       *row1,
-                                                          GtkListBoxRow       *row2,
-                                                          gpointer             user_data);
-
-static void           load_geometry                      (GcalWindow          *window);
-
-static gboolean       save_geometry                      (gpointer             user_data);
-
-static void           view_changed                       (GObject             *object,
-                                                          GParamSpec          *pspec,
-                                                          gpointer             user_data);
-
-static void           set_new_event_mode                 (GcalWindow          *window,
-                                                          gboolean             enabled);
-
-static void           show_new_event_widget              (GcalView            *view,
-                                                          gpointer             start_span,
-                                                          gpointer             end_span,
-                                                          gdouble              x,
-                                                          gdouble              y,
-                                                          GcalWindow          *window);
-
-static void           close_new_event_widget             (GtkButton           *button,
-                                                          gpointer             user_data);
-
-static void           create_notification                (GcalWindow          *window,
-                                                          gchar               *message,
-                                                          gchar               *button_label);
-
-static void           hide_notification                  (GcalWindow          *window,
-                                                          GtkWidget           *button);
-
-/* calendar management */
-static void           add_source                         (GcalManager         *manager,
-                                                          ESource             *source,
-                                                          gboolean             enabled,
-                                                          gpointer             user_data);
-
-
-static GtkWidget*     make_row_from_source               (GcalWindow          *window,
-                                                          ESource             *source);
-
-static void           remove_source                      (GcalManager         *manager,
-                                                          ESource             *source,
-                                                          gpointer             user_data);
-
-static void           source_row_activated               (GtkListBox          *listbox,
-                                                          GtkListBoxRow       *row,
-                                                          gpointer             user_data);
-
-static void           on_calendar_toggled                (GObject             *object,
-                                                          GParamSpec          *pspec,
-                                                          gpointer             user_data);
-
-static gboolean       refresh_sources                    (GcalWindow          *window);
-
-static gboolean       window_state_changed               (GtkWidget           *window,
-                                                          GdkEvent            *event,
-                                                          gpointer             user_data);
-
-/* handling events interaction */
-static void           edit_event                         (GcalQuickAddPopover *popover,
-                                                          GcalEvent           *event,
-                                                          GcalWindow          *self);
-
-static void           create_event_detailed_cb           (GcalView            *view,
-                                                          gpointer             start_span,
-                                                          gpointer             end_span,
-                                                          gpointer             user_data);
-
-static void           event_activated                    (GcalView            *view,
-                                                          GcalEventWidget     *event_widget,
-                                                          gpointer             user_data);
-
-static void           edit_dialog_closed                 (GtkDialog           *dialog,
-                                                          gint                 response,
-                                                          gpointer             user_data);
-
-static void           search_toggled                     (GObject             *object,
-                                                          GParamSpec          *pspec,
-                                                          gpointer             user_data);
-
-static void           search_changed                     (GtkEditable         *editable,
-                                                          gpointer             user_data);
-
-static void           remove_event                       (GtkWidget           *notification,
-                                                          GParamSpec          *spec,
-                                                          gpointer             user_data);
-
-static void           undo_remove_action                 (GtkButton           *button,
-                                                          gpointer             user_data);
-
-static void           gcal_window_constructed            (GObject             *object);
-
-static void           gcal_window_finalize               (GObject             *object);
-
-static void           gcal_window_set_property           (GObject             *object,
-                                                          guint                property_id,
-                                                          const GValue        *value,
-                                                          GParamSpec          *pspec);
-
-static void           gcal_window_get_property           (GObject             *object,
-                                                          guint                property_id,
-                                                          GValue              *value,
-                                                          GParamSpec          *pspec);
-
-static gboolean       gcal_window_configure_event        (GtkWidget           *widget,
-                                                          GdkEventConfigure   *event);
-
-static gboolean       gcal_window_state_event            (GtkWidget           *widget,
-                                                          GdkEventWindowState *event);
-
 G_DEFINE_TYPE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static const GActionEntry actions[] = {
@@ -288,76 +163,44 @@ static const GActionEntry actions[] = {
   {"show-calendars", on_show_calendars_action_activated },
 };
 
+/*
+ * Auxiliary methods
+ */
 static void
-on_show_calendars_action_activated (GSimpleAction *action,
-                                    GVariant      *param,
-                                    gpointer       user_data)
+update_today_button_sensitive (GcalWindow *window)
 {
-  GcalWindow *window = GCAL_WINDOW (user_data);
+  gboolean sensitive;
 
-  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (window->source_dialog), GCAL_SOURCE_DIALOG_MODE_NORMAL);
+  switch (window->active_view)
+    {
+    case GCAL_WINDOW_VIEW_DAY:
+      sensitive = window->active_date->year != window->current_date->year ||
+                  window->active_date->month != window->current_date->month ||
+                  window->active_date->day != window->current_date->day;
+      break;
 
-  gtk_widget_hide (window->calendar_popover);
+    case GCAL_WINDOW_VIEW_WEEK:
+      sensitive = window->active_date->year != window->current_date->year ||
+                  icaltime_week_number (*window->active_date) !=  icaltime_week_number (*window->current_date);
+      break;
 
-  gtk_widget_show (window->source_dialog);
-}
+    case GCAL_WINDOW_VIEW_MONTH:
+      sensitive = window->active_date->year != window->current_date->year ||
+                  window->active_date->month != window->current_date->month;
+      break;
 
-static void
-on_date_action_activated (GSimpleAction *action,
-                          GVariant      *param,
-                          gpointer       user_data)
-{
-  GcalWindow *window;
-  const gchar *action_name;
+    case GCAL_WINDOW_VIEW_YEAR:
+      sensitive = window->active_date->year != window->current_date->year;
+      break;
 
-  g_return_if_fail (GCAL_IS_WINDOW (user_data));
+    case GCAL_WINDOW_VIEW_LIST:
+    case GCAL_WINDOW_VIEW_SEARCH:
+    default:
+      sensitive = TRUE;
+      break;
+    }
 
-  window = GCAL_WINDOW (user_data);
-  action_name = g_action_get_name (G_ACTION (action));
-
-  if (g_strcmp0 (action_name, "next") == 0)
-    date_updated (GTK_BUTTON (window->forward_button), user_data);
-  else if (g_strcmp0 (action_name, "previous") == 0)
-    date_updated (GTK_BUTTON (window->back_button), user_data);
-  else if (g_strcmp0 (action_name, "today") == 0)
-    date_updated (GTK_BUTTON (window->today_button), user_data);
-}
-
-static void
-on_view_action_activated (GSimpleAction *action,
-                          GVariant      *param,
-                          gpointer       user_data)
-{
-  GcalWindow *window = GCAL_WINDOW (user_data);
-  gint32 view;
-
-  view = g_variant_get_int32 (param);
-
-  // -1 means next view
-  if (view == -1)
-    view = ++(window->active_view);
-  else if (view == -2)
-    view = --(window->active_view);
-
-  window->active_view = CLAMP (view, CLAMP(view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_MONTH), GCAL_WINDOW_VIEW_YEAR);
-  gtk_stack_set_visible_child (GTK_STACK (window->views_stack), window->views[window->active_view]);
-
-  g_object_notify (G_OBJECT (user_data), "active-view");
-}
-
-static gboolean
-key_pressed (GtkWidget *widget,
-             GdkEvent  *event,
-             gpointer   user_data)
-{
-  GcalWindow *window = GCAL_WINDOW (user_data);
-
-  /* special case: creating an event */
-  if (window->new_event_mode)
-    return GDK_EVENT_PROPAGATE;
-
-  return gtk_search_bar_handle_event (GTK_SEARCH_BAR (window->search_bar),
-                                      event);
+  gtk_widget_set_sensitive (window->today_button, sensitive);
 }
 
 static void
@@ -437,66 +280,6 @@ update_active_date (GcalWindow   *window,
   GCAL_EXIT;
 }
 
-static gboolean
-update_current_date (GcalWindow *window)
-{
-  guint seconds;
-
-  GCAL_ENTRY;
-
-  if (window->current_date == NULL)
-    window->current_date = g_new0 (icaltimetype, 1);
-
-  *(window->current_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (window->manager));
-  *(window->current_date) = icaltime_set_timezone (window->current_date, gcal_manager_get_system_timezone (window->manager));
-
-  gcal_week_view_set_current_date (GCAL_WEEK_VIEW (window->week_view), window->current_date);
-  gcal_month_view_set_current_date (GCAL_MONTH_VIEW (window->month_view), window->current_date);
-  gcal_year_view_set_current_date (GCAL_YEAR_VIEW (window->year_view), window->current_date);
-
-  seconds = 24 * 60 * 60 - (icaltime_as_timet (*(window->current_date)) % (24 * 60 * 60));
-  g_timeout_add_seconds (seconds, (GSourceFunc) update_current_date, window);
-
-  GCAL_RETURN (FALSE);
-}
-
-static void
-update_today_button_sensitive (GcalWindow *window)
-{
-  gboolean sensitive;
-
-  switch (window->active_view)
-    {
-    case GCAL_WINDOW_VIEW_DAY:
-      sensitive = window->active_date->year != window->current_date->year ||
-                  window->active_date->month != window->current_date->month ||
-                  window->active_date->day != window->current_date->day;
-      break;
-
-    case GCAL_WINDOW_VIEW_WEEK:
-      sensitive = window->active_date->year != window->current_date->year ||
-                  icaltime_week_number (*window->active_date) !=  icaltime_week_number (*window->current_date);
-      break;
-
-    case GCAL_WINDOW_VIEW_MONTH:
-      sensitive = window->active_date->year != window->current_date->year ||
-                  window->active_date->month != window->current_date->month;
-      break;
-
-    case GCAL_WINDOW_VIEW_YEAR:
-      sensitive = window->active_date->year != window->current_date->year;
-      break;
-
-    case GCAL_WINDOW_VIEW_LIST:
-    case GCAL_WINDOW_VIEW_SEARCH:
-    default:
-      sensitive = TRUE;
-      break;
-    }
-
-  gtk_widget_set_sensitive (window->today_button, sensitive);
-}
-
 static void
 date_updated (GtkButton  *button,
               gpointer    user_data)
@@ -549,6 +332,102 @@ date_updated (GtkButton  *button,
   update_active_date (user_data, new_date);
 
   GCAL_EXIT;
+}
+
+
+static void
+on_show_calendars_action_activated (GSimpleAction *action,
+                                    GVariant      *param,
+                                    gpointer       user_data)
+{
+  GcalWindow *window = GCAL_WINDOW (user_data);
+
+  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (window->source_dialog), GCAL_SOURCE_DIALOG_MODE_NORMAL);
+
+  gtk_widget_hide (window->calendar_popover);
+
+  gtk_widget_show (window->source_dialog);
+}
+
+static void
+on_date_action_activated (GSimpleAction *action,
+                          GVariant      *param,
+                          gpointer       user_data)
+{
+  GcalWindow *window;
+  const gchar *action_name;
+
+  g_return_if_fail (GCAL_IS_WINDOW (user_data));
+
+  window = GCAL_WINDOW (user_data);
+  action_name = g_action_get_name (G_ACTION (action));
+
+  if (g_strcmp0 (action_name, "next") == 0)
+    date_updated (GTK_BUTTON (window->forward_button), user_data);
+  else if (g_strcmp0 (action_name, "previous") == 0)
+    date_updated (GTK_BUTTON (window->back_button), user_data);
+  else if (g_strcmp0 (action_name, "today") == 0)
+    date_updated (GTK_BUTTON (window->today_button), user_data);
+}
+
+static void
+on_view_action_activated (GSimpleAction *action,
+                          GVariant      *param,
+                          gpointer       user_data)
+{
+  GcalWindow *window = GCAL_WINDOW (user_data);
+  gint32 view;
+
+  view = g_variant_get_int32 (param);
+
+  // -1 means next view
+  if (view == -1)
+    view = ++(window->active_view);
+  else if (view == -2)
+    view = --(window->active_view);
+
+  window->active_view = CLAMP (view, CLAMP(view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_MONTH), GCAL_WINDOW_VIEW_YEAR);
+  gtk_stack_set_visible_child (GTK_STACK (window->views_stack), window->views[window->active_view]);
+
+  g_object_notify (G_OBJECT (user_data), "active-view");
+}
+
+static gboolean
+key_pressed (GtkWidget *widget,
+             GdkEvent  *event,
+             gpointer   user_data)
+{
+  GcalWindow *window = GCAL_WINDOW (user_data);
+
+  /* special case: creating an event */
+  if (window->new_event_mode)
+    return GDK_EVENT_PROPAGATE;
+
+  return gtk_search_bar_handle_event (GTK_SEARCH_BAR (window->search_bar),
+                                      event);
+}
+
+static gboolean
+update_current_date (GcalWindow *window)
+{
+  guint seconds;
+
+  GCAL_ENTRY;
+
+  if (window->current_date == NULL)
+    window->current_date = g_new0 (icaltimetype, 1);
+
+  *(window->current_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (window->manager));
+  *(window->current_date) = icaltime_set_timezone (window->current_date, gcal_manager_get_system_timezone (window->manager));
+
+  gcal_week_view_set_current_date (GCAL_WEEK_VIEW (window->week_view), window->current_date);
+  gcal_month_view_set_current_date (GCAL_MONTH_VIEW (window->month_view), window->current_date);
+  gcal_year_view_set_current_date (GCAL_YEAR_VIEW (window->year_view), window->current_date);
+
+  seconds = 24 * 60 * 60 - (icaltime_as_timet (*(window->current_date)) % (24 * 60 * 60));
+  g_timeout_add_seconds (seconds, (GSourceFunc) update_current_date, window);
+
+  GCAL_RETURN (FALSE);
 }
 
 static void
@@ -859,29 +738,30 @@ hide_notification_scheduled (gpointer window)
 }
 
 static void
-add_source (GcalManager *manager,
-            ESource     *source,
-            gboolean     enabled,
-            gpointer     user_data)
+on_calendar_toggled (GObject    *object,
+                     GParamSpec *pspec,
+                     gpointer    user_data)
 {
   GcalWindow *window;
+  gboolean active;
   GtkWidget *row;
+  ESource *source;
 
   window = GCAL_WINDOW (user_data);
+  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object));
+  row = gtk_widget_get_parent (gtk_widget_get_parent (GTK_WIDGET (object)));
+  source = g_object_get_data (G_OBJECT (row), "source");
 
-  row = make_row_from_source (GCAL_WINDOW (user_data), source);
+  if (source == NULL)
+    return;
 
-  gtk_container_add (GTK_CONTAINER (window->calendar_listbox), row);
+  /* Enable/disable the toggled calendar */
+  if (active)
+    gcal_manager_enable_source (window->manager, source);
+  else
+    gcal_manager_disable_source (window->manager, source);
 }
 
-/**
- * make_row_from_source:
- *
- * Create a GtkListBoxRow for a given
- * ESource.
- *
- * Returns: (transfer full) the new row
- */
 static GtkWidget*
 make_row_from_source (GcalWindow *window,
                       ESource    *source)
@@ -933,6 +813,22 @@ make_row_from_source (GcalWindow *window,
   g_clear_pointer (&surface, cairo_surface_destroy);
 
   return row;
+}
+
+static void
+add_source (GcalManager *manager,
+            ESource     *source,
+            gboolean     enabled,
+            gpointer     user_data)
+{
+  GcalWindow *window;
+  GtkWidget *row;
+
+  window = GCAL_WINDOW (user_data);
+
+  row = make_row_from_source (GCAL_WINDOW (user_data), source);
+
+  gtk_container_add (GTK_CONTAINER (window->calendar_listbox), row);
 }
 
 static void
@@ -1027,31 +923,6 @@ source_changed (GcalWindow *window,
     }
 
   g_list_free (children);
-}
-
-static void
-on_calendar_toggled (GObject    *object,
-                     GParamSpec *pspec,
-                     gpointer    user_data)
-{
-  GcalWindow *window;
-  gboolean active;
-  GtkWidget *row;
-  ESource *source;
-
-  window = GCAL_WINDOW (user_data);
-  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object));
-  row = gtk_widget_get_parent (gtk_widget_get_parent (GTK_WIDGET (object)));
-  source = g_object_get_data (G_OBJECT (row), "source");
-
-  if (source == NULL)
-    return;
-
-  /* Enable/disable the toggled calendar */
-  if (active)
-    gcal_manager_enable_source (window->manager, source);
-  else
-    gcal_manager_disable_source (window->manager, source);
 }
 
 static gboolean
@@ -1313,139 +1184,6 @@ schedule_open_edit_dialog_by_uuid (OpenEditDialogData *edit_dialog_data)
 }
 
 static void
-gcal_window_class_init(GcalWindowClass *klass)
-{
-  GObjectClass *object_class;
-  GtkWidgetClass *widget_class;
-
-  object_class = G_OBJECT_CLASS (klass);
-  object_class->constructed = gcal_window_constructed;
-  object_class->finalize = gcal_window_finalize;
-  object_class->set_property = gcal_window_set_property;
-  object_class->get_property = gcal_window_get_property;
-
-  widget_class = GTK_WIDGET_CLASS (klass);
-  widget_class->configure_event = gcal_window_configure_event;
-  widget_class->window_state_event = gcal_window_state_event;
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/window.ui");
-
-  g_object_class_install_property (
-      object_class,
-      PROP_ACTIVE_VIEW,
-      g_param_spec_enum ("active-view",
-                         "Active View",
-                         "The active view, eg: month, week, etc.",
-                         GCAL_WINDOW_VIEW_TYPE,
-                         GCAL_WINDOW_VIEW_MONTH,
-                         G_PARAM_READWRITE));
-
-  g_object_class_install_property (
-      object_class,
-      PROP_MANAGER,
-      g_param_spec_object ("manager",
-                           "The manager object",
-                           "A weak reference to the app manager object",
-                           GCAL_TYPE_MANAGER,
-                           G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
-
-  g_object_class_install_property (
-      object_class,
-      PROP_ACTIVE_DATE,
-      g_param_spec_boxed ("active-date",
-                          "Date",
-                          "The active/selected date",
-                          ICAL_TIME_TYPE,
-                          G_PARAM_CONSTRUCT |
-                          G_PARAM_READWRITE));
-
-  g_object_class_install_property (
-      object_class,
-      PROP_NEW_EVENT_MODE,
-      g_param_spec_boolean ("new-event-mode",
-                            "New Event mode",
-                            "Whether the window is in new-event-mode or not",
-                            FALSE,
-                            G_PARAM_READWRITE));
-
-  /* widgets */
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, edit_dialog);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, main_box);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, menu_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_bar);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_popover);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, source_dialog);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, back_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, today_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, forward_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_overlay);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, week_view);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, year_view);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_view);
-
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_action_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_close_button);
-
-  gtk_widget_class_bind_template_callback (widget_class, source_row_activated);
-
-  gtk_widget_class_bind_template_callback (widget_class, key_pressed);
-  gtk_widget_class_bind_template_callback (widget_class, search_toggled);
-  gtk_widget_class_bind_template_callback (widget_class, search_changed);
-  gtk_widget_class_bind_template_callback (widget_class, view_changed);
-  gtk_widget_class_bind_template_callback (widget_class, date_updated);
-
-  /* Event removal related */
-  gtk_widget_class_bind_template_callback (widget_class, hide_notification);
-  gtk_widget_class_bind_template_callback (widget_class, remove_event);
-  gtk_widget_class_bind_template_callback (widget_class, undo_remove_action);
-
-  /* Event creation related */
-  gtk_widget_class_bind_template_callback (widget_class, edit_event);
-  gtk_widget_class_bind_template_callback (widget_class, create_event_detailed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, show_new_event_widget);
-  gtk_widget_class_bind_template_callback (widget_class, close_new_event_widget);
-  gtk_widget_class_bind_template_callback (widget_class, event_activated);
-
-  /* Syncronization related */
-  gtk_widget_class_bind_template_callback (widget_class, window_state_changed);
-
-  /* search related */
-  gtk_widget_class_bind_template_callback (widget_class, search_event_selected);
-
-  /* Edit dialog related */
-  gtk_widget_class_bind_template_callback (widget_class, edit_dialog_closed);
-}
-
-static void
-gcal_window_init (GcalWindow *self)
-{
-  /* Setup actions */
-  g_action_map_add_action_entries (G_ACTION_MAP (self),
-                                   actions,
-                                   G_N_ELEMENTS (actions),
-                                   self);
-
-  gtk_widget_init_template (GTK_WIDGET (self));
-
-  /* source dialog */
-  g_object_bind_property (self, "application", self->source_dialog, "application",
-                          G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-
-  self->active_date = g_new0 (icaltimetype, 1);
-  self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
-}
-
-static void
 gcal_window_constructed (GObject *object)
 {
   GcalWindow *window = GCAL_WINDOW (object);
@@ -1682,19 +1420,154 @@ gcal_window_state_event (GtkWidget           *widget,
   return retval;
 }
 
+static void
+gcal_window_class_init(GcalWindowClass *klass)
+{
+  GObjectClass *object_class;
+  GtkWidgetClass *widget_class;
+
+  object_class = G_OBJECT_CLASS (klass);
+  object_class->constructed = gcal_window_constructed;
+  object_class->finalize = gcal_window_finalize;
+  object_class->set_property = gcal_window_set_property;
+  object_class->get_property = gcal_window_get_property;
+
+  widget_class = GTK_WIDGET_CLASS (klass);
+  widget_class->configure_event = gcal_window_configure_event;
+  widget_class->window_state_event = gcal_window_state_event;
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/window.ui");
+
+  g_object_class_install_property (
+      object_class,
+      PROP_ACTIVE_VIEW,
+      g_param_spec_enum ("active-view",
+                         "Active View",
+                         "The active view, eg: month, week, etc.",
+                         GCAL_WINDOW_VIEW_TYPE,
+                         GCAL_WINDOW_VIEW_MONTH,
+                         G_PARAM_READWRITE));
+
+  g_object_class_install_property (
+      object_class,
+      PROP_MANAGER,
+      g_param_spec_object ("manager",
+                           "The manager object",
+                           "A weak reference to the app manager object",
+                           GCAL_TYPE_MANAGER,
+                           G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+
+  g_object_class_install_property (
+      object_class,
+      PROP_ACTIVE_DATE,
+      g_param_spec_boxed ("active-date",
+                          "Date",
+                          "The active/selected date",
+                          ICAL_TIME_TYPE,
+                          G_PARAM_CONSTRUCT |
+                          G_PARAM_READWRITE));
+
+  g_object_class_install_property (
+      object_class,
+      PROP_NEW_EVENT_MODE,
+      g_param_spec_boolean ("new-event-mode",
+                            "New Event mode",
+                            "Whether the window is in new-event-mode or not",
+                            FALSE,
+                            G_PARAM_READWRITE));
+
+  /* widgets */
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, edit_dialog);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, header_bar);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, main_box);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, menu_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_bar);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_popover);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, source_dialog);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, back_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, today_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, forward_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_overlay);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, week_view);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, year_view);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_view);
+
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_action_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_close_button);
+
+  gtk_widget_class_bind_template_callback (widget_class, source_row_activated);
+
+  gtk_widget_class_bind_template_callback (widget_class, key_pressed);
+  gtk_widget_class_bind_template_callback (widget_class, search_toggled);
+  gtk_widget_class_bind_template_callback (widget_class, search_changed);
+  gtk_widget_class_bind_template_callback (widget_class, view_changed);
+  gtk_widget_class_bind_template_callback (widget_class, date_updated);
+
+  /* Event removal related */
+  gtk_widget_class_bind_template_callback (widget_class, hide_notification);
+  gtk_widget_class_bind_template_callback (widget_class, remove_event);
+  gtk_widget_class_bind_template_callback (widget_class, undo_remove_action);
+
+  /* Event creation related */
+  gtk_widget_class_bind_template_callback (widget_class, edit_event);
+  gtk_widget_class_bind_template_callback (widget_class, create_event_detailed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, show_new_event_widget);
+  gtk_widget_class_bind_template_callback (widget_class, close_new_event_widget);
+  gtk_widget_class_bind_template_callback (widget_class, event_activated);
+
+  /* Syncronization related */
+  gtk_widget_class_bind_template_callback (widget_class, window_state_changed);
+
+  /* search related */
+  gtk_widget_class_bind_template_callback (widget_class, search_event_selected);
+
+  /* Edit dialog related */
+  gtk_widget_class_bind_template_callback (widget_class, edit_dialog_closed);
+}
+
+static void
+gcal_window_init (GcalWindow *self)
+{
+  /* Setup actions */
+  g_action_map_add_action_entries (G_ACTION_MAP (self),
+                                   actions,
+                                   G_N_ELEMENTS (actions),
+                                   self);
+
+  gtk_widget_init_template (GTK_WIDGET (self));
+
+  /* source dialog */
+  g_object_bind_property (self, "application", self->source_dialog, "application",
+                          G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+
+  self->active_date = g_new0 (icaltimetype, 1);
+  self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+}
+
 /* Public API */
 GtkWidget*
-gcal_window_new_with_view_and_date (GcalApplication   *app,
-                                    GcalWindowViewType view_type,
-                                    icaltimetype      *date)
+gcal_window_new_with_view_and_date (GcalApplication    *app,
+                                    GcalWindowViewType  view_type,
+                                    icaltimetype       *date)
 {
-  GcalWindow *win;
   GcalManager *manager;
+  GcalWindow *win;
 
   manager = gcal_application_get_manager (GCAL_APPLICATION (app));
-
-  win  =  g_object_new (GCAL_TYPE_WINDOW, "application", GTK_APPLICATION (app), "manager", manager, "active-date", date,
-                        NULL);
+  win = g_object_new (GCAL_TYPE_WINDOW,
+                      "application", GTK_APPLICATION (app),
+                      "manager", manager,
+                      "active-date", date,
+                      NULL);
 
   /* setup accels */
   gcal_window_add_accelerator (app, "win.next",     "<Alt>Right");
@@ -1719,22 +1592,22 @@ gcal_window_new_with_view_and_date (GcalApplication   *app,
 
 /* new-event interaction: first variant */
 void
-gcal_window_new_event (GcalWindow *window)
+gcal_window_new_event (GcalWindow *self)
 {
   GDateTime *start_date, *end_date;
   icaltimetype date;
 
   /* 1st and 2nd steps */
-  set_new_event_mode (window, TRUE);
+  set_new_event_mode (self, TRUE);
 
-  date = *window->current_date;
+  date = *self->current_date;
   date.is_date = 1;
 
   start_date = icaltime_to_datetime (&date);
   end_date = icaltime_to_datetime (&date);
 
   /* adjusting dates according to the actual view */
-  switch (window->active_view)
+  switch (self->active_view)
     {
     case GCAL_WINDOW_VIEW_DAY:
     case GCAL_WINDOW_VIEW_WEEK:
@@ -1750,49 +1623,51 @@ gcal_window_new_event (GcalWindow *window)
       break;
     }
 
-  create_event_detailed_cb (NULL, start_date, end_date, window);
+  create_event_detailed_cb (NULL, start_date, end_date, self);
 }
 
 void
-gcal_window_set_search_mode (GcalWindow *window,
+gcal_window_set_search_mode (GcalWindow *self,
                              gboolean    enabled)
 {
-  g_return_if_fail (GCAL_IS_WINDOW (window));
+  g_return_if_fail (GCAL_IS_WINDOW (self));
 
-  window->search_mode = enabled;
-  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (window->search_bar), enabled);
+  self->search_mode = enabled;
+  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (self->search_bar), enabled);
 }
 
 void
-gcal_window_set_search_query (GcalWindow  *window,
+gcal_window_set_search_query (GcalWindow  *self,
                               const gchar *query)
 {
-  g_return_if_fail (GCAL_IS_WINDOW (window));
+  g_return_if_fail (GCAL_IS_WINDOW (self));
 
-  gtk_entry_set_text (GTK_ENTRY (window->search_entry), query);
+  gtk_entry_set_text (GTK_ENTRY (self->search_entry), query);
 }
 
 void
-gcal_window_open_event_by_uuid (GcalWindow  *window,
+gcal_window_open_event_by_uuid (GcalWindow  *self,
                                 const gchar *uuid)
 {
   GList *widgets;
 
   /* XXX: show events on month view */
-  gtk_stack_set_visible_child (GTK_STACK (window->views_stack), window->month_view);
-  widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (window->month_view), uuid);
-  if (widgets != NULL)
+  gtk_stack_set_visible_child (GTK_STACK (self->views_stack), self->month_view);
+
+  widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (self->month_view), uuid);
+
+  if (widgets)
     {
-      event_activated (NULL, widgets->data, window);
+      event_activated (NULL, widgets->data, self);
       g_list_free (widgets);
     }
   else
     {
       OpenEditDialogData *edit_dialog_data = g_new0 (OpenEditDialogData, 1);
-      edit_dialog_data->window = window;
+      edit_dialog_data->window = self;
       edit_dialog_data->uuid = g_strdup (uuid);
-      window->open_edit_dialog_timeout_id = g_timeout_add_seconds (2,
-                                                                   (GSourceFunc) schedule_open_edit_dialog_by_uuid,
-                                                                   edit_dialog_data);
+      self->open_edit_dialog_timeout_id = g_timeout_add_seconds (2,
+                                                                 (GSourceFunc) schedule_open_edit_dialog_by_uuid,
+                                                                 edit_dialog_data);
     }
 }

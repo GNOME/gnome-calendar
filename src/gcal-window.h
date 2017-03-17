@@ -32,16 +32,20 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalWindow, gcal_window, GCAL, WINDOW, GtkApplicationWindow)
 
-GtkWidget*   gcal_window_new_with_view_and_date (GcalApplication    *app,
-                                                 GcalWindowViewType  view_type,
-                                                 icaltimetype       *date);
-void         gcal_window_new_event              (GcalWindow         *window);
-void         gcal_window_set_search_mode        (GcalWindow         *window,
-                                                 gboolean            enabled);
-void         gcal_window_set_search_query       (GcalWindow         *window,
-                                                 const gchar        *query);
-void         gcal_window_open_event_by_uuid     (GcalWindow         *window,
-                                                 const gchar        *uuid);
+GtkWidget*           gcal_window_new_with_view_and_date         (GcalApplication     *app,
+                                                                 GcalWindowViewType   view_type,
+                                                                 icaltimetype        *date);
+
+void                 gcal_window_new_event                      (GcalWindow          *self);
+
+void                 gcal_window_set_search_mode                (GcalWindow          *self,
+                                                                 gboolean             enabled);
+
+void                 gcal_window_set_search_query               (GcalWindow          *self,
+                                                                const gchar          *query);
+
+void                 gcal_window_open_event_by_uuid             (GcalWindow          *self,
+                                                                 const gchar         *uuid);
 
 G_END_DECLS
 
