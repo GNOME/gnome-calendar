@@ -42,6 +42,17 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2017-03-16" version="3.23.92">
+      <description>
+        <p>
+          In this release, many bugs were fixed in the Week view. GNOME Calendar is
+          now freeze until the next stable release.
+        </p>
+        <p>This release also updates translations.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2017-02-28" version="3.23.91.1">
       <description>
         <p>
