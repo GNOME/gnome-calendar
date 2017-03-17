@@ -17,6 +17,8 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define G_LOG_DOMAIN "GcalManager"
+
 #include "gcal-manager.h"
 #include "gcal-utils.h"
 

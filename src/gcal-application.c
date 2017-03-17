@@ -21,6 +21,8 @@
 #include "config.h"
 #endif
 
+#define G_LOG_DOMAIN "GcalApplication"
+
 #include "gcal-application.h"
 #include "css-code.h"
 #include "gcal-window.h"

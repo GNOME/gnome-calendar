@@ -20,6 +20,8 @@
 
 #include "config.h"
 
+#define G_LOG_DOMAIN "Utils"
+
 #include "gcal-utils.h"
 #include "gcal-event-widget.h"
 #include "gcal-view.h"

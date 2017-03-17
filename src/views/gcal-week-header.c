@@ -19,6 +19,8 @@
 
 #include "config.h"
 
+#define G_LOG_DOMAIN "GcalWeekHeader"
+
 #include "gcal-week-header.h"
 #include "gcal-week-view.h"
 #include "gcal-utils.h"

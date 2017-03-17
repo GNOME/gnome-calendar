@@ -18,6 +18,8 @@
 
 #include "config.h"
 
+#define G_LOG_DOMAIN "GcalDateChooserDay"
+
 #include "gcal-date-chooser-day.h"
 
 #include <stdlib.h>

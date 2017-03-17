@@ -18,6 +18,8 @@
  */
 #include "config.h"
 
+#define G_LOG_DOMAIN "GcalEditDialog"
+
 #include "gcal-edit-dialog.h"
 #include "gcal-time-selector.h"
 #include "gcal-date-selector.h"

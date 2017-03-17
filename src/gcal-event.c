@@ -16,6 +16,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define G_LOG_DOMAIN "GcalEvent"
+
 #include "gcal-event.h"
 #include "gcal-utils.h"
 

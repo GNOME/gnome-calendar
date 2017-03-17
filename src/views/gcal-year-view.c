@@ -17,6 +17,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define G_LOG_DOMAIN "GcalYearView"
+
 #include "gcal-year-view.h"
 #include "gcal-view.h"
 #include "gcal-utils.h"
