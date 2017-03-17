@@ -29,15 +29,19 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalWeekView, gcal_week_view, GCAL, WEEK_VIEW, GtkBox)
 
-GtkWidget*     gcal_week_view_new                (void);
-void           gcal_week_view_set_manager        (GcalWeekView *view,
-                                                  GcalManager  *manager);
-void           gcal_week_view_set_first_weekday  (GcalWeekView *view,
-                                                  gint          day_nr);
-void           gcal_week_view_set_use_24h_format (GcalWeekView *view,
-                                                  gboolean      use_24h);
-void           gcal_week_view_set_current_date   (GcalWeekView *week_header,
-                                                  icaltimetype *current_date);
+GtkWidget*           gcal_week_view_new                          (void);
+
+void                 gcal_week_view_set_manager                  (GcalWeekView       *self,
+                                                                  GcalManager        *manager);
+
+void                 gcal_week_view_set_first_weekday            (GcalWeekView       *self,
+                                                                  gint                day_nr);
+
+void                 gcal_week_view_set_use_24h_format           (GcalWeekView       *self,
+                                                                  gboolean            use_24h);
+
+void                 gcal_week_view_set_current_date             (GcalWeekView       *self,
+                                                                  icaltimetype       *current_date);
 
 G_END_DECLS
 

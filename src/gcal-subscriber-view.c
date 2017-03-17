@@ -35,48 +35,12 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-static void           event_activated                               (GcalEventWidget                   *widget,
-                                                                     gpointer                           user_data);
+static void          gcal_subscriber_view_clear_state            (GcalSubscriberView *self);
 
-static void           event_visibility_changed                      (GtkWidget                         *widget,
-                                                                      gpointer                           user_data);
+static guint         gcal_subscriber_view_get_child_cell         (GcalSubscriberView *self,
+                                                                  GcalEventWidget    *child);
 
-static void           gcal_data_model_subscriber_interface_init      (ECalDataModelSubscriberInterface *iface);
-
-static void           gcal_subscriber_view_finalize                  (GObject                          *object);
-
-static void           gcal_subscriber_view_add                       (GtkContainer                     *container,
-                                                                      GtkWidget                        *widget);
-
-static void           gcal_subscriber_view_remove                    (GtkContainer                     *container,
-                                                                      GtkWidget                        *widget);
-
-static void           gcal_subscriber_view_forall                    (GtkContainer                     *container,
-                                                                      gboolean                          include_internals,
-                                                                      GtkCallback                       callback,
-                                                                      gpointer                          callback_data);
-
-static guint          gcal_subscriber_view_get_child_cell            (GcalSubscriberView               *subscriber,
-                                                                      GcalEventWidget                  *child);
-
-static void           gcal_subscriber_view_clear_state               (GcalSubscriberView               *subscriber_view);
-
-static void           gcal_subscriber_view_component_added           (ECalDataModelSubscriber *subscriber,
-                                                                      ECalClient              *client,
-                                                                      ECalComponent           *comp);
-
-static void           gcal_subscriber_view_component_modified        (ECalDataModelSubscriber *subscriber,
-                                                                      ECalClient              *client,
-                                                                      ECalComponent           *comp);
-
-static void           gcal_subscriber_view_component_removed         (ECalDataModelSubscriber *subscriber,
-                                                                      ECalClient              *client,
-                                                                      const gchar             *uid,
-                                                                      const gchar             *rid);
-
-static void           gcal_subscriber_view_freeze                    (ECalDataModelSubscriber *subscriber);
-
-static void           gcal_subscriber_view_thaw                      (ECalDataModelSubscriber *subscriber);
+static void          gcal_data_model_subscriber_interface_init   (ECalDataModelSubscriberInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GcalSubscriberView, gcal_subscriber_view, GTK_TYPE_CONTAINER,
                          G_ADD_PRIVATE (GcalSubscriberView)
@@ -93,46 +57,129 @@ event_activated (GcalEventWidget *widget,
 }
 
 static void
-event_visibility_changed(GtkWidget *widget,
-                         gpointer   user_data)
+event_visibility_changed (GtkWidget *widget,
+                          gpointer   user_data)
 {
   GcalSubscriberViewPrivate *priv = GCAL_SUBSCRIBER_VIEW (user_data)->priv;
   priv->children_changed = TRUE;
 }
 
+/* ECalDataModelSubscriber interface API */
 static void
-gcal_subscriber_view_class_init (GcalSubscriberViewClass *klass)
+gcal_subscriber_view_component_added (ECalDataModelSubscriber *subscriber,
+                                      ECalClient              *client,
+                                      ECalComponent           *comp)
 {
-  GtkContainerClass *container_class;
+  GtkWidget *event_widget;
+  GcalEvent *event;
+  GError *error;
 
-  klass->get_child_cell = gcal_subscriber_view_get_child_cell;
+  error = NULL;
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
 
-  G_OBJECT_CLASS (klass)->finalize = gcal_subscriber_view_finalize;
+  if (error)
+    {
+      g_message ("Error creating event: %s", error->message);
+      g_clear_error (&error);
+      return;
+    }
 
-  container_class = GTK_CONTAINER_CLASS (klass);
-  container_class->add = gcal_subscriber_view_add;
-  container_class->remove = gcal_subscriber_view_remove;
-  container_class->forall = gcal_subscriber_view_forall;
+  event_widget = gcal_event_widget_new (event);
+  gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event_widget), e_client_is_readonly (E_CLIENT (client)));
 
-  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_SUBSCRIBER_VIEW, G_SIGNAL_RUN_LAST,
-                                           G_STRUCT_OFFSET (GcalSubscriberViewClass, event_activated),
-                                           NULL, NULL, NULL,
-                                           G_TYPE_NONE, 1, GCAL_TYPE_EVENT_WIDGET);
+  gtk_widget_show (event_widget);
+  gtk_container_add (GTK_CONTAINER (subscriber), event_widget);
+
+  g_clear_object (&event);
 }
 
 static void
-gcal_subscriber_view_init (GcalSubscriberView *self)
+gcal_subscriber_view_component_modified (ECalDataModelSubscriber *subscriber,
+                                         ECalClient              *client,
+                                         ECalComponent           *comp)
 {
   GcalSubscriberViewPrivate *priv;
+  GList *l;
+  GtkWidget *new_widget;
+  GcalEvent *event;
+  GError *error;
 
-  priv = gcal_subscriber_view_get_instance_private (self);
-  self->priv = priv;
+  error = NULL;
+  priv = gcal_subscriber_view_get_instance_private (GCAL_SUBSCRIBER_VIEW (subscriber));
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
 
-  priv->children = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_list_free);
-  priv->single_cell_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
-  priv->overflow_cells = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
-  priv->hidden_as_overflow = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
+  if (error)
+    {
+      g_message ("Error creating event: %s", error->message);
+      g_clear_error (&error);
+      return;
+    }
+
+  new_widget = gcal_event_widget_new (event);
+
+  l = g_hash_table_lookup (priv->children, gcal_event_get_uid (event));
+
+  if (l != NULL)
+    {
+      gtk_widget_destroy (l->data);
+
+      gtk_widget_show (new_widget);
+      gtk_container_add (GTK_CONTAINER (subscriber), new_widget);
+    }
+  else
+    {
+      g_warning ("%s: Widget with uuid: %s not found in view: %s",
+                 G_STRFUNC, gcal_event_get_uid (event),
+                 gtk_widget_get_name (GTK_WIDGET (subscriber)));
+      gtk_widget_destroy (new_widget);
+    }
+
+  g_clear_object (&event);
 }
+
+static void
+gcal_subscriber_view_component_removed (ECalDataModelSubscriber *subscriber,
+                                        ECalClient              *client,
+                                        const gchar             *uid,
+                                        const gchar             *rid)
+{
+  GcalSubscriberViewPrivate *priv;
+  const gchar *sid;
+  gchar *uuid;
+  GList *l;
+
+  priv = gcal_subscriber_view_get_instance_private (GCAL_SUBSCRIBER_VIEW (subscriber));
+
+  sid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
+  if (rid != NULL)
+      uuid = g_strdup_printf ("%s:%s:%s", sid, uid, rid);
+  else
+    uuid = g_strdup_printf ("%s:%s", sid, uid);
+
+  l = g_hash_table_lookup (priv->children, uuid);
+  if (l != NULL)
+    {
+      gtk_widget_destroy (l->data);
+    }
+  else
+    {
+      g_warning ("%s: Widget with uuid: %s not found in view: %s",
+                 G_STRFUNC, uuid, gtk_widget_get_name (GTK_WIDGET (subscriber)));
+    }
+
+  g_free (uuid);
+}
+
+static void
+gcal_subscriber_view_freeze (ECalDataModelSubscriber *subscriber)
+{
+}
+
+static void
+gcal_subscriber_view_thaw (ECalDataModelSubscriber *subscriber)
+{
+}
+
 
 static void
 gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
@@ -197,7 +244,9 @@ gcal_subscriber_view_add (GtkContainer *container,
     }
   else
     {
-      guint cell_idx = gcal_subscriber_view_get_child_cell (GCAL_SUBSCRIBER_VIEW (container), GCAL_EVENT_WIDGET (widget));
+      guint cell_idx;
+
+      cell_idx = gcal_subscriber_view_get_child_cell (GCAL_SUBSCRIBER_VIEW (container), GCAL_EVENT_WIDGET (widget));
       l = g_hash_table_lookup (priv->single_cell_children, GINT_TO_POINTER (cell_idx));
       l = g_list_insert_sorted (l, widget, (GCompareFunc) gcal_event_widget_compare_by_start_date);
 
@@ -337,7 +386,7 @@ gcal_subscriber_view_forall (GtkContainer *container,
 
 static guint
 gcal_subscriber_view_get_child_cell (GcalSubscriberView  *subscriber,
-                                     GcalEventWidget *child)
+                                     GcalEventWidget     *child)
 {
   GcalSubscriberViewClass *klass;
 
@@ -364,120 +413,38 @@ gcal_subscriber_view_clear_state (GcalSubscriberView  *subscriber_view)
     klass->clear_state (subscriber_view);
 }
 
-/* ECalDataModelSubscriber interface API */
 static void
-gcal_subscriber_view_component_added (ECalDataModelSubscriber *subscriber,
-                                      ECalClient              *client,
-                                      ECalComponent           *comp)
+gcal_subscriber_view_class_init (GcalSubscriberViewClass *klass)
 {
-  GtkWidget *event_widget;
-  GcalEvent *event;
-  GError *error;
+  GtkContainerClass *container_class;
 
-  error = NULL;
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+  klass->get_child_cell = gcal_subscriber_view_get_child_cell;
 
-  if (error)
-    {
-      g_message ("Error creating event: %s", error->message);
-      g_clear_error (&error);
-      return;
-    }
+  G_OBJECT_CLASS (klass)->finalize = gcal_subscriber_view_finalize;
 
-  event_widget = gcal_event_widget_new (event);
-  gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event_widget), e_client_is_readonly (E_CLIENT (client)));
+  container_class = GTK_CONTAINER_CLASS (klass);
+  container_class->add = gcal_subscriber_view_add;
+  container_class->remove = gcal_subscriber_view_remove;
+  container_class->forall = gcal_subscriber_view_forall;
 
-  gtk_widget_show (event_widget);
-  gtk_container_add (GTK_CONTAINER (subscriber), event_widget);
-
-  g_clear_object (&event);
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_SUBSCRIBER_VIEW, G_SIGNAL_RUN_LAST,
+                                           G_STRUCT_OFFSET (GcalSubscriberViewClass, event_activated),
+                                           NULL, NULL, NULL,
+                                           G_TYPE_NONE, 1, GCAL_TYPE_EVENT_WIDGET);
 }
 
 static void
-gcal_subscriber_view_component_modified (ECalDataModelSubscriber *subscriber,
-                                         ECalClient              *client,
-                                         ECalComponent           *comp)
+gcal_subscriber_view_init (GcalSubscriberView *self)
 {
   GcalSubscriberViewPrivate *priv;
-  GList *l;
-  GtkWidget *new_widget;
-  GcalEvent *event;
-  GError *error;
 
-  error = NULL;
-  priv = gcal_subscriber_view_get_instance_private (GCAL_SUBSCRIBER_VIEW (subscriber));
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+  priv = gcal_subscriber_view_get_instance_private (self);
+  self->priv = priv;
 
-  if (error)
-    {
-      g_message ("Error creating event: %s", error->message);
-      g_clear_error (&error);
-      return;
-    }
-
-  new_widget = gcal_event_widget_new (event);
-
-  l = g_hash_table_lookup (priv->children, gcal_event_get_uid (event));
-
-  if (l != NULL)
-    {
-      gtk_widget_destroy (l->data);
-
-      gtk_widget_show (new_widget);
-      gtk_container_add (GTK_CONTAINER (subscriber), new_widget);
-    }
-  else
-    {
-      g_warning ("%s: Widget with uuid: %s not found in view: %s",
-                 G_STRFUNC, gcal_event_get_uid (event),
-                 gtk_widget_get_name (GTK_WIDGET (subscriber)));
-      gtk_widget_destroy (new_widget);
-    }
-
-  g_clear_object (&event);
-}
-
-static void
-gcal_subscriber_view_component_removed (ECalDataModelSubscriber *subscriber,
-                                        ECalClient              *client,
-                                        const gchar             *uid,
-                                        const gchar             *rid)
-{
-  GcalSubscriberViewPrivate *priv;
-  const gchar *sid;
-  gchar *uuid;
-  GList *l;
-
-  priv = gcal_subscriber_view_get_instance_private (GCAL_SUBSCRIBER_VIEW (subscriber));
-
-  sid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
-  if (rid != NULL)
-      uuid = g_strdup_printf ("%s:%s:%s", sid, uid, rid);
-  else
-    uuid = g_strdup_printf ("%s:%s", sid, uid);
-
-  l = g_hash_table_lookup (priv->children, uuid);
-  if (l != NULL)
-    {
-      gtk_widget_destroy (l->data);
-    }
-  else
-    {
-      g_warning ("%s: Widget with uuid: %s not found in view: %s",
-                 G_STRFUNC, uuid, gtk_widget_get_name (GTK_WIDGET (subscriber)));
-    }
-
-  g_free (uuid);
-}
-
-static void
-gcal_subscriber_view_freeze (ECalDataModelSubscriber *subscriber)
-{
-}
-
-static void
-gcal_subscriber_view_thaw (ECalDataModelSubscriber *subscriber)
-{
+  priv->children = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_list_free);
+  priv->single_cell_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
+  priv->overflow_cells = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
+  priv->hidden_as_overflow = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 }
 
 /* Public API */

@@ -127,7 +127,6 @@ enum
 
 static guint signals[NUM_SIGNALS] = { 0, };
 
-static void   reset_sidebar (GcalYearView *year_view);
 static void   gcal_view_interface_init (GcalViewInterface *iface);
 static void   gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
@@ -161,26 +160,6 @@ get_last_week_of_year_dmy (gint       first_weekday,
     g_date_add_days (&day_of_year, first_weekday - day_of_week - 1);
 
   return g_date_get_iso8601_week_of_year (&day_of_year);
-}
-
-static void
-update_date (GcalYearView *year_view,
-             icaltimetype *new_date)
-{
-  gboolean needs_reset = FALSE;
-  if (year_view->date != NULL && icaltime_compare_date (year_view->date, new_date) && year_view->start_selected_date->day != 0)
-    needs_reset = TRUE;
-
-  g_clear_pointer (&year_view->date, g_free);
-  year_view->date = new_date;
-
-  year_view->first_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
-                                                             1, G_DATE_JANUARY,  year_view->date->year);;
-  year_view->last_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
-                                                            31, G_DATE_DECEMBER, year_view->date->year);
-
-  if (needs_reset)
-    reset_sidebar (year_view);
 }
 
 static void
@@ -540,6 +519,26 @@ update_sidebar_headers (GtkListBoxRow *row,
 
   g_clear_pointer (&before_date, g_date_time_unref);
   g_clear_pointer (&row_date, g_date_time_unref);
+}
+
+static void
+update_date (GcalYearView *year_view,
+             icaltimetype *new_date)
+{
+  gboolean needs_reset = FALSE;
+  if (year_view->date != NULL && icaltime_compare_date (year_view->date, new_date) && year_view->start_selected_date->day != 0)
+    needs_reset = TRUE;
+
+  g_clear_pointer (&year_view->date, g_free);
+  year_view->date = new_date;
+
+  year_view->first_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
+                                                             1, G_DATE_JANUARY,  year_view->date->year);;
+  year_view->last_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
+                                                            31, G_DATE_DECEMBER, year_view->date->year);
+
+  if (needs_reset)
+    reset_sidebar (year_view);
 }
 
 static void

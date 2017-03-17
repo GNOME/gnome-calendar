@@ -95,104 +95,20 @@ struct _GcalMonthView
   GcalManager    *manager;
 };
 
+#define MIRROR(val,start,end) (start + (val / end) * end + (end - val % end))
+
+static void           gcal_view_interface_init              (GcalViewInterface *iface);
+
+G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view, GCAL_TYPE_SUBSCRIBER_VIEW,
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
+
 enum
 {
   PROP_0,
   PROP_DATE,  /* active-date inherited property */
 };
 
-#define MIRROR(val,start,end) (start + (val / end) * end + (end - val % end))
-
-static gint           gather_button_event_data              (GcalMonthView  *view,
-                                                             gdouble         x,
-                                                             gdouble         y,
-                                                             gboolean       *out_on_indicator,
-                                                             gdouble        *out_x,
-                                                             gdouble        *out_y);
-
-static gdouble        get_start_grid_y                      (GtkWidget      *widget);
-
-static gboolean       get_widget_parts                      (gint            first_cell,
-                                                             gint            last_cell,
-                                                             gint            natural_height,
-                                                             gdouble         vertical_cell_space,
-                                                             gdouble        *size_left,
-                                                             GArray         *cells,
-                                                             GArray         *lengths);
-
-static void           rebuild_popover_for_day               (GcalMonthView  *view,
-                                                             gint            day);
-
-static void           update_list_box_headers               (GtkListBoxRow  *row,
-                                                             GtkListBoxRow  *before,
-                                                             gpointer        user_data);
-
-static gboolean       gcal_month_view_key_press             (GtkWidget      *widget,
-                                                             GdkEventKey    *event);
-
-static void           add_new_event_button_cb               (GtkWidget      *button,
-                                                             gpointer        user_data);
-
-static void           gcal_month_view_set_property          (GObject        *object,
-                                                             guint           property_id,
-                                                             const GValue   *value,
-                                                             GParamSpec     *pspec);
-
-static void           gcal_month_view_get_property          (GObject        *object,
-                                                             guint           property_id,
-                                                             GValue         *value,
-                                                             GParamSpec     *pspec);
-
-static void           gcal_month_view_finalize              (GObject        *object);
-
-static void           gcal_month_view_realize               (GtkWidget      *widget);
-
-static void           gcal_month_view_unrealize             (GtkWidget      *widget);
-
-static void           gcal_month_view_map                   (GtkWidget      *widget);
-
-static void           gcal_month_view_unmap                 (GtkWidget      *widget);
-
-static void           gcal_month_view_size_allocate         (GtkWidget      *widget,
-                                                             GtkAllocation  *allocation);
-
-static gboolean       gcal_month_view_draw                  (GtkWidget      *widget,
-                                                             cairo_t        *cr);
-
-static gboolean       gcal_month_view_button_press          (GtkWidget      *widget,
-                                                             GdkEventButton *event);
-
-static gboolean       gcal_month_view_motion_notify_event   (GtkWidget      *widget,
-                                                             GdkEventMotion *event);
-
-static gboolean       gcal_month_view_button_release        (GtkWidget      *widget,
-                                                             GdkEventButton *event);
-
-static void           gcal_month_view_direction_changed     (GtkWidget        *widget,
-                                                             GtkTextDirection  previous_direction);
-
-static guint          gcal_month_view_get_child_cell        (GcalSubscriberView *subscriber,
-                                                             GcalEventWidget    *child);
-
-static void           gcal_month_view_clear_state           (GcalSubscriberView *subscriber);
-
-static icaltimetype*  gcal_month_view_get_initial_date      (GcalView       *view);
-
-static icaltimetype*  gcal_month_view_get_final_date        (GcalView       *view);
-
-static void           gcal_month_view_clear_marks           (GcalView       *view);
-
-static GList*         gcal_month_view_get_children_by_uuid  (GcalView       *view,
-                                                             const gchar    *uuid);
-
-static void           gcal_view_interface_init              (GcalViewInterface *iface);
-
-static void           cancel_selection                      (GcalMonthView *month_view);
-
-G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view, GCAL_TYPE_SUBSCRIBER_VIEW,
-                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
-
-static gint
+static inline gint
 real_cell (gint     cell,
            gboolean rtl)
 {
@@ -202,11 +118,52 @@ real_cell (gint     cell,
   return rtl ? MIRROR (cell, 0, 7) - 1 : cell;
 }
 
-static void
+static inline void
 cancel_selection (GcalMonthView *self)
 {
   g_clear_pointer (&self->start_mark_cell, g_date_time_unref);
   g_clear_pointer (&self->end_mark_cell, g_date_time_unref);
+}
+
+static gdouble
+get_start_grid_y (GtkWidget *widget)
+{
+  GtkStyleContext* context;
+  GtkStateFlags state_flags;
+  gint padding_top;
+
+  PangoLayout *layout;
+  PangoFontDescription *font_desc;
+  gint font_height;
+  gdouble start_grid_y;
+
+  context = gtk_widget_get_style_context (widget);
+  state_flags = gtk_style_context_get_state (context);
+
+  layout = gtk_widget_create_pango_layout (widget, NULL);
+
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "start-header");
+  gtk_style_context_get (context, state_flags, "padding-top", &padding_top, "font", &font_desc, NULL);
+
+  pango_layout_set_font_description (layout, font_desc);
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+
+  pango_font_description_free (font_desc);
+  gtk_style_context_restore (context);
+
+  start_grid_y = 2 * padding_top + font_height;
+
+  gtk_style_context_get (context, state_flags, "font", &font_desc, "padding-top", &padding_top, NULL);
+
+  pango_layout_set_font_description (layout, font_desc);
+  pango_layout_get_pixel_size (layout, NULL, &font_height);
+
+  start_grid_y += padding_top + font_height;
+
+  pango_font_description_free (font_desc);
+  g_object_unref (layout);
+  return start_grid_y;
 }
 
 static void
@@ -240,6 +197,131 @@ get_cell_position (GcalMonthView *self,
 
   if (out_y != NULL)
     *out_y = cell_height * ((cell / 7) + first_row_gap + 0.5) + start_grid_y;
+}
+static void
+rebuild_popover_for_day (GcalMonthView *self,
+                         gint           day)
+{
+  GcalSubscriberViewPrivate *ppriv;
+  GList *l;
+  GtkWidget *child_widget;
+  GdkRectangle rect;
+
+  gchar *label_title;
+  /* placement helpers */
+  gdouble start_grid_y, cell_width, cell_height;
+
+  gint shown_rows;
+  gint real_clicked_popover_cell;
+
+  GtkStyleContext *context;
+  GtkStateFlags state;
+
+  PangoLayout *overflow_layout;
+  PangoFontDescription *ofont_desc;
+  gint font_height, padding_bottom;
+
+  ppriv = GCAL_SUBSCRIBER_VIEW (self)->priv;
+
+  label_title = g_strdup_printf ("%s %d", gcal_get_month_name (self->date->month - 1), day);
+  gtk_label_set_text (GTK_LABEL (self->popover_title), label_title);
+  g_free (label_title);
+
+  /* Clean all the widgets */
+  gtk_container_foreach (GTK_CONTAINER (self->events_list_box), (GtkCallback) gtk_widget_destroy, NULL);
+
+  l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (self->pressed_overflow_indicator));
+
+  /* Setup the start & end dates of the events as the begin & end of day */
+  if (l)
+    {
+      for (; l != NULL; l = g_list_next (l))
+        {
+          GtkWidget *cloned_event;
+          GDateTime *current_date;
+          GDateTime *dt_start;
+          GDateTime *dt_end;
+          GcalEvent *event;
+          GTimeZone *tz;
+
+          event = gcal_event_widget_get_event (l->data);
+
+          if (gcal_event_get_all_day (event))
+            tz = g_time_zone_new_utc ();
+          else
+            tz = g_time_zone_new_local ();
+
+          current_date = icaltime_to_datetime (self->date);
+          dt_start = g_date_time_new (tz,
+                                      g_date_time_get_year (current_date),
+                                      g_date_time_get_month (current_date),
+                                      day,
+                                      0, 0, 0);
+
+          dt_end = g_date_time_add_days (dt_start, 1);
+
+          cloned_event = gcal_event_widget_clone (l->data);
+          gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (cloned_event), dt_start);
+          gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (cloned_event), dt_end);
+
+          gtk_container_add (GTK_CONTAINER (self->events_list_box), cloned_event);
+          _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (self), cloned_event);
+
+          g_clear_pointer (&current_date, g_date_time_unref);
+          g_clear_pointer (&dt_start, g_date_time_unref);
+          g_clear_pointer (&dt_end, g_date_time_unref);
+          g_clear_pointer (&tz, g_time_zone_unref);
+        }
+    }
+
+  /* placement calculation */
+  start_grid_y = get_start_grid_y (GTK_WIDGET (self));
+  shown_rows = ceil ((self->days_delay + icaltime_days_in_month (self->date->month, self->date->year)) / 7.0);
+
+  cell_width = gtk_widget_get_allocated_width (GTK_WIDGET (self)) / 7.0;
+  cell_height = (gtk_widget_get_allocated_height (GTK_WIDGET (self)) - start_grid_y) / 6.0;
+
+  context = gtk_widget_get_style_context (GTK_WIDGET (self));
+  state = gtk_style_context_get_state (context);
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "overflow");
+  gtk_style_context_get (context, state, "font", &ofont_desc, "padding-bottom", &padding_bottom, NULL);
+
+  overflow_layout = gtk_widget_create_pango_layout (GTK_WIDGET (self), NULL);
+  pango_layout_set_font_description (overflow_layout, ofont_desc);
+  pango_layout_get_pixel_size (overflow_layout, NULL, &font_height);
+
+  gtk_style_context_restore (context);
+  pango_font_description_free (ofont_desc);
+  g_object_unref (overflow_layout);
+
+  real_clicked_popover_cell = real_cell (self->pressed_overflow_indicator, self->k);
+  rect.y = cell_height * ((real_clicked_popover_cell / 7) + 1.0 + (6 - shown_rows) * 0.5) + start_grid_y - padding_bottom - font_height / 2;
+  rect.width = 1;
+  rect.height = 1;
+
+  if (real_clicked_popover_cell % 7 < 3)
+    {
+      rect.x = cell_width * ((real_clicked_popover_cell % 7) + 1.0);
+      gtk_popover_set_position (GTK_POPOVER (self->overflow_popover), self->k ? GTK_POS_LEFT : GTK_POS_RIGHT);
+    }
+  else if (real_clicked_popover_cell % 7 > 3)
+    {
+      rect.x = cell_width * ((real_clicked_popover_cell % 7));
+      gtk_popover_set_position (GTK_POPOVER (self->overflow_popover), self->k ? GTK_POS_RIGHT : GTK_POS_LEFT);
+    }
+  else
+    {
+      rect.x = cell_width * ((real_clicked_popover_cell % 7) + 1.0 - self->k);
+      gtk_popover_set_position (GTK_POPOVER (self->overflow_popover), GTK_POS_RIGHT);
+    }
+  gtk_popover_set_pointing_to (GTK_POPOVER (self->overflow_popover), &rect);
+
+  /* sizing hack */
+  child_widget = gtk_bin_get_child (GTK_BIN (self->overflow_popover));
+  gtk_widget_set_size_request (child_widget, 200, -1);
+
+  g_object_set_data (G_OBJECT (self->overflow_popover), "selected-day", GINT_TO_POINTER (day));
 }
 
 static gboolean
@@ -397,47 +479,6 @@ gather_button_event_data (GcalMonthView *self,
   return cell;
 }
 
-static gdouble
-get_start_grid_y (GtkWidget *widget)
-{
-  GtkStyleContext* context;
-  GtkStateFlags state_flags;
-  gint padding_top;
-
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
-  gint font_height;
-  gdouble start_grid_y;
-
-  context = gtk_widget_get_style_context (widget);
-  state_flags = gtk_style_context_get_state (context);
-
-  layout = gtk_widget_create_pango_layout (widget, NULL);
-
-  gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "start-header");
-  gtk_style_context_get (context, state_flags, "padding-top", &padding_top, "font", &font_desc, NULL);
-
-  pango_layout_set_font_description (layout, font_desc);
-  pango_layout_get_pixel_size (layout, NULL, &font_height);
-
-  pango_font_description_free (font_desc);
-  gtk_style_context_restore (context);
-
-  start_grid_y = 2 * padding_top + font_height;
-
-  gtk_style_context_get (context, state_flags, "font", &font_desc, "padding-top", &padding_top, NULL);
-
-  pango_layout_set_font_description (layout, font_desc);
-  pango_layout_get_pixel_size (layout, NULL, &font_height);
-
-  start_grid_y += padding_top + font_height;
-
-  pango_font_description_free (font_desc);
-  g_object_unref (layout);
-  return start_grid_y;
-}
-
 static gboolean
 get_widget_parts (gint     first_cell,
                   gint     last_cell,
@@ -483,132 +524,6 @@ get_widget_parts (gint     first_cell,
     }
 
   return TRUE;
-}
-
-static void
-rebuild_popover_for_day (GcalMonthView *self,
-                         gint           day)
-{
-  GcalSubscriberViewPrivate *ppriv;
-  GList *l;
-  GtkWidget *child_widget;
-  GdkRectangle rect;
-
-  gchar *label_title;
-  /* placement helpers */
-  gdouble start_grid_y, cell_width, cell_height;
-
-  gint shown_rows;
-  gint real_clicked_popover_cell;
-
-  GtkStyleContext *context;
-  GtkStateFlags state;
-
-  PangoLayout *overflow_layout;
-  PangoFontDescription *ofont_desc;
-  gint font_height, padding_bottom;
-
-  ppriv = GCAL_SUBSCRIBER_VIEW (self)->priv;
-
-  label_title = g_strdup_printf ("%s %d", gcal_get_month_name (self->date->month - 1), day);
-  gtk_label_set_text (GTK_LABEL (self->popover_title), label_title);
-  g_free (label_title);
-
-  /* Clean all the widgets */
-  gtk_container_foreach (GTK_CONTAINER (self->events_list_box), (GtkCallback) gtk_widget_destroy, NULL);
-
-  l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (self->pressed_overflow_indicator));
-
-  /* Setup the start & end dates of the events as the begin & end of day */
-  if (l)
-    {
-      for (; l != NULL; l = g_list_next (l))
-        {
-          GtkWidget *cloned_event;
-          GDateTime *current_date;
-          GDateTime *dt_start;
-          GDateTime *dt_end;
-          GcalEvent *event;
-          GTimeZone *tz;
-
-          event = gcal_event_widget_get_event (l->data);
-
-          if (gcal_event_get_all_day (event))
-            tz = g_time_zone_new_utc ();
-          else
-            tz = g_time_zone_new_local ();
-
-          current_date = icaltime_to_datetime (self->date);
-          dt_start = g_date_time_new (tz,
-                                      g_date_time_get_year (current_date),
-                                      g_date_time_get_month (current_date),
-                                      day,
-                                      0, 0, 0);
-
-          dt_end = g_date_time_add_days (dt_start, 1);
-
-          cloned_event = gcal_event_widget_clone (l->data);
-          gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (cloned_event), dt_start);
-          gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (cloned_event), dt_end);
-
-          gtk_container_add (GTK_CONTAINER (self->events_list_box), cloned_event);
-          _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (self), cloned_event);
-
-          g_clear_pointer (&current_date, g_date_time_unref);
-          g_clear_pointer (&dt_start, g_date_time_unref);
-          g_clear_pointer (&dt_end, g_date_time_unref);
-          g_clear_pointer (&tz, g_time_zone_unref);
-        }
-    }
-
-  /* placement calculation */
-  start_grid_y = get_start_grid_y (GTK_WIDGET (self));
-  shown_rows = ceil ((self->days_delay + icaltime_days_in_month (self->date->month, self->date->year)) / 7.0);
-
-  cell_width = gtk_widget_get_allocated_width (GTK_WIDGET (self)) / 7.0;
-  cell_height = (gtk_widget_get_allocated_height (GTK_WIDGET (self)) - start_grid_y) / 6.0;
-
-  context = gtk_widget_get_style_context (GTK_WIDGET (self));
-  state = gtk_style_context_get_state (context);
-  gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "overflow");
-  gtk_style_context_get (context, state, "font", &ofont_desc, "padding-bottom", &padding_bottom, NULL);
-
-  overflow_layout = gtk_widget_create_pango_layout (GTK_WIDGET (self), NULL);
-  pango_layout_set_font_description (overflow_layout, ofont_desc);
-  pango_layout_get_pixel_size (overflow_layout, NULL, &font_height);
-
-  gtk_style_context_restore (context);
-  pango_font_description_free (ofont_desc);
-  g_object_unref (overflow_layout);
-
-  real_clicked_popover_cell = real_cell (self->pressed_overflow_indicator, self->k);
-  rect.y = cell_height * ((real_clicked_popover_cell / 7) + 1.0 + (6 - shown_rows) * 0.5) + start_grid_y - padding_bottom - font_height / 2;
-  rect.width = 1;
-  rect.height = 1;
-
-  if (real_clicked_popover_cell % 7 < 3)
-    {
-      rect.x = cell_width * ((real_clicked_popover_cell % 7) + 1.0);
-      gtk_popover_set_position (GTK_POPOVER (self->overflow_popover), self->k ? GTK_POS_LEFT : GTK_POS_RIGHT);
-    }
-  else if (real_clicked_popover_cell % 7 > 3)
-    {
-      rect.x = cell_width * ((real_clicked_popover_cell % 7));
-      gtk_popover_set_position (GTK_POPOVER (self->overflow_popover), self->k ? GTK_POS_RIGHT : GTK_POS_LEFT);
-    }
-  else
-    {
-      rect.x = cell_width * ((real_clicked_popover_cell % 7) + 1.0 - self->k);
-      gtk_popover_set_position (GTK_POPOVER (self->overflow_popover), GTK_POS_RIGHT);
-    }
-  gtk_popover_set_pointing_to (GTK_POPOVER (self->overflow_popover), &rect);
-
-  /* sizing hack */
-  child_widget = gtk_bin_get_child (GTK_BIN (self->overflow_popover));
-  gtk_widget_set_size_request (child_widget, 200, -1);
-
-  g_object_set_data (G_OBJECT (self->overflow_popover), "selected-day", GINT_TO_POINTER (day));
 }
 
 static void
@@ -1000,104 +915,76 @@ add_new_event_button_cb (GtkWidget *button,
   g_date_time_unref (start_date);
 }
 
-static void
-gcal_month_view_class_init (GcalMonthViewClass *klass)
+/* GcalView Interface API */
+static icaltimetype*
+gcal_month_view_get_initial_date (GcalView *view)
 {
-  GObjectClass *object_class;
-  GtkWidgetClass *widget_class;
-  GcalSubscriberViewClass *subscriber_view_class;
+  //FIXME to retrieve the 35 days range
+  GcalMonthView *self;
+  icaltimetype *new_date;
 
-  object_class = G_OBJECT_CLASS (klass);
-  object_class->set_property = gcal_month_view_set_property;
-  object_class->get_property = gcal_month_view_get_property;
-  object_class->finalize = gcal_month_view_finalize;
+  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), NULL);
 
-  widget_class = GTK_WIDGET_CLASS (klass);
-  widget_class->realize = gcal_month_view_realize;
-  widget_class->unrealize = gcal_month_view_unrealize;
-  widget_class->map = gcal_month_view_map;
-  widget_class->unmap = gcal_month_view_unmap;
-  widget_class->size_allocate = gcal_month_view_size_allocate;
-  widget_class->draw = gcal_month_view_draw;
-  widget_class->button_press_event = gcal_month_view_button_press;
-  widget_class->motion_notify_event = gcal_month_view_motion_notify_event;
-  widget_class->button_release_event = gcal_month_view_button_release;
-  widget_class->direction_changed = gcal_month_view_direction_changed;
-  widget_class->key_press_event = gcal_month_view_key_press;
-  widget_class->drag_motion = gcal_month_view_drag_motion;
-  widget_class->drag_drop = gcal_month_view_drag_drop;
-  widget_class->drag_leave = gcal_month_view_drag_leave;
-  widget_class->scroll_event = gcal_month_view_scroll_event;
+  self = GCAL_MONTH_VIEW (view);
 
-  subscriber_view_class = GCAL_SUBSCRIBER_VIEW_CLASS (klass);
-  subscriber_view_class->get_child_cell = gcal_month_view_get_child_cell;
-  subscriber_view_class->clear_state = gcal_month_view_clear_state;
+  new_date = gcal_dup_icaltime (self->date);
+  new_date->day = 1;
+  new_date->is_date = 0;
+  new_date->hour = 0;
+  new_date->minute = 0;
+  new_date->second = 0;
 
-  g_object_class_override_property (object_class, PROP_DATE, "active-date");
+  return new_date;
+}
 
-  gtk_widget_class_set_css_name (widget_class, "calendar-view");
+/**
+ * gcal_month_view_get_final_date:
+ *
+ * Since: 0.1
+ * Return value: the last day of the month
+ * Returns: (transfer full): Release with g_free()
+ **/
+static icaltimetype*
+gcal_month_view_get_final_date (GcalView *view)
+{
+  //FIXME to retrieve the 35 days range
+  GcalMonthView *self;
+  icaltimetype *new_date;
+
+  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), NULL);
+
+  self = GCAL_MONTH_VIEW (view);
+
+  new_date = gcal_dup_icaltime (self->date);
+  new_date->day = icaltime_days_in_month (self->date->month, self->date->year);
+  new_date->is_date = 0;
+  new_date->hour = 23;
+  new_date->minute = 59;
+  new_date->second = 59;
+
+  return new_date;
 }
 
 static void
-gcal_month_view_init (GcalMonthView *self)
+gcal_month_view_clear_marks (GcalView *view)
 {
-  GtkWidget *grid;
-  GtkWidget *button;
+  cancel_selection (GCAL_MONTH_VIEW (view));
 
-  gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
+  gtk_widget_queue_draw (GTK_WIDGET (view));
+}
 
-  self = gcal_month_view_get_instance_private (self);
+static GList*
+gcal_month_view_get_children_by_uuid (GcalView    *view,
+                                      const gchar *uuid)
+{
+  GcalSubscriberViewPrivate *ppriv = GCAL_SUBSCRIBER_VIEW (view)->priv;
+  GList *l;
 
-  cancel_selection (self);
+  l = g_hash_table_lookup (ppriv->children, uuid);
+  if (l != NULL)
+    return g_list_reverse (g_list_copy (l));
 
-  self->pressed_overflow_indicator = -1;
-  self->hovered_overflow_indicator = -1;
-
-  self->k = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
-
-  self->overflow_popover = gtk_popover_new (GTK_WIDGET (self));
-  gtk_style_context_add_class (gtk_widget_get_style_context (self->overflow_popover), "events");
-  g_signal_connect_swapped (self->overflow_popover, "hide", G_CALLBACK (overflow_popover_hide), self);
-  g_signal_connect_swapped (self->overflow_popover,
-                            "drag-motion",
-                            G_CALLBACK (cancel_dnd_from_overflow_popover),
-                            self->overflow_popover);
-
-  grid = gtk_grid_new ();
-  g_object_set (grid, "row-spacing", 6, "orientation", GTK_ORIENTATION_VERTICAL, NULL);
-  gtk_container_add (GTK_CONTAINER (self->overflow_popover), grid);
-
-  self->popover_title = gtk_label_new (NULL);
-  gtk_style_context_add_class (gtk_widget_get_style_context (self->popover_title), "sidebar-header");
-  g_object_set (self->popover_title, "margin", 6, "halign", GTK_ALIGN_START, NULL);
-  self->events_list_box = gtk_list_box_new ();
-  gtk_list_box_set_selection_mode (GTK_LIST_BOX (self->events_list_box), GTK_SELECTION_NONE);
-  gtk_list_box_set_header_func (GTK_LIST_BOX (self->events_list_box), update_list_box_headers, self, NULL);
-  button = gtk_button_new_with_label (_("Add Event…"));
-  g_object_set (button, "hexpand", TRUE, NULL);
-  g_signal_connect (button, "clicked", G_CALLBACK (add_new_event_button_cb), self);
-
-  gtk_container_add (GTK_CONTAINER (grid), self->popover_title);
-  gtk_container_add (GTK_CONTAINER (grid), self->events_list_box);
-  gtk_container_add (GTK_CONTAINER (grid), button);
-
-  /* Setup the month view as a drag n' drop destination */
-  gtk_drag_dest_set (GTK_WIDGET (self),
-                     0,
-                     NULL,
-                     0,
-                     GDK_ACTION_MOVE);
-
-  /*
-   * Also set the overflow popover as a drop destination, so we can hide
-   * it when the user starts dragging an event that is inside the overflow
-   * list.
-   */
-  gtk_drag_dest_set (GTK_WIDGET (self->overflow_popover),
-                     0,
-                     NULL,
-                     0,
-                     GDK_ACTION_MOVE);
+  return NULL;
 }
 
 static void
@@ -2298,83 +2185,104 @@ gcal_month_view_clear_state (GcalSubscriberView *subscriber)
   gtk_widget_hide (self->overflow_popover);
 }
 
-/* GcalView Interface API */
-/**
- * gcal_month_view_get_initial_date:
- *
- * Since: 0.1
- * Return value: the first day of the month
- * Returns: (transfer full): Release with g_free()
- **/
-static icaltimetype*
-gcal_month_view_get_initial_date (GcalView *view)
+static void
+gcal_month_view_class_init (GcalMonthViewClass *klass)
 {
-  //FIXME to retrieve the 35 days range
-  GcalMonthView *self;
-  icaltimetype *new_date;
+  GObjectClass *object_class;
+  GtkWidgetClass *widget_class;
+  GcalSubscriberViewClass *subscriber_view_class;
 
-  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), NULL);
+  object_class = G_OBJECT_CLASS (klass);
+  object_class->set_property = gcal_month_view_set_property;
+  object_class->get_property = gcal_month_view_get_property;
+  object_class->finalize = gcal_month_view_finalize;
 
-  self = GCAL_MONTH_VIEW (view);
+  widget_class = GTK_WIDGET_CLASS (klass);
+  widget_class->realize = gcal_month_view_realize;
+  widget_class->unrealize = gcal_month_view_unrealize;
+  widget_class->map = gcal_month_view_map;
+  widget_class->unmap = gcal_month_view_unmap;
+  widget_class->size_allocate = gcal_month_view_size_allocate;
+  widget_class->draw = gcal_month_view_draw;
+  widget_class->button_press_event = gcal_month_view_button_press;
+  widget_class->motion_notify_event = gcal_month_view_motion_notify_event;
+  widget_class->button_release_event = gcal_month_view_button_release;
+  widget_class->direction_changed = gcal_month_view_direction_changed;
+  widget_class->key_press_event = gcal_month_view_key_press;
+  widget_class->drag_motion = gcal_month_view_drag_motion;
+  widget_class->drag_drop = gcal_month_view_drag_drop;
+  widget_class->drag_leave = gcal_month_view_drag_leave;
+  widget_class->scroll_event = gcal_month_view_scroll_event;
 
-  new_date = gcal_dup_icaltime (self->date);
-  new_date->day = 1;
-  new_date->is_date = 0;
-  new_date->hour = 0;
-  new_date->minute = 0;
-  new_date->second = 0;
+  subscriber_view_class = GCAL_SUBSCRIBER_VIEW_CLASS (klass);
+  subscriber_view_class->get_child_cell = gcal_month_view_get_child_cell;
+  subscriber_view_class->clear_state = gcal_month_view_clear_state;
 
-  return new_date;
-}
+  g_object_class_override_property (object_class, PROP_DATE, "active-date");
 
-/**
- * gcal_month_view_get_final_date:
- *
- * Since: 0.1
- * Return value: the last day of the month
- * Returns: (transfer full): Release with g_free()
- **/
-static icaltimetype*
-gcal_month_view_get_final_date (GcalView *view)
-{
-  //FIXME to retrieve the 35 days range
-  GcalMonthView *self;
-  icaltimetype *new_date;
-
-  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), NULL);
-
-  self = GCAL_MONTH_VIEW (view);
-
-  new_date = gcal_dup_icaltime (self->date);
-  new_date->day = icaltime_days_in_month (self->date->month, self->date->year);
-  new_date->is_date = 0;
-  new_date->hour = 23;
-  new_date->minute = 59;
-  new_date->second = 59;
-
-  return new_date;
+  gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
 
 static void
-gcal_month_view_clear_marks (GcalView *view)
+gcal_month_view_init (GcalMonthView *self)
 {
-  cancel_selection (GCAL_MONTH_VIEW (view));
+  GtkWidget *grid;
+  GtkWidget *button;
 
-  gtk_widget_queue_draw (GTK_WIDGET (view));
-}
+  gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
-static GList*
-gcal_month_view_get_children_by_uuid (GcalView    *view,
-                                      const gchar *uuid)
-{
-  GcalSubscriberViewPrivate *ppriv = GCAL_SUBSCRIBER_VIEW (view)->priv;
-  GList *l;
+  self = gcal_month_view_get_instance_private (self);
 
-  l = g_hash_table_lookup (ppriv->children, uuid);
-  if (l != NULL)
-    return g_list_reverse (g_list_copy (l));
+  cancel_selection (self);
 
-  return NULL;
+  self->pressed_overflow_indicator = -1;
+  self->hovered_overflow_indicator = -1;
+
+  self->k = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+
+  self->overflow_popover = gtk_popover_new (GTK_WIDGET (self));
+  gtk_style_context_add_class (gtk_widget_get_style_context (self->overflow_popover), "events");
+  g_signal_connect_swapped (self->overflow_popover, "hide", G_CALLBACK (overflow_popover_hide), self);
+  g_signal_connect_swapped (self->overflow_popover,
+                            "drag-motion",
+                            G_CALLBACK (cancel_dnd_from_overflow_popover),
+                            self->overflow_popover);
+
+  grid = gtk_grid_new ();
+  g_object_set (grid, "row-spacing", 6, "orientation", GTK_ORIENTATION_VERTICAL, NULL);
+  gtk_container_add (GTK_CONTAINER (self->overflow_popover), grid);
+
+  self->popover_title = gtk_label_new (NULL);
+  gtk_style_context_add_class (gtk_widget_get_style_context (self->popover_title), "sidebar-header");
+  g_object_set (self->popover_title, "margin", 6, "halign", GTK_ALIGN_START, NULL);
+  self->events_list_box = gtk_list_box_new ();
+  gtk_list_box_set_selection_mode (GTK_LIST_BOX (self->events_list_box), GTK_SELECTION_NONE);
+  gtk_list_box_set_header_func (GTK_LIST_BOX (self->events_list_box), update_list_box_headers, self, NULL);
+  button = gtk_button_new_with_label (_("Add Event…"));
+  g_object_set (button, "hexpand", TRUE, NULL);
+  g_signal_connect (button, "clicked", G_CALLBACK (add_new_event_button_cb), self);
+
+  gtk_container_add (GTK_CONTAINER (grid), self->popover_title);
+  gtk_container_add (GTK_CONTAINER (grid), self->events_list_box);
+  gtk_container_add (GTK_CONTAINER (grid), button);
+
+  /* Setup the month view as a drag n' drop destination */
+  gtk_drag_dest_set (GTK_WIDGET (self),
+                     0,
+                     NULL,
+                     0,
+                     GDK_ACTION_MOVE);
+
+  /*
+   * Also set the overflow popover as a drop destination, so we can hide
+   * it when the user starts dragging an event that is inside the overflow
+   * list.
+   */
+  gtk_drag_dest_set (GTK_WIDGET (self->overflow_popover),
+                     0,
+                     NULL,
+                     0,
+                     GDK_ACTION_MOVE);
 }
 
 /* Public API */
@@ -2382,6 +2290,8 @@ void
 gcal_month_view_set_current_date (GcalMonthView *self,
                                   icaltimetype  *current_date)
 {
+  g_return_if_fail (GCAL_IS_MONTH_VIEW (self));
+
   self->current_date = current_date;
   gtk_widget_queue_draw (GTK_WIDGET (self));
 }
@@ -2398,9 +2308,12 @@ void
 gcal_month_view_set_first_weekday (GcalMonthView *self,
                                    gint           day_nr)
 {
+  g_return_if_fail (GCAL_IS_MONTH_VIEW (self));
+
   self->first_weekday = day_nr;
+
   /* update days_delay */
-  if (self->date != NULL)
+  if (self->date)
     self->days_delay = (time_day_of_week (1, self->date->month - 1, self->date->year) - self->first_weekday + 7) % 7;
 }
 
@@ -2422,5 +2335,7 @@ void
 gcal_month_view_set_manager (GcalMonthView *self,
                              GcalManager   *manager)
 {
+  g_return_if_fail (GCAL_IS_MONTH_VIEW (self));
+
   self->manager = manager;
 }

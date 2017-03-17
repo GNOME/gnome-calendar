@@ -30,15 +30,17 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (GcalMonthView, gcal_month_view, GCAL, MONTH_VIEW, GcalSubscriberView)
 
 
-void           gcal_month_view_set_current_date   (GcalMonthView *month_view,
-                                                   icaltimetype  *current_date);
-void           gcal_month_view_set_first_weekday  (GcalMonthView *view,
-                                                   gint           day_nr);
-void           gcal_month_view_set_use_24h_format (GcalMonthView *view,
-                                                   gboolean       use_24h);
+void                 gcal_month_view_set_current_date            (GcalMonthView      *self,
+                                                                  icaltimetype       *current_date);
 
-void           gcal_month_view_set_manager        (GcalMonthView *view,
-                                                   GcalManager   *manager);
+void                 gcal_month_view_set_first_weekday           (GcalMonthView      *self,
+                                                                  gint                day_nr);
+
+void                 gcal_month_view_set_use_24h_format          (GcalMonthView      *self,
+                                                                  gboolean            use_24h);
+
+void                 gcal_month_view_set_manager                 (GcalMonthView      *self ,
+                                                                  GcalManager        *manager);
 
 G_END_DECLS
 
