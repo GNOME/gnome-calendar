@@ -1242,7 +1242,7 @@ gcal_window_constructed (GObject *object)
   gtk_list_box_set_sort_func (GTK_LIST_BOX (window->calendar_listbox), (GtkListBoxSortFunc) calendar_listbox_sort_func,
                               object, NULL);
 
-  if (gcal_manager_load_completed (window->manager))
+  if (!gcal_manager_get_loading (window->manager))
     {
       GList *sources, *l;
       sources = gcal_manager_get_sources_connected (window->manager);
