@@ -20,7 +20,7 @@
 #include <config.h>
 #include <gtk/gtk.h>
 #include "gcal-application.h"
-
+#include "gcal-log.h"
 
 #include <glib/gi18n.h>
 
@@ -32,6 +32,7 @@ main (int   argc,
   GcalApplication *app;
   int status;
 
+  gcal_log_init ();
 
 #ifdef ENABLE_NLS
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);

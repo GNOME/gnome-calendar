@@ -56,6 +56,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-event.h                                          \
     gcal-event-widget.c                                   \
     gcal-event-widget.h                                   \
+    gcal-log.c                                            \
+    gcal-log.h                                            \
     gcal-manager.c                                        \
     gcal-manager.h                                        \
     gcal-multi-choice.c                                   \
