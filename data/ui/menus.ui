@@ -15,7 +15,7 @@
     </section>
     <section>
       <item>
-        <attribute name="label" translatable="yes">_Calendars…</attribute>
+        <attribute name="label" translatable="yes">_Calendars</attribute>
         <attribute name="action">win.show-calendars</attribute>
       </item>
     </section>
