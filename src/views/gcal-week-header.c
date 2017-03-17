@@ -1388,6 +1388,7 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   GDateTime *end_date;
   GtkWidget *event_widget;
   GcalEvent *event;
+  gboolean turn_all_day;
   gboolean ltr;
   gint drop_cell;
 
@@ -1412,7 +1413,9 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   end_date = gcal_event_get_date_end (event);
   week_start = get_start_of_week (self->active_date);
 
-  if (gcal_event_is_multiday (event) && !gcal_event_get_all_day (event))
+  turn_all_day = !gcal_event_is_multiday (event) || gcal_event_get_all_day (event);
+
+  if (!turn_all_day)
     {
       /*
        * The only case where we don't touch the timezone is for
@@ -1432,8 +1435,6 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
                                       g_date_time_get_month (week_start),
                                       g_date_time_get_day_of_month (week_start) + drop_cell,
                                       0, 0, 0);
-
-      gcal_event_set_all_day (event, TRUE);
     }
 
   /* Since the event may have a NULL end date, so we have to check it here */
@@ -1442,8 +1443,10 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
       g_autoptr (GDateTime) new_end;
       GTimeSpan difference;
 
-      difference = g_date_time_difference (end_date, start_date);
-      difference /= G_TIME_SPAN_HOUR;
+      if (turn_all_day)
+        difference = 24;
+      else
+        difference = g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
 
       new_end = g_date_time_add_hours (dnd_date, difference);
       gcal_event_set_date_end (event, new_end);
@@ -1454,6 +1457,9 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
    * the event's start and end dates above
    */
   gcal_event_set_date_start (event, dnd_date);
+
+  if (turn_all_day)
+    gcal_event_set_all_day (event, TRUE);
 
   /* Commit the changes */
   gcal_manager_update_event (self->manager, event);
