@@ -20,12 +20,13 @@
 
 #define G_LOG_DOMAIN "GcalWeekView"
 
-#include "gcal-week-view.h"
+#include "gcal-debug.h"
+#include "gcal-event-widget.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
-#include "gcal-event-widget.h"
 #include "gcal-week-header.h"
 #include "gcal-week-grid.h"
+#include "gcal-week-view.h"
 
 #include <glib/gi18n.h>
 
@@ -116,7 +117,7 @@ update_grid_scroll_position (GcalWeekView *self)
   if (!gtk_widget_get_realized (self->scrolled_window) ||
       !gtk_widget_get_mapped (self->scrolled_window))
     {
-      return G_SOURCE_CONTINUE;
+      GCAL_RETURN (G_SOURCE_CONTINUE);
     }
 
   now = g_date_time_new_now_local ();
@@ -125,7 +126,7 @@ update_grid_scroll_position (GcalWeekView *self)
 
   /* Don't animate when not today */
   if (datetime_compare_date (now, week_start) < 0 || datetime_compare_date (now, week_end) >= 0)
-    goto out;
+    GCAL_GOTO (out);
 
   vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));
   minutes = g_date_time_get_hour (now) * 60 + g_date_time_get_minute (now);
@@ -147,7 +148,7 @@ update_grid_scroll_position (GcalWeekView *self)
 
 out:
   self->scroll_grid_timeout_id = 0;
-  return G_SOURCE_REMOVE;
+  GCAL_RETURN (G_SOURCE_REMOVE);
 }
 
 static void
