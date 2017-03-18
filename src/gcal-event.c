@@ -1337,7 +1337,7 @@ gcal_event_set_timezone (GcalEvent *self,
  * @self: a #GcalEvent
  *
  * Retrieves the unique identifier of the event. The UID
- * consists of '<source id>:<event id>:<recurrency id>'.
+ * consists of '[source id]:[event id]:[recurrency id]'.
  * If there's no recurrency assigned, the last field is
  * ignored.
  *
