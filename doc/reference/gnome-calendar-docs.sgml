@@ -8,51 +8,66 @@
 ]>
 <book id="index">
   <bookinfo>
-    <title>&package_name; Reference Manual</title>
+    <title>GNOME Calendar Reference Manual</title>
     <releaseinfo>
-      for &package_string;.
+      For &package_string;.
       The latest version of this documentation can be found on-line at
       <ulink role="online-location" url="http://[SERVER]/&package_name;/index.html">http://[SERVER]/&package_name;/</ulink>.
     </releaseinfo>
   </bookinfo>
 
   <chapter>
-    <title>[Insert title here]</title>
-        <xi:include href="xml/css-code.xml"/>
+    <title>Logging and Debugging</title>
+    <xi:include href="xml/gcal-debug.xml"/>
+    <xi:include href="xml/gcal-log.xml"/>
+  </chapter>
+
+  <chapter>
+    <title>Backend</title>
     <xi:include href="xml/e-cal-data-model.xml"/>
     <xi:include href="xml/e-cal-data-model-subscriber.xml"/>
-    <xi:include href="xml/gcal-application.xml"/>
-    <xi:include href="xml/gcal-date-chooser.xml"/>
-    <xi:include href="xml/gcal-date-chooser-day.xml"/>
-    <xi:include href="xml/gcal-date-selector.xml"/>
-    <xi:include href="xml/gcal-debug.xml"/>
-    <xi:include href="xml/gcal-edit-dialog.xml"/>
     <xi:include href="xml/gcal-enum-types.xml"/>
     <xi:include href="xml/gcal-event.xml"/>
-    <xi:include href="xml/gcal-event-widget.xml"/>
-    <xi:include href="xml/gcal-log.xml"/>
     <xi:include href="xml/gcal-manager.xml"/>
-    <xi:include href="xml/gcal-month-view.xml"/>
-    <xi:include href="xml/gcal-multi-choice.xml"/>
-    <xi:include href="xml/gcal-quick-add-popover.xml"/>
     <xi:include href="xml/gcal-range-tree.xml"/>
-    <xi:include href="xml/gcal-resources.xml"/>
-    <xi:include href="xml/gcal-search-view.xml"/>
     <xi:include href="xml/gcal-shell-search-provider.xml"/>
     <xi:include href="xml/gcal-shell-search-provider-generated.xml"/>
-    <xi:include href="xml/gcal-source-dialog.xml"/>
+    <xi:include href="xml/gcal-utils.xml"/>
+  </chapter>
+
+  <chapter>
+    <title>Views</title>
+    <xi:include href="xml/gcal-month-view.xml"/>
+    <xi:include href="xml/gcal-search-view.xml"/>
     <xi:include href="xml/gcal-subscriber-view.xml"/>
     <xi:include href="xml/gcal-subscriber-view-private.xml"/>
-    <xi:include href="xml/gcal-time-selector.xml"/>
     <xi:include href="xml/gcal-utils.xml"/>
     <xi:include href="xml/gcal-view.xml"/>
     <xi:include href="xml/gcal-week-grid.xml"/>
     <xi:include href="xml/gcal-week-header.xml"/>
     <xi:include href="xml/gcal-week-view.xml"/>
-    <xi:include href="xml/gcal-window.xml"/>
     <xi:include href="xml/gcal-year-view.xml"/>
-
   </chapter>
+
+  <chapter>
+    <title>Edit dialog</title>
+    <xi:include href="xml/gcal-date-chooser.xml"/>
+    <xi:include href="xml/gcal-date-chooser-day.xml"/>
+    <xi:include href="xml/gcal-date-selector.xml"/>
+    <xi:include href="xml/gcal-edit-dialog.xml"/>
+    <xi:include href="xml/gcal-multi-choice.xml"/>
+    <xi:include href="xml/gcal-time-selector.xml"/>
+  </chapter>
+
+  <chapter>
+    <title>Main</title>
+    <xi:include href="xml/gcal-application.xml"/>
+    <xi:include href="xml/gcal-event-widget.xml"/>
+    <xi:include href="xml/gcal-quick-add-popover.xml"/>
+    <xi:include href="xml/gcal-source-dialog.xml"/>
+    <xi:include href="xml/gcal-window.xml"/>
+  </chapter>
+
   <chapter id="object-tree">
     <title>Object Hierarchy</title>
     <xi:include href="xml/tree_index.sgml"/>
