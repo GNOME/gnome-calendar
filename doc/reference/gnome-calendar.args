@@ -1,0 +1,470 @@
+<ARG>
+<NAME>ECalDataModel::expand-recurrences</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Expand Recurrences</NICK>
+<BLURB>(null)</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>ECalDataModel::timezone</NAME>
+<TYPE>gpointer</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Time Zone</NICK>
+<BLURB>(null)</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalDateChooser::date</NAME>
+<TYPE>GDateTime*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Date</NICK>
+<BLURB>The selected date.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalDateChooser::no-month-change</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>No Month Change</NICK>
+<BLURB>If TRUE, the selected month cannot be changed.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalDateChooser::show-day-names</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Show Day Names</NICK>
+<BLURB>If TRUE, day names are displayed.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalDateChooser::show-heading</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Show Heading</NICK>
+<BLURB>If TRUE, a heading is displayed.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalDateChooser::show-week-numbers</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Show Week Numbers</NICK>
+<BLURB>If TRUE, week numbers are displayed.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalDateSelector::date</NAME>
+<TYPE>GDateTime*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Date of the selector</NICK>
+<BLURB>The current date of the selector.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEditDialog::event</NAME>
+<TYPE>GcalEvent*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>event of the dialog</NICK>
+<BLURB>The event being edited.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEditDialog::manager</NAME>
+<TYPE>GcalManager*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Manager of the dialog</NICK>
+<BLURB>The manager of the dialog.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEditDialog::writable</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Whether the current event can be edited</NICK>
+<BLURB>Whether the current event can be edited or not.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEvent::all-day</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>If event is all day</NICK>
+<BLURB>Whether the event is all day or not.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEvent::color</NAME>
+<TYPE>GdkRGBA*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Color of the event</NICK>
+<BLURB>The color of the event.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEvent::component</NAME>
+<TYPE>ECalComponent*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rwX</FLAGS>
+<NICK>Component</NICK>
+<BLURB>The ECalComponent of the event.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEvent::date-end</NAME>
+<TYPE>GDateTime*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>End date of the event</NICK>
+<BLURB>The end date of the event.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEvent::date-start</NAME>
+<TYPE>GDateTime*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Start date of the event</NICK>
+<BLURB>The start date of the event.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEvent::description</NAME>
+<TYPE>gchar*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Description of the event</NICK>
+<BLURB>The description of the event.</BLURB>
+<DEFAULT>""</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEvent::location</NAME>
+<TYPE>gchar*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Location of the event</NICK>
+<BLURB>The location of the event.</BLURB>
+<DEFAULT>""</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEvent::source</NAME>
+<TYPE>ESource*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rwx</FLAGS>
+<NICK>ESource</NICK>
+<BLURB>The ESource this event belongs to.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEvent::summary</NAME>
+<TYPE>gchar*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Summary of the event</NICK>
+<BLURB>The summary of the event.</BLURB>
+<DEFAULT>""</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEvent::timezone</NAME>
+<TYPE>GTimeZone*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Timezone of the event</NICK>
+<BLURB>The timezone of the event.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEvent::uid</NAME>
+<TYPE>gchar*</TYPE>
+<RANGE></RANGE>
+<FLAGS>r</FLAGS>
+<NICK>Identifier of the event</NICK>
+<BLURB>The unique identifier of the event.</BLURB>
+<DEFAULT>""</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEventWidget::date-end</NAME>
+<TYPE>GDateTime*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>End date</NICK>
+<BLURB>The end date of the widget.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEventWidget::date-start</NAME>
+<TYPE>GDateTime*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Start date</NICK>
+<BLURB>The start date of the widget.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalEventWidget::event</NAME>
+<TYPE>GcalEvent*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rwX</FLAGS>
+<NICK>Event</NICK>
+<BLURB>The event this widget represents.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalManager::default-calendar</NAME>
+<TYPE>ESource*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Default calendar</NICK>
+<BLURB>The default calendar.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalManager::loading</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>r</FLAGS>
+<NICK>Loading</NICK>
+<BLURB>Whether it's still loading or not.</BLURB>
+<DEFAULT>TRUE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalManager::settings</NAME>
+<TYPE>GSettings*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rwX</FLAGS>
+<NICK>Application settings</NICK>
+<BLURB>The settings of the application passed down from GcalApplication.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalMultiChoice::animate</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Animate</NICK>
+<BLURB>Animate.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalMultiChoice::choices</NAME>
+<TYPE>GStrv</TYPE>
+<RANGE></RANGE>
+<FLAGS>w</FLAGS>
+<NICK>Choices</NICK>
+<BLURB>Choices.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalMultiChoice::max-value</NAME>
+<TYPE>gint</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Maximum Value</NICK>
+<BLURB>Maximum Value.</BLURB>
+<DEFAULT>0</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalMultiChoice::min-value</NAME>
+<TYPE>gint</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Minimum Value</NICK>
+<BLURB>Minimum Value.</BLURB>
+<DEFAULT>0</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalMultiChoice::value</NAME>
+<TYPE>gint</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Value</NICK>
+<BLURB>Value.</BLURB>
+<DEFAULT>0</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalMultiChoice::wrap</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Wrap</NICK>
+<BLURB>Wrap.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalQuickAddPopover::date-end</NAME>
+<TYPE>GDateTime*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>End date of the event</NICK>
+<BLURB>The end date of the new event.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalQuickAddPopover::date-start</NAME>
+<TYPE>GDateTime*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Start date of the event</NICK>
+<BLURB>The start date of the new event.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalQuickAddPopover::manager</NAME>
+<TYPE>GcalManager*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Manager of the application</NICK>
+<BLURB>The singleton manager of the application.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalSearchView::active-date</NAME>
+<TYPE>icaltimetype*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>The active date</NICK>
+<BLURB>The active/selected date in the view.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalTimeSelector::time</NAME>
+<TYPE>GDateTime*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Time of the selector</NICK>
+<BLURB>The current time of the selector.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalView::active-date</NAME>
+<TYPE>icaltimetype*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>The active date</NICK>
+<BLURB>The active/selecetd date in the view.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalWeekGrid::active-date</NAME>
+<TYPE>icaltimetype*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rwx</FLAGS>
+<NICK>Date</NICK>
+<BLURB>The active selected date.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalWeekHeader::active-date</NAME>
+<TYPE>icaltimetype*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rwx</FLAGS>
+<NICK>Date</NICK>
+<BLURB>The active selected date.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalWindow::active-date</NAME>
+<TYPE>icaltimetype*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rwx</FLAGS>
+<NICK>Date</NICK>
+<BLURB>The active/selected date.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalWindow::active-view</NAME>
+<TYPE>GcalWindowViewType</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Active View</NICK>
+<BLURB>The active view, eg: month, week, etc.</BLURB>
+<DEFAULT>GCAL_WINDOW_VIEW_MONTH</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalWindow::manager</NAME>
+<TYPE>GcalManager*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rwX</FLAGS>
+<NICK>The manager object</NICK>
+<BLURB>A weak reference to the app manager object.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalWindow::new-event-mode</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>New Event mode</NICK>
+<BLURB>Whether the window is in new-event-mode or not.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalYearView::show-week-numbers</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Show Week Numbers</NICK>
+<BLURB>Show Week Numbers Column.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+

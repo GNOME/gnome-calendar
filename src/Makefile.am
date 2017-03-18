@@ -125,5 +125,22 @@ EXTRA_DIST =                                              \
     gcal-enum-types.h.template                            \
     gcal-enum-types.c.template
 
+
+#---------------------------------------------
+# Library for GTK-Doc
+#---------------------------------------------
+noinst_LTLIBRARIES = libgcal.la
+
+libgcal_la_SOURCES = $(gnome_calendar_SOURCES)
+
+libgcal_la_CFLAGS = \
+	$(CALENDAR_CFLAGS) \
+	$(CALENDAR_WARN_CFLAGS)
+
+libgcal_la_LDFLAGS = \
+	-Wl,--export-dynamic \
+	-lm
+
+
 dist-hook:
 	cd $(distdir); rm -f $(BUILT_SOURCES)

@@ -1,5 +1,5 @@
-SUBDIRS = src data po
-DIST_SUBDIRS = src data po
+SUBDIRS = src data po doc
+DIST_SUBDIRS = src data po doc
 
 INTLTOOL_FILES =                \
   intltool-extract.in           \
@@ -21,7 +21,9 @@ DISTCLEANFILES =                \
   intltool-update               \
   po/.intltool-merge-cache
 
-DISTCHECK_CONFIGURE_FLAGS = --enable-appstream-util
+DISTCHECK_CONFIGURE_FLAGS =     \
+  --enable-appstream-util       \
+  --disable-gtk-doc
 
 # Remove doc directory on uninstall
 uninstall-local:

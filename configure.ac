@@ -124,6 +124,18 @@ BUGREPORT_URL=calendar_bugreport_url
 AC_SUBST(BUGREPORT_URL)
 
 dnl ================================================================
+dnl Documentation
+dnl ================================================================
+GTK_DOC_CHECK([1.14],[--flavour no-tmpl])
+AM_CONDITIONAL(ENABLE_GTK_DOC, test "x$enable_gtk_doc" = "xyes")
+AC_ARG_ENABLE(doc-cross-references,
+              AS_HELP_STRING([--disable-doc-cross-references],
+                             [cross reference symbols from other libraries @<:@default=yes@:>@]),
+              enable_doc_cross_references=$enableval,
+              enable_doc_cross_references=yes)
+AM_CONDITIONAL(ENABLE_DOC_CROSS_REFERENCES, test x$enable_doc_cross_references != xno)
+
+dnl ================================================================
 dnl Misc
 dnl ================================================================
 AC_PATH_PROG([GLIB_MKENUMS], [glib-mkenums])
@@ -163,6 +175,9 @@ AC_CONFIG_FILES([
       data/org.gnome.Calendar.desktop.in
       data/org.gnome.Calendar.search-provider.ini.in
       data/icons/Makefile
+      doc/Makefile
+      doc/reference/Makefile
+      doc/reference/version.xml
       po/Makefile.in
 ])
 
@@ -181,6 +196,7 @@ echo "
     Development options
         Enable Debug .....................  ${enable_debug}
         Enable Tracing ...................  ${enable_tracing}
+        Enable Documentation .............  ${enable_gtk_doc}
 
     Now type 'make' to build $PACKAGE
 "

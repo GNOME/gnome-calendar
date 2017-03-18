@@ -11,6 +11,7 @@ cd $srcdir
 mkdir -p m4
 autoreconf --verbose --force --install || exit $?
 intltoolize --force --copy --automake || exit $?
+gtkdocize || exit 1
 
 if test -z "$NOCONFIGURE"; then
     run_configure=true

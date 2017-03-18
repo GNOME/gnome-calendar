@@ -87,9 +87,13 @@ data/org.gnome.Calendar.search-provider.ini.in
 data/org.gnome.Calendar.service
 data/appdata/org.gnome.Calendar.appdata.xml
 src/gcal-debug.h
-tags
+tags*
 src/tags
 src/views/tags
 src/views/.dirstamp
 *.goutputstream*
-tags*
+gtk-doc.make
+doc/reference/xml
+doc/reference/html
+doc/reference/*.stamp
+doc/reference/*.xml
