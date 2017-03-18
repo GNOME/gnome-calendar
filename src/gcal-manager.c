@@ -44,8 +44,6 @@ typedef struct
 typedef struct
 {
   ECalClient     *client;
-
-  gboolean        enabled;
   gboolean        connected;
 } GcalManagerUnit;
 
@@ -84,7 +82,6 @@ struct _GcalManager
 
   /* state flags */
   gboolean         goa_client_ready;
-  gchar          **disabled_sources;
   gint             sources_at_launch;
 
   /* timezone */
@@ -299,7 +296,7 @@ on_client_readonly_changed (EClient    *client,
   source = e_client_get_source (client);
 
   unit = g_hash_table_lookup (manager->clients, source);
-  if (unit && unit->enabled)
+  if (unit && is_source_enabled (source))
     source_changed (manager, source);
 
   GCAL_EXIT;
@@ -340,11 +337,13 @@ on_client_connected (GObject      *source_object,
   ECalClient *client;
   ESource *source;
   GError *error;
+  gboolean enabled;
 
   GCAL_ENTRY;
 
   manager = GCAL_MANAGER (user_data);
   source = e_client_get_source (E_CLIENT (source_object));
+  enabled = is_source_enabled (source);
 
   manager->sources_at_launch--;
 
@@ -380,14 +379,8 @@ on_client_connected (GObject      *source_object,
   /* notify the readonly property */
   g_signal_connect (client, "notify::readonly", G_CALLBACK (on_client_readonly_changed), user_data);
 
-  if (g_strv_contains ((const gchar * const *) manager->disabled_sources, e_source_get_uid (source)))
+  if (enabled)
     {
-      unit->enabled = FALSE;
-    }
-  else
-    {
-      unit->enabled = TRUE;
-
       e_cal_data_model_add_client (manager->e_data_model, client);
       e_cal_data_model_add_client (manager->search_data_model, client);
       if (manager->shell_search_data_model != NULL)
@@ -395,10 +388,8 @@ on_client_connected (GObject      *source_object,
     }
 
   /* refresh client when it's added */
-  if (unit->enabled && e_client_check_refresh_supported (E_CLIENT (client)))
-  {
+  if (enabled && e_client_check_refresh_supported (E_CLIENT (client)))
     e_client_refresh (E_CLIENT (client), NULL, on_client_refreshed, user_data);
-  }
 
   /* Cache all the online calendars, so the user can see them offline */
   offline_extension = e_source_get_extension (source, E_SOURCE_EXTENSION_OFFLINE);
@@ -410,7 +401,7 @@ on_client_connected (GObject      *source_object,
                                    NULL,
                                    NULL);
 
-  g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ADDED], 0, source, unit->enabled);
+  g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ADDED], 0, source, enabled);
 
   g_clear_object (&client);
 
@@ -776,8 +767,6 @@ gcal_manager_constructed (GObject *object)
   G_OBJECT_CLASS (gcal_manager_parent_class)->constructed (object);
 
   manager = GCAL_MANAGER (object);
-
-  manager->disabled_sources = g_settings_get_strv (manager->settings, "disabled-sources");
   manager->system_timezone = e_cal_util_get_system_timezone ();
 
   manager->clients = g_hash_table_new_full ((GHashFunc) e_source_hash, (GEqualFunc) e_source_equal,
@@ -904,8 +893,6 @@ gcal_manager_finalize (GObject *object)
   g_clear_object (&manager->e_data_model);
   g_clear_object (&manager->search_data_model);
   g_clear_object (&manager->shell_search_data_model);
-
-  g_strfreev (manager->disabled_sources);
 
   if (manager->search_view_data != NULL)
     {
@@ -1143,7 +1130,7 @@ gcal_manager_get_sources (GcalManager *manager)
     {
       GcalManagerUnit *unit = value;
 
-      if (!unit->enabled)
+      if (!is_source_enabled (key))
         continue;
 
       aux = g_list_append (aux, key);
@@ -1235,7 +1222,7 @@ gcal_manager_set_shell_search_query (GcalManager *manager,
 
   manager->search_view_data->passed_start = FALSE;
   manager->search_view_data->search_done = FALSE;
-  manager->search_view_data->sources_left = g_hash_table_size (manager->clients) - g_strv_length (manager->disabled_sources);
+  manager->search_view_data->sources_left = g_hash_table_size (manager->clients);
 
   if (manager->search_view_data->query != NULL)
     g_free (manager->search_view_data->query);
@@ -1435,48 +1422,32 @@ void
 gcal_manager_enable_source (GcalManager *manager,
                             ESource     *source)
 {
+  ESourceSelectable *selectable;
   GcalManagerUnit *unit;
-  gchar **new_disabled_sources;
-  guint i;
 
   GCAL_ENTRY;
 
   unit = g_hash_table_lookup (manager->clients, source);
+  selectable = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
 
-  if (unit->enabled)
+  if (is_source_enabled (source))
     {
       g_debug ("Source '%s' already enabled", e_source_get_uid (source));
       GCAL_EXIT;
       return;
     }
 
-  unit->enabled = TRUE;
   e_cal_data_model_add_client (manager->e_data_model, unit->client);
   e_cal_data_model_add_client (manager->search_data_model, unit->client);
-  if (manager->shell_search_data_model != NULL)
+
+  if (manager->shell_search_data_model)
     e_cal_data_model_add_client (manager->shell_search_data_model, unit->client);
-
-  /* remove source's uid from disabled_sources array */
-  new_disabled_sources = g_new0 (gchar*, g_strv_length (manager->disabled_sources));
-
-  for (i = 0; i < g_strv_length (manager->disabled_sources); i++)
-    {
-      if (g_strcmp0 (manager->disabled_sources[i], e_source_get_uid (source)) == 0)
-        continue;
-
-      new_disabled_sources[i] = g_strdup (manager->disabled_sources[i]);
-    }
-
-  g_strfreev (manager->disabled_sources);
-
-  manager->disabled_sources = new_disabled_sources;
 
   g_signal_emit (manager, signals[SOURCE_ENABLED], 0, source, TRUE);
 
-  /* sync settings value */
-  g_settings_set_strv (manager->settings,
-                       "disabled-sources",
-                       (const gchar * const *) manager->disabled_sources);
+  /* Save the source */
+  e_source_selectable_set_selected (selectable, TRUE);
+  gcal_manager_save_source (manager, source);
 
   GCAL_EXIT;
 }
@@ -1492,16 +1463,16 @@ void
 gcal_manager_disable_source (GcalManager *manager,
                              ESource     *source)
 {
+  ESourceSelectable *selectable;
   GcalManagerUnit *unit;
-  gchar **new_disabled_sources;
-  guint i;
   const gchar *source_uid;
 
   GCAL_ENTRY;
 
   unit = g_hash_table_lookup (manager->clients, source);
+  selectable = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
 
-  if (!unit->enabled)
+  if (!is_source_enabled (source))
     {
       g_debug ("Source '%s' already disabled", e_source_get_uid (source));
       GCAL_EXIT;
@@ -1510,29 +1481,17 @@ gcal_manager_disable_source (GcalManager *manager,
 
   source_uid = e_source_get_uid (source);
 
-  unit->enabled = FALSE;
-
   e_cal_data_model_remove_client (manager->e_data_model, source_uid);
   e_cal_data_model_remove_client (manager->search_data_model, source_uid);
 
   if (manager->shell_search_data_model != NULL)
     e_cal_data_model_remove_client (manager->shell_search_data_model, source_uid);
 
-  /* add source's uid from disabled_sources array */
-  new_disabled_sources = g_new0 (gchar*, g_strv_length (manager->disabled_sources) + 2);
-
-  for (i = 0; i < g_strv_length (manager->disabled_sources); i++)
-    new_disabled_sources[i] = g_strdup (manager->disabled_sources[i]);
-
-  new_disabled_sources[g_strv_length (manager->disabled_sources)] = g_strdup (source_uid);
-
-  g_strfreev (manager->disabled_sources);
-  manager->disabled_sources = new_disabled_sources;
-
   g_signal_emit (manager, signals[SOURCE_ENABLED], 0, source, FALSE);
 
-  /* sync settings value */
-  g_settings_set_strv (manager->settings, "disabled-sources", (const gchar * const *) manager->disabled_sources);
+  /* Save the source */
+  e_source_selectable_set_selected (selectable, FALSE);
+  gcal_manager_save_source (manager, source);
 
   GCAL_EXIT;
 }
@@ -1562,22 +1521,6 @@ gcal_manager_save_source (GcalManager *manager,
     }
 
   GCAL_EXIT;
-}
-
-gboolean
-gcal_manager_source_enabled (GcalManager *manager,
-                             ESource     *source)
-{
-  GcalManagerUnit *unit;
-
-  GCAL_ENTRY;
-
-  unit = g_hash_table_lookup (manager->clients, source);
-
-  if (!unit)
-    GCAL_RETURN (FALSE);
-
-  GCAL_RETURN (unit->enabled);
 }
 
 void

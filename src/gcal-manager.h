@@ -97,9 +97,6 @@ void                 gcal_manager_disable_source                 (GcalManager   
 void                 gcal_manager_save_source                    (GcalManager        *manager,
                                                                   ESource            *source);
 
-gboolean             gcal_manager_source_enabled                 (GcalManager        *manager,
-                                                                  ESource            *source);
-
 GList*               gcal_manager_get_events                     (GcalManager        *manager,
                                                                   icaltimetype       *range_start,
                                                                   icaltimetype       *range_end);

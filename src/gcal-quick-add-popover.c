@@ -364,7 +364,7 @@ on_source_changed (GcalManager         *manager,
     {
       on_source_added (self->manager,
                        source,
-                       gcal_manager_source_enabled (self->manager, source),
+                       is_source_enabled (source),
                        self);
 
       row = get_row_for_source (self, source);

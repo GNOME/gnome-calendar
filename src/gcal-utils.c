@@ -924,3 +924,15 @@ should_change_date_for_scroll (gdouble        *scroll_value,
 
   return FALSE;
 }
+
+gboolean
+is_source_enabled (ESource *source)
+{
+  ESourceSelectable *selectable;
+
+  g_return_val_if_fail (E_IS_SOURCE (source), FALSE);
+
+  selectable = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
+
+  return e_source_selectable_get_selected (selectable);
+}
