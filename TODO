@@ -5,8 +5,6 @@ TODO
  - Add disable/enable of views
  - Rework GcalViews as grid only (WeekView, MonthView, YearView)
  - Rework GcalViews to implement the new API (remove every "New API" comment)
- - Reorder funcs inside GcalWindow
- - Fix nav-button css to matches pushed-down state (font-color goes white)
  - Review all-day checkbox and date/time fields interaction in GcalEditDialog
  - Check width of read-only layer in GcalEditDialog
  - Rethink signals from GcalManager
@@ -15,9 +13,6 @@ TODO
  - Add different triggers for hiding the sources view.
  - Check for the real need of adding timezone, and check everywhere
  - Connect all dconf options to the program
- - Clear/reorder #include in every header file.
- - Review every g_return_if_fail statement since G_OBJECT macros does that
-   already
  - Check the real need of a caching GcalManager
 
 Design stuff
