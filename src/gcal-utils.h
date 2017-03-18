@@ -138,4 +138,6 @@ gint            get_alarm_trigger_minutes                       (GcalEvent      
 gboolean        should_change_date_for_scroll                   (gdouble               *scroll_value,
                                                                  GdkEventScroll        *scroll_event);
 
+gboolean        is_source_enabled                               (ESource               *source);
+
 #endif // __GCAL_UTILS_H__

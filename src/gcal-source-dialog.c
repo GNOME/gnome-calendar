@@ -942,7 +942,7 @@ stack_visible_child_name_changed (GObject    *object,
 
       // enabled check
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->calendar_visible_check),
-                                    gcal_manager_source_enabled (self->manager, self->source));
+                                    is_source_enabled (self->source));
 
       /* default source check button */
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->default_check), (self->source == default_source));
@@ -1684,8 +1684,10 @@ notification_child_revealed_changed (GtkWidget  *notification,
         {
           g_warning ("[source-dialog] Error removing source: %s", error->message);
 
-          add_source (self->manager, self->removed_source,
-                      gcal_manager_source_enabled (self->manager, self->removed_source), user_data);
+          add_source (self->manager,
+                      self->removed_source,
+                      is_source_enabled (self->removed_source),
+                      user_data);
 
           gcal_manager_enable_source (self->manager, self->removed_source);
 
@@ -1713,8 +1715,10 @@ undo_remove_action (GtkButton *button,
       // Enable the source before adding it again
       gcal_manager_enable_source (self->manager, self->removed_source);
 
-      add_source (self->manager, self->removed_source,
-                  gcal_manager_source_enabled (self->manager, self->removed_source), user_data);
+      add_source (self->manager,
+                  self->removed_source,
+                  is_source_enabled (self->removed_source),
+                  user_data);
 
       /*
        * Don't clear the pointer, since we don't
@@ -2200,7 +2204,7 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
       sources = gcal_manager_get_sources_connected (dialog->manager);
 
       for (l = sources; l != NULL; l = l->next)
-        add_source (dialog->manager, l->data, gcal_manager_source_enabled (dialog->manager, l->data), dialog);
+        add_source (dialog->manager, l->data, is_source_enabled (l->data), dialog);
     }
   else
     {

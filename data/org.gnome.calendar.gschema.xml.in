@@ -21,10 +21,5 @@
             <_summary>Type of the active view</_summary>
             <_description>Type of the active window view, default value is: monthly view</_description>
         </key>
-        <key name="disabled-sources" type="as">
-            <default>[]</default>
-            <_summary>List of the disabled sources</_summary>
-            <_description>Sources disabled last time Calendar ran</_description>
-        </key>
     </schema>
 </schemalist>

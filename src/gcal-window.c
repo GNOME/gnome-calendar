@@ -806,7 +806,7 @@ make_row_from_source (GcalWindow *window,
 
   /* checkbox */
   checkbox = gtk_check_button_new ();
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbox), gcal_manager_source_enabled (window->manager, source));
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbox), is_source_enabled (source));
   g_signal_connect (checkbox, "notify::active", G_CALLBACK (on_calendar_toggled), window);
 
   gtk_container_add (GTK_CONTAINER (box), icon);
@@ -926,7 +926,7 @@ source_changed (GcalWindow *window,
       if (child_source != NULL && child_source == source)
         {
           gtk_widget_destroy (aux->data);
-          add_source (window->manager, source, gcal_manager_source_enabled (window->manager, source), window);
+          add_source (window->manager, source, is_source_enabled (source), window);
           break;
         }
     }
@@ -1256,9 +1256,11 @@ gcal_window_constructed (GObject *object)
   if (!gcal_manager_get_loading (window->manager))
     {
       GList *sources, *l;
+
       sources = gcal_manager_get_sources_connected (window->manager);
+
       for (l = sources; l != NULL; l = g_list_next (l))
-        add_source (window->manager, l->data, gcal_manager_source_enabled (window->manager, l->data), object);
+        add_source (window->manager, l->data, is_source_enabled (l->data), object);
 
       g_list_free (sources);
     }
