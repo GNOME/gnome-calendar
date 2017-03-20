@@ -1,6 +1,5 @@
 e_cal_data_model_get_type
 e_cal_data_model_subscriber_get_type
-event_editable_property_get_type
 gcal_application_get_type
 gcal_date_chooser_day_get_type
 gcal_date_chooser_get_type

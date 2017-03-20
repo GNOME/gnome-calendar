@@ -1,7 +1,7 @@
-47% symbol docs coverage.
-264 symbols documented.
-182 symbols incomplete.
-296 not documented.
+60% symbol docs coverage.
+324 symbols documented.
+108 symbols incomplete.
+216 not documented.
 
 
 ALIGNED (<parameters>)
@@ -12,22 +12,14 @@ ECalDataModel:timezone
 ECalDataModelForeachFunc (<parameters>)
 ECalDataModelViewState (<items>)
 EThreadJobFunc (<parameters>)
-EventEditableProperty (<items>)
-GCAL_BUG (<parameters>)
+EventEditableProperty
 GCAL_ENABLE_TRACE
-GCAL_ENTRY
 GCAL_EVENT_ERROR
-GCAL_EXIT
-GCAL_GOTO (<parameters>)
 GCAL_LOG_LEVEL_TRACE
-GCAL_PROBE
 GCAL_RESPONSE_CREATE_EVENT
 GCAL_RESPONSE_DELETE_EVENT
 GCAL_RESPONSE_REMOVE_SOURCE
 GCAL_RESPONSE_SAVE_EVENT
-GCAL_RETURN (<parameters>)
-GCAL_TODO (<parameters>)
-GCAL_TRACE_MSG (<parameters>)
 GCAL_TYPE_APPLICATION
 GCAL_TYPE_DATE_CHOOSER
 GCAL_TYPE_DATE_CHOOSER_DAY
@@ -60,7 +52,6 @@ GcalDateChooserDayOptionsCallback (<parameters>)
 GcalDateSelector
 GcalEditDialog
 GcalEvent
-GcalEventError (<items>)
 GcalEventWidget
 GcalEventWidget::activate
 GcalManager
@@ -74,16 +65,14 @@ GcalMultiChoice
 GcalMultiChoice::wrapped
 GcalMultiChoiceFormatCallback (<parameters>)
 GcalQuickAddPopover
-GcalRangeTraverseFunc (<parameters>)
 GcalSearchView
 GcalShellSearchProvider
 GcalShellSearchProviderClass (<items>)
 GcalSourceDialog
-GcalSourceDialogMode (<items>)
 GcalSubscriberView::event-activated
 GcalSubscriberViewPrivate (<items>)
 GcalTimeSelector
-GcalTranslateFunc (<parameters>)
+GcalTranslateFunc
 GcalView
 GcalViewInterface (<items>)
 GcalWeekGrid
@@ -93,29 +82,19 @@ GcalWeekHeader::event-activated
 GcalWeekView
 GcalWeekView::event-activated
 GcalWindow
-GcalWindowViewType (<items>)
 GcalYearView
 GcalYearView::event-activated
 ICAL_TIME_TYPE
 MAX_MINUTES
 MINUTES_PER_DAY
-action_widget_activated (Returns)
-back_button_clicked (Returns)
+_GCAL_BUG
 build_component_from_details (summary, initial_date, final_date)
-calendar_file_selected (Returns)
 calendar_get_resource
-calendar_listbox_row_activated (Returns)
-clear_pages (Returns)
-datetime_compare_date (<parameters>)
-datetime_is_date (<parameters>)
-datetime_to_icaltime (<parameters>)
-description_label_link_activated (Returns)
 e_cal_data_model_remove_client (data_model)
 e_cal_data_model_subscriber_component_added (comp)
-e_strftime_fix_am_pm (<parameters>)
-e_utf8_strftime_fix_am_pm (<parameters>)
+e_strftime_fix_am_pm (str, tm, fmt, max)
+e_utf8_strftime_fix_am_pm (fmt, max, str, tm)
 fix_popover_menu_icons (popover)
-format_utc_offset (<parameters>)
 free_row_data (Returns)
 gcal_application_get_manager (<parameters>)
 gcal_application_get_settings (<parameters>)
@@ -143,15 +122,6 @@ gcal_date_chooser_set_show_day_names (<parameters>)
 gcal_date_chooser_set_show_heading (<parameters>)
 gcal_date_chooser_set_show_week_numbers (<parameters>)
 gcal_date_selector_new
-gcal_dup_icaltime (<parameters>)
-gcal_edit_dialog_get_date_end (<parameters>)
-gcal_edit_dialog_get_date_start (<parameters>)
-gcal_edit_dialog_get_event (<parameters>)
-gcal_edit_dialog_new
-gcal_edit_dialog_set_event (<parameters>)
-gcal_edit_dialog_set_event_is_new (<parameters>)
-gcal_edit_dialog_set_manager (<parameters>)
-gcal_edit_dialog_set_time_format (<parameters>)
 gcal_event_get_description (self)
 gcal_event_set_summary (self)
 gcal_event_widget_clone (<parameters>)
@@ -163,37 +133,18 @@ gcal_event_widget_new (<parameters>)
 gcal_event_widget_set_date_start (date_start)
 gcal_event_widget_set_has_reminders (<parameters>)
 gcal_event_widget_set_read_only (<parameters>)
-gcal_get_month_name (<parameters>)
-gcal_get_pixbuf_from_color (color, size)
-gcal_get_surface_from_color (<parameters>)
-gcal_get_weekday (<parameters>)
 gcal_log_init
-gcal_manager_add_source (name, backend)
-gcal_manager_create_event (<parameters>)
+gcal_manager_add_source (backend, name)
 gcal_manager_get_default_source
-gcal_manager_get_event_from_shell_search (<parameters>)
-gcal_manager_get_events (manager, range_end, range_start)
-gcal_manager_get_goa_client (<parameters>)
-gcal_manager_get_loading (<parameters>)
-gcal_manager_get_shell_search_events (<parameters>)
-gcal_manager_get_source (manager)
-gcal_manager_get_sources (manager)
-gcal_manager_get_sources_connected (manager)
-gcal_manager_get_system_timezone (<parameters>)
-gcal_manager_is_client_writable (<parameters>)
-gcal_manager_move_event_to_source (<parameters>)
-gcal_manager_new_with_settings
-gcal_manager_query_client_data (source, manager, field)
-gcal_manager_refresh (<parameters>)
-gcal_manager_remove_event (<parameters>)
-gcal_manager_set_default_source
-gcal_manager_set_search_subscriber (<parameters>)
-gcal_manager_set_shell_search_subscriber (<parameters>)
-gcal_manager_set_subscriber (<parameters>)
-gcal_manager_setup_shell_search (<parameters>)
-gcal_manager_shell_search_done (<parameters>)
-gcal_manager_update_event (<parameters>)
-gcal_month_view_get_final_date
+gcal_manager_get_events (range_end, range_start)
+gcal_manager_get_goa_client (manager)
+gcal_manager_get_shell_search_events (manager)
+gcal_manager_query_client_data (field, source, manager)
+gcal_manager_set_search_subscriber (manager)
+gcal_manager_set_shell_search_subscriber (manager)
+gcal_manager_set_subscriber (manager)
+gcal_manager_setup_shell_search (self)
+gcal_manager_shell_search_done (manager)
 gcal_month_view_motion_notify_event (widget, event, Returns)
 gcal_month_view_set_first_weekday (self)
 gcal_month_view_set_manager (<parameters>)
@@ -204,7 +155,6 @@ gcal_multi_choice_set_choices (<parameters>)
 gcal_multi_choice_set_format_callback (<parameters>)
 gcal_multi_choice_set_value (<parameters>)
 gcal_quick_add_popover_new
-gcal_range_tree_count_entries_at_range (<parameters>)
 gcal_search_view_new
 gcal_search_view_search (<parameters>)
 gcal_search_view_set_search
@@ -213,15 +163,14 @@ gcal_shell_search_provider_dbus_export (<parameters>)
 gcal_shell_search_provider_dbus_unexport (<parameters>)
 gcal_shell_search_provider_new
 gcal_source_dialog_new
-gcal_source_dialog_set_manager (Returns)
-gcal_source_dialog_set_mode (Returns)
-gcal_source_dialog_set_source (Returns)
 gcal_subscriber_view_get_child_by_uuid (<parameters>)
 gcal_time_selector_get_time (<parameters>)
 gcal_time_selector_new
 gcal_time_selector_set_time (<parameters>)
 gcal_time_selector_set_time_format (<parameters>)
 gcal_view_get_date (<parameters>)
+gcal_view_get_final_date
+gcal_view_get_initial_date
 gcal_view_set_date (<parameters>)
 gcal_week_grid_add_event (<parameters>)
 gcal_week_grid_clear_marks (<parameters>)
@@ -238,49 +187,21 @@ gcal_week_header_remove_event (<parameters>)
 gcal_week_header_set_first_weekday (<parameters>)
 gcal_week_header_set_manager (<parameters>)
 gcal_week_header_set_use_24h_format (<parameters>)
-gcal_week_view_get_final_date
-gcal_week_view_get_initial_date
 gcal_week_view_set_first_weekday (view, day_nr)
 gcal_week_view_set_manager (<parameters>)
 gcal_week_view_set_use_24h_format (view, use_24h)
-gcal_window_new_event (<parameters>)
-gcal_window_new_with_view_and_date (<parameters>)
-gcal_window_open_event_by_uuid (<parameters>)
-gcal_window_set_search_mode (<parameters>)
-gcal_window_set_search_query (<parameters>)
 gcal_year_view_set_current_date (<parameters>)
 gcal_year_view_set_first_weekday (<parameters>)
 gcal_year_view_set_manager (<parameters>)
 gcal_year_view_set_use_24h_format (<parameters>)
-get_alarm_trigger_minutes (<parameters>)
-get_circle_surface_from_color (<parameters>)
-get_color_name_from_source (<parameters>)
-get_desc_from_component (component)
-get_end_of_week (<parameters>)
-get_source_parent_name_color (<parameters>)
-get_start_of_week (<parameters>)
 hide_notification (Returns)
-icaltime_compare_date (date1, date2)
-icaltime_compare_with_current (<parameters>)
 icaltime_get_type
-icaltime_to_datetime (<parameters>)
-is_clock_format_24h
-is_source_enabled (<parameters>)
-name_entry_text_changed (Returns)
 notification_child_revealed_changed (Returns)
-on_local_activated (Returns)
-on_web_activated (Returns)
-online_accounts_listbox_row_activated (Returns)
-online_accounts_settings_button_clicked (Returns)
 open_event (Returns)
 remove_button_clicked (Returns)
 remove_source (Returns)
-response_signal (Returns)
-should_change_date_for_scroll (<parameters>)
 undo_remove_action (Returns)
 update_view (Returns)
-uri_get_fields (uri, schema, host, path)
-url_entry_text_changed (Returns)
 view_changed (object, pspec, user_data)
 
 css-code:Long_Description
@@ -297,28 +218,18 @@ gcal-date-chooser:Long_Description
 gcal-date-chooser:Short_Description
 gcal-date-selector:Long_Description
 gcal-date-selector:Short_Description
-gcal-debug:Long_Description
-gcal-debug:Short_Description
-gcal-edit-dialog:Long_Description
-gcal-edit-dialog:Short_Description
 gcal-enum-types:Long_Description
 gcal-enum-types:Short_Description
 gcal-event-widget:Long_Description
 gcal-event-widget:Short_Description
-gcal-event:Long_Description
-gcal-event:Short_Description
 gcal-log:Long_Description
 gcal-log:Short_Description
-gcal-manager:Long_Description
-gcal-manager:Short_Description
 gcal-month-view:Long_Description
 gcal-month-view:Short_Description
 gcal-multi-choice:Long_Description
 gcal-multi-choice:Short_Description
 gcal-quick-add-popover:Long_Description
 gcal-quick-add-popover:Short_Description
-gcal-range-tree:Long_Description
-gcal-range-tree:Short_Description
 gcal-resources:Long_Description
 gcal-resources:Short_Description
 gcal-search-view:Long_Description
@@ -327,8 +238,6 @@ gcal-shell-search-provider-generated:Long_Description
 gcal-shell-search-provider-generated:Short_Description
 gcal-shell-search-provider:Long_Description
 gcal-shell-search-provider:Short_Description
-gcal-source-dialog:Long_Description
-gcal-source-dialog:Short_Description
 gcal-subscriber-view-private:Long_Description
 gcal-subscriber-view-private:Short_Description
 gcal-subscriber-view:Long_Description
@@ -336,7 +245,6 @@ gcal-subscriber-view:Short_Description
 gcal-time-selector:Long_Description
 gcal-time-selector:Short_Description
 gcal-utils:Long_Description
-gcal-utils:Short_Description
 gcal-view:Long_Description
 gcal-view:Short_Description
 gcal-week-grid:Long_Description
@@ -345,7 +253,5 @@ gcal-week-header:Long_Description
 gcal-week-header:Short_Description
 gcal-week-view:Long_Description
 gcal-week-view:Short_Description
-gcal-window:Long_Description
-gcal-window:Short_Description
 gcal-year-view:Long_Description
 gcal-year-view:Short_Description

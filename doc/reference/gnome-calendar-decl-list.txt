@@ -152,9 +152,7 @@ GcalEditDialog
 <SECTION>
 <FILE>gcal-enum-types</FILE>
 <SUBSECTION Standard>
-GCAL_EDITABLE_PROPERTY
 GCAL_WINDOW_VIEW_TYPE
-event_editable_property_get_type
 gcal_window_view_type_get_type
 </SECTION>
 
@@ -448,8 +446,6 @@ MINUTES_PER_DAY
 MAX_MINUTES
 gcal_clear_datetime
 GcalWindowViewType
-EventEditableProperty
-GcalTranslateFunc
 icaltime_get_type
 datetime_compare_date
 datetime_to_icaltime
@@ -488,8 +484,6 @@ GCAL_TYPE_VIEW
 GcalViewInterface
 gcal_view_set_date
 gcal_view_get_date
-gcal_view_get_initial_date
-gcal_view_get_final_date
 gcal_view_clear_marks
 gcal_view_get_children_by_uuid
 GcalView

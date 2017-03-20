@@ -27,6 +27,17 @@ G_BEGIN_DECLS
 
 typedef struct _GcalRangeTree GcalRangeTree;
 
+/**
+ * GcalRangeTraverseFunc:
+ * @start: start of range of the entry
+ * @end: end of range of the entry
+ * @data: (nullable): the data of the entry
+ * @user_data: (closure): user data passed to the function
+ *
+ * Function type to be called when traversing a #GcalRangeTree.
+ *
+ * Returns: %TRUE to stop traversing, %FALSE to continue traversing
+ */
 typedef gboolean    (*GcalRangeTraverseFunc)                     (guint16             start,
                                                                   guint16             end,
                                                                   gpointer            data,

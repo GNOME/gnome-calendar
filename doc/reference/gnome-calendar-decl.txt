@@ -764,10 +764,6 @@ struct _GcalViewInterface
                                                         icaltimetype *start_span,
                                                         icaltimetype *end_span);
 
-  /* Time handling related API */
-  icaltimetype*  (*get_initial_date)                   (GcalView    *view);
-  icaltimetype*  (*get_final_date)                     (GcalView    *view);
-
   /* Marks related API */
   void           (*clear_marks)                        (GcalView    *view);
 
@@ -782,16 +778,6 @@ GcalView     *view, icaltimetype *date
 </FUNCTION>
 <FUNCTION>
 <NAME>gcal_view_get_date</NAME>
-<RETURNS>icaltimetype * </RETURNS>
-GcalView     *view
-</FUNCTION>
-<FUNCTION>
-<NAME>gcal_view_get_initial_date</NAME>
-<RETURNS>icaltimetype * </RETURNS>
-GcalView     *view
-</FUNCTION>
-<FUNCTION>
-<NAME>gcal_view_get_final_date</NAME>
 <RETURNS>icaltimetype * </RETURNS>
 GcalView     *view
 </FUNCTION>
@@ -1023,15 +1009,6 @@ ECalDataModel *data_model
 <RETURNS>GType  </RETURNS>
 void
 </FUNCTION>
-<MACRO>
-<NAME>GCAL_EDITABLE_PROPERTY</NAME>
-#define GCAL_EDITABLE_PROPERTY	(event_editable_property_get_type())
-</MACRO>
-<FUNCTION>
-<NAME>event_editable_property_get_type</NAME>
-<RETURNS>GType  </RETURNS>
-void
-</FUNCTION>
 <FUNCTION>
 <NAME>gcal_log_init</NAME>
 <RETURNS>void                  </RETURNS>
@@ -1069,23 +1046,6 @@ typedef enum
   GCAL_WINDOW_VIEW_SEARCH,
 } GcalWindowViewType;
 </ENUM>
-<ENUM>
-<NAME>EventEditableProperty</NAME>
-typedef enum
-{
-  EVENT_SUMMARY = 0,
-  EVENT_START_DATE,
-  EVENT_END_DATE,
-  EVENT_LOCATION,
-  EVENT_DESCRIPTION,
-  EVENT_SOURCE,
-} EventEditableProperty;
-</ENUM>
-<USER_FUNCTION>
-<NAME>GcalTranslateFunc</NAME>
-<RETURNS>const gchar *</RETURNS>
-GtkWidget             *source_widget
-</USER_FUNCTION>
 <FUNCTION>
 <NAME>icaltime_get_type</NAME>
 <RETURNS>GType            </RETURNS>

@@ -1,0 +1,4 @@
+EventEditableProperty
+GcalTranslateFunc
+gcal_view_get_final_date
+gcal_view_get_initial_date

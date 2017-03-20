@@ -96,4 +96,4 @@ gtk-doc.make
 doc/reference/xml
 doc/reference/html
 doc/reference/*.stamp
-doc/reference/*.xml
+doc/reference/version.xml

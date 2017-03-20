@@ -29,6 +29,17 @@
 #include <libecal/libecal.h>
 #include <glib/gi18n.h>
 
+/**
+ * SECTION:gcal-edit-dialog
+ * @short_description: Event editor dialog
+ * @title:GcalEditDialog
+ * @image:gcal-edit-dialog.png
+ *
+ * #GcalEditDialog is the event editor dialog of GNOME Calendar. It
+ * allows the user to change the various aspects of the events, as
+ * well as managing alarms.
+ */
+
 struct _GcalEditDialog
 {
   GtkDialog         parent;
@@ -766,6 +777,7 @@ get_row_for_alarm_trigger_minutes (GcalEditDialog *self,
 
   return NULL;
 }
+
 static void
 remove_button_clicked (GtkButton *button,
                        GtkWidget *row)
@@ -1019,12 +1031,27 @@ add_alarm_button_clicked (GtkWidget      *button,
 }
 
 /* Public API */
+
+/**
+ * gcal_edit_dialog_new:
+ *
+ * Creates a new #GcalEditDialog
+ *
+ * Returns: (transfer full): a #GcalEditDialog
+ */
 GtkWidget*
 gcal_edit_dialog_new (void)
 {
   return g_object_new (GCAL_TYPE_EDIT_DIALOG, NULL);
 }
 
+/**
+ * gcal_edit_dialog_set_time_format:
+ * @dialog: a #GcalDialog
+ * @use_24h_format: %TRUE to use 24h format, %FALSE otherwise
+ *
+ * Sets the time format to be used by @dialog.
+ */
 void
 gcal_edit_dialog_set_time_format (GcalEditDialog *dialog,
                                   gboolean        use_24h_format)
@@ -1037,6 +1064,14 @@ gcal_edit_dialog_set_time_format (GcalEditDialog *dialog,
   gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->end_time_selector), dialog->format_24h);
 }
 
+/**
+ * gcal_edit_dialog_set_event_is_new:
+ * @dialog: a #GcalDialog
+ * @event_is_new: %TRUE if the event is new, %FALSE otherwise
+ *
+ * Sets whether the currently edited event is a new event, or not.
+ * The @dialog will adapt it's UI elements to reflect that.
+ */
 void
 gcal_edit_dialog_set_event_is_new (GcalEditDialog *dialog,
                                    gboolean        event_is_new)
@@ -1046,6 +1081,14 @@ gcal_edit_dialog_set_event_is_new (GcalEditDialog *dialog,
   gtk_widget_set_visible (dialog->delete_button, !event_is_new);
 }
 
+/**
+ * gcal_edit_dialog_get_event:
+ * @dialog: a #GcalDialog
+ *
+ * Retrieves the current event being edited by the @dialog.
+ *
+ * Returns: (transfer none)(nullable): a #GcalEvent
+ */
 GcalEvent*
 gcal_edit_dialog_get_event (GcalEditDialog *dialog)
 {
@@ -1054,6 +1097,14 @@ gcal_edit_dialog_get_event (GcalEditDialog *dialog)
   return dialog->event;
 }
 
+/**
+ * gcal_edit_dialog_set_event:
+ * @dialog: a #GcalDialog
+ * @event: (nullable): a #GcalEvent
+ *
+ * Sets the event of the @dialog. When @event is
+ * %NULL, the current event information is unset.
+ */
 void
 gcal_edit_dialog_set_event (GcalEditDialog *dialog,
                             GcalEvent      *event)
@@ -1164,6 +1215,13 @@ out:
   GCAL_EXIT;
 }
 
+/**
+ * gcal_edit_dialog_set_manager:
+ * @dialog: a #GcalEditDialog
+ * @manager: a #GcalManager
+ *
+ * Sets the #GcalManager instance of the @dialog.
+ */
 void
 gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
                               GcalManager    *manager)
@@ -1220,6 +1278,14 @@ return_datetime_for_widgets (GcalEditDialog   *dialog,
   return retval;
 }
 
+/**
+ * gcal_edit_dialog_get_date_start:
+ * @dialog: a #GcalEditDialog
+ *
+ * Retrieves the start date of the edit dialog.
+ *
+ * Returns: (transfer full): a #GDateTime
+ */
 GDateTime*
 gcal_edit_dialog_get_date_start (GcalEditDialog *dialog)
 {
@@ -1231,6 +1297,14 @@ gcal_edit_dialog_get_date_start (GcalEditDialog *dialog)
                                       GCAL_TIME_SELECTOR (dialog->start_time_selector));
 }
 
+/**
+ * gcal_edit_dialog_get_date_end:
+ * @dialog: a #GcalEditDialog
+ *
+ * Retrieves the end date of the edit dialog.
+ *
+ * Returns: (transfer full): a #GDateTime
+ */
 GDateTime*
 gcal_edit_dialog_get_date_end (GcalEditDialog *dialog)
 {

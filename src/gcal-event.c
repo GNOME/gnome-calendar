@@ -23,6 +23,58 @@
 
 #define LIBICAL_TZID_PREFIX "/freeassociation.sourceforge.net/"
 
+/**
+ * SECTION:gcal-event
+ * @short_description: A class that represents an event
+ * @title:GcalEvent
+ * @stability:unstable
+ * @see_also:GcalEventWidget,GcalManager
+ *
+ * The #GcalEvent class represents an appointment, with
+ * various functions to modify it. All the changes are
+ * transient. To persistently store the changes, you
+ * need to call gcal_manager_update_event().
+ *
+ * Although the #ECalComponent may have no end date. In this
+ * case, gcal_event_get_date_end() returns the same date that
+ * gcal_event_get_date_start().
+ *
+ * #GcalEvent implements #GInitable, and creating it possibly
+ * can generate an error. At the moment, the only error that
+ * can be generate is #GCAL_EVENT_ERROR_INVALID_START_DATE.
+ *
+ * ## Timezones
+ *
+ * When a #GcalEvent is created, the timezone is parsed from
+ * the #ECalComponent. The start and end dates can possibly
+ * have different timezones, e.g. when the user is traveling
+ * across timezones and the departure time is in a different
+ * timezone of the arrival time.
+ *
+ * For the sake of sanity, gcal_event_get_timezone() returns
+ * the timezone of the start date. If you need to precisely
+ * check the timezones of the start and end dates, you have
+ * to use g_date_time_get_timezone_identifier().
+ *
+ * ## Example:
+ * |[<!-- language="C" -->
+ * GcalEvent *event;
+ * GError *error;
+ *
+ * error = NULL;
+ * event = gcal_event_new (source, component, &error);
+ *
+ * if (error)
+ *   {
+ *     g_warning ("Error creating event: %s", error->message);
+ *     g_clear_error (&error);
+ *     return;
+ *   }
+ *
+ * ...
+ * ]|
+ */
+
 struct _GcalEvent
 {
   GObject             parent;
@@ -739,7 +791,7 @@ gcal_event_get_color (GcalEvent *self)
  * @color: a #GdkRGBA
  *
  * Sets the color of the event, which is passed to the
- * parent @ESource.
+ * parent #ESource.
  */
 void
 gcal_event_set_color (GcalEvent *self,
@@ -797,7 +849,9 @@ gcal_event_set_all_day (GcalEvent *self,
  * gcal_event_get_date_end:
  * @self: a #GcalEvent
  *
- * Retrieves the end date of @self.
+ * Retrieves the end date of @self. If the component doesn't
+ * have an end date, then the returned date is the same of
+ * gcal_event_get_date_start().
  *
  * Returns: (transfer none): a #GDateTime.
  */

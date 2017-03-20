@@ -104,8 +104,28 @@ GInterface
   GConverter
   GProxyResolver
   AtkImage
+GBoxed
+  GValueArray
+  GcalRangeTree
+  icaltimetype
+  GError
+  GVariantDict
+  GdkRectangle
+  CairoRectangleInt
+  CairoContext
+  GdkEvent
+  GtkSelectionData
+  GtkRequisition
+  GtkBorder
+  GdkColor
+  GDateTime
+  PangoAttrList
+  PangoTabArray
+  GdkRGBA
+  GTimeZone
+  GStrv
+  GDBusInterfaceInfo
 GEnum
-  EventEditableProperty
   GcalWindowViewType
   GtkAlign
   GtkStateType
@@ -133,24 +153,3 @@ GEnum
   GBusType
   GtkReliefStyle
   GtkArrowType
-GBoxed
-  GValueArray
-  GcalRangeTree
-  icaltimetype
-  GError
-  GVariantDict
-  GdkRectangle
-  CairoRectangleInt
-  CairoContext
-  GdkEvent
-  GtkSelectionData
-  GtkRequisition
-  GtkBorder
-  GdkColor
-  GDateTime
-  PangoAttrList
-  PangoTabArray
-  GdkRGBA
-  GTimeZone
-  GStrv
-  GDBusInterfaceInfo

@@ -34,6 +34,7 @@ if ENABLE_DOC_CROSS_REFERENCES
 # Extra options to supply to gtkdoc-fixref. Not normally needed.
 # e.g. FIXXREF_OPTIONS=--extra-dir=../gdk-pixbuf/html --extra-dir=../gdk/html
 FIXXREF_OPTIONS = \
+        --extra-dir=$(GTK_PREFIX)/share/gtk-doc/html/evolution-data-server \
 	--extra-dir=$(GLIB_PREFIX)/share/gtk-doc/html/glib       \
 	--extra-dir=$(GLIB_PREFIX)/share/gtk-doc/html/gobject    \
 	--extra-dir=$(GLIB_PREFIX)/share/gtk-doc/html/gio        \
@@ -55,7 +56,13 @@ CFILE_GLOB = \
 IGNORE_HFILES = $(NULL)
 
 # Images to copy into HTML directory.
-HTML_IMAGES = $(NULL)
+HTML_IMAGES =                                                    \
+        images/gcal-edit-dialog.png                              \
+        images/gcal-event-widget.png                             \
+        images/gcal-source-dialog.png                            \
+        images/gcal-window.png                                   \
+        images/gcal-window_agendas.png                           \
+        $(NULL)
 
 # Extra SGML files that are included by $(DOC_MAIN_SGML_FILE).
 # e.g. content_files=running.sgml building.sgml changes-2.0.sgml
