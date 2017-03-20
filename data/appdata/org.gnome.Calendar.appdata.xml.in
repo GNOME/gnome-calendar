@@ -42,6 +42,20 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2017-03-20" version="3.24.0">
+      <description>
+        <p>
+          The GNOME Calendar team is proud to announce the 3.24 release of
+          GNOME Calendar! In this release, users will notice big changes,
+          with the inclusion of the new Week view, various improvements to
+          ranging from various bugfixes, improved keyboard flow for creating
+          events using the quick-add popover, cleanups and much more.
+        </p>
+        <p>This release also updates translations.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2017-03-16" version="3.23.92">
       <description>
         <p>
