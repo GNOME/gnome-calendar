@@ -720,7 +720,7 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
                                         &margin);
 
           width = column_width / events_at_range - margin.left - margin.right;
-          height = MAX ((data->end - data->start) * minutes_height - margin.top - margin.bottom, natural_height);
+          height = (data->end - data->start) * minutes_height - margin.top - margin.bottom;
           offset = (width + margin.left + margin.right) * widget_index;
 
           if (ltr)
