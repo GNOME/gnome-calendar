@@ -1398,7 +1398,7 @@ navigator_drag_motion_cb (GcalYearView   *self,
           self->selected_data->dnd_day = day;
           self->selected_data->dnd_month = month;
 
-          gdk_drag_status (context, GDK_ACTION_COPY, time);
+          gdk_drag_status (context, GDK_ACTION_MOVE, time);
 
           retval = TRUE;
         }
@@ -1955,7 +1955,7 @@ gcal_year_view_init (GcalYearView *self)
                      0,
                      NULL,
                      0,
-                     GDK_ACTION_COPY);
+                     GDK_ACTION_MOVE);
 }
 
 static void

@@ -983,7 +983,7 @@ gcal_week_grid_drag_motion (GtkWidget      *widget,
    * aborts the drag with FALSE.
    */
   gdk_drag_status (context,
-                   self->dnd_cell == -1 ? 0 : GDK_ACTION_COPY,
+                   self->dnd_cell == -1 ? 0 : GDK_ACTION_MOVE,
                    time);
 
   gtk_widget_queue_draw (widget);
