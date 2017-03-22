@@ -207,7 +207,7 @@ gcal_event_widget_init (GcalEventWidget *self)
                        GDK_BUTTON1_MASK,
                        NULL,
                        0,
-                       GDK_ACTION_COPY);
+                       GDK_ACTION_MOVE);
 
   gtk_drag_source_add_text_targets (widget);
 }
@@ -843,7 +843,7 @@ gcal_event_widget_set_read_only (GcalEventWidget *event,
                            0,
                            NULL,
                            0,
-                           GDK_ACTION_COPY);
+                           GDK_ACTION_MOVE);
 
       gtk_drag_source_add_text_targets (widget);
     }
