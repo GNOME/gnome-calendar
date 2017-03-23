@@ -69,6 +69,93 @@ static guint signals[NUM_SIGNALS] = { 0, };
 G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL));
 
+static gchar*
+get_visible_text (GtkWidget         *widget,
+                  GtkOrientation     orientation)
+{
+  GcalEventWidget *self;
+  gboolean is_ltr;
+  gchar *display_text;
+  gchar *escaped_text;
+
+  self = GCAL_EVENT_WIDGET (widget);
+  is_ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
+
+  /*
+   * Since we set markup labels, we have to escape text before
+   * using it, or we get empty event widgets.
+   */
+  escaped_text = g_markup_escape_text (gcal_event_get_summary (self->event), -1);
+
+  /*
+   * The text displayed in the widget includes the time when the event
+   * is timed, or not if the event is all day.
+   */
+  if (gcal_event_get_all_day (self->event))
+    {
+      display_text = escaped_text;
+    }
+  else
+    {
+      GDateTime *local_start_time;
+      gchar *start_time;
+      local_start_time = g_date_time_to_local (gcal_event_get_date_start (self->event));
+
+      if (self->clock_format_24h)
+        start_time = g_date_time_format (local_start_time, "%R");
+      else
+        start_time = g_date_time_format (local_start_time, "%I:%M %P");
+
+      /*
+       * When in horizontal, draw the elements sequentially; otherwise,
+       * draw the time in the first line, and the title in subsequent
+       * lines.
+       */
+      if (orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          if (is_ltr)
+            display_text = g_strdup_printf ("(%s) %s", start_time, escaped_text);
+          else
+            display_text = g_strdup_printf ("%s (%s)", escaped_text, start_time);
+        }
+      else
+        {
+          display_text = g_strdup_printf ("<b>%s</b>\n%s", start_time, escaped_text);
+        }
+
+      g_clear_pointer (&local_start_time, g_date_time_unref);
+      g_clear_pointer (&escaped_text, g_free);
+      g_clear_pointer (&start_time, g_free);
+    }
+
+    return display_text;
+}
+
+static gint
+get_vertical_text_height (GtkWidget         *widget)
+{
+  GcalEventWidget *self;
+  GtkBorder border, padding;
+  GtkStyleContext *context;
+  PangoLayout *layout;
+  gint layout_height;
+  gchar* display_text;
+
+  self = GCAL_EVENT_WIDGET (widget);
+  context = gtk_widget_get_style_context (widget);
+  display_text = get_visible_text (widget, GTK_ORIENTATION_VERTICAL);
+  layout = gtk_widget_create_pango_layout (widget, display_text);
+  pango_layout_get_pixel_size (layout, NULL, &layout_height);
+  g_object_unref (layout);
+
+  gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
+  gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
+
+  g_clear_pointer(&display_text, g_free);
+
+  return layout_height + padding.top + padding.bottom + border.top + border.bottom;
+}
+
 static void
 gcal_event_widget_update_style (GcalEventWidget *self)
 {
@@ -328,23 +415,24 @@ gcal_event_widget_get_preferred_height (GtkWidget *widget,
   GtkStyleContext *context;
   PangoLayout *layout;
   gint layout_height;
-  gint factor;
+  gchar* display_text;
 
   self = GCAL_EVENT_WIDGET (widget);
   context = gtk_widget_get_style_context (widget);
-  layout = gtk_widget_create_pango_layout (widget, NULL);
+  display_text = get_visible_text (widget, self->orientation);
+  layout = gtk_widget_create_pango_layout (widget, display_text);
   pango_layout_get_pixel_size (layout, NULL, &layout_height);
   g_object_unref (layout);
 
   gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
   gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
 
-  factor = self->orientation == GTK_ORIENTATION_HORIZONTAL ? 1 : 2;
-
   if (minimum != NULL)
-    *minimum = (factor * layout_height) + padding.top + padding.bottom + border.top + border.bottom;
+    *minimum = layout_height + padding.top + padding.bottom + border.top + border.bottom;
   if (natural != NULL)
-    *natural = (factor * layout_height) + padding.top + padding.bottom + border.top + border.bottom;
+    *natural = layout_height + padding.top + padding.bottom + border.top + border.bottom;
+
+  g_clear_pointer(&display_text, g_free);
 }
 
 static void
@@ -475,7 +563,6 @@ gcal_event_widget_draw (GtkWidget *widget,
   PangoLayout *layout;
   PangoFontDescription *font_desc;
   gchar *display_text;
-  gchar *escaped_text;
 
   self = GCAL_EVENT_WIDGET (widget);
   context = gtk_widget_get_style_context (widget);
@@ -490,51 +577,15 @@ gcal_event_widget_draw (GtkWidget *widget,
   gtk_render_background (context, cr, 0, 0, width, height);
   gtk_render_frame (context, cr, 0, 0, width, height);
 
-  /*
-   * Since we set markup labels, we have to escape text before
-   * using it, or we get empty event widgets.
-   */
-  escaped_text = g_markup_escape_text (gcal_event_get_summary (self->event), -1);
-
-  /*
-   * The text displayed in the widget includes the time when the event
-   * is timed, or not if the event is all day.
-   */
-  if (gcal_event_get_all_day (self->event))
-    {
-      display_text = escaped_text;
-    }
+  /* Set the text to be displayed */
+  if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
+    display_text = get_visible_text (widget, GTK_ORIENTATION_HORIZONTAL);
   else
     {
-      GDateTime *local_start_time;
-      gchar *start_time;
-      local_start_time = g_date_time_to_local (gcal_event_get_date_start (self->event));
-
-      if (self->clock_format_24h)
-        start_time = g_date_time_format (local_start_time, "%R");
+      if (get_vertical_text_height (widget) >= height)
+        display_text = get_visible_text (widget, GTK_ORIENTATION_HORIZONTAL);
       else
-        start_time = g_date_time_format (local_start_time, "%I:%M %P");
-
-      /*
-       * When in horizontal, draw the elements sequentially; otherwise,
-       * draw the time in the first line, and the title in subsequent
-       * lines.
-       */
-      if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-        {
-          if (is_ltr)
-            display_text = g_strdup_printf ("(%s) %s", start_time, escaped_text);
-          else
-            display_text = g_strdup_printf ("%s (%s)", escaped_text, start_time);
-        }
-      else
-        {
-          display_text = g_strdup_printf ("<b>%s</b>\n%s", start_time, escaped_text);
-        }
-
-      g_clear_pointer (&local_start_time, g_date_time_unref);
-      g_clear_pointer (&escaped_text, g_free);
-      g_clear_pointer (&start_time, g_free);
+        display_text = get_visible_text (widget, GTK_ORIENTATION_VERTICAL);
     }
 
   /* Retrieve the font description */
@@ -662,7 +713,6 @@ gcal_event_widget_button_press_event (GtkWidget      *widget,
 
   self = GCAL_EVENT_WIDGET (widget);
   self->button_pressed = TRUE;
-
   return TRUE;
 }
 
