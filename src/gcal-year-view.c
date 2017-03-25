@@ -1761,59 +1761,6 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
 }
 
 static void
-gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
-                                  ECalClient              *client,
-                                  ECalComponent           *comp)
-{
-  GcalYearView *self = GCAL_YEAR_VIEW (subscriber);
-  GList *children, *l;
-  gchar *uuid;
-  guint i;
-
-  uuid = get_uuid_from_component (e_client_get_source (E_CLIENT (client)), comp);
-  children = gtk_container_get_children (GTK_CONTAINER (self->events_sidebar));
-
-  /* Remove from the sidebar */
-  for (l = children; l != NULL; l = g_list_next (l))
-    {
-      GcalEventWidget *child_widget;
-      GcalEvent *event;
-
-      child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
-      event = gcal_event_widget_get_event (child_widget);
-
-      if (child_widget && g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
-        gtk_widget_destroy (l->data);
-    }
-
-  /* Also remove from the cached list of events */
-  for (i = 0; i < 12; i++)
-    {
-      GPtrArray *events;
-      guint j;
-
-      events = self->events[i];
-
-      for (j = 0; j < events->len; j++)
-        {
-          GcalEvent *event;
-
-          event = g_ptr_array_index (events, j);
-
-          if (g_strcmp0 (gcal_event_get_uid (event), uuid) != 0)
-            continue;
-
-          g_ptr_array_remove (events, event);
-        }
-    }
-
-  g_list_free (children);
-  g_free (uuid);
-
-  gcal_year_view_component_added (subscriber, client, comp);
-}
-
-static void
 gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
                                   ECalClient              *client,
                                   const gchar             *uid,
@@ -1885,6 +1832,21 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
 
   g_list_free (children);
   g_free (uuid);
+}
+
+static void
+gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
+                                  ECalClient              *client,
+                                  ECalComponent           *comp)
+{
+  ECalComponentId *id;
+
+  id = e_cal_component_get_id (comp);
+
+  gcal_year_view_component_removed (subscriber, client, id->uid, id->rid);
+  gcal_year_view_component_added (subscriber, client, comp);
+
+  g_clear_pointer (&id, e_cal_component_free_id);
 }
 
 static void
