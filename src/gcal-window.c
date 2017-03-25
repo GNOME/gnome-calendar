@@ -691,7 +691,7 @@ show_new_event_widget (GcalView   *view,
   rect.height = 1;
 
   gtk_popover_set_pointing_to (GTK_POPOVER (window->quick_add_popover), &rect);
-  gtk_widget_show (window->quick_add_popover);
+  gtk_popover_popup (GTK_POPOVER (window->quick_add_popover));
 
   GCAL_EXIT;
 }
