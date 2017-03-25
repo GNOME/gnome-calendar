@@ -367,9 +367,10 @@ update_overflow (GcalWeekHeader *self)
           gtk_label_set_label (GTK_LABEL (label), text);
           g_free (text);
         }
-      else
+      else if (label)
         {
-          g_clear_pointer (&self->overflow_label[i], gtk_widget_destroy);
+          gtk_widget_destroy (label);
+          self->overflow_label[i] = NULL;
         }
     }
 
@@ -1667,6 +1668,13 @@ gcal_week_header_add_event (GcalWeekHeader *self,
     end = floor (g_date_time_difference (end_date, week_start) / G_TIME_SPAN_DAY) - all_day;
   else
     end = 6;
+
+  /* Sanity checks */
+  if (start > end || start > 6 || end < 0)
+    {
+      g_warning ("Error adding event '%s' to the week header", gcal_event_get_summary (event));
+      return;
+    }
 
   /* Add the event widget to the grid */
   add_event_to_grid (self, event, start, end);
