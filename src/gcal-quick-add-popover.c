@@ -228,10 +228,10 @@ update_header (GcalQuickAddPopover *self)
 
   stm_date = icaltimetype_to_tm (dtstart);
   /* Translators:
-   * this is the format string for representing a date consisting of a month name
-   * and a date of month.
+   * this is the format string for representing a date consisting of a month
+   * name and a day of month.
    */
-  e_utf8_strftime_fix_am_pm (start, 64, C_("event date format", "%B %d"), &stm_date);
+  e_utf8_strftime_fix_am_pm (start, 64, _("%B %d"), &stm_date);
 
   if (self->date_end)
     {
@@ -258,10 +258,10 @@ update_header (GcalQuickAddPopover *self)
         {
           etm_date = icaltimetype_to_tm (dtend);
           /* Translators:
-           * this is the format string for representing a date consisting of a month name
-           * and a date of month.
+           * this is the format string for representing a date consisting of a month
+           * name and a day of month.
            */
-          e_utf8_strftime_fix_am_pm (end, 64, C_("event date format", "%B %d"), &etm_date);
+          e_utf8_strftime_fix_am_pm (end, 64, _("%B %d"), &etm_date);
 
           title_date = g_strdup_printf (_("New Event from %s to %s"), start, end);
         }

@@ -276,10 +276,19 @@ update_no_events_page (GcalYearView *year_view)
     }
   else
     {
-      title = g_strdup_printf ("%s %d%s",
-                               gcal_get_month_name (year_view->start_selected_date->month - 1),
-                               year_view->start_selected_date->day,
-                               has_range ? "…" : "");
+      if (has_range)
+        {
+          /* Translators: This is a date format in the sidebar of the year
+           * view when the selection starts at the specified day and the
+           * end is unspecified.  */
+          title = g_date_time_format (start_selected_date, _("%B %d…"));
+        }
+      else
+        {
+          /* Translators: This is a date format in the sidebar of the year
+           * view when there is only one specified day selected.  */
+          title = g_date_time_format (start_selected_date, _("%B %d"));
+        }
     }
 
   gtk_label_set_text (GTK_LABEL (year_view->no_events_title), title);
@@ -499,7 +508,8 @@ update_sidebar_headers (GtkListBoxRow *row,
       if (datetime_compare_date (dt, now) == 0)
         label_str = g_strdup (_("Today"));
       else
-        label_str = g_strdup_printf ("%s %d", gcal_get_month_name (date.month  - 1), date.day);
+        /* Translators: This is a date format in the sidebar of the year view. */
+        label_str = g_date_time_format (dt, _("%B %d"));
 
       label = gtk_label_new (label_str);
       gtk_style_context_add_class (gtk_widget_get_style_context (label), "sidebar-header");

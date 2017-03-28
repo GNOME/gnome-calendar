@@ -199,7 +199,7 @@ get_cell_position (GcalMonthView *self,
 }
 static void
 rebuild_popover_for_day (GcalMonthView *self,
-                         gint           day)
+                         GDateTime     *day)
 {
   GcalSubscriberViewPrivate *ppriv;
   GList *l;
@@ -222,7 +222,7 @@ rebuild_popover_for_day (GcalMonthView *self,
 
   ppriv = GCAL_SUBSCRIBER_VIEW (self)->priv;
 
-  label_title = g_strdup_printf ("%s %d", gcal_get_month_name (self->date->month - 1), day);
+  label_title = g_date_time_format (day, _("%B %d"));
   gtk_label_set_text (GTK_LABEL (self->popover_title), label_title);
   g_free (label_title);
 
@@ -254,7 +254,7 @@ rebuild_popover_for_day (GcalMonthView *self,
           dt_start = g_date_time_new (tz,
                                       g_date_time_get_year (current_date),
                                       g_date_time_get_month (current_date),
-                                      day,
+                                      g_date_time_get_day_of_month (day),
                                       0, 0, 0);
 
           dt_end = g_date_time_add_days (dt_start, 1);
@@ -320,7 +320,9 @@ rebuild_popover_for_day (GcalMonthView *self,
   child_widget = gtk_bin_get_child (GTK_BIN (self->overflow_popover));
   gtk_widget_set_size_request (child_widget, 200, -1);
 
-  g_object_set_data (G_OBJECT (self->overflow_popover), "selected-day", GINT_TO_POINTER (day));
+  g_object_set_data (G_OBJECT (self->overflow_popover),
+                     "selected-day",
+                     GINT_TO_POINTER (g_date_time_get_day_of_month (day)));
 }
 
 static gboolean
@@ -347,7 +349,7 @@ show_popover_for_position (GcalMonthView *self,
     {
       self->hovered_overflow_indicator = self->pressed_overflow_indicator;
 
-      rebuild_popover_for_day (GCAL_MONTH_VIEW (widget), g_date_time_get_day_of_month (end_dt));
+      rebuild_popover_for_day (GCAL_MONTH_VIEW (widget), end_dt);
       gtk_widget_show_all (self->overflow_popover);
 
       gtk_widget_queue_draw (widget);
