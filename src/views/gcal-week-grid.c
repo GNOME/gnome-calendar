@@ -913,8 +913,15 @@ gcal_week_grid_button_release (GtkWidget      *widget,
     }
   else
     {
-      start = g_date_time_add_minutes (week_start, MAX_MINUTES - column * MINUTES_PER_DAY + minute);
-      end = g_date_time_add_minutes (week_start, MAX_MINUTES - column * MINUTES_PER_DAY + (end_cell + 1) * 30);
+      guint rtl_start_cell, rtl_end_cell, rtl_column;
+
+      /* Fix the minute */
+      rtl_column = 6 - column;
+      rtl_start_cell = start_cell + (rtl_column - column) * 48;
+      rtl_end_cell = (rtl_column * MINUTES_PER_DAY + minute) / 30;
+
+      start = g_date_time_add_minutes (week_start, rtl_start_cell * 30);
+      end = g_date_time_add_minutes (week_start, (rtl_end_cell + 1) * 30);
     }
 
   x = round ((column + 0.5) * (alloc.width / 7.0));
