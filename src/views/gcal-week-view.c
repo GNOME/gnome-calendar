@@ -162,60 +162,6 @@ schedule_position_scroll (GcalWeekView *self)
                                                 self);
 }
 
-/**
- * gcal_week_view_get_initial_date:
- *
- * Since: 0.1
- * Return value: the first day of the week
- * Returns: (transfer full): Release with g_free()
- **/
-static icaltimetype*
-gcal_week_view_get_initial_date (GcalView *view)
-{
-  GcalWeekView *self;
-  icaltimetype *new_date;
-
-  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  self = GCAL_WEEK_VIEW(view);
-  new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(self->date),
-                                                                  self->first_weekday + 1),
-                                         self->date->year);
-  new_date->is_date = 0;
-  new_date->hour = 0;
-  new_date->minute = 0;
-  new_date->second = 0;
-  *new_date = icaltime_set_timezone (new_date, self->date->zone);
-  return new_date;
-}
-
-/**
- * gcal_week_view_get_final_date:
- *
- * Since: 0.1
- * Return value: the last day of the week
- * Returns: (transfer full): Release with g_free()
- **/
-static icaltimetype*
-gcal_week_view_get_final_date (GcalView *view)
-{
-  GcalWeekView *self;
-  icaltimetype *new_date;
-
-  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  self = GCAL_WEEK_VIEW(view);
-  new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(self->date),
-                                                                  self->first_weekday + 1) + 6,
-                                         self->date->year);
-  new_date->is_date = 0;
-  new_date->hour = 23;
-  new_date->minute = 59;
-  new_date->second = 0;
-  *new_date = icaltime_set_timezone (new_date, self->date->zone);
-  return new_date;
-}
-
 static GList*
 gcal_week_view_get_children_by_uuid (GcalView    *view,
                                      const gchar *uuid)
@@ -486,8 +432,6 @@ gcal_week_view_draw_hours (GcalWeekView *self,
 static void
 gcal_view_interface_init (GcalViewInterface *iface)
 {
-  iface->get_initial_date = gcal_week_view_get_initial_date;
-  iface->get_final_date = gcal_week_view_get_final_date;
   iface->get_children_by_uuid = gcal_week_view_get_children_by_uuid;
   iface->clear_marks = gcal_week_view_clear_marks;
 }

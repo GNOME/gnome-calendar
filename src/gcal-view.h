@@ -42,10 +42,6 @@ struct _GcalViewInterface
                                                         icaltimetype *start_span,
                                                         icaltimetype *end_span);
 
-  /* Time handling related API */
-  icaltimetype*  (*get_initial_date)                   (GcalView    *view);
-  icaltimetype*  (*get_final_date)                     (GcalView    *view);
-
   /* Marks related API */
   void           (*clear_marks)                        (GcalView    *view);
 
@@ -57,10 +53,6 @@ void          gcal_view_set_date                      (GcalView     *view,
                                                        icaltimetype *date);
 
 icaltimetype* gcal_view_get_date                      (GcalView     *view);
-
-icaltimetype* gcal_view_get_initial_date              (GcalView     *view);
-
-icaltimetype* gcal_view_get_final_date                (GcalView     *view);
 
 void          gcal_view_clear_marks                   (GcalView     *view);
 

@@ -914,55 +914,6 @@ add_new_event_button_cb (GtkWidget *button,
 }
 
 /* GcalView Interface API */
-static icaltimetype*
-gcal_month_view_get_initial_date (GcalView *view)
-{
-  //FIXME to retrieve the 35 days range
-  GcalMonthView *self;
-  icaltimetype *new_date;
-
-  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), NULL);
-
-  self = GCAL_MONTH_VIEW (view);
-
-  new_date = gcal_dup_icaltime (self->date);
-  new_date->day = 1;
-  new_date->is_date = 0;
-  new_date->hour = 0;
-  new_date->minute = 0;
-  new_date->second = 0;
-
-  return new_date;
-}
-
-/**
- * gcal_month_view_get_final_date:
- *
- * Since: 0.1
- * Return value: the last day of the month
- * Returns: (transfer full): Release with g_free()
- **/
-static icaltimetype*
-gcal_month_view_get_final_date (GcalView *view)
-{
-  //FIXME to retrieve the 35 days range
-  GcalMonthView *self;
-  icaltimetype *new_date;
-
-  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), NULL);
-
-  self = GCAL_MONTH_VIEW (view);
-
-  new_date = gcal_dup_icaltime (self->date);
-  new_date->day = icaltime_days_in_month (self->date->month, self->date->year);
-  new_date->is_date = 0;
-  new_date->hour = 23;
-  new_date->minute = 59;
-  new_date->second = 59;
-
-  return new_date;
-}
-
 static void
 gcal_month_view_clear_marks (GcalView *view)
 {
@@ -988,11 +939,7 @@ gcal_month_view_get_children_by_uuid (GcalView    *view,
 static void
 gcal_view_interface_init (GcalViewInterface *iface)
 {
-  iface->get_initial_date = gcal_month_view_get_initial_date;
-  iface->get_final_date = gcal_month_view_get_final_date;
-
   iface->clear_marks = gcal_month_view_clear_marks;
-
   iface->get_children_by_uuid = gcal_month_view_get_children_by_uuid;
 }
 

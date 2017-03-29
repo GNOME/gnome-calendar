@@ -96,40 +96,6 @@ gcal_view_get_date (GcalView *view)
 }
 
 /**
- * gcal_view_get_initial_date:
- * @view: a #GcalView
- *
- * Return the initial date represented by the view.
- *
- * Returns: (transfer full): An #icaltimetype object
- **/
-icaltimetype*
-gcal_view_get_initial_date (GcalView *view)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_val_if_fail (GCAL_VIEW_GET_IFACE (view)->get_initial_date, NULL);
-
-  return GCAL_VIEW_GET_IFACE (view)->get_initial_date (view);
-}
-
-/**
- * gcal_view_get_final_date:
- * @view: a #GcalView
- *
- * Return the final date represented by the view.
- *
- * Returns: (transfer full): An #icaltimetype object
- **/
-icaltimetype*
-gcal_view_get_final_date (GcalView *view)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_val_if_fail (GCAL_VIEW_GET_IFACE (view)->get_final_date, NULL);
-
-  return GCAL_VIEW_GET_IFACE (view)->get_final_date (view);
-}
-
-/**
  * gcal_view_clear_marks:
  * @view: a #GcalView
  *
