@@ -92,3 +92,4 @@ src/tags
 src/views/tags
 src/views/.dirstamp
 *.goutputstream*
+tags*
