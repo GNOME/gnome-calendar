@@ -224,20 +224,6 @@ calendar_get_weekday_name (gint i)
   return text;
 }
 
-/* 0 = january */
-static gchar *
-calendar_get_month_name (gint i)
-{
-  GDateTime *date;
-  gchar *text;
-
-  date = g_date_time_new_local (2015, i + 1, 1, 1, 1, 1);
-  text = g_date_time_format (date, "%B");
-  g_date_time_unref (date);
-
-  return text;
-}
-
 static void
 calendar_init_weekday_display (GcalDateChooser *self)
 {
@@ -257,7 +243,7 @@ format_month (GcalMultiChoice *choice,
               gint             value,
               gpointer         data)
 {
-  return calendar_get_month_name (value);
+  return g_strdup (gcal_get_month_name (value));
 }
 
 static void
@@ -269,9 +255,8 @@ calendar_init_month_display (GcalDateChooser *self)
 
   for (i = 0; i < 12; i++)
     {
-      month = calendar_get_month_name (i);
-      months[i] = g_strdup_printf ("%s", month);
-      g_free (month);
+      month = gcal_get_month_name (i);
+      months[i] = g_strdup (month);
     }
 
   months[12] = NULL;
