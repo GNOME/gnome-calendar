@@ -20,6 +20,9 @@
 
 #define G_LOG_DOMAIN "Utils"
 
+/* langinfo.h in glibc 2.27 defines ALTMON_* only if _GNU_SOURCE is defined.  */
+#define _GNU_SOURCE
+
 #include "gcal-enums.h"
 #include "gcal-utils.h"
 #include "gcal-event-widget.h"
@@ -57,6 +60,29 @@ ab_day[7] =
 static const gint
 month_item[12] =
 {
+  /* ALTMON_* constants have been introduced in glibc 2.27 (Feb 1, 2018), also
+   * have been supported in *BSD family (but not in OS X) since 1990s.
+   * If they exist they are the correct way to obtain the month names in
+   * nominative case, standalone, without the day number, as used in the
+   * calendar header.  This is obligatory in some languages (Slavic, Baltic,
+   * Greek, etc.) but also recommended to use in all languages because for
+   * other languages there is no difference between ALTMON_* and MON_*.
+   * If ALTMON_* is not supported then we must use MON_*.
+   */
+#ifdef HAVE_ALTMON
+  ALTMON_1,
+  ALTMON_2,
+  ALTMON_3,
+  ALTMON_4,
+  ALTMON_5,
+  ALTMON_6,
+  ALTMON_7,
+  ALTMON_8,
+  ALTMON_9,
+  ALTMON_10,
+  ALTMON_11,
+  ALTMON_12
+#else
   MON_1,
   MON_2,
   MON_3,
@@ -69,6 +95,7 @@ month_item[12] =
   MON_10,
   MON_11,
   MON_12
+#endif
 };
 
 #define SCROLL_HARDNESS 10.0

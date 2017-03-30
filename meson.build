@@ -78,6 +78,30 @@ nl_time_first_weekday_src = '''
 config_h.set('HAVE__NL_TIME_FIRST_WEEKDAY', cc.compiles(nl_time_first_weekday_src),
          description: 'Define if _NL_TIME_FIRST_WEEKDAY is available')
 
+# Not all systems support nl_langinfo (ALTMON_*)
+altmon_src = '''
+  /* _GNU_SOURCE is required by glibc 2.27.  */
+  #define _GNU_SOURCE
+  #include <langinfo.h>
+  int main() {
+    nl_langinfo (ALTMON_1);
+    nl_langinfo (ALTMON_2);
+    nl_langinfo (ALTMON_3);
+    nl_langinfo (ALTMON_4);
+    nl_langinfo (ALTMON_5);
+    nl_langinfo (ALTMON_6);
+    nl_langinfo (ALTMON_7);
+    nl_langinfo (ALTMON_8);
+    nl_langinfo (ALTMON_9);
+    nl_langinfo (ALTMON_10);
+    nl_langinfo (ALTMON_11);
+    nl_langinfo (ALTMON_12);
+  };
+'''
+
+config_h.set('HAVE_ALTMON', cc.compiles(altmon_src),
+         description: 'Define if ALTMON_* constants are available')
+
 # Compiler flags
 common_flags = [
   '-DHAVE_CONFIG_H',
