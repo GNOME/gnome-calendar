@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
 "POT-Creation-Date: 2017-03-23 02:00+0000\n"
-"PO-Revision-Date: 2017-04-10 21:40+0200\n"
+"PO-Revision-Date: 2017-04-10 21:42+0200\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -133,7 +133,7 @@ msgstr "Datum"
 
 #: ../data/ui/edit-dialog.ui.h:6
 msgid "Reminders"
-msgstr ""
+msgstr "Podsjetnici"
 
 #: ../data/ui/edit-dialog.ui.h:7
 msgid "Notes"
