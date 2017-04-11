@@ -22,6 +22,7 @@ src/views/gcal-year-view.c
 src/gcal-application.c
 src/gcal-date-selector.c
 src/gcal-edit-dialog.c
+src/gcal-event-widget.c
 src/gcal-manager.c
 src/gcal-quick-add-popover.c
 src/gcal-search-view.c
