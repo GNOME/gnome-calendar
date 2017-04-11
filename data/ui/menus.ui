@@ -7,11 +7,6 @@
         <attribute name="action">app.new</attribute>
         <attribute name="accel">&lt;Primary&gt;n</attribute>
       </item>
-      <item>
-        <attribute name="label" translatable="yes">_Search…</attribute>
-        <attribute name="action">app.search</attribute>
-        <attribute name="accel">&lt;Primary&gt;f</attribute>
-      </item>
     </section>
     <section>
       <item>
