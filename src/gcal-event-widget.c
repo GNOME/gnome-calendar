@@ -247,12 +247,13 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
                                      GcalEvent       *event)
 {
   g_autoptr (GDateTime) tooltip_start, tooltip_end;
-  g_autofree gchar *start, *end;
+  g_autofree gchar *start, *end, *escaped_summary, *escaped_description;
   gboolean allday, multiday, is_ltr;
   GString *tooltip_desc, *tooltip_mesg;
 
   tooltip_mesg = g_string_new (NULL);
-  g_string_append_printf (tooltip_mesg, "<b>%s</b>", gcal_event_get_summary (event));
+  escaped_summary = g_markup_escape_text (gcal_event_get_summary (event), -1);
+  g_string_append_printf (tooltip_mesg, "<b>%s</b>", escaped_summary);
 
   tooltip_start = g_date_time_to_local (gcal_event_get_date_start (event));
   tooltip_end = g_date_time_to_local (gcal_event_get_date_end (event));
@@ -360,7 +361,8 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
                               gcal_event_get_location (event));
     }
 
-  tooltip_desc = g_string_new (gcal_event_get_description (event));
+  escaped_description = g_markup_escape_text (gcal_event_get_description (event), -1);
+  tooltip_desc = g_string_new (escaped_description);
 
   /* Truncate long descriptions at a white space and ellipsize */
   if (tooltip_desc->len > 0)
