@@ -546,6 +546,42 @@ gcal_week_grid_draw (GtkWidget *widget,
                              cell_height);
     }
 
+  /* Vertical lines */
+  for (i = 0; i < 7; i++)
+    {
+      if (ltr)
+        x = column_width * i;
+      else
+        x = width - column_width * i;
+
+      cairo_move_to (cr, ALIGNED (x), 0);
+      cairo_rel_line_to (cr, 0, height);
+    }
+
+  /* Horizontal lines */
+  for (i = 1; i < 24; i++)
+    {
+      cairo_move_to (cr, 0, ALIGNED ((height / 24.0) * i));
+      cairo_rel_line_to (cr, width, 0);
+    }
+
+  cairo_stroke (cr);
+
+  /* Dashed lines between the vertical lines */
+  cairo_set_dash (cr, dashed, 2, 0);
+
+  for (i = 0; i < 24; i++)
+    {
+      cairo_move_to (cr, 0, ALIGNED ((height / 24.0) * i + (height / 48.0)));
+      cairo_rel_line_to (cr, width, 0);
+    }
+
+  cairo_stroke (cr);
+
+  gtk_style_context_restore (context);
+
+  GTK_WIDGET_CLASS (gcal_week_grid_parent_class)->draw (widget, cr);
+
   /* Today column */
   today_column = get_today_column (GCAL_WEEK_GRID (widget));
 
@@ -582,42 +618,6 @@ gcal_week_grid_draw (GtkWidget *widget,
 
       gtk_style_context_restore (context);
     }
-
-  /* Vertical lines */
-  for (i = 0; i < 7; i++)
-    {
-      if (ltr)
-        x = column_width * i;
-      else
-        x = width - column_width * i;
-
-      cairo_move_to (cr, ALIGNED (x), 0);
-      cairo_rel_line_to (cr, 0, height);
-    }
-
-  /* Horizontal lines */
-  for (i = 1; i < 24; i++)
-    {
-      cairo_move_to (cr, 0, ALIGNED ((height / 24.0) * i));
-      cairo_rel_line_to (cr, width, 0);
-    }
-
-  cairo_stroke (cr);
-
-  /* Dashed lines between the vertical lines */
-  cairo_set_dash (cr, dashed, 2, 0);
-
-  for (i = 0; i < 24; i++)
-    {
-      cairo_move_to (cr, 0, ALIGNED ((height / 24.0) * i + (height / 48.0)));
-      cairo_rel_line_to (cr, width, 0);
-    }
-
-  cairo_stroke (cr);
-
-  gtk_style_context_restore (context);
-
-  GTK_WIDGET_CLASS (gcal_week_grid_parent_class)->draw (widget, cr);
 
   /* Fire the redraw timeout if needed */
   if (self->redraw_timeout_id == 0)
