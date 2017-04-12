@@ -1,0 +1,19 @@
+ECalDataModelSubscriber GObject
+GActionGroup GObject
+GActionMap GObject
+GtkBuildable GObject
+GtkCellEditable GtkWidget
+GInitable GObject
+GtkOrientable GObject
+GcalView GtkWidget
+GcalShellSearchProvider2 GObject
+GDBusInterface GObject
+GAsyncInitable GObject
+GtkActionable GtkWidget
+GtkActivatable GObject
+GIcon GObject
+GLoadableIcon GIcon GObject
+GtkCellLayout GObject
+AtkWindow AtkObject
+GConverter GObject
+GProxyResolver GObject

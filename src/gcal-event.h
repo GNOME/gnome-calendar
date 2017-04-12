@@ -26,6 +26,12 @@
 
 G_BEGIN_DECLS
 
+/**
+ * GcalEventError:
+ * @GCAL_EVENT_ERROR_INVALID_START_DATE: indicated an invalid start date
+ *
+ * Errors that #GcalEvent can generate.
+ */
 typedef enum
 {
   GCAL_EVENT_ERROR_INVALID_START_DATE

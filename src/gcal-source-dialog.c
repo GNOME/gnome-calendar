@@ -26,6 +26,19 @@
 #include <goa/goa.h>
 #include <libedataserverui/libedataserverui.h>
 
+/**
+ * SECTION:gcal-source-dialog
+ * @short_description: Dialog to manage calendars
+ * @title:GcalSourceDialog
+ * @stability:unstable
+ * @image:gcal-source-dialog.png
+ *
+ * #GcalSourceDialog is the calendar management widget of GNOME
+ * Calendar. With it, users can create calendars from local files,
+ * local calendars or even import calendars from the Web or their
+ * online accounts.
+ */
+
 struct _GcalSourceDialog
 {
   GtkDialog           parent;
@@ -239,7 +252,7 @@ add_button_clicked (GtkWidget *button,
 
   if (self->source != NULL)
     {
-      // Commit the new source
+      /* Commit the new source */
       gcal_manager_save_source (self->manager, self->source);
 
       self->source = NULL;
@@ -251,14 +264,14 @@ add_button_clicked (GtkWidget *button,
     {
       GList *l;
 
-      // Commit each new remote source
+      /* Commit each new remote source */
       for (l = self->remote_sources; l != NULL; l = l->next)
         gcal_manager_save_source (self->manager, l->data);
 
       g_list_free (self->remote_sources);
       self->remote_sources = NULL;
 
-      // Go back to overview
+      /* Go back to overview */
       gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
     }
 }
@@ -311,16 +324,6 @@ add_source (GcalManager *manager,
   g_list_free (children);
 }
 
-/**
- * action_widget_activated:
- * @widget: the button which emited the signal.
- * @user_data: a {@link GcalSourceDialog} instance.
- *
- * Emit a response when action buttons
- * are clicked.
- *
- * Returns:
- */
 static void
 action_widget_activated (GtkWidget *widget,
                          gpointer   user_data)
@@ -333,13 +336,6 @@ action_widget_activated (GtkWidget *widget,
   gtk_dialog_response (GTK_DIALOG (user_data), response);
 }
 
-/**
- * back_button_clicked:
- *
- * Returns to the previous page.
- *
- * Returns:
- */
 static void
 back_button_clicked (GtkButton *button,
                      gpointer   user_data)
@@ -348,10 +344,10 @@ back_button_clicked (GtkButton *button,
 
   if (gtk_stack_get_visible_child (GTK_STACK (self->stack)) == self->edit_grid)
     {
-      // Save the source before leaving
+      /* Save the source before leaving */
       gcal_manager_save_source (self->manager, self->source);
 
-      // Release the source ref we acquired
+      /* Release the source ref we acquired */
       g_clear_object (&self->source);
     }
 
@@ -370,11 +366,11 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
 
   self = GCAL_SOURCE_DIALOG (user_data);
 
-  // first source
+  /* first source */
   source1 = g_object_get_data (G_OBJECT (row1), "source");
   is_goa1 = is_goa_source (GCAL_SOURCE_DIALOG (user_data), source1);
 
-  // second source
+  /* second source */
   source2 = g_object_get_data (G_OBJECT (row2), "source");
   is_goa2 = is_goa_source (GCAL_SOURCE_DIALOG (user_data), source2);
 
@@ -383,13 +379,13 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
       gchar *parent_name1 = NULL;
       gchar *parent_name2 = NULL;
 
-      // Retrieve parent names
+      /* Retrieve parent names */
       get_source_parent_name_color (self->manager, source1, &parent_name1, NULL);
       get_source_parent_name_color (self->manager, source2, &parent_name2, NULL);
 
       retval = g_strcmp0 (parent_name1, parent_name2);
 
-      // If they have the same parent names, compare by the source display names
+      /* If they have the same parent names, compare by the source display names */
       if (retval == 0)
         retval = g_strcmp0 (e_source_get_display_name (source1), e_source_get_display_name (source2));
 
@@ -398,7 +394,7 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
     }
   else
     {
-      // If one is a GOA account and the other isn't, make the GOA one go first
+      /* If one is a GOA account and the other isn't, make the GOA one go first */
       retval = is_goa1 ? -1 : 1;
     }
 
@@ -424,10 +420,10 @@ cancel_button_clicked (GtkWidget *button,
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
 
-  // Destroy the ongoing created source
+  /* Destroy the ongoing created source */
   g_clear_object (&self->source);
 
-  // Cleanup detected remote sources that weren't added
+  /* Cleanup detected remote sources that weren't added */
   if (self->remote_sources != NULL)
     {
       g_list_free_full (self->remote_sources, g_object_unref);
@@ -437,13 +433,6 @@ cancel_button_clicked (GtkWidget *button,
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
 }
 
-/**
- * clear_pages:
- *
- * Clear local and web pages.
- *
- * Returns:
- */
 static void
 clear_pages (GcalSourceDialog *dialog)
 {
@@ -452,7 +441,7 @@ clear_pages (GcalSourceDialog *dialog)
   gtk_entry_set_text (GTK_ENTRY (dialog->calendar_address_entry), "");
   gtk_widget_set_sensitive (dialog->add_button, FALSE);
 
-  // Remove discovered web sources (if any)
+  /* Remove discovered web sources (if any) */
   list = gtk_container_get_children (GTK_CONTAINER (dialog->web_sources_listbox));
   g_list_free_full (list, (GDestroyNotify) gtk_widget_destroy);
 
@@ -500,15 +489,6 @@ default_check_toggled (GObject    *object,
     gcal_manager_set_default_source (self->manager, self->old_default_source);
 }
 
-
-/**
- * description_label_link_activated:
- *
- * Show GNOME Control Center when
- * the label's link is pressed.
- *
- * Returns:
- */
 static gboolean
 description_label_link_activated (GtkWidget *widget,
                                   gchar     *uri,
@@ -520,12 +500,6 @@ description_label_link_activated (GtkWidget *widget,
   return TRUE;
 }
 
-/**
- * display_header_func:
- *
- * Shows a separator before each row.
- *
- */
 static void
 display_header_func (GtkListBoxRow *row,
                      GtkListBoxRow *before,
@@ -540,14 +514,6 @@ display_header_func (GtkListBoxRow *row,
     }
 }
 
-/**
- * is_goa_source:
- *
- * Checks whether the source comes from
- * a online account.
- *
- * Returns: %TRUE if the source came from a GOA account
- */
 static gboolean
 is_goa_source (GcalSourceDialog *dialog,
                ESource          *source)
@@ -599,14 +565,6 @@ invalidate_calendar_listbox_sort (GObject    *source,
   gtk_list_box_invalidate_sort (GTK_LIST_BOX (user_data));
 }
 
-/**
- * make_row_from_source:
- *
- * Create a GtkListBoxRow for a given
- * ESource.
- *
- * Returns: (transfer full) the new row
- */
 static GtkWidget*
 make_row_from_source (GcalSourceDialog *dialog,
                       ESource          *source)
@@ -658,17 +616,6 @@ make_row_from_source (GcalSourceDialog *dialog,
   return row;
 }
 
-/**
- * name_entry_text_changed:
- *
- * Callend when the name entry's text
- * is edited. It changes the source's
- * display name, but wait's for the
- * calendar's ::response signal to
- * commit these changes.
- *
- * Returns:
- */
 static void
 name_entry_text_changed (GObject    *object,
                          GParamSpec *pspec,
@@ -676,6 +623,14 @@ name_entry_text_changed (GObject    *object,
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
   gboolean valid = gtk_entry_get_text_length (GTK_ENTRY (object)) > 0;
+
+  /*
+   * Callend when the name entry's text
+   * is edited. It changes the source's
+   * display name, but wait's for the
+   * calendar's ::response signal to
+   * commit these changes.
+   */
 
   gtk_widget_set_sensitive (self->back_button, valid);
   gtk_widget_set_sensitive (self->add_button, valid);
@@ -695,13 +650,6 @@ spawn_goa_with_args (const gchar *action,
                  NULL, NULL, NULL, NULL);
 }
 
-/**
- * online_accounts_listbox_row_activated:
- *
- * Selects the online account, or add one.
- *
- * Returns:
- */
 static void
 online_accounts_listbox_row_activated (GtkListBox    *box,
                                        GtkListBoxRow *row,
@@ -736,14 +684,6 @@ online_accounts_listbox_row_activated (GtkListBox    *box,
     }
 }
 
-/**
- * response_signal:
- *
- * Save the source when the dialog
- * is close.
- *
- * Returns:
- */
 static void
 response_signal (GtkDialog *dialog,
                  gint       response_id,
@@ -751,19 +691,19 @@ response_signal (GtkDialog *dialog,
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (dialog);
 
-  /* save the source */
+  /* Save the source */
   if (self->mode == GCAL_SOURCE_DIALOG_MODE_EDIT && self->source != NULL)
     {
       gcal_manager_save_source (self->manager, self->source);
       g_clear_object (&self->source);
     }
 
-  /* commit the new source; save the current page's source */
+  /* Commit the new source; save the current page's source */
   if (self->mode == GCAL_SOURCE_DIALOG_MODE_NORMAL && response_id == GTK_RESPONSE_APPLY && self->remote_sources != NULL)
       {
         GList *l;
 
-        // Commit each new remote source
+        /* Commit each new remote source */
         for (l = self->remote_sources; l != NULL; l = l->next)
           gcal_manager_save_source (self->manager, l->data);
 
@@ -800,7 +740,7 @@ is_remote_source (ESource *source)
 
       auth = e_source_get_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
 
-      // No host is set, it's not a remote source
+      /* No host is set, it's not a remote source */
       if (e_source_authentication_get_host (auth) == NULL)
         return FALSE;
     }
@@ -811,7 +751,7 @@ is_remote_source (ESource *source)
 
       webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
 
-      // No resource path specified, not a remote source
+      /* No resource path specified, not a remote source */
       if (e_source_webdav_get_resource_path (webdav) == NULL)
         return FALSE;
     }
@@ -876,7 +816,7 @@ stack_visible_child_name_changed (GObject    *object,
 
       get_source_parent_name_color (self->manager, self->source, &parent_name, NULL);
 
-      // update headerbar buttons
+      /* update headerbar buttons */
       gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (self->headerbar), !creation_mode);
       gtk_widget_set_visible (self->calendar_visible_check, !creation_mode);
       gtk_widget_set_visible (self->back_button, !creation_mode);
@@ -885,7 +825,7 @@ stack_visible_child_name_changed (GObject    *object,
       gtk_widget_set_visible (self->account_box, is_goa);
       gtk_widget_set_visible (self->calendar_url_button, !is_goa && (is_file || is_remote));
 
-      // If it's a file, set the file path
+      /* If it's a file, set the file path */
       if (is_file)
         {
           ESourceLocal *local;
@@ -902,7 +842,7 @@ stack_visible_child_name_changed (GObject    *object,
           g_free (uri);
         }
 
-      // If it's remote, build the uri
+      /* If it's remote, build the uri */
       if (is_remote)
         {
           ESourceAuthentication *auth;
@@ -940,7 +880,7 @@ stack_visible_child_name_changed (GObject    *object,
       /* entry */
       gtk_entry_set_text (GTK_ENTRY (self->name_entry), e_source_get_display_name (self->source));
 
-      // enabled check
+      /* enabled check */
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->calendar_visible_check),
                                     is_source_enabled (self->source));
 
@@ -968,14 +908,6 @@ stack_visible_child_name_changed (GObject    *object,
     }
 }
 
-/**
- * calendar_file_selected:
- *
- * Opens a file selector dialog and
- * parse the resulting selection.
- *
- * Returns:
- */
 static void
 calendar_file_selected (GtkFileChooser *button,
                         gpointer        user_data)
@@ -1007,23 +939,13 @@ calendar_file_selected (GtkFileChooser *button,
   /* update the source properties */
   e_source_set_display_name (source, g_file_get_basename (file));
 
-  // Jump to the edit page
+  /* Jump to the edit page */
   gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_CREATE);
 
   gtk_widget_set_sensitive (self->add_button, TRUE);
 }
 
-/**
- * calendar_listbox_row_activated:
- *
- * Edits the selected calendar for the
- * 'Calendars' listbox or goes to the
- * calendar selection for the Online
- * Accounts listbox.
- *
- * Returns:
- */
 static void
 calendar_listbox_row_activated (GtkListBox    *box,
                                 GtkListBoxRow *row,
@@ -1046,13 +968,6 @@ calendar_listbox_row_activated (GtkListBox    *box,
     }
 }
 
-/**
- * pulse_web_entry:
- *
- * Update the url's entry with a pulse fraction.
- *
- * Returns: FALSE
- */
 static gboolean
 pulse_web_entry (GcalSourceDialog *dialog)
 {
@@ -1063,14 +978,6 @@ pulse_web_entry (GcalSourceDialog *dialog)
   return FALSE;
 }
 
-/**
- * url_entry_text_changed:
- *
- * Performs a validation of the URL
- * 1 second after the user inputs.
- *
- * Returns:
- */
 static void
 url_entry_text_changed (GObject    *object,
                         GParamSpec *pspec,
@@ -1098,7 +1005,7 @@ url_entry_text_changed (GObject    *object,
 
   if (g_utf8_strlen (text, -1) != 0)
     {
-      // Remove any previous unreleased resource
+      /* Remove any previous unreleased resource */
       if (self->validate_url_resource_id != 0)
         g_source_remove (self->validate_url_resource_id);
 
@@ -1117,14 +1024,6 @@ url_entry_text_changed (GObject    *object,
     }
 }
 
-/**
- * online_accounts_settings_button_clicked:
- *
- * Spawns the GNOME Control Center app
- * with Online Accounts openned.
- *
- * Returns:
- */
 static void
 online_accounts_settings_button_clicked (GtkWidget *button,
                                          gpointer   user_data)
@@ -1141,7 +1040,7 @@ on_file_activated (GSimpleAction *action,
   GtkFileFilter *filter;
   gint response;
 
-  // Dialog
+  /* Dialog */
   dialog = gtk_file_chooser_dialog_new (_("Select a calendar file"),
                                         GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (user_data))),
                                         GTK_FILE_CHOOSER_ACTION_SAVE,
@@ -1151,7 +1050,7 @@ on_file_activated (GSimpleAction *action,
 
   g_signal_connect (dialog, "file-activated", G_CALLBACK (calendar_file_selected), user_data);
 
-  // File filter
+  /* File filter */
   filter = gtk_file_filter_new ();
   gtk_file_filter_set_name (filter, _("Calendar files"));
   gtk_file_filter_add_mime_type (filter, "text/calendar");
@@ -1166,14 +1065,6 @@ on_file_activated (GSimpleAction *action,
   gtk_widget_destroy (dialog);
 }
 
-/**
- * on_local_activated:
- *
- * Creates a new local calendar, and let
- * the user adjust the settings after.
- *
- * Returns:
- */
 static void
 on_local_activated (GSimpleAction *action,
                     GVariant      *param,
@@ -1197,21 +1088,13 @@ on_local_activated (GSimpleAction *action,
   /* update the source properties */
   e_source_set_display_name (source, _("Unnamed Calendar"));
 
-  // Jump to the edit page
+  /* Jump to the edit page */
   gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_CREATE);
 
   gtk_widget_set_sensitive (self->add_button, TRUE);
 }
 
-/**
- * on_web_activated:
- *
- * Redirect to the web calendar creation
- * page
- *
- * Returns:
- */
 static void
 on_web_activated (GSimpleAction *action,
                   GVariant      *param,
@@ -1229,14 +1112,6 @@ calendar_address_activated (GtkEntry *entry,
   validate_url_cb (GCAL_SOURCE_DIALOG (user_data));
 }
 
-/**
- * validate_url_cb:
- *
- * Query the given URL for possible
- * calendar data.
- *
- * Returns:FALSE
- */
 static gboolean
 validate_url_cb (GcalSourceDialog *dialog)
 {
@@ -1260,15 +1135,15 @@ validate_url_cb (GcalSourceDialog *dialog)
       dialog->remote_sources = NULL;
     }
 
-  // Remove previous results
+  /* Remove previous results */
   g_list_free_full (gtk_container_get_children (GTK_CONTAINER (dialog->web_sources_listbox)),
                     (GDestroyNotify) gtk_widget_destroy);
   gtk_revealer_set_reveal_child (GTK_REVEALER (dialog->web_sources_revealer), FALSE);
 
-  // Clear the entry icon
+  /* Clear the entry icon */
   gtk_entry_set_icon_from_icon_name (GTK_ENTRY (dialog->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 
-  // Get the hostname and file path from the server
+  /* Get the hostname and file path from the server */
   uri_valid = uri_get_fields (gtk_entry_get_text (GTK_ENTRY (dialog->calendar_address_entry)), NULL, &host, &path);
 
   g_debug ("[source-dialog] host: '%s', path: '%s'", host, path);
@@ -1286,11 +1161,11 @@ validate_url_cb (GcalSourceDialog *dialog)
   ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
   e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "webcal");
 
-  // Authentication
+  /* Authentication */
   auth = e_source_get_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
   e_source_authentication_set_host (auth, host);
 
-  // Webdav
+  /* Webdav */
   webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
   e_source_webdav_set_resource_path (webdav, path);
 
@@ -1301,17 +1176,17 @@ validate_url_cb (GcalSourceDialog *dialog)
    */
   if (g_str_has_suffix (path, ".ics"))
     {
-      // Set the private source so it saves at closing
+      /* Set the private source so it saves at closing */
       dialog->remote_sources = g_list_append (dialog->remote_sources, source);
 
-      // Update buttons
+      /* Update buttons */
       gtk_widget_set_sensitive (dialog->add_button, source != NULL);
     }
   else
     {
       ENamedParameters *credentials;
 
-      // Pulse the entry while it performs the check
+      /* Pulse the entry while it performs the check */
       dialog->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
 
       /*
@@ -1325,7 +1200,7 @@ validate_url_cb (GcalSourceDialog *dialog)
         {
           g_debug ("[source-dialog] Trying to connect without credentials...");
 
-          // NULL credentials
+          /* NULL credentials */
           e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, NULL);
           e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, NULL);
 
@@ -1349,7 +1224,7 @@ validate_url_cb (GcalSourceDialog *dialog)
            */
           if (response == GTK_RESPONSE_OK)
             {
-              // User inputted credentials
+              /* User inputted credentials */
               e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, user);
               e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, password);
 
@@ -1398,13 +1273,13 @@ prompt_credentials (GcalSourceDialog  *dialog,
 {
   gint response;
 
-  // Cleanup last credentials
+  /* Cleanup last credentials */
   gtk_entry_set_text (GTK_ENTRY (dialog->credentials_password_entry), "");
   gtk_entry_set_text (GTK_ENTRY (dialog->credentials_user_entry), "");
 
   gtk_widget_grab_focus (dialog->credentials_user_entry);
 
-  // Show the dialog, then destroy it
+  /* Show the dialog, then destroy it */
   response = gtk_dialog_run (GTK_DIALOG (dialog->credentials_dialog));
 
   if (response == GTK_RESPONSE_OK)
@@ -1435,7 +1310,7 @@ duplicate_source (ESource *source)
   ext = e_source_get_extension (new_source, E_SOURCE_EXTENSION_CALENDAR);
   e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
 
-  // Copy Authentication data
+  /* Copy Authentication data */
   if (e_source_has_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION))
     {
       ESourceAuthentication *new_auth, *parent_auth;
@@ -1450,7 +1325,7 @@ duplicate_source (ESource *source)
       e_source_authentication_set_proxy_uid (new_auth, e_source_authentication_get_proxy_uid (parent_auth));
     }
 
-  // Copy Webdav data
+  /* Copy Webdav data */
   if (e_source_has_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND))
     {
       ESourceWebdav *new_webdav, *parent_webdav;
@@ -1507,7 +1382,7 @@ discover_sources_cb (GObject      *source,
   self = GCAL_SOURCE_DIALOG (user_data);
   error = NULL;
 
-  // Stop the pulsing entry
+  /* Stop the pulsing entry */
   if (self->calendar_address_id != 0)
     {
       gtk_entry_set_progress_fraction (GTK_ENTRY (self->calendar_address_entry), 0);
@@ -1518,7 +1393,7 @@ discover_sources_cb (GObject      *source,
   if (!e_webdav_discover_sources_finish (E_SOURCE (source), result, NULL, NULL, &discovered_sources, &user_addresses,
                                         &error))
     {
-      // Don't add an source with errors
+      /* Don't add an source with errors */
       gtk_widget_set_sensitive (self->add_button, FALSE);
 
       /*
@@ -1543,15 +1418,15 @@ discover_sources_cb (GObject      *source,
       return;
     }
 
-  // Add a success icon to the entry
+  /* Add a success icon to the entry */
   gtk_entry_set_icon_from_icon_name (GTK_ENTRY (self->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY,
                                      "emblem-ok-symbolic");
 
-  // Remove previous results
+  /* Remove previous results */
   g_list_free_full (gtk_container_get_children (GTK_CONTAINER (self->web_sources_listbox)),
                     (GDestroyNotify) gtk_widget_destroy);
 
-  // Show the list of calendars
+  /* Show the list of calendars */
   gtk_revealer_set_reveal_child (GTK_REVEALER (self->web_sources_revealer), TRUE);
   gtk_widget_show (self->web_sources_revealer);
 
@@ -1563,7 +1438,7 @@ discover_sources_cb (GObject      *source,
 
       src = aux->data;
 
-      // Get the new resource path from the uri
+      /* Get the new resource path from the uri */
       uri_valid = uri_get_fields (src->href, NULL, NULL, &resource_path);
 
       if (uri_valid)
@@ -1606,7 +1481,7 @@ discover_sources_cb (GObject      *source,
       g_free (resource_path);
     }
 
-  // Free things up
+  /* Free things up */
   e_webdav_discover_free_discovered_sources (discovered_sources);
   g_slist_free_full (user_addresses, g_free);
 }
@@ -1671,7 +1546,7 @@ notification_child_revealed_changed (GtkWidget  *notification,
       if (!e_source_get_removable (self->removed_source))
         return;
 
-      // Enable the source again to remove it's name from disabled list
+      /* Enable the source again to remove it's name from disabled list */
       gcal_manager_enable_source (self->manager, self->removed_source);
 
       e_source_remove_sync (self->removed_source, NULL, &error);
@@ -1712,7 +1587,7 @@ undo_remove_action (GtkButton *button,
   /* if there's any set source, unremove it */
   if (self->removed_source != NULL)
     {
-      // Enable the source before adding it again
+      /* Enable the source before adding it again */
       gcal_manager_enable_source (self->manager, self->removed_source);
 
       add_source (self->manager,
@@ -1726,7 +1601,7 @@ undo_remove_action (GtkButton *button,
        */
       self->removed_source = NULL;
 
-      // Hide notification
+      /* Hide notification */
       gtk_revealer_set_reveal_child (GTK_REVEALER (self->notification), FALSE);
     }
 }
@@ -1788,7 +1663,7 @@ remove_button_clicked (GtkWidget *button,
 
       gtk_revealer_set_reveal_child (GTK_REVEALER (self->notification), TRUE);
 
-      // Remove the listbox entry (if any)
+      /* Remove the listbox entry (if any) */
       for (l = children; l != NULL; l = l->next)
         {
           if (g_object_get_data (l->data, "source") == self->removed_source)
@@ -1798,17 +1673,17 @@ remove_button_clicked (GtkWidget *button,
             }
         }
 
-      // Update notification label
+      /* Update notification label */
       str = g_markup_printf_escaped (_("Calendar <b>%s</b> removed"), e_source_get_display_name (self->removed_source));
       gtk_label_set_markup (GTK_LABEL (self->notification_label), str);
 
-      // Remove old notifications
+      /* Remove old notifications */
       if (self->notification_timeout_id != 0)
         g_source_remove (self->notification_timeout_id);
 
       self->notification_timeout_id = g_timeout_add_seconds (5, hide_notification_scheduled, user_data);
 
-      // Disable the source, so it gets hidden
+      /* Disable the source, so it gets hidden */
       gcal_manager_disable_source (self->manager, self->removed_source);
 
       g_list_free (children);
@@ -1840,7 +1715,7 @@ gcal_source_dialog_constructed (GObject *object)
 
   g_object_set_data (G_OBJECT (self->remove_button), "response", GINT_TO_POINTER (GCAL_RESPONSE_REMOVE_SOURCE));
 
-  // Setup listbox header functions
+  /* Setup listbox header functions */
   gtk_list_box_set_header_func (GTK_LIST_BOX (self->calendars_listbox), display_header_func, NULL, NULL);
   gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendars_listbox), (GtkListBoxSortFunc) calendar_listbox_sort_func,
                               object, NULL);
@@ -1849,13 +1724,13 @@ gcal_source_dialog_constructed (GObject *object)
   gtk_list_box_set_sort_func (GTK_LIST_BOX (self->online_accounts_listbox), (GtkListBoxSortFunc) online_accounts_listbox_sort_func,
                               object, NULL);
 
-  // Action group
+  /* Action group */
   self->action_group = g_simple_action_group_new ();
   gtk_widget_insert_action_group (GTK_WIDGET (object), "source", G_ACTION_GROUP (self->action_group));
 
   g_action_map_add_action_entries (G_ACTION_MAP (self->action_group), actions, G_N_ELEMENTS (actions), object);
 
-  // Load the "Add" button menu
+  /* Load the "Add" button menu */
   builder = gtk_builder_new_from_resource ("/org/gnome/calendar/gtk/menus.ui");
 
   menu = G_MENU_MODEL (gtk_builder_get_object (builder, "add-source-menu"));
@@ -2186,11 +2061,11 @@ loading_changed_cb (GcalSourceDialog *dialog)
 
 /**
  * gcal_source_dialog_set_manager:
+ * @dialog: a #GcalSourceDialog
+ * @manager: a #GcalManager
  *
- * Setup the {@link GcalManager} singleton
+ * Setup the #GcalManager singleton
  * instance of the application.
- *
- * Returns:
  */
 void
 gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
@@ -2221,13 +2096,12 @@ gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
 
 /**
  * gcal_source_dialog_set_mode:
+ * @dialog: a #GcalSourceDialog
+ * @mode: a #GcalSourceDialogMode
  *
- * Set the source dialog mode. Creation
- * mode means that a new calendar will
- * be created, while edit mode means a
- * calendar will be edited.
- *
- * Returns:
+ * Set the source dialog mode. Creation mode means that a new
+ * calendar will be created, while edit mode means a calendar
+ * will be edited.
  */
 void
 gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
@@ -2237,7 +2111,7 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
 
   dialog->mode = mode;
 
-  // Cleanup old data
+  /* Cleanup old data */
   clear_pages (dialog);
 
   switch (mode)
@@ -2258,7 +2132,7 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
       break;
 
     case GCAL_SOURCE_DIALOG_MODE_EDIT:
-      // Bind title
+      /* Bind title */
       if (dialog->title_bind == NULL)
         {
           dialog->title_bind = g_object_bind_property (dialog->name_entry, "text", dialog->headerbar, "title",
@@ -2287,10 +2161,10 @@ gcal_source_dialog_set_mode (GcalSourceDialog    *dialog,
 
 /**
  * gcal_source_dialog_set_source:
+ * @dialog: a #GcalSourceDialog
+ * @source: an #ESource
  *
  * Sets the source to be edited by the user.
- *
- * Returns:
  */
 void
 gcal_source_dialog_set_source (GcalSourceDialog *dialog,

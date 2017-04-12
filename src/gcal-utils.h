@@ -33,6 +33,17 @@
 
 #define gcal_clear_datetime(dt) g_clear_pointer (dt, g_date_time_unref)
 
+/**
+ * GcalWindowViewType:
+ * @GCAL_WINDOW_VIEW_DAY: Day view (not implemented)
+ * @GCAL_WINDOW_VIEW_WEEK: Week view
+ * @GCAL_WINDOW_VIEW_MONTH: Month view
+ * @GCAL_WINDOW_VIEW_YEAR: Year view
+ * @GCAL_WINDOW_VIEW_LIST: List (not implemented)
+ * @GCAL_WINDOW_VIEW_SEARCH: Search view (partially implemented)
+ *
+ * Enum with the available views.
+ */
 typedef enum
 {
   GCAL_WINDOW_VIEW_DAY,
@@ -42,19 +53,6 @@ typedef enum
   GCAL_WINDOW_VIEW_LIST,
   GCAL_WINDOW_VIEW_SEARCH,
 } GcalWindowViewType;
-
-typedef enum
-{
-  EVENT_SUMMARY = 0,
-  EVENT_START_DATE,
-  EVENT_END_DATE,
-  EVENT_LOCATION,
-  EVENT_DESCRIPTION,
-  EVENT_SOURCE,
-} EventEditableProperty;
-
-typedef
-const gchar*  (*GcalTranslateFunc)                              (GtkWidget             *source_widget);
 
 GType           icaltime_get_type                               (void)            G_GNUC_CONST;
 

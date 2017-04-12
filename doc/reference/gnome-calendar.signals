@@ -1,0 +1,213 @@
+<SIGNAL>
+<NAME>ECalDataModel::view-state-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+ECalDataModel *ecaldatamodel
+ECalClientView *arg1
+guint  arg2
+guint  arg3
+gchar *arg4
+GError *arg5
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalDateChooserDay::selected</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+GcalDateChooserDay *gcaldatechooserday
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalDateChooser::day-selected</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+GcalDateChooser *gcaldatechooser
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalDateChooser::month-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+GcalDateChooser *gcaldatechooser
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalEventWidget::activate</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalEventWidget *gcaleventwidget
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalManager::query-completed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalManager *gcalmanager
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalManager::source-added</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalManager *gcalmanager
+gpointer  arg1
+gboolean  arg2
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalManager::source-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalManager *gcalmanager
+ESource *arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalManager::source-enabled</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalManager *gcalmanager
+ESource *arg1
+gboolean  arg2
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalManager::source-removed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalManager *gcalmanager
+gpointer  arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalMultiChoice::wrapped</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalMultiChoice *gcalmultichoice
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalQuickAddPopover::edit-event</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalQuickAddPopover *gcalquickaddpopover
+GcalEvent *arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalSearchView::event-activated</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalSearchView *gcalsearchview
+icaltimetype *arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalShellSearchProvider2::handle-activate-result</NAME>
+<RETURNS>gboolean</RETURNS>
+<FLAGS>l</FLAGS>
+GcalShellSearchProvider2 *gcalshellsearchprovider2
+GDBusMethodInvocation *arg1
+gchar *arg2
+GStrv  arg3
+guint  arg4
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalShellSearchProvider2::handle-get-initial-result-set</NAME>
+<RETURNS>gboolean</RETURNS>
+<FLAGS>l</FLAGS>
+GcalShellSearchProvider2 *gcalshellsearchprovider2
+GDBusMethodInvocation *arg1
+GStrv  arg2
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalShellSearchProvider2::handle-get-result-metas</NAME>
+<RETURNS>gboolean</RETURNS>
+<FLAGS>l</FLAGS>
+GcalShellSearchProvider2 *gcalshellsearchprovider2
+GDBusMethodInvocation *arg1
+GStrv  arg2
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalShellSearchProvider2::handle-get-subsearch-result-set</NAME>
+<RETURNS>gboolean</RETURNS>
+<FLAGS>l</FLAGS>
+GcalShellSearchProvider2 *gcalshellsearchprovider2
+GDBusMethodInvocation *arg1
+GStrv  arg2
+GStrv  arg3
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalShellSearchProvider2::handle-launch-search</NAME>
+<RETURNS>gboolean</RETURNS>
+<FLAGS>l</FLAGS>
+GcalShellSearchProvider2 *gcalshellsearchprovider2
+GDBusMethodInvocation *arg1
+GStrv  arg2
+guint  arg3
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalSubscriberView::event-activated</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalSubscriberView *gcalsubscriberview
+GcalEventWidget *arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalView::create-event</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalView *gcalview
+gpointer  arg1
+gpointer  arg2
+gdouble  arg3
+gdouble  arg4
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalView::create-event-detailed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalView *gcalview
+gpointer  arg1
+gpointer  arg2
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalWeekGrid::event-activated</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+GcalWeekGrid *gcalweekgrid
+GcalEventWidget *arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalWeekHeader::event-activated</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+GcalWeekHeader *gcalweekheader
+GcalEventWidget *arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalWeekView::event-activated</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>f</FLAGS>
+GcalWeekView *gcalweekview
+GcalEventWidget *arg1
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalYearView::event-activated</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalYearView *gcalyearview
+GcalEventWidget *arg1
+</SIGNAL>
+

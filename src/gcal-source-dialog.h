@@ -35,6 +35,15 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalSourceDialog, gcal_source_dialog, GCAL, SOURCE_DIALOG, GtkDialog)
 
+/**
+ * GcalSourceDialogMode:
+ * @GCAL_SOURCE_DIALOG_MODE_CREATE: creating a new calendar
+ * @GCAL_SOURCE_DIALOG_MODE_CREATE_WEB: creating a new web-based calendar
+ * @GCAL_SOURCE_DIALOG_MODE_EDIT: editing an existing calendar
+ * @GCAL_SOURCE_DIALOG_MODE_NORMAL: showing the list of calendars and online accounts
+ *
+ * The current action of the #GcalSourceDialog
+ */
 typedef enum
 {
   GCAL_SOURCE_DIALOG_MODE_CREATE,

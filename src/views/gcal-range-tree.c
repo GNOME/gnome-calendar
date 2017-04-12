@@ -20,6 +20,28 @@
 
 #include "gcal-range-tree.h"
 
+/**
+ * SECTION:gcal-range-tree
+ * @short_description: Augmented AVL tree to handle ranges
+ * @title:GcalRangeTree
+ * @stability:stable
+ *
+ * #GcalRangeTree is an augmented AVL tree implemented to be
+ * able to handle ranges rather than point values. This tree
+ * is used by @GcalWeekGrid to store events according to their
+ * start and end minutes, and thus all the data structure was
+ * optimized to handle a limited subset of values.
+ *
+ * In the future, we may need to extend support for broader
+ * range values, and move away from guint16 in function params.
+ *
+ * # Ranges
+ *
+ * Conforming to the overall standard of iCal and Calendar,
+ * the start of a range is inclusive but the end of the range
+ * is always exclusive.
+ */
+
 typedef struct _Node
 {
   struct _Node       *left;
@@ -587,6 +609,17 @@ gcal_range_tree_get_data_at_range (GcalRangeTree *self,
   return data;
 }
 
+/**
+ * gcal_range_tree_count_entries_at_range:
+ * @self: a #GcalRangeTree
+ * @start: start of the range
+ * @end: end of the range
+ *
+ * Counts the number of entries available in the given
+ * range.
+ *
+ * Returns: the number of entries in the given range
+ */
 guint64
 gcal_range_tree_count_entries_at_range (GcalRangeTree *self,
                                         guint16        start,

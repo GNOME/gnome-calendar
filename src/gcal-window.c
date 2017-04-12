@@ -39,6 +39,48 @@
 #include <libecal/libecal.h>
 #include <libical/icaltime.h>
 
+/**
+ * SECTION:gcal-window
+ * @short_description: Main window of GNOME Calendar
+ * @title:GcalWindow
+ * @stability:unstable
+ * @image:gcal-window.png
+ *
+ * #GcalWindow is the main window of GNOME Calendar, and contains
+ * the views, the source dialog, the edit dialog, and manages the
+ * calendar toggler popover menu.
+ *
+ * Besides that, #GcalWindow is also responsible for #GcalQuickAddPopover,
+ * and it responds to the #GcalView:create-event signal by positioning
+ * the quick add popover at the requested position.
+ *
+ * ## Calendar popover
+ *
+ * ![The popover](gcal-window_agendas.png)
+ *
+ * The calendar popover enables/disables the selected calendars.
+ * This is simply an UI for gcal_manager_enable_source() and
+ * gcal_manager_disable_source().
+ *
+ * The calendar popover also contains a button to open the source
+ * dialog.
+ *
+ * ## Edit dialog
+ *
+ * When an event is clicked, the views send the `event-activated`
+ * signal. #GcalWindow responds to this signal opening #GcalEditDialog
+ * with the clicked event.
+ *
+ * When #GcalEditDialog sends a response, #GcalWindow reacts by
+ * either propagating to gcal_manager_update_event(), or hiding
+ * the delete event widgets from the views.
+ *
+ * ## Source dialog
+ *
+ * The interaction with the source dialog is almost none. #GcalWindow
+ * just shows and hides it.
+ */
+
 typedef struct
 {
   gint               x;
@@ -1572,6 +1614,17 @@ gcal_window_init (GcalWindow *self)
 }
 
 /* Public API */
+/**
+ * gcal_window_new_with_view_and_date:
+ * @app: a #GcalApplication
+ * @view_type: a #GcalWindowViewType
+ * @date: the active date
+ *
+ * Creates a #GcalWindow, positions it at @date and shows
+ * @view_type view by default.
+ *
+ * Returns: (transfer full): a #GcalWindow
+ */
 GtkWidget*
 gcal_window_new_with_view_and_date (GcalApplication    *app,
                                     GcalWindowViewType  view_type,
@@ -1609,6 +1662,12 @@ gcal_window_new_with_view_and_date (GcalApplication    *app,
 }
 
 /* new-event interaction: first variant */
+/**
+ * gcal_window_new_event:
+ * @self: a #GcalWindow
+ *
+ * Makes #GcalWindow create a new event.
+ */
 void
 gcal_window_new_event (GcalWindow *self)
 {
@@ -1640,6 +1699,15 @@ gcal_window_new_event (GcalWindow *self)
   create_event_detailed_cb (NULL, start_date, end_date, self);
 }
 
+/**
+ * gcal_window_set_search_mode:
+ * @self: a #GcalWindow
+ * @enabled: whether the search mode is enabled or not
+ *
+ * Sets whether #GcalWindow is in search mode. This is used by
+ * #GcalShellSearchProvider to respond to the user clicking on
+ * GNOME Calendar icon at the search.
+ */
 void
 gcal_window_set_search_mode (GcalWindow *self,
                              gboolean    enabled)
@@ -1650,6 +1718,15 @@ gcal_window_set_search_mode (GcalWindow *self,
   gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (self->search_bar), enabled);
 }
 
+/**
+ * gcal_window_set_search_query:
+ * @self: a #GcalWindow
+ * @query: sets the search query of @self
+ *
+ * Sets the search query of the search. #GcalWindow only
+ * propagates this to the search bar, which ends up
+ * triggering the search.
+ */
 void
 gcal_window_set_search_query (GcalWindow  *self,
                               const gchar *query)
@@ -1659,6 +1736,14 @@ gcal_window_set_search_query (GcalWindow  *self,
   gtk_entry_set_text (GTK_ENTRY (self->search_entry), query);
 }
 
+/**
+ * gcal_window_open_event_by_uuid:
+ * @self: a #GcalWindow
+ * @uuid: the unique identifier of the event to be opened
+ *
+ * Tells @self to open the event with @uuid. When it fails to
+ * open the event, it waits for 2 seconds before trying again.
+ */
 void
 gcal_window_open_event_by_uuid (GcalWindow  *self,
                                 const gchar *uuid)

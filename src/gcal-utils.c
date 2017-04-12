@@ -36,6 +36,12 @@
 #include <string.h>
 #include <math.h>
 
+/**
+ * SECTION:gcal-utils
+ * @short_description: Utility functions
+ * @title:Utility functions
+ */
+
 static const gint
 ab_day[7] =
 {
@@ -69,6 +75,16 @@ month_item[12] =
 
 G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
 
+/**
+ * datetime_compare_date:
+ * @dt1: (nullable): a #GDateTime
+ * @dt2: (nullable): a #GDateTime
+ *
+ * Compares the dates of @dt1 and @dt2. The times are
+ * ignored.
+ *
+ * Returns: negative, 0 or positive
+ */
 gint
 datetime_compare_date (GDateTime *dt1,
                        GDateTime *dt2)
@@ -92,6 +108,14 @@ datetime_compare_date (GDateTime *dt1,
   return 0;
 }
 
+/**
+ * datetime_to_icaltime:
+ * @dt: a #GDateTime
+ *
+ * Converts the #GDateTime's @dt to an #icaltimetype.
+ *
+ * Returns: (transfer full): a #icaltimetype.
+ */
 icaltimetype*
 datetime_to_icaltime (GDateTime *dt)
 {
@@ -115,6 +139,15 @@ datetime_to_icaltime (GDateTime *dt)
   return idt;
 }
 
+/**
+ * icaltime_to_datetime:
+ * @date: an #icaltimetype
+ *
+ * Converts the #icaltimetype's @date to a #GDateTime. The
+ * timezone is preserved.
+ *
+ * Returns: (transfer full): a #GDateTime.
+ */
 GDateTime*
 icaltime_to_datetime (const icaltimetype  *date)
 {
@@ -135,6 +168,17 @@ icaltime_to_datetime (const icaltimetype  *date)
   return dt;
 }
 
+/**
+ * datetime_is_date:
+ * @dt: a #GDateTime
+ *
+ * Checks if @dt represents a date. A pure date
+ * has the values of hour, minutes and seconds set
+ * to 0.
+ *
+ * Returns: %TRUE if @dt is a date, %FALSE if it's a
+ * timed datetime.
+ */
 gboolean
 datetime_is_date (GDateTime *dt)
 {
@@ -143,6 +187,14 @@ datetime_is_date (GDateTime *dt)
          g_date_time_get_seconds (dt) == 0;
 }
 
+/**
+ * gcal_dup_icaltime:
+ * @date: an #icaltimetype
+ *
+ * Creates an exact copy of @date.
+ *
+ * Returns: (transfer full): an #icaltimetype
+ */
 icaltimetype*
 gcal_dup_icaltime (const icaltimetype *date)
 {
@@ -166,12 +218,28 @@ gcal_dup_icaltime (const icaltimetype *date)
   return new_date;
 }
 
+/**
+ * gcal_get_weekday:
+ * @i: the weekday index
+ *
+ * Retrieves the weekday name.
+ *
+ * Returns: (transfer full): the weekday name
+ */
 gchar*
 gcal_get_weekday (gint i)
 {
   return nl_langinfo (ab_day[i]);
 }
 
+/**
+ * gcal_get_month_name:
+ * @i: the month index
+ *
+ * Retrieves the month name.
+ *
+ * Returns: (transfer full): the month name
+ */
 gchar*
 gcal_get_month_name (gint i)
 {
@@ -179,14 +247,15 @@ gcal_get_month_name (gint i)
 }
 
 /**
- * gcal_get_pixbuf_from_color:
- * @color:
- * @size:
+ * gcal_get_surface_from_color:
+ * @color: a #GdkRGBA
+ * @size: the size of the surface
  *
- * Create a pixbuf of a simple {@link GdkRGBA} color.
+ * Creates a squared surface filled with @color. The
+ * surface is always @size x @size.
  *
- * Returns: (Transfer full): An instance of {@link GdkPixbuf} to be freed with g_object_unref()
- **/
+ * Returns: (transfer full): a #cairo_surface_t
+ */
 cairo_surface_t*
 gcal_get_surface_from_color (GdkRGBA  *color,
                              gint      size)
@@ -210,6 +279,16 @@ gcal_get_surface_from_color (GdkRGBA  *color,
   return surface;
 }
 
+/**
+ * get_circle_surface_from_color:
+ * @color: a #GdkRGBA
+ * @size: the size of the surface
+ *
+ * Creates a circular surface filled with @color. The
+ * surface is always @size x @size.
+ *
+ * Returns: (transfer full): a #cairo_surface_t
+ */
 cairo_surface_t*
 get_circle_surface_from_color (GdkRGBA *color,
                                gint     size)
@@ -232,8 +311,16 @@ get_circle_surface_from_color (GdkRGBA *color,
   return surface;
 }
 
+/**
+ * get_color_name_from_source:
+ * @source: an #ESource
+ * @out_color: return value for the color
+ *
+ * Utility function to retrieve the color from @source.
+ */
 void
-get_color_name_from_source (ESource *source, GdkRGBA *out_color)
+get_color_name_from_source (ESource *source,
+                            GdkRGBA *out_color)
 {
   ESourceSelectable *extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
 
@@ -244,13 +331,15 @@ get_color_name_from_source (ESource *source, GdkRGBA *out_color)
 
 /**
  * get_desc_from_component:
- * @component:
+ * @component: an #ECalComponent
+ * @joint_char: the character to use when merging event comments
  *
  * Utility method to handle the extraction of the description from an
  * #ECalComponent. This cycle through the list of #ECalComponentText
  * and concatenate each string into one.
  *
- * Returns: (Transfer full) a new allocated string with the description
+ * Returns: (nullable)(transfer full) a new allocated string with the
+ * description
  **/
 gchar*
 get_desc_from_component (ECalComponent *component,
@@ -387,7 +476,7 @@ get_first_weekday (void)
  *
  * Create a component with the provided details
  *
- * Returns: (Transfer full): an {@link ECalComponent} object
+ * Returns: (transfer full): an {@link ECalComponent} object
  **/
 ECalComponent*
 build_component_from_details (const gchar *summary,
@@ -459,12 +548,15 @@ build_component_from_details (const gchar *summary,
 
 /**
  * icaltime_compare_date:
- * @date1:
- * @date2:
+ * @date1: an #icaltimetype
+ * @date2: an #icaltimetype
  *
- * Compare date parts of {@link icaltimetype} objects. Return negative value, 0 or positive value
- * accordingly if date1 is before, same day of after date2.
- * As a bonus it returns the amount of days passed between two days on the same year.
+ * Compare date parts of #icaltimetype objects. Returns negative value,
+ * 0 or positive value accordingly if @date1 is before, same day of
+ * after date2.
+ *
+ * As a bonus it returns the amount of days passed between two days on the
+ * same year.
  *
  * Returns: negative, 0 or positive
  **/
@@ -484,6 +576,18 @@ icaltime_compare_date (const icaltimetype *date1,
            time_day_of_year (date2->day, date2->month - 1, date2->year);
 }
 
+/**
+ * icaltime_compare_with_current:
+ * @date1: an #icaltimetype
+ * @date2: an #icaltimetype
+ * @current_time_t: the current time
+ *
+ * Compares @date1 and @date2 against the current time. Dates
+ * closer to the current date are sorted before.
+ *
+ * Returns: negative if @date1 comes after @date2, 0 if they're
+ * equal, positive otherwise
+ */
 gint
 icaltime_compare_with_current (const icaltimetype *date1,
                                const icaltimetype *date2,
@@ -517,6 +621,17 @@ icaltime_compare_with_current (const icaltimetype *date1,
   return result;
 }
 
+/**
+ * get_start_of_week:
+ * @date: an #icaltimetype
+ *
+ * Retrieves the start of the week that @date
+ * falls in. This function already takes the
+ * first weekday into account.
+ *
+ * Returns: (transfer full): a #GDateTime with
+ * the start of the week.
+ */
 GDateTime*
 get_start_of_week (icaltimetype *date)
 {
@@ -541,6 +656,17 @@ get_start_of_week (icaltimetype *date)
   return dt;
 }
 
+/**
+ * get_end_of_week:
+ * @date: an #icaltimetype
+ *
+ * Retrieves the end of the week that @date
+ * falls in. This function already takes the
+ * first weekday into account.
+ *
+ * Returns: (transfer full): a #GDateTime with
+ * the end of the week.
+ */
 GDateTime*
 get_end_of_week (icaltimetype *date)
 {
@@ -554,6 +680,15 @@ get_end_of_week (icaltimetype *date)
   return week_end;
 }
 
+/**
+ * is_clock_format_24h:
+ *
+ * Retrieves whether the current clock format is
+ * 12h or 24h based.
+ *
+ * Returns: %TRUE if the clock format is 24h, %FALSE
+ * otherwise.
+ */
 gboolean
 is_clock_format_24h (void)
 {
@@ -568,7 +703,10 @@ is_clock_format_24h (void)
   return g_strcmp0 (clock_format, "24h") == 0;
 }
 
-/* Function to do a last minute fixup of the AM/PM stuff if the locale
+/**
+ * e_strftime_fix_am_pm:
+ *
+ * Function to do a last minute fixup of the AM/PM stuff if the locale
  * and gettext haven't done it right. Most English speaking countries
  * except the USA use the 24 hour clock (UK, Australia etc). However
  * since they are English nobody bothers to write a language
@@ -584,7 +722,6 @@ is_clock_format_24h (void)
  * TODO: Actually remove the '%p' from the fixed up string so that
  * there isn't a stray space.
  */
-
 gsize
 e_strftime_fix_am_pm (gchar *str,
                       gsize max,
@@ -627,6 +764,14 @@ e_strftime_fix_am_pm (gchar *str,
   return (ret);
 }
 
+/**
+ * e_utf8_strftime_fix_am_pm:
+ *
+ * Stolen from Evolution codebase. Selects the
+ * correct time format.
+ *
+ * Returns: the size of the string
+ */
 gsize
 e_utf8_strftime_fix_am_pm (gchar *str,
                            gsize max,
@@ -748,9 +893,12 @@ fix_popover_menu_icons (GtkPopover *popover)
 
 /**
  * uri_get_fields:
+ * @uri: the URI
+ * @schema: (nullable): return location for the schema of the URI
+ * @host: (nullable): return location for the host of the URI
+ * @path: (nullable): return location for the resource path
  *
- * Split the given URI into the
- * fields.
+ * Split the given URI into the fields.
  *
  * Returns: #TRUE if @uri could be parsed, #FALSE otherwise
  */
@@ -809,6 +957,16 @@ uri_get_fields (const gchar  *uri,
   return valid;
 }
 
+/**
+ * get_source_parent_name_color:
+ * @manager: a #GcalManager
+ * @source: an #ESource
+ * @name: (nullable): return location for the name
+ * @color: (nullable): return location for the color
+ *
+ * Retrieves the name and the color of the #ESource that is
+ * parent of @source.
+ */
 void
 get_source_parent_name_color (GcalManager  *manager,
                               ESource      *source,
@@ -834,6 +992,16 @@ get_source_parent_name_color (GcalManager  *manager,
     }
 }
 
+/**
+ * format_utc_offset:
+ * @offset: an UTC offset
+ *
+ * Formats the UTC offset to a string that GTimeZone can
+ * parse. E.g. "-0300" or "+0530".
+ *
+ * Returns: (transfer full): a string representing the
+ * offset
+ */
 gchar*
 format_utc_offset (gint64 offset)
 {
@@ -859,6 +1027,17 @@ format_utc_offset (gint64 offset)
     return g_strdup_printf ("%s%02i%02i", sign, hours, minutes);
 }
 
+/**
+ * get_alarm_trigger_minutes:
+ * @event: a #GcalEvent
+ * @alarm: a #ECalComponentAlarm
+ *
+ * Calculates the number of minutes before @event's
+ * start time that the alarm should be triggered.
+ *
+ * Returns: the number of minutes before the event
+ * start that @alarm will be triggered.
+ */
 gint
 get_alarm_trigger_minutes (GcalEvent          *event,
                            ECalComponentAlarm *alarm)
@@ -891,6 +1070,18 @@ get_alarm_trigger_minutes (GcalEvent          *event,
   return diff;
 }
 
+/**
+ * should_change_date_for_scroll:
+ * @scroll_value: the current scroll value
+ * @scroll_event: the #GdkEventScroll that is being parsed
+ *
+ * Utility function to check if the date should change based
+ * on the scroll. The date is changed when the user scrolls
+ * too much on touchpad, or performs a rotation of the scroll
+ * button in a mouse.
+ *
+ * Returns: %TRUE if the date should change, %FALSE otherwise.
+ */
 gboolean
 should_change_date_for_scroll (gdouble        *scroll_value,
                                GdkEventScroll *scroll_event)
@@ -925,6 +1116,15 @@ should_change_date_for_scroll (gdouble        *scroll_value,
   return FALSE;
 }
 
+/**
+ * is_source_enabled:
+ * @source: an #ESource
+ *
+ * Retrieves whether the @source is enabled or not.
+ * Disabled sources don't show their events.
+ *
+ * Returns: %TRUE if @source is enabled, %FALSE otherwise.
+ */
 gboolean
 is_source_enabled (ESource *source)
 {
