@@ -1008,6 +1008,7 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   GcalWeekGrid *self;
   g_autoptr (GDateTime) week_start;
   g_autoptr (GDateTime) dnd_date;
+  g_autoptr (GDateTime) new_end;
   GtkWidget *event_widget;
   GcalEvent *event;
   GTimeSpan timespan = 0;
@@ -1043,8 +1044,7 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
    * Calculate the diff between the dropped cell and the event's start date,
    * so we can update the end date accordingly.
    */
-  if (gcal_event_get_date_end (event))
-    timespan = g_date_time_difference (gcal_event_get_date_end (event), gcal_event_get_date_start (event));
+  timespan = g_date_time_difference (gcal_event_get_date_end (event), gcal_event_get_date_start (event));
 
   /*
    * Set the event's start and end dates. Since the event may have a
@@ -1053,12 +1053,10 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   gcal_event_set_all_day (event, FALSE);
   gcal_event_set_date_start (event, dnd_date);
 
-  if (gcal_event_get_date_end (event))
-    {
-      g_autoptr (GDateTime) new_end = g_date_time_add (dnd_date, timespan);
 
-      gcal_event_set_date_end (event, new_end);
-    }
+  /* Setup the new end date */
+  new_end = g_date_time_add (dnd_date, timespan);
+  gcal_event_set_date_end (event, new_end);
 
   /* Commit the changes */
   gcal_manager_update_event (self->manager, event);
