@@ -1402,8 +1402,10 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   GcalWeekHeader *self;
   g_autoptr (GDateTime) week_start;
   g_autoptr (GDateTime) dnd_date;
+  g_autoptr (GDateTime) new_end;
   GDateTime *start_date;
   GDateTime *end_date;
+  GTimeSpan difference;
   GtkWidget *event_widget;
   GcalEvent *event;
   gboolean turn_all_day;
@@ -1455,20 +1457,11 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
                                       0, 0, 0);
     }
 
-  /* Since the event may have a NULL end date, so we have to check it here */
-  if (end_date)
-    {
-      g_autoptr (GDateTime) new_end;
-      GTimeSpan difference;
+  /* End date */
+  difference = turn_all_day ? 24 : g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
 
-      if (turn_all_day)
-        difference = 24;
-      else
-        difference = g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
-
-      new_end = g_date_time_add_hours (dnd_date, difference);
-      gcal_event_set_date_end (event, new_end);
-    }
+  new_end = g_date_time_add_hours (dnd_date, difference);
+  gcal_event_set_date_end (event, new_end);
 
   /*
    * Set the start date ~after~ the end date, so we can compare
