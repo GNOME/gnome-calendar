@@ -51,6 +51,9 @@ GList*               gcal_week_grid_get_children_by_uuid         (GcalWeekGrid  
 
 void                 gcal_week_grid_clear_marks                  (GcalWeekGrid       *self);
 
+void                 gcal_week_grid_set_date                     (GcalWeekGrid       *self,
+                                                                  icaltimetype       *date);
+
 G_END_DECLS
 
 #endif /* GCAL_WEEK_GRID_H */

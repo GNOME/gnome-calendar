@@ -268,7 +268,10 @@ update_active_date (GcalWindow   *window,
 
   previous_date = window->active_date;
   window->active_date = new_date;
-  g_object_notify (G_OBJECT (window), "active-date");
+
+  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), new_date);
+  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), new_date);
+  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_YEAR]), new_date);
 
   /* year_view */
   if (previous_date->year != new_date->year)
@@ -1235,82 +1238,6 @@ schedule_open_edit_dialog_by_uuid (OpenEditDialogData *edit_dialog_data)
 }
 
 static void
-gcal_window_constructed (GObject *object)
-{
-  GcalWindow *window = GCAL_WINDOW (object);
-
-  GtkBuilder *builder;
-  GMenuModel *winmenu;
-
-  GSettings *helper_settings;
-  gchar *clock_format;
-  gboolean use_24h_format;
-
-  GCAL_ENTRY;
-
-  if (G_OBJECT_CLASS (gcal_window_parent_class)->constructed != NULL)
-    G_OBJECT_CLASS (gcal_window_parent_class)->constructed (object);
-
-  helper_settings = g_settings_new ("org.gnome.desktop.interface");
-  clock_format = g_settings_get_string (helper_settings, "clock-format");
-  use_24h_format = (g_strcmp0 (clock_format, "24h") == 0);
-  g_free (clock_format);
-  g_object_unref (helper_settings);
-
-  /* header_bar: menu */
-  builder = gtk_builder_new ();
-  gtk_builder_add_from_resource (builder,
-                                 "/org/gnome/calendar/gtk/menus.ui",
-                                 NULL);
-
-  winmenu = (GMenuModel *)gtk_builder_get_object (builder, "win-menu");
-  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (window->menu_button),
-                                  winmenu);
-
-  g_object_unref (builder);
-
-  window->views[GCAL_WINDOW_VIEW_WEEK] = window->week_view;
-  window->views[GCAL_WINDOW_VIEW_MONTH] = window->month_view;
-  window->views[GCAL_WINDOW_VIEW_YEAR] = window->year_view;
-
-  gcal_edit_dialog_set_time_format (GCAL_EDIT_DIALOG (window->edit_dialog), use_24h_format);
-
-  gcal_week_view_set_first_weekday (GCAL_WEEK_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), get_first_weekday ());
-  gcal_week_view_set_use_24h_format (GCAL_WEEK_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), use_24h_format);
-
-  gcal_month_view_set_first_weekday (GCAL_MONTH_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), get_first_weekday ());
-  gcal_month_view_set_use_24h_format (GCAL_MONTH_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), use_24h_format);
-
-  gcal_year_view_set_first_weekday (GCAL_YEAR_VIEW (window->views[GCAL_WINDOW_VIEW_YEAR]), get_first_weekday ());
-  gcal_year_view_set_use_24h_format (GCAL_YEAR_VIEW (window->views[GCAL_WINDOW_VIEW_YEAR]), use_24h_format);
-
-  /* search view */
-  gcal_search_view_connect (GCAL_SEARCH_VIEW (window->search_view), window->manager);
-  gcal_search_view_set_time_format (GCAL_SEARCH_VIEW (window->search_view), use_24h_format);
-
-  /* refresh timeout, first is fast */
-  window->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, object);
-
-  /* calendars popover */
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (window->calendar_listbox), (GtkListBoxSortFunc) calendar_listbox_sort_func,
-                              object, NULL);
-
-  if (!gcal_manager_get_loading (window->manager))
-    {
-      GList *sources, *l;
-
-      sources = gcal_manager_get_sources_connected (window->manager);
-
-      for (l = sources; l != NULL; l = g_list_next (l))
-        add_source (window->manager, l->data, is_source_enabled (l->data), object);
-
-      g_list_free (sources);
-    }
-
-  GCAL_EXIT;
-}
-
-static void
 gcal_window_finalize (GObject *object)
 {
   GcalWindow *window = GCAL_WINDOW (object);
@@ -1380,6 +1307,19 @@ gcal_window_set_property (GObject      *object,
     case PROP_MANAGER:
       if (g_set_object (&self->manager, g_value_get_object (value)))
         {
+
+          if (!gcal_manager_get_loading (self->manager))
+            {
+              GList *sources, *l;
+
+              sources = gcal_manager_get_sources_connected (self->manager);
+
+              for (l = sources; l != NULL; l = g_list_next (l))
+                add_source (self->manager, l->data, is_source_enabled (l->data), self);
+
+              g_list_free (sources);
+            }
+
           g_signal_connect (self->manager, "source-added", G_CALLBACK (add_source), object);
           g_signal_connect (self->manager, "source-removed", G_CALLBACK (remove_source), object);
           g_signal_connect_swapped (self->manager, "source-enabled", G_CALLBACK (source_enabled), object);
@@ -1487,7 +1427,6 @@ gcal_window_class_init(GcalWindowClass *klass)
   GtkWidgetClass *widget_class;
 
   object_class = G_OBJECT_CLASS (klass);
-  object_class->constructed = gcal_window_constructed;
   object_class->finalize = gcal_window_finalize;
   object_class->set_property = gcal_window_set_property;
   object_class->get_property = gcal_window_get_property;
@@ -1523,7 +1462,6 @@ gcal_window_class_init(GcalWindowClass *klass)
                           "Date",
                           "The active/selected date",
                           ICAL_TIME_TYPE,
-                          G_PARAM_CONSTRUCT |
                           G_PARAM_READWRITE));
 
   g_object_class_install_property (
@@ -1597,6 +1535,12 @@ gcal_window_class_init(GcalWindowClass *klass)
 static void
 gcal_window_init (GcalWindow *self)
 {
+  GtkBuilder *builder;
+  GMenuModel *winmenu;
+  GSettings *helper_settings;
+  gchar *clock_format;
+  gboolean use_24h_format;
+
   /* Setup actions */
   g_action_map_add_action_entries (G_ACTION_MAP (self),
                                    actions,
@@ -1608,6 +1552,52 @@ gcal_window_init (GcalWindow *self)
   /* source dialog */
   g_object_bind_property (self, "application", self->source_dialog, "application",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+
+  helper_settings = g_settings_new ("org.gnome.desktop.interface");
+  clock_format = g_settings_get_string (helper_settings, "clock-format");
+  use_24h_format = (g_strcmp0 (clock_format, "24h") == 0);
+  g_free (clock_format);
+  g_object_unref (helper_settings);
+
+  /* header_bar: menu */
+  builder = gtk_builder_new ();
+  gtk_builder_add_from_resource (builder,
+                                 "/org/gnome/calendar/gtk/menus.ui",
+                                 NULL);
+
+  winmenu = (GMenuModel *)gtk_builder_get_object (builder, "win-menu");
+  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (self->menu_button),
+                                  winmenu);
+
+  g_object_unref (builder);
+
+  self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
+  self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
+  self->views[GCAL_WINDOW_VIEW_YEAR] = self->year_view;
+
+  gcal_edit_dialog_set_time_format (GCAL_EDIT_DIALOG (self->edit_dialog), use_24h_format);
+
+  gcal_week_view_set_first_weekday (GCAL_WEEK_VIEW (self->views[GCAL_WINDOW_VIEW_WEEK]), get_first_weekday ());
+  gcal_week_view_set_use_24h_format (GCAL_WEEK_VIEW (self->views[GCAL_WINDOW_VIEW_WEEK]), use_24h_format);
+
+  gcal_month_view_set_first_weekday (GCAL_MONTH_VIEW (self->views[GCAL_WINDOW_VIEW_MONTH]), get_first_weekday ());
+  gcal_month_view_set_use_24h_format (GCAL_MONTH_VIEW (self->views[GCAL_WINDOW_VIEW_MONTH]), use_24h_format);
+
+  gcal_year_view_set_first_weekday (GCAL_YEAR_VIEW (self->views[GCAL_WINDOW_VIEW_YEAR]), get_first_weekday ());
+  gcal_year_view_set_use_24h_format (GCAL_YEAR_VIEW (self->views[GCAL_WINDOW_VIEW_YEAR]), use_24h_format);
+
+  /* search view */
+  gcal_search_view_connect (GCAL_SEARCH_VIEW (self->search_view), self->manager);
+  gcal_search_view_set_time_format (GCAL_SEARCH_VIEW (self->search_view), use_24h_format);
+
+  /* refresh timeout, first is fast */
+  self->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, self);
+
+  /* calendars popover */
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendar_listbox),
+                              (GtkListBoxSortFunc) calendar_listbox_sort_func,
+                              self,
+                              NULL);
 
   self->active_date = g_new0 (icaltimetype, 1);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;

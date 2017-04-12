@@ -86,12 +86,6 @@ typedef enum
 
 enum
 {
-  PROP_0,
-  PROP_ACTIVE_DATE
-};
-
-enum
-{
   EVENT_ACTIVATED,
   LAST_SIGNAL
 };
@@ -1060,17 +1054,7 @@ gcal_week_header_get_property (GObject    *object,
                                GValue     *value,
                                GParamSpec *pspec)
 {
-  GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
-
-  switch (prop_id)
-    {
-    case PROP_ACTIVE_DATE:
-      g_value_set_boxed (value, self->active_date);
-      return;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
+  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 static void
@@ -1079,41 +1063,7 @@ gcal_week_header_set_property (GObject      *object,
                                const GValue *value,
                                GParamSpec   *pspec)
 {
-  GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
-  icaltimetype *old_date, *new_date;
-
-  switch (prop_id)
-    {
-    case PROP_ACTIVE_DATE:
-      old_date = self->active_date;
-      new_date = g_value_dup_boxed (value);
-
-      /*
-       * If the active date changed, but we're still in the same week,
-       * there's no need to recalculate visible events.
-       */
-      if (old_date && new_date &&
-          old_date->year == new_date->year &&
-          icaltime_week_number (*old_date) == icaltime_week_number (*new_date))
-        {
-          g_free (new_date);
-          break;
-        }
-
-      self->active_date = new_date;
-
-      update_title (self);
-      gtk_widget_queue_draw (GTK_WIDGET (self));
-
-      if (old_date)
-        update_unchanged_events (self, self->active_date);
-
-      g_clear_pointer (&old_date, g_free);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
+  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 static void
@@ -1514,14 +1464,6 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   widget_class->drag_leave = gcal_week_header_drag_leave;
   widget_class->drag_drop = gcal_week_header_drag_drop;
 
-  g_object_class_install_property (object_class,
-                                   PROP_ACTIVE_DATE,
-                                   g_param_spec_boxed ("active-date",
-                                                       "Date",
-                                                       "The active selected date",
-                                                       ICAL_TIME_TYPE,
-                                                       G_PARAM_CONSTRUCT | G_PARAM_READWRITE));
-
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_WEEK_HEADER,
                                            G_SIGNAL_RUN_FIRST,
@@ -1786,4 +1728,36 @@ gcal_week_header_clear_marks (GcalWeekHeader *self)
   self->selection_end = -1;
 
   gtk_widget_queue_draw (GTK_WIDGET (self));
+}
+
+void
+gcal_week_header_set_date (GcalWeekHeader *self,
+                           icaltimetype   *date)
+{
+  icaltimetype *old_date, *new_date;
+
+  old_date = self->active_date;
+  new_date = gcal_dup_icaltime (date);
+
+  /*
+   * If the active date changed, but we're still in the same week,
+   * there's no need to recalculate visible events.
+   */
+  if (old_date && new_date &&
+      old_date->year == new_date->year &&
+      icaltime_week_number (*old_date) == icaltime_week_number (*new_date))
+    {
+      g_free (new_date);
+      return;
+    }
+
+  self->active_date = new_date;
+
+  update_title (self);
+  gtk_widget_queue_draw (GTK_WIDGET (self));
+
+  if (old_date)
+    update_unchanged_events (self, self->active_date);
+
+  g_clear_pointer (&old_date, g_free);
 }
