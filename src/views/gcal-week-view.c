@@ -162,58 +162,33 @@ schedule_position_scroll (GcalWeekView *self)
                                                 self);
 }
 
-/**
- * gcal_week_view_get_initial_date:
- *
- * Since: 0.1
- * Return value: the first day of the week
- * Returns: (transfer full): Release with g_free()
- **/
+/* GcalView implementation */
 static icaltimetype*
-gcal_week_view_get_initial_date (GcalView *view)
+gcal_week_view_get_date (GcalView *view)
 {
-  GcalWeekView *self;
-  icaltimetype *new_date;
+  GcalWeekView *self = GCAL_WEEK_VIEW (view);
 
-  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  self = GCAL_WEEK_VIEW(view);
-  new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(self->date),
-                                                                  self->first_weekday + 1),
-                                         self->date->year);
-  new_date->is_date = 0;
-  new_date->hour = 0;
-  new_date->minute = 0;
-  new_date->second = 0;
-  *new_date = icaltime_set_timezone (new_date, self->date->zone);
-  return new_date;
+  return self->date;
 }
 
-/**
- * gcal_week_view_get_final_date:
- *
- * Since: 0.1
- * Return value: the last day of the week
- * Returns: (transfer full): Release with g_free()
- **/
-static icaltimetype*
-gcal_week_view_get_final_date (GcalView *view)
+static void
+gcal_week_view_set_date (GcalView     *view,
+                         icaltimetype *date)
 {
-  GcalWeekView *self;
-  icaltimetype *new_date;
+  GcalWeekView *self = GCAL_WEEK_VIEW (view);
 
-  g_return_val_if_fail (GCAL_IS_WEEK_VIEW (view), NULL);
-  self = GCAL_WEEK_VIEW(view);
-  new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*(self->date),
-                                                                  self->first_weekday + 1) + 6,
-                                         self->date->year);
-  new_date->is_date = 0;
-  new_date->hour = 23;
-  new_date->minute = 59;
-  new_date->second = 0;
-  *new_date = icaltime_set_timezone (new_date, self->date->zone);
-  return new_date;
+  GCAL_ENTRY;
+
+  g_clear_pointer (&self->date, g_free);
+  self->date = gcal_dup_icaltime (date);
+
+  /* Propagate the new date */
+  gcal_week_grid_set_date (GCAL_WEEK_GRID (self->week_grid), date);
+  gcal_week_header_set_date (GCAL_WEEK_HEADER (self->header), date);
+
+  schedule_position_scroll (self);
+
+  GCAL_EXIT;
 }
 
 static GList*
@@ -237,6 +212,15 @@ gcal_week_view_clear_marks (GcalView *view)
 
   gcal_week_header_clear_marks (GCAL_WEEK_HEADER (self->header));
   gcal_week_grid_clear_marks (GCAL_WEEK_GRID (self->week_grid));
+}
+
+static void
+gcal_view_interface_init (GcalViewInterface *iface)
+{
+  iface->get_date = gcal_week_view_get_date;
+  iface->set_date = gcal_week_view_set_date;
+  iface->get_children_by_uuid = gcal_week_view_get_children_by_uuid;
+  iface->clear_marks = gcal_week_view_clear_marks;
 }
 
 static void
@@ -293,6 +277,8 @@ update_hours_sidebar_size (GcalWeekView *self)
   g_object_unref (layout);
 }
 
+
+/* ECalDataModelSubscriber implementation */
 static void
 gcal_week_view_component_added (ECalDataModelSubscriber *subscriber,
                                 ECalClient              *client,
@@ -484,15 +470,6 @@ gcal_week_view_draw_hours (GcalWeekView *self,
 }
 
 static void
-gcal_view_interface_init (GcalViewInterface *iface)
-{
-  iface->get_initial_date = gcal_week_view_get_initial_date;
-  iface->get_final_date = gcal_week_view_get_final_date;
-  iface->get_children_by_uuid = gcal_week_view_get_children_by_uuid;
-  iface->clear_marks = gcal_week_view_clear_marks;
-}
-
-static void
 gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
 {
   iface->component_added = gcal_week_view_component_added;
@@ -521,18 +498,10 @@ gcal_week_view_set_property (GObject       *object,
                              const GValue  *value,
                              GParamSpec    *pspec)
 {
-  GcalWeekView *self;
-
-  self = GCAL_WEEK_VIEW (object);
-
   switch (property_id)
     {
     case PROP_DATE:
-      g_clear_pointer (&self->date, g_free);
-      self->date = g_value_dup_boxed (value);
-
-      schedule_position_scroll (self);
-
+      gcal_view_set_date (GCAL_VIEW (object), g_value_get_boxed (value));
       break;
 
     default:

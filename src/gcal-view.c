@@ -75,58 +75,38 @@ gcal_view_default_init (GcalViewInterface *iface)
                 G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
 }
 
+/**
+ * gcal_view_set_date:
+ * @view: a #GcalView
+ * @date: an #icaltimetype
+ *
+ * Sets the date of @view.
+ */
 void
 gcal_view_set_date (GcalView     *view,
                     icaltimetype *date)
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
+  g_return_if_fail (GCAL_VIEW_GET_IFACE (view)->set_date);
 
-  g_object_set (view, "active-date", date, NULL);
+  GCAL_VIEW_GET_IFACE (view)->set_date (view, date);
 }
 
+/**
+ * gcal_view_get_date:
+ * @view: a #GcalView
+ *
+ * Retrieves the date of @view.
+ *
+ * Returns: (transfer none): an #icaltimetype.
+ */
 icaltimetype*
 gcal_view_get_date (GcalView *view)
 {
-  icaltimetype *date;
-
   g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
+  g_return_val_if_fail (GCAL_VIEW_GET_IFACE (view)->get_date, NULL);
 
-  g_object_get (view, "active-date", &date, NULL);
-  return date;
-}
-
-/**
- * gcal_view_get_initial_date:
- * @view: a #GcalView
- *
- * Return the initial date represented by the view.
- *
- * Returns: (transfer full): An #icaltimetype object
- **/
-icaltimetype*
-gcal_view_get_initial_date (GcalView *view)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_val_if_fail (GCAL_VIEW_GET_IFACE (view)->get_initial_date, NULL);
-
-  return GCAL_VIEW_GET_IFACE (view)->get_initial_date (view);
-}
-
-/**
- * gcal_view_get_final_date:
- * @view: a #GcalView
- *
- * Return the final date represented by the view.
- *
- * Returns: (transfer full): An #icaltimetype object
- **/
-icaltimetype*
-gcal_view_get_final_date (GcalView *view)
-{
-  g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
-  g_return_val_if_fail (GCAL_VIEW_GET_IFACE (view)->get_final_date, NULL);
-
-  return GCAL_VIEW_GET_IFACE (view)->get_final_date (view);
+  return GCAL_VIEW_GET_IFACE (view)->get_date (view);
 }
 
 /**

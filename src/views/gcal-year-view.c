@@ -19,6 +19,7 @@
 
 #define G_LOG_DOMAIN "GcalYearView"
 
+#include "gcal-debug.h"
 #include "gcal-year-view.h"
 #include "gcal-view.h"
 #include "gcal-utils.h"
@@ -553,7 +554,7 @@ update_date (GcalYearView *year_view,
     needs_reset = TRUE;
 
   g_clear_pointer (&year_view->date, g_free);
-  year_view->date = new_date;
+  year_view->date = gcal_dup_icaltime (new_date);
 
   year_view->first_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
                                                              1, G_DATE_JANUARY,  year_view->date->year);;
@@ -1541,6 +1542,62 @@ navigator_drag_leave_cb (GcalYearView   *self,
   gtk_widget_queue_draw (navigator);
 }
 
+/* GcalView implementation */
+static icaltimetype*
+gcal_year_view_get_date (GcalView *view)
+{
+  GcalYearView *self = GCAL_YEAR_VIEW (view);
+
+  return self->date;
+}
+
+static void
+gcal_year_view_set_date (GcalView     *view,
+                         icaltimetype *date)
+{
+  GCAL_ENTRY;
+
+  update_date (GCAL_YEAR_VIEW (view), date);
+
+  GCAL_EXIT;
+}
+
+static GList*
+gcal_year_view_get_children_by_uuid (GcalView    *view,
+                                     const gchar *uuid)
+{
+  GcalYearView *year_view = GCAL_YEAR_VIEW (view);
+  GList *children, *l, *result = NULL;
+
+  children = gtk_container_get_children (GTK_CONTAINER (year_view->events_sidebar));
+
+  for (l = children; l != NULL; l = g_list_next (l))
+    {
+      GcalEventWidget *child_widget;
+      GcalEvent *event;
+
+      child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
+      event = gcal_event_widget_get_event (child_widget);
+
+
+      if (child_widget != NULL && g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
+        result = g_list_append (result, child_widget);
+    }
+
+  g_list_free (children);
+
+  return result;
+}
+
+static void
+gcal_view_interface_init (GcalViewInterface *iface)
+{
+  /* FIXME: implement what's needed */
+  iface->get_date = gcal_year_view_get_date;
+  iface->set_date = gcal_year_view_set_date;
+  iface->get_children_by_uuid = gcal_year_view_get_children_by_uuid;
+}
+
 static void
 gcal_year_view_finalize (GObject *object)
 {
@@ -1597,7 +1654,7 @@ gcal_year_view_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_DATE:
-      update_date (self, g_value_dup_boxed (value));
+      gcal_view_set_date (GCAL_VIEW (self), g_value_get_boxed (value));
       break;
 
     case PROP_SHOW_WEEK_NUMBERS:
@@ -1716,31 +1773,6 @@ gcal_year_view_direction_changed (GtkWidget        *widget,
     year_view->k = 1;
 }
 
-static GList*
-gcal_year_view_get_children_by_uuid (GcalView    *view,
-                                     const gchar *uuid)
-{
-  GcalYearView *year_view = GCAL_YEAR_VIEW (view);
-  GList *children, *l, *result = NULL;
-
-  children = gtk_container_get_children (GTK_CONTAINER (year_view->events_sidebar));
-  for (l = children; l != NULL; l = g_list_next (l))
-    {
-      GcalEventWidget *child_widget;
-      GcalEvent *event;
-
-      child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
-      event = gcal_event_widget_get_event (child_widget);
-
-
-      if (child_widget != NULL && g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
-        result = g_list_append (result, child_widget);
-    }
-  g_list_free (children);
-
-  return result;
-}
-
 static void
 gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
                                 ECalClient              *client,
@@ -1780,7 +1812,6 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
   for (i = start_month; i <= end_month; i++)
     g_ptr_array_add (self->events[i], event);
 
-  update_selected_dates_from_button_data (self);
   update_sidebar (self);
 
   gtk_widget_queue_draw (GTK_WIDGET (self->navigator));
@@ -1983,13 +2014,6 @@ gcal_year_view_init (GcalYearView *self)
                      NULL,
                      0,
                      GDK_ACTION_MOVE);
-}
-
-static void
-gcal_view_interface_init (GcalViewInterface *iface)
-{
-  /* FIXME: implement what's needed */
-  iface->get_children_by_uuid = gcal_year_view_get_children_by_uuid;
 }
 
 static void

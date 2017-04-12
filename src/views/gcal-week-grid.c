@@ -74,12 +74,6 @@ struct _GcalWeekGrid
 
 G_DEFINE_TYPE (GcalWeekGrid, gcal_week_grid, GTK_TYPE_CONTAINER);
 
-enum
-{
-  PROP_0,
-  PROP_ACTIVE_DATE,
-  LAST_PROP
-};
 
 enum
 {
@@ -88,7 +82,6 @@ enum
 };
 
 static guint signals[LAST_SIGNAL] = { 0, };
-static GParamSpec* properties[LAST_PROP] = { NULL, };
 
 /* ChildData methods */
 static ChildData*
@@ -311,17 +304,7 @@ gcal_week_grid_get_property (GObject    *object,
                              GValue     *value,
                              GParamSpec *pspec)
 {
-  GcalWeekGrid *self = GCAL_WEEK_GRID (object);
-
-  switch (prop_id)
-    {
-    case PROP_ACTIVE_DATE:
-      g_value_set_boxed (value, self->active_date);
-      return;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
+  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 static void
@@ -330,21 +313,7 @@ gcal_week_grid_set_property (GObject      *object,
                              const GValue *value,
                              GParamSpec   *pspec)
 {
-  GcalWeekGrid *self = GCAL_WEEK_GRID (object);
-
-  switch (prop_id)
-    {
-    case PROP_ACTIVE_DATE:
-      g_clear_pointer (&self->active_date, g_free);
-      self->active_date = g_value_dup_boxed (value);
-
-      gtk_widget_queue_resize (GTK_WIDGET (self));
-      gtk_widget_queue_draw (GTK_WIDGET (self));
-      return;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
+  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
 }
 
 static void
@@ -1115,13 +1084,6 @@ gcal_week_grid_class_init (GcalWeekGridClass *klass)
   widget_class->drag_leave = gcal_week_grid_drag_leave;
   widget_class->drag_drop = gcal_week_grid_drag_drop;
 
-  properties[PROP_ACTIVE_DATE] = g_param_spec_boxed ("active-date",
-                                                     "Date",
-                                                     "The active selected date",
-                                                     ICAL_TIME_TYPE,
-                                                     G_PARAM_CONSTRUCT | G_PARAM_READWRITE);
-
-
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_WEEK_GRID,
                                            G_SIGNAL_RUN_FIRST,
@@ -1129,8 +1091,6 @@ gcal_week_grid_class_init (GcalWeekGridClass *klass)
                                            G_TYPE_NONE,
                                            1,
                                            GCAL_TYPE_EVENT_WIDGET);
-
-  g_object_class_install_properties (object_class, G_N_ELEMENTS (properties), properties);
 
   gtk_widget_class_set_css_name (widget_class, "weekgrid");
 }
@@ -1288,5 +1248,16 @@ gcal_week_grid_clear_marks (GcalWeekGrid *self)
   self->selection_start = -1;
   self->selection_end = -1;
 
+  gtk_widget_queue_draw (GTK_WIDGET (self));
+}
+
+void
+gcal_week_grid_set_date (GcalWeekGrid *self,
+                         icaltimetype *date)
+{
+  g_clear_pointer (&self->active_date, g_free);
+  self->active_date = gcal_dup_icaltime (date);
+
+  gtk_widget_queue_resize (GTK_WIDGET (self));
   gtk_widget_queue_draw (GTK_WIDGET (self));
 }

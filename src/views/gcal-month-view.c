@@ -24,6 +24,7 @@
 
 #define G_LOG_DOMAIN "GcalMonthView"
 
+#include "gcal-debug.h"
 #include "gcal-month-view.h"
 #include "gcal-subscriber-view-private.h"
 #include "gcal-utils.h"
@@ -915,52 +916,39 @@ add_new_event_button_cb (GtkWidget *button,
 
 /* GcalView Interface API */
 static icaltimetype*
-gcal_month_view_get_initial_date (GcalView *view)
+gcal_month_view_get_date (GcalView *view)
 {
-  //FIXME to retrieve the 35 days range
-  GcalMonthView *self;
-  icaltimetype *new_date;
+  GcalMonthView *self = GCAL_MONTH_VIEW (view);
 
-  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), NULL);
-
-  self = GCAL_MONTH_VIEW (view);
-
-  new_date = gcal_dup_icaltime (self->date);
-  new_date->day = 1;
-  new_date->is_date = 0;
-  new_date->hour = 0;
-  new_date->minute = 0;
-  new_date->second = 0;
-
-  return new_date;
+  return self->date;
 }
 
-/**
- * gcal_month_view_get_final_date:
- *
- * Since: 0.1
- * Return value: the last day of the month
- * Returns: (transfer full): Release with g_free()
- **/
-static icaltimetype*
-gcal_month_view_get_final_date (GcalView *view)
+static void
+gcal_month_view_set_date (GcalView     *view,
+                          icaltimetype *date)
 {
-  //FIXME to retrieve the 35 days range
+  GcalSubscriberViewPrivate *ppriv;
   GcalMonthView *self;
-  icaltimetype *new_date;
 
-  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (view), NULL);
+  GCAL_ENTRY;
 
   self = GCAL_MONTH_VIEW (view);
+  ppriv = GCAL_SUBSCRIBER_VIEW (view)->priv;
 
-  new_date = gcal_dup_icaltime (self->date);
-  new_date->day = icaltime_days_in_month (self->date->month, self->date->year);
-  new_date->is_date = 0;
-  new_date->hour = 23;
-  new_date->minute = 59;
-  new_date->second = 59;
+  g_clear_pointer (&self->date, g_free);
 
-  return new_date;
+  self->date = gcal_dup_icaltime (date);
+  self->days_delay = (time_day_of_week (1, self->date->month - 1, self->date->year) - self->first_weekday + 7) % 7;
+  self->keyboard_cell = self->days_delay + (self->date->day - 1);
+
+  GCAL_TRACE_MSG ("new date: %s", icaltime_as_ical_string (*date));
+
+  cancel_selection (self);
+
+  ppriv->children_changed = TRUE;
+  gtk_widget_queue_resize (GTK_WIDGET (view));
+
+  GCAL_EXIT;
 }
 
 static void
@@ -988,11 +976,9 @@ gcal_month_view_get_children_by_uuid (GcalView    *view,
 static void
 gcal_view_interface_init (GcalViewInterface *iface)
 {
-  iface->get_initial_date = gcal_month_view_get_initial_date;
-  iface->get_final_date = gcal_month_view_get_final_date;
-
+  iface->get_date = gcal_month_view_get_date;
+  iface->set_date = gcal_month_view_set_date;
   iface->clear_marks = gcal_month_view_clear_marks;
-
   iface->get_children_by_uuid = gcal_month_view_get_children_by_uuid;
 }
 
@@ -1002,29 +988,12 @@ gcal_month_view_set_property (GObject       *object,
                               const GValue  *value,
                               GParamSpec    *pspec)
 {
-  GcalSubscriberViewPrivate *ppriv;
-  GcalMonthView *self;
-
-  ppriv = GCAL_SUBSCRIBER_VIEW (object)->priv;
-  self = GCAL_MONTH_VIEW (object);
-
   switch (property_id)
     {
     case PROP_DATE:
-      {
-        if (self->date != NULL)
-          g_free (self->date);
+      gcal_view_set_date (GCAL_VIEW (object), g_value_get_boxed (value));
+      break;
 
-        self->date = g_value_dup_boxed (value);
-        self->days_delay = (time_day_of_week (1, self->date->month - 1, self->date->year) - self->first_weekday + 7) % 7;
-        self->keyboard_cell = self->days_delay + (self->date->day - 1);
-
-        cancel_selection (GCAL_MONTH_VIEW (object));
-
-        ppriv->children_changed = TRUE;
-        gtk_widget_queue_resize (GTK_WIDGET (object));
-        break;
-      }
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -2116,15 +2085,22 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   if (current_day >= self->days_delay && current_day < days)
     {
+      gboolean valid;
+
       g_clear_pointer (&self->end_mark_cell, g_date_time_unref);
 
       self->keyboard_cell = current_day;
       self->end_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day - self->days_delay + 1, 0, 0, 0);
 
       self->date->day = g_date_time_get_day_of_month (self->end_mark_cell);
+
+      /* First, make sure to show the popover */
+      valid = show_popover_for_position (GCAL_MONTH_VIEW (widget), x, y, released_indicator);
+
+      /* Then update the active date */
       g_object_notify (G_OBJECT (self), "active-date");
 
-      return show_popover_for_position (GCAL_MONTH_VIEW (widget), x, y, released_indicator);
+      return valid;
     }
   else
     {
