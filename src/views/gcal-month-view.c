@@ -943,8 +943,6 @@ gcal_month_view_set_date (GcalView     *view,
 
   GCAL_TRACE_MSG ("new date: %s", icaltime_as_ical_string (*date));
 
-  cancel_selection (self);
-
   ppriv->children_changed = TRUE;
   gtk_widget_queue_resize (GTK_WIDGET (view));
 
