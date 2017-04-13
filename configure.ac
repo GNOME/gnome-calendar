@@ -159,6 +159,7 @@ PKG_CHECK_MODULES([CALENDAR], [
                   libedataserver-1.2 >= $EDATASERVER_REQUIRED
                   libedataserverui-1.2 >= $EDATASERVERUI_REQUIRED
                   libical >= $LIBICAL_REQUIRED
+                  libsoup-2.4
                   gsettings-desktop-schemas >= $GSETTINGS_DESKTOP_SCHEMAS_REQUIRED])
 
 AC_CHECK_LIB([ical], [icaltime_days_in_year], [],

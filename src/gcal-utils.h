@@ -121,7 +121,8 @@ void            fix_popover_menu_icons                          (GtkPopover     
 gboolean        uri_get_fields                                  (const gchar           *uri,
                                                                  gchar                **schema,
                                                                  gchar                **host,
-                                                                 gchar                **path);
+                                                                 gchar                **path,
+                                                                 gboolean              *is_file);
 
 void            get_source_parent_name_color                    (GcalManager           *manager,
                                                                  ESource               *source,
