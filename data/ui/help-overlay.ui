@@ -56,21 +56,21 @@
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
                 <property name="title" translatable="yes" context="shortcut window">Go back</property>
-                <property name="accelerator">&lt;alt&gt;Left</property>
+                <property name="accelerator">&lt;alt&gt;Left Page_Up</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
                 <property name="title" translatable="yes" context="shortcut window">Go forward</property>
-                <property name="accelerator">&lt;alt&gt;Right</property>
+                <property name="accelerator">&lt;alt&gt;Right Page_Down</property>
               </object>
             </child>
             <child>
               <object class="GtkShortcutsShortcut">
                 <property name="visible">True</property>
                 <property name="title" translatable="yes" context="shortcut window">Show today</property>
-                <property name="accelerator">&lt;alt&gt;Down &lt;Primary&gt;T</property>
+                <property name="accelerator">&lt;alt&gt;Down &lt;Primary&gt;T Home</property>
               </object>
             </child>
             <child>

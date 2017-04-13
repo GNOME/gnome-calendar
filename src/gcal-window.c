@@ -176,8 +176,8 @@ enum
 #define FAST_REFRESH_TIMEOUT     900000 /* ms */
 #define SLOW_REFRESH_TIMEOUT     3600000 /* ms */
 
-#define gcal_window_add_accelerator(app,action,accel) {\
-  const gchar *tmp[] = {accel, NULL};\
+#define gcal_window_add_accelerator(app,action,...) {\
+  const gchar *tmp[] = {__VA_ARGS__, NULL};\
   gtk_application_set_accels_for_action (GTK_APPLICATION (app), action, tmp);\
 }
 
@@ -1535,6 +1535,7 @@ gcal_window_class_init(GcalWindowClass *klass)
 static void
 gcal_window_init (GcalWindow *self)
 {
+  GApplication *app;
   GtkBuilder *builder;
   GMenuModel *winmenu;
   GSettings *helper_settings;
@@ -1601,6 +1602,19 @@ gcal_window_init (GcalWindow *self)
 
   self->active_date = g_new0 (icaltimetype, 1);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+
+  /* setup accels */
+  app = g_application_get_default ();
+
+  gcal_window_add_accelerator (app, "win.next",     "<Alt>Right", "Page_Down");
+  gcal_window_add_accelerator (app, "win.previous", "<Alt>Left", "Page_Up");
+  gcal_window_add_accelerator (app, "win.today",    "<Alt>Down", "<Ctrl>t", "Home");
+
+  gcal_window_add_accelerator (app, "win.change-view(-1)", "<Ctrl>Page_Down");
+  gcal_window_add_accelerator (app, "win.change-view(-2)", "<Ctrl>Page_Up");
+  gcal_window_add_accelerator (app, "win.change-view(1)",  "<Ctrl>1")
+  gcal_window_add_accelerator (app, "win.change-view(2)",  "<Ctrl>2");
+  gcal_window_add_accelerator (app, "win.change-view(3)",  "<Ctrl>3");
 }
 
 /* Public API */
@@ -1629,18 +1643,6 @@ gcal_window_new_with_view_and_date (GcalApplication    *app,
                       "manager", manager,
                       "active-date", date,
                       NULL);
-
-  /* setup accels */
-  gcal_window_add_accelerator (app, "win.next",     "<Alt>Right");
-  gcal_window_add_accelerator (app, "win.previous", "<Alt>Left");
-  gcal_window_add_accelerator (app, "win.today",    "<Alt>Down");
-  gcal_window_add_accelerator (app, "win.today",    "<Ctrl>t");
-
-  gcal_window_add_accelerator (app, "win.change-view(-1)", "<Ctrl>Page_Down");
-  gcal_window_add_accelerator (app, "win.change-view(-2)", "<Ctrl>Page_Up");
-  gcal_window_add_accelerator (app, "win.change-view(1)",  "<Ctrl>1")
-  gcal_window_add_accelerator (app, "win.change-view(2)",  "<Ctrl>2");
-  gcal_window_add_accelerator (app, "win.change-view(3)",  "<Ctrl>3");
 
   /* loading size */
   load_geometry (win);
