@@ -1584,6 +1584,8 @@ gcal_manager_create_event (GcalManager        *manager,
   component = gcal_event_get_component (event);
   unit = g_hash_table_lookup (manager->clients, source);
 
+  g_return_if_fail (unit != NULL);
+
   new_event_icalcomp = e_cal_component_get_icalcomponent (component);
 
   data = g_new0 (AsyncOpsData, 1);
