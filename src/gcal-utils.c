@@ -758,7 +758,8 @@ gboolean
 uri_get_fields (const gchar  *uri,
                 gchar       **schema,
                 gchar       **host,
-                gchar       **path)
+                gchar       **path,
+                gboolean     *is_file)
 {
   GRegex *regex;
   GMatchInfo *match;
@@ -791,6 +792,8 @@ uri_get_fields (const gchar  *uri,
 
       if (path != NULL)
         *path = g_match_info_fetch (match, 3);
+
+      g_match_info_free (match);
     }
   else
     {
@@ -804,7 +807,18 @@ uri_get_fields (const gchar  *uri,
         *path = NULL;
     }
 
-  g_match_info_free (match);
+  /* File extension */
+  if (is_file)
+    {
+      GRegex *extension_regex;
+
+      extension_regex = g_regex_new ("(\\.[a-zA-Z0-9]+)$", G_REGEX_CASELESS, 0, NULL);
+
+      *is_file = g_regex_match (extension_regex, uri, 0, NULL);
+
+      g_regex_unref (extension_regex);
+    }
+
   g_regex_unref (regex);
   return valid;
 }

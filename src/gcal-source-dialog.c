@@ -25,6 +25,7 @@
 #include <glib/gi18n.h>
 #include <goa/goa.h>
 #include <libedataserverui/libedataserverui.h>
+#include <libsoup/soup.h>
 
 struct _GcalSourceDialog
 {
@@ -1241,13 +1242,17 @@ static gboolean
 validate_url_cb (GcalSourceDialog *dialog)
 {
   ESourceAuthentication *auth;
+  ENamedParameters *credentials;
   ESourceExtension *ext;
   ESourceWebdav *webdav;
   ESource *source;
+  SoupURI *soup_uri;
+  const gchar *uri;
   gchar *host, *path;
-  gboolean uri_valid;
+  gboolean uri_valid, is_file;
 
   dialog->validate_url_resource_id = 0;
+  soup_uri = NULL;
   host = path = NULL;
 
   /**
@@ -1268,13 +1273,14 @@ validate_url_cb (GcalSourceDialog *dialog)
   // Clear the entry icon
   gtk_entry_set_icon_from_icon_name (GTK_ENTRY (dialog->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY, NULL);
 
-  // Get the hostname and file path from the server
-  uri_valid = uri_get_fields (gtk_entry_get_text (GTK_ENTRY (dialog->calendar_address_entry)), NULL, &host, &path);
+  /* Get the hostname and file path from the server */
+  uri = gtk_entry_get_text (GTK_ENTRY (dialog->calendar_address_entry));
+  uri_valid = uri_get_fields (uri, NULL, &host, &path, &is_file);
 
-  g_debug ("[source-dialog] host: '%s', path: '%s'", host, path);
-
-  if (host == NULL || !uri_valid)
+  if (!host || !uri_valid)
     goto out;
+
+  g_debug ("Detected host: '%s', path: '%s'", host, path);
 
   /**
    * Create the new source and add the needed
@@ -1290,82 +1296,91 @@ validate_url_cb (GcalSourceDialog *dialog)
   auth = e_source_get_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
   e_source_authentication_set_host (auth, host);
 
-  // Webdav
+  /* Webdav */
+  soup_uri = soup_uri_new (uri);
   webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-  e_source_webdav_set_resource_path (webdav, path);
+  e_source_webdav_set_soup_uri (webdav, soup_uri);
 
   /*
    * If we're dealing with an absolute file path,
    * there is no need to check the server for more
    * sources.
    */
-  if (g_str_has_suffix (path, ".ics"))
+  if (is_file)
     {
       // Set the private source so it saves at closing
       dialog->remote_sources = g_list_append (dialog->remote_sources, source);
 
       // Update buttons
       gtk_widget_set_sensitive (dialog->add_button, source != NULL);
+
+      goto out;
+    }
+
+  /* Pulse the entry while it performs the check */
+  dialog->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
+
+  /*
+   * Try to retrieve the sources without prompting
+   * username and password. If we get any error,
+   * then it prompts and retry.
+   */
+  credentials = e_named_parameters_new ();
+
+  if (!dialog->prompt_password)
+    {
+      g_debug ("Trying to connect without credentials...");
+
+      /* NULL credentials */
+      e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, NULL);
+      e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, NULL);
+
+      e_webdav_discover_sources (source,
+                                 uri,
+                                 E_WEBDAV_DISCOVER_SUPPORTS_EVENTS,
+                                 credentials,
+                                 NULL,
+                                 discover_sources_cb,
+                                 dialog);
     }
   else
     {
-      ENamedParameters *credentials;
+      gint response;
+      gchar *user, *password;
 
-      // Pulse the entry while it performs the check
-      dialog->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
+      g_debug ("No credentials failed, retrying with user credentials...");
+
+      user = password = NULL;
+      response = prompt_credentials (dialog, &user, &password);
 
       /*
-       * Try to retrieve the sources without prompting
-       * username and password. If we get any error,
-       * then it prompts and retry.
+       * User entered username and password, let's try
+       * with it.
        */
-      credentials = e_named_parameters_new ();
-
-      if (!dialog->prompt_password)
+      if (response == GTK_RESPONSE_OK)
         {
-          g_debug ("[source-dialog] Trying to connect without credentials...");
+          /* User inputted credentials */
+          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, user);
+          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, password);
 
-          // NULL credentials
-          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, NULL);
-          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, NULL);
-
-          e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (dialog->calendar_address_entry)),
-                                     E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, credentials, NULL, discover_sources_cb,
+          e_webdav_discover_sources (source,
+                                     uri,
+                                     E_WEBDAV_DISCOVER_SUPPORTS_EVENTS,
+                                     credentials,
+                                     NULL,
+                                     discover_sources_cb,
                                      dialog);
         }
-      else
-        {
-          gint response;
-          gchar *user, *password;
 
-          g_debug ("[source-dialog] No credentials failed, retrying with user credentials...");
 
-          user = password = NULL;
-          response = prompt_credentials (dialog, &user, &password);
-
-          /*
-           * User entered username and password, let's try
-           * with it.
-           */
-          if (response == GTK_RESPONSE_OK)
-            {
-              // User inputted credentials
-              e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, user);
-              e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, password);
-
-              e_webdav_discover_sources (source, gtk_entry_get_text (GTK_ENTRY (dialog->calendar_address_entry)),
-                                         E_WEBDAV_DISCOVER_SUPPORTS_EVENTS, credentials, NULL, discover_sources_cb,
-                                         dialog);
-            }
-
-          g_free (user);
-          g_free (password);
-        }
-
-      e_named_parameters_free (credentials);
+      g_free (user);
+      g_free (password);
     }
 
+  e_named_parameters_free (credentials);
+
 out:
+  g_clear_pointer (&soup_uri, soup_uri_free);
   g_free (host);
   g_free (path);
 
@@ -1563,8 +1578,8 @@ discover_sources_cb (GObject      *source,
 
       src = aux->data;
 
-      // Get the new resource path from the uri
-      uri_valid = uri_get_fields (src->href, NULL, NULL, &resource_path);
+      /* Get the new resource path from the uri */
+      uri_valid = uri_get_fields (src->href, NULL, NULL, &resource_path, NULL);
 
       if (uri_valid)
         {
