@@ -1502,7 +1502,7 @@ check_activated_cb (GtkWidget  *check,
   source = g_object_get_data (G_OBJECT (row), "source");
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)))
-    self->remote_sources = g_list_append (self->remote_sources, source);
+    self->remote_sources = g_list_prepend (self->remote_sources, source);
   else
     self->remote_sources = g_list_remove (self->remote_sources, source);
 
@@ -1515,7 +1515,6 @@ discover_sources_cb (GObject      *source,
                      gpointer      user_data)
 {
   GcalSourceDialog *self;
-  EWebDAVDiscoveredSource *src;
   GSList *discovered_sources, *user_addresses, *aux;
   GError *error;
 
@@ -1543,7 +1542,10 @@ discover_sources_cb (GObject      *source,
        * really want to retry things on unavailable
        * servers.
        */
-      if (!self->prompt_password && error->code == 14)
+      if (!self->prompt_password &&
+          (error->code == 14 ||
+           error->code == 403 ||
+           error->code == 405))
         {
           self->prompt_password = TRUE;
 
@@ -1573,16 +1575,18 @@ discover_sources_cb (GObject      *source,
   /* TODO: show a list of calendars */
   for (aux = discovered_sources; aux != NULL; aux = aux->next)
     {
+      EWebDAVDiscoveredSource *discovered_source;
       gchar *resource_path = NULL;
       gboolean uri_valid;
 
-      src = aux->data;
+      discovered_source = aux->data;
 
       /* Get the new resource path from the uri */
-      uri_valid = uri_get_fields (src->href, NULL, NULL, &resource_path, NULL);
+      uri_valid = uri_get_fields (discovered_source->href, NULL, NULL, &resource_path, NULL);
 
       if (uri_valid)
         {
+          ESourceSelectable *selectable;
           ESourceWebdav *webdav;
           GtkWidget *row, *check;
           ESource *new_source;
@@ -1590,20 +1594,24 @@ discover_sources_cb (GObject      *source,
 
           /* build up the new source */
           new_source = duplicate_source (E_SOURCE (source));
-          e_source_set_display_name (E_SOURCE (new_source), src->display_name);
+          e_source_set_display_name (E_SOURCE (new_source), discovered_source->display_name);
 
           webdav = e_source_get_extension (new_source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
           e_source_webdav_set_resource_path (webdav, resource_path);
-          e_source_webdav_set_display_name (webdav, src->display_name);
+          e_source_webdav_set_display_name (webdav, discovered_source->display_name);
 
           if (user_addresses)
             e_source_webdav_set_email_address (webdav, user_addresses->data);
+
+          /* Setup the color */
+          selectable = e_source_get_extension (new_source, E_SOURCE_EXTENSION_CALENDAR);
+          e_source_selectable_set_color (selectable, discovered_source->color);
 
           /* create the new row */
           row = gtk_list_box_row_new ();
 
           check = gtk_check_button_new ();
-          gtk_button_set_label (GTK_BUTTON (check), src->display_name);
+          gtk_button_set_label (GTK_BUTTON (check), discovered_source->display_name);
           g_signal_connect (check, "notify::active", G_CALLBACK (check_activated_cb), user_data);
 
           gtk_container_add (GTK_CONTAINER (row), check);
@@ -1611,9 +1619,6 @@ discover_sources_cb (GObject      *source,
 
           g_object_set_data (G_OBJECT (row), "parent-source", source);
           g_object_set_data (G_OBJECT (row), "source", new_source);
-          g_object_set_data_full (G_OBJECT (row), "source-url", g_strdup (src->href), g_free);
-          g_object_set_data_full (G_OBJECT (row), "source-color", g_strdup (src->color), g_free);
-          g_object_set_data_full (G_OBJECT (row), "source-display-name", g_strdup (src->display_name), g_free);
 
           gtk_widget_show_all (row);
         }
