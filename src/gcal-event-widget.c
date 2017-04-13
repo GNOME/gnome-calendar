@@ -355,7 +355,7 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
   /* Append event location */
   if (g_utf8_strlen (gcal_event_get_location (event), -1) > 0)
     {
-      g_string_append (tooltip_mesg, "\n");
+      g_string_append (tooltip_mesg, "\n\n");
       g_string_append_printf (tooltip_mesg,
                               _("At %s"),
                               gcal_event_get_location (event));
@@ -367,10 +367,14 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
   /* Truncate long descriptions at a white space and ellipsize */
   if (tooltip_desc->len > 0)
     {
-      g_string_truncate (tooltip_desc, DESC_MAX_CHAR - 1);
-      g_string_append (tooltip_desc, "…");
+      /* If the description is larger than DESC_MAX_CHAR, ellipsize it */
+      if (g_utf8_strlen (tooltip_desc->str, -1) > DESC_MAX_CHAR)
+        {
+          g_string_truncate (tooltip_desc, DESC_MAX_CHAR - 1);
+          g_string_append (tooltip_desc, "…");
+        }
 
-      g_string_append_printf (tooltip_mesg, "\n%s", tooltip_desc->str);
+      g_string_append_printf (tooltip_mesg, "\n\n%s", tooltip_desc->str);
     }
 
   gtk_widget_set_tooltip_markup (GTK_WIDGET (self), tooltip_mesg->str);
