@@ -938,6 +938,7 @@ gcal_event_set_description (GcalEvent   *self,
       ECalComponentText text_component;
       GSList list;
 
+      g_clear_pointer (&self->description, g_free);
       self->description = g_strdup (description);
 
       text_component.value = description;
