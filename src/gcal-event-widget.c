@@ -355,7 +355,7 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
   /* Append event location */
   if (g_utf8_strlen (gcal_event_get_location (event), -1) > 0)
     {
-      g_autofree gchar *location;
+      g_autofree gchar *escaped_location;
 
       escaped_location = g_markup_escape_text (gcal_event_get_location (event), -1);
 
