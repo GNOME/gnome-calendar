@@ -198,7 +198,7 @@ gcal_time_selector_set_time_format (GcalTimeSelector *selector,
 
   if (format_24h)
     {
-      gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin)), 0.0);
+      gtk_adjustment_set_lower (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin)), 0.0);
       gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin)), 23.0);
     }
   else
