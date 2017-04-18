@@ -355,10 +355,12 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
   /* Append event location */
   if (g_utf8_strlen (gcal_event_get_location (event), -1) > 0)
     {
+      g_autofree gchar *location;
+
+      escaped_location = g_markup_escape_text (gcal_event_get_location (event), -1);
+
       g_string_append (tooltip_mesg, "\n\n");
-      g_string_append_printf (tooltip_mesg,
-                              "%s",
-                              gcal_event_get_location (event));
+      g_string_append_printf (tooltip_mesg, "%s", escaped_location);
     }
 
   escaped_description = g_markup_escape_text (gcal_event_get_description (event), -1);
