@@ -113,9 +113,11 @@ struct _GcalWindow
   GtkWidget           *calendar_popover;
   GtkWidget           *calendar_listbox;
   GtkWidget           *source_dialog;
+
   gint                 refresh_timeout;
   gint                 refresh_timeout_id;
   gint                 open_edit_dialog_timeout_id;
+  gint                 update_current_date_timeout_id;
 
   /* temp to keep event_creation */
   gboolean             open_edit_dialog;
@@ -424,22 +426,18 @@ key_pressed (GtkWidget *widget,
 }
 
 static gboolean
-update_current_date (GcalWindow *window)
+update_current_date (GcalWindow *self)
 {
   GCAL_ENTRY;
 
-  /* FIXME: we end up here before constructed(), this shouldn't happen */
-  if (!window->views[GCAL_WINDOW_VIEW_WEEK])
-    GCAL_GOTO (out);
+  if (self->update_current_date_timeout_id == 0)
+    self->update_current_date_timeout_id = g_timeout_add_seconds (60, (GSourceFunc) update_current_date, self);
 
-  gtk_widget_queue_draw (window->views[GCAL_WINDOW_VIEW_WEEK]);
-  gtk_widget_queue_draw (window->views[GCAL_WINDOW_VIEW_MONTH]);
-  gtk_widget_queue_draw (window->views[GCAL_WINDOW_VIEW_YEAR]);
+  gtk_widget_queue_draw (self->views[GCAL_WINDOW_VIEW_WEEK]);
+  gtk_widget_queue_draw (self->views[GCAL_WINDOW_VIEW_MONTH]);
+  gtk_widget_queue_draw (self->views[GCAL_WINDOW_VIEW_YEAR]);
 
-out:
-  g_timeout_add_seconds (60, (GSourceFunc) update_current_date, window);
-
-  GCAL_RETURN (G_SOURCE_REMOVE);
+  GCAL_RETURN (G_SOURCE_CONTINUE);
 }
 
 static void
@@ -1214,6 +1212,12 @@ gcal_window_finalize (GObject *object)
       window->open_edit_dialog_timeout_id = 0;
     }
 
+  if (window->update_current_date_timeout_id > 0)
+    {
+      g_source_remove (window->update_current_date_timeout_id);
+      window->update_current_date_timeout_id = 0;
+    }
+
   /* If we have a queued event to delete, remove it now */
   if (window->event_to_delete)
     {
@@ -1289,7 +1293,6 @@ gcal_window_set_property (GObject      *object,
           gcal_year_view_set_manager (GCAL_YEAR_VIEW (self->year_view), self->manager);
           gcal_quick_add_popover_set_manager (GCAL_QUICK_ADD_POPOVER (self->quick_add_popover), self->manager);
           gcal_source_dialog_set_manager (GCAL_SOURCE_DIALOG (self->source_dialog), self->manager);
-          update_current_date (GCAL_WINDOW (object));
 
           g_object_notify (object, "manager");
         }
@@ -1573,6 +1576,8 @@ gcal_window_init (GcalWindow *self)
   gcal_window_add_accelerator (app, "win.change-view(1)",  "<Ctrl>1")
   gcal_window_add_accelerator (app, "win.change-view(2)",  "<Ctrl>2");
   gcal_window_add_accelerator (app, "win.change-view(3)",  "<Ctrl>3");
+
+  update_current_date (self);
 }
 
 /* Public API */
