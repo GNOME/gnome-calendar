@@ -481,7 +481,7 @@ update_current_date (GcalWindow *window)
 out:
   g_timeout_add_seconds (60, (GSourceFunc) update_current_date, window);
 
-  GCAL_RETURN (G_SOURCE_CONTINUE);
+  GCAL_RETURN (G_SOURCE_REMOVE);
 }
 
 static void
