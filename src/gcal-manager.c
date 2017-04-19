@@ -1232,7 +1232,7 @@ gcal_manager_setup_shell_search (GcalManager             *self,
 {
   g_return_if_fail (GCAL_IS_MANAGER (self));
 
-  if (!self->shell_search_data_model)
+  if (self->shell_search_data_model)
     return;
 
   self->shell_search_data_model = e_cal_data_model_new (submit_thread_job);
