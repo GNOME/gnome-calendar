@@ -628,6 +628,7 @@ calculate_day_month_for_coord (GcalYearView *year_view,
                                gint         *out_month,
                                gboolean     *is_title)
 {
+  GdkPoint *coordinates;
   gint row, column, i, sw, clicked_cell, day, month, columns_or_rows;
   gint number_of_rows;
   gdouble box_side;
@@ -637,6 +638,7 @@ calculate_day_month_for_coord (GcalYearView *year_view,
   box_side = year_view->navigator_grid->box_side;
   number_of_rows = ceil (12.0 / year_view->number_of_columns);
   sw = 1 - 2 * year_view->k;
+  coordinates = year_view->navigator_grid->coordinates;
 
   *is_title = FALSE;
   columns_or_rows = year_view->number_of_columns > number_of_rows ? year_view->number_of_columns : number_of_rows;
@@ -644,16 +646,16 @@ calculate_day_month_for_coord (GcalYearView *year_view,
   for (i = 0; i < columns_or_rows && ((row == -1) || (column == -1)); i++)
     {
       if (row == -1 &&
-          y > year_view->navigator_grid->coordinates[i * year_view->number_of_columns].y &&
-          y < year_view->navigator_grid->coordinates[i * year_view->number_of_columns].y + year_view->row_height)
+          y > coordinates[i * year_view->number_of_columns].y &&
+          y < coordinates[i * year_view->number_of_columns].y + year_view->row_height)
         {
-          if (y < year_view->navigator_grid->coordinates[i * year_view->number_of_columns].y + box_side)
+          if (y < coordinates[i * year_view->number_of_columns].y + box_side)
             *is_title = TRUE;
           row = i;
         }
       if (column == -1 &&
-          x > year_view->navigator_grid->coordinates[i].x + box_side * year_view->show_week_numbers * (1 - year_view->k) &&
-          x < year_view->navigator_grid->coordinates[i].x + year_view->column_width - box_side * year_view->show_week_numbers * year_view->k)
+          x > coordinates[i].x + box_side * year_view->show_week_numbers * (1 - year_view->k) &&
+          x < coordinates[i].x + year_view->column_width - box_side * year_view->show_week_numbers * year_view->k)
         {
           column = i;
         }
