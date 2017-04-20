@@ -392,7 +392,7 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
 
       // If they have the same parent names, compare by the source display names
       if (retval == 0)
-        retval = g_strcmp0 (e_source_get_display_name (source1), e_source_get_display_name (source2));
+        retval = g_ascii_strcasecmp (e_source_get_display_name (source1), e_source_get_display_name (source2));
 
       g_free (parent_name1);
       g_free (parent_name2);
