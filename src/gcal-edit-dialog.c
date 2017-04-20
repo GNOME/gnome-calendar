@@ -136,6 +136,18 @@ const GActionEntry action_entries[] =
   { "select-calendar", on_calendar_selected, "s" },
 };
 
+static gint
+sources_menu_sort_func (gconstpointer a,
+                        gconstpointer b)
+{
+  ESource *source1, *source2;
+
+  source1 = E_SOURCE (a);
+  source2 = E_SOURCE (b);
+
+  return g_ascii_strcasecmp (e_source_get_display_name (source1), e_source_get_display_name (source2));
+}
+
 static void
 fill_sources_menu (GcalEditDialog *dialog)
 {
@@ -147,6 +159,8 @@ fill_sources_menu (GcalEditDialog *dialog)
 
   list = gcal_manager_get_sources (dialog->manager);
   dialog->sources_menu = g_menu_new ();
+
+  g_list_sort (list, sources_menu_sort_func);
 
   for (aux = list; aux != NULL; aux = aux->next)
     {
