@@ -462,7 +462,7 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
   if (source1 == NULL && source2 == NULL)
     return 0;
 
-  return g_strcmp0 (e_source_get_display_name (source1), e_source_get_display_name (source2));
+  return g_ascii_strcasecmp (e_source_get_display_name (source1), e_source_get_display_name (source2));
 }
 
 static void
