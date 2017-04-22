@@ -816,6 +816,7 @@ draw_month_grid (GcalYearView *year_view,
   shown_rows = ceil (days / 7.0);
   sunday_idx = year_view->k * 7 + sw * ((7 - year_view->first_weekday) % 7) + year_view->show_week_numbers * (1 - year_view->k);
 
+  today = icaltime_today ();
   today.year = year_view->date->year;
   today.month = month_nr + 1;
   today.day = 1;
@@ -1205,7 +1206,7 @@ navigator_motion_notify_cb (GcalYearView   *year_view,
                             GdkEventMotion *event,
                             GtkWidget      *widget)
 {
-  gint day, month;
+  gint day = 0, month = 0;
   gboolean is_title = FALSE;
 
   /* Cancel the hover when selecting a date range */
