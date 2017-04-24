@@ -6,7 +6,7 @@ dnl Define Versioning Information
 dnl ***********************************************************************
 m4_define([calendar_major_version],[3])
 m4_define([calendar_minor_version],[24])
-m4_define([calendar_micro_version],[0])
+m4_define([calendar_micro_version],[1])
 m4_define([calendar_version],[calendar_major_version.calendar_minor_version.calendar_micro_version])
 m4_define([calendar_interface_age],[0])
 m4_define([calendar_bugreport_url],

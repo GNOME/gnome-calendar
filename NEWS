@@ -1,3 +1,20 @@
+Major changes in 3.24.1:
+* Added logging capabilities
+* Fix a lot of issues in Week view
+* Big code cleanups in old classes
+* Synchronize disabled calendars with Evolution
+* Fix DnD cursor (Jente Hidskes)
+* Optimize Year view
+* Drop "Search..." app menu item (Jeremy Bicha)
+* Show tooltips when hovering event widgets (Novi-Novi)
+* Various memory leaks and fixups (Mohammed Sadiq)
+* Updated translations for:
+    * Croatian (gogo)
+    * Greek (Tom Tryfonidis)
+    * Latvian (Rūdolfs Mazurs)
+    * Spanish (Daniel Mustieles)
+    * Turkish (Emin Tufan Çetin)
+
 Major changes in 3.24.0:
 * Updated translations for:
     * French (Guillaume Bernard)
