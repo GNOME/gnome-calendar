@@ -399,30 +399,10 @@
 </ARG>
 
 <ARG>
-<NAME>GcalWeekGrid::active-date</NAME>
-<TYPE>icaltimetype*</TYPE>
-<RANGE></RANGE>
-<FLAGS>rwx</FLAGS>
-<NICK>Date</NICK>
-<BLURB>The active selected date.</BLURB>
-<DEFAULT></DEFAULT>
-</ARG>
-
-<ARG>
-<NAME>GcalWeekHeader::active-date</NAME>
-<TYPE>icaltimetype*</TYPE>
-<RANGE></RANGE>
-<FLAGS>rwx</FLAGS>
-<NICK>Date</NICK>
-<BLURB>The active selected date.</BLURB>
-<DEFAULT></DEFAULT>
-</ARG>
-
-<ARG>
 <NAME>GcalWindow::active-date</NAME>
 <TYPE>icaltimetype*</TYPE>
 <RANGE></RANGE>
-<FLAGS>rwx</FLAGS>
+<FLAGS>rw</FLAGS>
 <NICK>Date</NICK>
 <BLURB>The active/selected date.</BLURB>
 <DEFAULT></DEFAULT>

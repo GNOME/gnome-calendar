@@ -1,3 +1,5 @@
+gcal_week_grid_set_date
+gcal_week_header_set_date
 e_cal_data_model_submit_thread_job(description, alert_ident, alert_arg_0)
 e_cal_data_model_subscriber_component_added(icalcomp)
 fix_popover_menu_icons(window)

@@ -499,6 +499,7 @@ gcal_week_grid_add_event
 gcal_week_grid_remove_event
 gcal_week_grid_get_children_by_uuid
 gcal_week_grid_clear_marks
+gcal_week_grid_set_date
 GcalWeekGrid
 </SECTION>
 
@@ -513,6 +514,7 @@ gcal_week_header_remove_event
 gcal_week_header_get_children_by_uuid
 gcal_week_header_get_sidebar_size_group
 gcal_week_header_clear_marks
+gcal_week_header_set_date
 GcalWeekHeader
 </SECTION>
 

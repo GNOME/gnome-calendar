@@ -1,7 +1,7 @@
 60% symbol docs coverage.
 324 symbols documented.
-108 symbols incomplete.
-216 not documented.
+107 symbols incomplete.
+214 not documented.
 
 
 ALIGNED (<parameters>)
@@ -92,8 +92,8 @@ build_component_from_details (summary, initial_date, final_date)
 calendar_get_resource
 e_cal_data_model_remove_client (data_model)
 e_cal_data_model_subscriber_component_added (comp)
-e_strftime_fix_am_pm (str, tm, fmt, max)
-e_utf8_strftime_fix_am_pm (fmt, max, str, tm)
+e_strftime_fix_am_pm (max, fmt, tm, str)
+e_utf8_strftime_fix_am_pm (max, str, tm, fmt)
 fix_popover_menu_icons (popover)
 free_row_data (Returns)
 gcal_application_get_manager (<parameters>)
@@ -134,12 +134,12 @@ gcal_event_widget_set_date_start (date_start)
 gcal_event_widget_set_has_reminders (<parameters>)
 gcal_event_widget_set_read_only (<parameters>)
 gcal_log_init
-gcal_manager_add_source (backend, name)
+gcal_manager_add_source (name, backend)
 gcal_manager_get_default_source
 gcal_manager_get_events (range_end, range_start)
 gcal_manager_get_goa_client (manager)
 gcal_manager_get_shell_search_events (manager)
-gcal_manager_query_client_data (field, source, manager)
+gcal_manager_query_client_data (manager, field, source)
 gcal_manager_set_search_subscriber (manager)
 gcal_manager_set_shell_search_subscriber (manager)
 gcal_manager_set_subscriber (manager)
@@ -168,10 +168,8 @@ gcal_time_selector_get_time (<parameters>)
 gcal_time_selector_new
 gcal_time_selector_set_time (<parameters>)
 gcal_time_selector_set_time_format (<parameters>)
-gcal_view_get_date (<parameters>)
 gcal_view_get_final_date
 gcal_view_get_initial_date
-gcal_view_set_date (<parameters>)
 gcal_week_grid_add_event (<parameters>)
 gcal_week_grid_clear_marks (<parameters>)
 gcal_week_grid_get_children_by_uuid (<parameters>)
@@ -202,6 +200,7 @@ remove_button_clicked (Returns)
 remove_source (Returns)
 undo_remove_action (Returns)
 update_view (Returns)
+uri_get_fields (is_file)
 view_changed (object, pspec, user_data)
 
 css-code:Long_Description

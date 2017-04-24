@@ -45,6 +45,19 @@
     <release date="2017-03-20" version="3.24.1">
       <description>
         <p>
+          The GNOME Calendar team is proud to announce the 3.25.1 release of
+          GNOME Calendar, the first release in the next (3.26) unstable series.
+          This release contains most of the changes that landed for 3.24.1, plus
+          a few translation changes.
+        </p>
+        <p>This release also updates translations.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
+    <release date="2017-03-20" version="3.24.1">
+      <description>
+        <p>
           The GNOME Calendar team is proud to announce the 3.24.1 release of
           GNOME Calendar! This is a bugfix release that improves a lot the
           performance and stability of GNOME Calendar.

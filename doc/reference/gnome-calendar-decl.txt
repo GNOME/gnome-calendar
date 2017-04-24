@@ -764,6 +764,11 @@ struct _GcalViewInterface
                                                         icaltimetype *start_span,
                                                         icaltimetype *end_span);
 
+  icaltimetype*  (*get_date)                           (GcalView     *view);
+
+  void           (*set_date)                           (GcalView     *view,
+                                                        icaltimetype *date);
+
   /* Marks related API */
   void           (*clear_marks)                        (GcalView    *view);
 
@@ -1164,7 +1169,7 @@ GtkPopover            *popover
 <FUNCTION>
 <NAME>uri_get_fields</NAME>
 <RETURNS>gboolean         </RETURNS>
-const gchar           *uri, gchar                **schema, gchar                **host, gchar                **path
+const gchar           *uri, gchar                **schema, gchar                **host, gchar                **path, gboolean              *is_file
 </FUNCTION>
 <FUNCTION>
 <NAME>get_source_parent_name_color</NAME>
@@ -1739,7 +1744,7 @@ void
 </STRUCT>
 <MACRO>
 <NAME>GCAL_ENABLE_TRACE</NAME>
-# define GCAL_ENABLE_TRACE 1
+# define GCAL_ENABLE_TRACE 0
 </MACRO>
 <MACRO>
 <NAME>GCAL_LOG_LEVEL_TRACE</NAME>
@@ -2210,6 +2215,11 @@ GcalWeekGrid       *self, const gchar        *uid
 <RETURNS>void                  </RETURNS>
 GcalWeekGrid       *self
 </FUNCTION>
+<FUNCTION>
+<NAME>gcal_week_grid_set_date</NAME>
+<RETURNS>void                  </RETURNS>
+GcalWeekGrid       *self, icaltimetype       *date
+</FUNCTION>
 <STRUCT>
 <NAME>GcalWeekGrid</NAME>
 </STRUCT>
@@ -2278,6 +2288,11 @@ GcalWeekHeader     *self
 <NAME>gcal_week_header_clear_marks</NAME>
 <RETURNS>void                  </RETURNS>
 GcalWeekHeader     *self
+</FUNCTION>
+<FUNCTION>
+<NAME>gcal_week_header_set_date</NAME>
+<RETURNS>void                  </RETURNS>
+GcalWeekHeader     *self, icaltimetype       *date
 </FUNCTION>
 <STRUCT>
 <NAME>GcalWeekHeader</NAME>
