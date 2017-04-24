@@ -160,7 +160,7 @@ fill_sources_menu (GcalEditDialog *dialog)
   list = gcal_manager_get_sources (dialog->manager);
   dialog->sources_menu = g_menu_new ();
 
-  g_list_sort (list, sources_menu_sort_func);
+  list = g_list_sort (list, sources_menu_sort_func);
 
   for (aux = list; aux != NULL; aux = aux->next)
     {
