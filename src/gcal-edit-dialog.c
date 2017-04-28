@@ -691,8 +691,6 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
       gtk_dialog_response (GTK_DIALOG (dialog),
                            dialog->event_is_new ? GCAL_RESPONSE_CREATE_EVENT : GCAL_RESPONSE_SAVE_EVENT);
     }
-
-  gcal_edit_dialog_set_event (dialog, NULL);
 }
 
 static void

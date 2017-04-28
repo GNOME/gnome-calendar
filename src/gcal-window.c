@@ -1102,7 +1102,6 @@ edit_dialog_closed (GtkDialog *dialog,
   event = gcal_edit_dialog_get_event (edit_dialog);
   view = GCAL_VIEW (window->views[window->active_view]);
 
-  gcal_edit_dialog_set_event (edit_dialog, NULL);
   gtk_widget_hide (GTK_WIDGET (dialog));
 
   switch (response)
@@ -1149,6 +1148,8 @@ edit_dialog_closed (GtkDialog *dialog,
       break;
 
     }
+
+  gcal_edit_dialog_set_event (edit_dialog, NULL);
 }
 
 static void
