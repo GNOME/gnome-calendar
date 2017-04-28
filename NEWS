@@ -1,3 +1,8 @@
+Major changes in 3.22.5:
+* Fix crash when adding and editing events
+* Updated translations for:
+    * Occitan (Cédric Valmary)
+
 Major changes in 3.22.4:
 * Fix outstanding performance issue in Year view
 

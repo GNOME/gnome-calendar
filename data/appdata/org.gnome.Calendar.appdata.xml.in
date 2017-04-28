@@ -42,6 +42,17 @@
   <project_group>GNOME</project_group>
 
   <releases>
+
+    <release date="2017-04-28" version="3.22.5">
+      <description>
+        <p>
+          This is the sixth stable release for GNOME Calendar 3.22, and fixes
+          an outstanding issue when creating and editing events.
+        </p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2017-03-28" version="3.22.4">
       <description>
         <p>
