@@ -2,6 +2,7 @@
 # Please keep this file sorted alphabetically.
 data/appdata/org.gnome.Calendar.appdata.xml.in
 data/org.gnome.Calendar.desktop.in
+data/org.gnome.calendar.gschema.xml
 data/ui/alarm-row.ui
 data/ui/edit-dialog.ui
 data/ui/help-overlay.ui
@@ -12,11 +13,6 @@ data/ui/source-dialog.ui
 data/ui/time-selector.ui
 data/ui/window.ui
 data/ui/year-view.ui
-src/views/gcal-month-view.c
-src/views/gcal-week-grid.c
-src/views/gcal-week-header.c
-src/views/gcal-week-view.c
-src/views/gcal-year-view.c
 src/gcal-application.c
 src/gcal-date-selector.c
 src/gcal-edit-dialog.c
@@ -29,3 +25,8 @@ src/gcal-time-selector.c
 src/gcal-utils.c
 src/gcal-window.c
 src/main.c
+src/views/gcal-month-view.c
+src/views/gcal-week-grid.c
+src/views/gcal-week-header.c
+src/views/gcal-week-view.c
+src/views/gcal-year-view.c
