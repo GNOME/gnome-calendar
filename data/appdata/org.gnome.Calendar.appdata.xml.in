@@ -4,16 +4,16 @@
   <id>org.gnome.Calendar.desktop</id>
   <metadata_license>CC0</metadata_license>
   <project_license>GPL-3.0+</project_license>
-  <_name>Calendar</_name>
-  <_summary>Calendar for GNOME</_summary>
+  <name>Calendar</name>
+  <summary>Calendar for GNOME</summary>
 
   <description>
-    <_p>
+    <p>
       GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME desktop. By reusing the components which the GNOME desktop is build on, Calendar nicely integrates with the GNOME ecosystem.
-    </_p>
-    <_p>
+    </p>
+    <p>
       We aim to find the perfect balance between nicely crafted features and user-centred usability. No excess, no lacks. You’ll feel comfortable using Calendar, like you’ve been using it for ages!
-    </_p>
+    </p>
   </description>
 
   <screenshots>
@@ -21,11 +21,11 @@
       <image width="1200" height="675">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/default.png</image>
     </screenshot>
     <screenshot>
-      <_caption>Search for events</_caption>
+      <caption>Search for events</caption>
       <image width="1200" height="675">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/search.png</image>
     </screenshot>
     <screenshot>
-      <_caption>Calendar management</_caption>
+      <caption>Calendar management</caption>
       <image width="1200" height="675">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/calendar-management.png</image>
     </screenshot>
   </screenshots>

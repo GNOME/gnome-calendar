@@ -16,15 +16,8 @@ config.log
 config.status
 config
 configure
-data/gnome-documents-search-provider.ini
-data/gnome-documents.desktop
-data/gnome-documents.desktop.in
-data/org.gnome.Documents.GDataMiner.service
-data/org.gnome.documents.gschema.valid
-data/org.gnome.documents.gschema.xml
-intltool-extract.in
-intltool-merge.in
-intltool-update.in
+data/org.gnome.Calendar.desktop
+data/org.gnome.Calendar.gschema.valid
 libtool
 m4/
 omf.make
@@ -32,7 +25,6 @@ po/*.gmo
 po/*.header
 po/*.sed
 po/*.sin
-po/.intltool-merge-cache
 po/Makefile.in.in
 po/Makevars.template
 po/POTFILES
@@ -81,9 +73,6 @@ src/gcal-shell-search-provider-generated.h
 AUTHORS
 build-aux
 data/org.gnome.Calendar.desktop
-data/org.gnome.Calendar.desktop.in
-data/org.gnome.Calendar.search-provider.ini
-data/org.gnome.Calendar.search-provider.ini.in
 data/org.gnome.Calendar.service
 data/appdata/org.gnome.Calendar.appdata.xml
 src/gcal-debug.h

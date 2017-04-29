@@ -1,4 +1,0 @@
-# List of source files that should *not* be translated.
-# Please keep this file sorted alphabetically.
-data/org.gnome.Calendar.desktop.in
-sub/data/org.gnome.Calendar.desktop.in

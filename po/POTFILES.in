@@ -1,19 +1,17 @@
 # List of source files containing translatable strings.
 # Please keep this file sorted alphabetically.
 data/appdata/org.gnome.Calendar.appdata.xml.in
-data/org.gnome.Calendar.desktop.in.in
-data/org.gnome.calendar.gschema.xml.in
-[type: gettext/ini]data/org.gnome.Calendar.search-provider.ini.in.in
-[type: gettext/glade]data/ui/alarm-row.ui
-[type: gettext/glade]data/ui/edit-dialog.ui
-[type: gettext/glade]data/ui/help-overlay.ui
-[type: gettext/glade]data/ui/menus.ui
-[type: gettext/glade]data/ui/quick-add-popover.ui
-[type: gettext/glade]data/ui/search-view.ui
-[type: gettext/glade]data/ui/source-dialog.ui
-[type: gettext/glade]data/ui/time-selector.ui
-[type: gettext/glade]data/ui/window.ui
-[type: gettext/glade]data/ui/year-view.ui
+data/org.gnome.Calendar.desktop.in
+data/ui/alarm-row.ui
+data/ui/edit-dialog.ui
+data/ui/help-overlay.ui
+data/ui/menus.ui
+data/ui/quick-add-popover.ui
+data/ui/search-view.ui
+data/ui/source-dialog.ui
+data/ui/time-selector.ui
+data/ui/window.ui
+data/ui/year-view.ui
 src/views/gcal-month-view.c
 src/views/gcal-week-grid.c
 src/views/gcal-week-header.c

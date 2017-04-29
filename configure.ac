@@ -38,12 +38,15 @@ AM_MAINTAINER_MODE([enable])
 dnl ***************************************************************************
 dnl Internationalization
 dnl ***************************************************************************
-IT_PROG_INTLTOOL([0.40.6])
 PKG_PROG_PKG_CONFIG([0.22])
 
 GETTEXT_PACKAGE=AC_PACKAGE_TARNAME
 AC_SUBST([GETTEXT_PACKAGE])
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [GETTEXT package name])
+
+AM_GNU_GETTEXT_VERSION([0.19.8])
+AM_GNU_GETTEXT([external])
+
 
 AS_IF([test "x$USE_NLS" != "xno"],
       [AC_DEFINE([ENABLE_NLS], [1], [Native language support is enabled])])
@@ -173,8 +176,6 @@ AC_CONFIG_FILES([
       src/Makefile
       src/gcal-debug.h
       data/Makefile
-      data/org.gnome.Calendar.desktop.in
-      data/org.gnome.Calendar.search-provider.ini.in
       data/icons/Makefile
       doc/Makefile
       doc/reference/Makefile

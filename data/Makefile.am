@@ -1,21 +1,55 @@
 SUBDIRS = icons
 
+################
+# Desktop files
+################
+
 desktopdir = $(datadir)/applications
 desktop_in_files = org.gnome.Calendar.desktop.in
 desktop_DATA = $(desktop_in_files:.desktop.in=.desktop)
 
+%.desktop: %.desktop.in
+	$(AM_V_GEN) $(MSGFMT) --desktop --template $< -d $(top_srcdir)/po -o $@
+
+
+##############################
+# GNOME Shell search provider
+##############################
+
 searchproviderdir = $(datadir)/gnome-shell/search-providers
 searchprovider_DATA = org.gnome.Calendar.search-provider.ini
 
-%.ini: %.ini.in
-	LC_ALL=C $(INTLTOOL_MERGE) -d -u -c $(top_builddir)/po/.intltool-merge-cache $(top_srcdir)/po $< $@
 
-@INTLTOOL_XML_RULE@
+################
+# Appdata files
+################
+
 appdatadir = $(datadir)/appdata
 appdata_DATA = $(appdata_in_files:.xml.in=.xml)
 appdata_in_files = $(srcdir)/appdata/org.gnome.Calendar.appdata.xml.in
 
-@INTLTOOL_DESKTOP_RULE@
+%.xml: %.xml.in
+	$(AM_V_GEN)$(MSGFMT) --xml --template $< -d $(top_srcdir)/po -o $@
+
+
+###################
+# GSettings schema
+###################
+
+gsettings_ENUM_NAMESPACE = org.gnome.calendar
+gsettings_ENUM_FILES = \
+	$(top_srcdir)/src/gcal-utils.h
+
+gsettings_SCHEMAS = org.gnome.calendar.gschema.xml
+
+.PRECIOUS: $(gsettings_SCHEMAS)
+
+@GSETTINGS_RULES@
+
+
+#####################
+# DBus service files
+#####################
 
 servicedir = $(datadir)/dbus-1/services
 service_DATA = org.gnome.Calendar.service
@@ -30,23 +64,8 @@ org.gnome.Calendar.service:
 	            echo 'Exec=${bindir}/gnome-calendar --gapplication-service') > $@.tmp && \
 	            mv $@.tmp $@
 
-@GSETTINGS_RULES@
-
-%.gschema.xml: %.gschema.xml.in
-	$(AM_V_GEN) $(INTLTOOL_MERGE) -x -u --no-translations $< $@
-
-gsettings_ENUM_NAMESPACE = org.gnome.calendar
-gsettings_ENUM_FILES = \
-	$(top_srcdir)/src/gcal-utils.h
-
-gsettingsschema_in_files = org.gnome.calendar.gschema.xml.in
-gsettings_SCHEMAS = $(gsettingsschema_in_files:.xml.in=.xml)
-.PRECIOUS: $(gsettings_SCHEMAS)
-
 EXTRA_DIST=                     \
   appdata/org.gnome.Calendar.appdata.xml \
-  org.gnome.Calendar.search-provider.ini.in.in \
-  org.gnome.Calendar.desktop    \
   calendar.gresource.xml        \
   shell-search-provider-dbus-interfaces.xml \
   ui/alarm-row.ui               \
@@ -68,11 +87,10 @@ EXTRA_DIST=                     \
   theme/gtk-styles.css          \
   $(appdata_in_files)           \
   $(desktop_in_files)           \
-  $(gsettingsschema_in_files)
+  $(gsettings_SCHEMAS)          \
+  $(searchprovider_DATA)
 
 CLEANFILES =                    \
+  $(appdata_DATA)               \
   $(service_DATA)               \
-  $(desktop_DATA)               \
-  $(searchprovider_DATA)        \
-  $(gsettings_SCHEMAS)          \
-  $(appdata_DATA)
+  $(desktop_DATA)
