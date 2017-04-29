@@ -1369,7 +1369,9 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   drop_cell = get_dnd_cell (widget, x, y);
   event_widget = gtk_drag_get_source_widget (context);
 
-  week_start = dnd_date = NULL;
+  week_start = NULL;
+  dnd_date = NULL;
+  new_end = NULL;
 
   if (!GCAL_IS_EVENT_WIDGET (event_widget))
     return FALSE;
