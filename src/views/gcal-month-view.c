@@ -487,9 +487,13 @@ get_widget_parts (gint     first_cell,
                   GArray  *cells,
                   GArray  *lengths)
 {
-  gint i;
+  gdouble old_y;
+  gdouble y;
   gint current_part_length;
-  gdouble y, old_y = - 1.0;
+  gint i;
+
+  old_y  = -1.0;
+  current_part_length = 0;
 
   if (last_cell < first_cell)
     {
@@ -501,24 +505,21 @@ get_widget_parts (gint     first_cell,
   for (i = first_cell; i <= last_cell; i++)
     {
       if (size_left[i] < natural_height)
+        return FALSE;
+
+      y = vertical_cell_space - size_left[i];
+
+      if (old_y == -1.0 || y != old_y)
         {
-          return FALSE;
+          current_part_length = 1;
+          g_array_append_val (cells, i);
+          g_array_append_val (lengths, current_part_length);
+          old_y = y;
         }
       else
         {
-          y = vertical_cell_space - size_left[i];
-          if (y != old_y)
-            {
-              current_part_length = 1;
-              g_array_append_val (cells, i);
-              g_array_append_val (lengths, current_part_length);
-              old_y = y;
-            }
-          else
-            {
-              current_part_length++;
-              g_array_index (lengths, gint, lengths->len - 1) = current_part_length;
-            }
+          current_part_length++;
+          g_array_index (lengths, gint, lengths->len - 1) = current_part_length;
         }
     }
 
