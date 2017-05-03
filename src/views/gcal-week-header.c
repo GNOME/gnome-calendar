@@ -1666,12 +1666,12 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
       if (event_position == -1)
         continue;
 
-      /* Move remaining events up */
-      move_events_at_column (self, UP, weekday, event_position);
-
       /* Remove from the current weekday */
       l = g_list_remove (l, removed_event);
       self->events[weekday] = l;
+
+      /* Move remaining events up */
+      move_events_at_column (self, UP, weekday, event_position);
 
     }
 
