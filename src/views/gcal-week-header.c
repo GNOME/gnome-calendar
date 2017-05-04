@@ -140,7 +140,7 @@ on_button_pressed (GcalWeekHeader *self,
 
   gtk_widget_queue_draw (GTK_WIDGET (self));
 
-  return GDK_EVENT_STOP;
+  return GDK_EVENT_PROPAGATE;
 }
 
 static gboolean

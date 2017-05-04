@@ -121,6 +121,10 @@ struct _GcalWindow
 
   /* temp to keep event_creation */
   gboolean             open_edit_dialog;
+
+  /* handler for the searh_view */
+  gint                 click_outside_handler_id;
+
 };
 
 enum
@@ -167,6 +171,27 @@ static const GActionEntry actions[] = {
 /*
  * Auxiliary methods
  */
+
+static gboolean
+hide_search_view_on_click_outside (GcalWindow     *window,
+                                   GdkEventButton *event,
+                                   GtkPopover     *popover)
+{
+  GdkWindow *search_view_window;
+
+  search_view_window = gtk_widget_get_window (GTK_WIDGET (popover)); 
+
+  /* If the event is not produced in the search view widget, we hide the search_bar */
+  if (event->window != search_view_window) 
+    {
+      gtk_popover_popdown (popover);
+      gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (window->search_bar), FALSE);
+    }
+
+  return GDK_EVENT_PROPAGATE;
+}
+
+
 static void
 update_today_button_sensitive (GcalWindow *window)
 {
@@ -1101,7 +1126,21 @@ search_toggled (GObject    *object,
 
   /* update header_bar widget */
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (window->search_bar)))
-    gcal_search_view_search (GCAL_SEARCH_VIEW (window->search_view), NULL, NULL);
+    {
+      gcal_search_view_search (GCAL_SEARCH_VIEW (window->search_view), NULL, NULL);
+
+      /* When the search button is toogled we connect the signal */
+      window->click_outside_handler_id = g_signal_connect (window,
+                                                           "button-press-event",
+                                                           G_CALLBACK (hide_search_view_on_click_outside),
+                                                           window->search_view);
+    }
+  else
+    {
+      /* When the search mode is false we disconnect the handler */
+      g_signal_handler_disconnect (window, window->click_outside_handler_id);
+    }
+
 }
 
 static void
