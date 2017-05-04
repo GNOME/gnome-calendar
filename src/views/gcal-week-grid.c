@@ -798,7 +798,7 @@ gcal_week_grid_button_press (GtkWidget      *widget,
 
   gtk_widget_queue_draw (widget);
 
-  return GDK_EVENT_STOP;
+  return GDK_EVENT_PROPAGATE;
 }
 
 static gboolean

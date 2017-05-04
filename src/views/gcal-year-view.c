@@ -1135,7 +1135,7 @@ navigator_button_press_cb (GcalYearView   *year_view,
   gboolean is_title = FALSE;
 
   if (!calculate_day_month_for_coord (year_view, event->x, event->y, &day, &month, &is_title))
-    return FALSE;
+    return GDK_EVENT_PROPAGATE;
 
   if (is_title)
     day = 1;
@@ -1144,7 +1144,7 @@ navigator_button_press_cb (GcalYearView   *year_view,
   year_view->selected_data->start_day = day;
   year_view->selected_data->start_month = month;
 
-  return TRUE;
+  return GDK_EVENT_PROPAGATE;
 }
 
 static gboolean

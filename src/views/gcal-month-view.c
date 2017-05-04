@@ -1973,7 +1973,7 @@ gcal_month_view_button_press (GtkWidget      *widget,
   if (pressed_indicator && g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (clicked_cell)))
     self->pressed_overflow_indicator = clicked_cell;
 
-  return TRUE;
+  return GDK_EVENT_PROPAGATE;
 }
 
 /**
