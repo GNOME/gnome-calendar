@@ -1353,6 +1353,7 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   g_autoptr (GDateTime) week_start;
   g_autoptr (GDateTime) dnd_date;
   g_autoptr (GDateTime) new_end;
+  g_autoptr (GDateTime) tmp_dt;
   GDateTime *start_date;
   GDateTime *end_date;
   GTimeSpan difference;
@@ -1372,6 +1373,7 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   week_start = NULL;
   dnd_date = NULL;
   new_end = NULL;
+  tmp_dt = NULL;
 
   if (!GCAL_IS_EVENT_WIDGET (event_widget))
     return FALSE;
@@ -1393,21 +1395,22 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
        * The only case where we don't touch the timezone is for
        * timed, multiday events.
        */
-      dnd_date = g_date_time_new (gcal_event_get_timezone (event),
-                                  g_date_time_get_year (week_start),
-                                  g_date_time_get_month (week_start),
-                                  g_date_time_get_day_of_month (week_start) + drop_cell,
-                                  g_date_time_get_hour (start_date),
-                                  g_date_time_get_minute (start_date),
-                                  0);
+      tmp_dt = g_date_time_new (gcal_event_get_timezone (event),
+                                g_date_time_get_year (week_start),
+                                g_date_time_get_month (week_start),
+                                g_date_time_get_day_of_month (week_start),
+                                g_date_time_get_hour (start_date),
+                                g_date_time_get_minute (start_date),
+                                0);
     }
   else
     {
-      dnd_date = g_date_time_new_utc (g_date_time_get_year (week_start),
-                                      g_date_time_get_month (week_start),
-                                      g_date_time_get_day_of_month (week_start) + drop_cell,
-                                      0, 0, 0);
+      tmp_dt = g_date_time_new_utc (g_date_time_get_year (week_start),
+                                    g_date_time_get_month (week_start),
+                                    g_date_time_get_day_of_month (week_start),
+                                    0, 0, 0);
     }
+  dnd_date = g_date_time_add_days (tmp_dt, drop_cell);
 
   /* End date */
   difference = turn_all_day ? 24 : g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
