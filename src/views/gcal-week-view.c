@@ -111,6 +111,7 @@ update_grid_scroll_position (GcalWeekView *self)
   GtkAdjustment *vadjustment;
   gdouble minutes, real_value;
   gdouble max, page, page_increment, value;
+  gboolean dummy;
 
   /* While the scrolled window is not mapped, we keep waiting */
   if (!gtk_widget_get_realized (self->scrolled_window) ||
@@ -141,7 +142,8 @@ update_grid_scroll_position (GcalWeekView *self)
   g_signal_emit_by_name (self->scrolled_window,
                          "scroll-child",
                          GTK_SCROLL_PAGE_FORWARD,
-                         FALSE);
+                         FALSE,
+                         &dummy);
 
   gtk_adjustment_set_page_increment (vadjustment, page_increment);
 
