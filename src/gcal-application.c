@@ -228,7 +228,7 @@ gcal_application_activate (GApplication *application)
 
   gtk_window_present (GTK_WINDOW (self->window));
 
-  if (!self->initial_date)
+  if (self->initial_date)
     g_object_set (self->window, "active-date", self->initial_date, NULL);
 
   g_clear_pointer (&self->initial_date, g_free);
