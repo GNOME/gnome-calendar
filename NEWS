@@ -1,3 +1,11 @@
+Major changes in 3.24.2:
+* Fix crash in Week view (Mohammed Sadiq)
+* Fix crash in changing the current date (Mohammed Sadiq)
+* Properly update Week view's header when removing events (Orkun Tezer)
+* Hide search popover when clicking outside it (Kevin Lopez)
+* Updated translations for:
+    * Belarusian (Yuras Shumovich)
+
 Major changes in 3.24.1:
 * Added logging capabilities
 * Fix a lot of issues in Week view
