@@ -247,9 +247,10 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
                                      GcalEvent       *event)
 {
   g_autoptr (GDateTime) tooltip_start, tooltip_end;
-  g_autofree gchar *start, *end, *escaped_summary, *escaped_description;
+  g_autofree gchar *start, *end, *escaped_summary;
+  GString *tooltip_mesg;
   gboolean allday, multiday, is_ltr;
-  GString *tooltip_desc, *tooltip_mesg;
+  guint description_len;
 
   tooltip_mesg = g_string_new (NULL);
   escaped_summary = g_markup_escape_text (gcal_event_get_summary (event), -1);
@@ -363,25 +364,32 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
       g_string_append_printf (tooltip_mesg, "%s", escaped_location);
     }
 
-  escaped_description = g_markup_escape_text (gcal_event_get_description (event), -1);
-  tooltip_desc = g_string_new (escaped_description);
+  description_len = g_utf8_strlen (gcal_event_get_description (event), -1);
 
   /* Truncate long descriptions at a white space and ellipsize */
-  if (tooltip_desc->len > 0)
+  if (description_len > 0)
     {
+      g_autofree gchar *escaped_description;
+      GString *tooltip_desc;
+
+      tooltip_desc = g_string_new (gcal_event_get_description (event));
+
       /* If the description is larger than DESC_MAX_CHAR, ellipsize it */
-      if (g_utf8_strlen (tooltip_desc->str, -1) > DESC_MAX_CHAR)
+      if (description_len > DESC_MAX_CHAR)
         {
           g_string_truncate (tooltip_desc, DESC_MAX_CHAR - 1);
           g_string_append (tooltip_desc, "…");
         }
 
-      g_string_append_printf (tooltip_mesg, "\n\n%s", tooltip_desc->str);
+      escaped_description = g_markup_escape_text (tooltip_desc->str, -1);
+
+      g_string_append_printf (tooltip_mesg, "\n\n%s", escaped_description);
+
+      g_string_free (tooltip_desc, TRUE);
     }
 
   gtk_widget_set_tooltip_markup (GTK_WIDGET (self), tooltip_mesg->str);
 
-  g_string_free (tooltip_desc, TRUE);
   g_string_free (tooltip_mesg, TRUE);
 }
 
