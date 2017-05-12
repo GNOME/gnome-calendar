@@ -903,6 +903,7 @@ get_dnd_icon (GtkWidget *widget)
   cr = cairo_create (surface);
 
   gtk_widget_draw (widget, cr);
+  cairo_destroy (cr);
 
   return surface;
 }
