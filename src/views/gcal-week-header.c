@@ -1193,7 +1193,7 @@ gcal_week_header_draw (GtkWidget      *widget,
 
   for (i = 0; i < 7; i++)
     {
-      gchar *weekday_date, *weekday_abv;
+      gchar *weekday_date, *weekday_abv, *weekday;
       gdouble x;
       gint font_width;
       gint n_day;
@@ -1232,7 +1232,9 @@ gcal_week_header_draw (GtkWidget      *widget,
       gtk_style_context_restore (context);
 
       /* Draws the days name */
-      weekday_abv = g_strdup_printf ("%s", g_utf8_strup (gcal_get_weekday ((i + self->first_weekday) % 7), -1));
+      weekday = g_utf8_strup (gcal_get_weekday ((i + self->first_weekday) % 7), -1);
+      weekday_abv = g_strdup_printf ("%s", weekday);
+      g_free (weekday);
 
       gtk_style_context_save (context);
       gtk_style_context_add_class (context, "week-names");
