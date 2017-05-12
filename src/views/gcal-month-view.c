@@ -1666,7 +1666,7 @@ gcal_month_view_draw (GtkWidget *widget,
                                      cell_width, font_height + padding.bottom * 2);
             }
 
-          gtk_render_layout (context, cr, cell_width * column, y_value, overflow_layout);
+          gtk_render_layout (context, cr, cell_width * column + padding.left, y_value, overflow_layout);
 
           gtk_style_context_remove_class (context, "overflow");
           gtk_style_context_restore (context);
