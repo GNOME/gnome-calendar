@@ -2035,6 +2035,11 @@ gcal_year_view_set_manager (GcalYearView *year_view,
                             GcalManager  *manager)
 {
   year_view->manager = manager;
+
+  g_signal_connect_swapped (gcal_manager_get_clock (manager),
+                            "day-changed",
+                            G_CALLBACK (gtk_widget_queue_draw),
+                            year_view->navigator);
 }
 
 void

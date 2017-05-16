@@ -159,7 +159,6 @@ struct _GcalWindow
   gint                 refresh_timeout;
   gint                 refresh_timeout_id;
   gint                 open_edit_dialog_timeout_id;
-  gint                 update_current_date_timeout_id;
 
   /* temp to keep event_creation */
   gboolean             open_edit_dialog;
@@ -490,21 +489,6 @@ key_pressed (GtkWidget *widget,
 
   return gtk_search_bar_handle_event (GTK_SEARCH_BAR (window->search_bar),
                                       event);
-}
-
-static gboolean
-update_current_date (GcalWindow *self)
-{
-  GCAL_ENTRY;
-
-  if (self->update_current_date_timeout_id == 0)
-    self->update_current_date_timeout_id = g_timeout_add_seconds (60, (GSourceFunc) update_current_date, self);
-
-  gtk_widget_queue_draw (self->views[GCAL_WINDOW_VIEW_WEEK]);
-  gtk_widget_queue_draw (self->views[GCAL_WINDOW_VIEW_MONTH]);
-  gtk_widget_queue_draw (self->views[GCAL_WINDOW_VIEW_YEAR]);
-
-  GCAL_RETURN (G_SOURCE_CONTINUE);
 }
 
 static void
@@ -1293,12 +1277,6 @@ gcal_window_finalize (GObject *object)
       window->open_edit_dialog_timeout_id = 0;
     }
 
-  if (window->update_current_date_timeout_id > 0)
-    {
-      g_source_remove (window->update_current_date_timeout_id);
-      window->update_current_date_timeout_id = 0;
-    }
-
   /* If we have a queued event to delete, remove it now */
   if (window->event_to_delete)
     {
@@ -1657,8 +1635,6 @@ gcal_window_init (GcalWindow *self)
   gcal_window_add_accelerator (app, "win.change-view(1)",  "<Ctrl>1")
   gcal_window_add_accelerator (app, "win.change-view(2)",  "<Ctrl>2");
   gcal_window_add_accelerator (app, "win.change-view(3)",  "<Ctrl>3");
-
-  update_current_date (self);
 }
 
 /* Public API */

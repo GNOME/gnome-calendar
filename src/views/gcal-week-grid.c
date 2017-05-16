@@ -59,7 +59,6 @@ struct _GcalWeekGrid
   GcalRangeTree      *events;
 
   gboolean            children_changed;
-  gint                redraw_timeout_id;
 
   /*
    * These fields are "cells" rather than minutes. Each cell
@@ -250,12 +249,6 @@ gcal_week_grid_finalize (GObject *object)
   g_clear_pointer (&self->events, gcal_range_tree_unref);
   g_clear_pointer (&self->active_date, g_free);
 
-  if (self->redraw_timeout_id > 0)
-    {
-      g_source_remove (self->redraw_timeout_id);
-      self->redraw_timeout_id = 0;
-    }
-
   G_OBJECT_CLASS (gcal_week_grid_parent_class)->finalize (object);
 }
 
@@ -419,14 +412,6 @@ get_today_column (GcalWeekGrid *self)
 }
 
 static gboolean
-on_redraw_timeout_cb (gpointer data)
-{
-  gtk_widget_queue_draw (data);
-
-  return G_SOURCE_CONTINUE;
-}
-
-static gboolean
 gcal_week_grid_draw (GtkWidget *widget,
                      cairo_t   *cr)
 {
@@ -586,14 +571,6 @@ gcal_week_grid_draw (GtkWidget *widget,
                              MAX (1, min_stip_height - margin.top - margin.bottom));
 
       gtk_style_context_restore (context);
-    }
-
-  /* Fire the redraw timeout if needed */
-  if (self->redraw_timeout_id == 0)
-    {
-      self->redraw_timeout_id = g_timeout_add_seconds (5,
-                                                       on_redraw_timeout_cb,
-                                                       self);
     }
 
   return FALSE;
@@ -1124,6 +1101,11 @@ gcal_week_grid_set_manager (GcalWeekGrid *self,
   g_return_if_fail (GCAL_IS_WEEK_GRID (self));
 
   self->manager = manager;
+
+  g_signal_connect_swapped (gcal_manager_get_clock (manager),
+                            "minute-changed",
+                            G_CALLBACK (gtk_widget_queue_draw),
+                            self);
 }
 
 void

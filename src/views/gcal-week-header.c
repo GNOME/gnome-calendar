@@ -67,7 +67,6 @@ struct _GcalWeekHeader
   gboolean          expanded;
 
   gboolean          use_24h_format;
-  gint              redraw_timeout_id;
 
   icaltimetype     *active_date;
 
@@ -976,14 +975,6 @@ on_expand_action_activated (GcalWeekHeader *self,
     header_expand (self);
 }
 
-static gboolean
-on_redraw_timeout_cb (gpointer data)
-{
-  gtk_widget_queue_draw (data);
-
-  return G_SOURCE_CONTINUE;
-}
-
 /* Drawing area content and size */
 static gdouble
 get_weekday_names_height (GtkWidget *widget)
@@ -1037,12 +1028,6 @@ gcal_week_header_finalize (GObject *object)
   gint i;
 
   g_clear_pointer (&self->active_date, g_free);
-
-  if (self->redraw_timeout_id > 0)
-    {
-      g_source_remove (self->redraw_timeout_id);
-      self->redraw_timeout_id = 0;
-    }
 
   for (i = 0; i < 7; i++)
     g_list_free (self->events[i]);
@@ -1292,14 +1277,6 @@ gcal_week_header_draw (GtkWidget      *widget,
 
   GTK_WIDGET_CLASS (gcal_week_header_parent_class)->draw (widget, cr);
 
-  /* Fire the redraw timeout if needed */
-  if (self->redraw_timeout_id == 0)
-    {
-      self->redraw_timeout_id = g_timeout_add_seconds (5,
-                                                       (GSourceFunc) on_redraw_timeout_cb,
-                                                       self);
-    }
-
   g_clear_pointer (&week_start, g_date_time_unref);
   g_clear_pointer (&week_end, g_date_time_unref);
 
@@ -1526,6 +1503,11 @@ gcal_week_header_set_manager (GcalWeekHeader *self,
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
   self->manager = manager;
+
+  g_signal_connect_swapped (gcal_manager_get_clock (manager),
+                            "day-changed",
+                            G_CALLBACK (gtk_widget_queue_draw),
+                            self);
 }
 
 void
