@@ -26,6 +26,7 @@
 #include "css-code.h"
 #include "gcal-application.h"
 #include "gcal-debug.h"
+#include "gcal-log.h"
 #include "gcal-shell-search-provider.h"
 #include "gcal-window.h"
 
@@ -77,6 +78,7 @@ static void     gcal_application_quit                 (GSimpleAction           *
 G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 
 static gboolean show_version = FALSE;
+static gboolean debug = FALSE;
 static gchar* date = NULL;
 static gchar* uuid = NULL;
 
@@ -85,6 +87,11 @@ static GOptionEntry gcal_application_goptions[] = {
     "version", 'v', 0,
     G_OPTION_ARG_NONE, &show_version,
     N_("Display version number"), NULL
+  },
+  {
+    "debug", 'd', 0,
+    G_OPTION_ARG_NONE, &debug,
+    N_("Enable debug messages"), NULL
   },
   {
     "date", 'd', 0,
@@ -292,6 +299,9 @@ gcal_application_command_line (GApplication            *app,
       g_print ("gnome-calendar: Version %s\n", PACKAGE_VERSION);
       return 0;
     }
+
+  if (debug)
+    gcal_log_init ();
 
   if (uuid != NULL)
     {
