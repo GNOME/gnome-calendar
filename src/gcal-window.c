@@ -295,6 +295,8 @@ update_active_date (GcalWindow   *window,
   previous_date = window->active_date;
   window->active_date = new_date;
 
+  g_debug ("Updating active date to %s", icaltime_as_ical_string (*new_date));
+
   gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), new_date);
   gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), new_date);
   gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_YEAR]), new_date);
@@ -1319,12 +1321,15 @@ gcal_window_set_property (GObject      *object,
       gtk_stack_set_visible_child (GTK_STACK (self->views_stack),
                                    self->views[self->active_view]);
       return;
+
     case PROP_ACTIVE_DATE:
       update_active_date (GCAL_WINDOW (object), g_value_dup_boxed (value));
       return;
+
     case PROP_NEW_EVENT_MODE:
       set_new_event_mode (GCAL_WINDOW (object), g_value_get_boolean (value));
       return;
+
     case PROP_MANAGER:
       if (g_set_object (&self->manager, g_value_get_object (value)))
         {
@@ -1377,12 +1382,15 @@ gcal_window_get_property (GObject    *object,
     case PROP_ACTIVE_VIEW:
       g_value_set_enum (value, self->active_view);
       return;
+
     case PROP_MANAGER:
       g_value_set_object (value, self->manager);
       return;
+
     case PROP_ACTIVE_DATE:
       g_value_set_boxed (value, self->active_date);
       return;
+
     case PROP_NEW_EVENT_MODE:
       g_value_set_boolean (value, self->new_event_mode);
       return;
