@@ -26,6 +26,12 @@ G_LOCK_DEFINE_STATIC (channel_lock);
 
 GIOChannel *standard_channel = NULL;
 
+static const gchar* ignored_domains[] =
+{
+  "GdkPixbuf",
+  NULL
+};
+
 static const gchar *
 log_level_str (GLogLevelFlags log_level)
 {
@@ -56,6 +62,10 @@ gcal_log_handler (const gchar    *domain,
   const gchar *level;
   gchar ftime[32];
   gchar *buffer;
+
+  /* Skip ignored log domains */
+  if (g_strv_contains (ignored_domains, domain))
+    return;
 
   level = log_level_str (log_level);
   g_get_current_time (&tv);
