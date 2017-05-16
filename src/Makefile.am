@@ -42,8 +42,10 @@ gnome_calendar_SOURCES =                                  \
     views/gcal-week-view.h                                \
     views/gcal-year-view.c                                \
     views/gcal-year-view.h                                \
-    gcal-application.h                                    \
     gcal-application.c                                    \
+    gcal-application.h                                    \
+    gcal-clock.c                                          \
+    gcal-clock.h                                          \
     gcal-date-chooser-day.c                               \
     gcal-date-chooser-day.h                               \
     gcal-date-chooser.c                                   \
