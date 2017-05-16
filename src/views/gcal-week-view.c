@@ -69,6 +69,8 @@ struct _GcalWeekView
   gint            clicked_cell;
 };
 
+static void           schedule_position_scroll                  (GcalWeekView      *self);
+
 static void           gcal_view_interface_init                  (GcalViewInterface *iface);
 
 static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
@@ -101,6 +103,19 @@ on_event_activated (GcalWeekView *self,
   g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
 }
 
+static void
+stack_visible_child_changed_cb (GtkStack     *stack,
+                                GParamSpec   *pspec,
+                                GcalWeekView *self)
+{
+  if (gtk_stack_get_visible_child (stack) != (GtkWidget*) self)
+    return;
+
+  schedule_position_scroll (self);
+
+  g_signal_handlers_disconnect_by_func (stack, stack_visible_child_changed_cb, self);
+}
+
 /* Auxiliary methods */
 static gboolean
 update_grid_scroll_position (GcalWeekView *self)
@@ -117,7 +132,18 @@ update_grid_scroll_position (GcalWeekView *self)
   if (!gtk_widget_get_realized (self->scrolled_window) ||
       !gtk_widget_get_mapped (self->scrolled_window))
     {
-      GCAL_RETURN (G_SOURCE_CONTINUE);
+      GtkWidget *stack;
+
+      stack = gtk_widget_get_ancestor (GTK_WIDGET (self), GTK_TYPE_STACK);
+
+      g_signal_connect (stack,
+                        "notify::visible-child",
+                        G_CALLBACK (stack_visible_child_changed_cb),
+                        self);
+
+      self->scroll_grid_timeout_id = 0;
+
+      GCAL_RETURN (G_SOURCE_REMOVE);
     }
 
   now = g_date_time_new_now_local ();
