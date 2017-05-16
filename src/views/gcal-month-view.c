@@ -2307,4 +2307,9 @@ gcal_month_view_set_manager (GcalMonthView *self,
   g_return_if_fail (GCAL_IS_MONTH_VIEW (self));
 
   self->manager = manager;
+
+  g_signal_connect_swapped (gcal_manager_get_clock (manager),
+                            "day-changed",
+                            G_CALLBACK (gtk_widget_queue_draw),
+                            self);
 }
