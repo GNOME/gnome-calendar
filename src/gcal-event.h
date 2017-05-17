@@ -76,6 +76,8 @@ const gchar*         gcal_event_get_description                  (GcalEvent     
 void                 gcal_event_set_description                  (GcalEvent          *self,
                                                                   const gchar        *description);
 
+gboolean             gcal_event_has_recurrence                   (GcalEvent          *self);
+
 gboolean             gcal_event_has_alarms                       (GcalEvent          *self);
 
 GList*               gcal_event_get_alarms                       (GcalEvent          *self);

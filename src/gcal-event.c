@@ -80,6 +80,7 @@ struct _GcalEvent
   GObject             parent;
 
   gchar              *uid;
+  gboolean            has_recurrence;
 
   /*
    * The description is cached in the class because it
@@ -125,6 +126,7 @@ enum {
   PROP_SUMMARY,
   PROP_TIMEZONE,
   PROP_UID,
+  PROP_HAS_RECURRENCE,
   N_PROPS
 };
 
@@ -363,9 +365,13 @@ gcal_event_set_component_internal (GcalEvent     *self,
       /* Setup UID */
       gcal_event_update_uid_internal (self);
 
+      /* Set has-recurrence to check if the component has recurrence or not */
+      self->has_recurrence = e_cal_component_has_recurrences(component);
+
       /* Load and setup the alarms */
       load_alarms (self);
 
+      g_object_notify (G_OBJECT (self), "has-recurrence");
       g_object_notify (G_OBJECT (self), "component");
       g_object_notify (G_OBJECT (self), "location");
       g_object_notify (G_OBJECT (self), "summary");
@@ -479,6 +485,10 @@ gcal_event_get_property (GObject    *object,
 
     case PROP_UID:
       g_value_set_string (value, self->uid);
+      break;
+
+    case PROP_HAS_RECURRENCE:
+      g_value_set_boolean (value, self->has_recurrence);
       break;
 
     default:
@@ -692,6 +702,21 @@ gcal_event_class_init (GcalEventClass *klass)
                                                         "The unique identifier of the event",
                                                         "",
                                                         G_PARAM_READABLE));
+
+  /**
+  * GcalEvent::has-recurrence:
+  *
+  * The recurrence property of the event.
+  */
+  g_object_class_install_property (object_class,
+                                   PROP_HAS_RECURRENCE,
+                                   g_param_spec_boolean ("has-recurrence",
+                                                         "If event has recurrence",
+                                                         "Whether the event has recurrence or not",
+                                                         FALSE,
+                                                         G_PARAM_READABLE));
+
+
 }
 
 static void
@@ -998,6 +1023,22 @@ gcal_event_set_description (GcalEvent   *self,
 
       g_object_notify (G_OBJECT (self), "description");
     }
+}
+
+/**
+ * gcal_event_has_recurrence:
+ * @self: a #GcalEvent
+ *
+ * Returns whether the event has recurrences or not.
+ *
+ * Returns: %TRUE if @self has recurrences, %FALSE otherwise
+ */
+gboolean
+gcal_event_has_recurrence (GcalEvent *self)
+{
+  g_return_val_if_fail (GCAL_IS_EVENT (self), FALSE);
+
+  return e_cal_component_has_recurrences (self->component);
 }
 
 /**
