@@ -10,6 +10,7 @@
         "--share=ipc", "--socket=x11",
         "--socket=wayland",
         "--share=network",
+        "--talk-name=org.gnome.ControlCenter",
         "--talk-name=org.gnome.OnlineAccounts",
         "--talk-name=org.gnome.evolution.dataserver.AddressBook9",
         "--talk-name=org.gnome.evolution.dataserver.Calendar7",
