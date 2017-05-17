@@ -52,7 +52,6 @@ struct _GcalEvent
   ESource            *source;
 
   gboolean            is_valid : 1;
-  gboolean            is_initialized : 1;
   GError             *initialization_error;
 };
 
@@ -343,13 +342,6 @@ gcal_event_initable_init (GInitable     *initable,
   self = GCAL_EVENT (initable);
 
   G_LOCK (init_lock);
-
-  if (self->is_initialized)
-    goto out;
-
-
-out:
-  self->is_initialized = TRUE;
 
   if (!self->is_valid)
     g_propagate_error (error, g_error_copy (self->initialization_error));
