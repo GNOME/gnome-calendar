@@ -1,0 +1,2 @@
+option('enable-tracing', type: 'boolean', value: false, description: 'add extra debugging information')
+option('enable-gtk-doc', type: 'boolean', value: false, description: 'use gtk-doc to build documentation')
