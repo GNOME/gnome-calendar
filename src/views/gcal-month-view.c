@@ -1625,56 +1625,6 @@ gcal_month_view_draw (GtkWidget *widget,
 
       nr_day = g_strdup_printf ("%d", j);
 
-      if (g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (real_i)))
-        {
-          GList *l;
-          PangoLayout *overflow_layout;
-          PangoFontDescription *ofont_desc;
-          gchar *overflow_str;
-          gdouble y_value;
-
-          l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (real_i));
-
-          /* TODO: Warning: in some languages this string can be too long and may overlap with the number */
-          overflow_str = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", g_list_length (l)),
-                                          g_list_length (l));
-
-          gtk_style_context_save (context);
-          gtk_style_context_add_class (context, "overflow");
-          if (self->hovered_overflow_indicator == real_i)
-            {
-              gtk_style_context_set_state (context, GTK_STATE_FLAG_PRELIGHT);
-              gtk_style_context_get (context, GTK_STATE_FLAG_PRELIGHT, "font", &ofont_desc, NULL);
-            }
-          else
-            {
-              gtk_style_context_get (context, state, "font", &ofont_desc, NULL);
-            }
-
-          overflow_layout = gtk_widget_create_pango_layout (widget, overflow_str);
-
-          pango_layout_set_font_description (overflow_layout, ofont_desc);
-          pango_layout_set_width (overflow_layout, pango_units_from_double (cell_width));
-          pango_layout_set_alignment (overflow_layout, PANGO_ALIGN_CENTER);
-          pango_layout_get_pixel_size (overflow_layout, &font_width, &font_height);
-          y_value = cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y;
-
-          if ((!gtk_widget_is_visible (self->overflow_popover) && self->hovered_overflow_indicator == real_i) ||
-               gtk_widget_is_visible (self->overflow_popover))
-            {
-              gtk_render_background (context, cr, cell_width * column, y_value - padding.bottom,
-                                     cell_width, font_height + padding.bottom * 2);
-            }
-
-          gtk_render_layout (context, cr, cell_width * column + padding.left, y_value, overflow_layout);
-
-          gtk_style_context_remove_class (context, "overflow");
-          gtk_style_context_restore (context);
-          g_free (overflow_str);
-          pango_font_description_free (ofont_desc);
-          g_object_unref (overflow_layout);
-        }
-
       if (self->date->year == g_date_time_get_year (today) &&
           self->date->month == g_date_time_get_month (today) &&
           j == g_date_time_get_day_of_month (today))
@@ -1741,6 +1691,57 @@ gcal_month_view_draw (GtkWidget *widget,
         }
 
       g_free (nr_day);
+
+      if (g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (real_i)))
+        {
+          GList *l;
+          PangoLayout *overflow_layout;
+          PangoFontDescription *ofont_desc;
+          gchar *overflow_str;
+          gdouble y_value;
+
+          l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (real_i));
+
+          /* TODO: Warning: in some languages this string can be too long and may overlap with the number */
+          overflow_str = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", g_list_length (l)),
+                                          g_list_length (l));
+
+          gtk_style_context_save (context);
+          gtk_style_context_add_class (context, "overflow");
+          if (self->hovered_overflow_indicator == real_i)
+            {
+              gtk_style_context_set_state (context, GTK_STATE_FLAG_PRELIGHT);
+              gtk_style_context_get (context, GTK_STATE_FLAG_PRELIGHT, "font", &ofont_desc, NULL);
+            }
+          else
+            {
+              gtk_style_context_get (context, state, "font", &ofont_desc, NULL);
+            }
+
+          overflow_layout = gtk_widget_create_pango_layout (widget, overflow_str);
+
+          pango_layout_set_font_description (overflow_layout, ofont_desc);
+          pango_layout_set_width (overflow_layout, pango_units_from_double (cell_width - (font_width + padding.right)));
+          pango_layout_set_alignment (overflow_layout, PANGO_ALIGN_CENTER);
+          pango_layout_set_ellipsize (overflow_layout, PANGO_ELLIPSIZE_END);
+          pango_layout_get_pixel_size (overflow_layout, &font_width, &font_height);
+          y_value = cell_height * (row + 1 + first_row_gap) - font_height - padding.bottom + start_grid_y;
+
+          if ((!gtk_widget_is_visible (self->overflow_popover) && self->hovered_overflow_indicator == real_i) ||
+               gtk_widget_is_visible (self->overflow_popover))
+            {
+              gtk_render_background (context, cr, cell_width * column, y_value - padding.bottom,
+                                     cell_width, font_height + padding.bottom * 2);
+            }
+
+          gtk_render_layout (context, cr, cell_width * column, y_value, overflow_layout);
+
+          gtk_style_context_remove_class (context, "overflow");
+          gtk_style_context_restore (context);
+          g_free (overflow_str);
+          pango_font_description_free (ofont_desc);
+          g_object_unref (overflow_layout);
+        }
     }
   pango_font_description_free (sfont_desc);
   pango_font_description_free (font_desc);
