@@ -837,7 +837,9 @@ gcal_event_set_date_end (GcalEvent *self,
 
       g_object_notify (G_OBJECT (self), "date-end");
 
-      g_clear_pointer (&component_dt, e_cal_component_free_datetime);
+      e_cal_component_free_datetime (&current);
+      e_cal_component_free_datetime (component_dt);
+      g_free (component_dt);
     }
 }
 
@@ -892,7 +894,9 @@ gcal_event_set_date_start (GcalEvent *self,
 
       g_object_notify (G_OBJECT (self), "date-start");
 
-      g_clear_pointer (&component_dt, e_cal_component_free_datetime);
+      e_cal_component_free_datetime (&current);
+      e_cal_component_free_datetime (component_dt);
+      g_free (component_dt);
     }
 }
 
