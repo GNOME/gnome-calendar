@@ -1159,8 +1159,6 @@ gcal_manager_get_sources (GcalManager *manager)
 
   while (g_hash_table_iter_next (&iter, &key, &value))
     {
-      GcalManagerUnit *unit = value;
-
       if (!is_source_enabled (key))
         continue;
 
@@ -1577,7 +1575,6 @@ gcal_manager_disable_source (GcalManager *manager,
                              ESource     *source)
 {
   ESourceSelectable *selectable;
-  GcalManagerUnit *unit;
   const gchar *source_uid;
 
   GCAL_ENTRY;
@@ -1585,7 +1582,6 @@ gcal_manager_disable_source (GcalManager *manager,
   g_return_if_fail (GCAL_IS_MANAGER (manager));
   g_return_if_fail (E_IS_SOURCE (source));
 
-  unit = g_hash_table_lookup (manager->clients, source);
   selectable = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
 
   if (!is_source_enabled (source))

@@ -136,14 +136,12 @@ get_visible_text (GtkWidget         *widget,
 static gint
 get_vertical_text_height (GtkWidget *widget)
 {
-  GcalEventWidget *self;
   GtkBorder border, padding;
   GtkStyleContext *context;
   PangoLayout *layout;
   gint layout_height;
   gchar* display_text;
 
-  self = GCAL_EVENT_WIDGET (widget);
   context = gtk_widget_get_style_context (widget);
   display_text = get_visible_text (widget, GTK_ORIENTATION_VERTICAL);
   layout = gtk_widget_create_pango_layout (widget, display_text);

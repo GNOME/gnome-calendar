@@ -1785,7 +1785,6 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
   GDateTime *event_start, *event_end;
   GcalEvent *event;
   GError *error;
-  GList *l;
   guint i, start_month, end_month;
 
   error = NULL;
