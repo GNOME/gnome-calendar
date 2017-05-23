@@ -213,90 +213,269 @@ select_row (GcalQuickAddPopover *self,
   g_clear_pointer (&surface, cairo_surface_destroy);
 }
 
-static void
-update_header (GcalQuickAddPopover *self)
+static gint
+get_number_of_days_from_today (GDateTime *day)
 {
-  icaltimetype *dtstart;
-  struct tm stm_date, etm_date;
-  gboolean multiday_or_timed;
-  gboolean all_day;
-  gchar start[64], end[64];
-  gchar *title_date;
+    GDate today, event_day;
+    gint n_days;
 
-  all_day = datetime_is_date (self->date_start) && (self->date_end ? datetime_is_date (self->date_end) : TRUE);
-  dtstart = datetime_to_icaltime (self->date_start);
+    g_date_set_dmy (&today,
+                    g_date_time_get_day_of_month (g_date_time_new_now_local ()),
+                    g_date_time_get_month (g_date_time_new_now_local ()),
+                    g_date_time_get_year (g_date_time_new_now_local ()));
 
-  stm_date = icaltimetype_to_tm (dtstart);
-  /* Translators:
-   * this is the format string for representing a date consisting of a month
-   * name and a day of month.
-   */
-  e_utf8_strftime_fix_am_pm (start, 64, _("%B %d"), &stm_date);
+    g_date_set_dmy (&event_day,
+                    g_date_time_get_day_of_month (day),
+                    g_date_time_get_month (day),
+                    g_date_time_get_year (day));
+    n_days = g_date_days_between (&event_day, &today);
 
-  if (self->date_end)
+    return n_days;
+}
+
+static gchar*
+get_date_string_for_multiday (GDateTime *start,
+                              GDateTime *end)
+{
+    gint n_days;
+    gchar *start_date_str, *end_date_str, *date_string;
+
+    gchar *start_date_weekdays_strings [] = {
+      N_("from next Monday"),
+      N_("from next Tuesday"),
+      N_("from next Wednesday"),
+      N_("from next Thursday"),
+      N_("from next Friday"),
+      N_("from next Saturday"),
+      N_("from next Sunday"),
+      NULL
+    };
+
+    gchar *end_date_weekdays_strings [] = {
+      N_("to next Monday"),
+      N_("to next Tuesday"),
+      N_("to next Wednesday"),
+      N_("to next Thursday"),
+      N_("to next Friday"),
+      N_("to next Saturday"),
+      N_("to next Sunday"),
+      NULL
+    };
+
+    gchar *month_names [] = {
+      N_("January"),
+      N_("February"),
+      N_("March"),
+      N_("April"),
+      N_("May"),
+      N_("June"),
+      N_("July"),
+      N_("August"),
+      N_("September"),
+      N_("October"),
+      N_("November"),
+      N_("December"),
+      NULL
+    };
+
+    start_date_str = NULL;
+    n_days = get_number_of_days_from_today (start);
+
+    if (n_days == 0)
+      {
+        start_date_str = g_strdup_printf (_("from Today"));
+      }
+    else if (n_days == -1)
+      {
+        start_date_str = g_strdup_printf (_("from Tomorrow"));
+      }
+    else if (n_days == 1)
+      {
+        start_date_str = g_strdup_printf (_("from Yesterday"));
+      }
+    else if (n_days < -1 && n_days > -8)
+      {
+        gchar *start_weekday_str;
+
+        start_weekday_str = start_date_weekdays_strings [g_date_time_get_day_of_week (start) - 1];
+        start_date_str = g_strdup_printf ("%s", start_weekday_str);
+      }
+    else
+      {
+        gchar *day_number_str;
+
+        day_number_str = g_strdup_printf ("%u", g_date_time_get_day_of_month (start));
+        /* Translators:
+         * this is the format string for representing a date consisting of a month
+         * name and a date of month.
+         */
+        start_date_str = g_strdup_printf (_("from %1$s %2$s"),
+                                          month_names [g_date_time_get_month (start) - 1],
+                                          day_number_str);
+        g_free (day_number_str);
+      }
+
+    end_date_str = NULL;
+    n_days = get_number_of_days_from_today (end);
+
+    if (n_days == 0)
+      {
+        end_date_str = g_strdup_printf (_("to Today"));
+      }
+    else if (n_days == -1)
+      {
+        end_date_str = g_strdup_printf (_("to Tomorrow"));
+      }
+    else if (n_days == 1)
+      {
+        end_date_str = g_strdup_printf (_("to Yesterday"));
+      }
+    else if (n_days < -1 && n_days > -8)
+      {
+        gchar *end_weekday_str;
+
+        end_weekday_str = end_date_weekdays_strings [g_date_time_get_day_of_week (end) - 1];
+        end_date_str = g_strdup_printf ("%s", end_weekday_str);
+      }
+    else
+      {
+        gchar *day_number_str;
+
+        day_number_str = g_strdup_printf ("%u", g_date_time_get_day_of_month (end));
+        /* Translators:
+         * this is the format string for representing a date consisting of a month
+         * name and a date of month.
+         */
+        end_date_str = g_strdup_printf (_("to %1$s %2$s"),
+                                        month_names [g_date_time_get_month (end) - 1],
+                                        day_number_str);
+        g_free (day_number_str);
+      }
+
+    date_string = g_strdup_printf (_("New Event %1$s %2$s"),
+                                   start_date_str,
+                                   end_date_str);
+    return date_string;
+}
+
+static gchar*
+get_date_string_for_day (GDateTime *day)
+{
+  GDate today, event_day;
+  gchar *string_for_date;
+  gint n_days;
+
+  string_for_date = NULL;
+  n_days = get_number_of_days_from_today (day);
+
+  if (n_days == 0)
     {
-      multiday_or_timed = g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_DAY > 1 ||
-                          g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_MINUTE > 1;
+      string_for_date = g_strdup_printf (_("New Event Today"));
+    }
+  else if (n_days == -1)
+    {
+      string_for_date = g_strdup_printf (_("New Event Tomorrow"));
+    }
+  else if (n_days == 1)
+    {
+      string_for_date = g_strdup_printf (_("New Event Yesterday"));
+    }
+  else if (n_days < -1 && n_days > -8)
+    {
+       gchar *event_weekday;
+       gchar *event_weekday_names [] = {
+         N_("New Event next Monday"),
+         N_("New Event next Tuesday"),
+         N_("New Event next Wednesday"),
+         N_("New Event next Thursday"),
+         N_("New Event next Friday"),
+         N_("New Event next Saturday"),
+         N_("New Event next Sunday"),
+         NULL
+       };
+
+       event_weekday = event_weekday_names [g_date_time_get_day_of_week (day) - 1];
+       string_for_date = g_strdup_printf ("%s", event_weekday);
     }
   else
     {
-      multiday_or_timed = FALSE;
+       gchar *event_month;
+       gchar *event_month_names [] = {
+         N_("New Event on January"),
+         N_("New Event on February"),
+         N_("New Event on March"),
+         N_("New Event on April"),
+         N_("New Event on May"),
+         N_("New Event on June"),
+         N_("New Event on July"),
+         N_("New Event on August"),
+         N_("New Event on September"),
+         N_("New Event on October"),
+         N_("New Event on November"),
+         N_("New Event on December"),
+         NULL
+       };
+
+       event_month = event_month_names [g_date_time_get_month (day) - 1];
+       string_for_date = g_strdup_printf (_("%1$s %2$d"),
+                                          event_month,
+                                          g_date_time_get_day_of_month (day));
     }
+
+  return string_for_date;
+}
+
+static void
+update_header (GcalQuickAddPopover *self)
+{
+  gboolean multiday_or_timed;
+  gchar *title_date;
+
+  multiday_or_timed = self->date_end &&
+                      (g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_DAY > 1 ||
+                       g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_MINUTE > 1);
 
   if (multiday_or_timed)
     {
-      icaltimetype *dtend;
+      gboolean all_day;
 
-      dtend = datetime_to_icaltime (self->date_end);
-
-      if (dtend->is_date)
-        icaltime_adjust (dtend, -1, 0, 0, 0);
+      all_day = datetime_is_date (self->date_start) && (self->date_end ? datetime_is_date (self->date_end) : TRUE);
 
       if (all_day &&
           (g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_DAY > 1 &&
            g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_MINUTE > 1))
         {
-          etm_date = icaltimetype_to_tm (dtend);
-          /* Translators:
-           * this is the format string for representing a date consisting of a month
-           * name and a day of month.
-           */
-          e_utf8_strftime_fix_am_pm (end, 64, _("%B %d"), &etm_date);
-
-          title_date = g_strdup_printf (_("New Event from %s to %s"), start, end);
+          title_date = get_date_string_for_multiday (self->date_start, g_date_time_add_days (self->date_end, -1));
         }
       else
         {
-          g_autofree gchar *start_hour, *end_hour;
+          g_autofree gchar *start_hour, *end_hour, *event_date_name;
+          gchar *hour_format;
 
           if (self->clock_format_24h)
-            {
-              start_hour = g_date_time_format (self->date_start, "%R");
-              end_hour = g_date_time_format (self->date_end, "%R");
-            }
+              hour_format = "%R";
           else
-            {
-              start_hour = g_date_time_format (self->date_start, "%I:%M %P");
-              end_hour = g_date_time_format (self->date_end, "%I:%M %P");
-            }
+              hour_format = "%I:%M %P";
 
-          title_date = g_strdup_printf (_("New Event on %s, %s – %s"),
-                                        start,
+          start_hour = g_date_time_format (self->date_start, hour_format);
+          end_hour = g_date_time_format (self->date_end, hour_format);
+
+          event_date_name = get_date_string_for_day (self->date_start);
+          title_date = g_strdup_printf (_("%1$s, %2$s – %3$s"),
+                                        event_date_name,
                                         start_hour,
                                         end_hour);
         }
-
-      g_free (dtend);
     }
   else
     {
-      title_date = g_strdup_printf (_("New Event on %s"), start);
+      g_autofree gchar *event_date_name;
+      event_date_name = get_date_string_for_day (self->date_start);
+      title_date = g_strdup_printf ("%s", event_date_name);
     }
 
   gtk_label_set_label (GTK_LABEL (self->title_label), title_date);
-
   g_free (title_date);
-  g_free (dtstart);
 }
 
 static void
