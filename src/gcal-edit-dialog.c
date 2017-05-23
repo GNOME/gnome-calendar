@@ -1072,108 +1072,107 @@ void
 gcal_edit_dialog_set_event (GcalEditDialog *dialog,
                             GcalEvent      *event)
 {
+  GDateTime *date_start;
+  GDateTime *date_end;
+  cairo_surface_t *surface;
+  ESource *source;
+  const gchar *summary;
+  gboolean all_day;
+
   GCAL_ENTRY;
 
   g_return_if_fail (GCAL_IS_EDIT_DIALOG (dialog));
 
-  if (g_set_object (&dialog->event, event))
-    {
-      GDateTime *date_start;
-      GDateTime *date_end;
-      cairo_surface_t *surface;
-      ESource *source;
-      const gchar *summary;
-      gboolean all_day;
+  g_set_object (&dialog->event, event);
 
-      dialog->setting_event = TRUE;
+  dialog->setting_event = TRUE;
 
-      /* If we just set the event to NULL, simply send a property notify */
-      if (!event)
-        GCAL_GOTO (out);
+  /* If we just set the event to NULL, simply send a property notify */
+  if (!event)
+    GCAL_GOTO (out);
 
-      all_day = gcal_event_get_all_day (event);
-      source = gcal_event_get_source (event);
+  all_day = gcal_event_get_all_day (event);
+  source = gcal_event_get_source (event);
 
-      /* Clear event data */
-      gcal_edit_dialog_clear_data (dialog);
+  /* Clear event data */
+  gcal_edit_dialog_clear_data (dialog);
 
-      /* update sources list */
-      if (dialog->sources_menu != NULL)
-        g_menu_remove_all (dialog->sources_menu);
+  /* update sources list */
+  if (dialog->sources_menu != NULL)
+    g_menu_remove_all (dialog->sources_menu);
 
-      fill_sources_menu (dialog);
+  fill_sources_menu (dialog);
 
-      /* Load new event data */
-      /* summary */
-      summary = gcal_event_get_summary (event);
+  /* Load new event data */
+  /* summary */
+  summary = gcal_event_get_summary (event);
 
-      if (g_strcmp0 (summary, "") == 0)
-        gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), _("Unnamed event"));
-      else
-        gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), summary);
+  if (g_strcmp0 (summary, "") == 0)
+    gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), _("Unnamed event"));
+  else
+    gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), summary);
 
-      /* dialog titlebar's title & subtitle */
-      surface = get_circle_surface_from_color (gcal_event_get_color (event), 16);
-      gtk_image_set_from_surface (GTK_IMAGE (dialog->source_image), surface);
-      g_clear_pointer (&surface, cairo_surface_destroy);
+  /* dialog titlebar's title & subtitle */
+  surface = get_circle_surface_from_color (gcal_event_get_color (event), 16);
+  gtk_image_set_from_surface (GTK_IMAGE (dialog->source_image), surface);
+  g_clear_pointer (&surface, cairo_surface_destroy);
 
-      gtk_label_set_label (GTK_LABEL (dialog->subtitle_label), e_source_get_display_name (source));
+  gtk_label_set_label (GTK_LABEL (dialog->subtitle_label), e_source_get_display_name (source));
 
-      /* retrieve start and end dates */
-      date_start = gcal_event_get_date_start (event);
-      date_start = all_day ? g_date_time_ref (date_start) : g_date_time_to_local (date_start);
+  /* retrieve start and end dates */
+  date_start = gcal_event_get_date_start (event);
+  date_start = all_day ? g_date_time_ref (date_start) : g_date_time_to_local (date_start);
 
-      date_end = gcal_event_get_date_end (event);
-      /*
-       * This is subtracting what has been added in gcal_edit_dialog_action_button_clicked ().
-       * See bug 769300.
-       */
-      date_end = all_day ? g_date_time_add_days (date_end, -1) : g_date_time_to_local (date_end);
+  date_end = gcal_event_get_date_end (event);
+  /*
+   * This is subtracting what has been added in gcal_edit_dialog_action_button_clicked ().
+   * See bug 769300.
+   */
+  date_end = all_day ? g_date_time_add_days (date_end, -1) : g_date_time_to_local (date_end);
 
-      /* date */
-      g_signal_handlers_block_by_func (dialog->end_date_selector, sync_datetimes, dialog);
-      g_signal_handlers_block_by_func (dialog->start_date_selector, sync_datetimes, dialog);
+  /* date */
+  g_signal_handlers_block_by_func (dialog->end_date_selector, sync_datetimes, dialog);
+  g_signal_handlers_block_by_func (dialog->start_date_selector, sync_datetimes, dialog);
 
-      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->start_date_selector), date_start);
-      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->end_date_selector), date_end);
+  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->start_date_selector), date_start);
+  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->end_date_selector), date_end);
 
-      g_signal_handlers_unblock_by_func (dialog->start_date_selector, sync_datetimes, dialog);
-      g_signal_handlers_unblock_by_func (dialog->end_date_selector, sync_datetimes, dialog);
+  g_signal_handlers_unblock_by_func (dialog->start_date_selector, sync_datetimes, dialog);
+  g_signal_handlers_unblock_by_func (dialog->end_date_selector, sync_datetimes, dialog);
 
-      /* time */
-      g_signal_handlers_block_by_func (dialog->end_time_selector, sync_datetimes, dialog);
-      g_signal_handlers_block_by_func (dialog->start_time_selector, sync_datetimes, dialog);
+  /* time */
+  g_signal_handlers_block_by_func (dialog->end_time_selector, sync_datetimes, dialog);
+  g_signal_handlers_block_by_func (dialog->start_time_selector, sync_datetimes, dialog);
 
-      gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->start_time_selector), date_start);
-      gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->end_time_selector), date_end);
+  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->start_time_selector), date_start);
+  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->end_time_selector), date_end);
 
-      g_signal_handlers_unblock_by_func (dialog->start_time_selector, sync_datetimes, dialog);
-      g_signal_handlers_unblock_by_func (dialog->end_time_selector, sync_datetimes, dialog);
+  g_signal_handlers_unblock_by_func (dialog->start_time_selector, sync_datetimes, dialog);
+  g_signal_handlers_unblock_by_func (dialog->end_time_selector, sync_datetimes, dialog);
 
-      /* all_day  */
-      gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->all_day_check), all_day);
+  /* all_day  */
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->all_day_check), all_day);
 
-      /* location */
-      gtk_entry_set_text (GTK_ENTRY (dialog->location_entry), gcal_event_get_location (event));
+  /* location */
+  gtk_entry_set_text (GTK_ENTRY (dialog->location_entry), gcal_event_get_location (event));
 
-      /* notes */
-      gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text)),
-                                gcal_event_get_description (event),
-                                -1);
+  /* notes */
+  gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text)),
+                            gcal_event_get_description (event),
+                            -1);
 
-      gcal_edit_dialog_set_writable (dialog, gcal_manager_is_client_writable (dialog->manager, source));
+  gcal_edit_dialog_set_writable (dialog, gcal_manager_is_client_writable (dialog->manager, source));
 
-      g_clear_pointer (&date_start, g_date_time_unref);
-      g_clear_pointer (&date_end, g_date_time_unref);
+  g_clear_pointer (&date_start, g_date_time_unref);
+  g_clear_pointer (&date_end, g_date_time_unref);
 
-      /* Setup the alarms */
-      setup_alarms (dialog);
+  /* Setup the alarms */
+  setup_alarms (dialog);
 
 out:
-      g_object_notify (G_OBJECT (dialog), "event");
+  g_object_notify (G_OBJECT (dialog), "event");
 
-      dialog->setting_event = FALSE;
-    }
+  dialog->setting_event = FALSE;
 
   GCAL_EXIT;
 }
