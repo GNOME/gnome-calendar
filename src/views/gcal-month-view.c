@@ -1721,7 +1721,7 @@ gcal_month_view_draw (GtkWidget *widget,
           overflow_layout = gtk_widget_create_pango_layout (widget, overflow_str);
 
           pango_layout_set_font_description (overflow_layout, ofont_desc);
-          pango_layout_set_width (overflow_layout, pango_units_from_double (cell_width - (font_width + padding.right)));
+          pango_layout_set_width (overflow_layout, pango_units_from_double (cell_width - (font_width + padding.right + padding.left)));
           pango_layout_set_alignment (overflow_layout, PANGO_ALIGN_CENTER);
           pango_layout_set_ellipsize (overflow_layout, PANGO_ELLIPSIZE_END);
           pango_layout_get_pixel_size (overflow_layout, &font_width, &font_height);
@@ -1734,7 +1734,7 @@ gcal_month_view_draw (GtkWidget *widget,
                                      cell_width, font_height + padding.bottom * 2);
             }
 
-          gtk_render_layout (context, cr, cell_width * column, y_value, overflow_layout);
+          gtk_render_layout (context, cr, cell_width * column + padding.left, y_value, overflow_layout);
 
           gtk_style_context_remove_class (context, "overflow");
           gtk_style_context_restore (context);
