@@ -1487,6 +1487,11 @@ gcal_week_header_init (GcalWeekHeader *self)
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
+  /* This is to avoid stray lines when adding and removing events */
+G_GNUC_BEGIN_IGNORE_DEPRECATIONS
+  gtk_container_set_reallocate_redraws (GTK_CONTAINER (self), TRUE);
+G_GNUC_END_IGNORE_DEPRECATIONS
+
   /* Setup the week header as a drag n' drop destination */
   gtk_drag_dest_set (GTK_WIDGET (self),
                      0,
