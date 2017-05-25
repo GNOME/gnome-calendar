@@ -1315,6 +1315,7 @@ gcal_window_set_property (GObject      *object,
           gcal_year_view_set_manager (GCAL_YEAR_VIEW (self->year_view), self->manager);
           gcal_quick_add_popover_set_manager (GCAL_QUICK_ADD_POPOVER (self->quick_add_popover), self->manager);
           gcal_source_dialog_set_manager (GCAL_SOURCE_DIALOG (self->source_dialog), self->manager);
+          gcal_search_view_connect (GCAL_SEARCH_VIEW (self->search_view), self->manager);
 
           g_object_notify (object, "manager");
         }
@@ -1574,7 +1575,6 @@ gcal_window_init (GcalWindow *self)
   gcal_year_view_set_use_24h_format (GCAL_YEAR_VIEW (self->views[GCAL_WINDOW_VIEW_YEAR]), use_24h_format);
 
   /* search view */
-  gcal_search_view_connect (GCAL_SEARCH_VIEW (self->search_view), self->manager);
   gcal_search_view_set_time_format (GCAL_SEARCH_VIEW (self->search_view), use_24h_format);
 
   /* refresh timeout, first is fast */
