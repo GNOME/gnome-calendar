@@ -817,7 +817,7 @@ remove_button_clicked (GtkButton *button,
 
   gcal_event_remove_alarm (event, trigger_minutes);
 
-  gcal_manager_update_event (self->manager, event);
+  gcal_manager_update_event (self->manager, event, E_CAL_OBJ_MOD_THIS);
 
   gtk_widget_destroy (row);
 

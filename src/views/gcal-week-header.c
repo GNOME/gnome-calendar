@@ -1407,7 +1407,7 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
     gcal_event_set_all_day (event, TRUE);
 
   /* Commit the changes */
-  gcal_manager_update_event (self->manager, event);
+  gcal_manager_update_event (self->manager, event, E_CAL_OBJ_MOD_THIS);
 
   /* Cancel the DnD */
   self->dnd_cell = -1;

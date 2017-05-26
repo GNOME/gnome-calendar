@@ -1748,12 +1748,14 @@ gcal_manager_create_event (GcalManager *manager,
  * gcal_manager_update_event:
  * @manager: a #GcalManager
  * @event: a #GcalEvent
+ * @mod: an #ECalObjModType
  *
  * Saves all changes made to @event persistently.
  */
 void
-gcal_manager_update_event (GcalManager *manager,
-                           GcalEvent   *event)
+gcal_manager_update_event (GcalManager    *manager,
+                           GcalEvent      *event,
+                           ECalObjModType  mod)
 {
   GcalManagerUnit *unit;
   ECalComponent *component;
@@ -1775,7 +1777,7 @@ gcal_manager_update_event (GcalManager *manager,
 
   e_cal_client_modify_object (unit->client,
                               e_cal_component_get_icalcomponent (component),
-                              E_CAL_OBJ_MOD_THIS,
+                              mod,
                               NULL,
                               on_event_updated,
                               component);
@@ -1787,12 +1789,14 @@ gcal_manager_update_event (GcalManager *manager,
  * gcal_manager_remove_event:
  * @manager: a #GcalManager
  * @event: a #GcalEvent
+ * @mod: an #ECalObjModType
  *
  * Deletes @event.
  */
 void
-gcal_manager_remove_event (GcalManager *manager,
-                           GcalEvent   *event)
+gcal_manager_remove_event (GcalManager    *manager,
+                           GcalEvent      *event,
+                           ECalObjModType  mod)
 {
   GcalManagerUnit *unit;
   ECalComponentId *id;
@@ -1817,7 +1821,7 @@ gcal_manager_remove_event (GcalManager *manager,
   e_cal_client_remove_object (unit->client,
                               id->uid,
                               id->rid,
-                              E_CAL_OBJ_MOD_THIS,
+                              mod,
                               manager->async_ops,
                               on_event_removed,
                               component);

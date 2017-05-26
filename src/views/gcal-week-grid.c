@@ -1007,7 +1007,7 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   gcal_event_set_date_end (event, new_end);
 
   /* Commit the changes */
-  gcal_manager_update_event (self->manager, event);
+  gcal_manager_update_event (self->manager, event, E_CAL_OBJ_MOD_THIS);
 
   /* Cancel the DnD */
   self->dnd_cell = -1;

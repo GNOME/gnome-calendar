@@ -75,10 +75,12 @@ void                 gcal_manager_create_event                   (GcalManager   
                                                                   GcalEvent          *event);
 
 void                 gcal_manager_update_event                   (GcalManager        *manager,
-                                                                  GcalEvent          *event);
+                                                                  GcalEvent          *event,
+                                                                  ECalObjModType      mod);
 
 void                 gcal_manager_remove_event                   (GcalManager        *manager,
-                                                                  GcalEvent          *event);
+                                                                  GcalEvent          *event,
+                                                                  ECalObjModType      mod);
 
 void                 gcal_manager_move_event_to_source           (GcalManager        *manager,
                                                                   GcalEvent          *event,

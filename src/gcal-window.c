@@ -1102,13 +1102,13 @@ edit_dialog_closed (GtkDialog *dialog,
       break;
 
     case GCAL_RESPONSE_SAVE_EVENT:
-      gcal_manager_update_event (window->manager, event);
+      gcal_manager_update_event (window->manager, event, E_CAL_OBJ_MOD_THIS);
       break;
 
     case GCAL_RESPONSE_DELETE_EVENT:
       if (window->event_to_delete != NULL)
         {
-          gcal_manager_remove_event (window->manager, window->event_to_delete);
+          gcal_manager_remove_event (window->manager, window->event_to_delete, E_CAL_OBJ_MOD_THIS);
           g_clear_object (&window->event_to_delete);
 
           create_notification (GCAL_WINDOW (user_data), _("Another event deleted"), _("Undo"));
@@ -1209,7 +1209,7 @@ remove_event (GtkWidget  *notification,
 
   if (window->event_to_delete != NULL)
     {
-      gcal_manager_remove_event (window->manager, window->event_to_delete);
+      gcal_manager_remove_event (window->manager, window->event_to_delete, E_CAL_OBJ_MOD_THIS);
       g_clear_object (&window->event_to_delete);
     }
 }
@@ -1282,7 +1282,7 @@ gcal_window_finalize (GObject *object)
   /* If we have a queued event to delete, remove it now */
   if (window->event_to_delete)
     {
-      gcal_manager_remove_event (window->manager, window->event_to_delete);
+      gcal_manager_remove_event (window->manager, window->event_to_delete, E_CAL_OBJ_MOD_THIS);
       g_clear_object (&window->event_to_delete);
     }
 

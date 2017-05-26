@@ -829,7 +829,7 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
           g_clear_pointer (&new_end, g_date_time_unref);
         }
 
-      gcal_manager_update_event (self->manager, event);
+      gcal_manager_update_event (self->manager, event, E_CAL_OBJ_MOD_THIS);
 
       g_clear_pointer (&new_start, g_date_time_unref);
 
