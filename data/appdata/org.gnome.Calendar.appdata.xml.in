@@ -42,7 +42,7 @@
   <project_group>GNOME</project_group>
 
   <releases>
-    <release date="2017-03-20" version="3.24.1">
+    <release date="2017-04-24" version="3.25.1">
       <description>
         <p>
           The GNOME Calendar team is proud to announce the 3.25.1 release of
@@ -55,7 +55,7 @@
       </description>
     </release>
 
-    <release date="2017-03-20" version="3.24.1">
+    <release date="2017-04-24" version="3.24.1">
       <description>
         <p>
           The GNOME Calendar team is proud to announce the 3.24.1 release of
