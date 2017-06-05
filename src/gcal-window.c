@@ -1295,6 +1295,12 @@ gcal_window_finalize (GObject *object)
       window->open_edit_dialog_timeout_id = 0;
     }
 
+  if (window->refresh_timeout_id > 0)
+    {
+      g_source_remove (window->refresh_timeout_id);
+      window->refresh_timeout_id = 0;
+    }
+
   /* If we have a queued event to delete, remove it now */
   if (window->event_to_delete)
     {
