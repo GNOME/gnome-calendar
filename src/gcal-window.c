@@ -28,6 +28,7 @@
 #include "gcal-month-view.h"
 #include "gcal-quick-add-popover.h"
 #include "gcal-search-view.h"
+#include "gcal-sidebar.h"
 #include "gcal-source-dialog.h"
 #include "gcal-view.h"
 #include "gcal-week-view.h"
@@ -117,6 +118,7 @@ struct _GcalWindow
   GtkWidget           *notification_label;
   GtkWidget           *notification_action_button;
   GtkWidget           *notification_close_button;
+  GtkWidget           *sidebar;
 
   /* header_bar widets */
   GtkWidget           *menu_button;
@@ -127,6 +129,7 @@ struct _GcalWindow
   GtkWidget           *today_button;
   GtkWidget           *forward_button;
   GtkWidget           *views_switcher;
+  GtkWidget           *titlebar_box;
 
   /* new event popover widgets */
   GtkWidget           *quick_add_popover;
@@ -192,6 +195,10 @@ static void           on_show_calendars_action_activated (GSimpleAction       *a
                                                           GVariant            *param,
                                                           gpointer             user_data);
 
+static void           on_toggle_sidebar_action_changed   (GSimpleAction       *action,
+                                                          GVariant            *param,
+                                                          gpointer             user_data);
+
 static void           on_date_action_activated           (GSimpleAction       *action,
                                                           GVariant            *param,
                                                           gpointer             user_data);
@@ -208,6 +215,7 @@ static const GActionEntry actions[] = {
   {"today",    on_date_action_activated },
   {"change-view", on_view_action_activated, "i" },
   {"show-calendars", on_show_calendars_action_activated },
+  {"toggle-sidebar", NULL, NULL, "true", on_toggle_sidebar_action_changed },
 };
 
 /*
@@ -301,6 +309,7 @@ update_active_date (GcalWindow   *window,
   gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), new_date);
   gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), new_date);
   gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_YEAR]), new_date);
+  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_SIDEBAR]), new_date);
 
   /* year_view */
   if (previous_date->year != new_date->year)
@@ -421,6 +430,7 @@ date_updated (GtkButton  *button,
   GCAL_EXIT;
 }
 
+/* GAction implementations */
 
 static void
 on_show_calendars_action_activated (GSimpleAction *action,
@@ -434,6 +444,22 @@ on_show_calendars_action_activated (GSimpleAction *action,
   gtk_widget_hide (window->calendar_popover);
 
   gtk_widget_show (window->source_dialog);
+}
+
+static void
+on_toggle_sidebar_action_changed (GSimpleAction *action,
+                                  GVariant      *param,
+                                  gpointer       user_data)
+{
+  GcalWindow *self;
+  gboolean reveal;
+
+  self = GCAL_WINDOW (user_data);
+  reveal = gtk_revealer_get_reveal_child (GTK_REVEALER (self->sidebar));
+
+  gtk_revealer_set_reveal_child (GTK_REVEALER (self->sidebar), !reveal);
+
+  g_simple_action_set_state (action, g_variant_new_boolean (!reveal));
 }
 
 static void
@@ -1381,6 +1407,9 @@ gcal_window_set_property (GObject      *object,
           gcal_source_dialog_set_manager (GCAL_SOURCE_DIALOG (self->source_dialog), self->manager);
           gcal_search_view_connect (GCAL_SEARCH_VIEW (self->search_view), self->manager);
 
+          /* TODO: fix GcalWindow and bind all those manager properties */
+          g_object_set (self->sidebar, "manager", self->manager, NULL);
+
           g_object_notify (object, "manager");
         }
       return;
@@ -1485,6 +1514,9 @@ gcal_window_class_init(GcalWindowClass *klass)
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->configure_event = gcal_window_configure_event;
   widget_class->window_state_event = gcal_window_state_event;
+
+  g_type_ensure (GCAL_TYPE_SIDEBAR);
+
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/window.ui");
 
   g_object_class_install_property (
@@ -1537,6 +1569,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, source_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, back_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, titlebar_box);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, today_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, forward_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_overlay);
@@ -1547,6 +1580,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_view);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, sidebar);
 
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_label);
@@ -1626,6 +1660,7 @@ gcal_window_init (GcalWindow *self)
   self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
   self->views[GCAL_WINDOW_VIEW_YEAR] = self->year_view;
+  self->views[GCAL_WINDOW_VIEW_SIDEBAR] = self->sidebar;
 
   gcal_edit_dialog_set_time_format (GCAL_EDIT_DIALOG (self->edit_dialog), use_24h_format);
 
@@ -1653,6 +1688,15 @@ gcal_window_init (GcalWindow *self)
   self->active_date = g_new0 (icaltimetype, 1);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
+  /* Add the sidebar header */
+  gtk_container_add (GTK_CONTAINER (self->titlebar_box),
+                     gcal_sidebar_get_header_widget (GCAL_SIDEBAR (self->sidebar)));
+
+  gtk_container_child_set (GTK_CONTAINER (self->titlebar_box),
+                           gcal_sidebar_get_header_widget (GCAL_SIDEBAR (self->sidebar)),
+                           "position", 0,
+                           NULL);
+
   /* setup accels */
   app = g_application_get_default ();
 
@@ -1665,6 +1709,8 @@ gcal_window_init (GcalWindow *self)
   gcal_window_add_accelerator (app, "win.change-view(1)",  "<Ctrl>1")
   gcal_window_add_accelerator (app, "win.change-view(2)",  "<Ctrl>2");
   gcal_window_add_accelerator (app, "win.change-view(3)",  "<Ctrl>3");
+
+  gcal_window_add_accelerator (app, "win.show-sidebar", "F9");
 }
 
 /* Public API */
