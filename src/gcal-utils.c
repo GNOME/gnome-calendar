@@ -1150,3 +1150,83 @@ is_source_enabled (ESource *source)
 
   return e_source_selectable_get_selected (selectable);
 }
+
+/**
+ * ask_recurrence_modification_type:
+ * @parent: a #GtkWidget
+ * @modtype: an #ECalObjModType
+ * @source: an #ESource
+ *
+ * Assigns the appropriate modtype while modifying an event
+ * based on user's choice in the GtkMessageDialog that pops up.
+ * The modtype helps the user choose the part of recurrent events
+ * to modify. Such as Only This Event, Subsequent events
+ * or All events.
+ *
+ * Returns: %TRUE if user chooses appropriate option and
+ * @modtype is assigned, %FALSE otherwise.
+ */
+gboolean
+ask_recurrence_modification_type (GtkWidget      *parent,
+                                  ECalObjModType *modtype,
+                                  ESource         source)
+{
+  GtkWidget *dialog;
+  GtkDialogFlags flags;
+  gint result;
+  gboolean is_set;
+  EClient *client;
+
+  flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
+  *modtype = E_CAL_OBJ_MOD_THIS;
+
+  dialog = gtk_message_dialog_new (GTK_WINDOW (parent),
+                                   flags,
+                                   GTK_MESSAGE_QUESTION,
+                                   GTK_BUTTONS_NONE,
+                                   _("The event you are trying to modify is recurring. The changes you have selected should be applied to:"));
+
+  gtk_dialog_add_buttons (GTK_DIALOG (dialog),
+                          _("_Cancel"),
+                          GTK_RESPONSE_CANCEL,
+                          _("_Only This Event"),
+                          GTK_RESPONSE_ACCEPT,
+                          NULL);
+
+  client = g_object_get_data (G_OBJECT (&source), "client");
+
+  if (!e_client_check_capability (E_CLIENT (client), CAL_STATIC_CAPABILITY_NO_THISANDFUTURE))
+    gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Subsequent events"), GTK_RESPONSE_OK);
+
+  gtk_dialog_add_button (GTK_DIALOG (dialog), _("_All events"), GTK_RESPONSE_YES);
+
+  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (parent));
+
+  result = gtk_dialog_run (GTK_DIALOG (dialog));
+
+  switch (result)
+    {
+      case GTK_RESPONSE_CANCEL:
+        is_set = FALSE;
+        break;
+      case GTK_RESPONSE_ACCEPT:
+        *modtype = E_CAL_OBJ_MOD_THIS;
+        is_set = TRUE;
+        break;
+      case GTK_RESPONSE_OK:
+        *modtype = E_CAL_OBJ_MOD_THIS_AND_FUTURE;
+        is_set = TRUE;
+        break;
+      case GTK_RESPONSE_YES:
+        *modtype = E_CAL_OBJ_MOD_ALL;
+        is_set = TRUE;
+        break;
+      default:
+        is_set = FALSE;
+        break;
+    }
+
+  gtk_widget_destroy (GTK_WIDGET (dialog));
+
+  return is_set;
+}

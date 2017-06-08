@@ -139,4 +139,8 @@ gboolean        should_change_date_for_scroll                   (gdouble        
 
 gboolean        is_source_enabled                               (ESource               *source);
 
+gboolean        ask_recurrence_modification_type                (GtkWidget             *parent,
+                                                                 ECalObjModType        *modtype,
+                                                                 ESource                source);
+
 #endif // __GCAL_UTILS_H__
