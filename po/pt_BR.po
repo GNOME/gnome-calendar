@@ -242,12 +242,12 @@ msgstr "Navegação"
 #: ../data/ui/help-overlay.ui.h:8
 msgctxt "shortcut window"
 msgid "Go back"
-msgstr "Volta"
+msgstr "Voltar"
 
 #: ../data/ui/help-overlay.ui.h:9
 msgctxt "shortcut window"
 msgid "Go forward"
-msgstr "Avança"
+msgstr "Avançar"
 
 #: ../data/ui/help-overlay.ui.h:10
 msgctxt "shortcut window"
