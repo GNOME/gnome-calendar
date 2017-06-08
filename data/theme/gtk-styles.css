@@ -311,13 +311,14 @@ datechooser day {
 }
 
 datechooser day label {
+  font-size: small;
   transition-property: color;
   transition-duration: 200ms;
 }
 
 datechooser day {
-  min-height: 32px;
-  min-width: 32px;
+  min-height: 25px;
+  min-width: 25px;
   border-radius: 50%;
 }
 
