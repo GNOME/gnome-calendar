@@ -101,7 +101,7 @@ struct _GcalWindow
   GtkApplicationWindow parent;
 
   /* timeout ids */
-  guint                save_geometry_timeout_id;
+  guint                save_settings_timeout_id;
   guint                notification_timeout;
 
   /* upper level widgets */
@@ -181,7 +181,7 @@ enum
   PROP_NEW_EVENT_MODE
 };
 
-#define SAVE_GEOMETRY_ID_TIMEOUT 100 /* ms */
+#define SAVE_SETTINGS_ID_TIMEOUT 100 /* ms */
 #define FAST_REFRESH_TIMEOUT     900000 /* ms */
 #define SLOW_REFRESH_TIMEOUT     3600000 /* ms */
 
@@ -545,13 +545,85 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
   return g_ascii_strcasecmp (e_source_get_display_name (source1), e_source_get_display_name (source2));
 }
 
+static gboolean
+save_settings (gpointer user_data)
+{
+  GcalWindow *window;
+  GtkWindow *self;
+  GdkWindow *win;
+  GdkWindowState state;
+  GcalApplication *app;
+  GSettings *settings;
+  gboolean maximized;
+  GVariant *variant;
+  gint32 size[2];
+  gint32 position[2];
+
+  GCAL_ENTRY;
+
+  self = GTK_WINDOW (user_data);
+  window = GCAL_WINDOW (self);
+  win = gtk_widget_get_window (GTK_WIDGET (self));
+  state = gdk_window_get_state (win);
+
+
+  app = GCAL_APPLICATION (gtk_window_get_application (self));
+  settings = gcal_application_get_settings (app);
+
+  /* save window's state */
+  maximized = state & GDK_WINDOW_STATE_MAXIMIZED;
+  g_settings_set_boolean (settings,
+                          "window-maximized",
+                          maximized);
+
+  if (maximized)
+    {
+      window->save_settings_timeout_id = 0;
+      GCAL_RETURN (G_SOURCE_REMOVE);
+    }
+
+  /* save window's size */
+  gtk_window_get_size (self,
+                       (gint *) &size[0],
+                       (gint *) &size[1]);
+  variant = g_variant_new_fixed_array (G_VARIANT_TYPE_INT32,
+                                       size,
+                                       2,
+                                       sizeof (size[0]));
+  g_settings_set_value (settings,
+                        "window-size",
+                        variant);
+
+  /* save windows's position */
+  gtk_window_get_position (self,
+                           (gint *) &position[0],
+                           (gint *) &position[1]);
+  variant = g_variant_new_fixed_array (G_VARIANT_TYPE_INT32,
+                                       position,
+                                       2,
+                                       sizeof (position[0]));
+  g_settings_set_value (settings,
+                        "window-position",
+                        variant);
+
+  /* Sidebar */
+  g_settings_set_boolean (settings,
+                          "show-sidebar",
+                          gtk_revealer_get_reveal_child (GTK_REVEALER (window->sidebar)));
+
+  window->save_settings_timeout_id = 0;
+
+  GCAL_RETURN (G_SOURCE_REMOVE);
+}
+
 static void
-load_geometry (GcalWindow *window)
+load_settings (GcalWindow *window)
 {
   GcalApplication *app;
   GSettings *settings;
   GVariant *variant;
   gboolean maximized;
+  gboolean show_sidebar;
   const gint32 *position;
   const gint32 *size;
   gsize n_elements;
@@ -592,73 +664,25 @@ load_geometry (GcalWindow *window)
   if (maximized)
     gtk_window_maximize (GTK_WINDOW (window));
 
-  GCAL_EXIT;
-}
+  /* Show the sidebar */
+  show_sidebar = g_settings_get_boolean (settings, "show-sidebar");
 
-static gboolean
-save_geometry (gpointer user_data)
-{
-  GcalWindow *window;
-  GtkWindow *self;
-  GdkWindow *win;
-  GdkWindowState state;
-  GcalApplication *app;
-  GSettings *settings;
-  gboolean maximized;
-  GVariant *variant;
-  gint32 size[2];
-  gint32 position[2];
-
-  GCAL_ENTRY;
-
-  self = GTK_WINDOW (user_data);
-  window = GCAL_WINDOW (self);
-  win = gtk_widget_get_window (GTK_WIDGET (self));
-  state = gdk_window_get_state (win);
-
-
-  app = GCAL_APPLICATION (gtk_window_get_application (self));
-  settings = gcal_application_get_settings (app);
-
-  /* save window's state */
-  maximized = state & GDK_WINDOW_STATE_MAXIMIZED;
-  g_settings_set_boolean (settings,
-                          "window-maximized",
-                          maximized);
-
-  if (maximized)
+  if (show_sidebar)
     {
-      window->save_geometry_timeout_id = 0;
-      GCAL_RETURN (G_SOURCE_REMOVE);
+      g_signal_handlers_block_by_func (window->sidebar, save_settings, window);
+
+      gtk_revealer_set_transition_type (GTK_REVEALER (window->sidebar),
+                                        GTK_REVEALER_TRANSITION_TYPE_NONE);
+
+      gtk_revealer_set_reveal_child (GTK_REVEALER (window->sidebar), TRUE);
+
+      gtk_revealer_set_transition_type (GTK_REVEALER (window->sidebar),
+                                        GTK_REVEALER_TRANSITION_TYPE_SLIDE_LEFT);
+
+      g_signal_handlers_unblock_by_func (window->sidebar, save_settings, window);
     }
 
-  /* save window's size */
-  gtk_window_get_size (self,
-                       (gint *) &size[0],
-                       (gint *) &size[1]);
-  variant = g_variant_new_fixed_array (G_VARIANT_TYPE_INT32,
-                                       size,
-                                       2,
-                                       sizeof (size[0]));
-  g_settings_set_value (settings,
-                        "window-size",
-                        variant);
-
-  /* save windows's position */
-  gtk_window_get_position (self,
-                           (gint *) &position[0],
-                           (gint *) &position[1]);
-  variant = g_variant_new_fixed_array (G_VARIANT_TYPE_INT32,
-                                       position,
-                                       2,
-                                       sizeof (position[0]));
-  g_settings_set_value (settings,
-                        "window-position",
-                        variant);
-
-  window->save_geometry_timeout_id = 0;
-
-  GCAL_RETURN (G_SOURCE_REMOVE);
+  GCAL_EXIT;
 }
 
 /**
@@ -1309,10 +1333,10 @@ gcal_window_finalize (GObject *object)
 
   GCAL_ENTRY;
 
-  if (window->save_geometry_timeout_id > 0)
+  if (window->save_settings_timeout_id > 0)
     {
-      g_source_remove (window->save_geometry_timeout_id);
-      window->save_geometry_timeout_id = 0;
+      g_source_remove (window->save_settings_timeout_id);
+      window->save_settings_timeout_id = 0;
     }
 
   if (window->open_edit_dialog_timeout_id > 0)
@@ -1461,14 +1485,14 @@ gcal_window_configure_event (GtkWidget         *widget,
 
   window = GCAL_WINDOW (widget);
 
-  if (window->save_geometry_timeout_id != 0)
+  if (window->save_settings_timeout_id != 0)
     {
-      g_source_remove (window->save_geometry_timeout_id);
-      window->save_geometry_timeout_id = 0;
+      g_source_remove (window->save_settings_timeout_id);
+      window->save_settings_timeout_id = 0;
     }
 
-  window->save_geometry_timeout_id = g_timeout_add (SAVE_GEOMETRY_ID_TIMEOUT,
-                                                    save_geometry,
+  window->save_settings_timeout_id = g_timeout_add (SAVE_SETTINGS_ID_TIMEOUT,
+                                                    save_settings,
                                                     window);
 
   retval = GTK_WIDGET_CLASS (gcal_window_parent_class)->configure_event (widget, event);
@@ -1485,14 +1509,14 @@ gcal_window_state_event (GtkWidget           *widget,
 
   window = GCAL_WINDOW (widget);
 
-  if (window->save_geometry_timeout_id != 0)
+  if (window->save_settings_timeout_id != 0)
     {
-      g_source_remove (window->save_geometry_timeout_id);
-      window->save_geometry_timeout_id = 0;
+      g_source_remove (window->save_settings_timeout_id);
+      window->save_settings_timeout_id = 0;
     }
 
-  window->save_geometry_timeout_id = g_timeout_add (SAVE_GEOMETRY_ID_TIMEOUT,
-                                                    save_geometry,
+  window->save_settings_timeout_id = g_timeout_add (SAVE_SETTINGS_ID_TIMEOUT,
+                                                    save_settings,
                                                     window);
 
   retval = GTK_WIDGET_CLASS (gcal_window_parent_class)->window_state_event (widget, event);
@@ -1608,6 +1632,7 @@ gcal_window_class_init(GcalWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, event_activated);
 
   /* Syncronization related */
+  gtk_widget_class_bind_template_callback (widget_class, save_settings);
   gtk_widget_class_bind_template_callback (widget_class, window_state_changed);
 
   /* search related */
@@ -1741,7 +1766,7 @@ gcal_window_new_with_view_and_date (GcalApplication    *app,
                       NULL);
 
   /* loading size */
-  load_geometry (win);
+  load_settings (win);
 
   if (view_type == GCAL_WINDOW_VIEW_DAY)
     view_changed (NULL, NULL, win);

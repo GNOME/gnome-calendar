@@ -21,5 +21,10 @@
             <summary>Type of the active view</summary>
             <description>Type of the active window view, default value is: monthly view</description>
         </key>
+      <key name="show-sidebar" type="b">
+            <default>false</default>
+            <summary>Whether the sidebar is visible</summary>
+            <description>Whether the sidebar is visible or not</description>
+        </key>
     </schema>
 </schemalist>
