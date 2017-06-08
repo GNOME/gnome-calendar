@@ -78,6 +78,7 @@ EXTRA_DIST=                     \
   ui/multi-choice.ui            \
   ui/quick-add-popover.ui       \
   ui/search-view.ui             \
+  ui/sidebar.ui                 \
   ui/source-dialog.ui           \
   ui/time-selector.ui           \
   ui/week-header.ui             \

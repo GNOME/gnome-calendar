@@ -71,6 +71,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-search-view.c                                    \
     gcal-shell-search-provider.h                          \
     gcal-shell-search-provider.c                          \
+    gcal-sidebar.c                                        \
+    gcal-sidebar.h                                        \
     gcal-source-dialog.c                                  \
     gcal-source-dialog.h                                  \
     gcal-subscriber-view.c                                \

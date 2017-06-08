@@ -10,6 +10,7 @@
     <file alias="online-account-row.ui" compressed="true" preprocess="xml-stripblanks">ui/online-account-row.ui</file>
     <file alias="quick-add-popover.ui" compressed="true" preprocess="xml-stripblanks">ui/quick-add-popover.ui</file>
     <file alias="search-view.ui" compressed="true" preprocess="xml-stripblanks">ui/search-view.ui</file>
+    <file alias="sidebar.ui" compressed="true" preprocess="xml-stripblanks">ui/sidebar.ui</file>
     <file alias="source-dialog.ui" compressed="true" preprocess="xml-stripblanks">ui/source-dialog.ui</file>
     <file alias="time-selector.ui" compressed="true" preprocess="xml-stripblanks">ui/time-selector.ui</file>
     <file alias="week-header.ui" compressed="true" preprocess="xml-stripblanks">ui/week-header.ui</file>

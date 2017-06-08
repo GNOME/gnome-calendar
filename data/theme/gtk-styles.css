@@ -422,3 +422,13 @@ weekgrid:selected,
 .week-header:selected {
     border: solid 1px alpha(@theme_selected_bg_color, 0.8);
 }
+
+/* Sidebar */
+label.tiny-label {
+    font-size: smaller;
+}
+
+/* HACK: fix black separator */
+separator.header-separator {
+    background-color: @borders;
+}
