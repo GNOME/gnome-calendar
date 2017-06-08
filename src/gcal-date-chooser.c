@@ -109,7 +109,7 @@ calendar_compute_days (GcalDateChooser *self)
 
   ndays_in_month = month_length[leap (year)][month];
 
-  date = g_date_time_new_local (year, month, 1, 1, 1, 1);
+  date = g_date_time_new_local (year, month, 1, 0, 0, 0);
   first_day = g_date_time_get_day_of_week (date);
   g_date_time_unref (date);
 
@@ -135,7 +135,7 @@ calendar_compute_days (GcalDateChooser *self)
   for (col = 0; col < first_day; col++)
     {
       d = GCAL_DATE_CHOOSER_DAY (self->days[0][col]);
-      date = g_date_time_new_local (other_year, other_month, day, 1, 1, 1);
+      date = g_date_time_new_local (other_year, other_month, day, 0, 0, 0);
       gcal_date_chooser_day_set_date (d, date);
       gcal_date_chooser_day_set_other_month (d, TRUE);
       g_date_time_unref (date);
@@ -149,7 +149,7 @@ calendar_compute_days (GcalDateChooser *self)
   for (day = 1; day <= ndays_in_month; day++)
     {
       d = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
-      date = g_date_time_new_local (year, month, day, 1, 1, 1);
+      date = g_date_time_new_local (year, month, day, 0, 0, 0);
       gcal_date_chooser_day_set_date (d, date);
       gcal_date_chooser_day_set_other_month (d, FALSE);
       g_date_time_unref (date);
@@ -178,7 +178,7 @@ calendar_compute_days (GcalDateChooser *self)
       for (; col < 7; col++)
         {
           d = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
-          date = g_date_time_new_local (other_year, other_month, day, 1, 1, 1);
+          date = g_date_time_new_local (other_year, other_month, day, 0, 0, 0);
           gcal_date_chooser_day_set_date (d, date);
           gcal_date_chooser_day_set_other_month (d, TRUE);
           g_date_time_unref (date);
@@ -211,7 +211,7 @@ calendar_get_weekday_name (gint i)
   gchar *upcased_date;
   gchar *text;
 
-  date = g_date_time_new_local (2015, 1, 4 + i, 1, 1, 1);
+  date = g_date_time_new_local (2015, 1, 4 + i, 0, 0, 0);
   formatted_date = g_date_time_format (date, "%a");
   g_date_time_unref (date);
 
@@ -231,7 +231,7 @@ calendar_get_month_name (gint i)
   GDateTime *date;
   gchar *text;
 
-  date = g_date_time_new_local (2015, i + 1, 1, 1, 1, 1);
+  date = g_date_time_new_local (2015, i + 1, 1, 0, 0, 0);
   text = g_date_time_format (date, "%B");
   g_date_time_unref (date);
 
@@ -319,7 +319,7 @@ calendar_update_selected_day (GcalDateChooser *self)
 
   if (month_len < day)
     {
-      date = g_date_time_new_local (year, month, month_len, 1, 1, 1);
+      date = g_date_time_new_local (year, month, month_len, 0, 0, 0);
       gcal_date_chooser_set_date (self, date);
       g_date_time_unref (date);
     }
@@ -418,7 +418,7 @@ multi_choice_changed (GcalDateChooser *self)
   month = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->month_choice)) + 1;
   g_date_time_get_ymd (self->date, NULL, NULL, &day);
 
-  date = g_date_time_new_local (year, month, day, 1, 1, 1);
+  date = g_date_time_new_local (year, month, day, 0, 0, 0);
   gcal_date_chooser_set_date (self, date);
   g_date_time_unref (date);
 }
@@ -463,7 +463,7 @@ calendar_drag_data_received (GtkWidget        *widget,
   if (!self->show_heading || self->no_month_change)
     g_date_time_get_ymd (self->date, &year, &month, NULL);
 
-  date = g_date_time_new_local (year, month, day, 1, 1, 1);
+  date = g_date_time_new_local (year, month, day, 0, 0, 0);
   gcal_date_chooser_set_date (self, date);
   g_date_time_unref (date);
 }
