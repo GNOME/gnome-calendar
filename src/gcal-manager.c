@@ -1828,7 +1828,7 @@ gcal_manager_remove_event (GcalManager    *manager,
 
   e_cal_client_remove_object (unit->client,
                               uid,
-                              rid,
+                              mod == E_CAL_OBJ_MOD_ALL ? NULL : rid,
                               mod,
                               manager->async_ops,
                               on_event_removed,
