@@ -1801,8 +1801,9 @@ gcal_manager_remove_event (GcalManager    *manager,
                            ECalObjModType  mod)
 {
   GcalManagerUnit *unit;
-  ECalComponentId *id;
   ECalComponent *component;
+  gchar* rid;
+  gchar* uid;
 
   GCAL_ENTRY;
 
@@ -1811,7 +1812,12 @@ gcal_manager_remove_event (GcalManager    *manager,
 
   component = gcal_event_get_component (event);
   unit = g_hash_table_lookup (manager->clients, gcal_event_get_source (event));
-  id = e_cal_component_get_id (component);
+  rid = NULL;
+
+  e_cal_component_get_uid (component, &uid);
+
+  if (gcal_event_has_recurrence (event))
+    rid = e_cal_component_get_recurid_as_string (component);
 
   /*
    * While we're removing the event, we don't want the component
@@ -1821,14 +1827,14 @@ gcal_manager_remove_event (GcalManager    *manager,
   g_object_ref (component);
 
   e_cal_client_remove_object (unit->client,
-                              id->uid,
-                              id->rid,
+                              uid,
+                              rid,
                               mod,
                               manager->async_ops,
                               on_event_removed,
                               component);
 
-  e_cal_component_free_id (id);
+  g_free (rid);
 
   GCAL_EXIT;
 }
