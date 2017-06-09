@@ -380,6 +380,8 @@ on_client_connected (GObject      *source_object,
       return;
     }
 
+  g_object_set_data (G_OBJECT (source), "client", client);
+
   unit = g_new0 (GcalManagerUnit, 1);
   unit->connected = TRUE;
   unit->client = g_object_ref (client);
