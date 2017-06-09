@@ -1,3 +1,12 @@
+Major changes in 3.24.3:
+* Fix date calculation in week header (Orkun Tezer)
+* Plug many memory leaks (Mohammed Sadiq)
+* Draw current time strip over events in Week view
+* Reliably keep track of time with a new internal clocking API
+* Add a new --debug option, to show debug messages
+* Use libical2 to build Flatpak
+* Improve Month view rendering code (Abdullahi Usman)
+
 Major changes in 3.24.2:
 * Fix crash in Week view (Mohammed Sadiq)
 * Fix crash in changing the current date (Mohammed Sadiq)

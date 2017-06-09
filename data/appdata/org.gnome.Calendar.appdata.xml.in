@@ -42,6 +42,19 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2017-06-08" version="3.24.3">
+      <description>
+        <p>
+          The GNOME Calendar team is proud to announce the 3.24.3 release of
+          GNOME Calendar! This is a bugfix release that improves a lot the
+          performance and stability of GNOME Calendar, and polishes many
+          rough edges around.
+        </p>
+        <p>This release also updates the translation for Belorusian language.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2017-05-09" version="3.24.2">
       <description>
         <p>
