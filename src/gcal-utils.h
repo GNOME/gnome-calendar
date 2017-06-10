@@ -141,6 +141,6 @@ gboolean        is_source_enabled                               (ESource        
 
 gboolean        ask_recurrence_modification_type                (GtkWidget             *parent,
                                                                  ECalObjModType        *modtype,
-                                                                 ESource                source);
+                                                                 ESource               *source);
 
 #endif // __GCAL_UTILS_H__

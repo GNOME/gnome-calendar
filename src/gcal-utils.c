@@ -1169,7 +1169,7 @@ is_source_enabled (ESource *source)
 gboolean
 ask_recurrence_modification_type (GtkWidget      *parent,
                                   ECalObjModType *modtype,
-                                  ESource         source)
+                                  ESource        *source)
 {
   GtkWidget *dialog;
   GtkDialogFlags flags;
@@ -1193,7 +1193,7 @@ ask_recurrence_modification_type (GtkWidget      *parent,
                           GTK_RESPONSE_ACCEPT,
                           NULL);
 
-  client = g_object_get_data (G_OBJECT (&source), "client");
+  client = g_object_get_data (G_OBJECT (source), "client");
 
   if (!e_client_check_capability (E_CLIENT (client), CAL_STATIC_CAPABILITY_NO_THISANDFUTURE))
     gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Subsequent events"), GTK_RESPONSE_OK);
