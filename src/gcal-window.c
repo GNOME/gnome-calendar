@@ -150,6 +150,7 @@ struct _GcalWindow
   NewEventData        *event_creation_data;
 
   GcalEvent           *event_to_delete;
+  ECalObjModType       event_to_delete_mod;
 
   /* calendar management */
   GtkWidget           *calendar_popover;
@@ -1085,6 +1086,8 @@ edit_dialog_closed (GtkDialog *dialog,
   GcalEvent *event;
   GcalView *view;
   GList *widgets;
+  ECalObjModType mod;
+  ESource *source;
 
   GCAL_ENTRY;
 
@@ -1092,8 +1095,17 @@ edit_dialog_closed (GtkDialog *dialog,
   edit_dialog = GCAL_EDIT_DIALOG (dialog);
   event = gcal_edit_dialog_get_event (edit_dialog);
   view = GCAL_VIEW (window->views[window->active_view]);
+  mod = E_CAL_OBJ_MOD_THIS;
+  source = gcal_event_get_source (event);
 
-  gtk_widget_hide (GTK_WIDGET (dialog));
+  if (response != GCAL_RESPONSE_CREATE_EVENT &&
+      response != GTK_RESPONSE_CANCEL &&
+      response != GTK_RESPONSE_DELETE_EVENT &&
+      gcal_event_has_recurrence (event) &&
+      !ask_recurrence_modification_type (GTK_WIDGET (dialog), &mod, source))
+    {
+      return;
+    }
 
   switch (response)
     {
@@ -1102,13 +1114,13 @@ edit_dialog_closed (GtkDialog *dialog,
       break;
 
     case GCAL_RESPONSE_SAVE_EVENT:
-      gcal_manager_update_event (window->manager, event, E_CAL_OBJ_MOD_THIS);
+      gcal_manager_update_event (window->manager, event, mod);
       break;
 
     case GCAL_RESPONSE_DELETE_EVENT:
       if (window->event_to_delete != NULL)
         {
-          gcal_manager_remove_event (window->manager, window->event_to_delete, E_CAL_OBJ_MOD_THIS);
+          gcal_manager_remove_event (window->manager, window->event_to_delete, window->event_to_delete_mod);
           g_clear_object (&window->event_to_delete);
 
           create_notification (GCAL_WINDOW (user_data), _("Another event deleted"), _("Undo"));
@@ -1127,6 +1139,8 @@ edit_dialog_closed (GtkDialog *dialog,
 
       g_set_object (&window->event_to_delete, event);
 
+      window->event_to_delete_mod = mod;
+
       /* hide widget of the event */
       widgets = gcal_view_get_children_by_uuid (view, gcal_event_get_uid (event));
 
@@ -1139,6 +1153,8 @@ edit_dialog_closed (GtkDialog *dialog,
       break;
 
     }
+
+  gtk_widget_hide (GTK_WIDGET (dialog));
 
   gcal_edit_dialog_set_event (edit_dialog, NULL);
 
@@ -1209,7 +1225,7 @@ remove_event (GtkWidget  *notification,
 
   if (window->event_to_delete != NULL)
     {
-      gcal_manager_remove_event (window->manager, window->event_to_delete, E_CAL_OBJ_MOD_THIS);
+      gcal_manager_remove_event (window->manager, window->event_to_delete, window->event_to_delete_mod);
       g_clear_object (&window->event_to_delete);
     }
 }
@@ -1282,7 +1298,7 @@ gcal_window_finalize (GObject *object)
   /* If we have a queued event to delete, remove it now */
   if (window->event_to_delete)
     {
-      gcal_manager_remove_event (window->manager, window->event_to_delete, E_CAL_OBJ_MOD_THIS);
+      gcal_manager_remove_event (window->manager, window->event_to_delete, window->event_to_delete_mod);
       g_clear_object (&window->event_to_delete);
     }
 
