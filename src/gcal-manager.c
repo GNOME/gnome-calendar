@@ -1802,8 +1802,8 @@ gcal_manager_remove_event (GcalManager    *manager,
 {
   GcalManagerUnit *unit;
   ECalComponent *component;
-  gchar* rid;
-  gchar* uid;
+  gchar *rid;
+  const gchar *uid;
 
   GCAL_ENTRY;
 
