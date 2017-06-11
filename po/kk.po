@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-06-01 14:38+0000\n"
-"PO-Revision-Date: 2017-06-09 22:45+0500\n"
+"POT-Creation-Date: 2017-06-10 01:34+0000\n"
+"PO-Revision-Date: 2017-06-11 21:07+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -64,7 +64,6 @@ msgstr "Күнтізбелеріңізге қатынау және басқар�
 
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/org.gnome.Calendar.desktop.in:7
-#| msgid "Unnamed Calendar"
 msgid "org.gnome.Calendar"
 msgstr "org.gnome.Calendar"
 
@@ -569,8 +568,6 @@ msgstr "%s (бұл күнтізбе тек оқу үшін)"
 #: src/gcal-quick-add-popover.c:234 src/gcal-quick-add-popover.c:264
 #: src/views/gcal-month-view.c:225 src/views/gcal-year-view.c:290
 #: src/views/gcal-year-view.c:512
-#| msgctxt "event date format"
-#| msgid "%B %d"
 msgid "%B %d"
 msgstr "%B %d"
 
@@ -643,6 +640,30 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
+#: src/gcal-utils.c:1187
+msgid ""
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
+msgstr ""
+"Сіз түзетем деген оқиға қайталанады. Сіз таңдаған өзгерістер келесі үшін "
+"іске асырылуы керек:"
+
+#: src/gcal-utils.c:1190
+msgid "_Cancel"
+msgstr "_Бас тарту"
+
+#: src/gcal-utils.c:1192
+msgid "_Only This Event"
+msgstr "_Тек бұл оқиға"
+
+#: src/gcal-utils.c:1199
+msgid "_Subsequent events"
+msgstr "Барлық к_елесі оқиғалар"
+
+#: src/gcal-utils.c:1201
+msgid "_All events"
+msgstr "Б_арлық оқиғалар"
+
 #: src/gcal-window.c:1114
 msgid "Another event deleted"
 msgstr "Басқа оқиға өшірілді"
@@ -675,8 +696,6 @@ msgstr "апта %d"
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
 #: src/views/gcal-year-view.c:284
-#| msgctxt "event date format"
-#| msgid "%B %d"
 msgid "%B %d…"
 msgstr "%B %d…"
 
