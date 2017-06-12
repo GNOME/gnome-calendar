@@ -1180,7 +1180,7 @@ ask_recurrence_modification_type (GtkWidget      *parent,
   flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
   *modtype = E_CAL_OBJ_MOD_THIS;
 
-  dialog = gtk_message_dialog_new (GTK_WINDOW (parent),
+  dialog = gtk_message_dialog_new (GTK_WINDOW (gtk_widget_get_toplevel (parent)),
                                    flags,
                                    GTK_MESSAGE_QUESTION,
                                    GTK_BUTTONS_NONE,
