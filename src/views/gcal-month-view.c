@@ -778,6 +778,8 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
   GtkWidget *event_widget;
   GDateTime *start_dt, *end_dt, *current_dt;
   GcalEvent *event;
+  ECalObjModType mod;
+  ESource *source;
   gint cell, diff;
   gint start_month, current_month;
   gint start_year, current_year;
@@ -785,11 +787,19 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
 
   cell = get_dnd_cell (widget, x, y);
   event_widget = gtk_drag_get_source_widget (context);
+  mod = E_CAL_OBJ_MOD_THIS;
 
   if (!GCAL_IS_EVENT_WIDGET (event_widget))
     return FALSE;
 
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
+  source = gcal_event_get_source (event);
+
+  if (gcal_event_has_recurrence (event) &&
+      !ask_recurrence_modification_type (widget, &mod, source))
+    {
+      goto out;
+    }
 
   /* Move the event's date */
   start_dt = gcal_event_get_date_start (event);
@@ -831,7 +841,7 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
           g_clear_pointer (&new_end, g_date_time_unref);
         }
 
-      gcal_manager_update_event (self->manager, event, E_CAL_OBJ_MOD_THIS);
+      gcal_manager_update_event (self->manager, event, mod);
 
       g_clear_pointer (&new_start, g_date_time_unref);
 
@@ -840,6 +850,7 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
 
   g_clear_pointer (&start_dt, g_date_time_unref);
 
+out:
   /* Cancel the DnD */
   self->dnd_cell = -1;
   gtk_drag_unhighlight (widget);

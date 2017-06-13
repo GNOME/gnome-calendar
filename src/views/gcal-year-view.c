@@ -1488,12 +1488,23 @@ navigator_drag_drop_cb (GcalYearView   *self,
       if (!is_title)
         {
           GcalEventWidget *event_widget;
+          ECalObjModType mod;
           GcalEvent *event;
           GDateTime *start_dt, *end_dt;
           GDateTime *drop_date;
+          ESource *source;
 
           event_widget = GCAL_EVENT_WIDGET (gtk_drag_get_source_widget (context));
           event = gcal_event_widget_get_event (event_widget);
+          source = gcal_event_get_source (event);
+          mod = E_CAL_OBJ_MOD_THIS;
+
+          if (gcal_event_has_recurrence (event) &&
+              !ask_recurrence_modification_type (GTK_WIDGET (self), &mod, source))
+            {
+              goto out;
+            }
+
           start_dt = gcal_event_get_date_start (event);
           end_dt = gcal_event_get_date_end (event);
 
@@ -1522,7 +1533,7 @@ navigator_drag_drop_cb (GcalYearView   *self,
                   g_clear_pointer (&new_end, g_date_time_unref);
                 }
 
-              gcal_manager_update_event (self->manager, event, E_CAL_OBJ_MOD_THIS);
+              gcal_manager_update_event (self->manager, event, mod);
 
               g_clear_pointer (&new_start, g_date_time_unref);
             }
@@ -1531,6 +1542,7 @@ navigator_drag_drop_cb (GcalYearView   *self,
         }
     }
 
+out:
   /* Cancel the DnD after the event is dropped */
   self->selected_data->dnd_day = -1;
   self->selected_data->dnd_month = -1;

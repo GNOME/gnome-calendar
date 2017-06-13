@@ -956,7 +956,9 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   g_autoptr (GDateTime) dnd_date;
   g_autoptr (GDateTime) new_end;
   GtkWidget *event_widget;
+  ECalObjModType mod;
   GcalEvent *event;
+  ESource *source;
   GTimeSpan timespan = 0;
   gboolean ltr;
   gint drop_cell;
@@ -966,6 +968,7 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   drop_cell = get_dnd_cell (widget, x, y);
   event_widget = gtk_drag_get_source_widget (context);
 
+  mod = E_CAL_OBJ_MOD_THIS;
   week_start = NULL;
   dnd_date = NULL;
   new_end = NULL;
@@ -985,6 +988,14 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
     }
 
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
+  source = gcal_event_get_source (event);
+
+  if (gcal_event_has_recurrence (event) &&
+      !ask_recurrence_modification_type (widget, &mod, source))
+    {
+      goto out;
+    }
+
   week_start = get_start_of_week (self->active_date);
   dnd_date = g_date_time_add_minutes (week_start, drop_cell * 30);
 
@@ -1007,8 +1018,10 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   gcal_event_set_date_end (event, new_end);
 
   /* Commit the changes */
-  gcal_manager_update_event (self->manager, event, E_CAL_OBJ_MOD_THIS);
 
+  gcal_manager_update_event (self->manager, event, mod);
+
+out:
   /* Cancel the DnD */
   self->dnd_cell = -1;
   gtk_drag_unhighlight (widget);
