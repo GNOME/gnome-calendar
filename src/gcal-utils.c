@@ -1200,7 +1200,7 @@ ask_recurrence_modification_type (GtkWidget      *parent,
 
   gtk_dialog_add_button (GTK_DIALOG (dialog), _("_All events"), GTK_RESPONSE_YES);
 
-  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (parent));
+  gtk_window_set_transient_for (GTK_WINDOW (dialog), GTK_WINDOW (gtk_widget_get_toplevel (parent)));
 
   result = gtk_dialog_run (GTK_DIALOG (dialog));
 
