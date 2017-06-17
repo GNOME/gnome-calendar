@@ -3,26 +3,26 @@
 # This file is distributed under the same license as the gnome-calendar package.
 #
 # Balázs Úr <urbalazs at gmail dot com>, 2013, 2014, 2015, 2016, 2017.
-# Gabor Kelemen <kelemeng at ubuntu dot com>, 2016.
+# Gabor Kelemen <kelemeng at ubuntu dot com>, 2016, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-04-29 14:11+0000\n"
-"PO-Revision-Date: 2017-05-05 21:49+0200\n"
-"Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
+"POT-Creation-Date: 2017-06-14 21:29+0000\n"
+"PO-Revision-Date: 2017-06-17 10:26+0200\n"
+"Last-Translator: Gabor Kelemen <kelemeng at ubuntu dot com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 1.2\n"
+"X-Generator: Lokalize 1.5\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:184 src/gcal-application.c:469
+#: data/ui/window.ui:184 src/gcal-application.c:479
 msgid "Calendar"
 msgstr "Naptár"
 
@@ -61,13 +61,11 @@ msgid "Calendar management"
 msgstr "Naptárkezelés"
 
 #: data/org.gnome.Calendar.desktop.in:4
-#| msgid "Access, and manage calendar"
 msgid "Access and manage your calendars"
 msgstr "Naptárak elérése és kezelése"
 
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/org.gnome.Calendar.desktop.in:7
-#| msgid "Unnamed Calendar"
 msgid "org.gnome.Calendar"
 msgstr "org.gnome.Calendar"
 
@@ -117,7 +115,7 @@ msgid "Remove the alarm"
 msgstr "A riasztás eltávolítása"
 
 #: data/ui/edit-dialog.ui:18 data/ui/source-dialog.ui:762
-#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1048
+#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1102
 msgid "Cancel"
 msgstr "Mégse"
 
@@ -282,7 +280,6 @@ msgid "Add Eve_nt…"
 msgstr "_Esemény hozzáadása…"
 
 #: data/ui/menus.ui:13
-#| msgid "Calendars"
 msgid "_Calendars"
 msgstr "_Naptárak"
 
@@ -331,7 +328,7 @@ msgstr "Nincs találat"
 msgid "Try a different search"
 msgstr "Próbáljon másik keresést"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1103 src/gcal-window.c:1107
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1126 src/gcal-window.c:1130
 msgid "Undo"
 msgstr "Visszavonás"
 
@@ -414,8 +411,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Naptár címe"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2139
-#: src/gcal-source-dialog.c:2145
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2193
+#: src/gcal-source-dialog.c:2199
 msgid "Add Calendar"
 msgstr "Naptár hozzáadása"
 
@@ -431,8 +428,8 @@ msgstr "Jelszó"
 msgid "Connect"
 msgstr "Kapcsolódás"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:757
-#: src/views/gcal-week-view.c:259
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:734
+#: src/views/gcal-week-view.c:287
 msgid "00:00"
 msgstr "00:00"
 
@@ -440,11 +437,11 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:414
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:442
 msgid "AM"
 msgstr "de."
 
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:414
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:442
 msgid "PM"
 msgstr "du."
 
@@ -461,7 +458,7 @@ msgid "Year"
 msgstr "Év"
 
 #: data/ui/window.ui:187 data/ui/year-view.ui:84 src/views/gcal-year-view.c:275
-#: src/views/gcal-year-view.c:500
+#: src/views/gcal-year-view.c:509
 msgid "Today"
 msgstr "Ma"
 
@@ -470,13 +467,12 @@ msgid "Manage your calendars"
 msgstr "Naptárak kezelése"
 
 #: data/ui/window.ui:278
-#| msgid "Search for events"
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Események keresése"
 
-#: data/ui/window.ui:334 src/gcal-source-dialog.c:790
-#: src/gcal-source-dialog.c:2168
+#: data/ui/window.ui:334 src/gcal-source-dialog.c:844
+#: src/gcal-source-dialog.c:2222
 msgid "Calendar Settings"
 msgstr "Naptárbeállítások"
 
@@ -484,37 +480,41 @@ msgstr "Naptárbeállítások"
 msgid "No events"
 msgstr "Nincsenek események"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2238
+#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2253
 msgid "Add Event…"
 msgstr "Esemény hozzáadása…"
 
-#: src/gcal-application.c:87
+#: src/gcal-application.c:89
 msgid "Display version number"
 msgstr "Verziószám kiírása"
 
-#: src/gcal-application.c:92
+#: src/gcal-application.c:94
+msgid "Enable debug messages"
+msgstr "Hibakeresési üzenetek engedélyezése"
+
+#: src/gcal-application.c:99
 msgid "Open calendar on the passed date"
 msgstr "Naptár megnyitása az átadott napra"
 
-#: src/gcal-application.c:97
+#: src/gcal-application.c:104
 msgid "Open calendar showing the passed event"
 msgstr "Naptár megnyitása az átadott esemény megtekintéséhez"
 
-#: src/gcal-application.c:278
+#: src/gcal-application.c:285
 msgid "— Calendar management"
 msgstr "– Naptárkezelés"
 
-#: src/gcal-application.c:457
+#: src/gcal-application.c:467
 #, c-format
 msgid "Copyright © %d The Calendar authors"
 msgstr "Copyright © %d A Naptár szerzői"
 
-#: src/gcal-application.c:463
+#: src/gcal-application.c:473
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Copyright © %d–%d A Naptár szerzői"
 
-#: src/gcal-application.c:476
+#: src/gcal-application.c:486
 msgid "translator-credits"
 msgstr ""
 "Úr Balázs <urbalazs@gmail.com>\n"
@@ -556,7 +556,7 @@ msgstr[1] "%d héttel előtte"
 msgid "Unnamed event"
 msgstr "Névtelen esemény"
 
-#: src/gcal-event-widget.c:363
+#: src/gcal-event-widget.c:362
 #, c-format
 msgid "At %s"
 msgstr "Ekkor: %s"
@@ -567,11 +567,15 @@ msgid "%s (this calendar is read-only)"
 msgstr "%s (ez a naptár csak olvasható)"
 
 #. Translators:
-#. * this is the format string for representing a date consisting of a month name
-#. * and a date of month.
+#. * this is the format string for representing a date consisting of a month
+#. * name and a day of month.
 #.
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
 #: src/gcal-quick-add-popover.c:234 src/gcal-quick-add-popover.c:264
-msgctxt "event date format"
+#: src/views/gcal-month-view.c:225 src/views/gcal-year-view.c:290
+#: src/views/gcal-year-view.c:512
 msgid "%B %d"
 msgstr "%B %d."
 
@@ -599,38 +603,38 @@ msgid "Use the entry above to search for events."
 msgstr "A fenti bejegyzés használata események kereséséhez."
 
 #. Dialog
-#: src/gcal-source-dialog.c:1045
+#: src/gcal-source-dialog.c:1099
 msgid "Select a calendar file"
 msgstr "Válasszon egy naptárfájlt"
 
-#: src/gcal-source-dialog.c:1049
+#: src/gcal-source-dialog.c:1103
 msgid "Open"
 msgstr "Megnyitás"
 
-#: src/gcal-source-dialog.c:1056
+#: src/gcal-source-dialog.c:1110
 msgid "Calendar files"
 msgstr "Naptárfájlok"
 
 #. update the source properties
-#: src/gcal-source-dialog.c:1090
+#: src/gcal-source-dialog.c:1144
 msgid "Unnamed Calendar"
 msgstr "Névtelen naptár"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1696
+#: src/gcal-source-dialog.c:1750
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "A(z) <b>%s</b> naptár eltávolítva"
 
-#: src/gcal-source-dialog.c:1899 src/gcal-source-dialog.c:1956
+#: src/gcal-source-dialog.c:1953 src/gcal-source-dialog.c:2010
 msgid "Off"
 msgstr "Ki"
 
-#: src/gcal-source-dialog.c:1899 src/gcal-source-dialog.c:1956
+#: src/gcal-source-dialog.c:1953 src/gcal-source-dialog.c:2010
 msgid "On"
 msgstr "Be"
 
-#: src/gcal-source-dialog.c:1955
+#: src/gcal-source-dialog.c:2009
 msgid "Expired"
 msgstr "Lejárt"
 
@@ -644,32 +648,61 @@ msgstr "de. %s"
 msgid "%s PM"
 msgstr "du. %s"
 
-#: src/gcal-window.c:1103
+#: src/gcal-utils.c:1187
+msgid ""
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
+msgstr "A módosítani próbált esemény ismétlődő. A változások vonatkozzanak:"
+
+#: src/gcal-utils.c:1190
+msgid "_Cancel"
+msgstr "_Mégse"
+
+#: src/gcal-utils.c:1192
+msgid "_Only This Event"
+msgstr "Csak _erre az eseményre"
+
+#: src/gcal-utils.c:1199
+msgid "_Subsequent events"
+msgstr "Az ezt _követő eseményekre"
+
+#: src/gcal-utils.c:1201
+msgid "_All events"
+msgstr "_Minden eseményre"
+
+#: src/gcal-window.c:1126
 msgid "Another event deleted"
 msgstr "Egy másik esemény törölve"
 
-#: src/gcal-window.c:1107
+#: src/gcal-window.c:1130
 msgid "Event deleted"
 msgstr "Esemény törölve"
 
-#: src/views/gcal-month-view.c:1172
+#: src/views/gcal-month-view.c:1186
 msgid "Other events"
 msgstr "Egyéb események"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:1638 src/views/gcal-week-header.c:339
+#: src/views/gcal-month-view.c:1719 src/views/gcal-week-header.c:338
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Egyéb esemény"
 msgstr[1] "Egyéb %d esemény"
 
-#: src/views/gcal-week-grid.c:754 src/views/gcal-week-view.c:256
+#: src/views/gcal-week-grid.c:731 src/views/gcal-week-view.c:284
 msgid "00 AM"
 msgstr "00:00"
 
-#: src/views/gcal-week-header.c:872
+#: src/views/gcal-week-header.c:871
 #, c-format
 msgid "week %d"
 msgstr "%d. hét"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when the selection starts at the specified day and the
+#. * end is unspecified.
+#: src/views/gcal-year-view.c:284
+msgid "%B %d…"
+msgstr "%B %d…"
 
