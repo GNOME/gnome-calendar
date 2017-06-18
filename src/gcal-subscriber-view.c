@@ -240,7 +240,7 @@ gcal_subscriber_view_add (GtkContainer *container,
   if (gcal_event_is_multiday (event))
     {
       priv->multi_cell_children = g_list_insert_sorted (priv->multi_cell_children, widget,
-                                                       (GCompareFunc) gcal_event_widget_compare_by_length);
+                                                       (GCompareFunc) gcal_event_widget_sort_events);
     }
   else
     {

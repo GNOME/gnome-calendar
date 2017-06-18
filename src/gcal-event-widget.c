@@ -1239,3 +1239,31 @@ gcal_event_widget_compare_by_start_date (GcalEventWidget *widget1,
 {
   return g_date_time_compare (widget1->dt_start, widget2->dt_start);
 }
+
+gint
+gcal_event_widget_sort_events (GcalEventWidget *widget1,
+                               GcalEventWidget *widget2)
+{
+  g_autoptr (GDateTime) dt_time1, dt_time2;
+  icaltimetype *ical_dt;
+  gint diff;
+
+  dt_time1 = dt_time2 = NULL;
+  diff = gcal_event_widget_compare_by_start_date (widget1, widget2);
+
+  if (diff != 0)
+    return diff;
+
+  diff = gcal_event_widget_compare_by_length (widget1, widget2);
+
+  if (diff != 0)
+    return diff;
+
+  e_cal_component_get_last_modified (gcal_event_get_component (widget1->event), &ical_dt);
+  dt_time1 = icaltime_to_datetime (ical_dt);
+
+  e_cal_component_get_last_modified (gcal_event_get_component (widget2->event), &ical_dt);
+  dt_time2 = icaltime_to_datetime (ical_dt);
+
+  return g_date_time_compare (dt_time2, dt_time1);
+}
