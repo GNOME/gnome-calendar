@@ -169,6 +169,16 @@
 </ARG>
 
 <ARG>
+<NAME>GcalEvent::has-recurrence</NAME>
+<TYPE>gboolean</TYPE>
+<RANGE></RANGE>
+<FLAGS>r</FLAGS>
+<NICK>If event has recurrence</NICK>
+<BLURB>Whether the event has recurrence or not.</BLURB>
+<DEFAULT>FALSE</DEFAULT>
+</ARG>
+
+<ARG>
 <NAME>GcalEvent::location</NAME>
 <TYPE>gchar*</TYPE>
 <RANGE></RANGE>
@@ -245,6 +255,16 @@
 <FLAGS>rwX</FLAGS>
 <NICK>Event</NICK>
 <BLURB>The event this widget represents.</BLURB>
+<DEFAULT></DEFAULT>
+</ARG>
+
+<ARG>
+<NAME>GcalManager::clock</NAME>
+<TYPE>GcalClock*</TYPE>
+<RANGE></RANGE>
+<FLAGS>rw</FLAGS>
+<NICK>Clock</NICK>
+<BLURB>The internal clock of Calendar.</BLURB>
 <DEFAULT></DEFAULT>
 </ARG>
 

@@ -1,3 +1,27 @@
+Major changes in 3.25.3:
+* Drop intltool
+* Move events at column after remove event from list (Orkun Tezer)
+* Hide search popover if click is performed outside (Kevin Lopez)
+* Plug memory leaks (Mohammed Sadiq)
+* Fix drag n' drop of multiday events in Week header (Orkun Tezer)
+* Add margins to overflow label in Month view (Abdullahi Usman)
+* Properly format dates (Rafal Luzynski)
+* Fix crash when after closing Calendar (Milan Crha)
+* Add recurrence dialog for modifying and removing recurrent events (Yash Singh)
+* Updated translations for:
+    * Belarusian (Yuras Shumovich)
+    * Catalan (Jordi Mas)
+    * Croatian (gogo)
+    * Friulian (Fabio Tomat)
+    * German (Mario Blättermann)
+    * Hungarian (Balázs Úr, Balázs Meskó)
+    * Kazakh (Baurzhan Muftakhidinov)
+    * Lithuanian (Aurimas Černius)
+    * Indonesian (Kukuh Syafaat)
+    * Norwegian bokmål (Kjartan Maraas)
+    * Spanish (Daniel Mustieles)
+    * Turkish (Emin Tufan Çetin)
+
 Major changes in 3.25.1:
 * Add developer documentation
 

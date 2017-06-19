@@ -1,3 +1,9 @@
+GCAL_TYPE_CLOCK
+GcalClock
+ask_recurrence_modification_type
+gcal_clock_new
+gcal_event_has_recurrence
+gcal_manager_get_clock
 gcal_week_grid_set_date
 gcal_week_header_set_date
 e_cal_data_model_submit_thread_job(description, alert_ident, alert_arg_0)

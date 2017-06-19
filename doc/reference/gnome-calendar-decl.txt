@@ -358,6 +358,11 @@ GcalEvent          *self
 GcalEvent          *self, const gchar        *description
 </FUNCTION>
 <FUNCTION>
+<NAME>gcal_event_has_recurrence</NAME>
+<RETURNS>gboolean              </RETURNS>
+GcalEvent          *self
+</FUNCTION>
+<FUNCTION>
 <NAME>gcal_event_has_alarms</NAME>
 <RETURNS>gboolean              </RETURNS>
 GcalEvent          *self
@@ -1196,6 +1201,11 @@ gdouble               *scroll_value, GdkEventScroll        *scroll_event
 <RETURNS>gboolean         </RETURNS>
 ESource               *source
 </FUNCTION>
+<FUNCTION>
+<NAME>ask_recurrence_modification_type</NAME>
+<RETURNS>gboolean         </RETURNS>
+GtkWidget             *parent, ECalObjModType        *modtype, ESource               *source
+</FUNCTION>
 <MACRO>
 <NAME>E_TYPE_CAL_DATA_MODEL_SUBSCRIBER</NAME>
 #define E_TYPE_CAL_DATA_MODEL_SUBSCRIBER \
@@ -1360,12 +1370,12 @@ GcalManager        *manager, GcalEvent          *event
 <FUNCTION>
 <NAME>gcal_manager_update_event</NAME>
 <RETURNS>void                  </RETURNS>
-GcalManager        *manager, GcalEvent          *event
+GcalManager        *manager, GcalEvent          *event, ECalObjModType      mod
 </FUNCTION>
 <FUNCTION>
 <NAME>gcal_manager_remove_event</NAME>
 <RETURNS>void                  </RETURNS>
-GcalManager        *manager, GcalEvent          *event
+GcalManager        *manager, GcalEvent          *event, ECalObjModType      mod
 </FUNCTION>
 <FUNCTION>
 <NAME>gcal_manager_move_event_to_source</NAME>
@@ -1400,6 +1410,11 @@ GcalManager        *manager, icaltimetype       *range_start, icaltimetype      
 <FUNCTION>
 <NAME>gcal_manager_get_loading</NAME>
 <RETURNS>gboolean              </RETURNS>
+GcalManager        *self
+</FUNCTION>
+<FUNCTION>
+<NAME>gcal_manager_get_clock</NAME>
+<RETURNS>GcalClock *           </RETURNS>
 GcalManager        *self
 </FUNCTION>
 <FUNCTION>
@@ -1741,6 +1756,18 @@ void
 </STRUCT>
 <STRUCT>
 <NAME>GcalShellSearchProvider2SkeletonPrivate</NAME>
+</STRUCT>
+<MACRO>
+<NAME>GCAL_TYPE_CLOCK</NAME>
+#define GCAL_TYPE_CLOCK (gcal_clock_get_type())
+</MACRO>
+<FUNCTION>
+<NAME>gcal_clock_new</NAME>
+<RETURNS>GcalClock *           </RETURNS>
+void
+</FUNCTION>
+<STRUCT>
+<NAME>GcalClock</NAME>
 </STRUCT>
 <MACRO>
 <NAME>GCAL_ENABLE_TRACE</NAME>

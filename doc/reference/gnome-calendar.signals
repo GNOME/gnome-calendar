@@ -11,6 +11,27 @@ GError *arg5
 </SIGNAL>
 
 <SIGNAL>
+<NAME>GcalClock::day-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalClock *gcalclock
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalClock::hour-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalClock *gcalclock
+</SIGNAL>
+
+<SIGNAL>
+<NAME>GcalClock::minute-changed</NAME>
+<RETURNS>void</RETURNS>
+<FLAGS>l</FLAGS>
+GcalClock *gcalclock
+</SIGNAL>
+
+<SIGNAL>
 <NAME>GcalDateChooserDay::selected</NAME>
 <RETURNS>void</RETURNS>
 <FLAGS>f</FLAGS>

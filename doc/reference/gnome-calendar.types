@@ -1,6 +1,7 @@
 e_cal_data_model_get_type
 e_cal_data_model_subscriber_get_type
 gcal_application_get_type
+gcal_clock_get_type
 gcal_date_chooser_day_get_type
 gcal_date_chooser_get_type
 gcal_date_selector_get_type

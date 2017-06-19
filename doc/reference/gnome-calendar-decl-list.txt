@@ -77,6 +77,13 @@ GcalApplication
 </SECTION>
 
 <SECTION>
+<FILE>gcal-clock</FILE>
+GCAL_TYPE_CLOCK
+gcal_clock_new
+GcalClock
+</SECTION>
+
+<SECTION>
 <FILE>gcal-date-chooser</FILE>
 GcalDateChooserDayOptions
 GCAL_TYPE_DATE_CHOOSER
@@ -174,6 +181,7 @@ gcal_event_get_date_start
 gcal_event_set_date_start
 gcal_event_get_description
 gcal_event_set_description
+gcal_event_has_recurrence
 gcal_event_has_alarms
 gcal_event_get_alarms
 gcal_event_add_alarm
@@ -244,6 +252,7 @@ gcal_manager_disable_source
 gcal_manager_save_source
 gcal_manager_get_events
 gcal_manager_get_loading
+gcal_manager_get_clock
 gcal_manager_get_goa_client
 gcal_manager_get_event_from_shell_search
 gcal_manager_setup_shell_search
@@ -475,6 +484,7 @@ format_utc_offset
 get_alarm_trigger_minutes
 should_change_date_for_scroll
 is_source_enabled
+ask_recurrence_modification_type
 </SECTION>
 
 <SECTION>

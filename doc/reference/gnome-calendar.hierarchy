@@ -3,6 +3,7 @@ GObject
   GApplication
     GtkApplication
       GcalApplication
+  GcalClock
   GInitiallyUnowned
     GtkWidget
       GtkContainer

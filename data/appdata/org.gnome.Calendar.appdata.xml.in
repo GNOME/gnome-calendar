@@ -9,16 +9,23 @@
 
   <description>
     <p>
-      GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME desktop. By reusing the components which the GNOME desktop is build on, Calendar nicely integrates with the GNOME ecosystem.
+      GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME
+      desktop. By reusing the components which the GNOME desktop is build on, Calendar nicely integrates
+      with the GNOME ecosystem.
     </p>
     <p>
-      We aim to find the perfect balance between nicely crafted features and user-centred usability. No excess, no lacks. You’ll feel comfortable using Calendar, like you’ve been using it for ages!
+      We aim to find the perfect balance between nicely crafted features and user-centred usability. No
+      excess, no lacks. You’ll feel comfortable using Calendar, like you’ve been using it for ages!
     </p>
   </description>
 
   <screenshots>
     <screenshot type="default">
       <image width="1200" height="675">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/default.png</image>
+    </screenshot>
+    <screenshot>
+      <caption>Week view</caption>
+      <image width="1200" height="675">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/management.png</image>
     </screenshot>
     <screenshot>
       <caption>Search for events</caption>
@@ -42,6 +49,19 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2017-06-19" version="3.25.3">
+      <description>
+        <p>
+          The GNOME Calendar team is proud to announce the 3.25.3 release of
+          GNOME Calendar, the first release in the next (3.26) unstable series.
+          This release brings the first steps to modify and delete recurrent
+          events, as well as many bugfixes.
+        </p>
+        <p>This release also updates translations.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2017-04-24" version="3.25.1">
       <description>
         <p>
