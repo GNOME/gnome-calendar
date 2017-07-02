@@ -67,6 +67,8 @@ gnome_calendar_SOURCES =                                  \
     gcal-multi-choice.h                                   \
     gcal-quick-add-popover.c                              \
     gcal-quick-add-popover.h                              \
+    gcal-recurrence.c                                     \
+    gcal-recurrence.h                                     \
     gcal-search-view.h                                    \
     gcal-search-view.c                                    \
     gcal-shell-search-provider.h                          \
