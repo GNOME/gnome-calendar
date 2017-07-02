@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-06-14 21:29+0000\n"
-"PO-Revision-Date: 2017-06-17 10:26+0200\n"
+"POT-Creation-Date: 2017-06-24 15:08+0000\n"
+"PO-Revision-Date: 2017-07-02 16:15+0200\n"
 "Last-Translator: Gabor Kelemen <kelemeng at ubuntu dot com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
@@ -41,22 +41,26 @@ msgstr ""
 "felépítő összetevők újrafelhasználásával a Naptár nagyon jól integrálódik a "
 "GNOME ökoszisztémába."
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:14
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, no lacks. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Célunk a tökéletes egyensúly megtalálása a szépen kialakított szolgáltatások "
-"és a felhasználóközpontú használhatóság között. Túlzások és hiány nélkül. "
+"és a felhasználó-központú használhatóság között. Túlzások és hiány nélkül. "
 "Kényelmesen fogja érezni magát a Naptár használatakor, mintha már évek óta "
 "ezt használná!"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:24
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:27
+msgid "Week view"
+msgstr "Hét nézet"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:31
 msgid "Search for events"
 msgstr "Események keresése"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:28
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:35
 msgid "Calendar management"
 msgstr "Naptárkezelés"
 
@@ -552,7 +556,7 @@ msgid_plural "%d weeks before"
 msgstr[0] "%d héttel előtte"
 msgstr[1] "%d héttel előtte"
 
-#: src/gcal-edit-dialog.c:1162 src/gcal-quick-add-popover.c:501
+#: src/gcal-edit-dialog.c:1162 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Névtelen esemény"
 
@@ -566,33 +570,254 @@ msgstr "Ekkor: %s"
 msgid "%s (this calendar is read-only)"
 msgstr "%s (ez a naptár csak olvasható)"
 
-#. Translators:
-#. * this is the format string for representing a date consisting of a month
-#. * name and a day of month.
-#.
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/gcal-quick-add-popover.c:234 src/gcal-quick-add-popover.c:264
-#: src/views/gcal-month-view.c:225 src/views/gcal-year-view.c:290
-#: src/views/gcal-year-view.c:512
-msgid "%B %d"
-msgstr "%B %d."
+#: src/gcal-quick-add-popover.c:244
+msgid "from next Monday"
+msgstr "a következő hétfőtől"
+
+#: src/gcal-quick-add-popover.c:245
+msgid "from next Tuesday"
+msgstr "a következő keddtől"
+
+#: src/gcal-quick-add-popover.c:246
+msgid "from next Wednesday"
+msgstr "a következő szerdától"
+
+#: src/gcal-quick-add-popover.c:247
+msgid "from next Thursday"
+msgstr "a következő csütörtöktől"
+
+#: src/gcal-quick-add-popover.c:248
+msgid "from next Friday"
+msgstr "a következő péntektől"
+
+#: src/gcal-quick-add-popover.c:249
+msgid "from next Saturday"
+msgstr "a következő szombattól"
+
+#: src/gcal-quick-add-popover.c:250
+msgid "from next Sunday"
+msgstr "a következő vasárnaptól"
+
+#: src/gcal-quick-add-popover.c:255
+msgid "to next Monday"
+msgstr "a következő hétfőig"
+
+#: src/gcal-quick-add-popover.c:256
+msgid "to next Tuesday"
+msgstr "a következő keddig"
+
+#: src/gcal-quick-add-popover.c:257
+msgid "to next Wednesday"
+msgstr "a következő szerdáig"
+
+#: src/gcal-quick-add-popover.c:258
+msgid "to next Thursday"
+msgstr "a következő csütörtökig"
+
+#: src/gcal-quick-add-popover.c:259
+msgid "to next Friday"
+msgstr "a következő péntekig"
+
+#: src/gcal-quick-add-popover.c:260
+msgid "to next Saturday"
+msgstr "a következő szombatig"
+
+#: src/gcal-quick-add-popover.c:261
+msgid "to next Sunday"
+msgstr "a következő vasárnapig"
 
 #: src/gcal-quick-add-popover.c:266
-#, c-format
-msgid "New Event from %s to %s"
-msgstr "Új esemény ettől: %s, eddig: %s"
+msgid "January"
+msgstr "január"
 
-#: src/gcal-quick-add-popover.c:283
-#, c-format
-msgid "New Event on %s, %s – %s"
-msgstr "Új esemény ekkor: %s, %s – %s"
+#: src/gcal-quick-add-popover.c:267
+msgid "February"
+msgstr "február"
 
-#: src/gcal-quick-add-popover.c:293
+#: src/gcal-quick-add-popover.c:268
+msgid "March"
+msgstr "március"
+
+#: src/gcal-quick-add-popover.c:269
+msgid "April"
+msgstr "április"
+
+#: src/gcal-quick-add-popover.c:270
+msgid "May"
+msgstr "május"
+
+#: src/gcal-quick-add-popover.c:271
+msgid "June"
+msgstr "június"
+
+#: src/gcal-quick-add-popover.c:272
+msgid "July"
+msgstr "július"
+
+#: src/gcal-quick-add-popover.c:273
+msgid "August"
+msgstr "augusztus"
+
+#: src/gcal-quick-add-popover.c:274
+msgid "September"
+msgstr "szeptember"
+
+#: src/gcal-quick-add-popover.c:275
+msgid "October"
+msgstr "október"
+
+#: src/gcal-quick-add-popover.c:276
+msgid "November"
+msgstr "november"
+
+#: src/gcal-quick-add-popover.c:277
+msgid "December"
+msgstr "december"
+
+#: src/gcal-quick-add-popover.c:286
+msgid "from Today"
+msgstr "mától"
+
+#: src/gcal-quick-add-popover.c:290
+msgid "from Tomorrow"
+msgstr "holnaptól"
+
+#: src/gcal-quick-add-popover.c:294
+msgid "from Yesterday"
+msgstr "tegnaptól"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gcal-quick-add-popover.c:312
 #, c-format
-msgid "New Event on %s"
-msgstr "Új esemény ekkor: %s"
+msgid "from %1$s %2$s"
+msgstr "ettől: %1$s %2$s"
+
+#: src/gcal-quick-add-popover.c:323
+msgid "to Today"
+msgstr "máig"
+
+#: src/gcal-quick-add-popover.c:327
+msgid "to Tomorrow"
+msgstr "holnapig"
+
+#: src/gcal-quick-add-popover.c:331
+msgid "to Yesterday"
+msgstr "tegnapig"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gcal-quick-add-popover.c:349
+#, c-format
+msgid "to %1$s %2$s"
+msgstr "eddig: %1$s %2$s"
+
+#: src/gcal-quick-add-popover.c:355
+#, c-format
+msgid "New Event %1$s %2$s"
+msgstr "Új esemény ekkor: %1$s %2$s"
+
+#: src/gcal-quick-add-popover.c:373
+msgid "New Event Today"
+msgstr "Új esemény ma"
+
+#: src/gcal-quick-add-popover.c:377
+msgid "New Event Tomorrow"
+msgstr "Új esemény holnap"
+
+#: src/gcal-quick-add-popover.c:381
+msgid "New Event Yesterday"
+msgstr "Új esemény tegnap"
+
+#: src/gcal-quick-add-popover.c:387
+msgid "New Event next Monday"
+msgstr "Új esemény a következő hétfőn"
+
+#: src/gcal-quick-add-popover.c:388
+msgid "New Event next Tuesday"
+msgstr "Új esemény a következő kedden"
+
+#: src/gcal-quick-add-popover.c:389
+msgid "New Event next Wednesday"
+msgstr "Új esemény a következő szerdán"
+
+#: src/gcal-quick-add-popover.c:390
+msgid "New Event next Thursday"
+msgstr "Új esemény a következő csütörtökön"
+
+#: src/gcal-quick-add-popover.c:391
+msgid "New Event next Friday"
+msgstr "Új esemény a következő pénteken"
+
+#: src/gcal-quick-add-popover.c:392
+msgid "New Event next Saturday"
+msgstr "Új esemény a következő szombaton"
+
+#: src/gcal-quick-add-popover.c:393
+msgid "New Event next Sunday"
+msgstr "Új esemény a következő vasárnap"
+
+#: src/gcal-quick-add-popover.c:404
+msgid "New Event on January"
+msgstr "Új esemény januárban"
+
+#: src/gcal-quick-add-popover.c:405
+msgid "New Event on February"
+msgstr "Új esemény februárban"
+
+#: src/gcal-quick-add-popover.c:406
+msgid "New Event on March"
+msgstr "Új esemény márciusban"
+
+#: src/gcal-quick-add-popover.c:407
+msgid "New Event on April"
+msgstr "Új esemény áprilisban"
+
+#: src/gcal-quick-add-popover.c:408
+msgid "New Event on May"
+msgstr "Új esemény májusban"
+
+#: src/gcal-quick-add-popover.c:409
+msgid "New Event on June"
+msgstr "Új esemény júniusban"
+
+#: src/gcal-quick-add-popover.c:410
+msgid "New Event on July"
+msgstr "Új esemény júliusban"
+
+#: src/gcal-quick-add-popover.c:411
+msgid "New Event on August"
+msgstr "Új esemény augusztusban"
+
+#: src/gcal-quick-add-popover.c:412
+msgid "New Event on September"
+msgstr "Új esemény szeptemberben"
+
+#: src/gcal-quick-add-popover.c:413
+msgid "New Event on October"
+msgstr "Új esemény októberben"
+
+#: src/gcal-quick-add-popover.c:414
+msgid "New Event on November"
+msgstr "Új esemény novemberben"
+
+#: src/gcal-quick-add-popover.c:415
+msgid "New Event on December"
+msgstr "Új esemény decemberben"
+
+#: src/gcal-quick-add-popover.c:420
+#, c-format
+msgid "%1$s %2$d"
+msgstr "%1$s %2$d"
+
+#: src/gcal-quick-add-popover.c:464
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
 
 #: src/gcal-search-view.c:358
 msgid "All day"
@@ -678,6 +903,14 @@ msgstr "Egy másik esemény törölve"
 msgid "Event deleted"
 msgstr "Esemény törölve"
 
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/views/gcal-month-view.c:225 src/views/gcal-year-view.c:290
+#: src/views/gcal-year-view.c:512
+msgid "%B %d"
+msgstr "%B %d."
+
 #: src/views/gcal-month-view.c:1186
 msgid "Other events"
 msgstr "Egyéb események"
@@ -706,3 +939,8 @@ msgstr "%d. hét"
 msgid "%B %d…"
 msgstr "%B %d…"
 
+#~ msgid "New Event from %s to %s"
+#~ msgstr "Új esemény ettől: %s, eddig: %s"
+
+#~ msgid "New Event on %s, %s – %s"
+#~ msgstr "Új esemény ekkor: %s, %s – %s"
