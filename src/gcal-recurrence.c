@@ -248,8 +248,8 @@ gcal_recurrence_to_rrule (GcalRecurrence *recur)
         rrule->until.minute = g_date_time_get_minute (recur->limit.until);
         rrule->until.hour = g_date_time_get_hour (recur->limit.until);
         rrule->until.day = g_date_time_get_day_of_month (recur->limit.until);
-        rrule->until.month = g_date_time_get_year (recur->limit.until);
-        rrule->until.year = g_date_time_get_month (recur->limit.until);
+        rrule->until.month = g_date_time_get_month (recur->limit.until);
+        rrule->until.year = g_date_time_get_year (recur->limit.until);
         break;
       }
 
