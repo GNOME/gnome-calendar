@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-06-10 01:34+0000\n"
-"PO-Revision-Date: 2017-06-10 11:22+0700\n"
+"POT-Creation-Date: 2017-07-04 13:45+0000\n"
+"PO-Revision-Date: 2017-07-10 16:59+0700\n"
 "Last-Translator: Kukuh Syafaat <syafaatkukuh@gmail.com>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.11\n"
+"X-Generator: Poedit 2.0.2\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
@@ -40,7 +40,7 @@ msgstr ""
 "komponen pembangun desktop GNOME, Calendar terintegrasi secara baik dengan "
 "ekosistem GNOME."
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:14
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, no lacks. You’ll feel comfortable using "
@@ -51,11 +51,15 @@ msgstr ""
 "kekurangan. Anda akan merasa nyaman memakai Calendar, serasa Anda sudah "
 "memakainya bertahun-tahun!"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:24
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:27
+msgid "Week view"
+msgstr "Tilikan minggu"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:31
 msgid "Search for events"
 msgstr "Cari acara"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:28
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:35
 msgid "Calendar management"
 msgstr "Manajemen kalender"
 
@@ -328,7 +332,7 @@ msgstr "Tak ditemukan hasil"
 msgid "Try a different search"
 msgstr "Cobalah pencarian lain"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1114 src/gcal-window.c:1118
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1126 src/gcal-window.c:1130
 msgid "Undo"
 msgstr "Tak jadi"
 
@@ -480,7 +484,7 @@ msgstr "Pengaturan Kalender"
 msgid "No events"
 msgstr "Tidak ada acara"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2242
+#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2253
 msgid "Add Event…"
 msgstr "Tambah Acara…"
 
@@ -548,7 +552,7 @@ msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d minggu sebelumnya"
 
-#: src/gcal-edit-dialog.c:1162 src/gcal-quick-add-popover.c:501
+#: src/gcal-edit-dialog.c:1162 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Acara tanpa nama"
 
@@ -562,33 +566,254 @@ msgstr "Pada %s"
 msgid "%s (this calendar is read-only)"
 msgstr "%s (kalender ini hanya-baca)"
 
-#. Translators:
-#. * this is the format string for representing a date consisting of a month
-#. * name and a day of month.
-#.
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/gcal-quick-add-popover.c:234 src/gcal-quick-add-popover.c:264
-#: src/views/gcal-month-view.c:225 src/views/gcal-year-view.c:290
-#: src/views/gcal-year-view.c:512
-msgid "%B %d"
-msgstr "%d %B"
+#: src/gcal-quick-add-popover.c:244
+msgid "from next Monday"
+msgstr "mulai Senin depan"
+
+#: src/gcal-quick-add-popover.c:245
+msgid "from next Tuesday"
+msgstr "mulai Selasa depan"
+
+#: src/gcal-quick-add-popover.c:246
+msgid "from next Wednesday"
+msgstr "mulai Rabu depan"
+
+#: src/gcal-quick-add-popover.c:247
+msgid "from next Thursday"
+msgstr "mulai Kamis depan"
+
+#: src/gcal-quick-add-popover.c:248
+msgid "from next Friday"
+msgstr "mulai Jumat depan"
+
+#: src/gcal-quick-add-popover.c:249
+msgid "from next Saturday"
+msgstr "mulai Sabtu depan"
+
+#: src/gcal-quick-add-popover.c:250
+msgid "from next Sunday"
+msgstr "mulai Minggu depan"
+
+#: src/gcal-quick-add-popover.c:255
+msgid "to next Monday"
+msgstr "sampai Senin depan"
+
+#: src/gcal-quick-add-popover.c:256
+msgid "to next Tuesday"
+msgstr "sampai Selasa depan"
+
+#: src/gcal-quick-add-popover.c:257
+msgid "to next Wednesday"
+msgstr "sampai Rabu depan"
+
+#: src/gcal-quick-add-popover.c:258
+msgid "to next Thursday"
+msgstr "sampai Kamis depan"
+
+#: src/gcal-quick-add-popover.c:259
+msgid "to next Friday"
+msgstr "sampai Jumat depan"
+
+#: src/gcal-quick-add-popover.c:260
+msgid "to next Saturday"
+msgstr "sampai Sabtu depan"
+
+#: src/gcal-quick-add-popover.c:261
+msgid "to next Sunday"
+msgstr "sampai Minggu depan"
 
 #: src/gcal-quick-add-popover.c:266
-#, c-format
-msgid "New Event from %s to %s"
-msgstr "Kejadian Baru dari %s sampai %s"
+msgid "January"
+msgstr "Januari"
 
-#: src/gcal-quick-add-popover.c:283
-#, c-format
-msgid "New Event on %s, %s – %s"
-msgstr "Kejadian Baru pada %s, %s – %s"
+#: src/gcal-quick-add-popover.c:267
+msgid "February"
+msgstr "Februari"
 
-#: src/gcal-quick-add-popover.c:293
+#: src/gcal-quick-add-popover.c:268
+msgid "March"
+msgstr "Maret"
+
+#: src/gcal-quick-add-popover.c:269
+msgid "April"
+msgstr "April"
+
+#: src/gcal-quick-add-popover.c:270
+msgid "May"
+msgstr "Mei"
+
+#: src/gcal-quick-add-popover.c:271
+msgid "June"
+msgstr "Juni"
+
+#: src/gcal-quick-add-popover.c:272
+msgid "July"
+msgstr "Juli"
+
+#: src/gcal-quick-add-popover.c:273
+msgid "August"
+msgstr "Agustus"
+
+#: src/gcal-quick-add-popover.c:274
+msgid "September"
+msgstr "September"
+
+#: src/gcal-quick-add-popover.c:275
+msgid "October"
+msgstr "Oktober"
+
+#: src/gcal-quick-add-popover.c:276
+msgid "November"
+msgstr "November"
+
+#: src/gcal-quick-add-popover.c:277
+msgid "December"
+msgstr "Desember"
+
+#: src/gcal-quick-add-popover.c:286
+msgid "from Today"
+msgstr "mulai Hari ini"
+
+#: src/gcal-quick-add-popover.c:290
+msgid "from Tomorrow"
+msgstr "mulai Besok"
+
+#: src/gcal-quick-add-popover.c:294
+msgid "from Yesterday"
+msgstr "mulai Kemarin"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gcal-quick-add-popover.c:312
 #, c-format
-msgid "New Event on %s"
-msgstr "Kejadian Baru pada %s"
+msgid "from %1$s %2$s"
+msgstr "mulai %1$s %2$s"
+
+#: src/gcal-quick-add-popover.c:323
+msgid "to Today"
+msgstr "sampai Hari ini"
+
+#: src/gcal-quick-add-popover.c:327
+msgid "to Tomorrow"
+msgstr "sampai Besok"
+
+#: src/gcal-quick-add-popover.c:331
+msgid "to Yesterday"
+msgstr "sampai Kemarin"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gcal-quick-add-popover.c:349
+#, c-format
+msgid "to %1$s %2$s"
+msgstr "sampai %1$s %2$s"
+
+#: src/gcal-quick-add-popover.c:355
+#, c-format
+msgid "New Event %1$s %2$s"
+msgstr "Acara Baru %1$s %2$s"
+
+#: src/gcal-quick-add-popover.c:373
+msgid "New Event Today"
+msgstr "Acara Baru Hari Ini"
+
+#: src/gcal-quick-add-popover.c:377
+msgid "New Event Tomorrow"
+msgstr "Acara Baru Besok"
+
+#: src/gcal-quick-add-popover.c:381
+msgid "New Event Yesterday"
+msgstr "Acara Baru Kemarin"
+
+#: src/gcal-quick-add-popover.c:387
+msgid "New Event next Monday"
+msgstr "Acara Baru Senin depan"
+
+#: src/gcal-quick-add-popover.c:388
+msgid "New Event next Tuesday"
+msgstr "Acara Baru Selasa depan"
+
+#: src/gcal-quick-add-popover.c:389
+msgid "New Event next Wednesday"
+msgstr "Acara Baru Rabu depan"
+
+#: src/gcal-quick-add-popover.c:390
+msgid "New Event next Thursday"
+msgstr "Acara Baru Kamis depan"
+
+#: src/gcal-quick-add-popover.c:391
+msgid "New Event next Friday"
+msgstr "Acara Baru Jumat depan"
+
+#: src/gcal-quick-add-popover.c:392
+msgid "New Event next Saturday"
+msgstr "Acara Baru Sabtu depan"
+
+#: src/gcal-quick-add-popover.c:393
+msgid "New Event next Sunday"
+msgstr "Acara Baru Minggu depan"
+
+#: src/gcal-quick-add-popover.c:404
+msgid "New Event on January"
+msgstr "Acara Baru pada Januari"
+
+#: src/gcal-quick-add-popover.c:405
+msgid "New Event on February"
+msgstr "Acara Baru pada Februari"
+
+#: src/gcal-quick-add-popover.c:406
+msgid "New Event on March"
+msgstr "Acara Baru pada Maret"
+
+#: src/gcal-quick-add-popover.c:407
+msgid "New Event on April"
+msgstr "Acara Baru pada April"
+
+#: src/gcal-quick-add-popover.c:408
+msgid "New Event on May"
+msgstr "Acara Baru pada May"
+
+#: src/gcal-quick-add-popover.c:409
+msgid "New Event on June"
+msgstr "Acara Baru pada June"
+
+#: src/gcal-quick-add-popover.c:410
+msgid "New Event on July"
+msgstr "Acara Baru pada Juli"
+
+#: src/gcal-quick-add-popover.c:411
+msgid "New Event on August"
+msgstr "Acara Baru pada Agustus"
+
+#: src/gcal-quick-add-popover.c:412
+msgid "New Event on September"
+msgstr "Acara Baru pada September"
+
+#: src/gcal-quick-add-popover.c:413
+msgid "New Event on October"
+msgstr "Acara Baru pada Oktober"
+
+#: src/gcal-quick-add-popover.c:414
+msgid "New Event on November"
+msgstr "Acara Baru pada November"
+
+#: src/gcal-quick-add-popover.c:415
+msgid "New Event on December"
+msgstr "Acara Baru pada Desember"
+
+#: src/gcal-quick-add-popover.c:420
+#, c-format
+msgid "%1$s %2$d"
+msgstr "%1$s %2$d"
+
+#: src/gcal-quick-add-popover.c:464
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
 
 #: src/gcal-search-view.c:358
 msgid "All day"
@@ -668,20 +893,28 @@ msgstr "A_cara berikutnya"
 msgid "_All events"
 msgstr "Semu_a acara"
 
-#: src/gcal-window.c:1114
+#: src/gcal-window.c:1126
 msgid "Another event deleted"
 msgstr "Acara lain dihapus"
 
-#: src/gcal-window.c:1118
+#: src/gcal-window.c:1130
 msgid "Event deleted"
 msgstr "Acara dihapus"
 
-#: src/views/gcal-month-view.c:1175
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/views/gcal-month-view.c:225 src/views/gcal-year-view.c:290
+#: src/views/gcal-year-view.c:512
+msgid "%B %d"
+msgstr "%d %B"
+
+#: src/views/gcal-month-view.c:1186
 msgid "Other events"
 msgstr "Acara lain"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:1708 src/views/gcal-week-header.c:338
+#: src/views/gcal-month-view.c:1719 src/views/gcal-week-header.c:338
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -701,7 +934,13 @@ msgstr "minggu %d"
 #. * end is unspecified.
 #: src/views/gcal-year-view.c:284
 msgid "%B %d…"
-msgstr "%d %B..."
+msgstr "%d %B…"
+
+#~ msgid "New Event from %s to %s"
+#~ msgstr "Kejadian Baru dari %s sampai %s"
+
+#~ msgid "New Event on %s, %s – %s"
+#~ msgstr "Kejadian Baru pada %s, %s – %s"
 
 #~ msgid "List of the disabled sources"
 #~ msgstr "Daftar sumber yang dinonaktifkan"
