@@ -184,10 +184,10 @@ get_event_range (GcalWeekGrid *self,
 }
 
 static inline gint
-int16_compare (gconstpointer a,
-               gconstpointer b)
+uint16_compare (gconstpointer a,
+                gconstpointer b)
 {
-  return GPOINTER_TO_INT (a) - GPOINTER_TO_INT (b);
+  return GPOINTER_TO_UINT (*(gint*)a) - GPOINTER_TO_UINT (*(gint*)b);
 }
 
 static inline guint
@@ -204,7 +204,7 @@ get_event_index (GcalRangeTree *tree,
   if (!array)
     return 0;
 
-  g_ptr_array_sort (array, int16_compare);
+  g_ptr_array_sort (array, uint16_compare);
 
   for (i = 0; array && i < array->len; i++)
     {
@@ -234,6 +234,35 @@ count_overlaps_at_range (GcalRangeTree *self,
       guint n_events;
 
       n_events = gcal_range_tree_count_entries_at_range (self, i, i + 1);
+
+      if (n_events == 0)
+        break;
+
+      counter = MAX (counter, n_events);
+    }
+
+  return counter;
+}
+
+static guint
+count_overlaps_of_event (GcalRangeTree *self,
+                         guint16        day_start,
+                         guint16        day_end,
+                         guint16        event_start,
+                         guint16        event_end)
+{
+  guint64 i, counter;
+
+  counter = count_overlaps_at_range (self, event_start, day_end);
+
+  for (i = event_start; i > day_start; i--)
+    {
+      guint n_events;
+
+      n_events = gcal_range_tree_count_entries_at_range (self, i - 1, i);
+
+      if (n_events == 0)
+        break;
 
       counter = MAX (counter, n_events);
     }
@@ -652,7 +681,7 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           context = gtk_widget_get_style_context (event_widget);
 
           /* The total number of events available in this range */
-          events_at_range = count_overlaps_at_range (self->events, data->start, data->end);
+          events_at_range = count_overlaps_of_event (self->events, day_start, day_end, data->start, data->end);
 
           /* The real horizontal position of this event */
           widget_index = get_event_index (overlaps, data->start, data->end);
@@ -689,7 +718,7 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           gcal_range_tree_add_range (overlaps,
                                      data->start,
                                      data->end,
-                                     GINT_TO_POINTER (widget_index));
+                                     GUINT_TO_POINTER (widget_index));
         }
 
       g_clear_pointer (&widgets_data, g_ptr_array_unref);
