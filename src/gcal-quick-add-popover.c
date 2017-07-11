@@ -216,146 +216,147 @@ select_row (GcalQuickAddPopover *self,
 static gint
 get_number_of_days_from_today (GDateTime *day)
 {
-    GDate today, event_day;
-    gint n_days;
+  GDate today, event_day;
+  gint n_days;
 
-    g_date_set_dmy (&today,
-                    g_date_time_get_day_of_month (g_date_time_new_now_local ()),
-                    g_date_time_get_month (g_date_time_new_now_local ()),
-                    g_date_time_get_year (g_date_time_new_now_local ()));
+  g_date_set_dmy (&today,
+                  g_date_time_get_day_of_month (g_date_time_new_now_local ()),
+                  g_date_time_get_month (g_date_time_new_now_local ()),
+                  g_date_time_get_year (g_date_time_new_now_local ()));
 
-    g_date_set_dmy (&event_day,
-                    g_date_time_get_day_of_month (day),
-                    g_date_time_get_month (day),
-                    g_date_time_get_year (day));
-    n_days = g_date_days_between (&event_day, &today);
+  g_date_set_dmy (&event_day,
+                  g_date_time_get_day_of_month (day),
+                  g_date_time_get_month (day),
+                  g_date_time_get_year (day));
+  n_days = g_date_days_between (&event_day, &today);
 
-    return n_days;
+  return n_days;
 }
 
 static gchar*
 get_date_string_for_multiday (GDateTime *start,
                               GDateTime *end)
 {
-    gint n_days;
-    gchar *start_date_str, *end_date_str, *date_string;
+  gint n_days;
+  gchar *start_date_str, *end_date_str, *date_string;
 
-    gchar *start_date_weekdays_strings [] = {
-      N_("from next Monday"),
-      N_("from next Tuesday"),
-      N_("from next Wednesday"),
-      N_("from next Thursday"),
-      N_("from next Friday"),
-      N_("from next Saturday"),
-      N_("from next Sunday"),
-      NULL
-    };
+  gchar *start_date_weekdays_strings [] = {
+    N_("from next Monday"),
+    N_("from next Tuesday"),
+    N_("from next Wednesday"),
+    N_("from next Thursday"),
+    N_("from next Friday"),
+    N_("from next Saturday"),
+    N_("from next Sunday"),
+    NULL
+  };
 
-    gchar *end_date_weekdays_strings [] = {
-      N_("to next Monday"),
-      N_("to next Tuesday"),
-      N_("to next Wednesday"),
-      N_("to next Thursday"),
-      N_("to next Friday"),
-      N_("to next Saturday"),
-      N_("to next Sunday"),
-      NULL
-    };
+  gchar *end_date_weekdays_strings [] = {
+    N_("to next Monday"),
+    N_("to next Tuesday"),
+    N_("to next Wednesday"),
+    N_("to next Thursday"),
+    N_("to next Friday"),
+    N_("to next Saturday"),
+    N_("to next Sunday"),
+    NULL
+  };
 
-    gchar *month_names [] = {
-      N_("January"),
-      N_("February"),
-      N_("March"),
-      N_("April"),
-      N_("May"),
-      N_("June"),
-      N_("July"),
-      N_("August"),
-      N_("September"),
-      N_("October"),
-      N_("November"),
-      N_("December"),
-      NULL
-    };
+  gchar *month_names [] = {
+    N_("January"),
+    N_("February"),
+    N_("March"),
+    N_("April"),
+    N_("May"),
+    N_("June"),
+    N_("July"),
+    N_("August"),
+    N_("September"),
+    N_("October"),
+    N_("November"),
+    N_("December"),
+    NULL
+  };
 
-    start_date_str = NULL;
-    n_days = get_number_of_days_from_today (start);
+  start_date_str = NULL;
+  n_days = get_number_of_days_from_today (start);
 
-    if (n_days == 0)
-      {
-        start_date_str = g_strdup_printf (_("from Today"));
-      }
-    else if (n_days == -1)
-      {
-        start_date_str = g_strdup_printf (_("from Tomorrow"));
-      }
-    else if (n_days == 1)
-      {
-        start_date_str = g_strdup_printf (_("from Yesterday"));
-      }
-    else if (n_days < -1 && n_days > -8)
-      {
-        gchar *start_weekday_str;
+  if (n_days == 0)
+    {
+      start_date_str = g_strdup_printf (_("from Today"));
+    }
+  else if (n_days == -1)
+    {
+      start_date_str = g_strdup_printf (_("from Tomorrow"));
+    }
+  else if (n_days == 1)
+    {
+      start_date_str = g_strdup_printf (_("from Yesterday"));
+    }
+  else if (n_days < -1 && n_days > -8)
+    {
+      gchar *start_weekday_str;
 
-        start_weekday_str = start_date_weekdays_strings [g_date_time_get_day_of_week (start) - 1];
-        start_date_str = g_strdup_printf ("%s", start_weekday_str);
-      }
-    else
-      {
-        gchar *day_number_str;
+      start_weekday_str = start_date_weekdays_strings [g_date_time_get_day_of_week (start) - 1];
+      start_date_str = g_strdup_printf ("%s", start_weekday_str);
+    }
+  else
+    {
+      gchar *day_number_str;
 
-        day_number_str = g_strdup_printf ("%u", g_date_time_get_day_of_month (start));
-        /* Translators:
-         * this is the format string for representing a date consisting of a month
-         * name and a date of month.
-         */
-        start_date_str = g_strdup_printf (_("from %1$s %2$s"),
-                                          month_names [g_date_time_get_month (start) - 1],
-                                          day_number_str);
-        g_free (day_number_str);
-      }
-
-    end_date_str = NULL;
-    n_days = get_number_of_days_from_today (end);
-
-    if (n_days == 0)
-      {
-        end_date_str = g_strdup_printf (_("to Today"));
-      }
-    else if (n_days == -1)
-      {
-        end_date_str = g_strdup_printf (_("to Tomorrow"));
-      }
-    else if (n_days == 1)
-      {
-        end_date_str = g_strdup_printf (_("to Yesterday"));
-      }
-    else if (n_days < -1 && n_days > -8)
-      {
-        gchar *end_weekday_str;
-
-        end_weekday_str = end_date_weekdays_strings [g_date_time_get_day_of_week (end) - 1];
-        end_date_str = g_strdup_printf ("%s", end_weekday_str);
-      }
-    else
-      {
-        gchar *day_number_str;
-
-        day_number_str = g_strdup_printf ("%u", g_date_time_get_day_of_month (end));
-        /* Translators:
-         * this is the format string for representing a date consisting of a month
-         * name and a date of month.
-         */
-        end_date_str = g_strdup_printf (_("to %1$s %2$s"),
-                                        month_names [g_date_time_get_month (end) - 1],
+      day_number_str = g_strdup_printf ("%u", g_date_time_get_day_of_month (start));
+      /* Translators:
+       * this is the format string for representing a date consisting of a month
+       * name and a date of month.
+       */
+      start_date_str = g_strdup_printf (_("from %1$s %2$s"),
+                                        month_names [g_date_time_get_month (start) - 1],
                                         day_number_str);
-        g_free (day_number_str);
-      }
+      g_free (day_number_str);
+    }
 
-    date_string = g_strdup_printf (_("New Event %1$s %2$s"),
-                                   start_date_str,
-                                   end_date_str);
-    return date_string;
+  end_date_str = NULL;
+  n_days = get_number_of_days_from_today (end);
+
+  if (n_days == 0)
+    {
+      end_date_str = g_strdup_printf (_("to Today"));
+    }
+  else if (n_days == -1)
+    {
+      end_date_str = g_strdup_printf (_("to Tomorrow"));
+    }
+  else if (n_days == 1)
+    {
+      end_date_str = g_strdup_printf (_("to Yesterday"));
+    }
+  else if (n_days < -1 && n_days > -8)
+    {
+      gchar *end_weekday_str;
+
+      end_weekday_str = end_date_weekdays_strings [g_date_time_get_day_of_week (end) - 1];
+      end_date_str = g_strdup_printf ("%s", end_weekday_str);
+    }
+  else
+    {
+      gchar *day_number_str;
+
+      day_number_str = g_strdup_printf ("%u", g_date_time_get_day_of_month (end));
+      /* Translators:
+       * this is the format string for representing a date consisting of a month
+       * name and a date of month.
+       */
+      end_date_str = g_strdup_printf (_("to %1$s %2$s"),
+                                      month_names [g_date_time_get_month (end) - 1],
+                                      day_number_str);
+      g_free (day_number_str);
+    }
+
+  /* Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow") */
+  date_string = g_strdup_printf (_("New Event %1$s %2$s"),
+                                 start_date_str,
+                                 end_date_str);
+  return date_string;
 }
 
 static gchar*
@@ -394,32 +395,33 @@ get_date_string_for_day (GDateTime *day)
          NULL
        };
 
-       event_weekday = event_weekday_names [g_date_time_get_day_of_week (day) - 1];
+       event_weekday = gettext (event_weekday_names [g_date_time_get_day_of_week (day) - 1]);
        string_for_date = g_strdup_printf ("%s", event_weekday);
     }
   else
     {
-       gchar *event_month;
-       gchar *event_month_names [] = {
-         N_("New Event on January"),
-         N_("New Event on February"),
-         N_("New Event on March"),
-         N_("New Event on April"),
-         N_("New Event on May"),
-         N_("New Event on June"),
-         N_("New Event on July"),
-         N_("New Event on August"),
-         N_("New Event on September"),
-         N_("New Event on October"),
-         N_("New Event on November"),
-         N_("New Event on December"),
-         NULL
-       };
+      gchar *event_month;
+      gchar *event_month_names [] = {
+        N_("New Event on January"),
+        N_("New Event on February"),
+        N_("New Event on March"),
+        N_("New Event on April"),
+        N_("New Event on May"),
+        N_("New Event on June"),
+        N_("New Event on July"),
+        N_("New Event on August"),
+        N_("New Event on September"),
+        N_("New Event on October"),
+        N_("New Event on November"),
+        N_("New Event on December"),
+        NULL
+      };
 
-       event_month = event_month_names [g_date_time_get_month (day) - 1];
-       string_for_date = g_strdup_printf (_("%1$s %2$d"),
-                                          event_month,
-                                          g_date_time_get_day_of_month (day));
+      event_month = gettext (event_month_names [g_date_time_get_month (day) - 1]);
+      /* Translators: %1$s is the event month (e.g. "New Event on December") and %2$d is the numeric day of month */
+      string_for_date = g_strdup_printf (_("%1$s %2$d"),
+                                         event_month,
+                                         g_date_time_get_day_of_month (day));
     }
 
   return string_for_date;
@@ -461,6 +463,7 @@ update_header (GcalQuickAddPopover *self)
           end_hour = g_date_time_format (self->date_end, hour_format);
 
           event_date_name = get_date_string_for_day (self->date_start);
+          /* Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour */
           title_date = g_strdup_printf (_("%1$s, %2$s – %3$s"),
                                         event_date_name,
                                         start_hour,

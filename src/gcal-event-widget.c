@@ -359,6 +359,8 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
       escaped_location = g_markup_escape_text (gcal_event_get_location (event), -1);
 
       g_string_append (tooltip_mesg, "\n\n");
+
+      /* Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue") */
       g_string_append_printf (tooltip_mesg, _("At %s"), escaped_location);
     }
 
