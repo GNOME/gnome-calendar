@@ -1098,14 +1098,17 @@ edit_dialog_closed (GtkDialog *dialog,
   mod = E_CAL_OBJ_MOD_THIS;
   source = gcal_event_get_source (event);
 
-  if (response != GCAL_RESPONSE_CREATE_EVENT &&
-      response != GTK_RESPONSE_CANCEL &&
-      response != GTK_RESPONSE_DELETE_EVENT &&
+  if (!gcal_edit_dialog_get_recurrence_changed (edit_dialog) &&
       gcal_event_has_recurrence (event) &&
-      !ask_recurrence_modification_type (GTK_WIDGET (dialog), &mod, source))
+      (response != GCAL_RESPONSE_CREATE_EVENT &&
+       response != GTK_RESPONSE_CANCEL &&
+       response != GTK_RESPONSE_DELETE_EVENT &&
+       gcal_event_has_recurrence (event) &&
+       !ask_recurrence_modification_type (GTK_WIDGET (dialog), &mod, source)))
     {
       return;
     }
+
 
   switch (response)
     {
