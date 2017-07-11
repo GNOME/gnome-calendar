@@ -19,6 +19,8 @@
 #ifndef GCAL_EVENT_H
 #define GCAL_EVENT_H
 
+#include "gcal-recurrence.h"
+
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <libecal/libecal.h>
@@ -121,6 +123,12 @@ gint                 gcal_event_compare                          (GcalEvent     
 gint                 gcal_event_compare_with_current             (GcalEvent          *event1,
                                                                   GcalEvent          *event2,
                                                                   time_t             *current_time);
+
+void                 gcal_event_set_recurrence                   (GcalEvent          *event,
+                                                                  GcalRecurrence     *recur);
+
+GcalRecurrence*      gcal_event_get_recurrence                   (GcalEvent          *self);
+
 
 G_END_DECLS
 

@@ -20,6 +20,7 @@
 
 #include "gcal-event.h"
 #include "gcal-utils.h"
+#include "gcal-recurrence.h"
 
 #define LIBICAL_TZID_PREFIX "/freeassociation.sourceforge.net/"
 
@@ -104,6 +105,8 @@ struct _GcalEvent
   ECalComponent      *component;
   ESource            *source;
 
+  GcalRecurrence     *recurrence;
+
   gboolean            is_valid : 1;
   GError             *initialization_error;
 };
@@ -127,6 +130,7 @@ enum {
   PROP_TIMEZONE,
   PROP_UID,
   PROP_HAS_RECURRENCE,
+  PROP_RECURRENCE,
   N_PROPS
 };
 
@@ -368,10 +372,14 @@ gcal_event_set_component_internal (GcalEvent     *self,
       /* Set has-recurrence to check if the component has recurrence or not */
       self->has_recurrence = e_cal_component_has_recurrences(component);
 
+      /* Load the recurrence-rules in GcalRecurrence struct */
+      self->recurrence = gcal_recurrence_parse_recurrence_rules (component);
+
       /* Load and setup the alarms */
       load_alarms (self);
 
       g_object_notify (G_OBJECT (self), "has-recurrence");
+      g_object_notify (G_OBJECT (self), "recurrence");
       g_object_notify (G_OBJECT (self), "component");
       g_object_notify (G_OBJECT (self), "location");
       g_object_notify (G_OBJECT (self), "summary");
@@ -429,6 +437,7 @@ gcal_event_finalize (GObject *object)
   g_clear_pointer (&self->color, gdk_rgba_free);
   g_clear_object (&self->component);
   g_clear_object (&self->source);
+  g_clear_pointer (&self->recurrence, gcal_recurrence_free);
 
   G_OBJECT_CLASS (gcal_event_parent_class)->finalize (object);
 }
@@ -491,6 +500,10 @@ gcal_event_get_property (GObject    *object,
       g_value_set_boolean (value, self->has_recurrence);
       break;
 
+    case PROP_RECURRENCE:
+      g_value_set_boxed (value, self->recurrence);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -544,6 +557,10 @@ gcal_event_set_property (GObject      *object,
 
     case PROP_TIMEZONE:
       gcal_event_set_timezone (self, g_value_get_boxed (value));
+      break;
+
+    case PROP_RECURRENCE:
+      gcal_event_set_recurrence (self, g_value_get_boxed (value));
       break;
 
     default:
@@ -716,6 +733,18 @@ gcal_event_class_init (GcalEventClass *klass)
                                                          FALSE,
                                                          G_PARAM_READABLE));
 
+  /**
+  * GcalEvent::recurrence:
+  *
+  * The recurrence-rules property of the event.
+  */
+  g_object_class_install_property (object_class,
+                                   PROP_RECURRENCE,
+                                   g_param_spec_boxed ("recurrence",
+                                                       "Recurrence property of the event",
+                                                       "The recurrence property of the event",
+                                                       GCAL_TYPE_RECURRENCE,
+                                                       G_PARAM_READWRITE));
 
 }
 
@@ -1596,4 +1625,63 @@ gcal_event_compare_with_current (GcalEvent *event1,
     }
 
   return 0;
+}
+
+/**
+ * gcal_event_set_recurrence:
+ * @self: a #GcalEvent
+ * @recur: (nullable): a #GcalRecurrence
+ *
+ * Sets the recurrence struct of the event to @recur
+ * and adds the corresponding rrule to the event.
+ */
+void
+gcal_event_set_recurrence (GcalEvent      *self,
+                           GcalRecurrence *recur)
+{
+  ECalComponent *comp;
+  icalcomponent *icalcomp;
+  icalproperty *prop;
+  struct icalrecurrencetype *rrule;
+
+  g_return_if_fail (GCAL_IS_EVENT (self));
+
+  rrule = gcal_recurrence_to_rrule (recur);
+
+  comp = gcal_event_get_component (self);
+  icalcomp = e_cal_component_get_icalcomponent (comp);
+
+  g_clear_pointer (&self->recurrence, gcal_recurrence_free);
+  self->recurrence = gcal_recurrence_copy (recur);
+
+  prop = icalcomponent_get_first_property (icalcomp, ICAL_RRULE_PROPERTY);
+
+  if (prop)
+    {
+      icalproperty_set_rrule (prop, *rrule);
+    }
+  else
+    {
+      prop = icalproperty_new_rrule (*rrule);
+      icalcomponent_add_property (icalcomp, prop);
+    }
+
+  /* Rescan the component for the changes to be detected and registered */
+  e_cal_component_rescan (comp);
+}
+
+/**
+ * gcal_event_get_recurrence:
+ * @self: a #GcalEvent
+ *
+ * Gets the recurrence struct @recur of the event.
+ *
+ * Returns: (transfer full): a #GcalRecurrence
+ */
+GcalRecurrence*
+gcal_event_get_recurrence (GcalEvent *self)
+{
+  g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
+
+  return self->recurrence;
 }
