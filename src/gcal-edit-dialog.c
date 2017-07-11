@@ -25,9 +25,12 @@
 #include "gcal-edit-dialog.h"
 #include "gcal-time-selector.h"
 #include "gcal-utils.h"
+#include "gcal-event.h"
+#include "gcal-recurrence.h"
 
 #include <libecal/libecal.h>
 #include <glib/gi18n.h>
+#include <gtk/gtk.h>
 
 /**
  * SECTION:gcal-edit-dialog
@@ -75,6 +78,15 @@ struct _GcalEditDialog
 
   GtkWidget        *alarms_listbox;
 
+  GtkWidget        *repeat_combo;
+  GtkWidget        *repeat_duration_combo;
+  GtkWidget        *repeat_limits_box;
+
+  /* Recurrence widgets */
+  GtkWidget        *number_of_occurrences_spin;
+  GtkWidget        *repeat_duration_stack;
+  GtkWidget        *until_date_selector;
+
   /* Add Alarms popover buttons */
   GtkWidget        *five_minutes_button;
   GtkWidget        *ten_minutes_button;
@@ -96,40 +108,41 @@ struct _GcalEditDialog
   /* flags */
   gboolean          format_24h;
   gboolean          event_is_new;
+  gboolean          recurrence_changed;
   gboolean          setting_event;
 };
 
-static void        fill_sources_menu                      (GcalEditDialog    *dialog);
+static void        fill_sources_menu                             (GcalEditDialog    *dialog);
 
-static void        on_calendar_selected                   (GSimpleAction     *menu_item,
-                                                           GVariant          *value,
-                                                           gpointer           user_data);
+static void        on_calendar_selected                          (GSimpleAction     *menu_item,
+                                                                  GVariant          *value,
+                                                                  gpointer           user_data);
 
-static void        update_location                        (GtkEntry          *entry,
-                                                           GParamSpec        *pspec,
-                                                           gpointer           user_data);
+static void        update_location                               (GtkEntry          *entry,
+                                                                  GParamSpec        *pspec,
+                                                                  gpointer           user_data);
 
-static void        update_summary                         (GtkEntry          *entry,
-                                                           GParamSpec        *pspec,
-                                                           gpointer           user_data);
+static void        update_summary                                (GtkEntry          *entry,
+                                                                  GParamSpec        *pspec,
+                                                                  gpointer           user_data);
 
-static void        gcal_edit_dialog_constructed           (GObject           *object);
+static void        gcal_edit_dialog_constructed                  (GObject           *object);
 
-static void        gcal_edit_dialog_finalize              (GObject           *object);
+static void        gcal_edit_dialog_finalize                     (GObject           *object);
 
-static void        gcal_edit_dialog_set_writable          (GcalEditDialog    *dialog,
-                                                           gboolean           writable);
+static void        gcal_edit_dialog_set_writable                 (GcalEditDialog    *dialog,
+                                                                  gboolean           writable);
 
-static void        gcal_edit_dialog_clear_data            (GcalEditDialog    *dialog);
+static void        gcal_edit_dialog_clear_data                   (GcalEditDialog    *dialog);
 
-static void        gcal_edit_dialog_action_button_clicked (GtkWidget         *widget,
-                                                           gpointer           user_data);
+static void        gcal_edit_dialog_action_button_clicked        (GtkWidget         *widget,
+                                                                  gpointer           user_data);
 
-static void        gcal_edit_dialog_all_day_changed       (GtkWidget         *widget,
-                                                           gpointer           user_data);
+static void        gcal_edit_dialog_all_day_changed              (GtkWidget         *widget,
+                                                                  gpointer           user_data);
 
-static void        add_alarm_button_clicked               (GtkWidget         *button,
-                                                           GcalEditDialog    *self);
+static void        add_alarm_button_clicked                      (GtkWidget         *button,
+                                                                  GcalEditDialog    *self);
 
 G_DEFINE_TYPE (GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
 
@@ -266,6 +279,29 @@ on_calendar_selected (GSimpleAction *action,
   g_list_free (list);
 
   GCAL_EXIT;
+}
+
+static void
+remove_recurrence_properties (GcalEvent *event)
+{
+  ECalComponent *comp;
+  icalcomponent *icalcomp;
+  icalproperty *prop;
+
+  comp = gcal_event_get_component (event);
+  icalcomp = e_cal_component_get_icalcomponent (comp);
+
+  e_cal_component_set_recurid (comp, NULL);
+
+  prop = icalcomponent_get_first_property (icalcomp, ICAL_RRULE_PROPERTY);
+
+  if (prop)
+    {
+      icalcomponent_remove_property (icalcomp, prop);
+      icalproperty_free (prop);
+    }
+
+  e_cal_component_rescan (comp);
 }
 
 static void
@@ -443,6 +479,50 @@ gcal_edit_dialog_set_property (GObject      *object,
 }
 
 static void
+repeat_duration_changed (GtkComboBox    *widget,
+                         GcalEditDialog *self)
+{
+  switch (gtk_combo_box_get_active (widget))
+    {
+      case 0:
+        gtk_widget_hide (self->repeat_duration_stack);
+        break;
+
+      case 1:
+        gtk_widget_show (self->repeat_duration_stack);
+        gtk_stack_set_visible_child (GTK_STACK (self->repeat_duration_stack), self->number_of_occurrences_spin);
+        break;
+
+      case 2:
+        gtk_widget_show (self->repeat_duration_stack);
+        gtk_stack_set_visible_child (GTK_STACK (self->repeat_duration_stack), self->until_date_selector);
+        break;
+
+      default:
+        break;
+    }
+}
+
+static void
+repeat_type_changed (GtkComboBox    *combobox,
+                     GcalEditDialog *self)
+{
+  GcalRecurrenceFrequency frequency;
+  gboolean has_recurrence;
+
+  frequency = gtk_combo_box_get_active (combobox);
+  has_recurrence = frequency != GCAL_RECURRENCE_NO_REPEAT;
+
+  gtk_widget_set_visible (self->repeat_limits_box, has_recurrence);
+
+  if (has_recurrence)
+    {
+      gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
+      gtk_widget_hide (self->repeat_duration_stack);
+    }
+}
+
+static void
 gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
 {
   GObjectClass *object_class;
@@ -525,18 +605,27 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, title_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, subtitle_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, lock);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, number_of_occurrences_spin);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_combo);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_duration_combo);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_duration_stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_limits_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, source_image);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, sources_popover);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, until_date_selector);
+
 
   /* callbacks */
   gtk_widget_class_bind_template_callback (widget_class, add_alarm_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, fix_reminders_label_height_cb);
   gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_action_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_all_day_changed);
+  gtk_widget_class_bind_template_callback (widget_class, repeat_duration_changed);
+  gtk_widget_class_bind_template_callback (widget_class, repeat_type_changed);
+  gtk_widget_class_bind_template_callback (widget_class, sync_datetimes);
   gtk_widget_class_bind_template_callback (widget_class, update_summary);
   gtk_widget_class_bind_template_callback (widget_class, update_location);
   gtk_widget_class_bind_template_callback (widget_class, update_revealer_visibility_cb);
-  gtk_widget_class_bind_template_callback (widget_class, sync_datetimes);
 }
 
 static void
@@ -659,6 +748,8 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
     }
   else
     {
+      GcalRecurrenceFrequency freq;
+      GcalRecurrence *old_recur;
       GDateTime *start_date, *end_date;
       gboolean all_day;
       gchar *note_text;
@@ -714,6 +805,34 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
 
       g_clear_pointer (&start_date, g_date_time_unref);
       g_clear_pointer (&end_date, g_date_time_unref);
+
+      /* Check Repeat popover and set recurrence-rules accordingly */
+      old_recur = gcal_event_get_recurrence (dialog->event);
+      freq = gtk_combo_box_get_active (GTK_COMBO_BOX (dialog->repeat_combo));
+
+      remove_recurrence_properties (dialog->event);
+
+      if ((!old_recur && freq != GCAL_RECURRENCE_NO_REPEAT) || old_recur->frequency != freq)
+        dialog->recurrence_changed = TRUE;
+
+      if (freq != GCAL_RECURRENCE_NO_REPEAT)
+        {
+          GcalRecurrence *recur;
+
+          recur = gcal_recurrence_new ();
+          recur->frequency = freq;
+          recur->limit_type = gtk_combo_box_get_active (GTK_COMBO_BOX (dialog->repeat_duration_combo));
+
+          if (recur->limit_type == GCAL_RECURRENCE_UNTIL)
+            recur->limit.until = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (dialog->until_date_selector));
+          else if (recur->limit_type == GCAL_RECURRENCE_COUNT)
+            recur->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin));
+
+          if (!gcal_recurrence_is_equal (old_recur, recur))
+            gcal_event_set_recurrence (dialog->event, recur);
+
+          g_clear_pointer (&recur, gcal_recurrence_free);
+        }
 
       /* Update the source if needed */
       if (dialog->selected_source &&
@@ -1123,6 +1242,10 @@ void
 gcal_edit_dialog_set_event (GcalEditDialog *dialog,
                             GcalEvent      *event)
 {
+  GcalRecurrenceLimitType limit_type;
+  GcalRecurrenceFrequency frequency;
+  GcalRecurrence *recur;
+  GtkAdjustment *count_adjustment;
   GDateTime *date_start;
   GDateTime *date_end;
   cairo_surface_t *surface;
@@ -1138,9 +1261,36 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 
   dialog->setting_event = TRUE;
 
+  count_adjustment = gtk_adjustment_new (0, 0, 1000, 1, 1, 10);
+
+  gtk_spin_button_set_adjustment (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin), count_adjustment);
+
   /* If we just set the event to NULL, simply send a property notify */
   if (!event)
     GCAL_GOTO (out);
+
+  /* Recurrences */
+  recur = gcal_event_get_recurrence (event);
+  frequency = recur ? recur->frequency : GCAL_RECURRENCE_NO_REPEAT;
+  limit_type = recur ? recur->limit_type : GCAL_RECURRENCE_FOREVER;
+
+  gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->repeat_duration_combo), limit_type);
+  gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->repeat_combo), frequency);
+
+  switch (limit_type)
+    {
+    case GCAL_RECURRENCE_COUNT:
+      gtk_spin_button_set_value (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin), recur->limit.count);
+      break;
+
+    case GCAL_RECURRENCE_UNTIL:
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->until_date_selector), recur->limit.until);
+      break;
+
+    case GCAL_RECURRENCE_FOREVER:
+      gtk_spin_button_set_value (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin), 0);
+      break;
+    }
 
   all_day = gcal_event_get_all_day (event);
   source = gcal_event_get_source (event);
@@ -1203,6 +1353,11 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 
   /* all_day  */
   gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->all_day_check), all_day);
+
+  /* recurrence_changed */
+  dialog->recurrence_changed = FALSE;
+
+  gtk_adjustment_set_value (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin)), 0);
 
   /* location */
   gtk_entry_set_text (GTK_ENTRY (dialog->location_entry), gcal_event_get_location (event));
@@ -1326,4 +1481,13 @@ gcal_edit_dialog_get_date_end (GcalEditDialog *dialog)
   return return_datetime_for_widgets (dialog,
                                       GCAL_DATE_SELECTOR (dialog->end_date_selector),
                                       GCAL_TIME_SELECTOR (dialog->end_time_selector));
+}
+
+
+gboolean
+gcal_edit_dialog_get_recurrence_changed (GcalEditDialog *self)
+{
+  g_return_val_if_fail (GCAL_IS_EDIT_DIALOG (self), FALSE);
+
+  return self->recurrence_changed;
 }
