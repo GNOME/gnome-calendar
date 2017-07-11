@@ -90,6 +90,45 @@ gcal_recurrence_free (GcalRecurrence *recur)
 }
 
 /**
+ * gcal_recurrence_is_equal:
+ * @recur1: (nullable): a #GcalRecurrence
+ * @recur2: (nullable): a #GcalRecurrence
+ *
+ * Checks if @recur1 and @recur2 are equal or not
+ *
+ * Returns: %TRUE if both are equal, %FALSE otherwise
+ */
+
+gboolean
+gcal_recurrence_is_equal (GcalRecurrence *recur1,
+                          GcalRecurrence *recur2)
+{
+  if (recur1 == recur2)
+    return TRUE;
+  else if (!recur1 || !recur2)
+    return FALSE;
+
+  if (recur1->frequency != recur2->frequency)
+    return FALSE;
+
+  if (recur1->limit_type != recur2->limit_type)
+    return FALSE;
+
+  if (recur1->limit_type == GCAL_RECURRENCE_UNTIL)
+    {
+      if (!g_date_time_equal (recur1->limit.until, recur2->limit.until))
+        return FALSE;
+    }
+  else if (recur1->limit_type == GCAL_RECURRENCE_COUNT)
+    {
+      if (recur1->limit.count != recur2->limit.count)
+        return FALSE;
+    }
+
+  return TRUE;
+}
+
+/**
  * gcal_recurrence_parse_recurrence_rules:
  * @comp: an #ECalComponent
  *
@@ -191,12 +230,6 @@ gcal_recurrence_to_rrule (GcalRecurrence *recur)
   /* Initialize and clear the rrule to get rid of unwanted fields */
   rrule = g_new0 (struct icalrecurrencetype, 1);
   icalrecurrencetype_clear (rrule);
-
-  rrule->until.second = 0;
-  rrule->until.minute = 0;
-  rrule->until.hour = 0;
-  rrule->until.is_date = TRUE;
-  rrule->until.is_utc = FALSE;
 
   switch (recur->frequency)
     {

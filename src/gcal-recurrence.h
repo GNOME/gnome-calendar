@@ -67,6 +67,9 @@ GcalRecurrence*      gcal_recurrence_copy                        (GcalRecurrence
 
 void                 gcal_recurrence_free                        (GcalRecurrence *recur);
 
+gboolean             gcal_recurrence_is_equal                    (GcalRecurrence *recur1,
+                                                                  GcalRecurrence *recur2);
+
 GcalRecurrence*      gcal_recurrence_parse_recurrence_rules      (ECalComponent *comp);
 
 struct icalrecurrencetype*    gcal_recurrence_to_rrule           (GcalRecurrence *recur);
