@@ -427,7 +427,7 @@
                 <items>
                   <item translatable="yes" id="no_repeat">No Repeat</item>
                   <item translatable="yes" id="daily">Daily</item>
-                  <item translatable="yes" id="mon_fri">Monday - Friday</item>
+                  <item translatable="yes" id="mon_fri">Monday – Friday</item>
                   <item translatable="yes" id="weekly">Weekly</item>
                   <item translatable="yes" id="monthly">Monthly</item>
                   <item translatable="yes" id="yearly">Yearly</item>
