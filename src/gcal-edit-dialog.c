@@ -1288,8 +1288,8 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   frequency = recur ? recur->frequency : GCAL_RECURRENCE_NO_REPEAT;
   limit_type = recur ? recur->limit_type : GCAL_RECURRENCE_FOREVER;
 
-  gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->repeat_duration_combo), limit_type);
   gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->repeat_combo), frequency);
+  gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->repeat_duration_combo), limit_type);
 
   if (frequency == GCAL_RECURRENCE_NO_REPEAT)
     {
