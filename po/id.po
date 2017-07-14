@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-07-04 13:45+0000\n"
-"PO-Revision-Date: 2017-07-10 16:59+0700\n"
+"POT-Creation-Date: 2017-07-13 17:28+0000\n"
+"PO-Revision-Date: 2017-07-14 11:02+0700\n"
 "Last-Translator: Kukuh Syafaat <syafaatkukuh@gmail.com>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
@@ -127,7 +127,7 @@ msgstr "Batal"
 msgid "Click to select the calendar"
 msgstr "Klik untuk memilih kalender"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:608
+#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:697
 msgid "Done"
 msgstr "Selesai"
 
@@ -139,63 +139,103 @@ msgstr "Judul"
 msgid "Date"
 msgstr "Tanggal"
 
-#: data/ui/edit-dialog.ui:172
+#: data/ui/edit-dialog.ui:171
+msgid "Repeat"
+msgstr "Ulangi"
+
+#: data/ui/edit-dialog.ui:188
 msgid "Reminders"
 msgstr "Pengingat"
 
-#: data/ui/edit-dialog.ui:189
+#: data/ui/edit-dialog.ui:205
 msgid "Notes"
 msgstr "Catatan"
 
-#: data/ui/edit-dialog.ui:204 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:220 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "Lokasi"
 
-#: data/ui/edit-dialog.ui:276
+#: data/ui/edit-dialog.ui:292
 msgid "Time"
 msgstr "Waktu"
 
-#: data/ui/edit-dialog.ui:339
+#: data/ui/edit-dialog.ui:355
 msgid "All Day"
 msgstr "Sepanjang Hari"
 
-#: data/ui/edit-dialog.ui:383
+#: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
 msgstr "Tambah pengingat…"
 
-#: data/ui/edit-dialog.ui:457
+#: data/ui/edit-dialog.ui:428
+msgid "No Repeat"
+msgstr "Tidak Ada Pengulangan"
+
+#: data/ui/edit-dialog.ui:429
+msgid "Daily"
+msgstr "Harian"
+
+#: data/ui/edit-dialog.ui:430
+msgid "Monday – Friday"
+msgstr "Senin – Jumat"
+
+#: data/ui/edit-dialog.ui:431
+msgid "Weekly"
+msgstr "Mingguan"
+
+#: data/ui/edit-dialog.ui:432
+msgid "Monthly"
+msgstr "Bulanan"
+
+#: data/ui/edit-dialog.ui:433
+msgid "Yearly"
+msgstr "Tahunan"
+
+#: data/ui/edit-dialog.ui:461
+msgid "Forever"
+msgstr "Selamanya"
+
+#: data/ui/edit-dialog.ui:462
+msgid "No. of occurrences"
+msgstr "Jumlah kejadian"
+
+#: data/ui/edit-dialog.ui:463
+msgid "Until Date"
+msgstr "Hingga Tanggal"
+
+#: data/ui/edit-dialog.ui:554
 msgid "Delete Event"
 msgstr "Hapus Acara"
 
-#: data/ui/edit-dialog.ui:494
+#: data/ui/edit-dialog.ui:591
 msgid "5 minutes"
 msgstr "5 menit"
 
-#: data/ui/edit-dialog.ui:503
+#: data/ui/edit-dialog.ui:600
 msgid "10 minutes"
 msgstr "10 menit"
 
-#: data/ui/edit-dialog.ui:512
+#: data/ui/edit-dialog.ui:609
 msgid "30 minutes"
 msgstr "30 menit"
 
-#: data/ui/edit-dialog.ui:521
+#: data/ui/edit-dialog.ui:618
 msgid "1 hour"
 msgstr "1 jam"
 
-#: data/ui/edit-dialog.ui:529
+#: data/ui/edit-dialog.ui:626
 msgid "1 day"
 msgstr "1 hari"
 
-#: data/ui/edit-dialog.ui:538
+#: data/ui/edit-dialog.ui:635
 msgid "2 days"
 msgstr "2 hari"
 
-#: data/ui/edit-dialog.ui:547
+#: data/ui/edit-dialog.ui:644
 msgid "3 days"
 msgstr "3 hari"
 
-#: data/ui/edit-dialog.ui:556
+#: data/ui/edit-dialog.ui:653
 msgid "1 week"
 msgstr "1 minggu"
 
@@ -332,7 +372,7 @@ msgstr "Tak ditemukan hasil"
 msgid "Try a different search"
 msgstr "Cobalah pencarian lain"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1126 src/gcal-window.c:1130
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1129 src/gcal-window.c:1133
 msgid "Undo"
 msgstr "Tak jadi"
 
@@ -432,7 +472,7 @@ msgstr "Kata Sandi"
 msgid "Connect"
 msgstr "Sambung"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:734
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:763
 #: src/views/gcal-week-view.c:287
 msgid "00:00"
 msgstr "00:00"
@@ -524,39 +564,40 @@ msgstr ""
 "Andika Triwidada <andika@gmail.com>, 2013, 2016.\n"
 "Kukuh Syafaat <syafaatkukuh@gmail.com>, 2017."
 
-#: src/gcal-edit-dialog.c:608
+#: src/gcal-edit-dialog.c:697
 msgid "Save"
 msgstr "Simpan"
 
-#: src/gcal-edit-dialog.c:878
+#: src/gcal-edit-dialog.c:997
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d menit sebelumnya"
 
-#: src/gcal-edit-dialog.c:886
+#: src/gcal-edit-dialog.c:1005
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d jam sebelumnya"
 
-#: src/gcal-edit-dialog.c:894
+#: src/gcal-edit-dialog.c:1013
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d hari sebelumnya"
 
-#: src/gcal-edit-dialog.c:902
+#: src/gcal-edit-dialog.c:1021
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d minggu sebelumnya"
 
-#: src/gcal-edit-dialog.c:1162 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1312 src/gcal-quick-add-popover.c:683
 msgid "Unnamed event"
 msgstr "Acara tanpa nama"
 
-#: src/gcal-event-widget.c:362
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gcal-event-widget.c:364
 #, c-format
 msgid "At %s"
 msgstr "Pada %s"
@@ -712,105 +753,108 @@ msgstr "sampai Kemarin"
 msgid "to %1$s %2$s"
 msgstr "sampai %1$s %2$s"
 
-#: src/gcal-quick-add-popover.c:355
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: src/gcal-quick-add-popover.c:356
 #, c-format
 msgid "New Event %1$s %2$s"
 msgstr "Acara Baru %1$s %2$s"
 
-#: src/gcal-quick-add-popover.c:373
+#: src/gcal-quick-add-popover.c:374
 msgid "New Event Today"
 msgstr "Acara Baru Hari Ini"
 
-#: src/gcal-quick-add-popover.c:377
+#: src/gcal-quick-add-popover.c:378
 msgid "New Event Tomorrow"
 msgstr "Acara Baru Besok"
 
-#: src/gcal-quick-add-popover.c:381
+#: src/gcal-quick-add-popover.c:382
 msgid "New Event Yesterday"
 msgstr "Acara Baru Kemarin"
 
-#: src/gcal-quick-add-popover.c:387
+#: src/gcal-quick-add-popover.c:388
 msgid "New Event next Monday"
 msgstr "Acara Baru Senin depan"
 
-#: src/gcal-quick-add-popover.c:388
+#: src/gcal-quick-add-popover.c:389
 msgid "New Event next Tuesday"
 msgstr "Acara Baru Selasa depan"
 
-#: src/gcal-quick-add-popover.c:389
+#: src/gcal-quick-add-popover.c:390
 msgid "New Event next Wednesday"
 msgstr "Acara Baru Rabu depan"
 
-#: src/gcal-quick-add-popover.c:390
+#: src/gcal-quick-add-popover.c:391
 msgid "New Event next Thursday"
 msgstr "Acara Baru Kamis depan"
 
-#: src/gcal-quick-add-popover.c:391
+#: src/gcal-quick-add-popover.c:392
 msgid "New Event next Friday"
 msgstr "Acara Baru Jumat depan"
 
-#: src/gcal-quick-add-popover.c:392
+#: src/gcal-quick-add-popover.c:393
 msgid "New Event next Saturday"
 msgstr "Acara Baru Sabtu depan"
 
-#: src/gcal-quick-add-popover.c:393
+#: src/gcal-quick-add-popover.c:394
 msgid "New Event next Sunday"
 msgstr "Acara Baru Minggu depan"
 
-#: src/gcal-quick-add-popover.c:404
+#: src/gcal-quick-add-popover.c:405
 msgid "New Event on January"
 msgstr "Acara Baru pada Januari"
 
-#: src/gcal-quick-add-popover.c:405
+#: src/gcal-quick-add-popover.c:406
 msgid "New Event on February"
 msgstr "Acara Baru pada Februari"
 
-#: src/gcal-quick-add-popover.c:406
+#: src/gcal-quick-add-popover.c:407
 msgid "New Event on March"
 msgstr "Acara Baru pada Maret"
 
-#: src/gcal-quick-add-popover.c:407
+#: src/gcal-quick-add-popover.c:408
 msgid "New Event on April"
 msgstr "Acara Baru pada April"
 
-#: src/gcal-quick-add-popover.c:408
+#: src/gcal-quick-add-popover.c:409
 msgid "New Event on May"
 msgstr "Acara Baru pada May"
 
-#: src/gcal-quick-add-popover.c:409
+#: src/gcal-quick-add-popover.c:410
 msgid "New Event on June"
 msgstr "Acara Baru pada June"
 
-#: src/gcal-quick-add-popover.c:410
+#: src/gcal-quick-add-popover.c:411
 msgid "New Event on July"
 msgstr "Acara Baru pada Juli"
 
-#: src/gcal-quick-add-popover.c:411
+#: src/gcal-quick-add-popover.c:412
 msgid "New Event on August"
 msgstr "Acara Baru pada Agustus"
 
-#: src/gcal-quick-add-popover.c:412
+#: src/gcal-quick-add-popover.c:413
 msgid "New Event on September"
 msgstr "Acara Baru pada September"
 
-#: src/gcal-quick-add-popover.c:413
+#: src/gcal-quick-add-popover.c:414
 msgid "New Event on October"
 msgstr "Acara Baru pada Oktober"
 
-#: src/gcal-quick-add-popover.c:414
+#: src/gcal-quick-add-popover.c:415
 msgid "New Event on November"
 msgstr "Acara Baru pada November"
 
-#: src/gcal-quick-add-popover.c:415
+#: src/gcal-quick-add-popover.c:416
 msgid "New Event on December"
 msgstr "Acara Baru pada Desember"
 
-#: src/gcal-quick-add-popover.c:420
+#. Translators: %1$s is the event month (e.g. "New Event on December") and %2$d is the numeric day of month
+#: src/gcal-quick-add-popover.c:422
 #, c-format
 msgid "%1$s %2$d"
 msgstr "%1$s %2$d"
 
-#: src/gcal-quick-add-popover.c:464
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
+#: src/gcal-quick-add-popover.c:467
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -893,11 +937,11 @@ msgstr "A_cara berikutnya"
 msgid "_All events"
 msgstr "Semu_a acara"
 
-#: src/gcal-window.c:1126
+#: src/gcal-window.c:1129
 msgid "Another event deleted"
 msgstr "Acara lain dihapus"
 
-#: src/gcal-window.c:1130
+#: src/gcal-window.c:1133
 msgid "Event deleted"
 msgstr "Acara dihapus"
 
@@ -920,7 +964,7 @@ msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "%d acara lain"
 
-#: src/views/gcal-week-grid.c:731 src/views/gcal-week-view.c:284
+#: src/views/gcal-week-grid.c:760 src/views/gcal-week-view.c:284
 msgid "00 AM"
 msgstr "00 AM"
 
