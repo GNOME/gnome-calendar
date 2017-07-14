@@ -810,11 +810,6 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
       old_recur = gcal_event_get_recurrence (dialog->event);
       freq = gtk_combo_box_get_active (GTK_COMBO_BOX (dialog->repeat_combo));
 
-      remove_recurrence_properties (dialog->event);
-
-      if ((!old_recur && freq != GCAL_RECURRENCE_NO_REPEAT) || old_recur->frequency != freq)
-        dialog->recurrence_changed = TRUE;
-
       if (freq != GCAL_RECURRENCE_NO_REPEAT)
         {
           GcalRecurrence *recur;
@@ -828,10 +823,28 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
           else if (recur->limit_type == GCAL_RECURRENCE_COUNT)
             recur->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin));
 
+          /* Only apply the new recurrence if it's different from the old one */
           if (!gcal_recurrence_is_equal (old_recur, recur))
-            gcal_event_set_recurrence (dialog->event, recur);
+            {
+              /* Remove the previous recurrence... */
+              remove_recurrence_properties (dialog->event);
+
+              /* ... and set the new one */
+              gcal_event_set_recurrence (dialog->event, recur);
+
+              dialog->recurrence_changed = TRUE;
+            }
 
           g_clear_pointer (&recur, gcal_recurrence_free);
+        }
+      else
+        {
+          /* When NO_REPEAT is set, make sure to remove the old recurrent */
+          remove_recurrence_properties (dialog->event);
+
+          /* If the recurrence from an recurrent event was removed, mark it as changed */
+          if (old_recur && old_recur->frequency != GCAL_RECURRENCE_NO_REPEAT)
+            dialog->recurrence_changed = TRUE;
         }
 
       /* Update the source if needed */
