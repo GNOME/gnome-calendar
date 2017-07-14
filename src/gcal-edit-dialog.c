@@ -1381,8 +1381,6 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   /* recurrence_changed */
   dialog->recurrence_changed = FALSE;
 
-  gtk_adjustment_set_value (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin)), 0);
-
   /* location */
   gtk_entry_set_text (GTK_ENTRY (dialog->location_entry), gcal_event_get_location (event));
 
