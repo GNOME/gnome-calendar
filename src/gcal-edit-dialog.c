@@ -518,6 +518,7 @@ repeat_type_changed (GtkComboBox    *combobox,
   if (has_recurrence)
     {
       gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
+      gtk_widget_show (self->repeat_duration_combo);
       gtk_widget_hide (self->repeat_duration_stack);
     }
 }
@@ -1289,6 +1290,16 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 
   gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->repeat_duration_combo), limit_type);
   gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->repeat_combo), frequency);
+
+  if (frequency == GCAL_RECURRENCE_NO_REPEAT)
+    {
+      gtk_widget_hide (dialog->repeat_duration_combo);
+      gtk_widget_hide (dialog->repeat_duration_stack);
+    }
+  else
+    {
+      gtk_widget_show (dialog->repeat_duration_combo);
+    }
 
   switch (limit_type)
     {
