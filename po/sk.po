@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-06-23 07:00+0000\n"
-"PO-Revision-Date: 2017-07-13 12:49+0200\n"
+"POT-Creation-Date: 2017-07-13 17:28+0000\n"
+"PO-Revision-Date: 2017-07-14 21:44+0200\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -68,7 +68,6 @@ msgstr "Pristupujte a spravujte vaše kalendáre"
 
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/org.gnome.Calendar.desktop.in:7
-#| msgid "Unnamed Calendar"
 msgid "org.gnome.Calendar"
 msgstr "org.gnome.Calendar"
 
@@ -130,7 +129,7 @@ msgstr "Zrušiť"
 msgid "Click to select the calendar"
 msgstr "Kliknutím vyberiete kalendár"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:608
+#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:697
 msgid "Done"
 msgstr "Hotovo"
 
@@ -142,63 +141,103 @@ msgstr "Názov"
 msgid "Date"
 msgstr "Dátum"
 
-#: data/ui/edit-dialog.ui:172
+#: data/ui/edit-dialog.ui:171
+msgid "Repeat"
+msgstr "Opakovanie"
+
+#: data/ui/edit-dialog.ui:188
 msgid "Reminders"
 msgstr "Pripomienky"
 
-#: data/ui/edit-dialog.ui:189
+#: data/ui/edit-dialog.ui:205
 msgid "Notes"
 msgstr "Poznámky"
 
-#: data/ui/edit-dialog.ui:204 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:220 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "Umiestnenie"
 
-#: data/ui/edit-dialog.ui:276
+#: data/ui/edit-dialog.ui:292
 msgid "Time"
 msgstr "Čas"
 
-#: data/ui/edit-dialog.ui:339
+#: data/ui/edit-dialog.ui:355
 msgid "All Day"
 msgstr "Celý deň"
 
-#: data/ui/edit-dialog.ui:383
+#: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
 msgstr "Pridať pripomienku…"
 
-#: data/ui/edit-dialog.ui:457
+#: data/ui/edit-dialog.ui:428
+msgid "No Repeat"
+msgstr "Bez opakovania"
+
+#: data/ui/edit-dialog.ui:429
+msgid "Daily"
+msgstr "Denne"
+
+#: data/ui/edit-dialog.ui:430
+msgid "Monday – Friday"
+msgstr "Od pondelka do piatku"
+
+#: data/ui/edit-dialog.ui:431
+msgid "Weekly"
+msgstr "Týždenne"
+
+#: data/ui/edit-dialog.ui:432
+msgid "Monthly"
+msgstr "Mesačne"
+
+#: data/ui/edit-dialog.ui:433
+msgid "Yearly"
+msgstr "Ročne"
+
+#: data/ui/edit-dialog.ui:461
+msgid "Forever"
+msgstr "Navždy"
+
+#: data/ui/edit-dialog.ui:462
+msgid "No. of occurrences"
+msgstr "Počet výskytov"
+
+#: data/ui/edit-dialog.ui:463
+msgid "Until Date"
+msgstr "Do dátumu"
+
+#: data/ui/edit-dialog.ui:554
 msgid "Delete Event"
 msgstr "Odstrániť udalosť"
 
-#: data/ui/edit-dialog.ui:494
+#: data/ui/edit-dialog.ui:591
 msgid "5 minutes"
 msgstr "5 minút"
 
-#: data/ui/edit-dialog.ui:503
+#: data/ui/edit-dialog.ui:600
 msgid "10 minutes"
 msgstr "10 minút"
 
-#: data/ui/edit-dialog.ui:512
+#: data/ui/edit-dialog.ui:609
 msgid "30 minutes"
 msgstr "30 minút"
 
-#: data/ui/edit-dialog.ui:521
+#: data/ui/edit-dialog.ui:618
 msgid "1 hour"
 msgstr "1 hodina"
 
-#: data/ui/edit-dialog.ui:529
+#: data/ui/edit-dialog.ui:626
 msgid "1 day"
 msgstr "1 deň"
 
-#: data/ui/edit-dialog.ui:538
+#: data/ui/edit-dialog.ui:635
 msgid "2 days"
 msgstr "2 dni"
 
-#: data/ui/edit-dialog.ui:547
+#: data/ui/edit-dialog.ui:644
 msgid "3 days"
 msgstr "3 dni"
 
-#: data/ui/edit-dialog.ui:556
+#: data/ui/edit-dialog.ui:653
 msgid "1 week"
 msgstr "1 týždeň"
 
@@ -335,7 +374,7 @@ msgstr "Nenašli sa žiadne výsledky"
 msgid "Try a different search"
 msgstr "Skúste vyhľadať niečo iné"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1126 src/gcal-window.c:1130
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1129 src/gcal-window.c:1133
 msgid "Undo"
 msgstr "Vrátiť späť"
 
@@ -436,7 +475,7 @@ msgstr "Heslo"
 msgid "Connect"
 msgstr "Pripojiť"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:734
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:763
 #: src/views/gcal-week-view.c:287
 msgid "00:00"
 msgstr "00:00"
@@ -526,11 +565,11 @@ msgstr "Autorské práva © %d–%d Autori aplikácie Kalendár"
 msgid "translator-credits"
 msgstr "Dušan Kazik <prescott66@gmail.com>"
 
-#: src/gcal-edit-dialog.c:608
+#: src/gcal-edit-dialog.c:697
 msgid "Save"
 msgstr "Uložiť"
 
-#: src/gcal-edit-dialog.c:878
+#: src/gcal-edit-dialog.c:997
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
@@ -538,7 +577,7 @@ msgstr[0] "Pred %d minútami"
 msgstr[1] "Pred %d minútou"
 msgstr[2] "Pred %d minútami"
 
-#: src/gcal-edit-dialog.c:886
+#: src/gcal-edit-dialog.c:1005
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
@@ -546,7 +585,7 @@ msgstr[0] "Pred %d hodinami"
 msgstr[1] "Pred %d hodinou"
 msgstr[2] "Pred %d hodinami"
 
-#: src/gcal-edit-dialog.c:894
+#: src/gcal-edit-dialog.c:1013
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
@@ -554,7 +593,7 @@ msgstr[0] "Pred %d dňami"
 msgstr[1] "Pred %d dňom"
 msgstr[2] "Pred %d dňami"
 
-#: src/gcal-edit-dialog.c:902
+#: src/gcal-edit-dialog.c:1021
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
@@ -562,11 +601,12 @@ msgstr[0] "Pred %d týždňami"
 msgstr[1] "Pred %d týždňom"
 msgstr[2] "Pred %d týždňami"
 
-#: src/gcal-edit-dialog.c:1162 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1312 src/gcal-quick-add-popover.c:683
 msgid "Unnamed event"
 msgstr "Nepomenovaná udalosť"
 
-#: src/gcal-event-widget.c:362
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gcal-event-widget.c:364
 #, c-format
 msgid "At %s"
 msgstr "V lokalite %s"
@@ -722,106 +762,108 @@ msgstr "do včera"
 msgid "to %1$s %2$s"
 msgstr "do %1$s %2$s"
 
-#: src/gcal-quick-add-popover.c:355
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: src/gcal-quick-add-popover.c:356
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event %1$s %2$s"
 msgstr "Nová udalosť %1$s %2$s"
 
-#: src/gcal-quick-add-popover.c:373
+#: src/gcal-quick-add-popover.c:374
 msgid "New Event Today"
 msgstr "Nová udalosť na dnes"
 
-#: src/gcal-quick-add-popover.c:377
+#: src/gcal-quick-add-popover.c:378
 msgid "New Event Tomorrow"
 msgstr "Nová udalosť na zajtra"
 
-#: src/gcal-quick-add-popover.c:381
+#: src/gcal-quick-add-popover.c:382
 msgid "New Event Yesterday"
 msgstr "Nová udalosť na včera"
 
-#: src/gcal-quick-add-popover.c:387
+#: src/gcal-quick-add-popover.c:388
 msgid "New Event next Monday"
 msgstr "Nová udalosť na nasledujúci pondelok"
 
-#: src/gcal-quick-add-popover.c:388
+#: src/gcal-quick-add-popover.c:389
 msgid "New Event next Tuesday"
 msgstr "Nová udalosť na nasledujúci utorok"
 
-#: src/gcal-quick-add-popover.c:389
+#: src/gcal-quick-add-popover.c:390
 msgid "New Event next Wednesday"
 msgstr "Nová udalosť na nasledujúcu stredu"
 
-#: src/gcal-quick-add-popover.c:390
+#: src/gcal-quick-add-popover.c:391
 msgid "New Event next Thursday"
 msgstr "Nová udalosť na nasledujúci štvrtok"
 
-#: src/gcal-quick-add-popover.c:391
+#: src/gcal-quick-add-popover.c:392
 msgid "New Event next Friday"
 msgstr "Nová udalosť na nasledujúci piatok"
 
-#: src/gcal-quick-add-popover.c:392
+#: src/gcal-quick-add-popover.c:393
 msgid "New Event next Saturday"
 msgstr "Nová udalosť na nasledujúcu sobotu"
 
-#: src/gcal-quick-add-popover.c:393
+#: src/gcal-quick-add-popover.c:394
 msgid "New Event next Sunday"
 msgstr "Nová udalosť na nasledujúcu nedeľu"
 
-#: src/gcal-quick-add-popover.c:404
+#: src/gcal-quick-add-popover.c:405
 msgid "New Event on January"
 msgstr "Nová udalosť na január"
 
-#: src/gcal-quick-add-popover.c:405
+#: src/gcal-quick-add-popover.c:406
 msgid "New Event on February"
 msgstr "Nová udalosť na február"
 
-#: src/gcal-quick-add-popover.c:406
+#: src/gcal-quick-add-popover.c:407
 msgid "New Event on March"
 msgstr "Nová udalosť na marec"
 
-#: src/gcal-quick-add-popover.c:407
+#: src/gcal-quick-add-popover.c:408
 msgid "New Event on April"
 msgstr "Nová udalosť na apríl"
 
-#: src/gcal-quick-add-popover.c:408
+#: src/gcal-quick-add-popover.c:409
 msgid "New Event on May"
 msgstr "Nová udalosť na máj"
 
-#: src/gcal-quick-add-popover.c:409
+#: src/gcal-quick-add-popover.c:410
 msgid "New Event on June"
 msgstr "Nová udalosť na jún"
 
-#: src/gcal-quick-add-popover.c:410
+#: src/gcal-quick-add-popover.c:411
 msgid "New Event on July"
 msgstr "Nová udalosť na júl"
 
-#: src/gcal-quick-add-popover.c:411
+#: src/gcal-quick-add-popover.c:412
 msgid "New Event on August"
 msgstr "Nová udalosť na august"
 
-#: src/gcal-quick-add-popover.c:412
+#: src/gcal-quick-add-popover.c:413
 msgid "New Event on September"
 msgstr "Nová udalosť na september"
 
-#: src/gcal-quick-add-popover.c:413
+#: src/gcal-quick-add-popover.c:414
 msgid "New Event on October"
 msgstr "Nová udalosť na október"
 
-#: src/gcal-quick-add-popover.c:414
+#: src/gcal-quick-add-popover.c:415
 msgid "New Event on November"
 msgstr "Nová udalosť na november"
 
-#: src/gcal-quick-add-popover.c:415
+#: src/gcal-quick-add-popover.c:416
 msgid "New Event on December"
 msgstr "Nová udalosť na december"
 
-#: src/gcal-quick-add-popover.c:420
+#. Translators: %1$s is the event month (e.g. "New Event on December") and %2$d is the numeric day of month
+#: src/gcal-quick-add-popover.c:422
 #, c-format
 msgid "%1$s %2$d"
-msgstr "%1$s %2$d"
+msgstr "%2$d. %1$s"
 
-#: src/gcal-quick-add-popover.c:464
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
+#: src/gcal-quick-add-popover.c:467
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -904,11 +946,11 @@ msgstr "_Nasledujúce udalosti"
 msgid "_All events"
 msgstr "Všetk_y udalosti"
 
-#: src/gcal-window.c:1126
+#: src/gcal-window.c:1129
 msgid "Another event deleted"
 msgstr "Iná udalosť bola odstránená"
 
-#: src/gcal-window.c:1130
+#: src/gcal-window.c:1133
 msgid "Event deleted"
 msgstr "Udalosť bola odstránená"
 
@@ -933,7 +975,7 @@ msgstr[0] "%d iných udalostíIná udalosť"
 msgstr[1] "Iná udalosť"
 msgstr[2] "%d iné udalosti"
 
-#: src/views/gcal-week-grid.c:731 src/views/gcal-week-view.c:284
+#: src/views/gcal-week-grid.c:760 src/views/gcal-week-view.c:284
 msgid "00 AM"
 msgstr "00 dopoludnia"
 
