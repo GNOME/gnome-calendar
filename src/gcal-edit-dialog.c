@@ -1293,11 +1293,11 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 
   if (frequency == GCAL_RECURRENCE_NO_REPEAT)
     {
-      gtk_widget_hide (dialog->repeat_duration_combo);
-      gtk_widget_hide (dialog->repeat_duration_stack);
+      gtk_widget_hide (dialog->repeat_limits_box);
     }
   else
     {
+      gtk_widget_show (dialog->repeat_limits_box);
       gtk_widget_show (dialog->repeat_duration_combo);
     }
 
