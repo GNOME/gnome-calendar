@@ -15,7 +15,6 @@ config.h.in
 config.log
 config.status
 config
-configure
 data/org.gnome.Calendar.desktop
 libtool
 m4/
