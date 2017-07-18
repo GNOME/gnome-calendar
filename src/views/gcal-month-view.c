@@ -1307,7 +1307,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
               /* Day number is calculated differently on RTL languages */
               if (self->k)
-                day = 7 * row + MIRROR (day % 7, 0, 7) - length;
+                day = 7 * row + MIRROR (cell_idx % 7, 0, 7) - self->days_delay - length + 1;
 
               if (i != 0)
                 {
