@@ -754,8 +754,9 @@ draw_month_grid (GcalYearView *year_view,
   GdkRGBA color;
   gint layout_width, layout_height, i, j, sw;
   gint column, row;
+  gboolean column_is_workday;
   gdouble x, y, box_side, box_padding_top, box_padding_start;
-  gint days_delay, days, shown_rows, sunday_idx;
+  gint days_delay, days, shown_rows;
   gchar *str, *nr_day, *nr_week;
   gboolean selected_day;
   icaltimetype today;
@@ -824,7 +825,6 @@ draw_month_grid (GcalYearView *year_view,
   days_delay = (time_day_of_week (1, month_nr, year_view->date->year) - year_view->first_weekday + 7) % 7;
   days = days_delay + icaltime_days_in_month (month_nr + 1, year_view->date->year);
   shown_rows = ceil (days / 7.0);
-  sunday_idx = year_view->k * 7 + sw * ((7 - year_view->first_weekday) % 7) + year_view->show_week_numbers * (1 - year_view->k);
 
   today = icaltime_today ();
   today.year = year_view->date->year;
@@ -838,6 +838,7 @@ draw_month_grid (GcalYearView *year_view,
   for (i = 0; i < 7 * shown_rows; i++)
     {
       column = (i % 7) + (year_view->k || year_view->show_week_numbers);
+      column_is_workday = is_workday ((7 * year_view->k + sw * (column - (year_view->show_week_numbers * !year_view->k) + (sw * year_view->first_weekday))) % 7);
       row = i / 7;
 
       j = 7 * ((i + 7 * year_view->k) / 7) + sw * (i % 7) + (1 - year_view->k);
@@ -966,10 +967,10 @@ draw_month_grid (GcalYearView *year_view,
 
           gtk_style_context_set_state (context, state_flags);
         }
-      else if (column == sunday_idx)
+      else if (!column_is_workday)
         {
           gtk_style_context_save (context);
-          gtk_style_context_add_class (context, "sunday");
+          gtk_style_context_add_class (context, "non-workday");
           gtk_render_layout (context, cr,
                              box_side * column + x + sw * box_padding_start - year_view->k * layout_width,
                              box_side * (row + 1) + y + box_padding_top,
@@ -994,8 +995,8 @@ draw_month_grid (GcalYearView *year_view,
 
           if (selected_day)
             gtk_style_context_add_class (context, "with-events-selected");
-          else if (column == sunday_idx)
-            gtk_style_context_add_class (context, "with-events-sunday");
+          else if (!column_is_workday)
+            gtk_style_context_add_class (context, "with-events-non-workday");
 
           box_padding_start = MAX (0, (box_side - VISUAL_CLUES_SIDE) / 2);
           gtk_render_background (context, cr,

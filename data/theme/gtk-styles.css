@@ -89,7 +89,7 @@ calendar-view.offset {
     font-size: 9pt;
 }
 
-.year-navigator.sunday {
+.year-navigator.non-workday {
     color: alpha(@theme_fg_color, 0.5);
 }
 
@@ -132,7 +132,7 @@ calendar-view.offset {
     background-color: @theme_selected_bg_color;
 }
 
-.year-navigator.with-events-sunday {
+.year-navigator.with-events-non-workday {
     background-color: alpha(@theme_fg_color, 0.5);
 }
 

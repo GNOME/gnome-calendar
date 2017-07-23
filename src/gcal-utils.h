@@ -54,6 +54,18 @@ typedef enum
   GCAL_WINDOW_VIEW_SEARCH,
 } GcalWindowViewType;
 
+typedef enum
+{
+    GCAL_WEEK_DAY_INVALID   = 0,
+    GCAL_WEEK_DAY_SUNDAY    = 1 << 0,
+    GCAL_WEEK_DAY_MONDAY    = 1 << 1,
+    GCAL_WEEK_DAY_TUESDAY   = 1 << 2,
+    GCAL_WEEK_DAY_WEDNESDAY = 1 << 3,
+    GCAL_WEEK_DAY_THURSDAY  = 1 << 4,
+    GCAL_WEEK_DAY_FRIDAY    = 1 << 5,
+    GCAL_WEEK_DAY_SATURDAY  = 1 << 6
+} GcalWeekDay;
+
 GType           icaltime_get_type                               (void)            G_GNUC_CONST;
 
 gint            datetime_compare_date                           (GDateTime             *dt1,
@@ -142,5 +154,7 @@ gboolean        is_source_enabled                               (ESource        
 gboolean        ask_recurrence_modification_type                (GtkWidget             *parent,
                                                                  ECalObjModType        *modtype,
                                                                  ESource               *source);
+
+gboolean        is_workday                                      (guint	                day);
 
 #endif // __GCAL_UTILS_H__

@@ -35,6 +35,7 @@
 
 #include <string.h>
 #include <math.h>
+#include <stdlib.h>
 
 /**
  * SECTION:gcal-utils
@@ -1229,4 +1230,87 @@ ask_recurrence_modification_type (GtkWidget      *parent,
   gtk_widget_destroy (GTK_WIDGET (dialog));
 
   return is_set;
+}
+
+struct
+{
+  const gchar        *territory;
+  GcalWeekDay         no_work_days;
+} no_work_day_per_locale[] = {
+  { "AE", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* United Arab Emirates */,
+  { "AF", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Afghanistan */,
+  { "BD", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Bangladesh */,
+  { "BH", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Bahrain */,
+  { "BN", GCAL_WEEK_DAY_SUNDAY   | GCAL_WEEK_DAY_FRIDAY   } /* Brunei Darussalam */,
+  { "CR", GCAL_WEEK_DAY_SATURDAY                          } /* Costa Rica */,
+  { "DJ", GCAL_WEEK_DAY_FRIDAY                            } /* Djibouti */,
+  { "DZ", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Algeria */,
+  { "EG", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Egypt */,
+  { "GN", GCAL_WEEK_DAY_SATURDAY                          } /* Equatorial Guinea */,
+  { "HK", GCAL_WEEK_DAY_SATURDAY                          } /* Hong Kong */,
+  { "IL", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Israel */,
+  { "IQ", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Iraq */,
+  { "IR", GCAL_WEEK_DAY_THURSDAY | GCAL_WEEK_DAY_FRIDAY   } /* Iran */,
+  { "KW", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Kuwait */,
+  { "KZ", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Kazakhstan */,
+  { "LY", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Libya */,
+  { "MX", GCAL_WEEK_DAY_SATURDAY                          } /* Mexico */,
+  { "MY", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Malaysia */,
+  { "NP", GCAL_WEEK_DAY_SATURDAY                          } /* Nepal */,
+  { "OM", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Oman */,
+  { "QA", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Qatar */,
+  { "SA", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Saudi Arabia */,
+  { "SU", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Sudan */,
+  { "SY", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Syria */,
+  { "UG", GCAL_WEEK_DAY_SUNDAY                            } /* Uganda */,
+  { "YE", GCAL_WEEK_DAY_FRIDAY   | GCAL_WEEK_DAY_SATURDAY } /* Yemen */,
+};
+
+
+/**
+ * is_workday:
+ * @day: a guint representing the day of a week (0…Sunday, 6…Saturday)
+ *
+ * Checks whether @day is workday or not based on the Territory part of Locale.
+ *
+ * Returns: %TRUE if @day is a workday, %FALSE otherwise.
+ */
+gboolean
+is_workday (guint day)
+{
+  GcalWeekDay no_work_days;
+  gchar *locale;
+  gchar territory[3] = { 0, };
+  guint i;
+
+  if (day > 6)
+    return FALSE;
+
+  no_work_days = GCAL_WEEK_DAY_SATURDAY | GCAL_WEEK_DAY_SUNDAY;
+
+  locale = getenv ("LC_ALL");
+  if (!locale || g_utf8_strlen (locale, -1) < 5)
+    locale = getenv ("LC_TIME");
+
+  if (!locale)
+    {
+      g_warning ("Locale is NULL, assuming Saturday and Sunday as non workdays");
+      return !(no_work_days & 1 << day);
+    }
+
+  g_return_val_if_fail (g_utf8_strlen (locale, -1) >= 5, TRUE);
+
+  territory[0] = locale[3];
+  territory[1] = locale[4];
+
+  for (i = 0; i < G_N_ELEMENTS (no_work_day_per_locale); i++)
+    {
+      if (g_strcmp0 (territory, no_work_day_per_locale[i].territory) == 0)
+        {
+          no_work_days = no_work_day_per_locale[i].no_work_days;
+          break;
+        }
+    }
+
+  return !(no_work_days & 1 << day);
 }
