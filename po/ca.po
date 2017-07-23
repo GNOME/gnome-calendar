@@ -11,8 +11,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-07-11 01:58+0000\n"
-"PO-Revision-Date: 2017-07-09 19:24+0200\n"
+"POT-Creation-Date: 2017-07-13 17:28+0000\n"
+"PO-Revision-Date: 2017-07-23 14:46+0200\n"
 "Last-Translator: Jordi Mas <jmas@softcatala.org>\n"
 "Language-Team: Softcatalà\n"
 "Language: ca\n"
@@ -129,7 +129,7 @@ msgstr "Cancel·la"
 msgid "Click to select the calendar"
 msgstr "Feu clic per seleccionar el calendari"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:608
+#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:697
 msgid "Done"
 msgstr "Fet"
 
@@ -141,63 +141,103 @@ msgstr "Títol"
 msgid "Date"
 msgstr "Data"
 
-#: data/ui/edit-dialog.ui:172
+#: data/ui/edit-dialog.ui:171
+msgid "Repeat"
+msgstr "Repeteix"
+
+#: data/ui/edit-dialog.ui:188
 msgid "Reminders"
 msgstr "Recordatoris"
 
-#: data/ui/edit-dialog.ui:189
+#: data/ui/edit-dialog.ui:205
 msgid "Notes"
 msgstr "Anotacions"
 
-#: data/ui/edit-dialog.ui:204 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:220 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "Ubicació"
 
-#: data/ui/edit-dialog.ui:276
+#: data/ui/edit-dialog.ui:292
 msgid "Time"
 msgstr "Hora"
 
-#: data/ui/edit-dialog.ui:339
+#: data/ui/edit-dialog.ui:355
 msgid "All Day"
 msgstr "Tot el dia"
 
-#: data/ui/edit-dialog.ui:383
+#: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
 msgstr "Afegeix un recordatori..."
 
-#: data/ui/edit-dialog.ui:457
+#: data/ui/edit-dialog.ui:428
+msgid "No Repeat"
+msgstr "No repeteixis"
+
+#: data/ui/edit-dialog.ui:429
+msgid "Daily"
+msgstr "Diàriament"
+
+#: data/ui/edit-dialog.ui:430
+msgid "Monday – Friday"
+msgstr "Dilluns – Divendres"
+
+#: data/ui/edit-dialog.ui:431
+msgid "Weekly"
+msgstr "Setmanalment"
+
+#: data/ui/edit-dialog.ui:432
+msgid "Monthly"
+msgstr "Mensualment"
+
+#: data/ui/edit-dialog.ui:433
+msgid "Yearly"
+msgstr "Anualment"
+
+#: data/ui/edit-dialog.ui:461
+msgid "Forever"
+msgstr "Per sempre"
+
+#: data/ui/edit-dialog.ui:462
+msgid "No. of occurrences"
+msgstr "Nombre d'aparicions"
+
+#: data/ui/edit-dialog.ui:463
+msgid "Until Date"
+msgstr "Fins a una dara"
+
+#: data/ui/edit-dialog.ui:554
 msgid "Delete Event"
 msgstr "Suprimeix la cita"
 
-#: data/ui/edit-dialog.ui:494
+#: data/ui/edit-dialog.ui:591
 msgid "5 minutes"
 msgstr "5 minuts"
 
-#: data/ui/edit-dialog.ui:503
+#: data/ui/edit-dialog.ui:600
 msgid "10 minutes"
 msgstr "10 minuts"
 
-#: data/ui/edit-dialog.ui:512
+#: data/ui/edit-dialog.ui:609
 msgid "30 minutes"
 msgstr "30 minuts"
 
-#: data/ui/edit-dialog.ui:521
+#: data/ui/edit-dialog.ui:618
 msgid "1 hour"
 msgstr "1 hora"
 
-#: data/ui/edit-dialog.ui:529
+#: data/ui/edit-dialog.ui:626
 msgid "1 day"
 msgstr "1 dia"
 
-#: data/ui/edit-dialog.ui:538
+#: data/ui/edit-dialog.ui:635
 msgid "2 days"
 msgstr "2 dies"
 
-#: data/ui/edit-dialog.ui:547
+#: data/ui/edit-dialog.ui:644
 msgid "3 days"
 msgstr "3 dies"
 
-#: data/ui/edit-dialog.ui:556
+#: data/ui/edit-dialog.ui:653
 msgid "1 week"
 msgstr "1 setmana"
 
@@ -334,7 +374,7 @@ msgstr "No s'han trobat resultats"
 msgid "Try a different search"
 msgstr "Proveu una cerca diferent"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1126 src/gcal-window.c:1130
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1129 src/gcal-window.c:1133
 msgid "Undo"
 msgstr "Desfés"
 
@@ -524,39 +564,39 @@ msgstr "Copyright © %d–%d els autors del Calendari"
 msgid "translator-credits"
 msgstr "Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2017"
 
-#: src/gcal-edit-dialog.c:608
+#: src/gcal-edit-dialog.c:697
 msgid "Save"
 msgstr "Desa"
 
-#: src/gcal-edit-dialog.c:878
+#: src/gcal-edit-dialog.c:997
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minut abans"
 msgstr[1] "%d minuts abans"
 
-#: src/gcal-edit-dialog.c:886
+#: src/gcal-edit-dialog.c:1005
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d hora abans"
 msgstr[1] "%d hores abans"
 
-#: src/gcal-edit-dialog.c:894
+#: src/gcal-edit-dialog.c:1013
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d dia abans"
 msgstr[1] "%d dies abans"
 
-#: src/gcal-edit-dialog.c:902
+#: src/gcal-edit-dialog.c:1021
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d setmana abans"
 msgstr[1] "%d setmanes abans"
 
-#: src/gcal-edit-dialog.c:1162 src/gcal-quick-add-popover.c:683
+#: src/gcal-edit-dialog.c:1312 src/gcal-quick-add-popover.c:683
 msgid "Unnamed event"
 msgstr "Cita sense nom"
 
@@ -901,11 +941,11 @@ msgstr "_Cites subsegüents"
 msgid "_All events"
 msgstr "_Totes les cites"
 
-#: src/gcal-window.c:1126
+#: src/gcal-window.c:1129
 msgid "Another event deleted"
 msgstr "S'ha suprimit una altra cita"
 
-#: src/gcal-window.c:1130
+#: src/gcal-window.c:1133
 msgid "Event deleted"
 msgstr "S'ha suprimit la cita"
 
