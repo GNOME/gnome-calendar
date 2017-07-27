@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-06-23 07:00+0000\n"
-"PO-Revision-Date: 2017-06-23 19:23+0500\n"
+"POT-Creation-Date: 2017-07-13 17:28+0000\n"
+"PO-Revision-Date: 2017-07-27 10:53+0500\n"
 "Last-Translator: Baurzhan Muftakhidinov <baurthefirst@gmail.com>\n"
 "Language-Team: Kazakh <kk_KZ@googlegroups.com>\n"
 "Language: kk\n"
@@ -125,7 +125,7 @@ msgstr "Бас тарту"
 msgid "Click to select the calendar"
 msgstr "Күнтізбені таңдау үшін шертіңіз"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:608
+#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:697
 msgid "Done"
 msgstr "Дайын"
 
@@ -137,63 +137,103 @@ msgstr "Атауы"
 msgid "Date"
 msgstr "Күні"
 
-#: data/ui/edit-dialog.ui:172
+#: data/ui/edit-dialog.ui:171
+msgid "Repeat"
+msgstr "Қайталау"
+
+#: data/ui/edit-dialog.ui:188
 msgid "Reminders"
 msgstr "Еске салулар"
 
-#: data/ui/edit-dialog.ui:189
+#: data/ui/edit-dialog.ui:205
 msgid "Notes"
 msgstr "Естеліктер"
 
-#: data/ui/edit-dialog.ui:204 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:220 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "Орны"
 
-#: data/ui/edit-dialog.ui:276
+#: data/ui/edit-dialog.ui:292
 msgid "Time"
 msgstr "Уақыт"
 
-#: data/ui/edit-dialog.ui:339
+#: data/ui/edit-dialog.ui:355
 msgid "All Day"
 msgstr "Толық күн"
 
-#: data/ui/edit-dialog.ui:383
+#: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
 msgstr "Еске салуды қосу…"
 
-#: data/ui/edit-dialog.ui:457
+#: data/ui/edit-dialog.ui:428
+msgid "No Repeat"
+msgstr "Қайталамау"
+
+#: data/ui/edit-dialog.ui:429
+msgid "Daily"
+msgstr "Күнде"
+
+#: data/ui/edit-dialog.ui:430
+msgid "Monday – Friday"
+msgstr "Дүйсенбі – Жұма"
+
+#: data/ui/edit-dialog.ui:431
+msgid "Weekly"
+msgstr "Апта сайын"
+
+#: data/ui/edit-dialog.ui:432
+msgid "Monthly"
+msgstr "Ай сайын"
+
+#: data/ui/edit-dialog.ui:433
+msgid "Yearly"
+msgstr "Жыл сайын"
+
+#: data/ui/edit-dialog.ui:461
+msgid "Forever"
+msgstr "Әрқашан"
+
+#: data/ui/edit-dialog.ui:462
+msgid "No. of occurrences"
+msgstr "Қайталаулар саны"
+
+#: data/ui/edit-dialog.ui:463
+msgid "Until Date"
+msgstr "Күнге дейін"
+
+#: data/ui/edit-dialog.ui:554
 msgid "Delete Event"
 msgstr "Оқиғаны өшіру"
 
-#: data/ui/edit-dialog.ui:494
+#: data/ui/edit-dialog.ui:591
 msgid "5 minutes"
 msgstr "5 минут"
 
-#: data/ui/edit-dialog.ui:503
+#: data/ui/edit-dialog.ui:600
 msgid "10 minutes"
 msgstr "10 минут"
 
-#: data/ui/edit-dialog.ui:512
+#: data/ui/edit-dialog.ui:609
 msgid "30 minutes"
 msgstr "30 минут"
 
-#: data/ui/edit-dialog.ui:521
+#: data/ui/edit-dialog.ui:618
 msgid "1 hour"
 msgstr "1 сағат"
 
-#: data/ui/edit-dialog.ui:529
+#: data/ui/edit-dialog.ui:626
 msgid "1 day"
 msgstr "1 күн"
 
-#: data/ui/edit-dialog.ui:538
+#: data/ui/edit-dialog.ui:635
 msgid "2 days"
 msgstr "2 күн"
 
-#: data/ui/edit-dialog.ui:547
+#: data/ui/edit-dialog.ui:644
 msgid "3 days"
 msgstr "3 күн"
 
-#: data/ui/edit-dialog.ui:556
+#: data/ui/edit-dialog.ui:653
 msgid "1 week"
 msgstr "1 апта"
 
@@ -330,7 +370,7 @@ msgstr "Нәтижелер табылмады"
 msgid "Try a different search"
 msgstr "Басқа сөздерді іздеп көріңіз"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1126 src/gcal-window.c:1130
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1129 src/gcal-window.c:1133
 msgid "Undo"
 msgstr "Болдырмау"
 
@@ -430,7 +470,7 @@ msgstr "Пароль"
 msgid "Connect"
 msgstr "Байланысу"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:734
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:763
 #: src/views/gcal-week-view.c:287
 msgid "00:00"
 msgstr "00:00"
@@ -520,39 +560,40 @@ msgstr "Copyright © %d–%d Calendar authors"
 msgid "translator-credits"
 msgstr "Baurzhan Muftakhidinov <baurthefirst@gmail.com>"
 
-#: src/gcal-edit-dialog.c:608
+#: src/gcal-edit-dialog.c:697
 msgid "Save"
 msgstr "Сақтау"
 
-#: src/gcal-edit-dialog.c:878
+#: src/gcal-edit-dialog.c:997
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d минут бұрын"
 
-#: src/gcal-edit-dialog.c:886
+#: src/gcal-edit-dialog.c:1005
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d сағат бұрын"
 
-#: src/gcal-edit-dialog.c:894
+#: src/gcal-edit-dialog.c:1013
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d күн бұрын"
 
-#: src/gcal-edit-dialog.c:902
+#: src/gcal-edit-dialog.c:1021
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d апта бұрын"
 
-#: src/gcal-edit-dialog.c:1162 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1312 src/gcal-quick-add-popover.c:683
 msgid "Unnamed event"
 msgstr "Атаусыз оқиға"
 
-#: src/gcal-event-widget.c:362
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gcal-event-widget.c:364
 #, c-format
 msgid "At %s"
 msgstr "Уақыты %s"
@@ -708,105 +749,108 @@ msgstr "Кешеге дейін"
 msgid "to %1$s %2$s"
 msgstr "%1$s %2$s дейін"
 
-#: src/gcal-quick-add-popover.c:355
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: src/gcal-quick-add-popover.c:356
 #, c-format
 msgid "New Event %1$s %2$s"
 msgstr "Жаңа оқиға, %1$s %2$s"
 
-#: src/gcal-quick-add-popover.c:373
+#: src/gcal-quick-add-popover.c:374
 msgid "New Event Today"
 msgstr "Жаңа оқиға бүгін"
 
-#: src/gcal-quick-add-popover.c:377
+#: src/gcal-quick-add-popover.c:378
 msgid "New Event Tomorrow"
 msgstr "Жаңа оқиға ертең"
 
-#: src/gcal-quick-add-popover.c:381
+#: src/gcal-quick-add-popover.c:382
 msgid "New Event Yesterday"
 msgstr "Жаңа оқиға кеше"
 
-#: src/gcal-quick-add-popover.c:387
+#: src/gcal-quick-add-popover.c:388
 msgid "New Event next Monday"
 msgstr "Жаңа оқиға келесі дүйсенбіде"
 
-#: src/gcal-quick-add-popover.c:388
+#: src/gcal-quick-add-popover.c:389
 msgid "New Event next Tuesday"
 msgstr "Жаңа оқиға келесі сейсенбіде"
 
-#: src/gcal-quick-add-popover.c:389
+#: src/gcal-quick-add-popover.c:390
 msgid "New Event next Wednesday"
 msgstr "Жаңа оқиға келесі сәрсенбіде"
 
-#: src/gcal-quick-add-popover.c:390
+#: src/gcal-quick-add-popover.c:391
 msgid "New Event next Thursday"
 msgstr "Жаңа оқиға келесі бейсенбіде"
 
-#: src/gcal-quick-add-popover.c:391
+#: src/gcal-quick-add-popover.c:392
 msgid "New Event next Friday"
 msgstr "Жаңа оқиға келесі жұмада"
 
-#: src/gcal-quick-add-popover.c:392
+#: src/gcal-quick-add-popover.c:393
 msgid "New Event next Saturday"
 msgstr "Жаңа оқиға келесі сенбіде"
 
-#: src/gcal-quick-add-popover.c:393
+#: src/gcal-quick-add-popover.c:394
 msgid "New Event next Sunday"
 msgstr "Жаңа оқиға келесі жексенбіде"
 
-#: src/gcal-quick-add-popover.c:404
+#: src/gcal-quick-add-popover.c:405
 msgid "New Event on January"
 msgstr "Жаңа оқиға қаңтарда"
 
-#: src/gcal-quick-add-popover.c:405
+#: src/gcal-quick-add-popover.c:406
 msgid "New Event on February"
 msgstr "Жаңа оқиға ақпанда"
 
-#: src/gcal-quick-add-popover.c:406
+#: src/gcal-quick-add-popover.c:407
 msgid "New Event on March"
 msgstr "Жаңа оқиға наурызда"
 
-#: src/gcal-quick-add-popover.c:407
+#: src/gcal-quick-add-popover.c:408
 msgid "New Event on April"
 msgstr "Жаңа оқиға сәуірде"
 
-#: src/gcal-quick-add-popover.c:408
+#: src/gcal-quick-add-popover.c:409
 msgid "New Event on May"
 msgstr "Жаңа оқиға мамырда"
 
-#: src/gcal-quick-add-popover.c:409
+#: src/gcal-quick-add-popover.c:410
 msgid "New Event on June"
 msgstr "Жаңа оқиға маусымда"
 
-#: src/gcal-quick-add-popover.c:410
+#: src/gcal-quick-add-popover.c:411
 msgid "New Event on July"
 msgstr "Жаңа оқиға шілдеде"
 
-#: src/gcal-quick-add-popover.c:411
+#: src/gcal-quick-add-popover.c:412
 msgid "New Event on August"
 msgstr "Жаңа оқиға тамызда"
 
-#: src/gcal-quick-add-popover.c:412
+#: src/gcal-quick-add-popover.c:413
 msgid "New Event on September"
 msgstr "Жаңа оқиға қыркүйекте"
 
-#: src/gcal-quick-add-popover.c:413
+#: src/gcal-quick-add-popover.c:414
 msgid "New Event on October"
 msgstr "Жаңа оқиға қазанда"
 
-#: src/gcal-quick-add-popover.c:414
+#: src/gcal-quick-add-popover.c:415
 msgid "New Event on November"
 msgstr "Жаңа оқиға қарашада"
 
-#: src/gcal-quick-add-popover.c:415
+#: src/gcal-quick-add-popover.c:416
 msgid "New Event on December"
 msgstr "Жаңа оқиға желтоқсанда"
 
-#: src/gcal-quick-add-popover.c:420
+#. Translators: %1$s is the event month (e.g. "New Event on December") and %2$d is the numeric day of month
+#: src/gcal-quick-add-popover.c:422
 #, c-format
 msgid "%1$s %2$d"
 msgstr "%1$s %2$d"
 
-#: src/gcal-quick-add-popover.c:464
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
+#: src/gcal-quick-add-popover.c:467
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -889,11 +933,11 @@ msgstr "Барлық к_елесі оқиғалар"
 msgid "_All events"
 msgstr "Б_арлық оқиғалар"
 
-#: src/gcal-window.c:1126
+#: src/gcal-window.c:1129
 msgid "Another event deleted"
 msgstr "Басқа оқиға өшірілді"
 
-#: src/gcal-window.c:1130
+#: src/gcal-window.c:1133
 msgid "Event deleted"
 msgstr "Оқиға өшірілді"
 
@@ -916,7 +960,7 @@ msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Басқа %d оқиға"
 
-#: src/views/gcal-week-grid.c:731 src/views/gcal-week-view.c:284
+#: src/views/gcal-week-grid.c:760 src/views/gcal-week-view.c:284
 msgid "00 AM"
 msgstr "00 AM"
 
