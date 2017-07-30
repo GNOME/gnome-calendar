@@ -1479,14 +1479,20 @@ gcal_month_view_draw (GtkWidget *widget,
 
   gint font_width, font_height, pos_x, pos_y, shown_rows;
   gint i, j, sw, lower_mark = 43, upper_mark = -2;
-  gint cell_width, cell_height;
+  gint unused_start, unused_start_width;
+  gint unused_end, unused_end_width;
+  gdouble cell_width, cell_height;
   gdouble start_grid_y, first_row_gap = 0.0;
   gdouble days;
+
+  gboolean is_ltr;
 
   self = GCAL_MONTH_VIEW (widget);
   ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
 
   today = g_date_time_new_now_local ();
+
+  is_ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   /* fonts and colors selection */
   context = gtk_widget_get_style_context (widget);
@@ -1618,6 +1624,60 @@ gcal_month_view_draw (GtkWidget *widget,
                              cell_width + 1,
                              cell_height + 1);
     }
+
+  /* grey background on cells outside the current month */
+  unused_start = is_ltr ? 0 : real_cell (self->days_delay - 1, self->k);
+  unused_start_width = self->days_delay;
+
+  unused_end = is_ltr ? real_cell (days, self->k) % 7 : 0;
+  unused_end_width = 7 * shown_rows - days;
+
+  gtk_style_context_save (context);
+  gtk_style_context_add_class (context, "offset");
+
+  /* Half-cell at the top and bottom */
+  if (shown_rows == 5)
+    {
+      gdouble half_cell = cell_height / 2.0;
+
+      gtk_render_background (context,
+                             cr,
+                             0,
+                             start_grid_y,
+                             alloc.width,
+                             half_cell);
+
+      gtk_render_background (context,
+                             cr,
+                             0,
+                             start_grid_y + cell_height * (shown_rows + first_row_gap),
+                             alloc.width,
+                             cell_height / 2);
+    }
+
+  /* Unused cells at the start */
+  if (unused_start_width > 0)
+    {
+      gtk_render_background (context,
+                             cr,
+                             floor (cell_width * unused_start),
+                             floor (cell_height * first_row_gap + start_grid_y),
+                             cell_width * unused_start_width,
+                             cell_height + 1);
+    }
+
+  /* Unused cells at the end */
+  if (unused_end_width > 0)
+    {
+      gtk_render_background (context,
+                         cr,
+                         floor (cell_width * unused_end),
+                         floor (start_grid_y + cell_height * (first_row_gap + shown_rows - 1)),
+                         cell_width * unused_end_width + 1,
+                         cell_height + 1);
+    }
+
+  gtk_style_context_restore (context);
 
   /* grid numbers */
   gtk_style_context_get (context, state, "font", &font_desc, NULL);

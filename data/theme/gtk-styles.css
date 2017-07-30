@@ -56,6 +56,10 @@ calendar-view.lines {
     color: alpha(@theme_fg_color, 0.4);
 }
 
+calendar-view.offset {
+    background-color: alpha(@theme_bg_color, 0.5);
+}
+
 /* Year View CSS */
 .year-view {
     padding: 0px;
