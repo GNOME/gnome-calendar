@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 3.26.x\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-06-10 01:34+0000\n"
-"PO-Revision-Date: 2017-06-11 19:08+0200\n"
+"POT-Creation-Date: 2017-07-28 12:00+0000\n"
+"PO-Revision-Date: 2017-07-31 10:39+0200\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: nb\n"
@@ -38,7 +38,7 @@ msgstr ""
 "komponentene som GNOME-skrivebordet er bygget på, og kler derfor GNOME-"
 "skrivebordet perfekt."
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:14
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, no lacks. You’ll feel comfortable using "
@@ -48,11 +48,15 @@ msgstr ""
 "brukskvalitet. Ikke for mye, og ikke for lite. Du skal føle deg komfortabel "
 "med å bruke Kalender, som om du har brukt den i mange år."
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:24
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:27
+msgid "Week view"
+msgstr "Ukevisning"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:31
 msgid "Search for events"
 msgstr "Søk etter hendelser"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:28
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:35
 msgid "Calendar management"
 msgstr "Kalenderbehandling"
 
@@ -119,7 +123,7 @@ msgstr "Avbryt"
 msgid "Click to select the calendar"
 msgstr "Klikk for å velge kalender"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:608
+#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:698
 msgid "Done"
 msgstr "Ferdig"
 
@@ -131,63 +135,103 @@ msgstr "Tittel"
 msgid "Date"
 msgstr "Dato"
 
-#: data/ui/edit-dialog.ui:172
+#: data/ui/edit-dialog.ui:171
+msgid "Repeat"
+msgstr "Gjenta"
+
+#: data/ui/edit-dialog.ui:188
 msgid "Reminders"
 msgstr "Påminnelser"
 
-#: data/ui/edit-dialog.ui:189
+#: data/ui/edit-dialog.ui:205
 msgid "Notes"
 msgstr "Notater"
 
-#: data/ui/edit-dialog.ui:204 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:220 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "Plassering"
 
-#: data/ui/edit-dialog.ui:276
+#: data/ui/edit-dialog.ui:292
 msgid "Time"
 msgstr "Tid"
 
-#: data/ui/edit-dialog.ui:339
+#: data/ui/edit-dialog.ui:355
 msgid "All Day"
 msgstr "Hele dagen"
 
-#: data/ui/edit-dialog.ui:383
+#: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
 msgstr "Legg til påminnelse …"
 
-#: data/ui/edit-dialog.ui:457
+#: data/ui/edit-dialog.ui:428
+msgid "No Repeat"
+msgstr "Ingen gjentakelse"
+
+#: data/ui/edit-dialog.ui:429
+msgid "Daily"
+msgstr "Daglig"
+
+#: data/ui/edit-dialog.ui:430
+msgid "Monday – Friday"
+msgstr "Mandag – fredag"
+
+#: data/ui/edit-dialog.ui:431
+msgid "Weekly"
+msgstr "Ukentlig"
+
+#: data/ui/edit-dialog.ui:432
+msgid "Monthly"
+msgstr "Månedlig"
+
+#: data/ui/edit-dialog.ui:433
+msgid "Yearly"
+msgstr "Årlig"
+
+#: data/ui/edit-dialog.ui:461
+msgid "Forever"
+msgstr "For alltid"
+
+#: data/ui/edit-dialog.ui:462
+msgid "No. of occurrences"
+msgstr "Antall gjentakelser"
+
+#: data/ui/edit-dialog.ui:463
+msgid "Until Date"
+msgstr "Til dato"
+
+#: data/ui/edit-dialog.ui:554
 msgid "Delete Event"
 msgstr "Slett hendelse"
 
-#: data/ui/edit-dialog.ui:494
+#: data/ui/edit-dialog.ui:591
 msgid "5 minutes"
 msgstr "Fem minutter"
 
-#: data/ui/edit-dialog.ui:503
+#: data/ui/edit-dialog.ui:600
 msgid "10 minutes"
 msgstr "Ti minutter"
 
-#: data/ui/edit-dialog.ui:512
+#: data/ui/edit-dialog.ui:609
 msgid "30 minutes"
 msgstr "Tredve minutter"
 
-#: data/ui/edit-dialog.ui:521
+#: data/ui/edit-dialog.ui:618
 msgid "1 hour"
 msgstr "En time"
 
-#: data/ui/edit-dialog.ui:529
+#: data/ui/edit-dialog.ui:626
 msgid "1 day"
 msgstr "En dag"
 
-#: data/ui/edit-dialog.ui:538
+#: data/ui/edit-dialog.ui:635
 msgid "2 days"
 msgstr "To dager"
 
-#: data/ui/edit-dialog.ui:547
+#: data/ui/edit-dialog.ui:644
 msgid "3 days"
 msgstr "Tre dager"
 
-#: data/ui/edit-dialog.ui:556
+#: data/ui/edit-dialog.ui:653
 msgid "1 week"
 msgstr "En uke"
 
@@ -324,7 +368,7 @@ msgstr "Ingen treff"
 msgid "Try a different search"
 msgstr "Prøv et annet søk"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1114 src/gcal-window.c:1118
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1129 src/gcal-window.c:1133
 msgid "Undo"
 msgstr "Angre"
 
@@ -424,7 +468,7 @@ msgstr "Passord"
 msgid "Connect"
 msgstr "Koble til"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:734
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:763
 #: src/views/gcal-week-view.c:287
 msgid "00:00"
 msgstr "00:00"
@@ -476,7 +520,7 @@ msgstr "Innstillinger for kalender"
 msgid "No events"
 msgstr "Ingen hendelser"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2242
+#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2253
 msgid "Add Event…"
 msgstr "Legg til hendelse …"
 
@@ -516,43 +560,44 @@ msgstr ""
 "Kjartan Maraas <kmaraas@gnome.org>\n"
 "Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com"
 
-#: src/gcal-edit-dialog.c:608
+#: src/gcal-edit-dialog.c:698
 msgid "Save"
 msgstr "Lagre"
 
-#: src/gcal-edit-dialog.c:878
+#: src/gcal-edit-dialog.c:1011
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minutt før"
 msgstr[1] "%d minutter før"
 
-#: src/gcal-edit-dialog.c:886
+#: src/gcal-edit-dialog.c:1019
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d time før"
 msgstr[1] "%d timer før"
 
-#: src/gcal-edit-dialog.c:894
+#: src/gcal-edit-dialog.c:1027
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d dag før"
 msgstr[1] "%d dager før"
 
-#: src/gcal-edit-dialog.c:902
+#: src/gcal-edit-dialog.c:1035
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d uke før"
 msgstr[1] "%d uker før"
 
-#: src/gcal-edit-dialog.c:1162 src/gcal-quick-add-popover.c:501
+#: src/gcal-edit-dialog.c:1336 src/gcal-quick-add-popover.c:683
 msgid "Unnamed event"
 msgstr "Hendelse uten navn"
 
-#: src/gcal-event-widget.c:362
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gcal-event-widget.c:364
 #, c-format
 msgid "At %s"
 msgstr "Kl. %s"
@@ -562,33 +607,257 @@ msgstr "Kl. %s"
 msgid "%s (this calendar is read-only)"
 msgstr "%s (denne kalenderen er skrivebeskyttet)"
 
-#. Translators:
-#. * this is the format string for representing a date consisting of a month
-#. * name and a day of month.
-#.
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/gcal-quick-add-popover.c:234 src/gcal-quick-add-popover.c:264
-#: src/views/gcal-month-view.c:225 src/views/gcal-year-view.c:290
-#: src/views/gcal-year-view.c:512
-msgid "%B %d"
-msgstr "%d %B"
+#: src/gcal-quick-add-popover.c:244
+msgid "from next Monday"
+msgstr "fra neste mandag"
+
+#: src/gcal-quick-add-popover.c:245
+msgid "from next Tuesday"
+msgstr "fra neste tirsdag"
+
+#: src/gcal-quick-add-popover.c:246
+msgid "from next Wednesday"
+msgstr "fra neste onsdag"
+
+#: src/gcal-quick-add-popover.c:247
+msgid "from next Thursday"
+msgstr "fra neste torsdag"
+
+#: src/gcal-quick-add-popover.c:248
+msgid "from next Friday"
+msgstr "fra neste fredag"
+
+#: src/gcal-quick-add-popover.c:249
+msgid "from next Saturday"
+msgstr "fra neste lørdag"
+
+#: src/gcal-quick-add-popover.c:250
+msgid "from next Sunday"
+msgstr "fra neste søndag"
+
+#: src/gcal-quick-add-popover.c:255
+msgid "to next Monday"
+msgstr "til neste mandag"
+
+#: src/gcal-quick-add-popover.c:256
+msgid "to next Tuesday"
+msgstr "til neste tirsdag"
+
+#: src/gcal-quick-add-popover.c:257
+msgid "to next Wednesday"
+msgstr "til neste onsdag"
+
+#: src/gcal-quick-add-popover.c:258
+msgid "to next Thursday"
+msgstr "til neste torsdag"
+
+#: src/gcal-quick-add-popover.c:259
+msgid "to next Friday"
+msgstr "til neste fredag"
+
+#: src/gcal-quick-add-popover.c:260
+msgid "to next Saturday"
+msgstr "til neste lørdag"
+
+#: src/gcal-quick-add-popover.c:261
+msgid "to next Sunday"
+msgstr "til neste søndag"
 
 #: src/gcal-quick-add-popover.c:266
-#, c-format
-msgid "New Event from %s to %s"
-msgstr "Ny hendelse fra %s til %s"
+msgid "January"
+msgstr "Januar"
 
-#: src/gcal-quick-add-popover.c:283
-#, c-format
-msgid "New Event on %s, %s – %s"
-msgstr "Ny hendelse på %s, %s – %s"
+#: src/gcal-quick-add-popover.c:267
+msgid "February"
+msgstr "Februar"
 
-#: src/gcal-quick-add-popover.c:293
+#: src/gcal-quick-add-popover.c:268
+msgid "March"
+msgstr "Mars"
+
+#: src/gcal-quick-add-popover.c:269
+msgid "April"
+msgstr "April"
+
+#: src/gcal-quick-add-popover.c:270
+msgid "May"
+msgstr "Mai"
+
+#: src/gcal-quick-add-popover.c:271
+msgid "June"
+msgstr "Juni"
+
+#: src/gcal-quick-add-popover.c:272
+msgid "July"
+msgstr "Juli"
+
+#: src/gcal-quick-add-popover.c:273
+msgid "August"
+msgstr "August"
+
+#: src/gcal-quick-add-popover.c:274
+msgid "September"
+msgstr "September"
+
+#: src/gcal-quick-add-popover.c:275
+msgid "October"
+msgstr "Oktober"
+
+#: src/gcal-quick-add-popover.c:276
+msgid "November"
+msgstr "November"
+
+#: src/gcal-quick-add-popover.c:277
+msgid "December"
+msgstr "Desember"
+
+#: src/gcal-quick-add-popover.c:286
+msgid "from Today"
+msgstr "fra i dag"
+
+#: src/gcal-quick-add-popover.c:290
+msgid "from Tomorrow"
+msgstr "fra i morgen"
+
+#: src/gcal-quick-add-popover.c:294
+msgid "from Yesterday"
+msgstr "fra i går"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gcal-quick-add-popover.c:312
 #, c-format
-msgid "New Event on %s"
-msgstr "Ny hendelse %s"
+msgid "from %1$s %2$s"
+msgstr "fra %1$s %2$s"
+
+#: src/gcal-quick-add-popover.c:323
+msgid "to Today"
+msgstr "til i dag"
+
+#: src/gcal-quick-add-popover.c:327
+msgid "to Tomorrow"
+msgstr "til i morgen"
+
+#: src/gcal-quick-add-popover.c:331
+msgid "to Yesterday"
+msgstr "til i går"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gcal-quick-add-popover.c:349
+#, c-format
+msgid "to %1$s %2$s"
+msgstr "til %1$s %2$s"
+
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: src/gcal-quick-add-popover.c:356
+#, c-format
+msgid "New Event %1$s %2$s"
+msgstr "Ny hendelse %1$s %2$s"
+
+#: src/gcal-quick-add-popover.c:374
+msgid "New Event Today"
+msgstr "Ny hendelse i dag"
+
+#: src/gcal-quick-add-popover.c:378
+msgid "New Event Tomorrow"
+msgstr "Ny hendelse i morgen"
+
+#: src/gcal-quick-add-popover.c:382
+msgid "New Event Yesterday"
+msgstr "Ny hendelse i går"
+
+#: src/gcal-quick-add-popover.c:388
+msgid "New Event next Monday"
+msgstr "Ny hendelse neste mandag"
+
+#: src/gcal-quick-add-popover.c:389
+msgid "New Event next Tuesday"
+msgstr "Ny hendelse neste tirsdag"
+
+#: src/gcal-quick-add-popover.c:390
+msgid "New Event next Wednesday"
+msgstr "Ny hendelse neste onsdag"
+
+#: src/gcal-quick-add-popover.c:391
+msgid "New Event next Thursday"
+msgstr "Ny hendelse neste torsdag"
+
+#: src/gcal-quick-add-popover.c:392
+msgid "New Event next Friday"
+msgstr "Ny hendelse neste fredag"
+
+#: src/gcal-quick-add-popover.c:393
+msgid "New Event next Saturday"
+msgstr "Ny hendelse neste lørdag"
+
+#: src/gcal-quick-add-popover.c:394
+msgid "New Event next Sunday"
+msgstr "Ny hendelse neste søndag"
+
+#: src/gcal-quick-add-popover.c:405
+msgid "New Event on January"
+msgstr "Ny hendelse i januar"
+
+#: src/gcal-quick-add-popover.c:406
+msgid "New Event on February"
+msgstr "Ny hendelse i februar"
+
+#: src/gcal-quick-add-popover.c:407
+msgid "New Event on March"
+msgstr "Ny hendelse i mars"
+
+#: src/gcal-quick-add-popover.c:408
+msgid "New Event on April"
+msgstr "Ny hendelse i april"
+
+#: src/gcal-quick-add-popover.c:409
+msgid "New Event on May"
+msgstr "Ny hendelse i mai"
+
+#: src/gcal-quick-add-popover.c:410
+msgid "New Event on June"
+msgstr "Ny hendelse i juni"
+
+#: src/gcal-quick-add-popover.c:411
+msgid "New Event on July"
+msgstr "Ny hendelse i juli"
+
+#: src/gcal-quick-add-popover.c:412
+msgid "New Event on August"
+msgstr "Ny hendelse i august"
+
+#: src/gcal-quick-add-popover.c:413
+msgid "New Event on September"
+msgstr "Ny hendelse i september"
+
+#: src/gcal-quick-add-popover.c:414
+msgid "New Event on October"
+msgstr "Ny hendelse i oktober"
+
+#: src/gcal-quick-add-popover.c:415
+msgid "New Event on November"
+msgstr "Ny hendelse i november"
+
+#: src/gcal-quick-add-popover.c:416
+msgid "New Event on December"
+msgstr "Ny hendelse i desember"
+
+#. Translators: %1$s is the event month (e.g. "New Event on December") and %2$d is the numeric day of month
+#: src/gcal-quick-add-popover.c:422
+#, c-format
+msgid "%1$s %2$d"
+msgstr "%1$s %2$d"
+
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
+#: src/gcal-quick-add-popover.c:467
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
 
 #: src/gcal-search-view.c:358
 msgid "All day"
@@ -648,7 +917,9 @@ msgstr "%s PM"
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
-msgstr "Hendelsen du prøver å endre er gjeninntreffende. Endringene du gjør bør brukes på:"
+msgstr ""
+"Hendelsen du prøver å endre er gjeninntreffende. Endringene du gjør bør "
+"brukes på:"
 
 #: src/gcal-utils.c:1190
 msgid "_Cancel"
@@ -666,27 +937,35 @@ msgstr "_Senere hendelser"
 msgid "_All events"
 msgstr "_Alle hendelser"
 
-#: src/gcal-window.c:1114
+#: src/gcal-window.c:1129
 msgid "Another event deleted"
 msgstr "Enda en hendelse slettet"
 
-#: src/gcal-window.c:1118
+#: src/gcal-window.c:1133
 msgid "Event deleted"
 msgstr "Hendelse slettet"
 
-#: src/views/gcal-month-view.c:1175
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/views/gcal-month-view.c:225 src/views/gcal-year-view.c:290
+#: src/views/gcal-year-view.c:512
+msgid "%B %d"
+msgstr "%d %B"
+
+#: src/views/gcal-month-view.c:1186
 msgid "Other events"
 msgstr "Andre hendelser"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:1708 src/views/gcal-week-header.c:338
+#: src/views/gcal-month-view.c:1719 src/views/gcal-week-header.c:338
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Annen hendelse"
 msgstr[1] "%d andre hendelser"
 
-#: src/views/gcal-week-grid.c:731 src/views/gcal-week-view.c:284
+#: src/views/gcal-week-grid.c:760 src/views/gcal-week-view.c:284
 msgid "00 AM"
 msgstr "00 AM"
 
