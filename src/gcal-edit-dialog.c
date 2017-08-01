@@ -1275,7 +1275,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 
   dialog->setting_event = TRUE;
 
-  count_adjustment = gtk_adjustment_new (0, 0, 1000, 1, 1, 10);
+  count_adjustment = gtk_adjustment_new (0, 1, G_MAXDOUBLE, 1, 1, 10);
 
   gtk_spin_button_set_adjustment (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin), count_adjustment);
 
