@@ -1279,6 +1279,8 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 
   gtk_spin_button_set_adjustment (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin), count_adjustment);
 
+  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin), TRUE);
+
   /* If we just set the event to NULL, simply send a property notify */
   if (!event)
     GCAL_GOTO (out);
