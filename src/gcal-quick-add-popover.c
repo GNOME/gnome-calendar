@@ -362,7 +362,6 @@ get_date_string_for_multiday (GDateTime *start,
 static gchar*
 get_date_string_for_day (GDateTime *day)
 {
-  GDate today, event_day;
   gchar *string_for_date;
   gint n_days;
 
