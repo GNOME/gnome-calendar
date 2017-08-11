@@ -593,7 +593,7 @@ msgstr "%s (cet agenda est en lecture seule)"
 #: ../src/gcal-quick-add-popover.c:232 ../src/gcal-quick-add-popover.c:262
 msgctxt "event date format"
 msgid "%B %d"
-msgstr "%B %d"
+msgstr "%d %B"
 
 #: ../src/gcal-quick-add-popover.c:264
 #, c-format
