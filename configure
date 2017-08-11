@@ -145,6 +145,12 @@ install:
 
 check:
 	${MESONTEST} ${NINJA_OPT}
+
+dist:
+	${NINJA} ${NINJA_OPT} dist
+
+distcheck:
+	${MESONTEST} ${NINJA_OPT}; ${NINJA} ${NINJA_OPT} dist
 END
 
 cmd_options=""
