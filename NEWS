@@ -1,3 +1,29 @@
+Major changes in 3.25.90:
+* Port to Meson build system (Iñigo Martínez)
+* Improve string in the quick add popover (Carlo Lobrano)
+* Fix Month view's overflow detection (Abdullahi Usman)
+* Add support for adding and modifying recurrences (Yash Singh)
+* Grey out out-of-range cells in Month view
+* Move remaining files to GPLv3 (Alex Benishek)
+* Updated translations for:
+    * Belarusian (Yuras Shumovich)
+    * Catalan (Jordi Mas)
+    * Croatian (gogo)
+    * Czech (Marek Cernocky)
+    * Friulian (Fabio Tomat)
+    * Galician (Fran Dieguez)
+    * German (Christian Kirbach)
+    * Hungarian (Balázs Meskó)
+    * Indonesian (Kukuh Syafaat)
+    * Kazakh (Baurzhan Muftakhidinov)
+    * Lithuanian (Aurimas Černius)
+    * Nepali (Pawan Chitrakar)
+    * Norwegian bokmål (Kjartan Maraas)
+    * Slovak (Dušan Kazik)
+    * Slovenian (Matej Urbančič)
+    * Spanish (Daniel Mustieles)
+    * Turkish (Emin Tufan Çetin)
+
 Major changes in 3.25.3:
 * Drop intltool
 * Move events at column after remove event from list (Orkun Tezer)

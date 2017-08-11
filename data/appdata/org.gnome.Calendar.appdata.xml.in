@@ -49,6 +49,23 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2017-08-11" version="3.25.90">
+      <description>
+        <p>
+          The GNOME Calendar team is proud to announce the 3.25.90 release of
+          GNOME Calendar, the third release in the next (3.26) unstable series.
+        </p>
+        <p>This release brings the following new features and improvements:</p>
+        <ul>
+          <li>Add the options to add, modify and remove recurrences from events.</li>
+          <li>Improve Month view by greying out out-of-range days.</li>
+          <li>Completely move to the Meson build system. This allows building Calendar at least 3x faster.</li>
+        </ul>
+        <p>This release also updates many translations.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2017-06-19" version="3.25.3">
       <description>
         <p>
