@@ -3,19 +3,19 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # Taner Orak <tnrork@gmail.com>, 2015.
 # Necdet Yücel <necdetyucel@gmail.com>, 2015.
-# Muhammet Kara <muhammetk@gmail.com>, 2015, 2016.
 # Furkan Ahmet Kara <furkanahmetkara.fk@gmail.com>, 2017.
 # Emin Tufan Çetin <etcetin@gmail.com>, 2017.
+# Muhammet Kara <muhammetk@gmail.com>, 2015, 2016, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-07-24 14:49+0000\n"
-"PO-Revision-Date: 2017-07-28 09:38+0300\n"
-"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
-"Language-Team: Türkçe <gnome-turk@gnome.org>\n"
+"POT-Creation-Date: 2017-07-28 12:00+0000\n"
+"PO-Revision-Date: 2017-08-13 15:03+0300\n"
+"Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
+"Language-Team: Turkish <gnometurk@gnome.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -183,17 +183,14 @@ msgid "Monday – Friday"
 msgstr "Pazartesi – Cuma"
 
 #: data/ui/edit-dialog.ui:431
-#| msgid "Week"
 msgid "Weekly"
 msgstr "Haftalık"
 
 #: data/ui/edit-dialog.ui:432
-#| msgid "Month"
 msgid "Monthly"
 msgstr "Aylık"
 
 #: data/ui/edit-dialog.ui:433
-#| msgid "Year"
 msgid "Yearly"
 msgstr "Yıllık"
 
@@ -207,7 +204,7 @@ msgstr "Oluş sayısı"
 
 #: data/ui/edit-dialog.ui:463
 msgid "Until Date"
-msgstr ""
+msgstr "Belirli Tarihe Kadar"
 
 #: data/ui/edit-dialog.ui:554
 msgid "Delete Event"
