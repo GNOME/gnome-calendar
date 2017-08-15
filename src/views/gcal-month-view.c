@@ -1635,6 +1635,9 @@ gcal_month_view_draw (GtkWidget *widget,
   gtk_style_context_save (context);
   gtk_style_context_add_class (context, "offset");
 
+  if (self->dnd_cell != -1)
+    gtk_drag_unhighlight (widget);
+
   /* Half-cell at the top and bottom */
   if (shown_rows == 5)
     {
@@ -1676,6 +1679,9 @@ gcal_month_view_draw (GtkWidget *widget,
                          cell_width * unused_end_width + 1,
                          cell_height + 1);
     }
+
+  if (self->dnd_cell != -1)
+    gtk_drag_highlight (widget);
 
   gtk_style_context_restore (context);
 
@@ -2287,6 +2293,7 @@ gcal_month_view_init (GcalMonthView *self)
 
   cancel_selection (self);
 
+  self->dnd_cell = -1;
   self->pressed_overflow_indicator = -1;
   self->hovered_overflow_indicator = -1;
 
