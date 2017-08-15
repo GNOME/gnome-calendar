@@ -3,6 +3,7 @@
 *.o
 .deps
 .libs
+_build/
 ABOUT-NLS
 ChangeLog
 INSTALL
