@@ -26,5 +26,5 @@ Contributing guidelines
 
 + Fill a bug, attach a patch, wait for review (ping the maintainers if you think
 we took too long)
-+ If you patch touch any autotools related files at all in any non trivial way,
++ If you patch touch any Meson-related files at all in any non trivial way,
 ensure **make distcheck** pass before posting the patch

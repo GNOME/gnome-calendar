@@ -1,12 +1,11 @@
 TODO
 
  - Rework internal GcalWindow working
-
  - Add disable/enable of views
  - Rework GcalViews as grid only (WeekView, MonthView, YearView)
  - Rework GcalViews to implement the new API (remove every "New API" comment)
- - Review all-day checkbox and date/time fields interaction in GcalEditDialog
- - Check width of read-only layer in GcalEditDialog
+ - Make GcalTimeSelector an entry
+ - Properly fix timezone handling
  - Rethink signals from GcalManager
  - Order events chronologically in views
  - Change ordering of events in all-day views (use a custom ordering)
@@ -17,12 +16,17 @@ TODO
 
 Design stuff
 
+ - How to handle timezones?
+ - How should a Single Day view look like?
+ - Need mockups for:
+   * Day view
+   * Agenda view
+   *
  - What to do when there's no host set in the event.
- - Interactions explained
-     - When to show/hide sources view
-     - When to show/hide new-event overlay
-     - Random stuff I don't remember now
 
 Wish-list
 
+ - Make GcalEventWidget a composite widget
+   * Turn into a GtkGrid subclass
+   * Remove all the custom drawing madness
  - Add resize-by-handlers capabilities to GcalEventWidget
