@@ -130,12 +130,13 @@
           <object class="GtkGrid" id="main_grid">
             <property name="visible">True</property>
             <property name="border_width">18</property>
-            <property name="row_spacing">18</property>
+            <property name="row_spacing">6</property>
             <property name="column_spacing">12</property>
             <child>
               <object class="GtkLabel" id="summary_label">
                 <property name="visible">True</property>
                 <property name="xalign">1.0</property>
+                <property name="margin-top">12</property>
                 <property name="label" translatable="yes">Title</property>
                 <property name="ellipsize">end</property>
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
@@ -153,6 +154,7 @@
               <object class="GtkLabel" id="dates_label">
                 <property name="visible">True</property>
                 <property name="xalign">1.0</property>
+                <property name="margin-top">12</property>
                 <property name="label" translatable="yes">Date</property>
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <style>
@@ -168,6 +170,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="xalign">1.0</property>
+                <property name="margin-top">12</property>
                 <property name="label" translatable="yes">Repeat</property>
                 <property name="ellipsize">end</property>
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
@@ -184,6 +187,7 @@
               <object class="GtkLabel" id="reminders_label">
                 <property name="visible">True</property>
                 <property name="xalign">1.0</property>
+                <property name="margin-top">12</property>
                 <property name="valign">start</property>
                 <property name="label" translatable="yes">Reminders</property>
                 <property name="ellipsize">end</property>
@@ -201,6 +205,7 @@
               <object class="GtkLabel" id="notes_label">
                 <property name="visible">True</property>
                 <property name="xalign">1.0</property>
+                <property name="margin-top">12</property>
                 <property name="valign">start</property>
                 <property name="label" translatable="yes">Notes</property>
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
@@ -217,6 +222,7 @@
               <object class="GtkLabel" id="location_label">
                 <property name="visible">True</property>
                 <property name="xalign">1.0</property>
+                <property name="margin-top">12</property>
                 <property name="label" translatable="yes">Location</property>
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <style>
@@ -234,6 +240,7 @@
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="activates_default">True</property>
+                <property name="margin-top">12</property>
                 <property name="editable" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <signal name="notify::text" handler="update_summary" object="GcalEditDialog" swapped="no"/>
@@ -248,6 +255,7 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="hexpand">True</property>
+                <property name="margin-top">12</property>
                 <property name="spacing">6</property>
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <child>
@@ -281,6 +289,7 @@
             <child>
               <object class="GtkRevealer">
                 <property name="visible">True</property>
+                <property name="margin-top">12</property>
                 <property name="reveal_child" bind-source="all_day_check" bind-property="active" bind-flags="default|invert-boolean|sync-create" />
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <signal name="notify::child-revealed" handler="update_revealer_visibility_cb" swapped="no" />
@@ -304,6 +313,7 @@
             <child>
               <object class="GtkRevealer">
                 <property name="visible">True</property>
+                <property name="margin-top">12</property>
                 <property name="reveal_child" bind-source="all_day_check" bind-property="active" bind-flags="default|invert-boolean|sync-create" />
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <signal name="notify::child-revealed" handler="update_revealer_visibility_cb" swapped="no" />
@@ -351,6 +361,7 @@
               <object class="GtkCheckButton" id="all_day_check">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="margin-top">12</property>
                 <property name="draw_indicator">True</property>
                 <property name="label" translatable="yes">All Day</property>
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
@@ -365,6 +376,7 @@
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin-top">12</property>
                 <property name="spacing">6</property>
                 <property name="hexpand">True</property>
                 <property name="orientation">vertical</property>
@@ -422,6 +434,7 @@
               <object class="GtkComboBoxText" id="repeat_combo">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="margin-top">12</property>
                 <property name="hexpand">True</property>
                 <signal name="changed" handler="repeat_type_changed" object="GcalEditDialog" swapped="no"/>
                 <items>
@@ -502,6 +515,7 @@
               <object class="GtkEntry" id="location_entry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="margin-top">12</property>
                 <property name="secondary_icon_name">find-location-symbolic</property>
                 <property name="editable" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
@@ -518,6 +532,7 @@
                 <property name="height_request">120</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="margin-top">12</property>
                 <property name="vexpand">True</property>
                 <property name="shadow_type">in</property>
                 <child>
@@ -546,6 +561,7 @@
               <object class="GtkButton" id="delete_button">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="margin-top">12</property>
                 <signal name="clicked" handler="gcal_edit_dialog_action_button_clicked" object="GcalEditDialog" swapped="no"/>
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <child>
