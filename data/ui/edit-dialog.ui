@@ -437,6 +437,7 @@
                 <property name="margin-top">12</property>
                 <property name="hexpand">True</property>
                 <signal name="changed" handler="repeat_type_changed" object="GcalEditDialog" swapped="no"/>
+                <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <items>
                   <item translatable="yes" id="no_repeat">No Repeat</item>
                   <item translatable="yes" id="daily">Daily</item>
