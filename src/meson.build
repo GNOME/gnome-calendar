@@ -75,7 +75,7 @@ sources += gnome.gdbus_codegen(
 
 debug_conf = configuration_data()
 debug_conf.set('BUGREPORT_URL', package_bugreport)
-debug_conf.set('ENABLE_TRACING', (enable_tracing ? 1 : 0))
+debug_conf.set10('ENABLE_TRACING', enable_tracing)
 
 debug = 'gcal-debug.h'
 
@@ -108,6 +108,5 @@ libgcal = shared_library(
 
 libgcal_dep = declare_dependency(
   link_with: libgcal,
-  include_directories: src_inc,
-  dependencies: calendar_deps
+  include_directories: src_inc
 )

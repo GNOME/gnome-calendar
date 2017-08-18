@@ -71,9 +71,7 @@ check_headers = [
 ]
 
 foreach header: check_headers
-  if cc.has_header(header[1])
-    config_h.set(header[0], true)
-  endif
+  config_h.set(header[0], cc.has_header(header[1]))
 endforeach
 
 # functions
@@ -97,9 +95,7 @@ if host_machine.system().contains('darwin')
 endif
 
 foreach func: check_functions
-  if cc.has_function(func[1])
-    config_h.set(func[0], true)
-  endif
+  config_h.set(func[0], cc.has_function(func[1]))
 endforeach
 
 assert(cc.has_function('strerror'), '"strerror" not found')
@@ -161,17 +157,17 @@ glib_dep = dependency('glib-2.0', version: '>= 2.43.4')
 gtk_dep = dependency('gtk+-3.0', version: '>= 3.21.6')
 
 calendar_deps = [
-  dependency('gmodule-export-2.0'),
-  dependency('gio-2.0', version: '>= 2.43.4'),
   glib_dep,
-  dependency('goa-1.0', version: '>= 3.2.0'),
   gtk_dep,
+  libical_dep,
+  dependency('gio-2.0', version: '>= 2.43.4'),
+  dependency('gmodule-export-2.0'),
+  dependency('goa-1.0', version: '>= 3.2.0'),
+  dependency('gsettings-desktop-schemas', version: '>= 3.21.2'),
   dependency('libecal-1.2', version: '>= 3.13.90'),
   dependency('libedataserver-1.2', version: '>= 3.17.1'),
   dependency('libedataserverui-1.2', version: '>= 3.17.1'),
-  libical_dep,
   dependency('libsoup-2.4'),
-  dependency('gsettings-desktop-schemas', version: '>= 3.21.2'),
   cc.find_library('m')
 ]
 
@@ -193,7 +189,7 @@ subdir('data')
 subdir('src')
 subdir('po')
 
-if get_option('enable-gtk-doc')
+if enable_gtk_doc
   subdir('doc/reference')
 endif
 
@@ -208,5 +204,5 @@ output += '      Development options\n'
 output += '          Enable Debug: ....................  ' + calendar_debug.to_string() + '\n'
 output += '          Enable Tracing: ..................  ' + enable_tracing.to_string() + '\n'
 output += '          Enable Documentation: ............  ' + enable_gtk_doc.to_string() + '\n\n'
-output += '      Now type "ninja -C ' + meson.build_root() + '" to build ' + meson.project_name() + '\n'
+output += '      Now type "ninja -C ' + meson.build_root() + '" to build ' + meson.project_name()
 message(output)
