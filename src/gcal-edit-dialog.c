@@ -357,15 +357,6 @@ fix_reminders_label_height_cb (GtkWidget    *summary_label,
 }
 
 static void
-update_revealer_visibility_cb (GtkRevealer *revealer)
-{
-  if (gtk_revealer_get_reveal_child (revealer))
-    gtk_widget_set_visible (GTK_WIDGET (revealer), TRUE);
-  else if (!gtk_revealer_get_child_revealed (revealer))
-    gtk_widget_set_visible (GTK_WIDGET (revealer), FALSE);
-}
-
-static void
 sync_datetimes (GcalEditDialog *self,
                 GParamSpec     *pspec,
                 GtkWidget      *widget)
@@ -626,7 +617,6 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, sync_datetimes);
   gtk_widget_class_bind_template_callback (widget_class, update_summary);
   gtk_widget_class_bind_template_callback (widget_class, update_location);
-  gtk_widget_class_bind_template_callback (widget_class, update_revealer_visibility_cb);
 }
 
 static void
