@@ -10,10 +10,10 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-07-28 12:00+0000\n"
-"PO-Revision-Date: 2017-08-03 10:46+0200\n"
+"POT-Creation-Date: 2017-08-08 22:00+0000\n"
+"PO-Revision-Date: 2017-08-21 11:56+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
-"Language-Team: čeština <gnome-cs-list@gnome.org>>\n"
+"Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -143,7 +143,7 @@ msgstr "Datum"
 
 #: data/ui/edit-dialog.ui:171
 msgid "Repeat"
-msgstr ""
+msgstr "Opakovat"
 
 #: data/ui/edit-dialog.ui:188
 msgid "Reminders"
@@ -526,7 +526,7 @@ msgstr "Nastavení kalendáře"
 msgid "No events"
 msgstr "Žádné události"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2253
+#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2313
 msgid "Add Event…"
 msgstr "Přidat událost…"
 
@@ -610,7 +610,7 @@ msgstr "Událost bez názvu"
 #: src/gcal-event-widget.c:364
 #, c-format
 msgid "At %s"
-msgstr ""
+msgstr "v místě %s"
 
 #: src/gcal-quick-add-popover.c:119
 #, c-format
@@ -675,54 +675,51 @@ msgstr "od příští neděle"
 
 #: src/gcal-quick-add-popover.c:266
 msgid "January"
-msgstr ""
+msgstr "ledna"
 
 #: src/gcal-quick-add-popover.c:267
 msgid "February"
-msgstr ""
+msgstr "února"
 
 #: src/gcal-quick-add-popover.c:268
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Search"
 msgid "March"
-msgstr "Hledat"
+msgstr "března"
 
 #: src/gcal-quick-add-popover.c:269
 msgid "April"
-msgstr ""
+msgstr "dubna"
 
 #: src/gcal-quick-add-popover.c:270
 msgid "May"
-msgstr ""
+msgstr "května"
 
 #: src/gcal-quick-add-popover.c:271
 msgid "June"
-msgstr ""
+msgstr "června"
 
 #: src/gcal-quick-add-popover.c:272
 msgid "July"
-msgstr ""
+msgstr "července"
 
 #: src/gcal-quick-add-popover.c:273
 msgid "August"
-msgstr ""
+msgstr "srpna"
 
 #: src/gcal-quick-add-popover.c:274
 msgid "September"
-msgstr ""
+msgstr "září"
 
 #: src/gcal-quick-add-popover.c:275
 msgid "October"
-msgstr ""
+msgstr "října"
 
 #: src/gcal-quick-add-popover.c:276
 msgid "November"
-msgstr ""
+msgstr "listopadu"
 
 #: src/gcal-quick-add-popover.c:277
 msgid "December"
-msgstr ""
+msgstr "prosince"
 
 #: src/gcal-quick-add-popover.c:286
 msgid "from Today"
@@ -743,7 +740,7 @@ msgstr "od včerejška"
 #: src/gcal-quick-add-popover.c:312
 #, c-format
 msgid "from %1$s %2$s"
-msgstr "od %1$s %2$s"
+msgstr "od %2$s. %1$s"
 
 #: src/gcal-quick-add-popover.c:323
 msgid "to Today"
@@ -864,7 +861,7 @@ msgstr "Nová událost v prosinci"
 #: src/gcal-quick-add-popover.c:422
 #, c-format
 msgid "%1$s %2$d"
-msgstr ""
+msgstr "%2$d. %1$s"
 
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
 #: src/gcal-quick-add-popover.c:467
@@ -906,15 +903,15 @@ msgstr "Kalendář <b>%s</b> byl odstraněn"
 
 #: src/gcal-source-dialog.c:1953 src/gcal-source-dialog.c:2010
 msgid "Off"
-msgstr "Vypnuto"
+msgstr "Vypnutý"
 
 #: src/gcal-source-dialog.c:1953 src/gcal-source-dialog.c:2010
 msgid "On"
-msgstr "Zapnuto"
+msgstr "Zapnutý"
 
 #: src/gcal-source-dialog.c:2009
 msgid "Expired"
-msgstr ""
+msgstr "Prošlá platnost"
 
 #: src/gcal-time-selector.c:84
 #, c-format
@@ -931,6 +928,8 @@ msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr ""
+"Událost, kterou se snažíte změnit, se opakuje. Mají se změny, které jste "
+"zvolili, použít:"
 
 #: src/gcal-utils.c:1190
 msgid "_Cancel"
@@ -938,14 +937,13 @@ msgstr "_Zrušit"
 
 #: src/gcal-utils.c:1192
 msgid "_Only This Event"
-msgstr ""
+msgstr "Jen na tut_o událost"
 
 #: src/gcal-utils.c:1199
 msgid "_Subsequent events"
-msgstr ""
+msgstr "I na navazující událo_sti"
 
 #: src/gcal-utils.c:1201
-#| msgid "No events"
 msgid "_All events"
 msgstr "_Všechny události"
 
@@ -962,9 +960,6 @@ msgstr "Událost smazána"
 #. Translators: This is a date format in the sidebar of the year view.
 #: src/views/gcal-month-view.c:225 src/views/gcal-year-view.c:290
 #: src/views/gcal-year-view.c:512
-#, fuzzy
-#| msgctxt "event date format"
-#| msgid "%B %d"
 msgid "%B %d"
 msgstr "%e. %B"
 
@@ -973,7 +968,7 @@ msgid "Other events"
 msgstr "Další události"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:1719 src/views/gcal-week-header.c:338
+#: src/views/gcal-month-view.c:1779 src/views/gcal-week-header.c:338
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -994,8 +989,5 @@ msgstr "%d. týden"
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
 #: src/views/gcal-year-view.c:284
-#, fuzzy
-#| msgctxt "event date format"
-#| msgid "%B %d"
 msgid "%B %d…"
-msgstr "%e. %B"
+msgstr "%e. %B…"
