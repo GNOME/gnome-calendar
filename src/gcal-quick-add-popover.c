@@ -399,28 +399,27 @@ get_date_string_for_day (GDateTime *day)
     }
   else
     {
-      gchar *event_month;
+      const gchar *event_month;
       gchar *event_month_names [] = {
-        N_("New Event on January"),
-        N_("New Event on February"),
-        N_("New Event on March"),
-        N_("New Event on April"),
-        N_("New Event on May"),
-        N_("New Event on June"),
-        N_("New Event on July"),
-        N_("New Event on August"),
-        N_("New Event on September"),
-        N_("New Event on October"),
-        N_("New Event on November"),
-        N_("New Event on December"),
+        N_("New Event on January %d"),
+        N_("New Event on February %d"),
+        N_("New Event on March %d"),
+        N_("New Event on April %d"),
+        N_("New Event on May %d"),
+        N_("New Event on June %d"),
+        N_("New Event on July %d"),
+        N_("New Event on August %d"),
+        N_("New Event on September %d"),
+        N_("New Event on October %d"),
+        N_("New Event on November %d"),
+        N_("New Event on December %d"),
         NULL
       };
 
       event_month = gettext (event_month_names [g_date_time_get_month (day) - 1]);
-      /* Translators: %1$s is the event month (e.g. "New Event on December") and %2$d is the numeric day of month */
-      string_for_date = g_strdup_printf (_("%1$s %2$d"),
-                                         event_month,
-                                         g_date_time_get_day_of_month (day));
+
+      /* Translators: %d is the numeric day of month */
+      string_for_date = g_strdup_printf (event_month, g_date_time_get_day_of_month (day));
     }
 
   return string_for_date;
