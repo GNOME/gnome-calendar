@@ -1729,7 +1729,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
           /* FIXME: hardcoded padding of the number background */
           gtk_render_background (context, cr,
-                                 cell_width * (column - self->k),
+                                 cell_width * column,
                                  cell_height * (row + first_row_gap) + start_grid_y,
                                  cell_width, cell_height);
           gtk_render_layout (context, cr,
@@ -1796,6 +1796,9 @@ gcal_month_view_draw (GtkWidget *widget,
             {
               gtk_style_context_get (context, state, "font", &ofont_desc, NULL);
             }
+
+          if (self->k)
+            column = MIRROR (column, 0, 7) - 1;
 
           overflow_layout = gtk_widget_create_pango_layout (widget, overflow_str);
 
@@ -2081,7 +2084,6 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
   days = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year);
 
   new_end_cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y, &hovered_indicator, NULL, NULL);
-  new_end_cell = real_cell (new_end_cell, self->k);
 
   if (self->start_mark_cell)
     {
