@@ -260,14 +260,21 @@ static void
 gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
                                gboolean        writable)
 {
-  if (dialog->writable != writable)
-    {
-      dialog->writable = writable;
+  gboolean all_day;
 
-      gtk_button_set_label (GTK_BUTTON (dialog->done_button), writable ? _("Save") : _("Done"));
+  if (dialog->writable == writable)
+    return;
 
-      g_object_notify (G_OBJECT (dialog), "writable");
-    }
+  all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
+
+  gtk_widget_set_sensitive (dialog->start_time_selector, !all_day && writable);
+  gtk_widget_set_sensitive (dialog->end_time_selector, !all_day && writable);
+
+  gtk_button_set_label (GTK_BUTTON (dialog->done_button), writable ? _("Save") : _("Done"));
+
+  dialog->writable = writable;
+
+  g_object_notify (G_OBJECT (dialog), "writable");
 }
 
 static void
