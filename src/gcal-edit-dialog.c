@@ -112,33 +112,8 @@ struct _GcalEditDialog
   gboolean          setting_event;
 };
 
-static void        fill_sources_menu                             (GcalEditDialog    *dialog);
-
 static void        on_calendar_selected                          (GSimpleAction     *menu_item,
                                                                   GVariant          *value,
-                                                                  gpointer           user_data);
-
-static void        update_location                               (GtkEntry          *entry,
-                                                                  GParamSpec        *pspec,
-                                                                  gpointer           user_data);
-
-static void        update_summary                                (GtkEntry          *entry,
-                                                                  GParamSpec        *pspec,
-                                                                  gpointer           user_data);
-
-static void        gcal_edit_dialog_constructed                  (GObject           *object);
-
-static void        gcal_edit_dialog_finalize                     (GObject           *object);
-
-static void        gcal_edit_dialog_set_writable                 (GcalEditDialog    *dialog,
-                                                                  gboolean           writable);
-
-static void        gcal_edit_dialog_clear_data                   (GcalEditDialog    *dialog);
-
-static void        gcal_edit_dialog_action_button_clicked        (GtkWidget         *widget,
-                                                                  gpointer           user_data);
-
-static void        gcal_edit_dialog_all_day_changed              (GtkWidget         *widget,
                                                                   gpointer           user_data);
 
 static void        add_alarm_button_clicked                      (GtkWidget         *button,
@@ -282,6 +257,20 @@ on_calendar_selected (GSimpleAction *action,
 }
 
 static void
+gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
+                               gboolean        writable)
+{
+  if (dialog->writable != writable)
+    {
+      dialog->writable = writable;
+
+      gtk_button_set_label (GTK_BUTTON (dialog->done_button), writable ? _("Save") : _("Done"));
+
+      g_object_notify (G_OBJECT (dialog), "writable");
+    }
+}
+
+static void
 remove_recurrence_properties (GcalEvent *event)
 {
   ECalComponent *comp;
@@ -419,312 +408,8 @@ out:
 }
 
 static void
-gcal_edit_dialog_get_property (GObject    *object,
-                               guint       prop_id,
-                               GValue     *value,
-                               GParamSpec *pspec)
-{
-  GcalEditDialog *self = GCAL_EDIT_DIALOG (object);
-
-  switch (prop_id)
-    {
-    case PROP_EVENT:
-      g_value_set_object (value, self->event);
-      break;
-
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
-      break;
-
-    case PROP_WRITABLE:
-      g_value_set_boolean (value, self->writable);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-gcal_edit_dialog_set_property (GObject      *object,
-                               guint         prop_id,
-                               const GValue *value,
-                               GParamSpec   *pspec)
-{
-  GcalEditDialog *self = GCAL_EDIT_DIALOG (object);
-
-  switch (prop_id)
-    {
-    case PROP_EVENT:
-      gcal_edit_dialog_set_event (self, g_value_get_object (value));
-      break;
-
-    case PROP_MANAGER:
-      gcal_edit_dialog_set_manager (self, g_value_get_object (value));
-      break;
-
-    case PROP_WRITABLE:
-      gcal_edit_dialog_set_writable (self, g_value_get_boolean (value));
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
-    }
-}
-
-static void
-repeat_duration_changed (GtkComboBox    *widget,
-                         GcalEditDialog *self)
-{
-  switch (gtk_combo_box_get_active (widget))
-    {
-      case 0:
-        gtk_widget_hide (self->repeat_duration_stack);
-        break;
-
-      case 1:
-        gtk_widget_show (self->repeat_duration_stack);
-        gtk_stack_set_visible_child (GTK_STACK (self->repeat_duration_stack), self->number_of_occurrences_spin);
-        break;
-
-      case 2:
-        gtk_widget_show (self->repeat_duration_stack);
-        gtk_stack_set_visible_child (GTK_STACK (self->repeat_duration_stack), self->until_date_selector);
-        break;
-
-      default:
-        break;
-    }
-}
-
-static void
-repeat_type_changed (GtkComboBox    *combobox,
-                     GcalEditDialog *self)
-{
-  GcalRecurrenceFrequency frequency;
-  gboolean has_recurrence;
-
-  frequency = gtk_combo_box_get_active (combobox);
-  has_recurrence = frequency != GCAL_RECURRENCE_NO_REPEAT;
-
-  gtk_widget_set_visible (self->repeat_limits_box, has_recurrence);
-
-  if (has_recurrence)
-    {
-      gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
-      gtk_widget_show (self->repeat_duration_combo);
-      gtk_widget_hide (self->repeat_duration_stack);
-    }
-}
-
-static void
-gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
-{
-  GObjectClass *object_class;
-  GtkWidgetClass *widget_class;
-
-  object_class = G_OBJECT_CLASS (klass);
-  object_class->get_property = gcal_edit_dialog_get_property;
-  object_class->set_property = gcal_edit_dialog_set_property;
-  object_class->constructed = gcal_edit_dialog_constructed;
-  object_class->finalize = gcal_edit_dialog_finalize;
-
-  widget_class = GTK_WIDGET_CLASS (klass);
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/edit-dialog.ui");
-
-  /**
-   * GcalEditDialog::event:
-   *
-   * The #GcalEvent being edited.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_EVENT,
-                                   g_param_spec_object ("event",
-                                                        "event of the dialog",
-                                                        "The event being edited",
-                                                        GCAL_TYPE_EVENT,
-                                                        G_PARAM_READWRITE));
-
-  /**
-   * GcalEditDialog::manager:
-   *
-   * The #GcalManager of the dialog.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_MANAGER,
-                                   g_param_spec_object ("manager",
-                                                        "Manager of the dialog",
-                                                        "The manager of the dialog",
-                                                        GCAL_TYPE_MANAGER,
-                                                        G_PARAM_READWRITE));
-
-  /**
-   * GcalEditDialog::writable:
-   *
-   * Whether the current event can be edited or not.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_WRITABLE,
-                                   g_param_spec_boolean ("writable",
-                                                         "Whether the current event can be edited",
-                                                         "Whether the current event can be edited or not",
-                                                         TRUE,
-                                                         G_PARAM_READWRITE));
-
-  /* Alarms */
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, five_minutes_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, ten_minutes_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, thirty_minutes_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, one_hour_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, one_day_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, two_days_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, three_days_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, one_week_button);
-  /* Buttons */
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, done_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, cancel_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, delete_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, sources_button);
-  /* Entries */
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, summary_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, start_time_selector);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, start_date_selector);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, end_time_selector);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, end_date_selector);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, location_entry);
-  /* Other */
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, alarms_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, notes_text);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, all_day_check);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, titlebar);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, title_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, subtitle_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, lock);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, number_of_occurrences_spin);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_combo);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_duration_combo);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_duration_stack);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_limits_box);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, source_image);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, sources_popover);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, until_date_selector);
-
-
-  /* callbacks */
-  gtk_widget_class_bind_template_callback (widget_class, add_alarm_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, fix_reminders_label_height_cb);
-  gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_action_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, gcal_edit_dialog_all_day_changed);
-  gtk_widget_class_bind_template_callback (widget_class, repeat_duration_changed);
-  gtk_widget_class_bind_template_callback (widget_class, repeat_type_changed);
-  gtk_widget_class_bind_template_callback (widget_class, sync_datetimes);
-  gtk_widget_class_bind_template_callback (widget_class, update_summary);
-  gtk_widget_class_bind_template_callback (widget_class, update_location);
-}
-
-static void
-gcal_edit_dialog_init (GcalEditDialog *self)
-{
-  self->writable = TRUE;
-
-  gtk_widget_init_template (GTK_WIDGET (self));
-
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->alarms_listbox),
-                              sort_alarms_func,
-                              self,
-                              NULL);
-}
-
-static void
-gcal_edit_dialog_constructed (GObject* object)
-{
-  GcalEditDialog *self;
-
-  self = GCAL_EDIT_DIALOG (object);
-
-  /* chaining up */
-  G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->constructed (object);
-
-  gtk_window_set_title (GTK_WINDOW (object), "");
-
-  /* titlebar */
-  gtk_window_set_titlebar (GTK_WINDOW (object), self->titlebar);
-
-  /* Actions */
-  self->action_group = g_simple_action_group_new ();
-  g_action_map_add_action_entries (G_ACTION_MAP (self->action_group),
-                                   action_entries,
-                                   G_N_ELEMENTS (action_entries),
-                                   self);
-
-  gtk_widget_insert_action_group (GTK_WIDGET (self),
-                                  "edit",
-                                  G_ACTION_GROUP (self->action_group));
-}
-
-static void
-gcal_edit_dialog_finalize (GObject *object)
-{
-  GcalEditDialog *dialog;
-
-  GCAL_ENTRY;
-
-  dialog = GCAL_EDIT_DIALOG (object);
-
-  g_clear_object (&dialog->action_group);
-  g_clear_object (&dialog->manager);
-  g_clear_object (&dialog->event);
-
-  G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->finalize (object);
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
-                               gboolean        writable)
-{
-  if (dialog->writable != writable)
-    {
-      dialog->writable = writable;
-
-      gtk_button_set_label (GTK_BUTTON (dialog->done_button), writable ? _("Save") : _("Done"));
-
-      g_object_notify (G_OBJECT (dialog), "writable");
-    }
-}
-
-static void
-gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
-{
-  /* summary */
-  g_signal_handlers_block_by_func (dialog->summary_entry,
-                                   update_summary,
-                                   dialog);
-  gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), "");
-  g_signal_handlers_unblock_by_func (dialog->summary_entry,
-                                     update_summary,
-                                     dialog);
-
-  /* location */
-  g_signal_handlers_block_by_func (dialog->location_entry,
-                                   update_location,
-                                   dialog);
-  gtk_entry_set_text (GTK_ENTRY (dialog->location_entry), "");
-  g_signal_handlers_unblock_by_func (dialog->location_entry,
-                                     update_location,
-                                     dialog);
-
-  /* notes */
-  gtk_text_buffer_set_text (
-      gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text)),
-      "",
-      -1);
-}
-
-static void
-gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
-                                        gpointer   user_data)
+action_button_clicked (GtkWidget *widget,
+                       gpointer   user_data)
 {
   GcalEditDialog *dialog;
 
@@ -867,18 +552,297 @@ gcal_edit_dialog_action_button_clicked (GtkWidget *widget,
   GCAL_EXIT;
 }
 
+
 static void
-gcal_edit_dialog_all_day_changed (GtkWidget *widget,
-                                  gpointer   user_data)
+repeat_duration_changed (GtkComboBox    *widget,
+                         GcalEditDialog *self)
+{
+  switch (gtk_combo_box_get_active (widget))
+    {
+      case 0:
+        gtk_widget_hide (self->repeat_duration_stack);
+        break;
+
+      case 1:
+        gtk_widget_show (self->repeat_duration_stack);
+        gtk_stack_set_visible_child (GTK_STACK (self->repeat_duration_stack), self->number_of_occurrences_spin);
+        break;
+
+      case 2:
+        gtk_widget_show (self->repeat_duration_stack);
+        gtk_stack_set_visible_child (GTK_STACK (self->repeat_duration_stack), self->until_date_selector);
+        break;
+
+      default:
+        break;
+    }
+}
+
+static void
+repeat_type_changed (GtkComboBox    *combobox,
+                     GcalEditDialog *self)
+{
+  GcalRecurrenceFrequency frequency;
+  gboolean has_recurrence;
+
+  frequency = gtk_combo_box_get_active (combobox);
+  has_recurrence = frequency != GCAL_RECURRENCE_NO_REPEAT;
+
+  gtk_widget_set_visible (self->repeat_limits_box, has_recurrence);
+
+  if (has_recurrence)
+    {
+      gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
+      gtk_widget_show (self->repeat_duration_combo);
+      gtk_widget_hide (self->repeat_duration_stack);
+    }
+}
+
+static void
+all_day_changed_cb (GtkToggleButton *button,
+                    GcalEditDialog  *self)
+{
+  gboolean active = gtk_toggle_button_get_active (button);
+
+  gtk_widget_set_sensitive (self->start_time_selector, !active);
+  gtk_widget_set_sensitive (self->end_time_selector, !active);
+}
+
+
+static void
+gcal_edit_dialog_finalize (GObject *object)
 {
   GcalEditDialog *dialog;
-  gboolean active;
 
-  dialog = GCAL_EDIT_DIALOG (user_data);
-  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
+  GCAL_ENTRY;
 
-  gtk_widget_set_sensitive (dialog->start_time_selector, !active);
-  gtk_widget_set_sensitive (dialog->end_time_selector, !active);
+  dialog = GCAL_EDIT_DIALOG (object);
+
+  g_clear_object (&dialog->action_group);
+  g_clear_object (&dialog->manager);
+  g_clear_object (&dialog->event);
+
+  G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->finalize (object);
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_edit_dialog_constructed (GObject* object)
+{
+  GcalEditDialog *self;
+
+  self = GCAL_EDIT_DIALOG (object);
+
+  /* chaining up */
+  G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->constructed (object);
+
+  gtk_window_set_title (GTK_WINDOW (object), "");
+
+  /* titlebar */
+  gtk_window_set_titlebar (GTK_WINDOW (object), self->titlebar);
+
+  /* Actions */
+  self->action_group = g_simple_action_group_new ();
+  g_action_map_add_action_entries (G_ACTION_MAP (self->action_group),
+                                   action_entries,
+                                   G_N_ELEMENTS (action_entries),
+                                   self);
+
+  gtk_widget_insert_action_group (GTK_WIDGET (self),
+                                  "edit",
+                                  G_ACTION_GROUP (self->action_group));
+}
+
+static void
+gcal_edit_dialog_get_property (GObject    *object,
+                               guint       prop_id,
+                               GValue     *value,
+                               GParamSpec *pspec)
+{
+  GcalEditDialog *self = GCAL_EDIT_DIALOG (object);
+
+  switch (prop_id)
+    {
+    case PROP_EVENT:
+      g_value_set_object (value, self->event);
+      break;
+
+    case PROP_MANAGER:
+      g_value_set_object (value, self->manager);
+      break;
+
+    case PROP_WRITABLE:
+      g_value_set_boolean (value, self->writable);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_edit_dialog_set_property (GObject      *object,
+                               guint         prop_id,
+                               const GValue *value,
+                               GParamSpec   *pspec)
+{
+  GcalEditDialog *self = GCAL_EDIT_DIALOG (object);
+
+  switch (prop_id)
+    {
+    case PROP_EVENT:
+      gcal_edit_dialog_set_event (self, g_value_get_object (value));
+      break;
+
+    case PROP_MANAGER:
+      gcal_edit_dialog_set_manager (self, g_value_get_object (value));
+      break;
+
+    case PROP_WRITABLE:
+      gcal_edit_dialog_set_writable (self, g_value_get_boolean (value));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
+{
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+
+  object_class->finalize = gcal_edit_dialog_finalize;
+  object_class->constructed = gcal_edit_dialog_constructed;
+  object_class->get_property = gcal_edit_dialog_get_property;
+  object_class->set_property = gcal_edit_dialog_set_property;
+
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/edit-dialog.ui");
+
+  /**
+   * GcalEditDialog::event:
+   *
+   * The #GcalEvent being edited.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_EVENT,
+                                   g_param_spec_object ("event",
+                                                        "event of the dialog",
+                                                        "The event being edited",
+                                                        GCAL_TYPE_EVENT,
+                                                        G_PARAM_READWRITE));
+
+  /**
+   * GcalEditDialog::manager:
+   *
+   * The #GcalManager of the dialog.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_MANAGER,
+                                   g_param_spec_object ("manager",
+                                                        "Manager of the dialog",
+                                                        "The manager of the dialog",
+                                                        GCAL_TYPE_MANAGER,
+                                                        G_PARAM_READWRITE));
+
+  /**
+   * GcalEditDialog::writable:
+   *
+   * Whether the current event can be edited or not.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_WRITABLE,
+                                   g_param_spec_boolean ("writable",
+                                                         "Whether the current event can be edited",
+                                                         "Whether the current event can be edited or not",
+                                                         TRUE,
+                                                         G_PARAM_READWRITE));
+
+  /* Alarms */
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, five_minutes_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, ten_minutes_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, thirty_minutes_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, one_hour_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, one_day_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, two_days_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, three_days_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, one_week_button);
+  /* Buttons */
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, done_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, cancel_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, delete_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, sources_button);
+  /* Entries */
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, summary_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, start_time_selector);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, start_date_selector);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, end_time_selector);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, end_date_selector);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, location_entry);
+  /* Other */
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, alarms_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, notes_text);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, all_day_check);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, titlebar);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, title_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, subtitle_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, lock);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, number_of_occurrences_spin);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_combo);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_duration_combo);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_duration_stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_limits_box);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, source_image);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, sources_popover);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, until_date_selector);
+
+
+  /* callbacks */
+  gtk_widget_class_bind_template_callback (widget_class, action_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, add_alarm_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, fix_reminders_label_height_cb);
+  gtk_widget_class_bind_template_callback (widget_class, all_day_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, repeat_duration_changed);
+  gtk_widget_class_bind_template_callback (widget_class, repeat_type_changed);
+  gtk_widget_class_bind_template_callback (widget_class, sync_datetimes);
+  gtk_widget_class_bind_template_callback (widget_class, update_summary);
+  gtk_widget_class_bind_template_callback (widget_class, update_location);
+}
+
+static void
+gcal_edit_dialog_init (GcalEditDialog *self)
+{
+  self->writable = TRUE;
+
+  gtk_widget_init_template (GTK_WIDGET (self));
+
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->alarms_listbox),
+                              sort_alarms_func,
+                              self,
+                              NULL);
+}
+
+static void
+gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
+{
+  /* summary */
+  g_signal_handlers_block_by_func (dialog->summary_entry, update_summary, dialog);
+
+  gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), "");
+
+  g_signal_handlers_unblock_by_func (dialog->summary_entry, update_summary, dialog);
+
+  /* location */
+  g_signal_handlers_block_by_func (dialog->location_entry, update_location, dialog);
+
+  gtk_entry_set_text (GTK_ENTRY (dialog->location_entry), "");
+
+  g_signal_handlers_unblock_by_func (dialog->location_entry, update_location, dialog);
+
+  /* notes */
+  gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text)), "", -1);
 }
 
 /*
@@ -1345,7 +1309,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 
   date_end = gcal_event_get_date_end (event);
   /*
-   * This is subtracting what has been added in gcal_edit_dialog_action_button_clicked ().
+   * This is subtracting what has been added in action_button_clicked ().
    * See bug 769300.
    */
   date_end = all_day ? g_date_time_add_days (date_end, -1) : g_date_time_to_local (date_end);

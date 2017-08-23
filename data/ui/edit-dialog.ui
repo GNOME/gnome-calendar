@@ -18,7 +18,7 @@
             <property name="label" translatable="yes">Cancel</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <signal name="clicked" handler="gcal_edit_dialog_action_button_clicked" object="GcalEditDialog" swapped="no"/>
+            <signal name="clicked" handler="action_button_clicked" object="GcalEditDialog" swapped="no"/>
           </object>
         </child>
         <child>
@@ -111,7 +111,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="gcal_edit_dialog_action_button_clicked" object="GcalEditDialog" swapped="no"/>
+            <signal name="clicked" handler="action_button_clicked" object="GcalEditDialog" swapped="no"/>
             <style>
               <class name="suggested-action"/>
             </style>
@@ -347,7 +347,7 @@
                 <property name="draw_indicator">True</property>
                 <property name="label" translatable="yes">All Day</property>
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                <signal name="toggled" handler="gcal_edit_dialog_all_day_changed" object="GcalEditDialog" swapped="no"/>
+                <signal name="toggled" handler="all_day_changed_cb" object="GcalEditDialog" swapped="no"/>
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -545,7 +545,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="margin-top">12</property>
-                <signal name="clicked" handler="gcal_edit_dialog_action_button_clicked" object="GcalEditDialog" swapped="no"/>
+                <signal name="clicked" handler="action_button_clicked" object="GcalEditDialog" swapped="no"/>
                 <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                 <child>
                   <object class="GtkLabel" id="delete_label">
