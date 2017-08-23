@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
 "POT-Creation-Date: 2017-08-23 09:38+0000\n"
-"PO-Revision-Date: 2017-08-23 16:33+0200\n"
+"PO-Revision-Date: 2017-08-23 16:38+0200\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -70,7 +70,7 @@ msgstr "Pristupite i upravljajte svojim kalendarom"
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/org.gnome.Calendar.desktop.in:7
 msgid "org.gnome.Calendar"
-msgstr ""
+msgstr "org.gnome.Calendar"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in:13
