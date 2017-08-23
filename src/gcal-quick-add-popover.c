@@ -401,6 +401,7 @@ get_date_string_for_day (GDateTime *day)
     {
       const gchar *event_month;
       gchar *event_month_names [] = {
+        /* Translators: %d is the numeric day of month */
         N_("New Event on January %d"),
         N_("New Event on February %d"),
         N_("New Event on March %d"),
@@ -417,8 +418,6 @@ get_date_string_for_day (GDateTime *day)
       };
 
       event_month = gettext (event_month_names [g_date_time_get_month (day) - 1]);
-
-      /* Translators: %d is the numeric day of month */
       string_for_date = g_strdup_printf (event_month, g_date_time_get_day_of_month (day));
     }
 
