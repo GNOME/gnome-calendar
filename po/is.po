@@ -5,10 +5,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-11-22 11:54+0000\n"
-"PO-Revision-Date: 2017-01-10 06:53+0000\n"
+"POT-Creation-Date: 2017-04-29 15:57+0000\n"
+"PO-Revision-Date: 2017-08-23 09:37+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic <translation-team-is@lists.sourceforge.net>\n"
 "Language: is\n"
@@ -21,8 +21,8 @@ msgstr ""
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
 #: ../data/org.gnome.Calendar.desktop.in.in.h:1
 #: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:481
+#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:4
+#: ../src/gcal-application.c:469
 msgid "Calendar"
 msgstr "Dagatal"
 
@@ -42,18 +42,21 @@ msgstr ""
 "vistkerfisins."
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+#| msgid ""
+#| "We aim to find the perfect balance between nicely crafted features and "
+#| "user-centred usability. No excess, no lacks. You'll feel comfortable "
+#| "using Calendar, like you've been using it for ages!"
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You'll feel comfortable using "
-"Calendar, like you've been using it for ages!"
+"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
 msgstr ""
-"Við reynum að finna rétta jafnvægið á milli fallegrar virkni og "
-"notendamiðaðs notagildis. Engu ofaukið, ekkert vantar. Þér á eftir að "
-"finnast þægilegt að vinna með dagatalið, rétt eins og þú hafir notað það svo "
-"árum skiptir!"
+"Við reynum að finna rétta jafnvægið á milli fallegrar virkni og notendamiðaðs "
+"notagildis. Engu ofaukið, ekkert vantar. Þér á eftir að finnast þægilegt að "
+"vinna með dagatalið, rétt eins og þú hafir notað það svo árum skiptir!"
 
 #: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
-#: ../data/ui/window.ui.h:6
+#: ../data/ui/window.ui.h:7
 msgid "Search for events"
 msgstr "Leita að atburðum"
 
@@ -101,33 +104,25 @@ msgstr "Tegund virkrar sýnar"
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Tegund virkrar gluggasýnar, sjálfgefið gildi er: mánaðarsýn"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:9
-msgid "List of the disabled sources"
-msgstr "Listi yfir óvirkjaðar veitur"
-
-#: ../data/org.gnome.calendar.gschema.xml.in.h:10
-msgid "Sources disabled last time Calendar ran"
-msgstr "Veitur sem gerðar hafa verið óvirkar síðan dagatalið var síðast keyrt"
-
 #: ../data/ui/alarm-row.ui.h:1
 msgid "Toggles the sound of the alarm"
 msgstr "Víxlar áminningarhljóði af/á"
 
 #: ../data/ui/alarm-row.ui.h:2
-#| msgid "Remove Calendar"
 msgid "Remove the alarm"
 msgstr "Fjarlægja áminningarhljóð"
 
 #: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1116
+#: ../src/gcal-source-dialog.c:1149
 msgid "Cancel"
 msgstr "Hætta við"
 
 #: ../data/ui/edit-dialog.ui.h:2
-msgid "Click to select the event's agenda"
-msgstr "Smelltu til að velja verkefnaskrá atburðarins"
+#| msgid "Click to select the event's agenda"
+msgid "Click to select the calendar"
+msgstr "Smelltu til að velja dagatalið"
 
-#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:564
+#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:597
 msgid "Done"
 msgstr "Lokið"
 
@@ -156,17 +151,14 @@ msgid "Time"
 msgstr "Tími"
 
 #: ../data/ui/edit-dialog.ui.h:10
-#| msgid "All day"
 msgid "All Day"
 msgstr "Allan daginn"
 
 #: ../data/ui/edit-dialog.ui.h:11
-#| msgid "Add Event…"
 msgid "Add reminder…"
 msgstr "Bæta við áminningu…"
 
 #: ../data/ui/edit-dialog.ui.h:12
-#| msgid "Delete event"
 msgid "Delete Event"
 msgstr "Eyða atburði"
 
@@ -187,17 +179,14 @@ msgid "1 hour"
 msgstr "1 klukkustund"
 
 #: ../data/ui/edit-dialog.ui.h:17
-#| msgid "All day"
 msgid "1 day"
 msgstr "1 dagur"
 
 #: ../data/ui/edit-dialog.ui.h:18
-#| msgid "All day"
 msgid "2 days"
 msgstr "2 dagar"
 
 #: ../data/ui/edit-dialog.ui.h:19
-#| msgid "All day"
 msgid "3 days"
 msgstr "3 dagar"
 
@@ -271,11 +260,18 @@ msgid "View"
 msgstr "Skoða"
 
 #: ../data/ui/help-overlay.ui.h:14
+#| msgctxt "shortcut window"
+#| msgid "Next view"
+msgctxt "shortcut window"
+msgid "Week view"
+msgstr "Vikusýn"
+
+#: ../data/ui/help-overlay.ui.h:15
 msgctxt "shortcut window"
 msgid "Month view"
 msgstr "Mánaðaryfirlit"
 
-#: ../data/ui/help-overlay.ui.h:15
+#: ../data/ui/help-overlay.ui.h:16
 msgctxt "shortcut window"
 msgid "Year view"
 msgstr "Ársyfirlit"
@@ -285,39 +281,34 @@ msgid "Add Eve_nt…"
 msgstr "_Bæta við atburði…"
 
 #: ../data/ui/menus.ui.h:2
-msgid "_Search…"
-msgstr "_Leita…"
-
-#: ../data/ui/menus.ui.h:3
-#| msgid "Calendars"
 msgid "_Calendars…"
 msgstr "_Dagatöl…"
 
-#: ../data/ui/menus.ui.h:4
+#: ../data/ui/menus.ui.h:3
 msgid "_Keyboard Shortcuts"
 msgstr "Flýtily_klar"
 
-#: ../data/ui/menus.ui.h:5
+#: ../data/ui/menus.ui.h:4
 msgid "_About"
 msgstr "_Um hugbúnaðinn"
 
-#: ../data/ui/menus.ui.h:6
+#: ../data/ui/menus.ui.h:5
 msgid "_Quit"
 msgstr "_Hætta"
 
-#: ../data/ui/menus.ui.h:7
+#: ../data/ui/menus.ui.h:6
 msgid "_Synchronize"
 msgstr "_Samstilla"
 
-#: ../data/ui/menus.ui.h:8
+#: ../data/ui/menus.ui.h:7
 msgid "From Web…"
 msgstr "Af netinu..."
 
-#: ../data/ui/menus.ui.h:9
+#: ../data/ui/menus.ui.h:8
 msgid "New Local Calendar…"
 msgstr "Nýtt staðvært dagatal…"
 
-#: ../data/ui/menus.ui.h:10
+#: ../data/ui/menus.ui.h:9
 msgid "From File…"
 msgstr "Úr skrá…"
 
@@ -337,8 +328,8 @@ msgstr "Engar niðurstöður fundust"
 msgid "Try a different search"
 msgstr "Reyna aðra leit"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1123
-#: ../src/gcal-window.c:1127
+#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1061
+#: ../src/gcal-window.c:1065
 msgid "Undo"
 msgstr "Afturkalla"
 
@@ -420,8 +411,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Vistfang dagatals"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2202
-#: ../src/gcal-source-dialog.c:2208
+#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2265
+#: ../src/gcal-source-dialog.c:2271
 msgid "Add Calendar"
 msgstr "Bæta við dagatali"
 
@@ -437,7 +428,8 @@ msgstr "Lykilorð"
 msgid "Connect"
 msgstr "Tengjast"
 
-#: ../data/ui/time-selector.ui.h:1
+#: ../data/ui/time-selector.ui.h:1 ../src/views/gcal-week-grid.c:757
+#: ../src/views/gcal-week-view.c:259
 msgid "00:00"
 msgstr "00:00"
 
@@ -445,33 +437,37 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:3 ../src/views/gcal-week-view.c:414
 msgid "AM"
 msgstr "f.h."
 
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
+#: ../data/ui/time-selector.ui.h:4 ../src/views/gcal-week-view.c:414
 msgid "PM"
 msgstr "e.h."
 
 #: ../data/ui/window.ui.h:1
+msgid "Week"
+msgstr "Vika"
+
+#: ../data/ui/window.ui.h:2
 msgid "Month"
 msgstr "Mánuður"
 
-#: ../data/ui/window.ui.h:2
+#: ../data/ui/window.ui.h:3
 msgid "Year"
 msgstr "Ár"
 
-#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:266 ../src/gcal-year-view.c:486
+#: ../data/ui/window.ui.h:5 ../data/ui/year-view.ui.h:1
+#: ../src/views/gcal-year-view.c:275 ../src/views/gcal-year-view.c:500
 msgid "Today"
 msgstr "Í dag"
 
-#: ../data/ui/window.ui.h:5
+#: ../data/ui/window.ui.h:6
 msgid "Manage your calendars"
 msgstr "Sýsla með dagatöl"
 
-#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:817
-#: ../src/gcal-source-dialog.c:2231
+#: ../data/ui/window.ui.h:8 ../src/gcal-source-dialog.c:850
+#: ../src/gcal-source-dialog.c:2294
 msgid "Calendar Settings"
 msgstr "Stillingar dagatals"
 
@@ -479,177 +475,205 @@ msgstr "Stillingar dagatals"
 msgid "No events"
 msgstr "Engir atburðir"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1074
+#: ../data/ui/year-view.ui.h:3 ../src/views/gcal-month-view.c:2239
 msgid "Add Event…"
 msgstr "Bæta við atburði..."
 
-#: ../src/gcal-application.c:102
-msgid "Display version number"
-msgstr "Birta útgáfunúmer"
-
-#: ../src/gcal-application.c:107
-msgid "Open calendar on the passed date"
-msgstr "Opna dagatal á liðnu dagsetningunni"
-
-#: ../src/gcal-application.c:112
-msgid "Open calendar showing the passed event"
-msgstr "Opna dagatal á liðna atburðinum"
-
-#: ../src/gcal-application.c:322
-msgid "- Calendar management"
-msgstr "- Umsýsla dagatals"
-
-#: ../src/gcal-application.c:469
-#, c-format
-msgid "Copyright © %d The Calendar authors"
-msgstr "Höfundarréttur © %d Höfundar Calendar/Dagatals"
-
-#: ../src/gcal-application.c:475
-#, c-format
-msgid "Copyright © %d–%d The Calendar authors"
-msgstr "Höfundarréttur © %d–%d Höfundar Calendar/Dagatals"
-
-#: ../src/gcal-application.c:488
-msgid "translator-credits"
-msgstr "Sveinn í Felli, sv1@fellsnet.is"
-
-#: ../src/gcal-edit-dialog.c:564
-msgid "Save"
-msgstr "Vista"
-
-#: ../src/gcal-edit-dialog.c:831
-#, c-format
-msgid "%d minute before"
-msgid_plural "%d minutes before"
-msgstr[0] "%d mínútu fyrir"
-msgstr[1] "%d mínútur fyrir"
-
-#: ../src/gcal-edit-dialog.c:839
-#, c-format
-msgid "%d hour before"
-msgid_plural "%d hours before"
-msgstr[0] "%d klukkustund fyrir"
-msgstr[1] "%d klukkustundir fyrir"
-
-#: ../src/gcal-edit-dialog.c:847
-#, c-format
-msgid "%d day before"
-msgid_plural "%d days before"
-msgstr[0] "%d dag fyrir"
-msgstr[1] "%d daga fyrir"
-
-#: ../src/gcal-edit-dialog.c:855
-#, c-format
-msgid "%d week before"
-msgid_plural "%d weeks before"
-msgstr[0] "%d viku fyrir"
-msgstr[1] "%d vikur fyrir"
-
-#: ../src/gcal-edit-dialog.c:1074 ../src/gcal-quick-add-popover.c:468
-msgid "Unnamed event"
-msgstr "Nafnlaus atburður"
-
-#: ../src/gcal-month-view.c:1318
+#: ../src/views/gcal-month-view.c:1173
 msgid "Other events"
 msgstr "Aðrir atburðir"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1780
+#: ../src/views/gcal-month-view.c:1639 ../src/views/gcal-week-header.c:339
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Annar atburður"
 msgstr[1] "Aðrir %d atburðir"
 
-#: ../src/gcal-quick-add-popover.c:115
+#: ../src/views/gcal-week-grid.c:754 ../src/views/gcal-week-view.c:256
+msgid "00 AM"
+msgstr "00 f.h."
+
+#: ../src/views/gcal-week-header.c:872
+#, c-format
+#| msgid "1 week"
+msgid "week %d"
+msgstr "vika %d"
+
+#: ../src/gcal-application.c:87
+msgid "Display version number"
+msgstr "Birta útgáfunúmer"
+
+#: ../src/gcal-application.c:92
+msgid "Open calendar on the passed date"
+msgstr "Opna dagatal á liðnu dagsetningunni"
+
+#: ../src/gcal-application.c:97
+msgid "Open calendar showing the passed event"
+msgstr "Opna dagatal á liðna atburðinum"
+
+#: ../src/gcal-application.c:278
+#| msgid "- Calendar management"
+msgid "— Calendar management"
+msgstr "— Umsýsla dagatals"
+
+#: ../src/gcal-application.c:457
+#, c-format
+msgid "Copyright © %d The Calendar authors"
+msgstr "Höfundarréttur © %d Höfundar Calendar/Dagatals"
+
+#: ../src/gcal-application.c:463
+#, c-format
+msgid "Copyright © %d–%d The Calendar authors"
+msgstr "Höfundarréttur © %d–%d Höfundar Calendar/Dagatals"
+
+#: ../src/gcal-application.c:476
+msgid "translator-credits"
+msgstr "Sveinn í Felli, sv1@fellsnet.is"
+
+#: ../src/gcal-edit-dialog.c:597
+msgid "Save"
+msgstr "Vista"
+
+#: ../src/gcal-edit-dialog.c:866
+#, c-format
+msgid "%d minute before"
+msgid_plural "%d minutes before"
+msgstr[0] "%d mínútu fyrir"
+msgstr[1] "%d mínútur fyrir"
+
+#: ../src/gcal-edit-dialog.c:874
+#, c-format
+msgid "%d hour before"
+msgid_plural "%d hours before"
+msgstr[0] "%d klukkustund fyrir"
+msgstr[1] "%d klukkustundir fyrir"
+
+#: ../src/gcal-edit-dialog.c:882
+#, c-format
+msgid "%d day before"
+msgid_plural "%d days before"
+msgstr[0] "%d dag fyrir"
+msgstr[1] "%d daga fyrir"
+
+#: ../src/gcal-edit-dialog.c:890
+#, c-format
+msgid "%d week before"
+msgid_plural "%d weeks before"
+msgstr[0] "%d viku fyrir"
+msgstr[1] "%d vikur fyrir"
+
+#: ../src/gcal-edit-dialog.c:1111 ../src/gcal-quick-add-popover.c:501
+msgid "Unnamed event"
+msgstr "Nafnlaus atburður"
+
+#: ../src/gcal-quick-add-popover.c:119
 #, c-format
 msgid "%s (this calendar is read-only)"
 msgstr "%s (þetta dagatal er ritvarið)"
 
-#: ../src/gcal-quick-add-popover.c:228 ../src/gcal-quick-add-popover.c:246
+#. Translators:
+#. * this is the format string for representing a date consisting of a month name
+#. * and a date of month.
+#.
+#: ../src/gcal-quick-add-popover.c:234 ../src/gcal-quick-add-popover.c:264
 msgctxt "event date format"
 msgid "%B %d"
 msgstr "%d. %B"
 
-#: ../src/gcal-quick-add-popover.c:248
+#: ../src/gcal-quick-add-popover.c:266
 #, c-format
 msgid "New Event from %s to %s"
 msgstr "Nýr atburður frá %s til %s"
 
-#: ../src/gcal-quick-add-popover.c:254
+#: ../src/gcal-quick-add-popover.c:283
+#, c-format
+#| msgid "New Event from %s to %s"
+msgid "New Event on %s, %s – %s"
+msgstr "Nýr atburður þann %s, %s – %s"
+
+#: ../src/gcal-quick-add-popover.c:293
 #, c-format
 msgid "New Event on %s"
 msgstr "Nýr atburður þann %s"
 
-#: ../src/gcal-search-view.c:353
+#: ../src/gcal-search-view.c:358
 msgid "All day"
 msgstr "Heilsdags"
 
-#: ../src/gcal-search-view.c:502
+#: ../src/gcal-search-view.c:563
 msgid "Use the entry above to search for events."
 msgstr "Notaðu færsluna hér að ofan til að leita að atburðum."
 
 #. Dialog
-#: ../src/gcal-source-dialog.c:1113
+#: ../src/gcal-source-dialog.c:1146
 msgid "Select a calendar file"
 msgstr "Veldu dagatalsskrá"
 
-#: ../src/gcal-source-dialog.c:1117
+#: ../src/gcal-source-dialog.c:1150
 msgid "Open"
 msgstr "Opna"
 
-#: ../src/gcal-source-dialog.c:1124
+#: ../src/gcal-source-dialog.c:1157
 msgid "Calendar files"
 msgstr "Dagatalsskrár"
 
 #. update the source properties
-#: ../src/gcal-source-dialog.c:1166
+#: ../src/gcal-source-dialog.c:1199
 msgid "Unnamed Calendar"
 msgstr "Ónefnt dagatal"
 
 #. Update notification label
-#: ../src/gcal-source-dialog.c:1766
+#: ../src/gcal-source-dialog.c:1822
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Dagatalið <b>%s</b> fjarlægt"
 
-#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
+#: ../src/gcal-source-dialog.c:2025 ../src/gcal-source-dialog.c:2081
 msgid "Off"
 msgstr "Slökkt"
 
-#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
+#: ../src/gcal-source-dialog.c:2025 ../src/gcal-source-dialog.c:2081
 msgid "On"
 msgstr "Kveikt"
 
-#: ../src/gcal-time-selector.c:82
+#: ../src/gcal-time-selector.c:84
 #, c-format
 msgid "%s AM"
 msgstr "%s f.h."
 
-#: ../src/gcal-time-selector.c:84
+#: ../src/gcal-time-selector.c:86
 #, c-format
 msgid "%s PM"
 msgstr "%s e.h."
 
-#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
-msgid "Midnight"
-msgstr "Miðnætti"
-
-#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
-msgid "Noon"
-msgstr "Hádegi"
-
-#: ../src/gcal-week-view.c:499
-msgid "00:00 PM"
-msgstr "00:00 e.h."
-
-#: ../src/gcal-window.c:1123
+#: ../src/gcal-window.c:1061
 msgid "Another event deleted"
 msgstr "Öðrum atburði eytt"
 
-#: ../src/gcal-window.c:1127
+#: ../src/gcal-window.c:1065
 msgid "Event deleted"
 msgstr "Atburði eytt"
+
+#~ msgid "List of the disabled sources"
+#~ msgstr "Listi yfir óvirkjaðar veitur"
+
+#~ msgid "Sources disabled last time Calendar ran"
+#~ msgstr ""
+#~ "Veitur sem gerðar hafa verið óvirkar síðan dagatalið var síðast keyrt"
+
+#~ msgid "_Search…"
+#~ msgstr "_Leita…"
+
+#~ msgid "Midnight"
+#~ msgstr "Miðnætti"
+
+#~ msgid "Noon"
+#~ msgstr "Hádegi"
+
+#~ msgid "00:00 PM"
+#~ msgstr "00:00 e.h."
 
 #~ msgid "Starts"
 #~ msgstr "Byrjar"
