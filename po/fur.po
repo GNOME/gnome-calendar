@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-07-17 10:07+0000\n"
-"PO-Revision-Date: 2017-07-20 17:50+0200\n"
+"POT-Creation-Date: 2017-08-23 09:38+0000\n"
+"PO-Revision-Date: 2017-08-23 14:15+0200\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
@@ -126,115 +126,115 @@ msgstr "Anule"
 msgid "Click to select the calendar"
 msgstr "Fâs clic par selezionâ il calendari"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:697
+#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:688
 msgid "Done"
 msgstr "Fat"
 
-#: data/ui/edit-dialog.ui:139
+#: data/ui/edit-dialog.ui:140
 msgid "Title"
 msgstr "Titul"
 
-#: data/ui/edit-dialog.ui:156
+#: data/ui/edit-dialog.ui:158
 msgid "Date"
 msgstr "Date"
 
-#: data/ui/edit-dialog.ui:171
+#: data/ui/edit-dialog.ui:174
 msgid "Repeat"
 msgstr "Ripet"
 
-#: data/ui/edit-dialog.ui:188
+#: data/ui/edit-dialog.ui:192
 msgid "Reminders"
 msgstr "Promemoriis"
 
-#: data/ui/edit-dialog.ui:205
+#: data/ui/edit-dialog.ui:210
 msgid "Notes"
 msgstr "Notis"
 
-#: data/ui/edit-dialog.ui:220 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:226 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "Posizion"
 
-#: data/ui/edit-dialog.ui:292
+#: data/ui/edit-dialog.ui:293
 msgid "Time"
 msgstr "Orari"
 
-#: data/ui/edit-dialog.ui:355
+#: data/ui/edit-dialog.ui:348
 msgid "All Day"
 msgstr "Dut il dì"
 
-#: data/ui/edit-dialog.ui:399
+#: data/ui/edit-dialog.ui:393
 msgid "Add reminder…"
 msgstr "Zonte promemorie..."
 
-#: data/ui/edit-dialog.ui:428
+#: data/ui/edit-dialog.ui:424
 msgid "No Repeat"
 msgstr "No sta ripeti"
 
-#: data/ui/edit-dialog.ui:429
+#: data/ui/edit-dialog.ui:425
 msgid "Daily"
 msgstr "Zornalîr"
 
-#: data/ui/edit-dialog.ui:430
+#: data/ui/edit-dialog.ui:426
 msgid "Monday – Friday"
 msgstr "Lunis – Vinars"
 
-#: data/ui/edit-dialog.ui:431
+#: data/ui/edit-dialog.ui:427
 msgid "Weekly"
 msgstr "Setemanâl"
 
-#: data/ui/edit-dialog.ui:432
+#: data/ui/edit-dialog.ui:428
 msgid "Monthly"
 msgstr "Mensîl"
 
-#: data/ui/edit-dialog.ui:433
+#: data/ui/edit-dialog.ui:429
 msgid "Yearly"
 msgstr "Anuâl"
 
-#: data/ui/edit-dialog.ui:461
+#: data/ui/edit-dialog.ui:457
 msgid "Forever"
 msgstr "Par simpri"
 
-#: data/ui/edit-dialog.ui:462
+#: data/ui/edit-dialog.ui:458
 msgid "No. of occurrences"
 msgstr "N. di ricorincis"
 
-#: data/ui/edit-dialog.ui:463
+#: data/ui/edit-dialog.ui:459
 msgid "Until Date"
 msgstr "Fin ae date"
 
-#: data/ui/edit-dialog.ui:554
+#: data/ui/edit-dialog.ui:553
 msgid "Delete Event"
 msgstr "Elimine Event"
 
-#: data/ui/edit-dialog.ui:591
+#: data/ui/edit-dialog.ui:590
 msgid "5 minutes"
 msgstr "5 minûts"
 
-#: data/ui/edit-dialog.ui:600
+#: data/ui/edit-dialog.ui:599
 msgid "10 minutes"
 msgstr "10 minûts"
 
-#: data/ui/edit-dialog.ui:609
+#: data/ui/edit-dialog.ui:608
 msgid "30 minutes"
 msgstr "30 minûts"
 
-#: data/ui/edit-dialog.ui:618
+#: data/ui/edit-dialog.ui:617
 msgid "1 hour"
 msgstr "1 ore"
 
-#: data/ui/edit-dialog.ui:626
+#: data/ui/edit-dialog.ui:625
 msgid "1 day"
 msgstr "1 dì"
 
-#: data/ui/edit-dialog.ui:635
+#: data/ui/edit-dialog.ui:634
 msgid "2 days"
 msgstr "2 dîs"
 
-#: data/ui/edit-dialog.ui:644
+#: data/ui/edit-dialog.ui:643
 msgid "3 days"
 msgstr "3 dîs"
 
-#: data/ui/edit-dialog.ui:653
+#: data/ui/edit-dialog.ui:652
 msgid "1 week"
 msgstr "1 setemane"
 
@@ -523,7 +523,7 @@ msgstr "Impostazions calendari"
 msgid "No events"
 msgstr "Nissun event"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2253
+#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2322
 msgid "Add Event…"
 msgstr "Zonte event..."
 
@@ -561,39 +561,39 @@ msgstr "Copyright © %d–%d i autôrs di Calendari"
 msgid "translator-credits"
 msgstr "Fabio Tomat <f.t.public@gmail.com>"
 
-#: src/gcal-edit-dialog.c:697
+#: src/gcal-edit-dialog.c:688
 msgid "Save"
 msgstr "Salve"
 
-#: src/gcal-edit-dialog.c:997
+#: src/gcal-edit-dialog.c:1001
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minût prime"
 msgstr[1] "%d minûts prime"
 
-#: src/gcal-edit-dialog.c:1005
+#: src/gcal-edit-dialog.c:1009
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d ore prime"
 msgstr[1] "%d oris prime"
 
-#: src/gcal-edit-dialog.c:1013
+#: src/gcal-edit-dialog.c:1017
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d zornade prime"
 msgstr[1] "%d dîs prime"
 
-#: src/gcal-edit-dialog.c:1021
+#: src/gcal-edit-dialog.c:1025
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d setemane prime"
 msgstr[1] "%d setemanis prime"
 
-#: src/gcal-edit-dialog.c:1312 src/gcal-quick-add-popover.c:683
+#: src/gcal-edit-dialog.c:1328 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Event cence non"
 
@@ -760,102 +760,109 @@ msgstr "al/ai %2$s di %1$s"
 msgid "New Event %1$s %2$s"
 msgstr "Gnûf event %1$s %2$s"
 
-#: src/gcal-quick-add-popover.c:374
+#: src/gcal-quick-add-popover.c:373
 msgid "New Event Today"
 msgstr "Gnûf event vuê"
 
-#: src/gcal-quick-add-popover.c:378
+#: src/gcal-quick-add-popover.c:377
 msgid "New Event Tomorrow"
 msgstr "Gnûf event doman"
 
-#: src/gcal-quick-add-popover.c:382
+#: src/gcal-quick-add-popover.c:381
 msgid "New Event Yesterday"
 msgstr "Gnûf event îr"
 
-#: src/gcal-quick-add-popover.c:388
+#: src/gcal-quick-add-popover.c:387
 msgid "New Event next Monday"
 msgstr "Gnûf event il prossim lunis"
 
-#: src/gcal-quick-add-popover.c:389
+#: src/gcal-quick-add-popover.c:388
 msgid "New Event next Tuesday"
 msgstr "Gnûf event il prossim martars"
 
-#: src/gcal-quick-add-popover.c:390
+#: src/gcal-quick-add-popover.c:389
 msgid "New Event next Wednesday"
 msgstr "Gnûf event il prossim miercus"
 
-#: src/gcal-quick-add-popover.c:391
+#: src/gcal-quick-add-popover.c:390
 msgid "New Event next Thursday"
 msgstr "Gnûf event la prossime joibe"
 
-#: src/gcal-quick-add-popover.c:392
+#: src/gcal-quick-add-popover.c:391
 msgid "New Event next Friday"
 msgstr "Gnûf event il prossim vinars"
 
-#: src/gcal-quick-add-popover.c:393
+#: src/gcal-quick-add-popover.c:392
 msgid "New Event next Saturday"
 msgstr "Gnûf event la prossime sabide"
 
-#: src/gcal-quick-add-popover.c:394
+#: src/gcal-quick-add-popover.c:393
 msgid "New Event next Sunday"
 msgstr "Gnûf event la prossime domenie"
 
+#. Translators: %d is the numeric day of month
 #: src/gcal-quick-add-popover.c:405
-msgid "New Event on January"
-msgstr "Gnûf event a zenâr"
+#, c-format
+msgid "New Event on January %d"
+msgstr "Gnûf event al/ai %d di zenâr"
 
 #: src/gcal-quick-add-popover.c:406
-msgid "New Event on February"
-msgstr "Gnûf event a fevrâr"
+#, c-format
+msgid "New Event on February %d"
+msgstr "Gnûf event al/ai %d di fevrâr"
 
 #: src/gcal-quick-add-popover.c:407
-msgid "New Event on March"
-msgstr "Gnûf event a març"
+#, c-format
+msgid "New Event on March %d"
+msgstr "Gnûf event al/ai %d di març"
 
 #: src/gcal-quick-add-popover.c:408
-msgid "New Event on April"
-msgstr "Gnûf event a avrîl"
+#, c-format
+msgid "New Event on April %d"
+msgstr "Gnûf event al/ai %d di avrîl"
 
 #: src/gcal-quick-add-popover.c:409
-msgid "New Event on May"
-msgstr "Gnûf event a mai"
+#, c-format
+msgid "New Event on May %d"
+msgstr "Gnûf event al/ai %d di mai"
 
 #: src/gcal-quick-add-popover.c:410
-msgid "New Event on June"
-msgstr "Gnûf event a jugn"
+#, c-format
+msgid "New Event on June %d"
+msgstr "Gnûf event al/ai %d di jugn"
 
 #: src/gcal-quick-add-popover.c:411
-msgid "New Event on July"
-msgstr "Gnûf event a lui"
+#, c-format
+msgid "New Event on July %d"
+msgstr "Gnûf event al/ai %d di lui"
 
 #: src/gcal-quick-add-popover.c:412
-msgid "New Event on August"
-msgstr "Gnûf event a avost"
+#, c-format
+msgid "New Event on August %d"
+msgstr "Gnûf event al/ai %d di avost"
 
 #: src/gcal-quick-add-popover.c:413
-msgid "New Event on September"
-msgstr "Gnûf event a setembar"
+#, c-format
+msgid "New Event on September %d"
+msgstr "Gnûf event al/ai %d di setembar"
 
 #: src/gcal-quick-add-popover.c:414
-msgid "New Event on October"
-msgstr "Gnûf event a otubar"
+#, c-format
+msgid "New Event on October %d"
+msgstr "Gnûf event al/ai %d di otubar"
 
 #: src/gcal-quick-add-popover.c:415
-msgid "New Event on November"
-msgstr "Gnûf event a novembar"
+#, c-format
+msgid "New Event on November %d"
+msgstr "Gnûf event al/ai %d di novembar"
 
 #: src/gcal-quick-add-popover.c:416
-msgid "New Event on December"
-msgstr "Gnûf event a dicembar"
-
-#. Translators: %1$s is the event month (e.g. "New Event on December") and %2$d is the numeric day of month
-#: src/gcal-quick-add-popover.c:422
 #, c-format
-msgid "%1$s %2$d"
-msgstr "%2$d di %1$s"
+msgid "New Event on December %d"
+msgstr "Gnûf event al/ai %d di dicembar"
 
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/gcal-quick-add-popover.c:467
+#: src/gcal-quick-add-popover.c:464
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -915,7 +922,7 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1187
+#: src/gcal-utils.c:1188
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -923,19 +930,19 @@ msgstr ""
 "L'event che si sta cirint di modificâ al è ciclic. Lis modifichis "
 "selezionadis e varessin di jessi aplicadis a:"
 
-#: src/gcal-utils.c:1190
+#: src/gcal-utils.c:1191
 msgid "_Cancel"
 msgstr "_Anule"
 
-#: src/gcal-utils.c:1192
+#: src/gcal-utils.c:1193
 msgid "_Only This Event"
 msgstr "_Dome chest event"
 
-#: src/gcal-utils.c:1199
+#: src/gcal-utils.c:1200
 msgid "_Subsequent events"
 msgstr "_Events seguitîfs"
 
-#: src/gcal-utils.c:1201
+#: src/gcal-utils.c:1202
 msgid "_All events"
 msgstr "_Ducj i events"
 
@@ -960,7 +967,7 @@ msgid "Other events"
 msgstr "Altris events"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:1719 src/views/gcal-week-header.c:338
+#: src/views/gcal-month-view.c:1785 src/views/gcal-week-header.c:338
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -982,6 +989,9 @@ msgstr "setemane %d"
 #: src/views/gcal-year-view.c:284
 msgid "%B %d…"
 msgstr "%d di %B…"
+
+#~ msgid "%1$s %2$d"
+#~ msgstr "%2$d di %1$s"
 
 #~ msgid "New Event from %s to %s"
 #~ msgstr "Gnûf event di %s a %s"
