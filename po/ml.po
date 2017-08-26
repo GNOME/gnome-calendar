@@ -6,17 +6,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar&keywords=I18N"
-"+L10N&component=General\n"
-"POT-Creation-Date: 2017-08-03 08:53+0000\n"
-"PO-Revision-Date: 2017-08-26 19:00+0530\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2017-08-26 13:31+0000\n"
+"PO-Revision-Date: 2017-08-26 19:02+0530\n"
+"Last-Translator: ബാലശങ്കർ സി <balasankarc@autistici.org>\n"
 "Language-Team: Malayalam <l10n@lists.smc.org.in>\n"
 "Language: ml\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: ബാലശങ്കർ സി <balasankarc@autistici.org>\n"
 "X-Generator: Poedit 2.0.3\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7 data/org.gnome.Calendar.desktop.in:3
@@ -30,17 +30,20 @@ msgstr "ഗ്നോമിന്റെ കലണ്ടർ"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:11
 msgid ""
-"GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the GNOME desktop. By "
-"reusing the components which the GNOME desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr "ഗ്നോം ഡെസ്ക്ടോപ്പുമായി കൃത്യമായി ചേർന്നുനിൽക്കാനായി നിർമ്മിച്ച ഒരു ലളിതവും മനോഹരവുമായ കലണ്ടർ പ്രയോഗമാണ് ഗ്നോം കലണ്ടർ."
+"GNOME Calendar is a simple and beautiful calendar application designed to perfectly fit the "
+"GNOME desktop. By reusing the components which the GNOME desktop is build on, Calendar nicely "
+"integrates with the GNOME ecosystem."
+msgstr ""
+"ഗ്നോം ഡെസ്ക്ടോപ്പുമായി കൃത്യമായി ചേർന്നുനിൽക്കാനായി നിർമ്മിച്ച ഒരു ലളിതവും മനോഹരവുമായ കലണ്ടർ പ്രയോഗമാണ് ഗ്നോം കലണ്ടർ."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
-"We aim to find the perfect balance between nicely crafted features and user-centred usability. No excess, no "
-"lacks. You’ll feel comfortable using Calendar, like you’ve been using it for ages!"
+"We aim to find the perfect balance between nicely crafted features and user-centred usability. "
+"No excess, no lacks. You’ll feel comfortable using Calendar, like you’ve been using it for ages!"
 msgstr ""
-"ഉപയോക്തൃ-കേന്ദ്രീകൃതമായ ഉപയോഗ്യതയ്ക്കും മികച്ച സവിശേഷതകൾക്കും ഇടയിലുള്ള സന്തുലനാവസ്ഥ കണ്ടെത്താനാണ് ഞങ്ങൾ ലക്ഷ്യം വയ്ക്കുന്നത്. ഒട്ടും കൂടുതലുമില്ല "
-"കുറവുമില്ല. കലണ്ടർ ഉപയോഗിക്കുമ്പോൾ കാലങ്ങളായി ഇത് ഉപയോഗിക്കുന്നതു പോലെയുള്ള സുഖം താങ്കൾക്ക് ലഭിക്കും!"
+"ഉപയോക്തൃ-കേന്ദ്രീകൃതമായ ഉപയോഗ്യതയ്ക്കും മികച്ച സവിശേഷതകൾക്കും ഇടയിലുള്ള സന്തുലനാവസ്ഥ കണ്ടെത്താനാണ് ഞങ്ങൾ ലക്ഷ്യം "
+"വയ്ക്കുന്നത്. ഒട്ടും കൂടുതലുമില്ല കുറവുമില്ല. കലണ്ടർ ഉപയോഗിക്കുമ്പോൾ കാലങ്ങളായി ഇത് ഉപയോഗിക്കുന്നതു പോലെയുള്ള സുഖം താങ്കൾക്ക് "
+"ലഭിക്കും!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
 msgid "Week view"
@@ -108,7 +111,8 @@ msgstr "അലാറത്തിന്റെ ഒച്ച നിയന്ത്�
 msgid "Remove the alarm"
 msgstr "അലാറം നീക്കം ചെയ്യുക"
 
-#: data/ui/edit-dialog.ui:18 data/ui/source-dialog.ui:762 data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1102
+#: data/ui/edit-dialog.ui:18 data/ui/source-dialog.ui:762 data/ui/source-dialog.ui:869
+#: src/gcal-source-dialog.c:1102
 msgid "Cancel"
 msgstr "റദ്ദാക്കുക"
 
@@ -116,115 +120,115 @@ msgstr "റദ്ദാക്കുക"
 msgid "Click to select the calendar"
 msgstr "കലണ്ടർ തിരഞ്ഞെടുക്കുന്നതിനായി ക്ലിക്ക് ചെയ്യുക"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:698
+#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:273
 msgid "Done"
 msgstr "പൂർത്തിയായി"
 
-#: data/ui/edit-dialog.ui:139
+#: data/ui/edit-dialog.ui:140
 msgid "Title"
 msgstr "തലക്കെട്ട്"
 
-#: data/ui/edit-dialog.ui:156
+#: data/ui/edit-dialog.ui:158
 msgid "Date"
 msgstr "തീയതി"
 
-#: data/ui/edit-dialog.ui:171
+#: data/ui/edit-dialog.ui:174
 msgid "Repeat"
 msgstr "ആവർത്തനം"
 
-#: data/ui/edit-dialog.ui:188
+#: data/ui/edit-dialog.ui:192
 msgid "Reminders"
 msgstr "ഓർമ്മപ്പെടുത്തലുകൾ"
 
-#: data/ui/edit-dialog.ui:205
+#: data/ui/edit-dialog.ui:210
 msgid "Notes"
 msgstr "കുറിപ്പുകൾ"
 
-#: data/ui/edit-dialog.ui:220 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:226 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "സ്ഥാനം"
 
-#: data/ui/edit-dialog.ui:292
+#: data/ui/edit-dialog.ui:293
 msgid "Time"
 msgstr "സമയം"
 
-#: data/ui/edit-dialog.ui:355
+#: data/ui/edit-dialog.ui:346
 msgid "All Day"
 msgstr "ദിവസം മുഴുവനും"
 
-#: data/ui/edit-dialog.ui:399
+#: data/ui/edit-dialog.ui:391
 msgid "Add reminder…"
 msgstr "ഓർമ്മപ്പെടുത്തൽ ചേർക്കുക…"
 
-#: data/ui/edit-dialog.ui:428
+#: data/ui/edit-dialog.ui:422
 msgid "No Repeat"
 msgstr "ആവർത്തിക്കേണ്ട"
 
-#: data/ui/edit-dialog.ui:429
+#: data/ui/edit-dialog.ui:423
 msgid "Daily"
 msgstr "ദിനംപ്രതി"
 
-#: data/ui/edit-dialog.ui:430
+#: data/ui/edit-dialog.ui:424
 msgid "Monday – Friday"
 msgstr "തിങ്കൾ-വെള്ളി"
 
-#: data/ui/edit-dialog.ui:431
+#: data/ui/edit-dialog.ui:425
 msgid "Weekly"
 msgstr "ആഴ്ചതോറും"
 
-#: data/ui/edit-dialog.ui:432
+#: data/ui/edit-dialog.ui:426
 msgid "Monthly"
 msgstr "മാസം തോറും"
 
-#: data/ui/edit-dialog.ui:433
+#: data/ui/edit-dialog.ui:427
 msgid "Yearly"
 msgstr "വർഷം തോറും"
 
-#: data/ui/edit-dialog.ui:461
+#: data/ui/edit-dialog.ui:455
 msgid "Forever"
 msgstr "എക്കാലവും"
 
-#: data/ui/edit-dialog.ui:462
+#: data/ui/edit-dialog.ui:456
 msgid "No. of occurrences"
 msgstr "ആവർത്തനങ്ങളുടെ എണ്ണം"
 
-#: data/ui/edit-dialog.ui:463
+#: data/ui/edit-dialog.ui:457
 msgid "Until Date"
 msgstr "അവസാന തീയതി"
 
-#: data/ui/edit-dialog.ui:554
+#: data/ui/edit-dialog.ui:551
 msgid "Delete Event"
 msgstr "പരിപാടി നീക്കം ചെയ്യുക"
 
-#: data/ui/edit-dialog.ui:591
+#: data/ui/edit-dialog.ui:588
 msgid "5 minutes"
 msgstr "5 മിനുട്ടുകൾ"
 
-#: data/ui/edit-dialog.ui:600
+#: data/ui/edit-dialog.ui:597
 msgid "10 minutes"
 msgstr "10 മിനുട്ടുകൾ"
 
-#: data/ui/edit-dialog.ui:609
+#: data/ui/edit-dialog.ui:606
 msgid "30 minutes"
 msgstr "30  മിനുട്ടുകൾ"
 
-#: data/ui/edit-dialog.ui:618
+#: data/ui/edit-dialog.ui:615
 msgid "1 hour"
 msgstr "1 മണിക്കൂർ"
 
-#: data/ui/edit-dialog.ui:626
+#: data/ui/edit-dialog.ui:623
 msgid "1 day"
 msgstr "1 ദിവസം"
 
-#: data/ui/edit-dialog.ui:635
+#: data/ui/edit-dialog.ui:632
 msgid "2 days"
 msgstr "2 ദിവസം"
 
-#: data/ui/edit-dialog.ui:644
+#: data/ui/edit-dialog.ui:641
 msgid "3 days"
 msgstr "3 ദിവസം"
 
-#: data/ui/edit-dialog.ui:653
+#: data/ui/edit-dialog.ui:650
 msgid "1 week"
 msgstr "1 ആഴ്ച"
 
@@ -430,11 +434,11 @@ msgstr "കലണ്ടർ തിരുത്തുക"
 
 #: data/ui/source-dialog.ui:631
 msgid ""
-"Enter the address of the calendar that you want to add. If the calendar belongs to one of your online accounts, "
-"you can add it through the <a href=\"GOA\">online account settings</a>."
+"Enter the address of the calendar that you want to add. If the calendar belongs to one of your "
+"online accounts, you can add it through the <a href=\"GOA\">online account settings</a>."
 msgstr ""
-"താങ്കൾക്ക് ചേർക്കേണ്ട കലണ്ടറിന്റെ വിലാസം നൽകുക. അഥവാ കലണ്ടർ താങ്കളുടെ ഏതെങ്കിലും ഓൺലൈൻ അക്കൗണ്ടിന്റെ ഉടമസ്ഥതയിലുള്ളതാണെങ്കിൽ, താങ്കൾക്കത് "
-"<a href=\"GOA\">ഓൺലൈൻ അക്കൗണ്ട് ക്രമീകരണങ്ങൾ</a> ഉപയോഗിച്ച് ചേർക്കാവുന്നതാണ്."
+"താങ്കൾക്ക് ചേർക്കേണ്ട കലണ്ടറിന്റെ വിലാസം നൽകുക. അഥവാ കലണ്ടർ താങ്കളുടെ ഏതെങ്കിലും ഓൺലൈൻ അക്കൗണ്ടിന്റെ "
+"ഉടമസ്ഥതയിലുള്ളതാണെങ്കിൽ, താങ്കൾക്കത് <a href=\"GOA\">ഓൺലൈൻ അക്കൗണ്ട് ക്രമീകരണങ്ങൾ</a> ഉപയോഗിച്ച് ചേർക്കാവുന്നതാണ്."
 
 #: data/ui/source-dialog.ui:646
 msgid "Calendar Address"
@@ -484,7 +488,8 @@ msgstr "മാസം"
 msgid "Year"
 msgstr "വർഷം"
 
-#: data/ui/window.ui:187 data/ui/year-view.ui:84 src/views/gcal-year-view.c:275 src/views/gcal-year-view.c:509
+#: data/ui/window.ui:187 data/ui/year-view.ui:84 src/views/gcal-year-view.c:275
+#: src/views/gcal-year-view.c:509
 msgid "Today"
 msgstr "ഇന്നു്"
 
@@ -505,7 +510,7 @@ msgstr "കലണ്ടർ ക്രമീകരണങ്ങൾ"
 msgid "No events"
 msgstr "പരിപാടികൾ ഒന്നും ഇല്ല"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2313
+#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2322
 msgid "Add Event…"
 msgstr "പരിപാടി ചേർക്കുക…"
 
@@ -543,39 +548,39 @@ msgstr "പകർപ്പവകാശം © %d-%d ദി കലണ്ടർ എ
 msgid "translator-credits"
 msgstr "ബാലശങ്കർ സി <balasankarc@autistici.org>"
 
-#: src/gcal-edit-dialog.c:698
+#: src/gcal-edit-dialog.c:273
 msgid "Save"
 msgstr "സൂക്ഷിക്കുക"
 
-#: src/gcal-edit-dialog.c:1011
+#: src/gcal-edit-dialog.c:975
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d മിനുട്ട് മുമ്പ്"
 msgstr[1] "%d മിനുട്ട് മുമ്പ്"
 
-#: src/gcal-edit-dialog.c:1019
+#: src/gcal-edit-dialog.c:983
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d മണിക്കൂർ മുമ്പ്"
 msgstr[1] "%d മണിക്കൂർ മുമ്പ്"
 
-#: src/gcal-edit-dialog.c:1027
+#: src/gcal-edit-dialog.c:991
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d ദിവസം മുമ്പ്"
 msgstr[1] "%d ദിവസം മുമ്പ്"
 
-#: src/gcal-edit-dialog.c:1035
+#: src/gcal-edit-dialog.c:999
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d ആഴ്ച മുമ്പ്"
 msgstr[1] "%d ആഴ്ച മുമ്പ്"
 
-#: src/gcal-edit-dialog.c:1336 src/gcal-quick-add-popover.c:683
+#: src/gcal-edit-dialog.c:1302 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "പേരില്ലാത്ത പരിപാടി"
 
@@ -742,102 +747,109 @@ msgstr "%1$s %2$s വരെ"
 msgid "New Event %1$s %2$s"
 msgstr "പുതിയ പരിപാടി %1$s %2$s"
 
-#: src/gcal-quick-add-popover.c:374
+#: src/gcal-quick-add-popover.c:373
 msgid "New Event Today"
 msgstr "ഇന്നത്തെ പുതിയ പരിപാടി"
 
-#: src/gcal-quick-add-popover.c:378
+#: src/gcal-quick-add-popover.c:377
 msgid "New Event Tomorrow"
 msgstr "നാളത്തെ പുതിയ പരിപാടി"
 
-#: src/gcal-quick-add-popover.c:382
+#: src/gcal-quick-add-popover.c:381
 msgid "New Event Yesterday"
 msgstr "ഇന്നലത്തെ പുതിയ പരിപാടി"
 
-#: src/gcal-quick-add-popover.c:388
+#: src/gcal-quick-add-popover.c:387
 msgid "New Event next Monday"
 msgstr "അടുത്ത തിങ്കളാഴ്ചയുള്ള പുതിയ പരിപാടി"
 
-#: src/gcal-quick-add-popover.c:389
+#: src/gcal-quick-add-popover.c:388
 msgid "New Event next Tuesday"
 msgstr "അടുത്ത ചൊവ്വാഴ്ചയുള്ള പുതിയ പരിപാടി"
 
-#: src/gcal-quick-add-popover.c:390
+#: src/gcal-quick-add-popover.c:389
 msgid "New Event next Wednesday"
 msgstr "അടുത്ത ബുധനാഴ്ചയുള്ള പുതിയ പരിപാടി"
 
-#: src/gcal-quick-add-popover.c:391
+#: src/gcal-quick-add-popover.c:390
 msgid "New Event next Thursday"
 msgstr "അടുത്ത വ്യാഴാഴ്ചയുള്ള പുതിയ പരിപാടി"
 
-#: src/gcal-quick-add-popover.c:392
+#: src/gcal-quick-add-popover.c:391
 msgid "New Event next Friday"
 msgstr "അടുത്ത വെള്ളിയാഴ്ചയുള്ള പുതിയ പരിപാടി"
 
-#: src/gcal-quick-add-popover.c:393
+#: src/gcal-quick-add-popover.c:392
 msgid "New Event next Saturday"
 msgstr "അടുത്ത ശനിയാഴ്ചയുള്ള പുതിയ പരിപാടി"
 
-#: src/gcal-quick-add-popover.c:394
+#: src/gcal-quick-add-popover.c:393
 msgid "New Event next Sunday"
 msgstr "അടുത്ത ഞായറാഴ്ചയുള്ള പുതിയ പരിപാടി"
 
+#. Translators: %d is the numeric day of month
 #: src/gcal-quick-add-popover.c:405
-msgid "New Event on January"
-msgstr "ജനുവരിയിലുള്ള പുതിയ പരിപാടി"
+#, c-format
+msgid "New Event on January %d"
+msgstr "ജനുവരിയിലുള്ള പുതിയ പരിപാടി %d"
 
 #: src/gcal-quick-add-popover.c:406
-msgid "New Event on February"
-msgstr "ഫെബ്രുവരിയിലുള്ള പുതിയ പരിപാടി"
+#, c-format
+msgid "New Event on February %d"
+msgstr "ഫെബ്രുവരിയിലുള്ള പുതിയ പരിപാടി %d"
 
 #: src/gcal-quick-add-popover.c:407
-msgid "New Event on March"
-msgstr "മാർച്ചിലുള്ള പുതിയ പരിപാടി"
+#, c-format
+msgid "New Event on March %d"
+msgstr "മാർച്ചിലുള്ള പുതിയ പരിപാടി %d"
 
 #: src/gcal-quick-add-popover.c:408
-msgid "New Event on April"
-msgstr "ഏപ്രിലിലുള്ള പുതിയ പരിപാടി"
+#, c-format
+msgid "New Event on April %d"
+msgstr "ഏപ്രിലിലുള്ള പുതിയ പരിപാടി %d"
 
 #: src/gcal-quick-add-popover.c:409
-msgid "New Event on May"
-msgstr "മെയിലുള്ള പുതിയ പരിപാടി"
+#, c-format
+msgid "New Event on May %d"
+msgstr "മെയിലുള്ള പുതിയ പരിപാടി %d"
 
 #: src/gcal-quick-add-popover.c:410
-msgid "New Event on June"
-msgstr "ജൂണിലുള്ള പുതിയ പരിപാടി"
+#, c-format
+msgid "New Event on June %d"
+msgstr "ജൂണിലുള്ള പുതിയ പരിപാടി %d"
 
 #: src/gcal-quick-add-popover.c:411
-msgid "New Event on July"
-msgstr "ജൂലൈയിലുള്ള പുതിയ പരിപാടി"
+#, c-format
+msgid "New Event on July %d"
+msgstr "ജൂലൈയിലുള്ള പുതിയ പരിപാടി %d"
 
 #: src/gcal-quick-add-popover.c:412
-msgid "New Event on August"
-msgstr "ആഗസ്റ്റിലുള്ള പുതിയ പരിപാടി"
+#, c-format
+msgid "New Event on August %d"
+msgstr "ആഗസ്റ്റിലുള്ള പുതിയ പരിപാടി %d"
 
 #: src/gcal-quick-add-popover.c:413
-msgid "New Event on September"
-msgstr "സെപ്റ്റംബറിലുള്ള പുതിയ പരിപാടി"
+#, c-format
+msgid "New Event on September %d"
+msgstr "സെപ്റ്റംബറിലുള്ള പുതിയ പരിപാടി %d"
 
 #: src/gcal-quick-add-popover.c:414
-msgid "New Event on October"
-msgstr "ഒക്ടോബറിലുള്ള പുതിയ പരിപാടി"
+#, c-format
+msgid "New Event on October %d"
+msgstr "ഒക്ടോബറിലുള്ള പുതിയ പരിപാടി %d"
 
 #: src/gcal-quick-add-popover.c:415
-msgid "New Event on November"
-msgstr "നവംബറിലുള്ള പുതിയ പരിപാടി"
+#, c-format
+msgid "New Event on November %d"
+msgstr "നവംബറിലുള്ള പുതിയ പരിപാടി %d"
 
 #: src/gcal-quick-add-popover.c:416
-msgid "New Event on December"
-msgstr "ഡിസംബറിലുള്ള പുതിയ പരിപാടി"
-
-#. Translators: %1$s is the event month (e.g. "New Event on December") and %2$d is the numeric day of month
-#: src/gcal-quick-add-popover.c:422
 #, c-format
-msgid "%1$s %2$d"
-msgstr "%1$s %2$d"
+msgid "New Event on December %d"
+msgstr "ഡിസംബറിലുള്ള പുതിയ പരിപാടി %d"
 
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/gcal-quick-add-popover.c:467
+#: src/gcal-quick-add-popover.c:464
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -896,23 +908,25 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1187
-msgid "The event you are trying to modify is recurring. The changes you have selected should be applied to:"
+#: src/gcal-utils.c:1188
+msgid ""
+"The event you are trying to modify is recurring. The changes you have selected should be applied "
+"to:"
 msgstr "താങ്കൾ പുതുക്കാൻ ശ്രമിക്കുന്ന പരിപാടി ആവർത്തിക്കുന്ന ഒന്നാണ്. താങ്കൾ തിരഞ്ഞെടുത്ത മാറ്റങ്ങൾ ഇവയിലും പ്രയോഗിക്കണം:"
 
-#: src/gcal-utils.c:1190
+#: src/gcal-utils.c:1191
 msgid "_Cancel"
 msgstr "റദ്ദാക്കുക (_C)"
 
-#: src/gcal-utils.c:1192
+#: src/gcal-utils.c:1193
 msgid "_Only This Event"
 msgstr "ഈ പരിപാടി മാത്രം (_O)"
 
-#: src/gcal-utils.c:1199
+#: src/gcal-utils.c:1200
 msgid "_Subsequent events"
 msgstr "ഇനി വരുന്ന ഏല്ലാ പരിപാടികളും (_S)"
 
-#: src/gcal-utils.c:1201
+#: src/gcal-utils.c:1202
 msgid "_All events"
 msgstr "എല്ലാ പരിപാടികളും"
 
@@ -936,7 +950,7 @@ msgid "Other events"
 msgstr "മറ്റു പരിപാടികൾ"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:1779 src/views/gcal-week-header.c:338
+#: src/views/gcal-month-view.c:1785 src/views/gcal-week-header.c:338
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -958,3 +972,6 @@ msgstr "ആഴ്ച %d"
 #: src/views/gcal-year-view.c:284
 msgid "%B %d…"
 msgstr "%B %d…"
+
+#~ msgid "%1$s %2$d"
+#~ msgstr "%1$s %2$d"
