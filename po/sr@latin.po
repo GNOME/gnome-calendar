@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-08-15 02:44+0000\n"
-"PO-Revision-Date: 2017-08-13 12:43+0200\n"
-"Last-Translator: Borisav Živanović <borisavzivanovic@gmail.com>\n"
+"POT-Creation-Date: 2017-08-23 22:16+0000\n"
+"PO-Revision-Date: 2017-08-23 17:39+0200\n"
+"Last-Translator: Marko M. Kostić <marko.m.kostic@gmail.com>\n"
 "Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
 "MIME-Version: 1.0\n"
@@ -79,7 +79,9 @@ msgstr "org.gnome.Calendar"
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in:13
 msgid "Calendar;Event;Reminder;"
-msgstr "kalendar;događaj;potsetnik;"
+msgstr ""
+"Calendar;Event;Reminder;Kalendar;Događaj;Podsetnik;Kalendar;Događaj;"
+"Podsetnik;Dogadjaj;"
 
 #: data/org.gnome.calendar.gschema.xml:6
 msgid "Window maximized"
@@ -130,115 +132,115 @@ msgstr "Otkaži"
 msgid "Click to select the calendar"
 msgstr "Kliknite da izaberete kalendar"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:698
+#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:273
 msgid "Done"
 msgstr "Urađeno"
 
-#: data/ui/edit-dialog.ui:139
+#: data/ui/edit-dialog.ui:140
 msgid "Title"
 msgstr "Naziv"
 
-#: data/ui/edit-dialog.ui:156
+#: data/ui/edit-dialog.ui:158
 msgid "Date"
 msgstr "Datum"
 
-#: data/ui/edit-dialog.ui:171
+#: data/ui/edit-dialog.ui:174
 msgid "Repeat"
 msgstr "Ponovi"
 
-#: data/ui/edit-dialog.ui:188
+#: data/ui/edit-dialog.ui:192
 msgid "Reminders"
 msgstr "Podsetnici"
 
-#: data/ui/edit-dialog.ui:205
+#: data/ui/edit-dialog.ui:210
 msgid "Notes"
 msgstr "Beleške"
 
-#: data/ui/edit-dialog.ui:220 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:226 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "Mesto"
 
-#: data/ui/edit-dialog.ui:292
+#: data/ui/edit-dialog.ui:293
 msgid "Time"
 msgstr "Vreme"
 
-#: data/ui/edit-dialog.ui:355
+#: data/ui/edit-dialog.ui:346
 msgid "All Day"
 msgstr "Čitav dan"
 
-#: data/ui/edit-dialog.ui:399
+#: data/ui/edit-dialog.ui:391
 msgid "Add reminder…"
 msgstr "Dodaj podsetnik…"
 
-#: data/ui/edit-dialog.ui:428
+#: data/ui/edit-dialog.ui:422
 msgid "No Repeat"
 msgstr "Bez ponavljanja"
 
-#: data/ui/edit-dialog.ui:429
+#: data/ui/edit-dialog.ui:423
 msgid "Daily"
 msgstr "Dnevno"
 
-#: data/ui/edit-dialog.ui:430
+#: data/ui/edit-dialog.ui:424
 msgid "Monday – Friday"
 msgstr "Ponedeljak – Petak"
 
-#: data/ui/edit-dialog.ui:431
+#: data/ui/edit-dialog.ui:425
 msgid "Weekly"
 msgstr "Nedeljno"
 
-#: data/ui/edit-dialog.ui:432
+#: data/ui/edit-dialog.ui:426
 msgid "Monthly"
 msgstr "Mesečno"
 
-#: data/ui/edit-dialog.ui:433
+#: data/ui/edit-dialog.ui:427
 msgid "Yearly"
 msgstr "Godišnje"
 
-#: data/ui/edit-dialog.ui:461
+#: data/ui/edit-dialog.ui:455
 msgid "Forever"
 msgstr "Zauvek"
 
-#: data/ui/edit-dialog.ui:462
+#: data/ui/edit-dialog.ui:456
 msgid "No. of occurrences"
 msgstr "Broj ponavljanja"
 
-#: data/ui/edit-dialog.ui:463
+#: data/ui/edit-dialog.ui:457
 msgid "Until Date"
 msgstr "Do datuma"
 
-#: data/ui/edit-dialog.ui:554
+#: data/ui/edit-dialog.ui:551
 msgid "Delete Event"
 msgstr "Obriši događaj"
 
-#: data/ui/edit-dialog.ui:591
+#: data/ui/edit-dialog.ui:588
 msgid "5 minutes"
 msgstr "5 minuta"
 
-#: data/ui/edit-dialog.ui:600
+#: data/ui/edit-dialog.ui:597
 msgid "10 minutes"
 msgstr "10 minuta"
 
-#: data/ui/edit-dialog.ui:609
+#: data/ui/edit-dialog.ui:606
 msgid "30 minutes"
 msgstr "30 minuta"
 
-#: data/ui/edit-dialog.ui:618
+#: data/ui/edit-dialog.ui:615
 msgid "1 hour"
 msgstr "1 sat"
 
-#: data/ui/edit-dialog.ui:626
+#: data/ui/edit-dialog.ui:623
 msgid "1 day"
 msgstr "1 dan"
 
-#: data/ui/edit-dialog.ui:635
+#: data/ui/edit-dialog.ui:632
 msgid "2 days"
 msgstr "2 dana"
 
-#: data/ui/edit-dialog.ui:644
+#: data/ui/edit-dialog.ui:641
 msgid "3 days"
 msgstr "3 dana"
 
-#: data/ui/edit-dialog.ui:653
+#: data/ui/edit-dialog.ui:650
 msgid "1 week"
 msgstr "1 nedelja"
 
@@ -527,7 +529,7 @@ msgstr "Podešavanje kalendara"
 msgid "No events"
 msgstr "Bez događaja"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2320
+#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2322
 msgid "Add Event…"
 msgstr "Dodaj događaj…"
 
@@ -571,11 +573,11 @@ msgstr ""
 "\n"
 "  http://prevod.org — prevod na srpski jezik"
 
-#: src/gcal-edit-dialog.c:698
+#: src/gcal-edit-dialog.c:273
 msgid "Save"
 msgstr "Sačuvaj"
 
-#: src/gcal-edit-dialog.c:1011
+#: src/gcal-edit-dialog.c:975
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
@@ -584,7 +586,7 @@ msgstr[1] "Pre %d minuta"
 msgstr[2] "Pre %d minuta"
 msgstr[3] "Pre %d minut"
 
-#: src/gcal-edit-dialog.c:1019
+#: src/gcal-edit-dialog.c:983
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
@@ -593,7 +595,7 @@ msgstr[1] "Pre %d sata"
 msgstr[2] "Pre %d sati"
 msgstr[3] "Pre %d sat"
 
-#: src/gcal-edit-dialog.c:1027
+#: src/gcal-edit-dialog.c:991
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
@@ -602,7 +604,7 @@ msgstr[1] "Pre %d dana"
 msgstr[2] "Pre %d dana"
 msgstr[3] "Pre %d dan"
 
-#: src/gcal-edit-dialog.c:1035
+#: src/gcal-edit-dialog.c:999
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
@@ -611,7 +613,7 @@ msgstr[1] "Pre %d nedelje"
 msgstr[2] "Pre %d nedelja"
 msgstr[3] "Pre %d nedelju"
 
-#: src/gcal-edit-dialog.c:1338 src/gcal-quick-add-popover.c:682
+#: src/gcal-edit-dialog.c:1302 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Neimenovani događaj"
 
@@ -818,62 +820,69 @@ msgstr "Novi događaj sledeće subote"
 msgid "New Event next Sunday"
 msgstr "Novi događaj sledeće nedelje"
 
-#: src/gcal-quick-add-popover.c:404
-msgid "New Event on January"
-msgstr "Novi događaj u januaru"
-
+#. Translators: %d is the numeric day of month
 #: src/gcal-quick-add-popover.c:405
-msgid "New Event on February"
-msgstr "Novi događaj u februaru"
+#, c-format
+msgid "New Event on January %d"
+msgstr "Novi događaj za %d. januar"
 
 #: src/gcal-quick-add-popover.c:406
-msgid "New Event on March"
-msgstr "Novi događaj u martu"
+#, c-format
+msgid "New Event on February %d"
+msgstr "Novi događaj za %d. februar"
 
 #: src/gcal-quick-add-popover.c:407
-msgid "New Event on April"
-msgstr "Novi događaj u aprilu"
+#, c-format
+msgid "New Event on March %d"
+msgstr "Novi događaj za %d. mart"
 
 #: src/gcal-quick-add-popover.c:408
-msgid "New Event on May"
-msgstr "Novi događaj u maju"
+#, c-format
+msgid "New Event on April %d"
+msgstr "Novi događaj za %d. april"
 
 #: src/gcal-quick-add-popover.c:409
-msgid "New Event on June"
-msgstr "Novi događaj u junu"
+#, c-format
+msgid "New Event on May %d"
+msgstr "Novi događaj za %d. maj"
 
 #: src/gcal-quick-add-popover.c:410
-msgid "New Event on July"
-msgstr "Novi događaj u julu"
+#, c-format
+msgid "New Event on June %d"
+msgstr "Novi događaj za %d. jun"
 
 #: src/gcal-quick-add-popover.c:411
-msgid "New Event on August"
-msgstr "Novi događaj u avgustu"
+#, c-format
+msgid "New Event on July %d"
+msgstr "Novi događaj za %d. jul"
 
 #: src/gcal-quick-add-popover.c:412
-msgid "New Event on September"
-msgstr "Novi događaj u septembru"
+#, c-format
+msgid "New Event on August %d"
+msgstr "Novi događaj za %d. avgust"
 
 #: src/gcal-quick-add-popover.c:413
-msgid "New Event on October"
-msgstr "Novi događaj u oktobru"
+#, c-format
+msgid "New Event on September %d"
+msgstr "Novi događaj za %d. septembar"
 
 #: src/gcal-quick-add-popover.c:414
-msgid "New Event on November"
-msgstr "Novi događaj u novembru"
+#, c-format
+msgid "New Event on October %d"
+msgstr "Novi događaj za %d. oktobar"
 
 #: src/gcal-quick-add-popover.c:415
-msgid "New Event on December"
-msgstr "Novi događaj u decembru"
-
-#. Translators: %1$s is the event month (e.g. "New Event on December") and %2$d is the numeric day of month
-#: src/gcal-quick-add-popover.c:421
 #, c-format
-msgid "%1$s %2$d"
-msgstr "%1$s %2$d"
+msgid "New Event on November %d"
+msgstr "Novi događaj za %d. novembar"
+
+#: src/gcal-quick-add-popover.c:416
+#, c-format
+msgid "New Event on December %d"
+msgstr "Novi događaj za %d. decembar"
 
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/gcal-quick-add-popover.c:466
+#: src/gcal-quick-add-popover.c:464
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -932,7 +941,7 @@ msgstr "%s PrP"
 msgid "%s PM"
 msgstr "%s PoP"
 
-#: src/gcal-utils.c:1187
+#: src/gcal-utils.c:1188
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -940,19 +949,19 @@ msgstr ""
 "Događaj koji pokušavate da izmenite se ponavlja. Izmene koje želite da "
 "napravite se odnose na:"
 
-#: src/gcal-utils.c:1190
+#: src/gcal-utils.c:1191
 msgid "_Cancel"
 msgstr "_Otkaži"
 
-#: src/gcal-utils.c:1192
+#: src/gcal-utils.c:1193
 msgid "_Only This Event"
 msgstr "_Samo za ovaj događaj"
 
-#: src/gcal-utils.c:1199
+#: src/gcal-utils.c:1200
 msgid "_Subsequent events"
 msgstr "_Prateći događaji"
 
-#: src/gcal-utils.c:1201
+#: src/gcal-utils.c:1202
 msgid "_All events"
 msgstr "Svi događaji"
 
@@ -1001,6 +1010,9 @@ msgstr "nedelja %d"
 #: src/views/gcal-year-view.c:284
 msgid "%B %d…"
 msgstr "%d. %B"
+
+#~ msgid "%1$s %2$d"
+#~ msgstr "%1$s %2$d"
 
 #~ msgid "List of the disabled sources"
 #~ msgstr "Spisak isključenih izvora"
