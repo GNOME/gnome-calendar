@@ -78,9 +78,6 @@ static void     gcal_application_quit                 (GSimpleAction           *
 G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 
 static gboolean show_version = FALSE;
-static gboolean debug = FALSE;
-static gchar* date = NULL;
-static gchar* uuid = NULL;
 
 static GOptionEntry gcal_application_goptions[] = {
   {
@@ -90,17 +87,17 @@ static GOptionEntry gcal_application_goptions[] = {
   },
   {
     "debug", 'd', 0,
-    G_OPTION_ARG_NONE, &debug,
+    G_OPTION_ARG_NONE, NULL,
     N_("Enable debug messages"), NULL
   },
   {
     "date", 'd', 0,
-    G_OPTION_ARG_STRING, &date,
+    G_OPTION_ARG_STRING, NULL,
     N_("Open calendar on the passed date"), NULL
   },
   {
     "uuid", 'u', 0,
-    G_OPTION_ARG_STRING, &uuid,
+    G_OPTION_ARG_STRING, NULL,
     N_("Open calendar showing the passed event"), NULL
   },
   { NULL }
@@ -274,43 +271,31 @@ gcal_application_command_line (GApplication            *app,
                                GApplicationCommandLine *command_line)
 {
   GcalApplication *self;
-
-  GOptionContext *context;
-  gchar **argv;
-  GError *error;
-  gint argc;
+  GVariantDict *options;
+  GVariant *option;
+  const gchar* date = NULL;
+  const gchar* uuid = NULL;
+  gsize length;
 
   self = GCAL_APPLICATION (app);
-  argv = g_application_command_line_get_arguments (command_line, &argc);
-  context = g_option_context_new (N_("— Calendar management"));
-  g_option_context_add_main_entries (context, gcal_application_goptions, GETTEXT_PACKAGE);
+  options = g_application_command_line_get_options_dict (command_line);
 
-  error = NULL;
-  if (!g_option_context_parse (context, &argc, &argv, &error))
-    {
-      g_critical ("Failed to parse argument: %s", error->message);
-      g_error_free (error);
-      g_option_context_free (context);
-      return 1;
-    }
-
-  if (show_version)
-    {
-      g_print ("gnome-calendar: Version %s\n", PACKAGE_VERSION);
-      return 0;
-    }
-
-  if (debug)
+  if (g_variant_dict_contains (options, "debug"))
     gcal_log_init ();
 
-  if (uuid != NULL)
+  if (g_variant_dict_contains (options, "uuid"))
     {
+      option = g_variant_dict_lookup_value (options, "uuid", G_VARIANT_TYPE_STRING);
+      uuid = g_variant_get_string (option, &length);
       gcal_application_set_uuid (GCAL_APPLICATION (app), uuid);
-      g_clear_pointer (&uuid, g_free);
+      g_variant_unref (option);
     }
-  else if (date != NULL)
+  else if (g_variant_dict_contains (options, "date"))
     {
       struct tm result;
+
+      option = g_variant_dict_lookup_value (options, "date", G_VARIANT_TYPE_STRING);
+      date = g_variant_get_string (option, &length);
 
       if (e_time_parse_date_and_time (date, &result) == E_TIME_PARSE_OK)
         {
@@ -322,15 +307,25 @@ gcal_application_command_line (GApplication            *app,
                                                          gcal_manager_get_system_timezone (self->manager));
         }
 
-      g_clear_pointer (&date, g_free);
+      g_variant_unref (option);
     }
-
-  g_option_context_free (context);
-  g_strfreev (argv);
 
   g_application_activate (app);
 
   return 0;
+}
+
+static gint
+gcal_application_handle_local_options (GApplication *app,
+                                       GVariantDict *options)
+{
+  if (show_version)
+    {
+      g_print ("gnome-calendar: Version %s\n", PACKAGE_VERSION);
+      return 0;
+    }
+
+  return -1;
 }
 
 static gboolean
@@ -390,6 +385,7 @@ gcal_application_class_init (GcalApplicationClass *klass)
   application_class->activate = gcal_application_activate;
   application_class->startup = gcal_application_startup;
   application_class->command_line = gcal_application_command_line;
+  application_class->handle_local_options = gcal_application_handle_local_options;
 
   application_class->dbus_register = gcal_application_dbus_register;
   application_class->dbus_unregister = gcal_application_dbus_unregister;
@@ -398,6 +394,8 @@ gcal_application_class_init (GcalApplicationClass *klass)
 static void
 gcal_application_init (GcalApplication *self)
 {
+  g_application_add_main_option_entries (G_APPLICATION (self), gcal_application_goptions);
+
   self->settings = g_settings_new ("org.gnome.calendar");
   self->colors_provider = gtk_css_provider_new ();
 
