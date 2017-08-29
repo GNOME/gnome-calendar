@@ -4,18 +4,18 @@
 # Taner Orak <tnrork@gmail.com>, 2015.
 # Necdet Yücel <necdetyucel@gmail.com>, 2015.
 # Furkan Ahmet Kara <furkanahmetkara.fk@gmail.com>, 2017.
-# Emin Tufan Çetin <etcetin@gmail.com>, 2017.
 # Muhammet Kara <muhammetk@gmail.com>, 2015, 2016, 2017.
+# Emin Tufan Çetin <etcetin@gmail.com>, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-07-28 12:00+0000\n"
-"PO-Revision-Date: 2017-08-13 15:03+0300\n"
-"Last-Translator: Muhammet Kara <muhammetk@gmail.com>\n"
-"Language-Team: Turkish <gnometurk@gnome.org>\n"
+"POT-Creation-Date: 2017-08-23 09:38+0000\n"
+"PO-Revision-Date: 2017-08-28 11:21+0300\n"
+"Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
+"Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -130,115 +130,115 @@ msgstr "Vazgeç"
 msgid "Click to select the calendar"
 msgstr "Takvim seçmek için tıkla"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:698
+#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:688
 msgid "Done"
 msgstr "Tamam"
 
-#: data/ui/edit-dialog.ui:139
+#: data/ui/edit-dialog.ui:140
 msgid "Title"
 msgstr "Başlık"
 
-#: data/ui/edit-dialog.ui:156
+#: data/ui/edit-dialog.ui:158
 msgid "Date"
 msgstr "Tarih"
 
-#: data/ui/edit-dialog.ui:171
+#: data/ui/edit-dialog.ui:174
 msgid "Repeat"
 msgstr "Yinele"
 
-#: data/ui/edit-dialog.ui:188
+#: data/ui/edit-dialog.ui:192
 msgid "Reminders"
 msgstr "Hatırlatıcılar"
 
-#: data/ui/edit-dialog.ui:205
+#: data/ui/edit-dialog.ui:210
 msgid "Notes"
 msgstr "Notlar"
 
-#: data/ui/edit-dialog.ui:220 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:226 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "Konum"
 
-#: data/ui/edit-dialog.ui:292
+#: data/ui/edit-dialog.ui:293
 msgid "Time"
 msgstr "Zaman"
 
-#: data/ui/edit-dialog.ui:355
+#: data/ui/edit-dialog.ui:348
 msgid "All Day"
 msgstr "Tüm Gün"
 
-#: data/ui/edit-dialog.ui:399
+#: data/ui/edit-dialog.ui:393
 msgid "Add reminder…"
 msgstr "Hatırlatıcı ekle…"
 
-#: data/ui/edit-dialog.ui:428
+#: data/ui/edit-dialog.ui:424
 msgid "No Repeat"
 msgstr "Yineleme"
 
-#: data/ui/edit-dialog.ui:429
+#: data/ui/edit-dialog.ui:425
 msgid "Daily"
 msgstr "Günlük"
 
-#: data/ui/edit-dialog.ui:430
+#: data/ui/edit-dialog.ui:426
 msgid "Monday – Friday"
 msgstr "Pazartesi – Cuma"
 
-#: data/ui/edit-dialog.ui:431
+#: data/ui/edit-dialog.ui:427
 msgid "Weekly"
 msgstr "Haftalık"
 
-#: data/ui/edit-dialog.ui:432
+#: data/ui/edit-dialog.ui:428
 msgid "Monthly"
 msgstr "Aylık"
 
-#: data/ui/edit-dialog.ui:433
+#: data/ui/edit-dialog.ui:429
 msgid "Yearly"
 msgstr "Yıllık"
 
-#: data/ui/edit-dialog.ui:461
+#: data/ui/edit-dialog.ui:457
 msgid "Forever"
 msgstr "Sonsuza Dek"
 
-#: data/ui/edit-dialog.ui:462
+#: data/ui/edit-dialog.ui:458
 msgid "No. of occurrences"
 msgstr "Oluş sayısı"
 
-#: data/ui/edit-dialog.ui:463
+#: data/ui/edit-dialog.ui:459
 msgid "Until Date"
 msgstr "Belirli Tarihe Kadar"
 
-#: data/ui/edit-dialog.ui:554
+#: data/ui/edit-dialog.ui:553
 msgid "Delete Event"
 msgstr "Olayı Sil"
 
-#: data/ui/edit-dialog.ui:591
+#: data/ui/edit-dialog.ui:590
 msgid "5 minutes"
 msgstr "5 dakika"
 
-#: data/ui/edit-dialog.ui:600
+#: data/ui/edit-dialog.ui:599
 msgid "10 minutes"
 msgstr "10 dakika"
 
-#: data/ui/edit-dialog.ui:609
+#: data/ui/edit-dialog.ui:608
 msgid "30 minutes"
 msgstr "30 dakika"
 
-#: data/ui/edit-dialog.ui:618
+#: data/ui/edit-dialog.ui:617
 msgid "1 hour"
 msgstr "1 saat"
 
-#: data/ui/edit-dialog.ui:626
+#: data/ui/edit-dialog.ui:625
 msgid "1 day"
 msgstr "1 gün"
 
-#: data/ui/edit-dialog.ui:635
+#: data/ui/edit-dialog.ui:634
 msgid "2 days"
 msgstr "2 gün"
 
-#: data/ui/edit-dialog.ui:644
+#: data/ui/edit-dialog.ui:643
 msgid "3 days"
 msgstr "3 gün"
 
-#: data/ui/edit-dialog.ui:653
+#: data/ui/edit-dialog.ui:652
 msgid "1 week"
 msgstr "1 hafta"
 
@@ -527,7 +527,7 @@ msgstr "Takvim Ayarları"
 msgid "No events"
 msgstr "Olay yok"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2253
+#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2322
 msgid "Add Event…"
 msgstr "Olay Ekle…"
 
@@ -565,35 +565,35 @@ msgstr "Telif Hakkı © %d–%d Takvim geliştiricileri"
 msgid "translator-credits"
 msgstr "Muhammet Kara <muhammetk@gmail.com>"
 
-#: src/gcal-edit-dialog.c:698
+#: src/gcal-edit-dialog.c:688
 msgid "Save"
 msgstr "Kaydet"
 
-#: src/gcal-edit-dialog.c:1011
+#: src/gcal-edit-dialog.c:1001
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d dakika önce"
 
-#: src/gcal-edit-dialog.c:1019
+#: src/gcal-edit-dialog.c:1009
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d saat önce"
 
-#: src/gcal-edit-dialog.c:1027
+#: src/gcal-edit-dialog.c:1017
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d gün önce"
 
-#: src/gcal-edit-dialog.c:1035
+#: src/gcal-edit-dialog.c:1025
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d hafta önce"
 
-#: src/gcal-edit-dialog.c:1336 src/gcal-quick-add-popover.c:683
+#: src/gcal-edit-dialog.c:1328 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Adsız olay"
 
@@ -760,102 +760,121 @@ msgstr "%1$s %2$se"
 msgid "New Event %1$s %2$s"
 msgstr "%1$s %2$s’de Yeni Olay"
 
-#: src/gcal-quick-add-popover.c:374
+#: src/gcal-quick-add-popover.c:373
 msgid "New Event Today"
 msgstr "Bugün Yeni Olay"
 
-#: src/gcal-quick-add-popover.c:378
+#: src/gcal-quick-add-popover.c:377
 msgid "New Event Tomorrow"
 msgstr "Yarın Yeni Olay"
 
-#: src/gcal-quick-add-popover.c:382
+#: src/gcal-quick-add-popover.c:381
 msgid "New Event Yesterday"
 msgstr "Dün Yeni Olay"
 
-#: src/gcal-quick-add-popover.c:388
+#: src/gcal-quick-add-popover.c:387
 msgid "New Event next Monday"
 msgstr "Gelecek Pazartesi Yeni Olay"
 
-#: src/gcal-quick-add-popover.c:389
+#: src/gcal-quick-add-popover.c:388
 msgid "New Event next Tuesday"
 msgstr "Gelecek Salı Yeni Olay"
 
-#: src/gcal-quick-add-popover.c:390
+#: src/gcal-quick-add-popover.c:389
 msgid "New Event next Wednesday"
 msgstr "Gelecek Çarşamba Yeni Olay"
 
-#: src/gcal-quick-add-popover.c:391
+#: src/gcal-quick-add-popover.c:390
 msgid "New Event next Thursday"
 msgstr "Gelecek Perşembe Yeni Olay"
 
-#: src/gcal-quick-add-popover.c:392
+#: src/gcal-quick-add-popover.c:391
 msgid "New Event next Friday"
 msgstr "Gelecek Cuma Yeni Olay"
 
-#: src/gcal-quick-add-popover.c:393
+#: src/gcal-quick-add-popover.c:392
 msgid "New Event next Saturday"
 msgstr "Gelecek Cumartesi Yeni Olay"
 
-#: src/gcal-quick-add-popover.c:394
+#: src/gcal-quick-add-popover.c:393
 msgid "New Event next Sunday"
 msgstr "Gelecek Pazar Yeni Olay"
 
+#. Translators: %d is the numeric day of month
 #: src/gcal-quick-add-popover.c:405
-msgid "New Event on January"
-msgstr "Ocakta Yeni Olay"
+#, c-format
+#| msgid "New Event on January"
+msgid "New Event on January %d"
+msgstr "%d Ocak’ta Yeni Olay"
 
 #: src/gcal-quick-add-popover.c:406
-msgid "New Event on February"
-msgstr "Şubatta Yeni Olay"
+#, c-format
+#| msgid "New Event on February"
+msgid "New Event on February %d"
+msgstr "%d Şubat’ta Yeni Olay"
 
 #: src/gcal-quick-add-popover.c:407
-msgid "New Event on March"
-msgstr "Martta Yeni Olay"
+#, c-format
+#| msgid "New Event on March"
+msgid "New Event on March %d"
+msgstr "%d Mart’ta Yeni Olay"
 
 #: src/gcal-quick-add-popover.c:408
-msgid "New Event on April"
-msgstr "Nisanda Yeni Olay"
+#, c-format
+#| msgid "New Event on April"
+msgid "New Event on April %d"
+msgstr "%d Nisan’da Yeni Olay"
 
 #: src/gcal-quick-add-popover.c:409
-msgid "New Event on May"
-msgstr "Mayısta Yeni Olay"
+#, c-format
+#| msgid "New Event on May"
+msgid "New Event on May %d"
+msgstr "%d Mayıs’ta Yeni Olay"
 
 #: src/gcal-quick-add-popover.c:410
-msgid "New Event on June"
-msgstr "Haziranda Yeni Olay"
+#, c-format
+#| msgid "New Event on June"
+msgid "New Event on June %d"
+msgstr "%d Haziran’da Yeni Olay"
 
 #: src/gcal-quick-add-popover.c:411
-msgid "New Event on July"
-msgstr "Temmuzda Yeni Olay"
+#, c-format
+#| msgid "New Event on July"
+msgid "New Event on July %d"
+msgstr "%d Temmuz’da Yeni Olay"
 
 #: src/gcal-quick-add-popover.c:412
-msgid "New Event on August"
-msgstr "Ağustosta Yeni Olay"
+#, c-format
+#| msgid "New Event on August"
+msgid "New Event on August %d"
+msgstr "%d Ağustos’ta Yeni Olay"
 
 #: src/gcal-quick-add-popover.c:413
-msgid "New Event on September"
-msgstr "Eylülde Yeni Olay"
+#, c-format
+#| msgid "New Event on September"
+msgid "New Event on September %d"
+msgstr "%d Eylül’de Yeni Olay"
 
 #: src/gcal-quick-add-popover.c:414
-msgid "New Event on October"
-msgstr "Ekimde Yeni Olay"
+#, c-format
+#| msgid "New Event on October"
+msgid "New Event on October %d"
+msgstr "%d Ekim’de Yeni Olay"
 
 #: src/gcal-quick-add-popover.c:415
-msgid "New Event on November"
-msgstr "Kasımda Yeni Olay"
+#, c-format
+#| msgid "New Event on November"
+msgid "New Event on November %d"
+msgstr "%d Kasım’da Yeni Olay"
 
 #: src/gcal-quick-add-popover.c:416
-msgid "New Event on December"
-msgstr "Aralıkta Yeni Olay"
-
-#. Translators: %1$s is the event month (e.g. "New Event on December") and %2$d is the numeric day of month
-#: src/gcal-quick-add-popover.c:422
 #, c-format
-msgid "%1$s %2$d"
-msgstr "%1$s %2$d"
+#| msgid "New Event on December"
+msgid "New Event on December %d"
+msgstr "%d Aralık’ta Yeni Olay"
 
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/gcal-quick-add-popover.c:467
+#: src/gcal-quick-add-popover.c:464
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -914,7 +933,7 @@ msgstr "ÖÖ %s"
 msgid "%s PM"
 msgstr "ÖS %s"
 
-#: src/gcal-utils.c:1187
+#: src/gcal-utils.c:1188
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -922,19 +941,19 @@ msgstr ""
 "Değişiklik yapmaya çalıştığınız olay yineleniyor. Şeçtiğiniz değişiklikler "
 "aşağıdakilere uygulanmalıdır:"
 
-#: src/gcal-utils.c:1190
+#: src/gcal-utils.c:1191
 msgid "_Cancel"
 msgstr "_İptal Et"
 
-#: src/gcal-utils.c:1192
+#: src/gcal-utils.c:1193
 msgid "_Only This Event"
 msgstr "Yalnızca Bu _Olay"
 
-#: src/gcal-utils.c:1199
+#: src/gcal-utils.c:1200
 msgid "_Subsequent events"
 msgstr "_Sonraki olaylar"
 
-#: src/gcal-utils.c:1201
+#: src/gcal-utils.c:1202
 msgid "_All events"
 msgstr "_Tüm olaylar"
 
@@ -959,7 +978,7 @@ msgid "Other events"
 msgstr "Diğer olaylar"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:1719 src/views/gcal-week-header.c:338
+#: src/views/gcal-month-view.c:1785 src/views/gcal-week-header.c:338
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -980,6 +999,9 @@ msgstr "%d. hafta"
 #: src/views/gcal-year-view.c:284
 msgid "%B %d…"
 msgstr "%B %d…"
+
+#~ msgid "%1$s %2$d"
+#~ msgstr "%1$s %2$d"
 
 #~ msgid "New Event from %s to %s"
 #~ msgstr "%s’den %s’e Yeni Olay"
