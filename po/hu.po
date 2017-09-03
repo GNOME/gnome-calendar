@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-07-28 12:00+0000\n"
-"PO-Revision-Date: 2017-07-30 13:24+0200\n"
-"Last-Translator: Meskó Balázs <meskobalazs@fedoraproject.org>\n"
+"POT-Creation-Date: 2017-08-23 09:38+0000\n"
+"PO-Revision-Date: 2017-09-03 17:58+0200\n"
+"Last-Translator: Balázs Úr <urbalazs@gmail.com>\n"
 "Language-Team: Hungarian <openscope at googlegroups dot com>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Lokalize 1.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
@@ -127,115 +127,115 @@ msgstr "Mégse"
 msgid "Click to select the calendar"
 msgstr "Kattintson a naptár kiválasztásához"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:698
+#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:688
 msgid "Done"
 msgstr "Kész"
 
-#: data/ui/edit-dialog.ui:139
+#: data/ui/edit-dialog.ui:140
 msgid "Title"
 msgstr "Cím"
 
-#: data/ui/edit-dialog.ui:156
+#: data/ui/edit-dialog.ui:158
 msgid "Date"
 msgstr "Dátum"
 
-#: data/ui/edit-dialog.ui:171
+#: data/ui/edit-dialog.ui:174
 msgid "Repeat"
 msgstr "Ismétlés"
 
-#: data/ui/edit-dialog.ui:188
+#: data/ui/edit-dialog.ui:192
 msgid "Reminders"
 msgstr "Emlékeztetők"
 
-#: data/ui/edit-dialog.ui:205
+#: data/ui/edit-dialog.ui:210
 msgid "Notes"
 msgstr "Megjegyzések"
 
-#: data/ui/edit-dialog.ui:220 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:226 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "Hely"
 
-#: data/ui/edit-dialog.ui:292
+#: data/ui/edit-dialog.ui:293
 msgid "Time"
 msgstr "Idő"
 
-#: data/ui/edit-dialog.ui:355
+#: data/ui/edit-dialog.ui:348
 msgid "All Day"
 msgstr "Egész nap"
 
-#: data/ui/edit-dialog.ui:399
+#: data/ui/edit-dialog.ui:393
 msgid "Add reminder…"
 msgstr "Emlékeztető hozzáadása…"
 
-#: data/ui/edit-dialog.ui:428
+#: data/ui/edit-dialog.ui:424
 msgid "No Repeat"
 msgstr "Nincs ismétlés"
 
-#: data/ui/edit-dialog.ui:429
+#: data/ui/edit-dialog.ui:425
 msgid "Daily"
 msgstr "Naponta"
 
-#: data/ui/edit-dialog.ui:430
+#: data/ui/edit-dialog.ui:426
 msgid "Monday – Friday"
 msgstr "Hétfőtől péntekig"
 
-#: data/ui/edit-dialog.ui:431
+#: data/ui/edit-dialog.ui:427
 msgid "Weekly"
 msgstr "Hetente"
 
-#: data/ui/edit-dialog.ui:432
+#: data/ui/edit-dialog.ui:428
 msgid "Monthly"
 msgstr "Havonta"
 
-#: data/ui/edit-dialog.ui:433
+#: data/ui/edit-dialog.ui:429
 msgid "Yearly"
 msgstr "Évente"
 
-#: data/ui/edit-dialog.ui:461
+#: data/ui/edit-dialog.ui:457
 msgid "Forever"
 msgstr "Örökké"
 
-#: data/ui/edit-dialog.ui:462
+#: data/ui/edit-dialog.ui:458
 msgid "No. of occurrences"
 msgstr "Előfordulások száma"
 
-#: data/ui/edit-dialog.ui:463
+#: data/ui/edit-dialog.ui:459
 msgid "Until Date"
 msgstr "Dátumig"
 
-#: data/ui/edit-dialog.ui:554
+#: data/ui/edit-dialog.ui:553
 msgid "Delete Event"
 msgstr "Esemény törlése"
 
-#: data/ui/edit-dialog.ui:591
+#: data/ui/edit-dialog.ui:590
 msgid "5 minutes"
 msgstr "5 perc"
 
-#: data/ui/edit-dialog.ui:600
+#: data/ui/edit-dialog.ui:599
 msgid "10 minutes"
 msgstr "10 perc"
 
-#: data/ui/edit-dialog.ui:609
+#: data/ui/edit-dialog.ui:608
 msgid "30 minutes"
 msgstr "30 perc"
 
-#: data/ui/edit-dialog.ui:618
+#: data/ui/edit-dialog.ui:617
 msgid "1 hour"
 msgstr "1 óra"
 
-#: data/ui/edit-dialog.ui:626
+#: data/ui/edit-dialog.ui:625
 msgid "1 day"
 msgstr "1 nap"
 
-#: data/ui/edit-dialog.ui:635
+#: data/ui/edit-dialog.ui:634
 msgid "2 days"
 msgstr "2 nap"
 
-#: data/ui/edit-dialog.ui:644
+#: data/ui/edit-dialog.ui:643
 msgid "3 days"
 msgstr "3 nap"
 
-#: data/ui/edit-dialog.ui:653
+#: data/ui/edit-dialog.ui:652
 msgid "1 week"
 msgstr "1 hét"
 
@@ -524,7 +524,7 @@ msgstr "Naptárbeállítások"
 msgid "No events"
 msgstr "Nincsenek események"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2253
+#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2322
 msgid "Add Event…"
 msgstr "Esemény hozzáadása…"
 
@@ -564,39 +564,39 @@ msgstr ""
 "Úr Balázs <urbalazs@gmail.com>\n"
 "Meskó Balázs <meskobalazs@fedoraproject.org>"
 
-#: src/gcal-edit-dialog.c:698
+#: src/gcal-edit-dialog.c:688
 msgid "Save"
 msgstr "Mentés"
 
-#: src/gcal-edit-dialog.c:1011
+#: src/gcal-edit-dialog.c:1001
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d perccel előtte"
 msgstr[1] "%d perccel előtte"
 
-#: src/gcal-edit-dialog.c:1019
+#: src/gcal-edit-dialog.c:1009
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d órával előtte"
 msgstr[1] "%d órával előtte"
 
-#: src/gcal-edit-dialog.c:1027
+#: src/gcal-edit-dialog.c:1017
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d nappal előtte"
 msgstr[1] "%d nappal előtte"
 
-#: src/gcal-edit-dialog.c:1035
+#: src/gcal-edit-dialog.c:1025
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d héttel előtte"
 msgstr[1] "%d héttel előtte"
 
-#: src/gcal-edit-dialog.c:1336 src/gcal-quick-add-popover.c:683
+#: src/gcal-edit-dialog.c:1328 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Névtelen esemény"
 
@@ -763,102 +763,121 @@ msgstr "eddig: %1$s %2$s"
 msgid "New Event %1$s %2$s"
 msgstr "Új esemény ekkor: %1$s %2$s"
 
-#: src/gcal-quick-add-popover.c:374
+#: src/gcal-quick-add-popover.c:373
 msgid "New Event Today"
 msgstr "Új esemény ma"
 
-#: src/gcal-quick-add-popover.c:378
+#: src/gcal-quick-add-popover.c:377
 msgid "New Event Tomorrow"
 msgstr "Új esemény holnap"
 
-#: src/gcal-quick-add-popover.c:382
+#: src/gcal-quick-add-popover.c:381
 msgid "New Event Yesterday"
 msgstr "Új esemény tegnap"
 
-#: src/gcal-quick-add-popover.c:388
+#: src/gcal-quick-add-popover.c:387
 msgid "New Event next Monday"
 msgstr "Új esemény a következő hétfőn"
 
-#: src/gcal-quick-add-popover.c:389
+#: src/gcal-quick-add-popover.c:388
 msgid "New Event next Tuesday"
 msgstr "Új esemény a következő kedden"
 
-#: src/gcal-quick-add-popover.c:390
+#: src/gcal-quick-add-popover.c:389
 msgid "New Event next Wednesday"
 msgstr "Új esemény a következő szerdán"
 
-#: src/gcal-quick-add-popover.c:391
+#: src/gcal-quick-add-popover.c:390
 msgid "New Event next Thursday"
 msgstr "Új esemény a következő csütörtökön"
 
-#: src/gcal-quick-add-popover.c:392
+#: src/gcal-quick-add-popover.c:391
 msgid "New Event next Friday"
 msgstr "Új esemény a következő pénteken"
 
-#: src/gcal-quick-add-popover.c:393
+#: src/gcal-quick-add-popover.c:392
 msgid "New Event next Saturday"
 msgstr "Új esemény a következő szombaton"
 
-#: src/gcal-quick-add-popover.c:394
+#: src/gcal-quick-add-popover.c:393
 msgid "New Event next Sunday"
 msgstr "Új esemény a következő vasárnap"
 
+#. Translators: %d is the numeric day of month
 #: src/gcal-quick-add-popover.c:405
-msgid "New Event on January"
-msgstr "Új esemény januárban"
+#, c-format
+#| msgid "New Event on January"
+msgid "New Event on January %d"
+msgstr "Új esemény január %d. napján"
 
 #: src/gcal-quick-add-popover.c:406
-msgid "New Event on February"
-msgstr "Új esemény februárban"
+#, c-format
+#| msgid "New Event on February"
+msgid "New Event on February %d"
+msgstr "Új esemény február %d. napján"
 
 #: src/gcal-quick-add-popover.c:407
-msgid "New Event on March"
-msgstr "Új esemény márciusban"
+#, c-format
+#| msgid "New Event on March"
+msgid "New Event on March %d"
+msgstr "Új esemény március %d. napján"
 
 #: src/gcal-quick-add-popover.c:408
-msgid "New Event on April"
-msgstr "Új esemény áprilisban"
+#, c-format
+#| msgid "New Event on April"
+msgid "New Event on April %d"
+msgstr "Új esemény április %d. napján"
 
 #: src/gcal-quick-add-popover.c:409
-msgid "New Event on May"
-msgstr "Új esemény májusban"
+#, c-format
+#| msgid "New Event on May"
+msgid "New Event on May %d"
+msgstr "Új esemény május %d. napján"
 
 #: src/gcal-quick-add-popover.c:410
-msgid "New Event on June"
-msgstr "Új esemény júniusban"
+#, c-format
+#| msgid "New Event on June"
+msgid "New Event on June %d"
+msgstr "Új esemény június %d. napján"
 
 #: src/gcal-quick-add-popover.c:411
-msgid "New Event on July"
-msgstr "Új esemény júliusban"
+#, c-format
+#| msgid "New Event on July"
+msgid "New Event on July %d"
+msgstr "Új esemény július %d. napján"
 
 #: src/gcal-quick-add-popover.c:412
-msgid "New Event on August"
-msgstr "Új esemény augusztusban"
+#, c-format
+#| msgid "New Event on August"
+msgid "New Event on August %d"
+msgstr "Új esemény augusztus %d. napján"
 
 #: src/gcal-quick-add-popover.c:413
-msgid "New Event on September"
-msgstr "Új esemény szeptemberben"
+#, c-format
+#| msgid "New Event on September"
+msgid "New Event on September %d"
+msgstr "Új esemény szeptember %d. napján"
 
 #: src/gcal-quick-add-popover.c:414
-msgid "New Event on October"
-msgstr "Új esemény októberben"
+#, c-format
+#| msgid "New Event on October"
+msgid "New Event on October %d"
+msgstr "Új esemény október %d. napján"
 
 #: src/gcal-quick-add-popover.c:415
-msgid "New Event on November"
-msgstr "Új esemény novemberben"
+#, c-format
+#| msgid "New Event on November"
+msgid "New Event on November %d"
+msgstr "Új esemény november %d. napján"
 
 #: src/gcal-quick-add-popover.c:416
-msgid "New Event on December"
-msgstr "Új esemény decemberben"
-
-#. Translators: %1$s is the event month (e.g. "New Event on December") and %2$d is the numeric day of month
-#: src/gcal-quick-add-popover.c:422
 #, c-format
-msgid "%1$s %2$d"
-msgstr "%1$s %2$d"
+#| msgid "New Event on December"
+msgid "New Event on December %d"
+msgstr "Új esemény december %d. napján"
 
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/gcal-quick-add-popover.c:467
+#: src/gcal-quick-add-popover.c:464
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -917,25 +936,25 @@ msgstr "de. %s"
 msgid "%s PM"
 msgstr "du. %s"
 
-#: src/gcal-utils.c:1187
+#: src/gcal-utils.c:1188
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr "A módosítani próbált esemény ismétlődő. A változások vonatkozzanak:"
 
-#: src/gcal-utils.c:1190
+#: src/gcal-utils.c:1191
 msgid "_Cancel"
 msgstr "_Mégse"
 
-#: src/gcal-utils.c:1192
+#: src/gcal-utils.c:1193
 msgid "_Only This Event"
 msgstr "Csak _erre az eseményre"
 
-#: src/gcal-utils.c:1199
+#: src/gcal-utils.c:1200
 msgid "_Subsequent events"
 msgstr "Az ezt _követő eseményekre"
 
-#: src/gcal-utils.c:1201
+#: src/gcal-utils.c:1202
 msgid "_All events"
 msgstr "_Minden eseményre"
 
@@ -960,7 +979,7 @@ msgid "Other events"
 msgstr "Egyéb események"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:1719 src/views/gcal-week-header.c:338
+#: src/views/gcal-month-view.c:1785 src/views/gcal-week-header.c:338
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -983,8 +1002,3 @@ msgstr "%d. hét"
 msgid "%B %d…"
 msgstr "%B %d…"
 
-#~ msgid "New Event from %s to %s"
-#~ msgstr "Új esemény ettől: %s, eddig: %s"
-
-#~ msgid "New Event on %s, %s – %s"
-#~ msgstr "Új esemény ekkor: %s, %s – %s"
