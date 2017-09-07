@@ -20,6 +20,7 @@ libgcal_deps = [
 sources = files(
   'views/gcal-month-view.c',
   'views/gcal-range-tree.c',
+  'views/gcal-view.c',
   'views/gcal-week-grid.c',
   'views/gcal-week-header.c',
   'views/gcal-week-view.c',
@@ -43,7 +44,6 @@ sources = files(
   'gcal-subscriber-view.c',
   'gcal-time-selector.c',
   'gcal-utils.c',
-  'gcal-view.c',
   'gcal-window.c',
 )
 
