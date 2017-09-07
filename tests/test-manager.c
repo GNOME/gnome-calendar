@@ -23,13 +23,11 @@
 /*********************************************************************************************************************/
 
 static void
-manager_new_with_settings (void)
+manager_new (void)
 {
   g_autoptr (GcalManager) manager;
-  g_autoptr (GSettings) settings;
 
-  settings = g_settings_new ("org.gnome.calendar");
-  manager = gcal_manager_new_with_settings (settings);
+  manager = gcal_manager_new ();
 
   g_assert_nonnull (manager);
 }
@@ -42,7 +40,7 @@ main (gint   argc,
 {
   g_test_init (&argc, &argv, NULL);
 
-  g_test_add_func ("/manager/new_with_settings", manager_new_with_settings);
+  g_test_add_func ("/manager/new", manager_new);
 
   return g_test_run ();
 }

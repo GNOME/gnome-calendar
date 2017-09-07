@@ -34,8 +34,6 @@ GcalApplication*     gcal_application_new                        (void);
 
 GcalManager*         gcal_application_get_manager                (GcalApplication    *self);
 
-GSettings*           gcal_application_get_settings               (GcalApplication    *self);
-
 void                 gcal_application_set_uuid                   (GcalApplication    *self,
                                                                   const gchar        *app_uuid);
 

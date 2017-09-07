@@ -33,7 +33,9 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalManager, gcal_manager, GCAL, MANAGER, GObject)
 
-GcalManager*         gcal_manager_new_with_settings              (GSettings          *settings);
+GcalManager*         gcal_manager_new                            (void);
+
+GSettings*           gcal_manager_get_settings                   (GcalManager        *self);
 
 ESource*             gcal_manager_get_source                     (GcalManager        *self,
                                                                   const gchar        *uid);

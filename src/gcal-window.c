@@ -522,7 +522,6 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
 static void
 load_geometry (GcalWindow *window)
 {
-  GcalApplication *app;
   GSettings *settings;
   GVariant *variant;
   gboolean maximized;
@@ -532,8 +531,7 @@ load_geometry (GcalWindow *window)
 
   GCAL_ENTRY;
 
-  app = GCAL_APPLICATION (gtk_window_get_application (GTK_WINDOW (window)));
-  settings = gcal_application_get_settings (app);
+  settings = gcal_manager_get_settings (window->manager);
 
   /* load window settings: size */
   variant = g_settings_get_value (settings,
@@ -576,7 +574,6 @@ save_geometry (gpointer user_data)
   GtkWindow *self;
   GdkWindow *win;
   GdkWindowState state;
-  GcalApplication *app;
   GSettings *settings;
   gboolean maximized;
   GVariant *variant;
@@ -589,10 +586,7 @@ save_geometry (gpointer user_data)
   window = GCAL_WINDOW (self);
   win = gtk_widget_get_window (GTK_WIDGET (self));
   state = gdk_window_get_state (win);
-
-
-  app = GCAL_APPLICATION (gtk_window_get_application (self));
-  settings = gcal_application_get_settings (app);
+  settings = gcal_manager_get_settings (window->manager);
 
   /* save window's state */
   maximized = state & GDK_WINDOW_STATE_MAXIMIZED;

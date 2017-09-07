@@ -43,7 +43,6 @@ struct _GcalApplication
 
   GtkWidget          *window;
 
-  GSettings          *settings;
   GcalManager        *manager;
 
   GtkCssProvider     *provider;
@@ -168,7 +167,6 @@ gcal_application_finalize (GObject *object)
 
   g_clear_object (&(self->provider));
   g_clear_object (&self->colors_provider);
-  g_clear_object (&self->settings);
 
   g_clear_object (&self->manager);
   g_clear_object (&self->search_provider);
@@ -182,10 +180,12 @@ static void
 gcal_application_activate (GApplication *application)
 {
   GcalApplication *self;
+  GSettings *settings;
 
   GCAL_ENTRY;
 
   self = GCAL_APPLICATION (application);
+  settings = gcal_manager_get_settings (self->manager);
 
   if (!self->provider)
     {
@@ -216,12 +216,12 @@ gcal_application_activate (GApplication *application)
         }
 
       self->window = gcal_window_new_with_view_and_date (GCAL_APPLICATION (application),
-                                                         g_settings_get_enum (self->settings, "active-view"),
+                                                         g_settings_get_enum (settings, "active-view"),
                                                          self->initial_date);
 
       g_signal_connect (self->window, "destroy", G_CALLBACK (gtk_widget_destroyed), &(self->window));
 
-      g_settings_bind (self->settings,
+      g_settings_bind (settings,
                        "active-view",
                        self->window,
                        "active-view",
@@ -398,10 +398,9 @@ gcal_application_init (GcalApplication *self)
 {
   g_application_add_main_option_entries (G_APPLICATION (self), gcal_application_goptions);
 
-  self->settings = g_settings_new ("org.gnome.calendar");
   self->colors_provider = gtk_css_provider_new ();
 
-  self->manager = gcal_manager_new_with_settings (self->settings);
+  self->manager = gcal_manager_new ();
   g_signal_connect_swapped (self->manager, "source-added", G_CALLBACK (process_sources), self);
   g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (process_sources), self);
 
@@ -513,20 +512,20 @@ gcal_application_new (void)
                        NULL);
 }
 
+/**
+ * gcal_application_get_manager:
+ * @self: a #GcalApplication
+ *
+ * Retrieves the #GcalManager of the application.
+ *
+ * Returns: (transfer none): a #GcalManager
+ */
 GcalManager*
 gcal_application_get_manager (GcalApplication *self)
 {
   g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
 
   return self->manager;
-}
-
-GSettings*
-gcal_application_get_settings (GcalApplication *self)
-{
-  g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
-
-  return self->settings;
 }
 
 void

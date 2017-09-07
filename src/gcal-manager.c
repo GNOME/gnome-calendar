@@ -954,11 +954,6 @@ gcal_manager_set_property (GObject      *object,
         }
       break;
 
-    case PROP_SETTINGS:
-      if (g_set_object (&self->settings, g_value_get_object (value)))
-        g_object_notify (object, "settings");
-      return;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -1051,7 +1046,7 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                                    "Application settings",
                                                    "The settings of the application passed down from GcalApplication",
                                                    G_TYPE_SETTINGS,
-                                                   G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE);
+                                                   G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, NUM_PROPS, properties);
 
@@ -1103,23 +1098,37 @@ static void
 gcal_manager_init (GcalManager *self)
 {
   self->clock = gcal_clock_new ();
+  self->settings = g_settings_new ("org.gnome.calendar");
 }
 
 /* Public API */
 /**
- * gcal_manager_new_with_settings:
- * @settings: a #GSettings
+ * gcal_manager_new:
  *
- * Creates a new #GcalManager with @settings.
+ * Creates a new #GcalManager.
  *
  * Returns: (transfer full): a newly created #GcalManager
  */
 GcalManager*
-gcal_manager_new_with_settings (GSettings *settings)
+gcal_manager_new (void)
 {
-  return g_object_new (GCAL_TYPE_MANAGER,
-                       "settings", settings,
-                       NULL);
+  return g_object_new (GCAL_TYPE_MANAGER, NULL);
+}
+
+/**
+ * gcal_manager_get_settings:
+ * @self:  a #GcalManager
+ *
+ * Retrieves the #GSetting of @self.
+ *
+ * Returns: (transfer none): a #GSettings
+ */
+GSettings*
+gcal_manager_get_settings (GcalManager *self)
+{
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
+
+  return self->settings;
 }
 
 /**
