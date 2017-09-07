@@ -16,10 +16,6 @@
  * Authors: Milan Crha <mcrha@redhat.com>
  */
 
-#ifdef HAVE_CONFIG_H
-#include <config.h>
-#endif
-
 #include "e-cal-data-model-subscriber.h"
 
 G_DEFINE_INTERFACE (ECalDataModelSubscriber, e_cal_data_model_subscriber, G_TYPE_OBJECT)

@@ -167,26 +167,19 @@ config_h.set('HAVE_LIBICAL', libical_dep.found())
 assert(cc.has_function('icaltime_days_in_year', dependencies: libical_dep),
        'Error: icaltime_days_in_year() not found in libical!. Upgrade your libical library.')
 
+gsettings_desktop_schemas_dep = dependency('gsettings-desktop-schemas', version: '>= 3.21.2')
+libedataserverui_dep = dependency('libedataserverui-1.2', version: '>= 3.17.1')
+libedataserver_dep = dependency('libedataserver-1.2', version: '>= 3.17.1')
+libecal_dep = dependency('libecal-1.2', version: '>= 3.13.90')
+libsoup_dep = dependency('libsoup-2.4')
 glib_dep = dependency('glib-2.0', version: '>= 2.43.4')
 gtk_dep = dependency('gtk+-3.0', version: '>= 3.21.6')
-
-calendar_deps = [
-  glib_dep,
-  gtk_dep,
-  libical_dep,
-  dependency('gio-2.0', version: '>= 2.43.4'),
-  dependency('gmodule-export-2.0'),
-  dependency('goa-1.0', version: '>= 3.2.0'),
-  dependency('gsettings-desktop-schemas', version: '>= 3.21.2'),
-  dependency('libecal-1.2', version: '>= 3.13.90'),
-  dependency('libedataserver-1.2', version: '>= 3.17.1'),
-  dependency('libedataserverui-1.2', version: '>= 3.17.1'),
-  dependency('libsoup-2.4'),
-  cc.find_library('m')
-]
+gio_dep = dependency('gio-2.0', version: '>= 2.43.4')
+goa_dep = dependency('goa-1.0', version: '>= 3.2.0')
+m_dep = cc.find_library('m')
 
 configure_file(
-  output: 'config.h',
+         output: 'config.h',
   configuration: config_h
 )
 
@@ -204,6 +197,7 @@ po_dir = join_paths(meson.source_root(), 'po')
 # Subdirs #
 ###########
 
+subdir('contrib')
 subdir('data')
 subdir('src')
 subdir('po')

@@ -2,6 +2,21 @@ src_inc = include_directories('.')
 
 enum_headers = files('gcal-utils.h')
 
+calendar_deps = [
+  gsettings_desktop_schemas_dep,
+  libedataserverui_dep,
+  libedataserver_dep,
+  libevolution_dep,
+  libecal_dep,
+  libsoup_dep,
+  libical_dep,
+  glib_dep,
+  gtk_dep,
+  gio_dep,
+  goa_dep,
+  m_dep,
+]
+
 sources = files(
   'views/gcal-month-view.c',
   'views/gcal-range-tree.c',
@@ -9,8 +24,6 @@ sources = files(
   'views/gcal-week-header.c',
   'views/gcal-week-view.c',
   'views/gcal-year-view.c',
-  'e-cal-data-model-subscriber.c',
-  'e-cal-data-model.c',
   'gcal-application.c',
   'gcal-clock.c',
   'gcal-date-chooser-day.c',
