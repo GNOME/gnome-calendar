@@ -255,41 +255,41 @@ gather_events (ECalDataModel         *data_model,
 }
 
 static void
-remove_source (GcalManager  *manager,
+remove_source (GcalManager  *self,
                ESource      *source)
 {
   GcalManagerUnit *unit;
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (E_IS_SOURCE (source));
 
-  e_cal_data_model_remove_client (manager->e_data_model,
+  e_cal_data_model_remove_client (self->e_data_model,
                                   e_source_get_uid (source));
-  e_cal_data_model_remove_client (manager->search_data_model,
+  e_cal_data_model_remove_client (self->search_data_model,
                                   e_source_get_uid (source));
 
-  unit = g_hash_table_lookup (manager->clients, source);
+  unit = g_hash_table_lookup (self->clients, source);
   if (unit && unit->client)
-     g_signal_handlers_disconnect_by_data (unit->client, manager);
+     g_signal_handlers_disconnect_by_data (unit->client, self);
 
-  g_hash_table_remove (manager->clients, source);
-  g_signal_emit (manager, signals[SOURCE_REMOVED], 0, source);
+  g_hash_table_remove (self->clients, source);
+  g_signal_emit (self, signals[SOURCE_REMOVED], 0, source);
 
   GCAL_EXIT;
 }
 
 static void
-source_changed (GcalManager *manager,
+source_changed (GcalManager *self,
                 ESource     *source)
 {
   GCAL_ENTRY;
 
-  if (g_hash_table_lookup (manager->clients, source) != NULL &&
+  if (g_hash_table_lookup (self->clients, source) != NULL &&
       e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR))
     {
-      g_signal_emit (manager, signals[SOURCE_CHANGED], 0, source);
+      g_signal_emit (self, signals[SOURCE_CHANGED], 0, source);
     }
 
   GCAL_EXIT;
@@ -300,18 +300,18 @@ on_client_readonly_changed (EClient    *client,
                             GParamSpec *pspec,
                             gpointer    user_data)
 {
-  GcalManager *manager;
+  GcalManager *self;
   ESource *source;
   GcalManagerUnit *unit;
 
   GCAL_ENTRY;
 
-  manager = GCAL_MANAGER (user_data);
+  self = GCAL_MANAGER (user_data);
   source = e_client_get_source (client);
 
-  unit = g_hash_table_lookup (manager->clients, source);
+  unit = g_hash_table_lookup (self->clients, source);
   if (unit && is_source_enabled (source))
-    source_changed (manager, source);
+    source_changed (self, source);
 
   GCAL_EXIT;
 }
@@ -347,7 +347,7 @@ on_client_connected (GObject      *source_object,
 {
   GcalManagerUnit *unit;
   ESourceOffline *offline_extension;
-  GcalManager *manager;
+  GcalManager *self;
   ECalClient *client;
   ESource *source;
   GError *error;
@@ -355,14 +355,14 @@ on_client_connected (GObject      *source_object,
 
   GCAL_ENTRY;
 
-  manager = GCAL_MANAGER (user_data);
+  self = GCAL_MANAGER (user_data);
   source = e_client_get_source (E_CLIENT (source_object));
   enabled = is_source_enabled (source);
 
-  manager->sources_at_launch--;
+  self->sources_at_launch--;
 
-  if (manager->sources_at_launch == 0)
-    g_object_notify_by_pspec (G_OBJECT (manager), properties[PROP_LOADING]);
+  if (self->sources_at_launch == 0)
+    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_LOADING]);
 
   error = NULL;
   client = E_CAL_CLIENT (e_cal_client_connect_finish (result, &error));
@@ -386,7 +386,7 @@ on_client_connected (GObject      *source_object,
   unit->connected = TRUE;
   unit->client = g_object_ref (client);
 
-  g_hash_table_insert (manager->clients, source, unit);
+  g_hash_table_insert (self->clients, source, unit);
 
   g_debug ("Source %s (%s) connected",
            e_source_get_display_name (source),
@@ -397,10 +397,10 @@ on_client_connected (GObject      *source_object,
 
   if (enabled)
     {
-      e_cal_data_model_add_client (manager->e_data_model, client);
-      e_cal_data_model_add_client (manager->search_data_model, client);
-      if (manager->shell_search_data_model != NULL)
-        e_cal_data_model_add_client (manager->shell_search_data_model, client);
+      e_cal_data_model_add_client (self->e_data_model, client);
+      e_cal_data_model_add_client (self->search_data_model, client);
+      if (self->shell_search_data_model != NULL)
+        e_cal_data_model_add_client (self->shell_search_data_model, client);
     }
 
   /* refresh client when it's added */
@@ -411,7 +411,7 @@ on_client_connected (GObject      *source_object,
   offline_extension = e_source_get_extension (source, E_SOURCE_EXTENSION_OFFLINE);
   e_source_offline_set_stay_synchronized (offline_extension, TRUE);
 
-  e_source_registry_commit_source (manager->source_registry,
+  e_source_registry_commit_source (self->source_registry,
                                    source,
                                    NULL,
                                    NULL,
@@ -426,7 +426,7 @@ on_client_connected (GObject      *source_object,
 
 /**
  * load_source:
- * @manager: Manager instance
+ * @self: Manager instance
  * @source: Loaded source
  *
  * Create @GcalManagerUnit data, add it to internal hash of sources.
@@ -434,19 +434,19 @@ on_client_connected (GObject      *source_object,
  *
  **/
 static void
-load_source (GcalManager *manager,
+load_source (GcalManager *self,
              ESource     *source)
 {
   GCAL_ENTRY;
 
-  if (g_hash_table_lookup (manager->clients, source) == NULL &&
+  if (g_hash_table_lookup (self->clients, source) == NULL &&
       e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR))
     {
       /* NULL: because maybe the operation cannot be really cancelled */
       e_cal_client_connect (source,
                             E_CAL_CLIENT_SOURCE_TYPE_EVENTS, 1, NULL,
                             on_client_connected,
-                            manager);
+                            self);
     }
   else
     {
@@ -566,7 +566,7 @@ on_event_removed (GObject      *source_object,
 }
 
 static void
-model_state_changed (GcalManager            *manager,
+model_state_changed (GcalManager            *self,
                      ECalClientView         *view,
                      ECalDataModelViewState  state,
                      guint                   percent,
@@ -581,21 +581,21 @@ model_state_changed (GcalManager            *manager,
   filter = e_cal_data_model_dup_filter (data_model);
 
   if (state == E_CAL_DATA_MODEL_VIEW_STATE_START &&
-      g_strcmp0 (manager->search_view_data->query, filter) == 0)
+      g_strcmp0 (self->search_view_data->query, filter) == 0)
     {
-      manager->search_view_data->passed_start = TRUE;
+      self->search_view_data->passed_start = TRUE;
       GCAL_GOTO (out);
     }
 
-  if (manager->search_view_data->passed_start &&
+  if (self->search_view_data->passed_start &&
       state == E_CAL_DATA_MODEL_VIEW_STATE_COMPLETE &&
-      g_strcmp0 (manager->search_view_data->query, filter) == 0)
+      g_strcmp0 (self->search_view_data->query, filter) == 0)
     {
-      manager->search_view_data->sources_left--;
-      manager->search_view_data->search_done = (manager->search_view_data->sources_left == 0);
+      self->search_view_data->sources_left--;
+      self->search_view_data->search_done = (self->search_view_data->sources_left == 0);
 
-      if (manager->search_view_data->search_done)
-        g_signal_emit (manager, signals[QUERY_COMPLETED], 0);
+      if (self->search_view_data->search_done)
+        g_signal_emit (self, signals[QUERY_COMPLETED], 0);
     }
 
 out:
@@ -672,15 +672,15 @@ source_credentials_required_cb (ESourceRegistry         *registry,
                                 const gchar             *certificate_pem,
                                 GTlsCertificateFlags     certificate_errors,
                                 const GError            *op_error,
-                                GcalManager             *manager)
+                                GcalManager             *self)
 {
   ECredentialsPrompter *credentials_prompter;
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
 
-  credentials_prompter = manager->credentials_prompter;
+  credentials_prompter = self->credentials_prompter;
 
   if (e_credentials_prompter_get_auto_prompt_disabled_for (credentials_prompter, source))
     return;
@@ -710,7 +710,7 @@ source_get_last_credentials_required_arguments_cb (GObject      *source_object,
                                                    GAsyncResult *result,
                                                    gpointer      user_data)
 {
-  GcalManager *manager = user_data;
+  GcalManager *self = user_data;
   ESource *source;
   ESourceCredentialsReason reason = E_SOURCE_CREDENTIALS_REASON_UNKNOWN;
   gchar *certificate_pem = NULL;
@@ -735,10 +735,10 @@ source_get_last_credentials_required_arguments_cb (GObject      *source_object,
       return;
     }
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
 
   if (reason != E_SOURCE_CREDENTIALS_REASON_UNKNOWN)
-    source_credentials_required_cb (NULL, source, reason, certificate_pem, certificate_errors, op_error, manager);
+    source_credentials_required_cb (NULL, source, reason, certificate_pem, certificate_errors, op_error, self);
 
   g_free (certificate_pem);
   g_clear_error (&op_error);
@@ -751,13 +751,13 @@ gcal_manager_client_ready_cb (GObject      *source,
                               GAsyncResult *result,
                               gpointer      user_data)
 {
-  GcalManager *manager = GCAL_MANAGER (user_data);
+  GcalManager *self = GCAL_MANAGER (user_data);
   GError *error = NULL;
 
   GCAL_ENTRY;
 
-  manager->goa_client = goa_client_new_finish (result, &error);
-  manager->goa_client_ready = TRUE;
+  self->goa_client = goa_client_new_finish (result, &error);
+  self->goa_client_ready = TRUE;
 
   if (error != NULL)
     {
@@ -768,7 +768,7 @@ gcal_manager_client_ready_cb (GObject      *source,
       g_error_free (error);
     }
 
-  g_object_notify_by_pspec (G_OBJECT (manager), properties[PROP_LOADING]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_LOADING]);
 
   GCAL_EXIT;
 }
@@ -776,7 +776,7 @@ gcal_manager_client_ready_cb (GObject      *source,
 static void
 gcal_manager_constructed (GObject *object)
 {
-  GcalManager *manager;
+  GcalManager *self;
 
   GList *sources, *l;
   GError *error = NULL;
@@ -786,10 +786,10 @@ gcal_manager_constructed (GObject *object)
 
   G_OBJECT_CLASS (gcal_manager_parent_class)->constructed (object);
 
-  manager = GCAL_MANAGER (object);
-  manager->system_timezone = e_cal_util_get_system_timezone ();
+  self = GCAL_MANAGER (object);
+  self->system_timezone = e_cal_util_get_system_timezone ();
 
-  manager->clients = g_hash_table_new_full ((GHashFunc) e_source_hash, (GEqualFunc) e_source_equal,
+  self->clients = g_hash_table_new_full ((GHashFunc) e_source_hash, (GEqualFunc) e_source_equal,
                                          g_object_unref, (GDestroyNotify) free_unit_data);
 
   /* load GOA client */
@@ -798,25 +798,25 @@ gcal_manager_constructed (GObject *object)
                   object);
 
   /* reading sources and schedule its connecting */
-  manager->source_registry = e_source_registry_new_sync (NULL, &error);
+  self->source_registry = e_source_registry_new_sync (NULL, &error);
 
-  if (!manager->source_registry)
+  if (!self->source_registry)
     {
       g_warning ("Failed to access calendar configuration: %s", error->message);
       g_error_free (error);
       return;
     }
 
-  g_object_bind_property (manager->source_registry,
+  g_object_bind_property (self->source_registry,
                           "default-calendar",
-                          manager,
+                          self,
                           "default-calendar",
                           G_BINDING_DEFAULT);
 
-  manager->credentials_prompter = e_credentials_prompter_new (manager->source_registry);
+  self->credentials_prompter = e_credentials_prompter_new (self->source_registry);
 
   /* First disable credentials prompt for all but calendar sources... */
-  sources = e_source_registry_list_sources (manager->source_registry, NULL);
+  sources = e_source_registry_list_sources (self->source_registry, NULL);
 
   for (l = sources; l != NULL; l = g_list_next (l))
     {
@@ -826,7 +826,7 @@ gcal_manager_constructed (GObject *object)
       if (!e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR) &&
           !e_source_has_extension (source, E_SOURCE_EXTENSION_COLLECTION))
         {
-          e_credentials_prompter_set_auto_prompt_disabled_for (manager->credentials_prompter, source, TRUE);
+          e_credentials_prompter_set_auto_prompt_disabled_for (self->credentials_prompter, source, TRUE);
         }
       else
         {
@@ -839,11 +839,11 @@ gcal_manager_constructed (GObject *object)
 
   g_list_free_full (sources, g_object_unref);
 
-  credentials_provider = e_credentials_prompter_get_provider (manager->credentials_prompter);
+  credentials_provider = e_credentials_prompter_get_provider (self->credentials_prompter);
 
   /* ...then enable credentials prompt for credential source of the calendar sources,
      which can be a collection source.  */
-  sources = e_source_registry_list_sources (manager->source_registry, E_SOURCE_EXTENSION_CALENDAR);
+  sources = e_source_registry_list_sources (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
 
   for (l = sources; l != NULL; l = g_list_next (l))
     {
@@ -854,7 +854,7 @@ gcal_manager_constructed (GObject *object)
 
       if (cred_source && !e_source_equal (source, cred_source))
 	{
-          e_credentials_prompter_set_auto_prompt_disabled_for (manager->credentials_prompter, cred_source, FALSE);
+          e_credentials_prompter_set_auto_prompt_disabled_for (self->credentials_prompter, cred_source, FALSE);
 
           /* Only consider SSL errors */
           if (e_source_get_connection_status (cred_source) != E_SOURCE_CONNECTION_STATUS_SSL_FAILED)
@@ -873,25 +873,25 @@ gcal_manager_constructed (GObject *object)
 
   /* The eds_credentials_prompter responses to REQUIRED and REJECTED reasons,
      the SSL_FAILED should be handled elsewhere. */
-  g_signal_connect (manager->source_registry, "credentials-required", G_CALLBACK (source_credentials_required_cb), object);
+  g_signal_connect (self->source_registry, "credentials-required", G_CALLBACK (source_credentials_required_cb), object);
 
-  e_credentials_prompter_process_awaiting_credentials (manager->credentials_prompter);
+  e_credentials_prompter_process_awaiting_credentials (self->credentials_prompter);
 
-  g_signal_connect_swapped (manager->source_registry, "source-added", G_CALLBACK (load_source), object);
-  g_signal_connect_swapped (manager->source_registry, "source-removed", G_CALLBACK (remove_source), object);
-  g_signal_connect_swapped (manager->source_registry, "source-changed", G_CALLBACK (source_changed), object);
+  g_signal_connect_swapped (self->source_registry, "source-added", G_CALLBACK (load_source), object);
+  g_signal_connect_swapped (self->source_registry, "source-removed", G_CALLBACK (remove_source), object);
+  g_signal_connect_swapped (self->source_registry, "source-changed", G_CALLBACK (source_changed), object);
 
   /* create data model */
-  manager->e_data_model = e_cal_data_model_new (submit_thread_job);
-  manager->search_data_model = e_cal_data_model_new (submit_thread_job);
+  self->e_data_model = e_cal_data_model_new (submit_thread_job);
+  self->search_data_model = e_cal_data_model_new (submit_thread_job);
 
-  e_cal_data_model_set_expand_recurrences (manager->e_data_model, TRUE);
-  e_cal_data_model_set_timezone (manager->e_data_model, manager->system_timezone);
-  e_cal_data_model_set_expand_recurrences (manager->search_data_model, TRUE);
-  e_cal_data_model_set_timezone (manager->search_data_model, manager->system_timezone);
+  e_cal_data_model_set_expand_recurrences (self->e_data_model, TRUE);
+  e_cal_data_model_set_timezone (self->e_data_model, self->system_timezone);
+  e_cal_data_model_set_expand_recurrences (self->search_data_model, TRUE);
+  e_cal_data_model_set_timezone (self->search_data_model, self->system_timezone);
 
-  sources = e_source_registry_list_enabled (manager->source_registry, E_SOURCE_EXTENSION_CALENDAR);
-  manager->sources_at_launch = g_list_length (sources);
+  sources = e_source_registry_list_enabled (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
+  self->sources_at_launch = g_list_length (sources);
 
   for (l = sources; l != NULL; l = l->next)
     load_source (GCAL_MANAGER (object), l->data);
@@ -904,24 +904,24 @@ gcal_manager_constructed (GObject *object)
 static void
 gcal_manager_finalize (GObject *object)
 {
-  GcalManager *manager =GCAL_MANAGER (object);
+  GcalManager *self =GCAL_MANAGER (object);
 
   GCAL_ENTRY;
 
-  g_clear_object (&manager->clock);
-  g_clear_object (&manager->settings);
-  g_clear_object (&manager->goa_client);
-  g_clear_object (&manager->e_data_model);
-  g_clear_object (&manager->search_data_model);
-  g_clear_object (&manager->shell_search_data_model);
+  g_clear_object (&self->clock);
+  g_clear_object (&self->settings);
+  g_clear_object (&self->goa_client);
+  g_clear_object (&self->e_data_model);
+  g_clear_object (&self->search_data_model);
+  g_clear_object (&self->shell_search_data_model);
 
-  if (manager->search_view_data != NULL)
+  if (self->search_view_data != NULL)
     {
-      g_free (manager->search_view_data->query);
-      g_free (manager->search_view_data);
+      g_free (self->search_view_data->query);
+      g_free (self->search_view_data);
     }
 
-  g_hash_table_destroy (manager->clients);
+  g_hash_table_destroy (self->clients);
 
   GCAL_EXIT;
 }
@@ -1124,7 +1124,7 @@ gcal_manager_new_with_settings (GSettings *settings)
 
 /**
  * gcal_manager_get_source:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @uid: the unique identifier of the source
  *
  * Retrieve a source according to it's UID. The source
@@ -1134,24 +1134,24 @@ gcal_manager_new_with_settings (GSettings *settings)
  * Returns: (nullable)(transfer full): an #ESource, or %NULL.
  */
 ESource*
-gcal_manager_get_source (GcalManager *manager,
+gcal_manager_get_source (GcalManager *self,
                          const gchar *uid)
 {
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  return e_source_registry_ref_source (manager->source_registry, uid);
+  return e_source_registry_ref_source (self->source_registry, uid);
 }
 
 /**
  * gcal_manager_get_sources:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  *
  * Retrieve a list of the enabled sources used in the application.
  *
  * Returns: (nullable)(transfer container)(content-type ESource): a #GList
  */
 GList*
-gcal_manager_get_sources (GcalManager *manager)
+gcal_manager_get_sources (GcalManager *self)
 {
   GHashTableIter iter;
   gpointer key, value;
@@ -1159,9 +1159,9 @@ gcal_manager_get_sources (GcalManager *manager)
 
   GCAL_ENTRY;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  g_hash_table_iter_init (&iter, manager->clients);
+  g_hash_table_iter_init (&iter, self->clients);
 
   while (g_hash_table_iter_next (&iter, &key, &value))
     {
@@ -1176,7 +1176,7 @@ gcal_manager_get_sources (GcalManager *manager)
 
 /**
  * gcal_manager_get_sources_connected:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  *
  * Returns a #GList with every source connected on the app,
  * whether they are enabled or not.
@@ -1184,63 +1184,63 @@ gcal_manager_get_sources (GcalManager *manager)
  * Returns: (nullable)(transfer container)(content-type ESource): a #GList
  */
 GList*
-gcal_manager_get_sources_connected (GcalManager *manager)
+gcal_manager_get_sources_connected (GcalManager *self)
 {
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  return g_hash_table_get_keys (manager->clients);
+  return g_hash_table_get_keys (self->clients);
 }
 
 /**
  * gcal_manager_get_default_source:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  *
  * Returns: (transfer full): an #ESource object. Free
  * with g_object_unref().
  */
 ESource*
-gcal_manager_get_default_source (GcalManager *manager)
+gcal_manager_get_default_source (GcalManager *self)
 {
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  return e_source_registry_ref_default_calendar (manager->source_registry);
+  return e_source_registry_ref_default_calendar (self->source_registry);
 }
 
 /**
  * gcal_manager_set_default_source:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @source: the new default source.
  *
  * Sets the default calendar.
  */
 void
-gcal_manager_set_default_source (GcalManager *manager,
+gcal_manager_set_default_source (GcalManager *self,
                                  ESource     *source)
 {
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
 
-  e_source_registry_set_default_calendar (manager->source_registry, source);
+  e_source_registry_set_default_calendar (self->source_registry, source);
 }
 
 /**
  * gcal_manager_get_system_timezone:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  *
  * Retireves the default timezone.
  *
  * Returns: (transfer none): the default timezone
  */
 icaltimezone*
-gcal_manager_get_system_timezone (GcalManager *manager)
+gcal_manager_get_system_timezone (GcalManager *self)
 {
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  return manager->system_timezone;
+  return self->system_timezone;
 }
 
 /**
  * gcal_manager_setup_shell_search:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @subscriber: an #ECalDataModelSubscriber
  *
  * Sets up the GNOME Shell search subscriber.
@@ -1269,28 +1269,28 @@ gcal_manager_setup_shell_search (GcalManager             *self,
 
 /**
  * gcal_manager_set_shell_search_query:
- * @manager: A #GcalManager instance
+ * @self: A #GcalManager instance
  * @query: query string (an s-exp)
  *
  * Set the query terms of the #ECalDataModel used in the shell search
  */
 void
-gcal_manager_set_shell_search_query (GcalManager *manager,
+gcal_manager_set_shell_search_query (GcalManager *self,
                                      const gchar *query)
 {
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
 
-  manager->search_view_data->passed_start = FALSE;
-  manager->search_view_data->search_done = FALSE;
-  manager->search_view_data->sources_left = g_hash_table_size (manager->clients);
+  self->search_view_data->passed_start = FALSE;
+  self->search_view_data->search_done = FALSE;
+  self->search_view_data->sources_left = g_hash_table_size (self->clients);
 
-  if (manager->search_view_data->query != NULL)
-    g_free (manager->search_view_data->query);
-  manager->search_view_data->query = g_strdup (query);
+  if (self->search_view_data->query != NULL)
+    g_free (self->search_view_data->query);
+  self->search_view_data->query = g_strdup (query);
 
-  e_cal_data_model_set_filter (manager->shell_search_data_model, query);
+  e_cal_data_model_set_filter (self->shell_search_data_model, query);
 }
 
 /**
@@ -1303,14 +1303,14 @@ gcal_manager_set_shell_search_query (GcalManager *manager,
  * Subscribe @subscriber to the shell data modal at the given range.
  */
 void
-gcal_manager_set_shell_search_subscriber (GcalManager             *manager,
+gcal_manager_set_shell_search_subscriber (GcalManager             *self,
                                           ECalDataModelSubscriber *subscriber,
                                           time_t                   range_start,
                                           time_t                   range_end)
 {
   GCAL_ENTRY;
 
-  e_cal_data_model_subscribe (manager->shell_search_data_model, subscriber, range_start, range_end);
+  e_cal_data_model_subscribe (self->shell_search_data_model, subscriber, range_start, range_end);
 
   GCAL_EXIT;
 }
@@ -1319,16 +1319,16 @@ gcal_manager_set_shell_search_subscriber (GcalManager             *manager,
  * gcal_manager_shell_search_done:
  * @self: a #GcalManager
  *
- * Retrieves whether the search at @manager is done or not.
+ * Retrieves whether the search at @self is done or not.
  *
  * Returns: %TRUE if the search is finished.
  */
 gboolean
-gcal_manager_shell_search_done (GcalManager *manager)
+gcal_manager_shell_search_done (GcalManager *self)
 {
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), FALSE);
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), FALSE);
 
-  return manager->search_view_data->search_done;
+  return self->search_view_data->search_done;
 }
 
 /**
@@ -1340,19 +1340,19 @@ gcal_manager_shell_search_done (GcalManager *manager)
  * Returns: (nullable)(transfer full)(content-type GcalEvent): a #GList
  */
 GList*
-gcal_manager_get_shell_search_events (GcalManager *manager)
+gcal_manager_get_shell_search_events (GcalManager *self)
 {
   time_t range_start, range_end;
   GList *list = NULL;
 
   GCAL_ENTRY;
 
-  e_cal_data_model_get_subscriber_range (manager->shell_search_data_model,
-                                         manager->search_view_data->subscriber,
+  e_cal_data_model_get_subscriber_range (self->shell_search_data_model,
+                                         self->search_view_data->subscriber,
                                          &range_start,
                                          &range_end);
 
-  e_cal_data_model_foreach_component (manager->shell_search_data_model,
+  e_cal_data_model_foreach_component (self->shell_search_data_model,
                                       range_start,
                                       range_end,
                                       gather_events,
@@ -1372,16 +1372,16 @@ gcal_manager_get_shell_search_events (GcalManager *manager)
  * and @range_end.
  */
 void
-gcal_manager_set_subscriber (GcalManager             *manager,
+gcal_manager_set_subscriber (GcalManager             *self,
                              ECalDataModelSubscriber *subscriber,
                              time_t                   range_start,
                              time_t                   range_end)
 {
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
 
-  e_cal_data_model_subscribe (manager->e_data_model,
+  e_cal_data_model_subscribe (self->e_data_model,
                               subscriber,
                               range_start,
                               range_end);
@@ -1400,16 +1400,16 @@ gcal_manager_set_subscriber (GcalManager             *manager,
  * and @range_end.
  */
 void
-gcal_manager_set_search_subscriber (GcalManager             *manager,
+gcal_manager_set_search_subscriber (GcalManager             *self,
                                     ECalDataModelSubscriber *subscriber,
                                     time_t                   range_start,
                                     time_t                   range_end)
 {
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
 
-  e_cal_data_model_subscribe (manager->search_data_model,
+  e_cal_data_model_subscribe (self->search_data_model,
                               subscriber,
                               range_start,
                               range_end);
@@ -1448,7 +1448,7 @@ gcal_manager_set_query (GcalManager *self,
  * the retrieved value.
  */
 gchar*
-gcal_manager_query_client_data (GcalManager *manager,
+gcal_manager_query_client_data (GcalManager *self,
                                 ESource     *source,
                                 const gchar *field)
 {
@@ -1457,9 +1457,9 @@ gcal_manager_query_client_data (GcalManager *manager,
 
   GCAL_ENTRY;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  unit = g_hash_table_lookup (manager->clients, source);
+  unit = g_hash_table_lookup (self->clients, source);
 
   if (!unit)
     GCAL_RETURN (NULL);
@@ -1471,7 +1471,7 @@ gcal_manager_query_client_data (GcalManager *manager,
 
 /**
  * gcal_manager_add_source:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @base_uri: URI defining the ESourceGroup the client will belongs
  * @relative_uri: URI, relative to the base URI
  * @color: a string representing a color parseable for gdk_rgba_parse
@@ -1483,7 +1483,7 @@ gcal_manager_query_client_data (GcalManager *manager,
  * %NULL.
  */
 gchar*
-gcal_manager_add_source (GcalManager *manager,
+gcal_manager_add_source (GcalManager *self,
                          const gchar *name,
                          const gchar *backend,
                          const gchar *color)
@@ -1494,7 +1494,7 @@ gcal_manager_add_source (GcalManager *manager,
 
   GCAL_ENTRY;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
   source = e_source_new (NULL, NULL, NULL);
   extension = E_SOURCE_CALENDAR (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
@@ -1507,7 +1507,7 @@ gcal_manager_add_source (GcalManager *manager,
   e_source_set_display_name (source, name);
 
   error = NULL;
-  e_source_registry_commit_source_sync (manager->source_registry,
+  e_source_registry_commit_source_sync (self->source_registry,
                                         source,
                                         NULL,
                                         &error);
@@ -1520,20 +1520,20 @@ gcal_manager_add_source (GcalManager *manager,
       GCAL_RETURN (NULL);
     }
 
-  load_source (manager, source);
+  load_source (self, source);
 
   GCAL_RETURN (e_source_dup_uid (source));
 }
 
 /**
  * gcal_manager_enable_source:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @source: the target ESource
  *
  * Enable the given ESource.
  */
 void
-gcal_manager_enable_source (GcalManager *manager,
+gcal_manager_enable_source (GcalManager *self,
                             ESource     *source)
 {
   ESourceSelectable *selectable;
@@ -1541,10 +1541,10 @@ gcal_manager_enable_source (GcalManager *manager,
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (E_IS_SOURCE (source));
 
-  unit = g_hash_table_lookup (manager->clients, source);
+  unit = g_hash_table_lookup (self->clients, source);
   selectable = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
 
   if (is_source_enabled (source))
@@ -1554,30 +1554,30 @@ gcal_manager_enable_source (GcalManager *manager,
       return;
     }
 
-  e_cal_data_model_add_client (manager->e_data_model, unit->client);
-  e_cal_data_model_add_client (manager->search_data_model, unit->client);
+  e_cal_data_model_add_client (self->e_data_model, unit->client);
+  e_cal_data_model_add_client (self->search_data_model, unit->client);
 
-  if (manager->shell_search_data_model)
-    e_cal_data_model_add_client (manager->shell_search_data_model, unit->client);
+  if (self->shell_search_data_model)
+    e_cal_data_model_add_client (self->shell_search_data_model, unit->client);
 
-  g_signal_emit (manager, signals[SOURCE_ENABLED], 0, source, TRUE);
+  g_signal_emit (self, signals[SOURCE_ENABLED], 0, source, TRUE);
 
   /* Save the source */
   e_source_selectable_set_selected (selectable, TRUE);
-  gcal_manager_save_source (manager, source);
+  gcal_manager_save_source (self, source);
 
   GCAL_EXIT;
 }
 
 /**
  * gcal_manager_disable_source:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @source: the target ESource
  *
  * Disable the given ESource.
  */
 void
-gcal_manager_disable_source (GcalManager *manager,
+gcal_manager_disable_source (GcalManager *self,
                              ESource     *source)
 {
   ESourceSelectable *selectable;
@@ -1585,7 +1585,7 @@ gcal_manager_disable_source (GcalManager *manager,
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (E_IS_SOURCE (source));
 
   selectable = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
@@ -1599,40 +1599,40 @@ gcal_manager_disable_source (GcalManager *manager,
 
   source_uid = e_source_get_uid (source);
 
-  e_cal_data_model_remove_client (manager->e_data_model, source_uid);
-  e_cal_data_model_remove_client (manager->search_data_model, source_uid);
+  e_cal_data_model_remove_client (self->e_data_model, source_uid);
+  e_cal_data_model_remove_client (self->search_data_model, source_uid);
 
-  if (manager->shell_search_data_model != NULL)
-    e_cal_data_model_remove_client (manager->shell_search_data_model, source_uid);
+  if (self->shell_search_data_model != NULL)
+    e_cal_data_model_remove_client (self->shell_search_data_model, source_uid);
 
-  g_signal_emit (manager, signals[SOURCE_ENABLED], 0, source, FALSE);
+  g_signal_emit (self, signals[SOURCE_ENABLED], 0, source, FALSE);
 
   /* Save the source */
   e_source_selectable_set_selected (selectable, FALSE);
-  gcal_manager_save_source (manager, source);
+  gcal_manager_save_source (self, source);
 
   GCAL_EXIT;
 }
 
 /**
  * gcal_manager_save_source:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @source: the target ESource
  *
  * Commit the given ESource.
  */
 void
-gcal_manager_save_source (GcalManager *manager,
+gcal_manager_save_source (GcalManager *self,
                           ESource     *source)
 {
   GError *error = NULL;
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (E_IS_SOURCE (source));
 
-  e_source_registry_commit_source_sync (manager->source_registry, source, NULL, &error);
+  e_source_registry_commit_source_sync (self->source_registry, source, NULL, &error);
 
   if (error)
     {
@@ -1646,22 +1646,22 @@ gcal_manager_save_source (GcalManager *manager,
 
 /**
  * gcal_manager_refresh:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  *
  * Forces a full refresh and synchronization of all available
  * calendars.
  */
 void
-gcal_manager_refresh (GcalManager *manager)
+gcal_manager_refresh (GcalManager *self)
 {
   GList *clients;
   GList *l;
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
 
-  clients = g_hash_table_get_values (manager->clients);
+  clients = g_hash_table_get_values (self->clients);
 
   /* refresh clients */
   for (l = clients; l != NULL; l = l->next)
@@ -1674,7 +1674,7 @@ gcal_manager_refresh (GcalManager *manager)
       e_client_refresh (E_CLIENT (unit->client),
                         NULL,
                         on_client_refreshed,
-                        manager);
+                        self);
     }
 
   g_list_free (clients);
@@ -1684,7 +1684,7 @@ gcal_manager_refresh (GcalManager *manager)
 
 /**
  * gcal_manager_is_client_writable:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @source: an #ESource
  *
  * Retrieves whether @source is writable.
@@ -1692,14 +1692,14 @@ gcal_manager_refresh (GcalManager *manager)
  * Returns: %TRUE if @source is writable, %FALSE otherwise.
  */
 gboolean
-gcal_manager_is_client_writable (GcalManager *manager,
+gcal_manager_is_client_writable (GcalManager *self,
                                  ESource     *source)
 {
   GcalManagerUnit *unit;
 
   GCAL_ENTRY;
 
-  unit = g_hash_table_lookup (manager->clients, source);
+  unit = g_hash_table_lookup (self->clients, source);
 
   if (!unit)
     GCAL_RETURN (FALSE);
@@ -1709,13 +1709,13 @@ gcal_manager_is_client_writable (GcalManager *manager,
 
 /**
  * gcal_manager_create_event:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @event: a #GcalEvent
  *
  * Creates @event.
  */
 void
-gcal_manager_create_event (GcalManager *manager,
+gcal_manager_create_event (GcalManager *self,
                            GcalEvent   *event)
 {
   GcalManagerUnit *unit;
@@ -1726,12 +1726,12 @@ gcal_manager_create_event (GcalManager *manager,
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (GCAL_IS_EVENT (event));
 
   source = gcal_event_get_source (event);
   component = gcal_event_get_component (event);
-  unit = g_hash_table_lookup (manager->clients, source);
+  unit = g_hash_table_lookup (self->clients, source);
 
   g_return_if_fail (unit != NULL);
 
@@ -1739,11 +1739,11 @@ gcal_manager_create_event (GcalManager *manager,
 
   data = g_new0 (AsyncOpsData, 1);
   data->event = g_object_ref (event);
-  data->manager = manager;
+  data->manager = self;
 
   e_cal_client_create_object (unit->client,
                               new_event_icalcomp,
-                              manager->async_ops,
+                              self->async_ops,
                               on_event_created,
                               data);
 
@@ -1752,14 +1752,14 @@ gcal_manager_create_event (GcalManager *manager,
 
 /**
  * gcal_manager_update_event:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @event: a #GcalEvent
  * @mod: an #GcalRecurrenceModType
  *
  * Saves all changes made to @event persistently.
  */
 void
-gcal_manager_update_event (GcalManager           *manager,
+gcal_manager_update_event (GcalManager           *self,
                            GcalEvent             *event,
                            GcalRecurrenceModType  mod)
 {
@@ -1768,10 +1768,10 @@ gcal_manager_update_event (GcalManager           *manager,
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (GCAL_IS_EVENT (event));
 
-  unit = g_hash_table_lookup (manager->clients, gcal_event_get_source (event));
+  unit = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
   component = gcal_event_get_component (event);
 
   /*
@@ -1802,14 +1802,14 @@ gcal_manager_update_event (GcalManager           *manager,
 
 /**
  * gcal_manager_remove_event:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @event: a #GcalEvent
  * @mod: an #GcalRecurrenceModType
  *
  * Deletes @event.
  */
 void
-gcal_manager_remove_event (GcalManager           *manager,
+gcal_manager_remove_event (GcalManager           *self,
                            GcalEvent             *event,
                            GcalRecurrenceModType  mod)
 {
@@ -1820,11 +1820,11 @@ gcal_manager_remove_event (GcalManager           *manager,
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (GCAL_IS_EVENT (event));
 
   component = gcal_event_get_component (event);
-  unit = g_hash_table_lookup (manager->clients, gcal_event_get_source (event));
+  unit = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
   rid = NULL;
 
   e_cal_component_get_uid (component, &uid);
@@ -1836,7 +1836,7 @@ gcal_manager_remove_event (GcalManager           *manager,
                               uid,
                               mod == GCAL_RECURRENCE_MOD_ALL ? NULL : rid,
                               (ECalObjModType) mod,
-                              manager->async_ops,
+                              self->async_ops,
                               on_event_removed,
                               event);
 
@@ -1847,7 +1847,7 @@ gcal_manager_remove_event (GcalManager           *manager,
 
 /**
  * gcal_manager_move_event_to_source:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @event: a #GcalEvent
  * @dest: the destination calendar
  *
@@ -1856,7 +1856,7 @@ gcal_manager_remove_event (GcalManager           *manager,
  * guarantee to never loose any data.
  */
 void
-gcal_manager_move_event_to_source (GcalManager *manager,
+gcal_manager_move_event_to_source (GcalManager *self,
                                    GcalEvent   *event,
                                    ESource     *dest)
 {
@@ -1869,14 +1869,14 @@ gcal_manager_move_event_to_source (GcalManager *manager,
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
+  g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (GCAL_IS_EVENT (event));
   g_return_if_fail (E_IS_SOURCE (dest));
 
   error = NULL;
 
   /* First, try to create the component on the destination source */
-  unit = g_hash_table_lookup (manager->clients, dest);
+  unit = g_hash_table_lookup (self->clients, dest);
 
   ecomponent = gcal_event_get_component (event);
   clone = e_cal_component_clone (ecomponent);
@@ -1901,7 +1901,7 @@ gcal_manager_move_event_to_source (GcalManager *manager,
    * created, try to remove the old component. Data loss it the last
    * thing we want to happen here.
    */
-  unit = g_hash_table_lookup (manager->clients, gcal_event_get_source (event));
+  unit = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
 
   id = e_cal_component_get_id (ecomponent);
 
@@ -1909,7 +1909,7 @@ gcal_manager_move_event_to_source (GcalManager *manager,
                                    id->uid,
                                    id->rid,
                                    E_CAL_OBJ_MOD_THIS,
-                                   manager->async_ops,
+                                   self->async_ops,
                                    &error);
 
   if (error)
@@ -1927,7 +1927,7 @@ gcal_manager_move_event_to_source (GcalManager *manager,
 
 /**
  * gcal_manager_get_events:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @start_date: the start of the dete range
  * @end_date: the end of the dete range
  *
@@ -1938,7 +1938,7 @@ gcal_manager_move_event_to_source (GcalManager *manager,
  * Returns: (nullable)(transfer full)(content-type GcalEvent):a #GList
  */
 GList*
-gcal_manager_get_events (GcalManager  *manager,
+gcal_manager_get_events (GcalManager  *self,
                          icaltimetype *start_date,
                          icaltimetype *end_date)
 {
@@ -1947,12 +1947,12 @@ gcal_manager_get_events (GcalManager  *manager,
 
   GCAL_ENTRY;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  range_start = icaltime_as_timet_with_zone (*start_date, manager->system_timezone);
-  range_end = icaltime_as_timet_with_zone (*end_date, manager->system_timezone);
+  range_start = icaltime_as_timet_with_zone (*start_date, self->system_timezone);
+  range_end = icaltime_as_timet_with_zone (*end_date, self->system_timezone);
 
-  e_cal_data_model_foreach_component (manager->e_data_model,
+  e_cal_data_model_foreach_component (self->e_data_model,
                                       range_start,
                                       range_end,
                                       gather_events,
@@ -1997,7 +1997,7 @@ gcal_manager_get_clock (GcalManager *self)
 
 /**
  * gcal_manager_get_event_from_shell_search:
- * @manager: a #GcalManager
+ * @self: a #GcalManager
  * @uuid: the unique identier of the event
  *
  * Retrieves the #GcalEvent with @uuid.
@@ -2005,7 +2005,7 @@ gcal_manager_get_clock (GcalManager *self)
  * Returns: (nullable)(transfer full): a #GcalEvent
  */
 GcalEvent*
-gcal_manager_get_event_from_shell_search (GcalManager *manager,
+gcal_manager_get_event_from_shell_search (GcalManager *self,
                                           const gchar *uuid)
 {
   GcalEvent *new_event;
@@ -2014,17 +2014,17 @@ gcal_manager_get_event_from_shell_search (GcalManager *manager,
 
   GCAL_ENTRY;
 
-  g_return_val_if_fail (GCAL_IS_MANAGER (manager), NULL);
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
   list = NULL;
   new_event = NULL;
 
-  e_cal_data_model_get_subscriber_range (manager->shell_search_data_model,
-                                         manager->search_view_data->subscriber,
+  e_cal_data_model_get_subscriber_range (self->shell_search_data_model,
+                                         self->search_view_data->subscriber,
                                          &range_start,
                                          &range_end);
 
-  e_cal_data_model_foreach_component (manager->shell_search_data_model,
+  e_cal_data_model_foreach_component (self->shell_search_data_model,
                                       range_start,
                                       range_end,
                                       gather_events,

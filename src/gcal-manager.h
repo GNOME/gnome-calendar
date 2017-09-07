@@ -35,26 +35,26 @@ G_DECLARE_FINAL_TYPE (GcalManager, gcal_manager, GCAL, MANAGER, GObject)
 
 GcalManager*         gcal_manager_new_with_settings              (GSettings          *settings);
 
-ESource*             gcal_manager_get_source                     (GcalManager        *manager,
+ESource*             gcal_manager_get_source                     (GcalManager        *self,
                                                                   const gchar        *uid);
 
-GList*               gcal_manager_get_sources                    (GcalManager        *manager);
+GList*               gcal_manager_get_sources                    (GcalManager        *self);
 
-GList*               gcal_manager_get_sources_connected          (GcalManager        *manager);
+GList*               gcal_manager_get_sources_connected          (GcalManager        *self);
 
-ESource*             gcal_manager_get_default_source             (GcalManager        *manager);
+ESource*             gcal_manager_get_default_source             (GcalManager        *self);
 
-void                 gcal_manager_set_default_source             (GcalManager        *manager,
+void                 gcal_manager_set_default_source             (GcalManager        *self,
                                                                   ESource            *source);
 
-icaltimezone*        gcal_manager_get_system_timezone            (GcalManager        *manager);
+icaltimezone*        gcal_manager_get_system_timezone            (GcalManager        *self);
 
-void                 gcal_manager_set_subscriber                 (GcalManager        *manager,
+void                 gcal_manager_set_subscriber                 (GcalManager        *self,
                                                                   ECalDataModelSubscriber *subscriber,
                                                                   time_t              range_start,
                                                                   time_t              range_end);
 
-void                 gcal_manager_set_search_subscriber          (GcalManager        *manager,
+void                 gcal_manager_set_search_subscriber          (GcalManager        *self,
                                                                   ECalDataModelSubscriber *subscriber,
                                                                   time_t              range_start,
                                                                   time_t              range_end);
@@ -62,45 +62,45 @@ void                 gcal_manager_set_search_subscriber          (GcalManager   
 void                 gcal_manager_set_query                      (GcalManager        *self,
                                                                   const gchar        *query);
 
-gchar*               gcal_manager_query_client_data              (GcalManager        *manager,
+gchar*               gcal_manager_query_client_data              (GcalManager        *self,
                                                                   ESource            *source,
                                                                   const gchar        *field);
 
-void                 gcal_manager_refresh                        (GcalManager        *manager);
+void                 gcal_manager_refresh                        (GcalManager        *self);
 
-gboolean             gcal_manager_is_client_writable             (GcalManager        *manager,
+gboolean             gcal_manager_is_client_writable             (GcalManager        *self,
                                                                   ESource            *source);
 
-void                 gcal_manager_create_event                   (GcalManager        *manager,
+void                 gcal_manager_create_event                   (GcalManager        *self,
                                                                   GcalEvent          *event);
 
-void                 gcal_manager_update_event                   (GcalManager           *manager,
+void                 gcal_manager_update_event                   (GcalManager           *self,
                                                                   GcalEvent             *event,
                                                                   GcalRecurrenceModType  mod);
 
-void                 gcal_manager_remove_event                   (GcalManager           *manager,
+void                 gcal_manager_remove_event                   (GcalManager           *self,
                                                                   GcalEvent             *event,
                                                                   GcalRecurrenceModType  mod);
 
-void                 gcal_manager_move_event_to_source           (GcalManager        *manager,
+void                 gcal_manager_move_event_to_source           (GcalManager        *self,
                                                                   GcalEvent          *event,
                                                                   ESource            *dest);
 
-gchar*               gcal_manager_add_source                     (GcalManager        *manager,
+gchar*               gcal_manager_add_source                     (GcalManager        *self,
                                                                   const gchar        *name,
                                                                   const gchar        *backend,
                                                                   const gchar        *color);
 
-void                 gcal_manager_enable_source                  (GcalManager        *manager,
+void                 gcal_manager_enable_source                  (GcalManager        *self,
                                                                   ESource            *source);
 
-void                 gcal_manager_disable_source                 (GcalManager        *manager,
+void                 gcal_manager_disable_source                 (GcalManager        *self,
                                                                   ESource            *source);
 
-void                 gcal_manager_save_source                    (GcalManager        *manager,
+void                 gcal_manager_save_source                    (GcalManager        *self,
                                                                   ESource            *source);
 
-GList*               gcal_manager_get_events                     (GcalManager        *manager,
+GList*               gcal_manager_get_events                     (GcalManager        *self,
                                                                   icaltimetype       *range_start,
                                                                   icaltimetype       *range_end);
 
@@ -110,27 +110,27 @@ gboolean             gcal_manager_get_loading                    (GcalManager   
 GcalClock*           gcal_manager_get_clock                      (GcalManager        *self);
 
 /* Online Accounts */
-GoaClient*           gcal_manager_get_goa_client                 (GcalManager        *manager);
+GoaClient*           gcal_manager_get_goa_client                 (GcalManager        *self);
 
 
 /* GNOME Shell-related functions */
-GcalEvent*           gcal_manager_get_event_from_shell_search    (GcalManager        *manager,
+GcalEvent*           gcal_manager_get_event_from_shell_search    (GcalManager        *self,
                                                                   const gchar        *uuid);
 
 void                 gcal_manager_setup_shell_search             (GcalManager             *self,
                                                                   ECalDataModelSubscriber *subscriber);
 
-void                 gcal_manager_set_shell_search_query         (GcalManager        *manager,
+void                 gcal_manager_set_shell_search_query         (GcalManager        *self,
                                                                   const gchar        *query);
 
-void                 gcal_manager_set_shell_search_subscriber    (GcalManager             *manager,
+void                 gcal_manager_set_shell_search_subscriber    (GcalManager             *self,
                                                                   ECalDataModelSubscriber *subscriber,
                                                                   time_t                   range_start,
                                                                   time_t                   range_end);
 
-gboolean             gcal_manager_shell_search_done              (GcalManager        *manager);
+gboolean             gcal_manager_shell_search_done              (GcalManager        *self);
 
-GList*               gcal_manager_get_shell_search_events        (GcalManager        *manager);
+GList*               gcal_manager_get_shell_search_events        (GcalManager        *self);
 
 
 
