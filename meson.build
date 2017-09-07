@@ -9,25 +9,36 @@ project(
   meson_version: '>= 0.41.0'
 )
 
+
+###########
+# Version #
+###########
+
 calendar_version = meson.project_version()
 version_array = calendar_version.split('.')
 calendar_major_version = version_array[0].to_int()
 calendar_minor_version = version_array[1].to_int()
 calendar_micro_version = version_array[2].to_int()
 
+
+#################
+# Default paths #
+#################
+
 calendar_prefix = get_option('prefix')
 calendar_bindir = join_paths(calendar_prefix, get_option('bindir'))
 calendar_localedir = join_paths(calendar_prefix, get_option('localedir'))
 calendar_datadir = join_paths(calendar_prefix, get_option('datadir'))
-
 calendar_pkgdatadir = join_paths(calendar_datadir, meson.project_name())
-
 calendar_schemadir = join_paths(calendar_datadir, 'glib-2.0', 'schemas')
 
+
+###########
+# Options #
+###########
+
 calendar_buildtype = get_option('buildtype')
-
 calendar_debug = calendar_minor_version.is_odd() or buildtype.contains('debug')
-
 enable_tracing = get_option('enable-tracing')
 enable_gtk_doc = get_option('enable-gtk-doc')
 
@@ -146,7 +157,10 @@ endif
 
 add_project_arguments(common_flags, language: 'c')
 
-# dependencies
+
+################
+# Dependencies #
+################
 libical_dep = dependency('libical', version: '>= 1.0')
 config_h.set('HAVE_LIBICAL', libical_dep.found())
 
@@ -184,6 +198,11 @@ top_inc = include_directories('.')
 
 data_dir = join_paths(meson.source_root(), 'data')
 po_dir = join_paths(meson.source_root(), 'po')
+
+
+###########
+# Subdirs #
+###########
 
 subdir('data')
 subdir('src')
