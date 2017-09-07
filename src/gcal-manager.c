@@ -483,6 +483,7 @@ on_event_created (GObject      *source_object,
     }
   else
     {
+      g_object_ref (data->event);
       gcal_manager_set_default_source (data->manager, gcal_event_get_source (data->event));
       g_debug ("Event: %s created successfully", new_uid);
     }
@@ -540,11 +541,13 @@ on_event_removed (GObject      *source_object,
                   gpointer      user_data)
 {
   ECalClient *client;
+  GcalEvent *event;
   GError *error;
 
   GCAL_ENTRY;
 
   client = E_CAL_CLIENT (source_object);
+  event = user_data;
   error = NULL;
 
   e_cal_client_remove_object_finish (client, result, &error);
@@ -554,9 +557,10 @@ on_event_removed (GObject      *source_object,
       /* FIXME: Notify the user somehow */
       g_warning ("Error removing event: %s", error->message);
       g_error_free (error);
+      GCAL_RETURN ();
     }
 
-  g_object_unref (user_data);
+  g_object_unref (event);
 
   GCAL_EXIT;
 }
@@ -1828,20 +1832,13 @@ gcal_manager_remove_event (GcalManager           *manager,
   if (gcal_event_has_recurrence (event))
     rid = e_cal_component_get_recurid_as_string (component);
 
-  /*
-   * While we're removing the event, we don't want the component
-   * to be destroyed, so take a reference of the component while
-   * we're deleting it.
-   */
-  g_object_ref (component);
-
   e_cal_client_remove_object (unit->client,
                               uid,
                               mod == GCAL_RECURRENCE_MOD_ALL ? NULL : rid,
                               (ECalObjModType) mod,
                               manager->async_ops,
                               on_event_removed,
-                              component);
+                              event);
 
   g_free (rid);
 

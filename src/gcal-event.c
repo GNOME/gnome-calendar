@@ -18,6 +18,7 @@
 
 #define G_LOG_DOMAIN "GcalEvent"
 
+#include "gconstructor.h"
 #include "gcal-event.h"
 #include "gcal-utils.h"
 #include "gcal-recurrence.h"
@@ -133,6 +134,33 @@ enum {
   PROP_RECURRENCE,
   N_PROPS
 };
+
+
+/*
+ * GcalEvent cache
+ */
+
+static GHashTable *event_cache = NULL;
+
+G_DEFINE_CONSTRUCTOR (init_event_cache_map);
+
+static void
+init_event_cache_map (void)
+{
+  event_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, g_object_unref);
+}
+
+G_DEFINE_DESTRUCTOR (destroy_event_cache_map);
+
+static void
+destroy_event_cache_map (void)
+{
+  g_hash_table_destroy (event_cache);
+}
+
+/*
+ * Auxiliary methods
+ */
 
 static GTimeZone*
 get_timezone_from_ical (ECalComponentDateTime *comp)
@@ -427,6 +455,10 @@ static void
 gcal_event_finalize (GObject *object)
 {
   GcalEvent *self = (GcalEvent *)object;
+
+  g_debug ("Removing '%s' (%p) from cache", self->uid, self);
+
+  g_hash_table_remove (event_cache, self->uid);
 
   g_clear_pointer (&self->dt_start, g_date_time_unref);
   g_clear_pointer (&self->dt_end, g_date_time_unref);
@@ -791,12 +823,36 @@ gcal_event_new (ESource        *source,
                 ECalComponent  *component,
                 GError        **error)
 {
-  return g_initable_new (GCAL_TYPE_EVENT,
-                         NULL,
-                         error,
-                         "source", source,
-                         "component", component,
-                         NULL);
+  GcalEvent *event;
+  g_autofree gchar *uuid;
+
+  uuid = get_uuid_from_component (source, component);
+
+  if (g_hash_table_contains (event_cache, uuid))
+    {
+      g_debug ("Using cached value for %s", uuid);
+
+      event = g_hash_table_lookup (event_cache, uuid);
+      gcal_event_set_component_internal (event, component);
+      g_object_ref (event);
+    }
+  else
+    {
+      event = g_initable_new (GCAL_TYPE_EVENT,
+                              NULL,
+                              error,
+                              "source", source,
+                              "component", component,
+                              NULL);
+
+      if (event)
+        {
+          g_debug ("Adding %s to the cache", event->uid);
+          g_hash_table_insert (event_cache, event->uid, event);
+        }
+    }
+
+  return event;
 }
 
 /**
