@@ -6,7 +6,7 @@ project(
     'buildtype=debugoptimized',
     'warning_level=1'
   ],
-  meson_version: '>= 0.41.0'
+  meson_version: '>= 0.42.0'
 )
 
 

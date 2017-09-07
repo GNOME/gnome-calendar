@@ -143,14 +143,18 @@ all:
 install:
 	DESTDIR="\$(DESTDIR)" ${NINJA} ${NINJA_OPT} install
 
+uninstall:
+	DESTDIR="\$(DESTDIR)" ${NINJA} ${NINJA_OPT} uninstall
+
 check:
-	${MESONTEST} ${NINJA_OPT}
+	${MESON} test ${NINJA_OPT}
 
 dist:
 	${NINJA} ${NINJA_OPT} dist
 
 distcheck:
-	${MESONTEST} ${NINJA_OPT}; ${NINJA} ${NINJA_OPT} dist
+	${MESON} test ${NINJA_OPT}; ${NINJA} ${NINJA_OPT} dist
+
 END
 
 cmd_options=""
