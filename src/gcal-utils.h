@@ -152,7 +152,7 @@ gboolean        should_change_date_for_scroll                   (gdouble        
 gboolean        is_source_enabled                               (ESource               *source);
 
 gboolean        ask_recurrence_modification_type                (GtkWidget             *parent,
-                                                                 ECalObjModType        *modtype,
+                                                                 GcalRecurrenceModType *modtype,
                                                                  ESource               *source);
 
 gboolean        is_workday                                      (guint	                day);

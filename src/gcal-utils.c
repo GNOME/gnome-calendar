@@ -1169,7 +1169,7 @@ is_source_enabled (ESource *source)
  */
 gboolean
 ask_recurrence_modification_type (GtkWidget      *parent,
-                                  ECalObjModType *modtype,
+                                  GcalRecurrenceModType *modtype,
                                   ESource        *source)
 {
   GtkWidget *dialog;
@@ -1179,7 +1179,7 @@ ask_recurrence_modification_type (GtkWidget      *parent,
   EClient *client;
 
   flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
-  *modtype = E_CAL_OBJ_MOD_THIS;
+  *modtype = GCAL_RECURRENCE_MOD_THIS_ONLY;
 
   dialog = gtk_message_dialog_new (GTK_WINDOW (gtk_widget_get_toplevel (parent)),
                                    flags,
@@ -1211,15 +1211,15 @@ ask_recurrence_modification_type (GtkWidget      *parent,
         is_set = FALSE;
         break;
       case GTK_RESPONSE_ACCEPT:
-        *modtype = E_CAL_OBJ_MOD_THIS;
+        *modtype = GCAL_RECURRENCE_MOD_THIS_ONLY;
         is_set = TRUE;
         break;
       case GTK_RESPONSE_OK:
-        *modtype = E_CAL_OBJ_MOD_THIS_AND_FUTURE;
+        *modtype = GCAL_RECURRENCE_MOD_THIS_AND_FUTURE;
         is_set = TRUE;
         break;
       case GTK_RESPONSE_YES:
-        *modtype = E_CAL_OBJ_MOD_ALL;
+        *modtype = GCAL_RECURRENCE_MOD_ALL;
         is_set = TRUE;
         break;
       default:

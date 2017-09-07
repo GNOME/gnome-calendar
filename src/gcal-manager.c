@@ -1750,14 +1750,14 @@ gcal_manager_create_event (GcalManager *manager,
  * gcal_manager_update_event:
  * @manager: a #GcalManager
  * @event: a #GcalEvent
- * @mod: an #ECalObjModType
+ * @mod: an #GcalRecurrenceModType
  *
  * Saves all changes made to @event persistently.
  */
 void
-gcal_manager_update_event (GcalManager    *manager,
-                           GcalEvent      *event,
-                           ECalObjModType  mod)
+gcal_manager_update_event (GcalManager           *manager,
+                           GcalEvent             *event,
+                           GcalRecurrenceModType  mod)
 {
   GcalManagerUnit *unit;
   ECalComponent *component;
@@ -1776,7 +1776,7 @@ gcal_manager_update_event (GcalManager    *manager,
    * the rid to NULL when modifying a recurrent event with MOD_ALL
    * modtype.
    */
-  if (mod == E_CAL_OBJ_MOD_ALL)
+  if (mod == GCAL_RECURRENCE_MOD_ALL)
     e_cal_component_set_recurid (component, NULL);
 
   /*
@@ -1788,7 +1788,7 @@ gcal_manager_update_event (GcalManager    *manager,
 
   e_cal_client_modify_object (unit->client,
                               e_cal_component_get_icalcomponent (component),
-                              mod,
+                              (ECalObjModType) mod,
                               NULL,
                               on_event_updated,
                               component);
@@ -1800,14 +1800,14 @@ gcal_manager_update_event (GcalManager    *manager,
  * gcal_manager_remove_event:
  * @manager: a #GcalManager
  * @event: a #GcalEvent
- * @mod: an #ECalObjModType
+ * @mod: an #GcalRecurrenceModType
  *
  * Deletes @event.
  */
 void
-gcal_manager_remove_event (GcalManager    *manager,
-                           GcalEvent      *event,
-                           ECalObjModType  mod)
+gcal_manager_remove_event (GcalManager           *manager,
+                           GcalEvent             *event,
+                           GcalRecurrenceModType  mod)
 {
   GcalManagerUnit *unit;
   ECalComponent *component;
@@ -1837,8 +1837,8 @@ gcal_manager_remove_event (GcalManager    *manager,
 
   e_cal_client_remove_object (unit->client,
                               uid,
-                              mod == E_CAL_OBJ_MOD_ALL ? NULL : rid,
-                              mod,
+                              mod == GCAL_RECURRENCE_MOD_ALL ? NULL : rid,
+                              (ECalObjModType) mod,
                               manager->async_ops,
                               on_event_removed,
                               component);

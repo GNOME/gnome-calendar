@@ -1488,8 +1488,8 @@ navigator_drag_drop_cb (GcalYearView   *self,
 
       if (!is_title)
         {
+          GcalRecurrenceModType mod;
           GcalEventWidget *event_widget;
-          ECalObjModType mod;
           GcalEvent *event;
           GDateTime *start_dt, *end_dt;
           GDateTime *drop_date;
@@ -1498,7 +1498,7 @@ navigator_drag_drop_cb (GcalYearView   *self,
           event_widget = GCAL_EVENT_WIDGET (gtk_drag_get_source_widget (context));
           event = gcal_event_widget_get_event (event_widget);
           source = gcal_event_get_source (event);
-          mod = E_CAL_OBJ_MOD_THIS;
+          mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
 
           if (gcal_event_has_recurrence (event) &&
               !ask_recurrence_modification_type (GTK_WIDGET (self), &mod, source))

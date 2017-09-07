@@ -149,8 +149,8 @@ struct _GcalWindow
 
   NewEventData        *event_creation_data;
 
-  GcalEvent           *event_to_delete;
-  ECalObjModType       event_to_delete_mod;
+  GcalEvent             *event_to_delete;
+  GcalRecurrenceModType  event_to_delete_mod;
 
   /* calendar management */
   GtkWidget           *calendar_popover;
@@ -1081,12 +1081,12 @@ edit_dialog_closed (GtkDialog *dialog,
                     gint       response,
                     gpointer   user_data)
 {
+  GcalRecurrenceModType mod;
   GcalWindow *window;
   GcalEditDialog *edit_dialog;
   GcalEvent *event;
   GcalView *view;
   GList *widgets;
-  ECalObjModType mod;
   ESource *source;
 
   GCAL_ENTRY;
@@ -1095,7 +1095,7 @@ edit_dialog_closed (GtkDialog *dialog,
   edit_dialog = GCAL_EDIT_DIALOG (dialog);
   event = gcal_edit_dialog_get_event (edit_dialog);
   view = GCAL_VIEW (window->views[window->active_view]);
-  mod = E_CAL_OBJ_MOD_THIS;
+  mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
   source = gcal_event_get_source (event);
 
   if (!gcal_edit_dialog_get_recurrence_changed (edit_dialog) &&

@@ -47,6 +47,13 @@ typedef enum
   GCAL_RECURRENCE_UNTIL
 } GcalRecurrenceLimitType;
 
+typedef enum
+{
+  GCAL_RECURRENCE_MOD_THIS_ONLY       = E_CAL_OBJ_MOD_THIS,
+  GCAL_RECURRENCE_MOD_THIS_AND_FUTURE = E_CAL_OBJ_MOD_THIS_AND_FUTURE,
+  GCAL_RECURRENCE_MOD_ALL             = E_CAL_OBJ_MOD_ALL,
+} GcalRecurrenceModType;
+
 struct _GcalRecurrence
 {
   gint                     ref_count;

@@ -774,11 +774,11 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
                            guint           time)
 {
   GcalSubscriberViewPrivate *ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
+  GcalRecurrenceModType mod;
   GcalMonthView *self = GCAL_MONTH_VIEW (widget);
   GtkWidget *event_widget;
   GDateTime *start_dt, *end_dt, *current_dt;
   GcalEvent *event;
-  ECalObjModType mod;
   ESource *source;
   gint cell, diff;
   gint start_month, current_month;
@@ -787,7 +787,7 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
 
   cell = get_dnd_cell (widget, x, y);
   event_widget = gtk_drag_get_source_widget (context);
-  mod = E_CAL_OBJ_MOD_THIS;
+  mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
 
   if (!GCAL_IS_EVENT_WIDGET (event_widget))
     return FALSE;

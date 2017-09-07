@@ -74,13 +74,13 @@ gboolean             gcal_manager_is_client_writable             (GcalManager   
 void                 gcal_manager_create_event                   (GcalManager        *manager,
                                                                   GcalEvent          *event);
 
-void                 gcal_manager_update_event                   (GcalManager        *manager,
-                                                                  GcalEvent          *event,
-                                                                  ECalObjModType      mod);
+void                 gcal_manager_update_event                   (GcalManager           *manager,
+                                                                  GcalEvent             *event,
+                                                                  GcalRecurrenceModType  mod);
 
-void                 gcal_manager_remove_event                   (GcalManager        *manager,
-                                                                  GcalEvent          *event,
-                                                                  ECalObjModType      mod);
+void                 gcal_manager_remove_event                   (GcalManager           *manager,
+                                                                  GcalEvent             *event,
+                                                                  GcalRecurrenceModType  mod);
 
 void                 gcal_manager_move_event_to_source           (GcalManager        *manager,
                                                                   GcalEvent          *event,
