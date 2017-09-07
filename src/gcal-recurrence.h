@@ -49,12 +49,15 @@ typedef enum
 
 struct _GcalRecurrence
 {
+  gint                     ref_count;
+
   GcalRecurrenceFrequency  frequency;
   GcalRecurrenceLimitType  limit_type;
 
-  struct {
-    GDateTime *until; 
-    guint count; 
+  struct
+  {
+    GDateTime *until;
+    guint count;
   } limit;
 
 };
@@ -63,16 +66,21 @@ GType                gcal_recurrence_get_type                    (void) G_GNUC_C
 
 GcalRecurrence*      gcal_recurrence_new                         (void);
 
-GcalRecurrence*      gcal_recurrence_copy                        (GcalRecurrence *recur);
+GcalRecurrence*      gcal_recurrence_copy                        (GcalRecurrence     *recur);
 
-void                 gcal_recurrence_free                        (GcalRecurrence *recur);
 
-gboolean             gcal_recurrence_is_equal                    (GcalRecurrence *recur1,
-                                                                  GcalRecurrence *recur2);
+GcalRecurrence*      gcal_recurrence_ref                         (GcalRecurrence     *self);
 
-GcalRecurrence*      gcal_recurrence_parse_recurrence_rules      (ECalComponent *comp);
+void                 gcal_recurrence_unref                       (GcalRecurrence     *self);
 
-struct icalrecurrencetype*    gcal_recurrence_to_rrule           (GcalRecurrence *recur);
+gboolean             gcal_recurrence_is_equal                    (GcalRecurrence     *recur1,
+                                                                  GcalRecurrence     *recur2);
+
+GcalRecurrence*      gcal_recurrence_parse_recurrence_rules      (ECalComponent      *comp);
+
+struct icalrecurrencetype* gcal_recurrence_to_rrule              (GcalRecurrence     *recur);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalRecurrence, gcal_recurrence_unref)
 
 G_END_DECLS
 

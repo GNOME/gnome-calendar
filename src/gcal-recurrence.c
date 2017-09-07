@@ -23,7 +23,17 @@
 
 #include <glib.h>
 
-G_DEFINE_BOXED_TYPE (GcalRecurrence, gcal_recurrence, gcal_recurrence_copy, gcal_recurrence_free)
+G_DEFINE_BOXED_TYPE (GcalRecurrence, gcal_recurrence, gcal_recurrence_ref, gcal_recurrence_unref)
+
+static void
+gcal_recurrence_free (GcalRecurrence *self)
+{
+  g_assert (self);
+  g_assert_cmpint (self->ref_count, ==, 0);
+
+  gcal_clear_datetime (&self->limit.until);
+  g_slice_free (GcalRecurrence, self);
+}
 
 /**
  * gcal_recurrence_new:
@@ -44,6 +54,8 @@ gcal_recurrence_new (void)
 
   new_recur->limit.until = NULL;
   new_recur->limit.count = 0;
+
+  new_recur->ref_count = 1;
 
   return new_recur;
 }
@@ -76,17 +88,25 @@ gcal_recurrence_copy (GcalRecurrence *recur)
   return new_recur;
 }
 
-/**
- * gcal_recurrence_free:
- * @recur: a #GcalRecurrence.
- *
- * Frees @recur
- */
-void
-gcal_recurrence_free (GcalRecurrence *recur)
+GcalRecurrence *
+gcal_recurrence_ref (GcalRecurrence *self)
 {
-  gcal_clear_datetime (&recur->limit.until);
-  g_slice_free (GcalRecurrence, recur);
+  g_return_val_if_fail (self, NULL);
+  g_return_val_if_fail (self->ref_count, NULL);
+
+  g_atomic_int_inc (&self->ref_count);
+
+  return self;
+}
+
+void
+gcal_recurrence_unref (GcalRecurrence *self)
+{
+  g_return_if_fail (self);
+  g_return_if_fail (self->ref_count);
+
+  if (g_atomic_int_dec_and_test (&self->ref_count))
+    gcal_recurrence_free (self);
 }
 
 /**

@@ -521,7 +521,7 @@ action_button_clicked (GtkWidget *widget,
               dialog->recurrence_changed = TRUE;
             }
 
-          g_clear_pointer (&recur, gcal_recurrence_free);
+          g_clear_pointer (&recur, gcal_recurrence_unref);
         }
       else
         {

@@ -437,7 +437,7 @@ gcal_event_finalize (GObject *object)
   g_clear_pointer (&self->color, gdk_rgba_free);
   g_clear_object (&self->component);
   g_clear_object (&self->source);
-  g_clear_pointer (&self->recurrence, gcal_recurrence_free);
+  g_clear_pointer (&self->recurrence, gcal_recurrence_unref);
 
   G_OBJECT_CLASS (gcal_event_parent_class)->finalize (object);
 }
@@ -1651,7 +1651,7 @@ gcal_event_set_recurrence (GcalEvent      *self,
   comp = gcal_event_get_component (self);
   icalcomp = e_cal_component_get_icalcomponent (comp);
 
-  g_clear_pointer (&self->recurrence, gcal_recurrence_free);
+  g_clear_pointer (&self->recurrence, gcal_recurrence_unref);
   self->recurrence = gcal_recurrence_copy (recur);
 
   prop = icalcomponent_get_first_property (icalcomp, ICAL_RRULE_PROPERTY);
