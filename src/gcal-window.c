@@ -1355,6 +1355,11 @@ gcal_window_set_property (GObject      *object,
     case PROP_MANAGER:
       if (g_set_object (&self->manager, g_value_get_object (value)))
         {
+          g_settings_bind (gcal_manager_get_settings (self->manager),
+                           "active-view",
+                           self,
+                           "active-view",
+                           G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
 
           if (!gcal_manager_get_loading (self->manager))
             {
@@ -1669,20 +1674,17 @@ gcal_window_init (GcalWindow *self)
 
 /* Public API */
 /**
- * gcal_window_new_with_view_and_date:
+ * gcal_window_new_with_date:
  * @app: a #GcalApplication
- * @view_type: a #GcalWindowViewType
  * @date: the active date
  *
- * Creates a #GcalWindow, positions it at @date and shows
- * @view_type view by default.
+ * Creates a #GcalWindow, positions it at @date.
  *
  * Returns: (transfer full): a #GcalWindow
  */
 GtkWidget*
-gcal_window_new_with_view_and_date (GcalApplication    *app,
-                                    GcalWindowViewType  view_type,
-                                    icaltimetype       *date)
+gcal_window_new_with_date (GcalApplication *app,
+                           icaltimetype    *date)
 {
   GcalManager *manager;
   GcalWindow *win;
@@ -1696,9 +1698,6 @@ gcal_window_new_with_view_and_date (GcalApplication    *app,
 
   /* loading size */
   load_geometry (win);
-
-  if (view_type == GCAL_WINDOW_VIEW_DAY)
-    view_changed (NULL, NULL, win);
 
   return GTK_WIDGET (win);
 }

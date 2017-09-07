@@ -180,12 +180,10 @@ static void
 gcal_application_activate (GApplication *application)
 {
   GcalApplication *self;
-  GSettings *settings;
 
   GCAL_ENTRY;
 
   self = GCAL_APPLICATION (application);
-  settings = gcal_manager_get_settings (self->manager);
 
   if (!self->provider)
     {
@@ -215,18 +213,8 @@ gcal_application_activate (GApplication *application)
                                                          gcal_manager_get_system_timezone (self->manager));
         }
 
-      self->window = gcal_window_new_with_view_and_date (GCAL_APPLICATION (application),
-                                                         g_settings_get_enum (settings, "active-view"),
-                                                         self->initial_date);
-
-      g_signal_connect (self->window, "destroy", G_CALLBACK (gtk_widget_destroyed), &(self->window));
-
-      g_settings_bind (settings,
-                       "active-view",
-                       self->window,
-                       "active-view",
-                       G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
-
+      self->window = gcal_window_new_with_date (GCAL_APPLICATION (application), self->initial_date);
+      g_signal_connect (self->window, "destroy", G_CALLBACK (gtk_widget_destroyed), &self->window);
       gtk_widget_show (self->window);
     }
 
