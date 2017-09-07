@@ -21,7 +21,6 @@
 
 #include "gcal-manager.h"
 #include "gcal-event-widget.h"
-#include "gcal-subscriber-view.h"
 
 #include <gtk/gtk.h>
 

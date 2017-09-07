@@ -21,13 +21,12 @@
 #define __GCAL_MONTH_VIEW_H__
 
 #include "gcal-manager.h"
-#include "gcal-subscriber-view.h"
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_MONTH_VIEW  (gcal_month_view_get_type ())
 
-G_DECLARE_FINAL_TYPE (GcalMonthView, gcal_month_view, GCAL, MONTH_VIEW, GcalSubscriberView)
+G_DECLARE_FINAL_TYPE (GcalMonthView, gcal_month_view, GCAL, MONTH_VIEW, GtkContainer)
 
 void                 gcal_month_view_set_first_weekday           (GcalMonthView      *self,
                                                                   gint                day_nr);

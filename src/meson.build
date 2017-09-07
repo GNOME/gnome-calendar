@@ -41,7 +41,6 @@ sources = files(
   'gcal-search-view.c',
   'gcal-shell-search-provider.c',
   'gcal-source-dialog.c',
-  'gcal-subscriber-view.c',
   'gcal-time-selector.c',
   'gcal-utils.c',
   'gcal-window.c',

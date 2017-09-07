@@ -24,9 +24,10 @@
 
 #define G_LOG_DOMAIN "GcalMonthView"
 
+#include "e-cal-data-model-subscriber.h"
+
 #include "gcal-debug.h"
 #include "gcal-month-view.h"
-#include "gcal-subscriber-view-private.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
 
@@ -38,7 +39,7 @@
 
 struct _GcalMonthView
 {
-  GcalSubscriberView parent;
+  GtkContainer    parent;
 
   GtkWidget      *overflow_popover;
   GtkWidget      *events_list_box;
@@ -47,8 +48,40 @@ struct _GcalMonthView
   GdkWindow      *event_window;
 
   /*
-   * the cell on which its drawn the first day of the month, in the first row, 0 for the first cell, 1 for the second,
-   * and so on, this takes first_weekday into account already.
+   * Hash to keep children widgets (all of them, parent widgets and its parts if there's any),
+   * uuid as key and a list of all the instances of the event as value. Here, the first widget
+   * on the list is the master, and the rest are the parts. Note: the master is a part itself.
+   */
+  GHashTable     *children;
+
+  /*
+   * Hash containig single-cell events, day of the month, on month-view, month of the year on
+   * year-view as key anda list of the events that belongs to this cell
+   */
+  GHashTable     *single_cell_children;
+
+  /*
+   * A sorted list containig multiday events. This one contains only parents events, to find out
+   * its parts @children will be used.
+   */
+  GList          *multi_cell_children;
+
+  /*
+   * Hash containing cells that who has overflow per list of hidden widgets.
+   */
+  GHashTable     *overflow_cells;
+
+  /*
+   * Set containing the master widgets hidden for delete;
+   */
+  GHashTable     *hidden_as_overflow;
+
+  /* state flags */
+  gboolean        children_changed;
+
+  /*
+   * the cell on which its drawn the first day of the month, in the first row, 0 for the first
+   * cell, 1 for the second, and so on, this takes first_weekday into account already.
    */
   gint            days_delay;
 
@@ -63,13 +96,13 @@ struct _GcalMonthView
   gint            first_weekday;
 
   /*
-   * The start & end dates of the selection. We use datetimes to allow the user to navigate between months using
-   * the keyboard.
+   * The start & end dates of the selection. We use datetimes to allow the user to navigate between
+   * months using the keyboard.
    */
   GDateTime      *start_mark_cell;
   GDateTime      *end_mark_cell;
 
-  /**
+  /*
    * This flags signals when the cursor is over an overflow indicator and when once has been clicked
    */
   gint            pressed_overflow_indicator;
@@ -96,10 +129,14 @@ struct _GcalMonthView
 
 #define MIRROR(val,start,end) (start + (val / end) * end + (end - val % end))
 
-static void           gcal_view_interface_init              (GcalViewInterface *iface);
+static void          gcal_view_interface_init                    (GcalViewInterface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view, GCAL_TYPE_SUBSCRIBER_VIEW,
-                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init));
+static void          e_data_model_subscriber_interface_init      (ECalDataModelSubscriberInterface *iface);
+
+G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view, GTK_TYPE_CONTAINER,
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
+                         G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
+                                                e_data_model_subscriber_interface_init));
 
 enum
 {
@@ -108,6 +145,14 @@ enum
   PROP_MANAGER,
   N_PROPS
 };
+
+enum
+{
+  EVENT_ACTIVATED,
+  NUM_SIGNALS
+};
+
+static guint signals[NUM_SIGNALS] = { 0, };
 
 static inline gint
 real_cell (gint     cell,
@@ -124,6 +169,38 @@ cancel_selection (GcalMonthView *self)
 {
   g_clear_pointer (&self->start_mark_cell, g_date_time_unref);
   g_clear_pointer (&self->end_mark_cell, g_date_time_unref);
+}
+
+static void
+event_activated (GcalEventWidget *widget,
+                 GcalMonthView   *self)
+{
+  cancel_selection (self);
+
+  self->pressed_overflow_indicator = -1;
+
+  gtk_widget_hide (self->overflow_popover);
+
+  g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
+}
+
+static void
+event_visibility_changed (GtkWidget     *widget,
+                          GcalMonthView *self)
+{
+  self->children_changed = TRUE;
+}
+
+static void
+setup_child_widget (GcalMonthView *self,
+                    GtkWidget     *widget)
+{
+  if (!gtk_widget_get_parent (widget))
+    gtk_widget_set_parent (widget, GTK_WIDGET (self));
+
+  g_signal_connect (widget, "activate", G_CALLBACK (event_activated), self);
+  g_signal_connect (widget, "hide", G_CALLBACK (event_visibility_changed), self);
+  g_signal_connect (widget, "show", G_CALLBACK (event_visibility_changed), self);
 }
 
 static gdouble
@@ -203,26 +280,18 @@ static void
 rebuild_popover_for_day (GcalMonthView *self,
                          GDateTime     *day)
 {
-  GcalSubscriberViewPrivate *ppriv;
-  GList *l;
-  GtkWidget *child_widget;
-  GdkRectangle rect;
-
-  gchar *label_title;
-  /* placement helpers */
-  gdouble start_grid_y, cell_width, cell_height;
-
-  gint shown_rows;
-  gint real_clicked_popover_cell;
-
-  GtkStyleContext *context;
-  GtkStateFlags state;
-
   PangoLayout *overflow_layout;
   PangoFontDescription *ofont_desc;
+  GtkStyleContext *context;
+  GtkStateFlags state;
+  GdkRectangle rect;
+  GtkWidget *child_widget;
+  GList *l;
+  gdouble start_grid_y, cell_width, cell_height;
+  gchar *label_title;
+  gint shown_rows;
+  gint real_clicked_popover_cell;
   gint font_height, padding_bottom;
-
-  ppriv = GCAL_SUBSCRIBER_VIEW (self)->priv;
 
   label_title = g_date_time_format (day, _("%B %d"));
   gtk_label_set_text (GTK_LABEL (self->popover_title), label_title);
@@ -231,7 +300,7 @@ rebuild_popover_for_day (GcalMonthView *self,
   /* Clean all the widgets */
   gtk_container_foreach (GTK_CONTAINER (self->events_list_box), (GtkCallback) gtk_widget_destroy, NULL);
 
-  l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (self->pressed_overflow_indicator));
+  l = g_hash_table_lookup (self->overflow_cells, GINT_TO_POINTER (self->pressed_overflow_indicator));
 
   /* Setup the start & end dates of the events as the begin & end of day */
   if (l)
@@ -266,7 +335,7 @@ rebuild_popover_for_day (GcalMonthView *self,
           gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (cloned_event), dt_end);
 
           gtk_container_add (GTK_CONTAINER (self->events_list_box), cloned_event);
-          _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (self), cloned_event);
+          setup_child_widget (self, cloned_event);
 
           g_clear_pointer (&current_date, g_date_time_unref);
           g_clear_pointer (&dt_start, g_date_time_unref);
@@ -333,12 +402,10 @@ show_popover_for_position (GcalMonthView *self,
                            gdouble        y,
                            gboolean       on_indicator)
 {
-  GcalSubscriberViewPrivate *ppriv;
   GtkWidget *widget;
   GDateTime *end_dt,*start_dt;
 
   widget = GTK_WIDGET (self);
-  ppriv = GCAL_SUBSCRIBER_VIEW (self)->priv;
   start_dt = self->start_mark_cell;
   end_dt = self->end_mark_cell;
 
@@ -347,7 +414,7 @@ show_popover_for_position (GcalMonthView *self,
 
   if (self->pressed_overflow_indicator != -1 &&
       g_date_time_equal (start_dt, end_dt) &&
-      g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (self->pressed_overflow_indicator)))
+      g_hash_table_contains (self->overflow_cells, GINT_TO_POINTER (self->pressed_overflow_indicator)))
     {
       self->hovered_overflow_indicator = self->pressed_overflow_indicator;
 
@@ -775,7 +842,6 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
                            gint            y,
                            guint           time)
 {
-  GcalSubscriberViewPrivate *ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
   GcalRecurrenceModType mod;
   GcalMonthView *self = GCAL_MONTH_VIEW (widget);
   GtkWidget *event_widget;
@@ -847,7 +913,7 @@ gcal_month_view_drag_drop (GtkWidget      *widget,
 
       g_clear_pointer (&new_start, g_date_time_unref);
 
-      ppriv->children_changed = TRUE;
+      self->children_changed = TRUE;
     }
 
   g_clear_pointer (&start_dt, g_date_time_unref);
@@ -943,13 +1009,11 @@ static void
 gcal_month_view_set_date (GcalView     *view,
                           icaltimetype *date)
 {
-  GcalSubscriberViewPrivate *ppriv;
   GcalMonthView *self;
 
   GCAL_ENTRY;
 
   self = GCAL_MONTH_VIEW (view);
-  ppriv = GCAL_SUBSCRIBER_VIEW (view)->priv;
 
   g_clear_pointer (&self->date, g_free);
 
@@ -959,7 +1023,7 @@ gcal_month_view_set_date (GcalView     *view,
 
   GCAL_TRACE_MSG ("new date: %s", icaltime_as_ical_string (*date));
 
-  ppriv->children_changed = TRUE;
+  self->children_changed = TRUE;
   gtk_widget_queue_resize (GTK_WIDGET (view));
 
   GCAL_EXIT;
@@ -978,14 +1042,15 @@ gcal_month_view_get_children_by_uuid (GcalView              *view,
                                       GcalRecurrenceModType  mod,
                                       const gchar           *uuid)
 {
-  GcalSubscriberViewPrivate *ppriv = GCAL_SUBSCRIBER_VIEW (view)->priv;
   GHashTableIter iter;
+  GcalMonthView *self;
   GList *children;
   GList *tmp;
 
+  self = GCAL_MONTH_VIEW (view);
   children = NULL;
 
-  g_hash_table_iter_init (&iter, ppriv->children);
+  g_hash_table_iter_init (&iter, self->children);
 
   while (g_hash_table_iter_next (&iter, NULL, (gpointer *) &tmp))
     children = g_list_concat (children, g_list_copy (tmp));
@@ -1001,6 +1066,351 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->clear_marks = gcal_month_view_clear_marks;
   iface->get_children_by_uuid = gcal_month_view_get_children_by_uuid;
 }
+
+/*
+ * ECalDataModelSubscriber interface
+ */
+
+static void
+gcal_month_view_component_added (ECalDataModelSubscriber *subscriber,
+                                 ECalClient              *client,
+                                 ECalComponent           *comp)
+{
+  GtkWidget *event_widget;
+  GcalEvent *event;
+  GError *error;
+
+  error = NULL;
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+
+  if (error)
+    {
+      g_message ("Error creating event: %s", error->message);
+      g_clear_error (&error);
+      return;
+    }
+
+  event_widget = gcal_event_widget_new (event);
+  gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event_widget), e_client_is_readonly (E_CLIENT (client)));
+
+  gtk_widget_show (event_widget);
+  gtk_container_add (GTK_CONTAINER (subscriber), event_widget);
+
+  g_clear_object (&event);
+}
+
+static void
+gcal_month_view_component_modified (ECalDataModelSubscriber *subscriber,
+                                    ECalClient              *client,
+                                    ECalComponent           *comp)
+{
+  GcalMonthView *self;
+  GList *l;
+  GtkWidget *new_widget;
+  GcalEvent *event;
+  GError *error;
+
+  error = NULL;
+  self = GCAL_MONTH_VIEW (subscriber);
+  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+
+  if (error)
+    {
+      g_message ("Error creating event: %s", error->message);
+      g_clear_error (&error);
+      return;
+    }
+
+  new_widget = gcal_event_widget_new (event);
+
+  l = g_hash_table_lookup (self->children, gcal_event_get_uid (event));
+
+  if (l != NULL)
+    {
+      gtk_widget_destroy (l->data);
+
+      gtk_widget_show (new_widget);
+      gtk_container_add (GTK_CONTAINER (subscriber), new_widget);
+    }
+  else
+    {
+      g_warning ("%s: Widget with uuid: %s not found in view: %s",
+                 G_STRFUNC, gcal_event_get_uid (event),
+                 gtk_widget_get_name (GTK_WIDGET (subscriber)));
+      gtk_widget_destroy (new_widget);
+    }
+
+  g_clear_object (&event);
+}
+
+static void
+gcal_month_view_component_removed (ECalDataModelSubscriber *subscriber,
+                                   ECalClient              *client,
+                                   const gchar             *uid,
+                                   const gchar             *rid)
+{
+  GcalMonthView *self;
+  const gchar *sid;
+  gchar *uuid;
+  GList *l;
+
+  self = GCAL_MONTH_VIEW (subscriber);
+  sid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
+
+  if (rid != NULL)
+    uuid = g_strdup_printf ("%s:%s:%s", sid, uid, rid);
+  else
+    uuid = g_strdup_printf ("%s:%s", sid, uid);
+
+  l = g_hash_table_lookup (self->children, uuid);
+  if (l != NULL)
+    {
+      gtk_widget_destroy (l->data);
+    }
+  else
+    {
+      g_warning ("%s: Widget with uuid: %s not found in view: %s",
+                 G_STRFUNC, uuid, gtk_widget_get_name (GTK_WIDGET (subscriber)));
+    }
+
+  g_free (uuid);
+}
+
+static void
+gcal_month_view_freeze (ECalDataModelSubscriber *subscriber)
+{
+}
+
+static void
+gcal_month_view_thaw (ECalDataModelSubscriber *subscriber)
+{
+}
+
+
+static void
+e_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
+{
+  iface->component_added = gcal_month_view_component_added;
+  iface->component_modified = gcal_month_view_component_modified;
+  iface->component_removed = gcal_month_view_component_removed;
+  iface->freeze = gcal_month_view_freeze;
+  iface->thaw = gcal_month_view_thaw;
+}
+
+/*
+ * GtkContainer overrides
+ */
+
+static inline guint
+get_child_cell (GcalMonthView   *self,
+                GcalEventWidget *child)
+{
+  GcalEvent *event;
+  GDateTime *dt;
+  gint cell;
+
+  event = gcal_event_widget_get_event (child);
+  dt = gcal_event_get_date_start (event);
+
+  /* Don't adjust the date when the event is all day */
+  if (gcal_event_get_all_day (event))
+    {
+      cell = g_date_time_get_day_of_month (dt);
+    }
+  else
+    {
+      dt = g_date_time_to_local (dt);
+      cell = g_date_time_get_day_of_month (dt);
+
+      g_clear_pointer (&dt, g_date_time_unref);
+    }
+
+  return cell;
+}
+
+static void
+gcal_month_view_add (GtkContainer *container,
+                     GtkWidget    *widget)
+{
+  GcalMonthView *self;
+  GcalEvent *event;
+  const gchar *uuid;
+  GList *l = NULL;
+
+  g_return_if_fail (GCAL_IS_EVENT_WIDGET (widget));
+  g_return_if_fail (gtk_widget_get_parent (widget) == NULL);
+
+  self = GCAL_MONTH_VIEW (container);
+  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
+  uuid = gcal_event_get_uid (event);
+
+  /* inserting in all children hash */
+  if (g_hash_table_lookup (self->children, uuid) != NULL)
+    {
+      g_warning ("Event with uuid: %s already added", uuid);
+      gtk_widget_destroy (widget);
+      return;
+    }
+
+  self->children_changed = TRUE;
+  l = g_list_append (l, widget);
+  g_hash_table_insert (self->children, g_strdup (uuid), l);
+
+  if (gcal_event_is_multiday (event))
+    {
+      self->multi_cell_children = g_list_insert_sorted (self->multi_cell_children, widget,
+                                                        (GCompareFunc) gcal_event_widget_sort_events);
+    }
+  else
+    {
+      guint cell_idx;
+
+      cell_idx = get_child_cell (self, GCAL_EVENT_WIDGET (widget));
+
+      l = g_hash_table_lookup (self->single_cell_children, GINT_TO_POINTER (cell_idx));
+      l = g_list_insert_sorted (l, widget, (GCompareFunc) gcal_event_widget_compare_by_start_date);
+
+      if (g_list_length (l) != 1)
+        {
+          g_hash_table_steal (self->single_cell_children, GINT_TO_POINTER (cell_idx));
+        }
+      g_hash_table_insert (self->single_cell_children, GINT_TO_POINTER (cell_idx), l);
+    }
+
+  setup_child_widget (self, widget);
+}
+
+static void
+gcal_month_view_remove (GtkContainer *container,
+                        GtkWidget    *widget)
+{
+  GcalMonthView *self;
+  GtkWidget *master_widget;
+  GcalEvent *event;
+  GList *l, *aux;
+  const gchar *uuid;
+
+  g_return_if_fail (gtk_widget_get_parent (widget) == GTK_WIDGET (container));
+
+  self = GCAL_MONTH_VIEW (container);
+  event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (widget));
+  uuid = gcal_event_get_uid (event);
+
+  l = g_hash_table_lookup (self->children, uuid);
+  if (l)
+    {
+      self->children_changed = TRUE;
+
+      gtk_widget_unparent (widget);
+
+      master_widget = (GtkWidget*) l->data;
+      if (widget == master_widget)
+        {
+          if (g_list_find (self->multi_cell_children, widget) != NULL)
+            {
+              self->multi_cell_children = g_list_remove (self->multi_cell_children, widget);
+
+              aux = g_list_next (l);
+              if (aux != NULL)
+                {
+                  l->next = NULL;
+                  aux->prev = NULL;
+                  g_list_foreach (aux, (GFunc) gtk_widget_unparent, NULL);
+                  g_list_free (aux);
+                }
+            }
+          else
+            {
+              GHashTableIter iter;
+              gpointer key, value;
+
+              /*
+               * When an event is changed, we can't rely on it's old date
+               * to remove the corresponding widget. Because of that, we have
+               * to iter through all the widgets to see which one matches
+               */
+              g_hash_table_iter_init (&iter, self->single_cell_children);
+
+              while (g_hash_table_iter_next (&iter, &key, &value))
+                {
+                  gboolean should_break;
+
+                  should_break = FALSE;
+
+                  for (aux = value; aux != NULL; aux = aux->next)
+                    {
+                      if (aux->data == widget)
+                        {
+                          aux = g_list_remove (g_list_copy (value), widget);
+
+                          /*
+                           * If we removed the event and there's no event left for
+                           * the day, remove the key from the table. If there are
+                           * events for that day, replace the list.
+                           */
+                          if (!aux)
+                            g_hash_table_remove (self->single_cell_children, key);
+                          else
+                            g_hash_table_replace (self->single_cell_children, key, aux);
+
+                          should_break = TRUE;
+
+                          break;
+                        }
+                    }
+
+                  if (should_break)
+                    break;
+                }
+            }
+        }
+
+      l = g_list_remove (g_list_copy (l), widget);
+
+      if (!l)
+        g_hash_table_remove (self->children, uuid);
+      else
+        g_hash_table_replace (self->children, g_strdup (uuid), l);
+
+      g_hash_table_remove (self->hidden_as_overflow, uuid);
+
+      gtk_widget_queue_resize (GTK_WIDGET (container));
+    }
+}
+
+static void
+gcal_month_view_forall (GtkContainer *container,
+                        gboolean      include_internals,
+                        GtkCallback   callback,
+                        gpointer      callback_data)
+{
+  GcalMonthView *self;
+  GList *l, *l2, *aux = NULL;
+
+  self = GCAL_MONTH_VIEW (container);
+  l2 = g_hash_table_get_values (self->children);
+
+  for (l = l2; l != NULL; l = g_list_next (l))
+    aux = g_list_concat (aux, g_list_reverse (g_list_copy (l->data)));
+
+  g_list_free (l2);
+
+  l = aux;
+  while (aux)
+    {
+      GtkWidget *widget = (GtkWidget*) aux->data;
+      aux = aux->next;
+
+      (*callback) (widget, callback_data);
+    }
+
+  g_list_free (l);
+}
+
+
+/*
+ * GObject overrides
+ */
 
 static void
 gcal_month_view_set_property (GObject       *object,
@@ -1063,6 +1473,11 @@ gcal_month_view_finalize (GObject *object)
   GcalMonthView *self = GCAL_MONTH_VIEW (object);
 
   g_clear_pointer (&self->date, g_free);
+  g_clear_pointer (&self->children, g_hash_table_destroy);
+  g_clear_pointer (&self->single_cell_children, g_hash_table_destroy);
+  g_clear_pointer (&self->overflow_cells, g_hash_table_destroy);
+  g_clear_pointer (&self->hidden_as_overflow, g_hash_table_destroy);
+  g_clear_pointer (&self->multi_cell_children, g_list_free);
 
   g_clear_object (&self->manager);
 
@@ -1153,7 +1568,6 @@ static void
 gcal_month_view_size_allocate (GtkWidget     *widget,
                                GtkAllocation *allocation)
 {
-  GcalSubscriberViewPrivate *ppriv;
   GtkStyleContext *context, *child_context;
   GcalMonthView *self;
 
@@ -1178,10 +1592,9 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
   self = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
   context = gtk_widget_get_style_context (widget);
-  ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
 
   /* No need to relayout stuff if nothing changed */
-  if (!ppriv->children_changed &&
+  if (!self->children_changed &&
       allocation->height == gtk_widget_get_allocated_height (widget) &&
       allocation->width == gtk_widget_get_allocated_width (widget))
     {
@@ -1189,7 +1602,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
     }
 
   /* remove every widget' parts, but the master widget */
-  widgets = g_hash_table_get_values (ppriv->children);
+  widgets = g_hash_table_get_values (self->children);
   for (aux = widgets; aux != NULL; aux = g_list_next (aux))
     l = g_list_concat (l, g_list_copy (g_list_next (aux->data)));
   g_list_free (widgets);
@@ -1197,7 +1610,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   g_list_free_full (l, (GDestroyNotify) gtk_widget_destroy);
 
   /* clean overflow information */
-  g_hash_table_remove_all (ppriv->overflow_cells);
+  g_hash_table_remove_all (self->overflow_cells);
 
   /* Allocate the widget */
   gtk_widget_set_allocation (widget, allocation);
@@ -1234,7 +1647,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
    * higher priority. Multiday events have a master event, and clones
    * to represent the multiple sections of the event.
    */
-  for (l = ppriv->multi_cell_children; l != NULL; l = g_list_next (l))
+  for (l = self->multi_cell_children; l != NULL; l = g_list_next (l))
     {
       gint first_cell, last_cell, first_row, last_row, start, end;
       gboolean visible, all_day;
@@ -1249,7 +1662,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       all_day = gcal_event_get_all_day (event);
       child_context = gtk_widget_get_style_context (l->data);
 
-      if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (ppriv->hidden_as_overflow, uuid))
+      if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (self->hidden_as_overflow, uuid))
         continue;
 
       gtk_widget_show (child_widget);
@@ -1341,12 +1754,12 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
                 {
                   child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
 
-                  _gcal_subscriber_view_setup_child (GCAL_SUBSCRIBER_VIEW (widget), child_widget);
+                  setup_child_widget (self, child_widget);
                   gtk_widget_show (child_widget);
 
                   child_context = gtk_widget_get_style_context (child_widget);
 
-                  aux = g_hash_table_lookup (ppriv->children, uuid);
+                  aux = g_hash_table_lookup (self->children, uuid);
                   aux = g_list_append (aux, child_widget);
                 }
 
@@ -1384,7 +1797,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               child_allocation.height = natural_height;
 
               gtk_widget_size_allocate (child_widget, &child_allocation);
-              g_hash_table_remove (ppriv->hidden_as_overflow, uuid);
+              g_hash_table_remove (self->hidden_as_overflow, uuid);
 
               /* update size_left */
               for (j = 0; j < length; j++)
@@ -1397,17 +1810,17 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       else
         {
           gtk_widget_hide (child_widget);
-          g_hash_table_add (ppriv->hidden_as_overflow, g_strdup (uuid));
+          g_hash_table_add (self->hidden_as_overflow, g_strdup (uuid));
 
           for (i = first_cell; i <= last_cell; i++)
             {
-              aux = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (i));
+              aux = g_hash_table_lookup (self->overflow_cells, GINT_TO_POINTER (i));
               aux = g_list_append (aux, child_widget);
 
               if (g_list_length (aux) == 1)
-                g_hash_table_insert (ppriv->overflow_cells, GINT_TO_POINTER (i), aux);
+                g_hash_table_insert (self->overflow_cells, GINT_TO_POINTER (i), aux);
               else
-                g_hash_table_replace (ppriv->overflow_cells, GINT_TO_POINTER (i), g_list_copy (aux));
+                g_hash_table_replace (self->overflow_cells, GINT_TO_POINTER (i), g_list_copy (aux));
             }
         }
 
@@ -1420,7 +1833,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
    * day children, there's no need to calculate the start & end
    * dates of the widgets.
    */
-  g_hash_table_iter_init (&iter, ppriv->single_cell_children);
+  g_hash_table_iter_init (&iter, self->single_cell_children);
 
   while (g_hash_table_iter_next (&iter, &key, &value))
     {
@@ -1437,7 +1850,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           event = gcal_event_widget_get_event (aux->data);
           uuid = gcal_event_get_uid (event);
 
-          if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (ppriv->hidden_as_overflow, uuid))
+          if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (self->hidden_as_overflow, uuid))
             continue;
 
           gtk_widget_show (child_widget);
@@ -1458,37 +1871,36 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               child_allocation.height = natural_height;
               gtk_widget_show (child_widget);
               gtk_widget_size_allocate (child_widget, &child_allocation);
-              g_hash_table_remove (ppriv->hidden_as_overflow, uuid);
+              g_hash_table_remove (self->hidden_as_overflow, uuid);
 
               size_left[i] -= natural_height + margin.top + margin.bottom;
             }
           else
             {
               gtk_widget_hide (child_widget);
-              g_hash_table_add (ppriv->hidden_as_overflow, g_strdup (uuid));
+              g_hash_table_add (self->hidden_as_overflow, g_strdup (uuid));
 
-              l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (i));
+              l = g_hash_table_lookup (self->overflow_cells, GINT_TO_POINTER (i));
               l = g_list_append (l, child_widget);
 
               if (g_list_length (l) == 1)
-                g_hash_table_insert (ppriv->overflow_cells, GINT_TO_POINTER (i), l);
+                g_hash_table_insert (self->overflow_cells, GINT_TO_POINTER (i), l);
               else
-                g_hash_table_replace (ppriv->overflow_cells, GINT_TO_POINTER (i), g_list_copy (l));
+                g_hash_table_replace (self->overflow_cells, GINT_TO_POINTER (i), g_list_copy (l));
             }
         }
     }
 
-  if (g_hash_table_size (ppriv->overflow_cells) != 0)
+  if (g_hash_table_size (self->overflow_cells) != 0)
     gtk_widget_queue_draw (widget);
 
-  ppriv->children_changed = FALSE;
+  self->children_changed = FALSE;
 }
 
 static gboolean
 gcal_month_view_draw (GtkWidget *widget,
                       cairo_t   *cr)
 {
-  GcalSubscriberViewPrivate *ppriv;
   GcalMonthView *self;
 
   GtkStyleContext *context;
@@ -1516,7 +1928,6 @@ gcal_month_view_draw (GtkWidget *widget,
   gboolean is_ltr;
 
   self = GCAL_MONTH_VIEW (widget);
-  ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
 
   today = g_date_time_new_now_local ();
 
@@ -1799,7 +2210,7 @@ gcal_month_view_draw (GtkWidget *widget,
 
       g_free (nr_day);
 
-      if (g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (real_i)))
+      if (g_hash_table_contains (self->overflow_cells, GINT_TO_POINTER (real_i)))
         {
           GList *l;
           PangoLayout *overflow_layout;
@@ -1807,7 +2218,7 @@ gcal_month_view_draw (GtkWidget *widget,
           gchar *overflow_str;
           gdouble y_value;
 
-          l = g_hash_table_lookup (ppriv->overflow_cells, GINT_TO_POINTER (real_i));
+          l = g_hash_table_lookup (self->overflow_cells, GINT_TO_POINTER (real_i));
 
           /* TODO: Warning: in some languages this string can be too long and may overlap with the number */
           overflow_str = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", g_list_length (l)),
@@ -2054,20 +2465,14 @@ static gboolean
 gcal_month_view_button_press (GtkWidget      *widget,
                               GdkEventButton *event)
 {
-  GcalSubscriberViewPrivate *ppriv;
   GcalMonthView *self;
 
   gint days, clicked_cell;
   gboolean pressed_indicator = FALSE;
 
   self = GCAL_MONTH_VIEW (widget);
-  ppriv = GCAL_SUBSCRIBER_VIEW (widget)->priv;
-
   days = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year);
-
-  clicked_cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y,
-                                                 &pressed_indicator, NULL, NULL);
-
+  clicked_cell = gather_button_event_data (GCAL_MONTH_VIEW (widget), event->x, event->y, &pressed_indicator, NULL, NULL);
   clicked_cell = real_cell (clicked_cell, self->k);
 
   if (clicked_cell >= self->days_delay && clicked_cell < days)
@@ -2081,7 +2486,7 @@ gcal_month_view_button_press (GtkWidget      *widget,
       gtk_widget_queue_draw (widget);
     }
 
-  if (pressed_indicator && g_hash_table_contains (ppriv->overflow_cells, GINT_TO_POINTER (clicked_cell)))
+  if (pressed_indicator && g_hash_table_contains (self->overflow_cells, GINT_TO_POINTER (clicked_cell)))
     self->pressed_overflow_indicator = clicked_cell;
 
   return GDK_EVENT_PROPAGATE;
@@ -2234,51 +2639,12 @@ gcal_month_view_direction_changed (GtkWidget        *widget,
     self->k = 1;
 }
 
-static guint
-gcal_month_view_get_child_cell (GcalSubscriberView *subscriber,
-                                GcalEventWidget    *child)
-{
-  GcalEvent *event;
-  GDateTime *dt;
-  gint cell;
-
-  event = gcal_event_widget_get_event (child);
-  dt = gcal_event_get_date_start (event);
-
-  /* Don't adjust the date when the event is all day */
-  if (gcal_event_get_all_day (event))
-    {
-      cell = g_date_time_get_day_of_month (dt);
-    }
-  else
-    {
-      dt = g_date_time_to_local (dt);
-      cell = g_date_time_get_day_of_month (dt);
-
-      g_clear_pointer (&dt, g_date_time_unref);
-    }
-
-  return cell;
-}
-
-static void
-gcal_month_view_clear_state (GcalSubscriberView *subscriber)
-{
-  GcalMonthView *self = GCAL_MONTH_VIEW (subscriber);
-
-  cancel_selection (GCAL_MONTH_VIEW (subscriber));
-
-  self->pressed_overflow_indicator = -1;
-
-  gtk_widget_hide (self->overflow_popover);
-}
-
 static void
 gcal_month_view_class_init (GcalMonthViewClass *klass)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
-  GcalSubscriberViewClass *subscriber_view_class;
+  GtkContainerClass *container_class;
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->set_property = gcal_month_view_set_property;
@@ -2302,12 +2668,21 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   widget_class->drag_leave = gcal_month_view_drag_leave;
   widget_class->scroll_event = gcal_month_view_scroll_event;
 
-  subscriber_view_class = GCAL_SUBSCRIBER_VIEW_CLASS (klass);
-  subscriber_view_class->get_child_cell = gcal_month_view_get_child_cell;
-  subscriber_view_class->clear_state = gcal_month_view_clear_state;
+  container_class = GTK_CONTAINER_CLASS (klass);
+  container_class->add = gcal_month_view_add;
+  container_class->remove = gcal_month_view_remove;
+  container_class->forall = gcal_month_view_forall;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
+
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
+                                           GCAL_TYPE_MONTH_VIEW,
+                                           G_SIGNAL_RUN_LAST,
+                                           0, NULL, NULL, NULL,
+                                           G_TYPE_NONE,
+                                           1,
+                                           GCAL_TYPE_EVENT_WIDGET);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
@@ -2320,13 +2695,16 @@ gcal_month_view_init (GcalMonthView *self)
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
-  self = gcal_month_view_get_instance_private (self);
 
   cancel_selection (self);
 
   self->dnd_cell = -1;
   self->pressed_overflow_indicator = -1;
   self->hovered_overflow_indicator = -1;
+  self->children = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_list_free);
+  self->single_cell_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
+  self->overflow_cells = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
+  self->hidden_as_overflow = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 
   self->k = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
