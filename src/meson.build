@@ -2,7 +2,7 @@ src_inc = include_directories('.')
 
 enum_headers = files('gcal-utils.h')
 
-calendar_deps = [
+libgcal_deps = [
   gsettings_desktop_schemas_dep,
   libedataserverui_dep,
   libedataserver_dep,
@@ -45,7 +45,6 @@ sources = files(
   'gcal-utils.c',
   'gcal-view.c',
   'gcal-window.c',
-  'main.c'
 )
 
 gnome.mkenums(
@@ -90,6 +89,11 @@ debug_conf = configuration_data()
 debug_conf.set('BUGREPORT_URL', package_bugreport)
 debug_conf.set10('ENABLE_TRACING', enable_tracing)
 
+
+#########
+# Debug #
+#########
+
 debug = 'gcal-debug.h'
 
 sources += configure_file(
@@ -98,28 +102,48 @@ sources += configure_file(
   configuration: debug_conf
 )
 
+
+#######################
+# Include directories #
+#######################
+
 incs = [
   top_inc,
   include_directories('views')
 ]
 
-executable(
-  meson.project_name(),
-               sources,
-   include_directories: incs,
-          dependencies: calendar_deps,
-               install: true,
-           install_dir: calendar_bindir
-)
+incs += contrib_incs
+
+
+###################
+# Private library #
+###################
 
 libgcal = shared_library(
                'gcal',
               sources: sources,
   include_directories: incs,
-         dependencies: calendar_deps
+         dependencies: libgcal_deps
 )
 
 libgcal_dep = declare_dependency(
             link_with: libgcal,
   include_directories: src_inc
+)
+
+
+##################
+# gnome-calendar #
+##################
+
+calendar_deps = libgcal_deps
+calendar_deps += [ libgcal_dep ]
+
+executable(
+  meson.project_name(),
+       files('main.c'),
+   include_directories: incs,
+          dependencies: calendar_deps,
+               install: true,
+           install_dir: calendar_bindir
 )

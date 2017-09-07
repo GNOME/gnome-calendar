@@ -17,8 +17,7 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <config.h>
-#include <gtk/gtk.h>
+#include "config.h"
 #include "gcal-application.h"
 
 #include <glib/gi18n.h>

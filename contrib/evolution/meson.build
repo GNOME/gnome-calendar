@@ -1,3 +1,5 @@
+contrib_incs += [ include_directories('.') ]
+
 libevolution_files = files(
   'e-cal-data-model.c',
   'e-cal-data-model-subscriber.c'
