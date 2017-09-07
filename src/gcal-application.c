@@ -39,20 +39,20 @@
 
 struct _GcalApplication
 {
-  GtkApplication  parent;
+  GtkApplication      parent;
 
-  GtkWidget      *window;
+  GtkWidget          *window;
 
-  GSettings      *settings;
-  GcalManager    *manager;
+  GSettings          *settings;
+  GcalManager        *manager;
+
+  GtkCssProvider     *provider;
+  GtkCssProvider     *colors_provider;
+
+  gchar              *uuid;
+  icaltimetype       *initial_date;
 
   GcalShellSearchProvider *search_provider;
-
-  GtkCssProvider *provider;
-  GtkCssProvider *colors_provider;
-
-  gchar          *uuid;
-  icaltimetype   *initial_date;
 };
 
 static void     gcal_application_create_new_event     (GSimpleAction           *new_event,
@@ -287,7 +287,9 @@ gcal_application_command_line (GApplication            *app,
     {
       option = g_variant_dict_lookup_value (options, "uuid", G_VARIANT_TYPE_STRING);
       uuid = g_variant_get_string (option, &length);
+
       gcal_application_set_uuid (GCAL_APPLICATION (app), uuid);
+
       g_variant_unref (option);
     }
   else if (g_variant_dict_contains (options, "date"))
@@ -299,12 +301,12 @@ gcal_application_command_line (GApplication            *app,
 
       if (e_time_parse_date_and_time (date, &result) == E_TIME_PARSE_OK)
         {
-          if (self->initial_date == NULL)
+          if (!self->initial_date)
             self->initial_date = g_new0 (icaltimetype, 1);
-          *(self->initial_date) = tm_to_icaltimetype (&result, FALSE);
 
-          *(self->initial_date) = icaltime_set_timezone (self->initial_date,
-                                                         gcal_manager_get_system_timezone (self->manager));
+          *self->initial_date = tm_to_icaltimetype (&result, FALSE);
+          *self->initial_date = icaltime_set_timezone (self->initial_date,
+                                                       gcal_manager_get_system_timezone (self->manager));
         }
 
       g_variant_unref (option);
