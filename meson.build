@@ -208,14 +208,14 @@ endif
 
 meson.add_install_script('meson_post_install.py')
 
-output = '\n    GNOME Calendar ' + calendar_version + '\n'
+output = '\n\n      GNOME Calendar ' + calendar_version + '\n'
 output += '      =========================\n\n'
-output += '          Source ...........................  ' + meson.source_root() + '\n'
-output += '          Prefix ...........................  ' + calendar_prefix + '\n'
-output += '          Compiler .........................  ' + cc.get_id() + '\n\n'
+output += '          Source ..........................: ' + meson.source_root() + '\n'
+output += '          Prefix ..........................: ' + calendar_prefix + '\n'
+output += '          Compiler ........................: ' + cc.get_id() + '\n\n'
 output += '      Development options\n'
-output += '          Enable Debug: ....................  ' + calendar_debug.to_string() + '\n'
-output += '          Enable Tracing: ..................  ' + enable_tracing.to_string() + '\n'
-output += '          Enable Documentation: ............  ' + enable_gtk_doc.to_string() + '\n\n'
-output += '      Now type "ninja -C ' + meson.build_root() + '" to build ' + meson.project_name()
+output += '          Enable Debug: ...................: ' + calendar_debug.to_string() + '\n'
+output += '          Enable Tracing: .................: ' + enable_tracing.to_string() + '\n'
+output += '          Enable Documentation: ...........: ' + enable_gtk_doc.to_string() + '\n\n'
+output += '    Now type "ninja -C ' + meson.build_root() + '" to build ' + meson.project_name() + '\n\n'
 message(output)
