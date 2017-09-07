@@ -30,12 +30,8 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalShellSearchProvider, gcal_shell_search_provider, GCAL, SHELL_SEARCH_PROVIDER, GObject)
 
-struct _GcalShellSearchProviderClass
-{
-  GObjectClass parent;
-};
+GcalShellSearchProvider *gcal_shell_search_provider_new           (void);
 
-GcalShellSearchProvider *gcal_shell_search_provider_new (void);
 gboolean                 gcal_shell_search_provider_dbus_export   (GcalShellSearchProvider *search_provider,
                                                                    GDBusConnection         *connection,
                                                                    const gchar             *object_path,

@@ -33,28 +33,21 @@ typedef struct
   icaltimetype              date;
 } PendingSearch;
 
-typedef struct
-{
-  GcalShellSearchProvider2 *skel;
-  GcalManager              *manager;
-
-  PendingSearch            *pending_search;
-  guint                     scheduled_search_id;
-  GHashTable               *events;
-} GcalShellSearchProviderPrivate;
-
 struct _GcalShellSearchProvider
 {
-  GObject parent;
+  GObject             parent;
 
-  /*< private >*/
-  GcalShellSearchProviderPrivate *priv;
+  GcalShellSearchProvider2 *skel;
+  GcalManager        *manager;
+
+  PendingSearch      *pending_search;
+  guint               scheduled_search_id;
+  GHashTable         *events;
 };
 
 static void   gcal_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GcalShellSearchProvider, gcal_shell_search_provider, G_TYPE_OBJECT,
-                         G_ADD_PRIVATE (GcalShellSearchProvider)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER, gcal_subscriber_interface_init));
 
 static gint
@@ -66,39 +59,35 @@ sort_event_data (GcalEvent *a,
 }
 
 static gboolean
-execute_search (GcalShellSearchProvider *search_provider)
+execute_search (GcalShellSearchProvider *self)
 {
-  GcalShellSearchProviderPrivate *priv;
-
   guint i;
   gchar *search_query;
 
   icaltimezone *zone;
   time_t range_start, range_end;
 
-  priv = search_provider->priv;
-
-  if (gcal_manager_get_loading (priv->manager))
+  if (gcal_manager_get_loading (self->manager))
     return TRUE;
 
-  zone = gcal_manager_get_system_timezone (priv->manager);
-  priv->pending_search->date = icaltime_current_time_with_zone (zone);
-  icaltime_adjust (&(priv->pending_search->date), -7, 0, 0, 0); /* -1 weeks from today */
-  range_start = icaltime_as_timet_with_zone (priv->pending_search->date, zone);
+  zone = gcal_manager_get_system_timezone (self->manager);
+  self->pending_search->date = icaltime_current_time_with_zone (zone);
+  icaltime_adjust (&(self->pending_search->date), -7, 0, 0, 0); /* -1 weeks from today */
+  range_start = icaltime_as_timet_with_zone (self->pending_search->date, zone);
 
-  icaltime_adjust (&(priv->pending_search->date), 21 * 2, 0, 0, 0); /* +3 weeks from today */
-  range_end = icaltime_as_timet_with_zone (priv->pending_search->date, zone);
+  icaltime_adjust (&(self->pending_search->date), 21 * 2, 0, 0, 0); /* +3 weeks from today */
+  range_end = icaltime_as_timet_with_zone (self->pending_search->date, zone);
 
-  gcal_manager_set_shell_search_subscriber (priv->manager, E_CAL_DATA_MODEL_SUBSCRIBER (search_provider),
+  gcal_manager_set_shell_search_subscriber (self->manager, E_CAL_DATA_MODEL_SUBSCRIBER (self),
                                             range_start, range_end);
 
   search_query = g_strdup_printf ("(or (contains? \"summary\" \"%s\") (contains? \"description\" \"%s\"))",
-                                  priv->pending_search->terms[0], priv->pending_search->terms[0]);
-  for (i = 1; i < g_strv_length (priv->pending_search->terms); i++)
+                                  self->pending_search->terms[0], self->pending_search->terms[0]);
+  for (i = 1; i < g_strv_length (self->pending_search->terms); i++)
     {
       gchar *complete_query;
       gchar *second_query = g_strdup_printf ("(or (contains? \"summary\" \"%s\") (contains? \"description\" \"%s\"))",
-                                             priv->pending_search->terms[0], priv->pending_search->terms[0]);
+                                             self->pending_search->terms[0], self->pending_search->terms[0]);
       complete_query = g_strdup_printf ("(and %s %s)", search_query, second_query);
 
       g_free (second_query);
@@ -107,21 +96,19 @@ execute_search (GcalShellSearchProvider *search_provider)
       search_query = complete_query;
     }
 
-  gcal_manager_set_shell_search_query (priv->manager,  search_query);
+  gcal_manager_set_shell_search_query (self->manager,  search_query);
   g_free (search_query);
 
-  priv->scheduled_search_id = 0;
+  self->scheduled_search_id = 0;
   g_application_hold (g_application_get_default ());
   return FALSE;
 }
 
 static void
-schedule_search (GcalShellSearchProvider *search_provider,
+schedule_search (GcalShellSearchProvider *self,
                  GDBusMethodInvocation   *invocation,
                  gchar                  **terms)
 {
-  GcalShellSearchProviderPrivate *priv = search_provider->priv;
-
   /* don't attempt searches for a single character */
   if (g_strv_length (terms) == 1 && g_utf8_strlen (terms[0], -1) == 1)
     {
@@ -129,66 +116,65 @@ schedule_search (GcalShellSearchProvider *search_provider,
       return;
     }
 
-  if (priv->pending_search != NULL)
+  if (self->pending_search != NULL)
     {
-      g_object_unref (priv->pending_search->invocation);
-      g_strfreev (priv->pending_search->terms);
+      g_object_unref (self->pending_search->invocation);
+      g_strfreev (self->pending_search->terms);
 
-      if (priv->scheduled_search_id == 0)
+      if (self->scheduled_search_id == 0)
         g_application_release (g_application_get_default ());
     }
   else
     {
-      priv->pending_search = g_new0 (PendingSearch, 1);
+      self->pending_search = g_new0 (PendingSearch, 1);
     }
 
-  if (priv->scheduled_search_id != 0)
+  if (self->scheduled_search_id != 0)
     {
-      g_source_remove (priv->scheduled_search_id);
-      priv->scheduled_search_id = 0;
+      g_source_remove (self->scheduled_search_id);
+      self->scheduled_search_id = 0;
     }
 
-  priv->pending_search->invocation = g_object_ref (invocation);
-  priv->pending_search->terms = g_strdupv (terms);
+  self->pending_search->invocation = g_object_ref (invocation);
+  self->pending_search->terms = g_strdupv (terms);
 
-  if (gcal_manager_get_loading (priv->manager))
+  if (gcal_manager_get_loading (self->manager))
     {
-      priv->scheduled_search_id = g_timeout_add_seconds (1, (GSourceFunc) execute_search, search_provider);
+      self->scheduled_search_id = g_timeout_add_seconds (1, (GSourceFunc) execute_search, self);
       return;
     }
 
-  execute_search (search_provider);
+  execute_search (self);
   return;
 }
 
 static gboolean
-get_initial_result_set_cb (GcalShellSearchProvider  *search_provider,
+get_initial_result_set_cb (GcalShellSearchProvider  *self,
                            GDBusMethodInvocation    *invocation,
                            gchar                   **terms,
                            GcalShellSearchProvider2 *skel)
 {
-  schedule_search (search_provider, invocation, terms);
+  schedule_search (self, invocation, terms);
   return TRUE;
 }
 
 static gboolean
-get_subsearch_result_set_cb (GcalShellSearchProvider  *search_provider,
+get_subsearch_result_set_cb (GcalShellSearchProvider  *self,
                              GDBusMethodInvocation    *invocation,
                              gchar                   **previous_results,
                              gchar                   **terms,
                              GcalShellSearchProvider2 *skel)
 {
-  schedule_search (search_provider, invocation, terms);
+  schedule_search (self, invocation, terms);
   return TRUE;
 }
 
 static gboolean
-get_result_metas_cb (GcalShellSearchProvider  *search_provider,
+get_result_metas_cb (GcalShellSearchProvider  *self,
                      GDBusMethodInvocation    *invocation,
                      gchar                   **results,
                      GcalShellSearchProvider2 *skel)
 {
-  GcalShellSearchProviderPrivate *priv;
   GDateTime *local_datetime;
   GVariantBuilder abuilder, builder;
   GVariant *icon_variant;
@@ -198,15 +184,13 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
   gchar *start_date;
   gint i;
 
-  priv = search_provider->priv;
-
   g_variant_builder_init (&abuilder, G_VARIANT_TYPE ("aa{sv}"));
   for (i = 0; i < g_strv_length (results); i++)
     {
       cairo_surface_t *surface;
 
       uuid = results[i];
-      event = g_hash_table_lookup (priv->events, uuid);
+      event = g_hash_table_lookup (self->events, uuid);
 
       g_variant_builder_init (&builder, G_VARIANT_TYPE ("a{sv}"));
       g_variant_builder_add (&builder, "{sv}", "id", g_variant_new_string (uuid));
@@ -240,22 +224,20 @@ get_result_metas_cb (GcalShellSearchProvider  *search_provider,
 }
 
 static gboolean
-activate_result_cb (GcalShellSearchProvider  *search_provider,
+activate_result_cb (GcalShellSearchProvider  *self,
                     GDBusMethodInvocation    *invocation,
                     gchar                    *result,
                     gchar                   **terms,
                     guint32                   timestamp,
                     GcalShellSearchProvider2 *skel)
 {
-  GcalShellSearchProviderPrivate *priv;
   GApplication *application;
   GcalEvent *event;
   GDateTime *dtstart;
 
-  priv = search_provider->priv;
   application = g_application_get_default ();
 
-  event = gcal_manager_get_event_from_shell_search (priv->manager, result);
+  event = gcal_manager_get_event_from_shell_search (self->manager, result);
   dtstart = gcal_event_get_date_start (event);
 
   gcal_application_set_uuid (GCAL_APPLICATION (application), result);
@@ -269,7 +251,7 @@ activate_result_cb (GcalShellSearchProvider  *search_provider,
 }
 
 static gboolean
-launch_search_cb (GcalShellSearchProvider  *search_provider,
+launch_search_cb (GcalShellSearchProvider  *self,
                   GDBusMethodInvocation    *invocation,
                   gchar                   **terms,
                   guint32                   timestamp,
@@ -297,20 +279,19 @@ launch_search_cb (GcalShellSearchProvider  *search_provider,
 }
 
 static gboolean
-query_completed_cb (GcalShellSearchProvider *search_provider,
+query_completed_cb (GcalShellSearchProvider *self,
                     GcalManager             *manager)
 {
-  GcalShellSearchProviderPrivate *priv = search_provider->priv;
   GList *events, *l;
   GVariantBuilder builder;
   time_t current_time_t;
 
-  g_hash_table_remove_all (priv->events);
+  g_hash_table_remove_all (self->events);
 
-  events = gcal_manager_get_shell_search_events (priv->manager);
+  events = gcal_manager_get_shell_search_events (self->manager);
   if (events == NULL)
     {
-      g_dbus_method_invocation_return_value (priv->pending_search->invocation, g_variant_new ("(as)", NULL));
+      g_dbus_method_invocation_return_value (self->pending_search->invocation, g_variant_new ("(as)", NULL));
       goto out;
     }
 
@@ -324,21 +305,21 @@ query_completed_cb (GcalShellSearchProvider *search_provider,
 
       uid = gcal_event_get_uid (l->data);
 
-      if (g_hash_table_contains (priv->events, uid))
+      if (g_hash_table_contains (self->events, uid))
         continue;
 
       g_variant_builder_add (&builder, "s", uid);
 
-      g_hash_table_insert (priv->events, g_strdup (uid), l->data);
+      g_hash_table_insert (self->events, g_strdup (uid), l->data);
     }
   g_list_free (events);
 
-  g_dbus_method_invocation_return_value (priv->pending_search->invocation, g_variant_new ("(as)", &builder));
+  g_dbus_method_invocation_return_value (self->pending_search->invocation, g_variant_new ("(as)", &builder));
 
 out:
-  g_object_unref (priv->pending_search->invocation);
-  g_strfreev (priv->pending_search->terms);
-  g_clear_pointer (&(priv->pending_search), g_free);
+  g_object_unref (self->pending_search->invocation);
+  g_strfreev (self->pending_search->terms);
+  g_clear_pointer (&(self->pending_search), g_free);
   g_application_release (g_application_get_default ());
   return FALSE;
 }
@@ -375,10 +356,12 @@ gcal_shell_search_provider_thaw (ECalDataModelSubscriber *subscriber)
 static void
 gcal_shell_search_provider_finalize (GObject *object)
 {
-  GcalShellSearchProviderPrivate *priv = GCAL_SHELL_SEARCH_PROVIDER (object)->priv;
+  GcalShellSearchProvider *self = (GcalShellSearchProvider *) object;
 
-  g_hash_table_destroy (priv->events);
-  g_clear_object (&priv->skel);
+  g_hash_table_destroy (self->events);
+
+  g_clear_object (&self->skel);
+
   G_OBJECT_CLASS (gcal_shell_search_provider_parent_class)->finalize (object);
 }
 
@@ -403,18 +386,14 @@ gcal_shell_search_provider_class_init (GcalShellSearchProviderClass *klass)
 static void
 gcal_shell_search_provider_init (GcalShellSearchProvider *self)
 {
-  GcalShellSearchProviderPrivate *priv = gcal_shell_search_provider_get_instance_private (self);
+  self->events = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
+  self->skel = gcal_shell_search_provider2_skeleton_new ();
 
-  priv->events = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
-  priv->skel = gcal_shell_search_provider2_skeleton_new ();
-
-  g_signal_connect_swapped (priv->skel, "handle-get-initial-result-set", G_CALLBACK (get_initial_result_set_cb), self);
-  g_signal_connect_swapped (priv->skel, "handle-get-subsearch-result-set", G_CALLBACK (get_subsearch_result_set_cb), self);
-  g_signal_connect_swapped (priv->skel, "handle-get-result-metas", G_CALLBACK (get_result_metas_cb), self);
-  g_signal_connect_swapped (priv->skel, "handle-activate-result", G_CALLBACK (activate_result_cb), self);
-  g_signal_connect_swapped (priv->skel, "handle-launch-search", G_CALLBACK (launch_search_cb), self);
-
-  self->priv = priv;
+  g_signal_connect_swapped (self->skel, "handle-get-initial-result-set", G_CALLBACK (get_initial_result_set_cb), self);
+  g_signal_connect_swapped (self->skel, "handle-get-subsearch-result-set", G_CALLBACK (get_subsearch_result_set_cb), self);
+  g_signal_connect_swapped (self->skel, "handle-get-result-metas", G_CALLBACK (get_result_metas_cb), self);
+  g_signal_connect_swapped (self->skel, "handle-activate-result", G_CALLBACK (activate_result_cb), self);
+  g_signal_connect_swapped (self->skel, "handle-launch-search", G_CALLBACK (launch_search_cb), self);
 }
 
 GcalShellSearchProvider*
@@ -424,33 +403,29 @@ gcal_shell_search_provider_new (void)
 }
 
 gboolean
-gcal_shell_search_provider_dbus_export (GcalShellSearchProvider *search_provider,
+gcal_shell_search_provider_dbus_export (GcalShellSearchProvider *self,
                                         GDBusConnection         *connection,
                                         const gchar             *object_path,
                                         GError                 **error)
 {
-  GcalShellSearchProviderPrivate *priv = GCAL_SHELL_SEARCH_PROVIDER (search_provider)->priv;
-
-  return g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (priv->skel), connection, object_path, error);
+  return g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (self->skel), connection, object_path, error);
 }
 
 void
-gcal_shell_search_provider_dbus_unexport (GcalShellSearchProvider *search_provider,
+gcal_shell_search_provider_dbus_unexport (GcalShellSearchProvider *self,
                                           GDBusConnection         *connection,
                                           const gchar             *object_path)
 {
-  GcalShellSearchProviderPrivate *priv = GCAL_SHELL_SEARCH_PROVIDER (search_provider)->priv;
-
-  if (g_dbus_interface_skeleton_has_connection (G_DBUS_INTERFACE_SKELETON (priv->skel), connection))
-    g_dbus_interface_skeleton_unexport_from_connection (G_DBUS_INTERFACE_SKELETON (priv->skel), connection);
+  if (g_dbus_interface_skeleton_has_connection (G_DBUS_INTERFACE_SKELETON (self->skel), connection))
+    g_dbus_interface_skeleton_unexport_from_connection (G_DBUS_INTERFACE_SKELETON (self->skel), connection);
 }
 
 void
-gcal_shell_search_provider_connect (GcalShellSearchProvider *search_provider,
+gcal_shell_search_provider_connect (GcalShellSearchProvider *self,
                                     GcalManager             *manager)
 {
-  search_provider->priv->manager = manager;
+  self->manager = manager;
 
-  gcal_manager_setup_shell_search (manager, E_CAL_DATA_MODEL_SUBSCRIBER (search_provider));
-  g_signal_connect_swapped (manager, "query-completed", G_CALLBACK (query_completed_cb), search_provider);
+  gcal_manager_setup_shell_search (manager, E_CAL_DATA_MODEL_SUBSCRIBER (self));
+  g_signal_connect_swapped (manager, "query-completed", G_CALLBACK (query_completed_cb), self);
 }
