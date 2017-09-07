@@ -1327,8 +1327,6 @@ filter_event_list_by_uid_and_modtype (GList                 *widgets,
   event = NULL;
   result = NULL;
 
-  g_message ("Checking for %s", uid);
-
   /* First pass: find the GcalEvent */
   for (l = widgets; l != NULL; l = l->next)
     {
