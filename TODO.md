@@ -1,18 +1,11 @@
 # Tasks
 
- [ ] Rework internal GcalWindow working
+ [ ] Cleanup GcalWindow
  [ ] Add disable/enable of views
- [ ] Rework GcalViews as grid only (WeekView, MonthView, YearView)
- [ ] Rework GcalViews to implement the new API (remove every "New API" comment)
  [ ] Make GcalTimeSelector an entry
  [ ] Properly fix timezone handling
  [ ] Rethink signals from GcalManager
- [ ] Order events chronologically in views
- [ ] Change ordering of events in all-day views (use a custom ordering)
- [ ] Add different triggers for hiding the sources view.
- [ ] Check for the real need of adding timezone, and check everywhere
- [ ] Connect all dconf options to the program
- [ ] Check the real need of a caching GcalManager
+ [ ] Merge GcalSubscriberView and GcalMonthView
 
 # Design tasks
 
