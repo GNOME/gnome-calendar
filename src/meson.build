@@ -37,40 +37,40 @@ sources = files(
 
 gnome.mkenums(
   'org.gnome.calendar.enums.xml',
-  sources: enum_headers,
-  comments: '<!-- @comment@ -->',
-  fhead: '<schemalist>',
-  vhead: '  <@type@ id="org.gnome.calendar.@EnumName@">',
-  vprod: '    <value nick="@valuenick@" value="@valuenum@"/>',
-  vtail: '  </@type@>',
-  ftail: '</schemalist>',
+         sources: enum_headers,
+        comments: '<!-- @comment@ -->',
+           fhead: '<schemalist>',
+           vhead: '  <@type@ id="org.gnome.calendar.@EnumName@">',
+           vprod: '    <value nick="@valuenick@" value="@valuenum@"/>',
+           vtail: '  </@type@>',
+           ftail: '</schemalist>',
   install_header: true,
-  install_dir: calendar_schemadir
+     install_dir: calendar_schemadir
 )
 
 enum_types = 'gcal-enum-types'
 
 sources += gnome.mkenums(
   enum_types,
-  sources: enum_headers,
+     sources: enum_headers,
   c_template: enum_types + '.c.template',
   h_template: enum_types + '.h.template'
 )
 
 sources += gnome.compile_resources(
   'gcal-resources',
-  gresource,
-  source_dir: data_dir,
-  c_name: 'calendar',
-  dependencies: resource_data,
-  export: true
+         gresource,
+        source_dir: data_dir,
+            c_name: 'calendar',
+      dependencies: resource_data,
+            export: true
 )
 
 sources += gnome.gdbus_codegen(
   'gcal-shell-search-provider-generated',
   shell_search_provider_dbus_interfaces,
   interface_prefix: 'org.gnome.',
-  namespace: 'Gcal'
+         namespace: 'Gcal'
 )
 
 debug_conf = configuration_data()
@@ -80,8 +80,8 @@ debug_conf.set10('ENABLE_TRACING', enable_tracing)
 debug = 'gcal-debug.h'
 
 sources += configure_file(
-  input: debug + '.in',
-  output: debug,
+          input: debug + '.in',
+         output: debug,
   configuration: debug_conf
 )
 
@@ -92,21 +92,21 @@ incs = [
 
 executable(
   meson.project_name(),
-  sources,
-  include_directories: incs,
-  dependencies: calendar_deps,
-  install: true,
-  install_dir: calendar_bindir
+               sources,
+   include_directories: incs,
+          dependencies: calendar_deps,
+               install: true,
+           install_dir: calendar_bindir
 )
 
 libgcal = shared_library(
-  'gcal',
-  sources: sources,
+               'gcal',
+              sources: sources,
   include_directories: incs,
-  dependencies: calendar_deps
+         dependencies: calendar_deps
 )
 
 libgcal_dep = declare_dependency(
-  link_with: libgcal,
+            link_with: libgcal,
   include_directories: src_inc
 )
