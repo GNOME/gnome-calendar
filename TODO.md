@@ -1,6 +1,8 @@
 # Tasks
 
  [ ] Cleanup GcalWindow
+ [ ] Cleanup GcalManager
+ [ ] Properly split shell search
  [ ] Add disable/enable of views
  [ ] Make GcalTimeSelector an entry
  [ ] Properly fix timezone handling
