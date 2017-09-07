@@ -19,6 +19,7 @@
 
 #define G_LOG_DOMAIN "GcalWeekGrid"
 
+#include "gcal-debug.h"
 #include "gcal-week-grid.h"
 #include "gcal-week-view.h"
 #include "gcal-utils.h"
@@ -1238,32 +1239,33 @@ gcal_week_grid_remove_event (GcalWeekGrid *self,
 }
 
 GList*
-gcal_week_grid_get_children_by_uuid (GcalWeekGrid *self,
-                                     const gchar  *uid)
+gcal_week_grid_get_children_by_uuid (GcalWeekGrid          *self,
+                                     GcalRecurrenceModType  mod,
+                                     const gchar           *uid)
 {
   GPtrArray *widgets;
+  GList *events;
   GList *result;
   guint i;
 
+  GCAL_ENTRY;
+
+  events = NULL;
   result = NULL;
   widgets = gcal_range_tree_get_data_at_range (self->events, 0, MAX_MINUTES);
 
   for (i = 0; widgets && i < widgets->len; i++)
     {
-      ChildData *data;
-      GcalEvent *event;
-
-      data = g_ptr_array_index (widgets, i);
-      event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (data->widget));
-
-      if (g_strcmp0 (gcal_event_get_uid (event), uid) == 0)
-        result = g_list_prepend (result, data->widget);
-
+      ChildData *data = g_ptr_array_index (widgets, i);
+      events = g_list_prepend (events, data->widget);
     }
 
-  g_clear_pointer (&widgets, g_ptr_array_unref);
+  result = filter_event_list_by_uid_and_modtype (events, mod, uid);
 
-  return result;
+  g_clear_pointer (&widgets, g_ptr_array_unref);
+  g_clear_pointer (&events, g_list_free);
+
+  GCAL_RETURN (result);
 }
 
 void

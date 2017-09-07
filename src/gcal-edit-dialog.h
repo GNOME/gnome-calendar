@@ -57,6 +57,8 @@ GDateTime*           gcal_edit_dialog_get_date_start          (GcalEditDialog *d
 
 gboolean             gcal_edit_dialog_get_recurrence_changed   (GcalEditDialog *self);
 
+GcalRecurrenceModType gcal_edit_dialog_get_recurrence_mod_type (GcalEditDialog *self);
+
 G_END_DECLS
 
 #endif /* __GCAL_EDIT_DIALOG_H__ */

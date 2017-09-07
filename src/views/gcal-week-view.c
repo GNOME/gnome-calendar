@@ -220,17 +220,20 @@ gcal_week_view_set_date (GcalView     *view,
 }
 
 static GList*
-gcal_week_view_get_children_by_uuid (GcalView    *view,
-                                     const gchar *uuid)
+gcal_week_view_get_children_by_uuid (GcalView              *view,
+                                     GcalRecurrenceModType  mod,
+                                     const gchar           *uuid)
 {
   GcalWeekView *self;
   GList *grid, *header;
 
-  self = GCAL_WEEK_VIEW (view);
-  grid = gcal_week_grid_get_children_by_uuid (GCAL_WEEK_GRID (self->week_grid), uuid);
-  header = gcal_week_header_get_children_by_uuid (GCAL_WEEK_HEADER (self->header), uuid);
+  GCAL_ENTRY;
 
-  return g_list_concat (grid, header);
+  self = GCAL_WEEK_VIEW (view);
+  grid = gcal_week_grid_get_children_by_uuid (GCAL_WEEK_GRID (self->week_grid), mod, uuid);
+  header = gcal_week_header_get_children_by_uuid (GCAL_WEEK_HEADER (self->header), mod, uuid);
+
+  GCAL_RETURN (g_list_concat (grid, header));
 }
 
 static void

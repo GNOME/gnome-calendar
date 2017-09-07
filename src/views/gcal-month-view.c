@@ -972,17 +972,23 @@ gcal_month_view_clear_marks (GcalView *view)
 }
 
 static GList*
-gcal_month_view_get_children_by_uuid (GcalView    *view,
-                                      const gchar *uuid)
+gcal_month_view_get_children_by_uuid (GcalView              *view,
+                                      GcalRecurrenceModType  mod,
+                                      const gchar           *uuid)
 {
   GcalSubscriberViewPrivate *ppriv = GCAL_SUBSCRIBER_VIEW (view)->priv;
-  GList *l;
+  GHashTableIter iter;
+  GList *children;
+  GList *tmp;
 
-  l = g_hash_table_lookup (ppriv->children, uuid);
-  if (l != NULL)
-    return g_list_reverse (g_list_copy (l));
+  children = NULL;
 
-  return NULL;
+  g_hash_table_iter_init (&iter, ppriv->children);
+
+  while (g_hash_table_iter_next (&iter, NULL, (gpointer *) &tmp))
+    children = g_list_concat (children, g_list_copy (tmp));
+
+  return filter_event_list_by_uid_and_modtype (children, mod, uuid);
 }
 
 static void

@@ -1589,26 +1589,17 @@ gcal_year_view_set_date (GcalView     *view,
 }
 
 static GList*
-gcal_year_view_get_children_by_uuid (GcalView    *view,
-                                     const gchar *uuid)
+gcal_year_view_get_children_by_uuid (GcalView              *view,
+                                     GcalRecurrenceModType  mod,
+                                     const gchar           *uuid)
 {
-  GcalYearView *year_view = GCAL_YEAR_VIEW (view);
-  GList *children, *l, *result = NULL;
+  GcalYearView *self = GCAL_YEAR_VIEW (view);
+  GList *result, *children;
 
-  children = gtk_container_get_children (GTK_CONTAINER (year_view->events_sidebar));
+  result = NULL;
 
-  for (l = children; l != NULL; l = g_list_next (l))
-    {
-      GcalEventWidget *child_widget;
-      GcalEvent *event;
-
-      child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
-      event = gcal_event_widget_get_event (child_widget);
-
-
-      if (child_widget != NULL && g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
-        result = g_list_append (result, child_widget);
-    }
+  children = gtk_container_get_children (GTK_CONTAINER (self->sidebar));
+  result = filter_event_list_by_uid_and_modtype (children, mod, uuid);
 
   g_list_free (children);
 

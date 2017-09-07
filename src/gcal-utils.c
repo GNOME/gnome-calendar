@@ -1314,3 +1314,92 @@ is_workday (guint day)
 
   return !(no_work_days & 1 << day);
 }
+
+GList*
+filter_event_list_by_uid_and_modtype (GList                 *widgets,
+                                      GcalRecurrenceModType  mod,
+                                      const gchar           *uid)
+{
+  GcalEvent *event;
+  GList *result;
+  GList *l;
+
+  event = NULL;
+  result = NULL;
+
+  g_message ("Checking for %s", uid);
+
+  /* First pass: find the GcalEvent */
+  for (l = widgets; l != NULL; l = l->next)
+    {
+      GcalEventWidget *event_widget;
+      GcalEvent *ev;
+
+      event_widget = l->data;
+
+      /* Safeguard against stray widgets */
+      if (!GCAL_IS_EVENT_WIDGET (event_widget))
+        continue;
+
+      ev = gcal_event_widget_get_event (event_widget);
+
+      /*
+       * We can assume only one event will have the exact uuid. Even among
+       * recurrencies.
+       */
+      if (g_str_equal (uid, gcal_event_get_uid (ev)))
+        {
+          result = g_list_prepend (result, event_widget);
+          event = ev;
+        }
+    }
+
+  /* Second pass: find the other related events */
+  if (event && mod != GCAL_RECURRENCE_MOD_THIS_ONLY)
+    {
+      ECalComponentId *id;
+      ECalComponent *component;
+      ESource *source;
+      g_autofree gchar *id_prefix;
+
+      component = gcal_event_get_component (event);
+      source = gcal_event_get_source (event);
+      id = e_cal_component_get_id (component);
+      id_prefix = g_strdup_printf ("%s:%s", e_source_get_uid (source), id->uid);
+
+      for (l = widgets; l != NULL; l = l->next)
+        {
+          GcalEventWidget *event_widget;
+          GcalEvent *ev;
+
+          event_widget = l->data;
+
+          /* Safeguard against stray widgets */
+          if (!GCAL_IS_EVENT_WIDGET (event_widget))
+            continue;
+
+          ev = gcal_event_widget_get_event (event_widget);
+
+          if (g_str_equal (gcal_event_get_uid (ev), uid))
+            continue;
+
+          if (!g_str_has_prefix (gcal_event_get_uid (ev), id_prefix))
+            continue;
+
+          if (mod == GCAL_RECURRENCE_MOD_ALL)
+            {
+              result = g_list_prepend (result, event_widget);
+            }
+          else if (mod == GCAL_RECURRENCE_MOD_THIS_AND_FUTURE)
+            {
+              if (g_date_time_compare (gcal_event_get_date_start (event), gcal_event_get_date_start (ev)) < 0)
+                result = g_list_prepend (result, event_widget);
+            }
+
+        }
+
+      e_cal_component_free_id (id);
+    }
+
+  return result;
+}

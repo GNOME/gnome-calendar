@@ -1677,32 +1677,20 @@ gcal_week_header_remove_event (GcalWeekHeader *self,
 }
 
 GList*
-gcal_week_header_get_children_by_uuid (GcalWeekHeader *self,
-                                       const gchar    *uuid)
+gcal_week_header_get_children_by_uuid (GcalWeekHeader        *self,
+                                       GcalRecurrenceModType  mod,
+                                       const gchar           *uuid)
 {
-  GList *children, *l, *result;
+  GList *children, *result;
 
-  result = NULL;
+  GCAL_ENTRY;
+
   children = gtk_container_get_children (GTK_CONTAINER (self->grid));
-
-  for (l = children; l != NULL; l = l->next)
-    {
-      GcalEventWidget *child_widget;
-      GcalEvent *event;
-
-      if (!GCAL_IS_EVENT_WIDGET (l->data))
-        continue;
-
-      child_widget = GCAL_EVENT_WIDGET (l->data);
-      event = gcal_event_widget_get_event (child_widget);
-
-      if (g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
-        result = g_list_prepend (result, l->data);
-    }
+  result = filter_event_list_by_uid_and_modtype (children, mod, uuid);
 
   g_list_free (children);
 
-  return result;
+  GCAL_RETURN (result);
 }
 
 GtkSizeGroup*

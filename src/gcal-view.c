@@ -134,11 +134,12 @@ gcal_view_clear_marks (GcalView *view)
  * Returns: (transfer full): a {@link GList} instance
  **/
 GList*
-gcal_view_get_children_by_uuid (GcalView    *view,
-                                const gchar *uuid)
+gcal_view_get_children_by_uuid (GcalView              *view,
+                                GcalRecurrenceModType  mod,
+                                const gchar           *uuid)
 {
   g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
   g_return_val_if_fail (GCAL_VIEW_GET_IFACE (view)->get_children_by_uuid, NULL);
 
-  return GCAL_VIEW_GET_IFACE (view)->get_children_by_uuid (view, uuid);
+  return GCAL_VIEW_GET_IFACE (view)->get_children_by_uuid (view, mod, uuid);
 }

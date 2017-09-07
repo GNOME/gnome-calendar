@@ -46,8 +46,9 @@ void                 gcal_week_grid_add_event                    (GcalWeekGrid  
 void                 gcal_week_grid_remove_event                 (GcalWeekGrid       *self,
                                                                   const gchar        *uid);
 
-GList*               gcal_week_grid_get_children_by_uuid         (GcalWeekGrid       *self,
-                                                                  const gchar        *uid);
+GList*               gcal_week_grid_get_children_by_uuid         (GcalWeekGrid          *self,
+                                                                  GcalRecurrenceModType  mod,
+                                                                  const gchar           *uid);
 
 void                 gcal_week_grid_clear_marks                  (GcalWeekGrid       *self);
 

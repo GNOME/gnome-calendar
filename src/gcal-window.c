@@ -1145,7 +1145,7 @@ edit_dialog_closed (GtkDialog *dialog,
       window->event_to_delete_mod = mod;
 
       /* hide widget of the event */
-      widgets = gcal_view_get_children_by_uuid (view, gcal_event_get_uid (event));
+      widgets = gcal_view_get_children_by_uuid (view, mod, gcal_event_get_uid (event));
 
       g_list_foreach (widgets, (GFunc) gtk_widget_hide, NULL);
       g_list_free (widgets);
@@ -1242,6 +1242,7 @@ undo_remove_action (GtkButton *button,
 
   window = GCAL_WINDOW (user_data);
   widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (window->views[window->active_view]),
+                                            window->event_to_delete_mod,
                                             gcal_event_get_uid (window->event_to_delete));
 
   /* Show the hidden to-be-deleted events */
@@ -1263,7 +1264,9 @@ schedule_open_edit_dialog_by_uuid (OpenEditDialogData *edit_dialog_data)
   GList *widgets;
 
   window = edit_dialog_data->window;
-  widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (window->month_view), edit_dialog_data->uuid);
+  widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (window->month_view),
+                                            GCAL_RECURRENCE_MOD_THIS_ONLY,
+                                            edit_dialog_data->uuid);
   if (widgets != NULL)
     {
       window->open_edit_dialog_timeout_id = 0;
@@ -1798,7 +1801,9 @@ gcal_window_open_event_by_uuid (GcalWindow  *self,
   /* XXX: show events on month view */
   gtk_stack_set_visible_child (GTK_STACK (self->views_stack), self->month_view);
 
-  widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (self->month_view), uuid);
+  widgets = gcal_view_get_children_by_uuid (GCAL_VIEW (self->month_view),
+                                            GCAL_RECURRENCE_MOD_THIS_ONLY,
+                                            uuid);
 
   if (widgets)
     {

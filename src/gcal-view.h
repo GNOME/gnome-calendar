@@ -51,8 +51,9 @@ struct _GcalViewInterface
   /* Marks related API */
   void               (*clear_marks)                              (GcalView           *view);
 
-  GList*             (*get_children_by_uuid)                     (GcalView           *view,
-                                                                  const gchar        *uuid);
+  GList*             (*get_children_by_uuid)                     (GcalView              *view,
+                                                                  GcalRecurrenceModType  mod,
+                                                                  const gchar           *uuid);
 };
 
 void                 gcal_view_set_date                          (GcalView           *view,
@@ -62,8 +63,9 @@ icaltimetype*        gcal_view_get_date                          (GcalView      
 
 void                 gcal_view_clear_marks                       (GcalView           *view);
 
-GList*               gcal_view_get_children_by_uuid              (GcalView           *view,
-                                                                  const gchar        *uuid);
+GList*               gcal_view_get_children_by_uuid              (GcalView              *view,
+                                                                  GcalRecurrenceModType  mod,
+                                                                  const gchar           *uuid);
 
 G_END_DECLS
 
