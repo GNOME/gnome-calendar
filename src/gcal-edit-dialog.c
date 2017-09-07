@@ -56,6 +56,8 @@ struct _GcalEditDialog
   GtkWidget        *title_label;
   GtkWidget        *subtitle_label;
 
+  GtkWidget        *scrolled_window;
+
   GtkWidget        *lock;
   GtkWidget        *source_image;
   GtkWidget        *source_label;
@@ -298,6 +300,19 @@ remove_recurrence_properties (GcalEvent *event)
     }
 
   e_cal_component_rescan (comp);
+}
+
+static void
+transient_size_allocate_cb (GcalEditDialog *self)
+{
+  GtkAllocation alloc;
+  GtkWindow *transient;
+
+  transient = gtk_window_get_transient_for (GTK_WINDOW (self));
+  gtk_widget_get_allocation (GTK_WIDGET (transient), &alloc);
+
+  gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolled_window),
+                                              MAX (400, (gint) (0.75 * alloc.height)));
 }
 
 static void
@@ -659,6 +674,12 @@ gcal_edit_dialog_constructed (GObject* object)
   gtk_widget_insert_action_group (GTK_WIDGET (self),
                                   "edit",
                                   G_ACTION_GROUP (self->action_group));
+
+  /* Watch the main window and adapt the maximum size */
+  g_signal_connect_swapped (gtk_window_get_transient_for (GTK_WINDOW (self)),
+                            "size-allocate",
+                            G_CALLBACK (transient_size_allocate_cb),
+                            self);
 }
 
 static void
@@ -801,6 +822,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_duration_combo);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_duration_stack);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_limits_box);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, scrolled_window);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, source_image);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, sources_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, until_date_selector);
