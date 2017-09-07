@@ -201,6 +201,7 @@ subdir('contrib')
 subdir('data')
 subdir('src')
 subdir('po')
+subdir('tests')
 
 if enable_gtk_doc
   subdir('doc/reference')
