@@ -1326,7 +1326,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
     gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), summary);
 
   /* dialog titlebar's title & subtitle */
-  surface = get_circle_surface_from_color (gcal_event_get_color (event), 16);
+  surface = get_circle_surface_from_color (gcal_event_get_color (event), 10);
   gtk_image_set_from_surface (GTK_IMAGE (dialog->source_image), surface);
   g_clear_pointer (&surface, cairo_surface_destroy);
 
