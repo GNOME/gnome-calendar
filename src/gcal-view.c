@@ -45,6 +45,18 @@ gcal_view_default_init (GcalViewInterface *iface)
                                                            G_PARAM_READWRITE));
 
   /**
+   * GcalView::manager:
+   *
+   * The #GcalManager of the view.
+   */
+  g_object_interface_install_property (iface,
+                                       g_param_spec_object ("manager",
+                                                            "The manager",
+                                                            "The manager of the view",
+                                                            GCAL_TYPE_MANAGER,
+                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
+  /**
    * GcalView::create-event:
    *
    * Emitted when the view wants to create an event.
@@ -90,6 +102,27 @@ gcal_view_set_date (GcalView     *view,
   g_return_if_fail (GCAL_VIEW_GET_IFACE (view)->set_date);
 
   GCAL_VIEW_GET_IFACE (view)->set_date (view, date);
+}
+
+/**
+ * gcal_view_get_manager:
+ * @self: a #GcalView
+ *
+ * Retrieves the #GcalManager instance from @self.
+ *
+ * Returns: (transfer none): a #GcalManager
+ */
+GcalManager*
+gcal_view_get_manager (GcalView *self)
+{
+  GcalManager *manager;
+
+  g_return_val_if_fail (GCAL_IS_VIEW (self), NULL);
+
+  g_object_get (self, "manager", &manager, NULL);
+  g_object_unref (manager);
+
+  return manager;
 }
 
 /**

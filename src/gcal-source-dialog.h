@@ -52,11 +52,6 @@ typedef enum
   GCAL_SOURCE_DIALOG_MODE_NORMAL
 } GcalSourceDialogMode;
 
-GtkWidget*          gcal_source_dialog_new                  (void);
-
-void                gcal_source_dialog_set_manager          (GcalSourceDialog   *dialog,
-                                                             GcalManager        *manager);
-
 void                gcal_source_dialog_set_mode             (GcalSourceDialog     *dialog,
                                                              GcalSourceDialogMode  mode);
 

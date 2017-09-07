@@ -777,7 +777,28 @@ gcal_quick_add_popover_set_property (GObject      *object,
       break;
 
     case PROP_MANAGER:
-      gcal_quick_add_popover_set_manager (self, g_value_get_object (value));
+      if (g_set_object (&self->manager, g_value_get_object (value)))
+        {
+          GcalManager *manager;
+          GList *sources, *l;
+
+          /* Add currently leaded sources */
+          manager = self->manager;
+          sources = gcal_manager_get_sources_connected (manager);
+
+          for (l = sources; l != NULL; l = g_list_next (l))
+            on_source_added (manager, l->data, gcal_manager_is_client_writable (manager, l->data), self);
+
+          g_list_free (sources);
+
+          /* Connect to the manager signals and keep the list updates */
+          g_signal_connect (manager, "source-added", G_CALLBACK (on_source_added), self);
+          g_signal_connect (manager, "source-changed", G_CALLBACK (on_source_changed), self);
+          g_signal_connect (manager, "source-removed", G_CALLBACK (on_source_removed), self);
+          g_signal_connect_swapped (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self);
+
+          g_object_notify (G_OBJECT (self), "manager");
+        }
       break;
 
     default:
@@ -901,41 +922,6 @@ GtkWidget*
 gcal_quick_add_popover_new (void)
 {
   return g_object_new (GCAL_TYPE_QUICK_ADD_POPOVER, NULL);
-}
-
-/**
- * gcal_quick_add_popover_set_manager:
- * @self: a #GcalQuickAddPopover
- * @manager: a #GcalManager
- *
- * Sets the manager of the popover.
- */
-void
-gcal_quick_add_popover_set_manager (GcalQuickAddPopover *self,
-                                    GcalManager         *manager)
-{
-  g_return_if_fail (GCAL_IS_QUICK_ADD_POPOVER (self));
-
-  if (g_set_object (&self->manager, manager))
-    {
-      GList *sources, *l;
-
-      /* Add currently leaded sources */
-      sources = gcal_manager_get_sources_connected (manager);
-
-      for (l = sources; l != NULL; l = g_list_next (l))
-        on_source_added (manager, l->data, gcal_manager_is_client_writable (manager, l->data), self);
-
-      g_list_free (sources);
-
-      /* Connect to the manager signals and keep the list updates */
-      g_signal_connect (manager, "source-added", G_CALLBACK (on_source_added), self);
-      g_signal_connect (manager, "source-changed", G_CALLBACK (on_source_changed), self);
-      g_signal_connect (manager, "source-removed", G_CALLBACK (on_source_removed), self);
-      g_signal_connect_swapped (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self);
-
-      g_object_notify (G_OBJECT (self), "manager");
-    }
 }
 
 /**

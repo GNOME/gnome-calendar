@@ -61,6 +61,8 @@ void                 gcal_view_set_date                          (GcalView      
 
 icaltimetype*        gcal_view_get_date                          (GcalView           *view);
 
+GcalManager*         gcal_view_get_manager                       (GcalView           *self);
+
 void                 gcal_view_clear_marks                       (GcalView           *view);
 
 GList*               gcal_view_get_children_by_uuid              (GcalView              *view,

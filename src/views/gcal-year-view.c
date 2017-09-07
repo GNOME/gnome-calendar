@@ -120,6 +120,7 @@ struct _GcalYearView
 enum {
   PROP_0,
   PROP_DATE,
+  PROP_MANAGER,
   PROP_SHOW_WEEK_NUMBERS,
   LAST_PROP
 };
@@ -1651,6 +1652,10 @@ gcal_year_view_get_property (GObject    *object,
       g_value_set_boxed (value, self->date);
       break;
 
+    case PROP_MANAGER:
+      g_value_set_object (value, self->manager);
+      break;
+
     case PROP_SHOW_WEEK_NUMBERS:
       g_value_set_boolean (value, self->show_week_numbers);
       break;
@@ -1672,6 +1677,17 @@ gcal_year_view_set_property (GObject      *object,
     {
     case PROP_DATE:
       gcal_view_set_date (GCAL_VIEW (self), g_value_get_boxed (value));
+      break;
+
+    case PROP_MANAGER:
+      self->manager = g_value_dup_object (value);
+
+      g_signal_connect_swapped (gcal_manager_get_clock (self->manager),
+                                "day-changed",
+                                G_CALLBACK (gtk_widget_queue_draw),
+                                self->navigator);
+
+      g_object_notify (object, "manager");
       break;
 
     case PROP_SHOW_WEEK_NUMBERS:
@@ -1948,6 +1964,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   widget_class->direction_changed = gcal_year_view_direction_changed;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
+  g_object_class_override_property (object_class, PROP_MANAGER, "manager");
 
   g_object_class_install_property (object_class,
                                    PROP_SHOW_WEEK_NUMBERS,
@@ -1958,10 +1975,13 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
                                                          G_PARAM_READWRITE));
 
   /* FIXME: it will problably go back to GcalView */
-  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_YEAR_VIEW, G_SIGNAL_RUN_LAST,
-                                           0,
-                                           NULL, NULL, NULL,
-                                           G_TYPE_NONE, 1, GCAL_TYPE_EVENT_WIDGET);
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
+                                           GCAL_TYPE_YEAR_VIEW,
+                                           G_SIGNAL_RUN_LAST,
+                                           0, NULL, NULL, NULL,
+                                           G_TYPE_NONE,
+                                           1,
+                                           GCAL_TYPE_EVENT_WIDGET);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/year-view.ui");
 
@@ -2043,18 +2063,6 @@ gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *ifa
 }
 
 /* Public API */
-void
-gcal_year_view_set_manager (GcalYearView *year_view,
-                            GcalManager  *manager)
-{
-  year_view->manager = manager;
-
-  g_signal_connect_swapped (gcal_manager_get_clock (manager),
-                            "day-changed",
-                            G_CALLBACK (gtk_widget_queue_draw),
-                            year_view->navigator);
-}
-
 void
 gcal_year_view_set_first_weekday (GcalYearView *year_view,
                                   gint          nr_day)

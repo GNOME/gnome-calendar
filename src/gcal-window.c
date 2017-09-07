@@ -1378,12 +1378,6 @@ gcal_window_set_property (GObject      *object,
           g_signal_connect_swapped (self->manager, "source-enabled", G_CALLBACK (source_enabled), object);
           g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (source_changed), object);
 
-          gcal_edit_dialog_set_manager (GCAL_EDIT_DIALOG (self->edit_dialog), self->manager);
-          gcal_week_view_set_manager (GCAL_WEEK_VIEW (self->week_view), self->manager);
-          gcal_month_view_set_manager (GCAL_MONTH_VIEW (self->month_view), self->manager);
-          gcal_year_view_set_manager (GCAL_YEAR_VIEW (self->year_view), self->manager);
-          gcal_quick_add_popover_set_manager (GCAL_QUICK_ADD_POPOVER (self->quick_add_popover), self->manager);
-          gcal_source_dialog_set_manager (GCAL_SOURCE_DIALOG (self->source_dialog), self->manager);
           gcal_search_view_connect (GCAL_SEARCH_VIEW (self->search_view), self->manager);
 
           g_object_notify (object, "manager");
@@ -1490,7 +1484,6 @@ gcal_window_class_init(GcalWindowClass *klass)
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->configure_event = gcal_window_configure_event;
   widget_class->window_state_event = gcal_window_state_event;
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/window.ui");
 
   g_object_class_install_property (
       object_class,
@@ -1507,7 +1500,7 @@ gcal_window_class_init(GcalWindowClass *klass)
       PROP_MANAGER,
       g_param_spec_object ("manager",
                            "The manager object",
-                           "A weak reference to the app manager object",
+                           "The manager object",
                            GCAL_TYPE_MANAGER,
                            G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
 
@@ -1528,6 +1521,8 @@ gcal_window_class_init(GcalWindowClass *klass)
                             "Whether the window is in new-event-mode or not",
                             FALSE,
                             G_PARAM_READWRITE));
+
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/window.ui");
 
   /* widgets */
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, edit_dialog);
@@ -1657,6 +1652,17 @@ gcal_window_init (GcalWindow *self)
 
   self->active_date = g_new0 (icaltimetype, 1);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+
+  /*
+   * FIXME: this is a hack around the issue that happens when trying to bind
+   * there properties using the GtkBuilder .ui file.
+   */
+  g_object_bind_property (self, "manager", self->edit_dialog, "manager", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "manager", self->source_dialog, "manager", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "manager", self->week_view, "manager", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "manager", self->month_view, "manager", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "manager", self->year_view, "manager", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT);
 
   /* setup accels */
   app = g_application_get_default ();

@@ -33,9 +33,6 @@ G_DECLARE_FINAL_TYPE (GcalQuickAddPopover, gcal_quick_add_popover, GCAL, QUICK_A
 
 GtkWidget*           gcal_quick_add_popover_new                  (void);
 
-void                 gcal_quick_add_popover_set_manager          (GcalQuickAddPopover *self,
-                                                                  GcalManager         *manager);
-
 GDateTime*           gcal_quick_add_popover_get_date_start       (GcalQuickAddPopover *self);
 
 void                 gcal_quick_add_popover_set_date_start       (GcalQuickAddPopover *self,

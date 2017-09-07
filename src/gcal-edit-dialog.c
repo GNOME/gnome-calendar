@@ -726,8 +726,6 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   object_class->get_property = gcal_edit_dialog_get_property;
   object_class->set_property = gcal_edit_dialog_set_property;
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/edit-dialog.ui");
-
   /**
    * GcalEditDialog::event:
    *
@@ -766,6 +764,8 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
                                                          "Whether the current event can be edited or not",
                                                          TRUE,
                                                          G_PARAM_READWRITE));
+
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/edit-dialog.ui");
 
   /* Alarms */
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, five_minutes_button);

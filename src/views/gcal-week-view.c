@@ -85,6 +85,7 @@ enum
 {
   PROP_0,
   PROP_DATE,
+  PROP_MANAGER,
   NUM_PROPS
 };
 
@@ -519,6 +520,8 @@ gcal_week_view_finalize (GObject       *object)
 
   g_clear_pointer (&self->date, g_free);
 
+  g_clear_object (&self->manager);
+
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_week_view_parent_class)->finalize (object);
 }
@@ -529,10 +532,21 @@ gcal_week_view_set_property (GObject       *object,
                              const GValue  *value,
                              GParamSpec    *pspec)
 {
+  GcalWeekView *self = (GcalWeekView *) object;
+
   switch (property_id)
     {
     case PROP_DATE:
       gcal_view_set_date (GCAL_VIEW (object), g_value_get_boxed (value));
+      break;
+
+    case PROP_MANAGER:
+      self->manager = g_value_dup_object (value);
+
+      gcal_week_grid_set_manager (GCAL_WEEK_GRID (self->week_grid), self->manager);
+      gcal_week_header_set_manager (GCAL_WEEK_HEADER (self->header), self->manager);
+
+      g_object_notify (object, "manager");
       break;
 
     default:
@@ -558,6 +572,10 @@ gcal_week_view_get_property (GObject       *object,
       g_value_set_boxed (value, self->date);
       break;
 
+    case PROP_MANAGER:
+      g_value_set_object (value, self->manager);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -575,6 +593,7 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   object_class->get_property = gcal_week_view_get_property;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
+  g_object_class_override_property (object_class, PROP_MANAGER, "manager");
 
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_WEEK_VIEW,
@@ -617,18 +636,6 @@ GtkWidget*
 gcal_week_view_new (void)
 {
   return g_object_new (GCAL_TYPE_WEEK_VIEW, NULL);
-}
-
-void
-gcal_week_view_set_manager (GcalWeekView *self,
-                            GcalManager  *manager)
-{
-  g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
-
-  self->manager = manager;
-
-  gcal_week_grid_set_manager (GCAL_WEEK_GRID (self->week_grid), manager);
-  gcal_week_header_set_manager (GCAL_WEEK_HEADER (self->header), manager);
 }
 
 /**

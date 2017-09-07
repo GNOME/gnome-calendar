@@ -104,7 +104,9 @@ G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view, GCAL_TYPE_SUBSCRIBER_VI
 enum
 {
   PROP_0,
-  PROP_DATE,  /* active-date inherited property */
+  PROP_DATE,
+  PROP_MANAGER,
+  N_PROPS
 };
 
 static inline gint
@@ -1006,10 +1008,23 @@ gcal_month_view_set_property (GObject       *object,
                               const GValue  *value,
                               GParamSpec    *pspec)
 {
+  GcalMonthView *self = (GcalMonthView *) object;
+
   switch (property_id)
     {
     case PROP_DATE:
       gcal_view_set_date (GCAL_VIEW (object), g_value_get_boxed (value));
+      break;
+
+    case PROP_MANAGER:
+      self->manager = g_value_dup_object (value);
+
+      g_signal_connect_swapped (gcal_manager_get_clock (self->manager),
+                                "day-changed",
+                                G_CALLBACK (gtk_widget_queue_draw),
+                                self);
+
+      g_object_notify (object, "manager");
       break;
 
     default:
@@ -1031,6 +1046,11 @@ gcal_month_view_get_property (GObject       *object,
     case PROP_DATE:
       g_value_set_boxed (value, self->date);
       break;
+
+    case PROP_MANAGER:
+      g_value_set_object (value, self->manager);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -1043,6 +1063,8 @@ gcal_month_view_finalize (GObject *object)
   GcalMonthView *self = GCAL_MONTH_VIEW (object);
 
   g_clear_pointer (&self->date, g_free);
+
+  g_clear_object (&self->manager);
 
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_month_view_parent_class)->finalize (object);
@@ -2285,6 +2307,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   subscriber_view_class->clear_state = gcal_month_view_clear_state;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
+  g_object_class_override_property (object_class, PROP_MANAGER, "manager");
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 }
@@ -2387,18 +2410,4 @@ gcal_month_view_set_use_24h_format (GcalMonthView *self,
                                     gboolean       use_24h)
 {
   self->use_24h_format = use_24h;
-}
-
-void
-gcal_month_view_set_manager (GcalMonthView *self,
-                             GcalManager   *manager)
-{
-  g_return_if_fail (GCAL_IS_MONTH_VIEW (self));
-
-  self->manager = manager;
-
-  g_signal_connect_swapped (gcal_manager_get_clock (manager),
-                            "day-changed",
-                            G_CALLBACK (gtk_widget_queue_draw),
-                            self);
 }

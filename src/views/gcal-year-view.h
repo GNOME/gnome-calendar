@@ -30,8 +30,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalYearView, gcal_year_view, GCAL, YEAR_VIEW, GtkBox)
 
-void              gcal_year_view_set_manager        (GcalYearView *year_view,
-                                                     GcalManager  *manager);
 void              gcal_year_view_set_first_weekday  (GcalYearView *year_view,
                                                      gint          nr_day);
 void              gcal_year_view_set_use_24h_format (GcalYearView *year_view,

@@ -242,6 +242,15 @@ static void       discover_sources_cb                   (GObject             *so
 
 G_DEFINE_TYPE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 
+enum
+{
+  PROP_0,
+  PROP_MANAGER,
+  N_PROPS
+};
+
+static GParamSpec *properties[N_PROPS] = { NULL, };
+
 GActionEntry actions[] = {
   {"file",  on_file_activated,  NULL, NULL, NULL},
   {"local", on_local_activated, NULL, NULL, NULL},
@@ -1766,142 +1775,9 @@ remove_button_clicked (GtkWidget *button,
   gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (user_data), GCAL_SOURCE_DIALOG_MODE_NORMAL);
 }
 
-GtkWidget*
-gcal_source_dialog_new (void)
-{
-  return g_object_new (GCAL_TYPE_SOURCE_DIALOG, NULL);
-}
-
-static void
-gcal_source_dialog_constructed (GObject *object)
-{
-  GcalSourceDialog *self;
-  GtkBuilder *builder;
-  GMenuModel *menu;
-
-  self = GCAL_SOURCE_DIALOG (object);
-
-  G_OBJECT_CLASS (gcal_source_dialog_parent_class)->constructed (object);
-
-  /* widget responses */
-  gtk_dialog_set_default_response (GTK_DIALOG (object), GTK_RESPONSE_CANCEL);
-
-  g_object_set_data (G_OBJECT (self->remove_button), "response", GINT_TO_POINTER (GCAL_RESPONSE_REMOVE_SOURCE));
-
-  /* Setup listbox header functions */
-  gtk_list_box_set_header_func (GTK_LIST_BOX (self->calendars_listbox), display_header_func, NULL, NULL);
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendars_listbox), (GtkListBoxSortFunc) calendar_listbox_sort_func,
-                              object, NULL);
-
-  gtk_list_box_set_header_func (GTK_LIST_BOX (self->online_accounts_listbox), display_header_func, NULL, NULL);
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->online_accounts_listbox), (GtkListBoxSortFunc) online_accounts_listbox_sort_func,
-                              object, NULL);
-
-  /* Action group */
-  self->action_group = g_simple_action_group_new ();
-  gtk_widget_insert_action_group (GTK_WIDGET (object), "source", G_ACTION_GROUP (self->action_group));
-
-  g_action_map_add_action_entries (G_ACTION_MAP (self->action_group), actions, G_N_ELEMENTS (actions), object);
-
-  /* Load the "Add" button menu */
-  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/gtk/menus.ui");
-
-  menu = G_MENU_MODEL (gtk_builder_get_object (builder, "add-source-menu"));
-  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (self->add_calendar_menu_button), menu);
-
-  g_object_unref (builder);
-
-  /* setup titlebar */
-  gtk_window_set_titlebar (GTK_WINDOW (object), self->headerbar);
-}
-
-static void
-gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
-{
-  GObjectClass *object_class;
-  GtkWidgetClass *widget_class;
-
-  /**
-   * Since we cannot guarantee that the
-   * type system registered ESourceLocal,
-   * it must be ensured at least here.
-   */
-  g_type_ensure (E_TYPE_SOURCE_LOCAL);
-
-  object_class = G_OBJECT_CLASS (klass);
-  object_class->constructed = gcal_source_dialog_constructed;
-
-  widget_class = GTK_WIDGET_CLASS (klass);
-
-  /* bind things for/from the template class */
-  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
-
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, account_box);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, account_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, add_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, add_calendar_menu_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, back_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_address_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_color_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_url_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_visible_check);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendars_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, cancel_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_cancel_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_connect_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_dialog);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_password_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_user_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, default_check);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, edit_grid);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, exchange_stub_row);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, google_stub_row);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, headerbar);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, location_dim_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, main_scrolledwindow);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, name_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, notification);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, notification_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, online_accounts_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, owncloud_stub_row);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, remove_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, settings_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, stack);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, web_source_grid);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, web_sources_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, web_sources_revealer);
-
-  gtk_widget_class_bind_template_callback (widget_class, add_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
-  gtk_widget_class_bind_template_callback (widget_class, back_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, calendar_address_activated);
-  gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
-  gtk_widget_class_bind_template_callback (widget_class, calendar_listbox_row_activated);
-  gtk_widget_class_bind_template_callback (widget_class, calendar_visible_check_toggled);
-  gtk_widget_class_bind_template_callback (widget_class, cancel_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, credential_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, credential_entry_activate);
-  gtk_widget_class_bind_template_callback (widget_class, color_set);
-  gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
-  gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
-  gtk_widget_class_bind_template_callback (widget_class, hide_notification);
-  gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
-  gtk_widget_class_bind_template_callback (widget_class, notification_child_revealed_changed);
-  gtk_widget_class_bind_template_callback (widget_class, online_accounts_listbox_row_activated);
-  gtk_widget_class_bind_template_callback (widget_class, online_accounts_settings_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, remove_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, response_signal);
-  gtk_widget_class_bind_template_callback (widget_class, settings_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, stack_visible_child_name_changed);
-  gtk_widget_class_bind_template_callback (widget_class, undo_remove_action);
-  gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
-}
-
-static void
-gcal_source_dialog_init (GcalSourceDialog *self)
-{
-  gtk_widget_init_template (GTK_WIDGET (self));
-}
+/*
+ * Callbacks
+ */
 
 static GcalAccountType
 get_account_type (GoaAccount *account)
@@ -1920,27 +1796,6 @@ get_account_type (GoaAccount *account)
   return GCAL_ACCOUNT_TYPE_NOT_SUPPORTED;
 }
 
-static gint
-online_accounts_listbox_sort_func (GtkListBoxRow *row1,
-                                   GtkListBoxRow *row2,
-                                   gpointer       user_data)
-{
-  GcalAccountType t1, t2;
-  GoaAccount *a1 = g_object_get_data (G_OBJECT (row1), "goa-account");
-  GoaAccount *a2 = g_object_get_data (G_OBJECT (row2), "goa-account");
-
-  if (!a1 || !a2)
-    return a1 ? -1 : (a2 ? 1 : 0);
-
-  t1 = get_account_type (a1);
-  t2 = get_account_type (a2);
-
-  if (t1 != t2)
-    return t1 - t2;
-
-  return g_strcmp0 (goa_account_get_identity (a1), goa_account_get_identity (a2));
-}
-
 static void
 account_calendar_disable_changed (GObject    *object,
                                   GParamSpec *pspec,
@@ -1952,7 +1807,6 @@ account_calendar_disable_changed (GObject    *object,
 
   gtk_label_set_label (GTK_LABEL (user_data), goa_account_get_calendar_disabled (account) ? _("Off") : _("On"));
 }
-
 
 static void
 add_goa_account (GcalSourceDialog *dialog,
@@ -2132,39 +1986,226 @@ loading_changed_cb (GcalSourceDialog *dialog)
   GCAL_EXIT;
 }
 
-/**
- * gcal_source_dialog_set_manager:
- * @dialog: a #GcalSourceDialog
- * @manager: a #GcalManager
- *
- * Setup the #GcalManager singleton
- * instance of the application.
- */
-void
-gcal_source_dialog_set_manager (GcalSourceDialog *dialog,
-                                GcalManager      *manager)
+
+static void
+gcal_source_dialog_constructed (GObject *object)
 {
-  dialog->manager = manager;
+  GcalSourceDialog *self;
+  GtkBuilder *builder;
+  GMenuModel *menu;
 
-  if (!gcal_manager_get_loading (dialog->manager))
+  self = GCAL_SOURCE_DIALOG (object);
+
+  G_OBJECT_CLASS (gcal_source_dialog_parent_class)->constructed (object);
+
+  /* widget responses */
+  gtk_dialog_set_default_response (GTK_DIALOG (object), GTK_RESPONSE_CANCEL);
+
+  g_object_set_data (G_OBJECT (self->remove_button), "response", GINT_TO_POINTER (GCAL_RESPONSE_REMOVE_SOURCE));
+
+  /* Setup listbox header functions */
+  gtk_list_box_set_header_func (GTK_LIST_BOX (self->calendars_listbox), display_header_func, NULL, NULL);
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendars_listbox), (GtkListBoxSortFunc) calendar_listbox_sort_func,
+                              object, NULL);
+
+  gtk_list_box_set_header_func (GTK_LIST_BOX (self->online_accounts_listbox), display_header_func, NULL, NULL);
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->online_accounts_listbox), (GtkListBoxSortFunc) online_accounts_listbox_sort_func,
+                              object, NULL);
+
+  /* Action group */
+  self->action_group = g_simple_action_group_new ();
+  gtk_widget_insert_action_group (GTK_WIDGET (object), "source", G_ACTION_GROUP (self->action_group));
+
+  g_action_map_add_action_entries (G_ACTION_MAP (self->action_group), actions, G_N_ELEMENTS (actions), object);
+
+  /* Load the "Add" button menu */
+  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/gtk/menus.ui");
+
+  menu = G_MENU_MODEL (gtk_builder_get_object (builder, "add-source-menu"));
+  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (self->add_calendar_menu_button), menu);
+
+  g_object_unref (builder);
+
+  /* setup titlebar */
+  gtk_window_set_titlebar (GTK_WINDOW (object), self->headerbar);
+}
+
+static void
+gcal_source_dialog_get_property (GObject    *object,
+                                 guint       prop_id,
+                                 GValue     *value,
+                                 GParamSpec *pspec)
+{
+  GcalSourceDialog *self = (GcalSourceDialog *) object;
+
+  switch (prop_id)
     {
-      GList *sources, *l;
+    case PROP_MANAGER:
+      g_value_set_object (value, self->manager);
+      break;
 
-      sources = gcal_manager_get_sources_connected (dialog->manager);
-
-      for (l = sources; l != NULL; l = l->next)
-        add_source (dialog->manager, l->data, is_source_enabled (l->data), dialog);
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
-  else
+}
+static void
+gcal_source_dialog_set_property (GObject      *object,
+                                 guint         prop_id,
+                                 const GValue *value,
+                                 GParamSpec   *pspec)
+{
+  GcalSourceDialog *self = (GcalSourceDialog *) object;
+
+  switch (prop_id)
     {
-      g_signal_connect_swapped (manager,
-                                "notify::loading",
-                                G_CALLBACK (loading_changed_cb),
-                                dialog);
-    }
+    case PROP_MANAGER:
+      self->manager = g_value_dup_object (value);
 
-  g_signal_connect (dialog->manager, "source-added", G_CALLBACK (add_source), dialog);
-  g_signal_connect (dialog->manager, "source-removed", G_CALLBACK (remove_source), dialog);
+      if (!gcal_manager_get_loading (self->manager))
+        {
+          GList *sources, *l;
+
+          sources = gcal_manager_get_sources_connected (self->manager);
+
+          for (l = sources; l != NULL; l = l->next)
+            add_source (self->manager, l->data, is_source_enabled (l->data), self);
+        }
+      else
+        {
+          g_signal_connect_swapped (self->manager,
+                                    "notify::loading",
+                                    G_CALLBACK (loading_changed_cb),
+                                    self);
+        }
+
+      g_signal_connect (self->manager, "source-added", G_CALLBACK (add_source), self);
+      g_signal_connect (self->manager, "source-removed", G_CALLBACK (remove_source), self);
+
+      g_object_notify_by_pspec (object, properties[PROP_MANAGER]);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
+{
+  GObjectClass *object_class;
+  GtkWidgetClass *widget_class;
+
+  /**
+   * Since we cannot guarantee that the
+   * type system registered ESourceLocal,
+   * it must be ensured at least here.
+   */
+  g_type_ensure (E_TYPE_SOURCE_LOCAL);
+
+  object_class = G_OBJECT_CLASS (klass);
+  object_class->constructed = gcal_source_dialog_constructed;
+  object_class->get_property = gcal_source_dialog_get_property;
+  object_class->set_property = gcal_source_dialog_set_property;
+
+  properties[PROP_MANAGER] = g_param_spec_object ("manager",
+                                                  "Manager",
+                                                  "The manager object of the application",
+                                                  GCAL_TYPE_MANAGER,
+                                                  G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
+
+  widget_class = GTK_WIDGET_CLASS (klass);
+
+  /* bind things for/from the template class */
+  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/source-dialog.ui");
+
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, account_box);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, account_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, add_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, add_calendar_menu_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, back_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_address_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_color_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_url_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendar_visible_check);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, calendars_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, cancel_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_cancel_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_connect_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_dialog);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_password_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_user_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, default_check);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, edit_grid);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, exchange_stub_row);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, google_stub_row);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, headerbar);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, location_dim_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, main_scrolledwindow);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, name_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, notification);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, notification_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, online_accounts_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, owncloud_stub_row);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, remove_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, settings_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, web_source_grid);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, web_sources_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, web_sources_revealer);
+
+  gtk_widget_class_bind_template_callback (widget_class, add_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
+  gtk_widget_class_bind_template_callback (widget_class, back_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, calendar_address_activated);
+  gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
+  gtk_widget_class_bind_template_callback (widget_class, calendar_listbox_row_activated);
+  gtk_widget_class_bind_template_callback (widget_class, calendar_visible_check_toggled);
+  gtk_widget_class_bind_template_callback (widget_class, cancel_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, credential_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, credential_entry_activate);
+  gtk_widget_class_bind_template_callback (widget_class, color_set);
+  gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
+  gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
+  gtk_widget_class_bind_template_callback (widget_class, hide_notification);
+  gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
+  gtk_widget_class_bind_template_callback (widget_class, notification_child_revealed_changed);
+  gtk_widget_class_bind_template_callback (widget_class, online_accounts_listbox_row_activated);
+  gtk_widget_class_bind_template_callback (widget_class, online_accounts_settings_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, remove_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, response_signal);
+  gtk_widget_class_bind_template_callback (widget_class, settings_button_clicked);
+  gtk_widget_class_bind_template_callback (widget_class, stack_visible_child_name_changed);
+  gtk_widget_class_bind_template_callback (widget_class, undo_remove_action);
+  gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
+}
+
+static void
+gcal_source_dialog_init (GcalSourceDialog *self)
+{
+  gtk_widget_init_template (GTK_WIDGET (self));
+}
+
+static gint
+online_accounts_listbox_sort_func (GtkListBoxRow *row1,
+                                   GtkListBoxRow *row2,
+                                   gpointer       user_data)
+{
+  GcalAccountType t1, t2;
+  GoaAccount *a1 = g_object_get_data (G_OBJECT (row1), "goa-account");
+  GoaAccount *a2 = g_object_get_data (G_OBJECT (row2), "goa-account");
+
+  if (!a1 || !a2)
+    return a1 ? -1 : (a2 ? 1 : 0);
+
+  t1 = get_account_type (a1);
+  t2 = get_account_type (a2);
+
+  if (t1 != t2)
+    return t1 - t2;
+
+  return g_strcmp0 (goa_account_get_identity (a1), goa_account_get_identity (a2));
 }
 
 /**
