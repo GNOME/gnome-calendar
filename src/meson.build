@@ -123,7 +123,9 @@ libgcal = shared_library(
                'gcal',
               sources: sources,
   include_directories: incs,
-         dependencies: libgcal_deps
+         dependencies: libgcal_deps,
+              install: true,
+          install_dir: calendar_libdir
 )
 
 libgcal_dep = declare_dependency(
