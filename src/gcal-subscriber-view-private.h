@@ -26,30 +26,31 @@ G_BEGIN_DECLS
 
 struct _GcalSubscriberViewPrivate
 {
-  /**
+  /*
    * Hash to keep children widgets (all of them, parent widgets and its parts if there's any),
-   * uuid as key and a list of all the instances of the event as value. Here, the first widget on the list is
-   * the master, and the rest are the parts. Note: that the master is a part itself, the first one
+   * uuid as key and a list of all the instances of the event as value. Here, the first widget
+   * on the list is the master, and the rest are the parts. Note: the master is a part itself.
    */
   GHashTable     *children;
 
-  /**
-   * Hash containig single-cell events, day of the month, on month-view, month of the year on year-view as key and
-   * a list of the events that belongs to this cell
+  /*
+   * Hash containig single-cell events, day of the month, on month-view, month of the year on
+   * year-view as key anda list of the events that belongs to this cell
    */
   GHashTable     *single_cell_children;
 
-  /**
-   * An organizaed list containig multiday events
-   * This one contains only parents events, to find out its parts @children will be used
+  /*
+   * A sorted list containig multiday events. This one contains only parents events, to find out
+   * its parts @children will be used.
    */
   GList          *multi_cell_children;
 
-  /**
+  /*
    * Hash containing cells that who has overflow per list of hidden widgets.
    */
   GHashTable     *overflow_cells;
-  /**
+
+  /*
    * Set containing the master widgets hidden for delete;
    */
   GHashTable     *hidden_as_overflow;
