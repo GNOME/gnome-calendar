@@ -3,6 +3,8 @@ test_incs = [
   src_inc
 ]
 
+tests_deps = gcal_deps + [ libgcal_dep ]
+
 ###########
 # Manager #
 ###########
@@ -10,7 +12,7 @@ test_incs = [
 test_manager = executable(
      'test-manager',
      'test-manager.c',
-         dependencies: calendar_deps,
+         dependencies: tests_deps,
   include_directories: test_incs
 )
 

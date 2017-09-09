@@ -27,7 +27,6 @@ calendar_micro_version = version_array[2].to_int()
 
 calendar_prefix = get_option('prefix')
 calendar_bindir = join_paths(calendar_prefix, get_option('bindir'))
-calendar_libdir = join_paths(calendar_prefix, get_option('libdir'))
 calendar_localedir = join_paths(calendar_prefix, get_option('localedir'))
 calendar_datadir = join_paths(calendar_prefix, get_option('datadir'))
 calendar_pkgdatadir = join_paths(calendar_datadir, meson.project_name())

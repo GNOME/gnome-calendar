@@ -2,7 +2,7 @@ src_inc = include_directories('.')
 
 enum_headers = files('gcal-utils.h')
 
-libgcal_deps = [
+gcal_deps = [
   gsettings_desktop_schemas_dep,
   libedataserverui_dep,
   libedataserver_dep,
@@ -119,12 +119,11 @@ incs += contrib_incs
 ###################
 
 libgcal = shared_library(
-               'gcal',
+               'gcal-private',
               sources: sources,
   include_directories: incs,
-         dependencies: libgcal_deps,
-              install: true,
-          install_dir: calendar_libdir
+         dependencies: gcal_deps,
+              install: false,
 )
 
 libgcal_dep = declare_dependency(
@@ -137,14 +136,11 @@ libgcal_dep = declare_dependency(
 # gnome-calendar #
 ##################
 
-calendar_deps = libgcal_deps
-calendar_deps += [ libgcal_dep ]
-
 executable(
   meson.project_name(),
-       files('main.c'),
+       sources + files('main.c'),
    include_directories: incs,
-          dependencies: calendar_deps,
+          dependencies: gcal_deps,
                install: true,
            install_dir: calendar_bindir
 )
