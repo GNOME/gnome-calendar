@@ -37,5 +37,5 @@ main (int   argc,
 
   app = gcal_application_new ();
 
-  return g_application_run (G_APPLICATION (app), argc, argv);;
+  return g_application_run (G_APPLICATION (app), argc, argv);
 }
