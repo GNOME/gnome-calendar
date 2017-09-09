@@ -27,8 +27,7 @@ int
 main (int   argc,
       char *argv[])
 {
-  GcalApplication *app;
-  int status;
+  g_autoptr (GcalApplication) app;
 
 #ifdef ENABLE_NLS
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
@@ -37,8 +36,6 @@ main (int   argc,
 #endif
 
   app = gcal_application_new ();
-  status = g_application_run (G_APPLICATION (app), argc, argv);
-  g_object_unref (app);
 
-  return status;
+  return g_application_run (G_APPLICATION (app), argc, argv);;
 }
