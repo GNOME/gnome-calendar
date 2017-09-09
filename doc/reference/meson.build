@@ -14,8 +14,8 @@ version_conf.set('VERSION', calendar_version)
 version = 'version.xml'
 
 version_xml = configure_file(
-  input: version + '.in',
-  output: version,
+          input: version + '.in',
+         output: version,
   configuration: version_conf
 )
 
@@ -29,16 +29,16 @@ doc_path = join_paths(calendar_datadir, 'gtk-doc', 'html', meson.project_name())
 
 gnome.gtkdoc(
   meson.project_name(),
-  main_sgml: meson.project_name() + '-docs.sgml',
-  src_dir: src_inc,
-  dependencies: libgcal_dep,
-  scan_args: '--rebuild-types',
-  mkdb_args: [
-    '--sgml-mode',
-    '--output-format=xml'
-  ],
+          main_sgml: meson.project_name() + '-docs.sgml',
+            src_dir: src_inc,
+       dependencies: libgcal_dep,
+          scan_args: '--rebuild-types',
+          mkdb_args: [ '--sgml-mode', '--output-format=xml' ],
   gobject_typesfile: meson.project_name() + '.types',
-  fixxref_args: [
+        html_assets: html_images,
+            install: true,
+        install_dir: doc_path
+       fixxref_args: [
     '--extra-dir=@0@'.format(join_paths(gtk_doc_path, 'evolution-data-server')),
     '--extra-dir=@0@'.format(join_paths(glib_doc_path, 'glib')),
     '--extra-dir=@0@'.format(join_paths(glib_doc_path, 'gobject')),
@@ -46,7 +46,4 @@ gnome.gtkdoc(
     '--extra-dir=@0@'.format(join_paths(gtk_doc_path, 'gdk')),
     '--extra-dir=@0@'.format(join_paths(gtk_doc_path, 'gtk'))
   ],
-  html_assets: html_images,
-  install: true,
-  install_dir: doc_path
 )
