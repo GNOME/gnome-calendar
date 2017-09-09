@@ -1283,8 +1283,6 @@ gcal_window_finalize (GObject *object)
 
   GCAL_ENTRY;
 
-  g_critical ("Finalizing");
-
   gcal_clear_timeout (&window->save_geometry_timeout_id);
   gcal_clear_timeout (&window->open_edit_dialog_timeout_id);
   gcal_clear_timeout (&window->refresh_timeout_id);
