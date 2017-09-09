@@ -9,6 +9,12 @@
  [ ] Rethink signals from GcalManager
  [ ] Merge GcalSubscriberView and GcalMonthView
 
+ * Add more animations
+   [ ] Bring libdazzle in
+   [ ] Add animation to switch weeks (horizontal scroll)
+   [ ] Add animation to switch months (vertical scroll)
+   [ ] Add animation to switch years (vertical scroll)
+
 # Design tasks
 
  [ ] How to handle timezones?
