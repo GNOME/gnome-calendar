@@ -7,7 +7,6 @@
  [ ] Make GcalTimeSelector an entry
  [ ] Properly fix timezone handling
  [ ] Rethink signals from GcalManager
- [ ] Merge GcalSubscriberView and GcalMonthView
 
  * Add more animations
    [ ] Bring libdazzle in
