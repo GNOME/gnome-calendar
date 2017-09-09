@@ -32,6 +32,7 @@
 #define MAX_MINUTES     (7 * MINUTES_PER_DAY)
 
 #define gcal_clear_datetime(dt) g_clear_pointer (dt, g_date_time_unref)
+#define gcal_clear_timeout(pp) { if (pp && *pp) { g_source_remove (*pp); *pp = 0; } }
 
 /**
  * GcalWindowViewType:

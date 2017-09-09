@@ -1842,7 +1842,7 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
 
   /* Add the event to the cache */
   for (i = start_month; i <= end_month; i++)
-    g_ptr_array_add (self->events[i], event);
+    g_ptr_array_add (self->events[i], g_object_ref (event));
 
   update_sidebar (self);
 
@@ -2015,7 +2015,7 @@ gcal_year_view_init (GcalYearView *self)
   guint i;
 
   for (i = 0; i < 12; i++)
-    self->events[i] = g_ptr_array_new ();
+    self->events[i] = g_ptr_array_new_with_free_func (g_object_unref);
 
   gtk_widget_init_template (GTK_WIDGET (self));
 

@@ -147,7 +147,7 @@ G_DEFINE_CONSTRUCTOR (init_event_cache_map);
 static void
 init_event_cache_map (void)
 {
-  event_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, g_object_unref);
+  event_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, NULL);
 }
 
 G_DEFINE_DESTRUCTOR (destroy_event_cache_map);
@@ -155,6 +155,12 @@ G_DEFINE_DESTRUCTOR (destroy_event_cache_map);
 static void
 destroy_event_cache_map (void)
 {
+  GList *events;
+
+  /* Destroy all events */
+  events = g_hash_table_get_values (event_cache);
+  g_list_free_full (events, g_object_unref);
+
   g_hash_table_destroy (event_cache);
 }
 

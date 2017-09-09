@@ -1283,23 +1283,11 @@ gcal_window_finalize (GObject *object)
 
   GCAL_ENTRY;
 
-  if (window->save_geometry_timeout_id > 0)
-    {
-      g_source_remove (window->save_geometry_timeout_id);
-      window->save_geometry_timeout_id = 0;
-    }
+  g_critical ("Finalizing");
 
-  if (window->open_edit_dialog_timeout_id > 0)
-    {
-      g_source_remove (window->open_edit_dialog_timeout_id);
-      window->open_edit_dialog_timeout_id = 0;
-    }
-
-  if (window->refresh_timeout_id > 0)
-    {
-      g_source_remove (window->refresh_timeout_id);
-      window->refresh_timeout_id = 0;
-    }
+  gcal_clear_timeout (&window->save_geometry_timeout_id);
+  gcal_clear_timeout (&window->open_edit_dialog_timeout_id);
+  gcal_clear_timeout (&window->refresh_timeout_id);
 
   /* If we have a queued event to delete, remove it now */
   if (window->event_to_delete)
@@ -1308,7 +1296,7 @@ gcal_window_finalize (GObject *object)
       g_clear_object (&window->event_to_delete);
     }
 
-  if (window->event_creation_data != NULL)
+  if (window->event_creation_data)
     {
       g_clear_pointer (&window->event_creation_data->start_date, g_date_time_unref);
       g_clear_pointer (&window->event_creation_data->end_date, g_date_time_unref);
@@ -1318,7 +1306,7 @@ gcal_window_finalize (GObject *object)
   g_clear_object (&window->manager);
   g_clear_object (&window->views_switcher);
 
-  g_free (window->active_date);
+  g_clear_pointer (&window->active_date, g_free);
 
   G_OBJECT_CLASS (gcal_window_parent_class)->finalize (object);
 
