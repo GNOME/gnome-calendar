@@ -4,27 +4,28 @@
 # Yuri Myasoedov <ymyasoedov@yandex.ru>, 2012, 2015.
 # Stas Solovey <whats_up@tut.by>, 2014, 2015, 2016.
 # Ivan Komaritsyn <vantu5z@mail.ru>, 2017.
+# Роман Верменко <dargodet@gmail.com>, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-08-23 22:16+0000\n"
-"PO-Revision-Date: 2017-08-27 10:47+0400\n"
-"Last-Translator: Yuri Myasoedov <ymyasoedov@yandex.ru>\n"
-"Language-Team: Русский <gnome-cyr@gnome.org>\n"
+"POT-Creation-Date: 2017-09-09 17:01+0000\n"
+"PO-Revision-Date: 2017-09-12 22:47+0300\n"
+"Last-Translator: Stas Solovey <whats_up@tut.by>\n"
+"Language-Team: русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.2\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:184 src/gcal-application.c:479
+#: data/ui/window.ui:184 src/gcal-application.c:466
 msgid "Calendar"
 msgstr "Календарь"
 
@@ -55,9 +56,6 @@ msgstr ""
 "будто вы используете его уже годы!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
-#, fuzzy
-#| msgctxt "shortcut window"
-#| msgid "Week view"
 msgid "Week view"
 msgstr "Просмотр недели"
 
@@ -123,124 +121,124 @@ msgstr "Переключает режим звука будильника"
 msgid "Remove the alarm"
 msgstr "Удалить будильник"
 
-#: data/ui/edit-dialog.ui:18 data/ui/source-dialog.ui:762
-#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1102
+#: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
+#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1111
 msgid "Cancel"
 msgstr "Отмена"
 
-#: data/ui/edit-dialog.ui:38
+#: data/ui/edit-dialog.ui:36
 msgid "Click to select the calendar"
 msgstr "Нажмите, чтобы выбрать календарь"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:273
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:275
 msgid "Done"
 msgstr "Выполнено"
 
-#: data/ui/edit-dialog.ui:140
+#: data/ui/edit-dialog.ui:146
 msgid "Title"
 msgstr "Заголовок"
 
-#: data/ui/edit-dialog.ui:158
+#: data/ui/edit-dialog.ui:164
 msgid "Date"
 msgstr "Дата"
 
-#: data/ui/edit-dialog.ui:174
+#: data/ui/edit-dialog.ui:180
 msgid "Repeat"
-msgstr ""
+msgstr "Повторение"
 
-#: data/ui/edit-dialog.ui:192
+#: data/ui/edit-dialog.ui:198
 msgid "Reminders"
 msgstr "Напоминания"
 
-#: data/ui/edit-dialog.ui:210
+#: data/ui/edit-dialog.ui:216
 msgid "Notes"
 msgstr "Примечания"
 
-#: data/ui/edit-dialog.ui:226 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:232 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "Местоположение"
 
-#: data/ui/edit-dialog.ui:293
+#: data/ui/edit-dialog.ui:299
 msgid "Time"
 msgstr "Время"
 
-#: data/ui/edit-dialog.ui:346
+#: data/ui/edit-dialog.ui:352
 msgid "All Day"
 msgstr "Весь день"
 
-#: data/ui/edit-dialog.ui:391
+#: data/ui/edit-dialog.ui:397
 msgid "Add reminder…"
 msgstr "Добавить напоминание…"
 
-#: data/ui/edit-dialog.ui:422
+#: data/ui/edit-dialog.ui:428
 msgid "No Repeat"
 msgstr "Не повторять"
 
-#: data/ui/edit-dialog.ui:423
+#: data/ui/edit-dialog.ui:429
 msgid "Daily"
 msgstr "Каждый день"
 
-#: data/ui/edit-dialog.ui:424
+#: data/ui/edit-dialog.ui:430
 msgid "Monday – Friday"
 msgstr "С понедельника по пятницу"
 
-#: data/ui/edit-dialog.ui:425
+#: data/ui/edit-dialog.ui:431
 msgid "Weekly"
 msgstr "Каждую неделю"
 
-#: data/ui/edit-dialog.ui:426
+#: data/ui/edit-dialog.ui:432
 msgid "Monthly"
 msgstr "Каждый месяц"
 
-#: data/ui/edit-dialog.ui:427
+#: data/ui/edit-dialog.ui:433
 msgid "Yearly"
 msgstr "Каждый год"
 
-#: data/ui/edit-dialog.ui:455
+#: data/ui/edit-dialog.ui:461
 msgid "Forever"
 msgstr "Всегда"
 
-#: data/ui/edit-dialog.ui:456
+#: data/ui/edit-dialog.ui:462
 msgid "No. of occurrences"
-msgstr ""
+msgstr "Количество повторений"
 
-#: data/ui/edit-dialog.ui:457
+#: data/ui/edit-dialog.ui:463
 msgid "Until Date"
-msgstr ""
+msgstr "До даты"
 
-#: data/ui/edit-dialog.ui:551
+#: data/ui/edit-dialog.ui:557
 msgid "Delete Event"
 msgstr "Удалить событие"
 
-#: data/ui/edit-dialog.ui:588
+#: data/ui/edit-dialog.ui:596
 msgid "5 minutes"
 msgstr "5 минут"
 
-#: data/ui/edit-dialog.ui:597
+#: data/ui/edit-dialog.ui:605
 msgid "10 minutes"
 msgstr "10 минут"
 
-#: data/ui/edit-dialog.ui:606
+#: data/ui/edit-dialog.ui:614
 msgid "30 minutes"
 msgstr "30 минут"
 
-#: data/ui/edit-dialog.ui:615
+#: data/ui/edit-dialog.ui:623
 msgid "1 hour"
 msgstr "1 час"
 
-#: data/ui/edit-dialog.ui:623
+#: data/ui/edit-dialog.ui:631
 msgid "1 day"
 msgstr "1 день"
 
-#: data/ui/edit-dialog.ui:632
+#: data/ui/edit-dialog.ui:640
 msgid "2 days"
 msgstr "2 дня"
 
-#: data/ui/edit-dialog.ui:641
+#: data/ui/edit-dialog.ui:649
 msgid "3 days"
 msgstr "3 дня"
 
-#: data/ui/edit-dialog.ui:650
+#: data/ui/edit-dialog.ui:658
 msgid "1 week"
 msgstr "1 неделю"
 
@@ -377,7 +375,7 @@ msgstr "Ничего не найдено"
 msgid "Try a different search"
 msgstr "Попробуйте другой поисковый запрос"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1129 src/gcal-window.c:1133
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1123 src/gcal-window.c:1127
 msgid "Undo"
 msgstr "Вернуть"
 
@@ -460,8 +458,8 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Адрес календаря"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2193
-#: src/gcal-source-dialog.c:2199
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2234
+#: src/gcal-source-dialog.c:2240
 msgid "Add Calendar"
 msgstr "Добавить календарь"
 
@@ -477,8 +475,8 @@ msgstr "Пароль"
 msgid "Connect"
 msgstr "Подключить"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:763
-#: src/views/gcal-week-view.c:287
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:764
+#: src/views/gcal-week-view.c:291
 msgid "00:00"
 msgstr "00:00"
 
@@ -486,11 +484,11 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:442
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:446
 msgid "AM"
 msgstr "AM"
 
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:442
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:446
 msgid "PM"
 msgstr "PM"
 
@@ -506,8 +504,8 @@ msgstr "Месяц"
 msgid "Year"
 msgstr "Год"
 
-#: data/ui/window.ui:187 data/ui/year-view.ui:84 src/views/gcal-year-view.c:275
-#: src/views/gcal-year-view.c:509
+#: data/ui/window.ui:187 data/ui/year-view.ui:84 src/views/gcal-year-view.c:276
+#: src/views/gcal-year-view.c:510
 msgid "Today"
 msgstr "Сегодня"
 
@@ -520,8 +518,8 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Поиск событий"
 
-#: data/ui/window.ui:334 src/gcal-source-dialog.c:844
-#: src/gcal-source-dialog.c:2222
+#: data/ui/window.ui:334 src/gcal-source-dialog.c:853
+#: src/gcal-source-dialog.c:2263
 msgid "Calendar Settings"
 msgstr "Параметры календаря"
 
@@ -529,51 +527,48 @@ msgstr "Параметры календаря"
 msgid "No events"
 msgstr "Нет событий"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2322
+#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2729
 msgid "Add Event…"
 msgstr "Добавить событие…"
 
-#: src/gcal-application.c:89
+#: src/gcal-application.c:85
 msgid "Display version number"
 msgstr "Показать номер версии"
 
-#: src/gcal-application.c:94
+#: src/gcal-application.c:90
 msgid "Enable debug messages"
 msgstr "Включить отладочные сообщения"
 
-#: src/gcal-application.c:99
+#: src/gcal-application.c:95
 msgid "Open calendar on the passed date"
 msgstr "Открыть календарь на прошедшей дате"
 
-#: src/gcal-application.c:104
+#: src/gcal-application.c:100
 msgid "Open calendar showing the passed event"
 msgstr "Открыть календарь на прошедшем событии"
 
-#: src/gcal-application.c:285
-msgid "— Calendar management"
-msgstr "— управление календарём"
-
-#: src/gcal-application.c:467
+#: src/gcal-application.c:454
 #, c-format
 msgid "Copyright © %d The Calendar authors"
 msgstr "Авторские права © %d авторы приложения «Календарь»"
 
-#: src/gcal-application.c:473
+#: src/gcal-application.c:460
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
 msgstr "Авторские права © %d–%d авторы приложения «Календарь»"
 
-#: src/gcal-application.c:486
+#: src/gcal-application.c:473
 msgid "translator-credits"
 msgstr ""
 "Юрий Мясоедов <ymyasoedov@yandex.ru>, 2012-2017.\n"
-"Станислав Соловей <whats_up@tut.by>, 2014-2016."
+"Станислав Соловей <whats_up@tut.by>, 2014-2017.\n"
+"Роман Верменко <dargodet@gmail.com>, 2017."
 
-#: src/gcal-edit-dialog.c:273
+#: src/gcal-edit-dialog.c:275
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/gcal-edit-dialog.c:975
+#: src/gcal-edit-dialog.c:997
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
@@ -581,7 +576,7 @@ msgstr[0] "%d минута до"
 msgstr[1] "%d минуты до"
 msgstr[2] "%d минут до"
 
-#: src/gcal-edit-dialog.c:983
+#: src/gcal-edit-dialog.c:1005
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
@@ -589,7 +584,7 @@ msgstr[0] "%d час до"
 msgstr[1] "%d часа до"
 msgstr[2] "%d часов до"
 
-#: src/gcal-edit-dialog.c:991
+#: src/gcal-edit-dialog.c:1013
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
@@ -597,7 +592,7 @@ msgstr[0] "%d день до"
 msgstr[1] "%d дня до"
 msgstr[2] "%d дней до"
 
-#: src/gcal-edit-dialog.c:999
+#: src/gcal-edit-dialog.c:1021
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
@@ -605,7 +600,7 @@ msgstr[0] "%d неделя до"
 msgstr[1] "%d недели до"
 msgstr[2] "%d недель до"
 
-#: src/gcal-edit-dialog.c:1302 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1324 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Безымянное событие"
 
@@ -622,59 +617,59 @@ msgstr "%s (данный календарь в режиме «только чт�
 
 #: src/gcal-quick-add-popover.c:244
 msgid "from next Monday"
-msgstr ""
+msgstr "со следующего понедельника"
 
 #: src/gcal-quick-add-popover.c:245
 msgid "from next Tuesday"
-msgstr ""
+msgstr "со следующего вторника"
 
 #: src/gcal-quick-add-popover.c:246
 msgid "from next Wednesday"
-msgstr ""
+msgstr "со следующей среды"
 
 #: src/gcal-quick-add-popover.c:247
 msgid "from next Thursday"
-msgstr ""
+msgstr "со следующего четверга"
 
 #: src/gcal-quick-add-popover.c:248
 msgid "from next Friday"
-msgstr ""
+msgstr "со следующей пятницы"
 
 #: src/gcal-quick-add-popover.c:249
 msgid "from next Saturday"
-msgstr ""
+msgstr "со следующей субботы"
 
 #: src/gcal-quick-add-popover.c:250
 msgid "from next Sunday"
-msgstr ""
+msgstr "со следующего воскресенья"
 
 #: src/gcal-quick-add-popover.c:255
 msgid "to next Monday"
-msgstr ""
+msgstr "до следующего понедельника"
 
 #: src/gcal-quick-add-popover.c:256
 msgid "to next Tuesday"
-msgstr ""
+msgstr "до следующего вторника"
 
 #: src/gcal-quick-add-popover.c:257
 msgid "to next Wednesday"
-msgstr ""
+msgstr "до следующей среды"
 
 #: src/gcal-quick-add-popover.c:258
 msgid "to next Thursday"
-msgstr ""
+msgstr "до следующего четверга"
 
 #: src/gcal-quick-add-popover.c:259
 msgid "to next Friday"
-msgstr ""
+msgstr "до следующей пятницы"
 
 #: src/gcal-quick-add-popover.c:260
 msgid "to next Saturday"
-msgstr ""
+msgstr "до следующей субботы"
 
 #: src/gcal-quick-add-popover.c:261
 msgid "to next Sunday"
-msgstr ""
+msgstr "до следующего воскресенья"
 
 #: src/gcal-quick-add-popover.c:266
 msgid "January"
@@ -725,18 +720,16 @@ msgid "December"
 msgstr "Декабрь"
 
 #: src/gcal-quick-add-popover.c:286
-#, fuzzy
-#| msgid "Today"
 msgid "from Today"
-msgstr "Сегодня"
+msgstr "с сегодняшнего дня"
 
 #: src/gcal-quick-add-popover.c:290
 msgid "from Tomorrow"
-msgstr ""
+msgstr "с завтрашнего дня"
 
 #: src/gcal-quick-add-popover.c:294
 msgid "from Yesterday"
-msgstr ""
+msgstr "со вчерашнего дня"
 
 #. Translators:
 #. * this is the format string for representing a date consisting of a month
@@ -745,21 +738,19 @@ msgstr ""
 #: src/gcal-quick-add-popover.c:312
 #, c-format
 msgid "from %1$s %2$s"
-msgstr ""
+msgstr "от %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:323
-#, fuzzy
-#| msgid "Today"
 msgid "to Today"
-msgstr "Сегодня"
+msgstr "к сегодняшнему дню"
 
 #: src/gcal-quick-add-popover.c:327
 msgid "to Tomorrow"
-msgstr ""
+msgstr "к завтрашнему дню"
 
 #: src/gcal-quick-add-popover.c:331
 msgid "to Yesterday"
-msgstr ""
+msgstr "к вчерашнему дню"
 
 #. Translators:
 #. * this is the format string for representing a date consisting of a month
@@ -768,153 +759,120 @@ msgstr ""
 #: src/gcal-quick-add-popover.c:349
 #, c-format
 msgid "to %1$s %2$s"
-msgstr ""
+msgstr "до %1$s %2$s"
 
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
 #: src/gcal-quick-add-popover.c:356
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event %1$s %2$s"
-msgstr "Создать событие на %s"
+msgstr "Создать событие %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
-#, fuzzy
-#| msgid "New Event on %s"
 msgid "New Event Today"
-msgstr "Создать событие на %s"
+msgstr "Создать событие сегодня"
 
 #: src/gcal-quick-add-popover.c:377
-#, fuzzy
-#| msgid "New Event on %s"
 msgid "New Event Tomorrow"
-msgstr "Создать событие на %s"
+msgstr "Создать событие завтра"
 
 #: src/gcal-quick-add-popover.c:381
-#, fuzzy
-#| msgid "New Event on %s"
 msgid "New Event Yesterday"
-msgstr "Создать событие на %s"
+msgstr "Создать событие вчера"
 
 #: src/gcal-quick-add-popover.c:387
-#, fuzzy
-#| msgid "New Event on %s"
 msgid "New Event next Monday"
-msgstr "Создать событие на %s"
+msgstr "Создать событие в следующий понедельник"
 
 #: src/gcal-quick-add-popover.c:388
-#, fuzzy
-#| msgid "New Event on %s"
 msgid "New Event next Tuesday"
-msgstr "Создать событие на %s"
+msgstr "Создать событие в следующий вторник"
 
 #: src/gcal-quick-add-popover.c:389
-#, fuzzy
-#| msgid "New Event on %s"
 msgid "New Event next Wednesday"
-msgstr "Создать событие на %s"
+msgstr "Создать событие в следующую среду"
 
 #: src/gcal-quick-add-popover.c:390
-#, fuzzy
-#| msgid "New Event on %s"
 msgid "New Event next Thursday"
-msgstr "Создать событие на %s"
+msgstr "Создать событие в следующий четверг"
 
 #: src/gcal-quick-add-popover.c:391
-#, fuzzy
-#| msgid "New Event on %s"
 msgid "New Event next Friday"
-msgstr "Создать событие на %s"
+msgstr "Создать событие в следующую пятницу"
 
 #: src/gcal-quick-add-popover.c:392
-#, fuzzy
-#| msgid "New Event on %s"
 msgid "New Event next Saturday"
-msgstr "Создать событие на %s"
+msgstr "Создать событие в следующую субботу"
 
 #: src/gcal-quick-add-popover.c:393
-#, fuzzy
-#| msgid "New Event on %s"
 msgid "New Event next Sunday"
-msgstr "Создать событие на %s"
+msgstr "Создать событие в следующее воскресенье"
 
 #. Translators: %d is the numeric day of month
 #: src/gcal-quick-add-popover.c:405
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on January %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на  %d Января"
 
 #: src/gcal-quick-add-popover.c:406
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on February %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на %d Февраля"
 
 #: src/gcal-quick-add-popover.c:407
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on March %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на %d Марта"
 
 #: src/gcal-quick-add-popover.c:408
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on April %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на %d Апреля"
 
 #: src/gcal-quick-add-popover.c:409
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on May %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на %d Мая"
 
 #: src/gcal-quick-add-popover.c:410
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on June %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на %d Июня"
 
 #: src/gcal-quick-add-popover.c:411
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on July %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на %d Июля"
 
 #: src/gcal-quick-add-popover.c:412
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on August %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на %d Августа"
 
 #: src/gcal-quick-add-popover.c:413
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on September %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на %d Сентября"
 
 #: src/gcal-quick-add-popover.c:414
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on October %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на %d Октября"
 
 #: src/gcal-quick-add-popover.c:415
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on November %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на %d Ноября"
 
 #: src/gcal-quick-add-popover.c:416
-#, fuzzy, c-format
-#| msgid "New Event on %s"
+#, c-format
 msgid "New Event on December %d"
-msgstr "Создать событие на %s"
+msgstr "Создать событие на %d Декабря"
 
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
 #: src/gcal-quick-add-popover.c:464
 #, c-format
 msgid "%1$s, %2$s – %3$s"
-msgstr ""
+msgstr "%1$s, %2$s — %3$s"
 
 #: src/gcal-search-view.c:358
 msgid "All day"
@@ -925,38 +883,38 @@ msgid "Use the entry above to search for events."
 msgstr "Используйте строку ввода выше для поиска событий."
 
 #. Dialog
-#: src/gcal-source-dialog.c:1099
+#: src/gcal-source-dialog.c:1108
 msgid "Select a calendar file"
 msgstr "Выберите файл календаря"
 
-#: src/gcal-source-dialog.c:1103
+#: src/gcal-source-dialog.c:1112
 msgid "Open"
 msgstr "Открыть"
 
-#: src/gcal-source-dialog.c:1110
+#: src/gcal-source-dialog.c:1119
 msgid "Calendar files"
 msgstr "Файлы календаря"
 
 #. update the source properties
-#: src/gcal-source-dialog.c:1144
+#: src/gcal-source-dialog.c:1153
 msgid "Unnamed Calendar"
 msgstr "Безымянный календарь"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1750
+#: src/gcal-source-dialog.c:1759
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Календарь <b>%s</b> удалён"
 
-#: src/gcal-source-dialog.c:1953 src/gcal-source-dialog.c:2010
+#: src/gcal-source-dialog.c:1808 src/gcal-source-dialog.c:1864
 msgid "Off"
 msgstr "Выключено"
 
-#: src/gcal-source-dialog.c:1953 src/gcal-source-dialog.c:2010
+#: src/gcal-source-dialog.c:1808 src/gcal-source-dialog.c:1864
 msgid "On"
 msgstr "Включено"
 
-#: src/gcal-source-dialog.c:2009
+#: src/gcal-source-dialog.c:1863
 msgid "Expired"
 msgstr "Просрочено"
 
@@ -975,6 +933,8 @@ msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr ""
+"Событие, которое вы пытаетесь изменить, повторяется. Выбранные вами "
+"изменения должны применяться к:"
 
 #: src/gcal-utils.c:1191
 msgid "_Cancel"
@@ -992,28 +952,28 @@ msgstr "_Последующие события"
 msgid "_All events"
 msgstr "_Все события"
 
-#: src/gcal-window.c:1129
+#: src/gcal-window.c:1123
 msgid "Another event deleted"
 msgstr "Ещё одно событие удалено"
 
-#: src/gcal-window.c:1133
+#: src/gcal-window.c:1127
 msgid "Event deleted"
 msgstr "Событие удалено"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-month-view.c:225 src/views/gcal-year-view.c:290
-#: src/views/gcal-year-view.c:512
+#: src/views/gcal-month-view.c:296 src/views/gcal-year-view.c:291
+#: src/views/gcal-year-view.c:513
 msgid "%B %d"
 msgstr "%d %b"
 
-#: src/views/gcal-month-view.c:1186
+#: src/views/gcal-month-view.c:1627
 msgid "Other events"
 msgstr "Другие события"
 
 #. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:1785 src/views/gcal-week-header.c:338
+#: src/views/gcal-month-view.c:2224 src/views/gcal-week-header.c:338
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1021,7 +981,7 @@ msgstr[0] "Другое %d событие"
 msgstr[1] "Другие %d события"
 msgstr[2] "Другие %d событий"
 
-#: src/views/gcal-week-grid.c:760 src/views/gcal-week-view.c:284
+#: src/views/gcal-week-grid.c:761 src/views/gcal-week-view.c:288
 msgid "00 AM"
 msgstr "00 AM"
 
@@ -1033,9 +993,12 @@ msgstr "%d неделя"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:284
+#: src/views/gcal-year-view.c:285
 msgid "%B %d…"
 msgstr "%d %b…"
+
+#~ msgid "— Calendar management"
+#~ msgstr "— управление календарём"
 
 #~ msgid "New Event from %s to %s"
 #~ msgstr "Создать событие с %s по %s"
