@@ -52,11 +52,6 @@ void          gcal_event_widget_set_read_only              (GcalEventWidget    *
 
 gboolean      gcal_event_widget_get_read_only              (GcalEventWidget    *event);
 
-void         gcal_event_widget_set_has_reminders           (GcalEventWidget    *event,
-                                                            gboolean            has_reminders);
-
-gboolean     gcal_event_widget_get_has_reminders           (GcalEventWidget    *event);
-
 /* Utilities */
 
 GtkWidget*    gcal_event_widget_clone                      (GcalEventWidget    *widget);
