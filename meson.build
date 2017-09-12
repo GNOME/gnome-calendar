@@ -1,6 +1,6 @@
 project(
   'gnome-calendar', 'c',
-  version: '3.25.90',
+  version: '3.26.0',
   license: 'GPL3+',
   default_options: [
     'buildtype=debugoptimized',
@@ -38,7 +38,7 @@ calendar_schemadir = join_paths(calendar_datadir, 'glib-2.0', 'schemas')
 ###########
 
 calendar_buildtype = get_option('buildtype')
-calendar_debug = calendar_minor_version.is_odd() or buildtype.contains('debug')
+calendar_debug = calendar_minor_version.is_odd() or calendar_buildtype.contains('debug')
 enable_tracing = get_option('enable-tracing')
 enable_gtk_doc = get_option('enable-gtk-doc')
 
