@@ -49,6 +49,27 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2017-09-11" version="3.26.0">
+      <description>
+        <p>
+          The GNOME Calendar team is proud to announce the 3.26.0 release of GNOME Calendar,
+          the first stable release of the 3.26 cycle! This release brings hundreds of improvements
+          from more than 50 different contributors.
+        </p>
+        <p>
+          The biggest highlight of this release is the introduction of support for events with
+          recurrences. This was the result of a successfull Google Summer of Code project, and
+          makes managing events that repeat over time much smoother.
+        </p>
+        <p>
+          This release also brings dozens of corrections from new contributors, and improves the
+          memory consumption of Calendar.
+        </p>
+        <p>This release also updates many translations.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2017-08-11" version="3.25.90">
       <description>
         <p>

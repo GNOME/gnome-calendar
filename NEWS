@@ -1,3 +1,13 @@
+Major changes in 3.26.0:
+* Many fixes to recurrent events (Yash Singh, Georges Basile Stavracas Neto)
+* Cache events for better resource management
+* Improve organization of files in the source code
+* Handle command line options correctly (Mohammed Sadiq)
+* Added the first version of a test suite. This will allow us continue improving
+  and delivering new features with much less regressions.
+* Many code cleanups and reorganizations.
+* Updated translations for many languages.
+
 Major changes in 3.25.90:
 * Port to Meson build system (Iñigo Martínez)
 * Improve string in the quick add popover (Carlo Lobrano)
