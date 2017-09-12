@@ -33,40 +33,40 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalEventWidget, gcal_event_widget, GCAL, EVENT_WIDGET, GtkWidget)
 
-GtkWidget*    gcal_event_widget_new                        (GcalEvent          *event);
+GtkWidget*           gcal_event_widget_new                       (GcalEvent          *event);
 
-GcalEvent*    gcal_event_widget_get_event                  (GcalEventWidget    *self);
+GcalEvent*           gcal_event_widget_get_event                 (GcalEventWidget    *self);
 
-GDateTime*    gcal_event_widget_get_date_start             (GcalEventWidget    *self);
+GDateTime*           gcal_event_widget_get_date_start            (GcalEventWidget    *self);
 
-void          gcal_event_widget_set_date_start             (GcalEventWidget    *self,
-                                                            GDateTime          *date_start);
+void                 gcal_event_widget_set_date_start            (GcalEventWidget    *self,
+                                                                  GDateTime          *date_start);
 
-GDateTime*    gcal_event_widget_get_date_end               (GcalEventWidget    *self);
+GDateTime*           gcal_event_widget_get_date_end              (GcalEventWidget    *self);
 
-void          gcal_event_widget_set_date_end               (GcalEventWidget    *self,
-                                                            GDateTime          *date_end);
+void                 gcal_event_widget_set_date_end              (GcalEventWidget    *self,
+                                                                  GDateTime          *date_end);
 
-void          gcal_event_widget_set_read_only              (GcalEventWidget    *event,
-                                                            gboolean            read_only);
+void                 gcal_event_widget_set_read_only             (GcalEventWidget    *event,
+                                                                  gboolean            read_only);
 
-gboolean      gcal_event_widget_get_read_only              (GcalEventWidget    *event);
+gboolean             gcal_event_widget_get_read_only             (GcalEventWidget    *event);
 
 /* Utilities */
 
-GtkWidget*    gcal_event_widget_clone                      (GcalEventWidget    *widget);
+GtkWidget*           gcal_event_widget_clone                     (GcalEventWidget    *widget);
 
-gboolean     gcal_event_widget_equal                       (GcalEventWidget    *widget1,
-                                                            GcalEventWidget    *widget2);
+gboolean             gcal_event_widget_equal                     (GcalEventWidget    *widget1,
+                                                                  GcalEventWidget    *widget2);
 
-gint         gcal_event_widget_compare_by_length           (GcalEventWidget    *widget1,
-                                                            GcalEventWidget    *widget2);
+gint                 gcal_event_widget_compare_by_length         (GcalEventWidget    *widget1,
+                                                                  GcalEventWidget    *widget2);
 
-gint         gcal_event_widget_compare_by_start_date       (GcalEventWidget    *widget1,
-                                                            GcalEventWidget    *widget2);
+gint                 gcal_event_widget_compare_by_start_date     (GcalEventWidget    *widget1,
+                                                                  GcalEventWidget    *widget2);
 
-gint         gcal_event_widget_sort_events                 (GcalEventWidget    *widget1,
-                                                            GcalEventWidget    *widget2);
+gint                gcal_event_widget_sort_events                (GcalEventWidget    *widget1,
+                                                                  GcalEventWidget    *widget2);
 
 G_END_DECLS
 
