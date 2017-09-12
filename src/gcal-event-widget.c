@@ -31,23 +31,23 @@
 
 struct _GcalEventWidget
 {
-  GtkWidget      parent;
+  GtkWidget           parent;
 
   /* properties */
-  GDateTime     *dt_start;
-  GDateTime     *dt_end;
+  GDateTime          *dt_start;
+  GDateTime          *dt_end;
 
   /* internal data */
-  gboolean       clock_format_24h : 1;
-  gboolean       read_only : 1;
-  gchar         *css_class;
+  gboolean            clock_format_24h : 1;
+  gboolean            read_only : 1;
+  gchar              *css_class;
 
-  GcalEvent     *event;
+  GcalEvent          *event;
 
-  GtkOrientation orientation;
+  GtkOrientation      orientation;
 
-  GdkWindow     *event_window;
-  gboolean       button_pressed;
+  GdkWindow          *event_window;
+  gboolean            button_pressed;
 };
 
 enum
@@ -70,6 +70,10 @@ static guint signals[NUM_SIGNALS] = { 0, };
 
 G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL));
+
+/*
+ * Auxiliary methods
+ */
 
 static gchar*
 get_visible_text (GtkWidget         *widget,
@@ -432,27 +436,10 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
   gcal_event_widget_set_event_tooltip (self, event);
 }
 
-static void
-gcal_event_widget_init (GcalEventWidget *self)
-{
-  GtkWidget *widget;
 
-  widget = GTK_WIDGET (self);
-  self->clock_format_24h = is_clock_format_24h ();
-  self->orientation = GTK_ORIENTATION_HORIZONTAL;
-
-  gtk_widget_set_has_window (widget, FALSE);
-  gtk_widget_set_can_focus (widget, TRUE);
-
-  /* Setup the event widget as a drag source */
-  gtk_drag_source_set (widget,
-                       GDK_BUTTON1_MASK,
-                       NULL,
-                       0,
-                       GDK_ACTION_MOVE);
-
-  gtk_drag_source_add_text_targets (widget);
-}
+/*
+ * GObject overrides
+ */
 
 static void
 gcal_event_widget_set_property (GObject      *object,
@@ -857,7 +844,7 @@ gcal_event_widget_draw (GtkWidget *widget,
   g_object_unref (layout);
   g_free (display_text);
 
-  return FALSE;
+  return GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->draw (widget, cr);
 }
 
 static gboolean
@@ -1025,6 +1012,27 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
   gtk_widget_class_set_css_name (widget_class, "event-widget");
 }
 
+static void
+gcal_event_widget_init (GcalEventWidget *self)
+{
+  GtkWidget *widget;
+
+  widget = GTK_WIDGET (self);
+  self->clock_format_24h = is_clock_format_24h ();
+  self->orientation = GTK_ORIENTATION_HORIZONTAL;
+
+  gtk_widget_set_has_window (widget, FALSE);
+  gtk_widget_set_can_focus (widget, TRUE);
+
+  /* Setup the event widget as a drag source */
+  gtk_drag_source_set (widget,
+                       GDK_BUTTON1_MASK,
+                       NULL,
+                       0,
+                       GDK_ACTION_MOVE);
+
+  gtk_drag_source_add_text_targets (widget);
+}
 
 GtkWidget*
 gcal_event_widget_new (GcalEvent *event)
