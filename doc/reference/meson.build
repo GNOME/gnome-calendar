@@ -37,7 +37,7 @@ gnome.gtkdoc(
   gobject_typesfile: meson.project_name() + '.types',
         html_assets: html_images,
             install: true,
-        install_dir: doc_path
+        install_dir: doc_path,
        fixxref_args: [
     '--extra-dir=@0@'.format(join_paths(gtk_doc_path, 'evolution-data-server')),
     '--extra-dir=@0@'.format(join_paths(glib_doc_path, 'glib')),
