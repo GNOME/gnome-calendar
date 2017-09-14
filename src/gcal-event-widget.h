@@ -50,8 +50,6 @@ void                 gcal_event_widget_set_date_end              (GcalEventWidge
 void                 gcal_event_widget_set_read_only             (GcalEventWidget    *event,
                                                                   gboolean            read_only);
 
-gboolean             gcal_event_widget_get_read_only             (GcalEventWidget    *event);
-
 /* Utilities */
 
 GtkWidget*           gcal_event_widget_clone                     (GcalEventWidget    *widget);

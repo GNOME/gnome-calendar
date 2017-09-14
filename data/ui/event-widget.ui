@@ -2,50 +2,41 @@
 <interface>
   <template class="GcalEventWidget" parent="GtkBin">
     <child>
-      <object class="GtkEventBox" id="event_box">
+      <object class="GtkGrid" id="main_grid">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="above_child">True</property>
-        <signal name="enter-notify-event" handler="enter_notify_event_cb" object="GcalEventWidget" swapped="no" />
-        <signal name="leave-notify-event" handler="leave_notify_event_cb" object="GcalEventWidget" swapped="no" />
+        <property name="column_spacing">4</property>
+        <property name="margin-top">1</property>
+        <property name="margin-bottom">1</property>
+        <property name="margin-start">6</property>
+        <property name="margin-end">4</property>
+        <property name="hexpand">False</property>
         <child>
-          <object class="GtkGrid" id="main_grid">
+          <object class="GtkLabel" id="hour_label">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="column_spacing">4</property>
-            <property name="margin-top">1</property>
-            <property name="margin-bottom">1</property>
-            <property name="margin-start">6</property>
-            <property name="margin-end">4</property>
-            <property name="hexpand">False</property>
-            <child>
-              <object class="GtkLabel" id="hour_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="xalign">0.0</property>
-                <attributes>
-                  <attribute name="weight" value="semibold"/>
-                </attributes>
-              </object>
-              <packing>
-                <property name="left_attach">0</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkLabel"  id="summary_label">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="hexpand">True</property>
-                <property name="xalign">0</property>
-                <property name="ellipsize">end</property>
-              </object>
-              <packing>
-                <property name="left_attach">1</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
+            <property name="xalign">0.0</property>
+            <attributes>
+              <attribute name="weight" value="semibold"/>
+            </attributes>
           </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel"  id="summary_label">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="xalign">0</property>
+            <property name="ellipsize">end</property>
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="top_attach">0</property>
+          </packing>
         </child>
       </object>
     </child>

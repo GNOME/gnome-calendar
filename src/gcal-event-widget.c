@@ -38,7 +38,6 @@ struct _GcalEventWidget
   GDateTime          *dt_end;
 
   /* widgets */
-  GtkWidget          *event_box;
   GtkWidget          *hour_label;
   GtkWidget          *main_grid;
   GtkWidget          *summary_label;
@@ -49,6 +48,8 @@ struct _GcalEventWidget
   gchar              *css_class;
 
   GcalEvent          *event;
+
+  GdkWindow          *event_window;
 
   GtkOrientation      orientation;
 
@@ -89,41 +90,27 @@ G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_BIN,
  * Auxiliary methods
  */
 
-
 static void
-set_cursor (GtkWidget  *widget,
-            CursorType  type)
+set_drag_source_enabled (GcalEventWidget *self,
+                         gboolean         enabled)
 {
-  GdkDisplay *display;
-  GdkCursor *cursor;
+  GtkWidget *widget = GTK_WIDGET (self);
 
-  if (!gtk_widget_get_realized (widget))
-    return;
-
-  display = gtk_widget_get_display (widget);
-
-  switch (type)
+  if (enabled)
     {
-    case CURSOR_NONE:
-      cursor = NULL;
-      break;
+      /* Setup the event widget as a drag source */
+      gtk_drag_source_set (widget,
+                           GDK_BUTTON1_MASK,
+                           NULL,
+                           0,
+                           GDK_ACTION_MOVE);
 
-    case CURSOR_GRAB:
-      cursor = gdk_cursor_new_from_name (display, "grab");
-      break;
-
-    case CURSOR_GRABBING:
-      cursor = gdk_cursor_new_from_name (display, "grabbing");
-      break;
-
-    default:
-      cursor = NULL;
+      gtk_drag_source_add_text_targets (widget);
     }
-
-  gdk_window_set_cursor (gtk_widget_get_window (widget), cursor);
-  gdk_display_flush (display);
-
-  g_clear_object (&cursor);
+  else
+    {
+      gtk_drag_source_unset (GTK_WIDGET (widget));
+    }
 }
 
 static void
@@ -466,30 +453,6 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
 
 
 /*
- * Callbacks
- */
-
-static gboolean
-enter_notify_event_cb (GtkWidget *event_box,
-                       GdkEvent  *event,
-                       GtkWidget *widget)
-{
-  set_cursor (widget, CURSOR_GRAB);
-  return GDK_EVENT_PROPAGATE;
-}
-
-
-static gboolean
-leave_notify_event_cb (GtkWidget *event_box,
-                       GdkEvent  *event,
-                       GtkWidget *widget)
-{
-  set_cursor (widget, CURSOR_NONE);
-  return GDK_EVENT_PROPAGATE;
-}
-
-
-/*
  * GtkWidget overrides
  */
 
@@ -533,8 +496,6 @@ gcal_event_widget_button_release_event (GtkWidget      *widget,
 
   if (self->button_pressed)
     {
-      set_cursor (widget, CURSOR_NONE);
-
       self->button_pressed = FALSE;
       g_signal_emit (widget, signals[ACTIVATE], 0);
 
@@ -552,6 +513,15 @@ gcal_event_widget_size_allocate (GtkWidget     *widget,
 
   self = GCAL_EVENT_WIDGET (widget);
 
+  if (gtk_widget_get_realized (widget))
+    {
+      gdk_window_move_resize (self->event_window,
+                              allocation->x,
+                              allocation->y,
+                              allocation->width,
+                              allocation->height);
+    }
+
   /* Try to put the summary label below if the orientation is vertical */
   if (self->orientation == GTK_ORIENTATION_VERTICAL && !gcal_event_get_all_day (self->event))
     {
@@ -566,7 +536,7 @@ gcal_event_widget_size_allocate (GtkWidget     *widget,
                                "width", 2,
                                NULL);
 
-      gtk_widget_get_preferred_height (self->event_box, &minimum_grid_height, NULL);
+      gtk_widget_get_preferred_height (self->main_grid, &minimum_grid_height, NULL);
 
       /*
        * There is no vertical space to put the summary label below the hour label.
@@ -624,9 +594,66 @@ gcal_event_widget_drag_begin (GtkWidget      *widget,
   surface = get_dnd_icon (widget);
 
   gtk_drag_set_icon_surface (context, surface);
-  set_cursor (widget, CURSOR_GRABBING);
 
   g_clear_pointer (&surface, cairo_surface_destroy);
+}
+
+static void
+gcal_event_widget_map (GtkWidget *widget)
+{
+  GcalEventWidget *self;
+
+  self = GCAL_EVENT_WIDGET (widget);
+
+  GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->map (widget);
+
+  if (self->event_window != NULL)
+    gdk_window_show (self->event_window);
+}
+
+static void
+gcal_event_widget_realize (GtkWidget *widget)
+{
+  GcalEventWidget *self;
+  GdkWindowAttr attributes;
+  GtkAllocation allocation;
+  GdkWindow *parent_window;
+  GdkCursor *pointer_cursor;
+  gint attributes_mask;
+
+  self = GCAL_EVENT_WIDGET (widget);
+  gtk_widget_set_realized (widget, TRUE);
+
+  parent_window = gtk_widget_get_parent_window (widget);
+  gtk_widget_set_window (widget, parent_window);
+  g_object_ref (parent_window);
+
+  gtk_widget_get_allocation (widget, &allocation);
+
+  attributes.window_type = GDK_WINDOW_CHILD;
+  attributes.wclass = GDK_INPUT_ONLY;
+  attributes.x = allocation.x;
+  attributes.y = allocation.y;
+  attributes.width = allocation.width;
+  attributes.height = allocation.height;
+  attributes.event_mask = gtk_widget_get_events (widget);
+  attributes.event_mask |= (GDK_BUTTON_PRESS_MASK |
+                            GDK_BUTTON_RELEASE_MASK |
+                            GDK_BUTTON1_MOTION_MASK |
+                            GDK_POINTER_MOTION_HINT_MASK |
+                            GDK_POINTER_MOTION_MASK |
+                            GDK_ENTER_NOTIFY_MASK |
+                            GDK_LEAVE_NOTIFY_MASK |
+                            GDK_SMOOTH_SCROLL_MASK |
+                            GDK_SCROLL_MASK);
+  attributes_mask = GDK_WA_X | GDK_WA_Y;
+
+  self->event_window = gdk_window_new (parent_window, &attributes, attributes_mask);
+  gtk_widget_register_window (widget, self->event_window);
+  gdk_window_show (self->event_window);
+
+  pointer_cursor = gdk_cursor_new_for_display (gdk_display_get_default (), GDK_HAND1);
+  gdk_window_set_cursor (self->event_window, pointer_cursor);
 }
 
 static gboolean
@@ -636,6 +663,35 @@ gcal_event_widget_scroll_event (GtkWidget      *widget,
   return GDK_EVENT_PROPAGATE;
 }
 
+static void
+gcal_event_widget_unmap (GtkWidget *widget)
+{
+   GcalEventWidget *self;
+
+  self = GCAL_EVENT_WIDGET (widget);
+
+  GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->unmap (widget);
+
+  if (self->event_window)
+    gdk_window_hide (self->event_window);
+}
+
+static void
+gcal_event_widget_unrealize (GtkWidget *widget)
+{
+  GcalEventWidget *self;
+
+  self = GCAL_EVENT_WIDGET (widget);
+
+  if (self->event_window)
+    {
+      gtk_widget_unregister_window (widget, self->event_window);
+      gdk_window_destroy (self->event_window);
+      self->event_window = NULL;
+    }
+
+  GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->unrealize (widget);
+}
 
 /*
  * GObject overrides
@@ -740,8 +796,12 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   widget_class->button_release_event = gcal_event_widget_button_release_event;
   widget_class->drag_begin = gcal_event_widget_drag_begin;
   widget_class->draw = gcal_event_widget_draw;
+  widget_class->map = gcal_event_widget_map;
+  widget_class->realize = gcal_event_widget_realize;
   widget_class->size_allocate = gcal_event_widget_size_allocate;
   widget_class->scroll_event = gcal_event_widget_scroll_event;
+  widget_class->unmap = gcal_event_widget_unmap;
+  widget_class->unrealize = gcal_event_widget_unrealize;
 
   /**
    * GcalEventWidget::date-end:
@@ -806,13 +866,9 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/event-widget.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, event_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, hour_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, main_grid);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_label);
-
-  gtk_widget_class_bind_template_callback (widget_class, enter_notify_event_cb);
-  gtk_widget_class_bind_template_callback (widget_class, leave_notify_event_cb);
 
   gtk_widget_class_set_css_name (widget_class, "event");
 }
@@ -825,18 +881,13 @@ gcal_event_widget_init (GcalEventWidget *self)
   widget = GTK_WIDGET (self);
   self->clock_format_24h = is_clock_format_24h ();
 
-  gtk_widget_init_template (GTK_WIDGET (self));
+  gtk_widget_init_template (widget);
 
   gtk_widget_set_can_focus (widget, TRUE);
+  gtk_widget_set_has_window (widget, FALSE);
 
   /* Setup the event widget as a drag source */
-  gtk_drag_source_set (widget,
-                       GDK_BUTTON1_MASK,
-                       NULL,
-                       0,
-                       GDK_ACTION_MOVE);
-
-  gtk_drag_source_add_text_targets (widget);
+  set_drag_source_enabled (self, TRUE);
 
   /* Starts with horizontal */
   self->orientation = GTK_ORIENTATION_HORIZONTAL;
@@ -857,27 +908,9 @@ gcal_event_widget_set_read_only (GcalEventWidget *event,
 {
   g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
 
-  if (!read_only)
-    {
-      GtkWidget *widget = GTK_WIDGET (event);
-
-      /* Setup the event widget as a drag source */
-      gtk_drag_source_set (widget,
-                           0,
-                           NULL,
-                           0,
-                           GDK_ACTION_MOVE);
-
-      gtk_drag_source_add_text_targets (widget);
-    }
+  set_drag_source_enabled (event, !read_only);
 
   event->read_only = read_only;
-}
-
-gboolean
-gcal_event_widget_get_read_only (GcalEventWidget *event)
-{
-  return event->read_only;
 }
 
 /**
@@ -1000,7 +1033,7 @@ gcal_event_widget_clone (GcalEventWidget *widget)
   GtkWidget *new_widget;
 
   new_widget = gcal_event_widget_new (widget->event);
-  gcal_event_widget_set_read_only(GCAL_EVENT_WIDGET (new_widget), gcal_event_widget_get_read_only (widget));
+  gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (new_widget), widget->read_only);
 
   return new_widget;
 }
