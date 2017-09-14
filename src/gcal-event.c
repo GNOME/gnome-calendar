@@ -1545,16 +1545,15 @@ gcal_event_get_uid (GcalEvent *self)
 gboolean
 gcal_event_is_multiday (GcalEvent *self)
 {
-  GDateTime *end_date, *real_end_date;
+  g_autoptr (GDateTime) real_end_date = NULL;
   gboolean is_multiday;
   gint n_days;
 
   g_return_val_if_fail (GCAL_IS_EVENT (self), FALSE);
 
-  end_date = gcal_event_get_date_end (self);
-  real_end_date = g_date_time_add_seconds (end_date, -1);
-  is_multiday = FALSE;
+  real_end_date = g_date_time_add_seconds (gcal_event_get_date_end (self), -1);
   n_days = g_date_time_difference (real_end_date, self->dt_start) / G_TIME_SPAN_DAY;
+  is_multiday = FALSE;
 
   /*
    * An all-day event with only 1 day of time span is treated as a
@@ -1574,8 +1573,6 @@ gcal_event_is_multiday (GcalEvent *self)
     {
       is_multiday = TRUE;
     }
-
-  g_clear_pointer (&real_end_date, g_date_time_unref);
 
   return is_multiday;
 }
