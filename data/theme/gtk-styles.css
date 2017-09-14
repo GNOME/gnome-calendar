@@ -1,19 +1,14 @@
 @define-color event_shadow_color alpha(black, 0.2);
 
-.nav-button {
-    background-color: transparent;
-    background-image: none;
-}
-
-/* nav-bar labels */
-.start-header {
+/* Header labels */
+label.primary-label {
     font-size: 16pt;
     font-weight: bold;
     color: @theme_selected_bg_color;
     padding: 12px;
 }
 
-.end-header {
+label.secondary-label {
     font-size: 16pt;
     font-weight: bold;
     padding: 12px;
@@ -25,7 +20,8 @@ calendar-view {
     font-size: 10pt;
 }
 
-calendar-view.header {
+calendar-view.header,
+label.header {
     font-size: 10pt;
     font-weight: bold;
     color: alpha(@theme_fg_color, 0.55);
@@ -39,25 +35,6 @@ weekgrid.current {
 calendar-view:selected {
     color: @theme_selected_bg_color;
     font-weight: bold;
-}
-
-calendar-view.overflow:hover {
-    font-weight: bold;
-    color: @theme_selected_bg_color;
-    background-image: linear-gradient(to bottom, shade(@theme_bg_color, 0.9), alpha(@theme_bg_color, 0.2) 10%,
-                                      alpha(@theme_bg_color, 0.2) 95%, shade(@theme_bg_color, 0.95) 100%);
-}
-
-calendar-view.overflow {
-    font-size: 8pt;
-}
-
-calendar-view.lines {
-    color: alpha(@theme_fg_color, 0.4);
-}
-
-calendar-view.offset {
-    background-color: alpha(@theme_bg_color, 0.5);
 }
 
 /* Year View CSS */
@@ -364,18 +341,18 @@ datechooser day:selected:hover {
   font-weight: bold;
 }
 
+label.month-name {
+    font-size: 16pt;
+    font-weight: bold;
+    color: alpha(@theme_selected_bg_color, 0.75);
+    padding: 12px;
+}
+
 /* Week View CSS */
 
 .week-header {
     padding: 0px;
     border-bottom: solid @borders 1px;
-}
-
-.week-header .month-name {
-    font-size: 16pt;
-    font-weight: bold;
-    color: alpha(@theme_selected_bg_color, 0.75);
-    padding: 12px;
 }
 
 .week-header .week-number {
@@ -436,4 +413,59 @@ weekgrid:selected,
 
 .week-header:selected {
     border: solid 1px alpha(@theme_selected_bg_color, 0.8);
+}
+
+
+/*
+ * Month cell
+ */
+
+monthcell {
+	border: solid 1px @borders;
+	border-width: 1px 0 0 1px;
+	background: transparent;
+	padding: 1px 0 1px 0;
+	transition: background-color 200ms;
+}
+
+monthcell:selected {
+    font-weight: bold;
+    background-color: alpha(@theme_selected_bg_color, 0.1);
+}
+
+monthcell.today {
+    background-color: alpha(@theme_selected_bg_color, 0.25);
+}
+
+monthcell:selected.today {
+    background-color: alpha(@theme_selected_bg_color, 0.33);
+}
+
+monthcell.out-of-month {
+    background-color: alpha(@theme_bg_color, 0.4);
+}
+
+monthcell label {
+    color: @theme_fg_color;
+    font-size: 0.9rem;
+}
+
+monthcell:hover:not(.out-of-month) {
+    background-color: @theme_bg_color;
+    transition: background-color 200ms;
+}
+
+monthcell:dir(ltr):nth-child(7n + 1) {
+	border-left-width: 0;
+}
+
+monthcell:dir(rtl):nth-child(7n + 1) {
+	border-right-width: 0;
+}
+
+monthcell button {
+    padding: 0 4px;
+    border-radius: 0;
+    border-bottom: none;
+    border-right: none;
 }

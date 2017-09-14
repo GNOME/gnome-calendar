@@ -54,6 +54,8 @@ resource_data = files(
   'ui/edit-dialog.ui',
   'ui/help-overlay.ui',
   'ui/menus.ui',
+  'ui/month-cell.ui',
+  'ui/month-view.ui',
   'ui/multi-choice.ui',
   'ui/quick-add-popover.ui',
   'ui/search-view.ui',

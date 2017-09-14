@@ -162,4 +162,10 @@ GList*          filter_event_list_by_uid_and_modtype            (GList          
                                                                  GcalRecurrenceModType  mod,
                                                                  const gchar           *uid);
 
+gboolean        gcal_translate_child_window_position            (GtkWidget           *target,
+                                                                 GdkWindow           *child_window,
+                                                                 gdouble              src_x,
+                                                                 gdouble              src_y,
+                                                                 gdouble             *real_x,
+                                                                 gdouble             *real_y);
 #endif // __GCAL_UTILS_H__

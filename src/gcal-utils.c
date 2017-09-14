@@ -1401,3 +1401,37 @@ filter_event_list_by_uid_and_modtype (GList                 *widgets,
 
   return result;
 }
+
+gboolean
+gcal_translate_child_window_position (GtkWidget *target,
+                                      GdkWindow *child_window,
+                                      gdouble    src_x,
+                                      gdouble    src_y,
+                                      gdouble   *real_x,
+                                      gdouble   *real_y)
+{
+  GdkWindow *window;
+  gdouble x, y;
+
+  x = src_x;
+  y = src_y;
+
+  /* Find the (x, y) values relative to the workbench */
+  window = child_window;
+  while (window && window != gtk_widget_get_window (target))
+    {
+      gdk_window_coords_to_parent (window, x, y, &x, &y);
+      window = gdk_window_get_parent (window);
+    }
+
+  if (!window)
+    return FALSE;
+
+  if (real_x)
+    *real_x = x;
+
+  if (real_y)
+    *real_y = y;
+
+  return TRUE;
+}

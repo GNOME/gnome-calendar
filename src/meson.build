@@ -18,6 +18,7 @@ gcal_deps = [
 ]
 
 sources = files(
+  'views/gcal-month-cell.c',
   'views/gcal-month-view.c',
   'views/gcal-range-tree.c',
   'views/gcal-view.c',

@@ -1065,7 +1065,7 @@ draw_navigator (GcalYearView *year_view,
 
   /* read header from CSS code related to the view */
   gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "start-header");
+  gtk_style_context_add_class (context, "primary-label");
 
   header_str = g_strdup_printf ("%d", year_view->date->year);
   gtk_style_context_get (context, state_flags, "font", &font_desc, NULL);
@@ -1348,7 +1348,7 @@ calculate_sizes (GcalYearView *self)
   /* get header info from CSS */
   context = gtk_widget_get_style_context (GTK_WIDGET (self));
   gtk_style_context_save (context);
-  gtk_style_context_add_class (context, "start-header");
+  gtk_style_context_add_class (context, "primary-label");
   gtk_style_context_get (context, gtk_style_context_get_state (context),
                          "padding-top", &padding_top,
                          "padding-bottom", &padding_bottom,

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalMonthCell" parent="GtkEventBox">
+    <property name="visible">True</property>
+    <property name="can-focus">True</property>
+    <property name="expand">True</property>
+    <signal name="enter-notify-event" handler="enter_notify_event_cb" object="GcalMonthCell" swapped="no" />
+    <signal name="leave-notify-event" handler="leave_notify_event_cb" object="GcalMonthCell" swapped="no" />
+    <child>
+      <object class="GtkOverlay" id="overlay">
+        <property name="visible">True</property>
+        <property name="can-focus">True</property>
+
+        <!-- HACK: in Gtk3, insensitive widgets receive no events. We "fix" this
+             limitation by adding an always-sensitive GtkEventBox above the event,
+             and when the event is insensitive, the event box's event window is
+             above it -->
+        <child type="overlay">
+          <object class="GtkEventBox" id="button_event_box">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="above-child" bind-source="overflow_button" bind-property="sensitive" bind-flags="default|invert-boolean|sync-create" />
+            <signal name="enter-notify-event" handler="enter_notify_event_cb" object="GcalMonthCell" swapped="no" />
+            <signal name="leave-notify-event" handler="leave_notify_event_cb" object="GcalMonthCell" swapped="no" />
+            <child>
+              <object class="GtkButton" id="overflow_button">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="valign">end</property>
+                <property name="receives-default">True</property>
+                <signal name="clicked" handler="overflow_button_clicked_cb" object="GcalMonthCell" swapped="no" />
+                <style>
+                  <class name="flat" />
+                </style>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="spacing">6</property>
+                    <property name="valign">center</property>
+                    <child type="center">
+                      <object class="GtkLabel" id="overflow_label">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="ellipsize">end</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="day_label">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="pack-type">end</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="weather_icon">
+                        <property name="can-focus">False</property>
+                        <property name="stock">gtk-missing-image</property>
+                      </object>
+                      <packing>
+                        <property name="pack-type">end</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>
