@@ -1791,6 +1791,9 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               pos_x = cell_width * column + margin.left;
               pos_y = cell_height * (row + first_row_gap) + start_grid_y + margin.top;
 
+              /* TODO: find a better way to take the lines into account */
+              pos_y += 2;
+
               child_allocation.x = pos_x;
               child_allocation.y = pos_y + vertical_cell_space - size_left[cell_idx];
               child_allocation.width = cell_width * length - (margin.left + margin.right);
@@ -1864,6 +1867,9 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
               pos_x = cell_width * (i % 7) + margin.left;
               pos_y = cell_height * ((i / 7) + first_row_gap) + start_grid_y + margin.top;
+
+              /* TODO: find a better way to take the lines into account */
+              pos_y += 2;
 
               child_allocation.x = pos_x;
               child_allocation.y = pos_y + vertical_cell_space - size_left[i];

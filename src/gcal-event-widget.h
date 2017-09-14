@@ -31,7 +31,7 @@ G_BEGIN_DECLS
 
 #define GCAL_TYPE_EVENT_WIDGET                    (gcal_event_widget_get_type ())
 
-G_DECLARE_FINAL_TYPE (GcalEventWidget, gcal_event_widget, GCAL, EVENT_WIDGET, GtkWidget)
+G_DECLARE_FINAL_TYPE (GcalEventWidget, gcal_event_widget, GCAL, EVENT_WIDGET, GtkBin)
 
 GtkWidget*           gcal_event_widget_new                       (GcalEvent          *event);
 

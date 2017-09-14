@@ -615,8 +615,8 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
   gboolean ltr;
   gdouble minutes_height;
   gdouble column_width;
+  guint x, y;
   guint i;
-  guint x;
 
   /* No need to relayout stuff if nothing changed */
   if (allocation->height == gtk_widget_get_allocated_height (widget) &&
@@ -698,15 +698,21 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           width = column_width / events_at_range - margin.left - margin.right;
           height = (data->end - data->start) * minutes_height - margin.top - margin.bottom;
           offset = (width + margin.left + margin.right) * widget_index;
+          y = (data->start % MINUTES_PER_DAY) * minutes_height + margin.top;
 
           if (ltr)
             x = column_width * i + offset + allocation->x + margin.left + 1;
           else
             x = allocation->width - width - (column_width * i + offset + allocation->x + margin.left + 1);
 
+          /* TODO: find a better way to handle line widths */
+          height -= 2;
+          width -= 1;
+          y += 1;
+
           /* Setup the child position and size */
           child_allocation.x = x;
-          child_allocation.y = (data->start % MINUTES_PER_DAY) * minutes_height + margin.top;
+          child_allocation.y = y;
           child_allocation.width = width;
           child_allocation.height = height;
 

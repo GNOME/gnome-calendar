@@ -212,28 +212,32 @@ popover.events button {
     box-shadow: none;
 }
 
-event-widget {
+
+/*
+ * Event widget
+ */
+
+event {
     border-radius: 2px;
-    margin: 2px 2px 1px;
-    padding: 3px 4px;
+    margin: 1px 1px 0 2px;
     font-size: 9pt;
 }
 
-event-widget.color-dark {
+event.color-dark {
     color: white;
     outline-color: rgba(0, 0, 0, 0.3);
 }
 
-event-widget.color-dark:backdrop {
+event.color-dark:backdrop {
     color: rgba(255, 255, 255, 0.3);
 }
 
-event-widget.color-light {
+event.color-light {
     color: black;
     outline-color: rgba(255, 255, 255, 0.5);
 }
 
-event-widget.color-light:backdrop {
+event.color-light:backdrop {
     color: rgba(0, 0, 0, 0.3);
 }
 

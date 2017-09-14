@@ -257,7 +257,12 @@
 "                                    alpha(%2$s, 0) 10px,"\
 "                                    alpha(%2$s, 0) 16px,"\
 "                                    %2$s	   17px);"\
-"}"
+"}"\
+".color-%1$d.slanted box { margin: 0 16px 0 16px; }"\
+".color-%1$d.slanted-start box { margin-left: 16px; }"\
+".color-%1$d.slanted-start:dir(rtl) box { margin-right: 16px; }"\
+".color-%1$d.slanted-end box { margin-right: 16px; }"\
+".color-%1$d.slanted-end:dir(rtl) box { margin-left: 16px; }"
 
 #endif /* CSS_CODE_H */
 

@@ -31,11 +31,18 @@
 
 struct _GcalEventWidget
 {
-  GtkWidget           parent;
+  GtkBin              parent;
 
   /* properties */
   GDateTime          *dt_start;
   GDateTime          *dt_end;
+
+  /* widgets */
+  GtkWidget          *alarm_icon;
+  GtkWidget          *event_box;
+  GtkWidget          *hour_label;
+  GtkWidget          *main_grid;
+  GtkWidget          *summary_label;
 
   /* internal data */
   gboolean            clock_format_24h : 1;
@@ -46,7 +53,6 @@ struct _GcalEventWidget
 
   GtkOrientation      orientation;
 
-  GdkWindow          *event_window;
   gboolean            button_pressed;
 };
 
@@ -66,98 +72,59 @@ enum
   NUM_SIGNALS
 };
 
+
+
+typedef enum
+{
+  CURSOR_NONE,
+  CURSOR_GRAB,
+  CURSOR_GRABBING
+} CursorType;
+
 static guint signals[NUM_SIGNALS] = { 0, };
 
-G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_WIDGET,
+G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_BIN,
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_ORIENTABLE, NULL));
 
 /*
  * Auxiliary methods
  */
 
-static gchar*
-get_visible_text (GtkWidget         *widget,
-                  GtkOrientation     orientation)
+
+static void
+set_cursor (GtkWidget  *widget,
+            CursorType  type)
 {
-  GcalEventWidget *self;
-  gboolean is_ltr;
-  gchar *display_text;
-  gchar *escaped_text;
+  GdkDisplay *display;
+  GdkCursor *cursor;
 
-  self = GCAL_EVENT_WIDGET (widget);
-  is_ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
+  if (!gtk_widget_get_realized (widget))
+    return;
 
-  /*
-   * Since we set markup labels, we have to escape text before
-   * using it, or we get empty event widgets.
-   */
-  escaped_text = g_markup_escape_text (gcal_event_get_summary (self->event), -1);
+  display = gtk_widget_get_display (widget);
 
-  /*
-   * The text displayed in the widget includes the time when the event
-   * is timed, or not if the event is all day.
-   */
-  if (gcal_event_get_all_day (self->event))
+  switch (type)
     {
-      display_text = escaped_text;
-    }
-  else
-    {
-      GDateTime *local_start_time;
-      gchar *start_time;
-      local_start_time = g_date_time_to_local (gcal_event_get_date_start (self->event));
+    case CURSOR_NONE:
+      cursor = NULL;
+      break;
 
-      if (self->clock_format_24h)
-        start_time = g_date_time_format (local_start_time, "%R");
-      else
-        start_time = g_date_time_format (local_start_time, "%I:%M %P");
+    case CURSOR_GRAB:
+      cursor = gdk_cursor_new_from_name (display, "grab");
+      break;
 
-      /*
-       * When in horizontal, draw the elements sequentially; otherwise,
-       * draw the time in the first line, and the title in subsequent
-       * lines.
-       */
-      if (orientation == GTK_ORIENTATION_HORIZONTAL)
-        {
-          if (is_ltr)
-            display_text = g_strdup_printf ("(%s) %s", start_time, escaped_text);
-          else
-            display_text = g_strdup_printf ("%s (%s)", escaped_text, start_time);
-        }
-      else
-        {
-          display_text = g_strdup_printf ("<b>%s</b>\n%s", start_time, escaped_text);
-        }
+    case CURSOR_GRABBING:
+      cursor = gdk_cursor_new_from_name (display, "grabbing");
+      break;
 
-      g_clear_pointer (&local_start_time, g_date_time_unref);
-      g_clear_pointer (&escaped_text, g_free);
-      g_clear_pointer (&start_time, g_free);
+    default:
+      cursor = NULL;
     }
 
-    return display_text;
-}
+  gdk_window_set_cursor (gtk_widget_get_window (widget), cursor);
+  gdk_display_flush (display);
 
-static gint
-get_vertical_text_height (GtkWidget *widget)
-{
-  GtkBorder border, padding;
-  GtkStyleContext *context;
-  PangoLayout *layout;
-  gint layout_height;
-  gchar* display_text;
-
-  context = gtk_widget_get_style_context (widget);
-  display_text = get_visible_text (widget, GTK_ORIENTATION_VERTICAL);
-  layout = gtk_widget_create_pango_layout (widget, display_text);
-  pango_layout_get_pixel_size (layout, NULL, &layout_height);
-  g_object_unref (layout);
-
-  gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
-  gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
-
-  g_clear_pointer(&display_text, g_free);
-
-  return layout_height + padding.top + padding.bottom + border.top + border.bottom;
+  g_clear_object (&cursor);
 }
 
 static void
@@ -192,6 +159,10 @@ gcal_event_widget_update_style (GcalEventWidget *self)
     gtk_style_context_add_class (context, "slanted-start");
   else if (slanted_end)
     gtk_style_context_add_class (context, "slanted-end");
+
+  /* TODO: adjust margins based on the CSS gradients sizes, not hardcoded */
+  gtk_widget_set_margin_start (self->main_grid, slanted_start ? 20 : 4);
+  gtk_widget_set_margin_end (self->main_grid, slanted_end ? 20 : 4);
 }
 
 static void
@@ -397,10 +368,25 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
   g_string_free (tooltip_mesg, TRUE);
 }
 
+static gchar*
+get_hour_label (GcalEventWidget *self)
+{
+  g_autoptr (GDateTime) local_start_time;
+
+  local_start_time = g_date_time_to_local (gcal_event_get_date_start (self->event));
+
+  if (self->clock_format_24h)
+    return g_date_time_format (local_start_time, "%R");
+  else
+    return g_date_time_format (local_start_time, "%I:%M %P");
+}
+
 static void
 gcal_event_widget_set_event_internal (GcalEventWidget *self,
                                       GcalEvent       *event)
 {
+  g_autofree gchar *hour_str = NULL;
+
   /*
    * This function is called only once, since the property is
    * set as CONSTRUCT_ONLY. Any other attempt to set an event
@@ -433,7 +419,199 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
                             G_CALLBACK (gtk_widget_queue_draw),
                             self);
 
+  /* Tooltip */
   gcal_event_widget_set_event_tooltip (self, event);
+
+  /* Alarm icon */
+  gtk_widget_set_visible (self->alarm_icon, gcal_event_has_alarms (event));
+
+  /* Hour label */
+  hour_str = get_hour_label (self);
+
+  gtk_widget_set_visible (self->hour_label, !gcal_event_get_all_day (event));
+  gtk_label_set_label (GTK_LABEL (self->hour_label), hour_str);
+
+  /* Summary label */
+  g_object_bind_property (event,
+                          "summary",
+                          self->summary_label,
+                          "label",
+                          G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+}
+
+
+/*
+ * Callbacks
+ */
+
+static gboolean
+enter_notify_event_cb (GtkWidget *event_box,
+                       GdkEvent  *event,
+                       GtkWidget *widget)
+{
+  set_cursor (widget, CURSOR_GRAB);
+  return GDK_EVENT_PROPAGATE;
+}
+
+
+static gboolean
+leave_notify_event_cb (GtkWidget *event_box,
+                       GdkEvent  *event,
+                       GtkWidget *widget)
+{
+  set_cursor (widget, CURSOR_NONE);
+  return GDK_EVENT_PROPAGATE;
+}
+
+
+/*
+ * GtkWidget overrides
+ */
+
+static gboolean
+gcal_event_widget_draw (GtkWidget *widget,
+                        cairo_t   *cr)
+{
+  GtkStyleContext *context;
+  guint width, height;
+
+  context = gtk_widget_get_style_context (widget);
+
+  width = gtk_widget_get_allocated_width (widget);
+  height = gtk_widget_get_allocated_height (widget);
+
+  gtk_render_background (context, cr, 0, 0, width, height);
+  gtk_render_frame (context, cr, 0, 0, width, height);
+
+  return GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->draw (widget, cr);
+}
+
+static gboolean
+gcal_event_widget_button_press_event (GtkWidget      *widget,
+                                      GdkEventButton *event)
+{
+  GcalEventWidget *self;
+
+  self = GCAL_EVENT_WIDGET (widget);
+  self->button_pressed = TRUE;
+
+  return GDK_EVENT_STOP;
+}
+
+static gboolean
+gcal_event_widget_button_release_event (GtkWidget      *widget,
+                                        GdkEventButton *event)
+{
+  GcalEventWidget *self;
+
+  self = GCAL_EVENT_WIDGET (widget);
+
+  if (self->button_pressed)
+    {
+      set_cursor (widget, CURSOR_NONE);
+
+      self->button_pressed = FALSE;
+      g_signal_emit (widget, signals[ACTIVATE], 0);
+
+      return GDK_EVENT_STOP;
+    }
+
+  return GDK_EVENT_PROPAGATE;
+}
+
+static void
+gcal_event_widget_size_allocate (GtkWidget     *widget,
+                                 GtkAllocation *allocation)
+{
+  GcalEventWidget *self;
+
+  self = GCAL_EVENT_WIDGET (widget);
+
+  /* Try to put the summary label below if the orientation is vertical */
+  if (self->orientation == GTK_ORIENTATION_VERTICAL && !gcal_event_get_all_day (self->event))
+    {
+      gint minimum_grid_height;
+
+      gtk_label_set_line_wrap (GTK_LABEL (self->summary_label), TRUE);
+      /* This is needed to push the alarm icon to the end of the widget */
+      gtk_widget_set_hexpand (self->hour_label, TRUE);
+
+      gtk_container_child_set (GTK_CONTAINER (self->main_grid),
+                               self->summary_label,
+                               "left-attach", 0,
+                               "top-attach", 1,
+                               "width", 3,
+                               NULL);
+
+      gtk_widget_get_preferred_height (self->event_box, &minimum_grid_height, NULL);
+
+      /*
+       * There is no vertical space to put the summary label below the hour label.
+       * Thus, reset the label's original attributes.
+       */
+      if (allocation->height < minimum_grid_height)
+        {
+          gtk_container_child_set (GTK_CONTAINER (self->main_grid),
+                                   self->summary_label,
+                                   "left-attach", 1,
+                                   "top-attach", 0,
+                                   "width", 1,
+                                   NULL);
+
+          gtk_label_set_line_wrap (GTK_LABEL (self->summary_label), FALSE);
+          gtk_widget_set_hexpand (self->hour_label, FALSE);
+        }
+    }
+
+  GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->size_allocate (widget, allocation);
+}
+
+static cairo_surface_t*
+get_dnd_icon (GtkWidget *widget)
+{
+  cairo_surface_t *surface;
+  cairo_t *cr;
+
+  /* Make it transparent */
+  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
+                                        gtk_widget_get_allocated_width (widget),
+                                        gtk_widget_get_allocated_height (widget));
+
+  cr = cairo_create (surface);
+
+  gtk_widget_draw (widget, cr);
+  cairo_destroy (cr);
+
+  return surface;
+}
+
+static void
+gcal_event_widget_drag_begin (GtkWidget      *widget,
+                              GdkDragContext *context)
+{
+  GcalEventWidget *self = GCAL_EVENT_WIDGET (widget);
+  cairo_surface_t *surface;
+
+  if (self->read_only)
+    {
+      gtk_drag_cancel (context);
+      return;
+    }
+
+  /* Setup the drag n' drop icon */
+  surface = get_dnd_icon (widget);
+
+  gtk_drag_set_icon_surface (context, surface);
+  set_cursor (widget, CURSOR_GRABBING);
+
+  g_clear_pointer (&surface, cairo_surface_destroy);
+}
+
+static gboolean
+gcal_event_widget_scroll_event (GtkWidget      *widget,
+                                GdkEventScroll *scroll_event)
+{
+  return GDK_EVENT_PROPAGATE;
 }
 
 
@@ -524,407 +702,7 @@ gcal_event_widget_finalize (GObject *object)
 }
 
 static void
-gcal_event_widget_get_preferred_width (GtkWidget *widget,
-                                       gint      *minimum,
-                                       gint      *natural)
-{
-  GtkBorder border, padding;
-  GtkStyleContext *context;
-  PangoLayout *layout;
-  gint layout_width;
-
-  context = gtk_widget_get_style_context (widget);
-  layout = gtk_widget_create_pango_layout (widget, "00:00:00 00:00");
-  pango_layout_get_pixel_size (layout, &layout_width, NULL);
-  g_object_unref (layout);
-
-  gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
-  gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
-
-  if (minimum != NULL)
-    *minimum = layout_width + padding.left + padding.right + border.left + border.right;
-  if (natural != NULL)
-    *natural = layout_width + padding.left + padding.right + border.left + border.right;
-}
-
-static void
-gcal_event_widget_get_preferred_height (GtkWidget *widget,
-                                        gint      *minimum,
-                                        gint      *natural)
-{
-  GcalEventWidget *self;
-  GtkBorder border, padding;
-  GtkStyleContext *context;
-  PangoLayout *layout;
-  gint layout_height;
-  gchar* display_text;
-
-  self = GCAL_EVENT_WIDGET (widget);
-  context = gtk_widget_get_style_context (widget);
-  display_text = get_visible_text (widget, self->orientation);
-  layout = gtk_widget_create_pango_layout (widget, display_text);
-  pango_layout_get_pixel_size (layout, NULL, &layout_height);
-  g_object_unref (layout);
-
-  gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
-  gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
-
-  if (minimum != NULL)
-    *minimum = layout_height + padding.top + padding.bottom + border.top + border.bottom;
-  if (natural != NULL)
-    *natural = layout_height + padding.top + padding.bottom + border.top + border.bottom;
-
-  g_clear_pointer(&display_text, g_free);
-}
-
-static void
-gcal_event_widget_realize (GtkWidget *widget)
-{
-  GcalEventWidget *self;
-  GdkWindow *parent_window;
-  GdkWindowAttr attributes;
-  gint attributes_mask;
-  GtkAllocation allocation;
-
-  GdkCursor* pointer_cursor;
-
-  self = GCAL_EVENT_WIDGET (widget);
-  gtk_widget_set_realized (widget, TRUE);
-
-  parent_window = gtk_widget_get_parent_window (widget);
-  gtk_widget_set_window (widget, parent_window);
-  g_object_ref (parent_window);
-
-  gtk_widget_get_allocation (widget, &allocation);
-
-  attributes.window_type = GDK_WINDOW_CHILD;
-  attributes.wclass = GDK_INPUT_ONLY;
-  attributes.x = allocation.x;
-  attributes.y = allocation.y;
-  attributes.width = allocation.width;
-  attributes.height = allocation.height;
-  attributes.event_mask = gtk_widget_get_events (widget);
-  attributes.event_mask |= (GDK_BUTTON_PRESS_MASK |
-                            GDK_BUTTON_RELEASE_MASK |
-                            GDK_BUTTON1_MOTION_MASK |
-                            GDK_POINTER_MOTION_HINT_MASK |
-                            GDK_POINTER_MOTION_MASK |
-                            GDK_ENTER_NOTIFY_MASK |
-                            GDK_LEAVE_NOTIFY_MASK |
-                            GDK_SMOOTH_SCROLL_MASK |
-                            GDK_SCROLL_MASK);
-  attributes_mask = GDK_WA_X | GDK_WA_Y;
-
-  self->event_window = gdk_window_new (parent_window,
-                                       &attributes,
-                                       attributes_mask);
-  gtk_widget_register_window (widget, self->event_window);
-  gdk_window_show (self->event_window);
-
-  pointer_cursor = gdk_cursor_new_for_display (gdk_display_get_default (),
-                                               GDK_HAND1);
-  gdk_window_set_cursor (self->event_window, pointer_cursor);
-}
-
-static void
-gcal_event_widget_unrealize (GtkWidget *widget)
-{
-  GcalEventWidget *self;
-
-  self = GCAL_EVENT_WIDGET (widget);
-
-  if (self->event_window != NULL)
-    {
-      gtk_widget_unregister_window (widget, self->event_window);
-      gdk_window_destroy (self->event_window);
-      self->event_window = NULL;
-    }
-
-  GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->unrealize (widget);
-}
-
-static void
-gcal_event_widget_map (GtkWidget *widget)
-{
-  GcalEventWidget *self;
-
-  self = GCAL_EVENT_WIDGET (widget);
-
-  GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->map (widget);
-
-  if (self->event_window != NULL)
-    gdk_window_show (self->event_window);
-}
-
-static void
-gcal_event_widget_unmap (GtkWidget *widget)
-{
-   GcalEventWidget *self;
-
-  self = GCAL_EVENT_WIDGET (widget);
-
-  GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->unmap (widget);
-
-  if (self->event_window != NULL)
-    gdk_window_hide (self->event_window);
-}
-
-static void
-gcal_event_widget_size_allocate (GtkWidget     *widget,
-                                 GtkAllocation *allocation)
-{
-  GcalEventWidget *self;
-
-  self = GCAL_EVENT_WIDGET (widget);
-  gtk_widget_set_allocation (widget, allocation);
-
-  if (gtk_widget_get_realized (widget))
-    {
-      gdk_window_move_resize (self->event_window,
-                              allocation->x,
-                              allocation->y,
-                              allocation->width,
-                              allocation->height);
-    }
-}
-
-static gboolean
-gcal_event_widget_draw (GtkWidget *widget,
-                        cairo_t   *cr)
-{
-  GcalEventWidget *self;
-
-  GtkStyleContext *context;
-  GtkStateFlags state;
-  GtkBorder padding;
-
-  gint width, height, layout_height, x;
-  gint end_gap, icon_size = 0;
-  gboolean is_ltr;
-
-  PangoLayout *layout;
-  PangoFontDescription *font_desc;
-  gchar *display_text;
-
-  self = GCAL_EVENT_WIDGET (widget);
-  context = gtk_widget_get_style_context (widget);
-  state = gtk_style_context_get_state (context);
-  is_ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
-
-  gtk_style_context_get_padding (context, state, &padding);
-
-  width = gtk_widget_get_allocated_width (widget);
-  height = gtk_widget_get_allocated_height (widget);
-
-  gtk_render_background (context, cr, 0, 0, width, height);
-  gtk_render_frame (context, cr, 0, 0, width, height);
-
-  /* Set the text to be displayed */
-  if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-    display_text = get_visible_text (widget, GTK_ORIENTATION_HORIZONTAL);
-  else
-    {
-      if (get_vertical_text_height (widget) >= height)
-        display_text = get_visible_text (widget, GTK_ORIENTATION_HORIZONTAL);
-      else
-        display_text = get_visible_text (widget, GTK_ORIENTATION_VERTICAL);
-    }
-
-  /* Retrieve the font description */
-  gtk_style_context_get (context, state, "font", &font_desc, NULL);
-  layout = gtk_widget_create_pango_layout (widget, "");
-  pango_layout_set_markup (layout, display_text, -1);
-  pango_layout_set_font_description (layout, font_desc);
-  pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
-
-  /* Icon size */
-  icon_size = ICON_SIZE;
-  end_gap = 0;
-
-  if (gcal_event_has_alarms (self->event))
-    end_gap += icon_size + (is_ltr ? padding.left : padding.right);
-
-  if (self->read_only)
-    end_gap += icon_size + (is_ltr ? padding.left : padding.right);
-
-  x = is_ltr ? padding.left : padding.left + end_gap;
-
-  pango_layout_set_width (layout, (width - (padding.left + padding.right + end_gap)) * PANGO_SCALE);
-  pango_layout_get_pixel_size (layout, NULL, &layout_height);
-  gtk_render_layout (context, cr, x, padding.top, layout);
-
-#if 0
-  /* TODO: find out a good way to handle this */
-  /*
-   * On vertical event widgets, we assume we might have space to draw the
-   * event's detail (or at least part of it).
-   */
-  if (self->orientation == GTK_ORIENTATION_VERTICAL &&
-      2 * padding.top + layout_height + padding.bottom < height &&
-      strlen (gcal_event_get_description (self->event)) > 0)
-    {
-      g_autofree gchar *description;
-
-      description = g_strdup_printf ("<small>%s</small>", gcal_event_get_description (self->event));
-      pango_layout_set_markup (layout, description, -1);
-      pango_layout_set_width (layout, (width - (padding.left + padding.right) ) * PANGO_SCALE);
-      pango_layout_set_height (layout, (height - (2 * padding.top + layout_height + padding.bottom) ) * PANGO_SCALE);
-      pango_layout_set_font_description (layout, font_desc);
-      pango_layout_set_ellipsize (layout, PANGO_ELLIPSIZE_END);
-
-      gtk_render_layout (context,
-                         cr,
-                         x,
-                         2 * padding.top + layout_height + padding.bottom,
-                         layout);
-    }
-#endif
-
-  x += is_ltr ? (width - end_gap - padding.left - padding.right) : (- padding.right - padding.left - icon_size);
-
-  /* render reminder icon */
-  if (gcal_event_has_alarms (self->event))
-    {
-      GtkIconTheme *icon_theme;
-      GtkIconInfo *icon_info;
-      GdkPixbuf *pixbuf;
-      gboolean was_symbolic;
-
-      icon_theme = gtk_icon_theme_get_default ();
-      icon_info = gtk_icon_theme_lookup_icon (icon_theme,
-                                              "alarm-symbolic",
-                                              icon_size,
-                                              0);
-      pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
-                                                        context,
-                                                        &was_symbolic,
-                                                        NULL);
-
-      gtk_render_icon (context,
-                       cr,
-                       pixbuf,
-                       x + padding.left,
-                       padding.top);
-
-      x += is_ltr ? (padding.left + icon_size) : (- padding.right - icon_size);
-
-      g_object_unref (pixbuf);
-      cairo_paint (cr);
-    }
-
-  /* render locked icon */
-  if (self->read_only)
-    {
-      GtkIconTheme *icon_theme;
-      GtkIconInfo *icon_info;
-      GdkPixbuf *pixbuf;
-      gboolean was_symbolic;
-
-      icon_theme = gtk_icon_theme_get_default ();
-      icon_info = gtk_icon_theme_lookup_icon (icon_theme,
-                                              "changes-prevent-symbolic",
-                                              icon_size,
-                                              0);
-      pixbuf = gtk_icon_info_load_symbolic_for_context (icon_info,
-                                                        context,
-                                                        &was_symbolic,
-                                                        NULL);
-
-      gtk_render_icon (context,
-                       cr,
-                       pixbuf,
-                       x + padding.left,
-                       padding.top);
-
-      g_object_unref (pixbuf);
-      cairo_paint (cr);
-    }
-
-  pango_font_description_free (font_desc);
-  g_object_unref (layout);
-  g_free (display_text);
-
-  return GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->draw (widget, cr);
-}
-
-static gboolean
-gcal_event_widget_button_press_event (GtkWidget      *widget,
-                                      GdkEventButton *event)
-{
-  GcalEventWidget *self;
-
-  self = GCAL_EVENT_WIDGET (widget);
-  self->button_pressed = TRUE;
-  return TRUE;
-}
-
-static gboolean
-gcal_event_widget_button_release_event (GtkWidget      *widget,
-                                        GdkEventButton *event)
-{
-  GcalEventWidget *self;
-
-  self = GCAL_EVENT_WIDGET (widget);
-
-  if (self->button_pressed)
-    {
-      self->button_pressed = FALSE;
-      g_signal_emit (widget, signals[ACTIVATE], 0);
-      return TRUE;
-    }
-
-  return FALSE;
-}
-
-static cairo_surface_t*
-get_dnd_icon (GtkWidget *widget)
-{
-  cairo_surface_t *surface;
-  cairo_t *cr;
-
-  /* Make it transparent */
-  surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32,
-                                        gtk_widget_get_allocated_width (widget),
-                                        gtk_widget_get_allocated_height (widget));
-
-  cr = cairo_create (surface);
-
-  gtk_widget_draw (widget, cr);
-  cairo_destroy (cr);
-
-  return surface;
-}
-
-static void
-gcal_event_widget_drag_begin (GtkWidget      *widget,
-                              GdkDragContext *context)
-{
-  GcalEventWidget *self = GCAL_EVENT_WIDGET (widget);
-  cairo_surface_t *surface;
-
-  if (self->read_only)
-    {
-      gtk_drag_cancel (context);
-      return;
-    }
-
-  /* Setup the drag n' drop icon */
-  surface = get_dnd_icon (widget);
-
-  gtk_drag_set_icon_surface (context, surface);
-
-  g_clear_pointer (&surface, cairo_surface_destroy);
-}
-
-static gboolean
-gcal_event_widget_scroll_event (GtkWidget      *widget,
-                                GdkEventScroll *scroll_event)
-{
-  return GDK_EVENT_PROPAGATE;
-}
-
-static void
-gcal_event_widget_class_init(GcalEventWidgetClass *klass)
+gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
@@ -935,17 +713,11 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
   object_class->finalize = gcal_event_widget_finalize;
 
   widget_class = GTK_WIDGET_CLASS (klass);
-  widget_class->get_preferred_width = gcal_event_widget_get_preferred_width;
-  widget_class->get_preferred_height = gcal_event_widget_get_preferred_height;
-  widget_class->realize = gcal_event_widget_realize;
-  widget_class->unrealize = gcal_event_widget_unrealize;
-  widget_class->map = gcal_event_widget_map;
-  widget_class->unmap = gcal_event_widget_unmap;
-  widget_class->size_allocate = gcal_event_widget_size_allocate;
-  widget_class->draw = gcal_event_widget_draw;
   widget_class->button_press_event = gcal_event_widget_button_press_event;
   widget_class->button_release_event = gcal_event_widget_button_release_event;
   widget_class->drag_begin = gcal_event_widget_drag_begin;
+  widget_class->draw = gcal_event_widget_draw;
+  widget_class->size_allocate = gcal_event_widget_size_allocate;
   widget_class->scroll_event = gcal_event_widget_scroll_event;
 
   /**
@@ -954,7 +726,7 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
    * The end date this widget represents. Notice that this may
    * differ from the event's end date. For example, if the event
    * spans more than one month and we're in Month View, the end
-   * date marks the last day this event is visible.
+   * date marks the last day this event widget is visible.
    */
   g_object_class_install_property (object_class,
                                    PROP_DATE_END,
@@ -970,7 +742,7 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
    * The start date this widget represents. Notice that this may
    * differ from the event's start date. For example, if the event
    * spans more than one month and we're in Month View, the start
-   * date marks the first day this event is visible.
+   * date marks the first day this event widget is visible.
    */
   g_object_class_install_property (object_class,
                                    PROP_DATE_START,
@@ -1009,7 +781,18 @@ gcal_event_widget_class_init(GcalEventWidgetClass *klass)
                                      G_TYPE_NONE,
                                      0);
 
-  gtk_widget_class_set_css_name (widget_class, "event-widget");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/event-widget.ui");
+
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, alarm_icon);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, event_box);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, hour_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, main_grid);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_label);
+
+  gtk_widget_class_bind_template_callback (widget_class, enter_notify_event_cb);
+  gtk_widget_class_bind_template_callback (widget_class, leave_notify_event_cb);
+
+  gtk_widget_class_set_css_name (widget_class, "event");
 }
 
 static void
@@ -1021,7 +804,8 @@ gcal_event_widget_init (GcalEventWidget *self)
   self->clock_format_24h = is_clock_format_24h ();
   self->orientation = GTK_ORIENTATION_HORIZONTAL;
 
-  gtk_widget_set_has_window (widget, FALSE);
+  gtk_widget_init_template (GTK_WIDGET (self));
+
   gtk_widget_set_can_focus (widget, TRUE);
 
   /* Setup the event widget as a drag source */
@@ -1048,7 +832,7 @@ gcal_event_widget_set_read_only (GcalEventWidget *event,
 {
   g_return_if_fail (GCAL_IS_EVENT_WIDGET (event));
 
-  if (read_only)
+  if (!read_only)
     {
       GtkWidget *widget = GTK_WIDGET (event);
 
