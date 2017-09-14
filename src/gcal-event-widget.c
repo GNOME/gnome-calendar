@@ -437,6 +437,19 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
                           self->summary_label,
                           "label",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+
+  /*
+   * If the event is a timed, single-day event, draw it differently
+   * from all-day or multi-day events.
+   */
+  if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))
+    {
+      GtkStyleContext *context;
+
+      context = gtk_widget_get_style_context (GTK_WIDGET (self));
+
+      gtk_style_context_add_class (context, "timed");
+    }
 }
 
 
