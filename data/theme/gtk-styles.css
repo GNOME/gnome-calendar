@@ -220,7 +220,7 @@ popover.events button {
 event {
     border-radius: 2px;
     margin: 0 1px 1px 2px;
-    font-size: 9pt;
+    font-size: 0.9rem;
 }
 
 event.color-dark.horizontal.timed,
@@ -240,7 +240,7 @@ event.color-dark:backdrop {
 }
 
 event.color-light {
-    color: black;
+    color: @theme_fg_color;
     outline-color: rgba(255, 255, 255, 0.5);
 }
 
