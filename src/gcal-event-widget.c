@@ -163,6 +163,35 @@ gcal_event_widget_update_style (GcalEventWidget *self)
   /* TODO: adjust margins based on the CSS gradients sizes, not hardcoded */
   gtk_widget_set_margin_start (self->main_grid, slanted_start ? 20 : 4);
   gtk_widget_set_margin_end (self->main_grid, slanted_end ? 20 : 4);
+
+  /* Add style classes for orientation selectors */
+  if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
+    {
+      gtk_style_context_add_class (context, "horizontal");
+      gtk_style_context_remove_class (context, "vertical");
+    }
+  else
+    {
+      gtk_style_context_add_class (context, "vertical");
+      gtk_style_context_remove_class (context, "horizontal");
+    }
+
+  /*
+   * If the event is a timed, single-day event, draw it differently
+   * from all-day or multi-day events.
+   */
+  if (!gcal_event_get_all_day (self->event) && !gcal_event_is_multiday (self->event))
+    {
+      GtkStyleContext *context;
+
+      context = gtk_widget_get_style_context (GTK_WIDGET (self));
+
+      gtk_style_context_add_class (context, "timed");
+
+      /* XXX: hardcoding these values isn't really great... */
+      if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
+        gtk_widget_set_margin_start (self->main_grid, 8);
+    }
 }
 
 static void
@@ -437,19 +466,6 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
                           self->summary_label,
                           "label",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-
-  /*
-   * If the event is a timed, single-day event, draw it differently
-   * from all-day or multi-day events.
-   */
-  if (!gcal_event_get_all_day (event) && !gcal_event_is_multiday (event))
-    {
-      GtkStyleContext *context;
-
-      context = gtk_widget_get_style_context (GTK_WIDGET (self));
-
-      gtk_style_context_add_class (context, "timed");
-    }
 }
 
 
@@ -638,11 +654,7 @@ gcal_event_widget_set_property (GObject      *object,
                                 const GValue *value,
                                 GParamSpec   *pspec)
 {
-  GcalEventWidget *self;
-  GtkStyleContext *context;
-
-  self = GCAL_EVENT_WIDGET (object);
-  context = gtk_widget_get_style_context (GTK_WIDGET (self));
+  GcalEventWidget *self = GCAL_EVENT_WIDGET (object);
 
   switch (property_id)
     {
@@ -660,19 +672,8 @@ gcal_event_widget_set_property (GObject      *object,
 
     case PROP_ORIENTATION:
       self->orientation = g_value_get_enum (value);
-
-      if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-        {
-          gtk_style_context_add_class (context, "horizontal");
-          gtk_style_context_remove_class (context, "vertical");
-        }
-      else
-        {
-          gtk_style_context_add_class (context, "vertical");
-          gtk_style_context_remove_class (context, "horizontal");
-        }
-
-      gtk_widget_queue_draw (GTK_WIDGET (object));
+      gcal_event_widget_update_style (self);
+      gtk_widget_queue_allocate (GTK_WIDGET (object));
       g_object_notify (object, "orientation");
       break;
 

@@ -15,7 +15,7 @@
             <property name="column_spacing">6</property>
             <property name="margin-top">1</property>
             <property name="margin-bottom">1</property>
-            <property name="margin-start">4</property>
+            <property name="margin-start">6</property>
             <property name="margin-end">4</property>
             <property name="hexpand">False</property>
             <child>

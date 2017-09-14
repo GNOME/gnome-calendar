@@ -23,6 +23,14 @@
 ".color-%1$d {"\
 "  background-color: %2$s"\
 "}"\
+".color-%1$d.horizontal.timed:dir(ltr) {"\
+"  background-color: transparent;"\
+"  border-left: solid 4px %2$s;"\
+"}"\
+".color-%1$d.horizontal.timed:dir(rtl) {"\
+"  background-color: transparent;"\
+"  border-right: solid 4px %2$s;"\
+"}"\
 ".color-%1$d.slanted {"\
 "  background-color: transparent;"\
 "  background-image: linear-gradient(100deg, /* left edge */"\
