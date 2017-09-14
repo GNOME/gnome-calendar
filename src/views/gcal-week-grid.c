@@ -708,7 +708,7 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
           /* TODO: find a better way to handle line widths */
           height -= 2;
           width -= 1;
-          y += 1;
+          y += 2;
 
           /* Setup the child position and size */
           child_allocation.x = x;
