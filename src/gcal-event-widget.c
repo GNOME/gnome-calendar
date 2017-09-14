@@ -625,7 +625,11 @@ gcal_event_widget_set_property (GObject      *object,
                                 const GValue *value,
                                 GParamSpec   *pspec)
 {
-  GcalEventWidget *self = GCAL_EVENT_WIDGET (object);
+  GcalEventWidget *self;
+  GtkStyleContext *context;
+
+  self = GCAL_EVENT_WIDGET (object);
+  context = gtk_widget_get_style_context (GTK_WIDGET (self));
 
   switch (property_id)
     {
@@ -643,6 +647,18 @@ gcal_event_widget_set_property (GObject      *object,
 
     case PROP_ORIENTATION:
       self->orientation = g_value_get_enum (value);
+
+      if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          gtk_style_context_add_class (context, "horizontal");
+          gtk_style_context_remove_class (context, "vertical");
+        }
+      else
+        {
+          gtk_style_context_add_class (context, "vertical");
+          gtk_style_context_remove_class (context, "horizontal");
+        }
+
       gtk_widget_queue_draw (GTK_WIDGET (object));
       g_object_notify (object, "orientation");
       break;
@@ -802,7 +818,6 @@ gcal_event_widget_init (GcalEventWidget *self)
 
   widget = GTK_WIDGET (self);
   self->clock_format_24h = is_clock_format_24h ();
-  self->orientation = GTK_ORIENTATION_HORIZONTAL;
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -816,6 +831,10 @@ gcal_event_widget_init (GcalEventWidget *self)
                        GDK_ACTION_MOVE);
 
   gtk_drag_source_add_text_targets (widget);
+
+  /* Starts with horizontal */
+  self->orientation = GTK_ORIENTATION_HORIZONTAL;
+  gtk_style_context_add_class (gtk_widget_get_style_context (widget), "horizontal");
 }
 
 GtkWidget*
