@@ -1,12 +1,10 @@
 project(
-  'gnome-calendar', 'c',
-  version: '3.27.0',
-  license: 'GPL3+',
-  default_options: [
-    'buildtype=debugoptimized',
-    'warning_level=1'
-  ],
-  meson_version: '>= 0.42.0'
+  'gnome-calendar',
+               'c',
+           version: '3.27.0',
+           license: 'GPL3+',
+   default_options: [ 'buildtype=debugoptimized', 'warning_level=1' ],
+     meson_version: '>= 0.42.0'
 )
 
 
