@@ -33,19 +33,6 @@
               </packing>
             </child>
             <child>
-              <object class="GtkImage"  id="alarm_icon">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="icon_name">alarm-symbolic</property>
-                <property name="pixel_size">12</property>
-                <property name="valign">center</property>
-              </object>
-              <packing>
-                <property name="left_attach">2</property>
-                <property name="top_attach">0</property>
-              </packing>
-            </child>
-            <child>
               <object class="GtkLabel"  id="summary_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>

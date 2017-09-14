@@ -38,7 +38,6 @@ struct _GcalEventWidget
   GDateTime          *dt_end;
 
   /* widgets */
-  GtkWidget          *alarm_icon;
   GtkWidget          *event_box;
   GtkWidget          *hour_label;
   GtkWidget          *main_grid;
@@ -451,9 +450,6 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
   /* Tooltip */
   gcal_event_widget_set_event_tooltip (self, event);
 
-  /* Alarm icon */
-  gtk_widget_set_visible (self->alarm_icon, gcal_event_has_alarms (event));
-
   /* Hour label */
   hour_str = get_hour_label (self);
 
@@ -562,14 +558,12 @@ gcal_event_widget_size_allocate (GtkWidget     *widget,
       gint minimum_grid_height;
 
       gtk_label_set_line_wrap (GTK_LABEL (self->summary_label), TRUE);
-      /* This is needed to push the alarm icon to the end of the widget */
-      gtk_widget_set_hexpand (self->hour_label, TRUE);
 
       gtk_container_child_set (GTK_CONTAINER (self->main_grid),
                                self->summary_label,
                                "left-attach", 0,
                                "top-attach", 1,
-                               "width", 3,
+                               "width", 2,
                                NULL);
 
       gtk_widget_get_preferred_height (self->event_box, &minimum_grid_height, NULL);
@@ -588,7 +582,6 @@ gcal_event_widget_size_allocate (GtkWidget     *widget,
                                    NULL);
 
           gtk_label_set_line_wrap (GTK_LABEL (self->summary_label), FALSE);
-          gtk_widget_set_hexpand (self->hour_label, FALSE);
         }
     }
 
@@ -813,7 +806,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/event-widget.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, alarm_icon);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, event_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, hour_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, main_grid);
