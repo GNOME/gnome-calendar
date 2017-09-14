@@ -607,60 +607,6 @@ overflow_popover_hide (GtkWidget *widget,
   gtk_widget_queue_draw (widget);
 }
 
-static void
-update_list_box_headers (GtkListBoxRow *row,
-                         GtkListBoxRow *before,
-                         gpointer user_data)
-{
-  GcalMonthView *self;
-  GtkWidget *row_child, *before_child = NULL;
-  GDateTime *row_date, *before_date = NULL;
-  GcalEvent *row_event;
-
-  self = GCAL_MONTH_VIEW (user_data);
-  row_child = gtk_bin_get_child (GTK_BIN (row));
-  row_event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (row_child));
-  row_date = gcal_event_widget_get_date_start (GCAL_EVENT_WIDGET (row_child));
-  row_date = g_date_time_to_local (row_date);
-  if (before != NULL)
-    {
-      before_child = gtk_bin_get_child (GTK_BIN (before));
-      before_date = gcal_event_widget_get_date_start (GCAL_EVENT_WIDGET (before_child));
-      before_date = g_date_time_to_local (before_date);
-    }
-
-  if (!gcal_event_is_multiday (row_event) &&
-      !gcal_event_get_all_day (row_event) &&
-      (before_date == NULL || g_date_time_get_hour (before_date) != g_date_time_get_hour (row_date)))
-    {
-      gchar *time;
-      GtkWidget *label, *vbox;
-      gint hour;
-
-      hour = g_date_time_get_hour (row_date);
-
-      if (self->use_24h_format)
-        time = g_strdup_printf ("%.2d:00", hour);
-      else
-        time = g_strdup_printf ("%.2d:00 %s", hour % 12, hour < 12 ? "AM" : "PM");
-
-      label = gtk_label_new (time);
-      gtk_style_context_add_class (gtk_widget_get_style_context (label), GTK_STYLE_CLASS_DIM_LABEL);
-      g_object_set (label, "margin-start", 6, "halign", GTK_ALIGN_START, NULL);
-
-      vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-      gtk_container_add (GTK_CONTAINER (vbox), label);
-      gtk_container_add (GTK_CONTAINER (vbox), gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
-      gtk_widget_show_all (vbox);
-
-      gtk_list_box_row_set_header (row, vbox);
-      g_free (time);
-    }
-
-  g_clear_pointer (&before_date, g_date_time_unref);
-  g_clear_pointer (&row_date, g_date_time_unref);
-}
-
 static gboolean
 gcal_month_view_key_press (GtkWidget   *widget,
                            GdkEventKey *event)
@@ -2731,7 +2677,6 @@ gcal_month_view_init (GcalMonthView *self)
   g_object_set (self->popover_title, "margin", 6, "halign", GTK_ALIGN_START, NULL);
   self->events_list_box = gtk_list_box_new ();
   gtk_list_box_set_selection_mode (GTK_LIST_BOX (self->events_list_box), GTK_SELECTION_NONE);
-  gtk_list_box_set_header_func (GTK_LIST_BOX (self->events_list_box), update_list_box_headers, self, NULL);
   button = gtk_button_new_with_label (_("Add Event…"));
   g_object_set (button, "hexpand", TRUE, NULL);
   g_signal_connect (button, "clicked", G_CALLBACK (add_new_event_button_cb), self);

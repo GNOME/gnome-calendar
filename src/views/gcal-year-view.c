@@ -475,7 +475,7 @@ update_sidebar_headers (GtkListBoxRow *row,
   year_view = GCAL_YEAR_VIEW (user_data);
   row_child = gtk_bin_get_child (GTK_BIN (row));
 
-  if (row_child == NULL)
+  if (!row_child)
     return;
 
   row_event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (row_child));
@@ -483,7 +483,7 @@ update_sidebar_headers (GtkListBoxRow *row,
   row_date = g_date_time_to_local (row_date);
   row_shift = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (row_child), "shift"));
 
-  if (before != NULL)
+  if (before)
     {
       before_child = gtk_bin_get_child (GTK_BIN (before));
       before_event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (before_child));
@@ -518,34 +518,6 @@ update_sidebar_headers (GtkListBoxRow *row,
       g_free (label_str);
 
       gtk_container_add (GTK_CONTAINER (row_header), label);
-    }
-
-  if (!gcal_event_is_multiday (row_event) &&
-      !gcal_event_get_all_day (row_event) &&
-      (before_date == NULL || g_date_time_get_hour (before_date) != g_date_time_get_hour (row_date)))
-    {
-      gchar *time;
-      GtkWidget *label;
-      gint hour;
-
-      hour = g_date_time_get_hour (row_date);
-
-      if (year_view->use_24h_format)
-        time = g_strdup_printf ("%.2d:00", hour);
-      else
-        time = g_strdup_printf ("%.2d:00 %s", hour % 12, hour < 12 ? "AM" : "PM");
-
-      label = gtk_label_new (time);
-      gtk_style_context_add_class (gtk_widget_get_style_context (label), GTK_STYLE_CLASS_DIM_LABEL);
-      g_object_set (label, "margin", 6, "halign", GTK_ALIGN_START, NULL);
-
-      if (row_header == NULL)
-        row_header = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
-
-      gtk_container_add (GTK_CONTAINER (row_header), label);
-      gtk_container_add (GTK_CONTAINER (row_header), gtk_separator_new (GTK_ORIENTATION_HORIZONTAL));
-
-      g_free (time);
     }
 
   if (row_header != NULL)
