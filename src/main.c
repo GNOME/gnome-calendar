@@ -29,11 +29,9 @@ main (int   argc,
 {
   g_autoptr (GcalApplication) app;
 
-#ifdef ENABLE_NLS
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
   textdomain (GETTEXT_PACKAGE);
-#endif
 
   app = gcal_application_new ();
 
