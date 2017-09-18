@@ -72,7 +72,7 @@ msgstr "Acceder e xestionar un calendario"
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/org.gnome.Calendar.desktop.in:7
 msgid "org.gnome.Calendar"
-msgstr "Calendario sen nome"
+msgstr "org.gnome.Calendar"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in:13
