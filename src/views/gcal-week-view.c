@@ -588,6 +588,9 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+  g_type_ensure (GCAL_TYPE_WEEK_GRID);
+  g_type_ensure (GCAL_TYPE_WEEK_HEADER);
+
   object_class->finalize = gcal_week_view_finalize;
   object_class->set_property = gcal_week_view_set_property;
   object_class->get_property = gcal_week_view_get_property;

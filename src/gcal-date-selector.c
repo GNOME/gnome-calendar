@@ -189,6 +189,8 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
   GtkEntryClass *entry_class = GTK_ENTRY_CLASS (klass);
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+  g_type_ensure (GCAL_TYPE_DATE_CHOOSER);
+
   object_class->finalize = gcal_date_selector_finalize;
   object_class->get_property = gcal_date_selector_get_property;
   object_class->set_property = gcal_date_selector_set_property;

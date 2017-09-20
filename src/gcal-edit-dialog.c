@@ -742,6 +742,9 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
 
+  g_type_ensure (GCAL_TYPE_DATE_SELECTOR);
+  g_type_ensure (GCAL_TYPE_TIME_SELECTOR);
+
   object_class->finalize = gcal_edit_dialog_finalize;
   object_class->constructed = gcal_edit_dialog_constructed;
   object_class->get_property = gcal_edit_dialog_get_property;
