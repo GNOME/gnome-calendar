@@ -1457,10 +1457,18 @@ gcal_window_state_event (GtkWidget           *widget,
 }
 
 static void
-gcal_window_class_init(GcalWindowClass *klass)
+gcal_window_class_init (GcalWindowClass *klass)
 {
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
+
+  g_type_ensure (GCAL_TYPE_EDIT_DIALOG);
+  g_type_ensure (GCAL_TYPE_MONTH_VIEW);
+  g_type_ensure (GCAL_TYPE_QUICK_ADD_POPOVER);
+  g_type_ensure (GCAL_TYPE_SEARCH_VIEW);
+  g_type_ensure (GCAL_TYPE_SOURCE_DIALOG);
+  g_type_ensure (GCAL_TYPE_WEEK_VIEW);
+  g_type_ensure (GCAL_TYPE_YEAR_VIEW);
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gcal_window_finalize;
