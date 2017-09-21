@@ -1,3 +1,7 @@
+Major changes in 3.26.1:
+* Fix translations not being picked up.
+* Fix type race issue preventing correct initialization.
+
 Major changes in 3.26.0:
 * Many fixes to recurrent events (Yash Singh, Georges Basile Stavracas Neto)
 * Cache events for better resource management
