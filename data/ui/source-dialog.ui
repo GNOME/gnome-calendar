@@ -742,7 +742,7 @@
     <child type="titlebar">
       <object class="GtkHeaderBar" id="headerbar">
         <property name="visible">True</property>
-        <property name="title">Calendar Settings</property>
+        <property name="title" translatable="yes">Calendar Settings</property>
         <property name="show_close_button">True</property>
         <child>
           <object class="GtkButton" id="back_button">
@@ -863,7 +863,7 @@
     <child type="titlebar">
       <object class="GtkHeaderBar" id="credentials_headerbar">
         <property name="visible">True</property>
-        <property name="title">Enter your credentials</property>
+        <property name="title" translatable="yes">Enter your credentials</property>
         <child>
           <object class="GtkButton" id="credentials_cancel_button">
             <property name="label" translatable="yes">Cancel</property>
