@@ -10,8 +10,8 @@ msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-09-09 17:01+0000\n"
-"PO-Revision-Date: 2017-09-10 12:55+0200\n"
+"POT-Creation-Date: 2017-09-28 11:44+0000\n"
+"PO-Revision-Date: 2017-09-29 11:46+0200\n"
 "Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
 "Language-Team: Ελληνικά <opensuse-translation-el@opensuse.org>\n"
 "Language: el\n"
@@ -54,8 +54,6 @@ msgstr ""
 "Ημερολόγιο, σαν να το χρησιμοποιούσατε για πολύ καιρό!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
-#| msgctxt "shortcut window"
-#| msgid "Week view"
 msgid "Week view"
 msgstr "Προβολή εβδομάδας"
 
@@ -68,13 +66,11 @@ msgid "Calendar management"
 msgstr "Διαχείριση ημερολογίου"
 
 #: data/org.gnome.Calendar.desktop.in:4
-#| msgid "Access, and manage calendar"
 msgid "Access and manage your calendars"
 msgstr "Πρόσβαση και διαχείριση των ημερολογίων"
 
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/org.gnome.Calendar.desktop.in:7
-#| msgid "Unnamed Calendar"
 msgid "org.gnome.Calendar"
 msgstr "org.gnome.Calendar"
 
@@ -187,17 +183,14 @@ msgid "Monday – Friday"
 msgstr "Δευτέρα – Παρασκευή"
 
 #: data/ui/edit-dialog.ui:431
-#| msgid "Week"
 msgid "Weekly"
 msgstr "Εβδομαδιαίως"
 
 #: data/ui/edit-dialog.ui:432
-#| msgid "Month"
 msgid "Monthly"
 msgstr "Μηνιαίως"
 
 #: data/ui/edit-dialog.ui:433
-#| msgid "Year"
 msgid "Yearly"
 msgstr "Ετησίως"
 
@@ -334,7 +327,6 @@ msgid "Add Eve_nt…"
 msgstr "Προσθήκη σ_υμβάντος…"
 
 #: data/ui/menus.ui:13
-#| msgid "Calendars"
 msgid "_Calendars"
 msgstr "_Ημερολόγια"
 
@@ -472,6 +464,11 @@ msgstr "Διεύθυνση ημερολογίου"
 msgid "Add Calendar"
 msgstr "Προσθήκη ημερολογίου"
 
+#: data/ui/source-dialog.ui:745 data/ui/window.ui:334
+#: src/gcal-source-dialog.c:853 src/gcal-source-dialog.c:2263
+msgid "Calendar Settings"
+msgstr "Ρυθμίσεις ημερολογίου"
+
 #: data/ui/source-dialog.ui:806
 msgid "User"
 msgstr "Χρήστης"
@@ -479,6 +476,11 @@ msgstr "Χρήστης"
 #: data/ui/source-dialog.ui:820
 msgid "Password"
 msgstr "Κωδικός πρόσβασης"
+
+#: data/ui/source-dialog.ui:866
+#| msgid "Manage your calendars"
+msgid "Enter your credentials"
+msgstr "Εισάγετε τα διαπιστευτήριά σας"
 
 #: data/ui/source-dialog.ui:878
 msgid "Connect"
@@ -523,15 +525,9 @@ msgid "Manage your calendars"
 msgstr "Διαχειριστείτε τα ημερολόγιά σας"
 
 #: data/ui/window.ui:278
-#| msgid "Search for events"
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Αναζήτηση για συμβάντα"
-
-#: data/ui/window.ui:334 src/gcal-source-dialog.c:853
-#: src/gcal-source-dialog.c:2263
-msgid "Calendar Settings"
-msgstr "Ρυθμίσεις ημερολογίου"
 
 #: data/ui/year-view.ui:95
 msgid "No events"
@@ -582,35 +578,35 @@ msgstr ""
 msgid "Save"
 msgstr "Αποθήκευση"
 
-#: src/gcal-edit-dialog.c:997
+#: src/gcal-edit-dialog.c:1000
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d λεπτό πριν"
 msgstr[1] "%d λεπτά πριν"
 
-#: src/gcal-edit-dialog.c:1005
+#: src/gcal-edit-dialog.c:1008
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d ώρα πριν"
 msgstr[1] "%d ώρες πριν"
 
-#: src/gcal-edit-dialog.c:1013
+#: src/gcal-edit-dialog.c:1016
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d μέρα πριν"
 msgstr[1] "%d μέρες πριν"
 
-#: src/gcal-edit-dialog.c:1021
+#: src/gcal-edit-dialog.c:1024
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d βδομάδα πριν"
 msgstr[1] "%d βδομάδες πριν"
 
-#: src/gcal-edit-dialog.c:1324 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1327 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Ανώνυμο συμβάν"
 
@@ -690,8 +686,6 @@ msgid "February"
 msgstr "Φεβρουάριος"
 
 #: src/gcal-quick-add-popover.c:268
-#| msgctxt "shortcut window"
-#| msgid "Search"
 msgid "March"
 msgstr "Μάρτιος"
 
@@ -700,7 +694,6 @@ msgid "April"
 msgstr "Απρίλιος"
 
 #: src/gcal-quick-add-popover.c:270
-#| msgid "Maybe"
 msgid "May"
 msgstr "Μάϊος"
 
@@ -733,7 +726,6 @@ msgid "December"
 msgstr "Δεκέμβριος"
 
 #: src/gcal-quick-add-popover.c:286
-#| msgid "Today"
 msgid "from Today"
 msgstr "από σήμερα"
 
@@ -755,7 +747,6 @@ msgid "from %1$s %2$s"
 msgstr "από  %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:323
-#| msgid "Today"
 msgid "to Today"
 msgstr "έως σήμερα"
 
@@ -779,130 +770,107 @@ msgstr "έως %1$s %2$s"
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
 #: src/gcal-quick-add-popover.c:356
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event %1$s %2$s"
 msgstr "Νέο συμβάν %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
-#| msgid "New Event on %s"
 msgid "New Event Today"
 msgstr "Νέο συμβάν σήμερα"
 
 #: src/gcal-quick-add-popover.c:377
-#| msgid "New Event on %s"
 msgid "New Event Tomorrow"
 msgstr "Νέο συμβάν αύριο"
 
 #: src/gcal-quick-add-popover.c:381
-#| msgid "New Event on %s"
 msgid "New Event Yesterday"
 msgstr "Νέο συμβάν χθες"
 
 #: src/gcal-quick-add-popover.c:387
-#| msgid "New Event on %s"
 msgid "New Event next Monday"
 msgstr "Νέο συμβάν την επόμενη Δευτέρα"
 
 #: src/gcal-quick-add-popover.c:388
-#| msgid "New Event on %s"
 msgid "New Event next Tuesday"
 msgstr "Νέο συμβάν την επόμενη Τρίτη"
 
 #: src/gcal-quick-add-popover.c:389
-#| msgid "New Event on %s"
 msgid "New Event next Wednesday"
 msgstr "Νέο συμβάν την επόμενη Τετάρτη"
 
 #: src/gcal-quick-add-popover.c:390
-#| msgid "New Event on %s"
 msgid "New Event next Thursday"
 msgstr "Νέο συμβάν την επόμενη Πέμπτη"
 
 #: src/gcal-quick-add-popover.c:391
-#| msgid "New Event on %s"
 msgid "New Event next Friday"
 msgstr "Νέο συμβάν την επόμενη Παρασκευή"
 
 #: src/gcal-quick-add-popover.c:392
-#| msgid "New Event on %s"
 msgid "New Event next Saturday"
 msgstr "Νέο συμβάν το επόμενο Σάββατο"
 
 #: src/gcal-quick-add-popover.c:393
-#| msgid "New Event on %s"
 msgid "New Event next Sunday"
 msgstr "Νέο συμβάν την επόμενη Κυριακή"
 
 #. Translators: %d is the numeric day of month
 #: src/gcal-quick-add-popover.c:405
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on January %d"
 msgstr "Νέο συμβάν στις %d Ιανουαρίου"
 
 #: src/gcal-quick-add-popover.c:406
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on February %d"
 msgstr "Νέο συμβάν στις %d Φεβρουαρίου"
 
 #: src/gcal-quick-add-popover.c:407
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on March %d"
 msgstr "Νέο συμβάν στις %d Μαρτίου"
 
 #: src/gcal-quick-add-popover.c:408
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on April %d"
 msgstr "Νέο συμβάν στις %d Απριλίου"
 
 #: src/gcal-quick-add-popover.c:409
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on May %d"
 msgstr "Νέο συμβάν στις %d Μαΐου"
 
 #: src/gcal-quick-add-popover.c:410
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on June %d"
 msgstr "Νέο συμβάν στις %d Ιουνίου"
 
 #: src/gcal-quick-add-popover.c:411
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on July %d"
 msgstr "Νέο συμβάν στις %d Ιουλίου"
 
 #: src/gcal-quick-add-popover.c:412
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on August %d"
 msgstr "Νέο συμβάν στις %d Αυγούστου"
 
 #: src/gcal-quick-add-popover.c:413
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on September %d"
 msgstr "Νέο συμβάν στις %d Σεπτεμβρίου"
 
 #: src/gcal-quick-add-popover.c:414
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on October %d"
 msgstr "Νέο συμβάν στις %d Οκτωβρίου"
 
 #: src/gcal-quick-add-popover.c:415
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on November %d"
 msgstr "Νέο συμβάν στις %d Νοεμβρίου"
 
 #: src/gcal-quick-add-popover.c:416
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on December %d"
 msgstr "Νέο συμβάν στις %d Δεκεμβρίου"
 
@@ -975,7 +943,6 @@ msgstr ""
 "αλλαγές που έχετε επιλέξει πρέπει να εφαρμοστούν σε:"
 
 #: src/gcal-utils.c:1191
-#| msgid "Cancel"
 msgid "_Cancel"
 msgstr "Ά_κυρο"
 
@@ -988,7 +955,6 @@ msgid "_Subsequent events"
 msgstr "_Μεταγενέστερα συμβάντα"
 
 #: src/gcal-utils.c:1202
-#| msgid "No events"
 msgid "_All events"
 msgstr "Ό_λα τα συμβάντα"
 
@@ -1005,8 +971,6 @@ msgstr "Διαγράφηκε το συμβάν"
 #. Translators: This is a date format in the sidebar of the year view.
 #: src/views/gcal-month-view.c:296 src/views/gcal-year-view.c:291
 #: src/views/gcal-year-view.c:513
-#| msgctxt "event date format"
-#| msgid "%B %d"
 msgid "%B %d"
 msgstr "%B %d"
 
@@ -1035,8 +999,6 @@ msgstr "εβδομάδα %d"
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
 #: src/views/gcal-year-view.c:285
-#| msgctxt "event date format"
-#| msgid "%B %d"
 msgid "%B %d…"
 msgstr "%B %d…"
 
