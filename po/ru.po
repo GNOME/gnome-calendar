@@ -11,9 +11,9 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-09-09 17:01+0000\n"
-"PO-Revision-Date: 2017-09-12 22:47+0300\n"
-"Last-Translator: Stas Solovey <whats_up@tut.by>\n"
+"POT-Creation-Date: 2017-09-28 11:44+0000\n"
+"PO-Revision-Date: 2017-09-30 13:15+0400\n"
+"Last-Translator: Yuri Myasoedov <ymyasoedov@yandex.ru>\n"
 "Language-Team: русский <gnome-cyr@gnome.org>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
@@ -21,7 +21,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
@@ -463,6 +463,11 @@ msgstr "Адрес календаря"
 msgid "Add Calendar"
 msgstr "Добавить календарь"
 
+#: data/ui/source-dialog.ui:745 data/ui/window.ui:334
+#: src/gcal-source-dialog.c:853 src/gcal-source-dialog.c:2263
+msgid "Calendar Settings"
+msgstr "Параметры календаря"
+
 #: data/ui/source-dialog.ui:806
 msgid "User"
 msgstr "Пользователь"
@@ -470,6 +475,10 @@ msgstr "Пользователь"
 #: data/ui/source-dialog.ui:820
 msgid "Password"
 msgstr "Пароль"
+
+#: data/ui/source-dialog.ui:866
+msgid "Enter your credentials"
+msgstr "Введите ваши учётные данные."
 
 #: data/ui/source-dialog.ui:878
 msgid "Connect"
@@ -518,11 +527,6 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Поиск событий"
 
-#: data/ui/window.ui:334 src/gcal-source-dialog.c:853
-#: src/gcal-source-dialog.c:2263
-msgid "Calendar Settings"
-msgstr "Параметры календаря"
-
 #: data/ui/year-view.ui:95
 msgid "No events"
 msgstr "Нет событий"
@@ -568,7 +572,7 @@ msgstr ""
 msgid "Save"
 msgstr "Сохранить"
 
-#: src/gcal-edit-dialog.c:997
+#: src/gcal-edit-dialog.c:1000
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
@@ -576,7 +580,7 @@ msgstr[0] "%d минута до"
 msgstr[1] "%d минуты до"
 msgstr[2] "%d минут до"
 
-#: src/gcal-edit-dialog.c:1005
+#: src/gcal-edit-dialog.c:1008
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
@@ -584,7 +588,7 @@ msgstr[0] "%d час до"
 msgstr[1] "%d часа до"
 msgstr[2] "%d часов до"
 
-#: src/gcal-edit-dialog.c:1013
+#: src/gcal-edit-dialog.c:1016
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
@@ -592,7 +596,7 @@ msgstr[0] "%d день до"
 msgstr[1] "%d дня до"
 msgstr[2] "%d дней до"
 
-#: src/gcal-edit-dialog.c:1021
+#: src/gcal-edit-dialog.c:1024
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
@@ -600,7 +604,7 @@ msgstr[0] "%d неделя до"
 msgstr[1] "%d недели до"
 msgstr[2] "%d недель до"
 
-#: src/gcal-edit-dialog.c:1324 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1327 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Безымянное событие"
 
