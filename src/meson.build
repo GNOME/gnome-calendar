@@ -1,7 +1,5 @@
 src_inc = include_directories('.')
 
-enum_headers = files('gcal-enums.h')
-
 gcal_deps = [
   gsettings_desktop_schemas_dep,
   libedataserverui_dep,
@@ -54,19 +52,6 @@ sources = files(
   'gcal-utils.c',
   'gcal-window.c',
   'gcal-timer.c'
-)
-
-gnome.mkenums(
-  'org.gnome.calendar.enums.xml',
-         sources: enum_headers,
-        comments: '<!-- @comment@ -->',
-           fhead: '<schemalist>',
-           vhead: '  <@type@ id="org.gnome.calendar.@EnumName@">',
-           vprod: '    <value nick="@valuenick@" value="@valuenum@"/>',
-           vtail: '  </@type@>',
-           ftail: '</schemalist>',
-  install_header: true,
-     install_dir: calendar_schemadir
 )
 
 enum_types = 'gcal-enum-types'
