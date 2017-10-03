@@ -64,7 +64,7 @@
                 "/lib/evolution-data-server/*-backends",
                 "/libexec",
                 "/share/dbus-1/services"
-	    ],
+            ],
             "buildsystem": "cmake",
             "config-opts": [
                 "-DENABLE_GTK=ON",
