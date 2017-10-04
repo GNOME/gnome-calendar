@@ -1,4 +1,4 @@
-info = 'org.gnome.Calendar.metainfo.xml'
+info = 'org.gnome.Calendar.appdata.xml'
 
 i18n.merge_file(
   info,
