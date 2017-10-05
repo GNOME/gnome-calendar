@@ -49,6 +49,16 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2017-10-04" version="3.26.2">
+      <description>
+        <p>
+          The GNOME Calendar team is proud to announce the 3.26.2 release of GNOME Calendar,
+          the second stable release of the 3.26 cycle! This release brings many new and
+          updated translations, and fixes for the Flatpak files.
+        </p>
+      </description>
+    </release>
+
     <release date="2017-09-11" version="3.26.0">
       <description>
         <p>
