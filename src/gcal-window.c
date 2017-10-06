@@ -722,9 +722,9 @@ show_new_event_widget (GcalView   *view,
   window->event_creation_data->x = x;
   window->event_creation_data->y = y;
   window->event_creation_data->start_date = g_date_time_ref (start_span);
-  if (end_span != NULL)
-    window->event_creation_data->end_date = g_date_time_ref (end_span);
-  g_debug ("[show_new_event] position (%f, %f)", x, y);
+  window->event_creation_data->end_date = end_span ? g_date_time_ref (end_span) : NULL;
+
+  g_debug ("Quick add popover position (%f, %f)", x, y);
 
   /* Setup the quick add popover's dates */
   gcal_quick_add_popover_set_date_start (GCAL_QUICK_ADD_POPOVER (window->quick_add_popover), start_span);
