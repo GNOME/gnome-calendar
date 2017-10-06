@@ -64,7 +64,7 @@ gcal_log_handler (const gchar    *domain,
   gchar *buffer;
 
   /* Skip ignored log domains */
-  if (g_strv_contains (ignored_domains, domain))
+  if (domain && g_strv_contains (ignored_domains, domain))
     return;
 
   level = log_level_str (log_level);
