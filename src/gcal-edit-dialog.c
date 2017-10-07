@@ -1029,6 +1029,7 @@ create_row_for_alarm (GcalEvent          *event,
 
   /* The row */
   row = gtk_list_box_row_new ();
+  gtk_list_box_row_set_activatable (GTK_LIST_BOX_ROW (row), FALSE);
 
   g_object_set_data (G_OBJECT (row), "alarm", alarm);
   g_object_set_data (G_OBJECT (row), "event", event);
