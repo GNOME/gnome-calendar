@@ -232,7 +232,7 @@ emit_create_event (GcalMonthView *self)
 
   GCAL_ENTRY;
 
-  if (!self->end_mark_cell)
+  if (!self->start_mark_cell || !self->end_mark_cell)
     GCAL_RETURN (FALSE);
 
   should_clear_end = FALSE;
@@ -534,7 +534,7 @@ update_month_cells (GcalMonthView *self)
           selection_start = self->start_mark_cell;
           selection_end = self->end_mark_cell;
 
-          if (selection_start || selection_end)
+          if (selection_start)
             {
               if (!selection_end)
                 selection_end = selection_start;
