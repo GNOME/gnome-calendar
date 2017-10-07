@@ -1722,7 +1722,11 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       j += self->days_delay;
       i = 7 * ((j - 1) / 7) + 6 * self->k + sw * ((j - 1) % 7);
 
-      month_cell = self->month_cell[i / 7][i % 7];
+      if (self->k)
+        month_cell = self->month_cell[i / 7][6 - i % 7];
+      else
+        month_cell = self->month_cell[i / 7][i % 7];
+
       gtk_widget_get_allocation (month_cell, &cell_alloc);
 
       l = (GList*) value;
