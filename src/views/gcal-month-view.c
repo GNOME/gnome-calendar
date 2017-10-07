@@ -94,9 +94,6 @@ struct _GcalMonthView
    */
   GHashTable         *hidden_as_overflow;
 
-  /* state flags */
-  gboolean            children_changed;
-
   /*
    * the cell on which its drawn the first day of the month, in the first row, 0 for the first
    * cell, 1 for the second, and so on, this takes first_weekday into account already.
@@ -203,13 +200,6 @@ event_activated (GcalEventWidget *widget,
 }
 
 static void
-event_visibility_changed (GtkWidget     *widget,
-                          GcalMonthView *self)
-{
-  self->children_changed = TRUE;
-}
-
-static void
 setup_child_widget (GcalMonthView *self,
                     GtkWidget     *widget)
 {
@@ -217,8 +207,8 @@ setup_child_widget (GcalMonthView *self,
     gtk_widget_set_parent (widget, GTK_WIDGET (self));
 
   g_signal_connect (widget, "activate", G_CALLBACK (event_activated), self);
-  g_signal_connect (widget, "hide", G_CALLBACK (event_visibility_changed), self);
-  g_signal_connect (widget, "show", G_CALLBACK (event_visibility_changed), self);
+  g_signal_connect_swapped (widget, "hide", G_CALLBACK (gtk_widget_queue_resize), self);
+  g_signal_connect_swapped (widget, "show", G_CALLBACK (gtk_widget_queue_resize), self);
 }
 
 static gboolean
@@ -803,8 +793,6 @@ gcal_month_view_set_date (GcalView     *view,
 
   GCAL_TRACE_MSG ("new date: %s", icaltime_as_ical_string (*date));
 
-  self->children_changed = TRUE;
-
   update_header_labels (self);
   update_month_cells (self);
 
@@ -1067,7 +1055,6 @@ gcal_month_view_add (GtkContainer *container,
       return;
     }
 
-  self->children_changed = TRUE;
   l = g_list_append (l, widget);
   g_hash_table_insert (self->children, g_strdup (uuid), l);
 
@@ -1118,8 +1105,6 @@ gcal_month_view_remove (GtkContainer *container,
 
   if (l)
     {
-      self->children_changed = TRUE;
-
       gtk_widget_unparent (widget);
 
       master_widget = (GtkWidget*) l->data;
@@ -1448,14 +1433,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   gint i, j, sw;
 
   self = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
-
-  /* No need to relayout stuff if nothing changed */
-  if (!self->children_changed &&
-      allocation->height == gtk_widget_get_allocated_height (widget) &&
-      allocation->width == gtk_widget_get_allocated_width (widget))
-    {
-      return;
-    }
 
   /* Remove every widget' parts, but the master widget */
   widgets = g_hash_table_get_values (self->children);
@@ -1786,8 +1763,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
     }
 
   update_month_cells (self);
-
-  self->children_changed = FALSE;
 }
 
 static gboolean
@@ -1919,7 +1894,7 @@ gcal_month_view_button_release (GtkWidget      *widget,
       /* If the button is released over an invalid cell, entirely cancel the selection */
       cancel_selection (GCAL_MONTH_VIEW (widget));
 
-      gtk_widget_queue_draw (widget);
+      gtk_widget_queue_resize (widget);
 
       GCAL_RETURN (GDK_EVENT_PROPAGATE);
     }
@@ -1935,6 +1910,8 @@ gcal_month_view_direction_changed (GtkWidget        *widget,
     self->k = 0;
   else if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
     self->k = 1;
+
+  gtk_widget_queue_resize (widget);
 }
 
 static void
