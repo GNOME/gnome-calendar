@@ -147,7 +147,7 @@
   <object class="GtkPopover" id="overflow_popover">
     <property name="can-focus">false</property>
     <property name="position">bottom</property>
-    <signal name="drag-motion" handler="cancel_dnd_from_overflow_popover" object="GcalMonthView" swapped="yes" />
+    <signal name="drag-motion" handler="cancel_dnd_from_overflow_popover" object="GcalMonthView" swapped="no" />
     <style>
       <class name="events" />
     </style>

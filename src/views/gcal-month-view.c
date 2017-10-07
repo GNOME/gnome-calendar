@@ -723,11 +723,13 @@ gcal_month_view_key_press (GtkWidget   *widget,
 }
 
 static gboolean
-cancel_dnd_from_overflow_popover (GtkWidget *popover)
+cancel_dnd_from_overflow_popover (GtkPopover *popover)
 {
-  gtk_widget_hide (popover);
+  GCAL_ENTRY;
 
-  return FALSE;
+  gtk_popover_popdown (popover);
+
+  GCAL_RETURN (FALSE);
 }
 
 static gboolean
