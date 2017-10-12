@@ -28,6 +28,18 @@
 
 G_BEGIN_DECLS
 
+
+/**
+ * Internal structure used to manage known
+ * weather icons.
+ */
+typedef struct
+{
+  gchar     *name;
+  gboolean   night_support;
+} GcalWeatherIconInfo;
+
+
 /* GcalWeatherService:
  *
  * @time_zone:               The current time zone
@@ -137,9 +149,11 @@ static void     gcal_weather_service_set_check_interval    (GcalWeatherService  
 
 static gssize   get_normalized_icon_name_len               (const gchar         *str);
 
-static gchar*   get_normalized_icon_name                   (GWeatherInfo        *gwi);
+static gchar*   get_normalized_icon_name                   (GWeatherInfo        *gwi,
+                                                            gboolean             is_night_icon);
 
-static gint     get_icon_name_sortkey                      (const gchar         *icon_name);
+static gint     get_icon_name_sortkey                      (const gchar         *icon_name,
+                                                            gboolean            *supports_night_icon);
 
 static void     gcal_weather_service_timer_stop            (GcalWeatherService  *self);
 
@@ -155,6 +169,7 @@ static inline gboolean get_gweather_temperature            (GWeatherInfo        
                                                             gdouble             *temp);
 
 static gboolean compute_weather_info_data                  (GSList              *samples,
+                                                            gboolean             is_today,
                                                             gchar              **icon_name,
                                                             gchar              **temperature);
 
@@ -387,14 +402,19 @@ get_normalized_icon_name_len (const gchar *str)
  * Returns: (transfer full): A normalized icon name.
  */
 static gchar*
-get_normalized_icon_name (GWeatherInfo* wi)
+get_normalized_icon_name (GWeatherInfo* wi,
+                          gboolean      is_night_icon)
 {
-  const gchar pfx[] = "-symbolic";
-  const gsize pfx_size = G_N_ELEMENTS (pfx) - 1;
+  const gchar night_pfx[] = "-night";
+  const gsize night_pfx_size = G_N_ELEMENTS (night_pfx) - 1;
+
+  const gchar sym_pfx[] = "-symbolic";
+  const gsize sym_pfx_size = G_N_ELEMENTS (sym_pfx) - 1;
 
   const gchar *str; /* unowned */
   gssize       normalized_size;
   gchar       *buffer = NULL; /* owned */
+  gchar       *bufpos = NULL; /* unowned */
   gsize        buffer_size;
 
   g_return_val_if_fail (wi != NULL, NULL);
@@ -405,12 +425,25 @@ get_normalized_icon_name (GWeatherInfo* wi)
   
   normalized_size = get_normalized_icon_name_len (str);
   g_return_val_if_fail (normalized_size >= 0, NULL);
-  
-  buffer_size = normalized_size + pfx_size + 1;
-  buffer = g_malloc (buffer_size);
 
-  memcpy (buffer, str, normalized_size);
-  memcpy (buffer + normalized_size, pfx, pfx_size);
+  if (is_night_icon) 
+    buffer_size = normalized_size + night_pfx_size + sym_pfx_size + 1;
+  else
+    buffer_size = normalized_size + sym_pfx_size + 1;
+
+  buffer = g_malloc (buffer_size);
+  bufpos = buffer;
+
+  memcpy (bufpos, str, normalized_size);
+  bufpos = bufpos + normalized_size;
+
+  if (is_night_icon)
+    {
+      memcpy (bufpos, night_pfx, night_pfx_size);
+      bufpos = bufpos + night_pfx_size;
+    }
+
+  memcpy (bufpos, sym_pfx, sym_pfx_size);
   buffer[buffer_size - 1] = '\0';  
 
   return buffer;
@@ -426,7 +459,8 @@ get_normalized_icon_name (GWeatherInfo* wi)
  * The lower the key, the better the weather.
  */
 static gint
-get_icon_name_sortkey (const gchar *icon_name)
+get_icon_name_sortkey (const gchar *icon_name,
+                       gboolean    *supports_night_icon)
 {
   /* Note that we can't use gweathers condition
    * field as it is not necessarily holds valid values.
@@ -437,27 +471,33 @@ get_icon_name_sortkey (const gchar *icon_name)
 
   gssize normalized_name_len;
 
-  const gchar* icons[] =
-    { "weather-clear",
-      "weather-few-clouds",
-      "weather-overcast",
-      "weather-fog",
-      "weather-showers-scattered",
-      "weather-showers",
-      "weather-snow",
-      "weather-storm",
-      "weather-severe-alert"
+  const GcalWeatherIconInfo icons[] =
+    { {"weather-clear",             FALSE},
+      {"weather-few-clouds",        FALSE},
+      {"weather-overcast",          FALSE},
+      {"weather-fog",               FALSE},
+      {"weather-showers-scattered", FALSE},
+      {"weather-showers",           FALSE},
+      {"weather-snow",              FALSE},
+      {"weather-storm",             FALSE},
+      {"weather-severe-alert",      FALSE}
     };
 
   g_return_val_if_fail (icon_name != NULL, -1);
+  g_return_val_if_fail (supports_night_icon != NULL, -1);
+
+  *supports_night_icon = FALSE;
 
   normalized_name_len = get_normalized_icon_name_len (icon_name);
   g_return_val_if_fail (normalized_name_len >= 0, -1);
 
   for (int i = 0; i < G_N_ELEMENTS (icons); i++)
     {
-      if (icons[i][normalized_name_len] == '\0' && strncmp (icon_name, icons[i], normalized_name_len) == 0)
-        return i;
+      if (icons[i].name[normalized_name_len] == '\0' && strncmp (icon_name, icons[i].name, normalized_name_len) == 0)
+        {
+          *supports_night_icon = icons[i].night_support;
+          return i;
+        }
     }
 
   g_warning ("Unknown weather icon '%s'", icon_name);
@@ -596,14 +636,17 @@ get_gweather_temperature (GWeatherInfo *gwi,
  * Returns: %TRUE if there is a valid icon name and temperature.
  */
 static gboolean
-compute_weather_info_data (GSList   *samples,
-                           gchar   **icon_name,
-                           gchar   **temperature)
+compute_weather_info_data (GSList    *samples,
+                           gboolean   is_today,
+                           gchar    **icon_name,
+                           gchar    **temperature)
 {
+  gboolean      phenomenon_supports_night_icon = FALSE;
   gint          phenomenon_val = -1;
   GWeatherInfo *phenomenon_gwi = NULL; /* unowned */
   gdouble       temp_val = NAN;
   GWeatherInfo *temp_gwi = NULL; /* unowned */
+  gboolean      has_daytime = FALSE;
   GSList       *iter;            /* unowned */
 
   /* Note: I checked three different gweather consumers
@@ -623,7 +666,8 @@ compute_weather_info_data (GSList   *samples,
     {
       GWeatherInfo  *gwi;       /* unowned */
       const gchar   *icon_name; /* unowned */
-      gint     phenomenon = -1;
+      gint           phenomenon = -1;
+      gboolean       supports_night_icon;
       gdouble  temp;
       gboolean valid_temp;
 
@@ -631,12 +675,13 @@ compute_weather_info_data (GSList   *samples,
 
       icon_name = gweather_info_get_icon_name (gwi);
       if (icon_name != NULL)
-        phenomenon  = get_icon_name_sortkey (icon_name);
+        phenomenon  = get_icon_name_sortkey (icon_name, &supports_night_icon);
 
       valid_temp = get_gweather_temperature (gwi, &temp);
 
-      if (icon_name != NULL && (phenomenon_gwi == NULL || phenomenon > phenomenon_val))
+      if (phenomenon >= 0 && (phenomenon_gwi == NULL || phenomenon > phenomenon_val))
         {
+          phenomenon_supports_night_icon = supports_night_icon;
           phenomenon_val = phenomenon;
           phenomenon_gwi = gwi;
         }
@@ -646,11 +691,14 @@ compute_weather_info_data (GSList   *samples,
           temp_val = temp;
           temp_gwi = gwi;
         }
+  
+      if (gweather_info_is_daytime (gwi))      
+        has_daytime = TRUE;
     }
 
   if (phenomenon_gwi != NULL && temp_gwi != NULL)
     {
-      *icon_name = get_normalized_icon_name (phenomenon_gwi);
+      *icon_name = get_normalized_icon_name (phenomenon_gwi, is_today && !has_daytime && phenomenon_supports_night_icon);
       *temperature = gweather_info_get_temp (temp_gwi);
       return TRUE;
     }
@@ -744,7 +792,7 @@ preprocess_gweather_reports (GcalWeatherService *self,
       g_autofree gchar *icon_name;
       g_autofree gchar *temperature;
 
-      if (compute_weather_info_data (days[i], &icon_name, &temperature))
+      if (compute_weather_info_data (days[i], i == 0, &icon_name, &temperature))
         {
           GcalWeatherInfo* gcwi; /* owned */
 
