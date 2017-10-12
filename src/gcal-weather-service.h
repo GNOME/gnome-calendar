@@ -38,8 +38,8 @@ GcalWeatherService* gcal_weather_service_new                (GTimeZone          
 
 GTimeZone*          gcal_weather_service_get_time_zone      (GcalWeatherService *self);
 
-void                gcal_weather_service_set_time_zone      (GcalWeatherService  *self,
-                                                             GTimeZone           *value);
+void                gcal_weather_service_set_time_zone      (GcalWeatherService *self,
+                                                             GTimeZone          *value);
 
 void                gcal_weather_service_run                (GcalWeatherService *self,
                                                              GWeatherLocation   *location);
@@ -49,6 +49,8 @@ void                gcal_weather_service_stop               (GcalWeatherService 
 guint               gcal_weather_service_get_max_days       (GcalWeatherService *self);
 
 guint               gcal_weather_service_get_check_interval (GcalWeatherService *self);
+
+GSList*             gcal_weather_service_get_weather_infos  (GcalWeatherService *self);
 
 
 G_END_DECLS

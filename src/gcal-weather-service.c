@@ -37,7 +37,8 @@ G_BEGIN_DECLS
  *                           freed by gcal_weather_service_stop().
  * @location_cancellable:    Used to deal with async location service construction.
  * @locaton_running:         Whether location service is active.
- * @weather_info:            The weather info to query.
+ * @weather_infos:           List of #GcalWeatherInfo objects.
+ * @gweather_info:           The weather info to query.
  * @max_days:                Number of days we want weather information for.
  * @weather_service_running: True if weather service is active.
  *
@@ -69,6 +70,7 @@ struct _GcalWeatherService
   gboolean         location_service_running;
 
   /* weather: */
+  GSList          *weather_infos;        /* owned[owned] */
   GWeatherInfo    *gweather_info;        /* owned, nullable */
   guint            max_days;
   gboolean         weather_service_running;
@@ -180,6 +182,8 @@ gcal_weather_service_finalize (GObject *object)
 
   g_cancellable_cancel (self->location_cancellable);
   g_clear_object (&self->location_cancellable);
+
+  g_slist_free_full (self->weather_infos, g_object_unref);
 
   if (self->gweather_info != NULL)
     g_clear_object (&self->gweather_info);
@@ -294,10 +298,11 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
   /**
    * GcalWeatherService::weather-changed:
    * @sender: The #GcalWeatherService
-   * @gwi:    A SList containing updated #GcalWeatherInfos.
    * @self:   data pointer.
    *
-   * Triggered on weather changes.
+   * Triggered on weather changes. Call
+   * gcal_weather_service_get_weather_infos() to
+   * retrieve predictions.
    */
   gcal_weather_service_signals[SIG_WEATHER_CHANGED]
     = g_signal_new ("weather-changed",
@@ -306,10 +311,9 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
                     0,
                     NULL,
                     NULL,
-                    g_cclosure_marshal_VOID__POINTER,
+                    g_cclosure_marshal_VOID__VOID,
                     G_TYPE_NONE,
-                    1,
-                    G_TYPE_POINTER);
+                    0);
 }
 
 
@@ -323,6 +327,7 @@ gcal_weather_service_init (GcalWeatherService *self)
   self->location_cancellable = g_cancellable_new ();
   self->location_service_running = FALSE;
   self->location_service = NULL;
+  self->weather_infos = NULL;
   self->gweather_info = NULL;
   self->weather_service_running = FALSE;
   self->max_days = 0;
@@ -918,12 +923,14 @@ static void
 gcal_weather_service_update_weather (GWeatherInfo       *info,
                                      GcalWeatherService *self)
 {
-  GSList *gcinfos = NULL; /* owned[owned] */
-
   g_return_if_fail (info == NULL || GWEATHER_IS_INFO (info));
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
-  /* Compute a list of weather infos. */
+  /* Free previously received weather infos */
+  g_slist_free_full (self->weather_infos, g_object_unref);
+  self->weather_infos = NULL;
+
+  /* Compute a list of newly received weather infos. */
   if (info == NULL)
     {
       g_debug ("Could not retrieve valid weather");
@@ -935,7 +942,7 @@ gcal_weather_service_update_weather (GWeatherInfo       *info,
       g_debug ("Received valid weather information");
 
       gwforecast = gweather_info_get_forecast_list (info);
-      gcinfos = preprocess_gweather_reports (self, gwforecast);
+      self->weather_infos = preprocess_gweather_reports (self, gwforecast);
     }
   else
     {
@@ -943,8 +950,7 @@ gcal_weather_service_update_weather (GWeatherInfo       *info,
       g_debug ("Could not retrieve valid weather for location '%s'", location_name);
     }
 
-  g_signal_emit (self, gcal_weather_service_signals[SIG_WEATHER_CHANGED], 0, gcinfos);
-  g_slist_free_full (gcinfos, g_object_unref);
+  g_signal_emit (self, gcal_weather_service_signals[SIG_WEATHER_CHANGED], 0);
 }
 
 
@@ -1189,7 +1195,8 @@ gcal_weather_service_get_time_zone (GcalWeatherService *self)
 
 
 
-/* gcal_weather_service_set_time_zone:
+/**
+ * gcal_weather_service_set_time_zone:
  * @self: The #GcalWeatherService instance.
  * @days: Number of days.
  *
@@ -1234,4 +1241,20 @@ gcal_weather_service_get_check_interval (GcalWeatherService *self)
   g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), 0);
 
   return self->check_interval;
+}
+
+
+
+/**
+ * gcal_weather_service_get_weather_infos:
+ * @self: The #GcalWeatherService instance.
+ *
+ * Returns: (transfer none): list of known weather reports.
+ */
+GSList*
+gcal_weather_service_get_weather_infos (GcalWeatherService *self)
+{
+  g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), NULL);
+
+  return self->weather_infos;
 }
