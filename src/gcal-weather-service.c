@@ -141,6 +141,12 @@ static gboolean get_time_day_start                         (GcalWeatherService *
                                                             GDate              *ret_date,
                                                             gint64             *ret_unix);
 
+static inline gboolean get_gweather_temperature            (GWeatherInfo       *gwi,
+                                                            gdouble            *temp);
+
+static inline gboolean get_gweather_phenomenon             (GWeatherInfo                *gwi,
+                                                            GWeatherConditionPhenomenon *phenomenon);
+
 static gboolean compute_weather_info_data                  (GSList             *samples,
                                                             gchar             **icon_name,
                                                             gchar             **temperature);
@@ -372,6 +378,85 @@ get_time_day_start (GcalWeatherService *self,
 
 
 
+/* get_gweather_temperature:
+ * @gwi: #GWeatherInfo to extract temperatures from.
+ * @temp: (out): extracted temperature or %NAN.
+ *
+ * Returns sanitized temperatures. Returned values should only
+ * be used as sort key.
+ *
+ * Returns: %TRUE for valid temperatures.
+ */
+static inline gboolean
+get_gweather_temperature (GWeatherInfo *gwi,
+                          gdouble      *temp)
+{
+  gboolean valid;
+  gdouble  value;
+
+  *temp = NAN;
+
+  g_return_val_if_fail (gwi != NULL, FALSE);
+  g_return_val_if_fail (temp != NULL, FALSE);
+
+  valid = gweather_info_get_value_temp (gwi,
+                                        GWEATHER_TEMP_UNIT_DEFAULT,
+                                        &value);
+
+  /* TODO: Extract temperatures in Celsius and catch
+   *       implausible cases.
+   */
+  if (valid)
+    {
+      *temp = value;
+      return TRUE;
+    }
+  else
+    {
+      *temp = NAN;
+      return FALSE;
+    }
+}
+
+
+
+/* get_gweather_phenomenon:
+ * @gwi: #GWeatherInfo to extract temperatures from.
+ * @phenomenon: (out): extracted phenomenon
+ *
+ * Extracts and sanitizes phenomenons.
+ *
+ * Returns: %TRUE for valid phenomenons.
+ */
+static inline gboolean
+get_gweather_phenomenon (GWeatherInfo                *gwi,
+                         GWeatherConditionPhenomenon *phenomenon)
+{
+  GWeatherConditionQualifier _qualifier;
+  GWeatherConditionPhenomenon value;
+  gboolean valid;
+
+  *phenomenon = GWEATHER_PHENOMENON_INVALID;
+
+  g_return_val_if_fail (gwi != NULL, FALSE);
+  g_return_val_if_fail (phenomenon != NULL, FALSE);
+
+  valid = gweather_info_get_value_conditions (gwi, &value, &_qualifier);
+
+  if (valid && value != GWEATHER_PHENOMENON_INVALID && value >= 0 && value < GWEATHER_PHENOMENON_LAST)
+    {
+      *phenomenon = value;
+      return TRUE;
+    }
+  else
+    {
+      *phenomenon = GWEATHER_PHENOMENON_INVALID;
+      return FALSE;
+    }
+}
+
+
+
 /* compute_weather_info_data:
  * @samples: List of received #GWeatherInfos.
  * @icon_name: (out): (transfer full): weather icon name or %NULL.
@@ -409,28 +494,22 @@ compute_weather_info_data (GSList   *samples,
     {
       GWeatherInfo *gwi; /* unowned */
       GWeatherConditionPhenomenon phenomenon;
-      GWeatherConditionQualifier _qualifier;
-      gboolean valid_val;
+      gboolean valid_phenom;
       gdouble temp;
+      gboolean valid_temp;
 
       gwi = GWEATHER_INFO (iter->data);
 
-      valid_val = gweather_info_get_value_temp (gwi,
-                                                GWEATHER_TEMP_UNIT_DEFAULT,
-                                                &temp);
-      if (!valid_val || isnan (temp))
-        continue;
+      valid_phenom = get_gweather_phenomenon (gwi, &phenomenon);
+      valid_temp = get_gweather_temperature (gwi, &temp);
 
-      valid_val = gweather_info_get_value_conditions (gwi, &phenomenon, &_qualifier);
-      if (!valid_val || valid_val == GWEATHER_PHENOMENON_INVALID || valid_val == GWEATHER_PHENOMENON_LAST)
-        continue;
-
-      if (phenomenon_gwi == NULL || phenomenon > phenomenon_val)
+      if (valid_phenom && (phenomenon_gwi == NULL || phenomenon > phenomenon_val))
         {
           phenomenon_val = phenomenon;
           phenomenon_gwi = gwi;
         }
-      if (temp_gwi == NULL || temp > temp_val)
+
+      if (valid_temp && (temp_gwi == NULL || temp > temp_val))
         {
           temp_val = temp;
           temp_gwi = gwi;
