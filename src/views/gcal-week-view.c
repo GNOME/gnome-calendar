@@ -62,7 +62,7 @@ struct _GcalWeekView
 
   /* property */
   icaltimetype   *date;
-  GcalManager    *manager; /* weak referenced */
+  GcalManager    *manager; /* owned */
 
   guint           scroll_grid_timeout_id;
 
