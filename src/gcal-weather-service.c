@@ -20,6 +20,7 @@
 
 #include <geocode-glib/geocode-glib.h>
 #include <geoclue.h>
+#include <string.h>
 #include <math.h>
 
 #include "gcal-weather-service.h"
@@ -126,35 +127,39 @@ static void     on_gclue_client_stop                       (GClueClient         
 static void     gcal_weather_service_set_max_days          (GcalWeatherService  *self,
                                                             guint                days);
 
-static void     gcal_weather_service_update_weather        (GWeatherInfo       *info,
-                                                            GcalWeatherService *self);
+static void     gcal_weather_service_update_weather        (GWeatherInfo        *info,
+                                                            GcalWeatherService  *self);
 
 /* Internal weather update timer API and callbacks */
-static void     gcal_weather_service_set_check_interval    (GcalWeatherService   *self,
-                                                            guint                 check_interval);
+static void     gcal_weather_service_set_check_interval    (GcalWeatherService  *self,
+                                                            guint                check_interval);
 
-static void     gcal_weather_service_timer_stop            (GcalWeatherService *self);
 
-static void     gcal_weather_service_timer_start           (GcalWeatherService *self);
+static gssize   get_normalized_icon_name_len               (const gchar         *str);
 
-static gboolean on_timer_timeout                           (GcalWeatherService *self);
+static gchar*   get_normalized_icon_name                   (GWeatherInfo        *gwi);
 
-static gboolean get_time_day_start                         (GcalWeatherService *self,
-                                                            GDate              *ret_date,
-                                                            gint64             *ret_unix);
+static gint     get_icon_name_sortkey                      (const gchar         *icon_name);
 
-static inline gboolean get_gweather_temperature            (GWeatherInfo       *gwi,
-                                                            gdouble            *temp);
+static void     gcal_weather_service_timer_stop            (GcalWeatherService  *self);
 
-static inline gboolean get_gweather_phenomenon             (GWeatherInfo                *gwi,
-                                                            GWeatherConditionPhenomenon *phenomenon);
+static void     gcal_weather_service_timer_start           (GcalWeatherService  *self);
 
-static gboolean compute_weather_info_data                  (GSList             *samples,
-                                                            gchar             **icon_name,
-                                                            gchar             **temperature);
+static gboolean on_timer_timeout                           (GcalWeatherService  *self);
 
-static GSList*  preprocess_gweather_reports                (GcalWeatherService *self,
-                                                            GSList             *samples);
+static gboolean get_time_day_start                         (GcalWeatherService  *self,
+                                                            GDate               *ret_date,
+                                                            gint64              *ret_unix);
+
+static inline gboolean get_gweather_temperature            (GWeatherInfo        *gwi,
+                                                            gdouble             *temp);
+
+static gboolean compute_weather_info_data                  (GSList              *samples,
+                                                            gchar              **icon_name,
+                                                            gchar              **temperature);
+
+static GSList*  preprocess_gweather_reports                (GcalWeatherService  *self,
+                                                            GSList              *samples);
 
 
 G_END_DECLS
@@ -335,6 +340,133 @@ gcal_weather_service_init (GcalWeatherService *self)
 
 
 
+/* drop_suffix:
+ * @str: A icon name to normalize.
+ *
+ * Translates a given weather icon name to the
+ * one to display for folded weather reports.
+ *
+ * Returns: Number of initial characters that
+ *          belong to the normalized name.
+ */
+static gssize
+get_normalized_icon_name_len (const gchar *str)
+{
+  const gchar suffix1[] = "-symbolic";
+  const gssize suffix1_len = G_N_ELEMENTS (suffix1) - 1;
+
+  const gchar suffix2[] = "-night";
+  const gssize suffix2_len = G_N_ELEMENTS (suffix2) - 1;
+
+  gssize clean_len;
+  gssize str_len;
+
+  g_return_val_if_fail (str != NULL, -1);
+
+  str_len = strlen (str);
+
+  clean_len = str_len - suffix1_len;
+  if (clean_len >= 0 && memcmp (suffix1, str + clean_len, suffix1_len) == 0)
+    str_len = clean_len;
+
+  clean_len = str_len - suffix2_len;
+  if (clean_len >= 0 && memcmp (suffix2, str + clean_len, suffix2_len) == 0)
+    str_len = clean_len;
+
+  return str_len;
+}
+
+
+
+/* get_normalized_icon_name:
+ * @str: A icon name to normalize.
+ *
+ * Translates a given weather icon name to the
+ * one to display for folded weather reports.
+ *
+ * Returns: (transfer full): A normalized icon name.
+ */
+static gchar*
+get_normalized_icon_name (GWeatherInfo* wi)
+{
+  const gchar pfx[] = "-symbolic";
+  const gsize pfx_size = G_N_ELEMENTS (pfx) - 1;
+
+  const gchar *str; /* unowned */
+  gssize       normalized_size;
+  gchar       *buffer = NULL; /* owned */
+  gsize        buffer_size;
+
+  g_return_val_if_fail (wi != NULL, NULL);
+  
+  str = gweather_info_get_icon_name (wi);
+  if (str == NULL)
+    return NULL;
+  
+  normalized_size = get_normalized_icon_name_len (str);
+  g_return_val_if_fail (normalized_size >= 0, NULL);
+  
+  buffer_size = normalized_size + pfx_size + 1;
+  buffer = g_malloc (buffer_size);
+
+  memcpy (buffer, str, normalized_size);
+  memcpy (buffer + normalized_size, pfx, pfx_size);
+  buffer[buffer_size - 1] = '\0';  
+
+  return buffer;
+}
+
+
+
+/* get_icon_name_sortkey:
+ *
+ * Returns a sort key for a given weather
+ * icon name and -1 for unknown ones.
+ *
+ * The lower the key, the better the weather.
+ */
+static gint
+get_icon_name_sortkey (const gchar *icon_name)
+{
+  /* Note that we can't use gweathers condition
+   * field as it is not necessarily holds valid values.
+   * libgweather uses its own heuristic to determine
+   * the icon to use. String matching is still better
+   * than copying their algorithm, I guess.
+   */
+
+  gssize normalized_name_len;
+
+  const gchar* icons[] =
+    { "weather-clear",
+      "weather-few-clouds",
+      "weather-overcast",
+      "weather-fog",
+      "weather-showers-scattered",
+      "weather-showers",
+      "weather-snow",
+      "weather-storm",
+      "weather-severe-alert"
+    };
+
+  g_return_val_if_fail (icon_name != NULL, -1);
+
+  normalized_name_len = get_normalized_icon_name_len (icon_name);
+  g_return_val_if_fail (normalized_name_len >= 0, -1);
+
+  for (int i = 0; i < G_N_ELEMENTS (icons); i++)
+    {
+      if (icons[i][normalized_name_len] == '\0' && strncmp (icon_name, icons[i], normalized_name_len) == 0)
+        return i;
+    }
+
+  g_warning ("Unknown weather icon '%s'", icon_name);
+
+  return -1;
+}
+
+
+
 /**************
  * < private >
  **************/
@@ -343,15 +475,12 @@ gcal_weather_service_init (GcalWeatherService *self)
 static gchar*
 gwc2str (GWeatherInfo *gwi)
 {
-    gchar *result = NULL; /* owned */
-
     g_autoptr (GDateTime) date = NULL;
     g_autofree gchar     *date_str = NULL;
     glong      update;
 
+    gchar     *icon_name; /* unowned */
     gdouble    temp;
-
-    GWeatherConditionPhenomenon phen;
 
     if (!gweather_info_get_value_update (gwi, &update))
         return g_strdup ("<null>");
@@ -360,14 +489,12 @@ gwc2str (GWeatherInfo *gwi)
     date_str = g_date_time_format (date, "%F %T"),
 
     get_gweather_temperature (gwi, &temp);
-    get_gweather_phenomenon (gwi, &phen);
+    icon_name = gweather_info_get_symbolic_icon_name (gwi);
 
-
-    result = g_strdup_printf ("(%s: t:%f, w:%d)",
-                              date_str,
-                              temp,
-                              phen);
-    return result;
+    return g_strdup_printf ("(%s: t:%f, w:%s)",
+                            date_str,
+                            temp,
+                            icon_name);
 }
 #endif
 
@@ -459,43 +586,6 @@ get_gweather_temperature (GWeatherInfo *gwi,
 
 
 
-/* get_gweather_phenomenon:
- * @gwi: #GWeatherInfo to extract temperatures from.
- * @phenomenon: (out): extracted phenomenon
- *
- * Extracts and sanitizes phenomenons.
- *
- * Returns: %TRUE for valid phenomenons.
- */
-static inline gboolean
-get_gweather_phenomenon (GWeatherInfo                *gwi,
-                         GWeatherConditionPhenomenon *phenomenon)
-{
-  GWeatherConditionQualifier _qualifier;
-  GWeatherConditionPhenomenon value;
-  gboolean valid;
-
-  *phenomenon = GWEATHER_PHENOMENON_INVALID;
-
-  g_return_val_if_fail (gwi != NULL, FALSE);
-  g_return_val_if_fail (phenomenon != NULL, FALSE);
-
-  valid = gweather_info_get_value_conditions (gwi, &value, &_qualifier);
-
-  if (valid && value != GWEATHER_PHENOMENON_INVALID && value >= 0 && value < GWEATHER_PHENOMENON_LAST)
-    {
-      *phenomenon = value;
-      return TRUE;
-    }
-  else
-    {
-      *phenomenon = GWEATHER_PHENOMENON_INVALID;
-      return FALSE;
-    }
-}
-
-
-
 /* compute_weather_info_data:
  * @samples: List of received #GWeatherInfos.
  * @icon_name: (out): (transfer full): weather icon name or %NULL.
@@ -510,7 +600,7 @@ compute_weather_info_data (GSList   *samples,
                            gchar   **icon_name,
                            gchar   **temperature)
 {
-  GWeatherConditionPhenomenon phenomenon_val = GWEATHER_PHENOMENON_INVALID;
+  gint          phenomenon_val = -1;
   GWeatherInfo *phenomenon_gwi = NULL; /* unowned */
   gdouble       temp_val = NAN;
   GWeatherInfo *temp_gwi = NULL; /* unowned */
@@ -531,18 +621,21 @@ compute_weather_info_data (GSList   *samples,
 
   for (iter = samples; iter != NULL; iter = iter->next)
     {
-      GWeatherInfo *gwi; /* unowned */
-      GWeatherConditionPhenomenon phenomenon;
-      gboolean valid_phenom;
-      gdouble temp;
+      GWeatherInfo  *gwi;       /* unowned */
+      const gchar   *icon_name; /* unowned */
+      gint     phenomenon = -1;
+      gdouble  temp;
       gboolean valid_temp;
 
       gwi = GWEATHER_INFO (iter->data);
 
-      valid_phenom = get_gweather_phenomenon (gwi, &phenomenon);
+      icon_name = gweather_info_get_icon_name (gwi);
+      if (icon_name != NULL)
+        phenomenon  = get_icon_name_sortkey (icon_name);
+
       valid_temp = get_gweather_temperature (gwi, &temp);
 
-      if (valid_phenom && (phenomenon_gwi == NULL || phenomenon > phenomenon_val))
+      if (icon_name != NULL && (phenomenon_gwi == NULL || phenomenon > phenomenon_val))
         {
           phenomenon_val = phenomenon;
           phenomenon_gwi = gwi;
@@ -557,7 +650,7 @@ compute_weather_info_data (GSList   *samples,
 
   if (phenomenon_gwi != NULL && temp_gwi != NULL)
     {
-      *icon_name = g_strdup (gweather_info_get_symbolic_icon_name (phenomenon_gwi));
+      *icon_name = get_normalized_icon_name (phenomenon_gwi);
       *temperature = gweather_info_get_temp (temp_gwi);
       return TRUE;
     }
