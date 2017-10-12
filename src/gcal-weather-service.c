@@ -69,7 +69,7 @@ struct _GcalWeatherService
   gboolean         location_service_running;
 
   /* weather: */
-  GWeatherInfo    *weather_info;         /* owned, nullable */
+  GWeatherInfo    *gweather_info;        /* owned, nullable */
   guint            max_days;
   gboolean         weather_service_running;
 };
@@ -181,8 +181,8 @@ gcal_weather_service_finalize (GObject *object)
   g_cancellable_cancel (self->location_cancellable);
   g_clear_object (&self->location_cancellable);
 
-  if (self->weather_info != NULL)
-    g_clear_object (&self->weather_info);
+  if (self->gweather_info != NULL)
+    g_clear_object (&self->gweather_info);
 
   G_OBJECT_CLASS (gcal_weather_service_parent_class)->finalize (object);
 }
@@ -323,7 +323,7 @@ gcal_weather_service_init (GcalWeatherService *self)
   self->location_cancellable = g_cancellable_new ();
   self->location_service_running = FALSE;
   self->location_service = NULL;
-  self->weather_info = NULL;
+  self->gweather_info = NULL;
   self->weather_service_running = FALSE;
   self->max_days = 0;
 }
@@ -643,10 +643,10 @@ gcal_weather_service_update_location (GcalWeatherService  *self,
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
-  if (self->weather_info != NULL)
+  if (self->gweather_info != NULL)
     {
       gcal_weather_service_timer_stop (self);
-      g_clear_object (&self->weather_info);
+      g_clear_object (&self->gweather_info);
     }
 
   if (location == NULL)
@@ -659,9 +659,9 @@ gcal_weather_service_update_location (GcalWeatherService  *self,
       g_debug ("Got new weather service location: '%s'",
                (location == NULL)? "<null>" : gweather_location_get_name (location));
 
-      self->weather_info = gweather_info_new (location, GWEATHER_FORECAST_ZONE | GWEATHER_FORECAST_LIST);
+      self->gweather_info = gweather_info_new (location, GWEATHER_FORECAST_ZONE | GWEATHER_FORECAST_LIST);
       /* TODO: display weather attributions somewhere:
-       * gweather_info_get_attribution (self->weather_info);
+       * gweather_info_get_attribution (self->gweather_info);
        * Do no roll-out a release without resolving this one before!
        */
 
@@ -669,9 +669,9 @@ gcal_weather_service_update_location (GcalWeatherService  *self,
        * This combination works fine, though. We should open a bug / investigate
        * what is going on.
        */
-      gweather_info_set_enabled_providers (self->weather_info, GWEATHER_PROVIDER_METAR | GWEATHER_PROVIDER_OWM | GWEATHER_PROVIDER_YR_NO);
-      g_signal_connect (self->weather_info, "updated", (GCallback) gcal_weather_service_update_weather, self);
-      gweather_info_update (self->weather_info);
+      gweather_info_set_enabled_providers (self->gweather_info, GWEATHER_PROVIDER_METAR | GWEATHER_PROVIDER_OWM | GWEATHER_PROVIDER_YR_NO);
+      g_signal_connect (self->gweather_info, "updated", (GCallback) gcal_weather_service_update_weather, self);
+      gweather_info_update (self->gweather_info);
 
       gcal_weather_service_timer_start (self);
     }
@@ -1032,8 +1032,8 @@ on_timer_timeout (GcalWeatherService *self)
 {
   g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), G_SOURCE_REMOVE);
 
-  if (self->weather_info != NULL)
-    gweather_info_update (self->weather_info);
+  if (self->gweather_info != NULL)
+    gweather_info_update (self->gweather_info);
 
   return G_SOURCE_CONTINUE;
 }
@@ -1213,7 +1213,7 @@ gcal_weather_service_set_time_zone (GcalWeatherService *self,
         self->time_zone = g_time_zone_ref (value);
 
       /* make sure we provide correct weather infos */
-      gweather_info_update (self->weather_info);
+      gweather_info_update (self->gweather_info);
 
       g_object_notify ((GObject*) self, "time-zone");
     }
