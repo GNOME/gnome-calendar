@@ -216,29 +216,30 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
   object_class->get_property = gcal_weather_service_get_property;
   object_class->set_property = gcal_weather_service_set_property;
 
-  const gint prop_flags = G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK |
-                          G_PARAM_STATIC_BLURB | G_PARAM_READABLE |
-                          G_PARAM_WRITABLE | G_PARAM_CONSTRUCT;
-
   /**
    * GcalWeatherServiceClass:max-days:
    *
    * Maximal number of days to fetch forecasts for.
    */
-  g_object_class_install_property (G_OBJECT_CLASS (klass),
-                                   PROP_MAX_DAYS,
-                                   g_param_spec_uint ("max-days", "max-days", "max-days",
-                                                      1, G_MAXUINT, 3, prop_flags));
+  g_object_class_install_property
+      (G_OBJECT_CLASS (klass),
+       PROP_MAX_DAYS,
+       g_param_spec_uint ("max-days", "max-days", "max-days",
+                          1, G_MAXUINT, 3,
+                          G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+
   /**
    * GcalWeatherServiceClass:check-interval:
    *
    * Amount of seconds to wait before re-fetching weather infos.
    * Use %0 to disable timers.
    */
-  g_object_class_install_property (G_OBJECT_CLASS (klass),
-                                   PROP_CHECK_INTERVAL,
-                                   g_param_spec_uint ("check-interval", "check-interval", "check-interval",
-                                                      0, G_MAXUINT, 0, prop_flags));
+  g_object_class_install_property
+      (G_OBJECT_CLASS (klass),
+       PROP_CHECK_INTERVAL,
+       g_param_spec_uint ("check-interval", "check-interval", "check-interval",
+                          0, G_MAXUINT, 0,
+                          G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
   /**
    * GcalWeatherService::weather-changed:

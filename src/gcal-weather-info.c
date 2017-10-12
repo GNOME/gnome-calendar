@@ -148,33 +148,39 @@ gcal_weather_info_class_init (GcalWeatherInfoClass *klass)
   object_class->get_property = gcal_weather_info_get_property;
   object_class->set_property = gcal_weather_info_set_property;
 
-  const gint pflags_rwc = G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB |
-                          G_PARAM_READABLE | G_PARAM_WRITABLE  | G_PARAM_CONSTRUCT;
 
   /**
    * GcalWeatherInfo:date:
    *
    * The non-nullable date weather information belongs to.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_DATE,
-                                   g_param_spec_boxed ("date", "date", "date", G_TYPE_DATE, pflags_rwc));
+  g_object_class_install_property
+      (object_class,
+       PROP_DATE,
+       g_param_spec_boxed ("date", "date", "date", G_TYPE_DATE,
+                           G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+
   /**
    * GcalWeatherInfo:icon-name:
    *
    * Non-nullable Icon name representing the weather.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_ICON_NAME,
-                                   g_param_spec_string ("icon-name", "icon-name", "icon-name", NULL, pflags_rwc));
+  g_object_class_install_property
+      (object_class,
+       PROP_ICON_NAME,
+       g_param_spec_string ("icon-name", "icon-name", "icon-name", NULL,
+                            G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+
   /**
    * GcalWeatherInfo:temperature:
    *
    * The temperature as string or %NULL.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_TEMPERATURE,
-                                   g_param_spec_string ("temperature", "temperature", "temperature", NULL, pflags_rwc));
+  g_object_class_install_property
+      (object_class,
+       PROP_TEMPERATURE,
+       g_param_spec_string ("temperature", "temperature", "temperature", NULL,
+                            G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 }
 
 
