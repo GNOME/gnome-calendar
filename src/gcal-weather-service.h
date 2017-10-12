@@ -32,7 +32,8 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (GcalWeatherService, gcal_weather_service, GCAL, WEATHER_SERVICE, GObject)
 
 
-GcalWeatherService* gcal_weather_service_new                (guint               max_days,
+GcalWeatherService* gcal_weather_service_new                (GTimeZone          *time_zone,
+                                                             guint               max_days,
                                                              guint               check_interval);
 
 GTimeZone*          gcal_weather_service_get_time_zone      (GcalWeatherService *self);

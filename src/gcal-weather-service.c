@@ -29,6 +29,7 @@ G_BEGIN_DECLS
 
 /* GcalWeatherService:
  *
+ * @time_zone:               The current time zone
  * @check_interval:          Amount of seconds to wait before re-fetching weather infos.
  * @timeout_id:              Time-out event ID or %0. Timer is used to periodically update weather infos.
  * @location_service:        Used to monitor location changes.
@@ -56,6 +57,7 @@ struct _GcalWeatherService
   /* <public> */
 
   /* <private> */
+  GTimeZone       *time_zone;            /* owned, nullable */
 
   /* timer: */
   guint            check_interval;
@@ -78,6 +80,7 @@ enum
 {
   PROP_0,
   PROP_MAX_DAYS,
+  PROP_TIME_ZONE,
   PROP_CHECK_INTERVAL,
   PROP_NUM,
 };
@@ -160,6 +163,12 @@ gcal_weather_service_finalize (GObject *object)
 
   self = (GcalWeatherService *) object;
 
+  if (self->time_zone != NULL)
+    {
+      g_time_zone_unref (self->time_zone);
+      self->time_zone = NULL;
+    }
+
   if (self->location_service != NULL)
     g_clear_object (&self->location_service);
 
@@ -188,6 +197,9 @@ gcal_weather_service_get_property (GObject    *object,
   case PROP_MAX_DAYS:
     g_value_set_uint (value, gcal_weather_service_get_max_days (self));
     break;
+  case PROP_TIME_ZONE:
+    g_value_set_pointer (value, gcal_weather_service_get_time_zone (self));
+    break;
   case PROP_CHECK_INTERVAL:
     g_value_set_uint (value, gcal_weather_service_get_check_interval (self));
     break;
@@ -212,6 +224,9 @@ gcal_weather_service_set_property (GObject      *object,
   {
   case PROP_MAX_DAYS:
     gcal_weather_service_set_max_days (self, g_value_get_uint (value));
+    break;
+  case PROP_TIME_ZONE:
+    gcal_weather_service_set_time_zone (self, g_value_get_pointer (value));
     break;
   case PROP_CHECK_INTERVAL:
     gcal_weather_service_set_check_interval (self, g_value_get_uint (value));
@@ -245,6 +260,17 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
        g_param_spec_uint ("max-days", "max-days", "max-days",
                           1, G_MAXUINT, 3,
                           G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+
+  /**
+   * GcalWeatherServiceClass:time-zone:
+   *
+   * The time zone to use.
+   */
+  g_object_class_install_property
+      (G_OBJECT_CLASS (klass),
+       PROP_TIME_ZONE,
+       g_param_spec_pointer ("time-zone", "time-zone", "time-zone",
+                             G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 
   /**
    * GcalWeatherServiceClass:check-interval:
@@ -285,6 +311,7 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
 static void
 gcal_weather_service_init (GcalWeatherService *self)
 {
+  self->time_zone = NULL;
   self->check_interval = 0;
   self->timeout_id = 0;
   self->location_cancellable = g_cancellable_new ();
@@ -323,7 +350,9 @@ get_time_day_start (GcalWeatherService *self,
   g_return_val_if_fail (ret_date != NULL, FALSE);
   g_return_val_if_fail (ret_unix != NULL, FALSE);
 
-  now = g_date_time_new_now_local ();
+  now = (self->time_zone == NULL)
+          ? g_date_time_new_now_local ()
+          : g_date_time_new_now (self->time_zone);
   day = g_date_time_add_full (now,
                               0, /* years */
                               0, /* months */
@@ -941,10 +970,12 @@ on_timer_timeout (GcalWeatherService *self)
  * Returns: (transfer full): A newly created #GcalWeatherService.
  */
 GcalWeatherService *
-gcal_weather_service_new (guint      max_days,
+gcal_weather_service_new (GTimeZone *time_zone,
+                          guint      max_days,
                           guint      check_interval)
 {
   return g_object_new (GCAL_TYPE_WEATHER_SERVICE,
+                       "time-zone", time_zone,
                        "max-days", max_days,
                        "check-interval", check_interval,
                        NULL);
@@ -1051,6 +1082,54 @@ gcal_weather_service_get_max_days (GcalWeatherService *self)
 
   return self->max_days;
 }
+
+
+
+/**
+ * gcal_weather_service_get_time_zone:
+ * @self: The #GcalWeatherService instance.
+ *
+ * Getter for #GcalWeatherService:time-zone.
+ */
+GTimeZone*
+gcal_weather_service_get_time_zone (GcalWeatherService *self)
+{
+  g_return_val_if_fail (self != NULL, NULL);
+  return self->time_zone;
+}
+
+
+
+/* gcal_weather_service_set_time_zone:
+ * @self: The #GcalWeatherService instance.
+ * @days: Number of days.
+ *
+ * Setter for #GcalWeatherInfos:time-zone.
+ */
+void
+gcal_weather_service_set_time_zone (GcalWeatherService *self,
+                                    GTimeZone          *value)
+{
+  g_return_if_fail (self != NULL);
+
+  if (self->time_zone != value)
+    {
+      if (self->time_zone != NULL)
+        {
+          g_time_zone_unref (self->time_zone);
+          self->time_zone = NULL;
+        }
+
+      if (value != NULL)
+        self->time_zone = g_time_zone_ref (value);
+
+      /* make sure we provide correct weather infos */
+      gweather_info_update (self->weather_info);
+
+      g_object_notify ((GObject*) self, "time-zone");
+    }
+}
+
 
 
 
