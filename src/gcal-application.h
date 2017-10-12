@@ -20,6 +20,7 @@
 #ifndef _GCAL_APPLICATION_H_
 #define _GCAL_APPLICATION_H_
 
+#include "gcal-weather-service.h"
 #include "gcal-manager.h"
 
 #include <gtk/gtk.h>
@@ -33,6 +34,8 @@ G_DECLARE_FINAL_TYPE (GcalApplication, gcal_application, GCAL, APPLICATION, GtkA
 GcalApplication*     gcal_application_new                        (void);
 
 GcalManager*         gcal_application_get_manager                (GcalApplication    *self);
+
+GcalWeatherService*  gcal_application_get_weather_service        (GcalApplication    *self);
 
 void                 gcal_application_set_uuid                   (GcalApplication    *self,
                                                                   const gchar        *app_uuid);

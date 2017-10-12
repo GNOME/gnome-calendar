@@ -35,6 +35,9 @@
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 
+#define WEATHER_CHECK_INTERVAL 7200 /* seconds */
+#define FORECAST_MAX_DAYS      3
+
 struct _GcalApplication
 {
   GtkApplication      parent;
@@ -48,6 +51,12 @@ struct _GcalApplication
 
   gchar              *uuid;
   icaltimetype       *initial_date;
+
+  /* Weather service exists as long as #GcalApplication.
+   * However, it only runs if #GcalApplicatoin->window
+   * is available.
+   */
+  GcalWeatherService *weather_service; /* owned */
 
   GcalShellSearchProvider *search_provider;
 };
@@ -198,6 +207,7 @@ gcal_application_finalize (GObject *object)
   g_clear_object (&self->colors_provider);
 
   g_clear_object (&self->manager);
+  g_clear_object (&self->weather_service);
   g_clear_object (&self->search_provider);
 
   G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
@@ -412,7 +422,9 @@ gcal_application_init (GcalApplication *self)
   self->manager = gcal_manager_new ();
   g_signal_connect_swapped (self->manager, "source-added", G_CALLBACK (process_sources), self);
   g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (process_sources), self);
-
+  self->weather_service = gcal_weather_service_new (NULL, /* in prep. for configurable time zones */
+                                                    FORECAST_MAX_DAYS,
+                                                    WEATHER_CHECK_INTERVAL);
   self->search_provider = gcal_shell_search_provider_new ();
   gcal_shell_search_provider_connect (self->search_provider, self->manager);
 }
@@ -535,6 +547,22 @@ gcal_application_get_manager (GcalApplication *self)
   g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
 
   return self->manager;
+}
+
+/**
+ * gcal_application_get_weather_service:
+ * @self: A #GcalApplication
+ *
+ * Provides the #GcalWeatherService used by this application.
+ *
+ * Returns: (transfer none): A #GcalWeatehrService
+ */
+GcalWeatherService*
+gcal_application_get_weather_service (GcalApplication *self)
+{
+  g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
+
+  return self->weather_service;
 }
 
 void
