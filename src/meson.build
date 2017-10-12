@@ -15,6 +15,9 @@ gcal_deps = [
   gtk_dep,
   gio_dep,
   goa_dep,
+  gweather_dep,
+  geoclue_dep,
+  geocode_dep,
   m_dep,
 ]
 
@@ -47,6 +50,8 @@ sources = files(
   'gcal-time-selector.c',
   'gcal-utils.c',
   'gcal-window.c',
+  'gcal-weather-service.c',
+  'gcal-weather-info.c',
 )
 
 gnome.mkenums(

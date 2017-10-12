@@ -2,6 +2,7 @@ subdir('icons')
 subdir('appdata')
 
 # Desktop files
+# Note: This name is registered in gcal-weather-service.c.
 desktop = 'org.gnome.Calendar.desktop'
 
 i18n.merge_file(
