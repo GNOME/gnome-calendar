@@ -19,7 +19,6 @@
 #define DESKTOP_FILE_NAME  "org.gnome.Calendar"
 
 #include <geocode-glib/geocode-glib.h>
-#include <libgweather/gweather.h>
 #include <geoclue.h>
 
 #include "gcal-weather-service.h"
@@ -63,6 +62,7 @@ struct _GcalWeatherService
   /* weather: */
   GWeatherInfo   *weather_info;         /* owned, nullable */
   guint           max_days;
+  gboolean        weather_service_running;
 };
 
 
@@ -88,41 +88,44 @@ G_DEFINE_TYPE (GcalWeatherService, gcal_weather_service, G_TYPE_OBJECT)
 
 
 /* Internal location API and callbacks: */
-static void     gcal_weather_service_update_location     (GcalWeatherService  *self,
-                                                          GClueLocation       *location);
+static void     gcal_weather_service_update_location       (GcalWeatherService  *self,
+                                                            GWeatherLocation    *location);
 
-static char*    gcal_weather_service_get_location_name   (GClueLocation       *location);
+static void     gcal_weather_service_update_gclue_location (GcalWeatherService  *self,
+                                                            GClueLocation       *location);
 
-static void     on_gclue_simple_creation                 (GClueSimple         *source,
-                                                          GAsyncResult        *result,
-                                                          GcalWeatherService  *data);
+static char*    gcal_weather_service_get_location_name     (GClueLocation       *location);
 
-static void     on_gclue_location_changed                (GClueLocation       *location,
-                                                          GcalWeatherService  *self);
+static void     on_gclue_simple_creation                   (GClueSimple         *source,
+                                                            GAsyncResult        *result,
+                                                            GcalWeatherService  *data);
 
-static void     on_gclue_client_activity_changed         (GClueClient         *client,
-                                                          GcalWeatherService  *self);
+static void     on_gclue_location_changed                  (GClueLocation       *location,
+                                                            GcalWeatherService  *self);
 
-static void     on_gclue_client_stop                     (GClueClient         *client,
-                                                          GAsyncResult        *res,
-                                                          GClueSimple         *simple);
+static void     on_gclue_client_activity_changed           (GClueClient         *client,
+                                                            GcalWeatherService  *self);
+
+static void     on_gclue_client_stop                       (GClueClient         *client,
+                                                            GAsyncResult        *res,
+                                                            GClueSimple         *simple);
 
 /* Internal Wweather API */
-static void     gcal_weather_service_set_max_days        (GcalWeatherService  *self,
-                                                          guint                days);
+static void     gcal_weather_service_set_max_days          (GcalWeatherService  *self,
+                                                            guint                days);
 
-static void     gcal_weather_service_update_weather      (GWeatherInfo       *info,
-                                                          GcalWeatherService *self);
+static void     gcal_weather_service_update_weather        (GWeatherInfo       *info,
+                                                            GcalWeatherService *self);
 
 /* Internal weather update timer API and callbacks */
-static void     gcal_weather_service_set_check_interval  (GcalWeatherService   *self,
-                                                          guint                 check_interval);
+static void     gcal_weather_service_set_check_interval    (GcalWeatherService   *self,
+                                                            guint                 check_interval);
 
-static void     gcal_weather_service_timer_stop          (GcalWeatherService *self);
+static void     gcal_weather_service_timer_stop            (GcalWeatherService *self);
 
-static void     gcal_weather_service_timer_start         (GcalWeatherService *self);
+static void     gcal_weather_service_timer_start           (GcalWeatherService *self);
 
-static gboolean on_timer_timeout                         (GcalWeatherService *self);
+static gboolean on_timer_timeout                           (GcalWeatherService *self);
 
 
 G_END_DECLS
@@ -225,7 +228,7 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
   g_object_class_install_property (G_OBJECT_CLASS (klass),
                                    PROP_MAX_DAYS,
                                    g_param_spec_uint ("max-days", "max-days", "max-days",
-                                                      0, G_MAXUINT, 0, prop_flags));
+                                                      1, G_MAXUINT, 3, prop_flags));
   /**
    * GcalWeatherServiceClass:check-interval:
    *
@@ -269,6 +272,7 @@ gcal_weather_service_init (GcalWeatherService *self)
   self->location_service_running = FALSE;
   self->location_service = NULL;
   self->weather_info = NULL;
+  self->weather_service_running = FALSE;
   self->max_days = 0;
 }
 
@@ -281,16 +285,15 @@ gcal_weather_service_init (GcalWeatherService *self)
 /**
  * gcal_weather_service_update_location:
  * @self:     The #GcalWeatherService instance.
- * @location: (nullable) (element-type Gcal.WeatherInfo): The location we want weather information for.
+ * @location: (nullable): The location we want weather information for.
  *
  * Registers the location to retrieve weather information from.
  */
 static void
 gcal_weather_service_update_location (GcalWeatherService  *self,
-                                      GClueLocation       *location)
+                                      GWeatherLocation    *location)
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
-  g_return_if_fail (location == NULL || GCLUE_IS_LOCATION (location));
 
   if (self->weather_info != NULL)
     {
@@ -305,25 +308,56 @@ gcal_weather_service_update_location (GcalWeatherService  *self,
     }
   else
     {
-      GWeatherLocation *wlocation; /* owned */
-      g_autofree gchar *loc_name = NULL;
-      gdouble latitude;
-      gdouble longitude;
-
-      loc_name = gcal_weather_service_get_location_name (location);
-      latitude = gclue_location_get_latitude (location);
-      longitude = gclue_location_get_longitude (location);
-      wlocation = gweather_location_new_detached (loc_name, NULL, latitude, longitude);
-
-      self->weather_info = gweather_info_new (wlocation, GWEATHER_FORECAST_ZONE);
+      self->weather_info = gweather_info_new (location, GWEATHER_FORECAST_ZONE);
 
       gweather_info_set_enabled_providers (self->weather_info, GWEATHER_PROVIDER_ALL);
       g_signal_connect (self->weather_info, "updated", (GCallback) gcal_weather_service_update_weather, self);
       gweather_info_update (self->weather_info);
 
       gcal_weather_service_timer_start (self);
-      gweather_location_unref (wlocation);
     }
+}
+
+
+
+/**
+ * gcal_weather_service_update_gclue_location:
+ * @self:     The #GcalWeatherService instance.
+ * @location: (nullable): The location we want weather information for.
+ *
+ * Registers the location to retrieve weather information from.
+ */
+static void
+gcal_weather_service_update_gclue_location (GcalWeatherService  *self,
+                                            GClueLocation       *location)
+{
+  GWeatherLocation *wlocation = NULL; /* owned */
+
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+  g_return_if_fail (location == NULL || GCLUE_IS_LOCATION (location));
+
+  if (location != NULL)
+    {
+      g_autofree gchar *loc_name = NULL;
+
+      loc_name = gcal_weather_service_get_location_name (location);
+      if (loc_name != NULL)
+        {
+          gdouble latitude;
+          gdouble longitude;
+
+          latitude = gclue_location_get_latitude (location);
+          longitude = gclue_location_get_longitude (location);
+
+          wlocation = gweather_location_new_detached (loc_name, NULL, latitude, longitude);
+        }
+    }
+
+
+  gcal_weather_service_update_location (self, wlocation);
+
+  if (wlocation != NULL)
+    gweather_location_unref (wlocation);
 }
 
 
@@ -333,7 +367,7 @@ gcal_weather_service_update_location (GcalWeatherService  *self,
  *
  * Queries the city name for the given location or %NULL.
  *
- * @Returns: (transfer full): City name or %NULL.
+ * @Returns: (transfer full) (nullable): City name or %NULL.
  */
 static char*
 gcal_weather_service_get_location_name (GClueLocation *location)
@@ -378,7 +412,6 @@ on_gclue_simple_creation (GClueSimple        *_source,
 
   g_return_if_fail (G_IS_ASYNC_RESULT (result));
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
-  g_return_if_fail (self->location_service_running);
 
   /* make sure we do not touch self->location_service
    * if the current operation was cancelled.
@@ -407,8 +440,7 @@ on_gclue_simple_creation (GClueSimple        *_source,
 
   if (location != NULL)
     {
-      gcal_weather_service_update_location (self, location);
-
+      gcal_weather_service_update_gclue_location (self, location);
 
       g_signal_connect_object (location,
                                "notify::location",
@@ -427,7 +459,6 @@ on_gclue_simple_creation (GClueSimple        *_source,
 }
 
 
-
 /* on_gclue_location_changed:
  * @location: #GClueLocation owned by @self
  * @self: The #GcalWeatherService
@@ -440,9 +471,8 @@ on_gclue_location_changed (GClueLocation       *location,
 {
   g_return_if_fail (GCLUE_IS_LOCATION (location));
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
-  g_return_if_fail (self->location_service_running);
 
-  gcal_weather_service_update_location (self, location);
+  gcal_weather_service_update_gclue_location (self, location);
 }
 
 
@@ -459,7 +489,6 @@ on_gclue_client_activity_changed (GClueClient         *client,
 {
   g_return_if_fail (GCLUE_IS_CLIENT (client));
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
-  g_return_if_fail (self->location_service_running);
 
   /* Notify listeners about unknown locations: */
   gcal_weather_service_update_location (self, NULL);
@@ -674,24 +703,25 @@ gcal_weather_service_new (guint max_days,
 /**
  * gcal_weather_service_run:
  * @self: The #GcalWeatherService instance.
+ * @location: (nullable): A fixed location or %NULL to use Gclue.
  *
  * Starts to monitor location and weather changes.
  * Use ::weather-changed to catch responses.
  */
 void
-gcal_weather_service_run (GcalWeatherService *self)
+gcal_weather_service_run (GcalWeatherService *self,
+                          GWeatherLocation   *location)
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
-  if (self->location_service_running)
-    return ;
+  if (self->location_service_running || self->weather_service_running)
+    gcal_weather_service_stop (self);
 
-  self->location_service_running = TRUE;
-
-  g_assert (self->location_service == NULL);
-
-  if (self->max_days > 0)
+  if (location == NULL)
     {
+      /* Start location and weather service: */
+      self->location_service_running = TRUE;
+      self->location_service_running = TRUE;
       g_cancellable_cancel (self->location_cancellable);
       g_cancellable_reset (self->location_cancellable);
       gclue_simple_new (DESKTOP_FILE_NAME,
@@ -699,6 +729,15 @@ gcal_weather_service_run (GcalWeatherService *self)
                         self->location_cancellable,
                         (GAsyncReadyCallback) on_gclue_simple_creation,
                         g_object_ref (self));
+    }
+  else
+    {
+      /* Use the given location to retrieve weather information: */
+      self->location_service_running = FALSE;
+      self->location_service_running = TRUE;
+
+      gcal_weather_service_update_location (self, location);
+      gcal_weather_service_timer_start (self);
     }
 }
 
@@ -716,11 +755,11 @@ gcal_weather_service_stop (GcalWeatherService *self)
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
-  if (!self->location_service_running)
+  if (!self->location_service_running && !self->weather_service_running)
     return ;
 
   self->location_service_running = FALSE;
-
+  self->weather_service_running = FALSE;
 
   gcal_weather_service_timer_stop (self);
 
@@ -734,15 +773,14 @@ gcal_weather_service_stop (GcalWeatherService *self)
     }
   else
     {
-      GClueClient *client; /* owned */
+      GClueClient *client; /* unowned */
 
       client = gclue_simple_get_client (self->location_service);
-      self->location_service = NULL;
 
       gclue_client_call_stop (client,
                               NULL,
                               (GAsyncReadyCallback) on_gclue_client_stop,
-                              client); /* transfres ownership */
+                              g_steal_pointer (&self->location_service));
     }
 }
 

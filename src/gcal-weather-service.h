@@ -19,6 +19,7 @@
 #ifndef GCAL_WEATHER_SERVICE_H
 #define GCAL_WEATHER_SERVICE_H
 
+#include <libgweather/gweather.h>
 #include <glib-object.h>
 #include <glib.h>
 
@@ -32,7 +33,8 @@ G_DECLARE_FINAL_TYPE (GcalWeatherService, gcal_weather_service, GCAL, WEATHER_SE
 GcalWeatherService* gcal_weather_service_new                (guint max_days,
                                                              guint check_interval);
 
-void                gcal_weather_service_run                (GcalWeatherService *self);
+void                gcal_weather_service_run                (GcalWeatherService *self,
+                                                             GWeatherLocation   *location);
 
 void                gcal_weather_service_stop               (GcalWeatherService *self);
 
