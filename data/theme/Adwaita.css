@@ -362,7 +362,7 @@ label.month-name {
     color: alpha(@theme_fg_color, 0.25);
 }
 
-.week-header.week-names {
+.week-header.week-names, .week-header.week-temperature {
     font-size: 10pt;
     font-weight: bold;
     color: alpha(@theme_fg_color, 0.55);

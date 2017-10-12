@@ -1372,7 +1372,6 @@ gcal_week_header_draw (GtkWidget      *widget,
           gdouble wibox_width;
           gdouble wibox_x;
 
-          // TODO: actually try to style temperature via css
           if (weather_icon_name != NULL && wpinfo->icon_buf == NULL)
             {
               GtkIconTheme *theme; /* unowned */
