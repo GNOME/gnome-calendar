@@ -516,7 +516,7 @@ preprocess_gweather_reports (GcalWeatherService *self,
         }
       else
         {
-          g_info ("Received historic weather information.");
+          g_debug ("Encountered historic weather information");
         }
     }
 
@@ -572,11 +572,14 @@ gcal_weather_service_update_location (GcalWeatherService  *self,
 
   if (location == NULL)
     {
-      g_info ("Could not retrieve current location.");
+      g_debug ("Could not retrieve current location");
       gcal_weather_service_update_weather (NULL, self);
     }
   else
     {
+      g_debug ("Got new weather service location: '%s'",
+               (location == NULL)? "<null>" : gweather_location_get_name (location));
+
       self->weather_info = gweather_info_new (location, GWEATHER_FORECAST_ZONE | GWEATHER_FORECAST_LIST);
       /* TODO: display weather attributions somewhere:
        * gweather_info_get_attribution (self->weather_info);
@@ -844,11 +847,13 @@ gcal_weather_service_update_weather (GWeatherInfo       *info,
   /* Compute a list of weather infos. */
   if (info == NULL)
     {
-      g_info ("Could not retrieve valid weather");
+      g_debug ("Could not retrieve valid weather");
     }
   else if (gweather_info_is_valid (info))
     {
       GSList *gwforecast; /* unowned */
+
+      g_debug ("Received valid weather information");
 
       gwforecast = gweather_info_get_forecast_list (info);
       gcinfos = preprocess_gweather_reports (self, gwforecast);
@@ -856,7 +861,7 @@ gcal_weather_service_update_weather (GWeatherInfo       *info,
   else
     {
       g_autofree gchar* location_name = gweather_info_get_location_name (info);
-      g_info ("Could not retrieve valid weather for location '%s'", location_name);
+      g_debug ("Could not retrieve valid weather for location '%s'", location_name);
     }
 
   g_signal_emit (self, gcal_weather_service_signals[SIG_WEATHER_CHANGED], 0, gcinfos);
@@ -998,6 +1003,8 @@ gcal_weather_service_run (GcalWeatherService *self,
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
+  g_debug ("Start weather service");
+
   if (self->location_service_running || self->weather_service_running)
     gcal_weather_service_stop (self);
 
@@ -1038,6 +1045,8 @@ void
 gcal_weather_service_stop (GcalWeatherService *self)
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+
+  g_debug ("Stop weather service");
 
   if (!self->location_service_running && !self->weather_service_running)
     return ;
