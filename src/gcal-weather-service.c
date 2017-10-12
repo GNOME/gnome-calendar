@@ -20,6 +20,7 @@
 
 #include <geocode-glib/geocode-glib.h>
 #include <geoclue.h>
+#include <math.h>
 
 #include "gcal-weather-service.h"
 
@@ -28,11 +29,16 @@ G_BEGIN_DECLS
 
 /* GcalWeatherService:
  *
- * @location_service:     Used to monitor location changes.
- *                        Initialized by gcal_weather_service_run(),
- *                        freed by gcal_weather_service_stop().
- * @location_cancellable: Used to deal with async location service construction.
- * @weather_info:         The weather info to query.
+ * @check_interval:          Amount of seconds to wait before re-fetching weather infos.
+ * @timeout_id:              Time-out event ID or %0. Timer is used to periodically update weather infos.
+ * @location_service:        Used to monitor location changes.
+ *                           Initialized by gcal_weather_service_run(),
+ *                           freed by gcal_weather_service_stop().
+ * @location_cancellable:    Used to deal with async location service construction.
+ * @locaton_running:         Whether location service is active.
+ * @weather_info:            The weather info to query.
+ * @max_days:                Number of days we want weather information for.
+ * @weather_service_running: True if weather service is active.
  *
  * This service listens to location and weather changes and reports them.
  *
@@ -50,19 +56,20 @@ struct _GcalWeatherService
   /* <public> */
 
   /* <private> */
+
   /* timer: */
-  guint           check_interval;
-  guint           timeout_id;
+  guint            check_interval;
+  guint            timeout_id;
 
   /* locations: */
-  GClueSimple    *location_service;     /* owned, nullable */
-  GCancellable   *location_cancellable; /* owned, non-null */
-  gboolean        location_service_running;
+  GClueSimple     *location_service;     /* owned, nullable */
+  GCancellable    *location_cancellable; /* owned, non-null */
+  gboolean         location_service_running;
 
   /* weather: */
-  GWeatherInfo   *weather_info;         /* owned, nullable */
-  guint           max_days;
-  gboolean        weather_service_running;
+  GWeatherInfo    *weather_info;         /* owned, nullable */
+  guint            max_days;
+  gboolean         weather_service_running;
 };
 
 
@@ -126,6 +133,17 @@ static void     gcal_weather_service_timer_stop            (GcalWeatherService *
 static void     gcal_weather_service_timer_start           (GcalWeatherService *self);
 
 static gboolean on_timer_timeout                           (GcalWeatherService *self);
+
+static gboolean get_time_day_start                         (GcalWeatherService *self,
+                                                            GDate              *ret_date,
+                                                            gint64             *ret_unix);
+
+static gboolean compute_weather_info_data                  (GSList             *samples,
+                                                            gchar             **icon_name,
+                                                            gchar             **temperature);
+
+static GSList*  preprocess_gweather_reports                (GcalWeatherService *self,
+                                                            GSList             *samples);
 
 
 G_END_DECLS
@@ -283,6 +301,227 @@ gcal_weather_service_init (GcalWeatherService *self)
  * < private >
  **************/
 
+/* get_time_day_start:
+ * @self: The #GcalWeatherService instance.
+ * @date: (out) (not nullable): A #GDate that should be set to today.
+ * @unix: (out) (not nullable): A UNIX time stamp that should be set to today
+ *
+ * Provides current date in two different forms.
+ *
+ * Returns: %TRUE on success.
+ */
+static gboolean
+get_time_day_start (GcalWeatherService *self,
+                    GDate              *ret_date,
+                    gint64             *ret_unix)
+{
+  g_autoptr (GDateTime) now = NULL;
+  g_autoptr (GDateTime) day = NULL;
+
+
+  g_return_val_if_fail (self != NULL, FALSE);
+  g_return_val_if_fail (ret_date != NULL, FALSE);
+  g_return_val_if_fail (ret_unix != NULL, FALSE);
+
+  now = g_date_time_new_now_local ();
+  day = g_date_time_add_full (now,
+                              0, /* years */
+                              0, /* months */
+                              0, /* days */
+                              - g_date_time_get_hour (now),
+                              - g_date_time_get_minute (now),
+                              - g_date_time_get_seconds (now));
+
+  g_date_set_dmy (ret_date,
+                  g_date_time_get_day_of_month (day),
+                  g_date_time_get_month (day),
+                  g_date_time_get_year (day));
+
+  *ret_unix = g_date_time_to_unix (day);
+  return TRUE;
+}
+
+
+
+/* compute_weather_info_data:
+ * @samples: List of received #GWeatherInfos.
+ * @icon_name: (out): (transfer full): weather icon name or %NULL.
+ * @temperature: (out): (transfer full): temperature and unit or %NULL.
+ *
+ * Computes a icon name and temperature representing @samples.
+ *
+ * Returns: %TRUE if there is a valid icon name and temperature.
+ */
+static gboolean
+compute_weather_info_data (GSList   *samples,
+                           gchar   **icon_name,
+                           gchar   **temperature)
+{
+  GWeatherConditionPhenomenon phenomenon_val = GWEATHER_PHENOMENON_INVALID;
+  GWeatherInfo *phenomenon_gwi = NULL; /* unowned */
+  gdouble       temp_val = NAN;
+  GWeatherInfo *temp_gwi = NULL; /* unowned */
+  GSList       *iter;            /* unowned */
+
+  /* Note: I checked three different gweather consumers
+   *   and they all pick different values. So here is my
+   *   take: I pick up the worst weather for icons and
+   *   the highest temperature. I basically want to know
+   *   whether I need my umbrella for my appointment.
+   *   Not sure about the right temperature. It is probably
+   *   better to pick-up the median of all predictions
+   *   during daytime.
+   */
+
+  g_return_val_if_fail (icon_name != NULL, FALSE);
+  g_return_val_if_fail (temperature != NULL, FALSE);
+
+  for (iter = samples; iter != NULL; iter = iter->next)
+    {
+      GWeatherInfo *gwi; /* unowned */
+      GWeatherConditionPhenomenon phenomenon;
+      GWeatherConditionQualifier _qualifier;
+      gboolean valid_val;
+      gdouble temp;
+
+      gwi = GWEATHER_INFO (iter->data);
+
+      valid_val = gweather_info_get_value_temp (gwi,
+                                                GWEATHER_TEMP_UNIT_DEFAULT,
+                                                &temp);
+      if (!valid_val || isnan (temp))
+        continue;
+
+      valid_val = gweather_info_get_value_conditions (gwi, &phenomenon, &_qualifier);
+      if (!valid_val || valid_val == GWEATHER_PHENOMENON_INVALID || valid_val == GWEATHER_PHENOMENON_LAST)
+        continue;
+
+      if (phenomenon_gwi == NULL || phenomenon > phenomenon_val)
+        {
+          phenomenon_val = phenomenon;
+          phenomenon_gwi = gwi;
+        }
+      if (temp_gwi == NULL || temp > temp_val)
+        {
+          temp_val = temp;
+          temp_gwi = gwi;
+        }
+    }
+
+  if (phenomenon_gwi != NULL && temp_gwi != NULL)
+    {
+      *icon_name = g_strdup (gweather_info_get_symbolic_icon_name (phenomenon_gwi));
+      *temperature = gweather_info_get_temp (temp_gwi);
+      return TRUE;
+    }
+  else
+    {
+      /* empty list */
+      *icon_name = NULL;
+      *temperature = NULL;
+      return FALSE;
+    }
+}
+
+
+
+/* preprocess_gweather_reports:
+ * @self:     The #GcalWeatherService instance.
+ * @samples:  Received list of #GWeatherInfos
+ *
+ * Computes weather info objects representing specific days
+ * by combining given #GWeatherInfos.
+ *
+ * Returns: (transfer full): List of up to $self->max_days #GcalWeatherInfos.
+ */
+static GSList*
+preprocess_gweather_reports (GcalWeatherService *self,
+                             GSList             *samples)
+{
+  const glong DAY_SECONDS = 24*60*60;
+  GSList  *result = NULL; /* owned[owned] */
+  GSList **days;          /* owned[owned[unowned]] */
+  GSList *iter;           /* unowned */
+  GDate cur_gdate;
+  glong today_unix;
+
+  g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), NULL);
+
+  /* This function basically separates samples by
+   * date and calls compute_weather_info_data for
+   * every bucket to build weather infos.
+   * Each bucket represents a single day.
+   */
+
+  /* All gweather consumers I reviewed presume
+   * sorted samples. However, there is no documented
+   * order. Lets assume the worst.
+   */
+
+  if (self->max_days <= 0)
+    return NULL;
+
+  if (!get_time_day_start (self, &cur_gdate, &today_unix))
+    return NULL;
+
+  days = g_malloc0 (sizeof (GSList*) * self->max_days);
+
+  /* Split samples to max_days buckets: */
+  for (iter = samples; iter != NULL; iter = iter->next)
+    {
+      GWeatherInfo *gwi; /* unowned */
+      gboolean valid_date;
+      glong gwi_dtime;
+      gsize bucket;
+
+      gwi = GWEATHER_INFO (iter->data);
+      valid_date = gweather_info_get_value_update (gwi, &gwi_dtime);
+      if (!valid_date)
+        continue;
+
+      if (gwi_dtime >= 0 && gwi_dtime >= today_unix)
+        {
+          bucket = (gwi_dtime - today_unix) / DAY_SECONDS;
+          if (bucket >= 0 && bucket < self->max_days)
+            days[bucket] = g_slist_prepend (days[bucket], gwi);
+        }
+      else
+        {
+          g_info ("Received historic weather information.");
+        }
+    }
+
+  /* Produce GcalWeatherInfo for each bucket: */
+  for (int i = 0; i < self->max_days; i++)
+    {
+      g_autofree gchar *icon_name;
+      g_autofree gchar *temperature;
+
+      if (compute_weather_info_data (days[i], &icon_name, &temperature))
+        {
+          GcalWeatherInfo* gcwi; /* owned */
+
+          gcwi = gcal_weather_info_new (&cur_gdate,
+                                        icon_name,
+                                        temperature);
+
+          result = g_slist_prepend (result,
+                                    g_steal_pointer (&gcwi));
+        }
+
+      g_date_add_days (&cur_gdate, 1);
+    }
+
+  /* Cleanup: */
+  for (int i = 0; i < self->max_days; i++)
+    g_slist_free (days[i]);
+  g_free (days);
+
+  return result;
+}
+
+
+
 /**
  * gcal_weather_service_update_location:
  * @self:     The #GcalWeatherService instance.
@@ -309,9 +548,17 @@ gcal_weather_service_update_location (GcalWeatherService  *self,
     }
   else
     {
-      self->weather_info = gweather_info_new (location, GWEATHER_FORECAST_ZONE);
+      self->weather_info = gweather_info_new (location, GWEATHER_FORECAST_ZONE | GWEATHER_FORECAST_LIST);
+      /* TODO: display weather attributions somewhere:
+       * gweather_info_get_attribution (self->weather_info);
+       * Do no roll-out a release without resolving this one before!
+       */
 
-      gweather_info_set_enabled_providers (self->weather_info, GWEATHER_PROVIDER_ALL);
+      /* NOTE: We do not get detailed infos for GWEATHER_PROVIDER_ALL.
+       * This combination works fine, though. We should open a bug / investigate
+       * what is going on.
+       */
+      gweather_info_set_enabled_providers (self->weather_info, GWEATHER_PROVIDER_METAR | GWEATHER_PROVIDER_OWM | GWEATHER_PROVIDER_YR_NO);
       g_signal_connect (self->weather_info, "updated", (GCallback) gcal_weather_service_update_weather, self);
       gweather_info_update (self->weather_info);
 
@@ -559,17 +806,22 @@ static void
 gcal_weather_service_update_weather (GWeatherInfo       *info,
                                      GcalWeatherService *self)
 {
-  GSList* infos = NULL;
+  GSList *gcinfos = NULL; /* owned[owned] */
 
+  g_return_if_fail (info == NULL || GWEATHER_IS_INFO (info));
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
+  /* Compute a list of weather infos. */
   if (info == NULL)
     {
       g_info ("Could not retrieve valid weather");
     }
   else if (gweather_info_is_valid (info))
     {
-      // TODO
+      GSList *gwforecast; /* unowned */
+
+      gwforecast = gweather_info_get_forecast_list (info);
+      gcinfos = preprocess_gweather_reports (self, gwforecast);
     }
   else
     {
@@ -577,7 +829,8 @@ gcal_weather_service_update_weather (GWeatherInfo       *info,
       g_info ("Could not retrieve valid weather for location '%s'", location_name);
     }
 
-  g_signal_emit (self, gcal_weather_service_signals[SIG_WEATHER_CHANGED], 0, infos);
+  g_signal_emit (self, gcal_weather_service_signals[SIG_WEATHER_CHANGED], 0, gcinfos);
+  g_slist_free_full (gcinfos, g_object_unref);
 }
 
 
@@ -688,14 +941,12 @@ on_timer_timeout (GcalWeatherService *self)
  * Returns: (transfer full): A newly created #GcalWeatherService.
  */
 GcalWeatherService *
-gcal_weather_service_new (guint max_days,
-                          guint check_interval)
+gcal_weather_service_new (guint      max_days,
+                          guint      check_interval)
 {
   return g_object_new (GCAL_TYPE_WEATHER_SERVICE,
-                       "max-days",
-                       max_days,
-                       "check-interval",
-                       check_interval,
+                       "max-days", max_days,
+                       "check-interval", check_interval,
                        NULL);
 }
 
@@ -722,7 +973,7 @@ gcal_weather_service_run (GcalWeatherService *self,
     {
       /* Start location and weather service: */
       self->location_service_running = TRUE;
-      self->location_service_running = TRUE;
+      self->weather_service_running = TRUE;
       g_cancellable_cancel (self->location_cancellable);
       g_cancellable_reset (self->location_cancellable);
       gclue_simple_new (DESKTOP_FILE_NAME,
@@ -735,7 +986,7 @@ gcal_weather_service_run (GcalWeatherService *self,
     {
       /* Use the given location to retrieve weather information: */
       self->location_service_running = FALSE;
-      self->location_service_running = TRUE;
+      self->weather_service_running = TRUE;
 
       gcal_weather_service_update_location (self, location);
       gcal_weather_service_timer_start (self);
