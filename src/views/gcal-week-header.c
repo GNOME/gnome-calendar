@@ -1364,7 +1364,7 @@ gcal_week_header_draw (GtkWidget      *widget,
            * Its height is derived from day name and numbers. The icon sticks on
            * the very top and the temperature on its base.
            */
-          gint icon_size = day_num_font_height;
+          gint icon_size = day_num_font_height - 3; /* available space - space between temperature and icon */
           gint temp_width = 0;
           gint temp_height = 0;
           gint temp_baseline = 0;
