@@ -339,6 +339,40 @@ gcal_weather_service_init (GcalWeatherService *self)
  * < private >
  **************/
 
+#if PRINT_WEATHER_DATA
+static gchar*
+gwc2str (GWeatherInfo *gwi)
+{
+    gchar *result = NULL; /* owned */
+
+    g_autoptr (GDateTime) date = NULL;
+    g_autofree gchar     *date_str = NULL;
+    glong      update;
+
+    gdouble    temp;
+
+    GWeatherConditionPhenomenon phen;
+
+    if (!gweather_info_get_value_update (gwi, &update))
+        return g_strdup ("<null>");
+
+    date = g_date_time_new_from_unix_local (update);
+    date_str = g_date_time_format (date, "%F %T"),
+
+    get_gweather_temperature (gwi, &temp);
+    get_gweather_phenomenon (gwi, &phen);
+
+
+    result = g_strdup_printf ("(%s: t:%f, w:%d)",
+                              date_str,
+                              temp,
+                              phen);
+    return result;
+}
+#endif
+
+
+
 /* get_time_day_start:
  * @self: The #GcalWeatherService instance.
  * @date: (out) (not nullable): A #GDate that should be set to today.
@@ -591,6 +625,13 @@ preprocess_gweather_reports (GcalWeatherService *self,
       valid_date = gweather_info_get_value_update (gwi, &gwi_dtime);
       if (!valid_date)
         continue;
+
+      #if PRINT_WEATHER_DATA
+      {
+        g_autofree gchar* dbg_str = gwc2str (gwi);
+        g_message ("WEATHER READING POINT: %s", dbg_str);
+      }
+      #endif
 
       if (gwi_dtime >= 0 && gwi_dtime >= today_unix)
         {
