@@ -27,6 +27,7 @@
 #include "gcal-week-header.h"
 #include "gcal-week-grid.h"
 #include "gcal-week-view.h"
+#include "gcal-weather-service.h"
 
 #include <glib/gi18n.h>
 
@@ -61,8 +62,9 @@ struct _GcalWeekView
   gboolean        use_24h_format;
 
   /* property */
-  icaltimetype   *date;
-  GcalManager    *manager; /* owned */
+  icaltimetype       *date;
+  GcalManager        *manager;         /* owned */
+  GcalWeatherService *weather_service; /* owned */
 
   guint           scroll_grid_timeout_id;
 
@@ -86,6 +88,7 @@ enum
   PROP_0,
   PROP_DATE,
   PROP_MANAGER,
+  PROP_WEATHER_SERVICE,
   NUM_PROPS
 };
 
@@ -522,6 +525,9 @@ gcal_week_view_finalize (GObject       *object)
 
   g_clear_object (&self->manager);
 
+  if (self->weather_service != NULL)
+    g_clear_object (&self->weather_service);
+
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_week_view_parent_class)->finalize (object);
 }
@@ -545,9 +551,27 @@ gcal_week_view_set_property (GObject       *object,
 
       gcal_week_grid_set_manager (GCAL_WEEK_GRID (self->week_grid), self->manager);
       gcal_week_header_set_manager (GCAL_WEEK_HEADER (self->header), self->manager);
-
       g_object_notify (object, "manager");
       break;
+
+    case PROP_WEATHER_SERVICE:
+      {
+        GcalWeatherService* weather_service; /* unowned */
+        weather_service = g_value_get_object (value);
+
+        g_return_if_fail (weather_service == NULL || GCAL_IS_WEATHER_SERVICE (weather_service));
+
+        if (self->weather_service != weather_service)
+          {
+            g_set_object (&self->weather_service, weather_service);
+
+            gcal_week_header_set_weather_service (GCAL_WEEK_HEADER (self->header),
+                                                  self->weather_service);
+
+            g_object_notify (object, "weather-service");
+          }
+        break;
+      }
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -576,6 +600,10 @@ gcal_week_view_get_property (GObject       *object,
       g_value_set_object (value, self->manager);
       break;
 
+    case PROP_WEATHER_SERVICE:
+      g_value_set_object (value, self->weather_service);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -597,6 +625,18 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
+
+  /**
+   * GcalWeekView:weather-service:
+   *
+   * Sets the weather service to use.
+   */
+  g_object_class_install_property
+      (object_class,
+       PROP_WEATHER_SERVICE,
+       g_param_spec_object ("weather-service", "weather-service", "weather-service",
+                            GCAL_TYPE_WEATHER_SERVICE,
+                            G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_WEEK_VIEW,
@@ -625,6 +665,8 @@ gcal_week_view_init (GcalWeekView *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   update_hours_sidebar_size (self);
+
+  self->weather_service = NULL;
 }
 
 /* Public API */

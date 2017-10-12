@@ -21,5 +21,10 @@
             <summary>Type of the active view</summary>
             <description>Type of the active window view, default value is: monthly view</description>
         </key>
+        <key name="weather-settings" type="(bbsmv)">
+            <default>(true, true, '', nothing)</default>
+            <summary>Weather Service Configuration</summary>
+            <description>Whether weather reports are shown, automatic locations are used and a location-name</description>
+        </key>
     </schema>
 </schemalist>

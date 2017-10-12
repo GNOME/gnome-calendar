@@ -30,19 +30,158 @@
       </item>
     </section>
   </menu>
-  <menu id="win-menu">
-    <section>
-      <item>
-        <attribute name="label" translatable="yes">Add Eve_nt…</attribute>
-        <attribute name="action">app.new</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Synchronize</attribute>
-        <attribute name="action">app.sync</attribute>
-        <attribute name="accel">F5</attribute>
-      </item>
-    </section>
-  </menu>
+  <object class="GtkPopoverMenu" id="win-menu">
+    <child>
+      <object class="GtkStack" id="win-menu-stack">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="vhomogeneous">False</property>
+        <child>
+          <!-- Initial user menu: -->
+          <object class="GtkBox">
+            <property name="margin">12</property>
+            <property name="visible">True</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkModelButton">
+                <property name="text" translatable="yes">Add Eve_nt</property>
+                <property name="action-name">app.new</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkModelButton">
+                <property name="text" translatable="yes">_Synchronize</property>
+                <property name="action-name">app.sync</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+            <child>
+              <object class="GtkModelButton" id="win-menu-open-weather">
+                <property name="text" translatable="yes">_Weather</property>
+                <property name="menu-name" translatable="yes">win-menu-weather</property>
+                <property name="visible">True</property>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="name">win-menu-main</property>
+          </packing>
+        </child>
+        <child>
+          <!-- Weather Box: -> name this weather-settings -->
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="orientation">vertical</property>
+            <property name="margin">12</property>
+            <property name="spacing">5</property> <!-- TODO: check HIG for right value -->
+            <child>
+              <object class="GtkModelButton" id="win-menu-close-weather">
+                <property name="text" translatable="yes">_Weather</property>
+                <property name="menu-name" translatable="yes">win-menu-main</property>
+                <property name="inverted">True</property>
+                <property name="centered">True</property>
+                <property name="visible">True</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="spacing">5</property> <!-- TODO: check HIG for right value -->
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Show Weather</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSwitch" id="show-weather-switch">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkBox">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="spacing">5</property> <!-- TODO: check HIG for right value -->
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="label" translatable="yes">Automatic Location</property>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkSwitch" id="auto-location-switch">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GWeatherLocationEntry" id="fixed-weather-location">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="primary_icon_name">edit-find-symbolic</property>
+                <property name="primary_icon_activatable">False</property>
+                <property name="primary_icon_sensitive">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">3</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="name">win-menu-weather</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
   <menu id="add-source-menu">
     <section>
       <item>

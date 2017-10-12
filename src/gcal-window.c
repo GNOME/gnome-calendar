@@ -33,9 +33,10 @@
 #include "gcal-week-view.h"
 #include "gcal-window.h"
 #include "gcal-year-view.h"
+#include "gcal-weather-service.h"
 
 #include <glib/gi18n.h>
-
+#include <libgweather/gweather.h>
 #include <libecal/libecal.h>
 #include <libical/icaltime.h>
 
@@ -94,6 +95,21 @@ typedef struct
   GcalWindow *window;
   gchar *uuid;
 } OpenEditDialogData;
+
+/* WeatherSigs:
+ * @instance: (transfer none) Instance this signal is connected to.
+ * @sig_id: Signal uid
+ *
+ * Describes a signal used in weather-menu that triggers
+ * weather service or weather menu changes.
+ *
+ * Used to block signals when loading settings.
+ */
+typedef struct
+{
+  GObject *obj; /* unowned */
+  gulong   id;
+} WeatherSigs;
 
 struct _GcalWindow
 {
@@ -160,6 +176,13 @@ struct _GcalWindow
   gint                 refresh_timeout_id;
   gint                 open_edit_dialog_timeout_id;
 
+  /* weather management */
+  GcalWeatherService    *weather_service; /* owned */
+  GtkSwitch             *weather;         /* unowned */
+  GtkSwitch             *auto_location;   /* unowned */
+  GWeatherLocationEntry *location_entry;  /* unowned */
+  WeatherSigs            weather_cb_ids[5];
+
   /* temp to keep event_creation */
   gboolean             open_edit_dialog;
 
@@ -179,6 +202,7 @@ enum
   PROP_0,
   PROP_ACTIVE_VIEW,
   PROP_MANAGER,
+  PROP_WEATHER_SERVICE,
   PROP_ACTIVE_DATE,
   PROP_NEW_EVENT_MODE
 };
@@ -204,6 +228,49 @@ static void           on_view_action_activated           (GSimpleAction       *a
 static void           on_toggle_search_bar_activated     (GSimpleAction       *action,
                                                           GVariant            *param,
                                                           gpointer             user_data);
+
+static void           on_menu_button_clicked             (GtkMenuButton       *menu,
+                                                          GtkStack            *stack);
+
+static void           on_view_menu_open_sub              (GtkModelButton      *button,
+                                                          GtkStack            *stack);
+
+static void           on_view_menu_open_parent           (GtkModelButton      *button,
+                                                          GtkStack            *stack);
+
+static void           on_weather_location_searchbox_change (GWeatherLocationEntry *entry,
+                                                            GcalWindow            *self);
+
+static void           on_show_weather_change             (GtkSwitch           *wswitch,
+                                                          GParamSpec          *pspec,
+                                                          GcalWindow          *self);
+
+static void           on_auto_location_change            (GtkSwitch           *lswitch,
+                                                          GParamSpec          *pspec,
+                                                          GcalWindow          *self);
+
+static gboolean       on_weather_location_searchbox_match_selected
+                                                         (GtkEntryCompletion  *sender,
+                                                          GtkTreeModel        *model,
+                                                          GtkTreeIter         *iter,
+                                                          GcalWindow          *self);
+
+static void           set_model_button_animation         (GtkBuilder          *builder,
+                                                          GtkStack            *stack,
+                                                          const char          *id,
+                                                          gboolean             go_back);
+static void           update_menu_weather_sensitivity    (GcalWindow          *self);
+
+
+static void           close_menu                         (GcalWindow          *self);
+
+static void           safe_weather_settings              (GcalWindow          *self);
+
+static void           load_weather_settings              (GcalWindow *self);
+
+static void           manage_weather_service             (GcalWindow *self);
+
+static GWeatherLocation* get_checked_fixed_location      (GcalWindow *self);
 
 G_DEFINE_TYPE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
@@ -1234,8 +1301,10 @@ gcal_window_finalize (GObject *object)
   g_clear_object (&window->views_switcher);
 
   g_clear_pointer (&window->active_date, g_free);
-
   G_OBJECT_CLASS (gcal_window_parent_class)->finalize (object);
+
+  gcal_weather_service_stop (window->weather_service);
+  g_clear_object (&window->weather_service);
 
   GCAL_EXIT;
 }
@@ -1299,6 +1368,19 @@ gcal_window_set_property (GObject      *object,
         }
       return;
 
+    case PROP_WEATHER_SERVICE:
+      {
+        GcalWeatherService *service; /* unowned */
+
+        service = GCAL_WEATHER_SERVICE (g_value_get_object (value));
+        g_return_if_fail (service != NULL);
+
+        g_return_if_fail (self->weather_service == NULL);
+        self->weather_service = (GcalWeatherService*) g_object_ref (service);
+        g_object_notify (object, "weather-service");
+        return ;
+      }
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -1322,6 +1404,10 @@ gcal_window_get_property (GObject    *object,
 
     case PROP_MANAGER:
       g_value_set_object (value, self->manager);
+      return;
+
+    case PROP_WEATHER_SERVICE:
+      g_value_set_object (value, self->weather_service);
       return;
 
     case PROP_ACTIVE_DATE:
@@ -1393,6 +1479,15 @@ gcal_window_class_init (GcalWindowClass *klass)
                            "The manager object",
                            "The manager object",
                            GCAL_TYPE_MANAGER,
+                           G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+
+  g_object_class_install_property (
+      object_class,
+      PROP_WEATHER_SERVICE,
+      g_param_spec_object ("weather-service",
+                           "The weather service object",
+                           "The weather service object",
+                           GCAL_TYPE_WEATHER_SERVICE,
                            G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
 
   g_object_class_install_property (
@@ -1479,7 +1574,9 @@ gcal_window_init (GcalWindow *self)
 {
   GApplication *app;
   GtkBuilder *builder;
-  GMenuModel *winmenu;
+  GtkPopoverMenu *winmenu; /* unowned */
+  GtkStack *winmenustack;  /* unowned */
+  GtkEntryCompletion *location_completion; /* unowned */
   GSettings *helper_settings;
   gchar *clock_format;
   gboolean use_24h_format;
@@ -1508,9 +1605,32 @@ gcal_window_init (GcalWindow *self)
                                  "/org/gnome/calendar/gtk/menus.ui",
                                  NULL);
 
-  winmenu = (GMenuModel *)gtk_builder_get_object (builder, "win-menu");
-  gtk_menu_button_set_menu_model (GTK_MENU_BUTTON (self->menu_button),
-                                  winmenu);
+  winmenu = (GtkPopoverMenu *)gtk_builder_get_object (builder, "win-menu");
+  gtk_menu_button_set_popover (GTK_MENU_BUTTON (self->menu_button),
+                               GTK_WIDGET (winmenu));
+  /* Set-up menu animations: */
+  winmenustack = GTK_STACK (gtk_builder_get_object (builder, "win-menu-stack"));
+  g_signal_connect (GTK_BUTTON (self->menu_button), "clicked", (GCallback) on_menu_button_clicked, winmenustack);
+  set_model_button_animation (builder, winmenustack, "win-menu-open-weather", TRUE);
+  set_model_button_animation (builder, winmenustack, "win-menu-close-weather", FALSE);
+
+  /* Weather menu: */
+  self->weather_service = NULL;
+  self->weather = GTK_SWITCH(gtk_builder_get_object (builder, "show-weather-switch"));
+  self->auto_location = GTK_SWITCH(gtk_builder_get_object (builder, "auto-location-switch"));
+  self->location_entry = GWEATHER_LOCATION_ENTRY (gtk_builder_get_object (builder, "fixed-weather-location"));
+  location_completion = gtk_entry_get_completion (GTK_ENTRY (self->location_entry));
+  /* Store signals that need to be blocked when loading weather information */
+  self->weather_cb_ids[0].id = g_signal_connect (self->location_entry, "changed", (GCallback) on_weather_location_searchbox_change, self);
+  self->weather_cb_ids[0].obj = G_OBJECT (self->location_entry);
+  self->weather_cb_ids[1].id = g_signal_connect (self->location_entry, "activate", (GCallback) on_weather_location_searchbox_change, self);
+  self->weather_cb_ids[1].obj = G_OBJECT (self->location_entry);
+  self->weather_cb_ids[2].id = g_signal_connect (location_completion, "match-selected", (GCallback) on_weather_location_searchbox_match_selected, self);
+  self->weather_cb_ids[2].obj = G_OBJECT (location_completion);
+  self->weather_cb_ids[3].id = g_signal_connect (self->weather, "notify::active", (GCallback) on_show_weather_change, self);
+  self->weather_cb_ids[3].obj = G_OBJECT (self->weather);
+  self->weather_cb_ids[4].id = g_signal_connect (self->auto_location, "notify::active", (GCallback) on_auto_location_change, self);
+  self->weather_cb_ids[4].obj = G_OBJECT (self->auto_location);
 
   g_object_unref (builder);
 
@@ -1548,6 +1668,7 @@ gcal_window_init (GcalWindow *self)
    * FIXME: this is a hack around the issue that happens when trying to bind
    * there properties using the GtkBuilder .ui file.
    */
+  g_object_bind_property (self, "weather-service", self->week_view, "weather-service", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->edit_dialog, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->source_dialog, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->week_view, "manager", G_BINDING_DEFAULT);
@@ -1566,6 +1687,392 @@ gcal_window_init (GcalWindow *self)
   gcal_window_add_accelerator (app, "win.toggle-search-bar", "<Ctrl>f");
 }
 
+
+/* set_model_button_animation:
+ * @builder: Builder including menu buttons
+ * @id: name of the menu button to modify
+ * @go_back: Whether this button jumps back to a parent menu
+ *
+ * Used to set right stack animations for hand-written menus.
+ */
+static void
+set_model_button_animation (GtkBuilder *builder,
+                            GtkStack   *stack,
+                            const char *button_id,
+                            gboolean    go_back)
+{
+  g_return_if_fail (GTK_IS_BUILDER (builder));
+  g_return_if_fail (GTK_IS_STACK (stack));
+  g_return_if_fail (button_id != NULL);
+
+  GtkMenuButton *mbutton; /* unowned */
+
+  mbutton = GTK_MENU_BUTTON (gtk_builder_get_object (builder, button_id));
+  g_return_if_fail (mbutton != NULL);
+
+  if (go_back)
+    g_signal_connect (mbutton, "clicked", (GCallback) on_view_menu_open_parent, stack);
+  else
+    g_signal_connect (mbutton, "clicked", (GCallback) on_view_menu_open_sub, stack);
+}
+
+/* on_menu_button_clicked:
+ * @menu: primary menu button
+ * @stack: main menu popover stack
+ *
+ * Resets menu stack state before opening menu-popovers.
+ */
+static void
+on_menu_button_clicked (GtkMenuButton *menu,
+                        GtkStack      *stack)
+{
+  g_return_if_fail (GTK_IS_MENU_BUTTON (menu));
+  g_return_if_fail (GTK_IS_STACK (stack));
+
+  gtk_stack_set_visible_child_name (stack, "win-menu-main");
+  gtk_stack_set_transition_type (stack, GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT);
+}
+
+/* on_view_menu_open_sub:
+ * @button: clicked menu entry
+ * @stack: main menu popover stack
+ *
+ * Callback used to set right stack animations for sub-menus.
+ */
+static void
+on_view_menu_open_sub (GtkModelButton *button,
+                       GtkStack       *stack)
+{
+  g_return_if_fail (GTK_IS_MODEL_BUTTON (button));
+  g_return_if_fail (GTK_IS_STACK (stack));
+
+  gtk_stack_set_transition_type (stack, GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT);
+}
+
+/* on_view_menu_open_sub:
+ * @button: clicked menu entry
+ * @stack: Main menu popover stack
+ *
+ * Callback used to select right stack animation when jumping back to a parent menu.
+ */
+static void
+on_view_menu_open_parent (GtkModelButton *button,
+                          GtkStack       *stack)
+{
+  g_return_if_fail (GTK_IS_MODEL_BUTTON (button));
+  g_return_if_fail (GTK_IS_STACK (stack));
+
+  gtk_stack_set_transition_type (stack, GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT);
+}
+
+/* on_show_weather_change:
+ * @lswitch: The "show-weather" switch owned by @self
+ * @pspec: spec of changed property.
+ * @self: The #GcalWindow
+ *
+ * Handles show-weather on/off switch changes.
+ */
+static void
+on_show_weather_change (GtkSwitch  *wswitch,
+                        GParamSpec *pspec,
+                        GcalWindow *self)
+{
+  g_return_if_fail (GTK_IS_SWITCH (wswitch));
+  g_return_if_fail (pspec != NULL);
+  g_return_if_fail (GCAL_IS_WINDOW (self));
+
+  safe_weather_settings (self);
+
+  if (!gtk_switch_get_active (wswitch))
+    close_menu (self);
+
+  update_menu_weather_sensitivity (self);
+  manage_weather_service (self);
+}
+
+/* on_auto_location_change:
+ * @lswitch: The "auto-location" switch owned by @self
+ * @pspec: spec of changed property.
+ * @self: The #GcalWindow
+ *
+ * Handles auto-location on/off switch changes.
+ */
+static void
+on_auto_location_change (GtkSwitch  *lswitch,
+                         GParamSpec *pspec,
+                         GcalWindow *self)
+{
+  g_return_if_fail (GTK_IS_SWITCH (lswitch));
+  g_return_if_fail (pspec != NULL);
+  g_return_if_fail (GCAL_IS_WINDOW (self));
+
+  safe_weather_settings (self);
+
+  if (gtk_switch_get_active (lswitch))
+    close_menu (self);
+
+  update_menu_weather_sensitivity (self);
+  manage_weather_service (self);
+}
+
+/* on_weather_location_searchbox_change:
+ * @entry: the #GweatherLocationEntry owned by @self
+ * @self: a #GcalWindow.
+ *
+ * Handles location search-box changes.
+ */
+static void
+on_weather_location_searchbox_change (GWeatherLocationEntry *entry,
+                                      GcalWindow            *self)
+{
+  GWeatherLocation *location; /* owned */
+
+  g_return_if_fail (GWEATHER_IS_LOCATION_ENTRY (entry));
+  g_return_if_fail (GCAL_IS_WINDOW (self));
+
+  safe_weather_settings (self);
+
+  location = get_checked_fixed_location (self);
+  if (location != NULL)
+    {
+      close_menu (self);
+      manage_weather_service (self);
+      gweather_location_unref (location);
+    }
+}
+
+/* on_weather_location_searchbox_match_selected:
+ * @sender: the #GWeatherLocationEntry of @self.
+ * @model: underlining location model
+ * @iter: current position
+ * @self: a #GcalWindow as user data.
+ *
+ * Wrapper around on_weather_location_searchbox_change().
+ *
+ * Returns: %FALSE
+ */
+static gboolean
+on_weather_location_searchbox_match_selected (GtkEntryCompletion *sender,
+                                              GtkTreeModel       *model,
+                                              GtkTreeIter        *iter,
+                                              GcalWindow         *self)
+{
+  g_return_val_if_fail (GTK_IS_ENTRY_COMPLETION (sender), FALSE);
+  g_return_val_if_fail (GTK_IS_TREE_MODEL (model), FALSE);
+  g_return_val_if_fail (iter != NULL, FALSE);
+  g_return_val_if_fail (GCAL_IS_WINDOW (self), FALSE);
+
+  GWeatherLocationEntry *entry; /* unowned */
+
+  entry = GWEATHER_LOCATION_ENTRY (gtk_entry_completion_get_entry (sender));
+
+  on_weather_location_searchbox_change (entry, self);
+  return FALSE;
+}
+
+/* update_menu_weather_sensitivity:
+ * @self: A #GcalWindow
+ *
+ * Greys-out weather settings based on active settings.
+ */
+static void
+update_menu_weather_sensitivity (GcalWindow *self)
+{
+  g_return_if_fail (GCAL_IS_WINDOW (self));
+
+  gboolean weather_enabled;
+  gboolean autoloc_enabled;
+
+  weather_enabled = gtk_switch_get_active (self->weather);
+  autoloc_enabled = gtk_switch_get_active (self->auto_location);
+
+  gtk_widget_set_sensitive (GTK_WIDGET (self->auto_location), weather_enabled);
+  gtk_widget_set_sensitive (GTK_WIDGET (self->location_entry), weather_enabled && !autoloc_enabled);
+}
+
+/* close_menu:
+ * @self: A #GcalWindow
+ *
+ * Closes the main menu ("burger") if open.
+ */
+static void
+close_menu (GcalWindow *self)
+{
+  g_return_if_fail (GCAL_IS_WINDOW (self));
+
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->menu_button), FALSE);
+}
+
+/* safe_weather_settings.
+ * @self: A #GcalWindow
+ *
+ * Stores current weather settings. This
+ * includes invalid states.
+ */
+static void
+safe_weather_settings (GcalWindow *self)
+{
+  g_return_if_fail (GCAL_IS_WINDOW (self));
+
+  GSettings *settings;        /* unowned */
+  GVariant *value = NULL;     /* floating */
+  GVariant *vlocation = NULL; /* floating */
+  GWeatherLocation *location; /* owned */
+  gboolean res;
+
+  location = gweather_location_entry_get_location (self->location_entry);
+  if (location != NULL)
+    {
+      vlocation = gweather_location_serialize (location);
+      gweather_location_unref (location);
+      location = NULL;
+    }
+
+  settings = gcal_manager_get_settings (self->manager);
+  value = g_variant_new ("(bbsmv)",
+                         gtk_switch_get_active (self->weather),
+                         gtk_switch_get_active (self->auto_location),
+                         gtk_entry_get_text (GTK_ENTRY (self->location_entry)),
+                         vlocation);
+
+  res = g_settings_set_value (settings, "weather-settings", value);
+
+  if (!res)
+    g_warning ("Could not persist weather settings");
+}
+
+/* load_weather_settings:
+ * @self: A #GcalWindow.
+ *
+ * Loads registered user settings.
+ *
+ * Does not start weather-services on its own.
+ */
+static void
+load_weather_settings (GcalWindow *self)
+{
+  g_return_if_fail (GCAL_IS_WINDOW (self));
+
+  GSettings *settings; /* unowned */
+  g_autoptr (GVariant) value = NULL;
+  gboolean show_weather;
+  gboolean auto_location;
+  g_autoptr (GVariant) location = NULL;
+  g_autofree gchar *location_name = NULL;
+
+  settings = gcal_manager_get_settings (self->manager);
+  value = g_settings_get_value (settings, "weather-settings");
+
+  g_variant_get (value,
+                 "(bbsmv)",
+                 &show_weather,
+                 &auto_location,
+                 &location_name,
+                 &location);
+
+
+  for (int i = 0; i < G_N_ELEMENTS (self->weather_cb_ids); i++)
+    {
+      g_assert (self->weather_cb_ids[i].obj != NULL);
+      g_assert (self->weather_cb_ids[i].id > 0);
+
+      g_signal_handler_block (self->weather_cb_ids[i].obj, self->weather_cb_ids[i].id);
+    }
+
+  gtk_switch_set_active (self->weather, show_weather);
+  gtk_switch_set_active (self->auto_location, auto_location);
+  if (location == NULL)
+    {
+      gtk_entry_set_text (GTK_ENTRY (self->location_entry), location_name);
+    }
+  else
+    {
+      GWeatherLocation *world; /* unowned */
+      GWeatherLocation *loc;   /* owned */
+
+      world = gweather_location_get_world ();
+      loc = gweather_location_deserialize (world, location);
+      gweather_location_entry_set_location (self->location_entry, loc);
+      gweather_location_unref (loc);
+    }
+
+  for (int i = 0; i < G_N_ELEMENTS (self->weather_cb_ids); i++)
+     g_signal_handler_unblock (self->weather_cb_ids[i].obj, self->weather_cb_ids[i].id);
+}
+
+/* manage_weather_service:
+ * @self: A #GcalWindow
+ *
+ * Starts or stops weather service based on current
+ * settings.
+ */
+static void
+manage_weather_service (GcalWindow *self)
+{
+  g_return_if_fail (GCAL_IS_WINDOW (self));
+
+  gboolean show_weather;
+  gboolean auto_location;
+  GWeatherLocation* location; /* owned */
+
+  gcal_weather_service_stop (self->weather_service);
+
+  show_weather = gtk_switch_get_active (self->weather);
+  if (!show_weather)
+    return;
+
+  auto_location = gtk_switch_get_active (self->auto_location);
+  if (auto_location)
+    {
+      gcal_weather_service_run (self->weather_service, NULL);
+      return;
+    }
+
+  location = get_checked_fixed_location (self);
+  if (location == NULL)
+    {
+      /* TODO: this one should get reported to users */
+      g_warning ("Unknown location '%s' selected",
+                 gtk_entry_get_text (GTK_ENTRY (self->location_entry)));
+    }
+  else
+    {
+      gcal_weather_service_run (self->weather_service, location);
+      gweather_location_unref (location);
+    }
+}
+
+/* get_checked_fixed_location:
+ * @self: A #GcalWindow
+ *
+ * Returns user defined location or %NULL
+ * for invalid entries.
+ *
+ * Returns: (transfer full) (nullable): A #GweatherLocation.
+ */
+static GWeatherLocation*
+get_checked_fixed_location (GcalWindow *self)
+{
+  g_return_val_if_fail (GCAL_IS_WINDOW (self), NULL);
+
+  GWeatherLocation *location; /* owned */
+
+  location = gweather_location_entry_get_location (self->location_entry);
+
+  // NOTE: This check feels shabby. However,
+  // I couldn't find a better one without iterating
+  // the model. has-custom-text does not work properly.
+  // Lets go with it for now.
+  if (location != NULL && gweather_location_get_name (location) != NULL)
+    return location;
+
+  if (location != NULL)
+    gweather_location_unref (location);
+
+  return NULL;
+}
+
+
 /* Public API */
 /**
  * gcal_window_new_with_date:
@@ -1580,18 +2087,26 @@ GtkWidget*
 gcal_window_new_with_date (GcalApplication *app,
                            icaltimetype    *date)
 {
-  GcalManager *manager;
-  GcalWindow *win;
+  GcalWeatherService *weather_service; /* unowned */
+  GcalManager *manager; /* unowned */
+  GcalWindow *win;      /* owned */
 
+  weather_service = gcal_application_get_weather_service (GCAL_APPLICATION (app));
   manager = gcal_application_get_manager (GCAL_APPLICATION (app));
   win = g_object_new (GCAL_TYPE_WINDOW,
                       "application", GTK_APPLICATION (app),
+                      "weather-service", weather_service,
                       "manager", manager,
                       "active-date", date,
                       NULL);
 
   /* loading size */
   load_geometry (win);
+
+  /* Recover weather settings */
+  load_weather_settings (win);
+  update_menu_weather_sensitivity (win);
+  manage_weather_service (win);
 
   return GTK_WIDGET (win);
 }
