@@ -21,6 +21,8 @@
 
 #include "gcal-manager.h"
 #include "gcal-event-widget.h"
+#include "gcal-weather-service.h"
+#include "gcal-weather-info.h"
 
 #include <gtk/gtk.h>
 
@@ -55,6 +57,13 @@ void                 gcal_week_header_clear_marks                (GcalWeekHeader
 
 void                 gcal_week_header_set_date                   (GcalWeekHeader     *self,
                                                                   icaltimetype       *date);
+
+void                 gcal_week_header_set_weather_service        (GcalWeekHeader     *self,
+                                                                  GcalWeatherService *service);
+
+void                 gcal_week_header_update_weather_infos       (GcalWeekHeader     *self);
+
+GSList*              gcal_week_header_get_shown_weather_infos    (GcalWeekHeader     *self);
 
 G_END_DECLS
 

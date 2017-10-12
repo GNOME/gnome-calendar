@@ -34,6 +34,31 @@
 
 #define COLUMN_PADDING       6
 
+/* WeatherInfoPos:
+ * @winfo: (nullable): Holds weather information for this week-day. All other fields are only valid if this one is not %NULL.
+ * @icon_buf: (nullable): Buffered weather icon.
+ * @x: X-position of weather indicators.
+ * @y: Y-positon of weather indicators.
+ * @width: Width of weather indicators.
+ * @height: Height of weather indicators.
+ *
+ * Structure represents a weather indicator for a single day.
+ *
+ * Location information are stored for mouse-over events.
+ */
+typedef struct
+{
+  GcalWeatherInfo  *winfo;    /* owned */
+  GdkPixbuf        *icon_buf; /* owned */
+
+  gint              x;
+  gint              y;
+  gint              width;
+  gint              height;
+} WeatherInfoPos;
+
+
+
 struct _GcalWeekHeader
 {
   GtkGrid           parent;
@@ -74,6 +99,11 @@ struct _GcalWeekHeader
   gint              selection_end;
   gint              dnd_cell;
 
+  GcalWeatherService *weather_service; /* unowned, nullable */
+  gulong              on_weather_changed_hid;
+  /* Array of nullable weather infos for each day, starting with Sunday. */
+  WeatherInfoPos      weather_infos[7];
+
   GtkSizeGroup     *sizegroup;
 };
 
@@ -86,12 +116,71 @@ typedef enum
 enum
 {
   EVENT_ACTIVATED,
+  /*
+  EVENT_WEATHER_MOUSEOVER,
+  */
   LAST_SIGNAL
 };
 
 static guint signals[LAST_SIGNAL] = { 0, };
 
 G_DEFINE_TYPE (GcalWeekHeader, gcal_week_header, GTK_TYPE_GRID);
+
+
+/* WeatherInfoPos methods */
+
+/* wip_set_geometric:
+ *
+ * Setter for geometric weather indicator information.
+ */
+static inline void
+wip_set_geometric (WeatherInfoPos *wip,
+                   gint            x,
+                   gint            y,
+                   gint            width,
+                   gint            height)
+{
+  g_return_if_fail (wip != NULL);
+
+  wip->x = x;
+  wip->y = y;
+  wip->width = width;
+  wip->height = height;
+}
+
+/* wip_clear_geometric:
+ *
+ * Sets all weather indicator information to zero.
+ */
+static inline void
+wip_clear_geometric (WeatherInfoPos *wip)
+{
+  g_return_if_fail (wip != NULL);
+
+  wip->x = 0;
+  wip->y = 0;
+  wip->width = 0;
+  wip->height = 0;
+}
+
+/* wip_clear:
+ *
+ * Drops all internal references and resets
+ * geometric information.
+ */
+static inline void
+wip_clear (WeatherInfoPos *wip)
+{
+   g_return_if_fail (wip != NULL);
+
+  if (wip->winfo != NULL)
+    g_clear_object (&wip->winfo);
+
+  if (wip->icon_buf != NULL)
+    g_clear_object (&wip->icon_buf);
+
+  wip_clear_geometric (wip);
+}
 
 /* Event activation methods */
 static void
@@ -229,6 +318,17 @@ on_button_released (GcalWeekHeader *self,
                          (gdouble) out_y);
 
   return GDK_EVENT_STOP;
+}
+
+static void
+on_weather_update (GcalWeatherService *weather_service,
+                   GcalWeekHeader     *self)
+{
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (weather_service));
+  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
+  g_return_if_fail (self->weather_service == weather_service);
+
+  gcal_week_header_update_weather_infos (self);
 }
 
 static GcalEvent*
@@ -1031,6 +1131,9 @@ gcal_week_header_finalize (GObject *object)
 
   for (i = 0; i < 7; i++)
     g_list_free (self->events[i]);
+
+  for (i = 0; i < G_N_ELEMENTS (self->weather_infos); i++)
+    wip_clear (&self->weather_infos[i]);
 }
 
 static void
@@ -1082,7 +1185,7 @@ gcal_week_header_draw (GtkWidget      *widget,
   PangoFontDescription *bold_font;
 
   gdouble cell_width;
-  gint i, font_height, current_cell, today_column;
+  gint i, day_abv_font_height, current_cell, today_column;
   gint start_x, start_y;
 
   gboolean ltr;
@@ -1174,12 +1277,14 @@ gcal_week_header_draw (GtkWidget      *widget,
       gtk_style_context_restore (context);
     }
 
-  pango_layout_get_pixel_size (layout, NULL, &font_height);
+  pango_layout_get_pixel_size (layout, NULL, &day_abv_font_height);
 
   for (i = 0; i < 7; i++)
     {
+      WeatherInfoPos *wpinfo; /* unowned */
       gchar *weekday_date, *weekday_abv, *weekday;
       gdouble x;
+      gint day_num_font_height, day_num_font_baseline;
       gint font_width;
       gint n_day;
 
@@ -1201,7 +1306,8 @@ gcal_week_header_draw (GtkWidget      *widget,
       pango_layout_set_font_description (layout, bold_font);
       pango_layout_set_text (layout, weekday_date, -1);
 
-      pango_layout_get_pixel_size (layout, &font_width, NULL);
+      pango_layout_get_pixel_size (layout, &font_width, &day_num_font_height);
+      day_num_font_baseline = pango_layout_get_baseline (layout) / PANGO_SCALE;
 
       if (ltr)
         x = padding.left + cell_width * i + COLUMN_PADDING + start_x;
@@ -1211,14 +1317,14 @@ gcal_week_header_draw (GtkWidget      *widget,
       gtk_render_layout (context,
                          cr,
                          x,
-                         font_height + padding.bottom + start_y,
+                         day_abv_font_height + padding.bottom + start_y,
                          layout);
 
       gtk_style_context_restore (context);
 
       /* Draws the days name */
       weekday = g_utf8_strup (gcal_get_weekday ((i + self->first_weekday) % 7), -1);
-      weekday_abv = g_strdup_printf ("%s", weekday);
+      weekday_abv = g_strdup (weekday);
       g_free (weekday);
 
       gtk_style_context_save (context);
@@ -1246,6 +1352,85 @@ gcal_week_header_draw (GtkWidget      *widget,
 
       gtk_style_context_restore (context);
 
+      /* Draws weather icon if given */
+      wpinfo = &self->weather_infos[ltr? i : 6 - i];
+      if (wpinfo->winfo != NULL)
+        {
+          const gchar *weather_icon_name = gcal_weather_info_get_icon_name (wpinfo->winfo);
+          const gchar *weather_temp = gcal_weather_info_get_temperature (wpinfo->winfo);
+
+          /* Imagine a box around weather indicators with length MAX(imgW,tempW)
+           * We compute its width and position in this section.
+           * Its height is derived from day name and numbers. The icon sticks on
+           * the very top and the temperature on its base.
+           */
+          gint icon_size = day_num_font_height;
+          gint temp_width = 0;
+          gint temp_height = 0;
+          gint temp_baseline = 0;
+
+          gdouble wibox_width;
+          gdouble wibox_x;
+
+          // TODO: actually try to style temperature via css
+          if (weather_icon_name != NULL && wpinfo->icon_buf == NULL)
+            {
+              GtkIconTheme *theme; /* unowned */
+              g_autoptr (GError) err = NULL;
+              gint icon_flags;
+
+              theme = gtk_icon_theme_get_default ();
+              // TODO: catch icon theme changes
+
+              icon_flags = ltr? GTK_ICON_LOOKUP_FORCE_SIZE | GTK_ICON_LOOKUP_DIR_LTR
+                              : GTK_ICON_LOOKUP_FORCE_SIZE | GTK_ICON_LOOKUP_DIR_RTL;
+              wpinfo->icon_buf = gtk_icon_theme_load_icon (theme, weather_icon_name, icon_size, icon_flags, &err);
+              if (err != NULL)
+                {
+                  g_assert (wpinfo->icon_buf == NULL);
+                  g_warning ("Could not load icon %s: %s", weather_icon_name, err->message);
+                }
+            }
+
+          if (G_LIKELY (weather_temp != NULL))
+            {
+              gtk_style_context_save (context);
+              gtk_style_context_add_class (context, "week-temperature");
+              gtk_style_context_get (context, state, "font", &bold_font, NULL);
+
+              pango_layout_set_font_description (layout, bold_font);
+              pango_layout_set_text (layout, weather_temp, -1);
+
+              pango_layout_get_pixel_size (layout, &temp_width, &temp_height);
+              temp_baseline = pango_layout_get_baseline (layout) / PANGO_SCALE;
+            }
+
+          wibox_width = MAX(icon_size, temp_width);
+          wibox_x = ltr ? alloc.width - (cell_width * (6 - i) + wibox_width + COLUMN_PADDING)
+                        : padding.left + cell_width * i + COLUMN_PADDING + start_x;
+
+          /* Actually draw weather indicator: */
+          if (G_LIKELY (weather_temp != NULL))
+            {
+              gtk_render_layout (context,
+                                 cr,
+                                 wibox_x + (wibox_width - temp_width) / 2,
+                                 day_abv_font_height + padding.bottom + start_y + day_num_font_baseline - temp_baseline,
+                                 layout);
+              gtk_style_context_restore (context);
+            }
+
+          if (G_LIKELY (wpinfo->icon_buf != NULL))
+            {
+              gdk_cairo_set_source_pixbuf (cr,
+                                           wpinfo->icon_buf,
+                                           wibox_x + (wibox_width - icon_size) / 2,
+                                           start_y);
+              cairo_paint (cr);
+            }
+        }
+
+
       /* Draws the lines after each day of the week */
       gtk_style_context_save (context);
       gtk_style_context_add_class (context, "lines");
@@ -1257,11 +1442,11 @@ gcal_week_header_draw (GtkWidget      *widget,
 
       cairo_move_to (cr,
                      ALIGNED (ltr ? (cell_width * i + start_x) : (alloc.width - (cell_width * i + start_x))),
-                     font_height + padding.bottom + start_y);
+                     day_abv_font_height + padding.bottom + start_y);
 
       cairo_rel_line_to (cr,
                          0.0,
-                         gtk_widget_get_allocated_height (widget) - font_height - start_y + padding.bottom);
+                         gtk_widget_get_allocated_height (widget) - day_abv_font_height - start_y + padding.bottom);
       cairo_stroke (cr);
 
       gtk_style_context_restore (context);
@@ -1456,6 +1641,22 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
                                            1,
                                            GCAL_TYPE_EVENT_WIDGET);
 
+  /* *
+   * GCalWeekHeader::mouseover-weather:
+   * @info: Hovered GcalWeatherInfo
+   *
+   * Triggered when cursor points to a weather indicator.
+   */
+  /*
+  signals[EVENT_WEATHER_MOUSEOVER] = g_signal_new ("weather-mouseover",
+                                                   GCAL_TYPE_WEEK_HEADER,
+                                                   G_SIGNAL_RUN_FIRST,
+                                                   0, NULL, NULL, NULL,
+                                                   G_TYPE_NONE,
+                                                   1,
+                                                   GCAL_TYPE_WEATHER_INFO);
+  */
+
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-header.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button);
@@ -1484,7 +1685,9 @@ gcal_week_header_init (GcalWeekHeader *self)
   self->selection_start = -1;
   self->selection_end = -1;
   self->dnd_cell = -1;
-
+  self->weather_service = NULL;
+  self->on_weather_changed_hid = 0;
+  memset (self->weather_infos, 0, sizeof(self->weather_infos));
   gtk_widget_init_template (GTK_WIDGET (self));
 
   /* This is to avoid stray lines when adding and removing events */
@@ -1500,7 +1703,141 @@ G_GNUC_END_IGNORE_DEPRECATIONS
                      GDK_ACTION_MOVE);
 }
 
+/* Private API */
+
+/* gcal_week_header_add_weather_infos:
+ * @self:  (not nullable): The #GcalWeekHeader instance.
+ * @winfo: List of #GcalWeatherInfos to add to @self.
+ *
+ * Adds weather information to this header. @self
+ * only adds weather information that can be
+ * displayed with current settings.
+ *
+ * Return: Number of consumed weather information
+ *         objects.
+ */
+static gint
+gcal_week_header_add_weather_infos (GcalWeekHeader *self,
+                                    GSList         *winfos)
+{
+  g_autoptr (GDateTime) _week_start = NULL;
+  GSList *iter; /* unowned */
+  GDate week_start;
+  int consumed = 0;
+
+  g_return_val_if_fail (self != NULL, 0);
+
+  _week_start = get_start_of_week (self->active_date);
+  g_date_set_dmy (&week_start,
+                  g_date_time_get_day_of_month (_week_start),
+                  g_date_time_get_month (_week_start),
+                  g_date_time_get_year (_week_start));
+
+  for (iter = winfos; iter != NULL; iter = iter->next)
+    {
+      GcalWeatherInfo *gwi; /* unowned */
+      GDate gwi_date;
+      gint day_diff;
+
+      gwi = GCAL_WEATHER_INFO (iter->data);
+      gcal_weather_info_get_date (gwi, &gwi_date);
+
+      day_diff = g_date_days_between (&week_start, &gwi_date);
+      if (day_diff >= 0 && day_diff < G_N_ELEMENTS (self->weather_infos))
+        {
+          wip_clear (&self->weather_infos[day_diff]);
+          self->weather_infos[day_diff].winfo = g_object_ref (gwi);
+          consumed++;
+        }
+    }
+
+  if (consumed > 0)
+    gtk_widget_queue_draw (GTK_WIDGET (self));
+
+  return consumed;
+}
+
+/* gcal_week_header_clear_weather_infos:
+ * @self: The #GcalWeekHeader instance.
+ *
+ * Removes all registered weather information objects from
+ * this widget.
+ */
+static void
+gcal_week_header_clear_weather_infos (GcalWeekHeader *self)
+{
+  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
+
+  for (gint i = 0; i < G_N_ELEMENTS (self->weather_infos); i++)
+    wip_clear (&self->weather_infos[i]);
+
+  gtk_widget_queue_draw (GTK_WIDGET (self));
+}
+
+
 /* Public API */
+
+/**
+ * gcal_week_header_set_weather_service:
+ * @self:    The #GcalWeekHeader instance.
+ * @service: (nullable): The weather service to query.
+ *
+ * Note that #GcalWeekHeader does not hold a strong reference
+ * to its weather service.
+ */
+void
+gcal_week_header_set_weather_service (GcalWeekHeader     *self,
+                                      GcalWeatherService *service)
+{
+  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
+  g_return_if_fail (service == NULL || GCAL_IS_WEATHER_SERVICE (service));
+
+  if (self->weather_service == service)
+    return;
+
+  if (self->on_weather_changed_hid > 0)
+    {
+      g_signal_handler_disconnect (self->weather_service, self->on_weather_changed_hid);
+      self->on_weather_changed_hid = 0;
+    }
+
+  self->weather_service = service;
+
+  if (self->weather_service != NULL)
+    self->on_weather_changed_hid = g_signal_connect_object (
+                                         self->weather_service,
+                                         "weather-changed",
+                                         G_CALLBACK (on_weather_update),
+                                         self,
+                                         0);
+
+  gcal_week_header_update_weather_infos (self);
+}
+
+/**
+ * gcal_week_header_update_weather_infos:
+ * @self: The #GcalWeekHeader instance.
+ *
+ * Retrieves latest weather information from registered
+ * weather service and displays it.
+ */
+void
+gcal_week_header_update_weather_infos (GcalWeekHeader *self)
+{
+
+  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
+
+  gcal_week_header_clear_weather_infos (self);
+
+  if (self->weather_service != NULL)
+    {
+      GSList* weather_infos = NULL; /* unowned */
+
+      weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
+      gcal_week_header_add_weather_infos (self, weather_infos);
+    }
+}
+
 void
 gcal_week_header_set_manager (GcalWeekHeader *self,
                               GcalManager    *manager)
@@ -1523,7 +1860,6 @@ gcal_week_header_set_first_weekday (GcalWeekHeader *self,
 
   self->first_weekday = nr_day;
 }
-
 void
 gcal_week_header_set_use_24h_format (GcalWeekHeader *self,
                                      gboolean        use_24h_format)
@@ -1742,4 +2078,29 @@ gcal_week_header_set_date (GcalWeekHeader *self,
     update_unchanged_events (self, self->active_date);
 
   g_clear_pointer (&old_date, g_free);
+}
+
+/**
+ * gcal_week_header_get_weather_infos:
+ * @self: The #GcalWeekHeader instance.
+ *
+ * Returns a list of shown weather informations.
+ *
+ * @Returns: (transfer container):
+ *           A GSList. The callee is responsible for freeing it.
+ *           Elements are owned by the widget. Do not modify.
+ */
+GSList*
+gcal_week_header_get_shown_weather_infos (GcalWeekHeader  *self)
+{
+  g_return_val_if_fail (GCAL_IS_WEEK_HEADER (self), NULL);
+  GSList* lst = NULL; /* owned[unowned] */
+
+  for (int i = 0; i < G_N_ELEMENTS (self->weather_infos); i++)
+    {
+      if (self->weather_infos[i].winfo != NULL)
+        lst = g_slist_prepend (lst, self->weather_infos[i].winfo);
+    }
+
+   return lst;
 }
