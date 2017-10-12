@@ -661,6 +661,7 @@ gcal_weather_service_get_location_name (GClueLocation *location)
 
   greverse = geocode_reverse_new_for_location (glocation);
 
+  /* TODO: Use async version of geocode_reverse_resolve */
   gplace = geocode_reverse_resolve (greverse, NULL);
   if (gplace == NULL)
     return NULL;
