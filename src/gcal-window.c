@@ -177,10 +177,11 @@ struct _GcalWindow
   gint                 open_edit_dialog_timeout_id;
 
   /* weather management */
-  GcalWeatherService    *weather_service; /* owned */
-  GtkSwitch             *weather;         /* unowned */
-  GtkSwitch             *auto_location;   /* unowned */
-  GWeatherLocationEntry *location_entry;  /* unowned */
+  GcalWeatherService    *weather_service;   /* owned */
+  GtkSwitch             *weather;           /* unowned */
+  GtkSwitch             *auto_location;     /* unowned */
+  GtkBox                *auto_location_box; /* unowned */
+  GWeatherLocationEntry *location_entry;    /* unowned */
   WeatherSigs            weather_cb_ids[5];
 
   /* temp to keep event_creation */
@@ -1617,6 +1618,7 @@ gcal_window_init (GcalWindow *self)
   /* Weather menu: */
   self->weather_service = NULL;
   self->weather = GTK_SWITCH(gtk_builder_get_object (builder, "show-weather-switch"));
+  self->auto_location_box = GTK_BOX (gtk_builder_get_object (builder, "auto-location-box"));
   self->auto_location = GTK_SWITCH(gtk_builder_get_object (builder, "auto-location-switch"));
   self->location_entry = GWEATHER_LOCATION_ENTRY (gtk_builder_get_object (builder, "fixed-weather-location"));
   location_completion = gtk_entry_get_completion (GTK_ENTRY (self->location_entry));
@@ -1894,7 +1896,7 @@ update_menu_weather_sensitivity (GcalWindow *self)
   weather_enabled = gtk_switch_get_active (self->weather);
   autoloc_enabled = gtk_switch_get_active (self->auto_location);
 
-  gtk_widget_set_sensitive (GTK_WIDGET (self->auto_location), weather_enabled);
+  gtk_widget_set_sensitive (GTK_WIDGET (self->auto_location_box), weather_enabled);
   gtk_widget_set_sensitive (GTK_WIDGET (self->location_entry), weather_enabled && !autoloc_enabled);
 }
 
@@ -1991,6 +1993,9 @@ load_weather_settings (GcalWindow *self)
   gtk_switch_set_active (self->auto_location, auto_location);
   if (location == NULL)
     {
+      GtkStyleContext *context; /* unowned */
+
+      context = gtk_widget_get_style_context (GTK_WIDGET (self->location_entry));
       gtk_entry_set_text (GTK_ENTRY (self->location_entry), location_name);
       gtk_style_context_add_class (context, "error");
     }
