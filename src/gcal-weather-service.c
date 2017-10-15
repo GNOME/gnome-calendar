@@ -163,7 +163,8 @@ static gboolean on_timer_timeout                           (GcalWeatherService  
 
 static gboolean get_time_day_start                         (GcalWeatherService  *self,
                                                             GDate               *ret_date,
-                                                            gint64              *ret_unix);
+                                                            gint64              *ret_unix,
+                                                            gint64              *ret_unix_exact);
 
 static inline gboolean get_gweather_temperature            (GWeatherInfo        *gwi,
                                                             gdouble             *temp);
@@ -472,8 +473,8 @@ get_icon_name_sortkey (const gchar *icon_name,
   gssize normalized_name_len;
 
   const GcalWeatherIconInfo icons[] =
-    { {"weather-clear",             FALSE},
-      {"weather-few-clouds",        FALSE},
+    { {"weather-clear",             TRUE},
+      {"weather-few-clouds",        TRUE},
       {"weather-overcast",          FALSE},
       {"weather-fog",               FALSE},
       {"weather-showers-scattered", FALSE},
@@ -543,7 +544,8 @@ gwc2str (GWeatherInfo *gwi)
 /* get_time_day_start:
  * @self: The #GcalWeatherService instance.
  * @date: (out) (not nullable): A #GDate that should be set to today.
- * @unix: (out) (not nullable): A UNIX time stamp that should be set to today
+ * @unix: (out) (not nullable): A UNIX time stamp that should be set to today.
+ * @ret_unix_exact (out) (not nullable): The exact date time this data point predicts.
  *
  * Provides current date in two different forms.
  *
@@ -552,7 +554,8 @@ gwc2str (GWeatherInfo *gwi)
 static gboolean
 get_time_day_start (GcalWeatherService *self,
                     GDate              *ret_date,
-                    gint64             *ret_unix)
+                    gint64             *ret_unix,
+                    gint64             *ret_unix_exact)
 {
   g_autoptr (GDateTime) now = NULL;
   g_autoptr (GDateTime) day = NULL;
@@ -561,6 +564,7 @@ get_time_day_start (GcalWeatherService *self,
   g_return_val_if_fail (self != NULL, FALSE);
   g_return_val_if_fail (ret_date != NULL, FALSE);
   g_return_val_if_fail (ret_unix != NULL, FALSE);
+  g_return_val_if_fail (ret_unix_exact != NULL, FALSE);
 
   now = (self->time_zone == NULL)
           ? g_date_time_new_now_local ()
@@ -579,6 +583,7 @@ get_time_day_start (GcalWeatherService *self,
                   g_date_time_get_year (day));
 
   *ret_unix = g_date_time_to_unix (day);
+  *ret_unix_exact = g_date_time_to_unix (now);
   return TRUE;
 }
 
@@ -691,8 +696,8 @@ compute_weather_info_data (GSList    *samples,
           temp_val = temp;
           temp_gwi = gwi;
         }
-  
-      if (gweather_info_is_daytime (gwi))      
+
+      if (gweather_info_is_daytime (gwi))
         has_daytime = TRUE;
     }
 
@@ -732,6 +737,10 @@ preprocess_gweather_reports (GcalWeatherService *self,
   GSList *iter;           /* unowned */
   GDate cur_gdate;
   glong today_unix;
+  glong unix_now;
+
+  GWeatherInfo *first_tomorrow = NULL; /* unowned */
+  glong         first_tomorrow_dtime = -1;
 
   g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), NULL);
 
@@ -749,7 +758,7 @@ preprocess_gweather_reports (GcalWeatherService *self,
   if (self->max_days <= 0)
     return NULL;
 
-  if (!get_time_day_start (self, &cur_gdate, &today_unix))
+  if (!get_time_day_start (self, &cur_gdate, &today_unix, &unix_now))
     return NULL;
 
   days = g_malloc0 (sizeof (GSList*) * self->max_days);
@@ -779,11 +788,32 @@ preprocess_gweather_reports (GcalWeatherService *self,
           bucket = (gwi_dtime - today_unix) / DAY_SECONDS;
           if (bucket >= 0 && bucket < self->max_days)
             days[bucket] = g_slist_prepend (days[bucket], gwi);
+
+          if (bucket == 1 && (first_tomorrow == NULL || first_tomorrow_dtime > gwi_dtime))
+            {
+              first_tomorrow_dtime = gwi_dtime;
+              first_tomorrow = gwi;
+            }
         }
       else
         {
           g_debug ("Encountered historic weather information");
         }
+    }
+
+  if (days[0] == NULL && first_tomorrow != NULL)
+    {
+        /* There is no data point left for today.
+         * Lets borrow one.
+         */
+       glong secs_left_today;
+       glong secs_between;
+
+       secs_left_today = DAY_SECONDS - (unix_now - today_unix);
+       secs_between = first_tomorrow_dtime - unix_now;
+
+       if (secs_left_today < 90*60 && secs_between <= 180*60)
+         days[0] = g_slist_prepend (days[0], first_tomorrow);
     }
 
   /* Produce GcalWeatherInfo for each bucket: */
