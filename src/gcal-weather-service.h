@@ -34,7 +34,8 @@ G_DECLARE_FINAL_TYPE (GcalWeatherService, gcal_weather_service, GCAL, WEATHER_SE
 
 GcalWeatherService* gcal_weather_service_new                (GTimeZone          *time_zone,
                                                              guint               max_days,
-                                                             guint               check_interval);
+                                                             guint               check_interval,
+                                                             gint64              valid_timespan);
 
 GTimeZone*          gcal_weather_service_get_time_zone      (GcalWeatherService *self);
 
@@ -47,6 +48,8 @@ void                gcal_weather_service_run                (GcalWeatherService 
 void                gcal_weather_service_stop               (GcalWeatherService *self);
 
 guint               gcal_weather_service_get_max_days       (GcalWeatherService *self);
+
+gint64              gcal_weather_service_get_valid_timespan (GcalWeatherService *self);
 
 guint               gcal_weather_service_get_check_interval (GcalWeatherService *self);
 
