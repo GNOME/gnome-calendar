@@ -124,8 +124,6 @@ static void     gcal_weather_service_update_location       (GcalWeatherService  
 static void     gcal_weather_service_update_gclue_location (GcalWeatherService  *self,
                                                             GClueLocation       *location);
 
-static char*    gcal_weather_service_get_location_name     (GClueLocation       *location);
-
 static void     on_gclue_simple_creation                   (GClueSimple         *source,
                                                             GAsyncResult        *result,
                                                             GcalWeatherService  *data);
@@ -952,23 +950,16 @@ gcal_weather_service_update_gclue_location (GcalWeatherService  *self,
 
   if (location != NULL)
     {
-      g_autofree gchar *loc_name = NULL;
+      GWeatherLocation *wworld; /* unowned */
+      gdouble latitude;
+      gdouble longitude;
 
-      loc_name = gcal_weather_service_get_location_name (location);
-      if (loc_name != NULL)
-        {
-          GWeatherLocation *wworld; /* unowned */
-          gdouble latitude;
-          gdouble longitude;
+      latitude = gclue_location_get_latitude (location);
+      longitude = gclue_location_get_longitude (location);
 
-          latitude = gclue_location_get_latitude (location);
-          longitude = gclue_location_get_longitude (location);
-
-          // wlocation = gweather_location_new_detached (loc_name, NULL, latitude, longitude);
-          // nearest-city works more closely to gnome weather.
-          wworld = gweather_location_get_world ();
-          wlocation = gweather_location_find_nearest_city (wworld, latitude, longitude);
-        }
+      // nearest-city works more closely to gnome weather.
+      wworld = gweather_location_get_world ();
+      wlocation = gweather_location_find_nearest_city (wworld, latitude, longitude);
     }
 
 
@@ -976,38 +967,6 @@ gcal_weather_service_update_gclue_location (GcalWeatherService  *self,
 
   if (wlocation != NULL)
     gweather_location_unref (wlocation);
-}
-
-
-
-/* gcal_weather_service_get_location_name:
- * @location: A #GClueLocation to get the city name from.
- *
- * Queries the city name for the given location or %NULL.
- *
- * @Returns: (transfer full) (nullable): City name or %NULL.
- */
-static char*
-gcal_weather_service_get_location_name (GClueLocation *location)
-{
-  g_autoptr (GeocodeLocation) glocation = NULL;
-  g_autoptr (GeocodeReverse) greverse = NULL;
-  g_autoptr (GeocodePlace) gplace = NULL;
-
-  g_return_val_if_fail (GCLUE_IS_LOCATION (location), NULL);
-
-  glocation = geocode_location_new (gclue_location_get_latitude (location),
-                                    gclue_location_get_longitude (location),
-                                    gclue_location_get_accuracy (location));
-
-  greverse = geocode_reverse_new_for_location (glocation);
-
-  /* TODO: Use async version of geocode_reverse_resolve */
-  gplace = geocode_reverse_resolve (greverse, NULL);
-  if (gplace == NULL)
-    return NULL;
-
-  return g_strdup (geocode_place_get_town (gplace));
 }
 
 
