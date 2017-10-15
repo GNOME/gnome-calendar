@@ -957,13 +957,17 @@ gcal_weather_service_update_gclue_location (GcalWeatherService  *self,
       loc_name = gcal_weather_service_get_location_name (location);
       if (loc_name != NULL)
         {
+          GWeatherLocation *wworld; /* unowned */
           gdouble latitude;
           gdouble longitude;
 
           latitude = gclue_location_get_latitude (location);
           longitude = gclue_location_get_longitude (location);
 
-          wlocation = gweather_location_new_detached (loc_name, NULL, latitude, longitude);
+          // wlocation = gweather_location_new_detached (loc_name, NULL, latitude, longitude);
+          // nearest-city works more closely to gnome weather.
+          wworld = gweather_location_get_world ();
+          wlocation = gweather_location_find_nearest_city (wworld, latitude, longitude);
         }
     }
 
