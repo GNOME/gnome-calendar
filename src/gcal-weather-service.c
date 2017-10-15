@@ -847,10 +847,6 @@ gcal_weather_service_update_location (GcalWeatherService  *self,
                (location == NULL)? "<null>" : gweather_location_get_name (location));
 
       self->gweather_info = gweather_info_new (location, GWEATHER_FORECAST_ZONE | GWEATHER_FORECAST_LIST);
-      /* TODO: display weather attributions somewhere:
-       * gweather_info_get_attribution (self->gweather_info);
-       * Do no roll-out a release without resolving this one before!
-       */
 
       /* NOTE: We do not get detailed infos for GWEATHER_PROVIDER_ALL.
        * This combination works fine, though. We should open a bug / investigate
@@ -1439,4 +1435,24 @@ gcal_weather_service_get_weather_infos (GcalWeatherService *self)
   g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), NULL);
 
   return self->weather_infos;
+}
+
+
+
+/**
+ * gcal_weather_service_get_attribution:
+ *
+ * Returns weather service attribution.
+ *
+ * Returns: (nullable) (transfer none): Text to display.
+ */
+const gchar*
+gcal_weather_service_get_attribution (GcalWeatherService *self)
+{
+  g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), NULL);
+
+  if (self->gweather_info != NULL)
+    return gweather_info_get_attribution (self->gweather_info);
+
+  return NULL;
 }

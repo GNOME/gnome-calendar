@@ -457,14 +457,53 @@ gcal_application_launch_search (GSimpleAction *search,
 }
 
 static void
+on_about_response (GtkAboutDialog *about,
+                   int             response_id,
+                   gpointer        user_data)
+{
+  g_return_if_fail (GTK_IS_ABOUT_DIALOG (about));
+  g_return_if_fail (user_data == NULL);
+
+  if (response_id == GTK_RESPONSE_CANCEL)
+    gtk_widget_destroy (GTK_WIDGET (about));
+}
+
+static gchar*
+build_about_copyright (GcalApplication *self)
+{
+  GString     *builder ;    /* owned */
+  const gchar *attribution; /* unowned */
+  g_autoptr (GDateTime) dt = NULL;
+
+  g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
+
+  builder = g_string_new ("<span size=\"small\">");
+  dt = g_date_time_new_now_local ();
+
+  /* Build string: */
+  g_string_append_printf (builder,
+                         _("Copyright \xC2\xA9 2012\xE2\x80\x93%d " "The Calendar authors"),
+                          g_date_time_get_year (dt));
+
+  attribution = gcal_weather_service_get_attribution (self->weather_service);
+  if (attribution != NULL)
+    {
+      g_string_append_c (builder, '\n');
+      g_string_append (builder, attribution);
+    }
+  g_string_append (builder, "</span>");
+
+  return g_string_free (builder, FALSE);
+}
+
+static void
 gcal_application_show_about (GSimpleAction *simple,
                              GVariant      *parameter,
                              gpointer       user_data)
 {
-  GcalApplication *self;
-  char *copyright;
-  GDateTime *dt;
-  int created_year = 2012;
+  GcalApplication *self;   /* unowned */
+  GtkWidget       *dialog; /* owned */
+
   const gchar *authors[] = {
     "Erick Pérez Castellanos <erickpc@gnome.org>",
     "Georges Basile Stavracas Neto <georges.stavracas@gmail.com>",
@@ -479,26 +518,15 @@ gcal_application_show_about (GSimpleAction *simple,
     NULL
   };
 
+
   self = GCAL_APPLICATION (user_data);
-  dt = g_date_time_new_now_local ();
 
-  if (g_date_time_get_year (dt) == created_year)
-    {
-      copyright = g_strdup_printf (_("Copyright \xC2\xA9 %d "
-                                     "The Calendar authors"),
-                                   created_year);
-    }
-  else
-    {
-      copyright = g_strdup_printf (_("Copyright \xC2\xA9 %d\xE2\x80\x93%d "
-                                     "The Calendar authors"),
-                                   created_year, g_date_time_get_year (dt));
-    }
-
-  gtk_show_about_dialog (GTK_WINDOW (self->window),
+  dialog = g_object_new (GTK_TYPE_ABOUT_DIALOG,
+                         "transient-for", GTK_WINDOW (self->window),
+                         "modal", TRUE,
+                         "destroy-with-parent", TRUE,
                          "program-name", _("Calendar"),
                          "version", VERSION,
-                         "copyright", copyright,
                          "license-type", GTK_LICENSE_GPL_3_0,
                          "authors", authors,
                          "artists", artists,
@@ -506,8 +534,22 @@ gcal_application_show_about (GSimpleAction *simple,
                          "translator-credits", _("translator-credits"),
                          NULL);
 
-  g_clear_pointer (&copyright, g_free);
-  g_clear_pointer (&dt, g_date_time_unref);
+  /* Poke AboutDialog internals to display links in
+   * attributions. This workaround is also used by
+   * gnome-weather.
+   */
+  {
+    g_autofree gchar *copyright;
+    GObject *cpyright_lbl; /* unowned */
+
+    copyright = build_about_copyright (self);
+    cpyright_lbl = gtk_widget_get_template_child (GTK_WIDGET (dialog), GTK_TYPE_ABOUT_DIALOG, "copyright_label");
+    gtk_label_set_markup (GTK_LABEL (cpyright_lbl), copyright);
+    gtk_widget_show (GTK_WIDGET (cpyright_lbl));
+  }
+
+  g_signal_connect (dialog, "response", G_CALLBACK (on_about_response), NULL);
+  gtk_widget_show (dialog);
 }
 
 static void
