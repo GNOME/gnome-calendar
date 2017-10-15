@@ -1859,6 +1859,7 @@ gcal_week_header_set_first_weekday (GcalWeekHeader *self,
 
   self->first_weekday = nr_day;
 }
+
 void
 gcal_week_header_set_use_24h_format (GcalWeekHeader *self,
                                      gboolean        use_24h_format)
@@ -2075,6 +2076,8 @@ gcal_week_header_set_date (GcalWeekHeader *self,
 
   if (old_date)
     update_unchanged_events (self, self->active_date);
+
+  gcal_week_header_update_weather_infos (self);
 
   g_clear_pointer (&old_date, g_free);
 }
