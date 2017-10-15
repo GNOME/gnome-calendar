@@ -1825,6 +1825,7 @@ static void
 on_weather_location_searchbox_change (GWeatherLocationEntry *entry,
                                       GcalWindow            *self)
 {
+  GtkStyleContext  *context;  /* unowned */
   GWeatherLocation *location; /* owned */
 
   g_return_if_fail (GWEATHER_IS_LOCATION_ENTRY (entry));
@@ -1832,9 +1833,16 @@ on_weather_location_searchbox_change (GWeatherLocationEntry *entry,
 
   safe_weather_settings (self);
 
+  context = gtk_widget_get_style_context (GTK_WIDGET (self->location_entry));
   location = get_checked_fixed_location (self);
-  if (location != NULL)
+  if (location == NULL)
     {
+      gtk_style_context_add_class (context, "error");
+    }
+  else
+    {
+      gtk_style_context_remove_class (context, "error");
+
       close_menu (self);
       manage_weather_service (self);
       gweather_location_unref (location);
@@ -1984,6 +1992,7 @@ load_weather_settings (GcalWindow *self)
   if (location == NULL)
     {
       gtk_entry_set_text (GTK_ENTRY (self->location_entry), location_name);
+      gtk_style_context_add_class (context, "error");
     }
   else
     {
