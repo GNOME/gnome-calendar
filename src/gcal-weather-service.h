@@ -54,6 +54,8 @@ GSList*             gcal_weather_service_get_weather_infos  (GcalWeatherService 
 
 const gchar*        gcal_weather_service_get_attribution    (GcalWeatherService *self);
 
+void                gcal_weather_service_update             (GcalWeatherService *self);
+
 G_END_DECLS
 
 #endif /* GCAL_WEATHER_SERVICE_H */

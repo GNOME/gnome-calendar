@@ -1246,8 +1246,7 @@ on_timer_timeout (GcalWeatherService *self)
 {
   g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), G_SOURCE_REMOVE);
 
-  if (self->gweather_info != NULL)
-    gweather_info_update (self->gweather_info);
+  gcal_weather_service_update (self);
 
   return G_SOURCE_CONTINUE;
 }
@@ -1471,6 +1470,7 @@ gcal_weather_service_get_weather_infos (GcalWeatherService *self)
 
 /**
  * gcal_weather_service_get_attribution:
+ * @self: The #GcalWeatherService instance.
  *
  * Returns weather service attribution.
  *
@@ -1485,4 +1485,21 @@ gcal_weather_service_get_attribution (GcalWeatherService *self)
     return gweather_info_get_attribution (self->gweather_info);
 
   return NULL;
+}
+
+
+
+/**
+ * gcal_weather_service_update:
+ * @self: The #GcalWeatherService instance.
+ *
+ * Tries to update weather reports.
+ */
+void
+gcal_weather_service_update (GcalWeatherService *self)
+{
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+
+  if (self->gweather_info != NULL)
+    gweather_info_update (self->gweather_info);
 }

@@ -445,6 +445,7 @@ gcal_application_sync (GSimpleAction *sync,
 {
   GcalApplication *self = GCAL_APPLICATION (app);
   gcal_manager_refresh (self->manager);
+  gcal_weather_service_update (self->weather_service);
 }
 
 static void
