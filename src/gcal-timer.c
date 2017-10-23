@@ -212,11 +212,8 @@ gcal_timer_reset (GcalTimer *self)
   g_return_if_fail (self != NULL);
   g_return_if_fail (gcal_timer_is_running (self));
 
-  if (g_source_get_ready_time ((GSource*) self) >= 0)
-    {
-      self->last_event = g_source_get_time ((GSource*) self);
-      schedule_next (self);
-    }
+  self->last_event = g_source_get_time ((GSource*) self);
+  schedule_next (self);
 }
 
 
