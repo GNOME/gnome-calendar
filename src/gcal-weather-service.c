@@ -46,7 +46,7 @@ typedef struct
  * @time_zone:               The current time zone
  * @check_interval_new:      Amount of seconds to wait before fetching weather infos.
  * @check_interval_renew:    Amount of seconds to wait before re-fetching weather information.
- * @timer                    Timer used to request weather report updates.
+ * @duration_timer           Timer used to request weather report updates.
  * @network_changed_sid      "network-changed" signal ID.
  * @location_service:        Used to monitor location changes.
  *                           Initialized by gcal_weather_service_run(),
@@ -81,7 +81,7 @@ struct _GcalWeatherService
   /* timer: */
   guint            check_interval_new;
   guint            check_interval_renew;
-  GcalTimer       *timer;
+  GcalTimer       *duration_timer;
 
   /* network monitoring */
   gulong           network_changed_sid;
@@ -189,7 +189,7 @@ static gchar*   get_normalized_icon_name                   (GWeatherInfo        
 static gint     get_icon_name_sortkey                      (const gchar         *icon_name,
                                                             gboolean            *supports_night_icon);
 
-static void     on_timer_timeout                           (GcalTimer           *timer,
+static void     on_duration_timer_timeout                  (GcalTimer           *timer,
                                                             GcalWeatherService  *self);
 
 static gboolean get_time_day_start                         (GcalWeatherService  *self,
@@ -223,8 +223,8 @@ gcal_weather_service_finalize (GObject *object)
 
   self = (GcalWeatherService *) object;
 
-  gcal_timer_free (self->timer);
-  self->timer = NULL;
+  gcal_timer_free (self->duration_timer);
+  self->duration_timer = NULL;
 
   if (self->time_zone != NULL)
     {
@@ -424,8 +424,8 @@ gcal_weather_service_init (GcalWeatherService *self)
 {
   GNetworkMonitor *monitor; /* unowned */
 
-  self->timer = gcal_timer_new (GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT);
-  gcal_timer_set_callback (self->timer, (GCalTimerFunc) on_timer_timeout, self, NULL);
+  self->duration_timer = gcal_timer_new (GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT);
+  gcal_timer_set_callback (self->duration_timer, (GCalTimerFunc) on_duration_timer_timeout, self, NULL);
   self->time_zone = NULL;
   self->check_interval_new = GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT;
   self->check_interval_renew = GCAL_WEATHER_CHECK_INTERVAL_RENEW_DFLT;
@@ -952,7 +952,7 @@ gcal_weather_service_update_location (GcalWeatherService  *self,
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
-  if (gcal_timer_is_running (self->timer))
+  if (gcal_timer_is_running (self->duration_timer))
     stop_timer (self);
 
   if (self->gweather_info != NULL)
@@ -1317,7 +1317,7 @@ update_timeout_interval (GcalWeatherService *self)
   else
     interval = self->check_interval_new;
 
-  gcal_timer_set_default_duration (self->timer, interval);
+  gcal_timer_set_default_duration (self->duration_timer, interval);
 }
 
 
@@ -1338,7 +1338,7 @@ start_timer (GcalWeatherService  *self)
   if (g_network_monitor_get_network_available (monitor))
     {
       update_timeout_interval (self);
-      gcal_timer_start (self->timer);
+      gcal_timer_start (self->duration_timer);
     }
 }
 
@@ -1354,7 +1354,7 @@ stop_timer (GcalWeatherService  *self)
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
-  gcal_timer_stop (self->timer);
+  gcal_timer_stop (self->duration_timer);
 }
 
 
@@ -1379,7 +1379,7 @@ on_network_change (GNetworkMonitor    *monitor,
 
   g_debug ("network changed, available = %d", available);
 
-  is_running = gcal_timer_is_running (self->timer);
+  is_running = gcal_timer_is_running (self->duration_timer);
   if (available && !is_running)
     {
       if (self->gweather_info != NULL)
@@ -1438,14 +1438,14 @@ gcal_weather_service_set_check_interval_renew (GcalWeatherService *self,
 
 
 
-/* on_timer_timeout
+/* on_duration_timer_timeout
  * @self: A #GcalWeatherService.
  *
  * Handles scheduled weather report updates.
  */
 static void
-on_timer_timeout (GcalTimer          *timer,
-                  GcalWeatherService *self)
+on_duration_timer_timeout (GcalTimer          *timer,
+                           GcalWeatherService *self)
 {
   g_return_if_fail (timer != NULL);
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
@@ -1741,7 +1741,7 @@ gcal_weather_service_update (GcalWeatherService *self)
     {
       gweather_info_update (self->gweather_info);
       update_timeout_interval (self);
-      if (gcal_timer_is_running (self->timer))
-        gcal_timer_reset (self->timer);
+      if (gcal_timer_is_running (self->duration_timer))
+        gcal_timer_reset (self->duration_timer);
     }
 }
