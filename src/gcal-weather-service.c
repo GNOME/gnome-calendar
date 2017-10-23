@@ -44,7 +44,7 @@ typedef struct
 /* GcalWeatherService:
  *
  * @time_zone:               The current time zone
- * @check_interval:          Amount of seconds to wait before re-fetching weather infos.
+ * @check_interval_renew:    Amount of seconds to wait before re-fetching weather infos.
  * @location_service:        Used to monitor location changes.
  *                           Initialized by gcal_weather_service_run(),
  *                           freed by gcal_weather_service_stop().
@@ -76,7 +76,7 @@ struct _GcalWeatherService
   GTimeZone       *time_zone;            /* owned, nullable */
 
   /* timer: */
-  guint            check_interval;
+  guint            check_interval_renew;
   GcalTimer       *timer;
 
   /* locations: */
@@ -100,7 +100,7 @@ enum
   PROP_0,
   PROP_MAX_DAYS,
   PROP_TIME_ZONE,
-  PROP_CHECK_INTERVAL,
+  PROP_CHECK_INTERVAL_RENEW,
   PROP_VALID_TIMESPAN,
   PROP_NUM,
 };
@@ -157,8 +157,8 @@ static void     on_gweather_update                         (GWeatherInfo        
                                                             GcalWeatherService  *self);
 
 /* Internal weather update timer API and callbacks */
-static void     gcal_weather_service_set_check_interval    (GcalWeatherService  *self,
-                                                            guint                check_interval);
+static void     gcal_weather_service_set_check_interval_renew (GcalWeatherService *self,
+                                                               guint               check_interval);
 
 
 static gssize   get_normalized_icon_name_len               (const gchar         *str);
@@ -245,8 +245,8 @@ gcal_weather_service_get_property (GObject    *object,
   case PROP_TIME_ZONE:
     g_value_set_pointer (value, gcal_weather_service_get_time_zone (self));
     break;
-  case PROP_CHECK_INTERVAL:
-    g_value_set_uint (value, gcal_weather_service_get_check_interval (self));
+  case PROP_CHECK_INTERVAL_RENEW:
+    g_value_set_uint (value, gcal_weather_service_get_check_interval_renew (self));
     break;
   case PROP_VALID_TIMESPAN:
     g_value_set_int64 (value, gcal_weather_service_get_valid_timespan (self));
@@ -276,8 +276,8 @@ gcal_weather_service_set_property (GObject      *object,
   case PROP_TIME_ZONE:
     gcal_weather_service_set_time_zone (self, g_value_get_pointer (value));
     break;
-  case PROP_CHECK_INTERVAL:
-    gcal_weather_service_set_check_interval (self, g_value_get_uint (value));
+  case PROP_CHECK_INTERVAL_RENEW:
+    gcal_weather_service_set_check_interval_renew (self, g_value_get_uint (value));
     break;
   case PROP_VALID_TIMESPAN:
     gcal_weather_service_set_valid_timespan (self, g_value_get_int64 (value));
@@ -324,15 +324,15 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
                              G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 
   /**
-   * GcalWeatherService:check-interval:
+   * GcalWeatherService:check-interval-renew:
    *
-   * Amount of seconds to wait before re-fetching weather infos.
+   * Amount of seconds to wait before re-fetching weather information.
    * Use %0 to disable timers.
    */
   g_object_class_install_property
       (G_OBJECT_CLASS (klass),
-       PROP_CHECK_INTERVAL,
-       g_param_spec_uint ("check-interval", "check-interval", "check-interval",
+       PROP_CHECK_INTERVAL_RENEW,
+       g_param_spec_uint ("check-interval-renew", "check-interval-renew", "check-interval-renew",
                           0, G_MAXUINT, 0,
                           G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
@@ -378,7 +378,7 @@ gcal_weather_service_init (GcalWeatherService *self)
   self->timer = gcal_timer_new (600);
   gcal_timer_set_callback (self->timer, (GCalTimerFunc) on_timer_timeout, self, NULL);
   self->time_zone = NULL;
-  self->check_interval = 0;
+  self->check_interval_renew = 0;
   self->location_cancellable = g_cancellable_new ();
   self->location_service_running = FALSE;
   self->location_service = NULL;
@@ -1235,27 +1235,27 @@ static void
 update_timeout_interval (GcalWeatherService *self)
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
-  gcal_timer_set_duration (self->timer, self->check_interval);
+  gcal_timer_set_duration (self->timer, self->check_interval_renew);
 }
 
 
 
-/* gcal_weather_service_set_max_days:
+/* gcal_weather_service_set_check_interval_renew:
  * @self: The #GcalWeatherService instance.
  * @days: Number of days.
  *
  * Setter for GcalWeatherInfos:max-days.
  */
 static void
-gcal_weather_service_set_check_interval (GcalWeatherService *self,
-                                         guint               interval)
+gcal_weather_service_set_check_interval_renew (GcalWeatherService *self,
+                                               guint               interval)
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
-  self->check_interval = interval;
+  self->check_interval_renew = interval;
   update_timeout_interval (self);
 
-  g_object_notify ((GObject*) self, "check-interval");
+  g_object_notify ((GObject*) self, "check-interval-renew");
 }
 
 
@@ -1286,7 +1286,7 @@ on_timer_timeout (GcalTimer          *timer,
 /**
  * gcal_weather_service_new:
  * @max_days:       mumber of days to fetch forecasts for.
- * @check_interval: seconds between checks for new weather information or %0 to disable checks.
+ * @check_interval_renew: seconds between checks for new weather information or %0 to disable checks.
  *
  * Creates a new #GcalWeatherService. This service listens
  * to location and weather changes and reports them.
@@ -1296,13 +1296,13 @@ on_timer_timeout (GcalTimer          *timer,
 GcalWeatherService *
 gcal_weather_service_new (GTimeZone *time_zone,
                           guint      max_days,
-                          guint      check_interval,
+                          guint      check_interval_renew,
                           gint64     valid_timespan)
 {
   return g_object_new (GCAL_TYPE_WEATHER_SERVICE,
                        "time-zone", time_zone,
                        "max-days", max_days,
-                       "check-interval", check_interval,
+                       "check-interval-renew", check_interval_renew,
                        "valid-timespan", valid_timespan,
                        NULL);
 }
@@ -1478,17 +1478,17 @@ gcal_weather_service_set_time_zone (GcalWeatherService *self,
 
 
 /**
- * gcal_weather_service_get_max_days:
+ * gcal_weather_service_get_check_interval_renew:
  * @self: The #GcalWeatherService instance.
  *
  * Getter for #GcalWeatherService:max-days.
  */
 guint
-gcal_weather_service_get_check_interval (GcalWeatherService *self)
+gcal_weather_service_get_check_interval_renew (GcalWeatherService *self)
 {
   g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), 0);
 
-  return self->check_interval;
+  return self->check_interval_renew;
 }
 
 

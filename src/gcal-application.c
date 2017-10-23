@@ -35,9 +35,9 @@
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 
-#define WEATHER_CHECK_INTERVAL (2 * 60 * 60)  /* seconds */
-#define WEATHER_VALID_TIMESPAN (24 * 60 * 60) /* seconds */
-#define FORECAST_MAX_DAYS      3
+#define WEATHER_CHECK_INTERVAL_RENEW (2 * 60 * 60)  /* seconds */
+#define WEATHER_VALID_TIMESPAN       (24 * 60 * 60) /* seconds */
+#define FORECAST_MAX_DAYS             3
 
 struct _GcalApplication
 {
@@ -425,7 +425,7 @@ gcal_application_init (GcalApplication *self)
   g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (process_sources), self);
   self->weather_service = gcal_weather_service_new (NULL, /* in prep. for configurable time zones */
                                                     FORECAST_MAX_DAYS,
-                                                    WEATHER_CHECK_INTERVAL,
+                                                    WEATHER_CHECK_INTERVAL_RENEW,
                                                     WEATHER_VALID_TIMESPAN);
   self->search_provider = gcal_shell_search_provider_new ();
   gcal_shell_search_provider_connect (self->search_provider, self->manager);

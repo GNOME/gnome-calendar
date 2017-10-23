@@ -51,7 +51,7 @@ guint               gcal_weather_service_get_max_days       (GcalWeatherService 
 
 gint64              gcal_weather_service_get_valid_timespan (GcalWeatherService *self);
 
-guint               gcal_weather_service_get_check_interval (GcalWeatherService *self);
+guint               gcal_weather_service_get_check_interval_renew (GcalWeatherService *self);
 
 GSList*             gcal_weather_service_get_weather_infos  (GcalWeatherService *self);
 
