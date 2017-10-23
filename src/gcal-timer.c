@@ -262,8 +262,8 @@ gcal_timer_is_running (GcalTimer *self)
  * Changes the duration between two events.
  */
 void
-gcal_timer_set_duration (GcalTimer *self,
-                         gint64     duration)
+gcal_timer_set_default_duration (GcalTimer *self,
+                                 gint64     duration)
 {
   gint64 now;
 
@@ -281,6 +281,21 @@ gcal_timer_set_duration (GcalTimer *self,
     schedule_next (self);
 }
 
+
+
+/**
+ * gcal_timer_get_default_duration:
+ * @self: The #GcalTimer.
+ *
+ * Returns the default duration.
+ */
+gint64
+gcal_timer_get_default_duration (GcalTimer *self)
+{
+  g_return_val_if_fail (self != NULL, -1);
+
+  return self->default_duration;
+}
 
 
 /**

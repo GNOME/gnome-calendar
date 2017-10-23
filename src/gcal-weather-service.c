@@ -1235,7 +1235,7 @@ static void
 update_timeout_interval (GcalWeatherService *self)
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
-  gcal_timer_set_duration (self->timer, self->check_interval_renew);
+  gcal_timer_set_default_duration (self->timer, self->check_interval_renew);
 }
 
 

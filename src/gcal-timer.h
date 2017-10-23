@@ -38,8 +38,10 @@ void            gcal_timer_stop                   (GcalTimer       *self);
 
 gboolean        gcal_timer_is_running             (GcalTimer *self);
 
-void            gcal_timer_set_duration           (GcalTimer       *self,
+void            gcal_timer_set_default_duration   (GcalTimer       *self,
                                                    gint64           duration);
+
+gint64          gcal_timer_get_default_duration   (GcalTimer *self);
 
 void            gcal_timer_set_callback           (GcalTimer       *self,
                                                    GCalTimerFunc    func,
