@@ -649,25 +649,25 @@ get_time_day_start (GcalWeatherService *self,
                     gint64             *ret_unix,
                     gint64             *ret_unix_exact)
 {
+  g_autoptr (GTimeZone) zone = NULL;
   g_autoptr (GDateTime) now = NULL;
   g_autoptr (GDateTime) day = NULL;
-
 
   g_return_val_if_fail (self != NULL, FALSE);
   g_return_val_if_fail (ret_date != NULL, FALSE);
   g_return_val_if_fail (ret_unix != NULL, FALSE);
   g_return_val_if_fail (ret_unix_exact != NULL, FALSE);
 
-  now = (self->time_zone == NULL)
-          ? g_date_time_new_now_local ()
-          : g_date_time_new_now (self->time_zone);
-  day = g_date_time_add_full (now,
-                              0, /* years */
-                              0, /* months */
-                              0, /* days */
-                              - g_date_time_get_hour (now),
-                              - g_date_time_get_minute (now),
-                              - g_date_time_get_seconds (now));
+  zone = (self->time_zone == NULL)
+          ? g_time_zone_new_local ()
+          : g_time_zone_ref (self->time_zone);
+
+  now = g_date_time_new_now (zone);
+  day = g_date_time_new (zone,
+                         g_date_time_get_year (now),
+                         g_date_time_get_month (now),
+                         g_date_time_get_day_of_month (now),
+                         0, 0, 0);
 
   g_date_set_dmy (ret_date,
                   g_date_time_get_day_of_month (day),
