@@ -35,7 +35,7 @@ typedef struct _GcalTimer
 } GcalTimer;
 
 
-/* CallbackWrapper:
+/* CbWrapperData:
  * @timer: The timer the callback applies to.
  * @callback: Original callback.
  * @destroy_notify: Original user-data destroy function.
@@ -50,16 +50,16 @@ typedef struct
   GCalTimerFunc   callback;
   GDestroyNotify  destroy_notify;
   gpointer        data;
-} CallbackWrapper;
+} CbWrapperData;
 
 
-static void     timer_func_destroy_notify_wrapper (CallbackWrapper *wrapper);
+static void     timer_func_destroy_notify_wrapper (CbWrapperData   *wrapper);
 
-static gboolean timer_func_wrapper                (CallbackWrapper *wrapper);
+static gboolean timer_func_wrapper                (CbWrapperData   *wrapper);
 
 static gboolean timer_source_dispatch             (GcalTimer       *self,
                                                    GSourceFunc      callback,
-                                                   CallbackWrapper *user_data);
+                                                   CbWrapperData   *user_data);
 
 static void     schedule_next                     (GcalTimer       *self);
 
@@ -70,7 +70,7 @@ static void     timer_source_finalize             (GcalTimer       *self);
 
 /*< private >*/
 static void
-timer_func_destroy_notify_wrapper (CallbackWrapper *wrapper)
+timer_func_destroy_notify_wrapper (CbWrapperData *wrapper)
 {
   g_return_if_fail (wrapper != NULL);
 
@@ -83,7 +83,7 @@ timer_func_destroy_notify_wrapper (CallbackWrapper *wrapper)
 
 
 static gboolean
-timer_func_wrapper (CallbackWrapper *wrapper)
+timer_func_wrapper (CbWrapperData *wrapper)
 {
   g_return_val_if_fail (wrapper != NULL, G_SOURCE_REMOVE);
 
@@ -98,7 +98,7 @@ timer_func_wrapper (CallbackWrapper *wrapper)
 static gboolean
 timer_source_dispatch (GcalTimer       *self,
                        GSourceFunc      user_callback,
-                       CallbackWrapper *user_data)
+                       CbWrapperData   *user_data)
 {
   gboolean result = G_SOURCE_CONTINUE;
 
@@ -314,12 +314,12 @@ gcal_timer_set_callback (GcalTimer      *self,
                          gpointer        data,
                          GDestroyNotify  notify)
 {
-  CallbackWrapper *wrapper; /* owned */
+  CbWrapperData *wrapper; /* owned */
 
   g_return_if_fail (self != NULL);
   g_return_if_fail (func != NULL);
 
-  wrapper = g_new0 (CallbackWrapper, 1);
+  wrapper = g_new0 (CbWrapperData, 1);
   wrapper->timer = self;
   wrapper->callback = func;
   wrapper->destroy_notify = notify;
