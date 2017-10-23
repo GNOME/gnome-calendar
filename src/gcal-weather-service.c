@@ -16,7 +16,7 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define DESKTOP_FILE_NAME  "org.gnome.Calendar"
+#define DESKTOP_FILE_NAME         "org.gnome.Calendar"
 
 #include <geocode-glib/geocode-glib.h>
 #include <geoclue.h>
@@ -47,6 +47,7 @@ typedef struct
  * @check_interval_new:      Amount of seconds to wait before fetching weather infos.
  * @check_interval_renew:    Amount of seconds to wait before re-fetching weather information.
  * @timer                    Timer used to request weather report updates.
+ * @network_changed_sid      "network-changed" signal ID.
  * @location_service:        Used to monitor location changes.
  *                           Initialized by gcal_weather_service_run(),
  *                           freed by gcal_weather_service_stop().
@@ -81,6 +82,9 @@ struct _GcalWeatherService
   guint            check_interval_new;
   guint            check_interval_renew;
   GcalTimer       *timer;
+
+  /* network monitoring */
+  gulong           network_changed_sid;
 
   /* locations: */
   GClueSimple     *location_service;     /* owned, nullable */
@@ -127,6 +131,10 @@ static void     update_timeout_interval                    (GcalWeatherService  
 static void     start_timer                                (GcalWeatherService  *self);
 
 static void     stop_timer                                 (GcalWeatherService  *self);
+
+static void     on_network_change                          (GNetworkMonitor     *monitor,
+                                                            gboolean             available,
+                                                            GcalWeatherService  *self);
 
 
 /* Internal location API and callbacks: */
@@ -234,6 +242,14 @@ gcal_weather_service_finalize (GObject *object)
 
   if (self->gweather_info != NULL)
     g_clear_object (&self->gweather_info);
+
+  if (self->network_changed_sid > 0)
+    {
+      GNetworkMonitor *monitor; /* unowned */
+
+      monitor = g_network_monitor_get_default ();
+      g_signal_handler_disconnect (monitor, self->network_changed_sid);
+    }
 
   G_OBJECT_CLASS (gcal_weather_service_parent_class)->finalize (object);
 }
@@ -406,6 +422,8 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
 static void
 gcal_weather_service_init (GcalWeatherService *self)
 {
+  GNetworkMonitor *monitor; /* unowned */
+
   self->timer = gcal_timer_new (GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT);
   gcal_timer_set_callback (self->timer, (GCalTimerFunc) on_timer_timeout, self, NULL);
   self->time_zone = NULL;
@@ -420,6 +438,12 @@ gcal_weather_service_init (GcalWeatherService *self)
   self->gweather_info = NULL;
   self->weather_service_running = FALSE;
   self->max_days = 0;
+
+  monitor = g_network_monitor_get_default ();
+  self->network_changed_sid = g_signal_connect (monitor,
+                                                "network-changed",
+                                                (GCallback) on_network_change,
+                                                self);
 }
 
 
@@ -1306,10 +1330,16 @@ update_timeout_interval (GcalWeatherService *self)
 static void
 start_timer (GcalWeatherService  *self)
 {
+  GNetworkMonitor *monitor; /* unowned */
+
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
-  update_timeout_interval (self);
-  gcal_timer_start (self->timer);
+  monitor = g_network_monitor_get_default ();
+  if (g_network_monitor_get_network_available (monitor))
+    {
+      update_timeout_interval (self);
+      gcal_timer_start (self->timer);
+    }
 }
 
 
@@ -1325,6 +1355,42 @@ stop_timer (GcalWeatherService  *self)
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
   gcal_timer_stop (self->timer);
+}
+
+
+
+/* on_network_change:
+ * @monitor:   The emitting #GNetworkMonitor
+ * @available: The current value of “network-available”
+ * @self:      The #GcalWeatherService instance.
+ *
+ * Starts and stops timer based on monitored network
+ * changes.
+ */
+static void
+on_network_change (GNetworkMonitor    *monitor,
+                   gboolean            available,
+                   GcalWeatherService *self)
+{
+  gboolean is_running;
+
+  g_return_if_fail (G_IS_NETWORK_MONITOR (monitor));
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+
+  g_debug ("network changed, available = %d", available);
+
+  is_running = gcal_timer_is_running (self->timer);
+  if (available && !is_running)
+    {
+      if (self->gweather_info != NULL)
+        gweather_info_update (self->gweather_info);
+
+      start_timer (self);
+    }
+  else if (!available && is_running)
+    {
+      stop_timer (self);
+    }
 }
 
 
