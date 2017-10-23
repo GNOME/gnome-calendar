@@ -552,7 +552,7 @@ gcal_search_view_constructed (GObject *object)
   gtk_list_box_set_sort_func (GTK_LIST_BOX (view->listbox), (GtkListBoxSortFunc) sort_by_event, object, NULL);
   gtk_list_box_set_header_func (GTK_LIST_BOX (view->listbox), display_header_func, NULL, NULL);
 
-  // gchar* -> RowEventData*
+  /* gchar* -> RowEventData* */
   view->uuid_to_event = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) free_row_data);
 
   /* don't fill the list with all events on startup */

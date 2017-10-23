@@ -515,7 +515,7 @@ on_view_action_activated (GSimpleAction *action,
 
   view = g_variant_get_int32 (param);
 
-  // -1 means next view
+  /* -1 means next view */
   if (view == -1)
     view = ++(window->active_view);
   else if (view == -2)
@@ -2073,10 +2073,11 @@ get_checked_fixed_location (GcalWindow *self)
 
   location = gweather_location_entry_get_location (self->location_entry);
 
-  // NOTE: This check feels shabby. However,
-  // I couldn't find a better one without iterating
-  // the model. has-custom-text does not work properly.
-  // Lets go with it for now.
+  /* NOTE: This check feels shabby. However,
+   * I couldn't find a better one without iterating
+   * the model. has-custom-text does not work properly.
+   * Lets go with it for now.
+   */
   if (location != NULL && gweather_location_get_name (location) != NULL)
     return location;
 

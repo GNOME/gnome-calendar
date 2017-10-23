@@ -1379,7 +1379,7 @@ gcal_week_header_draw (GtkWidget      *widget,
               gint icon_flags;
 
               theme = gtk_icon_theme_get_default ();
-              // TODO: catch icon theme changes
+              /* TODO: catch icon theme changes */
 
               icon_flags = ltr? GTK_ICON_LOOKUP_FORCE_SIZE | GTK_ICON_LOOKUP_DIR_LTR
                               : GTK_ICON_LOOKUP_FORCE_SIZE | GTK_ICON_LOOKUP_DIR_RTL;

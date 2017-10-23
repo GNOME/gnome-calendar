@@ -793,7 +793,7 @@ gcal_manager_constructed (GObject *object)
                                          g_object_unref, (GDestroyNotify) free_unit_data);
 
   /* load GOA client */
-  goa_client_new (NULL, // we won't really cancel it
+  goa_client_new (NULL, /* we won't really cancel it */
                   (GAsyncReadyCallback) gcal_manager_client_ready_cb,
                   object);
 

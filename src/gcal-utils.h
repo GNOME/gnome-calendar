@@ -165,4 +165,4 @@ gboolean        gcal_translate_child_window_position            (GtkWidget      
                                                                  gdouble              src_y,
                                                                  gdouble             *real_x,
                                                                  gdouble             *real_y);
-#endif // __GCAL_UTILS_H__
+#endif /* __GCAL_UTILS_H__ */

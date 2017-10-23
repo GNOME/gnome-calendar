@@ -1018,7 +1018,7 @@ gcal_weather_service_update_gclue_location (GcalWeatherService  *self,
       latitude = gclue_location_get_latitude (location);
       longitude = gclue_location_get_longitude (location);
 
-      // nearest-city works more closely to gnome weather.
+      /* nearest-city works more closely to gnome weather. */
       wworld = gweather_location_get_world ();
       wlocation = gweather_location_find_nearest_city (wworld, latitude, longitude);
     }
