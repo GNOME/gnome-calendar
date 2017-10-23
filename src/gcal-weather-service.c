@@ -16,7 +16,8 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
 
-#define DESKTOP_FILE_NAME         "org.gnome.Calendar"
+#define G_LOG_DOMAIN      "Weather"
+#define DESKTOP_FILE_NAME "org.gnome.Calendar"
 
 #include <geocode-glib/geocode-glib.h>
 #include <geoclue.h>
