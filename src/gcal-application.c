@@ -28,16 +28,13 @@
 #include "gcal-debug.h"
 #include "gcal-log.h"
 #include "gcal-shell-search-provider.h"
+#include "gcal-weather-service.h"
 #include "gcal-window.h"
 
 #include <glib.h>
 #include <glib-object.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>
-
-#define WEATHER_CHECK_INTERVAL_RENEW (3 * 60 * 60)  /* seconds */
-#define WEATHER_VALID_TIMESPAN       (24 * 60 * 60) /* seconds */
-#define FORECAST_MAX_DAYS             3
 
 struct _GcalApplication
 {
@@ -424,9 +421,10 @@ gcal_application_init (GcalApplication *self)
   g_signal_connect_swapped (self->manager, "source-added", G_CALLBACK (process_sources), self);
   g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (process_sources), self);
   self->weather_service = gcal_weather_service_new (NULL, /* in prep. for configurable time zones */
-                                                    FORECAST_MAX_DAYS,
-                                                    WEATHER_CHECK_INTERVAL_RENEW,
-                                                    WEATHER_VALID_TIMESPAN);
+                                                    GCAL_WEATHER_FORECAST_MAX_DAYS_DFLT,
+                                                    GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT,
+                                                    GCAL_WEATHER_CHECK_INTERVAL_RENEW_DFLT,
+                                                    GCAL_WEATHER_VALID_TIMESPAN_DFLT);
   self->search_provider = gcal_shell_search_provider_new ();
   gcal_shell_search_provider_connect (self->search_provider, self->manager);
 }
