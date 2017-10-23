@@ -47,6 +47,7 @@ typedef struct
  * @check_interval_new:      Amount of seconds to wait before fetching weather infos.
  * @check_interval_renew:    Amount of seconds to wait before re-fetching weather information.
  * @duration_timer           Timer used to request weather report updates.
+ * @midnight_timer           Timer used to update weather reports at midnight.
  * @network_changed_sid      "network-changed" signal ID.
  * @location_service:        Used to monitor location changes.
  *                           Initialized by gcal_weather_service_run(),
@@ -82,6 +83,7 @@ struct _GcalWeatherService
   guint            check_interval_new;
   guint            check_interval_renew;
   GcalTimer       *duration_timer;
+  GcalTimer       *midnight_timer;
 
   /* network monitoring */
   gulong           network_changed_sid;
@@ -127,6 +129,8 @@ G_DEFINE_TYPE (GcalWeatherService, gcal_weather_service, G_TYPE_OBJECT)
 
 /* Timer Helpers: */
 static void     update_timeout_interval                    (GcalWeatherService  *self);
+
+static void     schedule_midnight                          (GcalWeatherService  *self);
 
 static void     start_timer                                (GcalWeatherService  *self);
 
@@ -192,6 +196,9 @@ static gint     get_icon_name_sortkey                      (const gchar         
 static void     on_duration_timer_timeout                  (GcalTimer           *timer,
                                                             GcalWeatherService  *self);
 
+static void     on_midnight_timer_timeout                  (GcalTimer           *timer,
+                                                            GcalWeatherService  *self);
+
 static gboolean get_time_day_start                         (GcalWeatherService  *self,
                                                             GDate               *ret_date,
                                                             gint64              *ret_unix,
@@ -225,6 +232,9 @@ gcal_weather_service_finalize (GObject *object)
 
   gcal_timer_free (self->duration_timer);
   self->duration_timer = NULL;
+
+  gcal_timer_free (self->midnight_timer);
+  self->midnight_timer = NULL;
 
   if (self->time_zone != NULL)
     {
@@ -426,6 +436,8 @@ gcal_weather_service_init (GcalWeatherService *self)
 
   self->duration_timer = gcal_timer_new (GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT);
   gcal_timer_set_callback (self->duration_timer, (GCalTimerFunc) on_duration_timer_timeout, self, NULL);
+  self->midnight_timer = gcal_timer_new (24*60*60);
+  gcal_timer_set_callback (self->midnight_timer, (GCalTimerFunc) on_midnight_timer_timeout, self, NULL);
   self->time_zone = NULL;
   self->check_interval_new = GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT;
   self->check_interval_renew = GCAL_WEATHER_CHECK_INTERVAL_RENEW_DFLT;
@@ -1305,6 +1317,12 @@ on_gweather_update (GWeatherInfo       *info,
 
 
 
+/* update_timeout_interval:
+ * @self: The #GcalWeatherService instance.
+ *
+ * Selects the right duration timer timeout based
+ * on locally-stored weather information.
+ */
 static void
 update_timeout_interval (GcalWeatherService *self)
 {
@@ -1318,6 +1336,46 @@ update_timeout_interval (GcalWeatherService *self)
     interval = self->check_interval_new;
 
   gcal_timer_set_default_duration (self->duration_timer, interval);
+}
+
+
+
+/* schedule_midnight:
+ * @self: The #GcalWeatherService instance.
+ *
+ * Sets the midnight timer timeout to midnight.
+ * The timer needs to be reset when it
+ * emits.
+ */
+static void
+schedule_midnight (GcalWeatherService  *self)
+{
+  g_autoptr (GTimeZone) zone = NULL;
+  g_autoptr (GDateTime) now = NULL;
+  g_autoptr (GDateTime) tom = NULL;
+  g_autoptr (GDateTime) mid = NULL;
+  gint64 real_now;
+  gint64 real_mid;
+
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+
+  zone = (self->time_zone == NULL)
+           ? g_time_zone_new_local ()
+           : g_time_zone_ref (self->time_zone);
+
+  now = g_date_time_new_now (zone);
+  tom = g_date_time_add_days (now, 1);
+  mid = g_date_time_new (zone,
+                         g_date_time_get_year (tom),
+                         g_date_time_get_month (tom),
+                         g_date_time_get_day_of_month (tom),
+                         0, 0, 0);
+
+  real_mid = g_date_time_to_unix (mid);
+  real_now = g_date_time_to_unix (now);
+
+  gcal_timer_set_default_duration (self->midnight_timer,
+                                   real_mid - real_now);
 }
 
 
@@ -1339,6 +1397,9 @@ start_timer (GcalWeatherService  *self)
     {
       update_timeout_interval (self);
       gcal_timer_start (self->duration_timer);
+
+      schedule_midnight (self);
+      gcal_timer_start (self->duration_timer);
     }
 }
 
@@ -1355,6 +1416,7 @@ stop_timer (GcalWeatherService  *self)
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
   gcal_timer_stop (self->duration_timer);
+  gcal_timer_stop (self->midnight_timer);
 }
 
 
@@ -1437,7 +1499,6 @@ gcal_weather_service_set_check_interval_renew (GcalWeatherService *self,
 
 
 
-
 /* on_duration_timer_timeout
  * @self: A #GcalWeatherService.
  *
@@ -1452,6 +1513,29 @@ on_duration_timer_timeout (GcalTimer          *timer,
 
   if (self->gweather_info != NULL)
     gweather_info_update (self->gweather_info);
+}
+
+
+
+/* on_midnight_timer_timeout
+ * @self: A #GcalWeatherService.
+ *
+ * Handles scheduled weather report updates.
+ */
+static void
+on_midnight_timer_timeout (GcalTimer          *timer,
+                           GcalWeatherService *self)
+{
+  g_return_if_fail (timer != NULL);
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+
+  if (self->gweather_info != NULL)
+    gweather_info_update (self->gweather_info);
+
+  if (gcal_timer_is_running (self->duration_timer))
+    gcal_timer_reset (self->duration_timer);
+
+  schedule_midnight (self);
 }
 
 
@@ -1649,6 +1733,9 @@ gcal_weather_service_set_time_zone (GcalWeatherService *self,
 
       /* make sure we provide correct weather infos */
       gweather_info_update (self->gweather_info);
+
+      /* make sure midnight is timed correctly: */
+      schedule_midnight (self);
 
       g_object_notify ((GObject*) self, "time-zone");
     }
