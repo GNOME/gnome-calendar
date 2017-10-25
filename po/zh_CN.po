@@ -3,15 +3,18 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # tuhaihe <1132321739qq@gmail.com>, 2013.
 # Cheng Lu <dawndiy.dev@gmail.com>, 2016.
+# Bin Li <binli@gnome.org>, 2016.
+# Qizhi Zhou <zhouqz@yahoo.com>, 2016.
+# Dinzhong Chen <wsxy162@gmail.com>, 2017.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-10-09 13:15+0000\n"
-"PO-Revision-Date: 2016-10-10 16:23+0800\n"
-"Last-Translator: Cheng Lu <dawndiy.dev@gmail.com>\n"
+"POT-Creation-Date: 2017-10-25 22:30+0800\n"
+"PO-Revision-Date: 2017-03-22 02:07+0800\n"
+"Last-Translator: Dingzhong Chen <wsxy162@gmail.com>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -19,632 +22,865 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Launchpad-Export-Date: 2016-03-22 14:52+0000\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Poedit 1.8.12\n"
 
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
-#: ../data/org.gnome.Calendar.desktop.in.in.h:1
-#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:481
-msgid "Calendar"
-msgstr "日历"
-
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
-msgid "Calendar for GNOME"
-msgstr "GNOME 日历"
-
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
-msgid ""
-"GNOME Calendar is a simple and beautiful calendar application designed to "
-"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr ""
-"GNOME 日历设计简洁美观，符合 GNOME 桌面风格。通过重用组件，日历能够很好地与 "
-"GNOME 生态系统结合。"
-
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
-msgid ""
-"We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You'll feel comfortable using "
-"Calendar, like you've been using it for ages!"
-msgstr ""
-"我们的目标是找到很好的功能和用户为中心的易用性之间的完美平衡。既不多余，也不"
-"缺乏。使用日历，您会感觉很舒服！"
-
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
-#: ../data/ui/window.ui.h:6
-msgid "Search for events"
-msgstr "搜索事件"
-
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
-msgid "Calendar management"
-msgstr "日历管理 "
-
-#: ../data/org.gnome.Calendar.desktop.in.in.h:2
-msgid "Access, and manage calendar"
-msgstr "访问并管理日历"
-
-#: ../data/org.gnome.Calendar.desktop.in.in.h:3
-msgid "Calendar;Event;Reminder;"
-msgstr "Calendar;Event;Reminder;日历;事件;提醒;"
-
-#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+#: ../data/org.gnome.calendar.gschema.xml.h:1
 msgid "Window maximized"
 msgstr "窗口最大化"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+#: ../data/org.gnome.calendar.gschema.xml.h:2
 msgid "Window maximized state"
 msgstr "窗口最大化状态"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+#: ../data/org.gnome.calendar.gschema.xml.h:3
 msgid "Window size"
 msgstr "窗口大小"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+#: ../data/org.gnome.calendar.gschema.xml.h:4
 msgid "Window size (width and height)."
-msgstr "窗口大小(宽度和高度)。"
+msgstr "窗口大小（宽度和高度）。"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+#: ../data/org.gnome.calendar.gschema.xml.h:5
 msgid "Window position"
 msgstr "窗口位置"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+#: ../data/org.gnome.calendar.gschema.xml.h:6
 msgid "Window position (x and y)."
-msgstr "窗口位置(水平和竖直)。"
+msgstr "窗口位置（水平和垂直）。"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:7
+#: ../data/org.gnome.calendar.gschema.xml.h:7
 msgid "Type of the active view"
 msgstr "活动视图类型"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:8
+#: ../data/org.gnome.calendar.gschema.xml.h:8
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "活动窗口视图类型，默认值为：月份视图"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:9
-msgid "List of the disabled sources"
-msgstr "已禁用源列表"
-
-#: ../data/org.gnome.calendar.gschema.xml.in.h:10
-msgid "Sources disabled last time Calendar ran"
-msgstr "上次运行日历时所禁用的源"
-
-#: ../data/ui/alarm-row.ui.h:1
-msgid "Toggles the sound of the alarm"
-msgstr "切换闹钟的声音"
-
-#: ../data/ui/alarm-row.ui.h:2
-msgid "Remove the alarm"
-msgstr "删除闹钟"
-
-#: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1116
-msgid "Cancel"
-msgstr "取消"
-
-#: ../data/ui/edit-dialog.ui.h:2
-msgid "Click to select the event's agenda"
-msgstr "单击选中事件的议程"
-
-#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:564
-msgid "Done"
-msgstr "完成"
-
-#: ../data/ui/edit-dialog.ui.h:4
-msgid "Title"
-msgstr "标题"
-
-#: ../data/ui/edit-dialog.ui.h:5
-msgid "Date"
-msgstr "日期"
-
-#: ../data/ui/edit-dialog.ui.h:6
-msgid "Reminders"
-msgstr "提醒"
-
-#: ../data/ui/edit-dialog.ui.h:7
-msgid "Notes"
-msgstr "备注"
-
-#: ../data/ui/edit-dialog.ui.h:8 ../data/ui/source-dialog.ui.h:17
-msgid "Location"
-msgstr "位置"
-
-#: ../data/ui/edit-dialog.ui.h:9
-msgid "Time"
-msgstr "时间"
-
-#: ../data/ui/edit-dialog.ui.h:10
-msgid "All Day"
-msgstr "全天"
-
-#: ../data/ui/edit-dialog.ui.h:11
-msgid "Add reminder…"
-msgstr "添加提醒..."
-
-#: ../data/ui/edit-dialog.ui.h:12
-msgid "Delete Event"
-msgstr "删除事件"
-
-#: ../data/ui/edit-dialog.ui.h:13
-msgid "5 minutes"
-msgstr "5 分钟"
-
-#: ../data/ui/edit-dialog.ui.h:14
-msgid "10 minutes"
-msgstr "10 分钟"
-
-#: ../data/ui/edit-dialog.ui.h:15
-msgid "30 minutes"
-msgstr "30 分钟"
-
-#: ../data/ui/edit-dialog.ui.h:16
-msgid "1 hour"
-msgstr "1 小时"
-
-#: ../data/ui/edit-dialog.ui.h:17
-msgid "1 day"
-msgstr "1 天"
-
-#: ../data/ui/edit-dialog.ui.h:18
-msgid "2 days"
-msgstr "2 天"
-
-#: ../data/ui/edit-dialog.ui.h:19
-msgid "3 days"
-msgstr "3 天"
-
-#: ../data/ui/edit-dialog.ui.h:20
-msgid "1 week"
-msgstr "1 周"
-
-#: ../data/ui/help-overlay.ui.h:1
-msgctxt "shortcut window"
-msgid "General"
-msgstr "通用"
-
-#: ../data/ui/help-overlay.ui.h:2
-msgctxt "shortcut window"
-msgid "New event"
-msgstr "新事件"
-
-#: ../data/ui/help-overlay.ui.h:3
-msgctxt "shortcut window"
-msgid "Close window"
-msgstr "关闭窗口"
-
-#: ../data/ui/help-overlay.ui.h:4
-msgctxt "shortcut window"
-msgid "Search"
-msgstr "搜索"
-
-#: ../data/ui/help-overlay.ui.h:5
-msgctxt "shortcut window"
-msgid "Show help"
-msgstr "显示帮助"
-
-#: ../data/ui/help-overlay.ui.h:6
-msgctxt "shortcut window"
-msgid "Shortcuts"
-msgstr "快捷键"
-
-#: ../data/ui/help-overlay.ui.h:7
-msgctxt "shortcut window"
-msgid "Navigation"
-msgstr "导航 、"
-
-#: ../data/ui/help-overlay.ui.h:8
-msgctxt "shortcut window"
-msgid "Go back"
-msgstr "返回"
-
-#: ../data/ui/help-overlay.ui.h:9
-msgctxt "shortcut window"
-msgid "Go forward"
-msgstr "前进"
-
-#: ../data/ui/help-overlay.ui.h:10
-msgctxt "shortcut window"
-msgid "Show today"
-msgstr "显示今天"
-
-#: ../data/ui/help-overlay.ui.h:11
-msgctxt "shortcut window"
-msgid "Next view"
-msgstr "下一视图"
-
-#: ../data/ui/help-overlay.ui.h:12
-msgctxt "shortcut window"
-msgid "Previous view"
-msgstr "上一视图"
-
-#: ../data/ui/help-overlay.ui.h:13
-msgctxt "shortcut window"
-msgid "View"
-msgstr "视图"
-
-#: ../data/ui/help-overlay.ui.h:14
-msgctxt "shortcut window"
-msgid "Month view"
-msgstr "月视图"
-
-#: ../data/ui/help-overlay.ui.h:15
-msgctxt "shortcut window"
-msgid "Year view"
-msgstr "年视图"
-
-#: ../data/ui/menus.ui.h:1
-msgid "Add Eve_nt…"
-msgstr "添加事件(_N)..."
-
-#: ../data/ui/menus.ui.h:2
-msgid "_Search…"
-msgstr "搜索(_S)..."
-
-#: ../data/ui/menus.ui.h:3
-msgid "_Calendars…"
-msgstr "日历(_C)..."
-
-#: ../data/ui/menus.ui.h:4
-msgid "_Keyboard Shortcuts"
-msgstr "键盘快捷键(_K)"
-
-#: ../data/ui/menus.ui.h:5
-msgid "_About"
-msgstr "关于(_A)"
-
-#: ../data/ui/menus.ui.h:6
-msgid "_Quit"
-msgstr "退出(_Q)"
-
-#: ../data/ui/menus.ui.h:7
-msgid "_Synchronize"
-msgstr "同步(_S)"
-
-#: ../data/ui/menus.ui.h:8
-msgid "From Web…"
-msgstr "从网络…"
-
-#: ../data/ui/menus.ui.h:9
-msgid "New Local Calendar…"
-msgstr "新本地日历..."
-
-#: ../data/ui/menus.ui.h:10
-msgid "From File…"
-msgstr "从文件…"
-
-#: ../data/ui/quick-add-popover.ui.h:1
-msgid "Edit Details…"
-msgstr "编辑细节…"
-
-#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
-msgid "Add"
-msgstr "添加"
-
-#: ../data/ui/search-view.ui.h:1
-msgid "No results found"
-msgstr "未发现结果"
-
-#: ../data/ui/search-view.ui.h:2
-msgid "Try a different search"
-msgstr "尝试不同的搜索"
-
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1123
-#: ../src/gcal-window.c:1127
-msgid "Undo"
-msgstr "撤消"
-
-#: ../data/ui/source-dialog.ui.h:2
-msgid "Online Accounts"
-msgstr "在线账户"
-
-#: ../data/ui/source-dialog.ui.h:3
-msgid "Open online account settings"
-msgstr "打开在线账户设置"
-
-#: ../data/ui/source-dialog.ui.h:4
-msgid "Google"
-msgstr "Google"
-
-#: ../data/ui/source-dialog.ui.h:5
-msgid "Click to set up"
-msgstr "点击设置"
-
-#: ../data/ui/source-dialog.ui.h:6
-msgid "ownCloud"
-msgstr "ownCloud"
-
-#: ../data/ui/source-dialog.ui.h:7
-msgid "Microsoft Exchange"
-msgstr "微软 Exchange"
-
-#: ../data/ui/source-dialog.ui.h:8
-msgid "Calendars"
-msgstr "日历"
-
-#: ../data/ui/source-dialog.ui.h:10
-msgid "Overview"
-msgstr "概述"
-
-#: ../data/ui/source-dialog.ui.h:11
-msgid "Add new events to this calendar by default"
-msgstr "默认情况下将新事件添加到该日历中 "
-
-#: ../data/ui/source-dialog.ui.h:12
-msgid "Remove Calendar"
-msgstr "删除日历"
-
-#: ../data/ui/source-dialog.ui.h:13
-msgid "Display calendar"
-msgstr "显示日历 "
-
-#: ../data/ui/source-dialog.ui.h:14
-msgid "Calendar name"
-msgstr "日历名称"
-
-#: ../data/ui/source-dialog.ui.h:15
-msgid "Color"
-msgstr "颜色"
-
-#: ../data/ui/source-dialog.ui.h:16
-msgid "Account"
-msgstr "账户"
-
-#: ../data/ui/source-dialog.ui.h:18
-msgid "Settings"
-msgstr "设置"
-
-#: ../data/ui/source-dialog.ui.h:19
-msgid "Edit Calendar"
-msgstr "编辑日历"
-
-#: ../data/ui/source-dialog.ui.h:20
-msgid ""
-"Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of your online accounts, you can add it through the <a href="
-"\"GOA\">online account settings</a>."
-msgstr ""
-"输入您要添加的日历地址。如果您是在线账户，可以通过<a href=\"GOA\">在线帐户设"
-"置</a>来添加。"
-
-#: ../data/ui/source-dialog.ui.h:21
-msgid "Calendar Address"
-msgstr "日历地址"
-
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2202
-#: ../src/gcal-source-dialog.c:2208
-msgid "Add Calendar"
-msgstr "添加日历"
-
-#: ../data/ui/source-dialog.ui.h:24
-msgid "User"
-msgstr "用户"
-
-#: ../data/ui/source-dialog.ui.h:25
-msgid "Password"
-msgstr "密码"
-
-#: ../data/ui/source-dialog.ui.h:26
-msgid "Connect"
-msgstr "连接"
-
-#: ../data/ui/time-selector.ui.h:1
-msgid "00:00"
-msgstr "00:00"
-
-#: ../data/ui/time-selector.ui.h:2
-msgid ":"
-msgstr ":"
-
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
-msgid "AM"
-msgstr "上午"
-
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
-msgid "PM"
-msgstr "下午"
-
-#: ../data/ui/window.ui.h:1
-msgid "Month"
-msgstr "月份"
-
-#: ../data/ui/window.ui.h:2
-msgid "Year"
-msgstr "年份"
-
-#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:266 ../src/gcal-year-view.c:486
-msgid "Today"
-msgstr "今天"
-
-#: ../data/ui/window.ui.h:5
-msgid "Manage your calendars"
-msgstr "管理您的日历"
-
-#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:817
-#: ../src/gcal-source-dialog.c:2231
-msgid "Calendar Settings"
-msgstr "日历设置"
-
-#: ../data/ui/year-view.ui.h:2
-msgid "No events"
-msgstr "没有事件 "
-
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1074
-msgid "Add Event…"
-msgstr "添加事件..."
-
-#: ../src/gcal-application.c:102
+#: ../src/gcal-application.c:85
 msgid "Display version number"
 msgstr "显示版本号"
 
-#: ../src/gcal-application.c:107
+#: ../src/gcal-application.c:90
+msgid "Enable debug messages"
+msgstr ""
+
+#: ../src/gcal-application.c:95
 msgid "Open calendar on the passed date"
 msgstr "打开日历显示过去的日期"
 
-#: ../src/gcal-application.c:112
+#: ../src/gcal-application.c:100
 msgid "Open calendar showing the passed event"
 msgstr "打开日历显示过去的事件"
 
-#: ../src/gcal-application.c:322
-msgid "- Calendar management"
-msgstr "- 日历管理"
-
-#: ../src/gcal-application.c:469
+#: ../src/gcal-application.c:454
 #, c-format
 msgid "Copyright © %d The Calendar authors"
-msgstr "版权所有© %d 个日历作者"
+msgstr "Copyright © %d 日历作者"
 
-#: ../src/gcal-application.c:475
+#: ../src/gcal-application.c:460
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
-msgstr "版权所有 © %d–%d  个日历作者"
+msgstr "Copyright © %d–%d 日历作者"
 
-#: ../src/gcal-application.c:488
+#: ../src/gcal-application.c:466
+msgid "Calendar"
+msgstr "日历"
+
+#: ../src/gcal-application.c:473
 msgid "translator-credits"
 msgstr ""
 "tuhaihe <1132321739qq@gmail.com>, 2013\n"
-"\n"
-"Launchpad Contributions:\n"
-"  Wang Dianjin https://launchpad.net/~tuhaihe"
+"Cheng Lu <dawndiy.dev@gmail.com>, 2016\n"
+"Bin Li <binli@gnome.org>, 2016\n"
+"Qizhi Zhou <zhouqz@yahoo.com>, 2016\n"
+"Dinzhong Chen <wsxy162@gmail.com>, 2017"
 
-#: ../src/gcal-edit-dialog.c:564
+#: ../src/gcal-edit-dialog.c:275
 msgid "Save"
 msgstr "保存"
 
-#: ../src/gcal-edit-dialog.c:836
+#: ../src/gcal-edit-dialog.c:275
+msgid "Done"
+msgstr "完成"
+
+#: ../src/gcal-edit-dialog.c:1000
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d 分钟前"
 
-#: ../src/gcal-edit-dialog.c:844
+#: ../src/gcal-edit-dialog.c:1008
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d 小时前"
 
-#: ../src/gcal-edit-dialog.c:852
+#: ../src/gcal-edit-dialog.c:1016
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d 天前"
 
-#: ../src/gcal-edit-dialog.c:860
+#: ../src/gcal-edit-dialog.c:1024
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d 周前"
 
-#: ../src/gcal-edit-dialog.c:1079 ../src/gcal-quick-add-popover.c:468
+#: ../src/gcal-edit-dialog.c:1328 ../src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "未命名事件"
 
-#: ../src/gcal-month-view.c:1318
-msgid "Other events"
-msgstr "其他事件"
-
-#. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1780
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: ../src/gcal-event-widget.c:364
 #, c-format
-msgid "Other event"
-msgid_plural "Other %d events"
-msgstr[0] "其他%d事件"
+msgid "At %s"
+msgstr ""
 
-#: ../src/gcal-quick-add-popover.c:115
+#: ../src/gcal-quick-add-popover.c:119
 #, c-format
 msgid "%s (this calendar is read-only)"
-msgstr "%s (这个日历是只读的)"
+msgstr "%s（这个日历是只读的）"
 
-#: ../src/gcal-quick-add-popover.c:228 ../src/gcal-quick-add-popover.c:246
-msgctxt "event date format"
-msgid "%B %d"
-msgstr "%B %d"
+#: ../src/gcal-quick-add-popover.c:244
+msgid "from next Monday"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:245
+msgid "from next Tuesday"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:246
+msgid "from next Wednesday"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:247
+msgid "from next Thursday"
+msgstr ""
 
 #: ../src/gcal-quick-add-popover.c:248
-#, c-format
-msgid "New Event from %s to %s"
-msgstr "新建活动：%s~%s"
+msgid "from next Friday"
+msgstr ""
 
-#: ../src/gcal-quick-add-popover.c:254
-#, c-format
-msgid "New Event on %s"
-msgstr "新建活动时间：%s"
+#: ../src/gcal-quick-add-popover.c:249
+msgid "from next Saturday"
+msgstr ""
 
-#: ../src/gcal-search-view.c:353
+#: ../src/gcal-quick-add-popover.c:250
+msgid "from next Sunday"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:255
+msgid "to next Monday"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:256
+msgid "to next Tuesday"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:257
+msgid "to next Wednesday"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:258
+msgid "to next Thursday"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:259
+msgid "to next Friday"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:260
+msgid "to next Saturday"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:261
+msgid "to next Sunday"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:266
+msgid "January"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:267
+msgid "February"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:268
+#, fuzzy
+msgid "March"
+msgstr "搜索"
+
+#: ../src/gcal-quick-add-popover.c:269
+msgid "April"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:270
+#, fuzzy
+msgid "May"
+msgstr "工作日"
+
+#: ../src/gcal-quick-add-popover.c:271
+msgid "June"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:272
+msgid "July"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:273
+msgid "August"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:274
+msgid "September"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:275
+msgid "October"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:276
+msgid "November"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:277
+msgid "December"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:286
+#, fuzzy, c-format
+msgid "from Today"
+msgstr "今天"
+
+#: ../src/gcal-quick-add-popover.c:290
+#, c-format
+msgid "from Tomorrow"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:294
+#, c-format
+msgid "from Yesterday"
+msgstr ""
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: ../src/gcal-quick-add-popover.c:312
+#, c-format
+msgid "from %1$s %2$s"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:323
+#, fuzzy, c-format
+msgid "to Today"
+msgstr "今天"
+
+#: ../src/gcal-quick-add-popover.c:327
+#, c-format
+msgid "to Tomorrow"
+msgstr ""
+
+#: ../src/gcal-quick-add-popover.c:331
+#, c-format
+msgid "to Yesterday"
+msgstr ""
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: ../src/gcal-quick-add-popover.c:349
+#, c-format
+msgid "to %1$s %2$s"
+msgstr ""
+
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: ../src/gcal-quick-add-popover.c:356
+#, fuzzy, c-format
+msgid "New Event %1$s %2$s"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:373
+#, fuzzy, c-format
+msgid "New Event Today"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:377
+#, fuzzy, c-format
+msgid "New Event Tomorrow"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:381
+#, fuzzy, c-format
+msgid "New Event Yesterday"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:387
+#, fuzzy
+msgid "New Event next Monday"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:388
+#, fuzzy
+msgid "New Event next Tuesday"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:389
+#, fuzzy
+msgid "New Event next Wednesday"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:390
+#, fuzzy
+msgid "New Event next Thursday"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:391
+#, fuzzy
+msgid "New Event next Friday"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:392
+#, fuzzy
+msgid "New Event next Saturday"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:393
+#, fuzzy
+msgid "New Event next Sunday"
+msgstr "新建事件于 %s"
+
+#. Translators: %d is the numeric day of month
+#: ../src/gcal-quick-add-popover.c:405
+#, fuzzy, c-format
+msgid "New Event on January %d"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:406
+#, fuzzy, c-format
+msgid "New Event on February %d"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:407
+#, fuzzy, c-format
+msgid "New Event on March %d"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:408
+#, fuzzy, c-format
+msgid "New Event on April %d"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:409
+#, fuzzy, c-format
+msgid "New Event on May %d"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:410
+#, fuzzy, c-format
+msgid "New Event on June %d"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:411
+#, fuzzy, c-format
+msgid "New Event on July %d"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:412
+#, fuzzy, c-format
+msgid "New Event on August %d"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:413
+#, fuzzy, c-format
+msgid "New Event on September %d"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:414
+#, fuzzy, c-format
+msgid "New Event on October %d"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:415
+#, fuzzy, c-format
+msgid "New Event on November %d"
+msgstr "新建事件于 %s"
+
+#: ../src/gcal-quick-add-popover.c:416
+#, fuzzy, c-format
+msgid "New Event on December %d"
+msgstr "新建事件于 %s"
+
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
+#: ../src/gcal-quick-add-popover.c:464
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr ""
+
+#: ../src/gcal-search-view.c:358
 msgid "All day"
 msgstr "全天"
 
-#: ../src/gcal-search-view.c:502
+#: ../src/gcal-search-view.c:563
 msgid "Use the entry above to search for events."
 msgstr "使用上面的条目搜索事件。"
 
+#: ../src/gcal-source-dialog.c:853 ../src/gcal-source-dialog.c:2263
+msgid "Calendar Settings"
+msgstr "日历设置"
+
 #. Dialog
-#: ../src/gcal-source-dialog.c:1113
+#: ../src/gcal-source-dialog.c:1108
 msgid "Select a calendar file"
 msgstr "选择一个日历文件"
 
-#: ../src/gcal-source-dialog.c:1117
+#: ../src/gcal-source-dialog.c:1111
+msgid "Cancel"
+msgstr "取消"
+
+#: ../src/gcal-source-dialog.c:1112
 msgid "Open"
 msgstr "打开"
 
-#: ../src/gcal-source-dialog.c:1124
+#: ../src/gcal-source-dialog.c:1119
 msgid "Calendar files"
 msgstr "日历文件"
 
 #. update the source properties
-#: ../src/gcal-source-dialog.c:1166
+#: ../src/gcal-source-dialog.c:1153
 msgid "Unnamed Calendar"
 msgstr "未命名日历 "
 
 #. Update notification label
-#: ../src/gcal-source-dialog.c:1766
+#: ../src/gcal-source-dialog.c:1759
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "日历<b>%s</b> 已被删除"
 
-#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
+#: ../src/gcal-source-dialog.c:1808 ../src/gcal-source-dialog.c:1864
 msgid "Off"
 msgstr "关闭"
 
-#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
+#: ../src/gcal-source-dialog.c:1808 ../src/gcal-source-dialog.c:1864
 msgid "On"
 msgstr "开启"
 
-#: ../src/gcal-time-selector.c:82
+#: ../src/gcal-source-dialog.c:1863
+msgid "Expired"
+msgstr ""
+
+#: ../src/gcal-source-dialog.c:2234 ../src/gcal-source-dialog.c:2240
+msgid "Add Calendar"
+msgstr "添加日历"
+
+#: ../src/gcal-time-selector.c:84
 #, c-format
 msgid "%s AM"
 msgstr "%s AM"
 
-#: ../src/gcal-time-selector.c:84
+#: ../src/gcal-time-selector.c:86
 #, c-format
 msgid "%s PM"
 msgstr "%s PM"
 
-#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
-msgid "Midnight"
-msgstr "午夜"
+#: ../src/gcal-utils.c:1188
+msgid ""
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
+msgstr ""
 
-#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
-msgid "Noon"
-msgstr "中午"
+#: ../src/gcal-utils.c:1191
+#, fuzzy
+msgid "_Cancel"
+msgstr "取消"
 
-#: ../src/gcal-week-view.c:499
-msgid "00:00 PM"
-msgstr "00:00 PM"
+#: ../src/gcal-utils.c:1193
+msgid "_Only This Event"
+msgstr ""
+
+#: ../src/gcal-utils.c:1200
+msgid "_Subsequent events"
+msgstr ""
+
+#: ../src/gcal-utils.c:1202
+#, fuzzy
+msgid "_All events"
+msgstr "没有事件 "
 
 #: ../src/gcal-window.c:1123
 msgid "Another event deleted"
 msgstr "另一个事件已删除"
 
+#: ../src/gcal-window.c:1123 ../src/gcal-window.c:1127
+msgid "Undo"
+msgstr "撤消"
+
 #: ../src/gcal-window.c:1127
 msgid "Event deleted"
-msgstr "活动已删除"
+msgstr "事件已删除"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: ../src/views/gcal-month-view.c:296 ../src/views/gcal-year-view.c:291
+#: ../src/views/gcal-year-view.c:513
+#, fuzzy
+msgid "%B %d"
+msgstr "%B %d"
+
+#: ../src/views/gcal-month-view.c:1627
+msgid "Other events"
+msgstr "其他事件"
+
+#. TODO: Warning: in some languages this string can be too long and may overlap with the number
+#: ../src/views/gcal-month-view.c:2224 ../src/views/gcal-week-header.c:338
+#, fuzzy, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "其他 %d 个事件"
+
+#: ../src/views/gcal-month-view.c:2729
+msgid "Add Event…"
+msgstr "添加事件…"
+
+#: ../src/views/gcal-week-grid.c:761 ../src/views/gcal-week-view.c:288
+msgid "00 AM"
+msgstr "上午 00"
+
+#: ../src/views/gcal-week-grid.c:764 ../src/views/gcal-week-view.c:291
+msgid "00:00"
+msgstr "00:00"
+
+#: ../src/views/gcal-week-header.c:871
+#, c-format
+msgid "week %d"
+msgstr "第 %d 周"
+
+#: ../src/views/gcal-week-view.c:446
+msgid "PM"
+msgstr "下午"
+
+#: ../src/views/gcal-week-view.c:446
+msgid "AM"
+msgstr "上午"
+
+#: ../src/views/gcal-year-view.c:276 ../src/views/gcal-year-view.c:510
+msgid "Today"
+msgstr "今天"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when the selection starts at the specified day and the
+#. * end is unspecified.
+#: ../src/views/gcal-year-view.c:285
+#, fuzzy
+msgid "%B %d…"
+msgstr "%B %d"
+
+#~ msgid "— Calendar management"
+#~ msgstr "——日历管理"
+
+#~ msgid "New Event from %s to %s"
+#~ msgstr "新建事件从 %s 到 %s"
+
+#~ msgid "New Event on %s, %s – %s"
+#~ msgstr "新建事件于 %s，%s – %s"
+
+#~ msgid "Calendar for GNOME"
+#~ msgstr "GNOME 日历"
+
+#~ msgid ""
+#~ "GNOME Calendar is a simple and beautiful calendar application designed to "
+#~ "perfectly fit the GNOME desktop. By reusing the components which the "
+#~ "GNOME desktop is build on, Calendar nicely integrates with the GNOME "
+#~ "ecosystem."
+#~ msgstr ""
+#~ "GNOME 日历设计简洁美观，符合 GNOME 桌面风格。通过重用组件，日历能够很好地"
+#~ "与 GNOME 生态系统结合。"
+
+#~ msgid ""
+#~ "We aim to find the perfect balance between nicely crafted features and "
+#~ "user-centred usability. No excess, no lacks. You’ll feel comfortable "
+#~ "using Calendar, like you’ve been using it for ages!"
+#~ msgstr ""
+#~ "我们的目标是找到很好的功能和用户为中心的易用性之间的完美平衡。既不多余，也"
+#~ "不缺乏。使用日历，您会感觉很舒服！"
+
+#~ msgid "Search for events"
+#~ msgstr "搜索事件"
+
+#~ msgid "Calendar management"
+#~ msgstr "日历管理 "
+
+#~ msgid "Access, and manage calendar"
+#~ msgstr "访问并管理日历"
+
+#~ msgid "Calendar;Event;Reminder;"
+#~ msgstr "Calendar;Event;Reminder;日历;事件;提醒;"
+
+#~ msgid "Toggles the sound of the alarm"
+#~ msgstr "切换闹钟的声音"
+
+#~ msgid "Remove the alarm"
+#~ msgstr "删除闹钟"
+
+#~ msgid "Click to select the calendar"
+#~ msgstr "单击选中日历"
+
+#~ msgid "Title"
+#~ msgstr "标题"
+
+#~ msgid "Date"
+#~ msgstr "日期"
+
+#~ msgid "Reminders"
+#~ msgstr "提醒"
+
+#~ msgid "Notes"
+#~ msgstr "备注"
+
+#~ msgid "Location"
+#~ msgstr "位置"
+
+#~ msgid "Time"
+#~ msgstr "时间"
+
+#~ msgid "All Day"
+#~ msgstr "全天"
+
+#~ msgid "Add reminder…"
+#~ msgstr "添加提醒…"
+
+#~ msgid "Delete Event"
+#~ msgstr "删除事件"
+
+#~ msgid "5 minutes"
+#~ msgstr "5 分钟"
+
+#~ msgid "10 minutes"
+#~ msgstr "10 分钟"
+
+#~ msgid "30 minutes"
+#~ msgstr "30 分钟"
+
+#~ msgid "1 hour"
+#~ msgstr "1 小时"
+
+#~ msgid "1 day"
+#~ msgstr "1 天"
+
+#~ msgid "2 days"
+#~ msgstr "2 天"
+
+#~ msgid "3 days"
+#~ msgstr "3 天"
+
+#~ msgid "1 week"
+#~ msgstr "1 周"
+
+#~ msgctxt "shortcut window"
+#~ msgid "General"
+#~ msgstr "通用"
+
+#~ msgctxt "shortcut window"
+#~ msgid "New event"
+#~ msgstr "新事件"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Close window"
+#~ msgstr "关闭窗口"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Show help"
+#~ msgstr "显示帮助"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Shortcuts"
+#~ msgstr "快捷键"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Navigation"
+#~ msgstr "导航"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Go back"
+#~ msgstr "返回"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Go forward"
+#~ msgstr "前进"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Show today"
+#~ msgstr "显示今天"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Next view"
+#~ msgstr "下一视图"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Previous view"
+#~ msgstr "上一视图"
+
+#~ msgctxt "shortcut window"
+#~ msgid "View"
+#~ msgstr "视图"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Week view"
+#~ msgstr "周视图"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Month view"
+#~ msgstr "月视图"
+
+#~ msgctxt "shortcut window"
+#~ msgid "Year view"
+#~ msgstr "年视图"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "添加事件(_N)…"
+
+#~ msgid "_Search…"
+#~ msgstr "搜索(_S)…"
+
+#~ msgid "_Calendars…"
+#~ msgstr "日历(_C)…"
+
+#~ msgid "_Keyboard Shortcuts"
+#~ msgstr "键盘快捷键(_K)"
+
+#~ msgid "_About"
+#~ msgstr "关于(_A)"
+
+#~ msgid "_Quit"
+#~ msgstr "退出(_Q)"
+
+#~ msgid "_Synchronize"
+#~ msgstr "同步(_S)"
+
+#~ msgid "From Web…"
+#~ msgstr "从网络…"
+
+#~ msgid "New Local Calendar…"
+#~ msgstr "新建本地日历…"
+
+#~ msgid "From File…"
+#~ msgstr "从文件…"
+
+#~ msgid "Edit Details…"
+#~ msgstr "编辑细节…"
+
+#~ msgid "Add"
+#~ msgstr "添加"
+
+#~ msgid "No results found"
+#~ msgstr "未发现结果"
+
+#~ msgid "Try a different search"
+#~ msgstr "尝试不同的搜索"
+
+#~ msgid "Online Accounts"
+#~ msgstr "在线帐户"
+
+#~ msgid "Open online account settings"
+#~ msgstr "打开在线帐户设置"
+
+#~ msgid "Google"
+#~ msgstr "Google"
+
+#~ msgid "Click to set up"
+#~ msgstr "点击设置"
+
+#~ msgid "ownCloud"
+#~ msgstr "ownCloud"
+
+#~ msgid "Microsoft Exchange"
+#~ msgstr "微软 Exchange"
+
+#~ msgid "Calendars"
+#~ msgstr "日历"
+
+#~ msgid "Overview"
+#~ msgstr "概览"
+
+#~ msgid "Add new events to this calendar by default"
+#~ msgstr "默认情况下将新事件添加到该日历中"
+
+#~ msgid "Remove Calendar"
+#~ msgstr "移除日历"
+
+#~ msgid "Display calendar"
+#~ msgstr "显示日历 "
+
+#~ msgid "Calendar name"
+#~ msgstr "日历名称"
+
+#~ msgid "Color"
+#~ msgstr "颜色"
+
+#~ msgid "Account"
+#~ msgstr "帐户"
+
+#~ msgid "Settings"
+#~ msgstr "设置"
+
+#~ msgid "Edit Calendar"
+#~ msgstr "编辑日历"
+
+#~ msgid ""
+#~ "Enter the address of the calendar that you want to add. If the calendar "
+#~ "belongs to one of your online accounts, you can add it through the <a "
+#~ "href=\"GOA\">online account settings</a>."
+#~ msgstr ""
+#~ "输入您要添加的日历地址。如果您是在线帐户，可以通过<a href=\"GOA\">在线帐户"
+#~ "设置</a>来添加。"
+
+#~ msgid "Calendar Address"
+#~ msgstr "日历地址"
+
+#~ msgid "User"
+#~ msgstr "用户"
+
+#~ msgid "Password"
+#~ msgstr "密码"
+
+#~ msgid "Connect"
+#~ msgstr "连接"
+
+#~ msgid ":"
+#~ msgstr ":"
+
+#~ msgid "Week"
+#~ msgstr "星期"
+
+#~ msgid "Month"
+#~ msgstr "月份"
+
+#~ msgid "Year"
+#~ msgstr "年份"
+
+#~ msgid "Manage your calendars"
+#~ msgstr "管理您的日历"
+
+#~ msgid "List of the disabled sources"
+#~ msgstr "已禁用源列表"
+
+#~ msgid "Sources disabled last time Calendar ran"
+#~ msgstr "上次运行日历时所禁用的源"
+
+#~ msgid "Midnight"
+#~ msgstr "午夜"
+
+#~ msgid "Noon"
+#~ msgstr "中午"
+
+#~ msgid "00:00 PM"
+#~ msgstr "00:00 PM"
 
 #~ msgid "Starts"
 #~ msgstr "开始时间"
 
 #~ msgid "Ends"
 #~ msgstr "结束时间"
-
-#~ msgid "Day"
-#~ msgstr "工作日"
