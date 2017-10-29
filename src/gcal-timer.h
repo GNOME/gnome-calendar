@@ -28,27 +28,27 @@ typedef struct _GcalTimer GcalTimer;
 typedef void (*GCalTimerFunc) (GcalTimer *self, gpointer  data);
 
 
-GcalTimer*      gcal_timer_new                    (gint64           default_duration);
+GcalTimer*           gcal_timer_new                              (gint64              default_duration);
 
-void            gcal_timer_start                  (GcalTimer       *self);
+void                 gcal_timer_start                            (GcalTimer          *self);
 
-void            gcal_timer_reset                  (GcalTimer       *self);
+void                 gcal_timer_reset                            (GcalTimer          *self);
 
-void            gcal_timer_stop                   (GcalTimer       *self);
+void                 gcal_timer_stop                             (GcalTimer          *self);
 
-gboolean        gcal_timer_is_running             (GcalTimer *self);
+gboolean             gcal_timer_is_running                       (GcalTimer          *self);
 
-void            gcal_timer_set_default_duration   (GcalTimer       *self,
-                                                   gint64           duration);
+void                 gcal_timer_set_default_duration             (GcalTimer          *self,
+                                                                  gint64              duration);
 
-gint64          gcal_timer_get_default_duration   (GcalTimer *self);
+gint64               gcal_timer_get_default_duration             (GcalTimer          *self);
 
-void            gcal_timer_set_callback           (GcalTimer       *self,
-                                                   GCalTimerFunc    func,
-                                                   gpointer         data,
-                                                   GDestroyNotify   notify);
+void                 gcal_timer_set_callback                     (GcalTimer          *self,
+                                                                  GCalTimerFunc       func,
+                                                                  gpointer            data,
+                                                                  GDestroyNotify      notify);
 
-void            gcal_timer_free                   (GcalTimer       *self);
+void                 gcal_timer_free                             (GcalTimer          *self);
 
 
 #endif /* __GCAL_TIMER_H__ */

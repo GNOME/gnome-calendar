@@ -35,90 +35,90 @@
 typedef struct
 {
   /* month span from 0 to 11 */
-  gint start_day, start_month;
-  gint end_day, end_month;
-  gint hovered_day, hovered_month;
-  gint dnd_day, dnd_month;
+  gint                start_day, start_month;
+  gint                end_day, end_month;
+  gint                hovered_day, hovered_month;
+  gint                dnd_day, dnd_month;
 } ButtonData;
 
 typedef struct
 {
-  gdouble  box_side;
-  GdkPoint coordinates [12];
+  gdouble             box_side;
+  GdkPoint            coordinates [12];
 } GridData;
 
 struct _GcalYearView
 {
-  GtkBox        parent;
+  GtkBox              parent;
 
   /* composite, GtkBuilder's widgets */
-  GtkWidget    *navigator;
-  GtkWidget    *sidebar;
-  GtkWidget    *events_sidebar;
-  GtkWidget    *navigator_stack;
-  GtkWidget    *no_events_title;
-  GtkWidget    *navigator_sidebar;
-  GtkWidget    *scrolled_window;
-  GtkLabel     *temp_label;   /* unowned */
-  GtkImage     *weather_icon; /* unowned */
+  GtkWidget          *navigator;
+  GtkWidget          *sidebar;
+  GtkWidget          *events_sidebar;
+  GtkWidget          *navigator_stack;
+  GtkWidget          *no_events_title;
+  GtkWidget          *navigator_sidebar;
+  GtkWidget          *scrolled_window;
+  GtkLabel           *temp_label;   /* unowned */
+  GtkImage           *weather_icon; /* unowned */
 
-  GtkWidget    *popover; /* Popover for popover_mode */
+  GtkWidget          *popover; /* Popover for popover_mode */
 
   /* manager singleton */
-  GcalManager  *manager;
+  GcalManager        *manager;
   GcalWeatherService *weather_service; /* owned, nullable */
 
   /* range shown on the sidebar */
-  icaltimetype *start_selected_date;
-  icaltimetype *end_selected_date;
+  icaltimetype       *start_selected_date;
+  icaltimetype       *end_selected_date;
 
   /* geometry info */
-  GridData     *navigator_grid;
-  guint         number_of_columns;
-  guint         column_width;
-  guint         row_height;
-  guint         header_height;
-  guint         sidebar_width;
+  GridData           *navigator_grid;
+  guint               number_of_columns;
+  guint               column_width;
+  guint               row_height;
+  guint               header_height;
+  guint               sidebar_width;
 
   /* state flags */
-  gboolean      popover_mode;
-  gboolean      button_pressed;
-  ButtonData   *selected_data;
+  gboolean            popover_mode;
+  gboolean            button_pressed;
+  ButtonData         *selected_data;
 
   /**
    * first day of the week according to user locale, being
    * 0 for Sunday, 1 for Monday and so on
    */
-  gint          first_weekday;
+  gint                first_weekday;
 
   /* first and last weeks of the year */
-  guint         first_week_of_year;
-  guint         last_week_of_year;
+  guint               first_week_of_year;
+  guint               last_week_of_year;
 
   /* Storage for the accumulated scrolling */
-  gdouble         scroll_value;
+  gdouble               scroll_value;
 
   /**
    * clock format from GNOME desktop settings
    */
-  gboolean      use_24h_format;
+  gboolean            use_24h_format;
 
   /* show week numbers from GNOME Shell settings */
-  GSettings    *calendar_settings;
-  gboolean      show_week_numbers;
+  GSettings          *calendar_settings;
+  gboolean            show_week_numbers;
 
   /* text direction factors */
-  gint          k;
+  gint                k;
 
   /* date property */
-  icaltimetype *date;
+  icaltimetype       *date;
 
   /*
    * Array with the events at every month. Events
    * that span multiple months are added multiple
    * times to the array.
    */
-  GPtrArray    *events[12];
+  GPtrArray          *events[12];
 };
 
 enum {
@@ -139,9 +139,10 @@ enum
 static guint signals[NUM_SIGNALS] = { 0, };
 static gpointer year_view_parent_class = NULL;
 
-static void   gcal_view_interface_init (GcalViewInterface *iface);
-static void   gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
-static void   update_weather (GcalYearView *self);
+static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
+static void          gcal_data_model_subscriber_interface_init   (ECalDataModelSubscriberInterface *iface);
+static void          update_weather                              (GcalYearView       *self);
+
 
 G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)

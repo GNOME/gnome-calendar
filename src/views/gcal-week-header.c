@@ -48,57 +48,57 @@
  */
 typedef struct
 {
-  GcalWeatherInfo  *winfo;    /* owned */
-  GdkPixbuf        *icon_buf; /* owned */
+  GcalWeatherInfo    *winfo;    /* owned */
+  GdkPixbuf          *icon_buf; /* owned */
 } WeatherInfoDay;
 
 
 
 struct _GcalWeekHeader
 {
-  GtkGrid           parent;
+  GtkGrid             parent;
 
-  GtkWidget        *grid;
-  GtkWidget        *month_label;
-  GtkWidget        *week_label;
-  GtkWidget        *year_label;
-  GtkWidget        *scrolledwindow;
-  GtkWidget        *expand_button;
-  GtkWidget        *expand_button_box;
-  GtkWidget        *expand_button_image;
-  GtkWidget        *header_labels_box;
+  GtkWidget          *grid;
+  GtkWidget          *month_label;
+  GtkWidget          *week_label;
+  GtkWidget          *year_label;
+  GtkWidget          *scrolledwindow;
+  GtkWidget          *expand_button;
+  GtkWidget          *expand_button_box;
+  GtkWidget          *expand_button_image;
+  GtkWidget          *header_labels_box;
 
-  GcalManager      *manager;
+  GcalManager        *manager;
 
   /*
    * Stores the events as they come from the week-view
    * The list will later be iterated after the active date is changed
    * and the events will be placed
    */
-  GList            *events[7];
-  GtkWidget        *overflow_label[7];
+  GList              *events[7];
+  GtkWidget          *overflow_label[7];
 
-  gint              first_weekday;
+  gint                first_weekday;
 
   /*
    * Used for checking if the header is in collapsed state or expand state
    * false is collapse state true is expand state
    */
-  gboolean          expanded;
+  gboolean            expanded;
 
-  gboolean          use_24h_format;
+  gboolean            use_24h_format;
 
-  icaltimetype     *active_date;
+  icaltimetype       *active_date;
 
-  gint              selection_start;
-  gint              selection_end;
-  gint              dnd_cell;
+  gint                selection_start;
+  gint                selection_end;
+  gint                dnd_cell;
 
   GcalWeatherService *weather_service; /* unowned, nullable */
   /* Array of nullable weather infos for each day, starting with Sunday. */
   WeatherInfoDay      weather_infos[7];
 
-  GtkSizeGroup     *sizegroup;
+  GtkSizeGroup       *sizegroup;
 };
 
 typedef enum

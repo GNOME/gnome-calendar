@@ -43,39 +43,39 @@ static const double dashed [] =
 
 struct _GcalWeekView
 {
-  GtkBox          parent;
+  GtkBox              parent;
 
-  GtkWidget      *header;
-  GtkWidget      *hours_bar;
-  GtkWidget      *scrolled_window;
-  GtkWidget      *week_grid;
+  GtkWidget          *header;
+  GtkWidget          *hours_bar;
+  GtkWidget          *scrolled_window;
+  GtkWidget          *week_grid;
 
   /*
    * first day of the week according to user locale, being
    * 0 for Sunday, 1 for Monday and so on
    */
-  gint            first_weekday;
+  gint                first_weekday;
 
   /*
    * clock format from GNOME desktop settings
    */
-  gboolean        use_24h_format;
+  gboolean            use_24h_format;
 
   /* property */
   icaltimetype       *date;
   GcalManager        *manager;         /* owned */
   GcalWeatherService *weather_service; /* owned */
 
-  guint           scroll_grid_timeout_id;
+  guint               scroll_grid_timeout_id;
 
-  gint            clicked_cell;
+  gint                clicked_cell;
 };
 
-static void           schedule_position_scroll                  (GcalWeekView      *self);
+static void          schedule_position_scroll                    (GcalWeekView       *self);
 
-static void           gcal_view_interface_init                  (GcalViewInterface *iface);
+static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
 
-static void           gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
+static void          gcal_data_model_subscriber_interface_init   (ECalDataModelSubscriberInterface *iface);
 
 enum
 {

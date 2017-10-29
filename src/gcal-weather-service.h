@@ -37,37 +37,35 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (GcalWeatherService, gcal_weather_service, GCAL, WEATHER_SERVICE, GObject)
 
 
-GcalWeatherService* gcal_weather_service_new                (GTimeZone          *time_zone,
-                                                             guint               max_days,
-                                                             guint               check_interval_new,
-                                                             guint               check_interval_renew,
-                                                             gint64              valid_timespan);
+GcalWeatherService*  gcal_weather_service_new                    (GTimeZone          *time_zone,
+                                                                  guint               max_days,
+                                                                  guint               check_interval_new,
+                                                                  guint               check_interval_renew,
+                                                                  gint64              valid_timespan);
 
-GTimeZone*          gcal_weather_service_get_time_zone      (GcalWeatherService *self);
+GTimeZone*           gcal_weather_service_get_time_zone          (GcalWeatherService *self);
 
-void                gcal_weather_service_set_time_zone      (GcalWeatherService *self,
-                                                             GTimeZone          *value);
+void                 gcal_weather_service_set_time_zone          (GcalWeatherService *self,
+                                                                  GTimeZone          *value);
 
-void                gcal_weather_service_run                (GcalWeatherService *self,
-                                                             GWeatherLocation   *location);
+guint                gcal_weather_service_get_max_days           (GcalWeatherService *self);
 
-void                gcal_weather_service_stop               (GcalWeatherService *self);
+gint64               gcal_weather_service_get_valid_timespan     (GcalWeatherService *self);
 
-guint               gcal_weather_service_get_max_days       (GcalWeatherService *self);
+guint                gcal_weather_service_get_check_interval_new (GcalWeatherService *self);
 
-gint64              gcal_weather_service_get_valid_timespan (GcalWeatherService *self);
+guint                gcal_weather_service_get_check_interval_renew (GcalWeatherService *self);
 
-guint               gcal_weather_service_get_check_interval_new
-                                                            (GcalWeatherService *self);
+GSList*              gcal_weather_service_get_weather_infos      (GcalWeatherService *self);
 
-guint               gcal_weather_service_get_check_interval_renew
-                                                            (GcalWeatherService *self);
+const gchar*         gcal_weather_service_get_attribution        (GcalWeatherService *self);
 
-GSList*             gcal_weather_service_get_weather_infos  (GcalWeatherService *self);
+void                 gcal_weather_service_update                 (GcalWeatherService *self);
 
-const gchar*        gcal_weather_service_get_attribution    (GcalWeatherService *self);
+void                 gcal_weather_service_run                    (GcalWeatherService *self,
+                                                                  GWeatherLocation   *location);
 
-void                gcal_weather_service_update             (GcalWeatherService *self);
+void                 gcal_weather_service_stop                   (GcalWeatherService *self);
 
 G_END_DECLS
 

@@ -35,10 +35,10 @@ typedef struct
 
 struct _GcalSearchView
 {
-  GtkPopover      parent;
+  GtkPopover          parent;
 
-  GtkWidget      *listbox;
-  GtkWidget      *stack;
+  GtkWidget          *listbox;
+  GtkWidget          *stack;
 
   /* Since the user can have (literally)
    * thousands of events, the usage of
@@ -46,23 +46,23 @@ struct _GcalSearchView
    * the RowEventData lookup constant
    * time.
    */
-  GHashTable     *uuid_to_event;
+  GHashTable         *uuid_to_event;
 
   /* misc */
-  gint            no_results_timeout_id;
-  gint            num_results;
-  gchar          *field;
-  gchar          *query;
-  time_t          current_utc_date;
-  guint           search_timeout_id;
+  gint                no_results_timeout_id;
+  gint                num_results;
+  gchar              *field;
+  gchar              *query;
+  time_t              current_utc_date;
+  guint               search_timeout_id;
 
   /* property */
-  icaltimetype   *date;
-  GcalManager    *manager; /* weak reference */
+  icaltimetype       *date;
+  GcalManager        *manager; /* weak reference */
 
   /* flags */
-  gboolean        format_24h;
-  gboolean        subscribed;
+  gboolean            format_24h;
+  gboolean            subscribed;
 };
 
 enum

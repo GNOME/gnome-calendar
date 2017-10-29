@@ -38,70 +38,70 @@
 
 typedef struct
 {
-  GcalEvent     *event;
-  GcalManager   *manager;
+  GcalEvent          *event;
+  GcalManager        *manager;
 } AsyncOpsData;
 
 typedef struct
 {
   ECalDataModelSubscriber *subscriber;
-  gchar                   *query;
+  gchar              *query;
 
-  guint                    sources_left;
-  gboolean                 passed_start;
-  gboolean                 search_done;
+  guint               sources_left;
+  gboolean            passed_start;
+  gboolean            search_done;
 } ViewStateData;
 
 typedef struct
 {
-  ECalClient     *client;
-  gboolean        connected;
+  ECalClient         *client;
+  gboolean            connected;
 } GcalManagerUnit;
 
 typedef struct
 {
-  gchar           *event_uid;
-  GcalManagerUnit *unit;
-  GcalManagerUnit *new_unit;
-  ECalComponent   *new_component;
-  GcalManager     *manager;
+  gchar              *event_uid;
+  GcalManagerUnit    *unit;
+  GcalManagerUnit    *new_unit;
+  ECalComponent      *new_component;
+  GcalManager        *manager;
 } MoveEventData;
 
 struct _GcalManager
 {
-  GObject          parent;
+  GObject             parent;
 
   /**
    * The list of clients we are managing.
    * Each value is of type GCalStoreUnit
    * And each key is the source uid
    */
-  GHashTable      *clients;
+  GHashTable         *clients;
 
-  ESourceRegistry *source_registry;
+  ESourceRegistry    *source_registry;
   ECredentialsPrompter *credentials_prompter;
 
-  ECalDataModel   *e_data_model;
-  ECalDataModel   *search_data_model;
+  ECalDataModel      *e_data_model;
+  ECalDataModel      *search_data_model;
 
-  ECalDataModel   *shell_search_data_model;
-  ViewStateData   *search_view_data;
+  ECalDataModel      *shell_search_data_model;
+  ViewStateData      *search_view_data;
 
-  GCancellable    *async_ops;
+  GCancellable       *async_ops;
 
-  GoaClient       *goa_client;
+  GoaClient          *goa_client;
 
-  GcalClock       *clock;
+  GcalClock          *clock;
 
   /* state flags */
-  gboolean         goa_client_ready;
-  gint             sources_at_launch;
+  gboolean            goa_client_ready;
+  gint                sources_at_launch;
 
   /* timezone */
-  icaltimezone    *system_timezone;
+  icaltimezone       *system_timezone;
 
   /* property */
-  GSettings       *settings;
+  GSettings          *settings;
 };
 
 G_DEFINE_TYPE (GcalManager, gcal_manager, G_TYPE_OBJECT)
@@ -131,12 +131,12 @@ static GParamSpec *properties[NUM_PROPS] = { NULL, };
 
 /* -- start: threading related code provided by Milan Crha */
 typedef struct {
-  EThreadJobFunc func;
-  gpointer user_data;
-  GDestroyNotify free_user_data;
+  EThreadJobFunc      func;
+  gpointer            user_data;
+  GDestroyNotify      free_user_data;
 
-  GCancellable *cancellable;
-  GError *error;
+  GCancellable       *cancellable;
+  GError             *error;
 } ThreadJobData;
 
 static void
@@ -175,7 +175,7 @@ thread_job_thread (gpointer user_data)
   return g_thread_self ();
 }
 
-static GCancellable *
+static GCancellable*
 submit_thread_job (EThreadJobFunc func,
                    gpointer user_data,
                    GDestroyNotify free_user_data)

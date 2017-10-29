@@ -30,19 +30,19 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (GcalWeatherInfo, gcal_weather_info, GCAL, WEATHER_INFO, GObject)
 
 
-GcalWeatherInfo*  gcal_weather_info_new                (GDate           *date,
-                                                        const gchar     *icon_name,
-                                                        const gchar     *temperature);
+GcalWeatherInfo*     gcal_weather_info_new                       (GDate              *date,
+                                                                  const gchar        *icon_name,
+                                                                  const gchar        *temperature);
 
-void              gcal_weather_info_get_date           (GcalWeatherInfo *self,
-                                                        GDate           *date);
+void                 gcal_weather_info_get_date                  (GcalWeatherInfo    *self,
+                                                                  GDate              *date);
 
-void              gcal_weather_info_get_date           (GcalWeatherInfo *self,
-                                                        GDate           *date);
+void                 gcal_weather_info_get_date                  (GcalWeatherInfo    *self,
+                                                                  GDate              *date);
 
-const gchar*      gcal_weather_info_get_icon_name      (GcalWeatherInfo *self);
+const gchar*         gcal_weather_info_get_icon_name             (GcalWeatherInfo    *self);
 
-const gchar*      gcal_weather_info_get_temperature    (GcalWeatherInfo *self);
+const gchar*         gcal_weather_info_get_temperature           (GcalWeatherInfo    *self);
 
 
 G_END_DECLS

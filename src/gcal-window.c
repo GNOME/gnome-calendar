@@ -84,16 +84,16 @@
 
 typedef struct
 {
-  gint               x;
-  gint               y;
-  GDateTime         *start_date;
-  GDateTime         *end_date;
+  gint                x;
+  gint                y;
+  GDateTime          *start_date;
+  GDateTime          *end_date;
 } NewEventData;
 
 typedef struct
 {
-  GcalWindow *window;
-  gchar *uuid;
+  GcalWindow         *window;
+  gchar              *uuid;
 } OpenEditDialogData;
 
 /* WeatherSigs:
@@ -107,8 +107,8 @@ typedef struct
  */
 typedef struct
 {
-  GObject *obj; /* unowned */
-  gulong   id;
+  GObject            *obj; /* unowned */
+  gulong              id;
 } WeatherSigs;
 
 struct _GcalWindow
@@ -116,86 +116,86 @@ struct _GcalWindow
   GtkApplicationWindow parent;
 
   /* timeout ids */
-  guint                notification_timeout;
+  guint               notification_timeout;
 
   /* upper level widgets */
-  GtkWidget           *main_box;
+  GtkWidget          *main_box;
 
-  GtkWidget           *header_bar;
-  GtkWidget           *search_bar;
-  GtkWidget           *views_overlay;
-  GtkWidget           *views_stack;
-  GtkWidget           *week_view;
-  GtkWidget           *month_view;
-  GtkWidget           *year_view;
-  GtkWidget           *notification;
-  GtkWidget           *notification_label;
-  GtkWidget           *notification_action_button;
-  GtkWidget           *notification_close_button;
+  GtkWidget          *header_bar;
+  GtkWidget          *search_bar;
+  GtkWidget          *views_overlay;
+  GtkWidget          *views_stack;
+  GtkWidget          *week_view;
+  GtkWidget          *month_view;
+  GtkWidget          *year_view;
+  GtkWidget          *notification;
+  GtkWidget          *notification_label;
+  GtkWidget          *notification_action_button;
+  GtkWidget          *notification_close_button;
 
   /* header_bar widets */
-  GtkWidget           *menu_button;
-  GtkWidget           *search_button;
-  GtkWidget           *calendars_button;
-  GtkWidget           *search_entry;
-  GtkWidget           *back_button;
-  GtkWidget           *today_button;
-  GtkWidget           *forward_button;
-  GtkWidget           *views_switcher;
+  GtkWidget          *menu_button;
+  GtkWidget          *search_button;
+  GtkWidget          *calendars_button;
+  GtkWidget          *search_entry;
+  GtkWidget          *back_button;
+  GtkWidget          *today_button;
+  GtkWidget          *forward_button;
+  GtkWidget          *views_switcher;
 
   /* new event popover widgets */
-  GtkWidget           *quick_add_popover;
+  GtkWidget          *quick_add_popover;
 
-  GtkWidget           *search_view;
+  GtkWidget          *search_view;
 
   /* day, week, month, year, list */
-  GtkWidget           *views [6];
-  GtkWidget           *edit_dialog;
+  GtkWidget          *views [6];
+  GtkWidget          *edit_dialog;
 
-  GcalManager         *manager;
-  GcalWindowViewType   active_view;
-  icaltimetype        *active_date;
+  GcalManager        *manager;
+  GcalWindowViewType  active_view;
+  icaltimetype       *active_date;
 
-  gboolean             rtl;
+  gboolean            rtl;
 
   /* states */
-  gboolean             new_event_mode;
-  gboolean             search_mode;
+  gboolean            new_event_mode;
+  gboolean            search_mode;
 
-  NewEventData        *event_creation_data;
+  NewEventData       *event_creation_data;
 
-  GcalEvent             *event_to_delete;
-  GcalRecurrenceModType  event_to_delete_mod;
+  GcalEvent          *event_to_delete;
+  GcalRecurrenceModType event_to_delete_mod;
 
   /* calendar management */
-  GtkWidget           *calendar_popover;
-  GtkWidget           *calendar_listbox;
-  GtkWidget           *source_dialog;
+  GtkWidget          *calendar_popover;
+  GtkWidget          *calendar_listbox;
+  GtkWidget          *source_dialog;
 
-  gint                 refresh_timeout;
-  gint                 refresh_timeout_id;
-  gint                 open_edit_dialog_timeout_id;
+  gint                refresh_timeout;
+  gint                refresh_timeout_id;
+  gint                open_edit_dialog_timeout_id;
 
   /* weather management */
-  GcalWeatherService    *weather_service;   /* owned */
-  GtkSwitch             *weather;           /* unowned */
-  GtkSwitch             *auto_location;     /* unowned */
-  GtkBox                *auto_location_box; /* unowned */
+  GcalWeatherService *weather_service;   /* owned */
+  GtkSwitch          *weather;           /* unowned */
+  GtkSwitch          *auto_location;     /* unowned */
+  GtkBox             *auto_location_box; /* unowned */
   GWeatherLocationEntry *location_entry;    /* unowned */
-  WeatherSigs            weather_cb_ids[5];
+  WeatherSigs         weather_cb_ids[5];
 
   /* temp to keep event_creation */
-  gboolean             open_edit_dialog;
+  gboolean            open_edit_dialog;
 
   /* handler for the searh_view */
-  gint                 click_outside_handler_id;
+  gint                click_outside_handler_id;
 
   /* Window states */
-  gint                 width;
-  gint                 height;
-  gint                 pos_x;
-  gint                 pos_y;
-  gboolean             is_maximized;
+  gint                width;
+  gint                height;
+  gint                pos_x;
+  gint                pos_y;
+  gboolean            is_maximized;
 };
 
 enum
@@ -218,60 +218,60 @@ enum
 }
 
 
-static void           on_show_calendars_action_activated (GSimpleAction       *action,
-                                                          GVariant            *param,
-                                                          gpointer             user_data);
+static void          on_show_calendars_action_activated          (GSimpleAction      *action,
+                                                                  GVariant           *param,
+                                                                  gpointer            user_data);
 
-static void           on_view_action_activated           (GSimpleAction       *action,
-                                                          GVariant            *param,
-                                                          gpointer             user_data);
+static void          on_view_action_activated                    (GSimpleAction      *action,
+                                                                  GVariant           *param,
+                                                                  gpointer            user_data);
 
-static void           on_toggle_search_bar_activated     (GSimpleAction       *action,
-                                                          GVariant            *param,
-                                                          gpointer             user_data);
+static void          on_menu_button_clicked                      (GtkMenuButton      *menu,
+                                                                  GtkStack           *stack);
 
-static void           on_menu_button_clicked             (GtkMenuButton       *menu,
-                                                          GtkStack            *stack);
+static void          on_toggle_search_bar_activated              (GSimpleAction      *action,
+                                                                  GVariant           *param,
+                                                                  gpointer            user_data);
 
-static void           on_view_menu_open_sub              (GtkModelButton      *button,
-                                                          GtkStack            *stack);
+static void          on_view_menu_open_sub                       (GtkModelButton     *button,
+                                                                  GtkStack           *stack);
 
-static void           on_view_menu_open_parent           (GtkModelButton      *button,
-                                                          GtkStack            *stack);
+static void          on_view_menu_open_parent                    (GtkModelButton     *button,
+                                                                  GtkStack           *stack);
 
-static void           on_weather_location_searchbox_change (GWeatherLocationEntry *entry,
-                                                            GcalWindow            *self);
+static void          on_weather_location_searchbox_change        (GWeatherLocationEntry *entry,
+                                                                  GcalWindow            *self);
 
-static void           on_show_weather_change             (GtkSwitch           *wswitch,
-                                                          GParamSpec          *pspec,
-                                                          GcalWindow          *self);
+static void          on_show_weather_change                      (GtkSwitch          *wswitch,
+                                                                  GParamSpec         *pspec,
+                                                                  GcalWindow         *self);
 
-static void           on_auto_location_change            (GtkSwitch           *lswitch,
-                                                          GParamSpec          *pspec,
-                                                          GcalWindow          *self);
+static void          on_auto_location_change                     (GtkSwitch          *lswitch,
+                                                                  GParamSpec         *pspec,
+                                                                  GcalWindow         *self);
 
-static gboolean       on_weather_location_searchbox_match_selected
-                                                         (GtkEntryCompletion  *sender,
-                                                          GtkTreeModel        *model,
-                                                          GtkTreeIter         *iter,
-                                                          GcalWindow          *self);
+static gboolean      on_weather_location_searchbox_match_selected (GtkEntryCompletion *sender,
+                                                                   GtkTreeModel       *model,
+                                                                   GtkTreeIter        *iter,
+                                                                   GcalWindow         *self);
 
-static void           set_model_button_animation         (GtkBuilder          *builder,
-                                                          GtkStack            *stack,
-                                                          const char          *id,
-                                                          gboolean             go_back);
-static void           update_menu_weather_sensitivity    (GcalWindow          *self);
+static void          set_model_button_animation                  (GtkBuilder         *builder,
+                                                                  GtkStack           *stack,
+                                                                  const char         *id,
+                                                                  gboolean            go_back);
+
+static void          update_menu_weather_sensitivity             (GcalWindow         *self);
 
 
-static void           close_menu                         (GcalWindow          *self);
+static void          close_menu                                  (GcalWindow         *self);
 
-static void           safe_weather_settings              (GcalWindow          *self);
+static void          safe_weather_settings                       (GcalWindow         *self);
 
-static void           load_weather_settings              (GcalWindow *self);
+static void          load_weather_settings                       (GcalWindow         *self);
 
-static void           manage_weather_service             (GcalWindow *self);
+static void          manage_weather_service                      (GcalWindow         *self);
 
-static GWeatherLocation* get_checked_fixed_location      (GcalWindow *self);
+static GWeatherLocation* get_checked_fixed_location              (GcalWindow         *self);
 
 G_DEFINE_TYPE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 

@@ -21,15 +21,6 @@
 #include <string.h>
 #include "gcal-weather-info.h"
 
-static void      gcal_weather_info_set_date (GcalWeatherInfo *self,
-                                             GDate           *date);
-
-static void      gcal_weather_info_set_temperature (GcalWeatherInfo *self,
-                                                    const gchar     *temperature);
-
-static void      gcal_weather_info_set_icon_name   (GcalWeatherInfo *self,
-                                                    const gchar     *icon_name);
-
 
 /* _GcalWeatherInfo:
  * @date:        (not nullable): The day this information belongs to.
@@ -50,6 +41,15 @@ struct _GcalWeatherInfo {
   gchar            *temperature; /* owned, non-null */
 };
 
+
+static void          gcal_weather_info_set_date                  (GcalWeatherInfo    *self,
+                                                                  GDate              *date);
+
+static void          gcal_weather_info_set_temperature           (GcalWeatherInfo    *self,
+                                                                  const gchar        *temperature);
+
+static void          gcal_weather_info_set_icon_name             (GcalWeatherInfo    *self,
+                                                                  const gchar        *icon_name);
 
 G_DEFINE_TYPE (GcalWeatherInfo, gcal_weather_info, G_TYPE_OBJECT)
 
@@ -79,8 +79,6 @@ gcal_weather_info_finalize (GObject *object)
   G_OBJECT_CLASS (gcal_weather_info_parent_class)->finalize (object);
 }
 
-
-
 static void
 gcal_weather_info_get_property (GObject    *object,
                                 guint       property_id,
@@ -106,8 +104,6 @@ gcal_weather_info_get_property (GObject    *object,
       break;
     }
 }
-
-
 
 static void
 gcal_weather_info_set_property (GObject      *object,
@@ -137,8 +133,6 @@ gcal_weather_info_set_property (GObject      *object,
       break;
     }
 }
-
-
 
 static void
 gcal_weather_info_class_init (GcalWeatherInfoClass *klass)
@@ -185,8 +179,6 @@ gcal_weather_info_class_init (GcalWeatherInfoClass *klass)
                             G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 }
 
-
-
 static void
 gcal_weather_info_init (GcalWeatherInfo *self)
 {
@@ -215,8 +207,6 @@ gcal_weather_info_set_date (GcalWeatherInfo *self,
   self->date = *date;
 }
 
-
-
 /* gcal_weather_info_set_temperature:
  * @self:        A #GcalWeatherInfo instance.
  * @temperature: A weather string.
@@ -238,9 +228,7 @@ gcal_weather_info_set_temperature (GcalWeatherInfo *self,
     }
 }
 
-
-
-/*  gcal_weather_info_set_icon_name:
+/* gcal_weather_info_set_icon_name:
  * @self:      A #GcalWeatherInfo instance.
  * @icon_name: The name of the icon to display.
  *
@@ -260,6 +248,7 @@ gcal_weather_info_set_icon_name (GcalWeatherInfo *self,
       g_object_notify ((GObject*) self, "icon-name");
     }
 }
+
 
 
 /* < public > */
@@ -293,8 +282,6 @@ gcal_weather_info_new (GDate       *date,
   return info;
 }
 
-
-
 /**
  * gcal_weather_info_get_date:
  * @self: A #GcalWeatherInfo instance.
@@ -311,8 +298,6 @@ gcal_weather_info_get_date (GcalWeatherInfo *self,
   *date = self->date;
 }
 
-
-
 /**
  * gcal_weather_info_get_icon_name:
  * @self: A #GcalWeatherInfo instance.
@@ -326,8 +311,6 @@ gcal_weather_info_get_icon_name (GcalWeatherInfo *self)
 
   return self->icon_name;
 }
-
-
 
 /**
  * gcal_weather_info_get_temperature:
