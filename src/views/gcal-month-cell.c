@@ -33,6 +33,8 @@ struct _GcalMonthCell
 
   GtkLabel           *day_label;
   GtkWidget          *header_box;
+  GtkImage           *weather_icon;
+
   GtkWidget          *overflow_button;
   GtkWidget          *overflow_label;
   GtkWidget          *overlay;
@@ -427,6 +429,7 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overflow_button);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overflow_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overlay);
+  gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, weather_icon);
 
   gtk_widget_class_bind_template_callback (widget_class, enter_notify_event_cb);
   gtk_widget_class_bind_template_callback (widget_class, leave_notify_event_cb);
@@ -483,6 +486,38 @@ gcal_month_cell_set_date (GcalMonthCell *self,
 
   gtk_label_set_text (self->day_label, text);
   update_style_flags (self);
+}
+
+/**
+ * gcal_month_cell_set_weather:
+ * @self: The #GcalMonthCell instance.
+ * @info: (nullable): The weather information to display.
+ *
+ * Sets the weather information to display for this day.
+ *
+ * Note that this function does not check dates nor
+ * manages weather information changes on its own.
+ */
+void
+gcal_month_cell_set_weather (GcalMonthCell   *self,
+                             GcalWeatherInfo *info)
+{
+  g_return_if_fail (GCAL_IS_MONTH_CELL (self));
+  g_return_if_fail (info == NULL || GCAL_IS_WEATHER_INFO (info));
+
+  if (info == NULL)
+    {
+      gtk_image_clear (self->weather_icon);
+    }
+  else
+    {
+      const gchar* icon_name; /* unowned */
+
+      icon_name = gcal_weather_info_get_icon_name (info);
+      gtk_image_set_from_icon_name (self->weather_icon, icon_name, GTK_ICON_SIZE_SMALL_TOOLBAR);
+    }
+
+  gtk_widget_show (GTK_WIDGET (self->weather_icon));
 }
 
 gboolean

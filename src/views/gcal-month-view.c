@@ -70,7 +70,7 @@ struct _GcalMonthView
 
   /* Grid widgets */
   GtkWidget          *grid;
-  GtkWidget          *month_cell[6][7];
+  GtkWidget          *month_cell[6][7]; /* unowned */
 
   /*
    * Hash to keep children widgets (all of them, parent widgets and its parts if there's any),
@@ -132,6 +132,8 @@ struct _GcalMonthView
   icaltimetype       *date;
   GcalManager        *manager;
 
+  GcalWeatherService *weather_service;
+
   gboolean            pending_event_allocation;
 };
 
@@ -140,6 +142,9 @@ static void          gcal_view_interface_init                    (GcalViewInterf
 static void          gtk_buildable_interface_init                (GtkBuildableIface  *iface);
 
 static void          e_data_model_subscriber_interface_init      (ECalDataModelSubscriberInterface *iface);
+
+static void          update_weather                              (GcalMonthView      *self,
+                                                                  gboolean            clear_old);
 
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view, GTK_TYPE_CONTAINER,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
@@ -153,6 +158,7 @@ enum
   PROP_0,
   PROP_DATE,
   PROP_MANAGER,
+  PROP_WEATHER_SERVICE,
   N_PROPS
 };
 
@@ -162,6 +168,7 @@ enum
   NUM_SIGNALS
 };
 
+static gpointer month_view_parent_class = NULL;
 static guint signals[NUM_SIGNALS] = { 0, };
 
 
@@ -192,6 +199,13 @@ event_widget_visibility_changed_cb (GcalMonthView *self)
 {
   self->pending_event_allocation = TRUE;
   gtk_widget_queue_resize (GTK_WIDGET (self));
+}
+
+static void
+weather_changed_cb (GcalWeatherService *weather_service,
+                    GcalMonthView      *self)
+{
+  update_weather (self, TRUE);
 }
 
 static void
@@ -896,6 +910,76 @@ setup_month_grid (GcalMonthView *self,
     }
 }
 
+static void
+update_weather (GcalMonthView *self,
+                gboolean       clear_old)
+{
+  g_return_if_fail (GCAL_IS_MONTH_VIEW (self));
+
+  /* Drop old weather information */
+  if (clear_old)
+    {
+      guint row;
+      guint col;
+
+      for (row = 0; row < 6; row++)
+        {
+          for (col = 0; col < 7; col++)
+            {
+              GcalMonthCell *cell;
+
+              cell = GCAL_MONTH_CELL (self->month_cell[row][col]);
+              gcal_month_cell_set_weather (cell,  NULL);
+            }
+        }
+    }
+
+
+  /* Set new one */
+  if (self->weather_service != NULL)
+    {
+      GcalMonthCell *fstcell;
+      GDateTime *firstdt;
+      GSList *weather_infos;
+      GSList *witer;
+      GDate first;
+
+      fstcell = GCAL_MONTH_CELL (self->month_cell[0][0]);
+      firstdt = gcal_month_cell_get_date (fstcell);
+
+      g_date_set_dmy (&first,
+                      g_date_time_get_day_of_month (firstdt),
+                      g_date_time_get_month (firstdt),
+                      g_date_time_get_year (firstdt));
+
+      weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
+      for (witer = weather_infos; witer; witer = witer->next)
+        {
+          GcalWeatherInfo *info;
+          GDate weather_date;
+          gint day_difference;
+
+          info = GCAL_WEATHER_INFO (witer->data);
+          gcal_weather_info_get_date (info, &weather_date);
+          day_difference = g_date_days_between (&first, &weather_date);
+
+          if (day_difference >= 0 && day_difference < 6 * 7)
+            {
+              GcalMonthCell *wcell;
+              guint row;
+              guint column;
+
+              row = day_difference / 7;
+              column = day_difference % 7;
+              wcell = GCAL_MONTH_CELL (self->month_cell[row][column]);
+
+              gcal_month_cell_set_weather (wcell, info);
+            }
+        }
+    }
+
+}
+
 static gboolean
 update_month_cells (GcalMonthView *self)
 {
@@ -928,6 +1012,7 @@ update_month_cells (GcalMonthView *self)
           cell_date = g_date_time_add_days (dt, row * 7 + col - self->days_delay);
 
           gcal_month_cell_set_date (cell, cell_date);
+          gcal_month_cell_set_weather (cell, NULL);
 
           /* Different month */
           different_month = day < self->days_delay ||
@@ -975,6 +1060,8 @@ update_month_cells (GcalMonthView *self)
           gcal_month_cell_set_selected (cell, selected);
         }
     }
+
+  update_weather (self, FALSE);
 
   self->update_grid_id = 0;
 
@@ -1685,6 +1772,9 @@ gcal_month_view_set_property (GObject       *object,
       g_object_notify (object, "manager");
       break;
 
+    case PROP_WEATHER_SERVICE:
+        gcal_month_view_set_weather_service (self, g_value_get_object (value));
+        break;
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -1709,16 +1799,47 @@ gcal_month_view_get_property (GObject       *object,
       g_value_set_object (value, self->manager);
       break;
 
+    case PROP_WEATHER_SERVICE:
+      g_value_set_boxed (value, gcal_month_view_get_weather_service (self));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
     }
 }
 
+/*
+ * Called when self is destroyed.
+ *
+ * WARNING: This is a workaround. This is one of the views where
+ * reference counts are off. We overwrite destroy to avoid dangling
+ * pointers. This issue needs to be addressed and this function removed.
+ */
+static void
+gcal_month_view_destroyed (GtkWidget *widget)
+{
+  GcalMonthView *self = GCAL_MONTH_VIEW (widget);
+
+  if (self->weather_service)
+    {
+      g_signal_handlers_disconnect_by_func (self->weather_service, weather_changed_cb, self);
+      g_clear_object (&self->weather_service);
+    }
+
+  GTK_WIDGET_CLASS (month_view_parent_class)->destroy ((GtkWidget*) G_TYPE_CHECK_INSTANCE_CAST (self, GTK_TYPE_GRID, GtkGrid));
+}
+
 static void
 gcal_month_view_finalize (GObject *object)
 {
   GcalMonthView *self = GCAL_MONTH_VIEW (object);
+
+  if (self->weather_service)
+    {
+      g_signal_handlers_disconnect_by_func (self->weather_service, weather_changed_cb, self);
+      g_clear_object (&self->weather_service);
+    }
 
   g_clear_pointer (&self->date, g_free);
   g_clear_pointer (&self->children, g_hash_table_destroy);
@@ -2086,6 +2207,18 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
 
+  /**
+   * GcalWeekView:weather-service:
+   *
+   * Sets the weather service to use.
+   */
+  g_object_class_install_property
+      (object_class,
+       PROP_WEATHER_SERVICE,
+       g_param_spec_object ("weather-service", "weather-service", "weather-service",
+                            GCAL_TYPE_WEATHER_SERVICE,
+                            G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
+
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_MONTH_VIEW,
                                            G_SIGNAL_RUN_LAST,
@@ -2111,6 +2244,10 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 
   g_type_ensure (GCAL_TYPE_MONTH_POPOVER);
+
+  /* FIXME: Hack to deal with broken reference counts */
+  month_view_parent_class = g_type_class_peek_parent (klass);
+  ((GtkWidgetClass *) klass)->destroy = (void (*) (GtkWidget *)) gcal_month_view_destroyed;
 }
 
 static void
@@ -2120,6 +2257,7 @@ gcal_month_view_init (GcalMonthView *self)
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
+  self->weather_service = NULL;
   self->children = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_list_free);
   self->single_cell_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   self->overflow_cells = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
@@ -2188,4 +2326,53 @@ gcal_month_view_set_use_24h_format (GcalMonthView *self,
                                     gboolean       use_24h)
 {
   self->use_24h_format = use_24h;
+}
+
+/**
+ * gcal_month_view_set_weather_service:
+ * @self: The #GcalWeatherView instance.
+ * @service: (nullable): The weather service to query.
+ *
+ * Sets the service to query for weather reports.
+ */
+void
+gcal_month_view_set_weather_service (GcalMonthView      *self,
+                                     GcalWeatherService *service)
+{
+  g_return_if_fail (GCAL_IS_MONTH_VIEW (self));
+  g_return_if_fail (!service || GCAL_IS_WEATHER_SERVICE (service));
+
+  if (self->weather_service == service)
+    return;
+
+  if (self->weather_service)
+    g_signal_handlers_disconnect_by_func (self->weather_service, weather_changed_cb, self);
+
+  g_set_object (&self->weather_service, service);
+
+  if (service)
+    {
+      g_signal_connect (service,
+                        "weather-changed",
+                        G_CALLBACK (weather_changed_cb),
+                        self);
+    }
+
+  update_weather (self, TRUE);
+
+  g_object_notify (G_OBJECT (self), "weather-service");
+}
+
+/**
+ * gcal_month_view_get_weather_service:
+ * @self: The #GcalWeatherView instance.
+ *
+ * Returns: (transfer none): The internal weather service object.
+ */
+GcalWeatherService*
+gcal_month_view_get_weather_service (GcalMonthView *self)
+{
+  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (self), NULL);
+
+  return self->weather_service;
 }

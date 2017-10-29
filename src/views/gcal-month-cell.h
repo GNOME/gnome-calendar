@@ -20,6 +20,7 @@
 #define GCAL_MONTH_CELL_H
 
 #include "gcal-manager.h"
+#include "gcal-weather-info.h"
 
 #include <gtk/gtk.h>
 
@@ -35,6 +36,9 @@ GDateTime*           gcal_month_cell_get_date                    (GcalMonthCell 
 
 void                 gcal_month_cell_set_date                    (GcalMonthCell      *self,
                                                                   GDateTime          *date);
+
+void                 gcal_month_cell_set_weather                 (GcalMonthCell      *self,
+                                                                  GcalWeatherInfo    *info);
 
 gboolean             gcal_month_cell_get_different_month         (GcalMonthCell      *self);
 

@@ -21,6 +21,7 @@
 #define __GCAL_MONTH_VIEW_H__
 
 #include "gcal-manager.h"
+#include "gcal-weather-service.h"
 
 G_BEGIN_DECLS
 
@@ -33,6 +34,11 @@ void                 gcal_month_view_set_first_weekday           (GcalMonthView 
 
 void                 gcal_month_view_set_use_24h_format          (GcalMonthView      *self,
                                                                   gboolean            use_24h);
+
+void                 gcal_month_view_set_weather_service         (GcalMonthView      *self,
+                                                                  GcalWeatherService *service);
+
+GcalWeatherService*  gcal_month_view_get_weather_service         (GcalMonthView      *self);
 
 G_END_DECLS
 

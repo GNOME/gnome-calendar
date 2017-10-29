@@ -1670,13 +1670,14 @@ gcal_window_init (GcalWindow *self)
    * FIXME: this is a hack around the issue that happens when trying to bind
    * there properties using the GtkBuilder .ui file.
    */
-  g_object_bind_property (self, "weather-service", self->week_view, "weather-service", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->edit_dialog, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->source_dialog, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->week_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->month_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->year_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "weather-service", self->week_view, "weather-service", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "weather-service", self->month_view, "weather-service", G_BINDING_DEFAULT);
 
   /* setup accels */
   app = g_application_get_default ();

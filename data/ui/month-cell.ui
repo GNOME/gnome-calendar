@@ -31,7 +31,11 @@
             <child>
               <object class="GtkImage" id="weather_icon">
                 <property name="can-focus">False</property>
-                <property name="stock">gtk-missing-image</property>
+                <property name="visible">True</property>
+                <property name="pixel_size">16</property>
+                <style>
+                  <class name="dim-label" />
+                </style>
               </object>
             </child>
           </object>
@@ -67,7 +71,6 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="ellipsize">end</property>
-                        <property name="xalign">0.0</property>
                       </object>
                     </child>
                   </object>
