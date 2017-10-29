@@ -131,6 +131,8 @@ struct _GcalMonthView
   /* Storage for the accumulated scrolling */
   gdouble             scroll_value;
 
+  guint               update_grid_id;
+
   /* property */
   icaltimetype       *date;
   GcalManager        *manager;
@@ -471,8 +473,8 @@ setup_month_grid (GcalMonthView *self,
     }
 }
 
-static void
-update_month_cells (GcalMonthView *self)
+static gboolean
+update_month_cells_in_idle_cb (GcalMonthView *self)
 {
   g_autoptr (GDateTime) dt;
   guint row, col;
@@ -550,6 +552,19 @@ update_month_cells (GcalMonthView *self)
           gtk_widget_queue_draw (GTK_WIDGET (cell));
         }
     }
+
+  self->update_grid_id = 0;
+
+  return G_SOURCE_REMOVE;
+}
+
+static void
+update_month_cells (GcalMonthView *self)
+{
+  if (self->update_grid_id > 0)
+    g_source_remove (self->update_grid_id);
+
+  self->update_grid_id = g_idle_add ((GSourceFunc) update_month_cells_in_idle_cb, self);
 }
 
 static void
@@ -1299,6 +1314,12 @@ gcal_month_view_finalize (GObject *object)
   g_clear_pointer (&self->multi_cell_children, g_list_free);
 
   g_clear_object (&self->manager);
+
+  if (self->update_grid_id > 0)
+    {
+      g_source_remove (self->update_grid_id);
+      self->update_grid_id = 0;
+    }
 
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_month_view_parent_class)->finalize (object);
