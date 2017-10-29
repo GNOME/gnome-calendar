@@ -95,7 +95,6 @@ struct _GcalWeekHeader
   gint              dnd_cell;
 
   GcalWeatherService *weather_service; /* unowned, nullable */
-  gulong              on_weather_changed_hid;
   /* Array of nullable weather infos for each day, starting with Sunday. */
   WeatherInfoDay      weather_infos[7];
 
@@ -110,10 +109,14 @@ typedef enum
 
 enum
 {
+  PROP_0,
+  PROP_WEATHER_SERVICE,
+  NUM_PROPS
+};
+
+enum
+{
   EVENT_ACTIVATED,
-  /*
-  EVENT_WEATHER_MOUSEOVER,
-  */
   LAST_SIGNAL
 };
 
@@ -1091,26 +1094,56 @@ gcal_week_header_finalize (GObject *object)
   for (i = 0; i < 7; i++)
     g_list_free (self->events[i]);
 
+  if (self->weather_service != NULL)
+    {
+      g_signal_handlers_disconnect_by_func (self->weather_service,
+                                            (GCallback) on_weather_update,
+                                            self);
+      g_clear_object (&self->weather_service);
+    }
+
   for (i = 0; i < G_N_ELEMENTS (self->weather_infos); i++)
     wid_clear (&self->weather_infos[i]);
 }
 
 static void
 gcal_week_header_get_property (GObject    *object,
-                               guint       prop_id,
+                               guint       property_id,
                                GValue     *value,
                                GParamSpec *pspec)
 {
-  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+  GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
+
+  switch (property_id)
+    {
+    case PROP_WEATHER_SERVICE:
+      g_value_set_boxed (value, self->weather_service);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+      break;
+    }
 }
 
 static void
 gcal_week_header_set_property (GObject      *object,
-                               guint         prop_id,
+                               guint         property_id,
                                const GValue *value,
                                GParamSpec   *pspec)
 {
-  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+  GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
+
+  switch (property_id)
+    {
+    case PROP_WEATHER_SERVICE:
+        gcal_week_header_set_weather_service (self, GCAL_WEATHER_SERVICE (g_value_get_object (value)));
+        break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+      break;
+    }
 }
 
 static void
@@ -1591,6 +1624,19 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   widget_class->drag_leave = gcal_week_header_drag_leave;
   widget_class->drag_drop = gcal_week_header_drag_drop;
 
+  /**
+   * GcalWeekHeader::weather-service:
+   *
+   * The #GcalWeatherService of the view.
+   */
+  g_object_class_install_property (G_OBJECT_CLASS (kclass),
+                                   PROP_WEATHER_SERVICE,
+                                   g_param_spec_object ("weather-service",
+                                                        "The weather service",
+                                                        "The weather service of the view",
+                                                        GCAL_TYPE_WEATHER_SERVICE,
+                                                        G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_WEEK_HEADER,
                                            G_SIGNAL_RUN_FIRST,
@@ -1598,22 +1644,6 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
                                            G_TYPE_NONE,
                                            1,
                                            GCAL_TYPE_EVENT_WIDGET);
-
-  /* *
-   * GCalWeekHeader::mouseover-weather:
-   * @info: Hovered GcalWeatherInfo
-   *
-   * Triggered when cursor points to a weather indicator.
-   */
-  /*
-  signals[EVENT_WEATHER_MOUSEOVER] = g_signal_new ("weather-mouseover",
-                                                   GCAL_TYPE_WEEK_HEADER,
-                                                   G_SIGNAL_RUN_FIRST,
-                                                   0, NULL, NULL, NULL,
-                                                   G_TYPE_NONE,
-                                                   1,
-                                                   GCAL_TYPE_WEATHER_INFO);
-  */
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-header.ui");
 
@@ -1644,7 +1674,6 @@ gcal_week_header_init (GcalWeekHeader *self)
   self->selection_end = -1;
   self->dnd_cell = -1;
   self->weather_service = NULL;
-  self->on_weather_changed_hid = 0;
   memset (self->weather_infos, 0, sizeof(self->weather_infos));
   gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -1750,26 +1779,11 @@ gcal_week_header_set_weather_service (GcalWeekHeader     *self,
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
   g_return_if_fail (service == NULL || GCAL_IS_WEATHER_SERVICE (service));
 
-  if (self->weather_service == service)
-    return;
-
-  if (self->on_weather_changed_hid > 0)
-    {
-      g_signal_handler_disconnect (self->weather_service, self->on_weather_changed_hid);
-      self->on_weather_changed_hid = 0;
-    }
-
-  self->weather_service = service;
-
-  if (self->weather_service != NULL)
-    self->on_weather_changed_hid = g_signal_connect_object (
-                                         self->weather_service,
-                                         "weather-changed",
-                                         G_CALLBACK (on_weather_update),
-                                         self,
-                                         0);
-
-  gcal_week_header_update_weather_infos (self);
+  gcal_view_set_weather_service_impl_helper (&self->weather_service,
+                                             service,
+                                             (GcalWeatherUpdateFunc) gcal_week_header_update_weather_infos,
+                                             (GCallback) on_weather_update,
+                                             GTK_WIDGET (self));
 }
 
 /**

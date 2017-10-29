@@ -625,18 +625,7 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
-
-  /**
-   * GcalWeekView:weather-service:
-   *
-   * Sets the weather service to use.
-   */
-  g_object_class_install_property
-      (object_class,
-       PROP_WEATHER_SERVICE,
-       g_param_spec_object ("weather-service", "weather-service", "weather-service",
-                            GCAL_TYPE_WEATHER_SERVICE,
-                            G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
+  g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
 
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_WEEK_VIEW,

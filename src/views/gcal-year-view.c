@@ -66,7 +66,7 @@ struct _GcalYearView
 
   /* manager singleton */
   GcalManager  *manager;
-  GcalWeatherService *weather_service;
+  GcalWeatherService *weather_service; /* owned, nullable */
 
   /* range shown on the sidebar */
   icaltimetype *start_selected_date;
@@ -1678,7 +1678,7 @@ gcal_year_view_get_property (GObject    *object,
       break;
 
     case PROP_WEATHER_SERVICE:
-      g_value_set_object (value, gcal_year_view_get_weather_service (self));
+      g_value_set_object (value, self->weather_service);
       break;
 
     case PROP_SHOW_WEEK_NUMBERS:
@@ -1716,7 +1716,11 @@ gcal_year_view_set_property (GObject      *object,
       break;
 
     case PROP_WEATHER_SERVICE:
-      gcal_year_view_set_weather_service (self, g_value_get_object (value));
+      gcal_view_set_weather_service_impl_helper (&self->weather_service,
+                                                 GCAL_WEATHER_SERVICE (g_value_get_object (value)),
+                                                 (GcalWeatherUpdateFunc) update_weather,
+                                                 (GCallback) weather_changed,
+                                                 GTK_WIDGET (self));
       break;
 
     case PROP_SHOW_WEEK_NUMBERS:
@@ -1994,18 +1998,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
-
-  /**
-   * GcalWeekView:weather-service:
-   *
-   * Sets the weather service to use.
-   */
-  g_object_class_install_property
-      (object_class,
-       PROP_WEATHER_SERVICE,
-       g_param_spec_object ("weather-service", "weather-service", "weather-service",
-                            GCAL_TYPE_WEATHER_SERVICE,
-                            G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
+  g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
 
   g_object_class_install_property (object_class,
                                    PROP_SHOW_WEEK_NUMBERS,
@@ -2170,52 +2163,4 @@ gcal_year_view_set_use_24h_format (GcalYearView *year_view,
                                    gboolean      use_24h_format)
 {
   year_view->use_24h_format = use_24h_format;
-}
-
-/**
- * gcal_year_view_set_weather_service:
- * @self: The #GcalYearView instance.
- * @service: (nullable): The weather service to query.
- *
- * Sets the service to query for weather reports.
- */
-void
-gcal_year_view_set_weather_service (GcalYearView       *self,
-                                    GcalWeatherService *service)
-{
-  g_return_if_fail (GCAL_IS_YEAR_VIEW (self));
-  g_return_if_fail (service == NULL || GCAL_IS_WEATHER_SERVICE (service));
-
-  if (self->weather_service != service)
-    {
-      if (self->weather_service != NULL)
-        g_signal_handlers_disconnect_by_func (self->weather_service,
-                                              (GCallback) weather_changed,
-                                              self);
-
-      g_set_object (&self->weather_service, service);
-
-      if (self->weather_service != NULL)
-        g_signal_connect (self->weather_service,
-                          "weather-changed",
-                          (GCallback) weather_changed,
-                          self);
-
-      update_weather (self);
-      g_object_notify (G_OBJECT (self), "weather-service");
-    }
-}
-
-/**
- * gcal_year_view_get_weather_service:
- * @self: The #GcalYearView instance.
- *
- * Returns: (transfer none): The internal weather service object.
- */
-GcalWeatherService*
-gcal_year_view_get_weather_service (GcalYearView *self)
-{
-  g_return_val_if_fail (GCAL_IS_YEAR_VIEW (self), NULL);
-
-  return self->weather_service;
 }

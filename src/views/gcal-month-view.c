@@ -1773,8 +1773,13 @@ gcal_month_view_set_property (GObject       *object,
       break;
 
     case PROP_WEATHER_SERVICE:
-        gcal_month_view_set_weather_service (self, g_value_get_object (value));
-        break;
+      gcal_view_set_weather_service_impl_helper (&self->weather_service,
+                                                 GCAL_WEATHER_SERVICE (g_value_get_object (value)),
+                                                 (GcalWeatherUpdateFunc) update_weather,
+                                                 (GCallback) weather_changed_cb,
+                                                 GTK_WIDGET (self));
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -1800,7 +1805,7 @@ gcal_month_view_get_property (GObject       *object,
       break;
 
     case PROP_WEATHER_SERVICE:
-      g_value_set_boxed (value, gcal_month_view_get_weather_service (self));
+      g_value_set_boxed (value, self->weather_service);
       break;
 
     default:
@@ -2206,18 +2211,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
-
-  /**
-   * GcalWeekView:weather-service:
-   *
-   * Sets the weather service to use.
-   */
-  g_object_class_install_property
-      (object_class,
-       PROP_WEATHER_SERVICE,
-       g_param_spec_object ("weather-service", "weather-service", "weather-service",
-                            GCAL_TYPE_WEATHER_SERVICE,
-                            G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
+  g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
 
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_MONTH_VIEW,
@@ -2326,53 +2320,4 @@ gcal_month_view_set_use_24h_format (GcalMonthView *self,
                                     gboolean       use_24h)
 {
   self->use_24h_format = use_24h;
-}
-
-/**
- * gcal_month_view_set_weather_service:
- * @self: The #GcalWeatherView instance.
- * @service: (nullable): The weather service to query.
- *
- * Sets the service to query for weather reports.
- */
-void
-gcal_month_view_set_weather_service (GcalMonthView      *self,
-                                     GcalWeatherService *service)
-{
-  g_return_if_fail (GCAL_IS_MONTH_VIEW (self));
-  g_return_if_fail (!service || GCAL_IS_WEATHER_SERVICE (service));
-
-  if (self->weather_service == service)
-    return;
-
-  if (self->weather_service)
-    g_signal_handlers_disconnect_by_func (self->weather_service, weather_changed_cb, self);
-
-  g_set_object (&self->weather_service, service);
-
-  if (service)
-    {
-      g_signal_connect (service,
-                        "weather-changed",
-                        G_CALLBACK (weather_changed_cb),
-                        self);
-    }
-
-  update_weather (self, TRUE);
-
-  g_object_notify (G_OBJECT (self), "weather-service");
-}
-
-/**
- * gcal_month_view_get_weather_service:
- * @self: The #GcalWeatherView instance.
- *
- * Returns: (transfer none): The internal weather service object.
- */
-GcalWeatherService*
-gcal_month_view_get_weather_service (GcalMonthView *self)
-{
-  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (self), NULL);
-
-  return self->weather_service;
 }

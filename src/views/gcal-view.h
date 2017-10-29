@@ -21,12 +21,15 @@
 #define __GCAL_VIEW_H__
 
 #include "gcal-event-widget.h"
+#include "gcal-weather-service.h"
 
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_VIEW (gcal_view_get_type ())
 
 G_DECLARE_INTERFACE (GcalView, gcal_view, GCAL, VIEW, GtkWidget)
+
+typedef void (*GcalWeatherUpdateFunc) (GtkWidget *widget);
 
 struct _GcalViewInterface
 {
@@ -63,11 +66,23 @@ icaltimetype*        gcal_view_get_date                          (GcalView      
 
 GcalManager*         gcal_view_get_manager                       (GcalView           *self);
 
+GcalWeatherService*  gcal_view_get_weather_service               (GcalView           *view);
+
+void                 gcal_view_set_weather_service               (GcalView           *view,
+                                                                  GcalWeatherService *service);
+
+void                 gcal_view_set_weather_service_impl_helper   (GcalWeatherService **old_service,
+                                                                  GcalWeatherService *new_service,
+                                                                  GcalWeatherUpdateFunc update_func,
+                                                                  GCallback            weather_changed_cb,
+                                                                  GtkWidget          *data);
+
 void                 gcal_view_clear_marks                       (GcalView           *view);
 
 GList*               gcal_view_get_children_by_uuid              (GcalView              *view,
                                                                   GcalRecurrenceModType  mod,
                                                                   const gchar           *uuid);
+
 
 G_END_DECLS
 
