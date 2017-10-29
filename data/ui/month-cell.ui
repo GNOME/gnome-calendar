@@ -28,13 +28,27 @@
                 </style>
               </object>
             </child>
+
+            <!-- Weather forecast -->
             <child>
               <object class="GtkImage" id="weather_icon">
                 <property name="can-focus">False</property>
                 <property name="visible">True</property>
                 <property name="pixel_size">16</property>
+                <property name="margin-start">12</property>
                 <style>
                   <class name="dim-label" />
+                </style>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkLabel" id="temp_label">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <style>
+                  <class name="dim-label" />
+                  <class name="temp-label" />
                 </style>
               </object>
             </child>
