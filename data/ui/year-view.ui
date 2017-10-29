@@ -77,14 +77,52 @@
                   <class name="sidebar"/>
                 </style>
                 <child>
-                  <object class="GtkLabel" id="no_events_title">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="halign">start</property>
-                    <property name="margin">6</property>
-                    <property name="label" translatable="yes">Today</property>
-                    <style>
-                      <class name="sidebar-header"/>
-                    </style>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkLabel" id="no_events_title">
+                        <property name="visible">True</property>
+                        <property name="halign">start</property>
+                        <property name="label" translatable="yes">Today</property>
+                        <style>
+                          <class name="sidebar-header"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="temp_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">temp</property>
+                        <property name="label">foo</property>
+                        <style>
+                          <class name="temp-label" />
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="weather_icon">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
                   </object>
                 </child>
                 <child>

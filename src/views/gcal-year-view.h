@@ -21,6 +21,7 @@
 
 #include "gcal-manager.h"
 #include "gcal-event-widget.h"
+#include "gcal-weather-service.h"
 
 #include <gtk/gtk.h>
 
@@ -36,6 +37,12 @@ void              gcal_year_view_set_use_24h_format (GcalYearView *year_view,
                                                      gboolean      use_24h_format);
 void              gcal_year_view_set_current_date   (GcalYearView *year_view,
                                                      icaltimetype *current_date);
+
+void              gcal_year_view_set_weather_service (GcalYearView *self,
+                                                      GcalWeatherService *service);
+
+GcalWeatherService* gcal_year_view_get_weather_service (GcalYearView *self);
+
 
 G_END_DECLS
 

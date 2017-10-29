@@ -1678,6 +1678,7 @@ gcal_window_init (GcalWindow *self)
   g_object_bind_property (self, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "weather-service", self->week_view, "weather-service", G_BINDING_DEFAULT);
   g_object_bind_property (self, "weather-service", self->month_view, "weather-service", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "weather-service", self->year_view, "weather-service", G_BINDING_DEFAULT);
 
   /* setup accels */
   app = g_application_get_default ();

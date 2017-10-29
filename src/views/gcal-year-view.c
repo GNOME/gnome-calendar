@@ -59,11 +59,14 @@ struct _GcalYearView
   GtkWidget    *no_events_title;
   GtkWidget    *navigator_sidebar;
   GtkWidget    *scrolled_window;
+  GtkLabel     *temp_label;   /* unowned */
+  GtkImage     *weather_icon; /* unowned */
 
   GtkWidget    *popover; /* Popover for popover_mode */
 
   /* manager singleton */
   GcalManager  *manager;
+  GcalWeatherService *weather_service;
 
   /* range shown on the sidebar */
   icaltimetype *start_selected_date;
@@ -84,7 +87,8 @@ struct _GcalYearView
 
   /**
    * first day of the week according to user locale, being
-   * 0 for Sunday, 1 for Monday and so on */
+   * 0 for Sunday, 1 for Monday and so on
+   */
   gint          first_weekday;
 
   /* first and last weeks of the year */
@@ -94,7 +98,7 @@ struct _GcalYearView
   /* Storage for the accumulated scrolling */
   gdouble         scroll_value;
 
-    /**
+  /**
    * clock format from GNOME desktop settings
    */
   gboolean      use_24h_format;
@@ -121,6 +125,7 @@ enum {
   PROP_0,
   PROP_DATE,
   PROP_MANAGER,
+  PROP_WEATHER_SERVICE,
   PROP_SHOW_WEEK_NUMBERS,
   LAST_PROP
 };
@@ -132,9 +137,11 @@ enum
 };
 
 static guint signals[NUM_SIGNALS] = { 0, };
+static gpointer year_view_parent_class = NULL;
 
 static void   gcal_view_interface_init (GcalViewInterface *iface);
 static void   gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
+static void   update_weather (GcalYearView *self);
 
 G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
@@ -177,6 +184,16 @@ event_activated (GcalEventWidget *widget,
   if (view->popover_mode)
     gtk_widget_hide (view->popover);
   g_signal_emit (GCAL_YEAR_VIEW (user_data), signals[EVENT_ACTIVATED], 0, widget);
+}
+
+static void
+weather_changed (GcalWeatherService *weather_service,
+                 GcalYearView       *self)
+{
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (weather_service));
+  g_return_if_fail (GCAL_IS_YEAR_VIEW (self));
+
+  update_weather (self);
 }
 
 static void
@@ -293,6 +310,7 @@ update_no_events_page (GcalYearView *year_view)
     }
 
   gtk_label_set_text (GTK_LABEL (year_view->no_events_title), title);
+  update_weather (year_view);
   g_free (title);
 }
 
@@ -1588,11 +1606,42 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->get_children_by_uuid = gcal_year_view_get_children_by_uuid;
 }
 
+/* Called when self is destroyed.
+ *
+ * WARNING: This is a workaround. This is one of the views where
+ * reference counts are off. We overwrite destroy to avoid dangling
+ * pointers. This issue needs to be addressed and this function removed.
+ */
+static void
+gcal_year_view_destroyed (GtkWidget *widget)
+{
+  GcalYearView *self = GCAL_YEAR_VIEW (widget);
+
+  if (self->weather_service != NULL)
+    {
+      g_signal_handlers_disconnect_by_func (self->weather_service,
+                                            (GCallback) weather_changed,
+                                            self);
+      g_clear_object (&self->weather_service);
+    }
+
+  GTK_WIDGET_CLASS (year_view_parent_class)->destroy ((GtkWidget*) G_TYPE_CHECK_INSTANCE_CAST (self, GTK_TYPE_BOX, GtkGrid));
+}
+
 static void
 gcal_year_view_finalize (GObject *object)
 {
   GcalYearView *year_view = GCAL_YEAR_VIEW (object);
   guint i;
+
+  if (year_view->weather_service != NULL)
+    {
+      g_signal_connect (year_view->weather_service,
+                        "weather-changed",
+                        (GCallback) weather_changed,
+                        year_view);
+      g_clear_object (&year_view->weather_service);
+    }
 
   g_free (year_view->navigator_grid);
   g_free (year_view->selected_data);
@@ -1628,6 +1677,10 @@ gcal_year_view_get_property (GObject    *object,
       g_value_set_object (value, self->manager);
       break;
 
+    case PROP_WEATHER_SERVICE:
+      g_value_set_object (value, gcal_year_view_get_weather_service (self));
+      break;
+
     case PROP_SHOW_WEEK_NUMBERS:
       g_value_set_boolean (value, self->show_week_numbers);
       break;
@@ -1660,6 +1713,10 @@ gcal_year_view_set_property (GObject      *object,
                                 self->navigator);
 
       g_object_notify (object, "manager");
+      break;
+
+    case PROP_WEATHER_SERVICE:
+      gcal_year_view_set_weather_service (self, g_value_get_object (value));
       break;
 
     case PROP_SHOW_WEEK_NUMBERS:
@@ -1938,6 +1995,18 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
 
+  /**
+   * GcalWeekView:weather-service:
+   *
+   * Sets the weather service to use.
+   */
+  g_object_class_install_property
+      (object_class,
+       PROP_WEATHER_SERVICE,
+       g_param_spec_object ("weather-service", "weather-service", "weather-service",
+                            GCAL_TYPE_WEATHER_SERVICE,
+                            G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
+
   g_object_class_install_property (object_class,
                                    PROP_SHOW_WEEK_NUMBERS,
                                    g_param_spec_boolean ("show-week-numbers",
@@ -1965,6 +2034,8 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, no_events_title);
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, popover);
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, scrolled_window);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, temp_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalYearView, weather_icon);
 
   gtk_widget_class_bind_template_callback (widget_class, draw_navigator);
   gtk_widget_class_bind_template_callback (widget_class, navigator_button_press_cb);
@@ -1979,12 +2050,18 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, popover_closed_cb);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
+
+  /* Hack to deal with broken reference counts: */
+  year_view_parent_class = g_type_class_peek_parent (klass);
+  ((GtkWidgetClass *) klass)->destroy = (void (*) (GtkWidget *)) gcal_year_view_destroyed;
 }
 
 static void
 gcal_year_view_init (GcalYearView *self)
 {
   guint i;
+
+  self->weather_service = NULL;
 
   for (i = 0; i < 12; i++)
     self->events[i] = g_ptr_array_new_with_free_func (g_object_unref);
@@ -2034,6 +2111,52 @@ gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *ifa
   iface->thaw = gcal_year_view_thaw;
 }
 
+static void
+update_weather (GcalYearView *self)
+{
+  gboolean updated = FALSE;
+
+  g_return_if_fail (GCAL_IS_YEAR_VIEW (self));
+
+
+  if (self->weather_service != NULL && self->date != NULL)
+    {
+      GSList *witer;  /* unowned */
+      GDate   date;
+
+      g_date_set_dmy (&date, self->date->day, self->date->month, self->date->year);
+
+      witer = gcal_weather_service_get_weather_infos (self->weather_service);
+      for (; witer != NULL; witer = witer->next)
+        {
+          GcalWeatherInfo *info; /* unowned */
+          GDate wdate;
+
+          info = GCAL_WEATHER_INFO (witer->data);
+          gcal_weather_info_get_date (info, &wdate);
+          if (g_date_compare (&date, &wdate) == 0)
+            {
+              const gchar *temp_str; /* unowned */
+              const gchar *icon_nm;  /* unowned */
+
+              temp_str = gcal_weather_info_get_temperature (info);
+              icon_nm = gcal_weather_info_get_icon_name (info);
+
+              gtk_label_set_text (self->temp_label, temp_str);
+              gtk_image_set_from_icon_name (self->weather_icon, icon_nm, GTK_ICON_SIZE_SMALL_TOOLBAR);
+              updated = TRUE;
+              break;
+            }
+        }
+    }
+
+  if (!updated)
+    {
+      gtk_label_set_text (self->temp_label, "");
+      gtk_image_clear (self->weather_icon);
+    }
+}
+
 /* Public API */
 void
 gcal_year_view_set_first_weekday (GcalYearView *year_view,
@@ -2047,4 +2170,52 @@ gcal_year_view_set_use_24h_format (GcalYearView *year_view,
                                    gboolean      use_24h_format)
 {
   year_view->use_24h_format = use_24h_format;
+}
+
+/**
+ * gcal_year_view_set_weather_service:
+ * @self: The #GcalYearView instance.
+ * @service: (nullable): The weather service to query.
+ *
+ * Sets the service to query for weather reports.
+ */
+void
+gcal_year_view_set_weather_service (GcalYearView       *self,
+                                    GcalWeatherService *service)
+{
+  g_return_if_fail (GCAL_IS_YEAR_VIEW (self));
+  g_return_if_fail (service == NULL || GCAL_IS_WEATHER_SERVICE (service));
+
+  if (self->weather_service != service)
+    {
+      if (self->weather_service != NULL)
+        g_signal_handlers_disconnect_by_func (self->weather_service,
+                                              (GCallback) weather_changed,
+                                              self);
+
+      g_set_object (&self->weather_service, service);
+
+      if (self->weather_service != NULL)
+        g_signal_connect (self->weather_service,
+                          "weather-changed",
+                          (GCallback) weather_changed,
+                          self);
+
+      update_weather (self);
+      g_object_notify (G_OBJECT (self), "weather-service");
+    }
+}
+
+/**
+ * gcal_year_view_get_weather_service:
+ * @self: The #GcalYearView instance.
+ *
+ * Returns: (transfer none): The internal weather service object.
+ */
+GcalWeatherService*
+gcal_year_view_get_weather_service (GcalYearView *self)
+{
+  g_return_val_if_fail (GCAL_IS_YEAR_VIEW (self), NULL);
+
+  return self->weather_service;
 }
