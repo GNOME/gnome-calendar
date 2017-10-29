@@ -38,6 +38,7 @@ struct _GcalEventWidget
   GDateTime          *dt_end;
 
   /* widgets */
+  GtkWidget          *ghost_grid;
   GtkWidget          *hour_label;
   GtkWidget          *main_grid;
   GtkWidget          *summary_label;
@@ -53,6 +54,7 @@ struct _GcalEventWidget
 
   GtkOrientation      orientation;
 
+  guint               toggle_description_id;
   gboolean            button_pressed;
 };
 
@@ -89,6 +91,40 @@ G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_BIN,
 /*
  * Auxiliary methods
  */
+
+static gboolean
+toggle_description_position_cb (GcalEventWidget *self)
+{
+  gint current_top;
+
+  gtk_container_child_get (GTK_CONTAINER (self->main_grid),
+                           self->summary_label,
+                           "top-attach", &current_top,
+                           NULL);
+
+  gtk_label_set_line_wrap (GTK_LABEL (self->summary_label),
+                           !gtk_label_get_line_wrap (GTK_LABEL (self->summary_label)));
+
+  gtk_container_child_set (GTK_CONTAINER (self->main_grid),
+                           self->summary_label,
+                           "left-attach", current_top == 1 ? 1 : 0,
+                           "top-attach", current_top == 1 ? 0 : 1,
+                           "width", current_top == 1 ? 1 : 2,
+                           NULL);
+
+  self->toggle_description_id = 0;
+
+  return G_SOURCE_REMOVE;
+}
+
+static void
+queue_toggle_description_position (GcalEventWidget *self)
+{
+  if (self->toggle_description_id > 0)
+    g_source_remove (self->toggle_description_id);
+
+  self->toggle_description_id = g_idle_add ((GSourceFunc) toggle_description_position_cb, self);
+}
 
 static void
 set_drag_source_enabled (GcalEventWidget *self,
@@ -526,32 +562,23 @@ gcal_event_widget_size_allocate (GtkWidget     *widget,
   if (self->orientation == GTK_ORIENTATION_VERTICAL && !gcal_event_get_all_day (self->event))
     {
       gint minimum_grid_height;
+      gint current_top;
 
-      gtk_label_set_line_wrap (GTK_LABEL (self->summary_label), TRUE);
+      gtk_widget_get_preferred_height (self->ghost_grid, &minimum_grid_height, NULL);
 
-      gtk_container_child_set (GTK_CONTAINER (self->main_grid),
+      gtk_container_child_get (GTK_CONTAINER (self->main_grid),
                                self->summary_label,
-                               "left-attach", 0,
-                               "top-attach", 1,
-                               "width", 2,
+                               "top-attach", &current_top,
                                NULL);
 
-      gtk_widget_get_preferred_height (self->main_grid, &minimum_grid_height, NULL);
-
       /*
-       * There is no vertical space to put the summary label below the hour label.
-       * Thus, reset the label's original attributes.
+       * Since we can't change the position of the events inside size-allocate,
+       * queue it for future iterations of the mainloop.
        */
-      if (allocation->height < minimum_grid_height)
+      if ((allocation->height < minimum_grid_height && current_top == 1) ||
+          (allocation->height >= minimum_grid_height && current_top == 0))
         {
-          gtk_container_child_set (GTK_CONTAINER (self->main_grid),
-                                   self->summary_label,
-                                   "left-attach", 1,
-                                   "top-attach", 0,
-                                   "width", 1,
-                                   NULL);
-
-          gtk_label_set_line_wrap (GTK_LABEL (self->summary_label), FALSE);
+          queue_toggle_description_position (self);
         }
     }
 
@@ -777,6 +804,13 @@ gcal_event_widget_finalize (GObject *object)
   g_clear_pointer (&self->css_class, g_free);
   g_clear_object (&self->event);
 
+  /* withdraw mainloop sources */
+  if (self->toggle_description_id > 0)
+    {
+      g_source_remove (self->toggle_description_id);
+      self->toggle_description_id = 0;
+    }
+
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->finalize (object);
 }
 
@@ -866,6 +900,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/event-widget.ui");
 
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, ghost_grid);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, hour_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, main_grid);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_label);
