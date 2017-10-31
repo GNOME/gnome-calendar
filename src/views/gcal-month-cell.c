@@ -470,6 +470,9 @@ gcal_month_cell_set_date (GcalMonthCell *self,
 
   g_return_if_fail (GCAL_IS_MONTH_CELL (self));
 
+  if (self->date && date && datetime_compare_date (self->date, date) == 0)
+    return;
+
   gcal_clear_datetime (&self->date);
   self->date = g_date_time_ref (date);
 
