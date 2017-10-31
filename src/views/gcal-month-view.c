@@ -125,9 +125,6 @@ struct _GcalMonthView
   /* text direction factors */
   gboolean            k;
 
-  /* The cell hovered during Drag and Drop */
-  gint                dnd_cell;
-
   /* Storage for the accumulated scrolling */
   gdouble             scroll_value;
 
@@ -544,12 +541,6 @@ update_month_cells (GcalMonthView *self)
             }
 
           gcal_month_cell_set_selected (cell, selected);
-
-          /* Drag n' Drop */
-          if (self->dnd_cell != row * 7 + col)
-            gtk_drag_unhighlight (GTK_WIDGET (cell));
-
-          gtk_widget_queue_draw (GTK_WIDGET (cell));
         }
     }
 
@@ -1999,7 +1990,6 @@ gcal_month_view_init (GcalMonthView *self)
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
-  self->dnd_cell = -1;
   self->children = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_list_free);
   self->single_cell_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   self->overflow_cells = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
