@@ -474,7 +474,7 @@ setup_month_grid (GcalMonthView *self,
 }
 
 static gboolean
-update_month_cells_in_idle_cb (GcalMonthView *self)
+update_month_cells (GcalMonthView *self)
 {
   g_autoptr (GDateTime) dt;
   guint row, col;
@@ -559,12 +559,12 @@ update_month_cells_in_idle_cb (GcalMonthView *self)
 }
 
 static void
-update_month_cells (GcalMonthView *self)
+queue_update_month_cells (GcalMonthView *self)
 {
   if (self->update_grid_id > 0)
     g_source_remove (self->update_grid_id);
 
-  self->update_grid_id = g_idle_add ((GSourceFunc) update_month_cells_in_idle_cb, self);
+  self->update_grid_id = g_idle_add ((GSourceFunc) update_month_cells, self);
 }
 
 static void
@@ -909,8 +909,6 @@ gcal_month_view_component_added (ECalDataModelSubscriber *subscriber,
   gtk_widget_show (event_widget);
   gtk_container_add (GTK_CONTAINER (subscriber), event_widget);
 
-  update_month_cells (GCAL_MONTH_VIEW (subscriber));
-
   g_clear_object (&event);
 }
 
@@ -955,8 +953,6 @@ gcal_month_view_component_modified (ECalDataModelSubscriber *subscriber,
       gtk_widget_destroy (new_widget);
     }
 
-  update_month_cells (self);
-
   g_clear_object (&event);
 }
 
@@ -991,7 +987,6 @@ gcal_month_view_component_removed (ECalDataModelSubscriber *subscriber,
     }
 
   gtk_widget_destroy (l->data);
-  update_month_cells (self);
 }
 
 static void
@@ -1783,7 +1778,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
         }
     }
 
-  update_month_cells (self);
+  queue_update_month_cells (self);
 }
 
 static gboolean
