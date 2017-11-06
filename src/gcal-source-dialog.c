@@ -976,15 +976,16 @@ static void
 calendar_file_selected (GtkFileChooser *button,
                         gpointer        user_data)
 {
+  g_autofree gchar* display_name = NULL;
+  g_autoptr (ESource) source = NULL;
+  g_autoptr (GFile) file = NULL;
   GcalSourceDialog *self;
   ESourceExtension *ext;
-  ESource *source;
-  GFile *file;
 
   self = GCAL_SOURCE_DIALOG (user_data);
   file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (button));
 
-  if (file == NULL)
+  if (!file)
     return;
 
   /**
@@ -1001,7 +1002,8 @@ calendar_file_selected (GtkFileChooser *button,
   e_source_local_set_custom_file (E_SOURCE_LOCAL (ext), file);
 
   /* update the source properties */
-  e_source_set_display_name (source, g_file_get_basename (file));
+  display_name = g_file_get_basename (file);
+  e_source_set_display_name (source, display_name);
 
   /* Jump to the edit page */
   gcal_source_dialog_set_source (GCAL_SOURCE_DIALOG (user_data), source);
