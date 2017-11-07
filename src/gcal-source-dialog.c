@@ -257,6 +257,14 @@ GActionEntry actions[] = {
   {"web",   on_web_activated,   NULL, NULL, NULL}
 };
 
+const gchar*
+import_file_extensions[] = {
+  ".ical",
+  ".ics",
+  ".ifb",
+  ".icalendar",
+  ".vcs"
+};
 
 static void
 add_button_clicked (GtkWidget *button,
@@ -972,11 +980,47 @@ stack_visible_child_name_changed (GObject    *object,
     }
 }
 
+/* calendar_path_to_name_suggestion:
+ * @file: a calendar file reference.
+ *
+ * Returns: (transfer full): A calendar name.
+ */
+static gchar*
+calendar_path_to_name_suggestion (GFile *file)
+{
+  g_autofree gchar *unencoded_basename = NULL;
+  g_autofree gchar *basename = NULL;
+  gchar *ext;
+  guint i;
+
+  g_return_val_if_fail (G_IS_FILE (file), NULL);
+
+  unencoded_basename = g_file_get_basename (file);
+  basename = g_filename_display_name (unencoded_basename);
+
+  ext = strrchr (basename, '.');
+
+  if (!ext)
+    return NULL;
+
+  for (i = 0; i < G_N_ELEMENTS(import_file_extensions); i++)
+    {
+      if (g_ascii_strcasecmp (import_file_extensions[i], ext) == 0)
+        {
+           *ext = '\0';
+           break;
+        }
+    }
+
+  g_strdelimit (basename, "-_", ' ');
+
+  return g_steal_pointer (&basename);
+}
+
 static void
 calendar_file_selected (GtkFileChooser *button,
                         gpointer        user_data)
 {
-  g_autofree gchar *unencoded_display_name = NULL;
   g_autofree gchar *display_name = NULL;
   g_autoptr (ESource) source = NULL;
   g_autoptr (GFile) file = NULL;
@@ -1003,8 +1047,7 @@ calendar_file_selected (GtkFileChooser *button,
   e_source_local_set_custom_file (E_SOURCE_LOCAL (ext), file);
 
   /* update the source properties */
-  unencoded_display_name = g_file_get_basename (file);
-  display_name = g_filename_display_name (unencoded_display_name);
+  display_name = calendar_path_to_name_suggestion (file);
   e_source_set_display_name (source, display_name);
 
   /* Jump to the edit page */
