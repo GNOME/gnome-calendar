@@ -95,7 +95,7 @@ struct _GcalSourceDialog
   /* stub goa rows */
   GtkWidget          *exchange_stub_row;
   GtkWidget          *google_stub_row;
-  GtkWidget          *owncloud_stub_row;
+  GtkWidget          *nextcloud_stub_row;
 
   /* flags */
   GcalSourceDialogMode mode;
@@ -737,7 +737,7 @@ online_accounts_listbox_row_activated (GtkListBox    *box,
     {
       spawn_goa_with_args ("add", "google");
     }
-  else if ((GtkWidget*) row == self->owncloud_stub_row)
+  else if ((GtkWidget*) row == self->nextcloud_stub_row)
     {
       spawn_goa_with_args ("add", "owncloud");
     }
@@ -1894,7 +1894,7 @@ add_goa_account (GcalSourceDialog *dialog,
 
     case GCAL_ACCOUNT_TYPE_OWNCLOUD:
       icon_name = "goa-account-owncloud";
-      gtk_widget_hide (dialog->owncloud_stub_row);
+      gtk_widget_hide (dialog->nextcloud_stub_row);
       break;
 
     case GCAL_ACCOUNT_TYPE_NOT_SUPPORTED:
@@ -1985,7 +1985,7 @@ goa_account_removed_cb (GoaClient *client,
           break;
 
         case GCAL_ACCOUNT_TYPE_OWNCLOUD:
-          gtk_widget_show (self->owncloud_stub_row);
+          gtk_widget_show (self->nextcloud_stub_row);
           break;
 
         case GCAL_ACCOUNT_TYPE_NOT_SUPPORTED:
@@ -2194,7 +2194,7 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, notification);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, notification_label);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, online_accounts_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, owncloud_stub_row);
+  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, nextcloud_stub_row);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, remove_button);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, settings_button);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, stack);
