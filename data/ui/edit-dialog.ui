@@ -268,6 +268,7 @@
                       <object class="GcalDateSelector" id="start_date_selector">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="input-hints">no-emoji</property>
                         <signal name="notify::date" handler="sync_datetimes" object="GcalEditDialog" swapped="yes" />
                       </object>
                     </child>
@@ -282,6 +283,7 @@
                       <object class="GcalDateSelector" id="end_date_selector">
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
+                        <property name="input-hints">no-emoji</property>
                         <signal name="notify::date" handler="sync_datetimes" object="GcalEditDialog" swapped="yes" />
                       </object>
                     </child>
@@ -478,6 +480,7 @@
                           <object class = "GtkSpinButton" id="number_of_occurrences_spin">
                             <property name="visible">True</property>
                             <property name="input_purpose">number</property>
+                            <property name="input-hints">no-emoji</property>
                           </object>
                         </child>
 

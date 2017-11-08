@@ -6,6 +6,7 @@
     <property name="width-chars">16</property>
     <property name="max-width-chars">16</property>
     <property name="secondary-icon-name">pan-down-symbolic</property>
+    <property name="input-hints">no-emoji</property>
     <signal name="icon-press" handler="icon_pressed_cb" object="GcalDateSelector" swapped="no"/>
   </template>
   <object class="GtkPopover" id="date_selector_popover">
