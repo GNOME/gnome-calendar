@@ -1154,7 +1154,7 @@ on_file_activated (GSimpleAction *action,
   /* Dialog */
   dialog = gtk_file_chooser_dialog_new (_("Select a calendar file"),
                                         GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (user_data))),
-                                        GTK_FILE_CHOOSER_ACTION_SAVE,
+                                        GTK_FILE_CHOOSER_ACTION_OPEN,
                                         _("Cancel"), GTK_RESPONSE_CANCEL,
                                         _("Open"), GTK_RESPONSE_OK,
                                         NULL);
