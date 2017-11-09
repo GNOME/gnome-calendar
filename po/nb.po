@@ -6,11 +6,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-calendar 3.26.x\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-10-25 14:50+0000\n"
-"PO-Revision-Date: 2017-11-05 12:57+0100\n"
+"Project-Id-Version: gnome-calendar 3.27.x\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2017-11-09 01:57+0000\n"
+"PO-Revision-Date: 2017-11-09 19:51+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: nb\n"
@@ -116,7 +115,7 @@ msgid "Remove the alarm"
 msgstr "Fjern alarmen"
 
 #: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
-#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1111
+#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1158
 msgid "Cancel"
 msgstr "Avbryt"
 
@@ -152,87 +151,87 @@ msgstr "Notater"
 msgid "Location"
 msgstr "Plassering"
 
-#: data/ui/edit-dialog.ui:299
+#: data/ui/edit-dialog.ui:301
 msgid "Time"
 msgstr "Tid"
 
-#: data/ui/edit-dialog.ui:352
+#: data/ui/edit-dialog.ui:354
 msgid "All Day"
 msgstr "Hele dagen"
 
-#: data/ui/edit-dialog.ui:397
+#: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
 msgstr "Legg til påminnelse …"
 
-#: data/ui/edit-dialog.ui:428
+#: data/ui/edit-dialog.ui:430
 msgid "No Repeat"
 msgstr "Ingen gjentakelse"
 
-#: data/ui/edit-dialog.ui:429
+#: data/ui/edit-dialog.ui:431
 msgid "Daily"
 msgstr "Daglig"
 
-#: data/ui/edit-dialog.ui:430
+#: data/ui/edit-dialog.ui:432
 msgid "Monday – Friday"
 msgstr "Mandag – fredag"
 
-#: data/ui/edit-dialog.ui:431
+#: data/ui/edit-dialog.ui:433
 msgid "Weekly"
 msgstr "Ukentlig"
 
-#: data/ui/edit-dialog.ui:432
+#: data/ui/edit-dialog.ui:434
 msgid "Monthly"
 msgstr "Månedlig"
 
-#: data/ui/edit-dialog.ui:433
+#: data/ui/edit-dialog.ui:435
 msgid "Yearly"
 msgstr "Årlig"
 
-#: data/ui/edit-dialog.ui:461
+#: data/ui/edit-dialog.ui:463
 msgid "Forever"
 msgstr "For alltid"
 
-#: data/ui/edit-dialog.ui:462
+#: data/ui/edit-dialog.ui:464
 msgid "No. of occurrences"
 msgstr "Antall gjentakelser"
 
-#: data/ui/edit-dialog.ui:463
+#: data/ui/edit-dialog.ui:465
 msgid "Until Date"
 msgstr "Til dato"
 
-#: data/ui/edit-dialog.ui:557
+#: data/ui/edit-dialog.ui:560
 msgid "Delete Event"
 msgstr "Slett hendelse"
 
-#: data/ui/edit-dialog.ui:596
+#: data/ui/edit-dialog.ui:599
 msgid "5 minutes"
 msgstr "Fem minutter"
 
-#: data/ui/edit-dialog.ui:605
+#: data/ui/edit-dialog.ui:608
 msgid "10 minutes"
 msgstr "Ti minutter"
 
-#: data/ui/edit-dialog.ui:614
+#: data/ui/edit-dialog.ui:617
 msgid "30 minutes"
 msgstr "Tredve minutter"
 
-#: data/ui/edit-dialog.ui:623
+#: data/ui/edit-dialog.ui:626
 msgid "1 hour"
 msgstr "En time"
 
-#: data/ui/edit-dialog.ui:631
+#: data/ui/edit-dialog.ui:634
 msgid "1 day"
 msgstr "En dag"
 
-#: data/ui/edit-dialog.ui:640
+#: data/ui/edit-dialog.ui:643
 msgid "2 days"
 msgstr "To dager"
 
-#: data/ui/edit-dialog.ui:649
+#: data/ui/edit-dialog.ui:652
 msgid "3 days"
 msgstr "Tre dager"
 
-#: data/ui/edit-dialog.ui:658
+#: data/ui/edit-dialog.ui:661
 msgid "1 week"
 msgstr "En uke"
 
@@ -352,6 +351,10 @@ msgstr "Ny lokal kalender …"
 msgid "From File…"
 msgstr "Fra fil …"
 
+#: data/ui/month-view.ui:199 data/ui/year-view.ui:117
+msgid "Add Event…"
+msgstr "Legg til hendelse …"
+
 #: data/ui/quick-add-popover.ui:117
 msgid "Edit Details…"
 msgstr "Rediger detaljer …"
@@ -391,8 +394,8 @@ msgid "Click to set up"
 msgstr "Klikk for å sette opp"
 
 #: data/ui/source-dialog.ui:249
-msgid "ownCloud"
-msgstr "ownCloud"
+msgid "Nextcloud"
+msgstr "Nextcloud"
 
 #: data/ui/source-dialog.ui:300
 msgid "Microsoft Exchange"
@@ -452,13 +455,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Adresse til kalender"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2234
-#: src/gcal-source-dialog.c:2240
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2281
+#: src/gcal-source-dialog.c:2287
 msgid "Add Calendar"
 msgstr "Legg til kalender"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:334
-#: src/gcal-source-dialog.c:853 src/gcal-source-dialog.c:2263
+#: src/gcal-source-dialog.c:861 src/gcal-source-dialog.c:2310
 msgid "Calendar Settings"
 msgstr "Innstillinger for kalender"
 
@@ -478,7 +481,7 @@ msgstr "Oppgi påloggingsinformasjon"
 msgid "Connect"
 msgstr "Koble til"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:764
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:770
 #: src/views/gcal-week-view.c:291
 msgid "00:00"
 msgstr "00:00"
@@ -524,10 +527,6 @@ msgstr "Søk etter hendelser"
 #: data/ui/year-view.ui:95
 msgid "No events"
 msgstr "Ingen hendelser"
-
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2729
-msgid "Add Event…"
-msgstr "Legg til hendelse …"
 
 #: src/gcal-application.c:85
 msgid "Display version number"
@@ -598,7 +597,7 @@ msgid "Unnamed event"
 msgstr "Hendelse uten navn"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:364
+#: src/gcal-event-widget.c:390
 #, c-format
 msgid "At %s"
 msgstr "Kl. %s"
@@ -876,38 +875,38 @@ msgid "Use the entry above to search for events."
 msgstr "Bruk elementet ovenfor for å søke etter hendelser."
 
 #. Dialog
-#: src/gcal-source-dialog.c:1108
+#: src/gcal-source-dialog.c:1155
 msgid "Select a calendar file"
 msgstr "Velg en kalenderfil"
 
-#: src/gcal-source-dialog.c:1112
+#: src/gcal-source-dialog.c:1159
 msgid "Open"
 msgstr "Åpne"
 
-#: src/gcal-source-dialog.c:1119
+#: src/gcal-source-dialog.c:1166
 msgid "Calendar files"
 msgstr "Kalenderfiler"
 
 #. update the source properties
-#: src/gcal-source-dialog.c:1153
+#: src/gcal-source-dialog.c:1200
 msgid "Unnamed Calendar"
 msgstr "Kalender uten navn"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1759
+#: src/gcal-source-dialog.c:1806
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalender <b>%s</b> fjernet"
 
-#: src/gcal-source-dialog.c:1808 src/gcal-source-dialog.c:1864
+#: src/gcal-source-dialog.c:1855 src/gcal-source-dialog.c:1911
 msgid "Off"
 msgstr "Av"
 
-#: src/gcal-source-dialog.c:1808 src/gcal-source-dialog.c:1864
+#: src/gcal-source-dialog.c:1855 src/gcal-source-dialog.c:1911
 msgid "On"
 msgstr "På"
 
-#: src/gcal-source-dialog.c:1863
+#: src/gcal-source-dialog.c:1910
 msgid "Expired"
 msgstr "Utløpt"
 
@@ -953,29 +952,25 @@ msgstr "Enda en hendelse slettet"
 msgid "Event deleted"
 msgstr "Hendelse slettet"
 
+#. Popover title
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-month-view.c:296 src/views/gcal-year-view.c:291
+#: src/views/gcal-month-view.c:379 src/views/gcal-year-view.c:291
 #: src/views/gcal-year-view.c:513
 msgid "%B %d"
 msgstr "%d %B"
 
-#: src/views/gcal-month-view.c:1627
-msgid "Other events"
-msgstr "Andre hendelser"
+#: src/views/gcal-week-grid.c:767 src/views/gcal-week-view.c:288
+msgid "00 AM"
+msgstr "00 AM"
 
-#. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:2224 src/views/gcal-week-header.c:338
+#: src/views/gcal-week-header.c:338
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Annen hendelse"
 msgstr[1] "%d andre hendelser"
-
-#: src/views/gcal-week-grid.c:761 src/views/gcal-week-view.c:288
-msgid "00 AM"
-msgstr "00 AM"
 
 #: src/views/gcal-week-header.c:871
 #, c-format
