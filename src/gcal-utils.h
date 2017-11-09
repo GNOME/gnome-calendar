@@ -34,6 +34,9 @@
 #define gcal_clear_datetime(dt) g_clear_pointer (dt, g_date_time_unref)
 #define gcal_clear_timeout(pp) { if (pp && *pp) { g_source_remove (*pp); *pp = 0; } }
 
+/* Add autoptr support for libecal */
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ESource, g_object_unref)
+
 /**
  * GcalWindowViewType:
  * @GCAL_WINDOW_VIEW_DAY: Day view (not implemented)
