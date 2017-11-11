@@ -590,9 +590,21 @@ gcal_month_cell_get_real_height (GcalMonthCell *self)
 gint
 gcal_month_cell_get_header_height (GcalMonthCell *self)
 {
+  GtkStyleContext *context;
+  GtkBorder padding;
+  GtkBorder border;
+
   g_return_val_if_fail (GCAL_IS_MONTH_CELL (self), -1);
 
-  return gtk_widget_get_allocated_height (self->header_box);
+  context = gtk_widget_get_style_context (GTK_WIDGET (self->header_box));
+  gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
+  gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
+
+  return gtk_widget_get_allocated_height (self->header_box) +
+         gtk_widget_get_margin_top (self->header_box) +
+         gtk_widget_get_margin_bottom (self->header_box) +
+         padding.top + padding.bottom +
+         border.top + border.bottom;
 }
 
 gboolean
