@@ -563,7 +563,7 @@ gcal_month_cell_set_overflow (GcalMonthCell *self,
 
   self->n_overflow = n_overflow;
 
-  text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", n_overflow), n_overflow);
+  text = g_strdup_printf ("+%d", n_overflow);
   gtk_label_set_text (GTK_LABEL (self->overflow_label), text);
 }
 
