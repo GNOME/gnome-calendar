@@ -1398,16 +1398,19 @@ remove_cell_border_and_padding (GtkWidget *cell,
   GtkStyleContext *cell_context;
   GtkBorder cell_padding;
   GtkBorder cell_border;
+  gint header_height;
 
   cell_context = gtk_widget_get_style_context (cell);
   gtk_style_context_get_border (cell_context, gtk_style_context_get_state (cell_context), &cell_border);
   gtk_style_context_get_padding (cell_context, gtk_style_context_get_state (cell_context), &cell_padding);
 
+  header_height = gcal_month_cell_get_header_height (GCAL_MONTH_CELL (cell));
+
   if (x)
     *x += cell_border.left + cell_padding.left;
 
   if (y)
-    *y += cell_border.top + cell_padding.top;
+    *y += cell_border.top + cell_padding.top + header_height;
 
   if (width)
     {

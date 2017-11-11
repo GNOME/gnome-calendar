@@ -53,6 +53,8 @@ void                 gcal_month_cell_set_overflow                (GcalMonthCell 
 
 gint                 gcal_month_cell_get_real_height             (GcalMonthCell      *self);
 
+gint                 gcal_month_cell_get_header_height           (GcalMonthCell      *self);
+
 gboolean             gcal_month_cell_get_selected                (GcalMonthCell      *self);
 
 void                 gcal_month_cell_set_selected                (GcalMonthCell      *self,
