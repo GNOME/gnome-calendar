@@ -15,23 +15,9 @@
 
   <maintainer>
     <foaf:Person>
-      <foaf:name>Erick Pérez Castellanos</foaf:name>
-      <foaf:mbox rdf:resource="mailto:erickpc@gnome.org" />
-      <gnome:userid>erickpc</gnome:userid>
-    </foaf:Person>
-  </maintainer>
-  <maintainer>
-    <foaf:Person>
       <foaf:name>Georges Basile Stavracas Neto</foaf:name>
       <foaf:mbox rdf:resource="mailto:georges.stavracas@gmail.com" />
       <gnome:userid>gbsneto</gnome:userid>
-    </foaf:Person>
-  </maintainer>
-  <maintainer>
-    <foaf:Person>
-      <foaf:name>Isaque Galdino</foaf:name>
-      <foaf:mbox rdf:resource="mailto:igaldino@gmail.com" />
-      <gnome:userid>igaldino</gnome:userid>
     </foaf:Person>
   </maintainer>
 </Project>
