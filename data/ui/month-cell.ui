@@ -17,6 +17,8 @@
             <property name="can-focus">False</property>
             <property name="valign">start</property>
             <property name="spacing">6</property>
+            <property name="margin">6</property>
+            <property name="margin-bottom">3</property>
             <child>
               <object class="GtkLabel" id="day_label">
                 <property name="visible">True</property>
@@ -25,18 +27,12 @@
                   <class name="day-label" />
                 </style>
               </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
             </child>
             <child>
               <object class="GtkImage" id="weather_icon">
                 <property name="can-focus">False</property>
                 <property name="stock">gtk-missing-image</property>
               </object>
-              <packing>
-                <property name="pack-type">end</property>
-              </packing>
             </child>
           </object>
         </child>
