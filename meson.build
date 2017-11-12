@@ -62,50 +62,6 @@ foreach define: set_defines
   config_h.set_quoted(define[0], define[1])
 endforeach
 
-# headers
-check_headers = [
-  ['HAVE_DLFCN_H', 'dlfcn.h'],
-  ['HAVE_INTTYPES_H', 'inttypes.h'],
-  ['HAVE_LANGINFO_H', 'langinfo.h'],
-  ['HAVE_LOCALE_H', 'locale.h'],
-  ['HAVE_MEMORY_H', 'memory.h'],
-  ['HAVE_STDINT_H', 'stdint.h'],
-  ['HAVE_STDLIB_H', 'stdlib.h'],
-  ['HAVE_STRINGS_H', 'strings.h'],
-  ['HAVE_STRING_H', 'string.h'],
-  ['HAVE_SYS_STAT_H', 'sys/stat.h'],
-  ['HAVE_SYS_TYPES_H', 'sys/types.h'],
-  ['HAVE_UNISTD_H', 'unistd.h']
-]
-
-foreach header: check_headers
-  config_h.set(header[0], cc.has_header(header[1]))
-endforeach
-
-# functions
-check_functions = [
-  ['HAVE_DCGETTEXT', 'dcgettext'],
-  ['HAVE_GETTEXT', 'gettext'],
-  ['HAVE_FLOOR', 'floor'],
-  ['HAVE_ICONV', 'iconv'],
-  ['HAVE_MEMSET', 'memset'],
-  ['HAVE_NL_LANGINFO', 'nl_langinfo'],
-  ['HAVE_POW', 'pow'],
-  ['HAVE_SETLOCALE', 'setlocale'],
-  ['HAVE_STRSTR', 'strstr']
-]
-
-if host_machine.system().contains('darwin')
-  check_functions += [
-    ['HAVE_CFLOCALECOPYCURRENT', 'CFLocaleCopyCurrent'],
-    ['HAVE_CFPREFERENCESCOPYAPPVALUE', 'CFPreferencesCopyAppValue']
-  ]
-endif
-
-foreach func: check_functions
-  config_h.set(func[0], cc.has_function(func[1]))
-endforeach
-
 assert(cc.has_function('strerror'), '"strerror" not found')
 
 # options
@@ -133,13 +89,11 @@ common_flags = [
   '-DGWEATHER_I_KNOW_THIS_IS_UNSTABLE'
 ]
 
-test_cflags = ['-Wno-sign-compare']
+test_cflags = '-Wno-sign-compare'
 
-foreach cflag: test_cflags
-  if cc.has_argument(cflag)
-    common_flags += [cflag]
-  endif
-endforeach
+if cc.has_argument(cflag)
+  common_flags += [cflag]
+endif
 
 if calendar_debug
   common_flags += [
@@ -180,11 +134,6 @@ geoclue_dep = dependency('libgeoclue-2.0', version: '>=2.4')
 geocode_dep = dependency('geocode-glib-1.0', version: '>=3.23')
 m_dep = cc.find_library('m')
 
-configure_file(
-         output: 'config.h',
-  configuration: config_h
-)
-
 gnome = import('gnome')
 i18n = import('i18n')
 pkg = import('pkgconfig')
@@ -208,6 +157,11 @@ subdir('tests')
 if enable_gtk_doc
   subdir('doc/reference')
 endif
+
+configure_file(
+         output: 'config.h',
+  configuration: config_h
+)
 
 meson.add_install_script('meson_post_install.py')
 
