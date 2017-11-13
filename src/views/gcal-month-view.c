@@ -89,11 +89,6 @@ struct _GcalMonthView
   GHashTable         *overflow_cells;
 
   /*
-   * Set containing the master widgets hidden for delete;
-   */
-  GHashTable         *hidden_as_overflow;
-
-  /*
    * the cell on which its drawn the first day of the month, in the first row, 0 for the first
    * cell, 1 for the second, and so on, this takes first_weekday into account already.
    */
@@ -305,14 +300,15 @@ get_month_cell_at_position (GcalMonthView *self,
   return NULL;
 }
 
-static gboolean
+static void
 get_widget_parts (gint     first_cell,
                   gint     last_cell,
                   gint     natural_height,
                   gdouble *vertical_cell_space,
                   gdouble *size_left,
                   GArray  *cells,
-                  GArray  *lengths)
+                  GArray  *lengths,
+                  GArray  *length_visible)
 {
   gdouble old_y;
   gdouble y;
@@ -331,17 +327,22 @@ get_widget_parts (gint     first_cell,
 
   for (i = first_cell; i <= last_cell; i++)
     {
-      if (size_left[i] < natural_height)
-        return FALSE;
+      gboolean visible_at_range;
+      gboolean different_row;
+
+      visible_at_range = size_left[i] >= natural_height;
+      different_row = i / 7 != (i - 1) / 7;
 
       y = vertical_cell_space[i] - size_left[i];
 
-      if (old_y == -1.0 || y != old_y)
+      if (old_y == -1.0 || y != old_y || different_row)
         {
           current_part_length = 1;
+          old_y = y;
+
           g_array_append_val (cells, i);
           g_array_append_val (lengths, current_part_length);
-          old_y = y;
+          g_array_append_val (length_visible, visible_at_range);
         }
       else
         {
@@ -349,8 +350,6 @@ get_widget_parts (gint     first_cell,
           g_array_index (lengths, gint, lengths->len - 1) = current_part_length;
         }
     }
-
-  return TRUE;
 }
 
 static void
@@ -1175,8 +1174,6 @@ gcal_month_view_remove (GtkContainer *container,
         g_hash_table_remove (self->children, uuid);
       else
         g_hash_table_replace (self->children, g_strdup (uuid), l);
-
-      g_hash_table_remove (self->hidden_as_overflow, uuid);
     }
 
 out:
@@ -1295,7 +1292,6 @@ gcal_month_view_finalize (GObject *object)
   g_clear_pointer (&self->children, g_hash_table_destroy);
   g_clear_pointer (&self->single_cell_children, g_hash_table_destroy);
   g_clear_pointer (&self->overflow_cells, g_hash_table_destroy);
-  g_clear_pointer (&self->hidden_as_overflow, g_hash_table_destroy);
   g_clear_pointer (&self->multi_cell_children, g_list_free);
 
   g_clear_object (&self->manager);
@@ -1500,21 +1496,22 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
    */
   for (l = self->multi_cell_children; l; l = g_list_next (l))
     {
+      g_autoptr (GArray) visible_at_length = NULL;
       g_autoptr (GArray) lengths = NULL;
       g_autoptr (GArray) cells = NULL;
       GDateTime *date;
       GcalEvent *event;
-      gboolean visible, all_day;
-      gint first_cell, last_cell, first_row, last_row, start, end;
+      gboolean all_day;
+      gint first_cell, last_cell;
+      gint first_row, last_row;
+      gint start, end;
+      gint cell;
 
       child_widget = (GtkWidget*) l->data;
       event = gcal_event_widget_get_event (l->data);
       uuid = gcal_event_get_uid (event);
       all_day = gcal_event_get_all_day (event);
       child_context = gtk_widget_get_style_context (l->data);
-
-      if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (self->hidden_as_overflow, uuid))
-        continue;
 
       gtk_widget_show (child_widget);
       gtk_widget_get_preferred_height (child_widget, &minimum_height, NULL);
@@ -1573,11 +1570,11 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
        */
       first_row = first_cell / 7;
       last_row = last_cell / 7;
-      visible = TRUE;
       cells = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
       lengths = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
+      visible_at_length = g_array_sized_new (TRUE, TRUE, sizeof (gboolean), 16);
 
-      for (row = first_row; row <= last_row && visible; row++)
+      for (row = first_row; row <= last_row; row++)
         {
           start = row * 7 + self->k * 6;
           end = row * 7 + (1 - self->k) * 6;
@@ -1587,51 +1584,42 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           if (row == last_row)
             end = last_cell;
 
-          visible = get_widget_parts (start, end, minimum_height, vertical_cell_space, size_left, cells, lengths);
+          get_widget_parts (start, end,
+                            minimum_height,
+                            vertical_cell_space,
+                            size_left,
+                            cells,
+                            lengths,
+                            visible_at_length);
         }
 
-      /* No space left, add to the overflow and continue */
-      if (!visible)
-        {
-          gtk_widget_hide (child_widget);
-          g_hash_table_add (self->hidden_as_overflow, g_strdup (uuid));
-
-          for (row = first_cell; row <= last_cell; row++)
-            {
-              aux = g_hash_table_lookup (self->overflow_cells, GINT_TO_POINTER (row));
-              aux = g_list_append (aux, child_widget);
-
-              if (g_list_length (aux) == 1)
-                g_hash_table_insert (self->overflow_cells, GINT_TO_POINTER (row), aux);
-              else
-                g_hash_table_replace (self->overflow_cells, GINT_TO_POINTER (row), g_list_copy (aux));
-            }
-
-          continue;
-        }
-
-      for (row = 0; row < cells->len; row++)
+      for (cell = 0; cell < cells->len; cell++)
         {
           g_autoptr (GDateTime) dt_start = NULL;
           g_autoptr (GDateTime) dt_end = NULL;
+          gboolean visible;
           gdouble width;
           gint cell_idx;
           gint length;
-          gint real_row;
           gint column;
           gint day;
 
-          cell_idx = g_array_index (cells, gint, row);
-          length = g_array_index (lengths, gint, row);
-          real_row = cell_idx / 7;
+          visible = g_array_index (visible_at_length, gboolean, cell);
+          cell_idx = g_array_index (cells, gint, cell);
+          length = g_array_index (lengths, gint, cell);
+          row = cell_idx / 7;
           column = cell_idx % 7;
           day = cell_idx - self->days_delay + 1;
 
           /* Day number is calculated differently on RTL languages */
           if (self->k)
-            day = 7 * real_row + MIRROR (cell_idx % 7, 0, 7) - self->days_delay - length + 1;
+            day = 7 * row + MIRROR (cell_idx % 7, 0, 7) - self->days_delay - length + 1;
 
-          if (row != 0)
+          /*
+           * Setup a new event widget when the cell index changes. This happens when
+           * the event has a different y position, or when the row changed.
+           */
+          if (cell != 0)
             {
               child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
 
@@ -1644,11 +1632,32 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               aux = g_list_append (aux, child_widget);
             }
 
+          /* No space left, add to the overflow and continue */
+          if (!visible)
+            {
+              gint idx;
+
+              gtk_widget_hide (child_widget);
+
+              for (idx = cell_idx; idx < cell_idx + length; idx++)
+                {
+                  aux = g_hash_table_lookup (self->overflow_cells, GINT_TO_POINTER (idx));
+                  aux = g_list_append (aux, child_widget);
+
+                  if (g_list_length (aux) == 1)
+                    g_hash_table_insert (self->overflow_cells, GINT_TO_POINTER (idx), aux);
+                  else
+                    g_hash_table_replace (self->overflow_cells, GINT_TO_POINTER (idx), g_list_copy (aux));
+                }
+
+              continue;
+            }
+
           /* Retrieve the cell widget */
           if (self->k)
-            month_cell = self->month_cell[real_row][6 - column];
+            month_cell = self->month_cell[row][6 - column];
           else
-            month_cell = self->month_cell[real_row][column];
+            month_cell = self->month_cell[row][column];
 
           gtk_widget_get_allocation (month_cell, &cell_alloc);
 
@@ -1689,7 +1698,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           child_allocation.height = minimum_height;
 
           gtk_widget_size_allocate (child_widget, &child_allocation);
-          g_hash_table_remove (self->hidden_as_overflow, uuid);
 
           /* update size_left */
           for (j = 0; j < length; j++)
@@ -1732,7 +1740,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           event = gcal_event_widget_get_event (aux->data);
           uuid = gcal_event_get_uid (event);
 
-          if (!gtk_widget_is_visible (child_widget) && !g_hash_table_contains (self->hidden_as_overflow, uuid))
+          if (!gtk_widget_is_visible (child_widget))
             continue;
 
           gtk_widget_show (child_widget);
@@ -1742,7 +1750,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           if (size_left[cell] < minimum_height)
             {
               gtk_widget_hide (child_widget);
-              g_hash_table_add (self->hidden_as_overflow, g_strdup (uuid));
 
               l = g_hash_table_lookup (self->overflow_cells, GINT_TO_POINTER (cell));
               l = g_list_append (l, child_widget);
@@ -1771,7 +1778,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           child_allocation.height = minimum_height;
           gtk_widget_show (child_widget);
           gtk_widget_size_allocate (child_widget, &child_allocation);
-          g_hash_table_remove (self->hidden_as_overflow, uuid);
 
           size_left[cell] -= minimum_height + margin.top + margin.bottom;
         }
@@ -2001,7 +2007,6 @@ gcal_month_view_init (GcalMonthView *self)
   self->children = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_list_free);
   self->single_cell_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   self->overflow_cells = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
-  self->hidden_as_overflow = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 
   self->k = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
