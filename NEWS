@@ -1,3 +1,14 @@
+Major changes in 3.27.2:
+* Events now are rendered differently if they are all-day or timed
+* Rewrite of the Month view
+    * Month cells have more transitions and effects
+    * The day number is above the cells
+    * A new overflow popup window was introduced
+    * Right-to-left languages are fully working now
+* Plug some memory leaks (Florian Brosch)
+* Improve filename handling when adding new calendars (Florian Brosch)
+* Updates translations
+
 Major changes in 3.25.90:
 * Port to Meson build system (Iñigo Martínez)
 * Improve string in the quick add popover (Carlo Lobrano)

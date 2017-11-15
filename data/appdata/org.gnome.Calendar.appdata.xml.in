@@ -49,6 +49,19 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2017-11-15" version="3.27.2">
+      <description>
+        <p>This release brings the following new features and improvements:</p>
+        <ul>
+          <li>Month view was rewritten, and received a substantial redesign.</li>
+          <li>Events were also redesigned. All-day events look different than timed events.</li>
+          <li>Improvements when adding calendars from files.</li>
+        </ul>
+        <p>This release also updates many translations.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2017-08-11" version="3.25.90">
       <description>
         <p>
