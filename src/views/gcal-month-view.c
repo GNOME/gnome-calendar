@@ -1203,7 +1203,7 @@ gcal_month_view_set_property (GObject       *object,
 
       g_signal_connect_swapped (gcal_manager_get_clock (self->manager),
                                 "day-changed",
-                                G_CALLBACK (gtk_widget_queue_draw),
+                                G_CALLBACK (update_month_cells),
                                 self);
 
       for (i = 0; i < 42; i++)
