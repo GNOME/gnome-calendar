@@ -127,7 +127,6 @@ struct _GcalMonthView
   GcalManager        *manager;
 
   gboolean            pending_event_allocation;
-  gboolean            pending_child_allocation;
 };
 
 #define MIRROR(val,start,end) (start + (val / end) * end + (end - val % end))
@@ -437,10 +436,8 @@ static gboolean
 update_month_cells (GcalMonthView *self)
 {
   g_autoptr (GDateTime) dt;
-  gboolean changed;
   guint row, col;
 
-  changed = FALSE;
   dt = g_date_time_new_local (self->date->year, self->date->month, 1, 0, 0, 0);
 
   for (row = 0; row < 6; row++)
@@ -464,34 +461,24 @@ update_month_cells (GcalMonthView *self)
           /* Cell date */
           cell_date = g_date_time_add_days (dt, row * 7 + col - self->days_delay);
 
-          changed |= datetime_compare_date (gcal_month_cell_get_date (cell), cell_date) != 0;
-
           gcal_month_cell_set_date (cell, cell_date);
 
           /* Different month */
           different_month = day < self->days_delay ||
                             day - self->days_delay >= icaltime_days_in_month (self->date->month, self->date->year);
 
-          changed |= different_month != gcal_month_cell_get_different_month (cell);
-
           gcal_month_cell_set_different_month (cell, different_month);
 
           if (different_month)
             {
-              changed |= gcal_month_cell_get_selected (cell) != FALSE;
               gcal_month_cell_set_selected (cell, FALSE);
-
-              changed |= gcal_month_cell_get_overflow (cell) != 0;
               gcal_month_cell_set_overflow (cell, 0);
-
               continue;
             }
 
           /* Overflow */
           if (g_hash_table_contains (self->overflow_cells, GINT_TO_POINTER (day)))
             l = g_hash_table_lookup (self->overflow_cells, GINT_TO_POINTER (day));
-
-          changed |= gcal_month_cell_get_overflow (cell) != g_list_length (l);
 
           gcal_month_cell_set_overflow (cell, l ? g_list_length (l) : 0);
 
@@ -516,14 +503,11 @@ update_month_cells (GcalMonthView *self)
                          datetime_compare_date (gcal_month_cell_get_date (cell), selection_end) <= 0;
             }
 
-          changed |= gcal_month_cell_get_selected (cell) != selected;
-
           gcal_month_cell_set_selected (cell, selected);
         }
     }
 
   self->update_grid_id = 0;
-  self->pending_child_allocation = changed;
 
   return G_SOURCE_REMOVE;
 }
@@ -1487,6 +1471,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   GHashTableIter iter;
   GtkAllocation child_allocation;
   GtkAllocation cell_alloc;
+  GtkAllocation old_alloc;
   GcalMonthView *self;
   GtkWidget *child_widget;
   GtkWidget *month_cell;
@@ -1506,32 +1491,8 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
   self = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
 
-  /*
-   * If nothing changed, and the month cells didn't request an allocation,
-   * and the size is the same, return early here.
-   */
-  if (!self->pending_event_allocation &&
-      !self->pending_child_allocation &&
-      allocation->width == gtk_widget_get_allocated_width (widget) &&
-      allocation->height == gtk_widget_get_allocated_height (widget))
-    {
-      return;
-    }
-
-  /* Remove every widget' parts, but the master widget */
-  widgets = g_hash_table_get_values (self->children);
-
-  for (aux = widgets; aux != NULL; aux = g_list_next (aux))
-    l = g_list_concat (l, g_list_copy (g_list_next (aux->data)));
-
-  g_list_free (widgets);
-
-  g_list_free_full (l, (GDestroyNotify) gtk_widget_destroy);
-
-  /* Clean overflow information */
-  g_hash_table_remove_all (self->overflow_cells);
-
   /* Allocate the widget */
+  gtk_widget_get_allocation (widget, &old_alloc);
   gtk_widget_set_allocation (widget, allocation);
 
   if (gtk_widget_get_realized (widget))
@@ -1556,6 +1517,31 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   child_allocation.height = MAX (allocation->height - header_height, grid_height);
 
   gtk_widget_size_allocate (self->grid, &child_allocation);
+
+  /*
+   * At this point, the internal widgets are already allocated and happy. Thus, if no new event
+   * was added and the size is the same, we don't need to create and add new event widgets. This
+   * breaks the indirect allocation cycle.
+   */
+  if (!self->pending_event_allocation &&
+      allocation->width == old_alloc.width &&
+      allocation->height == old_alloc.height)
+    {
+      goto out;
+    }
+
+  /* Remove every widget' parts, but the master widget */
+  widgets = g_hash_table_get_values (self->children);
+
+  for (aux = widgets; aux != NULL; aux = g_list_next (aux))
+    l = g_list_concat (l, g_list_copy (g_list_next (aux->data)));
+
+  g_list_free (widgets);
+
+  g_list_free_full (l, (GDestroyNotify) gtk_widget_destroy);
+
+  /* Clean overflow information */
+  g_hash_table_remove_all (self->overflow_cells);
 
   /* Event widgets */
   count_events_per_day (self, events_at_day);
@@ -1888,10 +1874,10 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
         }
     }
 
+out:
   queue_update_month_cells (self);
 
   self->pending_event_allocation = FALSE;
-  self->pending_child_allocation = FALSE;
 }
 
 static gboolean
@@ -2114,7 +2100,6 @@ gcal_month_view_init (GcalMonthView *self)
   self->single_cell_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   self->overflow_cells = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   self->pending_event_allocation = FALSE;
-  self->pending_child_allocation = FALSE;
 
   self->k = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
