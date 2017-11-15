@@ -403,8 +403,6 @@ new_event_button_clicked_cb (GtkWidget        *button,
   action = g_action_map_lookup_action (map, "new");
 
   g_action_activate (action, NULL);
-
-  //gcal_month_popover_popdown (self);
 }
 
 static void
