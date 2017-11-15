@@ -11,6 +11,32 @@
         <property name="visible">True</property>
         <property name="can-focus">True</property>
 
+        <child type="overlay">
+          <object class="GtkBox" id="header_box">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="valign">start</property>
+            <property name="spacing">6</property>
+            <property name="margin">6</property>
+            <property name="margin-bottom">0</property>
+            <child>
+              <object class="GtkLabel" id="day_label">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <style>
+                  <class name="day-label" />
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkImage" id="weather_icon">
+                <property name="can-focus">False</property>
+                <property name="stock">gtk-missing-image</property>
+              </object>
+            </child>
+          </object>
+        </child>
+
         <!-- HACK: in Gtk3, insensitive widgets receive no events. We "fix" this
              limitation by adding an always-sensitive GtkEventBox above the event,
              and when the event is insensitive, the event box's event window is
@@ -36,35 +62,13 @@
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="spacing">6</property>
-                    <property name="valign">center</property>
-                    <child type="center">
+                    <child>
                       <object class="GtkLabel" id="overflow_label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="ellipsize">end</property>
+                        <property name="xalign">0.0</property>
                       </object>
-                    </child>
-                    <child>
-                      <object class="GtkLabel" id="day_label">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <style>
-                          <class name="day-label" />
-                        </style>
-                      </object>
-                      <packing>
-                        <property name="pack-type">end</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkImage" id="weather_icon">
-                        <property name="can-focus">False</property>
-                        <property name="stock">gtk-missing-image</property>
-                      </object>
-                      <packing>
-                        <property name="pack-type">end</property>
-                      </packing>
                     </child>
                   </object>
                 </child>

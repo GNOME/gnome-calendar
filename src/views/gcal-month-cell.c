@@ -32,6 +32,7 @@ struct _GcalMonthCell
   guint               n_overflow;
 
   GtkLabel           *day_label;
+  GtkWidget          *header_box;
   GtkWidget          *overflow_button;
   GtkWidget          *overflow_label;
   GtkWidget          *overlay;
@@ -422,6 +423,7 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/month-cell.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, day_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, header_box);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overflow_button);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overflow_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, overlay);
@@ -561,12 +563,12 @@ gcal_month_cell_set_overflow (GcalMonthCell *self,
 
   self->n_overflow = n_overflow;
 
-  text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE, "Other event", "Other %d events", n_overflow), n_overflow);
+  text = g_strdup_printf ("+%d", n_overflow);
   gtk_label_set_text (GTK_LABEL (self->overflow_label), text);
 }
 
 gint
-gcal_month_cell_get_real_height (GcalMonthCell *self)
+gcal_month_cell_get_content_space (GcalMonthCell *self)
 {
   GtkStyleContext *context;
   GtkBorder padding;
@@ -579,9 +581,37 @@ gcal_month_cell_get_real_height (GcalMonthCell *self)
   gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
 
   return gtk_widget_get_allocated_height (GTK_WIDGET (self)) -
-         gtk_widget_get_allocated_height (self->overflow_button) -
+         gcal_month_cell_get_header_height (self) -
          padding.top - padding.bottom -
          border.top - border.bottom;
+}
+
+gint
+gcal_month_cell_get_header_height (GcalMonthCell *self)
+{
+  GtkStyleContext *context;
+  GtkBorder padding;
+  GtkBorder border;
+
+  g_return_val_if_fail (GCAL_IS_MONTH_CELL (self), -1);
+
+  context = gtk_widget_get_style_context (GTK_WIDGET (self->header_box));
+  gtk_style_context_get_padding (context, gtk_style_context_get_state (context), &padding);
+  gtk_style_context_get_border (context, gtk_style_context_get_state (context), &border);
+
+  return gtk_widget_get_allocated_height (self->header_box) +
+         gtk_widget_get_margin_top (self->header_box) +
+         gtk_widget_get_margin_bottom (self->header_box) +
+         padding.top + padding.bottom +
+         border.top + border.bottom;
+}
+
+gint
+gcal_month_cell_get_overflow_height (GcalMonthCell *self)
+{
+  g_return_val_if_fail (GCAL_IS_MONTH_CELL (self), -1);
+
+  return gtk_widget_get_allocated_height (self->overflow_button);
 }
 
 gboolean
