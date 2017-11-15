@@ -129,8 +129,6 @@ struct _GcalMonthView
   gboolean            pending_event_allocation;
 };
 
-#define MIRROR(val,start,end) (start + (val / end) * end + (end - val % end))
-
 static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
 
 static void          gtk_buildable_interface_init                (GtkBuildableIface  *iface);
@@ -164,16 +162,6 @@ static guint signals[NUM_SIGNALS] = { 0, };
 /*
  * Auxiliary functions
  */
-
-static inline gint
-real_cell (gint     cell,
-           gboolean rtl)
-{
-  if (cell < 0)
-    return cell;
-
-  return rtl ? MIRROR (cell, 0, 7) - 1 : cell;
-}
 
 static inline void
 cancel_selection (GcalMonthView *self)
@@ -302,23 +290,25 @@ get_month_cell_at_position (GcalMonthView *self,
 }
 
 static void
-get_widget_parts (GcalMonthView *self,
-                  gint           first_cell,
-                  gint           last_cell,
-                  gint           natural_height,
-                  gdouble       *vertical_cell_space,
-                  gdouble       *size_left,
-                  GArray        *cells,
-                  GArray        *lengths,
-                  GArray        *length_visible,
-                  gint          *events_at_day,
-                  gint          *allocated_events_at_day)
+calculate_multiday_event_blocks (GcalMonthView *self,
+                                 gint           first_cell,
+                                 gint           last_cell,
+                                 gint           natural_height,
+                                 gdouble       *vertical_cell_space,
+                                 gdouble       *size_left,
+                                 GArray        *cells,
+                                 GArray        *lengths,
+                                 GArray        *length_visible,
+                                 gint          *events_at_day,
+                                 gint          *allocated_events_at_day)
 {
   gboolean was_visible;
   gdouble old_y;
   gdouble y;
   gint current_part_length;
   gint i;
+
+  GCAL_ENTRY;
 
   old_y  = -1.0;
   current_part_length = 0;
@@ -330,6 +320,8 @@ get_widget_parts (GcalMonthView *self,
       last_cell = first_cell;
       first_cell = swap;
     }
+
+  GCAL_TRACE_MSG ("Calculating event blocks from cell %d to cell %d", first_cell, last_cell);
 
   for (i = first_cell; i <= last_cell; i++)
     {
@@ -362,6 +354,8 @@ get_widget_parts (GcalMonthView *self,
 
       if (old_y == -1.0 || y != old_y || different_row || was_visible != visible_at_range)
         {
+          GCAL_TRACE_MSG ("Breaking event at cell %d (previous section was %d)", i, current_part_length);
+
           current_part_length = 1;
           old_y = y;
 
@@ -377,6 +371,8 @@ get_widget_parts (GcalMonthView *self,
 
       was_visible = visible_at_range;
     }
+
+  GCAL_EXIT;
 }
 
 static void
@@ -1487,9 +1483,11 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   gint minimum_height;
   gint header_height;
   gint grid_height;
-  gint i, j, sw, row;
+  gint i, j;
 
-  self = gcal_month_view_get_instance_private (GCAL_MONTH_VIEW (widget));
+  GCAL_ENTRY;
+
+  self = GCAL_MONTH_VIEW (widget);
 
   /* Allocate the widget */
   gtk_widget_get_allocation (widget, &old_alloc);
@@ -1527,7 +1525,8 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       allocation->width == old_alloc.width &&
       allocation->height == old_alloc.height)
     {
-      goto out;
+      GCAL_TRACE_MSG ("Events didn't change, stopping here");
+      GCAL_GOTO (out);
     }
 
   /* Remove every widget' parts, but the master widget */
@@ -1554,8 +1553,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       size_left[i] = h;
     }
 
-  sw = 1 - 2 * self->k;
-
   /*
    * Allocate multidays events before single day events, as they have a
    * higher priority. Multiday events have a master event, and clones
@@ -1563,15 +1560,16 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
    */
   for (l = self->multi_cell_children; l; l = g_list_next (l))
     {
+      g_autoptr (GDateTime) start_date = NULL;
+      g_autoptr (GDateTime) end_date = NULL;
       g_autoptr (GArray) visible_at_length = NULL;
       g_autoptr (GArray) lengths = NULL;
-      g_autoptr (GArray) cells = NULL;
-      GDateTime *date;
+      g_autoptr (GArray) blocks = NULL;
       GcalEvent *event;
       gboolean all_day;
-      gint first_cell, last_cell;
-      gint first_row, last_row;
-      gint cell;
+      gint event_block;
+      gint first_cell;
+      gint last_cell;
 
       child_widget = (GtkWidget*) l->data;
       event = gcal_event_widget_get_event (l->data);
@@ -1584,117 +1582,88 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
        * we're visualizing, the first cell is the event's day of the
        * month. Otherwise, the first cell is the 1st day of the month.
        */
-      j = 1;
-      date = gcal_event_get_date_start (event);
-      date = all_day ? g_date_time_ref (date) : g_date_time_to_local (date);
+      first_cell = 1;
+      start_date = gcal_event_get_date_start (event);
+      start_date = all_day ? g_date_time_ref (start_date) : g_date_time_to_local (start_date);
 
-      if (g_date_time_get_year (date) == self->date->year &&
-          g_date_time_get_month (date) == self->date->month)
+      if (g_date_time_get_year (start_date) == self->date->year &&
+          g_date_time_get_month (start_date) == self->date->month)
         {
-          j = g_date_time_get_day_of_month (date);
+          first_cell = g_date_time_get_day_of_month (start_date);
         }
 
-      j += self->days_delay;
-
-      g_clear_pointer (&date, g_date_time_unref);
-
-      /*
-       * Calculate the first cell position according to the locale
-       * and the start date.
-       */
-      first_cell = 7 * ((j - 1) / 7)+ 6 * self->k + sw * ((j - 1) % 7);
+      first_cell += self->days_delay - 1;
 
       /*
        * The logic for the end date is the same, except that we have to check
        * if the event is all day or not.
        */
-      j = icaltime_days_in_month (self->date->month, self->date->year);
-      date = gcal_event_get_date_end (event);
-      date = all_day ? g_date_time_ref (date) : g_date_time_to_local (date);
+      last_cell = icaltime_days_in_month (self->date->month, self->date->year);
+      end_date = gcal_event_get_date_end (event);
+      end_date = all_day ? g_date_time_ref (end_date) : g_date_time_to_local (end_date);
 
-      if (g_date_time_get_month (date) == self->date->month)
+      if (g_date_time_get_month (end_date) == self->date->month)
         {
-          j = g_date_time_get_day_of_month (date);
+          last_cell = g_date_time_get_day_of_month (end_date);
 
           /* If the event is all day, we have to subtract 1 to find the the real date */
           if (all_day)
-            j--;
+            last_cell--;
         }
 
-      j += self->days_delay;
-
-      g_clear_pointer (&date, g_date_time_unref);
-
-      last_cell = 7 * ((j - 1) / 7)+ 6 * self->k + sw * ((j - 1) % 7);
+      last_cell += self->days_delay - 1;
 
       /*
        * Now that we found the start & end dates, we have to find out
        * whether the event is visible or not.
        */
-      first_row = first_cell / 7;
-      last_row = last_cell / 7;
-      cells = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
+
+      GCAL_TRACE_MSG ("Positioning '%s' (multiday) from %d to %d", gcal_event_get_summary (event), first_cell, last_cell);
+
+      blocks = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
       lengths = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
       visible_at_length = g_array_sized_new (TRUE, TRUE, sizeof (gboolean), 16);
 
-      for (row = first_row; row <= last_row; row++)
-        {
-          gint start, end;
+      /* Position and allocate the child widget */
+      minimum_height = get_real_event_widget_height (child_widget);
 
-          /* Position and allocate the child widget */
-          minimum_height = get_real_event_widget_height (child_widget);
+      gtk_style_context_get_margin (child_context,
+                                    gtk_style_context_get_state (child_context),
+                                    &margin);
 
-          gtk_style_context_get_margin (gtk_widget_get_style_context (child_widget),
-                                        gtk_style_context_get_state (child_context),
-                                        &margin);
+      calculate_multiday_event_blocks (self,
+                                       first_cell, last_cell,
+                                       minimum_height + margin.top + margin.bottom,
+                                       vertical_cell_space,
+                                       size_left,
+                                       blocks,
+                                       lengths,
+                                       visible_at_length,
+                                       events_at_day,
+                                       allocated_events_at_day);
 
-          start = row * 7 + self->k * 6;
-          end = row * 7 + (1 - self->k) * 6;
-
-          if (row == first_row)
-            start = first_cell;
-          if (row == last_row)
-            end = last_cell;
-
-          get_widget_parts (self,
-                            start, end,
-                            minimum_height + margin.top + margin.bottom,
-                            vertical_cell_space,
-                            size_left,
-                            cells,
-                            lengths,
-                            visible_at_length,
-                            events_at_day,
-                            allocated_events_at_day);
-        }
-
-      for (cell = 0; cell < cells->len; cell++)
+      for (event_block = 0; event_block < blocks->len; event_block++)
         {
           g_autoptr (GDateTime) dt_start = NULL;
           g_autoptr (GDateTime) dt_end = NULL;
           gboolean visible;
           gdouble width;
-          gint cell_idx;
+          gint last_block_cell;
           gint length;
-          gint column;
+          gint cell;
           gint day;
 
-          visible = g_array_index (visible_at_length, gboolean, cell);
-          cell_idx = g_array_index (cells, gint, cell);
-          length = g_array_index (lengths, gint, cell);
-          row = cell_idx / 7;
-          column = cell_idx % 7;
-          day = cell_idx - self->days_delay + 1;
-
-          /* Day number is calculated differently on RTL languages */
-          if (self->k)
-            day = 7 * row + MIRROR (cell_idx % 7, 0, 7) - self->days_delay - length + 1;
+          visible = g_array_index (visible_at_length, gboolean, event_block);
+          length = g_array_index (lengths, gint, event_block);
+          cell = g_array_index (blocks, gint, event_block);
+          last_block_cell = cell + length - 1;
+          day = cell - self->days_delay + 1;
 
           /*
            * Setup a new event widget when the cell index changes. This happens when
            * the event has a different y position, or when the row changed.
            */
-          if (cell != 0)
+          if (event_block != 0)
             {
               child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
               gtk_widget_show (child_widget);
@@ -1714,7 +1683,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
               gtk_widget_set_child_visible (child_widget, FALSE);
 
-              for (idx = cell_idx; idx < cell_idx + length; idx++)
+              for (idx = cell; idx < cell + length; idx++)
                 {
                   aux = g_hash_table_lookup (self->overflow_cells, GINT_TO_POINTER (idx));
                   aux = g_list_append (aux, child_widget);
@@ -1728,11 +1697,15 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
               continue;
             }
 
-          /* Retrieve the cell widget */
+
+          /*
+           * Retrieve the cell widget. On RTL languages, we use the last month cell as the starting
+           * point.
+           */
           if (self->k)
-            month_cell = self->month_cell[row][6 - column];
+            month_cell = self->month_cell[last_block_cell / 7][last_block_cell % 7];
           else
-            month_cell = self->month_cell[row][column];
+            month_cell = self->month_cell[cell / 7][cell % 7];
 
           gtk_widget_get_allocation (month_cell, &cell_alloc);
 
@@ -1774,7 +1747,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           minimum_height = get_real_event_widget_height (child_widget);
 
           child_allocation.x = pos_x;
-          child_allocation.y = pos_y + vertical_cell_space[cell_idx] - size_left[cell_idx];
+          child_allocation.y = pos_y + vertical_cell_space[cell] - size_left[cell];
           child_allocation.width = width - (margin.left + margin.right);
           child_allocation.height = minimum_height;
 
@@ -1783,8 +1756,8 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           /* update size_left */
           for (j = 0; j < length; j++)
             {
-              size_left[cell_idx + j] -= minimum_height;
-              size_left[cell_idx + j] -= margin.top + margin.bottom;
+              size_left[cell + j] -= minimum_height;
+              size_left[cell + j] -= margin.top + margin.bottom;
             }
         }
     }
@@ -1800,15 +1773,11 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
     {
       gboolean will_overflow;
       gint cell;
+      gint day;
 
-      j = GPOINTER_TO_INT (key);
-      j += self->days_delay;
-      cell = 7 * ((j - 1) / 7) + 6 * self->k + sw * ((j - 1) % 7);
-
-      if (self->k)
-        month_cell = self->month_cell[cell / 7][6 - cell % 7];
-      else
-        month_cell = self->month_cell[cell / 7][cell % 7];
+      day = GPOINTER_TO_INT (key);
+      cell = day + self->days_delay - 1;
+      month_cell = self->month_cell[cell / 7][cell % 7];
 
       gtk_widget_get_allocation (month_cell, &cell_alloc);
 
@@ -1834,7 +1803,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
           real_height = size_left[cell];
 
           if (will_overflow)
-            real_height -= gcal_month_cell_get_overflow_height (GCAL_MONTH_CELL (self->month_cell[cell / 7][cell % 7]));
+            real_height -= gcal_month_cell_get_overflow_height (GCAL_MONTH_CELL (month_cell));
 
           /* No space left, add to the overflow and continue */
           if (real_height < minimum_height)
@@ -1878,6 +1847,8 @@ out:
   queue_update_month_cells (self);
 
   self->pending_event_allocation = FALSE;
+
+  GCAL_EXIT;
 }
 
 static gboolean
@@ -1898,8 +1869,6 @@ gcal_month_view_button_press (GtkWidget      *widget,
     return GDK_EVENT_PROPAGATE;
 
   get_month_cell_at_position (self, x, y, &clicked_cell);
-
-  clicked_cell = real_cell (clicked_cell, self->k);
 
   if (clicked_cell >= self->days_delay && clicked_cell < days)
     {
