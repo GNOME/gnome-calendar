@@ -465,3 +465,17 @@ monthcell button {
     border-bottom: none;
     border-right: none;
 }
+
+/*
+ * Month popover
+ */
+
+monthpopover { background: transparent; }
+
+monthpopover > box {
+  margin: 4px;
+  border: 1px solid @borders;
+  box-shadow: 0px 0px 2px @wm_shadow;
+  padding: 12px;
+  background: @theme_bg_color;
+}

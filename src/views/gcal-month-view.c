@@ -27,6 +27,7 @@
 
 #include "gcal-debug.h"
 #include "gcal-month-cell.h"
+#include "gcal-month-popover.h"
 #include "gcal-month-view.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
@@ -41,9 +42,7 @@ struct _GcalMonthView
 {
   GtkContainer        parent;
 
-  GtkWidget          *events_box;
-  GtkWidget          *overflow_popover;
-  GtkWidget          *popover_title;
+  GcalMonthPopover   *overflow_popover;
 
   GdkWindow          *event_window;
 
@@ -185,11 +184,12 @@ cancel_selection (GcalMonthView *self)
 }
 
 static void
-event_activated (GcalEventWidget *widget,
-                 GcalMonthView   *self)
+event_activated (GcalMonthView   *self,
+                 GcalEventWidget *widget,
+                 gpointer         unused)
 {
   cancel_selection (self);
-  gtk_widget_hide (self->overflow_popover);
+  gcal_month_popover_popdown (self->overflow_popover);
 
   g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
 }
@@ -201,7 +201,7 @@ setup_child_widget (GcalMonthView *self,
   if (!gtk_widget_get_parent (widget))
     gtk_widget_set_parent (widget, GTK_WIDGET (self));
 
-  g_signal_connect (widget, "activate", G_CALLBACK (event_activated), self);
+  g_signal_connect_swapped (widget, "activate", G_CALLBACK (event_activated), self);
   g_signal_connect_swapped (widget, "hide", G_CALLBACK (gtk_widget_queue_resize), self);
   g_signal_connect_swapped (widget, "show", G_CALLBACK (gtk_widget_queue_resize), self);
 }
@@ -385,78 +385,15 @@ show_overflow_popover_cb (GcalMonthCell *cell,
                           GtkWidget     *button,
                           GcalMonthView *self)
 {
-  g_autofree gchar *label_title = NULL;
-  GtkWidget *child_widget;
-  GDateTime *dt;
-  GList *l;
-  gint day, cell_nr;
+  GcalMonthPopover *popover;
 
-  dt = gcal_month_cell_get_date (cell);
-  day = g_date_time_get_day_of_month (dt);
-  cell_nr = day + self->days_delay - 1;
-
-  if (!g_hash_table_contains (self->overflow_cells, GINT_TO_POINTER (cell_nr)))
-    {
-      g_critical ("No overflow events for day %d. Something is wrong.", cell_nr);
-      return;
-    }
-
-  /* Popover title */
-  label_title = g_date_time_format (dt, _("%B %d"));
-  gtk_label_set_text (GTK_LABEL (self->popover_title), label_title);
-
-  /* Clean all the widgets */
-  gtk_container_foreach (GTK_CONTAINER (self->events_box), (GtkCallback) gtk_widget_destroy, NULL);
-
-  l = g_hash_table_lookup (self->overflow_cells, GINT_TO_POINTER (cell_nr));
-
-  /* Setup the start & end dates of the events as the begin & end of day */
-  for (; l != NULL; l = g_list_next (l))
-    {
-      g_autoptr (GDateTime) current_date = NULL;
-      g_autoptr (GDateTime) dt_start = NULL;
-      g_autoptr (GDateTime) dt_end = NULL;
-      g_autoptr (GTimeZone) tz = NULL;
-      GtkWidget *cloned_event;
-      GcalEvent *event;
-
-      event = gcal_event_widget_get_event (l->data);
-
-      if (gcal_event_get_all_day (event))
-        tz = g_time_zone_new_utc ();
-      else
-        tz = g_time_zone_new_local ();
-
-      current_date = icaltime_to_datetime (self->date);
-      dt_start = g_date_time_new (tz,
-                                  g_date_time_get_year (current_date),
-                                  g_date_time_get_month (current_date),
-                                  day, 0, 0, 0);
-
-      dt_end = g_date_time_add_days (dt_start, 1);
-
-      cloned_event = gcal_event_widget_clone (l->data);
-      gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (cloned_event), dt_start);
-      gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (cloned_event), dt_end);
-
-      gtk_container_add (GTK_CONTAINER (self->events_box), cloned_event);
-      setup_child_widget (self, cloned_event);
-    }
-
-  gtk_popover_set_relative_to (GTK_POPOVER (self->overflow_popover), button);
-
-  /* sizing hack */
-  child_widget = gtk_bin_get_child (GTK_BIN (self->overflow_popover));
-  gtk_widget_set_size_request (child_widget, 200, -1);
-  gtk_widget_show_all (child_widget);
-
-  g_object_set_data (G_OBJECT (self->overflow_popover),
-                     "selected-day",
-                     GINT_TO_POINTER (day));
-
-  gtk_popover_popup (GTK_POPOVER (self->overflow_popover));
+  popover = GCAL_MONTH_POPOVER (self->overflow_popover);
 
   cancel_selection (self);
+
+  gcal_month_popover_set_relative_to (popover, GTK_WIDGET (cell));
+  gcal_month_popover_set_date (popover, gcal_month_cell_get_date (cell));
+  gcal_month_popover_popup (popover);
 }
 
 static void
@@ -761,16 +698,6 @@ gcal_month_view_key_press (GtkWidget   *widget,
 }
 
 static gboolean
-cancel_dnd_from_overflow_popover (GtkPopover *popover)
-{
-  GCAL_ENTRY;
-
-  gtk_popover_popdown (popover);
-
-  GCAL_RETURN (FALSE);
-}
-
-static gboolean
 gcal_month_view_scroll_event (GtkWidget      *widget,
                               GdkEventScroll *scroll_event)
 {
@@ -799,12 +726,12 @@ add_new_event_button_cb (GtkWidget *button,
                          gpointer   user_data)
 {
   GcalMonthView *self;
-  gint day;
   GDateTime *start_date;
+  gint day;
 
   self = GCAL_MONTH_VIEW (user_data);
 
-  gtk_widget_hide (self->overflow_popover);
+  gcal_month_popover_popdown (self->overflow_popover);
 
   day = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (self->overflow_popover), "selected-day"));
   start_date = g_date_time_new_local (self->date->year, self->date->month, day, 0, 0, 0);
@@ -2045,7 +1972,7 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
     }
   else
     {
-      if (gtk_widget_is_visible (self->overflow_popover))
+      if (gtk_widget_is_visible (GTK_WIDGET (self->overflow_popover)))
         GCAL_RETURN (GDK_EVENT_PROPAGATE);
     }
 
@@ -2159,7 +2086,6 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/month-view.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalMonthView, events_box);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, label_0);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, label_1);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, label_2);
@@ -2168,14 +2094,13 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, label_5);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, label_6);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, month_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalMonthView, overflow_popover);
-  gtk_widget_class_bind_template_child (widget_class, GcalMonthView, popover_title);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, year_label);
 
   gtk_widget_class_bind_template_callback (widget_class, add_new_event_button_cb);
-  gtk_widget_class_bind_template_callback (widget_class, cancel_dnd_from_overflow_popover);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
+
+  g_type_ensure (GCAL_TYPE_MONTH_POPOVER);
 }
 
 static void
@@ -2193,17 +2118,6 @@ gcal_month_view_init (GcalMonthView *self)
 
   self->k = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
-  /*
-   * Also set the overflow popover as a drop destination, so we can hide
-   * it when the user starts dragging an event that is inside the overflow
-   * list.
-   */
-  gtk_drag_dest_set (GTK_WIDGET (self->overflow_popover),
-                     0,
-                     NULL,
-                     0,
-                     GDK_ACTION_MOVE);
-
   /* Weekday header labels */
   self->weekday_label[0] = self->label_0;
   self->weekday_label[1] = self->label_1;
@@ -2214,6 +2128,20 @@ gcal_month_view_init (GcalMonthView *self)
   self->weekday_label[6] = self->label_6;
 
   update_weekday_labels (self);
+
+  /* Overflow popover */
+  self->overflow_popover = (GcalMonthPopover*) gcal_month_popover_new ();
+
+  g_object_bind_property (self,
+                          "manager",
+                          self->overflow_popover,
+                          "manager",
+                          G_BINDING_DEFAULT);
+
+  g_signal_connect_swapped (self->overflow_popover,
+                            "event-activated",
+                            G_CALLBACK (event_activated),
+                            self);
 }
 
 /* Public API */

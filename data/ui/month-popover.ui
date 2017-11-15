@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalMonthPopover" parent="GtkWindow">
+    <property name="modal">false</property>
+    <property name="opacity">0.0</property>
+    <property name="destroy-with-parent">true</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">true</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">12</property>
+
+        <!-- Day label & close button-->
+        <child>
+          <object class="GtkBox">
+            <property name="visible">true</property>
+
+            <child>
+              <object class="GtkLabel" id="day_label">
+                <property name="visible">true</property>
+                <property name="label">12</property>
+                <property name="xalign">0.0</property>
+                <property name="hexpand">true</property>
+                <attributes>
+                  <attribute name="scale" value="2.25" />
+                </attributes>
+              </object>
+            </child>
+
+            <child>
+              <object class="GtkButton">
+                <property name="visible">true</property>
+                <property name="halign">end</property>
+                <property name="valign">start</property>
+                <property name="relief">none</property>
+                <signal name="clicked" handler="close_button_clicked_cb" object="GcalMonthPopover" swapped="yes" />
+                <child>
+                  <object class="GtkImage">
+                    <property name="visible">true</property>
+                    <property name="icon-name">window-close-symbolic</property>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+          </object>
+        </child>
+
+        <!-- Event list revealer -->
+        <child>
+          <object class="GtkRevealer" id="revealer">
+            <property name="reveal-child">false</property>
+            <property name="transition-duration">200</property>
+            <property name="transition-type">slide-down</property>
+            <property name="visible">true</property>
+            <child>
+              <object class="GtkBox" id="top_box">
+                <property name="orientation">vertical</property>
+                <property name="visible">true</property>
+                <child>
+                  <object class="DzlElasticBin" id="elastic">
+                    <property name="visible">true</property>
+                    <child>
+                      <object class="GtkScrolledWindow" id="scrolled_window">
+                        <property name="hscrollbar-policy">never</property>
+                        <property name="propagate-natural-height">true</property>
+                        <property name="visible">true</property>
+                        <child>
+                          <object class="GtkListBox" id="listbox">
+                            <property name="visible">true</property>
+                            <property name="selection-mode">none</property>
+                            <style>
+                              <class name="background" />
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <!-- New Event button -->
+        <child>
+          <object class="GtkButton" id="new_event_button">
+            <property name="visible">true</property>
+            <property name="relief">none</property>
+            <property name="label" translatable="yes">New Event…</property>
+            <signal name="clicked" handler="new_event_button_clicked_cb" object="GcalMonthPopover" />
+          </object>
+        </child>
+
+      </object>
+    </child>
+  </template>
+</interface>

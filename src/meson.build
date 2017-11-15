@@ -8,6 +8,7 @@ gcal_deps = [
   libedataserver_dep,
   libevolution_dep,
   libecal_dep,
+  libdazzle_dep,
   libsoup_dep,
   libical_dep,
   glib_dep,
@@ -19,6 +20,7 @@ gcal_deps = [
 
 sources = files(
   'views/gcal-month-cell.c',
+  'views/gcal-month-popover.c',
   'views/gcal-month-view.c',
   'views/gcal-range-tree.c',
   'views/gcal-view.c',

@@ -8,6 +8,7 @@
     <file alias="edit-dialog.ui" compressed="true" preprocess="xml-stripblanks">ui/edit-dialog.ui</file>
     <file alias="event-widget.ui" compressed="true" preprocess="xml-stripblanks">ui/event-widget.ui</file>
     <file alias="month-cell.ui" compressed="true" preprocess="xml-stripblanks">ui/month-cell.ui</file>
+    <file alias="month-popover.ui" compressed="true" preprocess="xml-stripblanks">ui/month-popover.ui</file>
     <file alias="month-view.ui" compressed="true" preprocess="xml-stripblanks">ui/month-view.ui</file>
     <file alias="multi-choice.ui" compressed="true" preprocess="xml-stripblanks">ui/multi-choice.ui</file>
     <file alias="online-account-row.ui" compressed="true" preprocess="xml-stripblanks">ui/online-account-row.ui</file>
