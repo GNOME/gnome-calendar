@@ -1136,6 +1136,11 @@ gcal_event_widget_sort_events (GcalEventWidget *widget1,
   gint diff;
 
   dt_time1 = dt_time2 = NULL;
+  diff = gcal_event_is_multiday (widget2->event) - gcal_event_is_multiday (widget1->event);
+
+  if (diff != 0)
+    return diff;
+
   diff = gcal_event_widget_compare_by_start_date (widget1, widget2);
 
   if (diff != 0)
