@@ -357,6 +357,25 @@ update_event_list (GcalMonthPopover *self)
 
 
 /*
+ * GtkListBox functions
+ */
+
+static gint
+sort_func (GtkListBoxRow *a,
+           GtkListBoxRow *b,
+           gpointer       user_data)
+{
+  GcalEventWidget *event_a;
+  GcalEventWidget *event_b;
+
+  event_a = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (a)));
+  event_b = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (b)));
+
+  return gcal_event_widget_sort_events (event_a, event_b);
+}
+
+
+/*
  * Callbacks
  */
 
@@ -718,6 +737,8 @@ gcal_month_popover_init (GcalMonthPopover *self)
                            G_CALLBACK (revealer_notify_child_revealed_cb),
                            self,
                            G_CONNECT_SWAPPED);
+
+  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->listbox), sort_func, NULL, NULL);
 }
 
 GtkWidget*
