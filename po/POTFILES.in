@@ -7,6 +7,7 @@ data/ui/alarm-row.ui
 data/ui/edit-dialog.ui
 data/ui/help-overlay.ui
 data/ui/menus.ui
+data/ui/month-popover.ui
 data/ui/month-view.ui
 data/ui/quick-add-popover.ui
 data/ui/search-view.ui
