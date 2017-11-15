@@ -87,6 +87,19 @@
             ]
         },
         {
+            "name": "libdazzle",
+            "config-opts": [ "--libdir=/app/lib",
+                             "--buildtype=debugoptimized" ],
+            "buildsystem": "meson",
+            "builddir": true,
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "https://git.gnome.org/browse/libdazzle"
+                }
+            ]
+        },
+        {
             "name": "gnome-calendar",
             "sources": [
                 {
