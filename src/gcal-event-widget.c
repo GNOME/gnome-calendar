@@ -608,8 +608,16 @@ static void
 gcal_event_widget_drag_begin (GtkWidget      *widget,
                               GdkDragContext *context)
 {
-  GcalEventWidget *self = GCAL_EVENT_WIDGET (widget);
+  GcalEventWidget *self;
   cairo_surface_t *surface;
+  GdkWindow *window;
+  GdkDevice *device;
+  gint x, y;
+  GtkAllocation allocation;
+
+  self = GCAL_EVENT_WIDGET (widget);
+  window = gtk_widget_get_window (widget);
+  device = gdk_drag_context_get_device (context);
 
   if (self->read_only)
     {
@@ -621,6 +629,11 @@ gcal_event_widget_drag_begin (GtkWidget      *widget,
   surface = get_dnd_icon (widget);
 
   gtk_drag_set_icon_surface (context, surface);
+
+  /* reposition drag surface to the point the GCalEvent was */
+  gtk_widget_get_allocation (widget, &allocation);
+  gdk_window_get_device_position (window, device, &x, &y, NULL);
+  gdk_drag_context_set_hotspot (context, x - allocation.x, y - allocation.y);
 
   g_clear_pointer (&surface, cairo_surface_destroy);
 }
