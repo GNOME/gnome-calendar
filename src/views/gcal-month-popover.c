@@ -152,7 +152,7 @@ animate_size (GcalMonthPopover *self,
   if (self->size_animation)
     dzl_animation_stop (self->size_animation);
 
-  /* Animate the opacity */
+  /* Animate the size */
   animation = dzl_object_animate (self,
                                   DZL_ANIMATION_EASE_IN_OUT_CUBIC,
                                   200,
