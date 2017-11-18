@@ -38,6 +38,15 @@
 
 #define LINE_WIDTH      0.5
 
+typedef struct
+{
+  GtkWidget          *event_widget;
+  gboolean            visible;
+  guint8              length;
+  guint8              height;
+  guint8              cell;
+} GcalEventBlock;
+
 struct _GcalMonthView
 {
   GtkContainer        parent;
@@ -289,19 +298,18 @@ get_month_cell_at_position (GcalMonthView *self,
   return NULL;
 }
 
-static void
+static GPtrArray*
 calculate_multiday_event_blocks (GcalMonthView *self,
+                                 GtkWidget     *event_widget,
                                  gint           first_cell,
                                  gint           last_cell,
-                                 gint           natural_height,
                                  gdouble       *vertical_cell_space,
                                  gdouble       *size_left,
-                                 GArray        *cells,
-                                 GArray        *lengths,
-                                 GArray        *length_visible,
                                  gint          *events_at_day,
                                  gint          *allocated_events_at_day)
 {
+  GcalEventBlock *block;
+  GPtrArray *blocks;
   gboolean was_visible;
   gdouble old_y;
   gdouble y;
@@ -321,27 +329,40 @@ calculate_multiday_event_blocks (GcalMonthView *self,
       first_cell = swap;
     }
 
+  blocks = g_ptr_array_new_full (last_cell - first_cell + 1, g_free);
+
   GCAL_TRACE_MSG ("Calculating event blocks from cell %d to cell %d", first_cell, last_cell);
 
   for (i = first_cell; i <= last_cell; i++)
     {
+      GtkStyleContext *context;
+      GtkBorder margin;
       gboolean visible_at_range;
       gboolean different_row;
       gboolean will_overflow;
       gdouble real_height;
       gint remaining_events;
+      gint minimum_height;
 
       real_height = size_left[i];
+
+      /* Calculate the minimum event height */
+      context = gtk_widget_get_style_context (GTK_WIDGET (event_widget));
+
+      gtk_style_context_get_margin (context, gtk_style_context_get_state (context), &margin);
+      gtk_widget_get_preferred_height (GTK_WIDGET (event_widget), &minimum_height, NULL);
+
+      minimum_height += margin.top + margin.bottom;
 
       /* Count this event at this cell */
       different_row = i / 7 != (i - 1) / 7;
       remaining_events = events_at_day[i] - allocated_events_at_day[i];
-      will_overflow = remaining_events * natural_height > real_height;
+      will_overflow = remaining_events * minimum_height > real_height;
 
       if (will_overflow)
         real_height -= gcal_month_cell_get_overflow_height (GCAL_MONTH_CELL (self->month_cell[i / 7][i % 7]));
 
-      visible_at_range = real_height >= natural_height;
+      visible_at_range = real_height >= minimum_height;
 
       if (visible_at_range)
         allocated_events_at_day[i]++;
@@ -359,20 +380,34 @@ calculate_multiday_event_blocks (GcalMonthView *self,
           current_part_length = 1;
           old_y = y;
 
-          g_array_append_val (cells, i);
-          g_array_append_val (lengths, current_part_length);
-          g_array_append_val (length_visible, visible_at_range);
+          /* Only create a new event widget after the first one is consumed */
+          if (old_y != -1.0)
+            {
+              event_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (event_widget));
+              gtk_widget_show (event_widget);
+
+              setup_child_widget (self, event_widget);
+            }
+
+          /* Add a new block */
+          block = g_new (GcalEventBlock, 1);
+          block->event_widget = event_widget;
+          block->visible = visible_at_range;
+          block->height = minimum_height;
+          block->length = 1;
+          block->cell = i;
+
+          g_ptr_array_add (blocks, block);
         }
       else
         {
-          current_part_length++;
-          g_array_index (lengths, gint, lengths->len - 1) = current_part_length;
+          block->length++;
         }
 
       was_visible = visible_at_range;
     }
 
-  GCAL_EXIT;
+  GCAL_RETURN (blocks);
 }
 
 static void
@@ -1562,14 +1597,12 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
     {
       g_autoptr (GDateTime) start_date = NULL;
       g_autoptr (GDateTime) end_date = NULL;
-      g_autoptr (GArray) visible_at_length = NULL;
-      g_autoptr (GArray) lengths = NULL;
-      g_autoptr (GArray) blocks = NULL;
+      g_autoptr (GPtrArray) blocks = NULL;
       GcalEvent *event;
       gboolean all_day;
-      gint event_block;
       gint first_cell;
       gint last_cell;
+      gint block_idx;
 
       child_widget = (GtkWidget*) l->data;
       event = gcal_event_widget_get_event (l->data);
@@ -1620,42 +1653,28 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
 
       GCAL_TRACE_MSG ("Positioning '%s' (multiday) from %d to %d", gcal_event_get_summary (event), first_cell, last_cell);
 
-      blocks = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
-      lengths = g_array_sized_new (TRUE, TRUE, sizeof (gint), 16);
-      visible_at_length = g_array_sized_new (TRUE, TRUE, sizeof (gboolean), 16);
+      blocks = calculate_multiday_event_blocks (self,
+                                                child_widget,
+                                                first_cell, last_cell,
+                                                vertical_cell_space,
+                                                size_left,
+                                                events_at_day,
+                                                allocated_events_at_day);
 
-      /* Position and allocate the child widget */
-      minimum_height = get_real_event_widget_height (child_widget);
-
-      gtk_style_context_get_margin (child_context,
-                                    gtk_style_context_get_state (child_context),
-                                    &margin);
-
-      calculate_multiday_event_blocks (self,
-                                       first_cell, last_cell,
-                                       minimum_height + margin.top + margin.bottom,
-                                       vertical_cell_space,
-                                       size_left,
-                                       blocks,
-                                       lengths,
-                                       visible_at_length,
-                                       events_at_day,
-                                       allocated_events_at_day);
-
-      for (event_block = 0; event_block < blocks->len; event_block++)
+      for (block_idx = 0; block_idx < blocks->len; block_idx++)
         {
           g_autoptr (GDateTime) dt_start = NULL;
           g_autoptr (GDateTime) dt_end = NULL;
-          gboolean visible;
+          GcalEventBlock *block;
           gdouble width;
           gint last_block_cell;
           gint length;
           gint cell;
           gint day;
 
-          visible = g_array_index (visible_at_length, gboolean, event_block);
-          length = g_array_index (lengths, gint, event_block);
-          cell = g_array_index (blocks, gint, event_block);
+          block = g_ptr_array_index (blocks, block_idx);
+          length = block->length;
+          cell = block->cell;
           last_block_cell = cell + length - 1;
           day = cell - self->days_delay + 1;
 
@@ -1663,7 +1682,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
            * Setup a new event widget when the cell index changes. This happens when
            * the event has a different y position, or when the row changed.
            */
-          if (event_block != 0)
+          if (block_idx != 0)
             {
               child_widget = gcal_event_widget_clone (GCAL_EVENT_WIDGET (child_widget));
               gtk_widget_show (child_widget);
@@ -1677,7 +1696,7 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
             }
 
           /* No space left, add to the overflow and continue */
-          if (!visible)
+          if (!block->visible)
             {
               gint idx;
 
