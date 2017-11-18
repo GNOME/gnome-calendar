@@ -1,6 +1,6 @@
 /* gcal-month-view.c
  *
- * Copyright © 2015 - Erick Pérez Castellanos
+ * Copyright © 2015 Erick Pérez Castellanos
  *             2017 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
