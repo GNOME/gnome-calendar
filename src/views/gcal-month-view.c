@@ -124,9 +124,6 @@ struct _GcalMonthView
    */
   gboolean            use_24h_format;
 
-  /* text direction factors */
-  gboolean            k;
-
   /* Storage for the accumulated scrolling */
   gdouble             scroll_value;
   guint               update_grid_id;
@@ -589,6 +586,9 @@ allocate_multiday_events (GcalMonthView *self,
   GtkAllocation cell_allocation;
   GtkBorder margin;
   GList *l;
+  gboolean is_rtl;
+
+  is_rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
   for (l = self->multi_cell_children; l; l = g_list_next (l))
     {
@@ -668,7 +668,7 @@ allocate_multiday_events (GcalMonthView *self,
            * Retrieve the cell widget. On RTL languages, we use the last month cell as the starting
            * point.
            */
-          if (self->k)
+          if (is_rtl)
             month_cell = self->month_cell[last_block_cell / 7][last_block_cell % 7];
           else
             month_cell = self->month_cell[cell / 7][cell % 7];
@@ -2023,10 +2023,7 @@ gcal_month_view_direction_changed (GtkWidget        *widget,
 {
   GcalMonthView *self = GCAL_MONTH_VIEW (widget);
 
-  if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_LTR)
-    self->k = 0;
-  else if (gtk_widget_get_direction (widget) == GTK_TEXT_DIR_RTL)
-    self->k = 1;
+  self->pending_event_allocation = TRUE;
 
   gtk_widget_queue_resize (widget);
 }
@@ -2102,8 +2099,6 @@ gcal_month_view_init (GcalMonthView *self)
   self->single_cell_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   self->overflow_cells = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   self->pending_event_allocation = FALSE;
-
-  self->k = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
   /* Weekday header labels */
   self->weekday_label[0] = self->label_0;
