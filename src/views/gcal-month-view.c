@@ -188,6 +188,13 @@ event_activated (GcalMonthView   *self,
 }
 
 static void
+event_widget_visibility_changed_cb (GcalMonthView *self)
+{
+  self->pending_event_allocation = TRUE;
+  gtk_widget_queue_resize (GTK_WIDGET (self));
+}
+
+static void
 setup_child_widget (GcalMonthView *self,
                     GtkWidget     *widget)
 {
@@ -195,8 +202,7 @@ setup_child_widget (GcalMonthView *self,
     gtk_widget_set_parent (widget, GTK_WIDGET (self));
 
   g_signal_connect_swapped (widget, "activate", G_CALLBACK (event_activated), self);
-  g_signal_connect_swapped (widget, "hide", G_CALLBACK (gtk_widget_queue_resize), self);
-  g_signal_connect_swapped (widget, "show", G_CALLBACK (gtk_widget_queue_resize), self);
+  g_signal_connect_swapped (widget, "notify::visible", G_CALLBACK (event_widget_visibility_changed_cb), self);
 }
 
 static gboolean
@@ -541,6 +547,9 @@ count_events_per_day (GcalMonthView *self,
       gint last_cell;
       gint i;
 
+      if (!gtk_widget_get_visible (l->data))
+        continue;
+
       event = gcal_event_widget_get_event (l->data);
 
       calculate_event_cells (self, event, &first_cell, &last_cell);
@@ -558,7 +567,12 @@ count_events_per_day (GcalMonthView *self,
       cell = GPOINTER_TO_INT (key) + self->days_delay - 1;
 
       for (l = children; l; l = l->next)
-        events_per_day[cell]++;
+        {
+          if (!gtk_widget_get_visible (l->data))
+            continue;
+
+          events_per_day[cell]++;
+        }
     }
 }
 
@@ -599,6 +613,10 @@ allocate_multiday_events (GcalMonthView *self,
       gint block_idx;
 
       child_widget = (GtkWidget*) l->data;
+
+      if (!gtk_widget_get_visible (child_widget))
+        continue;
+
       event = gcal_event_widget_get_event (l->data);
       child_context = gtk_widget_get_style_context (l->data);
 
@@ -772,6 +790,10 @@ allocate_single_day_events (GcalMonthView *self,
           gint minimum_height;
 
           child_widget = aux->data;
+
+          if (!gtk_widget_get_visible (child_widget))
+            continue;
+
           child_context = gtk_widget_get_style_context (child_widget);
 
           gtk_style_context_get_margin (child_context, gtk_style_context_get_state (child_context), &margin);
