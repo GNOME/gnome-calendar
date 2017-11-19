@@ -46,7 +46,7 @@ shell_search_provider_dbus_interfaces = files('shell-search-provider-dbus-interf
 gresource = files('calendar.gresource.xml')
 
 resource_data = files(
-  'theme/gtk-styles.css',
+  'theme/Adwaita.css',
   'ui/alarm-row.ui',
   'ui/calendar-row.ui',
   'ui/date-chooser.ui',
