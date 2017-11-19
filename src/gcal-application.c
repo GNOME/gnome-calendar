@@ -35,8 +35,6 @@
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 
-#define CSS_FILE "/org/gnome/calendar/gtk-styles.css"
-
 struct _GcalApplication
 {
   GtkApplication      parent;
@@ -156,6 +154,37 @@ process_sources (GcalApplication *application)
 }
 
 static void
+load_css_provider (GcalApplication *self)
+{
+  g_autoptr (GFile) css_file = NULL;
+  g_autofree gchar *theme_name = NULL;
+  g_autofree gchar *theme_uri = NULL;
+
+  /* Apply the CSS provider */
+  self->provider = gtk_css_provider_new ();
+  gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
+                                             GTK_STYLE_PROVIDER (self->provider),
+                                             GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
+
+  /* Retrieve the theme name */
+  g_object_get (gtk_settings_get_default (), "gtk-theme-name", &theme_name, NULL);
+  theme_uri = g_strconcat ("resource:///org/gnome/calendar/theme/", theme_name, ".css", NULL);
+
+  /* Try and load the CSS file */
+  css_file = g_file_new_for_uri (theme_uri);
+
+  if (g_file_query_exists (css_file, NULL))
+    gtk_css_provider_load_from_file (self->provider, css_file, NULL);
+  else
+    gtk_css_provider_load_from_resource (self->provider, "/org/gnome/calendar/theme/Adwaita.css");
+}
+
+
+/*
+ * GObject overrides
+ */
+
+static void
 gcal_application_finalize (GObject *object)
 {
  GcalApplication *self = GCAL_APPLICATION (object);
@@ -186,15 +215,7 @@ gcal_application_activate (GApplication *application)
   self = GCAL_APPLICATION (application);
 
   if (!self->provider)
-    {
-      self->provider = gtk_css_provider_new ();
-
-      gtk_style_context_add_provider_for_screen (gdk_screen_get_default (),
-                                                 GTK_STYLE_PROVIDER (self->provider),
-                                                 GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 1);
-
-      gtk_css_provider_load_from_resource (self->provider, CSS_FILE);
-    }
+    load_css_provider (self);
 
   if (self->colors_provider)
     {
