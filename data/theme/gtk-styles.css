@@ -421,7 +421,7 @@ weekgrid:selected,
  */
 
 monthcell {
-	border: solid 1px @borders;
+	border: solid 1px alpha(@borders, 0.3);
 	border-width: 1px 0 0 1px;
 	background: transparent;
 	padding: 1px 0 1px 0;
