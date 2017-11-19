@@ -903,8 +903,10 @@ static gboolean
 update_month_cells (GcalMonthView *self)
 {
   g_autoptr (GDateTime) dt;
+  gboolean show_last_row;
   guint row, col;
 
+  show_last_row = g_date_get_days_in_month (self->date->month, self->date->year) + self->days_delay > 35;
   dt = g_date_time_new_local (self->date->year, self->date->month, 1, 0, 0, 0);
 
   for (row = 0; row < 6; row++)
@@ -935,6 +937,9 @@ update_month_cells (GcalMonthView *self)
                             day - self->days_delay >= icaltime_days_in_month (self->date->month, self->date->year);
 
           gcal_month_cell_set_different_month (cell, different_month);
+
+          /* If the last row is empty, hide it */
+          gtk_widget_set_visible (GTK_WIDGET (cell), show_last_row || row < 5);
 
           if (different_month)
             {
