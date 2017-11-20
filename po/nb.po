@@ -7,9 +7,10 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar 3.27.x\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-11-09 01:57+0000\n"
-"PO-Revision-Date: 2017-11-09 19:51+0100\n"
+"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
+"calendar&keywords=I18N+L10N&component=General\n"
+"POT-Creation-Date: 2017-11-15 23:59+0000\n"
+"PO-Revision-Date: 2017-11-20 12:16+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: nb\n"
@@ -351,9 +352,9 @@ msgstr "Ny lokal kalender …"
 msgid "From File…"
 msgstr "Fra fil …"
 
-#: data/ui/month-view.ui:199 data/ui/year-view.ui:117
-msgid "Add Event…"
-msgstr "Legg til hendelse …"
+#: data/ui/month-popover.ui:91
+msgid "New Event…"
+msgstr "Ny hendelse …"
 
 #: data/ui/quick-add-popover.ui:117
 msgid "Edit Details…"
@@ -527,6 +528,10 @@ msgstr "Søk etter hendelser"
 #: data/ui/year-view.ui:95
 msgid "No events"
 msgstr "Ingen hendelser"
+
+#: data/ui/year-view.ui:117
+msgid "Add Event…"
+msgstr "Legg til hendelse …"
 
 #: src/gcal-application.c:85
 msgid "Display version number"
@@ -952,15 +957,6 @@ msgstr "Enda en hendelse slettet"
 msgid "Event deleted"
 msgstr "Hendelse slettet"
 
-#. Popover title
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-month-view.c:379 src/views/gcal-year-view.c:291
-#: src/views/gcal-year-view.c:513
-msgid "%B %d"
-msgstr "%d %B"
-
 #: src/views/gcal-week-grid.c:767 src/views/gcal-week-view.c:288
 msgid "00 AM"
 msgstr "00 AM"
@@ -983,3 +979,10 @@ msgstr "uke %d"
 #: src/views/gcal-year-view.c:285
 msgid "%B %d…"
 msgstr "%d %B …"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/views/gcal-year-view.c:291 src/views/gcal-year-view.c:513
+msgid "%B %d"
+msgstr "%d %B"
