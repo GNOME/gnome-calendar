@@ -375,7 +375,6 @@ calculate_multiday_event_blocks (GcalMonthView *self,
   gboolean was_visible;
   gdouble old_y;
   gdouble y;
-  gint current_part_length;
   gint first_cell;
   gint last_cell;
   gint i;
@@ -383,7 +382,6 @@ calculate_multiday_event_blocks (GcalMonthView *self,
   GCAL_ENTRY;
 
   old_y  = -1.0;
-  current_part_length = 0;
   was_visible = FALSE;
 
   /* Get the event cells */
@@ -437,7 +435,7 @@ calculate_multiday_event_blocks (GcalMonthView *self,
 
       if (!block || y != old_y || different_row || was_visible != visible_at_range)
         {
-          GCAL_TRACE_MSG ("Breaking event at cell %d (previous section was %d)", i, i - current_part_length);
+          GCAL_TRACE_MSG ("Breaking event at cell %d", i);
 
           /* Only create a new event widget after the first one is consumed */
           if (block)
@@ -457,7 +455,6 @@ calculate_multiday_event_blocks (GcalMonthView *self,
               aux = g_list_append (aux, event_widget);
             }
 
-          current_part_length = 1;
           old_y = y;
 
           /* Add a new block */
