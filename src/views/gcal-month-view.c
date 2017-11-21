@@ -1102,7 +1102,7 @@ gcal_month_view_key_press (GtkWidget   *widget,
     {
       month_change = self->keyboard_cell + diff > max ? 1 : -1;
       self->date->month += month_change;
-      *(self->date) = icaltime_normalize(*(self->date));
+      *self->date = icaltime_normalize (*self->date);
 
       self->days_delay = (time_day_of_week (1, self->date->month - 1, self->date->year) - self->first_weekday + 7) % 7;
 
