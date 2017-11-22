@@ -264,7 +264,6 @@ gcal_get_surface_from_color (GdkRGBA  *color,
   cairo_surface_t *surface;
   cairo_t *cr;
 
-  /* TODO: review size here, maybe not hardcoded */
   surface = cairo_image_surface_create (CAIRO_FORMAT_ARGB32, size, size);
   cr = cairo_create (surface);
 
