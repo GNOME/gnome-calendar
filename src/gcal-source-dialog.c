@@ -919,17 +919,20 @@ stack_visible_child_name_changed (GObject    *object,
         {
           ESourceAuthentication *auth;
           ESourceWebdav *webdav;
-          gchar *uri;
+          g_autoptr (SoupURI) soup;
+          g_autofree gchar *uri;
 
           auth = e_source_get_extension (self->source, E_SOURCE_EXTENSION_AUTHENTICATION);
           webdav = e_source_get_extension (self->source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-          uri = g_strdup_printf ("https://%s%s", e_source_authentication_get_host (auth),
-                                 e_source_webdav_get_resource_path (webdav));
+          soup = e_source_webdav_dup_soup_uri (webdav);
+          uri = g_strdup_printf ("%s://%s%s:%d",
+                                 soup_uri_get_scheme (soup),
+                                 e_source_authentication_get_host (auth),
+                                 e_source_webdav_get_resource_path (webdav),
+                                 e_source_authentication_get_port (auth));
 
           gtk_link_button_set_uri (GTK_LINK_BUTTON (self->calendar_url_button), uri);
           gtk_button_set_label (GTK_BUTTON (self->calendar_url_button), uri);
-
-          g_free (uri);
         }
 
       if (is_goa)
