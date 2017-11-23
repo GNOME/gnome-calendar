@@ -919,17 +919,20 @@ stack_visible_child_name_changed (GObject    *object,
         {
           ESourceAuthentication *auth;
           ESourceWebdav *webdav;
-          gchar *uri;
+          g_autoptr (SoupURI) soup;
+          g_autofree gchar *uri;
 
           auth = e_source_get_extension (self->source, E_SOURCE_EXTENSION_AUTHENTICATION);
           webdav = e_source_get_extension (self->source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-          uri = g_strdup_printf ("https://%s%s", e_source_authentication_get_host (auth),
+          soup = e_source_webdav_dup_soup_uri (webdav);
+          uri = g_strdup_printf ("%s://%s:%d%s",
+                                 soup_uri_get_scheme (soup),
+                                 e_source_authentication_get_host (auth),
+                                 e_source_authentication_get_port (auth),
                                  e_source_webdav_get_resource_path (webdav));
 
           gtk_link_button_set_uri (GTK_LINK_BUTTON (self->calendar_url_button), uri);
           gtk_button_set_label (GTK_BUTTON (self->calendar_url_button), uri);
-
-          g_free (uri);
         }
 
       if (is_goa)
@@ -1231,14 +1234,15 @@ validate_url_cb (GcalSourceDialog *dialog)
   ESourceExtension *ext;
   ESourceWebdav *webdav;
   ESource *source;
-  SoupURI *soup_uri;
+  g_autoptr (SoupURI) soup_uri;
   const gchar *uri;
-  gchar *host, *path;
-  gboolean uri_valid, is_file;
+  const gchar *host, *path;
+  gboolean is_file;
 
   dialog->validate_url_resource_id = 0;
   soup_uri = NULL;
   host = path = NULL;
+  is_file = FALSE;
 
   /**
    * Remove any reminescent ESources
@@ -1260,10 +1264,15 @@ validate_url_cb (GcalSourceDialog *dialog)
 
   /* Get the hostname and file path from the server */
   uri = gtk_entry_get_text (GTK_ENTRY (dialog->calendar_address_entry));
-  uri_valid = uri_get_fields (uri, NULL, &host, &path, &is_file);
+  soup_uri = soup_uri_new (uri);
+  if (!soup_uri)
+    return FALSE;
 
-  if (!host || !uri_valid)
-    goto out;
+  host = soup_uri_get_host (soup_uri);
+  path = soup_uri_get_path (soup_uri);
+
+  if (soup_uri_get_scheme (soup_uri) == SOUP_URI_SCHEME_FILE)
+    is_file = TRUE;
 
   g_debug ("Detected host: '%s', path: '%s'", host, path);
 
@@ -1282,7 +1291,6 @@ validate_url_cb (GcalSourceDialog *dialog)
   e_source_authentication_set_host (auth, host);
 
   /* Webdav */
-  soup_uri = soup_uri_new (uri);
   webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
   e_source_webdav_set_soup_uri (webdav, soup_uri);
 
@@ -1299,7 +1307,7 @@ validate_url_cb (GcalSourceDialog *dialog)
       /* Update buttons */
       gtk_widget_set_sensitive (dialog->add_button, source != NULL);
 
-      goto out;
+      return FALSE;
     }
 
   /* Pulse the entry while it performs the check */
@@ -1362,11 +1370,6 @@ validate_url_cb (GcalSourceDialog *dialog)
     }
 
   e_named_parameters_free (credentials);
-
-out:
-  g_clear_pointer (&soup_uri, soup_uri_free);
-  g_free (host);
-  g_free (path);
 
   return FALSE;
 }
@@ -1559,16 +1562,18 @@ discover_sources_cb (GObject      *source,
   /* TODO: show a list of calendars */
   for (aux = discovered_sources; aux != NULL; aux = aux->next)
     {
+      g_autoptr (SoupURI) soup_uri = NULL;
       EWebDAVDiscoveredSource *discovered_source;
-      gchar *resource_path = NULL;
-      gboolean uri_valid;
+      const gchar *resource_path = NULL;
 
       discovered_source = aux->data;
 
-      /* Get the new resource path from the uri */
-      uri_valid = uri_get_fields (discovered_source->href, NULL, NULL, &resource_path, NULL);
+      soup_uri = soup_uri_new (discovered_source->href);
 
-      if (uri_valid)
+      /* Get the new resource path from the uri */
+      resource_path = soup_uri_get_path (soup_uri);
+
+      if (soup_uri)
         {
           ESourceSelectable *selectable;
           ESourceWebdav *webdav;
@@ -1606,8 +1611,6 @@ discover_sources_cb (GObject      *source,
 
           gtk_widget_show_all (row);
         }
-
-      g_free (resource_path);
     }
 
   /* Free things up */
