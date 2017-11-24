@@ -12,11 +12,11 @@ Please note we have a code of conduct, please follow it in all your interactions
 3. The commit message is formatted as follows:
    ```
    component: <summary>
-
+   ‌
    A paragraph explaining the problem and its context.
-
+‌
    Another one explaining how you solved that.
-
+‌
    <link to the bug ticket>
    ```
 4. You may merge the pull request in once you have the sign-off of the maintainers, or if you
