@@ -59,8 +59,6 @@ struct _GcalWeekGrid
 
   GcalRangeTree      *events;
 
-  gboolean            children_changed;
-
   /*
    * These fields are "cells" rather than minutes. Each cell
    * correspond to 30 minutes.
@@ -618,14 +616,6 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
   guint x, y;
   guint i;
 
-  /* No need to relayout stuff if nothing changed */
-  if (allocation->height == gtk_widget_get_allocated_height (widget) &&
-      allocation->width == gtk_widget_get_allocated_width (widget) &&
-      !self->children_changed)
-    {
-      return;
-    }
-
   /* Allocate the widget */
   gtk_widget_set_allocation (widget, allocation);
 
@@ -730,8 +720,6 @@ gcal_week_grid_size_allocate (GtkWidget     *widget,
 
       g_clear_pointer (&widgets_data, g_ptr_array_unref);
     }
-
-  self->children_changed = FALSE;
 
   g_clear_pointer (&overlaps, gcal_range_tree_unref);
 }
@@ -1192,8 +1180,6 @@ gcal_week_grid_add_event (GcalWeekGrid *self,
                          "orientation", GTK_ORIENTATION_VERTICAL,
                          NULL);
 
-  self->children_changed = TRUE;
-
   get_event_range (self, event, &start, &end);
 
   gcal_range_tree_add_range (self->events,
@@ -1230,8 +1216,6 @@ gcal_week_grid_remove_event (GcalWeekGrid *self,
 
       if (g_strcmp0 (gcal_event_get_uid (event), uid) != 0)
         continue;
-
-      self->children_changed = TRUE;
 
       get_event_range (self, event, &event_start, &event_end);
 
