@@ -2,85 +2,96 @@
 <interface>
   <template class="GcalEventWidget" parent="GtkBin">
     <child>
-      <object class="GtkGrid" id="main_grid">
+      <object class="GtkStack" id="stack">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="column_spacing">4</property>
+        <property name="hexpand">False</property>
         <property name="margin-top">1</property>
         <property name="margin-bottom">1</property>
         <property name="margin-start">6</property>
         <property name="margin-end">4</property>
-        <property name="hexpand">False</property>
+        <property name="homogeneous">false</property>
+
+        <!-- Horizontal page -->
         <child>
-          <object class="GtkLabel" id="hour_label">
+          <object class="GtkGrid" id="horizontal_grid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="xalign">0.0</property>
-            <attributes>
-              <attribute name="weight" value="semibold"/>
-            </attributes>
+            <property name="column_spacing">4</property>
+            <child>
+              <object class="GtkLabel"  id="summary_label">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="hexpand">True</property>
+                <property name="xalign">0.0</property>
+                <property name="ellipsize">end</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="hour_label">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <style>
+                  <class name="dim-label" />
+                </style>
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
           </object>
           <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">0</property>
+            <property name="name">horizontal</property>
           </packing>
         </child>
+
+        <!-- Vertical page -->
         <child>
-          <object class="GtkLabel"  id="summary_label">
+          <object class="GtkGrid" id="vertical_grid">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="hexpand">True</property>
-            <property name="xalign">0</property>
-            <property name="ellipsize">end</property>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" bind-source="hour_label" bind-property="label" bind-flags="default" />
+                <property name="xalign">0.0</property>
+                <style>
+                  <class name="dim-label" />
+                </style>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" bind-source="summary_label" bind-property="label" bind-flags="default" />
+                <property name="wrap">True</property>
+                <property name="hexpand">True</property>
+                <property name="xalign">0.0</property>
+                <property name="ellipsize">end</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">0</property>
+            <property name="name">vertical</property>
           </packing>
         </child>
+
       </object>
     </child>
   </template>
-
-  <!-- HACK!!!
-       We need this ghost GtkGrid because we can't change the position of the
-       labels in size-allocate. This grid will simulate the main grid with the
-       labels vertically positioned, so we don't need to chage the main grid's
-       label position in size-allocate -->
-  <object class="GtkGrid" id="ghost_grid">
-    <property name="visible">True</property>
-    <property name="column_spacing">4</property>
-    <property name="margin-top">1</property>
-    <property name="margin-bottom">1</property>
-    <property name="margin-start">6</property>
-    <property name="margin-end">4</property>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="label" bind-source="hour_label" bind-property="label" bind-flags="default" />
-        <property name="can_focus">False</property>
-        <property name="xalign">0.0</property>
-        <attributes>
-          <attribute name="weight" value="semibold"/>
-        </attributes>
-      </object>
-      <packing>
-        <property name="left_attach">0</property>
-        <property name="top_attach">0</property>
-      </packing>
-    </child>
-    <child>
-      <object class="GtkLabel">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" bind-source="summary_label" bind-property="label" bind-flags="default" />
-        <property name="hexpand">True</property>
-        <property name="xalign">0</property>
-        <property name="ellipsize">end</property>
-      </object>
-      <packing>
-        <property name="top_attach">1</property>
-      </packing>
-    </child>
-  </object>
 </interface>

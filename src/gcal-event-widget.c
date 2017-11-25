@@ -38,10 +38,11 @@ struct _GcalEventWidget
   GDateTime          *dt_end;
 
   /* widgets */
-  GtkWidget          *ghost_grid;
+  GtkWidget          *horizontal_grid;
   GtkWidget          *hour_label;
-  GtkWidget          *main_grid;
+  GtkWidget          *stack;
   GtkWidget          *summary_label;
+  GtkWidget          *vertical_grid;
 
   /* internal data */
   gboolean            clock_format_24h : 1;
@@ -54,7 +55,10 @@ struct _GcalEventWidget
 
   GtkOrientation      orientation;
 
-  guint               toggle_description_id;
+  guint               vertical_label_source_id;
+  gboolean            vertical_value_to_set;
+  gboolean            vertical_labels;
+
   gboolean            button_pressed;
 };
 
@@ -74,8 +78,6 @@ enum
   NUM_SIGNALS
 };
 
-
-
 typedef enum
 {
   CURSOR_NONE,
@@ -93,37 +95,53 @@ G_DEFINE_TYPE_WITH_CODE (GcalEventWidget, gcal_event_widget, GTK_TYPE_BIN,
  */
 
 static gboolean
-toggle_description_position_cb (GcalEventWidget *self)
+can_hold_vertical_labels_with_height (GcalEventWidget *self,
+                                      gint             height)
 {
-  gint current_top;
+  gint total_height;
 
-  gtk_container_child_get (GTK_CONTAINER (self->main_grid),
-                           self->summary_label,
-                           "top-attach", &current_top,
-                           NULL);
+  gtk_widget_get_preferred_height (self->vertical_grid, &total_height, NULL);
 
-  gtk_label_set_line_wrap (GTK_LABEL (self->summary_label),
-                           !gtk_label_get_line_wrap (GTK_LABEL (self->summary_label)));
+  return height >= total_height;
+}
 
-  gtk_container_child_set (GTK_CONTAINER (self->main_grid),
-                           self->summary_label,
-                           "left-attach", current_top == 1 ? 1 : 0,
-                           "top-attach", current_top == 1 ? 0 : 1,
-                           "width", current_top == 1 ? 1 : 2,
-                           NULL);
+static void
+set_vertical_labels (GcalEventWidget *self,
+                     gboolean         vertical)
+{
+  if (self->vertical_labels == vertical)
+    return;
 
-  self->toggle_description_id = 0;
+  gtk_stack_set_visible_child (GTK_STACK (self->stack), vertical ? self->vertical_grid : self->horizontal_grid);
+  self->vertical_labels = vertical;
+}
 
+static gboolean
+set_vertical_labels_in_idle_cb (gpointer data)
+{
+  GcalEventWidget *self = (GcalEventWidget*) data;
+
+  set_vertical_labels (self, self->vertical_value_to_set);
+
+  self->vertical_label_source_id = 0;
   return G_SOURCE_REMOVE;
 }
 
 static void
-queue_toggle_description_position (GcalEventWidget *self)
+queue_set_vertical_labels (GcalEventWidget *self,
+                           gboolean         vertical)
 {
-  if (self->toggle_description_id > 0)
-    g_source_remove (self->toggle_description_id);
+  if (self->vertical_label_source_id > 0)
+    {
+      g_source_remove (self->vertical_label_source_id);
+      self->vertical_label_source_id = 0;
+    }
 
-  self->toggle_description_id = g_idle_add ((GSourceFunc) toggle_description_position_cb, self);
+  if (self->vertical_labels == vertical)
+    return;
+
+  self->vertical_value_to_set = vertical;
+  self->vertical_label_source_id = g_idle_add (set_vertical_labels_in_idle_cb, self);
 }
 
 static void
@@ -153,7 +171,8 @@ static void
 gcal_event_widget_update_style (GcalEventWidget *self)
 {
   GtkStyleContext *context;
-  gboolean slanted_start, slanted_end;
+  gboolean slanted_start;
+  gboolean slanted_end;
 
   context = gtk_widget_get_style_context (GTK_WIDGET (self));
   slanted_start = FALSE;
@@ -183,8 +202,8 @@ gcal_event_widget_update_style (GcalEventWidget *self)
     gtk_style_context_add_class (context, "slanted-end");
 
   /* TODO: adjust margins based on the CSS gradients sizes, not hardcoded */
-  gtk_widget_set_margin_start (self->main_grid, slanted_start ? 20 : 4);
-  gtk_widget_set_margin_end (self->main_grid, slanted_end ? 20 : 4);
+  gtk_widget_set_margin_start (self->stack, slanted_start ? 20 : 4);
+  gtk_widget_set_margin_end (self->stack, slanted_end ? 20 : 4);
 
   /* Add style classes for orientation selectors */
   if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
@@ -212,7 +231,7 @@ gcal_event_widget_update_style (GcalEventWidget *self)
 
       /* XXX: hardcoding these values isn't really great... */
       if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-        gtk_widget_set_margin_start (self->main_grid, 8);
+        gtk_widget_set_margin_start (self->stack, 8);
     }
 }
 
@@ -546,8 +565,11 @@ gcal_event_widget_size_allocate (GtkWidget     *widget,
                                  GtkAllocation *allocation)
 {
   GcalEventWidget *self;
+  GtkAllocation old_allocation;
 
   self = GCAL_EVENT_WIDGET (widget);
+
+  gtk_widget_get_allocation (widget, &old_allocation);
 
   if (gtk_widget_get_realized (widget))
     {
@@ -558,31 +580,20 @@ gcal_event_widget_size_allocate (GtkWidget     *widget,
                               allocation->height);
     }
 
-  /* Try to put the summary label below if the orientation is vertical */
-  if (self->orientation == GTK_ORIENTATION_VERTICAL && !gcal_event_get_all_day (self->event))
-    {
-      gint minimum_grid_height;
-      gint current_top;
-
-      gtk_widget_get_preferred_height (self->ghost_grid, &minimum_grid_height, NULL);
-
-      gtk_container_child_get (GTK_CONTAINER (self->main_grid),
-                               self->summary_label,
-                               "top-attach", &current_top,
-                               NULL);
-
-      /*
-       * Since we can't change the position of the events inside size-allocate,
-       * queue it for future iterations of the mainloop.
-       */
-      if ((allocation->height < minimum_grid_height && current_top == 1) ||
-          (allocation->height >= minimum_grid_height && current_top == 0))
-        {
-          queue_toggle_description_position (self);
-        }
-    }
-
   GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->size_allocate (widget, allocation);
+
+  /*
+   * Only after the child widgets (main grid, labels, etc) are allocated with the parent
+   * class' allocation function, we can check if the current height is enough to hold the
+   * vertical labels.
+   */
+  if (old_allocation.width != allocation->width || old_allocation.height != allocation->height)
+    {
+      if (self->orientation == GTK_ORIENTATION_HORIZONTAL || gcal_event_get_all_day (self->event))
+        return;
+
+      queue_set_vertical_labels (self, can_hold_vertical_labels_with_height (self, allocation->height));
+    }
 }
 
 static cairo_surface_t*
@@ -761,8 +772,8 @@ gcal_event_widget_set_property (GObject      *object,
 
     case PROP_ORIENTATION:
       self->orientation = g_value_get_enum (value);
+      gtk_widget_set_visible (self->vertical_grid, self->orientation == GTK_ORIENTATION_VERTICAL);
       gcal_event_widget_update_style (self);
-      gtk_widget_queue_allocate (GTK_WIDGET (object));
       g_object_notify (object, "orientation");
       break;
 
@@ -817,11 +828,11 @@ gcal_event_widget_finalize (GObject *object)
   g_clear_pointer (&self->css_class, g_free);
   g_clear_object (&self->event);
 
-  /* withdraw mainloop sources */
-  if (self->toggle_description_id > 0)
+  /* remove timeouts */
+  if (self->vertical_label_source_id > 0)
     {
-      g_source_remove (self->toggle_description_id);
-      self->toggle_description_id = 0;
+      g_source_remove (self->vertical_label_source_id);
+      self->vertical_label_source_id = 0;
     }
 
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->finalize (object);
@@ -913,10 +924,11 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/event-widget.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, ghost_grid);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, horizontal_grid);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, hour_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, main_grid);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, stack);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, summary_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, vertical_grid);
 
   gtk_widget_class_set_css_name (widget_class, "event");
 }
