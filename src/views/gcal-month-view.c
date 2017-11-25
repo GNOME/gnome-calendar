@@ -1823,10 +1823,6 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
   GtkAllocation child_allocation;
   GtkAllocation old_alloc;
   GcalMonthView *self;
-  gdouble vertical_cell_space [42];
-  gdouble size_left [42];
-  gint allocated_events_at_day [42] = { 0, };
-  gint events_at_day [42] = { 0, };
   gint header_height;
   gint grid_height;
   gint i;
@@ -1882,6 +1878,11 @@ gcal_month_view_size_allocate (GtkWidget     *widget,
       allocation->width != old_alloc.width ||
       allocation->height != old_alloc.height)
     {
+      gdouble vertical_cell_space [42];
+      gdouble size_left [42];
+      gint allocated_events_at_day [42] = { 0, };
+      gint events_at_day [42] = { 0, };
+
       /* Remove every widget' parts, but the master widget */
       cleanup_overflow_information (self);
 
