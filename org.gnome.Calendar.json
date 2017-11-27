@@ -113,7 +113,7 @@
             "sources": [
                 {
                     "type": "git",
-                    "url": "git://git.gnome.org/gnome-calendar"
+                    "url": "https://gitlab.gnome.org/GNOME/gnome-calendar.git"
                 }
             ]
         }
