@@ -387,8 +387,8 @@ msgid "Click to set up"
 msgstr "सेटअप गर्न क्लिक गर्नुहोस्"
 
 #: data/ui/source-dialog.ui:249
-msgid "ownCloud"
-msgstr "ownCloud"
+msgid "Nextcloud"
+msgstr "Nextcloud"
 
 #: data/ui/source-dialog.ui:300
 msgid "Microsoft Exchange"

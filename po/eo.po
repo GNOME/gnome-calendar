@@ -207,8 +207,8 @@ msgid "Click to set up"
 msgstr "Alklaku por agordi"
 
 #: ../data/ui/source-dialog.ui.h:6
-msgid "ownCloud"
-msgstr "ownCloud"
+msgid "Nextcloud"
+msgstr "Nextcloud"
 
 #: ../data/ui/source-dialog.ui.h:7
 msgid "Microsoft Exchange"

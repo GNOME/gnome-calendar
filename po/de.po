@@ -997,8 +997,5 @@ msgstr "Woche %d"
 msgid "%B %d…"
 msgstr "%d. … %B"
 
-#~ msgid "ownCloud"
-#~ msgstr "ownCloud"
-
 #~ msgid "Other events"
 #~ msgstr "Weitere Termine"

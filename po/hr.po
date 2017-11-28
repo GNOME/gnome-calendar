@@ -992,9 +992,6 @@ msgstr "tjedan %d"
 msgid "%B %d…"
 msgstr "%d %B…"
 
-#~ msgid "ownCloud"
-#~ msgstr "ownCloud"
-
 #~ msgid "— Calendar management"
 #~ msgstr "— Upravljanje kalendarom"
 

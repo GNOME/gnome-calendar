@@ -385,7 +385,7 @@ msgid "Click to set up"
 msgstr "ക്രമീകരിക്കാനായി ക്ലിക്ക് ചെയ്യുക"
 
 #: data/ui/source-dialog.ui:249
-msgid "ownCloud"
+msgid "Nextcloud"
 msgstr "ഓൺക്ലൗഡ്"
 
 #: data/ui/source-dialog.ui:300
