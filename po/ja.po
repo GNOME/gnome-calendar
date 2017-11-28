@@ -281,8 +281,8 @@ msgid "Click to set up"
 msgstr "クリックしてセットアップする"
 
 #: ../data/ui/source-dialog.ui.h:6
-msgid "ownCloud"
-msgstr "ownCloud"
+msgid "Nextcloud"
+msgstr "Nextcloud"
 
 #: ../data/ui/source-dialog.ui.h:7
 msgid "Microsoft Exchange"
