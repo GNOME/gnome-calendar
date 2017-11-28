@@ -134,12 +134,6 @@ gsize           e_utf8_strftime_fix_am_pm                       (gchar          
 
 void            fix_popover_menu_icons                          (GtkPopover            *popover);
 
-gboolean        uri_get_fields                                  (const gchar           *uri,
-                                                                 gchar                **schema,
-                                                                 gchar                **host,
-                                                                 gchar                **path,
-                                                                 gboolean              *is_file);
-
 void            get_source_parent_name_color                    (GcalManager           *manager,
                                                                  ESource               *source,
                                                                  gchar                **name,
