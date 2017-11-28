@@ -892,66 +892,25 @@ uri_get_fields (const gchar  *uri,
                 gchar       **path,
                 gboolean     *is_file)
 {
-  GRegex *regex;
-  GMatchInfo *match;
-  gboolean valid;
+  g_autoptr(SoupURI) soup_uri = NULL;
 
-  g_return_val_if_fail (uri != NULL, FALSE);
+  soup_uri = soup_uri_new (uri);
 
-  match = NULL;
-  valid = FALSE;
-
-  regex = g_regex_new ("([a-zA-Z0-9\\+\\.\\-]*:\\/\\/){0,1}([-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,6}\\b)([-a-zA-Z0-9@:%_\\+.//=]*)",
-                       G_REGEX_CASELESS, 0, NULL);
-
-  /*
-   * Retrieved matching URI. The whole url is
-   * checked and the regex groups are:
-   * 1. schema
-   * 2. host
-   * 3. server path
-   */
-  if (g_regex_match (regex, uri, 0, &match))
+  if (soup_uri == NULL)
     {
-      valid = TRUE;
-
-      if (schema != NULL)
-        *schema = g_match_info_fetch (match, 1);
-
-      if (host != NULL)
-        *host = g_match_info_fetch (match, 2);
-
-      if (path != NULL)
-        *path = g_match_info_fetch (match, 3);
-
-      g_match_info_free (match);
+      return FALSE;
     }
+
+  *host = g_strdup (soup_uri_get_host (soup_uri));
+  *path = g_strdup (soup_uri_get_path (soup_uri));
+  *schema = g_strdup (soup_uri_get_scheme (soup_uri));
+
+  if (*schema == SOUP_URI_SCHEME_FILE)
+    *is_file = TRUE;
   else
-    {
-      if (schema != NULL)
-        *schema = NULL;
+    *is_file = FALSE;
 
-      if (host != NULL)
-        *host = NULL;
-
-      if (path != NULL)
-        *path = NULL;
-    }
-
-  /* File extension */
-  if (is_file)
-    {
-      GRegex *extension_regex;
-
-      extension_regex = g_regex_new ("(\\.[a-zA-Z0-9]+)$", G_REGEX_CASELESS, 0, NULL);
-
-      *is_file = g_regex_match (extension_regex, uri, 0, NULL);
-
-      g_regex_unref (extension_regex);
-    }
-
-  g_regex_unref (regex);
-  return valid;
+  return TRUE;
 }
 
 /**
