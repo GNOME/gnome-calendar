@@ -399,8 +399,8 @@ msgid "Click to set up"
 msgstr "Kliknite za podešavanje"
 
 #: data/ui/source-dialog.ui:249
-msgid "ownCloud"
-msgstr "mojOblak (ownCloud)"
+msgid "Nextcloud"
+msgstr "mojOblak (Nextcloud)"
 
 #: data/ui/source-dialog.ui:300
 msgid "Microsoft Exchange"

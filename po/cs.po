@@ -997,9 +997,6 @@ msgstr "%e. %B…"
 msgid "%B %d"
 msgstr "%e. %B"
 
-#~ msgid "ownCloud"
-#~ msgstr "ownCloud"
-
 #~ msgid "Other events"
 #~ msgstr "Další události"
 

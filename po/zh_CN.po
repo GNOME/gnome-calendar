@@ -493,8 +493,8 @@ msgstr "今天"
 #~ msgid "Click to set up"
 #~ msgstr "点击设置"
 
-#~ msgid "ownCloud"
-#~ msgstr "ownCloud"
+#~ msgid "Nextcloud"
+#~ msgstr "Nextcloud"
 
 #~ msgid "Microsoft Exchange"
 #~ msgstr "微软 Exchange"
