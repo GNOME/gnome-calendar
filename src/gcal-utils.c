@@ -875,45 +875,6 @@ fix_popover_menu_icons (GtkPopover *popover)
 }
 
 /**
- * uri_get_fields:
- * @uri: the URI
- * @schema: (nullable): return location for the schema of the URI
- * @host: (nullable): return location for the host of the URI
- * @path: (nullable): return location for the resource path
- *
- * Split the given URI into the fields.
- *
- * Returns: #TRUE if @uri could be parsed, #FALSE otherwise
- */
-gboolean
-uri_get_fields (const gchar  *uri,
-                gchar       **schema,
-                gchar       **host,
-                gchar       **path,
-                gboolean     *is_file)
-{
-  g_autoptr(SoupURI) soup_uri = NULL;
-
-  soup_uri = soup_uri_new (uri);
-
-  if (soup_uri == NULL)
-    {
-      return FALSE;
-    }
-
-  *host = g_strdup (soup_uri_get_host (soup_uri));
-  *path = g_strdup (soup_uri_get_path (soup_uri));
-  *schema = g_strdup (soup_uri_get_scheme (soup_uri));
-
-  if (*schema == SOUP_URI_SCHEME_FILE)
-    *is_file = TRUE;
-  else
-    *is_file = FALSE;
-
-  return TRUE;
-}
-
-/**
  * get_source_parent_name_color:
  * @manager: a #GcalManager
  * @source: an #ESource
