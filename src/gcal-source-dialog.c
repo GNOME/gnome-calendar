@@ -1274,12 +1274,6 @@ validate_url_cb (GcalSourceDialog *dialog)
   if (soup_uri_get_scheme (soup_uri) == SOUP_URI_SCHEME_FILE)
     is_file = TRUE;
 
-  host = soup_uri_get_host (soup_uri);
-  path = soup_uri_get_path (soup_uri);
-
-  if (soup_uri_get_scheme (soup_uri) == SOUP_URI_SCHEME_FILE)
-    is_file = TRUE;
-
   g_debug ("Detected host: '%s', path: '%s'", host, path);
 
   /**
