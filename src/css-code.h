@@ -23,13 +23,14 @@
 ".color-%1$d {"\
 "  background-color: %2$s"\
 "}"\
-".color-%1$d.horizontal.timed:dir(ltr) {"\
+".color-%1$d.horizontal.timed {"\
 "  background-color: transparent;"\
-"  border-left: solid 4px %2$s;"\
 "}"\
-".color-%1$d.horizontal.timed:dir(rtl) {"\
-"  background-color: transparent;"\
-"  border-right: solid 4px %2$s;"\
+".color-%1$d.horizontal.timed box.icon-box{"\
+"  background-color: %2$s;"\
+"  border-radius: 2px;"\
+"  min-height: 16px;"\
+"  min-width: 16px;"\
 "}"\
 ".color-%1$d.slanted {"\
 "  background-color: transparent;"\

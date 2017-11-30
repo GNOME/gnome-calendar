@@ -19,6 +19,19 @@
             <property name="can_focus">False</property>
             <property name="column_spacing">4</property>
             <child>
+              <object class="GtkBox" id="color_box">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <style>
+                  <class name="icon-box" />
+                </style>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
               <object class="GtkLabel"  id="summary_label">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
@@ -27,7 +40,7 @@
                 <property name="ellipsize">end</property>
               </object>
               <packing>
-                <property name="left_attach">0</property>
+                <property name="left_attach">1</property>
                 <property name="top_attach">0</property>
               </packing>
             </child>
@@ -40,7 +53,7 @@
                 </style>
               </object>
               <packing>
-                <property name="left_attach">1</property>
+                <property name="left_attach">2</property>
                 <property name="top_attach">0</property>
               </packing>
             </child>

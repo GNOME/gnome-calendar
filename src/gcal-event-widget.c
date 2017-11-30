@@ -38,6 +38,7 @@ struct _GcalEventWidget
   GDateTime          *dt_end;
 
   /* widgets */
+  GtkWidget          *color_box;
   GtkWidget          *horizontal_grid;
   GtkWidget          *hour_label;
   GtkWidget          *stack;
@@ -173,6 +174,7 @@ gcal_event_widget_update_style (GcalEventWidget *self)
   GtkStyleContext *context;
   gboolean slanted_start;
   gboolean slanted_end;
+  gboolean timed;
 
   context = gtk_widget_get_style_context (GTK_WIDGET (self));
   slanted_start = FALSE;
@@ -221,17 +223,19 @@ gcal_event_widget_update_style (GcalEventWidget *self)
    * If the event is a timed, single-day event, draw it differently
    * from all-day or multi-day events.
    */
-  if (!gcal_event_get_all_day (self->event) && !gcal_event_is_multiday (self->event))
+  timed = !gcal_event_get_all_day (self->event) && !gcal_event_is_multiday (self->event);
+
+  gtk_widget_set_visible (self->color_box, timed);
+
+  if (timed)
     {
       GtkStyleContext *context;
 
       context = gtk_widget_get_style_context (GTK_WIDGET (self));
-
       gtk_style_context_add_class (context, "timed");
 
-      /* XXX: hardcoding these values isn't really great... */
-      if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
-        gtk_widget_set_margin_start (self->stack, 8);
+      gtk_widget_set_margin_start (self->stack, 0);
+      gtk_widget_set_margin_end (self->stack, 2);
     }
 }
 
@@ -924,6 +928,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/event-widget.ui");
 
+  gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, color_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, horizontal_grid);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, hour_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, stack);
