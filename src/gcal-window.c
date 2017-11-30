@@ -200,6 +200,10 @@ static void           on_view_action_activated           (GSimpleAction       *a
                                                           GVariant            *param,
                                                           gpointer             user_data);
 
+static void           on_toggle_search_bar               (GSimpleAction       *action,
+                                                          GVariant            *param,
+                                                          gpointer             user_data);
+
 G_DEFINE_TYPE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static const GActionEntry actions[] = {
@@ -208,6 +212,7 @@ static const GActionEntry actions[] = {
   {"today",    on_date_action_activated },
   {"change-view", on_view_action_activated, "i" },
   {"show-calendars", on_show_calendars_action_activated },
+  {"toggle-search-bar", on_toggle_search_bar }
 };
 
 /*
@@ -478,6 +483,19 @@ on_view_action_activated (GSimpleAction *action,
 
   g_object_notify (G_OBJECT (user_data), "active-view");
 }
+
+static void
+on_toggle_search_bar (GSimpleAction *action,
+                          GVariant      *param,
+                          gpointer       user_data)
+{
+  GcalWindow *window = GCAL_WINDOW (user_data);
+  gint search_mode;
+
+  search_mode = gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (window->search_bar));
+  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (window->search_bar), !search_mode);
+}
+
 
 static gboolean
 key_pressed (GtkWidget *widget,
@@ -1665,11 +1683,12 @@ gcal_window_init (GcalWindow *self)
   gcal_window_add_accelerator (app, "win.previous", "<Alt>Left", "Page_Up");
   gcal_window_add_accelerator (app, "win.today",    "<Alt>Down", "<Ctrl>t", "Home");
 
-  gcal_window_add_accelerator (app, "win.change-view(-1)", "<Ctrl>Page_Down");
-  gcal_window_add_accelerator (app, "win.change-view(-2)", "<Ctrl>Page_Up");
-  gcal_window_add_accelerator (app, "win.change-view(1)",  "<Ctrl>1")
-  gcal_window_add_accelerator (app, "win.change-view(2)",  "<Ctrl>2");
-  gcal_window_add_accelerator (app, "win.change-view(3)",  "<Ctrl>3");
+  gcal_window_add_accelerator (app, "win.change-view(-1)",   "<Ctrl>Page_Down");
+  gcal_window_add_accelerator (app, "win.change-view(-2)",   "<Ctrl>Page_Up");
+  gcal_window_add_accelerator (app, "win.change-view(1)",    "<Ctrl>1")
+  gcal_window_add_accelerator (app, "win.change-view(2)",    "<Ctrl>2");
+  gcal_window_add_accelerator (app, "win.change-view(3)",    "<Ctrl>3");
+  gcal_window_add_accelerator (app, "win.toggle-search-bar", "<Ctrl>f");
 }
 
 /* Public API */
