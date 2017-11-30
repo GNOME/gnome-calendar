@@ -78,3 +78,5 @@ doc/reference/xml
 doc/reference/html
 doc/reference/*.stamp
 doc/reference/version.xml
+.gitlab
+.flatpak-builder
