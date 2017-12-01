@@ -200,7 +200,7 @@ static void           on_view_action_activated           (GSimpleAction       *a
                                                           GVariant            *param,
                                                           gpointer             user_data);
 
-static void           on_reveal_search_bar               (GSimpleAction       *action,
+static void           on_toggle_search_bar               (GSimpleAction       *action,
                                                           GVariant            *param,
                                                           gpointer             user_data);
 
@@ -212,7 +212,7 @@ static const GActionEntry actions[] = {
   {"today",    on_date_action_activated },
   {"change-view", on_view_action_activated, "i" },
   {"show-calendars", on_show_calendars_action_activated },
-  {"reveal-search-bar", on_reveal_search_bar }
+  {"toggle-search-bar", on_toggle_search_bar }
 };
 
 /*
@@ -485,7 +485,7 @@ on_view_action_activated (GSimpleAction *action,
 }
 
 static void
-on_reveal_search_bar (GSimpleAction *action,
+on_toggle_search_bar (GSimpleAction *action,
                           GVariant      *param,
                           gpointer       user_data)
 {
@@ -1692,7 +1692,7 @@ gcal_window_init (GcalWindow *self)
   gcal_window_add_accelerator (app, "win.change-view(1)",    "<Ctrl>1")
   gcal_window_add_accelerator (app, "win.change-view(2)",    "<Ctrl>2");
   gcal_window_add_accelerator (app, "win.change-view(3)",    "<Ctrl>3");
-  gcal_window_add_accelerator (app, "win.reveal-search-bar", "<Ctrl>f");
+  gcal_window_add_accelerator (app, "win.toggle-search-bar", "<Ctrl>f");
 }
 
 /* Public API */
