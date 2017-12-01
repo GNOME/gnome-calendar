@@ -490,8 +490,14 @@ on_reveal_search_bar (GSimpleAction *action,
                           gpointer       user_data)
 {
   GcalWindow *window = GCAL_WINDOW (user_data);
-  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (window->search_bar), TRUE);
+  gint search_mode;
 
+  search_mode = gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (window->search_bar));
+
+  if (search_mode)
+    gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (window->search_bar), FALSE);
+  else
+    gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (window->search_bar), TRUE);
 }
 
 
