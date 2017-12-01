@@ -234,8 +234,15 @@ gcal_event_widget_update_style (GcalEventWidget *self)
       context = gtk_widget_get_style_context (GTK_WIDGET (self));
       gtk_style_context_add_class (context, "timed");
 
-      gtk_widget_set_margin_start (self->stack, 0);
-      gtk_widget_set_margin_end (self->stack, 2);
+      if (self->orientation == GTK_ORIENTATION_HORIZONTAL)
+        {
+          gtk_widget_set_margin_start (self->stack, 0);
+          gtk_widget_set_margin_end (self->stack, 2);
+        }
+      else
+        {
+          gtk_widget_set_visible (self->color_box, FALSE);
+        }
     }
 }
 
