@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-09-28 11:44+0000\n"
-"PO-Revision-Date: 2017-10-03 14:39+0700\n"
+"POT-Creation-Date: 2017-11-15 23:59+0000\n"
+"PO-Revision-Date: 2017-11-16 11:32+0700\n"
 "Last-Translator: Kukuh Syafaat <syafaatkukuh@gmail.com>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.4\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
@@ -119,7 +119,7 @@ msgid "Remove the alarm"
 msgstr "Hapus alarm"
 
 #: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
-#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1111
+#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1158
 msgid "Cancel"
 msgstr "Batal"
 
@@ -155,87 +155,87 @@ msgstr "Catatan"
 msgid "Location"
 msgstr "Lokasi"
 
-#: data/ui/edit-dialog.ui:299
+#: data/ui/edit-dialog.ui:301
 msgid "Time"
 msgstr "Waktu"
 
-#: data/ui/edit-dialog.ui:352
+#: data/ui/edit-dialog.ui:354
 msgid "All Day"
 msgstr "Sepanjang Hari"
 
-#: data/ui/edit-dialog.ui:397
+#: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
 msgstr "Tambah pengingat…"
 
-#: data/ui/edit-dialog.ui:428
+#: data/ui/edit-dialog.ui:430
 msgid "No Repeat"
 msgstr "Tidak Ada Pengulangan"
 
-#: data/ui/edit-dialog.ui:429
+#: data/ui/edit-dialog.ui:431
 msgid "Daily"
 msgstr "Harian"
 
-#: data/ui/edit-dialog.ui:430
+#: data/ui/edit-dialog.ui:432
 msgid "Monday – Friday"
 msgstr "Senin – Jumat"
 
-#: data/ui/edit-dialog.ui:431
+#: data/ui/edit-dialog.ui:433
 msgid "Weekly"
 msgstr "Mingguan"
 
-#: data/ui/edit-dialog.ui:432
+#: data/ui/edit-dialog.ui:434
 msgid "Monthly"
 msgstr "Bulanan"
 
-#: data/ui/edit-dialog.ui:433
+#: data/ui/edit-dialog.ui:435
 msgid "Yearly"
 msgstr "Tahunan"
 
-#: data/ui/edit-dialog.ui:461
+#: data/ui/edit-dialog.ui:463
 msgid "Forever"
 msgstr "Selamanya"
 
-#: data/ui/edit-dialog.ui:462
+#: data/ui/edit-dialog.ui:464
 msgid "No. of occurrences"
 msgstr "Jumlah kejadian"
 
-#: data/ui/edit-dialog.ui:463
+#: data/ui/edit-dialog.ui:465
 msgid "Until Date"
 msgstr "Hingga Tanggal"
 
-#: data/ui/edit-dialog.ui:557
+#: data/ui/edit-dialog.ui:560
 msgid "Delete Event"
 msgstr "Hapus Acara"
 
-#: data/ui/edit-dialog.ui:596
+#: data/ui/edit-dialog.ui:599
 msgid "5 minutes"
 msgstr "5 menit"
 
-#: data/ui/edit-dialog.ui:605
+#: data/ui/edit-dialog.ui:608
 msgid "10 minutes"
 msgstr "10 menit"
 
-#: data/ui/edit-dialog.ui:614
+#: data/ui/edit-dialog.ui:617
 msgid "30 minutes"
 msgstr "30 menit"
 
-#: data/ui/edit-dialog.ui:623
+#: data/ui/edit-dialog.ui:626
 msgid "1 hour"
 msgstr "1 jam"
 
-#: data/ui/edit-dialog.ui:631
+#: data/ui/edit-dialog.ui:634
 msgid "1 day"
 msgstr "1 hari"
 
-#: data/ui/edit-dialog.ui:640
+#: data/ui/edit-dialog.ui:643
 msgid "2 days"
 msgstr "2 hari"
 
-#: data/ui/edit-dialog.ui:649
+#: data/ui/edit-dialog.ui:652
 msgid "3 days"
 msgstr "3 hari"
 
-#: data/ui/edit-dialog.ui:658
+#: data/ui/edit-dialog.ui:661
 msgid "1 week"
 msgstr "1 minggu"
 
@@ -355,6 +355,10 @@ msgstr "Kalender Lokal Baru…"
 msgid "From File…"
 msgstr "Dari Berkas…"
 
+#: data/ui/month-popover.ui:91
+msgid "New Event…"
+msgstr "Acara Baru…"
+
 #: data/ui/quick-add-popover.ui:117
 msgid "Edit Details…"
 msgstr "Sunting Rincian…"
@@ -455,13 +459,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Alamat Kalender"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2234
-#: src/gcal-source-dialog.c:2240
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2281
+#: src/gcal-source-dialog.c:2287
 msgid "Add Calendar"
 msgstr "Tambah Kalender"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:334
-#: src/gcal-source-dialog.c:853 src/gcal-source-dialog.c:2263
+#: src/gcal-source-dialog.c:861 src/gcal-source-dialog.c:2310
 msgid "Calendar Settings"
 msgstr "Pengaturan Kalender"
 
@@ -481,7 +485,7 @@ msgstr "Masukkan kredensial Anda"
 msgid "Connect"
 msgstr "Sambung"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:764
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:770
 #: src/views/gcal-week-view.c:291
 msgid "00:00"
 msgstr "00:00"
@@ -528,7 +532,7 @@ msgstr "Cari acara"
 msgid "No events"
 msgstr "Tidak ada acara"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2729
+#: data/ui/year-view.ui:117
 msgid "Add Event…"
 msgstr "Tambah Acara…"
 
@@ -592,12 +596,12 @@ msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d minggu sebelumnya"
 
-#: src/gcal-edit-dialog.c:1327 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1328 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Acara tanpa nama"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:364
+#: src/gcal-event-widget.c:390
 #, c-format
 msgid "At %s"
 msgstr "Pada %s"
@@ -875,38 +879,38 @@ msgid "Use the entry above to search for events."
 msgstr "Pakai entri di atas untuk mencari acara."
 
 #. Dialog
-#: src/gcal-source-dialog.c:1108
+#: src/gcal-source-dialog.c:1155
 msgid "Select a calendar file"
 msgstr "Pilih sebuah berkas kalender"
 
-#: src/gcal-source-dialog.c:1112
+#: src/gcal-source-dialog.c:1159
 msgid "Open"
 msgstr "Buka"
 
-#: src/gcal-source-dialog.c:1119
+#: src/gcal-source-dialog.c:1166
 msgid "Calendar files"
 msgstr "Berkas kalender"
 
 #. update the source properties
-#: src/gcal-source-dialog.c:1153
+#: src/gcal-source-dialog.c:1200
 msgid "Unnamed Calendar"
 msgstr "Kalender Tanpa Nama"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1759
+#: src/gcal-source-dialog.c:1806
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalender <b>%s</b> dihapus"
 
-#: src/gcal-source-dialog.c:1808 src/gcal-source-dialog.c:1864
+#: src/gcal-source-dialog.c:1855 src/gcal-source-dialog.c:1911
 msgid "Off"
 msgstr "Mati"
 
-#: src/gcal-source-dialog.c:1808 src/gcal-source-dialog.c:1864
+#: src/gcal-source-dialog.c:1855 src/gcal-source-dialog.c:1911
 msgid "On"
 msgstr "Nyala"
 
-#: src/gcal-source-dialog.c:1863
+#: src/gcal-source-dialog.c:1910
 msgid "Expired"
 msgstr "Kedaluwarsa"
 
@@ -952,28 +956,15 @@ msgstr "Acara lain dihapus"
 msgid "Event deleted"
 msgstr "Acara dihapus"
 
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-month-view.c:296 src/views/gcal-year-view.c:291
-#: src/views/gcal-year-view.c:513
-msgid "%B %d"
-msgstr "%d %B"
+#: src/views/gcal-week-grid.c:767 src/views/gcal-week-view.c:288
+msgid "00 AM"
+msgstr "00 AM"
 
-#: src/views/gcal-month-view.c:1627
-msgid "Other events"
-msgstr "Acara lain"
-
-#. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:2224 src/views/gcal-week-header.c:338
+#: src/views/gcal-week-header.c:338
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "%d acara lain"
-
-#: src/views/gcal-week-grid.c:761 src/views/gcal-week-view.c:288
-msgid "00 AM"
-msgstr "00 AM"
 
 #: src/views/gcal-week-header.c:871
 #, c-format
@@ -986,6 +977,19 @@ msgstr "minggu %d"
 #: src/views/gcal-year-view.c:285
 msgid "%B %d…"
 msgstr "%d %B…"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/views/gcal-year-view.c:291 src/views/gcal-year-view.c:513
+msgid "%B %d"
+msgstr "%d %B"
+
+#~ msgid "ownCloud"
+#~ msgstr "ownCloud"
+
+#~ msgid "Other events"
+#~ msgstr "Acara lain"
 
 #~ msgid "— Calendar management"
 #~ msgstr "— Manajemen kalender"
