@@ -225,24 +225,28 @@ build_component_from_datetime (GcalEvent *self,
                                GDateTime *dt)
 {
   ECalComponentDateTime *comp_dt;
-  gchar *tzid;
 
   if (!dt)
     return NULL;
 
   comp_dt = g_new0 (ECalComponentDateTime, 1);
-  comp_dt->value = NULL;
-  comp_dt->tzid = NULL;
-
-  tzid = g_date_time_format (dt, "%Z");
-
   comp_dt->value = datetime_to_icaltime (dt);
-  comp_dt->value->zone = icaltimezone_get_builtin_timezone_from_tzid (tzid);
   comp_dt->value->is_date = self->all_day;
 
-  /* All day events have no timezone */
-  if (!self->all_day)
-    comp_dt->tzid = tzid;
+  if (self->all_day)
+    {
+      comp_dt->value->zone = icaltimezone_get_utc_timezone ();
+      comp_dt->tzid = g_strdup ("UTC");
+    }
+  else
+    {
+      gchar *tzid;
+
+      tzid = g_date_time_format (dt, "%Z");
+      comp_dt->value->zone = icaltimezone_get_builtin_timezone_from_tzid (tzid);
+      /* This transfers ownership of tzid. */
+      comp_dt->tzid = tzid;
+    }
 
   return comp_dt;
 }
