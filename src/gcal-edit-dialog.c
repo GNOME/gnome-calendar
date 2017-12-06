@@ -452,6 +452,7 @@ action_button_clicked (GtkWidget *widget,
       GcalRecurrenceFrequency freq;
       GcalRecurrence *old_recur;
       GDateTime *start_date, *end_date;
+      gboolean was_all_day;
       gboolean all_day;
       gchar *note_text;
 
@@ -468,6 +469,7 @@ action_button_clicked (GtkWidget *widget,
 
       /* Update all day */
       all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
+      was_all_day = gcal_event_get_all_day (dialog->event);
 
       gcal_event_set_all_day (dialog->event, all_day);
 
@@ -483,7 +485,7 @@ action_button_clicked (GtkWidget *widget,
 
       /*
        * Update start & end dates. The dates are already translated to the current
-       * timezone.
+       * timezone (unless the event used to be all day, but no longer is).
        */
       start_date = gcal_edit_dialog_get_date_start (dialog);
       end_date = gcal_edit_dialog_get_date_end (dialog);
@@ -499,6 +501,23 @@ action_button_clicked (GtkWidget *widget,
 
           g_clear_pointer (&end_date, g_date_time_unref);
           end_date = fake_end_date;
+        }
+      else if (!all_day && was_all_day)
+        {
+          /* When an all day event is changed to be not an all day event, we
+           * need to correct for the fact that the event's timezone was until
+           * now set to UTC. That means we need to change the timezone to
+           * localtime now, or else it will be saved incorrectly.
+           */
+          GDateTime *localtime_date;
+
+          localtime_date = g_date_time_to_local (start_date);
+          g_clear_pointer (&start_date, g_date_time_unref);
+          start_date = localtime_date;
+
+          localtime_date = g_date_time_to_local (end_date);
+          g_clear_pointer (&end_date, g_date_time_unref);
+          end_date = localtime_date;
         }
 
       gcal_event_set_date_start (dialog->event, start_date);
