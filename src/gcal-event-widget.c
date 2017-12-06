@@ -352,8 +352,8 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
             {
               if (is_ltr)
                 {
-                  start = g_date_time_format (tooltip_start, "%x I:%M %P");
-                  end = g_date_time_format (tooltip_end, "%x I:%M %P");
+                  start = g_date_time_format (tooltip_start, "%x %I:%M %P");
+                  end = g_date_time_format (tooltip_end, "%x %I:%M %P");
                 }
               else
                 {
@@ -381,8 +381,8 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
             {
               if (is_ltr)
                 {
-                  start = g_date_time_format (tooltip_start, "%x, I:%M %P");
-                  end = g_date_time_format (tooltip_end, "I:%M %P");
+                  start = g_date_time_format (tooltip_start, "%x, %I:%M %P");
+                  end = g_date_time_format (tooltip_end, "%I:%M %P");
                 }
               else
                 {
