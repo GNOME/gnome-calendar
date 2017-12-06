@@ -102,6 +102,7 @@ struct _GcalEditDialog
   /* actions */
   GMenu              *sources_menu;
   GSimpleActionGroup *action_group;
+  GTimeSpan           time_span_hour;
 
   /* new data holders */
   GcalEvent        *event;
@@ -378,13 +379,17 @@ sync_datetimes (GcalEditDialog *self,
 
   GCAL_ENTRY;
 
+  date_widget = NULL;
+  time_widget = NULL;
+  new_date = NULL;
+
   is_start = (widget == self->start_time_selector || widget == self->start_date_selector);
   is_all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
   start = gcal_edit_dialog_get_date_start (self);
   end = gcal_edit_dialog_get_date_end (self);
 
   /* The date is valid, no need to update the fields */
-  if (g_date_time_compare (end, start) >= 0)
+  if ((is_all_day) && (g_date_time_compare (end, start) >= 0))
     GCAL_GOTO (out);
 
   start_local = g_date_time_to_local (start);
@@ -396,31 +401,54 @@ sync_datetimes (GcalEditDialog *self,
    */
   if (is_start)
     {
-      new_date = is_all_day ? g_date_time_add_hours (start, 0) : g_date_time_add_hours (start_local, 1);
+      new_date = is_all_day ? g_date_time_add_hours (start, 0) : g_date_time_add_hours (start_local, self->time_span_hour);
 
       date_widget = self->end_date_selector;
       time_widget = self->end_time_selector;
     }
   else
     {
-      new_date = is_all_day ? g_date_time_add_hours (end, 0) : g_date_time_add_hours (end_local, -1);
+      if (is_all_day)
+        {
+          new_date = g_date_time_add_hours (end, 0);
+        }
+      else
+        {
+          self->time_span_hour = g_date_time_difference (end_local, start_local) / G_TIME_SPAN_HOUR;
 
-      date_widget = self->start_date_selector;
-      time_widget = self->start_time_selector;
+          if (self->time_span_hour == 0)
+            {
+              new_date = g_date_time_add_hours (end_local, 0);
+              self->time_span_hour = 0;
+              date_widget = self->start_date_selector;
+              time_widget = self->start_time_selector;
+            }
+          else if (self->time_span_hour < 0)
+            {
+              new_date = g_date_time_add_hours (start_local, 0);
+              self->time_span_hour = 0;
+              date_widget = self->end_date_selector;
+              time_widget = self->end_time_selector;
+            }
+      }
+
     }
 
-  g_signal_handlers_block_by_func (date_widget, sync_datetimes, self);
-  g_signal_handlers_block_by_func (time_widget, sync_datetimes, self);
+  if ((date_widget != NULL) && (time_widget != NULL) && (new_date != NULL))
+    {
+      g_signal_handlers_block_by_func (date_widget, sync_datetimes, self);
+      g_signal_handlers_block_by_func (time_widget, sync_datetimes, self);
 
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (date_widget), new_date);
-  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (time_widget), new_date);
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (date_widget), new_date);
+      gcal_time_selector_set_time (GCAL_TIME_SELECTOR (time_widget), new_date);
 
-  g_signal_handlers_unblock_by_func (date_widget, sync_datetimes, self);
-  g_signal_handlers_unblock_by_func (time_widget, sync_datetimes, self);
+      g_signal_handlers_unblock_by_func (date_widget, sync_datetimes, self);
+      g_signal_handlers_unblock_by_func (time_widget, sync_datetimes, self);
 
-  g_clear_pointer (&start_local, g_date_time_unref);
-  g_clear_pointer (&end_local, g_date_time_unref);
-  g_clear_pointer (&new_date, g_date_time_unref);
+      g_clear_pointer (&start_local, g_date_time_unref);
+      g_clear_pointer (&end_local, g_date_time_unref);
+      g_clear_pointer (&new_date, g_date_time_unref);
+    }
 
 out:
   g_clear_pointer (&start, g_date_time_unref);
