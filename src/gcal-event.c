@@ -1492,7 +1492,7 @@ gcal_event_set_timezone (GcalEvent *self,
               new_dtend = g_date_time_to_timezone (self->dt_end, timezone);
               gcal_event_set_date_end (self, new_dtend);
 
-              g_clear_pointer (&new_dtstart, g_date_time_unref);
+              g_clear_pointer (&new_dtend, g_date_time_unref);
             }
 
           g_clear_pointer (&new_dtstart, g_date_time_unref);
