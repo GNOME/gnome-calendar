@@ -240,12 +240,8 @@ build_component_from_datetime (GcalEvent *self,
     }
   else
     {
-      gchar *tzid;
-
-      tzid = g_date_time_format (dt, "%Z");
-      comp_dt->value->zone = icaltimezone_get_builtin_timezone_from_tzid (tzid);
-      /* This transfers ownership of tzid. */
-      comp_dt->tzid = tzid;
+      comp_dt->value->zone = e_cal_util_get_system_timezone ();
+      comp_dt->tzid = g_strdup (icaltimezone_get_tzid ((icaltimezone *) comp_dt->value->zone));
     }
 
   return comp_dt;
