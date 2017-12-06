@@ -6,13 +6,13 @@
             <summary>Window maximized</summary>
             <description>Window maximized state</description>
         </key>
-        <key name="window-size" type="ai">
-            <default>[768, 600]</default>
+        <key name="window-size" type="(ii)">
+            <default>(768, 600)</default>
             <summary>Window size</summary>
             <description>Window size (width and height).</description>
         </key>
-        <key name="window-position" type="ai">
-            <default>[]</default>
+        <key name="window-position" type="(ii)">
+            <default>(-1, -1)</default>
             <summary>Window position</summary>
             <description>Window position (x and y).</description>
         </key>
