@@ -197,10 +197,6 @@ static void           on_show_calendars_action_activated (GSimpleAction       *a
                                                           GVariant            *param,
                                                           gpointer             user_data);
 
-static void           on_date_action_activated           (GSimpleAction       *action,
-                                                          GVariant            *param,
-                                                          gpointer             user_data);
-
 static void           on_view_action_activated           (GSimpleAction       *action,
                                                           GVariant            *param,
                                                           gpointer             user_data);
@@ -212,9 +208,6 @@ static void           on_toggle_search_bar_activated     (GSimpleAction       *a
 G_DEFINE_TYPE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static const GActionEntry actions[] = {
-  {"next",     on_date_action_activated },
-  {"previous", on_date_action_activated },
-  {"today",    on_date_action_activated },
   {"change-view", on_view_action_activated, "i" },
   {"show-calendars", on_show_calendars_action_activated },
   {"toggle-search-bar", on_toggle_search_bar_activated }
@@ -375,11 +368,9 @@ update_active_date (GcalWindow   *window,
 }
 
 static void
-date_updated (GtkButton  *button,
-              gpointer    user_data)
+date_updated (GcalWindow *window,
+              GtkButton  *button)
 {
-  GcalWindow *window = GCAL_WINDOW (user_data);
-
   icaltimetype *new_date;
   gboolean move_back, move_today;
   gint factor;
@@ -426,7 +417,7 @@ date_updated (GtkButton  *button,
       *new_date = icaltime_normalize (*new_date);
     }
 
-  update_active_date (user_data, new_date);
+  update_active_date (window, new_date);
 
   GCAL_EXIT;
 }
@@ -444,27 +435,6 @@ on_show_calendars_action_activated (GSimpleAction *action,
   gtk_widget_hide (window->calendar_popover);
 
   gtk_widget_show (window->source_dialog);
-}
-
-static void
-on_date_action_activated (GSimpleAction *action,
-                          GVariant      *param,
-                          gpointer       user_data)
-{
-  GcalWindow *window;
-  const gchar *action_name;
-
-  g_return_if_fail (GCAL_IS_WINDOW (user_data));
-
-  window = GCAL_WINDOW (user_data);
-  action_name = g_action_get_name (G_ACTION (action));
-
-  if (g_strcmp0 (action_name, "next") == 0)
-    date_updated (GTK_BUTTON (window->forward_button), user_data);
-  else if (g_strcmp0 (action_name, "previous") == 0)
-    date_updated (GTK_BUTTON (window->back_button), user_data);
-  else if (g_strcmp0 (action_name, "today") == 0)
-    date_updated (GTK_BUTTON (window->today_button), user_data);
 }
 
 static void
@@ -1587,10 +1557,6 @@ gcal_window_init (GcalWindow *self)
 
   /* setup accels */
   app = g_application_get_default ();
-
-  gcal_window_add_accelerator (app, "win.next",     "<Alt>Right", "Page_Down");
-  gcal_window_add_accelerator (app, "win.previous", "<Alt>Left", "Page_Up");
-  gcal_window_add_accelerator (app, "win.today",    "<Alt>Down", "<Ctrl>t", "Home");
 
   gcal_window_add_accelerator (app, "win.change-view(-1)",   "<Ctrl>Page_Down");
   gcal_window_add_accelerator (app, "win.change-view(-2)",   "<Ctrl>Page_Up");
