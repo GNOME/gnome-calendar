@@ -973,6 +973,8 @@ window_state_changed (GtkWidget *widget,
   state = (GdkEventWindowState*) event;
   active = (state->new_window_state & GDK_WINDOW_STATE_FOCUSED);
 
+  window->is_maximized = state->new_window_state & GDK_WINDOW_STATE_MAXIMIZED;
+
   /* update timeout time according to the state */
   window->refresh_timeout = (active ? FAST_REFRESH_TIMEOUT : SLOW_REFRESH_TIMEOUT);
 
@@ -1382,22 +1384,6 @@ gcal_window_configure_event (GtkWidget         *widget,
   return retval;
 }
 
-static gboolean
-gcal_window_state_event (GtkWidget           *widget,
-                         GdkEventWindowState *event)
-{
-  GcalWindow *window;
-  gboolean retval;
-
-  window = GCAL_WINDOW (widget);
-
-  window->is_maximized = gtk_window_is_maximized (GTK_WINDOW (window));
-
-  retval = GTK_WIDGET_CLASS (gcal_window_parent_class)->window_state_event (widget, event);
-
-  return retval;
-}
-
 static void
 gcal_window_class_init (GcalWindowClass *klass)
 {
@@ -1419,7 +1405,6 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->configure_event = gcal_window_configure_event;
-  widget_class->window_state_event = gcal_window_state_event;
 
   g_object_class_install_property (
       object_class,
