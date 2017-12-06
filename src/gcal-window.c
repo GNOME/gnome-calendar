@@ -100,7 +100,6 @@ struct _GcalWindow
   GtkApplicationWindow parent;
 
   /* timeout ids */
-  guint                save_geometry_timeout_id;
   guint                notification_timeout;
 
   /* upper level widgets */
@@ -167,6 +166,12 @@ struct _GcalWindow
   /* handler for the searh_view */
   gint                 click_outside_handler_id;
 
+  /* Window states */
+  gint                 width;
+  gint                 height;
+  gint                 pos_x;
+  gint                 pos_y;
+  gboolean             is_maximized;
 };
 
 enum
@@ -538,113 +543,46 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
 }
 
 static void
-load_geometry (GcalWindow *window)
+load_geometry (GcalWindow *self)
 {
   GSettings *settings;
-  GVariant *variant;
-  gboolean maximized;
-  const gint32 *position;
-  const gint32 *size;
-  gsize n_elements;
 
   GCAL_ENTRY;
 
-  settings = gcal_manager_get_settings (window->manager);
+  settings = gcal_manager_get_settings (self->manager);
 
-  /* load window settings: size */
-  variant = g_settings_get_value (settings,
-                                  "window-size");
-  size = g_variant_get_fixed_array (variant,
-                                    &n_elements,
-                                    sizeof (gint32));
-  if (n_elements == 2)
-    gtk_window_set_default_size (GTK_WINDOW (window),
-                                 size[0],
-                                 size[1]);
-  g_variant_unref (variant);
+  self->is_maximized = g_settings_get_boolean (settings, "window-maximized");
+  g_settings_get (settings, "window-size", "(ii)", &self->width, &self->height);
+  g_settings_get (settings, "window-position", "(ii)", &self->pos_x, &self->pos_y);
 
-  /* load window settings: position */
-  variant = g_settings_get_value (settings,
-                                  "window-position");
-  position = g_variant_get_fixed_array (variant,
-                                        &n_elements,
-                                        sizeof (gint32));
-  if (n_elements == 2)
-    gtk_window_move (GTK_WINDOW (window),
-                     position[0],
-                     position[1]);
-
-  g_variant_unref (variant);
-
-  /* load window settings: state */
-  maximized = g_settings_get_boolean (settings,
-                                      "window-maximized");
-  if (maximized)
-    gtk_window_maximize (GTK_WINDOW (window));
+  if (self->is_maximized)
+    {
+      gtk_window_maximize (GTK_WINDOW (self));
+    }
+  else
+    {
+      gtk_window_set_default_size (GTK_WINDOW (self), self->width, self->height);
+      if (self->pos_x >= 0)
+        gtk_window_move (GTK_WINDOW (self), self->pos_x, self->pos_y);
+    }
 
   GCAL_EXIT;
 }
 
-static gboolean
-save_geometry (gpointer user_data)
+static void
+save_geometry (GcalWindow *self)
 {
-  GcalWindow *window;
-  GtkWindow *self;
-  GdkWindow *win;
-  GdkWindowState state;
   GSettings *settings;
-  gboolean maximized;
-  GVariant *variant;
-  gint32 size[2];
-  gint32 position[2];
 
   GCAL_ENTRY;
 
-  self = GTK_WINDOW (user_data);
-  window = GCAL_WINDOW (self);
-  win = gtk_widget_get_window (GTK_WIDGET (self));
-  state = gdk_window_get_state (win);
-  settings = gcal_manager_get_settings (window->manager);
+  settings = gcal_manager_get_settings (self->manager);
 
-  /* save window's state */
-  maximized = state & GDK_WINDOW_STATE_MAXIMIZED;
-  g_settings_set_boolean (settings,
-                          "window-maximized",
-                          maximized);
+  g_settings_set_boolean (settings, "window-maximized", self->is_maximized);
+  g_settings_set (settings, "window-size", "(ii)", self->width, self->height);
+  g_settings_set (settings, "window-position", "(ii)", self->pos_x, self->pos_y);
 
-  if (maximized)
-    {
-      window->save_geometry_timeout_id = 0;
-      GCAL_RETURN (G_SOURCE_REMOVE);
-    }
-
-  /* save window's size */
-  gtk_window_get_size (self,
-                       (gint *) &size[0],
-                       (gint *) &size[1]);
-  variant = g_variant_new_fixed_array (G_VARIANT_TYPE_INT32,
-                                       size,
-                                       2,
-                                       sizeof (size[0]));
-  g_settings_set_value (settings,
-                        "window-size",
-                        variant);
-
-  /* save windows's position */
-  gtk_window_get_position (self,
-                           (gint *) &position[0],
-                           (gint *) &position[1]);
-  variant = g_variant_new_fixed_array (G_VARIANT_TYPE_INT32,
-                                       position,
-                                       2,
-                                       sizeof (position[0]));
-  g_settings_set_value (settings,
-                        "window-position",
-                        variant);
-
-  window->save_geometry_timeout_id = 0;
-
-  GCAL_RETURN (G_SOURCE_REMOVE);
+  GCAL_EXIT;
 }
 
 /**
@@ -1301,7 +1239,8 @@ gcal_window_finalize (GObject *object)
 
   GCAL_ENTRY;
 
-  gcal_clear_timeout (&window->save_geometry_timeout_id);
+  save_geometry (window);
+
   gcal_clear_timeout (&window->open_edit_dialog_timeout_id);
   gcal_clear_timeout (&window->refresh_timeout_id);
 
@@ -1435,15 +1374,8 @@ gcal_window_configure_event (GtkWidget         *widget,
 
   window = GCAL_WINDOW (widget);
 
-  if (window->save_geometry_timeout_id != 0)
-    {
-      g_source_remove (window->save_geometry_timeout_id);
-      window->save_geometry_timeout_id = 0;
-    }
-
-  window->save_geometry_timeout_id = g_timeout_add (SAVE_GEOMETRY_ID_TIMEOUT,
-                                                    save_geometry,
-                                                    window);
+  gtk_window_get_size (GTK_WINDOW (window), &window->width, &window->height);
+  gtk_window_get_position (GTK_WINDOW (window), &window->pos_x, &window->pos_y);
 
   retval = GTK_WIDGET_CLASS (gcal_window_parent_class)->configure_event (widget, event);
 
@@ -1459,15 +1391,7 @@ gcal_window_state_event (GtkWidget           *widget,
 
   window = GCAL_WINDOW (widget);
 
-  if (window->save_geometry_timeout_id != 0)
-    {
-      g_source_remove (window->save_geometry_timeout_id);
-      window->save_geometry_timeout_id = 0;
-    }
-
-  window->save_geometry_timeout_id = g_timeout_add (SAVE_GEOMETRY_ID_TIMEOUT,
-                                                    save_geometry,
-                                                    window);
+  window->is_maximized = gtk_window_is_maximized (GTK_WINDOW (window));
 
   retval = GTK_WIDGET_CLASS (gcal_window_parent_class)->window_state_event (widget, event);
 
