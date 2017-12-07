@@ -10,6 +10,9 @@
     <signal name="key-press-event" handler="key_pressed" object="GcalWindow" swapped="no"/>
     <signal name="window-state-event" handler="window_state_changed" object="GcalWindow" swapped="no"/>
     <property name="active-date" bind-source="search_view" bind-property="active-date" bind-flags="default|sync-create"/>
+    <style>
+        <class name="org-gnome-Calendar"/>
+    </style>
     <child>
       <object class="GtkOverlay" id="views_overlay">
         <property name="visible">True</property>
