@@ -7,8 +7,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
 "calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-09-09 17:01+0000\n"
-"PO-Revision-Date: 2017-09-25 17:29+0000\n"
+"POT-Creation-Date: 2017-10-25 14:50+0000\n"
+"PO-Revision-Date: 2017-12-07 05:57+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic <translation-team-is@lists.sourceforge.net>\n"
 "Language: is\n"
@@ -51,8 +51,6 @@ msgstr ""
 "árum skiptir!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
-#| msgctxt "shortcut window"
-#| msgid "Week view"
 msgid "Week view"
 msgstr "Vikusýn"
 
@@ -65,13 +63,11 @@ msgid "Calendar management"
 msgstr "Umsýsla dagatals"
 
 #: data/org.gnome.Calendar.desktop.in:4
-#| msgid "Access, and manage calendar"
 msgid "Access and manage your calendars"
 msgstr "Skoða og sýsla með dagatöl"
 
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/org.gnome.Calendar.desktop.in:7
-#| msgid "Unnamed Calendar"
 msgid "org.gnome.Calendar"
 msgstr "org.gnome.Calendar"
 
@@ -182,17 +178,14 @@ msgid "Monday – Friday"
 msgstr "Mánudagur – Föstudagur"
 
 #: data/ui/edit-dialog.ui:431
-#| msgid "Week"
 msgid "Weekly"
 msgstr "Vikulega"
 
 #: data/ui/edit-dialog.ui:432
-#| msgid "Month"
 msgid "Monthly"
 msgstr "Mánaðarlega"
 
 #: data/ui/edit-dialog.ui:433
-#| msgid "Year"
 msgid "Yearly"
 msgstr "Árlega"
 
@@ -329,7 +322,6 @@ msgid "Add Eve_nt…"
 msgstr "_Bæta við atburði…"
 
 #: data/ui/menus.ui:13
-#| msgid "Calendars"
 msgid "_Calendars"
 msgstr "_Dagatöl"
 
@@ -466,6 +458,11 @@ msgstr "Vistfang dagatals"
 msgid "Add Calendar"
 msgstr "Bæta við dagatali"
 
+#: data/ui/source-dialog.ui:745 data/ui/window.ui:334
+#: src/gcal-source-dialog.c:853 src/gcal-source-dialog.c:2263
+msgid "Calendar Settings"
+msgstr "Stillingar dagatals"
+
 #: data/ui/source-dialog.ui:806
 msgid "User"
 msgstr "Notandi"
@@ -473,6 +470,11 @@ msgstr "Notandi"
 #: data/ui/source-dialog.ui:820
 msgid "Password"
 msgstr "Lykilorð"
+
+#: data/ui/source-dialog.ui:866
+#| msgid "Manage your calendars"
+msgid "Enter your credentials"
+msgstr "Settu inn auðkennin þín"
 
 #: data/ui/source-dialog.ui:878
 msgid "Connect"
@@ -517,15 +519,9 @@ msgid "Manage your calendars"
 msgstr "Sýsla með dagatöl"
 
 #: data/ui/window.ui:278
-#| msgid "Search for events"
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Leita að atburðum"
-
-#: data/ui/window.ui:334 src/gcal-source-dialog.c:853
-#: src/gcal-source-dialog.c:2263
-msgid "Calendar Settings"
-msgstr "Stillingar dagatals"
 
 #: data/ui/year-view.ui:95
 msgid "No events"
@@ -569,35 +565,35 @@ msgstr "Sveinn í Felli, sv1@fellsnet.is"
 msgid "Save"
 msgstr "Vista"
 
-#: src/gcal-edit-dialog.c:997
+#: src/gcal-edit-dialog.c:1000
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d mínútu fyrir"
 msgstr[1] "%d mínútur fyrir"
 
-#: src/gcal-edit-dialog.c:1005
+#: src/gcal-edit-dialog.c:1008
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d klukkustund fyrir"
 msgstr[1] "%d klukkustundir fyrir"
 
-#: src/gcal-edit-dialog.c:1013
+#: src/gcal-edit-dialog.c:1016
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d dag fyrir"
 msgstr[1] "%d daga fyrir"
 
-#: src/gcal-edit-dialog.c:1021
+#: src/gcal-edit-dialog.c:1024
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d viku fyrir"
 msgstr[1] "%d vikur fyrir"
 
-#: src/gcal-edit-dialog.c:1324 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1328 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Nafnlaus atburður"
 
@@ -677,8 +673,6 @@ msgid "February"
 msgstr "Febrúar"
 
 #: src/gcal-quick-add-popover.c:268
-#| msgctxt "shortcut window"
-#| msgid "Search"
 msgid "March"
 msgstr "Mars"
 
@@ -687,7 +681,6 @@ msgid "April"
 msgstr "Apríl"
 
 #: src/gcal-quick-add-popover.c:270
-#| msgid "Day"
 msgid "May"
 msgstr "Maí"
 
@@ -720,7 +713,6 @@ msgid "December"
 msgstr "Desember"
 
 #: src/gcal-quick-add-popover.c:286
-#| msgid "Today"
 msgid "from Today"
 msgstr "frá deginum í dag"
 
@@ -742,7 +734,6 @@ msgid "from %1$s %2$s"
 msgstr "frá %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:323
-#| msgid "Today"
 msgid "to Today"
 msgstr "til dagsins í dag"
 
@@ -766,130 +757,107 @@ msgstr "til %1$s %2$s"
 #. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
 #: src/gcal-quick-add-popover.c:356
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event %1$s %2$s"
 msgstr "Nýr atburður þann %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
-#| msgid "New Event on %s"
 msgid "New Event Today"
 msgstr "Nýr atburður í dag"
 
 #: src/gcal-quick-add-popover.c:377
-#| msgid "New Event on %s"
 msgid "New Event Tomorrow"
 msgstr "Nýr atburður á morgun"
 
 #: src/gcal-quick-add-popover.c:381
-#| msgid "New Event on %s"
 msgid "New Event Yesterday"
 msgstr "Nýr atburður í gær"
 
 #: src/gcal-quick-add-popover.c:387
-#| msgid "New Event on %s"
 msgid "New Event next Monday"
 msgstr "Nýr atburður næsta mánudag"
 
 #: src/gcal-quick-add-popover.c:388
-#| msgid "New Event on %s"
 msgid "New Event next Tuesday"
 msgstr "Nýr atburður næsta þriðjudag"
 
 #: src/gcal-quick-add-popover.c:389
-#| msgid "New Event on %s"
 msgid "New Event next Wednesday"
 msgstr "Nýr atburður næsta miðvikudag"
 
 #: src/gcal-quick-add-popover.c:390
-#| msgid "New Event on %s"
 msgid "New Event next Thursday"
 msgstr "Nýr atburður næsta fimmtudag"
 
 #: src/gcal-quick-add-popover.c:391
-#| msgid "New Event on %s"
 msgid "New Event next Friday"
 msgstr "Nýr atburður næsta föstudag"
 
 #: src/gcal-quick-add-popover.c:392
-#| msgid "New Event on %s"
 msgid "New Event next Saturday"
 msgstr "Nýr atburður næsta laugardag"
 
 #: src/gcal-quick-add-popover.c:393
-#| msgid "New Event on %s"
 msgid "New Event next Sunday"
 msgstr "Nýr atburður næsta sunnudag"
 
 #. Translators: %d is the numeric day of month
 #: src/gcal-quick-add-popover.c:405
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on January %d"
 msgstr "Nýr atburður þann %d. janúar"
 
 #: src/gcal-quick-add-popover.c:406
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on February %d"
 msgstr "Nýr atburður þann %d. febrúar"
 
 #: src/gcal-quick-add-popover.c:407
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on March %d"
 msgstr "Nýr atburður þann %d. mars"
 
 #: src/gcal-quick-add-popover.c:408
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on April %d"
 msgstr "Nýr atburður þann %d. apríl"
 
 #: src/gcal-quick-add-popover.c:409
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on May %d"
 msgstr "Nýr atburður þann %d. maí"
 
 #: src/gcal-quick-add-popover.c:410
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on June %d"
 msgstr "Nýr atburður þann %d. júní"
 
 #: src/gcal-quick-add-popover.c:411
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on July %d"
 msgstr "Nýr atburður þann %d. júlí"
 
 #: src/gcal-quick-add-popover.c:412
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on August %d"
 msgstr "Nýr atburður þann %d. ágúst"
 
 #: src/gcal-quick-add-popover.c:413
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on September %d"
 msgstr "Nýr atburður þann %d. september"
 
 #: src/gcal-quick-add-popover.c:414
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on October %d"
 msgstr "Nýr atburður þann %d. október"
 
 #: src/gcal-quick-add-popover.c:415
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on November %d"
 msgstr "Nýr atburður þann %d. nóvember"
 
 #: src/gcal-quick-add-popover.c:416
 #, c-format
-#| msgid "New Event on %s"
 msgid "New Event on December %d"
 msgstr "Nýr atburður þann %d. desember"
 
@@ -962,7 +930,6 @@ msgstr ""
 "þú hefur valið ætti að beita á:"
 
 #: src/gcal-utils.c:1191
-#| msgid "Cancel"
 msgid "_Cancel"
 msgstr "_Hætta við"
 
@@ -975,7 +942,6 @@ msgid "_Subsequent events"
 msgstr "Atburðir sem _fylgja í kjölfarið"
 
 #: src/gcal-utils.c:1202
-#| msgid "No events"
 msgid "_All events"
 msgstr "_Allir atburðir"
 
@@ -992,8 +958,6 @@ msgstr "Atburði eytt"
 #. Translators: This is a date format in the sidebar of the year view.
 #: src/views/gcal-month-view.c:296 src/views/gcal-year-view.c:291
 #: src/views/gcal-year-view.c:513
-#| msgctxt "event date format"
-#| msgid "%B %d"
 msgid "%B %d"
 msgstr "%d. %B"
 
@@ -1022,8 +986,6 @@ msgstr "vika %d"
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
 #: src/views/gcal-year-view.c:285
-#| msgctxt "event date format"
-#| msgid "%B %d"
 msgid "%B %d…"
 msgstr "%d. %B…"
 
