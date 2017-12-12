@@ -513,7 +513,7 @@ update_location (GcalWeatherService  *self,
       g_debug ("Got new weather service location: '%s'",
                (location == NULL)? "<null>" : gweather_location_get_name (location));
 
-      self->gweather_info = gweather_info_new (location, GWEATHER_FORECAST_ZONE | GWEATHER_FORECAST_LIST);
+      self->gweather_info = gweather_info_new (location);
 
       /* NOTE: We do not get detailed infos for GWEATHER_PROVIDER_ALL.
        * This combination works fine, though. We should open a bug / investigate
