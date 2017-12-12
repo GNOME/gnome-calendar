@@ -914,6 +914,12 @@ static void
 update_weather (GcalMonthView *self,
                 gboolean       clear_old)
 {
+  GcalMonthCell *first_cell;
+  GDateTime *first_dt;
+  GSList *weather_infos;
+  GSList *l;
+  GDate first;
+
   g_return_if_fail (GCAL_IS_MONTH_VIEW (self));
 
   /* Drop old weather information */
@@ -936,48 +942,43 @@ update_weather (GcalMonthView *self,
 
 
   /* Set new one */
-  if (self->weather_service != NULL)
+  if (!self->weather_service)
+    return;
+
+  first_cell = GCAL_MONTH_CELL (self->month_cell[0][0]);
+  first_dt = gcal_month_cell_get_date (first_cell);
+
+  g_date_set_dmy (&first,
+                  g_date_time_get_day_of_month (first_dt),
+                  g_date_time_get_month (first_dt),
+                  g_date_time_get_year (first_dt));
+
+  weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
+
+  for (l = weather_infos; l; l = l->next)
     {
-      GcalMonthCell *fstcell;
-      GDateTime *firstdt;
-      GSList *weather_infos;
-      GSList *witer;
-      GDate first;
+      GcalWeatherInfo *info;
+      GDate weather_date;
+      gint day_difference;
 
-      fstcell = GCAL_MONTH_CELL (self->month_cell[0][0]);
-      firstdt = gcal_month_cell_get_date (fstcell);
+      info = GCAL_WEATHER_INFO (l->data);
 
-      g_date_set_dmy (&first,
-                      g_date_time_get_day_of_month (firstdt),
-                      g_date_time_get_month (firstdt),
-                      g_date_time_get_year (firstdt));
+      gcal_weather_info_get_date (info, &weather_date);
+      day_difference = g_date_days_between (&first, &weather_date);
 
-      weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
-      for (witer = weather_infos; witer; witer = witer->next)
+      if (day_difference >= 0 && day_difference < 6 * 7)
         {
-          GcalWeatherInfo *info;
-          GDate weather_date;
-          gint day_difference;
+          GcalMonthCell *wcell;
+          guint row;
+          guint column;
 
-          info = GCAL_WEATHER_INFO (witer->data);
-          gcal_weather_info_get_date (info, &weather_date);
-          day_difference = g_date_days_between (&first, &weather_date);
+          row = day_difference / 7;
+          column = day_difference % 7;
+          wcell = GCAL_MONTH_CELL (self->month_cell[row][column]);
 
-          if (day_difference >= 0 && day_difference < 6 * 7)
-            {
-              GcalMonthCell *wcell;
-              guint row;
-              guint column;
-
-              row = day_difference / 7;
-              column = day_difference % 7;
-              wcell = GCAL_MONTH_CELL (self->month_cell[row][column]);
-
-              gcal_month_cell_set_weather (wcell, info);
-            }
+          gcal_month_cell_set_weather (wcell, info);
         }
     }
-
 }
 
 static gboolean
@@ -1012,7 +1013,6 @@ update_month_cells (GcalMonthView *self)
           cell_date = g_date_time_add_days (dt, row * 7 + col - self->days_delay);
 
           gcal_month_cell_set_date (cell, cell_date);
-          gcal_month_cell_set_weather (cell, NULL);
 
           /* Different month */
           different_month = day < self->days_delay ||

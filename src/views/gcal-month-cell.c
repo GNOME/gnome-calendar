@@ -48,6 +48,8 @@ struct _GcalMonthCell
   gboolean            pressed : 1;
 
   GcalManager        *manager;
+
+  GcalWeatherInfo    *weather_info;
 };
 
 G_DEFINE_TYPE (GcalMonthCell, gcal_month_cell, GTK_TYPE_EVENT_BOX)
@@ -505,9 +507,14 @@ gcal_month_cell_set_weather (GcalMonthCell   *self,
                              GcalWeatherInfo *info)
 {
   g_return_if_fail (GCAL_IS_MONTH_CELL (self));
-  g_return_if_fail (info == NULL || GCAL_IS_WEATHER_INFO (info));
+  g_return_if_fail (!info || GCAL_IS_WEATHER_INFO (info));
 
-  if (info == NULL)
+  if (self->weather_info == info)
+    return;
+
+  self->weather_info = info;
+
+  if (!info)
     {
       gtk_image_clear (self->weather_icon);
       gtk_label_set_text (self->temp_label, "");
