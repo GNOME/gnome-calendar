@@ -589,6 +589,7 @@ static GtkWidget*
 make_row_from_source (GcalSourceDialog *dialog,
                       ESource          *source)
 {
+  ESourceSelectable *extension;
   cairo_surface_t *surface;
   GtkBuilder *builder;
   GtkWidget *bottom_label;
@@ -598,8 +599,8 @@ make_row_from_source (GcalSourceDialog *dialog,
   GdkRGBA color;
   gchar *parent_name;
 
-  ESourceSelectable *extension;
   get_source_parent_name_color (dialog->manager, source, &parent_name, NULL);
+
   builder = gtk_builder_new_from_resource ("/org/gnome/calendar/calendar-row.ui");
 
   /*
@@ -607,7 +608,7 @@ make_row_from_source (GcalSourceDialog *dialog,
    * the row to the listbox, it should be referenced here so
    * it isn't destroyed with the GtkBuilder.
    */
-  row = g_object_ref (gtk_builder_get_object (builder, "row"));
+  row = g_object_ref (GTK_WIDGET (gtk_builder_get_object (builder, "row")));
 
   /* source color icon */
   get_color_name_from_source (source, &color);
