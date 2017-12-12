@@ -97,6 +97,11 @@ static GOptionEntry gcal_application_goptions[] = {
     G_OPTION_ARG_STRING, NULL,
     N_("Open calendar showing the passed event"), NULL
   },
+  {
+    "quit", 'q', 0,
+    G_OPTION_ARG_NONE, NULL,
+    N_("Quit GNOME Calendar"), NULL
+  },
   { NULL }
 };
 
@@ -319,6 +324,11 @@ gcal_application_command_line (GApplication            *app,
         }
 
       g_variant_unref (option);
+    }
+  else if (g_variant_dict_contains (options, "quit"))
+    {
+      g_application_quit (app);
+      return 0;
     }
 
   g_application_activate (app);
