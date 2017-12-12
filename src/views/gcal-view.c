@@ -170,7 +170,7 @@ gcal_view_set_weather_service (GcalView           *self,
   g_return_if_fail (GCAL_IS_VIEW (self));
   g_return_if_fail (service == NULL || GCAL_IS_WEATHER_SERVICE (service));
 
-  g_object_set (self, "weather-service", &service, NULL);
+  g_object_set (self, "weather-service", service, NULL);
 }
 
 /**
