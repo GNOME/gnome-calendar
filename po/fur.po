@@ -6,10 +6,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-09-28 11:44+0000\n"
-"PO-Revision-Date: 2017-10-11 08:05+0200\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
+"POT-Creation-Date: 2017-12-12 01:12+0000\n"
+"PO-Revision-Date: 2017-12-12 15:18+0100\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
@@ -21,7 +20,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:184 src/gcal-application.c:466
+#: data/ui/window.ui:187 src/gcal-application.c:529
 msgid "Calendar"
 msgstr "Calendari"
 
@@ -109,6 +108,18 @@ msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
 "Il mût de viste dal barcon atîf, il valôr predefinît al è: viste mensîl"
 
+#: data/org.gnome.calendar.gschema.xml:26
+msgid "Weather Service Configuration"
+msgstr "Configurazion dal servizi meteorologjic"
+
+#: data/org.gnome.calendar.gschema.xml:27
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr ""
+"Indiche se a vegnin mostrâts i rapuarts dal timp, a vegnin dopradis lis "
+"posizions automatichis e un non di localitât"
+
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
 msgstr "Cambie il sun dal alarme"
@@ -118,7 +129,7 @@ msgid "Remove the alarm"
 msgstr "Gjave l'alarme"
 
 #: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
-#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1111
+#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1161
 msgid "Cancel"
 msgstr "Anule"
 
@@ -154,87 +165,87 @@ msgstr "Notis"
 msgid "Location"
 msgstr "Posizion"
 
-#: data/ui/edit-dialog.ui:299
+#: data/ui/edit-dialog.ui:301
 msgid "Time"
 msgstr "Orari"
 
-#: data/ui/edit-dialog.ui:352
+#: data/ui/edit-dialog.ui:354
 msgid "All Day"
 msgstr "Dut il dì"
 
-#: data/ui/edit-dialog.ui:397
+#: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
-msgstr "Zonte promemorie..."
+msgstr "Zonte promemorie…"
 
-#: data/ui/edit-dialog.ui:428
+#: data/ui/edit-dialog.ui:430
 msgid "No Repeat"
 msgstr "No sta ripeti"
 
-#: data/ui/edit-dialog.ui:429
+#: data/ui/edit-dialog.ui:431
 msgid "Daily"
 msgstr "Zornalîr"
 
-#: data/ui/edit-dialog.ui:430
+#: data/ui/edit-dialog.ui:432
 msgid "Monday – Friday"
 msgstr "Lunis – Vinars"
 
-#: data/ui/edit-dialog.ui:431
+#: data/ui/edit-dialog.ui:433
 msgid "Weekly"
 msgstr "Setemanâl"
 
-#: data/ui/edit-dialog.ui:432
+#: data/ui/edit-dialog.ui:434
 msgid "Monthly"
 msgstr "Mensîl"
 
-#: data/ui/edit-dialog.ui:433
+#: data/ui/edit-dialog.ui:435
 msgid "Yearly"
 msgstr "Anuâl"
 
-#: data/ui/edit-dialog.ui:461
+#: data/ui/edit-dialog.ui:463
 msgid "Forever"
 msgstr "Par simpri"
 
-#: data/ui/edit-dialog.ui:462
+#: data/ui/edit-dialog.ui:464
 msgid "No. of occurrences"
 msgstr "N. di ricorincis"
 
-#: data/ui/edit-dialog.ui:463
+#: data/ui/edit-dialog.ui:465
 msgid "Until Date"
 msgstr "Fin ae date"
 
-#: data/ui/edit-dialog.ui:557
+#: data/ui/edit-dialog.ui:560
 msgid "Delete Event"
 msgstr "Elimine Event"
 
-#: data/ui/edit-dialog.ui:596
+#: data/ui/edit-dialog.ui:599
 msgid "5 minutes"
 msgstr "5 minûts"
 
-#: data/ui/edit-dialog.ui:605
+#: data/ui/edit-dialog.ui:608
 msgid "10 minutes"
 msgstr "10 minûts"
 
-#: data/ui/edit-dialog.ui:614
+#: data/ui/edit-dialog.ui:617
 msgid "30 minutes"
 msgstr "30 minûts"
 
-#: data/ui/edit-dialog.ui:623
+#: data/ui/edit-dialog.ui:626
 msgid "1 hour"
 msgstr "1 ore"
 
-#: data/ui/edit-dialog.ui:631
+#: data/ui/edit-dialog.ui:634
 msgid "1 day"
 msgstr "1 dì"
 
-#: data/ui/edit-dialog.ui:640
+#: data/ui/edit-dialog.ui:643
 msgid "2 days"
 msgstr "2 dîs"
 
-#: data/ui/edit-dialog.ui:649
+#: data/ui/edit-dialog.ui:652
 msgid "3 days"
 msgstr "3 dîs"
 
-#: data/ui/edit-dialog.ui:658
+#: data/ui/edit-dialog.ui:661
 msgid "1 week"
 msgstr "1 setemane"
 
@@ -318,9 +329,9 @@ msgctxt "shortcut window"
 msgid "Year view"
 msgstr "Viodude an"
 
-#: data/ui/menus.ui:6 data/ui/menus.ui:36
+#: data/ui/menus.ui:6
 msgid "Add Eve_nt…"
-msgstr "_Zonte event..."
+msgstr "_Zonte event…"
 
 #: data/ui/menus.ui:13
 msgid "_Calendars"
@@ -338,25 +349,53 @@ msgstr "_Informazions"
 msgid "_Quit"
 msgstr "_Jes"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:47
+msgid "Add Eve_nt"
+msgstr "_Zonte event"
+
+#: data/ui/menus.ui:54
 msgid "_Synchronize"
 msgstr "_Sincronize"
 
-#: data/ui/menus.ui:49
+#: data/ui/menus.ui:61 data/ui/menus.ui:81
+msgid "_Weather"
+msgstr "_Timp"
+
+#: data/ui/menus.ui:62
+msgid "win-menu-weather"
+msgstr ""
+
+#: data/ui/menus.ui:82
+msgid "win-menu-main"
+msgstr ""
+
+#: data/ui/menus.ui:101
+msgid "Show Weather"
+msgstr "Mostre timp"
+
+#: data/ui/menus.ui:137
+msgid "Automatic Location"
+msgstr "Posizion automatiche"
+
+#: data/ui/menus.ui:188
 msgid "From Web…"
-msgstr "Dal web..."
+msgstr "Dal web…"
 
-#: data/ui/menus.ui:53
+#: data/ui/menus.ui:192
 msgid "New Local Calendar…"
-msgstr "Gnûf calendari locâl..."
+msgstr "Gnûf calendari locâl…"
 
-#: data/ui/menus.ui:57
+#: data/ui/menus.ui:196
 msgid "From File…"
-msgstr "Da file..."
+msgstr "Di file…"
+
+#: data/ui/month-popover.ui:91
+msgid "New Event…"
+msgstr "Gnûf event…"
 
 #: data/ui/quick-add-popover.ui:117
 msgid "Edit Details…"
-msgstr "Modifiche detais..."
+msgstr "Modifiche detais…"
 
 #: data/ui/quick-add-popover.ui:130 data/ui/source-dialog.ui:389
 #: data/ui/source-dialog.ui:773
@@ -371,7 +410,7 @@ msgstr "Nissun risultât cjatât"
 msgid "Try a different search"
 msgstr "Prove une ricercje diferente"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1123 src/gcal-window.c:1127
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1119 src/gcal-window.c:1123
 msgid "Undo"
 msgstr "Anule"
 
@@ -454,13 +493,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Direzion calendari"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2234
-#: src/gcal-source-dialog.c:2240
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2284
+#: src/gcal-source-dialog.c:2290
 msgid "Add Calendar"
 msgstr "Zonte calendari"
 
-#: data/ui/source-dialog.ui:745 data/ui/window.ui:334
-#: src/gcal-source-dialog.c:853 src/gcal-source-dialog.c:2263
+#: data/ui/source-dialog.ui:745 data/ui/window.ui:343
+#: src/gcal-source-dialog.c:861 src/gcal-source-dialog.c:2313
 msgid "Calendar Settings"
 msgstr "Impostazions calendari"
 
@@ -480,8 +519,8 @@ msgstr "Inserìs lis tôs credenziâls"
 msgid "Connect"
 msgstr "Conet"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:764
-#: src/views/gcal-week-view.c:291
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:758
+#: src/views/gcal-week-view.c:294
 msgid "00:00"
 msgstr "00:00"
 
@@ -489,75 +528,75 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:446
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:449
 msgid "AM"
 msgstr "AM"
 
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:446
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:449
 msgid "PM"
 msgstr "PM"
 
-#: data/ui/window.ui:64
+#: data/ui/window.ui:67
 msgid "Week"
 msgstr "Setemane"
 
-#: data/ui/window.ui:79
+#: data/ui/window.ui:82
 msgid "Month"
 msgstr "Mês"
 
-#: data/ui/window.ui:93
+#: data/ui/window.ui:96
 msgid "Year"
 msgstr "An"
 
-#: data/ui/window.ui:187 data/ui/year-view.ui:84 src/views/gcal-year-view.c:276
-#: src/views/gcal-year-view.c:510
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:294
+#: src/views/gcal-year-view.c:529
 msgid "Today"
 msgstr "Vuê"
 
-#: data/ui/window.ui:261
+#: data/ui/window.ui:270
 msgid "Manage your calendars"
 msgstr "Ministre i tiei calendaris"
 
-#: data/ui/window.ui:278
+#: data/ui/window.ui:287
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Cîr events"
 
-#: data/ui/year-view.ui:95
+#: data/ui/year-view.ui:103
+msgid "temp"
+msgstr ""
+
+#: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Nissun event"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2729
+#: data/ui/year-view.ui:155
 msgid "Add Event…"
-msgstr "Zonte event..."
+msgstr "Zonte event…"
 
-#: src/gcal-application.c:85
+#: src/gcal-application.c:90
 msgid "Display version number"
 msgstr "Mostre il numar di version"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:95
 msgid "Enable debug messages"
 msgstr "Abilite messaçs di debug"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:100
 msgid "Open calendar on the passed date"
 msgstr "Vierç il calendari te zornade dade"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:105
 msgid "Open calendar showing the passed event"
 msgstr "Vierç il calendari mostrant l'event dât"
 
-#: src/gcal-application.c:454
+#: src/gcal-application.c:486
 #, c-format
-msgid "Copyright © %d The Calendar authors"
-msgstr "Copyright © %d i autôrs di Calendari"
+#| msgid "Copyright © %d–%d The Calendar authors"
+msgid "Copyright © 2012–%d The Calendar authors"
+msgstr "Copyright © 2012–%d i autôrs di Calendari"
 
-#: src/gcal-application.c:460
-#, c-format
-msgid "Copyright © %d–%d The Calendar authors"
-msgstr "Copyright © %d–%d i autôrs di Calendari"
-
-#: src/gcal-application.c:473
+#: src/gcal-application.c:535
 msgid "translator-credits"
 msgstr "Fabio Tomat <f.t.public@gmail.com>"
 
@@ -565,40 +604,40 @@ msgstr "Fabio Tomat <f.t.public@gmail.com>"
 msgid "Save"
 msgstr "Salve"
 
-#: src/gcal-edit-dialog.c:1000
+#: src/gcal-edit-dialog.c:1019
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minût prime"
 msgstr[1] "%d minûts prime"
 
-#: src/gcal-edit-dialog.c:1008
+#: src/gcal-edit-dialog.c:1027
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d ore prime"
 msgstr[1] "%d oris prime"
 
-#: src/gcal-edit-dialog.c:1016
+#: src/gcal-edit-dialog.c:1035
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d zornade prime"
 msgstr[1] "%d dîs prime"
 
-#: src/gcal-edit-dialog.c:1024
+#: src/gcal-edit-dialog.c:1043
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d setemane prime"
 msgstr[1] "%d setemanis prime"
 
-#: src/gcal-edit-dialog.c:1327 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1347 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Event cence non"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:364
+#: src/gcal-event-widget.c:420
 #, c-format
 msgid "At %s"
 msgstr "A %s"
@@ -876,39 +915,39 @@ msgid "Use the entry above to search for events."
 msgstr "Dopre la casele di test parsore par cirî i events."
 
 #. Dialog
-#: src/gcal-source-dialog.c:1108
+#: src/gcal-source-dialog.c:1158
 msgid "Select a calendar file"
 msgstr "Selezione un file calendari"
 
-#: src/gcal-source-dialog.c:1112
+#: src/gcal-source-dialog.c:1162
 msgid "Open"
 msgstr "Vierç"
 
-#: src/gcal-source-dialog.c:1119
+#: src/gcal-source-dialog.c:1169
 msgid "Calendar files"
 msgstr "File calendari"
 
 #. update the source properties
-#: src/gcal-source-dialog.c:1153
+#: src/gcal-source-dialog.c:1203
 msgid "Unnamed Calendar"
 msgstr "Calendari cence non"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1759
+#: src/gcal-source-dialog.c:1809
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Calendari <b>%s</b> gjavât"
 
-#: src/gcal-source-dialog.c:1808 src/gcal-source-dialog.c:1864
+#: src/gcal-source-dialog.c:1858 src/gcal-source-dialog.c:1914
 msgid "Off"
 msgstr "Off"
 
-#: src/gcal-source-dialog.c:1808 src/gcal-source-dialog.c:1864
+#: src/gcal-source-dialog.c:1858 src/gcal-source-dialog.c:1914
 msgid "On"
 msgstr "On"
 
 # o scjadude?
-#: src/gcal-source-dialog.c:1863
+#: src/gcal-source-dialog.c:1913
 msgid "Expired"
 msgstr "Scjadût"
 
@@ -922,7 +961,7 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1188
+#: src/gcal-utils.c:1090
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -930,55 +969,42 @@ msgstr ""
 "L'event che si sta cirint di modificâ al è ciclic. Lis modifichis "
 "selezionadis e varessin di jessi aplicadis a:"
 
-#: src/gcal-utils.c:1191
+#: src/gcal-utils.c:1093
 msgid "_Cancel"
 msgstr "_Anule"
 
-#: src/gcal-utils.c:1193
+#: src/gcal-utils.c:1095
 msgid "_Only This Event"
 msgstr "_Dome chest event"
 
-#: src/gcal-utils.c:1200
+#: src/gcal-utils.c:1102
 msgid "_Subsequent events"
 msgstr "_Events seguitîfs"
 
-#: src/gcal-utils.c:1202
+#: src/gcal-utils.c:1104
 msgid "_All events"
 msgstr "_Ducj i events"
 
-#: src/gcal-window.c:1123
+#: src/gcal-window.c:1119
 msgid "Another event deleted"
 msgstr "Un altri event eliminât"
 
-#: src/gcal-window.c:1127
+#: src/gcal-window.c:1123
 msgid "Event deleted"
 msgstr "Event eliminât"
 
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-month-view.c:296 src/views/gcal-year-view.c:291
-#: src/views/gcal-year-view.c:513
-msgid "%B %d"
-msgstr "%d di %B"
+#: src/views/gcal-week-grid.c:755 src/views/gcal-week-view.c:291
+msgid "00 AM"
+msgstr "00 AM"
 
-#: src/views/gcal-month-view.c:1627
-msgid "Other events"
-msgstr "Altris events"
-
-#. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:2224 src/views/gcal-week-header.c:338
+#: src/views/gcal-week-header.c:400
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Altri event"
 msgstr[1] "Altris %d events"
 
-#: src/views/gcal-week-grid.c:761 src/views/gcal-week-view.c:288
-msgid "00 AM"
-msgstr "00 AM"
-
-#: src/views/gcal-week-header.c:871
+#: src/views/gcal-week-header.c:933
 #, c-format
 msgid "week %d"
 msgstr "setemane %d"
@@ -986,9 +1012,22 @@ msgstr "setemane %d"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:285
+#: src/views/gcal-year-view.c:303
 msgid "%B %d…"
 msgstr "%d di %B…"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/views/gcal-year-view.c:309 src/views/gcal-year-view.c:532
+msgid "%B %d"
+msgstr "%d di %B"
+
+#~ msgid "Copyright © %d The Calendar authors"
+#~ msgstr "Copyright © %d i autôrs di Calendari"
+
+#~ msgid "Other events"
+#~ msgstr "Altris events"
 
 #~ msgid "— Calendar management"
 #~ msgstr "— Gjestion calendari"
