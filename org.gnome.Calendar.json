@@ -7,10 +7,12 @@
     "tags": ["devel"],
     "desktop-file-name-prefix": "(Development) ",
     "finish-args": [
-        "--share=ipc", "--socket=x11",
-        "--socket=wayland",
+        "--share=ipc",
         "--share=network",
+        "--socket=x11",
+        "--socket=wayland",
         "--system-talk-name=org.freedesktop.login1",
+        "--system-talk-name=org.freedesktop.GeoClue2",
         "--talk-name=ca.desrt.dconf",
         "--talk-name=org.gnome.ControlCenter",
         "--talk-name=org.gnome.OnlineAccounts",
@@ -67,6 +69,29 @@
             ]
         },
         {
+            "name": "geocode-glib",
+            "buildsystem": "meson",
+            "builddir": true,
+            "config-opts": [ "--libdir=/app/lib" ],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "git://git.gnome.org/geocode-glib"
+                }
+            ]
+        },
+        {
+            "name": "libgweather",
+            "buildsystem": "meson",
+            "config-opts": ["--libdir=/app/lib"],
+            "sources": [
+                {
+                    "type": "git",
+                    "url": "git://git.gnome.org/libgweather"
+                }
+            ]
+        },
+        {
             "name": "evolution-data-server",
             "cleanup": [
                 "/lib/cmake",
@@ -115,7 +140,8 @@
                     "type": "git",
                     "url": "https://gitlab.gnome.org/GNOME/gnome-calendar.git"
                 }
-            ]
+            ],
+            "config-opts": ["-Denable-tracing=true"]
         }
     ]
 }
