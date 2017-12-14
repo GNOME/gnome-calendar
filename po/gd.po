@@ -7,7 +7,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2017-12-07 08:43+0000\n"
-"PO-Revision-Date: 2017-12-14 10:39+0100\n"
+"PO-Revision-Date: 2017-12-14 10:41+0100\n"
 "Last-Translator: GunChleoc <fios@foramnagaidhlig.net>\n"
 "Language-Team: Fòram na Gàidhlig\n"
 "Language: gd\n"
@@ -36,8 +36,8 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"'S e aplacaid mìosachain brèagha simplidh a th' ann am Mìosachan GNOME a "
-"chaidh a dhealbhachadh gus freagairt ris an deasg GNOME cho foirfe 's a "
+"’S e aplacaid mìosachain brèagha simplidh a th’ ann am Mìosachan GNOME a "
+"chaidh a dhealbhachadh gus freagairt ris an deasg GNOME cho foirfe ’s a "
 "ghabhas. On a tha e ag ath-chleachdadh co-phàirtean air a bheil an deasg "
 "GNOME stèidhichte, nì Mìosachan amalachadh ann an àrainneachd GNOME gu "
 "dòigheil."
@@ -53,7 +53,7 @@ msgid ""
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Tha sinn ag amas am meidh as fhearr a lorg eadar gleusan air an dèanamh gu "
-"math agus an so-chleachdadh. Gun leisgeul, gun dìth. Bidh thu cofhurtail a' "
+"math agus an so-chleachdadh. Gun leisgeul, gun dìth. Bidh thu cofhurtail a’ "
 "cleachdadh Mìosachan mar an robh thu air a chleachdadh fad linntean mar-thà!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
@@ -68,7 +68,7 @@ msgstr "Lorg tachartasan"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:35
 msgid "Calendar management"
-msgstr "Stiùireadh a' mhìosachain"
+msgstr "Stiùireadh a’ mhìosachain"
 
 #: data/org.gnome.Calendar.desktop.in:4
 #| msgid "Access, and manage calendar"
@@ -100,7 +100,7 @@ msgstr "Meud na h-uinneige"
 
 #: data/org.gnome.calendar.gschema.xml:12
 msgid "Window size (width and height)."
-msgstr "Meud na h-uinneige (leud 's àirde)."
+msgstr "Meud na h-uinneige (leud ’s àirde)."
 
 #: data/org.gnome.calendar.gschema.xml:16
 msgid "Window position"
@@ -117,7 +117,7 @@ msgstr "Seòrsa an t-seallaidh ghnìomhaich"
 #: data/org.gnome.calendar.gschema.xml:22
 msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
-"Seòrsa uinneag an t-seallaidh ghnìomhaich, 's e sealladh mìosail an tha san "
+"Seòrsa uinneag an t-seallaidh ghnìomhaich, ’s e sealladh mìosail an tha san "
 "t-sealladh tùsail"
 
 #: data/ui/alarm-row.ui:34
@@ -126,7 +126,7 @@ msgstr "Toglaichidh seo fuaim na caismeachd"
 
 #: data/ui/alarm-row.ui:54
 msgid "Remove the alarm"
-msgstr "Thoir a' chaismeachd air falbh"
+msgstr "Thoir a’ chaismeachd air falbh"
 
 #: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
 #: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1111
@@ -276,7 +276,7 @@ msgstr "Lorg"
 #: data/ui/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Show help"
-msgstr "Seall a' chobhair"
+msgstr "Seall a’ chobhair"
 
 #: data/ui/help-overlay.ui:45
 msgctxt "shortcut window"
@@ -346,7 +346,7 @@ msgstr "_Mìosachain"
 
 #: data/ui/menus.ui:19
 msgid "_Keyboard Shortcuts"
-msgstr "Ath-ghoiridean a' _mheur-chlàir"
+msgstr "Ath-ghoiridean a’ _mheur-chlàir"
 
 #: data/ui/menus.ui:23
 msgid "_About"
@@ -399,7 +399,7 @@ msgstr "Cunntasan air loidhne"
 
 #: data/ui/source-dialog.ui:151
 msgid "Open online account settings"
-msgstr "Fosgail roghainnean a' chunntais air loidhne"
+msgstr "Fosgail roghainnean a’ chunntais air loidhne"
 
 #: data/ui/source-dialog.ui:198
 msgid "Google"
@@ -428,7 +428,7 @@ msgstr "Foir-shealladh"
 
 #: data/ui/source-dialog.ui:441
 msgid "Add new events to this calendar by default"
-msgstr "Cuir tachartasan ùra ris a' mhìosachan seo a ghnàth"
+msgstr "Cuir tachartasan ùra ris a’ mhìosachan seo a ghnàth"
 
 #: data/ui/source-dialog.ui:454
 msgid "Remove Calendar"
@@ -440,7 +440,7 @@ msgstr "Seall am mìosachan"
 
 #: data/ui/source-dialog.ui:521
 msgid "Calendar name"
-msgstr "Ainm a' mhìosachain"
+msgstr "Ainm a’ mhìosachain"
 
 #: data/ui/source-dialog.ui:535
 msgid "Color"
@@ -464,13 +464,13 @@ msgid ""
 "belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
-"Cuir a-steach seòladh a' mhìosachain a tha thu airson cur ris. Ma tha am "
-"mìosachan a' buntainn ri fear dhe na cunntasan air loidhne agad, 's urrainn "
-"dhut a chur ris le <a href=\"GOA\">roghainnean a' chunntais air loidhne</a>."
+"Cuir a-steach seòladh a’ mhìosachain a tha thu airson cur ris. Ma tha am "
+"mìosachan a’ buntainn ri fear dhe na cunntasan air loidhne agad, ’s urrainn "
+"dhut a chur ris le <a href=\"GOA\">roghainnean a’ chunntais air loidhne</a>."
 
 #: data/ui/source-dialog.ui:646
 msgid "Calendar Address"
-msgstr "Seòladh a' mhìosachain"
+msgstr "Seòladh a’ mhìosachain"
 
 #: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2234
 #: src/gcal-source-dialog.c:2240
@@ -480,7 +480,7 @@ msgstr "Cuir mìosachan ris"
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:334
 #: src/gcal-source-dialog.c:853 src/gcal-source-dialog.c:2263
 msgid "Calendar Settings"
-msgstr "Roghainnean a' mhìosachain"
+msgstr "Roghainnean a’ mhìosachain"
 
 #: data/ui/source-dialog.ui:806
 msgid "User"
@@ -561,21 +561,21 @@ msgstr "Cuir teachdaireachdan dì-bhugachaidh an comas"
 
 #: src/gcal-application.c:95
 msgid "Open calendar on the passed date"
-msgstr "Fosgail am mìosachain air a' cheann-là"
+msgstr "Fosgail am mìosachain air a’ cheann-là"
 
 #: src/gcal-application.c:100
 msgid "Open calendar showing the passed event"
-msgstr "Fosgail am mìosachain a' sealltainn an tachartais"
+msgstr "Fosgail am mìosachain a’ sealltainn an tachartais"
 
 #: src/gcal-application.c:454
 #, c-format
 msgid "Copyright © %d The Calendar authors"
-msgstr "Còir-lethbhreac © %d ùghdaran a' Mhìosachain"
+msgstr "Còir-lethbhreac © %d ùghdaran a’ Mhìosachain"
 
 #: src/gcal-application.c:460
 #, c-format
 msgid "Copyright © %d–%d The Calendar authors"
-msgstr "Còir-lethbhreac © %d-%d ùghdaran a' Mhìosachain"
+msgstr "Còir-lethbhreac © %d-%d ùghdaran a’ Mhìosachain"
 
 #: src/gcal-application.c:473
 msgid "translator-credits"
