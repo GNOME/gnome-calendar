@@ -1061,7 +1061,7 @@ update_month_cells (GcalMonthView *self)
         }
     }
 
-  update_weather (self, FALSE);
+  update_weather (self, TRUE);
 
   self->update_grid_id = 0;
 
