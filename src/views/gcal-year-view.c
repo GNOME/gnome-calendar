@@ -130,8 +130,6 @@ enum {
   LAST_PROP
 };
 
-static gpointer year_view_parent_class = NULL;
-
 static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
 static void          gcal_data_model_subscriber_interface_init   (ECalDataModelSubscriberInterface *iface);
 static void          update_weather                              (GcalYearView       *self);
@@ -1611,15 +1609,13 @@ gcal_year_view_destroyed (GtkWidget *widget)
 {
   GcalYearView *self = GCAL_YEAR_VIEW (widget);
 
-  if (self->weather_service != NULL)
+  if (self->weather_service)
     {
-      g_signal_handlers_disconnect_by_func (self->weather_service,
-                                            (GCallback) weather_changed,
-                                            self);
+      g_signal_handlers_disconnect_by_func (self->weather_service, weather_changed, self);
       g_clear_object (&self->weather_service);
     }
 
-  GTK_WIDGET_CLASS (year_view_parent_class)->destroy ((GtkWidget*) G_TYPE_CHECK_INSTANCE_CAST (self, GTK_TYPE_BOX, GtkGrid));
+  GTK_WIDGET_CLASS (gcal_year_view_parent_class)->destroy (widget);
 }
 
 static void
@@ -1990,6 +1986,9 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   widget_class->size_allocate = gcal_year_view_size_allocate;
   widget_class->direction_changed = gcal_year_view_direction_changed;
 
+  /* Hack to deal with broken reference counts */
+  widget_class->destroy = gcal_year_view_destroyed;
+
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
   g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
@@ -2028,10 +2027,6 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, popover_closed_cb);
 
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
-
-  /* Hack to deal with broken reference counts: */
-  year_view_parent_class = g_type_class_peek_parent (klass);
-  ((GtkWidgetClass *) klass)->destroy = (void (*) (GtkWidget *)) gcal_year_view_destroyed;
 }
 
 static void

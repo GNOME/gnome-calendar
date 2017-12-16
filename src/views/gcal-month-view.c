@@ -162,8 +162,6 @@ enum
   N_PROPS
 };
 
-static gpointer month_view_parent_class = NULL;
-
 
 /*
  * Auxiliary functions
@@ -1825,7 +1823,7 @@ gcal_month_view_destroyed (GtkWidget *widget)
       g_clear_object (&self->weather_service);
     }
 
-  GTK_WIDGET_CLASS (month_view_parent_class)->destroy ((GtkWidget*) G_TYPE_CHECK_INSTANCE_CAST (self, GTK_TYPE_GRID, GtkGrid));
+  GTK_WIDGET_CLASS (gcal_month_view_parent_class)->destroy (widget);
 }
 
 static void
@@ -2197,6 +2195,9 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   widget_class->key_press_event = gcal_month_view_key_press;
   widget_class->scroll_event = gcal_month_view_scroll_event;
 
+  /* FIXME: Hack to deal with broken reference counts */
+  widget_class->destroy = gcal_month_view_destroyed;
+
   container_class = GTK_CONTAINER_CLASS (klass);
   container_class->add = gcal_month_view_add;
   container_class->remove = gcal_month_view_remove;
@@ -2205,8 +2206,6 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
   g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
-
-
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/month-view.ui");
 
@@ -2225,10 +2224,6 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   gtk_widget_class_set_css_name (widget_class, "calendar-view");
 
   g_type_ensure (GCAL_TYPE_MONTH_POPOVER);
-
-  /* FIXME: Hack to deal with broken reference counts */
-  month_view_parent_class = g_type_class_peek_parent (klass);
-  ((GtkWidgetClass *) klass)->destroy = (void (*) (GtkWidget *)) gcal_month_view_destroyed;
 }
 
 static void
