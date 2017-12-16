@@ -162,14 +162,7 @@ enum
   N_PROPS
 };
 
-enum
-{
-  EVENT_ACTIVATED,
-  NUM_SIGNALS
-};
-
 static gpointer month_view_parent_class = NULL;
-static guint signals[NUM_SIGNALS] = { 0, };
 
 
 /*
@@ -191,7 +184,7 @@ event_activated (GcalMonthView   *self,
   cancel_selection (self);
   gcal_month_popover_popdown (self->overflow_popover);
 
-  g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
+  g_signal_emit_by_name (self, "event-activated", widget);
 }
 
 static void
@@ -2213,13 +2206,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
   g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
 
-  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
-                                           GCAL_TYPE_MONTH_VIEW,
-                                           G_SIGNAL_RUN_LAST,
-                                           0, NULL, NULL, NULL,
-                                           G_TYPE_NONE,
-                                           1,
-                                           GCAL_TYPE_EVENT_WIDGET);
+
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/month-view.ui");
 

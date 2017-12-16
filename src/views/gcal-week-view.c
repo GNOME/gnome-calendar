@@ -79,12 +79,6 @@ static void          gcal_data_model_subscriber_interface_init   (ECalDataModelS
 
 enum
 {
-  EVENT_ACTIVATED,
-  LAST_SIGNAL
-};
-
-enum
-{
   PROP_0,
   PROP_DATE,
   PROP_MANAGER,
@@ -92,7 +86,6 @@ enum
   NUM_PROPS
 };
 
-static guint signals[LAST_SIGNAL] = { 0, };
 
 G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
@@ -104,7 +97,7 @@ static void
 on_event_activated (GcalWeekView *self,
                     GtkWidget    *widget)
 {
-  g_signal_emit (self, signals[EVENT_ACTIVATED], 0, widget);
+  g_signal_emit_by_name (self, "event-activated", widget);
 }
 
 static void
@@ -626,14 +619,6 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
   g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
-
-  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
-                                           GCAL_TYPE_WEEK_VIEW,
-                                           G_SIGNAL_RUN_FIRST,
-                                           0,  NULL, NULL, NULL,
-                                           G_TYPE_NONE,
-                                           1,
-                                           GCAL_TYPE_EVENT_WIDGET);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
 

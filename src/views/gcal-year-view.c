@@ -130,13 +130,6 @@ enum {
   LAST_PROP
 };
 
-enum
-{
-  EVENT_ACTIVATED,
-  NUM_SIGNALS
-};
-
-static guint signals[NUM_SIGNALS] = { 0, };
 static gpointer year_view_parent_class = NULL;
 
 static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
@@ -184,7 +177,7 @@ event_activated (GcalEventWidget *widget,
 
   if (view->popover_mode)
     gtk_widget_hide (view->popover);
-  g_signal_emit (GCAL_YEAR_VIEW (user_data), signals[EVENT_ACTIVATED], 0, widget);
+  g_signal_emit_by_name (view, "event-activated", widget);
 }
 
 static void
@@ -2008,15 +2001,6 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
                                                          "Show Week Numbers Column",
                                                          FALSE,
                                                          G_PARAM_READWRITE));
-
-  /* FIXME: it will problably go back to GcalView */
-  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
-                                           GCAL_TYPE_YEAR_VIEW,
-                                           G_SIGNAL_RUN_LAST,
-                                           0, NULL, NULL, NULL,
-                                           G_TYPE_NONE,
-                                           1,
-                                           GCAL_TYPE_EVENT_WIDGET);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/year-view.ui");
 

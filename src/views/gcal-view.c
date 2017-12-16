@@ -21,6 +21,7 @@
 
 #define G_LOG_DOMAIN "GcalView"
 
+#include "gcal-event-widget.h"
 #include "gcal-view.h"
 #include "gcal-utils.h"
 
@@ -97,6 +98,19 @@ gcal_view_default_init (GcalViewInterface *iface)
                 G_STRUCT_OFFSET (GcalViewInterface, create_event_detailed),
                 NULL, NULL, NULL,
                 G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
+
+  /**
+   * GcalView::event-activated:
+   *
+   * Emitted when an event widget inside the view is activated.
+   */
+  g_signal_new ("event-activated",
+                GCAL_TYPE_VIEW,
+                G_SIGNAL_RUN_LAST,
+                0, NULL, NULL, NULL,
+                G_TYPE_NONE,
+                1,
+                GCAL_TYPE_EVENT_WIDGET);
 }
 
 /**
