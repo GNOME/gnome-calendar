@@ -23,6 +23,7 @@
 #include "gcal-manager.h"
 #include <gtk/gtk.h>
 #include <libecal/libecal.h>
+#include <libgweather/gweather.h>
 #include <libical/icaltime.h>
 
 #define ICAL_TIME_TYPE (icaltime_get_type ())
@@ -36,6 +37,7 @@
 
 /* Add autoptr support for libecal */
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ESource, g_object_unref)
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (GWeatherLocation, gweather_location_unref)
 
 /**
  * GcalWindowViewType:

@@ -25,8 +25,9 @@
 #include <string.h>
 #include <math.h>
 
-#include "gcal-weather-service.h"
+#include "gcal-debug.h"
 #include "gcal-timer.h"
+#include "gcal-weather-service.h"
 
 
 #define DAY_SECONDS (24 * 60 * 60)
@@ -234,9 +235,10 @@ schedule_midnight (GcalWeatherService  *self)
 static void
 start_timer (GcalWeatherService  *self)
 {
-  GNetworkMonitor *monitor; /* unowned */
+  GNetworkMonitor *monitor;
 
   monitor = g_network_monitor_get_default ();
+
   if (g_network_monitor_get_network_available (monitor))
     {
       update_timeout_interval (self);
@@ -303,14 +305,8 @@ static gint
 get_icon_name_sortkey (const gchar *icon_name,
                        gboolean    *supports_night_icon)
 {
-  /* Note that we can't use gweathers condition
-   * field as it is not necessarily holds valid values.
-   * libgweather uses its own heuristic to determine
-   * the icon to use. String matching is still better
-   * than copying their algorithm, I guess.
-   */
-
   gssize normalized_name_len;
+  guint i;
 
   const GcalWeatherIconInfo icons[] =
     { {"weather-clear",             TRUE},
@@ -332,7 +328,7 @@ get_icon_name_sortkey (const gchar *icon_name,
   normalized_name_len = get_normalized_icon_name_len (icon_name);
   g_return_val_if_fail (normalized_name_len >= 0, -1);
 
-  for (int i = 0; i < G_N_ELEMENTS (icons); i++)
+  for (i = 0; i < G_N_ELEMENTS (icons); i++)
     {
       if (icons[i].name[normalized_name_len] == '\0' && strncmp (icon_name, icons[i].name, normalized_name_len) == 0)
         {
@@ -429,7 +425,8 @@ compute_weather_info_data (GSList    *samples,
   phenomenon_val = -1;
   phenomenon_supports_night_icon = FALSE;
 
-  /* Note: I checked three different gweather consumers
+  /*
+   * Note: I checked three different gweather consumers
    *   and they all pick different values. So here is my
    *   take: I pick up the worst weather for icons and
    *   the highest temperature. I basically want to know
@@ -441,8 +438,8 @@ compute_weather_info_data (GSList    *samples,
 
   for (iter = samples; iter; iter = iter->next)
     {
-      GWeatherInfo  *gwi;       /* unowned */
-      const gchar   *icon_name; /* unowned */
+      GWeatherInfo  *gwi;
+      const gchar *icon_name;
       gboolean supports_night_icon;
       gboolean valid_temp;
       gdouble temp;
@@ -478,6 +475,7 @@ compute_weather_info_data (GSList    *samples,
     {
       *icon_name = get_normalized_icon_name (phenomenon_gwi, is_today && !has_daytime && phenomenon_supports_night_icon);
       *temperature = gweather_info_get_temp (temp_gwi);
+
       return TRUE;
     }
   else
@@ -485,10 +483,10 @@ compute_weather_info_data (GSList    *samples,
       /* empty list */
       *icon_name = NULL;
       *temperature = NULL;
+
       return FALSE;
     }
 }
-
 
 static void
 update_location (GcalWeatherService  *self,
@@ -571,8 +569,10 @@ preprocess_gweather_reports (GcalWeatherService *self,
   glong first_tomorrow_dtime = -1;
   glong today_unix;
   glong unix_now;
+  guint i;
 
-  /* This function basically separates samples by date and calls compute_weather_info_data
+  /*
+   * This function basically separates samples by date and calls compute_weather_info_data
    * for every bucket to build weather infos. Each bucket represents a single day.
    *
    * All gweather consumers I reviewed presume sorted samples. However, there is no documented
@@ -641,7 +641,7 @@ preprocess_gweather_reports (GcalWeatherService *self,
     }
 
   /* Produce GcalWeatherInfo for each bucket: */
-  for (int i = 0; i < self->max_days; i++)
+  for (i = 0; i < self->max_days; i++)
     {
       g_autofree gchar *icon_name;
       g_autofree gchar *temperature;
@@ -653,7 +653,7 @@ preprocess_gweather_reports (GcalWeatherService *self,
     }
 
   /* Cleanup */
-  for (int i = 0; i < self->max_days; i++)
+  for (i = 0; i < self->max_days; i++)
     g_slist_free (days[i]);
   g_free (days);
 
@@ -676,7 +676,7 @@ on_network_changed_cb (GNetworkMonitor    *monitor,
 
   if (available && !is_running)
     {
-      if (self->gweather_info != NULL)
+      if (self->gweather_info)
         gweather_info_update (self->gweather_info);
 
       start_timer (self);
@@ -712,6 +712,8 @@ on_gclue_simple_creation_cb (GClueSimple        *_source,
   GClueSimple *location_service;
   GClueClient *client;
 
+  GCAL_ENTRY;
+
   /*
    * Make sure we do not touch self->location_service
    * if the current operation was cancelled.
@@ -727,8 +729,7 @@ on_gclue_simple_creation_cb (GClueSimple        *_source,
       else
         g_warning ("Could not create GCLueSimple: %s", error->message);
 
-      g_object_unref (self);
-      return;
+      GCAL_RETURN ();
     }
 
   self->location_service = g_steal_pointer (&location_service);
@@ -740,29 +741,20 @@ on_gclue_simple_creation_cb (GClueSimple        *_source,
     {
       update_gclue_location (self, location);
 
-      g_signal_connect_object (location,
-                               "notify::location",
-                               G_CALLBACK (on_gclue_location_changed_cb),
-                               self,
-                               0);
+      g_signal_connect (location,
+                        "notify::location",
+                        G_CALLBACK (on_gclue_location_changed_cb),
+                        self);
     }
 
-  g_signal_connect_object (client,
-                           "notify::active",
-                           G_CALLBACK (on_gclue_client_activity_changed_cb),
-                           self,
-                           0);
+  g_signal_connect (client,
+                    "notify::active",
+                    G_CALLBACK (on_gclue_client_activity_changed_cb),
+                    self);
 
-  g_object_unref (self);
+  GCAL_EXIT;
 }
 
-/* on_gclue_client_stop:
- * @source_object: A #GClueClient.
- * @res:           Result of gclue_client_call_stop().
- * @simple:        (transfer full): A #GClueSimple.
- *
- * Helper-callback used in gcal_weather_service_stop().
- */
 static void
 on_gclue_client_stop (GClueClient  *client,
                       GAsyncResult *res,
@@ -789,11 +781,6 @@ on_gweather_update_cb (GWeatherInfo       *info,
   update_weather (self, info, TRUE);
 }
 
-/* on_duration_timer_timeout
- * @self: A #GcalWeatherService.
- *
- * Handles scheduled weather report updates.
- */
 static void
 on_duration_timer_timeout (GcalTimer          *timer,
                            GcalWeatherService *self)
@@ -802,11 +789,6 @@ on_duration_timer_timeout (GcalTimer          *timer,
     gweather_info_update (self->gweather_info);
 }
 
-/* on_midnight_timer_timeout
- * @self: A #GcalWeatherService.
- *
- * Handles scheduled weather report updates.
- */
 static void
 on_midnight_timer_timeout (GcalTimer          *timer,
                            GcalWeatherService *self)
@@ -1391,12 +1373,14 @@ gcal_weather_service_run (GcalWeatherService *self,
 void
 gcal_weather_service_stop (GcalWeatherService *self)
 {
+  GCAL_ENTRY;
+
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
   g_debug ("Stop weather service");
 
   if (!self->location_service_running && !self->weather_service_running)
-    return ;
+    GCAL_RETURN ();
 
   self->location_service_running = FALSE;
   self->weather_service_running = FALSE;
@@ -1412,8 +1396,10 @@ gcal_weather_service_stop (GcalWeatherService *self)
   else
     {
       gclue_client_call_stop (gclue_simple_get_client (self->location_service),
-                              NULL,
+                              self->location_cancellable,
                               (GAsyncReadyCallback) on_gclue_client_stop,
                               g_steal_pointer (&self->location_service));
     }
+
+  GCAL_EXIT;
 }
