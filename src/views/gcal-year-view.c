@@ -2060,22 +2060,25 @@ update_weather (GcalYearView *self)
 
   g_return_if_fail (GCAL_IS_YEAR_VIEW (self));
 
-
-  if (self->weather_service != NULL && self->date != NULL)
+  if (self->weather_service && self->date)
     {
-      GSList *witer;  /* unowned */
-      GDate   date;
+      GPtrArray *weather_infos;
+      GDate date;
+      guint i;
 
       g_date_set_dmy (&date, self->date->day, self->date->month, self->date->year);
 
-      witer = gcal_weather_service_get_weather_infos (self->weather_service);
-      for (; witer != NULL; witer = witer->next)
+      weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
+
+      for (i = 0; weather_infos && i < weather_infos->len; i++)
         {
-          GcalWeatherInfo *info; /* unowned */
+          GcalWeatherInfo *info;
           GDate wdate;
 
-          info = GCAL_WEATHER_INFO (witer->data);
+          info = g_ptr_array_index (weather_infos, i);
+
           gcal_weather_info_get_date (info, &wdate);
+
           if (g_date_compare (&date, &wdate) == 0)
             {
               const gchar *temp_str; /* unowned */

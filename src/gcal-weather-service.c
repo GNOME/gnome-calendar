@@ -92,7 +92,7 @@ struct _GcalWeatherService
   gboolean            location_service_running;
 
   /* weather: */
-  GSList             *weather_infos;        /* owned[owned] */
+  GPtrArray          *weather_infos;        /* owned[owned] */
   gint64              weather_infos_upated;
   gint64              valid_timespan;
   GWeatherInfo       *gweather_info;        /* owned, nullable */
@@ -559,13 +559,13 @@ update_gclue_location (GcalWeatherService  *self,
   g_clear_pointer (&wlocation, gweather_location_unref);
 }
 
-static GSList*
+static GPtrArray*
 preprocess_gweather_reports (GcalWeatherService *self,
                              GSList             *samples)
 {
   GWeatherInfo *first_tomorrow = NULL; /* unowned */
+  GPtrArray *result = NULL;
   GSList **days = NULL;   /* owned[owned[unowned]] */
-  GSList *result = NULL;  /* owned[owned] */
   GSList *iter = NULL;    /* unowned */
   GDate cur_gdate;
   glong first_tomorrow_dtime = -1;
@@ -585,6 +585,7 @@ preprocess_gweather_reports (GcalWeatherService *self,
   if (!get_time_day_start (self, &cur_gdate, &today_unix, &unix_now))
     return NULL;
 
+  result = g_ptr_array_new_full (self->max_days, g_object_unref);
   days = g_malloc0 (sizeof (GSList*) * self->max_days);
 
   /* Split samples to max_days buckets: */
@@ -635,7 +636,7 @@ preprocess_gweather_reports (GcalWeatherService *self,
       secs_left_today = DAY_SECONDS - (unix_now - today_unix);
       secs_between = first_tomorrow_dtime - unix_now;
 
-      if (secs_left_today < 90*60 && secs_between <= 180*60)
+      if (secs_left_today < 90 * 60 && secs_between <= 180 * 60)
         days[0] = g_slist_prepend (days[0], first_tomorrow);
     }
 
@@ -646,12 +647,7 @@ preprocess_gweather_reports (GcalWeatherService *self,
       g_autofree gchar *temperature;
 
       if (compute_weather_info_data (days[i], i == 0, &icon_name, &temperature))
-        {
-          GcalWeatherInfo* gcwi;
-
-          gcwi = gcal_weather_info_new (&cur_gdate, icon_name, temperature);
-          result = g_slist_prepend (result, g_steal_pointer (&gcwi));
-        }
+        g_ptr_array_add (result, gcal_weather_info_new (&cur_gdate, icon_name, temperature));
 
       g_date_add_days (&cur_gdate, 1);
     }
@@ -921,8 +917,7 @@ update_weather (GcalWeatherService *self,
     {
       if (!reuse_old_on_error || !has_valid_weather_infos (self))
         {
-          g_slist_free_full (self->weather_infos, g_object_unref);
-          self->weather_infos = NULL;
+          g_clear_pointer (&self->weather_infos, g_ptr_array_unref);
           self->weather_infos_upated = -1;
 
           g_signal_emit (self, signals[SIG_WEATHER_CHANGED], 0);
@@ -930,7 +925,7 @@ update_weather (GcalWeatherService *self,
     }
   else if (gwforecast)
     {
-      g_slist_free_full (self->weather_infos, g_object_unref);
+      g_clear_pointer (&self->weather_infos, g_ptr_array_unref);
       self->weather_infos = preprocess_gweather_reports (self, gwforecast);
       self->weather_infos_upated = g_get_monotonic_time ();
 
@@ -953,12 +948,11 @@ gcal_weather_service_finalize (GObject *object)
   g_clear_pointer (&self->duration_timer, gcal_timer_free);
   g_clear_pointer (&self->midnight_timer, gcal_timer_free);
   g_clear_pointer (&self->timezone, g_time_zone_unref);
+  g_clear_pointer (&self->weather_infos, g_ptr_array_unref);
 
   g_clear_object (&self->gweather_info);
   g_clear_object (&self->location_service);
   g_clear_object (&self->location_cancellable);
-
-  g_slist_free_full (self->weather_infos, g_object_unref);
 
   if (self->network_changed_sid > 0)
     g_signal_handler_disconnect (g_network_monitor_get_default (), self->network_changed_sid);
@@ -1294,7 +1288,7 @@ gcal_weather_service_get_check_interval_renew (GcalWeatherService *self)
  *
  * Returns: (transfer none): list of known weather reports.
  */
-GSList*
+GPtrArray*
 gcal_weather_service_get_weather_infos (GcalWeatherService *self)
 {
   g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), NULL);

@@ -1705,28 +1705,29 @@ G_GNUC_END_IGNORE_DEPRECATIONS
  */
 static gint
 gcal_week_header_add_weather_infos (GcalWeekHeader *self,
-                                    GSList         *winfos)
+                                    GPtrArray      *weather_infos)
 {
-  g_autoptr (GDateTime) _week_start = NULL;
-  GSList *iter; /* unowned */
+  g_autoptr (GDateTime) week_start_dt = NULL;
   GDate week_start;
-  int consumed = 0;
+  gint consumed = 0;
+  guint i;
 
   g_return_val_if_fail (self != NULL, 0);
 
-  _week_start = get_start_of_week (self->active_date);
+  week_start_dt = get_start_of_week (self->active_date);
   g_date_set_dmy (&week_start,
-                  g_date_time_get_day_of_month (_week_start),
-                  g_date_time_get_month (_week_start),
-                  g_date_time_get_year (_week_start));
+                  g_date_time_get_day_of_month (week_start_dt),
+                  g_date_time_get_month (week_start_dt),
+                  g_date_time_get_year (week_start_dt));
 
-  for (iter = winfos; iter != NULL; iter = iter->next)
+  for (i = 0; weather_infos && i < weather_infos->len; i++)
     {
       GcalWeatherInfo *gwi; /* unowned */
       GDate gwi_date;
       gint day_diff;
 
-      gwi = GCAL_WEATHER_INFO (iter->data);
+      gwi = g_ptr_array_index (weather_infos, i);
+
       gcal_weather_info_get_date (gwi, &gwi_date);
 
       day_diff = g_date_days_between (&week_start, &gwi_date);
@@ -1796,18 +1797,17 @@ gcal_week_header_set_weather_service (GcalWeekHeader     *self,
 void
 gcal_week_header_update_weather_infos (GcalWeekHeader *self)
 {
+  GPtrArray* weather_infos;
 
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
   gcal_week_header_clear_weather_infos (self);
 
-  if (self->weather_service != NULL)
-    {
-      GSList* weather_infos = NULL; /* unowned */
+  if (!self->weather_service)
+    return;
 
-      weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
-      gcal_week_header_add_weather_infos (self, weather_infos);
-    }
+  weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
+  gcal_week_header_add_weather_infos (self, weather_infos);
 }
 
 void

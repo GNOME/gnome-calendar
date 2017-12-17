@@ -56,7 +56,7 @@ guint                gcal_weather_service_get_check_interval_new (GcalWeatherSer
 
 guint                gcal_weather_service_get_check_interval_renew (GcalWeatherService *self);
 
-GSList*              gcal_weather_service_get_weather_infos      (GcalWeatherService *self);
+GPtrArray*           gcal_weather_service_get_weather_infos      (GcalWeatherService *self);
 
 const gchar*         gcal_weather_service_get_attribution        (GcalWeatherService *self);
 

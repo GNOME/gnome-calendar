@@ -517,9 +517,7 @@ gcal_week_view_finalize (GObject       *object)
   g_clear_pointer (&self->date, g_free);
 
   g_clear_object (&self->manager);
-
-  if (self->weather_service != NULL)
-    g_clear_object (&self->weather_service);
+  g_clear_object (&self->weather_service);
 
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_week_view_parent_class)->finalize (object);
