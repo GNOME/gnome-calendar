@@ -1598,40 +1598,11 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->get_children_by_uuid = gcal_year_view_get_children_by_uuid;
 }
 
-/* Called when self is destroyed.
- *
- * WARNING: This is a workaround. This is one of the views where
- * reference counts are off. We overwrite destroy to avoid dangling
- * pointers. This issue needs to be addressed and this function removed.
- */
-static void
-gcal_year_view_destroyed (GtkWidget *widget)
-{
-  GcalYearView *self = GCAL_YEAR_VIEW (widget);
-
-  if (self->weather_service)
-    {
-      g_signal_handlers_disconnect_by_func (self->weather_service, weather_changed, self);
-      g_clear_object (&self->weather_service);
-    }
-
-  GTK_WIDGET_CLASS (gcal_year_view_parent_class)->destroy (widget);
-}
-
 static void
 gcal_year_view_finalize (GObject *object)
 {
   GcalYearView *year_view = GCAL_YEAR_VIEW (object);
   guint i;
-
-  if (year_view->weather_service != NULL)
-    {
-      g_signal_connect (year_view->weather_service,
-                        "weather-changed",
-                        (GCallback) weather_changed,
-                        year_view);
-      g_clear_object (&year_view->weather_service);
-    }
 
   g_free (year_view->navigator_grid);
   g_free (year_view->selected_data);
@@ -1642,6 +1613,7 @@ gcal_year_view_finalize (GObject *object)
   g_clear_pointer (&year_view->date, g_free);
 
   g_clear_object (&year_view->calendar_settings);
+  g_clear_object (&year_view->weather_service);
 
   for (i = 0; i < 12; i++)
     g_clear_pointer (&year_view->events[i], g_ptr_array_unref);
@@ -1707,7 +1679,7 @@ gcal_year_view_set_property (GObject      *object,
 
     case PROP_WEATHER_SERVICE:
       gcal_view_set_weather_service_impl_helper (&self->weather_service,
-                                                 GCAL_WEATHER_SERVICE (g_value_get_object (value)),
+                                                 g_value_get_object (value),
                                                  (GcalWeatherUpdateFunc) update_weather,
                                                  (GCallback) weather_changed,
                                                  GTK_WIDGET (self));
@@ -1985,9 +1957,6 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   widget_class->get_preferred_width = gcal_year_view_get_preferred_width;
   widget_class->size_allocate = gcal_year_view_size_allocate;
   widget_class->direction_changed = gcal_year_view_direction_changed;
-
-  /* Hack to deal with broken reference counts */
-  widget_class->destroy = gcal_year_view_destroyed;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");

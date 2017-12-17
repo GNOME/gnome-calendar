@@ -1765,7 +1765,7 @@ gcal_month_view_set_property (GObject       *object,
 
     case PROP_WEATHER_SERVICE:
       gcal_view_set_weather_service_impl_helper (&self->weather_service,
-                                                 GCAL_WEATHER_SERVICE (g_value_get_object (value)),
+                                                 g_value_get_object (value),
                                                  (GcalWeatherUpdateFunc) update_weather,
                                                  (GCallback) weather_changed_cb,
                                                  GTK_WIDGET (self));
@@ -1805,37 +1805,13 @@ gcal_month_view_get_property (GObject       *object,
     }
 }
 
-/*
- * Called when self is destroyed.
- *
- * WARNING: This is a workaround. This is one of the views where
- * reference counts are off. We overwrite destroy to avoid dangling
- * pointers. This issue needs to be addressed and this function removed.
- */
-static void
-gcal_month_view_destroyed (GtkWidget *widget)
-{
-  GcalMonthView *self = GCAL_MONTH_VIEW (widget);
-
-  if (self->weather_service)
-    {
-      g_signal_handlers_disconnect_by_func (self->weather_service, weather_changed_cb, self);
-      g_clear_object (&self->weather_service);
-    }
-
-  GTK_WIDGET_CLASS (gcal_month_view_parent_class)->destroy (widget);
-}
-
 static void
 gcal_month_view_finalize (GObject *object)
 {
   GcalMonthView *self = GCAL_MONTH_VIEW (object);
 
   if (self->weather_service)
-    {
-      g_signal_handlers_disconnect_by_func (self->weather_service, weather_changed_cb, self);
-      g_clear_object (&self->weather_service);
-    }
+    g_signal_handlers_disconnect_by_func (self->weather_service, weather_changed_cb, self);
 
   g_clear_pointer (&self->date, g_free);
   g_clear_pointer (&self->children, g_hash_table_destroy);
@@ -1844,6 +1820,7 @@ gcal_month_view_finalize (GObject *object)
   g_clear_pointer (&self->multi_cell_children, g_list_free);
 
   g_clear_object (&self->manager);
+  g_clear_object (&self->weather_service);
 
   if (self->update_grid_id > 0)
     {
@@ -2194,9 +2171,6 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   widget_class->direction_changed = gcal_month_view_direction_changed;
   widget_class->key_press_event = gcal_month_view_key_press;
   widget_class->scroll_event = gcal_month_view_scroll_event;
-
-  /* FIXME: Hack to deal with broken reference counts */
-  widget_class->destroy = gcal_month_view_destroyed;
 
   container_class = GTK_CONTAINER_CLASS (klass);
   container_class->add = gcal_month_view_add;

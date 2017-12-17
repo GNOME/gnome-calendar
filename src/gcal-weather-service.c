@@ -214,8 +214,6 @@ schedule_midnight (GcalWeatherService  *self)
   gint64 real_now;
   gint64 real_mid;
 
-  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
-
   zone = !self->timezone ? g_time_zone_new_local () : g_time_zone_ref (self->timezone);
 
   now = g_date_time_new_now (zone);
@@ -379,6 +377,7 @@ get_time_day_start (GcalWeatherService *self,
 
   *ret_unix = g_date_time_to_unix (day);
   *ret_unix_exact = g_date_time_to_unix (now);
+
   return TRUE;
 }
 
@@ -495,15 +494,12 @@ static void
 update_location (GcalWeatherService  *self,
                  GWeatherLocation    *location)
 {
-  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
-
   if (gcal_timer_is_running (self->duration_timer))
     stop_timer (self);
 
-  if (self->gweather_info != NULL)
-    g_clear_object (&self->gweather_info);
+  g_clear_object (&self->gweather_info);
 
-  if (location == NULL)
+  if (!location)
     {
       g_debug ("Could not retrieve current location");
       update_weather (self, NULL, FALSE);
@@ -511,18 +507,20 @@ update_location (GcalWeatherService  *self,
   else
     {
       g_debug ("Got new weather service location: '%s'",
-               (location == NULL)? "<null>" : gweather_location_get_name (location));
+               !location ? "<null>" : gweather_location_get_name (location));
 
       self->gweather_info = gweather_info_new (location);
 
-      /* NOTE: We do not get detailed infos for GWEATHER_PROVIDER_ALL.
+      /*
+       * NOTE: We do not get detailed infos for GWEATHER_PROVIDER_ALL.
        * This combination works fine, though. We should open a bug / investigate
        * what is going on.
        */
       gweather_info_set_enabled_providers (self->gweather_info, GWEATHER_PROVIDER_METAR | GWEATHER_PROVIDER_OWM | GWEATHER_PROVIDER_YR_NO);
       g_signal_connect (self->gweather_info, "updated", (GCallback) on_gweather_update_cb, self);
 
-      /* gweather_info_update might or might not trigger a
+      /*
+       * gweather_info_update might or might not trigger a
        * GWeatherInfo::update() signal. Therefore, we have to
        * remove weather information before querying new one.
        * This might result in icon flickering on screen.
@@ -714,11 +712,12 @@ on_gclue_simple_creation_cb (GClueSimple        *_source,
                              GcalWeatherService *self)
 {
   g_autoptr (GError) error = NULL;
-  GClueLocation *location;         /* unowned */
-  GClueSimple *location_service;   /* owned */
-  GClueClient *client;             /* unowned */
+  GClueLocation *location;
+  GClueSimple *location_service;
+  GClueClient *client;
 
-  /* make sure we do not touch self->location_service
+  /*
+   * Make sure we do not touch self->location_service
    * if the current operation was cancelled.
    */
   location_service = gclue_simple_new_finish (result, &error);
@@ -773,13 +772,13 @@ on_gclue_client_stop (GClueClient  *client,
                       GAsyncResult *res,
                       GClueSimple  *simple)
 {
-  g_autoptr(GError) error = NULL; /* owned */
+  g_autoptr (GError) error = NULL;
   gboolean stopped;
 
   stopped = gclue_client_call_stop_finish (client,
                                            res,
                                            &error);
-  if (error != NULL)
+  if (error)
     g_warning ("Could not stop location service: %s", error->message);
   else if (!stopped)
     g_warning ("Could not stop location service");
@@ -830,11 +829,11 @@ static gchar*
 gwc2str (GWeatherInfo *gwi)
 {
     g_autoptr (GDateTime) date = NULL;
-    g_autofree gchar     *date_str = NULL;
-    glong      update;
+    g_autofree gchar *date_str = NULL;
+    glong update;
 
-    gchar     *icon_name; /* unowned */
-    gdouble    temp;
+    gchar *icon_name; /* unowned */
+    gdouble temp;
 
     if (!gweather_info_get_value_update (gwi, &update))
       return g_strdup ("<null>");
@@ -856,8 +855,7 @@ static void
 set_max_days (GcalWeatherService *self,
               guint               days)
 {
-  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
-  g_return_if_fail (days >= 1);
+  g_assert_cmpint (days, >=, 1);
 
   self->max_days = days;
 
@@ -868,8 +866,7 @@ static void
 set_valid_timespan (GcalWeatherService *self,
                     gint64              timespan)
 {
-  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
-  g_return_if_fail (timespan >= 0);
+  g_assert_cmpint (timespan, >=, 0);
 
   self->valid_timespan = timespan;
 
@@ -880,8 +877,6 @@ static gboolean
 has_valid_weather_infos (GcalWeatherService *self)
 {
   gint64 now;
-
-  g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), FALSE);
 
   if (self->gweather_info == NULL || self->weather_infos_upated < 0)
     return FALSE;
@@ -905,10 +900,6 @@ update_weather (GcalWeatherService *self,
                 gboolean            reuse_old_on_error)
 {
   GSList *gwforecast = NULL; /* unowned */
-
-  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
-  g_return_if_fail (info == NULL || GWEATHER_IS_INFO (info));
-
 
   /* Compute a list of newly received weather infos. */
   if (!info)
@@ -1062,23 +1053,27 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
    *
    * Maximal number of days to fetch forecasts for.
    */
-  g_object_class_install_property
-      (G_OBJECT_CLASS (klass),
-       PROP_MAX_DAYS,
-       g_param_spec_uint ("max-days", "max-days", "max-days",
-                          1, G_MAXUINT, 3,
-                          G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+  g_object_class_install_property (object_class,
+                                   PROP_MAX_DAYS,
+                                   g_param_spec_uint ("max-days",
+                                                      "max-days",
+                                                      "max-days",
+                                                      1,
+                                                      G_MAXUINT,
+                                                      3,
+                                                      G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
   /**
    * GcalWeatherService:time-zone:
    *
    * The time zone to use.
    */
-  g_object_class_install_property
-      (G_OBJECT_CLASS (klass),
-       PROP_TIME_ZONE,
-       g_param_spec_pointer ("time-zone", "time-zone", "time-zone",
-                             G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
+  g_object_class_install_property (object_class,
+                                   PROP_TIME_ZONE,
+                                   g_param_spec_pointer ("time-zone",
+                                                         "time-zone",
+                                                         "time-zone",
+                                                         G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
 
   /**
    * GcalWeatherService:check-interval-new:
@@ -1086,12 +1081,15 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
    * Amount of seconds to wait before re-fetching weather infos.
    * This interval is used when no valid weather reports are available.
    */
-  g_object_class_install_property
-      (G_OBJECT_CLASS (klass),
-       PROP_CHECK_INTERVAL_NEW,
-       g_param_spec_uint ("check-interval-new", "check-interval-new", "check-interval-new",
-                          0, G_MAXUINT, GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT,
-                          G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+  g_object_class_install_property (object_class,
+                                   PROP_CHECK_INTERVAL_NEW,
+                                   g_param_spec_uint ("check-interval-new",
+                                                      "check-interval-new",
+                                                      "check-interval-new",
+                                                      0,
+                                                      G_MAXUINT,
+                                                      GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT,
+                                                      G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
   /**
    * GcalWeatherService:check-interval-renew:
@@ -1099,24 +1097,30 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
    * Amount of seconds to wait before re-fetching weather information.
    * This interval is used when valid weather reports are available.
    */
-  g_object_class_install_property
-      (G_OBJECT_CLASS (klass),
-       PROP_CHECK_INTERVAL_RENEW,
-       g_param_spec_uint ("check-interval-renew", "check-interval-renew", "check-interval-renew",
-                          0, G_MAXUINT, GCAL_WEATHER_CHECK_INTERVAL_RENEW_DFLT,
-                          G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+  g_object_class_install_property (object_class,
+                                   PROP_CHECK_INTERVAL_RENEW,
+                                   g_param_spec_uint ("check-interval-renew",
+                                                      "check-interval-renew",
+                                                      "check-interval-renew",
+                                                      0,
+                                                      G_MAXUINT,
+                                                      GCAL_WEATHER_CHECK_INTERVAL_RENEW_DFLT,
+                                                      G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
   /**
    * GcalWeatherService:valid_timespan:
    *
    * Amount of seconds fetched weather information are considered as valid.
    */
-  g_object_class_install_property
-      (G_OBJECT_CLASS (klass),
-       PROP_VALID_TIMESPAN,
-       g_param_spec_int64 ("valid-timespan", "valid-timespan", "valid-timespan",
-                           0, G_MAXINT64, GCAL_WEATHER_VALID_TIMESPAN_DFLT,
-                           G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+  g_object_class_install_property (object_class,
+                                   PROP_VALID_TIMESPAN,
+                                   g_param_spec_int64 ("valid-timespan",
+                                                       "valid-timespan",
+                                                       "valid-timespan",
+                                                       0,
+                                                       G_MAXINT64,
+                                                       GCAL_WEATHER_VALID_TIMESPAN_DFLT,
+                                                       G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
 
   /**
@@ -1196,7 +1200,7 @@ gcal_weather_service_new (GTimeZone *time_zone,
 GTimeZone*
 gcal_weather_service_get_time_zone (GcalWeatherService *self)
 {
-  g_return_val_if_fail (self != NULL, NULL);
+  g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), NULL);
 
   return self->timezone;
 }
@@ -1212,7 +1216,7 @@ void
 gcal_weather_service_set_time_zone (GcalWeatherService *self,
                                     GTimeZone          *value)
 {
-  g_return_if_fail (self != NULL);
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
   if (self->timezone == value)
     return;
@@ -1311,7 +1315,7 @@ gcal_weather_service_get_attribution (GcalWeatherService *self)
 {
   g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), NULL);
 
-  if (self->gweather_info != NULL)
+  if (self->gweather_info)
     return gweather_info_get_attribution (self->gweather_info);
 
   return NULL;
@@ -1328,7 +1332,7 @@ gcal_weather_service_update (GcalWeatherService *self)
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
-  if (self->gweather_info != NULL)
+  if (self->gweather_info)
     {
       gweather_info_update (self->gweather_info);
       update_timeout_interval (self);
