@@ -84,7 +84,8 @@ G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 static gboolean show_version = FALSE;
 
 static GOptionEntry gcal_application_goptions[] = {
-  { "quit", 'q', 0,
+  { 
+    "quit", 'q', 0,
     G_OPTION_ARG_NONE, NULL,
     N_("Quit GNOME To Do"), NULL
   },
