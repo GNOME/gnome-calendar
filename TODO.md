@@ -9,7 +9,6 @@
  [ ] Rethink signals from GcalManager
 
  * Add more animations
-   [ ] Bring libdazzle in
    [ ] Add animation to switch weeks (horizontal scroll)
    [ ] Add animation to switch months (vertical scroll)
    [ ] Add animation to switch years (vertical scroll)
@@ -26,7 +25,4 @@
 
 # Wishlist
 
- [ ] Make GcalEventWidget a composite widget
-   [ ] Turn into a GtkGrid subclass
-   [ ] Remove all the custom drawing madness
  [ ] Add resize-by-handlers capabilities to GcalEventWidget
