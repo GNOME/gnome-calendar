@@ -84,6 +84,11 @@ G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
 static gboolean show_version = FALSE;
 
 static GOptionEntry gcal_application_goptions[] = {
+  { 
+    "quit", 'q', 0,
+    G_OPTION_ARG_NONE, NULL,
+    N_("Quit GNOME Calendar"), NULL
+  },
   {
     "version", 'v', 0,
     G_OPTION_ARG_NONE, &show_version,
@@ -296,6 +301,12 @@ gcal_application_command_line (GApplication            *app,
 
   self = GCAL_APPLICATION (app);
   options = g_application_command_line_get_options_dict (command_line);
+
+  if (g_variant_dict_contains (options, "quit"))
+    {
+      g_application_quit (app);
+      return 0;
+    }
 
   if (g_variant_dict_contains (options, "debug"))
     gcal_log_init ();
