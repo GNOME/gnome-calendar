@@ -8,10 +8,9 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-11-15 23:59+0000\n"
-"PO-Revision-Date: 2017-11-17 21:48+0100\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
+"POT-Creation-Date: 2017-12-18 15:27+0000\n"
+"PO-Revision-Date: 2017-12-20 23:27+0100\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -23,7 +22,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:184 src/gcal-application.c:466
+#: data/ui/window.ui:187 src/gcal-application.c:529
 msgid "Calendar"
 msgstr "Kalendář"
 
@@ -112,6 +111,18 @@ msgstr ""
 "Typ aktivního zobrazení okna, výchozí hodnotou je „month“ (zobrazení po "
 "měsících)"
 
+#: data/org.gnome.calendar.gschema.xml:26
+msgid "Weather Service Configuration"
+msgstr "Nastavení služby Počasí"
+
+#: data/org.gnome.calendar.gschema.xml:27
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr ""
+"Zdali je zobrazována předpověď počasí, používáno automatické určení místa a "
+"název místa."
+
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
 msgstr "Zapnout/vypnout zvuk budíku"
@@ -121,7 +132,7 @@ msgid "Remove the alarm"
 msgstr "Odebrat budík"
 
 #: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
-#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1158
+#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1162
 msgid "Cancel"
 msgstr "Zrušit"
 
@@ -321,7 +332,7 @@ msgctxt "shortcut window"
 msgid "Year view"
 msgstr "Roční zobrazení"
 
-#: data/ui/menus.ui:6 data/ui/menus.ui:36
+#: data/ui/menus.ui:6
 msgid "Add Eve_nt…"
 msgstr "Přidat _událost…"
 
@@ -341,19 +352,15 @@ msgstr "O _aplikaci"
 msgid "_Quit"
 msgstr "U_končit"
 
-#: data/ui/menus.ui:40
-msgid "_Synchronize"
-msgstr "_Synchronizovat"
-
-#: data/ui/menus.ui:49
+#: data/ui/menus.ui:36
 msgid "From Web…"
 msgstr "Z webu…"
 
-#: data/ui/menus.ui:53
+#: data/ui/menus.ui:40
 msgid "New Local Calendar…"
 msgstr "Nový místní kalendář…"
 
-#: data/ui/menus.ui:57
+#: data/ui/menus.ui:44
 msgid "From File…"
 msgstr "Ze souboru…"
 
@@ -378,7 +385,7 @@ msgstr "Nebylo nic nalezeno"
 msgid "Try a different search"
 msgstr "Zkuste hledat nějak jinak"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1123 src/gcal-window.c:1127
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1272 src/gcal-window.c:1276
 msgid "Undo"
 msgstr "Zpět"
 
@@ -461,13 +468,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Adresa kalendáře"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2281
-#: src/gcal-source-dialog.c:2287
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
+#: src/gcal-source-dialog.c:2291
 msgid "Add Calendar"
 msgstr "Přidání kalendáře"
 
-#: data/ui/source-dialog.ui:745 data/ui/window.ui:334
-#: src/gcal-source-dialog.c:861 src/gcal-source-dialog.c:2310
+#: data/ui/source-dialog.ui:745 data/ui/window.ui:344
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
 msgid "Calendar Settings"
 msgstr "Nastavení kalendáře"
 
@@ -487,8 +494,8 @@ msgstr "Zadání přihlašovacích údajů"
 msgid "Connect"
 msgstr "Připojit se"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:770
-#: src/views/gcal-week-view.c:291
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:758
+#: src/views/gcal-week-view.c:287
 msgid "00:00"
 msgstr "00∶00"
 
@@ -496,75 +503,102 @@ msgstr "00∶00"
 msgid ":"
 msgstr "∶"
 
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:446
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:442
 msgid "AM"
 msgstr "dop."
 
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:446
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:442
 msgid "PM"
 msgstr "odp."
 
-#: data/ui/window.ui:64
+#: data/ui/window.ui:67
 msgid "Week"
 msgstr "Týden"
 
-#: data/ui/window.ui:79
+#: data/ui/window.ui:82
 msgid "Month"
 msgstr "Měsíc"
 
-#: data/ui/window.ui:93
+#: data/ui/window.ui:96
 msgid "Year"
 msgstr "Rok"
 
-#: data/ui/window.ui:187 data/ui/year-view.ui:84 src/views/gcal-year-view.c:276
-#: src/views/gcal-year-view.c:510
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:285
+#: src/views/gcal-year-view.c:520
 msgid "Today"
 msgstr "Dnes"
 
-#: data/ui/window.ui:261
+#: data/ui/window.ui:271
 msgid "Manage your calendars"
 msgstr "Spravovat své kalendáře"
 
-#: data/ui/window.ui:278
+#: data/ui/window.ui:288
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Hledat události"
 
-#: data/ui/year-view.ui:95
+#: data/ui/window.ui:391
+msgid "Add Eve_nt"
+msgstr "Přidat _událost"
+
+#: data/ui/window.ui:400
+msgid "_Synchronize"
+msgstr "_Synchronizovat"
+
+#: data/ui/window.ui:407 data/ui/window.ui:428
+msgid "_Weather"
+msgstr "_Počasí"
+
+#: data/ui/window.ui:408
+msgid "weather-menu"
+msgstr ""
+
+#: data/ui/window.ui:429
+msgid "main-menu"
+msgstr ""
+
+#: data/ui/window.ui:446
+msgid "Show Weather"
+msgstr "Zobrazovat počasí"
+
+#: data/ui/window.ui:469
+msgid "Automatic Location"
+msgstr "Místo automaticky"
+
+#: data/ui/year-view.ui:103
+msgid "temp"
+msgstr ""
+
+#: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Žádné události"
 
-#: data/ui/year-view.ui:117
+#: data/ui/year-view.ui:155
 msgid "Add Event…"
 msgstr "Přidat událost…"
 
-#: src/gcal-application.c:85
+#: src/gcal-application.c:90
 msgid "Display version number"
 msgstr "Zobrazit číslo verze"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:95
 msgid "Enable debug messages"
 msgstr "Povolit ladicí zprávy"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:100
 msgid "Open calendar on the passed date"
 msgstr "Otevřít kalendář na zadaném datu"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:105
 msgid "Open calendar showing the passed event"
 msgstr "Otevřít kalendář na zadané události"
 
-#: src/gcal-application.c:454
+#: src/gcal-application.c:486
 #, c-format
-msgid "Copyright © %d The Calendar authors"
-msgstr "Copyright © %d autoři Kalendáře"
+msgid "Copyright © 2012–%d The Calendar authors"
+msgstr "Copyright © 2012 – %d autoři Kalendáře"
 
-#: src/gcal-application.c:460
-#, c-format
-msgid "Copyright © %d–%d The Calendar authors"
-msgstr "Copyright © %d – %d autoři Kalendáře"
-
-#: src/gcal-application.c:473
+#: src/gcal-application.c:535
 msgid "translator-credits"
 msgstr ""
 "Adam Matoušek <adamatousek@gmail.com>\n"
@@ -574,7 +608,7 @@ msgstr ""
 msgid "Save"
 msgstr "Uložit"
 
-#: src/gcal-edit-dialog.c:1000
+#: src/gcal-edit-dialog.c:1019
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
@@ -582,7 +616,7 @@ msgstr[0] "před %d minutou"
 msgstr[1] "před %d minutami"
 msgstr[2] "před %d minutami"
 
-#: src/gcal-edit-dialog.c:1008
+#: src/gcal-edit-dialog.c:1027
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
@@ -590,7 +624,7 @@ msgstr[0] "před %d hodinou"
 msgstr[1] "před %d hodinami"
 msgstr[2] "před %d hodinami"
 
-#: src/gcal-edit-dialog.c:1016
+#: src/gcal-edit-dialog.c:1035
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
@@ -598,7 +632,7 @@ msgstr[0] "před %d dnem"
 msgstr[1] "před %d dny"
 msgstr[2] "před %d dny"
 
-#: src/gcal-edit-dialog.c:1024
+#: src/gcal-edit-dialog.c:1043
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
@@ -606,12 +640,12 @@ msgstr[0] "před %d týdnem"
 msgstr[1] "před %d týdny"
 msgstr[2] "před %d týdny"
 
-#: src/gcal-edit-dialog.c:1328 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1347 src/gcal-quick-add-popover.c:680
 msgid "Unnamed event"
 msgstr "Událost bez názvu"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:390
+#: src/gcal-event-widget.c:420
 #, c-format
 msgid "At %s"
 msgstr "v místě %s"
@@ -889,38 +923,38 @@ msgid "Use the entry above to search for events."
 msgstr "Použijte položku výše pro vyhledání událostí."
 
 #. Dialog
-#: src/gcal-source-dialog.c:1155
+#: src/gcal-source-dialog.c:1159
 msgid "Select a calendar file"
 msgstr "Výběr kalendářového souboru"
 
-#: src/gcal-source-dialog.c:1159
+#: src/gcal-source-dialog.c:1163
 msgid "Open"
 msgstr "Otevřít"
 
-#: src/gcal-source-dialog.c:1166
+#: src/gcal-source-dialog.c:1170
 msgid "Calendar files"
 msgstr "Kalendářové soubory"
 
 #. update the source properties
-#: src/gcal-source-dialog.c:1200
+#: src/gcal-source-dialog.c:1204
 msgid "Unnamed Calendar"
 msgstr "Kalendář bez názvu"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1806
+#: src/gcal-source-dialog.c:1810
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalendář <b>%s</b> byl odstraněn"
 
-#: src/gcal-source-dialog.c:1855 src/gcal-source-dialog.c:1911
+#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
 msgid "Off"
 msgstr "Vypnutý"
 
-#: src/gcal-source-dialog.c:1855 src/gcal-source-dialog.c:1911
+#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
 msgid "On"
 msgstr "Zapnutý"
 
-#: src/gcal-source-dialog.c:1910
+#: src/gcal-source-dialog.c:1914
 msgid "Expired"
 msgstr "Prošlá platnost"
 
@@ -934,7 +968,7 @@ msgstr "%s odp."
 msgid "%s PM"
 msgstr "%s dop."
 
-#: src/gcal-utils.c:1188
+#: src/gcal-utils.c:1090
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -942,35 +976,35 @@ msgstr ""
 "Událost, kterou se snažíte změnit, se opakuje. Mají se změny, které jste "
 "zvolili, použít:"
 
-#: src/gcal-utils.c:1191
+#: src/gcal-utils.c:1093
 msgid "_Cancel"
 msgstr "_Zrušit"
 
-#: src/gcal-utils.c:1193
+#: src/gcal-utils.c:1095
 msgid "_Only This Event"
 msgstr "Jen na tut_o událost"
 
-#: src/gcal-utils.c:1200
+#: src/gcal-utils.c:1102
 msgid "_Subsequent events"
 msgstr "I na navazující událo_sti"
 
-#: src/gcal-utils.c:1202
+#: src/gcal-utils.c:1104
 msgid "_All events"
 msgstr "_Všechny události"
 
-#: src/gcal-window.c:1123
+#: src/gcal-window.c:1272
 msgid "Another event deleted"
 msgstr "Smazána ještě jedna událost"
 
-#: src/gcal-window.c:1127
+#: src/gcal-window.c:1276
 msgid "Event deleted"
 msgstr "Událost smazána"
 
-#: src/views/gcal-week-grid.c:767 src/views/gcal-week-view.c:288
+#: src/views/gcal-week-grid.c:755 src/views/gcal-week-view.c:284
 msgid "00 AM"
 msgstr "0"
 
-#: src/views/gcal-week-header.c:338
+#: src/views/gcal-week-header.c:400
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -978,7 +1012,7 @@ msgstr[0] "Další událost"
 msgstr[1] "Další %d události"
 msgstr[2] "Další %d událostí"
 
-#: src/views/gcal-week-header.c:871
+#: src/views/gcal-week-header.c:933
 #, c-format
 msgid "week %d"
 msgstr "%d. týden"
@@ -986,16 +1020,19 @@ msgstr "%d. týden"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:285
+#: src/views/gcal-year-view.c:294
 msgid "%B %d…"
 msgstr "%e. %B…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:291 src/views/gcal-year-view.c:513
+#: src/views/gcal-year-view.c:300 src/views/gcal-year-view.c:523
 msgid "%B %d"
 msgstr "%e. %B"
+
+#~ msgid "Copyright © %d The Calendar authors"
+#~ msgstr "Copyright © %d autoři Kalendáře"
 
 #~ msgid "Other events"
 #~ msgstr "Další události"
