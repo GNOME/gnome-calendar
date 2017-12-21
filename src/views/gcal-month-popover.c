@@ -393,11 +393,13 @@ close_button_clicked_cb (GcalMonthPopover *self)
 }
 
 static void
-new_event_button_clicked_cb (GtkWidget        *button,
-                             GcalMonthPopover *self)
+new_event_button_clicked_cb (GcalMonthPopover *self,
+                             GtkWidget        *button)
 {
   GActionMap *map;
   GAction *action;
+
+  gcal_month_popover_popdown (self);
 
   map = G_ACTION_MAP (g_application_get_default ());
   action = g_action_map_lookup_action (map, "new");
