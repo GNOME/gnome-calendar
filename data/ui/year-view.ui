@@ -100,7 +100,7 @@
                       <object class="GtkLabel" id="temp_label">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">temp</property>
+                        <property name="label">temp</property>
                         <property name="label">foo</property>
                         <style>
                           <class name="temp-label" />

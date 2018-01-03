@@ -130,7 +130,7 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="notification_action_button">
-                        <property name="label" translatable="no">button</property>
+                        <property name="label">button</property>
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
@@ -405,7 +405,7 @@
             <child>
               <object class="GtkModelButton" id="win-menu-open-weather">
                 <property name="text" translatable="yes">_Weather</property>
-                <property name="menu-name" translatable="yes">weather-menu</property>
+                <property name="menu-name">weather-menu</property>
                 <property name="visible">True</property>
               </object>
             </child>
@@ -426,7 +426,7 @@
             <child>
               <object class="GtkModelButton">
                 <property name="text" translatable="yes">_Weather</property>
-                <property name="menu-name" translatable="yes">main-menu</property>
+                <property name="menu-name">main-menu</property>
                 <property name="inverted">True</property>
                 <property name="centered">True</property>
                 <property name="visible">True</property>
