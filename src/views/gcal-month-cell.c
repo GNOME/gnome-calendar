@@ -181,6 +181,7 @@ gcal_month_cell_drag_motion (GtkWidget      *widget,
                              guint           time)
 {
   GcalMonthCell *self;
+  GdkModifierType mask;
 
   self = GCAL_MONTH_CELL (widget);
 
@@ -189,9 +190,66 @@ gcal_month_cell_drag_motion (GtkWidget      *widget,
   else
     gtk_drag_highlight (widget);
 
-  gdk_drag_status (context, self->different_month ? 0 : GDK_ACTION_MOVE, time);
+  gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
+  if (mask & GDK_CONTROL_MASK)
+    gdk_drag_status (context, self->different_month ? 0 : GDK_ACTION_COPY, time);
+  else
+    gdk_drag_status (context, self->different_month ? 0 : GDK_ACTION_MOVE, time);
 
   return !self->different_month;
+}
+
+static void
+gcal_move_event (GcalEvent *event,
+                 GDateTime *new_start,
+                 GDateTime *end_dt,
+                 GTimeSpan timespan,
+                 GcalManager *manager,
+                 GcalRecurrenceModType *mod)
+{
+  gcal_event_set_date_start (event, new_start);
+
+  /* The event may have a NULL end date, so we have to check it here */
+  if (end_dt)
+  {
+    GDateTime *new_end = g_date_time_add (new_start, timespan);
+
+    gcal_event_set_date_end (event, new_end);
+    g_clear_pointer (&new_end, g_date_time_unref);
+  }
+
+  gcal_manager_update_event (manager, event, *mod);
+}
+
+static void
+gcal_copy_event (GcalEvent *event,
+                 GDateTime *new_start,
+                 GDateTime *end_dt,
+                 GTimeSpan timespan,
+                 GcalManager *manager)
+{
+  GcalEvent *newev = 0;
+  ECalComponent *component;
+
+  /* The event may have a NULL end date, so we have to check it here */
+  if (end_dt) {
+    GDateTime *new_end = g_date_time_add (new_start, timespan);
+
+    component = build_component_from_details (gcal_event_get_summary(event),
+                                              new_start, new_end);
+    g_clear_pointer (&new_end, g_date_time_unref);
+  } else
+    component = build_component_from_details (gcal_event_get_summary(event),
+                                              new_start, NULL);
+
+  newev = gcal_event_new (gcal_event_get_source (event),
+                          component,
+                          NULL);
+  gcal_event_set_all_day (newev, gcal_event_get_all_day (event));
+  gcal_event_set_timezone (newev, gcal_event_get_timezone (event));
+  gcal_manager_create_event (manager, newev);
 }
 
 static gboolean
@@ -254,22 +312,17 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
       current_month != start_month ||
       current_year != start_year)
     {
+      GdkModifierType mask;
       g_autoptr (GDateTime) new_start;
+      new_start = g_date_time_add_days (start_dt, diff);
 
-       new_start = g_date_time_add_days (start_dt, diff);
-
-      gcal_event_set_date_start (event, new_start);
-
-      /* The event may have a NULL end date, so we have to check it here */
-      if (end_dt)
-        {
-          GDateTime *new_end = g_date_time_add (new_start, timespan);
-
-          gcal_event_set_date_end (event, new_end);
-          g_clear_pointer (&new_end, g_date_time_unref);
-        }
-
-      gcal_manager_update_event (self->manager, event, mod);
+      gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
+      if (mask & GDK_CONTROL_MASK)
+        gcal_copy_event (event, new_start, end_dt, timespan, self->manager);
+      else
+        gcal_move_event (event, new_start, end_dt, timespan, self->manager, &mod);
     }
 
   g_clear_pointer (&start_dt, g_date_time_unref);
