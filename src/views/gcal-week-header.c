@@ -1481,17 +1481,23 @@ gcal_week_header_drag_motion (GtkWidget      *widget,
                               guint           time)
 {
   GcalWeekHeader *self;
+  GdkModifierType mask;
 
   self = GCAL_WEEK_HEADER (widget);
   self->dnd_cell = get_dnd_cell (widget, x, y);
+
+  gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
 
   /*
    * Sets the status of the drag - if it fails, sets the action to 0 and
    * aborts the drag with FALSE.
    */
-  gdk_drag_status (context,
-                   self->dnd_cell == -1 ? 0 : GDK_ACTION_MOVE,
-                   time);
+  if (mask & GDK_CONTROL_MASK)
+    gdk_drag_status (context, self->dnd_cell == -1 ? 0 : GDK_ACTION_COPY, time);
+  else
+    gdk_drag_status (context, self->dnd_cell == -1 ? 0 : GDK_ACTION_MOVE, time);
 
   gtk_widget_queue_draw (widget);
 
@@ -1518,6 +1524,7 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   gboolean turn_all_day;
   gboolean ltr;
   gint drop_cell;
+  GdkModifierType mask;
 
   GCAL_ENTRY;
 
@@ -1572,6 +1579,14 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   difference = turn_all_day ? 24 : g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
 
   new_end = g_date_time_add_hours (dnd_date, difference);
+
+  gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
+
+  if (mask & GDK_CONTROL_MASK)
+    event = gcal_manager_copy_event (self->manager, event);
+
   gcal_event_set_date_end (event, new_end);
 
   /*
@@ -1585,6 +1600,8 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
 
   /* Commit the changes */
   gcal_manager_update_event (self->manager, event, GCAL_RECURRENCE_MOD_THIS_ONLY);
+  if (mask & GDK_CONTROL_MASK)
+    g_object_unref (event);
 
   /* Cancel the DnD */
   self->dnd_cell = -1;

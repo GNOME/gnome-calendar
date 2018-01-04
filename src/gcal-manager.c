@@ -1678,6 +1678,33 @@ gcal_manager_update_event (GcalManager           *self,
 }
 
 /**
+ * gcal_manager_copy_event:
+ * @self: a #GcalManager
+ * @event: a #GcalEvent to copy
+ *
+ * Copies the event
+ *
+ * Returns: (transfer full): a new #GcalEvent object.
+ */
+GcalEvent*
+gcal_manager_copy_event (GcalManager *self,
+                         GcalEvent   *event)
+{
+  GcalEvent *newev = NULL;
+  ECalComponent *component = NULL;
+
+  component = build_component_from_details (gcal_event_get_summary (event),
+                                            gcal_event_get_date_start (event),
+                                            gcal_event_get_date_end (event));
+  newev = gcal_event_new (gcal_event_get_source (event), component, NULL);
+  gcal_event_set_all_day (newev, gcal_event_get_all_day (event));
+  gcal_event_set_timezone (newev, gcal_event_get_timezone (event));
+  gcal_manager_create_event (self, newev);
+
+  GCAL_RETURN (newev);
+}
+
+/**
  * gcal_manager_remove_event:
  * @self: a #GcalManager
  * @event: a #GcalEvent

@@ -941,6 +941,7 @@ gcal_week_grid_drag_motion (GtkWidget      *widget,
                             guint           time)
 {
   GcalWeekGrid *self;
+  GdkModifierType mask;
 
   self = GCAL_WEEK_GRID (widget);
   self->dnd_cell = get_dnd_cell (widget, x, y);
@@ -951,13 +952,17 @@ gcal_week_grid_drag_motion (GtkWidget      *widget,
   else
     gtk_drag_unhighlight (widget);
 
+  gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
   /*
    * Sets the status of the drag - if it fails, sets the action to 0 and
    * aborts the drag with FALSE.
    */
-  gdk_drag_status (context,
-                   self->dnd_cell == -1 ? 0 : GDK_ACTION_MOVE,
-                   time);
+  if (mask & GDK_CONTROL_MASK)
+    gdk_drag_status (context, self->dnd_cell == -1 ? 0 : GDK_ACTION_COPY, time);
+  else
+    gdk_drag_status (context, self->dnd_cell == -1 ? 0 : GDK_ACTION_MOVE, time);
 
   gtk_widget_queue_draw (widget);
 
@@ -982,6 +987,7 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   GTimeSpan timespan = 0;
   gboolean ltr;
   gint drop_cell;
+  GdkModifierType mask;
 
   self = GCAL_WEEK_GRID (widget);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
@@ -1019,6 +1025,13 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   week_start = get_start_of_week (self->active_date);
   dnd_date = g_date_time_add_minutes (week_start, drop_cell * 30);
 
+  gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
+
+  if (mask & GDK_CONTROL_MASK)
+    event = gcal_manager_copy_event (self->manager, event);
+
   /*
    * Calculate the diff between the dropped cell and the event's start date,
    * so we can update the end date accordingly.
@@ -1040,6 +1053,8 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   /* Commit the changes */
 
   gcal_manager_update_event (self->manager, event, mod);
+  if (mask & GDK_CONTROL_MASK)
+    g_object_unref (event);
 
 out:
   /* Cancel the DnD */

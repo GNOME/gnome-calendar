@@ -1418,6 +1418,7 @@ navigator_drag_motion_cb (GcalYearView   *self,
 {
   gint day, month;
   gboolean is_title, retval;
+  GdkModifierType mask;
 
   retval = FALSE;
 
@@ -1432,7 +1433,13 @@ navigator_drag_motion_cb (GcalYearView   *self,
           self->selected_data->dnd_day = day;
           self->selected_data->dnd_month = month;
 
-          gdk_drag_status (context, GDK_ACTION_MOVE, time);
+          gdk_window_get_device_position (gtk_widget_get_window (GTK_WIDGET (self)),
+                                          gtk_get_current_event_device (),
+                                          NULL, NULL, &mask);
+          if (mask & GDK_CONTROL_MASK)
+            gdk_drag_status (context, GDK_ACTION_COPY, time);
+          else
+            gdk_drag_status (context, GDK_ACTION_MOVE, time);
 
           retval = TRUE;
         }
@@ -1496,6 +1503,14 @@ navigator_drag_drop_cb (GcalYearView   *self,
             {
               GTimeSpan diff = g_date_time_difference (drop_date, start_dt);
               GDateTime *new_start;
+              GdkModifierType mask;
+
+              gdk_window_get_device_position (gtk_widget_get_window (GTK_WIDGET (self)),
+                                              gtk_get_current_event_device (),
+                                              NULL, NULL, &mask);
+
+              if (mask & GDK_CONTROL_MASK)
+                event = gcal_manager_copy_event (self->manager, event);
 
               new_start = g_date_time_add (start_dt, diff);
               gcal_event_set_date_start (event, new_start);
@@ -1514,6 +1529,9 @@ navigator_drag_drop_cb (GcalYearView   *self,
               gcal_manager_update_event (self->manager, event, mod);
 
               g_clear_pointer (&new_start, g_date_time_unref);
+
+              if (mask & GDK_CONTROL_MASK)
+                g_object_unref (event);
             }
 
           g_clear_pointer (&drop_date, g_date_time_unref);

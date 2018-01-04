@@ -181,6 +181,7 @@ gcal_month_cell_drag_motion (GtkWidget      *widget,
                              guint           time)
 {
   GcalMonthCell *self;
+  GdkModifierType mask;
 
   self = GCAL_MONTH_CELL (widget);
 
@@ -189,7 +190,13 @@ gcal_month_cell_drag_motion (GtkWidget      *widget,
   else
     gtk_drag_highlight (widget);
 
-  gdk_drag_status (context, self->different_month ? 0 : GDK_ACTION_MOVE, time);
+  gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
+  if (mask & GDK_CONTROL_MASK)
+    gdk_drag_status (context, self->different_month ? 0 : GDK_ACTION_COPY, time);
+  else
+    gdk_drag_status (context, self->different_month ? 0 : GDK_ACTION_MOVE, time);
 
   return !self->different_month;
 }
@@ -254,9 +261,15 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
       current_month != start_month ||
       current_year != start_year)
     {
+      GdkModifierType mask;
       g_autoptr (GDateTime) new_start;
+      new_start = g_date_time_add_days (start_dt, diff);
 
-       new_start = g_date_time_add_days (start_dt, diff);
+      gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
+      if (mask & GDK_CONTROL_MASK)
+        event = gcal_manager_copy_event (self->manager, event);
 
       gcal_event_set_date_start (event, new_start);
 
@@ -270,6 +283,9 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
         }
 
       gcal_manager_update_event (self->manager, event, mod);
+
+      if (mask & GDK_CONTROL_MASK)
+        g_object_unref (event);
     }
 
   g_clear_pointer (&start_dt, g_date_time_unref);

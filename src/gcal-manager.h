@@ -79,6 +79,9 @@ void                 gcal_manager_update_event                   (GcalManager   
                                                                   GcalEvent             *event,
                                                                   GcalRecurrenceModType  mod);
 
+GcalEvent*           gcal_manager_copy_event                     (GcalManager           *self,
+                                                                  GcalEvent             *event);
+
 void                 gcal_manager_remove_event                   (GcalManager           *self,
                                                                   GcalEvent             *event,
                                                                   GcalRecurrenceModType  mod);
