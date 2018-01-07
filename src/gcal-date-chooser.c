@@ -397,11 +397,21 @@ static void
 multi_choice_changed (GcalDateChooser *self)
 {
   GDateTime *date;
-  gint year, month, day;
+  gint year, month, day, month_days;
 
   year = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->year_choice));
   month = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->month_choice)) + 1;
-  g_date_time_get_ymd (self->date, NULL, NULL, &day);
+  month_days = month_length [0][month];
+  day = 1;
+
+  if (leap (year))
+    month_days = month_length [1][month];
+
+  if (self->date)
+    g_date_time_get_ymd (self->date, NULL, NULL, &day);
+
+  if (day > month_days)
+    day = month_days;
 
   date = g_date_time_new_local (year, month, day, 1, 1, 1);
   gcal_date_chooser_set_date (self, date);
