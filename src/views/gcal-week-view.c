@@ -439,7 +439,7 @@ gcal_week_view_draw_hours (GcalWeekView *self,
         {
           hours = g_strdup_printf ("%d %s",
                                    i % 12 == 0 ? 12 : i % 12,
-                                   i > 12 ? _("PM") : _("AM"));
+                                   i >= 12 ? _("PM") : _("AM"));
         }
 
       pango_layout_set_text (layout, hours, -1);
