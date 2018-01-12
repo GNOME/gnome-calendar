@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-01-03 16:51+0000\n"
-"PO-Revision-Date: 2018-01-09 20:58+0200\n"
+"POT-Creation-Date: 2018-01-10 15:33+0000\n"
+"PO-Revision-Date: 2018-01-12 09:59+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:529
+#: data/ui/window.ui:187 src/gcal-application.c:540
 msgid "Calendar"
 msgstr "Kalenteri"
 
@@ -560,27 +560,31 @@ msgid "Add Event…"
 msgstr "Lisää tapahtuma…"
 
 #: src/gcal-application.c:90
+msgid "Quit GNOME Calendar"
+msgstr "Lopeta Gnomen kalenteri"
+
+#: src/gcal-application.c:95
 msgid "Display version number"
 msgstr "Näytä versionumero"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:100
 msgid "Enable debug messages"
 msgstr "Ota vianjäljitysviestit käyttöön"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:105
 msgid "Open calendar on the passed date"
 msgstr "Avaa kalenteri menneeseen päivään"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:110
 msgid "Open calendar showing the passed event"
 msgstr "Avaa kalenteri näyttäen mennyt tapahtuma"
 
-#: src/gcal-application.c:486
+#: src/gcal-application.c:497
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Tekijänoikeus © 2012–%d Kalenterisovelluksen tekijät"
 
-#: src/gcal-application.c:535
+#: src/gcal-application.c:546
 msgid "translator-credits"
 msgstr "Jiri Grönroos"
 
