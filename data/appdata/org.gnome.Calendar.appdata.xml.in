@@ -49,6 +49,16 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2018-01-16" version="3.26.3">
+      <description>
+        <p>
+          The GNOME Calendar team is proud to announce the 3.26.3 release of GNOME Calendar,
+          the second stable release of the 3.26 cycle! This release brings a fix to an annoying
+          issue with timezones, a updated translations.
+        </p>
+      </description>
+    </release>
+
     <release date="2017-10-04" version="3.26.2">
       <description>
         <p>
