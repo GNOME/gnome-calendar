@@ -286,6 +286,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="tooltip_text" translatable="yes" context="tooltip">Search for events</property>
+            <accelerator key="f" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
             <child>
               <object class="GtkImage" id="search_button_image">
                 <property name="visible">True</property>
