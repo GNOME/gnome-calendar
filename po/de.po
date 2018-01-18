@@ -7,14 +7,14 @@
 # Bernd Homuth <dev@hmt.im>, 2015.
 # Paul Seyfert <pseyfert@mathphys.fsk.uni-heidelberg.de>, 2015, 2017.
 # Franco Della-Monica <franco.della.monica@gmail.com>, 2016.
-# Tim Sabsch <tim@sabsch.com>, 2017.
+# Tim Sabsch <tim@sabsch.com>, 2017-2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2017-12-18 17:03+0000\n"
-"PO-Revision-Date: 2017-12-23 00:46+0100\n"
+"POT-Creation-Date: 2018-01-10 15:33+0000\n"
+"PO-Revision-Date: 2018-01-15 21:12+0100\n"
 "Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
@@ -26,7 +26,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:529
+#: data/ui/window.ui:187 src/gcal-application.c:540
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -552,14 +552,6 @@ msgstr "_Abgleichen"
 msgid "_Weather"
 msgstr "_Wetter"
 
-#: data/ui/window.ui:408
-msgid "weather-menu"
-msgstr "Wettermenü"
-
-#: data/ui/window.ui:429
-msgid "main-menu"
-msgstr "Hauptmenü"
-
 #: data/ui/window.ui:446
 msgid "Show Weather"
 msgstr "Wetter anzeigen"
@@ -567,10 +559,6 @@ msgstr "Wetter anzeigen"
 #: data/ui/window.ui:469
 msgid "Automatic Location"
 msgstr "Automatische Ortsbestimmung"
-
-#: data/ui/year-view.ui:103
-msgid "temp"
-msgstr "Temp"
 
 #: data/ui/year-view.ui:133
 msgid "No events"
@@ -581,34 +569,39 @@ msgid "Add Event…"
 msgstr "Termin hinzufügen …"
 
 #: src/gcal-application.c:90
+msgid "Quit GNOME Calendar"
+msgstr "GNOME-Kalender beenden"
+
+#: src/gcal-application.c:95
 msgid "Display version number"
 msgstr "Versionsnummer anzeigen"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:100
 msgid "Enable debug messages"
 msgstr "Fehlerdiagnosemeldungen aktivieren"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:105
 msgid "Open calendar on the passed date"
 msgstr "Kalender am vergangenen Datum öffnen"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:110
 msgid "Open calendar showing the passed event"
 msgstr "Kalender am vergangenen Termin öffnen"
 
-#: src/gcal-application.c:486
+#: src/gcal-application.c:497
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d Die Kalender-Autoren"
 
-#: src/gcal-application.c:535
+#: src/gcal-application.c:546
 msgid "translator-credits"
 msgstr ""
 "Franco Della-Monica <franco.della.monica@gmail.com>\n"
 "Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Benjamin Steinwender <b@stbe.at>\n"
 "Bernd Homuth <dev@hmt.im>\n"
-"Paul Seyfert <pseyfert@mathphys.fsk.uni-heidelberg.de>"
+"Paul Seyfert <pseyfert@mathphys.fsk.uni-heidelberg.de>\n"
+"Tim Sabsch <tim@sabsch.com>"
 
 #: src/gcal-edit-dialog.c:275
 msgid "Save"
@@ -1033,6 +1026,15 @@ msgstr "%d. %B …"
 #: src/views/gcal-year-view.c:300 src/views/gcal-year-view.c:523
 msgid "%B %d"
 msgstr "%e. %B"
+
+#~ msgid "weather-menu"
+#~ msgstr "Wettermenü"
+
+#~ msgid "main-menu"
+#~ msgstr "Hauptmenü"
+
+#~ msgid "temp"
+#~ msgstr "Temp"
 
 #~ msgid "Copyright © %d The Calendar authors"
 #~ msgstr "Copyright © %d Die Kalender-Autoren"
