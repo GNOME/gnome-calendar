@@ -117,26 +117,26 @@ static const GActionEntry gcal_app_entries[] = {
 };
 
 static void
-process_sources (GcalApplication *application)
+process_sources (GcalApplication *self)
 {
+  g_autoptr (GError) error = NULL;
+  g_autofree gchar *new_css_data = NULL;
+  g_auto (GStrv) new_css_snippets = NULL;
   GList *sources, *l;
   ESource *source;
-
-  gint arr_length, i = 0;
   GQuark color_id;
   GdkRGBA color;
-  gchar* color_str;
+  gint arr_length;
+  gint i = 0;
 
-  gchar **new_css_snippets;
-  gchar *new_css_data;
 
-  GError *error = NULL;
-
-  sources = gcal_manager_get_sources_connected (application->manager);
+  sources = gcal_manager_get_sources_connected (self->manager);
   arr_length = g_list_length (sources);
   new_css_snippets = g_new0 (gchar*, arr_length + 2);
   for (l = sources; l != NULL; l = g_list_next (l), i++)
     {
+      g_autofree gchar* color_str = NULL;
+
       source = l->data;
 
       get_color_name_from_source (source, &color);
@@ -144,21 +144,16 @@ process_sources (GcalApplication *application)
       color_id = g_quark_from_string (color_str);
 
       new_css_snippets[i] = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
-
-      g_free (color_str);
     }
 
   g_list_free (sources);
 
   new_css_data = g_strjoinv ("\n", new_css_snippets);
-  g_strfreev (new_css_snippets);
 
-  error = NULL;
-  gtk_css_provider_load_from_data (application->colors_provider, new_css_data, -1, &error);
-  if (error != NULL)
+  gtk_css_provider_load_from_data (self->colors_provider, new_css_data, -1, &error);
+
+  if (error)
     g_warning ("Error creating custom stylesheet. %s", error->message);
-
-  g_free (new_css_data);
 }
 
 static void
@@ -361,23 +356,19 @@ gcal_application_dbus_register (GApplication    *application,
                                 GError         **error)
 {
   GcalApplication *self;
-  gchar *search_provider_path = NULL;
-  gboolean ret_val = FALSE;
+  g_autofree gchar *search_provider_path = NULL;
 
   self = GCAL_APPLICATION (application);
 
   if (!G_APPLICATION_CLASS (gcal_application_parent_class)->dbus_register (application, connection, object_path, error))
-    goto out;
+    return FALSE;
 
   search_provider_path = g_strconcat (object_path, "/SearchProvider", NULL);
+
   if (!gcal_shell_search_provider_dbus_export (self->search_provider, connection, search_provider_path, error))
-    goto out;
+    return FALSE;
 
-  ret_val = TRUE;
-
-out:
-  g_free (search_provider_path);
-  return ret_val;
+  return TRUE;
 }
 
 static void
@@ -386,7 +377,7 @@ gcal_application_dbus_unregister (GApplication *application,
                                   const gchar *object_path)
 {
   GcalApplication *self;
-  gchar *search_provider_path = NULL;
+  g_autofree gchar *search_provider_path = NULL;
 
   self = GCAL_APPLICATION (application);
 
@@ -394,8 +385,6 @@ gcal_application_dbus_unregister (GApplication *application,
   gcal_shell_search_provider_dbus_unexport (self->search_provider, connection, search_provider_path);
 
   G_APPLICATION_CLASS (gcal_application_parent_class)->dbus_unregister (application, connection, object_path);
-
-  g_free (search_provider_path);
 }
 
 static void
