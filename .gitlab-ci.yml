@@ -6,7 +6,7 @@ before_script:
   - dnf install -y gcc meson ninja-build gettext gtk-doc glib2-devel gtk3-devel
     gnome-online-accounts-devel evolution-data-server-devel
 
-build-todo:
+build-calendar:
   stage: build
   script:
   - meson . _build
