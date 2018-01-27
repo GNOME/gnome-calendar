@@ -163,7 +163,7 @@ animate_size (GcalMonthPopover *self,
   dzl_set_weak_pointer (&self->size_animation, animation);
 }
 
-void
+static void
 update_maximum_height (GcalMonthPopover *self)
 {
   GdkWindow *window;
