@@ -4,7 +4,8 @@ stages:
 
 before_script:
   - dnf install -y gcc meson ninja-build gettext gtk-doc glib2-devel gtk3-devel
-    gnome-online-accounts-devel evolution-data-server-devel
+    gnome-online-accounts-devel evolution-data-server-devel libdazzle-devel
+    gsettings-desktop-schemas-devel
 
 build-calendar:
   stage: build
