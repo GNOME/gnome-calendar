@@ -1223,6 +1223,11 @@ schedule_open_edit_dialog_by_uuid (OpenEditDialogData *edit_dialog_data)
   return G_SOURCE_CONTINUE;
 }
 
+
+/*
+ * GObject overrides
+ */
+
 static void
 gcal_window_finalize (GObject *object)
 {
@@ -1257,6 +1262,23 @@ gcal_window_finalize (GObject *object)
 
   gcal_weather_service_stop (window->weather_service);
   g_clear_object (&window->weather_service);
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_window_constructed (GObject *object)
+{
+  GcalWindow *self;
+
+  GCAL_ENTRY;
+
+  self = GCAL_WINDOW (object);
+
+  G_OBJECT_CLASS (gcal_window_parent_class)->constructed (object);
+
+  /* Load saved geometry *after* the construct-time properties are set */
+  load_geometry (self);
 
   GCAL_EXIT;
 }
@@ -1319,6 +1341,11 @@ gcal_window_set_property (GObject      *object,
         }
       break;
 
+    case PROP_WEATHER_SERVICE:
+      if (g_set_object (&self->weather_service, g_value_get_object (value)))
+        g_object_notify_by_pspec (object, properties[PROP_WEATHER_SERVICE]);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -1361,6 +1388,11 @@ gcal_window_get_property (GObject    *object,
     }
 }
 
+
+/*
+ * GtkWidget overrides
+ */
+
 static gboolean
 gcal_window_configure_event (GtkWidget         *widget,
                              GdkEventConfigure *event)
@@ -1397,6 +1429,7 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gcal_window_finalize;
+  object_class->constructed = gcal_window_constructed;
   object_class->set_property = gcal_window_set_property;
   object_class->get_property = gcal_window_get_property;
 
@@ -1421,7 +1454,7 @@ gcal_window_class_init (GcalWindowClass *klass)
                                                   "The manager object",
                                                   "The manager object",
                                                   GCAL_TYPE_MANAGER,
-                                                  G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                                                  G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_NEW_EVENT_MODE] = g_param_spec_boolean ("new-event-mode",
                                                           "New Event mode",
@@ -1433,7 +1466,7 @@ gcal_window_class_init (GcalWindowClass *klass)
                                                           "The weather service object",
                                                           "The weather service object",
                                                           GCAL_TYPE_WEATHER_SERVICE,
-                                                          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+                                                          G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
@@ -1572,10 +1605,10 @@ gcal_window_init (GcalWindow *self)
   g_object_bind_property (self, "manager", self->month_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->year_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "weather-service", self->weather_settings, "weather-service", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "weather-service", self->month_view, "weather-service", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "weather-service", self->week_view, "weather-service", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "weather-service", self->year_view, "weather-service", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "weather-service", self->weather_settings, "weather-service", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "weather-service", self->month_view, "weather-service", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "weather-service", self->week_view, "weather-service", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "weather-service", self->year_view, "weather-service", G_BINDING_DEFAULT);
 
   /* setup accels */
   gcal_window_add_accelerator (app, "win.change-view(-1)",   "<Ctrl>Page_Down");
@@ -1599,20 +1632,11 @@ GtkWidget*
 gcal_window_new_with_date (GcalApplication *app,
                            icaltimetype    *date)
 {
-  GcalManager *manager;
-  GcalWindow *win;
-
-  manager = gcal_application_get_manager (GCAL_APPLICATION (app));
-  win = g_object_new (GCAL_TYPE_WINDOW,
-                      "application", GTK_APPLICATION (app),
-                      "manager", manager,
-                      "active-date", date,
-                      NULL);
-
-  /* loading size */
-  load_geometry (win);
-
-  return GTK_WIDGET (win);
+  return g_object_new (GCAL_TYPE_WINDOW,
+                       "application", GTK_APPLICATION (app),
+                       "manager", gcal_application_get_manager (GCAL_APPLICATION (app)),
+                       "active-date", date,
+                       NULL);
 }
 
 /* new-event interaction: first variant */

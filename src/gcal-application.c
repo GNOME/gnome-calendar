@@ -114,6 +114,16 @@ static const GActionEntry gcal_app_entries[] = {
   { "quit",   gcal_application_quit },
 };
 
+enum
+{
+  PROP_0,
+  PROP_MANAGER,
+  PROP_WEATHER_SERVICE,
+  N_PROPS
+};
+
+static GParamSpec* properties[N_PROPS] = { NULL, };
+
 static void
 process_sources (GcalApplication *self)
 {
@@ -208,6 +218,33 @@ gcal_application_finalize (GObject *object)
 }
 
 static void
+gcal_application_get_property (GObject    *object,
+                               guint       property_id,
+                               GValue     *value,
+                               GParamSpec *pspec)
+{
+  GcalApplication *self = GCAL_APPLICATION (object);
+
+  switch (property_id)
+    {
+    case PROP_MANAGER:
+      g_value_set_object (value, self->manager);
+      break;
+
+    case PROP_WEATHER_SERVICE:
+      g_value_set_object (value, self->weather_service);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    }
+}
+
+/*
+ * GApplication overrides
+ */
+
+static void
 gcal_application_activate (GApplication *application)
 {
   GcalApplication *self;
@@ -230,13 +267,22 @@ gcal_application_activate (GApplication *application)
     {
       if (!self->initial_date)
         {
+          icaltimezone *tz;
+
+          tz = gcal_manager_get_system_timezone (self->manager);
+
           self->initial_date = g_new0 (icaltimetype, 1);
-          *(self->initial_date) = icaltime_current_time_with_zone (gcal_manager_get_system_timezone (self->manager));
-          *(self->initial_date) = icaltime_set_timezone (self->initial_date,
-                                                         gcal_manager_get_system_timezone (self->manager));
+          *self->initial_date = icaltime_current_time_with_zone (tz);
+          *self->initial_date = icaltime_set_timezone (self->initial_date, tz);
         }
 
-      self->window = gcal_window_new_with_date (GCAL_APPLICATION (application), self->initial_date);
+      self->window =  g_object_new (GCAL_TYPE_WINDOW,
+                                    "application", self,
+                                    "manager", self->manager,
+                                    "active-date", self->initial_date,
+                                    "weather-service", self->weather_service,
+                                    NULL);
+
       g_signal_connect (self->window, "destroy", G_CALLBACK (gtk_widget_destroyed), &self->window);
       gtk_widget_show (self->window);
     }
@@ -251,7 +297,7 @@ gcal_application_activate (GApplication *application)
   if (self->uuid != NULL)
     {
       gcal_window_open_event_by_uuid (GCAL_WINDOW (self->window), self->uuid);
-      g_clear_pointer (&(self->uuid), g_free);
+      g_clear_pointer (&self->uuid, g_free);
     }
 
   GCAL_EXIT;
@@ -370,9 +416,9 @@ gcal_application_dbus_register (GApplication    *application,
 }
 
 static void
-gcal_application_dbus_unregister (GApplication *application,
+gcal_application_dbus_unregister (GApplication    *application,
                                   GDBusConnection *connection,
-                                  const gchar *object_path)
+                                  const gchar     *object_path)
 {
   GcalApplication *self;
   g_autofree gchar *search_provider_path = NULL;
@@ -393,15 +439,29 @@ gcal_application_class_init (GcalApplicationClass *klass)
 
   object_class = G_OBJECT_CLASS (klass);
   object_class->finalize = gcal_application_finalize;
+  object_class->get_property = gcal_application_get_property;
 
   application_class = G_APPLICATION_CLASS (klass);
   application_class->activate = gcal_application_activate;
   application_class->startup = gcal_application_startup;
   application_class->command_line = gcal_application_command_line;
   application_class->handle_local_options = gcal_application_handle_local_options;
-
   application_class->dbus_register = gcal_application_dbus_register;
   application_class->dbus_unregister = gcal_application_dbus_unregister;
+
+  properties[PROP_MANAGER] = g_param_spec_object ("manager",
+                                                  "The manager object",
+                                                  "The manager object",
+                                                  GCAL_TYPE_MANAGER,
+                                                  G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+
+  properties[PROP_WEATHER_SERVICE] = g_param_spec_object ("weather-service",
+                                                          "The weather service object",
+                                                          "The weather service object",
+                                                          GCAL_TYPE_WEATHER_SERVICE,
+                                                          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 }
 
 static void
