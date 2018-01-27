@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.14"/>
+  <template class="GcalWeatherSettings" parent="GtkBox">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="orientation">vertical</property>
+    <property name="margin">12</property>
+    <property name="spacing">6</property>
+    <child>
+      <object class="GtkModelButton">
+        <property name="text" translatable="yes">_Weather</property>
+        <property name="menu-name">main-menu</property>
+        <property name="inverted">True</property>
+        <property name="centered">True</property>
+        <property name="visible">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="spacing">18</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="xalign">0.0</property>
+            <property name="label" translatable="yes">Show Weather</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSwitch" id="show_weather_switch">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <signal name="notify::active" handler="on_show_weather_changed_cb" object="GcalWeatherSettings" swapped="no" />
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GtkBox" id="weather_auto_location_box">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="spacing">18</property>
+        <child>
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="xalign">0.0</property>
+            <property name="label" translatable="yes">Automatic Location</property>
+          </object>
+        </child>
+        <child>
+          <object class="GtkSwitch" id="weather_auto_location_switch">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <signal name="notify::active" handler="on_weather_auto_location_changed_cb" object="GcalWeatherSettings" swapped="no" />
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
+      <object class="GWeatherLocationEntry" id="weather_location_entry">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="primary_icon_name">edit-find-symbolic</property>
+        <property name="primary_icon_activatable">False</property>
+        <property name="primary_icon_sensitive">False</property>
+        <signal name="changed" handler="on_weather_location_searchbox_changed_cb" object="GcalWeatherSettings" swapped="no" />
+        <signal name="activate" handler="on_weather_location_searchbox_changed_cb" object="GcalWeatherSettings" swapped="no" />
+      </object>
+    </child>
+  </template>
+</interface>

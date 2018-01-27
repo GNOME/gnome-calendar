@@ -33,6 +33,7 @@ sources = files(
   'views/gcal-year-view.c',
   'weather/gcal-weather-info.c',
   'weather/gcal-weather-service.c',
+  'weather/gcal-weather-settings.c',
   'gcal-application.c',
   'gcal-clock.c',
   'gcal-date-chooser-day.c',

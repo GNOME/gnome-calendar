@@ -50,11 +50,7 @@ struct _GcalApplication
   gchar              *uuid;
   icaltimetype       *initial_date;
 
-  /* Weather service exists as long as #GcalApplication.
-   * However, it only runs if #GcalApplicatoin->window
-   * is available.
-   */
-  GcalWeatherService *weather_service; /* owned */
+  GcalWeatherService *weather_service;
 
   GcalShellSearchProvider *search_provider;
 };
@@ -431,11 +427,9 @@ gcal_application_init (GcalApplication *self)
   self->manager = gcal_manager_new ();
   g_signal_connect_swapped (self->manager, "source-added", G_CALLBACK (process_sources), self);
   g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (process_sources), self);
-  self->weather_service = gcal_weather_service_new (NULL, /* in prep. for configurable time zones */
-                                                    GCAL_WEATHER_FORECAST_MAX_DAYS_DFLT,
-                                                    GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT,
-                                                    GCAL_WEATHER_CHECK_INTERVAL_RENEW_DFLT,
-                                                    GCAL_WEATHER_VALID_TIMESPAN_DFLT);
+
+  self->weather_service = gcal_weather_service_new ();
+
   self->search_provider = gcal_shell_search_provider_new ();
   gcal_shell_search_provider_connect (self->search_provider, self->manager);
 }

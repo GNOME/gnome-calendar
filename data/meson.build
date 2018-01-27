@@ -63,6 +63,7 @@ resource_data = files(
   'ui/search-view.ui',
   'ui/source-dialog.ui',
   'ui/time-selector.ui',
+  'ui/weather-settings.ui',
   'ui/week-header.ui',
   'ui/week-view.ui',
   'ui/window.ui',

@@ -27,21 +27,12 @@
 
 G_BEGIN_DECLS
 
-#define GCAL_WEATHER_CHECK_INTERVAL_RENEW_DFLT (3 * 60 * 60)  /* seconds */
-#define GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT   (5 * 60)       /* seconds */
-#define GCAL_WEATHER_VALID_TIMESPAN_DFLT       (24 * 60 * 60) /* seconds */
-#define GCAL_WEATHER_FORECAST_MAX_DAYS_DFLT     3
-
 #define GCAL_TYPE_WEATHER_SERVICE (gcal_weather_service_get_type())
 
 G_DECLARE_FINAL_TYPE (GcalWeatherService, gcal_weather_service, GCAL, WEATHER_SERVICE, GObject)
 
 
-GcalWeatherService*  gcal_weather_service_new                    (GTimeZone          *time_zone,
-                                                                  guint               max_days,
-                                                                  guint               check_interval_new,
-                                                                  guint               check_interval_renew,
-                                                                  gint64              valid_timespan);
+GcalWeatherService*  gcal_weather_service_new                    (void);
 
 GTimeZone*           gcal_weather_service_get_time_zone          (GcalWeatherService *self);
 

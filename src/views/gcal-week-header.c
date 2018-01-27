@@ -1674,7 +1674,7 @@ gcal_week_header_init (GcalWeekHeader *self)
   self->selection_end = -1;
   self->dnd_cell = -1;
   self->weather_service = NULL;
-  memset (self->weather_infos, 0, sizeof(self->weather_infos));
+
   gtk_widget_init_template (GTK_WIDGET (self));
 
   /* This is to avoid stray lines when adding and removing events */
@@ -1712,7 +1712,8 @@ gcal_week_header_add_weather_infos (GcalWeekHeader *self,
   gint consumed = 0;
   guint i;
 
-  g_return_val_if_fail (self != NULL, 0);
+  if (!self->active_date)
+    return 0;
 
   week_start_dt = get_start_of_week (self->active_date);
   g_date_set_dmy (&week_start,
@@ -2066,7 +2067,7 @@ gcal_week_header_set_date (GcalWeekHeader *self,
  *           Elements are owned by the widget. Do not modify.
  */
 GSList*
-gcal_week_header_get_shown_weather_infos (GcalWeekHeader  *self)
+gcal_week_header_get_shown_weather_infos (GcalWeekHeader *self)
 {
   g_return_val_if_fail (GCAL_IS_WEEK_HEADER (self), NULL);
   GSList* lst = NULL; /* owned[unowned] */

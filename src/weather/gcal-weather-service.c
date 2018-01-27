@@ -30,6 +30,11 @@
 #include "gcal-weather-service.h"
 
 
+#define GCAL_WEATHER_CHECK_INTERVAL_RENEW_DEFAULT (3 * 60 * 60)  /* seconds */
+#define GCAL_WEATHER_CHECK_INTERVAL_NEW_DEFAULT   (5 * 60)       /* seconds */
+#define GCAL_WEATHER_VALID_TIMESPAN_DEFAULT       (24 * 60 * 60) /* seconds */
+#define GCAL_WEATHER_FORECAST_MAX_DAYS_DEFAULT     3
+
 #define DAY_SECONDS (24 * 60 * 60)
 
 /**
@@ -263,7 +268,7 @@ set_check_interval_new (GcalWeatherService *self,
   self->check_interval_new = interval;
   update_timeout_interval (self);
 
-  g_object_notify ((GObject*) self, "check-interval-new");
+  g_object_notify (G_OBJECT (self), "check-interval-new");
 }
 
 static void
@@ -273,7 +278,7 @@ set_check_interval_renew (GcalWeatherService *self,
   self->check_interval_renew = interval;
   update_timeout_interval (self);
 
-  g_object_notify ((GObject*) self, "check-interval-renew");
+  g_object_notify (G_OBJECT (self), "check-interval-renew");
 }
 
 static gssize
@@ -830,7 +835,7 @@ set_max_days (GcalWeatherService *self,
 
   self->max_days = days;
 
-  g_object_notify ((GObject*) self, "max-days");
+  g_object_notify (G_OBJECT (self), "max-days");
 }
 
 static void
@@ -841,7 +846,7 @@ set_valid_timespan (GcalWeatherService *self,
 
   self->valid_timespan = timespan;
 
-  g_object_notify ((GObject*) self, "valid-timespan");
+  g_object_notify (G_OBJECT (self), "valid-timespan");
 }
 
 static gboolean
@@ -1057,7 +1062,7 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
                                                       "check-interval-new",
                                                       0,
                                                       G_MAXUINT,
-                                                      GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT,
+                                                      GCAL_WEATHER_CHECK_INTERVAL_NEW_DEFAULT,
                                                       G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
   /**
@@ -1073,7 +1078,7 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
                                                       "check-interval-renew",
                                                       0,
                                                       G_MAXUINT,
-                                                      GCAL_WEATHER_CHECK_INTERVAL_RENEW_DFLT,
+                                                      GCAL_WEATHER_CHECK_INTERVAL_RENEW_DEFAULT,
                                                       G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
   /**
@@ -1088,7 +1093,7 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
                                                        "valid-timespan",
                                                        0,
                                                        G_MAXINT64,
-                                                       GCAL_WEATHER_VALID_TIMESPAN_DFLT,
+                                                       GCAL_WEATHER_VALID_TIMESPAN_DEFAULT,
                                                        G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
 
 
@@ -1115,13 +1120,14 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
 static void
 gcal_weather_service_init (GcalWeatherService *self)
 {
-  self->check_interval_new = GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT;
-  self->check_interval_renew = GCAL_WEATHER_CHECK_INTERVAL_RENEW_DFLT;
+  self->max_days = GCAL_WEATHER_FORECAST_MAX_DAYS_DEFAULT;
+  self->check_interval_new = GCAL_WEATHER_CHECK_INTERVAL_NEW_DEFAULT;
+  self->check_interval_renew = GCAL_WEATHER_CHECK_INTERVAL_RENEW_DEFAULT;
   self->location_cancellable = g_cancellable_new ();
   self->weather_infos_upated = -1;
-  self->valid_timespan = -1;
+  self->valid_timespan = GCAL_WEATHER_VALID_TIMESPAN_DEFAULT;
 
-  self->duration_timer = gcal_timer_new (GCAL_WEATHER_CHECK_INTERVAL_NEW_DFLT);
+  self->duration_timer = gcal_timer_new (GCAL_WEATHER_CHECK_INTERVAL_NEW_DEFAULT);
   gcal_timer_set_callback (self->duration_timer, (GCalTimerFunc) on_duration_timer_timeout, self, NULL);
 
   self->midnight_timer = gcal_timer_new (24 * 60 * 60);
@@ -1135,29 +1141,16 @@ gcal_weather_service_init (GcalWeatherService *self)
 
 /**
  * gcal_weather_service_new:
- * @max_days:       mumber of days to fetch forecasts for.
- * @check_interval_new:   timeout used when fetching new weather reports.
- * @check_interval_renew: timeout used to update valid weather reports.
  *
  * Creates a new #GcalWeatherService. This service listens
  * to location and weather changes and reports them.
  *
  * Returns: (transfer full): A newly created #GcalWeatherService.
  */
-GcalWeatherService *
-gcal_weather_service_new (GTimeZone *time_zone,
-                          guint      max_days,
-                          guint      check_interval_new,
-                          guint      check_interval_renew,
-                          gint64     valid_timespan)
+GcalWeatherService*
+gcal_weather_service_new (void)
 {
-  return g_object_new (GCAL_TYPE_WEATHER_SERVICE,
-                       "time-zone", time_zone,
-                       "max-days", max_days,
-                       "check-interval-new", check_interval_new,
-                       "check-interval-renew", check_interval_renew,
-                       "valid-timespan", valid_timespan,
-                       NULL);
+  return g_object_new (GCAL_TYPE_WEATHER_SERVICE, NULL);
 }
 
 /**
@@ -1199,7 +1192,7 @@ gcal_weather_service_set_time_zone (GcalWeatherService *self,
   /* make sure midnight is timed correctly: */
   schedule_midnight (self);
 
-  g_object_notify ((GObject*) self, "time-zone");
+  g_object_notify (G_OBJECT (self), "time-zone");
 }
 
 /**

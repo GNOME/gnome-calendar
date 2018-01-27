@@ -546,23 +546,9 @@ gcal_week_view_set_property (GObject       *object,
       break;
 
     case PROP_WEATHER_SERVICE:
-      {
-        GcalWeatherService* weather_service; /* unowned */
-        weather_service = g_value_get_object (value);
-
-        g_return_if_fail (weather_service == NULL || GCAL_IS_WEATHER_SERVICE (weather_service));
-
-        if (self->weather_service != weather_service)
-          {
-            g_set_object (&self->weather_service, weather_service);
-
-            gcal_week_header_set_weather_service (GCAL_WEEK_HEADER (self->header),
-                                                  self->weather_service);
-
-            g_object_notify (object, "weather-service");
-          }
-        break;
-      }
+      if (g_set_object (&self->weather_service, g_value_get_object (value)))
+        g_object_notify (object, "weather-service");
+      break;
 
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -639,6 +625,8 @@ gcal_week_view_init (GcalWeekView *self)
   update_hours_sidebar_size (self);
 
   self->weather_service = NULL;
+
+  g_object_bind_property (self, "weather-service", self->header, "weather-service", G_BINDING_DEFAULT);
 }
 
 /* Public API */
