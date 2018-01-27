@@ -186,11 +186,12 @@ struct _GcalWindow
 enum
 {
   PROP_0,
+  PROP_ACTIVE_DATE,
   PROP_ACTIVE_VIEW,
   PROP_MANAGER,
+  PROP_NEW_EVENT_MODE,
   PROP_WEATHER_SERVICE,
-  PROP_ACTIVE_DATE,
-  PROP_NEW_EVENT_MODE
+  N_PROPS
 };
 
 #define SAVE_GEOMETRY_ID_TIMEOUT 100 /* ms */
@@ -237,6 +238,9 @@ static const GActionEntry actions[] = {
   {"show-calendars", on_show_calendars_action_activated },
   {"toggle-search-bar", on_toggle_search_bar_activated }
 };
+
+static GParamSpec* properties[N_PROPS] = { NULL, };
+
 
 /*
  * Auxiliary methods
@@ -1601,6 +1605,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   GtkWidgetClass *widget_class;
 
   g_type_ensure (GCAL_TYPE_EDIT_DIALOG);
+  g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_QUICK_ADD_POPOVER);
   g_type_ensure (GCAL_TYPE_SEARCH_VIEW);
@@ -1616,51 +1621,39 @@ gcal_window_class_init (GcalWindowClass *klass)
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->configure_event = gcal_window_configure_event;
 
-  g_object_class_install_property (
-      object_class,
-      PROP_ACTIVE_VIEW,
-      g_param_spec_enum ("active-view",
-                         "Active View",
-                         "The active view, eg: month, week, etc.",
-                         GCAL_WINDOW_VIEW_TYPE,
-                         GCAL_WINDOW_VIEW_MONTH,
-                         G_PARAM_READWRITE));
 
-  g_object_class_install_property (
-      object_class,
-      PROP_MANAGER,
-      g_param_spec_object ("manager",
-                           "The manager object",
-                           "The manager object",
-                           GCAL_TYPE_MANAGER,
-                           G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+  properties[PROP_ACTIVE_DATE] = g_param_spec_boxed ("active-date",
+                                                     "Date",
+                                                     "The active/selected date",
+                                                     ICAL_TIME_TYPE,
+                                                     G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-  g_object_class_install_property (
-      object_class,
-      PROP_WEATHER_SERVICE,
-      g_param_spec_object ("weather-service",
-                           "The weather service object",
-                           "The weather service object",
-                           GCAL_TYPE_WEATHER_SERVICE,
-                           G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE));
+  properties[PROP_ACTIVE_VIEW] = g_param_spec_enum ("active-view",
+                                                    "Active View",
+                                                    "The active view, eg: month, week, etc.",
+                                                    GCAL_WINDOW_VIEW_TYPE,
+                                                    GCAL_WINDOW_VIEW_MONTH,
+                                                    G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-  g_object_class_install_property (
-      object_class,
-      PROP_ACTIVE_DATE,
-      g_param_spec_boxed ("active-date",
-                          "Date",
-                          "The active/selected date",
-                          ICAL_TIME_TYPE,
-                          G_PARAM_READWRITE));
+  properties[PROP_MANAGER] = g_param_spec_object ("manager",
+                                                  "The manager object",
+                                                  "The manager object",
+                                                  GCAL_TYPE_MANAGER,
+                                                  G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-  g_object_class_install_property (
-      object_class,
-      PROP_NEW_EVENT_MODE,
-      g_param_spec_boolean ("new-event-mode",
-                            "New Event mode",
-                            "Whether the window is in new-event-mode or not",
-                            FALSE,
-                            G_PARAM_READWRITE));
+  properties[PROP_NEW_EVENT_MODE] = g_param_spec_boolean ("new-event-mode",
+                                                          "New Event mode",
+                                                          "Whether the window is in new-event-mode or not",
+                                                          FALSE,
+                                                          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+
+  properties[PROP_WEATHER_SERVICE] = g_param_spec_object ("weather-service",
+                                                          "The weather service object",
+                                                          "The weather service object",
+                                                          GCAL_TYPE_WEATHER_SERVICE,
+                                                          G_PARAM_CONSTRUCT | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/window.ui");
 
