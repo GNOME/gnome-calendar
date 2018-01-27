@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-26\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2017-12-06 10:50+0000\n"
-"PO-Revision-Date: 2017-12-06 18:03+0200\n"
+"PO-Revision-Date: 2018-01-27 08:41+0200\n"
 "Last-Translator: Pieter Schoeman <pieter@sonbesie.co.za>\n"
 "Language-Team: Afrikaans <pieter@sonbesie.co.za>\n"
 "Language: af\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Gtranslator 2.91.7\n"
+"X-Generator: Poedit 2.0.3\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
@@ -73,7 +73,7 @@ msgstr "org.gnome.Calendar"
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in:13
 msgid "Calendar;Event;Reminder;"
-msgstr "Calendar;Event;Reminder;Kalender;Geleentheid;Aanmanings;"
+msgstr "kalender;geleentheid;aanmanings;"
 
 #: data/org.gnome.calendar.gschema.xml:6
 msgid "Window maximized"
@@ -162,11 +162,11 @@ msgstr "Heel dag"
 
 #: data/ui/edit-dialog.ui:397
 msgid "Add reminder…"
-msgstr "Voeg aanmanings by..."
+msgstr "Voeg aanmanings by…"
 
 #: data/ui/edit-dialog.ui:428
 msgid "No Repeat"
-msgstr "Geen Herhaling"
+msgstr "Geen herhaling"
 
 #: data/ui/edit-dialog.ui:429
 msgid "Daily"
@@ -198,11 +198,11 @@ msgstr "Aantal voorvalle"
 
 #: data/ui/edit-dialog.ui:463
 msgid "Until Date"
-msgstr "Tot Datum"
+msgstr "Tot datum"
 
 #: data/ui/edit-dialog.ui:557
 msgid "Delete Event"
-msgstr "Verwyder Geleentheid"
+msgstr "Verwyder geleentheid"
 
 #: data/ui/edit-dialog.ui:596
 msgid "5 minutes"
@@ -318,7 +318,7 @@ msgstr "Jaar oorsig"
 
 #: data/ui/menus.ui:6 data/ui/menus.ui:36
 msgid "Add Eve_nt…"
-msgstr "Voeg Gelee_ntheid by..."
+msgstr "Voeg gelee_ntheid by…"
 
 #: data/ui/menus.ui:13
 msgid "_Calendars"
@@ -342,19 +342,19 @@ msgstr "_Sinchroniseer"
 
 #: data/ui/menus.ui:49
 msgid "From Web…"
-msgstr "Vanaf die Web..."
+msgstr "Vanaf die web…"
 
 #: data/ui/menus.ui:53
 msgid "New Local Calendar…"
-msgstr "Nuwe Plaaslike Kalender"
+msgstr "Nuwe plaaslike kalender…"
 
 #: data/ui/menus.ui:57
 msgid "From File…"
-msgstr "Vanaf Lêer..."
+msgstr "Vanaf lêer...…"
 
 #: data/ui/quick-add-popover.ui:117
 msgid "Edit Details…"
-msgstr "Redigeer besonderhede..."
+msgstr "Redigeer besonderhede…"
 
 #: data/ui/quick-add-popover.ui:130 data/ui/source-dialog.ui:389
 #: data/ui/source-dialog.ui:773
@@ -412,7 +412,7 @@ msgstr "Voeg nuwe gebeurtenisse per verstek by die kalender by"
 
 #: data/ui/source-dialog.ui:454
 msgid "Remove Calendar"
-msgstr "Verwyder Kalender"
+msgstr "Verwyder kalender"
 
 #: data/ui/source-dialog.ui:483
 msgid "Display calendar"
@@ -436,7 +436,7 @@ msgstr "Instellings"
 
 #: data/ui/source-dialog.ui:618
 msgid "Edit Calendar"
-msgstr "Redigeer Kalender"
+msgstr "Redigeer kalender"
 
 #: data/ui/source-dialog.ui:631
 msgid ""
@@ -450,12 +450,12 @@ msgstr ""
 
 #: data/ui/source-dialog.ui:646
 msgid "Calendar Address"
-msgstr "Kalender Adres"
+msgstr "Kalender adres"
 
 #: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2234
 #: src/gcal-source-dialog.c:2240
 msgid "Add Calendar"
-msgstr "Voeg Kalender by"
+msgstr "Voeg kalender by"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:334
 #: src/gcal-source-dialog.c:853 src/gcal-source-dialog.c:2263
@@ -527,7 +527,7 @@ msgstr "Geen geleenthede"
 
 #: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2729
 msgid "Add Event…"
-msgstr "Voeg Geleentheid by..."
+msgstr "Voeg geleentheid by…"
 
 #: src/gcal-application.c:85
 msgid "Display version number"
@@ -543,7 +543,7 @@ msgstr "Maak kalender oop op die verlede datum"
 
 #: src/gcal-application.c:100
 msgid "Open calendar showing the passed event"
-msgstr "Maak kalender oop op die verlede gebeurtenis "
+msgstr "Maak kalender oop op die verlede gebeurtenis"
 
 #: src/gcal-application.c:454
 #, c-format
@@ -557,7 +557,7 @@ msgstr "Kopiereg © %d–%d Die Kalender skrywers"
 
 #: src/gcal-application.c:473
 msgid "translator-credits"
-msgstr "Pieter Schalk Schoeman"
+msgstr "Pieter Schoeman"
 
 #: src/gcal-edit-dialog.c:275
 msgid "Save"
@@ -756,108 +756,108 @@ msgstr "tot %1$s %2$s"
 #: src/gcal-quick-add-popover.c:356
 #, c-format
 msgid "New Event %1$s %2$s"
-msgstr "Nuwe Geleentheid %1$s %2$s"
+msgstr "Nuwe geleentheid %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
 msgid "New Event Today"
-msgstr "Nuwe Geleentheid Vandag"
+msgstr "Nuwe geleentheid vandag"
 
 #: src/gcal-quick-add-popover.c:377
 msgid "New Event Tomorrow"
-msgstr "Nuwe Geleentheid More"
+msgstr "Nuwe geleentheid more"
 
 #: src/gcal-quick-add-popover.c:381
 msgid "New Event Yesterday"
-msgstr "Nuwe Geleentheid Gister"
+msgstr "Nuwe geleentheid gister"
 
 #: src/gcal-quick-add-popover.c:387
 msgid "New Event next Monday"
-msgstr "Nuwe Geleentheid volgende Maandag"
+msgstr "Nuwe geleentheid volgende Maandag"
 
 #: src/gcal-quick-add-popover.c:388
 msgid "New Event next Tuesday"
-msgstr "Nuwe Geleentheid volgende Dinsdag"
+msgstr "Nuwe geleentheid volgende Dinsdag"
 
 #: src/gcal-quick-add-popover.c:389
 msgid "New Event next Wednesday"
-msgstr "Nuwe Geleentheid volgende Woensdag"
+msgstr "Nuwe geleentheid volgende Woensdag"
 
 #: src/gcal-quick-add-popover.c:390
 msgid "New Event next Thursday"
-msgstr "Nuwe Geleentheid volgende Donderdag"
+msgstr "Nuwe geleentheid volgende Donderdag"
 
 #: src/gcal-quick-add-popover.c:391
 msgid "New Event next Friday"
-msgstr "Nuwe Geleentheid volgende Vrydag"
+msgstr "Nuwe geleentheid volgende Vrydag"
 
 #: src/gcal-quick-add-popover.c:392
 msgid "New Event next Saturday"
-msgstr "Nuwe Geleentheid volgende Saterdag"
+msgstr "Nuwe geleentheid volgende Saterdag"
 
 #: src/gcal-quick-add-popover.c:393
 msgid "New Event next Sunday"
-msgstr "Nuwe Geleentheid volgende Sondag"
+msgstr "Nuwe geleentheid volgende Sondag"
 
 #. Translators: %d is the numeric day of month
 #: src/gcal-quick-add-popover.c:405
 #, c-format
 msgid "New Event on January %d"
-msgstr "Nuwe Geleentheid op %d Januarie"
+msgstr "Nuwe geleentheid op %d Januarie"
 
 #: src/gcal-quick-add-popover.c:406
 #, c-format
 msgid "New Event on February %d"
-msgstr "Nuwe Geleentheid op %d Februarie"
+msgstr "Nuwe geleentheid op %d Februarie"
 
 #: src/gcal-quick-add-popover.c:407
 #, c-format
 msgid "New Event on March %d"
-msgstr "Nuwe Geleentheid op %d Maart"
+msgstr "Nuwe geleentheid op %d Maart"
 
 #: src/gcal-quick-add-popover.c:408
 #, c-format
 msgid "New Event on April %d"
-msgstr "Nuwe Geleentheid op %d April"
+msgstr "Nuwe geleentheid op %d April"
 
 #: src/gcal-quick-add-popover.c:409
 #, c-format
 msgid "New Event on May %d"
-msgstr "Nuwe Geleentheid op %d Mei"
+msgstr "Nuwe geleentheid op %d Mei"
 
 #: src/gcal-quick-add-popover.c:410
 #, c-format
 msgid "New Event on June %d"
-msgstr "Nuwe Geleentheid op %d Junie"
+msgstr "Nuwe geleentheid op %d Junie"
 
 #: src/gcal-quick-add-popover.c:411
 #, c-format
 msgid "New Event on July %d"
-msgstr "Nuwe Geleentheid op %d Julie"
+msgstr "Nuwe geleentheid op %d Julie"
 
 #: src/gcal-quick-add-popover.c:412
 #, c-format
 msgid "New Event on August %d"
-msgstr "Nuwe Geleentheid op %d Augustus"
+msgstr "Nuwe geleentheid op %d Augustus"
 
 #: src/gcal-quick-add-popover.c:413
 #, c-format
 msgid "New Event on September %d"
-msgstr "Nuwe Geleentheid op %d September"
+msgstr "Nuwe geleentheid op %d September"
 
 #: src/gcal-quick-add-popover.c:414
 #, c-format
 msgid "New Event on October %d"
-msgstr "Nuwe Geleentheid op %d Oktober"
+msgstr "Nuwe geleentheid op %d Oktober"
 
 #: src/gcal-quick-add-popover.c:415
 #, c-format
 msgid "New Event on November %d"
-msgstr "Nuwe Geleentheid op %d November"
+msgstr "Nuwe geleentheid op %d November"
 
 #: src/gcal-quick-add-popover.c:416
 #, c-format
 msgid "New Event on December %d"
-msgstr "Nuwe Geleentheid op %d Desember"
+msgstr "Nuwe geleentheid op %d Desember"
 
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
 #: src/gcal-quick-add-popover.c:464
@@ -889,7 +889,7 @@ msgstr "Kalender lêers"
 #. update the source properties
 #: src/gcal-source-dialog.c:1153
 msgid "Unnamed Calendar"
-msgstr "Naamlose Kalender"
+msgstr "Naamlose kalender"
 
 #. Update notification label
 #: src/gcal-source-dialog.c:1759
@@ -933,7 +933,7 @@ msgstr "_Kanselleer"
 
 #: src/gcal-utils.c:1193
 msgid "_Only This Event"
-msgstr "_Slegs Die Geleentheid"
+msgstr "_Slegs die geleentheid"
 
 #: src/gcal-utils.c:1200
 msgid "_Subsequent events"
