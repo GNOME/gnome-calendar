@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/org/gnome/calendar">
-    <file alias="alarm-row.ui" compressed="true" preprocess="xml-stripblanks">ui/alarm-row.ui</file>
-    <file alias="calendar-row.ui" compressed="true" preprocess="xml-stripblanks">ui/calendar-row.ui</file>
-    <file alias="date-chooser.ui" compressed="true" preprocess="xml-stripblanks">ui/date-chooser.ui</file>
-    <file alias="date-selector.ui" compressed="true" preprocess="xml-stripblanks">ui/date-selector.ui</file>
-    <file alias="edit-dialog.ui" compressed="true" preprocess="xml-stripblanks">ui/edit-dialog.ui</file>
-    <file alias="event-widget.ui" compressed="true" preprocess="xml-stripblanks">ui/event-widget.ui</file>
-    <file alias="month-cell.ui" compressed="true" preprocess="xml-stripblanks">ui/month-cell.ui</file>
-    <file alias="month-popover.ui" compressed="true" preprocess="xml-stripblanks">ui/month-popover.ui</file>
-    <file alias="month-view.ui" compressed="true" preprocess="xml-stripblanks">ui/month-view.ui</file>
-    <file alias="multi-choice.ui" compressed="true" preprocess="xml-stripblanks">ui/multi-choice.ui</file>
-    <file alias="online-account-row.ui" compressed="true" preprocess="xml-stripblanks">ui/online-account-row.ui</file>
-    <file alias="quick-add-popover.ui" compressed="true" preprocess="xml-stripblanks">ui/quick-add-popover.ui</file>
-    <file alias="search-view.ui" compressed="true" preprocess="xml-stripblanks">ui/search-view.ui</file>
-    <file alias="source-dialog.ui" compressed="true" preprocess="xml-stripblanks">ui/source-dialog.ui</file>
-    <file alias="time-selector.ui" compressed="true" preprocess="xml-stripblanks">ui/time-selector.ui</file>
-    <file alias="week-header.ui" compressed="true" preprocess="xml-stripblanks">ui/week-header.ui</file>
-    <file alias="week-view.ui" compressed="true" preprocess="xml-stripblanks">ui/week-view.ui</file>
-    <file alias="window.ui" compressed="true" preprocess="xml-stripblanks">ui/window.ui</file>
-    <file alias="year-view.ui" compressed="true" preprocess="xml-stripblanks">ui/year-view.ui</file>
+    <file alias="alarm-row.ui" compressed="true">ui/alarm-row.ui</file>
+    <file alias="calendar-row.ui" compressed="true">ui/calendar-row.ui</file>
+    <file alias="date-chooser.ui" compressed="true">ui/date-chooser.ui</file>
+    <file alias="date-selector.ui" compressed="true">ui/date-selector.ui</file>
+    <file alias="edit-dialog.ui" compressed="true">ui/edit-dialog.ui</file>
+    <file alias="event-widget.ui" compressed="true">ui/event-widget.ui</file>
+    <file alias="month-cell.ui" compressed="true">ui/month-cell.ui</file>
+    <file alias="month-popover.ui" compressed="true">ui/month-popover.ui</file>
+    <file alias="month-view.ui" compressed="true">ui/month-view.ui</file>
+    <file alias="multi-choice.ui" compressed="true">ui/multi-choice.ui</file>
+    <file alias="online-account-row.ui" compressed="true">ui/online-account-row.ui</file>
+    <file alias="quick-add-popover.ui" compressed="true">ui/quick-add-popover.ui</file>
+    <file alias="search-view.ui" compressed="true">ui/search-view.ui</file>
+    <file alias="source-dialog.ui" compressed="true">ui/source-dialog.ui</file>
+    <file alias="time-selector.ui" compressed="true">ui/time-selector.ui</file>
+    <file alias="week-header.ui" compressed="true">ui/week-header.ui</file>
+    <file alias="week-view.ui" compressed="true">ui/week-view.ui</file>
+    <file alias="window.ui" compressed="true">ui/window.ui</file>
+    <file alias="year-view.ui" compressed="true">ui/year-view.ui</file>
 
     <file>theme/Adwaita.css</file>
   </gresource>
 
   <gresource prefix="/org/gnome/calendar/gtk">
-    <file alias="menus.ui" compressed="true" preprocess="xml-stripblanks">ui/menus.ui</file>
-    <file alias="help-overlay.ui" compressed="true" preprocess="xml-stripblanks">ui/help-overlay.ui</file>
+    <file alias="menus.ui" compressed="true">ui/menus.ui</file>
+    <file alias="help-overlay.ui" compressed="true">ui/help-overlay.ui</file>
   </gresource>
 </gresources>
