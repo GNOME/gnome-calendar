@@ -709,20 +709,15 @@ on_gclue_simple_creation_cb (GClueSimple        *_source,
 {
   g_autoptr (GError) error = NULL;
   GClueLocation *location;
-  GClueSimple *location_service;
   GClueClient *client;
 
   GCAL_ENTRY;
 
-  /*
-   * Make sure we do not touch self->location_service
-   * if the current operation was cancelled.
-   */
-  location_service = gclue_simple_new_finish (result, &error);
+  self->location_service = gclue_simple_new_finish (result, &error);
 
   if (error)
     {
-      g_assert_null (location_service);
+      g_assert_null (self->location_service);
 
       if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
         /* Cancelled during creation. Silently fail. */;
@@ -731,8 +726,6 @@ on_gclue_simple_creation_cb (GClueSimple        *_source,
 
       GCAL_RETURN ();
     }
-
-  self->location_service = g_steal_pointer (&location_service);
 
   location = gclue_simple_get_location (self->location_service);
   client = gclue_simple_get_client (self->location_service);
