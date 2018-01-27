@@ -89,12 +89,6 @@ common_flags = [
   '-DGWEATHER_I_KNOW_THIS_IS_UNSTABLE'
 ]
 
-test_cflags = '-Wno-sign-compare'
-
-if cc.has_argument(cflag)
-  common_flags += [cflag]
-endif
-
 if calendar_debug
   common_flags += [
     '-DG_DISABLE_CAST_CHECKS'
