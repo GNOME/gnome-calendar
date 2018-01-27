@@ -159,7 +159,7 @@ END
 
 cmd_options=""
 for key in "${!meson_options[@]}"; do
-    cmd_options="$cmd_options -Denable-$key=${meson_options[$key]}"
+    cmd_options="$cmd_options -D${key/\-/_}=${meson_options[$key]}"
 done
 
 exec ${MESON} \
