@@ -17,11 +17,9 @@
  * with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #define G_LOG_DOMAIN "GcalApplication"
+
+#include "config.h"
 
 #include "css-code.h"
 #include "gcal-application.h"
