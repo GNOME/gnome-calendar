@@ -1611,6 +1611,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   g_type_ensure (GCAL_TYPE_SEARCH_VIEW);
   g_type_ensure (GCAL_TYPE_SOURCE_DIALOG);
   g_type_ensure (GCAL_TYPE_WEEK_VIEW);
+  g_type_ensure (GCAL_TYPE_WEATHER_SERVICE);
   g_type_ensure (GCAL_TYPE_YEAR_VIEW);
 
   object_class = G_OBJECT_CLASS (klass);
@@ -1792,7 +1793,6 @@ gcal_window_init (GcalWindow *self)
   g_object_bind_property (self, "manager", self->month_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->year_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "weather-service", self->week_view, "weather-service", G_BINDING_DEFAULT);
   g_object_bind_property (self, "weather-service", self->month_view, "weather-service", G_BINDING_DEFAULT);
   g_object_bind_property (self, "weather-service", self->year_view, "weather-service", G_BINDING_DEFAULT);
 

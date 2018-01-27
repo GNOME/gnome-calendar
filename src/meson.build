@@ -31,6 +31,8 @@ sources = files(
   'views/gcal-week-header.c',
   'views/gcal-week-view.c',
   'views/gcal-year-view.c',
+  'weather/gcal-weather-info.c',
+  'weather/gcal-weather-service.c',
   'gcal-application.c',
   'gcal-clock.c',
   'gcal-date-chooser-day.c',
@@ -50,8 +52,6 @@ sources = files(
   'gcal-time-selector.c',
   'gcal-utils.c',
   'gcal-window.c',
-  'gcal-weather-service.c',
-  'gcal-weather-info.c',
   'gcal-timer.c'
 )
 
@@ -117,7 +117,8 @@ sources += configure_file(
 
 incs = [
   top_inc,
-  include_directories('views')
+  include_directories('views'),
+  include_directories('weather'),
 ]
 
 incs += contrib_incs
