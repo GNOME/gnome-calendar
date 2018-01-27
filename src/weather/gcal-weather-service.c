@@ -1318,10 +1318,10 @@ gcal_weather_service_run (GcalWeatherService *self,
 {
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
-  g_debug ("Starting weather service");
+  if (self->location_service_running && self->weather_service_running)
+    return;
 
-  if (self->location_service_running || self->weather_service_running)
-    gcal_weather_service_stop (self);
+  g_debug ("Starting weather service");
 
   if (!location)
     {
@@ -1363,10 +1363,10 @@ gcal_weather_service_stop (GcalWeatherService *self)
 
   g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
 
-  g_debug ("Stop weather service");
-
   if (!self->location_service_running && !self->weather_service_running)
     GCAL_RETURN ();
+
+  g_debug ("Stopping weather service");
 
   self->location_service_running = FALSE;
   self->weather_service_running = FALSE;
