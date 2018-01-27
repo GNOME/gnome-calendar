@@ -16,6 +16,9 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#define G_LOG_DOMAIN "GcalWeatherSettings"
+
+#include "gcal-debug.h"
 #include "gcal-manager.h"
 #include "gcal-utils.h"
 #include "gcal-weather-service.h"
@@ -179,28 +182,28 @@ get_checked_fixed_location (GcalWeatherSettings *self)
 static void
 manage_weather_service (GcalWeatherSettings *self)
 {
-  g_autoptr (GWeatherLocation) location = NULL;
+  GCAL_ENTRY;
 
-  gcal_weather_service_stop (self->weather_service);
-
-  if (!gtk_switch_get_active (self->show_weather_switch))
-    return;
-
-  if (gtk_switch_get_active (self->weather_auto_location_switch))
+  if (gtk_switch_get_active (self->show_weather_switch))
     {
-      gcal_weather_service_run (self->weather_service, NULL);
-      return;
+      g_autoptr (GWeatherLocation) location = NULL;
+
+      if (!gtk_switch_get_active (self->weather_auto_location_switch))
+        {
+          location = get_checked_fixed_location (self);
+
+          if (!location)
+            g_warning ("Unknown location '%s' selected", gtk_entry_get_text (GTK_ENTRY (self->weather_location_entry)));
+        }
+
+      gcal_weather_service_run (self->weather_service, location);
+    }
+  else
+    {
+      gcal_weather_service_stop (self->weather_service);
     }
 
-  location = get_checked_fixed_location (self);
-  if (!location)
-    {
-      /* TODO: this one should get reported to users */
-      g_warning ("Unknown location '%s' selected", gtk_entry_get_text (GTK_ENTRY (self->weather_location_entry)));
-      return;
-    }
-
-  gcal_weather_service_run (self->weather_service, location);
+  GCAL_EXIT;
 }
 
 
