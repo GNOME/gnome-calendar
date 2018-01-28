@@ -407,16 +407,14 @@ gint
 get_first_weekday (void)
 {
   int week_start;
-#ifdef HAVE__NL_TIME_FIRST_WEEKDAY
-  union { unsigned int word; char *string; } langinfo;
-  int week_1stday = 0;
-  int first_weekday = 1;
-  guint week_origin;
-#else
-  char *gtk_week_start;
-#endif
 
 #ifdef HAVE__NL_TIME_FIRST_WEEKDAY
+
+  union { unsigned int word; char *string; } langinfo;
+  gint week_1stday = 0;
+  gint first_weekday = 1;
+  guint week_origin;
+
   langinfo.string = nl_langinfo (_NL_TIME_FIRST_WEEKDAY);
   first_weekday = langinfo.string[0];
   langinfo.string = nl_langinfo (_NL_TIME_WEEK_1STDAY);
@@ -429,7 +427,12 @@ get_first_weekday (void)
     g_warning ("Unknown value of _NL_TIME_WEEK_1STDAY.\n");
 
   week_start = (week_1stday + first_weekday - 1) % 7;
+
 #else
+
+  gchar *gtk_week_start;
+
+
   /* Use a define to hide the string from xgettext */
 # define GTK_WEEK_START "calendar:week_start:0"
   gtk_week_start = dgettext ("gtk30", GTK_WEEK_START);
@@ -445,6 +448,7 @@ get_first_weekday (void)
                  "did so wrongly.\n");
       week_start = 0;
     }
+
 #endif
 
   return week_start;
