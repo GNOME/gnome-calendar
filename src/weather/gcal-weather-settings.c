@@ -76,8 +76,10 @@ load_weather_settings (GcalWeatherSettings *self)
   gboolean show_weather;
   gboolean auto_location;
 
+  GCAL_ENTRY;
+
   if (!self->manager)
-    return;
+    GCAL_RETURN ();
 
   settings = gcal_manager_get_settings (self->manager);
   value = g_settings_get_value (settings, "weather-settings");
@@ -117,6 +119,8 @@ load_weather_settings (GcalWeatherSettings *self)
   g_signal_handlers_unblock_by_func (self->show_weather_switch, on_show_weather_changed_cb, self);
   g_signal_handlers_unblock_by_func (self->weather_auto_location_switch, on_weather_auto_location_changed_cb, self);
   g_signal_handlers_unblock_by_func (self->weather_location_entry, on_weather_location_searchbox_changed_cb, self);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -128,8 +132,10 @@ save_weather_settings (GcalWeatherSettings *self)
   GVariant *vlocation;
   gboolean res;
 
+  GCAL_ENTRY;
+
   if (!self->manager)
-    return;
+    GCAL_RETURN ();
 
   location = gweather_location_entry_get_location (GWEATHER_LOCATION_ENTRY (self->weather_location_entry));
   vlocation = location ? gweather_location_serialize (location) : NULL;
@@ -145,6 +151,8 @@ save_weather_settings (GcalWeatherSettings *self)
 
   if (!res)
     g_warning ("Could not persist weather settings");
+
+  GCAL_EXIT;
 }
 
 static void
