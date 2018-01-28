@@ -21,6 +21,7 @@
 
 #include "gcal-debug.h"
 #include "gcal-edit-dialog.h"
+#include "gcal-enums.h"
 #include "gcal-enum-types.h"
 #include "gcal-event-widget.h"
 #include "gcal-manager.h"

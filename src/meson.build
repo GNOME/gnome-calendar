@@ -1,6 +1,6 @@
 src_inc = include_directories('.')
 
-enum_headers = files('gcal-utils.h')
+enum_headers = files('gcal-enums.h')
 
 gcal_deps = [
   gsettings_desktop_schemas_dep,

@@ -38,39 +38,6 @@
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ESource, g_object_unref)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GWeatherLocation, gweather_location_unref)
 
-/**
- * GcalWindowViewType:
- * @GCAL_WINDOW_VIEW_DAY: Day view (not implemented)
- * @GCAL_WINDOW_VIEW_WEEK: Week view
- * @GCAL_WINDOW_VIEW_MONTH: Month view
- * @GCAL_WINDOW_VIEW_YEAR: Year view
- * @GCAL_WINDOW_VIEW_LIST: List (not implemented)
- * @GCAL_WINDOW_VIEW_SEARCH: Search view (partially implemented)
- *
- * Enum with the available views.
- */
-typedef enum
-{
-  GCAL_WINDOW_VIEW_DAY,
-  GCAL_WINDOW_VIEW_WEEK,
-  GCAL_WINDOW_VIEW_MONTH,
-  GCAL_WINDOW_VIEW_YEAR,
-  GCAL_WINDOW_VIEW_LIST,
-  GCAL_WINDOW_VIEW_SEARCH,
-} GcalWindowViewType;
-
-typedef enum
-{
-    GCAL_WEEK_DAY_INVALID   = 0,
-    GCAL_WEEK_DAY_SUNDAY    = 1 << 0,
-    GCAL_WEEK_DAY_MONDAY    = 1 << 1,
-    GCAL_WEEK_DAY_TUESDAY   = 1 << 2,
-    GCAL_WEEK_DAY_WEDNESDAY = 1 << 3,
-    GCAL_WEEK_DAY_THURSDAY  = 1 << 4,
-    GCAL_WEEK_DAY_FRIDAY    = 1 << 5,
-    GCAL_WEEK_DAY_SATURDAY  = 1 << 6
-} GcalWeekDay;
-
 GType                icaltime_get_type                           (void)            G_GNUC_CONST;
 
 gint                 datetime_compare_date                       (GDateTime          *dt1,
