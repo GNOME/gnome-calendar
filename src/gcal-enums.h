@@ -18,6 +18,18 @@
 
 #pragma once
 
+#include "gcal-enum-types.h"
+
+/**
+ * GcalTimeFormat:
+ * @GCAL_TIME_FORMAT_12H: time is displayed in 12h format
+ * @GCAL_TIME_FORMAT_24H: time is displayed in 24h format
+ */
+typedef enum
+{
+  GCAL_TIME_FORMAT_12H,
+  GCAL_TIME_FORMAT_24H,
+} GcalTimeFormat;
 
 /**
  * GcalWindowViewType:

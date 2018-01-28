@@ -30,9 +30,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalSearchPopover, gcal_search_popover, GCAL, SEARCH_POPOVER, GtkPopover)
 
-void                 gcal_search_popover_set_time_format         (GcalSearchPopover  *self,
-                                                                  gboolean            format_24h);
-
 void                 gcal_search_popover_search                  (GcalSearchPopover  *self,
                                                                   const gchar        *field,
                                                                   const gchar        *query);

@@ -20,6 +20,7 @@
 #define G_LOG_DOMAIN "GcalSearchPopover"
 
 #include "gcal-debug.h"
+#include "gcal-enums.h"
 #include "gcal-event.h"
 #include "gcal-search-popover.h"
 #include "gcal-utils.h"
@@ -60,14 +61,15 @@ struct _GcalSearchPopover
   GcalManager        *manager; /* weak reference */
 
   /* flags */
-  gboolean            format_24h;
+  GcalTimeFormat      time_format;
   gboolean            subscribed;
 };
 
 enum
 {
   PROP_0,
-  PROP_DATE,  /* active-date inherited property */
+  PROP_DATE,
+  PROP_TIME_FORMAT,
 };
 
 enum
@@ -291,7 +293,8 @@ make_row_for_event (GcalSearchPopover *self,
   /* show 'all day' instead of 00:00 */
   if (!gcal_event_get_all_day (event))
     {
-      text = g_date_time_format (local_datetime, self->format_24h ? "%R" : "%r");
+      text = g_date_time_format (local_datetime,
+                                 self->time_format == GCAL_TIME_FORMAT_24H ? "%R" : "%r");
       time_label = gtk_label_new (text);
       g_free (text);
     }
@@ -579,11 +582,14 @@ gcal_search_popover_set_property (GObject      *object,
   switch (property_id)
     {
     case PROP_DATE:
-      {
-        g_clear_pointer (&self->date, g_free);
-        self->date = g_value_dup_boxed (value);
-        break;
-      }
+      g_clear_pointer (&self->date, g_free);
+      self->date = g_value_dup_boxed (value);
+      break;
+
+    case PROP_TIME_FORMAT:
+      self->time_format = g_value_get_enum (value);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -603,6 +609,11 @@ gcal_search_popover_get_property (GObject    *object,
     case PROP_DATE:
       g_value_set_boxed (value, self->date);
       break;
+
+    case PROP_TIME_FORMAT:
+      g_value_set_enum (value, self->time_format);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -655,11 +666,22 @@ gcal_search_popover_class_init (GcalSearchPopoverClass *klass)
    * Actually it is not used.
    *
    */
-  g_object_class_install_property (object_class, PROP_DATE,
-      g_param_spec_boxed ("active-date",
-                          "The active date",
-                          "The active/selected date in the view",
-                          ICAL_TIME_TYPE, G_PARAM_READWRITE));
+  g_object_class_install_property (object_class,
+                                   PROP_DATE,
+                                   g_param_spec_boxed ("active-date",
+                                                       "The active date",
+                                                       "The active/selected date in the view",
+                                                       ICAL_TIME_TYPE,
+                                                       G_PARAM_READWRITE));
+
+  g_object_class_install_property (object_class,
+                                   PROP_TIME_FORMAT,
+                                   g_param_spec_enum ("time-format",
+                                                      "The time format",
+                                                      "The time format",
+                                                      GCAL_TYPE_TIME_FORMAT,
+                                                      GCAL_TIME_FORMAT_24H,
+                                                      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/search-popover.ui");
@@ -706,23 +728,6 @@ gcal_search_popover_connect (GcalSearchPopover *search_popover,
   if (manager != NULL && manager != search_popover->manager)
     search_popover->manager = manager;
 }
-
-/**
- * gcal_search_popover_set_time_format:
- * @view: a #GcalSearchPopover instance.
- * @format_24h: whether is 24h or not.
- *
- * Setup time format, instead of accessing DConf
- * again.
- *
- */
-void
-gcal_search_popover_set_time_format (GcalSearchPopover *self,
-                                     gboolean           format_24h)
-{
-  self->format_24h = format_24h;
-}
-
 
 /**
  * gcal_search_popover_set_search:

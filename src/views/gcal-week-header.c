@@ -86,8 +86,6 @@ struct _GcalWeekHeader
    */
   gboolean            expanded;
 
-  gboolean            use_24h_format;
-
   icaltimetype       *active_date;
 
   gint                selection_start;
@@ -1832,15 +1830,6 @@ gcal_week_header_set_first_weekday (GcalWeekHeader *self,
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
   self->first_weekday = nr_day;
-}
-
-void
-gcal_week_header_set_use_24h_format (GcalWeekHeader *self,
-                                     gboolean        use_24h_format)
-{
-  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
-
-  self->use_24h_format = use_24h_format;
 }
 
 void

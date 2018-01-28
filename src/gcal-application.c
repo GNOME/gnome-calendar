@@ -24,6 +24,7 @@
 #include "css-code.h"
 #include "gcal-application.h"
 #include "gcal-debug.h"
+#include "gcal-enums.h"
 #include "gcal-log.h"
 #include "gcal-shell-search-provider.h"
 #include "gcal-weather-service.h"
@@ -47,6 +48,9 @@ struct _GcalApplication
 
   gchar              *uuid;
   icaltimetype       *initial_date;
+
+  GSettings          *desktop_settings;
+  GcalTimeFormat      time_format;
 
   GcalWeatherService *weather_service;
 
@@ -118,6 +122,7 @@ enum
 {
   PROP_0,
   PROP_MANAGER,
+  PROP_TIME_FORMAT,
   PROP_WEATHER_SERVICE,
   N_PROPS
 };
@@ -190,6 +195,25 @@ load_css_provider (GcalApplication *self)
     gtk_css_provider_load_from_resource (self->provider, "/org/gnome/calendar/theme/Adwaita.css");
 }
 
+static void
+load_time_format (GcalApplication *self)
+{
+  g_autofree gchar *clock_format = NULL;
+  g_autofree gchar *enum_format = NULL;
+
+  clock_format = g_settings_get_string (self->desktop_settings, "clock-format");
+
+  if (g_strcmp0 (clock_format, "12h") == 0)
+    self->time_format = GCAL_TIME_FORMAT_12H;
+  else
+    self->time_format = GCAL_TIME_FORMAT_24H;
+
+  enum_format = g_enum_to_string (GCAL_TYPE_TIME_FORMAT, self->time_format);
+  g_debug ("Setting time format to %s", enum_format);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_TIME_FORMAT]);
+}
+
 
 /*
  * GObject overrides
@@ -202,15 +226,14 @@ gcal_application_finalize (GObject *object)
 
   GCAL_ENTRY;
 
-  g_clear_pointer (&self->uuid, g_free);
   g_clear_pointer (&self->initial_date, g_free);
-
-  g_clear_object (&(self->provider));
+  g_clear_pointer (&self->uuid, g_free);
   g_clear_object (&self->colors_provider);
-
+  g_clear_object (&self->desktop_settings);
   g_clear_object (&self->manager);
-  g_clear_object (&self->weather_service);
+  g_clear_object (&self->provider);
   g_clear_object (&self->search_provider);
+  g_clear_object (&self->weather_service);
 
   G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
 
@@ -229,6 +252,10 @@ gcal_application_get_property (GObject    *object,
     {
     case PROP_MANAGER:
       g_value_set_object (value, self->manager);
+      break;
+
+    case PROP_TIME_FORMAT:
+      g_value_set_enum (value, self->time_format);
       break;
 
     case PROP_WEATHER_SERVICE:
@@ -281,7 +308,10 @@ gcal_application_activate (GApplication *application)
                                     "manager", self->manager,
                                     "active-date", self->initial_date,
                                     "weather-service", self->weather_service,
+                                    "time-format", self->time_format,
                                     NULL);
+
+      g_object_bind_property (self, "time-format", self->window, "time-format", G_BINDING_DEFAULT);
 
       g_signal_connect (self->window, "destroy", G_CALLBACK (gtk_widget_destroyed), &self->window);
       gtk_widget_show (self->window);
@@ -455,6 +485,13 @@ gcal_application_class_init (GcalApplicationClass *klass)
                                                   GCAL_TYPE_MANAGER,
                                                   G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
+  properties[PROP_TIME_FORMAT] = g_param_spec_enum ("time-format",
+                                                    "The time format of the computer",
+                                                    "The time format of the computer",
+                                                    GCAL_TYPE_TIME_FORMAT,
+                                                    GCAL_TIME_FORMAT_24H,
+                                                    G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+
   properties[PROP_WEATHER_SERVICE] = g_param_spec_object ("weather-service",
                                                           "The weather service object",
                                                           "The weather service object",
@@ -477,6 +514,14 @@ gcal_application_init (GcalApplication *self)
 
   self->weather_service = gcal_weather_service_new ();
   self->search_provider = gcal_shell_search_provider_new (self->manager);
+
+  /* Time format */
+  self->desktop_settings = g_settings_new ("org.gnome.desktop.interface");
+  g_signal_connect_swapped (self->desktop_settings,
+                            "changed::clock-format",
+                            G_CALLBACK (load_time_format),
+                            self);
+  load_time_format (self);
 }
 
 static void

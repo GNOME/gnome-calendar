@@ -107,7 +107,7 @@ struct _GcalEditDialog
   ESource          *selected_source;
 
   /* flags */
-  gboolean          format_24h;
+  GcalTimeFormat    time_format;
   gboolean          event_is_new;
   gboolean          recurrence_changed;
   gboolean          setting_event;
@@ -127,6 +127,7 @@ enum
   PROP_0,
   PROP_EVENT,
   PROP_MANAGER,
+  PROP_TIME_FORMAT,
   PROP_WRITABLE,
   LAST_PROP
 };
@@ -718,6 +719,10 @@ gcal_edit_dialog_get_property (GObject    *object,
       g_value_set_object (value, self->manager);
       break;
 
+    case PROP_TIME_FORMAT:
+      g_value_set_enum (value, self->time_format);
+      break;
+
     case PROP_WRITABLE:
       g_value_set_boolean (value, self->writable);
       break;
@@ -743,6 +748,10 @@ gcal_edit_dialog_set_property (GObject      *object,
 
     case PROP_MANAGER:
       gcal_edit_dialog_set_manager (self, g_value_get_object (value));
+      break;
+
+    case PROP_TIME_FORMAT:
+      gcal_edit_dialog_set_time_format (self, g_value_get_enum (value));
       break;
 
     case PROP_WRITABLE:
@@ -793,6 +802,20 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
                                                         "The manager of the dialog",
                                                         GCAL_TYPE_MANAGER,
                                                         G_PARAM_READWRITE));
+
+  /**
+   * GcalEditDialog::time-format:
+   *
+   * The time format.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_TIME_FORMAT,
+                                   g_param_spec_enum ("time-format",
+                                                      "Manager of the dialog",
+                                                      "The manager of the dialog",
+                                                      GCAL_TYPE_TIME_FORMAT,
+                                                      GCAL_TIME_FORMAT_24H,
+                                                      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
    * GcalEditDialog::writable:
@@ -1209,14 +1232,16 @@ gcal_edit_dialog_new (void)
  */
 void
 gcal_edit_dialog_set_time_format (GcalEditDialog *dialog,
-                                  gboolean        use_24h_format)
+                                  GcalTimeFormat  time_format)
 {
   g_return_if_fail (GCAL_IS_EDIT_DIALOG (dialog));
 
-  dialog->format_24h = use_24h_format;
+  dialog->time_format = time_format;
 
-  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->start_time_selector), dialog->format_24h);
-  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->end_time_selector), dialog->format_24h);
+  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->start_time_selector), dialog->time_format);
+  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->end_time_selector), dialog->time_format);
+
+  g_object_notify (G_OBJECT (dialog), "time-format");
 }
 
 /**

@@ -19,6 +19,7 @@
 #define G_LOG_DOMAIN "GcalWeekView"
 
 #include "gcal-debug.h"
+#include "gcal-enums.h"
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
@@ -54,10 +55,8 @@ struct _GcalWeekView
    */
   gint                first_weekday;
 
-  /*
-   * clock format from GNOME desktop settings
-   */
-  gboolean            use_24h_format;
+
+  GcalTimeFormat      time_format;
 
   /* property */
   icaltimetype       *date;
@@ -80,6 +79,7 @@ enum
   PROP_0,
   PROP_DATE,
   PROP_MANAGER,
+  PROP_TIME_FORMAT,
   PROP_WEATHER_SERVICE,
   NUM_PROPS
 };
@@ -429,7 +429,7 @@ gcal_week_view_draw_hours (GcalWeekView *self,
     {
       gchar *hours;
 
-      if (self->use_24h_format)
+      if (self->time_format == GCAL_TIME_FORMAT_24H)
         {
           hours = g_strdup_printf ("%02d:00", i);
         }
@@ -543,6 +543,12 @@ gcal_week_view_set_property (GObject       *object,
       g_object_notify (object, "manager");
       break;
 
+    case PROP_TIME_FORMAT:
+      g_debug ("BLAAA");
+      self->time_format = g_value_get_enum (value);
+      gtk_widget_queue_draw (self->hours_bar);
+      break;
+
     case PROP_WEATHER_SERVICE:
       if (g_set_object (&self->weather_service, g_value_get_object (value)))
         g_object_notify (object, "weather-service");
@@ -575,6 +581,10 @@ gcal_week_view_get_property (GObject       *object,
       g_value_set_object (value, self->manager);
       break;
 
+    case PROP_TIME_FORMAT:
+      g_value_set_enum (value, self->time_format);
+      break;
+
     case PROP_WEATHER_SERVICE:
       g_value_set_object (value, self->weather_service);
       break;
@@ -601,6 +611,15 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_MANAGER, "manager");
   g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
+
+  g_object_class_install_property (object_class,
+                                   PROP_TIME_FORMAT,
+                                   g_param_spec_enum ("time-format",
+                                                      "Time format",
+                                                      "Time format",
+                                                      GCAL_TYPE_TIME_FORMAT,
+                                                      GCAL_TIME_FORMAT_24H,
+                                                      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
 
@@ -661,18 +680,3 @@ gcal_week_view_set_first_weekday (GcalWeekView *self,
   gcal_week_grid_set_first_weekday (GCAL_WEEK_GRID (self->week_grid), self->first_weekday);
 }
 
-/**
- * gcal_week_view_set_use_24h_format:
- * @view:
- * @use_24h:
- *
- * Whether the view will show time using 24h or 12h format
- **/
-void
-gcal_week_view_set_use_24h_format (GcalWeekView *self,
-                                   gboolean      use_24h)
-{
-  g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
-
-  self->use_24h_format = use_24h;
-}

@@ -21,7 +21,6 @@
 
 #include "gcal-debug.h"
 #include "gcal-edit-dialog.h"
-#include "gcal-enums.h"
 #include "gcal-event-widget.h"
 #include "gcal-manager.h"
 #include "gcal-month-view.h"
@@ -162,6 +161,8 @@ struct _GcalWindow
   gint                refresh_timeout_id;
   gint                open_edit_dialog_timeout_id;
 
+  GcalTimeFormat      time_format;
+
   /* weather management */
   GcalWeatherService  *weather_service;
   GcalWeatherSettings *weather_settings;
@@ -187,6 +188,7 @@ enum
   PROP_ACTIVE_VIEW,
   PROP_MANAGER,
   PROP_NEW_EVENT_MODE,
+  PROP_TIME_FORMAT,
   PROP_WEATHER_SERVICE,
   N_PROPS
 };
@@ -1339,6 +1341,14 @@ gcal_window_set_property (GObject      *object,
         }
       break;
 
+    case PROP_TIME_FORMAT:
+      if (self->time_format != g_value_get_enum (value))
+        {
+          self->time_format = g_value_get_enum (value);
+          g_object_notify_by_pspec (object, properties[PROP_TIME_FORMAT]);
+        }
+      break;
+
     case PROP_WEATHER_SERVICE:
       if (g_set_object (&self->weather_service, g_value_get_object (value)))
         g_object_notify_by_pspec (object, properties[PROP_WEATHER_SERVICE]);
@@ -1361,24 +1371,28 @@ gcal_window_get_property (GObject    *object,
 
   switch (property_id)
     {
+    case PROP_ACTIVE_DATE:
+      g_value_set_boxed (value, self->active_date);
+      break;
+
     case PROP_ACTIVE_VIEW:
       g_value_set_enum (value, self->active_view);
+      break;
+
+    case PROP_NEW_EVENT_MODE:
+      g_value_set_boolean (value, self->new_event_mode);
       break;
 
     case PROP_MANAGER:
       g_value_set_object (value, self->manager);
       break;
 
+    case PROP_TIME_FORMAT:
+      g_value_set_enum (value, self->time_format);
+      break;
+
     case PROP_WEATHER_SERVICE:
       g_value_set_object (value, self->weather_service);
-      break;
-
-    case PROP_ACTIVE_DATE:
-      g_value_set_boxed (value, self->active_date);
-      break;
-
-    case PROP_NEW_EVENT_MODE:
-      g_value_set_boolean (value, self->new_event_mode);
       break;
 
     default:
@@ -1460,6 +1474,13 @@ gcal_window_class_init (GcalWindowClass *klass)
                                                           FALSE,
                                                           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
+  properties[PROP_TIME_FORMAT] = g_param_spec_enum ("time-format",
+                                                    "The time format of the computer",
+                                                    "The time format of the computer",
+                                                    GCAL_TYPE_TIME_FORMAT,
+                                                    GCAL_TIME_FORMAT_24H,
+                                                    G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+
   properties[PROP_WEATHER_SERVICE] = g_param_spec_object ("weather-service",
                                                           "The weather service object",
                                                           "The weather service object",
@@ -1537,9 +1558,6 @@ static void
 gcal_window_init (GcalWindow *self)
 {
   GApplication *app;
-  GSettings *helper_settings;
-  gchar *clock_format;
-  gboolean use_24h_format;
 
   /* Setup actions */
   g_action_map_add_action_entries (G_ACTION_MAP (self),
@@ -1549,6 +1567,7 @@ gcal_window_init (GcalWindow *self)
 
   app = g_application_get_default ();
   self->weather_service = gcal_application_get_weather_service (GCAL_APPLICATION (app));
+  self->time_format = GCAL_TIME_FORMAT_24H;
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -1556,29 +1575,13 @@ gcal_window_init (GcalWindow *self)
   g_object_bind_property (self, "application", self->source_dialog, "application",
                           G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
-  helper_settings = g_settings_new ("org.gnome.desktop.interface");
-  clock_format = g_settings_get_string (helper_settings, "clock-format");
-  use_24h_format = (g_strcmp0 (clock_format, "24h") == 0);
-  g_free (clock_format);
-  g_object_unref (helper_settings);
-
   self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
   self->views[GCAL_WINDOW_VIEW_YEAR] = self->year_view;
 
-  gcal_edit_dialog_set_time_format (GCAL_EDIT_DIALOG (self->edit_dialog), use_24h_format);
-
   gcal_week_view_set_first_weekday (GCAL_WEEK_VIEW (self->views[GCAL_WINDOW_VIEW_WEEK]), get_first_weekday ());
-  gcal_week_view_set_use_24h_format (GCAL_WEEK_VIEW (self->views[GCAL_WINDOW_VIEW_WEEK]), use_24h_format);
-
   gcal_month_view_set_first_weekday (GCAL_MONTH_VIEW (self->views[GCAL_WINDOW_VIEW_MONTH]), get_first_weekday ());
-  gcal_month_view_set_use_24h_format (GCAL_MONTH_VIEW (self->views[GCAL_WINDOW_VIEW_MONTH]), use_24h_format);
-
   gcal_year_view_set_first_weekday (GCAL_YEAR_VIEW (self->views[GCAL_WINDOW_VIEW_YEAR]), get_first_weekday ());
-  gcal_year_view_set_use_24h_format (GCAL_YEAR_VIEW (self->views[GCAL_WINDOW_VIEW_YEAR]), use_24h_format);
-
-  /* search view */
-  gcal_search_popover_set_time_format (GCAL_SEARCH_POPOVER (self->search_popover), use_24h_format);
 
   /* refresh timeout, first is fast */
   self->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, self);
@@ -1604,6 +1607,9 @@ gcal_window_init (GcalWindow *self)
   g_object_bind_property (self, "manager", self->month_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->year_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "time-format", self->edit_dialog, "time-format", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "time-format", self->search_popover, "time-format", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "time-format", self->week_view, "time-format", G_BINDING_DEFAULT);
   g_object_bind_property (self, "weather-service", self->weather_settings, "weather-service", G_BINDING_DEFAULT);
   g_object_bind_property (self, "weather-service", self->month_view, "weather-service", G_BINDING_DEFAULT);
   g_object_bind_property (self, "weather-service", self->week_view, "weather-service", G_BINDING_DEFAULT);

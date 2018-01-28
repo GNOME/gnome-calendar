@@ -36,9 +36,6 @@ void                 gcal_week_grid_set_manager                  (GcalWeekGrid  
 void                 gcal_week_grid_set_first_weekday            (GcalWeekGrid       *week_grid,
                                                                   gint                nr_day);
 
-void                 gcal_week_grid_set_use_24h_format           (GcalWeekGrid       *week_grid,
-                                                                  gboolean            use_24h_format);
-
 void                 gcal_week_grid_add_event                    (GcalWeekGrid       *self,
                                                                   GcalEvent          *event);
 

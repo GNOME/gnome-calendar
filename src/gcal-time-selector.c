@@ -38,7 +38,7 @@ struct _GcalTimeSelector
 
   GDateTime *time;
 
-  gboolean   format_24h;
+  GcalTimeFormat      time_format;
 };
 
 enum
@@ -63,7 +63,7 @@ update_label (GcalTimeSelector *selector)
 {
   gchar *new_label;
 
-  if (selector->format_24h)
+  if (selector->time_format == GCAL_TIME_FORMAT_24H)
     {
       new_label = g_date_time_format (selector->time, "%H:%M");
     }
@@ -102,7 +102,7 @@ update_time (GcalTimeSelector *selector)
   hour = (gint) gtk_adjustment_get_value (selector->hour_adjustment);
   minute = (gint) gtk_adjustment_get_value (selector->minute_adjustment);
 
-  if (!selector->format_24h)
+  if (selector->time_format == GCAL_TIME_FORMAT_12H)
     {
       hour = hour % 12;
 
@@ -188,14 +188,14 @@ gcal_time_selector_set_property (GObject      *object,
 
 void
 gcal_time_selector_set_time_format (GcalTimeSelector *selector,
-                                    gboolean          format_24h)
+                                    GcalTimeFormat    time_format)
 {
   g_return_if_fail (GCAL_IS_TIME_SELECTOR (selector));
 
-  selector->format_24h = format_24h;
-  gtk_widget_set_visible (selector->period_combo, !format_24h);
+  selector->time_format = time_format;
+  gtk_widget_set_visible (selector->period_combo, time_format == GCAL_TIME_FORMAT_12H);
 
-  if (format_24h)
+  if (time_format == GCAL_TIME_FORMAT_24H)
     {
       gtk_adjustment_set_lower (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin)), 0.0);
       gtk_adjustment_set_upper (gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (selector->hour_spin)), 23.0);
@@ -312,7 +312,7 @@ gcal_time_selector_set_time (GcalTimeSelector *selector,
       hour = g_date_time_get_hour (time);
       minute = g_date_time_get_minute (time);
 
-      if (!selector->format_24h)
+      if (selector->time_format == GCAL_TIME_FORMAT_12H)
         {
           g_signal_handlers_block_by_func (selector->period_combo, update_time, selector);
 

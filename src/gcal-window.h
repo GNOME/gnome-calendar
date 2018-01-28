@@ -20,6 +20,7 @@
 #define __GCAL_WINDOW_H__
 
 #include "gcal-application.h"
+#include "gcal-enums.h"
 #include "gcal-utils.h"
 
 #include <gtk/gtk.h>

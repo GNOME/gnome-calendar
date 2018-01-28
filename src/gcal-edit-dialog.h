@@ -19,6 +19,7 @@
 #ifndef __GCAL_EDIT_DIALOG_H__
 #define __GCAL_EDIT_DIALOG_H__
 
+#include "gcal-enums.h"
 #include "gcal-event.h"
 #include "gcal-manager.h"
 
@@ -48,7 +49,7 @@ void                 gcal_edit_dialog_set_manager             (GcalEditDialog *d
                                                                GcalManager    *manager);
 
 void                 gcal_edit_dialog_set_time_format         (GcalEditDialog *dialog,
-                                                               gboolean        use_24h_format);
+                                                               GcalTimeFormat  time_format);
 
 GDateTime*           gcal_edit_dialog_get_date_end            (GcalEditDialog *dialog);
 

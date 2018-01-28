@@ -19,6 +19,8 @@
 #ifndef __GCAL_TIME_SELECTOR_H__
 #define __GCAL_TIME_SELECTOR_H__
 
+#include "gcal-enums.h"
+
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
@@ -30,7 +32,7 @@ G_DECLARE_FINAL_TYPE (GcalTimeSelector, gcal_time_selector, GCAL, TIME_SELECTOR,
 GtkWidget*       gcal_time_selector_new          (void);
 
 void             gcal_time_selector_set_time_format (GcalTimeSelector *selector,
-                                                     gboolean          format_24h);
+                                                     GcalTimeFormat    time_format);
 
 GDateTime*       gcal_time_selector_get_time     (GcalTimeSelector *selector);
 

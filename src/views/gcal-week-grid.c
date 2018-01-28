@@ -53,7 +53,6 @@ struct _GcalWeekGrid
   GdkWindow          *event_window;
 
   gint                first_weekday;
-  gboolean            use_24h_format : 1;
 
   icaltimetype       *active_date;
 
@@ -1152,15 +1151,6 @@ gcal_week_grid_set_first_weekday (GcalWeekGrid *self,
   g_return_if_fail (GCAL_IS_WEEK_GRID (self));
 
   self->first_weekday = nr_day;
-}
-
-void
-gcal_week_grid_set_use_24h_format (GcalWeekGrid *self,
-                                     gboolean    use_24h_format)
-{
-  g_return_if_fail (GCAL_IS_WEEK_GRID (self));
-
-  self->use_24h_format = use_24h_format;
 }
 
 void

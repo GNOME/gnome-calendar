@@ -97,11 +97,6 @@ struct _GcalYearView
   /* Storage for the accumulated scrolling */
   gdouble               scroll_value;
 
-  /**
-   * clock format from GNOME desktop settings
-   */
-  gboolean            use_24h_format;
-
   /* show week numbers from GNOME Shell settings */
   GSettings          *calendar_settings;
   gboolean            show_week_numbers;
@@ -2107,11 +2102,4 @@ gcal_year_view_set_first_weekday (GcalYearView *year_view,
                                   gint          nr_day)
 {
   year_view->first_weekday = nr_day;
-}
-
-void
-gcal_year_view_set_use_24h_format (GcalYearView *year_view,
-                                   gboolean      use_24h_format)
-{
-  year_view->use_24h_format = use_24h_format;
 }

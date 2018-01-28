@@ -111,11 +111,6 @@ struct _GcalMonthView
   GDateTime          *start_mark_cell;
   GDateTime          *end_mark_cell;
 
-  /*
-   * clock format from GNOME desktop settings
-   */
-  gboolean            use_24h_format;
-
   /* Storage for the accumulated scrolling */
   gdouble             scroll_value;
   guint               update_grid_id;
@@ -2246,16 +2241,3 @@ gcal_month_view_set_first_weekday (GcalMonthView *self,
   update_weekday_labels (self);
 }
 
-/**
- * gcal_month_view_set_use_24h_format:
- * @view:
- * @use_24h:
- *
- * Whether the view will show time using 24h or 12h format
- */
-void
-gcal_month_view_set_use_24h_format (GcalMonthView *self,
-                                    gboolean       use_24h)
-{
-  self->use_24h_format = use_24h;
-}
