@@ -111,7 +111,7 @@ load_weather_settings (GcalWeatherSettings *self)
       GWeatherLocation *world;
 
       world = gweather_location_get_world ();
-      weather_location = gweather_location_deserialize (world, location);
+      weather_location = location ? gweather_location_deserialize (world, location) : NULL;
 
       gweather_location_entry_set_location (GWEATHER_LOCATION_ENTRY (self->weather_location_entry), weather_location);
     }
