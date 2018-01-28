@@ -536,7 +536,9 @@ on_source_changed (GcalManager         *manager,
   /* If the calendar changed from/to read-only, we add or remove it here */
   if (!gcal_manager_is_client_writable (self->manager, source))
     {
-      gtk_container_remove (GTK_CONTAINER (self->calendars_listbox), row);
+      if (row)
+        gtk_container_remove (GTK_CONTAINER (self->calendars_listbox), row);
+
       return;
     }
   else if (!row)
