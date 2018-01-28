@@ -922,11 +922,9 @@ window_state_changed (GtkWidget *widget,
 {
   GcalWindow *window;
   GdkEventWindowState *state;
-  gboolean active;
 
   window = GCAL_WINDOW (widget);
   state = (GdkEventWindowState*) event;
-  active = (state->new_window_state & GDK_WINDOW_STATE_FOCUSED);
 
   window->is_maximized = state->new_window_state & GDK_WINDOW_STATE_MAXIMIZED;
 
@@ -1571,7 +1569,6 @@ gcal_window_init (GcalWindow *self)
   g_object_bind_property (self, "manager", self->month_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->year_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "manager", self->search_popover, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "time-format", self->edit_dialog, "time-format", G_BINDING_DEFAULT);
   g_object_bind_property (self, "time-format", self->search_popover, "time-format", G_BINDING_DEFAULT);
   g_object_bind_property (self, "time-format", self->week_view, "time-format", G_BINDING_DEFAULT);
