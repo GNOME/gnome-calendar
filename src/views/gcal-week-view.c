@@ -536,7 +536,6 @@ gcal_week_view_set_property (GObject       *object,
       break;
 
     case PROP_TIME_FORMAT:
-      g_debug ("BLAAA");
       self->time_format = g_value_get_enum (value);
       gtk_widget_queue_draw (self->hours_bar);
       break;
