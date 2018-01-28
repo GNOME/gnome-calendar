@@ -38,7 +38,7 @@ typedef enum
   GCAL_WINDOW_VIEW_YEAR,
   GCAL_WINDOW_VIEW_LIST,
   GCAL_WINDOW_VIEW_SEARCH,
-} GcalWindowViewType;
+} GcalWindowView;
 
 typedef enum
 {

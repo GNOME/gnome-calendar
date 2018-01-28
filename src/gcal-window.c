@@ -22,7 +22,6 @@
 #include "gcal-debug.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-enums.h"
-#include "gcal-enum-types.h"
 #include "gcal-event-widget.h"
 #include "gcal-manager.h"
 #include "gcal-month-view.h"
@@ -140,7 +139,7 @@ struct _GcalWindow
   GtkWidget          *edit_dialog;
 
   GcalManager        *manager;
-  GcalWindowViewType  active_view;
+  GcalWindowView      active_view;
   icaltimetype       *active_date;
 
   gboolean            rtl;
@@ -584,7 +583,7 @@ view_changed (GObject    *object,
   GcalWindow *window;
   GEnumClass *eklass;
   GEnumValue *eval;
-  GcalWindowViewType view_type;
+  GcalWindowView view_type;
 
   window = GCAL_WINDOW (user_data);
 
@@ -592,10 +591,8 @@ view_changed (GObject    *object,
   if (!gtk_widget_get_visible (window->views_stack))
     return;
 
-  eklass = g_type_class_ref (gcal_window_view_type_get_type ());
-  eval = g_enum_get_value_by_nick (
-             eklass,
-             gtk_stack_get_visible_child_name (GTK_STACK (window->views_stack)));
+  eklass = g_type_class_ref (GCAL_TYPE_WINDOW_VIEW);
+  eval = g_enum_get_value_by_nick (eklass, gtk_stack_get_visible_child_name (GTK_STACK (window->views_stack)));
 
   view_type = eval->value;
 
@@ -1447,7 +1444,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   properties[PROP_ACTIVE_VIEW] = g_param_spec_enum ("active-view",
                                                     "Active View",
                                                     "The active view, eg: month, week, etc.",
-                                                    GCAL_WINDOW_VIEW_TYPE,
+                                                    GCAL_TYPE_WINDOW_VIEW,
                                                     GCAL_WINDOW_VIEW_MONTH,
                                                     G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 

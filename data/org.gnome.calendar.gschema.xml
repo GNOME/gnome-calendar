@@ -16,7 +16,7 @@
             <summary>Window position</summary>
             <description>Window position (x and y).</description>
         </key>
-        <key name="active-view" enum="org.gnome.calendar.GcalWindowViewType">
+        <key name="active-view" enum="org.gnome.calendar.GcalWindowView">
             <default>'month'</default>
             <summary>Type of the active view</summary>
             <description>Type of the active window view, default value is: monthly view</description>

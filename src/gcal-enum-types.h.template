@@ -14,7 +14,7 @@ G_BEGIN_DECLS
 /*** END file-production ***/
 
 /*** BEGIN enumeration-production ***/
-#define GCAL_@ENUMSHORT@	(@enum_name@_get_type())
+#define GCAL_TYPE_@ENUMSHORT@	(@enum_name@_get_type())
 GType @enum_name@_get_type	(void) G_GNUC_CONST;
 
 /*** END enumeration-production ***/
