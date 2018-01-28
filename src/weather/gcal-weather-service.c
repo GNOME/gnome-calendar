@@ -128,11 +128,7 @@ G_DEFINE_TYPE (GcalWeatherService, gcal_weather_service, G_TYPE_OBJECT)
 enum
 {
   PROP_0,
-  PROP_MAX_DAYS,
   PROP_TIME_ZONE,
-  PROP_CHECK_INTERVAL_NEW,
-  PROP_CHECK_INTERVAL_RENEW,
-  PROP_VALID_TIMESPAN,
   PROP_NUM,
 };
 
@@ -259,26 +255,6 @@ stop_timer (GcalWeatherService  *self)
 {
   gcal_timer_stop (self->duration_timer);
   gcal_timer_stop (self->midnight_timer);
-}
-
-static void
-set_check_interval_new (GcalWeatherService *self,
-                        guint               interval)
-{
-  self->check_interval_new = interval;
-  update_timeout_interval (self);
-
-  g_object_notify (G_OBJECT (self), "check-interval-new");
-}
-
-static void
-set_check_interval_renew (GcalWeatherService *self,
-                          guint               interval)
-{
-  self->check_interval_renew = interval;
-  update_timeout_interval (self);
-
-  g_object_notify (G_OBJECT (self), "check-interval-renew");
 }
 
 static gssize
@@ -824,28 +800,6 @@ gwc2str (GWeatherInfo *gwi)
 }
 #endif
 
-static void
-set_max_days (GcalWeatherService *self,
-              guint               days)
-{
-  g_assert_cmpint (days, >=, 1);
-
-  self->max_days = days;
-
-  g_object_notify (G_OBJECT (self), "max-days");
-}
-
-static void
-set_valid_timespan (GcalWeatherService *self,
-                    gint64              timespan)
-{
-  g_assert_cmpint (timespan, >=, 0);
-
-  self->valid_timespan = timespan;
-
-  g_object_notify (G_OBJECT (self), "valid-timespan");
-}
-
 static gboolean
 has_valid_weather_infos (GcalWeatherService *self)
 {
@@ -947,24 +901,8 @@ gcal_weather_service_get_property (GObject    *object,
 
   switch (prop_id)
     {
-    case PROP_MAX_DAYS:
-      g_value_set_uint (value, gcal_weather_service_get_max_days (self));
-      break;
-
     case PROP_TIME_ZONE:
       g_value_set_pointer (value, gcal_weather_service_get_time_zone (self));
-      break;
-
-    case PROP_CHECK_INTERVAL_NEW:
-      g_value_set_uint (value, gcal_weather_service_get_check_interval_new (self));
-      break;
-
-    case PROP_CHECK_INTERVAL_RENEW:
-      g_value_set_uint (value, gcal_weather_service_get_check_interval_renew (self));
-      break;
-
-    case PROP_VALID_TIMESPAN:
-      g_value_set_int64 (value, gcal_weather_service_get_valid_timespan (self));
       break;
 
     default:
@@ -983,24 +921,8 @@ gcal_weather_service_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_MAX_DAYS:
-      set_max_days (self, g_value_get_uint (value));
-      break;
-
     case PROP_TIME_ZONE:
       gcal_weather_service_set_time_zone (self, g_value_get_pointer (value));
-      break;
-
-    case PROP_CHECK_INTERVAL_NEW:
-      set_check_interval_new (self, g_value_get_uint (value));
-      break;
-
-    case PROP_CHECK_INTERVAL_RENEW:
-      set_check_interval_renew (self, g_value_get_uint (value));
-      break;
-
-    case PROP_VALID_TIMESPAN:
-      set_valid_timespan (self, g_value_get_int64 (value));
       break;
 
     default:
@@ -1020,21 +942,6 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
   object_class->set_property = gcal_weather_service_set_property;
 
   /**
-   * GcalWeatherService:max-days:
-   *
-   * Maximal number of days to fetch forecasts for.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_MAX_DAYS,
-                                   g_param_spec_uint ("max-days",
-                                                      "max-days",
-                                                      "max-days",
-                                                      1,
-                                                      G_MAXUINT,
-                                                      3,
-                                                      G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
-
-  /**
    * GcalWeatherService:time-zone:
    *
    * The time zone to use.
@@ -1045,54 +952,6 @@ gcal_weather_service_class_init (GcalWeatherServiceClass *klass)
                                                          "time-zone",
                                                          "time-zone",
                                                          G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE));
-
-  /**
-   * GcalWeatherService:check-interval-new:
-   *
-   * Amount of seconds to wait before re-fetching weather infos.
-   * This interval is used when no valid weather reports are available.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_CHECK_INTERVAL_NEW,
-                                   g_param_spec_uint ("check-interval-new",
-                                                      "check-interval-new",
-                                                      "check-interval-new",
-                                                      0,
-                                                      G_MAXUINT,
-                                                      GCAL_WEATHER_CHECK_INTERVAL_NEW_DEFAULT,
-                                                      G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
-
-  /**
-   * GcalWeatherService:check-interval-renew:
-   *
-   * Amount of seconds to wait before re-fetching weather information.
-   * This interval is used when valid weather reports are available.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_CHECK_INTERVAL_RENEW,
-                                   g_param_spec_uint ("check-interval-renew",
-                                                      "check-interval-renew",
-                                                      "check-interval-renew",
-                                                      0,
-                                                      G_MAXUINT,
-                                                      GCAL_WEATHER_CHECK_INTERVAL_RENEW_DEFAULT,
-                                                      G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
-
-  /**
-   * GcalWeatherService:valid_timespan:
-   *
-   * Amount of seconds fetched weather information are considered as valid.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_VALID_TIMESPAN,
-                                   g_param_spec_int64 ("valid-timespan",
-                                                       "valid-timespan",
-                                                       "valid-timespan",
-                                                       0,
-                                                       G_MAXINT64,
-                                                       GCAL_WEATHER_VALID_TIMESPAN_DEFAULT,
-                                                       G_PARAM_STATIC_STRINGS | G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
-
 
   /**
    * GcalWeatherService::weather-changed:
@@ -1190,61 +1049,6 @@ gcal_weather_service_set_time_zone (GcalWeatherService *self,
   schedule_midnight (self);
 
   g_object_notify (G_OBJECT (self), "time-zone");
-}
-
-/**
- * gcal_weather_service_get_max_days:
- * @self: The #GcalWeatherService instance.
- *
- * Getter for #GcalWeatherService:max-days.
- */
-guint
-gcal_weather_service_get_max_days (GcalWeatherService *self)
-{
-  g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), 0);
-
-  return self->max_days;
-}
-
-/**
- * gcal_weather_service_get_valid_timespan:
- * @self: The #GcalWeatherService instance.
- *
- * Getter for #GcalWeatherService:valid-interval.
- */
-gint64
-gcal_weather_service_get_valid_timespan (GcalWeatherService *self)
-{
-  g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), 0);
-  return self->valid_timespan;
-}
-
-/**
- * gcal_weather_service_get_check_interval_new:
- * @self: The #GcalWeatherService instance.
- *
- * Getter for #GcalWeatherService:check-interval-new.
- */
-guint
-gcal_weather_service_get_check_interval_new (GcalWeatherService *self)
-{
-  g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), 0);
-
-  return self->check_interval_new;
-}
-
-/**
- * gcal_weather_service_get_check_interval_renew:
- * @self: The #GcalWeatherService instance.
- *
- * Getter for #GcalWeatherService:check-interval-renew.
- */
-guint
-gcal_weather_service_get_check_interval_renew (GcalWeatherService *self)
-{
-  g_return_val_if_fail (GCAL_IS_WEATHER_SERVICE (self), 0);
-
-  return self->check_interval_renew;
 }
 
 /**

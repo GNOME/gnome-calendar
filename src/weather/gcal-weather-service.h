@@ -39,14 +39,6 @@ GTimeZone*           gcal_weather_service_get_time_zone          (GcalWeatherSer
 void                 gcal_weather_service_set_time_zone          (GcalWeatherService *self,
                                                                   GTimeZone          *value);
 
-guint                gcal_weather_service_get_max_days           (GcalWeatherService *self);
-
-gint64               gcal_weather_service_get_valid_timespan     (GcalWeatherService *self);
-
-guint                gcal_weather_service_get_check_interval_new (GcalWeatherService *self);
-
-guint                gcal_weather_service_get_check_interval_renew (GcalWeatherService *self);
-
 GPtrArray*           gcal_weather_service_get_weather_infos      (GcalWeatherService *self);
 
 const gchar*         gcal_weather_service_get_attribution        (GcalWeatherService *self);
