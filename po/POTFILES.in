@@ -10,7 +10,7 @@ data/ui/menus.ui
 data/ui/month-popover.ui
 data/ui/month-view.ui
 data/ui/quick-add-popover.ui
-data/ui/search-view.ui
+data/ui/search-popover.ui
 data/ui/source-dialog.ui
 data/ui/time-selector.ui
 data/ui/window.ui
@@ -21,7 +21,7 @@ src/gcal-edit-dialog.c
 src/gcal-event-widget.c
 src/gcal-manager.c
 src/gcal-quick-add-popover.c
-src/gcal-search-view.c
+src/gcal-search-popover.c
 src/gcal-source-dialog.c
 src/gcal-time-selector.c
 src/gcal-utils.c

@@ -26,7 +26,7 @@
 #include "gcal-manager.h"
 #include "gcal-month-view.h"
 #include "gcal-quick-add-popover.h"
-#include "gcal-search-view.h"
+#include "gcal-search-popover.h"
 #include "gcal-source-dialog.h"
 #include "gcal-view.h"
 #include "gcal-weather-settings.h"
@@ -132,7 +132,7 @@ struct _GcalWindow
   /* new event popover widgets */
   GtkWidget          *quick_add_popover;
 
-  GtkWidget          *search_view;
+  GtkWidget          *search_popover;
 
   /* day, week, month, year, list */
   GtkWidget          *views [6];
@@ -498,9 +498,9 @@ key_pressed (GtkWidget *widget,
 }
 
 static void
-search_event_selected (GcalSearchView *search_view,
-                       icaltimetype   *date,
-                       gpointer        user_data)
+search_event_selected (GcalSearchPopover *search_view,
+                       icaltimetype      *date,
+                       gpointer           user_data)
 {
   g_object_set (user_data, "active-date", date, NULL);
   gcal_window_set_search_mode (GCAL_WINDOW (user_data), FALSE);
@@ -1114,13 +1114,13 @@ search_toggled (GObject    *object,
   /* update header_bar widget */
   if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (window->search_bar)))
     {
-      gcal_search_view_search (GCAL_SEARCH_VIEW (window->search_view), NULL, NULL);
+      gcal_search_popover_search (GCAL_SEARCH_POPOVER (window->search_popover), NULL, NULL);
 
       /* When the search button is toogled we connect the signal */
       window->click_outside_handler_id = g_signal_connect (window,
                                                            "button-press-event",
                                                            G_CALLBACK (hide_search_view_on_click_outside),
-                                                           window->search_view);
+                                                           window->search_popover);
     }
   else
     {
@@ -1145,13 +1145,14 @@ search_changed (GtkEditable *editable,
 
       if (search_length)
         {
-          gtk_popover_popup (GTK_POPOVER (window->search_view));
-          gcal_search_view_search (GCAL_SEARCH_VIEW (window->search_view),
-                                   "summary", gtk_entry_get_text (GTK_ENTRY (window->search_entry)));
+          gtk_popover_popup (GTK_POPOVER (window->search_popover));
+          gcal_search_popover_search (GCAL_SEARCH_POPOVER (window->search_popover),
+                                      "summary",
+                                      gtk_entry_get_text (GTK_ENTRY (window->search_entry)));
         }
       else
         {
-          gtk_popover_popdown (GTK_POPOVER (window->search_view));
+          gtk_popover_popdown (GTK_POPOVER (window->search_popover));
         }
     }
 }
@@ -1334,7 +1335,7 @@ gcal_window_set_property (GObject      *object,
           g_signal_connect_swapped (self->manager, "source-enabled", G_CALLBACK (source_enabled), object);
           g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (source_changed), object);
 
-          gcal_search_view_connect (GCAL_SEARCH_VIEW (self->search_view), self->manager);
+          gcal_search_popover_connect (GCAL_SEARCH_POPOVER (self->search_popover), self->manager);
 
           g_object_notify_by_pspec (object, properties[PROP_MANAGER]);
         }
@@ -1419,7 +1420,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_QUICK_ADD_POPOVER);
-  g_type_ensure (GCAL_TYPE_SEARCH_VIEW);
+  g_type_ensure (GCAL_TYPE_SEARCH_POPOVER);
   g_type_ensure (GCAL_TYPE_SOURCE_DIALOG);
   g_type_ensure (GCAL_TYPE_WEATHER_SERVICE);
   g_type_ensure (GCAL_TYPE_WEATHER_SETTINGS);
@@ -1487,7 +1488,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, source_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_view);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, today_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
@@ -1579,7 +1580,7 @@ gcal_window_init (GcalWindow *self)
   gcal_year_view_set_use_24h_format (GCAL_YEAR_VIEW (self->views[GCAL_WINDOW_VIEW_YEAR]), use_24h_format);
 
   /* search view */
-  gcal_search_view_set_time_format (GCAL_SEARCH_VIEW (self->search_view), use_24h_format);
+  gcal_search_popover_set_time_format (GCAL_SEARCH_POPOVER (self->search_popover), use_24h_format);
 
   /* refresh timeout, first is fast */
   self->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, self);

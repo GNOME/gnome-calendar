@@ -13,7 +13,7 @@
     <file alias="multi-choice.ui" compressed="true">ui/multi-choice.ui</file>
     <file alias="online-account-row.ui" compressed="true">ui/online-account-row.ui</file>
     <file alias="quick-add-popover.ui" compressed="true">ui/quick-add-popover.ui</file>
-    <file alias="search-view.ui" compressed="true">ui/search-view.ui</file>
+    <file alias="search-popover.ui" compressed="true">ui/search-popover.ui</file>
     <file alias="source-dialog.ui" compressed="true">ui/source-dialog.ui</file>
     <file alias="time-selector.ui" compressed="true">ui/time-selector.ui</file>
     <file alias="weather-settings.ui" compressed="true">ui/weather-settings.ui</file>

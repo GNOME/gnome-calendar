@@ -9,7 +9,7 @@
     <property name="show_menubar">False</property>
     <signal name="key-press-event" handler="key_pressed" object="GcalWindow" swapped="no"/>
     <signal name="window-state-event" handler="window_state_changed" object="GcalWindow" swapped="no"/>
-    <property name="active-date" bind-source="search_view" bind-property="active-date" bind-flags="default|sync-create"/>
+    <property name="active-date" bind-source="search_popover" bind-property="active-date" bind-flags="default|sync-create"/>
     <style>
       <class name="org-gnome-Calendar"/>
     </style>    
@@ -300,7 +300,7 @@
       </object>
     </child>
   </template>
-  <object class="GcalSearchView" id="search_view">
+  <object class="GcalSearchPopover" id="search_popover">
     <property name="relative_to">search_entry</property>
     <property name="position">bottom</property>
     <signal name="event-activated" handler="search_event_selected" object="GcalWindow" swapped="no"/>

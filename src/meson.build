@@ -47,7 +47,7 @@ sources = files(
   'gcal-multi-choice.c',
   'gcal-quick-add-popover.c',
   'gcal-recurrence.c',
-  'gcal-search-view.c',
+  'gcal-search-popover.c',
   'gcal-shell-search-provider.c',
   'gcal-source-dialog.c',
   'gcal-time-selector.c',

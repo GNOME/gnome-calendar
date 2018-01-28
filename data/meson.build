@@ -60,7 +60,7 @@ resource_data = files(
   'ui/month-view.ui',
   'ui/multi-choice.ui',
   'ui/quick-add-popover.ui',
-  'ui/search-view.ui',
+  'ui/search-popover.ui',
   'ui/source-dialog.ui',
   'ui/time-selector.ui',
   'ui/weather-settings.ui',
