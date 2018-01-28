@@ -22,6 +22,7 @@
 #include "gcal-shell-search-provider-generated.h"
 
 #include "gcal-application.h"
+#include "gcal-debug.h"
 #include "gcal-event.h"
 #include "gcal-window.h"
 #include "gcal-utils.h"
@@ -59,6 +60,11 @@ enum
 
 static GParamSpec* properties[N_PROPS] = { NULL, };
 
+
+/*
+ * Auxiliary methods
+ */
+
 static gint
 sort_event_data (GcalEvent *a,
                  GcalEvent *b,
@@ -70,14 +76,15 @@ sort_event_data (GcalEvent *a,
 static gboolean
 execute_search (GcalShellSearchProvider *self)
 {
-  guint i;
-  gchar *search_query;
-
   icaltimezone *zone;
+  g_autofree gchar *search_query = NULL;
   time_t range_start, range_end;
+  guint i;
+
+  GCAL_ENTRY;
 
   if (gcal_manager_get_loading (self->manager))
-    return TRUE;
+    GCAL_RETURN (TRUE);
 
   zone = gcal_manager_get_system_timezone (self->manager);
   self->pending_search->date = icaltime_current_time_with_zone (zone);
@@ -94,23 +101,23 @@ execute_search (GcalShellSearchProvider *self)
                                   self->pending_search->terms[0], self->pending_search->terms[0]);
   for (i = 1; i < g_strv_length (self->pending_search->terms); i++)
     {
-      gchar *complete_query;
-      gchar *second_query = g_strdup_printf ("(or (contains? \"summary\" \"%s\") (contains? \"description\" \"%s\"))",
-                                             self->pending_search->terms[0], self->pending_search->terms[0]);
+      g_autofree gchar *complete_query = NULL;
+      g_autofree gchar *second_query = NULL;
+
+      second_query = g_strdup_printf ("(or (contains? \"summary\" \"%s\") (contains? \"description\" \"%s\"))",
+                                      self->pending_search->terms[0], self->pending_search->terms[0]);
       complete_query = g_strdup_printf ("(and %s %s)", search_query, second_query);
 
-      g_free (second_query);
-      g_free (search_query);
-
-      search_query = complete_query;
+      g_clear_pointer (&search_query, g_free);
+      search_query = g_steal_pointer (&complete_query);
     }
 
   gcal_manager_set_shell_search_query (self->manager,  search_query);
-  g_free (search_query);
 
   self->scheduled_search_id = 0;
   g_application_hold (g_application_get_default ());
-  return FALSE;
+
+  GCAL_RETURN (FALSE);
 }
 
 static void
@@ -118,11 +125,13 @@ schedule_search (GcalShellSearchProvider *self,
                  GDBusMethodInvocation   *invocation,
                  gchar                  **terms)
 {
+  GCAL_ENTRY;
+
   /* don't attempt searches for a single character */
   if (g_strv_length (terms) == 1 && g_utf8_strlen (terms[0], -1) == 1)
     {
       g_dbus_method_invocation_return_value (invocation, g_variant_new ("(as)", NULL));
-      return;
+      GCAL_RETURN ();
     }
 
   if (self->pending_search != NULL)
@@ -150,12 +159,18 @@ schedule_search (GcalShellSearchProvider *self,
   if (gcal_manager_get_loading (self->manager))
     {
       self->scheduled_search_id = g_timeout_add_seconds (1, (GSourceFunc) execute_search, self);
-      return;
+      GCAL_RETURN ();
     }
 
   execute_search (self);
-  return;
+
+  GCAL_EXIT;
 }
+
+
+/*
+ * Callbacks
+ */
 
 static gboolean
 get_initial_result_set_cb (GcalShellSearchProvider  *self,
@@ -186,16 +201,18 @@ get_result_metas_cb (GcalShellSearchProvider  *self,
 {
   GDateTime *local_datetime;
   GVariantBuilder abuilder, builder;
-  GVariant *icon_variant;
   GcalEvent *event;
-  GdkPixbuf *gicon;
   gchar *uuid, *desc;
   gchar *start_date;
   gint i;
 
+  GCAL_ENTRY;
+
   g_variant_builder_init (&abuilder, G_VARIANT_TYPE ("aa{sv}"));
   for (i = 0; i < g_strv_length (results); i++)
     {
+      g_autoptr (GVariant) icon_variant = NULL;
+      g_autoptr (GdkPixbuf) gicon = NULL;
       cairo_surface_t *surface;
 
       uuid = results[i];
@@ -209,8 +226,6 @@ get_result_metas_cb (GcalShellSearchProvider  *self,
       gicon = gdk_pixbuf_get_from_surface (surface, 0, 0, 96, 96);
       icon_variant = g_icon_serialize (G_ICON (gicon));
       g_variant_builder_add (&builder, "{sv}", "icon", icon_variant);
-      g_object_unref (gicon);
-      g_variant_unref (icon_variant);
 
       local_datetime = g_date_time_to_local (gcal_event_get_date_start (event));
 
@@ -229,7 +244,7 @@ get_result_metas_cb (GcalShellSearchProvider  *self,
     }
   g_dbus_method_invocation_return_value (invocation, g_variant_new ("(aa{sv})", &abuilder));
 
-  return TRUE;
+  GCAL_RETURN (TRUE);
 }
 
 static gboolean
@@ -240,9 +255,11 @@ activate_result_cb (GcalShellSearchProvider  *self,
                     guint32                   timestamp,
                     GcalShellSearchProvider2 *skel)
 {
+  g_autoptr (GcalEvent) event = NULL;
   GApplication *application;
-  GcalEvent *event;
   GDateTime *dtstart;
+
+  GCAL_ENTRY;
 
   application = g_application_get_default ();
 
@@ -254,9 +271,7 @@ activate_result_cb (GcalShellSearchProvider  *self,
 
   g_application_activate (application);
 
-  g_clear_object (&event);
-
-  return TRUE;
+  GCAL_RETURN (TRUE);
 }
 
 static gboolean
@@ -266,25 +281,24 @@ launch_search_cb (GcalShellSearchProvider  *self,
                   guint32                   timestamp,
                   GcalShellSearchProvider2 *skel)
 {
+  g_autofree gchar *terms_joined = NULL;
   GApplication *application;
-  gchar *terms_joined;
-  GList *windows;
+  GcalWindow *window;
+
+  GCAL_ENTRY;
 
   application = g_application_get_default ();
   g_application_activate (application);
 
   terms_joined = g_strjoinv (" ", terms);
-  windows = g_list_reverse (gtk_application_get_windows (GTK_APPLICATION (application)));
-  if (windows != NULL)
+  window = (GcalWindow *) gtk_application_get_active_window (GTK_APPLICATION (application));
+  if (window)
     {
-      gcal_window_set_search_mode (GCAL_WINDOW (windows->data), TRUE);
-      gcal_window_set_search_query (GCAL_WINDOW (windows->data), terms_joined);
-
-      g_list_free (windows);
+      gcal_window_set_search_mode (window, TRUE);
+      gcal_window_set_search_query (window, terms_joined);
     }
 
-  g_free (terms_joined);
-  return TRUE;
+  GCAL_RETURN (TRUE);
 }
 
 static gboolean
@@ -295,13 +309,15 @@ query_completed_cb (GcalShellSearchProvider *self,
   GVariantBuilder builder;
   time_t current_time_t;
 
+  GCAL_ENTRY;
+
   g_hash_table_remove_all (self->events);
 
   events = gcal_manager_get_shell_search_events (self->manager);
   if (events == NULL)
     {
       g_dbus_method_invocation_return_value (self->pending_search->invocation, g_variant_new ("(as)", NULL));
-      goto out;
+      GCAL_GOTO (out);
     }
 
   g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
@@ -326,11 +342,12 @@ query_completed_cb (GcalShellSearchProvider *self,
   g_dbus_method_invocation_return_value (self->pending_search->invocation, g_variant_new ("(as)", &builder));
 
 out:
-  g_object_unref (self->pending_search->invocation);
-  g_strfreev (self->pending_search->terms);
-  g_clear_pointer (&(self->pending_search), g_free);
+  g_clear_object (&self->pending_search->invocation);
+  g_clear_pointer (&self->pending_search->terms, g_strfreev);
+  g_clear_pointer (&self->pending_search, g_free);
   g_application_release (g_application_get_default ());
-  return FALSE;
+
+  GCAL_RETURN (FALSE);
 }
 
 
@@ -387,8 +404,7 @@ gcal_shell_search_provider_finalize (GObject *object)
 {
   GcalShellSearchProvider *self = (GcalShellSearchProvider *) object;
 
-  g_hash_table_destroy (self->events);
-
+  g_clear_pointer (&self->events, g_hash_table_destroy);
   g_clear_object (&self->manager);
   g_clear_object (&self->skel);
 
@@ -479,10 +495,10 @@ gcal_shell_search_provider_new (GcalManager *manager)
 }
 
 gboolean
-gcal_shell_search_provider_dbus_export (GcalShellSearchProvider *self,
-                                        GDBusConnection         *connection,
-                                        const gchar             *object_path,
-                                        GError                 **error)
+gcal_shell_search_provider_dbus_export (GcalShellSearchProvider  *self,
+                                        GDBusConnection          *connection,
+                                        const gchar              *object_path,
+                                        GError                  **error)
 {
   return g_dbus_interface_skeleton_export (G_DBUS_INTERFACE_SKELETON (self->skel), connection, object_path, error);
 }
