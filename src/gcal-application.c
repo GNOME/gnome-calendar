@@ -476,9 +476,7 @@ gcal_application_init (GcalApplication *self)
   g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (process_sources), self);
 
   self->weather_service = gcal_weather_service_new ();
-
-  self->search_provider = gcal_shell_search_provider_new ();
-  gcal_shell_search_provider_connect (self->search_provider, self->manager);
+  self->search_provider = gcal_shell_search_provider_new (self->manager);
 }
 
 static void

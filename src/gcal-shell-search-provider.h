@@ -30,17 +30,16 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalShellSearchProvider, gcal_shell_search_provider, GCAL, SHELL_SEARCH_PROVIDER, GObject)
 
-GcalShellSearchProvider *gcal_shell_search_provider_new           (void);
+GcalShellSearchProvider* gcal_shell_search_provider_new           (GcalManager             *manager);
 
 gboolean                 gcal_shell_search_provider_dbus_export   (GcalShellSearchProvider *search_provider,
                                                                    GDBusConnection         *connection,
                                                                    const gchar             *object_path,
                                                                    GError                 **error);
+
 void                     gcal_shell_search_provider_dbus_unexport (GcalShellSearchProvider *search_provider,
                                                                    GDBusConnection         *connection,
                                                                    const gchar             *object_path);
-void                     gcal_shell_search_provider_connect       (GcalShellSearchProvider *search_provider,
-                                                                   GcalManager             *manager);
 
 G_END_DECLS
 

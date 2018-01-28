@@ -50,6 +50,15 @@ static void   gcal_subscriber_interface_init (ECalDataModelSubscriberInterface *
 G_DEFINE_TYPE_WITH_CODE (GcalShellSearchProvider, gcal_shell_search_provider, G_TYPE_OBJECT,
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER, gcal_subscriber_interface_init));
 
+enum
+{
+  PROP_0,
+  PROP_MANAGER,
+  N_PROPS
+};
+
+static GParamSpec* properties[N_PROPS] = { NULL, };
+
 static gint
 sort_event_data (GcalEvent *a,
                  GcalEvent *b,
@@ -324,6 +333,11 @@ out:
   return FALSE;
 }
 
+
+/*
+ * ECalDataModelSubscriber iface
+ */
+
 static void
 gcal_shell_search_provider_component_changed (ECalDataModelSubscriber *subscriber,
                                               ECalClient              *client,
@@ -354,18 +368,6 @@ gcal_shell_search_provider_thaw (ECalDataModelSubscriber *subscriber)
 }
 
 static void
-gcal_shell_search_provider_finalize (GObject *object)
-{
-  GcalShellSearchProvider *self = (GcalShellSearchProvider *) object;
-
-  g_hash_table_destroy (self->events);
-
-  g_clear_object (&self->skel);
-
-  G_OBJECT_CLASS (gcal_shell_search_provider_parent_class)->finalize (object);
-}
-
-static void
 gcal_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
 {
   iface->component_added = gcal_shell_search_provider_component_changed;
@@ -375,12 +377,84 @@ gcal_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
   iface->thaw = gcal_shell_search_provider_thaw;
 }
 
+
+/*
+ * GObject overrides
+ */
+
+static void
+gcal_shell_search_provider_finalize (GObject *object)
+{
+  GcalShellSearchProvider *self = (GcalShellSearchProvider *) object;
+
+  g_hash_table_destroy (self->events);
+
+  g_clear_object (&self->manager);
+  g_clear_object (&self->skel);
+
+  G_OBJECT_CLASS (gcal_shell_search_provider_parent_class)->finalize (object);
+}
+
+static void
+gcal_shell_search_provider_get_property (GObject    *object,
+                                         guint       property_id,
+                                         GValue     *value,
+                                         GParamSpec *pspec)
+{
+  GcalShellSearchProvider *self = GCAL_SHELL_SEARCH_PROVIDER (object);
+
+  switch (property_id)
+    {
+    case PROP_MANAGER:
+      g_value_set_object (value, self->manager);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    }
+}
+
+static void
+gcal_shell_search_provider_set_property (GObject      *object,
+                                         guint         property_id,
+                                         const GValue *value,
+                                         GParamSpec   *pspec)
+{
+  GcalShellSearchProvider *self = GCAL_SHELL_SEARCH_PROVIDER (object);
+
+  switch (property_id)
+    {
+    case PROP_MANAGER:
+      if (g_set_object (&self->manager, g_value_get_object (value)))
+        {
+          gcal_manager_setup_shell_search (self->manager, E_CAL_DATA_MODEL_SUBSCRIBER (self));
+          g_signal_connect_swapped (self->manager, "query-completed", G_CALLBACK (query_completed_cb), self);
+
+          g_object_notify_by_pspec (object, properties[PROP_MANAGER]);
+        }
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    }
+}
+
 static void
 gcal_shell_search_provider_class_init (GcalShellSearchProviderClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   object_class->finalize = gcal_shell_search_provider_finalize;
+  object_class->get_property = gcal_shell_search_provider_get_property;
+  object_class->set_property = gcal_shell_search_provider_set_property;
+
+  properties[PROP_MANAGER] = g_param_spec_object ("manager",
+                                                  "The manager object",
+                                                  "The manager object",
+                                                  GCAL_TYPE_MANAGER,
+                                                  G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 }
 
 static void
@@ -397,9 +471,11 @@ gcal_shell_search_provider_init (GcalShellSearchProvider *self)
 }
 
 GcalShellSearchProvider*
-gcal_shell_search_provider_new (void)
+gcal_shell_search_provider_new (GcalManager *manager)
 {
-  return g_object_new (GCAL_TYPE_SHELL_SEARCH_PROVIDER, NULL);
+  return g_object_new (GCAL_TYPE_SHELL_SEARCH_PROVIDER,
+                       "manager", manager,
+                       NULL);
 }
 
 gboolean
@@ -418,14 +494,4 @@ gcal_shell_search_provider_dbus_unexport (GcalShellSearchProvider *self,
 {
   if (g_dbus_interface_skeleton_has_connection (G_DBUS_INTERFACE_SKELETON (self->skel), connection))
     g_dbus_interface_skeleton_unexport_from_connection (G_DBUS_INTERFACE_SKELETON (self->skel), connection);
-}
-
-void
-gcal_shell_search_provider_connect (GcalShellSearchProvider *self,
-                                    GcalManager             *manager)
-{
-  self->manager = manager;
-
-  gcal_manager_setup_shell_search (manager, E_CAL_DATA_MODEL_SUBSCRIBER (self));
-  g_signal_connect_swapped (manager, "query-completed", G_CALLBACK (query_completed_cb), self);
 }
