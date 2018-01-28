@@ -13,6 +13,7 @@ data/ui/quick-add-popover.ui
 data/ui/search-popover.ui
 data/ui/source-dialog.ui
 data/ui/time-selector.ui
+data/ui/weather-settings.ui
 data/ui/window.ui
 data/ui/year-view.ui
 src/gcal-application.c
