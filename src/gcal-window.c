@@ -1598,6 +1598,7 @@ gcal_window_init (GcalWindow *self)
    * FIXME: this is a hack around the issue that happens when trying to bind
    * there properties using the GtkBuilder .ui file.
    */
+  g_object_bind_property (self, "manager", self->weather_settings, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->edit_dialog, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->source_dialog, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->weather_settings, "manager", G_BINDING_DEFAULT);
