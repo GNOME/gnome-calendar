@@ -1,6 +1,4 @@
-/* -*- mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-/*
- * gcal-utils.c
+/* gcal-utils.c
  *
  * Copyright (C) 2012 - Erick Pérez Castellanos
  *

@@ -1,5 +1,4 @@
-/*
- * gcal-view.h
+/* gcal-view.h
  *
  * Copyright (C) 2012 - Erick Pérez Castellanos
  *

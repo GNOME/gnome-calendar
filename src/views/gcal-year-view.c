@@ -1,4 +1,3 @@
-/* -*- mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /* gcal-year-view.c
  *
  * Copyright (C) 2015 Erick Pérez Castellanos <erick.red@gmail.com>

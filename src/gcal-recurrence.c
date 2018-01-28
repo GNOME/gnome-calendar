@@ -1,6 +1,5 @@
-/* -*- mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-/*
- * gcal-recurrence.c
+/* gcal-recurrence.c
+ *
  * Copyright (C) 2017 Yash Singh <yashdev10p@gmail.com>
  *
  * gnome-calendar is free software: you can redistribute it and/or modify it

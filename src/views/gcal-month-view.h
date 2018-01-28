@@ -1,5 +1,4 @@
-/*
- * gcal-month-view.h
+/* gcal-month-view.h
  *
  * Copyright (C) 2012 - Erick Pérez Castellanos
  *

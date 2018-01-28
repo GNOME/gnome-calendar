@@ -1,5 +1,4 @@
-/*
- * gcal-timer.c
+/* gcal-timer.c
  *
  * Copyright (C) 2017 - Florian Brosch <flo.brosch@gmail.com>
  *

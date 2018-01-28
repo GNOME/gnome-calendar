@@ -1,6 +1,4 @@
-/* -*- mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-/*
- * gcal-view.c
+/* gcal-view.c
  *
  * Copyright (C) 2015 - Erick Pérez Castellanos
  *               2016 - Georges Basile Stavracas Neto <georges.stavracas@gmail.com>

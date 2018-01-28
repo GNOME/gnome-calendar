@@ -1,5 +1,4 @@
-/*
- * gcal-week-view.h
+/* gcal-week-view.h
  *
  * Copyright (C) 2012 - Erick Pérez Castellanos
  *

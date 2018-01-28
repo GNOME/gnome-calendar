@@ -1,6 +1,4 @@
-/* -*- mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-/*
- * gcal-search-view.c
+/* gcal-search-view.c
  *
  * Copyright (C) 2014 - Erick Pérez Castellanos
  *

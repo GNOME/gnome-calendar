@@ -1,5 +1,4 @@
-/*
- * gcal-search-view.h
+/* gcal-search-view.h
  *
  * Copyright (C) 2014 - Erick Pérez Castellanos
  *

@@ -1,6 +1,4 @@
-/* -*- mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
-/*
- * gcal-week-view.c
+/* gcal-week-view.c
  *
  * Copyright (C) 2015 - Erick Pérez Castellanos
  *
