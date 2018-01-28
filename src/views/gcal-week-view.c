@@ -49,13 +49,6 @@ struct _GcalWeekView
   GtkWidget          *scrolled_window;
   GtkWidget          *week_grid;
 
-  /*
-   * first day of the week according to user locale, being
-   * 0 for Sunday, 1 for Monday and so on
-   */
-  gint                first_weekday;
-
-
   GcalTimeFormat      time_format;
 
   /* property */
@@ -644,39 +637,5 @@ gcal_week_view_init (GcalWeekView *self)
   self->weather_service = NULL;
 
   g_object_bind_property (self, "weather-service", self->header, "weather-service", G_BINDING_DEFAULT);
-}
-
-/* Public API */
-/**
- * gcal_week_view_new:
- *
- * Create a week-view widget
- *
- * Returns: (transfer full):
- **/
-GtkWidget*
-gcal_week_view_new (void)
-{
-  return g_object_new (GCAL_TYPE_WEEK_VIEW, NULL);
-}
-
-/**
- * gcal_week_view_set_first_weekday:
- * @view:
- * @day_nr:
- *
- * Set the first day of the week according to the locale, being
- * 0 for Sunday, 1 for Monday and so on.
- **/
-void
-gcal_week_view_set_first_weekday (GcalWeekView *self,
-                                  gint          day_nr)
-{
-  g_return_if_fail (GCAL_IS_WEEK_VIEW (self));
-
-  self->first_weekday = day_nr;
-
-  gcal_week_header_set_first_weekday (GCAL_WEEK_HEADER (self->header), self->first_weekday);
-  gcal_week_grid_set_first_weekday (GCAL_WEEK_GRID (self->week_grid), self->first_weekday);
 }
 

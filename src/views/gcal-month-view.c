@@ -2190,6 +2190,9 @@ gcal_month_view_init (GcalMonthView *self)
   self->overflow_cells = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   self->pending_event_allocation = FALSE;
 
+  /* First weekday */
+  self->first_weekday = get_first_weekday ();
+
   /* Weekday header labels */
   self->weekday_label[0] = self->label_0;
   self->weekday_label[1] = self->label_1;
@@ -2214,30 +2217,5 @@ gcal_month_view_init (GcalMonthView *self)
                             "event-activated",
                             G_CALLBACK (event_activated),
                             self);
-}
-
-/* Public API */
-
-/**
- * gcal_month_view_set_first_weekday:
- * @view: A #GcalMonthView instance
- * @day_nr: Integer representing the first day of the week
- *
- * Set the first day of the week according to the locale, being
- * 0 for Sunday, 1 for Monday and so on.
- */
-void
-gcal_month_view_set_first_weekday (GcalMonthView *self,
-                                   gint           day_nr)
-{
-  g_return_if_fail (GCAL_IS_MONTH_VIEW (self));
-
-  self->first_weekday = day_nr;
-
-  /* update days_delay */
-  if (self->date)
-    self->days_delay = (time_day_of_week (1, self->date->month - 1, self->date->year) - self->first_weekday + 7) % 7;
-
-  update_weekday_labels (self);
 }
 

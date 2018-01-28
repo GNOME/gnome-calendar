@@ -49,10 +49,7 @@ struct _GcalWeekGrid
   GtkContainer        parent;
 
   GtkWidget          *hours_sidebar;
-
   GdkWindow          *event_window;
-
-  gint                first_weekday;
 
   icaltimetype       *active_date;
 
@@ -1142,15 +1139,6 @@ gcal_week_grid_set_manager (GcalWeekGrid *self,
                             "minute-changed",
                             G_CALLBACK (gtk_widget_queue_draw),
                             self);
-}
-
-void
-gcal_week_grid_set_first_weekday (GcalWeekGrid *self,
-                                  gint          nr_day)
-{
-  g_return_if_fail (GCAL_IS_WEEK_GRID (self));
-
-  self->first_weekday = nr_day;
 }
 
 void

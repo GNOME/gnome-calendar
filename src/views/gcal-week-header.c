@@ -1671,7 +1671,7 @@ gcal_week_header_init (GcalWeekHeader *self)
   self->selection_start = -1;
   self->selection_end = -1;
   self->dnd_cell = -1;
-  self->weather_service = NULL;
+  self->first_weekday = get_first_weekday ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
 
@@ -1821,15 +1821,6 @@ gcal_week_header_set_manager (GcalWeekHeader *self,
                             "day-changed",
                             G_CALLBACK (gtk_widget_queue_draw),
                             self);
-}
-
-void
-gcal_week_header_set_first_weekday (GcalWeekHeader *self,
-                                    gint            nr_day)
-{
-  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
-
-  self->first_weekday = nr_day;
 }
 
 void

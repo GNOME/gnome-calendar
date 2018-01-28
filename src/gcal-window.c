@@ -1579,10 +1579,6 @@ gcal_window_init (GcalWindow *self)
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
   self->views[GCAL_WINDOW_VIEW_YEAR] = self->year_view;
 
-  gcal_week_view_set_first_weekday (GCAL_WEEK_VIEW (self->views[GCAL_WINDOW_VIEW_WEEK]), get_first_weekday ());
-  gcal_month_view_set_first_weekday (GCAL_MONTH_VIEW (self->views[GCAL_WINDOW_VIEW_MONTH]), get_first_weekday ());
-  gcal_year_view_set_first_weekday (GCAL_YEAR_VIEW (self->views[GCAL_WINDOW_VIEW_YEAR]), get_first_weekday ());
-
   /* refresh timeout, first is fast */
   self->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, self);
 

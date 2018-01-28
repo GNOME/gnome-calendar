@@ -35,9 +35,6 @@ G_DECLARE_FINAL_TYPE (GcalWeekHeader, gcal_week_header, GCAL, WEEK_HEADER, GtkGr
 void                 gcal_week_header_set_manager                (GcalWeekHeader     *self,
                                                                   GcalManager        *manager);
 
-void                 gcal_week_header_set_first_weekday          (GcalWeekHeader     *self,
-                                                                  gint                nr_day);
-
 void                 gcal_week_header_add_event                  (GcalWeekHeader     *self,
                                                                   GcalEvent          *event);
 

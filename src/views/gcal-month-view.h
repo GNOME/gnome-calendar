@@ -28,12 +28,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalMonthView, gcal_month_view, GCAL, MONTH_VIEW, GtkContainer)
 
-void                 gcal_month_view_set_first_weekday           (GcalMonthView      *self,
-                                                                  gint                day_nr);
-
-void                 gcal_month_view_set_use_24h_format          (GcalMonthView      *self,
-                                                                  gboolean            use_24h);
-
 G_END_DECLS
 
 #endif /* __GCAL_MONTH_VIEW_H__ */

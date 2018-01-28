@@ -28,11 +28,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalWeekView, gcal_week_view, GCAL, WEEK_VIEW, GtkBox)
 
-GtkWidget*           gcal_week_view_new                          (void);
-
-void                 gcal_week_view_set_first_weekday            (GcalWeekView       *self,
-                                                                  gint                day_nr);
-
 G_END_DECLS
 
 #endif /* __GCAL_WEEK_VIEW_H__ */

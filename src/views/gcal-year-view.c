@@ -2009,6 +2009,8 @@ gcal_year_view_init (GcalYearView *self)
   else if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL)
     self->k = 1;
 
+  self->first_weekday = get_first_weekday ();
+
   self->navigator_grid = g_new0 (GridData, 1);
   self->selected_data = g_new0 (ButtonData, 1);
 
@@ -2096,10 +2098,3 @@ update_weather (GcalYearView *self)
     }
 }
 
-/* Public API */
-void
-gcal_year_view_set_first_weekday (GcalYearView *year_view,
-                                  gint          nr_day)
-{
-  year_view->first_weekday = nr_day;
-}

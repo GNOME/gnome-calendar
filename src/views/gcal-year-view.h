@@ -31,9 +31,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalYearView, gcal_year_view, GCAL, YEAR_VIEW, GtkBox)
 
-void                 gcal_year_view_set_first_weekday            (GcalYearView       *year_view,
-                                                                  gint                nr_day);
-
 void                 gcal_year_view_set_current_date             (GcalYearView       *year_view,
                                                                   icaltimetype       *current_date);
 
