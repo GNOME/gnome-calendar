@@ -1153,6 +1153,8 @@ gcal_week_grid_add_event (GcalWeekGrid *self,
   end = 0;
   start = 0;
 
+  g_object_ref (event);
+
   widget = g_object_new (GCAL_TYPE_EVENT_WIDGET,
                          "event", event,
                          "orientation", GTK_ORIENTATION_VERTICAL,
@@ -1200,6 +1202,7 @@ gcal_week_grid_remove_event (GcalWeekGrid *self,
       gcal_range_tree_remove_range (self->events, data->start, data->end, data);
       destroy_event_widget (self, data->widget);
       gtk_widget_queue_allocate (GTK_WIDGET (self));
+      g_object_unref (event);
       g_free (data);
     }
 

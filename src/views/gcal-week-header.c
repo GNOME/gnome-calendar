@@ -723,6 +723,9 @@ add_event_to_grid (GcalWeekHeader *self,
   gint position;
   gint i;
 
+  /* Take a reference to the event */
+  g_object_ref (event);
+
   /* Add at least at the first weekday */
   position = add_event_to_weekday (self, event, start);
 
@@ -1909,7 +1912,7 @@ void
 gcal_week_header_remove_event (GcalWeekHeader *self,
                                const gchar    *uuid)
 {
-  GcalEvent *removed_event;
+  g_autoptr (GcalEvent) removed_event = NULL;
   GList *children, *l;
   gint weekday;
 

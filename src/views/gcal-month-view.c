@@ -1357,10 +1357,12 @@ gcal_month_view_component_added (ECalDataModelSubscriber *subscriber,
                                  ECalClient              *client,
                                  ECalComponent           *comp)
 {
+  g_autoptr (GcalEvent) event = NULL;
   GcalMonthView *self;
   GtkWidget *event_widget;
-  GcalEvent *event;
   GError *error;
+
+  GCAL_ENTRY;
 
   error = NULL;
   self = GCAL_MONTH_VIEW (subscriber);
@@ -1370,7 +1372,7 @@ gcal_month_view_component_added (ECalDataModelSubscriber *subscriber,
     {
       g_warning ("Error creating event: %s", error->message);
       g_clear_error (&error);
-      return;
+      GCAL_RETURN ();
     }
 
   event_widget = gcal_event_widget_new (event);
@@ -1381,7 +1383,7 @@ gcal_month_view_component_added (ECalDataModelSubscriber *subscriber,
 
   self->pending_event_allocation = TRUE;
 
-  g_clear_object (&event);
+  GCAL_EXIT;
 }
 
 static void
@@ -1389,11 +1391,13 @@ gcal_month_view_component_modified (ECalDataModelSubscriber *subscriber,
                                     ECalClient              *client,
                                     ECalComponent           *comp)
 {
+  g_autoptr (GcalEvent) event = NULL;
   GcalMonthView *self;
   GtkWidget *new_widget;
-  GcalEvent *event;
   GError *error;
   GList *l;
+
+  GCAL_ENTRY;
 
   error = NULL;
   self = GCAL_MONTH_VIEW (subscriber);
@@ -1403,7 +1407,7 @@ gcal_month_view_component_modified (ECalDataModelSubscriber *subscriber,
     {
       g_warning ("Error creating event: %s", error->message);
       g_clear_error (&error);
-      return;
+      GCAL_RETURN ();
     }
 
   new_widget = gcal_event_widget_new (event);
@@ -1427,7 +1431,7 @@ gcal_month_view_component_modified (ECalDataModelSubscriber *subscriber,
 
   self->pending_event_allocation = TRUE;
 
-  g_clear_object (&event);
+  GCAL_EXIT;
 }
 
 static void
@@ -1440,6 +1444,8 @@ gcal_month_view_component_removed (ECalDataModelSubscriber *subscriber,
   g_autofree gchar *uuid = NULL;
   const gchar *sid;
   GList *l;
+
+  GCAL_ENTRY;
 
   self = GCAL_MONTH_VIEW (subscriber);
   sid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
@@ -1457,12 +1463,14 @@ gcal_month_view_component_removed (ECalDataModelSubscriber *subscriber,
                  G_STRFUNC,
                  uuid,
                  gtk_widget_get_name (GTK_WIDGET (subscriber)));
-      return;
+      GCAL_RETURN ();
     }
 
   gtk_widget_destroy (l->data);
 
   self->pending_event_allocation = TRUE;
+
+  GCAL_EXIT;
 }
 
 static void

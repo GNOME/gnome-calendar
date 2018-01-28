@@ -157,6 +157,8 @@ destroy_event_cache_map (void)
 {
   GList *events;
 
+  g_debug ("Number of cached events at destruction: %d", g_hash_table_size (event_cache));
+
   /* Destroy all events */
   events = g_hash_table_get_values (event_cache);
   g_list_free_full (events, g_object_unref);

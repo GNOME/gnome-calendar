@@ -1800,21 +1800,26 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
                                 ECalClient              *client,
                                 ECalComponent           *comp)
 {
-  GcalYearView *self = GCAL_YEAR_VIEW (subscriber);
+  g_autoptr (GcalEvent) event = NULL;
+  GcalYearView *self;
   GDateTime *event_start, *event_end;
-  GcalEvent *event;
   GError *error;
   guint i, start_month, end_month;
 
+  GCAL_ENTRY;
+
   error = NULL;
+  self = GCAL_YEAR_VIEW (subscriber);
   event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
 
   if (error)
     {
       g_warning ("Error creating event: %s", error->message);
       g_clear_error (&error);
-      return;
+      GCAL_RETURN ();
     }
+
+  g_debug ("Caching event '%s' in Year view", gcal_event_get_uid (event));
 
   event_start = gcal_event_get_date_start (event);
   event_end = gcal_event_get_date_end (event);
@@ -1836,6 +1841,8 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
   update_sidebar (self);
 
   gtk_widget_queue_draw (GTK_WIDGET (self->navigator));
+
+  GCAL_EXIT;
 }
 
 static void
@@ -1844,13 +1851,16 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
                                   const gchar             *uid,
                                   const gchar             *rid)
 {
-  GcalYearView *year_view = GCAL_YEAR_VIEW (subscriber);
+  GcalYearView *year_view;
   GList *children, *l;
   ESource *source;
-  gchar *uuid;
+  g_autofree gchar *uuid = NULL;
   guint i;
   gint number_of_children;
 
+  GCAL_ENTRY;
+
+  year_view = GCAL_YEAR_VIEW (subscriber);
   source = e_client_get_source (E_CLIENT (client));
   if (rid != NULL)
     uuid = g_strdup_printf ("%s:%s:%s", e_source_get_uid (source), uid, rid);
@@ -1899,9 +1909,10 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
 
           event = g_ptr_array_index (events, j);
 
-          if (g_strcmp0 (gcal_event_get_uid (event), uuid) != 0)
+          if (!g_str_equal (gcal_event_get_uid (event), uuid))
             continue;
 
+          g_debug ("Removing event '%s' from Year view's cache", uuid);
           g_ptr_array_remove (events, event);
         }
     }
@@ -1909,7 +1920,8 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
   gtk_widget_queue_draw (GTK_WIDGET (year_view->navigator));
 
   g_list_free (children);
-  g_free (uuid);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -1919,12 +1931,16 @@ gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
 {
   ECalComponentId *id;
 
+  GCAL_ENTRY;
+
   id = e_cal_component_get_id (comp);
 
   gcal_year_view_component_removed (subscriber, client, id->uid, id->rid);
   gcal_year_view_component_added (subscriber, client, comp);
 
   g_clear_pointer (&id, e_cal_component_free_id);
+
+  GCAL_EXIT;
 }
 
 static void

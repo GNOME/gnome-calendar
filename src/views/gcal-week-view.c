@@ -304,8 +304,7 @@ gcal_week_view_component_added (ECalDataModelSubscriber *subscriber,
                                 ECalComponent           *comp)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
-
-  GcalEvent *event;
+  g_autoptr (GcalEvent) event = NULL;
 
   GCAL_ENTRY;
 
