@@ -157,8 +157,6 @@ struct _GcalWindow
   GtkWidget          *calendar_listbox;
   GtkWidget          *source_dialog;
 
-  gint                refresh_timeout;
-  gint                refresh_timeout_id;
   gint                open_edit_dialog_timeout_id;
 
   GcalTimeFormat      time_format;
@@ -194,8 +192,6 @@ enum
 };
 
 #define SAVE_GEOMETRY_ID_TIMEOUT 100 /* ms */
-#define FAST_REFRESH_TIMEOUT     900000 /* ms */
-#define SLOW_REFRESH_TIMEOUT     3600000 /* ms */
 
 #define gcal_window_add_accelerator(app,action,...) {\
   const gchar *tmp[] = {__VA_ARGS__, NULL};\
@@ -920,27 +916,6 @@ source_changed (GcalWindow *window,
 }
 
 static gboolean
-refresh_sources (GcalWindow *window)
-{
-  static gint current_timeout = FAST_REFRESH_TIMEOUT;
-
-  /* refresh sources */
-  gcal_manager_refresh (window->manager);
-
-  /* check window state */
-  if (current_timeout != window->refresh_timeout)
-    {
-      current_timeout = window->refresh_timeout;
-
-      window->refresh_timeout_id = g_timeout_add (window->refresh_timeout, (GSourceFunc) refresh_sources, window);
-
-      return G_SOURCE_REMOVE;
-    }
-
-  return G_SOURCE_CONTINUE;
-}
-
-static gboolean
 window_state_changed (GtkWidget *widget,
                       GdkEvent  *event,
                       gpointer   user_data)
@@ -954,9 +929,6 @@ window_state_changed (GtkWidget *widget,
   active = (state->new_window_state & GDK_WINDOW_STATE_FOCUSED);
 
   window->is_maximized = state->new_window_state & GDK_WINDOW_STATE_MAXIMIZED;
-
-  /* update timeout time according to the state */
-  window->refresh_timeout = (active ? FAST_REFRESH_TIMEOUT : SLOW_REFRESH_TIMEOUT);
 
   return FALSE;
 }
@@ -1238,7 +1210,6 @@ gcal_window_finalize (GObject *object)
   save_geometry (window);
 
   gcal_clear_timeout (&window->open_edit_dialog_timeout_id);
-  gcal_clear_timeout (&window->refresh_timeout_id);
 
   /* If we have a queued event to delete, remove it now */
   if (window->event_to_delete)
@@ -1579,9 +1550,6 @@ gcal_window_init (GcalWindow *self)
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
   self->views[GCAL_WINDOW_VIEW_YEAR] = self->year_view;
 
-  /* refresh timeout, first is fast */
-  self->refresh_timeout_id = g_timeout_add (FAST_REFRESH_TIMEOUT, (GSourceFunc) refresh_sources, self);
-
   /* calendars popover */
   gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendar_listbox),
                               (GtkListBoxSortFunc) calendar_listbox_sort_func,
@@ -1603,6 +1571,7 @@ gcal_window_init (GcalWindow *self)
   g_object_bind_property (self, "manager", self->month_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->year_view, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "manager", self->search_popover, "manager", G_BINDING_DEFAULT);
   g_object_bind_property (self, "time-format", self->edit_dialog, "time-format", G_BINDING_DEFAULT);
   g_object_bind_property (self, "time-format", self->search_popover, "time-format", G_BINDING_DEFAULT);
   g_object_bind_property (self, "time-format", self->week_view, "time-format", G_BINDING_DEFAULT);

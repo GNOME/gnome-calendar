@@ -345,6 +345,7 @@ on_client_connected (GObject      *source_object,
                      gpointer      user_data)
 {
   GcalManagerUnit *unit;
+  ESourceRefresh *refresh_extension;
   ESourceOffline *offline_extension;
   GcalManager *self;
   ECalClient *client;
@@ -410,6 +411,11 @@ on_client_connected (GObject      *source_object,
   offline_extension = e_source_get_extension (source, E_SOURCE_EXTENSION_OFFLINE);
   e_source_offline_set_stay_synchronized (offline_extension, TRUE);
 
+  /* And also make sure the source is periodically updated */
+  refresh_extension = e_source_get_extension (source, E_SOURCE_EXTENSION_REFRESH);
+  e_source_refresh_set_enabled (refresh_extension, TRUE);
+  e_source_refresh_set_interval_minutes (refresh_extension, 30);
+
   e_source_registry_commit_source (self->source_registry,
                                    source,
                                    NULL,
@@ -423,15 +429,6 @@ on_client_connected (GObject      *source_object,
   GCAL_EXIT;
 }
 
-/**
- * load_source:
- * @self: Manager instance
- * @source: Loaded source
- *
- * Create @GcalManagerUnit data, add it to internal hash of sources.
- * Open/connect to calendars available
- *
- **/
 static void
 load_source (GcalManager *self,
              ESource     *source)
