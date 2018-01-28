@@ -770,134 +770,6 @@ gcal_manager_client_ready_cb (GObject      *source,
 }
 
 static void
-gcal_manager_constructed (GObject *object)
-{
-  GcalManager *self;
-
-  GList *sources, *l;
-  GError *error = NULL;
-  ESourceCredentialsProvider *credentials_provider;
-
-  GCAL_ENTRY;
-
-  G_OBJECT_CLASS (gcal_manager_parent_class)->constructed (object);
-
-  self = GCAL_MANAGER (object);
-  self->system_timezone = e_cal_util_get_system_timezone ();
-
-  self->clients = g_hash_table_new_full ((GHashFunc) e_source_hash, (GEqualFunc) e_source_equal,
-                                         g_object_unref, (GDestroyNotify) free_unit_data);
-
-  /* load GOA client */
-  goa_client_new (NULL, /* we won't really cancel it */
-                  (GAsyncReadyCallback) gcal_manager_client_ready_cb,
-                  object);
-
-  /* reading sources and schedule its connecting */
-  self->source_registry = e_source_registry_new_sync (NULL, &error);
-
-  if (!self->source_registry)
-    {
-      g_warning ("Failed to access calendar configuration: %s", error->message);
-      g_error_free (error);
-      return;
-    }
-
-  g_object_bind_property (self->source_registry,
-                          "default-calendar",
-                          self,
-                          "default-calendar",
-                          G_BINDING_DEFAULT);
-
-  self->credentials_prompter = e_credentials_prompter_new (self->source_registry);
-
-  /* First disable credentials prompt for all but calendar sources... */
-  sources = e_source_registry_list_sources (self->source_registry, NULL);
-
-  for (l = sources; l != NULL; l = g_list_next (l))
-    {
-      ESource *source = E_SOURCE (l->data);
-
-      /* Mark for skip also currently disabled sources */
-      if (!e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR) &&
-          !e_source_has_extension (source, E_SOURCE_EXTENSION_COLLECTION))
-        {
-          e_credentials_prompter_set_auto_prompt_disabled_for (self->credentials_prompter, source, TRUE);
-        }
-      else
-        {
-          e_source_get_last_credentials_required_arguments (source,
-                                                            NULL,
-                                                            source_get_last_credentials_required_arguments_cb,
-                                                            object);
-        }
-    }
-
-  g_list_free_full (sources, g_object_unref);
-
-  credentials_provider = e_credentials_prompter_get_provider (self->credentials_prompter);
-
-  /* ...then enable credentials prompt for credential source of the calendar sources,
-     which can be a collection source.  */
-  sources = e_source_registry_list_sources (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
-
-  for (l = sources; l != NULL; l = g_list_next (l))
-    {
-      ESource *source, *cred_source;
-
-      source = l->data;
-      cred_source = e_source_credentials_provider_ref_credentials_source (credentials_provider, source);
-
-      if (cred_source && !e_source_equal (source, cred_source))
-	{
-          e_credentials_prompter_set_auto_prompt_disabled_for (self->credentials_prompter, cred_source, FALSE);
-
-          /* Only consider SSL errors */
-          if (e_source_get_connection_status (cred_source) != E_SOURCE_CONNECTION_STATUS_SSL_FAILED)
-            continue;
-
-          e_source_get_last_credentials_required_arguments (cred_source,
-                                                            NULL,
-                                                            source_get_last_credentials_required_arguments_cb,
-                                                            object);
-        }
-
-      g_clear_object (&cred_source);
-    }
-
-  g_list_free_full (sources, g_object_unref);
-
-  /* The eds_credentials_prompter responses to REQUIRED and REJECTED reasons,
-     the SSL_FAILED should be handled elsewhere. */
-  g_signal_connect (self->source_registry, "credentials-required", G_CALLBACK (source_credentials_required_cb), object);
-
-  e_credentials_prompter_process_awaiting_credentials (self->credentials_prompter);
-
-  g_signal_connect_swapped (self->source_registry, "source-added", G_CALLBACK (load_source), object);
-  g_signal_connect_swapped (self->source_registry, "source-removed", G_CALLBACK (remove_source), object);
-  g_signal_connect_swapped (self->source_registry, "source-changed", G_CALLBACK (source_changed), object);
-
-  /* create data model */
-  self->e_data_model = e_cal_data_model_new (submit_thread_job);
-  self->search_data_model = e_cal_data_model_new (submit_thread_job);
-
-  e_cal_data_model_set_expand_recurrences (self->e_data_model, TRUE);
-  e_cal_data_model_set_timezone (self->e_data_model, self->system_timezone);
-  e_cal_data_model_set_expand_recurrences (self->search_data_model, TRUE);
-  e_cal_data_model_set_timezone (self->search_data_model, self->system_timezone);
-
-  sources = e_source_registry_list_enabled (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
-  self->sources_at_launch = g_list_length (sources);
-
-  for (l = sources; l != NULL; l = l->next)
-    load_source (GCAL_MANAGER (object), l->data);
-
-  g_list_free (sources);
-
-  GCAL_EXIT;
-}
-
-static void
 gcal_manager_finalize (GObject *object)
 {
   GcalManager *self =GCAL_MANAGER (object);
@@ -996,7 +868,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
   object_class->finalize = gcal_manager_finalize;
-  object_class->constructed = gcal_manager_constructed;
   object_class->set_property = gcal_manager_set_property;
   object_class->get_property = gcal_manager_get_property;
 
@@ -1095,6 +966,7 @@ gcal_manager_init (GcalManager *self)
 {
   self->clock = gcal_clock_new ();
   self->settings = g_settings_new ("org.gnome.calendar");
+  self->system_timezone = e_cal_util_get_system_timezone ();
 }
 
 /* Public API */
@@ -2069,4 +1941,125 @@ gcal_manager_get_goa_client (GcalManager *self)
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
   GCAL_RETURN (self->goa_client);
+}
+
+void
+gcal_manager_startup (GcalManager *self)
+{
+  GList *sources, *l;
+  GError *error = NULL;
+  ESourceCredentialsProvider *credentials_provider;
+
+  GCAL_ENTRY;
+
+  self->clients = g_hash_table_new_full ((GHashFunc) e_source_hash, (GEqualFunc) e_source_equal,
+                                         g_object_unref, (GDestroyNotify) free_unit_data);
+
+  /* load GOA client */
+  goa_client_new (NULL, /* we won't really cancel it */
+                  (GAsyncReadyCallback) gcal_manager_client_ready_cb,
+                  self);
+
+  /* reading sources and schedule its connecting */
+  self->source_registry = e_source_registry_new_sync (NULL, &error);
+
+  if (!self->source_registry)
+    {
+      g_warning ("Failed to access calendar configuration: %s", error->message);
+      g_error_free (error);
+      return;
+    }
+
+  g_object_bind_property (self->source_registry,
+                          "default-calendar",
+                          self,
+                          "default-calendar",
+                          G_BINDING_DEFAULT);
+
+  self->credentials_prompter = e_credentials_prompter_new (self->source_registry);
+
+  /* First disable credentials prompt for all but calendar sources... */
+  sources = e_source_registry_list_sources (self->source_registry, NULL);
+
+  for (l = sources; l != NULL; l = g_list_next (l))
+    {
+      ESource *source = E_SOURCE (l->data);
+
+      /* Mark for skip also currently disabled sources */
+      if (!e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR) &&
+          !e_source_has_extension (source, E_SOURCE_EXTENSION_COLLECTION))
+        {
+          e_credentials_prompter_set_auto_prompt_disabled_for (self->credentials_prompter, source, TRUE);
+        }
+      else
+        {
+          e_source_get_last_credentials_required_arguments (source,
+                                                            NULL,
+                                                            source_get_last_credentials_required_arguments_cb,
+                                                            self);
+        }
+    }
+
+  g_list_free_full (sources, g_object_unref);
+
+  credentials_provider = e_credentials_prompter_get_provider (self->credentials_prompter);
+
+  /* ...then enable credentials prompt for credential source of the calendar sources,
+     which can be a collection source.  */
+  sources = e_source_registry_list_sources (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
+
+  for (l = sources; l != NULL; l = g_list_next (l))
+    {
+      ESource *source, *cred_source;
+
+      source = l->data;
+      cred_source = e_source_credentials_provider_ref_credentials_source (credentials_provider, source);
+
+      if (cred_source && !e_source_equal (source, cred_source))
+	{
+          e_credentials_prompter_set_auto_prompt_disabled_for (self->credentials_prompter, cred_source, FALSE);
+
+          /* Only consider SSL errors */
+          if (e_source_get_connection_status (cred_source) != E_SOURCE_CONNECTION_STATUS_SSL_FAILED)
+            continue;
+
+          e_source_get_last_credentials_required_arguments (cred_source,
+                                                            NULL,
+                                                            source_get_last_credentials_required_arguments_cb,
+                                                            self);
+        }
+
+      g_clear_object (&cred_source);
+    }
+
+  g_list_free_full (sources, g_object_unref);
+
+  /* The eds_credentials_prompter responses to REQUIRED and REJECTED reasons,
+     the SSL_FAILED should be handled elsewhere. */
+  g_signal_connect (self->source_registry, "credentials-required", G_CALLBACK (source_credentials_required_cb), self);
+
+  e_credentials_prompter_process_awaiting_credentials (self->credentials_prompter);
+
+  g_signal_connect_swapped (self->source_registry, "source-added", G_CALLBACK (load_source), self);
+  g_signal_connect_swapped (self->source_registry, "source-removed", G_CALLBACK (remove_source), self);
+  g_signal_connect_swapped (self->source_registry, "source-changed", G_CALLBACK (source_changed), self);
+
+  /* create data model */
+  self->e_data_model = e_cal_data_model_new (submit_thread_job);
+  self->search_data_model = e_cal_data_model_new (submit_thread_job);
+
+  e_cal_data_model_set_expand_recurrences (self->e_data_model, TRUE);
+  e_cal_data_model_set_timezone (self->e_data_model, self->system_timezone);
+  e_cal_data_model_set_expand_recurrences (self->search_data_model, TRUE);
+  e_cal_data_model_set_timezone (self->search_data_model, self->system_timezone);
+
+  sources = e_source_registry_list_enabled (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
+  self->sources_at_launch = g_list_length (sources);
+
+  for (l = sources; l != NULL; l = l->next)
+    load_source (self, l->data);
+
+  g_list_free (sources);
+
+  GCAL_EXIT;
 }

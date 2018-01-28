@@ -336,7 +336,11 @@ gcal_application_activate (GApplication *application)
 static void
 gcal_application_startup (GApplication *app)
 {
+  GcalApplication *self;
+
   GCAL_ENTRY;
+
+  self = GCAL_APPLICATION (app);
 
   /* add actions */
   g_action_map_add_action_entries (G_ACTION_MAP (app),
@@ -345,6 +349,20 @@ gcal_application_startup (GApplication *app)
                                    app);
 
   G_APPLICATION_CLASS (gcal_application_parent_class)->startup (app);
+
+  self->colors_provider = gtk_css_provider_new ();
+  self->weather_service = gcal_weather_service_new ();
+
+  /* Time format */
+  self->desktop_settings = g_settings_new ("org.gnome.desktop.interface");
+  g_signal_connect_swapped (self->desktop_settings,
+                            "changed::clock-format",
+                            G_CALLBACK (load_time_format),
+                            self);
+  load_time_format (self);
+
+  /* Startup the manager */
+  gcal_manager_startup (self->manager);
 
   /* We're assuming the application is called as a service only by the shell search system */
   if ((g_application_get_flags (app) & G_APPLICATION_IS_SERVICE) != 0)
@@ -364,17 +382,16 @@ gcal_application_command_line (GApplication            *app,
   const gchar* uuid = NULL;
   gsize length;
 
+  GCAL_ENTRY;
+
   self = GCAL_APPLICATION (app);
   options = g_application_command_line_get_options_dict (command_line);
 
   if (g_variant_dict_contains (options, "quit"))
     {
       g_application_quit (app);
-      return 0;
+      GCAL_RETURN (0);
     }
-
-  if (g_variant_dict_contains (options, "debug"))
-    gcal_log_init ();
 
   if (g_variant_dict_contains (options, "uuid"))
     {
@@ -407,13 +424,17 @@ gcal_application_command_line (GApplication            *app,
 
   g_application_activate (app);
 
-  return 0;
+  GCAL_RETURN (0);
 }
 
 static gint
 gcal_application_handle_local_options (GApplication *app,
                                        GVariantDict *options)
 {
+  /* Initialize logging before anything else */
+  if (g_variant_dict_contains (options, "debug"))
+    gcal_log_init ();
+
   if (show_version)
     {
       g_print ("gnome-calendar: Version %s\n", PACKAGE_VERSION);
@@ -432,17 +453,19 @@ gcal_application_dbus_register (GApplication    *application,
   GcalApplication *self;
   g_autofree gchar *search_provider_path = NULL;
 
+  GCAL_ENTRY;
+
   self = GCAL_APPLICATION (application);
 
   if (!G_APPLICATION_CLASS (gcal_application_parent_class)->dbus_register (application, connection, object_path, error))
-    return FALSE;
+    GCAL_RETURN (FALSE);
 
   search_provider_path = g_strconcat (object_path, "/SearchProvider", NULL);
 
   if (!gcal_shell_search_provider_dbus_export (self->search_provider, connection, search_provider_path, error))
-    return FALSE;
+    GCAL_RETURN (FALSE);
 
-  return TRUE;
+  GCAL_RETURN (TRUE);
 }
 
 static void
@@ -453,12 +476,16 @@ gcal_application_dbus_unregister (GApplication    *application,
   GcalApplication *self;
   g_autofree gchar *search_provider_path = NULL;
 
+  GCAL_ENTRY;
+
   self = GCAL_APPLICATION (application);
 
   search_provider_path = g_strconcat (object_path, "/SearchProvider", NULL);
   gcal_shell_search_provider_dbus_unexport (self->search_provider, connection, search_provider_path);
 
   G_APPLICATION_CLASS (gcal_application_parent_class)->dbus_unregister (application, connection, object_path);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -506,22 +533,11 @@ gcal_application_init (GcalApplication *self)
 {
   g_application_add_main_option_entries (G_APPLICATION (self), gcal_application_goptions);
 
-  self->colors_provider = gtk_css_provider_new ();
-
   self->manager = gcal_manager_new ();
   g_signal_connect_swapped (self->manager, "source-added", G_CALLBACK (process_sources), self);
   g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (process_sources), self);
 
-  self->weather_service = gcal_weather_service_new ();
   self->search_provider = gcal_shell_search_provider_new (self->manager);
-
-  /* Time format */
-  self->desktop_settings = g_settings_new ("org.gnome.desktop.interface");
-  g_signal_connect_swapped (self->desktop_settings,
-                            "changed::clock-format",
-                            G_CALLBACK (load_time_format),
-                            self);
-  load_time_format (self);
 }
 
 static void

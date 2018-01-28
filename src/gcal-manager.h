@@ -133,7 +133,7 @@ gboolean             gcal_manager_shell_search_done              (GcalManager   
 
 GList*               gcal_manager_get_shell_search_events        (GcalManager        *self);
 
-
+void                 gcal_manager_startup                        (GcalManager        *self);
 
 G_END_DECLS
 
