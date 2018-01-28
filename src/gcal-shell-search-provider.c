@@ -228,8 +228,6 @@ get_result_metas_cb (GcalShellSearchProvider  *self,
       g_variant_builder_add (&builder, "{sv}", "icon", icon_variant);
 
       local_datetime = g_date_time_to_local (gcal_event_get_date_start (event));
-
-      /* FIXME: respect 24h time format */
       start_date = g_date_time_format (local_datetime, gcal_event_get_all_day (event) ? "%x" : "%c");
 
       if (gcal_event_get_location (event))
