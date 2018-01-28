@@ -724,9 +724,7 @@ on_gclue_simple_creation_cb (GClueSimple        *_source,
     {
       g_assert_null (self->location_service);
 
-      if (g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
-        /* Cancelled during creation. Silently fail. */;
-      else
+      if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
         g_warning ("Could not create GCLueSimple: %s", error->message);
 
       GCAL_RETURN ();
@@ -754,16 +752,15 @@ on_gclue_simple_creation_cb (GClueSimple        *_source,
 }
 
 static void
-on_gclue_client_stop (GClueClient  *client,
-                      GAsyncResult *res,
-                      GClueSimple  *simple)
+on_gclue_client_stopped_cb (GClueClient  *client,
+                            GAsyncResult *res,
+                            GClueSimple  *simple)
 {
   g_autoptr (GError) error = NULL;
   gboolean stopped;
 
-  stopped = gclue_client_call_stop_finish (client,
-                                           res,
-                                           &error);
+  stopped = gclue_client_call_stop_finish (client, res, &error);
+
   if (error)
     g_warning ("Could not stop location service: %s", error->message);
   else if (!stopped)
@@ -1323,11 +1320,12 @@ gcal_weather_service_run (GcalWeatherService *self,
 
   g_debug ("Starting weather service");
 
+  self->weather_service_running = TRUE;
+
   if (!location)
     {
       /* Start location and weather service: */
       self->location_service_running = TRUE;
-      self->weather_service_running = TRUE;
 
       g_cancellable_cancel (self->location_cancellable);
       g_cancellable_reset (self->location_cancellable);
@@ -1336,13 +1334,11 @@ gcal_weather_service_run (GcalWeatherService *self,
                         GCLUE_ACCURACY_LEVEL_EXACT,
                         self->location_cancellable,
                         (GAsyncReadyCallback) on_gclue_simple_creation_cb,
-                        g_object_ref (self));
+                        self);
     }
   else
     {
-      /* Use the given location to retrieve weather information: */
       self->location_service_running = FALSE;
-      self->weather_service_running = TRUE;
 
       /*_update_location starts timer if necessary */
       update_location (self, location);
@@ -1383,8 +1379,10 @@ gcal_weather_service_stop (GcalWeatherService *self)
     {
       gclue_client_call_stop (gclue_simple_get_client (self->location_service),
                               self->location_cancellable,
-                              (GAsyncReadyCallback) on_gclue_client_stop,
-                              g_steal_pointer (&self->location_service));
+                              (GAsyncReadyCallback) on_gclue_client_stopped_cb,
+                              self->location_service);
+
+      self->location_service = NULL;
     }
 
   GCAL_EXIT;

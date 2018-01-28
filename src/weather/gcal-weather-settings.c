@@ -382,8 +382,10 @@ gcal_weather_settings_set_weather_service (GcalWeatherSettings *self,
 {
   g_return_if_fail (GCAL_IS_WEATHER_SETTINGS (self));
 
+  GCAL_ENTRY;
+
   if (!g_set_object (&self->weather_service, service))
-    return;
+    GCAL_RETURN ();
 
   /* Recover weather settings */
   load_weather_settings (self);
@@ -391,4 +393,6 @@ gcal_weather_settings_set_weather_service (GcalWeatherSettings *self,
   manage_weather_service (self);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_WEATHER_SERVICE]);
+
+  GCAL_EXIT;
 }
