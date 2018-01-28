@@ -467,7 +467,7 @@ on_view_action_activated (GSimpleAction *action,
   window->active_view = CLAMP (view, CLAMP(view, GCAL_WINDOW_VIEW_WEEK, GCAL_WINDOW_VIEW_MONTH), GCAL_WINDOW_VIEW_YEAR);
   gtk_stack_set_visible_child (GTK_STACK (window->views_stack), window->views[window->active_view]);
 
-  g_object_notify (G_OBJECT (user_data), "active-view");
+  g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
 }
 
 static void
@@ -606,7 +606,7 @@ view_changed (GObject    *object,
 
   window->active_view = view_type;
   update_today_button_sensitive (window);
-  g_object_notify (G_OBJECT (user_data), "active-view");
+  g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
 }
 
 static void
@@ -616,7 +616,7 @@ set_new_event_mode (GcalWindow *window,
   GCAL_ENTRY;
 
   window->new_event_mode = enabled;
-  g_object_notify (G_OBJECT (window), "new-event-mode");
+  g_object_notify_by_pspec (G_OBJECT (window), properties[PROP_NEW_EVENT_MODE]);
 
   if (!enabled && window->views[window->active_view])
     gcal_view_clear_marks (GCAL_VIEW (window->views[window->active_view]));
@@ -1337,7 +1337,7 @@ gcal_window_set_property (GObject      *object,
 
           gcal_search_view_connect (GCAL_SEARCH_VIEW (self->search_view), self->manager);
 
-          g_object_notify (object, "manager");
+          g_object_notify_by_pspec (object, properties[PROP_MANAGER]);
         }
       break;
 
