@@ -1481,21 +1481,72 @@ gcal_week_header_drag_motion (GtkWidget      *widget,
                               guint           time)
 {
   GcalWeekHeader *self;
+  GdkModifierType mask;
 
   self = GCAL_WEEK_HEADER (widget);
   self->dnd_cell = get_dnd_cell (widget, x, y);
+
+  gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
 
   /*
    * Sets the status of the drag - if it fails, sets the action to 0 and
    * aborts the drag with FALSE.
    */
-  gdk_drag_status (context,
-                   self->dnd_cell == -1 ? 0 : GDK_ACTION_MOVE,
-                   time);
+  if (mask & GDK_CONTROL_MASK)
+    gdk_drag_status (context, self->dnd_cell == -1 ? 0 : GDK_ACTION_COPY, time);
+  else
+    gdk_drag_status (context, self->dnd_cell == -1 ? 0 : GDK_ACTION_MOVE, time);
 
   gtk_widget_queue_draw (widget);
 
   return self->dnd_cell != -1;
+}
+
+static void
+gcal_move_event (GcalEvent   *event,
+                 GDateTime   *dnd_date,
+                 GDateTime   *new_end,
+                 gboolean     turn_all_day,
+                 GTimeSpan    timespan,
+                 GcalManager *manager) {
+  gcal_event_set_date_end (event, new_end);
+
+  /*
+   * Set the start date ~after~ the end date, so we can compare
+   * the event's start and end dates above
+   */
+  gcal_event_set_date_start (event, dnd_date);
+
+  if (turn_all_day)
+    gcal_event_set_all_day (event, TRUE);
+
+  /* Commit the changes */
+  gcal_manager_update_event (manager, event, GCAL_RECURRENCE_MOD_THIS_ONLY);
+}
+
+static void
+gcal_copy_event (GcalEvent   *event,
+                 GDateTime   *dnd_date,
+                 GDateTime   *new_end,
+                 gboolean     turn_all_day,
+                 GTimeSpan    timespan,
+                 GcalManager *manager) {
+  GcalEvent *newev = NULL;
+  ECalComponent *component = NULL;
+
+  component = build_component_from_details (gcal_event_get_summary (event),
+                                              dnd_date, new_end);
+  newev = gcal_event_new (gcal_event_get_source (event), component, NULL);
+  gcal_event_set_timezone (newev, gcal_event_get_timezone (event));
+
+  if (turn_all_day)
+    gcal_event_set_all_day (newev, TRUE);
+  else
+    gcal_event_set_all_day (newev, gcal_event_get_all_day (event));
+
+  gcal_manager_create_event (manager, newev);
 }
 
 static gboolean
@@ -1518,6 +1569,7 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   gboolean turn_all_day;
   gboolean ltr;
   gint drop_cell;
+  GdkModifierType mask;
 
   GCAL_ENTRY;
 
@@ -1572,19 +1624,15 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   difference = turn_all_day ? 24 : g_date_time_difference (end_date, start_date) / G_TIME_SPAN_HOUR;
 
   new_end = g_date_time_add_hours (dnd_date, difference);
-  gcal_event_set_date_end (event, new_end);
 
-  /*
-   * Set the start date ~after~ the end date, so we can compare
-   * the event's start and end dates above
-   */
-  gcal_event_set_date_start (event, dnd_date);
+  gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
 
-  if (turn_all_day)
-    gcal_event_set_all_day (event, TRUE);
-
-  /* Commit the changes */
-  gcal_manager_update_event (self->manager, event, GCAL_RECURRENCE_MOD_THIS_ONLY);
+  if (mask & GDK_CONTROL_MASK)
+    gcal_copy_event (event, dnd_date, new_end, difference, turn_all_day, self->manager);
+  else
+    gcal_move_event (event, dnd_date, new_end, difference, turn_all_day, self->manager);
 
   /* Cancel the DnD */
   self->dnd_cell = -1;

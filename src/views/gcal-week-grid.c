@@ -941,6 +941,7 @@ gcal_week_grid_drag_motion (GtkWidget      *widget,
                             guint           time)
 {
   GcalWeekGrid *self;
+  GdkModifierType mask;
 
   self = GCAL_WEEK_GRID (widget);
   self->dnd_cell = get_dnd_cell (widget, x, y);
@@ -951,17 +952,65 @@ gcal_week_grid_drag_motion (GtkWidget      *widget,
   else
     gtk_drag_unhighlight (widget);
 
+  gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
   /*
    * Sets the status of the drag - if it fails, sets the action to 0 and
    * aborts the drag with FALSE.
    */
-  gdk_drag_status (context,
-                   self->dnd_cell == -1 ? 0 : GDK_ACTION_MOVE,
-                   time);
+  if (mask & GDK_CONTROL_MASK)
+    gdk_drag_status (context, self->dnd_cell == -1 ? 0 : GDK_ACTION_COPY, time);
+  else
+    gdk_drag_status (context, self->dnd_cell == -1 ? 0 : GDK_ACTION_MOVE, time);
 
   gtk_widget_queue_draw (widget);
 
   return self->dnd_cell != -1;
+}
+
+static void
+gcal_move_event (GcalEvent             *event,
+                 GDateTime             *dnd_date,
+                 GTimeSpan              timespan,
+                 GcalManager           *manager,
+                 GcalRecurrenceModType *mod) {
+
+  g_autoptr (GDateTime) new_end = NULL;
+  /*
+   * Set the event's start and end dates. Since the event may have a
+   * NULL end date, so we have to check it here
+   */
+  gcal_event_set_all_day (event, FALSE);
+  gcal_event_set_date_start (event, dnd_date);
+
+
+  /* Setup the new end date */
+  new_end = g_date_time_add (dnd_date, timespan);
+  gcal_event_set_date_end (event, new_end);
+
+  /* Commit the changes */
+  gcal_manager_update_event (manager, event, *mod);
+}
+
+static void
+gcal_copy_event (GcalEvent   *event,
+                 GDateTime   *dnd_date,
+                 GTimeSpan    timespan,
+                 GcalManager *manager) {
+
+  g_autoptr (GDateTime) new_end = NULL;
+  GcalEvent *newev = NULL;
+  ECalComponent *component = NULL;
+
+  new_end = g_date_time_add (dnd_date, timespan);
+  component = build_component_from_details (gcal_event_get_summary (event),
+                                              dnd_date, new_end);
+  newev = gcal_event_new (gcal_event_get_source (event), component, NULL);
+
+  gcal_event_set_all_day (newev, gcal_event_get_all_day (event));
+  gcal_event_set_timezone (newev, gcal_event_get_timezone (event));
+  gcal_manager_create_event (manager, newev);
 }
 
 static gboolean
@@ -975,13 +1024,13 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   GcalWeekGrid *self;
   g_autoptr (GDateTime) week_start;
   g_autoptr (GDateTime) dnd_date;
-  g_autoptr (GDateTime) new_end;
   GtkWidget *event_widget;
   GcalEvent *event;
   ESource *source;
   GTimeSpan timespan = 0;
   gboolean ltr;
   gint drop_cell;
+  GdkModifierType mask;
 
   self = GCAL_WEEK_GRID (widget);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
@@ -991,7 +1040,6 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
   week_start = NULL;
   dnd_date = NULL;
-  new_end = NULL;
 
   if (!GCAL_IS_EVENT_WIDGET (event_widget))
     return FALSE;
@@ -1025,21 +1073,15 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
    */
   timespan = g_date_time_difference (gcal_event_get_date_end (event), gcal_event_get_date_start (event));
 
-  /*
-   * Set the event's start and end dates. Since the event may have a
-   * NULL end date, so we have to check it here
-   */
-  gcal_event_set_all_day (event, FALSE);
-  gcal_event_set_date_start (event, dnd_date);
+  gdk_window_get_device_position (gtk_widget_get_window (widget),
+                                  gtk_get_current_event_device (),
+                                  NULL, NULL, &mask);
 
+  if (mask & GDK_CONTROL_MASK)
+    gcal_copy_event (event, dnd_date, timespan, self->manager);
+  else
+    gcal_move_event (event, dnd_date, timespan, self->manager, &mod);
 
-  /* Setup the new end date */
-  new_end = g_date_time_add (dnd_date, timespan);
-  gcal_event_set_date_end (event, new_end);
-
-  /* Commit the changes */
-
-  gcal_manager_update_event (self->manager, event, mod);
 
 out:
   /* Cancel the DnD */
