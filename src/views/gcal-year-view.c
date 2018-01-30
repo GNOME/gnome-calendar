@@ -1418,6 +1418,7 @@ navigator_drag_motion_cb (GcalYearView   *self,
 {
   gint day, month;
   gboolean is_title, retval;
+  GdkModifierType mask;
 
   retval = FALSE;
 
@@ -1432,7 +1433,13 @@ navigator_drag_motion_cb (GcalYearView   *self,
           self->selected_data->dnd_day = day;
           self->selected_data->dnd_month = month;
 
-          gdk_drag_status (context, GDK_ACTION_MOVE, time);
+          gdk_window_get_device_position (gtk_widget_get_window (GTK_WIDGET (self)),
+                                          gtk_get_current_event_device (),
+                                          NULL, NULL, &mask);
+          if (mask & GDK_CONTROL_MASK)
+            gdk_drag_status (context, GDK_ACTION_COPY, time);
+          else
+            gdk_drag_status (context, GDK_ACTION_MOVE, time);
 
           retval = TRUE;
         }
@@ -1447,6 +1454,65 @@ navigator_drag_motion_cb (GcalYearView   *self,
   return retval;
 }
 
+static void
+gcal_move_event (GcalEvent             *event,
+                 GTimeSpan              diff,
+                 GcalManager           *manager,
+                 GcalRecurrenceModType *mod) {
+
+  GDateTime *start_dt = gcal_event_get_date_start (event);
+  GDateTime *end_dt = gcal_event_get_date_end (event);
+
+  GDateTime *new_start = g_date_time_add (start_dt, diff);
+  gcal_event_set_date_start (event, new_start);
+
+  /* The event may have a NULL end date, so we have to check it here */
+  if (end_dt)
+    {
+      GDateTime *new_end;
+
+      new_end = g_date_time_add (end_dt, diff);
+      gcal_event_set_date_end (event, new_end);
+
+      g_clear_pointer (&new_end, g_date_time_unref);
+    }
+
+  gcal_manager_update_event (manager, event, *mod);
+
+  g_clear_pointer (&new_start, g_date_time_unref);
+}
+
+static void
+gcal_copy_event (GcalEvent   *event,
+                 GTimeSpan    diff,
+                 GcalManager *manager) {
+
+  GDateTime *start_dt = gcal_event_get_date_start (event);
+  GDateTime *end_dt = gcal_event_get_date_end (event);
+
+  GDateTime *new_start = g_date_time_add (start_dt, diff);
+  GDateTime *new_end = NULL;
+
+  GcalEvent *newev = NULL;
+  ECalComponent *component = NULL;
+
+  /* The event may have a NULL end date, so we have to check it here */
+  if (end_dt)
+    new_end = g_date_time_add (end_dt, diff);
+
+  component = build_component_from_details (gcal_event_get_summary (event),
+                                              new_start, new_end);
+  newev = gcal_event_new (gcal_event_get_source (event), component, NULL);
+  gcal_event_set_all_day (newev, gcal_event_get_all_day (event));
+  gcal_event_set_timezone (newev, gcal_event_get_timezone (event));
+
+  gcal_manager_create_event (manager, newev);
+
+  g_clear_pointer (&new_start, g_date_time_unref);
+  if (end_dt)
+    g_clear_pointer (&new_end, g_date_time_unref);
+}
+
 static gboolean
 navigator_drag_drop_cb (GcalYearView   *self,
                         GdkDragContext *context,
@@ -1457,6 +1523,7 @@ navigator_drag_drop_cb (GcalYearView   *self,
 {
   gint day, month;
   gboolean is_title;
+  GdkModifierType mask;
 
   if (calculate_day_month_for_coord (self, x, y, &day, &month, &is_title))
     {
@@ -1468,7 +1535,7 @@ navigator_drag_drop_cb (GcalYearView   *self,
           GcalRecurrenceModType mod;
           GcalEventWidget *event_widget;
           GcalEvent *event;
-          GDateTime *start_dt, *end_dt;
+          GDateTime *start_dt;
           GDateTime *drop_date;
           ESource *source;
 
@@ -1484,7 +1551,6 @@ navigator_drag_drop_cb (GcalYearView   *self,
             }
 
           start_dt = gcal_event_get_date_start (event);
-          end_dt = gcal_event_get_date_end (event);
 
           drop_date = g_date_time_add_full (start_dt,
                                             self->date->year - g_date_time_get_year (start_dt),
@@ -1495,25 +1561,15 @@ navigator_drag_drop_cb (GcalYearView   *self,
           if (!g_date_time_equal (start_dt, drop_date))
             {
               GTimeSpan diff = g_date_time_difference (drop_date, start_dt);
-              GDateTime *new_start;
 
-              new_start = g_date_time_add (start_dt, diff);
-              gcal_event_set_date_start (event, new_start);
+              gdk_window_get_device_position (gtk_widget_get_window (GTK_WIDGET (self)),
+                                              gtk_get_current_event_device (),
+                                              NULL, NULL, &mask);
 
-              /* The event may have a NULL end date, so we have to check it here */
-              if (end_dt)
-                {
-                  GDateTime *new_end;
-
-                  new_end = g_date_time_add (end_dt, diff);
-                  gcal_event_set_date_end (event, new_end);
-
-                  g_clear_pointer (&new_end, g_date_time_unref);
-                }
-
-              gcal_manager_update_event (self->manager, event, mod);
-
-              g_clear_pointer (&new_start, g_date_time_unref);
+              if (mask & GDK_CONTROL_MASK)
+                gcal_copy_event (event, diff, self->manager);
+              else
+                gcal_move_event (event, diff, self->manager, &mod);
             }
 
           g_clear_pointer (&drop_date, g_date_time_unref);
