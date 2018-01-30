@@ -135,6 +135,8 @@ enum {
   N_PROPS
 };
 
+static GParamSpec* properties[N_PROPS] = { NULL, };
+
 
 /*
  * GcalEvent cache
@@ -293,7 +295,7 @@ gcal_event_update_uid_internal (GcalEvent *self)
     }
 
   e_cal_component_free_id (id);
-  g_object_notify (G_OBJECT (self), "uid");
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_UID]);
 }
 
 static void
@@ -417,11 +419,11 @@ gcal_event_set_component_internal (GcalEvent     *self,
       /* Load and setup the alarms */
       load_alarms (self);
 
-      g_object_notify (G_OBJECT (self), "has-recurrence");
-      g_object_notify (G_OBJECT (self), "recurrence");
-      g_object_notify (G_OBJECT (self), "component");
-      g_object_notify (G_OBJECT (self), "location");
-      g_object_notify (G_OBJECT (self), "summary");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_HAS_RECURRENCE]);
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_RECURRENCE]);
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPONENT]);
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_LOCATION]);
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SUMMARY]);
 
       g_clear_pointer (&zone_start, g_time_zone_unref);
       g_clear_pointer (&zone_end, g_time_zone_unref);
@@ -625,170 +627,146 @@ gcal_event_class_init (GcalEventClass *klass)
    *
    * Whether the event is all day or not.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_ALL_DAY,
-                                   g_param_spec_boolean ("all-day",
-                                                         "If event is all day",
-                                                         "Whether the event is all day or not",
-                                                         FALSE,
-                                                         G_PARAM_READWRITE));
+
+  properties[PROP_ALL_DAY] = g_param_spec_boolean ("all-day",
+                                                   "If event is all day",
+                                                   "Whether the event is all day or not",
+                                                   FALSE,
+                                                   G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEvent::color:
    *
    * The color of the event.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_COLOR,
-                                   g_param_spec_boxed ("color",
-                                                       "Color of the event",
-                                                       "The color of the event",
-                                                       GDK_TYPE_RGBA,
-                                                       G_PARAM_READWRITE));
+  properties[PROP_COLOR] = g_param_spec_boxed ("color",
+                                               "Color of the event",
+                                               "The color of the event",
+                                               GDK_TYPE_RGBA,
+                                               G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEvent::component:
    *
    * The #ECalComponent of this event.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_COMPONENT,
-                                   g_param_spec_object ("component",
-                                                        "Component",
-                                                        "The ECalComponent of the event",
-                                                        E_TYPE_CAL_COMPONENT,
-                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY));
+  properties[PROP_COMPONENT] = g_param_spec_object ("component",
+                                                     "Component",
+                                                     "The ECalComponent of the event",
+                                                     E_TYPE_CAL_COMPONENT,
+                                                     G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEvent::date-end:
    *
    * The end date of the event.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_DATE_END,
-                                   g_param_spec_boxed ("date-end",
-                                                       "End date of the event",
-                                                       "The end date of the event",
-                                                       G_TYPE_DATE_TIME,
-                                                       G_PARAM_READWRITE));
+  properties[PROP_DATE_END] = g_param_spec_boxed ("date-end",
+                                                  "End date of the event",
+                                                  "The end date of the event",
+                                                  G_TYPE_DATE_TIME,
+                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEvent::date-start:
    *
    * The start date of the event.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_DATE_START,
-                                   g_param_spec_boxed ("date-start",
-                                                       "Start date of the event",
-                                                       "The start date of the event",
-                                                       G_TYPE_DATE_TIME,
-                                                       G_PARAM_READWRITE));
+  properties[PROP_DATE_START] = g_param_spec_boxed ("date-start",
+                                                    "Start date of the event",
+                                                    "The start date of the event",
+                                                    G_TYPE_DATE_TIME,
+                                                    G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEvent::description:
    *
    * The description of the event.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_DESCRIPTION,
-                                   g_param_spec_string ("description",
-                                                        "Description of the event",
-                                                        "The description of the event",
-                                                        "",
-                                                        G_PARAM_READWRITE));
-
-  /**
-   * GcalEvent::location:
-   *
-   * The location of the event.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_LOCATION,
-                                   g_param_spec_string ("location",
-                                                        "Location of the event",
-                                                        "The location of the event",
-                                                        "",
-                                                        G_PARAM_READWRITE));
-
-  /**
-   * GcalEvent::source:
-   *
-   * The #ESource this event belongs to.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_SOURCE,
-                                   g_param_spec_object ("source",
-                                                        "ESource",
-                                                        "The ESource this event belongs to",
-                                                        E_TYPE_SOURCE,
-                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT));
-
-  /**
-   * GcalEvent::summary:
-   *
-   * The summary of the event.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_SUMMARY,
-                                   g_param_spec_string ("summary",
-                                                        "Summary of the event",
-                                                        "The summary of the event",
-                                                        "",
-                                                        G_PARAM_READWRITE));
-
-  /**
-   * GcalEvent::timezone:
-   *
-   * The timezone of the event.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_TIMEZONE,
-                                   g_param_spec_boxed ("timezone",
-                                                       "Timezone of the event",
-                                                       "The timezone of the event",
-                                                       G_TYPE_TIME_ZONE,
-                                                       G_PARAM_READWRITE));
-
-  /**
-   * GcalEvent::uid:
-   *
-   * The unique identifier of the event.
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_UID,
-                                   g_param_spec_string ("uid",
-                                                        "Identifier of the event",
-                                                        "The unique identifier of the event",
-                                                        "",
-                                                        G_PARAM_READABLE));
+  properties[PROP_DESCRIPTION] = g_param_spec_string ("description",
+                                                      "Description of the event",
+                                                      "The description of the event",
+                                                      "",
+                                                      G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
   * GcalEvent::has-recurrence:
   *
   * The recurrence property of the event.
   */
-  g_object_class_install_property (object_class,
-                                   PROP_HAS_RECURRENCE,
-                                   g_param_spec_boolean ("has-recurrence",
-                                                         "If event has recurrence",
-                                                         "Whether the event has recurrence or not",
-                                                         FALSE,
-                                                         G_PARAM_READABLE));
+  properties[PROP_HAS_RECURRENCE] = g_param_spec_boolean ("has-recurrence",
+                                                          "If event has recurrence",
+                                                          "Whether the event has recurrence or not",
+                                                          FALSE,
+                                                          G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalEvent::location:
+   *
+   * The location of the event.
+   */
+  properties[PROP_LOCATION] = g_param_spec_string ("location",
+                                                   "Location of the event",
+                                                   "The location of the event",
+                                                   "",
+                                                   G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
   * GcalEvent::recurrence:
   *
   * The recurrence-rules property of the event.
   */
-  g_object_class_install_property (object_class,
-                                   PROP_RECURRENCE,
-                                   g_param_spec_boxed ("recurrence",
-                                                       "Recurrence property of the event",
-                                                       "The recurrence property of the event",
-                                                       GCAL_TYPE_RECURRENCE,
-                                                       G_PARAM_READWRITE));
+  properties[PROP_RECURRENCE] = g_param_spec_boxed ("recurrence",
+                                                    "Recurrence property of the event",
+                                                    "The recurrence property of the event",
+                                                    GCAL_TYPE_RECURRENCE,
+                                                    G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
+  /**
+   * GcalEvent::source:
+   *
+   * The #ESource this event belongs to.
+   */
+  properties[PROP_SOURCE] = g_param_spec_object ("source",
+                                                 "ESource",
+                                                 "The ESource this event belongs to",
+                                                 E_TYPE_SOURCE,
+                                                 G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalEvent::summary:
+   *
+   * The summary of the event.
+   */
+  properties[PROP_SUMMARY] = g_param_spec_string ("summary",
+                                                        "Summary of the event",
+                                                        "The summary of the event",
+                                                        "",
+                                                        G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalEvent::timezone:
+   *
+   * The timezone of the event.
+   */
+  properties[PROP_TIMEZONE] = g_param_spec_boxed ("timezone",
+                                                  "Timezone of the event",
+                                                  "The timezone of the event",
+                                                  G_TYPE_TIME_ZONE,
+                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalEvent::uid:
+   *
+   * The unique identifier of the event.
+   */
+  properties[PROP_UID] = g_param_spec_string ("uid",
+                                              "Identifier of the event",
+                                              "The unique identifier of the event",
+                                              "",
+                                              G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 }
 
 static void
@@ -917,7 +895,7 @@ gcal_event_set_color (GcalEvent *self,
       g_clear_pointer (&self->color, gdk_rgba_free);
       self->color = gdk_rgba_copy (color);
 
-      g_object_notify (G_OBJECT (self), "color");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COLOR]);
     }
 }
 
@@ -954,7 +932,7 @@ gcal_event_set_all_day (GcalEvent *self,
     {
       self->all_day = all_day;
 
-      g_object_notify (G_OBJECT (self), "all-day");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ALL_DAY]);
     }
 }
 
@@ -1003,7 +981,7 @@ gcal_event_set_date_end (GcalEvent *self,
       e_cal_component_set_dtend (self->component, component_dt);
       e_cal_component_commit_sequence (self->component);
 
-      g_object_notify (G_OBJECT (self), "date-end");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DATE_END]);
 
       e_cal_component_free_datetime (component_dt);
       g_free (component_dt);
@@ -1052,7 +1030,7 @@ gcal_event_set_date_start (GcalEvent *self,
       e_cal_component_set_dtstart (self->component, component_dt);
       e_cal_component_commit_sequence (self->component);
 
-      g_object_notify (G_OBJECT (self), "date-start");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DATE_START]);
 
       e_cal_component_free_datetime (component_dt);
       g_free (component_dt);
@@ -1105,7 +1083,7 @@ gcal_event_set_description (GcalEvent   *self,
       e_cal_component_set_description_list (self->component, &list);
       e_cal_component_commit_sequence (self->component);
 
-      g_object_notify (G_OBJECT (self), "description");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DESCRIPTION]);
     }
 }
 
@@ -1321,7 +1299,7 @@ gcal_event_set_location (GcalEvent   *self,
     {
       e_cal_component_set_location (self->component, location);
 
-      g_object_notify (G_OBJECT (self), "location");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_LOCATION]);
     }
 }
 
@@ -1388,7 +1366,7 @@ gcal_event_set_source (GcalEvent *self,
                                                              NULL);
         }
 
-      g_object_notify (G_OBJECT (self), "source");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SOURCE]);
 
       gcal_event_update_uid_internal (self);
     }
@@ -1441,7 +1419,7 @@ gcal_event_set_summary (GcalEvent   *self,
       e_cal_component_set_summary (self->component, &text_component);
       e_cal_component_commit_sequence (self->component);
 
-      g_object_notify (G_OBJECT (self), "summary");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SUMMARY]);
     }
 }
 
@@ -1500,7 +1478,7 @@ gcal_event_set_timezone (GcalEvent *self,
           g_clear_pointer (&new_dtstart, g_date_time_unref);
         }
 
-      g_object_notify (G_OBJECT (self), "timezone");
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_TIMEZONE]);
     }
 }
 
