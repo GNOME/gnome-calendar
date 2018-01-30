@@ -129,10 +129,12 @@ enum
   PROP_MANAGER,
   PROP_TIME_FORMAT,
   PROP_WRITABLE,
-  LAST_PROP
+  N_PROPS
 };
 
-const GActionEntry action_entries[] =
+static GParamSpec* properties[N_PROPS] = { NULL, };
+
+static const GActionEntry action_entries[] =
 {
   { "select-calendar", on_calendar_selected, "s" },
 };
@@ -276,7 +278,7 @@ gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
 
   dialog->writable = writable;
 
-  g_object_notify (G_OBJECT (dialog), "writable");
+  g_object_notify_by_pspec (G_OBJECT (dialog), properties[PROP_WRITABLE]);
 }
 
 static void
@@ -782,53 +784,47 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
    *
    * The #GcalEvent being edited.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_EVENT,
-                                   g_param_spec_object ("event",
-                                                        "event of the dialog",
-                                                        "The event being edited",
-                                                        GCAL_TYPE_EVENT,
-                                                        G_PARAM_READWRITE));
+  properties[PROP_EVENT] = g_param_spec_object ("event",
+                                                "event of the dialog",
+                                                "The event being edited",
+                                                GCAL_TYPE_EVENT,
+                                                G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEditDialog::manager:
    *
    * The #GcalManager of the dialog.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_MANAGER,
-                                   g_param_spec_object ("manager",
-                                                        "Manager of the dialog",
-                                                        "The manager of the dialog",
-                                                        GCAL_TYPE_MANAGER,
-                                                        G_PARAM_READWRITE));
+  properties[PROP_MANAGER] = g_param_spec_object ("manager",
+                                                  "Manager of the dialog",
+                                                  "The manager of the dialog",
+                                                  GCAL_TYPE_MANAGER,
+                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEditDialog::time-format:
    *
    * The time format.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_TIME_FORMAT,
-                                   g_param_spec_enum ("time-format",
-                                                      "Manager of the dialog",
-                                                      "The manager of the dialog",
-                                                      GCAL_TYPE_TIME_FORMAT,
-                                                      GCAL_TIME_FORMAT_24H,
-                                                      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+  properties[PROP_TIME_FORMAT] = g_param_spec_enum ("time-format",
+                                                    "Manager of the dialog",
+                                                    "The manager of the dialog",
+                                                    GCAL_TYPE_TIME_FORMAT,
+                                                    GCAL_TIME_FORMAT_24H,
+                                                    G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEditDialog::writable:
    *
    * Whether the current event can be edited or not.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_WRITABLE,
-                                   g_param_spec_boolean ("writable",
-                                                         "Whether the current event can be edited",
-                                                         "Whether the current event can be edited or not",
-                                                         TRUE,
-                                                         G_PARAM_READWRITE));
+  properties[PROP_WRITABLE] = g_param_spec_boolean ("writable",
+                                                    "Whether the current event can be edited",
+                                                    "Whether the current event can be edited or not",
+                                                    TRUE,
+                                                    G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/edit-dialog.ui");
 
@@ -1241,7 +1237,7 @@ gcal_edit_dialog_set_time_format (GcalEditDialog *dialog,
   gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->start_time_selector), dialog->time_format);
   gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->end_time_selector), dialog->time_format);
 
-  g_object_notify (G_OBJECT (dialog), "time-format");
+  g_object_notify_by_pspec (G_OBJECT (dialog), properties[PROP_TIME_FORMAT]);
 }
 
 /**
@@ -1433,7 +1429,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   setup_alarms (dialog);
 
 out:
-  g_object_notify (G_OBJECT (dialog), "event");
+  g_object_notify_by_pspec (G_OBJECT (dialog), properties[PROP_EVENT]);
 
   dialog->setting_event = FALSE;
 
@@ -1455,7 +1451,7 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
   g_return_if_fail (GCAL_IS_MANAGER (manager));
 
   if (g_set_object (&dialog->manager, manager))
-    g_object_notify (G_OBJECT (dialog), "manager");
+    g_object_notify_by_pspec (G_OBJECT (dialog), properties[PROP_MANAGER]);
 }
 
 static GDateTime*
