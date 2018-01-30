@@ -117,6 +117,8 @@ static void          gcal_event_initable_iface_init              (GInitableIface
 G_DEFINE_TYPE_WITH_CODE (GcalEvent, gcal_event, G_TYPE_OBJECT,
                          G_IMPLEMENT_INTERFACE (G_TYPE_INITABLE, gcal_event_initable_iface_init))
 
+G_DEFINE_QUARK (GcalEvent, gcal_event_error);
+
 enum {
   PROP_0,
   PROP_ALL_DAY,
@@ -782,17 +784,6 @@ gcal_event_init (GcalEvent *self)
   self->alarms = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, g_free);
 
   self->is_valid = TRUE;
-}
-
-/**
- * gcal_event_error_quark:
- *
- * Error quark for event creating.
- */
-GQuark
-gcal_event_error_quark (void)
-{
-  return g_quark_from_static_string ("Invalid start date");
 }
 
 /**
