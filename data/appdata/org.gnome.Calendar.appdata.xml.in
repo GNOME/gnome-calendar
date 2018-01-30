@@ -45,7 +45,7 @@
   </kudos>
 
   <url type="homepage">https://wiki.gnome.org/Apps/Calendar</url>
-  <url type="bugtracker">https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-calendar</url>
+  <url type="bugtracker">https://gitlab.gnome.org/GNOME/gnome-calendar/issues</url>
   <project_group>GNOME</project_group>
 
   <releases>
