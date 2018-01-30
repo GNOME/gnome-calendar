@@ -431,6 +431,8 @@ monthcell {
 monthcell:selected { background-color: alpha(@theme_selected_bg_color, 0.1); }
 monthcell:selected label.day-label { font-weight: bold; }
 
+monthcell:nth-child(7n + 1) { border-left-width: 0; }
+
 monthcell.today { background-color: alpha(@theme_selected_bg_color, 0.25); }
 monthcell:selected.today { background-color: alpha(@theme_selected_bg_color, 0.33); }
 
@@ -455,9 +457,6 @@ monthcell:hover:not(.out-of-month) {
     background-color: @theme_bg_color;
     transition: background-color 200ms;
 }
-
-monthcell:dir(ltr):nth-child(7n + 1) { border-left-width: 0; }
-monthcell:dir(rtl):nth-child(7n + 1) { border-right-width: 0; }
 
 monthcell button {
     padding: 0 4px;
