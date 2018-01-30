@@ -583,11 +583,9 @@ on_about_response (GtkAboutDialog *about,
 static gchar*
 build_about_copyright (GcalApplication *self)
 {
-  GString     *builder ;    /* owned */
-  const gchar *attribution; /* unowned */
   g_autoptr (GDateTime) dt = NULL;
-
-  g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
+  const gchar *attribution;
+  GString *builder;
 
   builder = g_string_new ("<span size=\"small\">");
   dt = g_date_time_new_now_local ();
@@ -598,7 +596,7 @@ build_about_copyright (GcalApplication *self)
                           g_date_time_get_year (dt));
 
   attribution = gcal_weather_service_get_attribution (self->weather_service);
-  if (attribution != NULL)
+  if (attribution)
     {
       g_string_append_c (builder, '\n');
       g_string_append (builder, attribution);
@@ -613,8 +611,10 @@ gcal_application_show_about (GSimpleAction *simple,
                              GVariant      *parameter,
                              gpointer       user_data)
 {
-  GcalApplication *self;   /* unowned */
-  GtkWidget       *dialog; /* owned */
+  GcalApplication *self;
+  GtkWidget *dialog;
+  GtkLabel *copyright_label;
+  g_autofree gchar *copyright = NULL;
 
   const gchar *authors[] = {
     "Erick Pérez Castellanos <erickpc@gnome.org>",
@@ -646,19 +646,12 @@ gcal_application_show_about (GSimpleAction *simple,
                          "translator-credits", _("translator-credits"),
                          NULL);
 
-  /* Poke AboutDialog internals to display links in
-   * attributions. This workaround is also used by
-   * gnome-weather.
-   */
-  {
-    g_autofree gchar *copyright;
-    GObject *cpyright_lbl; /* unowned */
-
-    copyright = build_about_copyright (self);
-    cpyright_lbl = gtk_widget_get_template_child (GTK_WIDGET (dialog), GTK_TYPE_ABOUT_DIALOG, "copyright_label");
-    gtk_label_set_markup (GTK_LABEL (cpyright_lbl), copyright);
-    gtk_widget_show (GTK_WIDGET (cpyright_lbl));
-  }
+  copyright = build_about_copyright (self);
+  copyright_label = GTK_LABEL (gtk_widget_get_template_child (GTK_WIDGET (dialog),
+                                                              GTK_TYPE_ABOUT_DIALOG,
+                                                              "copyright_label"));
+  gtk_label_set_markup (copyright_label, copyright);
+  gtk_widget_show (GTK_WIDGET (copyright_label));
 
   g_signal_connect (dialog, "response", G_CALLBACK (on_about_response), NULL);
   gtk_widget_show (dialog);
@@ -678,8 +671,6 @@ gcal_application_quit (GSimpleAction *simple,
 GcalApplication*
 gcal_application_new (void)
 {
-  g_set_application_name ("Calendar");
-
   return g_object_new (gcal_application_get_type (),
                        "resource-base-path", "/org/gnome/calendar",
                        "application-id", "org.gnome.Calendar",
