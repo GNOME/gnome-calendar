@@ -37,14 +37,16 @@ struct _GcalDateSelector
   GSettings   *settings;
 };
 
+G_DEFINE_TYPE (GcalDateSelector, gcal_date_selector, GTK_TYPE_ENTRY);
+
 enum
 {
   PROP_0,
   PROP_DATE,
-  LAST_PROP
+  N_PROPS
 };
 
-G_DEFINE_TYPE (GcalDateSelector, gcal_date_selector, GTK_TYPE_ENTRY);
+static GParamSpec* properties[N_PROPS] = { NULL, };
 
 static void
 update_text (GcalDateSelector *self)
@@ -66,7 +68,7 @@ calendar_day_selected (GcalDateSelector *self)
 {
   update_text (self);
 
-  g_object_notify (G_OBJECT (self), "date");
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DATE]);
 }
 
 static void
@@ -204,13 +206,13 @@ gcal_date_selector_class_init (GcalDateSelectorClass *klass)
    *
    * The current date of the selector.
    */
-  g_object_class_install_property (object_class,
-                                   PROP_DATE,
-                                   g_param_spec_boxed ("date",
-                                                       "Date of the selector",
-                                                       "The current date of the selector",
-                                                       G_TYPE_DATE_TIME,
-                                                       G_PARAM_READWRITE));
+  properties[PROP_DATE] = g_param_spec_boxed ("date",
+                                              "Date of the selector",
+                                              "The current date of the selector",
+                                              G_TYPE_DATE_TIME,
+                                              G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/date-selector.ui");
 
@@ -262,7 +264,7 @@ gcal_date_selector_set_date (GcalDateSelector *selector,
   update_text (selector);
 
   /* emit the MODIFIED signal */
-  g_object_notify (G_OBJECT (selector), "date");
+  g_object_notify_by_pspec (G_OBJECT (selector), properties[PROP_DATE]);
 }
 
 /**
