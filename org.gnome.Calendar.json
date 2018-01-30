@@ -32,6 +32,7 @@
             "V": "1"
         }
     },
+    "x-run-args" : [ "--debug" ],
     "cleanup": [
         "/include",
         "/lib/pkgconfig",
@@ -141,7 +142,7 @@
                     "url": "https://gitlab.gnome.org/GNOME/gnome-calendar.git"
                 }
             ],
-            "config-opts": ["-Denable-tracing=true"]
+            "config-opts": ["-Dtracing=true"]
         }
     ]
 }
