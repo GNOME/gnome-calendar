@@ -22,9 +22,17 @@ install_data(
 )
 
 # GSettings schema
-install_data(
-  'org.gnome.calendar.gschema.xml',
-  install_dir: calendar_schemadir
+schema_conf = configuration_data()
+schema_conf.set('GETTEXT_PACKAGE', meson.project_name())
+
+schema = 'org.gnome.calendar.gschema.xml'
+
+configure_file(
+  input: schema + '.in',
+  output: schema,
+  install: true,
+  install_dir: calendar_schemadir,
+  configuration: schema_conf
 )
 
 # DBus service files
