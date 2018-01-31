@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<schemalist gettext-domain="gnome-calendar">
+<schemalist gettext-domain="@GETTEXT_PACKAGE@">
     <schema id="org.gnome.calendar" path="/org/gnome/calendar/">
         <key name="window-maximized" type="b">
             <default>true</default>
