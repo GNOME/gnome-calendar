@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-26\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2017-12-06 10:50+0000\n"
-"PO-Revision-Date: 2018-01-27 08:41+0200\n"
+"PO-Revision-Date: 2018-02-01 09:50+0200\n"
 "Last-Translator: Pieter Schoeman <pieter@sonbesie.co.za>\n"
 "Language-Team: Afrikaans <pieter@sonbesie.co.za>\n"
 "Language: af\n"
@@ -158,7 +158,7 @@ msgstr "Tyd"
 
 #: data/ui/edit-dialog.ui:352
 msgid "All Day"
-msgstr "Heel dag"
+msgstr "Heeldag"
 
 #: data/ui/edit-dialog.ui:397
 msgid "Add reminder…"
