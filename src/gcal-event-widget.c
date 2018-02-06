@@ -18,8 +18,9 @@
 
 #define G_LOG_DOMAIN "GcalEventWidget"
 
-#include <string.h>
+#include <libecal/libecal.h>
 #include <glib/gi18n.h>
+#include <string.h>
 
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
@@ -1167,11 +1168,11 @@ gint
 gcal_event_widget_sort_events (GcalEventWidget *widget1,
                                GcalEventWidget *widget2)
 {
-  g_autoptr (GDateTime) dt_time1, dt_time2;
+  g_autoptr (GDateTime) dt_time1 = NULL;
+  g_autoptr (GDateTime) dt_time2 = NULL;
   icaltimetype *ical_dt;
   gint diff;
 
-  dt_time1 = dt_time2 = NULL;
   diff = gcal_event_is_multiday (widget2->event) - gcal_event_is_multiday (widget1->event);
 
   if (diff != 0)
@@ -1188,10 +1189,12 @@ gcal_event_widget_sort_events (GcalEventWidget *widget1,
     return diff;
 
   e_cal_component_get_last_modified (gcal_event_get_component (widget1->event), &ical_dt);
-  dt_time1 = icaltime_to_datetime (ical_dt);
+  if (ical_dt)
+    dt_time1 = icaltime_to_datetime (ical_dt);
 
   e_cal_component_get_last_modified (gcal_event_get_component (widget2->event), &ical_dt);
-  dt_time2 = icaltime_to_datetime (ical_dt);
+  if (ical_dt)
+    dt_time2 = icaltime_to_datetime (ical_dt);
 
-  return g_date_time_compare (dt_time2, dt_time1);
+  return dt_time1 && dt_time2 ? g_date_time_compare (dt_time2, dt_time1) : 0;
 }
