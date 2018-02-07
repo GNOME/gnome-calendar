@@ -506,8 +506,8 @@ on_source_added (GcalManager         *manager,
   ESource *default_source;
   GtkWidget *row;
 
-  /* Since we can't add on read-only calendars, lets not show them at all */
-  if (!gcal_manager_is_client_writable (manager, source))
+  /* Lets not show disabled or read-only calendars (since we can't add on them) */
+  if (!gcal_manager_is_client_writable (manager, source) || !enabled)
     return;
 
   default_source = gcal_manager_get_default_source (manager);
@@ -530,11 +530,13 @@ on_source_changed (GcalManager         *manager,
   cairo_surface_t *surface;
   GtkWidget *row, *color_icon, *name_label;
   GdkRGBA color;
+  gboolean source_enabled;
 
+  source_enabled = is_source_enabled(source);
   row = get_row_for_source (self, source);
 
-  /* If the calendar changed from/to read-only, we add or remove it here */
-  if (!gcal_manager_is_client_writable (self->manager, source))
+  /* If the calendar changed from/to read-only or enabled/disabled, we add or remove it here */
+  if (!gcal_manager_is_client_writable (self->manager, source) || !source_enabled)
     {
       if (row)
         gtk_container_remove (GTK_CONTAINER (self->calendars_listbox), row);
@@ -545,7 +547,7 @@ on_source_changed (GcalManager         *manager,
     {
       on_source_added (self->manager,
                        source,
-                       is_source_enabled (source),
+                       source_enabled,
                        self);
 
       row = get_row_for_source (self, source);
