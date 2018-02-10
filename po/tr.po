@@ -6,14 +6,14 @@
 # Furkan Ahmet Kara <furkanahmetkara.fk@gmail.com>, 2017.
 # Muhammet Kara <muhammetk@gmail.com>, 2015, 2016, 2017.
 # Çağrı Dolaz <dolazcagri@gmail.com>, 2017.
-# Emin Tufan Çetin <etcetin@gmail.com>, 2017.
+# Emin Tufan Çetin <etcetin@gmail.com>, 2017, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2017-12-17 13:36+0000\n"
-"PO-Revision-Date: 2017-12-18 12:17+0300\n"
+"POT-Creation-Date: 2018-01-18 17:40+0000\n"
+"PO-Revision-Date: 2018-01-21 13:02+0300\n"
 "Last-Translator: Emin Tufan Çetin <etcetin@gmail.com>\n"
 "Language-Team: Türkçe <gnome-turk@gnome.org>\n"
 "Language: tr\n"
@@ -26,7 +26,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:529
+#: data/ui/window.ui:187 src/gcal-application.c:540
 msgid "Calendar"
 msgstr "Takvim"
 
@@ -551,28 +551,13 @@ msgstr "_Eşzamanla"
 msgid "_Weather"
 msgstr "_Hava Durumu"
 
-#: data/ui/window.ui:408
-#| msgid "_Weather"
-msgid "weather-menu"
-msgstr "weather-menu"
-
-#: data/ui/window.ui:429
-#| msgid "win-menu-main"
-msgid "main-menu"
-msgstr "main-menu"
-
 #: data/ui/window.ui:446
 msgid "Show Weather"
 msgstr "Hava Durumunu Göster"
 
 #: data/ui/window.ui:469
-#| msgid "Location"
 msgid "Automatic Location"
 msgstr "Kendiliğinden Saptanmış Konum"
-
-#: data/ui/year-view.ui:103
-msgid "temp"
-msgstr "temp"
 
 #: data/ui/year-view.ui:133
 msgid "No events"
@@ -583,27 +568,32 @@ msgid "Add Event…"
 msgstr "Olay Ekle…"
 
 #: src/gcal-application.c:90
+#| msgid "Edit Calendar"
+msgid "Quit GNOME Calendar"
+msgstr "GNOME Takvimʼden Çık"
+
+#: src/gcal-application.c:95
 msgid "Display version number"
 msgstr "Sürüm numarasını göster"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:100
 msgid "Enable debug messages"
 msgstr "Hata ayıklama iletilerini etkinleştir"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:105
 msgid "Open calendar on the passed date"
 msgstr "Takvimi geçmiş tarihte aç"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:110
 msgid "Open calendar showing the passed event"
 msgstr "Takvimi, geçmiş olayı gösterir şekilde aç"
 
-#: src/gcal-application.c:486
+#: src/gcal-application.c:497
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Telif Hakkı © 2012–%d Takvim geliştiricileri"
 
-#: src/gcal-application.c:535
+#: src/gcal-application.c:546
 msgid "translator-credits"
 msgstr "Muhammet Kara <muhammetk@gmail.com>"
 
@@ -1023,6 +1013,17 @@ msgstr "%B %d…"
 #: src/views/gcal-year-view.c:300 src/views/gcal-year-view.c:523
 msgid "%B %d"
 msgstr "%B %d"
+
+#~| msgid "_Weather"
+#~ msgid "weather-menu"
+#~ msgstr "weather-menu"
+
+#~| msgid "win-menu-main"
+#~ msgid "main-menu"
+#~ msgstr "main-menu"
+
+#~ msgid "temp"
+#~ msgstr "temp"
 
 #~ msgid "win-menu-weather"
 #~ msgstr "win-menu-weather"
