@@ -1,3 +1,10 @@
+Major changes in 3.27.90:
+* Big code refactorings that lead to more stability and ease of maintainership
+* Follow-up improvements after rewritting the Month view
+* Flatpak Nightly now builds with debug and tracing enabled
+* Huge memory leaks were fixed
+* Updates translations
+
 Major changes in 3.27.2:
 * Events now are rendered differently if they are all-day or timed
 * Rewrite of the Month view

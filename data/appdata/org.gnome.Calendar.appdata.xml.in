@@ -49,6 +49,22 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2018-02-12" version="3.27.90">
+      <description>
+        <p>This is the alpha version of the next big release of GNOME Calendar, and it brings the following new features and improvements:</p>
+        <ul>
+          <li>Big code refactorings that lead to more stability and ease of maintainership.</li>
+          <li>Follow-up improvements after rewritting the Month view.</li>
+          <li>The Flatpak Nightly builds of GNOME Calendar now have debugging and tracing enabled by default. This
+            will allow testers to report bugs with more precision.
+          </li>
+          <li>Huge memory leaks were also fixed.</li>
+        </ul>
+        <p>This release also updates many translations.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2017-11-15" version="3.27.2">
       <description>
         <p>This release brings the following new features and improvements:</p>
