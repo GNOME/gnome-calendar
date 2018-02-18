@@ -1,15 +1,65 @@
 image: fedora:rawhide
 stages:
   - build
+  - test
+  - deploy
+
+variables:
+  DEPENDENCIES: gcc meson ninja-build gettext gtk-doc glib2-devel
+                gtk3-devel gsettings-desktop-schemas-devel git
+                gnome-online-accounts-devel libdazzle-devel
+                evolution-data-server-devel libgweather-devel
 
 before_script:
-  - dnf install -y gcc meson ninja-build gettext gtk-doc glib2-devel gtk3-devel
-    gnome-online-accounts-devel evolution-data-server-devel libdazzle-devel
-    gsettings-desktop-schemas-devel libgweather-devel
+  - dnf update -y --nogpgcheck && dnf install -y --nogpgcheck $DEPENDENCIES
 
-build-calendar:
+
+##
+# Stage: Build
+#
+# Checks if GNOME Calendar is properly building and installing. This is the
+# most important stage of the CI, and no MR should ever be merged if it breaks
+# any of them.
+##
+build:
   stage: build
   script:
-  - meson . _build
-  - ninja -C _build
-  - ninja -C _build install
+    - meson . _build
+    - ninja -C _build
+
+install:
+  stage: build
+  script:
+    - meson . _build
+    - ninja -C _build
+    - ninja -C _build install
+
+
+##
+# Stage: Test
+#
+# Runs the unit tests and makes sure the new changes does not reintroduce bugs
+# or breaks something unrelated.
+##
+test:
+  stage: test
+  script:
+    - meson . _build
+    - ninja -C _build
+    - meson test -C _build
+
+
+##
+# Stage: Deploy
+#
+# Checks if the released version is perfectly functional.
+##
+deploy:
+  stage: deploy
+  script:
+    - meson . _build
+    - ninja -C _build
+    - meson test -C _build
+    - ninja dist -C _build
+  only:
+    - tags
