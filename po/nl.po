@@ -2,28 +2,27 @@
 # Copyright (C) 2015 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 #
-# Nathan Follens <nthn@unseen.is>, 2015-2016.
-# Justin van Steijn <jvs@fsfe.org>, 2017
+# Nathan Follens <nthn@unseen.is>, 2015-2018.
+# Justin van Steijn <jvs@fsfe.org>, 2017.
 # Hannie Dumoleyn <hannie@ubuntu-nl.org>, 2015, 2016, 2017.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-16\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-c"
-"alendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-08-23 22:16+0000\n"
-"PO-Revision-Date: 2017-08-24 11:57+0100\n"
-"Last-Translator: Hannie Dumoleyn <hannie@ubuntu-nl.org>\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
+"POT-Creation-Date: 2018-02-05 16:20+0000\n"
+"PO-Revision-Date: 2018-02-08 13:46+0100\n"
+"Last-Translator: Nathan Follens <nthn@unseen.is>\n"
 "Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Lokalize 2.0\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:184 src/gcal-application.c:479
+#: data/ui/window.ui:187 src/gcal-application.c:640 src/main.c:36
 msgid "Calendar"
 msgstr "Agenda"
 
@@ -67,7 +66,7 @@ msgstr "Agendabeheer"
 
 #: data/org.gnome.Calendar.desktop.in:4
 msgid "Access and manage your calendars"
-msgstr "Uw agenda's gebruiken en beheren"
+msgstr "Beheer en gebruik uw agenda’s"
 
 #. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
 #: data/org.gnome.Calendar.desktop.in:7
@@ -113,6 +112,18 @@ msgstr "Het type van de actieve weergave"
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Type van de actieve vensterweergave, standaardwaarde is: maandweergave"
 
+#: data/org.gnome.calendar.gschema.xml:26
+msgid "Weather Service Configuration"
+msgstr "Configuratie van weerdienst"
+
+#: data/org.gnome.calendar.gschema.xml:27
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr ""
+"Of weerrapporten worden getoond, automatische locaties worden gebruikt en "
+"een locatienaam"
+
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
 msgstr "Zet het geluid van het alarm aan of uit"
@@ -121,124 +132,124 @@ msgstr "Zet het geluid van het alarm aan of uit"
 msgid "Remove the alarm"
 msgstr "Alarm verwijderen"
 
-#: data/ui/edit-dialog.ui:18 data/ui/source-dialog.ui:762
-#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1102
+#: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
+#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1162
 msgid "Cancel"
 msgstr "Annuleren"
 
-#: data/ui/edit-dialog.ui:38
+#: data/ui/edit-dialog.ui:36
 msgid "Click to select the calendar"
 msgstr "Klik om de agenda te selecteren"
 
-#: data/ui/edit-dialog.ui:110 src/gcal-edit-dialog.c:273
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
 msgid "Done"
 msgstr "Klaar"
 
-#: data/ui/edit-dialog.ui:140
+#: data/ui/edit-dialog.ui:146
 msgid "Title"
 msgstr "Titel"
 
-#: data/ui/edit-dialog.ui:158
+#: data/ui/edit-dialog.ui:164
 msgid "Date"
 msgstr "Datum"
 
-#: data/ui/edit-dialog.ui:174
+#: data/ui/edit-dialog.ui:180
 msgid "Repeat"
 msgstr "Herhalen"
 
-#: data/ui/edit-dialog.ui:192
+#: data/ui/edit-dialog.ui:198
 msgid "Reminders"
 msgstr "Herinneringen"
 
-#: data/ui/edit-dialog.ui:210
+#: data/ui/edit-dialog.ui:216
 msgid "Notes"
 msgstr "Opmerkingen"
 
-#: data/ui/edit-dialog.ui:226 data/ui/source-dialog.ui:563
+#: data/ui/edit-dialog.ui:232 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "Locatie"
 
-#: data/ui/edit-dialog.ui:293
+#: data/ui/edit-dialog.ui:301
 msgid "Time"
 msgstr "Tijd"
 
-#: data/ui/edit-dialog.ui:346
+#: data/ui/edit-dialog.ui:354
 msgid "All Day"
 msgstr "De hele dag"
 
-#: data/ui/edit-dialog.ui:391
+#: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
 msgstr "Herinnering toevoegen…"
 
-#: data/ui/edit-dialog.ui:422
+#: data/ui/edit-dialog.ui:430
 msgid "No Repeat"
 msgstr "Eén keer"
 
-#: data/ui/edit-dialog.ui:423
+#: data/ui/edit-dialog.ui:431
 msgid "Daily"
 msgstr "Dagelijks"
 
-#: data/ui/edit-dialog.ui:424
+#: data/ui/edit-dialog.ui:432
 msgid "Monday – Friday"
 msgstr "Maandag – vrijdag"
 
-#: data/ui/edit-dialog.ui:425
+#: data/ui/edit-dialog.ui:433
 msgid "Weekly"
 msgstr "Wekelijks"
 
-#: data/ui/edit-dialog.ui:426
+#: data/ui/edit-dialog.ui:434
 msgid "Monthly"
 msgstr "Maandelijks"
 
-#: data/ui/edit-dialog.ui:427
+#: data/ui/edit-dialog.ui:435
 msgid "Yearly"
 msgstr "Jaarlijks"
 
-#: data/ui/edit-dialog.ui:455
+#: data/ui/edit-dialog.ui:463
 msgid "Forever"
 msgstr "Voor altijd"
 
-#: data/ui/edit-dialog.ui:456
+#: data/ui/edit-dialog.ui:464
 msgid "No. of occurrences"
 msgstr "Aantal herhalingen"
 
-#: data/ui/edit-dialog.ui:457
+#: data/ui/edit-dialog.ui:465
 msgid "Until Date"
 msgstr "Tot datum"
 
-#: data/ui/edit-dialog.ui:551
+#: data/ui/edit-dialog.ui:560
 msgid "Delete Event"
 msgstr "Afspraak verwijderen"
 
-#: data/ui/edit-dialog.ui:588
+#: data/ui/edit-dialog.ui:599
 msgid "5 minutes"
 msgstr "5 minuten"
 
-#: data/ui/edit-dialog.ui:597
+#: data/ui/edit-dialog.ui:608
 msgid "10 minutes"
 msgstr "10 minuten"
 
-#: data/ui/edit-dialog.ui:606
+#: data/ui/edit-dialog.ui:617
 msgid "30 minutes"
 msgstr "30 minuten"
 
-#: data/ui/edit-dialog.ui:615
+#: data/ui/edit-dialog.ui:626
 msgid "1 hour"
 msgstr "1 uur"
 
-#: data/ui/edit-dialog.ui:623
+#: data/ui/edit-dialog.ui:634
 msgid "1 day"
 msgstr "1 dag"
 
-#: data/ui/edit-dialog.ui:632
+#: data/ui/edit-dialog.ui:643
 msgid "2 days"
 msgstr "2 dagen"
 
-#: data/ui/edit-dialog.ui:641
+#: data/ui/edit-dialog.ui:652
 msgid "3 days"
 msgstr "3 dagen"
 
-#: data/ui/edit-dialog.ui:650
+#: data/ui/edit-dialog.ui:661
 msgid "1 week"
 msgstr "1 week"
 
@@ -322,13 +333,13 @@ msgctxt "shortcut window"
 msgid "Year view"
 msgstr "Jaarweergave"
 
-#: data/ui/menus.ui:6 data/ui/menus.ui:36
+#: data/ui/menus.ui:6
 msgid "Add Eve_nt…"
 msgstr "_Afspraak toevoegen…"
 
 #: data/ui/menus.ui:13
 msgid "_Calendars"
-msgstr "_Agenda's"
+msgstr "_Agenda’s"
 
 #: data/ui/menus.ui:19
 msgid "_Keyboard Shortcuts"
@@ -342,21 +353,21 @@ msgstr "_Info"
 msgid "_Quit"
 msgstr "_Afsluiten"
 
-#: data/ui/menus.ui:40
-msgid "_Synchronize"
-msgstr "_Synchroniseren"
-
-#: data/ui/menus.ui:49
+#: data/ui/menus.ui:36
 msgid "From Web…"
 msgstr "Van het internet…"
 
-#: data/ui/menus.ui:53
+#: data/ui/menus.ui:40
 msgid "New Local Calendar…"
 msgstr "Nieuwe lokale agenda…"
 
-#: data/ui/menus.ui:57
+#: data/ui/menus.ui:44
 msgid "From File…"
 msgstr "Van bestand…"
+
+#: data/ui/month-popover.ui:91
+msgid "New Event…"
+msgstr "Nieuwe afspraak…"
 
 #: data/ui/quick-add-popover.ui:117
 msgid "Edit Details…"
@@ -367,15 +378,15 @@ msgstr "Gegevens bewerken…"
 msgid "Add"
 msgstr "Toevoegen"
 
-#: data/ui/search-view.ui:76
+#: data/ui/search-popover.ui:76
 msgid "No results found"
 msgstr "Geen resultaten gevonden"
 
-#: data/ui/search-view.ui:92
+#: data/ui/search-popover.ui:92
 msgid "Try a different search"
 msgstr "Probeer een andere zoekopdracht"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1129 src/gcal-window.c:1133
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
 msgid "Undo"
 msgstr "Ongedaan maken"
 
@@ -406,7 +417,7 @@ msgstr "Microsoft Exchange"
 
 #: data/ui/source-dialog.ui:346 data/ui/source-dialog.ui:682
 msgid "Calendars"
-msgstr "Agenda's"
+msgstr "Agenda’s"
 
 #: data/ui/source-dialog.ui:421
 msgid "Overview"
@@ -458,10 +469,15 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Agenda-adres"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2193
-#: src/gcal-source-dialog.c:2199
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
+#: src/gcal-source-dialog.c:2291
 msgid "Add Calendar"
 msgstr "Agenda toevoegen"
+
+#: data/ui/source-dialog.ui:745 data/ui/window.ui:344
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+msgid "Calendar Settings"
+msgstr "Agenda-instellingen"
 
 #: data/ui/source-dialog.ui:806
 msgid "User"
@@ -471,12 +487,16 @@ msgstr "Gebruiker"
 msgid "Password"
 msgstr "Wachtwoord"
 
+#: data/ui/source-dialog.ui:866
+msgid "Enter your credentials"
+msgstr "Voer uw aanmeldgegevens in"
+
 #: data/ui/source-dialog.ui:878
 msgid "Connect"
 msgstr "Verbinden"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:763
-#: src/views/gcal-week-view.c:287
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:754
+#: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
 
@@ -484,129 +504,140 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:442
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:432
 msgid "AM"
 msgstr "AM"
 
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:442
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:432
 msgid "PM"
 msgstr "PM"
 
-#: data/ui/window.ui:64
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+msgid "_Weather"
+msgstr "_Weer"
+
+#: data/ui/weather-settings.ui:30
+msgid "Show Weather"
+msgstr "Weer tonen"
+
+#: data/ui/weather-settings.ui:53
+msgid "Automatic Location"
+msgstr "Automatische locatie"
+
+#: data/ui/window.ui:67
 msgid "Week"
 msgstr "Week"
 
-#: data/ui/window.ui:79
+#: data/ui/window.ui:82
 msgid "Month"
 msgstr "Maand"
 
-#: data/ui/window.ui:93
+#: data/ui/window.ui:96
 msgid "Year"
 msgstr "Jaar"
 
-#: data/ui/window.ui:187 data/ui/year-view.ui:84 src/views/gcal-year-view.c:275
-#: src/views/gcal-year-view.c:509
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
+#: src/views/gcal-year-view.c:514
 msgid "Today"
 msgstr "Vandaag"
 
-#: data/ui/window.ui:261
+#: data/ui/window.ui:271
 msgid "Manage your calendars"
-msgstr "Uw agenda's beheren"
+msgstr "Uw agenda’s beheren"
 
-#: data/ui/window.ui:278
+#: data/ui/window.ui:288
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Zoeken naar afspraken"
 
-#: data/ui/window.ui:334 src/gcal-source-dialog.c:844
-#: src/gcal-source-dialog.c:2222
-msgid "Calendar Settings"
-msgstr "Agenda-instellingen"
+#: data/ui/window.ui:391
+msgid "Add Eve_nt"
+msgstr "_Afspraak toevoegen"
 
-#: data/ui/year-view.ui:95
+#: data/ui/window.ui:400
+msgid "_Synchronize"
+msgstr "_Synchroniseren"
+
+#: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Geen afspraken"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2322
+#: data/ui/year-view.ui:155
 msgid "Add Event…"
 msgstr "Afspraak toevoegen…"
 
-#: src/gcal-application.c:89
+#: src/gcal-application.c:88
+msgid "Quit GNOME Calendar"
+msgstr "Gnome Agenda afsluiten"
+
+#: src/gcal-application.c:93
 msgid "Display version number"
 msgstr "Versienummer weergeven"
 
-#: src/gcal-application.c:94
+#: src/gcal-application.c:98
 msgid "Enable debug messages"
 msgstr "Debug-berichten inschakelen"
 
-#: src/gcal-application.c:99
+#: src/gcal-application.c:103
 msgid "Open calendar on the passed date"
 msgstr "Agenda openen op de verstreken datum"
 
-#: src/gcal-application.c:104
+#: src/gcal-application.c:108
 msgid "Open calendar showing the passed event"
 msgstr "Agenda openen en verstreken afspraak tonen"
 
-#: src/gcal-application.c:285
-msgid "— Calendar management"
-msgstr "— Agendabeheer"
-
-#: src/gcal-application.c:467
+#: src/gcal-application.c:595
 #, c-format
-msgid "Copyright © %d The Calendar authors"
-msgstr "Copyright © %d De auteurs van Agenda"
+msgid "Copyright © 2012–%d The Calendar authors"
+msgstr "Copyright © 2012–%d De auteurs van Agenda"
 
-#: src/gcal-application.c:473
-#, c-format
-msgid "Copyright © %d–%d The Calendar authors"
-msgstr "Copyright © %d–%d De auteurs van Agenda"
-
-#: src/gcal-application.c:486
+#: src/gcal-application.c:646
 msgid "translator-credits"
 msgstr ""
 "Nathan Follens\n"
 "Hannie Dumoleyn\n"
 "Justin van Steijn\n"
+"\n"
 "Meer info over Gnome-NL http://nl.gnome.org"
 
-#: src/gcal-edit-dialog.c:273
+#: src/gcal-edit-dialog.c:277
 msgid "Save"
 msgstr "Opslaan"
 
-#: src/gcal-edit-dialog.c:975
+#: src/gcal-edit-dialog.c:1037
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minuut geleden"
 msgstr[1] "%d minuten geleden"
 
-#: src/gcal-edit-dialog.c:983
+#: src/gcal-edit-dialog.c:1045
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d uur geleden"
 msgstr[1] "%d uur geleden"
 
-#: src/gcal-edit-dialog.c:991
+#: src/gcal-edit-dialog.c:1053
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d dag geleden"
 msgstr[1] "%d dagen geleden"
 
-#: src/gcal-edit-dialog.c:999
+#: src/gcal-edit-dialog.c:1061
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d week geleden"
 msgstr[1] "%d weken geleden"
 
-#: src/gcal-edit-dialog.c:1302 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Naamloze afspraak"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:364
+#: src/gcal-event-widget.c:419
 #, c-format
 msgid "At %s"
 msgstr "Bij %s"
@@ -811,73 +842,61 @@ msgstr "Nieuwe afspraak komende zondag"
 #. Translators: %d is the numeric day of month
 #: src/gcal-quick-add-popover.c:405
 #, c-format
-#| msgid "New Event on January"
 msgid "New Event on January %d"
 msgstr "Nieuwe afspraak op %d januari"
 
 #: src/gcal-quick-add-popover.c:406
 #, c-format
-#| msgid "New Event on February"
 msgid "New Event on February %d"
 msgstr "Nieuwe afspraak op %d februari"
 
 #: src/gcal-quick-add-popover.c:407
 #, c-format
-#| msgid "New Event on March"
 msgid "New Event on March %d"
 msgstr "Nieuwe afspraak op %d maart"
 
 #: src/gcal-quick-add-popover.c:408
 #, c-format
-#| msgid "New Event on April"
 msgid "New Event on April %d"
 msgstr "Nieuwe afspraak op %d april"
 
 #: src/gcal-quick-add-popover.c:409
 #, c-format
-#| msgid "New Event on May"
 msgid "New Event on May %d"
 msgstr "Nieuwe afspraak op %d mei"
 
 #: src/gcal-quick-add-popover.c:410
 #, c-format
-#| msgid "New Event on June"
 msgid "New Event on June %d"
 msgstr "Nieuwe afspraak op %d juni"
 
 #: src/gcal-quick-add-popover.c:411
 #, c-format
-#| msgid "New Event on July"
 msgid "New Event on July %d"
 msgstr "Nieuwe afspraak op %d juli"
 
 #: src/gcal-quick-add-popover.c:412
 #, c-format
-#| msgid "New Event on August"
 msgid "New Event on August %d"
 msgstr "Nieuwe afspraak op %d augustus"
 
 #: src/gcal-quick-add-popover.c:413
 #, c-format
-#| msgid "New Event on September"
 msgid "New Event on September %d"
 msgstr "Nieuwe afspraak op %d september"
 
 #: src/gcal-quick-add-popover.c:414
 #, c-format
-#| msgid "New Event on October"
 msgid "New Event on October %d"
 msgstr "Nieuwe afspraak op %d oktober"
 
 #: src/gcal-quick-add-popover.c:415
 #, c-format
-#| msgid "New Event on November"
 msgid "New Event on November %d"
 msgstr "Nieuwe afspraak op %d november"
 
 #: src/gcal-quick-add-popover.c:416
 #, c-format
-#| msgid "New Event on December"
 msgid "New Event on December %d"
 msgstr "Nieuwe afspraak op %d december"
 
@@ -887,61 +906,61 @@ msgstr "Nieuwe afspraak op %d december"
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
-#: src/gcal-search-view.c:358
+#: src/gcal-search-popover.c:303
 msgid "All day"
 msgstr "De hele dag"
 
-#: src/gcal-search-view.c:563
+#: src/gcal-search-popover.c:563
 msgid "Use the entry above to search for events."
 msgstr "Gebruik de invoer hierboven om te zoeken naar afspraken."
 
 #. Dialog
-#: src/gcal-source-dialog.c:1099
+#: src/gcal-source-dialog.c:1159
 msgid "Select a calendar file"
-msgstr "Een agendabestand kiezen"
+msgstr "Kies een agendabestand"
 
-#: src/gcal-source-dialog.c:1103
+#: src/gcal-source-dialog.c:1163
 msgid "Open"
 msgstr "Openen"
 
-#: src/gcal-source-dialog.c:1110
+#: src/gcal-source-dialog.c:1170
 msgid "Calendar files"
 msgstr "Agendabestanden"
 
 #. update the source properties
-#: src/gcal-source-dialog.c:1144
+#: src/gcal-source-dialog.c:1204
 msgid "Unnamed Calendar"
 msgstr "Naamloze agenda"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1750
+#: src/gcal-source-dialog.c:1810
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Agenda <b>%s</b> verwijderd"
 
-#: src/gcal-source-dialog.c:1953 src/gcal-source-dialog.c:2010
+#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
 msgid "Off"
 msgstr "Uit"
 
-#: src/gcal-source-dialog.c:1953 src/gcal-source-dialog.c:2010
+#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
 msgid "On"
 msgstr "Aan"
 
-#: src/gcal-source-dialog.c:2009
+#: src/gcal-source-dialog.c:1914
 msgid "Expired"
 msgstr "Verlopen"
 
-#: src/gcal-time-selector.c:84
+#: src/gcal-time-selector.c:83
 #, c-format
 msgid "%s AM"
 msgstr "%s AM"
 
-#: src/gcal-time-selector.c:86
+#: src/gcal-time-selector.c:85
 #, c-format
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1188
+#: src/gcal-utils.c:1093
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -949,55 +968,42 @@ msgstr ""
 "De afspraak die u probeert te bewerken is terugkerend. De wijzigingen die u "
 "heeft gemaakt worden toegepast op:"
 
-#: src/gcal-utils.c:1191
+#: src/gcal-utils.c:1096
 msgid "_Cancel"
 msgstr "_Annuleren"
 
-#: src/gcal-utils.c:1193
+#: src/gcal-utils.c:1098
 msgid "_Only This Event"
 msgstr "_Alleen deze afspraak"
 
-#: src/gcal-utils.c:1200
+#: src/gcal-utils.c:1105
 msgid "_Subsequent events"
-msgstr "_Komende afspraken"
+msgstr "Komende af_spraken"
 
-#: src/gcal-utils.c:1202
+#: src/gcal-utils.c:1107
 msgid "_All events"
 msgstr "_Alle afspraken"
 
-#: src/gcal-window.c:1129
+#: src/gcal-window.c:1039
 msgid "Another event deleted"
 msgstr "Nog een afspraak verwijderd"
 
-#: src/gcal-window.c:1133
+#: src/gcal-window.c:1043
 msgid "Event deleted"
-msgstr "Gebeurtenis verwijderd"
+msgstr "Afspraak verwijderd"
 
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-month-view.c:225 src/views/gcal-year-view.c:290
-#: src/views/gcal-year-view.c:512
-msgid "%B %d"
-msgstr "%B %d"
+#: src/views/gcal-week-grid.c:751 src/views/gcal-week-view.c:275
+msgid "00 AM"
+msgstr "0:00"
 
-#: src/views/gcal-month-view.c:1186
-msgid "Other events"
-msgstr "Andere afspraken"
-
-#. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:1785 src/views/gcal-week-header.c:338
+#: src/views/gcal-week-header.c:398
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Andere afspraak"
 msgstr[1] "Andere %d afspraken"
 
-#: src/views/gcal-week-grid.c:760 src/views/gcal-week-view.c:284
-msgid "00 AM"
-msgstr "0:00"
-
-#: src/views/gcal-week-header.c:871
+#: src/views/gcal-week-header.c:934
 #, c-format
 msgid "week %d"
 msgstr "week %d"
@@ -1005,9 +1011,34 @@ msgstr "week %d"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:284
+#: src/views/gcal-year-view.c:288
 msgid "%B %d…"
 msgstr "%B %d…"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:517
+msgid "%B %d"
+msgstr "%B %d"
+
+#~ msgid "win-menu-weather"
+#~ msgstr "win-menu-weather"
+
+#~ msgid "win-menu-main"
+#~ msgstr "win-menu-main"
+
+#~ msgid "temp"
+#~ msgstr "temp"
+
+#~ msgid "— Calendar management"
+#~ msgstr "— Agendabeheer"
+
+#~ msgid "Copyright © %d The Calendar authors"
+#~ msgstr "Copyright © %d De auteurs van Agenda"
+
+#~ msgid "Other events"
+#~ msgstr "Andere afspraken"
 
 #~ msgid "%1$s %2$d"
 #~ msgstr "%1$s %2$d"
