@@ -9,6 +9,7 @@ variables:
                 gtk3-devel gsettings-desktop-schemas-devel git
                 gnome-online-accounts-devel libdazzle-devel
                 evolution-data-server-devel libgweather-devel
+                geoclue2-devel
 
 before_script:
   - dnf update -y --nogpgcheck && dnf install -y --nogpgcheck $DEPENDENCIES
