@@ -60,6 +60,7 @@ deploy:
   script:
     - meson . _build
     - ninja -C _build
+    - ninja -C _build install # Workaround GSettings...
     - meson test -C _build
     - ninja dist -C _build
   only:
