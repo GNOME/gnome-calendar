@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-02-01 17:48+0000\n"
-"PO-Revision-Date: 2018-02-04 22:20+0100\n"
+"POT-Creation-Date: 2018-02-20 22:28+0000\n"
+"PO-Revision-Date: 2018-02-20 17:12+0100\n"
 "Last-Translator: Piotr Drąg <piotrdrag@gmail.com>\n"
 "Language-Team: Polish <community-poland@mozilla.org>\n"
 "Language: pl\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:640
+#: data/ui/window.ui:187 src/gcal-application.c:640 src/main.c:36
 msgid "Calendar"
 msgstr "Kalendarz"
 
@@ -74,45 +74,45 @@ msgstr "org.gnome.Calendar"
 msgid "Calendar;Event;Reminder;"
 msgstr "Kalendarz;Wydarzenie;Zdarzenie;Przypomnienie;Przypominanie;"
 
-#: data/org.gnome.calendar.gschema.xml:6
+#: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
 msgstr "Okno zmaksymalizowane"
 
-#: data/org.gnome.calendar.gschema.xml:7
+#: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
 msgstr "Stan maksymalizacji okna"
 
-#: data/org.gnome.calendar.gschema.xml:11
+#: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
 msgstr "Rozmiar okna"
 
-#: data/org.gnome.calendar.gschema.xml:12
+#: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
 msgstr "Rozmiar okna (szerokość i wysokość)."
 
-#: data/org.gnome.calendar.gschema.xml:16
+#: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
 msgstr "Położenie okna"
 
-#: data/org.gnome.calendar.gschema.xml:17
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
 msgstr "Położenie okna (na osi X oraz Y)."
 
-#: data/org.gnome.calendar.gschema.xml:21
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Typ aktywnego widoku"
 
-#: data/org.gnome.calendar.gschema.xml:22
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
 "Typ aktywnego widoku okna, domyślna wartość: „monthly view” (widok "
 "miesięczny)"
 
-#: data/org.gnome.calendar.gschema.xml:26
+#: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
 msgstr "Konfiguracja usługi pogody"
 
-#: data/org.gnome.calendar.gschema.xml:27
+#: data/org.gnome.calendar.gschema.xml.in:27
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
@@ -634,7 +634,7 @@ msgid "Unnamed event"
 msgstr "Wydarzenie bez nazwy"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:419
+#: src/gcal-event-widget.c:420
 #, c-format
 msgid "At %s"
 msgstr "Gdzie: %s"
@@ -698,7 +698,7 @@ msgstr "do następnej soboty"
 
 #: src/gcal-quick-add-popover.c:261
 msgid "to next Sunday"
-msgstr "do następnego niedzieli"
+msgstr "do następnej niedzieli"
 
 #: src/gcal-quick-add-popover.c:266
 msgid "January"
@@ -749,14 +749,17 @@ msgid "December"
 msgstr "grudnia"
 
 #: src/gcal-quick-add-popover.c:286
+#, c-format
 msgid "from Today"
 msgstr "od dzisiaj"
 
 #: src/gcal-quick-add-popover.c:290
+#, c-format
 msgid "from Tomorrow"
 msgstr "od jutra"
 
 #: src/gcal-quick-add-popover.c:294
+#, c-format
 msgid "from Yesterday"
 msgstr "od wczoraj"
 
@@ -770,14 +773,17 @@ msgid "from %1$s %2$s"
 msgstr "od %2$s %1$s"
 
 #: src/gcal-quick-add-popover.c:323
+#, c-format
 msgid "to Today"
 msgstr "do dzisiaj"
 
 #: src/gcal-quick-add-popover.c:327
+#, c-format
 msgid "to Tomorrow"
 msgstr "do jutra"
 
 #: src/gcal-quick-add-popover.c:331
+#, c-format
 msgid "to Yesterday"
 msgstr "do wczoraj"
 
@@ -797,14 +803,17 @@ msgid "New Event %1$s %2$s"
 msgstr "Nowe wydarzenie %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
+#, c-format
 msgid "New Event Today"
 msgstr "Nowe wydarzenie dzisiaj"
 
 #: src/gcal-quick-add-popover.c:377
+#, c-format
 msgid "New Event Tomorrow"
 msgstr "Nowe wydarzenie jutro"
 
 #: src/gcal-quick-add-popover.c:381
+#, c-format
 msgid "New Event Yesterday"
 msgstr "Nowe wydarzenie wczoraj"
 
