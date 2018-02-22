@@ -322,12 +322,12 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
     {
       if (multiday)
         {
-          start = g_date_time_format (tooltip_start, "%x");
-          end = g_date_time_format (tooltip_end, "%x");
+          start = g_date_time_format (tooltip_start, _("%B %e"));
+          end = g_date_time_format (tooltip_end, _("%B %e"));
         }
       else
         {
-          start = g_date_time_format (tooltip_start, "%x");
+          start = g_date_time_format (tooltip_start, _("%B %e"));
           end = NULL;
         }
     }
@@ -339,26 +339,26 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
             {
               if (is_ltr)
                 {
-                  start = g_date_time_format (tooltip_start, "%x %R");
-                  end = g_date_time_format (tooltip_end, "%x %R");
+                  start = g_date_time_format (tooltip_start, _("%R (%B %e)"));
+                  end = g_date_time_format (tooltip_end, _("%R (%B %e)"));
                 }
               else
                 {
-                  start = g_date_time_format (tooltip_start, "%R %x");
-                  end = g_date_time_format (tooltip_end, "%R %x");
+                  start = g_date_time_format (tooltip_start, _("%R (%B %e)"));
+                  end = g_date_time_format (tooltip_end, _("%R (%B %e)"));
                 }
             }
           else
             {
               if (is_ltr)
                 {
-                  start = g_date_time_format (tooltip_start, "%x %I:%M %P");
-                  end = g_date_time_format (tooltip_end, "%x %I:%M %P");
+                  start = g_date_time_format (tooltip_start, _("%I:%M %P (%B %e)"));
+                  end = g_date_time_format (tooltip_end, _("%I:%M %P (%B %e)"));
                 }
               else
                 {
-                  start = g_date_time_format (tooltip_start, "%P %M:%I %x");
-                  end = g_date_time_format (tooltip_end, "%P %M:%I %x");
+                  start = g_date_time_format (tooltip_start, _("%P %M:%I (%B %e)"));
+                  end = g_date_time_format (tooltip_end, _("%P %M:%I (%B %e)"));
                 }
             }
         }
@@ -368,12 +368,12 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
             {
               if (is_ltr)
                 {
-                  start = g_date_time_format (tooltip_start, "%x, %R");
+                  start = g_date_time_format (tooltip_start, _("%B %e, %R"));
                   end = g_date_time_format (tooltip_end, "%R");
                 }
               else
                 {
-                  start = g_date_time_format (tooltip_start, "%R ,%x");
+                  start = g_date_time_format (tooltip_start, _("%R ,%B %e"));
                   end = g_date_time_format (tooltip_end, "%R");
                 }
             }
@@ -381,12 +381,12 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
             {
               if (is_ltr)
                 {
-                  start = g_date_time_format (tooltip_start, "%x, %I:%M %P");
+                  start = g_date_time_format (tooltip_start, _("%B %e, %I:%M %P"));
                   end = g_date_time_format (tooltip_end, "%I:%M %P");
                 }
               else
                 {
-                  start = g_date_time_format (tooltip_start, "%P %M:%I ,%x");
+                  start = g_date_time_format (tooltip_start, _("%P %M:%I ,%B %e"));
                   end = g_date_time_format (tooltip_end, "%P %M:%I");
                 }
             }
@@ -402,7 +402,7 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
   else
     {
       g_string_append_printf (tooltip_mesg,
-                              "\n%s - %s",
+                              _("\n%s to %s"),
                               is_ltr ? start : end,
                               is_ltr ? end : start);
     }
