@@ -197,7 +197,7 @@ popover.events button {
 event {
     border-radius: 2px;
     margin: 0 1px 1px 2px;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 event.color-dark.horizontal.timed,
