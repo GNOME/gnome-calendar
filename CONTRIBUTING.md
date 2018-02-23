@@ -7,7 +7,8 @@ Please note we have a code of conduct, please follow it in all your interactions
 
 ## Pull Request Process
 
-1. Ensure your code compiles. Run `make` before creating the pull request.
+1. Ensure your code compiles and doesn't break anything. Run `meson test -C <builddir>` before creating
+   the pull request.
 2. If you're adding new API, it must be properly documented.
 3. The commit message is formatted as follows:
    ```
@@ -17,7 +18,7 @@ Please note we have a code of conduct, please follow it in all your interactions
 ‌
    Another one explaining how you solved that.
 ‌
-   <link to the bug ticket>
+   <link to the issue>
    ```
 4. You may merge the pull request in once you have the sign-off of the maintainers, or if you
    do not have permission to do that, you may request the second reviewer to merge it for you.
