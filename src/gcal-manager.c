@@ -783,13 +783,13 @@ gcal_manager_finalize (GObject *object)
   g_clear_object (&self->search_data_model);
   g_clear_object (&self->shell_search_data_model);
 
-  if (self->search_view_data != NULL)
+  if (self->search_view_data)
     {
-      g_free (self->search_view_data->query);
-      g_free (self->search_view_data);
+      g_clear_pointer (&self->search_view_data->query, g_free);
+      g_clear_pointer (&self->search_view_data, g_free);
     }
 
-  g_hash_table_destroy (self->clients);
+  g_clear_pointer (&self->clients, g_hash_table_destroy);
 
   GCAL_EXIT;
 }
