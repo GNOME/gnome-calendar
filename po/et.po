@@ -1,0 +1,1011 @@
+# Estonian translation for gnome-calendar.
+# Copyright (C) 2018 gnome-calendar's COPYRIGHT HOLDER
+# This file is distributed under the same license as the gnome-calendar package.
+# Liivia Lilleväli <liivia.l10n@gmail.com>, 2018.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-calendar master\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
+"POT-Creation-Date: 2018-01-22 12:26+0000\n"
+"PO-Revision-Date: 2018-02-23 20:48+0200\n"
+"Language-Team: Estonian <gnome-et-list@gnome.org>\n"
+"Language: et\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Last-Translator: Liivia Lilleväli <liivia.l10n@gmail.com>\n"
+"X-Generator: Poedit 2.0.6\n"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:7
+#: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
+#: data/ui/window.ui:187 src/gcal-application.c:540
+msgid "Calendar"
+msgstr "Kalender"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:8
+msgid "Calendar for GNOME"
+msgstr "Kalender GNOME’ile"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:11
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"GNOME Kalender on lihtne ja kena kalendrirakendus, mis sobitub ideaalselt "
+"GNOME töölauaga. Kuna Kalender kasutab samu komponente, millele on üles "
+"ehitatud GNOME töölaud, integreerub ta GNOME’i ökosüsteemiga suurepäraselt."
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:16
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
+msgstr ""
+"Meie eesmärk on leida täiuslik tasakaal hästi väljatöötatud võimaluste ja "
+"kasutajasõbralikkuse vahel. Hoidume üleliigsest, kuid samas seisame hea "
+"selle eest, et kõik oluline oleks sinu käsutuses. Kalendrit on nii mugav "
+"kasutada, et seda proovides tekib sul kiiresti tunne, nagu oleksite juba "
+"vanad tuttavad!"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:27
+msgid "Week view"
+msgstr "Nädalavaade"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:31
+msgid "Search for events"
+msgstr "Sündmuste otsing"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:35
+msgid "Calendar management"
+msgstr "Kalendrihaldus"
+
+#: data/org.gnome.Calendar.desktop.in:4
+msgid "Access and manage your calendars"
+msgstr "Isiklike kalendrite vaatamine ja haldamine"
+
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: data/org.gnome.Calendar.desktop.in:7
+msgid "org.gnome.Calendar"
+msgstr "org.gnome.Calendar"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.Calendar.desktop.in:13
+msgid "Calendar;Event;Reminder;"
+msgstr "Calendar;Event;Reminder;Kalender;Sündmused;Meeldetuletused;Päevakava;"
+
+#: data/org.gnome.calendar.gschema.xml:6
+msgid "Window maximized"
+msgstr "Akna maksimeeritus"
+
+#: data/org.gnome.calendar.gschema.xml:7
+msgid "Window maximized state"
+msgstr "Akna maksimeerituse olek"
+
+#: data/org.gnome.calendar.gschema.xml:11
+msgid "Window size"
+msgstr "Akna suurus"
+
+#: data/org.gnome.calendar.gschema.xml:12
+msgid "Window size (width and height)."
+msgstr "Akna suurus (laius ja kõrgus)."
+
+#: data/org.gnome.calendar.gschema.xml:16
+msgid "Window position"
+msgstr "Akna asukoht"
+
+#: data/org.gnome.calendar.gschema.xml:17
+msgid "Window position (x and y)."
+msgstr "Akna asukoht (x ja y)."
+
+#: data/org.gnome.calendar.gschema.xml:21
+msgid "Type of the active view"
+msgstr "Aktiivse vaate tüüp"
+
+#: data/org.gnome.calendar.gschema.xml:22
+msgid "Type of the active window view, default value is: monthly view"
+msgstr "Aktiivse akna vaate tüüp, vaikeväärtuseks on kuuvaade"
+
+#: data/org.gnome.calendar.gschema.xml:26
+msgid "Weather Service Configuration"
+msgstr "Ilmateenistuse seadistamine"
+
+#: data/org.gnome.calendar.gschema.xml:27
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr ""
+"Ilmateadete näitamine, automaatsete asukohtade kasutamine ja asukoha nimi"
+
+#: data/ui/alarm-row.ui:34
+msgid "Toggles the sound of the alarm"
+msgstr "Alarmi heli sisse- ja väljalülitamine"
+
+#: data/ui/alarm-row.ui:54
+msgid "Remove the alarm"
+msgstr "Alarmi eemaldamine"
+
+#: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
+#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1162
+msgid "Cancel"
+msgstr "Loobu"
+
+#: data/ui/edit-dialog.ui:36
+msgid "Click to select the calendar"
+msgstr "Kalendri valimiseks klõpsa siia"
+
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:275
+msgid "Done"
+msgstr "Valmis"
+
+#: data/ui/edit-dialog.ui:146
+msgid "Title"
+msgstr "Pealkiri"
+
+#: data/ui/edit-dialog.ui:164
+msgid "Date"
+msgstr "Kuupäev"
+
+#: data/ui/edit-dialog.ui:180
+msgid "Repeat"
+msgstr "Kordus"
+
+#: data/ui/edit-dialog.ui:198
+msgid "Reminders"
+msgstr "Meeldetuletused"
+
+#: data/ui/edit-dialog.ui:216
+msgid "Notes"
+msgstr "Märkmed"
+
+#: data/ui/edit-dialog.ui:232 data/ui/source-dialog.ui:563
+msgid "Location"
+msgstr "Asukoht"
+
+#: data/ui/edit-dialog.ui:301
+msgid "Time"
+msgstr "Kellaaeg"
+
+#: data/ui/edit-dialog.ui:354
+msgid "All Day"
+msgstr "Kogu päev"
+
+#: data/ui/edit-dialog.ui:399
+msgid "Add reminder…"
+msgstr "Lisa meeldetuletus…"
+
+#: data/ui/edit-dialog.ui:430
+msgid "No Repeat"
+msgstr "Korduseta"
+
+#: data/ui/edit-dialog.ui:431
+msgid "Daily"
+msgstr "Iga päev"
+
+#: data/ui/edit-dialog.ui:432
+msgid "Monday – Friday"
+msgstr "Esmaspäev – reede"
+
+#: data/ui/edit-dialog.ui:433
+msgid "Weekly"
+msgstr "Iga nädal"
+
+#: data/ui/edit-dialog.ui:434
+msgid "Monthly"
+msgstr "Iga kuu"
+
+#: data/ui/edit-dialog.ui:435
+msgid "Yearly"
+msgstr "Iga aasta"
+
+#: data/ui/edit-dialog.ui:463
+msgid "Forever"
+msgstr "Igavesti"
+
+#: data/ui/edit-dialog.ui:464
+msgid "No. of occurrences"
+msgstr "Esinemisjuhtude arv"
+
+#: data/ui/edit-dialog.ui:465
+msgid "Until Date"
+msgstr "Kuni kuupäevani"
+
+#: data/ui/edit-dialog.ui:560
+msgid "Delete Event"
+msgstr "Kustuta sündmus"
+
+#: data/ui/edit-dialog.ui:599
+msgid "5 minutes"
+msgstr "5 minutit"
+
+#: data/ui/edit-dialog.ui:608
+msgid "10 minutes"
+msgstr "10 minutit"
+
+#: data/ui/edit-dialog.ui:617
+msgid "30 minutes"
+msgstr "30 minutit"
+
+#: data/ui/edit-dialog.ui:626
+msgid "1 hour"
+msgstr "1 tund"
+
+#: data/ui/edit-dialog.ui:634
+msgid "1 day"
+msgstr "1 päev"
+
+#: data/ui/edit-dialog.ui:643
+msgid "2 days"
+msgstr "2 päeva"
+
+#: data/ui/edit-dialog.ui:652
+msgid "3 days"
+msgstr "3 päeva"
+
+#: data/ui/edit-dialog.ui:661
+msgid "1 week"
+msgstr "1 nädal"
+
+#: data/ui/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Üldine"
+
+#: data/ui/help-overlay.ui:17
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "Uus sündmus"
+
+#: data/ui/help-overlay.ui:24
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Akna sulgemine"
+
+#: data/ui/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Otsing"
+
+#: data/ui/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Abi kuvamine"
+
+#: data/ui/help-overlay.ui:45
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Kiirklahvid"
+
+#: data/ui/help-overlay.ui:54
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Navigeerimine"
+
+#: data/ui/help-overlay.ui:58
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "Tagasiliikumine"
+
+#: data/ui/help-overlay.ui:65
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "Edasiliikumine"
+
+#: data/ui/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "Tänase päeva kuvamine"
+
+#: data/ui/help-overlay.ui:79
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "Järgmine vaade"
+
+#: data/ui/help-overlay.ui:86
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "Eelmine vaade"
+
+#: data/ui/help-overlay.ui:95
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Vaade"
+
+#: data/ui/help-overlay.ui:99
+msgctxt "shortcut window"
+msgid "Week view"
+msgstr "Nädalavaade"
+
+#: data/ui/help-overlay.ui:106
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "Kuuvaade"
+
+#: data/ui/help-overlay.ui:113
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "Aastavaade"
+
+#: data/ui/menus.ui:6
+msgid "Add Eve_nt…"
+msgstr "Lisa _sündmus…"
+
+#: data/ui/menus.ui:13
+msgid "_Calendars"
+msgstr "K_alendrid"
+
+#: data/ui/menus.ui:19
+msgid "_Keyboard Shortcuts"
+msgstr "_Kiirklahvid"
+
+#: data/ui/menus.ui:23
+msgid "_About"
+msgstr "_Programmist"
+
+#: data/ui/menus.ui:27
+msgid "_Quit"
+msgstr "_Lõpeta"
+
+#: data/ui/menus.ui:36
+msgid "From Web…"
+msgstr "Veebist…"
+
+#: data/ui/menus.ui:40
+msgid "New Local Calendar…"
+msgstr "Uus kohalik kalender…"
+
+#: data/ui/menus.ui:44
+msgid "From File…"
+msgstr "Failist…"
+
+#: data/ui/month-popover.ui:91
+msgid "New Event…"
+msgstr "Uus sündmus…"
+
+#: data/ui/quick-add-popover.ui:117
+msgid "Edit Details…"
+msgstr "Muuda üksikasju…"
+
+#: data/ui/quick-add-popover.ui:130 data/ui/source-dialog.ui:389
+#: data/ui/source-dialog.ui:773
+msgid "Add"
+msgstr "Lisa"
+
+#: data/ui/search-view.ui:76
+msgid "No results found"
+msgstr "Tulemusi ei leitud"
+
+#: data/ui/search-view.ui:92
+msgid "Try a different search"
+msgstr "Proovi mõnda muud otsingusõna"
+
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1272 src/gcal-window.c:1276
+msgid "Undo"
+msgstr "Võta tagasi"
+
+#: data/ui/source-dialog.ui:135
+msgid "Online Accounts"
+msgstr "Veebikontod"
+
+#: data/ui/source-dialog.ui:151
+msgid "Open online account settings"
+msgstr "Veebikontode sätete avamine"
+
+#: data/ui/source-dialog.ui:198
+msgid "Google"
+msgstr "Google"
+
+#: data/ui/source-dialog.ui:209 data/ui/source-dialog.ui:260
+#: data/ui/source-dialog.ui:311
+msgid "Click to set up"
+msgstr "Klõpsa seadistamiseks"
+
+#: data/ui/source-dialog.ui:249
+msgid "Nextcloud"
+msgstr "Nextcloud"
+
+#: data/ui/source-dialog.ui:300
+msgid "Microsoft Exchange"
+msgstr "Microsoft Exchange"
+
+#: data/ui/source-dialog.ui:346 data/ui/source-dialog.ui:682
+msgid "Calendars"
+msgstr "Kalendrid"
+
+#: data/ui/source-dialog.ui:421
+msgid "Overview"
+msgstr "Ülevaade"
+
+#: data/ui/source-dialog.ui:441
+msgid "Add new events to this calendar by default"
+msgstr "Uued sündmused lisatakse vaikimisi sellesse kalendrisse"
+
+#: data/ui/source-dialog.ui:454
+msgid "Remove Calendar"
+msgstr "Eemalda kalender"
+
+#: data/ui/source-dialog.ui:483
+msgid "Display calendar"
+msgstr "Kalendri kuvamine"
+
+#: data/ui/source-dialog.ui:521
+msgid "Calendar name"
+msgstr "Kalendri nimi"
+
+#: data/ui/source-dialog.ui:535
+msgid "Color"
+msgstr "Värvus"
+
+#: data/ui/source-dialog.ui:549
+msgid "Account"
+msgstr "Konto"
+
+#: data/ui/source-dialog.ui:587
+msgid "Settings"
+msgstr "Sätted"
+
+#: data/ui/source-dialog.ui:618
+msgid "Edit Calendar"
+msgstr "Kalendri muutmine"
+
+#: data/ui/source-dialog.ui:631
+msgid ""
+"Enter the address of the calendar that you want to add. If the calendar "
+"belongs to one of your online accounts, you can add it through the <a href="
+"\"GOA\">online account settings</a>."
+msgstr ""
+"Sisesta lisatava kalendri aadress. Kui kalender, mida lisada soovid, kuulub "
+"mõne sinu veebikonto alla, saad selle lisada <a href=\"GOA\">veebikontode "
+"sätete</a> kaudu."
+
+#: data/ui/source-dialog.ui:646
+msgid "Calendar Address"
+msgstr "Kalendri aadress"
+
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
+#: src/gcal-source-dialog.c:2291
+msgid "Add Calendar"
+msgstr "Kalendri lisamine"
+
+#: data/ui/source-dialog.ui:745 data/ui/window.ui:344
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+msgid "Calendar Settings"
+msgstr "Kalendri sätted"
+
+#: data/ui/source-dialog.ui:806
+msgid "User"
+msgstr "Kasutaja"
+
+#: data/ui/source-dialog.ui:820
+msgid "Password"
+msgstr "Parool"
+
+#: data/ui/source-dialog.ui:866
+msgid "Enter your credentials"
+msgstr "Sisselogimisandmete sisestamine"
+
+#: data/ui/source-dialog.ui:878
+msgid "Connect"
+msgstr "Ühenda"
+
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:758
+#: src/views/gcal-week-view.c:287
+msgid "00:00"
+msgstr "00:00"
+
+#: data/ui/time-selector.ui:65
+msgid ":"
+msgstr ":"
+
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:442
+msgid "AM"
+msgstr "e. l."
+
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:442
+msgid "PM"
+msgstr "p. l."
+
+#: data/ui/window.ui:67
+msgid "Week"
+msgstr "Nädal"
+
+#: data/ui/window.ui:82
+msgid "Month"
+msgstr "Kuu"
+
+#: data/ui/window.ui:96
+msgid "Year"
+msgstr "Aasta"
+
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:285
+#: src/views/gcal-year-view.c:520
+msgid "Today"
+msgstr "Täna"
+
+#: data/ui/window.ui:271
+msgid "Manage your calendars"
+msgstr "Kalendrite haldamine"
+
+#: data/ui/window.ui:288
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "Sündmuste otsing"
+
+#: data/ui/window.ui:391
+msgid "Add Eve_nt"
+msgstr "Lisa sü_ndmus"
+
+#: data/ui/window.ui:400
+msgid "_Synchronize"
+msgstr "_Sünkroniseerimine"
+
+#: data/ui/window.ui:407 data/ui/window.ui:428
+msgid "_Weather"
+msgstr "_Ilm"
+
+#: data/ui/window.ui:446
+msgid "Show Weather"
+msgstr "Ilmaandmete kuvamine"
+
+#: data/ui/window.ui:469
+msgid "Automatic Location"
+msgstr "Automaatne asukoht"
+
+#: data/ui/year-view.ui:133
+msgid "No events"
+msgstr "Sündmuseid pole"
+
+#: data/ui/year-view.ui:155
+msgid "Add Event…"
+msgstr "Lisa sündmus…"
+
+#: src/gcal-application.c:90
+msgid "Quit GNOME Calendar"
+msgstr "Sulge GNOME Kalender"
+
+#: src/gcal-application.c:95
+msgid "Display version number"
+msgstr "Versiooninumbri kuvamine"
+
+#: src/gcal-application.c:100
+msgid "Enable debug messages"
+msgstr "Silumisteadete lubamine"
+
+#: src/gcal-application.c:105
+msgid "Open calendar on the passed date"
+msgstr "Kalendri avamine sisestatud kuupäeva kuvamisega"
+
+#: src/gcal-application.c:110
+msgid "Open calendar showing the passed event"
+msgstr "Kalendri avamine sisestatud sündmuse kuvamisega"
+
+#: src/gcal-application.c:497
+#, c-format
+msgid "Copyright © 2012–%d The Calendar authors"
+msgstr "Autoriõigused © 2012–%d Calendari autorid"
+
+#: src/gcal-application.c:546
+msgid "translator-credits"
+msgstr "Liivia Lilleväli <liivia.l10n@gmail.com>, 2018"
+
+#: src/gcal-edit-dialog.c:275
+msgid "Save"
+msgstr "Salvesta"
+
+#: src/gcal-edit-dialog.c:1019
+#, c-format
+msgid "%d minute before"
+msgid_plural "%d minutes before"
+msgstr[0] "%d minut enne"
+msgstr[1] "%d minutit enne"
+
+#: src/gcal-edit-dialog.c:1027
+#, c-format
+msgid "%d hour before"
+msgid_plural "%d hours before"
+msgstr[0] "%d tund enne"
+msgstr[1] "%d tundi enne"
+
+#: src/gcal-edit-dialog.c:1035
+#, c-format
+msgid "%d day before"
+msgid_plural "%d days before"
+msgstr[0] "%d päev enne"
+msgstr[1] "%d päeva enne"
+
+#: src/gcal-edit-dialog.c:1043
+#, c-format
+msgid "%d week before"
+msgid_plural "%d weeks before"
+msgstr[0] "%d nädal enne"
+msgstr[1] "%d nädalat enne"
+
+#: src/gcal-edit-dialog.c:1347 src/gcal-quick-add-popover.c:680
+msgid "Unnamed event"
+msgstr "Nimetu sündmus"
+
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gcal-event-widget.c:420
+#, c-format
+msgid "At %s"
+msgstr "Asukohas %s"
+
+#: src/gcal-quick-add-popover.c:119
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (see kalender on kirjutuskaitsega)"
+
+#: src/gcal-quick-add-popover.c:244
+msgid "from next Monday"
+msgstr "järgmisest esmaspäevast"
+
+#: src/gcal-quick-add-popover.c:245
+msgid "from next Tuesday"
+msgstr "järgmisest teisipäevast"
+
+#: src/gcal-quick-add-popover.c:246
+msgid "from next Wednesday"
+msgstr "järgmisest kolmapäevast"
+
+#: src/gcal-quick-add-popover.c:247
+msgid "from next Thursday"
+msgstr "järgmisest neljapäevast"
+
+#: src/gcal-quick-add-popover.c:248
+msgid "from next Friday"
+msgstr "järgmisest reedest"
+
+#: src/gcal-quick-add-popover.c:249
+msgid "from next Saturday"
+msgstr "järgmisest laupäevast"
+
+#: src/gcal-quick-add-popover.c:250
+msgid "from next Sunday"
+msgstr "järgmisest pühapäevast"
+
+#: src/gcal-quick-add-popover.c:255
+msgid "to next Monday"
+msgstr "järgmise esmaspäevani"
+
+#: src/gcal-quick-add-popover.c:256
+msgid "to next Tuesday"
+msgstr "järgmise teisipäevani"
+
+#: src/gcal-quick-add-popover.c:257
+msgid "to next Wednesday"
+msgstr "järgmise kolmapäevani"
+
+#: src/gcal-quick-add-popover.c:258
+msgid "to next Thursday"
+msgstr "järgmise neljapäevani"
+
+#: src/gcal-quick-add-popover.c:259
+msgid "to next Friday"
+msgstr "järgmise reedeni"
+
+#: src/gcal-quick-add-popover.c:260
+msgid "to next Saturday"
+msgstr "järgmise laupäevani"
+
+#: src/gcal-quick-add-popover.c:261
+msgid "to next Sunday"
+msgstr "järgmise pühapäevani"
+
+#: src/gcal-quick-add-popover.c:266
+msgid "January"
+msgstr "jaanuar"
+
+#: src/gcal-quick-add-popover.c:267
+msgid "February"
+msgstr "veebruar"
+
+#: src/gcal-quick-add-popover.c:268
+msgid "March"
+msgstr "märts"
+
+#: src/gcal-quick-add-popover.c:269
+msgid "April"
+msgstr "aprill"
+
+#: src/gcal-quick-add-popover.c:270
+msgid "May"
+msgstr "mai"
+
+#: src/gcal-quick-add-popover.c:271
+msgid "June"
+msgstr "juuni"
+
+#: src/gcal-quick-add-popover.c:272
+msgid "July"
+msgstr "juuli"
+
+#: src/gcal-quick-add-popover.c:273
+msgid "August"
+msgstr "august"
+
+#: src/gcal-quick-add-popover.c:274
+msgid "September"
+msgstr "september"
+
+#: src/gcal-quick-add-popover.c:275
+msgid "October"
+msgstr "oktoober"
+
+#: src/gcal-quick-add-popover.c:276
+msgid "November"
+msgstr "november"
+
+#: src/gcal-quick-add-popover.c:277
+msgid "December"
+msgstr "detsember"
+
+#: src/gcal-quick-add-popover.c:286
+msgid "from Today"
+msgstr "tänasest"
+
+#: src/gcal-quick-add-popover.c:290
+msgid "from Tomorrow"
+msgstr "homsest"
+
+#: src/gcal-quick-add-popover.c:294
+msgid "from Yesterday"
+msgstr "eilsest"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gcal-quick-add-popover.c:312
+#, c-format
+msgid "from %1$s %2$s"
+msgstr "alates %2$s. %1$s"
+
+#: src/gcal-quick-add-popover.c:323
+msgid "to Today"
+msgstr "tänaseni"
+
+#: src/gcal-quick-add-popover.c:327
+msgid "to Tomorrow"
+msgstr "homseni"
+
+#: src/gcal-quick-add-popover.c:331
+msgid "to Yesterday"
+msgstr "eilseni"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gcal-quick-add-popover.c:349
+#, c-format
+msgid "to %1$s %2$s"
+msgstr "kuni %2$s. %1$s"
+
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: src/gcal-quick-add-popover.c:356
+#, c-format
+msgid "New Event %1$s %2$s"
+msgstr "Uus sündmus %1$s %2$s"
+
+#: src/gcal-quick-add-popover.c:373
+msgid "New Event Today"
+msgstr "Uus sündmus täna"
+
+#: src/gcal-quick-add-popover.c:377
+msgid "New Event Tomorrow"
+msgstr "Uus sündmus homme"
+
+#: src/gcal-quick-add-popover.c:381
+msgid "New Event Yesterday"
+msgstr "Uus sündmus eile"
+
+#: src/gcal-quick-add-popover.c:387
+msgid "New Event next Monday"
+msgstr "Uus sündmus järgmisel esmaspäeval"
+
+#: src/gcal-quick-add-popover.c:388
+msgid "New Event next Tuesday"
+msgstr "Uus sündmus järgmisel teisipäeval"
+
+#: src/gcal-quick-add-popover.c:389
+msgid "New Event next Wednesday"
+msgstr "Uus sündmus järgmisel kolmapäeval"
+
+#: src/gcal-quick-add-popover.c:390
+msgid "New Event next Thursday"
+msgstr "Uus sündmus järgmisel neljapäeval"
+
+#: src/gcal-quick-add-popover.c:391
+msgid "New Event next Friday"
+msgstr "Uus sündmus järgmisel reedel"
+
+#: src/gcal-quick-add-popover.c:392
+msgid "New Event next Saturday"
+msgstr "Uus sündmus järgmisel laupäeval"
+
+#: src/gcal-quick-add-popover.c:393
+msgid "New Event next Sunday"
+msgstr "Uus sündmus järgmisel pühapäeval"
+
+#. Translators: %d is the numeric day of month
+#: src/gcal-quick-add-popover.c:405
+#, c-format
+msgid "New Event on January %d"
+msgstr "Uus sündmus %d. jaanuaril"
+
+#: src/gcal-quick-add-popover.c:406
+#, c-format
+msgid "New Event on February %d"
+msgstr "Uus sündmus %d. veebruaril"
+
+#: src/gcal-quick-add-popover.c:407
+#, c-format
+msgid "New Event on March %d"
+msgstr "Uus sündmus %d. märtsil"
+
+#: src/gcal-quick-add-popover.c:408
+#, c-format
+msgid "New Event on April %d"
+msgstr "Uus sündmus %d. aprillil"
+
+#: src/gcal-quick-add-popover.c:409
+#, c-format
+msgid "New Event on May %d"
+msgstr "Uus sündmus %d. mail"
+
+#: src/gcal-quick-add-popover.c:410
+#, c-format
+msgid "New Event on June %d"
+msgstr "Uus sündmus %d. juunil"
+
+#: src/gcal-quick-add-popover.c:411
+#, c-format
+msgid "New Event on July %d"
+msgstr "Uus sündmus %d. juulil"
+
+#: src/gcal-quick-add-popover.c:412
+#, c-format
+msgid "New Event on August %d"
+msgstr "Uus sündmus %d. augustil"
+
+#: src/gcal-quick-add-popover.c:413
+#, c-format
+msgid "New Event on September %d"
+msgstr "Uus sündmus %d. septembril"
+
+#: src/gcal-quick-add-popover.c:414
+#, c-format
+msgid "New Event on October %d"
+msgstr "Uus sündmus %d. oktoobril"
+
+#: src/gcal-quick-add-popover.c:415
+#, c-format
+msgid "New Event on November %d"
+msgstr "Uus sündmus %d. novembril"
+
+#: src/gcal-quick-add-popover.c:416
+#, c-format
+msgid "New Event on December %d"
+msgstr "Uus sündmus %d. detsembril"
+
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
+#: src/gcal-quick-add-popover.c:464
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
+
+#: src/gcal-search-view.c:358
+msgid "All day"
+msgstr "Kogu päev"
+
+#: src/gcal-search-view.c:563
+msgid "Use the entry above to search for events."
+msgstr "Sündmuste otsimiseks kasuta ülal asuvat tekstivälja."
+
+#. Dialog
+#: src/gcal-source-dialog.c:1159
+msgid "Select a calendar file"
+msgstr "Kalendrifaili valimine"
+
+#: src/gcal-source-dialog.c:1163
+msgid "Open"
+msgstr "Ava"
+
+#: src/gcal-source-dialog.c:1170
+msgid "Calendar files"
+msgstr "Kalendrifailid"
+
+#. update the source properties
+#: src/gcal-source-dialog.c:1204
+msgid "Unnamed Calendar"
+msgstr "Nimetu kalender"
+
+#. Update notification label
+#: src/gcal-source-dialog.c:1810
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "Kalender <b>%s</b> eemaldati"
+
+#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+msgid "Off"
+msgstr "Keelatud"
+
+#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+msgid "On"
+msgstr "Lubatud"
+
+#: src/gcal-source-dialog.c:1914
+msgid "Expired"
+msgstr "Aegunud"
+
+#: src/gcal-time-selector.c:84
+#, c-format
+msgid "%s AM"
+msgstr "%s e. l."
+
+#: src/gcal-time-selector.c:86
+#, c-format
+msgid "%s PM"
+msgstr "%s p. l."
+
+#: src/gcal-utils.c:1090
+msgid ""
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
+msgstr "Püüad muuta korduvat sündmust. Valitud muudatused tuleb rakendada:"
+
+#: src/gcal-utils.c:1093
+msgid "_Cancel"
+msgstr "_Loobu"
+
+#: src/gcal-utils.c:1095
+msgid "_Only This Event"
+msgstr "Ainult _praegusele sündmusele"
+
+#: src/gcal-utils.c:1102
+msgid "_Subsequent events"
+msgstr "_Järgnevatele sündmustele"
+
+#: src/gcal-utils.c:1104
+msgid "_All events"
+msgstr "_Kõikidele sündmustele"
+
+#: src/gcal-window.c:1272
+msgid "Another event deleted"
+msgstr "Veel üks sündmus kustutati"
+
+#: src/gcal-window.c:1276
+msgid "Event deleted"
+msgstr "Sündmus kustutati"
+
+#: src/views/gcal-week-grid.c:755 src/views/gcal-week-view.c:284
+msgid "00 AM"
+msgstr "00 e. l."
+
+#: src/views/gcal-week-header.c:400
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "Veel üks sündmus"
+msgstr[1] "Veel %d sündmust"
+
+#: src/views/gcal-week-header.c:933
+#, c-format
+msgid "week %d"
+msgstr "%d. nädal"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when the selection starts at the specified day and the
+#. * end is unspecified.
+#: src/views/gcal-year-view.c:294
+msgid "%B %d…"
+msgstr "%d. %B…"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/views/gcal-year-view.c:300 src/views/gcal-year-view.c:523
+msgid "%B %d"
+msgstr "%d. %B"
