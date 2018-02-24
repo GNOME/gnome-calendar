@@ -647,6 +647,9 @@ all_day_changed_cb (GtkToggleButton *button,
 {
   gboolean active = gtk_toggle_button_get_active (button);
 
+  GTimeZone *tz;
+  tz = active ? g_time_zone_new_utc () : g_time_zone_new_local ();
+  gcal_event_set_timezone (self->event, tz);
   gtk_widget_set_sensitive (self->start_time_selector, !active);
   gtk_widget_set_sensitive (self->end_time_selector, !active);
 }
