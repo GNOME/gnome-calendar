@@ -154,6 +154,7 @@
         },
         {
             "name" : "gnome-calendar",
+            "buildsystem" : "meson",
             "sources" : [
                 {
                     "type" : "git",
