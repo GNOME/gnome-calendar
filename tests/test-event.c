@@ -34,10 +34,10 @@
 static void
 event_new (void)
 {
-  g_autoptr (ECalComponent) component;
-  g_autoptr (GcalEvent) event;
-  g_autoptr (ESource) source;
-  g_autoptr (GError) error;
+  g_autoptr (ECalComponent) component = NULL;
+  g_autoptr (GcalEvent) event = NULL;
+  g_autoptr (ESource) source = NULL;
+  g_autoptr (GError) error = NULL;
 
   component = e_cal_component_new_from_string (STUB_EVENT);
   source = e_source_new_with_uid ("stub", NULL, &error);
