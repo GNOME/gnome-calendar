@@ -12,6 +12,20 @@ test_env = [
 test_cflags = '-DTEST_DATA_DIR="@0@"'.format(join_paths(meson.source_root(), 'data'))
 
 
+#########
+# Event #
+#########
+
+test_event = executable(
+     'test-event',
+    ['test-event.c', compiled_schemas],
+        c_args: test_cflags,
+  dependencies: test_deps
+)
+
+test('test-event', test_event, env: test_env)
+
+
 ###########
 # Manager #
 ###########
