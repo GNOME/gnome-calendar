@@ -35,6 +35,7 @@
 #define gcal_clear_timeout(pp) { if (pp && *pp) { g_source_remove (*pp); *pp = 0; } }
 
 /* Add autoptr support for libecal */
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ECalComponent, g_object_unref)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ESource, g_object_unref)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GWeatherLocation, gweather_location_unref)
 
