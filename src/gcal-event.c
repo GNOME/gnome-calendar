@@ -190,33 +190,29 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
     }
   else if (icaltime_get_timezone (*comp->value))
     {
-      gchar *tzid;
+      g_autofree gchar *tzid = NULL;
       gint offset;
 
       offset = icaltimezone_get_utc_offset ((icaltimezone*) icaltime_get_timezone (*comp->value),
                                             comp->value, NULL);
       tzid = format_utc_offset (offset);
       tz = g_time_zone_new (tzid);
-
-      g_free (tzid);
     }
   else if (comp->tzid)
     {
+      g_autofree gchar *tzid = NULL;
       icaltimezone *zone;
-      gchar *tzid;
       gint offset;
 
       if (g_str_has_prefix (comp->tzid, LIBICAL_TZID_PREFIX))
-          zone = icaltimezone_get_builtin_timezone_from_tzid (comp->tzid);
+        zone = icaltimezone_get_builtin_timezone_from_tzid (comp->tzid);
       else
-          zone = icaltimezone_get_builtin_timezone (comp->tzid);
+        zone = icaltimezone_get_builtin_timezone (comp->tzid);
 
       offset = icaltimezone_get_utc_offset (zone, comp->value, NULL);
       tzid = format_utc_offset (offset);
 
       tz = g_time_zone_new (tzid);
-
-      g_free (tzid);
     }
   else
     {
@@ -349,7 +345,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
       e_cal_component_get_dtstart (component, &start);
 
       /*
-       * A NULL start date is invalid. We set something bogus to procceed, and make
+       * A NULL start date is invalid. We set something bogus to proceed, and make
        * it set a GError and return NULL.
        */
       if (!start.value)
@@ -384,7 +380,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
 
       if(!end.value)
         {
-            self->all_day = TRUE;
+          self->all_day = TRUE;
         }
       else
         {
