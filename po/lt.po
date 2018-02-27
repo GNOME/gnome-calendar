@@ -3,15 +3,14 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # brennus <jonas.ska@gmail.com>, 2015.
 # Jonas Skarulskis <jonas.ska@gmail.com>, 2015.
-# Aurimas Černius <aurisc4@gmail.com>, 2015, 2016, 2017.
+# Aurimas Černius <aurisc4@gmail.com>, 2015, 2016, 2017, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: https://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2017-09-28 11:44+0000\n"
-"PO-Revision-Date: 2017-10-08 22:35+0300\n"
+"Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
+"POT-Creation-Date: 2018-02-20 22:28+0000\n"
+"PO-Revision-Date: 2018-02-27 23:10+0200\n"
 "Last-Translator: Aurimas Černius <aurisc4@gmail.com>\n"
 "Language-Team: Lietuvių <gnome-lt@lists.akl.lt>\n"
 "Language: lt\n"
@@ -24,7 +23,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:184 src/gcal-application.c:466
+#: data/ui/window.ui:187 src/gcal-application.c:640 src/main.c:36
 msgid "Calendar"
 msgstr "Kalendorius"
 
@@ -78,37 +77,49 @@ msgstr "org.gnome.Calendar"
 msgid "Calendar;Event;Reminder;"
 msgstr "Kalendorius;Įvykis;Priminimas;"
 
-#: data/org.gnome.calendar.gschema.xml:6
+#: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
 msgstr "Langas išdidintas"
 
-#: data/org.gnome.calendar.gschema.xml:7
+#: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
 msgstr "Lango išdidinimo būsena"
 
-#: data/org.gnome.calendar.gschema.xml:11
+#: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
 msgstr "Lango dydis"
 
-#: data/org.gnome.calendar.gschema.xml:12
+#: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
 msgstr "Lango dydis (plotis ir aukštis)."
 
-#: data/org.gnome.calendar.gschema.xml:16
+#: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
 msgstr "Lango padėtis"
 
-#: data/org.gnome.calendar.gschema.xml:17
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
 msgstr "Lango padėtis (x ir y)."
 
-#: data/org.gnome.calendar.gschema.xml:21
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Įjungto vaizdo tipas"
 
-#: data/org.gnome.calendar.gschema.xml:22
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Įjungto vaizdo tipas, numatyta reikšmė yra mėnesio vaizdas"
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Weather Service Configuration"
+msgstr "Orų tarnybos konfigūracija"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr ""
+"Ar rodomos orų prognozės, naudojamos automatinės vietos bei vietos "
+"pavadinimas"
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -119,7 +130,7 @@ msgid "Remove the alarm"
 msgstr "Pašalinti žadintuvą"
 
 #: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
-#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1111
+#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1162
 msgid "Cancel"
 msgstr "Atsisakyti"
 
@@ -127,7 +138,7 @@ msgstr "Atsisakyti"
 msgid "Click to select the calendar"
 msgstr "Spustelėkite kalendoriui pasirinkti"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:275
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
 msgid "Done"
 msgstr "Atlikta"
 
@@ -155,87 +166,87 @@ msgstr "Užrašai"
 msgid "Location"
 msgstr "Vieta"
 
-#: data/ui/edit-dialog.ui:299
+#: data/ui/edit-dialog.ui:301
 msgid "Time"
 msgstr "Laikas"
 
-#: data/ui/edit-dialog.ui:352
+#: data/ui/edit-dialog.ui:354
 msgid "All Day"
 msgstr "Visą dieną"
 
-#: data/ui/edit-dialog.ui:397
+#: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
 msgstr "Pridėti priminimą…"
 
-#: data/ui/edit-dialog.ui:428
+#: data/ui/edit-dialog.ui:430
 msgid "No Repeat"
 msgstr "Nekartoti"
 
-#: data/ui/edit-dialog.ui:429
+#: data/ui/edit-dialog.ui:431
 msgid "Daily"
 msgstr "Kasdien"
 
-#: data/ui/edit-dialog.ui:430
+#: data/ui/edit-dialog.ui:432
 msgid "Monday – Friday"
 msgstr "Pirmadienį – penktadienį"
 
-#: data/ui/edit-dialog.ui:431
+#: data/ui/edit-dialog.ui:433
 msgid "Weekly"
 msgstr "Kas savaitę"
 
-#: data/ui/edit-dialog.ui:432
+#: data/ui/edit-dialog.ui:434
 msgid "Monthly"
 msgstr "Kas mėnesį"
 
-#: data/ui/edit-dialog.ui:433
+#: data/ui/edit-dialog.ui:435
 msgid "Yearly"
 msgstr "Kas metus"
 
-#: data/ui/edit-dialog.ui:461
+#: data/ui/edit-dialog.ui:463
 msgid "Forever"
 msgstr "Neribotai"
 
-#: data/ui/edit-dialog.ui:462
+#: data/ui/edit-dialog.ui:464
 msgid "No. of occurrences"
 msgstr "Pasikartojimų skaičius"
 
-#: data/ui/edit-dialog.ui:463
+#: data/ui/edit-dialog.ui:465
 msgid "Until Date"
 msgstr "Iki datos"
 
-#: data/ui/edit-dialog.ui:557
+#: data/ui/edit-dialog.ui:560
 msgid "Delete Event"
 msgstr "Pašalinti įvykį"
 
-#: data/ui/edit-dialog.ui:596
+#: data/ui/edit-dialog.ui:599
 msgid "5 minutes"
 msgstr "5 minutės"
 
-#: data/ui/edit-dialog.ui:605
+#: data/ui/edit-dialog.ui:608
 msgid "10 minutes"
 msgstr "10 minučių"
 
-#: data/ui/edit-dialog.ui:614
+#: data/ui/edit-dialog.ui:617
 msgid "30 minutes"
 msgstr "30 miniučių"
 
-#: data/ui/edit-dialog.ui:623
+#: data/ui/edit-dialog.ui:626
 msgid "1 hour"
 msgstr "1 valanda"
 
-#: data/ui/edit-dialog.ui:631
+#: data/ui/edit-dialog.ui:634
 msgid "1 day"
 msgstr "1 diena"
 
-#: data/ui/edit-dialog.ui:640
+#: data/ui/edit-dialog.ui:643
 msgid "2 days"
 msgstr "2 dienos"
 
-#: data/ui/edit-dialog.ui:649
+#: data/ui/edit-dialog.ui:652
 msgid "3 days"
 msgstr "3 dienos"
 
-#: data/ui/edit-dialog.ui:658
+#: data/ui/edit-dialog.ui:661
 msgid "1 week"
 msgstr "1 savaitė"
 
@@ -319,7 +330,7 @@ msgctxt "shortcut window"
 msgid "Year view"
 msgstr "Metų rodinys"
 
-#: data/ui/menus.ui:6 data/ui/menus.ui:36
+#: data/ui/menus.ui:6
 msgid "Add Eve_nt…"
 msgstr "Pri_dėti įvykį..."
 
@@ -339,21 +350,23 @@ msgstr "_Apie"
 msgid "_Quit"
 msgstr "_Baigti"
 
-#: data/ui/menus.ui:40
-msgid "_Synchronize"
-msgstr "_Sinchronizuoti"
-
-#: data/ui/menus.ui:49
+#: data/ui/menus.ui:36
 msgid "From Web…"
 msgstr "Iš interneto…"
 
-#: data/ui/menus.ui:53
+#: data/ui/menus.ui:40
 msgid "New Local Calendar…"
 msgstr "Naujas vietinis kalendorius…"
 
-#: data/ui/menus.ui:57
+#: data/ui/menus.ui:44
 msgid "From File…"
 msgstr "Iš failo…"
+
+#: data/ui/month-popover.ui:91
+#| msgctxt "shortcut window"
+#| msgid "New event"
+msgid "New Event…"
+msgstr "Naujas įvykis…"
 
 #: data/ui/quick-add-popover.ui:117
 msgid "Edit Details…"
@@ -364,15 +377,15 @@ msgstr "Keisti informaciją..."
 msgid "Add"
 msgstr "Pridėti"
 
-#: data/ui/search-view.ui:76
+#: data/ui/search-popover.ui:76
 msgid "No results found"
 msgstr "Nieko nerasta"
 
-#: data/ui/search-view.ui:92
+#: data/ui/search-popover.ui:92
 msgid "Try a different search"
 msgstr "Bandykite kitą paiešką"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1123 src/gcal-window.c:1127
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
 msgid "Undo"
 msgstr "Atšaukti"
 
@@ -455,13 +468,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Kalendoriaus adresas"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2234
-#: src/gcal-source-dialog.c:2240
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
+#: src/gcal-source-dialog.c:2291
 msgid "Add Calendar"
 msgstr "Pridėti kalendorių"
 
-#: data/ui/source-dialog.ui:745 data/ui/window.ui:334
-#: src/gcal-source-dialog.c:853 src/gcal-source-dialog.c:2263
+#: data/ui/source-dialog.ui:745 data/ui/window.ui:344
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
 msgid "Calendar Settings"
 msgstr "Kalendoriaus nustatymai"
 
@@ -474,7 +487,6 @@ msgid "Password"
 msgstr "Slaptažodis"
 
 #: data/ui/source-dialog.ui:866
-#| msgid "Manage your calendars"
 msgid "Enter your credentials"
 msgstr "Įveskite savo įgaliojimus"
 
@@ -482,8 +494,8 @@ msgstr "Įveskite savo įgaliojimus"
 msgid "Connect"
 msgstr "Prisijungti"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:764
-#: src/views/gcal-week-view.c:291
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:754
+#: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
 
@@ -491,85 +503,110 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:446
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:432
 msgid "AM"
 msgstr "AM"
 
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:446
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:432
 msgid "PM"
 msgstr "PM"
 
-#: data/ui/window.ui:64
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+msgid "_Weather"
+msgstr "_Oras"
+
+#: data/ui/weather-settings.ui:30
+#| msgctxt "shortcut window"
+#| msgid "Show help"
+msgid "Show Weather"
+msgstr "Rodyti orus"
+
+#: data/ui/weather-settings.ui:53
+#| msgid "Location"
+msgid "Automatic Location"
+msgstr "Automatinė vieta"
+
+#: data/ui/window.ui:67
 msgid "Week"
 msgstr "Savaitė"
 
-#: data/ui/window.ui:79
+#: data/ui/window.ui:82
 msgid "Month"
 msgstr "Mėnuo"
 
-#: data/ui/window.ui:93
+#: data/ui/window.ui:96
 msgid "Year"
 msgstr "Metai"
 
-#: data/ui/window.ui:187 data/ui/year-view.ui:84 src/views/gcal-year-view.c:276
-#: src/views/gcal-year-view.c:510
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
+#: src/views/gcal-year-view.c:514
 msgid "Today"
 msgstr "Šiandien"
 
-#: data/ui/window.ui:261
+#: data/ui/window.ui:271
 msgid "Manage your calendars"
 msgstr "Tvarkykite savo kalendorius"
 
-#: data/ui/window.ui:278
+#: data/ui/window.ui:288
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Ieškoti įvykių"
 
-#: data/ui/year-view.ui:95
+#: data/ui/window.ui:391
+#| msgid "Add Eve_nt…"
+msgid "Add Eve_nt"
+msgstr "Pridėti į_vykį"
+
+#: data/ui/window.ui:400
+msgid "_Synchronize"
+msgstr "_Sinchronizuoti"
+
+#: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Įvykių nėra"
 
-#: data/ui/year-view.ui:117 src/views/gcal-month-view.c:2729
+#: data/ui/year-view.ui:155
 msgid "Add Event…"
 msgstr "Pridėti įvykį..."
 
-#: src/gcal-application.c:85
+#: src/gcal-application.c:88
+#| msgid "Edit Calendar"
+msgid "Quit GNOME Calendar"
+msgstr "Išeiti iš GNOME kalendoriaus"
+
+#: src/gcal-application.c:93
 msgid "Display version number"
 msgstr "Rodyti versijos numerį"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:98
 msgid "Enable debug messages"
 msgstr "Įjungti derinimo pranešimus"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:103
 msgid "Open calendar on the passed date"
 msgstr "Atverti kalendorių praėjusia data"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:108
 msgid "Open calendar showing the passed event"
 msgstr "Atverti kalendorių parodant praėjusį įvykį"
 
-#: src/gcal-application.c:454
+#: src/gcal-application.c:595
 #, c-format
-msgid "Copyright © %d The Calendar authors"
-msgstr "Autorių teisės saugomos © %d Kalendoriaus kūrėjai"
+#| msgid "Copyright © %d–%d The Calendar authors"
+msgid "Copyright © 2012–%d The Calendar authors"
+msgstr "Autorių teisės saugomos © 2012–%d Kalendoriaus kūrėjai"
 
-#: src/gcal-application.c:460
-#, c-format
-msgid "Copyright © %d–%d The Calendar authors"
-msgstr "Autorių teisės saugomos © %d–%d Kalendoriaus kūrėjai"
-
-#: src/gcal-application.c:473
+#: src/gcal-application.c:646
 msgid "translator-credits"
 msgstr ""
 "Išvertė:\n"
 "Jonas Skarulskis <jonas.ska@gmail.com>"
 
-#: src/gcal-edit-dialog.c:275
+#: src/gcal-edit-dialog.c:277
 msgid "Save"
 msgstr "Įrašyti"
 
-#: src/gcal-edit-dialog.c:1000
+#: src/gcal-edit-dialog.c:1037
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
@@ -577,7 +614,7 @@ msgstr[0] "Prieš %d minutę"
 msgstr[1] "Prieš %d minutes"
 msgstr[2] "Prieš %d minučių"
 
-#: src/gcal-edit-dialog.c:1008
+#: src/gcal-edit-dialog.c:1045
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
@@ -585,7 +622,7 @@ msgstr[0] "Prieš %d valandą"
 msgstr[1] "Prieš %d valandas"
 msgstr[2] "Prieš %d valandų"
 
-#: src/gcal-edit-dialog.c:1016
+#: src/gcal-edit-dialog.c:1053
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
@@ -593,7 +630,7 @@ msgstr[0] "Prieš %d dieną"
 msgstr[1] "Prieš %d dienas"
 msgstr[2] "Prieš %d dienų"
 
-#: src/gcal-edit-dialog.c:1024
+#: src/gcal-edit-dialog.c:1061
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
@@ -601,12 +638,12 @@ msgstr[0] "Prieš %d savaitę"
 msgstr[1] "Prieš %d savaites"
 msgstr[2] "Prieš %d savaičių"
 
-#: src/gcal-edit-dialog.c:1327 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Bevardis įvykis"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:364
+#: src/gcal-event-widget.c:420
 #, c-format
 msgid "At %s"
 msgstr "Ties %s"
@@ -721,14 +758,17 @@ msgid "December"
 msgstr "Gruodis"
 
 #: src/gcal-quick-add-popover.c:286
+#, c-format
 msgid "from Today"
 msgstr "nuo šiandien"
 
 #: src/gcal-quick-add-popover.c:290
+#, c-format
 msgid "from Tomorrow"
 msgstr "nuo rytojaus"
 
 #: src/gcal-quick-add-popover.c:294
+#, c-format
 msgid "from Yesterday"
 msgstr "nuo vakar"
 
@@ -742,14 +782,17 @@ msgid "from %1$s %2$s"
 msgstr "nuo %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:323
+#, c-format
 msgid "to Today"
 msgstr "iki šiandien"
 
 #: src/gcal-quick-add-popover.c:327
+#, c-format
 msgid "to Tomorrow"
 msgstr "iki rytojaus"
 
 #: src/gcal-quick-add-popover.c:331
+#, c-format
 msgid "to Yesterday"
 msgstr "iki vakar"
 
@@ -769,14 +812,17 @@ msgid "New Event %1$s %2$s"
 msgstr "Naujas įvykis %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
+#, c-format
 msgid "New Event Today"
 msgstr "Naujas įvykis šiandien"
 
 #: src/gcal-quick-add-popover.c:377
+#, c-format
 msgid "New Event Tomorrow"
 msgstr "Naujas įvykis rytoj"
 
 #: src/gcal-quick-add-popover.c:381
+#, c-format
 msgid "New Event Yesterday"
 msgstr "Naujas įvykis vakar"
 
@@ -875,61 +921,61 @@ msgstr "Naujas įvykis gruodžio %d"
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
-#: src/gcal-search-view.c:358
+#: src/gcal-search-popover.c:303
 msgid "All day"
 msgstr "Visą dieną"
 
-#: src/gcal-search-view.c:563
+#: src/gcal-search-popover.c:563
 msgid "Use the entry above to search for events."
 msgstr "Pasinaudokite lauku viršuje įvykiams ieškoti."
 
 #. Dialog
-#: src/gcal-source-dialog.c:1108
+#: src/gcal-source-dialog.c:1159
 msgid "Select a calendar file"
 msgstr "Pasirinkite kalendoriaus failą"
 
-#: src/gcal-source-dialog.c:1112
+#: src/gcal-source-dialog.c:1163
 msgid "Open"
 msgstr "Atverti"
 
-#: src/gcal-source-dialog.c:1119
+#: src/gcal-source-dialog.c:1170
 msgid "Calendar files"
 msgstr "Kalendoriaus failai"
 
 #. update the source properties
-#: src/gcal-source-dialog.c:1153
+#: src/gcal-source-dialog.c:1204
 msgid "Unnamed Calendar"
 msgstr "Bevardis kalendorius"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1759
+#: src/gcal-source-dialog.c:1810
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalendorius <b>%s</b> pašalintas"
 
-#: src/gcal-source-dialog.c:1808 src/gcal-source-dialog.c:1864
+#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
 msgid "Off"
 msgstr "Išjungta"
 
-#: src/gcal-source-dialog.c:1808 src/gcal-source-dialog.c:1864
+#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
 msgid "On"
 msgstr "Įjungta"
 
-#: src/gcal-source-dialog.c:1863
+#: src/gcal-source-dialog.c:1914
 msgid "Expired"
 msgstr "Nebegalioja"
 
-#: src/gcal-time-selector.c:84
+#: src/gcal-time-selector.c:83
 #, c-format
 msgid "%s AM"
 msgstr "%s AM"
 
-#: src/gcal-time-selector.c:86
+#: src/gcal-time-selector.c:85
 #, c-format
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1188
+#: src/gcal-utils.c:1093
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -937,44 +983,35 @@ msgstr ""
 "Keičiamas įvykis yra pasikartojantis. Jūsų pasirinkti pakeitimai turi būti "
 "taikomi:"
 
-#: src/gcal-utils.c:1191
+#: src/gcal-utils.c:1096
 msgid "_Cancel"
 msgstr "_Atsisakyti"
 
-#: src/gcal-utils.c:1193
+#: src/gcal-utils.c:1098
 msgid "_Only This Event"
 msgstr "_Tik šiam įvykiui"
 
-#: src/gcal-utils.c:1200
+#: src/gcal-utils.c:1105
 msgid "_Subsequent events"
 msgstr "Vė_lesniems įvykimas"
 
-#: src/gcal-utils.c:1202
+#: src/gcal-utils.c:1107
 msgid "_All events"
 msgstr "_Visiems įvykiams"
 
-#: src/gcal-window.c:1123
+#: src/gcal-window.c:1039
 msgid "Another event deleted"
 msgstr "Dar vienas įvykis ištrintas"
 
-#: src/gcal-window.c:1127
+#: src/gcal-window.c:1043
 msgid "Event deleted"
 msgstr "Įvykis ištrintas"
 
-#. Translators: This is a date format in the sidebar of the year
-#. * view when there is only one specified day selected.
-#. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-month-view.c:296 src/views/gcal-year-view.c:291
-#: src/views/gcal-year-view.c:513
-msgid "%B %d"
-msgstr "%B %d"
+#: src/views/gcal-week-grid.c:751 src/views/gcal-week-view.c:275
+msgid "00 AM"
+msgstr "00 AM"
 
-#: src/views/gcal-month-view.c:1627
-msgid "Other events"
-msgstr "Kiti įvykiai"
-
-#. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: src/views/gcal-month-view.c:2224 src/views/gcal-week-header.c:338
+#: src/views/gcal-week-header.c:398
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -982,11 +1019,7 @@ msgstr[0] "Kitas %d įvykis"
 msgstr[1] "Kiti %d įvykiai"
 msgstr[2] "Kitų %d įvykių"
 
-#: src/views/gcal-week-grid.c:761 src/views/gcal-week-view.c:288
-msgid "00 AM"
-msgstr "00 AM"
-
-#: src/views/gcal-week-header.c:871
+#: src/views/gcal-week-header.c:934
 #, c-format
 msgid "week %d"
 msgstr "%d savaitė"
@@ -994,9 +1027,22 @@ msgstr "%d savaitė"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:285
+#: src/views/gcal-year-view.c:288
 msgid "%B %d…"
 msgstr "%B %d…"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:517
+msgid "%B %d"
+msgstr "%B %d"
+
+#~ msgid "Copyright © %d The Calendar authors"
+#~ msgstr "Autorių teisės saugomos © %d Kalendoriaus kūrėjai"
+
+#~ msgid "Other events"
+#~ msgstr "Kiti įvykiai"
 
 #~ msgid "— Calendar management"
 #~ msgstr "— Kalendoriaus tvarkymas"
