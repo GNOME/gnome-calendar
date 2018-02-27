@@ -1,8 +1,5 @@
 test_deps = gcal_deps + [ libgcal_dep ]
 
-###########
-# Manager #
-###########
 
 test_env = [
          'G_TEST_SRCDIR=' + meson.current_source_dir(),
@@ -14,13 +11,16 @@ test_env = [
 
 test_cflags = '-DTEST_DATA_DIR="@0@"'.format(join_paths(meson.source_root(), 'data'))
 
-test_unit = 'test-manager'
+
+###########
+# Manager #
+###########
 
 test_manager = executable(
-     test_unit,
-  [test_unit + '.c', compiled_schemas],
+     'test-manager',
+    ['test-manager.c', compiled_schemas],
         c_args: test_cflags,
   dependencies: test_deps
 )
 
-test(test_unit, test_manager, env: test_env)
+test('test-manager', test_manager, env: test_env)
