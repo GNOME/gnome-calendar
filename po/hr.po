@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-02-05 16:35+0000\n"
-"PO-Revision-Date: 2018-02-16 21:06+0100\n"
+"POT-Creation-Date: 2018-02-20 22:28+0000\n"
+"PO-Revision-Date: 2018-02-28 21:52+0100\n"
 "Last-Translator: gogo <trebelnik2@gmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Launchpad-Export-Date: 2016-09-22 19:52+0000\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 1.8.7.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
@@ -76,49 +76,49 @@ msgstr "org.gnome.Calendar"
 msgid "Calendar;Event;Reminder;"
 msgstr "Kalendar;Događaj;Podsjetnik;"
 
-#: data/org.gnome.calendar.gschema.xml:6
+#: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
 msgstr "Prozor povećan"
 
-#: data/org.gnome.calendar.gschema.xml:7
+#: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
 msgstr "Stanje povećanog prozora"
 
-#: data/org.gnome.calendar.gschema.xml:11
+#: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
 msgstr "Veličina prozora"
 
-#: data/org.gnome.calendar.gschema.xml:12
+#: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
 msgstr "Veličina prozora (širina i visina)."
 
-#: data/org.gnome.calendar.gschema.xml:16
+#: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
 msgstr "Položaj prozora"
 
-#: data/org.gnome.calendar.gschema.xml:17
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
 msgstr "Položaj prozora (x i y)."
 
-#: data/org.gnome.calendar.gschema.xml:21
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Vrsta aktivnog prikaza"
 
-#: data/org.gnome.calendar.gschema.xml:22
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Vrsta aktivnog pogleda prozora, zadana vrijednost je: mjesečni prikaz"
 
-#: data/org.gnome.calendar.gschema.xml:26
+#: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
 msgstr "Podešavanje usluge prognoze vremena"
 
-#: data/org.gnome.calendar.gschema.xml:27
+#: data/org.gnome.calendar.gschema.xml.in:27
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
-"Treba li prikazati zvještaje vremenske prognoze, automatske lokacije se "
-"koriste i i naziv lokacije"
+"Treba li prikazati izvještaje vremenske prognoze, koriste se automatske "
+"lokacije i naziv lokacije"
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -634,7 +634,7 @@ msgid "Unnamed event"
 msgstr "Neimenovani događaj"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:419
+#: src/gcal-event-widget.c:420
 #, c-format
 msgid "At %s"
 msgstr "U %s"
@@ -749,14 +749,17 @@ msgid "December"
 msgstr "Prosinac"
 
 #: src/gcal-quick-add-popover.c:286
+#, c-format
 msgid "from Today"
 msgstr "od danas"
 
 #: src/gcal-quick-add-popover.c:290
+#, c-format
 msgid "from Tomorrow"
 msgstr "od sutra"
 
 #: src/gcal-quick-add-popover.c:294
+#, c-format
 msgid "from Yesterday"
 msgstr "od jučer"
 
@@ -770,14 +773,17 @@ msgid "from %1$s %2$s"
 msgstr "od %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:323
+#, c-format
 msgid "to Today"
 msgstr "do danas"
 
 #: src/gcal-quick-add-popover.c:327
+#, c-format
 msgid "to Tomorrow"
 msgstr "do sutra"
 
 #: src/gcal-quick-add-popover.c:331
+#, c-format
 msgid "to Yesterday"
 msgstr "do jučer"
 
@@ -797,14 +803,17 @@ msgid "New Event %1$s %2$s"
 msgstr "Novi događaj %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
+#, c-format
 msgid "New Event Today"
 msgstr "Novi događaj danas"
 
 #: src/gcal-quick-add-popover.c:377
+#, c-format
 msgid "New Event Tomorrow"
 msgstr "Novi događaj sutra"
 
 #: src/gcal-quick-add-popover.c:381
+#, c-format
 msgid "New Event Yesterday"
 msgstr "Novi događaj jučer"
 
