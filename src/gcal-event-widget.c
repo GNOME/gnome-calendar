@@ -466,8 +466,6 @@ static void
 gcal_event_widget_set_event_internal (GcalEventWidget *self,
                                       GcalEvent       *event)
 {
-  g_autofree gchar *hour_str = NULL;
-
   /*
    * This function is called only once, since the property is
    * set as CONSTRUCT_ONLY. Any other attempt to set an event
@@ -504,10 +502,14 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
   gcal_event_widget_set_event_tooltip (self, event);
 
   /* Hour label */
-  hour_str = get_hour_label (self);
+  if (!gcal_event_get_all_day (event))
+    {
+      g_autofree gchar *hour_str = NULL;
+      hour_str = get_hour_label (self);
 
+      gtk_label_set_label (GTK_LABEL (self->hour_label), hour_str);
+    }
   gtk_widget_set_visible (self->hour_label, !gcal_event_get_all_day (event));
-  gtk_label_set_label (GTK_LABEL (self->hour_label), hour_str);
 
   /* Summary label */
   g_object_bind_property (event,
