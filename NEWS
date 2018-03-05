@@ -1,3 +1,8 @@
+Major changes in 3.27.92:
+* Flatpak improvements
+* New unit tests
+* Updates translations
+
 Major changes in 3.27.90:
 * Big code refactorings that lead to more stability and ease of maintainership
 * Follow-up improvements after rewritting the Month view
