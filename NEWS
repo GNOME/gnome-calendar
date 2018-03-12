@@ -1,14 +1,17 @@
+Major changes in 3.28.0:
+* Updated translations
+
 Major changes in 3.27.92:
 * Flatpak improvements
 * New unit tests
-* Updates translations
+* Updated translations
 
 Major changes in 3.27.90:
 * Big code refactorings that lead to more stability and ease of maintainership
 * Follow-up improvements after rewritting the Month view
 * Flatpak Nightly now builds with debug and tracing enabled
 * Huge memory leaks were fixed
-* Updates translations
+* Updated translations
 
 Major changes in 3.27.2:
 * Events now are rendered differently if they are all-day or timed
@@ -19,7 +22,7 @@ Major changes in 3.27.2:
     * Right-to-left languages are fully working now
 * Plug some memory leaks (Florian Brosch)
 * Improve filename handling when adding new calendars (Florian Brosch)
-* Updates translations
+* Updated translations
 
 Major changes in 3.25.90:
 * Port to Meson build system (Iñigo Martínez)
