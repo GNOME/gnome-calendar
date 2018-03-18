@@ -178,7 +178,7 @@ msgstr "Tot el dia"
 
 #: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
-msgstr "Afegeix un recordatori..."
+msgstr "Afegeix un recordatori…"
 
 #: data/ui/edit-dialog.ui:430
 msgid "No Repeat"
@@ -214,7 +214,7 @@ msgstr "Nombre d'aparicions"
 
 #: data/ui/edit-dialog.ui:465
 msgid "Until Date"
-msgstr "Fins a una dara"
+msgstr "Fins a una data"
 
 #: data/ui/edit-dialog.ui:560
 msgid "Delete Event"
