@@ -49,6 +49,14 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2018-03-19" version="3.26.4">
+      <description>
+        <p>
+          GNOME Calendar 3.26.4 release brings another fix to timezone issues, a updated translations.
+        </p>
+      </description>
+    </release>
+
     <release date="2018-01-16" version="3.26.3">
       <description>
         <p>

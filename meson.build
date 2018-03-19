@@ -1,6 +1,6 @@
 project(
   'gnome-calendar', 'c',
-  version: '3.26.3',
+  version: '3.26.4',
   license: 'GPL3+',
   default_options: [
     'buildtype=debugoptimized',
