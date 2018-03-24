@@ -350,9 +350,11 @@ update_event_list (GcalMonthPopover *self)
                         "activate",
                         G_CALLBACK (event_activated_cb),
                         self);
+
+      gtk_widget_show (event_widget);
     }
 
-  gtk_widget_show_all (self->listbox);
+  gtk_widget_show (self->listbox);
 }
 
 
