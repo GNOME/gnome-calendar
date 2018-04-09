@@ -1795,9 +1795,6 @@ gcal_month_view_finalize (GObject *object)
 {
   GcalMonthView *self = GCAL_MONTH_VIEW (object);
 
-  if (self->weather_service)
-    g_signal_handlers_disconnect_by_func (self->weather_service, weather_changed_cb, self);
-
   g_clear_pointer (&self->date, g_free);
   g_clear_pointer (&self->children, g_hash_table_destroy);
   g_clear_pointer (&self->single_cell_children, g_hash_table_destroy);

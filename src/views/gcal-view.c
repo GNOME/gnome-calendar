@@ -218,7 +218,7 @@ gcal_view_set_weather_service_impl_helper (GcalWeatherService  **old_service,
       g_set_object (old_service, new_service);
 
       if (*old_service)
-        g_signal_connect (*old_service, "weather-changed", weather_changed_cb, data);
+        g_signal_connect_object (*old_service, "weather-changed", weather_changed_cb, data, 0);
 
       update_func (data);
       g_object_notify (G_OBJECT (data), "weather-service");

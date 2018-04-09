@@ -1095,13 +1095,7 @@ gcal_week_header_finalize (GObject *object)
   for (i = 0; i < 7; i++)
     g_list_free (self->events[i]);
 
-  if (self->weather_service != NULL)
-    {
-      g_signal_handlers_disconnect_by_func (self->weather_service,
-                                            (GCallback) on_weather_update,
-                                            self);
-      g_clear_object (&self->weather_service);
-    }
+  g_clear_object (&self->weather_service);
 
   for (i = 0; i < G_N_ELEMENTS (self->weather_infos); i++)
     wid_clear (&self->weather_infos[i]);
