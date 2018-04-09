@@ -1598,6 +1598,9 @@ gcal_year_view_finalize (GObject *object)
   GcalYearView *year_view = GCAL_YEAR_VIEW (object);
   guint i;
 
+  if (year_view->weather_service)
+    g_signal_handlers_disconnect_by_func (year_view->weather_service, weather_changed, year_view);
+
   g_free (year_view->navigator_grid);
   g_free (year_view->selected_data);
 
