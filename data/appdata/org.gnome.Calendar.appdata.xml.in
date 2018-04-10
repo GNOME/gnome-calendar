@@ -49,6 +49,12 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2018-04-10" version="3.28.1">
+      <description>
+        <p>This release updates many translations.</p>
+      </description>
+    </release>
+
     <release date="2018-03-12" version="3.28.0">
       <description>
         <p>The GNOME Calendar Team is proud to announce GNOME Calendar 3.28!</p>

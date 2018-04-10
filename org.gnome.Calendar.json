@@ -1,13 +1,9 @@
 {
     "app-id" : "org.gnome.Calendar",
     "runtime" : "org.gnome.Platform",
-    "runtime-version" : "master",
+    "runtime-version" : "3.28",
     "sdk" : "org.gnome.Sdk",
     "command" : "gnome-calendar",
-    "tags" : [
-        "devel"
-    ],
-    "desktop-file-name-prefix" : "(Development) ",
     "finish-args" : [
         "--share=ipc",
         "--share=network",
@@ -34,9 +30,6 @@
             "V" : "1"
         }
     },
-    "x-run-args" : [
-        "--debug"
-    ],
     "cleanup" : [
         "/include",
         "/lib/pkgconfig",
@@ -58,8 +51,9 @@
             ],
             "sources" : [
                 {
-                    "type" : "git",
-                    "url" : "git://git.gnome.org/gnome-online-accounts"
+                    "type" : "archive",
+                    "url" : "https://download.gnome.org/sources/gnome-online-accounts/3.28/gnome-online-accounts-3.28.0.tar.xz",
+                    "sha256" : "87bc4ef307604f1ce4f09f6e5c9996ef8d37ca5e0a3bf76f6b27d71844adb40c"
                 }
             ]
         },
@@ -90,8 +84,9 @@
             ],
             "sources" : [
                 {
-                    "type" : "git",
-                    "url" : "git://git.gnome.org/geocode-glib"
+                    "type" : "archive",
+                    "url" : "https://download.gnome.org/sources/geocode-glib/3.25/geocode-glib-3.25.4.tar.xz",
+                    "sha256" : "75ea9c2a1bf108651521c4274132b0f424cf950b3fdc226852bc3089d97664dd"
                 }
             ]
         },
@@ -103,8 +98,9 @@
             ],
             "sources" : [
                 {
-                    "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/libgweather.git"
+                    "type" : "archive",
+                    "url" : "https://download.gnome.org/sources/libgweather/3.28/libgweather-3.28.1.tar.xz",
+                    "sha256" : "157a8388532a751b36befff424b11ed913b2c43689b62cd2060f6847eb730be3"
                 }
             ]
         },
@@ -116,7 +112,6 @@
                 "/libexec",
                 "/share/dbus-1/services"
             ],
-            "buildsystem" : "cmake",
             "config-opts" : [
                 "-DENABLE_GTK=ON",
                 "-DENABLE_GOOGLE_AUTH=OFF",
@@ -130,10 +125,12 @@
                 "-DENABLE_GTK_DOC=OFF",
                 "-DENABLE_EXAMPLES=OFF"
             ],
+            "buildsystem" : "cmake",
             "sources" : [
                 {
-                    "type" : "git",
-                    "url" : "git://git.gnome.org/evolution-data-server"
+                    "type" : "archive",
+                    "url" : "https://download.gnome.org/sources/evolution-data-server/3.28/evolution-data-server-3.28.1.tar.xz",
+                    "sha256" : "6b04fc1adaba0541546267a77f1bc5aa549fe85eb9933492fdf994c69fa36989"
                 }
             ]
         },
@@ -147,8 +144,9 @@
             "builddir" : true,
             "sources" : [
                 {
-                    "type" : "git",
-                    "url" : "https://gitlab.gnome.org/GNOME/libdazzle.git"
+                    "type" : "archive",
+                    "url" : "https://download.gnome.org/sources/libdazzle/3.28/libdazzle-3.28.1.tar.xz",
+                    "sha256" : "627cdbd1fda815ad8308f8a01ba9a23d4a8fd11cc783e40d6eadbffba2bc4912"
                 }
             ]
         },
@@ -158,11 +156,9 @@
             "sources" : [
                 {
                     "type" : "git",
+                    "branch" : "gnome-3-28",
                     "url" : "https://gitlab.gnome.org/GNOME/gnome-calendar.git"
                 }
-            ],
-            "config-opts" : [
-                "-Dtracing=true"
             ]
         }
     ]
