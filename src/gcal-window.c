@@ -191,8 +191,6 @@ enum
   N_PROPS
 };
 
-#define SAVE_GEOMETRY_ID_TIMEOUT 100 /* ms */
-
 #define gcal_window_add_accelerator(app,action,...) {\
   const gchar *tmp[] = {__VA_ARGS__, NULL};\
   gtk_application_set_accels_for_action (GTK_APPLICATION (app), action, tmp);\
