@@ -168,38 +168,33 @@ fill_sources_menu (GcalEditDialog *dialog)
   for (aux = list; aux != NULL; aux = aux->next)
     {
       ESource *source;
-      GMenuItem *item;
-      GdkRGBA color;
-      cairo_surface_t *surface;
-      GdkPixbuf *pix;
 
       source = E_SOURCE (aux->data);
 
-      /* retrieve color */
-      get_color_name_from_source (source, &color);
-      surface = get_circle_surface_from_color (&color, 16);
-      pix = gdk_pixbuf_get_from_surface (surface, 0, 0, 16, 16);
-
-      /* menu item */
-      item = g_menu_item_new (e_source_get_display_name (source), "select-calendar");
-      g_menu_item_set_icon (item, G_ICON (pix));
-
-      /* set insensitive for read-only calendars */
-      if (!gcal_manager_is_client_writable (dialog->manager, source))
+      /* only add writable calendars */
+      if (gcal_manager_is_client_writable (dialog->manager, source))
         {
-          g_menu_item_set_action_and_target_value (item, "select-calendar", NULL);
-        }
-      else
-        {
+          GMenuItem *item;
+          GdkRGBA color;
+          cairo_surface_t *surface;
+          GdkPixbuf *pix;
+
+          /* retrieve color */
+          get_color_name_from_source (source, &color);
+          surface = get_circle_surface_from_color (&color, 16);
+          pix = gdk_pixbuf_get_from_surface (surface, 0, 0, 16, 16);
+
+          /* menu item */
+          item = g_menu_item_new (e_source_get_display_name (source), "select-calendar");
+          g_menu_item_set_icon (item, G_ICON (pix));
           g_menu_item_set_action_and_target_value (item, "select-calendar",
                                                    g_variant_new_string (e_source_get_uid (source)));
+          g_menu_append_item (dialog->sources_menu, item);
+
+          g_clear_pointer (&surface, cairo_surface_destroy);
+          g_object_unref (pix);
+          g_object_unref (item);
         }
-
-      g_menu_append_item (dialog->sources_menu, item);
-
-      g_clear_pointer (&surface, cairo_surface_destroy);
-      g_object_unref (pix);
-      g_object_unref (item);
     }
 
   gtk_popover_bind_model (GTK_POPOVER (dialog->sources_popover), G_MENU_MODEL (dialog->sources_menu), "edit");
