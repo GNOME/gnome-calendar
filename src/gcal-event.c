@@ -1492,7 +1492,19 @@ gcal_event_get_uid (GcalEvent *self)
  * gcal_event_is_multiday:
  * @self: a #GcalEvent
  *
- * Whether the event spans more than 1 day.
+ * Whether the event visibly spans more than one day in the
+ * calendar.
+ *
+ * This function can return different values for the same event
+ * depending on your timezone. For example, an event that spans
+ * [ 02:00, 22:00 ) +0000 would assume the following values:
+ *
+ * |[
+ *             D-1            D            D+1
+ * -0600 [         ---][-------     ][            ] (multiday)
+ * +0000 [            ][ ---------- ][            ] (single day)
+ * +0800 [            ][     -------][---         ] (multiday)
+ * ]|
  *
  * Returns: %TRUE if @self spans more than 1 day, %FALSE otherwise.
  */
