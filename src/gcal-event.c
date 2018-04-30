@@ -1499,36 +1499,31 @@ gcal_event_get_uid (GcalEvent *self)
 gboolean
 gcal_event_is_multiday (GcalEvent *self)
 {
-  g_autoptr (GDateTime) real_end_date = NULL;
-  gboolean is_multiday;
-  gint n_days;
+  g_autoptr (GDateTime) inclusive_end_date = NULL;
+  g_autoptr (GDateTime) local_start_date = NULL;
+  g_autoptr (GDateTime) local_end_date = NULL;
+  GDate start_dt;
+  GDate end_dt;
 
   g_return_val_if_fail (GCAL_IS_EVENT (self), FALSE);
 
-  real_end_date = g_date_time_add_seconds (gcal_event_get_date_end (self), -1);
-  n_days = g_date_time_difference (real_end_date, self->dt_start) / G_TIME_SPAN_DAY;
-  is_multiday = FALSE;
+  inclusive_end_date = g_date_time_add_seconds (gcal_event_get_date_end (self), -1);
+  local_start_date = g_date_time_to_local (self->dt_start);
+  local_end_date = g_date_time_to_local (inclusive_end_date);
 
-  /*
-   * An all-day event with only 1 day of time span is treated as a
-   * single-day event.
-   */
-  if (self->all_day && n_days == 1)
-    is_multiday = FALSE;
+  g_date_clear (&start_dt, 1);
+  g_date_set_dmy (&start_dt,
+                  g_date_time_get_day_of_month (local_start_date),
+                  g_date_time_get_month (local_start_date),
+                  g_date_time_get_year (local_start_date));
 
-  /*
-   * If any of the following fields are different, we're certain that
-   * it's a multiday event. Otherwise, we're certain it's NOT a multiday
-   * event.
-   */
-  if (g_date_time_get_year (self->dt_start) != g_date_time_get_year (real_end_date) ||
-      g_date_time_get_month (self->dt_start) != g_date_time_get_month (real_end_date) ||
-      g_date_time_get_day_of_month (self->dt_start) != g_date_time_get_day_of_month (real_end_date))
-    {
-      is_multiday = TRUE;
-    }
+  g_date_clear (&end_dt, 1);
+  g_date_set_dmy (&end_dt,
+                  g_date_time_get_day_of_month (local_end_date),
+                  g_date_time_get_month (local_end_date),
+                  g_date_time_get_year (local_end_date));
 
-  return is_multiday;
+  return g_date_days_between (&start_dt, &end_dt) > 1;
 }
 
 /**
