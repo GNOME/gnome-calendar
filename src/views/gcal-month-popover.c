@@ -26,6 +26,7 @@
 #include <dazzle.h>
 
 #define RATIO_TO_RELATIVE  1.25
+#define MIN_WIDTH          250
 
 struct _GcalMonthPopover
 {
@@ -274,6 +275,8 @@ reposition_popover (GcalMonthPopover *self,
   diff_h = (RATIO_TO_RELATIVE - 1) * alloc.height;
 
   gtk_window_move (GTK_WINDOW (self), alloc.x - diff_w / 2, alloc.y - diff_h / 2);
+
+  alloc.width = MAX (MIN_WIDTH, alloc.width);
 
   if (animate)
     {
@@ -852,6 +855,8 @@ gcal_month_popover_popdown (GcalMonthPopover *self)
   gtk_widget_translate_coordinates (self->relative_to,
                                     gtk_widget_get_toplevel (self->relative_to), 0, 0, &alloc.x, &alloc.y);
   adjust_margin (self, &alloc);
+
+  alloc.width = MAX (MIN_WIDTH, alloc.width);
 
   animate_opacity (self, 0.0);
   animate_position (self, 0.0, 0.0);
