@@ -124,14 +124,24 @@ struct _GcalMonthView
   gboolean            pending_event_allocation;
 };
 
+
 static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
 
 static void          gtk_buildable_interface_init                (GtkBuildableIface  *iface);
 
 static void          e_data_model_subscriber_interface_init      (ECalDataModelSubscriberInterface *iface);
 
-static void          update_weather                              (GcalMonthView      *self,
-                                                                  gboolean            clear_old);
+static void          on_event_activated_cb                       (GcalEventWidget    *widget,
+                                                                  GcalMonthView      *self);
+
+static void          on_event_widget_visibility_changed_cb       (GtkWidget          *event_widget,
+                                                                  GParamSpec         *pspec,
+                                                                  GcalMonthView      *self);
+
+static void          on_month_cell_show_overflow_popover_cb      (GcalMonthCell      *cell,
+                                                                  GtkWidget          *button,
+                                                                  GcalMonthView      *self);
+
 
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view, GTK_TYPE_CONTAINER,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
@@ -162,28 +172,13 @@ cancel_selection (GcalMonthView *self)
 }
 
 static void
-event_activated (GcalMonthView   *self,
-                 GcalEventWidget *widget,
-                 gpointer         unused)
+activate_event (GcalMonthView   *self,
+                GcalEventWidget *event_widget)
 {
   cancel_selection (self);
   gcal_month_popover_popdown (self->overflow_popover);
 
-  g_signal_emit_by_name (self, "event-activated", widget);
-}
-
-static void
-event_widget_visibility_changed_cb (GcalMonthView *self)
-{
-  self->pending_event_allocation = TRUE;
-  gtk_widget_queue_resize (GTK_WIDGET (self));
-}
-
-static void
-weather_changed_cb (GcalWeatherService *weather_service,
-                    GcalMonthView      *self)
-{
-  update_weather (self, TRUE);
+  g_signal_emit_by_name (self, "event-activated", event_widget);
 }
 
 static void
@@ -193,8 +188,8 @@ setup_child_widget (GcalMonthView *self,
   if (!gtk_widget_get_parent (widget))
     gtk_widget_set_parent (widget, GTK_WIDGET (self));
 
-  g_signal_connect_swapped (widget, "activate", G_CALLBACK (event_activated), self);
-  g_signal_connect_swapped (widget, "notify::visible", G_CALLBACK (event_widget_visibility_changed_cb), self);
+  g_signal_connect (widget, "activate", G_CALLBACK (on_event_activated_cb), self);
+  g_signal_connect (widget, "notify::visible", G_CALLBACK (on_event_widget_visibility_changed_cb), self);
 }
 
 static gboolean
@@ -836,22 +831,6 @@ allocate_single_day_events (GcalMonthView *self,
 }
 
 static void
-show_overflow_popover_cb (GcalMonthCell *cell,
-                          GtkWidget     *button,
-                          GcalMonthView *self)
-{
-  GcalMonthPopover *popover;
-
-  popover = GCAL_MONTH_POPOVER (self->overflow_popover);
-
-  cancel_selection (self);
-
-  gcal_month_popover_set_relative_to (popover, GTK_WIDGET (cell));
-  gcal_month_popover_set_date (popover, gcal_month_cell_get_date (cell));
-  gcal_month_popover_popup (popover);
-}
-
-static void
 setup_header_widget (GcalMonthView *self,
                      GtkWidget     *widget)
 {
@@ -876,10 +855,7 @@ setup_month_grid (GcalMonthView *self,
 
           cell = gcal_month_cell_new ();
 
-          g_signal_connect (cell,
-                            "show-overflow",
-                            G_CALLBACK (show_overflow_popover_cb),
-                            self);
+          g_signal_connect (cell, "show-overflow", G_CALLBACK (on_month_cell_show_overflow_popover_cb), self);
 
           self->month_cell[row][col] = cell;
 
@@ -1040,7 +1016,7 @@ static void
 queue_update_month_cells (GcalMonthView *self)
 {
   if (self->update_grid_id > 0)
-    g_source_remove (self->update_grid_id);
+    return;
 
   self->update_grid_id = g_idle_add ((GSourceFunc) update_month_cells, self);
 }
@@ -1071,163 +1047,10 @@ update_weekday_labels (GcalMonthView *self)
     }
 }
 
+
 /*
- * GtkWidget overrides
+ * Callbacks
  */
-
-static gboolean
-gcal_month_view_key_press (GtkWidget   *widget,
-                           GdkEventKey *event)
-{
-  GcalMonthView *self;
-  gboolean create_event;
-  gboolean selection;
-  gboolean valid_key;
-  gboolean is_ltr;
-  gint min, max, diff, month_change, current_day;
-  gint row, col;
-
-  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (widget), FALSE);
-
-  self = GCAL_MONTH_VIEW (widget);
-  selection = event->state & GDK_SHIFT_MASK;
-  create_event = FALSE;
-  valid_key = FALSE;
-  diff = 0;
-  month_change = 0;
-  current_day = self->keyboard_cell - self->days_delay + 1;
-  min = self->days_delay;
-  max = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year) - 1;
-  is_ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
-
-  /*
-   * If it's starting the selection right now, it should mark the current keyboard
-   * focused cell as the start, and then update the end mark after updating the
-   * focused cell.
-   */
-  if (selection && self->start_mark_cell == NULL)
-      self->start_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day, 0, 0, 0);
-
-  switch (event->keyval)
-    {
-    case GDK_KEY_Up:
-      valid_key = TRUE;
-      diff = -7;
-      break;
-
-    case GDK_KEY_Down:
-      valid_key = TRUE;
-      diff = 7;
-      break;
-
-    case GDK_KEY_Left:
-      valid_key = TRUE;
-      diff = is_ltr ? -1 : 1;
-      break;
-
-    case GDK_KEY_Right:
-      valid_key = TRUE;
-      diff = is_ltr ? 1 : -1;
-      break;
-
-    case GDK_KEY_Return:
-      /*
-       * If it's not on the selection mode (i.e. shift is not pressed), we should
-       * simulate it by changing the start & end selected cells = keyboard cell.
-       */
-      if (!selection && !self->start_mark_cell && !self->end_mark_cell)
-        self->start_mark_cell = self->end_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day, 0, 0, 0);
-
-      create_event = TRUE;
-      break;
-
-    case GDK_KEY_Escape:
-      cancel_selection (GCAL_MONTH_VIEW (widget));
-      break;
-
-    default:
-      return GDK_EVENT_PROPAGATE;
-    }
-
-  if (self->keyboard_cell + diff <= max && self->keyboard_cell + diff >= min)
-    {
-      self->keyboard_cell += diff;
-    }
-  else
-    {
-      month_change = self->keyboard_cell + diff > max ? 1 : -1;
-      self->date->month += month_change;
-      *self->date = icaltime_normalize (*self->date);
-
-      self->days_delay = (time_day_of_week (1, self->date->month - 1, self->date->year) - self->first_weekday + 7) % 7;
-
-      /*
-       * Set keyboard cell value to the sum or difference of days delay of successive
-       * month or last day of preceeding month and overload value depending on
-       * month_change. Overload value is the equal to the deviation of the value
-       * of keboard_cell from the min or max value of the current month depending
-       * on the overload point.
-       */
-      if (month_change == 1)
-        self->keyboard_cell = self->days_delay + self->keyboard_cell + diff - max - 1;
-      else
-        self->keyboard_cell = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year) - min + self->keyboard_cell + diff;
-    }
-
-  /* Focus the selected month cell */
-  row = self->keyboard_cell / 7;
-  col = self->keyboard_cell % 7;
-
-  gtk_widget_grab_focus (self->month_cell[row][col]);
-
-  current_day = self->keyboard_cell - self->days_delay + 1;
-  self->date->day = current_day;
-
-  /*
-   * We can only emit the :create-event signal ~after~ grabbing the focus, otherwise
-   * the popover is instantly hidden.
-   */
-  if (create_event)
-    emit_create_event (self);
-
-  g_object_notify (G_OBJECT (widget), "active-date");
-
-  if (selection)
-    {
-      self->end_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day, 0, 0, 0);
-    }
-  else if (!selection && valid_key)
-    {
-      /* Cancel selection if SHIFT is not pressed */
-      cancel_selection (GCAL_MONTH_VIEW (widget));
-    }
-
-  return GDK_EVENT_STOP;
-}
-
-static gboolean
-gcal_month_view_scroll_event (GtkWidget      *widget,
-                              GdkEventScroll *scroll_event)
-{
-  GcalMonthView *self = GCAL_MONTH_VIEW (widget);
-
-  /*
-   * If we accumulated enough scrolling, change the month. Otherwise, we'd scroll
-   * waaay too fast.
-   */
-  if (should_change_date_for_scroll (&self->scroll_value, scroll_event))
-    {
-      self->date->month += self->scroll_value > 0 ? 1 : -1;
-      *self->date = icaltime_normalize (*self->date);
-      self->scroll_value = 0;
-
-      gtk_widget_queue_draw (widget);
-
-      g_object_notify (G_OBJECT (widget), "active-date");
-    }
-
-  return GDK_EVENT_STOP;
-}
 
 static void
 add_new_event_button_cb (GtkWidget *button,
@@ -1249,7 +1072,58 @@ add_new_event_button_cb (GtkWidget *button,
   g_date_time_unref (start_date);
 }
 
-/* GcalView Interface API */
+static void
+on_event_activated_cb (GcalEventWidget *widget,
+                       GcalMonthView   *self)
+{
+  activate_event (self, widget);
+}
+
+static void
+on_event_widget_visibility_changed_cb (GtkWidget     *event_widget,
+                                       GParamSpec    *pspec,
+                                       GcalMonthView *self)
+{
+  self->pending_event_allocation = TRUE;
+  gtk_widget_queue_resize (GTK_WIDGET (self));
+}
+
+static void
+on_month_cell_show_overflow_popover_cb (GcalMonthCell *cell,
+                                        GtkWidget     *button,
+                                        GcalMonthView *self)
+{
+  GcalMonthPopover *popover;
+
+  popover = GCAL_MONTH_POPOVER (self->overflow_popover);
+
+  cancel_selection (self);
+
+  gcal_month_popover_set_relative_to (popover, GTK_WIDGET (cell));
+  gcal_month_popover_set_date (popover, gcal_month_cell_get_date (cell));
+  gcal_month_popover_popup (popover);
+}
+
+static void
+on_month_popover_event_activated_cb (GcalMonthPopover *month_popover,
+                                     GcalEventWidget  *event_widget,
+                                     GcalMonthView    *self)
+{
+  activate_event (self, event_widget);
+}
+
+static void
+on_weather_service_weather_changed_cb (GcalWeatherService *weather_service,
+                                       GcalMonthView      *self)
+{
+  update_weather (self, TRUE);
+}
+
+
+/*
+ * GcalView interface
+ */
+
 static icaltimetype*
 gcal_month_view_get_date (GcalView *view)
 {
@@ -1347,6 +1221,7 @@ gtk_buildable_interface_init (GtkBuildableIface *iface)
 {
   iface->add_child = gcal_month_view_add_child;
 }
+
 
 /*
  * ECalDataModelSubscriber interface
@@ -1493,6 +1368,7 @@ e_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
   iface->freeze = gcal_month_view_freeze;
   iface->thaw = gcal_month_view_thaw;
 }
+
 
 /*
  * GtkContainer overrides
@@ -1690,7 +1566,7 @@ gcal_month_view_forall (GtkContainer *container,
   if (self->header)
     (*callback) (self->header, callback_data);
 
-  /* Header */
+  /* Grid */
   if (self->grid)
     (*callback) (self->grid, callback_data);
 
@@ -1716,103 +1592,8 @@ gcal_month_view_forall (GtkContainer *container,
 
 
 /*
- * GObject overrides
+ * GtkWidget overrides
  */
-
-static void
-gcal_month_view_set_property (GObject       *object,
-                              guint          property_id,
-                              const GValue  *value,
-                              GParamSpec    *pspec)
-{
-  GcalMonthView *self = (GcalMonthView *) object;
-  gint i;
-
-  switch (property_id)
-    {
-    case PROP_DATE:
-      gcal_view_set_date (GCAL_VIEW (object), g_value_get_boxed (value));
-      break;
-
-    case PROP_MANAGER:
-      self->manager = g_value_dup_object (value);
-
-      g_signal_connect_swapped (gcal_manager_get_clock (self->manager),
-                                "day-changed",
-                                G_CALLBACK (update_month_cells),
-                                self);
-
-      for (i = 0; i < 42; i++)
-        gcal_month_cell_set_manager (GCAL_MONTH_CELL (self->month_cell[i / 7][i % 7]), self->manager);
-
-      g_object_notify (object, "manager");
-      break;
-
-    case PROP_WEATHER_SERVICE:
-      gcal_view_set_weather_service_impl_helper (&self->weather_service,
-                                                 g_value_get_object (value),
-                                                 (GcalWeatherUpdateFunc) update_weather,
-                                                 (GCallback) weather_changed_cb,
-                                                 GTK_WIDGET (self));
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-      break;
-    }
-}
-
-static void
-gcal_month_view_get_property (GObject       *object,
-                              guint          property_id,
-                              GValue        *value,
-                              GParamSpec    *pspec)
-{
-  GcalMonthView *self = GCAL_MONTH_VIEW (object);
-
-  switch (property_id)
-    {
-    case PROP_DATE:
-      g_value_set_boxed (value, self->date);
-      break;
-
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
-      break;
-
-    case PROP_WEATHER_SERVICE:
-      g_value_set_boxed (value, self->weather_service);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-      break;
-    }
-}
-
-static void
-gcal_month_view_finalize (GObject *object)
-{
-  GcalMonthView *self = GCAL_MONTH_VIEW (object);
-
-  g_clear_pointer (&self->date, g_free);
-  g_clear_pointer (&self->children, g_hash_table_destroy);
-  g_clear_pointer (&self->single_cell_children, g_hash_table_destroy);
-  g_clear_pointer (&self->overflow_cells, g_hash_table_destroy);
-  g_clear_pointer (&self->multi_cell_children, g_list_free);
-
-  g_clear_object (&self->manager);
-  g_clear_object (&self->weather_service);
-
-  if (self->update_grid_id > 0)
-    {
-      g_source_remove (self->update_grid_id);
-      self->update_grid_id = 0;
-    }
-
-  /* Chain up to parent's finalize() method. */
-  G_OBJECT_CLASS (gcal_month_view_parent_class)->finalize (object);
-}
 
 static void
 gcal_month_view_realize (GtkWidget *widget)
@@ -2129,6 +1910,260 @@ gcal_month_view_direction_changed (GtkWidget        *widget,
   gtk_widget_queue_resize (widget);
 }
 
+static gboolean
+gcal_month_view_key_press (GtkWidget   *widget,
+                           GdkEventKey *event)
+{
+  GcalMonthView *self;
+  gboolean create_event;
+  gboolean selection;
+  gboolean valid_key;
+  gboolean is_ltr;
+  gint min, max, diff, month_change, current_day;
+  gint row, col;
+
+  g_return_val_if_fail (GCAL_IS_MONTH_VIEW (widget), FALSE);
+
+  self = GCAL_MONTH_VIEW (widget);
+  selection = event->state & GDK_SHIFT_MASK;
+  create_event = FALSE;
+  valid_key = FALSE;
+  diff = 0;
+  month_change = 0;
+  current_day = self->keyboard_cell - self->days_delay + 1;
+  min = self->days_delay;
+  max = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year) - 1;
+  is_ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
+
+  /*
+   * If it's starting the selection right now, it should mark the current keyboard
+   * focused cell as the start, and then update the end mark after updating the
+   * focused cell.
+   */
+  if (selection && self->start_mark_cell == NULL)
+      self->start_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day, 0, 0, 0);
+
+  switch (event->keyval)
+    {
+    case GDK_KEY_Up:
+      valid_key = TRUE;
+      diff = -7;
+      break;
+
+    case GDK_KEY_Down:
+      valid_key = TRUE;
+      diff = 7;
+      break;
+
+    case GDK_KEY_Left:
+      valid_key = TRUE;
+      diff = is_ltr ? -1 : 1;
+      break;
+
+    case GDK_KEY_Right:
+      valid_key = TRUE;
+      diff = is_ltr ? 1 : -1;
+      break;
+
+    case GDK_KEY_Return:
+      /*
+       * If it's not on the selection mode (i.e. shift is not pressed), we should
+       * simulate it by changing the start & end selected cells = keyboard cell.
+       */
+      if (!selection && !self->start_mark_cell && !self->end_mark_cell)
+        self->start_mark_cell = self->end_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day, 0, 0, 0);
+
+      create_event = TRUE;
+      break;
+
+    case GDK_KEY_Escape:
+      cancel_selection (GCAL_MONTH_VIEW (widget));
+      break;
+
+    default:
+      return GDK_EVENT_PROPAGATE;
+    }
+
+  if (self->keyboard_cell + diff <= max && self->keyboard_cell + diff >= min)
+    {
+      self->keyboard_cell += diff;
+    }
+  else
+    {
+      month_change = self->keyboard_cell + diff > max ? 1 : -1;
+      self->date->month += month_change;
+      *self->date = icaltime_normalize (*self->date);
+
+      self->days_delay = (time_day_of_week (1, self->date->month - 1, self->date->year) - self->first_weekday + 7) % 7;
+
+      /*
+       * Set keyboard cell value to the sum or difference of days delay of successive
+       * month or last day of preceeding month and overload value depending on
+       * month_change. Overload value is the equal to the deviation of the value
+       * of keboard_cell from the min or max value of the current month depending
+       * on the overload point.
+       */
+      if (month_change == 1)
+        self->keyboard_cell = self->days_delay + self->keyboard_cell + diff - max - 1;
+      else
+        self->keyboard_cell = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year) - min + self->keyboard_cell + diff;
+    }
+
+  /* Focus the selected month cell */
+  row = self->keyboard_cell / 7;
+  col = self->keyboard_cell % 7;
+
+  gtk_widget_grab_focus (self->month_cell[row][col]);
+
+  current_day = self->keyboard_cell - self->days_delay + 1;
+  self->date->day = current_day;
+
+  /*
+   * We can only emit the :create-event signal ~after~ grabbing the focus, otherwise
+   * the popover is instantly hidden.
+   */
+  if (create_event)
+    emit_create_event (self);
+
+  g_object_notify (G_OBJECT (widget), "active-date");
+
+  if (selection)
+    {
+      self->end_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day, 0, 0, 0);
+    }
+  else if (!selection && valid_key)
+    {
+      /* Cancel selection if SHIFT is not pressed */
+      cancel_selection (GCAL_MONTH_VIEW (widget));
+    }
+
+  return GDK_EVENT_STOP;
+}
+
+static gboolean
+gcal_month_view_scroll_event (GtkWidget      *widget,
+                              GdkEventScroll *scroll_event)
+{
+  GcalMonthView *self = GCAL_MONTH_VIEW (widget);
+
+  /*
+   * If we accumulated enough scrolling, change the month. Otherwise, we'd scroll
+   * waaay too fast.
+   */
+  if (should_change_date_for_scroll (&self->scroll_value, scroll_event))
+    {
+      self->date->month += self->scroll_value > 0 ? 1 : -1;
+      *self->date = icaltime_normalize (*self->date);
+      self->scroll_value = 0;
+
+      gtk_widget_queue_draw (widget);
+
+      g_object_notify (G_OBJECT (widget), "active-date");
+    }
+
+  return GDK_EVENT_STOP;
+}
+
+
+/*
+ * GObject overrides
+ */
+
+static void
+gcal_month_view_set_property (GObject       *object,
+                              guint          property_id,
+                              const GValue  *value,
+                              GParamSpec    *pspec)
+{
+  GcalMonthView *self = (GcalMonthView *) object;
+  gint i;
+
+  switch (property_id)
+    {
+    case PROP_DATE:
+      gcal_view_set_date (GCAL_VIEW (object), g_value_get_boxed (value));
+      break;
+
+    case PROP_MANAGER:
+      self->manager = g_value_dup_object (value);
+
+      g_signal_connect_swapped (gcal_manager_get_clock (self->manager),
+                                "day-changed",
+                                G_CALLBACK (update_month_cells),
+                                self);
+
+      for (i = 0; i < 42; i++)
+        gcal_month_cell_set_manager (GCAL_MONTH_CELL (self->month_cell[i / 7][i % 7]), self->manager);
+
+      g_object_notify (object, "manager");
+      break;
+
+    case PROP_WEATHER_SERVICE:
+      gcal_view_set_weather_service_impl_helper (&self->weather_service,
+                                                 g_value_get_object (value),
+                                                 (GcalWeatherUpdateFunc) update_weather,
+                                                 G_CALLBACK (on_weather_service_weather_changed_cb),
+                                                 GTK_WIDGET (self));
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+      break;
+    }
+}
+
+static void
+gcal_month_view_get_property (GObject       *object,
+                              guint          property_id,
+                              GValue        *value,
+                              GParamSpec    *pspec)
+{
+  GcalMonthView *self = GCAL_MONTH_VIEW (object);
+
+  switch (property_id)
+    {
+    case PROP_DATE:
+      g_value_set_boxed (value, self->date);
+      break;
+
+    case PROP_MANAGER:
+      g_value_set_object (value, self->manager);
+      break;
+
+    case PROP_WEATHER_SERVICE:
+      g_value_set_boxed (value, self->weather_service);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+      break;
+    }
+}
+
+static void
+gcal_month_view_finalize (GObject *object)
+{
+  GcalMonthView *self = GCAL_MONTH_VIEW (object);
+
+  g_clear_pointer (&self->date, g_free);
+  g_clear_pointer (&self->children, g_hash_table_destroy);
+  g_clear_pointer (&self->single_cell_children, g_hash_table_destroy);
+  g_clear_pointer (&self->overflow_cells, g_hash_table_destroy);
+  g_clear_pointer (&self->multi_cell_children, g_list_free);
+
+  g_clear_object (&self->manager);
+  g_clear_object (&self->weather_service);
+
+  if (self->update_grid_id > 0)
+    {
+      g_source_remove (self->update_grid_id);
+      self->update_grid_id = 0;
+    }
+
+  /* Chain up to parent's finalize() method. */
+  G_OBJECT_CLASS (gcal_month_view_parent_class)->finalize (object);
+}
+
 static void
 gcal_month_view_class_init (GcalMonthViewClass *klass)
 {
@@ -2218,9 +2253,6 @@ gcal_month_view_init (GcalMonthView *self)
                           "manager",
                           G_BINDING_DEFAULT);
 
-  g_signal_connect_swapped (self->overflow_popover,
-                            "event-activated",
-                            G_CALLBACK (event_activated),
-                            self);
+  g_signal_connect (self->overflow_popover, "event-activated", G_CALLBACK (on_month_popover_event_activated_cb), self);
 }
 
