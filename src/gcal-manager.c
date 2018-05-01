@@ -1715,7 +1715,7 @@ gcal_manager_remove_event (GcalManager           *self,
                               (ECalObjModType) mod,
                               self->async_ops,
                               on_event_removed,
-                              event);
+                              g_object_ref (event));
 
   g_free (rid);
 
