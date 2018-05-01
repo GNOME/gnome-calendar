@@ -152,11 +152,12 @@ get_event_range (GcalWeekGrid *self,
 
   if (end)
     {
-
-      GDateTime *event_end;
+      g_autoptr (GDateTime) inclusive_end_date = NULL;
+      g_autoptr (GDateTime) event_end = NULL;
       gboolean event_end_dst;
 
-      event_end = g_date_time_to_local (gcal_event_get_date_end (event));
+      inclusive_end_date = g_date_time_add_seconds (gcal_event_get_date_end (event), -1);
+      event_end = g_date_time_to_local (inclusive_end_date);
       event_end_dst = g_date_time_is_daylight_savings (event_end);
 
       diff = g_date_time_difference (event_end, week_start);
@@ -171,8 +172,6 @@ get_event_range (GcalWeekGrid *self,
        */
       if (start && *start == *end)
         *end = *end + 1;
-
-      g_clear_pointer (&event_end, g_date_time_unref);
     }
 
   g_clear_pointer (&week_start, g_date_time_unref);
