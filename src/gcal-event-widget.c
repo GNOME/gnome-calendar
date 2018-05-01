@@ -310,9 +310,6 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
   escaped_summary = g_markup_escape_text (gcal_event_get_summary (event), -1);
   g_string_append_printf (tooltip_mesg, "<b>%s</b>", escaped_summary);
 
-  tooltip_start = g_date_time_to_local (gcal_event_get_date_start (event));
-  tooltip_end = g_date_time_to_local (gcal_event_get_date_end (event));
-
   allday = gcal_event_get_all_day (event);
   multiday = gcal_event_is_multiday (event);
 
@@ -320,6 +317,10 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
 
   if (allday)
     {
+      /* All day events span from [ start, end - 1 day ] */
+      tooltip_start = g_date_time_ref (gcal_event_get_date_start (event));
+      tooltip_end = g_date_time_add_days (gcal_event_get_date_end (event), -1);
+
       if (multiday)
         {
           start = g_date_time_format (tooltip_start, "%x");
@@ -333,6 +334,9 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
     }
   else
     {
+      tooltip_start = g_date_time_to_local (gcal_event_get_date_start (event));
+      tooltip_end = g_date_time_to_local (gcal_event_get_date_end (event));
+
       if (multiday)
         {
           if (self->clock_format_24h)
@@ -395,9 +399,7 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
 
   if (allday && !multiday)
     {
-      g_string_append_printf (tooltip_mesg,
-                              "\n%s",
-                              start);
+      g_string_append_printf (tooltip_mesg, "\n%s", start);
     }
   else
     {
