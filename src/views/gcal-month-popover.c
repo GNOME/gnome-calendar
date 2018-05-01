@@ -18,6 +18,7 @@
 
 #define G_LOG_DOMAIN "GcalMonthPopover"
 
+#include "gcal-debug.h"
 #include "gcal-event-widget.h"
 #include "gcal-month-popover.h"
 #include "gcal-utils.h"
@@ -399,10 +400,16 @@ new_event_button_clicked_cb (GtkWidget        *button,
   GActionMap *map;
   GAction *action;
 
+  GCAL_ENTRY;
+
   map = G_ACTION_MAP (g_application_get_default ());
   action = g_action_map_lookup_action (map, "new");
 
+  gcal_month_popover_popdown (self);
+
   g_action_activate (action, NULL);
+
+  GCAL_EXIT;
 }
 
 static void
