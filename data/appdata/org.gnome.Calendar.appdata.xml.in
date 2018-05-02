@@ -49,6 +49,15 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2018-05-01" version="3.28.2">
+      <description>
+        <p>
+          The 3.28.2 release brings polish to the Month and Week views, and fixes a crash
+          when removing tasks. It also updates many translations.
+        </p>
+      </description>
+    </release>
+
     <release date="2018-04-10" version="3.28.1">
       <description>
         <p>This release updates many translations.</p>

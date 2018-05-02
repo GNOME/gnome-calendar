@@ -1,3 +1,12 @@
+Major changes in 3.28.2:
+* Don't show time labels on full day events (Abdullahi Usman)
+* Fix Week grid collapsing non-overlapping events
+* Force timed events square box to be squared
+* Use the correct end date on tooltips
+* Minor improvements to the Month view paddings
+* Fix a crash when deleting tasks
+* Updates translations
+
 Major changes in 3.28.1:
 * Updated translations
 
