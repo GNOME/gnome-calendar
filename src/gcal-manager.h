@@ -20,7 +20,6 @@
 #define __GCAL_MANAGER_H__
 
 #include "e-cal-data-model.h"
-#include "gcal-clock.h"
 #include "gcal-event.h"
 
 #include <libical/icaltime.h>
@@ -106,9 +105,6 @@ GList*               gcal_manager_get_events                     (GcalManager   
                                                                   icaltimetype       *range_end);
 
 gboolean             gcal_manager_get_loading                    (GcalManager        *self);
-
-/* Clock */
-GcalClock*           gcal_manager_get_clock                      (GcalManager        *self);
 
 /* Online Accounts */
 GoaClient*           gcal_manager_get_goa_client                 (GcalManager        *self);
