@@ -18,6 +18,8 @@
 
 #define G_LOG_DOMAIN "GcalYearView"
 
+#include "gcal-application.h"
+#include "gcal-clock.h"
 #include "gcal-debug.h"
 #include "gcal-year-view.h"
 #include "gcal-view.h"
@@ -1662,12 +1664,6 @@ gcal_year_view_set_property (GObject      *object,
 
     case PROP_MANAGER:
       self->manager = g_value_dup_object (value);
-
-      g_signal_connect_swapped (gcal_manager_get_clock (self->manager),
-                                "day-changed",
-                                G_CALLBACK (gtk_widget_queue_draw),
-                                self->navigator);
-
       g_object_notify (object, "manager");
       break;
 
@@ -2011,6 +2007,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
 static void
 gcal_year_view_init (GcalYearView *self)
 {
+  GcalApplication *application;
   guint i;
 
   self->weather_service = NULL;
@@ -2053,6 +2050,17 @@ gcal_year_view_init (GcalYearView *self)
                      NULL,
                      0,
                      GDK_ACTION_MOVE);
+
+  /* Connect to the wall clock */
+  application = GCAL_APPLICATION (g_application_get_default ());
+
+  g_assert (application != NULL);
+
+  g_signal_connect_object (gcal_application_get_clock (application),
+                           "day-changed",
+                           G_CALLBACK (gtk_widget_queue_draw),
+                           self,
+                           G_CONNECT_SWAPPED);
 }
 
 static void

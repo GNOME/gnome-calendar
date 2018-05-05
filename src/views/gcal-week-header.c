@@ -21,6 +21,8 @@
 
 #define G_LOG_DOMAIN "GcalWeekHeader"
 
+#include "gcal-application.h"
+#include "gcal-clock.h"
 #include "gcal-debug.h"
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
@@ -1664,6 +1666,8 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
 static void
 gcal_week_header_init (GcalWeekHeader *self)
 {
+  GcalApplication *application;
+
   self->expanded = FALSE;
   self->selection_start = -1;
   self->selection_end = -1;
@@ -1683,6 +1687,17 @@ G_GNUC_END_IGNORE_DEPRECATIONS
                      NULL,
                      0,
                      GDK_ACTION_MOVE);
+
+  /* Connect to the wall clock */
+  application = GCAL_APPLICATION (g_application_get_default ());
+
+  g_assert (application != NULL);
+
+  g_signal_connect_object (gcal_application_get_clock (application),
+                           "day-changed",
+                           G_CALLBACK (gtk_widget_queue_draw),
+                           self,
+                           G_CONNECT_SWAPPED);
 }
 
 /* Private API */
@@ -1813,11 +1828,6 @@ gcal_week_header_set_manager (GcalWeekHeader *self,
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
   self->manager = manager;
-
-  g_signal_connect_swapped (gcal_manager_get_clock (manager),
-                            "day-changed",
-                            G_CALLBACK (gtk_widget_queue_draw),
-                            self);
 }
 
 void
