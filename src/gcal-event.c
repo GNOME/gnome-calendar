@@ -1535,7 +1535,7 @@ gcal_event_is_multiday (GcalEvent *self)
                   g_date_time_get_month (local_end_date),
                   g_date_time_get_year (local_end_date));
 
-  return g_date_days_between (&start_dt, &end_dt) > 1;
+  return g_date_days_between (&start_dt, &end_dt) > 0;
 }
 
 /**
