@@ -404,6 +404,12 @@ multi_choice_changed (GcalDateChooser *self)
   g_date_time_get_ymd (self->date, NULL, NULL, &day);
 
   date = g_date_time_new_local (year, month, day, 1, 1, 1);
+  /* ensure that we have a valid date e.g. on switching from 31th of May to June */
+  while (date == NULL)
+  {
+    day--;
+    date = g_date_time_new_local (year, month, day, 1, 1, 1);
+  }
   gcal_date_chooser_set_date (self, date);
   g_date_time_unref (date);
 }
