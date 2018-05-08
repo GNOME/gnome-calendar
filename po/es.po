@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-02-20 22:28+0000\n"
-"PO-Revision-Date: 2018-02-21 17:13+0100\n"
+"POT-Creation-Date: 2018-05-02 02:05+0000\n"
+"PO-Revision-Date: 2018-05-08 14:48+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -30,10 +30,15 @@ msgid "Calendar for GNOME"
 msgstr "Calendario para GNOME"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:11
+#| msgid ""
+#| "GNOME Calendar is a simple and beautiful calendar application designed to "
+#| "perfectly fit the GNOME desktop. By reusing the components which the "
+#| "GNOME desktop is build on, Calendar nicely integrates with the GNOME "
+#| "ecosystem."
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "Calendario de GNOME es una aplicación de calendario bonita y sencilla "
 "diseñada para ajustarse perfectamente al escritorio GNOME. Al reutilizar "
@@ -491,7 +496,7 @@ msgstr "Introduzca sus credenciales"
 msgid "Connect"
 msgstr "Conectar"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:754
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:753
 #: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
@@ -563,7 +568,6 @@ msgid "Add Event…"
 msgstr "Añadir evento…"
 
 #: src/gcal-application.c:88
-#| msgid "Edit Calendar"
 msgid "Quit GNOME Calendar"
 msgstr "Salir de calendario de GNOME"
 
@@ -629,7 +633,7 @@ msgid "Unnamed event"
 msgstr "Evento sin nombre"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:420
+#: src/gcal-event-widget.c:422
 #, c-format
 msgid "At %s"
 msgstr "El %s"
@@ -961,7 +965,7 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1093
+#: src/gcal-utils.c:1120
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -969,19 +973,19 @@ msgstr ""
 "El evento que intenta modificar es recurrente. Los cambios que ha "
 "seleccionado se deben aplicar a:"
 
-#: src/gcal-utils.c:1096
+#: src/gcal-utils.c:1123
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/gcal-utils.c:1098
+#: src/gcal-utils.c:1125
 msgid "_Only This Event"
 msgstr "_Sólo este evento"
 
-#: src/gcal-utils.c:1105
+#: src/gcal-utils.c:1132
 msgid "_Subsequent events"
 msgstr "_Eventos próximos"
 
-#: src/gcal-utils.c:1107
+#: src/gcal-utils.c:1134
 msgid "_All events"
 msgstr "_Todos los eventos"
 
@@ -993,7 +997,7 @@ msgstr "Otro evento eliminado"
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
-#: src/views/gcal-week-grid.c:751 src/views/gcal-week-view.c:275
+#: src/views/gcal-week-grid.c:750 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "00 AM"
 
