@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-03-05 19:17+0000\n"
-"PO-Revision-Date: 2018-03-22 17:25+0100\n"
+"POT-Creation-Date: 2018-05-08 13:11+0000\n"
+"PO-Revision-Date: 2018-05-08 22:22+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:640 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
 msgid "Calendar"
 msgstr "Koledar"
 
@@ -35,10 +35,11 @@ msgstr "Koledar za GNOME"
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "Koledar za GNOME je program, ki je zasnovan za enostavno uporabo in "
-"vključuje elemente, ki so uporabljeni v namizju Gnome."
+"vključuje elemente, ki so uporabljeni v namizju GNOME. Z uporabo elementov, "
+"na katerih je zgrajen GNOME, se program odlično povezuje v namizje."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
@@ -491,7 +492,7 @@ msgstr "Vpišite poverila"
 msgid "Connect"
 msgstr "Poveži"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:754
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
 #: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
@@ -532,8 +533,8 @@ msgstr "Mesec"
 msgid "Year"
 msgstr "Leto"
 
-#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
-#: src/views/gcal-year-view.c:514
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:281
+#: src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "Danes"
 
@@ -562,32 +563,32 @@ msgstr "Ni dogodkov"
 msgid "Add Event…"
 msgstr "Dodaj dogodek ..."
 
-#: src/gcal-application.c:88
+#: src/gcal-application.c:90
 msgid "Quit GNOME Calendar"
 msgstr "Končaj program"
 
-#: src/gcal-application.c:93
+#: src/gcal-application.c:95
 msgid "Display version number"
 msgstr "Pokaži številko različice"
 
-#: src/gcal-application.c:98
+#: src/gcal-application.c:100
 msgid "Enable debug messages"
 msgstr "Omogoči sporočila za razhroščevanje"
 
-#: src/gcal-application.c:103
+#: src/gcal-application.c:105
 msgid "Open calendar on the passed date"
 msgstr "Odpri koledar na preteklem datumu"
 
-#: src/gcal-application.c:108
+#: src/gcal-application.c:110
 msgid "Open calendar showing the passed event"
 msgstr "Odpri koledar v pogledu preteklih dogodkov"
 
-#: src/gcal-application.c:595
+#: src/gcal-application.c:610
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Avtorske pravice © 2012–%d Avtorji programa Koledar"
 
-#: src/gcal-application.c:646
+#: src/gcal-application.c:661
 msgid "translator-credits"
 msgstr "Matej Urbančič <mateju@svn@gnome.org>"
 
@@ -636,7 +637,7 @@ msgid "Unnamed event"
 msgstr "Neimenovan dogodek"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:420
+#: src/gcal-event-widget.c:424
 #, c-format
 msgid "At %s"
 msgstr "Mesto: %s"
@@ -1000,11 +1001,11 @@ msgstr "Izbrisan je drug dogodek"
 msgid "Event deleted"
 msgstr "Dogodek je izbrisan"
 
-#: src/views/gcal-week-grid.c:751 src/views/gcal-week-view.c:275
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/views/gcal-week-header.c:398
+#: src/views/gcal-week-header.c:400
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1013,7 +1014,7 @@ msgstr[1] "Drug %d dogodek"
 msgstr[2] "Druga %d dogodka"
 msgstr[3] "Drugi %d dogodki"
 
-#: src/views/gcal-week-header.c:934
+#: src/views/gcal-week-header.c:936
 #, c-format
 msgid "week %d"
 msgstr "%d. teden"
@@ -1021,14 +1022,14 @@ msgstr "%d. teden"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:290
 msgid "%B %d…"
 msgstr "%B %d …"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:517
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%B %d"
 
