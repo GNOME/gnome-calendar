@@ -20,6 +20,8 @@
 #define G_LOG_DOMAIN "GcalMonthCell"
 
 #include "config.h"
+#include "gcal-application.h"
+#include "gcal-clock.h"
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 #include "gcal-month-cell.h"
@@ -445,8 +447,9 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
 static void
 gcal_month_cell_init (GcalMonthCell *self)
 {
-  gtk_widget_init_template (GTK_WIDGET (self));
+  GcalApplication *application;
 
+  gtk_widget_init_template (GTK_WIDGET (self));
 
   /* Setup the month cell as a drag n' drop destination */
   gtk_drag_dest_set (GTK_WIDGET (self),
@@ -454,6 +457,18 @@ gcal_month_cell_init (GcalMonthCell *self)
                      NULL,
                      0,
                      GDK_ACTION_MOVE);
+
+  /* Connect to the wall clock */
+  application = GCAL_APPLICATION (g_application_get_default ());
+
+  g_assert (application != NULL);
+
+  g_signal_connect_object (gcal_application_get_clock (application),
+                           "day-changed",
+                           G_CALLBACK (day_changed_cb),
+                           self,
+                           0);
+
 }
 
 GtkWidget*
@@ -576,14 +591,7 @@ gcal_month_cell_set_manager (GcalMonthCell *self,
   g_return_if_fail (GCAL_IS_MONTH_CELL (self));
 
   if (g_set_object (&self->manager, manager))
-    {
-      g_signal_connect_swapped (gcal_manager_get_clock (manager),
-                                "day-changed",
-                                G_CALLBACK (day_changed_cb),
-                                self);
-
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_MANAGER]);
-    }
+    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_MANAGER]);
 }
 
 guint

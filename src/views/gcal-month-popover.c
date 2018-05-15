@@ -18,6 +18,7 @@
 
 #define G_LOG_DOMAIN "GcalMonthPopover"
 
+#include "gcal-debug.h"
 #include "gcal-event-widget.h"
 #include "gcal-month-popover.h"
 #include "gcal-utils.h"
@@ -25,6 +26,7 @@
 #include <dazzle.h>
 
 #define RATIO_TO_RELATIVE  1.25
+#define MIN_WIDTH          250
 
 struct _GcalMonthPopover
 {
@@ -274,6 +276,8 @@ reposition_popover (GcalMonthPopover *self,
 
   gtk_window_move (GTK_WINDOW (self), alloc.x - diff_w / 2, alloc.y - diff_h / 2);
 
+  alloc.width = MAX (MIN_WIDTH, alloc.width);
+
   if (animate)
     {
       gtk_widget_set_size_request (GTK_WIDGET (self), alloc.width, alloc.height);
@@ -399,10 +403,16 @@ new_event_button_clicked_cb (GtkWidget        *button,
   GActionMap *map;
   GAction *action;
 
+  GCAL_ENTRY;
+
   map = G_ACTION_MAP (g_application_get_default ());
   action = g_action_map_lookup_action (map, "new");
 
+  gcal_month_popover_popdown (self);
+
   g_action_activate (action, NULL);
+
+  GCAL_EXIT;
 }
 
 static void
@@ -845,6 +855,8 @@ gcal_month_popover_popdown (GcalMonthPopover *self)
   gtk_widget_translate_coordinates (self->relative_to,
                                     gtk_widget_get_toplevel (self->relative_to), 0, 0, &alloc.x, &alloc.y);
   adjust_margin (self, &alloc);
+
+  alloc.width = MAX (MIN_WIDTH, alloc.width);
 
   animate_opacity (self, 0.0);
   animate_position (self, 0.0, 0.0);

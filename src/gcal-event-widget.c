@@ -22,6 +22,8 @@
 #include <glib/gi18n.h>
 #include <string.h>
 
+#include "gcal-application.h"
+#include "gcal-clock.h"
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
 
@@ -310,9 +312,6 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
   escaped_summary = g_markup_escape_text (gcal_event_get_summary (event), -1);
   g_string_append_printf (tooltip_mesg, "<b>%s</b>", escaped_summary);
 
-  tooltip_start = g_date_time_to_local (gcal_event_get_date_start (event));
-  tooltip_end = g_date_time_to_local (gcal_event_get_date_end (event));
-
   allday = gcal_event_get_all_day (event);
   multiday = gcal_event_is_multiday (event);
 
@@ -320,6 +319,10 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
 
   if (allday)
     {
+      /* All day events span from [ start, end - 1 day ] */
+      tooltip_start = g_date_time_ref (gcal_event_get_date_start (event));
+      tooltip_end = g_date_time_add_days (gcal_event_get_date_end (event), -1);
+
       if (multiday)
         {
           start = g_date_time_format (tooltip_start, "%x");
@@ -333,6 +336,9 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
     }
   else
     {
+      tooltip_start = g_date_time_to_local (gcal_event_get_date_start (event));
+      tooltip_end = g_date_time_to_local (gcal_event_get_date_end (event));
+
       if (multiday)
         {
           if (self->clock_format_24h)
@@ -395,9 +401,7 @@ gcal_event_widget_set_event_tooltip (GcalEventWidget *self,
 
   if (allday && !multiday)
     {
-      g_string_append_printf (tooltip_mesg,
-                              "\n%s",
-                              start);
+      g_string_append_printf (tooltip_mesg, "\n%s", start);
     }
   else
     {
@@ -948,6 +952,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 static void
 gcal_event_widget_init (GcalEventWidget *self)
 {
+  GcalApplication *application;
   GtkWidget *widget;
 
   widget = GTK_WIDGET (self);
@@ -964,6 +969,17 @@ gcal_event_widget_init (GcalEventWidget *self)
   /* Starts with horizontal */
   self->orientation = GTK_ORIENTATION_HORIZONTAL;
   gtk_style_context_add_class (gtk_widget_get_style_context (widget), "horizontal");
+
+  /* Connect to the wall clock */
+  application = GCAL_APPLICATION (g_application_get_default ());
+
+  g_assert (application != NULL);
+
+  g_signal_connect_object (gcal_application_get_clock (application),
+                           "minute-changed",
+                           G_CALLBACK (update_color),
+                           self,
+                           G_CONNECT_SWAPPED);
 }
 
 GtkWidget*

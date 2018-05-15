@@ -19,6 +19,8 @@
 
 #define G_LOG_DOMAIN "GcalWeekGrid"
 
+#include "gcal-application.h"
+#include "gcal-clock.h"
 #include "gcal-debug.h"
 #include "gcal-week-grid.h"
 #include "gcal-week-view.h"
@@ -152,11 +154,12 @@ get_event_range (GcalWeekGrid *self,
 
   if (end)
     {
-
-      GDateTime *event_end;
+      g_autoptr (GDateTime) inclusive_end_date = NULL;
+      g_autoptr (GDateTime) event_end = NULL;
       gboolean event_end_dst;
 
-      event_end = g_date_time_to_local (gcal_event_get_date_end (event));
+      inclusive_end_date = g_date_time_add_seconds (gcal_event_get_date_end (event), -1);
+      event_end = g_date_time_to_local (inclusive_end_date);
       event_end_dst = g_date_time_is_daylight_savings (event_end);
 
       diff = g_date_time_difference (event_end, week_start);
@@ -171,8 +174,6 @@ get_event_range (GcalWeekGrid *self,
        */
       if (start && *start == *end)
         *end = *end + 1;
-
-      g_clear_pointer (&event_end, g_date_time_unref);
     }
 
   g_clear_pointer (&week_start, g_date_time_unref);
@@ -1110,6 +1111,8 @@ gcal_week_grid_class_init (GcalWeekGridClass *klass)
 static void
 gcal_week_grid_init (GcalWeekGrid *self)
 {
+  GcalApplication *application;
+
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
   self->selection_start = -1;
@@ -1124,6 +1127,17 @@ gcal_week_grid_init (GcalWeekGrid *self)
                      NULL,
                      0,
                      GDK_ACTION_MOVE);
+
+  /* Connect to the wall clock */
+  application = GCAL_APPLICATION (g_application_get_default ());
+
+  g_assert (application != NULL);
+
+  g_signal_connect_object (gcal_application_get_clock (application),
+                           "minute-changed",
+                           G_CALLBACK (gtk_widget_queue_draw),
+                           self,
+                           G_CONNECT_SWAPPED);
 }
 
 /* Public API */
@@ -1134,11 +1148,6 @@ gcal_week_grid_set_manager (GcalWeekGrid *self,
   g_return_if_fail (GCAL_IS_WEEK_GRID (self));
 
   self->manager = manager;
-
-  g_signal_connect_swapped (gcal_manager_get_clock (manager),
-                            "minute-changed",
-                            G_CALLBACK (gtk_widget_queue_draw),
-                            self);
 }
 
 void

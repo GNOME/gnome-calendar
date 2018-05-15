@@ -20,6 +20,7 @@
 #ifndef _GCAL_APPLICATION_H_
 #define _GCAL_APPLICATION_H_
 
+#include "gcal-clock.h"
 #include "gcal-weather-service.h"
 #include "gcal-manager.h"
 
@@ -42,6 +43,8 @@ void                 gcal_application_set_uuid                   (GcalApplicatio
 
 void                 gcal_application_set_initial_date           (GcalApplication    *self,
                                                                   GDateTime          *initial_date);
+
+GcalClock*           gcal_application_get_clock                  (GcalApplication    *self);
 
 G_END_DECLS
 

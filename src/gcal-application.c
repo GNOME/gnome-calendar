@@ -55,6 +55,8 @@ struct _GcalApplication
   GcalWeatherService *weather_service;
 
   GcalShellSearchProvider *search_provider;
+
+  GcalClock          *clock;
 };
 
 static void     gcal_application_create_new_event     (GSimpleAction           *new_event,
@@ -121,6 +123,7 @@ static const GActionEntry gcal_app_entries[] = {
 enum
 {
   PROP_0,
+  PROP_CLOCK,
   PROP_MANAGER,
   PROP_TIME_FORMAT,
   PROP_WEATHER_SERVICE,
@@ -229,6 +232,7 @@ gcal_application_finalize (GObject *object)
   g_clear_pointer (&self->initial_date, g_free);
   g_clear_pointer (&self->uuid, g_free);
   g_clear_object (&self->colors_provider);
+  g_clear_object (&self->clock);
   g_clear_object (&self->desktop_settings);
   g_clear_object (&self->manager);
   g_clear_object (&self->provider);
@@ -250,6 +254,10 @@ gcal_application_get_property (GObject    *object,
 
   switch (property_id)
     {
+    case PROP_CLOCK:
+      g_value_set_object (value, self->clock);
+      break;
+
     case PROP_MANAGER:
       g_value_set_object (value, self->manager);
       break;
@@ -506,6 +514,12 @@ gcal_application_class_init (GcalApplicationClass *klass)
   application_class->dbus_register = gcal_application_dbus_register;
   application_class->dbus_unregister = gcal_application_dbus_unregister;
 
+  properties[PROP_CLOCK] = g_param_spec_object ("clock",
+                                                "Clock",
+                                                "The internal clock of Calendar",
+                                                GCAL_TYPE_CLOCK,
+                                                G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+
   properties[PROP_MANAGER] = g_param_spec_object ("manager",
                                                   "The manager object",
                                                   "The manager object",
@@ -533,6 +547,7 @@ gcal_application_init (GcalApplication *self)
 {
   g_application_add_main_option_entries (G_APPLICATION (self), gcal_application_goptions);
 
+  self->clock = gcal_clock_new ();
   self->manager = gcal_manager_new ();
   g_signal_connect_swapped (self->manager, "source-added", G_CALLBACK (process_sources), self);
   g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (process_sources), self);
@@ -728,4 +743,12 @@ gcal_application_set_initial_date (GcalApplication *self,
 
   g_clear_pointer (&self->initial_date, g_date_time_unref);
   self->initial_date = datetime_to_icaltime (initial_date);
+}
+
+GcalClock*
+gcal_application_get_clock (GcalApplication *self)
+{
+  g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
+
+  return self->clock;
 }

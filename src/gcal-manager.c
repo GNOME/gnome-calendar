@@ -90,8 +90,6 @@ struct _GcalManager
 
   GoaClient          *goa_client;
 
-  GcalClock          *clock;
-
   /* state flags */
   gboolean            goa_client_ready;
   gint                sources_at_launch;
@@ -108,7 +106,6 @@ G_DEFINE_TYPE (GcalManager, gcal_manager, G_TYPE_OBJECT)
 enum
 {
   PROP_0,
-  PROP_CLOCK,
   PROP_DEFAULT_CALENDAR,
   PROP_LOADING,
   PROP_SETTINGS,
@@ -776,7 +773,6 @@ gcal_manager_finalize (GObject *object)
 
   GCAL_ENTRY;
 
-  g_clear_object (&self->clock);
   g_clear_object (&self->settings);
   g_clear_object (&self->goa_client);
   g_clear_object (&self->e_data_model);
@@ -872,17 +868,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
   object_class->get_property = gcal_manager_get_property;
 
   /**
-   * GcalManager:clock:
-   *
-   * The internal clock of Calendar.
-   */
-  properties[PROP_CLOCK] = g_param_spec_object ("clock",
-                                                "Clock",
-                                                "The internal clock of Calendar",
-                                                GCAL_TYPE_CLOCK,
-                                                G_PARAM_READWRITE);
-
-  /**
    * GcalManager:default-calendar:
    *
    * The default calendar.
@@ -964,7 +949,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
 static void
 gcal_manager_init (GcalManager *self)
 {
-  self->clock = gcal_clock_new ();
   self->settings = g_settings_new ("org.gnome.calendar");
   self->system_timezone = e_cal_util_get_system_timezone ();
 }
@@ -1715,7 +1699,7 @@ gcal_manager_remove_event (GcalManager           *self,
                               (ECalObjModType) mod,
                               self->async_ops,
                               on_event_removed,
-                              event);
+                              g_object_ref (event));
 
   g_free (rid);
 
@@ -1854,22 +1838,6 @@ gcal_manager_get_loading (GcalManager *self)
   g_return_val_if_fail (GCAL_IS_MANAGER (self), FALSE);
 
   return !self->goa_client_ready || self->sources_at_launch > 0;
-}
-
-/**
- * gcal_manager_get_clock:
- * @self: a #GcalManager
- *
- * Retrieves the internal #GcalClock of @self.
- *
- * Returns: (transfer none): a #GcalClock.
- */
-GcalClock*
-gcal_manager_get_clock (GcalManager *self)
-{
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
-
-  return self->clock;
 }
 
 /**
