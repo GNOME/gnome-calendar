@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-02-05 16:35+0000\n"
+"POT-Creation-Date: 2018-03-20 20:41+0000\n"
 "PO-Revision-Date: 2018-02-17 00:26+0200\n"
 "Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
 "Language-Team: Galician\n"
@@ -78,44 +78,44 @@ msgstr "org.gnome.Calendar"
 msgid "Calendar;Event;Reminder;"
 msgstr "Calendario;Evento;Recordatorio;"
 
-#: data/org.gnome.calendar.gschema.xml:6
+#: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
 msgstr "Xanela maximizada"
 
-#: data/org.gnome.calendar.gschema.xml:7
+#: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
 msgstr "Estado da xanela maximizada"
 
-#: data/org.gnome.calendar.gschema.xml:11
+#: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
 msgstr "Tamaño da xanela"
 
-#: data/org.gnome.calendar.gschema.xml:12
+#: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
 msgstr "Tamaño da xanela (largo e alto)."
 
-#: data/org.gnome.calendar.gschema.xml:16
+#: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
 msgstr "Posición da xanela"
 
-#: data/org.gnome.calendar.gschema.xml:17
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
 msgstr "Posición da xanela (x e y)."
 
-#: data/org.gnome.calendar.gschema.xml:21
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Tipo da vista activa"
 
-#: data/org.gnome.calendar.gschema.xml:22
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
 "Tipo da vista da xanela activa, o valor predeterminado é: vista mensual"
 
-#: data/org.gnome.calendar.gschema.xml:26
+#: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
 msgstr "Configuración do Servizo de metereoloxía"
 
-#: data/org.gnome.calendar.gschema.xml:27
+#: data/org.gnome.calendar.gschema.xml.in:27
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
@@ -170,7 +170,7 @@ msgstr "Localización"
 
 #: data/ui/edit-dialog.ui:301
 msgid "Time"
-msgstr "Tempo"
+msgstr "Hora"
 
 #: data/ui/edit-dialog.ui:354
 msgid "All Day"
@@ -365,8 +365,6 @@ msgid "From File…"
 msgstr "Desde un ficheiro…"
 
 #: data/ui/month-popover.ui:91
-#| msgctxt "shortcut window"
-#| msgid "New event"
 msgid "New Event…"
 msgstr "Novo evento…"
 
@@ -518,13 +516,10 @@ msgid "_Weather"
 msgstr "_Tempo"
 
 #: data/ui/weather-settings.ui:30
-#| msgctxt "shortcut window"
-#| msgid "Show help"
 msgid "Show Weather"
 msgstr "Mostrar o tempo"
 
 #: data/ui/weather-settings.ui:53
-#| msgid "Location"
 msgid "Automatic Location"
 msgstr "Localización automática"
 
@@ -555,7 +550,6 @@ msgid "Search for events"
 msgstr "Buscar eventos"
 
 #: data/ui/window.ui:391
-#| msgid "Add Eve_nt…"
 msgid "Add Eve_nt"
 msgstr "Engadir Eve_nto"
 
@@ -572,7 +566,6 @@ msgid "Add Event…"
 msgstr "Engadir evento…"
 
 #: src/gcal-application.c:88
-#| msgid "Edit Calendar"
 msgid "Quit GNOME Calendar"
 msgstr "Saír de Calendario de GNOME"
 
@@ -594,7 +587,6 @@ msgstr "Abrir calendario mostrando o evento pasado"
 
 #: src/gcal-application.c:595
 #, c-format
-#| msgid "Copyright © %d–%d The Calendar authors"
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Dereitos de autor © 2012–%d Os autores de Calendario"
 
@@ -639,7 +631,7 @@ msgid "Unnamed event"
 msgstr "Evento sen nome"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:419
+#: src/gcal-event-widget.c:420
 #, c-format
 msgid "At %s"
 msgstr "En %s"
@@ -754,14 +746,17 @@ msgid "December"
 msgstr "Decembro"
 
 #: src/gcal-quick-add-popover.c:286
+#, c-format
 msgid "from Today"
 msgstr "desde o Luns"
 
 #: src/gcal-quick-add-popover.c:290
+#, c-format
 msgid "from Tomorrow"
 msgstr "desde mañán"
 
 #: src/gcal-quick-add-popover.c:294
+#, c-format
 msgid "from Yesterday"
 msgstr "desde onte"
 
@@ -775,14 +770,17 @@ msgid "from %1$s %2$s"
 msgstr "desde %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:323
+#, c-format
 msgid "to Today"
 msgstr "até hoxe"
 
 #: src/gcal-quick-add-popover.c:327
+#, c-format
 msgid "to Tomorrow"
 msgstr "até mañá"
 
 #: src/gcal-quick-add-popover.c:331
+#, c-format
 msgid "to Yesterday"
 msgstr "até onte"
 
@@ -802,14 +800,17 @@ msgid "New Event %1$s %2$s"
 msgstr "Novo evento %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
+#, c-format
 msgid "New Event Today"
 msgstr "Novo evento hoxe"
 
 #: src/gcal-quick-add-popover.c:377
+#, c-format
 msgid "New Event Tomorrow"
 msgstr "Novo evento mañá"
 
 #: src/gcal-quick-add-popover.c:381
+#, c-format
 msgid "New Event Yesterday"
 msgstr "Novo evento onte"
 
@@ -962,7 +963,7 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1093
+#: src/gcal-utils.c:1120
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -970,19 +971,19 @@ msgstr ""
 "O evento que tenta modificar é recurrente. Os cambios que seleccione "
 "aplicaránse a:"
 
-#: src/gcal-utils.c:1096
+#: src/gcal-utils.c:1123
 msgid "_Cancel"
 msgstr "_Cancelar"
 
-#: src/gcal-utils.c:1098
+#: src/gcal-utils.c:1125
 msgid "_Only This Event"
 msgstr "Só _este evento"
 
-#: src/gcal-utils.c:1105
+#: src/gcal-utils.c:1132
 msgid "_Subsequent events"
 msgstr "Eventos _subsecuentes"
 
-#: src/gcal-utils.c:1107
+#: src/gcal-utils.c:1134
 msgid "_All events"
 msgstr "_Todos os eventos"
 
