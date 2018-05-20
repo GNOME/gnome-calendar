@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-03-05 18:58+0000\n"
-"PO-Revision-Date: 2018-02-01 23:13+0100\n"
+"POT-Creation-Date: 2018-05-02 02:05+0000\n"
+"PO-Revision-Date: 2018-05-20 20:03+0200\n"
 "Last-Translator: Anders Jonsson <anders.jonsson@norsjovallen.se>\n"
 "Language-Team: Swedish <tp-sv@listor.tp-sv.se>\n"
 "Language: sv\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.5\n"
+"X-Generator: Poedit 2.0.7\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
@@ -34,7 +34,7 @@ msgstr "Kalender för GNOME"
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "GNOME Kalender är ett enkelt och snyggt kalenderprogram som är designat att "
 "passa in i skrivbordsmiljön GNOME. Genom att återanvända de komponenter som "
@@ -492,7 +492,7 @@ msgstr "Ange dina autentiseringsuppgifter"
 msgid "Connect"
 msgstr "Anslut"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:754
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:753
 #: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
@@ -633,7 +633,7 @@ msgid "Unnamed event"
 msgstr "Namnlös händelse"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:420
+#: src/gcal-event-widget.c:422
 #, c-format
 msgid "At %s"
 msgstr "Vid %s"
@@ -998,7 +998,7 @@ msgstr "En annan händelse raderad"
 msgid "Event deleted"
 msgstr "Händelse raderad"
 
-#: src/views/gcal-week-grid.c:751 src/views/gcal-week-view.c:275
+#: src/views/gcal-week-grid.c:750 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "00 f.m."
 
