@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-03-20 20:44+0000\n"
-"PO-Revision-Date: 2018-03-25 02:09+0800\n"
-"Last-Translator: Dingzhong Chen <wsxy162@gmail.com>\n"
+"POT-Creation-Date: 2018-05-02 02:05+0000\n"
+"PO-Revision-Date: 2018-05-10 12:21-0500\n"
+"Last-Translator: Mingcong Bai <jeffbai@aosc.xyz>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
@@ -38,9 +38,9 @@ msgstr "GNOME 日历"
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"GNOME 日历设计简洁美观，符合 GNOME 桌面风格。通过重用组件，日历能够很好地与 "
+"GNOME 日历设计符合 GNOME 桌面简洁美观的风格。通过重用组件，日历能够很好地与 "
 "GNOME 生态系统结合。"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
@@ -490,7 +490,7 @@ msgstr "输入您的凭据"
 msgid "Connect"
 msgstr "连接"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:754
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:753
 #: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
@@ -629,7 +629,7 @@ msgid "Unnamed event"
 msgstr "未命名事件"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:420
+#: src/gcal-event-widget.c:422
 #, c-format
 msgid "At %s"
 msgstr "位于 %s"
@@ -991,7 +991,7 @@ msgstr "另一个事件已删除"
 msgid "Event deleted"
 msgstr "事件已删除"
 
-#: src/views/gcal-week-grid.c:751 src/views/gcal-week-view.c:275
+#: src/views/gcal-week-grid.c:750 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "上午 00"
 
