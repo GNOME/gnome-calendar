@@ -59,7 +59,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "git://git.gnome.org/gnome-online-accounts"
+                    "url" : "https://gitlab.gnome.org/GNOME/gnome-online-accounts.git"
                 }
             ]
         },
@@ -91,7 +91,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "git://git.gnome.org/geocode-glib"
+                    "url" : "https://gitlab.gnome.org/GNOME/geocode-glib.git"
                 }
             ]
         },
@@ -122,10 +122,11 @@
                 "-DENABLE_GOOGLE_AUTH=OFF",
                 "-DENABLE_UOA=OFF",
                 "-DENABLE_GOOGLE=OFF",
-                "-DENABLE_VALA_BINDINGS=ON",
+                "-DENABLE_VALA_BINDINGS=OFF",
                 "-DENABLE_WEATHER=OFF",
                 "-DWITH_OPENLDAP=OFF",
-                "-DENABLE_INTROSPECTION=ON",
+                "-DWITH_LIBDB=OFF",
+                "-DENABLE_INTROSPECTION=OFF",
                 "-DENABLE_INSTALLED_TESTS=OFF",
                 "-DENABLE_GTK_DOC=OFF",
                 "-DENABLE_EXAMPLES=OFF"
@@ -133,7 +134,7 @@
             "sources" : [
                 {
                     "type" : "git",
-                    "url" : "git://git.gnome.org/evolution-data-server"
+                    "url" : "https://gitlab.gnome.org/GNOME/evolution-data-server.git"
                 }
             ]
         },
