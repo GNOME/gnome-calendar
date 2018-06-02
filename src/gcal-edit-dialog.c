@@ -1467,7 +1467,17 @@ return_datetime_for_widgets (GcalEditDialog   *dialog,
 
   /* Use UTC timezone for All Day events, otherwise use the event's timezone */
   all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
-  tz = all_day ? g_time_zone_new_utc () : g_time_zone_new_local ();
+  if (all_day)
+    {
+      tz = g_time_zone_new_utc ();
+    }
+  else
+    {
+      if (gcal_event_get_timezone (dialog->event))
+        tz = g_time_zone_ref (gcal_event_get_timezone (dialog->event));
+      else
+        tz = g_time_zone_new_local ();
+    }
 
   date = gcal_date_selector_get_date (date_selector);
   time = gcal_time_selector_get_time (time_selector);
