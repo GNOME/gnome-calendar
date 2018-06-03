@@ -3,15 +3,14 @@
 # This file is distributed under the same license as the gnome-calendar package.
 # Safa Alfulaij <safa1996alfulaij@gmail.com>, 2015, 2016.
 # Abderrahim Kitouni <a.kitouni@gmail.com>, 2015.
-# Khaled Hosny <khaledhosny@eglug.org>, 2015, 2016.
+# Khaled Hosny <khaledhosny@eglug.org>, 2015, 2016, 2018.
 # Muhannad Alrusayni <muhannad.alrusayni@gmail.com>, 2016.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
-"Report-Msgid-Bugs-To: http://bugzilla.gnome.org/enter_bug.cgi?product=gnome-"
-"calendar&keywords=I18N+L10N&component=General\n"
-"POT-Creation-Date: 2016-09-14 16:10+0000\n"
-"PO-Revision-Date: 2016-09-21 08:46+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-06-03 15:15+0200\n"
+"PO-Revision-Date: 2018-06-03 15:37+0200\n"
 "Last-Translator: Khaled Hosny <khaledhosny@eglug.org>\n"
 "Language-Team: Arabic <doc@arabeyes.org>\n"
 "Language: ar\n"
@@ -24,389 +23,435 @@ msgstr ""
 "X-Project-Style: gnome\n"
 "X-Poedit-Bookmarks: -1,-1,-1,-1,-1,37,-1,-1,-1,-1\n"
 
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:1
-#: ../data/org.gnome.Calendar.desktop.in.in.h:1
-#: ../data/org.gnome.Calendar.search-provider.ini.in.in.h:1
-#: ../data/ui/quick-add-popover.ui.h:3 ../data/ui/window.ui.h:3
-#: ../src/gcal-application.c:483
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:7
+#: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
+#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
 msgid "Calendar"
 msgstr "التقويم"
 
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:2
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:8
 msgid "Calendar for GNOME"
 msgstr "تطبيق تقويم لجنوم"
 
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:3
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:11
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "«تقويم جنوم» هو تطبيق تقويم جميل و بسيط مصمّم ليلائم سطح مكتب جنوم تماما. "
-"يتكامل التقويم (باستخدام المكونات التي بُني عليها سطح مكتب جنوم) مع نظام جنوم "
-"البيئي."
+"يتكامل التقويم مع نظام جنوم البيئي باستخدام المكونات التي بُني عليها سطح "
+"مكتب جنوم."
 
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:4
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You'll feel comfortable using "
-"Calendar, like you've been using it for ages!"
+"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
 msgstr ""
 "نسعى لإيجاد التوازن المثالي بين الميزات الجميلة و سهولة الاستخدام. لا زيادة "
-"ولا نقصان. ستشعر بالراحة وأنت تستخدم «التقويم» كما لو كنت تستخدمه لأعوام!"
+"و لا نقصان. ستشعر بالراحة وأنت تستخدم «التقويم» كما لو كنت تستخدمه منذ أعوام!"
 
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:5
-#: ../data/ui/window.ui.h:6
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:27
+msgid "Week view"
+msgstr "المنظور التالي"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:31
 msgid "Search for events"
 msgstr "ابحث عن الأحداث"
 
-#: ../data/appdata/org.gnome.Calendar.appdata.xml.in.h:6
+#: data/appdata/org.gnome.Calendar.appdata.xml.in:35
 msgid "Calendar management"
 msgstr "إدارة التقويم"
 
-#: ../data/org.gnome.Calendar.desktop.in.in.h:2
-msgid "Access, and manage calendar"
-msgstr "انفذ إلى التقويم وأدره"
+#: data/org.gnome.Calendar.desktop.in:4
+msgid "Access and manage your calendars"
+msgstr "انفذ إلى تقاويمك و أدرها"
 
-#: ../data/org.gnome.Calendar.desktop.in.in.h:3
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: data/org.gnome.Calendar.desktop.in:7
+msgid "org.gnome.Calendar"
+msgstr "org.gnome.Calendar"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.Calendar.desktop.in:13
 msgid "Calendar;Event;Reminder;"
 msgstr "Calendar;Event;Reminder;تقويم;حدث;تذكير;"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:1
+#: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
 msgstr "النافذة مكبرة"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:2
+#: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
 msgstr "حالة كون النافذة مكبرة"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:3
+#: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
 msgstr "حجم النافذة"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:4
+#: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
 msgstr "حجم النافذة (العرض والارتفاع)."
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:5
+#: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
 msgstr "موضع النافذة"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:6
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
-msgstr "موضع النافذة (س و ص)."
+msgstr "موضع النافذة (س و ص)."
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:7
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
-msgstr "نوع الحدث الجديد"
+msgstr "نوع المنظور النشط"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:8
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
-msgstr "نوع منظور النافذة النشط، القيمة الافتراضية هي: المنظور الشهري"
+msgstr "نوع منظور النافذة النشط، القيمة المبدئية هي: المنظور الشهري"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:9
-msgid "List of the disabled sources"
-msgstr "قائمة المصادر المعطلة"
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Weather Service Configuration"
+msgstr "ضبط خدمة الطقس"
 
-#: ../data/org.gnome.calendar.gschema.xml.in.h:10
-msgid "Sources disabled last time Calendar ran"
-msgstr "عُطّلت المصادر منذ آخر تشغيل للتقويم"
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr ""
 
-#: ../data/ui/alarm-row.ui.h:1
+#: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
 msgstr "يبدّل حالة تفعيل صوت المنبه"
 
-#: ../data/ui/alarm-row.ui.h:2
-#| msgid "Remove Calendar"
+#: data/ui/alarm-row.ui:54
 msgid "Remove the alarm"
 msgstr "أزل المنبه"
 
-#: ../data/ui/edit-dialog.ui.h:1 ../data/ui/source-dialog.ui.h:23
-#: ../src/gcal-source-dialog.c:1116
+#: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
+#: data/ui/source-dialog.ui:869 src/gcal-source-dialog.c:1162
 msgid "Cancel"
 msgstr "ألغِ"
 
-#: ../data/ui/edit-dialog.ui.h:2
-msgid "Click to select the event's agenda"
-msgstr "انقر لاختيار مخطط الحدث"
+#: data/ui/edit-dialog.ui:36
+msgid "Click to select the calendar"
+msgstr "انقر لاختيار التقويم"
 
-#: ../data/ui/edit-dialog.ui.h:3 ../src/gcal-edit-dialog.c:565
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
 msgid "Done"
 msgstr "تمّ"
 
-#: ../data/ui/edit-dialog.ui.h:4
+#: data/ui/edit-dialog.ui:146
 msgid "Title"
 msgstr "العنوان"
 
-#: ../data/ui/edit-dialog.ui.h:5
+#: data/ui/edit-dialog.ui:164
 msgid "Date"
 msgstr "التّاريخ"
 
-#: ../data/ui/edit-dialog.ui.h:6
+#: data/ui/edit-dialog.ui:180
+msgid "Repeat"
+msgstr "كرّر"
+
+#: data/ui/edit-dialog.ui:198
 msgid "Reminders"
 msgstr "التذكيرات"
 
-#: ../data/ui/edit-dialog.ui.h:7
+#: data/ui/edit-dialog.ui:216
 msgid "Notes"
 msgstr "ملاحظات"
 
-#: ../data/ui/edit-dialog.ui.h:8 ../data/ui/source-dialog.ui.h:17
+#: data/ui/edit-dialog.ui:232 data/ui/source-dialog.ui:563
 msgid "Location"
 msgstr "المكان"
 
-#: ../data/ui/edit-dialog.ui.h:9
+#: data/ui/edit-dialog.ui:301
 msgid "Time"
 msgstr "الوقت"
 
-#: ../data/ui/edit-dialog.ui.h:10
+#: data/ui/edit-dialog.ui:354
 msgid "All Day"
 msgstr "طول اليوم"
 
-#: ../data/ui/edit-dialog.ui.h:11
-#| msgid "Add Event…"
+#: data/ui/edit-dialog.ui:399
 msgid "Add reminder…"
 msgstr "أضف تذكيرًا…"
 
-#: ../data/ui/edit-dialog.ui.h:12
+#: data/ui/edit-dialog.ui:430
+msgid "No Repeat"
+msgstr "لا تكرار"
+
+#: data/ui/edit-dialog.ui:431
+msgid "Daily"
+msgstr "يومي"
+
+#: data/ui/edit-dialog.ui:432
+msgid "Monday – Friday"
+msgstr "الاثنين – الجمعة"
+
+#: data/ui/edit-dialog.ui:433
+msgid "Weekly"
+msgstr "أسبوعي"
+
+#: data/ui/edit-dialog.ui:434
+msgid "Monthly"
+msgstr "شهري"
+
+#: data/ui/edit-dialog.ui:435
+msgid "Yearly"
+msgstr "سنوي"
+
+#: data/ui/edit-dialog.ui:463
+msgid "Forever"
+msgstr "للأبد"
+
+#: data/ui/edit-dialog.ui:464
+msgid "No. of occurrences"
+msgstr "عدد المرات"
+
+#: data/ui/edit-dialog.ui:465
+msgid "Until Date"
+msgstr "حتى تاريخ"
+
+#: data/ui/edit-dialog.ui:560
 msgid "Delete Event"
 msgstr "احذف الحدث"
 
-#: ../data/ui/edit-dialog.ui.h:13
+#: data/ui/edit-dialog.ui:599
 msgid "5 minutes"
 msgstr "٥ دقائق"
 
-#: ../data/ui/edit-dialog.ui.h:14
+#: data/ui/edit-dialog.ui:608
 msgid "10 minutes"
 msgstr "١٠ دقائق"
 
-#: ../data/ui/edit-dialog.ui.h:15
+#: data/ui/edit-dialog.ui:617
 msgid "30 minutes"
 msgstr "٣٠ دقيقة"
 
-#: ../data/ui/edit-dialog.ui.h:16
+#: data/ui/edit-dialog.ui:626
 msgid "1 hour"
 msgstr "ساعة"
 
-#: ../data/ui/edit-dialog.ui.h:17
-#| msgid "All day"
+#: data/ui/edit-dialog.ui:634
 msgid "1 day"
 msgstr "يوم"
 
-#: ../data/ui/edit-dialog.ui.h:18
-#| msgid "All day"
+#: data/ui/edit-dialog.ui:643
 msgid "2 days"
 msgstr "يومين"
 
-#: ../data/ui/edit-dialog.ui.h:19
-#| msgid "All day"
+#: data/ui/edit-dialog.ui:652
 msgid "3 days"
 msgstr "٣ أيام"
 
-#: ../data/ui/edit-dialog.ui.h:20
+#: data/ui/edit-dialog.ui:661
 msgid "1 week"
 msgstr "أسبوع"
 
-#: ../data/ui/help-overlay.ui.h:1
+#: data/ui/help-overlay.ui:13
 msgctxt "shortcut window"
 msgid "General"
 msgstr "عام"
 
-#: ../data/ui/help-overlay.ui.h:2
+#: data/ui/help-overlay.ui:17
 msgctxt "shortcut window"
 msgid "New event"
 msgstr "حدث جديد"
 
-#: ../data/ui/help-overlay.ui.h:3
+#: data/ui/help-overlay.ui:24
 msgctxt "shortcut window"
 msgid "Close window"
 msgstr "أغلق النافذة"
 
-#: ../data/ui/help-overlay.ui.h:4
+#: data/ui/help-overlay.ui:31
 msgctxt "shortcut window"
 msgid "Search"
-msgstr "بحث"
+msgstr "ابحث"
 
-#: ../data/ui/help-overlay.ui.h:5
+#: data/ui/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Show help"
 msgstr "أظهر المساعدة"
 
-#: ../data/ui/help-overlay.ui.h:6
+#: data/ui/help-overlay.ui:45
 msgctxt "shortcut window"
 msgid "Shortcuts"
 msgstr "الاختصارات"
 
-#: ../data/ui/help-overlay.ui.h:7
+#: data/ui/help-overlay.ui:54
 msgctxt "shortcut window"
 msgid "Navigation"
 msgstr "التنقّل"
 
-#: ../data/ui/help-overlay.ui.h:8
+#: data/ui/help-overlay.ui:58
 msgctxt "shortcut window"
 msgid "Go back"
 msgstr "عُد"
 
-#: ../data/ui/help-overlay.ui.h:9
+#: data/ui/help-overlay.ui:65
 msgctxt "shortcut window"
 msgid "Go forward"
 msgstr "تقدم"
 
-#: ../data/ui/help-overlay.ui.h:10
+#: data/ui/help-overlay.ui:72
 msgctxt "shortcut window"
 msgid "Show today"
 msgstr "اعرض اليوم"
 
-#: ../data/ui/help-overlay.ui.h:11
+#: data/ui/help-overlay.ui:79
 msgctxt "shortcut window"
 msgid "Next view"
-msgstr "العرض التالي"
+msgstr "المنظور التالي"
 
-#: ../data/ui/help-overlay.ui.h:12
+#: data/ui/help-overlay.ui:86
 msgctxt "shortcut window"
 msgid "Previous view"
-msgstr "العرض السابق"
+msgstr "المنظور السابق"
 
-#: ../data/ui/help-overlay.ui.h:13
+#: data/ui/help-overlay.ui:95
 msgctxt "shortcut window"
 msgid "View"
-msgstr "العرض"
+msgstr "المنظور"
 
-#: ../data/ui/help-overlay.ui.h:14
+#: data/ui/help-overlay.ui:99
+msgctxt "shortcut window"
+msgid "Week view"
+msgstr "منظور الأسبوع"
+
+#: data/ui/help-overlay.ui:106
 msgctxt "shortcut window"
 msgid "Month view"
-msgstr "عرض الشهر"
+msgstr "منظور الشهر"
 
-#: ../data/ui/help-overlay.ui.h:15
+#: data/ui/help-overlay.ui:113
 msgctxt "shortcut window"
 msgid "Year view"
-msgstr "عرض السنة"
+msgstr "منظور السنة"
 
-#: ../data/ui/menus.ui.h:1
+#: data/ui/menus.ui:6
 msgid "Add Eve_nt…"
 msgstr "أضف ح_دثًا…"
 
-#: ../data/ui/menus.ui.h:2
-msgid "_Search…"
-msgstr "ا_بحث…"
+#: data/ui/menus.ui:13
+msgid "_Calendars"
+msgstr "الت_قويمات"
 
-#: ../data/ui/menus.ui.h:3
-msgid "_Calendars…"
-msgstr "الت_قاويم..."
-
-#: ../data/ui/menus.ui.h:4
+#: data/ui/menus.ui:19
 msgid "_Keyboard Shortcuts"
 msgstr "ا_ختصارات لوحة المفاتيح"
 
-#: ../data/ui/menus.ui.h:5
+#: data/ui/menus.ui:23
 msgid "_About"
 msgstr "_عن"
 
-#: ../data/ui/menus.ui.h:6
+#: data/ui/menus.ui:27
 msgid "_Quit"
 msgstr "أ_نهِ"
 
-#: ../data/ui/menus.ui.h:7
-msgid "_Synchronize"
-msgstr "زا_من"
-
-#: ../data/ui/menus.ui.h:8
+#: data/ui/menus.ui:36
 msgid "From Web…"
 msgstr "من الوب…"
 
-#: ../data/ui/menus.ui.h:9
+#: data/ui/menus.ui:40
 msgid "New Local Calendar…"
 msgstr "تقويم محلي جديد…"
 
-#: ../data/ui/menus.ui.h:10
+#: data/ui/menus.ui:44
 msgid "From File…"
 msgstr "من ملف…"
 
-#: ../data/ui/quick-add-popover.ui.h:1
-msgid "Edit Details…"
-msgstr "حرر التفاصيل..."
+#: data/ui/month-popover.ui:91
+msgid "New Event…"
+msgstr "حدث جديد…"
 
-#: ../data/ui/quick-add-popover.ui.h:2 ../data/ui/source-dialog.ui.h:9
+#: data/ui/quick-add-popover.ui:117
+msgid "Edit Details…"
+msgstr "حرر التفاصيل…"
+
+#: data/ui/quick-add-popover.ui:130 data/ui/source-dialog.ui:389
+#: data/ui/source-dialog.ui:773
 msgid "Add"
 msgstr "أضف"
 
-#: ../data/ui/search-view.ui.h:1
+#: data/ui/search-popover.ui:76
 msgid "No results found"
 msgstr "لم يُعثر على أي نتائج"
 
-#: ../data/ui/search-view.ui.h:2
+#: data/ui/search-popover.ui:92
 msgid "Try a different search"
 msgstr "جرب بحثًا آخر"
 
-#: ../data/ui/source-dialog.ui.h:1 ../src/gcal-window.c:1123
-#: ../src/gcal-window.c:1127
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
 msgid "Undo"
 msgstr "تراجع"
 
-#: ../data/ui/source-dialog.ui.h:2
+#: data/ui/source-dialog.ui:135
 msgid "Online Accounts"
 msgstr "حسابات الإنترنت"
 
-#: ../data/ui/source-dialog.ui.h:3
+#: data/ui/source-dialog.ui:151
 msgid "Open online account settings"
 msgstr "افتح إعدادات حسابات الإنترنت"
 
-#: ../data/ui/source-dialog.ui.h:4
+#: data/ui/source-dialog.ui:198
 msgid "Google"
 msgstr "جوجل"
 
-#: ../data/ui/source-dialog.ui.h:5
+#: data/ui/source-dialog.ui:209 data/ui/source-dialog.ui:260
+#: data/ui/source-dialog.ui:311
 msgid "Click to set up"
 msgstr "انقر للإعداد"
 
-#: ../data/ui/source-dialog.ui.h:6
+#: data/ui/source-dialog.ui:249
 msgid "Nextcloud"
 msgstr "Nextcloud"
 
-#: ../data/ui/source-dialog.ui.h:7
+#: data/ui/source-dialog.ui:300
 msgid "Microsoft Exchange"
 msgstr "ميكروسوفت إكستشينج"
 
-#: ../data/ui/source-dialog.ui.h:8
+#: data/ui/source-dialog.ui:346 data/ui/source-dialog.ui:682
 msgid "Calendars"
 msgstr "التقويمات"
 
-#: ../data/ui/source-dialog.ui.h:10
+#: data/ui/source-dialog.ui:421
 msgid "Overview"
 msgstr "نظرة عامّة"
 
-#: ../data/ui/source-dialog.ui.h:11
+#: data/ui/source-dialog.ui:441
 msgid "Add new events to this calendar by default"
-msgstr "أضف الإحداث الجديدة إلى هذا التقويم"
+msgstr "أضف الأحداث الجديدة إلى هذا التقويم"
 
-#: ../data/ui/source-dialog.ui.h:12
+#: data/ui/source-dialog.ui:454
 msgid "Remove Calendar"
 msgstr "أزل التقويم"
 
-#: ../data/ui/source-dialog.ui.h:13
+#: data/ui/source-dialog.ui:483
 msgid "Display calendar"
 msgstr "اعرض التقويم"
 
-#: ../data/ui/source-dialog.ui.h:14
+#: data/ui/source-dialog.ui:521
 msgid "Calendar name"
 msgstr "اسم التقويم"
 
-#: ../data/ui/source-dialog.ui.h:15
+#: data/ui/source-dialog.ui:535
 msgid "Color"
 msgstr "اللون"
 
-#: ../data/ui/source-dialog.ui.h:16
+#: data/ui/source-dialog.ui:549
 msgid "Account"
 msgstr "الحساب"
 
-#: ../data/ui/source-dialog.ui.h:18
+#: data/ui/source-dialog.ui:587
 msgid "Settings"
 msgstr "الإعدادات"
 
-#: ../data/ui/source-dialog.ui.h:19
+#: data/ui/source-dialog.ui:618
 msgid "Edit Calendar"
 msgstr "حرّر التقويم"
 
-#: ../data/ui/source-dialog.ui.h:20
+#: data/ui/source-dialog.ui:631
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
 "belongs to one of your online accounts, you can add it through the <a href="
@@ -415,100 +460,133 @@ msgstr ""
 "أدخل عنوان التقويم الذي تريد إضافته. إذا كان التقويم ينتمي لأحد حساباتك على "
 "الإنترنت فيمكنك إضافته من <a href=\"GOA\">إعدادات حسابات الإنترنت</a>."
 
-#: ../data/ui/source-dialog.ui.h:21
+#: data/ui/source-dialog.ui:646
 msgid "Calendar Address"
 msgstr "عنوان التقويم"
 
-#: ../data/ui/source-dialog.ui.h:22 ../src/gcal-source-dialog.c:2202
-#: ../src/gcal-source-dialog.c:2208
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
+#: src/gcal-source-dialog.c:2291
 msgid "Add Calendar"
 msgstr "أضف تقويمًا"
 
-#: ../data/ui/source-dialog.ui.h:24
-msgid "User"
-msgstr "المستخدم"
-
-#: ../data/ui/source-dialog.ui.h:25
-msgid "Password"
-msgstr "كلمة السّر"
-
-#: ../data/ui/source-dialog.ui.h:26
-msgid "Connect"
-msgstr "اتصل"
-
-#: ../data/ui/time-selector.ui.h:1
-msgid "00:00"
-msgstr "00:00"
-
-#: ../data/ui/time-selector.ui.h:2
-msgid ":"
-msgstr ":"
-
-#: ../data/ui/time-selector.ui.h:3 ../src/gcal-week-view.c:417
-msgid "AM"
-msgstr "ص"
-
-#: ../data/ui/time-selector.ui.h:4 ../src/gcal-week-view.c:417
-msgid "PM"
-msgstr "م"
-
-#: ../data/ui/window.ui.h:1
-msgid "Month"
-msgstr "الشهر"
-
-#: ../data/ui/window.ui.h:2
-msgid "Year"
-msgstr "السنة"
-
-#: ../data/ui/window.ui.h:4 ../data/ui/year-view.ui.h:1
-#: ../src/gcal-year-view.c:262 ../src/gcal-year-view.c:482
-msgid "Today"
-msgstr "اليوم"
-
-#: ../data/ui/window.ui.h:5
-msgid "Manage your calendars"
-msgstr "أدر التقويمات لديك"
-
-#: ../data/ui/window.ui.h:7 ../src/gcal-source-dialog.c:817
-#: ../src/gcal-source-dialog.c:2231
+#: data/ui/source-dialog.ui:745 data/ui/window.ui:344
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
 msgid "Calendar Settings"
 msgstr "إعدادات التقويم"
 
-#: ../data/ui/year-view.ui.h:2
+#: data/ui/source-dialog.ui:806
+msgid "User"
+msgstr "المستخدم"
+
+#: data/ui/source-dialog.ui:820
+msgid "Password"
+msgstr "كلمة السّر"
+
+#: data/ui/source-dialog.ui:866
+msgid "Enter your credentials"
+msgstr "أدخل بيانات الولوج"
+
+#: data/ui/source-dialog.ui:878
+msgid "Connect"
+msgstr "اتصل"
+
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
+#: src/views/gcal-week-view.c:278
+msgid "00:00"
+msgstr "٠٠:٠٠"
+
+#: data/ui/time-selector.ui:65
+msgid ":"
+msgstr ":"
+
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:432
+msgid "AM"
+msgstr "ص"
+
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:432
+msgid "PM"
+msgstr "م"
+
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+msgid "_Weather"
+msgstr "ال_طقس"
+
+#: data/ui/weather-settings.ui:30
+msgid "Show Weather"
+msgstr "اعرض الطقس"
+
+#: data/ui/weather-settings.ui:53
+msgid "Automatic Location"
+msgstr "مكان تلقائي"
+
+#: data/ui/window.ui:67
+msgid "Week"
+msgstr "الأسبوع"
+
+#: data/ui/window.ui:82
+msgid "Month"
+msgstr "الشهر"
+
+#: data/ui/window.ui:96
+msgid "Year"
+msgstr "السنة"
+
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:281
+#: src/views/gcal-year-view.c:516
+msgid "Today"
+msgstr "اليوم"
+
+#: data/ui/window.ui:271
+msgid "Manage your calendars"
+msgstr "أدر تقويماتك"
+
+#: data/ui/window.ui:288
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "ابحث عن الأحداث"
+
+#: data/ui/window.ui:391
+msgid "Add Eve_nt"
+msgstr "أضف ح_دثًا"
+
+#: data/ui/window.ui:400
+msgid "_Synchronize"
+msgstr "زا_من"
+
+#: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "لا أحداث"
 
-#: ../data/ui/year-view.ui.h:3 ../src/gcal-month-view.c:1037
+#: data/ui/year-view.ui:155
 msgid "Add Event…"
 msgstr "أضف حدثًا…"
 
-#: ../src/gcal-application.c:102
+#: src/gcal-application.c:90
+msgid "Quit GNOME Calendar"
+msgstr "أنهِ تقويم جنوم"
+
+#: src/gcal-application.c:95
 msgid "Display version number"
 msgstr "اعرض رقم الإصدارة"
 
-#: ../src/gcal-application.c:107
+#: src/gcal-application.c:100
+msgid "Enable debug messages"
+msgstr "فعّل رسائل التنقيح"
+
+#: src/gcal-application.c:105
 msgid "Open calendar on the passed date"
 msgstr "افتح التقويم عند التاريخ الممرر"
 
-#: ../src/gcal-application.c:112
+#: src/gcal-application.c:110
 msgid "Open calendar showing the passed event"
-msgstr "افتح التقويم وأظهر التقويم الممرر"
+msgstr "افتح التقويم و أظهر التقويم الممرر"
 
-#: ../src/gcal-application.c:324
-msgid "- Calendar management"
-msgstr "- إدارة التقويم"
-
-#: ../src/gcal-application.c:471
+#: src/gcal-application.c:610
 #, c-format
-msgid "Copyright © %d The Calendar authors"
-msgstr "حقوق النشر © %Id لمؤلفي التقويم"
+msgid "Copyright © 2012–%d The Calendar authors"
+msgstr "حقوق النشر © ٢٠١٢–%Id لمؤلفي التقويم"
 
-#: ../src/gcal-application.c:477
-#, c-format
-msgid "Copyright © %d–%d The Calendar authors"
-msgstr "حقوق النشر © %Id–%Id لمؤلفي التقويم"
-
-#: ../src/gcal-application.c:490
+#: src/gcal-application.c:661
 msgid "translator-credits"
 msgstr ""
 "فريق عربآيز للتّرجمة http://www.arabeyes.org:\n"
@@ -516,11 +594,11 @@ msgstr ""
 "خالد حسني <khaledhosny@eglug.org>\n"
 "مهند الرسيني <muhannad.alrusayni@gmail.com>"
 
-#: ../src/gcal-edit-dialog.c:565
+#: src/gcal-edit-dialog.c:277
 msgid "Save"
 msgstr "احفظ"
 
-#: ../src/gcal-edit-dialog.c:837
+#: src/gcal-edit-dialog.c:1037
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
@@ -531,7 +609,7 @@ msgstr[3] "%d دقائق قبله"
 msgstr[4] "%d دقيقة قبله"
 msgstr[5] "%d دقيقة قبله"
 
-#: ../src/gcal-edit-dialog.c:845
+#: src/gcal-edit-dialog.c:1045
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
@@ -542,7 +620,7 @@ msgstr[3] "%d ساعات قبله"
 msgstr[4] "%d ساعة قبله"
 msgstr[5] "%d ساعة قبله"
 
-#: ../src/gcal-edit-dialog.c:853
+#: src/gcal-edit-dialog.c:1053
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
@@ -553,7 +631,7 @@ msgstr[3] "%d أيام قبله"
 msgstr[4] "%d يومًا قبله"
 msgstr[5] "%d يوم قبله"
 
-#: ../src/gcal-edit-dialog.c:861
+#: src/gcal-edit-dialog.c:1061
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
@@ -564,16 +642,378 @@ msgstr[3] "%d أسابيع قبله"
 msgstr[4] "%d أسبوعًا قبله"
 msgstr[5] "%d أسبوع قبله"
 
-#: ../src/gcal-edit-dialog.c:1080 ../src/gcal-quick-add-popover.c:424
+#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "حدث غير مُعنوَن"
 
-#: ../src/gcal-month-view.c:1275
-msgid "Other events"
-msgstr "أحداث أخرى"
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gcal-event-widget.c:424
+#, c-format
+msgid "At %s"
+msgstr "في %s"
 
-#. TODO: Warning: in some languages this string can be too long and may overlap with the number
-#: ../src/gcal-month-view.c:1737
+#: src/gcal-quick-add-popover.c:119
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (هذا التقويم للقراءة فقط)"
+
+#: src/gcal-quick-add-popover.c:244
+msgid "from next Monday"
+msgstr "من الاثنين القادم"
+
+#: src/gcal-quick-add-popover.c:245
+msgid "from next Tuesday"
+msgstr "من الثلاثاء القادم"
+
+#: src/gcal-quick-add-popover.c:246
+msgid "from next Wednesday"
+msgstr "من الأربعاء القادم"
+
+#: src/gcal-quick-add-popover.c:247
+msgid "from next Thursday"
+msgstr "من الخميس القادم"
+
+#: src/gcal-quick-add-popover.c:248
+msgid "from next Friday"
+msgstr "من الجمعة القادم"
+
+#: src/gcal-quick-add-popover.c:249
+msgid "from next Saturday"
+msgstr "من السبت القادم"
+
+#: src/gcal-quick-add-popover.c:250
+msgid "from next Sunday"
+msgstr "من الأحد القادم"
+
+#: src/gcal-quick-add-popover.c:255
+msgid "to next Monday"
+msgstr "إلى الاثنين القادم"
+
+#: src/gcal-quick-add-popover.c:256
+msgid "to next Tuesday"
+msgstr "إلى الثلاثاء القادم"
+
+#: src/gcal-quick-add-popover.c:257
+msgid "to next Wednesday"
+msgstr "إلى الأربعاء القادم"
+
+#: src/gcal-quick-add-popover.c:258
+msgid "to next Thursday"
+msgstr "إلى الخميس القادم"
+
+#: src/gcal-quick-add-popover.c:259
+msgid "to next Friday"
+msgstr "إلى الجمعة القادم"
+
+#: src/gcal-quick-add-popover.c:260
+msgid "to next Saturday"
+msgstr "إلى السبت القادم"
+
+#: src/gcal-quick-add-popover.c:261
+msgid "to next Sunday"
+msgstr "إلى الأحد القادم"
+
+#: src/gcal-quick-add-popover.c:266
+msgid "January"
+msgstr "يناير"
+
+#: src/gcal-quick-add-popover.c:267
+msgid "February"
+msgstr "فبراير"
+
+#: src/gcal-quick-add-popover.c:268
+msgid "March"
+msgstr "مارس"
+
+#: src/gcal-quick-add-popover.c:269
+msgid "April"
+msgstr "أبريل"
+
+#: src/gcal-quick-add-popover.c:270
+msgid "May"
+msgstr "مايو"
+
+#: src/gcal-quick-add-popover.c:271
+msgid "June"
+msgstr "يونيو"
+
+#: src/gcal-quick-add-popover.c:272
+msgid "July"
+msgstr "يوليو"
+
+#: src/gcal-quick-add-popover.c:273
+msgid "August"
+msgstr "أغسطس"
+
+#: src/gcal-quick-add-popover.c:274
+msgid "September"
+msgstr "سبتمبر"
+
+#: src/gcal-quick-add-popover.c:275
+msgid "October"
+msgstr "أكتوبر"
+
+#: src/gcal-quick-add-popover.c:276
+msgid "November"
+msgstr "نوفمبر"
+
+#: src/gcal-quick-add-popover.c:277
+msgid "December"
+msgstr "ديسمبر"
+
+#: src/gcal-quick-add-popover.c:286
+#, c-format
+msgid "from Today"
+msgstr "من اليوم"
+
+#: src/gcal-quick-add-popover.c:290
+#, c-format
+msgid "from Tomorrow"
+msgstr "من غد"
+
+#: src/gcal-quick-add-popover.c:294
+#, c-format
+msgid "from Yesterday"
+msgstr "من أمس"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gcal-quick-add-popover.c:312
+#, c-format
+msgid "from %1$s %2$s"
+msgstr "من %1$s %2$s"
+
+#: src/gcal-quick-add-popover.c:323
+#, c-format
+msgid "to Today"
+msgstr "إلى اليوم"
+
+#: src/gcal-quick-add-popover.c:327
+#, c-format
+msgid "to Tomorrow"
+msgstr "إلى غد"
+
+#: src/gcal-quick-add-popover.c:331
+#, c-format
+msgid "to Yesterday"
+msgstr "إلى أمس"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gcal-quick-add-popover.c:349
+#, c-format
+msgid "to %1$s %2$s"
+msgstr "إلى %1$s %2$s"
+
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: src/gcal-quick-add-popover.c:356
+#, c-format
+msgid "New Event %1$s %2$s"
+msgstr "حدث جديد %1$s %2$s"
+
+#: src/gcal-quick-add-popover.c:373
+#, c-format
+msgid "New Event Today"
+msgstr "حدث جديد اليوم"
+
+#: src/gcal-quick-add-popover.c:377
+#, c-format
+msgid "New Event Tomorrow"
+msgstr "حدث جديد غدا"
+
+#: src/gcal-quick-add-popover.c:381
+#, c-format
+msgid "New Event Yesterday"
+msgstr "حدث جديد أمس"
+
+#: src/gcal-quick-add-popover.c:387
+msgid "New Event next Monday"
+msgstr "حدث جديد الاثنين القادم"
+
+#: src/gcal-quick-add-popover.c:388
+msgid "New Event next Tuesday"
+msgstr "حدث جديد الثلاثاء القادم"
+
+#: src/gcal-quick-add-popover.c:389
+msgid "New Event next Wednesday"
+msgstr "حدث جديد الأربعاء القادم"
+
+#: src/gcal-quick-add-popover.c:390
+msgid "New Event next Thursday"
+msgstr "حدث جديد الخميس القادم"
+
+#: src/gcal-quick-add-popover.c:391
+msgid "New Event next Friday"
+msgstr "حدث جديد الجمعة القادمة"
+
+#: src/gcal-quick-add-popover.c:392
+msgid "New Event next Saturday"
+msgstr "حدث جديد السبت القادم"
+
+#: src/gcal-quick-add-popover.c:393
+msgid "New Event next Sunday"
+msgstr "حدث جديد الأحد القادم"
+
+#. Translators: %d is the numeric day of month
+#: src/gcal-quick-add-popover.c:405
+#, c-format
+msgid "New Event on January %d"
+msgstr "حدث جديد في يناير %d"
+
+#: src/gcal-quick-add-popover.c:406
+#, c-format
+msgid "New Event on February %d"
+msgstr "حدث جديد في فبراير %d"
+
+#: src/gcal-quick-add-popover.c:407
+#, c-format
+msgid "New Event on March %d"
+msgstr "حدث جديد في مارس %d"
+
+#: src/gcal-quick-add-popover.c:408
+#, c-format
+msgid "New Event on April %d"
+msgstr "حدث جديد في أبريل %d"
+
+#: src/gcal-quick-add-popover.c:409
+#, c-format
+msgid "New Event on May %d"
+msgstr "حدث جديد في مايو %d"
+
+#: src/gcal-quick-add-popover.c:410
+#, c-format
+msgid "New Event on June %d"
+msgstr "حدث جديد في يونيو %d"
+
+#: src/gcal-quick-add-popover.c:411
+#, c-format
+msgid "New Event on July %d"
+msgstr "حدث جديد في يوليو %d"
+
+#: src/gcal-quick-add-popover.c:412
+#, c-format
+msgid "New Event on August %d"
+msgstr "حدث جديد في أغسطس %d"
+
+#: src/gcal-quick-add-popover.c:413
+#, c-format
+msgid "New Event on September %d"
+msgstr "حدث جديد في سبتمبر %d"
+
+#: src/gcal-quick-add-popover.c:414
+#, c-format
+msgid "New Event on October %d"
+msgstr "حدث جديد في أكتوبر %d"
+
+#: src/gcal-quick-add-popover.c:415
+#, c-format
+msgid "New Event on November %d"
+msgstr "حدث جديد في نوفمبر %d"
+
+#: src/gcal-quick-add-popover.c:416
+#, c-format
+msgid "New Event on December %d"
+msgstr "حدث جديد في ديسمبر %d"
+
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
+#: src/gcal-quick-add-popover.c:464
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s، %2$s – %3$s"
+
+#: src/gcal-search-popover.c:303
+msgid "All day"
+msgstr "طوال اليوم"
+
+#: src/gcal-search-popover.c:563
+msgid "Use the entry above to search for events."
+msgstr "استخدم المدخلة أعلاه للبحث عن الأحداث."
+
+#. Dialog
+#: src/gcal-source-dialog.c:1159
+msgid "Select a calendar file"
+msgstr "اختر ملف تقويم"
+
+#: src/gcal-source-dialog.c:1163
+msgid "Open"
+msgstr "افتح"
+
+#: src/gcal-source-dialog.c:1170
+msgid "Calendar files"
+msgstr "ملفات التقويم"
+
+#. update the source properties
+#: src/gcal-source-dialog.c:1204
+msgid "Unnamed Calendar"
+msgstr "تقويم غير مُعنوَن"
+
+#. Update notification label
+#: src/gcal-source-dialog.c:1810
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "أزيل التقويم <b>%s</b>"
+
+#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+msgid "Off"
+msgstr "معطل"
+
+#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+msgid "On"
+msgstr "مفعل"
+
+#: src/gcal-source-dialog.c:1914
+msgid "Expired"
+msgstr "منتهي الصلاحية"
+
+#: src/gcal-time-selector.c:83
+#, c-format
+msgid "%s AM"
+msgstr "%s ص"
+
+#: src/gcal-time-selector.c:85
+#, c-format
+msgid "%s PM"
+msgstr "%s م"
+
+#: src/gcal-utils.c:1120
+msgid ""
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
+msgstr "الحدث الذي تحاول تغييره متكرر. هل تريد تطبيق التغيرات على:"
+
+#: src/gcal-utils.c:1123
+msgid "_Cancel"
+msgstr "أ_لغِ"
+
+#: src/gcal-utils.c:1125
+msgid "_Only This Event"
+msgstr "هذا الحدث _فقط"
+
+#: src/gcal-utils.c:1132
+msgid "_Subsequent events"
+msgstr "الأحداث ال_تالية"
+
+#: src/gcal-utils.c:1134
+msgid "_All events"
+msgstr "_كل الأحداث"
+
+#: src/gcal-window.c:1039
+msgid "Another event deleted"
+msgstr "حُذف حدث آخر"
+
+#: src/gcal-window.c:1043
+msgid "Event deleted"
+msgstr "حُذف الحدث"
+
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
+msgid "00 AM"
+msgstr "٠٠ ص"
+
+#: src/views/gcal-week-header.c:400
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -584,104 +1024,63 @@ msgstr[3] "%d أحداث أخرى"
 msgstr[4] "%d حدثًا آخرًا"
 msgstr[5] "%d حدث آخر"
 
-#: ../src/gcal-quick-add-popover.c:115
+#: src/views/gcal-week-header.c:936
 #, c-format
-msgid "%s (this calendar is read-only)"
-msgstr "%s (هذا التقويم للقراءة فقط)"
+msgid "week %d"
+msgstr "الأسبوع %Id"
 
-#: ../src/gcal-quick-add-popover.c:225 ../src/gcal-quick-add-popover.c:243
-msgctxt "event date format"
+#. Translators: This is a date format in the sidebar of the year
+#. * view when the selection starts at the specified day and the
+#. * end is unspecified.
+#: src/views/gcal-year-view.c:290
+msgid "%B %d…"
+msgstr "%d %B…"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d %B"
 
-#: ../src/gcal-quick-add-popover.c:245
-#, c-format
-msgid "New Event from %s to %s"
-msgstr "حدث جديد من %s إلى %s"
+#~ msgid "List of the disabled sources"
+#~ msgstr "قائمة المصادر المعطلة"
 
-#: ../src/gcal-quick-add-popover.c:251
-#, c-format
-msgid "New Event on %s"
-msgstr "حدث جديد في %s"
+#~ msgid "Sources disabled last time Calendar ran"
+#~ msgstr "عُطّلت المصادر منذ آخر تشغيل للتقويم"
 
-#: ../src/gcal-search-view.c:353
-msgid "All day"
-msgstr "طوال اليوم"
+#~ msgid "_Search…"
+#~ msgstr "ا_بحث…"
 
-#: ../src/gcal-search-view.c:502
-msgid "Use the entry above to search for events."
-msgstr "استخدم المدخلة أعلاه للبحث عن الأحداث."
+#~ msgid "_Calendars…"
+#~ msgstr "الت_قاويم..."
 
-#. Dialog
-#: ../src/gcal-source-dialog.c:1113
-msgid "Select a calendar file"
-msgstr "اختر ملف تقويم"
+#~ msgid "- Calendar management"
+#~ msgstr "- إدارة التقويم"
 
-#: ../src/gcal-source-dialog.c:1117
-msgid "Open"
-msgstr "افتح"
+#~ msgid "Copyright © %d The Calendar authors"
+#~ msgstr "حقوق النشر © %Id لمؤلفي التقويم"
 
-#: ../src/gcal-source-dialog.c:1124
-msgid "Calendar files"
-msgstr "ملفات التقويم"
+#~ msgid "Other events"
+#~ msgstr "أحداث أخرى"
 
-#. update the source properties
-#: ../src/gcal-source-dialog.c:1166
-msgid "Unnamed Calendar"
-msgstr "تقويم غير مُعنوَن"
+#~ msgid "New Event from %s to %s"
+#~ msgstr "حدث جديد من %s إلى %s"
 
-#. Update notification label
-#: ../src/gcal-source-dialog.c:1766
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "أزيل التقويم <b>%s</b>"
+#~ msgid "Midnight"
+#~ msgstr "منتصف اللّيل"
 
-#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
-msgid "Off"
-msgstr "معطل"
+#~ msgid "Noon"
+#~ msgstr "منتصف النّهار"
 
-#: ../src/gcal-source-dialog.c:1969 ../src/gcal-source-dialog.c:2025
-msgid "On"
-msgstr "مفعل"
-
-#: ../src/gcal-time-selector.c:82
-#, c-format
-msgid "%s AM"
-msgstr "%s ص"
-
-#: ../src/gcal-time-selector.c:84
-#, c-format
-msgid "%s PM"
-msgstr "%s م"
-
-#: ../src/gcal-week-view.c:420 ../src/gcal-week-view.c:493
-msgid "Midnight"
-msgstr "منتصف اللّيل"
-
-#: ../src/gcal-week-view.c:422 ../src/gcal-week-view.c:496
-msgid "Noon"
-msgstr "منتصف النّهار"
-
-#: ../src/gcal-week-view.c:499
-msgid "00:00 PM"
-msgstr "00:00 م"
-
-#: ../src/gcal-window.c:1123
-msgid "Another event deleted"
-msgstr "حُذف حدث آخر"
-
-#: ../src/gcal-window.c:1127
-msgid "Event deleted"
-msgstr "حُذف الحدث"
+#~ msgid "00:00 PM"
+#~ msgstr "00:00 م"
 
 #~ msgid "Starts"
 #~ msgstr "يبدأ في"
 
 #~ msgid "Ends"
 #~ msgstr "ينتهي في"
-
-#~ msgid "Day"
-#~ msgstr "اليوم"
 
 #~ msgid "Create"
 #~ msgstr "أنشئ"
