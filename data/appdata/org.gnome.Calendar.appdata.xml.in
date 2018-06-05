@@ -2,8 +2,8 @@
 <!-- Copyright 2014 Igor Gnatenko <ignatenko@src.gnome.org> -->
 <component type="desktop">
   <id>org.gnome.Calendar.desktop</id>
-  <metadata_license>CC0</metadata_license>
-  <project_license>GPL-3.0+</project_license>
+  <metadata_license>CC0-1.0</metadata_license>
+  <project_license>GPL-3.0-or-later</project_license>
   <name>Calendar</name>
   <summary>Calendar for GNOME</summary>
 
@@ -15,25 +15,25 @@
     </p>
     <p>
       We aim to find the perfect balance between nicely crafted features and user-centred usability. No
-      excess, no lacks. You’ll feel comfortable using Calendar, like you’ve been using it for ages!
+      excess, nothing missing. You’ll feel comfortable using Calendar, like you’ve been using it for ages!
     </p>
   </description>
 
   <screenshots>
     <screenshot type="default">
-      <image width="1200" height="675">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/default.png</image>
+      <image width="1200" height="675">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/default.png</image>
     </screenshot>
     <screenshot>
       <caption>Week view</caption>
-      <image width="1200" height="675">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/management.png</image>
+      <image width="1200" height="675">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/management.png</image>
     </screenshot>
     <screenshot>
       <caption>Search for events</caption>
-      <image width="1200" height="675">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/search.png</image>
+      <image width="1200" height="675">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/search.png</image>
     </screenshot>
     <screenshot>
       <caption>Calendar management</caption>
-      <image width="1202" height="681">https://git.gnome.org/browse/gnome-calendar/plain/data/appdata/calendar-management.png</image>
+      <image width="1202" height="681">https://gitlab.gnome.org/GNOME/gnome-calendar/raw/master/data/appdata/calendar-management.png</image>
     </screenshot>
   </screenshots>
 
@@ -228,4 +228,33 @@
 
   <update_contact>gbsneto@gnome.org</update_contact>
   <translation type="gettext">gnome-calendar</translation>
+  <content_rating type="oars-1.1">
+    <content_attribute id="violence-cartoon">none</content_attribute>
+    <content_attribute id="violence-fantasy">none</content_attribute>
+    <content_attribute id="violence-realistic">none</content_attribute>
+    <content_attribute id="violence-bloodshed">none</content_attribute>
+    <content_attribute id="violence-sexual">none</content_attribute>
+    <content_attribute id="violence-desecration">none</content_attribute>
+    <content_attribute id="violence-slavery">none</content_attribute>
+    <content_attribute id="violence-worship">none</content_attribute>
+    <content_attribute id="drugs-alcohol">none</content_attribute>
+    <content_attribute id="drugs-narcotics">none</content_attribute>
+    <content_attribute id="drugs-tobacco">none</content_attribute>
+    <content_attribute id="sex-nudity">none</content_attribute>
+    <content_attribute id="sex-themes">none</content_attribute>
+    <content_attribute id="sex-homosexuality">none</content_attribute>
+    <content_attribute id="sex-prostitution">none</content_attribute>
+    <content_attribute id="sex-adultery">none</content_attribute>
+    <content_attribute id="sex-appearance">none</content_attribute>
+    <content_attribute id="language-profanity">none</content_attribute>
+    <content_attribute id="language-humor">none</content_attribute>
+    <content_attribute id="language-discrimination">none</content_attribute>
+    <content_attribute id="social-chat">intense</content_attribute>
+    <content_attribute id="social-info">none</content_attribute>
+    <content_attribute id="social-audio">none</content_attribute>
+    <content_attribute id="social-location">none</content_attribute>
+    <content_attribute id="social-contacts">none</content_attribute>
+    <content_attribute id="money-purchasing">none</content_attribute>
+    <content_attribute id="money-gambling">none</content_attribute>
+  </content_rating>
 </component>
