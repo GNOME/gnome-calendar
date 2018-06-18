@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-05-02 02:05+0000\n"
-"PO-Revision-Date: 2018-05-04 00:26+0200\n"
+"POT-Creation-Date: 2018-06-07 14:40+0000\n"
+"PO-Revision-Date: 2018-06-18 13:24+0200\n"
 "Last-Translator: Marek Černocký <marek@manet.cz>\n"
 "Language-Team: čeština <gnome-cs-list@gnome.org>\n"
 "Language: cs\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:640 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
 msgid "Calendar"
 msgstr "Kalendář"
 
@@ -44,7 +44,7 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Cílem vývojářů bylo najít rovnováhu mezi propracovanými funkcemi a "
@@ -494,7 +494,7 @@ msgstr "Zadání přihlašovacích údajů"
 msgid "Connect"
 msgstr "Připojit se"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:753
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
 #: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00∶00"
@@ -535,8 +535,8 @@ msgstr "Měsíc"
 msgid "Year"
 msgstr "Rok"
 
-#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
-#: src/views/gcal-year-view.c:514
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:281
+#: src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "Dnes"
 
@@ -565,32 +565,32 @@ msgstr "Žádné události"
 msgid "Add Event…"
 msgstr "Přidat událost…"
 
-#: src/gcal-application.c:88
+#: src/gcal-application.c:90
 msgid "Quit GNOME Calendar"
 msgstr "Ukončit kalendář GNOME"
 
-#: src/gcal-application.c:93
+#: src/gcal-application.c:95
 msgid "Display version number"
 msgstr "Zobrazit číslo verze"
 
-#: src/gcal-application.c:98
+#: src/gcal-application.c:100
 msgid "Enable debug messages"
 msgstr "Povolit ladicí zprávy"
 
-#: src/gcal-application.c:103
+#: src/gcal-application.c:105
 msgid "Open calendar on the passed date"
 msgstr "Otevřít kalendář na zadaném datu"
 
-#: src/gcal-application.c:108
+#: src/gcal-application.c:110
 msgid "Open calendar showing the passed event"
 msgstr "Otevřít kalendář na zadané události"
 
-#: src/gcal-application.c:595
+#: src/gcal-application.c:610
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012 – %d autoři Kalendáře"
 
-#: src/gcal-application.c:646
+#: src/gcal-application.c:661
 msgid "translator-credits"
 msgstr ""
 "Adam Matoušek <adamatousek@gmail.com>\n"
@@ -637,7 +637,7 @@ msgid "Unnamed event"
 msgstr "Událost bez názvu"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:422
+#: src/gcal-event-widget.c:424
 #, c-format
 msgid "At %s"
 msgstr "v místě %s"
@@ -1001,11 +1001,11 @@ msgstr "Smazána ještě jedna událost"
 msgid "Event deleted"
 msgstr "Událost smazána"
 
-#: src/views/gcal-week-grid.c:750 src/views/gcal-week-view.c:275
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "0"
 
-#: src/views/gcal-week-header.c:398
+#: src/views/gcal-week-header.c:400
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1013,7 +1013,7 @@ msgstr[0] "Další událost"
 msgstr[1] "Další %d události"
 msgstr[2] "Další %d událostí"
 
-#: src/views/gcal-week-header.c:934
+#: src/views/gcal-week-header.c:936
 #, c-format
 msgid "week %d"
 msgstr "%d. týden"
@@ -1021,13 +1021,13 @@ msgstr "%d. týden"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:290
 msgid "%B %d…"
 msgstr "%e. %B…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:517
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%e. %B"
