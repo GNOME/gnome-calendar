@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-05-02 02:05+0000\n"
-"PO-Revision-Date: 2018-05-08 14:48+0200\n"
+"POT-Creation-Date: 2018-06-07 14:40+0000\n"
+"PO-Revision-Date: 2018-06-21 09:28+0200\n"
 "Last-Translator: Daniel Mustieles <daniel.mustieles@gmail.com>\n"
 "Language-Team: es <gnome-es-list@gnome.org>\n"
 "Language: es\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:640 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
 msgid "Calendar"
 msgstr "Calendario"
 
@@ -30,11 +30,6 @@ msgid "Calendar for GNOME"
 msgstr "Calendario para GNOME"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:11
-#| msgid ""
-#| "GNOME Calendar is a simple and beautiful calendar application designed to "
-#| "perfectly fit the GNOME desktop. By reusing the components which the "
-#| "GNOME desktop is build on, Calendar nicely integrates with the GNOME "
-#| "ecosystem."
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
@@ -46,9 +41,13 @@ msgstr ""
 "integra muy bien con el entorno de GNOME."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
+#| msgid ""
+#| "We aim to find the perfect balance between nicely crafted features and "
+#| "user-centred usability. No excess, no lacks. You’ll feel comfortable "
+#| "using Calendar, like you’ve been using it for ages!"
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Se ha tratado de buscar el equilibrio entre características bien elaboradas "
@@ -496,7 +495,7 @@ msgstr "Introduzca sus credenciales"
 msgid "Connect"
 msgstr "Conectar"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:753
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
 #: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
@@ -538,7 +537,7 @@ msgid "Year"
 msgstr "Año"
 
 #: data/ui/window.ui:190 data/ui/year-view.ui:88
-#: src/views/gcal-year-view.c:279 src/views/gcal-year-view.c:514
+#: src/views/gcal-year-view.c:281 src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "Hoy"
 
@@ -567,32 +566,32 @@ msgstr "No hay eventos"
 msgid "Add Event…"
 msgstr "Añadir evento…"
 
-#: src/gcal-application.c:88
+#: src/gcal-application.c:90
 msgid "Quit GNOME Calendar"
 msgstr "Salir de calendario de GNOME"
 
-#: src/gcal-application.c:93
+#: src/gcal-application.c:95
 msgid "Display version number"
 msgstr "Mostrar el número de versión"
 
-#: src/gcal-application.c:98
+#: src/gcal-application.c:100
 msgid "Enable debug messages"
 msgstr "Activar mensajes de depuración"
 
-#: src/gcal-application.c:103
+#: src/gcal-application.c:105
 msgid "Open calendar on the passed date"
 msgstr "Abrir el calendario en una fecha pasada"
 
-#: src/gcal-application.c:108
+#: src/gcal-application.c:110
 msgid "Open calendar showing the passed event"
 msgstr "Abrir el calendario en una evento pasada"
 
-#: src/gcal-application.c:595
+#: src/gcal-application.c:610
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d Los autores de Calendario"
 
-#: src/gcal-application.c:646
+#: src/gcal-application.c:661
 msgid "translator-credits"
 msgstr "Daniel Mustieles <daniel.mustieles@gmail.com>, 2012 - 2017"
 
@@ -633,7 +632,7 @@ msgid "Unnamed event"
 msgstr "Evento sin nombre"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:422
+#: src/gcal-event-widget.c:424
 #, c-format
 msgid "At %s"
 msgstr "El %s"
@@ -997,18 +996,18 @@ msgstr "Otro evento eliminado"
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
-#: src/views/gcal-week-grid.c:750 src/views/gcal-week-view.c:275
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/views/gcal-week-header.c:398
+#: src/views/gcal-week-header.c:400
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Otro evento"
 msgstr[1] "Otros %d eventos"
 
-#: src/views/gcal-week-header.c:934
+#: src/views/gcal-week-header.c:936
 #, c-format
 msgid "week %d"
 msgstr "%d semana"
@@ -1016,14 +1015,14 @@ msgstr "%d semana"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:290
 msgid "%B %d…"
 msgstr "%d de %B…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:517
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d de %B"
 
