@@ -1,8 +1,9 @@
-image: fedora:rawhide
 stages:
+  - flatpak
   - build
   - test
   - deploy
+  - review
 
 variables:
   DEPENDENCIES: gcc meson ninja-build gettext gtk-doc glib2-devel
@@ -10,9 +11,9 @@ variables:
                 gnome-online-accounts-devel libdazzle-devel
                 evolution-data-server-devel libgweather-devel
                 geoclue2-devel
+  # File name of the resulting Flatpak bundle
+  BUNDLE: "gnome-calendar-git.flatpak"
 
-before_script:
-  - dnf update -y --nogpgcheck && dnf install -y --nogpgcheck $DEPENDENCIES
 
 
 ##
@@ -23,13 +24,19 @@ before_script:
 # any of them.
 ##
 build:
+  image: fedora:rawhide
   stage: build
+  before_script:
+    - dnf update -y --nogpgcheck && dnf install -y --nogpgcheck $DEPENDENCIES
   script:
     - meson . _build
     - ninja -C _build
 
 install:
+  image: fedora:rawhide
   stage: build
+  before_script:
+    - dnf update -y --nogpgcheck && dnf install -y --nogpgcheck $DEPENDENCIES
   script:
     - meson . _build
     - ninja -C _build
@@ -43,7 +50,10 @@ install:
 # or breaks something unrelated.
 ##
 test:
+  image: fedora:rawhide
   stage: test
+  before_script:
+    - dnf update -y --nogpgcheck && dnf install -y --nogpgcheck $DEPENDENCIES
   script:
     - meson . _build
     - ninja -C _build
@@ -56,7 +66,10 @@ test:
 # Checks if the released version is perfectly functional.
 ##
 deploy:
+  image: fedora:rawhide
   stage: deploy
+  before_script:
+    - dnf update -y --nogpgcheck && dnf install -y --nogpgcheck $DEPENDENCIES
   script:
     - meson . _build
     - ninja -C _build
@@ -64,3 +77,62 @@ deploy:
     - ninja dist -C _build
   only:
     - tags
+
+flatpak:
+    image: registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master
+    stage: flatpak
+    variables:
+        # Replace with your manifest path
+        MANIFEST_PATH: "org.gnome.Calendar.json"
+        RUNTIME_REPO: "https://sdk.gnome.org/gnome-nightly.flatpakrepo"
+        # Replace with your application name, as written in the manifest
+        FLATPAK_MODULE: "gnome-calendar"
+        # Make sure to keep this in sync with the Flatpak manifest, all arguments
+        # are passed except the config-args because we build it ourselves
+        MESON_ARGS: "-Dtracing=true -Ddocumentation=true"
+        DBUS_ID: "org.gnome.Calendar"
+
+    script:
+        - flatpak-builder --stop-at=${FLATPAK_MODULE} app ${MANIFEST_PATH}
+        # Make sure to keep this in sync with the Flatpak manifest, all arguments
+        # are passed except the config-args because we build it ourselves
+        - flatpak build app meson --prefix=/app ${MESON_ARGS} _build
+        - flatpak build app ninja -C _build install
+        - flatpak-builder --finish-only --repo=repo app ${MANIFEST_PATH}
+        # Generate a Flatpak bundle
+        - flatpak build-bundle repo ${BUNDLE} --runtime-repo=${RUNTIME_REPO} ${DBUS_ID}
+        # Run automatic tests inside the Flatpak env
+        - xvfb-run -a -s "-screen 0 1024x768x24" flatpak build app ninja -C _build test
+    artifacts:
+        paths:
+            - ${BUNDLE}
+            - _build/meson-logs/meson-log.txt
+            - _build/meson-logs/testlog.txt
+        expire_in: 30 days
+    cache:
+        paths:
+             - .flatpak-builder/cache
+
+review:
+    stage: review
+    dependencies:
+        - flatpak
+    script:
+        - echo "Generating flatpak deployment"
+    artifacts:
+        paths:
+            - ${BUNDLE}
+        expire_in: 30 days
+    environment:
+        name: review/$CI_COMMIT_REF_NAME
+        url: https://gitlab.gnome.org/$CI_PROJECT_PATH/-/jobs/$CI_JOB_ID/artifacts/raw/${BUNDLE}
+        on_stop: stop_review
+
+stop_review:
+    stage: review
+    script:
+        - echo "Stopping flatpak deployment"
+    when: manual
+    environment:
+        name: review/$CI_COMMIT_REF_NAME
+        action: stop
