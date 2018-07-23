@@ -1,28 +1,58 @@
-<?xml version='1.0' encoding='UTF-8' standalone='no'?>
-<!-- Created with Inkscape (http://www.inkscape.org/) -->
-
-<svg xmlns:cc='http://creativecommons.org/ns#' xmlns:dc='http://purl.org/dc/elements/1.1/' sodipodi:docname='gnome-calendar-symbolic.svg' height='16' id='svg7384' xmlns:inkscape='http://www.inkscape.org/namespaces/inkscape' xmlns:osb='http://www.openswatchbook.org/uri/2009/osb' xmlns:rdf='http://www.w3.org/1999/02/22-rdf-syntax-ns#' xmlns:sodipodi='http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd' xmlns:svg='http://www.w3.org/2000/svg' version='1.1' inkscape:version='0.91 r13725' width='16.03845' xmlns='http://www.w3.org/2000/svg'>
-  <metadata id='metadata90'>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   width="16.000061"
+   version="1.1"
+   style="enable-background:new"
+   id="svg7384"
+   height="16">
+  <metadata
+     id="metadata90">
     <rdf:RDF>
-      <cc:Work rdf:about=''>
+      <cc:Work
+         rdf:about="">
         <dc:format>image/svg+xml</dc:format>
-        <dc:type rdf:resource='http://purl.org/dc/dcmitype/StillImage'/>
-        <dc:title>Gnome Symbolic Icon Theme</dc:title>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title>Gnome Symbolic Icons</dc:title>
+        <cc:license
+           rdf:resource="http://creativecommons.org/licenses/by-sa/4.0/" />
       </cc:Work>
+      <cc:License
+         rdf:about="http://creativecommons.org/licenses/by-sa/4.0/">
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Reproduction" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#Distribution" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Notice" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#Attribution" />
+        <cc:permits
+           rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+        <cc:requires
+           rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+      </cc:License>
     </rdf:RDF>
   </metadata>
-  <sodipodi:namedview inkscape:bbox-nodes='true' inkscape:bbox-paths='true' bordercolor='#666666' borderopacity='1' inkscape:current-layer='layer9' inkscape:cx='3.2026434' inkscape:cy='5.11078' gridtolerance='10' inkscape:guide-bbox='true' guidetolerance='10' id='namedview88' inkscape:object-nodes='false' inkscape:object-paths='false' objecttolerance='10' pagecolor='#555753' inkscape:pageopacity='1' inkscape:pageshadow='2' showborder='false' showgrid='false' showguides='true' inkscape:snap-bbox='false' inkscape:snap-bbox-edge-midpoints='true' inkscape:snap-bbox-midpoints='true' inkscape:snap-global='true' inkscape:snap-grids='true' inkscape:snap-nodes='true' inkscape:snap-others='true' inkscape:snap-to-guides='true' inkscape:window-height='1376' inkscape:window-maximized='1' inkscape:window-width='2560' inkscape:window-x='0' inkscape:window-y='27' inkscape:zoom='1'>
-    <inkscape:grid empspacing='2' enabled='true' id='grid4866' originx='-221.96155' originy='-322' snapvisiblegridlinesonly='true' spacingx='1px' spacingy='1px' type='xygrid' visible='true'/>
-  </sodipodi:namedview>
-  <title id='title9167'>Gnome Symbolic Icon Theme</title>
-  <defs id='defs7386'>
-    <linearGradient id='linearGradient7212' osb:paint='solid'>
-      <stop id='stop7214' offset='0' style='stop-color:#000000;stop-opacity:1;'/>
-    </linearGradient>
-  </defs>
-  <g inkscape:groupmode='layer' id='layer9' inkscape:label='apps' style='display:inline' transform='translate(-462.96175,105)'>
-    
-    <path inkscape:connector-curvature='0' d='m 466.41331,-103.98805 c -1.08812,0 -2.08266,0.70238 -2.21754,1.71132 l -1.18269,7.71632 c -0.23162,1.7327 0.29768,3.58571 2.05549,3.56033 l 10.82243,-0.15625 c 1.75779,-0.0254 2.33066,-1.67244 2.09133,-3.40408 l -1.21853,-7.68048 c -0.14428,-1.04384 -1.11053,-1.74716 -2.21753,-1.74716 z m -0.12178,0.99331 8.20762,0.004 0.4841,4.76727 -0.30266,0.78741 0.46885,0.62631 0.50336,3.80803 -10.3281,0 0.43945,-3.90517 0.48554,-0.59708 -0.37686,-0.53694 z' id='path12403' sodipodi:nodetypes='sccssccssccccccccccc' style='color:#bebebe;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:&apos;Bitstream Vera Sans&apos;;-inkscape-font-specification:&apos;Bitstream Vera Sans&apos;;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:normal;word-spacing:normal;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;text-anchor:start;display:inline;overflow:visible;visibility:visible;fill:#bebebe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2;marker:none;enable-background:accumulate'/>
-    <path inkscape:connector-curvature='0' d='m 474.02488,-100.96939 -3.00242,-0.013 0.0435,1.02041 1.94342,0 -2.00945,4.93666 1.30033,-0.0389 1.72454,-4.69835 z m -6.53288,1.61759 c 1.15539,-0.89693 1.5747,-0.23156 1.13545,0.77095 l -1.60695,3.0178 0,0.55073 2.9852,-0.013 0.0326,-0.98533 -1.48344,0.013 0.88135,-1.82911 c 1.41812,-2.29582 -0.36954,-4.35574 -2.33834,-2.58383 z' id='path12416' sodipodi:nodetypes='cccccccccccccccccc' style='color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:125%;font-family:Cantarell;-inkscape-font-specification:Cantarell;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;letter-spacing:0px;word-spacing:0px;text-transform:none;direction:ltr;block-progression:tb;writing-mode:lr-tb;baseline-shift:baseline;text-anchor:start;visibility:visible;fill:#bebebe;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;marker:none;marker-start:none;marker-mid:none;marker-end:none'/>
+  <title
+     id="title8473">Gnome Symbolic Icons</title>
+  <defs
+     id="defs7386" />
+  <g
+     transform="translate(-112,-668)"
+     id="layer3">
+    <path
+       d="M 115.71484,669 C 114.22843,669 113,670.22842 113,671.71484 v 8.57032 c 0,1.48641 1.22843,2.71484 2.71484,2.71484 h 8.57032 C 125.77157,683 127,681.77157 127,680.28516 v -8.57032 C 127,670.22842 125.77157,669 124.28516,669 Z m 0,2 h 8.57032 c 0.41301,0 0.71484,0.30182 0.71484,0.71484 v 3.6211 L 124.33594,676 125,676.66406 v 3.6211 c 0,0.413 -0.30183,0.71484 -0.71484,0.71484 h -8.57032 C 115.30183,681 115,680.69816 115,680.28516 v -3.57813 L 115.70703,676 115,675.29297 v -3.57813 C 115,671.30182 115.30183,671 115.71484,671 Z"
+       id="path864"
+       style="color:#000000;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:medium;line-height:normal;font-family:sans-serif;font-variant-ligatures:normal;font-variant-position:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-alternates:normal;font-feature-settings:normal;text-indent:0;text-align:start;text-decoration:none;text-decoration-line:none;text-decoration-style:solid;text-decoration-color:#000000;letter-spacing:normal;word-spacing:normal;text-transform:none;writing-mode:lr-tb;direction:ltr;text-orientation:mixed;dominant-baseline:auto;baseline-shift:baseline;text-anchor:start;white-space:normal;shape-padding:0;clip-rule:nonzero;display:inline;overflow:visible;visibility:visible;opacity:1;isolation:auto;mix-blend-mode:normal;color-interpolation:sRGB;color-interpolation-filters:linearRGB;solid-color:#000000;solid-opacity:1;vector-effect:none;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;color-rendering:auto;image-rendering:auto;shape-rendering:auto;text-rendering:auto;enable-background:accumulate" />
+    <path
+       d="M 116.51791,673 116,674.03584 h 1.01396 V 679 H 119 v -6 z m 3.43732,0 v 3.21297 c 0,1.03581 0.77686,1.03581 1.29477,1.03581 h 0.75583 V 679 H 124 V 676.10232 673 h -1.99417 v 3 h -0.72458 c -0.25896,0 -0.25896,-0.25892 -0.25896,-0.25892 V 673 Z"
+       id="path1058"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:medium;line-height:1.25;font-family:Montserrat;-inkscape-font-specification:'Montserrat, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-feature-settings:normal;text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#241f31;fill-opacity:1;stroke:none;stroke-width:0.24999994;enable-background:new" />
   </g>
 </svg>
