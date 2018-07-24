@@ -6,4 +6,4 @@ effort.
 
 The wiki is [here][1]
 
-[1]: https://wiki.gnome.org/Design/Apps/Calendar
+[1]: https://wiki.gnome.org/Apps/Calendar
