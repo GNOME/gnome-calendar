@@ -396,16 +396,18 @@ calendar_get_property (GObject    *obj,
 static void
 multi_choice_changed (GcalDateChooser *self)
 {
-  GDateTime *date;
+  g_autoptr (GDateTime) date = NULL;
   gint year, month, day;
 
   year = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->year_choice));
   month = gcal_multi_choice_get_value (GCAL_MULTI_CHOICE (self->month_choice)) + 1;
-  g_date_time_get_ymd (self->date, NULL, NULL, &day);
+  day = g_date_time_get_day_of_month (self->date);
+
+  /* Make sure the day is valid at that month */
+  day = MIN (day, month_length[leap (year)][month]);
 
   date = g_date_time_new_local (year, month, day, 1, 1, 1);
   gcal_date_chooser_set_date (self, date);
-  g_date_time_unref (date);
 }
 
 static void
