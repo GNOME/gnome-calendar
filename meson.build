@@ -167,6 +167,7 @@ src_dir = join_paths(meson.source_root(), 'src')
 # Subdirs #
 ###########
 
+subdir('build-aux')
 subdir('contrib')
 subdir('data')
 subdir('src')
@@ -181,8 +182,6 @@ configure_file(
          output: 'config.h',
   configuration: config_h
 )
-
-meson.add_install_script('meson_post_install.py')
 
 output = '\n\n      GNOME Calendar ' + calendar_version + '\n'
 output += '      =========================\n\n'
