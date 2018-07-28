@@ -4,25 +4,25 @@
 #
 # Nathan Follens <nthn@unseen.is>, 2015-2018.
 # Justin van Steijn <jvs@fsfe.org>, 2017.
-# Hannie Dumoleyn <hannie@ubuntu-nl.org>, 2015, 2016, 2017.
+# Hannie Dumoleyn <hannie@ubuntu-nl.org>, 2015, 2016, 2017, 2018.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-16\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-02-05 16:20+0000\n"
-"PO-Revision-Date: 2018-02-08 13:46+0100\n"
-"Last-Translator: Nathan Follens <nthn@unseen.is>\n"
+"POT-Creation-Date: 2018-06-07 14:40+0000\n"
+"PO-Revision-Date: 2018-07-28 12:52+0100\n"
+"Last-Translator: Hannie Dumoleyn <hannie@ubuntu-nl.org>\n"
 "Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Lokalize 2.0\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:640 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
 msgid "Calendar"
 msgstr "Agenda"
 
@@ -31,10 +31,15 @@ msgid "Calendar for GNOME"
 msgstr "Agenda voor Gnome"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:11
+#| msgid ""
+#| "GNOME Calendar is a simple and beautiful calendar application designed to "
+#| "perfectly fit the GNOME desktop. By reusing the components which the "
+#| "GNOME desktop is build on, Calendar nicely integrates with the GNOME "
+#| "ecosystem."
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "Gnome Agenda is een eenvoudig en mooi agendaprogramma dat perfect aansluit "
 "bij de Gnome-werkomgeving. Door de onderdelen waarop de Gnome-werkomgeving "
@@ -42,15 +47,19 @@ msgstr ""
 "systeem."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
+#| msgid ""
+#| "We aim to find the perfect balance between nicely crafted features and "
+#| "user-centred usability. No excess, no lacks. You’ll feel comfortable "
+#| "using Calendar, like you’ve been using it for ages!"
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
-"We streven ernaar de ideale balans te vinden tussen goede functionaliteit en "
-"gebruiksvriendelijkheid. Niet te veel, niet te weinig. U zult zich "
-"comfortabel voelen bij het gebruiken van Agenda, alsof u het al jaren "
-"gebruikt!"
+"We streven ernaar de ideale balans te vinden tussen goede functionaliteit en"
+" gebruiksvriendelijkheid. Niet te veel, niet te weinig. U zult zich"
+" comfortabel voelen bij het gebruiken van Agenda, alsof u het al jaren"
+" gebruikt!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
 msgid "Week view"
@@ -80,43 +89,43 @@ msgstr ""
 "Calendar;Agenda;Kalender;Event;Afspraak;Evenement;Gebeurtenis;Reminder;"
 "Herinnering;"
 
-#: data/org.gnome.calendar.gschema.xml:6
+#: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
 msgstr "Venster gemaximaliseerd"
 
-#: data/org.gnome.calendar.gschema.xml:7
+#: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
 msgstr "Venster in gemaximaliseerde staat"
 
-#: data/org.gnome.calendar.gschema.xml:11
+#: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
 msgstr "Venstergrootte"
 
-#: data/org.gnome.calendar.gschema.xml:12
+#: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
 msgstr "Venstergrootte (breedte en hoogte)."
 
-#: data/org.gnome.calendar.gschema.xml:16
+#: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
 msgstr "Vensterpositie"
 
-#: data/org.gnome.calendar.gschema.xml:17
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
 msgstr "Vensterpositie (x en y)."
 
-#: data/org.gnome.calendar.gschema.xml:21
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Het type van de actieve weergave"
 
-#: data/org.gnome.calendar.gschema.xml:22
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Type van de actieve vensterweergave, standaardwaarde is: maandweergave"
 
-#: data/org.gnome.calendar.gschema.xml:26
+#: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
 msgstr "Configuratie van weerdienst"
 
-#: data/org.gnome.calendar.gschema.xml:27
+#: data/org.gnome.calendar.gschema.xml.in:27
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
@@ -495,7 +504,7 @@ msgstr "Voer uw aanmeldgegevens in"
 msgid "Connect"
 msgstr "Verbinden"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:754
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
 #: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
@@ -536,8 +545,8 @@ msgstr "Maand"
 msgid "Year"
 msgstr "Jaar"
 
-#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
-#: src/views/gcal-year-view.c:514
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:281
+#: src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "Vandaag"
 
@@ -566,32 +575,32 @@ msgstr "Geen afspraken"
 msgid "Add Event…"
 msgstr "Afspraak toevoegen…"
 
-#: src/gcal-application.c:88
+#: src/gcal-application.c:90
 msgid "Quit GNOME Calendar"
 msgstr "Gnome Agenda afsluiten"
 
-#: src/gcal-application.c:93
+#: src/gcal-application.c:95
 msgid "Display version number"
 msgstr "Versienummer weergeven"
 
-#: src/gcal-application.c:98
+#: src/gcal-application.c:100
 msgid "Enable debug messages"
 msgstr "Debug-berichten inschakelen"
 
-#: src/gcal-application.c:103
+#: src/gcal-application.c:105
 msgid "Open calendar on the passed date"
 msgstr "Agenda openen op de verstreken datum"
 
-#: src/gcal-application.c:108
+#: src/gcal-application.c:110
 msgid "Open calendar showing the passed event"
 msgstr "Agenda openen en verstreken afspraak tonen"
 
-#: src/gcal-application.c:595
+#: src/gcal-application.c:610
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d De auteurs van Agenda"
 
-#: src/gcal-application.c:646
+#: src/gcal-application.c:661
 msgid "translator-credits"
 msgstr ""
 "Nathan Follens\n"
@@ -637,7 +646,7 @@ msgid "Unnamed event"
 msgstr "Naamloze afspraak"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:419
+#: src/gcal-event-widget.c:424
 #, c-format
 msgid "At %s"
 msgstr "Bij %s"
@@ -752,14 +761,17 @@ msgid "December"
 msgstr "december"
 
 #: src/gcal-quick-add-popover.c:286
+#, c-format
 msgid "from Today"
 msgstr "vanaf vandaag"
 
 #: src/gcal-quick-add-popover.c:290
+#, c-format
 msgid "from Tomorrow"
 msgstr "vanaf morgen"
 
 #: src/gcal-quick-add-popover.c:294
+#, c-format
 msgid "from Yesterday"
 msgstr "vanaf gisteren"
 
@@ -773,14 +785,17 @@ msgid "from %1$s %2$s"
 msgstr "vanaf %2$s %1$s"
 
 #: src/gcal-quick-add-popover.c:323
+#, c-format
 msgid "to Today"
 msgstr "tot vandaag"
 
 #: src/gcal-quick-add-popover.c:327
+#, c-format
 msgid "to Tomorrow"
 msgstr "tot morgen"
 
 #: src/gcal-quick-add-popover.c:331
+#, c-format
 msgid "to Yesterday"
 msgstr "tot gisteren"
 
@@ -800,14 +815,17 @@ msgid "New Event %1$s %2$s"
 msgstr "Nieuwe afspraak op %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
+#, c-format
 msgid "New Event Today"
 msgstr "Nieuwe afspraak vandaag"
 
 #: src/gcal-quick-add-popover.c:377
+#, c-format
 msgid "New Event Tomorrow"
 msgstr "Nieuwe afspraak morgen"
 
 #: src/gcal-quick-add-popover.c:381
+#, c-format
 msgid "New Event Yesterday"
 msgstr "Nieuwe afspraak gisteren"
 
@@ -960,7 +978,7 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1093
+#: src/gcal-utils.c:1120
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -968,19 +986,19 @@ msgstr ""
 "De afspraak die u probeert te bewerken is terugkerend. De wijzigingen die u "
 "heeft gemaakt worden toegepast op:"
 
-#: src/gcal-utils.c:1096
+#: src/gcal-utils.c:1123
 msgid "_Cancel"
 msgstr "_Annuleren"
 
-#: src/gcal-utils.c:1098
+#: src/gcal-utils.c:1125
 msgid "_Only This Event"
 msgstr "_Alleen deze afspraak"
 
-#: src/gcal-utils.c:1105
+#: src/gcal-utils.c:1132
 msgid "_Subsequent events"
 msgstr "Komende af_spraken"
 
-#: src/gcal-utils.c:1107
+#: src/gcal-utils.c:1134
 msgid "_All events"
 msgstr "_Alle afspraken"
 
@@ -992,18 +1010,18 @@ msgstr "Nog een afspraak verwijderd"
 msgid "Event deleted"
 msgstr "Afspraak verwijderd"
 
-#: src/views/gcal-week-grid.c:751 src/views/gcal-week-view.c:275
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "0:00"
 
-#: src/views/gcal-week-header.c:398
+#: src/views/gcal-week-header.c:400
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Andere afspraak"
 msgstr[1] "Andere %d afspraken"
 
-#: src/views/gcal-week-header.c:934
+#: src/views/gcal-week-header.c:936
 #, c-format
 msgid "week %d"
 msgstr "week %d"
@@ -1011,14 +1029,14 @@ msgstr "week %d"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:290
 msgid "%B %d…"
 msgstr "%B %d…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:517
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%B %d"
 
