@@ -542,7 +542,6 @@ GcalWeekView
 <FILE>gcal-window</FILE>
 GCAL_TYPE_WINDOW
 gcal_window_new_with_view_and_date
-gcal_window_new_event
 gcal_window_set_search_mode
 gcal_window_set_search_query
 gcal_window_open_event_by_uuid

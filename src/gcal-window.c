@@ -1604,46 +1604,6 @@ gcal_window_new_with_date (GcalApplication *app,
                        NULL);
 }
 
-/* new-event interaction: first variant */
-/**
- * gcal_window_new_event:
- * @self: a #GcalWindow
- *
- * Makes #GcalWindow create a new event.
- */
-void
-gcal_window_new_event (GcalWindow *self)
-{
-  g_autoptr (GDateTime) start_date, end_date;
-
-  /* 1st and 2nd steps */
-  set_new_event_mode (self, TRUE);
-
-  start_date = g_date_time_new_now_local ();
-
-  /* adjusting dates according to the actual view */
-  switch (self->active_view)
-    {
-    case GCAL_WINDOW_VIEW_DAY:
-    case GCAL_WINDOW_VIEW_WEEK:
-      end_date = g_date_time_add_hours (start_date, 1);
-      break;
-
-    case GCAL_WINDOW_VIEW_MONTH:
-    case GCAL_WINDOW_VIEW_YEAR:
-      end_date = g_date_time_add_days (start_date, 1);
-      break;
-
-    case GCAL_WINDOW_VIEW_LIST:
-    case GCAL_WINDOW_VIEW_SEARCH:
-    default:
-      end_date = g_date_time_add_days (start_date, 1);
-      break;
-    }
-
-  create_event_detailed_cb (NULL, start_date, end_date, self);
-}
-
 /**
  * gcal_window_set_search_mode:
  * @self: a #GcalWindow

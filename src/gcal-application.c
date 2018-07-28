@@ -59,10 +59,6 @@ struct _GcalApplication
   GcalClock          *clock;
 };
 
-static void     gcal_application_create_new_event     (GSimpleAction           *new_event,
-                                                       GVariant                *parameter,
-                                                       gpointer                 app);
-
 static void     gcal_application_launch_search        (GSimpleAction           *search,
                                                        GVariant                *parameter,
                                                        gpointer                 app);
@@ -113,7 +109,6 @@ static GOptionEntry gcal_application_goptions[] = {
 };
 
 static const GActionEntry gcal_app_entries[] = {
-  { "new",    gcal_application_create_new_event },
   { "sync",   gcal_application_sync },
   { "search", gcal_application_launch_search },
   { "about",  gcal_application_show_about },
@@ -553,15 +548,6 @@ gcal_application_init (GcalApplication *self)
   g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (process_sources), self);
 
   self->search_provider = gcal_shell_search_provider_new (self->manager);
-}
-
-static void
-gcal_application_create_new_event (GSimpleAction *new_event,
-                                   GVariant      *parameter,
-                                   gpointer       app)
-{
-  GcalApplication *self = GCAL_APPLICATION (app);
-  gcal_window_new_event (GCAL_WINDOW (self->window));
 }
 
 static void

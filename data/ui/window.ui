@@ -386,13 +386,6 @@
             <property name="margin">12</property>
             <property name="visible">True</property>
             <property name="orientation">vertical</property>
-            <child>
-              <object class="GtkModelButton">
-                <property name="text" translatable="yes">Add Eve_nt</property>
-                <property name="action-name">app.new</property>
-                <property name="visible">True</property>
-              </object>
-            </child>
 
             <!-- Synchronize -->
             <child>

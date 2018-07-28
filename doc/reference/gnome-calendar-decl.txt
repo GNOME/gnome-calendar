@@ -722,11 +722,6 @@ GcalShellSearchProvider *search_provider, GcalManager             *manager
 GcalApplication     *app, GcalWindowViewType   view_type, icaltimetype        *date
 </FUNCTION>
 <FUNCTION>
-<NAME>gcal_window_new_event</NAME>
-<RETURNS>void                  </RETURNS>
-GcalWindow          *self
-</FUNCTION>
-<FUNCTION>
 <NAME>gcal_window_set_search_mode</NAME>
 <RETURNS>void                  </RETURNS>
 GcalWindow          *self, gboolean             enabled

@@ -35,8 +35,6 @@ G_DECLARE_FINAL_TYPE (GcalWindow, gcal_window, GCAL, WINDOW, GtkApplicationWindo
 GtkWidget*           gcal_window_new_with_date                  (GcalApplication     *app,
                                                                  icaltimetype        *date);
 
-void                 gcal_window_new_event                      (GcalWindow          *self);
-
 void                 gcal_window_set_search_mode                (GcalWindow          *self,
                                                                  gboolean             enabled);
 
