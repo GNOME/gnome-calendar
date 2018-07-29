@@ -126,7 +126,6 @@ struct _GcalWindow
   GtkWidget          *today_button;
   GtkWidget          *forward_button;
   GtkWidget          *views_switcher;
-  GtkWidget          *win_menu_stack;
 
   /* new event popover widgets */
   GtkWidget          *quick_add_popover;
@@ -930,14 +929,6 @@ window_state_changed (GtkWidget *widget,
 }
 
 static void
-on_popover_menu_visible_cb (GtkWidget  *widget,
-                            GParamSpec *pspec,
-                            GcalWindow *self)
-{
-  gtk_stack_set_visible_child_name (GTK_STACK (self->win_menu_stack), "main-menu");
-}
-
-static void
 edit_event (GcalQuickAddPopover *popover,
             GcalEvent           *event,
             GcalWindow          *window)
@@ -1479,7 +1470,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_switcher);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, win_menu_stack);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, weather_settings);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, week_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, year_view);
@@ -1496,8 +1486,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, search_changed);
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
   gtk_widget_class_bind_template_callback (widget_class, date_updated);
-
-  gtk_widget_class_bind_template_callback (widget_class, on_popover_menu_visible_cb);
 
   /* Event removal related */
   gtk_widget_class_bind_template_callback (widget_class, hide_notification);

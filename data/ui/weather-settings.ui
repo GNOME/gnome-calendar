@@ -10,7 +10,7 @@
     <child>
       <object class="GtkModelButton">
         <property name="text" translatable="yes">_Weather</property>
-        <property name="menu-name">main-menu</property>
+        <property name="menu-name">main</property>
         <property name="inverted">True</property>
         <property name="centered">True</property>
         <property name="visible">True</property>

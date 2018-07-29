@@ -370,55 +370,44 @@
     <signal name="response" handler="edit_dialog_closed" object="GcalWindow" swapped="no"/>
     <signal name="delete-event" handler="gtk_widget_hide_on_delete" object="GcalWindow" swapped="no"/>
   </object>
+
   <object class="GtkPopoverMenu" id="win_menu">
-    <signal name="notify::visible" handler="on_popover_menu_visible_cb" object="GcalWindow" swapped="no" />
     <child>
-      <object class="GtkStack" id="win_menu_stack">
+      <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="homogeneous">False</property>
-        <property name="transition_type">slide-left-right</property>
-        <property name="interpolate-size">True</property>
+        <property name="margin">12</property>
+        <property name="orientation">vertical</property>
+
+        <!-- Synchronize -->
         <child>
-
-          <!-- New Event -->
-          <object class="GtkBox">
-            <property name="margin">12</property>
+          <object class="GtkModelButton">
             <property name="visible">True</property>
-            <property name="orientation">vertical</property>
-
-            <!-- Synchronize -->
-            <child>
-              <object class="GtkModelButton">
-                <property name="text" translatable="yes">_Synchronize</property>
-                <property name="action-name">app.sync</property>
-                <property name="visible">True</property>
-              </object>
-            </child>
-            <child>
-              <object class="GtkModelButton" id="win-menu-open-weather">
-                <property name="text" translatable="yes">_Weather</property>
-                <property name="menu-name">weather-menu</property>
-                <property name="visible">True</property>
-              </object>
-            </child>
+            <property name="action-name">app.sync</property>
+            <property name="text" translatable="yes">_Synchronize</property>
           </object>
-          <packing>
-            <property name="name">main-menu</property>
-          </packing>
         </child>
 
         <!-- Weather -->
         <child>
-          <object class="GcalWeatherSettings" id="weather_settings">
+          <object class="GtkModelButton">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="menu-name">weather</property>
+            <property name="text" translatable="yes">_Weather</property>
           </object>
-          <packing>
-            <property name="name">weather-menu</property>
-          </packing>
         </child>
       </object>
     </child>
+
+    <!-- Weather submenu -->
+    <child>
+      <object class="GcalWeatherSettings" id="weather_settings">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+      </object>
+      <packing>
+        <property name="submenu">weather</property>
+      </packing>
+    </child>
+
   </object>
 </interface>
