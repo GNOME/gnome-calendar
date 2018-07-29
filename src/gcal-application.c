@@ -26,6 +26,7 @@
 #include "gcal-debug.h"
 #include "gcal-enums.h"
 #include "gcal-log.h"
+#include "gcal-night-light-monitor.h"
 #include "gcal-shell-search-provider.h"
 #include "gcal-weather-service.h"
 #include "gcal-window.h"
@@ -53,8 +54,8 @@ struct _GcalApplication
   GcalTimeFormat      time_format;
 
   GcalWeatherService *weather_service;
-
   GcalShellSearchProvider *search_provider;
+  GcalNightLightMonitor *night_light_monitor;
 
   GcalClock          *clock;
 };
@@ -230,6 +231,7 @@ gcal_application_finalize (GObject *object)
   g_clear_object (&self->clock);
   g_clear_object (&self->desktop_settings);
   g_clear_object (&self->manager);
+  g_clear_object (&self->night_light_monitor);
   g_clear_object (&self->provider);
   g_clear_object (&self->search_provider);
   g_clear_object (&self->weather_service);
@@ -292,6 +294,9 @@ gcal_application_activate (GApplication *application)
                                                  GTK_STYLE_PROVIDER (self->colors_provider),
                                                  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION + 2);
     }
+
+  if (!self->night_light_monitor)
+    self->night_light_monitor = gcal_night_light_monitor_new (self->manager);
 
   if (!self->window)
     {

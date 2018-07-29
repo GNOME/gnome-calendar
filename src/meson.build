@@ -43,6 +43,7 @@ sources = files(
   'gcal-log.c',
   'gcal-manager.c',
   'gcal-multi-choice.c',
+  'gcal-night-light-monitor.c',
   'gcal-quick-add-popover.c',
   'gcal-recurrence.c',
   'gcal-search-popover.c',
