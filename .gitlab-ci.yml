@@ -83,7 +83,7 @@ flatpak:
     stage: flatpak
     variables:
         # Replace with your manifest path
-        MANIFEST_PATH: "org.gnome.Calendar.json"
+        MANIFEST_PATH: "build-aux/flatpak/org.gnome.Calendar.json"
         RUNTIME_REPO: "https://sdk.gnome.org/gnome-nightly.flatpakrepo"
         # Replace with your application name, as written in the manifest
         FLATPAK_MODULE: "gnome-calendar"
