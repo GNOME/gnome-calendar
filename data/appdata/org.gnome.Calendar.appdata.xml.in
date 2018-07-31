@@ -49,6 +49,13 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2018-07-30" version="3.29.90">
+      <description>
+        <p>This release brings small improvements, bug fixes, and updates many translations.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2018-03-05" version="3.27.92">
       <description>
         <p>This is the release candidate version of the next big release of GNOME Calendar, and it brings a few Flatpak improvements.</p>

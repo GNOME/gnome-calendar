@@ -1,3 +1,8 @@
+Major changes in 3.29.90:
+* Add Night Light integration
+* Bugfixes
+* Updated translations
+
 Major changes in 3.27.92:
 * Flatpak improvements
 * New unit tests
