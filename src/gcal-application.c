@@ -732,7 +732,7 @@ gcal_application_set_initial_date (GcalApplication *self,
 {
   g_return_if_fail (GCAL_IS_APPLICATION (self));
 
-  g_clear_pointer (&self->initial_date, g_date_time_unref);
+  g_clear_pointer (&self->initial_date, g_free);
   self->initial_date = datetime_to_icaltime (initial_date);
 }
 
