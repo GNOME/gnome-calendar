@@ -221,6 +221,8 @@ gint
 main (gint   argc,
       gchar *argv[])
 {
+  g_setenv ("TZ", "UTC", TRUE);
+
   g_test_init (&argc, &argv, NULL);
 
   g_test_add_func ("/event/new", event_new);
