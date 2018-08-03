@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-05-08 13:11+0000\n"
-"PO-Revision-Date: 2018-05-08 22:22+0200\n"
+"POT-Creation-Date: 2018-07-30 00:20+0000\n"
+"PO-Revision-Date: 2018-07-30 22:01+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -23,7 +23,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "Koledar"
 
@@ -44,7 +44,7 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Program deluje na ravni optimalne uporabniške izkušnje in najpomembnejših "
@@ -121,6 +121,15 @@ msgid ""
 msgstr ""
 "Ali so poročila o vremenu pokazana in ali je uporabljeno samodejno "
 "določevanje mesta"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Upošteva sistemsko nočno osvetlitev"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr ""
+"Uporaba nastavitve nočne osvetlitve omogoča zagon nočnega načina prikaza."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -332,34 +341,30 @@ msgid "Year view"
 msgstr "Letni pogled"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "Dodaj _dogodek ..."
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "_Koledarji"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "_Tipkovne bližnjice"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "_O programu"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "_Končaj"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "S spleta ..."
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "Nov krajevni koledar ..."
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "Iz datoteke ..."
 
@@ -384,7 +389,7 @@ msgstr "Ni najdenih zadetkov"
 msgid "Try a different search"
 msgstr "Poskusite z drugačnim iskanjem"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Razveljavi"
 
@@ -509,7 +514,7 @@ msgstr "dop"
 msgid "PM"
 msgstr "pop"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "_Vreme"
 
@@ -547,11 +552,7 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Iskanje dogodkov"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "Dodaj _dogodek"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Uskladi"
 
@@ -563,32 +564,32 @@ msgstr "Ni dogodkov"
 msgid "Add Event…"
 msgstr "Dodaj dogodek ..."
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "Končaj program"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Pokaži številko različice"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Omogoči sporočila za razhroščevanje"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Odpri koledar na preteklem datumu"
 
-#: src/gcal-application.c:110
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Odpri koledar v pogledu preteklih dogodkov"
 
-#: src/gcal-application.c:610
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Avtorske pravice © 2012–%d Avtorji programa Koledar"
 
-#: src/gcal-application.c:661
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr "Matej Urbančič <mateju@svn@gnome.org>"
 
@@ -993,11 +994,11 @@ msgstr "_Poznejši dogodki"
 msgid "_All events"
 msgstr "_Vsi dogodki"
 
-#: src/gcal-window.c:1039
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "Izbrisan je drug dogodek"
 
-#: src/gcal-window.c:1043
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "Dogodek je izbrisan"
 
@@ -1032,6 +1033,12 @@ msgstr "%B %d …"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%B %d"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "Dodaj _dogodek ..."
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "Dodaj _dogodek"
 
 #~ msgid "weather-menu"
 #~ msgstr "weather-menu"
