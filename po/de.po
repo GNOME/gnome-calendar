@@ -1,7 +1,7 @@
 # German translation for gnome-calendar.
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
-# Mario Blättermann <mario.blaettermann@gmail.com>, 2013, 2016-2017.
+# Mario Blättermann <mario.blaettermann@gmail.com>, 2013, 2016-2018.
 # Simon Linden <xhi2018@gmail.com>, 2014.
 # Benjamin Steinwender <b@stbe.at>, 2015.
 # Bernd Homuth <dev@hmt.im>, 2015.
@@ -13,20 +13,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-01-10 15:33+0000\n"
-"PO-Revision-Date: 2018-01-15 21:12+0100\n"
-"Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
+"POT-Creation-Date: 2018-07-29 04:02+0000\n"
+"PO-Revision-Date: 2018-08-04 19:08+0200\n"
+"Last-Translator: Mario Blättermann <mario.blaettermann@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.5\n"
+"X-Generator: Poedit 2.0.9\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:540
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -38,17 +38,17 @@ msgstr "Kalender für GNOME"
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "GNOME-Kalender ist eine einfache und schöne Kalenderverwaltung, entwickelt, "
 "um sich perfekt in die GNOME-Arbeitsumgebung einzufügen. Durch die "
 "Wiederverwendung von Komponenten, auf denen die GNOME-Arbeitsumgebung "
-"basiert, integriert der Kalender wunderbar mit dem GNOME-Ökosystem."
+"basiert, integriert sich der Kalender wunderbar in das GNOME-Ökosystem."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Wir streben die perfekte Balance an zwischen schön gestalteten Funktionen "
@@ -82,49 +82,59 @@ msgstr "org.gnome.Calendar"
 msgid "Calendar;Event;Reminder;"
 msgstr "Kalender;Termin;Erinnerung;"
 
-#: data/org.gnome.calendar.gschema.xml:6
+#: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
 msgstr "Fenster maximiert"
 
-#: data/org.gnome.calendar.gschema.xml:7
+#: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
 msgstr "Maximierungszustand des Fensters"
 
-#: data/org.gnome.calendar.gschema.xml:11
+#: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
 msgstr "Fenstergröße"
 
-#: data/org.gnome.calendar.gschema.xml:12
+#: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
 msgstr "Fenstergröße (Breite und Höhe)."
 
-#: data/org.gnome.calendar.gschema.xml:16
+#: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
 msgstr "Fensterposition"
 
-#: data/org.gnome.calendar.gschema.xml:17
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
 msgstr "Fensterposition (x und y)."
 
-#: data/org.gnome.calendar.gschema.xml:21
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Typ der aktiven Ansicht"
 
-#: data/org.gnome.calendar.gschema.xml:22
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Typ der aktiven Fensteransicht, Standard ist Monatsansicht"
 
-#: data/org.gnome.calendar.gschema.xml:26
+#: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
 msgstr "Wetterdienst-Einstellung"
 
-#: data/org.gnome.calendar.gschema.xml:27
+#: data/org.gnome.calendar.gschema.xml.in:27
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
 "Legt fest, ob Wetterberichte angezeigt werden, automatische Ortsbestimmung "
 "verwendet wird, sowie ein Ortsname"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Dem Nachtmodus des Systems folgen"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr ""
+"Verwendet die Nachtmodus-Einstellungen von GNOME zur Aktivierung des "
+"Nachtmodus."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -143,7 +153,7 @@ msgstr "Abbrechen"
 msgid "Click to select the calendar"
 msgstr "Klicken, um den Kalender auszuwählen"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:275
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
 msgid "Done"
 msgstr "Fertig"
 
@@ -336,34 +346,30 @@ msgid "Year view"
 msgstr "Jahresansicht"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "Termi_n hinzufügen …"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "_Kalender"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "Tasten_kürzel"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "_Info"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "_Beenden"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Aus dem Internet …"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "Neuer lokaler Kalender …"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "Aus Datei …"
 
@@ -380,15 +386,15 @@ msgstr "Details bearbeiten …"
 msgid "Add"
 msgstr "Hinzufügen"
 
-#: data/ui/search-view.ui:76
+#: data/ui/search-popover.ui:76
 msgid "No results found"
 msgstr "Keine Ergebnisse gefunden"
 
-#: data/ui/search-view.ui:92
+#: data/ui/search-popover.ui:92
 msgid "Try a different search"
 msgstr "Mit veränderter Suche erneut versuchen"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1272 src/gcal-window.c:1276
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Rückgängig"
 
@@ -497,8 +503,8 @@ msgstr "Geben Sie Ihre Anmeldedaten ein"
 msgid "Connect"
 msgstr "Verbinden"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:758
-#: src/views/gcal-week-view.c:287
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
+#: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
 
@@ -506,13 +512,25 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:442
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:432
 msgid "AM"
 msgstr "AM"
 
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:442
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:432
 msgid "PM"
 msgstr "PM"
+
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
+msgid "_Weather"
+msgstr "_Wetter"
+
+#: data/ui/weather-settings.ui:30
+msgid "Show Weather"
+msgstr "Wetter anzeigen"
+
+#: data/ui/weather-settings.ui:53
+msgid "Automatic Location"
+msgstr "Automatische Ortsbestimmung"
 
 #: data/ui/window.ui:67
 msgid "Week"
@@ -526,8 +544,8 @@ msgstr "Monat"
 msgid "Year"
 msgstr "Jahr"
 
-#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:285
-#: src/views/gcal-year-view.c:520
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:281
+#: src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "Heute"
 
@@ -540,25 +558,9 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Nach Terminen suchen"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "Termi_n hinzufügen"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Abgleichen"
-
-#: data/ui/window.ui:407 data/ui/window.ui:428
-msgid "_Weather"
-msgstr "_Wetter"
-
-#: data/ui/window.ui:446
-msgid "Show Weather"
-msgstr "Wetter anzeigen"
-
-#: data/ui/window.ui:469
-msgid "Automatic Location"
-msgstr "Automatische Ortsbestimmung"
 
 #: data/ui/year-view.ui:133
 msgid "No events"
@@ -568,32 +570,32 @@ msgstr "Keine Termine"
 msgid "Add Event…"
 msgstr "Termin hinzufügen …"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "GNOME-Kalender beenden"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Versionsnummer anzeigen"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Fehlerdiagnosemeldungen aktivieren"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Kalender am vergangenen Datum öffnen"
 
-#: src/gcal-application.c:110
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Kalender am vergangenen Termin öffnen"
 
-#: src/gcal-application.c:497
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d Die Kalender-Autoren"
 
-#: src/gcal-application.c:546
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr ""
 "Franco Della-Monica <franco.della.monica@gmail.com>\n"
@@ -603,44 +605,44 @@ msgstr ""
 "Paul Seyfert <pseyfert@mathphys.fsk.uni-heidelberg.de>\n"
 "Tim Sabsch <tim@sabsch.com>"
 
-#: src/gcal-edit-dialog.c:275
+#: src/gcal-edit-dialog.c:277
 msgid "Save"
 msgstr "Speichern"
 
-#: src/gcal-edit-dialog.c:1019
+#: src/gcal-edit-dialog.c:1037
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d Minute vorher"
 msgstr[1] "%d Minuten vorher"
 
-#: src/gcal-edit-dialog.c:1027
+#: src/gcal-edit-dialog.c:1045
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d Stunde vorher"
 msgstr[1] "%d Stunden vorher"
 
-#: src/gcal-edit-dialog.c:1035
+#: src/gcal-edit-dialog.c:1053
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d Tag vorher"
 msgstr[1] "%d Tage vorher"
 
-#: src/gcal-edit-dialog.c:1043
+#: src/gcal-edit-dialog.c:1061
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d Woche vorher"
 msgstr[1] "%d Wochen vorher"
 
-#: src/gcal-edit-dialog.c:1347 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Unbenannter Termin"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:420
+#: src/gcal-event-widget.c:424
 #, c-format
 msgid "At %s"
 msgstr "Am %s"
@@ -755,14 +757,17 @@ msgid "December"
 msgstr "Dezember"
 
 #: src/gcal-quick-add-popover.c:286
+#, c-format
 msgid "from Today"
 msgstr "von heute"
 
 #: src/gcal-quick-add-popover.c:290
+#, c-format
 msgid "from Tomorrow"
 msgstr "von morgen"
 
 #: src/gcal-quick-add-popover.c:294
+#, c-format
 msgid "from Yesterday"
 msgstr "von gestern"
 
@@ -776,14 +781,17 @@ msgid "from %1$s %2$s"
 msgstr "vom %2$s. %1$s"
 
 #: src/gcal-quick-add-popover.c:323
+#, c-format
 msgid "to Today"
 msgstr "bis heute"
 
 #: src/gcal-quick-add-popover.c:327
+#, c-format
 msgid "to Tomorrow"
 msgstr "bis morgen"
 
 #: src/gcal-quick-add-popover.c:331
+#, c-format
 msgid "to Yesterday"
 msgstr "bis gestern"
 
@@ -803,14 +811,17 @@ msgid "New Event %1$s %2$s"
 msgstr "Neuer Termin am %2$s. %1$s"
 
 #: src/gcal-quick-add-popover.c:373
+#, c-format
 msgid "New Event Today"
 msgstr "Neuer Termin heute"
 
 #: src/gcal-quick-add-popover.c:377
+#, c-format
 msgid "New Event Tomorrow"
 msgstr "Neuer Termin morgen"
 
 #: src/gcal-quick-add-popover.c:381
+#, c-format
 msgid "New Event Yesterday"
 msgstr "Neuer Termin gestern"
 
@@ -911,11 +922,11 @@ msgstr "Neuer Termin am %d. Dezember"
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
-#: src/gcal-search-view.c:358
+#: src/gcal-search-popover.c:303
 msgid "All day"
 msgstr "Ganzer Tag"
 
-#: src/gcal-search-view.c:563
+#: src/gcal-search-popover.c:563
 msgid "Use the entry above to search for events."
 msgstr "Suchen Sie nach Terminen mit dem Eingabefeld oben."
 
@@ -955,17 +966,17 @@ msgstr "AN"
 msgid "Expired"
 msgstr "Abgelaufen"
 
-#: src/gcal-time-selector.c:84
+#: src/gcal-time-selector.c:83
 #, c-format
 msgid "%s AM"
 msgstr "%s AM"
 
-#: src/gcal-time-selector.c:86
+#: src/gcal-time-selector.c:85
 #, c-format
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1090
+#: src/gcal-utils.c:1120
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -973,31 +984,31 @@ msgstr ""
 "Sie versuchen, einen wiederkehrenden Termin zu bearbeiten. Die ausgewählten "
 "Änderungen sollten angewendet werden auf:"
 
-#: src/gcal-utils.c:1093
+#: src/gcal-utils.c:1123
 msgid "_Cancel"
 msgstr "_Abbrechen"
 
-#: src/gcal-utils.c:1095
+#: src/gcal-utils.c:1125
 msgid "_Only This Event"
 msgstr "N_ur diesen Termin"
 
-#: src/gcal-utils.c:1102
+#: src/gcal-utils.c:1132
 msgid "_Subsequent events"
 msgstr "Nach_folgende Termine"
 
-#: src/gcal-utils.c:1104
+#: src/gcal-utils.c:1134
 msgid "_All events"
 msgstr "_Alle Termine"
 
-#: src/gcal-window.c:1272
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "Weiteren Termin gelöscht"
 
-#: src/gcal-window.c:1276
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "Termin gelöscht"
 
-#: src/views/gcal-week-grid.c:755 src/views/gcal-week-view.c:284
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "00"
 
@@ -1008,7 +1019,7 @@ msgid_plural "Other %d events"
 msgstr[0] "Weiterer Termin"
 msgstr[1] "Weitere %d Termine"
 
-#: src/views/gcal-week-header.c:933
+#: src/views/gcal-week-header.c:936
 #, c-format
 msgid "week %d"
 msgstr "Woche %d"
@@ -1016,28 +1027,13 @@ msgstr "Woche %d"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:294
+#: src/views/gcal-year-view.c:290
 msgid "%B %d…"
 msgstr "%d. %B …"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:300 src/views/gcal-year-view.c:523
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%e. %B"
-
-#~ msgid "weather-menu"
-#~ msgstr "Wettermenü"
-
-#~ msgid "main-menu"
-#~ msgstr "Hauptmenü"
-
-#~ msgid "temp"
-#~ msgstr "Temp"
-
-#~ msgid "Copyright © %d The Calendar authors"
-#~ msgstr "Copyright © %d Die Kalender-Autoren"
-
-#~ msgid "Other events"
-#~ msgstr "Weitere Termine"
