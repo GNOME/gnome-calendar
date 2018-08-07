@@ -1532,6 +1532,7 @@ discover_sources_cb (GObject      *source,
        */
       if (!self->prompt_password &&
           (error->code == 14 ||
+           error->code == 401 ||
            error->code == 403 ||
            error->code == 405))
         {
