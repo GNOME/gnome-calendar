@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-06-07 14:51+0000\n"
-"PO-Revision-Date: 2018-06-09 00:10+0800\n"
-"Last-Translator: Cheng-Chia Tseng <pswo10680@gmail.com>\n"
+"POT-Creation-Date: 2018-08-09 21:52+0000\n"
+"PO-Revision-Date: 2018-08-12 17:01+0800\n"
+"Last-Translator: pan93412 <pan93412@gmail.com>\n"
 "Language-Team: Chinese (Taiwan) <chinese-l10n@googlegroups.com>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.8\n"
+"X-Generator: Poedit 1.8.4\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "行事曆"
 
@@ -34,8 +34,8 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"GNOME《行事曆》是為了能完美搭配 GNOME 桌面而設計的簡單、精美行事曆應用程式。"
-"藉著重複使用 GNOME 桌面內建的元件，《行事曆》順利整合到 GNOME 生態系中。"
+"GNOME《行事曆》是為了能完美搭配 GNOME 桌面而設計的簡單、精美行事曆應用程式。藉"
+"著重複使用 GNOME 桌面內建的元件，《行事曆》順利整合到 GNOME 生態系中。"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
@@ -43,8 +43,8 @@ msgid ""
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
-"我們的目標是在精心設計的功能，與以使用者為中心的可用性之間找到完美的平衡點，"
-"麻雀雖小五臟俱全，您會很舒適的使用《行事曆》，就像您過去一直在使用的一樣！"
+"我們的目標是在精心設計的功能，與以使用者為中心的可用性之間找到完美的平衡點，麻"
+"雀雖小五臟俱全，您會很舒適的使用《行事曆》，就像您過去一直在使用的一樣！"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
 msgid "Week view"
@@ -113,6 +113,14 @@ msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr "是否要顯示天氣報告，會使用自動位置和位置名稱"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "跟隨系統的夜光模式"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "使用 GNOME 夜光模式設定啟用夜間模式。"
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -324,34 +332,30 @@ msgid "Year view"
 msgstr "年檢視"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "加入行程(_N)…"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "行事曆(_C)"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "鍵盤捷徑鍵(_K)"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "關於(_A)"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "結束(_Q)"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "從網路…"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "新增本機行事曆…"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "從檔案…"
 
@@ -376,7 +380,7 @@ msgstr "找不到結果"
 msgid "Try a different search"
 msgstr "嘗試不同的搜尋"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1037 src/gcal-window.c:1041
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "復原"
 
@@ -501,7 +505,7 @@ msgstr "上午"
 msgid "PM"
 msgstr "下午"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "天氣(_W)"
 
@@ -539,11 +543,7 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "搜尋行程"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "加入行程(_N)"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "同步(_S)"
 
@@ -555,32 +555,32 @@ msgstr "沒有行程"
 msgid "Add Event…"
 msgstr "加入行程…"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "退出 GNOME 行事曆"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "顯示版本號碼"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "啟用除錯訊息"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "在傳入的日期開啟行事曆"
 
-#: src/gcal-application.c:110
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "開啟行事曆顯示傳入的行程"
 
-#: src/gcal-application.c:610
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "著作權所有 © 2012–%d Calendar 作者群"
 
-#: src/gcal-application.c:661
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr "Cheng-Chia Tseng <pswo10680@gmail.com>, 2013, 2015, 2017."
 
@@ -971,11 +971,11 @@ msgstr "後續行程(_S)"
 msgid "_All events"
 msgstr "全部行程(_A)"
 
-#: src/gcal-window.c:1037
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "叧一個行程已刪除"
 
-#: src/gcal-window.c:1041
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "行程已刪除"
 
@@ -1007,6 +1007,12 @@ msgstr "%m月%d日…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%m月%d日"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "加入行程(_N)…"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "加入行程(_N)"
 
 #~ msgid "Copyright © %d The Calendar authors"
 #~ msgstr "著作權所有 © %d Calendar 作者群"
