@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-06-07 14:40+0000\n"
-"PO-Revision-Date: 2018-06-19 01:26+0300\n"
+"POT-Creation-Date: 2018-08-09 21:52+0000\n"
+"PO-Revision-Date: 2018-08-15 14:18+0300\n"
 "Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
 "Language-Team: Ελληνικά <opensuse-translation-el@opensuse.org>\n"
 "Language: el\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.7\n"
+"X-Generator: Poedit 2.0.9\n"
 "X-Project-Style: gnome\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "Ημερολόγιο"
 
@@ -124,6 +124,16 @@ msgid ""
 msgstr ""
 "Εάν τα δελτία καιρού θα εμφανίζονται, χρησιμοποιούνται αυτόματες τοποθεσίες "
 "και όνομα τοποθεσίας"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Να ακολουθείται ο φωτισμός νυκτός του συστήματος"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr ""
+"Χρησιμοποιήστε την ρύθμιση λειτουργίας νυκτός του GNOME για την ενεργοποίηση "
+"της λειτουργίας νυκτός."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -335,34 +345,30 @@ msgid "Year view"
 msgstr "Προβολής έτους"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "Προσθήκη σ_υμβάντος…"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "_Ημερολόγια"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "Συντομεύσεις _πληκτρολογίου"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "_Περί"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "Έ_ξοδος"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Από τον Ιστό…"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "Νέο τοπικό ημερολόγιο…"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "Από αρχείο…"
 
@@ -387,7 +393,7 @@ msgstr "Δεν βρέθηκαν αποτελέσματα"
 msgid "Try a different search"
 msgstr "Δοκιμάστε μια διαφορετική αναζήτηση"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Αναίρεση"
 
@@ -514,7 +520,7 @@ msgstr "ΠΜ"
 msgid "PM"
 msgstr "ΜΜ"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "_Καιρός"
 
@@ -552,11 +558,7 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Αναζήτηση για συμβάντα"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "Προσθήκη σ_υμβάντος"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Συγχρονισμός"
 
@@ -568,32 +570,32 @@ msgstr "Χωρίς συμβάντα"
 msgid "Add Event…"
 msgstr "Προσθήκη συμβάντος…"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "Έξοδος από το Ημερολόγιο του GNOME"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Εμφάνιση αριθμού έκδοσης"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Ενεργοποίηση μηνυμάτων αποσφαλμάτωσης"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Άνοιγμα ημερολογίου σε προηγούμενη ημερομηνία"
 
-#: src/gcal-application.c:110
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Άνοιγμα ημερολογίου σε προηγούμενο συμβάν"
 
-#: src/gcal-application.c:610
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Πνευματικά δικαιώματα © 2012–%d Οι συγγραφείς του Ημερολόγιο"
 
-#: src/gcal-application.c:661
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr ""
 "Ελληνική μεταφραστική ομάδα GNOME\n"
@@ -997,11 +999,11 @@ msgstr "_Μεταγενέστερα συμβάντα"
 msgid "_All events"
 msgstr "Ό_λα τα συμβάντα"
 
-#: src/gcal-window.c:1039
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "Διαγράφηκε ένα άλλο συμβάν"
 
-#: src/gcal-window.c:1043
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "Διαγράφηκε το συμβάν"
 
@@ -1032,10 +1034,14 @@ msgstr "%B %d…"
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
-#| msgctxt "event date format"
-#| msgid "%B %d"
 msgid "%B %d"
 msgstr "%B %d"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "Προσθήκη σ_υμβάντος…"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "Προσθήκη σ_υμβάντος"
 
 #~ msgid "— Calendar management"
 #~ msgstr "- Διαχείριση ημερολογίου"
