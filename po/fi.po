@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-01-10 15:33+0000\n"
-"PO-Revision-Date: 2018-01-12 09:59+0200\n"
+"POT-Creation-Date: 2018-07-29 04:02+0000\n"
+"PO-Revision-Date: 2018-08-17 11:11+0300\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -16,11 +16,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:540
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "Kalenteri"
 
@@ -32,7 +32,7 @@ msgstr "Kalenteri Gnome-työpöydälle"
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "Gnomen kalenteri on yksinkertainen ja nätti sovellus tapahtumien sekä "
 "aikataulujen hallintaan."
@@ -40,12 +40,12 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
-"Tavoite on löytää sopiva tasapaino ominaisuuksien sekä käytettävyyden "
-"välillä. Ei liikaa, ei liian vähän. Kalenterin käyttö on yhtä helppoa kuin "
-"aina ennenkin!"
+"Tavoite on löytää sopiva tasapaino hyödyllisien ominaisuuksien sekä "
+"käytettävyyden välillä. Ei liikaa, ei liian vähän. Kalenterin käyttö on yhtä "
+"helppoa kuin aina ennenkin!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
 msgid "Week view"
@@ -73,49 +73,57 @@ msgstr "org.gnome.Calendar"
 msgid "Calendar;Event;Reminder;"
 msgstr "Calendar;Event;Reminder;Kalenteri;Tapahtuma;Muistutus;"
 
-#: data/org.gnome.calendar.gschema.xml:6
+#: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
 msgstr "Ikkuna suurennettu"
 
-#: data/org.gnome.calendar.gschema.xml:7
+#: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
 msgstr "Suurennetun ikkunan tila"
 
-#: data/org.gnome.calendar.gschema.xml:11
+#: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
 msgstr "Ikkunan koko"
 
-#: data/org.gnome.calendar.gschema.xml:12
+#: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
 msgstr "Ikkunan koko (leveys ja korkeus)."
 
-#: data/org.gnome.calendar.gschema.xml:16
+#: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
 msgstr "Ikkunan sijainti"
 
-#: data/org.gnome.calendar.gschema.xml:17
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
 msgstr "Ikkunan sijainti (x ja y)"
 
-#: data/org.gnome.calendar.gschema.xml:21
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Aktiivisen näkymän tyyppi"
 
-#: data/org.gnome.calendar.gschema.xml:22
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Aktiivisen näkymän tyyppi, oletusarvo on: monthly view"
 
-#: data/org.gnome.calendar.gschema.xml:26
+#: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
 msgstr "Sääpalvelun asetukset"
 
-#: data/org.gnome.calendar.gschema.xml:27
+#: data/org.gnome.calendar.gschema.xml.in:27
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
 "Näytetäänkö sääilmoitukset, käytetäänkö automaattista sijaintia ja paikan "
 "nimi"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Seuraa järjestelmän yövaloa"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "Käytä Gnomen yövaloasetusta yötilan aktivointiin."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -134,7 +142,7 @@ msgstr "Peru"
 msgid "Click to select the calendar"
 msgstr "Napsauta valitaksesi kalenterin"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:275
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
 msgid "Done"
 msgstr "Valmis"
 
@@ -327,34 +335,30 @@ msgid "Year view"
 msgstr "Vuosinäkymä"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "Lisä_ä tapahtuma…"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "_Kalenterit"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "_Pikanäppäimet"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "_Tietoja"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "_Lopeta"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Verkosta…"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "Uusi paikallinen kalenteri…"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "Tiedostosta…"
 
@@ -371,15 +375,15 @@ msgstr "Muokkaa tietoja…"
 msgid "Add"
 msgstr "Lisää"
 
-#: data/ui/search-view.ui:76
+#: data/ui/search-popover.ui:76
 msgid "No results found"
 msgstr "Tuloksia ei löytynyt"
 
-#: data/ui/search-view.ui:92
+#: data/ui/search-popover.ui:92
 msgid "Try a different search"
 msgstr "Kokeile eri hakuehtoja"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1272 src/gcal-window.c:1276
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Kumoa"
 
@@ -488,8 +492,8 @@ msgstr "Anna kirjautumistietosi"
 msgid "Connect"
 msgstr "Yhdistä"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:758
-#: src/views/gcal-week-view.c:287
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
+#: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
 
@@ -497,13 +501,25 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:442
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:432
 msgid "AM"
 msgstr "AM"
 
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:442
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:432
 msgid "PM"
 msgstr "PM"
+
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
+msgid "_Weather"
+msgstr "_Sää"
+
+#: data/ui/weather-settings.ui:30
+msgid "Show Weather"
+msgstr "Näytä sää"
+
+#: data/ui/weather-settings.ui:53
+msgid "Automatic Location"
+msgstr "Automaattinen sijainti"
 
 #: data/ui/window.ui:67
 msgid "Week"
@@ -517,8 +533,8 @@ msgstr "Kuukausi"
 msgid "Year"
 msgstr "Vuosi"
 
-#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:285
-#: src/views/gcal-year-view.c:520
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:281
+#: src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "Tänään"
 
@@ -531,25 +547,9 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Etsi tapahtumia"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "Lisä_ä tapahtuma"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Synkronoi"
-
-#: data/ui/window.ui:407 data/ui/window.ui:428
-msgid "_Weather"
-msgstr "_Sää"
-
-#: data/ui/window.ui:446
-msgid "Show Weather"
-msgstr "Näytä sää"
-
-#: data/ui/window.ui:469
-msgid "Automatic Location"
-msgstr "Automaattinen sijainti"
 
 #: data/ui/year-view.ui:133
 msgid "No events"
@@ -559,73 +559,73 @@ msgstr "Ei tapahtumia"
 msgid "Add Event…"
 msgstr "Lisää tapahtuma…"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "Lopeta Gnomen kalenteri"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Näytä versionumero"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Ota vianjäljitysviestit käyttöön"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Avaa kalenteri menneeseen päivään"
 
-#: src/gcal-application.c:110
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Avaa kalenteri näyttäen mennyt tapahtuma"
 
-#: src/gcal-application.c:497
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Tekijänoikeus © 2012–%d Kalenterisovelluksen tekijät"
 
-#: src/gcal-application.c:546
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr "Jiri Grönroos"
 
-#: src/gcal-edit-dialog.c:275
+#: src/gcal-edit-dialog.c:277
 msgid "Save"
 msgstr "Tallenna"
 
-#: src/gcal-edit-dialog.c:1019
+#: src/gcal-edit-dialog.c:1037
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minuutti ennen"
 msgstr[1] "%d minuuttia ennen"
 
-#: src/gcal-edit-dialog.c:1027
+#: src/gcal-edit-dialog.c:1045
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d tunti ennen"
 msgstr[1] "%d tuntia ennen"
 
-#: src/gcal-edit-dialog.c:1035
+#: src/gcal-edit-dialog.c:1053
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d päivä ennen"
 msgstr[1] "%d päivää ennen"
 
-#: src/gcal-edit-dialog.c:1043
+#: src/gcal-edit-dialog.c:1061
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d viikko ennen"
 msgstr[1] "%d viikkoa ennen"
 
-#: src/gcal-edit-dialog.c:1347 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Nimetön tapahtuma"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:420
+#: src/gcal-event-widget.c:424
 #, c-format
 msgid "At %s"
 msgstr "Tapahtuman sijainti %s"
@@ -740,14 +740,17 @@ msgid "December"
 msgstr "Joulukuu"
 
 #: src/gcal-quick-add-popover.c:286
+#, c-format
 msgid "from Today"
 msgstr "tästä päivästä"
 
 #: src/gcal-quick-add-popover.c:290
+#, c-format
 msgid "from Tomorrow"
 msgstr "huomisesta"
 
 #: src/gcal-quick-add-popover.c:294
+#, c-format
 msgid "from Yesterday"
 msgstr "eilisestä"
 
@@ -761,14 +764,17 @@ msgid "from %1$s %2$s"
 msgstr "ajankohdasta %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:323
+#, c-format
 msgid "to Today"
 msgstr "kuluvaan päivään"
 
 #: src/gcal-quick-add-popover.c:327
+#, c-format
 msgid "to Tomorrow"
 msgstr "huomiseen"
 
 #: src/gcal-quick-add-popover.c:331
+#, c-format
 msgid "to Yesterday"
 msgstr "eiliseen"
 
@@ -788,14 +794,17 @@ msgid "New Event %1$s %2$s"
 msgstr "Uusi tapahtuma %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
+#, c-format
 msgid "New Event Today"
 msgstr "Uusi tapahtuma tänään"
 
 #: src/gcal-quick-add-popover.c:377
+#, c-format
 msgid "New Event Tomorrow"
 msgstr "Uusi tapahtuma huomenna"
 
 #: src/gcal-quick-add-popover.c:381
+#, c-format
 msgid "New Event Yesterday"
 msgstr "Uusi tapahtuma eilen"
 
@@ -894,11 +903,11 @@ msgstr "Uusi tapahtuma %-d. joulukuuta"
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
-#: src/gcal-search-view.c:358
+#: src/gcal-search-popover.c:303
 msgid "All day"
 msgstr "Koko päivä"
 
-#: src/gcal-search-view.c:563
+#: src/gcal-search-popover.c:563
 msgid "Use the entry above to search for events."
 msgstr "Etsi tapahtumia yläpuolelta."
 
@@ -938,17 +947,17 @@ msgstr "Päällä"
 msgid "Expired"
 msgstr "Vanhentunut"
 
-#: src/gcal-time-selector.c:84
+#: src/gcal-time-selector.c:83
 #, c-format
 msgid "%s AM"
 msgstr "%s AM"
 
-#: src/gcal-time-selector.c:86
+#: src/gcal-time-selector.c:85
 #, c-format
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1090
+#: src/gcal-utils.c:1120
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -956,31 +965,31 @@ msgstr ""
 "Tapahtuma, jota koetat muokata, on toistuva. Tekemäsi muutokset tulee "
 "toteuttaa:"
 
-#: src/gcal-utils.c:1093
+#: src/gcal-utils.c:1123
 msgid "_Cancel"
 msgstr "_Peru"
 
-#: src/gcal-utils.c:1095
+#: src/gcal-utils.c:1125
 msgid "_Only This Event"
 msgstr "_Vain tähän tapahtumaan"
 
-#: src/gcal-utils.c:1102
+#: src/gcal-utils.c:1132
 msgid "_Subsequent events"
 msgstr "_Myöhempiin tapahtumiin"
 
-#: src/gcal-utils.c:1104
+#: src/gcal-utils.c:1134
 msgid "_All events"
 msgstr "_Kaikkiin tapahtumiin"
 
-#: src/gcal-window.c:1272
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "Toinen tapahtuma poistettu"
 
-#: src/gcal-window.c:1276
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "Tapahtuma poistettu"
 
-#: src/views/gcal-week-grid.c:755 src/views/gcal-week-view.c:284
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "00 AM"
 
@@ -991,7 +1000,7 @@ msgid_plural "Other %d events"
 msgstr[0] "Muu tapahtuma"
 msgstr[1] "Muut %d tapahtumaa"
 
-#: src/views/gcal-week-header.c:933
+#: src/views/gcal-week-header.c:936
 #, c-format
 msgid "week %d"
 msgstr "viikko %d"
@@ -999,16 +1008,22 @@ msgstr "viikko %d"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:294
+#: src/views/gcal-year-view.c:290
 msgid "%B %d…"
 msgstr "%e. %Bta…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:300 src/views/gcal-year-view.c:523
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%e. %Bta"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "Lisä_ä tapahtuma…"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "Lisä_ä tapahtuma"
 
 #~ msgid "Copyright © %d The Calendar authors"
 #~ msgstr "Tekijänoikeus © %d Kalenterin tekijät"
