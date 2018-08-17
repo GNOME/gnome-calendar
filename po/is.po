@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-03-11 09:42+0000\n"
-"PO-Revision-Date: 2018-03-16 12:39+0000\n"
+"POT-Creation-Date: 2018-03-20 20:44+0000\n"
+"PO-Revision-Date: 2018-08-17 12:54+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic <translation-team-is@lists.sourceforge.net>\n"
 "Language: is\n"
@@ -116,6 +116,8 @@ msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
+"Hvort birta eigi veðurspár, hvort sjálfvirk staðsetning sé notuð eða "
+"staðarheiti"
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -359,8 +361,6 @@ msgid "From File…"
 msgstr "Úr skrá…"
 
 #: data/ui/month-popover.ui:91
-#| msgctxt "shortcut window"
-#| msgid "New event"
 msgid "New Event…"
 msgstr "Nýr atburður…"
 
@@ -512,13 +512,10 @@ msgid "_Weather"
 msgstr "_Veður"
 
 #: data/ui/weather-settings.ui:30
-#| msgctxt "shortcut window"
-#| msgid "Show help"
 msgid "Show Weather"
 msgstr "Sýna veður"
 
 #: data/ui/weather-settings.ui:53
-#| msgid "Location"
 msgid "Automatic Location"
 msgstr "Sjálfvirk staðsetning"
 
@@ -549,7 +546,6 @@ msgid "Search for events"
 msgstr "Leita að atburðum"
 
 #: data/ui/window.ui:391
-#| msgid "Add Eve_nt…"
 msgid "Add Eve_nt"
 msgstr "_Bæta við atburði"
 
@@ -566,7 +562,6 @@ msgid "Add Event…"
 msgstr "Bæta við atburði..."
 
 #: src/gcal-application.c:88
-#| msgid "Edit Calendar"
 msgid "Quit GNOME Calendar"
 msgstr "Hætta í GNOME dagtali"
 
@@ -588,7 +583,6 @@ msgstr "Opna dagatal á liðna atburðinum"
 
 #: src/gcal-application.c:595
 #, c-format
-#| msgid "Copyright © %d–%d The Calendar authors"
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Höfundarréttur © 2012–%d Höfundar Calendar/Dagatals"
 
