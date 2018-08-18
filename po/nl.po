@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-16\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-06-07 14:40+0000\n"
-"PO-Revision-Date: 2018-07-28 12:52+0100\n"
+"POT-Creation-Date: 2018-08-17 12:58+0000\n"
+"PO-Revision-Date: 2018-08-18 10:17+0100\n"
 "Last-Translator: Hannie Dumoleyn <hannie@ubuntu-nl.org>\n"
 "Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
 "Language: nl\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "Agenda"
 
@@ -31,11 +31,6 @@ msgid "Calendar for GNOME"
 msgstr "Agenda voor Gnome"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:11
-#| msgid ""
-#| "GNOME Calendar is a simple and beautiful calendar application designed to "
-#| "perfectly fit the GNOME desktop. By reusing the components which the "
-#| "GNOME desktop is build on, Calendar nicely integrates with the GNOME "
-#| "ecosystem."
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
@@ -47,19 +42,15 @@ msgstr ""
 "systeem."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
-#| msgid ""
-#| "We aim to find the perfect balance between nicely crafted features and "
-#| "user-centred usability. No excess, no lacks. You’ll feel comfortable "
-#| "using Calendar, like you’ve been using it for ages!"
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
-"We streven ernaar de ideale balans te vinden tussen goede functionaliteit en"
-" gebruiksvriendelijkheid. Niet te veel, niet te weinig. U zult zich"
-" comfortabel voelen bij het gebruiken van Agenda, alsof u het al jaren"
-" gebruikt!"
+"We streven ernaar de ideale balans te vinden tussen goede functionaliteit en "
+"gebruiksvriendelijkheid. Niet te veel, niet te weinig. U zult zich "
+"comfortabel voelen bij het gebruiken van Agenda, alsof u het al jaren "
+"gebruikt!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
 msgid "Week view"
@@ -132,6 +123,14 @@ msgid ""
 msgstr ""
 "Of weerrapporten worden getoond, automatische locaties worden gebruikt en "
 "een locatienaam"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Systeemnachtlicht volgen"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "Nachtlichtinstelling van Gnome gebruiken om nachtmodus te activeren."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -343,34 +342,30 @@ msgid "Year view"
 msgstr "Jaarweergave"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "_Afspraak toevoegen…"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "_Agenda’s"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "_Sneltoetsen"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "_Info"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "_Afsluiten"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Van het internet…"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "Nieuwe lokale agenda…"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "Van bestand…"
 
@@ -395,7 +390,7 @@ msgstr "Geen resultaten gevonden"
 msgid "Try a different search"
 msgstr "Probeer een andere zoekopdracht"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Ongedaan maken"
 
@@ -521,7 +516,7 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "_Weer"
 
@@ -559,11 +554,7 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Zoeken naar afspraken"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "_Afspraak toevoegen"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Synchroniseren"
 
@@ -575,32 +566,32 @@ msgstr "Geen afspraken"
 msgid "Add Event…"
 msgstr "Afspraak toevoegen…"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "Gnome Agenda afsluiten"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Versienummer weergeven"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Debug-berichten inschakelen"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Agenda openen op de verstreken datum"
 
-#: src/gcal-application.c:110
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Agenda openen en verstreken afspraak tonen"
 
-#: src/gcal-application.c:610
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d De auteurs van Agenda"
 
-#: src/gcal-application.c:661
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr ""
 "Nathan Follens\n"
@@ -1002,11 +993,11 @@ msgstr "Komende af_spraken"
 msgid "_All events"
 msgstr "_Alle afspraken"
 
-#: src/gcal-window.c:1039
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "Nog een afspraak verwijderd"
 
-#: src/gcal-window.c:1043
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "Afspraak verwijderd"
 
@@ -1039,6 +1030,12 @@ msgstr "%B %d…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%B %d"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "_Afspraak toevoegen…"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "_Afspraak toevoegen"
 
 #~ msgid "win-menu-weather"
 #~ msgstr "win-menu-weather"
