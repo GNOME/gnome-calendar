@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-07-13 16:01+0000\n"
-"PO-Revision-Date: 2018-07-20 20:40+0200\n"
+"POT-Creation-Date: 2018-08-17 14:01+0000\n"
+"PO-Revision-Date: 2018-08-19 10:30+0200\n"
 "Last-Translator: Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>\n"
 "Language-Team: Gnome Romanian Translation Team\n"
 "Language: ro\n"
@@ -17,12 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2);\n"
-"X-Generator: Poedit 2.0.9\n"
+"X-Generator: Poedit 2.1.1\n"
 "X-Project-Style: gnome\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "Calendar"
 
@@ -123,6 +123,16 @@ msgid ""
 msgstr ""
 "Dacă sunt arătate rapoartele de vreme, sunt utilizate locațiile automate și "
 "un nume de locație"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Urmează lumina de noapte a sistemului"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr ""
+"Utilizează configurarea luminii de noapte GNOME pentru a activa modul "
+"nocturn."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -334,34 +344,30 @@ msgid "Year view"
 msgstr "Vizualizare anuală"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "Adaugă evenime_nt…"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "_Calendare"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "S_curtături de tastatură"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "_Despre"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "_Ieșire"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "De pe Web…"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "Calendar local nou…"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "Din fișier…"
 
@@ -386,7 +392,7 @@ msgstr "Niciun rezultat găsit"
 msgid "Try a different search"
 msgstr "Încercați o căutare diferită"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1037 src/gcal-window.c:1041
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Anulează"
 
@@ -469,13 +475,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Adresa calendarului"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
-#: src/gcal-source-dialog.c:2291
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2286
+#: src/gcal-source-dialog.c:2292
 msgid "Add Calendar"
 msgstr "Adaugă calendar"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:344
-#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2315
 msgid "Calendar Settings"
 msgstr "Configurări calendar"
 
@@ -512,7 +518,7 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "_Vreme"
 
@@ -548,13 +554,9 @@ msgstr "Administrați calendarele"
 #: data/ui/window.ui:288
 msgctxt "tooltip"
 msgid "Search for events"
-msgstr "Caută pentru evenimente"
+msgstr "Caută evenimente"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "Adaugă un eve_niment"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Sincronizează"
 
@@ -566,32 +568,32 @@ msgstr "Nu există evenimente"
 msgid "Add Event…"
 msgstr "Adaugă eveniment…"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "Părăsește Calendar GNOME"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Afișează numărul versiunii"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Activează mesajele de depanare"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Deschide calendarul la data trecută"
 
-#: src/gcal-application.c:110
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Deschide calendarul care arată evenimentul trecut"
 
-#: src/gcal-application.c:610
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Drepturi de autor © 2012–%d autorii lui Calendar"
 
-#: src/gcal-application.c:661
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr ""
 "va511e \n"
@@ -636,7 +638,7 @@ msgstr[2] "%d de săptămâni înainte"
 
 #: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
-msgstr "Eveniment anonim"
+msgstr "Eveniment nedenumit"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
 #: src/gcal-event-widget.c:424
@@ -944,20 +946,20 @@ msgid "Unnamed Calendar"
 msgstr "Calendar fără nume"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1810
+#: src/gcal-source-dialog.c:1811
 #, c-format
 msgid "Calendar <b>%s</b> removed"
-msgstr "Calendarul <b>%s</ b> a fost eliminat"
+msgstr "Calendarul <b>%s</b> a fost eliminat"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "Off"
 msgstr "Oprit"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "On"
 msgstr "Pornit"
 
-#: src/gcal-source-dialog.c:1914
+#: src/gcal-source-dialog.c:1915
 msgid "Expired"
 msgstr "Expirat"
 
@@ -995,11 +997,11 @@ msgstr "Evenimente _ulterioare"
 msgid "_All events"
 msgstr "To_ate evenimentele"
 
-#: src/gcal-window.c:1037
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "Un alt eveniment șters"
 
-#: src/gcal-window.c:1041
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "Eveniment șters"
 
@@ -1033,6 +1035,12 @@ msgstr "%B %d…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%B %d"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "Adaugă evenime_nt…"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "Adaugă un eve_niment"
 
 #~ msgid "List of the disabled sources"
 #~ msgstr "Lista surselor dezactivate"
