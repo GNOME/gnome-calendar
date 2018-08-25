@@ -2,25 +2,26 @@
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Seong-ho Cho <shcho@gnome.org>, 2013, 2015-2018.
+# Hyunwoo Park <ez.amiryo@gmail.com>, 2018.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-02-20 22:28+0000\n"
-"PO-Revision-Date: 2018-02-24 15:30+0900\n"
-"Last-Translator: Seong-ho Cho <shcho@gnome.org>\n"
+"POT-Creation-Date: 2018-07-29 04:02+0000\n"
+"PO-Revision-Date: 2018-08-25 16:35+0900\n"
+"Last-Translator: Hyunwoo Park <ez.amiryo@gmail.com>\n"
 "Language-Team: GNOME Korea <gnome-kr@googlegroups.com>\n"
 "Language: ko\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:640 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "달력"
 
@@ -32,7 +33,7 @@ msgstr "그놈용 달력"
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "그놈 달력은 그놈 데스크톱에 완벽하게 맞춰 설계한 단순하고 아름다운 달력 프로"
 "그램입니다. 그놈 달력은 그놈 데스크톱에 내장한 구성 요소를 재사용하여 그놈 환"
@@ -41,12 +42,12 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
-"멋지게 다듬은 기능과 사용자 중심의 활용성간의 균형의 완벽 유지가 목표입니다. "
-"잘나지도 부족하지도 않습니다. 오랫동안 달력을 사용해보셨던 것 같은 편안함을 "
-"느끼실 수 있습니다!"
+"멋지게 다듬은 기능과 사용자 중심의 활용성 간의 완벽한 균형의 유지가 목표입니"
+"다. 잘나지도 부족하지도 않습니다. 오랫동안 달력을 사용해보셨던 것 같은 편안함"
+"을 느끼실 수 있습니다!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
 msgid "Week view"
@@ -117,6 +118,14 @@ msgid ""
 msgstr ""
 "날씨 정보를 나타내느냐에 따라 자동 위치 정보를 location-name과 함께 사용합니"
 "다"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "시스템 야간 모드 따르기"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "그놈 야간 모드 설정에 따라 야간 모드를 설정합니다."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -328,34 +337,30 @@ msgid "Year view"
 msgstr "연 단위 보기"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "행사 추가(_N)…"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "달력(_C)"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "키보드 바로 가기 키(_K)"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "정보(_A)"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "끝내기(_Q)"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "웹에서 가져오기…"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "새 로컬 달력…"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "파일 가져오기…"
 
@@ -380,7 +385,7 @@ msgstr "결과가 없습니다"
 msgid "Try a different search"
 msgstr "다른 방법으로 검색 시도"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "실행 취소"
 
@@ -488,7 +493,7 @@ msgstr "인증 정보 입력"
 msgid "Connect"
 msgstr "연결"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:754
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
 #: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
@@ -505,7 +510,7 @@ msgstr "오전"
 msgid "PM"
 msgstr "오후"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "날씨(_W)"
 
@@ -529,8 +534,8 @@ msgstr "월"
 msgid "Year"
 msgstr "연"
 
-#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
-#: src/views/gcal-year-view.c:514
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:281
+#: src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "오늘"
 
@@ -543,11 +548,7 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "행사 검색"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "행사 추가(_N)"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "동기화(_S)"
 
@@ -559,32 +560,32 @@ msgstr "행사 없음"
 msgid "Add Event…"
 msgstr "행사 추가…"
 
-#: src/gcal-application.c:88
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "그놈 캘린더 끝내기"
 
-#: src/gcal-application.c:93
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "버전 번호를 표시합니다"
 
-#: src/gcal-application.c:98
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "디버깅 메시지 출력 활성"
 
-#: src/gcal-application.c:103
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "과거 달력 열기"
 
-#: src/gcal-application.c:108
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "과거 행사를 보여주는 달력을 엽니다"
 
-#: src/gcal-application.c:595
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d The Calendar authors"
 
-#: src/gcal-application.c:646
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr "조성호 <shcho@gnome.org>"
 
@@ -621,7 +622,7 @@ msgid "Unnamed event"
 msgstr "이름 없는 행사"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:420
+#: src/gcal-event-widget.c:424
 #, c-format
 msgid "At %s"
 msgstr "장소: %s"
@@ -953,47 +954,47 @@ msgstr "오전 %s"
 msgid "%s PM"
 msgstr "오후 %s"
 
-#: src/gcal-utils.c:1093
+#: src/gcal-utils.c:1120
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
 msgstr "수정하려는 행사가 반복됩니다. 다음 항목을 반영해야 합니다:"
 
-#: src/gcal-utils.c:1096
+#: src/gcal-utils.c:1123
 msgid "_Cancel"
 msgstr "취소(_C)"
 
-#: src/gcal-utils.c:1098
+#: src/gcal-utils.c:1125
 msgid "_Only This Event"
 msgstr "이 행사에만(_O)"
 
-#: src/gcal-utils.c:1105
+#: src/gcal-utils.c:1132
 msgid "_Subsequent events"
 msgstr "다음 행사(_S)"
 
-#: src/gcal-utils.c:1107
+#: src/gcal-utils.c:1134
 msgid "_All events"
 msgstr "모든 행사(_A)"
 
-#: src/gcal-window.c:1039
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "삭제한 다른 행사"
 
-#: src/gcal-window.c:1043
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "삭제한 행사"
 
-#: src/views/gcal-week-grid.c:751 src/views/gcal-week-view.c:275
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "오전 00"
 
-#: src/views/gcal-week-header.c:398
+#: src/views/gcal-week-header.c:400
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "다른 행사 %d개"
 
-#: src/views/gcal-week-header.c:934
+#: src/views/gcal-week-header.c:936
 #, c-format
 msgid "week %d"
 msgstr "%d주"
@@ -1001,16 +1002,22 @@ msgstr "%d주"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:290
 msgid "%B %d…"
 msgstr "%B %d일…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:517
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%B %d일"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "행사 추가(_N)…"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "행사 추가(_N)"
 
 #~ msgid "— Calendar management"
 #~ msgstr "— 달력 관리"
