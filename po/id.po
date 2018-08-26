@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-01-10 15:33+0000\n"
-"PO-Revision-Date: 2018-01-16 10:24+0700\n"
-"Last-Translator: Kukuh Syafaat <syafaatkukuh@gmail.com>\n"
+"POT-Creation-Date: 2018-07-29 04:02+0000\n"
+"PO-Revision-Date: 2018-07-30 15:22+0700\n"
+"Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.5\n"
+"X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:540
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -32,22 +32,22 @@ msgstr "Kalender untuk GNOME"
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"GNOME Calendar adalah aplikasi kalender yang sederhana dan indah, dirancang "
-"untuk secara sempurna pas dengan desktop GNOME. Dengan memakai ulang "
-"komponen pembangun desktop GNOME, Calendar terintegrasi secara baik dengan "
-"ekosistem GNOME."
+"GNOME Kalender adalah aplikasi kalender yang sederhana dan indah, dirancang "
+"untuk secara sempurna pas dengan destop GNOME. Dengan memakai ulang komponen "
+"pembangun destop GNOME, Kalender terintegrasi secara baik dengan ekosistem "
+"GNOME."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Kami berupaya mencari keseimbangan sempurna antara fitur yang dibuat dengan "
 "baik dan usabilitas yang terpusat pengguna. Tak ada yang berlebihan, tak ada "
-"kekurangan. Anda akan merasa nyaman memakai Calendar, serasa Anda sudah "
+"yang hilang. Anda akan merasa nyaman memakai Calendar, serasa Anda sudah "
 "memakainya bertahun-tahun!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
@@ -76,49 +76,57 @@ msgstr "org.gnome.Calendar"
 msgid "Calendar;Event;Reminder;"
 msgstr "Kalender;Acara;Pengingat;"
 
-#: data/org.gnome.calendar.gschema.xml:6
+#: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
 msgstr "Jendela dimaksimalkan"
 
-#: data/org.gnome.calendar.gschema.xml:7
+#: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
 msgstr "Keadaan termaksimalkan jendela"
 
-#: data/org.gnome.calendar.gschema.xml:11
+#: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
 msgstr "Ukuran jendela"
 
-#: data/org.gnome.calendar.gschema.xml:12
+#: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
 msgstr "Ukuran jendela (lebar dan tinggi)."
 
-#: data/org.gnome.calendar.gschema.xml:16
+#: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
 msgstr "Posisi jendela"
 
-#: data/org.gnome.calendar.gschema.xml:17
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
 msgstr "Posisi jendela (x dan y)."
 
-#: data/org.gnome.calendar.gschema.xml:21
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Tipe dari tilikan yang aktif"
 
-#: data/org.gnome.calendar.gschema.xml:22
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
 "Tipe dari tilikan jendela yang aktif, nilai baku adalah: tilikan bulanan"
 
-#: data/org.gnome.calendar.gschema.xml:26
+#: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
 msgstr "Konfigurasi Layanan Cuaca"
 
-#: data/org.gnome.calendar.gschema.xml:27
+#: data/org.gnome.calendar.gschema.xml.in:27
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
 "Apakah laporan cuaca ditampilkan, lokasi otomatis digunakan dan nama-lokasi"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Ikuti cahaya malam sistem"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "Gunakan pengaturan cahaya malam GNOME untuk mengaktifkan mode malam."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -137,7 +145,7 @@ msgstr "Batal"
 msgid "Click to select the calendar"
 msgstr "Klik untuk memilih kalender"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:275
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
 msgid "Done"
 msgstr "Selesai"
 
@@ -330,34 +338,30 @@ msgid "Year view"
 msgstr "Tilikan tahun"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "Ta_mbah Acara…"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "_Kalender"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "Pintasan Papan Ti_k"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "Tent_ang"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "_Keluar"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Dari Web…"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "Kalender Lokal Baru…"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "Dari Berkas…"
 
@@ -374,15 +378,15 @@ msgstr "Sunting Rincian…"
 msgid "Add"
 msgstr "Tambah"
 
-#: data/ui/search-view.ui:76
+#: data/ui/search-popover.ui:76
 msgid "No results found"
 msgstr "Tak ditemukan hasil"
 
-#: data/ui/search-view.ui:92
+#: data/ui/search-popover.ui:92
 msgid "Try a different search"
 msgstr "Cobalah pencarian lain"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1272 src/gcal-window.c:1276
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Tak jadi"
 
@@ -491,8 +495,8 @@ msgstr "Masukkan kredensial Anda"
 msgid "Connect"
 msgstr "Sambung"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:758
-#: src/views/gcal-week-view.c:287
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
+#: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
 
@@ -500,13 +504,25 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:442
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:432
 msgid "AM"
 msgstr "AM"
 
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:442
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:432
 msgid "PM"
 msgstr "PM"
+
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
+msgid "_Weather"
+msgstr "_Cuaca"
+
+#: data/ui/weather-settings.ui:30
+msgid "Show Weather"
+msgstr "Tampilkan Cuaca"
+
+#: data/ui/weather-settings.ui:53
+msgid "Automatic Location"
+msgstr "Lokasi Otomatis"
 
 #: data/ui/window.ui:67
 msgid "Week"
@@ -520,8 +536,8 @@ msgstr "Bulan"
 msgid "Year"
 msgstr "Tahun"
 
-#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:285
-#: src/views/gcal-year-view.c:520
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:281
+#: src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "Hari ini"
 
@@ -534,25 +550,9 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Cari acara"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "Ta_mbah Acara"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Selaraskan"
-
-#: data/ui/window.ui:407 data/ui/window.ui:428
-msgid "_Weather"
-msgstr "_Cuaca"
-
-#: data/ui/window.ui:446
-msgid "Show Weather"
-msgstr "Tampilkan Cuaca"
-
-#: data/ui/window.ui:469
-msgid "Automatic Location"
-msgstr "Lokasi Otomatis"
 
 #: data/ui/year-view.ui:133
 msgid "No events"
@@ -562,71 +562,71 @@ msgstr "Tidak ada acara"
 msgid "Add Event…"
 msgstr "Tambah Acara…"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "Keluar Kalender GNOME"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Tampilkan nomor versi"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Aktifkan pesan awakutu"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Buka kalender pada tanggal yang diberikan"
 
-#: src/gcal-application.c:110
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Buka kalender yang menampilkan acara yang telah lewat"
 
-#: src/gcal-application.c:497
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Hak Cipta © 2012–%d para penulis Kalender"
 
-#: src/gcal-application.c:546
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr ""
 "Andika Triwidada <andika@gmail.com>, 2013, 2016.\n"
-"Kukuh Syafaat <syafaatkukuh@gmail.com>, 2017, 2018."
+"Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017, 2018."
 
-#: src/gcal-edit-dialog.c:275
+#: src/gcal-edit-dialog.c:277
 msgid "Save"
 msgstr "Simpan"
 
-#: src/gcal-edit-dialog.c:1019
+#: src/gcal-edit-dialog.c:1037
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d menit sebelumnya"
 
-#: src/gcal-edit-dialog.c:1027
+#: src/gcal-edit-dialog.c:1045
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d jam sebelumnya"
 
-#: src/gcal-edit-dialog.c:1035
+#: src/gcal-edit-dialog.c:1053
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d hari sebelumnya"
 
-#: src/gcal-edit-dialog.c:1043
+#: src/gcal-edit-dialog.c:1061
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d minggu sebelumnya"
 
-#: src/gcal-edit-dialog.c:1347 src/gcal-quick-add-popover.c:680
+#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Acara tanpa nama"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:420
+#: src/gcal-event-widget.c:424
 #, c-format
 msgid "At %s"
 msgstr "Pada %s"
@@ -741,14 +741,17 @@ msgid "December"
 msgstr "Desember"
 
 #: src/gcal-quick-add-popover.c:286
+#, c-format
 msgid "from Today"
 msgstr "mulai Hari ini"
 
 #: src/gcal-quick-add-popover.c:290
+#, c-format
 msgid "from Tomorrow"
 msgstr "mulai Besok"
 
 #: src/gcal-quick-add-popover.c:294
+#, c-format
 msgid "from Yesterday"
 msgstr "mulai Kemarin"
 
@@ -762,14 +765,17 @@ msgid "from %1$s %2$s"
 msgstr "mulai %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:323
+#, c-format
 msgid "to Today"
 msgstr "sampai Hari ini"
 
 #: src/gcal-quick-add-popover.c:327
+#, c-format
 msgid "to Tomorrow"
 msgstr "sampai Besok"
 
 #: src/gcal-quick-add-popover.c:331
+#, c-format
 msgid "to Yesterday"
 msgstr "sampai Kemarin"
 
@@ -789,14 +795,17 @@ msgid "New Event %1$s %2$s"
 msgstr "Acara Baru %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
+#, c-format
 msgid "New Event Today"
 msgstr "Acara Baru Hari Ini"
 
 #: src/gcal-quick-add-popover.c:377
+#, c-format
 msgid "New Event Tomorrow"
 msgstr "Acara Baru Besok"
 
 #: src/gcal-quick-add-popover.c:381
+#, c-format
 msgid "New Event Yesterday"
 msgstr "Acara Baru Kemarin"
 
@@ -895,11 +904,11 @@ msgstr "Acara Baru pada %d Desember"
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
-#: src/gcal-search-view.c:358
+#: src/gcal-search-popover.c:303
 msgid "All day"
 msgstr "Sepanjang hari"
 
-#: src/gcal-search-view.c:563
+#: src/gcal-search-popover.c:563
 msgid "Use the entry above to search for events."
 msgstr "Pakai entri di atas untuk mencari acara."
 
@@ -939,17 +948,17 @@ msgstr "Nyala"
 msgid "Expired"
 msgstr "Kedaluwarsa"
 
-#: src/gcal-time-selector.c:84
+#: src/gcal-time-selector.c:83
 #, c-format
 msgid "%s AM"
 msgstr "%s AM"
 
-#: src/gcal-time-selector.c:86
+#: src/gcal-time-selector.c:85
 #, c-format
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1090
+#: src/gcal-utils.c:1120
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -957,31 +966,31 @@ msgstr ""
 "Acara yang ingin Anda ubah berulang. Perubahan yang telah Anda pilih harus "
 "diterapkan pada:"
 
-#: src/gcal-utils.c:1093
+#: src/gcal-utils.c:1123
 msgid "_Cancel"
 msgstr "_Batal"
 
-#: src/gcal-utils.c:1095
+#: src/gcal-utils.c:1125
 msgid "_Only This Event"
 msgstr "Hanya Acara _Ini"
 
-#: src/gcal-utils.c:1102
+#: src/gcal-utils.c:1132
 msgid "_Subsequent events"
 msgstr "A_cara berikutnya"
 
-#: src/gcal-utils.c:1104
+#: src/gcal-utils.c:1134
 msgid "_All events"
 msgstr "Semu_a acara"
 
-#: src/gcal-window.c:1272
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "Acara lain dihapus"
 
-#: src/gcal-window.c:1276
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "Acara dihapus"
 
-#: src/views/gcal-week-grid.c:755 src/views/gcal-week-view.c:284
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "00 AM"
 
@@ -991,7 +1000,7 @@ msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "%d acara lain"
 
-#: src/views/gcal-week-header.c:933
+#: src/views/gcal-week-header.c:936
 #, c-format
 msgid "week %d"
 msgstr "minggu %d"
@@ -999,16 +1008,22 @@ msgstr "minggu %d"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:294
+#: src/views/gcal-year-view.c:290
 msgid "%B %d…"
 msgstr "%d %B…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:300 src/views/gcal-year-view.c:523
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d %B"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "Ta_mbah Acara…"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "Ta_mbah Acara"
 
 #~ msgid "weather-menu"
 #~ msgstr "menu-cuaca"
