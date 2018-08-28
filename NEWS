@@ -1,3 +1,7 @@
+Major changes in 3.29.92:
+* Better handle 401 status codes when adding calendars (Ralph Plawetzki)
+* Updated translations
+
 Major changes in 3.29.90:
 * Add Night Light integration
 * Bugfixes
