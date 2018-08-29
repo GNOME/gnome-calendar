@@ -8,22 +8,22 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-05-15 21:54+0000\n"
-"PO-Revision-Date: 2018-05-16 00:29+0200\n"
-"Last-Translator: marcos <marcoslansgarza@gmail.com>\n"
-"Language-Team: Galician\n"
+"POT-Creation-Date: 2018-08-17 12:58+0000\n"
+"PO-Revision-Date: 2018-08-30 00:46+0200\n"
+"Last-Translator: Fran Dieguez <frandieguez@gnome.org>\n"
+"Language-Team: Proxecto Trasno <proxecto@trasno.gal>\n"
 "Language: gl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Virtaal 0.7.1\n"
 "X-Launchpad-Export-Date: 2016-03-03 10:20+0000\n"
 "X-Project-Style: gnome\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "Calendario"
 
@@ -32,7 +32,6 @@ msgid "Calendar for GNOME"
 msgstr "Calendario de GNOME"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:11
-#, fuzzy
 #| msgid ""
 #| "GNOME Calendar is a simple and beautiful calendar applicatidesigned to "
 #| "perfectly fit the GNOME desktop. By reusing the components which the "
@@ -49,9 +48,13 @@ msgstr ""
 "perfectamente co ecosistema GNOME."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
+#| msgid ""
+#| "We aim to find the perfect balance between nicely crafted features and "
+#| "user-centred usability. No excess, no lacks. You’ll feel comfortable "
+#| "using Calendar, like you’ve been using it for ages!"
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Tentamos buscar o equilibro entre características ben elaboradas e a "
@@ -128,6 +131,14 @@ msgid ""
 msgstr ""
 "Indica se se mostran os informes metereolóxicos, usanse localizacións "
 "automáticas e un nome de localización"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Seguir a luz nocturna do sistema"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "Usar a configuración de Luz nocturna para activar o modo noite."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -339,34 +350,30 @@ msgid "Year view"
 msgstr "Vista anual"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "Engadir Eve_nto…"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "_Calendarios"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "Atallos de _teclado"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "_Sobre"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "_Saír"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Desde a web…"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "Novo calendario local…"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "Desde un ficheiro…"
 
@@ -391,7 +398,7 @@ msgstr "Non se atopou ningún resultado"
 msgid "Try a different search"
 msgstr "Probe unha busca diferente"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Desfacer"
 
@@ -517,7 +524,7 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "_Tempo"
 
@@ -555,11 +562,7 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Buscar eventos"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "Engadir Eve_nto"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Sincronizar"
 
@@ -571,32 +574,32 @@ msgstr "Non hai eventos"
 msgid "Add Event…"
 msgstr "Engadir evento…"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "Saír de Calendario de GNOME"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Mostrar número de versión"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Activar os mensaxes de depuración"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Abrir calendario nunha data pasada"
 
-#: src/gcal-application.c:110
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Abrir calendario mostrando o evento pasado"
 
-#: src/gcal-application.c:610
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Dereitos de autor © 2012–%d Os autores de Calendario"
 
-#: src/gcal-application.c:661
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr "Fran Dieguez <frandieguez@gnome.org>, 2012-2018"
 
@@ -993,11 +996,11 @@ msgstr "Eventos _subsecuentes"
 msgid "_All events"
 msgstr "_Todos os eventos"
 
-#: src/gcal-window.c:1039
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "Outro evento eliminado"
 
-#: src/gcal-window.c:1043
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "Evento eliminado"
 
@@ -1030,6 +1033,12 @@ msgstr "%d de %B"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d de %B"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "Engadir Eve_nto…"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "Engadir Eve_nto"
 
 #~ msgid "Copyright © %d The Calendar authors"
 #~ msgstr "Dereitos de autor © %Id Os autores de Calendario"
