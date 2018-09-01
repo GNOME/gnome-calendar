@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-02-20 22:28+0000\n"
-"PO-Revision-Date: 2018-02-26 17:13+0100\n"
+"POT-Creation-Date: 2018-07-29 04:02+0000\n"
+"PO-Revision-Date: 2018-09-01 18:44+0200\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -24,7 +24,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:640 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -36,7 +36,7 @@ msgstr "Kalender til GNOME"
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "GNOME Kalender er et simpelt og smukt kalenderprogram designet til at passe "
 "nøjagtigt til GNOME-skrivebordet. Ved at genbruge komponenterne, som GNOME-"
@@ -45,12 +45,12 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Vi forsøger at finde den perfekte balance mellem fint udarbejdede funktioner "
 "og brugervenlighed. Ingen overflod, ingen mangler. Du vil kunne bruge "
-"Kalender komfortabelt, som havde du brugt programmet i evigheder!"
+"Kalender, som havde du brugt programmet i evigheder!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
 msgid "Week view"
@@ -121,6 +121,14 @@ msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr "Om vejrudsigter vises, automatiske steder bruges og et stednavn vises"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Følg systemets nattelys"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "Brug GNOMEs nattelysindstillinger for at aktivere nattilstand."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -332,34 +340,30 @@ msgid "Year view"
 msgstr "Årsvisning"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "Tilføj be_givenhed …"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "_Kalendere"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "_Tastaturgenveje"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "_Om"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "_Afslut"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Fra internettet …"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "Ny lokal kalender …"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "Fra fil …"
 
@@ -384,7 +388,7 @@ msgstr "Ingen resultater fundet"
 msgid "Try a different search"
 msgstr "Prøv en anden søgning"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Fortryd"
 
@@ -493,7 +497,7 @@ msgstr "Indtast dine loginoplysninger"
 msgid "Connect"
 msgstr "Tilslut"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:754
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
 #: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
@@ -510,7 +514,7 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "_Vejret"
 
@@ -534,8 +538,8 @@ msgstr "Måned"
 msgid "Year"
 msgstr "År"
 
-#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
-#: src/views/gcal-year-view.c:514
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:281
+#: src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "I dag"
 
@@ -548,11 +552,7 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Søg efter begivenheder"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "Tilføj be_givenhed"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Synkronisér"
 
@@ -564,32 +564,32 @@ msgstr "Ingen begivenheder"
 msgid "Add Event…"
 msgstr "Tilføj begivenhed …"
 
-#: src/gcal-application.c:88
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "Afslut GNOME Kalender"
 
-#: src/gcal-application.c:93
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Vis versionsnummer"
 
-#: src/gcal-application.c:98
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Aktivér fejlsøgningsbeskeder"
 
-#: src/gcal-application.c:103
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Åbn kalender for foregående dato"
 
-#: src/gcal-application.c:108
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Åbn kalender som viser den foregående begivenhed"
 
-#: src/gcal-application.c:595
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Ophavsret © 2012–%d Kalenderens forfattere"
 
-#: src/gcal-application.c:646
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr ""
 "Kris Thomsen\n"
@@ -639,7 +639,7 @@ msgstr "Unavngivet begivenhed"
 
 # "At" kan dårligt oversættes til at dække alle muligheder på dansk (hos/ved/på)
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:420
+#: src/gcal-event-widget.c:424
 #, c-format
 msgid "At %s"
 msgstr "Sted: %s"
@@ -995,7 +995,7 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gcal-utils.c:1093
+#: src/gcal-utils.c:1120
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -1003,42 +1003,42 @@ msgstr ""
 "Begivenheden, du prøver at ændre, er tilbagevendende. De valgte ændringer "
 "skal gælde for:"
 
-#: src/gcal-utils.c:1096
+#: src/gcal-utils.c:1123
 msgid "_Cancel"
 msgstr "_Annullér"
 
-#: src/gcal-utils.c:1098
+#: src/gcal-utils.c:1125
 msgid "_Only This Event"
 msgstr "_Kun denne begivenhed"
 
-#: src/gcal-utils.c:1105
+#: src/gcal-utils.c:1132
 msgid "_Subsequent events"
 msgstr "_Efterfølgende begivenheder"
 
-#: src/gcal-utils.c:1107
+#: src/gcal-utils.c:1134
 msgid "_All events"
 msgstr "A_lle begivenheder"
 
-#: src/gcal-window.c:1039
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "Anden begivenhed slettet"
 
-#: src/gcal-window.c:1043
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "Begivenhed slettet"
 
-#: src/views/gcal-week-grid.c:751 src/views/gcal-week-view.c:275
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/views/gcal-week-header.c:398
+#: src/views/gcal-week-header.c:400
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Anden begivenhed"
 msgstr[1] "%d andre begivenheder"
 
-#: src/views/gcal-week-header.c:934
+#: src/views/gcal-week-header.c:936
 #, c-format
 msgid "week %d"
 msgstr "uge %d"
@@ -1046,16 +1046,22 @@ msgstr "uge %d"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:290
 msgid "%B %d…"
 msgstr "%d. %B …"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:517
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d. %B"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "Tilføj be_givenhed …"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "Tilføj be_givenhed"
 
 #~ msgid "Copyright © %d The Calendar authors"
 #~ msgstr "Ophavsret © %d Kalenderens forfattere"
