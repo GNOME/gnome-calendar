@@ -49,6 +49,14 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2018-09-03" version="3.30.0">
+      <description>
+        <p>GNOME Calendar 3.30.0 release is here!</p>
+        <p>The major highlight of this release is the integration with GNOME's Night Light, making GNOME Calendar use the dark variant of the theme when Night Light is active.</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2018-08-27" version="3.29.92">
       <description>
         <p>This release bring a small improvement and updates many translations.</p>
