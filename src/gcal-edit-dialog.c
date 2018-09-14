@@ -152,16 +152,16 @@ sources_menu_sort_func (gconstpointer a,
 }
 
 static void
-fill_sources_menu (GcalEditDialog *dialog)
+fill_sources_menu (GcalEditDialog *self)
 {
   GList *list;
   GList *aux;
 
-  if (dialog->manager == NULL)
+  if (self->manager == NULL)
     return;
 
-  list = gcal_manager_get_sources (dialog->manager);
-  dialog->sources_menu = g_menu_new ();
+  list = gcal_manager_get_sources (self->manager);
+  self->sources_menu = g_menu_new ();
 
   list = g_list_sort (list, sources_menu_sort_func);
 
@@ -185,7 +185,7 @@ fill_sources_menu (GcalEditDialog *dialog)
       g_menu_item_set_icon (item, G_ICON (pix));
 
       /* set insensitive for read-only calendars */
-      if (!gcal_manager_is_client_writable (dialog->manager, source))
+      if (!gcal_manager_is_client_writable (self->manager, source))
         {
           g_menu_item_set_action_and_target_value (item, "select-calendar", NULL);
         }
@@ -195,17 +195,17 @@ fill_sources_menu (GcalEditDialog *dialog)
                                                    g_variant_new_string (e_source_get_uid (source)));
         }
 
-      g_menu_append_item (dialog->sources_menu, item);
+      g_menu_append_item (self->sources_menu, item);
 
       g_clear_pointer (&surface, cairo_surface_destroy);
       g_object_unref (pix);
       g_object_unref (item);
     }
 
-  gtk_popover_bind_model (GTK_POPOVER (dialog->sources_popover), G_MENU_MODEL (dialog->sources_menu), "edit");
+  gtk_popover_bind_model (GTK_POPOVER (self->sources_popover), G_MENU_MODEL (self->sources_menu), "edit");
 
   /* HACK: show the popover menu icons */
-  fix_popover_menu_icons (GTK_POPOVER (dialog->sources_popover));
+  fix_popover_menu_icons (GTK_POPOVER (self->sources_popover));
 
   g_list_free (list);
 }
@@ -387,24 +387,24 @@ get_date_end (GcalEditDialog *self)
 }
 
 static void
-gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
+gcal_edit_dialog_set_writable (GcalEditDialog *self,
                                gboolean        writable)
 {
   gboolean all_day;
 
-  if (dialog->writable == writable)
+  if (self->writable == writable)
     return;
 
-  all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
+  all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
 
-  gtk_widget_set_sensitive (dialog->start_time_selector, !all_day && writable);
-  gtk_widget_set_sensitive (dialog->end_time_selector, !all_day && writable);
+  gtk_widget_set_sensitive (self->start_time_selector, !all_day && writable);
+  gtk_widget_set_sensitive (self->end_time_selector, !all_day && writable);
 
-  gtk_button_set_label (GTK_BUTTON (dialog->done_button), writable ? _("Save") : _("Done"));
+  gtk_button_set_label (GTK_BUTTON (self->done_button), writable ? _("Save") : _("Done"));
 
-  dialog->writable = writable;
+  self->writable = writable;
 
-  g_object_notify_by_pspec (G_OBJECT (dialog), properties[PROP_WRITABLE]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_WRITABLE]);
 }
 
 static void
@@ -448,11 +448,11 @@ update_location (GtkEntry   *entry,
                  GParamSpec *pspec,
                  gpointer    user_data)
 {
-  GcalEditDialog *dialog;
+  GcalEditDialog *self;
 
-  dialog = GCAL_EDIT_DIALOG (user_data);
+  self = GCAL_EDIT_DIALOG (user_data);
 
-  gcal_event_set_location (dialog->event, gtk_entry_get_text (entry));
+  gcal_event_set_location (self->event, gtk_entry_get_text (entry));
 }
 
 static void
@@ -460,11 +460,11 @@ update_summary (GtkEntry   *entry,
                 GParamSpec *pspec,
                 gpointer    user_data)
 {
-  GcalEditDialog *dialog;
+  GcalEditDialog *self;
 
-  dialog = GCAL_EDIT_DIALOG (user_data);
+  self = GCAL_EDIT_DIALOG (user_data);
 
-  gtk_widget_set_sensitive (dialog->done_button, gtk_entry_get_text_length (entry) > 0);
+  gtk_widget_set_sensitive (self->done_button, gtk_entry_get_text_length (entry) > 0);
 }
 
 static gint
@@ -561,19 +561,19 @@ static void
 action_button_clicked (GtkWidget *widget,
                        gpointer   user_data)
 {
-  GcalEditDialog *dialog;
+  GcalEditDialog *self;
 
   GCAL_ENTRY;
 
-  dialog = GCAL_EDIT_DIALOG (user_data);
+  self = GCAL_EDIT_DIALOG (user_data);
 
-  if (widget == dialog->cancel_button || (widget == dialog->done_button && !dialog->writable))
+  if (widget == self->cancel_button || (widget == self->done_button && !self->writable))
     {
-      gtk_dialog_response (GTK_DIALOG (dialog), GTK_RESPONSE_CANCEL);
+      gtk_dialog_response (GTK_DIALOG (self), GTK_RESPONSE_CANCEL);
     }
-  else if (widget == dialog->delete_button)
+  else if (widget == self->delete_button)
     {
-      gtk_dialog_response (GTK_DIALOG (dialog), GCAL_RESPONSE_DELETE_EVENT);
+      gtk_dialog_response (GTK_DIALOG (self), GCAL_RESPONSE_DELETE_EVENT);
     }
   else
     {
@@ -585,28 +585,28 @@ action_button_clicked (GtkWidget *widget,
       gchar *note_text;
 
       /* Update summary */
-      gcal_event_set_summary (dialog->event, gtk_entry_get_text (GTK_ENTRY (dialog->summary_entry)));
+      gcal_event_set_summary (self->event, gtk_entry_get_text (GTK_ENTRY (self->summary_entry)));
 
       /* Update description */
-      g_object_get (G_OBJECT (gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text))),
+      g_object_get (G_OBJECT (gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->notes_text))),
                     "text", &note_text,
                     NULL);
 
-      gcal_event_set_description (dialog->event, note_text);
+      gcal_event_set_description (self->event, note_text);
       g_free (note_text);
 
-      all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
-      was_all_day = gcal_event_get_all_day (dialog->event);
+      all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
+      was_all_day = gcal_event_get_all_day (self->event);
 
       if (!was_all_day && all_day)
-        gcal_event_save_original_timezones (dialog->event);
+        gcal_event_save_original_timezones (self->event);
 
       /*
        * Update start & end dates. The dates are already translated to the current
        * timezone (unless the event used to be all day, but no longer is).
        */
-      start_date = get_date_start (dialog);
-      end_date = get_date_end (dialog);
+      start_date = get_date_start (self);
+      end_date = get_date_end (self);
 
 #ifdef GCAL_ENABLE_TRACE
         {
@@ -618,7 +618,7 @@ action_button_clicked (GtkWidget *widget,
         }
 #endif
 
-      gcal_event_set_all_day (dialog->event, all_day);
+      gcal_event_set_all_day (self->event, all_day);
 
       /*
        * The end date for multi-day events is exclusive, so we bump it by a day.
@@ -650,15 +650,15 @@ action_button_clicked (GtkWidget *widget,
           end_date = localtime_date;
         }
 
-      gcal_event_set_date_start (dialog->event, start_date);
-      gcal_event_set_date_end (dialog->event, end_date);
+      gcal_event_set_date_start (self->event, start_date);
+      gcal_event_set_date_end (self->event, end_date);
 
       g_clear_pointer (&start_date, g_date_time_unref);
       g_clear_pointer (&end_date, g_date_time_unref);
 
       /* Check Repeat popover and set recurrence-rules accordingly */
-      old_recur = gcal_event_get_recurrence (dialog->event);
-      freq = gtk_combo_box_get_active (GTK_COMBO_BOX (dialog->repeat_combo));
+      old_recur = gcal_event_get_recurrence (self->event);
+      freq = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_combo));
 
       if (freq != GCAL_RECURRENCE_NO_REPEAT)
         {
@@ -666,23 +666,23 @@ action_button_clicked (GtkWidget *widget,
 
           recur = gcal_recurrence_new ();
           recur->frequency = freq;
-          recur->limit_type = gtk_combo_box_get_active (GTK_COMBO_BOX (dialog->repeat_duration_combo));
+          recur->limit_type = gtk_combo_box_get_active (GTK_COMBO_BOX (self->repeat_duration_combo));
 
           if (recur->limit_type == GCAL_RECURRENCE_UNTIL)
-            recur->limit.until = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (dialog->until_date_selector));
+            recur->limit.until = gcal_date_selector_get_date (GCAL_DATE_SELECTOR (self->until_date_selector));
           else if (recur->limit_type == GCAL_RECURRENCE_COUNT)
-            recur->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin));
+            recur->limit.count = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (self->number_of_occurrences_spin));
 
           /* Only apply the new recurrence if it's different from the old one */
           if (!gcal_recurrence_is_equal (old_recur, recur))
             {
               /* Remove the previous recurrence... */
-              remove_recurrence_properties (dialog->event);
+              remove_recurrence_properties (self->event);
 
               /* ... and set the new one */
-              gcal_event_set_recurrence (dialog->event, recur);
+              gcal_event_set_recurrence (self->event, recur);
 
-              dialog->recurrence_changed = TRUE;
+              self->recurrence_changed = TRUE;
             }
 
           g_clear_pointer (&recur, gcal_recurrence_unref);
@@ -690,34 +690,34 @@ action_button_clicked (GtkWidget *widget,
       else
         {
           /* When NO_REPEAT is set, make sure to remove the old recurrent */
-          remove_recurrence_properties (dialog->event);
+          remove_recurrence_properties (self->event);
 
           /* If the recurrence from an recurrent event was removed, mark it as changed */
           if (old_recur && old_recur->frequency != GCAL_RECURRENCE_NO_REPEAT)
-            dialog->recurrence_changed = TRUE;
+            self->recurrence_changed = TRUE;
         }
 
       /* Update the source if needed */
-      if (dialog->selected_source &&
-          gcal_event_get_source (dialog->event) != dialog->selected_source)
+      if (self->selected_source &&
+          gcal_event_get_source (self->event) != self->selected_source)
         {
-          if (dialog->event_is_new)
+          if (self->event_is_new)
             {
-              gcal_event_set_source (dialog->event, dialog->selected_source);
+              gcal_event_set_source (self->event, self->selected_source);
             }
           else
             {
-              gcal_manager_move_event_to_source (dialog->manager,
-                                                 dialog->event,
-                                                 dialog->selected_source);
+              gcal_manager_move_event_to_source (self->manager,
+                                                 self->event,
+                                                 self->selected_source);
             }
         }
 
-      dialog->selected_source = NULL;
+      self->selected_source = NULL;
 
       /* Send the response */
-      gtk_dialog_response (GTK_DIALOG (dialog),
-                           dialog->event_is_new ? GCAL_RESPONSE_CREATE_EVENT : GCAL_RESPONSE_SAVE_EVENT);
+      gtk_dialog_response (GTK_DIALOG (self),
+                           self->event_is_new ? GCAL_RESPONSE_CREATE_EVENT : GCAL_RESPONSE_SAVE_EVENT);
     }
 
   GCAL_EXIT;
@@ -783,15 +783,15 @@ all_day_changed_cb (GtkToggleButton *button,
 static void
 gcal_edit_dialog_finalize (GObject *object)
 {
-  GcalEditDialog *dialog;
+  GcalEditDialog *self;
 
   GCAL_ENTRY;
 
-  dialog = GCAL_EDIT_DIALOG (object);
+  self = GCAL_EDIT_DIALOG (object);
 
-  g_clear_object (&dialog->action_group);
-  g_clear_object (&dialog->manager);
-  g_clear_object (&dialog->event);
+  g_clear_object (&self->action_group);
+  g_clear_object (&self->manager);
+  g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->finalize (object);
 
@@ -1022,24 +1022,24 @@ gcal_edit_dialog_init (GcalEditDialog *self)
 }
 
 static void
-gcal_edit_dialog_clear_data (GcalEditDialog *dialog)
+gcal_edit_dialog_clear_data (GcalEditDialog *self)
 {
   /* summary */
-  g_signal_handlers_block_by_func (dialog->summary_entry, update_summary, dialog);
+  g_signal_handlers_block_by_func (self->summary_entry, update_summary, self);
 
-  gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), "");
+  gtk_entry_set_text (GTK_ENTRY (self->summary_entry), "");
 
-  g_signal_handlers_unblock_by_func (dialog->summary_entry, update_summary, dialog);
+  g_signal_handlers_unblock_by_func (self->summary_entry, update_summary, self);
 
   /* location */
-  g_signal_handlers_block_by_func (dialog->location_entry, update_location, dialog);
+  g_signal_handlers_block_by_func (self->location_entry, update_location, self);
 
-  gtk_entry_set_text (GTK_ENTRY (dialog->location_entry), "");
+  gtk_entry_set_text (GTK_ENTRY (self->location_entry), "");
 
-  g_signal_handlers_unblock_by_func (dialog->location_entry, update_location, dialog);
+  g_signal_handlers_unblock_by_func (self->location_entry, update_location, self);
 
   /* notes */
-  gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text)), "", -1);
+  gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->notes_text)), "", -1);
 }
 
 /*
@@ -1355,17 +1355,17 @@ gcal_edit_dialog_new (void)
  * Sets the time format to be used by @dialog.
  */
 void
-gcal_edit_dialog_set_time_format (GcalEditDialog *dialog,
+gcal_edit_dialog_set_time_format (GcalEditDialog *self,
                                   GcalTimeFormat  time_format)
 {
-  g_return_if_fail (GCAL_IS_EDIT_DIALOG (dialog));
+  g_return_if_fail (GCAL_IS_EDIT_DIALOG (self));
 
-  dialog->time_format = time_format;
+  self->time_format = time_format;
 
-  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->start_time_selector), dialog->time_format);
-  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (dialog->end_time_selector), dialog->time_format);
+  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (self->start_time_selector), self->time_format);
+  gcal_time_selector_set_time_format (GCAL_TIME_SELECTOR (self->end_time_selector), self->time_format);
 
-  g_object_notify_by_pspec (G_OBJECT (dialog), properties[PROP_TIME_FORMAT]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_TIME_FORMAT]);
 }
 
 /**
@@ -1377,12 +1377,12 @@ gcal_edit_dialog_set_time_format (GcalEditDialog *dialog,
  * The @dialog will adapt it's UI elements to reflect that.
  */
 void
-gcal_edit_dialog_set_event_is_new (GcalEditDialog *dialog,
+gcal_edit_dialog_set_event_is_new (GcalEditDialog *self,
                                    gboolean        event_is_new)
 {
-  dialog->event_is_new = event_is_new;
+  self->event_is_new = event_is_new;
 
-  gtk_widget_set_visible (dialog->delete_button, !event_is_new);
+  gtk_widget_set_visible (self->delete_button, !event_is_new);
 }
 
 /**
@@ -1394,11 +1394,11 @@ gcal_edit_dialog_set_event_is_new (GcalEditDialog *dialog,
  * Returns: (transfer none)(nullable): a #GcalEvent
  */
 GcalEvent*
-gcal_edit_dialog_get_event (GcalEditDialog *dialog)
+gcal_edit_dialog_get_event (GcalEditDialog *self)
 {
-  g_return_val_if_fail (GCAL_IS_EDIT_DIALOG (dialog), NULL);
+  g_return_val_if_fail (GCAL_IS_EDIT_DIALOG (self), NULL);
 
-  return dialog->event;
+  return self->event;
 }
 
 /**
@@ -1410,7 +1410,7 @@ gcal_edit_dialog_get_event (GcalEditDialog *dialog)
  * %NULL, the current event information is unset.
  */
 void
-gcal_edit_dialog_set_event (GcalEditDialog *dialog,
+gcal_edit_dialog_set_event (GcalEditDialog *self,
                             GcalEvent      *event)
 {
   GcalRecurrenceLimitType limit_type;
@@ -1426,17 +1426,17 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_EDIT_DIALOG (dialog));
+  g_return_if_fail (GCAL_IS_EDIT_DIALOG (self));
 
-  g_set_object (&dialog->event, event);
+  g_set_object (&self->event, event);
 
-  dialog->setting_event = TRUE;
+  self->setting_event = TRUE;
 
   count_adjustment = gtk_adjustment_new (0, 2, G_MAXDOUBLE, 1, 1, 10);
 
-  gtk_spin_button_set_adjustment (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin), count_adjustment);
+  gtk_spin_button_set_adjustment (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), count_adjustment);
 
-  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin), TRUE);
+  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), TRUE);
 
   /* If we just set the event to NULL, simply send a property notify */
   if (!event)
@@ -1447,31 +1447,31 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   frequency = recur ? recur->frequency : GCAL_RECURRENCE_NO_REPEAT;
   limit_type = recur ? recur->limit_type : GCAL_RECURRENCE_FOREVER;
 
-  gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->repeat_combo), frequency);
-  gtk_combo_box_set_active (GTK_COMBO_BOX (dialog->repeat_duration_combo), limit_type);
+  gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_combo), frequency);
+  gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_duration_combo), limit_type);
 
   if (frequency == GCAL_RECURRENCE_NO_REPEAT)
     {
-      gtk_widget_hide (dialog->repeat_limits_box);
+      gtk_widget_hide (self->repeat_limits_box);
     }
   else
     {
-      gtk_widget_show (dialog->repeat_limits_box);
-      gtk_widget_show (dialog->repeat_duration_combo);
+      gtk_widget_show (self->repeat_limits_box);
+      gtk_widget_show (self->repeat_duration_combo);
     }
 
   switch (limit_type)
     {
     case GCAL_RECURRENCE_COUNT:
-      gtk_spin_button_set_value (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin), recur->limit.count);
+      gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), recur->limit.count);
       break;
 
     case GCAL_RECURRENCE_UNTIL:
-      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->until_date_selector), recur->limit.until);
+      gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->until_date_selector), recur->limit.until);
       break;
 
     case GCAL_RECURRENCE_FOREVER:
-      gtk_spin_button_set_value (GTK_SPIN_BUTTON (dialog->number_of_occurrences_spin), 0);
+      gtk_spin_button_set_value (GTK_SPIN_BUTTON (self->number_of_occurrences_spin), 0);
       break;
     }
 
@@ -1479,29 +1479,29 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   source = gcal_event_get_source (event);
 
   /* Clear event data */
-  gcal_edit_dialog_clear_data (dialog);
+  gcal_edit_dialog_clear_data (self);
 
   /* update sources list */
-  if (dialog->sources_menu != NULL)
-    g_menu_remove_all (dialog->sources_menu);
+  if (self->sources_menu != NULL)
+    g_menu_remove_all (self->sources_menu);
 
-  fill_sources_menu (dialog);
+  fill_sources_menu (self);
 
   /* Load new event data */
   /* summary */
   summary = gcal_event_get_summary (event);
 
   if (g_strcmp0 (summary, "") == 0)
-    gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), _("Unnamed event"));
+    gtk_entry_set_text (GTK_ENTRY (self->summary_entry), _("Unnamed event"));
   else
-    gtk_entry_set_text (GTK_ENTRY (dialog->summary_entry), summary);
+    gtk_entry_set_text (GTK_ENTRY (self->summary_entry), summary);
 
   /* dialog titlebar's title & subtitle */
   surface = get_circle_surface_from_color (gcal_event_get_color (event), 10);
-  gtk_image_set_from_surface (GTK_IMAGE (dialog->source_image), surface);
+  gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
   g_clear_pointer (&surface, cairo_surface_destroy);
 
-  gtk_label_set_label (GTK_LABEL (dialog->subtitle_label), e_source_get_display_name (source));
+  gtk_label_set_label (GTK_LABEL (self->subtitle_label), e_source_get_display_name (source));
 
   /* retrieve start and end dates */
   date_start = gcal_event_get_date_start (event);
@@ -1515,51 +1515,51 @@ gcal_edit_dialog_set_event (GcalEditDialog *dialog,
   date_end = all_day ? g_date_time_add_days (date_end, -1) : g_date_time_to_local (date_end);
 
   /* date */
-  g_signal_handlers_block_by_func (dialog->end_date_selector, sync_datetimes, dialog);
-  g_signal_handlers_block_by_func (dialog->start_date_selector, sync_datetimes, dialog);
+  g_signal_handlers_block_by_func (self->end_date_selector, sync_datetimes, self);
+  g_signal_handlers_block_by_func (self->start_date_selector, sync_datetimes, self);
 
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->start_date_selector), date_start);
-  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (dialog->end_date_selector), date_end);
+  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->start_date_selector), date_start);
+  gcal_date_selector_set_date (GCAL_DATE_SELECTOR (self->end_date_selector), date_end);
 
-  g_signal_handlers_unblock_by_func (dialog->start_date_selector, sync_datetimes, dialog);
-  g_signal_handlers_unblock_by_func (dialog->end_date_selector, sync_datetimes, dialog);
+  g_signal_handlers_unblock_by_func (self->start_date_selector, sync_datetimes, self);
+  g_signal_handlers_unblock_by_func (self->end_date_selector, sync_datetimes, self);
 
   /* time */
-  g_signal_handlers_block_by_func (dialog->end_time_selector, sync_datetimes, dialog);
-  g_signal_handlers_block_by_func (dialog->start_time_selector, sync_datetimes, dialog);
+  g_signal_handlers_block_by_func (self->end_time_selector, sync_datetimes, self);
+  g_signal_handlers_block_by_func (self->start_time_selector, sync_datetimes, self);
 
-  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->start_time_selector), date_start);
-  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (dialog->end_time_selector), date_end);
+  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (self->start_time_selector), date_start);
+  gcal_time_selector_set_time (GCAL_TIME_SELECTOR (self->end_time_selector), date_end);
 
-  g_signal_handlers_unblock_by_func (dialog->start_time_selector, sync_datetimes, dialog);
-  g_signal_handlers_unblock_by_func (dialog->end_time_selector, sync_datetimes, dialog);
+  g_signal_handlers_unblock_by_func (self->start_time_selector, sync_datetimes, self);
+  g_signal_handlers_unblock_by_func (self->end_time_selector, sync_datetimes, self);
 
   /* all_day  */
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (dialog->all_day_check), all_day);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->all_day_check), all_day);
 
   /* recurrence_changed */
-  dialog->recurrence_changed = FALSE;
+  self->recurrence_changed = FALSE;
 
   /* location */
-  gtk_entry_set_text (GTK_ENTRY (dialog->location_entry), gcal_event_get_location (event));
+  gtk_entry_set_text (GTK_ENTRY (self->location_entry), gcal_event_get_location (event));
 
   /* notes */
-  gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (dialog->notes_text)),
+  gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->notes_text)),
                             gcal_event_get_description (event),
                             -1);
 
-  gcal_edit_dialog_set_writable (dialog, gcal_manager_is_client_writable (dialog->manager, source));
+  gcal_edit_dialog_set_writable (self, gcal_manager_is_client_writable (self->manager, source));
 
   g_clear_pointer (&date_start, g_date_time_unref);
   g_clear_pointer (&date_end, g_date_time_unref);
 
   /* Setup the alarms */
-  setup_alarms (dialog);
+  setup_alarms (self);
 
 out:
-  g_object_notify_by_pspec (G_OBJECT (dialog), properties[PROP_EVENT]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_EVENT]);
 
-  dialog->setting_event = FALSE;
+  self->setting_event = FALSE;
 
   GCAL_EXIT;
 }
@@ -1572,14 +1572,14 @@ out:
  * Sets the #GcalManager instance of the @dialog.
  */
 void
-gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
+gcal_edit_dialog_set_manager (GcalEditDialog *self,
                               GcalManager    *manager)
 {
-  g_return_if_fail (GCAL_IS_EDIT_DIALOG (dialog));
+  g_return_if_fail (GCAL_IS_EDIT_DIALOG (self));
   g_return_if_fail (GCAL_IS_MANAGER (manager));
 
-  if (g_set_object (&dialog->manager, manager))
-    g_object_notify_by_pspec (G_OBJECT (dialog), properties[PROP_MANAGER]);
+  if (g_set_object (&self->manager, manager))
+    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_MANAGER]);
 }
 
 gboolean
