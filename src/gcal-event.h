@@ -129,8 +129,6 @@ void                 gcal_event_set_recurrence                   (GcalEvent     
 
 GcalRecurrence*      gcal_event_get_recurrence                   (GcalEvent          *self);
 
-void                 gcal_event_remove_from_cache                (GcalEvent          *self);
-
 G_END_DECLS
 
 #endif /* GCAL_EVENT_H */
