@@ -16,7 +16,7 @@
             <property name="label" translatable="yes">Cancel</property>
             <property name="visible">True</property>
             <property name="can_focus">True</property>
-            <signal name="clicked" handler="action_button_clicked" object="GcalEditDialog" swapped="no"/>
+            <signal name="clicked" handler="on_action_button_clicked_cb" object="GcalEditDialog" swapped="no"/>
           </object>
         </child>
         <child>
@@ -109,7 +109,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="action_button_clicked" object="GcalEditDialog" swapped="no"/>
+            <signal name="clicked" handler="on_action_button_clicked_cb" object="GcalEditDialog" swapped="no"/>
             <style>
               <class name="suggested-action"/>
             </style>
@@ -249,7 +249,7 @@
                     <property name="margin-top">12</property>
                     <property name="editable" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                    <signal name="notify::text" handler="update_summary" object="GcalEditDialog" swapped="no"/>
+                    <signal name="notify::text" handler="on_summary_entry_changed_cb" object="GcalEditDialog" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -353,7 +353,7 @@
                     <property name="draw_indicator">True</property>
                     <property name="label" translatable="yes">All Day</property>
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                    <signal name="toggled" handler="all_day_changed_cb" object="GcalEditDialog" swapped="no"/>
+                    <signal name="toggled" handler="on_all_day_check_changed_cb" object="GcalEditDialog" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -424,7 +424,7 @@
                     <property name="can_focus">False</property>
                     <property name="margin-top">12</property>
                     <property name="hexpand">True</property>
-                    <signal name="changed" handler="repeat_type_changed" object="GcalEditDialog" swapped="no"/>
+                    <signal name="changed" handler="on_repeat_type_changed_cb" object="GcalEditDialog" swapped="no"/>
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                     <items>
                       <item translatable="yes" id="no_repeat">No Repeat</item>
@@ -458,7 +458,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="hexpand">True</property>
-                        <signal name="changed" handler="repeat_duration_changed" object="GcalEditDialog" swapped="no"/>
+                        <signal name="changed" handler="on_repeat_duration_changed_cb" object="GcalEditDialog" swapped="no"/>
                         <items>
                           <item translatable="yes" id="forever">Forever</item>
                           <item translatable="yes" id="number_of_occurrences_spin">No. of occurrences</item>
@@ -509,7 +509,7 @@
                     <property name="secondary_icon_name">find-location-symbolic</property>
                     <property name="editable" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                    <signal name="notify::text" handler="update_location" object="GcalEditDialog" swapped="no"/>
+                    <signal name="notify::text" handler="on_location_entry_changed_cb" object="GcalEditDialog" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left_attach">1</property>
@@ -552,7 +552,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="margin-top">12</property>
-                    <signal name="clicked" handler="action_button_clicked" object="GcalEditDialog" swapped="no"/>
+                    <signal name="clicked" handler="on_action_button_clicked_cb" object="GcalEditDialog" swapped="no"/>
                     <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                     <child>
                       <object class="GtkLabel" id="delete_label">
@@ -597,7 +597,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">5 minutes</property>
-            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalEditDialog" swapped="no" />
           </object>
         </child>
         <child>
@@ -606,7 +606,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">10 minutes</property>
-            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalEditDialog" swapped="no" />
           </object>
         </child>
         <child>
@@ -615,7 +615,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">30 minutes</property>
-            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalEditDialog" swapped="no" />
           </object>
         </child>
         <child>
@@ -624,7 +624,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">1 hour</property>
-            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalEditDialog" swapped="no" />
           </object>
         </child>
         <child>
@@ -632,7 +632,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="text" translatable="yes">1 day</property>
-            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalEditDialog" swapped="no" />
           </object>
         </child>
         <child>
@@ -641,7 +641,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">2 days</property>
-            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalEditDialog" swapped="no" />
           </object>
         </child>
         <child>
@@ -650,7 +650,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">3 days</property>
-            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalEditDialog" swapped="no" />
           </object>
         </child>
         <child>
@@ -659,7 +659,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="text" translatable="yes">1 week</property>
-            <signal name="clicked" handler="add_alarm_button_clicked" object="GcalEditDialog" swapped="no" />
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalEditDialog" swapped="no" />
           </object>
         </child>
       </object>

@@ -113,12 +113,26 @@ struct _GcalEditDialog
   gboolean          setting_event;
 };
 
-static void        on_calendar_selected                          (GSimpleAction     *menu_item,
-                                                                  GVariant          *value,
-                                                                  gpointer           user_data);
+static void          on_calendar_selected_action_cb              (GSimpleAction      *menu_item,
+                                                                  GVariant           *value,
+                                                                  gpointer            user_data);
 
-static void        add_alarm_button_clicked                      (GtkWidget         *button,
-                                                                  GcalEditDialog    *self);
+static void          on_sound_toggle_changed_cb                  (GtkToggleButton    *button,
+                                                                  GtkWidget          *row);
+
+static void          on_summary_entry_changed_cb                 (GtkEntry           *entry,
+                                                                  GParamSpec         *pspec,
+                                                                  GcalEditDialog     *self);
+
+static void          on_location_entry_changed_cb                (GtkEntry           *entry,
+                                                                  GParamSpec         *pspec,
+                                                                  GcalEditDialog     *self);
+
+static void          on_remove_alarm_button_clicked              (GtkButton          *button,
+                                                                  GtkWidget          *row);
+
+static void          on_add_alarm_button_clicked_cb              (GtkWidget          *button,
+                                                                  GcalEditDialog     *self);
 
 G_DEFINE_TYPE (GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
 
@@ -136,8 +150,13 @@ static GParamSpec* properties[N_PROPS] = { NULL, };
 
 static const GActionEntry action_entries[] =
 {
-  { "select-calendar", on_calendar_selected, "s" },
+  { "select-calendar", on_calendar_selected_action_cb, "s" },
 };
+
+
+/*
+ * Auxiliary methods
+ */
 
 static gint
 sources_menu_sort_func (gconstpointer a,
@@ -208,56 +227,6 @@ fill_sources_menu (GcalEditDialog *self)
   fix_popover_menu_icons (GTK_POPOVER (self->sources_popover));
 
   g_list_free (list);
-}
-
-static void
-on_calendar_selected (GSimpleAction *action,
-                      GVariant      *value,
-                      gpointer       user_data)
-{
-  GcalEditDialog *self;
-  GList *list;
-  GList *aux;
-  gchar *uid;
-
-  GCAL_ENTRY;
-
-  self = GCAL_EDIT_DIALOG (user_data);
-  list = gcal_manager_get_sources (self->manager);
-
-  /* retrieve selected calendar uid */
-  g_variant_get (value, "s", &uid);
-
-  /* search for any source with the given UID */
-  for (aux = list; aux != NULL; aux = aux->next)
-    {
-      ESource *source;
-      source = E_SOURCE (aux->data);
-
-      if (g_strcmp0 (e_source_get_uid (source), uid) == 0)
-      {
-        GdkRGBA color;
-        cairo_surface_t *surface;
-
-        /* retrieve color */
-        get_color_name_from_source (source, &color);
-
-        surface = get_circle_surface_from_color (&color, 16);
-        gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
-
-        self->selected_source = source;
-
-        gtk_label_set_label (GTK_LABEL (self->subtitle_label), e_source_get_display_name (source));
-
-        g_clear_pointer (&surface, cairo_surface_destroy);
-        break;
-      }
-    }
-
-  g_free (uid);
-  g_list_free (list);
-
-  GCAL_EXIT;
 }
 
 static void
@@ -387,8 +356,8 @@ get_date_end (GcalEditDialog *self)
 }
 
 static void
-gcal_edit_dialog_set_writable (GcalEditDialog *self,
-                               gboolean        writable)
+set_writable (GcalEditDialog *self,
+              gboolean        writable)
 {
   gboolean all_day;
 
@@ -428,71 +397,6 @@ remove_recurrence_properties (GcalEvent *event)
     }
 
   e_cal_component_rescan (comp);
-}
-
-static void
-transient_size_allocate_cb (GcalEditDialog *self)
-{
-  GtkAllocation alloc;
-  GtkWindow *transient;
-
-  transient = gtk_window_get_transient_for (GTK_WINDOW (self));
-  gtk_widget_get_allocation (GTK_WIDGET (transient), &alloc);
-
-  gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolled_window),
-                                              MAX (400, (gint) (0.75 * alloc.height)));
-}
-
-static void
-update_location (GtkEntry   *entry,
-                 GParamSpec *pspec,
-                 gpointer    user_data)
-{
-  GcalEditDialog *self;
-
-  self = GCAL_EDIT_DIALOG (user_data);
-
-  gcal_event_set_location (self->event, gtk_entry_get_text (entry));
-}
-
-static void
-update_summary (GtkEntry   *entry,
-                GParamSpec *pspec,
-                gpointer    user_data)
-{
-  GcalEditDialog *self;
-
-  self = GCAL_EDIT_DIALOG (user_data);
-
-  gtk_widget_set_sensitive (self->done_button, gtk_entry_get_text_length (entry) > 0);
-}
-
-static gint
-sort_alarms_func (GtkListBoxRow *a,
-                  GtkListBoxRow *b,
-                  gpointer       user_data)
-{
-  ECalComponentAlarm *alarm_a, *alarm_b;
-  GcalEvent *event_a, *event_b;
-  gint minutes_a, minutes_b;
-
-  alarm_a = g_object_get_data (G_OBJECT (a), "alarm");
-  alarm_b = g_object_get_data (G_OBJECT (b), "alarm");
-  event_a = g_object_get_data (G_OBJECT (a), "event");
-  event_b = g_object_get_data (G_OBJECT (b), "event");
-
-  minutes_a = get_alarm_trigger_minutes (event_a, alarm_a);
-  minutes_b = get_alarm_trigger_minutes (event_b, alarm_b);
-
-  return minutes_a - minutes_b;
-}
-
-static void
-fix_reminders_label_height_cb (GtkWidget    *summary_label,
-                               GdkRectangle *allocation,
-                               GtkWidget    *reminders_label)
-{
-  gtk_widget_set_size_request (reminders_label, -1, allocation->height);
 }
 
 static void
@@ -558,8 +462,277 @@ out:
 }
 
 static void
-action_button_clicked (GtkWidget *widget,
-                       gpointer   user_data)
+gcal_edit_dialog_clear_data (GcalEditDialog *self)
+{
+  /* summary */
+  g_signal_handlers_block_by_func (self->summary_entry, on_summary_entry_changed_cb, self);
+
+  gtk_entry_set_text (GTK_ENTRY (self->summary_entry), "");
+
+  g_signal_handlers_unblock_by_func (self->summary_entry, on_summary_entry_changed_cb, self);
+
+  /* location */
+  g_signal_handlers_block_by_func (self->location_entry, on_location_entry_changed_cb, self);
+
+  gtk_entry_set_text (GTK_ENTRY (self->location_entry), "");
+
+  g_signal_handlers_unblock_by_func (self->location_entry, on_location_entry_changed_cb, self);
+
+  /* notes */
+  gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->notes_text)), "", -1);
+}
+
+#define OFFSET(x)             (G_STRUCT_OFFSET (GcalEditDialog, x))
+#define WIDGET_FROM_OFFSET(x) (G_STRUCT_MEMBER (GtkWidget*, self, x))
+
+struct
+{
+  gint minutes;
+  gint button_offset;
+} minutes_button[] = {
+    { 5,     OFFSET (five_minutes_button) },
+    { 10,    OFFSET (ten_minutes_button) },
+    { 30,    OFFSET (thirty_minutes_button) },
+    { 60,    OFFSET (one_hour_button) },
+    { 1440,  OFFSET (one_day_button) },
+    { 2880,  OFFSET (two_days_button) },
+    { 4320,  OFFSET (three_days_button) },
+    { 10080, OFFSET (one_week_button) }
+};
+
+static GtkWidget*
+get_row_for_alarm_trigger_minutes (GcalEditDialog *self,
+                                   gint            minutes)
+{
+  guint i;
+
+  for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
+    {
+      if (minutes_button[i].minutes == minutes)
+        return WIDGET_FROM_OFFSET (minutes_button[i].button_offset);
+    }
+
+  return NULL;
+}
+
+static GtkWidget*
+create_row_for_alarm (GcalEvent          *event,
+                      ECalComponentAlarm *alarm)
+{
+  ECalComponentAlarmAction action;
+  GtkBuilder *builder;
+  GtkWidget *label, *main_box, *row, *remove_button;
+  GtkWidget *volume_button, *volume_icon;
+  gboolean has_sound;
+  gchar *text;
+  gint trigger_minutes;
+
+  trigger_minutes = get_alarm_trigger_minutes (event, alarm);
+
+  /* Something bad happened */
+  if (trigger_minutes < 0)
+    return NULL;
+
+  if (trigger_minutes < 60)
+    {
+      text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE,
+                                           "%d minute before",
+                                           "%d minutes before",
+                                           trigger_minutes),
+                              trigger_minutes);
+    }
+  else if (trigger_minutes < 1440)
+    {
+      text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE,
+                                           "%d hour before",
+                                           "%d hours before",
+                                           trigger_minutes / 60),
+                              trigger_minutes / 60);
+    }
+  else if (trigger_minutes < 10080)
+    {
+      text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE,
+                                           "%d day before",
+                                           "%d days before",
+                                           trigger_minutes / 1440),
+                              trigger_minutes / 1440);
+    }
+  else
+    {
+      text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE,
+                                           "%d week before",
+                                           "%d weeks before",
+                                           trigger_minutes / 10080),
+                              trigger_minutes / 10080);
+    }
+
+  /* The row */
+  row = gtk_list_box_row_new ();
+  gtk_list_box_row_set_activatable (GTK_LIST_BOX_ROW (row), FALSE);
+
+  g_object_set_data (G_OBJECT (row), "alarm", alarm);
+  g_object_set_data (G_OBJECT (row), "event", event);
+
+  /* Build the UI */
+  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/alarm-row.ui");
+
+#define WID(x) (GTK_WIDGET (gtk_builder_get_object (builder, x)))
+
+  label = WID ("label");
+  gtk_label_set_label (GTK_LABEL (label), text);
+
+  /* Retrieves the actions associated to the alarm */
+  e_cal_component_alarm_get_action (alarm, &action);
+
+  /* Updates the volume button to match the action */
+  has_sound = action == E_CAL_COMPONENT_ALARM_AUDIO;
+
+  volume_button = WID ("volume_button");
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (volume_button), has_sound);
+
+  volume_icon = WID ("volume_icon");
+  gtk_image_set_from_icon_name (GTK_IMAGE (volume_icon),
+                                has_sound ? "audio-volume-high-symbolic" : "audio-volume-muted-symbolic",
+                                GTK_ICON_SIZE_BUTTON);
+
+  g_signal_connect (volume_button, "toggled", G_CALLBACK (on_sound_toggle_changed_cb), row);
+
+  /* Remove button */
+  remove_button = WID ("remove_button");
+
+  g_signal_connect (remove_button,
+                    "clicked",
+                    G_CALLBACK (on_remove_alarm_button_clicked),
+                    row);
+
+  main_box = WID ("main_box");
+  gtk_container_add (GTK_CONTAINER (row), main_box);
+
+  gtk_widget_show_all (row);
+
+  g_clear_object (&builder);
+  g_free (text);
+
+#undef WID
+
+  return row;
+}
+
+
+/*
+ * Callbacks
+ */
+
+static void
+on_calendar_selected_action_cb (GSimpleAction *action,
+                                GVariant      *value,
+                                gpointer       user_data)
+{
+  GcalEditDialog *self;
+  GList *list;
+  GList *aux;
+  gchar *uid;
+
+  GCAL_ENTRY;
+
+  self = GCAL_EDIT_DIALOG (user_data);
+  list = gcal_manager_get_sources (self->manager);
+
+  /* retrieve selected calendar uid */
+  g_variant_get (value, "s", &uid);
+
+  /* search for any source with the given UID */
+  for (aux = list; aux != NULL; aux = aux->next)
+    {
+      ESource *source;
+      source = E_SOURCE (aux->data);
+
+      if (g_strcmp0 (e_source_get_uid (source), uid) == 0)
+      {
+        GdkRGBA color;
+        cairo_surface_t *surface;
+
+        /* retrieve color */
+        get_color_name_from_source (source, &color);
+
+        surface = get_circle_surface_from_color (&color, 16);
+        gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
+
+        self->selected_source = source;
+
+        gtk_label_set_label (GTK_LABEL (self->subtitle_label), e_source_get_display_name (source));
+
+        g_clear_pointer (&surface, cairo_surface_destroy);
+        break;
+      }
+    }
+
+  g_free (uid);
+  g_list_free (list);
+
+  GCAL_EXIT;
+}
+
+static void
+transient_size_allocate_cb (GcalEditDialog *self)
+{
+  GtkAllocation alloc;
+  GtkWindow *transient;
+
+  transient = gtk_window_get_transient_for (GTK_WINDOW (self));
+  gtk_widget_get_allocation (GTK_WIDGET (transient), &alloc);
+
+  gtk_scrolled_window_set_max_content_height (GTK_SCROLLED_WINDOW (self->scrolled_window),
+                                              MAX (400, (gint) (0.75 * alloc.height)));
+}
+
+static void
+on_location_entry_changed_cb (GtkEntry       *entry,
+                              GParamSpec     *pspec,
+                              GcalEditDialog *self)
+{
+  gcal_event_set_location (self->event, gtk_entry_get_text (entry));
+}
+
+static void
+on_summary_entry_changed_cb (GtkEntry       *entry,
+                             GParamSpec     *pspec,
+                             GcalEditDialog *self)
+{
+  gtk_widget_set_sensitive (self->done_button, gtk_entry_get_text_length (entry) > 0);
+}
+
+static gint
+sort_alarms_func (GtkListBoxRow *a,
+                  GtkListBoxRow *b,
+                  gpointer       user_data)
+{
+  ECalComponentAlarm *alarm_a, *alarm_b;
+  GcalEvent *event_a, *event_b;
+  gint minutes_a, minutes_b;
+
+  alarm_a = g_object_get_data (G_OBJECT (a), "alarm");
+  alarm_b = g_object_get_data (G_OBJECT (b), "alarm");
+  event_a = g_object_get_data (G_OBJECT (a), "event");
+  event_b = g_object_get_data (G_OBJECT (b), "event");
+
+  minutes_a = get_alarm_trigger_minutes (event_a, alarm_a);
+  minutes_b = get_alarm_trigger_minutes (event_b, alarm_b);
+
+  return minutes_a - minutes_b;
+}
+
+static void
+fix_reminders_label_height_cb (GtkWidget    *summary_label,
+                               GdkRectangle *allocation,
+                               GtkWidget    *reminders_label)
+{
+  gtk_widget_set_size_request (reminders_label, -1, allocation->height);
+}
+
+static void
+on_action_button_clicked_cb (GtkWidget *widget,
+                             gpointer   user_data)
 {
   GcalEditDialog *self;
 
@@ -723,10 +896,9 @@ action_button_clicked (GtkWidget *widget,
   GCAL_EXIT;
 }
 
-
 static void
-repeat_duration_changed (GtkComboBox    *widget,
-                         GcalEditDialog *self)
+on_repeat_duration_changed_cb (GtkComboBox    *widget,
+                               GcalEditDialog *self)
 {
   switch (gtk_combo_box_get_active (widget))
     {
@@ -750,8 +922,8 @@ repeat_duration_changed (GtkComboBox    *widget,
 }
 
 static void
-repeat_type_changed (GtkComboBox    *combobox,
-                     GcalEditDialog *self)
+on_repeat_type_changed_cb (GtkComboBox    *combobox,
+                           GcalEditDialog *self)
 {
   GcalRecurrenceFrequency frequency;
   gboolean has_recurrence;
@@ -770,8 +942,8 @@ repeat_type_changed (GtkComboBox    *combobox,
 }
 
 static void
-all_day_changed_cb (GtkToggleButton *button,
-                    GcalEditDialog  *self)
+on_all_day_check_changed_cb (GtkToggleButton *button,
+                             GcalEditDialog  *self)
 {
   gboolean active = gtk_toggle_button_get_active (button);
 
@@ -779,6 +951,157 @@ all_day_changed_cb (GtkToggleButton *button,
   gtk_widget_set_sensitive (self->end_time_selector, !active);
 }
 
+static void
+on_remove_alarm_button_clicked (GtkButton *button,
+                                GtkWidget *row)
+{
+  ECalComponentAlarm *alarm;
+  GcalEditDialog *self;
+  GtkWidget *alarm_button;
+  GcalEvent *event;
+  gint trigger_minutes;
+
+  self = GCAL_EDIT_DIALOG (gtk_widget_get_toplevel (row));
+  alarm = g_object_get_data (G_OBJECT (row), "alarm");
+  event = g_object_get_data (G_OBJECT (row), "event");
+  trigger_minutes = get_alarm_trigger_minutes (event, alarm);
+
+  /*
+   * Make the button sensitive again
+   */
+  alarm_button = get_row_for_alarm_trigger_minutes (self, trigger_minutes);
+
+  if (alarm_button)
+    gtk_widget_set_sensitive (alarm_button, TRUE);
+
+  gcal_event_remove_alarm (event, trigger_minutes);
+
+  gcal_manager_update_event (self->manager, event, GCAL_RECURRENCE_MOD_THIS_ONLY);
+
+  gtk_widget_destroy (row);
+
+  /*
+   * In order to not allocate a spacing between the listbox and the
+   * add alarms button, we should always keep the listbox:visible property
+   * updated.
+   */
+  gtk_widget_set_visible (self->alarms_listbox, gcal_event_has_alarms (self->event));
+}
+
+static void
+on_sound_toggle_changed_cb (GtkToggleButton *button,
+                            GtkWidget       *row)
+{
+  ECalComponentAlarmAction action;
+  ECalComponentAlarm *alarm;
+  GtkWidget *image;
+  gboolean has_sound;
+
+  alarm = g_object_get_data (G_OBJECT (row), "alarm");
+  image = gtk_bin_get_child (GTK_BIN (button));
+  has_sound = gtk_toggle_button_get_active (button);
+
+  /* Setup the alarm action */
+  action = has_sound ? E_CAL_COMPONENT_ALARM_AUDIO : E_CAL_COMPONENT_ALARM_DISPLAY;
+
+  e_cal_component_alarm_set_action (alarm, action);
+
+  /* Update the volume icon */
+  gtk_image_set_from_icon_name (GTK_IMAGE (image),
+                                has_sound ? "audio-volume-high-symbolic" : "audio-volume-muted-symbolic",
+                                GTK_ICON_SIZE_BUTTON);
+
+}
+
+static void
+setup_alarms (GcalEditDialog *self)
+{
+  GList *alarms, *l;
+  guint i;
+
+  gtk_widget_set_visible (self->alarms_listbox, gcal_event_has_alarms (self->event));
+
+  alarms = gcal_event_get_alarms (self->event);
+
+  /* Remove previous alarms */
+  gtk_container_foreach (GTK_CONTAINER (self->alarms_listbox),
+                         (GtkCallback) gtk_widget_destroy,
+                         NULL);
+
+  /*
+   * We start by making all alarm buttons sensitive,
+   * and only make them insensitive when needed.
+   */
+  for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
+    gtk_widget_set_sensitive (WIDGET_FROM_OFFSET (minutes_button[i].button_offset), TRUE);
+
+  for (l = alarms; l != NULL; l = l->next)
+    {
+      GtkWidget *row;
+      gint minutes;
+
+      row = create_row_for_alarm (self->event, l->data);
+
+      if (!row)
+        continue;
+
+      /* Make already-added alarm buttons insensitive */
+      minutes = get_alarm_trigger_minutes (self->event, l->data);
+
+      for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
+        {
+          if (minutes_button[i].minutes == minutes)
+            gtk_widget_set_sensitive (WIDGET_FROM_OFFSET (minutes_button[i].button_offset), FALSE);
+        }
+
+      /* Add the row */
+      gtk_container_add (GTK_CONTAINER (self->alarms_listbox), row);
+    }
+
+  g_list_free (alarms);
+}
+
+static void
+on_add_alarm_button_clicked_cb (GtkWidget      *button,
+                                GcalEditDialog *self)
+{
+  guint i, minutes;
+
+  /* Search for the button minute */
+  minutes = 0;
+
+  for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
+    {
+      if (WIDGET_FROM_OFFSET (minutes_button[i].button_offset) == button)
+        {
+          minutes = minutes_button[i].minutes;
+          break;
+        }
+    }
+
+  if (minutes == 0)
+    return;
+
+  /* Add the alarm */
+  gcal_event_add_alarm (self->event, minutes, FALSE);
+
+  /*
+   * Instead of manually handling stuff, simply remove all alarms and
+   * add back again.
+   */
+  setup_alarms (self);
+
+  /*
+   * Since we don't allow more than 1 alarm per time, set the button
+   * to insensitive so it cannot be triggered anymore.
+   */
+  gtk_widget_set_sensitive (button, FALSE);
+}
+
+
+/*
+ * Gobject overrides
+ */
 
 static void
 gcal_edit_dialog_finalize (GObject *object)
@@ -885,7 +1208,7 @@ gcal_edit_dialog_set_property (GObject      *object,
       break;
 
     case PROP_WRITABLE:
-      gcal_edit_dialog_set_writable (self, g_value_get_boolean (value));
+      set_writable (self, g_value_get_boolean (value));
       break;
 
     default:
@@ -997,15 +1320,15 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
 
 
   /* callbacks */
-  gtk_widget_class_bind_template_callback (widget_class, action_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, add_alarm_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, fix_reminders_label_height_cb);
-  gtk_widget_class_bind_template_callback (widget_class, all_day_changed_cb);
-  gtk_widget_class_bind_template_callback (widget_class, repeat_duration_changed);
-  gtk_widget_class_bind_template_callback (widget_class, repeat_type_changed);
   gtk_widget_class_bind_template_callback (widget_class, sync_datetimes);
-  gtk_widget_class_bind_template_callback (widget_class, update_summary);
-  gtk_widget_class_bind_template_callback (widget_class, update_location);
+  gtk_widget_class_bind_template_callback (widget_class, on_action_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_add_alarm_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_all_day_check_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_repeat_duration_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_repeat_type_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_summary_entry_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_location_entry_changed_cb);
 }
 
 static void
@@ -1020,319 +1343,6 @@ gcal_edit_dialog_init (GcalEditDialog *self)
                               self,
                               NULL);
 }
-
-static void
-gcal_edit_dialog_clear_data (GcalEditDialog *self)
-{
-  /* summary */
-  g_signal_handlers_block_by_func (self->summary_entry, update_summary, self);
-
-  gtk_entry_set_text (GTK_ENTRY (self->summary_entry), "");
-
-  g_signal_handlers_unblock_by_func (self->summary_entry, update_summary, self);
-
-  /* location */
-  g_signal_handlers_block_by_func (self->location_entry, update_location, self);
-
-  gtk_entry_set_text (GTK_ENTRY (self->location_entry), "");
-
-  g_signal_handlers_unblock_by_func (self->location_entry, update_location, self);
-
-  /* notes */
-  gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (self->notes_text)), "", -1);
-}
-
-/*
- * Alarm related functions
- */
-
-#define OFFSET(x)             (G_STRUCT_OFFSET (GcalEditDialog, x))
-#define WIDGET_FROM_OFFSET(x) (G_STRUCT_MEMBER (GtkWidget*, self, x))
-
-struct
-{
-  gint minutes;
-  gint button_offset;
-} minutes_button[] = {
-    { 5,     OFFSET (five_minutes_button) },
-    { 10,    OFFSET (ten_minutes_button) },
-    { 30,    OFFSET (thirty_minutes_button) },
-    { 60,    OFFSET (one_hour_button) },
-    { 1440,  OFFSET (one_day_button) },
-    { 2880,  OFFSET (two_days_button) },
-    { 4320,  OFFSET (three_days_button) },
-    { 10080, OFFSET (one_week_button) }
-};
-
-static GtkWidget*
-get_row_for_alarm_trigger_minutes (GcalEditDialog *self,
-                                   gint            minutes)
-{
-  guint i;
-
-  for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
-    {
-      if (minutes_button[i].minutes == minutes)
-        return WIDGET_FROM_OFFSET (minutes_button[i].button_offset);
-    }
-
-  return NULL;
-}
-
-static void
-remove_button_clicked (GtkButton *button,
-                       GtkWidget *row)
-{
-  ECalComponentAlarm *alarm;
-  GcalEditDialog *self;
-  GtkWidget *alarm_button;
-  GcalEvent *event;
-  gint trigger_minutes;
-
-  self = GCAL_EDIT_DIALOG (gtk_widget_get_toplevel (row));
-  alarm = g_object_get_data (G_OBJECT (row), "alarm");
-  event = g_object_get_data (G_OBJECT (row), "event");
-  trigger_minutes = get_alarm_trigger_minutes (event, alarm);
-
-  /*
-   * Make the button sensitive again
-   */
-  alarm_button = get_row_for_alarm_trigger_minutes (self, trigger_minutes);
-
-  if (alarm_button)
-    gtk_widget_set_sensitive (alarm_button, TRUE);
-
-  gcal_event_remove_alarm (event, trigger_minutes);
-
-  gcal_manager_update_event (self->manager, event, GCAL_RECURRENCE_MOD_THIS_ONLY);
-
-  gtk_widget_destroy (row);
-
-  /*
-   * In order to not allocate a spacing between the listbox and the
-   * add alarms button, we should always keep the listbox:visible property
-   * updated.
-   */
-  gtk_widget_set_visible (self->alarms_listbox, gcal_event_has_alarms (self->event));
-}
-
-static void
-sound_toggle_changed (GtkToggleButton *button,
-                      GtkWidget       *row)
-{
-  ECalComponentAlarmAction action;
-  ECalComponentAlarm *alarm;
-  GtkWidget *image;
-  gboolean has_sound;
-
-  alarm = g_object_get_data (G_OBJECT (row), "alarm");
-  image = gtk_bin_get_child (GTK_BIN (button));
-  has_sound = gtk_toggle_button_get_active (button);
-
-  /* Setup the alarm action */
-  action = has_sound ? E_CAL_COMPONENT_ALARM_AUDIO : E_CAL_COMPONENT_ALARM_DISPLAY;
-
-  e_cal_component_alarm_set_action (alarm, action);
-
-  /* Update the volume icon */
-  gtk_image_set_from_icon_name (GTK_IMAGE (image),
-                                has_sound ? "audio-volume-high-symbolic" : "audio-volume-muted-symbolic",
-                                GTK_ICON_SIZE_BUTTON);
-
-}
-
-static GtkWidget*
-create_row_for_alarm (GcalEvent          *event,
-                      ECalComponentAlarm *alarm)
-{
-  ECalComponentAlarmAction action;
-  GtkBuilder *builder;
-  GtkWidget *label, *main_box, *row, *remove_button;
-  GtkWidget *volume_button, *volume_icon;
-  gboolean has_sound;
-  gchar *text;
-  gint trigger_minutes;
-
-  trigger_minutes = get_alarm_trigger_minutes (event, alarm);
-
-  /* Something bad happened */
-  if (trigger_minutes < 0)
-    return NULL;
-
-  if (trigger_minutes < 60)
-    {
-      text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE,
-                                           "%d minute before",
-                                           "%d minutes before",
-                                           trigger_minutes),
-                              trigger_minutes);
-    }
-  else if (trigger_minutes < 1440)
-    {
-      text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE,
-                                           "%d hour before",
-                                           "%d hours before",
-                                           trigger_minutes / 60),
-                              trigger_minutes / 60);
-    }
-  else if (trigger_minutes < 10080)
-    {
-      text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE,
-                                           "%d day before",
-                                           "%d days before",
-                                           trigger_minutes / 1440),
-                              trigger_minutes / 1440);
-    }
-  else
-    {
-      text = g_strdup_printf (g_dngettext (GETTEXT_PACKAGE,
-                                           "%d week before",
-                                           "%d weeks before",
-                                           trigger_minutes / 10080),
-                              trigger_minutes / 10080);
-    }
-
-  /* The row */
-  row = gtk_list_box_row_new ();
-  gtk_list_box_row_set_activatable (GTK_LIST_BOX_ROW (row), FALSE);
-
-  g_object_set_data (G_OBJECT (row), "alarm", alarm);
-  g_object_set_data (G_OBJECT (row), "event", event);
-
-  /* Build the UI */
-  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/alarm-row.ui");
-
-#define WID(x) (GTK_WIDGET (gtk_builder_get_object (builder, x)))
-
-  label = WID ("label");
-  gtk_label_set_label (GTK_LABEL (label), text);
-
-  /* Retrieves the actions associated to the alarm */
-  e_cal_component_alarm_get_action (alarm, &action);
-
-  /* Updates the volume button to match the action */
-  has_sound = action == E_CAL_COMPONENT_ALARM_AUDIO;
-
-  volume_button = WID ("volume_button");
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (volume_button), has_sound);
-
-  volume_icon = WID ("volume_icon");
-  gtk_image_set_from_icon_name (GTK_IMAGE (volume_icon),
-                                has_sound ? "audio-volume-high-symbolic" : "audio-volume-muted-symbolic",
-                                GTK_ICON_SIZE_BUTTON);
-
-  g_signal_connect (volume_button,
-                    "toggled",
-                    G_CALLBACK (sound_toggle_changed),
-                    row);
-
-  /* Remove button */
-  remove_button = WID ("remove_button");
-
-  g_signal_connect (remove_button,
-                    "clicked",
-                    G_CALLBACK (remove_button_clicked),
-                    row);
-
-  main_box = WID ("main_box");
-  gtk_container_add (GTK_CONTAINER (row), main_box);
-
-  gtk_widget_show_all (row);
-
-  g_clear_object (&builder);
-  g_free (text);
-
-#undef WID
-
-  return row;
-}
-
-static void
-setup_alarms (GcalEditDialog *self)
-{
-  GList *alarms, *l;
-  guint i;
-
-  gtk_widget_set_visible (self->alarms_listbox, gcal_event_has_alarms (self->event));
-
-  alarms = gcal_event_get_alarms (self->event);
-
-  /* Remove previous alarms */
-  gtk_container_foreach (GTK_CONTAINER (self->alarms_listbox),
-                         (GtkCallback) gtk_widget_destroy,
-                         NULL);
-
-  /*
-   * We start by making all alarm buttons sensitive,
-   * and only make them insensitive when needed.
-   */
-  for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
-    gtk_widget_set_sensitive (WIDGET_FROM_OFFSET (minutes_button[i].button_offset), TRUE);
-
-  for (l = alarms; l != NULL; l = l->next)
-    {
-      GtkWidget *row;
-      gint minutes;
-
-      row = create_row_for_alarm (self->event, l->data);
-
-      if (!row)
-        continue;
-
-      /* Make already-added alarm buttons insensitive */
-      minutes = get_alarm_trigger_minutes (self->event, l->data);
-
-      for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
-        {
-          if (minutes_button[i].minutes == minutes)
-            gtk_widget_set_sensitive (WIDGET_FROM_OFFSET (minutes_button[i].button_offset), FALSE);
-        }
-
-      /* Add the row */
-      gtk_container_add (GTK_CONTAINER (self->alarms_listbox), row);
-    }
-
-  g_list_free (alarms);
-}
-
-static void
-add_alarm_button_clicked (GtkWidget      *button,
-                          GcalEditDialog *self)
-{
-  guint i, minutes;
-
-  /* Search for the button minute */
-  minutes = 0;
-
-  for (i = 0; i < G_N_ELEMENTS (minutes_button); i++)
-    {
-      if (WIDGET_FROM_OFFSET (minutes_button[i].button_offset) == button)
-        {
-          minutes = minutes_button[i].minutes;
-          break;
-        }
-    }
-
-  if (minutes == 0)
-    return;
-
-  /* Add the alarm */
-  gcal_event_add_alarm (self->event, minutes, FALSE);
-
-  /*
-   * Instead of manually handling stuff, simply remove all alarms and
-   * add back again.
-   */
-  setup_alarms (self);
-
-  /*
-   * Since we don't allow more than 1 alarm per time, set the button
-   * to insensitive so it cannot be triggered anymore.
-   */
-  gtk_widget_set_sensitive (button, FALSE);
-}
-
-/* Public API */
 
 /**
  * gcal_edit_dialog_new:
@@ -1548,7 +1558,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
                             gcal_event_get_description (event),
                             -1);
 
-  gcal_edit_dialog_set_writable (self, gcal_manager_is_client_writable (self->manager, source));
+  set_writable (self, gcal_manager_is_client_writable (self->manager, source));
 
   g_clear_pointer (&date_start, g_date_time_unref);
   g_clear_pointer (&date_end, g_date_time_unref);
