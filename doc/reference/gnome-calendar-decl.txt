@@ -413,16 +413,6 @@ GcalEvent          *self
 GcalEvent          *self, const gchar        *summary
 </FUNCTION>
 <FUNCTION>
-<NAME>gcal_event_get_timezone</NAME>
-<RETURNS>GTimeZone *           </RETURNS>
-GcalEvent          *self
-</FUNCTION>
-<FUNCTION>
-<NAME>gcal_event_set_timezone</NAME>
-<RETURNS>void                  </RETURNS>
-GcalEvent          *self, GTimeZone          *timezone
-</FUNCTION>
-<FUNCTION>
 <NAME>gcal_event_get_uid</NAME>
 <RETURNS>const gchar *         </RETURNS>
 GcalEvent          *self

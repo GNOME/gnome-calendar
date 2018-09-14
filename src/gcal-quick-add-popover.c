@@ -686,7 +686,6 @@ edit_or_create_event (GcalQuickAddPopover *self,
 
   event = gcal_event_new (source, component, NULL);
   gcal_event_set_all_day (event, all_day);
-  gcal_event_set_timezone (event, tz);
 
   /* If we clicked edit button, send a signal; otherwise, create the event */
   if (button == self->add_button)

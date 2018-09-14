@@ -106,11 +106,6 @@ const gchar*         gcal_event_get_summary                      (GcalEvent     
 void                 gcal_event_set_summary                      (GcalEvent          *self,
                                                                   const gchar        *summary);
 
-GTimeZone*           gcal_event_get_timezone                     (GcalEvent          *self);
-
-void                 gcal_event_set_timezone                     (GcalEvent          *self,
-                                                                  GTimeZone          *timezone);
-
 const gchar*         gcal_event_get_uid                          (GcalEvent          *self);
 
 /* Utilities */
@@ -128,6 +123,12 @@ void                 gcal_event_set_recurrence                   (GcalEvent     
                                                                   GcalRecurrence     *recur);
 
 GcalRecurrence*      gcal_event_get_recurrence                   (GcalEvent          *self);
+
+void                 gcal_event_save_original_timezones          (GcalEvent          *self);
+
+void                 gcal_event_get_original_timezones           (GcalEvent          *self,
+                                                                  GTimeZone         **start_tz,
+                                                                  GTimeZone         **end_tz);
 
 G_END_DECLS
 

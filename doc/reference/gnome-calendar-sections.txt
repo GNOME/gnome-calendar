@@ -195,8 +195,6 @@ gcal_event_get_source
 gcal_event_set_source
 gcal_event_get_summary
 gcal_event_set_summary
-gcal_event_get_timezone
-gcal_event_set_timezone
 gcal_event_get_uid
 gcal_event_is_multiday
 gcal_event_compare

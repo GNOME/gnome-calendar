@@ -19,6 +19,7 @@
 #define G_LOG_DOMAIN "GcalEvent"
 
 #include "gconstructor.h"
+#include "gcal-debug.h"
 #include "gcal-event.h"
 #include "gcal-utils.h"
 #include "gcal-recurrence.h"
@@ -44,19 +45,6 @@
  * #GcalEvent implements #GInitable, and creating it possibly
  * can generate an error. At the moment, the only error that
  * can be generate is #GCAL_EVENT_ERROR_INVALID_START_DATE.
- *
- * ## Timezones
- *
- * When a #GcalEvent is created, the timezone is parsed from
- * the #ECalComponent. The start and end dates can possibly
- * have different timezones, e.g. when the user is traveling
- * across timezones and the departure time is in a different
- * timezone of the arrival time.
- *
- * For the sake of sanity, gcal_event_get_timezone() returns
- * the timezone of the start date. If you need to precisely
- * check the timezones of the start and end dates, you have
- * to use g_date_time_get_timezone_identifier().
  *
  * ## Example:
  * |[<!-- language="C" -->
@@ -91,7 +79,6 @@ struct _GcalEvent
    */
   gchar              *description;
 
-  GTimeZone          *timezone;
   GDateTime          *dt_start;
   GDateTime          *dt_end;
 
@@ -177,7 +164,10 @@ destroy_event_cache_map (void)
 static GTimeZone*
 get_timezone_from_ical (ECalComponentDateTime *comp)
 {
+  const icaltimezone *zone;
   GTimeZone *tz;
+
+  zone = icaltime_get_timezone (*comp->value);
 
   if (comp->value->is_date)
     {
@@ -188,7 +178,18 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
        */
       tz = g_time_zone_new_utc ();
     }
-  else if (icaltime_get_timezone (*comp->value))
+  else if (comp->tzid)
+    {
+      const gchar *real_tzid;
+
+      real_tzid = comp->tzid;
+
+      if (g_str_has_prefix (comp->tzid, LIBICAL_TZID_PREFIX))
+        real_tzid += strlen (LIBICAL_TZID_PREFIX);
+
+      tz = g_time_zone_new (real_tzid);
+    }
+  else if (zone)
     {
       g_autofree gchar *tzid = NULL;
       gint offset;
@@ -198,26 +199,14 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
       tzid = format_utc_offset (offset);
       tz = g_time_zone_new (tzid);
     }
-  else if (comp->tzid)
-    {
-      g_autofree gchar *tzid = NULL;
-      icaltimezone *zone;
-      gint offset;
-
-      if (g_str_has_prefix (comp->tzid, LIBICAL_TZID_PREFIX))
-        zone = icaltimezone_get_builtin_timezone_from_tzid (comp->tzid);
-      else
-        zone = icaltimezone_get_builtin_timezone (comp->tzid);
-
-      offset = icaltimezone_get_utc_offset (zone, comp->value, NULL);
-      tzid = format_utc_offset (offset);
-
-      tz = g_time_zone_new (tzid);
-    }
   else
     {
       tz = g_time_zone_new_utc ();
     }
+
+  g_assert (tz != NULL);
+
+  GCAL_TRACE_MSG ("%s (%p)", g_time_zone_get_identifier (tz), tz);
 
   return tz;
 }
@@ -360,6 +349,8 @@ gcal_event_set_component_internal (GcalEvent     *self,
           *start.value = icaltime_today ();
         }
 
+      GCAL_TRACE_MSG ("Retrieving start timezone");
+
       date = icaltime_normalize (*start.value);
       zone_start = get_timezone_from_ical (&start);
       date_start = g_date_time_new (zone_start,
@@ -371,10 +362,6 @@ gcal_event_set_component_internal (GcalEvent     *self,
 
       self->dt_start = date_start;
 
-
-      /* The timezone of the event is the timezone of the start date */
-      self->timezone = g_time_zone_ref (zone_start);
-
       /* Setup end date */
       e_cal_component_get_dtend (component, &end);
 
@@ -384,6 +371,8 @@ gcal_event_set_component_internal (GcalEvent     *self,
         }
       else
         {
+          GCAL_TRACE_MSG ("Retrieving end timezone");
+
           date = icaltime_normalize (*end.value);
           zone_end = get_timezone_from_ical (&end);
           date_end = g_date_time_new (zone_end,
@@ -473,7 +462,6 @@ gcal_event_finalize (GObject *object)
 
   g_clear_pointer (&self->dt_start, g_date_time_unref);
   g_clear_pointer (&self->dt_end, g_date_time_unref);
-  g_clear_pointer (&self->timezone, g_time_zone_unref);
   g_clear_pointer (&self->description, g_free);
   g_clear_pointer (&self->alarms, g_hash_table_unref);
   g_clear_pointer (&self->uid, g_free);
@@ -529,10 +517,6 @@ gcal_event_get_property (GObject    *object,
 
     case PROP_SUMMARY:
       g_value_set_string (value, gcal_event_get_summary (self));
-      break;
-
-    case PROP_TIMEZONE:
-      g_value_set_boxed (value, self->timezone);
       break;
 
     case PROP_UID:
@@ -596,10 +580,6 @@ gcal_event_set_property (GObject      *object,
 
     case PROP_SUMMARY:
       gcal_event_set_summary (self, g_value_get_string (value));
-      break;
-
-    case PROP_TIMEZONE:
-      gcal_event_set_timezone (self, g_value_get_boxed (value));
       break;
 
     case PROP_RECURRENCE:
@@ -1411,65 +1391,6 @@ gcal_event_set_summary (GcalEvent   *self,
 }
 
 /**
- * gcal_event_get_timezone:
- * @self: a #GcalEvent
- *
- * Retrieves the event's timezone.
- *
- * Returns: (transfer none): a #GTimeZone
- */
-GTimeZone*
-gcal_event_get_timezone (GcalEvent *self)
-{
-  g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
-
-  return self->timezone;
-}
-
-/**
- * gcal_event_set_timezone:
- * @self: a #GcalEvent
- * @timezone: a #GTimeZone
- *
- * Sets the timezone of the event to @timezone.
- */
-void
-gcal_event_set_timezone (GcalEvent *self,
-                         GTimeZone *timezone)
-{
-  g_return_if_fail (GCAL_IS_EVENT (self));
-
-  if (self->timezone != timezone)
-    {
-      g_clear_pointer (&self->timezone, g_time_zone_unref);
-      self->timezone = g_time_zone_ref (timezone);
-
-      /* Swap the timezone from the component start & end dates*/
-      if (!self->all_day)
-        {
-          GDateTime *new_dtstart;
-
-          new_dtstart = g_date_time_to_timezone (self->dt_start, timezone);
-          gcal_event_set_date_start (self, new_dtstart);
-
-          if (self->dt_end)
-            {
-              GDateTime *new_dtend;
-
-              new_dtend = g_date_time_to_timezone (self->dt_end, timezone);
-              gcal_event_set_date_end (self, new_dtend);
-
-              g_clear_pointer (&new_dtend, g_date_time_unref);
-            }
-
-          g_clear_pointer (&new_dtstart, g_date_time_unref);
-        }
-
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_TIMEZONE]);
-    }
-}
-
-/**
  * gcal_event_get_uid:
  * @self: a #GcalEvent
  *
@@ -1704,4 +1625,150 @@ gcal_event_get_recurrence (GcalEvent *self)
   g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
 
   return self->recurrence;
+}
+
+/**
+ * gcal_event_get_original_timezones:
+ * @self: a #GcalEvent
+ * @out_start_timezone: (direction out)(nullable): the return location for the
+ * previously stored start date timezone
+ * @out_end_timezone: (direction out)(nullable): the return location for the
+ * previously stored end date timezone
+ *
+ * Retrieves the start and end date timezones previously stored by
+ * gcal_event_save_original_timezones().
+ *
+ * If gcal_event_save_original_timezones() wasn't called before,
+ * it will use local timezones instead.
+ */
+void
+gcal_event_get_original_timezones (GcalEvent  *self,
+                                   GTimeZone **out_start_timezone,
+                                   GTimeZone **out_end_timezone)
+{
+  g_autoptr (GTimeZone) original_start_tz = NULL;
+  g_autoptr (GTimeZone) original_end_tz = NULL;
+  icalcomponent *ical_comp;
+  icalproperty *property;
+
+  g_return_if_fail (GCAL_IS_EVENT (self));
+  g_assert (self->component != NULL);
+
+  ical_comp = e_cal_component_get_icalcomponent (self->component);
+
+  for (property = icalcomponent_get_first_property (ical_comp, ICAL_X_PROPERTY);
+       property;
+       property = icalcomponent_get_next_property (ical_comp, ICAL_X_PROPERTY))
+    {
+      const gchar *value;
+
+      if (original_start_tz && original_end_tz)
+        break;
+
+      if (g_strcmp0 (icalproperty_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-START") == 0)
+        {
+          value = icalproperty_get_x (property);
+          original_start_tz = g_time_zone_new (value);
+
+          GCAL_TRACE_MSG ("Found X-GNOME-CALENDAR-ORIGINAL-TZ-START=%s", value);
+        }
+      else if (g_strcmp0 (icalproperty_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-END") == 0)
+        {
+          value = icalproperty_get_x (property);
+          original_end_tz = g_time_zone_new (value);
+
+          GCAL_TRACE_MSG ("Found X-GNOME-CALENDAR-ORIGINAL-TZ-END=%s", value);
+        }
+    }
+
+  if (!original_start_tz)
+    original_start_tz = g_time_zone_new_local ();
+
+  if (!original_end_tz)
+    original_end_tz = g_time_zone_new_local ();
+
+  g_assert (original_start_tz != NULL);
+  g_assert (original_end_tz != NULL);
+
+  if (out_start_timezone)
+    *out_start_timezone = g_steal_pointer (&original_start_tz);
+
+  if (out_end_timezone)
+    *out_end_timezone = g_steal_pointer (&original_end_tz);
+}
+
+/**
+ * gcal_event_save_original_timezones:
+ * @self: a #GcalEvent
+ *
+ * Stores the current timezones of the start and end dates of @self
+ * into separate, GNOME Calendar specific fields. These fields can
+ * be used by gcal_event_get_original_timezones() to retrieve the
+ * previous timezones of the event later.
+ */
+void
+gcal_event_save_original_timezones (GcalEvent *self)
+{
+  icalcomponent *ical_comp;
+  icalproperty *property;
+  GTimeZone *tz;
+  gboolean has_original_start_tz;
+  gboolean has_original_end_tz;
+
+  GCAL_ENTRY;
+
+  g_return_if_fail (GCAL_IS_EVENT (self));
+  g_assert (self->component != NULL);
+
+  has_original_start_tz = FALSE;
+  has_original_end_tz = FALSE;
+  ical_comp = e_cal_component_get_icalcomponent (self->component);
+
+  for (property = icalcomponent_get_first_property (ical_comp, ICAL_X_PROPERTY);
+       property;
+       property = icalcomponent_get_next_property (ical_comp, ICAL_X_PROPERTY))
+    {
+      if (g_strcmp0 (icalproperty_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-START") == 0)
+        {
+          tz = g_date_time_get_timezone (self->dt_start);
+          icalproperty_set_x (property, g_time_zone_get_identifier (tz));
+
+          GCAL_TRACE_MSG ("Reusing X-GNOME-CALENDAR-ORIGINAL-TZ-START property with %s", icalproperty_get_x (property));
+
+          has_original_start_tz = TRUE;
+        }
+      else if (g_strcmp0 (icalproperty_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-END") == 0)
+        {
+          tz = g_date_time_get_timezone (self->dt_end);
+          icalproperty_set_x (property, g_time_zone_get_identifier (tz));
+
+          GCAL_TRACE_MSG ("Reusing X-GNOME-CALENDAR-ORIGINAL-TZ-END property with %s", icalproperty_get_x (property));
+
+          has_original_end_tz = TRUE;
+        }
+    }
+
+  if (!has_original_start_tz)
+    {
+      tz = g_date_time_get_timezone (self->dt_start);
+      property = icalproperty_new_x (g_time_zone_get_identifier (tz));
+      icalproperty_set_x_name (property, "X-GNOME-CALENDAR-ORIGINAL-TZ-START");
+
+      icalcomponent_add_property (ical_comp, property);
+
+      GCAL_TRACE_MSG ("Added new X-GNOME-CALENDAR-ORIGINAL-TZ-START property with %s", icalproperty_get_x (property));
+    }
+
+  if (!has_original_end_tz)
+    {
+      tz = g_date_time_get_timezone (self->dt_end);
+      property = icalproperty_new_x (g_time_zone_get_identifier (tz));
+      icalproperty_set_x_name (property, "X-GNOME-CALENDAR-ORIGINAL-TZ-END");
+
+      icalcomponent_add_property (ical_comp, property);
+
+      GCAL_TRACE_MSG ("Added new X-GNOME-CALENDAR-ORIGINAL-TZ-END property with %s", icalproperty_get_x (property));
+    }
+
+  GCAL_EXIT;
 }

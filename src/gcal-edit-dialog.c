@@ -261,6 +261,132 @@ on_calendar_selected (GSimpleAction *action,
 }
 
 static void
+find_best_timezones_for_event (GcalEditDialog  *self,
+                               GTimeZone      **out_tz_start,
+                               GTimeZone      **out_tz_end)
+{
+  gboolean was_all_day;
+  gboolean all_day;
+
+  /* Update all day */
+  all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
+  was_all_day = gcal_event_get_all_day (self->event);
+
+  GCAL_TRACE_MSG ("Finding best timezone with all_day=%d, was_all_day=%d, event_is_new=%d",
+                  all_day,
+                  was_all_day,
+                  self->event_is_new);
+
+  if (!self->event_is_new && was_all_day && !all_day)
+    {
+      GCAL_TRACE_MSG ("Using original event timezones");
+
+      gcal_event_get_original_timezones (self->event, out_tz_start, out_tz_end);
+      return;
+    }
+
+  if (all_day)
+    {
+      GCAL_TRACE_MSG ("Using UTC timezones");
+
+      if (out_tz_start)
+        *out_tz_start = g_time_zone_new_utc ();
+
+      if (out_tz_end)
+        *out_tz_end = g_time_zone_new_utc ();
+    }
+  else
+    {
+      g_autoptr (GTimeZone) tz_start = NULL;
+      g_autoptr (GTimeZone) tz_end = NULL;
+
+      if (self->event_is_new)
+        {
+          GCAL_TRACE_MSG ("Using the local timezone");
+
+          tz_start = g_time_zone_new_local ();
+          tz_end = g_time_zone_new_local ();
+        }
+      else
+        {
+          GCAL_TRACE_MSG ("Using the current timezones");
+
+          tz_start = g_time_zone_ref (g_date_time_get_timezone (gcal_event_get_date_start (self->event)));
+          tz_end = g_time_zone_ref (g_date_time_get_timezone (gcal_event_get_date_end (self->event)));
+        }
+
+      if (out_tz_start)
+        *out_tz_start = g_steal_pointer (&tz_start);
+
+      if (out_tz_end)
+        *out_tz_end = g_steal_pointer (&tz_end);
+    }
+}
+
+static GDateTime*
+return_datetime_for_widgets (GcalEditDialog   *self,
+                             GTimeZone        *timezone,
+                             GcalDateSelector *date_selector,
+                             GcalTimeSelector *time_selector)
+{
+  g_autoptr (GDateTime) date_in_local_tz = NULL;
+  g_autoptr (GDateTime) date_in_best_tz = NULL;
+  GDateTime *date;
+  GDateTime *time;
+  GDateTime *retval;
+  gboolean all_day;
+
+  all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
+  date = gcal_date_selector_get_date (date_selector);
+  time = gcal_time_selector_get_time (time_selector);
+
+  date_in_local_tz = g_date_time_new_local (g_date_time_get_year (date),
+                                            g_date_time_get_month (date),
+                                            g_date_time_get_day_of_month (date),
+                                            all_day ? 0 : g_date_time_get_hour (time),
+                                            all_day ? 0 : g_date_time_get_minute (time),
+                                            0);
+
+  date_in_best_tz = g_date_time_to_timezone (date_in_local_tz, timezone);
+
+  retval = g_date_time_new (timezone,
+                            g_date_time_get_year (date_in_best_tz),
+                            g_date_time_get_month (date_in_best_tz),
+                            g_date_time_get_day_of_month (date_in_best_tz),
+                            all_day ? 0 : g_date_time_get_hour (date_in_best_tz),
+                            all_day ? 0 : g_date_time_get_minute (date_in_best_tz),
+                            0);
+
+  return retval;
+}
+
+static GDateTime*
+get_date_start (GcalEditDialog *self)
+{
+  g_autoptr (GTimeZone) start_tz = NULL;
+
+  find_best_timezones_for_event (self, &start_tz, NULL);
+
+  return return_datetime_for_widgets (self,
+                                      start_tz,
+                                      GCAL_DATE_SELECTOR (self->start_date_selector),
+                                      GCAL_TIME_SELECTOR (self->start_time_selector));
+}
+
+static GDateTime*
+get_date_end (GcalEditDialog *self)
+{
+  g_autoptr (GTimeZone) end_tz = NULL;
+
+  find_best_timezones_for_event (self, NULL, &end_tz);
+
+  return return_datetime_for_widgets (self,
+                                      end_tz,
+                                      GCAL_DATE_SELECTOR (self->end_date_selector),
+                                      GCAL_TIME_SELECTOR (self->end_time_selector));
+}
+
+static void
 gcal_edit_dialog_set_writable (GcalEditDialog *dialog,
                                gboolean        writable)
 {
@@ -382,8 +508,8 @@ sync_datetimes (GcalEditDialog *self,
 
   is_start = (widget == self->start_time_selector || widget == self->start_date_selector);
   is_all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
-  start = gcal_edit_dialog_get_date_start (self);
-  end = gcal_edit_dialog_get_date_end (self);
+  start = get_date_start (self);
+  end = get_date_end (self);
 
   /* The date is valid, no need to update the fields */
   if (g_date_time_compare (end, start) >= 0)
@@ -469,28 +595,30 @@ action_button_clicked (GtkWidget *widget,
       gcal_event_set_description (dialog->event, note_text);
       g_free (note_text);
 
-      /* Update all day */
       all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
       was_all_day = gcal_event_get_all_day (dialog->event);
 
-      gcal_event_set_all_day (dialog->event, all_day);
-
-      /* By definition, all day events are always UTC */
-      if (all_day)
-        {
-          GTimeZone *utc = g_time_zone_new_utc ();
-
-          gcal_event_set_timezone (dialog->event, utc);
-
-          g_clear_pointer (&utc, g_time_zone_unref);
-        }
+      if (!was_all_day && all_day)
+        gcal_event_save_original_timezones (dialog->event);
 
       /*
        * Update start & end dates. The dates are already translated to the current
        * timezone (unless the event used to be all day, but no longer is).
        */
-      start_date = gcal_edit_dialog_get_date_start (dialog);
-      end_date = gcal_edit_dialog_get_date_end (dialog);
+      start_date = get_date_start (dialog);
+      end_date = get_date_end (dialog);
+
+#ifdef GCAL_ENABLE_TRACE
+        {
+          g_autofree gchar *start_dt_string = g_date_time_format (start_date, "%x %X %z");
+          g_autofree gchar *end_dt_string = g_date_time_format (end_date, "%x %X %z");
+
+          g_debug ("New start date: %s", start_dt_string);
+          g_debug ("New end date: %s", end_dt_string);
+        }
+#endif
+
+      gcal_event_set_all_day (dialog->event, all_day);
 
       /*
        * The end date for multi-day events is exclusive, so we bump it by a day.
@@ -1453,99 +1581,6 @@ gcal_edit_dialog_set_manager (GcalEditDialog *dialog,
   if (g_set_object (&dialog->manager, manager))
     g_object_notify_by_pspec (G_OBJECT (dialog), properties[PROP_MANAGER]);
 }
-
-static GDateTime*
-return_datetime_for_widgets (GcalEditDialog   *dialog,
-                             GcalDateSelector *date_selector,
-                             GcalTimeSelector *time_selector)
-{
-  GTimeZone *tz;
-  GDateTime *date;
-  GDateTime *time;
-  GDateTime *retval;
-  gboolean all_day;
-
-  /* Use UTC timezone for All Day events, otherwise use the event's timezone */
-  all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (dialog->all_day_check));
-  if (all_day)
-    {
-      tz = g_time_zone_new_utc ();
-    }
-  else
-    {
-      if (gcal_event_get_timezone (dialog->event))
-        tz = g_time_zone_ref (gcal_event_get_timezone (dialog->event));
-      else
-        tz = g_time_zone_new_local ();
-    }
-
-  date = gcal_date_selector_get_date (date_selector);
-  time = gcal_time_selector_get_time (time_selector);
-
-  retval = g_date_time_new (tz,
-                            g_date_time_get_year (date),
-                            g_date_time_get_month (date),
-                            g_date_time_get_day_of_month (date),
-                            g_date_time_get_hour (time),
-                            g_date_time_get_minute (time),
-                            0);
-
-  /*
-   * If the event is not all day, the timezone may be different from UTC or
-   * local. In any case, since we're editing the event in the current timezone,
-   * we should always correct the timezone to the event's timezone.
-   */
-  if (!all_day)
-    {
-      GDateTime *aux = retval;
-
-      retval = g_date_time_to_timezone (aux, gcal_event_get_timezone (dialog->event));
-
-      g_clear_pointer (&aux, g_date_time_unref);
-    }
-
-  g_clear_pointer (&tz, g_time_zone_unref);
-
-  return retval;
-}
-
-/**
- * gcal_edit_dialog_get_date_start:
- * @dialog: a #GcalEditDialog
- *
- * Retrieves the start date of the edit dialog.
- *
- * Returns: (transfer full): a #GDateTime
- */
-GDateTime*
-gcal_edit_dialog_get_date_start (GcalEditDialog *dialog)
-{
-
-  g_return_val_if_fail (GCAL_IS_EDIT_DIALOG (dialog), NULL);
-
-  return return_datetime_for_widgets (dialog,
-                                      GCAL_DATE_SELECTOR (dialog->start_date_selector),
-                                      GCAL_TIME_SELECTOR (dialog->start_time_selector));
-}
-
-/**
- * gcal_edit_dialog_get_date_end:
- * @dialog: a #GcalEditDialog
- *
- * Retrieves the end date of the edit dialog.
- *
- * Returns: (transfer full): a #GDateTime
- */
-GDateTime*
-gcal_edit_dialog_get_date_end (GcalEditDialog *dialog)
-{
-  g_return_val_if_fail (GCAL_IS_EDIT_DIALOG (dialog), NULL);
-
-  return return_datetime_for_widgets (dialog,
-                                      GCAL_DATE_SELECTOR (dialog->end_date_selector),
-                                      GCAL_TIME_SELECTOR (dialog->end_time_selector));
-}
-
 
 gboolean
 gcal_edit_dialog_get_recurrence_changed (GcalEditDialog *self)

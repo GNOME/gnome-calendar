@@ -687,12 +687,13 @@ allocate_multiday_events (GcalMonthView *self,
            * have to worry about the dates, since GcalEventWidget performs
            * some checks and only applies the dates when it's valid.
            */
-          dt_start = g_date_time_new (gcal_event_get_timezone (event),
+          dt_start = g_date_time_new (g_date_time_get_timezone (gcal_event_get_date_start (event)),
                                       self->date->year,
                                       self->date->month,
                                       day,
                                       0, 0, 0);
 
+          /* FIXME: use end date's timezone here */
           dt_end = g_date_time_add_days (dt_start, length);
 
           gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (child_widget), dt_start);

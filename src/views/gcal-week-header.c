@@ -1547,7 +1547,7 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
        * The only case where we don't touch the timezone is for
        * timed, multiday events.
        */
-      tmp_dt = g_date_time_new (gcal_event_get_timezone (event),
+      tmp_dt = g_date_time_new (g_date_time_get_timezone (start_date),
                                 g_date_time_get_year (week_start),
                                 g_date_time_get_month (week_start),
                                 g_date_time_get_day_of_month (week_start),
