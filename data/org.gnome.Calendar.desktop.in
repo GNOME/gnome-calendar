@@ -10,5 +10,4 @@ StartupNotify=true
 Categories=GNOME;GTK;Office;Calendar;Core;
 # Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 Keywords=Calendar;Event;Reminder;
-MimeType=text/calendar;
 DBusActivatable=true
