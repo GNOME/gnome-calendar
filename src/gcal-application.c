@@ -350,6 +350,8 @@ gcal_application_startup (GApplication *app)
 
   self = GCAL_APPLICATION (app);
 
+  gtk_window_set_default_icon_name ("org.gnome.Calendar");
+
   /* add actions */
   g_action_map_add_action_entries (G_ACTION_MAP (app),
                                    gcal_app_entries,
