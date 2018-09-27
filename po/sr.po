@@ -10,8 +10,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-02-05 16:35+0000\n"
-"PO-Revision-Date: 2018-02-18 16:10+0100\n"
+"POT-Creation-Date: 2018-07-29 04:02+0000\n"
+"PO-Revision-Date: 2018-08-19 11:15+0200\n"
 "Last-Translator: Марко М. Костић <marko.m.kostic@gmail.com>\n"
 "Language-Team: Serbian <(nothing)>\n"
 "Language: sr\n"
@@ -21,11 +21,11 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=n==1? 3 : n%10==1 && n%100!=11 ? 0 : n"
 "%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Project-Style: gnome\n"
-"X-Generator: Poedit 2.0.3\n"
+"X-Generator: Poedit 2.0.6\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:640 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "Календар"
 
@@ -37,7 +37,7 @@ msgstr "Календар за Гном"
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "Гномов календар је једноставан и леп програм, осмишљен тако да се савршено "
 "уклопи у Гномову радну површ. Користећи састојке на којима је изграђена "
@@ -46,7 +46,7 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Циљ нам је да пронађемо савршену равнотежу између лепо одрађених функција и "
@@ -82,49 +82,57 @@ msgstr ""
 "Calendar;Event;Reminder;Календар;Догађај;Подсетник;Kalendar;Događaj;"
 "Podsetnik;Dogadjaj;"
 
-#: data/org.gnome.calendar.gschema.xml:6
+#: data/org.gnome.calendar.gschema.xml.in:6
 msgid "Window maximized"
 msgstr "Увећан прозор"
 
-#: data/org.gnome.calendar.gschema.xml:7
+#: data/org.gnome.calendar.gschema.xml.in:7
 msgid "Window maximized state"
 msgstr "Стање увећаног прозора"
 
-#: data/org.gnome.calendar.gschema.xml:11
+#: data/org.gnome.calendar.gschema.xml.in:11
 msgid "Window size"
 msgstr "Величина прозора"
 
-#: data/org.gnome.calendar.gschema.xml:12
+#: data/org.gnome.calendar.gschema.xml.in:12
 msgid "Window size (width and height)."
 msgstr "Величина прозора (ширина и висина)."
 
-#: data/org.gnome.calendar.gschema.xml:16
+#: data/org.gnome.calendar.gschema.xml.in:16
 msgid "Window position"
 msgstr "Положај прозора"
 
-#: data/org.gnome.calendar.gschema.xml:17
+#: data/org.gnome.calendar.gschema.xml.in:17
 msgid "Window position (x and y)."
 msgstr "Положај прозора (положено и усправно)."
 
-#: data/org.gnome.calendar.gschema.xml:21
+#: data/org.gnome.calendar.gschema.xml.in:21
 msgid "Type of the active view"
 msgstr "Врста радног приказа"
 
-#: data/org.gnome.calendar.gschema.xml:22
+#: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Врста приказа радног прозора, подразумвано је: месечни приказ"
 
-#: data/org.gnome.calendar.gschema.xml:26
+#: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
 msgstr "Подешавање услуге временске прогнозе"
 
-#: data/org.gnome.calendar.gschema.xml:27
+#: data/org.gnome.calendar.gschema.xml.in:27
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr ""
 "Да ли се временски извештаји приказују, да ли се аутоматска локација и назив "
 "локације користе"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Прати ноћно светло система"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "Користи подешавање ноћног светла из Гнома за покретање ноћног режима."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -336,34 +344,30 @@ msgid "Year view"
 msgstr "Годишњи преглед"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "Додај _догађај…"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "_Календари"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "Пречице _тастатуре"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "_О програму"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "_Изађи"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Са веба…"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "Нови локални календар…"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "Из датотеке…"
 
@@ -388,7 +392,7 @@ msgstr "Нема резултата"
 msgid "Try a different search"
 msgstr "Покушајте другачију претрагу"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Опозови"
 
@@ -497,7 +501,7 @@ msgstr "Унесите ваше податке за приступ"
 msgid "Connect"
 msgstr "Повежи се"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:754
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
 #: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
@@ -514,7 +518,7 @@ msgstr "преподне"
 msgid "PM"
 msgstr "поподне"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "_Време"
 
@@ -538,8 +542,8 @@ msgstr "Месец"
 msgid "Year"
 msgstr "Година"
 
-#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
-#: src/views/gcal-year-view.c:514
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:281
+#: src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "Данас"
 
@@ -552,11 +556,7 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Тражи догађаје"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "Додај _догађај"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Усагласи"
 
@@ -568,32 +568,32 @@ msgstr "Без догађаја"
 msgid "Add Event…"
 msgstr "Додај догађај…"
 
-#: src/gcal-application.c:88
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "Изађи из Гномовог календара"
 
-#: src/gcal-application.c:93
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Приказује број издања"
 
-#: src/gcal-application.c:98
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Омогући поруке за поправљање грешака"
 
-#: src/gcal-application.c:103
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Отвара календар за прошли датум"
 
-#: src/gcal-application.c:108
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Отвара календар који приказује прошли догађај"
 
-#: src/gcal-application.c:595
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Ауторска права © 2012–%d аутори Календара"
 
-#: src/gcal-application.c:646
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr ""
 "Мирослав Николић <miroslavnikolic@rocketmail.com>\n"
@@ -648,7 +648,7 @@ msgid "Unnamed event"
 msgstr "Неименовани догађај"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:419
+#: src/gcal-event-widget.c:424
 #, c-format
 msgid "At %s"
 msgstr "У %s"
@@ -763,14 +763,17 @@ msgid "December"
 msgstr "децембар"
 
 #: src/gcal-quick-add-popover.c:286
+#, c-format
 msgid "from Today"
 msgstr "од данас"
 
 #: src/gcal-quick-add-popover.c:290
+#, c-format
 msgid "from Tomorrow"
 msgstr "од сутра"
 
 #: src/gcal-quick-add-popover.c:294
+#, c-format
 msgid "from Yesterday"
 msgstr "од јуче"
 
@@ -784,14 +787,17 @@ msgid "from %1$s %2$s"
 msgstr "од %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:323
+#, c-format
 msgid "to Today"
 msgstr "до данас"
 
 #: src/gcal-quick-add-popover.c:327
+#, c-format
 msgid "to Tomorrow"
 msgstr "до сутра"
 
 #: src/gcal-quick-add-popover.c:331
+#, c-format
 msgid "to Yesterday"
 msgstr "до јуче"
 
@@ -811,14 +817,17 @@ msgid "New Event %1$s %2$s"
 msgstr "Нови догађај %1$s %2$s"
 
 #: src/gcal-quick-add-popover.c:373
+#, c-format
 msgid "New Event Today"
 msgstr "Нови догађај данас"
 
 #: src/gcal-quick-add-popover.c:377
+#, c-format
 msgid "New Event Tomorrow"
 msgstr "Нови догађај сутра"
 
 #: src/gcal-quick-add-popover.c:381
+#, c-format
 msgid "New Event Yesterday"
 msgstr "Нови догађај јуче"
 
@@ -971,7 +980,7 @@ msgstr "%s ПрП"
 msgid "%s PM"
 msgstr "%s ПоП"
 
-#: src/gcal-utils.c:1093
+#: src/gcal-utils.c:1120
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -979,35 +988,35 @@ msgstr ""
 "Догађај који покушавате да измените се понавља. Измене коje желите да "
 "направите се односе на:"
 
-#: src/gcal-utils.c:1096
+#: src/gcal-utils.c:1123
 msgid "_Cancel"
 msgstr "_Откажи"
 
-#: src/gcal-utils.c:1098
+#: src/gcal-utils.c:1125
 msgid "_Only This Event"
 msgstr "_Само за овај догађај"
 
-#: src/gcal-utils.c:1105
+#: src/gcal-utils.c:1132
 msgid "_Subsequent events"
 msgstr "_Пратећи догађаји"
 
-#: src/gcal-utils.c:1107
+#: src/gcal-utils.c:1134
 msgid "_All events"
 msgstr "Сви догађаји"
 
-#: src/gcal-window.c:1039
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "Други догађај је обрисан"
 
-#: src/gcal-window.c:1043
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "Догађај је обрисан"
 
-#: src/views/gcal-week-grid.c:751 src/views/gcal-week-view.c:275
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "00 ПрП"
 
-#: src/views/gcal-week-header.c:398
+#: src/views/gcal-week-header.c:400
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1016,7 +1025,7 @@ msgstr[1] "Друга %d догађаја"
 msgstr[2] "Других %d догађаја"
 msgstr[3] "Други догађај"
 
-#: src/views/gcal-week-header.c:934
+#: src/views/gcal-week-header.c:936
 #, c-format
 msgid "week %d"
 msgstr "недеља %d"
@@ -1024,16 +1033,22 @@ msgstr "недеља %d"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:290
 msgid "%B %d…"
 msgstr "%d. %B"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:517
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d. %B"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "Додај _догађај…"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "Додај _догађај"
 
 #~ msgid "Copyright © %d The Calendar authors"
 #~ msgstr "Ауторска права © %d аутори Календара"
