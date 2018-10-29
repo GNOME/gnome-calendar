@@ -61,7 +61,7 @@ msgstr "행사 검색"
 msgid "Calendar management"
 msgstr "달력 관리자"
 
-#: data/org.gnome.Calendar.desktop.in:4
+#: data/org.gnome.Calendar.desktop.in:3
 msgid "Access and manage your calendars"
 msgstr "달력에 접근하고 관리합니다"
 
