@@ -49,6 +49,12 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2018-11-02" version="3.30.1">
+      <description>
+        <p>GNOME Calendar 3.30.1 fixes a problem some users were facing with timezone management.</p>
+      </description>
+    </release>
+
     <release date="2018-09-03" version="3.30.0">
       <description>
         <p>GNOME Calendar 3.30.0 release is here!</p>
