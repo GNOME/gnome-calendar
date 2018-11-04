@@ -395,6 +395,45 @@
             <property name="text" translatable="yes">_Weather</property>
           </object>
         </child>
+
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+          </object>
+        </child>
+
+        <!-- Calendars -->
+        <child>
+          <object class="GtkModelButton">
+            <property name="visible">True</property>
+            <property name="action-name">win.show-calendars</property>
+            <property name="text" translatable="yes">_Calendars</property>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkSeparator">
+            <property name="visible">True</property>
+          </object>
+        </child>
+
+        <!-- Shortcuts -->
+        <child>
+          <object class="GtkModelButton">
+            <property name="visible">True</property>
+            <property name="action-name">win.show-help-overlay</property>
+            <property name="text" translatable="yes">_Keyboard Shortcuts</property>
+          </object>
+        </child>
+
+        <!-- About -->
+        <child>
+          <object class="GtkModelButton">
+            <property name="visible">True</property>
+            <property name="action-name">app.about</property>
+            <property name="text" translatable="yes">_About Calendar</property>
+          </object>
+        </child>
       </object>
     </child>
 
