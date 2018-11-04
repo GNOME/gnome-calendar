@@ -18,22 +18,30 @@ enums_xml = gnome.mkenums(
 
 # Desktop files
 # Note: This name is registered in gcal-weather-service.c.
-desktop = 'org.gnome.Calendar.desktop'
-
-i18n.merge_file(
-      desktop,
-         type: 'desktop',
-        input: desktop + '.in',
-       output: desktop,
-       po_dir: po_dir,
-      install: true,
+desktop_conf = configuration_data()
+desktop_conf.set('icon', application_id)
+desktop = i18n.merge_file(
+  type: 'desktop',
+  input: configure_file(
+    input: files('org.gnome.Calendar.desktop.in.in'),
+    output: 'org.gnome.Calendar.desktop.in',
+    configuration: desktop_conf
+  ),
+  output: '@0@.desktop'.format(application_id),
+  po_dir: po_dir,
+  install: true,
   install_dir: join_paths(calendar_datadir, 'applications')
 )
 
 # GNOME Shell search provider
-install_data(
-  'org.gnome.Calendar.search-provider.ini',
-  install_dir: join_paths(calendar_datadir, 'gnome-shell', 'search-providers')
+search_provider_conf = configuration_data()
+search_provider_conf.set('appid', application_id)
+search_provider_conf.set('profile',  profile)
+configure_file(
+  configuration: search_provider_conf,
+  input: files('org.gnome.Calendar.search-provider.ini.in'),
+  install_dir: join_paths(calendar_datadir, 'gnome-shell', 'search-providers'),
+  output: '@0@.search-provider.ini'.format(application_id)
 )
 
 # GSettings schema
@@ -63,13 +71,13 @@ compiled_schemas = custom_target(
 
 # DBus service files
 service_conf = configuration_data()
+service_conf.set('appid', application_id)
 service_conf.set('bindir', calendar_bindir)
-
 service = 'org.gnome.Calendar.service'
 
 configure_file(
           input: service + '.in',
-         output: service,
+         output: '@0@.service'.format(application_id),
         install: true,
     install_dir: join_paths(calendar_datadir, 'dbus-1', 'services'),
   configuration: service_conf

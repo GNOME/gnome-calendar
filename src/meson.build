@@ -119,7 +119,7 @@ libgcal = shared_library(
                'gcal-private',
               sources: sources,
   include_directories: incs,
-         dependencies: gcal_deps,
+         dependencies: [ gcal_deps, config ],
               install: false,
 )
 
@@ -137,7 +137,7 @@ executable(
   meson.project_name(),
        sources + files('main.c'),
    include_directories: incs,
-          dependencies: gcal_deps,
+          dependencies: [ gcal_deps, config ],
                install: true,
            install_dir: calendar_bindir
 )
