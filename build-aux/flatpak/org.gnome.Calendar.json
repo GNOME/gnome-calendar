@@ -1,5 +1,5 @@
 {
-    "app-id" : "org.gnome.Calendar",
+    "app-id" : "org.gnome.CalendarDevel",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "master",
     "sdk" : "org.gnome.Sdk",
@@ -8,9 +8,7 @@
         "devel"
     ],
     "desktop-file-name-prefix" : "(Development) ",
-    "finish-args" : [
-        "--share=ipc",
-        "--share=network",
+    "finish-args" : [ "--share=ipc", "--share=network",
         "--socket=x11",
         "--socket=wayland",
         "--system-talk-name=org.freedesktop.login1",
@@ -166,7 +164,8 @@
             ],
             "config-opts" : [
                 "-Dtracing=true",
-                "-Ddocumentation=true"
+                "-Ddocumentation=true",
+                "-Dprofile=development"
             ]
         }
     ]

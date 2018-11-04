@@ -137,7 +137,10 @@ executable(
   meson.project_name(),
        sources + files('main.c'),
    include_directories: incs,
-          dependencies: gcal_deps,
+          dependencies: [
+                           gcal_deps,
+                           conf
+                        ],
                install: true,
            install_dir: calendar_bindir
 )
