@@ -19,6 +19,7 @@
 
 #define G_LOG_DOMAIN "GcalWindow"
 
+#include "config.h"
 #include "gcal-debug.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-event-widget.h"
@@ -1542,6 +1543,15 @@ gcal_window_init (GcalWindow *self)
 
   self->active_date = g_new0 (icaltimetype, 1);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
+
+  /* devel styling */
+  if (g_strcmp0 (PROFILE, "Devel") == 0)
+  {
+      GtkStyleContext *style_context;
+
+      style_context = gtk_widget_get_style_context (GTK_WIDGET (self));
+      gtk_style_context_add_class (style_context, "devel");
+  }
 
   /*
    * FIXME: this is a hack around the issue that happens when trying to bind
