@@ -3,7 +3,7 @@ Name=Calendar
 Comment=Access and manage your calendars
 Exec=gnome-calendar
 # Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-Icon=org.gnome.Calendar
+Icon=@icon@
 Terminal=false
 Type=Application
 StartupNotify=true
