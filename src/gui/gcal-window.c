@@ -21,6 +21,7 @@
 
 #include "gcal-calendar-management-dialog.h"
 #include "gcal-calendar-popover.h"
+#include "config.h"
 #include "gcal-debug.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-event-widget.h"
@@ -1122,6 +1123,14 @@ gcal_window_init (GcalWindow *self)
                            G_CALLBACK (dzl_shortcut_manager_handle_event),
                            NULL,
                            G_CONNECT_SWAPPED);
+  /* devel styling */
+  if (g_strcmp0 (PROFILE, "Devel") == 0)
+  {
+      GtkStyleContext *style_context;
+
+      style_context = gtk_widget_get_style_context (GTK_WIDGET (self));
+      gtk_style_context_add_class (style_context, "devel");
+  }
 
   /* setup accels */
   app = g_application_get_default ();
