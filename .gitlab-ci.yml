@@ -90,7 +90,7 @@ flatpak:
         # Make sure to keep this in sync with the Flatpak manifest, all arguments
         # are passed except the config-args because we build it ourselves
         MESON_ARGS: "-Dtracing=true -Ddocumentation=true -Dprofile=development"
-        DBUS_ID: "org.gnome.Calendar"
+        DBUS_ID: "org.gnome.CalendarDevel"
 
     script:
         - flatpak-builder --stop-at=${FLATPAK_MODULE} app ${MANIFEST_PATH}
