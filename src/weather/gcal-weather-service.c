@@ -18,13 +18,12 @@
 
 #define G_LOG_DOMAIN      "GcalWeatherService"
 
-#define DESKTOP_FILE_NAME "org.gnome.Calendar"
-
 #include <geocode-glib/geocode-glib.h>
 #include <geoclue.h>
 #include <string.h>
 #include <math.h>
 
+#include "config.h"
 #include "gcal-debug.h"
 #include "gcal-timer.h"
 #include "gcal-weather-service.h"
@@ -1118,7 +1117,7 @@ gcal_weather_service_run (GcalWeatherService *self,
       g_cancellable_cancel (self->location_cancellable);
       g_cancellable_reset (self->location_cancellable);
 
-      gclue_simple_new (DESKTOP_FILE_NAME,
+      gclue_simple_new (APPLICATION_ID,
                         GCLUE_ACCURACY_LEVEL_EXACT,
                         self->location_cancellable,
                         (GAsyncReadyCallback) on_gclue_simple_creation_cb,
