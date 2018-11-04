@@ -34,6 +34,18 @@ calendar_schemadir = join_paths(calendar_datadir, 'glib-2.0', 'schemas')
 # Options #
 ###########
 
+rev_txt = run_command('git','rev-parse','--short','HEAD').stdout().strip()
+if get_option('profile') == 'development'
+  profile = 'Devel'
+  name_suffix = ' (Development)'
+  rev = '-@0@'.format(rev_txt)
+else
+  profile = ''
+  name_suffix = ''
+  rev = ''
+endif
+
+application_id = 'org.gnome.Calendar@0@'.format(profile)
 calendar_buildtype = get_option('buildtype')
 calendar_debug = calendar_minor_version.is_odd() or calendar_buildtype.contains('debug')
 enable_tracing = get_option('tracing')
@@ -53,9 +65,12 @@ set_defines = [
   ['PACKAGE_STRING', '@0@ @1@'.format(meson.project_name(), calendar_version)],
   ['PACKAGE_TARNAME', meson.project_name()],
   ['PACKAGE_URL', 'https://wiki.gnome.org/Apps/Calendar'],
-  ['PACKAGE_VERSION', calendar_version],
-  ['VERSION', calendar_version],
-  ['GETTEXT_PACKAGE', meson.project_name()]
+  ['PACKAGE_VERSION', calendar_version + rev],
+  ['VERSION', calendar_version + rev],
+  ['GETTEXT_PACKAGE', meson.project_name()],
+  ['PROFILE', profile],
+  ['NAME_SUFFIX', name_suffix],
+  ['APPLICATION_ID', application_id]
 ]
 
 foreach define: set_defines
@@ -162,6 +177,17 @@ data_dir = join_paths(meson.source_root(), 'data')
 po_dir = join_paths(meson.source_root(), 'po')
 src_dir = join_paths(meson.source_root(), 'src')
 
+config = declare_dependency(
+  sources: vcs_tag(
+    command: ['git', 'rev-parse', '--short', 'HEAD'],
+    fallback: get_option('profile') != 'default'? 'devel' : 'stable',
+    input: configure_file(
+      output: 'config.h.in',
+      configuration: config_h
+    ),
+    output: 'config.h'
+  )
+)
 
 ###########
 # Subdirs #
@@ -177,11 +203,6 @@ subdir('tests')
 if enable_gtk_doc
   subdir('doc/reference')
 endif
-
-configure_file(
-         output: 'config.h',
-  configuration: config_h
-)
 
 output = '\n\n      GNOME Calendar ' + calendar_version + '\n'
 output += '      =========================\n\n'
