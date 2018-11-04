@@ -1,5 +1,5 @@
 {
-    "app-id" : "org.gnome.Calendar",
+    "app-id" : "org.gnome.CalendarDevel",
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "master",
     "sdk" : "org.gnome.Sdk",
@@ -178,7 +178,8 @@
                 }
             ],
             "config-opts" : [
-                "-Dtracing=true"
+                "-Dtracing=true",
+                "-Dprofile=development"
             ]
         }
     ]
