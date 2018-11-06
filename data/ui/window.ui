@@ -402,21 +402,6 @@
           </object>
         </child>
 
-        <!-- Calendars -->
-        <child>
-          <object class="GtkModelButton">
-            <property name="visible">True</property>
-            <property name="action-name">win.show-calendars</property>
-            <property name="text" translatable="yes">_Calendars</property>
-          </object>
-        </child>
-
-        <child>
-          <object class="GtkSeparator">
-            <property name="visible">True</property>
-          </object>
-        </child>
-
         <!-- Shortcuts -->
         <child>
           <object class="GtkModelButton">
