@@ -52,7 +52,7 @@ static void
 update_text (GcalDateSelector *self)
 {
   GDateTime *date;
-  gchar *label;
+  g_autofree gchar *label = NULL;
 
   date = gcal_date_chooser_get_date (GCAL_DATE_CHOOSER (self->date_chooser));
 
@@ -60,7 +60,6 @@ update_text (GcalDateSelector *self)
   label = g_date_time_format (date, "%x");
 
   gtk_entry_set_text (GTK_ENTRY (self), label);
-  g_free (label);
 }
 
 static void
@@ -74,7 +73,7 @@ calendar_day_selected (GcalDateSelector *self)
 static void
 parse_date (GcalDateSelector *self)
 {
-  GDateTime *new_date;
+  g_autoptr (GDateTime) new_date = NULL;
   GDate parsed_date;
 
   g_date_clear (&parsed_date, 1);
@@ -92,8 +91,6 @@ parse_date (GcalDateSelector *self)
                                     0, 0, 0);
 
   gcal_date_selector_set_date (self, new_date);
-
-  g_clear_pointer (&new_date, g_date_time_unref);
 }
 
 static void
