@@ -187,10 +187,10 @@ fill_sources_menu (GcalEditDialog *self)
   for (aux = list; aux != NULL; aux = aux->next)
     {
       ESource *source;
-      GMenuItem *item;
+      g_autoptr (GMenuItem) item = NULL;
       GdkRGBA color;
       cairo_surface_t *surface;
-      GdkPixbuf *pix;
+      g_autoptr (GdkPixbuf) pix = NULL;
 
       source = E_SOURCE (aux->data);
 
@@ -217,8 +217,6 @@ fill_sources_menu (GcalEditDialog *self)
       g_menu_append_item (self->sources_menu, item);
 
       g_clear_pointer (&surface, cairo_surface_destroy);
-      g_object_unref (pix);
-      g_object_unref (item);
     }
 
   gtk_popover_bind_model (GTK_POPOVER (self->sources_popover), G_MENU_MODEL (self->sources_menu), "edit");
@@ -520,11 +518,11 @@ create_row_for_alarm (GcalEvent          *event,
                       ECalComponentAlarm *alarm)
 {
   ECalComponentAlarmAction action;
-  GtkBuilder *builder;
+  g_autoptr (GtkBuilder) builder = NULL;
   GtkWidget *label, *main_box, *row, *remove_button;
   GtkWidget *volume_button, *volume_icon;
   gboolean has_sound;
-  gchar *text;
+  g_autofree gchar *text = NULL;
   gint trigger_minutes;
 
   trigger_minutes = get_alarm_trigger_minutes (event, alarm);
@@ -610,9 +608,6 @@ create_row_for_alarm (GcalEvent          *event,
 
   gtk_widget_show_all (row);
 
-  g_clear_object (&builder);
-  g_free (text);
-
 #undef WID
 
   return row;
@@ -631,7 +626,7 @@ on_calendar_selected_action_cb (GSimpleAction *action,
   GcalEditDialog *self;
   GList *list;
   GList *aux;
-  gchar *uid;
+  g_autofree gchar *uid = NULL;
 
   GCAL_ENTRY;
 
@@ -667,7 +662,6 @@ on_calendar_selected_action_cb (GSimpleAction *action,
       }
     }
 
-  g_free (uid);
   g_list_free (list);
 
   GCAL_EXIT;
@@ -755,7 +749,7 @@ on_action_button_clicked_cb (GtkWidget *widget,
       GDateTime *start_date, *end_date;
       gboolean was_all_day;
       gboolean all_day;
-      gchar *note_text;
+      g_autofree gchar *note_text = NULL;
 
       /* Update summary */
       gcal_event_set_summary (self->event, gtk_entry_get_text (GTK_ENTRY (self->summary_entry)));
@@ -766,7 +760,6 @@ on_action_button_clicked_cb (GtkWidget *widget,
                     NULL);
 
       gcal_event_set_description (self->event, note_text);
-      g_free (note_text);
 
       all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
       was_all_day = gcal_event_get_all_day (self->event);
