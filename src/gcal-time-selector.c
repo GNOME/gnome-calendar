@@ -61,7 +61,7 @@ G_DEFINE_TYPE (GcalTimeSelector, gcal_time_selector, GTK_TYPE_MENU_BUTTON);
 static void
 update_label (GcalTimeSelector *selector)
 {
-  gchar *new_label;
+  g_autofree gchar *new_label = NULL;
 
   if (selector->time_format == GCAL_TIME_FORMAT_24H)
     {
@@ -69,7 +69,7 @@ update_label (GcalTimeSelector *selector)
     }
   else
     {
-      gchar *time_str;
+      g_autofree gchar *time_str = NULL;
       gint hour, minute, period;
 
       hour = (gint) gtk_adjustment_get_value (selector->hour_adjustment);
@@ -83,19 +83,16 @@ update_label (GcalTimeSelector *selector)
         new_label = g_strdup_printf (_("%s AM"), time_str);
       else
         new_label = g_strdup_printf (_("%s PM"), time_str);
-
-      g_free (time_str);
     }
 
   gtk_label_set_label (GTK_LABEL (selector->time_label), new_label);
-
-  g_clear_pointer (&new_label, g_free);
 }
 
 static void
 update_time (GcalTimeSelector *selector)
 {
-  GDateTime *now, *new_time;
+  g_autoptr (GDateTime) now = NULL;
+  g_autoptr (GDateTime) new_time = NULL;
   gint hour, minute;
 
   /* Retrieve current time */
@@ -125,9 +122,6 @@ update_time (GcalTimeSelector *selector)
 
   /* Set the new time */
   gcal_time_selector_set_time (selector, new_time);
-
-  g_clear_pointer (&new_time, g_date_time_unref);
-  g_clear_pointer (&now, g_date_time_unref);
 }
 
 static gboolean
@@ -135,15 +129,13 @@ on_output (GtkWidget        *widget,
            GcalTimeSelector *selector)
 {
   GtkAdjustment *adjustment;
-  gchar *text;
+  g_autofree gchar *text = NULL;
   gint value;
 
   adjustment = gtk_spin_button_get_adjustment (GTK_SPIN_BUTTON (widget));
   value = (gint) gtk_adjustment_get_value (adjustment);
   text = g_strdup_printf ("%02d", value);
   gtk_entry_set_text (GTK_ENTRY (widget), text);
-
-  g_free (text);
 
   return TRUE;
 }
