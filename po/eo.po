@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-09-15 05:15+0000\n"
-"PO-Revision-Date: 2018-10-20 14:46+0200\n"
-"Last-Translator: Kristjan SCHMIDT <kristjan.schmidt@googlemail.com>\n"
+"POT-Creation-Date: 2018-10-20 12:47+0000\n"
+"PO-Revision-Date: 2018-11-13 16:45+0100\n"
+"Last-Translator: Carmen Bianca Bakker <carmen@carmenbianca.eu>\n"
 "Language-Team: Esperanto <gnome-eo-list@gnome.org>\n"
 "Language: eo\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Virtaal 0.7.1\n"
+"X-Generator: Poedit 2.2\n"
 "X-DamnedLies-Scope: partial\n"
 "X-Project-Style: gnome\n"
 
@@ -110,6 +110,24 @@ msgstr "Speco de la aktiva vidon"
 msgid "Type of the active window view, default value is: monthly view"
 msgstr "Speco de la vido de la aktiva fenestro, defaŭlta estas: monata vido"
 
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Weather Service Configuration"
+msgstr "Vetera serva agordo"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr "Ĉu veterinformoj montriĝas, aŭtomataj lokoj uziĝas, kaj location-name"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Sekvi sisteman noktlumon"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "Uzu GNOME noktluman agordon por ŝalti noktan reĝimon."
+
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
 msgstr "Baskuligas la sonon de la alarmon"
@@ -173,7 +191,7 @@ msgstr "Ne ripeti"
 
 #: data/ui/edit-dialog.ui:431
 msgid "Daily"
-msgstr "Ĉiutaga"
+msgstr "Ĉiutage"
 
 #: data/ui/edit-dialog.ui:432
 msgid "Monday – Friday"
@@ -181,15 +199,15 @@ msgstr "Lundo — Vendredo"
 
 #: data/ui/edit-dialog.ui:433
 msgid "Weekly"
-msgstr "Ĉiusemajna"
+msgstr "Ĉiusemajne"
 
 #: data/ui/edit-dialog.ui:434
 msgid "Monthly"
-msgstr "Ĉiumonata"
+msgstr "Ĉiumonate"
 
 #: data/ui/edit-dialog.ui:435
 msgid "Yearly"
-msgstr "Ĉiujara"
+msgstr "Ĉiujare"
 
 #: data/ui/edit-dialog.ui:463
 msgid "Forever"
@@ -932,7 +950,6 @@ msgid "On"
 msgstr "Ŝaltita"
 
 #: src/gcal-source-dialog.c:1915
-#, fuzzy
 msgid "Expired"
 msgstr "Posttempa"
 
@@ -979,7 +996,6 @@ msgid "Event deleted"
 msgstr "Forigita evento"
 
 #: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
-#, fuzzy
 msgid "00 AM"
 msgstr "00 ATM"
 
