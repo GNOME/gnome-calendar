@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Generated with glade 3.22.1 -->
 <interface>
-  <template class="GcalTimeSelector" parent="GtkMenuButton">
-    <property name="use_popover">True</property>
-    <property name="popover">time_selector_popover</property>
-    <child>
-      <object class="GtkLabel" id="time_label">
-        <property name="visible">True</property>
-        <property name="label" translatable="yes">00:00</property>
-      </object>
-    </child>
-  </template>
+  <requires lib="gtk+" version="3.12"/>
   <object class="GtkAdjustment" id="hour_adjustment">
     <property name="upper">23</property>
     <property name="step_increment">1</property>
@@ -23,16 +15,19 @@
     <signal name="value-changed" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
   </object>
   <object class="GtkPopover" id="time_selector_popover">
+    <property name="can_focus">False</property>
     <property name="position">bottom</property>
     <child>
       <object class="GtkGrid" id="grid">
         <property name="visible">True</property>
+        <property name="can_focus">False</property>
         <property name="border_width">12</property>
         <property name="column_spacing">6</property>
         <child>
           <object class="GtkSpinButton" id="hour_spin">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
+            <property name="has_focus">True</property>
             <property name="xalign">0.5</property>
             <property name="input_purpose">number</property>
             <property name="orientation">vertical</property>
@@ -62,6 +57,7 @@
         <child>
           <object class="GtkLabel" id="label1">
             <property name="visible">True</property>
+            <property name="can_focus">False</property>
             <property name="label" translatable="yes">:</property>
           </object>
           <packing>
@@ -71,13 +67,14 @@
         </child>
         <child>
           <object class="GtkComboBoxText" id="period_combo">
+            <property name="can_focus">False</property>
             <property name="valign">center</property>
             <property name="active">0</property>
-            <signal name="changed" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
             <items>
               <item translatable="yes">AM</item>
               <item translatable="yes">PM</item>
             </items>
+            <signal name="changed" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
           </object>
           <packing>
             <property name="left_attach">3</property>
@@ -87,4 +84,16 @@
       </object>
     </child>
   </object>
+  <template class="GcalTimeSelector" parent="GtkMenuButton">
+    <property name="can_focus">False</property>
+    <property name="receives_default">False</property>
+    <property name="popover">time_selector_popover</property>
+    <child>
+      <object class="GtkLabel" id="time_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">00:00</property>
+      </object>
+    </child>
+  </template>
 </interface>
