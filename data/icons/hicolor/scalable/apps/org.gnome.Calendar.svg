@@ -5,7 +5,6 @@
    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
    xmlns:svg="http://www.w3.org/2000/svg"
    xmlns="http://www.w3.org/2000/svg"
-   enable-background="new"
    viewBox="0 0 128 128"
    style="display:inline;enable-background:new"
    version="1.0"
@@ -15,16 +14,7 @@
   <title
      id="title4162">Adwaita Icon Template</title>
   <defs
-     id="defs3">
-    <filter
-       id="filter944"
-       style="color-interpolation-filters:sRGB">
-      <feBlend
-         id="feBlend946"
-         in2="BackgroundImage"
-         mode="multiply" />
-    </filter>
-  </defs>
+     id="defs3" />
   <metadata
      id="metadata4">
     <rdf:RDF>
@@ -89,7 +79,7 @@
      style="display:inline"
      id="layer1">
     <g
-       style="display:inline;filter:url(#filter944)"
+       style="display:inline"
        id="layer9">
       <g
          transform="translate(-220)"
