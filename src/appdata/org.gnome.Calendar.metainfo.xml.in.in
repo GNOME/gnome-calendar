@@ -102,6 +102,9 @@
 
   <translation type="gettext">gnome-calendar</translation>
   <launchable type="desktop-id">@appid@.desktop</launchable>
+  <provides>
+    <binary>gnome-calendar</binary>
+  </provides>
 
   <content_rating type="oars-1.1" />
 
@@ -543,4 +546,3 @@
     </release>
   </releases>
 </component>
-
