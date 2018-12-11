@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2014 Igor Gnatenko <ignatenko@src.gnome.org> -->
 <component type="desktop">
-  <id>org.gnome.Calendar.desktop</id>
+  <id>org.gnome.Calendar</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>Calendar</name>
@@ -43,9 +43,16 @@
     <kudo>ModernToolkit</kudo>
     <kudo>SearchProvider</kudo>
   </kudos>
-
+  <provides>
+    <binary>gnome-calendar</binary>
+  </provides>
+  
+  <launchable type="desktop-id">org.gnome.Calendar.desktop</launchable>
   <url type="homepage">https://wiki.gnome.org/Apps/Calendar</url>
   <url type="bugtracker">https://gitlab.gnome.org/GNOME/gnome-calendar/issues</url>
+  <url type="donation">http://www.gnome.org/friends/</url>
+  <url type="translate">https://wiki.gnome.org/TranslationProject</url>
+  <developer_name>The GNOME Project</developer_name>
   <project_group>GNOME</project_group>
 
   <releases>
