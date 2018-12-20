@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-08-09 21:52+0000\n"
-"PO-Revision-Date: 2018-08-15 14:18+0300\n"
+"POT-Creation-Date: 2018-11-06 13:46+0000\n"
+"PO-Revision-Date: 2018-12-21 00:35+0200\n"
 "Last-Translator: Efstathios Iosifidis <iosifidis@opensuse.org>\n"
 "Language-Team: Ελληνικά <opensuse-translation-el@opensuse.org>\n"
 "Language: el\n"
@@ -18,12 +18,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.9\n"
+"X-Generator: Poedit 2.0.7\n"
 "X-Project-Style: gnome\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
 msgstr "Ημερολόγιο"
 
@@ -152,7 +152,7 @@ msgstr "Aκύρωση"
 msgid "Click to select the calendar"
 msgstr "Κάντε κλικ για να επιλέξετε το ημερολόγιο"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:372
 msgid "Done"
 msgstr "Ολοκληρώθηκε"
 
@@ -345,30 +345,14 @@ msgid "Year view"
 msgstr "Προβολής έτους"
 
 #: data/ui/menus.ui:6
-msgid "_Calendars"
-msgstr "_Ημερολόγια"
-
-#: data/ui/menus.ui:12
-msgid "_Keyboard Shortcuts"
-msgstr "Συντομεύσεις _πληκτρολογίου"
-
-#: data/ui/menus.ui:16
-msgid "_About"
-msgstr "_Περί"
-
-#: data/ui/menus.ui:20
-msgid "_Quit"
-msgstr "Έ_ξοδος"
-
-#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Από τον Ιστό…"
 
-#: data/ui/menus.ui:33
+#: data/ui/menus.ui:10
 msgid "New Local Calendar…"
 msgstr "Νέο τοπικό ημερολόγιο…"
 
-#: data/ui/menus.ui:37
+#: data/ui/menus.ui:14
 msgid "From File…"
 msgstr "Από αρχείο…"
 
@@ -477,13 +461,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Διεύθυνση ημερολογίου"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
-#: src/gcal-source-dialog.c:2291
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2286
+#: src/gcal-source-dialog.c:2292
 msgid "Add Calendar"
 msgstr "Προσθήκη ημερολογίου"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:344
-#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2315
 msgid "Calendar Settings"
 msgstr "Ρυθμίσεις ημερολογίου"
 
@@ -562,6 +546,14 @@ msgstr "Αναζήτηση για συμβάντα"
 msgid "_Synchronize"
 msgstr "_Συγχρονισμός"
 
+#: data/ui/window.ui:410
+msgid "_Keyboard Shortcuts"
+msgstr "Συντομεύσεις _πληκτρολογίου"
+
+#: data/ui/window.ui:419
+msgid "_About Calendar"
+msgstr "_Περί του Ημερολόγιο"
+
 #: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Χωρίς συμβάντα"
@@ -590,12 +582,12 @@ msgstr "Άνοιγμα ημερολογίου σε προηγούμενη ημε
 msgid "Open calendar showing the passed event"
 msgstr "Άνοιγμα ημερολογίου σε προηγούμενο συμβάν"
 
-#: src/gcal-application.c:601
+#: src/gcal-application.c:603
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Πνευματικά δικαιώματα © 2012–%d Οι συγγραφείς του Ημερολόγιο"
 
-#: src/gcal-application.c:652
+#: src/gcal-application.c:654
 msgid "translator-credits"
 msgstr ""
 "Ελληνική μεταφραστική ομάδα GNOME\n"
@@ -606,39 +598,39 @@ msgstr ""
 "Για περισσότερες πληροφορίες, επισκεφθείτε τη σελίδα\n"
 "http://gnome.gr/"
 
-#: src/gcal-edit-dialog.c:277
+#: src/gcal-edit-dialog.c:372
 msgid "Save"
 msgstr "Αποθήκευση"
 
-#: src/gcal-edit-dialog.c:1037
+#: src/gcal-edit-dialog.c:539
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d λεπτό πριν"
 msgstr[1] "%d λεπτά πριν"
 
-#: src/gcal-edit-dialog.c:1045
+#: src/gcal-edit-dialog.c:547
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d ώρα πριν"
 msgstr[1] "%d ώρες πριν"
 
-#: src/gcal-edit-dialog.c:1053
+#: src/gcal-edit-dialog.c:555
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d μέρα πριν"
 msgstr[1] "%d μέρες πριν"
 
-#: src/gcal-edit-dialog.c:1061
+#: src/gcal-edit-dialog.c:563
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d βδομάδα πριν"
 msgstr[1] "%d βδομάδες πριν"
 
-#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
+#: src/gcal-edit-dialog.c:1505 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Ανώνυμο συμβάν"
 
@@ -948,20 +940,20 @@ msgid "Unnamed Calendar"
 msgstr "Ανώνυμο ημερολόγιο"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1810
+#: src/gcal-source-dialog.c:1811
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Το ημερολόγιο <b>%s</b> αφαιρέθηκε"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "Off"
 msgstr "Ανενεργό"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "On"
 msgstr "Ενεργό"
 
-#: src/gcal-source-dialog.c:1914
+#: src/gcal-source-dialog.c:1915
 msgid "Expired"
 msgstr "Έληξε"
 
@@ -1036,6 +1028,15 @@ msgstr "%B %d…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%B %d"
+
+#~ msgid "_Calendars"
+#~ msgstr "_Ημερολόγια"
+
+#~ msgid "_About"
+#~ msgstr "_Περί"
+
+#~ msgid "_Quit"
+#~ msgstr "Έ_ξοδος"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Προσθήκη σ_υμβάντος…"
