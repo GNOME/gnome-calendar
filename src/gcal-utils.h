@@ -34,9 +34,12 @@
 #define gcal_clear_datetime(dt) g_clear_pointer (dt, g_date_time_unref)
 #define gcal_clear_timeout(pp) { if (pp && *pp) { g_source_remove (*pp); *pp = 0; } }
 
+#if !EDS_CHECK_VERSION (3, 31, 90)
 /* Add autoptr support for libecal */
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ECalComponent, g_object_unref)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ESource, g_object_unref)
+#endif
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GWeatherLocation, gweather_location_unref)
 
 GType                icaltime_get_type                           (void)            G_GNUC_CONST;
