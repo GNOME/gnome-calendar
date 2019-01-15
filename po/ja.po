@@ -2,14 +2,14 @@
 # Copyright (C) 2015 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Hajime Taira <htaira@redhat.com>, 2015.
-# Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2015-2016.
+# Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2015-2016, 2018.
 # sicklylife <translation@sicklylife.jp>, 2019.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-11-06 13:46+0000\n"
+"POT-Creation-Date: 2019-01-15 14:29+0000\n"
 "PO-Revision-Date: 2019-01-15 23:12+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
