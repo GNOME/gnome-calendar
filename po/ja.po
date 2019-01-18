@@ -9,8 +9,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-01-15 14:29+0000\n"
-"PO-Revision-Date: 2019-01-15 23:12+0900\n"
+"POT-Creation-Date: 2019-01-15 14:32+0000\n"
+"PO-Revision-Date: 2019-01-19 04:35+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -116,15 +116,15 @@ msgstr "天気予報の設定"
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
-msgstr ""
+msgstr "天気予報を表示するかどうか。自動検出した位置情報と地域名が使用されます。"
 
 #: data/org.gnome.calendar.gschema.xml.in:31
 msgid "Follow system night light"
-msgstr ""
+msgstr "システムの夜間モードに従う"
 
 #: data/org.gnome.calendar.gschema.xml.in:32
 msgid "Use GNOME night light setting to activate night-mode."
-msgstr ""
+msgstr "夜間モードをアクティブにするには GNOME の夜間モード設定を使用してください。"
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
