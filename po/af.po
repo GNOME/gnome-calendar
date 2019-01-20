@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-26\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-08-17 12:57+0000\n"
-"PO-Revision-Date: 2018-03-18 17:31+0200\n"
+"POT-Creation-Date: 2019-01-20 19:41+0000\n"
+"PO-Revision-Date: 2019-01-20 23:03+0200\n"
 "Last-Translator: Pieter Schalk Schoeman <pieter@sonbesie.co.za>\n"
 "Language-Team: Afrikaans <pieter@sonbesie.co.za>\n"
 "Language: af\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -33,7 +33,7 @@ msgstr "Kalender vir GNOME"
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
-"desktop is build on, Calendar nicely integrates with the GNOME ecosystem."
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "GNOME Kalender is 'n eenvoudige en elegante kalender toepassing ontwerp om "
 "met GNOME te integreer. Deur komponente waarop GNOME gebou is te hergebruik, "
@@ -42,7 +42,7 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Ons streef daarna om die perfekte balans te kry tussen goed ontwikkelde "
@@ -119,6 +119,14 @@ msgstr ""
 "Of weerverslae vertoon word, outomatiese liggings gebruik word asook 'n "
 "ligging naam"
 
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Volg stelsel naglig"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "Gebruik GNOME-naglig om nagmodus te aktiveer."
+
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
 msgstr "Verander die klank van die alarm"
@@ -136,7 +144,7 @@ msgstr "Kanselleer"
 msgid "Click to select the calendar"
 msgstr "Klik om die kalender te kies"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:372
 msgid "Done"
 msgstr "Klaar"
 
@@ -329,34 +337,14 @@ msgid "Year view"
 msgstr "Jaar oorsig"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "Voeg _geleentheid by…"
-
-#: data/ui/menus.ui:13
-msgid "_Calendars"
-msgstr "_Kalenders"
-
-#: data/ui/menus.ui:19
-msgid "_Keyboard Shortcuts"
-msgstr "_Sleutelbordkortpaaie"
-
-#: data/ui/menus.ui:23
-msgid "_About"
-msgstr "_Aangaande"
-
-#: data/ui/menus.ui:27
-msgid "_Quit"
-msgstr "_Sluit af"
-
-#: data/ui/menus.ui:36
 msgid "From Web…"
 msgstr "Vanaf die web…"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:10
 msgid "New Local Calendar…"
 msgstr "Nuwe plaaslike kalender…"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:14
 msgid "From File…"
 msgstr "Vanaf lêer...…"
 
@@ -381,7 +369,7 @@ msgstr "Geen resultate gevind nie"
 msgid "Try a different search"
 msgstr "Probeer 'n ander soektog"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Maak ongedaan"
 
@@ -464,13 +452,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Kalender adres"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
-#: src/gcal-source-dialog.c:2291
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2286
+#: src/gcal-source-dialog.c:2292
 msgid "Add Calendar"
 msgstr "Voeg kalender by"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:344
-#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2315
 msgid "Calendar Settings"
 msgstr "Kalender Instellings"
 
@@ -507,7 +495,7 @@ msgstr "VM"
 msgid "PM"
 msgstr "NM"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "_Weer"
 
@@ -545,13 +533,17 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Soek vir geleenthede"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "_Voeg geleentheid by"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Sinchroniseer"
+
+#: data/ui/window.ui:410
+msgid "_Keyboard Shortcuts"
+msgstr "_Sleutelbordkortpaaie"
+
+#: data/ui/window.ui:419
+msgid "_About Calendar"
+msgstr "_Aangaande kalender"
 
 #: data/ui/year-view.ui:133
 msgid "No events"
@@ -561,68 +553,68 @@ msgstr "Geen geleenthede"
 msgid "Add Event…"
 msgstr "Voeg geleentheid by…"
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "Sluit GNOME Kalender"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Wys weergawenommer"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Aktiveer ontvoutingsboodskappe"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Maak kalender oop op die verlede datum"
 
-#: src/gcal-application.c:110
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Maak kalender oop op die verlede gebeurtenis"
 
-#: src/gcal-application.c:610
+#: src/gcal-application.c:603
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Kopiereg © 2012–%d Die Kalender outeurs"
 
-#: src/gcal-application.c:661
+#: src/gcal-application.c:654
 msgid "translator-credits"
 msgstr "Pieter Schoeman"
 
-#: src/gcal-edit-dialog.c:277
+#: src/gcal-edit-dialog.c:372
 msgid "Save"
 msgstr "Stoor"
 
-#: src/gcal-edit-dialog.c:1037
+#: src/gcal-edit-dialog.c:539
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minuut voor"
 msgstr[1] "%d minute voor"
 
-#: src/gcal-edit-dialog.c:1045
+#: src/gcal-edit-dialog.c:547
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d uur voor"
 msgstr[1] "%d ure voor"
 
-#: src/gcal-edit-dialog.c:1053
+#: src/gcal-edit-dialog.c:555
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d dag voor"
 msgstr[1] "%d dae voor"
 
-#: src/gcal-edit-dialog.c:1061
+#: src/gcal-edit-dialog.c:563
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d week voor"
 msgstr[1] "%d weke voor"
 
-#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
+#: src/gcal-edit-dialog.c:1505 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Naamlose geleentheid"
 
@@ -932,20 +924,20 @@ msgid "Unnamed Calendar"
 msgstr "Naamlose kalender"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1810
+#: src/gcal-source-dialog.c:1811
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalender <b>%s</b> verwyder"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "Off"
 msgstr "Af"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "On"
 msgstr "Aan"
 
-#: src/gcal-source-dialog.c:1914
+#: src/gcal-source-dialog.c:1915
 msgid "Expired"
 msgstr "Verval"
 
@@ -983,11 +975,11 @@ msgstr "_Daaropvolgende geleenthede"
 msgid "_All events"
 msgstr "_Alle geleenthede"
 
-#: src/gcal-window.c:1039
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "Nog 'n geleentheid veryder"
 
-#: src/gcal-window.c:1043
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "Geleentheid verwyder"
 
@@ -1020,6 +1012,21 @@ msgstr "%B %d…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%B %d"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "Voeg _geleentheid by…"
+
+#~ msgid "_Calendars"
+#~ msgstr "_Kalenders"
+
+#~ msgid "_About"
+#~ msgstr "_Aangaande"
+
+#~ msgid "_Quit"
+#~ msgstr "_Sluit af"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "_Voeg geleentheid by"
 
 #~ msgid "ownCloud"
 #~ msgstr "ownCloud"
