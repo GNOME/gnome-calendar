@@ -1,26 +1,27 @@
 # Chinese (Taiwan) translation for gnome-calendar.
 # Copyright (C) 2013 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
-# Cheng-Chia Tseng <pswo10680@gmail.com>, 2013.
 #
+# Cheng-Chia Tseng <pswo10680@gmail.com>, 2013.
+# pan93412 <pan93412@gmail.com>, 2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-08-09 21:52+0000\n"
-"PO-Revision-Date: 2018-08-12 17:01+0800\n"
+"POT-Creation-Date: 2018-11-06 13:46+0000\n"
+"PO-Revision-Date: 2019-01-20 16:20+0800\n"
 "Last-Translator: pan93412 <pan93412@gmail.com>\n"
-"Language-Team: Chinese (Taiwan) <chinese-l10n@googlegroups.com>\n"
+"Language-Team: Chinese <kde-i18n-doc@kde.org>\n"
 "Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 1.8.4\n"
+"X-Generator: Lokalize 18.12.1\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
 msgstr "行事曆"
 
@@ -34,8 +35,8 @@ msgid ""
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"GNOME《行事曆》是為了能完美搭配 GNOME 桌面而設計的簡單、精美行事曆應用程式。藉"
-"著重複使用 GNOME 桌面內建的元件，《行事曆》順利整合到 GNOME 生態系中。"
+"GNOME《行事曆》是為了能完美搭配 GNOME 桌面而設計的簡單、精美行事曆應用程式。"
+"藉著重複使用 GNOME 桌面內建的元件，《行事曆》順利整合到 GNOME 生態系中。"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
@@ -43,8 +44,8 @@ msgid ""
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
-"我們的目標是在精心設計的功能，與以使用者為中心的可用性之間找到完美的平衡點，麻"
-"雀雖小五臟俱全，您會很舒適的使用《行事曆》，就像您過去一直在使用的一樣！"
+"我們的目標是在精心設計的功能，與以使用者為中心的可用性之間找到完美的平衡點，"
+"麻雀雖小五臟俱全，您會很舒適的使用《行事曆》，就像您過去一直在使用的一樣！"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
 msgid "Week view"
@@ -139,7 +140,7 @@ msgstr "取消"
 msgid "Click to select the calendar"
 msgstr "點按這裡選擇行事曆"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:372
 msgid "Done"
 msgstr "完成"
 
@@ -332,30 +333,14 @@ msgid "Year view"
 msgstr "年檢視"
 
 #: data/ui/menus.ui:6
-msgid "_Calendars"
-msgstr "行事曆(_C)"
-
-#: data/ui/menus.ui:12
-msgid "_Keyboard Shortcuts"
-msgstr "鍵盤捷徑鍵(_K)"
-
-#: data/ui/menus.ui:16
-msgid "_About"
-msgstr "關於(_A)"
-
-#: data/ui/menus.ui:20
-msgid "_Quit"
-msgstr "結束(_Q)"
-
-#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "從網路…"
 
-#: data/ui/menus.ui:33
+#: data/ui/menus.ui:10
 msgid "New Local Calendar…"
 msgstr "新增本機行事曆…"
 
-#: data/ui/menus.ui:37
+#: data/ui/menus.ui:14
 msgid "From File…"
 msgstr "從檔案…"
 
@@ -462,13 +447,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "行事曆位置"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
-#: src/gcal-source-dialog.c:2291
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2286
+#: src/gcal-source-dialog.c:2292
 msgid "Add Calendar"
 msgstr "加入行事曆"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:344
-#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2315
 msgid "Calendar Settings"
 msgstr "行事曆設定"
 
@@ -547,6 +532,14 @@ msgstr "搜尋行程"
 msgid "_Synchronize"
 msgstr "同步(_S)"
 
+#: data/ui/window.ui:410
+msgid "_Keyboard Shortcuts"
+msgstr "鍵盤捷徑鍵(_K)"
+
+#: data/ui/window.ui:419
+msgid "_About Calendar"
+msgstr "關於行事曆(_A)"
+
 #: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "沒有行程"
@@ -575,44 +568,44 @@ msgstr "在傳入的日期開啟行事曆"
 msgid "Open calendar showing the passed event"
 msgstr "開啟行事曆顯示傳入的行程"
 
-#: src/gcal-application.c:601
+#: src/gcal-application.c:603
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "著作權所有 © 2012–%d Calendar 作者群"
 
-#: src/gcal-application.c:652
+#: src/gcal-application.c:654
 msgid "translator-credits"
 msgstr "Cheng-Chia Tseng <pswo10680@gmail.com>, 2013, 2015, 2017."
 
-#: src/gcal-edit-dialog.c:277
+#: src/gcal-edit-dialog.c:372
 msgid "Save"
 msgstr "儲存"
 
-#: src/gcal-edit-dialog.c:1037
+#: src/gcal-edit-dialog.c:539
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d 分鐘前"
 
-#: src/gcal-edit-dialog.c:1045
+#: src/gcal-edit-dialog.c:547
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d 小時前"
 
-#: src/gcal-edit-dialog.c:1053
+#: src/gcal-edit-dialog.c:555
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d 天前"
 
-#: src/gcal-edit-dialog.c:1061
+#: src/gcal-edit-dialog.c:563
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d 週前"
 
-#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
+#: src/gcal-edit-dialog.c:1505 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "未命名的行程"
 
@@ -922,20 +915,20 @@ msgid "Unnamed Calendar"
 msgstr "未命名行事曆"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1810
+#: src/gcal-source-dialog.c:1811
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "<b>%s</b> 行事曆已移除"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "Off"
 msgstr "關"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "On"
 msgstr "開"
 
-#: src/gcal-source-dialog.c:1914
+#: src/gcal-source-dialog.c:1915
 msgid "Expired"
 msgstr "已逾期"
 
@@ -1007,125 +1000,3 @@ msgstr "%m月%d日…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%m月%d日"
-
-#~ msgid "Add Eve_nt…"
-#~ msgstr "加入行程(_N)…"
-
-#~ msgid "Add Eve_nt"
-#~ msgstr "加入行程(_N)"
-
-#~ msgid "Copyright © %d The Calendar authors"
-#~ msgstr "著作權所有 © %d Calendar 作者群"
-
-#~ msgid "Other events"
-#~ msgstr "其他行程"
-
-#~ msgid "— Calendar management"
-#~ msgstr "— 行事曆管理"
-
-#~ msgid "List of the disabled sources"
-#~ msgstr "已停用來源清單"
-
-#~ msgid "Sources disabled last time Calendar ran"
-#~ msgstr "上次《行事曆》執行時停用的來源"
-
-#~ msgid "_Search…"
-#~ msgstr "搜尋(_S)…"
-
-#~ msgid "_Calendars…"
-#~ msgstr "行事曆(_C)…"
-
-#~ msgid "week %d / %d"
-#~ msgstr "週數 %d / %d"
-
-#~ msgid "New Event from %s to %s"
-#~ msgstr "從 %s 到 %s 的新事件"
-
-#~ msgid "New Event on %s, %s – %s"
-#~ msgstr "在 %s，%s – %s 的新事件"
-
-#~ msgid "Midnight"
-#~ msgstr "午夜"
-
-#~ msgid "Noon"
-#~ msgstr "中午"
-
-#~ msgid "00:00 PM"
-#~ msgstr "下午 00:00"
-
-#~ msgid "Starts"
-#~ msgstr "開始於"
-
-#~ msgid "Ends"
-#~ msgstr "結束於"
-
-#~ msgid "Create"
-#~ msgstr "建立"
-
-#~ msgid "%.2d:%.2d AM"
-#~ msgstr "上午 %.2d:%.2d"
-
-#~ msgid "%.2d:%.2d PM"
-#~ msgstr "下午 %.2d:%.2d "
-
-#~ msgid "Max Content Height"
-#~ msgstr "最大內容高度"
-
-#~ msgid "The maximum height request that can be made."
-#~ msgstr "可以請求的最大高度。"
-
-#~ msgid "Max Content Width"
-#~ msgstr "最大內容寬度"
-
-#~ msgid "The maximum width request that can be made."
-#~ msgstr "可以請求的最大寬度。"
-
-#~ msgid "%m/%d/%y"
-#~ msgstr "%y/%m/%d"
-
-#~ msgid "More Details"
-#~ msgstr "更多詳細資訊"
-
-#~ msgid "%.2d:%.2d %s"
-#~ msgstr "%.2d:%.2d %s"
-
-#~ msgid "Unable to initialize GtkClutter"
-#~ msgstr "無法初始化 GtkClutter。"
-
-#~ msgid "Weeks"
-#~ msgstr "週"
-
-#~ msgid "Months"
-#~ msgstr "月"
-
-#~ msgid "Years"
-#~ msgstr "年"
-
-#~ msgid "Change the date"
-#~ msgstr "更改日期"
-
-#~ msgid "What (e.g. Alien Invasion)"
-#~ msgstr "什麼事 (例：外星人入侵)"
-
-#~ msgid "Email"
-#~ msgstr "電子郵件"
-
-#, fuzzy
-#~ msgid "WWW 99 - WWW 99"
-#~ msgstr "WWW 99 - WWW 99"
-
-#~ msgid "Change the time"
-#~ msgstr "更改時間"
-
-#~ msgid "List"
-#~ msgstr "清單"
-
-#~ msgid "Back"
-#~ msgstr "返回"
-
-#~ msgid "Edit"
-#~ msgstr "編輯"
-
-#, fuzzy
-#~ msgid "Year %d"
-#~ msgstr "%d 年"
