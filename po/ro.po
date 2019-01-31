@@ -7,9 +7,10 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-18\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-08-17 14:01+0000\n"
-"PO-Revision-Date: 2018-08-19 10:30+0200\n"
-"Last-Translator: Daniel Șerbănescu <daniel [at] serbanescu [dot] dk>\n"
+"POT-Creation-Date: 2018-11-06 13:46+0000\n"
+"PO-Revision-Date: 2019-01-27 01:52+0200\n"
+"Last-Translator: Florentina Mușat <florentina.musat.28 [at] gmail [dot] "
+"com>\n"
 "Language-Team: Gnome Romanian Translation Team\n"
 "Language: ro\n"
 "MIME-Version: 1.0\n"
@@ -17,12 +18,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2.1\n"
 "X-Project-Style: gnome\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
 msgstr "Calendar"
 
@@ -151,7 +152,7 @@ msgstr "Anulare"
 msgid "Click to select the calendar"
 msgstr "Apăsați clic pentru a selecta calendarul"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:372
 msgid "Done"
 msgstr "Terminat"
 
@@ -344,30 +345,14 @@ msgid "Year view"
 msgstr "Vizualizare anuală"
 
 #: data/ui/menus.ui:6
-msgid "_Calendars"
-msgstr "_Calendare"
-
-#: data/ui/menus.ui:12
-msgid "_Keyboard Shortcuts"
-msgstr "S_curtături de tastatură"
-
-#: data/ui/menus.ui:16
-msgid "_About"
-msgstr "_Despre"
-
-#: data/ui/menus.ui:20
-msgid "_Quit"
-msgstr "_Ieșire"
-
-#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "De pe Web…"
 
-#: data/ui/menus.ui:33
+#: data/ui/menus.ui:10
 msgid "New Local Calendar…"
 msgstr "Calendar local nou…"
 
-#: data/ui/menus.ui:37
+#: data/ui/menus.ui:14
 msgid "From File…"
 msgstr "Din fișier…"
 
@@ -560,6 +545,14 @@ msgstr "Caută evenimente"
 msgid "_Synchronize"
 msgstr "_Sincronizează"
 
+#: data/ui/window.ui:410
+msgid "_Keyboard Shortcuts"
+msgstr "S_curtături de tastatură"
+
+#: data/ui/window.ui:419
+msgid "_About Calendar"
+msgstr "_Despre Calendar"
+
 #: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Nu există evenimente"
@@ -588,23 +581,23 @@ msgstr "Deschide calendarul la data trecută"
 msgid "Open calendar showing the passed event"
 msgstr "Deschide calendarul care arată evenimentul trecut"
 
-#: src/gcal-application.c:601
+#: src/gcal-application.c:603
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Drepturi de autor © 2012–%d autorii lui Calendar"
 
-#: src/gcal-application.c:652
+#: src/gcal-application.c:654
 msgid "translator-credits"
 msgstr ""
 "va511e \n"
 "Adrian Gabor <raziel [underscore] theripper [at] yahoo [dot] com\n"
-"Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>, 2018"
+"Florentina Mușat <florentina.musat.28 [at] gmail [dot] com>, 2019"
 
-#: src/gcal-edit-dialog.c:277
+#: src/gcal-edit-dialog.c:372
 msgid "Save"
 msgstr "Salvează"
 
-#: src/gcal-edit-dialog.c:1037
+#: src/gcal-edit-dialog.c:539
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
@@ -612,7 +605,7 @@ msgstr[0] "%d minut înainte"
 msgstr[1] "%d minute înainte"
 msgstr[2] "%d de minute înainte"
 
-#: src/gcal-edit-dialog.c:1045
+#: src/gcal-edit-dialog.c:547
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
@@ -620,7 +613,7 @@ msgstr[0] "%d oră înainte"
 msgstr[1] "%d ore înainte"
 msgstr[2] "%d de ore înainte"
 
-#: src/gcal-edit-dialog.c:1053
+#: src/gcal-edit-dialog.c:555
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
@@ -628,7 +621,7 @@ msgstr[0] "%d zi înainte"
 msgstr[1] "%d zile înainte"
 msgstr[2] "%d de zile înainte"
 
-#: src/gcal-edit-dialog.c:1061
+#: src/gcal-edit-dialog.c:563
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
@@ -636,7 +629,7 @@ msgstr[0] "%d săptămână înainte"
 msgstr[1] "%d săptămâni înainte"
 msgstr[2] "%d de săptămâni înainte"
 
-#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
+#: src/gcal-edit-dialog.c:1505 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Eveniment nedenumit"
 
@@ -1035,6 +1028,15 @@ msgstr "%B %d…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%B %d"
+
+#~ msgid "_Calendars"
+#~ msgstr "_Calendare"
+
+#~ msgid "_About"
+#~ msgstr "_Despre"
+
+#~ msgid "_Quit"
+#~ msgstr "_Ieșire"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Adaugă evenime_nt…"
