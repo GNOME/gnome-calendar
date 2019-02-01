@@ -52,11 +52,9 @@
     "modules" : [
         {
             "name" : "gnome-online-accounts",
+            "buildsystem" : "meson",
             "config-opts" : [
-                "--disable-Werror",
-                "--disable-telepathy",
-                "--disable-documentation",
-                "--disable-backend"
+                "-Dgoabackend=false"
             ],
             "sources" : [
                 {
