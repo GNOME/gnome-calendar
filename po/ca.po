@@ -1016,14 +1016,14 @@ msgstr "setmana %d"
 #. * end is unspecified.
 #: src/views/gcal-year-view.c:290
 msgid "%B %d…"
-msgstr "%d %B…"
+msgstr "%-d %B…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
-msgstr "%d %B"
+msgstr "%-d %B"
 
 #~ msgid "— Calendar management"
 #~ msgstr " - Gestió del calendari"
