@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-07-29 04:02+0000\n"
-"PO-Revision-Date: 2018-07-30 15:22+0700\n"
+"POT-Creation-Date: 2018-11-06 13:46+0000\n"
+"PO-Revision-Date: 2019-02-03 15:48+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.0.6\n"
-"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Poedit 2.2.1\n"
+"Plural-Forms: nplurals=2; plural= n!=1;\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -145,7 +145,7 @@ msgstr "Batal"
 msgid "Click to select the calendar"
 msgstr "Klik untuk memilih kalender"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:372
 msgid "Done"
 msgstr "Selesai"
 
@@ -338,30 +338,14 @@ msgid "Year view"
 msgstr "Tilikan tahun"
 
 #: data/ui/menus.ui:6
-msgid "_Calendars"
-msgstr "_Kalender"
-
-#: data/ui/menus.ui:12
-msgid "_Keyboard Shortcuts"
-msgstr "Pintasan Papan Ti_k"
-
-#: data/ui/menus.ui:16
-msgid "_About"
-msgstr "Tent_ang"
-
-#: data/ui/menus.ui:20
-msgid "_Quit"
-msgstr "_Keluar"
-
-#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Dari Web…"
 
-#: data/ui/menus.ui:33
+#: data/ui/menus.ui:10
 msgid "New Local Calendar…"
 msgstr "Kalender Lokal Baru…"
 
-#: data/ui/menus.ui:37
+#: data/ui/menus.ui:14
 msgid "From File…"
 msgstr "Dari Berkas…"
 
@@ -469,13 +453,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Alamat Kalender"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
-#: src/gcal-source-dialog.c:2291
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2286
+#: src/gcal-source-dialog.c:2292
 msgid "Add Calendar"
 msgstr "Tambah Kalender"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:344
-#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2315
 msgid "Calendar Settings"
 msgstr "Pengaturan Kalender"
 
@@ -554,6 +538,14 @@ msgstr "Cari acara"
 msgid "_Synchronize"
 msgstr "_Selaraskan"
 
+#: data/ui/window.ui:410
+msgid "_Keyboard Shortcuts"
+msgstr "Pintasan Papan Ti_k"
+
+#: data/ui/window.ui:419
+msgid "_About Calendar"
+msgstr "Ten_ang Kalender"
+
 #: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Tidak ada acara"
@@ -582,46 +574,50 @@ msgstr "Buka kalender pada tanggal yang diberikan"
 msgid "Open calendar showing the passed event"
 msgstr "Buka kalender yang menampilkan acara yang telah lewat"
 
-#: src/gcal-application.c:601
+#: src/gcal-application.c:603
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Hak Cipta © 2012–%d para penulis Kalender"
 
-#: src/gcal-application.c:652
+#: src/gcal-application.c:654
 msgid "translator-credits"
 msgstr ""
 "Andika Triwidada <andika@gmail.com>, 2013, 2016.\n"
-"Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017, 2018."
+"Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017, 2018, 2019."
 
-#: src/gcal-edit-dialog.c:277
+#: src/gcal-edit-dialog.c:372
 msgid "Save"
 msgstr "Simpan"
 
-#: src/gcal-edit-dialog.c:1037
+#: src/gcal-edit-dialog.c:539
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d menit sebelumnya"
+msgstr[1] "%d menit sebelumnya"
 
-#: src/gcal-edit-dialog.c:1045
+#: src/gcal-edit-dialog.c:547
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d jam sebelumnya"
+msgstr[1] "%d jam sebelumnya"
 
-#: src/gcal-edit-dialog.c:1053
+#: src/gcal-edit-dialog.c:555
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d hari sebelumnya"
+msgstr[1] "%d hari sebelumnya"
 
-#: src/gcal-edit-dialog.c:1061
+#: src/gcal-edit-dialog.c:563
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d minggu sebelumnya"
+msgstr[1] "%d minggu sebelumnya"
 
-#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
+#: src/gcal-edit-dialog.c:1505 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Acara tanpa nama"
 
@@ -931,20 +927,20 @@ msgid "Unnamed Calendar"
 msgstr "Kalender Tanpa Nama"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1810
+#: src/gcal-source-dialog.c:1811
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalender <b>%s</b> dihapus"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "Off"
 msgstr "Mati"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "On"
 msgstr "Nyala"
 
-#: src/gcal-source-dialog.c:1914
+#: src/gcal-source-dialog.c:1915
 msgid "Expired"
 msgstr "Kedaluwarsa"
 
@@ -999,6 +995,7 @@ msgstr "00 AM"
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "%d acara lain"
+msgstr[1] "%d acara lain"
 
 #: src/views/gcal-week-header.c:936
 #, c-format
@@ -1018,6 +1015,15 @@ msgstr "%d %B…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d %B"
+
+#~ msgid "_Calendars"
+#~ msgstr "_Kalender"
+
+#~ msgid "_About"
+#~ msgstr "Tent_ang"
+
+#~ msgid "_Quit"
+#~ msgstr "_Keluar"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Ta_mbah Acara…"
