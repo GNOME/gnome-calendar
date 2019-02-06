@@ -299,7 +299,7 @@ return_datetime_for_widgets (GcalEditDialog   *self,
                              GcalTimeSelector *time_selector)
 {
   g_autoptr (GDateTime) date_in_local_tz = NULL;
-  g_autoptr (GDateTime) date_in_best_tz = NULL;
+  g_autoptr (GDateTime) date_converted = NULL;
   GDateTime *date;
   GDateTime *time;
   GDateTime *retval;
@@ -316,14 +316,14 @@ return_datetime_for_widgets (GcalEditDialog   *self,
                                             all_day ? 0 : g_date_time_get_minute (time),
                                             0);
 
-  date_in_best_tz = g_date_time_to_timezone (date_in_local_tz, timezone);
+  date_converted = (all_day) ? date_in_local_tz : g_date_time_to_timezone (date_in_local_tz, timezone);
 
   retval = g_date_time_new (timezone,
-                            g_date_time_get_year (date_in_best_tz),
-                            g_date_time_get_month (date_in_best_tz),
-                            g_date_time_get_day_of_month (date_in_best_tz),
-                            all_day ? 0 : g_date_time_get_hour (date_in_best_tz),
-                            all_day ? 0 : g_date_time_get_minute (date_in_best_tz),
+                            g_date_time_get_year (date_converted),
+                            g_date_time_get_month (date_converted),
+                            g_date_time_get_day_of_month (date_converted),
+                            g_date_time_get_hour (date_converted),
+                            g_date_time_get_minute (date_converted),
                             0);
 
   return retval;
