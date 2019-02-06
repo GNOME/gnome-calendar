@@ -316,14 +316,17 @@ return_datetime_for_widgets (GcalEditDialog   *self,
                                             all_day ? 0 : g_date_time_get_minute (time),
                                             0);
 
-  date_in_best_tz = g_date_time_to_timezone (date_in_local_tz, timezone);
+  if (all_day)
+    date_in_best_tz = g_date_time_ref (date_in_local_tz);
+  else
+    date_in_best_tz = g_date_time_to_timezone (date_in_local_tz, timezone);
 
   retval = g_date_time_new (timezone,
                             g_date_time_get_year (date_in_best_tz),
                             g_date_time_get_month (date_in_best_tz),
                             g_date_time_get_day_of_month (date_in_best_tz),
-                            all_day ? 0 : g_date_time_get_hour (date_in_best_tz),
-                            all_day ? 0 : g_date_time_get_minute (date_in_best_tz),
+                            g_date_time_get_hour (date_in_best_tz),
+                            g_date_time_get_minute (date_in_best_tz),
                             0);
 
   return retval;
