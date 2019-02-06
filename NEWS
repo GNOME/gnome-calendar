@@ -1,3 +1,10 @@
+Major changes in 3.31.90:
+* Updated translations
+* Fix build failures against latest EDS
+* New app icon
+* Rewrite timezone support for events
+* Run nested EDS in Flatpak
+
 Major changes in 3.30.0:
 * Updated translations
 
