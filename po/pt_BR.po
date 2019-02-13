@@ -1,31 +1,32 @@
 # Brazilian Portuguese translation for gnome-calendar.
-# Copyright (C) 2018 gnome-calendar's COPYRIGHT HOLDER
+# Copyright (C) 2019 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Felipe Braga <fbobraga@gmail.com>, 2015.
 # Gabriel Speckhahn <gabspeck@gmail.com>, 2015.
 # Fábio Nogueira <fnogueira@gnome.org>, 2016.
 # Enrico Nicoletto <liverig@gmail.com>, 2014, 2015, 2016.
-# Rafael Fontenelle <rafaelff@gnome.org>, 2012-2013, 2015, 2017-2018.
 # Jamerson Tiossi <jamersontiossi@yahoo.com.br>, 2017.
+# Rafael Fontenelle <rafaelff@gnome.org>, 2012-2019.
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-07-29 04:02+0000\n"
-"PO-Revision-Date: 2018-08-22 07:41-0200\n"
+"POT-Creation-Date: 2018-11-06 13:46+0000\n"
+"PO-Revision-Date: 2019-02-13 14:07-0200\n"
 "Last-Translator: Rafael Fontenelle <rafaelff@gnome.org>\n"
-"Language-Team: Brazilian Portuguese <gnome-pt_br-list@gnome.org>\n"
+"Language-Team: Portuguese - Brazil <gnome-pt_br-list@gnome.org>\n"
 "Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Virtaal 1.0.0-beta1\n"
+"Plural-Forms: nplurals=2; plural=(n > 1)\n"
+"X-Generator: Gtranslator 3.31.90\n"
 "X-Project-Style: gnome\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
 msgstr "Calendário"
 
@@ -34,25 +35,17 @@ msgid "Calendar for GNOME"
 msgstr "Calendário do GNOME"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:11
-#| msgid ""
-#| "GNOME Calendar is a simple and beautiful calendar application designed to "
-#| "perfectly fit the GNOME desktop. By reusing the components which the "
-#| "GNOME desktop is build on, Calendar nicely integrates with the GNOME "
-#| "ecosystem."
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"O GNOME Calendário é um aplicativo de calendário simples e bonito projetado para se "
-"encaixar perfeitamente ao ambiente GNOME. Por reutilizar os componentes com "
-"o qual GNOME é construído, Calendário se integra muito bem à esse ecossistema."
+"O GNOME Calendário é um aplicativo de calendário simples e bonito projetado "
+"para se encaixar perfeitamente ao ambiente GNOME. Por reutilizar os "
+"componentes com o qual GNOME é construído, Calendário se integra muito bem à "
+"esse ecossistema."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
-#| msgid ""
-#| "We aim to find the perfect balance between nicely crafted features and "
-#| "user-centred usability. No excess, no lacks. You’ll feel comfortable "
-#| "using Calendar, like you’ve been using it for ages!"
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
@@ -138,7 +131,8 @@ msgstr "Seguir a luz noturna do sistema"
 
 #: data/org.gnome.calendar.gschema.xml.in:32
 msgid "Use GNOME night light setting to activate night-mode."
-msgstr "Usa as configurações de luz noturna do GNOME para ativar o modo noturno."
+msgstr ""
+"Usa as configurações de luz noturna do GNOME para ativar o modo noturno."
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -157,7 +151,7 @@ msgstr "Cancelar"
 msgid "Click to select the calendar"
 msgstr "Clique para selecionar o calendário do evento"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:372
 msgid "Done"
 msgstr "Feito"
 
@@ -350,30 +344,14 @@ msgid "Year view"
 msgstr "Visão por ano"
 
 #: data/ui/menus.ui:6
-msgid "_Calendars"
-msgstr "_Calendários"
-
-#: data/ui/menus.ui:12
-msgid "_Keyboard Shortcuts"
-msgstr "Atalhos do _teclado"
-
-#: data/ui/menus.ui:16
-msgid "_About"
-msgstr "_Sobre"
-
-#: data/ui/menus.ui:20
-msgid "_Quit"
-msgstr "Sai_r"
-
-#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Da Web…"
 
-#: data/ui/menus.ui:33
+#: data/ui/menus.ui:10
 msgid "New Local Calendar…"
 msgstr "Novo calendário local…"
 
-#: data/ui/menus.ui:37
+#: data/ui/menus.ui:14
 msgid "From File…"
 msgstr "De arquivo…"
 
@@ -473,21 +451,21 @@ msgid ""
 "belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
 msgstr ""
-"Digite o endereço do calendário que você deseja adicionar. Se o calendário pertence "
-"a uma de suas contas on-line, você pode adicioná-lo através das <a href=\"GOA"
-"\">configurações de contas on-line</a>."
+"Digite o endereço do calendário que você deseja adicionar. Se o calendário "
+"pertence a uma de suas contas on-line, você pode adicioná-lo através das <a "
+"href=\"GOA\">configurações de contas on-line</a>."
 
 #: data/ui/source-dialog.ui:646
 msgid "Calendar Address"
 msgstr "Endereço do calendário"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
-#: src/gcal-source-dialog.c:2291
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2286
+#: src/gcal-source-dialog.c:2292
 msgid "Add Calendar"
 msgstr "Adicionar calendário"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:344
-#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2315
 msgid "Calendar Settings"
 msgstr "Configurações do calendário"
 
@@ -566,6 +544,15 @@ msgstr "Pesquisa por eventos"
 msgid "_Synchronize"
 msgstr "_Sincronizar"
 
+#: data/ui/window.ui:410
+msgid "_Keyboard Shortcuts"
+msgstr "Atalhos do _teclado"
+
+#: data/ui/window.ui:419
+#| msgid "Add Calendar"
+msgid "_About Calendar"
+msgstr "_Sobre o Calendário"
+
 #: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Nenhum evento"
@@ -594,12 +581,12 @@ msgstr "Abrir calendário na data anterior"
 msgid "Open calendar showing the passed event"
 msgstr "Abrir calendário mostrando o evento anterior"
 
-#: src/gcal-application.c:601
+#: src/gcal-application.c:603
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d Os autores do Calendário"
 
-#: src/gcal-application.c:652
+#: src/gcal-application.c:654
 msgid "translator-credits"
 msgstr ""
 "Enrico Nicoletto <liverig@gmail.com>\n"
@@ -607,39 +594,39 @@ msgstr ""
 "Gabriel Speckhahn <gabspeck@gmail.com>\n"
 "Rafael Fontenelle <rafaelff@gnome.org>"
 
-#: src/gcal-edit-dialog.c:277
+#: src/gcal-edit-dialog.c:372
 msgid "Save"
 msgstr "Salvar"
 
-#: src/gcal-edit-dialog.c:1037
+#: src/gcal-edit-dialog.c:539
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minuto antes"
 msgstr[1] "%d minutos antes"
 
-#: src/gcal-edit-dialog.c:1045
+#: src/gcal-edit-dialog.c:547
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d hora antes"
 msgstr[1] "%d horas antes"
 
-#: src/gcal-edit-dialog.c:1053
+#: src/gcal-edit-dialog.c:555
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d dia antes"
 msgstr[1] "%d dias antes"
 
-#: src/gcal-edit-dialog.c:1061
+#: src/gcal-edit-dialog.c:563
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d semana antes"
 msgstr[1] "%d semanas antes"
 
-#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
+#: src/gcal-edit-dialog.c:1505 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Evento sem nome"
 
@@ -951,20 +938,20 @@ msgid "Unnamed Calendar"
 msgstr "Calendário sem nome"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1810
+#: src/gcal-source-dialog.c:1811
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Calendário <b>%s</b> removido"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "Off"
 msgstr "Desligado"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "On"
 msgstr "Ligado"
 
-#: src/gcal-source-dialog.c:1914
+#: src/gcal-source-dialog.c:1915
 msgid "Expired"
 msgstr "Encerrado"
 
@@ -1039,6 +1026,15 @@ msgstr "%d de %B…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d de %B"
+
+#~ msgid "_Calendars"
+#~ msgstr "_Calendários"
+
+#~ msgid "_About"
+#~ msgstr "_Sobre"
+
+#~ msgid "_Quit"
+#~ msgstr "Sai_r"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Adicionar eve_nto…"
@@ -1126,8 +1122,8 @@ msgstr "%d de %B"
 #~ "Calendar is a simple and beautiful calendar application designed to fit "
 #~ "GNOME 3."
 #~ msgstr ""
-#~ "O Calendário é um aplicativo simples e elegante projetado para adequar-se ao "
-#~ "GNOME 3."
+#~ "O Calendário é um aplicativo simples e elegante projetado para adequar-se "
+#~ "ao GNOME 3."
 
 #~ msgid "Features:"
 #~ msgstr "Características:"
