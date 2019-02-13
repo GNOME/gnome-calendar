@@ -5,13 +5,13 @@
 # Kenneth Nielsen <k.nielsen81@gmail.com>, 2015.
 # Ask Hjorth Larsen <asklarsen@gmail.com>, 2015, 2016.
 # scootergrisen, 2016.
-# Alan Mortensen <alanmortensen.am@gmail.com>, 2016-2018.
+# Alan Mortensen <alanmortensen.am@gmail.com>, 2016-19.
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-07-29 04:02+0000\n"
-"PO-Revision-Date: 2018-09-01 18:44+0200\n"
+"POT-Creation-Date: 2018-11-06 13:46+0000\n"
+"PO-Revision-Date: 2019-02-11 19:39+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
 "Language: da\n"
@@ -19,12 +19,12 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 2.0.6\n"
 "X-Project-Style: gnome\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -147,7 +147,7 @@ msgstr "Annullér"
 msgid "Click to select the calendar"
 msgstr "Klik for at vælge kalenderen"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:372
 msgid "Done"
 msgstr "Færdig"
 
@@ -340,30 +340,14 @@ msgid "Year view"
 msgstr "Årsvisning"
 
 #: data/ui/menus.ui:6
-msgid "_Calendars"
-msgstr "_Kalendere"
-
-#: data/ui/menus.ui:12
-msgid "_Keyboard Shortcuts"
-msgstr "_Tastaturgenveje"
-
-#: data/ui/menus.ui:16
-msgid "_About"
-msgstr "_Om"
-
-#: data/ui/menus.ui:20
-msgid "_Quit"
-msgstr "_Afslut"
-
-#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Fra internettet …"
 
-#: data/ui/menus.ui:33
+#: data/ui/menus.ui:10
 msgid "New Local Calendar…"
 msgstr "Ny lokal kalender …"
 
-#: data/ui/menus.ui:37
+#: data/ui/menus.ui:14
 msgid "From File…"
 msgstr "Fra fil …"
 
@@ -471,13 +455,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Kalenderadresse"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
-#: src/gcal-source-dialog.c:2291
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2286
+#: src/gcal-source-dialog.c:2292
 msgid "Add Calendar"
 msgstr "Tilføj kalender"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:344
-#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2315
 msgid "Calendar Settings"
 msgstr "Kalenderindstillinger"
 
@@ -556,6 +540,14 @@ msgstr "Søg efter begivenheder"
 msgid "_Synchronize"
 msgstr "_Synkronisér"
 
+#: data/ui/window.ui:410
+msgid "_Keyboard Shortcuts"
+msgstr "_Tastaturgenveje"
+
+#: data/ui/window.ui:419
+msgid "_About Calendar"
+msgstr "_Om Kalender"
+
 #: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Ingen begivenheder"
@@ -584,12 +576,12 @@ msgstr "Åbn kalender for foregående dato"
 msgid "Open calendar showing the passed event"
 msgstr "Åbn kalender som viser den foregående begivenhed"
 
-#: src/gcal-application.c:601
+#: src/gcal-application.c:603
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Ophavsret © 2012–%d Kalenderens forfattere"
 
-#: src/gcal-application.c:652
+#: src/gcal-application.c:654
 msgid "translator-credits"
 msgstr ""
 "Kris Thomsen\n"
@@ -601,39 +593,39 @@ msgstr ""
 "Dansk-gruppen <dansk@dansk-gruppen.dk>\n"
 "Mere info: http://www.dansk-gruppen.dk"
 
-#: src/gcal-edit-dialog.c:277
+#: src/gcal-edit-dialog.c:372
 msgid "Save"
 msgstr "Gem"
 
-#: src/gcal-edit-dialog.c:1037
+#: src/gcal-edit-dialog.c:539
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minut før"
 msgstr[1] "%d minutter før"
 
-#: src/gcal-edit-dialog.c:1045
+#: src/gcal-edit-dialog.c:547
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d time før"
 msgstr[1] "%d timer før"
 
-#: src/gcal-edit-dialog.c:1053
+#: src/gcal-edit-dialog.c:555
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d dag før"
 msgstr[1] "%d dage før"
 
-#: src/gcal-edit-dialog.c:1061
+#: src/gcal-edit-dialog.c:563
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d uge før"
 msgstr[1] "%d uger før"
 
-#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
+#: src/gcal-edit-dialog.c:1505 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Unavngivet begivenhed"
 
@@ -966,22 +958,22 @@ msgid "Unnamed Calendar"
 msgstr "Unavngivet kalender"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1810
+#: src/gcal-source-dialog.c:1811
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalender <b>%s</b> fjernet"
 
 # Jeg tror det drejer sig om kalenderkilder
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "Off"
 msgstr "Slået fra"
 
 # Jeg tror det drejer sig om kalenderkilder
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "On"
 msgstr "Slået til"
 
-#: src/gcal-source-dialog.c:1914
+#: src/gcal-source-dialog.c:1915
 msgid "Expired"
 msgstr "Udløbet"
 
@@ -1056,6 +1048,15 @@ msgstr "%d. %B …"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d. %B"
+
+#~ msgid "_Calendars"
+#~ msgstr "_Kalendere"
+
+#~ msgid "_About"
+#~ msgstr "_Om"
+
+#~ msgid "_Quit"
+#~ msgstr "_Afslut"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Tilføj be_givenhed …"
