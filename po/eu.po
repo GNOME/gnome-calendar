@@ -7,7 +7,7 @@
 msgid ""
 msgstr "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-02-21 09:01+0000\n"
+"POT-Creation-Date: 2019-02-23 10:07+0000\n"
 "PO-Revision-Date: 2019-02-23 06:00+0100\n"
 "Last-Translator: Asier Sarasua Garmendia <asier.sarasua@gmail.com>\n"
 "Language-Team: Basque <librezale@librezale.eus>\n"
@@ -22,7 +22,7 @@ msgstr "Project-Id-Version: gnome-calendar master\n"
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
 #: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
-msgstr "Calendar"
+msgstr "Egutegia"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:8
 msgid "Calendar for GNOME"
@@ -33,18 +33,14 @@ msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr "GNOME Calendar egutegien aplikazio sotil eta ederra da, GNOME "
-"mahaigainean primeran integratu dadin diseinatua. GNOME mahaigainak oinarritzat "
-"dituen osagaiak berrerabilita, Calendar ederto integratzen da GNOME ekosisteman."
+msgstr "GNOME Calendar egutegien aplikazio sotil eta ederra da, GNOME mahaigainean primeran integratu dadin diseinatua. GNOME mahaigainak oinarritzat dituen osagaiak berrerabilita, Calendar ederto integratzen da GNOME ekosisteman."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
-msgstr "Oreka egokia bilatu nahi dugu ongi eraikitako eginbideen eta erabiltzailean "
-"zentratutako erabilgarritasunaren artean. Ezer ez soberan, ezer ez faltan. "
-"Eroso arituko zara Calendar erabilita, betidanik erabili izan bazenu bezala!"
+msgstr "Oreka egokia bilatu nahi dugu ongi eraikitako eginbideen eta erabiltzailean zentratutako erabilgarritasunaren artean. Ezer ez soberan, ezer ez faltan. Eroso arituko zara Calendar erabilita, betidanik erabili izan bazenu bezala!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
 msgid "Week view"
@@ -112,8 +108,7 @@ msgstr "Eguraldi-zerbitzuaren konfigurazioa"
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
-msgstr "Eguraldi-txostenak erakusten badira, kokaleku automatikoak "
-"eta kokalekuaren izen bat erabiliko dira"
+msgstr "Eguraldi-txostenak erakusten badira, kokaleku automatikoak eta kokalekuaren izen bat erabiliko dira"
 
 #: data/org.gnome.calendar.gschema.xml.in:31
 msgid "Follow system night light"
@@ -162,7 +157,7 @@ msgstr "Oroigarriak"
 
 #: data/ui/edit-dialog.ui:216
 msgid "Notes"
-msgstr "Oharrak"
+msgstr "Notes"
 
 #: data/ui/edit-dialog.ui:232 data/ui/source-dialog.ui:563
 msgid "Location"
@@ -275,7 +270,7 @@ msgstr "Bilatu"
 #: data/ui/help-overlay.ui:38
 msgctxt "shortcut window"
 msgid "Show help"
-msgstr "Erakutsi 'Laguntza'"
+msgstr "Erakutsi laguntza"
 
 #: data/ui/help-overlay.ui:45
 msgctxt "shortcut window"
@@ -439,8 +434,7 @@ msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
 "belongs to one of your online accounts, you can add it through the <a href="
 "\"GOA\">online account settings</a>."
-msgstr "Sartu gehitu nahi duzun egutegi-helbidea. Egutegia zure lineako kontu "
-"batena bada, <a href=\"GOA\">lineako kontuaren ezarpenak</a> bidez gehi dezakezu."
+msgstr "Sartu gehitu nahi duzun egutegi-helbidea. Egutegia zure lineako kontu batena bada, <a href=\"GOA\">lineako kontuaren ezarpenak</a> bidez gehi dezakezu."
 
 #: data/ui/source-dialog.ui:646
 msgid "Calendar Address"
@@ -949,8 +943,7 @@ msgstr "%s PM"
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
-msgstr "Aldatu nahi duzun gertaera errepikakorra da. Hautatu dituzun "
-"aldaketek honi eragingo die:"
+msgstr "Aldatu nahi duzun gertaera errepikakorra da. Hautatu dituzun aldaketek honi eragingo die:"
 
 #: src/gcal-utils.c:1123
 msgid "_Cancel"
