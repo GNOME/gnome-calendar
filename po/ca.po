@@ -2,7 +2,7 @@
 # Copyright (C) 2012 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 #
-# Jordi Mas i Hernandez <jmas@softcatala.org>, 2013-2017
+# Jordi Mas i Hernandez <jmas@softcatala.org>, 2013-2017, 2018
 # Gil Forcada Codinachs <gil.gnome@gmail.com>, 2018.
 #
 # N.T.
@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-06-07 14:40+0000\n"
-"PO-Revision-Date: 2018-01-22 00:06+0100\n"
+"POT-Creation-Date: 2019-02-23 10:07+0000\n"
+"PO-Revision-Date: 2019-03-02 09:25+0100\n"
 "Last-Translator: Gil Forcada Codinachs <gil.gnome@gmail.com>\n"
 "Language-Team: Catalan <tradgnome@softcatala.org>\n"
 "Language: ca\n"
@@ -20,10 +20,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 2.1.1\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:655 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
 msgstr "Calendari"
 
@@ -39,8 +40,8 @@ msgid ""
 msgstr ""
 "El Calendari del GNOME és una aplicació de calendari simple i bonica "
 "dissenyada per encaixar perfectament amb l'escriptori GNOME. Gràcies a la "
-"reutilització de components amb què es construeix, el "
-"calendari s'integra bé amb l'ecosistema GNOME."
+"reutilització de components amb què es construeix, el calendari s'integra bé "
+"amb l'ecosistema GNOME."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
@@ -123,6 +124,14 @@ msgstr ""
 "Si es mostren els informes meteorològics, s'utilitza la ubicació automàtica "
 "i el nom de la ubicació"
 
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "Segueix la llum nocturna del sistema"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "Utilitza el paràmetre de llum nocturna del GNOME per activar el mode nocturn."
+
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
 msgstr "Commuta el so de l'alarma"
@@ -140,7 +149,7 @@ msgstr "Cancel·la"
 msgid "Click to select the calendar"
 msgstr "Feu clic per seleccionar el calendari"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:372
 msgid "Done"
 msgstr "Fet"
 
@@ -333,34 +342,14 @@ msgid "Year view"
 msgstr "Vista anual"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "A_fegeix cita..."
-
-#: data/ui/menus.ui:13
-msgid "_Calendars"
-msgstr "_Calendaris"
-
-#: data/ui/menus.ui:19
-msgid "_Keyboard Shortcuts"
-msgstr "_Dreceres de teclat"
-
-#: data/ui/menus.ui:23
-msgid "_About"
-msgstr "_Quant a"
-
-#: data/ui/menus.ui:27
-msgid "_Quit"
-msgstr "_Surt"
-
-#: data/ui/menus.ui:36
 msgid "From Web…"
 msgstr "Des de la xarxa..."
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:10
 msgid "New Local Calendar…"
 msgstr "Calendari local nou..."
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:14
 msgid "From File…"
 msgstr "Des d'un fitxer..."
 
@@ -385,7 +374,7 @@ msgstr "No s'han trobat resultats"
 msgid "Try a different search"
 msgstr "Proveu una cerca diferent"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "Desfés"
 
@@ -468,13 +457,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Adreça del calendari"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
-#: src/gcal-source-dialog.c:2291
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2286
+#: src/gcal-source-dialog.c:2292
 msgid "Add Calendar"
 msgstr "Afegeix un calendari"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:344
-#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2315
 msgid "Calendar Settings"
 msgstr "Paràmetres del calendari"
 
@@ -511,7 +500,7 @@ msgstr "A. M."
 msgid "PM"
 msgstr "P. M."
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "_Meteorologia"
 
@@ -549,13 +538,17 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Cerqueu cites"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "A_fegeix cita"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "_Sincronitza"
+
+#: data/ui/window.ui:410
+msgid "_Keyboard Shortcuts"
+msgstr "_Dreceres de teclat"
+
+#: data/ui/window.ui:419
+msgid "_About Calendar"
+msgstr "_Quant al Calendari"
 
 #: data/ui/year-view.ui:133
 msgid "No events"
@@ -565,68 +558,68 @@ msgstr "Sense cites"
 msgid "Add Event…"
 msgstr "Afegeix una cita..."
 
-#: src/gcal-application.c:90
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "Surt del Calendari del GNOME"
 
-#: src/gcal-application.c:95
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "Mostra el número de versió"
 
-#: src/gcal-application.c:100
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "Habilita els missatges de depuració"
 
-#: src/gcal-application.c:105
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "Obre el calendari a la data passada"
 
-#: src/gcal-application.c:110
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "Obre el calendari i mostra la cita passada"
 
-#: src/gcal-application.c:610
+#: src/gcal-application.c:603
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d els autors del Calendari"
 
-#: src/gcal-application.c:661
+#: src/gcal-application.c:654
 msgid "translator-credits"
 msgstr "Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2017"
 
-#: src/gcal-edit-dialog.c:277
+#: src/gcal-edit-dialog.c:372
 msgid "Save"
 msgstr "Desa"
 
-#: src/gcal-edit-dialog.c:1037
+#: src/gcal-edit-dialog.c:539
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minut abans"
 msgstr[1] "%d minuts abans"
 
-#: src/gcal-edit-dialog.c:1045
+#: src/gcal-edit-dialog.c:547
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d hora abans"
 msgstr[1] "%d hores abans"
 
-#: src/gcal-edit-dialog.c:1053
+#: src/gcal-edit-dialog.c:555
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d dia abans"
 msgstr[1] "%d dies abans"
 
-#: src/gcal-edit-dialog.c:1061
+#: src/gcal-edit-dialog.c:563
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d setmana abans"
 msgstr[1] "%d setmanes abans"
 
-#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
+#: src/gcal-edit-dialog.c:1505 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Cita sense nom"
 
@@ -936,20 +929,20 @@ msgid "Unnamed Calendar"
 msgstr "Calendari sense nom"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1810
+#: src/gcal-source-dialog.c:1811
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "S'ha suprimit el calendari <b>%s</b>"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "Off"
 msgstr "Apagat"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "On"
 msgstr "Engegat"
 
-#: src/gcal-source-dialog.c:1914
+#: src/gcal-source-dialog.c:1915
 msgid "Expired"
 msgstr "Ha vençut"
 
@@ -987,11 +980,11 @@ msgstr "_Cites subsegüents"
 msgid "_All events"
 msgstr "_Totes les cites"
 
-#: src/gcal-window.c:1039
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "S'ha suprimit una altra cita"
 
-#: src/gcal-window.c:1043
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "S'ha suprimit la cita"
 
@@ -1024,6 +1017,21 @@ msgstr "%-d %B…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%-d %B"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "A_fegeix cita..."
+
+#~ msgid "_Calendars"
+#~ msgstr "_Calendaris"
+
+#~ msgid "_About"
+#~ msgstr "_Quant a"
+
+#~ msgid "_Quit"
+#~ msgstr "_Surt"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "A_fegeix cita"
 
 #~ msgid "— Calendar management"
 #~ msgstr " - Gestió del calendari"
