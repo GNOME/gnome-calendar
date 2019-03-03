@@ -1,13 +1,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 #
-# Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>, 2016, 2017, 2018.
+# Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>, 2016, 2017, 2018, 2019.
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-07-29 04:02+0000\n"
-"PO-Revision-Date: 2018-08-31 20:39+0200\n"
+"POT-Creation-Date: 2018-11-06 13:46+0000\n"
+"PO-Revision-Date: 2019-03-03 12:18+0200\n"
 "Last-Translator: Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>\n"
 "Language-Team: Latvian <lata-l10n@googlegroups.com>\n"
 "Language: lv\n"
@@ -20,7 +20,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
 msgstr "Kalendārs"
 
@@ -29,11 +29,6 @@ msgid "Calendar for GNOME"
 msgstr "Kalendārs GNOME videi"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:11
-#| msgid ""
-#| "GNOME Calendar is a simple and beautiful calendar application designed to "
-#| "perfectly fit the GNOME desktop. By reusing the components which the "
-#| "GNOME desktop is build on, Calendar nicely integrates with the GNOME "
-#| "ecosystem."
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
@@ -45,10 +40,6 @@ msgstr ""
 "ekosistēmā."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
-#| msgid ""
-#| "We aim to find the perfect balance between nicely crafted features and "
-#| "user-centred usability. No excess, no lacks. You’ll feel comfortable "
-#| "using Calendar, like you’ve been using it for ages!"
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
@@ -153,7 +144,7 @@ msgstr "Atcelt"
 msgid "Click to select the calendar"
 msgstr "Spiediet, lai izvēlētos kalendāru"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:372
 msgid "Done"
 msgstr "Pabeigts"
 
@@ -346,30 +337,14 @@ msgid "Year view"
 msgstr "Gada skats"
 
 #: data/ui/menus.ui:6
-msgid "_Calendars"
-msgstr "_Kalendāri"
-
-#: data/ui/menus.ui:12
-msgid "_Keyboard Shortcuts"
-msgstr "_Tastatūras īsinājumtaustiņi"
-
-#: data/ui/menus.ui:16
-msgid "_About"
-msgstr "P_ar"
-
-#: data/ui/menus.ui:20
-msgid "_Quit"
-msgstr "_Iziet"
-
-#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "No tīmekļa…"
 
-#: data/ui/menus.ui:33
+#: data/ui/menus.ui:10
 msgid "New Local Calendar…"
 msgstr "Jauns lokāls kalendārs…"
 
-#: data/ui/menus.ui:37
+#: data/ui/menus.ui:14
 msgid "From File…"
 msgstr "No datnes…"
 
@@ -477,13 +452,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Kalendāra adrese"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
-#: src/gcal-source-dialog.c:2291
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2286
+#: src/gcal-source-dialog.c:2292
 msgid "Add Calendar"
 msgstr "Pievienot kalendāru"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:344
-#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2315
 msgid "Calendar Settings"
 msgstr "Kalendāra iestatījumi"
 
@@ -562,6 +537,15 @@ msgstr "Meklēt notikumus"
 msgid "_Synchronize"
 msgstr "_Sinhronizēt"
 
+#: data/ui/window.ui:410
+msgid "_Keyboard Shortcuts"
+msgstr "_Tastatūras īsinājumtaustiņi"
+
+#: data/ui/window.ui:419
+#| msgid "Add Calendar"
+msgid "_About Calendar"
+msgstr "P_ar kalendāru"
+
 #: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Nav notikumu"
@@ -590,20 +574,20 @@ msgstr "Atvērt kalendāru pagājušajā datumā"
 msgid "Open calendar showing the passed event"
 msgstr "Atvērt kalendāru, kas rāda pagājušo notikumu"
 
-#: src/gcal-application.c:601
+#: src/gcal-application.c:603
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Autortiesības © 2012–%d Kalendāra autori"
 
-#: src/gcal-application.c:652
+#: src/gcal-application.c:654
 msgid "translator-credits"
 msgstr "Rūdolfs Mazurs <rudolfs.mazurs@gmail.com>"
 
-#: src/gcal-edit-dialog.c:277
+#: src/gcal-edit-dialog.c:372
 msgid "Save"
 msgstr "Saglabāt"
 
-#: src/gcal-edit-dialog.c:1037
+#: src/gcal-edit-dialog.c:539
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
@@ -611,7 +595,7 @@ msgstr[0] "%d minūti pirms"
 msgstr[1] "%d minūtes pirms"
 msgstr[2] "%d minūšu pirms"
 
-#: src/gcal-edit-dialog.c:1045
+#: src/gcal-edit-dialog.c:547
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
@@ -619,7 +603,7 @@ msgstr[0] "%d stundu pirms"
 msgstr[1] "%d stundas pirms"
 msgstr[2] "%d stundu pirms"
 
-#: src/gcal-edit-dialog.c:1053
+#: src/gcal-edit-dialog.c:555
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
@@ -627,7 +611,7 @@ msgstr[0] "%d dienu pirms"
 msgstr[1] "%d dienas pirms"
 msgstr[2] "%d dienu pirms"
 
-#: src/gcal-edit-dialog.c:1061
+#: src/gcal-edit-dialog.c:563
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
@@ -635,7 +619,7 @@ msgstr[0] "%d nedēļu pirms"
 msgstr[1] "%d nedēļas pirms"
 msgstr[2] "%d nedēļu pirms"
 
-#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
+#: src/gcal-edit-dialog.c:1505 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Nenosaukts notikums"
 
@@ -945,20 +929,20 @@ msgid "Unnamed Calendar"
 msgstr "Nenosaukts kalendārs"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1810
+#: src/gcal-source-dialog.c:1811
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalendārs <b>%s</b> ir izņemts"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "Off"
 msgstr "Izslēgts"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "On"
 msgstr "ieslēgts"
 
-#: src/gcal-source-dialog.c:1914
+#: src/gcal-source-dialog.c:1915
 msgid "Expired"
 msgstr "Beidzies"
 
@@ -1034,6 +1018,15 @@ msgstr "%d. %B…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d. %B"
+
+#~ msgid "_Calendars"
+#~ msgstr "_Kalendāri"
+
+#~ msgid "_About"
+#~ msgstr "P_ar"
+
+#~ msgid "_Quit"
+#~ msgstr "_Iziet"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Pievienot _notikumu…"
