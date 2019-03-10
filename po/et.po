@@ -7,20 +7,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-08-17 12:58+0000\n"
-"PO-Revision-Date: 2018-09-01 16:17+0300\n"
-"Last-Translator: Liivia Lilleväli <liivia.l10n@gmail.com>\n"
+"POT-Creation-Date: 2018-11-06 13:46+0000\n"
+"PO-Revision-Date: 2019-03-10 19:03+0200\n"
+"Last-Translator: Mart Raudsepp <leio@gentoo.org>\n"
 "Language-Team: Estonian <gnome-et-list@gnome.org>\n"
 "Language: et\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.1.1\n"
+"X-Generator: Poedit 2.2\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -144,7 +144,7 @@ msgstr "Loobu"
 msgid "Click to select the calendar"
 msgstr "Kalendri valimiseks klõpsa siia"
 
-#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:277
+#: data/ui/edit-dialog.ui:108 src/gcal-edit-dialog.c:372
 msgid "Done"
 msgstr "Valmis"
 
@@ -337,30 +337,14 @@ msgid "Year view"
 msgstr "Aastavaade"
 
 #: data/ui/menus.ui:6
-msgid "_Calendars"
-msgstr "K_alendrid"
-
-#: data/ui/menus.ui:12
-msgid "_Keyboard Shortcuts"
-msgstr "_Kiirklahvid"
-
-#: data/ui/menus.ui:16
-msgid "_About"
-msgstr "_Programmist"
-
-#: data/ui/menus.ui:20
-msgid "_Quit"
-msgstr "_Lõpeta"
-
-#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Veebist…"
 
-#: data/ui/menus.ui:33
+#: data/ui/menus.ui:10
 msgid "New Local Calendar…"
 msgstr "Uus kohalik kalender…"
 
-#: data/ui/menus.ui:37
+#: data/ui/menus.ui:14
 msgid "From File…"
 msgstr "Failist…"
 
@@ -468,13 +452,13 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Kalendri aadress"
 
-#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2285
-#: src/gcal-source-dialog.c:2291
+#: data/ui/source-dialog.ui:729 src/gcal-source-dialog.c:2286
+#: src/gcal-source-dialog.c:2292
 msgid "Add Calendar"
 msgstr "Kalendri lisamine"
 
 #: data/ui/source-dialog.ui:745 data/ui/window.ui:344
-#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2314
+#: src/gcal-source-dialog.c:862 src/gcal-source-dialog.c:2315
 msgid "Calendar Settings"
 msgstr "Kalendri sätted"
 
@@ -553,6 +537,14 @@ msgstr "Sündmuste otsing"
 msgid "_Synchronize"
 msgstr "_Sünkroniseerimine"
 
+#: data/ui/window.ui:410
+msgid "_Keyboard Shortcuts"
+msgstr "_Kiirklahvid"
+
+#: data/ui/window.ui:419
+msgid "_About Calendar"
+msgstr "Kalendrist _lähemalt"
+
 #: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Sündmuseid pole"
@@ -581,48 +573,48 @@ msgstr "Kalendri avamine sisestatud kuupäeva kuvamisega"
 msgid "Open calendar showing the passed event"
 msgstr "Kalendri avamine sisestatud sündmuse kuvamisega"
 
-#: src/gcal-application.c:601
+#: src/gcal-application.c:603
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Autoriõigused © 2012–%d Calendari autorid"
 
-#: src/gcal-application.c:652
+#: src/gcal-application.c:654
 msgid "translator-credits"
 msgstr "Liivia Lilleväli <liivia.l10n@gmail.com>, 2018"
 
-#: src/gcal-edit-dialog.c:277
+#: src/gcal-edit-dialog.c:372
 msgid "Save"
 msgstr "Salvesta"
 
-#: src/gcal-edit-dialog.c:1037
+#: src/gcal-edit-dialog.c:539
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d minut enne"
 msgstr[1] "%d minutit enne"
 
-#: src/gcal-edit-dialog.c:1045
+#: src/gcal-edit-dialog.c:547
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d tund enne"
 msgstr[1] "%d tundi enne"
 
-#: src/gcal-edit-dialog.c:1053
+#: src/gcal-edit-dialog.c:555
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d päev enne"
 msgstr[1] "%d päeva enne"
 
-#: src/gcal-edit-dialog.c:1061
+#: src/gcal-edit-dialog.c:563
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d nädal enne"
 msgstr[1] "%d nädalat enne"
 
-#: src/gcal-edit-dialog.c:1367 src/gcal-quick-add-popover.c:682
+#: src/gcal-edit-dialog.c:1505 src/gcal-quick-add-popover.c:682
 msgid "Unnamed event"
 msgstr "Nimetu sündmus"
 
@@ -932,20 +924,20 @@ msgid "Unnamed Calendar"
 msgstr "Nimetu kalender"
 
 #. Update notification label
-#: src/gcal-source-dialog.c:1810
+#: src/gcal-source-dialog.c:1811
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalender <b>%s</b> eemaldati"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "Off"
 msgstr "Keelatud"
 
-#: src/gcal-source-dialog.c:1859 src/gcal-source-dialog.c:1915
+#: src/gcal-source-dialog.c:1860 src/gcal-source-dialog.c:1916
 msgid "On"
 msgstr "Lubatud"
 
-#: src/gcal-source-dialog.c:1914
+#: src/gcal-source-dialog.c:1915
 msgid "Expired"
 msgstr "Aegunud"
 
@@ -1018,6 +1010,15 @@ msgstr "%d. %B…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d. %B"
+
+#~ msgid "_Calendars"
+#~ msgstr "K_alendrid"
+
+#~ msgid "_About"
+#~ msgstr "_Programmist"
+
+#~ msgid "_Quit"
+#~ msgstr "_Lõpeta"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "Lisa _sündmus…"
