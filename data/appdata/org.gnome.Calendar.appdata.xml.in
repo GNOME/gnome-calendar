@@ -49,6 +49,13 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2098-03-11" version="3.32.0">
+      <description>
+        <p>GNOME Calendar 3.32.0 release is here!</p>
+        <p>Thanks to all the contributors that worked on GNOME Calendar!</p>
+      </description>
+    </release>
+
     <release date="2018-09-03" version="3.30.0">
       <description>
         <p>GNOME Calendar 3.30.0 release is here!</p>
