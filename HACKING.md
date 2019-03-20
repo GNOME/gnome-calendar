@@ -134,5 +134,5 @@ foo_bar_do_somthing_sync (a, 1, object, data,
 
 # Contributing guidelines
 
-See CONTRIBUTIONS.md file for the contribution guidelines, and the Code of Conduct
+See CONTRIBUTING.md file for the contribution guidelines, and the Code of Conduct
 that contributors are expected to follow.
