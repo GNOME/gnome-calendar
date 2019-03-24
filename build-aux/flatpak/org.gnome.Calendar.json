@@ -106,7 +106,9 @@
         },
         {
             "name" : "evolution-data-server",
-            "cleanup": [ "/share/GConf" ],
+            "cleanup" : [
+                "/share/GConf"
+            ],
             "buildsystem" : "cmake-ninja",
             "config-opts" : [
                 "-DDBUS_SERVICES_PREFIX=org.gnome.Calendar",
