@@ -592,6 +592,15 @@
         <property name="border_width">12</property>
         <property name="orientation">vertical</property>
         <child>
+          <object class="GtkModelButton" id="at_event_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="receives_default">True</property>
+            <property name="text" translatable="yes">At time of event</property>
+            <signal name="clicked" handler="on_add_alarm_button_clicked_cb" object="GcalEditDialog" swapped="no" />
+          </object>
+        </child>
+        <child>
           <object class="GtkModelButton" id="five_minutes_button">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
