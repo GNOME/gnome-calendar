@@ -10,7 +10,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-11-06 13:46+0000\n"
+"POT-Creation-Date: 2019-03-24 07:06+0000\n"
 "PO-Revision-Date: 2019-02-11 19:39+0100\n"
 "Last-Translator: Alan Mortensen <alanmortensen.am@gmail.com>\n"
 "Language-Team: Danish <dansk@dansk-gruppen.dk>\n"
@@ -39,14 +39,15 @@ msgid ""
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
 "GNOME Kalender er et simpelt og smukt kalenderprogram designet til at passe "
-"nøjagtigt til GNOME-skrivebordet. Ved at genbruge komponenterne, som GNOME-"
-"skrivebordet er bygget med, er Kalender pænt integreret i GNOME-økosystemet."
+"nøjagtigt til GNOME-skrivebordet. Ved at genbruge komponenterne, som "
+"GNOME-skrivebordet er bygget med, er Kalender pænt integreret i "
+"GNOME-økosystemet."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
-"We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, nothing missing. You’ll feel comfortable using "
-"Calendar, like you’ve been using it for ages!"
+"We aim to find the perfect balance between nicely crafted features and "
+"user-centred usability. No excess, nothing missing. You’ll feel comfortable "
+"using Calendar, like you’ve been using it for ages!"
 msgstr ""
 "Vi forsøger at finde den perfekte balance mellem fint udarbejdede funktioner "
 "og brugervenlighed. Ingen overflod, ingen mangler. Du vil kunne bruge "
@@ -67,11 +68,6 @@ msgstr "Kalenderhåndtering"
 #: data/org.gnome.Calendar.desktop.in:4
 msgid "Access and manage your calendars"
 msgstr "Tilgå og håndtér dine kalendere"
-
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.Calendar.desktop.in:7
-msgid "org.gnome.Calendar"
-msgstr "org.gnome.Calendar"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in:13
@@ -108,7 +104,8 @@ msgstr "Typen af den aktive visning"
 
 #: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
-msgstr "Typen for den aktive vinduesvisning, standardværdien er: månedsvisning"
+msgstr ""
+"Typen for den aktive vinduesvisning, standardværdien er: månedsvisning"
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
@@ -444,12 +441,12 @@ msgstr "Redigér kalender"
 #: data/ui/source-dialog.ui:631
 msgid ""
 "Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of your online accounts, you can add it through the <a href="
-"\"GOA\">online account settings</a>."
+"belongs to one of your online accounts, you can add it through the <a "
+"href=\"GOA\">online account settings</a>."
 msgstr ""
 "Indtast adressen for den kalender som du vil tilføje. Hvis kalenderen "
-"tilhører en af dine onlinekonti, kan du tilføje den gennem <a href=\"GOA"
-"\">indstillinger for onlinekonti</a>."
+"tilhører en af dine onlinekonti, kan du tilføje den gennem <a "
+"href=\"GOA\">indstillinger for onlinekonti</a>."
 
 #: data/ui/source-dialog.ui:646
 msgid "Calendar Address"
@@ -590,8 +587,9 @@ msgstr ""
 "scootergrisen\n"
 "Alan Mortensen\n"
 "\n"
-"Dansk-gruppen <dansk@dansk-gruppen.dk>\n"
-"Mere info: http://www.dansk-gruppen.dk"
+"Dansk-gruppen\n"
+"Websted <http://dansk-gruppen.dk>\n"
+"E-mail <dansk@dansk-gruppen.dk>"
 
 #: src/gcal-edit-dialog.c:372
 msgid "Save"
@@ -1049,6 +1047,9 @@ msgstr "%d. %B …"
 msgid "%B %d"
 msgstr "%d. %B"
 
+#~ msgid "org.gnome.Calendar"
+#~ msgstr "org.gnome.Calendar"
+
 #~ msgid "_Calendars"
 #~ msgstr "_Kalendere"
 
@@ -1088,13 +1089,13 @@ msgstr "%d. %B"
 #~ msgid "week %d / %d"
 #~ msgstr "uge %d / %d"
 
-# %s: dag og måned
+#~ # %s: dag og måned
 #~ msgid "New Event from %s to %s"
 #~ msgstr "Ny begivenhed fra den %s til den %s"
 
-# %s(1): dag og måned
-# %s(2): starttidspunkt
-# %2(3): sluttidspunkt
+#~ # %s(1): dag og måned
+#~ # %s(2): starttidspunkt
+#~ # %2(3): sluttidspunkt
 #~ msgid "New Event on %s, %s – %s"
 #~ msgstr "Ny begivenhed den %s, %s – %s"
 
@@ -1119,11 +1120,11 @@ msgstr "%d. %B"
 #~ msgid "%m/%d/%y"
 #~ msgstr "%d/%m/%y"
 
-# Det er nok en fejl at de ikke bruger strftime.  Regionsindstillingerne bør forhindre at der kommer 12-timers-klokkeslæt ud til brugeren
+#~ # Det er nok en fejl at de ikke bruger strftime.  Regionsindstillingerne bør forhindre at der kommer 12-timers-klokkeslæt ud til brugeren
 #~ msgid "%.2d:%.2d AM"
 #~ msgstr "%.2d:%.2d AM"
 
-# Det er nok en fejl at de ikke bruger strftime
+#~ # Det er nok en fejl at de ikke bruger strftime
 #~ msgid "%.2d:%.2d PM"
 #~ msgstr "%.2d:%.2d PM"
 
@@ -1171,3 +1172,4 @@ msgstr "%d. %B"
 
 #~ msgid "Year %d"
 #~ msgstr "År %d"
+
