@@ -22,7 +22,7 @@
 #include "e-cal-data-model.h"
 #include "gcal-event.h"
 
-#include <libical/icaltime.h>
+#include <libecal/libecal.h>
 #include <goa/goa.h>
 
 G_BEGIN_DECLS
@@ -47,7 +47,7 @@ ESource*             gcal_manager_get_default_source             (GcalManager   
 void                 gcal_manager_set_default_source             (GcalManager        *self,
                                                                   ESource            *source);
 
-icaltimezone*        gcal_manager_get_system_timezone            (GcalManager        *self);
+ICalTimezone*        gcal_manager_get_system_timezone            (GcalManager        *self);
 
 void                 gcal_manager_set_subscriber                 (GcalManager        *self,
                                                                   ECalDataModelSubscriber *subscriber,
@@ -101,8 +101,8 @@ void                 gcal_manager_save_source                    (GcalManager   
                                                                   ESource            *source);
 
 GList*               gcal_manager_get_events                     (GcalManager        *self,
-                                                                  icaltimetype       *range_start,
-                                                                  icaltimetype       *range_end);
+                                                                  ICalTime           *range_start,
+                                                                  ICalTime           *range_end);
 
 gboolean             gcal_manager_get_loading                    (GcalManager        *self);
 

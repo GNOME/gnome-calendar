@@ -23,9 +23,6 @@
 #include <gtk/gtk.h>
 #include <libecal/libecal.h>
 #include <libgweather/gweather.h>
-#include <libical/icaltime.h>
-
-#define ICAL_TIME_TYPE (icaltime_get_type ())
 
 #define ALIGNED(x)      (round (x) + 0.5)
 #define MINUTES_PER_DAY 1440
@@ -41,18 +38,14 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (ESource, g_object_unref)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ECalComponent, g_object_unref)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GWeatherLocation, gweather_location_unref)
 
-GType                icaltime_get_type                           (void)            G_GNUC_CONST;
-
 gint                 datetime_compare_date                       (GDateTime          *dt1,
                                                                   GDateTime          *dt2);
 
-icaltimetype*        datetime_to_icaltime                        (GDateTime          *dt);
+ICalTime*            datetime_to_icaltime                        (GDateTime          *dt);
 
 gboolean             datetime_is_date                            (GDateTime          *dt);
 
-GDateTime*           icaltime_to_datetime                        (const icaltimetype *date);
-
-icaltimetype*        gcal_dup_icaltime                           (const icaltimetype *date);
+GDateTime*           icaltime_to_datetime                        (const ICalTime     *date);
 
 gchar*               gcal_get_weekday                            (gint                i);
 
@@ -79,16 +72,16 @@ ECalComponent*       build_component_from_details                (const gchar   
                                                                   GDateTime          *initial_date,
                                                                   GDateTime          *final_date);
 
-gint                 icaltime_compare_date                       (const icaltimetype *date1,
-                                                                  const icaltimetype *date2);
+gint                 icaltime_compare_date                       (const ICalTime     *date1,
+                                                                  const ICalTime     *date2);
 
-gint                 icaltime_compare_with_current               (const icaltimetype *date1,
-                                                                  const icaltimetype *date2,
+gint                 icaltime_compare_with_current               (const ICalTime     *date1,
+                                                                  const ICalTime     *date2,
                                                                   time_t             *current_time_t);
 
-GDateTime*           get_start_of_week                           (icaltimetype       *date);
+GDateTime*           get_start_of_week                           (ICalTime           *date);
 
-GDateTime*           get_end_of_week                             (icaltimetype       *date);
+GDateTime*           get_end_of_week                             (ICalTime           *date);
 
 gboolean             is_clock_format_24h                         (void);
 

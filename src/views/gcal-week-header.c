@@ -88,7 +88,7 @@ struct _GcalWeekHeader
    */
   gboolean            expanded;
 
-  icaltimetype       *active_date;
+  ICalTime           *active_date;
 
   gint                selection_start;
   gint                selection_end;
@@ -824,7 +824,7 @@ add_event_to_grid (GcalWeekHeader *self,
 
 static void
 update_unchanged_events (GcalWeekHeader *self,
-                         icaltimetype   *new_icaldt)
+                         ICalTime       *new_icaldt)
 {
   g_autoptr (GDateTime) new_week_start, new_week_end;
   g_autoptr (GDateTime) utc_week_start, utc_week_end;
@@ -1092,7 +1092,7 @@ gcal_week_header_finalize (GObject *object)
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
   gint i;
 
-  g_clear_pointer (&self->active_date, g_free);
+  g_clear_object (&self->active_date);
 
   for (i = 0; i < 7; i++)
     g_list_free (self->events[i]);
@@ -1206,7 +1206,7 @@ gcal_week_header_draw (GtkWidget      *widget,
 
   week_start = get_start_of_week (self->active_date);
   week_end = g_date_time_add_days (week_start, 6);
-  current_cell = icaltime_day_of_week (*(self->active_date)) - 1;
+  current_cell = i_cal_time_day_of_week (self->active_date) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
   today_column = get_today_column (self);
 
@@ -2011,22 +2011,22 @@ gcal_week_header_clear_marks (GcalWeekHeader *self)
 
 void
 gcal_week_header_set_date (GcalWeekHeader *self,
-                           icaltimetype   *date)
+                           ICalTime       *date)
 {
-  icaltimetype *old_date, *new_date;
+  ICalTime *old_date, *new_date;
 
   old_date = self->active_date;
-  new_date = gcal_dup_icaltime (date);
+  new_date = i_cal_time_new_clone (date);
 
   /*
    * If the active date changed, but we're still in the same week,
    * there's no need to recalculate visible events.
    */
   if (old_date && new_date &&
-      old_date->year == new_date->year &&
-      icaltime_week_number (*old_date) == icaltime_week_number (*new_date))
+      i_cal_time_get_year (old_date) == i_cal_time_get_year (new_date) &&
+      i_cal_time_week_number (old_date) == i_cal_time_week_number (new_date))
     {
-      g_free (new_date);
+      g_clear_object (&new_date);
       return;
     }
 
@@ -2040,7 +2040,7 @@ gcal_week_header_set_date (GcalWeekHeader *self,
 
   gcal_week_header_update_weather_infos (self);
 
-  g_clear_pointer (&old_date, g_free);
+  g_clear_object (&old_date);
 }
 
 /**

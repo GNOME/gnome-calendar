@@ -17,91 +17,105 @@
  */
 
 #include <glib.h>
-/*#include <glib/gi18n-lib.h>*/
+/* #include <glib/gi18n-lib.h> */
 
 #include "e-cal-data-model.h"
 
-#define LOCK_PROPS() g_rec_mutex_lock (&data_model->priv->props_lock)
-#define UNLOCK_PROPS() g_rec_mutex_unlock (&data_model->priv->props_lock)
-
-static void
+void
 cal_comp_get_instance_times (ECalClient *client,
-			     icalcomponent *icalcomp,
-			     const icaltimezone *default_zone,
-			     time_t *instance_start,
-			     gboolean *start_is_date,
-			     time_t *instance_end,
-			     gboolean *end_is_date,
+			     ICalComponent *icomp,
+			     const ICalTimezone *default_zone,
+			     ICalTime **out_instance_start,
+			     ICalTime **out_instance_end,
 			     GCancellable *cancellable)
 {
-	struct icaltimetype start_time, end_time;
-	const icaltimezone *zone = default_zone;
+	ICalTime *start_time, *end_time;
+	const ICalTimezone *zone = default_zone;
 
 	g_return_if_fail (E_IS_CAL_CLIENT (client));
-	g_return_if_fail (icalcomp != NULL);
-	g_return_if_fail (instance_start != NULL);
-	g_return_if_fail (instance_end != NULL);
+	g_return_if_fail (icomp != NULL);
+	g_return_if_fail (out_instance_start != NULL);
+	g_return_if_fail (out_instance_end != NULL);
 
-	start_time = icalcomponent_get_dtstart (icalcomp);
-	end_time = icalcomponent_get_dtend (icalcomp);
-	if (icaltime_is_null_time (end_time))
-	  end_time = start_time;
+	start_time = i_cal_component_get_dtstart (icomp);
+	end_time = i_cal_component_get_dtend (icomp);
 
-	if (start_time.zone) {
-		zone = start_time.zone;
+	/* Some event can have missing DTEND, then use the start_time for them */
+	if (!end_time || i_cal_time_is_null_time (end_time)) {
+		g_clear_object (&end_time);
+
+		end_time = i_cal_time_new_clone (start_time);
+	}
+
+	if (i_cal_time_get_timezone (start_time)) {
+		zone = i_cal_time_get_timezone (start_time);
 	} else {
-		icalparameter *param = NULL;
-		icalproperty *prop = icalcomponent_get_first_property (icalcomp, ICAL_DTSTART_PROPERTY);
+		ICalParameter *param = NULL;
+		ICalProperty *prop = i_cal_component_get_first_property (icomp, I_CAL_DTSTART_PROPERTY);
 
 		if (prop) {
-			param = icalproperty_get_first_parameter (prop, ICAL_TZID_PARAMETER);
+			param = i_cal_property_get_first_parameter (prop, I_CAL_TZID_PARAMETER);
 
 			if (param) {
 				const gchar *tzid = NULL;
-				icaltimezone *st_zone = NULL;
+				ICalTimezone *st_zone = NULL;
 
-				tzid = icalparameter_get_tzid (param);
-				if (tzid)
-					e_cal_client_get_timezone_sync (client, tzid, &st_zone, cancellable, NULL);
+				tzid = i_cal_parameter_get_tzid (param);
+				if (tzid && !e_cal_client_get_timezone_sync (client, tzid, &st_zone, cancellable, NULL))
+					st_zone = NULL;
 
 				if (st_zone)
 					zone = st_zone;
+
+				g_object_unref (param);
 			}
-	       }
+
+			g_object_unref (prop);
+		}
 	}
 
-	*instance_start = icaltime_as_timet_with_zone (start_time, zone);
-	if (start_is_date)
-		*start_is_date = start_time.is_date;
+	*out_instance_start = i_cal_time_new_clone (start_time);
+	i_cal_time_set_timezone (*out_instance_start, zone);
 
-	if (end_time.zone) {
-		zone = end_time.zone;
+	if (i_cal_time_get_timezone (end_time)) {
+		zone = i_cal_time_get_timezone (end_time);
 	} else {
-		icalparameter *param = NULL;
-		icalproperty *prop = icalcomponent_get_first_property (icalcomp, ICAL_DTSTART_PROPERTY);
+		ICalParameter *param = NULL;
+		ICalProperty *prop = i_cal_component_get_first_property (icomp, I_CAL_DTEND_PROPERTY);
+
+		if (!prop)
+			prop = i_cal_component_get_first_property (icomp, I_CAL_DTSTART_PROPERTY);
 
 		if (prop) {
-			param = icalproperty_get_first_parameter (prop, ICAL_TZID_PARAMETER);
+			param = i_cal_property_get_first_parameter (prop, I_CAL_TZID_PARAMETER);
 
 			if (param) {
 				const gchar *tzid = NULL;
-				icaltimezone *end_zone = NULL;
+				ICalTimezone *end_zone = NULL;
 
-				tzid = icalparameter_get_tzid (param);
-				if (tzid)
-					e_cal_client_get_timezone_sync (client, tzid, &end_zone, cancellable, NULL);
+				tzid = i_cal_parameter_get_tzid (param);
+				if (tzid && !e_cal_client_get_timezone_sync (client, tzid, &end_zone, cancellable, NULL))
+					end_zone = NULL;
 
 				if (end_zone)
 					zone = end_zone;
-			}
-	       }
 
+				g_object_unref (param);
+			}
+
+			g_object_unref (prop);
+		}
 	}
 
-	*instance_end = icaltime_as_timet_with_zone (end_time, zone);
-	if (end_is_date)
-		*end_is_date = end_time.is_date;
+	*out_instance_end = i_cal_time_new_clone (end_time);
+	i_cal_time_set_timezone (*out_instance_end, zone);
+
+	g_clear_object (&start_time);
+	g_clear_object (&end_time);
 }
+
+#define LOCK_PROPS() g_rec_mutex_lock (&data_model->priv->props_lock)
+#define UNLOCK_PROPS() g_rec_mutex_unlock (&data_model->priv->props_lock)
 
 struct _ECalDataModelPrivate {
 	GThread *main_thread;
@@ -113,9 +127,10 @@ struct _ECalDataModelPrivate {
 
 	gboolean disposing;
 	gboolean expand_recurrences;
+	gboolean skip_cancelled;
 	gchar *filter;
 	gchar *full_filter;	/* to be used with views */
-	icaltimezone *zone;
+	ICalTimezone *zone;
 	time_t range_start;
 	time_t range_end;
 
@@ -130,7 +145,8 @@ struct _ECalDataModelPrivate {
 enum {
 	PROP_0,
 	PROP_EXPAND_RECURRENCES,
-	PROP_TIMEZONE
+	PROP_TIMEZONE,
+	PROP_SKIP_CANCELLED
 };
 
 enum {
@@ -165,7 +181,7 @@ typedef struct _ViewData {
 	GHashTable *components; /* ECalComponentId ~> ComponentData */
 	GHashTable *lost_components; /* ECalComponentId ~> ComponentData; when re-running view, valid till 'complete' is received */
 	gboolean received_complete;
-	GSList *to_expand_recurrences; /* icalcomponent */
+	GSList *to_expand_recurrences; /* ICalComponent */
 	GSList *expanded_recurrences; /* ComponentData */
 	gint pending_expand_recurrences; /* how many is waiting to be processed */
 
@@ -212,8 +228,8 @@ static gboolean
 component_data_equal (ComponentData *comp_data1,
 		      ComponentData *comp_data2)
 {
-	icalcomponent *icomp1, *icomp2;
-	struct icaltimetype tt1, tt2;
+	ICalComponent *icomp1, *icomp2;
+	ICalTime *tt1, *tt2;
 	gchar *as_str1, *as_str2;
 	gboolean equal;
 
@@ -231,28 +247,40 @@ component_data_equal (ComponentData *comp_data1,
 	icomp2 = e_cal_component_get_icalcomponent (comp_data2->component);
 
 	if (!icomp1 || !icomp2 ||
-	    icalcomponent_get_sequence (icomp1) != icalcomponent_get_sequence (icomp2) ||
-	    g_strcmp0 (icalcomponent_get_uid (icomp1), icalcomponent_get_uid (icomp2)) != 0)
+	    i_cal_component_get_sequence (icomp1) != i_cal_component_get_sequence (icomp2) ||
+	    g_strcmp0 (i_cal_component_get_uid (icomp1), i_cal_component_get_uid (icomp2)) != 0)
 		return FALSE;
 
-	tt1 = icalcomponent_get_recurrenceid (icomp1);
-	tt2 = icalcomponent_get_recurrenceid (icomp2);
-	if ((icaltime_is_valid_time (tt1) ? 1 : 0) != (icaltime_is_valid_time (tt2) ? 1 : 0) ||
-	    (icaltime_is_null_time (tt1) ? 1 : 0) != (icaltime_is_null_time (tt2) ? 1 : 0) ||
-	    icaltime_compare (tt1, tt2) != 0)
+	tt1 = i_cal_component_get_recurrenceid (icomp1);
+	tt2 = i_cal_component_get_recurrenceid (icomp2);
+	if (((!tt1 || i_cal_time_is_valid_time (tt1)) ? 1 : 0) != ((!tt2 || i_cal_time_is_valid_time (tt2)) ? 1 : 0) ||
+	    ((!tt1 || i_cal_time_is_null_time (tt1)) ? 1 : 0) != ((!tt2 || i_cal_time_is_null_time (tt2)) ? 1 : 0) ||
+	    i_cal_time_compare (tt1, tt2) != 0) {
+		g_clear_object (&tt1);
+		g_clear_object (&tt2);
 		return FALSE;
+	}
 
-	tt1 = icalcomponent_get_dtstamp (icomp1);
-	tt2 = icalcomponent_get_dtstamp (icomp2);
-	if ((icaltime_is_valid_time (tt1) ? 1 : 0) != (icaltime_is_valid_time (tt2) ? 1 : 0) ||
-	    (icaltime_is_null_time (tt1) ? 1 : 0) != (icaltime_is_null_time (tt2) ? 1 : 0) ||
-	    icaltime_compare (tt1, tt2) != 0)
+	g_clear_object (&tt1);
+	g_clear_object (&tt2);
+
+	tt1 = i_cal_component_get_dtstamp (icomp1);
+	tt2 = i_cal_component_get_dtstamp (icomp2);
+	if (((!tt1 || i_cal_time_is_valid_time (tt1)) ? 1 : 0) != ((!tt2 || i_cal_time_is_valid_time (tt2)) ? 1 : 0) ||
+	    ((!tt1 || i_cal_time_is_null_time (tt1)) ? 1 : 0) != ((!tt2 || i_cal_time_is_null_time (tt2)) ? 1 : 0) ||
+	    i_cal_time_compare (tt1, tt2) != 0) {
+		g_clear_object (&tt1);
+		g_clear_object (&tt2);
 		return FALSE;
+	}
+
+	g_clear_object (&tt1);
+	g_clear_object (&tt2);
 
 	/* Maybe not so effective compare, but might be still more effective
 	   than updating whole UI with false notifications */
-	as_str1 = icalcomponent_as_ical_string_r (icomp1);
-	as_str2 = icalcomponent_as_ical_string_r (icomp2);
+	as_str1 = i_cal_component_as_ical_string_r (icomp1);
+	as_str2 = i_cal_component_as_ical_string_r (icomp2);
 
 	equal = g_strcmp0 (as_str1, as_str2) == 0;
 
@@ -275,8 +303,8 @@ view_data_new (ECalClient *client)
 	view_data->is_used = TRUE;
 	view_data->client = g_object_ref (client);
 	view_data->components = g_hash_table_new_full (
-		(GHashFunc) e_cal_component_id_hash, (GEqualFunc) e_cal_component_id_equal,
-		(GDestroyNotify) e_cal_component_free_id, component_data_free);
+		e_cal_component_id_hash, e_cal_component_id_equal,
+		e_cal_component_id_free, component_data_free);
 
 	return view_data;
 }
@@ -328,7 +356,7 @@ view_data_unref (gpointer ptr)
 			g_hash_table_destroy (view_data->components);
 			if (view_data->lost_components)
 				g_hash_table_destroy (view_data->lost_components);
-			g_slist_free_full (view_data->to_expand_recurrences, (GDestroyNotify) icalcomponent_free);
+			g_slist_free_full (view_data->to_expand_recurrences, g_object_unref);
 			g_slist_free_full (view_data->expanded_recurrences, component_data_free);
 			g_rec_mutex_clear (&view_data->lock);
 			g_free (view_data);
@@ -519,13 +547,6 @@ cal_data_model_call_submit_thread_job (gpointer user_data)
 /**
  * e_cal_data_model_submit_thread_job:
  * @data_model: an #ECalDataModel
- * @description: user-friendly description of the job, to be shown in UI
- * @alert_ident: in case of an error, this alert identificator is used
- *    for EAlert construction
- * @alert_arg_0: (allow-none): in case of an error, use this string as
- *    the first argument to the EAlert construction; the second argument
- *    is the actual error message; can be #NULL, in which case only
- *    the error message is passed to the EAlert construction
  * @func: function to be run in a dedicated thread
  * @user_data: (allow-none): custom data passed into @func; can be #NULL
  * @free_user_data: (allow-none): function to be called on @user_data,
@@ -615,7 +636,7 @@ cal_data_model_foreach_subscriber_in_range (ECalDataModel *data_model,
 
 		if ((in_range_start == (time_t) 0 && in_range_end == (time_t) 0) ||
 		    (subs_data->range_start == (time_t) 0 && subs_data->range_end == (time_t) 0) ||
-		    (subs_data->range_start < in_range_end && subs_data->range_end > in_range_start))
+		    (subs_data->range_start <= in_range_end && subs_data->range_end >= in_range_start))
 			func (data_model, client, subs_data->subscriber, user_data);
 	}
 
@@ -712,7 +733,9 @@ cal_data_model_remove_one_view_component_cb (ECalDataModel *data_model,
 
 	g_return_if_fail (id != NULL);
 
-	e_cal_data_model_subscriber_component_removed (subscriber, client, id->uid, id->rid);
+	e_cal_data_model_subscriber_component_removed (subscriber, client,
+		e_cal_component_id_get_uid (id),
+		e_cal_component_id_get_rid (id));
 }
 
 static void
@@ -818,8 +841,8 @@ cal_data_model_update_full_filter (ECalDataModel *data_model)
 		iso_start = isodate_from_time_t (range_start);
 		iso_end = isodate_from_time_t (range_end);
 
-		if (data_model->priv->zone && data_model->priv->zone != icaltimezone_get_utc_timezone ())
-			default_tzloc = icaltimezone_get_location (data_model->priv->zone);
+		if (data_model->priv->zone && data_model->priv->zone != i_cal_timezone_get_utc_timezone ())
+			default_tzloc = i_cal_timezone_get_location (data_model->priv->zone);
 		if (!default_tzloc)
 			default_tzloc = "";
 
@@ -945,7 +968,9 @@ cal_data_model_process_added_component (ECalDataModel *data_model,
 				if (g_hash_table_remove (new_subscribers, subscriber))
 					e_cal_data_model_subscriber_component_modified (subscriber, view_data->client, comp_data->component);
 				else if (old_id)
-					e_cal_data_model_subscriber_component_removed (subscriber, view_data->client, old_id->uid, old_id->rid);
+					e_cal_data_model_subscriber_component_removed (subscriber, view_data->client,
+						e_cal_component_id_get_uid (old_id),
+						e_cal_component_id_get_rid (old_id));
 			}
 
 			/* Those which left in the new_subscribers have the component added. */
@@ -967,8 +992,7 @@ cal_data_model_process_added_component (ECalDataModel *data_model,
 
 	view_data_unlock (view_data);
 
-	if (old_id)
-		e_cal_component_free_id (old_id);
+	e_cal_component_id_free (old_id);
 }
 
 typedef struct _GatherComponentsData {
@@ -994,7 +1018,7 @@ cal_data_model_gather_components (gpointer key,
 	g_return_if_fail (gather_data->pcomponent_ids != NULL || gather_data->component_ids_hash != NULL);
 	g_return_if_fail (gather_data->pcomponent_ids == NULL || gather_data->component_ids_hash == NULL);
 
-	if ((gather_data->all_instances || !comp_data->is_detached) && g_strcmp0 (id->uid, gather_data->uid) == 0) {
+	if ((gather_data->all_instances || !comp_data->is_detached) && g_strcmp0 (e_cal_component_id_get_uid (id), gather_data->uid) == 0) {
 		if (gather_data->component_ids_hash) {
 			ComponentData *comp_data_copy;
 
@@ -1055,21 +1079,21 @@ cal_data_model_notify_recurrences_cb (gpointer user_data)
 		gathered_uids = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
 		known_instances = g_hash_table_new_full (
 			(GHashFunc) e_cal_component_id_hash, (GEqualFunc) e_cal_component_id_equal,
-			(GDestroyNotify) e_cal_component_free_id, component_data_free);
+			(GDestroyNotify) e_cal_component_id_free, component_data_free);
 
 		for (link = expanded_recurrences; link && view_data->is_used; link = g_slist_next (link)) {
 			ComponentData *comp_data = link->data;
-			icalcomponent *icomp;
+			ICalComponent *icomp;
 			const gchar *uid;
 
 			if (!comp_data)
 				continue;
 
 			icomp = e_cal_component_get_icalcomponent (comp_data->component);
-			if (!icomp || !icalcomponent_get_uid (icomp))
+			if (!icomp || !i_cal_component_get_uid (icomp))
 				continue;
 
-			uid = icalcomponent_get_uid (icomp);
+			uid = i_cal_component_get_uid (icomp);
 
 			if (!g_hash_table_contains (gathered_uids, uid)) {
 				GatherComponentsData gather_data;
@@ -1126,26 +1150,78 @@ cal_data_model_notify_recurrences_cb (gpointer user_data)
 typedef struct
 {
 	ECalClient *client;
-	icaltimezone *zone;
+	ICalTimezone *zone;
 	GSList **pexpanded_recurrences;
+	gboolean skip_cancelled;
 } GenerateInstancesData;
 
 static gboolean
-cal_data_model_instance_generated (ECalComponent *comp,
-				   time_t instance_start,
-				   time_t instance_end,
-				   gpointer data)
+cal_data_model_instance_generated (ICalComponent *icomp,
+				   ICalTime *instance_start,
+				   ICalTime *instance_end,
+				   gpointer user_data,
+				   GCancellable *cancellable,
+				   GError **error)
 {
-	GenerateInstancesData *gid = data;
+	GenerateInstancesData *gid = user_data;
 	ComponentData *comp_data;
+	ECalComponent *comp_copy;
+	ICalTime *tt, *tt2;
+	time_t start_tt, end_tt;
 
 	g_return_val_if_fail (gid != NULL, FALSE);
 
-	cal_comp_get_instance_times (gid->client, e_cal_component_get_icalcomponent (comp),
-		gid->zone, &instance_start, NULL, &instance_end, NULL, NULL);
+	if (gid->skip_cancelled) {
+		ICalProperty *prop;
 
-	comp_data = component_data_new (comp, instance_start, instance_end, FALSE);
+		prop = i_cal_component_get_first_property (icomp, I_CAL_STATUS_PROPERTY);
+		if (prop && i_cal_property_get_status (prop) == I_CAL_STATUS_CANCELLED) {
+			g_object_unref (prop);
+			return TRUE;
+		}
+
+		g_clear_object (&prop);
+	}
+
+	comp_copy = e_cal_component_new_from_icalcomponent (i_cal_component_new_clone (icomp));
+	g_return_val_if_fail (comp_copy != NULL, FALSE);
+
+	tt = i_cal_component_get_dtstart (e_cal_component_get_icalcomponent (comp_copy));
+	tt2 = i_cal_time_convert_to_zone (instance_start, gid->zone);
+	if (i_cal_time_is_date (tt) || !i_cal_time_get_timezone (tt) || i_cal_time_is_utc (tt))
+		i_cal_time_set_timezone (tt2, NULL);
+	else
+		i_cal_time_set_timezone (tt2, gid->zone);
+	i_cal_component_set_dtstart (e_cal_component_get_icalcomponent (comp_copy), tt2);
+	g_clear_object (&tt);
+	g_clear_object (&tt2);
+
+	tt = i_cal_component_get_dtend (e_cal_component_get_icalcomponent (comp_copy));
+	tt2 = i_cal_time_convert_to_zone (instance_end, gid->zone);
+	if (i_cal_time_is_date (tt) || !i_cal_time_get_timezone (tt) || i_cal_time_is_utc (tt))
+		i_cal_time_set_timezone (tt2, NULL);
+	else
+		i_cal_time_set_timezone (tt2, gid->zone);
+	i_cal_component_set_dtend (e_cal_component_get_icalcomponent (comp_copy), tt2);
+	g_clear_object (&tt);
+	g_clear_object (&tt2);
+
+	cal_comp_get_instance_times (gid->client, e_cal_component_get_icalcomponent (comp_copy),
+		gid->zone, &tt, &tt2, cancellable);
+
+	start_tt = i_cal_time_as_timet (tt);
+	end_tt = i_cal_time_as_timet (tt2);
+
+	g_clear_object (&tt);
+	g_clear_object (&tt2);
+
+	if (end_tt > start_tt)
+		end_tt--;
+
+	comp_data = component_data_new (comp_copy, start_tt, end_tt, FALSE);
 	*gid->pexpanded_recurrences = g_slist_prepend (*gid->pexpanded_recurrences, comp_data);
+
+	g_object_unref (comp_copy);
 
 	return TRUE;
 }
@@ -1197,7 +1273,7 @@ cal_data_model_expand_recurrences_thread (ECalDataModel *data_model,
 	view_data_unlock (view_data);
 
 	for (link = to_expand_recurrences; link && view_data->is_used; link = g_slist_next (link)) {
-		icalcomponent *icomp = link->data;
+		ICalComponent *icomp = link->data;
 		GenerateInstancesData gid;
 
 		if (!icomp)
@@ -1205,13 +1281,16 @@ cal_data_model_expand_recurrences_thread (ECalDataModel *data_model,
 
 		gid.client = client;
 		gid.pexpanded_recurrences = &expanded_recurrences;
-		gid.zone = data_model->priv->zone;
+		gid.zone = g_object_ref (data_model->priv->zone);
+		gid.skip_cancelled = data_model->priv->skip_cancelled;
 
-		e_cal_client_generate_instances_for_object_sync (client, icomp, range_start, range_end,
+		e_cal_client_generate_instances_for_object_sync (client, icomp, range_start, range_end, NULL,
 			cal_data_model_instance_generated, &gid);
+
+		g_clear_object (&gid.zone);
 	}
 
-	g_slist_free_full (to_expand_recurrences, (GDestroyNotify) icalcomponent_free);
+	g_slist_free_full (to_expand_recurrences, g_object_unref);
 
 	view_data_lock (view_data);
 	if (expanded_recurrences)
@@ -1245,17 +1324,23 @@ cal_data_model_process_modified_or_added_objects (ECalClientView *view,
 	LOCK_PROPS ();
 
 	client = e_cal_client_view_ref_client (view);
+	if (!client) {
+		UNLOCK_PROPS ();
+		return;
+	}
+
 	view_data = g_hash_table_lookup (data_model->priv->views, client);
 	if (view_data) {
 		view_data_ref (view_data);
 		g_warn_if_fail (view_data->view == view);
 	}
-	g_object_unref (client);
 
 	UNLOCK_PROPS ();
 
-	if (!view_data)
+	if (!view_data) {
+		g_clear_object (&client);
 		return;
+	}
 
 	view_data_lock (view_data);
 
@@ -1277,9 +1362,9 @@ cal_data_model_process_modified_or_added_objects (ECalClientView *view,
 		cal_data_model_freeze_all_subscribers (data_model);
 
 		for (link = objects; link; link = g_slist_next (link)) {
-			icalcomponent *icomp = link->data;
+			ICalComponent *icomp = link->data;
 
-			if (!icomp || !icalcomponent_get_uid (icomp))
+			if (!icomp || !i_cal_component_get_uid (icomp))
 				continue;
 
 			if (data_model->priv->expand_recurrences &&
@@ -1288,18 +1373,32 @@ cal_data_model_process_modified_or_added_objects (ECalClientView *view,
 				/* This component requires an expand of recurrences, which
 				   will be done in a dedicated thread, thus remember it */
 				to_expand_recurrences = g_slist_prepend (to_expand_recurrences,
-					icalcomponent_new_clone (icomp));
+					i_cal_component_new_clone (icomp));
 			} else {
 				/* Single or detached instance, the simple case */
 				ECalComponent *comp;
 				ComponentData *comp_data;
+				ICalTime *start_tt = NULL, *end_tt = NULL;
 				time_t instance_start, instance_end;
 
-				comp = e_cal_component_new_from_icalcomponent (icalcomponent_new_clone (icomp));
+				if (data_model->priv->skip_cancelled &&
+				    i_cal_component_get_status (icomp) == I_CAL_STATUS_CANCELLED)
+					continue;
+
+				comp = e_cal_component_new_from_icalcomponent (i_cal_component_new_clone (icomp));
 				if (!comp)
 					continue;
 
-				cal_comp_get_instance_times (client, icomp, data_model->priv->zone, &instance_start, NULL, &instance_end, NULL, NULL);
+				cal_comp_get_instance_times (client, icomp, data_model->priv->zone, &start_tt, &end_tt, NULL);
+
+				instance_start = i_cal_time_as_timet (start_tt);
+				instance_end = i_cal_time_as_timet (end_tt);
+
+				g_clear_object (&start_tt);
+				g_clear_object (&end_tt);
+
+				if (instance_end > instance_start)
+					instance_end--;
 
 				comp_data = component_data_new (comp, instance_start, instance_end,
 					e_cal_util_component_is_instance (icomp));
@@ -1313,8 +1412,6 @@ cal_data_model_process_modified_or_added_objects (ECalClientView *view,
 		cal_data_model_thaw_all_subscribers (data_model);
 
 		if (to_expand_recurrences) {
-			ECalClient *rclient = e_cal_client_view_ref_client (view);
-
 			view_data_lock (view_data);
 			view_data->to_expand_recurrences = g_slist_concat (
 				view_data->to_expand_recurrences, to_expand_recurrences);
@@ -1322,12 +1419,14 @@ cal_data_model_process_modified_or_added_objects (ECalClientView *view,
 			view_data_unlock (view_data);
 
 			cal_data_model_submit_internal_thread_job (data_model,
-				cal_data_model_expand_recurrences_thread, rclient);
+				cal_data_model_expand_recurrences_thread, g_object_ref (client));
 		}
 	}
 
 	view_data_unlock (view_data);
 	view_data_unref (view_data);
+
+	g_clear_object (&client);
 }
 
 static void
@@ -1352,22 +1451,27 @@ cal_data_model_view_objects_removed (ECalClientView *view,
 				     ECalDataModel *data_model)
 {
 	ViewData *view_data;
-	const GSList *link;
 	ECalClient *client;
+	const GSList *link;
 
 	g_return_if_fail (E_IS_CAL_DATA_MODEL (data_model));
 
 	LOCK_PROPS ();
 
 	client = e_cal_client_view_ref_client (view);
-	view_data =
-	  g_hash_table_lookup (data_model->priv->views, client);
+	if (!client) {
+		UNLOCK_PROPS ();
+		return;
+	}
+
+	view_data = g_hash_table_lookup (data_model->priv->views, client);
+
+	g_clear_object (&client);
 
 	if (view_data) {
 		view_data_ref (view_data);
 		g_warn_if_fail (view_data->view == view);
 	}
-	g_object_unref (client);
 
 	UNLOCK_PROPS ();
 
@@ -1385,11 +1489,11 @@ cal_data_model_view_objects_removed (ECalClientView *view,
 			const ECalComponentId *id = link->data;
 
 			if (id) {
-				if (!id->rid || !*id->rid) {
-					if (!g_hash_table_contains (gathered_uids, id->uid)) {
+				if (!e_cal_component_id_get_rid (id)) {
+					if (!g_hash_table_contains (gathered_uids, e_cal_component_id_get_uid (id))) {
 						GatherComponentsData gather_data;
 
-						gather_data.uid = id->uid;
+						gather_data.uid = e_cal_component_id_get_uid (id);
 						gather_data.pcomponent_ids = &removed;
 						gather_data.component_ids_hash = NULL;
 						gather_data.copy_ids = TRUE;
@@ -1401,7 +1505,7 @@ cal_data_model_view_objects_removed (ECalClientView *view,
 							g_hash_table_foreach (view_data->lost_components,
 								cal_data_model_gather_components, &gather_data);
 
-						g_hash_table_insert (gathered_uids, id->uid, GINT_TO_POINTER (1));
+						g_hash_table_insert (gathered_uids, (gpointer) e_cal_component_id_get_uid (id), GINT_TO_POINTER (1));
 					}
 				} else {
 					removed = g_list_prepend (removed, e_cal_component_id_copy (id));
@@ -1443,7 +1547,7 @@ cal_data_model_view_objects_removed (ECalClientView *view,
 
 		cal_data_model_thaw_all_subscribers (data_model);
 
-		g_list_free_full (removed, (GDestroyNotify) e_cal_component_free_id);
+		g_list_free_full (removed, (GDestroyNotify) e_cal_component_id_free);
 		g_hash_table_destroy (gathered_uids);
 	}
 	view_data_unlock (view_data);
@@ -1630,11 +1734,8 @@ static void
 cal_data_model_update_client_view (ECalDataModel *data_model,
 				   ECalClient *client)
 {
-	/*ESource *source;*/
 	ViewData *view_data;
 	CreateViewData *cv_data;
-	/*const gchar *alert_ident;
-	gchar *description;*/
 
 	LOCK_PROPS ();
 
@@ -1696,7 +1797,7 @@ cal_data_model_update_client_view (ECalDataModel *data_model,
 		view_data->lost_components = view_data->components;
 		view_data->components = g_hash_table_new_full (
 			(GHashFunc) e_cal_component_id_hash, (GEqualFunc) e_cal_component_id_equal,
-			(GDestroyNotify) e_cal_component_free_id, component_data_free);
+			(GDestroyNotify) e_cal_component_id_free, component_data_free);
 	}
 
 	view_data_unlock (view_data);
@@ -1706,27 +1807,6 @@ cal_data_model_update_client_view (ECalDataModel *data_model,
 		return;
 	}
 
-	/*source = e_client_get_source (E_CLIENT (client));
-
-	switch (e_cal_client_get_source_type (client)) {
-		case E_CAL_CLIENT_SOURCE_TYPE_EVENTS:
-			alert_ident = "calendar:failed-create-view-calendar";
-			description = g_strdup_printf (_("Creating view for calendar '%s'"), e_source_get_display_name (source));
-			break;
-		case E_CAL_CLIENT_SOURCE_TYPE_TASKS:
-			alert_ident = "calendar:failed-create-view-tasks";
-			description = g_strdup_printf (_("Creating view for task list '%s'"), e_source_get_display_name (source));
-			break;
-		case E_CAL_CLIENT_SOURCE_TYPE_MEMOS:
-			alert_ident = "calendar:failed-create-view-memos";
-			description = g_strdup_printf (_("Creating view for memo list '%s'"), e_source_get_display_name (source));
-			break;
-		case E_CAL_CLIENT_SOURCE_TYPE_LAST:
-			g_warn_if_reached ();
-			UNLOCK_PROPS ();
-			return;
-	}*/
-
 	cv_data = g_new0 (CreateViewData, 1);
 	cv_data->data_model = g_object_ref (data_model);
 	cv_data->client = g_object_ref (client);
@@ -1734,8 +1814,6 @@ cal_data_model_update_client_view (ECalDataModel *data_model,
 	view_data->received_complete = FALSE;
 	view_data->cancellable = e_cal_data_model_submit_thread_job (data_model,
 		cal_data_model_create_view_thread, cv_data, create_view_data_free);
-
-	/*g_free (description);*/
 
 	UNLOCK_PROPS ();
 }
@@ -1820,8 +1898,8 @@ cal_data_model_add_to_subscriber_except_its_range (ECalDataModel *data_model,
 	/* subs_data should have set the old time range, which
 	   means only components which didn't fit into the old
 	   time range will be added */
-	if (!(instance_start < subs_data->range_end &&
-	    instance_end > subs_data->range_start))
+	if (!(instance_start <= subs_data->range_end &&
+	    instance_end >= subs_data->range_start))
 		e_cal_data_model_subscriber_component_added (subs_data->subscriber, client, component);
 
 	return TRUE;
@@ -1844,9 +1922,11 @@ cal_data_model_remove_from_subscriber_except_its_range (ECalDataModel *data_mode
 	/* subs_data should have set the new time range, which
 	   means only components which don't fit into this new
 	   time range will be removed */
-	if (!(instance_start < subs_data->range_end &&
-	    instance_end > subs_data->range_start))
-		e_cal_data_model_subscriber_component_removed (subs_data->subscriber, client, id->uid, id->rid);
+	if (!(instance_start <= subs_data->range_end &&
+	    instance_end >= subs_data->range_start))
+		e_cal_data_model_subscriber_component_removed (subs_data->subscriber, client,
+			e_cal_component_id_get_uid (id),
+			e_cal_component_id_get_rid (id));
 
 	return TRUE;
 }
@@ -1857,7 +1937,7 @@ cal_data_model_set_client_default_zone_cb (gpointer key,
 					   gpointer user_data)
 {
 	ECalClient *client = value;
-	icaltimezone *zone = user_data;
+	ICalTimezone *zone = user_data;
 
 	g_return_if_fail (E_IS_CAL_CLIENT (client));
 	g_return_if_fail (zone != NULL);
@@ -1946,9 +2026,15 @@ cal_data_model_set_property (GObject *object,
 				E_CAL_DATA_MODEL (object),
 				g_value_get_pointer (value));
 			return;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+
+		case PROP_SKIP_CANCELLED:
+			e_cal_data_model_set_skip_cancelled (
+				E_CAL_DATA_MODEL (object),
+				g_value_get_boolean (value));
+			return;
 	}
+
+	G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
 static void
@@ -1971,9 +2057,16 @@ cal_data_model_get_property (GObject *object,
 				e_cal_data_model_get_timezone (
 				E_CAL_DATA_MODEL (object)));
 			return;
-		default:
-			G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+
+		case PROP_SKIP_CANCELLED:
+			g_value_set_boolean (
+				value,
+				e_cal_data_model_get_skip_cancelled (
+				E_CAL_DATA_MODEL (object)));
+			return;
 	}
+
+	G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 }
 
 static void
@@ -1998,6 +2091,7 @@ cal_data_model_finalize (GObject *object)
 	g_slist_free_full (data_model->priv->subscribers, subscriber_data_free);
 	g_free (data_model->priv->filter);
 	g_free (data_model->priv->full_filter);
+	g_clear_object (&data_model->priv->zone);
 
 	g_rec_mutex_clear (&data_model->priv->props_lock);
 
@@ -2037,6 +2131,16 @@ e_cal_data_model_class_init (ECalDataModelClass *class)
 			NULL,
 			G_PARAM_READWRITE));
 
+	g_object_class_install_property (
+		object_class,
+		PROP_SKIP_CANCELLED,
+		g_param_spec_boolean (
+			"skip-cancelled",
+			"Skip Cancelled",
+			NULL,
+			FALSE,
+			G_PARAM_READWRITE));
+
 	signals[VIEW_STATE_CHANGED] = g_signal_new (
 		"view-state-changed",
 		G_TYPE_FROM_CLASS (class),
@@ -2063,7 +2167,8 @@ e_cal_data_model_init (ECalDataModel *data_model)
 
 	data_model->priv->disposing = FALSE;
 	data_model->priv->expand_recurrences = FALSE;
-	data_model->priv->zone = icaltimezone_get_utc_timezone ();
+	data_model->priv->skip_cancelled = FALSE;
+	data_model->priv->zone = g_object_ref (i_cal_timezone_get_utc_timezone ());
 
 	data_model->priv->views_update_freeze = 0;
 	data_model->priv->views_update_required = FALSE;
@@ -2118,6 +2223,7 @@ e_cal_data_model_new_clone (ECalDataModel *src_data_model)
 	clone = e_cal_data_model_new (src_data_model->priv->submit_thread_job_func);
 
 	e_cal_data_model_set_expand_recurrences (clone, e_cal_data_model_get_expand_recurrences (src_data_model));
+	e_cal_data_model_set_skip_cancelled (clone, e_cal_data_model_get_skip_cancelled (src_data_model));
 	e_cal_data_model_set_timezone (clone, e_cal_data_model_get_timezone (src_data_model));
 	e_cal_data_model_set_filter (clone, src_data_model->priv->filter);
 
@@ -2248,20 +2354,76 @@ e_cal_data_model_set_expand_recurrences (ECalDataModel *data_model,
 }
 
 /**
+ * e_cal_data_model_get_skip_cancelled:
+ * @data_model: an #EDataModel instance
+ *
+ * Obtains whether the @data_model skips cancelled components.
+ * The default value is #FALSE, to not skip cancelled components.
+ *
+ * Returns: Whether the @data_model skips cancelled components.
+ *
+ * Since: 3.32
+ **/
+gboolean
+e_cal_data_model_get_skip_cancelled (ECalDataModel *data_model)
+{
+	gboolean skip_cancelled;
+
+	g_return_val_if_fail (E_IS_CAL_DATA_MODEL (data_model), FALSE);
+
+	LOCK_PROPS ();
+
+	skip_cancelled = data_model->priv->skip_cancelled;
+
+	UNLOCK_PROPS ();
+
+	return skip_cancelled;
+}
+
+/**
+ * e_cal_data_model_set_skip_cancelled:
+ * @data_model: an #EDataModel instance
+ * @skip_cancelled: whether to skip cancelled components
+ *
+ * Sets whether the @data_model should skip cancelled components.
+ *
+ * Since: 3.32
+ **/
+void
+e_cal_data_model_set_skip_cancelled (ECalDataModel *data_model,
+				     gboolean skip_cancelled)
+{
+	g_return_if_fail (E_IS_CAL_DATA_MODEL (data_model));
+
+	LOCK_PROPS ();
+
+	if ((data_model->priv->skip_cancelled ? 1 : 0) == (skip_cancelled ? 1 : 0)) {
+		UNLOCK_PROPS ();
+		return;
+	}
+
+	data_model->priv->skip_cancelled = skip_cancelled;
+
+	cal_data_model_rebuild_everything (data_model, TRUE);
+
+	UNLOCK_PROPS ();
+}
+
+/**
  * e_cal_data_model_get_timezone:
  * @data_model: an #EDataModel instance
  *
  * Obtains a timezone being used for calendar views. The returned
  * timezone is owned by the @data_model.
  *
- * Returns: (transfer none): An #icaltimezone being used for calendar views.
+ * Returns: (transfer none): An #ICalTimezone being used for calendar views.
  *
  * Since: 3.14
  **/
-icaltimezone *
+ICalTimezone *
 e_cal_data_model_get_timezone (ECalDataModel *data_model)
 {
-	icaltimezone *zone;
+	ICalTimezone *zone;
 
 	g_return_val_if_fail (E_IS_CAL_DATA_MODEL (data_model), NULL);
 
@@ -2273,10 +2435,11 @@ e_cal_data_model_get_timezone (ECalDataModel *data_model)
 
 	return zone;
 }
+
 /**
  * e_cal_data_model_set_timezone:
  * @data_model: an #EDataModel instance
- * @zone: an #icaltimezone
+ * @zone: an #ICalTimezone
  *
  * Sets a trimezone to be used for calendar views. This change
  * regenerates all views.
@@ -2285,7 +2448,7 @@ e_cal_data_model_get_timezone (ECalDataModel *data_model)
  **/
 void
 e_cal_data_model_set_timezone (ECalDataModel *data_model,
-			       icaltimezone *zone)
+			       ICalTimezone *zone)
 {
 	g_return_if_fail (E_IS_CAL_DATA_MODEL (data_model));
 	g_return_if_fail (zone != NULL);
@@ -2293,7 +2456,8 @@ e_cal_data_model_set_timezone (ECalDataModel *data_model,
 	LOCK_PROPS ();
 
 	if (data_model->priv->zone != zone) {
-		data_model->priv->zone = zone;
+		g_clear_object (&data_model->priv->zone);
+		data_model->priv->zone = g_object_ref (zone);
 
 		g_hash_table_foreach (data_model->priv->clients, cal_data_model_set_client_default_zone_cb, zone);
 
@@ -2603,8 +2767,8 @@ cal_data_model_foreach_component (ECalDataModel *data_model,
 				continue;
 
 			if ((in_range_start == in_range_end && in_range_start == (time_t) 0) ||
-			    (comp_data->instance_start < in_range_end &&
-			     comp_data->instance_end > in_range_start)) {
+			    (comp_data->instance_start < in_range_end && comp_data->instance_end > in_range_start) ||
+			    (comp_data->instance_start == comp_data->instance_end && comp_data->instance_end == in_range_start)) {
 				if (!func (data_model, view_data->client, id, comp_data->component,
 					   comp_data->instance_start, comp_data->instance_end, user_data))
 					checked_all = FALSE;
@@ -2621,8 +2785,8 @@ cal_data_model_foreach_component (ECalDataModel *data_model,
 					continue;
 
 				if ((in_range_start == in_range_end && in_range_start == (time_t) 0) ||
-				    (comp_data->instance_start < in_range_end &&
-				     comp_data->instance_end > in_range_start)) {
+				    (comp_data->instance_start < in_range_end && comp_data->instance_end > in_range_start) ||
+				    (comp_data->instance_start == comp_data->instance_end && comp_data->instance_end == in_range_start)) {
 					if (!func (data_model, view_data->client, id, comp_data->component,
 						   comp_data->instance_start, comp_data->instance_end, user_data))
 						checked_all = FALSE;
@@ -2711,7 +2875,7 @@ e_cal_data_model_subscribe (ECalDataModel *data_model,
 	LOCK_PROPS ();
 
 	for (link = data_model->priv->subscribers; link; link = g_slist_next (link)) {
-		subs_data = link->data;
+		SubscriberData *subs_data = link->data;
 
 		if (!subs_data)
 			continue;

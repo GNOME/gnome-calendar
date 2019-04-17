@@ -24,8 +24,6 @@
 
 #include <gtk/gtk.h>
 
-#include <libical/icaltime.h>
-
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_EVENT_WIDGET                    (gcal_event_widget_get_type ())

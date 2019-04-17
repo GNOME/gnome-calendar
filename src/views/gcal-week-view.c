@@ -52,7 +52,7 @@ struct _GcalWeekView
   GcalTimeFormat      time_format;
 
   /* property */
-  icaltimetype       *date;
+  ICalTime           *date;
   GcalManager        *manager;         /* owned */
   GcalWeatherService *weather_service; /* owned */
 
@@ -179,7 +179,7 @@ schedule_position_scroll (GcalWeekView *self)
 }
 
 /* GcalView implementation */
-static icaltimetype*
+static ICalTime*
 gcal_week_view_get_date (GcalView *view)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (view);
@@ -188,15 +188,15 @@ gcal_week_view_get_date (GcalView *view)
 }
 
 static void
-gcal_week_view_set_date (GcalView     *view,
-                         icaltimetype *date)
+gcal_week_view_set_date (GcalView *view,
+                         ICalTime *date)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (view);
 
   GCAL_ENTRY;
 
-  g_clear_pointer (&self->date, g_free);
-  self->date = gcal_dup_icaltime (date);
+  g_clear_object (&self->date);
+  self->date = i_cal_time_new_clone (date);
 
   /* Propagate the new date */
   gcal_week_grid_set_date (GCAL_WEEK_GRID (self->week_grid), date);
@@ -504,7 +504,7 @@ gcal_week_view_finalize (GObject       *object)
 
   self = GCAL_WEEK_VIEW (object);
 
-  g_clear_pointer (&self->date, g_free);
+  g_clear_object (&self->date);
 
   g_clear_object (&self->manager);
   g_clear_object (&self->weather_service);
@@ -524,7 +524,7 @@ gcal_week_view_set_property (GObject       *object,
   switch (property_id)
     {
     case PROP_DATE:
-      gcal_view_set_date (GCAL_VIEW (object), g_value_get_boxed (value));
+      gcal_view_set_date (GCAL_VIEW (object), g_value_get_object (value));
       break;
 
     case PROP_MANAGER:
@@ -565,7 +565,7 @@ gcal_week_view_get_property (GObject       *object,
   switch (property_id)
     {
     case PROP_DATE:
-      g_value_set_boxed (value, self->date);
+      g_value_set_object (value, self->date);
       break;
 
     case PROP_MANAGER:

@@ -380,23 +380,11 @@ static void
 remove_recurrence_properties (GcalEvent *event)
 {
   ECalComponent *comp;
-  icalcomponent *icalcomp;
-  icalproperty *prop;
 
   comp = gcal_event_get_component (event);
-  icalcomp = e_cal_component_get_icalcomponent (comp);
 
   e_cal_component_set_recurid (comp, NULL);
-
-  prop = icalcomponent_get_first_property (icalcomp, ICAL_RRULE_PROPERTY);
-
-  if (prop)
-    {
-      icalcomponent_remove_property (icalcomp, prop);
-      icalproperty_free (prop);
-    }
-
-  e_cal_component_rescan (comp);
+  e_cal_component_set_rrules (comp, NULL);
 }
 
 static void
@@ -582,7 +570,7 @@ create_row_for_alarm (GcalEvent          *event,
   gtk_label_set_label (GTK_LABEL (label), text);
 
   /* Retrieves the actions associated to the alarm */
-  e_cal_component_alarm_get_action (alarm, &action);
+  action = e_cal_component_alarm_get_action (alarm);
 
   /* Updates the volume button to match the action */
   has_sound = action == E_CAL_COMPONENT_ALARM_AUDIO;

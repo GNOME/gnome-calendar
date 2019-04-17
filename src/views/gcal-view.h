@@ -36,19 +36,19 @@ struct _GcalViewInterface
 
   /* signals */
   void               (*create_event)                             (GcalView           *view,
-                                                                  icaltimetype       *start_span,
-                                                                  icaltimetype       *end_span,
+                                                                  ICalTime           *start_span,
+                                                                  ICalTime           *end_span,
                                                                   gdouble             x,
                                                                   gdouble             y);
 
   void               (*create_event_detailed)                    (GcalView           *view,
-                                                                  icaltimetype       *start_span,
-                                                                  icaltimetype       *end_span);
+                                                                  ICalTime           *start_span,
+                                                                  ICalTime           *end_span);
 
-  icaltimetype*      (*get_date)                                 (GcalView           *view);
+  ICalTime*          (*get_date)                                 (GcalView           *view);
 
   void               (*set_date)                                 (GcalView           *view,
-                                                                  icaltimetype       *date);
+                                                                  ICalTime           *date);
 
   /* Marks related API */
   void               (*clear_marks)                              (GcalView           *view);
@@ -59,9 +59,9 @@ struct _GcalViewInterface
 };
 
 void                 gcal_view_set_date                          (GcalView           *view,
-                                                                  icaltimetype       *date);
+                                                                  ICalTime           *date);
 
-icaltimetype*        gcal_view_get_date                          (GcalView           *view);
+ICalTime*            gcal_view_get_date                          (GcalView           *view);
 
 GcalManager*         gcal_view_get_manager                       (GcalView           *self);
 

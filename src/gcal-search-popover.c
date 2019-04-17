@@ -57,7 +57,7 @@ struct _GcalSearchPopover
   guint               search_timeout_id;
 
   /* property */
-  icaltimetype       *date;
+  ICalTime           *date;
   GcalManager        *manager; /* weak reference */
 
   /* flags */
@@ -122,7 +122,7 @@ display_header_func (GtkListBoxRow *row,
  * when the @row is activated by the user.
  *
  * It is up to #GcalWindow to hear the signal,
- * retrieve the #icaltimetype passed as parameter
+ * retrieve the #ICalTime passed as parameter
  * and select the day from the last view.
  *
  * Returns:
@@ -133,14 +133,14 @@ open_event (GtkListBox    *list,
             gpointer       user_data)
 {
   RowEventData *data;
-  icaltimetype *date_start;
+  ICalTime *date_start;
 
   data = g_object_get_data (G_OBJECT (row), "event-data");
   date_start = datetime_to_icaltime (gcal_event_get_date_start (data->event));
 
   g_signal_emit_by_name (user_data, "event-activated", date_start);
 
-  g_free (date_start);
+  g_clear_object (&date_start);
 }
 
 /**
@@ -582,8 +582,8 @@ gcal_search_popover_set_property (GObject      *object,
   switch (property_id)
     {
     case PROP_DATE:
-      g_clear_pointer (&self->date, g_free);
-      self->date = g_value_dup_boxed (value);
+      g_clear_object (&self->date);
+      self->date = g_value_dup_object (value);
       break;
 
     case PROP_TIME_FORMAT:
@@ -607,7 +607,7 @@ gcal_search_popover_get_property (GObject    *object,
   switch (property_id)
     {
     case PROP_DATE:
-      g_value_set_boxed (value, self->date);
+      g_value_set_object (value, self->date);
       break;
 
     case PROP_TIME_FORMAT:
@@ -625,7 +625,7 @@ gcal_search_popover_finalize (GObject *object)
 {
   GcalSearchPopover *self = GCAL_SEARCH_POPOVER (object);
 
-  g_clear_pointer (&self->date, g_free);
+  g_clear_object (&self->date);
   g_clear_pointer (&self->uuid_to_event, g_hash_table_unref);
 
   /* Chain up to parent's finalize() method. */
@@ -656,7 +656,7 @@ gcal_search_popover_class_init (GcalSearchPopoverClass *klass)
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_SEARCH_POPOVER, G_SIGNAL_RUN_LAST,
                                            0,
                                            NULL, NULL, NULL,
-                                           G_TYPE_NONE, 1, ICAL_TIME_TYPE);
+                                           G_TYPE_NONE, 1, I_CAL_TYPE_TIME);
 
   /* properties */
   /**
@@ -668,11 +668,11 @@ gcal_search_popover_class_init (GcalSearchPopoverClass *klass)
    */
   g_object_class_install_property (object_class,
                                    PROP_DATE,
-                                   g_param_spec_boxed ("active-date",
-                                                       "The active date",
-                                                       "The active/selected date in the view",
-                                                       ICAL_TIME_TYPE,
-                                                       G_PARAM_READWRITE));
+                                   g_param_spec_object ("active-date",
+                                                        "The active date",
+                                                        "The active/selected date in the view",
+                                                        I_CAL_TYPE_TIME,
+                                                        G_PARAM_READWRITE));
 
   g_object_class_install_property (object_class,
                                    PROP_TIME_FORMAT,

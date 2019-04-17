@@ -53,7 +53,7 @@ struct _GcalWeekGrid
   GtkWidget          *hours_sidebar;
   GdkWindow          *event_window;
 
-  icaltimetype       *active_date;
+  ICalTime           *active_date;
 
   GcalRangeTree      *events;
 
@@ -272,7 +272,7 @@ gcal_week_grid_finalize (GObject *object)
   GcalWeekGrid *self = GCAL_WEEK_GRID (object);
 
   g_clear_pointer (&self->events, gcal_range_tree_unref);
-  g_clear_pointer (&self->active_date, g_free);
+  g_clear_object (&self->active_date);
 
   G_OBJECT_CLASS (gcal_week_grid_parent_class)->finalize (object);
 }
@@ -1261,10 +1261,10 @@ gcal_week_grid_clear_marks (GcalWeekGrid *self)
 
 void
 gcal_week_grid_set_date (GcalWeekGrid *self,
-                         icaltimetype *date)
+                         ICalTime     *date)
 {
-  g_clear_pointer (&self->active_date, g_free);
-  self->active_date = gcal_dup_icaltime (date);
+  g_clear_object (&self->active_date);
+  self->active_date = i_cal_time_new_clone (date);
 
   gtk_widget_queue_resize (GTK_WIDGET (self));
   gtk_widget_queue_draw (GTK_WIDGET (self));

@@ -50,7 +50,7 @@ GtkSizeGroup*        gcal_week_header_get_sidebar_size_group     (GcalWeekHeader
 void                 gcal_week_header_clear_marks                (GcalWeekHeader     *self);
 
 void                 gcal_week_header_set_date                   (GcalWeekHeader     *self,
-                                                                  icaltimetype       *date);
+                                                                  ICalTime           *date);
 
 void                 gcal_week_header_set_weather_service        (GcalWeekHeader     *self,
                                                                   GcalWeatherService *service);

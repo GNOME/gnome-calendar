@@ -9,7 +9,6 @@
     <property name="show_menubar">False</property>
     <signal name="key-press-event" handler="key_pressed" object="GcalWindow" swapped="no"/>
     <signal name="window-state-event" handler="window_state_changed" object="GcalWindow" swapped="no"/>
-    <property name="active-date" bind-source="search_popover" bind-property="active-date" bind-flags="default|sync-create"/>
     <style>
       <class name="org-gnome-Calendar"/>
     </style>    
@@ -58,7 +57,6 @@
                 <child>
                   <object class="GcalWeekView" id="week_view">
                     <property name="visible">True</property>
-                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
                     <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
                     <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
                   </object>
@@ -71,7 +69,6 @@
                   <object class="GcalMonthView" id="month_view">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
-                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
                     <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
                     <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
                     <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>
@@ -85,7 +82,6 @@
                 <child>
                   <object class="GcalYearView" id="year_view">
                     <property name="visible">True</property>
-                    <property name="active-date" bind-source="GcalWindow" bind-property="active-date" bind-flags="bidirectional"/>
                     <signal name="create-event" handler="show_new_event_widget" object="GcalWindow" swapped="no"/>
                     <signal name="create-event-detailed" handler="create_event_detailed_cb" object="GcalWindow" swapped="no"/>
                     <signal name="event-activated" handler="event_activated" object="GcalWindow" swapped="no"/>

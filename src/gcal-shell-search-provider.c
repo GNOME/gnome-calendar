@@ -31,7 +31,6 @@ typedef struct
 {
   GDBusMethodInvocation    *invocation;
   gchar                   **terms;
-  icaltimetype              date;
 } PendingSearch;
 
 struct _GcalShellSearchProvider
@@ -76,7 +75,8 @@ sort_event_data (GcalEvent *a,
 static gboolean
 execute_search (GcalShellSearchProvider *self)
 {
-  icaltimezone *zone;
+  ICalTimezone *zone;
+  ICalTime *date;
   g_autofree gchar *search_query = NULL;
   time_t range_start, range_end;
   guint i;
@@ -87,12 +87,14 @@ execute_search (GcalShellSearchProvider *self)
     GCAL_RETURN (TRUE);
 
   zone = gcal_manager_get_system_timezone (self->manager);
-  self->pending_search->date = icaltime_current_time_with_zone (zone);
-  icaltime_adjust (&(self->pending_search->date), -7, 0, 0, 0); /* -1 weeks from today */
-  range_start = icaltime_as_timet_with_zone (self->pending_search->date, zone);
+  date = i_cal_time_current_time_with_zone (zone);
+  i_cal_time_adjust (date, -7, 0, 0, 0); /* -1 week from today */
+  range_start = i_cal_time_as_timet_with_zone (date, zone);
 
-  icaltime_adjust (&(self->pending_search->date), 21 * 2, 0, 0, 0); /* +3 weeks from today */
-  range_end = icaltime_as_timet_with_zone (self->pending_search->date, zone);
+  i_cal_time_adjust (date, 21 * 2, 0, 0, 0); /* +3 weeks from today */
+  range_end = i_cal_time_as_timet_with_zone (date, zone);
+
+  g_clear_object (&date);
 
   gcal_manager_set_shell_search_subscriber (self->manager, E_CAL_DATA_MODEL_SUBSCRIBER (self),
                                             range_start, range_end);

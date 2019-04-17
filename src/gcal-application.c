@@ -48,7 +48,7 @@ struct _GcalApplication
   GtkCssProvider     *colors_provider;
 
   gchar              *uuid;
-  icaltimetype       *initial_date;
+  ICalTime           *initial_date;
 
   GSettings          *desktop_settings;
   GcalTimeFormat      time_format;
@@ -225,8 +225,8 @@ gcal_application_finalize (GObject *object)
 
   GCAL_ENTRY;
 
-  g_clear_pointer (&self->initial_date, g_free);
   g_clear_pointer (&self->uuid, g_free);
+  g_clear_object (&self->initial_date);
   g_clear_object (&self->colors_provider);
   g_clear_object (&self->clock);
   g_clear_object (&self->desktop_settings);
@@ -302,13 +302,12 @@ gcal_application_activate (GApplication *application)
     {
       if (!self->initial_date)
         {
-          icaltimezone *tz;
+          ICalTimezone *tz;
 
           tz = gcal_manager_get_system_timezone (self->manager);
 
-          self->initial_date = g_new0 (icaltimetype, 1);
-          *self->initial_date = icaltime_current_time_with_zone (tz);
-          *self->initial_date = icaltime_set_timezone (self->initial_date, tz);
+          self->initial_date = i_cal_time_current_time_with_zone (tz);
+          i_cal_time_set_timezone (self->initial_date, tz);
         }
 
       self->window =  g_object_new (GCAL_TYPE_WINDOW,
@@ -330,7 +329,7 @@ gcal_application_activate (GApplication *application)
   if (self->initial_date)
     g_object_set (self->window, "active-date", self->initial_date, NULL);
 
-  g_clear_pointer (&self->initial_date, g_free);
+  g_clear_object (&self->initial_date);
 
   if (self->uuid != NULL)
     {
@@ -421,12 +420,9 @@ gcal_application_command_line (GApplication            *app,
 
       if (e_time_parse_date_and_time (date, &result) == E_TIME_PARSE_OK)
         {
-          if (!self->initial_date)
-            self->initial_date = g_new0 (icaltimetype, 1);
-
-          *self->initial_date = tm_to_icaltimetype (&result, FALSE);
-          *self->initial_date = icaltime_set_timezone (self->initial_date,
-                                                       gcal_manager_get_system_timezone (self->manager));
+          self->initial_date = e_cal_util_tm_to_icaltime (&result, FALSE);
+          i_cal_time_set_timezone (self->initial_date,
+                                   gcal_manager_get_system_timezone (self->manager));
         }
 
       g_variant_unref (option);
@@ -734,7 +730,7 @@ gcal_application_set_initial_date (GcalApplication *self,
 {
   g_return_if_fail (GCAL_IS_APPLICATION (self));
 
-  g_clear_pointer (&self->initial_date, g_free);
+  g_clear_object (&self->initial_date);
   self->initial_date = datetime_to_icaltime (initial_date);
 }
 

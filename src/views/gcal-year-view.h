@@ -31,8 +31,8 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalYearView, gcal_year_view, GCAL, YEAR_VIEW, GtkBox)
 
-void                 gcal_year_view_set_current_date             (GcalYearView       *year_view,
-                                                                  icaltimetype       *current_date);
+void                 gcal_year_view_set_current_date             (GcalYearView *year_view,
+                                                                  ICalTime     *current_date);
 
 G_END_DECLS
 

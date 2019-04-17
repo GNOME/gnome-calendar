@@ -37,11 +37,11 @@ gcal_view_default_init (GcalViewInterface *iface)
    * The active date of the view.
    */
   g_object_interface_install_property (iface,
-                                       g_param_spec_boxed ("active-date",
-                                                           "The active date",
-                                                           "The active/selecetd date in the view",
-                                                           ICAL_TIME_TYPE,
-                                                           G_PARAM_READWRITE));
+                                       g_param_spec_object ("active-date",
+                                                            "The active date",
+                                                            "The active/selecetd date in the view",
+                                                            I_CAL_TYPE_TIME,
+                                                            G_PARAM_READWRITE));
 
   /**
    * GcalView::manager:
@@ -114,13 +114,13 @@ gcal_view_default_init (GcalViewInterface *iface)
 /**
  * gcal_view_set_date:
  * @view: a #GcalView
- * @date: an #icaltimetype
+ * @date: an #ICalTime
  *
  * Sets the date of @view.
  */
 void
-gcal_view_set_date (GcalView     *view,
-                    icaltimetype *date)
+gcal_view_set_date (GcalView *view,
+                    ICalTime *date)
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
   g_return_if_fail (GCAL_VIEW_GET_IFACE (view)->set_date);
@@ -231,9 +231,9 @@ gcal_view_set_weather_service_impl_helper (GcalWeatherService  **old_service,
  *
  * Retrieves the date of @view.
  *
- * Returns: (transfer none): an #icaltimetype.
+ * Returns: (transfer none): an #ICalTime.
  */
-icaltimetype*
+ICalTime*
 gcal_view_get_date (GcalView *view)
 {
   g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);

@@ -100,8 +100,6 @@ month_item[12] =
 
 #define SCROLL_HARDNESS 10.0
 
-G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
-
 /**
  * datetime_compare_date:
  * @dt1: (nullable): a #GDateTime
@@ -139,56 +137,61 @@ datetime_compare_date (GDateTime *dt1,
  * datetime_to_icaltime:
  * @dt: a #GDateTime
  *
- * Converts the #GDateTime's @dt to an #icaltimetype.
+ * Converts the #GDateTime's @dt to an #ICalTime.
  *
- * Returns: (transfer full): a #icaltimetype.
+ * Returns: (transfer full): an #ICalTime.
  */
-icaltimetype*
+ICalTime*
 datetime_to_icaltime (GDateTime *dt)
 {
-  icaltimetype *idt;
+  ICalTime *idt;
 
   if (!dt)
     return NULL;
 
-  idt = g_new0 (icaltimetype, 1);
+  idt = i_cal_time_null_time ();
 
-  idt->year = g_date_time_get_year (dt);
-  idt->month = g_date_time_get_month (dt);
-  idt->day = g_date_time_get_day_of_month (dt);
-  idt->hour = g_date_time_get_hour (dt);
-  idt->minute = g_date_time_get_minute (dt);
-  idt->second = g_date_time_get_seconds (dt);
-  idt->is_date = (idt->hour == 0 &&
-                  idt->minute == 0 &&
-                  idt->second == 0);
+  i_cal_time_set_date (idt,
+                       g_date_time_get_year (dt),
+                       g_date_time_get_month (dt),
+                       g_date_time_get_day_of_month (dt));
+  i_cal_time_set_time (idt,
+                       g_date_time_get_hour (dt),
+                       g_date_time_get_minute (dt),
+                       g_date_time_get_seconds (dt));
+  i_cal_time_set_is_date (idt,
+                  i_cal_time_get_hour (idt) == 0 &&
+                  i_cal_time_get_minute (idt) == 0 &&
+                  i_cal_time_get_second (idt) == 0);
 
   return idt;
 }
 
 /**
  * icaltime_to_datetime:
- * @date: an #icaltimetype
+ * @date: an #ICalTime
  *
- * Converts the #icaltimetype's @date to a #GDateTime. The
+ * Converts the #ICalTime's @date to a #GDateTime. The
  * timezone is preserved.
  *
  * Returns: (transfer full): a #GDateTime.
  */
 GDateTime*
-icaltime_to_datetime (const icaltimetype  *date)
+icaltime_to_datetime (const ICalTime *date)
 {
   GDateTime *dt;
   GTimeZone *tz;
+  ICalTimezone *zone;
 
-  tz = date->zone ? g_time_zone_new (icaltime_get_tzid (*date)) : g_time_zone_new_utc ();
+  zone = i_cal_time_get_timezone (date);
+  tz = (zone && i_cal_timezone_get_location (zone)) ? g_time_zone_new (i_cal_timezone_get_location (zone)) : g_time_zone_new_utc ();
   dt = g_date_time_new (tz,
-                        date->year,
-                        date->month,
-                        date->day,
-                        date->is_date ? 0 : date->hour,
-                        date->is_date ? 0 : date->minute,
-                        date->is_date ? 0 : date->second);
+                        i_cal_time_get_year (date),
+                        i_cal_time_get_month (date),
+                        i_cal_time_get_day (date),
+                        i_cal_time_is_date (date) ? 0 : i_cal_time_get_hour (date),
+                        i_cal_time_is_date (date) ? 0 : i_cal_time_get_minute (date),
+                        i_cal_time_is_date (date) ? 0 : i_cal_time_get_second (date));
 
   g_clear_pointer (&tz, g_time_zone_unref);
 
@@ -212,20 +215,6 @@ datetime_is_date (GDateTime *dt)
   return g_date_time_get_hour (dt) == 0 &&
          g_date_time_get_minute (dt) == 0 &&
          g_date_time_get_seconds (dt) == 0;
-}
-
-/**
- * gcal_dup_icaltime:
- * @date: an #icaltimetype
- *
- * Creates an exact copy of @date.
- *
- * Returns: (transfer full): an #icaltimetype
- */
-icaltimetype*
-gcal_dup_icaltime (const icaltimetype *date)
-{
-  return g_memdup (date, sizeof (icaltimetype));
 }
 
 /**
@@ -358,7 +347,7 @@ get_desc_from_component (ECalComponent *component,
   GSList *l;
 
   gchar *desc = NULL;
-  e_cal_component_get_description_list (component, &text_list);
+  text_list = e_cal_component_get_descriptions (component);
 
   for (l = text_list; l != NULL; l = l->next)
     {
@@ -370,18 +359,18 @@ get_desc_from_component (ECalComponent *component,
 
           if (desc != NULL)
             {
-              carrier = g_strconcat (desc, joint_char, text->value, NULL);
+              carrier = g_strconcat (desc, joint_char, e_cal_component_text_get_value (text), NULL);
               g_free (desc);
               desc = carrier;
             }
           else
             {
-              desc = g_strdup (text->value);
+              desc = g_strdup (e_cal_component_text_get_value (text));
             }
         }
     }
 
-  e_cal_component_free_text_list (text_list);
+  g_slist_free_full (text_list, e_cal_component_text_free);
   return desc != NULL ? g_strstrip (desc) : NULL;
 }
 
@@ -404,20 +393,20 @@ get_uuid_from_component (ESource       *source,
   ECalComponentId *id;
 
   id = e_cal_component_get_id (component);
-  if (id->rid != NULL)
+  if (e_cal_component_id_get_rid (id) != NULL)
     {
       uuid = g_strdup_printf ("%s:%s:%s",
                               e_source_get_uid (source),
-                              id->uid,
-                              id->rid);
+                              e_cal_component_id_get_uid (id),
+                              e_cal_component_id_get_rid (id));
     }
   else
     {
       uuid = g_strdup_printf ("%s:%s",
                               e_source_get_uid (source),
-                              id->uid);
+                              e_cal_component_id_get_uid (id));
     }
-  e_cal_component_free_id (id);
+  e_cal_component_id_free (id);
 
   return uuid;
 }
@@ -497,9 +486,10 @@ build_component_from_details (const gchar *summary,
                               GDateTime   *final_date)
 {
   ECalComponent *event;
-  ECalComponentDateTime dt;
-  ECalComponentText summ;
-  icaltimezone *zone;
+  ECalComponentDateTime *dt;
+  ECalComponentText *summ;
+  ICalTimezone *zone;
+  ICalTime *itt;
   gboolean all_day;
 
   event = e_cal_component_new ();
@@ -517,42 +507,38 @@ build_component_from_details (const gchar *summary,
    */
   if (all_day)
     {
-      zone = icaltimezone_get_utc_timezone ();
+      zone = i_cal_timezone_get_utc_timezone ();
     }
   else
     {
-      gchar *system_tz = e_cal_system_timezone_get_location ();
-
-      zone = icaltimezone_get_builtin_timezone (system_tz);
-
-      g_free (system_tz);
+      zone = e_cal_util_get_system_timezone ();
     }
 
   /* Start date */
-  dt.value = datetime_to_icaltime (initial_date);
-  icaltime_set_timezone (dt.value, zone);
-  dt.value->is_date = all_day;
-  dt.tzid = icaltimezone_get_tzid (zone);
-  e_cal_component_set_dtstart (event, &dt);
+  itt = datetime_to_icaltime (initial_date);
+  i_cal_time_set_timezone (itt, zone);
+  i_cal_time_set_is_date (itt, all_day);
+  dt = e_cal_component_datetime_new_take (itt, zone ? g_strdup (i_cal_timezone_get_tzid (zone)) : NULL);
+  e_cal_component_set_dtstart (event, dt);
 
-  g_free (dt.value);
+  e_cal_component_datetime_free (dt);
 
   /* End date */
   if (!final_date)
     final_date = g_date_time_add_days (initial_date, 1);
 
-  dt.value = datetime_to_icaltime (final_date);
-  icaltime_set_timezone (dt.value, zone);
-  dt.value->is_date = all_day;
-  dt.tzid = icaltimezone_get_tzid (zone);
-  e_cal_component_set_dtend (event, &dt);
+  itt = datetime_to_icaltime (final_date);
+  i_cal_time_set_timezone (itt, zone);
+  i_cal_time_set_is_date (itt, all_day);
+  dt = e_cal_component_datetime_new_take (itt, zone ? g_strdup (i_cal_timezone_get_tzid (zone)) : NULL);
+  e_cal_component_set_dtend (event, dt);
 
-  g_free (dt.value);
+  e_cal_component_datetime_free (dt);
 
   /* Summary */
-  summ.altrep = NULL;
-  summ.value = summary;
-  e_cal_component_set_summary (event, &summ);
+  summ = e_cal_component_text_new (summary, NULL);
+  e_cal_component_set_summary (event, summ);
+  e_cal_component_text_free (summ);
 
   e_cal_component_commit_sequence (event);
 
@@ -561,11 +547,11 @@ build_component_from_details (const gchar *summary,
 
 /**
  * icaltime_compare_date:
- * @date1: an #icaltimetype
- * @date2: an #icaltimetype
+ * @date1: an #ICalTime
+ * @date2: an #ICalTime
  *
- * Compare date parts of #icaltimetype objects. Returns negative value,
- * 0 or positive value accordingly if @date1 is before, same day of
+ * Compare date parts of #ICalTime objects. Returns negative value,
+ * 0 or positive value accordingly if @date1 is before, same day or
  * after date2.
  *
  * As a bonus it returns the amount of days passed between two days on the
@@ -574,25 +560,25 @@ build_component_from_details (const gchar *summary,
  * Returns: negative, 0 or positive
  **/
 gint
-icaltime_compare_date (const icaltimetype *date1,
-                       const icaltimetype *date2)
+icaltime_compare_date (const ICalTime *date1,
+                       const ICalTime *date2)
 {
   if (date2 == NULL)
     return 0;
 
-  if (date1->year < date2->year)
+  if (i_cal_time_get_year (date1) < i_cal_time_get_year (date2))
     return -1;
-  else if (date1->year > date2->year)
+  else if (i_cal_time_get_year (date1) > i_cal_time_get_year (date2))
     return 1;
   else
-    return time_day_of_year (date1->day, date1->month - 1, date1->year) -
-           time_day_of_year (date2->day, date2->month - 1, date2->year);
+    return time_day_of_year (i_cal_time_get_day (date1), i_cal_time_get_month (date1) - 1, i_cal_time_get_year (date1)) -
+           time_day_of_year (i_cal_time_get_day (date2), i_cal_time_get_month (date2) - 1, i_cal_time_get_year (date2));
 }
 
 /**
  * icaltime_compare_with_current:
- * @date1: an #icaltimetype
- * @date2: an #icaltimetype
+ * @date1: an #ICalTime
+ * @date2: an #ICalTime
  * @current_time_t: the current time
  *
  * Compares @date1 and @date2 against the current time. Dates
@@ -602,15 +588,24 @@ icaltime_compare_date (const icaltimetype *date1,
  * equal, positive otherwise
  */
 gint
-icaltime_compare_with_current (const icaltimetype *date1,
-                               const icaltimetype *date2,
-                               time_t             *current_time_t)
+icaltime_compare_with_current (const ICalTime *date1,
+                               const ICalTime *date2,
+                               time_t         *current_time_t)
 {
+  ICalTimezone *zone1, *zone2;
   gint result = 0;
-
   time_t start1, start2, diff1, diff2;
-  start1 = icaltime_as_timet_with_zone (*date1, date1->zone != NULL ? date1->zone : e_cal_util_get_system_timezone ());
-  start2 = icaltime_as_timet_with_zone (*date2, date2->zone != NULL ? date2->zone : e_cal_util_get_system_timezone ());
+
+  zone1 = i_cal_time_get_timezone (date1);
+  if (!zone1)
+    zone1 = e_cal_util_get_system_timezone ();
+
+  zone2 = i_cal_time_get_timezone (date2);
+  if (!zone2)
+    zone2 = e_cal_util_get_system_timezone ();
+
+  start1 = i_cal_time_as_timet_with_zone (date1, zone1);
+  start2 = i_cal_time_as_timet_with_zone (date2, zone2);
   diff1 = start1 - *current_time_t;
   diff2 = start2 - *current_time_t;
 
@@ -636,7 +631,7 @@ icaltime_compare_with_current (const icaltimetype *date1,
 
 /**
  * get_start_of_week:
- * @date: an #icaltimetype
+ * @date: an #ICalTime
  *
  * Retrieves the start of the week that @date
  * falls in. This function already takes the
@@ -646,32 +641,29 @@ icaltime_compare_with_current (const icaltimetype *date1,
  * the start of the week.
  */
 GDateTime*
-get_start_of_week (icaltimetype *date)
+get_start_of_week (ICalTime *date)
 {
-  icaltimetype *new_date;
+  ICalTime *new_date;
   GDateTime *dt;
 
-  new_date = g_new0 (icaltimetype, 1);
-  *new_date = icaltime_from_day_of_year (icaltime_start_doy_week (*date, get_first_weekday () + 1),
-                                         date->year);
-  new_date->is_date = 0;
-  new_date->hour = 0;
-  new_date->minute = 0;
-  new_date->second = 0;
+  new_date = i_cal_time_from_day_of_year (i_cal_time_start_doy_week (date, get_first_weekday () + 1),
+                                          i_cal_time_get_year (date));
+  i_cal_time_set_is_date (new_date, FALSE);
+  i_cal_time_set_time (new_date, 0, 0, 0);
 
-  dt = g_date_time_new_local (new_date->year,
-                              new_date->month,
-                              new_date->day,
+  dt = g_date_time_new_local (i_cal_time_get_year (new_date),
+                              i_cal_time_get_month (new_date),
+                              i_cal_time_get_day (new_date),
                               0, 0, 0);
 
-  g_clear_pointer (&new_date, g_free);
+  g_clear_object (&new_date);
 
   return dt;
 }
 
 /**
  * get_end_of_week:
- * @date: an #icaltimetype
+ * @date: an #ICalTime
  *
  * Retrieves the end of the week that @date
  * falls in. This function already takes the
@@ -681,7 +673,7 @@ get_start_of_week (icaltimetype *date)
  * the end of the week.
  */
 GDateTime*
-get_end_of_week (icaltimetype *date)
+get_end_of_week (ICalTime *date)
 {
   GDateTime *week_start, *week_end;
 
@@ -989,26 +981,28 @@ gint
 get_alarm_trigger_minutes (GcalEvent          *event,
                            ECalComponentAlarm *alarm)
 {
-  ECalComponentAlarmTrigger trigger;
+  ECalComponentAlarmTrigger *trigger;
+  ICalDuration *duration;
   GDateTime *alarm_dt;
   gint diff;
 
-  e_cal_component_alarm_get_trigger (alarm, &trigger);
+  trigger = e_cal_component_alarm_get_trigger (alarm);
 
   /*
    * We only support alarms relative to the start date, and solely
    * ignore whetever different it may be.
    */
-  if (trigger.type != E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START)
+  if (!trigger || e_cal_component_alarm_trigger_get_kind (trigger) != E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START)
     return -1;
 
+  duration = e_cal_component_alarm_trigger_get_duration (trigger);
   alarm_dt = g_date_time_add_full (gcal_event_get_date_start (event),
                                    0,
                                    0,
-                                   - (trigger.u.rel_duration.days + trigger.u.rel_duration.weeks * 7),
-                                   - trigger.u.rel_duration.hours,
-                                   - trigger.u.rel_duration.minutes,
-                                   - trigger.u.rel_duration.seconds);
+                                   - (i_cal_duration_get_days (duration) + i_cal_duration_get_weeks (duration) * 7),
+                                   - i_cal_duration_get_hours (duration),
+                                   - i_cal_duration_get_minutes (duration),
+                                   - i_cal_duration_get_seconds (duration));
 
   diff = g_date_time_difference (gcal_event_get_date_start (event), alarm_dt) / G_TIME_SPAN_MINUTE;
 
@@ -1128,7 +1122,7 @@ ask_recurrence_modification_type (GtkWidget      *parent,
 
   client = g_object_get_data (G_OBJECT (source), "client");
 
-  if (!e_client_check_capability (E_CLIENT (client), CAL_STATIC_CAPABILITY_NO_THISANDFUTURE))
+  if (!e_client_check_capability (E_CLIENT (client), E_CAL_STATIC_CAPABILITY_NO_THISANDFUTURE))
     gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Subsequent events"), GTK_RESPONSE_OK);
 
   gtk_dialog_add_button (GTK_DIALOG (dialog), _("_All events"), GTK_RESPONSE_YES);
@@ -1226,7 +1220,12 @@ is_workday (guint day)
 
   if (!locale)
     {
-      g_warning ("Locale is NULL, assuming Saturday and Sunday as non workdays");
+      static gboolean know_that = FALSE;
+      if (!know_that)
+        {
+          know_that = TRUE;
+          g_warning ("Locale is NULL, assuming Saturday and Sunday as non workdays");
+        }
       return !(no_work_days & 1 << day);
     }
 
@@ -1295,7 +1294,7 @@ filter_event_list_by_uid_and_modtype (GList                 *widgets,
       component = gcal_event_get_component (event);
       source = gcal_event_get_source (event);
       id = e_cal_component_get_id (component);
-      id_prefix = g_strdup_printf ("%s:%s", e_source_get_uid (source), id->uid);
+      id_prefix = g_strdup_printf ("%s:%s", e_source_get_uid (source), e_cal_component_id_get_uid (id));
 
       for (l = widgets; l != NULL; l = l->next)
         {
@@ -1328,7 +1327,7 @@ filter_event_list_by_uid_and_modtype (GList                 *widgets,
 
         }
 
-      e_cal_component_free_id (id);
+      e_cal_component_id_free (id);
     }
 
   return result;
