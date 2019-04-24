@@ -691,22 +691,6 @@ gcal_application_get_context (GcalApplication *self)
   return self->context;
 }
 
-/**
- * gcal_application_get_manager:
- * @self: a #GcalApplication
- *
- * Retrieves the #GcalManager of the application.
- *
- * Returns: (transfer none): a #GcalManager
- */
-GcalManager*
-gcal_application_get_manager (GcalApplication *self)
-{
-  g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
-
-  return gcal_context_get_manager (self->context);
-}
-
 void
 gcal_application_set_uuid (GcalApplication *self,
                            const gchar     *app_uuid)
