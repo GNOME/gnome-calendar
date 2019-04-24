@@ -296,7 +296,7 @@ gcal_application_activate (GApplication *application)
     }
 
   if (!self->night_light_monitor)
-    self->night_light_monitor = gcal_night_light_monitor_new (manager);
+    self->night_light_monitor = gcal_night_light_monitor_new (self->context);
 
   if (!self->window)
     {

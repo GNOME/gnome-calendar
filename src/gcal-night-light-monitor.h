@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "gcal-manager.h"
+#include "gcal-context.h"
 #include "gcal-window.h"
 
 G_BEGIN_DECLS
@@ -29,6 +29,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalNightLightMonitor, gcal_night_light_monitor, GCAL, NIGHT_LIGHT_MONITOR, GObject)
 
-GcalNightLightMonitor* gcal_night_light_monitor_new              (GcalManager        *manager);
+GcalNightLightMonitor* gcal_night_light_monitor_new              (GcalContext        *context);
 
 G_END_DECLS

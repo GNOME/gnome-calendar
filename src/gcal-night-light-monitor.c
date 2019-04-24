@@ -25,7 +25,7 @@ struct _GcalNightLightMonitor
 {
   GObject             parent;
 
-  GcalManager        *manager;
+  GcalContext        *context;
 
   GDBusProxy         *night_light_proxy;
 };
@@ -35,7 +35,7 @@ G_DEFINE_TYPE (GcalNightLightMonitor, gcal_night_light_monitor, G_TYPE_OBJECT)
 enum
 {
   PROP_0,
-  PROP_MANAGER,
+  PROP_CONTEXT,
   N_PROPS
 };
 
@@ -52,12 +52,14 @@ on_night_light_proxy_properties_changed_cb (GcalNightLightMonitor *self,
                                             const gchar * const   *invalidated,
                                             GDBusProxy            *proxy)
 {
+  GcalManager *manager;
   GSettings *settings;
 
   g_assert (GCAL_IS_NIGHT_LIGHT_MONITOR (self));
   g_assert (G_IS_DBUS_PROXY (proxy));
 
-  settings = gcal_manager_get_settings (self->manager);
+  manager = gcal_context_get_manager (self->context);
+  settings = gcal_manager_get_settings (manager);
 
   if (g_settings_get_boolean (settings, "follow-night-light"))
     {
@@ -84,7 +86,7 @@ gcal_night_light_monitor_finalize (GObject *object)
 {
   GcalNightLightMonitor *self = (GcalNightLightMonitor *)object;
 
-  g_clear_object (&self->manager);
+  g_clear_object (&self->context);
   g_clear_object (&self->night_light_proxy);
 
   G_OBJECT_CLASS (gcal_night_light_monitor_parent_class)->finalize (object);
@@ -143,8 +145,8 @@ gcal_night_light_monitor_get_property (GObject    *object,
 
   switch (prop_id)
     {
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     default:
@@ -162,9 +164,9 @@ gcal_night_light_monitor_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_MANAGER:
-      g_assert (self->manager == NULL);
-      self->manager = g_value_dup_object (value);
+    case PROP_CONTEXT:
+      g_assert (self->context == NULL);
+      self->context = g_value_dup_object (value);
       g_object_notify_by_pspec (object, pspec);
       break;
 
@@ -183,10 +185,10 @@ gcal_night_light_monitor_class_init (GcalNightLightMonitorClass *klass)
   object_class->get_property = gcal_night_light_monitor_get_property;
   object_class->set_property = gcal_night_light_monitor_set_property;
 
-  properties[PROP_MANAGER] = g_param_spec_object ("manager",
-                                                  "Manager",
-                                                  "Manager",
-                                                  GCAL_TYPE_MANAGER,
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Context",
+                                                  "Context",
+                                                  GCAL_TYPE_CONTEXT,
                                                   G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -198,9 +200,9 @@ gcal_night_light_monitor_init (GcalNightLightMonitor *self)
 }
 
 GcalNightLightMonitor*
-gcal_night_light_monitor_new (GcalManager *manager)
+gcal_night_light_monitor_new (GcalContext *context)
 {
   return g_object_new (GCAL_TYPE_NIGHT_LIGHT_MONITOR,
-                       "manager", manager,
+                       "context", context,
                        NULL);
 }
