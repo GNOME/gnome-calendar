@@ -1261,10 +1261,9 @@ gcal_window_constructed (GObject *object)
    * FIXME: this is a hack around the issue that happens when trying to bind
    * these properties using the GtkBuilder .ui file.
    */
-  g_object_bind_property (self->context, "manager", self->weather_settings, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->weather_settings, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self->context, "manager", self->edit_dialog, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self->context, "manager", self->source_dialog, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self->context, "manager", self->weather_settings, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self->context, "manager", self->week_view, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self->context, "manager", self->month_view, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self->context, "manager", self->year_view, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);

@@ -18,6 +18,7 @@
 
 #define G_LOG_DOMAIN "GcalWeatherSettings"
 
+#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-manager.h"
 #include "gcal-utils.h"
@@ -32,7 +33,7 @@ struct _GcalWeatherSettings
   GtkSwitch          *weather_auto_location_switch;
   GtkWidget          *weather_location_entry;
 
-  GcalManager        *manager;
+  GcalContext        *context;
 
   GcalWeatherService *weather_service;
 };
@@ -54,7 +55,7 @@ G_DEFINE_TYPE (GcalWeatherSettings, gcal_weather_settings, GTK_TYPE_BOX)
 enum
 {
   PROP_0,
-  PROP_MANAGER,
+  PROP_CONTEXT,
   PROP_WEATHER_SERVICE,
   N_PROPS
 };
@@ -72,16 +73,18 @@ load_weather_settings (GcalWeatherSettings *self)
   g_autoptr (GVariant) location = NULL;
   g_autoptr (GVariant) value = NULL;
   g_autofree gchar *location_name = NULL;
+  GcalManager *manager;
   GSettings *settings;
   gboolean show_weather;
   gboolean auto_location;
 
   GCAL_ENTRY;
 
-  if (!self->manager)
+  if (!self->context)
     GCAL_RETURN ();
 
-  settings = gcal_manager_get_settings (self->manager);
+  manager = gcal_context_get_manager (self->context);
+  settings = gcal_manager_get_settings (manager);
   value = g_settings_get_value (settings, "weather-settings");
 
   g_variant_get (value, "(bbsmv)",
@@ -127,6 +130,7 @@ static void
 save_weather_settings (GcalWeatherSettings *self)
 {
   g_autoptr (GWeatherLocation) location = NULL;
+  GcalManager *manager;
   GSettings *settings;
   GVariant *value;
   GVariant *vlocation;
@@ -134,13 +138,14 @@ save_weather_settings (GcalWeatherSettings *self)
 
   GCAL_ENTRY;
 
-  if (!self->manager)
+  if (!self->context)
     GCAL_RETURN ();
 
   location = gweather_location_entry_get_location (GWEATHER_LOCATION_ENTRY (self->weather_location_entry));
   vlocation = location ? gweather_location_serialize (location) : NULL;
 
-  settings = gcal_manager_get_settings (self->manager);
+  manager = gcal_context_get_manager (self->context);
+  settings = gcal_manager_get_settings (manager);
   value = g_variant_new ("(bbsmv)",
                          gtk_switch_get_active (self->show_weather_switch),
                          gtk_switch_get_active (self->weather_auto_location_switch),
@@ -292,8 +297,8 @@ gcal_weather_settings_get_property (GObject    *object,
 
   switch (prop_id)
     {
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     case PROP_WEATHER_SERVICE:
@@ -315,14 +320,14 @@ gcal_weather_settings_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_MANAGER:
-      if (g_set_object (&self->manager, g_value_get_object (value)))
+    case PROP_CONTEXT:
+      if (g_set_object (&self->context, g_value_get_object (value)))
         {
           load_weather_settings (self);
           update_menu_weather_sensitivity (self);
           manage_weather_service (self);
 
-          g_object_notify_by_pspec (object, properties[PROP_MANAGER]);
+          g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
         }
       break;
 
@@ -345,10 +350,10 @@ gcal_weather_settings_class_init (GcalWeatherSettingsClass *klass)
   object_class->get_property = gcal_weather_settings_get_property;
   object_class->set_property = gcal_weather_settings_set_property;
 
-  properties[PROP_MANAGER] = g_param_spec_object ("manager",
-                                                  "Manager",
-                                                  "Manager",
-                                                  GCAL_TYPE_MANAGER,
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Context",
+                                                  "Context",
+                                                  GCAL_TYPE_CONTEXT,
                                                   G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_WEATHER_SERVICE] = g_param_spec_object ("weather-service",
