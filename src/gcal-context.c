@@ -21,6 +21,7 @@
 #define G_LOG_DOMAIN "GcalContext"
 
 #include "gcal-context.h"
+#include "gcal-night-light-monitor.h"
 
 struct _GcalContext
 {
@@ -31,6 +32,8 @@ struct _GcalContext
   GcalManager        *manager;
   GSettings          *settings;
   GcalWeatherService *weather_service;
+
+  GcalNightLightMonitor *night_light_monitor;
 };
 
 G_DEFINE_TYPE (GcalContext, gcal_context, G_TYPE_OBJECT)
@@ -61,6 +64,7 @@ gcal_context_finalize (GObject *object)
   g_clear_object (&self->clock);
   g_clear_object (&self->goa_client);
   g_clear_object (&self->manager);
+  g_clear_object (&self->night_light_monitor);
   g_clear_object (&self->weather_service);
 
   G_OBJECT_CLASS (gcal_context_parent_class)->finalize (object);
@@ -169,6 +173,8 @@ gcal_context_init (GcalContext *self)
   self->manager = gcal_manager_new ();
   self->settings = g_settings_new ("org.gnome.calendar");
   self->weather_service = gcal_weather_service_new ();
+
+  self->night_light_monitor = gcal_night_light_monitor_new (self);
 }
 
 /**
