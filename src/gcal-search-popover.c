@@ -63,11 +63,14 @@ struct _GcalSearchPopover
   /* flags */
   GcalTimeFormat      time_format;
   gboolean            subscribed;
+
+  GcalContext        *context;
 };
 
 enum
 {
   PROP_0,
+  PROP_CONTEXT,
   PROP_DATE,
   PROP_TIME_FORMAT,
 };
@@ -581,6 +584,10 @@ gcal_search_popover_set_property (GObject      *object,
 
   switch (property_id)
     {
+    case PROP_CONTEXT:
+      self->context = g_value_dup_object (value);
+      break;
+
     case PROP_DATE:
       g_clear_pointer (&self->date, g_free);
       self->date = g_value_dup_boxed (value);
@@ -606,6 +613,10 @@ gcal_search_popover_get_property (GObject    *object,
 
   switch (property_id)
     {
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
+      break;
+
     case PROP_DATE:
       g_value_set_boxed (value, self->date);
       break;
@@ -659,6 +670,21 @@ gcal_search_popover_class_init (GcalSearchPopoverClass *klass)
                                            G_TYPE_NONE, 1, ICAL_TIME_TYPE);
 
   /* properties */
+  /**
+   * GcalSearchPopover::context:
+   *
+   * The context
+   *
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_CONTEXT,
+                                   g_param_spec_object ("context",
+                                                        "Context",
+                                                        "Context",
+                                                        GCAL_TYPE_CONTEXT,
+                                                        G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+
+
   /**
    * GcalSearchPopover::active-date:
    *
