@@ -23,6 +23,7 @@
 #include <string.h>
 
 #include "gcal-application.h"
+#include "gcal-context.h"
 #include "gcal-clock.h"
 #include "gcal-event-widget.h"
 #include "gcal-utils.h"
@@ -63,11 +64,14 @@ struct _GcalEventWidget
   gboolean            vertical_labels;
 
   gboolean            button_pressed;
+
+  GcalContext        *context;
 };
 
 enum
 {
   PROP_0,
+  PROP_CONTEXT,
   PROP_DATE_END,
   PROP_DATE_START,
   PROP_EVENT,
@@ -773,6 +777,11 @@ gcal_event_widget_set_property (GObject      *object,
 
   switch (property_id)
     {
+    case PROP_CONTEXT:
+      g_assert (self->context == NULL);
+      self->context = g_value_dup_object (value);
+      break;
+
     case PROP_DATE_END:
       gcal_event_widget_set_date_end (self, g_value_get_boxed (value));
       break;
@@ -807,6 +816,10 @@ gcal_event_widget_get_property (GObject      *object,
 
   switch (property_id)
     {
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
+      break;
+
     case PROP_DATE_END:
       g_value_set_boxed (value, self->dt_end);
       break;
@@ -842,6 +855,7 @@ gcal_event_widget_finalize (GObject *object)
   /* releasing properties */
   g_clear_pointer (&self->css_class, g_free);
   g_clear_object (&self->event);
+  g_clear_object (&self->context);
 
   /* remove timeouts */
   if (self->vertical_label_source_id > 0)
@@ -876,6 +890,18 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   widget_class->unmap = gcal_event_widget_unmap;
   widget_class->unrealize = gcal_event_widget_unrealize;
 
+  /**
+   * GcalEventWidget::context:
+   *
+   * The context of the event.
+   */
+  g_object_class_install_property (object_class,
+                                   PROP_CONTEXT,
+                                   g_param_spec_object ("context",
+                                                        "Context",
+                                                        "Context",
+                                                        GCAL_TYPE_CONTEXT,
+                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
   /**
    * GcalEventWidget::date-end:
    *
@@ -983,9 +1009,11 @@ gcal_event_widget_init (GcalEventWidget *self)
 }
 
 GtkWidget*
-gcal_event_widget_new (GcalEvent *event)
+gcal_event_widget_new (GcalContext *context,
+                       GcalEvent   *event)
 {
   return g_object_new (GCAL_TYPE_EVENT_WIDGET,
+                       "context", context,
                        "event", event,
                        NULL);
 }
@@ -1120,7 +1148,7 @@ gcal_event_widget_clone (GcalEventWidget *widget)
 {
   GtkWidget *new_widget;
 
-  new_widget = gcal_event_widget_new (widget->event);
+  new_widget = gcal_event_widget_new (widget->context, widget->event);
   gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (new_widget), widget->read_only);
 
   return new_widget;

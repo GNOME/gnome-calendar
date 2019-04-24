@@ -1166,6 +1166,7 @@ gcal_week_grid_add_event (GcalWeekGrid *self,
   g_object_ref (event);
 
   widget = g_object_new (GCAL_TYPE_EVENT_WIDGET,
+                         "context", self->context,
                          "event", event,
                          "orientation", GTK_ORIENTATION_VERTICAL,
                          NULL);

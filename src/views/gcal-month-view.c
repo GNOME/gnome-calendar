@@ -1254,7 +1254,7 @@ gcal_month_view_component_added (ECalDataModelSubscriber *subscriber,
       GCAL_RETURN ();
     }
 
-  event_widget = gcal_event_widget_new (event);
+  event_widget = gcal_event_widget_new (self->context, event);
   gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event_widget), e_client_is_readonly (E_CLIENT (client)));
 
   gtk_widget_show (event_widget);
@@ -1289,7 +1289,7 @@ gcal_month_view_component_modified (ECalDataModelSubscriber *subscriber,
       GCAL_RETURN ();
     }
 
-  new_widget = gcal_event_widget_new (event);
+  new_widget = gcal_event_widget_new (self->context, event);
 
   l = g_hash_table_lookup (self->children, gcal_event_get_uid (event));
 

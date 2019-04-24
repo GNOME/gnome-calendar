@@ -20,7 +20,7 @@
 #define __GCAL_EVENT_WIDGET_H__
 
 #include "gcal-event.h"
-#include "gcal-manager.h"
+#include "gcal-context.h"
 
 #include <gtk/gtk.h>
 
@@ -32,7 +32,8 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalEventWidget, gcal_event_widget, GCAL, EVENT_WIDGET, GtkBin)
 
-GtkWidget*           gcal_event_widget_new                       (GcalEvent          *event);
+GtkWidget*           gcal_event_widget_new                       (GcalContext        *context,
+                                                                  GcalEvent          *event);
 
 GcalEvent*           gcal_event_widget_get_event                 (GcalEventWidget    *self);
 

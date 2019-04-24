@@ -319,7 +319,7 @@ add_event_to_day_array (GcalYearView  *year_view,
   manager = gcal_context_get_manager (year_view->context);
   is_readonly = !gcal_manager_is_client_writable (manager, gcal_event_get_source (event));
 
-  child_widget = gcal_event_widget_new (event);
+  child_widget = gcal_event_widget_new (year_view->context, event);
   gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (child_widget), is_readonly);
 
   dt_start = gcal_event_get_date_start (event);

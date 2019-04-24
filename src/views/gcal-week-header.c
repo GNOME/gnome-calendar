@@ -735,7 +735,7 @@ add_event_to_grid (GcalWeekHeader *self,
   move_events_at_column (self, DOWN, start, position);
 
   /* Add the event to the grid */
-  widget = gcal_event_widget_new (event);
+  widget = gcal_event_widget_new (self->context, event);
   setup_event_widget (self, widget);
 
   gtk_grid_attach (GTK_GRID (self->grid),
