@@ -26,8 +26,7 @@
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_MANAGER                                        (gcal_manager_get_type ())
-
+#define GCAL_TYPE_MANAGER (gcal_manager_get_type ())
 G_DECLARE_FINAL_TYPE (GcalManager, gcal_manager, GCAL, MANAGER, GObject)
 
 GcalManager*         gcal_manager_new                            (void);
