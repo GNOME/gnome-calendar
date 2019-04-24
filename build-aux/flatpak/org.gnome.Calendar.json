@@ -3,7 +3,7 @@
     "runtime" : "org.gnome.Platform",
     "runtime-version" : "master",
     "sdk" : "org.gnome.Sdk",
-    "command" : "flatpak-wrapper.sh",
+    "command" : "gnome-calendar",
     "tags" : [
         "devel"
     ],
@@ -11,12 +11,16 @@
     "finish-args" : [
         "--share=ipc",
         "--share=network",
-        "--socket=x11",
+        "--socket=fallback-x11",
         "--socket=wayland",
         "--system-talk-name=org.freedesktop.login1",
         "--system-talk-name=org.freedesktop.GeoClue2",
         "--talk-name=ca.desrt.dconf",
         "--talk-name=org.gnome.ControlCenter",
+        "--talk-name=org.gnome.evolution.dataserver.AddressBook9",
+        "--talk-name=org.gnome.evolution.dataserver.Calendar7",
+        "--talk-name=org.gnome.evolution.dataserver.Sources5",
+        "--talk-name=org.gnome.evolution.dataserver.Subprocess.Backend.*",
         "--talk-name=org.gnome.OnlineAccounts",
         "--talk-name=org.gnome.SettingsDaemon.Color",
         "--filesystem=home",
@@ -109,12 +113,9 @@
             "cleanup": [ "/share/GConf" ],
             "buildsystem" : "cmake-ninja",
             "config-opts" : [
-                "-DDBUS_SERVICES_PREFIX=org.gnome.Calendar",
                 "-DENABLE_DOT_LOCKING=OFF",
                 "-DENABLE_FILE_LOCKING=fcntl",
                 "-DENABLE_GTK=ON",
-                "-DENABLE_GOOGLE_AUTH=OFF",
-                "-DENABLE_UOA=OFF",
                 "-DENABLE_GOOGLE=OFF",
                 "-DENABLE_VALA_BINDINGS=OFF",
                 "-DENABLE_WEATHER=OFF",
@@ -145,22 +146,6 @@
                     "type" : "git",
                     "url" : "https://gitlab.gnome.org/GNOME/libdazzle.git"
                 }
-            ]
-        },
-        {
-            "name" : "flatpak-wrapper",
-            "buildsystem" : "simple",
-            "build-commands" : [
-            ],
-            "sources" : [
-                {
-                    "type" : "file",
-                    "path" : "flatpak-wrapper.sh"
-                }
-            ],
-            "post-install" : [
-                "mkdir -p /app/bin",
-                "install -C flatpak-wrapper.sh /app/bin/flatpak-wrapper.sh"
             ]
         },
         {
