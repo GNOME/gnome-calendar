@@ -42,8 +42,6 @@ struct _GcalApplication
 
   GtkWidget          *window;
 
-  GcalManager        *manager;
-
   GtkCssProvider     *provider;
   GtkCssProvider     *colors_provider;
 
@@ -57,7 +55,7 @@ struct _GcalApplication
   GcalShellSearchProvider *search_provider;
   GcalNightLightMonitor *night_light_monitor;
 
-  GcalClock          *clock;
+  GcalContext        *context;
 };
 
 static void     gcal_application_launch_search        (GSimpleAction           *search,
@@ -119,7 +117,7 @@ static const GActionEntry gcal_app_entries[] = {
 enum
 {
   PROP_0,
-  PROP_CLOCK,
+  PROP_CONTEXT,
   PROP_MANAGER,
   PROP_TIME_FORMAT,
   PROP_WEATHER_SERVICE,
@@ -134,6 +132,7 @@ process_sources (GcalApplication *self)
   g_autoptr (GError) error = NULL;
   g_autofree gchar *new_css_data = NULL;
   g_auto (GStrv) new_css_snippets = NULL;
+  GcalManager *manager;
   GList *sources, *l;
   ESource *source;
   GQuark color_id;
@@ -141,8 +140,8 @@ process_sources (GcalApplication *self)
   gint arr_length;
   gint i = 0;
 
-
-  sources = gcal_manager_get_sources_connected (self->manager);
+  manager = gcal_context_get_manager (self->context);
+  sources = gcal_manager_get_sources_connected (manager);
   arr_length = g_list_length (sources);
   new_css_snippets = g_new0 (gchar*, arr_length + 2);
   for (l = sources; l != NULL; l = g_list_next (l), i++)
@@ -227,10 +226,9 @@ gcal_application_finalize (GObject *object)
 
   g_clear_pointer (&self->initial_date, g_free);
   g_clear_pointer (&self->uuid, g_free);
+  g_clear_object (&self->context);
   g_clear_object (&self->colors_provider);
-  g_clear_object (&self->clock);
   g_clear_object (&self->desktop_settings);
-  g_clear_object (&self->manager);
   g_clear_object (&self->night_light_monitor);
   g_clear_object (&self->provider);
   g_clear_object (&self->search_provider);
@@ -251,12 +249,12 @@ gcal_application_get_property (GObject    *object,
 
   switch (property_id)
     {
-    case PROP_CLOCK:
-      g_value_set_object (value, self->clock);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+      g_value_set_object (value, gcal_context_get_manager (self->context));
       break;
 
     case PROP_TIME_FORMAT:
@@ -280,10 +278,12 @@ static void
 gcal_application_activate (GApplication *application)
 {
   GcalApplication *self;
+  GcalManager *manager;
 
   GCAL_ENTRY;
 
   self = GCAL_APPLICATION (application);
+  manager = gcal_context_get_manager (self->context);
 
   if (!self->provider)
     load_css_provider (self);
@@ -296,7 +296,7 @@ gcal_application_activate (GApplication *application)
     }
 
   if (!self->night_light_monitor)
-    self->night_light_monitor = gcal_night_light_monitor_new (self->manager);
+    self->night_light_monitor = gcal_night_light_monitor_new (manager);
 
   if (!self->window)
     {
@@ -304,7 +304,7 @@ gcal_application_activate (GApplication *application)
         {
           icaltimezone *tz;
 
-          tz = gcal_manager_get_system_timezone (self->manager);
+          tz = gcal_manager_get_system_timezone (manager);
 
           self->initial_date = g_new0 (icaltimetype, 1);
           *self->initial_date = icaltime_current_time_with_zone (tz);
@@ -313,7 +313,7 @@ gcal_application_activate (GApplication *application)
 
       self->window =  g_object_new (GCAL_TYPE_WINDOW,
                                     "application", self,
-                                    "manager", self->manager,
+                                    "manager", manager,
                                     "active-date", self->initial_date,
                                     "weather-service", self->weather_service,
                                     "time-format", self->time_format,
@@ -372,7 +372,7 @@ gcal_application_startup (GApplication *app)
   load_time_format (self);
 
   /* Startup the manager */
-  gcal_manager_startup (self->manager);
+  gcal_manager_startup (gcal_context_get_manager (self->context));
 
   /* We're assuming the application is called as a service only by the shell search system */
   if ((g_application_get_flags (app) & G_APPLICATION_IS_SERVICE) != 0)
@@ -421,12 +421,13 @@ gcal_application_command_line (GApplication            *app,
 
       if (e_time_parse_date_and_time (date, &result) == E_TIME_PARSE_OK)
         {
+          GcalManager *manager = gcal_context_get_manager (self->context);
           if (!self->initial_date)
             self->initial_date = g_new0 (icaltimetype, 1);
 
           *self->initial_date = tm_to_icaltimetype (&result, FALSE);
           *self->initial_date = icaltime_set_timezone (self->initial_date,
-                                                       gcal_manager_get_system_timezone (self->manager));
+                                                       gcal_manager_get_system_timezone (manager));
         }
 
       g_variant_unref (option);
@@ -516,11 +517,11 @@ gcal_application_class_init (GcalApplicationClass *klass)
   application_class->dbus_register = gcal_application_dbus_register;
   application_class->dbus_unregister = gcal_application_dbus_unregister;
 
-  properties[PROP_CLOCK] = g_param_spec_object ("clock",
-                                                "Clock",
-                                                "The internal clock of Calendar",
-                                                GCAL_TYPE_CLOCK,
-                                                G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Context",
+                                                  "Context",
+                                                  GCAL_TYPE_CONTEXT,
+                                                  G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_MANAGER] = g_param_spec_object ("manager",
                                                   "The manager object",
@@ -547,14 +548,17 @@ gcal_application_class_init (GcalApplicationClass *klass)
 static void
 gcal_application_init (GcalApplication *self)
 {
+  GcalManager *manager;
+
   g_application_add_main_option_entries (G_APPLICATION (self), gcal_application_goptions);
 
-  self->clock = gcal_clock_new ();
-  self->manager = gcal_manager_new ();
-  g_signal_connect_swapped (self->manager, "source-added", G_CALLBACK (process_sources), self);
-  g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (process_sources), self);
+  self->context = gcal_context_new ();
 
-  self->search_provider = gcal_shell_search_provider_new (self->manager);
+  manager = gcal_context_get_manager (self->context);
+  g_signal_connect_swapped (manager, "source-added", G_CALLBACK (process_sources), self);
+  g_signal_connect_swapped (manager, "source-changed", G_CALLBACK (process_sources), self);
+
+  self->search_provider = gcal_shell_search_provider_new (manager);
 }
 
 static void
@@ -563,7 +567,7 @@ gcal_application_sync (GSimpleAction *sync,
                        gpointer       app)
 {
   GcalApplication *self = GCAL_APPLICATION (app);
-  gcal_manager_refresh (self->manager);
+  gcal_manager_refresh (gcal_context_get_manager (self->context));
   gcal_weather_service_update (self->weather_service);
 }
 
@@ -687,6 +691,22 @@ gcal_application_new (void)
 }
 
 /**
+ * gcal_application_get_context:
+ * @self: a #GcalApplication
+ *
+ * Retrieves the #GcalContext of the application.
+ *
+ * Returns: (transfer none): a #GcalContext
+ */
+GcalContext*
+gcal_application_get_context (GcalApplication *self)
+{
+  g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
+
+  return self->context;
+}
+
+/**
  * gcal_application_get_manager:
  * @self: a #GcalApplication
  *
@@ -699,7 +719,7 @@ gcal_application_get_manager (GcalApplication *self)
 {
   g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
 
-  return self->manager;
+  return gcal_context_get_manager (self->context);
 }
 
 /**
@@ -743,5 +763,5 @@ gcal_application_get_clock (GcalApplication *self)
 {
   g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
 
-  return self->clock;
+  return gcal_context_get_clock (self->context);
 }

@@ -21,6 +21,7 @@
 #define _GCAL_APPLICATION_H_
 
 #include "gcal-clock.h"
+#include "gcal-context.h"
 #include "gcal-weather-service.h"
 #include "gcal-manager.h"
 
@@ -33,6 +34,8 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (GcalApplication, gcal_application, GCAL, APPLICATION, GtkApplication)
 
 GcalApplication*     gcal_application_new                        (void);
+
+GcalContext*         gcal_application_get_context                (GcalApplication    *self);
 
 GcalManager*         gcal_application_get_manager                (GcalApplication    *self);
 
