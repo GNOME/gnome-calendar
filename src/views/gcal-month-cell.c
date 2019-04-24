@@ -447,8 +447,6 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
 static void
 gcal_month_cell_init (GcalMonthCell *self)
 {
-  GcalApplication *application;
-
   gtk_widget_init_template (GTK_WIDGET (self));
 
   /* Setup the month cell as a drag n' drop destination */
@@ -457,18 +455,6 @@ gcal_month_cell_init (GcalMonthCell *self)
                      NULL,
                      0,
                      GDK_ACTION_MOVE);
-
-  /* Connect to the wall clock */
-  application = GCAL_APPLICATION (g_application_get_default ());
-
-  g_assert (application != NULL);
-
-  g_signal_connect_object (gcal_application_get_clock (application),
-                           "day-changed",
-                           G_CALLBACK (day_changed_cb),
-                           self,
-                           0);
-
 }
 
 GtkWidget*
@@ -590,8 +576,16 @@ gcal_month_cell_set_context (GcalMonthCell *self,
 {
   g_return_if_fail (GCAL_IS_MONTH_CELL (self));
 
-  if (g_set_object (&self->context, context))
-    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CONTEXT]);
+  if (!g_set_object (&self->context, context))
+    return;
+
+  g_signal_connect_object (gcal_context_get_clock (context),
+                           "day-changed",
+                           G_CALLBACK (day_changed_cb),
+                           self,
+                           0);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CONTEXT]);
 }
 
 guint

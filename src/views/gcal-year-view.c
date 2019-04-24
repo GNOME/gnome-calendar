@@ -1669,6 +1669,13 @@ gcal_year_view_set_property (GObject      *object,
 
     case PROP_CONTEXT:
       self->context = g_value_dup_object (value);
+
+      g_signal_connect_object (gcal_context_get_clock (self->context),
+                               "day-changed",
+                               G_CALLBACK (gtk_widget_queue_draw),
+                               self,
+                               G_CONNECT_SWAPPED);
+
       g_object_notify (object, "context");
       break;
 
@@ -2012,7 +2019,6 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
 static void
 gcal_year_view_init (GcalYearView *self)
 {
-  GcalApplication *application;
   guint i;
 
   self->weather_service = NULL;
@@ -2055,17 +2061,6 @@ gcal_year_view_init (GcalYearView *self)
                      NULL,
                      0,
                      GDK_ACTION_MOVE);
-
-  /* Connect to the wall clock */
-  application = GCAL_APPLICATION (g_application_get_default ());
-
-  g_assert (application != NULL);
-
-  g_signal_connect_object (gcal_application_get_clock (application),
-                           "day-changed",
-                           G_CALLBACK (gtk_widget_queue_draw),
-                           self,
-                           G_CONNECT_SWAPPED);
 }
 
 static void

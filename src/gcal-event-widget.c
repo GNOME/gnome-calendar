@@ -780,6 +780,12 @@ gcal_event_widget_set_property (GObject      *object,
     case PROP_CONTEXT:
       g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
+
+      g_signal_connect_object (gcal_context_get_clock (self->context),
+                               "minute-changed",
+                               G_CALLBACK (update_color),
+                               self,
+                               G_CONNECT_SWAPPED);
       break;
 
     case PROP_DATE_END:
@@ -978,7 +984,6 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
 static void
 gcal_event_widget_init (GcalEventWidget *self)
 {
-  GcalApplication *application;
   GtkWidget *widget;
 
   widget = GTK_WIDGET (self);
@@ -995,17 +1000,6 @@ gcal_event_widget_init (GcalEventWidget *self)
   /* Starts with horizontal */
   self->orientation = GTK_ORIENTATION_HORIZONTAL;
   gtk_style_context_add_class (gtk_widget_get_style_context (widget), "horizontal");
-
-  /* Connect to the wall clock */
-  application = GCAL_APPLICATION (g_application_get_default ());
-
-  g_assert (application != NULL);
-
-  g_signal_connect_object (gcal_application_get_clock (application),
-                           "minute-changed",
-                           G_CALLBACK (update_color),
-                           self,
-                           G_CONNECT_SWAPPED);
 }
 
 GtkWidget*

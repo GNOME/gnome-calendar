@@ -751,11 +751,3 @@ gcal_application_set_initial_date (GcalApplication *self,
   g_clear_pointer (&self->initial_date, g_free);
   self->initial_date = datetime_to_icaltime (initial_date);
 }
-
-GcalClock*
-gcal_application_get_clock (GcalApplication *self)
-{
-  g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
-
-  return gcal_context_get_clock (self->context);
-}

@@ -2094,6 +2094,12 @@ gcal_month_view_set_property (GObject       *object,
       for (i = 0; i < 42; i++)
         gcal_month_cell_set_context (GCAL_MONTH_CELL (self->month_cell[i / 7][i % 7]), self->context);
 
+      g_signal_connect_object (gcal_context_get_clock (self->context),
+                               "day-changed",
+                               G_CALLBACK (update_month_cells),
+                               self,
+                               G_CONNECT_SWAPPED);
+
       g_object_notify (object, "context");
       break;
 
@@ -2219,8 +2225,6 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
 static void
 gcal_month_view_init (GcalMonthView *self)
 {
-  GcalApplication *application;
-
   gtk_widget_init_template (GTK_WIDGET (self));
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
@@ -2255,17 +2259,5 @@ gcal_month_view_init (GcalMonthView *self)
                           G_BINDING_DEFAULT);
 
   g_signal_connect (self->overflow_popover, "event-activated", G_CALLBACK (on_month_popover_event_activated_cb), self);
-
-
-  /* Connect to the wall clock */
-  application = GCAL_APPLICATION (g_application_get_default ());
-
-  g_assert (application != NULL);
-
-  g_signal_connect_object (gcal_application_get_clock (application),
-                           "day-changed",
-                           G_CALLBACK (update_month_cells),
-                           self,
-                           G_CONNECT_SWAPPED);
 }
 
