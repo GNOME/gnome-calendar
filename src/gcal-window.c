@@ -1259,10 +1259,10 @@ gcal_window_constructed (GObject *object)
    */
   g_object_bind_property (self, "context", self->weather_settings, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->source_dialog, "context", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->year_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self->context, "manager", self->edit_dialog, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self->context, "manager", self->week_view, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self->context, "manager", self->month_view, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self->context, "manager", self->year_view, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self->context, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "time-format", self->edit_dialog, "time-format", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "time-format", self->search_popover, "time-format", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);

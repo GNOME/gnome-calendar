@@ -49,10 +49,10 @@ gcal_view_default_init (GcalViewInterface *iface)
    * The #GcalManager of the view.
    */
   g_object_interface_install_property (iface,
-                                       g_param_spec_object ("manager",
-                                                            "The manager",
-                                                            "The manager of the view",
-                                                            GCAL_TYPE_MANAGER,
+                                       g_param_spec_object ("context",
+                                                            "The context",
+                                                            "The context of the view",
+                                                            GCAL_TYPE_CONTEXT,
                                                             G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
@@ -129,24 +129,24 @@ gcal_view_set_date (GcalView     *view,
 }
 
 /**
- * gcal_view_get_manager:
+ * gcal_view_get_context:
  * @self: a #GcalView
  *
- * Retrieves the #GcalManager instance from @self.
+ * Retrieves the #GcalContext instance from @self.
  *
- * Returns: (transfer none): a #GcalManager
+ * Returns: (transfer none): a #GcalContext
  */
-GcalManager*
-gcal_view_get_manager (GcalView *self)
+GcalContext*
+gcal_view_get_context (GcalView *self)
 {
-  GcalManager *manager;
+  GcalContext *context;
 
   g_return_val_if_fail (GCAL_IS_VIEW (self), NULL);
 
-  g_object_get (self, "manager", &manager, NULL);
-  g_object_unref (manager);
+  g_object_get (self, "context", &context, NULL);
+  g_object_unref (context);
 
-  return manager;
+  return context;
 }
 
 /**

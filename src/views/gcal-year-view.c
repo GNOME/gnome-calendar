@@ -20,6 +20,7 @@
 
 #include "gcal-application.h"
 #include "gcal-clock.h"
+#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-year-view.h"
 #include "gcal-view.h"
@@ -66,7 +67,7 @@ struct _GcalYearView
   GtkWidget          *popover; /* Popover for popover_mode */
 
   /* manager singleton */
-  GcalManager        *manager;
+  GcalContext        *context;
   GcalWeatherService *weather_service; /* owned, nullable */
 
   /* range shown on the sidebar */
@@ -120,7 +121,7 @@ struct _GcalYearView
 enum {
   PROP_0,
   PROP_DATE,
-  PROP_MANAGER,
+  PROP_CONTEXT,
   PROP_WEATHER_SERVICE,
   PROP_SHOW_WEEK_NUMBERS,
   LAST_PROP
@@ -308,16 +309,18 @@ add_event_to_day_array (GcalYearView  *year_view,
                         GList        **days_widgets_array,
                         gint           days_span)
 {
+  GcalManager *manager;
   GtkWidget *child_widget;
-
   GDateTime *dt_start, *dt_end;
   GDateTime *date, *second_date;
-
+  gboolean is_readonly;
   gint i;
 
+  manager = gcal_context_get_manager (year_view->context);
+  is_readonly = !gcal_manager_is_client_writable (manager, gcal_event_get_source (event));
+
   child_widget = gcal_event_widget_new (event);
-  gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (child_widget),
-                                   !gcal_manager_is_client_writable (year_view->manager, gcal_event_get_source (event)));
+  gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (child_widget), is_readonly);
 
   dt_start = gcal_event_get_date_start (event);
   dt_end = gcal_event_get_date_end (event);
@@ -409,6 +412,7 @@ add_event_to_day_array (GcalYearView  *year_view,
 static void
 update_sidebar (GcalYearView *year_view)
 {
+  GcalManager *manager;
   GtkWidget *child_widget;
   GList *events, *l;
   GList **days_widgets_array;
@@ -421,7 +425,8 @@ update_sidebar (GcalYearView *year_view)
   days_span = icaltime_day_of_year(*(year_view->end_selected_date)) - icaltime_day_of_year(*(year_view->start_selected_date)) + 1;
   days_widgets_array = g_new0 (GList*, days_span);
 
-  events = gcal_manager_get_events (year_view->manager, year_view->start_selected_date, year_view->end_selected_date);
+  manager = gcal_context_get_manager (year_view->context);
+  events = gcal_manager_get_events (manager, year_view->start_selected_date, year_view->end_selected_date);
   if (events == NULL)
     {
       days_span = 0;
@@ -812,7 +817,7 @@ draw_month_grid (GcalYearView *year_view,
   today.hour = 0;
   today.minute = 0;
   today.second = 0;
-  today.zone = gcal_manager_get_system_timezone (year_view->manager);
+  today.zone = gcal_manager_get_system_timezone (gcal_context_get_manager (year_view->context));
 
   for (i = 0; i < 7 * shown_rows; i++)
     {
@@ -1513,7 +1518,7 @@ navigator_drag_drop_cb (GcalYearView   *self,
                   g_clear_pointer (&new_end, g_date_time_unref);
                 }
 
-              gcal_manager_update_event (self->manager, event, mod);
+              gcal_manager_update_event (gcal_context_get_manager (self->context), event, mod);
 
               g_clear_pointer (&new_start, g_date_time_unref);
             }
@@ -1631,8 +1636,8 @@ gcal_year_view_get_property (GObject    *object,
       g_value_set_boxed (value, self->date);
       break;
 
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     case PROP_WEATHER_SERVICE:
@@ -1662,9 +1667,9 @@ gcal_year_view_set_property (GObject      *object,
       gcal_view_set_date (GCAL_VIEW (self), g_value_get_boxed (value));
       break;
 
-    case PROP_MANAGER:
-      self->manager = g_value_dup_object (value);
-      g_object_notify (object, "manager");
+    case PROP_CONTEXT:
+      self->context = g_value_dup_object (value);
+      g_object_notify (object, "context");
       break;
 
     case PROP_WEATHER_SERVICE:
@@ -1965,7 +1970,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
   widget_class->direction_changed = gcal_year_view_direction_changed;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
-  g_object_class_override_property (object_class, PROP_MANAGER, "manager");
+  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
   g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
 
   g_object_class_install_property (object_class,

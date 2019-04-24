@@ -21,6 +21,7 @@
 
 #include "gcal-application.h"
 #include "gcal-clock.h"
+#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-week-grid.h"
 #include "gcal-week-view.h"
@@ -65,7 +66,7 @@ struct _GcalWeekGrid
   gint                selection_end;
   gint                dnd_cell;
 
-  GcalManager        *manager;
+  GcalContext        *context;
 };
 
 G_DEFINE_TYPE (GcalWeekGrid, gcal_week_grid, GTK_TYPE_CONTAINER);
@@ -1040,7 +1041,7 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
 
   /* Commit the changes */
 
-  gcal_manager_update_event (self->manager, event, mod);
+  gcal_manager_update_event (gcal_context_get_manager (self->context), event, mod);
 
 out:
   /* Cancel the DnD */
@@ -1142,12 +1143,12 @@ gcal_week_grid_init (GcalWeekGrid *self)
 
 /* Public API */
 void
-gcal_week_grid_set_manager (GcalWeekGrid *self,
-                            GcalManager  *manager)
+gcal_week_grid_set_context (GcalWeekGrid *self,
+                            GcalContext  *context)
 {
   g_return_if_fail (GCAL_IS_WEEK_GRID (self));
 
-  self->manager = manager;
+  self->context = context;
 }
 
 void

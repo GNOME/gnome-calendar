@@ -49,7 +49,7 @@ struct _GcalMonthCell
   gboolean            hovered : 1;
   gboolean            pressed : 1;
 
-  GcalManager        *manager;
+  GcalContext        *context;
 
   GcalWeatherInfo    *weather_info;
 };
@@ -65,7 +65,7 @@ enum
 enum
 {
   PROP_0,
-  PROP_MANAGER,
+  PROP_CONTEXT,
   N_PROPS
 };
 
@@ -271,7 +271,7 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
           g_clear_pointer (&new_end, g_date_time_unref);
         }
 
-      gcal_manager_update_event (self->manager, event, mod);
+      gcal_manager_update_event (gcal_context_get_manager (self->context), event, mod);
     }
 
   g_clear_pointer (&start_dt, g_date_time_unref);
@@ -348,7 +348,7 @@ gcal_month_cell_finalize (GObject *object)
   GcalMonthCell *self = (GcalMonthCell *)object;
 
   gcal_clear_datetime (&self->date);
-  g_clear_object (&self->manager);
+  g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_month_cell_parent_class)->finalize (object);
 }
@@ -364,8 +364,8 @@ gcal_month_cell_set_property (GObject       *object,
 
   switch (property_id)
     {
-    case PROP_MANAGER:
-      gcal_month_cell_set_manager (self, g_value_get_object (value));
+    case PROP_CONTEXT:
+      gcal_month_cell_set_context (self, g_value_get_object (value));
       break;
 
     default:
@@ -384,8 +384,8 @@ gcal_month_cell_get_property (GObject       *object,
 
   switch (property_id)
     {
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     default:
@@ -419,10 +419,10 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
                                          1,
                                          GTK_TYPE_WIDGET);
 
-  properties[PROP_MANAGER] = g_param_spec_object ("manager",
-                                                  "Manager",
-                                                  "The GcalManager of the application",
-                                                  GCAL_TYPE_MANAGER,
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Context",
+                                                  "The GcalContext of the application",
+                                                  GCAL_TYPE_CONTEXT,
                                                   G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -576,22 +576,22 @@ gcal_month_cell_set_different_month (GcalMonthCell *self,
     gtk_style_context_remove_class (context, "out-of-month");
 }
 
-GcalManager*
-gcal_month_cell_get_manager (GcalMonthCell *self)
+GcalContext*
+gcal_month_cell_get_context (GcalMonthCell *self)
 {
   g_return_val_if_fail (GCAL_IS_MONTH_CELL (self), NULL);
 
-  return self->manager;
+  return self->context;
 }
 
 void
-gcal_month_cell_set_manager (GcalMonthCell *self,
-                             GcalManager   *manager)
+gcal_month_cell_set_context (GcalMonthCell *self,
+                             GcalContext   *context)
 {
   g_return_if_fail (GCAL_IS_MONTH_CELL (self));
 
-  if (g_set_object (&self->manager, manager))
-    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_MANAGER]);
+  if (g_set_object (&self->context, context))
+    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CONTEXT]);
 }
 
 guint

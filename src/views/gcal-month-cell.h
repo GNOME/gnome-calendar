@@ -19,7 +19,7 @@
 #ifndef GCAL_MONTH_CELL_H
 #define GCAL_MONTH_CELL_H
 
-#include "gcal-manager.h"
+#include "gcal-context.h"
 #include "gcal-weather-info.h"
 
 #include <gtk/gtk.h>
@@ -45,10 +45,10 @@ gboolean             gcal_month_cell_get_different_month         (GcalMonthCell 
 void                 gcal_month_cell_set_different_month         (GcalMonthCell      *self,
                                                                   gboolean            out);
 
-GcalManager*         gcal_month_cell_get_manager                 (GcalMonthCell      *self);
+GcalContext*         gcal_month_cell_get_context                 (GcalMonthCell      *self);
 
-void                 gcal_month_cell_set_manager                 (GcalMonthCell      *self,
-                                                                  GcalManager        *manager);
+void                 gcal_month_cell_set_context                 (GcalMonthCell      *self,
+                                                                  GcalContext        *context);
 
 guint                gcal_month_cell_get_overflow                (GcalMonthCell      *self);
 

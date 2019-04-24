@@ -23,6 +23,7 @@
 #include "e-cal-data-model-subscriber.h"
 #include "gcal-application.h"
 #include "gcal-clock.h"
+#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-month-cell.h"
 #include "gcal-month-popover.h"
@@ -119,7 +120,7 @@ struct _GcalMonthView
 
   /* property */
   icaltimetype       *date;
-  GcalManager        *manager;
+  GcalContext        *context;
 
   GcalWeatherService *weather_service;
 
@@ -156,7 +157,7 @@ enum
 {
   PROP_0,
   PROP_DATE,
-  PROP_MANAGER,
+  PROP_CONTEXT,
   PROP_WEATHER_SERVICE,
   N_PROPS
 };
@@ -2087,13 +2088,13 @@ gcal_month_view_set_property (GObject       *object,
       gcal_view_set_date (GCAL_VIEW (object), g_value_get_boxed (value));
       break;
 
-    case PROP_MANAGER:
-      self->manager = g_value_dup_object (value);
+    case PROP_CONTEXT:
+      self->context = g_value_dup_object (value);
 
       for (i = 0; i < 42; i++)
-        gcal_month_cell_set_manager (GCAL_MONTH_CELL (self->month_cell[i / 7][i % 7]), self->manager);
+        gcal_month_cell_set_context (GCAL_MONTH_CELL (self->month_cell[i / 7][i % 7]), self->context);
 
-      g_object_notify (object, "manager");
+      g_object_notify (object, "context");
       break;
 
     case PROP_WEATHER_SERVICE:
@@ -2124,8 +2125,8 @@ gcal_month_view_get_property (GObject       *object,
       g_value_set_boxed (value, self->date);
       break;
 
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     case PROP_WEATHER_SERVICE:
@@ -2149,7 +2150,7 @@ gcal_month_view_finalize (GObject *object)
   g_clear_pointer (&self->overflow_cells, g_hash_table_destroy);
   g_clear_pointer (&self->multi_cell_children, g_list_free);
 
-  g_clear_object (&self->manager);
+  g_clear_object (&self->context);
   g_clear_object (&self->weather_service);
 
   if (self->update_grid_id > 0)
@@ -2193,7 +2194,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   container_class->forall = gcal_month_view_forall;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
-  g_object_class_override_property (object_class, PROP_MANAGER, "manager");
+  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
   g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/month-view.ui");
@@ -2248,9 +2249,9 @@ gcal_month_view_init (GcalMonthView *self)
   self->overflow_popover = (GcalMonthPopover*) gcal_month_popover_new ();
 
   g_object_bind_property (self,
-                          "manager",
+                          "context",
                           self->overflow_popover,
-                          "manager",
+                          "context",
                           G_BINDING_DEFAULT);
 
   g_signal_connect (self->overflow_popover, "event-activated", G_CALLBACK (on_month_popover_event_activated_cb), self);

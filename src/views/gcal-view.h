@@ -19,6 +19,7 @@
 #ifndef __GCAL_VIEW_H__
 #define __GCAL_VIEW_H__
 
+#include "gcal-context.h"
 #include "gcal-event-widget.h"
 #include "gcal-weather-service.h"
 
@@ -63,7 +64,7 @@ void                 gcal_view_set_date                          (GcalView      
 
 icaltimetype*        gcal_view_get_date                          (GcalView           *view);
 
-GcalManager*         gcal_view_get_manager                       (GcalView           *self);
+GcalContext*         gcal_view_get_context                       (GcalView           *self);
 
 GcalWeatherService*  gcal_view_get_weather_service               (GcalView           *view);
 

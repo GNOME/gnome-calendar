@@ -53,7 +53,7 @@ struct _GcalWeekView
 
   /* property */
   icaltimetype       *date;
-  GcalManager        *manager;         /* owned */
+  GcalContext        *context;
   GcalWeatherService *weather_service; /* owned */
 
   guint               scroll_grid_timeout_id;
@@ -71,7 +71,7 @@ enum
 {
   PROP_0,
   PROP_DATE,
-  PROP_MANAGER,
+  PROP_CONTEXT,
   PROP_TIME_FORMAT,
   PROP_WEATHER_SERVICE,
   NUM_PROPS
@@ -506,7 +506,7 @@ gcal_week_view_finalize (GObject       *object)
 
   g_clear_pointer (&self->date, g_free);
 
-  g_clear_object (&self->manager);
+  g_clear_object (&self->context);
   g_clear_object (&self->weather_service);
 
   /* Chain up to parent's finalize() method. */
@@ -527,12 +527,12 @@ gcal_week_view_set_property (GObject       *object,
       gcal_view_set_date (GCAL_VIEW (object), g_value_get_boxed (value));
       break;
 
-    case PROP_MANAGER:
-      self->manager = g_value_dup_object (value);
+    case PROP_CONTEXT:
+      self->context = g_value_dup_object (value);
 
-      gcal_week_grid_set_manager (GCAL_WEEK_GRID (self->week_grid), self->manager);
-      gcal_week_header_set_manager (GCAL_WEEK_HEADER (self->header), self->manager);
-      g_object_notify (object, "manager");
+      gcal_week_grid_set_context (GCAL_WEEK_GRID (self->week_grid), self->context);
+      gcal_week_header_set_context (GCAL_WEEK_HEADER (self->header), self->context);
+      g_object_notify (object, "context");
       break;
 
     case PROP_TIME_FORMAT:
@@ -568,8 +568,8 @@ gcal_week_view_get_property (GObject       *object,
       g_value_set_boxed (value, self->date);
       break;
 
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     case PROP_TIME_FORMAT:
@@ -600,7 +600,7 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   object_class->get_property = gcal_week_view_get_property;
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
-  g_object_class_override_property (object_class, PROP_MANAGER, "manager");
+  g_object_class_override_property (object_class, PROP_CONTEXT, "context");
   g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
 
   g_object_class_install_property (object_class,

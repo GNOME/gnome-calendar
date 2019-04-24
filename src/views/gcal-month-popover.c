@@ -18,6 +18,7 @@
 
 #define G_LOG_DOMAIN "GcalMonthPopover"
 
+#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-event-widget.h"
 #include "gcal-month-popover.h"
@@ -40,7 +41,7 @@ struct _GcalMonthPopover
   GtkWidget          *relative_to;
   GtkWindow          *transient_for;
 
-  GcalManager        *manager;
+  GcalContext        *context;
 
   DzlAnimation       *opacity_animation;
   DzlAnimation       *position_animation;
@@ -65,7 +66,7 @@ G_DEFINE_TYPE (GcalMonthPopover, gcal_month_popover, GTK_TYPE_WINDOW)
 enum
 {
   PROP_0,
-  PROP_MANAGER,
+  PROP_CONTEXT,
   PROP_RELATIVE_TO,
   PROP_X,
   PROP_Y,
@@ -319,7 +320,7 @@ update_event_list (GcalMonthPopover *self)
   start = datetime_to_icaltime (start_dt);
   end = datetime_to_icaltime (end_dt);
 
-  events = gcal_manager_get_events (self->manager, start, end);
+  events = gcal_manager_get_events (gcal_context_get_manager (self->context), start, end);
 
   for (l = events; l; l = l->next)
     {
@@ -608,8 +609,8 @@ gcal_month_popover_get_property (GObject    *object,
 
   switch (prop_id)
     {
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     case PROP_RELATIVE_TO:
@@ -639,8 +640,8 @@ gcal_month_popover_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_MANAGER:
-      self->manager = g_value_dup_object (value);
+    case PROP_CONTEXT:
+      self->context = g_value_dup_object (value);
       break;
 
     case PROP_RELATIVE_TO:
@@ -678,11 +679,11 @@ gcal_month_popover_class_init (GcalMonthPopoverClass *klass)
   widget_class->show = gcal_month_popover_show;
   widget_class->realize = gcal_month_popover_realize;
 
-  properties [PROP_MANAGER] = g_param_spec_object ("manager",
-                                                   "Manager",
-                                                   "Manager",
-                                                   GCAL_TYPE_MANAGER,
-                                                   (G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
+  properties [PROP_CONTEXT] = g_param_spec_object ("context",
+                                                   "Context",
+                                                   "Context",
+                                                   GCAL_TYPE_CONTEXT,
+                                                   G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   properties [PROP_RELATIVE_TO] = g_param_spec_object ("relative-to",
                                                        "Relative To",

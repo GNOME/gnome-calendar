@@ -19,7 +19,7 @@
 #ifndef GCAL_WEEK_HEADER_H
 #define GCAL_WEEK_HEADER_H
 
-#include "gcal-manager.h"
+#include "gcal-context.h"
 #include "gcal-event-widget.h"
 #include "gcal-weather-service.h"
 #include "gcal-weather-info.h"
@@ -32,8 +32,8 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalWeekHeader, gcal_week_header, GCAL, WEEK_HEADER, GtkGrid)
 
-void                 gcal_week_header_set_manager                (GcalWeekHeader     *self,
-                                                                  GcalManager        *manager);
+void                 gcal_week_header_set_context                (GcalWeekHeader     *self,
+                                                                  GcalContext        *context);
 
 void                 gcal_week_header_add_event                  (GcalWeekHeader     *self,
                                                                   GcalEvent          *event);

@@ -22,6 +22,7 @@
 #define G_LOG_DOMAIN "GcalWeekHeader"
 
 #include "gcal-application.h"
+#include "gcal-context.h"
 #include "gcal-clock.h"
 #include "gcal-debug.h"
 #include "gcal-event-widget.h"
@@ -70,7 +71,7 @@ struct _GcalWeekHeader
   GtkWidget          *expand_button_image;
   GtkWidget          *header_labels_box;
 
-  GcalManager        *manager;
+  GcalContext        *context;
 
   /*
    * Stores the events as they come from the week-view
@@ -1580,7 +1581,9 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
     gcal_event_set_all_day (event, TRUE);
 
   /* Commit the changes */
-  gcal_manager_update_event (self->manager, event, GCAL_RECURRENCE_MOD_THIS_ONLY);
+  gcal_manager_update_event (gcal_context_get_manager (self->context),
+                             event,
+                             GCAL_RECURRENCE_MOD_THIS_ONLY);
 
   /* Cancel the DnD */
   self->dnd_cell = -1;
@@ -1822,12 +1825,12 @@ gcal_week_header_update_weather_infos (GcalWeekHeader *self)
 }
 
 void
-gcal_week_header_set_manager (GcalWeekHeader *self,
-                              GcalManager    *manager)
+gcal_week_header_set_context (GcalWeekHeader *self,
+                              GcalContext    *context)
 {
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
-  self->manager = manager;
+  self->context = context;
 }
 
 void

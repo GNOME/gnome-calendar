@@ -19,7 +19,7 @@
 #ifndef GCAL_WEEK_GRID_H
 #define GCAL_WEEK_GRID_H
 
-#include "gcal-manager.h"
+#include "gcal-context.h"
 #include "gcal-event-widget.h"
 
 #include <gtk/gtk.h>
@@ -30,8 +30,8 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalWeekGrid, gcal_week_grid, GCAL, WEEK_GRID, GtkContainer)
 
-void                 gcal_week_grid_set_manager                  (GcalWeekGrid       *week_grid,
-                                                                  GcalManager        *manager);
+void                 gcal_week_grid_set_context                  (GcalWeekGrid       *week_grid,
+                                                                  GcalContext        *context);
 
 void                 gcal_week_grid_set_first_weekday            (GcalWeekGrid       *week_grid,
                                                                   gint                nr_day);
