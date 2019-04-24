@@ -28,9 +28,9 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_WEATHER_SERVICE (gcal_weather_service_get_type())
-
 G_DECLARE_FINAL_TYPE (GcalWeatherService, gcal_weather_service, GCAL, WEATHER_SERVICE, GObject)
 
+typedef void (*GcalWeatherUpdateFunc) (GtkWidget *widget);
 
 GcalWeatherService*  gcal_weather_service_new                    (void);
 
@@ -49,6 +49,11 @@ void                 gcal_weather_service_run                    (GcalWeatherSer
                                                                   GWeatherLocation   *location);
 
 void                 gcal_weather_service_stop                   (GcalWeatherService *self);
+
+void                 gcal_weather_service_connect_widget         (GcalWeatherService    *self,
+                                                                  GcalWeatherUpdateFunc  update_func,
+                                                                  GCallback              weather_changed_cb,
+                                                                  GtkWidget             *data);
 
 G_END_DECLS
 

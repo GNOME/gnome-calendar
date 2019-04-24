@@ -26,7 +26,6 @@
 #include "gcal-week-header.h"
 #include "gcal-week-grid.h"
 #include "gcal-week-view.h"
-#include "gcal-weather-service.h"
 
 #include <glib/gi18n.h>
 
@@ -54,7 +53,6 @@ struct _GcalWeekView
   /* property */
   icaltimetype       *date;
   GcalContext        *context;
-  GcalWeatherService *weather_service; /* owned */
 
   guint               scroll_grid_timeout_id;
 
@@ -73,7 +71,6 @@ enum
   PROP_DATE,
   PROP_CONTEXT,
   PROP_TIME_FORMAT,
-  PROP_WEATHER_SERVICE,
   NUM_PROPS
 };
 
@@ -507,7 +504,6 @@ gcal_week_view_finalize (GObject       *object)
   g_clear_pointer (&self->date, g_free);
 
   g_clear_object (&self->context);
-  g_clear_object (&self->weather_service);
 
   /* Chain up to parent's finalize() method. */
   G_OBJECT_CLASS (gcal_week_view_parent_class)->finalize (object);
@@ -538,11 +534,6 @@ gcal_week_view_set_property (GObject       *object,
     case PROP_TIME_FORMAT:
       self->time_format = g_value_get_enum (value);
       gtk_widget_queue_draw (self->hours_bar);
-      break;
-
-    case PROP_WEATHER_SERVICE:
-      if (g_set_object (&self->weather_service, g_value_get_object (value)))
-        g_object_notify (object, "weather-service");
       break;
 
     default:
@@ -576,10 +567,6 @@ gcal_week_view_get_property (GObject       *object,
       g_value_set_enum (value, self->time_format);
       break;
 
-    case PROP_WEATHER_SERVICE:
-      g_value_set_object (value, self->weather_service);
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -601,7 +588,6 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
-  g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
 
   g_object_class_install_property (object_class,
                                    PROP_TIME_FORMAT,
@@ -631,9 +617,5 @@ gcal_week_view_init (GcalWeekView *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   update_hours_sidebar_size (self);
-
-  self->weather_service = NULL;
-
-  g_object_bind_property (self, "weather-service", self->header, "weather-service", G_BINDING_DEFAULT);
 }
 

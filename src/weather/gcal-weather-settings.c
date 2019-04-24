@@ -34,8 +34,6 @@ struct _GcalWeatherSettings
   GtkWidget          *weather_location_entry;
 
   GcalContext        *context;
-
-  GcalWeatherService *weather_service;
 };
 
 
@@ -56,7 +54,6 @@ enum
 {
   PROP_0,
   PROP_CONTEXT,
-  PROP_WEATHER_SERVICE,
   N_PROPS
 };
 
@@ -191,7 +188,11 @@ get_checked_fixed_location (GcalWeatherSettings *self)
 static void
 manage_weather_service (GcalWeatherSettings *self)
 {
+  GcalWeatherService *weather_service;
+
   GCAL_ENTRY;
+
+  weather_service = gcal_context_get_weather_service (self->context);
 
   if (gtk_switch_get_active (self->show_weather_switch))
     {
@@ -205,11 +206,11 @@ manage_weather_service (GcalWeatherSettings *self)
             g_warning ("Unknown location '%s' selected", gtk_entry_get_text (GTK_ENTRY (self->weather_location_entry)));
         }
 
-      gcal_weather_service_run (self->weather_service, location);
+      gcal_weather_service_run (weather_service, location);
     }
   else
     {
-      gcal_weather_service_stop (self->weather_service);
+      gcal_weather_service_stop (weather_service);
     }
 
   GCAL_EXIT;
@@ -268,7 +269,6 @@ on_weather_location_searchbox_changed_cb (GWeatherLocationEntry *entry,
 }
 
 
-
 /*
  * GObject overrides
  */
@@ -278,7 +278,7 @@ gcal_weather_settings_finalize (GObject *object)
 {
   GcalWeatherSettings *self = (GcalWeatherSettings *)object;
 
-  g_clear_object (&self->weather_service);
+  g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_weather_settings_parent_class)->finalize (object);
 }
@@ -295,10 +295,6 @@ gcal_weather_settings_get_property (GObject    *object,
     {
     case PROP_CONTEXT:
       g_value_set_object (value, self->context);
-      break;
-
-    case PROP_WEATHER_SERVICE:
-      g_value_set_object (value, self->weather_service);
       break;
 
     default:
@@ -327,10 +323,6 @@ gcal_weather_settings_set_property (GObject      *object,
         }
       break;
 
-    case PROP_WEATHER_SERVICE:
-      gcal_weather_settings_set_weather_service (self, g_value_get_object (value));
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -352,12 +344,6 @@ gcal_weather_settings_class_init (GcalWeatherSettingsClass *klass)
                                                   GCAL_TYPE_CONTEXT,
                                                   G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-  properties[PROP_WEATHER_SERVICE] = g_param_spec_object ("weather-service",
-                                                          "The weather service object",
-                                                          "The weather service object",
-                                                          GCAL_TYPE_WEATHER_SERVICE,
-                                                          G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
-
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/weather-settings.ui");
@@ -375,33 +361,4 @@ static void
 gcal_weather_settings_init (GcalWeatherSettings *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
-}
-
-GcalWeatherService*
-gcal_weather_settings_get_weather_service (GcalWeatherSettings *self)
-{
-  g_return_val_if_fail (GCAL_IS_WEATHER_SETTINGS (self), NULL);
-
-  return self->weather_service;
-}
-
-void
-gcal_weather_settings_set_weather_service (GcalWeatherSettings *self,
-                                           GcalWeatherService  *service)
-{
-  g_return_if_fail (GCAL_IS_WEATHER_SETTINGS (self));
-
-  GCAL_ENTRY;
-
-  if (!g_set_object (&self->weather_service, service))
-    GCAL_RETURN ();
-
-  /* Recover weather settings */
-  load_weather_settings (self);
-  update_menu_weather_sensitivity (self);
-  manage_weather_service (self);
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_WEATHER_SERVICE]);
-
-  GCAL_EXIT;
 }

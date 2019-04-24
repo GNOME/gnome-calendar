@@ -61,6 +61,8 @@ gcal_context_finalize (GObject *object)
 {
   GcalContext *self = (GcalContext *)object;
 
+  gcal_weather_service_stop (self->weather_service);
+
   g_clear_object (&self->clock);
   g_clear_object (&self->goa_client);
   g_clear_object (&self->manager);

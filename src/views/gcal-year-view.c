@@ -68,7 +68,6 @@ struct _GcalYearView
 
   /* manager singleton */
   GcalContext        *context;
-  GcalWeatherService *weather_service; /* owned, nullable */
 
   /* range shown on the sidebar */
   icaltimetype       *start_selected_date;
@@ -122,7 +121,6 @@ enum {
   PROP_0,
   PROP_DATE,
   PROP_CONTEXT,
-  PROP_WEATHER_SERVICE,
   PROP_SHOW_WEEK_NUMBERS,
   LAST_PROP
 };
@@ -1614,7 +1612,6 @@ gcal_year_view_finalize (GObject *object)
   g_clear_pointer (&year_view->date, g_free);
 
   g_clear_object (&year_view->calendar_settings);
-  g_clear_object (&year_view->weather_service);
 
   for (i = 0; i < 12; i++)
     g_clear_pointer (&year_view->events[i], g_ptr_array_unref);
@@ -1638,10 +1635,6 @@ gcal_year_view_get_property (GObject    *object,
 
     case PROP_CONTEXT:
       g_value_set_object (value, self->context);
-      break;
-
-    case PROP_WEATHER_SERVICE:
-      g_value_set_object (value, self->weather_service);
       break;
 
     case PROP_SHOW_WEEK_NUMBERS:
@@ -1676,15 +1669,14 @@ gcal_year_view_set_property (GObject      *object,
                                self,
                                G_CONNECT_SWAPPED);
 
-      g_object_notify (object, "context");
-      break;
+      g_signal_connect_object (gcal_context_get_weather_service (self->context),
+                               "weather-changed",
+                               G_CALLBACK (weather_changed),
+                               self,
+                               0);
+      update_weather (self);
 
-    case PROP_WEATHER_SERVICE:
-      gcal_view_set_weather_service_impl_helper (&self->weather_service,
-                                                 g_value_get_object (value),
-                                                 (GcalWeatherUpdateFunc) update_weather,
-                                                 (GCallback) weather_changed,
-                                                 GTK_WIDGET (self));
+      g_object_notify (object, "context");
       break;
 
     case PROP_SHOW_WEEK_NUMBERS:
@@ -1978,7 +1970,6 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
-  g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
 
   g_object_class_install_property (object_class,
                                    PROP_SHOW_WEEK_NUMBERS,
@@ -2020,8 +2011,6 @@ static void
 gcal_year_view_init (GcalYearView *self)
 {
   guint i;
-
-  self->weather_service = NULL;
 
   for (i = 0; i < 12; i++)
     self->events[i] = g_ptr_array_new_with_free_func (g_object_unref);
@@ -2076,11 +2065,14 @@ gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *ifa
 static void
 update_weather (GcalYearView *self)
 {
+  GcalWeatherService *weather_service;
   gboolean updated = FALSE;
 
   g_return_if_fail (GCAL_IS_YEAR_VIEW (self));
 
-  if (self->weather_service && self->date)
+  weather_service = gcal_context_get_weather_service (self->context);
+
+  if (self->date)
     {
       GPtrArray *weather_infos;
       GDate date;
@@ -2088,7 +2080,7 @@ update_weather (GcalYearView *self)
 
       g_date_set_dmy (&date, self->date->day, self->date->month, self->date->year);
 
-      weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
+      weather_infos = gcal_weather_service_get_weather_infos (weather_service);
 
       for (i = 0; weather_infos && i < weather_infos->len; i++)
         {

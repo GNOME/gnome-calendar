@@ -27,7 +27,6 @@
 #include "gcal-enums.h"
 #include "gcal-log.h"
 #include "gcal-shell-search-provider.h"
-#include "gcal-weather-service.h"
 #include "gcal-window.h"
 
 #include <glib.h>
@@ -50,7 +49,6 @@ struct _GcalApplication
   GSettings          *desktop_settings;
   GcalTimeFormat      time_format;
 
-  GcalWeatherService *weather_service;
   GcalShellSearchProvider *search_provider;
 
   GcalContext        *context;
@@ -118,7 +116,6 @@ enum
   PROP_CONTEXT,
   PROP_MANAGER,
   PROP_TIME_FORMAT,
-  PROP_WEATHER_SERVICE,
   N_PROPS
 };
 
@@ -229,7 +226,6 @@ gcal_application_finalize (GObject *object)
   g_clear_object (&self->desktop_settings);
   g_clear_object (&self->provider);
   g_clear_object (&self->search_provider);
-  g_clear_object (&self->weather_service);
 
   G_OBJECT_CLASS (gcal_application_parent_class)->finalize (object);
 
@@ -256,10 +252,6 @@ gcal_application_get_property (GObject    *object,
 
     case PROP_TIME_FORMAT:
       g_value_set_enum (value, self->time_format);
-      break;
-
-    case PROP_WEATHER_SERVICE:
-      g_value_set_object (value, self->weather_service);
       break;
 
     default:
@@ -309,7 +301,6 @@ gcal_application_activate (GApplication *application)
                                     "application", self,
                                     "context", self->context,
                                     "active-date", self->initial_date,
-                                    "weather-service", self->weather_service,
                                     "time-format", self->time_format,
                                     NULL);
 
@@ -355,7 +346,6 @@ gcal_application_startup (GApplication *app)
   G_APPLICATION_CLASS (gcal_application_parent_class)->startup (app);
 
   self->colors_provider = gtk_css_provider_new ();
-  self->weather_service = gcal_weather_service_new ();
 
   /* Time format */
   self->desktop_settings = g_settings_new ("org.gnome.desktop.interface");
@@ -530,12 +520,6 @@ gcal_application_class_init (GcalApplicationClass *klass)
                                                     GCAL_TIME_FORMAT_24H,
                                                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
-  properties[PROP_WEATHER_SERVICE] = g_param_spec_object ("weather-service",
-                                                          "The weather service object",
-                                                          "The weather service object",
-                                                          GCAL_TYPE_WEATHER_SERVICE,
-                                                          G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
-
   g_object_class_install_properties (object_class, N_PROPS, properties);
 }
 
@@ -560,9 +544,14 @@ gcal_application_sync (GSimpleAction *sync,
                        GVariant      *parameter,
                        gpointer       app)
 {
-  GcalApplication *self = GCAL_APPLICATION (app);
+  GcalWeatherService *weather_service;
+  GcalApplication *self;
+
+  self = GCAL_APPLICATION (app);
+  weather_service = gcal_context_get_weather_service (self->context);
+
   gcal_manager_refresh (gcal_context_get_manager (self->context));
-  gcal_weather_service_update (self->weather_service);
+  gcal_weather_service_update (weather_service);
 }
 
 static void
@@ -590,6 +579,7 @@ static gchar*
 build_about_copyright (GcalApplication *self)
 {
   g_autoptr (GDateTime) dt = NULL;
+  GcalWeatherService *weather_service;
   const gchar *attribution;
   GString *builder;
 
@@ -601,7 +591,8 @@ build_about_copyright (GcalApplication *self)
                          _("Copyright \xC2\xA9 2012\xE2\x80\x93%d " "The Calendar authors"),
                           g_date_time_get_year (dt));
 
-  attribution = gcal_weather_service_get_attribution (self->weather_service);
+  weather_service = gcal_context_get_weather_service (self->context);
+  attribution = gcal_weather_service_get_attribution (weather_service);
   if (attribution)
     {
       g_string_append_c (builder, '\n');
@@ -714,22 +705,6 @@ gcal_application_get_manager (GcalApplication *self)
   g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
 
   return gcal_context_get_manager (self->context);
-}
-
-/**
- * gcal_application_get_weather_service:
- * @self: A #GcalApplication
- *
- * Provides the #GcalWeatherService used by this application.
- *
- * Returns: (transfer none): A #GcalWeatehrService
- */
-GcalWeatherService*
-gcal_application_get_weather_service (GcalApplication *self)
-{
-  g_return_val_if_fail (GCAL_IS_APPLICATION (self), NULL);
-
-  return self->weather_service;
 }
 
 void

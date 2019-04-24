@@ -22,7 +22,6 @@
 
 #include "gcal-clock.h"
 #include "gcal-context.h"
-#include "gcal-weather-service.h"
 #include "gcal-manager.h"
 
 #include <gtk/gtk.h>
@@ -38,8 +37,6 @@ GcalApplication*     gcal_application_new                        (void);
 GcalContext*         gcal_application_get_context                (GcalApplication    *self);
 
 GcalManager*         gcal_application_get_manager                (GcalApplication    *self);
-
-GcalWeatherService*  gcal_application_get_weather_service        (GcalApplication    *self);
 
 void                 gcal_application_set_uuid                   (GcalApplication    *self,
                                                                   const gchar        *app_uuid);

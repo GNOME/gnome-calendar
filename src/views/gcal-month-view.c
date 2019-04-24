@@ -122,8 +122,6 @@ struct _GcalMonthView
   icaltimetype       *date;
   GcalContext        *context;
 
-  GcalWeatherService *weather_service;
-
   gboolean            pending_event_allocation;
 };
 
@@ -158,7 +156,6 @@ enum
   PROP_0,
   PROP_DATE,
   PROP_CONTEXT,
-  PROP_WEATHER_SERVICE,
   N_PROPS
 };
 
@@ -872,16 +869,15 @@ static GcalWeatherInfo*
 get_weather_info_for_cell (GcalMonthView *self,
                            guint          cell)
 {
+  GcalWeatherService *weather_service;
   GcalMonthCell *first_cell;
   GPtrArray *weather_infos;
   GDateTime *first_dt;
   GDate first;
   guint i;
 
-  if (!self->weather_service)
-    return NULL;
-
-  weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
+  weather_service = gcal_context_get_weather_service (self->context);
+  weather_infos = gcal_weather_service_get_weather_infos (weather_service);
 
   first_cell = GCAL_MONTH_CELL (self->month_cell[0][0]);
   first_dt = gcal_month_cell_get_date (first_cell);
@@ -2100,15 +2096,14 @@ gcal_month_view_set_property (GObject       *object,
                                self,
                                G_CONNECT_SWAPPED);
 
-      g_object_notify (object, "context");
-      break;
+      g_signal_connect_object (gcal_context_get_weather_service (self->context),
+                               "weather-changed",
+                               G_CALLBACK (on_weather_service_weather_changed_cb),
+                               self,
+                               0);
+      update_weather (self, TRUE);
 
-    case PROP_WEATHER_SERVICE:
-      gcal_view_set_weather_service_impl_helper (&self->weather_service,
-                                                 g_value_get_object (value),
-                                                 (GcalWeatherUpdateFunc) update_weather,
-                                                 G_CALLBACK (on_weather_service_weather_changed_cb),
-                                                 GTK_WIDGET (self));
+      g_object_notify (object, "context");
       break;
 
     default:
@@ -2135,10 +2130,6 @@ gcal_month_view_get_property (GObject       *object,
       g_value_set_object (value, self->context);
       break;
 
-    case PROP_WEATHER_SERVICE:
-      g_value_set_boxed (value, self->weather_service);
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -2157,7 +2148,6 @@ gcal_month_view_finalize (GObject *object)
   g_clear_pointer (&self->multi_cell_children, g_list_free);
 
   g_clear_object (&self->context);
-  g_clear_object (&self->weather_service);
 
   if (self->update_grid_id > 0)
     {
@@ -2201,7 +2191,6 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
-  g_object_class_override_property (object_class, PROP_WEATHER_SERVICE, "weather-service");
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/month-view.ui");
 
@@ -2229,7 +2218,6 @@ gcal_month_view_init (GcalMonthView *self)
 
   gtk_widget_set_has_window (GTK_WIDGET (self), FALSE);
 
-  self->weather_service = NULL;
   self->children = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, (GDestroyNotify) g_list_free);
   self->single_cell_children = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);
   self->overflow_cells = g_hash_table_new_full (g_direct_hash, g_direct_equal, NULL, (GDestroyNotify) g_list_free);

@@ -1191,3 +1191,28 @@ gcal_weather_service_stop (GcalWeatherService *self)
 
   GCAL_EXIT;
 }
+
+/**
+ * gcal_weather_service_connect_widget:
+ * @old_service: The views weather service field.
+ * @new_service: (nullable): The new weather service to use.
+ * @update_func: The function to call after updating weather.
+ * @weather_changed_cb: The views "weather-changed" handler
+ * @data: The data to pass to @update_func and @weather_changed_cb
+ *
+ * Internal implementation helper for widgets.
+ */
+void
+gcal_weather_service_connect_widget (GcalWeatherService    *self,
+                                     GcalWeatherUpdateFunc  update_func,
+                                     GCallback              weather_changed_cb,
+                                     GtkWidget             *data)
+{
+  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (self));
+  g_return_if_fail (update_func != NULL);
+  g_return_if_fail (weather_changed_cb != NULL);
+  g_return_if_fail (GTK_IS_WIDGET (data));
+
+  g_signal_connect_object (self, "weather-changed", weather_changed_cb, data, 0);
+  update_func (data);
+}

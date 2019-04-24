@@ -110,13 +110,6 @@ typedef enum
 
 enum
 {
-  PROP_0,
-  PROP_WEATHER_SERVICE,
-  NUM_PROPS
-};
-
-enum
-{
   EVENT_ACTIVATED,
   LAST_SIGNAL
 };
@@ -144,6 +137,77 @@ wid_clear (WeatherInfoDay *wid)
   if (wid->icon_buf != NULL)
     g_clear_object (&wid->icon_buf);
 }
+
+static gint
+add_weather_infos (GcalWeekHeader *self,
+                   GPtrArray      *weather_infos)
+{
+  g_autoptr (GDateTime) week_start_dt = NULL;
+  GDate week_start;
+  gint consumed = 0;
+  guint i;
+
+  if (!self->active_date)
+    return 0;
+
+  week_start_dt = get_start_of_week (self->active_date);
+  g_date_set_dmy (&week_start,
+                  g_date_time_get_day_of_month (week_start_dt),
+                  g_date_time_get_month (week_start_dt),
+                  g_date_time_get_year (week_start_dt));
+
+  for (i = 0; weather_infos && i < weather_infos->len; i++)
+    {
+      GcalWeatherInfo *gwi; /* unowned */
+      GDate gwi_date;
+      gint day_diff;
+
+      gwi = g_ptr_array_index (weather_infos, i);
+
+      gcal_weather_info_get_date (gwi, &gwi_date);
+
+      day_diff = g_date_days_between (&week_start, &gwi_date);
+      if (day_diff >= 0 && day_diff < G_N_ELEMENTS (self->weather_infos))
+        {
+          wid_clear (&self->weather_infos[day_diff]);
+          self->weather_infos[day_diff].winfo = g_object_ref (gwi);
+          consumed++;
+        }
+    }
+
+  if (consumed > 0)
+    gtk_widget_queue_draw (GTK_WIDGET (self));
+
+  return consumed;
+}
+
+static void
+clear_weather_infos (GcalWeekHeader *self)
+{
+  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
+
+  for (gint i = 0; i < G_N_ELEMENTS (self->weather_infos); i++)
+    wid_clear (&self->weather_infos[i]);
+
+  gtk_widget_queue_draw (GTK_WIDGET (self));
+}
+
+static void
+update_weather_infos (GcalWeekHeader *self)
+{
+  GPtrArray* weather_infos;
+
+  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
+
+  clear_weather_infos (self);
+
+  if (!self->weather_service)
+    return;
+
+  weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
+  add_weather_infos (self, weather_infos);
+}
+
 
 /* Event activation methods */
 static void
@@ -287,11 +351,11 @@ static void
 on_weather_update (GcalWeatherService *weather_service,
                    GcalWeekHeader     *self)
 {
-  g_return_if_fail (GCAL_IS_WEATHER_SERVICE (weather_service));
-  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
-  g_return_if_fail (self->weather_service == weather_service);
+  g_assert (GCAL_IS_WEATHER_SERVICE (weather_service));
+  g_assert (GCAL_IS_WEEK_HEADER (self));
+  g_assert (self->weather_service == weather_service);
 
-  gcal_week_header_update_weather_infos (self);
+  update_weather_infos (self);
 }
 
 static GcalEvent*
@@ -1105,46 +1169,6 @@ gcal_week_header_finalize (GObject *object)
 }
 
 static void
-gcal_week_header_get_property (GObject    *object,
-                               guint       property_id,
-                               GValue     *value,
-                               GParamSpec *pspec)
-{
-  GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
-
-  switch (property_id)
-    {
-    case PROP_WEATHER_SERVICE:
-      g_value_set_boxed (value, self->weather_service);
-      break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-      break;
-    }
-}
-
-static void
-gcal_week_header_set_property (GObject      *object,
-                               guint         property_id,
-                               const GValue *value,
-                               GParamSpec   *pspec)
-{
-  GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
-
-  switch (property_id)
-    {
-    case PROP_WEATHER_SERVICE:
-        gcal_week_header_set_weather_service (self, GCAL_WEATHER_SERVICE (g_value_get_object (value)));
-        break;
-
-    default:
-      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
-      break;
-    }
-}
-
-static void
 gcal_week_header_size_allocate (GtkWidget     *widget,
                                 GtkAllocation *alloc)
 {
@@ -1615,27 +1639,12 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
   GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (kclass);
 
   object_class->finalize = gcal_week_header_finalize;
-  object_class->get_property = gcal_week_header_get_property;
-  object_class->set_property = gcal_week_header_set_property;
 
   widget_class->draw = gcal_week_header_draw;
   widget_class->size_allocate = gcal_week_header_size_allocate;
   widget_class->drag_motion = gcal_week_header_drag_motion;
   widget_class->drag_leave = gcal_week_header_drag_leave;
   widget_class->drag_drop = gcal_week_header_drag_drop;
-
-  /**
-   * GcalWeekHeader::weather-service:
-   *
-   * The #GcalWeatherService of the view.
-   */
-  g_object_class_install_property (G_OBJECT_CLASS (kclass),
-                                   PROP_WEATHER_SERVICE,
-                                   g_param_spec_object ("weather-service",
-                                                        "The weather service",
-                                                        "The weather service of the view",
-                                                        GCAL_TYPE_WEATHER_SERVICE,
-                                                        G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
                                            GCAL_TYPE_WEEK_HEADER,
@@ -1690,127 +1699,6 @@ G_GNUC_END_IGNORE_DEPRECATIONS
                      GDK_ACTION_MOVE);
 }
 
-/* Private API */
-
-/* gcal_week_header_add_weather_infos:
- * @self:  (not nullable): The #GcalWeekHeader instance.
- * @winfo: List of #GcalWeatherInfos to add to @self.
- *
- * Adds weather information to this header. @self
- * only adds weather information that can be
- * displayed with current settings.
- *
- * Return: Number of consumed weather information
- *         objects.
- */
-static gint
-gcal_week_header_add_weather_infos (GcalWeekHeader *self,
-                                    GPtrArray      *weather_infos)
-{
-  g_autoptr (GDateTime) week_start_dt = NULL;
-  GDate week_start;
-  gint consumed = 0;
-  guint i;
-
-  if (!self->active_date)
-    return 0;
-
-  week_start_dt = get_start_of_week (self->active_date);
-  g_date_set_dmy (&week_start,
-                  g_date_time_get_day_of_month (week_start_dt),
-                  g_date_time_get_month (week_start_dt),
-                  g_date_time_get_year (week_start_dt));
-
-  for (i = 0; weather_infos && i < weather_infos->len; i++)
-    {
-      GcalWeatherInfo *gwi; /* unowned */
-      GDate gwi_date;
-      gint day_diff;
-
-      gwi = g_ptr_array_index (weather_infos, i);
-
-      gcal_weather_info_get_date (gwi, &gwi_date);
-
-      day_diff = g_date_days_between (&week_start, &gwi_date);
-      if (day_diff >= 0 && day_diff < G_N_ELEMENTS (self->weather_infos))
-        {
-          wid_clear (&self->weather_infos[day_diff]);
-          self->weather_infos[day_diff].winfo = g_object_ref (gwi);
-          consumed++;
-        }
-    }
-
-  if (consumed > 0)
-    gtk_widget_queue_draw (GTK_WIDGET (self));
-
-  return consumed;
-}
-
-/* gcal_week_header_clear_weather_infos:
- * @self: The #GcalWeekHeader instance.
- *
- * Removes all registered weather information objects from
- * this widget.
- */
-static void
-gcal_week_header_clear_weather_infos (GcalWeekHeader *self)
-{
-  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
-
-  for (gint i = 0; i < G_N_ELEMENTS (self->weather_infos); i++)
-    wid_clear (&self->weather_infos[i]);
-
-  gtk_widget_queue_draw (GTK_WIDGET (self));
-}
-
-
-/* Public API */
-
-/**
- * gcal_week_header_set_weather_service:
- * @self:    The #GcalWeekHeader instance.
- * @service: (nullable): The weather service to query.
- *
- * Note that #GcalWeekHeader does not hold a strong reference
- * to its weather service.
- */
-void
-gcal_week_header_set_weather_service (GcalWeekHeader     *self,
-                                      GcalWeatherService *service)
-{
-  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
-  g_return_if_fail (service == NULL || GCAL_IS_WEATHER_SERVICE (service));
-
-  gcal_view_set_weather_service_impl_helper (&self->weather_service,
-                                             service,
-                                             (GcalWeatherUpdateFunc) gcal_week_header_update_weather_infos,
-                                             (GCallback) on_weather_update,
-                                             GTK_WIDGET (self));
-}
-
-/**
- * gcal_week_header_update_weather_infos:
- * @self: The #GcalWeekHeader instance.
- *
- * Retrieves latest weather information from registered
- * weather service and displays it.
- */
-void
-gcal_week_header_update_weather_infos (GcalWeekHeader *self)
-{
-  GPtrArray* weather_infos;
-
-  g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
-
-  gcal_week_header_clear_weather_infos (self);
-
-  if (!self->weather_service)
-    return;
-
-  weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
-  gcal_week_header_add_weather_infos (self, weather_infos);
-}
-
 void
 gcal_week_header_set_context (GcalWeekHeader *self,
                               GcalContext    *context)
@@ -1824,6 +1712,14 @@ gcal_week_header_set_context (GcalWeekHeader *self,
                            G_CALLBACK (gtk_widget_queue_draw),
                            self,
                            G_CONNECT_SWAPPED);
+
+  g_signal_connect_object (gcal_context_get_weather_service (self->context),
+                           "weather-changed",
+                           G_CALLBACK (on_weather_update),
+                           self,
+                           0);
+
+  update_weather_infos (self);
 }
 
 void
@@ -2034,32 +1930,8 @@ gcal_week_header_set_date (GcalWeekHeader *self,
   if (old_date)
     update_unchanged_events (self, self->active_date);
 
-  gcal_week_header_update_weather_infos (self);
+  update_weather_infos (self);
 
   g_clear_pointer (&old_date, g_free);
 }
 
-/**
- * gcal_week_header_get_weather_infos:
- * @self: The #GcalWeekHeader instance.
- *
- * Returns a list of shown weather informations.
- *
- * @Returns: (transfer container):
- *           A GSList. The callee is responsible for freeing it.
- *           Elements are owned by the widget. Do not modify.
- */
-GSList*
-gcal_week_header_get_shown_weather_infos (GcalWeekHeader *self)
-{
-  g_return_val_if_fail (GCAL_IS_WEEK_HEADER (self), NULL);
-  GSList* lst = NULL; /* owned[unowned] */
-
-  for (int i = 0; i < G_N_ELEMENTS (self->weather_infos); i++)
-    {
-      if (self->weather_infos[i].winfo != NULL)
-        lst = g_slist_prepend (lst, self->weather_infos[i].winfo);
-    }
-
-   return lst;
-}
