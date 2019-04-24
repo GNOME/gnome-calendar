@@ -18,6 +18,7 @@
 
 #define G_LOG_DOMAIN "GcalSourceDialog"
 
+#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-source-dialog.h"
 #include "gcal-utils.h"
@@ -109,8 +110,7 @@ struct _GcalSourceDialog
   /* auxiliary */
   GSimpleActionGroup *action_group;
 
-  /* manager */
-  GcalManager        *manager;
+  GcalContext        *context;
 };
 
 typedef enum
@@ -245,7 +245,7 @@ G_DEFINE_TYPE (GcalSourceDialog, gcal_source_dialog, GTK_TYPE_DIALOG)
 enum
 {
   PROP_0,
-  PROP_MANAGER,
+  PROP_CONTEXT,
   N_PROPS
 };
 
@@ -271,11 +271,14 @@ add_button_clicked (GtkWidget *button,
                     gpointer   user_data)
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
+  GcalManager *manager;
+
+  manager = gcal_context_get_manager (self->context);
 
   if (self->source != NULL)
     {
       /* Commit the new source */
-      gcal_manager_save_source (self->manager, self->source);
+      gcal_manager_save_source (manager, self->source);
 
       self->source = NULL;
 
@@ -288,7 +291,7 @@ add_button_clicked (GtkWidget *button,
 
       /* Commit each new remote source */
       for (l = self->remote_sources; l != NULL; l = l->next)
-        gcal_manager_save_source (self->manager, l->data);
+        gcal_manager_save_source (manager, l->data);
 
       g_list_free (self->remote_sources);
       self->remote_sources = NULL;
@@ -326,7 +329,7 @@ add_source (GcalManager *manager,
       GtkWidget *row;
       ESource *parent;
 
-      parent = gcal_manager_get_source (self->manager, e_source_get_parent (source));
+      parent = gcal_manager_get_source (manager, e_source_get_parent (source));
 
       row = make_row_from_source (GCAL_SOURCE_DIALOG (user_data), source);
       g_object_set_data (G_OBJECT (row), "source", source);
@@ -363,11 +366,14 @@ back_button_clicked (GtkButton *button,
                      gpointer   user_data)
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
+  GcalManager *manager;
+
+  manager = gcal_context_get_manager (self->context);
 
   if (gtk_stack_get_visible_child (GTK_STACK (self->stack)) == self->edit_grid)
     {
       /* Save the source before leaving */
-      gcal_manager_save_source (self->manager, self->source);
+      gcal_manager_save_source (manager, self->source);
 
       /* Release the source ref we acquired */
       g_clear_object (&self->source);
@@ -382,11 +388,13 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
                             gpointer       user_data)
 {
   GcalSourceDialog *self;
+  GcalManager *manager;
   ESource *source1, *source2;
   gboolean is_goa1, is_goa2;
   gint retval;
 
   self = GCAL_SOURCE_DIALOG (user_data);
+  manager = gcal_context_get_manager (self->context);
 
   /* first source */
   source1 = g_object_get_data (G_OBJECT (row1), "source");
@@ -402,8 +410,8 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
       gchar *parent_name2 = NULL;
 
       /* Retrieve parent names */
-      get_source_parent_name_color (self->manager, source1, &parent_name1, NULL);
-      get_source_parent_name_color (self->manager, source2, &parent_name2, NULL);
+      get_source_parent_name_color (manager, source1, &parent_name1, NULL);
+      get_source_parent_name_color (manager, source2, &parent_name2, NULL);
 
       retval = g_strcmp0 (parent_name1, parent_name2);
 
@@ -429,11 +437,14 @@ calendar_visible_check_toggled (GObject    *object,
                                 gpointer    user_data)
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
+  GcalManager *manager;
+
+  manager = gcal_context_get_manager (self->context);
 
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object)))
-    gcal_manager_enable_source (self->manager, self->source);
+    gcal_manager_enable_source (manager, self->source);
   else
-    gcal_manager_disable_source (self->manager, self->source);
+    gcal_manager_disable_source (manager, self->source);
 }
 
 static void
@@ -492,11 +503,14 @@ default_check_toggled (GObject    *object,
                        gpointer    user_data)
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
+  GcalManager *manager;
+
+  manager = gcal_context_get_manager (self->context);
 
   /* Retrieve the current default source */
   if (self->old_default_source == NULL)
     {
-      self->old_default_source = gcal_manager_get_default_source (self->manager);
+      self->old_default_source = gcal_manager_get_default_source (manager);
       g_object_unref (self->old_default_source);
     }
 
@@ -506,9 +520,9 @@ default_check_toggled (GObject    *object,
    * default source.
    */
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object)))
-    gcal_manager_set_default_source (self->manager, self->source);
+    gcal_manager_set_default_source (manager, self->source);
   else
-    gcal_manager_set_default_source (self->manager, self->old_default_source);
+    gcal_manager_set_default_source (manager, self->old_default_source);
 }
 
 static gboolean
@@ -540,10 +554,12 @@ is_goa_source (GcalSourceDialog *dialog,
 {
   ESource *parent;
   gboolean is_goa;
+  GcalManager *manager;
 
   g_assert (source && E_IS_SOURCE (source));
 
-  parent = gcal_manager_get_source (dialog->manager, e_source_get_parent (source));
+  manager = gcal_context_get_manager (dialog->context);
+  parent = gcal_manager_get_source (manager, e_source_get_parent (source));
   is_goa = e_source_has_extension (parent, E_SOURCE_EXTENSION_GOA);
   g_object_unref (parent);
 
@@ -591,6 +607,7 @@ make_row_from_source (GcalSourceDialog *dialog,
 {
   ESourceSelectable *extension;
   cairo_surface_t *surface;
+  GcalManager *manager;
   GtkBuilder *builder;
   GtkWidget *bottom_label;
   GtkWidget *top_label;
@@ -599,7 +616,8 @@ make_row_from_source (GcalSourceDialog *dialog,
   GdkRGBA color;
   gchar *parent_name;
 
-  get_source_parent_name_color (dialog->manager, source, &parent_name, NULL);
+  manager = gcal_context_get_manager (dialog->context);
+  get_source_parent_name_color (manager, source, &parent_name, NULL);
 
   builder = gtk_builder_new_from_resource ("/org/gnome/calendar/calendar-row.ui");
 
@@ -763,11 +781,14 @@ response_signal (GtkDialog *dialog,
                  gpointer   user_data)
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (dialog);
+  GcalManager *manager;
+
+  manager = gcal_context_get_manager (self->context);
 
   /* Save the source */
   if (self->mode == GCAL_SOURCE_DIALOG_MODE_EDIT && self->source != NULL)
     {
-      gcal_manager_save_source (self->manager, self->source);
+      gcal_manager_save_source (manager, self->source);
       g_clear_object (&self->source);
     }
 
@@ -778,7 +799,7 @@ response_signal (GtkDialog *dialog,
 
         /* Commit each new remote source */
         for (l = self->remote_sources; l != NULL; l = l->next)
-          gcal_manager_save_source (self->manager, l->data);
+          gcal_manager_save_source (manager, l->data);
 
         g_list_free (self->remote_sources);
         self->remote_sources = NULL;
@@ -852,9 +873,11 @@ stack_visible_child_name_changed (GObject    *object,
                                   gpointer    user_data)
 {
   GcalSourceDialog *self;
+  GcalManager *manager;
   GtkWidget *visible_child;
 
   self = GCAL_SOURCE_DIALOG (user_data);
+  manager = gcal_context_get_manager (self->context);
   visible_child = gtk_stack_get_visible_child (GTK_STACK (object));
 
   if (visible_child == self->main_scrolledwindow)
@@ -880,14 +903,14 @@ stack_visible_child_name_changed (GObject    *object,
       GdkRGBA color;
       gboolean creation_mode, is_goa, is_file, is_remote;
 
-      default_source = gcal_manager_get_default_source (self->manager);
+      default_source = gcal_manager_get_default_source (manager);
       creation_mode = (self->mode == GCAL_SOURCE_DIALOG_MODE_CREATE ||
                        self->mode == GCAL_SOURCE_DIALOG_MODE_CREATE_WEB);
       is_goa = is_goa_source (GCAL_SOURCE_DIALOG (user_data), self->source);
       is_file = e_source_has_extension (self->source, E_SOURCE_EXTENSION_LOCAL_BACKEND);
       is_remote = is_remote_source (self->source);
 
-      get_source_parent_name_color (self->manager, self->source, &parent_name, NULL);
+      get_source_parent_name_color (manager, self->source, &parent_name, NULL);
 
       /* update headerbar buttons */
       gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (self->headerbar), !creation_mode);
@@ -940,7 +963,7 @@ stack_visible_child_name_changed (GObject    *object,
         {
           gchar *name;
 
-          get_source_parent_name_color (self->manager, self->source, &name, NULL);
+          get_source_parent_name_color (manager, self->source, &name, NULL);
           gtk_label_set_label (GTK_LABEL (self->account_label), name);
         }
 
@@ -962,7 +985,7 @@ stack_visible_child_name_changed (GObject    *object,
 
       /* default source check button */
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->default_check), (self->source == default_source));
-      gtk_widget_set_visible (self->default_check, gcal_manager_is_client_writable (self->manager, self->source));
+      gtk_widget_set_visible (self->default_check, gcal_manager_is_client_writable (manager, self->source));
 
       /* title */
       if (!creation_mode)
@@ -1667,9 +1690,12 @@ notification_child_revealed_changed (GtkWidget  *notification,
                                      gpointer    user_data)
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
+  GcalManager *manager;
 
   if (gtk_revealer_get_child_revealed (GTK_REVEALER (notification)))
       return;
+
+  manager = gcal_context_get_manager (self->context);
 
   /* If we have any removed source, delete it */
   if (self->removed_source != NULL)
@@ -1681,7 +1707,7 @@ notification_child_revealed_changed (GtkWidget  *notification,
         return;
 
       /* Enable the source again to remove it's name from disabled list */
-      gcal_manager_enable_source (self->manager, self->removed_source);
+      gcal_manager_enable_source (manager, self->removed_source);
 
       e_source_remove_sync (self->removed_source, NULL, &error);
 
@@ -1693,12 +1719,12 @@ notification_child_revealed_changed (GtkWidget  *notification,
         {
           g_warning ("[source-dialog] Error removing source: %s", error->message);
 
-          add_source (self->manager,
+          add_source (manager,
                       self->removed_source,
                       is_source_enabled (self->removed_source),
                       user_data);
 
-          gcal_manager_enable_source (self->manager, self->removed_source);
+          gcal_manager_enable_source (manager, self->removed_source);
 
           g_error_free (error);
         }
@@ -1717,14 +1743,17 @@ undo_remove_action (GtkButton *button,
                     gpointer   user_data)
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
+  GcalManager *manager;
+
+  manager = gcal_context_get_manager (self->context);
 
   /* if there's any set source, unremove it */
   if (self->removed_source != NULL)
     {
       /* Enable the source before adding it again */
-      gcal_manager_enable_source (self->manager, self->removed_source);
+      gcal_manager_enable_source (manager, self->removed_source);
 
-      add_source (self->manager,
+      add_source (manager,
                   self->removed_source,
                   is_source_enabled (self->removed_source),
                   user_data);
@@ -1785,6 +1814,9 @@ remove_button_clicked (GtkWidget *button,
                        gpointer   user_data)
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
+  GcalManager *manager;
+
+  manager = gcal_context_get_manager (self->context);
 
   if (self->source != NULL)
     {
@@ -1818,7 +1850,7 @@ remove_button_clicked (GtkWidget *button,
       self->notification_timeout_id = g_timeout_add_seconds (5, hide_notification_scheduled, user_data);
 
       /* Disable the source, so it gets hidden */
-      gcal_manager_disable_source (self->manager, self->removed_source);
+      gcal_manager_disable_source (manager, self->removed_source);
 
       g_list_free (children);
       g_free (str);
@@ -2005,6 +2037,7 @@ goa_account_removed_cb (GoaClient *client,
 static void
 loading_changed_cb (GcalSourceDialog *dialog)
 {
+  GcalManager *manager;
   GoaClient *client;
   GList *accounts, *l;
 
@@ -2012,7 +2045,9 @@ loading_changed_cb (GcalSourceDialog *dialog)
 
   g_return_if_fail (GCAL_IS_SOURCE_DIALOG (dialog));
 
-  if (gcal_manager_get_loading (dialog->manager))
+  manager = gcal_context_get_manager (dialog->context);
+
+  if (gcal_manager_get_loading (manager))
     {
       GCAL_TRACE_MSG ("Not loaded yet");
       GCAL_EXIT;
@@ -2020,7 +2055,7 @@ loading_changed_cb (GcalSourceDialog *dialog)
     }
 
   /* Add already fetched accounts */
-  client = gcal_manager_get_goa_client (dialog->manager);
+  client = gcal_manager_get_goa_client (manager);
   accounts = goa_client_get_accounts (client);
 
   for (l = accounts; l != NULL; l = l->next)
@@ -2031,13 +2066,39 @@ loading_changed_cb (GcalSourceDialog *dialog)
   g_signal_connect (client, "account-removed", G_CALLBACK (goa_account_removed_cb), dialog);
 
   /* Once we loaded, no need to track it down again */
-  g_signal_handlers_disconnect_by_func (dialog->manager, loading_changed_cb, dialog);
+  g_signal_handlers_disconnect_by_func (manager, loading_changed_cb, dialog);
 
   g_list_free (accounts);
 
   GCAL_EXIT;
 }
 
+static void
+setup_context (GcalSourceDialog *self)
+{
+  GcalManager *manager = gcal_context_get_manager (self->context);
+
+  if (!gcal_manager_get_loading (manager))
+    {
+      GList *sources, *l;
+
+      sources = gcal_manager_get_sources_connected (manager);
+
+      for (l = sources; l != NULL; l = l->next)
+        add_source (manager, l->data, is_source_enabled (l->data), self);
+    }
+  else
+    {
+      g_signal_connect_swapped (manager,
+                                "notify::loading",
+                                G_CALLBACK (loading_changed_cb),
+                                self);
+    }
+
+  g_signal_connect (manager, "source-added", G_CALLBACK (add_source), self);
+  g_signal_connect (manager, "source-removed", G_CALLBACK (remove_source), self);
+
+}
 
 static void
 gcal_source_dialog_constructed (GObject *object)
@@ -2092,8 +2153,8 @@ gcal_source_dialog_get_property (GObject    *object,
 
   switch (prop_id)
     {
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     default:
@@ -2110,30 +2171,12 @@ gcal_source_dialog_set_property (GObject      *object,
 
   switch (prop_id)
     {
-    case PROP_MANAGER:
-      self->manager = g_value_dup_object (value);
-
-      if (!gcal_manager_get_loading (self->manager))
-        {
-          GList *sources, *l;
-
-          sources = gcal_manager_get_sources_connected (self->manager);
-
-          for (l = sources; l != NULL; l = l->next)
-            add_source (self->manager, l->data, is_source_enabled (l->data), self);
-        }
-      else
-        {
-          g_signal_connect_swapped (self->manager,
-                                    "notify::loading",
-                                    G_CALLBACK (loading_changed_cb),
-                                    self);
-        }
-
-      g_signal_connect (self->manager, "source-added", G_CALLBACK (add_source), self);
-      g_signal_connect (self->manager, "source-removed", G_CALLBACK (remove_source), self);
-
-      g_object_notify_by_pspec (object, properties[PROP_MANAGER]);
+    case PROP_CONTEXT:
+      g_message ("Setting the context");
+      g_assert (self->context == NULL);
+      self->context = g_value_dup_object (value);
+      setup_context (self);
+      g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
       break;
 
     default:
@@ -2159,11 +2202,11 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   object_class->get_property = gcal_source_dialog_get_property;
   object_class->set_property = gcal_source_dialog_set_property;
 
-  properties[PROP_MANAGER] = g_param_spec_object ("manager",
-                                                  "Manager",
-                                                  "The manager object of the application",
-                                                  GCAL_TYPE_MANAGER,
-                                                  G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Context",
+                                                  "The context object of the application",
+                                                  GCAL_TYPE_CONTEXT,
+                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
