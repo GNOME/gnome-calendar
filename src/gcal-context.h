@@ -21,6 +21,7 @@
 #pragma once
 
 #include "gcal-clock.h"
+#include "gcal-enums.h"
 #include "gcal-manager.h"
 #include "weather/gcal-weather-service.h"
 
@@ -41,6 +42,8 @@ GoaClient*           gcal_context_get_goa_client                 (GcalContext   
 GcalManager*         gcal_context_get_manager                    (GcalContext        *self);
 
 GSettings*           gcal_context_get_settings                   (GcalContext        *self);
+
+GcalTimeFormat       gcal_context_get_time_format                (GcalContext        *self);
 
 GcalWeatherService*  gcal_context_get_weather_service            (GcalContext        *self);
 

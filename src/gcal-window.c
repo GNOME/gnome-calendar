@@ -157,8 +157,6 @@ struct _GcalWindow
 
   gint                open_edit_dialog_timeout_id;
 
-  GcalTimeFormat      time_format;
-
   /* weather management */
   GcalWeatherSettings *weather_settings;
 
@@ -183,7 +181,6 @@ enum
   PROP_ACTIVE_VIEW,
   PROP_CONTEXT,
   PROP_NEW_EVENT_MODE,
-  PROP_TIME_FORMAT,
   N_PROPS
 };
 
@@ -1259,9 +1256,6 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->edit_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->search_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self->context, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "time-format", self->edit_dialog, "time-format", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "time-format", self->search_popover, "time-format", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "time-format", self->week_view, "time-format", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   GCAL_EXIT;
 }
@@ -1326,14 +1320,6 @@ gcal_window_set_property (GObject      *object,
         }
       break;
 
-    case PROP_TIME_FORMAT:
-      if (self->time_format != g_value_get_enum (value))
-        {
-          self->time_format = g_value_get_enum (value);
-          g_object_notify_by_pspec (object, properties[PROP_TIME_FORMAT]);
-        }
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -1365,10 +1351,6 @@ gcal_window_get_property (GObject    *object,
 
     case PROP_CONTEXT:
       g_value_set_object (value, self->context);
-      break;
-
-    case PROP_TIME_FORMAT:
-      g_value_set_enum (value, self->time_format);
       break;
 
     default:
@@ -1449,13 +1431,6 @@ gcal_window_class_init (GcalWindowClass *klass)
                                                           FALSE,
                                                           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-  properties[PROP_TIME_FORMAT] = g_param_spec_enum ("time-format",
-                                                    "The time format of the computer",
-                                                    "The time format of the computer",
-                                                    GCAL_TYPE_TIME_FORMAT,
-                                                    GCAL_TIME_FORMAT_24H,
-                                                    G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
-
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/window.ui");
@@ -1530,8 +1505,6 @@ gcal_window_init (GcalWindow *self)
                                    actions,
                                    G_N_ELEMENTS (actions),
                                    self);
-
-  self->time_format = GCAL_TIME_FORMAT_24H;
 
   gtk_widget_init_template (GTK_WIDGET (self));
 

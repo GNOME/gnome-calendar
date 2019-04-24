@@ -19,7 +19,6 @@
 #ifndef __GCAL_EDIT_DIALOG_H__
 #define __GCAL_EDIT_DIALOG_H__
 
-#include "gcal-enums.h"
 #include "gcal-event.h"
 #include "gcal-manager.h"
 
@@ -44,9 +43,6 @@ GcalEvent*           gcal_edit_dialog_get_event               (GcalEditDialog *d
 
 void                 gcal_edit_dialog_set_event               (GcalEditDialog *dialog,
                                                                GcalEvent      *event);
-
-void                 gcal_edit_dialog_set_time_format         (GcalEditDialog *dialog,
-                                                               GcalTimeFormat  time_format);
 
 gboolean             gcal_edit_dialog_get_recurrence_changed   (GcalEditDialog *self);
 

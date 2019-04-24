@@ -61,7 +61,6 @@ struct _GcalSearchPopover
   GcalManager        *manager; /* weak reference */
 
   /* flags */
-  GcalTimeFormat      time_format;
   gboolean            subscribed;
 
   GcalContext        *context;
@@ -72,7 +71,7 @@ enum
   PROP_0,
   PROP_CONTEXT,
   PROP_DATE,
-  PROP_TIME_FORMAT,
+  N_PROPS,
 };
 
 enum
@@ -296,8 +295,11 @@ make_row_for_event (GcalSearchPopover *self,
   /* show 'all day' instead of 00:00 */
   if (!gcal_event_get_all_day (event))
     {
+      GcalTimeFormat time_format;
+
+      time_format = gcal_context_get_time_format (self->context);
       text = g_date_time_format (local_datetime,
-                                 self->time_format == GCAL_TIME_FORMAT_24H ? "%R" : "%r");
+                                 time_format == GCAL_TIME_FORMAT_24H ? "%R" : "%r");
       time_label = gtk_label_new (text);
       g_free (text);
     }
@@ -593,10 +595,6 @@ gcal_search_popover_set_property (GObject      *object,
       self->date = g_value_dup_boxed (value);
       break;
 
-    case PROP_TIME_FORMAT:
-      self->time_format = g_value_get_enum (value);
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -619,10 +617,6 @@ gcal_search_popover_get_property (GObject    *object,
 
     case PROP_DATE:
       g_value_set_boxed (value, self->date);
-      break;
-
-    case PROP_TIME_FORMAT:
-      g_value_set_enum (value, self->time_format);
       break;
 
     default:
@@ -699,15 +693,6 @@ gcal_search_popover_class_init (GcalSearchPopoverClass *klass)
                                                        "The active/selected date in the view",
                                                        ICAL_TIME_TYPE,
                                                        G_PARAM_READWRITE));
-
-  g_object_class_install_property (object_class,
-                                   PROP_TIME_FORMAT,
-                                   g_param_spec_enum ("time-format",
-                                                      "The time format",
-                                                      "The time format",
-                                                      GCAL_TYPE_TIME_FORMAT,
-                                                      GCAL_TIME_FORMAT_24H,
-                                                      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/search-popover.ui");

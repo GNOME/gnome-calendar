@@ -48,8 +48,6 @@ struct _GcalWeekView
   GtkWidget          *scrolled_window;
   GtkWidget          *week_grid;
 
-  GcalTimeFormat      time_format;
-
   /* property */
   icaltimetype       *date;
   GcalContext        *context;
@@ -70,7 +68,6 @@ enum
   PROP_0,
   PROP_DATE,
   PROP_CONTEXT,
-  PROP_TIME_FORMAT,
   NUM_PROPS
 };
 
@@ -383,6 +380,7 @@ gcal_week_view_draw_hours (GcalWeekView *self,
                            GtkWidget    *widget)
 {
   GtkStyleContext *context;
+  GcalTimeFormat time_format;
   GtkStateFlags state;
   GtkBorder padding;
   GdkRGBA color;
@@ -394,6 +392,7 @@ gcal_week_view_draw_hours (GcalWeekView *self,
   PangoLayout *layout;
   PangoFontDescription *font_desc;
 
+  time_format = gcal_context_get_time_format (self->context);
   context = gtk_widget_get_style_context (widget);
   state = gtk_widget_get_state_flags (widget);
   ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
@@ -418,7 +417,7 @@ gcal_week_view_draw_hours (GcalWeekView *self,
     {
       gchar *hours;
 
-      if (self->time_format == GCAL_TIME_FORMAT_24H)
+      if (time_format == GCAL_TIME_FORMAT_24H)
         {
           hours = g_strdup_printf ("%02d:00", i);
         }
@@ -528,12 +527,14 @@ gcal_week_view_set_property (GObject       *object,
 
       gcal_week_grid_set_context (GCAL_WEEK_GRID (self->week_grid), self->context);
       gcal_week_header_set_context (GCAL_WEEK_HEADER (self->header), self->context);
-      g_object_notify (object, "context");
-      break;
 
-    case PROP_TIME_FORMAT:
-      self->time_format = g_value_get_enum (value);
-      gtk_widget_queue_draw (self->hours_bar);
+      g_signal_connect_object (self->context,
+                               "notify::time-format",
+                               G_CALLBACK (gtk_widget_queue_draw),
+                               self->hours_bar,
+                               G_CONNECT_SWAPPED);
+
+      g_object_notify (object, "context");
       break;
 
     default:
@@ -563,10 +564,6 @@ gcal_week_view_get_property (GObject       *object,
       g_value_set_object (value, self->context);
       break;
 
-    case PROP_TIME_FORMAT:
-      g_value_set_enum (value, self->time_format);
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -588,15 +585,6 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
 
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
-
-  g_object_class_install_property (object_class,
-                                   PROP_TIME_FORMAT,
-                                   g_param_spec_enum ("time-format",
-                                                      "Time format",
-                                                      "Time format",
-                                                      GCAL_TYPE_TIME_FORMAT,
-                                                      GCAL_TIME_FORMAT_24H,
-                                                      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
 

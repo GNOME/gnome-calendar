@@ -27,10 +27,13 @@ struct _GcalContext
 {
   GObject             parent;
 
+  GSettings          *desktop_settings;
+
   GcalClock          *clock;
   GoaClient          *goa_client;
   GcalManager        *manager;
   GSettings          *settings;
+  GcalTimeFormat      time_format;
   GcalWeatherService *weather_service;
 
   GcalNightLightMonitor *night_light_monitor;
@@ -45,11 +48,36 @@ enum
   PROP_GOA_CLIENT,
   PROP_MANAGER,
   PROP_SETTINGS,
+  PROP_TIME_FORMAT,
   PROP_WEATHER_SERVICE,
   N_PROPS
 };
 
 static GParamSpec *properties [N_PROPS];
+
+
+/*
+ * Auxiliary methods
+ */
+
+static void
+load_time_format (GcalContext *self)
+{
+  g_autofree gchar *clock_format = NULL;
+  g_autofree gchar *enum_format = NULL;
+
+  clock_format = g_settings_get_string (self->desktop_settings, "clock-format");
+
+  if (g_strcmp0 (clock_format, "12h") == 0)
+    self->time_format = GCAL_TIME_FORMAT_12H;
+  else
+    self->time_format = GCAL_TIME_FORMAT_24H;
+
+  enum_format = g_enum_to_string (GCAL_TYPE_TIME_FORMAT, self->time_format);
+  g_debug ("Setting time format to %s", enum_format);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_TIME_FORMAT]);
+}
 
 
 /*
@@ -64,6 +92,7 @@ gcal_context_finalize (GObject *object)
   gcal_weather_service_stop (self->weather_service);
 
   g_clear_object (&self->clock);
+  g_clear_object (&self->desktop_settings);
   g_clear_object (&self->goa_client);
   g_clear_object (&self->manager);
   g_clear_object (&self->night_light_monitor);
@@ -98,6 +127,10 @@ gcal_context_get_property (GObject    *object,
       g_value_set_object (value, self->settings);
       break;
 
+    case PROP_TIME_FORMAT:
+      g_value_set_enum (value, self->time_format);
+      break;
+
     case PROP_WEATHER_SERVICE:
       g_value_set_object (value, self->weather_service);
       break;
@@ -119,6 +152,7 @@ gcal_context_set_property (GObject      *object,
     case PROP_GOA_CLIENT:
     case PROP_MANAGER:
     case PROP_SETTINGS:
+    case PROP_TIME_FORMAT:
     case PROP_WEATHER_SERVICE:
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -158,6 +192,13 @@ gcal_context_class_init (GcalContextClass *klass)
                                                    G_TYPE_SETTINGS,
                                                    G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
+  properties[PROP_TIME_FORMAT] = g_param_spec_enum ("time-format",
+                                                    "Time format",
+                                                    "System time format",
+                                                    GCAL_TYPE_TIME_FORMAT,
+                                                    GCAL_TIME_FORMAT_24H,
+                                                    G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
   properties[PROP_WEATHER_SERVICE] = g_param_spec_object ("weather-service",
                                                           "Weather service",
                                                           "Weather service",
@@ -177,6 +218,15 @@ gcal_context_init (GcalContext *self)
   self->weather_service = gcal_weather_service_new ();
 
   self->night_light_monitor = gcal_night_light_monitor_new (self);
+
+  /* Time format */
+  self->desktop_settings = g_settings_new ("org.gnome.desktop.interface");
+  g_signal_connect_object (self->desktop_settings,
+                           "changed::clock-format",
+                           G_CALLBACK (load_time_format),
+                           self,
+                           G_CONNECT_SWAPPED);
+  load_time_format (self);
 }
 
 /**
@@ -251,6 +301,21 @@ gcal_context_get_settings (GcalContext *self)
   g_return_val_if_fail (GCAL_IS_CONTEXT (self), NULL);
 
   return self->settings;
+}
+
+/**
+ * gcal_context_get_time_format:
+ *
+ * Retrieves the #GcalTimeFormat from @self.
+ *
+ * Returns: a #GcalTimeFormat
+ */
+GcalTimeFormat
+gcal_context_get_time_format (GcalContext *self)
+{
+  g_return_val_if_fail (GCAL_IS_CONTEXT (self), 0);
+
+  return self->time_format;
 }
 
 /**
