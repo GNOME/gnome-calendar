@@ -34,6 +34,7 @@ sources = files(
   'weather/gcal-weather-settings.c',
   'gcal-application.c',
   'gcal-clock.c',
+  'gcal-context.c',
   'gcal-date-chooser-day.c',
   'gcal-date-chooser.c',
   'gcal-date-selector.c',
