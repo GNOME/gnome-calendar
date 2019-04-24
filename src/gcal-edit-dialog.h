@@ -45,9 +45,6 @@ GcalEvent*           gcal_edit_dialog_get_event               (GcalEditDialog *d
 void                 gcal_edit_dialog_set_event               (GcalEditDialog *dialog,
                                                                GcalEvent      *event);
 
-void                 gcal_edit_dialog_set_manager             (GcalEditDialog *dialog,
-                                                               GcalManager    *manager);
-
 void                 gcal_edit_dialog_set_time_format         (GcalEditDialog *dialog,
                                                                GcalTimeFormat  time_format);
 

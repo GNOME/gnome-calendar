@@ -19,6 +19,7 @@
 
 #define G_LOG_DOMAIN "GcalEditDialog"
 
+#include "gcal-context.h"
 #include "gcal-date-selector.h"
 #include "gcal-debug.h"
 #include "gcal-edit-dialog.h"
@@ -48,7 +49,7 @@ struct _GcalEditDialog
 
   gboolean          writable;
 
-  GcalManager      *manager;
+  GcalContext      *context;
 
   /* titlebar */
   GtkWidget        *titlebar;
@@ -139,8 +140,8 @@ G_DEFINE_TYPE (GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
 enum
 {
   PROP_0,
+  PROP_CONTEXT,
   PROP_EVENT,
-  PROP_MANAGER,
   PROP_TIME_FORMAT,
   PROP_WRITABLE,
   N_PROPS
@@ -173,13 +174,15 @@ sources_menu_sort_func (gconstpointer a,
 static void
 fill_sources_menu (GcalEditDialog *self)
 {
+  GcalManager *manager;
   GList *list;
   GList *aux;
 
-  if (self->manager == NULL)
+  if (self->context == NULL)
     return;
 
-  list = gcal_manager_get_sources (self->manager);
+  manager = gcal_context_get_manager (self->context);
+  list = gcal_manager_get_sources (manager);
   self->sources_menu = g_menu_new ();
 
   list = g_list_sort (list, sources_menu_sort_func);
@@ -204,7 +207,7 @@ fill_sources_menu (GcalEditDialog *self)
       g_menu_item_set_icon (item, G_ICON (pix));
 
       /* set insensitive for read-only calendars */
-      if (!gcal_manager_is_client_writable (self->manager, source))
+      if (!gcal_manager_is_client_writable (manager, source))
         {
           g_menu_item_set_action_and_target_value (item, "select-calendar", NULL);
         }
@@ -629,6 +632,7 @@ on_calendar_selected_action_cb (GSimpleAction *action,
                                 gpointer       user_data)
 {
   GcalEditDialog *self;
+  GcalManager *manager;
   GList *list;
   GList *aux;
   gchar *uid;
@@ -636,7 +640,8 @@ on_calendar_selected_action_cb (GSimpleAction *action,
   GCAL_ENTRY;
 
   self = GCAL_EDIT_DIALOG (user_data);
-  list = gcal_manager_get_sources (self->manager);
+  manager = gcal_context_get_manager (self->context);
+  list = gcal_manager_get_sources (manager);
 
   /* retrieve selected calendar uid */
   g_variant_get (value, "s", &uid);
@@ -880,7 +885,7 @@ on_action_button_clicked_cb (GtkWidget *widget,
             }
           else
             {
-              gcal_manager_move_event_to_source (self->manager,
+              gcal_manager_move_event_to_source (gcal_context_get_manager (self->context),
                                                  self->event,
                                                  self->selected_source);
             }
@@ -976,7 +981,9 @@ on_remove_alarm_button_clicked (GtkButton *button,
 
   gcal_event_remove_alarm (event, trigger_minutes);
 
-  gcal_manager_update_event (self->manager, event, GCAL_RECURRENCE_MOD_THIS_ONLY);
+  gcal_manager_update_event (gcal_context_get_manager (self->context),
+                             event,
+                             GCAL_RECURRENCE_MOD_THIS_ONLY);
 
   gtk_widget_destroy (row);
 
@@ -1113,7 +1120,7 @@ gcal_edit_dialog_finalize (GObject *object)
   self = GCAL_EDIT_DIALOG (object);
 
   g_clear_object (&self->action_group);
-  g_clear_object (&self->manager);
+  g_clear_object (&self->context);
   g_clear_object (&self->event);
 
   G_OBJECT_CLASS (gcal_edit_dialog_parent_class)->finalize (object);
@@ -1168,8 +1175,8 @@ gcal_edit_dialog_get_property (GObject    *object,
       g_value_set_object (value, self->event);
       break;
 
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     case PROP_TIME_FORMAT:
@@ -1199,8 +1206,8 @@ gcal_edit_dialog_set_property (GObject      *object,
       gcal_edit_dialog_set_event (self, g_value_get_object (value));
       break;
 
-    case PROP_MANAGER:
-      gcal_edit_dialog_set_manager (self, g_value_get_object (value));
+    case PROP_CONTEXT:
+      self->context = g_value_dup_object (value);
       break;
 
     case PROP_TIME_FORMAT:
@@ -1246,7 +1253,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
    *
    * The #GcalManager of the dialog.
    */
-  properties[PROP_MANAGER] = g_param_spec_object ("manager",
+  properties[PROP_CONTEXT] = g_param_spec_object ("manager",
                                                   "Manager of the dialog",
                                                   "The manager of the dialog",
                                                   GCAL_TYPE_MANAGER,
@@ -1427,6 +1434,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
   GcalRecurrenceFrequency frequency;
   GcalRecurrence *recur;
   GtkAdjustment *count_adjustment;
+  GcalManager *manager;
   GDateTime *date_start;
   GDateTime *date_end;
   cairo_surface_t *surface;
@@ -1558,7 +1566,8 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
                             gcal_event_get_description (event),
                             -1);
 
-  set_writable (self, gcal_manager_is_client_writable (self->manager, source));
+  manager = gcal_context_get_manager (self->context);
+  set_writable (self, gcal_manager_is_client_writable (manager, source));
 
   g_clear_pointer (&date_start, g_date_time_unref);
   g_clear_pointer (&date_end, g_date_time_unref);
@@ -1572,24 +1581,6 @@ out:
   self->setting_event = FALSE;
 
   GCAL_EXIT;
-}
-
-/**
- * gcal_edit_dialog_set_manager:
- * @dialog: a #GcalEditDialog
- * @manager: a #GcalManager
- *
- * Sets the #GcalManager instance of the @dialog.
- */
-void
-gcal_edit_dialog_set_manager (GcalEditDialog *self,
-                              GcalManager    *manager)
-{
-  g_return_if_fail (GCAL_IS_EDIT_DIALOG (self));
-  g_return_if_fail (GCAL_IS_MANAGER (manager));
-
-  if (g_set_object (&self->manager, manager))
-    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_MANAGER]);
 }
 
 gboolean
