@@ -22,6 +22,7 @@
 #include "gcal-debug.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-event-widget.h"
+#include "gcal-context.h"
 #include "gcal-manager.h"
 #include "gcal-month-view.h"
 #include "gcal-quick-add-popover.h"
@@ -136,7 +137,7 @@ struct _GcalWindow
   GtkWidget          *views [6];
   GtkWidget          *edit_dialog;
 
-  GcalManager        *manager;
+  GcalContext        *context;
   GcalWindowView      active_view;
   icaltimetype       *active_date;
 
@@ -183,7 +184,7 @@ enum
   PROP_0,
   PROP_ACTIVE_DATE,
   PROP_ACTIVE_VIEW,
-  PROP_MANAGER,
+  PROP_CONTEXT,
   PROP_NEW_EVENT_MODE,
   PROP_TIME_FORMAT,
   PROP_WEATHER_SERVICE,
@@ -294,6 +295,7 @@ static void
 update_active_date (GcalWindow   *window,
                     icaltimetype *new_date)
 {
+  GcalManager *manager;
   GDateTime *date_start, *date_end;
   time_t range_start, range_end;
   icaltimetype *previous_date;
@@ -303,6 +305,7 @@ update_active_date (GcalWindow   *window,
 
   previous_date = window->active_date;
   window->active_date = new_date;
+  manager = gcal_context_get_manager (window->context);
 
   g_debug ("Updating active date to %s", icaltime_as_ical_string (*new_date));
 
@@ -319,7 +322,7 @@ update_active_date (GcalWindow   *window,
       date_end = g_date_time_add_years (date_start, 1);
       range_end = g_date_time_to_unix (date_end);
 
-      gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->year_view), range_start, range_end);
+      gcal_manager_set_subscriber (manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->year_view), range_start, range_end);
 
       gcal_clear_datetime (&date_start);
       gcal_clear_datetime (&date_end);
@@ -334,7 +337,7 @@ update_active_date (GcalWindow   *window,
       date_end = g_date_time_add_months (date_start, 1);
       range_end = g_date_time_to_unix (date_end);
 
-      gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->month_view), range_start, range_end);
+      gcal_manager_set_subscriber (manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->month_view), range_start, range_end);
 
       gcal_clear_datetime (&date_start);
       gcal_clear_datetime (&date_end);
@@ -359,7 +362,7 @@ update_active_date (GcalWindow   *window,
       date_end = get_end_of_week (new_date);
       range_end = g_date_time_to_unix (date_end);
 
-      gcal_manager_set_subscriber (window->manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->week_view), range_start, range_end);
+      gcal_manager_set_subscriber (manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->week_view), range_start, range_end);
 
       gcal_clear_datetime (&date_start);
       gcal_clear_datetime (&date_end);
@@ -520,11 +523,13 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
 static void
 load_geometry (GcalWindow *self)
 {
+  GcalManager *manager;
   GSettings *settings;
 
   GCAL_ENTRY;
 
-  settings = gcal_manager_get_settings (self->manager);
+  manager = gcal_context_get_manager (self->context);
+  settings = gcal_manager_get_settings (manager);
 
   self->is_maximized = g_settings_get_boolean (settings, "window-maximized");
   g_settings_get (settings, "window-size", "(ii)", &self->width, &self->height);
@@ -547,11 +552,13 @@ load_geometry (GcalWindow *self)
 static void
 save_geometry (GcalWindow *self)
 {
+  GcalManager *manager;
   GSettings *settings;
 
   GCAL_ENTRY;
 
-  settings = gcal_manager_get_settings (self->manager);
+  manager = gcal_context_get_manager (self->context);
+  settings = gcal_manager_get_settings (manager);
 
   g_settings_set_boolean (settings, "window-maximized", self->is_maximized);
   g_settings_set (settings, "window-size", "(ii)", self->width, self->height);
@@ -729,12 +736,14 @@ on_calendar_toggled (GObject    *object,
                      GParamSpec *pspec,
                      gpointer    user_data)
 {
+  GcalManager *manager;
   GcalWindow *window;
   gboolean active;
   GtkWidget *row;
   ESource *source;
 
   window = GCAL_WINDOW (user_data);
+  manager = gcal_context_get_manager (window->context);
   active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object));
   row = gtk_widget_get_parent (gtk_widget_get_parent (GTK_WIDGET (object)));
   source = g_object_get_data (G_OBJECT (row), "source");
@@ -744,9 +753,9 @@ on_calendar_toggled (GObject    *object,
 
   /* Enable/disable the toggled calendar */
   if (active)
-    gcal_manager_enable_source (window->manager, source);
+    gcal_manager_enable_source (manager, source);
   else
-    gcal_manager_disable_source (window->manager, source);
+    gcal_manager_disable_source (manager, source);
 }
 
 static GtkWidget*
@@ -887,8 +896,10 @@ static void
 source_changed (GcalWindow *window,
                 ESource    *source)
 {
+  GcalManager *manager;
   GList *children, *aux;
 
+  manager = gcal_context_get_manager (window->context);
   children = gtk_container_get_children (GTK_CONTAINER (window->calendar_listbox));
 
   for (aux = children; aux != NULL; aux = aux->next)
@@ -904,7 +915,7 @@ source_changed (GcalWindow *window,
       if (child_source != NULL && child_source == source)
         {
           gtk_widget_destroy (aux->data);
-          add_source (window->manager, source, is_source_enabled (source), window);
+          add_source (manager, source, is_source_enabled (source), window);
           break;
         }
     }
@@ -946,11 +957,13 @@ create_event_detailed_cb (GcalView *view,
                           gpointer  user_data)
 {
   GcalWindow *window = GCAL_WINDOW (user_data);
+  GcalManager *manager;
   ECalComponent *comp;
   GcalEvent *event;
 
+  manager = gcal_context_get_manager (window->context);
   comp = build_component_from_details ("", start_span, end_span);
-  event = gcal_event_new (gcal_manager_get_default_source (window->manager), comp, NULL);
+  event = gcal_event_new (gcal_manager_get_default_source (manager), comp, NULL);
 
   gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
   gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
@@ -981,6 +994,7 @@ edit_dialog_closed (GtkDialog *dialog,
                     gpointer   user_data)
 {
   GcalRecurrenceModType mod;
+  GcalManager *manager;
   GcalWindow *window;
   GcalEditDialog *edit_dialog;
   GcalEvent *event;
@@ -991,6 +1005,7 @@ edit_dialog_closed (GtkDialog *dialog,
   GCAL_ENTRY;
 
   window = GCAL_WINDOW (user_data);
+  manager = gcal_context_get_manager (window->context);
   edit_dialog = GCAL_EDIT_DIALOG (dialog);
   event = gcal_edit_dialog_get_event (edit_dialog);
   view = GCAL_VIEW (window->views[window->active_view]);
@@ -1012,17 +1027,17 @@ edit_dialog_closed (GtkDialog *dialog,
   switch (response)
     {
     case GCAL_RESPONSE_CREATE_EVENT:
-      gcal_manager_create_event (window->manager, event);
+      gcal_manager_create_event (manager, event);
       break;
 
     case GCAL_RESPONSE_SAVE_EVENT:
-      gcal_manager_update_event (window->manager, event, mod);
+      gcal_manager_update_event (manager, event, mod);
       break;
 
     case GCAL_RESPONSE_DELETE_EVENT:
       if (window->event_to_delete != NULL)
         {
-          gcal_manager_remove_event (window->manager, window->event_to_delete, window->event_to_delete_mod);
+          gcal_manager_remove_event (manager, window->event_to_delete, window->event_to_delete_mod);
           g_clear_object (&window->event_to_delete);
 
           create_notification (GCAL_WINDOW (user_data), _("Another event deleted"), _("Undo"));
@@ -1128,7 +1143,9 @@ remove_event (GtkWidget  *notification,
 
   if (window->event_to_delete != NULL)
     {
-      gcal_manager_remove_event (window->manager, window->event_to_delete, window->event_to_delete_mod);
+      GcalManager *manager = gcal_context_get_manager (window->context);
+
+      gcal_manager_remove_event (manager, window->event_to_delete, window->event_to_delete_mod);
       g_clear_object (&window->event_to_delete);
     }
 }
@@ -1201,7 +1218,9 @@ gcal_window_finalize (GObject *object)
   /* If we have a queued event to delete, remove it now */
   if (window->event_to_delete)
     {
-      gcal_manager_remove_event (window->manager, window->event_to_delete, window->event_to_delete_mod);
+      GcalManager *manager = gcal_context_get_manager (window->context);
+
+      gcal_manager_remove_event (manager, window->event_to_delete, window->event_to_delete_mod);
       g_clear_object (&window->event_to_delete);
     }
 
@@ -1212,7 +1231,7 @@ gcal_window_finalize (GObject *object)
       g_clear_pointer (&window->event_creation_data, g_free);
     }
 
-  g_clear_object (&window->manager);
+  g_clear_object (&window->context);
   g_clear_object (&window->views_switcher);
 
   g_clear_pointer (&window->active_date, g_free);
@@ -1237,6 +1256,26 @@ gcal_window_constructed (GObject *object)
 
   /* Load saved geometry *after* the construct-time properties are set */
   load_geometry (self);
+
+  /*
+   * FIXME: this is a hack around the issue that happens when trying to bind
+   * these properties using the GtkBuilder .ui file.
+   */
+  g_object_bind_property (self->context, "manager", self->weather_settings, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self->context, "manager", self->edit_dialog, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self->context, "manager", self->source_dialog, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self->context, "manager", self->weather_settings, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self->context, "manager", self->week_view, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self->context, "manager", self->month_view, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self->context, "manager", self->year_view, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self->context, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "time-format", self->edit_dialog, "time-format", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "time-format", self->search_popover, "time-format", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "time-format", self->week_view, "time-format", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "weather-service", self->weather_settings, "weather-service", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "weather-service", self->month_view, "weather-service", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "weather-service", self->week_view, "weather-service", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "weather-service", self->year_view, "weather-service", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   GCAL_EXIT;
 }
@@ -1267,35 +1306,37 @@ gcal_window_set_property (GObject      *object,
       set_new_event_mode (GCAL_WINDOW (object), g_value_get_boolean (value));
       break;
 
-    case PROP_MANAGER:
-      if (g_set_object (&self->manager, g_value_get_object (value)))
+    case PROP_CONTEXT:
+      if (g_set_object (&self->context, g_value_get_object (value)))
         {
-          g_settings_bind (gcal_manager_get_settings (self->manager),
+          GcalManager *manager = gcal_context_get_manager (self->context);
+
+          g_settings_bind (gcal_manager_get_settings (manager),
                            "active-view",
                            self,
                            "active-view",
                            G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
 
-          if (!gcal_manager_get_loading (self->manager))
+          if (!gcal_manager_get_loading (manager))
             {
               GList *sources, *l;
 
-              sources = gcal_manager_get_sources_connected (self->manager);
+              sources = gcal_manager_get_sources_connected (manager);
 
               for (l = sources; l != NULL; l = g_list_next (l))
-                add_source (self->manager, l->data, is_source_enabled (l->data), self);
+                add_source (manager, l->data, is_source_enabled (l->data), self);
 
               g_list_free (sources);
             }
 
-          g_signal_connect (self->manager, "source-added", G_CALLBACK (add_source), object);
-          g_signal_connect (self->manager, "source-removed", G_CALLBACK (remove_source), object);
-          g_signal_connect_swapped (self->manager, "source-enabled", G_CALLBACK (source_enabled), object);
-          g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (source_changed), object);
+          g_signal_connect (manager, "source-added", G_CALLBACK (add_source), object);
+          g_signal_connect (manager, "source-removed", G_CALLBACK (remove_source), object);
+          g_signal_connect_swapped (manager, "source-enabled", G_CALLBACK (source_enabled), object);
+          g_signal_connect_swapped (manager, "source-changed", G_CALLBACK (source_changed), object);
 
-          gcal_search_popover_connect (GCAL_SEARCH_POPOVER (self->search_popover), self->manager);
+          gcal_search_popover_connect (GCAL_SEARCH_POPOVER (self->search_popover), manager);
 
-          g_object_notify_by_pspec (object, properties[PROP_MANAGER]);
+          g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
         }
       break;
 
@@ -1341,8 +1382,8 @@ gcal_window_get_property (GObject    *object,
       g_value_set_boolean (value, self->new_event_mode);
       break;
 
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     case PROP_TIME_FORMAT:
@@ -1420,10 +1461,10 @@ gcal_window_class_init (GcalWindowClass *klass)
                                                     GCAL_WINDOW_VIEW_MONTH,
                                                     G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
-  properties[PROP_MANAGER] = g_param_spec_object ("manager",
-                                                  "The manager object",
-                                                  "The manager object",
-                                                  GCAL_TYPE_MANAGER,
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Context",
+                                                  "Context",
+                                                  GCAL_TYPE_CONTEXT,
                                                   G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_NEW_EVENT_MODE] = g_param_spec_boolean ("new-event-mode",
@@ -1543,26 +1584,6 @@ gcal_window_init (GcalWindow *self)
   self->active_date = g_new0 (icaltimetype, 1);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
-  /*
-   * FIXME: this is a hack around the issue that happens when trying to bind
-   * there properties using the GtkBuilder .ui file.
-   */
-  g_object_bind_property (self, "manager", self->weather_settings, "manager", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "manager", self->edit_dialog, "manager", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "manager", self->source_dialog, "manager", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "manager", self->weather_settings, "manager", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "manager", self->week_view, "manager", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "manager", self->month_view, "manager", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "manager", self->year_view, "manager", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "time-format", self->edit_dialog, "time-format", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "time-format", self->search_popover, "time-format", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "time-format", self->week_view, "time-format", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "weather-service", self->weather_settings, "weather-service", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "weather-service", self->month_view, "weather-service", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "weather-service", self->week_view, "weather-service", G_BINDING_DEFAULT);
-  g_object_bind_property (self, "weather-service", self->year_view, "weather-service", G_BINDING_DEFAULT);
-
   /* setup accels */
   gcal_window_add_accelerator (app, "win.change-view(-1)",   "<Ctrl>Page_Down");
   gcal_window_add_accelerator (app, "win.change-view(-2)",   "<Ctrl>Page_Up");
@@ -1588,7 +1609,7 @@ gcal_window_new_with_date (GcalApplication *app,
 {
   return g_object_new (GCAL_TYPE_WINDOW,
                        "application", GTK_APPLICATION (app),
-                       "manager", gcal_application_get_manager (GCAL_APPLICATION (app)),
+                       "context", gcal_application_get_context (app),
                        "active-date", date,
                        NULL);
 }

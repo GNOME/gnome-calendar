@@ -313,7 +313,7 @@ gcal_application_activate (GApplication *application)
 
       self->window =  g_object_new (GCAL_TYPE_WINDOW,
                                     "application", self,
-                                    "manager", manager,
+                                    "context", self->context,
                                     "active-date", self->initial_date,
                                     "weather-service", self->weather_service,
                                     "time-format", self->time_format,
