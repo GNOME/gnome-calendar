@@ -27,6 +27,7 @@ struct _GcalContext
   GObject             parent;
 
   GcalClock          *clock;
+  GoaClient          *goa_client;
   GcalManager        *manager;
   GSettings          *settings;
   GcalWeatherService *weather_service;
@@ -38,6 +39,7 @@ enum
 {
   PROP_0,
   PROP_CLOCK,
+  PROP_GOA_CLIENT,
   PROP_MANAGER,
   PROP_SETTINGS,
   PROP_WEATHER_SERVICE,
@@ -57,6 +59,7 @@ gcal_context_finalize (GObject *object)
   GcalContext *self = (GcalContext *)object;
 
   g_clear_object (&self->clock);
+  g_clear_object (&self->goa_client);
   g_clear_object (&self->manager);
   g_clear_object (&self->weather_service);
 
@@ -75,6 +78,10 @@ gcal_context_get_property (GObject    *object,
     {
     case PROP_CLOCK:
       g_value_set_object (value, self->clock);
+      break;
+
+    case PROP_GOA_CLIENT:
+      g_value_set_object (value, self->goa_client);
       break;
 
     case PROP_MANAGER:
@@ -103,6 +110,7 @@ gcal_context_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_CLOCK:
+    case PROP_GOA_CLIENT:
     case PROP_MANAGER:
     case PROP_SETTINGS:
     case PROP_WEATHER_SERVICE:
@@ -125,6 +133,12 @@ gcal_context_class_init (GcalContextClass *klass)
                                                 "Main clock driving the calendar timeline",
                                                 GCAL_TYPE_CLOCK,
                                                 G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  properties[PROP_GOA_CLIENT] = g_param_spec_object ("goa-client",
+                                                     "Online Accounts client",
+                                                     "Online Accounts client",
+                                                     GOA_TYPE_CLIENT,
+                                                     G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_MANAGER] = g_param_spec_object ("manager",
                                                   "Data manager",
@@ -151,6 +165,7 @@ static void
 gcal_context_init (GcalContext *self)
 {
   self->clock = gcal_clock_new ();
+  self->goa_client = goa_client_new_sync (NULL, NULL);
   self->manager = gcal_manager_new ();
   self->settings = g_settings_new ("org.gnome.calendar");
   self->weather_service = gcal_weather_service_new ();
@@ -183,6 +198,21 @@ gcal_context_get_clock (GcalContext *self)
   g_return_val_if_fail (GCAL_IS_CONTEXT (self), NULL);
 
   return self->clock;
+}
+
+/**
+ * gcal_context_get_goa_client:
+ *
+ * Retrieves the #GoaClient from @self.
+ *
+ * Returns: (transfer none): a #GoaClient
+ */
+GoaClient*
+gcal_context_get_goa_client (GcalContext *self)
+{
+  g_return_val_if_fail (GCAL_IS_CONTEXT (self), NULL);
+
+  return self->goa_client;
 }
 
 /**

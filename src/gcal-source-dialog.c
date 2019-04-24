@@ -2035,69 +2035,31 @@ goa_account_removed_cb (GoaClient *client,
 }
 
 static void
-loading_changed_cb (GcalSourceDialog *dialog)
+setup_context (GcalSourceDialog *self)
 {
+  g_autolist (GoaAccount) accounts = NULL;
   GcalManager *manager;
   GoaClient *client;
-  GList *accounts, *l;
+  GList *l;
 
   GCAL_ENTRY;
 
-  g_return_if_fail (GCAL_IS_SOURCE_DIALOG (dialog));
-
-  manager = gcal_context_get_manager (dialog->context);
-
-  if (gcal_manager_get_loading (manager))
-    {
-      GCAL_TRACE_MSG ("Not loaded yet");
-      GCAL_EXIT;
-      return;
-    }
-
   /* Add already fetched accounts */
-  client = gcal_manager_get_goa_client (manager);
+  client = gcal_context_get_goa_client (self->context);
   accounts = goa_client_get_accounts (client);
 
   for (l = accounts; l != NULL; l = l->next)
-    add_goa_account (dialog, goa_object_get_account (l->data));
+    add_goa_account (self, goa_object_get_account (l->data));
 
   /* Be ready to other accounts */
-  g_signal_connect (client, "account-added", G_CALLBACK (goa_account_added_cb), dialog);
-  g_signal_connect (client, "account-removed", G_CALLBACK (goa_account_removed_cb), dialog);
+  g_signal_connect (client, "account-added", G_CALLBACK (goa_account_added_cb), self);
+  g_signal_connect (client, "account-removed", G_CALLBACK (goa_account_removed_cb), self);
 
-  /* Once we loaded, no need to track it down again */
-  g_signal_handlers_disconnect_by_func (manager, loading_changed_cb, dialog);
-
-  g_list_free (accounts);
-
-  GCAL_EXIT;
-}
-
-static void
-setup_context (GcalSourceDialog *self)
-{
-  GcalManager *manager = gcal_context_get_manager (self->context);
-
-  if (!gcal_manager_get_loading (manager))
-    {
-      GList *sources, *l;
-
-      sources = gcal_manager_get_sources_connected (manager);
-
-      for (l = sources; l != NULL; l = l->next)
-        add_source (manager, l->data, is_source_enabled (l->data), self);
-    }
-  else
-    {
-      g_signal_connect_swapped (manager,
-                                "notify::loading",
-                                G_CALLBACK (loading_changed_cb),
-                                self);
-    }
-
+  manager = gcal_context_get_manager (self->context);
   g_signal_connect (manager, "source-added", G_CALLBACK (add_source), self);
   g_signal_connect (manager, "source-removed", G_CALLBACK (remove_source), self);
 
+  GCAL_EXIT;
 }
 
 static void

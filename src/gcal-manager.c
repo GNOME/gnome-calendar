@@ -88,10 +88,7 @@ struct _GcalManager
 
   GCancellable       *async_ops;
 
-  GoaClient          *goa_client;
-
   /* state flags */
-  gboolean            goa_client_ready;
   gint                sources_at_launch;
 
   /* timezone */
@@ -736,40 +733,12 @@ source_get_last_credentials_required_arguments_cb (GObject      *source_object,
 }
 
 static void
-gcal_manager_client_ready_cb (GObject      *source,
-                              GAsyncResult *result,
-                              gpointer      user_data)
-{
-  GcalManager *self = GCAL_MANAGER (user_data);
-  GError *error = NULL;
-
-  GCAL_ENTRY;
-
-  self->goa_client = goa_client_new_finish (result, &error);
-  self->goa_client_ready = TRUE;
-
-  if (error != NULL)
-    {
-      g_warning ("%s: Error retrieving GoaClient: %s",
-                 G_STRFUNC,
-                 error->message);
-
-      g_error_free (error);
-    }
-
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_LOADING]);
-
-  GCAL_EXIT;
-}
-
-static void
 gcal_manager_finalize (GObject *object)
 {
   GcalManager *self =GCAL_MANAGER (object);
 
   GCAL_ENTRY;
 
-  g_clear_object (&self->goa_client);
   g_clear_object (&self->e_data_model);
   g_clear_object (&self->search_data_model);
   g_clear_object (&self->shell_search_data_model);
@@ -1800,7 +1769,7 @@ gcal_manager_get_loading (GcalManager *self)
 {
   g_return_val_if_fail (GCAL_IS_MANAGER (self), FALSE);
 
-  return !self->goa_client_ready || self->sources_at_launch > 0;
+  return self->sources_at_launch > 0;
 }
 
 /**
@@ -1856,24 +1825,6 @@ gcal_manager_get_event_from_shell_search (GcalManager *self,
   GCAL_RETURN (new_event);
 }
 
-/**
- * gcal_manager_get_goa_client:
- * @self: a #GcalManager
- *
- * Retrieves the #GoaClient connected by @self.
- *
- * Returns: (transfer none): a #GoaClient
- */
-GoaClient*
-gcal_manager_get_goa_client (GcalManager *self)
-{
-  GCAL_ENTRY;
-
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
-
-  GCAL_RETURN (self->goa_client);
-}
-
 void
 gcal_manager_startup (GcalManager *self)
 {
@@ -1885,11 +1836,6 @@ gcal_manager_startup (GcalManager *self)
 
   self->clients = g_hash_table_new_full ((GHashFunc) e_source_hash, (GEqualFunc) e_source_equal,
                                          g_object_unref, (GDestroyNotify) free_unit_data);
-
-  /* load GOA client */
-  goa_client_new (NULL, /* we won't really cancel it */
-                  (GAsyncReadyCallback) gcal_manager_client_ready_cb,
-                  self);
 
   /* reading sources and schedule its connecting */
   self->source_registry = e_source_registry_new_sync (NULL, &error);

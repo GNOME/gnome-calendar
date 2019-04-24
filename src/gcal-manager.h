@@ -23,7 +23,6 @@
 #include "gcal-event.h"
 
 #include <libical/icaltime.h>
-#include <goa/goa.h>
 
 G_BEGIN_DECLS
 
@@ -103,10 +102,6 @@ GList*               gcal_manager_get_events                     (GcalManager   
                                                                   icaltimetype       *range_end);
 
 gboolean             gcal_manager_get_loading                    (GcalManager        *self);
-
-/* Online Accounts */
-GoaClient*           gcal_manager_get_goa_client                 (GcalManager        *self);
-
 
 /* GNOME Shell-related functions */
 GcalEvent*           gcal_manager_get_event_from_shell_search    (GcalManager        *self,

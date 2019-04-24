@@ -25,6 +25,7 @@
 #include "weather/gcal-weather-service.h"
 
 #include <glib-object.h>
+#include <goa/goa.h>
 
 G_BEGIN_DECLS
 
@@ -34,6 +35,8 @@ G_DECLARE_FINAL_TYPE (GcalContext, gcal_context, GCAL, CONTEXT, GObject)
 GcalContext*         gcal_context_new                            (void);
 
 GcalClock*           gcal_context_get_clock                      (GcalContext        *self);
+
+GoaClient*           gcal_context_get_goa_client                 (GcalContext        *self);
 
 GcalManager*         gcal_context_get_manager                    (GcalContext        *self);
 
