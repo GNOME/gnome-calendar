@@ -14,6 +14,7 @@
         "--socket=fallback-x11",
         "--socket=wayland",
         "--system-talk-name=org.freedesktop.login1",
+        "--system-talk-name=org.freedesktop.timedate1",
         "--system-talk-name=org.freedesktop.GeoClue2",
         "--talk-name=ca.desrt.dconf",
         "--talk-name=org.gnome.ControlCenter",

@@ -51,6 +51,7 @@ sources = files(
   'gcal-shell-search-provider.c',
   'gcal-source-dialog.c',
   'gcal-time-selector.c',
+  'gcal-time-zone-monitor.c',
   'gcal-utils.c',
   'gcal-window.c',
   'gcal-timer.c'

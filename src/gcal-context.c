@@ -22,6 +22,7 @@
 
 #include "gcal-context.h"
 #include "gcal-night-light-monitor.h"
+#include "gcal-time-zone-monitor.h"
 
 struct _GcalContext
 {
@@ -37,6 +38,7 @@ struct _GcalContext
   GcalWeatherService *weather_service;
 
   GcalNightLightMonitor *night_light_monitor;
+  GcalTimeZoneMonitor   *timezone_monitor;
 };
 
 G_DEFINE_TYPE (GcalContext, gcal_context, G_TYPE_OBJECT)
@@ -49,6 +51,7 @@ enum
   PROP_MANAGER,
   PROP_SETTINGS,
   PROP_TIME_FORMAT,
+  PROP_TIMEZONE,
   PROP_WEATHER_SERVICE,
   N_PROPS
 };
@@ -81,6 +84,19 @@ load_time_format (GcalContext *self)
 
 
 /*
+ * Callbacks
+ */
+
+static void
+on_timezone_changed_cb (GcalTimeZoneMonitor *timezone_monitor,
+                        GParamSpec          *pspec,
+                        GcalContext         *self)
+{
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_TIMEZONE]);
+}
+
+
+/*
  * GObject overrides
  */
 
@@ -96,6 +112,7 @@ gcal_context_finalize (GObject *object)
   g_clear_object (&self->goa_client);
   g_clear_object (&self->manager);
   g_clear_object (&self->night_light_monitor);
+  g_clear_object (&self->timezone_monitor);
   g_clear_object (&self->weather_service);
 
   G_OBJECT_CLASS (gcal_context_parent_class)->finalize (object);
@@ -131,6 +148,10 @@ gcal_context_get_property (GObject    *object,
       g_value_set_enum (value, self->time_format);
       break;
 
+    case PROP_TIMEZONE:
+      g_value_set_boxed (value, gcal_time_zone_monitor_get_timezone (self->timezone_monitor));
+      break;
+
     case PROP_WEATHER_SERVICE:
       g_value_set_object (value, self->weather_service);
       break;
@@ -153,6 +174,7 @@ gcal_context_set_property (GObject      *object,
     case PROP_MANAGER:
     case PROP_SETTINGS:
     case PROP_TIME_FORMAT:
+    case PROP_TIMEZONE:
     case PROP_WEATHER_SERVICE:
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -199,6 +221,12 @@ gcal_context_class_init (GcalContextClass *klass)
                                                     GCAL_TIME_FORMAT_24H,
                                                     G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
+  properties[PROP_TIMEZONE] = g_param_spec_boxed ("timezone",
+                                                  "Timezone",
+                                                  "System timezone",
+                                                  G_TYPE_TIME_ZONE,
+                                                  G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
   properties[PROP_WEATHER_SERVICE] = g_param_spec_object ("weather-service",
                                                           "Weather service",
                                                           "Weather service",
@@ -218,6 +246,13 @@ gcal_context_init (GcalContext *self)
   self->weather_service = gcal_weather_service_new ();
 
   self->night_light_monitor = gcal_night_light_monitor_new (self);
+
+  self->timezone_monitor = gcal_time_zone_monitor_new ();
+  g_signal_connect_object (self->timezone_monitor,
+                           "notify::timezone",
+                           G_CALLBACK (on_timezone_changed_cb),
+                           self,
+                           0);
 
   /* Time format */
   self->desktop_settings = g_settings_new ("org.gnome.desktop.interface");
@@ -316,6 +351,21 @@ gcal_context_get_time_format (GcalContext *self)
   g_return_val_if_fail (GCAL_IS_CONTEXT (self), 0);
 
   return self->time_format;
+}
+
+/**
+ * gcal_context_get_timezone:
+ *
+ * Retrieves the system timezone.
+ *
+ * Returns: (transfer none): a #GTimeZone
+ */
+GTimeZone*
+gcal_context_get_timezone (GcalContext *self)
+{
+  g_return_val_if_fail (GCAL_IS_CONTEXT (self), NULL);
+
+  return gcal_time_zone_monitor_get_timezone (self->timezone_monitor);
 }
 
 /**
