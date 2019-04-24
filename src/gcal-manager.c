@@ -96,9 +96,6 @@ struct _GcalManager
 
   /* timezone */
   icaltimezone       *system_timezone;
-
-  /* property */
-  GSettings          *settings;
 };
 
 G_DEFINE_TYPE (GcalManager, gcal_manager, G_TYPE_OBJECT)
@@ -108,7 +105,6 @@ enum
   PROP_0,
   PROP_DEFAULT_CALENDAR,
   PROP_LOADING,
-  PROP_SETTINGS,
   NUM_PROPS
 };
 
@@ -773,7 +769,6 @@ gcal_manager_finalize (GObject *object)
 
   GCAL_ENTRY;
 
-  g_clear_object (&self->settings);
   g_clear_object (&self->goa_client);
   g_clear_object (&self->e_data_model);
   g_clear_object (&self->search_data_model);
@@ -845,10 +840,6 @@ gcal_manager_get_property (GObject    *object,
       g_value_set_boolean (value, gcal_manager_get_loading (self));
       break;
 
-    case PROP_SETTINGS:
-      g_value_set_object (value, self->settings);
-      return;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -888,17 +879,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                                    "Whether it's still loading or not",
                                                    TRUE,
                                                    G_PARAM_READABLE);
-
-  /**
-   * GcalManager:settings:
-   *
-   * The settings.
-   */
-  properties[PROP_SETTINGS] = g_param_spec_object ("settings",
-                                                   "Application settings",
-                                                   "The settings of the application passed down from GcalApplication",
-                                                   G_TYPE_SETTINGS,
-                                                   G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, NUM_PROPS, properties);
 
@@ -949,7 +929,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
 static void
 gcal_manager_init (GcalManager *self)
 {
-  self->settings = g_settings_new ("org.gnome.calendar");
   self->system_timezone = e_cal_util_get_system_timezone ();
 }
 
@@ -965,22 +944,6 @@ GcalManager*
 gcal_manager_new (void)
 {
   return g_object_new (GCAL_TYPE_MANAGER, NULL);
-}
-
-/**
- * gcal_manager_get_settings:
- * @self:  a #GcalManager
- *
- * Retrieves the #GSetting of @self.
- *
- * Returns: (transfer none): a #GSettings
- */
-GSettings*
-gcal_manager_get_settings (GcalManager *self)
-{
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
-
-  return self->settings;
 }
 
 /**

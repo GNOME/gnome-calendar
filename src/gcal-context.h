@@ -37,6 +37,8 @@ GcalClock*           gcal_context_get_clock                      (GcalContext   
 
 GcalManager*         gcal_context_get_manager                    (GcalContext        *self);
 
+GSettings*           gcal_context_get_settings                   (GcalContext        *self);
+
 GcalWeatherService*  gcal_context_get_weather_service            (GcalContext        *self);
 
 G_END_DECLS

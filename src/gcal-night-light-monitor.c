@@ -52,14 +52,12 @@ on_night_light_proxy_properties_changed_cb (GcalNightLightMonitor *self,
                                             const gchar * const   *invalidated,
                                             GDBusProxy            *proxy)
 {
-  GcalManager *manager;
   GSettings *settings;
 
   g_assert (GCAL_IS_NIGHT_LIGHT_MONITOR (self));
   g_assert (G_IS_DBUS_PROXY (proxy));
 
-  manager = gcal_context_get_manager (self->context);
-  settings = gcal_manager_get_settings (manager);
+  settings = gcal_context_get_settings (self->context);
 
   if (g_settings_get_boolean (settings, "follow-night-light"))
     {

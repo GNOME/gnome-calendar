@@ -28,6 +28,7 @@ struct _GcalContext
 
   GcalClock          *clock;
   GcalManager        *manager;
+  GSettings          *settings;
   GcalWeatherService *weather_service;
 };
 
@@ -38,6 +39,7 @@ enum
   PROP_0,
   PROP_CLOCK,
   PROP_MANAGER,
+  PROP_SETTINGS,
   PROP_WEATHER_SERVICE,
   N_PROPS
 };
@@ -79,6 +81,10 @@ gcal_context_get_property (GObject    *object,
       g_value_set_object (value, self->manager);
       break;
 
+    case PROP_SETTINGS:
+      g_value_set_object (value, self->settings);
+      break;
+
     case PROP_WEATHER_SERVICE:
       g_value_set_object (value, self->weather_service);
       break;
@@ -98,6 +104,7 @@ gcal_context_set_property (GObject      *object,
     {
     case PROP_CLOCK:
     case PROP_MANAGER:
+    case PROP_SETTINGS:
     case PROP_WEATHER_SERVICE:
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
@@ -125,6 +132,12 @@ gcal_context_class_init (GcalContextClass *klass)
                                                   GCAL_TYPE_MANAGER,
                                                   G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
+  properties[PROP_SETTINGS] = g_param_spec_object ("settings",
+                                                   "GNOME Calendar settings",
+                                                   "GNOME Calendar settings",
+                                                   G_TYPE_SETTINGS,
+                                                   G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
   properties[PROP_WEATHER_SERVICE] = g_param_spec_object ("weather-service",
                                                           "Weather service",
                                                           "Weather service",
@@ -139,6 +152,7 @@ gcal_context_init (GcalContext *self)
 {
   self->clock = gcal_clock_new ();
   self->manager = gcal_manager_new ();
+  self->settings = g_settings_new ("org.gnome.calendar");
   self->weather_service = gcal_weather_service_new ();
 }
 
@@ -184,6 +198,21 @@ gcal_context_get_manager (GcalContext *self)
   g_return_val_if_fail (GCAL_IS_CONTEXT (self), NULL);
 
   return self->manager;
+}
+
+/**
+ * gcal_context_get_settings:
+ *
+ * Retrieves the #GSettings from @self.
+ *
+ * Returns: (transfer none): a #GSettings
+ */
+GSettings*
+gcal_context_get_settings (GcalContext *self)
+{
+  g_return_val_if_fail (GCAL_IS_CONTEXT (self), NULL);
+
+  return self->settings;
 }
 
 /**

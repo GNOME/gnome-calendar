@@ -523,13 +523,11 @@ calendar_listbox_sort_func (GtkListBoxRow *row1,
 static void
 load_geometry (GcalWindow *self)
 {
-  GcalManager *manager;
   GSettings *settings;
 
   GCAL_ENTRY;
 
-  manager = gcal_context_get_manager (self->context);
-  settings = gcal_manager_get_settings (manager);
+  settings = gcal_context_get_settings (self->context);
 
   self->is_maximized = g_settings_get_boolean (settings, "window-maximized");
   g_settings_get (settings, "window-size", "(ii)", &self->width, &self->height);
@@ -552,13 +550,11 @@ load_geometry (GcalWindow *self)
 static void
 save_geometry (GcalWindow *self)
 {
-  GcalManager *manager;
   GSettings *settings;
 
   GCAL_ENTRY;
 
-  manager = gcal_context_get_manager (self->context);
-  settings = gcal_manager_get_settings (manager);
+  settings = gcal_context_get_settings (self->context);
 
   g_settings_set_boolean (settings, "window-maximized", self->is_maximized);
   g_settings_set (settings, "window-size", "(ii)", self->width, self->height);
@@ -1310,7 +1306,7 @@ gcal_window_set_property (GObject      *object,
         {
           GcalManager *manager = gcal_context_get_manager (self->context);
 
-          g_settings_bind (gcal_manager_get_settings (manager),
+          g_settings_bind (gcal_context_get_settings (self->context),
                            "active-view",
                            self,
                            "active-view",

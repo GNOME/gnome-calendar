@@ -73,7 +73,6 @@ load_weather_settings (GcalWeatherSettings *self)
   g_autoptr (GVariant) location = NULL;
   g_autoptr (GVariant) value = NULL;
   g_autofree gchar *location_name = NULL;
-  GcalManager *manager;
   GSettings *settings;
   gboolean show_weather;
   gboolean auto_location;
@@ -83,8 +82,7 @@ load_weather_settings (GcalWeatherSettings *self)
   if (!self->context)
     GCAL_RETURN ();
 
-  manager = gcal_context_get_manager (self->context);
-  settings = gcal_manager_get_settings (manager);
+  settings = gcal_context_get_settings (self->context);
   value = g_settings_get_value (settings, "weather-settings");
 
   g_variant_get (value, "(bbsmv)",
@@ -130,7 +128,6 @@ static void
 save_weather_settings (GcalWeatherSettings *self)
 {
   g_autoptr (GWeatherLocation) location = NULL;
-  GcalManager *manager;
   GSettings *settings;
   GVariant *value;
   GVariant *vlocation;
@@ -144,8 +141,7 @@ save_weather_settings (GcalWeatherSettings *self)
   location = gweather_location_entry_get_location (GWEATHER_LOCATION_ENTRY (self->weather_location_entry));
   vlocation = location ? gweather_location_serialize (location) : NULL;
 
-  manager = gcal_context_get_manager (self->context);
-  settings = gcal_manager_get_settings (manager);
+  settings = gcal_context_get_settings (self->context);
   value = g_variant_new ("(bbsmv)",
                          gtk_switch_get_active (self->show_weather_switch),
                          gtk_switch_get_active (self->weather_auto_location_switch),
