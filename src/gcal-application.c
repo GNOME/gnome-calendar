@@ -238,12 +238,10 @@ static void
 gcal_application_activate (GApplication *application)
 {
   GcalApplication *self;
-  GcalManager *manager;
 
   GCAL_ENTRY;
 
   self = GCAL_APPLICATION (application);
-  manager = gcal_context_get_manager (self->context);
 
   if (!self->provider)
     load_css_provider (self);
