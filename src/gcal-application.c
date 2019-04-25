@@ -259,13 +259,10 @@ gcal_application_activate (GApplication *application)
     {
       if (!self->initial_date)
         {
-          icaltimezone *tz;
+          g_autoptr (GDateTime) now = NULL;
 
-          tz = gcal_manager_get_system_timezone (manager);
-
-          self->initial_date = g_new0 (icaltimetype, 1);
-          *self->initial_date = icaltime_current_time_with_zone (tz);
-          *self->initial_date = icaltime_set_timezone (self->initial_date, tz);
+          now = g_date_time_new_now_local ();
+          self->initial_date = datetime_to_icaltime (now);
         }
 
       self->window =  g_object_new (GCAL_TYPE_WINDOW,
@@ -329,9 +326,9 @@ static gint
 gcal_application_command_line (GApplication            *app,
                                GApplicationCommandLine *command_line)
 {
+  g_autoptr (GVariant) option = NULL;
   GcalApplication *self;
   GVariantDict *options;
-  GVariant *option;
   const gchar* date = NULL;
   const gchar* uuid = NULL;
   gsize length;
@@ -353,8 +350,6 @@ gcal_application_command_line (GApplication            *app,
       uuid = g_variant_get_string (option, &length);
 
       gcal_application_set_uuid (GCAL_APPLICATION (app), uuid);
-
-      g_variant_unref (option);
     }
   else if (g_variant_dict_contains (options, "date"))
     {
@@ -365,16 +360,25 @@ gcal_application_command_line (GApplication            *app,
 
       if (e_time_parse_date_and_time (date, &result) == E_TIME_PARSE_OK)
         {
-          GcalManager *manager = gcal_context_get_manager (self->context);
-          if (!self->initial_date)
-            self->initial_date = g_new0 (icaltimetype, 1);
+          g_autoptr (GDateTime) initial_date = NULL;
 
-          *self->initial_date = tm_to_icaltimetype (&result, FALSE);
-          *self->initial_date = icaltime_set_timezone (self->initial_date,
-                                                       gcal_manager_get_system_timezone (manager));
+          initial_date = g_date_time_new (gcal_context_get_timezone (self->context),
+                                          result.tm_year,
+                                          result.tm_mon,
+                                          result.tm_mday,
+                                          result.tm_hour,
+                                          result.tm_min,
+                                          0);
+
+          g_clear_pointer (&self->initial_date, g_free);
+
+          if (initial_date)
+            self->initial_date = datetime_to_icaltime (initial_date);
         }
-
-      g_variant_unref (option);
+      else
+        {
+          g_warning ("Date %s is invalid", date);
+        }
     }
 
   g_application_activate (app);
