@@ -20,6 +20,7 @@ gcal_deps = [
 ]
 
 sources = files(
+  'utils/gcal-utils.c',
   'views/gcal-month-cell.c',
   'views/gcal-month-popover.c',
   'views/gcal-month-view.c',
@@ -52,7 +53,6 @@ sources = files(
   'gcal-source-dialog.c',
   'gcal-time-selector.c',
   'gcal-time-zone-monitor.c',
-  'gcal-utils.c',
   'gcal-window.c',
   'gcal-timer.c'
 )
@@ -106,6 +106,7 @@ sources += configure_file(
 
 incs = [
   top_inc,
+  include_directories('utils'),
   include_directories('views'),
   include_directories('weather'),
 ]
