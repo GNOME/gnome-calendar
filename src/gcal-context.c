@@ -245,8 +245,6 @@ gcal_context_init (GcalContext *self)
   self->settings = g_settings_new ("org.gnome.calendar");
   self->weather_service = gcal_weather_service_new ();
 
-  self->night_light_monitor = gcal_night_light_monitor_new (self);
-
   self->timezone_monitor = gcal_time_zone_monitor_new ();
   g_signal_connect_object (self->timezone_monitor,
                            "notify::timezone",
@@ -381,4 +379,15 @@ gcal_context_get_weather_service (GcalContext *self)
   g_return_val_if_fail (GCAL_IS_CONTEXT (self), NULL);
 
   return self->weather_service;
+}
+
+void
+gcal_context_startup (GcalContext *self)
+{
+  g_return_if_fail (GCAL_IS_CONTEXT (self));
+
+  /* Night Light requires GTK to be initialized */
+  self->night_light_monitor = gcal_night_light_monitor_new (self);
+
+  gcal_manager_startup (self->manager);
 }

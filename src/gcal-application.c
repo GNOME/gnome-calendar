@@ -23,6 +23,7 @@
 
 #include "css-code.h"
 #include "gcal-application.h"
+#include "gcal-context-private.h"
 #include "gcal-debug.h"
 #include "gcal-log.h"
 #include "gcal-shell-search-provider.h"
@@ -311,7 +312,7 @@ gcal_application_startup (GApplication *app)
   self->colors_provider = gtk_css_provider_new ();
 
   /* Startup the manager */
-  gcal_manager_startup (gcal_context_get_manager (self->context));
+  gcal_context_startup (self->context);
 
   /* We're assuming the application is called as a service only by the shell search system */
   if ((g_application_get_flags (app) & G_APPLICATION_IS_SERVICE) != 0)
