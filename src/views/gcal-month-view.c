@@ -876,6 +876,9 @@ get_weather_info_for_cell (GcalMonthView *self,
   GDate first;
   guint i;
 
+  if (!self->date)
+    return NULL;
+
   weather_service = gcal_context_get_weather_service (self->context);
   weather_infos = gcal_weather_service_get_weather_infos (weather_service);
 
