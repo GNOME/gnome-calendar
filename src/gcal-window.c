@@ -137,7 +137,8 @@ struct _GcalWindow
 
   GcalContext        *context;
   GcalWindowView      active_view;
-  icaltimetype       *active_date;
+
+  GDateTime          *active_date;
 
   gboolean            rtl;
 
@@ -249,27 +250,27 @@ update_today_button_sensitive (GcalWindow *window)
   switch (window->active_view)
     {
     case GCAL_WINDOW_VIEW_DAY:
-      sensitive = window->active_date->year != g_date_time_get_year (now) ||
-                  window->active_date->month != g_date_time_get_month (now) ||
-                  window->active_date->day != g_date_time_get_day_of_month (now);
+      sensitive = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
+                  g_date_time_get_month (window->active_date) != g_date_time_get_month (now) ||
+                  g_date_time_get_day_of_month (window->active_date) != g_date_time_get_day_of_month (now);
       break;
 
     case GCAL_WINDOW_VIEW_WEEK:
-      sensitive = window->active_date->year != g_date_time_get_year (now) ||
-                  icaltime_week_number (*window->active_date) !=  g_date_time_get_week_of_year (now) - 1;
+      sensitive = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
+                  g_date_time_get_week_of_year (window->active_date) !=  g_date_time_get_week_of_year (now);
 
       GCAL_TRACE_MSG ("Week: active date's week is %d, current week is %d",
-                      icaltime_week_number (*window->active_date) + 1,
+                      g_date_time_get_week_of_year (window->active_date),
                       g_date_time_get_week_of_year (now));
       break;
 
     case GCAL_WINDOW_VIEW_MONTH:
-      sensitive = window->active_date->year != g_date_time_get_year (now) ||
-                  window->active_date->month != g_date_time_get_month (now);
+      sensitive = g_date_time_get_year (window->active_date) != g_date_time_get_year (now) ||
+                  g_date_time_get_month (window->active_date) != g_date_time_get_month (now);
       break;
 
     case GCAL_WINDOW_VIEW_YEAR:
-      sensitive = window->active_date->year != g_date_time_get_year (now);
+      sensitive = g_date_time_get_year (window->active_date) != g_date_time_get_year (now);
       break;
 
     case GCAL_WINDOW_VIEW_LIST:
@@ -285,13 +286,15 @@ update_today_button_sensitive (GcalWindow *window)
 }
 
 static void
-update_active_date (GcalWindow   *window,
-                    icaltimetype *new_date)
+update_active_date (GcalWindow *window,
+                    GDateTime  *new_date)
 {
+  g_autoptr (GDateTime) previous_date = NULL;
+  g_autofree icaltimetype *new_icaldate = NULL;
+  g_autofree gchar *new_date_string = NULL;
   GcalManager *manager;
   GDateTime *date_start, *date_end;
   time_t range_start, range_end;
-  icaltimetype *previous_date;
   GDate old_week, new_week;
 
   GCAL_ENTRY;
@@ -300,16 +303,18 @@ update_active_date (GcalWindow   *window,
   window->active_date = new_date;
   manager = gcal_context_get_manager (window->context);
 
-  g_debug ("Updating active date to %s", icaltime_as_ical_string (*new_date));
+  new_date_string = g_date_time_format (new_date, "%x %X %z");
+  g_debug ("Updating active date to %s", new_date_string);
 
-  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), new_date);
-  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), new_date);
-  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_YEAR]), new_date);
+  new_icaldate = datetime_to_icaltime (new_date);
+  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), new_icaldate);
+  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), new_icaldate);
+  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_YEAR]), new_icaldate);
 
   /* year_view */
-  if (previous_date->year != new_date->year)
+  if (g_date_time_get_year (previous_date) != g_date_time_get_year (new_date))
     {
-      date_start = g_date_time_new_local (new_date->year, 1, 1, 0, 0, 0);
+      date_start = g_date_time_new_local (g_date_time_get_year (new_date), 1, 1, 0, 0, 0);
       range_start = g_date_time_to_unix (date_start);
 
       date_end = g_date_time_add_years (date_start, 1);
@@ -322,9 +327,12 @@ update_active_date (GcalWindow   *window,
     }
 
   /* month_view */
-  if (previous_date->month != new_date->month || previous_date->year != new_date->year)
+  if (g_date_time_get_year (previous_date) != g_date_time_get_year (new_date) ||
+      g_date_time_get_month (previous_date) != g_date_time_get_month (new_date))
     {
-      date_start = g_date_time_new_local (new_date->year, new_date->month, 1, 0, 0, 0);
+      date_start = g_date_time_new_local (g_date_time_get_year (new_date),
+                                          g_date_time_get_month (new_date),
+                                          1, 0, 0, 0);
       range_start = g_date_time_to_unix (date_start);
 
       date_end = g_date_time_add_months (date_start, 1);
@@ -339,20 +347,30 @@ update_active_date (GcalWindow   *window,
   /* week_view */
   g_date_clear (&old_week, 1);
 
-  if (previous_date->day > 0 && previous_date->month > 0 && previous_date->year)
-    g_date_set_dmy (&old_week, previous_date->day, previous_date->month, previous_date->year);
+  if (g_date_time_get_day_of_month (previous_date) > 0 &&
+      g_date_time_get_month (previous_date) > 0 &&
+      g_date_time_get_year (previous_date))
+    {
+      g_date_set_dmy (&old_week,
+                      g_date_time_get_day_of_month (previous_date),
+                      g_date_time_get_month (previous_date),
+                      g_date_time_get_year (previous_date));
+    }
 
   g_date_clear (&new_week, 1);
-  g_date_set_dmy (&new_week, new_date->day, new_date->month, new_date->year);
+  g_date_set_dmy (&new_week,
+                  g_date_time_get_day_of_month (new_date),
+                  g_date_time_get_month (new_date),
+                  g_date_time_get_year (new_date));
 
-  if (previous_date->year != new_date->year ||
+  if (g_date_time_get_year (previous_date) != g_date_time_get_year (new_date) ||
       !g_date_valid (&old_week) ||
       g_date_get_iso8601_week_of_year (&old_week) != g_date_get_iso8601_week_of_year (&new_week))
     {
-      date_start = get_start_of_week (new_date);
+      date_start = get_start_of_week (new_icaldate);
       range_start = g_date_time_to_unix (date_start);
 
-      date_end = get_end_of_week (new_date);
+      date_end = get_end_of_week (new_icaldate);
       range_end = g_date_time_to_unix (date_end);
 
       gcal_manager_set_subscriber (manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->week_view), range_start, range_end);
@@ -363,8 +381,6 @@ update_active_date (GcalWindow   *window,
 
   update_today_button_sensitive (window);
 
-  g_free (previous_date);
-
   GCAL_EXIT;
 }
 
@@ -372,8 +388,9 @@ static void
 date_updated (GcalWindow *window,
               GtkButton  *button)
 {
-  icaltimetype *new_date;
-  gboolean move_back, move_today;
+  g_autoptr (GDateTime) new_date = NULL;
+  gboolean move_today;
+  gboolean move_back;
   gint factor;
 
   GCAL_ENTRY;
@@ -383,39 +400,33 @@ date_updated (GcalWindow *window,
   move_today = window->today_button == (GtkWidget*) button;
   move_back = window->back_button == (GtkWidget*) button;
 
-  new_date = gcal_dup_icaltime (window->active_date);
-
   if (move_today)
     {
-      g_autoptr (GDateTime) now;
-
-      now = g_date_time_new_now_local ();
-      new_date = datetime_to_icaltime (now);
+      new_date = g_date_time_new_now_local ();
     }
   else
     {
+      gint diff = factor * (move_back ? -1 : 1);
+
       switch (window->active_view)
         {
         case GCAL_WINDOW_VIEW_DAY:
-          new_date->day += 1 * factor * (move_back ? -1 : 1);
+          new_date = g_date_time_add_days (window->active_date, 1 * diff);
           break;
         case GCAL_WINDOW_VIEW_WEEK:
-          new_date->day += 7 * factor * (move_back ? -1 : 1);
+          new_date = g_date_time_add_weeks (window->active_date, 1 * diff);
           break;
         case GCAL_WINDOW_VIEW_MONTH:
-          new_date->day = 1;
-          new_date->month += 1 * factor * (move_back ? -1 : 1);
+          new_date = g_date_time_add_months (window->active_date, 1 * diff);
           break;
         case GCAL_WINDOW_VIEW_YEAR:
-          new_date->year += 1 * factor * (move_back ? -1 : 1);
+          new_date = g_date_time_add_years (window->active_date, 1 * diff);
           break;
         case GCAL_WINDOW_VIEW_LIST:
         case GCAL_WINDOW_VIEW_SEARCH:
         default:
           break;
         }
-
-      *new_date = icaltime_normalize (*new_date);
     }
 
   update_active_date (window, new_date);
@@ -1279,7 +1290,7 @@ gcal_window_set_property (GObject      *object,
       break;
 
     case PROP_ACTIVE_DATE:
-      update_active_date (GCAL_WINDOW (object), g_value_dup_boxed (value));
+      update_active_date (GCAL_WINDOW (object), icaltime_to_datetime (g_value_get_boxed (value)));
       break;
 
     case PROP_NEW_EVENT_MODE:
@@ -1338,7 +1349,7 @@ gcal_window_get_property (GObject    *object,
   switch (property_id)
     {
     case PROP_ACTIVE_DATE:
-      g_value_set_boxed (value, self->active_date);
+      g_value_take_boxed (value, datetime_to_icaltime (self->active_date));
       break;
 
     case PROP_ACTIVE_VIEW:
@@ -1518,7 +1529,7 @@ gcal_window_init (GcalWindow *self)
                               self,
                               NULL);
 
-  self->active_date = g_new0 (icaltimetype, 1);
+  self->active_date = g_date_time_new_now_local ();
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
   /* setup accels */
