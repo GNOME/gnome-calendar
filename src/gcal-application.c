@@ -395,10 +395,10 @@ gcal_application_handle_local_options (GApplication *app,
 }
 
 static gboolean
-gcal_application_dbus_register (GApplication    *application,
-                                GDBusConnection *connection,
-                                const gchar     *object_path,
-                                GError         **error)
+gcal_application_dbus_register (GApplication     *application,
+                                GDBusConnection  *connection,
+                                const gchar      *object_path,
+                                GError          **error)
 {
   GcalApplication *self;
   g_autofree gchar *search_provider_path = NULL;
