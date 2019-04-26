@@ -20,14 +20,26 @@
 
 #define G_LOG_DOMAIN "GcalSearchButton"
 
+#include "gcal-context.h"
 #include "gcal-search-button.h"
 
 struct _GcalSearchButton
 {
-  DzlSuggestionButton parent;
+  DzlSuggestionButton  parent;
+
+  GcalContext         *context;
 };
 
 G_DEFINE_TYPE (GcalSearchButton, gcal_search_button, DZL_TYPE_SUGGESTION_BUTTON)
+
+enum
+{
+  PROP_0,
+  PROP_CONTEXT,
+  N_PROPS
+};
+
+static GParamSpec *properties [N_PROPS];
 
 
 /*
@@ -67,9 +79,82 @@ on_shortcut_grab_focus_cb (GtkWidget *widget,
 }
 
 
+/*
+ * GObject overrides
+ */
+
+
+static void
+gcal_search_button_finalize (GObject *object)
+{
+  GcalSearchButton *self = (GcalSearchButton *)object;
+
+  g_clear_object (&self->context);
+
+  G_OBJECT_CLASS (gcal_search_button_parent_class)->finalize (object);
+}
+
+static void
+gcal_search_button_get_property (GObject    *object,
+                                 guint       prop_id,
+                                 GValue     *value,
+                                 GParamSpec *pspec)
+{
+  GcalSearchButton *self = GCAL_SEARCH_BUTTON (object);
+
+  switch (prop_id)
+    {
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+static void
+gcal_search_button_set_property (GObject      *object,
+                                 guint         prop_id,
+                                 const GValue *value,
+                                 GParamSpec   *pspec)
+{
+  GcalSearchButton *self = GCAL_SEARCH_BUTTON (object);
+
+  switch (prop_id)
+    {
+    case PROP_CONTEXT:
+      g_assert (self->context == NULL);
+      self->context = g_value_dup_object (value);
+      break;
+
+    default:
+      G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
+    }
+}
+
+
 static void
 gcal_search_button_class_init (GcalSearchButtonClass *klass)
 {
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+  object_class->finalize = gcal_search_button_finalize;
+  object_class->get_property = gcal_search_button_get_property;
+  object_class->set_property = gcal_search_button_set_property;
+
+  /**
+   * GcalSearchButton::context:
+   *
+   * The #GcalContext of the application.
+   */
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Context of the application",
+                                                  "The context of the application",
+                                                  GCAL_TYPE_CONTEXT,
+                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, N_PROPS, properties);
 }
 
 static void

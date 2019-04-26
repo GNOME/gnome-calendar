@@ -1161,6 +1161,7 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->edit_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->search_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT);
 
   GCAL_EXIT;
 }
