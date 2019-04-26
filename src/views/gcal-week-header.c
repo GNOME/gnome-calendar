@@ -1295,6 +1295,7 @@ gcal_week_header_draw (GtkWidget      *widget,
 
   for (i = 0; i < 7; i++)
     {
+      g_autoptr (GDateTime) day = NULL;
       WeatherInfoDay *wdinfo; /* unowned */
       gchar *weekday_date, *weekday_abv, *weekday;
       gdouble x;
@@ -1302,7 +1303,8 @@ gcal_week_header_draw (GtkWidget      *widget,
       gint font_width;
       gint n_day;
 
-      n_day = g_date_time_get_day_of_month (week_start) + i;
+      day = g_date_time_add_days (week_start, i);
+      n_day = g_date_time_get_day_of_month (day);
 
       if (n_day > g_date_get_days_in_month (g_date_time_get_month (week_start), g_date_time_get_year (week_start)))
         n_day = n_day - g_date_get_days_in_month (g_date_time_get_month (week_start), g_date_time_get_year (week_start));
@@ -1337,8 +1339,8 @@ gcal_week_header_draw (GtkWidget      *widget,
       gtk_style_context_restore (context);
 
       /* Draws the days name */
-      weekday = g_utf8_strup (gcal_get_weekday ((i + self->first_weekday) % 7), -1);
-      weekday_abv = g_strdup (weekday);
+      weekday = g_date_time_format (day, "%a");
+      weekday_abv = g_utf8_strup (weekday, -1);
       g_free (weekday);
 
       gtk_style_context_save (context);
