@@ -57,7 +57,6 @@ struct _GcalSearchPopover
   guint               search_timeout_id;
 
   /* property */
-  icaltimetype       *date;
   GcalManager        *manager; /* weak reference */
 
   /* flags */
@@ -70,7 +69,6 @@ enum
 {
   PROP_0,
   PROP_CONTEXT,
-  PROP_DATE,
   N_PROPS,
 };
 
@@ -590,11 +588,6 @@ gcal_search_popover_set_property (GObject      *object,
       self->context = g_value_dup_object (value);
       break;
 
-    case PROP_DATE:
-      g_clear_pointer (&self->date, g_free);
-      self->date = g_value_dup_boxed (value);
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -615,10 +608,6 @@ gcal_search_popover_get_property (GObject    *object,
       g_value_set_object (value, self->context);
       break;
 
-    case PROP_DATE:
-      g_value_set_boxed (value, self->date);
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
       break;
@@ -630,7 +619,6 @@ gcal_search_popover_finalize (GObject *object)
 {
   GcalSearchPopover *self = GCAL_SEARCH_POPOVER (object);
 
-  g_clear_pointer (&self->date, g_free);
   g_clear_pointer (&self->uuid_to_event, g_hash_table_unref);
 
   /* Chain up to parent's finalize() method. */
@@ -677,22 +665,6 @@ gcal_search_popover_class_init (GcalSearchPopoverClass *klass)
                                                         "Context",
                                                         GCAL_TYPE_CONTEXT,
                                                         G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
-
-
-  /**
-   * GcalSearchPopover::active-date:
-   *
-   * The date from this view, as defined by #GcalWindow.
-   * Actually it is not used.
-   *
-   */
-  g_object_class_install_property (object_class,
-                                   PROP_DATE,
-                                   g_param_spec_boxed ("active-date",
-                                                       "The active date",
-                                                       "The active/selected date in the view",
-                                                       ICAL_TIME_TYPE,
-                                                       G_PARAM_READWRITE));
 
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/search-popover.ui");
