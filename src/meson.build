@@ -20,6 +20,7 @@ gcal_deps = [
 ]
 
 sources = files(
+  'search/gcal-search-button.c',
   'utils/gcal-date-time-utils.c',
   'utils/gcal-utils.c',
   'views/gcal-month-cell.c',
@@ -107,6 +108,7 @@ sources += configure_file(
 
 incs = [
   top_inc,
+  include_directories('search'),
   include_directories('utils'),
   include_directories('views'),
   include_directories('weather'),

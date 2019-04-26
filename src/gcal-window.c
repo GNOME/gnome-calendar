@@ -26,6 +26,7 @@
 #include "gcal-manager.h"
 #include "gcal-month-view.h"
 #include "gcal-quick-add-popover.h"
+#include "gcal-search-button.h"
 #include "gcal-search-popover.h"
 #include "gcal-source-dialog.h"
 #include "gcal-view.h"
@@ -105,7 +106,6 @@ struct _GcalWindow
   GtkWidget          *main_box;
 
   GtkWidget          *header_bar;
-  GtkWidget          *search_bar;
   GtkWidget          *views_overlay;
   GtkWidget          *views_stack;
   GtkWidget          *week_view;
@@ -118,13 +118,13 @@ struct _GcalWindow
 
   /* header_bar widets */
   GtkWidget          *menu_button;
-  GtkWidget          *search_button;
   GtkWidget          *calendars_button;
-  GtkWidget          *search_entry;
   GtkWidget          *back_button;
   GtkWidget          *today_button;
   GtkWidget          *forward_button;
   GtkWidget          *views_switcher;
+
+  DzlSuggestionButton *search_button;
 
   /* new event popover widgets */
   GtkWidget          *quick_add_popover;
@@ -173,6 +173,7 @@ struct _GcalWindow
   gint                pos_x;
   gint                pos_y;
   gboolean            is_maximized;
+  gboolean            in_key_press;
 };
 
 enum
@@ -199,16 +200,11 @@ static void          on_view_action_activated                    (GSimpleAction 
                                                                   GVariant           *param,
                                                                   gpointer            user_data);
 
-static void          on_toggle_search_bar_activated              (GSimpleAction      *action,
-                                                                  GVariant           *param,
-                                                                  gpointer            user_data);
-
 G_DEFINE_TYPE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static const GActionEntry actions[] = {
   {"change-view", on_view_action_activated, "i" },
   {"show-calendars", on_show_calendars_action_activated },
-  {"toggle-search-bar", on_toggle_search_bar_activated }
 };
 
 static GParamSpec* properties[N_PROPS] = { NULL, };
@@ -217,25 +213,6 @@ static GParamSpec* properties[N_PROPS] = { NULL, };
 /*
  * Auxiliary methods
  */
-
-static gboolean
-hide_search_view_on_click_outside (GcalWindow     *window,
-                                   GdkEventButton *event,
-                                   GtkPopover     *popover)
-{
-  GdkWindow *search_view_window;
-
-  search_view_window = gtk_widget_get_window (GTK_WIDGET (popover));
-
-  /* If the event is not produced in the search view widget, we hide the search_bar */
-  if (event->window != search_view_window)
-    {
-      gtk_popover_popdown (popover);
-      gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (window->search_bar), FALSE);
-    }
-
-  return GDK_EVENT_PROPAGATE;
-}
 
 static void
 update_today_button_sensitive (GcalWindow *window)
@@ -467,34 +444,6 @@ on_view_action_activated (GSimpleAction *action,
   gtk_stack_set_visible_child (GTK_STACK (window->views_stack), window->views[window->active_view]);
 
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
-}
-
-static void
-on_toggle_search_bar_activated (GSimpleAction *action,
-                                GVariant      *param,
-                                gpointer       user_data)
-{
-  GcalWindow *window = GCAL_WINDOW (user_data);
-  gint search_mode;
-
-  search_mode = gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (window->search_bar));
-  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (window->search_bar), !search_mode);
-}
-
-
-static gboolean
-key_pressed (GtkWidget *widget,
-             GdkEvent  *event,
-             gpointer   user_data)
-{
-  GcalWindow *window = GCAL_WINDOW (user_data);
-
-  /* special case: creating an event */
-  if (window->new_event_mode)
-    return GDK_EVENT_PROPAGATE;
-
-  return gtk_search_bar_handle_event (GTK_SEARCH_BAR (window->search_bar),
-                                      event);
 }
 
 static void
@@ -1077,59 +1026,6 @@ edit_dialog_closed (GtkDialog *dialog,
 }
 
 static void
-search_toggled (GObject    *object,
-                GParamSpec *pspec,
-                gpointer    user_data)
-{
-  GcalWindow *window = GCAL_WINDOW (user_data);
-
-  /* update header_bar widget */
-  if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (window->search_bar)))
-    {
-      gcal_search_popover_search (GCAL_SEARCH_POPOVER (window->search_popover), NULL, NULL);
-
-      /* When the search button is toogled we connect the signal */
-      window->click_outside_handler_id = g_signal_connect (window,
-                                                           "button-press-event",
-                                                           G_CALLBACK (hide_search_view_on_click_outside),
-                                                           window->search_popover);
-    }
-  else
-    {
-      /* When the search mode is false we disconnect the handler */
-      g_signal_handler_disconnect (window, window->click_outside_handler_id);
-    }
-
-}
-
-static void
-search_changed (GtkEditable *editable,
-                gpointer     user_data)
-{
-  GcalWindow *window = GCAL_WINDOW (user_data);
-  gint search_length;
-
-  if (gtk_search_bar_get_search_mode (GTK_SEARCH_BAR (window->search_bar)))
-    {
-      /* perform the search or hide when the field is empty */
-
-      search_length = gtk_entry_get_text_length (GTK_ENTRY (window->search_entry));
-
-      if (search_length)
-        {
-          gtk_popover_popup (GTK_POPOVER (window->search_popover));
-          gcal_search_popover_search (GCAL_SEARCH_POPOVER (window->search_popover),
-                                      "summary",
-                                      gtk_entry_get_text (GTK_ENTRY (window->search_entry)));
-        }
-      else
-        {
-          gtk_popover_popdown (GTK_POPOVER (window->search_popover));
-        }
-    }
-}
-
-static void
 remove_event (GtkWidget  *notification,
               GParamSpec *spec,
               gpointer    user_data)
@@ -1399,6 +1295,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_QUICK_ADD_POPOVER);
+  g_type_ensure (GCAL_TYPE_SEARCH_BUTTON);
   g_type_ensure (GCAL_TYPE_SEARCH_POPOVER);
   g_type_ensure (GCAL_TYPE_SOURCE_DIALOG);
   g_type_ensure (GCAL_TYPE_WEATHER_SETTINGS);
@@ -1456,10 +1353,8 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, menu_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_bar);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, source_dialog);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, today_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_overlay);
@@ -1476,9 +1371,6 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   gtk_widget_class_bind_template_callback (widget_class, source_row_activated);
 
-  gtk_widget_class_bind_template_callback (widget_class, key_pressed);
-  gtk_widget_class_bind_template_callback (widget_class, search_toggled);
-  gtk_widget_class_bind_template_callback (widget_class, search_changed);
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
   gtk_widget_class_bind_template_callback (widget_class, date_updated);
 
@@ -1530,6 +1422,13 @@ gcal_window_init (GcalWindow *self)
   self->active_date = g_date_time_new_from_unix_local (0);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
+  /* Dzl shortcut support */
+  g_signal_connect_object (self,
+                           "key-press-event",
+                           G_CALLBACK (dzl_shortcut_manager_handle_event),
+                           NULL,
+                           G_CONNECT_SWAPPED);
+
   /* setup accels */
   app = g_application_get_default ();
   gcal_window_add_accelerator (app, "win.change-view(-1)",   "<Ctrl>Page_Down");
@@ -1537,7 +1436,6 @@ gcal_window_init (GcalWindow *self)
   gcal_window_add_accelerator (app, "win.change-view(1)",    "<Ctrl>1")
   gcal_window_add_accelerator (app, "win.change-view(2)",    "<Ctrl>2");
   gcal_window_add_accelerator (app, "win.change-view(3)",    "<Ctrl>3");
-  gcal_window_add_accelerator (app, "win.toggle-search-bar", "<Ctrl>f");
   gcal_window_add_accelerator (app, "app.quit", "<Ctrl>q");
 }
 
@@ -1577,7 +1475,6 @@ gcal_window_set_search_mode (GcalWindow *self,
   g_return_if_fail (GCAL_IS_WINDOW (self));
 
   self->search_mode = enabled;
-  gtk_search_bar_set_search_mode (GTK_SEARCH_BAR (self->search_bar), enabled);
 }
 
 /**
@@ -1593,9 +1490,12 @@ void
 gcal_window_set_search_query (GcalWindow  *self,
                               const gchar *query)
 {
+  DzlSuggestionEntry *entry;
+
   g_return_if_fail (GCAL_IS_WINDOW (self));
 
-  gtk_entry_set_text (GTK_ENTRY (self->search_entry), query);
+  entry = dzl_suggestion_button_get_entry (self->search_button);
+  gtk_entry_set_text (GTK_ENTRY (entry), query);
 }
 
 /**
