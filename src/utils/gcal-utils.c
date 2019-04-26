@@ -100,22 +100,6 @@ month_item[12] =
 
 #define SCROLL_HARDNESS 10.0
 
-G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
-
-/**
- * gcal_dup_icaltime:
- * @date: an #icaltimetype
- *
- * Creates an exact copy of @date.
- *
- * Returns: (transfer full): an #icaltimetype
- */
-icaltimetype*
-gcal_dup_icaltime (const icaltimetype *date)
-{
-  return g_memdup (date, sizeof (icaltimetype));
-}
-
 /**
  * gcal_get_weekday:
  * @i: the weekday index

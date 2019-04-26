@@ -27,8 +27,6 @@
 #include <libgweather/gweather.h>
 #include <libical/icaltime.h>
 
-#define ICAL_TIME_TYPE (icaltime_get_type ())
-
 #define ALIGNED(x)      (round (x) + 0.5)
 #define MINUTES_PER_DAY 1440
 #define MAX_MINUTES     (7 * MINUTES_PER_DAY)
@@ -41,10 +39,6 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (ESource, g_object_unref)
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ECalComponent, g_object_unref)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GWeatherLocation, gweather_location_unref)
-
-GType                icaltime_get_type                           (void)            G_GNUC_CONST;
-
-icaltimetype*        gcal_dup_icaltime                           (const icaltimetype *date);
 
 gchar*               gcal_get_weekday                            (gint                i);
 

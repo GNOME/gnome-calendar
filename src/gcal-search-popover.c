@@ -646,10 +646,13 @@ gcal_search_popover_class_init (GcalSearchPopoverClass *klass)
    * Emitted when an event is selected from the list.
    *
    */
-  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated", GCAL_TYPE_SEARCH_POPOVER, G_SIGNAL_RUN_LAST,
+  signals[EVENT_ACTIVATED] = g_signal_new ("event-activated",
+                                           GCAL_TYPE_SEARCH_POPOVER,
+                                           G_SIGNAL_RUN_LAST,
                                            0,
                                            NULL, NULL, NULL,
-                                           G_TYPE_NONE, 1, ICAL_TIME_TYPE);
+                                           G_TYPE_NONE, 1,
+                                           G_TYPE_DATE_TIME);
 
   /* properties */
   /**
