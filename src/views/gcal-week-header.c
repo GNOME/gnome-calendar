@@ -1916,7 +1916,7 @@ gcal_week_header_set_date (GcalWeekHeader *self,
    */
   if (old_date && new_date &&
       g_date_time_get_year (old_date) == g_date_time_get_year (new_date) &&
-      g_date_time_get_week_numbering_year (old_date) == g_date_time_get_week_numbering_year (new_date))
+      g_date_time_get_week_of_year (old_date) == g_date_time_get_week_of_year (new_date))
     {
       g_date_time_unref (new_date);
       return;
