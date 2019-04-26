@@ -41,8 +41,6 @@ struct _GcalQuickAddPopover
 
   GtkWidget          *selected_row;
 
-  gboolean            clock_format_24h;
-
   GcalContext        *context;
 };
 
@@ -430,6 +428,9 @@ update_header (GcalQuickAddPopover *self)
   gboolean multiday_or_timed;
   gchar *title_date;
 
+  if (!self->date_start)
+    return;
+
   multiday_or_timed = self->date_end &&
                       (g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_DAY > 1 ||
                        g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_MINUTE > 1);
@@ -449,9 +450,12 @@ update_header (GcalQuickAddPopover *self)
       else
         {
           g_autofree gchar *start_hour, *end_hour, *event_date_name;
+          GcalTimeFormat time_format;
           gchar *hour_format;
 
-          if (self->clock_format_24h)
+          time_format = gcal_context_get_time_format (self->context);
+
+          if (time_format == GCAL_TIME_FORMAT_24H)
               hour_format = "%R";
           else
               hour_format = "%I:%M %P";
@@ -802,6 +806,12 @@ gcal_quick_add_popover_set_property (GObject      *object,
           g_signal_connect (manager, "source-removed", G_CALLBACK (on_source_removed), self);
           g_signal_connect_swapped (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self);
 
+          g_signal_connect_object (self->context,
+                                   "notify::time-format",
+                                   G_CALLBACK (update_header),
+                                   self,
+                                   G_CONNECT_SWAPPED);
+
           g_object_notify (G_OBJECT (self), "context");
         }
       break;
@@ -919,8 +929,6 @@ gcal_quick_add_popover_init (GcalQuickAddPopover *self)
   gtk_widget_init_template (GTK_WIDGET (self));
 
   gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendars_listbox), sort_func, NULL, NULL);
-
-  self->clock_format_24h = is_clock_format_24h ();
 }
 
 GtkWidget*
