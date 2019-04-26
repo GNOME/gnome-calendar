@@ -119,7 +119,7 @@ struct _GcalMonthView
   guint               update_grid_id;
 
   /* property */
-  icaltimetype       *date;
+  GDateTime          *date;
   GcalContext        *context;
 
   gboolean            pending_event_allocation;
@@ -308,8 +308,8 @@ calculate_event_cells (GcalMonthView *self,
       start_date = gcal_event_get_date_start (event);
       start_date = all_day ? g_date_time_ref (start_date) : g_date_time_to_local (start_date);
 
-      if (g_date_time_get_year (start_date) == self->date->year &&
-          g_date_time_get_month (start_date) == self->date->month)
+      if (g_date_time_get_year (start_date) == g_date_time_get_year (self->date) &&
+          g_date_time_get_month (start_date) == g_date_time_get_month (self->date))
         {
           first_cell = g_date_time_get_day_of_month (start_date);
         }
@@ -328,12 +328,12 @@ calculate_event_cells (GcalMonthView *self,
       g_autoptr (GDateTime) end_date = NULL;
       gint last_cell;
 
-      last_cell = icaltime_days_in_month (self->date->month, self->date->year);
+      last_cell = gcal_date_time_get_days_in_month (self->date);
       end_date = gcal_event_get_date_end (event);
       end_date = all_day ? g_date_time_ref (end_date) : g_date_time_to_local (end_date);
 
-      if (g_date_time_get_year (end_date) == self->date->year &&
-          g_date_time_get_month (end_date) == self->date->month)
+      if (g_date_time_get_year (end_date) == g_date_time_get_year (self->date) &&
+          g_date_time_get_month (end_date) == g_date_time_get_month (self->date))
         {
           last_cell = g_date_time_get_day_of_month (end_date);
 
@@ -686,8 +686,8 @@ allocate_multiday_events (GcalMonthView *self,
            * some checks and only applies the dates when it's valid.
            */
           dt_start = g_date_time_new (g_date_time_get_timezone (gcal_event_get_date_start (event)),
-                                      self->date->year,
-                                      self->date->month,
+                                      g_date_time_get_year (self->date),
+                                      g_date_time_get_month (self->date),
                                       day,
                                       0, 0, 0);
 
@@ -931,12 +931,14 @@ update_weather (GcalMonthView *self,
 static gboolean
 update_month_cells (GcalMonthView *self)
 {
-  g_autoptr (GDateTime) dt;
+  g_autoptr (GDateTime) dt = NULL;
   gboolean show_last_row;
   guint row, col;
 
-  show_last_row = g_date_get_days_in_month (self->date->month, self->date->year) + self->days_delay > 35;
-  dt = g_date_time_new_local (self->date->year, self->date->month, 1, 0, 0, 0);
+  show_last_row = gcal_date_time_get_days_in_month (self->date) + self->days_delay > 35;
+  dt = g_date_time_new_local (g_date_time_get_year (self->date),
+                              g_date_time_get_month (self->date),
+                              1, 0, 0, 0);
 
   for (row = 0; row < 6; row++)
     {
@@ -963,7 +965,7 @@ update_month_cells (GcalMonthView *self)
 
           /* Different month */
           different_month = day < self->days_delay ||
-                            day - self->days_delay >= icaltime_days_in_month (self->date->month, self->date->year);
+                            day - self->days_delay >= gcal_date_time_get_days_in_month (self->date);
 
           gcal_month_cell_set_different_month (cell, different_month);
 
@@ -1029,9 +1031,9 @@ update_header_labels (GcalMonthView *self)
 {
   gchar year_str[10] = { 0, };
 
-  g_snprintf (year_str, 10, "%d", self->date->year);
+  g_snprintf (year_str, 10, "%d", g_date_time_get_year (self->date));
 
-  gtk_label_set_label (GTK_LABEL (self->month_label), gcal_get_month_name (self->date->month - 1));
+  gtk_label_set_label (GTK_LABEL (self->month_label), gcal_get_month_name (g_date_time_get_month (self->date) - 1));
   gtk_label_set_label (GTK_LABEL (self->year_label), year_str);
 }
 
@@ -1068,7 +1070,9 @@ add_new_event_button_cb (GtkWidget *button,
   gcal_month_popover_popdown (self->overflow_popover);
 
   day = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (self->overflow_popover), "selected-day"));
-  start_date = g_date_time_new_local (self->date->year, self->date->month, day, 0, 0, 0);
+  start_date = g_date_time_new_local (g_date_time_get_year (self->date),
+                                      g_date_time_get_month (self->date),
+                                      day, 0, 0, 0);
 
   g_signal_emit_by_name (GCAL_VIEW (user_data), "create-event-detailed", start_date, NULL);
 
@@ -1127,7 +1131,7 @@ on_weather_service_weather_changed_cb (GcalWeatherService *weather_service,
  * GcalView interface
  */
 
-static icaltimetype*
+static GDateTime*
 gcal_month_view_get_date (GcalView *view)
 {
   GcalMonthView *self = GCAL_MONTH_VIEW (view);
@@ -1136,22 +1140,23 @@ gcal_month_view_get_date (GcalView *view)
 }
 
 static void
-gcal_month_view_set_date (GcalView     *view,
-                          icaltimetype *date)
+gcal_month_view_set_date (GcalView  *view,
+                          GDateTime *date)
 {
+  g_autofree gchar *new_date_string = NULL;
   GcalMonthView *self;
 
   GCAL_ENTRY;
 
   self = GCAL_MONTH_VIEW (view);
 
-  g_clear_pointer (&self->date, g_free);
+  gcal_set_date_time (&self->date, date);
 
-  self->date = gcal_dup_icaltime (date);
-  self->days_delay = (time_day_of_week (1, self->date->month - 1, self->date->year) - self->first_weekday + 7) % 7;
-  self->keyboard_cell = self->days_delay + (self->date->day - 1);
+  self->days_delay = (time_day_of_week (1, g_date_time_get_month (self->date) - 1, g_date_time_get_year (self->date)) - self->first_weekday + 7) % 7;
+  self->keyboard_cell = self->days_delay + (g_date_time_get_day_of_month (self->date) - 1);
 
-  GCAL_TRACE_MSG ("new date: %s", icaltime_as_ical_string (*date));
+  new_date_string = g_date_time_format (date, "%x %X %z");
+  GCAL_TRACE_MSG ("new date: %s", new_date_string);
 
   update_header_labels (self);
   update_month_cells (self);
@@ -1780,7 +1785,7 @@ gcal_month_view_button_press (GtkWidget      *widget,
   GCAL_ENTRY;
 
   self = GCAL_MONTH_VIEW (widget);
-  days = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year);
+  days = self->days_delay + gcal_date_time_get_days_in_month (self->date);
 
   /* The event may have come from a child widget, so make it relative to the month view */
   if (!gcal_translate_child_window_position (widget, event->window, event->x, event->y, &x, &y))
@@ -1793,7 +1798,8 @@ gcal_month_view_button_press (GtkWidget      *widget,
       g_clear_pointer (&self->start_mark_cell, g_date_time_unref);
 
       self->keyboard_cell = clicked_cell;
-      self->start_mark_cell = g_date_time_new_local (self->date->year, self->date->month,
+      self->start_mark_cell = g_date_time_new_local (g_date_time_get_year (self->date),
+                                                     g_date_time_get_month (self->date),
                                                      self->keyboard_cell - self->days_delay + 1,
                                                      0, 0, 0);
 
@@ -1815,7 +1821,7 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
   GCAL_ENTRY;
 
   self = GCAL_MONTH_VIEW (widget);
-  days = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year);
+  days = self->days_delay + gcal_date_time_get_days_in_month (self->date);
 
   if (!gcal_translate_child_window_position (widget, event->window, event->x, event->y, &x, &y))
     GCAL_RETURN (GDK_EVENT_PROPAGATE);
@@ -1834,8 +1840,8 @@ gcal_month_view_motion_notify_event (GtkWidget      *widget,
       self->keyboard_cell = new_end_cell;
 
       g_clear_pointer (&self->end_mark_cell, g_date_time_unref);
-      self->end_mark_cell = g_date_time_new_local (self->date->year,
-                                                   self->date->month,
+      self->end_mark_cell = g_date_time_new_local (g_date_time_get_year (self->date),
+                                                   g_date_time_get_month (self->date),
                                                    new_end_cell - self->days_delay + 1,
                                                    0, 0, 0);
 
@@ -1863,7 +1869,7 @@ gcal_month_view_button_release (GtkWidget      *widget,
   GCAL_ENTRY;
 
   self = GCAL_MONTH_VIEW (widget);
-  days = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year);
+  days = self->days_delay + gcal_date_time_get_days_in_month (self->date);
 
   if (!gcal_translate_child_window_position (widget, event->window, event->x, event->y, &x, &y))
     GCAL_RETURN (GDK_EVENT_PROPAGATE);
@@ -1872,14 +1878,17 @@ gcal_month_view_button_release (GtkWidget      *widget,
 
   if (current_day >= self->days_delay && current_day < days)
     {
+      g_autoptr (GDateTime) new_active_date = NULL;
       gboolean valid;
 
-      g_clear_pointer (&self->end_mark_cell, g_date_time_unref);
-
       self->keyboard_cell = current_day;
-      self->end_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day - self->days_delay + 1, 0, 0, 0);
+      new_active_date = g_date_time_new_local (g_date_time_get_year (self->date),
+                                               g_date_time_get_month (self->date),
+                                               current_day - self->days_delay + 1,
+                                               0, 0, 0);
 
-      self->date->day = g_date_time_get_day_of_month (self->end_mark_cell);
+      gcal_set_date_time (&self->end_mark_cell, new_active_date);
+      gcal_set_date_time (&self->date, new_active_date);
 
       /* First, make sure to show the popover */
       valid = emit_create_event (self);
@@ -1922,6 +1931,7 @@ gcal_month_view_key_press (GtkWidget   *widget,
   gboolean selection;
   gboolean valid_key;
   gboolean is_ltr;
+  gint days_in_month;
   gint min, max, diff, month_change, current_day;
   gint row, col;
 
@@ -1933,9 +1943,10 @@ gcal_month_view_key_press (GtkWidget   *widget,
   valid_key = FALSE;
   diff = 0;
   month_change = 0;
+  days_in_month = gcal_date_time_get_days_in_month (self->date);
   current_day = self->keyboard_cell - self->days_delay + 1;
   min = self->days_delay;
-  max = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year) - 1;
+  max = self->days_delay + days_in_month - 1;
   is_ltr = gtk_widget_get_direction (widget) != GTK_TEXT_DIR_RTL;
 
   /*
@@ -1944,7 +1955,12 @@ gcal_month_view_key_press (GtkWidget   *widget,
    * focused cell.
    */
   if (selection && self->start_mark_cell == NULL)
-      self->start_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day, 0, 0, 0);
+    {
+      self->start_mark_cell = g_date_time_new_local (g_date_time_get_year (self->date),
+                                                     g_date_time_get_month (self->date),
+                                                     current_day,
+                                                     0, 0, 0);
+    }
 
   switch (event->keyval)
     {
@@ -1974,7 +1990,16 @@ gcal_month_view_key_press (GtkWidget   *widget,
        * simulate it by changing the start & end selected cells = keyboard cell.
        */
       if (!selection && !self->start_mark_cell && !self->end_mark_cell)
-        self->start_mark_cell = self->end_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day, 0, 0, 0);
+        {
+          g_autoptr (GDateTime) new_mark = NULL;
+
+          new_mark = g_date_time_new_local (g_date_time_get_year (self->date),
+                                            g_date_time_get_month (self->date),
+                                            current_day,
+                                            0, 0, 0);
+          self->start_mark_cell = g_object_ref (new_mark);
+          self->end_mark_cell = g_object_ref (new_mark);
+        }
 
       create_event = TRUE;
       break;
@@ -1993,11 +2018,12 @@ gcal_month_view_key_press (GtkWidget   *widget,
     }
   else
     {
-      month_change = self->keyboard_cell + diff > max ? 1 : -1;
-      self->date->month += month_change;
-      *self->date = icaltime_normalize (*self->date);
+      g_autoptr (GDateTime) new_month = NULL;
 
-      self->days_delay = (time_day_of_week (1, self->date->month - 1, self->date->year) - self->first_weekday + 7) % 7;
+      month_change = self->keyboard_cell + diff > max ? 1 : -1;
+      new_month = g_date_time_add_months (self->date, month_change);
+
+      self->days_delay = (time_day_of_week (1, g_date_time_get_month (new_month) - 1, g_date_time_get_year (new_month)) - self->first_weekday + 7) % 7;
 
       /*
        * Set keyboard cell value to the sum or difference of days delay of successive
@@ -2009,7 +2035,7 @@ gcal_month_view_key_press (GtkWidget   *widget,
       if (month_change == 1)
         self->keyboard_cell = self->days_delay + self->keyboard_cell + diff - max - 1;
       else
-        self->keyboard_cell = self->days_delay + icaltime_days_in_month (self->date->month, self->date->year) - min + self->keyboard_cell + diff;
+        self->keyboard_cell = self->days_delay + gcal_date_time_get_days_in_month (new_month) - min + self->keyboard_cell + diff;
     }
 
   /* Focus the selected month cell */
@@ -2019,7 +2045,7 @@ gcal_month_view_key_press (GtkWidget   *widget,
   gtk_widget_grab_focus (self->month_cell[row][col]);
 
   current_day = self->keyboard_cell - self->days_delay + 1;
-  self->date->day = current_day;
+  //self->date->day = current_day;
 
   /*
    * We can only emit the :create-event signal ~after~ grabbing the focus, otherwise
@@ -2032,7 +2058,10 @@ gcal_month_view_key_press (GtkWidget   *widget,
 
   if (selection)
     {
-      self->end_mark_cell = g_date_time_new_local (self->date->year, self->date->month, current_day, 0, 0, 0);
+      self->end_mark_cell = g_date_time_new_local (g_date_time_get_year (self->date),
+                                                   g_date_time_get_month (self->date),
+                                                   current_day,
+                                                   0, 0, 0);
     }
   else if (!selection && valid_key)
     {
@@ -2055,8 +2084,14 @@ gcal_month_view_scroll_event (GtkWidget      *widget,
    */
   if (should_change_date_for_scroll (&self->scroll_value, scroll_event))
     {
-      self->date->month += self->scroll_value > 0 ? 1 : -1;
-      *self->date = icaltime_normalize (*self->date);
+      g_autoptr (GDateTime) new_date = NULL;
+      gint diff;
+
+      diff = self->scroll_value > 0 ? 1 : -1;
+      new_date = g_date_time_add_months (self->date, diff);
+
+      gcal_clear_datetime (&self->date);
+      self->date = g_steal_pointer (&new_date);
       self->scroll_value = 0;
 
       gtk_widget_queue_draw (widget);
@@ -2144,7 +2179,7 @@ gcal_month_view_finalize (GObject *object)
 {
   GcalMonthView *self = GCAL_MONTH_VIEW (object);
 
-  g_clear_pointer (&self->date, g_free);
+  gcal_clear_datetime (&self->date);
   g_clear_pointer (&self->children, g_hash_table_destroy);
   g_clear_pointer (&self->single_cell_children, g_hash_table_destroy);
   g_clear_pointer (&self->overflow_cells, g_hash_table_destroy);

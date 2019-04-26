@@ -54,7 +54,7 @@ struct _GcalWeekGrid
   GtkWidget          *hours_sidebar;
   GdkWindow          *event_window;
 
-  icaltimetype       *active_date;
+  GDateTime          *active_date;
 
   GcalRangeTree      *events;
 
@@ -134,7 +134,7 @@ get_event_range (GcalWeekGrid *self,
   if (!self->active_date)
     return;
 
-  week_start = get_start_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
   week_start_dst = g_date_time_is_daylight_savings (week_start);
 
   if (start)
@@ -273,7 +273,7 @@ gcal_week_grid_finalize (GObject *object)
   GcalWeekGrid *self = GCAL_WEEK_GRID (object);
 
   g_clear_pointer (&self->events, gcal_range_tree_unref);
-  g_clear_pointer (&self->active_date, g_free);
+  gcal_clear_datetime (&self->active_date);
 
   G_OBJECT_CLASS (gcal_week_grid_parent_class)->finalize (object);
 }
@@ -427,7 +427,7 @@ get_today_column (GcalWeekGrid *self)
   gint days_diff;
 
   today = g_date_time_new_now_local ();
-  week_start = get_start_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
   days_diff = g_date_time_difference (today, week_start) / G_TIME_SPAN_DAY;
 
   /* Today is out of range */
@@ -872,7 +872,7 @@ gcal_week_grid_button_release (GtkWidget      *widget,
 
   /* Fake the week view's event so we can control the X and Y values */
   weekview = gtk_widget_get_ancestor (widget, GCAL_TYPE_WEEK_VIEW);
-  week_start = get_start_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
 
   if (ltr)
     {
@@ -1018,7 +1018,7 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
       goto out;
     }
 
-  week_start = get_start_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
   dnd_date = g_date_time_add_minutes (week_start, drop_cell * 30);
 
   /*
@@ -1256,10 +1256,9 @@ gcal_week_grid_clear_marks (GcalWeekGrid *self)
 
 void
 gcal_week_grid_set_date (GcalWeekGrid *self,
-                         icaltimetype *date)
+                         GDateTime    *date)
 {
-  g_clear_pointer (&self->active_date, g_free);
-  self->active_date = gcal_dup_icaltime (date);
+  gcal_set_date_time (&self->active_date, date);
 
   gtk_widget_queue_resize (GTK_WIDGET (self));
   gtk_widget_queue_draw (GTK_WIDGET (self));

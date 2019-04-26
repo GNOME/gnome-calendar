@@ -44,7 +44,7 @@ struct _GcalApplication
   GtkCssProvider     *colors_provider;
 
   gchar              *uuid;
-  icaltimetype       *initial_date;
+  GDateTime          *initial_date;
 
   GcalShellSearchProvider *search_provider;
 
@@ -196,7 +196,7 @@ gcal_application_finalize (GObject *object)
 
   GCAL_ENTRY;
 
-  g_clear_pointer (&self->initial_date, g_free);
+  gcal_clear_datetime (&self->initial_date);
   g_clear_pointer (&self->uuid, g_free);
   g_clear_object (&self->context);
   g_clear_object (&self->colors_provider);
@@ -257,12 +257,7 @@ gcal_application_activate (GApplication *application)
   if (!self->window)
     {
       if (!self->initial_date)
-        {
-          g_autoptr (GDateTime) now = NULL;
-
-          now = g_date_time_new_now_local ();
-          self->initial_date = datetime_to_icaltime (now);
-        }
+        self->initial_date = g_date_time_new_now (gcal_context_get_timezone (self->context));
 
       self->window =  g_object_new (GCAL_TYPE_WINDOW,
                                     "application", self,
@@ -279,7 +274,7 @@ gcal_application_activate (GApplication *application)
   if (self->initial_date)
     g_object_set (self->window, "active-date", self->initial_date, NULL);
 
-  g_clear_pointer (&self->initial_date, g_free);
+  gcal_clear_datetime (&self->initial_date);
 
   if (self->uuid != NULL)
     {
@@ -369,10 +364,7 @@ gcal_application_command_line (GApplication            *app,
                                           result.tm_min,
                                           0);
 
-          g_clear_pointer (&self->initial_date, g_free);
-
-          if (initial_date)
-            self->initial_date = datetime_to_icaltime (initial_date);
+          gcal_set_date_time (&self->initial_date, initial_date);
         }
       else
         {
@@ -663,6 +655,5 @@ gcal_application_set_initial_date (GcalApplication *self,
 {
   g_return_if_fail (GCAL_IS_APPLICATION (self));
 
-  g_clear_pointer (&self->initial_date, g_free);
-  self->initial_date = datetime_to_icaltime (initial_date);
+  gcal_set_date_time (&self->initial_date, initial_date);
 }

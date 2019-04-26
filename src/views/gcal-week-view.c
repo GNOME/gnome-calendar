@@ -49,7 +49,7 @@ struct _GcalWeekView
   GtkWidget          *week_grid;
 
   /* property */
-  icaltimetype       *date;
+  GDateTime          *date;
   GcalContext        *context;
 
   guint               scroll_grid_timeout_id;
@@ -129,8 +129,8 @@ update_grid_scroll_position (GcalWeekView *self)
     }
 
   now = g_date_time_new_now_local ();
-  week_start = get_start_of_week (self->date);
-  week_end = get_end_of_week (self->date);
+  week_start = gcal_date_time_get_start_of_week (self->date);
+  week_end = gcal_date_time_get_end_of_week (self->date);
 
   /* Don't animate when not today */
   if (datetime_compare_date (now, week_start) < 0 || datetime_compare_date (now, week_end) >= 0)
@@ -173,7 +173,7 @@ schedule_position_scroll (GcalWeekView *self)
 }
 
 /* GcalView implementation */
-static icaltimetype*
+static GDateTime*
 gcal_week_view_get_date (GcalView *view)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (view);
@@ -182,15 +182,14 @@ gcal_week_view_get_date (GcalView *view)
 }
 
 static void
-gcal_week_view_set_date (GcalView     *view,
-                         icaltimetype *date)
+gcal_week_view_set_date (GcalView  *view,
+                         GDateTime *date)
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (view);
 
   GCAL_ENTRY;
 
-  g_clear_pointer (&self->date, g_free);
-  self->date = gcal_dup_icaltime (date);
+  gcal_set_date_time (&self->date, date);
 
   /* Propagate the new date */
   gcal_week_grid_set_date (GCAL_WEEK_GRID (self->week_grid), date);

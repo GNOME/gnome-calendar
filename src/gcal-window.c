@@ -290,7 +290,6 @@ update_active_date (GcalWindow *window,
                     GDateTime  *new_date)
 {
   g_autoptr (GDateTime) previous_date = NULL;
-  g_autofree icaltimetype *new_icaldate = NULL;
   g_autofree gchar *new_date_string = NULL;
   GcalManager *manager;
   GDateTime *date_start, *date_end;
@@ -300,16 +299,15 @@ update_active_date (GcalWindow *window,
   GCAL_ENTRY;
 
   previous_date = window->active_date;
-  window->active_date = new_date;
+  window->active_date = g_date_time_ref (new_date);
   manager = gcal_context_get_manager (window->context);
 
   new_date_string = g_date_time_format (new_date, "%x %X %z");
   g_debug ("Updating active date to %s", new_date_string);
 
-  new_icaldate = datetime_to_icaltime (new_date);
-  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), new_icaldate);
-  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), new_icaldate);
-  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_YEAR]), new_icaldate);
+  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), new_date);
+  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), new_date);
+  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_YEAR]), new_date);
 
   /* year_view */
   if (g_date_time_get_year (previous_date) != g_date_time_get_year (new_date))
@@ -367,10 +365,10 @@ update_active_date (GcalWindow *window,
       !g_date_valid (&old_week) ||
       g_date_get_iso8601_week_of_year (&old_week) != g_date_get_iso8601_week_of_year (&new_week))
     {
-      date_start = get_start_of_week (new_icaldate);
+      date_start = gcal_date_time_get_start_of_week (new_date);
       range_start = g_date_time_to_unix (date_start);
 
-      date_end = get_end_of_week (new_icaldate);
+      date_end = gcal_date_time_get_end_of_week (new_date);
       range_end = g_date_time_to_unix (date_end);
 
       gcal_manager_set_subscriber (manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->week_view), range_start, range_end);
@@ -633,8 +631,8 @@ set_new_event_mode (GcalWindow *window,
 /* new-event interaction: second variant */
 static void
 show_new_event_widget (GcalView   *view,
-                       gpointer    start_span,
-                       gpointer    end_span,
+                       GDateTime  *start_span,
+                       GDateTime  *end_span,
                        gdouble     x,
                        gdouble     y,
                        GcalWindow *window)
@@ -1234,7 +1232,7 @@ gcal_window_finalize (GObject *object)
   g_clear_object (&window->context);
   g_clear_object (&window->views_switcher);
 
-  g_clear_pointer (&window->active_date, g_free);
+  gcal_clear_datetime (&window->active_date);
 
   G_OBJECT_CLASS (gcal_window_parent_class)->finalize (object);
 
@@ -1290,7 +1288,7 @@ gcal_window_set_property (GObject      *object,
       break;
 
     case PROP_ACTIVE_DATE:
-      update_active_date (GCAL_WINDOW (object), icaltime_to_datetime (g_value_get_boxed (value)));
+      update_active_date (GCAL_WINDOW (object), g_value_get_boxed (value));
       break;
 
     case PROP_NEW_EVENT_MODE:
@@ -1349,7 +1347,7 @@ gcal_window_get_property (GObject    *object,
   switch (property_id)
     {
     case PROP_ACTIVE_DATE:
-      g_value_take_boxed (value, datetime_to_icaltime (self->active_date));
+      g_value_set_boxed (value, self->active_date);
       break;
 
     case PROP_ACTIVE_VIEW:
@@ -1420,7 +1418,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   properties[PROP_ACTIVE_DATE] = g_param_spec_boxed ("active-date",
                                                      "Date",
                                                      "The active/selected date",
-                                                     ICAL_TIME_TYPE,
+                                                     G_TYPE_DATE_TIME,
                                                      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_ACTIVE_VIEW] = g_param_spec_enum ("active-view",
@@ -1529,7 +1527,7 @@ gcal_window_init (GcalWindow *self)
                               self,
                               NULL);
 
-  self->active_date = g_date_time_new_now_local ();
+  self->active_date = g_date_time_new_from_unix_local (0);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
   /* setup accels */
@@ -1554,7 +1552,7 @@ gcal_window_init (GcalWindow *self)
  */
 GtkWidget*
 gcal_window_new_with_date (GcalApplication *app,
-                           icaltimetype    *date)
+                           GDateTime       *date)
 {
   return g_object_new (GCAL_TYPE_WINDOW,
                        "application", GTK_APPLICATION (app),

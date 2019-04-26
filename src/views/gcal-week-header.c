@@ -89,7 +89,7 @@ struct _GcalWeekHeader
    */
   gboolean            expanded;
 
-  icaltimetype       *active_date;
+  GDateTime          *active_date;
 
   gint                selection_start;
   gint                selection_end;
@@ -150,7 +150,7 @@ add_weather_infos (GcalWeekHeader *self,
   if (!self->active_date)
     return 0;
 
-  week_start_dt = get_start_of_week (self->active_date);
+  week_start_dt = gcal_date_time_get_start_of_week (self->active_date);
   g_date_set_dmy (&week_start,
                   g_date_time_get_day_of_month (week_start_dt),
                   g_date_time_get_month (week_start_dt),
@@ -320,7 +320,7 @@ on_button_released (GcalWeekHeader *self,
       start = start - end;
     }
 
-  week_start = get_start_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
   selection_start = g_date_time_add_days (week_start, start);
   selection_end = end == start ? g_date_time_ref (selection_start) : g_date_time_add_days (week_start, end + 1);
 
@@ -385,7 +385,7 @@ get_today_column (GcalWeekHeader *self)
   gint days_diff;
 
   today = g_date_time_new_now_local ();
-  week_start = get_start_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
   days_diff = g_date_time_difference (today, week_start) / G_TIME_SPAN_DAY;
 
   /* Today is out of range */
@@ -630,7 +630,7 @@ split_event_widget_at_column (GcalWeekHeader *self,
   gint new_width;
   gint old_width;
 
-  week_start = get_start_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
   column_date = g_date_time_add_days (week_start, column);
   end_column_date = g_date_time_add_days (column_date, 1);
 
@@ -821,8 +821,8 @@ add_event_to_grid (GcalWeekHeader *self,
   if (!gcal_event_is_multiday (event))
     return;
 
-  week_start = get_start_of_week (self->active_date);
-  week_end = get_end_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
+  week_end = gcal_date_time_get_end_of_week (self->active_date);
 
   gcal_event_widget_set_date_start (GCAL_EVENT_WIDGET (widget), week_start);
   gcal_event_widget_set_date_end (GCAL_EVENT_WIDGET (widget), week_end);
@@ -889,7 +889,7 @@ add_event_to_grid (GcalWeekHeader *self,
 
 static void
 update_unchanged_events (GcalWeekHeader *self,
-                         icaltimetype   *new_icaldt)
+                         GDateTime      *new_date)
 {
   g_autoptr (GDateTime) new_week_start, new_week_end;
   g_autoptr (GDateTime) utc_week_start, utc_week_end;
@@ -898,8 +898,8 @@ update_unchanged_events (GcalWeekHeader *self,
 
   events_to_update = NULL;
 
-  new_week_start = get_start_of_week (new_icaldt);
-  new_week_end = get_end_of_week (new_icaldt);
+  new_week_start = gcal_date_time_get_start_of_week (new_date);
+  new_week_end = gcal_date_time_get_end_of_week (new_date);
 
   utc_week_start = g_date_time_new_utc (g_date_time_get_year (new_week_start),
                                         g_date_time_get_month (new_week_start),
@@ -972,7 +972,7 @@ update_title (GcalWeekHeader *self)
   if(!self->active_date)
     return;
 
-  week_start = get_start_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
   week_end = g_date_time_add_days (week_start, 6);
   week_mid = g_date_time_add_days (week_start, 3);
 
@@ -1157,7 +1157,7 @@ gcal_week_header_finalize (GObject *object)
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
   gint i;
 
-  g_clear_pointer (&self->active_date, g_free);
+  gcal_clear_datetime (&self->active_date);
 
   for (i = 0; i < 7; i++)
     g_list_free (self->events[i]);
@@ -1229,9 +1229,9 @@ gcal_week_header_draw (GtkWidget      *widget,
   pango_font_description_set_weight (bold_font, PANGO_WEIGHT_MEDIUM);
   pango_layout_set_font_description (layout, bold_font);
 
-  week_start = get_start_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
   week_end = g_date_time_add_days (week_start, 6);
-  current_cell = icaltime_day_of_week (*(self->active_date)) - 1;
+  current_cell = g_date_time_get_day_of_week (self->active_date) - 1;
   current_cell = (7 + current_cell - self->first_weekday) % 7;
   today_column = get_today_column (self);
 
@@ -1562,7 +1562,7 @@ gcal_week_header_drag_drop (GtkWidget      *widget,
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
   start_date = gcal_event_get_date_start (event);
   end_date = gcal_event_get_date_end (event);
-  week_start = get_start_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
 
   turn_all_day = !gcal_event_is_multiday (event) || gcal_event_get_all_day (event);
 
@@ -1736,8 +1736,8 @@ gcal_week_header_add_event (GcalWeekHeader *self,
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
   all_day = gcal_event_get_all_day (event);
-  week_start = get_start_of_week (self->active_date);
-  week_end = get_end_of_week (self->active_date);
+  week_start = gcal_date_time_get_start_of_week (self->active_date);
+  week_end = gcal_date_time_get_end_of_week (self->active_date);
 
   /* Retrieve the real start and end dates */
   if (all_day)
@@ -1903,22 +1903,22 @@ gcal_week_header_clear_marks (GcalWeekHeader *self)
 
 void
 gcal_week_header_set_date (GcalWeekHeader *self,
-                           icaltimetype   *date)
+                           GDateTime      *date)
 {
-  icaltimetype *old_date, *new_date;
+  GDateTime *old_date, *new_date;
 
   old_date = self->active_date;
-  new_date = gcal_dup_icaltime (date);
+  new_date = g_date_time_ref (date);
 
   /*
    * If the active date changed, but we're still in the same week,
    * there's no need to recalculate visible events.
    */
   if (old_date && new_date &&
-      old_date->year == new_date->year &&
-      icaltime_week_number (*old_date) == icaltime_week_number (*new_date))
+      g_date_time_get_year (old_date) == g_date_time_get_year (new_date) &&
+      g_date_time_get_week_numbering_year (old_date) == g_date_time_get_week_numbering_year (new_date))
     {
-      g_free (new_date);
+      g_date_time_unref (new_date);
       return;
     }
 
@@ -1932,6 +1932,6 @@ gcal_week_header_set_date (GcalWeekHeader *self,
 
   update_weather_infos (self);
 
-  g_clear_pointer (&old_date, g_free);
+  gcal_clear_datetime (&old_date);
 }
 

@@ -40,8 +40,8 @@ gcal_view_default_init (GcalViewInterface *iface)
                                        g_param_spec_boxed ("active-date",
                                                            "The active date",
                                                            "The active/selecetd date in the view",
-                                                           ICAL_TIME_TYPE,
-                                                           G_PARAM_READWRITE));
+                                                           G_TYPE_DATE_TIME,
+                                                           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
 
   /**
    * GcalView::manager:
@@ -67,8 +67,8 @@ gcal_view_default_init (GcalViewInterface *iface)
                 NULL, NULL, NULL,
                 G_TYPE_NONE,
                 4,
-                G_TYPE_POINTER,
-                G_TYPE_POINTER,
+                G_TYPE_DATE_TIME,
+                G_TYPE_DATE_TIME,
                 G_TYPE_DOUBLE,
                 G_TYPE_DOUBLE);
 
@@ -83,7 +83,9 @@ gcal_view_default_init (GcalViewInterface *iface)
                 G_SIGNAL_RUN_LAST,
                 G_STRUCT_OFFSET (GcalViewInterface, create_event_detailed),
                 NULL, NULL, NULL,
-                G_TYPE_NONE, 2, G_TYPE_POINTER, G_TYPE_POINTER);
+                G_TYPE_NONE, 2,
+                G_TYPE_DATE_TIME,
+                G_TYPE_DATE_TIME);
 
   /**
    * GcalView::event-activated:
@@ -102,13 +104,13 @@ gcal_view_default_init (GcalViewInterface *iface)
 /**
  * gcal_view_set_date:
  * @view: a #GcalView
- * @date: an #icaltimetype
+ * @date: an #GDateTime
  *
  * Sets the date of @view.
  */
 void
 gcal_view_set_date (GcalView     *view,
-                    icaltimetype *date)
+                    GDateTime *date)
 {
   g_return_if_fail (GCAL_IS_VIEW (view));
   g_return_if_fail (GCAL_VIEW_GET_IFACE (view)->set_date);
@@ -143,9 +145,9 @@ gcal_view_get_context (GcalView *self)
  *
  * Retrieves the date of @view.
  *
- * Returns: (transfer none): an #icaltimetype.
+ * Returns: (transfer none): an #GDateTime.
  */
-icaltimetype*
+GDateTime*
 gcal_view_get_date (GcalView *view)
 {
   g_return_val_if_fail (GCAL_IS_VIEW (view), NULL);
