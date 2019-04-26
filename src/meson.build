@@ -20,6 +20,7 @@ gcal_deps = [
 ]
 
 sources = files(
+  'utils/gcal-date-time-utils.c',
   'utils/gcal-utils.c',
   'views/gcal-month-cell.c',
   'views/gcal-month-popover.c',

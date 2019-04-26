@@ -18,7 +18,7 @@
 
 #include <glib.h>
 
-#include "gcal-utils.h"
+#include "utils/gcal-utils.h"
 #include "gcal-event.h"
 
 #define STUB_EVENT "BEGIN:VEVENT\n"             \
