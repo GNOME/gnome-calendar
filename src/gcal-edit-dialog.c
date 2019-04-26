@@ -1260,10 +1260,10 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
    *
    * The #GcalManager of the dialog.
    */
-  properties[PROP_CONTEXT] = g_param_spec_object ("manager",
-                                                  "Manager of the dialog",
-                                                  "The manager of the dialog",
-                                                  GCAL_TYPE_MANAGER,
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Context of the dialog",
+                                                  "The context of the dialog",
+                                                  GCAL_TYPE_CONTEXT,
                                                   G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
