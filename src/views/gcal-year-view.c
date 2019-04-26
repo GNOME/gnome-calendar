@@ -222,8 +222,8 @@ update_selected_dates_from_button_data (GcalYearView *year_view)
 
       gcal_clear_date_time (&year_view->end_selected_date);
       year_view->end_selected_date = g_date_time_new_local (g_date_time_get_year (year_view->date),
-                                                            selected_data.start_month + 1,
-                                                            selected_data.start_day,
+                                                            selected_data.end_month + 1,
+                                                            selected_data.end_day,
                                                             23, 59, 59);
     }
   else
@@ -419,9 +419,6 @@ update_sidebar (GcalYearView *year_view)
 
   gtk_container_foreach (GTK_CONTAINER (year_view->events_sidebar), (GtkCallback) gtk_widget_destroy, NULL);
 
-  if (!year_view->start_selected_date || !year_view->end_selected_date)
-    return;
-
   days_span = g_date_time_get_day_of_year (year_view->end_selected_date) - g_date_time_get_day_of_year (year_view->start_selected_date) + 1;
   days_widgets_array = g_new0 (GList*, days_span);
 
@@ -506,18 +503,20 @@ update_sidebar_headers (GtkListBoxRow *row,
 
   if (before_shift == -1 || before_shift != row_shift)
     {
+      g_autoptr (GDateTime) row_day = NULL;
       g_autoptr (GDateTime) now = NULL;
       GtkWidget *label;
       gchar *label_str;
 
       row_header = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
       now = g_date_time_new_now_local ();
+      row_day = g_date_time_add_days (year_view->start_selected_date, row_shift);
 
-      if (gcal_date_time_compare_date (year_view->start_selected_date, now) == 0)
+      if (gcal_date_time_compare_date (row_day, now) == 0)
         label_str = g_strdup (_("Today"));
       else
         /* Translators: This is a date format in the sidebar of the year view. */
-        label_str = g_date_time_format (year_view->start_selected_date, _("%B %d"));
+        label_str = g_date_time_format (row_day, _("%B %d"));
 
       label = gtk_label_new (label_str);
       gtk_style_context_add_class (gtk_widget_get_style_context (label), "sidebar-header");
