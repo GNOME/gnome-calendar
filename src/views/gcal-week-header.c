@@ -1905,33 +1905,29 @@ void
 gcal_week_header_set_date (GcalWeekHeader *self,
                            GDateTime      *date)
 {
-  GDateTime *old_date, *new_date;
-
-  old_date = self->active_date;
-  new_date = g_date_time_ref (date);
+  gboolean had_date;
 
   /*
    * If the active date changed, but we're still in the same week,
    * there's no need to recalculate visible events.
    */
-  if (old_date && new_date &&
-      g_date_time_get_year (old_date) == g_date_time_get_year (new_date) &&
-      g_date_time_get_week_of_year (old_date) == g_date_time_get_week_of_year (new_date))
+  if (self->active_date && date &&
+      g_date_time_get_year (self->active_date) == g_date_time_get_year (date) &&
+      g_date_time_get_week_of_year (self->active_date) == g_date_time_get_week_of_year (date))
     {
-      g_date_time_unref (new_date);
       return;
     }
 
-  self->active_date = new_date;
+  had_date = self->active_date != NULL;
+
+  gcal_set_date_time (&self->active_date, date);
 
   update_title (self);
   gtk_widget_queue_draw (GTK_WIDGET (self));
 
-  if (old_date)
+  if (had_date)
     update_unchanged_events (self, self->active_date);
 
   update_weather_infos (self);
-
-  gcal_clear_date_time (&old_date);
 }
 
