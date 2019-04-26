@@ -196,7 +196,7 @@ gcal_application_finalize (GObject *object)
 
   GCAL_ENTRY;
 
-  gcal_clear_datetime (&self->initial_date);
+  gcal_clear_date_time (&self->initial_date);
   g_clear_pointer (&self->uuid, g_free);
   g_clear_object (&self->context);
   g_clear_object (&self->colors_provider);
@@ -274,7 +274,7 @@ gcal_application_activate (GApplication *application)
   if (self->initial_date)
     g_object_set (self->window, "active-date", self->initial_date, NULL);
 
-  gcal_clear_datetime (&self->initial_date);
+  gcal_clear_date_time (&self->initial_date);
 
   if (self->uuid != NULL)
     {

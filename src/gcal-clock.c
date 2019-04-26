@@ -82,7 +82,7 @@ update_current_date (GcalClock *self)
 
   g_debug ("Updating clock time");
 
-  gcal_clear_datetime (&self->current);
+  gcal_clear_date_time (&self->current);
   self->current = g_date_time_ref (now);
 
   GCAL_EXIT;
@@ -194,7 +194,7 @@ gcal_clock_finalize (GObject *object)
       self->timeout_id = 0;
     }
 
-  gcal_clear_datetime (&self->current);
+  gcal_clear_date_time (&self->current);
 
   g_clear_object (&self->cancellable);
   g_clear_object (&self->proxy);

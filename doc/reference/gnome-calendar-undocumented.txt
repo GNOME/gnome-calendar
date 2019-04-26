@@ -101,7 +101,7 @@ gcal_application_get_settings (<parameters>)
 gcal_application_new
 gcal_application_set_initial_date (<parameters>)
 gcal_application_set_uuid (<parameters>)
-gcal_clear_datetime (<parameters>)
+gcal_clear_date_time (<parameters>)
 gcal_date_chooser_day_get_date (<parameters>)
 gcal_date_chooser_day_new
 gcal_date_chooser_day_set_date (<parameters>)

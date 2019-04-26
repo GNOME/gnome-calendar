@@ -37,7 +37,7 @@ gcal_set_date_time (GDateTime **dest,
 {
   gboolean changed = *dest != src;
 
-  gcal_clear_datetime (dest);
+  gcal_clear_date_time (dest);
 
   if (src)
     *dest = g_date_time_ref (src);

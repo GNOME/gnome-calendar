@@ -214,13 +214,13 @@ update_selected_dates_from_button_data (GcalYearView *year_view)
 
       order_selected_data (&selected_data);
 
-      gcal_clear_datetime (&year_view->start_selected_date);
+      gcal_clear_date_time (&year_view->start_selected_date);
       year_view->start_selected_date = g_date_time_new_local (g_date_time_get_year (year_view->date),
                                                               selected_data.start_month + 1,
                                                               selected_data.start_day,
                                                               0, 0, 0);
 
-      gcal_clear_datetime (&year_view->end_selected_date);
+      gcal_clear_date_time (&year_view->end_selected_date);
       year_view->end_selected_date = g_date_time_new_local (g_date_time_get_year (year_view->date),
                                                             selected_data.start_month + 1,
                                                             selected_data.start_day,
@@ -235,14 +235,14 @@ update_selected_dates_from_button_data (GcalYearView *year_view)
       else
         start_date = g_date_time_new_now_local ();
 
-      gcal_clear_datetime (&year_view->start_selected_date);
+      gcal_clear_date_time (&year_view->start_selected_date);
       year_view->start_selected_date = g_date_time_new (gcal_context_get_timezone (year_view->context),
                                                         g_date_time_get_year (start_date),
                                                         g_date_time_get_month (start_date),
                                                         g_date_time_get_day_of_month (start_date),
                                                         0, 0, 0);
 
-      gcal_clear_datetime (&year_view->end_selected_date);
+      gcal_clear_date_time (&year_view->end_selected_date);
       year_view->end_selected_date = g_date_time_add_days (year_view->start_selected_date, 1);
 
       year_view->selected_data->start_day = g_date_time_get_day_of_month (year_view->start_selected_date);

@@ -465,7 +465,7 @@ ICAL_TIME_TYPE
 ALIGNED
 MINUTES_PER_DAY
 MAX_MINUTES
-gcal_clear_datetime
+gcal_clear_date_time
 GcalWindowViewType
 EventEditableProperty
 GcalTranslateFunc

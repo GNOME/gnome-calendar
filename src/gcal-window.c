@@ -320,8 +320,8 @@ update_active_date (GcalWindow *window,
 
       gcal_manager_set_subscriber (manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->year_view), range_start, range_end);
 
-      gcal_clear_datetime (&date_start);
-      gcal_clear_datetime (&date_end);
+      gcal_clear_date_time (&date_start);
+      gcal_clear_date_time (&date_end);
     }
 
   /* month_view */
@@ -338,8 +338,8 @@ update_active_date (GcalWindow *window,
 
       gcal_manager_set_subscriber (manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->month_view), range_start, range_end);
 
-      gcal_clear_datetime (&date_start);
-      gcal_clear_datetime (&date_end);
+      gcal_clear_date_time (&date_start);
+      gcal_clear_date_time (&date_end);
     }
 
   /* week_view */
@@ -373,8 +373,8 @@ update_active_date (GcalWindow *window,
 
       gcal_manager_set_subscriber (manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->week_view), range_start, range_end);
 
-      gcal_clear_datetime (&date_start);
-      gcal_clear_datetime (&date_end);
+      gcal_clear_date_time (&date_start);
+      gcal_clear_date_time (&date_end);
     }
 
   update_today_button_sensitive (window);
@@ -1232,7 +1232,7 @@ gcal_window_finalize (GObject *object)
   g_clear_object (&window->context);
   g_clear_object (&window->views_switcher);
 
-  gcal_clear_datetime (&window->active_date);
+  gcal_clear_date_time (&window->active_date);
 
   G_OBJECT_CLASS (gcal_window_parent_class)->finalize (object);
 

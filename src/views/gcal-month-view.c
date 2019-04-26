@@ -2090,7 +2090,7 @@ gcal_month_view_scroll_event (GtkWidget      *widget,
       diff = self->scroll_value > 0 ? 1 : -1;
       new_date = g_date_time_add_months (self->date, diff);
 
-      gcal_clear_datetime (&self->date);
+      gcal_clear_date_time (&self->date);
       self->date = g_steal_pointer (&new_date);
       self->scroll_value = 0;
 
@@ -2179,7 +2179,7 @@ gcal_month_view_finalize (GObject *object)
 {
   GcalMonthView *self = GCAL_MONTH_VIEW (object);
 
-  gcal_clear_datetime (&self->date);
+  gcal_clear_date_time (&self->date);
   g_clear_pointer (&self->children, g_hash_table_destroy);
   g_clear_pointer (&self->single_cell_children, g_hash_table_destroy);
   g_clear_pointer (&self->overflow_cells, g_hash_table_destroy);

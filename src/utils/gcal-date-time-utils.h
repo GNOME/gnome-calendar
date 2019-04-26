@@ -25,12 +25,12 @@
 G_BEGIN_DECLS
 
 /**
- * gcal_clear_datetime:
+ * gcal_clear_date_time:
  * @dt: location of a #GDateTime pointer
  *
  * Unreferences @dt if not %NULL, and set it to %NULL.
  */
-#define gcal_clear_datetime(dt) g_clear_pointer (dt, g_date_time_unref)
+#define gcal_clear_date_time(dt) g_clear_pointer (dt, g_date_time_unref)
 
 gboolean             gcal_set_date_time                          (GDateTime         **dest,
                                                                   GDateTime          *src);

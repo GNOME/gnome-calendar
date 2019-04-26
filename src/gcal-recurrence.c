@@ -30,7 +30,7 @@ gcal_recurrence_free (GcalRecurrence *self)
   g_assert (self);
   g_assert_cmpint (self->ref_count, ==, 0);
 
-  gcal_clear_datetime (&self->limit.until);
+  gcal_clear_date_time (&self->limit.until);
   g_slice_free (GcalRecurrence, self);
 }
 

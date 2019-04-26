@@ -87,10 +87,6 @@ gint                 icaltime_compare_with_current               (const icaltime
                                                                   const icaltimetype *date2,
                                                                   time_t             *current_time_t);
 
-GDateTime*           get_start_of_week                           (icaltimetype       *date);
-
-GDateTime*           get_end_of_week                             (icaltimetype       *date);
-
 gboolean             is_clock_format_24h                         (void);
 
 /* code brought from evolution */

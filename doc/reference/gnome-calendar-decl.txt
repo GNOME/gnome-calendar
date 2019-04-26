@@ -1026,8 +1026,8 @@ void
 #define MAX_MINUTES     (7 * MINUTES_PER_DAY)
 </MACRO>
 <MACRO>
-<NAME>gcal_clear_datetime</NAME>
-#define gcal_clear_datetime(dt) g_clear_pointer (dt, g_date_time_unref)
+<NAME>gcal_clear_date_time</NAME>
+#define gcal_clear_date_time(dt) g_clear_pointer (dt, g_date_time_unref)
 </MACRO>
 <ENUM>
 <NAME>GcalWindowViewType</NAME>

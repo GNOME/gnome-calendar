@@ -881,7 +881,7 @@ gcal_month_popover_set_date (GcalMonthPopover *self,
   if (date && self->date && datetime_compare_date (self->date, date) == 0)
     return;
 
-  gcal_clear_datetime (&self->date);
+  gcal_clear_date_time (&self->date);
 
   if (date)
     {

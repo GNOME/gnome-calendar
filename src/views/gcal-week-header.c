@@ -1157,7 +1157,7 @@ gcal_week_header_finalize (GObject *object)
   GcalWeekHeader *self = GCAL_WEEK_HEADER (object);
   gint i;
 
-  gcal_clear_datetime (&self->active_date);
+  gcal_clear_date_time (&self->active_date);
 
   for (i = 0; i < 7; i++)
     g_list_free (self->events[i]);
@@ -1762,11 +1762,11 @@ gcal_week_header_add_event (GcalWeekHeader *self,
        */
       aux = week_start;
       week_start = utc_week_start;
-      gcal_clear_datetime (&aux);
+      gcal_clear_date_time (&aux);
 
       aux = week_end;
       week_end = utc_week_end;
-      gcal_clear_datetime (&aux);
+      gcal_clear_date_time (&aux);
 
     }
   else
@@ -1932,6 +1932,6 @@ gcal_week_header_set_date (GcalWeekHeader *self,
 
   update_weather_infos (self);
 
-  gcal_clear_datetime (&old_date);
+  gcal_clear_date_time (&old_date);
 }
 

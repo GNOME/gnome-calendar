@@ -273,7 +273,7 @@ gcal_week_grid_finalize (GObject *object)
   GcalWeekGrid *self = GCAL_WEEK_GRID (object);
 
   g_clear_pointer (&self->events, gcal_range_tree_unref);
-  gcal_clear_datetime (&self->active_date);
+  gcal_clear_date_time (&self->active_date);
 
   G_OBJECT_CLASS (gcal_week_grid_parent_class)->finalize (object);
 }
@@ -909,9 +909,9 @@ gcal_week_grid_button_release (GtkWidget      *widget,
                          (gdouble) out_x,
                          (gdouble) out_y);
 
-  gcal_clear_datetime (&week_start);
-  gcal_clear_datetime (&start);
-  gcal_clear_datetime (&end);
+  gcal_clear_date_time (&week_start);
+  gcal_clear_date_time (&start);
+  gcal_clear_date_time (&end);
 
   return GDK_EVENT_STOP;
 }

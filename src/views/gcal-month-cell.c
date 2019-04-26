@@ -347,7 +347,7 @@ gcal_month_cell_finalize (GObject *object)
 {
   GcalMonthCell *self = (GcalMonthCell *)object;
 
-  gcal_clear_datetime (&self->date);
+  gcal_clear_date_time (&self->date);
   g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_month_cell_parent_class)->finalize (object);
@@ -483,7 +483,7 @@ gcal_month_cell_set_date (GcalMonthCell *self,
   if (self->date && date && datetime_compare_date (self->date, date) == 0)
     return;
 
-  gcal_clear_datetime (&self->date);
+  gcal_clear_date_time (&self->date);
   self->date = g_date_time_ref (date);
 
   /* Day label */
