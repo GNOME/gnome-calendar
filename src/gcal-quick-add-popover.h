@@ -19,8 +19,8 @@
 #ifndef GCAL_QUICK_ADD_POPOVER_H
 #define GCAL_QUICK_ADD_POPOVER_H
 
+#include "gcal-context.h"
 #include "gcal-event.h"
-#include "gcal-manager.h"
 
 #include <glib.h>
 #include <gtk/gtk.h>

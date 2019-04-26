@@ -1264,7 +1264,7 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->year_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->edit_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->search_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self->context, "manager", self->quick_add_popover, "manager", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   GCAL_EXIT;
 }

@@ -43,7 +43,7 @@ struct _GcalQuickAddPopover
 
   gboolean            clock_format_24h;
 
-  GcalManager        *manager;
+  GcalContext        *context;
 };
 
 G_DEFINE_TYPE (GcalQuickAddPopover, gcal_quick_add_popover, GTK_TYPE_POPOVER)
@@ -52,7 +52,7 @@ enum {
   PROP_0,
   PROP_DATE_START,
   PROP_DATE_END,
-  PROP_MANAGER,
+  PROP_CONTEXT,
   N_PROPS
 };
 
@@ -481,10 +481,12 @@ update_header (GcalQuickAddPopover *self)
 static void
 update_default_calendar_row (GcalQuickAddPopover *self)
 {
+  GcalManager *manager;
   GtkWidget *row;
   ESource *default_source;
 
-  default_source = gcal_manager_get_default_source (self->manager);
+  manager = gcal_context_get_manager (self->context);
+  default_source = gcal_manager_get_default_source (manager);
 
   row = get_row_for_source (self, default_source);
   select_row (self, GTK_LIST_BOX_ROW (row));
@@ -534,7 +536,7 @@ on_source_changed (GcalManager         *manager,
   row = get_row_for_source (self, source);
 
   /* If the calendar changed from/to read-only, we add or remove it here */
-  if (!gcal_manager_is_client_writable (self->manager, source))
+  if (!gcal_manager_is_client_writable (manager, source))
     {
       if (row)
         gtk_container_remove (GTK_CONTAINER (self->calendars_listbox), row);
@@ -543,7 +545,7 @@ on_source_changed (GcalManager         *manager,
     }
   else if (!row)
     {
-      on_source_added (self->manager,
+      on_source_added (manager,
                        source,
                        is_source_enabled (source),
                        self);
@@ -633,6 +635,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
                       GtkWidget           *button)
 {
   ECalComponent *component;
+  GcalManager *manager;
   GDateTime *date_start, *date_end;
   GTimeZone *tz;
   GcalEvent *event;
@@ -643,6 +646,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
   if (!self->selected_row)
     return;
 
+  manager = gcal_context_get_manager (self->context);
   source = g_object_get_data (G_OBJECT (self->selected_row), "source");
 
   single_day = datetime_compare_date (self->date_end, self->date_start) == 0;
@@ -689,7 +693,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
 
   /* If we clicked edit button, send a signal; otherwise, create the event */
   if (button == self->add_button)
-    gcal_manager_create_event (self->manager, event);
+    gcal_manager_create_event (manager, event);
   else
     g_signal_emit (self, signals[EDIT_EVENT], 0, event);
 
@@ -727,7 +731,7 @@ gcal_quick_add_popover_finalize (GObject *object)
 {
   GcalQuickAddPopover *self = (GcalQuickAddPopover *)object;
 
-  g_clear_object (&self->manager);
+  g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_quick_add_popover_parent_class)->finalize (object);
 }
@@ -750,8 +754,8 @@ gcal_quick_add_popover_get_property (GObject    *object,
       g_value_set_boxed (value, self->date_start);
       break;
 
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     default:
@@ -777,14 +781,14 @@ gcal_quick_add_popover_set_property (GObject      *object,
       gcal_quick_add_popover_set_date_start (self, g_value_get_boxed (value));
       break;
 
-    case PROP_MANAGER:
-      if (g_set_object (&self->manager, g_value_get_object (value)))
+    case PROP_CONTEXT:
+      if (g_set_object (&self->context, g_value_get_object (value)))
         {
           GcalManager *manager;
           GList *sources, *l;
 
-          /* Add currently leaded sources */
-          manager = self->manager;
+          /* Add currently loaded sources */
+          manager = gcal_context_get_manager (self->context);
           sources = gcal_manager_get_sources_connected (manager);
 
           for (l = sources; l != NULL; l = g_list_next (l))
@@ -798,7 +802,7 @@ gcal_quick_add_popover_set_property (GObject      *object,
           g_signal_connect (manager, "source-removed", G_CALLBACK (on_source_removed), self);
           g_signal_connect_swapped (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self);
 
-          g_object_notify (G_OBJECT (self), "manager");
+          g_object_notify (G_OBJECT (self), "context");
         }
       break;
 
@@ -884,11 +888,11 @@ gcal_quick_add_popover_class_init (GcalQuickAddPopoverClass *klass)
    * The manager of the application.
    */
   g_object_class_install_property (object_class,
-                                   PROP_MANAGER,
-                                   g_param_spec_object ("manager",
-                                                        "Manager of the application",
-                                                        "The singleton manager of the application",
-                                                        GCAL_TYPE_MANAGER,
+                                   PROP_CONTEXT,
+                                   g_param_spec_object ("context",
+                                                        "Context of the application",
+                                                        "The singleton context of the application",
+                                                        GCAL_TYPE_CONTEXT,
                                                         G_PARAM_READWRITE));
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/quick-add-popover.ui");
