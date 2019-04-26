@@ -20,6 +20,7 @@
 #define __GCAL_UTILS_H__
 
 #include "gcal-date-time-utils.h"
+#include "gcal-thread-utils.h"
 #include "gcal-manager.h"
 
 #include <gtk/gtk.h>

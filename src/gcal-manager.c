@@ -115,88 +115,6 @@ enum
 static guint       signals[NUM_SIGNALS] = { 0, };
 static GParamSpec *properties[NUM_PROPS] = { NULL, };
 
-/* -- start: threading related code provided by Milan Crha */
-typedef struct {
-  EThreadJobFunc      func;
-  gpointer            user_data;
-  GDestroyNotify      free_user_data;
-
-  GCancellable       *cancellable;
-  GError             *error;
-} ThreadJobData;
-
-static void
-thread_job_data_free (gpointer ptr)
-{
-  ThreadJobData *tjd = ptr;
-
-  if (tjd != NULL)
-    {
-      /* This should go to UI with more info/description,
-       * if it is not G_IOI_ERROR_CANCELLED */
-      if (tjd->error != NULL && !g_error_matches (tjd->error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
-        g_warning ("Job failed: %s\n", tjd->error->message);
-
-      if (tjd->free_user_data != NULL)
-        tjd->free_user_data (tjd->user_data);
-
-      g_clear_object (&tjd->cancellable);
-      g_clear_error (&tjd->error);
-      g_free (tjd);
-    }
-}
-
-static gpointer
-thread_job_thread (gpointer user_data)
-{
-  ThreadJobData *tjd = user_data;
-
-  g_return_val_if_fail (tjd != NULL, NULL);
-
-  if (tjd->func != NULL)
-    tjd->func (tjd->user_data, tjd->cancellable, &tjd->error);
-
-  thread_job_data_free (tjd);
-
-  return g_thread_self ();
-}
-
-static GCancellable*
-submit_thread_job (EThreadJobFunc func,
-                   gpointer user_data,
-                   GDestroyNotify free_user_data)
-{
-  ThreadJobData *tjd;
-  GThread *thread;
-  GCancellable *cancellable;
-
-  cancellable = g_cancellable_new ();
-
-  tjd = g_new0 (ThreadJobData, 1);
-  tjd->func = func;
-  tjd->user_data = user_data;
-  tjd->free_user_data = free_user_data;
-  /* user should be able to cancel this cancellable somehow */
-  tjd->cancellable = g_object_ref (cancellable);
-  tjd->error = NULL;
-
-  thread = g_thread_try_new (NULL,
-                             thread_job_thread, tjd,
-                             &tjd->error);
-  if (thread != NULL)
-    {
-      g_thread_unref (thread);
-    }
-  else
-    {
-      thread_job_data_free (tjd);
-      g_clear_object (&cancellable);
-    }
-
-  return cancellable;
-}
-/* -- end: threading related code provided by Milan Crha -- */
-
 static void
 free_async_ops_data (AsyncOpsData *data)
 {
@@ -1027,7 +945,7 @@ gcal_manager_setup_shell_search (GcalManager             *self,
   if (self->shell_search_data_model)
     return;
 
-  self->shell_search_data_model = e_cal_data_model_new (submit_thread_job);
+  self->shell_search_data_model = e_cal_data_model_new (gcal_thread_submit_job);
   g_signal_connect_swapped (self->shell_search_data_model,
                             "view-state-changed",
                             G_CALLBACK (model_state_changed),
@@ -1902,8 +1820,8 @@ gcal_manager_startup (GcalManager *self)
   g_signal_connect_swapped (self->source_registry, "source-changed", G_CALLBACK (source_changed), self);
 
   /* create data model */
-  self->e_data_model = e_cal_data_model_new (submit_thread_job);
-  self->search_data_model = e_cal_data_model_new (submit_thread_job);
+  self->e_data_model = e_cal_data_model_new (gcal_thread_submit_job);
+  self->search_data_model = e_cal_data_model_new (gcal_thread_submit_job);
 
   e_cal_data_model_set_expand_recurrences (self->e_data_model, TRUE);
   e_cal_data_model_set_timezone (self->e_data_model, e_cal_util_get_system_timezone ());

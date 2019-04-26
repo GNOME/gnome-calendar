@@ -22,6 +22,7 @@ gcal_deps = [
 sources = files(
   'search/gcal-search-button.c',
   'utils/gcal-date-time-utils.c',
+  'utils/gcal-thread-utils.c',
   'utils/gcal-utils.c',
   'views/gcal-month-cell.c',
   'views/gcal-month-popover.c',
