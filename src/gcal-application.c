@@ -484,7 +484,7 @@ gcal_application_init (GcalApplication *self)
   g_signal_connect_swapped (manager, "source-added", G_CALLBACK (process_sources), self);
   g_signal_connect_swapped (manager, "source-changed", G_CALLBACK (process_sources), self);
 
-  self->search_provider = gcal_shell_search_provider_new (manager);
+  self->search_provider = gcal_shell_search_provider_new (self->context);
 }
 
 static void

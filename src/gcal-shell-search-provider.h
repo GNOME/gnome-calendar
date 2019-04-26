@@ -22,7 +22,7 @@
 #include <glib-object.h>
 #include <gio/gio.h>
 
-#include "gcal-manager.h"
+#include "gcal-context.h"
 
 G_BEGIN_DECLS
 
@@ -30,7 +30,7 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE (GcalShellSearchProvider, gcal_shell_search_provider, GCAL, SHELL_SEARCH_PROVIDER, GObject)
 
-GcalShellSearchProvider* gcal_shell_search_provider_new           (GcalManager             *manager);
+GcalShellSearchProvider* gcal_shell_search_provider_new           (GcalContext             *context);
 
 gboolean                 gcal_shell_search_provider_dbus_export   (GcalShellSearchProvider *search_provider,
                                                                    GDBusConnection         *connection,

@@ -38,7 +38,7 @@ struct _GcalShellSearchProvider
   GObject             parent;
 
   GcalShellSearchProvider2 *skel;
-  GcalManager        *manager;
+  GcalContext        *context;
 
   PendingSearch      *pending_search;
   guint               scheduled_search_id;
@@ -53,7 +53,7 @@ G_DEFINE_TYPE_WITH_CODE (GcalShellSearchProvider, gcal_shell_search_provider, G_
 enum
 {
   PROP_0,
-  PROP_MANAGER,
+  PROP_CONTEXT,
   N_PROPS
 };
 
@@ -79,22 +79,26 @@ execute_search (GcalShellSearchProvider *self)
   g_autoptr (GDateTime) end = NULL;
   g_autoptr (GDateTime) now = NULL;
   g_autofree gchar *search_query = NULL;
+  GcalManager *manager;
   time_t range_start, range_end;
   guint i;
 
   GCAL_ENTRY;
 
-  if (gcal_manager_get_loading (self->manager))
+  manager = gcal_context_get_manager (self->context);
+
+  if (gcal_manager_get_loading (manager))
     GCAL_RETURN (TRUE);
 
-  now = g_date_time_new_now_local ();
+  now = g_date_time_new_now (gcal_context_get_timezone (self->context));
   start = g_date_time_add_weeks (now, -1);
   range_start = g_date_time_to_unix (start);
 
   end = g_date_time_add_weeks (now, 3);
   range_end = g_date_time_to_unix (end);
 
-  gcal_manager_set_shell_search_subscriber (self->manager, E_CAL_DATA_MODEL_SUBSCRIBER (self),
+  gcal_manager_set_shell_search_subscriber (manager,
+                                            E_CAL_DATA_MODEL_SUBSCRIBER (self),
                                             range_start, range_end);
 
   search_query = g_strdup_printf ("(or (contains? \"summary\" \"%s\") (contains? \"description\" \"%s\"))",
@@ -112,7 +116,7 @@ execute_search (GcalShellSearchProvider *self)
       search_query = g_steal_pointer (&complete_query);
     }
 
-  gcal_manager_set_shell_search_query (self->manager,  search_query);
+  gcal_manager_set_shell_search_query (manager,  search_query);
 
   self->scheduled_search_id = 0;
   g_application_hold (g_application_get_default ());
@@ -125,6 +129,8 @@ schedule_search (GcalShellSearchProvider *self,
                  GDBusMethodInvocation   *invocation,
                  gchar                  **terms)
 {
+  GcalManager *manager;
+
   GCAL_ENTRY;
 
   /* don't attempt searches for a single character */
@@ -156,7 +162,8 @@ schedule_search (GcalShellSearchProvider *self,
   self->pending_search->invocation = g_object_ref (invocation);
   self->pending_search->terms = g_strdupv (terms);
 
-  if (gcal_manager_get_loading (self->manager))
+  manager = gcal_context_get_manager (self->context);
+  if (gcal_manager_get_loading (manager))
     {
       self->scheduled_search_id = g_timeout_add_seconds (1, (GSourceFunc) execute_search, self);
       GCAL_RETURN ();
@@ -255,13 +262,15 @@ activate_result_cb (GcalShellSearchProvider  *self,
 {
   g_autoptr (GcalEvent) event = NULL;
   GApplication *application;
+  GcalManager *manager;
   GDateTime *dtstart;
 
   GCAL_ENTRY;
 
   application = g_application_get_default ();
 
-  event = gcal_manager_get_event_from_shell_search (self->manager, result);
+  manager = gcal_context_get_manager (self->context);
+  event = gcal_manager_get_event_from_shell_search (manager, result);
   dtstart = gcal_event_get_date_start (event);
 
   gcal_application_set_uuid (GCAL_APPLICATION (application), result);
@@ -303,15 +312,15 @@ static gboolean
 query_completed_cb (GcalShellSearchProvider *self,
                     GcalManager             *manager)
 {
-  GList *events, *l;
   GVariantBuilder builder;
+  GList *events, *l;
   time_t current_time_t;
 
   GCAL_ENTRY;
 
   g_hash_table_remove_all (self->events);
 
-  events = gcal_manager_get_shell_search_events (self->manager);
+  events = gcal_manager_get_shell_search_events (manager);
   if (events == NULL)
     {
       g_dbus_method_invocation_return_value (self->pending_search->invocation, g_variant_new ("(as)", NULL));
@@ -403,7 +412,7 @@ gcal_shell_search_provider_finalize (GObject *object)
   GcalShellSearchProvider *self = (GcalShellSearchProvider *) object;
 
   g_clear_pointer (&self->events, g_hash_table_destroy);
-  g_clear_object (&self->manager);
+  g_clear_object (&self->context);
   g_clear_object (&self->skel);
 
   G_OBJECT_CLASS (gcal_shell_search_provider_parent_class)->finalize (object);
@@ -419,8 +428,8 @@ gcal_shell_search_provider_get_property (GObject    *object,
 
   switch (property_id)
     {
-    case PROP_MANAGER:
-      g_value_set_object (value, self->manager);
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
       break;
 
     default:
@@ -438,13 +447,15 @@ gcal_shell_search_provider_set_property (GObject      *object,
 
   switch (property_id)
     {
-    case PROP_MANAGER:
-      if (g_set_object (&self->manager, g_value_get_object (value)))
+    case PROP_CONTEXT:
+      if (g_set_object (&self->context, g_value_get_object (value)))
         {
-          gcal_manager_setup_shell_search (self->manager, E_CAL_DATA_MODEL_SUBSCRIBER (self));
-          g_signal_connect_swapped (self->manager, "query-completed", G_CALLBACK (query_completed_cb), self);
+          GcalManager *manager = gcal_context_get_manager (self->context);
 
-          g_object_notify_by_pspec (object, properties[PROP_MANAGER]);
+          gcal_manager_setup_shell_search (manager, E_CAL_DATA_MODEL_SUBSCRIBER (self));
+          g_signal_connect_swapped (manager, "query-completed", G_CALLBACK (query_completed_cb), self);
+
+          g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
         }
       break;
 
@@ -462,10 +473,10 @@ gcal_shell_search_provider_class_init (GcalShellSearchProviderClass *klass)
   object_class->get_property = gcal_shell_search_provider_get_property;
   object_class->set_property = gcal_shell_search_provider_set_property;
 
-  properties[PROP_MANAGER] = g_param_spec_object ("manager",
-                                                  "The manager object",
-                                                  "The manager object",
-                                                  GCAL_TYPE_MANAGER,
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "The context object",
+                                                  "The context object",
+                                                  GCAL_TYPE_CONTEXT,
                                                   G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
@@ -485,10 +496,10 @@ gcal_shell_search_provider_init (GcalShellSearchProvider *self)
 }
 
 GcalShellSearchProvider*
-gcal_shell_search_provider_new (GcalManager *manager)
+gcal_shell_search_provider_new (GcalContext *context)
 {
   return g_object_new (GCAL_TYPE_SHELL_SEARCH_PROVIDER,
-                       "manager", manager,
+                       "context", context,
                        NULL);
 }
 
