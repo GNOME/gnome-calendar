@@ -43,8 +43,6 @@ ESource*             gcal_manager_get_default_source             (GcalManager   
 void                 gcal_manager_set_default_source             (GcalManager        *self,
                                                                   ESource            *source);
 
-icaltimezone*        gcal_manager_get_system_timezone            (GcalManager        *self);
-
 void                 gcal_manager_set_subscriber                 (GcalManager        *self,
                                                                   ECalDataModelSubscriber *subscriber,
                                                                   time_t              range_start,

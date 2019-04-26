@@ -90,9 +90,6 @@ struct _GcalManager
 
   /* state flags */
   gint                sources_at_launch;
-
-  /* timezone */
-  icaltimezone       *system_timezone;
 };
 
 G_DEFINE_TYPE (GcalManager, gcal_manager, G_TYPE_OBJECT)
@@ -898,7 +895,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
 static void
 gcal_manager_init (GcalManager *self)
 {
-  self->system_timezone = e_cal_util_get_system_timezone ();
 }
 
 /* Public API */
@@ -1016,22 +1012,6 @@ gcal_manager_set_default_source (GcalManager *self,
 }
 
 /**
- * gcal_manager_get_system_timezone:
- * @self: a #GcalManager
- *
- * Retireves the default timezone.
- *
- * Returns: (transfer none): the default timezone
- */
-icaltimezone*
-gcal_manager_get_system_timezone (GcalManager *self)
-{
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
-
-  return self->system_timezone;
-}
-
-/**
  * gcal_manager_setup_shell_search:
  * @self: a #GcalManager
  * @subscriber: an #ECalDataModelSubscriber
@@ -1054,7 +1034,7 @@ gcal_manager_setup_shell_search (GcalManager             *self,
                             self);
 
   e_cal_data_model_set_expand_recurrences (self->shell_search_data_model, TRUE);
-  e_cal_data_model_set_timezone (self->shell_search_data_model, self->system_timezone);
+  e_cal_data_model_set_timezone (self->shell_search_data_model, e_cal_util_get_system_timezone ());
 
   self->search_view_data = g_new0 (ViewStateData, 1);
   self->search_view_data->subscriber = subscriber;
@@ -1742,8 +1722,8 @@ gcal_manager_get_events (GcalManager  *self,
 
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  range_start = icaltime_as_timet_with_zone (*start_date, self->system_timezone);
-  range_end = icaltime_as_timet_with_zone (*end_date, self->system_timezone);
+  range_start = icaltime_as_timet_with_zone (*start_date, e_cal_util_get_system_timezone ());
+  range_end = icaltime_as_timet_with_zone (*end_date, e_cal_util_get_system_timezone ());
 
   e_cal_data_model_foreach_component (self->e_data_model,
                                       range_start,
@@ -1926,9 +1906,9 @@ gcal_manager_startup (GcalManager *self)
   self->search_data_model = e_cal_data_model_new (submit_thread_job);
 
   e_cal_data_model_set_expand_recurrences (self->e_data_model, TRUE);
-  e_cal_data_model_set_timezone (self->e_data_model, self->system_timezone);
+  e_cal_data_model_set_timezone (self->e_data_model, e_cal_util_get_system_timezone ());
   e_cal_data_model_set_expand_recurrences (self->search_data_model, TRUE);
-  e_cal_data_model_set_timezone (self->search_data_model, self->system_timezone);
+  e_cal_data_model_set_timezone (self->search_data_model, e_cal_util_get_system_timezone ());
 
   sources = e_source_registry_list_enabled (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
   self->sources_at_launch = g_list_length (sources);
