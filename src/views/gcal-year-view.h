@@ -19,20 +19,12 @@
 #ifndef GCAL_YEAR_VIEW_H
 #define GCAL_YEAR_VIEW_H
 
-#include "gcal-manager.h"
-#include "gcal-event-widget.h"
-#include "gcal-weather-service.h"
-
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
-#define GCAL_TYPE_YEAR_VIEW            (gcal_year_view_get_type())
-
+#define GCAL_TYPE_YEAR_VIEW (gcal_year_view_get_type())
 G_DECLARE_FINAL_TYPE (GcalYearView, gcal_year_view, GCAL, YEAR_VIEW, GtkBox)
-
-void                 gcal_year_view_set_current_date             (GcalYearView       *year_view,
-                                                                  icaltimetype       *current_date);
 
 G_END_DECLS
 
