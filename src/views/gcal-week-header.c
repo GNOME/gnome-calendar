@@ -1776,7 +1776,7 @@ gcal_week_header_add_event (GcalWeekHeader *self,
     }
 
   /* Start position */
-  if (datetime_compare_date (start_date, week_start) >= 0)
+  if (gcal_date_time_compare_date (start_date, week_start) >= 0)
     start = floor (g_date_time_difference (start_date, week_start) / G_TIME_SPAN_DAY);
   else
     start = 0;

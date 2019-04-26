@@ -439,7 +439,7 @@ update_header (GcalQuickAddPopover *self)
     {
       gboolean all_day;
 
-      all_day = datetime_is_date (self->date_start) && (self->date_end ? datetime_is_date (self->date_end) : TRUE);
+      all_day = gcal_date_time_is_date (self->date_start) && (self->date_end ? gcal_date_time_is_date (self->date_end) : TRUE);
 
       if (all_day &&
           (g_date_time_difference (self->date_end, self->date_start) / G_TIME_SPAN_DAY > 1 &&
@@ -653,8 +653,8 @@ edit_or_create_event (GcalQuickAddPopover *self,
   manager = gcal_context_get_manager (self->context);
   source = g_object_get_data (G_OBJECT (self->selected_row), "source");
 
-  single_day = datetime_compare_date (self->date_end, self->date_start) == 0;
-  all_day = datetime_compare_date (self->date_end, self->date_start) > 1 ||
+  single_day = gcal_date_time_compare_date (self->date_end, self->date_start) == 0;
+  all_day = gcal_date_time_compare_date (self->date_end, self->date_start) > 1 ||
             g_date_time_compare (self->date_end, self->date_start) == 0;
   tz = all_day ? g_time_zone_new_utc () : g_time_zone_new_local ();
 

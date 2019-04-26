@@ -103,118 +103,6 @@ month_item[12] =
 G_DEFINE_BOXED_TYPE (icaltimetype, icaltime, gcal_dup_icaltime, g_free)
 
 /**
- * datetime_compare_date:
- * @dt1: (nullable): a #GDateTime
- * @dt2: (nullable): a #GDateTime
- *
- * Compares the dates of @dt1 and @dt2. The times are
- * ignored.
- *
- * Returns: negative, 0 or positive
- */
-gint
-datetime_compare_date (GDateTime *dt1,
-                       GDateTime *dt2)
-{
-  if (!dt1 && !dt2)
-    return 0;
-  else if (!dt1)
-    return -1;
-  else if (!dt2)
-    return 1;
-
-  if (g_date_time_get_year (dt1) != g_date_time_get_year (dt2))
-    return (g_date_time_get_year (dt1) - g_date_time_get_year (dt2)) * 360;
-
-  if (g_date_time_get_month (dt1) != g_date_time_get_month (dt2))
-    return (g_date_time_get_month (dt1) - g_date_time_get_month (dt2)) * 30;
-
-  if (g_date_time_get_day_of_month (dt1) != g_date_time_get_day_of_month (dt2))
-    return g_date_time_get_day_of_month (dt1) - g_date_time_get_day_of_month (dt2);
-
-  return 0;
-}
-
-/**
- * datetime_to_icaltime:
- * @dt: a #GDateTime
- *
- * Converts the #GDateTime's @dt to an #icaltimetype.
- *
- * Returns: (transfer full): a #icaltimetype.
- */
-icaltimetype*
-datetime_to_icaltime (GDateTime *dt)
-{
-  icaltimetype *idt;
-
-  if (!dt)
-    return NULL;
-
-  idt = g_new0 (icaltimetype, 1);
-
-  idt->year = g_date_time_get_year (dt);
-  idt->month = g_date_time_get_month (dt);
-  idt->day = g_date_time_get_day_of_month (dt);
-  idt->hour = g_date_time_get_hour (dt);
-  idt->minute = g_date_time_get_minute (dt);
-  idt->second = g_date_time_get_seconds (dt);
-  idt->is_date = (idt->hour == 0 &&
-                  idt->minute == 0 &&
-                  idt->second == 0);
-
-  return idt;
-}
-
-/**
- * icaltime_to_datetime:
- * @date: an #icaltimetype
- *
- * Converts the #icaltimetype's @date to a #GDateTime. The
- * timezone is preserved.
- *
- * Returns: (transfer full): a #GDateTime.
- */
-GDateTime*
-icaltime_to_datetime (const icaltimetype  *date)
-{
-  GDateTime *dt;
-  GTimeZone *tz;
-
-  tz = date->zone ? g_time_zone_new (icaltime_get_tzid (*date)) : g_time_zone_new_utc ();
-  dt = g_date_time_new (tz,
-                        date->year,
-                        date->month,
-                        date->day,
-                        date->is_date ? 0 : date->hour,
-                        date->is_date ? 0 : date->minute,
-                        date->is_date ? 0 : date->second);
-
-  g_clear_pointer (&tz, g_time_zone_unref);
-
-  return dt;
-}
-
-/**
- * datetime_is_date:
- * @dt: a #GDateTime
- *
- * Checks if @dt represents a date. A pure date
- * has the values of hour, minutes and seconds set
- * to 0.
- *
- * Returns: %TRUE if @dt is a date, %FALSE if it's a
- * timed datetime.
- */
-gboolean
-datetime_is_date (GDateTime *dt)
-{
-  return g_date_time_get_hour (dt) == 0 &&
-         g_date_time_get_minute (dt) == 0 &&
-         g_date_time_get_seconds (dt) == 0;
-}
-
-/**
  * gcal_dup_icaltime:
  * @date: an #icaltimetype
  *
@@ -509,7 +397,7 @@ build_component_from_details (const gchar *summary,
    * Check if the event is all day. Notice that it can be all day even
    * without the final date.
    */
-  all_day = datetime_is_date (initial_date) && (final_date ? datetime_is_date (final_date) : TRUE);
+  all_day = gcal_date_time_is_date (initial_date) && (final_date ? gcal_date_time_is_date (final_date) : TRUE);
 
   /*
    * When the event is all day, we consider UTC timezone by default. Otherwise,
@@ -529,7 +417,7 @@ build_component_from_details (const gchar *summary,
     }
 
   /* Start date */
-  dt.value = datetime_to_icaltime (initial_date);
+  dt.value = gcal_date_time_to_icaltime (initial_date);
   icaltime_set_timezone (dt.value, zone);
   dt.value->is_date = all_day;
   dt.tzid = icaltimezone_get_tzid (zone);
@@ -541,7 +429,7 @@ build_component_from_details (const gchar *summary,
   if (!final_date)
     final_date = g_date_time_add_days (initial_date, 1);
 
-  dt.value = datetime_to_icaltime (final_date);
+  dt.value = gcal_date_time_to_icaltime (final_date);
   icaltime_set_timezone (dt.value, zone);
   dt.value->is_date = all_day;
   dt.tzid = icaltimezone_get_tzid (zone);

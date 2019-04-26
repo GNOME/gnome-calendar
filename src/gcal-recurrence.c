@@ -220,7 +220,7 @@ gcal_recurrence_parse_recurrence_rules (ECalComponent *comp)
   else if (rrule.until.year != 0)
     {
       recur->limit_type = GCAL_RECURRENCE_UNTIL;
-      recur->limit.until = icaltime_to_datetime (&rrule.until);
+      recur->limit.until = gcal_date_time_from_icaltime (&rrule.until);
     }
   else
     {

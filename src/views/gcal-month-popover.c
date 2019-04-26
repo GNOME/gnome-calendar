@@ -317,8 +317,8 @@ update_event_list (GcalMonthPopover *self)
                                     0, 0, 0);
   end_dt = g_date_time_add_days (start_dt, 1);
 
-  start = datetime_to_icaltime (start_dt);
-  end = datetime_to_icaltime (end_dt);
+  start = gcal_date_time_to_icaltime (start_dt);
+  end = gcal_date_time_to_icaltime (end_dt);
 
   events = gcal_manager_get_events (gcal_context_get_manager (self->context), start, end);
 
@@ -878,7 +878,7 @@ gcal_month_popover_set_date (GcalMonthPopover *self,
 {
   g_return_if_fail (GCAL_IS_MONTH_POPOVER (self));
 
-  if (date && self->date && datetime_compare_date (self->date, date) == 0)
+  if (date && self->date && gcal_date_time_compare_date (self->date, date) == 0)
     return;
 
   gcal_clear_date_time (&self->date);

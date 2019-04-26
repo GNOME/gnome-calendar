@@ -221,7 +221,7 @@ build_component_from_datetime (GcalEvent *self,
     return NULL;
 
   comp_dt = g_new0 (ECalComponentDateTime, 1);
-  comp_dt->value = datetime_to_icaltime (dt);
+  comp_dt->value = gcal_date_time_to_icaltime (dt);
   comp_dt->value->is_date = self->all_day;
 
   if (self->all_day)
@@ -358,7 +358,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
                                     date.is_date ? 0 : date.hour,
                                     date.is_date ? 0 : date.minute,
                                     date.is_date ? 0 : date.second);
-      start_is_all_day = datetime_is_date (date_start);
+      start_is_all_day = gcal_date_time_is_date (date_start);
 
       self->dt_start = date_start;
 
@@ -380,7 +380,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
                                       date.is_date ? 0 : date.hour,
                                       date.is_date ? 0 : date.minute,
                                       date.is_date ? 0 : date.second);
-          end_is_all_day = datetime_is_date (date_end);
+          end_is_all_day = gcal_date_time_is_date (date_end);
 
           self->dt_end = g_date_time_ref (date_end);
 

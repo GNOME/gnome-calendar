@@ -138,7 +138,7 @@ open_event (GtkListBox    *list,
   icaltimetype *date_start;
 
   data = g_object_get_data (G_OBJECT (row), "event-data");
-  date_start = datetime_to_icaltime (gcal_event_get_date_start (data->event));
+  date_start = gcal_date_time_to_icaltime (gcal_event_get_date_start (data->event));
 
   g_signal_emit_by_name (user_data, "event-activated", date_start);
 

@@ -21,6 +21,7 @@
 #pragma once
 
 #include <glib.h>
+#include <libical/icaltime.h>
 
 G_BEGIN_DECLS
 
@@ -40,5 +41,14 @@ guint8               gcal_date_time_get_days_in_month            (GDateTime     
 GDateTime*           gcal_date_time_get_start_of_week            (GDateTime          *date);
 
 GDateTime*           gcal_date_time_get_end_of_week              (GDateTime          *date);
+
+gint                 gcal_date_time_compare_date                 (GDateTime          *dt1,
+                                                                  GDateTime          *dt2);
+
+icaltimetype*        gcal_date_time_to_icaltime                  (GDateTime          *dt);
+
+gboolean             gcal_date_time_is_date                      (GDateTime          *dt);
+
+GDateTime*           gcal_date_time_from_icaltime                (const icaltimetype *date);
 
 G_END_DECLS

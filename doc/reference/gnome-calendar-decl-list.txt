@@ -454,10 +454,10 @@ MAX_MINUTES
 gcal_clear_date_time
 GcalWindowViewType
 icaltime_get_type
-datetime_compare_date
-datetime_to_icaltime
+gcal_date_time_compare_date
+gcal_date_time_to_icaltime
 datetime_is_date
-icaltime_to_datetime
+gcal_date_time_from_icaltime
 gcal_dup_icaltime
 gcal_get_weekday
 gcal_get_month_name

@@ -1047,12 +1047,12 @@ typedef enum
 void
 </FUNCTION>
 <FUNCTION>
-<NAME>datetime_compare_date</NAME>
+<NAME>gcal_date_time_compare_date</NAME>
 <RETURNS>gint             </RETURNS>
 GDateTime             *dt1, GDateTime             *dt2
 </FUNCTION>
 <FUNCTION>
-<NAME>datetime_to_icaltime</NAME>
+<NAME>gcal_date_time_to_icaltime</NAME>
 <RETURNS>icaltimetype *   </RETURNS>
 GDateTime             *dt
 </FUNCTION>
@@ -1062,7 +1062,7 @@ GDateTime             *dt
 GDateTime             *dt
 </FUNCTION>
 <FUNCTION>
-<NAME>icaltime_to_datetime</NAME>
+<NAME>gcal_date_time_from_icaltime</NAME>
 <RETURNS>GDateTime *      </RETURNS>
 const icaltimetype    *date
 </FUNCTION>

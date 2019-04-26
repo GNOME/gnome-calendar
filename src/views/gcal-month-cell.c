@@ -99,7 +99,7 @@ update_style_flags (GcalMonthCell *self)
   today = g_date_time_new_now_local ();
   context = gtk_widget_get_style_context (GTK_WIDGET (self));
 
-  if (datetime_compare_date (self->date, today) == 0)
+  if (gcal_date_time_compare_date (self->date, today) == 0)
     gtk_style_context_add_class (context, "today");
   else
     gtk_style_context_remove_class (context, "today");
@@ -480,7 +480,7 @@ gcal_month_cell_set_date (GcalMonthCell *self,
 
   g_return_if_fail (GCAL_IS_MONTH_CELL (self));
 
-  if (self->date && date && datetime_compare_date (self->date, date) == 0)
+  if (self->date && date && gcal_date_time_compare_date (self->date, date) == 0)
     return;
 
   gcal_clear_date_time (&self->date);

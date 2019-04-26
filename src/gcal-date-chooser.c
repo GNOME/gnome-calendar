@@ -286,7 +286,7 @@ calendar_update_selected_day_display (GcalDateChooser *self)
       {
         d = GCAL_DATE_CHOOSER_DAY (self->days[row][col]);
         date = gcal_date_chooser_day_get_date (d);
-        gcal_date_chooser_day_set_selected (d, datetime_compare_date (date, self->date) == 0);
+        gcal_date_chooser_day_set_selected (d, gcal_date_time_compare_date (date, self->date) == 0);
       }
     }
 }

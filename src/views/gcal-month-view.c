@@ -995,15 +995,15 @@ update_month_cells (GcalMonthView *self)
                 selection_end = selection_start;
 
               /* Swap dates if end is before start */
-              if (datetime_compare_date (selection_end, selection_start) < 0)
+              if (gcal_date_time_compare_date (selection_end, selection_start) < 0)
                 {
                   GDateTime *aux = selection_end;
                   selection_end = selection_start;
                   selection_start = aux;
                 }
 
-              selected = datetime_compare_date (gcal_month_cell_get_date (cell), selection_start) >= 0 &&
-                         datetime_compare_date (gcal_month_cell_get_date (cell), selection_end) <= 0;
+              selected = gcal_date_time_compare_date (gcal_month_cell_get_date (cell), selection_start) >= 0 &&
+                         gcal_date_time_compare_date (gcal_month_cell_get_date (cell), selection_end) <= 0;
             }
 
           gcal_month_cell_set_selected (cell, selected);

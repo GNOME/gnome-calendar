@@ -133,7 +133,7 @@ update_grid_scroll_position (GcalWeekView *self)
   week_end = gcal_date_time_get_end_of_week (self->date);
 
   /* Don't animate when not today */
-  if (datetime_compare_date (now, week_start) < 0 || datetime_compare_date (now, week_end) >= 0)
+  if (gcal_date_time_compare_date (now, week_start) < 0 || gcal_date_time_compare_date (now, week_end) >= 0)
     GCAL_GOTO (out);
 
   vadjustment = gtk_scrolled_window_get_vadjustment (GTK_SCROLLED_WINDOW (self->scrolled_window));

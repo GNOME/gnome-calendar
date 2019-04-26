@@ -272,9 +272,9 @@ update_no_events_page (GcalYearView *year_view)
   gchar *title;
 
   now = g_date_time_new_now_local ();
-  has_range = datetime_compare_date (year_view->start_selected_date, year_view->end_selected_date);
+  has_range = gcal_date_time_compare_date (year_view->start_selected_date, year_view->end_selected_date);
 
-  if (datetime_compare_date (now, year_view->start_selected_date) == 0)
+  if (gcal_date_time_compare_date (now, year_view->start_selected_date) == 0)
     {
       title = g_strdup_printf ("%s%s", _("Today"), has_range ? "…" : "");
     }
@@ -335,7 +335,7 @@ add_event_to_day_array (GcalYearView  *year_view,
       gint start_comparison;
 
       cloned_child = child_widget;
-      start_comparison = datetime_compare_date (dt_start, date);
+      start_comparison = gcal_date_time_compare_date (dt_start, date);
 
       if (start_comparison > 0)
         {
@@ -382,7 +382,7 @@ add_event_to_day_array (GcalYearView  *year_view,
                                                         cloned_child,
                                                         (GCompareFunc) compare_events);
 
-          end_comparison = datetime_compare_date (second_date, dt_end);
+          end_comparison = gcal_date_time_compare_date (second_date, dt_end);
 
           /*
            * If the end date surpassed the event's end date, we reached the
@@ -426,8 +426,8 @@ update_sidebar (GcalYearView *year_view)
   days_widgets_array = g_new0 (GList*, days_span);
 
   manager = gcal_context_get_manager (year_view->context);
-  start_icaldatetime = datetime_to_icaltime (year_view->start_selected_date);
-  end_icaldatetime = datetime_to_icaltime (year_view->end_selected_date);
+  start_icaldatetime = gcal_date_time_to_icaltime (year_view->start_selected_date);
+  end_icaldatetime = gcal_date_time_to_icaltime (year_view->end_selected_date);
   events = gcal_manager_get_events (manager, start_icaldatetime, end_icaldatetime);
   if (events == NULL)
     {
@@ -513,7 +513,7 @@ update_sidebar_headers (GtkListBoxRow *row,
       row_header = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
       now = g_date_time_new_now_local ();
 
-      if (datetime_compare_date (year_view->start_selected_date, now) == 0)
+      if (gcal_date_time_compare_date (year_view->start_selected_date, now) == 0)
         label_str = g_strdup (_("Today"));
       else
         /* Translators: This is a date format in the sidebar of the year view. */
@@ -709,8 +709,8 @@ count_events_at_day (GcalYearView *self,
           event_end = g_date_time_ref (gcal_event_get_date_end (event));
 
 
-      if (datetime_compare_date (event_start, today_end) >= 0 ||
-          datetime_compare_date (event_end, today) < 0)
+      if (gcal_date_time_compare_date (event_start, today_end) >= 0 ||
+          gcal_date_time_compare_date (event_end, today) < 0)
         {
           continue;
         }

@@ -1228,11 +1228,11 @@ gcal_event_widget_sort_events (GcalEventWidget *widget1,
 
   e_cal_component_get_last_modified (gcal_event_get_component (widget1->event), &ical_dt);
   if (ical_dt)
-    dt_time1 = icaltime_to_datetime (ical_dt);
+    dt_time1 = gcal_date_time_from_icaltime (ical_dt);
 
   e_cal_component_get_last_modified (gcal_event_get_component (widget2->event), &ical_dt);
   if (ical_dt)
-    dt_time2 = icaltime_to_datetime (ical_dt);
+    dt_time2 = gcal_date_time_from_icaltime (ical_dt);
 
   return dt_time1 && dt_time2 ? g_date_time_compare (dt_time2, dt_time1) : 0;
 }
