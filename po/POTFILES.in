@@ -25,9 +25,9 @@ src/gcal-quick-add-popover.c
 src/gcal-search-popover.c
 src/gcal-source-dialog.c
 src/gcal-time-selector.c
-src/gcal-utils.c
 src/gcal-window.c
 src/main.c
+src/utils/gcal-utils.c
 src/views/gcal-month-view.c
 src/views/gcal-week-grid.c
 src/views/gcal-week-header.c
