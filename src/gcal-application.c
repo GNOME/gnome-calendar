@@ -36,7 +36,7 @@
 
 struct _GcalApplication
 {
-  GtkApplication      parent;
+  DzlApplication      parent;
 
   GtkWidget          *window;
 
@@ -67,7 +67,7 @@ static void     gcal_application_quit                 (GSimpleAction           *
                                                        GVariant                *parameter,
                                                        gpointer                 user_data);
 
-G_DEFINE_TYPE (GcalApplication, gcal_application, GTK_TYPE_APPLICATION);
+G_DEFINE_TYPE (GcalApplication, gcal_application, DZL_TYPE_APPLICATION);
 
 static gboolean show_version = FALSE;
 
