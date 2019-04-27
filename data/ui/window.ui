@@ -9,7 +9,6 @@
     <property name="show_menubar">False</property>
     <signal name="key-press-event" handler="key_pressed" object="GcalWindow" swapped="no"/>
     <signal name="window-state-event" handler="window_state_changed" object="GcalWindow" swapped="no"/>
-    <property name="active-date" bind-source="search_popover" bind-property="active-date" bind-flags="default|sync-create"/>
     <style>
       <class name="org-gnome-Calendar"/>
     </style>    
@@ -272,10 +271,6 @@
       </object>
     </child>
   </template>
-  <object class="GcalSearchPopover" id="search_popover">
-    <property name="position">bottom</property>
-    <signal name="event-activated" handler="search_event_selected" object="GcalWindow" swapped="no"/>
-  </object>
   <object class="GtkPopover" id="calendar_popover">
     <property name="border_width">6</property>
     <child>

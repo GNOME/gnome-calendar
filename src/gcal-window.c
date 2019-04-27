@@ -27,7 +27,6 @@
 #include "gcal-month-view.h"
 #include "gcal-quick-add-popover.h"
 #include "gcal-search-button.h"
-#include "gcal-search-popover.h"
 #include "gcal-source-dialog.h"
 #include "gcal-view.h"
 #include "gcal-weather-settings.h"
@@ -128,8 +127,6 @@ struct _GcalWindow
 
   /* new event popover widgets */
   GtkWidget          *quick_add_popover;
-
-  GtkWidget          *search_popover;
 
   /* day, week, month, year, list */
   GtkWidget          *views [6];
@@ -444,15 +441,6 @@ on_view_action_activated (GSimpleAction *action,
   gtk_stack_set_visible_child (GTK_STACK (window->views_stack), window->views[window->active_view]);
 
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
-}
-
-static void
-search_event_selected (GcalSearchPopover *search_view,
-                       icaltimetype      *date,
-                       gpointer           user_data)
-{
-  g_object_set (user_data, "active-date", date, NULL);
-  gcal_window_set_search_mode (GCAL_WINDOW (user_data), FALSE);
 }
 
 static gint
@@ -1159,7 +1147,6 @@ gcal_window_constructed (GObject *object)
   g_object_bind_property (self, "context", self->month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->year_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->edit_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "context", self->search_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT);
 
@@ -1219,8 +1206,6 @@ gcal_window_set_property (GObject      *object,
           g_signal_connect (manager, "source-removed", G_CALLBACK (remove_source), object);
           g_signal_connect_swapped (manager, "source-enabled", G_CALLBACK (source_enabled), object);
           g_signal_connect_swapped (manager, "source-changed", G_CALLBACK (source_changed), object);
-
-          gcal_search_popover_connect (GCAL_SEARCH_POPOVER (self->search_popover), manager);
 
           g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
         }
@@ -1297,7 +1282,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_QUICK_ADD_POPOVER);
   g_type_ensure (GCAL_TYPE_SEARCH_BUTTON);
-  g_type_ensure (GCAL_TYPE_SEARCH_POPOVER);
   g_type_ensure (GCAL_TYPE_SOURCE_DIALOG);
   g_type_ensure (GCAL_TYPE_WEATHER_SETTINGS);
   g_type_ensure (GCAL_TYPE_WEEK_VIEW);
@@ -1356,7 +1340,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, source_dialog);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, today_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);
@@ -1389,9 +1372,6 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   /* Syncronization related */
   gtk_widget_class_bind_template_callback (widget_class, window_state_changed);
-
-  /* search related */
-  gtk_widget_class_bind_template_callback (widget_class, search_event_selected);
 
   /* Edit dialog related */
   gtk_widget_class_bind_template_callback (widget_class, edit_dialog_closed);
