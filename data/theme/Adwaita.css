@@ -258,6 +258,7 @@ event.color-light:backdrop {
 }
 
 /* adds a subtle shadow to the calendar color dot when it makes sense */
+image.calendar-color-image,
 button:active:not(:backdrop) .calendar-color-image,
 button:checked:not(:backdrop) .calendar-color-image,
 .calendars-list .calendar-color-image:not(:backdrop):not(:disabled),
