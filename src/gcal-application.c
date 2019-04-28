@@ -51,22 +51,6 @@ struct _GcalApplication
   GcalContext        *context;
 };
 
-static void     gcal_application_launch_search        (GSimpleAction           *search,
-                                                       GVariant                *parameter,
-                                                       gpointer                 app);
-
-static void     gcal_application_show_about           (GSimpleAction           *simple,
-                                                       GVariant                *parameter,
-                                                       gpointer                 user_data);
-
-static void     gcal_application_sync                 (GSimpleAction           *sync,
-                                                       GVariant                *parameter,
-                                                       gpointer                 app);
-
-static void     gcal_application_quit                 (GSimpleAction           *simple,
-                                                       GVariant                *parameter,
-                                                       gpointer                 user_data);
-
 G_DEFINE_TYPE (GcalApplication, gcal_application, DZL_TYPE_APPLICATION);
 
 static gboolean show_version = FALSE;
@@ -98,13 +82,6 @@ static GOptionEntry gcal_application_goptions[] = {
     N_("Open calendar showing the passed event"), NULL
   },
   { NULL }
-};
-
-static const GActionEntry gcal_app_entries[] = {
-  { "sync",   gcal_application_sync },
-  { "search", gcal_application_launch_search },
-  { "about",  gcal_application_show_about },
-  { "quit",   gcal_application_quit },
 };
 
 enum
@@ -182,6 +159,135 @@ load_css_provider (GcalApplication *self)
     gtk_css_provider_load_from_file (self->provider, css_file, NULL);
   else
     gtk_css_provider_load_from_resource (self->provider, "/org/gnome/calendar/theme/Adwaita.css");
+}
+
+/*
+ * Callbacks
+ */
+
+static void
+gcal_application_sync (GSimpleAction *sync,
+                       GVariant      *parameter,
+                       gpointer       app)
+{
+  GcalWeatherService *weather_service;
+  GcalApplication *self;
+
+  self = GCAL_APPLICATION (app);
+  weather_service = gcal_context_get_weather_service (self->context);
+
+  gcal_manager_refresh (gcal_context_get_manager (self->context));
+  gcal_weather_service_update (weather_service);
+}
+
+static void
+gcal_application_launch_search (GSimpleAction *search,
+                                GVariant      *parameter,
+                                gpointer       app)
+{
+  GcalApplication *self = GCAL_APPLICATION (app);
+  gcal_window_set_search_mode (GCAL_WINDOW (self->window), TRUE);
+}
+
+static void
+on_about_response (GtkAboutDialog *about,
+                   int             response_id,
+                   gpointer        user_data)
+{
+  g_return_if_fail (GTK_IS_ABOUT_DIALOG (about));
+  g_return_if_fail (user_data == NULL);
+
+  if (response_id == GTK_RESPONSE_CANCEL)
+    gtk_widget_destroy (GTK_WIDGET (about));
+}
+
+static gchar*
+build_about_copyright (GcalApplication *self)
+{
+  g_autoptr (GDateTime) dt = NULL;
+  GcalWeatherService *weather_service;
+  const gchar *attribution;
+  GString *builder;
+
+  builder = g_string_new ("<span size=\"small\">");
+  dt = g_date_time_new_now_local ();
+
+  /* Build string: */
+  g_string_append_printf (builder,
+                         _("Copyright \xC2\xA9 2012\xE2\x80\x93%d " "The Calendar authors"),
+                          g_date_time_get_year (dt));
+
+  weather_service = gcal_context_get_weather_service (self->context);
+  attribution = gcal_weather_service_get_attribution (weather_service);
+  if (attribution)
+    {
+      g_string_append_c (builder, '\n');
+      g_string_append (builder, attribution);
+    }
+  g_string_append (builder, "</span>");
+
+  return g_string_free (builder, FALSE);
+}
+
+static void
+gcal_application_show_about (GSimpleAction *simple,
+                             GVariant      *parameter,
+                             gpointer       user_data)
+{
+  GcalApplication *self;
+  GtkWidget *dialog;
+  GtkLabel *copyright_label;
+  g_autofree gchar *copyright = NULL;
+
+  const gchar *authors[] = {
+    "Erick Pérez Castellanos <erickpc@gnome.org>",
+    "Georges Basile Stavracas Neto <georges.stavracas@gmail.com>",
+    "Isaque Galdino <igaldino@gmail.com>",
+    NULL
+  };
+  const gchar *artists[] = {
+    "Jakub Steiner <jimmac@gmail.com>",
+    "Lapo Calamandrei <calamandrei@gmail.com>",
+    "Reda Lazri <the.red.shortcut@gmail.com>",
+    "William Jon McCann <jmccann@redhat.com>",
+    NULL
+  };
+
+
+  self = GCAL_APPLICATION (user_data);
+
+  dialog = g_object_new (GTK_TYPE_ABOUT_DIALOG,
+                         "transient-for", GTK_WINDOW (self->window),
+                         "modal", TRUE,
+                         "destroy-with-parent", TRUE,
+                         "program-name", _("Calendar"),
+                         "version", VERSION,
+                         "license-type", GTK_LICENSE_GPL_3_0,
+                         "authors", authors,
+                         "artists", artists,
+                         "logo-icon-name", "org.gnome.Calendar",
+                         "translator-credits", _("translator-credits"),
+                         NULL);
+
+  copyright = build_about_copyright (self);
+  copyright_label = GTK_LABEL (gtk_widget_get_template_child (GTK_WIDGET (dialog),
+                                                              GTK_TYPE_ABOUT_DIALOG,
+                                                              "copyright_label"));
+  gtk_label_set_markup (copyright_label, copyright);
+  gtk_widget_show (GTK_WIDGET (copyright_label));
+
+  g_signal_connect (dialog, "response", G_CALLBACK (on_about_response), NULL);
+  gtk_widget_show (dialog);
+}
+
+static void
+gcal_application_quit (GSimpleAction *simple,
+                       GVariant      *parameter,
+                       gpointer       user_data)
+{
+  GcalApplication *self = GCAL_APPLICATION (user_data);
+
+  gtk_widget_destroy (self->window);
 }
 
 
@@ -289,6 +395,13 @@ static void
 gcal_application_startup (GApplication *app)
 {
   GcalApplication *self;
+
+  static const GActionEntry gcal_app_entries[] = {
+    { "sync",   gcal_application_sync },
+    { "search", gcal_application_launch_search },
+    { "about",  gcal_application_show_about },
+    { "quit",   gcal_application_quit },
+  };
 
   GCAL_ENTRY;
 
@@ -485,131 +598,6 @@ gcal_application_init (GcalApplication *self)
   g_signal_connect_swapped (manager, "source-changed", G_CALLBACK (process_sources), self);
 
   self->search_provider = gcal_shell_search_provider_new (self->context);
-}
-
-static void
-gcal_application_sync (GSimpleAction *sync,
-                       GVariant      *parameter,
-                       gpointer       app)
-{
-  GcalWeatherService *weather_service;
-  GcalApplication *self;
-
-  self = GCAL_APPLICATION (app);
-  weather_service = gcal_context_get_weather_service (self->context);
-
-  gcal_manager_refresh (gcal_context_get_manager (self->context));
-  gcal_weather_service_update (weather_service);
-}
-
-static void
-gcal_application_launch_search (GSimpleAction *search,
-                                GVariant      *parameter,
-                                gpointer       app)
-{
-  GcalApplication *self = GCAL_APPLICATION (app);
-  gcal_window_set_search_mode (GCAL_WINDOW (self->window), TRUE);
-}
-
-static void
-on_about_response (GtkAboutDialog *about,
-                   int             response_id,
-                   gpointer        user_data)
-{
-  g_return_if_fail (GTK_IS_ABOUT_DIALOG (about));
-  g_return_if_fail (user_data == NULL);
-
-  if (response_id == GTK_RESPONSE_CANCEL)
-    gtk_widget_destroy (GTK_WIDGET (about));
-}
-
-static gchar*
-build_about_copyright (GcalApplication *self)
-{
-  g_autoptr (GDateTime) dt = NULL;
-  GcalWeatherService *weather_service;
-  const gchar *attribution;
-  GString *builder;
-
-  builder = g_string_new ("<span size=\"small\">");
-  dt = g_date_time_new_now_local ();
-
-  /* Build string: */
-  g_string_append_printf (builder,
-                         _("Copyright \xC2\xA9 2012\xE2\x80\x93%d " "The Calendar authors"),
-                          g_date_time_get_year (dt));
-
-  weather_service = gcal_context_get_weather_service (self->context);
-  attribution = gcal_weather_service_get_attribution (weather_service);
-  if (attribution)
-    {
-      g_string_append_c (builder, '\n');
-      g_string_append (builder, attribution);
-    }
-  g_string_append (builder, "</span>");
-
-  return g_string_free (builder, FALSE);
-}
-
-static void
-gcal_application_show_about (GSimpleAction *simple,
-                             GVariant      *parameter,
-                             gpointer       user_data)
-{
-  GcalApplication *self;
-  GtkWidget *dialog;
-  GtkLabel *copyright_label;
-  g_autofree gchar *copyright = NULL;
-
-  const gchar *authors[] = {
-    "Erick Pérez Castellanos <erickpc@gnome.org>",
-    "Georges Basile Stavracas Neto <georges.stavracas@gmail.com>",
-    "Isaque Galdino <igaldino@gmail.com>",
-    NULL
-  };
-  const gchar *artists[] = {
-    "Jakub Steiner <jimmac@gmail.com>",
-    "Lapo Calamandrei <calamandrei@gmail.com>",
-    "Reda Lazri <the.red.shortcut@gmail.com>",
-    "William Jon McCann <jmccann@redhat.com>",
-    NULL
-  };
-
-
-  self = GCAL_APPLICATION (user_data);
-
-  dialog = g_object_new (GTK_TYPE_ABOUT_DIALOG,
-                         "transient-for", GTK_WINDOW (self->window),
-                         "modal", TRUE,
-                         "destroy-with-parent", TRUE,
-                         "program-name", _("Calendar"),
-                         "version", VERSION,
-                         "license-type", GTK_LICENSE_GPL_3_0,
-                         "authors", authors,
-                         "artists", artists,
-                         "logo-icon-name", "org.gnome.Calendar",
-                         "translator-credits", _("translator-credits"),
-                         NULL);
-
-  copyright = build_about_copyright (self);
-  copyright_label = GTK_LABEL (gtk_widget_get_template_child (GTK_WIDGET (dialog),
-                                                              GTK_TYPE_ABOUT_DIALOG,
-                                                              "copyright_label"));
-  gtk_label_set_markup (copyright_label, copyright);
-  gtk_widget_show (GTK_WIDGET (copyright_label));
-
-  g_signal_connect (dialog, "response", G_CALLBACK (on_about_response), NULL);
-  gtk_widget_show (dialog);
-}
-
-static void
-gcal_application_quit (GSimpleAction *simple,
-                       GVariant      *parameter,
-                       gpointer       user_data)
-{
-  GcalApplication *self = GCAL_APPLICATION (user_data);
-
-  gtk_widget_destroy (self->window);
 }
 
 /* Public API */
