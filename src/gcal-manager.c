@@ -81,7 +81,6 @@ struct _GcalManager
   ECredentialsPrompter *credentials_prompter;
 
   ECalDataModel      *e_data_model;
-  ECalDataModel      *search_data_model;
 
   ECalDataModel      *shell_search_data_model;
   ViewStateData      *search_view_data;
@@ -170,8 +169,6 @@ remove_source (GcalManager  *self,
   g_return_if_fail (E_IS_SOURCE (source));
 
   e_cal_data_model_remove_client (self->e_data_model,
-                                  e_source_get_uid (source));
-  e_cal_data_model_remove_client (self->search_data_model,
                                   e_source_get_uid (source));
 
   unit = g_hash_table_lookup (self->clients, source);
@@ -303,7 +300,6 @@ on_client_connected (GObject      *source_object,
   if (enabled)
     {
       e_cal_data_model_add_client (self->e_data_model, client);
-      e_cal_data_model_add_client (self->search_data_model, client);
       if (self->shell_search_data_model != NULL)
         e_cal_data_model_add_client (self->shell_search_data_model, client);
     }
@@ -655,7 +651,6 @@ gcal_manager_finalize (GObject *object)
   GCAL_ENTRY;
 
   g_clear_object (&self->e_data_model);
-  g_clear_object (&self->search_data_model);
   g_clear_object (&self->shell_search_data_model);
 
   if (self->search_view_data)
@@ -1081,56 +1076,6 @@ gcal_manager_set_subscriber (GcalManager             *self,
 }
 
 /**
- * gcal_manager_set_search_subscriber:
- * @self: a #GcalManager
- * @subscriber: a #ECalDataModelSubscriber
- * @range_start: the start of the range
- * @range_end: the end of the range
- *
- * Sets the @subscriber to show events between @range_start
- * and @range_end.
- */
-void
-gcal_manager_set_search_subscriber (GcalManager             *self,
-                                    ECalDataModelSubscriber *subscriber,
-                                    time_t                   range_start,
-                                    time_t                   range_end)
-{
-  GCAL_ENTRY;
-
-  g_return_if_fail (GCAL_IS_MANAGER (self));
-
-  e_cal_data_model_subscribe (self->search_data_model,
-                              subscriber,
-                              range_start,
-                              range_end);
-
-  GCAL_EXIT;
-}
-
-/**
- * gcal_manager_set_query:
- * @self: A #GcalManager instance
- * @query: (nullable): query terms or %NULL
- *
- * Set the query terms of the #ECalDataModel or clear it if %NULL is
- * passed
- */
-void
-gcal_manager_set_query (GcalManager *self,
-                        const gchar *query)
-{
-  GCAL_ENTRY;
-
-  g_return_if_fail (GCAL_IS_MANAGER (self));
-
-  e_cal_data_model_set_filter (self->search_data_model,
-                               query != NULL ? query : "#t");
-
-  GCAL_EXIT;
-}
-
-/**
  * gcal_manager_query_client_data:
  *
  * Queries for a specific data field of the #ECalClient
@@ -1246,7 +1191,6 @@ gcal_manager_enable_source (GcalManager *self,
     }
 
   e_cal_data_model_add_client (self->e_data_model, unit->client);
-  e_cal_data_model_add_client (self->search_data_model, unit->client);
 
   if (self->shell_search_data_model)
     e_cal_data_model_add_client (self->shell_search_data_model, unit->client);
@@ -1291,7 +1235,6 @@ gcal_manager_disable_source (GcalManager *self,
   source_uid = e_source_get_uid (source);
 
   e_cal_data_model_remove_client (self->e_data_model, source_uid);
-  e_cal_data_model_remove_client (self->search_data_model, source_uid);
 
   if (self->shell_search_data_model != NULL)
     e_cal_data_model_remove_client (self->shell_search_data_model, source_uid);
@@ -1821,12 +1764,9 @@ gcal_manager_startup (GcalManager *self)
 
   /* create data model */
   self->e_data_model = e_cal_data_model_new (gcal_thread_submit_job);
-  self->search_data_model = e_cal_data_model_new (gcal_thread_submit_job);
 
   e_cal_data_model_set_expand_recurrences (self->e_data_model, TRUE);
   e_cal_data_model_set_timezone (self->e_data_model, e_cal_util_get_system_timezone ());
-  e_cal_data_model_set_expand_recurrences (self->search_data_model, TRUE);
-  e_cal_data_model_set_timezone (self->search_data_model, e_cal_util_get_system_timezone ());
 
   sources = e_source_registry_list_enabled (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
   self->sources_at_launch = g_list_length (sources);
@@ -1837,4 +1777,16 @@ gcal_manager_startup (GcalManager *self)
   g_list_free (sources);
 
   GCAL_EXIT;
+}
+
+ECalClient*
+gcal_manager_get_client (GcalManager *self,
+                         ESource     *source)
+{
+  GcalManagerUnit *unit;
+
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
+
+  unit = g_hash_table_lookup (self->clients, source);
+  return unit ? unit->client : NULL;
 }

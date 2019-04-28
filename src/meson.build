@@ -21,6 +21,10 @@ gcal_deps = [
 
 sources = files(
   'search/gcal-search-button.c',
+  'search/gcal-search-engine.c',
+  'search/gcal-search-hit.c',
+  'search/gcal-search-hit-event.c',
+  'search/gcal-search-model.c',
   'utils/gcal-date-time-utils.c',
   'utils/gcal-thread-utils.c',
   'utils/gcal-utils.c',
@@ -51,7 +55,6 @@ sources = files(
   'gcal-night-light-monitor.c',
   'gcal-quick-add-popover.c',
   'gcal-recurrence.c',
-  'gcal-search-popover.c',
   'gcal-shell-search-provider.c',
   'gcal-source-dialog.c',
   'gcal-time-selector.c',

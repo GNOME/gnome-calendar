@@ -33,6 +33,7 @@ struct _GcalContext
   GcalClock          *clock;
   GoaClient          *goa_client;
   GcalManager        *manager;
+  GcalSearchEngine   *search_engine;
   GSettings          *settings;
   GcalTimeFormat      time_format;
   GcalWeatherService *weather_service;
@@ -49,6 +50,7 @@ enum
   PROP_CLOCK,
   PROP_GOA_CLIENT,
   PROP_MANAGER,
+  PROP_SEARCH_ENGINE,
   PROP_SETTINGS,
   PROP_TIME_FORMAT,
   PROP_TIMEZONE,
@@ -140,6 +142,10 @@ gcal_context_get_property (GObject    *object,
       g_value_set_object (value, self->manager);
       break;
 
+    case PROP_SEARCH_ENGINE:
+      g_value_set_object (value, self->search_engine);
+      break;
+
     case PROP_SETTINGS:
       g_value_set_object (value, self->settings);
       break;
@@ -172,6 +178,7 @@ gcal_context_set_property (GObject      *object,
     case PROP_CLOCK:
     case PROP_GOA_CLIENT:
     case PROP_MANAGER:
+    case PROP_SEARCH_ENGINE:
     case PROP_SETTINGS:
     case PROP_TIME_FORMAT:
     case PROP_TIMEZONE:
@@ -207,6 +214,12 @@ gcal_context_class_init (GcalContextClass *klass)
                                                   "Data manager of the application",
                                                   GCAL_TYPE_MANAGER,
                                                   G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  properties[PROP_SEARCH_ENGINE] = g_param_spec_object ("search-engine",
+                                                        "Search engine",
+                                                        "Search engine",
+                                                        GCAL_TYPE_SEARCH_ENGINE,
+                                                        G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_SETTINGS] = g_param_spec_object ("settings",
                                                    "GNOME Calendar settings",
@@ -244,6 +257,7 @@ gcal_context_init (GcalContext *self)
   self->manager = gcal_manager_new ();
   self->settings = g_settings_new ("org.gnome.calendar");
   self->weather_service = gcal_weather_service_new ();
+  self->search_engine = gcal_search_engine_new (self);
 
   self->timezone_monitor = gcal_time_zone_monitor_new ();
   g_signal_connect_object (self->timezone_monitor,
@@ -319,6 +333,21 @@ gcal_context_get_manager (GcalContext *self)
   g_return_val_if_fail (GCAL_IS_CONTEXT (self), NULL);
 
   return self->manager;
+}
+
+/**
+ * gcal_context_get_search_engine:
+ *
+ * Retrieves the #GcalSearchEngine from @self.
+ *
+ * Returns: (transfer none): a #GcalSearchEngine
+ */
+GcalSearchEngine*
+gcal_context_get_search_engine (GcalContext *self)
+{
+  g_return_val_if_fail (GCAL_IS_CONTEXT (self), NULL);
+
+  return self->search_engine;
 }
 
 /**
