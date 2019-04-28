@@ -1531,7 +1531,7 @@ gcal_event_compare (GcalEvent *event1,
 gint
 gcal_event_compare_with_current (GcalEvent *event1,
                                  GcalEvent *event2,
-                                 time_t    *current_time)
+                                 time_t     current_time)
 {
   time_t time1, time2;
   time_t diff1, diff2;
@@ -1545,8 +1545,8 @@ gcal_event_compare_with_current (GcalEvent *event1,
 
   time1 = g_date_time_to_unix (event1->dt_start);
   time2 = g_date_time_to_unix (event2->dt_start);
-  diff1 = time1 - *current_time;
-  diff2 = time2 - *current_time;
+  diff1 = time1 - current_time;
+  diff2 = time2 - current_time;
 
   if (diff1 != diff2)
     {

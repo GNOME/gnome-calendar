@@ -69,7 +69,7 @@ sort_event_data (GcalEvent *a,
                  GcalEvent *b,
                  gpointer   user_data)
 {
-  return gcal_event_compare_with_current (a, b, user_data);
+  return gcal_event_compare_with_current (a, b, GPOINTER_TO_INT (user_data));
 }
 
 static gboolean
@@ -330,7 +330,7 @@ query_completed_cb (GcalShellSearchProvider *self,
   g_variant_builder_init (&builder, G_VARIANT_TYPE ("as"));
 
   current_time_t = time (NULL);
-  events = g_list_sort_with_data (events, (GCompareDataFunc) sort_event_data, &current_time_t);
+  events = g_list_sort_with_data (events, (GCompareDataFunc) sort_event_data, GINT_TO_POINTER (current_time_t));
   for (l = events; l != NULL; l = g_list_next (l))
     {
       const gchar *uid;
