@@ -166,6 +166,24 @@ load_css_provider (GcalApplication *self)
  */
 
 static void
+gcal_application_open_event (GSimpleAction *sync,
+                             GVariant      *parameter,
+                             gpointer       app)
+{
+  GcalApplication *self;
+  const gchar *event_uuid;
+
+  self = GCAL_APPLICATION (app);
+  event_uuid = g_variant_get_string (parameter, NULL);
+  g_assert (event_uuid != NULL);
+
+  g_debug ("Opening event %s", event_uuid);
+
+  gcal_window_open_event_by_uuid (GCAL_WINDOW (self->window), event_uuid);
+  gtk_window_present (GTK_WINDOW (self->window));
+}
+
+static void
 gcal_application_sync (GSimpleAction *sync,
                        GVariant      *parameter,
                        gpointer       app)
@@ -397,6 +415,7 @@ gcal_application_startup (GApplication *app)
   GcalApplication *self;
 
   static const GActionEntry gcal_app_entries[] = {
+    { "open-event", gcal_application_open_event, "s" },
     { "sync",   gcal_application_sync },
     { "search", gcal_application_launch_search },
     { "about",  gcal_application_show_about },
