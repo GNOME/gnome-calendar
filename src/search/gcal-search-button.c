@@ -105,7 +105,6 @@ on_search_entry_changed_cb (GcalSearchButton *self)
 
   if (dzl_str_empty0 (typed_text))
     {
-      g_debug ("Cancelling search");
       dzl_suggestion_entry_set_model (entry, NULL);
       return;
     }
