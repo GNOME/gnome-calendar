@@ -130,6 +130,8 @@ void                 gcal_event_get_original_timezones           (GcalEvent     
                                                                   GTimeZone         **start_tz,
                                                                   GTimeZone         **end_tz);
 
+gchar*               gcal_event_format_date                      (GcalEvent          *self);
+
 G_END_DECLS
 
 #endif /* GCAL_EVENT_H */

@@ -19,10 +19,13 @@
 #define G_LOG_DOMAIN "GcalEvent"
 
 #include "gconstructor.h"
+#include "gcal-application.h"
 #include "gcal-debug.h"
 #include "gcal-event.h"
 #include "gcal-utils.h"
 #include "gcal-recurrence.h"
+
+#include <glib/gi18n.h>
 
 #define LIBICAL_TZID_PREFIX "/freeassociation.sourceforge.net/"
 
@@ -1771,4 +1774,89 @@ gcal_event_save_original_timezones (GcalEvent *self)
     }
 
   GCAL_EXIT;
+}
+
+/**
+ * gcal_event_format_date:
+ * @self: a #GcalEvent
+ *
+ * Formats the start and end dates of @self into a human-readable
+ * string. The final string depends on whether the event is single
+ * or multiday, and timed or all-day.
+ *
+ * Returns: (transfer full): a string
+ */
+gchar*
+gcal_event_format_date (GcalEvent *self)
+{
+  g_autofree gchar *formatted_string = NULL;
+  g_autofree gchar *start_date = NULL;
+  g_autofree gchar *start_time = NULL;
+  g_autofree gchar *end_date = NULL;
+  g_autofree gchar *end_time = NULL;
+  GcalApplication *application;
+  GcalTimeFormat time_format;
+  GcalContext *context;
+  GDateTime *date_start;
+  GDateTime *date_end;
+  const gchar *hour_format;
+  gboolean is_multiday;
+  gboolean is_all_day;
+
+  g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
+
+  /* XXX: nasty... */
+  application = GCAL_APPLICATION (g_application_get_default ());
+  context = gcal_application_get_context (application);
+  time_format = gcal_context_get_time_format (context);
+
+  if (time_format == GCAL_TIME_FORMAT_24H)
+    hour_format = "%R";
+  else
+    hour_format = "%I:%M %P";
+
+  date_start = gcal_event_get_date_start (self);
+  date_end = gcal_event_get_date_end (self);
+  is_multiday = gcal_event_is_multiday (self);
+  is_all_day = gcal_event_get_all_day (self);
+
+  start_date = g_date_time_format (date_start, "%x");
+  start_time = g_date_time_format (date_start, hour_format);
+  end_date = g_date_time_format (date_end, "%x");
+  end_time = g_date_time_format (date_end, hour_format);
+
+  if (is_multiday)
+    {
+      if (is_all_day)
+        {
+          /* Translators: %1$s is the start date and %2$s is the end date. */
+          formatted_string = g_strdup_printf (_("%1$s — %2$s"), start_date, end_date);
+        }
+      else
+        {
+          /*
+           * Translators: %1$s is the start date, %2$s is the start time,
+           * %3$s is the end date, and %4$s is the end time.
+           */
+          formatted_string = g_strdup_printf (_("%1$s %2$s — %3$s %4$s"),
+                                              start_date,
+                                              start_time,
+                                              end_date,
+                                              end_time);
+        }
+    }
+  else
+    {
+      if (is_all_day)
+        {
+          formatted_string = g_steal_pointer (&start_date);
+        }
+      else
+        {
+          /* Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour */
+          formatted_string = g_strdup_printf (_("%1$s, %2$s – %3$s"), start_date, start_time, end_time);
+        }
+    }
+
+  return g_steal_pointer (&formatted_string);
 }
