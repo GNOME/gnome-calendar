@@ -31,11 +31,17 @@ struct _GcalSearchHitInterface
 {
   GTypeInterface parent;
 
+  void               (*activate)                                 (GcalSearchHit      *self,
+                                                                  GtkWidget          *for_widget);
+
   gint               (*get_priority)                             (GcalSearchHit      *self);
 
   gint               (*compare)                                  (GcalSearchHit      *a,
                                                                   GcalSearchHit      *b);
 };
+
+void                 gcal_search_hit_activate                    (GcalSearchHit      *self,
+                                                                  GtkWidget          *for_widget);
 
 gint                 gcal_search_hit_get_priority                (GcalSearchHit      *self);
 

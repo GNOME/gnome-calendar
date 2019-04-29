@@ -107,8 +107,6 @@ search_func (GTask        *task,
                               start,
                               end);
 
-  //e_cal_data_model_unsubscribe (self->data_model, E_CAL_DATA_MODEL_SUBSCRIBER (model));
-
   g_task_return_pointer (task, g_steal_pointer (&model), g_object_unref);
 }
 

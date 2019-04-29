@@ -22,6 +22,7 @@
 
 #include "gcal-context.h"
 #include "gcal-search-button.h"
+#include "gcal-search-hit.h"
 
 #include <math.h>
 
@@ -117,6 +118,14 @@ on_search_entry_changed_cb (GcalSearchButton *self)
                              self->cancellable,
                              on_search_finished_cb,
                              g_object_ref (self));
+}
+
+static void
+on_search_entry_suggestion_activated_cb (DzlSuggestionEntry *entry,
+                                         GcalSearchHit      *search_hit,
+                                         GcalSearchButton   *self)
+{
+  gcal_search_hit_activate (search_hit, GTK_WIDGET (self));
 }
 
 static void
@@ -257,6 +266,11 @@ gcal_search_button_init (GcalSearchButton *self)
                            G_CALLBACK (on_search_entry_changed_cb),
                            self,
                            G_CONNECT_SWAPPED);
+  g_signal_connect_object (entry,
+                           "suggestion-activated",
+                           G_CALLBACK (on_search_entry_suggestion_activated_cb),
+                           self,
+                           0);
 
   dzl_suggestion_entry_set_position_func (entry,
                                           position_suggestion_popover_func,

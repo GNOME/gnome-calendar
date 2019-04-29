@@ -27,6 +27,16 @@ gcal_search_hit_default_init (GcalSearchHitInterface *iface)
 {
 }
 
+void
+gcal_search_hit_activate (GcalSearchHit *self,
+                          GtkWidget     *for_widget)
+{
+  g_return_if_fail (GCAL_IS_SEARCH_HIT (self));
+  g_return_if_fail (GCAL_SEARCH_HIT_GET_IFACE (self)->activate);
+
+  GCAL_SEARCH_HIT_GET_IFACE (self)->activate (self, for_widget);
+}
+
 gint
 gcal_search_hit_get_priority (GcalSearchHit *self)
 {

@@ -62,8 +62,7 @@ set_event (GcalSearchHitEvent *self,
   dzl_suggestion_set_id (suggestion, gcal_event_get_uid (event));
   dzl_suggestion_set_title (suggestion, gcal_event_get_summary (event));
 
-  /* FIXME: use a better date description */
-  date_string = g_date_time_format (gcal_event_get_date_start (event), "%x %X %z");
+  date_string = gcal_event_format_date (event);
   dzl_suggestion_set_subtitle (suggestion, date_string);
 }
 
@@ -98,6 +97,25 @@ gcal_search_hit_event_get_icon_surface (DzlSuggestion *suggestion,
  * GcalSearchHit interface
  */
 
+static void
+gcal_search_hit_event_activate (GcalSearchHit *search_hit,
+                                GtkWidget     *for_widget)
+{
+  GcalSearchHitEvent *self;
+  GApplication *application;
+  const gchar *event_uid;
+
+  self = GCAL_SEARCH_HIT_EVENT (search_hit);
+  event_uid = gcal_event_get_uid (self->event);
+
+  application = g_application_get_default ();
+  g_assert (application != NULL);
+
+  g_action_group_activate_action (G_ACTION_GROUP (application),
+                                  "open-event",
+                                  g_variant_new_string (event_uid));
+}
+
 static gint
 gcal_search_hit_event_get_priority (GcalSearchHit *search_hit)
 {
@@ -125,6 +143,7 @@ gcal_search_hit_event_compare (GcalSearchHit *a,
 static void
 gcal_search_hit_interface_init (GcalSearchHitInterface *iface)
 {
+  iface->activate = gcal_search_hit_event_activate;
   iface->get_priority = gcal_search_hit_event_get_priority;
   iface->compare = gcal_search_hit_event_compare;
 }
