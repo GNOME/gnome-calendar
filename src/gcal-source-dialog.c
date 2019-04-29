@@ -2037,7 +2037,7 @@ goa_account_removed_cb (GoaClient *client,
 static void
 setup_context (GcalSourceDialog *self)
 {
-  g_autolist (GoaAccount) accounts = NULL;
+  GList *accounts = NULL;
   GcalManager *manager;
   GoaClient *client;
   GList *l;
@@ -2058,6 +2058,8 @@ setup_context (GcalSourceDialog *self)
   manager = gcal_context_get_manager (self->context);
   g_signal_connect (manager, "source-added", G_CALLBACK (add_source), self);
   g_signal_connect (manager, "source-removed", G_CALLBACK (remove_source), self);
+
+  g_list_free_full (accounts, g_object_unref);
 
   GCAL_EXIT;
 }
