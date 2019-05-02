@@ -2016,7 +2016,7 @@ gcal_week_header_set_date (GcalWeekHeader *self,
   ICalTime *old_date, *new_date;
 
   old_date = self->active_date;
-  new_date = i_cal_time_new_clone (date);
+  new_date = i_cal_time_clone (date);
 
   /*
    * If the active date changed, but we're still in the same week,

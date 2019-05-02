@@ -87,7 +87,7 @@ execute_search (GcalShellSearchProvider *self)
     GCAL_RETURN (TRUE);
 
   zone = gcal_manager_get_system_timezone (self->manager);
-  date = i_cal_time_current_time_with_zone (zone);
+  date = i_cal_time_new_current_with_zone (zone);
   i_cal_time_adjust (date, -7, 0, 0, 0); /* -1 week from today */
   range_start = i_cal_time_as_timet_with_zone (date, zone);
 

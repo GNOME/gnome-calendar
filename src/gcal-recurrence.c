@@ -310,7 +310,7 @@ gcal_recurrence_to_rrule (GcalRecurrence *recur)
       {
         ICalTime *until;
 
-        until = i_cal_time_null_time ();
+        until = i_cal_time_new_null_time ();
         i_cal_time_set_date (until,
                              g_date_time_get_year (recur->limit.until),
                              g_date_time_get_month (recur->limit.until),

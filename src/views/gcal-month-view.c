@@ -1148,11 +1148,11 @@ gcal_month_view_set_date (GcalView *view,
 
   g_clear_object (&self->date);
 
-  self->date = i_cal_time_new_clone (date);
+  self->date = i_cal_time_clone (date);
   self->days_delay = (time_day_of_week (1, i_cal_time_get_month (self->date) - 1, i_cal_time_get_year (self->date)) - self->first_weekday + 7) % 7;
   self->keyboard_cell = self->days_delay + (i_cal_time_get_day (self->date) - 1);
 
-  icalstr = i_cal_time_as_ical_string_r (date);
+  icalstr = i_cal_time_as_ical_string (date);
   GCAL_TRACE_MSG ("new date: %s", icalstr);
   g_free (icalstr);
 

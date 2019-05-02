@@ -357,7 +357,7 @@ gcal_event_set_component_internal (GcalEvent     *self,
                        "Event '%s' has an invalid start date", gcal_event_get_uid (self));
 
           e_cal_component_datetime_free (start);
-          start = e_cal_component_datetime_new_take (i_cal_time_today (), NULL);
+          start = e_cal_component_datetime_new_take (i_cal_time_new_today (), NULL);
         }
 
       GCAL_TRACE_MSG ("Retrieving start timezone");
@@ -1210,7 +1210,7 @@ gcal_event_add_alarm (GcalEvent *self,
   alarm = e_cal_component_alarm_new ();
 
   /* Setup the alarm trigger */
-  duration = i_cal_duration_null_duration ();
+  duration = i_cal_duration_new_null_duration ();
   i_cal_duration_set_is_neg (duration, TRUE);
   i_cal_duration_set_minutes (duration, type);
 

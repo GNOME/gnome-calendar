@@ -306,7 +306,7 @@ gcal_application_activate (GApplication *application)
 
           tz = gcal_manager_get_system_timezone (self->manager);
 
-          self->initial_date = i_cal_time_current_time_with_zone (tz);
+          self->initial_date = i_cal_time_new_current_with_zone (tz);
           i_cal_time_set_timezone (self->initial_date, tz);
         }
 

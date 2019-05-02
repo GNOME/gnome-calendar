@@ -238,14 +238,14 @@ update_selected_dates_from_button_data (GcalYearView *year_view)
 
       g_clear_object (&year_view->start_selected_date);
       if (year_view->date)
-        year_view->start_selected_date = i_cal_time_new_clone (year_view->date);
+        year_view->start_selected_date = i_cal_time_clone (year_view->date);
       else
-        year_view->start_selected_date = i_cal_time_new_clone (current_date);
+        year_view->start_selected_date = i_cal_time_clone (current_date);
 
       i_cal_time_set_time (year_view->start_selected_date, 0, 0, 0);
 
       g_clear_object (&year_view->end_selected_date);
-      year_view->end_selected_date = i_cal_time_new_clone (year_view->start_selected_date);
+      year_view->end_selected_date = i_cal_time_clone (year_view->start_selected_date);
       i_cal_time_set_time (year_view->end_selected_date, 23, 59, 59);
       i_cal_time_normalize_inplace (year_view->end_selected_date);
 
@@ -507,7 +507,7 @@ update_sidebar_headers (GtkListBoxRow *row,
       row_header = gtk_box_new (GTK_ORIENTATION_VERTICAL, 0);
       now = g_date_time_new_now_local ();
 
-      date = i_cal_time_new_clone (year_view->start_selected_date);
+      date = i_cal_time_clone (year_view->start_selected_date);
       i_cal_time_adjust (date, row_shift, 0, 0, 0);
 
       dt = icaltime_to_datetime (date);
@@ -544,7 +544,7 @@ update_date (GcalYearView *year_view,
     needs_reset = TRUE;
 
   g_clear_object (&year_view->date);
-  year_view->date = i_cal_time_new_clone (new_date);
+  year_view->date = i_cal_time_clone (new_date);
 
   year_view->first_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
                                                              1, G_DATE_JANUARY,  i_cal_time_get_year (year_view->date));
@@ -806,7 +806,7 @@ draw_month_grid (GcalYearView *year_view,
   days = days_delay + icaltime_days_in_month (month_nr + 1, i_cal_time_get_year (year_view->date));
   shown_rows = ceil (days / 7.0);
 
-  today = i_cal_time_today ();
+  today = i_cal_time_new_today ();
   i_cal_time_set_date (today, i_cal_time_get_year (year_view->date), month_nr + 1, 1);
   i_cal_time_set_time (today, 0, 0, 0);
   i_cal_time_set_timezone (today, gcal_manager_get_system_timezone (year_view->manager));
@@ -2026,9 +2026,9 @@ gcal_year_view_init (GcalYearView *self)
   self->navigator_grid = g_new0 (GridData, 1);
   self->selected_data = g_new0 (ButtonData, 1);
 
-  self->start_selected_date = i_cal_time_null_time ();
+  self->start_selected_date = i_cal_time_new_null_time ();
   i_cal_time_set_timezone (self->start_selected_date, e_cal_util_get_system_timezone ());
-  self->end_selected_date = i_cal_time_null_time ();
+  self->end_selected_date = i_cal_time_new_null_time ();
   i_cal_time_set_timezone (self->end_selected_date, e_cal_util_get_system_timezone ());
 
   /* bind GNOME Shell' show week numbers property to GNOME Calendar's one */

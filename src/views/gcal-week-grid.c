@@ -1264,7 +1264,7 @@ gcal_week_grid_set_date (GcalWeekGrid *self,
                          ICalTime     *date)
 {
   g_clear_object (&self->active_date);
-  self->active_date = i_cal_time_new_clone (date);
+  self->active_date = i_cal_time_clone (date);
 
   gtk_widget_queue_resize (GTK_WIDGET (self));
   gtk_widget_queue_draw (GTK_WIDGET (self));

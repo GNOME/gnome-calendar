@@ -304,7 +304,7 @@ update_active_date (GcalWindow *window,
   previous_date = window->active_date;
   window->active_date = new_date;
 
-  tmp_str = i_cal_time_as_ical_string_r (new_date);
+  tmp_str = i_cal_time_as_ical_string (new_date);
   g_debug ("Updating active date to %s", tmp_str);
   g_free (tmp_str);
 
@@ -389,7 +389,7 @@ date_updated (GcalWindow *window,
   move_today = window->today_button == (GtkWidget*) button;
   move_back = window->back_button == (GtkWidget*) button;
 
-  new_date = i_cal_time_new_clone (window->active_date);
+  new_date = i_cal_time_clone (window->active_date);
 
   if (move_today)
     {
@@ -1543,7 +1543,7 @@ gcal_window_init (GcalWindow *self)
                               self,
                               NULL);
 
-  self->active_date = i_cal_time_null_time ();
+  self->active_date = i_cal_time_new_null_time ();
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;
 
   /*

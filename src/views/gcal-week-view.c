@@ -196,7 +196,7 @@ gcal_week_view_set_date (GcalView *view,
   GCAL_ENTRY;
 
   g_clear_object (&self->date);
-  self->date = i_cal_time_new_clone (date);
+  self->date = i_cal_time_clone (date);
 
   /* Propagate the new date */
   gcal_week_grid_set_date (GCAL_WEEK_GRID (self->week_grid), date);

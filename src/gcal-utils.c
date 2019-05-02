@@ -149,7 +149,7 @@ datetime_to_icaltime (GDateTime *dt)
   if (!dt)
     return NULL;
 
-  idt = i_cal_time_null_time ();
+  idt = i_cal_time_new_null_time ();
 
   i_cal_time_set_date (idt,
                        g_date_time_get_year (dt),
@@ -646,8 +646,8 @@ get_start_of_week (ICalTime *date)
   ICalTime *new_date;
   GDateTime *dt;
 
-  new_date = i_cal_time_from_day_of_year (i_cal_time_start_doy_week (date, get_first_weekday () + 1),
-                                          i_cal_time_get_year (date));
+  new_date = i_cal_time_new_from_day_of_year (i_cal_time_start_doy_week (date, get_first_weekday () + 1),
+                                              i_cal_time_get_year (date));
   i_cal_time_set_is_date (new_date, FALSE);
   i_cal_time_set_time (new_date, 0, 0, 0);
 
