@@ -139,8 +139,8 @@ gcal_get_month_name (gint i)
  * Returns: (transfer full): a #cairo_surface_t
  */
 cairo_surface_t*
-gcal_get_surface_from_color (GdkRGBA  *color,
-                             gint      size)
+gcal_get_surface_from_color (const GdkRGBA *color,
+                             gint           size)
 {
   cairo_surface_t *surface;
   cairo_t *cr;
@@ -171,8 +171,8 @@ gcal_get_surface_from_color (GdkRGBA  *color,
  * Returns: (transfer full): a #cairo_surface_t
  */
 cairo_surface_t*
-get_circle_surface_from_color (GdkRGBA *color,
-                               gint     size)
+get_circle_surface_from_color (const GdkRGBA *color,
+                               gint           size)
 {
   cairo_surface_t *surface;
   cairo_t *cr;

@@ -45,10 +45,10 @@ gchar*               gcal_get_weekday                            (gint          
 
 gchar*               gcal_get_month_name                         (gint                i);
 
-cairo_surface_t*     gcal_get_surface_from_color                 (GdkRGBA            *color,
+cairo_surface_t*     gcal_get_surface_from_color                 (const GdkRGBA      *color,
                                                                   gint                size);
 
-cairo_surface_t*     get_circle_surface_from_color               (GdkRGBA            *color,
+cairo_surface_t*     get_circle_surface_from_color               (const GdkRGBA      *color,
                                                                   gint                size);
 
 void                 get_color_name_from_source                  (ESource            *source,
