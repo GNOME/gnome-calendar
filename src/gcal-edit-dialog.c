@@ -161,58 +161,59 @@ static gint
 sources_menu_sort_func (gconstpointer a,
                         gconstpointer b)
 {
-  ESource *source1, *source2;
+  GcalCalendar *calendar1, *calendar2;
 
-  source1 = E_SOURCE (a);
-  source2 = E_SOURCE (b);
+  calendar1 = GCAL_CALENDAR ((gpointer) a);
+  calendar2 = GCAL_CALENDAR ((gpointer) b);
 
-  return g_ascii_strcasecmp (e_source_get_display_name (source1), e_source_get_display_name (source2));
+  return g_ascii_strcasecmp (gcal_calendar_get_name (calendar1),
+                             gcal_calendar_get_name (calendar2));
 }
 
 static void
 fill_sources_menu (GcalEditDialog *self)
 {
+  g_autoptr (GList) list = NULL;
   GcalManager *manager;
-  GList *list;
   GList *aux;
 
   if (self->context == NULL)
     return;
 
   manager = gcal_context_get_manager (self->context);
-  list = gcal_manager_get_sources (manager);
+  list = gcal_manager_get_calendars (manager);
   self->sources_menu = g_menu_new ();
 
   list = g_list_sort (list, sources_menu_sort_func);
 
   for (aux = list; aux != NULL; aux = aux->next)
     {
-      ESource *source;
+      GcalCalendar *calendar;
+      const GdkRGBA *color;
       GMenuItem *item;
-      GdkRGBA color;
       cairo_surface_t *surface;
       GdkPixbuf *pix;
 
-      source = E_SOURCE (aux->data);
+      calendar = GCAL_CALENDAR (aux->data);
 
       /* retrieve color */
-      get_color_name_from_source (source, &color);
-      surface = get_circle_surface_from_color (&color, 16);
+      color = gcal_calendar_get_color (calendar);
+      surface = get_circle_surface_from_color (color, 16);
       pix = gdk_pixbuf_get_from_surface (surface, 0, 0, 16, 16);
 
       /* menu item */
-      item = g_menu_item_new (e_source_get_display_name (source), "select-calendar");
+      item = g_menu_item_new (gcal_calendar_get_name (calendar), "select-calendar");
       g_menu_item_set_icon (item, G_ICON (pix));
 
       /* set insensitive for read-only calendars */
-      if (!gcal_manager_is_client_writable (manager, source))
+      if (gcal_calendar_is_read_only (calendar))
         {
           g_menu_item_set_action_and_target_value (item, "select-calendar", NULL);
         }
       else
         {
-          g_menu_item_set_action_and_target_value (item, "select-calendar",
-                                                   g_variant_new_string (e_source_get_uid (source)));
+          const gchar *id = gcal_calendar_get_id (calendar);
+          g_menu_item_set_action_and_target_value (item, "select-calendar", g_variant_new_string (id));
         }
 
       g_menu_append_item (self->sources_menu, item);
@@ -226,8 +227,6 @@ fill_sources_menu (GcalEditDialog *self)
 
   /* HACK: show the popover menu icons */
   fix_popover_menu_icons (GTK_POPOVER (self->sources_popover));
-
-  g_list_free (list);
 }
 
 static void
@@ -629,9 +628,9 @@ on_calendar_selected_action_cb (GSimpleAction *action,
                                 GVariant      *value,
                                 gpointer       user_data)
 {
+  g_autoptr (GList) list = NULL;
   GcalEditDialog *self;
   GcalManager *manager;
-  GList *list;
   GList *aux;
   gchar *uid;
 
@@ -639,7 +638,7 @@ on_calendar_selected_action_cb (GSimpleAction *action,
 
   self = GCAL_EDIT_DIALOG (user_data);
   manager = gcal_context_get_manager (self->context);
-  list = gcal_manager_get_sources (manager);
+  list = gcal_manager_get_calendars (manager);
 
   /* retrieve selected calendar uid */
   g_variant_get (value, "s", &uid);
@@ -647,31 +646,28 @@ on_calendar_selected_action_cb (GSimpleAction *action,
   /* search for any source with the given UID */
   for (aux = list; aux != NULL; aux = aux->next)
     {
-      ESource *source;
-      source = E_SOURCE (aux->data);
+      GcalCalendar *calendar = GCAL_CALENDAR (aux->data);
 
-      if (g_strcmp0 (e_source_get_uid (source), uid) == 0)
-      {
-        GdkRGBA color;
-        cairo_surface_t *surface;
+      if (g_strcmp0 (gcal_calendar_get_id (calendar), uid) == 0)
+        {
+          cairo_surface_t *surface;
+          const GdkRGBA *color;
 
-        /* retrieve color */
-        get_color_name_from_source (source, &color);
+          /* retrieve color */
+          color = gcal_calendar_get_color (calendar);
+          surface = get_circle_surface_from_color (color, 16);
+          gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
 
-        surface = get_circle_surface_from_color (&color, 16);
-        gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
+          self->selected_source = gcal_calendar_get_source (calendar);
 
-        self->selected_source = source;
+          gtk_label_set_label (GTK_LABEL (self->subtitle_label), gcal_calendar_get_name (calendar));
 
-        gtk_label_set_label (GTK_LABEL (self->subtitle_label), e_source_get_display_name (source));
-
-        g_clear_pointer (&surface, cairo_surface_destroy);
-        break;
-      }
+          g_clear_pointer (&surface, cairo_surface_destroy);
+          break;
+        }
     }
 
   g_free (uid);
-  g_list_free (list);
 
   GCAL_EXIT;
 }

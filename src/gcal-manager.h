@@ -35,9 +35,7 @@ GcalManager*         gcal_manager_new                            (void);
 ESource*             gcal_manager_get_source                     (GcalManager        *self,
                                                                   const gchar        *uid);
 
-GList*               gcal_manager_get_sources                    (GcalManager        *self);
-
-GList*               gcal_manager_get_sources_connected          (GcalManager        *self);
+GList*               gcal_manager_get_calendars                  (GcalManager        *self);
 
 ESource*             gcal_manager_get_default_source             (GcalManager        *self);
 

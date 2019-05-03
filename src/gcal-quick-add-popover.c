@@ -788,17 +788,24 @@ gcal_quick_add_popover_set_property (GObject      *object,
     case PROP_CONTEXT:
       if (g_set_object (&self->context, g_value_get_object (value)))
         {
+          g_autoptr (GList) calendars = NULL;
           GcalManager *manager;
-          GList *sources, *l;
+          GList *l;
 
           /* Add currently loaded sources */
           manager = gcal_context_get_manager (self->context);
-          sources = gcal_manager_get_sources_connected (manager);
+          calendars = gcal_manager_get_calendars (manager);
 
-          for (l = sources; l != NULL; l = g_list_next (l))
-            on_source_added (manager, l->data, gcal_manager_is_client_writable (manager, l->data), self);
+          for (l = calendars; l; l = l->next)
+            {
+              GcalCalendar *calendar = l->data;
+              on_source_added (manager,
+                               gcal_calendar_get_source (calendar),
+                               gcal_calendar_get_visible (calendar),
+                               self);
+            }
 
-          g_list_free (sources);
+          g_list_free (calendars);
 
           /* Connect to the manager signals and keep the list updates */
           g_signal_connect (manager, "source-added", G_CALLBACK (on_source_added), self);

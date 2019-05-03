@@ -773,53 +773,12 @@ gcal_manager_get_source (GcalManager *self,
   return e_source_registry_ref_source (self->source_registry, uid);
 }
 
-/**
- * gcal_manager_get_sources:
- * @self: a #GcalManager
- *
- * Retrieve a list of the enabled sources used in the application.
- *
- * Returns: (nullable)(transfer container)(content-type ESource): a #GList
- */
 GList*
-gcal_manager_get_sources (GcalManager *self)
-{
-  GHashTableIter iter;
-  gpointer key, value;
-  GList *aux = NULL;
-
-  GCAL_ENTRY;
-
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
-
-  g_hash_table_iter_init (&iter, self->clients);
-
-  while (g_hash_table_iter_next (&iter, &key, &value))
-    {
-      if (!is_source_enabled (key))
-        continue;
-
-      aux = g_list_append (aux, key);
-    }
-
-  GCAL_RETURN (aux);
-}
-
-/**
- * gcal_manager_get_sources_connected:
- * @self: a #GcalManager
- *
- * Returns a #GList with every source connected on the app,
- * whether they are enabled or not.
- *
- * Returns: (nullable)(transfer container)(content-type ESource): a #GList
- */
-GList*
-gcal_manager_get_sources_connected (GcalManager *self)
+gcal_manager_get_calendars (GcalManager *self)
 {
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  return g_hash_table_get_keys (self->clients);
+  return g_hash_table_get_values (self->clients);
 }
 
 /**

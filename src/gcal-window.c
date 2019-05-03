@@ -1192,14 +1192,19 @@ gcal_window_set_property (GObject      *object,
 
           if (!gcal_manager_get_loading (manager))
             {
-              GList *sources, *l;
+              g_autoptr (GList) calendars = NULL;
+              GList *l;
 
-              sources = gcal_manager_get_sources_connected (manager);
+              calendars = gcal_manager_get_calendars (manager);
 
-              for (l = sources; l != NULL; l = g_list_next (l))
-                add_source (manager, l->data, is_source_enabled (l->data), self);
-
-              g_list_free (sources);
+              for (l = calendars; l; l = l->next)
+                {
+                  GcalCalendar *calendar = l->data;
+                  add_source (manager,
+                              gcal_calendar_get_source (calendar),
+                              gcal_calendar_get_visible (calendar),
+                              self);
+                }
             }
 
           g_signal_connect (manager, "source-added", G_CALLBACK (add_source), object);

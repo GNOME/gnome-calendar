@@ -101,31 +101,34 @@ process_sources (GcalApplication *self)
   g_autofree gchar *new_css_data = NULL;
   g_auto (GStrv) new_css_snippets = NULL;
   GcalManager *manager;
-  GList *sources, *l;
-  ESource *source;
+  GList *calendars, *l;
   GQuark color_id;
-  GdkRGBA color;
   gint arr_length;
   gint i = 0;
 
   manager = gcal_context_get_manager (self->context);
-  sources = gcal_manager_get_sources_connected (manager);
-  arr_length = g_list_length (sources);
+  calendars = gcal_manager_get_calendars (manager);
+  arr_length = g_list_length (calendars);
   new_css_snippets = g_new0 (gchar*, arr_length + 2);
-  for (l = sources; l != NULL; l = g_list_next (l), i++)
+  for (l = calendars; l; l = l->next, i++)
     {
       g_autofree gchar* color_str = NULL;
+      const GdkRGBA *color;
+      GcalCalendar *calendar;
 
-      source = l->data;
+      calendar = l->data;
 
-      get_color_name_from_source (source, &color);
-      color_str = gdk_rgba_to_string (&color);
+      if (!gcal_calendar_get_visible (calendar))
+        continue;
+
+      color = gcal_calendar_get_color (calendar);
+      color_str = gdk_rgba_to_string (color);
       color_id = g_quark_from_string (color_str);
 
       new_css_snippets[i] = g_strdup_printf (CSS_TEMPLATE, color_id, color_str);
     }
 
-  g_list_free (sources);
+  g_list_free (calendars);
 
   new_css_data = g_strjoinv ("\n", new_css_snippets);
 
