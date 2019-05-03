@@ -60,6 +60,12 @@ typedef struct
   GcalManager        *manager;
 } MoveEventData;
 
+typedef struct
+{
+  GcalManager        *manager;
+  GList              *events;
+} GatherEventData;
+
 struct _GcalManager
 {
   GObject             parent;
@@ -124,13 +130,14 @@ gather_events (ECalDataModel         *data_model,
                time_t                 instance_end,
                gpointer               user_data)
 {
+  GatherEventData *data = user_data;
+  GcalCalendar *calendar;
   GcalEvent *event;
   GError *error;
-  GList **result;
 
   error = NULL;
-  result = user_data;
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+  calendar = g_hash_table_lookup (data->manager->clients, e_client_get_source (E_CLIENT (client)));
+  event = gcal_event_new (calendar, comp, &error);
 
   if (error)
     {
@@ -139,7 +146,7 @@ gather_events (ECalDataModel         *data_model,
       return TRUE;
     }
 
-  *result = g_list_append (*result, event);/* FIXME: add me sorted */
+  data->events = g_list_append (data->events, event);/* FIXME: add me sorted */
 
   return TRUE;
 }
@@ -309,8 +316,12 @@ on_event_created (GObject      *source_object,
     }
   else
     {
+      GcalCalendar *calendar;
+
       g_object_ref (data->event);
-      gcal_manager_set_default_source (data->manager, gcal_event_get_source (data->event));
+
+      calendar = gcal_event_get_calendar (data->event);
+      gcal_manager_set_default_source (data->manager, gcal_calendar_get_source (calendar));
       g_debug ("Event: %s created successfully", new_uid);
     }
 
@@ -781,6 +792,15 @@ gcal_manager_get_calendars (GcalManager *self)
   return g_hash_table_get_values (self->clients);
 }
 
+GcalCalendar*
+gcal_manager_get_calendar_from_source (GcalManager *self,
+                                       ESource     *source)
+{
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
+
+  return g_hash_table_lookup (self->clients, source);
+}
+
 /**
  * gcal_manager_get_default_source:
  * @self: a #GcalManager
@@ -917,7 +937,10 @@ GList*
 gcal_manager_get_shell_search_events (GcalManager *self)
 {
   time_t range_start, range_end;
-  GList *list = NULL;
+  GatherEventData data = {
+    .manager = self,
+    .events = NULL,
+  };
 
   GCAL_ENTRY;
 
@@ -930,9 +953,9 @@ gcal_manager_get_shell_search_events (GcalManager *self)
                                       range_start,
                                       range_end,
                                       gather_events,
-                                      &list);
+                                      &data);
 
-  GCAL_RETURN (list);
+  GCAL_RETURN (data.events);
 }
 
 /**
@@ -1251,16 +1274,14 @@ gcal_manager_create_event (GcalManager *self,
   ECalComponent *component;
   GcalCalendar *calendar;
   AsyncOpsData *data;
-  ESource *source;
 
   GCAL_ENTRY;
 
   g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (GCAL_IS_EVENT (event));
 
-  source = gcal_event_get_source (event);
   component = gcal_event_get_component (event);
-  calendar = g_hash_table_lookup (self->clients, source);
+  calendar = gcal_event_get_calendar (event);
 
   new_event_icalcomp = e_cal_component_get_icalcomponent (component);
 
@@ -1298,7 +1319,7 @@ gcal_manager_update_event (GcalManager           *self,
   g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (GCAL_IS_EVENT (event));
 
-  calendar = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
+  calendar = gcal_event_get_calendar (event);
   component = gcal_event_get_component (event);
 
   /*
@@ -1351,7 +1372,7 @@ gcal_manager_remove_event (GcalManager           *self,
   g_return_if_fail (GCAL_IS_EVENT (event));
 
   component = gcal_event_get_component (event);
-  calendar = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
+  calendar = gcal_event_get_calendar (event);
   rid = NULL;
 
   e_cal_component_get_uid (component, &uid);
@@ -1428,7 +1449,7 @@ gcal_manager_move_event_to_source (GcalManager *self,
    * created, try to remove the old component. Data loss it the last
    * thing we want to happen here.
    */
-  calendar = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
+  calendar = gcal_event_get_calendar (event);
 
   id = e_cal_component_get_id (ecomponent);
 
@@ -1470,7 +1491,10 @@ gcal_manager_get_events (GcalManager  *self,
                          icaltimetype *end_date)
 {
   time_t range_start, range_end;
-  GList *list = NULL;
+  GatherEventData data = {
+    .manager = self,
+    .events = NULL,
+  };
 
   GCAL_ENTRY;
 
@@ -1483,9 +1507,9 @@ gcal_manager_get_events (GcalManager  *self,
                                       range_start,
                                       range_end,
                                       gather_events,
-                                      &list);
+                                      &data);
 
-  GCAL_RETURN (list);
+  GCAL_RETURN (data.events);
 }
 
 /**
@@ -1520,14 +1544,18 @@ gcal_manager_get_event_from_shell_search (GcalManager *self,
                                           const gchar *uuid)
 {
   GcalEvent *new_event;
-  GList *l, *list;
+  GList *l;
   time_t range_start, range_end;
+  GatherEventData data = {
+    .manager = self,
+    .events = NULL,
+  };
+
 
   GCAL_ENTRY;
 
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  list = NULL;
   new_event = NULL;
 
   e_cal_data_model_get_subscriber_range (self->shell_search_data_model,
@@ -1539,9 +1567,9 @@ gcal_manager_get_event_from_shell_search (GcalManager *self,
                                       range_start,
                                       range_end,
                                       gather_events,
-                                      &list);
+                                      &data);
 
-  for (l = list; l != NULL; l = g_list_next (l))
+  for (l = data.events; l != NULL; l = g_list_next (l))
     {
       GcalEvent *event;
 
@@ -1554,7 +1582,7 @@ gcal_manager_get_event_from_shell_search (GcalManager *self,
         g_object_unref (event);
     }
 
-  g_list_free (list);
+  g_list_free (data.events);
 
   GCAL_RETURN (new_event);
 }

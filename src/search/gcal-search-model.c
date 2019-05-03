@@ -21,6 +21,8 @@
 #define G_LOG_DOMAIN "GcalSearchModel"
 
 #include "e-cal-data-model.h"
+#include "gcal-application.h"
+#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-search-hit.h"
 #include "gcal-search-hit-event.h"
@@ -98,6 +100,8 @@ gcal_search_model_component_added (ECalDataModelSubscriber *subscriber,
   g_autoptr (GcalEvent) event = NULL;
   g_autoptr (GError) error = NULL;
   GcalSearchModel *self;
+  GcalCalendar *calendar;
+  GcalContext *context;
   ESource *source;
 
   self = GCAL_SEARCH_MODEL (subscriber);
@@ -105,8 +109,11 @@ gcal_search_model_component_added (ECalDataModelSubscriber *subscriber,
   if (g_list_model_get_n_items (self->model) > self->max_results)
     return;
 
+  /* FIXME: propagate context to the model properly */
+  context = gcal_application_get_context (GCAL_APPLICATION (g_application_get_default ()));
   source = e_client_get_source (E_CLIENT (client));
-  event = gcal_event_new (source, component, &error);
+  calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (context), source);
+  event = gcal_event_new (calendar, component, &error);
 
   if (error)
     {

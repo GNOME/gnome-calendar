@@ -639,6 +639,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
                       GtkWidget           *button)
 {
   ECalComponent *component;
+  GcalCalendar *calendar;
   GcalManager *manager;
   GDateTime *date_start, *date_end;
   GTimeZone *tz;
@@ -652,6 +653,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
 
   manager = gcal_context_get_manager (self->context);
   source = g_object_get_data (G_OBJECT (self->selected_row), "source");
+  calendar = gcal_manager_get_calendar_from_source (manager, source);
 
   single_day = gcal_date_time_compare_date (self->date_end, self->date_start) == 0;
   all_day = gcal_date_time_compare_date (self->date_end, self->date_start) > 1 ||
@@ -692,7 +694,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
   /* Create an ECalComponent from the data above */
   component = build_component_from_details (summary, date_start, date_end);
 
-  event = gcal_event_new (source, component, NULL);
+  event = gcal_event_new (calendar, component, NULL);
   gcal_event_set_all_day (event, all_day);
 
   /* If we clicked edit button, send a signal; otherwise, create the event */

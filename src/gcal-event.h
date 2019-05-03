@@ -19,6 +19,7 @@
 #ifndef GCAL_EVENT_H
 #define GCAL_EVENT_H
 
+#include "gcal-calendar.h"
 #include "gcal-recurrence.h"
 
 #include <glib-object.h>
@@ -47,7 +48,7 @@ G_DECLARE_FINAL_TYPE (GcalEvent, gcal_event, GCAL, EVENT, GObject)
 
 GQuark               gcal_event_error_quark                      (void);
 
-GcalEvent*           gcal_event_new                              (ESource            *source,
+GcalEvent*           gcal_event_new                              (GcalCalendar       *calendar,
                                                                   ECalComponent      *component,
                                                                   GError            **error);
 
@@ -96,10 +97,10 @@ const gchar*         gcal_event_get_location                     (GcalEvent     
 void                 gcal_event_set_location                     (GcalEvent          *self,
                                                                   const gchar        *location);
 
-ESource*             gcal_event_get_source                       (GcalEvent          *self);
+GcalCalendar*        gcal_event_get_calendar                     (GcalEvent          *self);
 
-void                 gcal_event_set_source                       (GcalEvent          *self,
-                                                                  ESource            *source);
+void                 gcal_event_set_calendar                     (GcalEvent          *self,
+                                                                  GcalCalendar       *calendar);
 
 const gchar*         gcal_event_get_summary                      (GcalEvent          *self);
 

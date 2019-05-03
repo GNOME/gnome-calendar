@@ -891,14 +891,18 @@ create_event_detailed_cb (GcalView *view,
                           gpointer  end_span,
                           gpointer  user_data)
 {
+  g_autoptr (ESource) default_source = NULL;
   GcalWindow *window = GCAL_WINDOW (user_data);
+  GcalCalendar *default_calendar;
   GcalManager *manager;
   ECalComponent *comp;
   GcalEvent *event;
 
   manager = gcal_context_get_manager (window->context);
   comp = build_component_from_details ("", start_span, end_span);
-  event = gcal_event_new (gcal_manager_get_default_source (manager), comp, NULL);
+  default_source = gcal_manager_get_default_source (manager);
+  default_calendar = gcal_manager_get_calendar_from_source (manager, default_source);
+  event = gcal_event_new (default_calendar, comp, NULL);
 
   gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);
   gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (window->edit_dialog), event);
@@ -929,6 +933,7 @@ edit_dialog_closed (GtkDialog *dialog,
                     gpointer   user_data)
 {
   GcalRecurrenceModType mod;
+  GcalCalendar *calendar;
   GcalManager *manager;
   GcalWindow *window;
   GcalEditDialog *edit_dialog;
@@ -945,7 +950,8 @@ edit_dialog_closed (GtkDialog *dialog,
   event = gcal_edit_dialog_get_event (edit_dialog);
   view = GCAL_VIEW (window->views[window->active_view]);
   mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
-  source = gcal_event_get_source (event);
+  calendar = gcal_event_get_calendar (event);
+  source = gcal_calendar_get_source (calendar);
 
   if (!gcal_edit_dialog_get_recurrence_changed (edit_dialog) &&
       gcal_event_has_recurrence (event) &&

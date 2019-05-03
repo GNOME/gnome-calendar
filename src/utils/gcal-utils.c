@@ -1102,13 +1102,13 @@ filter_event_list_by_uid_and_modtype (GList                 *widgets,
     {
       ECalComponentId *id;
       ECalComponent *component;
-      ESource *source;
+      GcalCalendar *calendar;
       g_autofree gchar *id_prefix;
 
       component = gcal_event_get_component (event);
-      source = gcal_event_get_source (event);
+      calendar = gcal_event_get_calendar (event);
       id = e_cal_component_get_id (component);
-      id_prefix = g_strdup_printf ("%s:%s", e_source_get_uid (source), id->uid);
+      id_prefix = g_strdup_printf ("%s:%s", gcal_calendar_get_id (calendar), id->uid);
 
       for (l = widgets; l != NULL; l = l->next)
         {

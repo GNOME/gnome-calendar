@@ -298,10 +298,13 @@ gcal_week_view_component_added (ECalDataModelSubscriber *subscriber,
 {
   GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
   g_autoptr (GcalEvent) event = NULL;
+  GcalCalendar *calendar;
 
   GCAL_ENTRY;
 
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, NULL);
+  calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (self->context),
+                                                    e_client_get_source (E_CLIENT (client)));
+  event = gcal_event_new (calendar, comp, NULL);
 
   if (gcal_event_is_multiday (event) || gcal_event_get_all_day (event))
     gcal_week_header_add_event (GCAL_WEEK_HEADER (self->header), event);

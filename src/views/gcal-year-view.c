@@ -308,14 +308,14 @@ add_event_to_day_array (GcalYearView  *year_view,
 {
   g_autoptr (GDateTime) second_date = NULL;
   g_autoptr (GDateTime) date = NULL;
-  GcalManager *manager;
+  GcalCalendar *calendar;
   GtkWidget *child_widget;
   GDateTime *dt_start, *dt_end;
   gboolean is_readonly;
   gint i;
 
-  manager = gcal_context_get_manager (year_view->context);
-  is_readonly = !gcal_manager_is_client_writable (manager, gcal_event_get_source (event));
+  calendar = gcal_event_get_calendar (event);
+  is_readonly = gcal_calendar_is_read_only (calendar);
 
   child_widget = gcal_event_widget_new (year_view->context, event);
   gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (child_widget), is_readonly);
@@ -1469,6 +1469,7 @@ navigator_drag_drop_cb (GcalYearView   *self,
         {
           GcalRecurrenceModType mod;
           GcalEventWidget *event_widget;
+          GcalCalendar *calendar;
           GcalEvent *event;
           GDateTime *start_dt, *end_dt;
           GDateTime *drop_date;
@@ -1476,7 +1477,8 @@ navigator_drag_drop_cb (GcalYearView   *self,
 
           event_widget = GCAL_EVENT_WIDGET (gtk_drag_get_source_widget (context));
           event = gcal_event_widget_get_event (event_widget);
-          source = gcal_event_get_source (event);
+          calendar = gcal_event_get_calendar (event);
+          source = gcal_calendar_get_source (calendar);
           mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
 
           if (gcal_event_has_recurrence (event) &&
@@ -1798,6 +1800,7 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
                                 ECalComponent           *comp)
 {
   g_autoptr (GcalEvent) event = NULL;
+  GcalCalendar *calendar;
   GcalYearView *self;
   GDateTime *event_start, *event_end;
   GError *error;
@@ -1807,7 +1810,9 @@ gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
 
   error = NULL;
   self = GCAL_YEAR_VIEW (subscriber);
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+  calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (self->context),
+                                                    e_client_get_source (E_CLIENT (client)));
+  event = gcal_event_new (calendar, comp, &error);
 
   if (error)
     {

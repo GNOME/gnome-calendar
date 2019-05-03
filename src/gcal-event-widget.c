@@ -1162,9 +1162,6 @@ gboolean
 gcal_event_widget_equal (GcalEventWidget *widget1,
                          GcalEventWidget *widget2)
 {
-  if (!e_source_equal (gcal_event_get_source (widget1->event), gcal_event_get_source (widget2->event)))
-    return FALSE;
-
   return g_strcmp0 (gcal_event_get_uid (widget1->event), gcal_event_get_uid (widget2->event)) == 0;
 }
 

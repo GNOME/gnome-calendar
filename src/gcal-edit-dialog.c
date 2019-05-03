@@ -751,6 +751,7 @@ on_action_button_clicked_cb (GtkWidget *widget,
     {
       GcalRecurrenceFrequency freq;
       GcalRecurrence *old_recur;
+      GcalCalendar *calendar;
       GDateTime *start_date, *end_date;
       gboolean was_all_day;
       gboolean all_day;
@@ -870,12 +871,15 @@ on_action_button_clicked_cb (GtkWidget *widget,
         }
 
       /* Update the source if needed */
+      calendar = gcal_event_get_calendar (self->event);
       if (self->selected_source &&
-          gcal_event_get_source (self->event) != self->selected_source)
+          gcal_calendar_get_source (calendar) != self->selected_source)
         {
           if (self->event_is_new)
             {
-              gcal_event_set_source (self->event, self->selected_source);
+              calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (self->context),
+                                                                self->selected_source);
+              gcal_event_set_calendar (self->event, calendar);
             }
           else
             {
@@ -1404,11 +1408,10 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
   GcalRecurrenceFrequency frequency;
   GcalRecurrence *recur;
   GtkAdjustment *count_adjustment;
-  GcalManager *manager;
+  GcalCalendar *calendar;
   GDateTime *date_start;
   GDateTime *date_end;
   cairo_surface_t *surface;
-  ESource *source;
   const gchar *summary;
   gboolean all_day;
 
@@ -1464,7 +1467,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
     }
 
   all_day = gcal_event_get_all_day (event);
-  source = gcal_event_get_source (event);
+  calendar = gcal_event_get_calendar (event);
 
   /* Clear event data */
   gcal_edit_dialog_clear_data (self);
@@ -1489,7 +1492,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
   gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
   g_clear_pointer (&surface, cairo_surface_destroy);
 
-  gtk_label_set_label (GTK_LABEL (self->subtitle_label), e_source_get_display_name (source));
+  gtk_label_set_label (GTK_LABEL (self->subtitle_label), gcal_calendar_get_name (calendar));
 
   /* retrieve start and end dates */
   date_start = gcal_event_get_date_start (event);
@@ -1536,8 +1539,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
                             gcal_event_get_description (event),
                             -1);
 
-  manager = gcal_context_get_manager (self->context);
-  set_writable (self, gcal_manager_is_client_writable (manager, source));
+  set_writable (self, !gcal_calendar_is_read_only (calendar));
 
   g_clear_pointer (&date_start, g_date_time_unref);
   g_clear_pointer (&date_end, g_date_time_unref);

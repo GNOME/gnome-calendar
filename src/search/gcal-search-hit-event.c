@@ -77,14 +77,14 @@ gcal_search_hit_event_get_icon_surface (DzlSuggestion *suggestion,
 {
   GcalSearchHitEvent *self;
   cairo_surface_t *surface;
-  ESource *source;
-  GdkRGBA color;
+  const GdkRGBA *color;
+  GcalCalendar *calendar;
 
   self = GCAL_SEARCH_HIT_EVENT (suggestion);
-  source = gcal_event_get_source (self->event);
+  calendar = gcal_event_get_calendar (self->event);
 
-  get_color_name_from_source (source, &color);
-  surface = get_circle_surface_from_color (&color, 16);
+  color = gcal_calendar_get_color (calendar);
+  surface = get_circle_surface_from_color (color, 16);
 
   /* Inject our custom style class into the given widget */
   gtk_style_context_add_class (gtk_widget_get_style_context (widget), "calendar-color-image");

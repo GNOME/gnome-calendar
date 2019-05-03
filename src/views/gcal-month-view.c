@@ -1242,6 +1242,7 @@ gcal_month_view_component_added (ECalDataModelSubscriber *subscriber,
 {
   g_autoptr (GcalEvent) event = NULL;
   GcalMonthView *self;
+  GcalCalendar *calendar;
   GtkWidget *event_widget;
   GError *error;
 
@@ -1249,7 +1250,9 @@ gcal_month_view_component_added (ECalDataModelSubscriber *subscriber,
 
   error = NULL;
   self = GCAL_MONTH_VIEW (subscriber);
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+  calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (self->context),
+                                                    e_client_get_source (E_CLIENT (client)));
+  event = gcal_event_new (calendar, comp, &error);
 
   if (error)
     {
@@ -1276,6 +1279,7 @@ gcal_month_view_component_modified (ECalDataModelSubscriber *subscriber,
 {
   g_autoptr (GcalEvent) event = NULL;
   GcalMonthView *self;
+  GcalCalendar *calendar;
   GtkWidget *new_widget;
   GError *error;
   GList *l;
@@ -1284,7 +1288,9 @@ gcal_month_view_component_modified (ECalDataModelSubscriber *subscriber,
 
   error = NULL;
   self = GCAL_MONTH_VIEW (subscriber);
-  event = gcal_event_new (e_client_get_source (E_CLIENT (client)), comp, &error);
+  calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (self->context),
+                                                    e_client_get_source (E_CLIENT (client)));
+  event = gcal_event_new (calendar, comp, &error);
 
   if (error)
     {

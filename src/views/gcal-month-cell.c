@@ -205,6 +205,7 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
 {
   GcalRecurrenceModType mod;
   GcalMonthCell *self;
+  GcalCalendar *calendar;
   GtkWidget *event_widget;
   GDateTime *start_dt, *end_dt;
   GcalEvent *event;
@@ -225,7 +226,8 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
     return FALSE;
 
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
-  source = gcal_event_get_source (event);
+  calendar = gcal_event_get_calendar (event);
+  source = gcal_calendar_get_source (calendar);
 
   if (gcal_event_has_recurrence (event) &&
       !ask_recurrence_modification_type (widget, &mod, source))

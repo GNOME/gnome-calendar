@@ -55,7 +55,7 @@
  * GError *error;
  *
  * error = NULL;
- * event = gcal_event_new (source, component, &error);
+ * event = gcal_event_new (calendar, component, &error);
  *
  * if (error)
  *   {
@@ -94,7 +94,7 @@ struct _GcalEvent
   GHashTable         *alarms;
 
   ECalComponent      *component;
-  ESource            *source;
+  GcalCalendar       *calendar;
 
   GcalRecurrence     *recurrence;
 
@@ -118,7 +118,7 @@ enum {
   PROP_DATE_END,
   PROP_DATE_START,
   PROP_LOCATION,
-  PROP_SOURCE,
+  PROP_CALENDAR,
   PROP_SUMMARY,
   PROP_TIMEZONE,
   PROP_UID,
@@ -264,7 +264,7 @@ gcal_event_update_uid_internal (GcalEvent *self)
   const gchar *source_id;
 
   /* Setup event uid */
-  source_id = self->source ? e_source_get_uid (self->source) : "";
+  source_id = self->calendar ? gcal_calendar_get_id (self->calendar) : "";
   id = e_cal_component_get_id (self->component);
 
   /* Clear the previous uid */
@@ -470,7 +470,7 @@ gcal_event_finalize (GObject *object)
   g_clear_pointer (&self->uid, g_free);
   g_clear_pointer (&self->color, gdk_rgba_free);
   g_clear_object (&self->component);
-  g_clear_object (&self->source);
+  g_clear_object (&self->calendar);
   g_clear_pointer (&self->recurrence, gcal_recurrence_unref);
 
   G_OBJECT_CLASS (gcal_event_parent_class)->finalize (object);
@@ -494,6 +494,10 @@ gcal_event_get_property (GObject    *object,
       g_value_set_boxed (value, self->color);
       break;
 
+    case PROP_CALENDAR:
+      g_value_set_object (value, self->calendar);
+      break;
+
     case PROP_COMPONENT:
       g_value_set_object (value, self->component);
       break;
@@ -512,10 +516,6 @@ gcal_event_get_property (GObject    *object,
 
     case PROP_LOCATION:
       g_value_set_string (value, gcal_event_get_location (self));
-      break;
-
-    case PROP_SOURCE:
-      g_value_set_object (value, self->source);
       break;
 
     case PROP_SUMMARY:
@@ -553,6 +553,10 @@ gcal_event_set_property (GObject      *object,
       gcal_event_set_all_day (self, g_value_get_boolean (value));
       break;
 
+    case PROP_CALENDAR:
+      gcal_event_set_calendar (self, g_value_get_object (value));
+      break;
+
     case PROP_COLOR:
       gcal_event_set_color (self, g_value_get_boxed (value));
       break;
@@ -575,10 +579,6 @@ gcal_event_set_property (GObject      *object,
 
     case PROP_LOCATION:
       gcal_event_set_location (self, g_value_get_string (value));
-      break;
-
-    case PROP_SOURCE:
-      gcal_event_set_source (self, g_value_get_object (value));
       break;
 
     case PROP_SUMMARY:
@@ -704,15 +704,15 @@ gcal_event_class_init (GcalEventClass *klass)
                                                     G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
-   * GcalEvent::source:
+   * GcalEvent::calendar:
    *
-   * The #ESource this event belongs to.
+   * The #GcalCalendar this event belongs to.
    */
-  properties[PROP_SOURCE] = g_param_spec_object ("source",
-                                                 "ESource",
-                                                 "The ESource this event belongs to",
-                                                 E_TYPE_SOURCE,
-                                                 G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+  properties[PROP_CALENDAR] = g_param_spec_object ("calendar",
+                                                   "Calendar",
+                                                   "The calendar this event belongs to",
+                                                   GCAL_TYPE_CALENDAR,
+                                                   G_PARAM_READWRITE | G_PARAM_CONSTRUCT | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalEvent::summary:
@@ -767,25 +767,25 @@ gcal_event_init (GcalEvent *self)
 
 /**
  * gcal_event_new:
- * @source: (nullable): an #ESource
+ * @calendar: (nullable): a #GcalCalendar
  * @component: a #ECalComponent
  * @error: (nullable): return location for a #GError
  *
- * Creates a new event which belongs to @source and
+ * Creates a new event which belongs to @calendar and
  * is represented by @component. New events will have
- * a %NULL @source.
+ * a %NULL @calendar.
  *
  * Returns: (transfer full)(nullable): a #GcalEvent
  */
 GcalEvent*
-gcal_event_new (ESource        *source,
+gcal_event_new (GcalCalendar   *calendar,
                 ECalComponent  *component,
                 GError        **error)
 {
   GcalEvent *event;
   g_autofree gchar *uuid;
 
-  uuid = get_uuid_from_component (source, component);
+  uuid = get_uuid_from_component (gcal_calendar_get_source (calendar), component);
 
   if (g_hash_table_contains (event_cache, uuid))
     {
@@ -800,7 +800,7 @@ gcal_event_new (ESource        *source,
       event = g_initable_new (GCAL_TYPE_EVENT,
                               NULL,
                               error,
-                              "source", source,
+                              "calendar", calendar,
                               "component", component,
                               NULL);
 
@@ -1274,57 +1274,54 @@ gcal_event_set_location (GcalEvent   *self,
 }
 
 /**
- * gcal_event_get_source:
+ * gcal_event_get_calendar:
  * @self: a #GcalEvent
  *
  * Retrieves the source of the event.
  *
- * Returns: (nullable): an #ESource.
+ * Returns: (nullable): a #GcalCalendar.
  */
-ESource*
-gcal_event_get_source (GcalEvent *self)
+GcalCalendar*
+gcal_event_get_calendar (GcalEvent *self)
 {
   g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
 
-  return self->source;
+  return self->calendar;
 }
 
 /**
- * gcal_event_set_source:
+ * gcal_event_set_calendar:
  * @self: a #GcalEvent
- * @source: an #ESource
+ * @calendar: a #GcalCalendar
  *
- * Sets the source of this event. The color of the
+ * Sets the calendar of this event. The color of the
  * event is automatically tied with the source's
  * color.
  *
  * The source should only be set once.
  */
 void
-gcal_event_set_source (GcalEvent *self,
-                       ESource   *source)
+gcal_event_set_calendar (GcalEvent    *self,
+                         GcalCalendar *calendar)
 {
   g_return_if_fail (GCAL_IS_EVENT (self));
 
-  if (self->source != source)
+  if (g_set_object (&self->calendar, calendar))
     {
       /* Remove previous binding */
       g_clear_pointer (&self->color_binding, g_binding_unbind);
 
-      g_set_object (&self->source, source);
-
-      if (source)
+      if (calendar)
         {
           ESourceSelectable *extension;
-          GdkRGBA color;
+          const GdkRGBA *color;
+          ESource *source;
 
-          extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
+          color = gcal_calendar_get_color (calendar);
+          gcal_event_set_color (self, (GdkRGBA*) color);
 
-          /* calendar default color */
-          if (!gdk_rgba_parse (&color, e_source_selectable_get_color (extension)))
-            gdk_rgba_parse (&color, "#ffffff");
-
-          gcal_event_set_color (self, &color);
+          source = gcal_calendar_get_source (calendar);
+          extension = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
 
           /* Bind the source's color with this event's color */
           self->color_binding = g_object_bind_property_full (extension, "color",
@@ -1336,7 +1333,7 @@ gcal_event_set_source (GcalEvent *self,
                                                              NULL);
         }
 
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SOURCE]);
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CALENDAR]);
 
       gcal_event_update_uid_internal (self);
     }
