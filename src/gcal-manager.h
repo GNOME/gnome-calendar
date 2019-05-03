@@ -20,6 +20,7 @@
 #define __GCAL_MANAGER_H__
 
 #include "e-cal-data-model.h"
+#include "gcal-calendar.h"
 #include "gcal-event.h"
 
 #include <libical/icaltime.h>

@@ -53,15 +53,9 @@ typedef struct
 
 typedef struct
 {
-  ECalClient         *client;
-  gboolean            connected;
-} GcalManagerUnit;
-
-typedef struct
-{
   gchar              *event_uid;
-  GcalManagerUnit    *unit;
-  GcalManagerUnit    *new_unit;
+  GcalCalendar       *calendar;
+  GcalCalendar       *new_calendar;
   ECalComponent      *new_component;
   GcalManager        *manager;
 } MoveEventData;
@@ -121,13 +115,6 @@ free_async_ops_data (AsyncOpsData *data)
   g_free (data);
 }
 
-static void
-free_unit_data (GcalManagerUnit *data)
-{
-  g_object_unref (data->client);
-  g_free (data);
-}
-
 static gboolean
 gather_events (ECalDataModel         *data_model,
                ECalClient            *client,
@@ -161,8 +148,6 @@ static void
 remove_source (GcalManager  *self,
                ESource      *source)
 {
-  GcalManagerUnit *unit;
-
   GCAL_ENTRY;
 
   g_return_if_fail (GCAL_IS_MANAGER (self));
@@ -170,10 +155,6 @@ remove_source (GcalManager  *self,
 
   e_cal_data_model_remove_client (self->e_data_model,
                                   e_source_get_uid (source));
-
-  unit = g_hash_table_lookup (self->clients, source);
-  if (unit && unit->client)
-     g_signal_handlers_disconnect_by_data (unit->client, self);
 
   g_hash_table_remove (self->clients, source);
   g_signal_emit (self, signals[SOURCE_REMOVED], 0, source);
@@ -192,27 +173,6 @@ source_changed (GcalManager *self,
     {
       g_signal_emit (self, signals[SOURCE_CHANGED], 0, source);
     }
-
-  GCAL_EXIT;
-}
-
-static void
-on_client_readonly_changed (EClient    *client,
-                            GParamSpec *pspec,
-                            gpointer    user_data)
-{
-  GcalManager *self;
-  ESource *source;
-  GcalManagerUnit *unit;
-
-  GCAL_ENTRY;
-
-  self = GCAL_MANAGER (user_data);
-  source = e_client_get_source (client);
-
-  unit = g_hash_table_lookup (self->clients, source);
-  if (unit && is_source_enabled (source))
-    source_changed (self, source);
 
   GCAL_EXIT;
 }
@@ -242,62 +202,41 @@ on_client_refreshed (GObject      *source_object,
 }
 
 static void
-on_client_connected (GObject      *source_object,
-                     GAsyncResult *result,
-                     gpointer      user_data)
+on_calendar_created_cb (GObject      *source_object,
+                        GAsyncResult *result,
+                        gpointer      user_data)
 {
-  GcalManagerUnit *unit;
+  g_autoptr (GError) error = NULL;
   ESourceRefresh *refresh_extension;
   ESourceOffline *offline_extension;
+  GcalCalendar *calendar;
   GcalManager *self;
   ECalClient *client;
   ESource *source;
-  GError *error;
-  gboolean enabled;
-
-  GCAL_ENTRY;
+  gboolean visible;
 
   self = GCAL_MANAGER (user_data);
-  source = e_client_get_source (E_CLIENT (source_object));
-  enabled = is_source_enabled (source);
+  calendar = gcal_calendar_new_finish (result, &error);
 
-  self->sources_at_launch--;
-
-  if (self->sources_at_launch == 0)
-    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_LOADING]);
-
-  error = NULL;
-  client = E_CAL_CLIENT (e_cal_client_connect_finish (result, &error));
-
-  if (error)
+  if (error &&
+      !g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED) &&
+      !g_error_matches (error, GCAL_CALENDAR_ERROR, GCAL_CALENDAR_ERROR_NOT_CALENDAR))
     {
-      remove_source (GCAL_MANAGER (user_data), source);
-      g_warning ("%s: Failed to open/connect '%s': %s",
-                 G_STRFUNC,
-                 e_source_get_display_name (source),
-                 error->message);
-
-      g_object_unref (source);
-      g_error_free (error);
+      g_warning ("Failed to open/connect to calendar: %s", error->message);
       return;
     }
 
-  g_object_set_data (G_OBJECT (source), "client", client);
-
-  unit = g_new0 (GcalManagerUnit, 1);
-  unit->connected = TRUE;
-  unit->client = g_object_ref (client);
-
-  g_hash_table_insert (self->clients, source, unit);
-
   g_debug ("Source %s (%s) connected",
-           e_source_get_display_name (source),
-           e_source_get_uid (source));
+           gcal_calendar_get_name (calendar),
+           gcal_calendar_get_id (calendar));
 
-  /* notify the readonly property */
-  g_signal_connect (client, "notify::readonly", G_CALLBACK (on_client_readonly_changed), user_data);
+  visible = gcal_calendar_get_visible (calendar);
+  client = gcal_calendar_get_client (calendar);
+  source = gcal_calendar_get_source (calendar);
 
-  if (enabled)
+  g_hash_table_insert (self->clients, source, calendar);
+
+  if (visible)
     {
       e_cal_data_model_add_client (self->e_data_model, client);
       if (self->shell_search_data_model != NULL)
@@ -305,7 +244,7 @@ on_client_connected (GObject      *source_object,
     }
 
   /* refresh client when it's added */
-  if (enabled && e_client_check_refresh_supported (E_CLIENT (client)))
+  if (visible && e_client_check_refresh_supported (E_CLIENT (client)))
     e_client_refresh (E_CLIENT (client), NULL, on_client_refreshed, user_data);
 
   /* Cache all the online calendars, so the user can see them offline */
@@ -323,11 +262,7 @@ on_client_connected (GObject      *source_object,
                                    NULL,
                                    NULL);
 
-  g_signal_emit (GCAL_MANAGER (user_data), signals[SOURCE_ADDED], 0, source, enabled);
-
-  g_clear_object (&client);
-
-  GCAL_EXIT;
+  g_signal_emit (self, signals[SOURCE_ADDED], 0, gcal_calendar_get_source (calendar), visible);
 }
 
 static void
@@ -336,21 +271,15 @@ load_source (GcalManager *self,
 {
   GCAL_ENTRY;
 
-  if (g_hash_table_lookup (self->clients, source) == NULL &&
-      e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR))
-    {
-      /* NULL: because maybe the operation cannot be really cancelled */
-      e_cal_client_connect (source,
-                            E_CAL_CLIENT_SOURCE_TYPE_EVENTS, 1, NULL,
-                            on_client_connected,
-                            self);
-    }
-  else
+  if (g_hash_table_contains (self->clients, source))
     {
       g_warning ("%s: Skipping already loaded source: %s",
                  G_STRFUNC,
                  e_source_get_uid (source));
+      return;
     }
+
+  gcal_calendar_new (source, self->async_ops, on_calendar_created_cb, self);
 
   GCAL_EXIT;
 }
@@ -1088,19 +1017,21 @@ gcal_manager_query_client_data (GcalManager *self,
                                 ESource     *source,
                                 const gchar *field)
 {
-  GcalManagerUnit *unit;
+  GcalCalendar *calendar;
+  ECalClient *client;
   gchar *out;
 
   GCAL_ENTRY;
 
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  unit = g_hash_table_lookup (self->clients, source);
+  calendar = g_hash_table_lookup (self->clients, source);
 
-  if (!unit)
+  if (!calendar)
     GCAL_RETURN (NULL);
 
-  g_object_get (unit->client, field, &out, NULL);
+  client = gcal_calendar_get_client (calendar);
+  g_object_get (client, field, &out, NULL);
 
   GCAL_RETURN (out);
 }
@@ -1173,14 +1104,15 @@ gcal_manager_enable_source (GcalManager *self,
                             ESource     *source)
 {
   ESourceSelectable *selectable;
-  GcalManagerUnit *unit;
+  GcalCalendar *calendar;
+  ECalClient *client;
 
   GCAL_ENTRY;
 
   g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (E_IS_SOURCE (source));
 
-  unit = g_hash_table_lookup (self->clients, source);
+  calendar = g_hash_table_lookup (self->clients, source);
   selectable = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
 
   if (is_source_enabled (source))
@@ -1190,10 +1122,11 @@ gcal_manager_enable_source (GcalManager *self,
       return;
     }
 
-  e_cal_data_model_add_client (self->e_data_model, unit->client);
+  client = gcal_calendar_get_client (calendar);
+  e_cal_data_model_add_client (self->e_data_model, client);
 
   if (self->shell_search_data_model)
-    e_cal_data_model_add_client (self->shell_search_data_model, unit->client);
+    e_cal_data_model_add_client (self->shell_search_data_model, client);
 
   g_signal_emit (self, signals[SOURCE_ENABLED], 0, source, TRUE);
 
@@ -1300,12 +1233,15 @@ gcal_manager_refresh (GcalManager *self)
   /* refresh clients */
   for (l = clients; l != NULL; l = l->next)
     {
-      GcalManagerUnit *unit = l->data;
+      GcalCalendar *calendar = l->data;
+      EClient *client;
 
-      if (!unit->connected || ! e_client_check_refresh_supported (E_CLIENT (unit->client)))
+      client = E_CLIENT (gcal_calendar_get_client (calendar));
+
+      if (!e_client_check_refresh_supported (client))
         continue;
 
-      e_client_refresh (E_CLIENT (unit->client),
+      e_client_refresh (client,
                         NULL,
                         on_client_refreshed,
                         self);
@@ -1329,16 +1265,16 @@ gboolean
 gcal_manager_is_client_writable (GcalManager *self,
                                  ESource     *source)
 {
-  GcalManagerUnit *unit;
+  GcalCalendar *calendar;
 
   GCAL_ENTRY;
 
-  unit = g_hash_table_lookup (self->clients, source);
+  calendar = g_hash_table_lookup (self->clients, source);
 
-  if (!unit)
+  if (!calendar)
     GCAL_RETURN (FALSE);
 
-  GCAL_RETURN (unit->connected && !e_client_is_readonly (E_CLIENT (unit->client)));
+  GCAL_RETURN (!gcal_calendar_is_read_only (calendar));
 }
 
 /**
@@ -1352,9 +1288,9 @@ void
 gcal_manager_create_event (GcalManager *self,
                            GcalEvent   *event)
 {
-  GcalManagerUnit *unit;
   icalcomponent *new_event_icalcomp;
   ECalComponent *component;
+  GcalCalendar *calendar;
   AsyncOpsData *data;
   ESource *source;
 
@@ -1365,9 +1301,7 @@ gcal_manager_create_event (GcalManager *self,
 
   source = gcal_event_get_source (event);
   component = gcal_event_get_component (event);
-  unit = g_hash_table_lookup (self->clients, source);
-
-  g_return_if_fail (unit != NULL);
+  calendar = g_hash_table_lookup (self->clients, source);
 
   new_event_icalcomp = e_cal_component_get_icalcomponent (component);
 
@@ -1375,7 +1309,7 @@ gcal_manager_create_event (GcalManager *self,
   data->event = g_object_ref (event);
   data->manager = self;
 
-  e_cal_client_create_object (unit->client,
+  e_cal_client_create_object (gcal_calendar_get_client (calendar),
                               new_event_icalcomp,
                               self->async_ops,
                               on_event_created,
@@ -1397,15 +1331,15 @@ gcal_manager_update_event (GcalManager           *self,
                            GcalEvent             *event,
                            GcalRecurrenceModType  mod)
 {
-  GcalManagerUnit *unit;
   ECalComponent *component;
+  GcalCalendar *calendar;
 
   GCAL_ENTRY;
 
   g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (GCAL_IS_EVENT (event));
 
-  unit = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
+  calendar = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
   component = gcal_event_get_component (event);
 
   /*
@@ -1424,7 +1358,7 @@ gcal_manager_update_event (GcalManager           *self,
    */
   g_object_ref (component);
 
-  e_cal_client_modify_object (unit->client,
+  e_cal_client_modify_object (gcal_calendar_get_client (calendar),
                               e_cal_component_get_icalcomponent (component),
                               (ECalObjModType) mod,
                               NULL,
@@ -1447,8 +1381,8 @@ gcal_manager_remove_event (GcalManager           *self,
                            GcalEvent             *event,
                            GcalRecurrenceModType  mod)
 {
-  GcalManagerUnit *unit;
   ECalComponent *component;
+  GcalCalendar *calendar;
   gchar *rid;
   const gchar *uid;
 
@@ -1458,7 +1392,7 @@ gcal_manager_remove_event (GcalManager           *self,
   g_return_if_fail (GCAL_IS_EVENT (event));
 
   component = gcal_event_get_component (event);
-  unit = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
+  calendar = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
   rid = NULL;
 
   e_cal_component_get_uid (component, &uid);
@@ -1466,7 +1400,7 @@ gcal_manager_remove_event (GcalManager           *self,
   if (gcal_event_has_recurrence (event))
     rid = e_cal_component_get_recurid_as_string (component);
 
-  e_cal_client_remove_object (unit->client,
+  e_cal_client_remove_object (gcal_calendar_get_client (calendar),
                               uid,
                               mod == GCAL_RECURRENCE_MOD_ALL ? NULL : rid,
                               (ECalObjModType) mod,
@@ -1497,7 +1431,7 @@ gcal_manager_move_event_to_source (GcalManager *self,
   ECalComponent *ecomponent;
   ECalComponent *clone;
   icalcomponent *comp;
-  GcalManagerUnit *unit;
+  GcalCalendar *calendar;
   ECalComponentId *id;
   GError *error;
 
@@ -1510,13 +1444,13 @@ gcal_manager_move_event_to_source (GcalManager *self,
   error = NULL;
 
   /* First, try to create the component on the destination source */
-  unit = g_hash_table_lookup (self->clients, dest);
+  calendar = g_hash_table_lookup (self->clients, dest);
 
   ecomponent = gcal_event_get_component (event);
   clone = e_cal_component_clone (ecomponent);
   comp = e_cal_component_get_icalcomponent (clone);
 
-  e_cal_client_create_object_sync (unit->client,
+  e_cal_client_create_object_sync (gcal_calendar_get_client (calendar),
                                    comp,
                                    NULL,
                                    NULL,
@@ -1535,11 +1469,11 @@ gcal_manager_move_event_to_source (GcalManager *self,
    * created, try to remove the old component. Data loss it the last
    * thing we want to happen here.
    */
-  unit = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
+  calendar = g_hash_table_lookup (self->clients, gcal_event_get_source (event));
 
   id = e_cal_component_get_id (ecomponent);
 
-  e_cal_client_remove_object_sync (unit->client,
+  e_cal_client_remove_object_sync (gcal_calendar_get_client (calendar),
                                    id->uid,
                                    id->rid,
                                    E_CAL_OBJ_MOD_THIS,
@@ -1675,8 +1609,10 @@ gcal_manager_startup (GcalManager *self)
 
   GCAL_ENTRY;
 
-  self->clients = g_hash_table_new_full ((GHashFunc) e_source_hash, (GEqualFunc) e_source_equal,
-                                         g_object_unref, (GDestroyNotify) free_unit_data);
+  self->clients = g_hash_table_new_full ((GHashFunc) e_source_hash,
+                                         (GEqualFunc) e_source_equal,
+                                         g_object_unref,
+                                         g_object_unref);
 
   /* reading sources and schedule its connecting */
   self->source_registry = e_source_registry_new_sync (NULL, &error);
@@ -1783,10 +1719,10 @@ ECalClient*
 gcal_manager_get_client (GcalManager *self,
                          ESource     *source)
 {
-  GcalManagerUnit *unit;
+  GcalCalendar *calendar;
 
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  unit = g_hash_table_lookup (self->clients, source);
-  return unit ? unit->client : NULL;
+  calendar = g_hash_table_lookup (self->clients, source);
+  return calendar ? gcal_calendar_get_client (calendar) : NULL;
 }
