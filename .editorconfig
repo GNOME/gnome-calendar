@@ -12,7 +12,7 @@ indent_style = space
 
 [*.c]
 indent_size = 2
-tab_width = 8
+tab_width = 2
 max_line_length = 120
 
 # Tab indentation (no size specified)
