@@ -102,7 +102,7 @@ struct _GcalSourceDialog
   GcalSourceDialogMode mode;
   ESource            *source;
   GList              *remote_sources;
-  ESource            *removed_source;
+  GcalCalendar       *removed_calendar;
   ESource            *old_default_source;
   GBinding           *title_bind;
   gboolean            prompt_password;
@@ -125,11 +125,6 @@ typedef enum
 
 static void       add_button_clicked                    (GtkWidget            *button,
                                                          gpointer              user_data);
-
-static void       add_source                             (GcalManager         *manager,
-                                                          ESource             *source,
-                                                          gboolean             enabled,
-                                                          gpointer             user_data);
 
 static void       action_widget_activated               (GtkWidget            *widget,
                                                          gpointer              user_data);
@@ -175,9 +170,6 @@ static void       display_header_func                   (GtkListBoxRow        *r
 static gboolean   is_goa_source                         (GcalSourceDialog     *dialog,
                                                          ESource              *source);
 
-static GtkWidget* make_row_from_source                  (GcalSourceDialog    *dialog,
-                                                         ESource             *source);
-
 static void       name_entry_text_changed               (GObject             *object,
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
@@ -203,10 +195,6 @@ static void       on_local_activated                    (GSimpleAction       *ac
 
 static void       on_web_activated                      (GSimpleAction       *action,
                                                          GVariant            *param,
-                                                         gpointer             user_data);
-
-static void       remove_source                         (GcalManager         *manager,
-                                                         ESource             *source,
                                                          gpointer             user_data);
 
 static void       response_signal                       (GtkDialog           *dialog,
@@ -302,22 +290,87 @@ add_button_clicked (GtkWidget *button,
 }
 
 static void
-add_source (GcalManager *manager,
-            ESource     *source,
-            gboolean     enabled,
-            gpointer     user_data)
+source_color_changed (GcalCalendar *calendar,
+                      GParamSpec   *pspec,
+                      GtkImage     *icon)
 {
-  GcalSourceDialog *self;
+  cairo_surface_t *surface;
+  const GdkRGBA *color;
+
+  color = gcal_calendar_get_color (calendar);
+  surface = get_circle_surface_from_color (color, 24);
+  gtk_image_set_from_surface (GTK_IMAGE (icon), surface);
+  g_clear_pointer (&surface, cairo_surface_destroy);
+}
+
+static GtkWidget*
+make_calendar_row (GcalSourceDialog *dialog,
+                   GcalCalendar     *calendar)
+{
+  cairo_surface_t *surface;
+  const GdkRGBA *color;
+  GcalManager *manager;
+  GtkBuilder *builder;
+  GtkWidget *bottom_label;
+  GtkWidget *top_label;
+  GtkWidget *icon;
+  GtkWidget *row;
+  gchar *parent_name;
+
+  manager = gcal_context_get_manager (dialog->context);
+  get_source_parent_name_color (manager, gcal_calendar_get_source (calendar), &parent_name, NULL);
+
+  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/calendar-row.ui");
+
+  /*
+   * Since we're destroying the builder instance before adding
+   * the row to the listbox, it should be referenced here so
+   * it isn't destroyed with the GtkBuilder.
+   */
+  row = g_object_ref (GTK_WIDGET (gtk_builder_get_object (builder, "row")));
+
+  /* source color icon */
+  color = gcal_calendar_get_color (calendar);
+  surface = get_circle_surface_from_color (color, 24);
+  icon = GTK_WIDGET (gtk_builder_get_object (builder, "icon"));
+  gtk_image_set_from_surface (GTK_IMAGE (icon), surface);
+
+  /* source name label */
+  top_label = GTK_WIDGET (gtk_builder_get_object (builder, "title"));
+  gtk_label_set_label (GTK_LABEL (top_label), gcal_calendar_get_name (calendar));
+  g_object_bind_property (calendar, "name", top_label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
+  g_signal_connect_swapped (calendar,
+                            "notify::name",
+                            G_CALLBACK (gtk_list_box_invalidate_sort),
+                            dialog->calendars_listbox);
+
+  g_signal_connect (calendar, "notify::color", G_CALLBACK (source_color_changed), icon);
+
+  /* parent source name label */
+  bottom_label = GTK_WIDGET (gtk_builder_get_object (builder, "subtitle"));
+  gtk_label_set_label (GTK_LABEL (bottom_label), parent_name);
+
+  g_clear_pointer (&surface, cairo_surface_destroy);
+  g_object_unref (builder);
+  g_free (parent_name);
+
+  return row;
+}
+
+static void
+add_calendar (GcalManager      *manager,
+              GcalCalendar     *calendar,
+              GcalSourceDialog *self)
+{
   GList *children, *l;
   gboolean contains_source;
 
-  self = GCAL_SOURCE_DIALOG (user_data);
   children = gtk_container_get_children (GTK_CONTAINER (self->calendars_listbox));
   contains_source = FALSE;
 
   for (l = children; l != NULL; l = l->next)
     {
-      if (g_object_get_data (l->data, "source") == source)
+      if (g_object_get_data (l->data, "calendar") == calendar)
         {
           contains_source = TRUE;
           break;
@@ -327,11 +380,13 @@ add_source (GcalManager *manager,
   if (!contains_source)
     {
       GtkWidget *row;
+      ESource *source;
       ESource *parent;
 
+      source = gcal_calendar_get_source (calendar);
       parent = gcal_manager_get_source (manager, e_source_get_parent (source));
 
-      row = make_row_from_source (GCAL_SOURCE_DIALOG (user_data), source);
+      row = make_calendar_row (self, calendar);
       g_object_set_data (G_OBJECT (row), "source", source);
 
       if (e_source_has_extension (parent, E_SOURCE_EXTENSION_GOA))
@@ -564,95 +619,6 @@ is_goa_source (GcalSourceDialog *dialog,
   g_object_unref (parent);
 
   return is_goa;
-}
-
-static void
-source_color_changed (GObject    *source,
-                      GParamSpec *pspec,
-                      GtkImage *icon)
-{
-  ESourceSelectable *extension;
-  cairo_surface_t *surface;
-  GdkRGBA out_color;
-
-  extension = E_SOURCE_SELECTABLE (source);
-
-  if (!gdk_rgba_parse (&out_color, e_source_selectable_get_color (extension)))
-    {
-      g_warning ("Error parsing color");
-      return;
-    }
-
-  if (gdk_rgba_parse (&out_color, e_source_selectable_get_color (extension)))
-    {
-      surface = get_circle_surface_from_color (&out_color, 24);
-      gtk_image_set_from_surface (GTK_IMAGE (icon), surface);
-      g_clear_pointer (&surface, cairo_surface_destroy);
-    }
-}
-
-static void
-invalidate_calendar_listbox_sort (GObject    *source,
-                                  GParamSpec *pspec,
-                                  gpointer    user_data)
-{
-  g_return_if_fail (GTK_IS_LIST_BOX (user_data));
-
-  gtk_list_box_invalidate_sort (GTK_LIST_BOX (user_data));
-}
-
-static GtkWidget*
-make_row_from_source (GcalSourceDialog *dialog,
-                      ESource          *source)
-{
-  ESourceSelectable *extension;
-  cairo_surface_t *surface;
-  GcalManager *manager;
-  GtkBuilder *builder;
-  GtkWidget *bottom_label;
-  GtkWidget *top_label;
-  GtkWidget *icon;
-  GtkWidget *row;
-  GdkRGBA color;
-  gchar *parent_name;
-
-  manager = gcal_context_get_manager (dialog->context);
-  get_source_parent_name_color (manager, source, &parent_name, NULL);
-
-  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/calendar-row.ui");
-
-  /*
-   * Since we're destroying the builder instance before adding
-   * the row to the listbox, it should be referenced here so
-   * it isn't destroyed with the GtkBuilder.
-   */
-  row = g_object_ref (GTK_WIDGET (gtk_builder_get_object (builder, "row")));
-
-  /* source color icon */
-  get_color_name_from_source (source, &color);
-  surface = get_circle_surface_from_color (&color, 24);
-  icon = GTK_WIDGET (gtk_builder_get_object (builder, "icon"));
-  gtk_image_set_from_surface (GTK_IMAGE (icon), surface);
-
-  /* source name label */
-  top_label = GTK_WIDGET (gtk_builder_get_object (builder, "title"));
-  gtk_label_set_label (GTK_LABEL (top_label), e_source_get_display_name (source));
-  g_object_bind_property (source, "display-name", top_label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_signal_connect (source, "notify::display-name", G_CALLBACK (invalidate_calendar_listbox_sort),
-                    dialog->calendars_listbox);
-
-  extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
-  g_signal_connect (extension, "notify::color", G_CALLBACK (source_color_changed), icon);
-
-  /* parent source name label */
-  bottom_label = GTK_WIDGET (gtk_builder_get_object (builder, "subtitle"));
-  gtk_label_set_label (GTK_LABEL (bottom_label), parent_name);
-
-  g_clear_pointer (&surface, cairo_surface_destroy);
-  g_object_unref (builder);
-  g_free (parent_name);
-
-  return row;
 }
 
 static void
@@ -1643,30 +1609,20 @@ discover_sources_cb (GObject      *source,
   g_slist_free_full (user_addresses, g_free);
 }
 
-/**
- * remove_source:
- *
- * Removes the given source from the source
- * list.
- *
- * Returns:
- */
 static void
-remove_source (GcalManager *manager,
-               ESource     *source,
-               gpointer     user_data)
+remove_calendar (GcalManager      *manager,
+                 GcalCalendar     *calendar,
+                 GcalSourceDialog *self)
 {
-  GcalSourceDialog *self;
   GList *children, *aux;
 
-  self = GCAL_SOURCE_DIALOG (user_data);
   children = gtk_container_get_children (GTK_CONTAINER (self->calendars_listbox));
 
   for (aux = children; aux != NULL; aux = aux->next)
     {
-      ESource *child_source = g_object_get_data (G_OBJECT (aux->data), "source");
+      GcalCalendar *row_calendar = g_object_get_data (G_OBJECT (aux->data), "calendar");
 
-      if (child_source != NULL && child_source == source)
+      if (row_calendar && row_calendar == calendar)
         {
           gtk_widget_destroy (aux->data);
           break;
@@ -1698,18 +1654,21 @@ notification_child_revealed_changed (GtkWidget  *notification,
   manager = gcal_context_get_manager (self->context);
 
   /* If we have any removed source, delete it */
-  if (self->removed_source != NULL)
+  if (self->removed_calendar != NULL)
     {
-      GError *error = NULL;
+      g_autoptr (GError) error = NULL;
+      ESource *removed_source;
+
+      removed_source = gcal_calendar_get_source (self->removed_calendar);
 
       /* We don't really want to remove non-removable sources */
-      if (!e_source_get_removable (self->removed_source))
+      if (!e_source_get_removable (removed_source))
         return;
 
       /* Enable the source again to remove it's name from disabled list */
-      gcal_manager_enable_source (manager, self->removed_source);
+      gcal_manager_enable_source (manager, removed_source);
 
-      e_source_remove_sync (self->removed_source, NULL, &error);
+      e_source_remove_sync (removed_source, NULL, &error);
 
       /**
        * If something goes wrong, throw
@@ -1719,14 +1678,8 @@ notification_child_revealed_changed (GtkWidget  *notification,
         {
           g_warning ("[source-dialog] Error removing source: %s", error->message);
 
-          add_source (manager,
-                      self->removed_source,
-                      is_source_enabled (self->removed_source),
-                      user_data);
-
-          gcal_manager_enable_source (manager, self->removed_source);
-
-          g_error_free (error);
+          add_calendar (manager, self->removed_calendar, self);
+          gcal_manager_enable_source (manager, removed_source);
         }
     }
 }
@@ -1748,21 +1701,22 @@ undo_remove_action (GtkButton *button,
   manager = gcal_context_get_manager (self->context);
 
   /* if there's any set source, unremove it */
-  if (self->removed_source != NULL)
+  if (self->removed_calendar != NULL)
     {
-      /* Enable the source before adding it again */
-      gcal_manager_enable_source (manager, self->removed_source);
+      ESource *removed_source;
 
-      add_source (manager,
-                  self->removed_source,
-                  is_source_enabled (self->removed_source),
-                  user_data);
+      removed_source = gcal_calendar_get_source (self->removed_calendar);
+
+      /* Enable the source before adding it again */
+      gcal_manager_enable_source (manager, removed_source);
+
+      add_calendar (manager, self->removed_calendar, self);
 
       /*
        * Don't clear the pointer, since we don't
        * want to erase the source at all.
        */
-      self->removed_source = NULL;
+      self->removed_calendar = NULL;
 
       /* Hide notification */
       gtk_revealer_set_reveal_child (GTK_REVEALER (self->notification), FALSE);
@@ -1820,10 +1774,12 @@ remove_button_clicked (GtkWidget *button,
 
   if (self->source != NULL)
     {
+      ESource *removed_source;
       GList *children, *l;
       gchar *str;
 
-      self->removed_source = self->source;
+      removed_source = self->source;
+      self->removed_calendar = gcal_manager_get_calendar_from_source (manager, removed_source);
       self->source = NULL;
       children = gtk_container_get_children (GTK_CONTAINER (self->calendars_listbox));
 
@@ -1832,7 +1788,7 @@ remove_button_clicked (GtkWidget *button,
       /* Remove the listbox entry (if any) */
       for (l = children; l != NULL; l = l->next)
         {
-          if (g_object_get_data (l->data, "source") == self->removed_source)
+          if (g_object_get_data (l->data, "calendar") == self->removed_calendar)
             {
               gtk_widget_destroy (l->data);
               break;
@@ -1840,7 +1796,7 @@ remove_button_clicked (GtkWidget *button,
         }
 
       /* Update notification label */
-      str = g_markup_printf_escaped (_("Calendar <b>%s</b> removed"), e_source_get_display_name (self->removed_source));
+      str = g_markup_printf_escaped (_("Calendar <b>%s</b> removed"), gcal_calendar_get_name (self->removed_calendar));
       gtk_label_set_markup (GTK_LABEL (self->notification_label), str);
 
       /* Remove old notifications */
@@ -1850,7 +1806,7 @@ remove_button_clicked (GtkWidget *button,
       self->notification_timeout_id = g_timeout_add_seconds (5, hide_notification_scheduled, user_data);
 
       /* Disable the source, so it gets hidden */
-      gcal_manager_disable_source (manager, self->removed_source);
+      gcal_manager_disable_source (manager, removed_source);
 
       g_list_free (children);
       g_free (str);
@@ -2056,8 +2012,8 @@ setup_context (GcalSourceDialog *self)
   g_signal_connect (client, "account-removed", G_CALLBACK (goa_account_removed_cb), self);
 
   manager = gcal_context_get_manager (self->context);
-  g_signal_connect (manager, "source-added", G_CALLBACK (add_source), self);
-  g_signal_connect (manager, "source-removed", G_CALLBACK (remove_source), self);
+  g_signal_connect (manager, "calendar-added", G_CALLBACK (add_calendar), self);
+  g_signal_connect (manager, "calendar-removed", G_CALLBACK (remove_calendar), self);
 
   g_list_free_full (accounts, g_object_unref);
 

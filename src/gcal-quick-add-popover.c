@@ -67,13 +67,13 @@ static guint signals[NUM_SIGNALS] = { 0, };
  */
 
 static GtkWidget*
-create_row_for_source (GcalManager *manager,
-                       ESource     *source,
-                       gboolean     writable)
+create_calendar_row (GcalManager  *manager,
+                     GcalCalendar *calendar)
 {
   cairo_surface_t *surface;
+  const GdkRGBA *color;
   GtkWidget *row, *box, *icon, *label, *selected_icon;
-  GdkRGBA color;
+  gboolean read_only;
   gchar *tooltip, *parent_name;
 
   /* The main box */
@@ -84,8 +84,8 @@ create_row_for_source (GcalManager *manager,
   gtk_widget_set_margin_bottom (box, 3);
 
   /* The icon with the source color */
-  get_color_name_from_source (source, &color);
-  surface = get_circle_surface_from_color (&color, 16);
+  color = gcal_calendar_get_color (calendar);
+  surface = get_circle_surface_from_color (color, 16);
   icon = gtk_image_new_from_surface (surface);
 
   gtk_container_add (GTK_CONTAINER (box), icon);
@@ -93,7 +93,7 @@ create_row_for_source (GcalManager *manager,
   gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
 
   /* Source name label */
-  label = gtk_label_new (e_source_get_display_name (source));
+  label = gtk_label_new (gcal_calendar_get_name (calendar));
   gtk_widget_set_margin_end (label, 12);
 
   gtk_container_add (GTK_CONTAINER (box), label);
@@ -104,17 +104,19 @@ create_row_for_source (GcalManager *manager,
 
   /* The row itself */
   row = gtk_list_box_row_new ();
-  gtk_widget_set_sensitive (row, writable);
+
+  read_only = gcal_calendar_is_read_only (calendar);
+  gtk_widget_set_sensitive (row, !read_only);
 
   gtk_container_add (GTK_CONTAINER (row), box);
 
   /* Setup also a cool tooltip */
-  get_source_parent_name_color (manager, source, &parent_name, NULL);
+  get_source_parent_name_color (manager, gcal_calendar_get_source (calendar), &parent_name, NULL);
 
-  if (writable)
-    tooltip = g_strdup (parent_name);
-  else
+  if (read_only)
     tooltip = g_strdup_printf (_("%s (this calendar is read-only)"), parent_name);
+  else
+    tooltip = g_strdup (parent_name);
 
   gtk_widget_set_tooltip_text (row, tooltip);
 
@@ -123,7 +125,7 @@ create_row_for_source (GcalManager *manager,
    * taken to make sure it is not destroyed before this
    * row.
    */
-  g_object_set_data_full (G_OBJECT (row), "source", g_object_ref (source), g_object_unref);
+  g_object_set_data_full (G_OBJECT (row), "calendar", g_object_ref (calendar), g_object_unref);
   g_object_set_data (G_OBJECT (row), "selected-icon", selected_icon);
   g_object_set_data (G_OBJECT (row), "color-icon", icon);
   g_object_set_data (G_OBJECT (row), "name-label", label);
@@ -145,8 +147,8 @@ create_row_for_source (GcalManager *manager,
  * ESource from the listbox.
  */
 static GtkWidget*
-get_row_for_source (GcalQuickAddPopover *self,
-                    ESource             *source)
+get_row_for_calendar (GcalQuickAddPopover *self,
+                      GcalCalendar        *calendar)
 {
   GList *children, *l;
   GtkWidget *row;
@@ -156,9 +158,9 @@ get_row_for_source (GcalQuickAddPopover *self,
 
   for (l = children; l != NULL; l = g_list_next (l))
     {
-      ESource *row_source = g_object_get_data (l->data, "source");
+      GcalCalendar *row_calendar = g_object_get_data (l->data, "calendar");
 
-      if (row_source == source)
+      if (row_calendar == calendar)
         {
           row = l->data;
           break;
@@ -175,9 +177,9 @@ select_row (GcalQuickAddPopover *self,
             GtkListBoxRow       *row)
 {
   cairo_surface_t *surface;
+  const GdkRGBA *color;
+  GcalCalendar *calendar;
   GtkWidget *icon;
-  ESource *source;
-  GdkRGBA color;
 
   /* First, unselect the previous row */
   if (self->selected_row)
@@ -193,12 +195,12 @@ select_row (GcalQuickAddPopover *self,
   self->selected_row = GTK_WIDGET (row);
 
   /* Setup the event page's source name and color */
-  source = g_object_get_data (G_OBJECT (row), "source");
+  calendar = g_object_get_data (G_OBJECT (row), "calendar");
 
-  gtk_label_set_label (GTK_LABEL (self->calendar_name_label), e_source_get_display_name (source));
+  gtk_label_set_label (GTK_LABEL (self->calendar_name_label), gcal_calendar_get_name (calendar));
 
-  get_color_name_from_source (source, &color);
-  surface = get_circle_surface_from_color (&color, 16);
+  color = gcal_calendar_get_color (calendar);
+  surface = get_circle_surface_from_color (color, 16);
   gtk_image_set_from_surface (GTK_IMAGE (self->color_image), surface);
 
   /* Return to the events page */
@@ -485,14 +487,16 @@ update_header (GcalQuickAddPopover *self)
 static void
 update_default_calendar_row (GcalQuickAddPopover *self)
 {
+  GcalCalendar *default_calendar;
   GcalManager *manager;
   GtkWidget *row;
   ESource *default_source;
 
   manager = gcal_context_get_manager (self->context);
   default_source = gcal_manager_get_default_source (manager);
+  default_calendar = gcal_manager_get_calendar_from_source (manager, default_source);
 
-  row = get_row_for_source (self, default_source);
+  row = get_row_for_calendar (self, default_calendar);
   select_row (self, GTK_LIST_BOX_ROW (row));
 
   g_clear_object (&default_source);
@@ -504,43 +508,47 @@ update_default_calendar_row (GcalQuickAddPopover *self)
  */
 
 static void
-on_source_added (GcalManager         *manager,
-                 ESource             *source,
-                 gboolean             enabled,
-                 GcalQuickAddPopover *self)
+on_calendar_added (GcalManager         *manager,
+                   GcalCalendar        *calendar,
+                   GcalQuickAddPopover *self)
 {
   ESource *default_source;
   GtkWidget *row;
 
   /* Since we can't add on read-only calendars, lets not show them at all */
-  if (!gcal_manager_is_client_writable (manager, source))
+  if (gcal_calendar_is_read_only (calendar))
     return;
 
   default_source = gcal_manager_get_default_source (manager);
-  row = create_row_for_source (manager, source, gcal_manager_is_client_writable (manager, source));
+  row = create_calendar_row (manager, calendar);
 
   gtk_container_add (GTK_CONTAINER (self->calendars_listbox), row);
 
   /* Select the default source whe first adding events */
-  if (source == default_source && !self->selected_row)
-    select_row (self, GTK_LIST_BOX_ROW (row));
+  if (gcal_calendar_get_source (calendar) == default_source &&
+      !self->selected_row)
+    {
+      select_row (self, GTK_LIST_BOX_ROW (row));
+    }
 
   g_clear_object (&default_source);
 }
 
 static void
-on_source_changed (GcalManager         *manager,
-                   ESource             *source,
-                   GcalQuickAddPopover *self)
+on_calendar_changed (GcalManager         *manager,
+                     GcalCalendar        *calendar,
+                     GcalQuickAddPopover *self)
 {
   cairo_surface_t *surface;
+  const GdkRGBA *color;
   GtkWidget *row, *color_icon, *name_label;
-  GdkRGBA color;
+  gboolean read_only;
 
-  row = get_row_for_source (self, source);
+  read_only = gcal_calendar_is_read_only (calendar);
+  row = get_row_for_calendar (self, calendar);
 
   /* If the calendar changed from/to read-only, we add or remove it here */
-  if (!gcal_manager_is_client_writable (manager, source))
+  if (read_only)
     {
       if (row)
         gtk_container_remove (GTK_CONTAINER (self->calendars_listbox), row);
@@ -549,29 +557,26 @@ on_source_changed (GcalManager         *manager,
     }
   else if (!row)
     {
-      on_source_added (manager,
-                       source,
-                       is_source_enabled (source),
-                       self);
+      on_calendar_added (manager, calendar, self);
 
-      row = get_row_for_source (self, source);
+      row = get_row_for_calendar (self, calendar);
     }
 
   color_icon = g_object_get_data (G_OBJECT (row), "color-icon");
   name_label = g_object_get_data (G_OBJECT (row), "name-label");
 
   /* If the source is writable now (or not), update sensitivity */
-  gtk_widget_set_sensitive (row, gcal_manager_is_client_writable (manager, source));
+  gtk_widget_set_sensitive (row, !read_only);
 
   /* Setup the source color, in case it changed */
-  get_color_name_from_source (source, &color);
-  surface = get_circle_surface_from_color (&color, 16);
+  color = gcal_calendar_get_color (calendar);
+  surface = get_circle_surface_from_color (color, 16);
   gtk_image_set_from_surface (GTK_IMAGE (color_icon), surface);
 
   g_clear_pointer (&surface, cairo_surface_destroy);
 
   /* Also setup the row name, in case we just changed the source name */
-  gtk_label_set_text (GTK_LABEL (name_label), e_source_get_display_name (source));
+  gtk_label_set_text (GTK_LABEL (name_label), gcal_calendar_get_name (calendar));
 
   gtk_list_box_invalidate_sort (GTK_LIST_BOX (self->calendars_listbox));
 
@@ -584,13 +589,13 @@ on_source_changed (GcalManager         *manager,
 }
 
 static void
-on_source_removed (GcalManager         *manager,
-                   ESource             *source,
-                   GcalQuickAddPopover *self)
+on_calendar_removed (GcalManager         *manager,
+                     GcalCalendar        *calendar,
+                     GcalQuickAddPopover *self)
 {
   GtkWidget *row;
 
-  row = get_row_for_source (self, source);
+  row = get_row_for_calendar (self, calendar);
 
   if (!row)
     return;
@@ -604,15 +609,15 @@ sort_func (GtkListBoxRow *row1,
            GtkListBoxRow *row2,
            gpointer       user_data)
 {
-  ESource *source1, *source2;
+  GcalCalendar *calendar1, *calendar2;
   gchar *name1, *name2;
   gint retval;
 
-  source1 = g_object_get_data (G_OBJECT (row1), "source");
-  source2 = g_object_get_data (G_OBJECT (row2), "source");
+  calendar1 = g_object_get_data (G_OBJECT (row1), "calendar");
+  calendar2 = g_object_get_data (G_OBJECT (row2), "calendar");
 
-  name1 = g_utf8_casefold (e_source_get_display_name (source1), -1);
-  name2 = g_utf8_casefold (e_source_get_display_name (source2), -1);
+  name1 = g_utf8_casefold (gcal_calendar_get_name (calendar1), -1);
+  name2 = g_utf8_casefold (gcal_calendar_get_name (calendar2), -1);
 
   retval = g_strcmp0 (name1, name2);
 
@@ -644,7 +649,6 @@ edit_or_create_event (GcalQuickAddPopover *self,
   GDateTime *date_start, *date_end;
   GTimeZone *tz;
   GcalEvent *event;
-  ESource *source;
   const gchar *summary;
   gboolean all_day, single_day;
 
@@ -652,8 +656,7 @@ edit_or_create_event (GcalQuickAddPopover *self,
     return;
 
   manager = gcal_context_get_manager (self->context);
-  source = g_object_get_data (G_OBJECT (self->selected_row), "source");
-  calendar = gcal_manager_get_calendar_from_source (manager, source);
+  calendar = g_object_get_data (G_OBJECT (self->selected_row), "calendar");
 
   single_day = gcal_date_time_compare_date (self->date_end, self->date_start) == 0;
   all_day = gcal_date_time_compare_date (self->date_end, self->date_start) > 1 ||
@@ -799,20 +802,14 @@ gcal_quick_add_popover_set_property (GObject      *object,
           calendars = gcal_manager_get_calendars (manager);
 
           for (l = calendars; l; l = l->next)
-            {
-              GcalCalendar *calendar = l->data;
-              on_source_added (manager,
-                               gcal_calendar_get_source (calendar),
-                               gcal_calendar_get_visible (calendar),
-                               self);
-            }
+            on_calendar_added (manager, l->data, self);
 
           g_list_free (calendars);
 
           /* Connect to the manager signals and keep the list updates */
-          g_signal_connect (manager, "source-added", G_CALLBACK (on_source_added), self);
-          g_signal_connect (manager, "source-changed", G_CALLBACK (on_source_changed), self);
-          g_signal_connect (manager, "source-removed", G_CALLBACK (on_source_removed), self);
+          g_signal_connect (manager, "calendar-added", G_CALLBACK (on_calendar_added), self);
+          g_signal_connect (manager, "calendar-changed", G_CALLBACK (on_calendar_changed), self);
+          g_signal_connect (manager, "calendar-removed", G_CALLBACK (on_calendar_removed), self);
           g_signal_connect_swapped (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self);
 
           g_signal_connect_object (self->context,

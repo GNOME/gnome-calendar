@@ -111,50 +111,41 @@ search_func (GTask        *task,
 }
 
 static void
-on_manager_source_added_cb (GcalManager      *manager,
-                            ESource          *source,
-                            gboolean          enabled,
-                            GcalSearchEngine *self)
+on_manager_calendar_added_cb (GcalManager      *manager,
+                              GcalCalendar     *calendar,
+                              GcalSearchEngine *self)
 {
   ECalClient *client;
 
-  g_debug ("Removing source %s from search results", e_source_get_uid (source));
+  g_debug ("Removing source %s from search results", gcal_calendar_get_id (calendar));
 
-  client = gcal_manager_get_client (manager, source);
+  client = gcal_calendar_get_client (calendar);
 
-  if (enabled)
+  if (gcal_calendar_get_visible (calendar))
     e_cal_data_model_add_client (self->data_model, client);
 }
 
 static void
-on_manager_source_enabled_cb (GcalManager      *manager,
-                              ESource          *source,
-                              gboolean          enabled,
-                              GcalSearchEngine *self)
+on_manager_calendar_changed_cb (GcalManager      *manager,
+                                GcalCalendar     *calendar,
+                                GcalSearchEngine *self)
 {
-  g_debug ("Changing source %s from search results", e_source_get_uid (source));
+  g_debug ("Changing source %s from search results", gcal_calendar_get_id (calendar));
 
-  if (enabled)
-    {
-      ECalClient *client;
-
-      client = gcal_manager_get_client (manager, source);
-      e_cal_data_model_add_client (self->data_model, client);
-    }
+  if (gcal_calendar_get_visible (calendar))
+    e_cal_data_model_add_client (self->data_model, gcal_calendar_get_client (calendar));
   else
-    {
-      e_cal_data_model_remove_client (self->data_model, e_source_get_uid (source));
-    }
+    e_cal_data_model_remove_client (self->data_model, gcal_calendar_get_id (calendar));
 }
 
 static void
-on_manager_source_removed_cb (GcalManager      *manager,
-                              ESource          *source,
-                              GcalSearchEngine *self)
+on_manager_calendar_removed_cb (GcalManager      *manager,
+                                GcalCalendar     *calendar,
+                                GcalSearchEngine *self)
 {
-  g_debug ("Removing source %s from search results", e_source_get_uid (source));
+  g_debug ("Removing source %s from search results", gcal_calendar_get_id (calendar));
 
-  e_cal_data_model_remove_client (self->data_model, e_source_get_uid (source));
+  e_cal_data_model_remove_client (self->data_model, gcal_calendar_get_id (calendar));
 }
 
 static void
@@ -196,9 +187,9 @@ gcal_search_engine_constructed (GObject *object)
 
 
   manager = gcal_context_get_manager (self->context);
-  g_signal_connect_object (manager, "source-added", G_CALLBACK (on_manager_source_added_cb), self, 0);
-  g_signal_connect_object (manager, "source-removed", G_CALLBACK (on_manager_source_removed_cb), self, 0);
-  g_signal_connect_object (manager, "source-enabled", G_CALLBACK (on_manager_source_enabled_cb), self, 0);
+  g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), self, 0);
+  g_signal_connect_object (manager, "calendar-changed", G_CALLBACK (on_manager_calendar_changed_cb), self, 0);
+  g_signal_connect_object (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), self, 0);
 
   g_signal_connect_object (self->context,
                            "notify::timezone",

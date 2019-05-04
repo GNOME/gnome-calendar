@@ -103,10 +103,9 @@ enum
 
 enum
 {
-  SOURCE_ADDED,
-  SOURCE_CHANGED,
-  SOURCE_REMOVED,
-  SOURCE_ENABLED,
+  CALENDAR_ADDED,
+  CALENDAR_CHANGED,
+  CALENDAR_REMOVED,
   QUERY_COMPLETED,
   NUM_SIGNALS
 };
@@ -155,16 +154,20 @@ static void
 remove_source (GcalManager  *self,
                ESource      *source)
 {
+  GcalCalendar *calendar;
+
   GCAL_ENTRY;
 
   g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (E_IS_SOURCE (source));
 
+  calendar = g_hash_table_lookup (self->clients, source);
+
   e_cal_data_model_remove_client (self->e_data_model,
                                   e_source_get_uid (source));
 
   g_hash_table_remove (self->clients, source);
-  g_signal_emit (self, signals[SOURCE_REMOVED], 0, source);
+  g_signal_emit (self, signals[CALENDAR_REMOVED], 0, calendar);
 
   GCAL_EXIT;
 }
@@ -173,13 +176,14 @@ static void
 source_changed (GcalManager *self,
                 ESource     *source)
 {
+  GcalCalendar *calendar;
+
   GCAL_ENTRY;
 
-  if (g_hash_table_lookup (self->clients, source) != NULL &&
-      e_source_has_extension (source, E_SOURCE_EXTENSION_CALENDAR))
-    {
-      g_signal_emit (self, signals[SOURCE_CHANGED], 0, source);
-    }
+  calendar = g_hash_table_lookup (self->clients, source);
+
+  if (calendar)
+    g_signal_emit (self, signals[CALENDAR_CHANGED], 0, calendar);
 
   GCAL_EXIT;
 }
@@ -269,7 +273,7 @@ on_calendar_created_cb (GObject      *source_object,
                                    NULL,
                                    NULL);
 
-  g_signal_emit (self, signals[SOURCE_ADDED], 0, gcal_calendar_get_source (calendar), visible);
+  g_signal_emit (self, signals[CALENDAR_ADDED], 0, calendar);
 }
 
 static void
@@ -702,39 +706,29 @@ gcal_manager_class_init (GcalManagerClass *klass)
   g_object_class_install_properties (object_class, NUM_PROPS, properties);
 
   /* signals */
-  signals[SOURCE_ADDED] = g_signal_new ("source-added",
-                                        GCAL_TYPE_MANAGER,
-                                        G_SIGNAL_RUN_LAST,
-                                        0, NULL, NULL, NULL,
-                                        G_TYPE_NONE,
-                                        2,
-                                        G_TYPE_POINTER,
-                                        G_TYPE_BOOLEAN);
-
-  signals[SOURCE_CHANGED] = g_signal_new ("source-changed",
+  signals[CALENDAR_ADDED] = g_signal_new ("calendar-added",
                                           GCAL_TYPE_MANAGER,
                                           G_SIGNAL_RUN_LAST,
                                           0, NULL, NULL, NULL,
                                           G_TYPE_NONE,
                                           1,
-                                          E_TYPE_SOURCE);
+                                          GCAL_TYPE_CALENDAR);
 
-  signals[SOURCE_REMOVED] = g_signal_new ("source-removed",
-                                          GCAL_TYPE_MANAGER,
-                                          G_SIGNAL_RUN_LAST,
-                                          0, NULL, NULL, NULL,
-                                          G_TYPE_NONE,
-                                          1,
-                                          G_TYPE_POINTER);
+  signals[CALENDAR_CHANGED] = g_signal_new ("calendar-changed",
+                                            GCAL_TYPE_MANAGER,
+                                            G_SIGNAL_RUN_LAST,
+                                            0, NULL, NULL, NULL,
+                                            G_TYPE_NONE,
+                                            1,
+                                            GCAL_TYPE_CALENDAR);
 
-  signals[SOURCE_ENABLED] = g_signal_new ("source-enabled",
-                                          GCAL_TYPE_MANAGER,
-                                          G_SIGNAL_RUN_LAST,
-                                          0, NULL, NULL, NULL,
-                                          G_TYPE_NONE,
-                                          2,
-                                          E_TYPE_SOURCE,
-                                          G_TYPE_BOOLEAN);
+  signals[CALENDAR_REMOVED] = g_signal_new ("calendar-removed",
+                                            GCAL_TYPE_MANAGER,
+                                            G_SIGNAL_RUN_LAST,
+                                            0, NULL, NULL, NULL,
+                                            G_TYPE_NONE,
+                                            1,
+                                            GCAL_TYPE_CALENDAR);
 
   signals[QUERY_COMPLETED] = g_signal_new ("query-completed",
                                            GCAL_TYPE_MANAGER,
@@ -1110,8 +1104,6 @@ gcal_manager_enable_source (GcalManager *self,
   if (self->shell_search_data_model)
     e_cal_data_model_add_client (self->shell_search_data_model, client);
 
-  g_signal_emit (self, signals[SOURCE_ENABLED], 0, source, TRUE);
-
   /* Save the source */
   e_source_selectable_set_selected (selectable, TRUE);
   gcal_manager_save_source (self, source);
@@ -1153,8 +1145,6 @@ gcal_manager_disable_source (GcalManager *self,
 
   if (self->shell_search_data_model != NULL)
     e_cal_data_model_remove_client (self->shell_search_data_model, source_uid);
-
-  g_signal_emit (self, signals[SOURCE_ENABLED], 0, source, FALSE);
 
   /* Save the source */
   e_source_selectable_set_selected (selectable, FALSE);

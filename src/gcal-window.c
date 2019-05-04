@@ -666,41 +666,14 @@ hide_notification_scheduled (gpointer window)
   return FALSE;
 }
 
-static void
-on_calendar_toggled (GObject    *object,
-                     GParamSpec *pspec,
-                     gpointer    user_data)
-{
-  GcalManager *manager;
-  GcalWindow *window;
-  gboolean active;
-  GtkWidget *row;
-  ESource *source;
-
-  window = GCAL_WINDOW (user_data);
-  manager = gcal_context_get_manager (window->context);
-  active = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object));
-  row = gtk_widget_get_parent (gtk_widget_get_parent (GTK_WIDGET (object)));
-  source = g_object_get_data (G_OBJECT (row), "source");
-
-  if (source == NULL)
-    return;
-
-  /* Enable/disable the toggled calendar */
-  if (active)
-    gcal_manager_enable_source (manager, source);
-  else
-    gcal_manager_disable_source (manager, source);
-}
-
 static GtkWidget*
-make_row_from_source (GcalWindow *window,
-                      ESource    *source)
+make_calendar_row (GcalWindow   *window,
+                   GcalCalendar *calendar)
 {
   GtkWidget *label, *icon, *checkbox, *box, *row;
   GtkStyleContext *context;
   cairo_surface_t *surface;
-  GdkRGBA color;
+  const GdkRGBA *color;
 
   row = gtk_list_box_row_new ();
 
@@ -715,21 +688,24 @@ make_row_from_source (GcalWindow *window,
   gtk_container_set_border_width (GTK_CONTAINER (box), 6);
 
   /* source color icon */
-  get_color_name_from_source (source, &color);
-  surface = get_circle_surface_from_color (&color, 16);
+  color = gcal_calendar_get_color (calendar);
+  surface = get_circle_surface_from_color (color, 16);
   icon = gtk_image_new_from_surface (surface);
 
   gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
 
   /* source name label */
-  label = gtk_label_new (e_source_get_display_name (source));
+  label = gtk_label_new (gcal_calendar_get_name (calendar));
   gtk_label_set_xalign (GTK_LABEL (label), 0.0);
   gtk_widget_set_hexpand (label, TRUE);
 
   /* checkbox */
   checkbox = gtk_check_button_new ();
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (checkbox), is_source_enabled (source));
-  g_signal_connect (checkbox, "notify::active", G_CALLBACK (on_calendar_toggled), window);
+  g_object_bind_property (calendar,
+                          "visible",
+                          checkbox,
+                          "active",
+                          G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
 
   gtk_container_add (GTK_CONTAINER (box), icon);
   gtk_container_add (GTK_CONTAINER (box), label);
@@ -737,7 +713,7 @@ make_row_from_source (GcalWindow *window,
   gtk_container_add (GTK_CONTAINER (row), box);
 
   g_object_set_data (G_OBJECT (row), "check", checkbox);
-  g_object_set_data (G_OBJECT (row), "source", source);
+  g_object_set_data (G_OBJECT (row), "calendar", calendar);
 
   gtk_widget_show_all (row);
 
@@ -747,36 +723,30 @@ make_row_from_source (GcalWindow *window,
 }
 
 static void
-add_source (GcalManager *manager,
-            ESource     *source,
-            gboolean     enabled,
-            gpointer     user_data)
+add_calendar (GcalManager  *manager,
+              GcalCalendar *calendar,
+              GcalWindow   *self)
 {
-  GcalWindow *window;
   GtkWidget *row;
 
-  window = GCAL_WINDOW (user_data);
-
-  row = make_row_from_source (GCAL_WINDOW (user_data), source);
-
-  gtk_container_add (GTK_CONTAINER (window->calendar_listbox), row);
+  row = make_calendar_row (self, calendar);
+  gtk_container_add (GTK_CONTAINER (self->calendar_listbox), row);
 }
 
 static void
-remove_source (GcalManager *manager,
-               ESource     *source,
-               gpointer     user_data)
+remove_calendar (GcalManager  *manager,
+                 GcalCalendar *calendar,
+                 GcalWindow   *self)
 {
-  GcalWindow *window = GCAL_WINDOW (user_data);
   GList *children, *aux;
 
-  children = gtk_container_get_children (GTK_CONTAINER (window->calendar_listbox));
+  children = gtk_container_get_children (GTK_CONTAINER (self->calendar_listbox));
 
   for (aux = children; aux != NULL; aux = aux->next)
     {
-      ESource *child_source = g_object_get_data (G_OBJECT (aux->data), "source");
+      GcalCalendar *row_calendar = g_object_get_data (G_OBJECT (aux->data), "calendar");
 
-      if (child_source != NULL && child_source == source)
+      if (row_calendar && row_calendar == calendar)
         {
           gtk_widget_destroy (aux->data);
           break;
@@ -800,62 +770,11 @@ source_row_activated (GtkListBox    *listbox,
 }
 
 static void
-source_enabled (GcalWindow *self,
-                ESource    *source,
-                gboolean    enabled)
+calendar_changed (GcalWindow   *window,
+                  GcalCalendar *calendar)
 {
-  GList *children, *aux;
-
-  children = gtk_container_get_children (GTK_CONTAINER (self->calendar_listbox));
-
-  for (aux = children; aux != NULL; aux = aux->next)
-    {
-      ESource *child_source = g_object_get_data (G_OBJECT (aux->data), "source");
-
-      if (child_source != NULL && child_source == source)
-        {
-          GtkToggleButton *button = g_object_get_data (G_OBJECT (aux->data), "check");
-
-          g_signal_handlers_block_by_func (button, on_calendar_toggled, self);
-          gtk_toggle_button_set_active (button, enabled);
-          g_signal_handlers_unblock_by_func (button, on_calendar_toggled, self);
-
-          break;
-        }
-    }
-
-  g_list_free (children);
-}
-
-static void
-source_changed (GcalWindow *window,
-                ESource    *source)
-{
-  GcalManager *manager;
-  GList *children, *aux;
-
-  manager = gcal_context_get_manager (window->context);
-  children = gtk_container_get_children (GTK_CONTAINER (window->calendar_listbox));
-
-  for (aux = children; aux != NULL; aux = aux->next)
-    {
-      ESource *child_source = g_object_get_data (G_OBJECT (aux->data), "source");
-
-      /*
-       * Here we destroy the row and re-add it because there is no
-       * way to actually bind the ::enabled state of source. It behaves
-       * like a construct-only property, and we need to re-create the
-       * row if there's any changes.
-       */
-      if (child_source != NULL && child_source == source)
-        {
-          gtk_widget_destroy (aux->data);
-          add_source (manager, source, is_source_enabled (source), window);
-          break;
-        }
-    }
-
-  g_list_free (children);
+  remove_calendar (NULL, calendar, window);
+  add_calendar (NULL, calendar, window);
 }
 
 static gboolean
@@ -1204,19 +1123,12 @@ gcal_window_set_property (GObject      *object,
               calendars = gcal_manager_get_calendars (manager);
 
               for (l = calendars; l; l = l->next)
-                {
-                  GcalCalendar *calendar = l->data;
-                  add_source (manager,
-                              gcal_calendar_get_source (calendar),
-                              gcal_calendar_get_visible (calendar),
-                              self);
-                }
+                add_calendar (manager, l->data, self);
             }
 
-          g_signal_connect (manager, "source-added", G_CALLBACK (add_source), object);
-          g_signal_connect (manager, "source-removed", G_CALLBACK (remove_source), object);
-          g_signal_connect_swapped (manager, "source-enabled", G_CALLBACK (source_enabled), object);
-          g_signal_connect_swapped (manager, "source-changed", G_CALLBACK (source_changed), object);
+          g_signal_connect (manager, "calendar-added", G_CALLBACK (add_calendar), object);
+          g_signal_connect (manager, "calendar-removed", G_CALLBACK (remove_calendar), object);
+          g_signal_connect_swapped (manager, "calendar-changed", G_CALLBACK (calendar_changed), object);
 
           g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
         }
