@@ -52,4 +52,6 @@ GTimeZone*           gcal_context_get_timezone                   (GcalContext   
 
 GcalWeatherService*  gcal_context_get_weather_service            (GcalContext        *self);
 
+void                 gcal_context_startup                        (GcalContext        *self);
+
 G_END_DECLS

@@ -23,7 +23,7 @@
 
 #include "css-code.h"
 #include "gcal-application.h"
-#include "gcal-context-private.h"
+#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-log.h"
 #include "gcal-resources.h"

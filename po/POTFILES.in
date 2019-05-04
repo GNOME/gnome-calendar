@@ -17,10 +17,10 @@ data/ui/time-selector.ui
 data/ui/weather-settings.ui
 data/ui/window.ui
 data/ui/year-view.ui
-src/gcal-application.c
 src/main.c
 src/core/gcal-event.c
 src/core/gcal-manager.c
+src/gui/gcal-application.c
 src/gui/gcal-date-selector.c
 src/gui/gcal-edit-dialog.c
 src/gui/gcal-event-widget.c
