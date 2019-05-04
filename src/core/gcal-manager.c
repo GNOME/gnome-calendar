@@ -182,8 +182,27 @@ source_changed (GcalManager *self,
 
   calendar = g_hash_table_lookup (self->clients, source);
 
-  if (calendar)
-    g_signal_emit (self, signals[CALENDAR_CHANGED], 0, calendar);
+  if (!calendar)
+    GCAL_RETURN ();
+
+  if (gcal_calendar_get_visible (calendar))
+    {
+      ECalClient *client = gcal_calendar_get_client (calendar);
+
+      e_cal_data_model_add_client (self->e_data_model, client);
+      if (self->shell_search_data_model)
+        e_cal_data_model_add_client (self->shell_search_data_model, client);
+    }
+  else
+    {
+      const gchar *id = gcal_calendar_get_id (calendar);
+
+      e_cal_data_model_remove_client (self->e_data_model, id);
+      if (self->shell_search_data_model)
+        e_cal_data_model_remove_client (self->shell_search_data_model, id);
+    }
+
+  g_signal_emit (self, signals[CALENDAR_CHANGED], 0, calendar);
 
   GCAL_EXIT;
 }
