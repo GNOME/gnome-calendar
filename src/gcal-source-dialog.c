@@ -492,14 +492,13 @@ calendar_visible_check_toggled (GObject    *object,
                                 gpointer    user_data)
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
+  GcalCalendar *calendar;
   GcalManager *manager;
 
   manager = gcal_context_get_manager (self->context);
 
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object)))
-    gcal_manager_enable_source (manager, self->source);
-  else
-    gcal_manager_disable_source (manager, self->source);
+  calendar = gcal_manager_get_calendar_from_source (manager, self->source);
+  gcal_calendar_set_visible (calendar, gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object)));
 }
 
 static void
@@ -1666,20 +1665,13 @@ notification_child_revealed_changed (GtkWidget  *notification,
         return;
 
       /* Enable the source again to remove it's name from disabled list */
-      gcal_manager_enable_source (manager, removed_source);
-
+      gcal_calendar_set_visible (self->removed_calendar, TRUE);
       e_source_remove_sync (removed_source, NULL, &error);
 
-      /**
-       * If something goes wrong, throw
-       * an alert and add the source back.
-       */
       if (error != NULL)
         {
           g_warning ("[source-dialog] Error removing source: %s", error->message);
-
           add_calendar (manager, self->removed_calendar, self);
-          gcal_manager_enable_source (manager, removed_source);
         }
     }
 }
@@ -1703,13 +1695,7 @@ undo_remove_action (GtkButton *button,
   /* if there's any set source, unremove it */
   if (self->removed_calendar != NULL)
     {
-      ESource *removed_source;
-
-      removed_source = gcal_calendar_get_source (self->removed_calendar);
-
-      /* Enable the source before adding it again */
-      gcal_manager_enable_source (manager, removed_source);
-
+      gcal_calendar_set_visible (self->removed_calendar, TRUE);
       add_calendar (manager, self->removed_calendar, self);
 
       /*
@@ -1805,8 +1791,7 @@ remove_button_clicked (GtkWidget *button,
 
       self->notification_timeout_id = g_timeout_add_seconds (5, hide_notification_scheduled, user_data);
 
-      /* Disable the source, so it gets hidden */
-      gcal_manager_disable_source (manager, removed_source);
+      gcal_calendar_set_visible (self->removed_calendar, FALSE);
 
       g_list_free (children);
       g_free (str);

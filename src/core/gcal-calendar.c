@@ -69,6 +69,19 @@ static GParamSpec *properties [N_PROPS];
  */
 
 static void
+save_calendar (GcalCalendar *self)
+{
+  if (!e_source_get_writable (self->source))
+    {
+      g_warning ("Calendar %s is read-only and cannot be modified. Aborting.",
+                 e_source_get_uid (self->source));
+      return;
+    }
+
+  e_source_write (self->source, NULL, NULL, NULL);
+}
+
+static void
 update_color (GcalCalendar *self)
 {
   ESourceSelectable *selectable_extension;
@@ -464,6 +477,8 @@ gcal_calendar_set_color (GcalCalendar  *self,
   selectable_extension = e_source_get_extension (self->source, E_SOURCE_EXTENSION_CALENDAR);
   e_source_selectable_set_color (selectable_extension, color_string);
 
+  save_calendar (self);
+
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COLOR]);
 }
 
@@ -513,6 +528,7 @@ gcal_calendar_set_name (GcalCalendar *self,
   g_return_if_fail (GCAL_IS_CALENDAR (self));
 
   e_source_set_display_name (self->source, name);
+  save_calendar (self);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_NAME]);
 }
@@ -601,5 +617,7 @@ gcal_calendar_set_visible (GcalCalendar *self,
 
   selectable_extension = e_source_get_extension (self->source, E_SOURCE_EXTENSION_CALENDAR);
   e_source_selectable_set_selected (selectable_extension, visible);
+
+  save_calendar (self);
 }
 

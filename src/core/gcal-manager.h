@@ -87,12 +87,6 @@ gchar*               gcal_manager_add_source                     (GcalManager   
                                                                   const gchar        *backend,
                                                                   const gchar        *color);
 
-void                 gcal_manager_enable_source                  (GcalManager        *self,
-                                                                  ESource            *source);
-
-void                 gcal_manager_disable_source                 (GcalManager        *self,
-                                                                  ESource            *source);
-
 void                 gcal_manager_save_source                    (GcalManager        *self,
                                                                   ESource            *source);
 
