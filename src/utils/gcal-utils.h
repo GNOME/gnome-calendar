@@ -33,6 +33,7 @@
 #define MAX_MINUTES     (7 * MINUTES_PER_DAY)
 
 #define gcal_clear_timeout(pp) { if (pp && *pp) { g_source_remove (*pp); *pp = 0; } }
+#define gcal_clear_signal_handler(pp,instance) { if (pp && *pp > 0) { g_signal_handler_disconnect (instance, *pp); *pp = 0; } }
 
 #if !EDS_CHECK_VERSION (3, 31, 90)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ESource, g_object_unref)
