@@ -558,14 +558,15 @@ default_check_toggled (GObject    *object,
 {
   GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
   GcalManager *manager;
+  ESource *new_default_source;
 
   manager = gcal_context_get_manager (self->context);
 
   /* Retrieve the current default source */
   if (self->old_default_source == NULL)
     {
-      self->old_default_source = gcal_manager_get_default_source (manager);
-      g_object_unref (self->old_default_source);
+      GcalCalendar *default_calendar = gcal_manager_get_default_calendar (manager);
+      self->old_default_source = gcal_calendar_get_source (default_calendar);
     }
 
   /**
@@ -574,9 +575,12 @@ default_check_toggled (GObject    *object,
    * default source.
    */
   if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object)))
-    gcal_manager_set_default_source (manager, self->source);
+    new_default_source = self->source;
   else
-    gcal_manager_set_default_source (manager, self->old_default_source);
+    new_default_source = self->old_default_source;
+
+  gcal_manager_set_default_calendar (manager,
+                                     gcal_manager_get_calendar_from_source (manager, new_default_source));
 }
 
 static gboolean
@@ -865,11 +869,13 @@ stack_visible_child_name_changed (GObject    *object,
    */
   if (visible_child == self->edit_grid && self->source != NULL)
     {
+      GcalCalendar *default_calendar;
       ESource *default_source;
       gchar *parent_name;
       gboolean creation_mode, is_goa, is_file, is_remote;
 
-      default_source = gcal_manager_get_default_source (manager);
+      default_calendar = gcal_manager_get_default_calendar (manager);
+      default_source = gcal_calendar_get_source (default_calendar);
       creation_mode = (self->mode == GCAL_SOURCE_DIALOG_MODE_CREATE ||
                        self->mode == GCAL_SOURCE_DIALOG_MODE_CREATE_WEB);
       is_goa = is_goa_source (GCAL_SOURCE_DIALOG (user_data), self->source);

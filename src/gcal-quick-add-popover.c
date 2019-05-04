@@ -490,16 +490,12 @@ update_default_calendar_row (GcalQuickAddPopover *self)
   GcalCalendar *default_calendar;
   GcalManager *manager;
   GtkWidget *row;
-  ESource *default_source;
 
   manager = gcal_context_get_manager (self->context);
-  default_source = gcal_manager_get_default_source (manager);
-  default_calendar = gcal_manager_get_calendar_from_source (manager, default_source);
+  default_calendar = gcal_manager_get_default_calendar (manager);
 
   row = get_row_for_calendar (self, default_calendar);
   select_row (self, GTK_LIST_BOX_ROW (row));
-
-  g_clear_object (&default_source);
 }
 
 
@@ -512,26 +508,21 @@ on_calendar_added (GcalManager         *manager,
                    GcalCalendar        *calendar,
                    GcalQuickAddPopover *self)
 {
-  ESource *default_source;
+  GcalCalendar *default_calendar;
   GtkWidget *row;
 
   /* Since we can't add on read-only calendars, lets not show them at all */
   if (gcal_calendar_is_read_only (calendar))
     return;
 
-  default_source = gcal_manager_get_default_source (manager);
+  default_calendar = gcal_manager_get_default_calendar (manager);
   row = create_calendar_row (manager, calendar);
 
   gtk_container_add (GTK_CONTAINER (self->calendars_listbox), row);
 
   /* Select the default source whe first adding events */
-  if (gcal_calendar_get_source (calendar) == default_source &&
-      !self->selected_row)
-    {
-      select_row (self, GTK_LIST_BOX_ROW (row));
-    }
-
-  g_clear_object (&default_source);
+  if (calendar == default_calendar && !self->selected_row)
+    select_row (self, GTK_LIST_BOX_ROW (row));
 }
 
 static void

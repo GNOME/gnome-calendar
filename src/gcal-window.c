@@ -672,7 +672,6 @@ create_event_detailed_cb (GcalView *view,
                           gpointer  end_span,
                           gpointer  user_data)
 {
-  g_autoptr (ESource) default_source = NULL;
   GcalWindow *window = GCAL_WINDOW (user_data);
   GcalCalendar *default_calendar;
   GcalManager *manager;
@@ -681,8 +680,7 @@ create_event_detailed_cb (GcalView *view,
 
   manager = gcal_context_get_manager (window->context);
   comp = build_component_from_details ("", start_span, end_span);
-  default_source = gcal_manager_get_default_source (manager);
-  default_calendar = gcal_manager_get_calendar_from_source (manager, default_source);
+  default_calendar = gcal_manager_get_default_calendar (manager);
   event = gcal_event_new (default_calendar, comp, NULL);
 
   gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (window->edit_dialog), TRUE);

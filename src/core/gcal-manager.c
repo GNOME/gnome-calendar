@@ -335,12 +335,8 @@ on_event_created (GObject      *source_object,
     }
   else
     {
-      GcalCalendar *calendar;
-
       g_object_ref (data->event);
-
-      calendar = gcal_event_get_calendar (data->event);
-      gcal_manager_set_default_source (data->manager, gcal_calendar_get_source (calendar));
+      gcal_manager_set_default_calendar (data->manager, gcal_event_get_calendar (data->event));
       g_debug ("Event: %s created successfully", new_uid);
     }
 
@@ -636,19 +632,7 @@ gcal_manager_set_property (GObject      *object,
   switch (property_id)
     {
     case PROP_DEFAULT_CALENDAR:
-        {
-          ESource *source;
-
-          source = e_source_registry_ref_default_calendar (self->source_registry);
-          g_object_unref (source);
-
-          /* Only notify a change when they're different, otherwise we'll end up in a notify loop */
-          if (g_value_get_object (value) == source)
-            break;
-
-          e_source_registry_set_default_calendar (self->source_registry, g_value_get_object (value));
-          g_object_notify (object, "default-calendar");
-        }
+      gcal_manager_set_default_calendar (self, g_value_get_object (value));
       break;
 
     default:
@@ -671,7 +655,7 @@ gcal_manager_get_property (GObject    *object,
   switch (property_id)
     {
     case PROP_DEFAULT_CALENDAR:
-      g_value_take_object (value, e_source_registry_ref_default_calendar (self->source_registry));
+      g_value_set_object (value, gcal_manager_get_default_calendar (self));
       break;
 
     default:
@@ -700,8 +684,8 @@ gcal_manager_class_init (GcalManagerClass *klass)
   properties[PROP_DEFAULT_CALENDAR] = g_param_spec_object ("default-calendar",
                                                            "Default calendar",
                                                            "The default calendar",
-                                                           E_TYPE_SOURCE,
-                                                           G_PARAM_READWRITE);
+                                                           GCAL_TYPE_CALENDAR,
+                                                           G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, NUM_PROPS, properties);
 
@@ -796,34 +780,41 @@ gcal_manager_get_calendar_from_source (GcalManager *self,
 }
 
 /**
- * gcal_manager_get_default_source:
+ * gcal_manager_get_default_calendar:
  * @self: a #GcalManager
  *
- * Returns: (transfer full): an #ESource object. Free
- * with g_object_unref().
+ * Returns: (transfer none): a #GcalCalendar.
  */
-ESource*
-gcal_manager_get_default_source (GcalManager *self)
+GcalCalendar*
+gcal_manager_get_default_calendar (GcalManager *self)
 {
+  g_autoptr (ESource) default_source = NULL;
+
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  return e_source_registry_ref_default_calendar (self->source_registry);
+  default_source = e_source_registry_ref_default_calendar (self->source_registry);
+  return g_hash_table_lookup (self->clients, default_source);
 }
 
 /**
- * gcal_manager_set_default_source:
+ * gcal_manager_set_default_calendar:
  * @self: a #GcalManager
- * @source: the new default source.
+ * @calendar: the new default calendar.
  *
  * Sets the default calendar.
  */
 void
-gcal_manager_set_default_source (GcalManager *self,
-                                 ESource     *source)
+gcal_manager_set_default_calendar (GcalManager  *self,
+                                   GcalCalendar *calendar)
 {
   g_return_if_fail (GCAL_IS_MANAGER (self));
 
-  e_source_registry_set_default_calendar (self->source_registry, source);
+  if (calendar == gcal_manager_get_default_calendar (self))
+    return;
+
+  e_source_registry_set_default_calendar (self->source_registry,
+                                          gcal_calendar_get_source (calendar));
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DEFAULT_CALENDAR]);
 }
 
 /**
