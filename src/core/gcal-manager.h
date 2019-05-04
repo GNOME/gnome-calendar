@@ -64,9 +64,6 @@ gchar*               gcal_manager_query_client_data              (GcalManager   
 
 void                 gcal_manager_refresh                        (GcalManager        *self);
 
-gboolean             gcal_manager_is_client_writable             (GcalManager        *self,
-                                                                  ESource            *source);
-
 void                 gcal_manager_create_event                   (GcalManager        *self,
                                                                   GcalEvent          *event);
 

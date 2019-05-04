@@ -1159,31 +1159,6 @@ gcal_manager_refresh (GcalManager *self)
 }
 
 /**
- * gcal_manager_is_client_writable:
- * @self: a #GcalManager
- * @source: an #ESource
- *
- * Retrieves whether @source is writable.
- *
- * Returns: %TRUE if @source is writable, %FALSE otherwise.
- */
-gboolean
-gcal_manager_is_client_writable (GcalManager *self,
-                                 ESource     *source)
-{
-  GcalCalendar *calendar;
-
-  GCAL_ENTRY;
-
-  calendar = g_hash_table_lookup (self->clients, source);
-
-  if (!calendar)
-    GCAL_RETURN (FALSE);
-
-  GCAL_RETURN (!gcal_calendar_is_read_only (calendar));
-}
-
-/**
  * gcal_manager_create_event:
  * @self: a #GcalManager
  * @event: a #GcalEvent
