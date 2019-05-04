@@ -241,22 +241,6 @@ build_component_from_datetime (GcalEvent *self,
   return comp_dt;
 }
 
-static gboolean
-string_to_color (GBinding     *binding,
-                 const GValue *from_value,
-                 GValue       *to_value,
-                 gpointer      user_data)
-{
-  GdkRGBA color;
-
-  if (!gdk_rgba_parse (&color, g_value_get_string (from_value)))
-    gdk_rgba_parse (&color, "#ffffff"); /* calendar default colour */
-
-  g_value_set_boxed (to_value, &color);
-
-  return TRUE;
-}
-
 static void
 gcal_event_update_uid_internal (GcalEvent *self)
 {
@@ -1313,24 +1297,11 @@ gcal_event_set_calendar (GcalEvent    *self,
 
       if (calendar)
         {
-          ESourceSelectable *extension;
-          const GdkRGBA *color;
-          ESource *source;
-
-          color = gcal_calendar_get_color (calendar);
-          gcal_event_set_color (self, (GdkRGBA*) color);
-
-          source = gcal_calendar_get_source (calendar);
-          extension = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
-
-          /* Bind the source's color with this event's color */
-          self->color_binding = g_object_bind_property_full (extension, "color",
-                                                             self, "color",
-                                                             G_BINDING_DEFAULT,
-                                                             string_to_color,
-                                                             NULL,
-                                                             self,
-                                                             NULL);
+          self->color_binding = g_object_bind_property (calendar,
+                                                        "color",
+                                                        self,
+                                                        "color",
+                                                        G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
         }
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_CALENDAR]);
