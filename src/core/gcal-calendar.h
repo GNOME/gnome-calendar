@@ -40,7 +40,12 @@ typedef enum
 
 
 #define GCAL_TYPE_CALENDAR (gcal_calendar_get_type())
-G_DECLARE_FINAL_TYPE (GcalCalendar, gcal_calendar, GCAL, CALENDAR, GObject)
+G_DECLARE_DERIVABLE_TYPE (GcalCalendar, gcal_calendar, GCAL, CALENDAR, GObject)
+
+struct _GcalCalendarClass
+{
+  GObjectClass parent_class;
+};
 
 GQuark               gcal_calendar_error_quark                   (void);
 

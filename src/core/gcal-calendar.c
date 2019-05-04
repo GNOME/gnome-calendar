@@ -23,10 +23,8 @@
 #include "gcal-debug.h"
 #include "gcal-calendar.h"
 
-struct _GcalCalendar
+typedef struct
 {
-  GObject             parent;
-
   GdkRGBA             color;
   ESource            *source;
   ECalClient         *client;
@@ -38,11 +36,12 @@ struct _GcalCalendar
   guint               readonly_changed_handler_id;
   guint               visible_changed_handler_id;
   gboolean            initialized;
-};
+} GcalCalendarPrivate;
 
 static void          g_initable_iface_init                       (GInitableIface     *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GcalCalendar, gcal_calendar, G_TYPE_OBJECT,
+                         G_ADD_PRIVATE (GcalCalendar)
                          G_IMPLEMENT_INTERFACE (G_TYPE_INITABLE, g_initable_iface_init)
                          G_IMPLEMENT_INTERFACE (G_TYPE_ASYNC_INITABLE, NULL))
 
@@ -71,27 +70,30 @@ static GParamSpec *properties [N_PROPS];
 static void
 save_calendar (GcalCalendar *self)
 {
-  if (!e_source_get_writable (self->source))
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+
+  if (!e_source_get_writable (priv->source))
     {
       g_warning ("Calendar %s is read-only and cannot be modified. Aborting.",
-                 e_source_get_uid (self->source));
+                 e_source_get_uid (priv->source));
       return;
     }
 
-  e_source_write (self->source, NULL, NULL, NULL);
+  e_source_write (priv->source, NULL, NULL, NULL);
 }
 
 static void
 update_color (GcalCalendar *self)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
   ESourceSelectable *selectable_extension;
   const gchar *color;
 
-  selectable_extension = e_source_get_extension (self->source, E_SOURCE_EXTENSION_CALENDAR);
+  selectable_extension = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR);
   color = e_source_selectable_get_color (selectable_extension);
 
-  if (!gdk_rgba_parse (&self->color, color))
-    gdk_rgba_parse (&self->color, "#ffffff");
+  if (!gdk_rgba_parse (&priv->color, color))
+    gdk_rgba_parse (&priv->color, "#ffffff");
 }
 
 
@@ -142,6 +144,7 @@ gcal_calendar_initable_init (GInitable     *initable,
                              GCancellable  *cancellable,
                              GError       **error)
 {
+  GcalCalendarPrivate *priv;
   g_autoptr (EClient) client = NULL;
   g_autoptr (GError) local_error = NULL;
   ESourceSelectable *selectable_extension;
@@ -150,11 +153,12 @@ gcal_calendar_initable_init (GInitable     *initable,
   GCAL_ENTRY;
 
   self = GCAL_CALENDAR (initable);
+  priv = gcal_calendar_get_instance_private (self);
 
-  g_assert (!self->initialized);
-  self->initialized = TRUE;
+  g_assert (!priv->initialized);
+  priv->initialized = TRUE;
 
-  if (!e_source_has_extension (self->source, E_SOURCE_EXTENSION_CALENDAR))
+  if (!e_source_has_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR))
     {
       g_set_error (error,
                    GCAL_CALENDAR_ERROR,
@@ -163,26 +167,26 @@ gcal_calendar_initable_init (GInitable     *initable,
       GCAL_RETURN (FALSE);
     }
 
-  selectable_extension = e_source_get_extension (self->source, E_SOURCE_EXTENSION_CALENDAR);
+  selectable_extension = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR);
 
   update_color (self);
-  self->color_changed_handler_id = g_signal_connect (selectable_extension,
+  priv->color_changed_handler_id = g_signal_connect (selectable_extension,
                                                      "notify::color",
                                                      G_CALLBACK (on_source_color_changed_cb),
                                                      self);
 
-  self->visible_changed_handler_id = g_signal_connect (selectable_extension,
+  priv->visible_changed_handler_id = g_signal_connect (selectable_extension,
                                                        "notify::selected",
                                                        G_CALLBACK (on_source_visible_changed_cb),
                                                        self);
 
-  self->name_changed_handler_id = g_signal_connect (self->source,
+  priv->name_changed_handler_id = g_signal_connect (priv->source,
                                                     "notify::display-name",
                                                     G_CALLBACK (on_source_name_changed_cb),
                                                     self);
 
   /* 15s is arbitrary, but very rarely this will be reached */
-  client = e_cal_client_connect_sync (self->source,
+  client = e_cal_client_connect_sync (priv->source,
                                       E_CAL_CLIENT_SOURCE_TYPE_EVENTS,
                                       15,
                                       cancellable,
@@ -194,13 +198,13 @@ gcal_calendar_initable_init (GInitable     *initable,
       GCAL_RETURN (FALSE);
     }
 
-  self->readonly_changed_handler_id = g_signal_connect (client,
+  priv->readonly_changed_handler_id = g_signal_connect (client,
                                                         "notify::readonly",
                                                         G_CALLBACK (on_client_readonly_changed_cb),
                                                         self);
 
   g_assert (E_IS_CAL_CLIENT (client));
-  self->client = (ECalClient*) g_steal_pointer (&client);
+  priv->client = (ECalClient*) g_steal_pointer (&client);
 
   GCAL_RETURN (TRUE);
 }
@@ -220,18 +224,19 @@ static void
 gcal_calendar_finalize (GObject *object)
 {
   GcalCalendar *self = (GcalCalendar *)object;
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
 
-  g_signal_handler_disconnect (self->source, self->color_changed_handler_id);
-  self->color_changed_handler_id = 0;
+  g_signal_handler_disconnect (priv->source, priv->color_changed_handler_id);
+  priv->color_changed_handler_id = 0;
 
-  g_signal_handler_disconnect (self->source, self->name_changed_handler_id);
-  self->name_changed_handler_id = 0;
+  g_signal_handler_disconnect (priv->source, priv->name_changed_handler_id);
+  priv->name_changed_handler_id = 0;
 
-  g_signal_handler_disconnect (self->client, self->readonly_changed_handler_id);
-  self->readonly_changed_handler_id = 0;
+  g_signal_handler_disconnect (priv->client, priv->readonly_changed_handler_id);
+  priv->readonly_changed_handler_id = 0;
 
-  g_clear_object (&self->client);
-  g_clear_object (&self->source);
+  g_clear_object (&priv->client);
+  g_clear_object (&priv->source);
 
   G_OBJECT_CLASS (gcal_calendar_parent_class)->finalize (object);
 }
@@ -243,15 +248,16 @@ gcal_calendar_get_property (GObject    *object,
                             GParamSpec *pspec)
 {
   GcalCalendar *self = GCAL_CALENDAR (object);
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
 
   switch (prop_id)
     {
     case PROP_CLIENT:
-      g_value_set_object (value, self->client);
+      g_value_set_object (value, priv->client);
       break;
 
     case PROP_COLOR:
-      g_value_set_boxed (value, &self->color);
+      g_value_set_boxed (value, &priv->color);
       break;
 
     case PROP_ID:
@@ -259,7 +265,7 @@ gcal_calendar_get_property (GObject    *object,
       break;
 
     case PROP_NAME:
-      g_value_set_string (value, e_source_get_display_name (self->source));
+      g_value_set_string (value, e_source_get_display_name (priv->source));
       break;
 
     case PROP_READ_ONLY:
@@ -267,7 +273,7 @@ gcal_calendar_get_property (GObject    *object,
       break;
 
     case PROP_SOURCE:
-      g_value_set_object (value, self->source);
+      g_value_set_object (value, priv->source);
       break;
 
     case PROP_VISIBLE:
@@ -286,6 +292,7 @@ gcal_calendar_set_property (GObject      *object,
                             GParamSpec   *pspec)
 {
   GcalCalendar *self = GCAL_CALENDAR (object);
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
 
   switch (prop_id)
     {
@@ -310,8 +317,8 @@ gcal_calendar_set_property (GObject      *object,
       break;
 
     case PROP_SOURCE:
-      g_assert (self->source == NULL);
-      self->source = g_value_dup_object (value);
+      g_assert (priv->source == NULL);
+      priv->source = g_value_dup_object (value);
       break;
 
     case PROP_VISIBLE:
@@ -446,9 +453,11 @@ gcal_calendar_new_finish (GAsyncResult  *result,
 const GdkRGBA*
 gcal_calendar_get_color (GcalCalendar *self)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+
   g_return_val_if_fail (GCAL_IS_CALENDAR (self), NULL);
 
-  return &self->color;
+  return &priv->color;
 }
 
 /**
@@ -462,19 +471,20 @@ void
 gcal_calendar_set_color (GcalCalendar  *self,
                          const GdkRGBA *color)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
   g_autofree gchar *color_string = NULL;
   ESourceSelectable *selectable_extension;
 
   g_return_if_fail (GCAL_IS_CALENDAR (self));
   g_return_if_fail (color != NULL);
 
-  if (gdk_rgba_equal (&self->color, color))
+  if (gdk_rgba_equal (&priv->color, color))
     return;
 
-  self->color = *color;
+  priv->color = *color;
 
   color_string = gdk_rgba_to_string (color);
-  selectable_extension = e_source_get_extension (self->source, E_SOURCE_EXTENSION_CALENDAR);
+  selectable_extension = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR);
   e_source_selectable_set_color (selectable_extension, color_string);
 
   save_calendar (self);
@@ -493,9 +503,11 @@ gcal_calendar_set_color (GcalCalendar  *self,
 const gchar*
 gcal_calendar_get_id (GcalCalendar *self)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+
   g_return_val_if_fail (GCAL_IS_CALENDAR (self), NULL);
 
-  return e_source_get_uid (self->source);
+  return e_source_get_uid (priv->source);
 }
 
 /**
@@ -509,9 +521,11 @@ gcal_calendar_get_id (GcalCalendar *self)
 const gchar*
 gcal_calendar_get_name (GcalCalendar *self)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+
   g_return_val_if_fail (GCAL_IS_CALENDAR (self), NULL);
 
-  return e_source_get_display_name (self->source);
+  return e_source_get_display_name (priv->source);
 }
 
 /**
@@ -525,9 +539,11 @@ void
 gcal_calendar_set_name (GcalCalendar *self,
                         const gchar  *name)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+
   g_return_if_fail (GCAL_IS_CALENDAR (self));
 
-  e_source_set_display_name (self->source, name);
+  e_source_set_display_name (priv->source, name);
   save_calendar (self);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_NAME]);
@@ -544,9 +560,11 @@ gcal_calendar_set_name (GcalCalendar *self,
 gboolean
 gcal_calendar_is_read_only (GcalCalendar *self)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+
   g_return_val_if_fail (GCAL_IS_CALENDAR (self), FALSE);
 
-  return e_client_is_readonly (E_CLIENT (self->client));
+  return e_client_is_readonly (E_CLIENT (priv->client));
 }
 
 /**
@@ -560,9 +578,11 @@ gcal_calendar_is_read_only (GcalCalendar *self)
 ESource*
 gcal_calendar_get_source (GcalCalendar *self)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+
   g_return_val_if_fail (GCAL_IS_CALENDAR (self), NULL);
 
-  return self->source;
+  return priv->source;
 }
 
 /**
@@ -576,9 +596,11 @@ gcal_calendar_get_source (GcalCalendar *self)
 ECalClient*
 gcal_calendar_get_client (GcalCalendar *self)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+
   g_return_val_if_fail (GCAL_IS_CALENDAR (self), NULL);
 
-  return self->client;
+  return priv->client;
 }
 
 /**
@@ -592,11 +614,12 @@ gcal_calendar_get_client (GcalCalendar *self)
 gboolean
 gcal_calendar_get_visible (GcalCalendar *self)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
   ESourceSelectable *selectable_extension;
 
   g_return_val_if_fail (GCAL_IS_CALENDAR (self), FALSE);
 
-  selectable_extension = e_source_get_extension (self->source, E_SOURCE_EXTENSION_CALENDAR);
+  selectable_extension = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR);
   return e_source_selectable_get_selected (selectable_extension);
 }
 
@@ -611,11 +634,12 @@ void
 gcal_calendar_set_visible (GcalCalendar *self,
                            gboolean      visible)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
   ESourceSelectable *selectable_extension;
 
   g_return_if_fail (GCAL_IS_CALENDAR (self));
 
-  selectable_extension = e_source_get_extension (self->source, E_SOURCE_EXTENSION_CALENDAR);
+  selectable_extension = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR);
   e_source_selectable_set_selected (selectable_extension, visible);
 
   save_calendar (self);
