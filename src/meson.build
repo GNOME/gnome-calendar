@@ -20,6 +20,12 @@ gcal_deps = [
 ]
 
 sources = files(
+  'core/gcal-calendar.c',
+  'core/gcal-clock.c',
+  'core/gcal-event.c',
+  'core/gcal-manager.c',
+  'core/gcal-recurrence.c',
+  'core/gcal-timer.c',
   'search/gcal-search-button.c',
   'search/gcal-search-engine.c',
   'search/gcal-search-hit.c',
@@ -41,27 +47,21 @@ sources = files(
   'weather/gcal-weather-service.c',
   'weather/gcal-weather-settings.c',
   'gcal-application.c',
-  'gcal-clock.c',
-  'gcal-calendar.c',
   'gcal-context.c',
   'gcal-date-chooser-day.c',
   'gcal-date-chooser.c',
   'gcal-date-selector.c',
   'gcal-edit-dialog.c',
   'gcal-event-widget.c',
-  'gcal-event.c',
   'gcal-log.c',
-  'gcal-manager.c',
   'gcal-multi-choice.c',
   'gcal-night-light-monitor.c',
   'gcal-quick-add-popover.c',
-  'gcal-recurrence.c',
   'gcal-shell-search-provider.c',
   'gcal-source-dialog.c',
   'gcal-time-selector.c',
   'gcal-time-zone-monitor.c',
   'gcal-window.c',
-  'gcal-timer.c'
 )
 
 enum_types = 'gcal-enum-types'
@@ -111,15 +111,16 @@ sources += configure_file(
 # Include directories #
 #######################
 
-incs = [
+calendar_incs = [
   top_inc,
+  include_directories('core'),
   include_directories('search'),
   include_directories('utils'),
   include_directories('views'),
   include_directories('weather'),
 ]
 
-incs += contrib_incs
+calendar_incs += contrib_incs
 
 
 ###################
@@ -129,7 +130,7 @@ incs += contrib_incs
 libgcal = shared_library(
                'gcal-private',
               sources: sources,
-  include_directories: incs,
+  include_directories: calendar_incs,
          dependencies: gcal_deps,
               install: false,
 )
@@ -147,7 +148,7 @@ libgcal_dep = declare_dependency(
 executable(
   meson.project_name(),
        sources + files('main.c'),
-   include_directories: incs,
+   include_directories: calendar_incs,
           dependencies: gcal_deps,
                install: true,
            install_dir: calendar_bindir

@@ -19,7 +19,6 @@ data/ui/year-view.ui
 src/gcal-application.c
 src/gcal-date-selector.c
 src/gcal-edit-dialog.c
-src/gcal-event.c
 src/gcal-event-widget.c
 src/gcal-manager.c
 src/gcal-quick-add-popover.c
@@ -27,6 +26,7 @@ src/gcal-source-dialog.c
 src/gcal-time-selector.c
 src/gcal-window.c
 src/main.c
+src/core/gcal-event.c
 src/utils/gcal-utils.c
 src/views/gcal-month-view.c
 src/views/gcal-week-grid.c
