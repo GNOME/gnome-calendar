@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/org/gnome/calendar">
     <file alias="alarm-row.ui" compressed="true">ui/alarm-row.ui</file>
+    <file alias="calendar-popover.ui" compressed="true">ui/calendar-popover.ui</file>
     <file alias="calendar-row.ui" compressed="true">ui/calendar-row.ui</file>
     <file alias="date-chooser.ui" compressed="true">ui/date-chooser.ui</file>
     <file alias="date-selector.ui" compressed="true">ui/date-selector.ui</file>

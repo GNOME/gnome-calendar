@@ -19,6 +19,7 @@
 
 #define G_LOG_DOMAIN "GcalWindow"
 
+#include "gcal-calendar-popover.h"
 #include "gcal-debug.h"
 #include "gcal-edit-dialog.h"
 #include "gcal-event-widget.h"
@@ -52,17 +53,6 @@
  * Besides that, #GcalWindow is also responsible for #GcalQuickAddPopover,
  * and it responds to the #GcalView:create-event signal by positioning
  * the quick add popover at the requested position.
- *
- * ## Calendar popover
- *
- * ![The popover](gcal-window_agendas.png)
- *
- * The calendar popover enables/disables the selected calendars.
- * This is simply an UI for gcal_manager_enable_source() and
- * gcal_manager_disable_source().
- *
- * The calendar popover also contains a button to open the source
- * dialog.
  *
  * ## Edit dialog
  *
@@ -150,7 +140,6 @@ struct _GcalWindow
 
   /* calendar management */
   GtkWidget          *calendar_popover;
-  GtkWidget          *calendar_listbox;
   GtkWidget          *source_dialog;
 
   gint                open_edit_dialog_timeout_id;
@@ -443,22 +432,6 @@ on_view_action_activated (GSimpleAction *action,
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
 }
 
-static gint
-calendar_listbox_sort_func (GtkListBoxRow *row1,
-                            GtkListBoxRow *row2,
-                            gpointer       user_data)
-{
-  ESource *source1, *source2;
-
-  source1 = g_object_get_data (G_OBJECT (row1), "source");
-  source2 = g_object_get_data (G_OBJECT (row2), "source");
-
-  if (source1 == NULL && source2 == NULL)
-    return 0;
-
-  return g_ascii_strcasecmp (e_source_get_display_name (source1), e_source_get_display_name (source2));
-}
-
 static void
 load_geometry (GcalWindow *self)
 {
@@ -664,117 +637,6 @@ hide_notification_scheduled (gpointer window)
 {
   hide_notification (GCAL_WINDOW (window), NULL);
   return FALSE;
-}
-
-static GtkWidget*
-make_calendar_row (GcalWindow   *window,
-                   GcalCalendar *calendar)
-{
-  GtkWidget *label, *icon, *checkbox, *box, *row;
-  GtkStyleContext *context;
-  cairo_surface_t *surface;
-  const GdkRGBA *color;
-
-  row = gtk_list_box_row_new ();
-
-  /* apply some nice styling */
-  context = gtk_widget_get_style_context (row);
-  gtk_style_context_add_class (context, "button");
-  gtk_style_context_add_class (context, "flat");
-  gtk_style_context_add_class (context, "menuitem");
-
-  /* main box */
-  box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 12);
-  gtk_container_set_border_width (GTK_CONTAINER (box), 6);
-
-  /* source color icon */
-  color = gcal_calendar_get_color (calendar);
-  surface = get_circle_surface_from_color (color, 16);
-  icon = gtk_image_new_from_surface (surface);
-
-  gtk_style_context_add_class (gtk_widget_get_style_context (icon), "calendar-color-image");
-
-  /* source name label */
-  label = gtk_label_new (gcal_calendar_get_name (calendar));
-  gtk_label_set_xalign (GTK_LABEL (label), 0.0);
-  gtk_widget_set_hexpand (label, TRUE);
-
-  /* checkbox */
-  checkbox = gtk_check_button_new ();
-  g_object_bind_property (calendar,
-                          "visible",
-                          checkbox,
-                          "active",
-                          G_BINDING_BIDIRECTIONAL | G_BINDING_SYNC_CREATE);
-
-  gtk_container_add (GTK_CONTAINER (box), icon);
-  gtk_container_add (GTK_CONTAINER (box), label);
-  gtk_container_add (GTK_CONTAINER (box), checkbox);
-  gtk_container_add (GTK_CONTAINER (row), box);
-
-  g_object_set_data (G_OBJECT (row), "check", checkbox);
-  g_object_set_data (G_OBJECT (row), "calendar", calendar);
-
-  gtk_widget_show_all (row);
-
-  g_clear_pointer (&surface, cairo_surface_destroy);
-
-  return row;
-}
-
-static void
-add_calendar (GcalManager  *manager,
-              GcalCalendar *calendar,
-              GcalWindow   *self)
-{
-  GtkWidget *row;
-
-  row = make_calendar_row (self, calendar);
-  gtk_container_add (GTK_CONTAINER (self->calendar_listbox), row);
-}
-
-static void
-remove_calendar (GcalManager  *manager,
-                 GcalCalendar *calendar,
-                 GcalWindow   *self)
-{
-  GList *children, *aux;
-
-  children = gtk_container_get_children (GTK_CONTAINER (self->calendar_listbox));
-
-  for (aux = children; aux != NULL; aux = aux->next)
-    {
-      GcalCalendar *row_calendar = g_object_get_data (G_OBJECT (aux->data), "calendar");
-
-      if (row_calendar && row_calendar == calendar)
-        {
-          gtk_widget_destroy (aux->data);
-          break;
-        }
-    }
-
-  g_list_free (children);
-}
-
-static void
-source_row_activated (GtkListBox    *listbox,
-                      GtkListBoxRow *row,
-                      gpointer       user_data)
-{
-  GtkWidget *check;
-
-  check = g_object_get_data (G_OBJECT (row), "check");
-
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (check),
-                                !gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)));
-}
-
-static void
-calendar_changed (GcalWindow   *window,
-                  GcalCalendar *calendar)
-{
-  remove_calendar (NULL, calendar, window);
-  add_calendar (NULL, calendar, window);
 }
 
 static gboolean
@@ -1066,6 +928,7 @@ gcal_window_constructed (GObject *object)
    * FIXME: this is a hack around the issue that happens when trying to bind
    * these properties using the GtkBuilder .ui file.
    */
+  g_object_bind_property (self, "context", self->calendar_popover, "context", G_BINDING_DEFAULT);
   g_object_bind_property (self, "context", self->weather_settings, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->source_dialog, "context", G_BINDING_DEFAULT);
   g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
@@ -1107,28 +970,11 @@ gcal_window_set_property (GObject      *object,
     case PROP_CONTEXT:
       if (g_set_object (&self->context, g_value_get_object (value)))
         {
-          GcalManager *manager = gcal_context_get_manager (self->context);
-
           g_settings_bind (gcal_context_get_settings (self->context),
                            "active-view",
                            self,
                            "active-view",
                            G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
-
-          if (!gcal_manager_get_loading (manager))
-            {
-              g_autoptr (GList) calendars = NULL;
-              GList *l;
-
-              calendars = gcal_manager_get_calendars (manager);
-
-              for (l = calendars; l; l = l->next)
-                add_calendar (manager, l->data, self);
-            }
-
-          g_signal_connect (manager, "calendar-added", G_CALLBACK (add_calendar), object);
-          g_signal_connect (manager, "calendar-removed", G_CALLBACK (remove_calendar), object);
-          g_signal_connect_swapped (manager, "calendar-changed", G_CALLBACK (calendar_changed), object);
 
           g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
         }
@@ -1200,6 +1046,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
 
+  g_type_ensure (GCAL_TYPE_CALENDAR_POPOVER);
   g_type_ensure (GCAL_TYPE_EDIT_DIALOG);
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
@@ -1252,7 +1099,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   /* widgets */
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, back_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_listbox);
+
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, edit_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, forward_button);
@@ -1275,8 +1122,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_label);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_action_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_close_button);
-
-  gtk_widget_class_bind_template_callback (widget_class, source_row_activated);
 
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
   gtk_widget_class_bind_template_callback (widget_class, date_updated);
@@ -1316,12 +1161,6 @@ gcal_window_init (GcalWindow *self)
   self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;
   self->views[GCAL_WINDOW_VIEW_YEAR] = self->year_view;
-
-  /* calendars popover */
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendar_listbox),
-                              (GtkListBoxSortFunc) calendar_listbox_sort_func,
-                              self,
-                              NULL);
 
   self->active_date = g_date_time_new_from_unix_local (0);
   self->rtl = gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL;

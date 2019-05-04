@@ -271,54 +271,7 @@
       </object>
     </child>
   </template>
-  <object class="GtkPopover" id="calendar_popover">
-    <property name="border_width">6</property>
-    <child>
-      <object class="GtkBox" id="calendar_box">
-        <property name="visible">True</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">6</property>
-        <child>
-          <object class="GtkScrolledWindow">
-            <property name="visible">True</property>
-            <property name="hscrollbar_policy">never</property>
-            <property name="max_content_height">450</property>
-            <property name="propagate-natural-height">True</property>
-            <child>
-              <object class="GtkListBox" id="calendar_listbox">
-                <property name="visible">True</property>
-                <property name="hexpand">True</property>
-                <property name="selection_mode">none</property>
-                <signal name="row-activated" handler="source_row_activated" object="GcalWindow" swapped="no"/>
-                <style>
-                  <class name="calendar-list"/>
-                </style>
-              </object>
-            </child>
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="calendar_settings_button">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="relief">none</property>
-            <property name="receives_default">True</property>
-            <property name="action_name">win.show-calendars</property>
-            <child>
-              <object class="GtkLabel" id="calendar_settings_label">
-                <property name="visible">True</property>
-                <property name="label" translatable="yes">Calendar Settings</property>
-                <property name="xalign">0</property>
-              </object>
-            </child>
-          </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-  </object>
+  <object class="GcalCalendarPopover" id="calendar_popover" />
   <object class="GcalQuickAddPopover" id="quick_add_popover">
     <property name="visible">False</property>
     <property name="relative_to">views_stack</property>
