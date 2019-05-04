@@ -1691,15 +1691,3 @@ gcal_manager_startup (GcalManager *self)
 
   GCAL_EXIT;
 }
-
-ECalClient*
-gcal_manager_get_client (GcalManager *self,
-                         ESource     *source)
-{
-  GcalCalendar *calendar;
-
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
-
-  calendar = g_hash_table_lookup (self->clients, source);
-  return calendar ? gcal_calendar_get_client (calendar) : NULL;
-}

@@ -123,9 +123,6 @@ GList*               gcal_manager_get_shell_search_events        (GcalManager   
 
 void                 gcal_manager_startup                        (GcalManager        *self);
 
-ECalClient*          gcal_manager_get_client                     (GcalManager        *self,
-                                                                  ESource            *source);
-
 G_END_DECLS
 
 #endif /* __GCAL_MANAGER_H__ */
