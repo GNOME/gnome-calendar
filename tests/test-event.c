@@ -18,8 +18,9 @@
 
 #include <glib.h>
 
-#include "utils/gcal-utils.h"
 #include "gcal-event.h"
+#include "gcal-stub-calendar.h"
+#include "gcal-utils.h"
 
 #define STUB_EVENT "BEGIN:VEVENT\n"             \
                    "SUMMARY:Stub event\n"       \
@@ -55,12 +56,12 @@ create_event_for_string (const gchar  *string,
                          GError      **error)
 {
   g_autoptr (ECalComponent) component = NULL;
-  g_autoptr (ESource) source = NULL;
+  g_autoptr (GcalCalendar) calendar = NULL;
 
-  source = e_source_new_with_uid ("stub", NULL, error);
   component = e_cal_component_new_from_string (string);
+  calendar = gcal_stub_calendar_new (NULL, error);
 
-  return component ? gcal_event_new (source, component, error) : NULL;
+  return component ? gcal_event_new (calendar, component, error) : NULL;
 }
 
 
