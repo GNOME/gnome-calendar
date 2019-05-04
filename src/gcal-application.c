@@ -116,10 +116,7 @@ process_sources (GcalApplication *self)
       const GdkRGBA *color;
       GcalCalendar *calendar;
 
-      calendar = l->data;
-
-      if (!gcal_calendar_get_visible (calendar))
-        continue;
+      calendar = GCAL_CALENDAR (l->data);
 
       color = gcal_calendar_get_color (calendar);
       color_str = gdk_rgba_to_string (color);
@@ -618,6 +615,7 @@ gcal_application_init (GcalApplication *self)
   manager = gcal_context_get_manager (self->context);
   g_signal_connect_swapped (manager, "calendar-added", G_CALLBACK (process_sources), self);
   g_signal_connect_swapped (manager, "calendar-changed", G_CALLBACK (process_sources), self);
+  g_signal_connect_swapped (manager, "calendar-removed", G_CALLBACK (process_sources), self);
 
   self->search_provider = gcal_shell_search_provider_new (self->context);
 }
