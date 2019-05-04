@@ -129,7 +129,7 @@ calendar_incs += contrib_incs
 # Private library #
 ###################
 
-libgcal = shared_library(
+libgcal = static_library(
                'gcal-private',
               sources: sources,
   include_directories: calendar_incs,
@@ -150,9 +150,9 @@ libgcal_dep = declare_dependency(
 
 executable(
   meson.project_name(),
-       sources + files('main.c'),
+       files('main.c'),
    include_directories: calendar_incs,
-          dependencies: gcal_deps,
+          dependencies: libgcal_dep,
                install: true,
            install_dir: calendar_bindir
 )
