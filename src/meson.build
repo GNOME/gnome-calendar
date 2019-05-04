@@ -138,7 +138,8 @@ libgcal = shared_library(
 
 libgcal_dep = declare_dependency(
             link_with: libgcal,
-  include_directories: src_inc
+         dependencies: gcal_deps,
+  include_directories: calendar_incs,
 )
 
 
