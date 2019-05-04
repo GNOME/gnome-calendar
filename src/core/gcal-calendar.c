@@ -181,13 +181,13 @@ gcal_calendar_initable_init (GInitable     *initable,
       GCAL_RETURN (FALSE);
     }
 
-  g_assert (E_IS_CAL_CLIENT (client));
-  self->client = E_CAL_CLIENT (client);
-
   self->readonly_changed_handler_id = g_signal_connect (client,
                                                         "notify::readonly",
                                                         G_CALLBACK (on_client_readonly_changed_cb),
                                                         self);
+
+  g_assert (E_IS_CAL_CLIENT (client));
+  self->client = (ECalClient*) g_steal_pointer (&client);
 
   GCAL_RETURN (TRUE);
 }
