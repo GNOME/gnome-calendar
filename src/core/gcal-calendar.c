@@ -20,8 +20,9 @@
 
 #define G_LOG_DOMAIN "GcalCalendar"
 
-#include "gcal-debug.h"
 #include "gcal-calendar.h"
+#include "gcal-debug.h"
+#include "gcal-utils.h"
 
 typedef struct
 {
@@ -225,15 +226,13 @@ gcal_calendar_finalize (GObject *object)
 {
   GcalCalendar *self = (GcalCalendar *)object;
   GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+  ESourceSelectable *selectable_extension;
 
-  g_signal_handler_disconnect (priv->source, priv->color_changed_handler_id);
-  priv->color_changed_handler_id = 0;
+  selectable_extension = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR);
 
-  g_signal_handler_disconnect (priv->source, priv->name_changed_handler_id);
-  priv->name_changed_handler_id = 0;
-
-  g_signal_handler_disconnect (priv->client, priv->readonly_changed_handler_id);
-  priv->readonly_changed_handler_id = 0;
+  gcal_clear_signal_handler (&priv->color_changed_handler_id, selectable_extension);
+  gcal_clear_signal_handler (&priv->name_changed_handler_id, selectable_extension);
+  gcal_clear_signal_handler (&priv->readonly_changed_handler_id, priv->client);
 
   g_clear_object (&priv->client);
   g_clear_object (&priv->source);
