@@ -278,10 +278,7 @@ launch_search_cb (GcalShellSearchProvider  *self,
   terms_joined = g_strjoinv (" ", terms);
   window = (GcalWindow *) gtk_application_get_active_window (GTK_APPLICATION (application));
   if (window)
-    {
-      gcal_window_set_search_mode (window, TRUE);
-      gcal_window_set_search_query (window, terms_joined);
-    }
+    gcal_window_set_search_query (window, terms_joined);
 
   GCAL_RETURN (TRUE);
 }

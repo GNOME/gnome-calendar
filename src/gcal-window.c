@@ -131,7 +131,6 @@ struct _GcalWindow
 
   /* states */
   gboolean            new_event_mode;
-  gboolean            search_mode;
 
   NewEventData       *event_creation_data;
 
@@ -1198,24 +1197,6 @@ gcal_window_new_with_date (GcalApplication *app,
                        "context", gcal_application_get_context (app),
                        "active-date", date,
                        NULL);
-}
-
-/**
- * gcal_window_set_search_mode:
- * @self: a #GcalWindow
- * @enabled: whether the search mode is enabled or not
- *
- * Sets whether #GcalWindow is in search mode. This is used by
- * #GcalShellSearchProvider to respond to the user clicking on
- * GNOME Calendar icon at the search.
- */
-void
-gcal_window_set_search_mode (GcalWindow *self,
-                             gboolean    enabled)
-{
-  g_return_if_fail (GCAL_IS_WINDOW (self));
-
-  self->search_mode = enabled;
 }
 
 /**

@@ -203,8 +203,6 @@ gcal_application_launch_search (GSimpleAction *search,
                                 GVariant      *parameter,
                                 gpointer       app)
 {
-  GcalApplication *self = GCAL_APPLICATION (app);
-  gcal_window_set_search_mode (GCAL_WINDOW (self->window), TRUE);
 }
 
 static void
