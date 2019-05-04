@@ -838,11 +838,13 @@ stack_visible_child_name_changed (GObject    *object,
                                   gpointer    user_data)
 {
   GcalSourceDialog *self;
+  GcalCalendar *calendar;
   GcalManager *manager;
   GtkWidget *visible_child;
 
   self = GCAL_SOURCE_DIALOG (user_data);
   manager = gcal_context_get_manager (self->context);
+  calendar = gcal_manager_get_calendar_from_source (manager, self->source);
   visible_child = gtk_stack_get_visible_child (GTK_STACK (object));
 
   if (visible_child == self->main_scrolledwindow)
@@ -865,7 +867,6 @@ stack_visible_child_name_changed (GObject    *object,
     {
       ESource *default_source;
       gchar *parent_name;
-      GdkRGBA color;
       gboolean creation_mode, is_goa, is_file, is_remote;
 
       default_source = gcal_manager_get_default_source (manager);
@@ -938,24 +939,24 @@ stack_visible_child_name_changed (GObject    *object,
       g_signal_handlers_block_by_func (self->name_entry, name_entry_text_changed, user_data);
 
       /* color button */
-      get_color_name_from_source (self->source, &color);
-      gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (self->calendar_color_button), &color);
+      gtk_color_chooser_set_rgba (GTK_COLOR_CHOOSER (self->calendar_color_button),
+                                  gcal_calendar_get_color (calendar));
 
       /* entry */
       gtk_entry_set_text (GTK_ENTRY (self->name_entry), e_source_get_display_name (self->source));
 
       /* enabled check */
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->calendar_visible_check),
-                                    is_source_enabled (self->source));
+                                    gcal_calendar_get_visible (calendar));
 
       /* default source check button */
       gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->default_check), (self->source == default_source));
-      gtk_widget_set_visible (self->default_check, gcal_manager_is_client_writable (manager, self->source));
+      gtk_widget_set_visible (self->default_check, !gcal_calendar_is_read_only (calendar));
 
       /* title */
       if (!creation_mode)
         {
-          gtk_header_bar_set_title (GTK_HEADER_BAR (self->headerbar), e_source_get_display_name (self->source));
+          gtk_header_bar_set_title (GTK_HEADER_BAR (self->headerbar), gcal_calendar_get_name (calendar));
           gtk_header_bar_set_subtitle (GTK_HEADER_BAR (self->headerbar), parent_name);
         }
 
