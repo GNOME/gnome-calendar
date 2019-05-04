@@ -86,9 +86,6 @@ struct _GcalManager
   ViewStateData      *search_view_data;
 
   GCancellable       *async_ops;
-
-  /* state flags */
-  gint                sources_at_launch;
 };
 
 G_DEFINE_TYPE (GcalManager, gcal_manager, G_TYPE_OBJECT)
@@ -97,7 +94,6 @@ enum
 {
   PROP_0,
   PROP_DEFAULT_CALENDAR,
-  PROP_LOADING,
   NUM_PROPS
 };
 
@@ -678,10 +674,6 @@ gcal_manager_get_property (GObject    *object,
       g_value_take_object (value, e_source_registry_ref_default_calendar (self->source_registry));
       break;
 
-    case PROP_LOADING:
-      g_value_set_boolean (value, gcal_manager_get_loading (self));
-      break;
-
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -710,17 +702,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                                            "The default calendar",
                                                            E_TYPE_SOURCE,
                                                            G_PARAM_READWRITE);
-
-  /**
-   * GcalManager:loading:
-   *
-   * Whether the manager is loading or not.
-   */
-  properties[PROP_LOADING] = g_param_spec_boolean ("loading",
-                                                   "Loading",
-                                                   "Whether it's still loading or not",
-                                                   TRUE,
-                                                   G_PARAM_READABLE);
 
   g_object_class_install_properties (object_class, NUM_PROPS, properties);
 
@@ -1412,24 +1393,6 @@ gcal_manager_get_events (GcalManager  *self,
 }
 
 /**
- * gcal_manager_get_loading:
- * @self: a #GcalManager
- *
- * Retrieves whether @self is still loading or not. Loading is
- * complete when the Online Accounts client is retrieved, and all
- * the calendars are loaded.
- *
- * Returns: %TRUE if manager is still loading; %FALSE otherwise
- */
-gboolean
-gcal_manager_get_loading (GcalManager *self)
-{
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), FALSE);
-
-  return self->sources_at_launch > 0;
-}
-
-/**
  * gcal_manager_get_event_from_shell_search:
  * @self: a #GcalManager
  * @uuid: the unique identier of the event
@@ -1591,7 +1554,6 @@ gcal_manager_startup (GcalManager *self)
   e_cal_data_model_set_timezone (self->e_data_model, e_cal_util_get_system_timezone ());
 
   sources = e_source_registry_list_enabled (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
-  self->sources_at_launch = g_list_length (sources);
 
   for (l = sources; l != NULL; l = l->next)
     load_source (self, l->data);

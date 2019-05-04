@@ -41,7 +41,6 @@ struct _GcalShellSearchProvider
   GcalContext        *context;
 
   PendingSearch      *pending_search;
-  guint               scheduled_search_id;
   GHashTable         *events;
 };
 
@@ -87,9 +86,6 @@ execute_search (GcalShellSearchProvider *self)
 
   manager = gcal_context_get_manager (self->context);
 
-  if (gcal_manager_get_loading (manager))
-    GCAL_RETURN (TRUE);
-
   now = g_date_time_new_now (gcal_context_get_timezone (self->context));
   start = g_date_time_add_weeks (now, -1);
   range_start = g_date_time_to_unix (start);
@@ -117,8 +113,6 @@ execute_search (GcalShellSearchProvider *self)
     }
 
   gcal_manager_set_shell_search_query (manager,  search_query);
-
-  self->scheduled_search_id = 0;
   g_application_hold (g_application_get_default ());
 
   GCAL_RETURN (FALSE);
@@ -129,8 +123,6 @@ schedule_search (GcalShellSearchProvider *self,
                  GDBusMethodInvocation   *invocation,
                  gchar                  **terms)
 {
-  GcalManager *manager;
-
   GCAL_ENTRY;
 
   /* don't attempt searches for a single character */
@@ -145,29 +137,15 @@ schedule_search (GcalShellSearchProvider *self,
       g_object_unref (self->pending_search->invocation);
       g_strfreev (self->pending_search->terms);
 
-      if (self->scheduled_search_id == 0)
-        g_application_release (g_application_get_default ());
+      g_application_release (g_application_get_default ());
     }
   else
     {
       self->pending_search = g_new0 (PendingSearch, 1);
     }
 
-  if (self->scheduled_search_id != 0)
-    {
-      g_source_remove (self->scheduled_search_id);
-      self->scheduled_search_id = 0;
-    }
-
   self->pending_search->invocation = g_object_ref (invocation);
   self->pending_search->terms = g_strdupv (terms);
-
-  manager = gcal_context_get_manager (self->context);
-  if (gcal_manager_get_loading (manager))
-    {
-      self->scheduled_search_id = g_timeout_add_seconds (1, (GSourceFunc) execute_search, self);
-      GCAL_RETURN ();
-    }
 
   execute_search (self);
 

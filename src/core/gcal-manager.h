@@ -91,8 +91,6 @@ GList*               gcal_manager_get_events                     (GcalManager   
                                                                   icaltimetype       *range_start,
                                                                   icaltimetype       *range_end);
 
-gboolean             gcal_manager_get_loading                    (GcalManager        *self);
-
 /* GNOME Shell-related functions */
 GcalEvent*           gcal_manager_get_event_from_shell_search    (GcalManager        *self,
                                                                   const gchar        *uuid);

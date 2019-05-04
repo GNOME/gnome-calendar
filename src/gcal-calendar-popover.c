@@ -237,22 +237,18 @@ gcal_calendar_popover_set_property (GObject      *object,
     {
     case PROP_CONTEXT:
       {
+        g_autoptr (GList) calendars = NULL;
         GcalManager *manager;
+        GList *l;
 
         g_assert (self->context == NULL);
         self->context = g_value_dup_object (value);
 
         manager = gcal_context_get_manager (self->context);
-        if (!gcal_manager_get_loading (manager))
-          {
-            g_autoptr (GList) calendars = NULL;
-            GList *l;
+        calendars = gcal_manager_get_calendars (manager);
 
-            calendars = gcal_manager_get_calendars (manager);
-
-            for (l = calendars; l; l = l->next)
-              add_calendar (self, l->data);
-          }
+        for (l = calendars; l; l = l->next)
+          add_calendar (self, l->data);
 
         g_signal_connect (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), object);
         g_signal_connect (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), object);
