@@ -37,7 +37,6 @@ calendar_schemadir = join_paths(calendar_datadir, 'glib-2.0', 'schemas')
 calendar_buildtype = get_option('buildtype')
 calendar_debug = calendar_minor_version.is_odd() or calendar_buildtype.contains('debug')
 enable_tracing = get_option('tracing')
-enable_gtk_doc = get_option('documentation')
 
 cc = meson.get_compiler('c')
 
@@ -174,10 +173,6 @@ subdir('src')
 subdir('po')
 subdir('tests')
 
-if enable_gtk_doc
-  subdir('doc/reference')
-endif
-
 configure_file(
          output: 'config.h',
   configuration: config_h
@@ -191,6 +186,5 @@ output += '          Compiler ........................: ' + cc.get_id() + '\n\n'
 output += '      Development options\n'
 output += '          Enable Debug: ...................: ' + calendar_debug.to_string() + '\n'
 output += '          Enable Tracing: .................: ' + enable_tracing.to_string() + '\n'
-output += '          Enable Documentation: ...........: ' + enable_gtk_doc.to_string() + '\n\n'
 output += '    Now type "ninja -C ' + meson.build_root() + '" to build ' + meson.project_name() + '\n\n'
 message(output)

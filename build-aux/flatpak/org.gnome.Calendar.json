@@ -159,8 +159,7 @@
                 }
             ],
             "config-opts" : [
-                "-Dtracing=true",
-                "-Ddocumentation=true"
+                "-Dtracing=true"
             ]
         }
     ]
