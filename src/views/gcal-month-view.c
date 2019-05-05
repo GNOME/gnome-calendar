@@ -60,6 +60,7 @@ struct _GcalMonthView
   GtkWidget          *label_5;
   GtkWidget          *label_6;
   GtkWidget          *month_label;
+  GtkWidget          *weeks_label;
   GtkWidget          *year_label;
   GtkWidget          *weekday_label[7];
 
@@ -1029,12 +1030,27 @@ queue_update_month_cells (GcalMonthView *self)
 static void
 update_header_labels (GcalMonthView *self)
 {
+  GDateTime *month_start, *month_end;
+  gchar *weeks_str;
   gchar year_str[10] = { 0, };
+
+  month_start = g_date_time_new_local (g_date_time_get_year (self->date),
+                                       g_date_time_get_month (self->date),
+                                       1, 0, 0, 0);
+  month_end = g_date_time_add_days (month_start, gcal_date_time_get_days_in_month (month_start) - 1);
+  weeks_str = g_strdup_printf (_("weeks %d - %d"),
+                               g_date_time_get_week_of_year (month_start),
+                               g_date_time_get_week_of_year (month_end));
 
   g_snprintf (year_str, 10, "%d", g_date_time_get_year (self->date));
 
   gtk_label_set_label (GTK_LABEL (self->month_label), gcal_get_month_name (g_date_time_get_month (self->date) - 1));
+  gtk_label_set_label (GTK_LABEL (self->weeks_label), weeks_str);
   gtk_label_set_label (GTK_LABEL (self->year_label), year_str);
+
+  g_clear_pointer (&month_start, g_date_time_unref);
+  g_clear_pointer (&month_end, g_date_time_unref);
+  g_clear_pointer (&weeks_str, g_free);
 }
 
 static inline void
@@ -2294,6 +2310,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, label_5);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, label_6);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, month_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalMonthView, weeks_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, year_label);
 
   gtk_widget_class_bind_template_callback (widget_class, add_new_event_button_cb);
