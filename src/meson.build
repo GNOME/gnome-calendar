@@ -19,6 +19,76 @@ gcal_deps = [
   m_dep,
 ]
 
+enum_types = 'gcal-enum-types'
+
+built_sources = gnome.mkenums(
+  enum_types,
+     sources: enum_headers,
+  c_template: enum_types + '.c.template',
+  h_template: enum_types + '.h.template'
+)
+
+built_sources += gnome.compile_resources(
+  'gcal-resources',
+         gresource,
+        source_dir: data_dir,
+            c_name: 'calendar',
+      dependencies: resource_data,
+            export: true
+)
+
+built_sources += gnome.gdbus_codegen(
+  'gcal-shell-search-provider-generated',
+  shell_search_provider_dbus_interfaces,
+  interface_prefix: 'org.gnome.',
+         namespace: 'Gcal'
+)
+
+debug_conf = configuration_data()
+debug_conf.set('BUGREPORT_URL', package_bugreport)
+debug_conf.set10('ENABLE_TRACING', enable_tracing)
+
+
+#########
+# Debug #
+#########
+
+debug = 'gcal-debug.h'
+
+built_sources += configure_file(
+          input: debug + '.in',
+         output: debug,
+  configuration: debug_conf
+)
+
+libgcal_generated_sources_dep = declare_dependency(
+  sources: built_sources,
+)
+
+gcal_deps += libgcal_generated_sources_dep
+
+
+#######################
+# Include directories #
+#######################
+
+calendar_incs = [
+  top_inc,
+  include_directories('core'),
+  include_directories('gui'),
+  include_directories('search'),
+  include_directories('utils'),
+  include_directories('views'),
+  include_directories('weather'),
+]
+
+calendar_incs += contrib_incs
+
+
+###################
+# Private library #
+###################
+
 sources = files(
   'core/gcal-calendar.c',
   'core/gcal-clock.c',
@@ -64,70 +134,6 @@ sources = files(
   'weather/gcal-weather-service.c',
   'weather/gcal-weather-settings.c',
 )
-
-enum_types = 'gcal-enum-types'
-
-built_sources = gnome.mkenums(
-  enum_types,
-     sources: enum_headers,
-  c_template: enum_types + '.c.template',
-  h_template: enum_types + '.h.template'
-)
-
-built_sources += gnome.compile_resources(
-  'gcal-resources',
-         gresource,
-        source_dir: data_dir,
-            c_name: 'calendar',
-      dependencies: resource_data,
-            export: true
-)
-
-built_sources += gnome.gdbus_codegen(
-  'gcal-shell-search-provider-generated',
-  shell_search_provider_dbus_interfaces,
-  interface_prefix: 'org.gnome.',
-         namespace: 'Gcal'
-)
-
-debug_conf = configuration_data()
-debug_conf.set('BUGREPORT_URL', package_bugreport)
-debug_conf.set10('ENABLE_TRACING', enable_tracing)
-
-
-#########
-# Debug #
-#########
-
-debug = 'gcal-debug.h'
-
-built_sources += configure_file(
-          input: debug + '.in',
-         output: debug,
-  configuration: debug_conf
-)
-
-
-#######################
-# Include directories #
-#######################
-
-calendar_incs = [
-  top_inc,
-  include_directories('core'),
-  include_directories('gui'),
-  include_directories('search'),
-  include_directories('utils'),
-  include_directories('views'),
-  include_directories('weather'),
-]
-
-calendar_incs += contrib_incs
-
-
-###################
-# Private library #
-###################
 
 libgcal = static_library(
                'gcal-private',
