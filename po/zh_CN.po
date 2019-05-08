@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-05-02 02:05+0000\n"
-"PO-Revision-Date: 2018-05-10 12:21-0500\n"
+"POT-Creation-Date: 2018-07-29 04:02+0000\n"
+"PO-Revision-Date: 2018-08-08 11:13-0500\n"
 "Last-Translator: Mingcong Bai <jeffbai@aosc.xyz>\n"
 "Language-Team: Chinese (China) <i18n-zh@googlegroups.com>\n"
 "Language: zh_CN\n"
@@ -22,11 +22,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Launchpad-Export-Date: 2016-03-22 14:52+0000\n"
-"X-Generator: Poedit 2.0.6\n"
+"X-Generator: Poedit 2.0.9\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:640 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
 msgid "Calendar"
 msgstr "日历"
 
@@ -46,11 +46,11 @@ msgstr ""
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
-"centred usability. No excess, no lacks. You’ll feel comfortable using "
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
-"我们的目标是找到很好的功能和用户为中心的易用性之间的完美平衡。既不多余，也不"
-"缺乏。使用日历，您会感觉很舒服！"
+"我们的目标是找到很好的功能和用户为中心的易用性之间的完美平衡。功能适中，使用"
+"舒适！"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
 msgid "Week view"
@@ -119,6 +119,14 @@ msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
 msgstr "是否显示天气预报，默认情况下使用自动位置探测，也可以使用 location-name"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "遵循系统的夜光设置"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "使用 GNOME 夜光设置激活夜间模式。"
 
 #: data/ui/alarm-row.ui:34
 msgid "Toggles the sound of the alarm"
@@ -330,34 +338,30 @@ msgid "Year view"
 msgstr "年视图"
 
 #: data/ui/menus.ui:6
-msgid "Add Eve_nt…"
-msgstr "添加事件(_N)…"
-
-#: data/ui/menus.ui:13
 msgid "_Calendars"
 msgstr "日历(_C)"
 
-#: data/ui/menus.ui:19
+#: data/ui/menus.ui:12
 msgid "_Keyboard Shortcuts"
 msgstr "键盘快捷键(_K)"
 
-#: data/ui/menus.ui:23
+#: data/ui/menus.ui:16
 msgid "_About"
 msgstr "关于(_A)"
 
-#: data/ui/menus.ui:27
+#: data/ui/menus.ui:20
 msgid "_Quit"
 msgstr "退出(_Q)"
 
-#: data/ui/menus.ui:36
+#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "从网络…"
 
-#: data/ui/menus.ui:40
+#: data/ui/menus.ui:33
 msgid "New Local Calendar…"
 msgstr "新建本地日历…"
 
-#: data/ui/menus.ui:44
+#: data/ui/menus.ui:37
 msgid "From File…"
 msgstr "从文件…"
 
@@ -382,7 +386,7 @@ msgstr "未发现结果"
 msgid "Try a different search"
 msgstr "尝试不同的搜索"
 
-#: data/ui/source-dialog.ui:53 src/gcal-window.c:1039 src/gcal-window.c:1043
+#: data/ui/source-dialog.ui:53 src/gcal-window.c:1028 src/gcal-window.c:1032
 msgid "Undo"
 msgstr "撤消"
 
@@ -490,7 +494,7 @@ msgstr "输入您的凭据"
 msgid "Connect"
 msgstr "连接"
 
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:753
+#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:755
 #: src/views/gcal-week-view.c:278
 msgid "00:00"
 msgstr "00:00"
@@ -507,7 +511,7 @@ msgstr "上午"
 msgid "PM"
 msgstr "下午"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:407
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:395
 msgid "_Weather"
 msgstr "天气(_W)"
 
@@ -531,8 +535,8 @@ msgstr "月份"
 msgid "Year"
 msgstr "年份"
 
-#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
-#: src/views/gcal-year-view.c:514
+#: data/ui/window.ui:190 data/ui/year-view.ui:88 src/views/gcal-year-view.c:281
+#: src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "今天"
 
@@ -545,11 +549,7 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "搜索事件"
 
-#: data/ui/window.ui:391
-msgid "Add Eve_nt"
-msgstr "添加事件(_N)"
-
-#: data/ui/window.ui:400
+#: data/ui/window.ui:386
 msgid "_Synchronize"
 msgstr "同步(_S)"
 
@@ -561,32 +561,32 @@ msgstr "无事件"
 msgid "Add Event…"
 msgstr "添加事件…"
 
-#: src/gcal-application.c:88
+#: src/gcal-application.c:87
 msgid "Quit GNOME Calendar"
 msgstr "退出 GNOME 日历"
 
-#: src/gcal-application.c:93
+#: src/gcal-application.c:92
 msgid "Display version number"
 msgstr "显示版本号"
 
-#: src/gcal-application.c:98
+#: src/gcal-application.c:97
 msgid "Enable debug messages"
 msgstr "显示调试消息"
 
-#: src/gcal-application.c:103
+#: src/gcal-application.c:102
 msgid "Open calendar on the passed date"
 msgstr "打开日历显示过去的日期"
 
-#: src/gcal-application.c:108
+#: src/gcal-application.c:107
 msgid "Open calendar showing the passed event"
 msgstr "打开日历显示过去的事件"
 
-#: src/gcal-application.c:595
+#: src/gcal-application.c:601
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d The Calendar 作者"
 
-#: src/gcal-application.c:646
+#: src/gcal-application.c:652
 msgid "translator-credits"
 msgstr ""
 "tuhaihe <1132321739qq@gmail.com>, 2013\n"
@@ -629,7 +629,7 @@ msgid "Unnamed event"
 msgstr "未命名事件"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
-#: src/gcal-event-widget.c:422
+#: src/gcal-event-widget.c:424
 #, c-format
 msgid "At %s"
 msgstr "位于 %s"
@@ -983,25 +983,25 @@ msgstr "后续事件(_S)"
 msgid "_All events"
 msgstr "所有事件(_A)"
 
-#: src/gcal-window.c:1039
+#: src/gcal-window.c:1028
 msgid "Another event deleted"
 msgstr "另一个事件已删除"
 
-#: src/gcal-window.c:1043
+#: src/gcal-window.c:1032
 msgid "Event deleted"
 msgstr "事件已删除"
 
-#: src/views/gcal-week-grid.c:750 src/views/gcal-week-view.c:275
+#: src/views/gcal-week-grid.c:752 src/views/gcal-week-view.c:275
 msgid "00 AM"
 msgstr "上午 00"
 
-#: src/views/gcal-week-header.c:398
+#: src/views/gcal-week-header.c:400
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "其他 %d 个事件"
 
-#: src/views/gcal-week-header.c:934
+#: src/views/gcal-week-header.c:936
 #, c-format
 msgid "week %d"
 msgstr "第 %d 周"
@@ -1009,16 +1009,22 @@ msgstr "第 %d 周"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:290
 msgid "%B %d…"
 msgstr "%-m月%-d日…"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:517
+#: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%-m月%-d日"
+
+#~ msgid "Add Eve_nt…"
+#~ msgstr "添加事件(_N)…"
+
+#~ msgid "Add Eve_nt"
+#~ msgstr "添加事件(_N)"
 
 #~ msgid "— Calendar management"
 #~ msgstr "——日历管理"
