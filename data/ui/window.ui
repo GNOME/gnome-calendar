@@ -163,6 +163,20 @@
         <property name="show_close_button">True</property>
         <property name="title" translatable="yes">Calendar</property>
         <child>
+          <object class="GtkButton" id="new_event_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="action-name">win.new-event</property>
+            <property name="tooltip_text" translatable="yes" context="tooltip">Add a new event</property>
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="icon-name">list-add-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
           <object class="GtkButton" id="today_button">
             <property name="label" translatable="yes">Today</property>
             <property name="visible">True</property>
@@ -172,9 +186,6 @@
             <accelerator key="t" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
             <accelerator key="Home" signal="clicked"/>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
         </child>
         <child>
           <object class="GtkBox" id="button_box">

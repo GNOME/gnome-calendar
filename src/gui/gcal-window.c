@@ -361,6 +361,38 @@ on_window_next_date_activated_cb (GSimpleAction *action,
 }
 
 static void
+on_window_new_event_cb (GSimpleAction *action,
+                        GVariant      *param,
+                        gpointer       user_data)
+{
+  g_autoptr (ECalComponent) comp = NULL;
+  g_autoptr (GDateTime) start = NULL;
+  g_autoptr (GDateTime) end = NULL;
+  GcalCalendar *default_calendar;
+  GcalManager *manager;
+  GcalWindow *self;
+  GcalEvent *event;
+
+  self = GCAL_WINDOW (user_data);
+  start = g_date_time_new (gcal_context_get_timezone (self->context),
+                           g_date_time_get_year (self->active_date),
+                           g_date_time_get_month (self->active_date),
+                           g_date_time_get_day_of_month (self->active_date),
+                           0, 0, 0);
+  end = g_date_time_add_days (start, 1);
+
+  manager = gcal_context_get_manager (self->context);
+  comp = build_component_from_details ("", start, end);
+  default_calendar = gcal_manager_get_default_calendar (manager);
+  event = gcal_event_new (default_calendar, comp, NULL);
+
+  gcal_edit_dialog_set_event_is_new (GCAL_EDIT_DIALOG (self->edit_dialog), TRUE);
+  gcal_edit_dialog_set_event (GCAL_EDIT_DIALOG (self->edit_dialog), event);
+
+  gtk_widget_show (self->edit_dialog);
+}
+
+static void
 on_window_previous_date_activated_cb (GSimpleAction *action,
                                       GVariant      *param,
                                       gpointer       user_data)
@@ -1053,6 +1085,7 @@ gcal_window_init (GcalWindow *self)
   static const GActionEntry actions[] = {
     {"change-view", on_view_action_activated, "i" },
     {"next-date", on_window_next_date_activated_cb },
+    {"new-event", on_window_new_event_cb },
     {"previous-date", on_window_previous_date_activated_cb },
     {"show-calendars", on_show_calendars_action_activated },
     {"today", on_window_today_activated_cb }
