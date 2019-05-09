@@ -48,6 +48,8 @@ struct _GcalViewInterface
   void               (*set_date)                                 (GcalView           *view,
                                                                   GDateTime          *date);
 
+  void               (*update_subscription)                      (GcalView           *self);
+
   /* Marks related API */
   void               (*clear_marks)                              (GcalView           *view);
 
@@ -68,6 +70,8 @@ void                 gcal_view_clear_marks                       (GcalView      
 GList*               gcal_view_get_children_by_uuid              (GcalView              *view,
                                                                   GcalRecurrenceModType  mod,
                                                                   const gchar           *uuid);
+
+void                 gcal_view_update_subscription               (GcalView              *self);
 
 
 G_END_DECLS

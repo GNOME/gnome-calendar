@@ -251,92 +251,22 @@ static void
 update_active_date (GcalWindow *window,
                     GDateTime  *new_date)
 {
-  g_autoptr (GDateTime) previous_date = NULL;
   g_autofree gchar *new_date_string = NULL;
-  GcalManager *manager;
-  GDateTime *date_start, *date_end;
-  time_t range_start, range_end;
-  GDate old_week, new_week;
+  GcalWindowView i;
 
   GCAL_ENTRY;
-
-  previous_date = window->active_date;
-  window->active_date = g_date_time_ref (new_date);
-  manager = gcal_context_get_manager (window->context);
 
   new_date_string = g_date_time_format (new_date, "%x %X %z");
   g_debug ("Updating active date to %s", new_date_string);
 
-  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_WEEK]), new_date);
-  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_MONTH]), new_date);
-  gcal_view_set_date (GCAL_VIEW (window->views[GCAL_WINDOW_VIEW_YEAR]), new_date);
+  gcal_set_date_time (&window->active_date, new_date);
 
-  /* year_view */
-  if (g_date_time_get_year (previous_date) != g_date_time_get_year (new_date))
+  for (i = GCAL_WINDOW_VIEW_WEEK; i <= GCAL_WINDOW_VIEW_YEAR; i++)
     {
-      date_start = g_date_time_new_local (g_date_time_get_year (new_date), 1, 1, 0, 0, 0);
-      range_start = g_date_time_to_unix (date_start);
+      GcalView *view = GCAL_VIEW (window->views[i]);
 
-      date_end = g_date_time_add_years (date_start, 1);
-      range_end = g_date_time_to_unix (date_end);
-
-      gcal_manager_set_subscriber (manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->year_view), range_start, range_end);
-
-      gcal_clear_date_time (&date_start);
-      gcal_clear_date_time (&date_end);
-    }
-
-  /* month_view */
-  if (g_date_time_get_year (previous_date) != g_date_time_get_year (new_date) ||
-      g_date_time_get_month (previous_date) != g_date_time_get_month (new_date))
-    {
-      date_start = g_date_time_new_local (g_date_time_get_year (new_date),
-                                          g_date_time_get_month (new_date),
-                                          1, 0, 0, 0);
-      range_start = g_date_time_to_unix (date_start);
-
-      date_end = g_date_time_add_months (date_start, 1);
-      range_end = g_date_time_to_unix (date_end);
-
-      gcal_manager_set_subscriber (manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->month_view), range_start, range_end);
-
-      gcal_clear_date_time (&date_start);
-      gcal_clear_date_time (&date_end);
-    }
-
-  /* week_view */
-  g_date_clear (&old_week, 1);
-
-  if (g_date_time_get_day_of_month (previous_date) > 0 &&
-      g_date_time_get_month (previous_date) > 0 &&
-      g_date_time_get_year (previous_date))
-    {
-      g_date_set_dmy (&old_week,
-                      g_date_time_get_day_of_month (previous_date),
-                      g_date_time_get_month (previous_date),
-                      g_date_time_get_year (previous_date));
-    }
-
-  g_date_clear (&new_week, 1);
-  g_date_set_dmy (&new_week,
-                  g_date_time_get_day_of_month (new_date),
-                  g_date_time_get_month (new_date),
-                  g_date_time_get_year (new_date));
-
-  if (g_date_time_get_year (previous_date) != g_date_time_get_year (new_date) ||
-      !g_date_valid (&old_week) ||
-      g_date_get_iso8601_week_of_year (&old_week) != g_date_get_iso8601_week_of_year (&new_week))
-    {
-      date_start = gcal_date_time_get_start_of_week (new_date);
-      range_start = g_date_time_to_unix (date_start);
-
-      date_end = gcal_date_time_get_end_of_week (new_date);
-      range_end = g_date_time_to_unix (date_end);
-
-      gcal_manager_set_subscriber (manager, E_CAL_DATA_MODEL_SUBSCRIBER (window->week_view), range_start, range_end);
-
-      gcal_clear_date_time (&date_start);
-      gcal_clear_date_time (&date_end);
+      gcal_view_set_date (view, new_date);
+      gcal_view_update_subscription (view);
     }
 
   update_today_button_sensitive (window);
