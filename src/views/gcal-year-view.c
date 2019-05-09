@@ -1609,6 +1609,25 @@ gcal_year_view_update_subscription (GcalView *view)
                                range_end);
 }
 
+static GDateTime*
+gcal_year_view_get_next_date (GcalView *view)
+{
+  GcalYearView *self = GCAL_YEAR_VIEW (view);
+
+  g_assert (self->date != NULL);
+  return g_date_time_add_years (self->date, 1);
+}
+
+
+static GDateTime*
+gcal_year_view_get_previous_date (GcalView *view)
+{
+  GcalYearView *self = GCAL_YEAR_VIEW (view);
+
+  g_assert (self->date != NULL);
+  return g_date_time_add_years (self->date, -1);
+}
+
 static void
 gcal_view_interface_init (GcalViewInterface *iface)
 {
@@ -1617,6 +1636,8 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->set_date = gcal_year_view_set_date;
   iface->get_children_by_uuid = gcal_year_view_get_children_by_uuid;
   iface->update_subscription = gcal_year_view_update_subscription;
+  iface->get_next_date = gcal_year_view_get_next_date;
+  iface->get_previous_date = gcal_year_view_get_previous_date;
 }
 
 static void

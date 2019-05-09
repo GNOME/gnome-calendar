@@ -168,9 +168,9 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
+            <property name="action-name">win.today</property>
             <accelerator key="t" modifiers="GDK_CONTROL_MASK" signal="clicked"/>
             <accelerator key="Home" signal="clicked"/>
-            <signal name="clicked" handler="date_updated" object="GcalWindow" swapped="yes"/>
           </object>
           <packing>
             <property name="position">1</property>
@@ -184,9 +184,9 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="action-name">win.previous-date</property>
                 <accelerator key="Left" modifiers="GDK_MOD1_MASK" signal="clicked"/>
                 <accelerator key="Page_Up" signal="clicked"/>
-                <signal name="clicked" handler="date_updated" object="GcalWindow" swapped="yes"/>
                 <child>
                   <object class="GtkImage" id="go_back_image">
                     <property name="visible">True</property>
@@ -200,9 +200,9 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
+                <property name="action-name">win.next-date</property>
                 <accelerator key="Right" modifiers="GDK_MOD1_MASK" signal="clicked"/>
                 <accelerator key="Page_Down" signal="clicked"/>
-                <signal name="clicked" handler="date_updated" object="GcalWindow" swapped="yes"/>
                 <child>
                   <object class="GtkImage" id="go_next_image">
                     <property name="visible">True</property>

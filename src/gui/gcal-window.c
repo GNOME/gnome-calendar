@@ -176,21 +176,7 @@ enum
   gtk_application_set_accels_for_action (GTK_APPLICATION (app), action, tmp);\
 }
 
-
-static void          on_show_calendars_action_activated          (GSimpleAction      *action,
-                                                                  GVariant           *param,
-                                                                  gpointer            user_data);
-
-static void          on_view_action_activated                    (GSimpleAction      *action,
-                                                                  GVariant           *param,
-                                                                  gpointer            user_data);
-
 G_DEFINE_TYPE (GcalWindow, gcal_window, GTK_TYPE_APPLICATION_WINDOW)
-
-static const GActionEntry actions[] = {
-  {"change-view", on_view_action_activated, "i" },
-  {"show-calendars", on_show_calendars_action_activated },
-};
 
 static GParamSpec* properties[N_PROPS] = { NULL, };
 
@@ -275,57 +261,6 @@ update_active_date (GcalWindow *window,
 }
 
 static void
-date_updated (GcalWindow *window,
-              GtkButton  *button)
-{
-  g_autoptr (GDateTime) new_date = NULL;
-  gboolean move_today;
-  gboolean move_back;
-  gint factor;
-
-  GCAL_ENTRY;
-
-  factor = window->rtl ? - 1 : 1;
-
-  move_today = window->today_button == (GtkWidget*) button;
-  move_back = window->back_button == (GtkWidget*) button;
-
-  if (move_today)
-    {
-      new_date = g_date_time_new_now_local ();
-    }
-  else
-    {
-      gint diff = factor * (move_back ? -1 : 1);
-
-      switch (window->active_view)
-        {
-        case GCAL_WINDOW_VIEW_DAY:
-          new_date = g_date_time_add_days (window->active_date, 1 * diff);
-          break;
-        case GCAL_WINDOW_VIEW_WEEK:
-          new_date = g_date_time_add_weeks (window->active_date, 1 * diff);
-          break;
-        case GCAL_WINDOW_VIEW_MONTH:
-          new_date = g_date_time_add_months (window->active_date, 1 * diff);
-          break;
-        case GCAL_WINDOW_VIEW_YEAR:
-          new_date = g_date_time_add_years (window->active_date, 1 * diff);
-          break;
-        case GCAL_WINDOW_VIEW_LIST:
-        case GCAL_WINDOW_VIEW_SEARCH:
-        default:
-          break;
-        }
-    }
-
-  update_active_date (window, new_date);
-
-  GCAL_EXIT;
-}
-
-
-static void
 on_show_calendars_action_activated (GSimpleAction *action,
                                     GVariant      *param,
                                     gpointer       user_data)
@@ -359,6 +294,52 @@ on_view_action_activated (GSimpleAction *action,
   gtk_stack_set_visible_child (GTK_STACK (window->views_stack), window->views[window->active_view]);
 
   g_object_notify_by_pspec (G_OBJECT (user_data), properties[PROP_ACTIVE_VIEW]);
+}
+
+static void
+on_window_next_date_activated_cb (GSimpleAction *action,
+                                  GVariant      *param,
+                                  gpointer       user_data)
+{
+  g_autoptr (GDateTime) next_date = NULL;
+  GcalWindow *self;
+  GcalView *current_view;
+
+  self = GCAL_WINDOW (user_data);
+  current_view = GCAL_VIEW (self->views[self->active_view]);
+  next_date = gcal_view_get_next_date (current_view);
+
+  update_active_date (self, next_date);
+}
+
+static void
+on_window_previous_date_activated_cb (GSimpleAction *action,
+                                      GVariant      *param,
+                                      gpointer       user_data)
+{
+  g_autoptr (GDateTime) previous_date = NULL;
+  GcalWindow *self;
+  GcalView *current_view;
+
+  self = GCAL_WINDOW (user_data);
+  current_view = GCAL_VIEW (self->views[self->active_view]);
+  previous_date = gcal_view_get_previous_date (current_view);
+
+  update_active_date (self, previous_date);
+}
+
+static void
+on_window_today_activated_cb (GSimpleAction *action,
+                              GVariant      *param,
+                              gpointer       user_data)
+{
+  g_autoptr (GDateTime) today = NULL;
+  GcalWindow *self;
+
+  self = GCAL_WINDOW (user_data);
+  today = g_date_time_new_now_local ();
+
+  update_active_date (self, today);
 }
 
 static void
@@ -1051,7 +1032,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, notification_close_button);
 
   gtk_widget_class_bind_template_callback (widget_class, view_changed);
-  gtk_widget_class_bind_template_callback (widget_class, date_updated);
 
   /* Event removal related */
   gtk_widget_class_bind_template_callback (widget_class, hide_notification);
@@ -1075,6 +1055,14 @@ gcal_window_class_init (GcalWindowClass *klass)
 static void
 gcal_window_init (GcalWindow *self)
 {
+  static const GActionEntry actions[] = {
+    {"change-view", on_view_action_activated, "i" },
+    {"next-date", on_window_next_date_activated_cb },
+    {"previous-date", on_window_previous_date_activated_cb },
+    {"show-calendars", on_show_calendars_action_activated },
+    {"today", on_window_today_activated_cb }
+  };
+
   GApplication *app;
 
   /* Setup actions */

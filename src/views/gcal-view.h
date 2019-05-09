@@ -50,6 +50,10 @@ struct _GcalViewInterface
 
   void               (*update_subscription)                      (GcalView           *self);
 
+  GDateTime*         (*get_next_date)                            (GcalView           *self);
+
+  GDateTime*         (*get_previous_date)                        (GcalView           *self);
+
   /* Marks related API */
   void               (*clear_marks)                              (GcalView           *view);
 
@@ -73,6 +77,9 @@ GList*               gcal_view_get_children_by_uuid              (GcalView      
 
 void                 gcal_view_update_subscription               (GcalView              *self);
 
+GDateTime*           gcal_view_get_next_date                     (GcalView              *self);
+
+GDateTime*           gcal_view_get_previous_date                 (GcalView              *self);
 
 G_END_DECLS
 

@@ -210,3 +210,66 @@ gcal_view_update_subscription (GcalView *self)
 
   GCAL_VIEW_GET_IFACE (self)->update_subscription (self);
 }
+
+/**
+ * gcal_view_get_next_date:
+ * @self: a #GcalView
+ *
+ * Retrieves the next date from @self. Different views have
+ * different time ranges (e.g. day view ranges 1 day, week
+ * view ranges 1 week, etc) and pressing the next button
+ * of the main window may advance the time in different steps.
+ *
+ * Returns: (transfer full): a #GDateTime
+ */
+GDateTime*
+gcal_view_get_next_date (GcalView *self)
+{
+  g_autoptr (GDateTime) next_date = NULL;
+
+  g_return_val_if_fail (GCAL_IS_VIEW (self), NULL);
+  g_return_val_if_fail (GCAL_VIEW_GET_IFACE (self)->get_next_date, NULL);
+
+  next_date = GCAL_VIEW_GET_IFACE (self)->get_next_date (self);
+
+#ifdef GCAL_ENABLE_TRACE
+    {
+      g_autofree gchar *str = NULL;
+
+      str = g_date_time_format (next_date, "%x %X %z");
+      g_debug ("%s's next date: %s", G_OBJECT_TYPE_NAME (self), str);
+    }
+#endif
+
+  return g_steal_pointer (&next_date);
+}
+
+/**
+ * gcal_view_get_previous_date:
+ * @self: a #GcalView
+ *
+ * Retrieves the previous date from @self.
+ *
+ * Returns: (transfer full): a #GDateTime
+ */
+GDateTime*
+gcal_view_get_previous_date (GcalView *self)
+{
+  g_autoptr (GDateTime) previous_date = NULL;
+
+  g_return_val_if_fail (GCAL_IS_VIEW (self), NULL);
+  g_return_val_if_fail (GCAL_VIEW_GET_IFACE (self)->get_previous_date, NULL);
+
+  previous_date = GCAL_VIEW_GET_IFACE (self)->get_previous_date (self);
+
+#ifdef GCAL_ENABLE_TRACE
+    {
+      g_autofree gchar *str = NULL;
+
+      str = g_date_time_format (previous_date, "%x %X %z");
+      g_debug ("%s's previous date: %s", G_OBJECT_TYPE_NAME (self), str);
+    }
+#endif
+
+  return g_steal_pointer (&previous_date);
+}
