@@ -261,6 +261,54 @@ update_active_date (GcalWindow *window,
 }
 
 static void
+load_geometry (GcalWindow *self)
+{
+  GSettings *settings;
+
+  GCAL_ENTRY;
+
+  settings = gcal_context_get_settings (self->context);
+
+  self->is_maximized = g_settings_get_boolean (settings, "window-maximized");
+  g_settings_get (settings, "window-size", "(ii)", &self->width, &self->height);
+  g_settings_get (settings, "window-position", "(ii)", &self->pos_x, &self->pos_y);
+
+  if (self->is_maximized)
+    {
+      gtk_window_maximize (GTK_WINDOW (self));
+    }
+  else
+    {
+      gtk_window_set_default_size (GTK_WINDOW (self), self->width, self->height);
+      if (self->pos_x >= 0)
+        gtk_window_move (GTK_WINDOW (self), self->pos_x, self->pos_y);
+    }
+
+  GCAL_EXIT;
+}
+
+static void
+save_geometry (GcalWindow *self)
+{
+  GSettings *settings;
+
+  GCAL_ENTRY;
+
+  settings = gcal_context_get_settings (self->context);
+
+  g_settings_set_boolean (settings, "window-maximized", self->is_maximized);
+  g_settings_set (settings, "window-size", "(ii)", self->width, self->height);
+  g_settings_set (settings, "window-position", "(ii)", self->pos_x, self->pos_y);
+
+  GCAL_EXIT;
+}
+
+
+/*
+ * Callbacks
+ */
+
+static void
 on_show_calendars_action_activated (GSimpleAction *action,
                                     GVariant      *param,
                                     gpointer       user_data)
@@ -342,59 +390,6 @@ on_window_today_activated_cb (GSimpleAction *action,
   update_active_date (self, today);
 }
 
-static void
-load_geometry (GcalWindow *self)
-{
-  GSettings *settings;
-
-  GCAL_ENTRY;
-
-  settings = gcal_context_get_settings (self->context);
-
-  self->is_maximized = g_settings_get_boolean (settings, "window-maximized");
-  g_settings_get (settings, "window-size", "(ii)", &self->width, &self->height);
-  g_settings_get (settings, "window-position", "(ii)", &self->pos_x, &self->pos_y);
-
-  if (self->is_maximized)
-    {
-      gtk_window_maximize (GTK_WINDOW (self));
-    }
-  else
-    {
-      gtk_window_set_default_size (GTK_WINDOW (self), self->width, self->height);
-      if (self->pos_x >= 0)
-        gtk_window_move (GTK_WINDOW (self), self->pos_x, self->pos_y);
-    }
-
-  GCAL_EXIT;
-}
-
-static void
-save_geometry (GcalWindow *self)
-{
-  GSettings *settings;
-
-  GCAL_ENTRY;
-
-  settings = gcal_context_get_settings (self->context);
-
-  g_settings_set_boolean (settings, "window-maximized", self->is_maximized);
-  g_settings_set (settings, "window-size", "(ii)", self->width, self->height);
-  g_settings_set (settings, "window-position", "(ii)", self->pos_x, self->pos_y);
-
-  GCAL_EXIT;
-}
-
-/**
- * view_changed:
- * @object:
- * @pspec:
- * @user_data:
- *
- * Called every time the user activate the stack-switcher
- * Retrieve the enum value representing the view, update internal
- * @active_view with it
- **/
 static void
 view_changed (GObject    *object,
               GParamSpec *pspec,
