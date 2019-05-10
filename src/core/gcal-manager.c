@@ -730,11 +730,11 @@ gcal_manager_class_init (GcalManagerClass *klass)
    *
    * Whether there are any sources refreshing or not.
    */
-  properties[PROP_SYNCHRONIZING] = g_param_spec_boolean ("refreshing",
-                                                      "Refreshing",
-                                                      "Whether there are any sources refreshing or not",
-                                                      FALSE,
-                                                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+  properties[PROP_SYNCHRONIZING] = g_param_spec_boolean ("synchronizing",
+                                                         "Synchronizing",
+                                                         "Whether there are any sources synchronizing or not",
+                                                         FALSE,
+                                                         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, NUM_PROPS, properties);
 
