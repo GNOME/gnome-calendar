@@ -325,8 +325,8 @@ return_datetime_for_widgets (GcalEditDialog   *self,
                             g_date_time_get_year (date_in_best_tz),
                             g_date_time_get_month (date_in_best_tz),
                             g_date_time_get_day_of_month (date_in_best_tz),
-                            g_date_time_get_hour (date_in_best_tz),
-                            g_date_time_get_minute (date_in_best_tz),
+                            all_day ? 0 : g_date_time_get_hour (date_in_best_tz),
+                            all_day ? 0 : g_date_time_get_minute (date_in_best_tz),
                             0);
 
   return retval;
