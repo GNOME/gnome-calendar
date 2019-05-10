@@ -257,12 +257,6 @@
             <property name="receives_default">True</property>
             <property name="popover">calendar_popover</property>
             <property name="tooltip_text" translatable="yes">Manage your calendars</property>
-            <child>
-              <object class="GtkImage" id="calendars_button_image">
-                <property name="visible">True</property>
-                <property name="icon_name">x-office-calendar-symbolic</property>
-              </object>
-            </child>
           </object>
           <packing>
             <property name="pack_type">end</property>

@@ -27,4 +27,6 @@ G_BEGIN_DECLS
 #define GCAL_TYPE_CALENDAR_POPOVER (gcal_calendar_popover_get_type())
 G_DECLARE_FINAL_TYPE (GcalCalendarPopover, gcal_calendar_popover, GCAL, CALENDAR_POPOVER, GtkPopover)
 
+GtkWidget*           gcal_calendar_popover_get_icon              (GcalCalendarPopover *self);
+
 G_END_DECLS

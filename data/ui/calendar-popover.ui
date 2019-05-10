@@ -48,4 +48,27 @@
       </object>
     </child>
   </template>
+
+  <!-- Icon -->
+  <object class="GtkStack" id="icon_stack">
+    <property name="visible">True</property>
+    <child>
+      <object class="GtkImage" id="calendar_image">
+        <property name="visible">True</property>
+        <property name="icon_name">x-office-calendar-symbolic</property>
+      </object>
+      <packing>
+        <property name="name">icon</property>
+      </packing>
+    </child>
+    <child>
+      <object class="GtkSpinner" id="refreshing_spinner">
+        <property name="active">True</property>
+        <property name="tooltip_text" translatable="yes" context="tooltip">Synchronizing remote calendars…</property>
+      </object>
+      <packing>
+        <property name="name">spinner</property>
+      </packing>
+    </child>
+  </object>
 </interface>

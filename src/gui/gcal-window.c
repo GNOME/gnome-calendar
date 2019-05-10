@@ -106,11 +106,11 @@ struct _GcalWindow
   GtkWidget          *notification_close_button;
 
   /* header_bar widets */
-  GtkWidget          *menu_button;
-  GtkWidget          *calendars_button;
   GtkWidget          *back_button;
-  GtkWidget          *today_button;
+  GtkWidget          *calendars_button;
   GtkWidget          *forward_button;
+  GtkWidget          *menu_button;
+  GtkWidget          *today_button;
   GtkWidget          *views_switcher;
 
   DzlSuggestionButton *search_button;
@@ -1034,7 +1034,6 @@ gcal_window_class_init (GcalWindowClass *klass)
   /* widgets */
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, back_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendars_button);
-
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, edit_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, forward_button);
@@ -1100,6 +1099,10 @@ gcal_window_init (GcalWindow *self)
                                    self);
 
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  /* Calendar icon */
+  gtk_container_add (GTK_CONTAINER (self->calendars_button),
+                     gcal_calendar_popover_get_icon (GCAL_CALENDAR_POPOVER (self->calendar_popover)));
 
   self->views[GCAL_WINDOW_VIEW_WEEK] = self->week_view;
   self->views[GCAL_WINDOW_VIEW_MONTH] = self->month_view;

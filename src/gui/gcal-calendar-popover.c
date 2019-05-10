@@ -30,9 +30,14 @@ struct _GcalCalendarPopover
   GtkPopover          parent;
 
   GtkWidget          *calendar_listbox;
+  GtkStack           *icon_stack;
 
   GcalContext        *context;
+
+  guint               icon_changed_source_id;
 };
+
+static gboolean      icon_change_timeout_cb                      (gpointer           data);
 
 G_DEFINE_TYPE (GcalCalendarPopover, gcal_calendar_popover, GTK_TYPE_POPOVER)
 
@@ -136,10 +141,34 @@ remove_calendar (GcalCalendarPopover *self,
     }
 }
 
+static void
+schedule_icon_change (GcalCalendarPopover *self)
+{
+  if (self->icon_changed_source_id > 0)
+    return;
+
+  g_debug ("Scheduling synchronization icon update");
+
+  self->icon_changed_source_id = g_timeout_add (500, icon_change_timeout_cb, self);
+}
+
 
 /*
  * Callbacks
  */
+
+static gboolean
+icon_change_timeout_cb (gpointer data)
+{
+  GcalCalendarPopover *self = GCAL_CALENDAR_POPOVER (data);
+
+  g_debug ("Updating calendar icon to spinner");
+
+  gtk_stack_set_visible_child_name (self->icon_stack, "spinner");
+
+  self->icon_changed_source_id = 0;
+  return G_SOURCE_REMOVE;
+}
 
 static gint
 listbox_sort_func (GtkListBoxRow *row1,
@@ -180,6 +209,24 @@ on_manager_calendar_removed_cb (GcalManager         *manager,
 }
 
 static void
+on_manager_synchronizing_changed_cb (GcalManager         *manager,
+                                     GParamSpec          *pspec,
+                                     GcalCalendarPopover *self)
+{
+  if (!gcal_manager_get_synchronizing (manager))
+    {
+      g_debug ("Updating calendar icon to calendar");
+
+      g_clear_handle_id (&self->icon_changed_source_id, g_source_remove);
+      gtk_stack_set_visible_child_name (self->icon_stack, "icon");
+    }
+  else
+    {
+      schedule_icon_change (self);
+    }
+}
+
+static void
 on_listbox_row_activated_cb (GtkListBox          *listbox,
                              GtkListBoxRow       *row,
                              GcalCalendarPopover *self)
@@ -201,6 +248,7 @@ gcal_calendar_popover_finalize (GObject *object)
 {
   GcalCalendarPopover *self = (GcalCalendarPopover *)object;
 
+  g_clear_handle_id (&self->icon_changed_source_id, g_source_remove);
   g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_calendar_popover_parent_class)->finalize (object);
@@ -253,7 +301,7 @@ gcal_calendar_popover_set_property (GObject      *object,
         g_signal_connect (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), object);
         g_signal_connect (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), object);
         g_signal_connect (manager, "calendar-changed", G_CALLBACK (on_manager_calendar_changed_cb), object);
-
+        g_signal_connect (manager, "notify::synchronizing", G_CALLBACK (on_manager_synchronizing_changed_cb), object);
       }
       break;
 
@@ -288,6 +336,7 @@ gcal_calendar_popover_class_init (GcalCalendarPopoverClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/calendar-popover.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarPopover, calendar_listbox);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarPopover, icon_stack);
 
   gtk_widget_class_bind_template_callback (widget_class, on_listbox_row_activated_cb);
 }
@@ -301,4 +350,12 @@ gcal_calendar_popover_init (GcalCalendarPopover *self)
                               (GtkListBoxSortFunc) listbox_sort_func,
                               self,
                               NULL);
+}
+
+GtkWidget*
+gcal_calendar_popover_get_icon (GcalCalendarPopover *self)
+{
+  g_return_val_if_fail (GCAL_IS_CALENDAR_POPOVER (self), NULL);
+
+  return GTK_WIDGET (self->icon_stack);
 }
