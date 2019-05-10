@@ -78,5 +78,14 @@
         <property name="name">spinner</property>
       </packing>
     </child>
+    <child>
+      <object class="GtkImage" id="success_image">
+        <property name="visible">True</property>
+        <property name="icon_name">emblem-ok-symbolic</property>
+      </object>
+      <packing>
+        <property name="name">success</property>
+      </packing>
+    </child>
   </object>
 </interface>

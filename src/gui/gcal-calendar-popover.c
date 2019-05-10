@@ -143,7 +143,7 @@ remove_calendar (GcalCalendarPopover *self,
 }
 
 static void
-schedule_icon_change (GcalCalendarPopover *self)
+schedule_switch_to_spinner (GcalCalendarPopover *self)
 {
   if (self->icon_changed_source_id > 0)
     return;
@@ -151,6 +151,18 @@ schedule_icon_change (GcalCalendarPopover *self)
   g_debug ("Scheduling synchronization icon update");
 
   self->icon_changed_source_id = g_timeout_add (500, icon_change_timeout_cb, self);
+}
+
+static void
+schedule_switch_to_success (GcalCalendarPopover *self)
+{
+  g_clear_handle_id (&self->icon_changed_source_id, g_source_remove);
+
+  g_debug ("Switching to success icon");
+
+  gtk_stack_set_visible_child_name (self->icon_stack, "success");
+
+  self->icon_changed_source_id = g_timeout_add (2000, icon_change_timeout_cb, self);
 }
 
 
@@ -161,11 +173,18 @@ schedule_icon_change (GcalCalendarPopover *self)
 static gboolean
 icon_change_timeout_cb (gpointer data)
 {
-  GcalCalendarPopover *self = GCAL_CALENDAR_POPOVER (data);
+  GcalCalendarPopover *self;
+  GcalManager *manager;
+
+  self = GCAL_CALENDAR_POPOVER (data);
+  manager = gcal_context_get_manager (self->context);
 
   g_debug ("Updating calendar icon to spinner");
 
-  gtk_stack_set_visible_child_name (self->icon_stack, "spinner");
+  if (gcal_manager_get_synchronizing (manager))
+    gtk_stack_set_visible_child_name (self->icon_stack, "spinner");
+  else
+    gtk_stack_set_visible_child_name (self->icon_stack, "icon");
 
   self->icon_changed_source_id = 0;
   return G_SOURCE_REMOVE;
@@ -214,17 +233,12 @@ on_manager_synchronizing_changed_cb (GcalManager         *manager,
                                      GParamSpec          *pspec,
                                      GcalCalendarPopover *self)
 {
-  if (!gcal_manager_get_synchronizing (manager))
-    {
-      g_debug ("Updating calendar icon to calendar");
+  g_message ("Notify");
 
-      g_clear_handle_id (&self->icon_changed_source_id, g_source_remove);
-      gtk_stack_set_visible_child_name (self->icon_stack, "icon");
-    }
+  if (gcal_manager_get_synchronizing (manager))
+    schedule_switch_to_spinner (self);
   else
-    {
-      schedule_icon_change (self);
-    }
+    schedule_switch_to_success (self);
 }
 
 static void
