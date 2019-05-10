@@ -310,6 +310,25 @@ load_source (GcalManager *self,
   GCAL_EXIT;
 }
 
+static gboolean
+transform_e_source_to_gcal_calendar_cb (GBinding     *binding,
+                                        const GValue *from_value,
+                                        GValue       *to_value,
+                                        gpointer      user_data)
+{
+  GcalCalendar *calendar;
+  GcalManager *self;
+  ESource *source;
+
+  self = GCAL_MANAGER (user_data);
+  source = g_value_get_object (from_value);
+
+  calendar = g_hash_table_lookup (self->clients, source);
+  g_value_set_object (to_value, calendar);
+
+  return TRUE;
+}
+
 static void
 on_event_created (GObject      *source_object,
                   GAsyncResult *result,
@@ -814,7 +833,6 @@ gcal_manager_set_default_calendar (GcalManager  *self,
 
   e_source_registry_set_default_calendar (self->source_registry,
                                           gcal_calendar_get_source (calendar));
-  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DEFAULT_CALENDAR]);
 }
 
 /**
@@ -1464,11 +1482,15 @@ gcal_manager_startup (GcalManager *self)
       return;
     }
 
-  g_object_bind_property (self->source_registry,
-                          "default-calendar",
-                          self,
-                          "default-calendar",
-                          G_BINDING_DEFAULT);
+  g_object_bind_property_full (self->source_registry,
+                               "default-calendar",
+                               self,
+                               "default-calendar",
+                               G_BINDING_DEFAULT,
+                               transform_e_source_to_gcal_calendar_cb,
+                               NULL,
+                               self,
+                               NULL);
 
   self->credentials_prompter = e_credentials_prompter_new (self->source_registry);
 
