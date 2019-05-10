@@ -86,6 +86,8 @@ struct _GcalManager
   ViewStateData      *search_view_data;
 
   GCancellable       *async_ops;
+
+  gint                clients_synchronizing;
 };
 
 G_DEFINE_TYPE (GcalManager, gcal_manager, G_TYPE_OBJECT)
@@ -94,6 +96,7 @@ enum
 {
   PROP_0,
   PROP_DEFAULT_CALENDAR,
+  PROP_SYNCHRONIZING,
   NUM_PROPS
 };
 
@@ -208,6 +211,7 @@ on_client_refreshed (GObject      *source_object,
                      GAsyncResult *result,
                      gpointer      user_data)
 {
+  GcalManager *self = GCAL_MANAGER (user_data);
   GError *error = NULL;
 
   GCAL_ENTRY;
@@ -223,6 +227,10 @@ on_client_refreshed (GObject      *source_object,
       /* FIXME: do something when there was some error */
       g_warning ("Error synchronizing client");
     }
+
+  self->clients_synchronizing--;
+  if (self->clients_synchronizing == 0)
+    g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SYNCHRONIZING]);
 
   GCAL_EXIT;
 }
@@ -271,7 +279,12 @@ on_calendar_created_cb (GObject      *source_object,
 
   /* refresh client when it's added */
   if (visible && e_client_check_refresh_supported (E_CLIENT (client)))
-    e_client_refresh (E_CLIENT (client), NULL, on_client_refreshed, user_data);
+    {
+      e_client_refresh (E_CLIENT (client), NULL, on_client_refreshed, user_data);
+
+      self->clients_synchronizing++;
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SYNCHRONIZING]);
+    }
 
   /* Cache all the online calendars, so the user can see them offline */
   offline_extension = e_source_get_extension (source, E_SOURCE_EXTENSION_OFFLINE);
@@ -654,6 +667,10 @@ gcal_manager_set_property (GObject      *object,
       gcal_manager_set_default_calendar (self, g_value_get_object (value));
       break;
 
+    case PROP_SYNCHRONIZING:
+      g_assert_not_reached ();
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
@@ -677,11 +694,13 @@ gcal_manager_get_property (GObject    *object,
       g_value_set_object (value, gcal_manager_get_default_calendar (self));
       break;
 
+    case PROP_SYNCHRONIZING:
+      g_value_set_boolean (value, self->clients_synchronizing != 0);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     }
-
-  G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
 
   GCAL_EXIT;
 }
@@ -705,6 +724,17 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                                            "The default calendar",
                                                            GCAL_TYPE_CALENDAR,
                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalManager:refreshing:
+   *
+   * Whether there are any sources refreshing or not.
+   */
+  properties[PROP_SYNCHRONIZING] = g_param_spec_boolean ("refreshing",
+                                                      "Refreshing",
+                                                      "Whether there are any sources refreshing or not",
+                                                      FALSE,
+                                                      G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, NUM_PROPS, properties);
 
@@ -1141,9 +1171,13 @@ gcal_manager_refresh (GcalManager *self)
                         NULL,
                         on_client_refreshed,
                         self);
+
+      self->clients_synchronizing++;
     }
 
   g_list_free (clients);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SYNCHRONIZING]);
 
   GCAL_EXIT;
 }
@@ -1456,6 +1490,22 @@ gcal_manager_get_event_from_shell_search (GcalManager *self,
   g_list_free (data.events);
 
   GCAL_RETURN (new_event);
+}
+
+/**
+ * gcal_manager_get_synchronizing:
+ * @self: a #GcalManager
+ *
+ * Retrieves whether @self is refreshing the calendars or not.
+ *
+ * Returns: %TRUE if any calendars are being synchronizing.
+ */
+gboolean
+gcal_manager_get_synchronizing (GcalManager *self)
+{
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), FALSE);
+
+  return self->clients_synchronizing != 0;
 }
 
 void
