@@ -302,15 +302,6 @@
         <property name="margin">12</property>
         <property name="orientation">vertical</property>
 
-        <!-- Synchronize -->
-        <child>
-          <object class="GtkModelButton">
-            <property name="visible">True</property>
-            <property name="action-name">app.sync</property>
-            <property name="text" translatable="yes">_Synchronize</property>
-          </object>
-        </child>
-
         <!-- Weather -->
         <child>
           <object class="GtkModelButton">

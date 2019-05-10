@@ -31,6 +31,7 @@ struct _GcalCalendarPopover
 
   GtkWidget          *calendar_listbox;
   GtkStack           *icon_stack;
+  GtkWidget          *synchronize_button;
 
   GcalContext        *context;
 
@@ -298,6 +299,12 @@ gcal_calendar_popover_set_property (GObject      *object,
         for (l = calendars; l; l = l->next)
           add_calendar (self, l->data);
 
+        g_object_bind_property (manager,
+                                "synchronizing",
+                                self->synchronize_button,
+                                "sensitive",
+                                G_BINDING_INVERT_BOOLEAN | G_BINDING_SYNC_CREATE);
+
         g_signal_connect (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), object);
         g_signal_connect (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), object);
         g_signal_connect (manager, "calendar-changed", G_CALLBACK (on_manager_calendar_changed_cb), object);
@@ -337,6 +344,7 @@ gcal_calendar_popover_class_init (GcalCalendarPopoverClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarPopover, calendar_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarPopover, icon_stack);
+  gtk_widget_class_bind_template_child (widget_class, GcalCalendarPopover, synchronize_button);
 
   gtk_widget_class_bind_template_callback (widget_class, on_listbox_row_activated_cb);
 }
