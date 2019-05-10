@@ -40,7 +40,7 @@
           <object class="GtkModelButton" id="synchronize_button">
             <property name="visible">True</property>
             <property name="action-name">app.sync</property>
-            <property name="text" translatable="yes">_Synchronize</property>
+            <property name="text" translatable="yes">_Synchronize Calendars</property>
           </object>
         </child>
 
@@ -58,6 +58,8 @@
   <!-- Icon -->
   <object class="GtkStack" id="icon_stack">
     <property name="visible">True</property>
+    <property name="transition-type">crossfade</property>
+    <property name="transition-duration">250</property>
     <child>
       <object class="GtkImage" id="calendar_image">
         <property name="visible">True</property>
