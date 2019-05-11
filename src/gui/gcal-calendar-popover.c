@@ -233,8 +233,6 @@ on_manager_synchronizing_changed_cb (GcalManager         *manager,
                                      GParamSpec          *pspec,
                                      GcalCalendarPopover *self)
 {
-  g_message ("Notify");
-
   if (gcal_manager_get_synchronizing (manager))
     schedule_switch_to_spinner (self);
   else

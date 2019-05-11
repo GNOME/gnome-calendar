@@ -2084,7 +2084,6 @@ gcal_source_dialog_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_CONTEXT:
-      g_message ("Setting the context");
       g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
       setup_context (self);
