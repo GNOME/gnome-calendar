@@ -139,7 +139,7 @@ assert(cc.has_function('icaltime_days_in_year', dependencies: libical_dep),
 gsettings_desktop_schemas_dep = dependency('gsettings-desktop-schemas', version: '>= 3.21.2')
 libedataserverui_dep = dependency('libedataserverui-1.2', version: '>= 3.17.1')
 libedataserver_dep = dependency('libedataserver-1.2', version: '>= 3.17.1')
-libecal_dep = dependency('libecal-1.2', version: '>= 3.13.90')
+libecal_dep = dependency('libecal-2.0', version: '>= 3.33.2')
 libsoup_dep = dependency('libsoup-2.4')
 libdazzle_dep = dependency('libdazzle-1.0', version: '>= 3.33.1')
 glib_dep = dependency('glib-2.0', version: '>= 2.58.0')

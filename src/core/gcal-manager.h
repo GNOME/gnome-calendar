@@ -23,7 +23,7 @@
 #include "gcal-calendar.h"
 #include "gcal-event.h"
 
-#include <libical/icaltime.h>
+#include <libecal/libecal.h>
 
 G_BEGIN_DECLS
 
@@ -88,8 +88,8 @@ void                 gcal_manager_save_source                    (GcalManager   
                                                                   ESource            *source);
 
 GList*               gcal_manager_get_events                     (GcalManager        *self,
-                                                                  icaltimetype       *range_start,
-                                                                  icaltimetype       *range_end);
+                                                                  ICalTime           *range_start,
+                                                                  ICalTime           *range_end);
 
 /* GNOME Shell-related functions */
 GcalEvent*           gcal_manager_get_event_from_shell_search    (GcalManager        *self,

@@ -21,7 +21,7 @@
 #pragma once
 
 #include <glib.h>
-#include <libical/icaltime.h>
+#include <libecal/libecal.h>
 
 G_BEGIN_DECLS
 
@@ -45,10 +45,10 @@ GDateTime*           gcal_date_time_get_end_of_week              (GDateTime     
 gint                 gcal_date_time_compare_date                 (GDateTime          *dt1,
                                                                   GDateTime          *dt2);
 
-icaltimetype*        gcal_date_time_to_icaltime                  (GDateTime          *dt);
+ICalTime*            gcal_date_time_to_icaltime                  (GDateTime          *dt);
 
 gboolean             gcal_date_time_is_date                      (GDateTime          *dt);
 
-GDateTime*           gcal_date_time_from_icaltime                (const icaltimetype *date);
+GDateTime*           gcal_date_time_from_icaltime                (const ICalTime     *date);
 
 G_END_DECLS

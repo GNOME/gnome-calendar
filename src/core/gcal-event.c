@@ -75,6 +75,10 @@ struct _GcalEvent
   gchar              *uid;
   gboolean            has_recurrence;
 
+  /* These are cached, because ECalComponent returns newly allocated data for them */
+  gchar              *summary;
+  gchar              *location;
+
   /*
    * The description is cached in the class because it
    * may come as a GSList of descriptions, in which
@@ -167,12 +171,14 @@ destroy_event_cache_map (void)
 static GTimeZone*
 get_timezone_from_ical (ECalComponentDateTime *comp)
 {
-  const icaltimezone *zone;
+  ICalTimezone *zone;
+  ICalTime *itt;
   GTimeZone *tz;
 
-  zone = icaltime_get_timezone (*comp->value);
+  itt = e_cal_component_datetime_get_value (comp);
+  zone = i_cal_time_get_timezone (itt);
 
-  if (comp->value->is_date)
+  if (i_cal_time_is_date (itt))
     {
       /*
        * When loading an all day event, the timezone must not be taken into account
@@ -181,13 +187,13 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
        */
       tz = g_time_zone_new_utc ();
     }
-  else if (comp->tzid)
+  else if (e_cal_component_datetime_get_tzid (comp))
     {
       const gchar *real_tzid;
 
-      real_tzid = comp->tzid;
+      real_tzid = e_cal_component_datetime_get_tzid (comp);
 
-      if (g_str_has_prefix (comp->tzid, LIBICAL_TZID_PREFIX))
+      if (g_str_has_prefix (real_tzid, LIBICAL_TZID_PREFIX))
         real_tzid += strlen (LIBICAL_TZID_PREFIX);
 
       tz = g_time_zone_new (real_tzid);
@@ -197,8 +203,7 @@ get_timezone_from_ical (ECalComponentDateTime *comp)
       g_autofree gchar *tzid = NULL;
       gint offset;
 
-      offset = icaltimezone_get_utc_offset ((icaltimezone*) icaltime_get_timezone (*comp->value),
-                                            comp->value, NULL);
+      offset = i_cal_timezone_get_utc_offset (zone, itt, NULL);
       tzid = format_utc_offset (offset);
       tz = g_time_zone_new (tzid);
     }
@@ -218,27 +223,32 @@ static ECalComponentDateTime*
 build_component_from_datetime (GcalEvent *self,
                                GDateTime *dt)
 {
-  ECalComponentDateTime *comp_dt;
+  ICalTime *itt;
+  gchar *tzid;
 
   if (!dt)
     return NULL;
 
-  comp_dt = g_new0 (ECalComponentDateTime, 1);
-  comp_dt->value = gcal_date_time_to_icaltime (dt);
-  comp_dt->value->is_date = self->all_day;
+  itt = gcal_date_time_to_icaltime (dt);
 
   if (self->all_day)
     {
-      comp_dt->value->zone = icaltimezone_get_utc_timezone ();
-      comp_dt->tzid = g_strdup ("UTC");
+      i_cal_time_set_timezone (itt, i_cal_timezone_get_utc_timezone ());
+      tzid = g_strdup ("UTC");
     }
   else
     {
-      comp_dt->value->zone = e_cal_util_get_system_timezone ();
-      comp_dt->tzid = g_strdup (icaltimezone_get_tzid ((icaltimezone *) comp_dt->value->zone));
+      ICalTimezone *zone;
+
+      zone = e_cal_util_get_system_timezone ();
+      i_cal_time_set_timezone (itt, zone);
+      tzid = zone ? g_strdup (i_cal_timezone_get_tzid (zone)) : NULL;
     }
 
-  return comp_dt;
+  /* Call it after setting the timezone, because the DATE values do not let set the timezone */
+  i_cal_time_set_is_date (itt, self->all_day);
+
+  return e_cal_component_datetime_new_take (itt, tzid);
 }
 
 static void
@@ -254,28 +264,28 @@ gcal_event_update_uid_internal (GcalEvent *self)
   /* Clear the previous uid */
   g_clear_pointer (&self->uid, g_free);
 
-  if (id->rid != NULL)
+  if (e_cal_component_id_get_rid (id) != NULL)
     {
       self->uid = g_strdup_printf ("%s:%s:%s",
                                    source_id,
-                                   id->uid,
-                                   id->rid);
+                                   e_cal_component_id_get_uid (id),
+                                   e_cal_component_id_get_rid (id));
     }
   else
     {
       self->uid = g_strdup_printf ("%s:%s",
                                    source_id,
-                                   id->uid);
+                                   e_cal_component_id_get_uid (id));
     }
 
-  e_cal_component_free_id (id);
+  e_cal_component_id_free (id);
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_UID]);
 }
 
 static void
 load_alarms (GcalEvent *self)
 {
-  GList *alarm_uids, *l;
+  GSList *alarm_uids, *l;
 
   alarm_uids = e_cal_component_get_alarm_uids (self->component);
 
@@ -298,7 +308,7 @@ load_alarms (GcalEvent *self)
       e_cal_component_alarm_free (alarm);
     }
 
-  cal_obj_uid_list_free (alarm_uids);
+  g_slist_free_full (alarm_uids, g_free);
 }
 
 static void
@@ -307,24 +317,25 @@ gcal_event_set_component_internal (GcalEvent     *self,
 {
   if (g_set_object (&self->component, component))
     {
-      ECalComponentDateTime start;
-      ECalComponentDateTime end;
-      icaltimetype date;
+      ECalComponentDateTime *start;
+      ECalComponentDateTime *end;
+      ECalComponentText *text;
+      ICalTime *date;
       GDateTime *date_start;
       GTimeZone *zone_start = NULL;
       GDateTime *date_end;
       GTimeZone *zone_end = NULL;
       gboolean start_is_all_day, end_is_all_day;
-      gchar *description;
+      gchar *description, *location;
 
       /* Setup start date */
-      e_cal_component_get_dtstart (component, &start);
+      start = e_cal_component_get_dtstart (component);
 
       /*
        * A NULL start date is invalid. We set something bogus to proceed, and make
        * it set a GError and return NULL.
        */
-      if (!start.value)
+      if (!start || !e_cal_component_datetime_get_value (start))
         {
           self->is_valid = FALSE;
           g_set_error (&self->initialization_error,
@@ -332,27 +343,31 @@ gcal_event_set_component_internal (GcalEvent     *self,
                        GCAL_EVENT_ERROR_INVALID_START_DATE,
                        "Event '%s' has an invalid start date", gcal_event_get_uid (self));
 
-          start.value = g_new0 (icaltimetype, 1);
-          *start.value = icaltime_today ();
+          e_cal_component_datetime_free (start);
+          start = e_cal_component_datetime_new_take (i_cal_time_new_today (), NULL);
         }
 
       GCAL_TRACE_MSG ("Retrieving start timezone");
 
-      date = icaltime_normalize (*start.value);
-      zone_start = get_timezone_from_ical (&start);
+      date = i_cal_time_normalize (e_cal_component_datetime_get_value (start));
+      zone_start = get_timezone_from_ical (start);
       date_start = g_date_time_new (zone_start,
-                                    date.year, date.month, date.day,
-                                    date.is_date ? 0 : date.hour,
-                                    date.is_date ? 0 : date.minute,
-                                    date.is_date ? 0 : date.second);
+                                    i_cal_time_get_year (date),
+                                    i_cal_time_get_month (date),
+                                    i_cal_time_get_day (date),
+                                    i_cal_time_is_date (date) ? 0 : i_cal_time_get_hour (date),
+                                    i_cal_time_is_date (date) ? 0 : i_cal_time_get_minute (date),
+                                    i_cal_time_is_date (date) ? 0 : i_cal_time_get_second (date));
       start_is_all_day = gcal_date_time_is_date (date_start);
 
       self->dt_start = date_start;
 
-      /* Setup end date */
-      e_cal_component_get_dtend (component, &end);
+      g_clear_object (&date);
 
-      if(!end.value)
+      /* Setup end date */
+      end = e_cal_component_get_dtend (component);
+
+      if (!end || !e_cal_component_datetime_get_value (end))
         {
           self->all_day = TRUE;
         }
@@ -360,13 +375,15 @@ gcal_event_set_component_internal (GcalEvent     *self,
         {
           GCAL_TRACE_MSG ("Retrieving end timezone");
 
-          date = icaltime_normalize (*end.value);
-          zone_end = get_timezone_from_ical (&end);
+          date = i_cal_time_normalize (e_cal_component_datetime_get_value (end));
+          zone_end = get_timezone_from_ical (end);
           date_end = g_date_time_new (zone_end,
-                                      date.year, date.month, date.day,
-                                      date.is_date ? 0 : date.hour,
-                                      date.is_date ? 0 : date.minute,
-                                      date.is_date ? 0 : date.second);
+                                      i_cal_time_get_year (date),
+                                      i_cal_time_get_month (date),
+                                      i_cal_time_get_day (date),
+                                      i_cal_time_is_date (date) ? 0 : i_cal_time_get_hour (date),
+                                      i_cal_time_is_date (date) ? 0 : i_cal_time_get_minute (date),
+                                      i_cal_time_is_date (date) ? 0 : i_cal_time_get_second (date));
           end_is_all_day = gcal_date_time_is_date (date_end);
 
           self->dt_end = g_date_time_ref (date_end);
@@ -374,8 +391,19 @@ gcal_event_set_component_internal (GcalEvent     *self,
           /* Setup all day */
           self->all_day = start_is_all_day && end_is_all_day;
 
-          e_cal_component_free_datetime (&end);
+          g_clear_object (&date);
         }
+
+      /* Summary */
+      text = e_cal_component_get_summary (component);
+      if (text && e_cal_component_text_get_value (text))
+        gcal_event_set_summary (self, e_cal_component_text_get_value (text));
+      else
+        gcal_event_set_summary (self, "");
+
+      /* Location */
+      location = e_cal_component_get_location (component);
+      gcal_event_set_location (self, location ? location : "");
 
       /* Setup description */
       description = get_desc_from_component (component, "\n\n");
@@ -396,14 +424,15 @@ gcal_event_set_component_internal (GcalEvent     *self,
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_HAS_RECURRENCE]);
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_RECURRENCE]);
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPONENT]);
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_LOCATION]);
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SUMMARY]);
 
       g_clear_pointer (&zone_start, g_time_zone_unref);
       g_clear_pointer (&zone_end, g_time_zone_unref);
       g_clear_pointer (&description, g_free);
+      g_clear_pointer (&location, g_free);
 
-      e_cal_component_free_datetime (&start);
+      e_cal_component_text_free (text);
+      e_cal_component_datetime_free (start);
+      e_cal_component_datetime_free (end);
     }
 }
 
@@ -449,6 +478,8 @@ gcal_event_finalize (GObject *object)
 
   g_clear_pointer (&self->dt_start, g_date_time_unref);
   g_clear_pointer (&self->dt_end, g_date_time_unref);
+  g_clear_pointer (&self->summary, g_free);
+  g_clear_pointer (&self->location, g_free);
   g_clear_pointer (&self->description, g_free);
   g_clear_pointer (&self->alarms, g_hash_table_unref);
   g_clear_pointer (&self->uid, g_free);
@@ -937,8 +968,7 @@ gcal_event_set_date_end (GcalEvent *self,
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DATE_END]);
 
-      e_cal_component_free_datetime (component_dt);
-      g_free (component_dt);
+      e_cal_component_datetime_free (component_dt);
     }
 }
 
@@ -986,8 +1016,7 @@ gcal_event_set_date_start (GcalEvent *self,
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DATE_START]);
 
-      e_cal_component_free_datetime (component_dt);
-      g_free (component_dt);
+      e_cal_component_datetime_free (component_dt);
     }
 }
 
@@ -1020,21 +1049,32 @@ gcal_event_set_description (GcalEvent   *self,
 {
   g_return_if_fail (GCAL_IS_EVENT (self));
 
+  if (description && !*description)
+    description = NULL;
+
   if (g_strcmp0 (self->description, description) != 0)
     {
-      ECalComponentText text_component;
-      GSList list;
-
       g_clear_pointer (&self->description, g_free);
       self->description = g_strdup (description);
 
-      text_component.value = description;
-      text_component.altrep = NULL;
+      if (description)
+        {
+          ECalComponentText* text_component;
+          GSList list;
 
-      list.data = &text_component;
-      list.next = NULL;
+          text_component = e_cal_component_text_new (description, NULL);
 
-      e_cal_component_set_description_list (self->component, &list);
+          list.data = text_component;
+          list.next = NULL;
+
+          e_cal_component_set_descriptions (self->component, &list);
+          e_cal_component_text_free (text_component);
+        }
+      else
+        {
+          e_cal_component_set_descriptions (self->component, NULL);
+        }
+
       e_cal_component_commit_sequence (self->component);
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_DESCRIPTION]);
@@ -1085,7 +1125,8 @@ GList*
 gcal_event_get_alarms (GcalEvent *self)
 {
   GHashTable *tmp;
-  GList *alarm_uids, *alarms, *l;
+  GSList *alarm_uids, *l;
+  GList *alarms;
 
   g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
 
@@ -1114,7 +1155,7 @@ gcal_event_get_alarms (GcalEvent *self)
         }
     }
 
-  cal_obj_uid_list_free (alarm_uids);
+  g_slist_free_full (alarm_uids, g_free);
   g_hash_table_destroy (tmp);
 
   return alarms;
@@ -1136,9 +1177,10 @@ gcal_event_add_alarm (GcalEvent *self,
                       guint      type,
                       gboolean   has_sound)
 {
-  ECalComponentAlarmTrigger trigger;
+  ECalComponentAlarmTrigger *trigger;
   ECalComponentAlarmAction action;
   ECalComponentAlarm *alarm;
+  ICalDuration *duration;
   gchar *alarm_uid;
 
   g_return_if_fail (GCAL_IS_EVENT (self));
@@ -1155,13 +1197,15 @@ gcal_event_add_alarm (GcalEvent *self,
   alarm = e_cal_component_alarm_new ();
 
   /* Setup the alarm trigger */
-  trigger.type = E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START;
+  duration = i_cal_duration_new_null_duration ();
+  i_cal_duration_set_is_neg (duration, TRUE);
+  i_cal_duration_set_minutes (duration, type);
 
-  trigger.u.rel_duration = icaldurationtype_null_duration ();
-  trigger.u.rel_duration.is_neg = TRUE;
-  trigger.u.rel_duration.minutes = type;
+  trigger = e_cal_component_alarm_trigger_new_relative (E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START, duration);
 
-  e_cal_component_alarm_set_trigger (alarm, trigger);
+  g_clear_object (&duration);
+
+  e_cal_component_alarm_take_trigger (alarm, trigger);
 
   /* Action */
   if (has_sound)
@@ -1223,13 +1267,9 @@ gcal_event_remove_alarm (GcalEvent *self,
 const gchar*
 gcal_event_get_location (GcalEvent *self)
 {
-  const gchar *location;
-
   g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
 
-  e_cal_component_get_location (self->component, &location);
-
-  return location ? location : "";
+  return self->location;
 }
 
 /**
@@ -1251,7 +1291,10 @@ gcal_event_set_location (GcalEvent   *self,
 
   if (g_strcmp0 (current_location, location) != 0)
     {
-      e_cal_component_set_location (self->component, location);
+      e_cal_component_set_location (self->component, (location && *location) ? location : NULL);
+
+      g_clear_pointer (&self->location, g_free);
+      self->location = g_strdup (location ? location : "");
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_LOCATION]);
     }
@@ -1321,13 +1364,9 @@ gcal_event_set_calendar (GcalEvent    *self,
 const gchar*
 gcal_event_get_summary (GcalEvent *self)
 {
-  ECalComponentText summary;
-
   g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
 
-  e_cal_component_get_summary (self->component, &summary);
-
-  return summary.value ? summary.value : "";
+  return self->summary;
 }
 
 /**
@@ -1349,13 +1388,17 @@ gcal_event_set_summary (GcalEvent   *self,
 
   if (g_strcmp0 (current_summary, summary) != 0)
     {
-      ECalComponentText text_component;
+      ECalComponentText *text_component;
 
-      text_component.value = summary ? summary : "";
-      text_component.altrep = NULL;
+      text_component = e_cal_component_text_new (summary ? summary : "", NULL);
 
-      e_cal_component_set_summary (self->component, &text_component);
+      e_cal_component_set_summary (self->component, text_component);
       e_cal_component_commit_sequence (self->component);
+
+      e_cal_component_text_free (text_component);
+
+      g_clear_pointer (&self->summary, g_free);
+      self->summary = g_strdup (summary ? summary : "");
 
       g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_SUMMARY]);
     }
@@ -1552,9 +1595,9 @@ gcal_event_set_recurrence (GcalEvent      *self,
                            GcalRecurrence *recur)
 {
   ECalComponent *comp;
-  icalcomponent *icalcomp;
-  icalproperty *prop;
-  struct icalrecurrencetype *rrule;
+  ICalComponent *icalcomp;
+  ICalProperty *prop;
+  ICalRecurrence *rrule;
 
   g_return_if_fail (GCAL_IS_EVENT (self));
 
@@ -1566,20 +1609,20 @@ gcal_event_set_recurrence (GcalEvent      *self,
   g_clear_pointer (&self->recurrence, gcal_recurrence_unref);
   self->recurrence = gcal_recurrence_copy (recur);
 
-  prop = icalcomponent_get_first_property (icalcomp, ICAL_RRULE_PROPERTY);
+  prop = i_cal_component_get_first_property (icalcomp, I_CAL_RRULE_PROPERTY);
 
   if (prop)
     {
-      icalproperty_set_rrule (prop, *rrule);
+      i_cal_property_set_rrule (prop, rrule);
     }
   else
     {
-      prop = icalproperty_new_rrule (*rrule);
-      icalcomponent_add_property (icalcomp, prop);
+      prop = i_cal_property_new_rrule (rrule);
+      i_cal_component_add_property (icalcomp, prop);
     }
 
-  /* Rescan the component for the changes to be detected and registered */
-  e_cal_component_rescan (comp);
+  g_clear_object (&rrule);
+  g_clear_object (&prop);
 }
 
 /**
@@ -1619,33 +1662,36 @@ gcal_event_get_original_timezones (GcalEvent  *self,
 {
   g_autoptr (GTimeZone) original_start_tz = NULL;
   g_autoptr (GTimeZone) original_end_tz = NULL;
-  icalcomponent *ical_comp;
-  icalproperty *property;
+  ICalComponent *icalcomp;
+  ICalProperty *property;
 
   g_return_if_fail (GCAL_IS_EVENT (self));
   g_assert (self->component != NULL);
 
-  ical_comp = e_cal_component_get_icalcomponent (self->component);
+  icalcomp = e_cal_component_get_icalcomponent (self->component);
 
-  for (property = icalcomponent_get_first_property (ical_comp, ICAL_X_PROPERTY);
+  for (property = i_cal_component_get_first_property (icalcomp, I_CAL_X_PROPERTY);
        property;
-       property = icalcomponent_get_next_property (ical_comp, ICAL_X_PROPERTY))
+       g_object_unref (property), property = i_cal_component_get_next_property (icalcomp, I_CAL_X_PROPERTY))
     {
       const gchar *value;
 
       if (original_start_tz && original_end_tz)
-        break;
-
-      if (g_strcmp0 (icalproperty_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-START") == 0)
         {
-          value = icalproperty_get_x (property);
+          g_object_unref (property);
+          break;
+        }
+
+      if (g_strcmp0 (i_cal_property_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-START") == 0)
+        {
+          value = i_cal_property_get_x (property);
           original_start_tz = g_time_zone_new (value);
 
           GCAL_TRACE_MSG ("Found X-GNOME-CALENDAR-ORIGINAL-TZ-START=%s", value);
         }
-      else if (g_strcmp0 (icalproperty_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-END") == 0)
+      else if (g_strcmp0 (i_cal_property_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-END") == 0)
         {
-          value = icalproperty_get_x (property);
+          value = i_cal_property_get_x (property);
           original_end_tz = g_time_zone_new (value);
 
           GCAL_TRACE_MSG ("Found X-GNOME-CALENDAR-ORIGINAL-TZ-END=%s", value);
@@ -1680,8 +1726,8 @@ gcal_event_get_original_timezones (GcalEvent  *self,
 void
 gcal_event_save_original_timezones (GcalEvent *self)
 {
-  icalcomponent *ical_comp;
-  icalproperty *property;
+  ICalComponent *icalcomp;
+  ICalProperty *property;
   GTimeZone *tz;
   gboolean has_original_start_tz;
   gboolean has_original_end_tz;
@@ -1693,52 +1739,54 @@ gcal_event_save_original_timezones (GcalEvent *self)
 
   has_original_start_tz = FALSE;
   has_original_end_tz = FALSE;
-  ical_comp = e_cal_component_get_icalcomponent (self->component);
+  icalcomp = e_cal_component_get_icalcomponent (self->component);
 
-  for (property = icalcomponent_get_first_property (ical_comp, ICAL_X_PROPERTY);
-       property;
-       property = icalcomponent_get_next_property (ical_comp, ICAL_X_PROPERTY))
+  for (property = i_cal_component_get_first_property (icalcomp, I_CAL_X_PROPERTY);
+       property && (!has_original_start_tz || !has_original_end_tz);
+       g_object_unref (property), property = i_cal_component_get_next_property (icalcomp, I_CAL_X_PROPERTY))
     {
-      if (g_strcmp0 (icalproperty_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-START") == 0)
+      if (g_strcmp0 (i_cal_property_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-START") == 0)
         {
           tz = g_date_time_get_timezone (self->dt_start);
-          icalproperty_set_x (property, g_time_zone_get_identifier (tz));
+          i_cal_property_set_x (property, g_time_zone_get_identifier (tz));
 
-          GCAL_TRACE_MSG ("Reusing X-GNOME-CALENDAR-ORIGINAL-TZ-START property with %s", icalproperty_get_x (property));
+          GCAL_TRACE_MSG ("Reusing X-GNOME-CALENDAR-ORIGINAL-TZ-START property with %s", i_cal_property_get_x (property));
 
           has_original_start_tz = TRUE;
         }
-      else if (g_strcmp0 (icalproperty_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-END") == 0)
+      else if (g_strcmp0 (i_cal_property_get_x_name (property), "X-GNOME-CALENDAR-ORIGINAL-TZ-END") == 0)
         {
           tz = g_date_time_get_timezone (self->dt_end);
-          icalproperty_set_x (property, g_time_zone_get_identifier (tz));
+          i_cal_property_set_x (property, g_time_zone_get_identifier (tz));
 
-          GCAL_TRACE_MSG ("Reusing X-GNOME-CALENDAR-ORIGINAL-TZ-END property with %s", icalproperty_get_x (property));
+          GCAL_TRACE_MSG ("Reusing X-GNOME-CALENDAR-ORIGINAL-TZ-END property with %s", i_cal_property_get_x (property));
 
           has_original_end_tz = TRUE;
         }
     }
 
+  g_clear_object (&property);
+
   if (!has_original_start_tz)
     {
       tz = g_date_time_get_timezone (self->dt_start);
-      property = icalproperty_new_x (g_time_zone_get_identifier (tz));
-      icalproperty_set_x_name (property, "X-GNOME-CALENDAR-ORIGINAL-TZ-START");
+      property = i_cal_property_new_x (g_time_zone_get_identifier (tz));
+      i_cal_property_set_x_name (property, "X-GNOME-CALENDAR-ORIGINAL-TZ-START");
 
-      icalcomponent_add_property (ical_comp, property);
+      GCAL_TRACE_MSG ("Added new X-GNOME-CALENDAR-ORIGINAL-TZ-START property with %s", i_cal_property_get_x (property));
 
-      GCAL_TRACE_MSG ("Added new X-GNOME-CALENDAR-ORIGINAL-TZ-START property with %s", icalproperty_get_x (property));
+      i_cal_component_take_property (icalcomp, property);
     }
 
   if (!has_original_end_tz)
     {
       tz = g_date_time_get_timezone (self->dt_end);
-      property = icalproperty_new_x (g_time_zone_get_identifier (tz));
-      icalproperty_set_x_name (property, "X-GNOME-CALENDAR-ORIGINAL-TZ-END");
+      property = i_cal_property_new_x (g_time_zone_get_identifier (tz));
+      i_cal_property_set_x_name (property, "X-GNOME-CALENDAR-ORIGINAL-TZ-END");
 
-      icalcomponent_add_property (ical_comp, property);
+      GCAL_TRACE_MSG ("Added new X-GNOME-CALENDAR-ORIGINAL-TZ-END property with %s", i_cal_property_get_x (property));
 
-      GCAL_TRACE_MSG ("Added new X-GNOME-CALENDAR-ORIGINAL-TZ-END property with %s", icalproperty_get_x (property));
+      i_cal_component_take_property (icalcomp, property);
     }
 
   GCAL_EXIT;

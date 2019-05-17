@@ -37,7 +37,6 @@
 
 #include <glib/gi18n.h>
 #include <libecal/libecal.h>
-#include <libical/icaltime.h>
 
 /**
  * SECTION:gcal-window

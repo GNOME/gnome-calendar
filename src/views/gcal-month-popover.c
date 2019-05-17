@@ -295,8 +295,8 @@ reposition_popover (GcalMonthPopover *self,
 static void
 update_event_list (GcalMonthPopover *self)
 {
-  g_autofree icaltimetype *start = NULL;
-  g_autofree icaltimetype *end = NULL;
+  g_autoptr (ICalTime) start = NULL;
+  g_autoptr (ICalTime) end = NULL;
   g_autoptr (GDateTime) start_dt = NULL;
   g_autoptr (GDateTime) end_dt = NULL;
   g_autoptr (GList) events = NULL;
@@ -321,6 +321,9 @@ update_event_list (GcalMonthPopover *self)
   end = gcal_date_time_to_icaltime (end_dt);
 
   events = gcal_manager_get_events (gcal_context_get_manager (self->context), start, end);
+
+  g_clear_object (&start);
+  g_clear_object (&end);
 
   for (l = events; l; l = l->next)
     {

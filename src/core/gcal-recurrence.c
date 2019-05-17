@@ -160,9 +160,9 @@ GcalRecurrence*
 gcal_recurrence_parse_recurrence_rules (ECalComponent *comp)
 {
   GcalRecurrence *recur;
-  icalproperty *prop;
-  icalcomponent *icalcomp;
-  struct icalrecurrencetype rrule;
+  ICalProperty *prop;
+  ICalComponent *icalcomp;
+  ICalRecurrence *rrule;
 
   if (!e_cal_component_has_recurrences (comp))
     return NULL;
@@ -170,26 +170,28 @@ gcal_recurrence_parse_recurrence_rules (ECalComponent *comp)
   recur = gcal_recurrence_new ();
   icalcomp = e_cal_component_get_icalcomponent (comp);
 
-  prop = icalcomponent_get_first_property (icalcomp, ICAL_RRULE_PROPERTY);
+  prop = i_cal_component_get_first_property (icalcomp, I_CAL_RRULE_PROPERTY);
   g_return_val_if_fail (prop != NULL, NULL);
 
-  rrule = icalproperty_get_rrule (prop);
+  rrule = i_cal_property_get_rrule (prop);
 
-  switch (rrule.freq)
+  g_clear_object (&prop);
+
+  switch (i_cal_recurrence_get_freq (rrule))
     {
-      case ICAL_DAILY_RECURRENCE:
+      case I_CAL_DAILY_RECURRENCE:
         recur->frequency = GCAL_RECURRENCE_DAILY;
         break;
 
-      case ICAL_WEEKLY_RECURRENCE:
+      case I_CAL_WEEKLY_RECURRENCE:
         {
-          if (rrule.by_day[0] == ICAL_MONDAY_WEEKDAY &&
-              rrule.by_day[1] == ICAL_TUESDAY_WEEKDAY &&
-              rrule.by_day[2] == ICAL_WEDNESDAY_WEEKDAY &&
-              rrule.by_day[3] == ICAL_THURSDAY_WEEKDAY &&
-              rrule.by_day[4] == ICAL_FRIDAY_WEEKDAY &&
-              rrule.by_day[5] != ICAL_SATURDAY_WEEKDAY &&
-              rrule.by_day[6] != ICAL_SUNDAY_WEEKDAY)
+          if (i_cal_recurrence_get_by_day (rrule, 0) == I_CAL_MONDAY_WEEKDAY &&
+              i_cal_recurrence_get_by_day (rrule, 1) == I_CAL_TUESDAY_WEEKDAY &&
+              i_cal_recurrence_get_by_day (rrule, 2) == I_CAL_WEDNESDAY_WEEKDAY &&
+              i_cal_recurrence_get_by_day (rrule, 3) == I_CAL_THURSDAY_WEEKDAY &&
+              i_cal_recurrence_get_by_day (rrule, 4) == I_CAL_FRIDAY_WEEKDAY &&
+              i_cal_recurrence_get_by_day (rrule, 5) != I_CAL_SATURDAY_WEEKDAY &&
+              i_cal_recurrence_get_by_day (rrule, 6) != I_CAL_SUNDAY_WEEKDAY)
             {
               recur->frequency = GCAL_RECURRENCE_MON_FRI;
             }
@@ -200,11 +202,11 @@ gcal_recurrence_parse_recurrence_rules (ECalComponent *comp)
           break;
         }
 
-      case ICAL_MONTHLY_RECURRENCE:
+      case I_CAL_MONTHLY_RECURRENCE:
         recur->frequency = GCAL_RECURRENCE_MONTHLY;
         break;
 
-      case ICAL_YEARLY_RECURRENCE:
+      case I_CAL_YEARLY_RECURRENCE:
         recur->frequency = GCAL_RECURRENCE_YEARLY;
         break;
 
@@ -212,20 +214,31 @@ gcal_recurrence_parse_recurrence_rules (ECalComponent *comp)
         recur->frequency = GCAL_RECURRENCE_OTHER;
     }
 
-  if (rrule.count > 0)
+  if (i_cal_recurrence_get_count (rrule) > 0)
     {
       recur->limit_type = GCAL_RECURRENCE_COUNT;
-      recur->limit.count = rrule.count;
-    }
-  else if (rrule.until.year != 0)
-    {
-      recur->limit_type = GCAL_RECURRENCE_UNTIL;
-      recur->limit.until = gcal_date_time_from_icaltime (&rrule.until);
+      recur->limit.count = i_cal_recurrence_get_count (rrule);
     }
   else
     {
-      recur->limit_type = GCAL_RECURRENCE_FOREVER;
+      ICalTime *until;
+
+      until = i_cal_recurrence_get_until (rrule);
+
+      if (i_cal_time_get_year (until) != 0)
+        {
+          recur->limit_type = GCAL_RECURRENCE_UNTIL;
+          recur->limit.until = gcal_date_time_from_icaltime (until);
+        }
+      else
+        {
+          recur->limit_type = GCAL_RECURRENCE_FOREVER;
+        }
+
+      g_clear_object (&until);
     }
+
+  g_clear_object (&rrule);
 
   return recur;
 }
@@ -236,72 +249,80 @@ gcal_recurrence_parse_recurrence_rules (ECalComponent *comp)
  *
  * Converts @recur into corresponding rrule.
  *
- * Returns: (transfer full): a #struct icalrecurrencetype
+ * Returns: (transfer full): an #ICalRecurrence
  */
-struct icalrecurrencetype*
+ICalRecurrence*
 gcal_recurrence_to_rrule (GcalRecurrence *recur)
 {
-  struct icalrecurrencetype *rrule;
+  ICalRecurrence *rrule;
 
   if (!recur)
     return NULL;
 
   /* Initialize and clear the rrule to get rid of unwanted fields */
-  rrule = g_new0 (struct icalrecurrencetype, 1);
-  icalrecurrencetype_clear (rrule);
+  rrule = i_cal_recurrence_new ();
 
   switch (recur->frequency)
     {
     case GCAL_RECURRENCE_DAILY:
-      rrule->freq = ICAL_DAILY_RECURRENCE;
+      i_cal_recurrence_set_freq (rrule, I_CAL_DAILY_RECURRENCE);
       break;
 
     case GCAL_RECURRENCE_WEEKLY:
-      rrule->freq = ICAL_WEEKLY_RECURRENCE;
+      i_cal_recurrence_set_freq (rrule, I_CAL_WEEKLY_RECURRENCE);
       break;
 
     case GCAL_RECURRENCE_MONTHLY:
-      rrule->freq = ICAL_MONTHLY_RECURRENCE;
+      i_cal_recurrence_set_freq (rrule, I_CAL_MONTHLY_RECURRENCE);
       break;
 
     case GCAL_RECURRENCE_YEARLY:
-      rrule->freq = ICAL_YEARLY_RECURRENCE;
+      i_cal_recurrence_set_freq (rrule, I_CAL_YEARLY_RECURRENCE);
       break;
 
     case GCAL_RECURRENCE_NO_REPEAT:
-      rrule->freq = ICAL_NO_RECURRENCE;
+      i_cal_recurrence_set_freq (rrule, I_CAL_NO_RECURRENCE);
       break;
 
     case GCAL_RECURRENCE_MON_FRI:
       {
-        rrule->freq = ICAL_WEEKLY_RECURRENCE;
-        rrule->by_day[0] = ICAL_MONDAY_WEEKDAY;
-        rrule->by_day[1] = ICAL_TUESDAY_WEEKDAY;
-        rrule->by_day[2] = ICAL_WEDNESDAY_WEEKDAY;
-        rrule->by_day[3] = ICAL_THURSDAY_WEEKDAY;
-        rrule->by_day[4] = ICAL_FRIDAY_WEEKDAY;
+        i_cal_recurrence_set_freq (rrule, I_CAL_WEEKLY_RECURRENCE);
+        i_cal_recurrence_set_by_day (rrule, 0, I_CAL_MONDAY_WEEKDAY);
+        i_cal_recurrence_set_by_day (rrule, 1, I_CAL_TUESDAY_WEEKDAY);
+        i_cal_recurrence_set_by_day (rrule, 2, I_CAL_WEDNESDAY_WEEKDAY);
+        i_cal_recurrence_set_by_day (rrule, 3, I_CAL_THURSDAY_WEEKDAY);
+        i_cal_recurrence_set_by_day (rrule, 4, I_CAL_FRIDAY_WEEKDAY);
         break;
       }
 
     default:
-      rrule->freq = ICAL_NO_RECURRENCE;
+      i_cal_recurrence_set_freq (rrule, I_CAL_NO_RECURRENCE);
       break;
     }
 
   switch (recur->limit_type)
     {
     case GCAL_RECURRENCE_COUNT:
-      rrule->count = recur->limit.count;
+      i_cal_recurrence_set_count (rrule, recur->limit.count);
       break;
 
     case GCAL_RECURRENCE_UNTIL:
       {
-        rrule->until.second = g_date_time_get_second (recur->limit.until);
-        rrule->until.minute = g_date_time_get_minute (recur->limit.until);
-        rrule->until.hour = g_date_time_get_hour (recur->limit.until);
-        rrule->until.day = g_date_time_get_day_of_month (recur->limit.until);
-        rrule->until.month = g_date_time_get_month (recur->limit.until);
-        rrule->until.year = g_date_time_get_year (recur->limit.until);
+        ICalTime *until;
+
+        until = i_cal_time_new_null_time ();
+        i_cal_time_set_date (until,
+                             g_date_time_get_year (recur->limit.until),
+                             g_date_time_get_month (recur->limit.until),
+                             g_date_time_get_day_of_month (recur->limit.until));
+        i_cal_time_set_time (until,
+                             g_date_time_get_hour (recur->limit.until),
+                             g_date_time_get_minute (recur->limit.until),
+                             g_date_time_get_second (recur->limit.until));
+
+        i_cal_recurrence_set_until (rrule, until);
+
+        g_clear_object (&until);
         break;
       }
 

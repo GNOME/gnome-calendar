@@ -84,7 +84,7 @@ gboolean             gcal_recurrence_is_equal                    (GcalRecurrence
 
 GcalRecurrence*      gcal_recurrence_parse_recurrence_rules      (ECalComponent      *comp);
 
-struct icalrecurrencetype* gcal_recurrence_to_rrule              (GcalRecurrence     *recur);
+ICalRecurrence*      gcal_recurrence_to_rrule              (GcalRecurrence     *recur);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalRecurrence, gcal_recurrence_unref)
 

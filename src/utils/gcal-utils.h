@@ -26,7 +26,6 @@
 #include <gtk/gtk.h>
 #include <libecal/libecal.h>
 #include <libgweather/gweather.h>
-#include <libical/icaltime.h>
 
 #define ALIGNED(x)      (round (x) + 0.5)
 #define MINUTES_PER_DAY 1440
@@ -41,6 +40,7 @@ G_DEFINE_AUTOPTR_CLEANUP_FUNC (ESource, g_object_unref)
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (ECalComponent, g_object_unref)
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GWeatherLocation, gweather_location_unref)
+G_DEFINE_AUTOPTR_CLEANUP_FUNC (ICalTime, g_object_unref)
 
 gchar*               gcal_get_weekday                            (gint                i);
 
@@ -67,12 +67,12 @@ ECalComponent*       build_component_from_details                (const gchar   
                                                                   GDateTime          *initial_date,
                                                                   GDateTime          *final_date);
 
-gint                 icaltime_compare_date                       (const icaltimetype *date1,
-                                                                  const icaltimetype *date2);
+gint                 icaltime_compare_date                       (const ICalTime *date1,
+                                                                  const ICalTime *date2);
 
-gint                 icaltime_compare_with_current               (const icaltimetype *date1,
-                                                                  const icaltimetype *date2,
-                                                                  time_t             *current_time_t);
+gint                 icaltime_compare_with_current               (const ICalTime *date1,
+                                                                  const ICalTime *date2,
+                                                                  time_t         *current_time_t);
 
 gboolean             is_clock_format_24h                         (void);
 

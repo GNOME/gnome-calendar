@@ -1193,7 +1193,7 @@ void
 gcal_manager_create_event (GcalManager *self,
                            GcalEvent   *event)
 {
-  icalcomponent *new_event_icalcomp;
+  ICalComponent *new_event_icalcomp;
   ECalComponent *component;
   GcalCalendar *calendar;
   AsyncOpsData *data;
@@ -1214,6 +1214,7 @@ gcal_manager_create_event (GcalManager *self,
 
   e_cal_client_create_object (gcal_calendar_get_client (calendar),
                               new_event_icalcomp,
+                              E_CAL_OPERATION_FLAG_NONE,
                               self->async_ops,
                               on_event_created,
                               data);
@@ -1264,6 +1265,7 @@ gcal_manager_update_event (GcalManager           *self,
   e_cal_client_modify_object (gcal_calendar_get_client (calendar),
                               e_cal_component_get_icalcomponent (component),
                               (ECalObjModType) mod,
+                              E_CAL_OPERATION_FLAG_NONE,
                               NULL,
                               on_event_updated,
                               component);
@@ -1298,7 +1300,7 @@ gcal_manager_remove_event (GcalManager           *self,
   calendar = gcal_event_get_calendar (event);
   rid = NULL;
 
-  e_cal_component_get_uid (component, &uid);
+  uid = e_cal_component_get_uid (component);
 
   if (gcal_event_has_recurrence (event))
     rid = e_cal_component_get_recurid_as_string (component);
@@ -1307,6 +1309,7 @@ gcal_manager_remove_event (GcalManager           *self,
                               uid,
                               mod == GCAL_RECURRENCE_MOD_ALL ? NULL : rid,
                               (ECalObjModType) mod,
+                              E_CAL_OPERATION_FLAG_NONE,
                               self->async_ops,
                               on_event_removed,
                               g_object_ref (event));
@@ -1333,7 +1336,7 @@ gcal_manager_move_event_to_source (GcalManager *self,
 {
   ECalComponent *ecomponent;
   ECalComponent *clone;
-  icalcomponent *comp;
+  ICalComponent *comp;
   GcalCalendar *calendar;
   ECalComponentId *id;
   GError *error;
@@ -1355,6 +1358,7 @@ gcal_manager_move_event_to_source (GcalManager *self,
 
   e_cal_client_create_object_sync (gcal_calendar_get_client (calendar),
                                    comp,
+                                   E_CAL_OPERATION_FLAG_NONE,
                                    NULL,
                                    NULL,
                                    &error);
@@ -1377,9 +1381,10 @@ gcal_manager_move_event_to_source (GcalManager *self,
   id = e_cal_component_get_id (ecomponent);
 
   e_cal_client_remove_object_sync (gcal_calendar_get_client (calendar),
-                                   id->uid,
-                                   id->rid,
+                                   e_cal_component_id_get_uid (id),
+                                   e_cal_component_id_get_rid (id),
                                    E_CAL_OBJ_MOD_THIS,
+                                   E_CAL_OPERATION_FLAG_NONE,
                                    self->async_ops,
                                    &error);
 
@@ -1391,7 +1396,7 @@ gcal_manager_move_event_to_source (GcalManager *self,
       return;
     }
 
-  e_cal_component_free_id (id);
+  e_cal_component_id_free (id);
 
   GCAL_EXIT;
 }
@@ -1409,9 +1414,9 @@ gcal_manager_move_event_to_source (GcalManager *self,
  * Returns: (nullable)(transfer full)(content-type GcalEvent):a #GList
  */
 GList*
-gcal_manager_get_events (GcalManager  *self,
-                         icaltimetype *start_date,
-                         icaltimetype *end_date)
+gcal_manager_get_events (GcalManager *self,
+                         ICalTime    *start_date,
+                         ICalTime    *end_date)
 {
   time_t range_start, range_end;
   GatherEventData data = {
@@ -1423,8 +1428,8 @@ gcal_manager_get_events (GcalManager  *self,
 
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  range_start = icaltime_as_timet_with_zone (*start_date, e_cal_util_get_system_timezone ());
-  range_end = icaltime_as_timet_with_zone (*end_date, e_cal_util_get_system_timezone ());
+  range_start = i_cal_time_as_timet_with_zone (start_date, e_cal_util_get_system_timezone ());
+  range_end = i_cal_time_as_timet_with_zone (end_date, e_cal_util_get_system_timezone ());
 
   e_cal_data_model_foreach_component (self->e_data_model,
                                       range_start,

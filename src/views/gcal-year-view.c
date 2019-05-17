@@ -407,8 +407,8 @@ add_event_to_day_array (GcalYearView  *year_view,
 static void
 update_sidebar (GcalYearView *year_view)
 {
-  g_autofree icaltimetype *start_icaldatetime = NULL;
-  g_autofree icaltimetype *end_icaldatetime = NULL;
+  g_autoptr (ICalTime) start_icaldatetime = NULL;
+  g_autoptr (ICalTime) end_icaldatetime = NULL;
   GcalManager *manager;
   GtkWidget *child_widget;
   GList *events, *l;
@@ -1981,10 +1981,10 @@ gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
 
   id = e_cal_component_get_id (comp);
 
-  gcal_year_view_component_removed (subscriber, client, id->uid, id->rid);
+  gcal_year_view_component_removed (subscriber, client, e_cal_component_id_get_uid (id), e_cal_component_id_get_rid (id));
   gcal_year_view_component_added (subscriber, client, comp);
 
-  g_clear_pointer (&id, e_cal_component_free_id);
+  g_clear_pointer (&id, e_cal_component_id_free);
 
   GCAL_EXIT;
 }

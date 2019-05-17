@@ -230,7 +230,7 @@ get_desc_from_component (ECalComponent *component,
   GSList *l;
 
   gchar *desc = NULL;
-  e_cal_component_get_description_list (component, &text_list);
+  text_list = e_cal_component_get_descriptions (component);
 
   for (l = text_list; l != NULL; l = l->next)
     {
@@ -242,18 +242,18 @@ get_desc_from_component (ECalComponent *component,
 
           if (desc != NULL)
             {
-              carrier = g_strconcat (desc, joint_char, text->value, NULL);
+              carrier = g_strconcat (desc, joint_char, e_cal_component_text_get_value (text), NULL);
               g_free (desc);
               desc = carrier;
             }
           else
             {
-              desc = g_strdup (text->value);
+              desc = g_strdup (e_cal_component_text_get_value (text));
             }
         }
     }
 
-  e_cal_component_free_text_list (text_list);
+  g_slist_free_full (text_list, e_cal_component_text_free);
   return desc != NULL ? g_strstrip (desc) : NULL;
 }
 
@@ -276,20 +276,20 @@ get_uuid_from_component (ESource       *source,
   ECalComponentId *id;
 
   id = e_cal_component_get_id (component);
-  if (id->rid != NULL)
+  if (e_cal_component_id_get_rid (id) != NULL)
     {
       uuid = g_strdup_printf ("%s:%s:%s",
                               e_source_get_uid (source),
-                              id->uid,
-                              id->rid);
+                              e_cal_component_id_get_uid (id),
+                              e_cal_component_id_get_rid (id));
     }
   else
     {
       uuid = g_strdup_printf ("%s:%s",
                               e_source_get_uid (source),
-                              id->uid);
+                              e_cal_component_id_get_uid (id));
     }
-  e_cal_component_free_id (id);
+  e_cal_component_id_free (id);
 
   return uuid;
 }
@@ -369,9 +369,10 @@ build_component_from_details (const gchar *summary,
                               GDateTime   *final_date)
 {
   ECalComponent *event;
-  ECalComponentDateTime dt;
-  ECalComponentText summ;
-  icaltimezone *zone;
+  ECalComponentDateTime *dt;
+  ECalComponentText *summ;
+  ICalTimezone *zone;
+  ICalTime *itt;
   gboolean all_day;
 
   event = e_cal_component_new ();
@@ -389,42 +390,38 @@ build_component_from_details (const gchar *summary,
    */
   if (all_day)
     {
-      zone = icaltimezone_get_utc_timezone ();
+      zone = i_cal_timezone_get_utc_timezone ();
     }
   else
     {
-      gchar *system_tz = e_cal_system_timezone_get_location ();
-
-      zone = icaltimezone_get_builtin_timezone (system_tz);
-
-      g_free (system_tz);
+      zone = e_cal_util_get_system_timezone ();
     }
 
   /* Start date */
-  dt.value = gcal_date_time_to_icaltime (initial_date);
-  icaltime_set_timezone (dt.value, zone);
-  dt.value->is_date = all_day;
-  dt.tzid = icaltimezone_get_tzid (zone);
-  e_cal_component_set_dtstart (event, &dt);
+  itt = gcal_date_time_to_icaltime (initial_date);
+  i_cal_time_set_timezone (itt, zone);
+  i_cal_time_set_is_date (itt, all_day);
+  dt = e_cal_component_datetime_new_take (itt, zone ? g_strdup (i_cal_timezone_get_tzid (zone)) : NULL);
+  e_cal_component_set_dtstart (event, dt);
 
-  g_free (dt.value);
+  e_cal_component_datetime_free (dt);
 
   /* End date */
   if (!final_date)
     final_date = g_date_time_add_days (initial_date, 1);
 
-  dt.value = gcal_date_time_to_icaltime (final_date);
-  icaltime_set_timezone (dt.value, zone);
-  dt.value->is_date = all_day;
-  dt.tzid = icaltimezone_get_tzid (zone);
-  e_cal_component_set_dtend (event, &dt);
+  itt = gcal_date_time_to_icaltime (final_date);
+  i_cal_time_set_timezone (itt, zone);
+  i_cal_time_set_is_date (itt, all_day);
+  dt = e_cal_component_datetime_new_take (itt, zone ? g_strdup (i_cal_timezone_get_tzid (zone)) : NULL);
+  e_cal_component_set_dtend (event, dt);
 
-  g_free (dt.value);
+  e_cal_component_datetime_free (dt);
 
   /* Summary */
-  summ.altrep = NULL;
-  summ.value = summary;
-  e_cal_component_set_summary (event, &summ);
+  summ = e_cal_component_text_new (summary, NULL);
+  e_cal_component_set_summary (event, summ);
+  e_cal_component_text_free (summ);
 
   e_cal_component_commit_sequence (event);
 
@@ -433,11 +430,11 @@ build_component_from_details (const gchar *summary,
 
 /**
  * icaltime_compare_date:
- * @date1: an #icaltimetype
- * @date2: an #icaltimetype
+ * @date1: an #ICalTime
+ * @date2: an #ICalTime
  *
- * Compare date parts of #icaltimetype objects. Returns negative value,
- * 0 or positive value accordingly if @date1 is before, same day of
+ * Compare date parts of #ICalTime objects. Returns negative value,
+ * 0 or positive value accordingly if @date1 is before, same day or
  * after date2.
  *
  * As a bonus it returns the amount of days passed between two days on the
@@ -446,25 +443,25 @@ build_component_from_details (const gchar *summary,
  * Returns: negative, 0 or positive
  **/
 gint
-icaltime_compare_date (const icaltimetype *date1,
-                       const icaltimetype *date2)
+icaltime_compare_date (const ICalTime *date1,
+                       const ICalTime *date2)
 {
   if (date2 == NULL)
     return 0;
 
-  if (date1->year < date2->year)
+  if (i_cal_time_get_year (date1) < i_cal_time_get_year (date2))
     return -1;
-  else if (date1->year > date2->year)
+  else if (i_cal_time_get_year (date1) > i_cal_time_get_year (date2))
     return 1;
   else
-    return time_day_of_year (date1->day, date1->month - 1, date1->year) -
-           time_day_of_year (date2->day, date2->month - 1, date2->year);
+    return time_day_of_year (i_cal_time_get_day (date1), i_cal_time_get_month (date1) - 1, i_cal_time_get_year (date1)) -
+           time_day_of_year (i_cal_time_get_day (date2), i_cal_time_get_month (date2) - 1, i_cal_time_get_year (date2));
 }
 
 /**
  * icaltime_compare_with_current:
- * @date1: an #icaltimetype
- * @date2: an #icaltimetype
+ * @date1: an #ICalTime
+ * @date2: an #ICalTime
  * @current_time_t: the current time
  *
  * Compares @date1 and @date2 against the current time. Dates
@@ -474,15 +471,24 @@ icaltime_compare_date (const icaltimetype *date1,
  * equal, positive otherwise
  */
 gint
-icaltime_compare_with_current (const icaltimetype *date1,
-                               const icaltimetype *date2,
-                               time_t             *current_time_t)
+icaltime_compare_with_current (const ICalTime *date1,
+                               const ICalTime *date2,
+                               time_t         *current_time_t)
 {
+  ICalTimezone *zone1, *zone2;
   gint result = 0;
-
   time_t start1, start2, diff1, diff2;
-  start1 = icaltime_as_timet_with_zone (*date1, date1->zone != NULL ? date1->zone : e_cal_util_get_system_timezone ());
-  start2 = icaltime_as_timet_with_zone (*date2, date2->zone != NULL ? date2->zone : e_cal_util_get_system_timezone ());
+
+  zone1 = i_cal_time_get_timezone (date1);
+  if (!zone1)
+    zone1 = e_cal_util_get_system_timezone ();
+
+  zone2 = i_cal_time_get_timezone (date2);
+  if (!zone2)
+    zone2 = e_cal_util_get_system_timezone ();
+
+  start1 = i_cal_time_as_timet_with_zone (date1, zone1);
+  start2 = i_cal_time_as_timet_with_zone (date2, zone2);
   diff1 = start1 - *current_time_t;
   diff2 = start2 - *current_time_t;
 
@@ -802,26 +808,28 @@ gint
 get_alarm_trigger_minutes (GcalEvent          *event,
                            ECalComponentAlarm *alarm)
 {
-  ECalComponentAlarmTrigger trigger;
+  ECalComponentAlarmTrigger *trigger;
+  ICalDuration *duration;
   GDateTime *alarm_dt;
   gint diff;
 
-  e_cal_component_alarm_get_trigger (alarm, &trigger);
+  trigger = e_cal_component_alarm_get_trigger (alarm);
 
   /*
    * We only support alarms relative to the start date, and solely
    * ignore whetever different it may be.
    */
-  if (trigger.type != E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START)
+  if (!trigger || e_cal_component_alarm_trigger_get_kind (trigger) != E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START)
     return -1;
 
+  duration = e_cal_component_alarm_trigger_get_duration (trigger);
   alarm_dt = g_date_time_add_full (gcal_event_get_date_start (event),
                                    0,
                                    0,
-                                   - (trigger.u.rel_duration.days + trigger.u.rel_duration.weeks * 7),
-                                   - trigger.u.rel_duration.hours,
-                                   - trigger.u.rel_duration.minutes,
-                                   - trigger.u.rel_duration.seconds);
+                                   - (i_cal_duration_get_days (duration) + i_cal_duration_get_weeks (duration) * 7),
+                                   - i_cal_duration_get_hours (duration),
+                                   - i_cal_duration_get_minutes (duration),
+                                   - i_cal_duration_get_seconds (duration));
 
   diff = g_date_time_difference (gcal_event_get_date_start (event), alarm_dt) / G_TIME_SPAN_MINUTE;
 
@@ -941,7 +949,7 @@ ask_recurrence_modification_type (GtkWidget      *parent,
 
   client = g_object_get_data (G_OBJECT (source), "client");
 
-  if (!e_client_check_capability (E_CLIENT (client), CAL_STATIC_CAPABILITY_NO_THISANDFUTURE))
+  if (!e_client_check_capability (E_CLIENT (client), E_CAL_STATIC_CAPABILITY_NO_THISANDFUTURE))
     gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Subsequent events"), GTK_RESPONSE_OK);
 
   gtk_dialog_add_button (GTK_DIALOG (dialog), _("_All events"), GTK_RESPONSE_YES);
@@ -1108,7 +1116,7 @@ filter_event_list_by_uid_and_modtype (GList                 *widgets,
       component = gcal_event_get_component (event);
       calendar = gcal_event_get_calendar (event);
       id = e_cal_component_get_id (component);
-      id_prefix = g_strdup_printf ("%s:%s", gcal_calendar_get_id (calendar), id->uid);
+      id_prefix = g_strdup_printf ("%s:%s", gcal_calendar_get_id (calendar), e_cal_component_id_get_uid (id));
 
       for (l = widgets; l != NULL; l = l->next)
         {
@@ -1141,7 +1149,7 @@ filter_event_list_by_uid_and_modtype (GList                 *widgets,
 
         }
 
-      e_cal_component_free_id (id);
+      e_cal_component_id_free (id);
     }
 
   return result;

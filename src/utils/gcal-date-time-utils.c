@@ -152,29 +152,32 @@ gcal_date_time_compare_date (GDateTime *dt1,
  * gcal_date_time_to_icaltime:
  * @dt: a #GDateTime
  *
- * Converts the #GDateTime's @dt to an #icaltimetype.
+ * Converts the #GDateTime's @dt to an #ICalTime.
  *
- * Returns: (transfer full): a #icaltimetype.
+ * Returns: (transfer full): a #ICalTime.
  */
-icaltimetype*
+ICalTime*
 gcal_date_time_to_icaltime (GDateTime *dt)
 {
-  icaltimetype *idt;
+  ICalTime *idt;
 
   if (!dt)
     return NULL;
 
-  idt = g_new0 (icaltimetype, 1);
+  idt = i_cal_time_new_null_time ();
 
-  idt->year = g_date_time_get_year (dt);
-  idt->month = g_date_time_get_month (dt);
-  idt->day = g_date_time_get_day_of_month (dt);
-  idt->hour = g_date_time_get_hour (dt);
-  idt->minute = g_date_time_get_minute (dt);
-  idt->second = g_date_time_get_seconds (dt);
-  idt->is_date = (idt->hour == 0 &&
-                  idt->minute == 0 &&
-                  idt->second == 0);
+  i_cal_time_set_date (idt,
+                       g_date_time_get_year (dt),
+                       g_date_time_get_month (dt),
+                       g_date_time_get_day_of_month (dt));
+  i_cal_time_set_time (idt,
+                       g_date_time_get_hour (dt),
+                       g_date_time_get_minute (dt),
+                       g_date_time_get_seconds (dt));
+  i_cal_time_set_is_date (idt,
+                  i_cal_time_get_hour (idt) == 0 &&
+                  i_cal_time_get_minute (idt) == 0 &&
+                  i_cal_time_get_second (idt) == 0);
 
   return idt;
 
@@ -201,26 +204,28 @@ gcal_date_time_is_date (GDateTime *dt)
 
 /**
  * gcal_date_time_from_icaltime:
- * @date: an #icaltimetype
+ * @date: an #ICalTime
  *
  * Creates a #GDateTime from @date. The timezone is preserved.
  *
  * Returns: (transfer full): a #GDateTime.
  */
 GDateTime*
-gcal_date_time_from_icaltime (const icaltimetype *date)
+gcal_date_time_from_icaltime (const ICalTime *date)
 {
   g_autoptr (GTimeZone) tz = NULL;
   g_autoptr (GDateTime) dt = NULL;
+  ICalTimezone *zone;
 
-  tz = date->zone ? g_time_zone_new (icaltime_get_tzid (*date)) : g_time_zone_new_utc ();
+  zone = i_cal_time_get_timezone (date);
+  tz = (zone && i_cal_timezone_get_location (zone)) ? g_time_zone_new (i_cal_timezone_get_location (zone)) : g_time_zone_new_utc ();
   dt = g_date_time_new (tz,
-                        date->year,
-                        date->month,
-                        date->day,
-                        date->is_date ? 0 : date->hour,
-                        date->is_date ? 0 : date->minute,
-                        date->is_date ? 0 : date->second);
+                        i_cal_time_get_year (date),
+                        i_cal_time_get_month (date),
+                        i_cal_time_get_day (date),
+                        i_cal_time_is_date (date) ? 0 : i_cal_time_get_hour (date),
+                        i_cal_time_is_date (date) ? 0 : i_cal_time_get_minute (date),
+                        i_cal_time_is_date (date) ? 0 : i_cal_time_get_second (date));
 
   return g_steal_pointer (&dt);
 }
