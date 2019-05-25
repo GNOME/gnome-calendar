@@ -19,7 +19,7 @@
         "--talk-name=ca.desrt.dconf",
         "--talk-name=org.gnome.ControlCenter",
         "--talk-name=org.gnome.evolution.dataserver.AddressBook9",
-        "--talk-name=org.gnome.evolution.dataserver.Calendar7",
+        "--talk-name=org.gnome.evolution.dataserver.Calendar8",
         "--talk-name=org.gnome.evolution.dataserver.Sources5",
         "--talk-name=org.gnome.evolution.dataserver.Subprocess.Backend.*",
         "--talk-name=org.gnome.OnlineAccounts",
