@@ -195,7 +195,7 @@ gcal_calendar_initable_init (GInitable     *initable,
 
   if (local_error)
     {
-      g_propagate_error (error, local_error);
+      g_propagate_error (error, g_steal_pointer (&local_error));
       GCAL_RETURN (FALSE);
     }
 
