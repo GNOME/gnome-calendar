@@ -69,10 +69,12 @@
             "cleanup" : [
                 "/lib/cmake"
             ],
-            "buildsystem" : "cmake",
+            "buildsystem" : "cmake-ninja",
             "config-opts" : [
                 "-DCMAKE_INSTALL_LIBDIR:PATH=/app/lib",
-                "-DBUILD_SHARED_LIBS:BOOL=ON"
+                "-DBUILD_SHARED_LIBS=On",
+                "-DICAL_BUILD_DOCS=False",
+                "-DWITH_CXX_BINDINGS=False"
             ],
             "sources" : [
                 {
@@ -85,9 +87,10 @@
         {
             "name" : "geocode-glib",
             "buildsystem" : "meson",
-            "builddir" : true,
             "config-opts" : [
-                "--libdir=/app/lib"
+                "-Denable-gtk-doc=false",
+                "-Denable-introspection=false",
+                "-Denable-installed-tests=false"
             ],
             "sources" : [
                 {
@@ -100,7 +103,9 @@
             "name" : "libgweather",
             "buildsystem" : "meson",
             "config-opts" : [
-                "--libdir=/app/lib"
+                "-Dglade_catalog=false",
+                "-Denable_vala=false",
+                "-Dgtk_doc=false"
             ],
             "sources" : [
                 {
@@ -137,8 +142,11 @@
         {
             "name" : "libdazzle",
             "config-opts" : [
-                "--libdir=/app/lib",
-                "--buildtype=debugoptimized"
+                "--buildtype=debugoptimized",
+                "-Denable_gtk_doc=false",
+                "-Denable_tests=false",
+                "-Dwith_introspection=false",
+                "-Dwith_vapi=false"
             ],
             "buildsystem" : "meson",
             "builddir" : true,
