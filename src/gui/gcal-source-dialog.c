@@ -91,12 +91,6 @@ struct _GcalSourceDialog
   /* overview widgets */
   GtkWidget          *add_calendar_menu_button;
   GtkWidget          *calendars_listbox;
-  GtkWidget          *online_accounts_listbox;
-
-  /* stub goa rows */
-  GtkWidget          *exchange_stub_row;
-  GtkWidget          *google_stub_row;
-  GtkWidget          *nextcloud_stub_row;
 
   /* flags */
   GcalSourceDialogMode mode;
@@ -173,17 +167,6 @@ static gboolean   is_goa_source                         (GcalSourceDialog     *d
 static void       name_entry_text_changed               (GObject             *object,
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
-
-static void       online_accounts_listbox_row_activated (GtkListBox          *box,
-                                                         GtkListBoxRow       *row,
-                                                         gpointer             user_data);
-
-static gint       online_accounts_listbox_sort_func      (GtkListBoxRow       *row1,
-                                                          GtkListBoxRow       *row2,
-                                                          gpointer             user_data);
-
-static void       online_accounts_settings_button_clicked (GtkWidget         *button,
-                                                          gpointer            user_data);
 
 static void       on_file_activated                     (GSimpleAction       *action,
                                                          GVariant            *param,
@@ -711,40 +694,6 @@ spawn_goa_with_args (const gchar *action,
 }
 
 static void
-online_accounts_listbox_row_activated (GtkListBox    *box,
-                                       GtkListBoxRow *row,
-                                       gpointer       user_data)
-{
-  GcalSourceDialog *self = GCAL_SOURCE_DIALOG (user_data);
-
-  if ((GtkWidget*) row == self->exchange_stub_row)
-    {
-      spawn_goa_with_args ("add", "exchange");
-    }
-  else if ((GtkWidget*) row == self->google_stub_row)
-    {
-      spawn_goa_with_args ("add", "google");
-    }
-  else if ((GtkWidget*) row == self->nextcloud_stub_row)
-    {
-      spawn_goa_with_args ("add", "owncloud");
-    }
-  else
-    {
-      GoaAccount *account;
-      gchar *id;
-
-      account = g_object_get_data (G_OBJECT (row), "goa-account");
-      g_return_if_fail (GOA_IS_ACCOUNT (account));
-
-      id = goa_account_dup_id (account);
-      spawn_goa_with_args (id, NULL);
-
-      g_free (id);
-    }
-}
-
-static void
 response_signal (GtkDialog *dialog,
                  gint       response_id,
                  gpointer   user_data)
@@ -1132,13 +1081,6 @@ url_entry_text_changed (GObject    *object,
     {
       gtk_entry_set_progress_fraction (GTK_ENTRY (self->calendar_address_entry), 0);
     }
-}
-
-static void
-online_accounts_settings_button_clicked (GtkWidget *button,
-                                         gpointer   user_data)
-{
-  spawn_goa_with_args (NULL, NULL);
 }
 
 static void
@@ -1811,197 +1753,13 @@ remove_button_clicked (GtkWidget *button,
  * Callbacks
  */
 
-static GcalAccountType
-get_account_type (GoaAccount *account)
-{
-  g_return_val_if_fail (GOA_IS_ACCOUNT (account), GCAL_ACCOUNT_TYPE_NOT_SUPPORTED);
-
-  if (g_strcmp0 (goa_account_get_provider_type (account), "exchange") == 0)
-    return GCAL_ACCOUNT_TYPE_EXCHANGE;
-
-  if (g_strcmp0 (goa_account_get_provider_type (account), "google") == 0)
-    return GCAL_ACCOUNT_TYPE_GOOGLE;
-
-  if (g_strcmp0 (goa_account_get_provider_type (account), "owncloud") == 0)
-    return GCAL_ACCOUNT_TYPE_OWNCLOUD;
-
-  return GCAL_ACCOUNT_TYPE_NOT_SUPPORTED;
-}
-
-static void
-account_calendar_disable_changed (GObject    *object,
-                                  GParamSpec *pspec,
-                                  gpointer    user_data)
-{
-  GoaAccount *account = GOA_ACCOUNT (object);
-
-  g_return_if_fail (GTK_IS_LABEL (user_data));
-
-  gtk_label_set_label (GTK_LABEL (user_data), goa_account_get_calendar_disabled (account) ? _("Off") : _("On"));
-}
-
-static void
-add_goa_account (GcalSourceDialog *dialog,
-                 GoaAccount       *account)
-{
-  GcalAccountType type;
-  GtkBuilder *builder;
-  GtkWidget *provider_label;
-  GtkWidget *account_label;
-  GtkWidget *enabled_label;
-  GtkWidget *row;
-  GtkWidget *icon;
-  const gchar *icon_name;
-
-  type = get_account_type (account);
-
-  if (type == GCAL_ACCOUNT_TYPE_NOT_SUPPORTED)
-    return;
-
-  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/online-account-row.ui");
-  row = GTK_WIDGET (gtk_builder_get_object (builder, "row"));
-  icon = GTK_WIDGET (gtk_builder_get_object (builder, "icon"));
-  provider_label = GTK_WIDGET (gtk_builder_get_object (builder, "account_provider_label"));
-  account_label = GTK_WIDGET (gtk_builder_get_object (builder, "account_name_label"));
-  enabled_label = GTK_WIDGET (gtk_builder_get_object (builder, "on_off_label"));
-
-  switch (type)
-    {
-    case GCAL_ACCOUNT_TYPE_EXCHANGE:
-      icon_name = "goa";
-      gtk_widget_hide (dialog->exchange_stub_row);
-      break;
-
-    case GCAL_ACCOUNT_TYPE_GOOGLE:
-      icon_name = "goa-account-google";
-      gtk_widget_hide (dialog->google_stub_row);
-      break;
-
-    case GCAL_ACCOUNT_TYPE_OWNCLOUD:
-      icon_name = "goa-account-owncloud";
-      gtk_widget_hide (dialog->nextcloud_stub_row);
-      break;
-
-    case GCAL_ACCOUNT_TYPE_NOT_SUPPORTED:
-    default:
-      icon_name = "goa";
-      g_assert_not_reached ();
-    }
-
-  /* update fields */
-  gtk_label_set_label (GTK_LABEL (provider_label), goa_account_get_provider_name (account));
-  gtk_label_set_label (GTK_LABEL (account_label), goa_account_get_identity (account));
-  gtk_label_set_label (GTK_LABEL (enabled_label),
-                       goa_account_get_attention_needed (account) ? _("Expired") :
-                       goa_account_get_calendar_disabled (account) ? _("Off") : _("On"));
-  gtk_image_set_from_icon_name (GTK_IMAGE (icon), icon_name, GTK_ICON_SIZE_DIALOG);
-  gtk_image_set_pixel_size (GTK_IMAGE (icon), 32);
-
-  g_object_set_data (G_OBJECT (row), "goa-account", account);
-  g_signal_connect (account, "notify::calendar-disabled",
-                    G_CALLBACK (account_calendar_disable_changed), enabled_label);
-
-  gtk_list_box_insert (GTK_LIST_BOX (dialog->online_accounts_listbox), row, 0);
-
-  g_object_unref (builder);
-}
-
-static void
-goa_account_added_cb (GoaClient *client,
-                      GoaObject *object,
-                      gpointer   user_data)
-{
-  add_goa_account (GCAL_SOURCE_DIALOG (user_data), goa_object_get_account (object));
-}
-
-static void
-goa_account_removed_cb (GoaClient *client,
-                        GoaObject *object,
-                        gpointer   user_data)
-{
-  GcalSourceDialog *self;
-  GoaAccount *account;
-  GcalAccountType type;
-  GList *children, *l;
-  gint counter = 1;
-
-  self = GCAL_SOURCE_DIALOG (user_data);
-  account = goa_object_get_account (object);
-  type = get_account_type (account);
-
-  if (type == GCAL_ACCOUNT_TYPE_NOT_SUPPORTED)
-    return;
-
-  children = gtk_container_get_children (GTK_CONTAINER (self->online_accounts_listbox));
-
-  for (l = children; l != NULL; l = l->next)
-    {
-      GoaAccount *row_account;
-      GcalAccountType row_type;
-
-      row_account = g_object_get_data (l->data, "goa-account");
-      row_type = row_account ? get_account_type (row_account) : GCAL_ACCOUNT_TYPE_NOT_SUPPORTED;
-
-      if (row_account == account)
-        {
-          gtk_widget_destroy (l->data);
-          counter--;
-        }
-      else if (type == row_type)
-        {
-          counter++;
-        }
-    }
-
-  /*
-   * If there's any other account with the same type,
-   * it should show back the stub row of the given type.
-   */
-  if (counter == 0)
-    {
-      switch (type)
-        {
-        case GCAL_ACCOUNT_TYPE_EXCHANGE:
-          gtk_widget_show (self->exchange_stub_row);
-          break;
-
-        case GCAL_ACCOUNT_TYPE_GOOGLE:
-          gtk_widget_show (self->google_stub_row);
-          break;
-
-        case GCAL_ACCOUNT_TYPE_OWNCLOUD:
-          gtk_widget_show (self->nextcloud_stub_row);
-          break;
-
-        case GCAL_ACCOUNT_TYPE_NOT_SUPPORTED:
-        default:
-          g_assert_not_reached ();
-        }
-    }
-
-  g_list_free (children);
-}
-
 static void
 setup_context (GcalSourceDialog *self)
 {
   GList *accounts = NULL;
   GcalManager *manager;
-  GoaClient *client;
-  GList *l;
 
   GCAL_ENTRY;
-
-  /* Add already fetched accounts */
-  client = gcal_context_get_goa_client (self->context);
-  accounts = goa_client_get_accounts (client);
-
-  for (l = accounts; l != NULL; l = l->next)
-    add_goa_account (self, goa_object_get_account (l->data));
-
-  /* Be ready to other accounts */
-  g_signal_connect (client, "account-added", G_CALLBACK (goa_account_added_cb), self);
-  g_signal_connect (client, "account-removed", G_CALLBACK (goa_account_removed_cb), self);
 
   manager = gcal_context_get_manager (self->context);
   g_signal_connect (manager, "calendar-added", G_CALLBACK (add_calendar), self);
@@ -2031,10 +1789,6 @@ gcal_source_dialog_constructed (GObject *object)
   /* Setup listbox header functions */
   gtk_list_box_set_header_func (GTK_LIST_BOX (self->calendars_listbox), display_header_func, NULL, NULL);
   gtk_list_box_set_sort_func (GTK_LIST_BOX (self->calendars_listbox), (GtkListBoxSortFunc) calendar_listbox_sort_func,
-                              object, NULL);
-
-  gtk_list_box_set_header_func (GTK_LIST_BOX (self->online_accounts_listbox), display_header_func, NULL, NULL);
-  gtk_list_box_set_sort_func (GTK_LIST_BOX (self->online_accounts_listbox), (GtkListBoxSortFunc) online_accounts_listbox_sort_func,
                               object, NULL);
 
   /* Action group */
@@ -2144,16 +1898,12 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, credentials_user_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, default_check);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, edit_grid);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, exchange_stub_row);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, google_stub_row);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, headerbar);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, location_dim_label);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, main_scrolledwindow);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, name_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, notification);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, notification_label);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, online_accounts_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, nextcloud_stub_row);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, remove_button);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, settings_button);
   gtk_widget_class_bind_template_child (widget_class, GcalSourceDialog, stack);
@@ -2177,8 +1927,6 @@ gcal_source_dialog_class_init (GcalSourceDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, hide_notification);
   gtk_widget_class_bind_template_callback (widget_class, name_entry_text_changed);
   gtk_widget_class_bind_template_callback (widget_class, notification_child_revealed_changed);
-  gtk_widget_class_bind_template_callback (widget_class, online_accounts_listbox_row_activated);
-  gtk_widget_class_bind_template_callback (widget_class, online_accounts_settings_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, remove_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
   gtk_widget_class_bind_template_callback (widget_class, settings_button_clicked);
@@ -2191,27 +1939,6 @@ static void
 gcal_source_dialog_init (GcalSourceDialog *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
-}
-
-static gint
-online_accounts_listbox_sort_func (GtkListBoxRow *row1,
-                                   GtkListBoxRow *row2,
-                                   gpointer       user_data)
-{
-  GcalAccountType t1, t2;
-  GoaAccount *a1 = g_object_get_data (G_OBJECT (row1), "goa-account");
-  GoaAccount *a2 = g_object_get_data (G_OBJECT (row2), "goa-account");
-
-  if (!a1 || !a2)
-    return a1 ? -1 : (a2 ? 1 : 0);
-
-  t1 = get_account_type (a1);
-  t2 = get_account_type (a2);
-
-  if (t1 != t2)
-    return t1 - t2;
-
-  return g_strcmp0 (goa_account_get_identity (a1), goa_account_get_identity (a2));
 }
 
 /**
