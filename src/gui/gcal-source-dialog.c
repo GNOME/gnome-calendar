@@ -191,10 +191,6 @@ static void       stack_visible_child_name_changed      (GObject             *ob
 static void       settings_button_clicked               (GtkWidget           *button,
                                                          gpointer             user_data);
 
-
-static void       spawn_goa_with_args                    (const gchar        *action,
-                                                          const gchar        *arg);
-
 static gboolean   pulse_web_entry                       (GcalSourceDialog    *dialog);
 
 static void       url_entry_text_changed                (GObject             *object,
@@ -571,7 +567,8 @@ description_label_link_activated (GtkWidget *widget,
                                   gchar     *uri,
                                   gpointer   user_data)
 {
-  spawn_goa_with_args (NULL, NULL);
+  GApplication *app = g_application_get_default ();
+  gcal_utils_launch_online_accounts_panel (g_application_get_dbus_connection (app), NULL, NULL);
   return TRUE;
 }
 
@@ -628,69 +625,6 @@ name_entry_text_changed (GObject    *object,
 
   if (valid)
     e_source_set_display_name (self->source, gtk_entry_get_text (GTK_ENTRY (self->name_entry)));
-}
-
-static GVariant*
-build_dbus_parameters (const gchar *action,
-                       const gchar *arg)
-{
-  GVariantBuilder builder;
-  GVariant *array[1], *params2[3];
-
-  g_variant_builder_init (&builder, G_VARIANT_TYPE ("av"));
-
-  if (!action && !arg)
-    {
-      g_variant_builder_add (&builder, "v", g_variant_new_string (""));
-    }
-  else
-    {
-      if (action)
-        g_variant_builder_add (&builder, "v", g_variant_new_string (action));
-
-      if (arg)
-        g_variant_builder_add (&builder, "v", g_variant_new_string (arg));
-    }
-
-  array[0] = g_variant_new ("v", g_variant_new ("(sav)", "online-accounts", &builder));
-
-  params2[0] = g_variant_new_string ("launch-panel");
-  params2[1] = g_variant_new_array (G_VARIANT_TYPE ("v"), array, 1);
-  params2[2] = g_variant_new_array (G_VARIANT_TYPE ("{sv}"), NULL, 0);
-
-  return g_variant_new_tuple (params2, 3);
-}
-
-static void
-spawn_goa_with_args (const gchar *action,
-                     const gchar *arg)
-{
-  GDBusProxy *proxy;
-
-  proxy = g_dbus_proxy_new_for_bus_sync (G_BUS_TYPE_SESSION,
-                                         G_DBUS_PROXY_FLAGS_NONE,
-                                         NULL,
-                                         "org.gnome.ControlCenter",
-                                         "/org/gnome/ControlCenter",
-                                         "org.gtk.Actions",
-                                         NULL,
-                                         NULL);
-
-  if (!proxy)
-    {
-      g_warning ("Couldn't open Online Accounts panel");
-      return;
-    }
-
-  g_dbus_proxy_call_sync (proxy,
-                          "Activate",
-                          build_dbus_parameters (action, arg),
-                          G_DBUS_CALL_FLAGS_NONE,
-                          -1,
-                          NULL,
-                          NULL);
-
-  g_clear_object (&proxy);
 }
 
 static void
@@ -776,13 +710,17 @@ settings_button_clicked (GtkWidget *button,
                          gpointer   user_data)
 {
   GcalSourceDialog *self;
+  GApplication *app;
   const gchar *account_id;
 
   self = GCAL_SOURCE_DIALOG (user_data);
   /* Selects the account to open */
   account_id = g_object_get_data (G_OBJECT (self->account_label), "account-id");
 
-  spawn_goa_with_args ((gchar*) account_id, NULL);
+  app = g_application_get_default ();
+  gcal_utils_launch_online_accounts_panel (g_application_get_dbus_connection (app),
+                                           (gchar*) account_id,
+                                           NULL);
 }
 
 static void

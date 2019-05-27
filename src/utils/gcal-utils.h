@@ -121,4 +121,9 @@ gboolean             gcal_translate_child_window_position        (GtkWidget     
                                                                   gdouble              src_y,
                                                                   gdouble             *real_x,
                                                                   gdouble             *real_y);
+
+void                 gcal_utils_launch_online_accounts_panel     (GDBusConnection     *connection,
+                                                                  const gchar         *action,
+                                                                  const gchar         *arg);
+
 #endif /* __GCAL_UTILS_H__ */
