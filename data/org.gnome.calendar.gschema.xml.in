@@ -27,7 +27,7 @@
             <description>Whether weather reports are shown, automatic locations are used and a location-name</description>
         </key>
         <key name="follow-night-light" type="b">
-            <default>true</default>
+            <default>false</default>
             <summary>Follow system night light</summary>
             <description>Use GNOME night light setting to activate night-mode.</description>
         </key>
