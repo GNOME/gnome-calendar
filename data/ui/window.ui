@@ -301,6 +301,15 @@
         <property name="margin">12</property>
         <property name="orientation">vertical</property>
 
+        <!-- About -->
+        <child>
+          <object class="GtkModelButton">
+            <property name="visible">True</property>
+            <property name="action-name">win.open-online-accounts</property>
+            <property name="text" translatable="yes">_Online Accounts…</property>
+          </object>
+        </child>
+
         <!-- Weather -->
         <child>
           <object class="GtkModelButton">

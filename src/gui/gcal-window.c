@@ -392,6 +392,16 @@ on_window_new_event_cb (GSimpleAction *action,
 }
 
 static void
+on_window_open_online_accounts_cb (GSimpleAction *action,
+                                   GVariant      *param,
+                                   gpointer       user_data)
+{
+  GApplication *application = g_application_get_default ();
+
+  gcal_utils_launch_online_accounts_panel (g_application_get_dbus_connection (application), NULL, NULL);
+}
+
+static void
 on_window_previous_date_activated_cb (GSimpleAction *action,
                                       GVariant      *param,
                                       gpointer       user_data)
@@ -1084,6 +1094,7 @@ gcal_window_init (GcalWindow *self)
     {"change-view", on_view_action_activated, "i" },
     {"next-date", on_window_next_date_activated_cb },
     {"new-event", on_window_new_event_cb },
+    {"open-online-accounts", on_window_open_online_accounts_cb },
     {"previous-date", on_window_previous_date_activated_cb },
     {"show-calendars", on_show_calendars_action_activated },
     {"today", on_window_today_activated_cb }
