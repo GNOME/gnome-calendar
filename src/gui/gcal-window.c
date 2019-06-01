@@ -19,6 +19,7 @@
 
 #define G_LOG_DOMAIN "GcalWindow"
 
+#include "gcal-calendar-management-dialog.h"
 #include "gcal-calendar-popover.h"
 #include "gcal-debug.h"
 #include "gcal-edit-dialog.h"
@@ -28,7 +29,6 @@
 #include "gcal-month-view.h"
 #include "gcal-quick-add-popover.h"
 #include "gcal-search-button.h"
-#include "gcal-source-dialog.h"
 #include "gcal-view.h"
 #include "gcal-weather-settings.h"
 #include "gcal-week-view.h"
@@ -138,7 +138,7 @@ struct _GcalWindow
 
   /* calendar management */
   GtkWidget          *calendar_popover;
-  GtkWidget          *source_dialog;
+  GtkWidget          *calendar_management_dialog;
 
   gint                open_edit_dialog_timeout_id;
 
@@ -314,11 +314,12 @@ on_show_calendars_action_activated (GSimpleAction *action,
 {
   GcalWindow *window = GCAL_WINDOW (user_data);
 
-  gcal_source_dialog_set_mode (GCAL_SOURCE_DIALOG (window->source_dialog), GCAL_SOURCE_DIALOG_MODE_NORMAL);
+  gcal_calendar_management_dialog_set_mode (GCAL_CALENDAR_MANAGEMENT_DIALOG (window->calendar_management_dialog),
+                                            GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL);
 
   gtk_widget_hide (window->calendar_popover);
 
-  gtk_widget_show (window->source_dialog);
+  gtk_widget_show (window->calendar_management_dialog);
 }
 
 static void
@@ -874,7 +875,7 @@ gcal_window_constructed (GObject *object)
    */
   g_object_bind_property (self, "context", self->calendar_popover, "context", G_BINDING_DEFAULT);
   g_object_bind_property (self, "context", self->weather_settings, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "context", self->source_dialog, "context", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "context", self->calendar_management_dialog, "context", G_BINDING_DEFAULT);
   g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->year_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
@@ -990,13 +991,13 @@ gcal_window_class_init (GcalWindowClass *klass)
   GObjectClass *object_class;
   GtkWidgetClass *widget_class;
 
+  g_type_ensure (GCAL_TYPE_CALENDAR_MANAGEMENT_DIALOG);
   g_type_ensure (GCAL_TYPE_CALENDAR_POPOVER);
   g_type_ensure (GCAL_TYPE_EDIT_DIALOG);
   g_type_ensure (GCAL_TYPE_MANAGER);
   g_type_ensure (GCAL_TYPE_MONTH_VIEW);
   g_type_ensure (GCAL_TYPE_QUICK_ADD_POPOVER);
   g_type_ensure (GCAL_TYPE_SEARCH_BUTTON);
-  g_type_ensure (GCAL_TYPE_SOURCE_DIALOG);
   g_type_ensure (GCAL_TYPE_WEATHER_SETTINGS);
   g_type_ensure (GCAL_TYPE_WEEK_VIEW);
   g_type_ensure (GCAL_TYPE_YEAR_VIEW);
@@ -1052,7 +1053,7 @@ gcal_window_class_init (GcalWindowClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, month_view);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, quick_add_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, search_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalWindow, source_dialog);
+  gtk_widget_class_bind_template_child (widget_class, GcalWindow, calendar_management_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, today_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_overlay);
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, views_stack);

@@ -2,6 +2,7 @@
 <gresources>
   <gresource prefix="/org/gnome/calendar">
     <file alias="alarm-row.ui" compressed="true">ui/alarm-row.ui</file>
+    <file alias="calendar-management-dialog.ui" compressed="true">ui/calendar-management-dialog.ui</file>
     <file alias="calendar-popover.ui" compressed="true">ui/calendar-popover.ui</file>
     <file alias="calendar-row.ui" compressed="true">ui/calendar-row.ui</file>
     <file alias="date-chooser.ui" compressed="true">ui/date-chooser.ui</file>
@@ -15,7 +16,6 @@
     <file alias="online-account-row.ui" compressed="true">ui/online-account-row.ui</file>
     <file alias="quick-add-popover.ui" compressed="true">ui/quick-add-popover.ui</file>
     <file alias="search-popover.ui" compressed="true">ui/search-popover.ui</file>
-    <file alias="source-dialog.ui" compressed="true">ui/source-dialog.ui</file>
     <file alias="time-selector.ui" compressed="true">ui/time-selector.ui</file>
     <file alias="weather-settings.ui" compressed="true">ui/weather-settings.ui</file>
     <file alias="week-header.ui" compressed="true">ui/week-header.ui</file>

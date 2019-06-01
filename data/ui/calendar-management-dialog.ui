@@ -2,7 +2,7 @@
 <!-- Generated with glade 3.18.1 -->
 <interface>
   <requires lib="gtk+" version="3.15"/>
-  <template class="GcalSourceDialog" parent="GtkDialog">
+  <template class="GcalCalendarManagementDialog" parent="GtkDialog">
     <property name="width_request">450</property>
     <property name="can_focus">False</property>
     <property name="border_width">0</property>
@@ -12,7 +12,7 @@
     <property name="modal">True</property>
     <property name="destroy_with_parent">True</property>
     <property name="modal">True</property>
-    <signal name="response" handler="response_signal" object="GcalSourceDialog" swapped="no"/>
+    <signal name="response" handler="response_signal" object="GcalCalendarManagementDialog" swapped="no"/>
     <child internal-child="vbox">
       <object class="GtkBox" id="vbox">
         <property name="orientation">vertical</property>
@@ -26,7 +26,7 @@
                 <property name="halign">center</property>
                 <property name="valign">start</property>
                 <property name="transition_duration">100</property>
-                <signal name="notify::child-revealed" handler="notification_child_revealed_changed" object="GcalSourceDialog" swapped="no"/>
+                <signal name="notify::child-revealed" handler="notification_child_revealed_changed" object="GcalCalendarManagementDialog" swapped="no"/>
                 <child>
                   <object class="GtkFrame">
                     <property name="visible">True</property>
@@ -55,7 +55,7 @@
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="no_show_all">True</property>
-                            <signal name="clicked" handler="undo_remove_action" object="GcalSourceDialog" swapped="no"/>
+                            <signal name="clicked" handler="undo_remove_action" object="GcalCalendarManagementDialog" swapped="no"/>
                             <style>
                               <class name="text-button"/>
                             </style>
@@ -72,7 +72,7 @@
                             <property name="receives_default">True</property>
                             <property name="relief">none</property>
                             <property name="focus_on_click">False</property>
-                            <signal name="clicked" handler="hide_notification" object="GcalSourceDialog" swapped="yes"/>
+                            <signal name="clicked" handler="hide_notification" object="GcalCalendarManagementDialog" swapped="yes"/>
                             <child>
                               <object class="GtkImage">
                                 <property name="visible">True</property>
@@ -105,7 +105,7 @@
                 <property name="vexpand">True</property>
                 <property name="vhomogeneous">False</property>
                 <property name="transition_type">crossfade</property>
-                <signal name="notify::visible-child-name" handler="stack_visible_child_name_changed" object="GcalSourceDialog" swapped="no"/>
+                <signal name="notify::visible-child-name" handler="stack_visible_child_name_changed" object="GcalCalendarManagementDialog" swapped="no"/>
                 <child>
                   <object class="GtkScrolledWindow" id="main_scrolledwindow">
                     <property name="visible">True</property>
@@ -150,7 +150,7 @@
                                       <object class="GtkListBox" id="calendars_listbox">
                                         <property name="visible">True</property>
                                         <property name="selection_mode">none</property>
-                                        <signal name="row-activated" handler="calendar_listbox_row_activated" object="GcalSourceDialog" swapped="no"/>
+                                        <signal name="row-activated" handler="calendar_listbox_row_activated" object="GcalCalendarManagementDialog" swapped="no"/>
                                         <style>
                                           <class name="calendars-list"/>
                                         </style>
@@ -223,7 +223,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="notify::active" handler="default_check_toggled" object="GcalSourceDialog" swapped="no"/>
+                        <signal name="notify::active" handler="default_check_toggled" object="GcalCalendarManagementDialog" swapped="no"/>
                         <child>
                           <object class="GtkLabel" id="default_check_label">
                             <property name="visible">True</property>
@@ -249,7 +249,7 @@
                         <property name="margin_top">6</property>
                         <property name="hexpand">True</property>
                         <property name="vexpand">True</property>
-                        <signal name="clicked" handler="remove_button_clicked" object="GcalSourceDialog" swapped="no"/>
+                        <signal name="clicked" handler="remove_button_clicked" object="GcalCalendarManagementDialog" swapped="no"/>
                         <style>
                           <class name="destructive-action"/>
                         </style>
@@ -265,7 +265,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="draw_indicator">True</property>
-                        <signal name="notify::active" handler="calendar_visible_check_toggled" object="GcalSourceDialog" swapped="no"/>
+                        <signal name="notify::active" handler="calendar_visible_check_toggled" object="GcalCalendarManagementDialog" swapped="no"/>
                         <child>
                           <object class="GtkLabel" id="display_calendar_check_label">
                             <property name="visible">True</property>
@@ -285,7 +285,7 @@
                         <property name="can_focus">True</property>
                         <property name="receives_default">True</property>
                         <property name="halign">start</property>
-                        <signal name="color-set" handler="color_set" object="GcalSourceDialog" swapped="no"/>
+                        <signal name="color-set" handler="color_set" object="GcalCalendarManagementDialog" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -297,7 +297,7 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="hexpand">True</property>
-                        <signal name="notify::text" handler="name_entry_text_changed" object="GcalSourceDialog" swapped="no"/>
+                        <signal name="notify::text" handler="name_entry_text_changed" object="GcalCalendarManagementDialog" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -377,7 +377,7 @@
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
-                            <signal name="clicked" handler="settings_button_clicked" object="GcalSourceDialog" swapped="no"/>
+                            <signal name="clicked" handler="settings_button_clicked" object="GcalCalendarManagementDialog" swapped="no"/>
                           </object>
                           <packing>
                             <property name="position">1</property>
@@ -421,7 +421,7 @@
                         <property name="use_markup">True</property>
                         <property name="wrap">True</property>
                         <property name="xalign">0</property>
-                        <signal name="activate-link" handler="description_label_link_activated" object="GcalSourceDialog" swapped="no"/>
+                        <signal name="activate-link" handler="description_label_link_activated" object="GcalCalendarManagementDialog" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">0</property>
@@ -448,8 +448,8 @@
                         <property name="visible">True</property>
                         <property name="can_focus">True</property>
                         <property name="hexpand">True</property>
-                        <signal name="notify::text" handler="url_entry_text_changed" object="GcalSourceDialog" swapped="no"/>
-                        <signal name="activate" handler="calendar_address_activated" object="GcalSourceDialog" swapped="no"/>
+                        <signal name="notify::text" handler="url_entry_text_changed" object="GcalCalendarManagementDialog" swapped="no"/>
+                        <signal name="activate" handler="calendar_address_activated" object="GcalCalendarManagementDialog" swapped="no"/>
                       </object>
                       <packing>
                         <property name="left_attach">1</property>
@@ -537,7 +537,7 @@
           <object class="GtkButton" id="back_button">
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="back_button_clicked" object="GcalSourceDialog" swapped="no"/>
+            <signal name="clicked" handler="back_button_clicked" object="GcalCalendarManagementDialog" swapped="no"/>
             <child>
               <object class="GtkImage" id="back_button_image">
                 <property name="visible">True</property>
@@ -551,7 +551,7 @@
             <property name="label" translatable="yes">Cancel</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="cancel_button_clicked" object="GcalSourceDialog" swapped="no"/>
+            <signal name="clicked" handler="cancel_button_clicked" object="GcalCalendarManagementDialog" swapped="no"/>
           </object>
           <packing>
             <property name="position">2</property>
@@ -563,7 +563,7 @@
             <property name="sensitive">False</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="add_button_clicked" object="GcalSourceDialog" swapped="no"/>
+            <signal name="clicked" handler="add_button_clicked" object="GcalCalendarManagementDialog" swapped="no"/>
             <style>
               <class name="suggested-action"/>
             </style>
@@ -578,7 +578,7 @@
   </template>
   <object class="GtkDialog" id="credentials_dialog">
     <property name="type_hint">dialog</property>
-    <property name="transient_for">GcalSourceDialog</property>
+    <property name="transient_for">GcalCalendarManagementDialog</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="credentials-dialog-vbox1">
         <property name="orientation">vertical</property>
@@ -659,7 +659,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="credential_button_clicked" object="GcalSourceDialog" swapped="no"/>
+            <signal name="clicked" handler="credential_button_clicked" object="GcalCalendarManagementDialog" swapped="no"/>
           </object>
         </child>
         <child>
@@ -668,7 +668,7 @@
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
-            <signal name="clicked" handler="credential_button_clicked" object="GcalSourceDialog" swapped="no"/>
+            <signal name="clicked" handler="credential_button_clicked" object="GcalCalendarManagementDialog" swapped="no"/>
             <style>
               <class name="suggested-action"/>
             </style>

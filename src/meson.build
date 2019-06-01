@@ -102,7 +102,7 @@ sources = files(
   'core/gcal-shell-search-provider.c',
   'core/gcal-timer.c',
   'core/gcal-time-zone-monitor.c',
-  'gui/calendar-management/gcal-source-dialog.c',
+  'gui/calendar-management/gcal-calendar-management-dialog.c',
   'gui/gcal-application.c',
   'gui/gcal-calendar-popover.c',
   'gui/gcal-date-chooser.c',

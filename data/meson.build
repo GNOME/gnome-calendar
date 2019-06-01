@@ -83,6 +83,7 @@ gresource = files('calendar.gresource.xml')
 resource_data = files(
   'theme/Adwaita.css',
   'ui/alarm-row.ui',
+  'ui/calendar-management-dialog.ui',
   'ui/calendar-row.ui',
   'ui/date-chooser.ui',
   'ui/date-selector.ui',
@@ -95,7 +96,6 @@ resource_data = files(
   'ui/multi-choice.ui',
   'ui/quick-add-popover.ui',
   'ui/search-popover.ui',
-  'ui/source-dialog.ui',
   'ui/time-selector.ui',
   'ui/weather-settings.ui',
   'ui/week-header.ui',

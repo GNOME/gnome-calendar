@@ -282,7 +282,7 @@
     <signal name="edit-event" handler="edit_event" object="GcalWindow" swapped="no"/>
     <signal name="closed" handler="close_new_event_widget" object="GcalWindow" swapped="no"/>
   </object>
-  <object class="GcalSourceDialog" id="source_dialog">
+  <object class="GcalCalendarManagementDialog" id="calendar_management_dialog">
     <property name="visible">False</property>
     <property name="transient_for">GcalWindow</property>
     <signal name="delete-event" handler="gtk_widget_hide_on_delete" object="GcalWindow" swapped="no" />
