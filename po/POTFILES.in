@@ -20,12 +20,12 @@ data/ui/year-view.ui
 src/main.c
 src/core/gcal-event.c
 src/core/gcal-manager.c
+src/gui/calendar-management/gcal-source-dialog.c
 src/gui/gcal-application.c
 src/gui/gcal-date-selector.c
 src/gui/gcal-edit-dialog.c
 src/gui/gcal-event-widget.c
 src/gui/gcal-quick-add-popover.c
-src/gui/gcal-source-dialog.c
 src/gui/gcal-time-selector.c
 src/gui/gcal-window.c
 src/utils/gcal-utils.c
