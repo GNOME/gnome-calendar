@@ -14,6 +14,7 @@
     <file alias="month-popover.ui" compressed="true">ui/month-popover.ui</file>
     <file alias="month-view.ui" compressed="true">ui/month-view.ui</file>
     <file alias="multi-choice.ui" compressed="true">ui/multi-choice.ui</file>
+    <file alias="new-calendar-page.ui" compressed="true">ui/new-calendar-page.ui</file>
     <file alias="online-account-row.ui" compressed="true">ui/online-account-row.ui</file>
     <file alias="quick-add-popover.ui" compressed="true">ui/quick-add-popover.ui</file>
     <file alias="search-popover.ui" compressed="true">ui/search-popover.ui</file>

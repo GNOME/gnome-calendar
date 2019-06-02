@@ -95,6 +95,7 @@ resource_data = files(
   'ui/month-popover.ui',
   'ui/month-view.ui',
   'ui/multi-choice.ui',
+  'ui/new-calendar-page.ui',
   'ui/quick-add-popover.ui',
   'ui/search-popover.ui',
   'ui/time-selector.ui',

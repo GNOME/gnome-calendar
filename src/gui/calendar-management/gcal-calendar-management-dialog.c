@@ -23,6 +23,7 @@
 #include "gcal-calendar-management-dialog.h"
 #include "gcal-calendar-management-page.h"
 #include "gcal-calendars-page.h"
+#include "gcal-new-calendar-page.h"
 #include "gcal-utils.h"
 
 #include <glib/gi18n.h>
@@ -46,6 +47,7 @@
 typedef enum
 {
   GCAL_PAGE_CALENDARS,
+  GCAL_PAGE_NEW_CALENDAR,
   N_PAGES,
 } GcalPageType;
 
@@ -1390,6 +1392,7 @@ setup_context (GcalCalendarManagementDialog *self)
     GType        gtype;
   } pages[] = {
     { GCAL_PAGE_CALENDARS, GCAL_TYPE_CALENDARS_PAGE },
+    { GCAL_PAGE_NEW_CALENDAR, GCAL_TYPE_NEW_CALENDAR_PAGE },
   };
   gint i;
 
