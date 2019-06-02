@@ -85,6 +85,7 @@ resource_data = files(
   'ui/alarm-row.ui',
   'ui/calendar-management-dialog.ui',
   'ui/calendar-row.ui',
+  'ui/calendars-page.ui',
   'ui/date-chooser.ui',
   'ui/date-selector.ui',
   'ui/edit-dialog.ui',

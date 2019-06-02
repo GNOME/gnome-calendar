@@ -104,6 +104,7 @@ sources = files(
   'core/gcal-time-zone-monitor.c',
   'gui/calendar-management/gcal-calendar-management-dialog.c',
   'gui/calendar-management/gcal-calendar-management-page.c',
+  'gui/calendar-management/gcal-calendars-page.c',
   'gui/gcal-application.c',
   'gui/gcal-calendar-popover.c',
   'gui/gcal-date-chooser.c',

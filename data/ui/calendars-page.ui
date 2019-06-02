@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalCalendarsPage" parent="GtkBox">
+    <property name="visible">True</property>
+    <property name="orientation">vertical</property>
+    <child>
+      <object class="GtkOverlay">
+        <property name="visible">True</property>
+
+        <child type="overlay">
+          <object class="GtkRevealer" id="notification_revealer">
+            <property name="visible">True</property>
+            <property name="halign">center</property>
+            <property name="valign">start</property>
+            <child>
+              <object class="GtkFrame">
+                <property name="visible">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="spacing">12</property>
+                    <child>
+                      <object class="GtkLabel" id="notification_label">
+                        <property name="visible">True</property>
+                        <property name="use_markup">True</property>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="notification_action_button">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Undo</property>
+                        <signal name="clicked" handler="on_undo_remove_button_clicked_cb" object="GcalCalendarsPage" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="relief">none</property>
+                        <property name="focus_on_click">False</property>
+                        <signal name="clicked" handler="on_close_notification_button_clicked_cb" object="GcalCalendarsPage" swapped="no"/>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="icon_name">window-close-symbolic</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <style>
+                  <class name="app-notification"/>
+                </style>
+              </object>
+            </child>
+          </object>
+        </child>
+
+        <child>
+          <object class="GtkScrolledWindow">
+            <property name="visible">True</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <property name="hscrollbar_policy">never</property>
+            <property name="max_content_height">600</property>
+            <property name="propagate_natural_height">True</property>
+
+
+            <child>
+              <object class="GtkFrame">
+                <property name="visible">True</property>
+                <property name="margin-top">24</property>
+                <property name="margin-bottom">24</property>
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <child>
+                  <object class="GtkListBox" id="listbox">
+                    <property name="visible">True</property>
+                    <property name="selection-mode">none</property>
+                    <signal name="row-activated" handler="on_listbox_row_activated_cb" object="GcalCalendarsPage" swapped="no" />
+                    <style>
+                      <class name="calendars-list"/>
+                    </style>
+
+                    <child>
+                      <object class="GtkListBoxRow" id="add_calendar_row">
+                        <property name="visible">True</property>
+
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="expand">True</property>
+                            <property name="xalign">0.5</property>
+                            <property name="yalign">0.5</property>
+                            <property name="label" translatable="yes">Add Calendar…</property>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+
+  <!-- Size group for the listbox rows -->
+  <object class="GtkSizeGroup" id="sizegroup">
+    <property name="mode">vertical</property>
+    <widgets>
+      <widget name="add_calendar_row" />
+    </widgets>
+  </object>
+</interface>
