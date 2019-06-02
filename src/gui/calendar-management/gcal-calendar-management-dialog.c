@@ -1336,9 +1336,51 @@ remove_button_clicked (GtkWidget *button,
 }
 #endif
 
+static void
+set_page (GcalCalendarManagementDialog *self,
+          const gchar                  *page_name,
+          gpointer                      page_data)
+{
+  GcalCalendarManagementPage *current_page;
+  guint i;
+
+  GCAL_TRACE_MSG ("Switching to page '%s'", page_name);
+
+  current_page = (GcalCalendarManagementPage*) gtk_stack_get_visible_child (GTK_STACK (self->stack));
+
+  for (i = 0; i < N_PAGES; i++)
+    {
+      GcalCalendarManagementPage *page = self->pages[i];
+
+      if (g_strcmp0 (page_name, gcal_calendar_management_page_get_name (page)) != 0)
+        continue;
+
+      gtk_stack_set_visible_child (GTK_STACK (self->stack), GTK_WIDGET (page));
+      gtk_header_bar_set_title (GTK_HEADER_BAR (self->headerbar),
+                                gcal_calendar_management_page_get_title (page));
+      gcal_calendar_management_page_activate (page, page_data);
+      break;
+    }
+
+  gcal_calendar_management_page_deactivate (current_page);
+}
+
 /*
  * Callbacks
  */
+
+static void
+on_page_switched_cb (GcalCalendarManagementPage   *page,
+                     const gchar                  *next_page,
+                     gpointer                      page_data,
+                     GcalCalendarManagementDialog *self)
+{
+  GCAL_ENTRY;
+
+  set_page (self, next_page, page_data);
+
+  GCAL_EXIT;
+}
 
 static void
 setup_context (GcalCalendarManagementDialog *self)
@@ -1353,7 +1395,7 @@ setup_context (GcalCalendarManagementDialog *self)
 
   GCAL_ENTRY;
 
-  for (i = 0; i < G_N_ELEMENTS (pages); i++)
+  for (i = 0; i < N_PAGES; i++)
     {
       GcalCalendarManagementPage *page;
 
@@ -1367,8 +1409,16 @@ setup_context (GcalCalendarManagementDialog *self)
                             gcal_calendar_management_page_get_name (page),
                             gcal_calendar_management_page_get_title (page));
 
-      self->pages[pages[i].page_type] = page;
+      g_signal_connect_object (page,
+                               "switch-page",
+                               G_CALLBACK (on_page_switched_cb),
+                               self,
+                               0);
+
+      self->pages[i] = page;
     }
+
+  set_page (self, "calendars", NULL);
 
   GCAL_EXIT;
 }
