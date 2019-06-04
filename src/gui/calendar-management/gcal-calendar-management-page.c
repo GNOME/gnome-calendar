@@ -106,3 +106,14 @@ gcal_calendar_management_page_switch_page (GcalCalendarManagementPage *self,
 
   g_signal_emit (self, signals[SWITCH_PAGE], 0, page_name, page_data);
 }
+
+GtkHeaderBar*
+gcal_calendar_management_page_get_titlebar (GcalCalendarManagementPage *self)
+{
+  GtkWidget *toplevel;
+
+  toplevel = gtk_widget_get_toplevel (GTK_WIDGET (self));
+  g_assert (toplevel != NULL);
+
+  return GTK_HEADER_BAR (gtk_window_get_titlebar (GTK_WINDOW (toplevel)));
+}
