@@ -211,4 +211,23 @@
     </child>
   </object>
 
+  <!-- Headerbar buttons -->
+  <object class="GtkButton" id="cancel_button">
+    <property name="visible">True</property>
+    <property name="label" translatable="yes">Cancel</property>
+    <property name="can_focus">True</property>
+    <property name="receives_default">True</property>
+    <signal name="clicked" handler="on_cancel_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
+  </object>
+  <object class="GtkButton" id="add_button">
+    <property name="visible">True</property>
+    <property name="label" translatable="yes">Add</property>
+    <property name="sensitive">False</property>
+    <property name="can_focus">True</property>
+    <property name="receives_default">True</property>
+    <signal name="clicked" handler="on_add_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
+    <style>
+      <class name="suggested-action"/>
+    </style>
+  </object>
 </interface>

@@ -57,9 +57,7 @@ struct _GcalCalendarManagementDialog
 {
   GtkDialog           parent;
 
-  GtkWidget          *add_button;
   GtkWidget          *back_button;
-  GtkWidget          *cancel_button;
   GtkWidget          *headerbar;
   GtkWidget          *notebook;
   GtkWidget          *stack;
@@ -86,9 +84,6 @@ typedef enum
   GCAL_ACCOUNT_TYPE_NOT_SUPPORTED
 } GcalAccountType;
 
-static void       add_button_clicked                    (GtkWidget            *button,
-                                                         gpointer              user_data);
-
 static void       action_widget_activated               (GtkWidget            *widget,
                                                          gpointer              user_data);
 
@@ -101,10 +96,6 @@ static void       calendar_file_selected                (GtkFileChooser       *b
 static void       calendar_visible_check_toggled        (GObject             *object,
                                                          GParamSpec          *pspec,
                                                          gpointer             user_data);
-
-static void       cancel_button_clicked                 (GtkWidget            *button,
-                                                         gpointer              user_data);
-
 
 static void       on_file_activated                     (GSimpleAction       *action,
                                                          GVariant            *param,
@@ -223,15 +214,6 @@ calendar_visible_check_toggled (GObject    *object,
 }
 
 static void
-cancel_button_clicked (GtkWidget *button,
-                       gpointer   user_data)
-{
-  GcalCalendarManagementDialog *self = GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data);
-
-  gcal_calendar_management_dialog_set_mode (self, GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL);
-}
-
-static void
 response_signal (GtkDialog *dialog,
                  gint       response_id,
                  gpointer   user_data)
@@ -340,7 +322,7 @@ calendar_file_selected (GtkFileChooser *button,
   gcal_calendar_management_dialog_set_source (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data), source);
   gcal_calendar_management_dialog_set_mode (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data), GCAL_CALENDAR_MANAGEMENT_MODE_CREATE);
 
-  gtk_widget_set_sensitive (self->add_button, TRUE);
+  //gtk_widget_set_sensitive (self->add_button, TRUE);
 }
 
 static void
@@ -404,7 +386,7 @@ on_local_activated (GSimpleAction *action,
   gcal_calendar_management_dialog_set_source (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data), source);
   gcal_calendar_management_dialog_set_mode (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data), GCAL_CALENDAR_MANAGEMENT_MODE_CREATE);
 
-  gtk_widget_set_sensitive (self->add_button, TRUE);
+  //gtk_widget_set_sensitive (self->add_button, TRUE);
 }
 
 static void
@@ -598,9 +580,7 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
   /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/calendar-management-dialog.ui");
 
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, add_button);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, back_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, headerbar);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, stack);
 
@@ -609,7 +589,6 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
   gtk_widget_class_bind_template_callback (widget_class, back_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
   gtk_widget_class_bind_template_callback (widget_class, calendar_visible_check_toggled);
-  gtk_widget_class_bind_template_callback (widget_class, cancel_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
 }
 
@@ -645,8 +624,6 @@ gcal_calendar_management_dialog_set_mode (GcalCalendarManagementDialog     *dial
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (dialog->headerbar), NULL);
       gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (dialog->headerbar), FALSE);
       gtk_stack_set_visible_child (GTK_STACK (dialog->stack), GTK_WIDGET (dialog->pages[GCAL_PAGE_NEW_CALENDAR]));
-      gtk_widget_set_visible (dialog->add_button, TRUE);
-      gtk_widget_set_visible (dialog->cancel_button, TRUE);
       break;
 
     case GCAL_CALENDAR_MANAGEMENT_MODE_EDIT:
