@@ -63,31 +63,12 @@ struct _GcalCalendarManagementDialog
   GtkWidget          *headerbar;
   GtkWidget          *notebook;
   GtkWidget          *stack;
-  GtkWidget          *web_source_grid;
-
-  /* new source details */
-  GtkWidget          *calendar_address_entry;
-  GtkWidget          *web_sources_listbox;
-  GtkWidget          *web_sources_revealer;
-
-  /* credentials dialog */
-  GtkWidget          *credentials_cancel_button;
-  GtkWidget          *credentials_connect_button;
-  GtkWidget          *credentials_dialog;
-  GtkWidget          *credentials_password_entry;
-  GtkWidget          *credentials_user_entry;
-
-  gint                calendar_address_id;
-  gint                validate_url_resource_id;
 
   /* flags */
   GcalCalendarManagementDialogMode mode;
   ESource            *source;
-  GList              *remote_sources;
-  GcalCalendar       *removed_calendar;
   ESource            *old_default_source;
   GBinding           *title_bind;
-  gboolean            prompt_password;
 
   /* auxiliary */
   GSimpleActionGroup *action_group;
@@ -104,8 +85,6 @@ typedef enum
   GCAL_ACCOUNT_TYPE_OWNCLOUD,
   GCAL_ACCOUNT_TYPE_NOT_SUPPORTED
 } GcalAccountType;
-
-#define ENTRY_PROGRESS_TIMEOUT            100
 
 static void       add_button_clicked                    (GtkWidget            *button,
                                                          gpointer              user_data);
@@ -126,18 +105,6 @@ static void       calendar_visible_check_toggled        (GObject             *ob
 static void       cancel_button_clicked                 (GtkWidget            *button,
                                                          gpointer              user_data);
 
-static void       clear_pages                           (GcalCalendarManagementDialog     *dialog);
-
-static void       color_set                             (GtkColorButton       *button,
-                                                         gpointer              user_data);
-
-static void       default_check_toggled                 (GObject             *object,
-                                                         GParamSpec          *pspec,
-                                                         gpointer             user_data);
-
-static gboolean   description_label_link_activated      (GtkWidget            *widget,
-                                                         gchar                *uri,
-                                                         gpointer              user_data);
 
 static void       on_file_activated                     (GSimpleAction       *action,
                                                          GVariant            *param,
@@ -153,22 +120,6 @@ static void       on_web_activated                      (GSimpleAction       *ac
 
 static void       response_signal                       (GtkDialog           *dialog,
                                                          gint                 response_id,
-                                                         gpointer             user_data);
-
-static gboolean   pulse_web_entry                       (GcalCalendarManagementDialog    *dialog);
-
-static void       url_entry_text_changed                (GObject             *object,
-                                                         GParamSpec          *pspec,
-                                                         gpointer             user_data);
-
-static gboolean   validate_url_cb                       (GcalCalendarManagementDialog    *dialog);
-
-static gint       prompt_credentials                    (GcalCalendarManagementDialog    *dialog,
-                                                         gchar              **username,
-                                                         gchar              **password);
-
-static void       discover_sources_cb                   (GObject             *source,
-                                                         GAsyncResult        *result,
                                                          gpointer             user_data);
 
 G_DEFINE_TYPE (GcalCalendarManagementDialog, gcal_calendar_management_dialog, GTK_TYPE_DIALOG)
@@ -216,7 +167,7 @@ add_button_clicked (GtkWidget *button,
       gcal_calendar_management_dialog_set_mode (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data),
                                                 GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL);
     }
-
+#if 0
   if (self->remote_sources != NULL)
     {
       GList *l;
@@ -232,6 +183,7 @@ add_button_clicked (GtkWidget *button,
       gcal_calendar_management_dialog_set_mode (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data),
                                                 GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL);
     }
+#endif
 }
 
 static void
@@ -276,90 +228,7 @@ cancel_button_clicked (GtkWidget *button,
 {
   GcalCalendarManagementDialog *self = GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data);
 
-  /* Destroy the ongoing created source */
-  g_clear_object (&self->source);
-
-  /* Cleanup detected remote sources that weren't added */
-  if (self->remote_sources != NULL)
-    {
-      g_list_free_full (self->remote_sources, g_object_unref);
-      self->remote_sources = NULL;
-    }
-
-  gcal_calendar_management_dialog_set_mode (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data), GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL);
-}
-
-static void
-clear_pages (GcalCalendarManagementDialog *dialog)
-{
-  GList *list;
-
-  gtk_entry_set_text (GTK_ENTRY (dialog->calendar_address_entry), "");
-  gtk_widget_set_sensitive (dialog->add_button, FALSE);
-
-  /* Remove discovered web sources (if any) */
-  list = gtk_container_get_children (GTK_CONTAINER (dialog->web_sources_listbox));
-  g_list_free_full (list, (GDestroyNotify) gtk_widget_destroy);
-
-  gtk_revealer_set_reveal_child (GTK_REVEALER (dialog->web_sources_revealer), FALSE);
-  gtk_widget_hide (dialog->web_sources_revealer);
-}
-
-static void
-color_set (GtkColorButton *button,
-           gpointer        user_data)
-{
-  GcalCalendarManagementDialog *self;
-  ESourceSelectable *extension;
-  GdkRGBA color;
-
-  self = GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data);
-  gtk_color_chooser_get_rgba (GTK_COLOR_CHOOSER (button), &color);
-
-  extension = E_SOURCE_SELECTABLE (e_source_get_extension (self->source, E_SOURCE_EXTENSION_CALENDAR));
-  e_source_selectable_set_color (extension, gdk_rgba_to_string (&color));
-}
-
-static void
-default_check_toggled (GObject    *object,
-                       GParamSpec *pspec,
-                       gpointer    user_data)
-{
-  GcalCalendarManagementDialog *self = GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data);
-  GcalManager *manager;
-  ESource *new_default_source;
-
-  manager = gcal_context_get_manager (self->context);
-
-  /* Retrieve the current default source */
-  if (self->old_default_source == NULL)
-    {
-      GcalCalendar *default_calendar = gcal_manager_get_default_calendar (manager);
-      self->old_default_source = gcal_calendar_get_source (default_calendar);
-    }
-
-  /**
-   * Keeps toggling between the
-   * current source and the previous
-   * default source.
-   */
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (object)))
-    new_default_source = self->source;
-  else
-    new_default_source = self->old_default_source;
-
-  gcal_manager_set_default_calendar (manager,
-                                     gcal_manager_get_calendar_from_source (manager, new_default_source));
-}
-
-static gboolean
-description_label_link_activated (GtkWidget *widget,
-                                  gchar     *uri,
-                                  gpointer   user_data)
-{
-  GApplication *app = g_application_get_default ();
-  gcal_utils_launch_online_accounts_panel (g_application_get_dbus_connection (app), NULL, NULL);
-  return TRUE;
+  gcal_calendar_management_dialog_set_mode (self, GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL);
 }
 
 static void
@@ -378,7 +247,7 @@ response_signal (GtkDialog *dialog,
       gcal_manager_save_source (manager, self->source);
       g_clear_object (&self->source);
     }
-
+#if 0
   /* Commit the new source; save the current page's source */
   if (self->mode == GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL && response_id == GTK_RESPONSE_APPLY && self->remote_sources != NULL)
       {
@@ -398,43 +267,10 @@ response_signal (GtkDialog *dialog,
       g_list_free_full (self->remote_sources, g_object_unref);
       self->remote_sources = NULL;
     }
-
+#endif
   gtk_widget_hide (GTK_WIDGET (dialog));
 }
 
-#if 0
-static void
-stack_visible_child_name_changed (GObject    *object,
-                                  GParamSpec *pspec,
-                                  gpointer    user_data)
-{
-  GcalCalendarManagementDialog *self;
-  GcalCalendar *calendar;
-  GcalManager *manager;
-  GtkWidget *visible_child;
-
-  self = GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data);
-  manager = gcal_context_get_manager (self->context);
-  calendar = gcal_manager_get_calendar_from_source (manager, self->source);
-  visible_child = gtk_stack_get_visible_child (GTK_STACK (object));
-
-  if (visible_child == self->main_scrolledwindow)
-    {
-      gtk_header_bar_set_title (GTK_HEADER_BAR (self->headerbar), _("Calendar Settings"));
-      gtk_header_bar_set_subtitle (GTK_HEADER_BAR (self->headerbar), NULL);
-      gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (self->headerbar), TRUE);
-      gtk_widget_set_visible (self->add_button, FALSE);
-      gtk_widget_set_visible (self->cancel_button, FALSE);
-      gtk_widget_set_visible (self->back_button, FALSE);
-    }
-}
-#endif
-
-/* calendar_path_to_name_suggestion:
- * @file: a calendar file reference.
- *
- * Returns: (transfer full): A calendar name.
- */
 static gchar*
 calendar_path_to_name_suggestion (GFile *file)
 {
@@ -507,62 +343,6 @@ calendar_file_selected (GtkFileChooser *button,
   gtk_widget_set_sensitive (self->add_button, TRUE);
 }
 
-static gboolean
-pulse_web_entry (GcalCalendarManagementDialog *dialog)
-{
-  gtk_entry_progress_pulse (GTK_ENTRY (dialog->calendar_address_entry));
-
-  dialog->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
-
-  return FALSE;
-}
-
-static void
-url_entry_text_changed (GObject    *object,
-                        GParamSpec *pspec,
-                        gpointer    user_data)
-{
-  GcalCalendarManagementDialog *self;
-  const gchar* text;
-
-  self = GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data);
-  text = gtk_entry_get_text (GTK_ENTRY (self->calendar_address_entry));
-
-  if (self->calendar_address_id != 0)
-    {
-      g_source_remove (self->calendar_address_id);
-      self->calendar_address_id = 0;
-
-      gtk_entry_set_progress_fraction (GTK_ENTRY (self->calendar_address_entry), 0);
-    }
-
-  if (self->validate_url_resource_id != 0)
-    {
-      g_source_remove (self->validate_url_resource_id);
-      self->validate_url_resource_id = 0;
-    }
-
-  if (g_utf8_strlen (text, -1) != 0)
-    {
-      /* Remove any previous unreleased resource */
-      if (self->validate_url_resource_id != 0)
-        g_source_remove (self->validate_url_resource_id);
-
-      /*
-       * At first, don't bother the user with
-       * the login prompt. Only prompt it when
-       * it fails.
-       */
-      self->prompt_password = FALSE;
-
-      self->validate_url_resource_id = g_timeout_add (500, (GSourceFunc) validate_url_cb, user_data);
-    }
-  else
-    {
-      gtk_entry_set_progress_fraction (GTK_ENTRY (self->calendar_address_entry), 0);
-    }
-}
-
 static void
 on_file_activated (GSimpleAction *action,
                    GVariant      *param,
@@ -633,407 +413,6 @@ on_web_activated (GSimpleAction *action,
                   gpointer       user_data)
 {
   gcal_calendar_management_dialog_set_mode (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data), GCAL_CALENDAR_MANAGEMENT_MODE_CREATE_WEB);
-}
-
-static void
-calendar_address_activated (GtkEntry *entry,
-                            gpointer  user_data)
-{
-  g_assert (GCAL_IS_CALENDAR_MANAGEMENT_DIALOG (user_data));
-
-  validate_url_cb (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data));
-}
-
-static gboolean
-validate_url_cb (GcalCalendarManagementDialog *dialog)
-{
-  ESourceAuthentication *auth;
-  ENamedParameters *credentials;
-  ESourceExtension *ext;
-  ESourceWebdav *webdav;
-  ESource *source;
-  g_autoptr (SoupURI) soup_uri;
-  const gchar *uri;
-  const gchar *host, *path;
-  gboolean is_file;
-
-  dialog->validate_url_resource_id = 0;
-  soup_uri = NULL;
-  host = path = NULL;
-  is_file = FALSE;
-
-  /**
-   * Remove any reminescent ESources
-   * cached before.
-   */
-  if (dialog->remote_sources != NULL)
-    {
-      g_list_free_full (dialog->remote_sources, g_object_unref);
-      dialog->remote_sources = NULL;
-    }
-
-  /* Remove previous results */
-  g_list_free_full (gtk_container_get_children (GTK_CONTAINER (dialog->web_sources_listbox)),
-                    (GDestroyNotify) gtk_widget_destroy);
-  gtk_revealer_set_reveal_child (GTK_REVEALER (dialog->web_sources_revealer), FALSE);
-
-  /* Clear the entry icon */
-  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (dialog->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY, NULL);
-
-  /* Get the hostname and file path from the server */
-  uri = gtk_entry_get_text (GTK_ENTRY (dialog->calendar_address_entry));
-  soup_uri = soup_uri_new (uri);
-  if (!soup_uri)
-    return FALSE;
-
-  host = soup_uri_get_host (soup_uri);
-  path = soup_uri_get_path (soup_uri);
-
-  if (soup_uri_get_scheme (soup_uri) == SOUP_URI_SCHEME_FILE)
-    is_file = TRUE;
-
-  g_debug ("Detected host: '%s', path: '%s'", host, path);
-
-  /**
-   * Create the new source and add the needed
-   * extensions.
-   */
-  source = e_source_new (NULL, NULL, NULL);
-  e_source_set_parent (source, "webcal-stub");
-
-  ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
-  e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "webcal");
-
-  /* Authentication */
-  auth = e_source_get_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
-  e_source_authentication_set_host (auth, host);
-
-  /* Webdav */
-  webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-  e_source_webdav_set_soup_uri (webdav, soup_uri);
-
-  /*
-   * If we're dealing with an absolute file path,
-   * there is no need to check the server for more
-   * sources.
-   */
-  if (is_file)
-    {
-      /* Set the private source so it saves at closing */
-      dialog->remote_sources = g_list_append (dialog->remote_sources, source);
-
-      /* Update buttons */
-      gtk_widget_set_sensitive (dialog->add_button, source != NULL);
-
-      return FALSE;
-    }
-
-  /* Pulse the entry while it performs the check */
-  dialog->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, dialog);
-
-  /*
-   * Try to retrieve the sources without prompting
-   * username and password. If we get any error,
-   * then it prompts and retry.
-   */
-  credentials = e_named_parameters_new ();
-
-  if (!dialog->prompt_password)
-    {
-      g_debug ("Trying to connect without credentials...");
-
-      /* NULL credentials */
-      e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, NULL);
-      e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, NULL);
-
-      e_webdav_discover_sources (source,
-                                 uri,
-                                 E_WEBDAV_DISCOVER_SUPPORTS_EVENTS,
-                                 credentials,
-                                 NULL,
-                                 discover_sources_cb,
-                                 dialog);
-    }
-  else
-    {
-      gint response;
-      gchar *user, *password;
-
-      g_debug ("No credentials failed, retrying with user credentials...");
-
-      user = password = NULL;
-      response = prompt_credentials (dialog, &user, &password);
-
-      /*
-       * User entered username and password, let's try
-       * with it.
-       */
-      if (response == GTK_RESPONSE_OK)
-        {
-          /* User inputted credentials */
-          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, user);
-          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, password);
-
-          e_webdav_discover_sources (source,
-                                     uri,
-                                     E_WEBDAV_DISCOVER_SUPPORTS_EVENTS,
-                                     credentials,
-                                     NULL,
-                                     discover_sources_cb,
-                                     dialog);
-        }
-
-      g_free (user);
-      g_free (password);
-    }
-
-  e_named_parameters_free (credentials);
-
-  return FALSE;
-}
-
-static void
-credential_button_clicked (GtkWidget *button,
-                           gpointer   user_data)
-{
-  GcalCalendarManagementDialog *self = GCAL_CALENDAR_MANAGEMENT_DIALOG(user_data);
-
-  if (button == self->credentials_cancel_button)
-    gtk_dialog_response (GTK_DIALOG (self->credentials_dialog), GTK_RESPONSE_CANCEL);
-  else
-    gtk_dialog_response (GTK_DIALOG (self->credentials_dialog), GTK_RESPONSE_OK);
-}
-
-static void
-credential_entry_activate (GtkEntry *entry,
-                           gpointer  user_data)
-{
-  gtk_dialog_response (GTK_DIALOG (user_data), GTK_RESPONSE_OK);
-}
-
-static gint
-prompt_credentials (GcalCalendarManagementDialog  *dialog,
-                    gchar            **username,
-                    gchar            **password)
-{
-  gint response;
-
-  /* Cleanup last credentials */
-  gtk_entry_set_text (GTK_ENTRY (dialog->credentials_password_entry), "");
-  gtk_entry_set_text (GTK_ENTRY (dialog->credentials_user_entry), "");
-
-  gtk_widget_grab_focus (dialog->credentials_user_entry);
-
-  /* Show the dialog, then destroy it */
-  response = gtk_dialog_run (GTK_DIALOG (dialog->credentials_dialog));
-
-  if (response == GTK_RESPONSE_OK)
-    {
-      if (username != NULL)
-        *username = g_strdup (gtk_entry_get_text (GTK_ENTRY (dialog->credentials_user_entry)));
-
-      if (password != NULL)
-        *password = g_strdup (gtk_entry_get_text (GTK_ENTRY (dialog->credentials_password_entry)));
-    }
-
-  gtk_widget_hide (dialog->credentials_dialog);
-
-  return response;
-}
-
-static ESource*
-duplicate_source (ESource *source)
-{
-  ESourceExtension *ext;
-  ESource *new_source;
-
-  g_assert (source && E_IS_SOURCE (source));
-
-  new_source = e_source_new (NULL, NULL, NULL);
-  e_source_set_parent (new_source, "local");
-
-  ext = e_source_get_extension (new_source, E_SOURCE_EXTENSION_CALENDAR);
-  e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
-
-  /* Copy Authentication data */
-  if (e_source_has_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION))
-    {
-      ESourceAuthentication *new_auth, *parent_auth;
-
-      parent_auth = e_source_get_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
-      new_auth = e_source_get_extension (new_source, E_SOURCE_EXTENSION_AUTHENTICATION);
-
-      e_source_authentication_set_host (new_auth, e_source_authentication_get_host (parent_auth));
-      e_source_authentication_set_method (new_auth, e_source_authentication_get_method (parent_auth));
-      e_source_authentication_set_port (new_auth, e_source_authentication_get_port (parent_auth));
-      e_source_authentication_set_user (new_auth, e_source_authentication_get_user (parent_auth));
-      e_source_authentication_set_proxy_uid (new_auth, e_source_authentication_get_proxy_uid (parent_auth));
-    }
-
-  /* Copy Webdav data */
-  if (e_source_has_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND))
-    {
-      ESourceWebdav *new_webdav, *parent_webdav;
-
-      parent_webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-      new_webdav = e_source_get_extension (new_source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-
-      e_source_webdav_set_display_name (new_webdav, e_source_webdav_get_display_name (parent_webdav));
-      e_source_webdav_set_resource_path (new_webdav, e_source_webdav_get_resource_path (parent_webdav));
-      e_source_webdav_set_resource_query (new_webdav, e_source_webdav_get_resource_query (parent_webdav));
-      e_source_webdav_set_email_address (new_webdav, e_source_webdav_get_email_address (parent_webdav));
-      e_source_webdav_set_ssl_trust (new_webdav, e_source_webdav_get_ssl_trust (parent_webdav));
-
-      e_source_set_parent (new_source, "webcal-stub");
-      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "webcal");
-    }
-
-  return new_source;
-}
-
-static void
-check_activated_cb (GtkWidget  *check,
-                    GParamSpec *spec,
-                    gpointer    user_data)
-{
-  GcalCalendarManagementDialog *self;
-  GtkWidget *row;
-  ESource *source;
-
-  self = GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data);
-
-  row = gtk_widget_get_parent (check);
-  source = g_object_get_data (G_OBJECT (row), "source");
-
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)))
-    self->remote_sources = g_list_prepend (self->remote_sources, source);
-  else
-    self->remote_sources = g_list_remove (self->remote_sources, source);
-
-  gtk_widget_set_sensitive (self->add_button, g_list_length (self->remote_sources) > 0);
-}
-
-static void
-discover_sources_cb (GObject      *source,
-                     GAsyncResult *result,
-                     gpointer      user_data)
-{
-  GcalCalendarManagementDialog *self;
-  GSList *discovered_sources, *user_addresses, *aux;
-  GError *error;
-
-  self = GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data);
-  error = NULL;
-
-  /* Stop the pulsing entry */
-  if (self->calendar_address_id != 0)
-    {
-      gtk_entry_set_progress_fraction (GTK_ENTRY (self->calendar_address_entry), 0);
-      g_source_remove (self->calendar_address_id);
-      self->calendar_address_id = 0;
-    }
-
-  if (!e_webdav_discover_sources_finish (E_SOURCE (source), result, NULL, NULL, &discovered_sources, &user_addresses,
-                                        &error))
-    {
-      /* Don't add an source with errors */
-      gtk_widget_set_sensitive (self->add_button, FALSE);
-
-      /*
-       * If it's the first try and things went wrong,
-       * retry with the user credentials. Also, it
-       * checks for the error code, since we don't
-       * really want to retry things on unavailable
-       * servers.
-       */
-      if (!self->prompt_password &&
-          (error->code == 14 ||
-           error->code == 401 ||
-           error->code == 403 ||
-           error->code == 405))
-        {
-          self->prompt_password = TRUE;
-
-          validate_url_cb (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data));
-        }
-      else
-        {
-          g_debug ("Error: %s", error->message);
-        }
-
-      g_error_free (error);
-      return;
-    }
-
-  /* Add a success icon to the entry */
-  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (self->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY,
-                                     "emblem-ok-symbolic");
-
-  /* Remove previous results */
-  g_list_free_full (gtk_container_get_children (GTK_CONTAINER (self->web_sources_listbox)),
-                    (GDestroyNotify) gtk_widget_destroy);
-
-  /* Show the list of calendars */
-  gtk_revealer_set_reveal_child (GTK_REVEALER (self->web_sources_revealer), TRUE);
-  gtk_widget_show (self->web_sources_revealer);
-
-  /* TODO: show a list of calendars */
-  for (aux = discovered_sources; aux != NULL; aux = aux->next)
-    {
-      g_autoptr (SoupURI) soup_uri = NULL;
-      EWebDAVDiscoveredSource *discovered_source;
-      const gchar *resource_path = NULL;
-
-      discovered_source = aux->data;
-
-      soup_uri = soup_uri_new (discovered_source->href);
-
-      /* Get the new resource path from the uri */
-      resource_path = soup_uri_get_path (soup_uri);
-
-      if (soup_uri)
-        {
-          ESourceSelectable *selectable;
-          ESourceWebdav *webdav;
-          GtkWidget *row, *check;
-          ESource *new_source;
-
-
-          /* build up the new source */
-          new_source = duplicate_source (E_SOURCE (source));
-          e_source_set_display_name (E_SOURCE (new_source), discovered_source->display_name);
-
-          webdav = e_source_get_extension (new_source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-          e_source_webdav_set_resource_path (webdav, resource_path);
-          e_source_webdav_set_display_name (webdav, discovered_source->display_name);
-
-          if (user_addresses)
-            e_source_webdav_set_email_address (webdav, user_addresses->data);
-
-          /* Setup the color */
-          selectable = e_source_get_extension (new_source, E_SOURCE_EXTENSION_CALENDAR);
-          e_source_selectable_set_color (selectable, discovered_source->color);
-
-          /* create the new row */
-          row = gtk_list_box_row_new ();
-
-          check = gtk_check_button_new ();
-          gtk_button_set_label (GTK_BUTTON (check), discovered_source->display_name);
-          g_signal_connect (check, "notify::active", G_CALLBACK (check_activated_cb), user_data);
-
-          gtk_container_add (GTK_CONTAINER (row), check);
-          gtk_container_add (GTK_CONTAINER (self->web_sources_listbox), row);
-
-          g_object_set_data (G_OBJECT (row), "parent-source", source);
-          g_object_set_data (G_OBJECT (row), "source", new_source);
-
-          gtk_widget_show_all (row);
-        }
-    }
-
-  /* Free things up */
-  e_webdav_discover_free_discovered_sources (discovered_sources);
-  g_slist_free_full (user_addresses, g_free);
 }
 
 static void
@@ -1221,34 +600,17 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, add_button);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, back_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, calendar_address_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, cancel_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, credentials_cancel_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, credentials_connect_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, credentials_dialog);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, credentials_password_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, credentials_user_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, headerbar);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, stack);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, web_source_grid);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, web_sources_listbox);
-  gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, web_sources_revealer);
 
   gtk_widget_class_bind_template_callback (widget_class, add_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
   gtk_widget_class_bind_template_callback (widget_class, back_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, calendar_address_activated);
   gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
   gtk_widget_class_bind_template_callback (widget_class, calendar_visible_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, cancel_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, credential_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, credential_entry_activate);
-  gtk_widget_class_bind_template_callback (widget_class, color_set);
-  gtk_widget_class_bind_template_callback (widget_class, default_check_toggled);
-  gtk_widget_class_bind_template_callback (widget_class, description_label_link_activated);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
-  //gtk_widget_class_bind_template_callback (widget_class, stack_visible_child_name_changed);
-  gtk_widget_class_bind_template_callback (widget_class, url_entry_text_changed);
 }
 
 static void
@@ -1270,26 +632,19 @@ void
 gcal_calendar_management_dialog_set_mode (GcalCalendarManagementDialog     *dialog,
                                           GcalCalendarManagementDialogMode  mode)
 {
-  GcalCalendarManagementDialogMode previous_mode = dialog->mode;
-
-  dialog->mode = mode;
-
-  /* Cleanup old data */
-  clear_pages (dialog);
-
   switch (mode)
     {
     case GCAL_CALENDAR_MANAGEMENT_MODE_CREATE:
       gtk_header_bar_set_title (GTK_HEADER_BAR (dialog->headerbar), _("Add Calendar"));
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (dialog->headerbar), NULL);
-      gtk_stack_set_visible_child (GTK_STACK (dialog->stack), GTK_WIDGET (dialog->pages[GCAL_PAGE_EDIT_CALENDAR]));
+      gtk_stack_set_visible_child (GTK_STACK (dialog->stack), GTK_WIDGET (dialog->pages[GCAL_PAGE_NEW_CALENDAR]));
       break;
 
     case GCAL_CALENDAR_MANAGEMENT_MODE_CREATE_WEB:
       gtk_header_bar_set_title (GTK_HEADER_BAR (dialog->headerbar), _("Add Calendar"));
       gtk_header_bar_set_subtitle (GTK_HEADER_BAR (dialog->headerbar), NULL);
       gtk_header_bar_set_show_close_button (GTK_HEADER_BAR (dialog->headerbar), FALSE);
-      gtk_stack_set_visible_child (GTK_STACK (dialog->stack), dialog->web_source_grid);
+      gtk_stack_set_visible_child (GTK_STACK (dialog->stack), GTK_WIDGET (dialog->pages[GCAL_PAGE_NEW_CALENDAR]));
       gtk_widget_set_visible (dialog->add_button, TRUE);
       gtk_widget_set_visible (dialog->cancel_button, TRUE);
       break;
@@ -1310,9 +665,6 @@ gcal_calendar_management_dialog_set_mode (GcalCalendarManagementDialog     *dial
     default:
       g_assert_not_reached ();
     }
-
-  //if (previous_mode == mode)
-  //  stack_visible_child_name_changed (G_OBJECT (dialog->stack), NULL, dialog);
 }
 
 /**

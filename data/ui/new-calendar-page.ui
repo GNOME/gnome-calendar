@@ -2,5 +2,213 @@
 <interface>
   <template class="GcalNewCalendarPage" parent="GtkBox">
     <property name="visible">True</property>
+    <child>
+      <object class="GtkGrid">
+        <property name="visible">True</property>
+        <property name="border_width">18</property>
+        <property name="row_spacing">16</property>
+        <property name="column_spacing">12</property>
+        <child>
+          <object class="GtkLabel" id="web_description_label">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Enter the address of the calendar that you want to add. If the calendar belongs to one of your online accounts, you can add it through the &lt;a href=&quot;GOA&quot;&gt;online account settings&lt;/a&gt;.</property>
+            <property name="use_markup">True</property>
+            <property name="wrap">True</property>
+            <property name="xalign">0</property>
+            <signal name="activate-link" handler="description_label_link_activated" object="GcalNewCalendarPage" swapped="no" />
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">0</property>
+            <property name="width">2</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="calendar_address_label">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Calendar Address</property>
+            <property name="xalign">1</property>
+            <style>
+              <class name="dim-label" />
+            </style>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkEntry" id="calendar_address_entry">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="hexpand">True</property>
+            <signal name="notify::text" handler="on_url_entry_text_changed_cb" object="GcalNewCalendarPage" swapped="no" />
+            <signal name="activate" handler="on_calendar_address_activated_cb" object="GcalNewCalendarPage" swapped="no" />
+          </object>
+          <packing>
+            <property name="left_attach">1</property>
+            <property name="top_attach">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkRevealer" id="web_sources_revealer">
+            <property name="transition_type">crossfade</property>
+            <property name="transition_duration">200</property>
+            <child>
+              <object class="GtkBox" id="web_sources_listbox_box">
+                <property name="visible">True</property>
+                <property name="orientation">vertical</property>
+                <property name="spacing">6</property>
+                <child>
+                  <object class="GtkLabel" id="web_sources_calendar_label">
+                    <property name="visible">True</property>
+                    <property name="label" translatable="yes">Calendars</property>
+                    <property name="xalign">0</property>
+                    <attributes>
+                      <attribute name="weight" value="bold" />
+                    </attributes>
+                  </object>
+                </child>
+                <child>
+                  <object class="GtkScrolledWindow">
+                    <property name="height_request">100</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <child>
+                      <object class="GtkViewport" id="viewport">
+                        <property name="visible">True</property>
+                        <property name="shadow_type">none</property>
+                        <child>
+                          <object class="GtkListBox" id="web_sources_listbox">
+                            <property name="visible">True</property>
+                            <property name="activate_on_single_click">False</property>
+                            <property name="selection_mode">none</property>
+                            <style>
+                              <class name="calendar-list" />
+                            </style>
+                          </object>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+            </child>
+          </object>
+          <packing>
+            <property name="left_attach">0</property>
+            <property name="top_attach">2</property>
+            <property name="width">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
   </template>
+
+  <!-- Credentials dialog -->
+  <object class="GtkDialog" id="credentials_dialog">
+    <property name="type_hint">dialog</property>
+    <property name="transient_for">GcalNewCalendarPage</property>
+    <child type="titlebar">
+      <object class="GtkHeaderBar" id="credentials_headerbar">
+        <property name="visible">True</property>
+        <property name="title" translatable="yes">Enter your credentials</property>
+        <child>
+          <object class="GtkButton" id="credentials_cancel_button">
+            <property name="label" translatable="yes">Cancel</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="credentials_connect_button">
+            <property name="label" translatable="yes">Connect</property>
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
+            <style>
+              <class name="suggested-action" />
+            </style>
+          </object>
+          <packing>
+            <property name="pack_type">end</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="credentials-dialog-vbox1">
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkGrid" id="credentials_grid">
+            <property name="visible">True</property>
+            <property name="hexpand">True</property>
+            <property name="border_width">12</property>
+            <property name="row_spacing">6</property>
+            <property name="column_spacing">12</property>
+            <child>
+              <object class="GtkLabel" id="credentials_user_dim_label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">User</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label" />
+                </style>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkLabel" id="credentials_password_dim_label">
+                <property name="visible">True</property>
+                <property name="label" translatable="yes">Password</property>
+                <property name="xalign">1</property>
+                <style>
+                  <class name="dim-label" />
+                </style>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="credentials_user_entry">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
+                <signal name="activate" handler="on_credential_entry_activate_cb" object="credentials_dialog" swapped="no" />
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="credentials_password_entry">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
+                <property name="visibility">False</property>
+                <signal name="activate" handler="on_credential_entry_activate_cb" object="credentials_dialog" swapped="no" />
+              </object>
+              <packing>
+                <property name="left_attach">1</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
+
 </interface>
