@@ -89,6 +89,7 @@ resource_data = files(
   'ui/date-chooser.ui',
   'ui/date-selector.ui',
   'ui/edit-dialog.ui',
+  'ui/edit-calendar-page.ui',
   'ui/help-overlay.ui',
   'ui/menus.ui',
   'ui/month-cell.ui',

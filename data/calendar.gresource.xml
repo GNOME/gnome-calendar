@@ -8,6 +8,7 @@
     <file alias="calendars-page.ui" compressed="true">ui/calendars-page.ui</file>
     <file alias="date-chooser.ui" compressed="true">ui/date-chooser.ui</file>
     <file alias="date-selector.ui" compressed="true">ui/date-selector.ui</file>
+    <file alias="edit-calendar-page.ui" compressed="true">ui/edit-calendar-page.ui</file>
     <file alias="edit-dialog.ui" compressed="true">ui/edit-dialog.ui</file>
     <file alias="event-widget.ui" compressed="true">ui/event-widget.ui</file>
     <file alias="month-cell.ui" compressed="true">ui/month-cell.ui</file>

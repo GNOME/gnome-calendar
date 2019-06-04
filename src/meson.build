@@ -105,6 +105,7 @@ sources = files(
   'gui/calendar-management/gcal-calendar-management-dialog.c',
   'gui/calendar-management/gcal-calendar-management-page.c',
   'gui/calendar-management/gcal-calendars-page.c',
+  'gui/calendar-management/gcal-edit-calendar-page.c',
   'gui/calendar-management/gcal-new-calendar-page.c',
   'gui/gcal-application.c',
   'gui/gcal-calendar-popover.c',
