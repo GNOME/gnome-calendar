@@ -8,20 +8,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-05-09 20:43+0000\n"
-"PO-Revision-Date: 2019-05-10 15:24+0700\n"
+"POT-Creation-Date: 2019-06-15 10:57+0000\n"
+"PO-Revision-Date: 2019-06-21 15:47+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.3\n"
 "Plural-Forms: nplurals=2; plural= n!=1;\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:164 src/main.c:36 src/gui/gcal-application.c:280
+#: data/ui/window.ui:163 src/main.c:36 src/gui/gcal-application.c:280
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -132,10 +132,18 @@ msgstr "Jungkitkan suara alarm"
 msgid "Remove the alarm"
 msgstr "Hapus alarm"
 
-#: data/ui/calendar-popover.ui:42 data/ui/source-dialog.ui:745
-#: src/gui/gcal-source-dialog.c:856 src/gui/gcal-source-dialog.c:2270
-msgid "Calendar Settings"
-msgstr "Pengaturan Kalender"
+#: data/ui/calendar-popover.ui:43
+msgid "_Synchronize Calendars"
+msgstr "_Selaraskan Kalender"
+
+#: data/ui/calendar-popover.ui:51
+msgid "Manage Calendars…"
+msgstr "Kelola Kalender…"
+
+#: data/ui/calendar-popover.ui:75
+msgctxt "tooltip"
+msgid "Synchronizing remote calendars…"
+msgstr "Selaraskan kalender jauh…"
 
 #: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
 #: data/ui/source-dialog.ui:869 src/gui/gcal-source-dialog.c:1157
@@ -146,7 +154,7 @@ msgstr "Batal"
 msgid "Click to select the calendar"
 msgstr "Klik untuk memilih kalender"
 
-#: data/ui/edit-dialog.ui:108 src/gui/gcal-edit-dialog.c:372
+#: data/ui/edit-dialog.ui:108 src/gui/gcal-edit-dialog.c:375
 msgid "Done"
 msgstr "Selesai"
 
@@ -371,8 +379,8 @@ msgstr "Tak ditemukan hasil"
 msgid "Try a different search"
 msgstr "Cobalah pencarian lain"
 
-#: data/ui/source-dialog.ui:53 src/gui/gcal-window.c:700
-#: src/gui/gcal-window.c:704
+#: data/ui/source-dialog.ui:53 src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:703
 msgid "Undo"
 msgstr "Tak jadi"
 
@@ -455,10 +463,15 @@ msgstr ""
 msgid "Calendar Address"
 msgstr "Alamat Kalender"
 
-#: data/ui/source-dialog.ui:729 src/gui/gcal-source-dialog.c:2241
-#: src/gui/gcal-source-dialog.c:2247
+#: data/ui/source-dialog.ui:729 src/gui/gcal-source-dialog.c:2240
+#: src/gui/gcal-source-dialog.c:2246
 msgid "Add Calendar"
 msgstr "Tambah Kalender"
+
+#: data/ui/source-dialog.ui:745 src/gui/gcal-source-dialog.c:856
+#: src/gui/gcal-source-dialog.c:2269
+msgid "Calendar Settings"
+msgstr "Pengaturan Kalender"
 
 #: data/ui/source-dialog.ui:806
 msgid "User"
@@ -493,7 +506,7 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:325
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:309
 msgid "_Weather"
 msgstr "_Cuaca"
 
@@ -505,46 +518,42 @@ msgstr "Tampilkan Cuaca"
 msgid "Automatic Location"
 msgstr "Lokasi Otomatis"
 
-#: data/ui/window.ui:44
+#: data/ui/window.ui:43
 msgid "Week"
 msgstr "Minggu"
 
-#: data/ui/window.ui:59
+#: data/ui/window.ui:58
 msgid "Month"
 msgstr "Bulan"
 
-#: data/ui/window.ui:73
+#: data/ui/window.ui:72
 msgid "Year"
 msgstr "Tahun"
 
-#: data/ui/window.ui:170
+#: data/ui/window.ui:169
 msgctxt "tooltip"
 msgid "Add a new event"
 msgstr "Tambah acara baru"
 
-#: data/ui/window.ui:181 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
+#: data/ui/window.ui:180 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
 #: src/views/gcal-year-view.c:516
 msgid "Today"
 msgstr "Hari ini"
 
-#: data/ui/window.ui:259
+#: data/ui/window.ui:258
 msgid "Manage your calendars"
 msgstr "Kelola kalender Anda"
 
-#: data/ui/window.ui:276
+#: data/ui/window.ui:269
 msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Cari acara"
 
-#: data/ui/window.ui:316
-msgid "_Synchronize"
-msgstr "_Selaraskan"
-
-#: data/ui/window.ui:340
+#: data/ui/window.ui:324
 msgid "_Keyboard Shortcuts"
 msgstr "Pintasan Papan Ti_k"
 
-#: data/ui/window.ui:349
+#: data/ui/window.ui:333
 msgid "_About Calendar"
 msgstr "Ten_ang Kalender"
 
@@ -557,7 +566,7 @@ msgid "Add Event…"
 msgstr "Tambah Acara…"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1801
+#: src/core/gcal-event.c:1849
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -566,14 +575,14 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1809
+#: src/core/gcal-event.c:1857
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1825 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1873 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -609,39 +618,39 @@ msgstr ""
 "Andika Triwidada <andika@gmail.com>, 2013, 2016.\n"
 "Kukuh Syafaat <kukuhsyafaat@gnome.org>, 2017, 2018, 2019."
 
-#: src/gui/gcal-edit-dialog.c:372
+#: src/gui/gcal-edit-dialog.c:375
 msgid "Save"
 msgstr "Simpan"
 
-#: src/gui/gcal-edit-dialog.c:539
+#: src/gui/gcal-edit-dialog.c:530
 #, c-format
 msgid "%d minute before"
 msgid_plural "%d minutes before"
 msgstr[0] "%d menit sebelumnya"
 msgstr[1] "%d menit sebelumnya"
 
-#: src/gui/gcal-edit-dialog.c:547
+#: src/gui/gcal-edit-dialog.c:538
 #, c-format
 msgid "%d hour before"
 msgid_plural "%d hours before"
 msgstr[0] "%d jam sebelumnya"
 msgstr[1] "%d jam sebelumnya"
 
-#: src/gui/gcal-edit-dialog.c:555
+#: src/gui/gcal-edit-dialog.c:546
 #, c-format
 msgid "%d day before"
 msgid_plural "%d days before"
 msgstr[0] "%d hari sebelumnya"
 msgstr[1] "%d hari sebelumnya"
 
-#: src/gui/gcal-edit-dialog.c:563
+#: src/gui/gcal-edit-dialog.c:554
 #, c-format
 msgid "%d week before"
 msgid_plural "%d weeks before"
 msgstr[0] "%d minggu sebelumnya"
 msgstr[1] "%d minggu sebelumnya"
 
-#: src/gui/gcal-edit-dialog.c:1486 src/gui/gcal-quick-add-popover.c:686
+#: src/gui/gcal-edit-dialog.c:1477 src/gui/gcal-quick-add-popover.c:686
 msgid "Unnamed event"
 msgstr "Acara tanpa nama"
 
@@ -964,15 +973,15 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gui/gcal-window.c:700
+#: src/gui/gcal-window.c:699
 msgid "Another event deleted"
 msgstr "Acara lain dihapus"
 
-#: src/gui/gcal-window.c:704
+#: src/gui/gcal-window.c:703
 msgid "Event deleted"
 msgstr "Acara dihapus"
 
-#: src/utils/gcal-utils.c:933
+#: src/utils/gcal-utils.c:941
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -980,19 +989,19 @@ msgstr ""
 "Acara yang ingin Anda ubah berulang. Perubahan yang telah Anda pilih harus "
 "diterapkan pada:"
 
-#: src/utils/gcal-utils.c:936
+#: src/utils/gcal-utils.c:944
 msgid "_Cancel"
 msgstr "_Batal"
 
-#: src/utils/gcal-utils.c:938
+#: src/utils/gcal-utils.c:946
 msgid "_Only This Event"
 msgstr "Hanya Acara _Ini"
 
-#: src/utils/gcal-utils.c:945
+#: src/utils/gcal-utils.c:953
 msgid "_Subsequent events"
 msgstr "A_cara berikutnya"
 
-#: src/utils/gcal-utils.c:947
+#: src/utils/gcal-utils.c:955
 msgid "_All events"
 msgstr "Semu_a acara"
 
