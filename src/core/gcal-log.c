@@ -72,7 +72,7 @@ gcal_log_handler (const gchar    *domain,
   t = (time_t) tv.tv_sec;
   tt = *localtime (&t);
   strftime (ftime, sizeof (ftime), "%H:%M:%S", &tt);
-  buffer = g_strdup_printf ("%s.%04ld  %24s: %s: %s\n",
+  buffer = g_strdup_printf ("%s.%04ld  %28s: %s: %s\n",
                             ftime,
                             tv.tv_usec / 1000,
                             domain,
