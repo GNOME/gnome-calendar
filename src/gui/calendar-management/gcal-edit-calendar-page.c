@@ -33,6 +33,7 @@ struct _GcalEditCalendarPage
   GtkWidget          *account_box;
   GtkLabel           *account_label;
   GtkWidget          *account_dim_label;
+  GtkWidget          *back_button;
   GtkColorChooser    *calendar_color_button;
   GtkToggleButton    *calendar_visible_check;
   GtkWidget          *calendar_url_button;
@@ -228,6 +229,20 @@ update_calendar (GcalEditCalendarPage *self)
  */
 
 static void
+on_back_button_clicked_cb (GtkButton            *back_button,
+                           GcalEditCalendarPage *self)
+{
+  GcalCalendarManagementPage *page;
+
+  GCAL_ENTRY;
+
+  page = GCAL_CALENDAR_MANAGEMENT_PAGE (self);
+  gcal_calendar_management_page_switch_page (page, "calendars", NULL);
+
+  GCAL_EXIT;
+}
+
+static void
 on_remove_button_clicked_cb (GtkButton            *button,
                              GcalEditCalendarPage *self)
 {
@@ -292,13 +307,16 @@ gcal_edit_calendar_page_activate (GcalCalendarManagementPage *page,
                                   gpointer                    data)
 {
   GcalEditCalendarPage *self;
+  GtkHeaderBar *headerbar;
   GcalCalendar *calendar;
 
   g_assert (GCAL_IS_CALENDAR (data));
 
   self = GCAL_EDIT_CALENDAR_PAGE (page);
-  calendar = GCAL_CALENDAR (data);
+  headerbar = gcal_calendar_management_page_get_titlebar (page);
+  gtk_header_bar_pack_start (headerbar, self->back_button);
 
+  calendar = GCAL_CALENDAR (data);
   setup_calendar (self, calendar);
 }
 
@@ -306,14 +324,18 @@ static void
 gcal_edit_calendar_page_deactivate (GcalCalendarManagementPage *page)
 {
   GcalEditCalendarPage *self;
+  GtkHeaderBar *headerbar;
   GcalManager *manager;
 
   GCAL_ENTRY;
 
   self = GCAL_EDIT_CALENDAR_PAGE (page);
-  manager = gcal_context_get_manager (self->context);
+  headerbar = gcal_calendar_management_page_get_titlebar (page);
+  gtk_container_remove (GTK_CONTAINER (headerbar), self->back_button);
 
   update_calendar (self);
+
+  manager = gcal_context_get_manager (self->context);
   gcal_manager_save_source (manager, gcal_calendar_get_source (self->calendar));
 
   g_clear_object (&self->calendar);
@@ -401,6 +423,7 @@ gcal_edit_calendar_page_class_init (GcalEditCalendarPageClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, account_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, account_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, back_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_color_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_url_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, calendar_visible_check);
@@ -409,6 +432,7 @@ gcal_edit_calendar_page_class_init (GcalEditCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, name_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, remove_button);
 
+  gtk_widget_class_bind_template_callback (widget_class, on_back_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_remove_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_settings_button_clicked_cb);
 }

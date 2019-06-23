@@ -84,12 +84,6 @@ typedef enum
   GCAL_ACCOUNT_TYPE_NOT_SUPPORTED
 } GcalAccountType;
 
-static void       action_widget_activated               (GtkWidget            *widget,
-                                                         gpointer              user_data);
-
-static void       back_button_clicked                   (GtkButton            *button,
-                                                         gpointer              user_data);
-
 static void       calendar_file_selected                (GtkFileChooser       *button,
                                                          gpointer              user_data);
 
@@ -138,65 +132,6 @@ import_file_extensions[] = {
   ".icalendar",
   ".vcs"
 };
-
-static void
-add_button_clicked (GtkWidget *button,
-                    gpointer   user_data)
-{
-  GcalCalendarManagementDialog *self = GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data);
-  GcalManager *manager;
-
-  manager = gcal_context_get_manager (self->context);
-
-  if (self->source != NULL)
-    {
-      /* Commit the new source */
-      gcal_manager_save_source (manager, self->source);
-
-      self->source = NULL;
-
-      gcal_calendar_management_dialog_set_mode (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data),
-                                                GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL);
-    }
-#if 0
-  if (self->remote_sources != NULL)
-    {
-      GList *l;
-
-      /* Commit each new remote source */
-      for (l = self->remote_sources; l != NULL; l = l->next)
-        gcal_manager_save_source (manager, l->data);
-
-      g_list_free (self->remote_sources);
-      self->remote_sources = NULL;
-
-      /* Go back to overview */
-      gcal_calendar_management_dialog_set_mode (GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data),
-                                                GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL);
-    }
-#endif
-}
-
-static void
-action_widget_activated (GtkWidget *widget,
-                         gpointer   user_data)
-{
-  GcalCalendarManagementDialog *self = GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data);
-  gint response = GPOINTER_TO_UINT (g_object_get_data (G_OBJECT (widget), "response"));
-
-  self->old_default_source = NULL;
-
-  gtk_dialog_response (GTK_DIALOG (user_data), response);
-}
-
-static void
-back_button_clicked (GtkButton *button,
-                     gpointer   user_data)
-{
-  GcalCalendarManagementDialog *self = GCAL_CALENDAR_MANAGEMENT_DIALOG (user_data);
-
-  gcal_calendar_management_dialog_set_mode (self, GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL);
-}
 
 static void
 calendar_visible_check_toggled (GObject    *object,
@@ -584,9 +519,6 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, headerbar);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, stack);
 
-  gtk_widget_class_bind_template_callback (widget_class, add_button_clicked);
-  gtk_widget_class_bind_template_callback (widget_class, action_widget_activated);
-  gtk_widget_class_bind_template_callback (widget_class, back_button_clicked);
   gtk_widget_class_bind_template_callback (widget_class, calendar_file_selected);
   gtk_widget_class_bind_template_callback (widget_class, calendar_visible_check_toggled);
   gtk_widget_class_bind_template_callback (widget_class, response_signal);
