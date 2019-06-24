@@ -117,7 +117,7 @@ on_manager_calendar_added_cb (GcalManager      *manager,
 {
   ECalClient *client;
 
-  g_debug ("Removing source %s from search results", gcal_calendar_get_id (calendar));
+  g_debug ("Adding source %s to search results", gcal_calendar_get_id (calendar));
 
   client = gcal_calendar_get_client (calendar);
 
