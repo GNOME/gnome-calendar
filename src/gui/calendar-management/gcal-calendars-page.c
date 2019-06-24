@@ -185,7 +185,7 @@ delete_calendar (GcalCalendarsPage *self,
 
   g_assert (calendar != NULL);
 
-  removed_source = gcal_calendar_get_source (self->removed_calendar);
+  removed_source = gcal_calendar_get_source (calendar);
 
   /* We don't really want to remove non-removable sources */
   if (!e_source_get_removable (removed_source))
