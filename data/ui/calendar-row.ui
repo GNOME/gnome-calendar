@@ -53,6 +53,22 @@
             <property name="top_attach">0</property>
           </packing>
         </child>
+
+        <!-- Visibility switch -->
+        <child>
+          <object class="GtkSwitch" id="switch">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="hexpand">True</property>
+            <property name="halign">end</property>
+            <property name="valign">center</property>
+          </object>
+          <packing>
+            <property name="left_attach">2</property>
+            <property name="top_attach">0</property>
+            <property name="height">2</property>
+          </packing>
+        </child>
       </object>
     </child>
   </object>
