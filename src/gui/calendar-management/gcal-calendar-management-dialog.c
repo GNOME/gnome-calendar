@@ -88,6 +88,11 @@ enum
 
 static GParamSpec *properties[N_PROPS] = { NULL, };
 
+
+/*
+ * Auxiliary methods
+ */
+
 static void
 set_page (GcalCalendarManagementDialog *self,
           const gchar                  *page_name,
@@ -211,9 +216,9 @@ gcal_calendar_management_dialog_constructed (GObject *object)
 
 static void
 gcal_calendar_management_dialog_get_property (GObject    *object,
-                                 guint       prop_id,
-                                 GValue     *value,
-                                 GParamSpec *pspec)
+                                              guint       prop_id,
+                                              GValue     *value,
+                                              GParamSpec *pspec)
 {
   GcalCalendarManagementDialog *self = (GcalCalendarManagementDialog *) object;
 
@@ -227,11 +232,12 @@ gcal_calendar_management_dialog_get_property (GObject    *object,
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
 }
+
 static void
 gcal_calendar_management_dialog_set_property (GObject      *object,
-                                 guint         prop_id,
-                                 const GValue *value,
-                                 GParamSpec   *pspec)
+                                              guint         prop_id,
+                                              const GValue *value,
+                                              GParamSpec   *pspec)
 {
   GcalCalendarManagementDialog *self = (GcalCalendarManagementDialog *) object;
 
@@ -252,17 +258,11 @@ gcal_calendar_management_dialog_set_property (GObject      *object,
 static void
 gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *klass)
 {
-  GObjectClass *object_class;
-  GtkWidgetClass *widget_class;
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
-  /**
-   * Since we cannot guarantee that the
-   * type system registered ESourceLocal,
-   * it must be ensured at least here.
-   */
   g_type_ensure (E_TYPE_SOURCE_LOCAL);
 
-  object_class = G_OBJECT_CLASS (klass);
   object_class->constructed = gcal_calendar_management_dialog_constructed;
   object_class->get_property = gcal_calendar_management_dialog_get_property;
   object_class->set_property = gcal_calendar_management_dialog_set_property;
@@ -275,9 +275,6 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  widget_class = GTK_WIDGET_CLASS (klass);
-
-  /* bind things for/from the template class */
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/calendar-management-dialog.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, headerbar);
