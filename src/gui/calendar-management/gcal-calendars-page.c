@@ -278,8 +278,8 @@ on_calendar_color_changed_cb (GcalCalendar *calendar,
 }
 
 static void
-on_close_notification_button_clicked_cb (GcalCalendarsPage *self,
-                                         GtkWidget         *button)
+on_close_notification_button_clicked_cb (GtkWidget         *button,
+                                         GcalCalendarsPage *self)
 {
   g_assert (self->removed_calendar != NULL);
 
