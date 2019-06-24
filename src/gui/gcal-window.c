@@ -314,11 +314,7 @@ on_show_calendars_action_activated (GSimpleAction *action,
 {
   GcalWindow *window = GCAL_WINDOW (user_data);
 
-  gcal_calendar_management_dialog_set_mode (GCAL_CALENDAR_MANAGEMENT_DIALOG (window->calendar_management_dialog),
-                                            GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL);
-
   gtk_widget_hide (window->calendar_popover);
-
   gtk_widget_show (window->calendar_management_dialog);
 }
 

@@ -37,27 +37,4 @@ G_DECLARE_FINAL_TYPE (GcalCalendarManagementDialog,
                       GCAL, CALENDAR_MANAGEMENT_DIALOG,
                       GtkDialog)
 
-/**
- * GcalCalendarManagementDialogMode:
- * @GCAL_CALENDAR_MANAGEMENT_MODE_CREATE: creating a new calendar
- * @GCAL_CALENDAR_MANAGEMENT_MODE_CREATE_WEB: creating a new web-based calendar
- * @GCAL_CALENDAR_MANAGEMENT_MODE_EDIT: editing an existing calendar
- * @GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL: showing the list of calendars and online accounts
- *
- * The current action of the #GcalCalendarManagementDialog
- */
-typedef enum
-{
-  GCAL_CALENDAR_MANAGEMENT_MODE_CREATE,
-  GCAL_CALENDAR_MANAGEMENT_MODE_CREATE_WEB,
-  GCAL_CALENDAR_MANAGEMENT_MODE_EDIT,
-  GCAL_CALENDAR_MANAGEMENT_MODE_NORMAL
-} GcalCalendarManagementDialogMode;
-
-void                 gcal_calendar_management_dialog_set_mode    (GcalCalendarManagementDialog     *dialog,
-                                                                  GcalCalendarManagementDialogMode  mode);
-
-void                 gcal_calendar_management_dialog_set_source  (GcalCalendarManagementDialog     *dialog,
-                                                                  ESource                          *source);
-
 G_END_DECLS
