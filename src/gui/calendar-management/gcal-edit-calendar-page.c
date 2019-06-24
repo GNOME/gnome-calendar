@@ -299,7 +299,7 @@ gcal_edit_calendar_page_get_title (GcalCalendarManagementPage *page)
 {
   GcalEditCalendarPage *self = GCAL_EDIT_CALENDAR_PAGE (page);
 
-  return gcal_calendar_get_name (self->calendar);
+  return self->calendar ? gcal_calendar_get_name (self->calendar) : "";
 }
 
 static void
