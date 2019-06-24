@@ -374,6 +374,14 @@ gcal_calendars_page_activate (GcalCalendarManagementPage *page,
     GCAL_RETURN ();
 
   self = GCAL_CALENDARS_PAGE (page);
+
+  /* Remove the previously deleted calendar, if any */
+  if (self->removed_calendar)
+    {
+      delete_calendar (self, self->removed_calendar);
+      g_clear_object (&self->removed_calendar);
+    }
+
   calendar = GCAL_CALENDAR (page_data);
   self->removed_calendar = g_object_ref (calendar);
 
