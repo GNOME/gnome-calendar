@@ -6,11 +6,14 @@ data/org.gnome.calendar.gschema.xml.in
 data/ui/alarm-row.ui
 data/ui/calendar-management-dialog.ui
 data/ui/calendar-popover.ui
+data/ui/calendars-page.ui
+data/ui/edit-calendar-page.ui
 data/ui/edit-dialog.ui
 data/ui/help-overlay.ui
 data/ui/menus.ui
 data/ui/month-popover.ui
 data/ui/month-view.ui
+data/ui/new-calendar-page.ui
 data/ui/quick-add-popover.ui
 data/ui/search-popover.ui
 data/ui/time-selector.ui
@@ -21,6 +24,8 @@ src/main.c
 src/core/gcal-event.c
 src/core/gcal-manager.c
 src/gui/calendar-management/gcal-calendar-management-dialog.c
+src/gui/calendar-management/gcal-calendars-page.c
+src/gui/calendar-management/gcal-new-calendar-page.c
 src/gui/gcal-application.c
 src/gui/gcal-date-selector.c
 src/gui/gcal-edit-dialog.c
