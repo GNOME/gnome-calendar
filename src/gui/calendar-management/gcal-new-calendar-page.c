@@ -35,12 +35,16 @@ struct _GcalNewCalendarPage
 
   GtkWidget          *add_button;
   GtkEntry           *calendar_address_entry;
+  GtkFileChooser     *calendar_file_chooser_button;
+  GtkFileFilter      *calendar_file_filter;
   GtkWidget          *cancel_button;
   GtkWidget          *credentials_cancel_button;
   GtkWidget          *credentials_connect_button;
   GtkWidget          *credentials_dialog;
   GtkEntry           *credentials_password_entry;
   GtkEntry           *credentials_user_entry;
+  GtkColorChooser    *local_calendar_color_button;
+  GtkEntry           *local_calendar_name_entry;
   GtkWidget          *web_sources_listbox;
   GtkWidget          *web_sources_revealer;
 
@@ -48,6 +52,8 @@ struct _GcalNewCalendarPage
   gboolean            prompt_password;
   GList              *remote_sources;
   guint               validate_url_resource_id;
+
+  ESource            *local_source;
 
   GcalContext        *context;
 };
@@ -152,11 +158,6 @@ prompt_credentials (GcalNewCalendarPage  *self,
   return response;
 }
 
-
-/*
- * Callbacks
- */
-
 static gchar*
 calendar_path_to_name_suggestion (GFile *file)
 {
@@ -199,23 +200,73 @@ calendar_path_to_name_suggestion (GFile *file)
 }
 
 static void
-calendar_file_selected (GtkFileChooser *button,
-                        gpointer        user_data)
+update_add_button (GcalNewCalendarPage *self)
+{
+  gboolean valid;
+
+  valid = self->local_source != NULL || self->remote_sources != NULL;
+  gtk_widget_set_sensitive (self->add_button, valid);
+}
+
+static void
+update_local_source (GcalNewCalendarPage *self)
+{
+  g_autofree gchar *calendar_name = NULL;
+
+  g_clear_object (&self->local_source);
+
+  calendar_name = g_strdup (gtk_entry_get_text (self->local_calendar_name_entry));
+  calendar_name = g_strstrip (calendar_name);
+
+  if (calendar_name && g_utf8_strlen (calendar_name, -1) > 0)
+    {
+      g_autofree gchar *color_string = NULL;
+      ESourceExtension *ext;
+      ESource *source;
+      GdkRGBA color;
+
+      gtk_color_chooser_get_rgba (self->local_calendar_color_button, &color);
+      color_string = gdk_rgba_to_string (&color);
+
+      /* Create the new source and add the needed extensions */
+      source = e_source_new (NULL, NULL, NULL);
+      e_source_set_parent (source, "local-stub");
+      e_source_set_display_name (source, calendar_name);
+
+      ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
+      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
+      e_source_selectable_set_color (E_SOURCE_SELECTABLE (ext), color_string);
+
+      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
+
+      self->local_source = source;
+    }
+
+  update_add_button (self);
+}
+
+
+/*
+ * Callbacks
+ */
+
+static void
+on_file_chooser_button_file_set_cb (GtkFileChooser      *chooser,
+                                    GcalNewCalendarPage *self)
 {
   g_autofree gchar *display_name = NULL;
   g_autoptr (ESource) source = NULL;
   g_autoptr (GFile) file = NULL;
   ESourceExtension *ext;
 
-  file = gtk_file_chooser_get_file (GTK_FILE_CHOOSER (button));
+  GCAL_ENTRY;
+
+  file = gtk_file_chooser_get_file (chooser);
 
   if (!file)
-    return;
+    GCAL_RETURN ();
 
-  /**
-   * Create the new source and add the needed
-   * extensions.
-   */
+  /* Create the new source and add the needed extensions */
   source = e_source_new (NULL, NULL, NULL);
   e_source_set_parent (source, "local-stub");
 
@@ -228,59 +279,17 @@ calendar_file_selected (GtkFileChooser *button,
   /* update the source properties */
   display_name = calendar_path_to_name_suggestion (file);
   e_source_set_display_name (source, display_name);
-}
 
-static void
-on_file_activated (GSimpleAction *action,
-                   GVariant      *param,
-                   gpointer       user_data)
-{
-  GtkWidget *dialog;
-  GtkFileFilter *filter;
-  gint response;
+  /* TODO: report errors */
+  gcal_manager_save_source (gcal_context_get_manager (self->context), source);
 
-  /* Dialog */
-  dialog = gtk_file_chooser_dialog_new (_("Select a calendar file"),
-                                        GTK_WINDOW (gtk_widget_get_toplevel (GTK_WIDGET (user_data))),
-                                        GTK_FILE_CHOOSER_ACTION_OPEN,
-                                        _("Cancel"), GTK_RESPONSE_CANCEL,
-                                        _("Open"), GTK_RESPONSE_OK,
-                                        NULL);
+  gcal_calendar_management_page_switch_page (GCAL_CALENDAR_MANAGEMENT_PAGE (self),
+                                             "calendars",
+                                             NULL);
 
-  g_signal_connect (dialog, "file-activated", G_CALLBACK (calendar_file_selected), user_data);
+  gtk_file_chooser_unselect_all (self->calendar_file_chooser_button);
 
-  /* File filter */
-  filter = gtk_file_filter_new ();
-  gtk_file_filter_set_name (filter, _("Calendar files"));
-  gtk_file_filter_add_mime_type (filter, "text/calendar");
-
-  gtk_file_chooser_add_filter (GTK_FILE_CHOOSER (dialog), filter);
-
-  response = gtk_dialog_run (GTK_DIALOG (dialog));
-
-  if (response == GTK_RESPONSE_OK)
-    calendar_file_selected (GTK_FILE_CHOOSER (dialog), user_data);
-
-  gtk_widget_destroy (dialog);
-}
-
-static void
-on_local_activated (GSimpleAction *action,
-                    GVariant      *param,
-                    gpointer       user_data)
-{
-  ESourceExtension *ext;
-  ESource *source;
-
-  /* Create the new source and add the needed extensions */
-  source = e_source_new (NULL, NULL, NULL);
-  e_source_set_parent (source, "local-stub");
-
-  ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
-  e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
-
-  /* update the source properties */
-  e_source_set_display_name (source, _("Unnamed Calendar"));
+  GCAL_EXIT;
 }
 
 static gboolean
@@ -309,7 +318,7 @@ on_check_activated_cb (GtkWidget           *check,
   else
     self->remote_sources = g_list_remove (self->remote_sources, source);
 
-  //gtk_widget_set_sensitive (self->add_button, g_list_length (self->remote_sources) > 0);
+  update_add_button (self);
 }
 
 static void
@@ -447,6 +456,8 @@ validate_url_cb (GcalNewCalendarPage *self)
   const gchar *host, *path;
   gboolean is_file;
 
+  GCAL_ENTRY;
+
   self->validate_url_resource_id = 0;
   soup_uri = NULL;
   host = path = NULL;
@@ -471,7 +482,7 @@ validate_url_cb (GcalNewCalendarPage *self)
   uri = gtk_entry_get_text (self->calendar_address_entry);
   soup_uri = soup_uri_new (uri);
   if (!soup_uri)
-    return FALSE;
+    GCAL_RETURN (G_SOURCE_REMOVE);
 
   host = soup_uri_get_host (soup_uri);
   path = soup_uri_get_path (soup_uri);
@@ -504,16 +515,15 @@ validate_url_cb (GcalNewCalendarPage *self)
     {
       self->remote_sources = g_list_append (self->remote_sources, source);
       gtk_widget_set_sensitive (self->add_button, source != NULL);
-      return FALSE;
+      GCAL_RETURN (G_SOURCE_REMOVE);
     }
 
   /* Pulse the entry while it performs the check */
   self->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, self);
 
   /*
-   * Try to retrieve the sources without prompting
-   * username and password. If we get any error,
-   * then it prompts and retry.
+   * Try to retrieve the sources without prompting username and password. If
+   * we get any error, then it prompts and retry.
    */
   credentials = e_named_parameters_new ();
 
@@ -541,8 +551,9 @@ validate_url_cb (GcalNewCalendarPage *self)
 
       g_debug ("No credentials failed, retrying with user credentials...");
 
-      user = password = NULL;
       response = prompt_credentials (self, &user, &password);
+
+      g_message ("lalala");
 
       if (response == GTK_RESPONSE_OK)
         {
@@ -561,7 +572,7 @@ validate_url_cb (GcalNewCalendarPage *self)
 
   e_named_parameters_free (credentials);
 
-  return FALSE;
+  GCAL_RETURN (G_SOURCE_REMOVE);
 }
 
 static void
@@ -573,11 +584,11 @@ on_add_button_clicked_cb (GtkWidget           *button,
   manager = gcal_context_get_manager (self->context);
 
   /* Commit the new source */
-  //if (self->source != NULL)
-  //  gcal_manager_save_source (manager, self->source);
+  if (self->local_source)
+    gcal_manager_save_source (manager, self->local_source);
 
   /* Commit each new remote source */
-  if (self->remote_sources != NULL)
+  if (self->remote_sources)
     {
       GList *l;
 
@@ -661,6 +672,14 @@ on_cancel_button_clicked_cb (GtkWidget                  *button,
   gcal_calendar_management_page_switch_page (page, "calendars", NULL);
 }
 
+static void
+on_local_calendar_name_entry_text_changed_cb (GtkEntry            *entry,
+                                              GParamSpec          *pspec,
+                                              GcalNewCalendarPage *self)
+{
+  update_local_source (self);
+}
+
 
 /*
  * GcalCalendarManagementPage iface
@@ -716,6 +735,9 @@ gcal_new_calendar_page_deactivate (GcalCalendarManagementPage *page)
       g_list_free_full (self->remote_sources, g_object_unref);
       self->remote_sources = NULL;
     }
+
+  gtk_entry_set_text (self->local_calendar_name_entry, "");
+  gtk_entry_set_text (self->calendar_address_entry, "");
 
   GCAL_EXIT;
 }
@@ -798,12 +820,16 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
 
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, add_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_address_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_file_chooser_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_file_filter);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_connect_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_password_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_user_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, local_calendar_color_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, local_calendar_name_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, web_sources_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, web_sources_revealer);
 
@@ -812,6 +838,8 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_cancel_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_credential_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_credential_entry_activate_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_file_chooser_button_file_set_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_name_entry_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_url_entry_text_changed_cb);
 }
 
@@ -819,4 +847,6 @@ static void
 gcal_new_calendar_page_init (GcalNewCalendarPage *self)
 {
   gtk_widget_init_template (GTK_WIDGET (self));
+
+  gtk_file_filter_set_name (self->calendar_file_filter, _("Calendar files"));
 }
