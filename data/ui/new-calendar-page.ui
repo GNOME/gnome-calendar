@@ -133,7 +133,7 @@
         <child>
           <object class="GtkFileChooserButton" id="calendar_file_chooser_button">
             <property name="visible">True</property>
-            <!-- <property name="filter">calendar_file_filter</property> -->
+            <property name="filter">calendar_file_filter</property>
             <property name="title" translatable="yes">Open a File</property>
             <signal name="file-set" handler="on_file_chooser_button_file_set_cb" object="GcalNewCalendarPage" swapped="no" />
           </object>
