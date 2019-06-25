@@ -26,6 +26,7 @@
 #include "gcal-calendar-management-page.h"
 #include "gcal-debug.h"
 #include "gcal-new-calendar-page.h"
+#include "gcal-utils.h"
 
 #define ENTRY_PROGRESS_TIMEOUT 100 // ms
 
@@ -680,6 +681,16 @@ on_local_calendar_name_entry_text_changed_cb (GtkEntry            *entry,
   update_local_source (self);
 }
 
+static void
+on_web_description_label_link_activated_cb (GtkLabel            *label,
+                                            gchar               *uri,
+                                            GcalNewCalendarPage *self)
+{
+  GDBusConnection *connection = g_application_get_dbus_connection (g_application_get_default ());
+
+  gcal_utils_launch_online_accounts_panel (connection, NULL, NULL);
+}
+
 
 /*
  * GcalCalendarManagementPage iface
@@ -841,6 +852,7 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_file_chooser_button_file_set_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_name_entry_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_url_entry_text_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_web_description_label_link_activated_cb);
 }
 
 static void

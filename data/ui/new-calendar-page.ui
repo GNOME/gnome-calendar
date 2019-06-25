@@ -205,7 +205,7 @@
             <property name="use_markup">True</property>
             <property name="wrap">True</property>
             <property name="xalign">0</property>
-            <signal name="activate-link" handler="description_label_link_activated" object="GcalNewCalendarPage" swapped="no" />
+            <signal name="activate-link" handler="on_web_description_label_link_activated_cb" object="GcalNewCalendarPage" swapped="no" />
           </object>
           <packing>
             <property name="left_attach">0</property>
