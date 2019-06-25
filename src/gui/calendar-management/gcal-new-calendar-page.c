@@ -710,7 +710,7 @@ gcal_new_calendar_page_get_title (GcalCalendarManagementPage *page)
 
 static void
 gcal_new_calendar_page_activate (GcalCalendarManagementPage *page,
-                                 gpointer                    page_data)
+                                 GcalCalendar               *calendar)
 {
   GcalNewCalendarPage *self;
   GtkHeaderBar *headerbar;

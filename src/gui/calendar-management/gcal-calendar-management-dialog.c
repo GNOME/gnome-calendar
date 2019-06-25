@@ -74,7 +74,7 @@ struct _GcalCalendarManagementDialog
 
 static void          on_page_switched_cb                         (GcalCalendarManagementPage   *page,
                                                                   const gchar                  *next_page,
-                                                                  gpointer                      page_data,
+                                                                  GcalCalendar                 *calendar,
                                                                   GcalCalendarManagementDialog *self);
 
 G_DEFINE_TYPE (GcalCalendarManagementDialog, gcal_calendar_management_dialog, GTK_TYPE_DIALOG)
@@ -96,7 +96,7 @@ static GParamSpec *properties[N_PROPS] = { NULL, };
 static void
 set_page (GcalCalendarManagementDialog *self,
           const gchar                  *page_name,
-          gpointer                      page_data)
+          GcalCalendar                 *calendar)
 {
   GcalCalendarManagementPage *current_page;
   guint i;
@@ -113,7 +113,7 @@ set_page (GcalCalendarManagementDialog *self,
         continue;
 
       gtk_stack_set_visible_child (GTK_STACK (self->stack), GTK_WIDGET (page));
-      gcal_calendar_management_page_activate (page, page_data);
+      gcal_calendar_management_page_activate (page, calendar);
 
       gtk_header_bar_set_title (GTK_HEADER_BAR (self->headerbar),
                                 gcal_calendar_management_page_get_title (page));
@@ -174,12 +174,12 @@ setup_context (GcalCalendarManagementDialog *self)
 static void
 on_page_switched_cb (GcalCalendarManagementPage   *page,
                      const gchar                  *next_page,
-                     gpointer                      page_data,
+                     GcalCalendar                 *calendar,
                      GcalCalendarManagementDialog *self)
 {
   GCAL_ENTRY;
 
-  set_page (self, next_page, page_data);
+  set_page (self, next_page, calendar);
 
   GCAL_EXIT;
 }

@@ -22,6 +22,8 @@
 
 #include <gtk/gtk.h>
 
+#include "gcal-calendar.h"
+
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_CALENDAR_MANAGEMENT_PAGE (gcal_calendar_management_page_get_type ())
@@ -37,13 +39,13 @@ struct _GcalCalendarManagementPageInterface
   const gchar*       (*get_title)                                (GcalCalendarManagementPage *self);
 
   void               (*activate)                                 (GcalCalendarManagementPage *self,
-                                                                  gpointer                    page_data);
+                                                                  GcalCalendar               *calendar);
 
   void               (*deactivate)                               (GcalCalendarManagementPage *self);
 
   void               (*switch_page)                              (GcalCalendarManagementPage *self,
                                                                   const gchar                *page_name,
-                                                                  gpointer                    page_data);
+                                                                  GcalCalendar               *calendar);
 };
 
 const gchar*         gcal_calendar_management_page_get_name      (GcalCalendarManagementPage *self);
@@ -51,13 +53,13 @@ const gchar*         gcal_calendar_management_page_get_name      (GcalCalendarMa
 const gchar*         gcal_calendar_management_page_get_title     (GcalCalendarManagementPage *self);
 
 void                 gcal_calendar_management_page_activate      (GcalCalendarManagementPage *self,
-                                                                  gpointer                    page_data);
+                                                                  GcalCalendar               *calendar);
 
 void                 gcal_calendar_management_page_deactivate    (GcalCalendarManagementPage *self);
 
 void                 gcal_calendar_management_page_switch_page   (GcalCalendarManagementPage *self,
                                                                   const gchar                *page_name,
-                                                                  gpointer                    page_data);
+                                                                  GcalCalendar               *calendar);
 
 GtkHeaderBar*        gcal_calendar_management_page_get_titlebar  (GcalCalendarManagementPage *self);
 

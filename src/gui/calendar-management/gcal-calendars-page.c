@@ -360,17 +360,14 @@ gcal_calendars_page_get_title (GcalCalendarManagementPage *page)
 
 static void
 gcal_calendars_page_activate (GcalCalendarManagementPage *page,
-                              gpointer                    page_data)
+                              GcalCalendar               *calendar)
 {
   g_autofree gchar *new_string = NULL;
   GcalCalendarsPage *self;
-  GcalCalendar *calendar;
 
   GCAL_ENTRY;
 
-  g_assert (!page_data || GCAL_IS_CALENDAR (page_data));
-
-  if (!page_data)
+  if (!calendar)
     GCAL_RETURN ();
 
   self = GCAL_CALENDARS_PAGE (page);
@@ -382,7 +379,6 @@ gcal_calendars_page_activate (GcalCalendarManagementPage *page,
       g_clear_object (&self->removed_calendar);
     }
 
-  calendar = GCAL_CALENDAR (page_data);
   self->removed_calendar = g_object_ref (calendar);
 
   /* Remove the listbox entry (if any) */

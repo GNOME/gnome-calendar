@@ -51,7 +51,7 @@ gcal_calendar_management_page_default_init (GcalCalendarManagementPageInterface 
                                        G_TYPE_NONE,
                                        2,
                                        G_TYPE_STRING,
-                                       G_TYPE_POINTER);
+                                       GCAL_TYPE_CALENDAR);
 }
 
 const gchar*
@@ -74,14 +74,14 @@ gcal_calendar_management_page_get_title (GcalCalendarManagementPage *self)
 
 void
 gcal_calendar_management_page_activate (GcalCalendarManagementPage *self,
-                                        gpointer                    page_data)
+                                        GcalCalendar               *calendar)
 {
   g_return_if_fail (GCAL_IS_CALENDAR_MANAGEMENT_PAGE (self));
 
   if (GCAL_CALENDAR_MANAGEMENT_PAGE_GET_IFACE (self)->activate)
     {
       g_debug ("Activating %s", G_OBJECT_TYPE_NAME (self));
-      GCAL_CALENDAR_MANAGEMENT_PAGE_GET_IFACE (self)->activate (self, page_data);
+      GCAL_CALENDAR_MANAGEMENT_PAGE_GET_IFACE (self)->activate (self, calendar);
     }
 }
 
@@ -100,11 +100,11 @@ gcal_calendar_management_page_deactivate (GcalCalendarManagementPage *self)
 void
 gcal_calendar_management_page_switch_page (GcalCalendarManagementPage *self,
                                            const gchar                *page_name,
-                                           gpointer                    page_data)
+                                           GcalCalendar               *calendar)
 {
   g_return_if_fail (GCAL_IS_CALENDAR_MANAGEMENT_PAGE (self));
 
-  g_signal_emit (self, signals[SWITCH_PAGE], 0, page_name, page_data);
+  g_signal_emit (self, signals[SWITCH_PAGE], 0, page_name, calendar);
 }
 
 GtkHeaderBar*
