@@ -27,7 +27,6 @@
                 <property name="vexpand">True</property>
                 <property name="vhomogeneous">False</property>
                 <property name="transition_type">crossfade</property>
-                <signal name="notify::visible-child-name" handler="stack_visible_child_name_changed" object="GcalCalendarManagementDialog" swapped="no"/>
               </object>
             </child>
           </object>
