@@ -581,7 +581,6 @@ allocate_multiday_events (GcalMonthView *self,
                           gint          *allocated_events_at_day)
 {
   GtkAllocation event_allocation;
-  GtkAllocation cell_allocation;
   GtkBorder margin;
   GList *l;
   gboolean is_rtl;
@@ -623,6 +622,9 @@ allocate_multiday_events (GcalMonthView *self,
           g_autoptr (GDateTime) dt_start = NULL;
           g_autoptr (GDateTime) dt_end = NULL;
           GcalEventBlock *block;
+          GtkAllocation first_cell_allocation;
+          GtkAllocation last_cell_allocation;
+          GtkWidget *last_month_cell;
           GtkWidget *month_cell;
           GList *aux;
           gdouble pos_x;
@@ -666,16 +668,19 @@ allocate_multiday_events (GcalMonthView *self,
             }
 
 
-          /*
-           * Retrieve the cell widget. On RTL languages, we use the last month cell as the starting
-           * point.
-           */
-          if (is_rtl)
-            month_cell = self->month_cell[last_block_cell / 7][last_block_cell % 7];
-          else
-            month_cell = self->month_cell[cell / 7][cell % 7];
+          /* Retrieve the cell widget. On RTL languages, swap the first and last cells */
+          month_cell = self->month_cell[cell / 7][cell % 7];
+          last_month_cell = self->month_cell[last_block_cell / 7][last_block_cell % 7];
 
-          gtk_widget_get_allocation (month_cell, &cell_allocation);
+          if (is_rtl)
+            {
+              GtkWidget *aux = month_cell;
+              month_cell = last_month_cell;
+              last_month_cell = aux;
+            }
+
+          gtk_widget_get_allocation (month_cell, &first_cell_allocation);
+          gtk_widget_get_allocation (last_month_cell, &last_cell_allocation);
 
           gtk_widget_set_child_visible (child_widget, TRUE);
 
@@ -703,9 +708,9 @@ allocate_multiday_events (GcalMonthView *self,
                                         &margin);
 
 
-          pos_x = cell_allocation.x + margin.left;
-          pos_y = cell_allocation.y + margin.top;
-          width = cell_allocation.width * length;
+          pos_x = first_cell_allocation.x + margin.left;
+          pos_y = first_cell_allocation.y + margin.top;
+          width = last_cell_allocation.x + last_cell_allocation.width - first_cell_allocation.x;
 
           remove_cell_border_and_padding (month_cell, &pos_x, &pos_y, &width);
 
