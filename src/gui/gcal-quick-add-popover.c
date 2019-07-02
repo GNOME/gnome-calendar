@@ -782,11 +782,19 @@ gcal_quick_add_popover_set_property (GObject      *object,
       break;
 
     case PROP_CONTEXT:
-      if (g_set_object (&self->context, g_value_get_object (value)))
+      if (self->context != g_value_get_object (value))
         {
           g_autoptr (GList) calendars = NULL;
           GcalManager *manager;
           GList *l;
+
+          if (self->context != NULL)
+            {
+              manager = gcal_context_get_manager (self->context);
+              g_signal_handlers_disconnect_by_data (manager, self);
+            }
+
+          g_set_object (&self->context, g_value_get_object (value));
 
           /* Add currently loaded sources */
           manager = gcal_context_get_manager (self->context);
@@ -798,10 +806,10 @@ gcal_quick_add_popover_set_property (GObject      *object,
           g_list_free (calendars);
 
           /* Connect to the manager signals and keep the list updates */
-          g_signal_connect (manager, "calendar-added", G_CALLBACK (on_calendar_added), self);
-          g_signal_connect (manager, "calendar-changed", G_CALLBACK (on_calendar_changed), self);
-          g_signal_connect (manager, "calendar-removed", G_CALLBACK (on_calendar_removed), self);
-          g_signal_connect_swapped (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self);
+          g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_calendar_added), self, 0);
+          g_signal_connect_object (manager, "calendar-changed", G_CALLBACK (on_calendar_changed), self, 0);
+          g_signal_connect_object (manager, "calendar-removed", G_CALLBACK (on_calendar_removed), self, 0);
+          g_signal_connect_object (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self, G_CONNECT_SWAPPED);
 
           g_signal_connect_object (self->context,
                                    "notify::time-format",
