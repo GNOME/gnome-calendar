@@ -778,10 +778,15 @@ gcal_quick_add_popover_set_property (GObject      *object,
       break;
 
     case PROP_MANAGER:
-      if (g_set_object (&self->manager, g_value_get_object (value)))
+      if (self->manager != g_value_get_object (value))
         {
           GcalManager *manager;
           GList *sources, *l;
+
+          if (self->manager != NULL)
+            g_signal_handlers_disconnect_by_data (self->manager, self);
+
+          g_set_object (&self->manager, g_value_get_object (value));
 
           /* Add currently leaded sources */
           manager = self->manager;
@@ -793,10 +798,10 @@ gcal_quick_add_popover_set_property (GObject      *object,
           g_list_free (sources);
 
           /* Connect to the manager signals and keep the list updates */
-          g_signal_connect (manager, "source-added", G_CALLBACK (on_source_added), self);
-          g_signal_connect (manager, "source-changed", G_CALLBACK (on_source_changed), self);
-          g_signal_connect (manager, "source-removed", G_CALLBACK (on_source_removed), self);
-          g_signal_connect_swapped (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self);
+          g_signal_connect_object (manager, "source-added", G_CALLBACK (on_source_added), self, 0);
+          g_signal_connect_object (manager, "source-changed", G_CALLBACK (on_source_changed), self, 0);
+          g_signal_connect_object (manager, "source-removed", G_CALLBACK (on_source_removed), self, 0);
+          g_signal_connect_object (manager, "notify::default-calendar", G_CALLBACK (update_default_calendar_row), self, G_CONNECT_SWAPPED);
 
           g_object_notify (G_OBJECT (self), "manager");
         }
