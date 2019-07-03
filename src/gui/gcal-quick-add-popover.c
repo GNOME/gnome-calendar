@@ -495,7 +495,8 @@ update_default_calendar_row (GcalQuickAddPopover *self)
   default_calendar = gcal_manager_get_default_calendar (manager);
 
   row = get_row_for_calendar (self, default_calendar);
-  select_row (self, GTK_LIST_BOX_ROW (row));
+  if (row != NULL)
+    select_row (self, GTK_LIST_BOX_ROW (row));
 }
 
 
