@@ -224,7 +224,7 @@ build_component_from_datetime (GcalEvent *self,
                                GDateTime *dt)
 {
   ICalTime *itt;
-  gchar *tzid;
+  gchar *tzid = NULL;
 
   if (!dt)
     return NULL;
@@ -241,8 +241,11 @@ build_component_from_datetime (GcalEvent *self,
       ICalTimezone *zone;
 
       zone = e_cal_util_get_system_timezone ();
-      i_cal_time_set_timezone (itt, zone);
-      tzid = zone ? g_strdup (i_cal_timezone_get_tzid (zone)) : NULL;
+      if (zone != NULL)
+        {
+          i_cal_time_set_timezone (itt, zone);
+          tzid = g_strdup (i_cal_timezone_get_tzid (zone));
+         }
     }
 
   /* Call it after setting the timezone, because the DATE values do not let set the timezone */
