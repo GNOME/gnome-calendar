@@ -34,6 +34,7 @@
 #include <glib/gi18n.h>
 
 #include <langinfo.h>
+#include <locale.h>
 
 #include <string.h>
 #include <math.h>
@@ -1041,17 +1042,13 @@ is_workday (guint day)
 
   no_work_days = GCAL_WEEK_DAY_SATURDAY | GCAL_WEEK_DAY_SUNDAY;
 
-  locale = getenv ("LC_ALL");
-  if (!locale || g_utf8_strlen (locale, -1) < 5)
-    locale = getenv ("LC_TIME");
+  locale = setlocale (LC_TIME, NULL);
 
-  if (!locale)
+  if (!locale || g_utf8_strlen (locale, -1) < 5)
     {
-      g_warning ("Locale is NULL, assuming Saturday and Sunday as non workdays");
+      g_warning ("Locale is unset or lacks territory code, assuming Saturday and Sunday as non workdays");
       return !(no_work_days & 1 << day);
     }
-
-  g_return_val_if_fail (g_utf8_strlen (locale, -1) >= 5, TRUE);
 
   territory[0] = locale[3];
   territory[1] = locale[4];
