@@ -372,7 +372,7 @@ build_component_from_details (const gchar *summary,
   ECalComponent *event;
   ECalComponentDateTime *dt;
   ECalComponentText *summ;
-  ICalTimezone *zone;
+  ICalTimezone *zone = NULL;
   ICalTime *itt;
   gboolean all_day;
 
@@ -389,13 +389,13 @@ build_component_from_details (const gchar *summary,
    * When the event is all day, we consider UTC timezone by default. Otherwise,
    * we always use the system timezone to create new events
    */
-  if (all_day)
-    {
-      zone = i_cal_timezone_get_utc_timezone ();
-    }
-  else
+  if (!all_day)
     {
       zone = e_cal_util_get_system_timezone ();
+    }
+  if (zone == NULL)
+    {
+      zone = i_cal_timezone_get_utc_timezone ();
     }
 
   /* Start date */
@@ -483,10 +483,14 @@ icaltime_compare_with_current (const ICalTime *date1,
   zone1 = i_cal_time_get_timezone (date1);
   if (!zone1)
     zone1 = e_cal_util_get_system_timezone ();
+  if (!zone1)
+    zone1 = i_cal_timezone_get_utc_timezone ();
 
   zone2 = i_cal_time_get_timezone (date2);
   if (!zone2)
     zone2 = e_cal_util_get_system_timezone ();
+  if (!zone2)
+    zone2 = i_cal_timezone_get_utc_timezone ();
 
   start1 = i_cal_time_as_timet_with_zone (date1, zone1);
   start2 = i_cal_time_as_timet_with_zone (date2, zone2);
