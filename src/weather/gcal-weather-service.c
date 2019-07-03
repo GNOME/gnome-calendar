@@ -476,7 +476,11 @@ update_location (GcalWeatherService  *self,
   if (gcal_timer_is_running (self->duration_timer))
     stop_timer (self);
 
-  g_clear_object (&self->gweather_info);
+  if (self->gweather_info != NULL)
+    {
+      g_signal_handlers_disconnect_by_data (self->gweather_info, self);
+      g_clear_object (&self->gweather_info);
+    }
 
   if (!location)
     {
@@ -496,7 +500,7 @@ update_location (GcalWeatherService  *self,
        * what is going on.
        */
       gweather_info_set_enabled_providers (self->gweather_info, GWEATHER_PROVIDER_METAR | GWEATHER_PROVIDER_OWM | GWEATHER_PROVIDER_YR_NO);
-      g_signal_connect (self->gweather_info, "updated", (GCallback) on_gweather_update_cb, self);
+      g_signal_connect_object (self->gweather_info, "updated", (GCallback) on_gweather_update_cb, self, 0);
 
       /*
        * gweather_info_update might or might not trigger a
