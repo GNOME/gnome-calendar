@@ -95,7 +95,6 @@ struct _GcalWeekHeader
   gint                selection_end;
   gint                dnd_cell;
 
-  GcalWeatherService *weather_service; /* unowned, nullable */
   /* Array of nullable weather infos for each day, starting with Sunday. */
   WeatherInfoDay      weather_infos[7];
 
@@ -195,16 +194,17 @@ clear_weather_infos (GcalWeekHeader *self)
 static void
 update_weather_infos (GcalWeekHeader *self)
 {
-  GPtrArray* weather_infos;
+  GPtrArray *weather_infos;
+  GcalWeatherService *service;
 
   g_return_if_fail (GCAL_IS_WEEK_HEADER (self));
 
   clear_weather_infos (self);
 
-  if (!self->weather_service)
-    return;
+  g_assert (self->context);
+  service = gcal_context_get_weather_service (self->context);
 
-  weather_infos = gcal_weather_service_get_weather_infos (self->weather_service);
+  weather_infos = gcal_weather_service_get_weather_infos (service);
   add_weather_infos (self, weather_infos);
 }
 
@@ -353,7 +353,6 @@ on_weather_update (GcalWeatherService *weather_service,
 {
   g_assert (GCAL_IS_WEATHER_SERVICE (weather_service));
   g_assert (GCAL_IS_WEEK_HEADER (self));
-  g_assert (self->weather_service == weather_service);
 
   update_weather_infos (self);
 }
@@ -1161,8 +1160,6 @@ gcal_week_header_finalize (GObject *object)
 
   for (i = 0; i < 7; i++)
     g_list_free (self->events[i]);
-
-  g_clear_object (&self->weather_service);
 
   for (i = 0; i < G_N_ELEMENTS (self->weather_infos); i++)
     wid_clear (&self->weather_infos[i]);
