@@ -1268,8 +1268,13 @@ gcal_window_set_property (GObject      *object,
       break;
 
     case PROP_MANAGER:
-      if (g_set_object (&self->manager, g_value_get_object (value)))
+      if (self->manager != g_value_get_object (value))
         {
+          if (self->manager != NULL)
+            g_signal_handlers_disconnect_by_data (self->manager, object);
+
+          g_set_object (&self->manager, g_value_get_object (value));
+
           g_settings_bind (gcal_manager_get_settings (self->manager),
                            "active-view",
                            self,
@@ -1288,10 +1293,10 @@ gcal_window_set_property (GObject      *object,
               g_list_free (sources);
             }
 
-          g_signal_connect (self->manager, "source-added", G_CALLBACK (add_source), object);
-          g_signal_connect (self->manager, "source-removed", G_CALLBACK (remove_source), object);
-          g_signal_connect_swapped (self->manager, "source-enabled", G_CALLBACK (source_enabled), object);
-          g_signal_connect_swapped (self->manager, "source-changed", G_CALLBACK (source_changed), object);
+          g_signal_connect_object (self->manager, "source-added", G_CALLBACK (add_source), object, 0);
+          g_signal_connect_object (self->manager, "source-removed", G_CALLBACK (remove_source), object, 0);
+          g_signal_connect_object (self->manager, "source-enabled", G_CALLBACK (source_enabled), object, G_CONNECT_SWAPPED);
+          g_signal_connect_object (self->manager, "source-changed", G_CALLBACK (source_changed), object, G_CONNECT_SWAPPED);
 
           gcal_search_popover_connect (GCAL_SEARCH_POPOVER (self->search_popover), self->manager);
 
