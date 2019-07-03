@@ -620,11 +620,11 @@ make_row_from_source (GcalSourceDialog *dialog,
   top_label = GTK_WIDGET (gtk_builder_get_object (builder, "title"));
   gtk_label_set_label (GTK_LABEL (top_label), e_source_get_display_name (source));
   g_object_bind_property (source, "display-name", top_label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_signal_connect (source, "notify::display-name", G_CALLBACK (invalidate_calendar_listbox_sort),
-                    dialog->calendars_listbox);
+  g_signal_connect_object (source, "notify::display-name", G_CALLBACK (invalidate_calendar_listbox_sort),
+                           dialog->calendars_listbox, 0);
 
   extension = E_SOURCE_SELECTABLE (e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR));
-  g_signal_connect (extension, "notify::color", G_CALLBACK (source_color_changed), icon);
+  g_signal_connect_object (extension, "notify::color", G_CALLBACK (source_color_changed), icon, 0);
 
   /* parent source name label */
   bottom_label = GTK_WIDGET (gtk_builder_get_object (builder, "subtitle"));
