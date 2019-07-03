@@ -2118,7 +2118,11 @@ update_weather (GcalYearView *self)
   if (!updated)
     {
       gtk_label_set_text (self->temp_label, "");
-      gtk_image_clear (self->weather_icon);
+      /* FIXME: This should never be NULL, but it somehow is.
+       * https://gitlab.gnome.org/GNOME/gnome-calendar/issues/299
+       */
+      if (self->weather_icon != NULL)
+        gtk_image_clear (self->weather_icon);
     }
 }
 
