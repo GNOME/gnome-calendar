@@ -2111,29 +2111,35 @@ gcal_source_dialog_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_MANAGER:
-      self->manager = g_value_dup_object (value);
-
-      if (!gcal_manager_get_loading (self->manager))
+      if (self->manager != g_value_get_object (value))
         {
-          GList *sources, *l;
+          if (self->manager != NULL)
+            g_signal_handlers_disconnect_by_data (self->manager, self);
 
-          sources = gcal_manager_get_sources_connected (self->manager);
+          g_set_object (&self->manager, g_value_get_object (value));
 
-          for (l = sources; l != NULL; l = l->next)
-            add_source (self->manager, l->data, is_source_enabled (l->data), self);
+          if (!gcal_manager_get_loading (self->manager))
+            {
+              GList *sources, *l;
+
+              sources = gcal_manager_get_sources_connected (self->manager);
+
+              for (l = sources; l != NULL; l = l->next)
+                add_source (self->manager, l->data, is_source_enabled (l->data), self);
+            }
+          else
+            {
+              g_signal_connect_swapped (self->manager,
+                                        "notify::loading",
+                                        G_CALLBACK (loading_changed_cb),
+                                        self);
+            }
+
+          g_signal_connect_object (self->manager, "source-added", G_CALLBACK (add_source), self, 0);
+          g_signal_connect_object (self->manager, "source-removed", G_CALLBACK (remove_source), self, 0);
+
+          g_object_notify_by_pspec (object, properties[PROP_MANAGER]);
         }
-      else
-        {
-          g_signal_connect_swapped (self->manager,
-                                    "notify::loading",
-                                    G_CALLBACK (loading_changed_cb),
-                                    self);
-        }
-
-      g_signal_connect (self->manager, "source-added", G_CALLBACK (add_source), self);
-      g_signal_connect (self->manager, "source-removed", G_CALLBACK (remove_source), self);
-
-      g_object_notify_by_pspec (object, properties[PROP_MANAGER]);
       break;
 
     default:
