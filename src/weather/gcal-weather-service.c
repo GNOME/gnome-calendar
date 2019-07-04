@@ -309,7 +309,8 @@ get_icon_name_sortkey (const gchar *icon_name,
 
   for (i = 0; i < G_N_ELEMENTS (icons); i++)
     {
-      if (icons[i].name[normalized_name_len] == '\0' && strncmp (icon_name, icons[i].name, normalized_name_len) == 0)
+      if (normalized_name_len == strlen (icons[i].name) &&
+          strncmp (icon_name, icons[i].name, normalized_name_len) == 0)
         {
           *supports_night_icon = icons[i].night_support;
           return i;
