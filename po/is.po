@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2018-09-15 05:15+0000\n"
-"PO-Revision-Date: 2019-02-21 08:55+0000\n"
+"POT-Creation-Date: 2019-04-23 22:27+0000\n"
+"PO-Revision-Date: 2019-07-06 07:08+0000\n"
 "Last-Translator: Sveinn í Felli <sv1@fellsnet.is>\n"
 "Language-Team: Icelandic <translation-team-is@lists.sourceforge.net>\n"
 "Language: is\n"
@@ -19,7 +19,7 @@ msgstr ""
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:187 src/gcal-application.c:646 src/main.c:36
+#: data/ui/window.ui:187 src/gcal-application.c:648 src/main.c:36
 msgid "Calendar"
 msgstr "Dagatal"
 
@@ -28,33 +28,26 @@ msgid "Calendar for GNOME"
 msgstr "Dagatal fyrir GNOME"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:11
-#| msgid ""
-#| "GNOME Calendar is a simple and beautiful calendar application designed to "
-#| "perfectly fit the GNOME desktop. By reusing the components which the "
-#| "GNOME desktop is build on, Calendar nicely integrates with the GNOME "
-#| "ecosystem."
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
 msgstr ""
-"GNOME Dagatal er einfalt og áferðarfallegt dagatalsforrit, sérstaklega hannað"
-" til að falla inn í GNOME skjáborðið. Með því að endurnýta aðrar einingar"
-" GNOME skjáborðsins, verður dagatalið órjúfanlegur hluti GNOME vistkerfisins."
+"GNOME Dagatal er einfalt og áferðarfallegt dagatalsforrit, sérstaklega "
+"hannað til að falla inn í GNOME skjáborðið. Með því að endurnýta aðrar "
+"einingar GNOME skjáborðsins, verður dagatalið órjúfanlegur hluti GNOME "
+"vistkerfisins."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
-#| msgid ""
-#| "We aim to find the perfect balance between nicely crafted features and "
-#| "user-centred usability. No excess, no lacks. You’ll feel comfortable "
-#| "using Calendar, like you’ve been using it for ages!"
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
 msgstr ""
-"Við reynum að finna rétta jafnvægið á milli fallegrar virkni og notendamiðaðs"
-" notagildis. Engu ofaukið, ekkert vantar. Þér á eftir að finnast þægilegt að"
-" vinna með dagatalið, rétt eins og þú hafir notað það svo árum skiptir!"
+"Við reynum að finna rétta jafnvægið á milli fallegrar virkni og "
+"notendamiðaðs notagildis. Engu ofaukið, ekkert vantar. Þér á eftir að "
+"finnast þægilegt að vinna með dagatalið, rétt eins og þú hafir notað það svo "
+"árum skiptir!"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:27
 msgid "Week view"
@@ -71,11 +64,6 @@ msgstr "Umsýsla dagatals"
 #: data/org.gnome.Calendar.desktop.in:4
 msgid "Access and manage your calendars"
 msgstr "Skoða og sýsla með dagatöl"
-
-#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
-#: data/org.gnome.Calendar.desktop.in:7
-msgid "org.gnome.Calendar"
-msgstr "org.gnome.Calendar"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
 #: data/org.gnome.Calendar.desktop.in:13
@@ -344,30 +332,14 @@ msgid "Year view"
 msgstr "Ársyfirlit"
 
 #: data/ui/menus.ui:6
-msgid "_Calendars"
-msgstr "_Dagatöl"
-
-#: data/ui/menus.ui:12
-msgid "_Keyboard Shortcuts"
-msgstr "Flýtily_klar"
-
-#: data/ui/menus.ui:16
-msgid "_About"
-msgstr "_Um hugbúnaðinn"
-
-#: data/ui/menus.ui:20
-msgid "_Quit"
-msgstr "_Hætta"
-
-#: data/ui/menus.ui:29
 msgid "From Web…"
 msgstr "Af netinu..."
 
-#: data/ui/menus.ui:33
+#: data/ui/menus.ui:10
 msgid "New Local Calendar…"
 msgstr "Nýtt staðvært dagatal…"
 
-#: data/ui/menus.ui:37
+#: data/ui/menus.ui:14
 msgid "From File…"
 msgstr "Úr skrá…"
 
@@ -560,6 +532,15 @@ msgstr "Leita að atburðum"
 msgid "_Synchronize"
 msgstr "_Samstilla"
 
+#: data/ui/window.ui:410
+msgid "_Keyboard Shortcuts"
+msgstr "Flýtily_klar"
+
+#: data/ui/window.ui:419
+#| msgid "Add Calendar"
+msgid "_About Calendar"
+msgstr "_Um dagatalsforritið"
+
 #: data/ui/year-view.ui:133
 msgid "No events"
 msgstr "Engir atburðir"
@@ -588,12 +569,12 @@ msgstr "Opna dagatal á liðnu dagsetningunni"
 msgid "Open calendar showing the passed event"
 msgstr "Opna dagatal á liðna atburðinum"
 
-#: src/gcal-application.c:601
+#: src/gcal-application.c:603
 #, c-format
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Höfundarréttur © 2012–%d Höfundar Calendar/Dagatals"
 
-#: src/gcal-application.c:652
+#: src/gcal-application.c:654
 msgid "translator-credits"
 msgstr "Sveinn í Felli, sv1@fellsnet.is"
 
@@ -1027,6 +1008,18 @@ msgstr "%d. %B…"
 #: src/views/gcal-year-view.c:296 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d. %B"
+
+#~ msgid "org.gnome.Calendar"
+#~ msgstr "org.gnome.Calendar"
+
+#~ msgid "_Calendars"
+#~ msgstr "_Dagatöl"
+
+#~ msgid "_About"
+#~ msgstr "_Um hugbúnaðinn"
+
+#~ msgid "_Quit"
+#~ msgstr "_Hætta"
 
 #~ msgid "Add Eve_nt…"
 #~ msgstr "_Bæta við atburði…"
