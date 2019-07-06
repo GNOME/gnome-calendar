@@ -353,7 +353,7 @@ on_weather_update (GcalWeatherService *weather_service,
 {
   g_assert (GCAL_IS_WEATHER_SERVICE (weather_service));
   g_assert (GCAL_IS_WEEK_HEADER (self));
-  g_assert (self->weather_service == weather_service);
+  g_assert (gcal_context_get_weather_service (self->context) == weather_service);
 
   update_weather_infos (self);
 }
