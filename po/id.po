@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-06-15 10:57+0000\n"
-"PO-Revision-Date: 2019-06-21 15:47+0700\n"
+"POT-Creation-Date: 2019-07-06 07:34+0000\n"
+"PO-Revision-Date: 2019-07-08 15:57+0700\n"
 "Last-Translator: Kukuh Syafaat <kukuhsyafaat@gnome.org>\n"
 "Language-Team: Indonesian <gnomed@i15n.org>\n"
 "Language: id\n"
@@ -132,6 +132,10 @@ msgstr "Jungkitkan suara alarm"
 msgid "Remove the alarm"
 msgstr "Hapus alarm"
 
+#: data/ui/calendar-management-dialog.ui:42
+msgid "Calendar Settings"
+msgstr "Pengaturan Kalender"
+
 #: data/ui/calendar-popover.ui:43
 msgid "_Synchronize Calendars"
 msgstr "_Selaraskan Kalender"
@@ -145,8 +149,49 @@ msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Selaraskan kalender jauh…"
 
-#: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
-#: data/ui/source-dialog.ui:869 src/gui/gcal-source-dialog.c:1157
+#: data/ui/calendars-page.ui:31 src/gui/gcal-window.c:706
+#: src/gui/gcal-window.c:710
+msgid "Undo"
+msgstr "Tak jadi"
+
+#: data/ui/calendars-page.ui:97
+msgid "Add Calendar…"
+msgstr "Tambah Kalender…"
+
+#: data/ui/edit-calendar-page.ui:18
+msgid "Account"
+msgstr "Akun"
+
+#: data/ui/edit-calendar-page.ui:43
+msgid "Settings"
+msgstr "Pengaturan"
+
+#: data/ui/edit-calendar-page.ui:64 data/ui/edit-dialog.ui:232
+msgid "Location"
+msgstr "Lokasi"
+
+#: data/ui/edit-calendar-page.ui:93
+msgid "Calendar name"
+msgstr "Nama kalender"
+
+#: data/ui/edit-calendar-page.ui:121 data/ui/new-calendar-page.ui:65
+msgid "Color"
+msgstr "Warna"
+
+#: data/ui/edit-calendar-page.ui:155
+msgid "Display calendar"
+msgstr "Tampilkan kalender"
+
+#: data/ui/edit-calendar-page.ui:175
+msgid "Add new events to this calendar by default"
+msgstr "Secara bawaan tambahkan acara baru ke kalender ini"
+
+#: data/ui/edit-calendar-page.ui:190
+msgid "Remove Calendar"
+msgstr "Hapus Kalender"
+
+#: data/ui/edit-dialog.ui:16 data/ui/new-calendar-page.ui:231
+#: data/ui/new-calendar-page.ui:342
 msgid "Cancel"
 msgstr "Batal"
 
@@ -177,10 +222,6 @@ msgstr "Pengingat"
 #: data/ui/edit-dialog.ui:216
 msgid "Notes"
 msgstr "Catatan"
-
-#: data/ui/edit-dialog.ui:232 data/ui/source-dialog.ui:563
-msgid "Location"
-msgstr "Lokasi"
 
 #: data/ui/edit-dialog.ui:301
 msgid "Time"
@@ -362,14 +403,61 @@ msgstr "Dari Berkas…"
 msgid "New Event…"
 msgstr "Acara Baru…"
 
+#: data/ui/new-calendar-page.ui:33 data/ui/new-calendar-page.ui:41
+msgid "Calendar Name"
+msgstr "Nama Kalender"
+
+#: data/ui/new-calendar-page.ui:86
+msgid "Import a Calendar"
+msgstr "Impor Kalender"
+
+#: data/ui/new-calendar-page.ui:105
+msgid ""
+"Alternatively, enter the web address of an online calendar you want to "
+"import, or open a supported calendar file."
+msgstr ""
+"Sebagai alternatif, masukkan alamat web kalender daring yang ingin Anda "
+"impor, atau buka berkas kalender yang didukung."
+
+#: data/ui/new-calendar-page.ui:137
+msgid "Open a File"
+msgstr "Buka suatu berkas"
+
+#: data/ui/new-calendar-page.ui:158
+msgid "Calendars"
+msgstr "Kalender"
+
+#: data/ui/new-calendar-page.ui:204
+msgid ""
+"If the calendar belongs to one of your online accounts, you can add it "
+"through the <a href=\"GOA\">online account settings</a>."
+msgstr ""
+"Bila kalender adalah milik satu dari akun daring Anda, Anda dapat "
+"menambahkannya melalui <a href=\"GOA\">Pengaturan akun daring</a>."
+
+#: data/ui/new-calendar-page.ui:228
+msgid "Enter your credentials"
+msgstr "Masukkan kredensial Anda"
+
+#: data/ui/new-calendar-page.ui:239
+msgid "Connect"
+msgstr "Sambung"
+
+#: data/ui/new-calendar-page.ui:266
+msgid "User"
+msgstr "Pengguna"
+
+#: data/ui/new-calendar-page.ui:280
+msgid "Password"
+msgstr "Kata Sandi"
+
+#: data/ui/new-calendar-page.ui:349 data/ui/quick-add-popover.ui:130
+msgid "Add"
+msgstr "Tambah"
+
 #: data/ui/quick-add-popover.ui:117
 msgid "Edit Details…"
 msgstr "Sunting Rincian…"
-
-#: data/ui/quick-add-popover.ui:130 data/ui/source-dialog.ui:389
-#: data/ui/source-dialog.ui:773
-msgid "Add"
-msgstr "Tambah"
 
 #: data/ui/search-popover.ui:76
 msgid "No results found"
@@ -378,116 +466,6 @@ msgstr "Tak ditemukan hasil"
 #: data/ui/search-popover.ui:92
 msgid "Try a different search"
 msgstr "Cobalah pencarian lain"
-
-#: data/ui/source-dialog.ui:53 src/gui/gcal-window.c:699
-#: src/gui/gcal-window.c:703
-msgid "Undo"
-msgstr "Tak jadi"
-
-#: data/ui/source-dialog.ui:135
-msgid "Online Accounts"
-msgstr "Akun Daring"
-
-#: data/ui/source-dialog.ui:151
-msgid "Open online account settings"
-msgstr "Buka pengaturan akun daring"
-
-#: data/ui/source-dialog.ui:198
-msgid "Google"
-msgstr "Google"
-
-#: data/ui/source-dialog.ui:209 data/ui/source-dialog.ui:260
-#: data/ui/source-dialog.ui:311
-msgid "Click to set up"
-msgstr "Klik untuk menyiapkan"
-
-#: data/ui/source-dialog.ui:249
-msgid "Nextcloud"
-msgstr "Nextcloud"
-
-#: data/ui/source-dialog.ui:300
-msgid "Microsoft Exchange"
-msgstr "Microsoft Exchange"
-
-#: data/ui/source-dialog.ui:346 data/ui/source-dialog.ui:682
-msgid "Calendars"
-msgstr "Kalender"
-
-#: data/ui/source-dialog.ui:421
-msgid "Overview"
-msgstr "Ringkasan"
-
-#: data/ui/source-dialog.ui:441
-msgid "Add new events to this calendar by default"
-msgstr "Secara bawaan tambahkan acara baru ke kalender ini"
-
-#: data/ui/source-dialog.ui:454
-msgid "Remove Calendar"
-msgstr "Hapus Kalender"
-
-#: data/ui/source-dialog.ui:483
-msgid "Display calendar"
-msgstr "Tampilkan kalender"
-
-#: data/ui/source-dialog.ui:521
-msgid "Calendar name"
-msgstr "Nama kalender"
-
-#: data/ui/source-dialog.ui:535
-msgid "Color"
-msgstr "Warna"
-
-#: data/ui/source-dialog.ui:549
-msgid "Account"
-msgstr "Akun"
-
-#: data/ui/source-dialog.ui:587
-msgid "Settings"
-msgstr "Pengaturan"
-
-#: data/ui/source-dialog.ui:618
-msgid "Edit Calendar"
-msgstr "Sunting Kalender"
-
-#: data/ui/source-dialog.ui:631
-msgid ""
-"Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of your online accounts, you can add it through the <a href="
-"\"GOA\">online account settings</a>."
-msgstr ""
-"Masukkan alamat kalender yang ingin Anda tambahkan. Bila kalender adalah "
-"milik satu dari akun daring Anda, Anda dapat menambahkannya melalui <a href="
-"\"GOA\">Pengaturan akun daring</a>."
-
-#: data/ui/source-dialog.ui:646
-msgid "Calendar Address"
-msgstr "Alamat Kalender"
-
-#: data/ui/source-dialog.ui:729 src/gui/gcal-source-dialog.c:2240
-#: src/gui/gcal-source-dialog.c:2246
-msgid "Add Calendar"
-msgstr "Tambah Kalender"
-
-#: data/ui/source-dialog.ui:745 src/gui/gcal-source-dialog.c:856
-#: src/gui/gcal-source-dialog.c:2269
-msgid "Calendar Settings"
-msgstr "Pengaturan Kalender"
-
-#: data/ui/source-dialog.ui:806
-msgid "User"
-msgstr "Pengguna"
-
-#: data/ui/source-dialog.ui:820
-msgid "Password"
-msgstr "Kata Sandi"
-
-#: data/ui/source-dialog.ui:866
-msgid "Enter your credentials"
-msgstr "Masukkan kredensial Anda"
-
-#: data/ui/source-dialog.ui:878
-msgid "Connect"
-msgstr "Sambung"
 
 #: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:756
 #: src/views/gcal-week-view.c:315
@@ -506,7 +484,7 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:309
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:318
 msgid "_Weather"
 msgstr "_Cuaca"
 
@@ -549,11 +527,15 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Cari acara"
 
-#: data/ui/window.ui:324
+#: data/ui/window.ui:309
+msgid "_Online Accounts…"
+msgstr "Ak_un Daring…"
+
+#: data/ui/window.ui:333
 msgid "_Keyboard Shortcuts"
 msgstr "Pintasan Papan Ti_k"
 
-#: data/ui/window.ui:333
+#: data/ui/window.ui:342
 msgid "_About Calendar"
 msgstr "Ten_ang Kalender"
 
@@ -586,6 +568,24 @@ msgstr "%1$s %2$s — %3$s %4$s"
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
+
+#: src/gui/calendar-management/gcal-calendars-page.c:358
+msgid "Manage Calendars"
+msgstr "Kelola Kalender"
+
+#. Update notification label
+#: src/gui/calendar-management/gcal-calendars-page.c:388
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "Kalender <b>%s</b> dihapus"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:708
+msgid "New Calendar"
+msgstr "Kalender Baru"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:863
+msgid "Calendar files"
+msgstr "Berkas kalender"
 
 #: src/gui/gcal-application.c:63
 msgid "Quit GNOME Calendar"
@@ -927,42 +927,6 @@ msgstr "Acara Baru pada %d November"
 msgid "New Event on December %d"
 msgstr "Acara Baru pada %d Desember"
 
-#. Dialog
-#: src/gui/gcal-source-dialog.c:1154
-msgid "Select a calendar file"
-msgstr "Pilih sebuah berkas kalender"
-
-#: src/gui/gcal-source-dialog.c:1158
-msgid "Open"
-msgstr "Buka"
-
-#: src/gui/gcal-source-dialog.c:1165
-msgid "Calendar files"
-msgstr "Berkas kalender"
-
-#. update the source properties
-#: src/gui/gcal-source-dialog.c:1199
-msgid "Unnamed Calendar"
-msgstr "Kalender Tanpa Nama"
-
-#. Update notification label
-#: src/gui/gcal-source-dialog.c:1792
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "Kalender <b>%s</b> dihapus"
-
-#: src/gui/gcal-source-dialog.c:1840 src/gui/gcal-source-dialog.c:1896
-msgid "Off"
-msgstr "Mati"
-
-#: src/gui/gcal-source-dialog.c:1840 src/gui/gcal-source-dialog.c:1896
-msgid "On"
-msgstr "Nyala"
-
-#: src/gui/gcal-source-dialog.c:1895
-msgid "Expired"
-msgstr "Kedaluwarsa"
-
 #: src/gui/gcal-time-selector.c:83
 #, c-format
 msgid "%s AM"
@@ -973,11 +937,11 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:706
 msgid "Another event deleted"
 msgstr "Acara lain dihapus"
 
-#: src/gui/gcal-window.c:703
+#: src/gui/gcal-window.c:710
 msgid "Event deleted"
 msgstr "Acara dihapus"
 
@@ -1034,6 +998,48 @@ msgstr "%d %B…"
 #: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d %B"
+
+#~ msgid "Open online account settings"
+#~ msgstr "Buka pengaturan akun daring"
+
+#~ msgid "Google"
+#~ msgstr "Google"
+
+#~ msgid "Click to set up"
+#~ msgstr "Klik untuk menyiapkan"
+
+#~ msgid "Nextcloud"
+#~ msgstr "Nextcloud"
+
+#~ msgid "Microsoft Exchange"
+#~ msgstr "Microsoft Exchange"
+
+#~ msgid "Overview"
+#~ msgstr "Ringkasan"
+
+#~ msgid "Edit Calendar"
+#~ msgstr "Sunting Kalender"
+
+#~ msgid "Calendar Address"
+#~ msgstr "Alamat Kalender"
+
+#~ msgid "Select a calendar file"
+#~ msgstr "Pilih sebuah berkas kalender"
+
+#~ msgid "Open"
+#~ msgstr "Buka"
+
+#~ msgid "Unnamed Calendar"
+#~ msgstr "Kalender Tanpa Nama"
+
+#~ msgid "Off"
+#~ msgstr "Mati"
+
+#~ msgid "On"
+#~ msgstr "Nyala"
+
+#~ msgid "Expired"
+#~ msgstr "Kedaluwarsa"
 
 #~ msgid "org.gnome.Calendar"
 #~ msgstr "org.gnome.Calendar"
