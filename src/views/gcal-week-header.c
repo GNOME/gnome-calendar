@@ -55,8 +55,6 @@ typedef struct
   GdkPixbuf          *icon_buf; /* owned */
 } WeatherInfoDay;
 
-
-
 struct _GcalWeekHeader
 {
   GtkGrid             parent;
