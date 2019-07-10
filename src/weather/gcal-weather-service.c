@@ -109,20 +109,6 @@ struct _GcalWeatherService
 static void          on_gweather_update_cb                       (GWeatherInfo       *info,
                                                                   GcalWeatherService *self);
 
-static void          schedule_midnight                           (GcalWeatherService *self);
-
-static void          start_timer                                 (GcalWeatherService *self);
-
-static void          stop_timer                                  (GcalWeatherService *self);
-
-static gboolean      has_valid_weather_infos                     (GcalWeatherService *self);
-
-static void          update_weather                              (GcalWeatherService *self,
-                                                                  GWeatherInfo       *info,
-                                                                  gboolean            reuse_old_on_error);
-
-static gssize        get_normalized_icon_name_len                (const gchar        *str);
-
 G_DEFINE_TYPE (GcalWeatherService, gcal_weather_service, G_TYPE_OBJECT)
 
 enum
@@ -144,6 +130,31 @@ static guint signals[N_SIGNALS] = { 0 };
 /*
  * Auxiliary methods
  */
+
+static gssize
+get_normalized_icon_name_len (const gchar *str)
+{
+  const gchar *suffix1 = "-symbolic";
+  const gssize suffix1_len = strlen (suffix1);
+
+  const gchar *suffix2 = "-night";
+  const gssize suffix2_len = strlen (suffix2);
+
+  gssize clean_len;
+  gssize str_len;
+
+  str_len = strlen (str);
+
+  clean_len = str_len - suffix1_len;
+  if (clean_len >= 0 && memcmp (suffix1, str + clean_len, suffix1_len) == 0)
+    str_len = clean_len;
+
+  clean_len = str_len - suffix2_len;
+  if (clean_len >= 0 && memcmp (suffix2, str + clean_len, suffix2_len) == 0)
+    str_len = clean_len;
+
+  return str_len;
+}
 
 static gchar*
 get_normalized_icon_name (GWeatherInfo* wi,
@@ -191,6 +202,18 @@ get_normalized_icon_name (GWeatherInfo* wi,
   buffer[buffer_size - 1] = '\0';
 
   return buffer;
+}
+
+static gboolean
+has_valid_weather_infos (GcalWeatherService *self)
+{
+  gint64 now;
+
+  if (self->gweather_info == NULL || self->weather_infos_upated < 0)
+    return FALSE;
+
+  now = g_get_monotonic_time ();
+  return (now - self->weather_infos_upated) / 1000000 <= self->valid_timespan;
 }
 
 static void
@@ -255,31 +278,6 @@ stop_timer (GcalWeatherService  *self)
 {
   gcal_timer_stop (self->duration_timer);
   gcal_timer_stop (self->midnight_timer);
-}
-
-static gssize
-get_normalized_icon_name_len (const gchar *str)
-{
-  const gchar *suffix1 = "-symbolic";
-  const gssize suffix1_len = strlen (suffix1);
-
-  const gchar *suffix2 = "-night";
-  const gssize suffix2_len = strlen (suffix2);
-
-  gssize clean_len;
-  gssize str_len;
-
-  str_len = strlen (str);
-
-  clean_len = str_len - suffix1_len;
-  if (clean_len >= 0 && memcmp (suffix1, str + clean_len, suffix1_len) == 0)
-    str_len = clean_len;
-
-  clean_len = str_len - suffix2_len;
-  if (clean_len >= 0 && memcmp (suffix2, str + clean_len, suffix2_len) == 0)
-    str_len = clean_len;
-
-  return str_len;
 }
 
 static gint
@@ -469,79 +467,6 @@ compute_weather_info_data (GSList    *samples,
     }
 }
 
-static void
-update_location (GcalWeatherService  *self,
-                 GWeatherLocation    *location)
-{
-  if (gcal_timer_is_running (self->duration_timer))
-    stop_timer (self);
-
-  if (self->gweather_info != NULL)
-    {
-      g_signal_handlers_disconnect_by_data (self->gweather_info, self);
-      g_clear_object (&self->gweather_info);
-    }
-
-  if (!location)
-    {
-      g_debug ("Could not retrieve current location");
-      update_weather (self, NULL, FALSE);
-    }
-  else
-    {
-      g_debug ("Got new weather service location: '%s'",
-               !location ? "<null>" : gweather_location_get_name (location));
-
-      self->gweather_info = gweather_info_new (location);
-
-      /*
-       * NOTE: We do not get detailed infos for GWEATHER_PROVIDER_ALL.
-       * This combination works fine, though. We should open a bug / investigate
-       * what is going on.
-       */
-      gweather_info_set_enabled_providers (self->gweather_info, GWEATHER_PROVIDER_METAR | GWEATHER_PROVIDER_OWM | GWEATHER_PROVIDER_YR_NO);
-      g_signal_connect_object (self->gweather_info, "updated", (GCallback) on_gweather_update_cb, self, 0);
-
-      /*
-       * gweather_info_update might or might not trigger a
-       * GWeatherInfo::update() signal. Therefore, we have to
-       * remove weather information before querying new one.
-       * This might result in icon flickering on screen.
-       * We probably want to introduce a "unknown" or "loading"
-       * state in gweather-info to soften the effect.
-       */
-      update_weather (self, NULL, FALSE);
-      gweather_info_update (self->gweather_info);
-
-      start_timer (self);
-    }
-}
-
-static void
-update_gclue_location (GcalWeatherService  *self,
-                       GClueLocation       *location)
-{
-  GWeatherLocation *wlocation = NULL; /* owned */
-
-  if (location)
-    {
-      GWeatherLocation *wworld; /* unowned */
-      gdouble latitude;
-      gdouble longitude;
-
-      latitude = gclue_location_get_latitude (location);
-      longitude = gclue_location_get_longitude (location);
-
-      /* nearest-city works more closely to gnome weather. */
-      wworld = gweather_location_get_world ();
-      wlocation = gweather_location_find_nearest_city (wworld, latitude, longitude);
-    }
-
-  update_location (self, wlocation);
-
-  g_clear_pointer (&wlocation, gweather_location_unref);
-}
-
 static GPtrArray*
 preprocess_gweather_reports (GcalWeatherService *self,
                              GSList             *samples)
@@ -643,6 +568,122 @@ preprocess_gweather_reports (GcalWeatherService *self,
   g_free (days);
 
   return result;
+}
+
+static void
+update_weather (GcalWeatherService *self,
+                GWeatherInfo       *info,
+                gboolean            reuse_old_on_error)
+{
+  GSList *gwforecast = NULL; /* unowned */
+
+  /* Compute a list of newly received weather infos. */
+  if (!info)
+    {
+      g_debug ("Could not retrieve valid weather");
+    }
+  else if (gweather_info_is_valid (info))
+    {
+      g_debug ("Received valid weather information");
+      gwforecast = gweather_info_get_forecast_list (info);
+    }
+  else
+    {
+      g_autofree gchar* location_name = gweather_info_get_location_name (info);
+      g_debug ("Could not retrieve valid weather for location '%s'", location_name);
+    }
+
+  if (!gwforecast && self->weather_infos_upated >= 0)
+    {
+      if (!reuse_old_on_error || !has_valid_weather_infos (self))
+        {
+          g_clear_pointer (&self->weather_infos, g_ptr_array_unref);
+          self->weather_infos_upated = -1;
+
+          g_signal_emit (self, signals[SIG_WEATHER_CHANGED], 0);
+        }
+    }
+  else if (gwforecast)
+    {
+      g_clear_pointer (&self->weather_infos, g_ptr_array_unref);
+      self->weather_infos = preprocess_gweather_reports (self, gwforecast);
+      self->weather_infos_upated = g_get_monotonic_time ();
+
+      g_signal_emit (self, signals[SIG_WEATHER_CHANGED], 0);
+    }
+}
+
+static void
+update_location (GcalWeatherService  *self,
+                 GWeatherLocation    *location)
+{
+  if (gcal_timer_is_running (self->duration_timer))
+    stop_timer (self);
+
+  if (self->gweather_info != NULL)
+    {
+      g_signal_handlers_disconnect_by_data (self->gweather_info, self);
+      g_clear_object (&self->gweather_info);
+    }
+
+  if (!location)
+    {
+      g_debug ("Could not retrieve current location");
+      update_weather (self, NULL, FALSE);
+    }
+  else
+    {
+      g_debug ("Got new weather service location: '%s'",
+               !location ? "<null>" : gweather_location_get_name (location));
+
+      self->gweather_info = gweather_info_new (location);
+
+      /*
+       * NOTE: We do not get detailed infos for GWEATHER_PROVIDER_ALL.
+       * This combination works fine, though. We should open a bug / investigate
+       * what is going on.
+       */
+      gweather_info_set_enabled_providers (self->gweather_info, GWEATHER_PROVIDER_METAR | GWEATHER_PROVIDER_OWM | GWEATHER_PROVIDER_YR_NO);
+      g_signal_connect_object (self->gweather_info, "updated", (GCallback) on_gweather_update_cb, self, 0);
+
+      /*
+       * gweather_info_update might or might not trigger a
+       * GWeatherInfo::update() signal. Therefore, we have to
+       * remove weather information before querying new one.
+       * This might result in icon flickering on screen.
+       * We probably want to introduce a "unknown" or "loading"
+       * state in gweather-info to soften the effect.
+       */
+      update_weather (self, NULL, FALSE);
+      gweather_info_update (self->gweather_info);
+
+      start_timer (self);
+    }
+}
+
+static void
+update_gclue_location (GcalWeatherService  *self,
+                       GClueLocation       *location)
+{
+  GWeatherLocation *wlocation = NULL; /* owned */
+
+  if (location)
+    {
+      GWeatherLocation *wworld; /* unowned */
+      gdouble latitude;
+      gdouble longitude;
+
+      latitude = gclue_location_get_latitude (location);
+      longitude = gclue_location_get_longitude (location);
+
+      /* nearest-city works more closely to gnome weather. */
+      wworld = gweather_location_get_world ();
+      wlocation = gweather_location_find_nearest_city (wworld, latitude, longitude);
+    }
+
+  update_location (self, wlocation);
+
+  g_clear_pointer (&wlocation, gweather_location_unref);
 }
 
 
@@ -803,70 +844,6 @@ gwc2str (GWeatherInfo *gwi)
                             icon_name);
 }
 #endif
-
-static gboolean
-has_valid_weather_infos (GcalWeatherService *self)
-{
-  gint64 now;
-
-  if (self->gweather_info == NULL || self->weather_infos_upated < 0)
-    return FALSE;
-
-  now = g_get_monotonic_time ();
-  return (now - self->weather_infos_upated) / 1000000 <= self->valid_timespan;
-}
-
-/* update_weather:
- * @self: A #GcalWeatherService instance.
- * @info: (nullable): Newly received weather information or %NULL.
- * @reuse_old_on_error: Whether to re-use old but not outdated weather
- *                      information in case we could not fetch new data.
- *
- * Retrieves weather information for @location and triggers
- * #GcalWeatherService::weather-changed.
- */
-static void
-update_weather (GcalWeatherService *self,
-                GWeatherInfo       *info,
-                gboolean            reuse_old_on_error)
-{
-  GSList *gwforecast = NULL; /* unowned */
-
-  /* Compute a list of newly received weather infos. */
-  if (!info)
-    {
-      g_debug ("Could not retrieve valid weather");
-    }
-  else if (gweather_info_is_valid (info))
-    {
-      g_debug ("Received valid weather information");
-      gwforecast = gweather_info_get_forecast_list (info);
-    }
-  else
-    {
-      g_autofree gchar* location_name = gweather_info_get_location_name (info);
-      g_debug ("Could not retrieve valid weather for location '%s'", location_name);
-    }
-
-  if (!gwforecast && self->weather_infos_upated >= 0)
-    {
-      if (!reuse_old_on_error || !has_valid_weather_infos (self))
-        {
-          g_clear_pointer (&self->weather_infos, g_ptr_array_unref);
-          self->weather_infos_upated = -1;
-
-          g_signal_emit (self, signals[SIG_WEATHER_CHANGED], 0);
-        }
-    }
-  else if (gwforecast)
-    {
-      g_clear_pointer (&self->weather_infos, g_ptr_array_unref);
-      self->weather_infos = preprocess_gweather_reports (self, gwforecast);
-      self->weather_infos_upated = g_get_monotonic_time ();
-
-      g_signal_emit (self, signals[SIG_WEATHER_CHANGED], 0);
-    }
-}
 
 
 /*
