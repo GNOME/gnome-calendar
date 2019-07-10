@@ -30,29 +30,21 @@ libgcal_test_dep = declare_dependency(
   include_directories: calendar_incs,
 )
 
-#########
-# Event #
-#########
+tests = [
+  'event',
+  'manager',
+]
 
-test_event = executable(
-     'test-event',
-    ['test-event.c', compiled_schemas],
-        c_args: test_cflags,
-  dependencies: libgcal_test_dep,
-)
+foreach test : tests
+  test_name = 'test-@0@'.format(test)
+  test_source = ['@0@.c'.format(test_name)]
 
-test('test-event', test_event, env: test_env)
+  test_executable = executable(
+       test_name,
+      [test_source, compiled_schemas],
+          c_args: test_cflags,
+    dependencies: libgcal_test_dep,
+  )
 
-
-###########
-# Manager #
-###########
-
-test_manager = executable(
-     'test-manager',
-    ['test-manager.c', compiled_schemas],
-        c_args: test_cflags,
-  dependencies: libgcal_test_dep,
-)
-
-test('test-manager', test_manager, env: test_env)
+  test(test, test_executable, env: test_env)
+endforeach
