@@ -33,6 +33,7 @@ libgcal_test_dep = declare_dependency(
 
 tests = [
   'server',
+  'discoverer',
   'event',
   'manager',
 ]

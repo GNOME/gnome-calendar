@@ -124,6 +124,7 @@ sources = files(
   'search/gcal-search-hit-event.c',
   'search/gcal-search-model.c',
   'utils/gcal-date-time-utils.c',
+  'utils/gcal-source-discoverer.c',
   'utils/gcal-thread-utils.c',
   'utils/gcal-utils.c',
   'views/gcal-month-cell.c',

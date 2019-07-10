@@ -88,7 +88,7 @@ static void
 process_caldav (SoupMessage *message,
                 const gchar *path)
 {
-  g_message ("Processing CalDAV");
+  g_debug ("Processing CalDAV request");
 }
 
 
