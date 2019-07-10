@@ -13,6 +13,7 @@ test_cflags = '-DTEST_DATA_DIR="@0@"'.format(join_paths(meson.source_root(), 'da
 ################
 
 sources = files(
+  'gcal-simple-server.c',
   'gcal-stub-calendar.c',
 )
 
@@ -31,6 +32,7 @@ libgcal_test_dep = declare_dependency(
 )
 
 tests = [
+  'server',
   'event',
   'manager',
 ]
