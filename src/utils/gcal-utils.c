@@ -1240,3 +1240,26 @@ gcal_utils_launch_online_accounts_panel (GDBusConnection *connection,
                           NULL,
                           NULL);
 }
+
+gchar*
+gcal_utils_format_filename_for_display (const gchar *filename)
+{
+  /*
+   * Foo_bar-something-cool.ics
+   */
+  g_autofree gchar *display_name = NULL;
+  gchar *file_extension;
+
+  display_name = g_strdup (filename);
+
+  /* Strip out the file extension */
+  file_extension = g_strrstr (display_name, ".");
+  if (file_extension)
+    *file_extension = '\0';
+
+  /* Replace underscores with spaces */
+  display_name = g_strdelimit (display_name, "_", ' ');
+  display_name = g_strstrip (display_name);
+
+  return g_steal_pointer (&display_name);
+}

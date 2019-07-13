@@ -126,4 +126,6 @@ void                 gcal_utils_launch_online_accounts_panel     (GDBusConnectio
                                                                   const gchar         *action,
                                                                   const gchar         *arg);
 
+gchar*               gcal_utils_format_filename_for_display      (const gchar         *filename);
+
 #endif /* __GCAL_UTILS_H__ */
