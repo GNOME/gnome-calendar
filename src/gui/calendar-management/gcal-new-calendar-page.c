@@ -554,7 +554,8 @@ gcal_new_calendar_page_finalize (GObject *object)
 {
   GcalNewCalendarPage *self = (GcalNewCalendarPage *)object;
 
-  toggle_url_entry_pulsing (self, FALSE);
+  g_clear_handle_id (&self->calendar_address_id, g_source_remove);
+  g_clear_handle_id (&self->validate_url_resource_id, g_source_remove);
 
   g_cancellable_cancel (self->cancellable);
   g_clear_object (&self->cancellable);
