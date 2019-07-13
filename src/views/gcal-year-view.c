@@ -404,14 +404,51 @@ add_event_to_day_array (GcalYearView  *year_view,
     }
 }
 
+static GPtrArray*
+get_events_for_range (GcalYearView *self,
+                      GDateTime    *start,
+                      GDateTime    *end)
+{
+  g_autoptr (GPtrArray) events = NULL;
+  guint i;
+
+  events = g_ptr_array_sized_new (50);
+
+  g_message ("Range: %s  --  %s", g_date_time_format (start, "%x %X %z"), g_date_time_format (end, "%x %X %z"));
+
+  for (i = g_date_time_get_month (start) - 1; i <= g_date_time_get_month (end) - 1; i++)
+    {
+      GPtrArray *month_events = self->events[i];
+      guint j;
+
+      for (j = 0; j < month_events->len; j++)
+        {
+          GDateTime *event_start;
+          GDateTime *event_end;
+          GcalEvent *event;
+
+          event = g_ptr_array_index (month_events, j);
+          event_start = gcal_event_get_date_start (event);
+          event_end = gcal_event_get_date_end (event);
+
+          if (gcal_date_time_compare_date (event_end, start) < 0 ||
+              gcal_date_time_compare_date (event_start, end) > 0)
+            {
+              continue;
+            }
+
+          g_ptr_array_add (events, event);
+        }
+    }
+
+  return g_steal_pointer (&events);
+}
+
 static void
 update_sidebar (GcalYearView *year_view)
 {
-  g_autoptr (ICalTime) start_icaldatetime = NULL;
-  g_autoptr (ICalTime) end_icaldatetime = NULL;
-  GcalManager *manager;
+  g_autoptr (GPtrArray) events = NULL;
   GtkWidget *child_widget;
-  GList *events, *l;
   GList **days_widgets_array;
   gint i, days_span;
 
@@ -422,11 +459,12 @@ update_sidebar (GcalYearView *year_view)
   days_span = g_date_time_get_day_of_year (year_view->end_selected_date) - g_date_time_get_day_of_year (year_view->start_selected_date) + 1;
   days_widgets_array = g_new0 (GList*, days_span);
 
-  manager = gcal_context_get_manager (year_view->context);
-  start_icaldatetime = gcal_date_time_to_icaltime (year_view->start_selected_date);
-  end_icaldatetime = gcal_date_time_to_icaltime (year_view->end_selected_date);
-  events = gcal_manager_get_events (manager, start_icaldatetime, end_icaldatetime);
-  if (events == NULL)
+  events = get_events_for_range (year_view,
+                                 year_view->start_selected_date,
+                                 year_view->end_selected_date);
+
+
+  if (events->len == 0)
     {
       days_span = 0;
       update_no_events_page (year_view);
@@ -437,14 +475,21 @@ update_sidebar (GcalYearView *year_view)
       gtk_stack_set_visible_child_name (GTK_STACK (year_view->navigator_stack), "events-list");
     }
 
-  for (l = events; l != NULL; l = g_list_next (l))
-    add_event_to_day_array (year_view, l->data, days_widgets_array, days_span);
+  for (i = 0; i < events->len; i++)
+    {
+      add_event_to_day_array (year_view,
+                              g_ptr_array_index (events, i),
+                              days_widgets_array,
+                              days_span);
+    }
 
   gtk_widget_queue_draw (year_view->navigator);
 
   for (i = 0; i < days_span; i++)
     {
       GList *current_day = days_widgets_array[i];
+      GList *l;
+
       for (l = current_day; l != NULL; l = g_list_next (l))
         {
           child_widget = l->data;
@@ -457,7 +502,6 @@ update_sidebar (GcalYearView *year_view)
       g_list_free (current_day);
     }
 
-  g_list_free_full (events, g_object_unref);
   g_free (days_widgets_array);
 }
 
