@@ -26,6 +26,7 @@
 #include "gcal-calendar-management-page.h"
 #include "gcal-debug.h"
 #include "gcal-new-calendar-page.h"
+#include "gcal-source-discoverer.h"
 #include "gcal-utils.h"
 
 #define ENTRY_PROGRESS_TIMEOUT 100 // ms
@@ -41,8 +42,8 @@ struct _GcalNewCalendarPage
   GtkWidget          *cancel_button;
   GtkWidget          *credentials_cancel_button;
   GtkWidget          *credentials_connect_button;
-  GtkWidget          *credentials_dialog;
   GtkEntry           *credentials_password_entry;
+  GtkPopover         *credentials_popover;
   GtkEntry           *credentials_user_entry;
   GtkColorChooser    *local_calendar_color_button;
   GtkEntry           *local_calendar_name_entry;
@@ -50,17 +51,21 @@ struct _GcalNewCalendarPage
   GtkWidget          *web_sources_revealer;
 
   guint               calendar_address_id;
-  gboolean            prompt_password;
-  GList              *remote_sources;
+  GPtrArray          *remote_sources;
   guint               validate_url_resource_id;
+
+  GCancellable       *cancellable;
 
   ESource            *local_source;
 
   GcalContext        *context;
 };
 
+static gboolean      pulse_web_entry                             (gpointer           data);
 
-static gboolean      validate_url_cb                             (GcalNewCalendarPage *self);
+static void          sources_discovered_cb                       (GObject           *source_object,
+                                                                  GAsyncResult      *result,
+                                                                  gpointer           user_data);
 
 static void          gcal_calendar_management_page_iface_init    (GcalCalendarManagementPageInterface *iface);
 
@@ -78,86 +83,6 @@ enum
 /*
  * Auxiliary methods
  */
-
-static ESource*
-duplicate_source (ESource *source)
-{
-  ESourceExtension *ext;
-  ESource *new_source;
-
-  g_assert (source && E_IS_SOURCE (source));
-
-  new_source = e_source_new (NULL, NULL, NULL);
-  e_source_set_parent (new_source, "local");
-
-  ext = e_source_get_extension (new_source, E_SOURCE_EXTENSION_CALENDAR);
-  e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
-
-  /* Copy Authentication data */
-  if (e_source_has_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION))
-    {
-      ESourceAuthentication *new_auth, *parent_auth;
-
-      parent_auth = e_source_get_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
-      new_auth = e_source_get_extension (new_source, E_SOURCE_EXTENSION_AUTHENTICATION);
-
-      e_source_authentication_set_host (new_auth, e_source_authentication_get_host (parent_auth));
-      e_source_authentication_set_method (new_auth, e_source_authentication_get_method (parent_auth));
-      e_source_authentication_set_port (new_auth, e_source_authentication_get_port (parent_auth));
-      e_source_authentication_set_user (new_auth, e_source_authentication_get_user (parent_auth));
-      e_source_authentication_set_proxy_uid (new_auth, e_source_authentication_get_proxy_uid (parent_auth));
-    }
-
-  /* Copy Webdav data */
-  if (e_source_has_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND))
-    {
-      ESourceWebdav *new_webdav, *parent_webdav;
-
-      parent_webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-      new_webdav = e_source_get_extension (new_source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-
-      e_source_webdav_set_display_name (new_webdav, e_source_webdav_get_display_name (parent_webdav));
-      e_source_webdav_set_resource_path (new_webdav, e_source_webdav_get_resource_path (parent_webdav));
-      e_source_webdav_set_resource_query (new_webdav, e_source_webdav_get_resource_query (parent_webdav));
-      e_source_webdav_set_email_address (new_webdav, e_source_webdav_get_email_address (parent_webdav));
-      e_source_webdav_set_ssl_trust (new_webdav, e_source_webdav_get_ssl_trust (parent_webdav));
-
-      e_source_set_parent (new_source, "webcal-stub");
-      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "webcal");
-    }
-
-  return new_source;
-}
-
-static gint
-prompt_credentials (GcalNewCalendarPage  *self,
-                    gchar               **username,
-                    gchar               **password)
-{
-  gint response;
-
-  /* Cleanup last credentials */
-  gtk_entry_set_text (self->credentials_password_entry, "");
-  gtk_entry_set_text (self->credentials_user_entry, "");
-
-  gtk_widget_grab_focus (GTK_WIDGET (self->credentials_user_entry));
-
-  /* Show the dialog, then destroy it */
-  response = gtk_dialog_run (GTK_DIALOG (self->credentials_dialog));
-
-  if (response == GTK_RESPONSE_OK)
-    {
-      if (username)
-        *username = g_strdup (gtk_entry_get_text (self->credentials_user_entry));
-
-      if (password)
-        *password = g_strdup (gtk_entry_get_text (self->credentials_password_entry));
-    }
-
-  gtk_widget_hide (self->credentials_dialog);
-
-  return response;
-}
 
 static gchar*
 calendar_path_to_name_suggestion (GFile *file)
@@ -246,6 +171,67 @@ update_local_source (GcalNewCalendarPage *self)
   update_add_button (self);
 }
 
+static void
+toggle_url_entry_pulsing (GcalNewCalendarPage *self,
+                          gboolean             pulsing)
+{
+  gtk_entry_set_progress_fraction (self->calendar_address_entry, 0);
+
+  if (pulsing && self->calendar_address_id == 0)
+    self->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, pulse_web_entry, self);
+  else if (!pulsing && self->calendar_address_id != 0)
+    g_clear_handle_id (&self->calendar_address_id, g_source_remove);
+}
+
+static void
+set_url_entry_error (GcalNewCalendarPage *self,
+                     gboolean             error)
+{
+  GtkStyleContext *context;
+
+  context = gtk_widget_get_style_context (GTK_WIDGET (self->calendar_address_entry));
+
+  if (error)
+    gtk_style_context_add_class (context, "error");
+  else
+    gtk_style_context_remove_class (context, "error");
+}
+
+static void
+discover_sources (GcalNewCalendarPage *self)
+{
+  const gchar *username;
+  const gchar *password;
+  const gchar *url;
+
+  GCAL_ENTRY;
+
+  self->validate_url_resource_id = 0;
+
+  url = gtk_entry_get_text (self->calendar_address_entry);
+  username = gtk_entry_get_text (self->credentials_user_entry);
+  password = gtk_entry_get_text (self->credentials_password_entry);
+
+  gcal_discover_sources_from_uri (url,
+                                  username,
+                                  password,
+                                  self->cancellable,
+                                  sources_discovered_cb,
+                                  self);
+
+  toggle_url_entry_pulsing (self, TRUE);
+
+  GCAL_EXIT;
+}
+
+static void
+popdown_credentials_popover (GcalNewCalendarPage *self)
+{
+  gtk_entry_set_text (self->credentials_user_entry, "");
+  gtk_entry_set_text (self->credentials_password_entry, "");
+
+  gtk_popover_popdown (self->credentials_popover);
+}
 
 /*
  * Callbacks
@@ -294,284 +280,75 @@ on_file_chooser_button_file_set_cb (GtkFileChooser      *chooser,
 }
 
 static gboolean
-pulse_web_entry (GcalNewCalendarPage *self)
+pulse_web_entry (gpointer data)
 {
+  GcalNewCalendarPage *self = data;
+
   gtk_entry_progress_pulse (self->calendar_address_entry);
-
-  self->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, self);
-
   return G_SOURCE_CONTINUE;
 }
 
 static void
-on_check_activated_cb (GtkWidget           *check,
-                       GParamSpec          *spec,
-                       GcalNewCalendarPage *self)
+sources_discovered_cb (GObject      *source_object,
+                       GAsyncResult *result,
+                       gpointer      user_data)
 {
-  GtkWidget *row;
-  ESource *source;
+  GcalNewCalendarPage *self;
+  g_autoptr (GPtrArray) sources = NULL;
+  g_autoptr (GError) error = NULL;
 
-  row = gtk_widget_get_parent (check);
-  source = g_object_get_data (G_OBJECT (row), "source");
-
-  if (gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (check)))
-    self->remote_sources = g_list_prepend (self->remote_sources, source);
-  else
-    self->remote_sources = g_list_remove (self->remote_sources, source);
-
-  update_add_button (self);
-}
-
-static void
-discover_sources_cb (GObject      *source,
-                     GAsyncResult *result,
-                     gpointer      user_data)
-{
-  GcalNewCalendarPage  *self;
-  GSList *discovered_sources;
-  GSList *user_addresses;
-  GSList *aux;
-  GError *error;
+  GCAL_ENTRY;
 
   self = GCAL_NEW_CALENDAR_PAGE (user_data);
-  error = NULL;
+  sources = gcal_discover_sources_from_uri_finish (result, &error);
 
-  /* Stop the pulsing entry */
-  if (self->calendar_address_id != 0)
+  if (error)
     {
-      gtk_entry_set_progress_fraction (GTK_ENTRY (self->calendar_address_entry), 0);
-      g_source_remove (self->calendar_address_id);
-      self->calendar_address_id = 0;
-    }
-
-  if (!e_webdav_discover_sources_finish (E_SOURCE (source), result, NULL, NULL, &discovered_sources, &user_addresses,
-                                        &error))
-    {
-      /* Don't add an source with errors */
-      gtk_widget_set_sensitive (self->add_button, FALSE);
-
-      /*
-       * If it's the first try and things went wrong, retry with the user
-       * credentials. Also, it checks for the error code, since we don't
-       * really want to retry things on unavailable servers.
-       */
-      if (!self->prompt_password &&
-          (error->code == 14 ||
-           error->code == 401 ||
-           error->code == 403 ||
-           error->code == 405))
+      if (g_error_matches (error,
+                           GCAL_SOURCE_DISCOVERER_ERROR,
+                           GCAL_SOURCE_DISCOVERER_ERROR_UNAUTHORIZED))
         {
-          self->prompt_password = TRUE;
-          validate_url_cb (self);
+          g_debug ("Unauthorized, asking for credentials...");
+          gtk_popover_popup (self->credentials_popover);
         }
       else
         {
-          g_debug ("Error: %s", error->message);
+          g_warning ("Error finding sources: %s", error->message);
+          toggle_url_entry_pulsing (self, FALSE);
         }
-
-      g_error_free (error);
-      return;
+      GCAL_RETURN ();
     }
 
-  /* Add a success icon to the entry */
-  gtk_entry_set_icon_from_icon_name (GTK_ENTRY (self->calendar_address_entry), GTK_ENTRY_ICON_SECONDARY,
-                                     "emblem-ok-symbolic");
+  g_debug ("Found %u sources", sources->len);
 
-  /* Remove previous results */
-  g_list_free_full (gtk_container_get_children (GTK_CONTAINER (self->web_sources_listbox)),
-                    (GDestroyNotify) gtk_widget_destroy);
+  self->remote_sources = g_steal_pointer (&sources);
+  update_add_button (self);
 
-  /* Show the list of calendars */
-  gtk_revealer_set_reveal_child (GTK_REVEALER (self->web_sources_revealer), TRUE);
-  gtk_widget_show (self->web_sources_revealer);
+  toggle_url_entry_pulsing (self, FALSE);
 
-  /* TODO: show a list of calendars */
-  for (aux = discovered_sources; aux != NULL; aux = aux->next)
-    {
-      g_autoptr (SoupURI) soup_uri = NULL;
-      EWebDAVDiscoveredSource *discovered_source;
-      const gchar *resource_path = NULL;
-
-      discovered_source = aux->data;
-
-      soup_uri = soup_uri_new (discovered_source->href);
-
-      /* Get the new resource path from the uri */
-      resource_path = soup_uri_get_path (soup_uri);
-
-      if (soup_uri)
-        {
-          ESourceSelectable *selectable;
-          ESourceWebdav *webdav;
-          GtkWidget *row, *check;
-          ESource *new_source;
-
-
-          /* build up the new source */
-          new_source = duplicate_source (E_SOURCE (source));
-          e_source_set_display_name (E_SOURCE (new_source), discovered_source->display_name);
-
-          webdav = e_source_get_extension (new_source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-          e_source_webdav_set_resource_path (webdav, resource_path);
-          e_source_webdav_set_display_name (webdav, discovered_source->display_name);
-
-          if (user_addresses)
-            e_source_webdav_set_email_address (webdav, user_addresses->data);
-
-          /* Setup the color */
-          selectable = e_source_get_extension (new_source, E_SOURCE_EXTENSION_CALENDAR);
-          e_source_selectable_set_color (selectable, discovered_source->color);
-
-          /* create the new row */
-          row = gtk_list_box_row_new ();
-
-          check = gtk_check_button_new ();
-          gtk_button_set_label (GTK_BUTTON (check), discovered_source->display_name);
-          g_signal_connect (check, "notify::active", G_CALLBACK (on_check_activated_cb), self);
-
-          gtk_container_add (GTK_CONTAINER (row), check);
-          gtk_container_add (GTK_CONTAINER (self->web_sources_listbox), row);
-
-          g_object_set_data (G_OBJECT (row), "parent-source", source);
-          g_object_set_data (G_OBJECT (row), "source", new_source);
-
-          gtk_widget_show_all (row);
-        }
-    }
-
-  /* Free things up */
-  e_webdav_discover_free_discovered_sources (discovered_sources);
-  g_slist_free_full (user_addresses, g_free);
+  GCAL_EXIT;
 }
 
 static gboolean
-validate_url_cb (GcalNewCalendarPage *self)
+validate_url_cb (gpointer data)
 {
-  ESourceAuthentication *auth;
-  ENamedParameters *credentials;
-  ESourceExtension *ext;
-  ESourceWebdav *webdav;
-  ESource *source;
-  g_autoptr (SoupURI) soup_uri;
-  const gchar *uri;
-  const gchar *host, *path;
-  gboolean is_file;
+  GcalNewCalendarPage *self = data;
+  g_autoptr (SoupURI) uri = NULL;
+  gboolean valid_uri;
 
   GCAL_ENTRY;
 
   self->validate_url_resource_id = 0;
-  soup_uri = NULL;
-  host = path = NULL;
-  is_file = FALSE;
 
-  /* Remove any reminescent ESources cached before */
-  if (self->remote_sources)
-    {
-      g_list_free_full (self->remote_sources, g_object_unref);
-      self->remote_sources = NULL;
-    }
+  uri = soup_uri_new (gtk_entry_get_text (self->calendar_address_entry));
+  valid_uri = uri != NULL;
 
-  /* Remove previous results */
-  g_list_free_full (gtk_container_get_children (GTK_CONTAINER (self->web_sources_listbox)),
-                    (GDestroyNotify) gtk_widget_destroy);
-  gtk_revealer_set_reveal_child (GTK_REVEALER (self->web_sources_revealer), FALSE);
+  set_url_entry_error (self, !valid_uri);
 
-  /* Clear the entry icon */
-  gtk_entry_set_icon_from_icon_name (self->calendar_address_entry, GTK_ENTRY_ICON_SECONDARY, NULL);
-
-  /* Get the hostname and file path from the server */
-  uri = gtk_entry_get_text (self->calendar_address_entry);
-  soup_uri = soup_uri_new (uri);
-  if (!soup_uri)
-    GCAL_RETURN (G_SOURCE_REMOVE);
-
-  host = soup_uri_get_host (soup_uri);
-  path = soup_uri_get_path (soup_uri);
-
-  if (soup_uri_get_scheme (soup_uri) == SOUP_URI_SCHEME_FILE)
-    is_file = TRUE;
-
-  g_debug ("Detected host: '%s', path: '%s'", host, path);
-
-  /* Create the new source and add the needed extensions */
-  source = e_source_new (NULL, NULL, NULL);
-  e_source_set_parent (source, "webcal-stub");
-
-  ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
-  e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "webcal");
-
-  /* Authentication */
-  auth = e_source_get_extension (source, E_SOURCE_EXTENSION_AUTHENTICATION);
-  e_source_authentication_set_host (auth, host);
-
-  /* Webdav */
-  webdav = e_source_get_extension (source, E_SOURCE_EXTENSION_WEBDAV_BACKEND);
-  e_source_webdav_set_soup_uri (webdav, soup_uri);
-
-  /*
-   * If we're dealing with an absolute file path, there is no need
-   * to check the server for more sources.
-   */
-  if (is_file)
-    {
-      self->remote_sources = g_list_append (self->remote_sources, source);
-      gtk_widget_set_sensitive (self->add_button, source != NULL);
-      GCAL_RETURN (G_SOURCE_REMOVE);
-    }
-
-  /* Pulse the entry while it performs the check */
-  self->calendar_address_id = g_timeout_add (ENTRY_PROGRESS_TIMEOUT, (GSourceFunc) pulse_web_entry, self);
-
-  /*
-   * Try to retrieve the sources without prompting username and password. If
-   * we get any error, then it prompts and retry.
-   */
-  credentials = e_named_parameters_new ();
-
-  if (!self->prompt_password)
-    {
-      g_debug ("Trying to connect without credentials...");
-
-      /* NULL credentials */
-      e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, NULL);
-      e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, NULL);
-
-      e_webdav_discover_sources (source,
-                                 uri,
-                                 E_WEBDAV_DISCOVER_SUPPORTS_EVENTS,
-                                 credentials,
-                                 NULL,
-                                 discover_sources_cb,
-                                 self);
-    }
+  if (valid_uri)
+    discover_sources (self);
   else
-    {
-      g_autofree gchar *password = NULL;
-      g_autofree gchar *user = NULL;
-      gint response;
-
-      g_debug ("No credentials failed, retrying with user credentials...");
-
-      response = prompt_credentials (self, &user, &password);
-
-      g_message ("lalala");
-
-      if (response == GTK_RESPONSE_OK)
-        {
-          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_USERNAME, user);
-          e_named_parameters_set (credentials, E_SOURCE_CREDENTIAL_PASSWORD, password);
-
-          e_webdav_discover_sources (source,
-                                     uri,
-                                     E_WEBDAV_DISCOVER_SUPPORTS_EVENTS,
-                                     credentials,
-                                     NULL,
-                                     discover_sources_cb,
-                                     self);
-        }
-    }
-
-  e_named_parameters_free (credentials);
+    g_debug ("Invalid URL passed");
 
   GCAL_RETURN (G_SOURCE_REMOVE);
 }
@@ -591,13 +368,12 @@ on_add_button_clicked_cb (GtkWidget           *button,
   /* Commit each new remote source */
   if (self->remote_sources)
     {
-      GList *l;
+      guint i;
 
-      for (l = self->remote_sources; l; l = l->next)
-        gcal_manager_save_source (manager, l->data);
+      for (i = 0; i < self->remote_sources->len; i++)
+        gcal_manager_save_source (manager, g_ptr_array_index (self->remote_sources, i));
 
-      g_list_free_full (self->remote_sources, g_object_unref);
-      self->remote_sources = NULL;
+      g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
     }
 
   gcal_calendar_management_page_switch_page (GCAL_CALENDAR_MANAGEMENT_PAGE (self),
@@ -616,17 +392,20 @@ static void
 on_credential_button_clicked_cb (GtkWidget           *button,
                                  GcalNewCalendarPage *self)
 {
-  if (button == self->credentials_cancel_button)
-    gtk_dialog_response (GTK_DIALOG (self->credentials_dialog), GTK_RESPONSE_CANCEL);
+  if (button == self->credentials_connect_button)
+    discover_sources (self);
   else
-    gtk_dialog_response (GTK_DIALOG (self->credentials_dialog), GTK_RESPONSE_OK);
+    toggle_url_entry_pulsing (self, FALSE);
+
+  popdown_credentials_popover (self);
 }
 
 static void
-on_credential_entry_activate_cb (GtkEntry  *entry,
-                                 GtkDialog *dialog)
+on_credential_entry_activate_cb (GtkEntry            *entry,
+                                 GcalNewCalendarPage *self)
 {
-  gtk_dialog_response (dialog, GTK_RESPONSE_OK);
+  discover_sources (self);
+  popdown_credentials_popover (self);
 }
 
 static void
@@ -646,21 +425,25 @@ on_url_entry_text_changed_cb (GtkEntry            *entry,
       g_clear_handle_id (&self->calendar_address_id, g_source_remove);
     }
 
+  /* Cleanup previous remote sources */
+  g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
+  update_add_button (self);
+
   if (self->validate_url_resource_id != 0)
     g_clear_handle_id (&self->validate_url_resource_id, g_source_remove);
 
-  if (g_utf8_strlen (text, -1) > 0)
+  if (text && g_utf8_strlen (text, -1) > 0)
     {
       /*
        * At first, don't bother the user with the login prompt. Only prompt it when
        * it fails.
        */
-      self->prompt_password = FALSE;
-      self->validate_url_resource_id = g_timeout_add (500, (GSourceFunc) validate_url_cb, self);
+      self->validate_url_resource_id = g_timeout_add (500, validate_url_cb, self);
     }
   else
     {
       gtk_entry_set_progress_fraction (self->calendar_address_entry, 0);
+      set_url_entry_error (self, FALSE);
     }
 
   GCAL_EXIT;
@@ -741,14 +524,14 @@ gcal_new_calendar_page_deactivate (GcalCalendarManagementPage *page)
   gtk_container_remove (GTK_CONTAINER (headerbar), self->add_button);
   gtk_header_bar_set_show_close_button (headerbar, TRUE);
 
-  if (self->remote_sources)
-    {
-      g_list_free_full (self->remote_sources, g_object_unref);
-      self->remote_sources = NULL;
-    }
+  g_clear_object (&self->local_source);
+  g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
+  update_add_button (self);
 
   gtk_entry_set_text (self->local_calendar_name_entry, "");
   gtk_entry_set_text (self->calendar_address_entry, "");
+
+  toggle_url_entry_pulsing (self, FALSE);
 
   GCAL_EXIT;
 }
@@ -771,6 +554,10 @@ gcal_new_calendar_page_finalize (GObject *object)
 {
   GcalNewCalendarPage *self = (GcalNewCalendarPage *)object;
 
+  toggle_url_entry_pulsing (self, FALSE);
+
+  g_cancellable_cancel (self->cancellable);
+  g_clear_object (&self->cancellable);
   g_clear_object (&self->context);
 
   G_OBJECT_CLASS (gcal_new_calendar_page_parent_class)->finalize (object);
@@ -836,8 +623,8 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_cancel_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_connect_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_dialog);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_password_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_user_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, local_calendar_color_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, local_calendar_name_entry);
@@ -858,6 +645,8 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
 static void
 gcal_new_calendar_page_init (GcalNewCalendarPage *self)
 {
+  self->cancellable = g_cancellable_new ();
+
   gtk_widget_init_template (GTK_WIDGET (self));
 
   gtk_file_filter_set_name (self->calendar_file_filter, _("Calendar files"));

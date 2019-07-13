@@ -218,41 +218,15 @@
     </child>
   </template>
 
-  <!-- Credentials dialog -->
-  <object class="GtkDialog" id="credentials_dialog">
-    <property name="modal">True</property>
-    <property name="type_hint">dialog</property>
-    <child type="titlebar">
-      <object class="GtkHeaderBar" id="credentials_headerbar">
+  <!-- Credentials popover -->
+  <object class="GtkPopover" id="credentials_popover">
+    <property name="relative-to">calendar_address_entry</property>
+    <property name="position">top</property>
+    <child>
+      <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="title" translatable="yes">Enter your credentials</property>
-        <child>
-          <object class="GtkButton" id="credentials_cancel_button">
-            <property name="label" translatable="yes">Cancel</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
-          </object>
-        </child>
-        <child>
-          <object class="GtkButton" id="credentials_connect_button">
-            <property name="label" translatable="yes">Connect</property>
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
-            <style>
-              <class name="suggested-action" />
-            </style>
-          </object>
-          <packing>
-            <property name="pack_type">end</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-    <child internal-child="vbox">
-      <object class="GtkBox" id="credentials-dialog-vbox1">
         <property name="orientation">vertical</property>
+        <property name="margin">12</property>
         <child>
           <object class="GtkGrid" id="credentials_grid">
             <property name="visible">True</property>
@@ -293,7 +267,7 @@
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
-                <signal name="activate" handler="on_credential_entry_activate_cb" object="credentials_dialog" swapped="no" />
+                <signal name="activate" handler="on_credential_entry_activate_cb" object="GcalNewCalendarPage" swapped="no" />
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -306,7 +280,7 @@
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="visibility">False</property>
-                <signal name="activate" handler="on_credential_entry_activate_cb" object="credentials_dialog" swapped="no" />
+                <signal name="activate" handler="on_credential_entry_activate_cb" object="GcalNewCalendarPage" swapped="no" />
               </object>
               <packing>
                 <property name="left_attach">1</property>
@@ -314,9 +288,34 @@
               </packing>
             </child>
           </object>
-          <packing>
-            <property name="position">1</property>
-          </packing>
+        </child>
+
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="spacing">12</property>
+            <child>
+              <object class="GtkButton" id="credentials_cancel_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Cancel</property>
+                <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
+              </object>
+            </child>
+            <child>
+              <object class="GtkButton" id="credentials_connect_button">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="hexpand">True</property>
+                <property name="label" translatable="yes">Connect</property>
+                <signal name="clicked" handler="on_credential_button_clicked_cb" object="GcalNewCalendarPage" swapped="no" />
+                <style>
+                  <class name="suggested-action" />
+                </style>
+              </object>
+            </child>
+          </object>
         </child>
       </object>
     </child>
