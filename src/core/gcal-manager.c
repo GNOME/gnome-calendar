@@ -153,7 +153,7 @@ static void
 remove_source (GcalManager  *self,
                ESource      *source)
 {
-  GcalCalendar *calendar;
+  g_autoptr (GcalCalendar) calendar = NULL;
 
   GCAL_ENTRY;
 
@@ -161,6 +161,7 @@ remove_source (GcalManager  *self,
   g_return_if_fail (E_IS_SOURCE (source));
 
   calendar = g_hash_table_lookup (self->clients, source);
+  g_object_ref (calendar);
 
   e_cal_data_model_remove_client (self->e_data_model,
                                   e_source_get_uid (source));
