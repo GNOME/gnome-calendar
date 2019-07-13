@@ -32,10 +32,10 @@ typedef struct
 
   gboolean            read_only;
 
-  guint               color_changed_handler_id;
-  guint               name_changed_handler_id;
-  guint               readonly_changed_handler_id;
-  guint               visible_changed_handler_id;
+  gulong              color_changed_handler_id;
+  gulong              name_changed_handler_id;
+  gulong              readonly_changed_handler_id;
+  gulong              visible_changed_handler_id;
   gboolean            initialized;
 } GcalCalendarPrivate;
 
