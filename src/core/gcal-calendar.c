@@ -233,6 +233,7 @@ gcal_calendar_finalize (GObject *object)
   gcal_clear_signal_handler (&priv->color_changed_handler_id, selectable_extension);
   gcal_clear_signal_handler (&priv->name_changed_handler_id, priv->source);
   gcal_clear_signal_handler (&priv->readonly_changed_handler_id, priv->client);
+  gcal_clear_signal_handler (&priv->visible_changed_handler_id, selectable_extension);
 
   g_clear_object (&priv->client);
   g_clear_object (&priv->source);
