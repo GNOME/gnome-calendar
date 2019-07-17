@@ -265,6 +265,9 @@ gcal_event_update_uid_internal (GcalEvent *self)
   id = e_cal_component_get_id (self->component);
 
   /* Clear the previous uid */
+  g_debug ("Removing '%s' (%p) from cache", self->uid, self);
+  g_hash_table_remove (event_cache, self->uid);
+
   g_clear_pointer (&self->uid, g_free);
 
   if (e_cal_component_id_get_rid (id) != NULL)
@@ -280,6 +283,9 @@ gcal_event_update_uid_internal (GcalEvent *self)
                                    source_id,
                                    e_cal_component_id_get_uid (id));
     }
+
+  g_debug ("Adding %s to the cache", self->uid);
+  g_hash_table_insert (event_cache, self->uid, self);
 
   e_cal_component_id_free (id);
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_UID]);
