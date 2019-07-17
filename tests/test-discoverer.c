@@ -82,6 +82,8 @@ discoverer_file (void)
 
 /*********************************************************************************************************************/
 
+#if 0
+
 static void
 discovered_webdav_no_auth_cb (GObject      *source_object,
                               GAsyncResult *result,
@@ -124,8 +126,6 @@ discoverer_webdav_no_auth (void)
 }
 
 /*********************************************************************************************************************/
-
-#if 0
 
 // TODO: Implement raw CalDAV server in GcalSimpleServer
 
@@ -183,7 +183,7 @@ main (gint   argc,
   g_test_init (&argc, &argv, NULL);
 
   g_test_add_func ("/discoverer/file", discoverer_file);
-  g_test_add_func ("/discoverer/webdav/no-auth", discoverer_webdav_no_auth);
+  //g_test_add_func ("/discoverer/webdav/no-auth", discoverer_webdav_no_auth);
 
   return g_test_run ();
 }
