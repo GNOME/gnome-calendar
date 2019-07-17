@@ -269,7 +269,7 @@ on_calendar_created_cb (GObject      *source_object,
   client = gcal_calendar_get_client (calendar);
   source = gcal_calendar_get_source (calendar);
 
-  g_hash_table_insert (self->clients, source, calendar);
+  g_hash_table_insert (self->clients, g_object_ref (source), calendar);
 
   if (visible)
     {
