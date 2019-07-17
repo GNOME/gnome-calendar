@@ -256,13 +256,19 @@ gcal_event_update_uid_internal (GcalEvent *self)
 {
   ECalComponentId *id;
   const gchar *source_id;
+  gboolean should_update_cache = FALSE;
 
   /* Setup event uid */
   source_id = self->calendar ? gcal_calendar_get_id (self->calendar) : "";
   id = e_cal_component_get_id (self->component);
 
-  /* Clear the previous uid */
-  g_clear_pointer (&self->uid, g_free);
+  if (self->uid != NULL)
+    {
+      should_update_cache = TRUE;
+      g_debug ("Removing '%s' (%p) from cache", self->uid, self);
+      g_hash_table_remove (event_cache, self->uid);
+      g_free (self->uid);
+    }
 
   if (e_cal_component_id_get_rid (id) != NULL)
     {
@@ -278,7 +284,13 @@ gcal_event_update_uid_internal (GcalEvent *self)
                                    e_cal_component_id_get_uid (id));
     }
 
-  e_cal_component_id_free (id);
+  if (should_update_cache)
+    {
+      g_debug ("Adding %s to the cache", self->uid);
+      g_hash_table_insert (event_cache, self->uid, self);
+    }
+
+  e_cal_component_free_id (id);
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_UID]);
 }
 
