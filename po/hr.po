@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-06-15 10:57+0000\n"
-"PO-Revision-Date: 2019-06-21 00:47+0200\n"
-"Last-Translator: gogo <trebelnik2@gmail.com>\n"
+"POT-Creation-Date: 2019-07-13 19:05+0000\n"
+"PO-Revision-Date: 2019-07-19 22:48+0200\n"
+"Last-Translator: gogo <linux.hr@protonmail.com>\n"
 "Language-Team: Croatian <hr@li.org>\n"
 "Language: hr\n"
 "MIME-Version: 1.0\n"
@@ -132,6 +132,10 @@ msgstr "Uklj/Isklj zvuk alarma"
 msgid "Remove the alarm"
 msgstr "Ukloni alarm"
 
+#: data/ui/calendar-management-dialog.ui:42
+msgid "Calendar Settings"
+msgstr "Postavke kalendara"
+
 #: data/ui/calendar-popover.ui:43
 msgid "_Synchronize Calendars"
 msgstr "_Uskladi kalendare"
@@ -145,8 +149,49 @@ msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Usklađivanje udaljenih kalendara…"
 
-#: data/ui/edit-dialog.ui:16 data/ui/source-dialog.ui:762
-#: data/ui/source-dialog.ui:869 src/gui/gcal-source-dialog.c:1157
+#: data/ui/calendars-page.ui:31 src/gui/gcal-window.c:706
+#: src/gui/gcal-window.c:710
+msgid "Undo"
+msgstr "Vrati"
+
+#: data/ui/calendars-page.ui:97
+msgid "Add Calendar…"
+msgstr "Dodaj kalendar…"
+
+#: data/ui/edit-calendar-page.ui:18
+msgid "Account"
+msgstr "Račun"
+
+#: data/ui/edit-calendar-page.ui:43
+msgid "Settings"
+msgstr "Postavke"
+
+#: data/ui/edit-calendar-page.ui:64 data/ui/edit-dialog.ui:232
+msgid "Location"
+msgstr "Lokacija"
+
+#: data/ui/edit-calendar-page.ui:93
+msgid "Calendar name"
+msgstr "Naslov kalendara"
+
+#: data/ui/edit-calendar-page.ui:121 data/ui/new-calendar-page.ui:65
+msgid "Color"
+msgstr "Boja"
+
+#: data/ui/edit-calendar-page.ui:155
+msgid "Display calendar"
+msgstr "Prikaži kalendar"
+
+#: data/ui/edit-calendar-page.ui:175
+msgid "Add new events to this calendar by default"
+msgstr "Dodaj po zadanome nove događaje na ovaj kalendar"
+
+#: data/ui/edit-calendar-page.ui:190
+msgid "Remove Calendar"
+msgstr "Ukloni kalendar"
+
+#: data/ui/edit-dialog.ui:16 data/ui/new-calendar-page.ui:302
+#: data/ui/new-calendar-page.ui:341
 msgid "Cancel"
 msgstr "Odustani"
 
@@ -177,10 +222,6 @@ msgstr "Podsjetnici"
 #: data/ui/edit-dialog.ui:216
 msgid "Notes"
 msgstr "Bilješke"
-
-#: data/ui/edit-dialog.ui:232 data/ui/source-dialog.ui:563
-msgid "Location"
-msgstr "Lokacija"
 
 #: data/ui/edit-dialog.ui:301
 msgid "Time"
@@ -362,14 +403,57 @@ msgstr "Iz datoteke…"
 msgid "New Event…"
 msgstr "Novi događaj…"
 
+#: data/ui/new-calendar-page.ui:33 data/ui/new-calendar-page.ui:41
+msgid "Calendar Name"
+msgstr "Naslov kalendara"
+
+#: data/ui/new-calendar-page.ui:86
+msgid "Import a Calendar"
+msgstr "Uvezi kalendar"
+
+#: data/ui/new-calendar-page.ui:105
+msgid ""
+"Alternatively, enter the web address of an online calendar you want to "
+"import, or open a supported calendar file."
+msgstr ""
+"Alternativno, upišite web adresu mrežnog kalendara koji želite uvesti ili "
+"otvorite datoteku podržanog kalendara."
+
+#: data/ui/new-calendar-page.ui:137
+msgid "Open a File"
+msgstr "Otvori datoteku"
+
+#: data/ui/new-calendar-page.ui:158
+msgid "Calendars"
+msgstr "Kalendari"
+
+#: data/ui/new-calendar-page.ui:204
+msgid ""
+"If the calendar belongs to one of your online accounts, you can add it "
+"through the <a href=\"GOA\">online account settings</a>."
+msgstr ""
+"Ako kalendar pripada jednom od vaših mrežnih računa, možete ga dodati putem "
+"<a href=\"GOA\">postavki mrežnih računa</a>."
+
+#: data/ui/new-calendar-page.ui:240
+msgid "User"
+msgstr "Korisnik"
+
+#: data/ui/new-calendar-page.ui:254
+msgid "Password"
+msgstr "Lozinka"
+
+#: data/ui/new-calendar-page.ui:311
+msgid "Connect"
+msgstr "Poveži se"
+
+#: data/ui/new-calendar-page.ui:348 data/ui/quick-add-popover.ui:130
+msgid "Add"
+msgstr "Dodaj"
+
 #: data/ui/quick-add-popover.ui:117
 msgid "Edit Details…"
 msgstr "Uredi pojedinosti…"
-
-#: data/ui/quick-add-popover.ui:130 data/ui/source-dialog.ui:389
-#: data/ui/source-dialog.ui:773
-msgid "Add"
-msgstr "Dodaj"
 
 #: data/ui/search-popover.ui:76
 msgid "No results found"
@@ -378,116 +462,6 @@ msgstr "Nema pronađenih rezultata"
 #: data/ui/search-popover.ui:92
 msgid "Try a different search"
 msgstr "Pokušaj drugačiju pretragu"
-
-#: data/ui/source-dialog.ui:53 src/gui/gcal-window.c:699
-#: src/gui/gcal-window.c:703
-msgid "Undo"
-msgstr "Vrati"
-
-#: data/ui/source-dialog.ui:135
-msgid "Online Accounts"
-msgstr "Mrežni računi"
-
-#: data/ui/source-dialog.ui:151
-msgid "Open online account settings"
-msgstr "Otvori postavke mrežnih računa"
-
-#: data/ui/source-dialog.ui:198
-msgid "Google"
-msgstr "Google"
-
-#: data/ui/source-dialog.ui:209 data/ui/source-dialog.ui:260
-#: data/ui/source-dialog.ui:311
-msgid "Click to set up"
-msgstr "Klikni za postavljanje"
-
-#: data/ui/source-dialog.ui:249
-msgid "Nextcloud"
-msgstr "Nextcloud"
-
-#: data/ui/source-dialog.ui:300
-msgid "Microsoft Exchange"
-msgstr "Microsoft Exchange"
-
-#: data/ui/source-dialog.ui:346 data/ui/source-dialog.ui:682
-msgid "Calendars"
-msgstr "Kalendari"
-
-#: data/ui/source-dialog.ui:421
-msgid "Overview"
-msgstr "Prikaz"
-
-#: data/ui/source-dialog.ui:441
-msgid "Add new events to this calendar by default"
-msgstr "Dodaj po zadanome nove događaje na ovaj kalendar"
-
-#: data/ui/source-dialog.ui:454
-msgid "Remove Calendar"
-msgstr "Ukloni kalendar"
-
-#: data/ui/source-dialog.ui:483
-msgid "Display calendar"
-msgstr "Prikaži kalendar"
-
-#: data/ui/source-dialog.ui:521
-msgid "Calendar name"
-msgstr "Naslov kalendara"
-
-#: data/ui/source-dialog.ui:535
-msgid "Color"
-msgstr "Boja"
-
-#: data/ui/source-dialog.ui:549
-msgid "Account"
-msgstr "Račun"
-
-#: data/ui/source-dialog.ui:587
-msgid "Settings"
-msgstr "Postavke"
-
-#: data/ui/source-dialog.ui:618
-msgid "Edit Calendar"
-msgstr "Uredi kalendar"
-
-#: data/ui/source-dialog.ui:631
-msgid ""
-"Enter the address of the calendar that you want to add. If the calendar "
-"belongs to one of your online accounts, you can add it through the <a href="
-"\"GOA\">online account settings</a>."
-msgstr ""
-"Upišite adresu kalendara koji želite dodati. Ako račun pripada jednom od "
-"vaših mrežnih računa, možete ga dodati putem <a href=\"GOA\">postavki "
-"mrežnih računas</a>."
-
-#: data/ui/source-dialog.ui:646
-msgid "Calendar Address"
-msgstr "Adresa kalendara"
-
-#: data/ui/source-dialog.ui:729 src/gui/gcal-source-dialog.c:2240
-#: src/gui/gcal-source-dialog.c:2246
-msgid "Add Calendar"
-msgstr "Dodaj kalendar"
-
-#: data/ui/source-dialog.ui:745 src/gui/gcal-source-dialog.c:856
-#: src/gui/gcal-source-dialog.c:2269
-msgid "Calendar Settings"
-msgstr "Postavke kalendara"
-
-#: data/ui/source-dialog.ui:806
-msgid "User"
-msgstr "Korisnik"
-
-#: data/ui/source-dialog.ui:820
-msgid "Password"
-msgstr "Lozinka"
-
-#: data/ui/source-dialog.ui:866
-msgid "Enter your credentials"
-msgstr "Upišite svoje vjerodajnice"
-
-#: data/ui/source-dialog.ui:878
-msgid "Connect"
-msgstr "Poveži se"
 
 #: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:756
 #: src/views/gcal-week-view.c:315
@@ -506,7 +480,7 @@ msgstr "AM"
 msgid "PM"
 msgstr "PM"
 
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:309
+#: data/ui/weather-settings.ui:12 data/ui/window.ui:318
 msgid "_Weather"
 msgstr "_Vremenska prognoza"
 
@@ -549,11 +523,15 @@ msgctxt "tooltip"
 msgid "Search for events"
 msgstr "Pretraži događaje"
 
-#: data/ui/window.ui:324
+#: data/ui/window.ui:309
+msgid "_Online Accounts…"
+msgstr "_Mrežni računi…"
+
+#: data/ui/window.ui:333
 msgid "_Keyboard Shortcuts"
 msgstr "_Prečaci tipkovnice"
 
-#: data/ui/window.ui:333
+#: data/ui/window.ui:342
 msgid "_About Calendar"
 msgstr "_O Kalendaru"
 
@@ -586,6 +564,24 @@ msgstr "%1$s %2$s — %3$s %4$s"
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
+
+#: src/gui/calendar-management/gcal-calendars-page.c:358
+msgid "Manage Calendars"
+msgstr "Upravljanje kalendarima"
+
+#. Update notification label
+#: src/gui/calendar-management/gcal-calendars-page.c:388
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "Kalendar <b>%s</b> uklonjen"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:491
+msgid "New Calendar"
+msgstr "Novi kalendar"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:652
+msgid "Calendar files"
+msgstr "Datoteke događaja"
 
 #: src/gui/gcal-application.c:63
 msgid "Quit GNOME Calendar"
@@ -654,7 +650,7 @@ msgstr[0] "Prije %d tjedna"
 msgstr[1] "Prije %d tjedna"
 msgstr[2] "Prije %d tjedana"
 
-#: src/gui/gcal-edit-dialog.c:1477 src/gui/gcal-quick-add-popover.c:686
+#: src/gui/gcal-edit-dialog.c:1477 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
 msgstr "Neimenovani događaj"
 
@@ -931,42 +927,6 @@ msgstr "Novi događaj u studenom %d"
 msgid "New Event on December %d"
 msgstr "Novi događaj u prosincu %d"
 
-#. Dialog
-#: src/gui/gcal-source-dialog.c:1154
-msgid "Select a calendar file"
-msgstr "Odaberi datoteku događaja"
-
-#: src/gui/gcal-source-dialog.c:1158
-msgid "Open"
-msgstr "Otvori"
-
-#: src/gui/gcal-source-dialog.c:1165
-msgid "Calendar files"
-msgstr "Datoteke događaja"
-
-#. update the source properties
-#: src/gui/gcal-source-dialog.c:1199
-msgid "Unnamed Calendar"
-msgstr "Bezimeni kalendar"
-
-#. Update notification label
-#: src/gui/gcal-source-dialog.c:1792
-#, c-format
-msgid "Calendar <b>%s</b> removed"
-msgstr "Kalendar <b>%s</b> uklonjen"
-
-#: src/gui/gcal-source-dialog.c:1840 src/gui/gcal-source-dialog.c:1896
-msgid "Off"
-msgstr "Isključen"
-
-#: src/gui/gcal-source-dialog.c:1840 src/gui/gcal-source-dialog.c:1896
-msgid "On"
-msgstr "Uključen"
-
-#: src/gui/gcal-source-dialog.c:1895
-msgid "Expired"
-msgstr "Istekao"
-
 #: src/gui/gcal-time-selector.c:83
 #, c-format
 msgid "%s AM"
@@ -977,15 +937,15 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gui/gcal-window.c:699
+#: src/gui/gcal-window.c:706
 msgid "Another event deleted"
 msgstr "Drugi događaj obrisan"
 
-#: src/gui/gcal-window.c:703
+#: src/gui/gcal-window.c:710
 msgid "Event deleted"
 msgstr "Događaj obrisan"
 
-#: src/utils/gcal-utils.c:941
+#: src/utils/gcal-utils.c:942
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -993,19 +953,19 @@ msgstr ""
 "Događaj koji pokušavate promijeniti ponavlja se. Promjene koje ste odabrali "
 "trebale bi se primijeniti na:"
 
-#: src/utils/gcal-utils.c:944
+#: src/utils/gcal-utils.c:945
 msgid "_Cancel"
 msgstr "_Odustani"
 
-#: src/utils/gcal-utils.c:946
+#: src/utils/gcal-utils.c:947
 msgid "_Only This Event"
 msgstr "_Samo ovaj događaj"
 
-#: src/utils/gcal-utils.c:953
+#: src/utils/gcal-utils.c:954
 msgid "_Subsequent events"
 msgstr "_Naknadni događaji"
 
-#: src/utils/gcal-utils.c:955
+#: src/utils/gcal-utils.c:956
 msgid "_All events"
 msgstr "_Svi događaji"
 
@@ -1013,7 +973,7 @@ msgstr "_Svi događaji"
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/views/gcal-week-header.c:465
+#: src/views/gcal-week-header.c:462
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
@@ -1021,7 +981,7 @@ msgstr[0] "Ostali %d događaj"
 msgstr[1] "Ostalih %d događaja"
 msgstr[2] "Ostalih %d događaja"
 
-#: src/views/gcal-week-header.c:1001
+#: src/views/gcal-week-header.c:998
 #, c-format
 msgid "week %d"
 msgstr "tjedan %d"
@@ -1039,6 +999,51 @@ msgstr "%d %B…"
 #: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:519
 msgid "%B %d"
 msgstr "%d %B"
+
+#~ msgid "Open online account settings"
+#~ msgstr "Otvori postavke mrežnih računa"
+
+#~ msgid "Google"
+#~ msgstr "Google"
+
+#~ msgid "Click to set up"
+#~ msgstr "Klikni za postavljanje"
+
+#~ msgid "Nextcloud"
+#~ msgstr "Nextcloud"
+
+#~ msgid "Microsoft Exchange"
+#~ msgstr "Microsoft Exchange"
+
+#~ msgid "Overview"
+#~ msgstr "Prikaz"
+
+#~ msgid "Edit Calendar"
+#~ msgstr "Uredi kalendar"
+
+#~ msgid "Calendar Address"
+#~ msgstr "Adresa kalendara"
+
+#~ msgid "Enter your credentials"
+#~ msgstr "Upišite svoje vjerodajnice"
+
+#~ msgid "Select a calendar file"
+#~ msgstr "Odaberi datoteku događaja"
+
+#~ msgid "Open"
+#~ msgstr "Otvori"
+
+#~ msgid "Unnamed Calendar"
+#~ msgstr "Bezimeni kalendar"
+
+#~ msgid "Off"
+#~ msgstr "Isključen"
+
+#~ msgid "On"
+#~ msgstr "Uključen"
+
+#~ msgid "Expired"
+#~ msgstr "Istekao"
 
 #~ msgid "All day"
 #~ msgstr "Cijeli dan"
