@@ -345,7 +345,7 @@ on_client_connected (GObject      *source_object,
   ESourceRefresh *refresh_extension;
   ESourceOffline *offline_extension;
   GcalManager *self;
-  ECalClient *client;
+  EClient *client;
   ESource *source;
   GError *error;
   gboolean enabled;
@@ -353,8 +353,6 @@ on_client_connected (GObject      *source_object,
   GCAL_ENTRY;
 
   self = GCAL_MANAGER (user_data);
-  source = e_client_get_source (E_CLIENT (source_object));
-  enabled = is_source_enabled (source);
 
   self->sources_at_launch--;
 
@@ -362,28 +360,28 @@ on_client_connected (GObject      *source_object,
     g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_LOADING]);
 
   error = NULL;
-  client = E_CAL_CLIENT (e_cal_client_connect_finish (result, &error));
+  client = e_cal_client_connect_finish (result, &error);
 
   if (error)
     {
-      remove_source (GCAL_MANAGER (user_data), source);
-      g_warning ("%s: Failed to open/connect '%s': %s",
+      g_warning ("%s: Failed to open/connect calendar: %s",
                  G_STRFUNC,
-                 e_source_get_display_name (source),
                  error->message);
 
-      g_object_unref (source);
       g_error_free (error);
       return;
     }
+
+  source = e_client_get_source (client);
+  enabled = is_source_enabled (source);
 
   g_object_set_data (G_OBJECT (source), "client", client);
 
   unit = g_new0 (GcalManagerUnit, 1);
   unit->connected = TRUE;
-  unit->client = g_object_ref (client);
+  unit->client = g_object_ref (E_CAL_CLIENT (client));
 
-  g_hash_table_insert (self->clients, source, unit);
+  g_hash_table_insert (self->clients, g_object_ref (source), unit);
 
   g_debug ("Source %s (%s) connected",
            e_source_get_display_name (source),
@@ -394,15 +392,17 @@ on_client_connected (GObject      *source_object,
 
   if (enabled)
     {
-      e_cal_data_model_add_client (self->e_data_model, client);
-      e_cal_data_model_add_client (self->search_data_model, client);
+      ECalClient *cal_client = E_CAL_CLIENT (client);
+
+      e_cal_data_model_add_client (self->e_data_model, cal_client);
+      e_cal_data_model_add_client (self->search_data_model, cal_client);
       if (self->shell_search_data_model != NULL)
-        e_cal_data_model_add_client (self->shell_search_data_model, client);
+        e_cal_data_model_add_client (self->shell_search_data_model, cal_client);
     }
 
   /* refresh client when it's added */
-  if (enabled && e_client_check_refresh_supported (E_CLIENT (client)))
-    e_client_refresh (E_CLIENT (client), NULL, on_client_refreshed, user_data);
+  if (enabled && e_client_check_refresh_supported (client))
+    e_client_refresh (client, NULL, on_client_refreshed, user_data);
 
   /* Cache all the online calendars, so the user can see them offline */
   offline_extension = e_source_get_extension (source, E_SOURCE_EXTENSION_OFFLINE);
