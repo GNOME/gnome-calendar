@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-07-13 23:45+0000\n"
+"POT-Creation-Date: 2019-07-31 18:16+0000\n"
 "PO-Revision-Date: 2019-07-24 06:50+0530\n"
 "Last-Translator: Jor Teron <jor.teron@gmail.com>\n"
 "Language-Team: Karbi <karbi.translation@gmail.com>\n"
@@ -547,7 +547,7 @@ msgstr "%2$s %1$s — %4$s %3$s"
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
 #: src/core/gcal-event.c:1873 src/gui/gcal-quick-add-popover.c:470
 #, c-format
-msgid "%1$s, %2$s – %3$s, "
+msgid "%1$s, %2$s – %3$s"
 msgstr "%2$s – %3$s, %1$s"
 
 #: src/gui/calendar-management/gcal-calendars-page.c:358
