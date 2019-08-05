@@ -105,7 +105,7 @@ msgstr "Tipus de la vista activa"
 #: data/org.gnome.calendar.gschema.xml.in:22
 msgid "Type of the active window view, default value is: monthly view"
 msgstr ""
-"Tipus de vista de la finestra activa. El valor per defecte és per mesos."
+"Tipus de vista de la finestra activa. El valor per defecte és per mesos"
 
 #: data/org.gnome.calendar.gschema.xml.in:26
 msgid "Weather Service Configuration"
@@ -160,7 +160,7 @@ msgstr "Desfés"
 
 #: data/ui/calendars-page.ui:97
 msgid "Add Calendar…"
-msgstr "Afegeix un calendari"
+msgstr "Afegeix un calendari…"
 
 #: data/ui/edit-calendar-page.ui:18
 msgid "Account"
