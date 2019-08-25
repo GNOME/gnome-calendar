@@ -414,8 +414,6 @@ get_events_for_range (GcalYearView *self,
 
   events = g_ptr_array_sized_new (50);
 
-  g_message ("Range: %s  --  %s", g_date_time_format (start, "%x %X %z"), g_date_time_format (end, "%x %X %z"));
-
   for (i = g_date_time_get_month (start) - 1; i <= g_date_time_get_month (end) - 1; i++)
     {
       GPtrArray *month_events = self->events[i];
