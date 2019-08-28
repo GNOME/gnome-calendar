@@ -658,7 +658,7 @@ msgstr "Cita sense nom"
 #: src/gui/gcal-event-widget.c:428
 #, c-format
 msgid "At %s"
-msgstr "El %s"
+msgstr "A %s"
 
 #: src/gui/gcal-quick-add-popover.c:117
 #, c-format
