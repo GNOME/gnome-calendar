@@ -49,6 +49,20 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2019-09-09" version="3.34.0">
+      <description>
+        <p>GNOME Calendar 3.34 release is here!</p>
+        <p>
+          This release comes with many improvements and new features:
+          <ul>
+            <li>The calendar management dialog was redesigned and reimplemented</li>
+            <li>Discovering online calendars is much more reliable</li>
+            <li>Minor tweaks to the main interface</li>
+          </ul>
+        </p>
+      </description>
+    </release>
+
     <release date="2019-03-11" version="3.32.0">
       <description>
         <p>GNOME Calendar 3.32.0 release is here!</p>
