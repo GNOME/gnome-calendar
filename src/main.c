@@ -1,4 +1,3 @@
-/* -*- mode: c; tab-width: 8; indent-tabs-mode: nil; c-basic-offset: 2 -*- */
 /*
  * main.c
  * Copyright (C) 2015 Erick Pérez Castellanos <erickpc@gnome.org>
@@ -23,9 +22,9 @@
 #include <glib/gi18n.h>
 
 
-int
-main (int   argc,
-      char *argv[])
+gint
+main (gint    argc,
+      gchar **argv)
 {
   g_autoptr (GcalApplication) app;
 
