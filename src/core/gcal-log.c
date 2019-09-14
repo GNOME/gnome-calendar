@@ -57,11 +57,11 @@ gcal_log_handler (const gchar    *domain,
                   gpointer        user_data)
 {
   GTimeVal tv;
+  g_autofree gchar *buffer = NULL;
   struct tm tt;
   time_t t;
   const gchar *level;
   gchar ftime[32];
-  gchar *buffer;
 
   /* Skip ignored log domains */
   if (domain && g_strv_contains (ignored_domains, domain))
@@ -86,8 +86,6 @@ gcal_log_handler (const gchar    *domain,
   g_io_channel_flush (standard_channel, NULL);
 
   G_UNLOCK (channel_lock);
-
-  g_free (buffer);
 }
 
 void
