@@ -56,25 +56,23 @@ gcal_log_handler (const gchar    *domain,
                   const gchar    *message,
                   gpointer        user_data)
 {
-  GTimeVal tv;
+  g_autoptr (GDateTime) now = NULL;
   g_autofree gchar *buffer = NULL;
-  struct tm tt;
-  time_t t;
+  g_autofree gchar *ftime = NULL;
   const gchar *level;
-  gchar ftime[32];
+  gint microsecond;
 
   /* Skip ignored log domains */
   if (domain && g_strv_contains (ignored_domains, domain))
     return;
 
   level = log_level_str (log_level);
-  g_get_current_time (&tv);
-  t = (time_t) tv.tv_sec;
-  tt = *localtime (&t);
-  strftime (ftime, sizeof (ftime), "%H:%M:%S", &tt);
-  buffer = g_strdup_printf ("%s.%04ld  %28s: %s: %s\n",
+  now = g_date_time_new_now_local ();
+  ftime = g_date_time_format (now, "%H:%M:%S");
+  microsecond = g_date_time_get_microsecond (now);
+  buffer = g_strdup_printf ("%s.%04d  %28s: %s: %s\n",
                             ftime,
-                            tv.tv_usec / 1000,
+                            microsecond,
                             domain,
                             level,
                             message);
