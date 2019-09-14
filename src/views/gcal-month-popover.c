@@ -354,10 +354,11 @@ update_event_list (GcalMonthPopover *self)
 
       gtk_container_add (GTK_CONTAINER (self->listbox), event_widget);
 
-      g_signal_connect (event_widget,
-                        "activate",
-                        G_CALLBACK (event_activated_cb),
-                        self);
+      g_signal_connect_object (event_widget,
+                               "activate",
+                               G_CALLBACK (event_activated_cb),
+                               self,
+                               0);
     }
 
   gtk_widget_show_all (self->listbox);

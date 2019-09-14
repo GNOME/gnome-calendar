@@ -623,10 +623,11 @@ gcal_date_chooser_init (GcalDateChooser *self)
         {
           self->days[row][col] = gcal_date_chooser_day_new ();
 
-          g_signal_connect (self->days[row][col],
-                            "selected",
-                            G_CALLBACK (day_selected_cb),
-                            self);
+          g_signal_connect_object (self->days[row][col],
+                                   "selected",
+                                   G_CALLBACK (day_selected_cb),
+                                   self,
+                                   0);
 
           gtk_widget_show (self->days[row][col]);
           gtk_grid_attach (GTK_GRID (self->day_grid), self->days[row][col], col, row, 1, 1);

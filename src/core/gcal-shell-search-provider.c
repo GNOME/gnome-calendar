@@ -428,7 +428,7 @@ gcal_shell_search_provider_set_property (GObject      *object,
           GcalManager *manager = gcal_context_get_manager (self->context);
 
           gcal_manager_setup_shell_search (manager, E_CAL_DATA_MODEL_SUBSCRIBER (self));
-          g_signal_connect_swapped (manager, "query-completed", G_CALLBACK (query_completed_cb), self);
+          g_signal_connect_object (manager, "query-completed", G_CALLBACK (query_completed_cb), self, G_CONNECT_SWAPPED);
 
           g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
         }
@@ -463,11 +463,11 @@ gcal_shell_search_provider_init (GcalShellSearchProvider *self)
   self->events = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, g_object_unref);
   self->skel = gcal_shell_search_provider2_skeleton_new ();
 
-  g_signal_connect_swapped (self->skel, "handle-get-initial-result-set", G_CALLBACK (get_initial_result_set_cb), self);
-  g_signal_connect_swapped (self->skel, "handle-get-subsearch-result-set", G_CALLBACK (get_subsearch_result_set_cb), self);
-  g_signal_connect_swapped (self->skel, "handle-get-result-metas", G_CALLBACK (get_result_metas_cb), self);
-  g_signal_connect_swapped (self->skel, "handle-activate-result", G_CALLBACK (activate_result_cb), self);
-  g_signal_connect_swapped (self->skel, "handle-launch-search", G_CALLBACK (launch_search_cb), self);
+  g_signal_connect_object (self->skel, "handle-get-initial-result-set", G_CALLBACK (get_initial_result_set_cb), self, G_CONNECT_SWAPPED);
+  g_signal_connect_object (self->skel, "handle-get-subsearch-result-set", G_CALLBACK (get_subsearch_result_set_cb), self, G_CONNECT_SWAPPED);
+  g_signal_connect_object (self->skel, "handle-get-result-metas", G_CALLBACK (get_result_metas_cb), self, G_CONNECT_SWAPPED);
+  g_signal_connect_object (self->skel, "handle-activate-result", G_CALLBACK (activate_result_cb), self, G_CONNECT_SWAPPED);
+  g_signal_connect_object (self->skel, "handle-launch-search", G_CALLBACK (launch_search_cb), self, G_CONNECT_SWAPPED);
 }
 
 GcalShellSearchProvider*

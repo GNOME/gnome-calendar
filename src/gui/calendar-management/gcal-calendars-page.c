@@ -103,10 +103,11 @@ make_calendar_row (GcalCalendarsPage *self,
   top_label = GTK_WIDGET (gtk_builder_get_object (builder, "title"));
   gtk_label_set_label (GTK_LABEL (top_label), gcal_calendar_get_name (calendar));
   g_object_bind_property (calendar, "name", top_label, "label", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_signal_connect_swapped (calendar,
-                            "notify::name",
-                            G_CALLBACK (gtk_list_box_invalidate_sort),
-                            self->listbox);
+  g_signal_connect_object (calendar,
+                           "notify::name",
+                           G_CALLBACK (gtk_list_box_invalidate_sort),
+                           self->listbox,
+                           G_CONNECT_SWAPPED);
 
   g_signal_connect_object (calendar,
                            "notify::color",
