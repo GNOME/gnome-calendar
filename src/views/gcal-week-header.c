@@ -221,7 +221,7 @@ setup_event_widget (GcalWeekHeader *self,
                     GtkWidget      *widget)
 {
   gtk_widget_set_margin_end (widget, 6);
-  g_signal_connect (widget, "activate", G_CALLBACK (on_event_widget_activated), self);
+  g_signal_connect_object (widget, "activate", G_CALLBACK (on_event_widget_activated), self, 0);
 }
 
 static inline void

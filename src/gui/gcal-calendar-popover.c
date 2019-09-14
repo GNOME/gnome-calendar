@@ -317,10 +317,10 @@ gcal_calendar_popover_set_property (GObject      *object,
                                 "sensitive",
                                 G_BINDING_INVERT_BOOLEAN | G_BINDING_SYNC_CREATE);
 
-        g_signal_connect (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), object);
-        g_signal_connect (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), object);
-        g_signal_connect (manager, "calendar-changed", G_CALLBACK (on_manager_calendar_changed_cb), object);
-        g_signal_connect (manager, "notify::synchronizing", G_CALLBACK (on_manager_synchronizing_changed_cb), object);
+        g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), object, 0);
+        g_signal_connect_object (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), object, 0);
+        g_signal_connect_object (manager, "calendar-changed", G_CALLBACK (on_manager_calendar_changed_cb), object, 0);
+        g_signal_connect_object (manager, "notify::synchronizing", G_CALLBACK (on_manager_synchronizing_changed_cb), object, 0);
       }
       break;
 

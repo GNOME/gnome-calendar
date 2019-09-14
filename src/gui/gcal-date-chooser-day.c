@@ -392,10 +392,11 @@ gcal_date_chooser_day_init (GcalDateChooserDay *self)
   self->multipress_gesture = gtk_gesture_multi_press_new (widget);
   gtk_gesture_single_set_button (GTK_GESTURE_SINGLE (self->multipress_gesture), 0);
 
-  g_signal_connect (self->multipress_gesture,
-                    "pressed",
-                    G_CALLBACK (day_pressed),
-                    self);
+  g_signal_connect_object (self->multipress_gesture,
+                           "pressed",
+                           G_CALLBACK (day_pressed),
+                           self,
+                           0);
 }
 
 GtkWidget*

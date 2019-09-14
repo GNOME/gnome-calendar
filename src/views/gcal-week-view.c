@@ -118,10 +118,11 @@ update_grid_scroll_position (GcalWeekView *self)
 
       stack = gtk_widget_get_ancestor (GTK_WIDGET (self), GTK_TYPE_STACK);
 
-      g_signal_connect (stack,
-                        "notify::visible-child",
-                        G_CALLBACK (stack_visible_child_changed_cb),
-                        self);
+      g_signal_connect_object (stack,
+                               "notify::visible-child",
+                               G_CALLBACK (stack_visible_child_changed_cb),
+                               self,
+                               0);
 
       self->scroll_grid_timeout_id = 0;
 

@@ -498,15 +498,17 @@ gcal_event_widget_set_event_internal (GcalEventWidget *self,
   /* Update color */
   update_color (self);
 
-  g_signal_connect_swapped (event,
-                            "notify::color",
-                            G_CALLBACK (update_color),
-                            self);
+  g_signal_connect_object (event,
+                           "notify::color",
+                           G_CALLBACK (update_color),
+                           self,
+                           G_CONNECT_SWAPPED);
 
-  g_signal_connect_swapped (event,
-                            "notify::summary",
-                            G_CALLBACK (gtk_widget_queue_draw),
-                            self);
+  g_signal_connect_object (event,
+                           "notify::summary",
+                           G_CALLBACK (gtk_widget_queue_draw),
+                           self,
+                           G_CONNECT_SWAPPED);
 
   /* Tooltip */
   gcal_event_widget_set_event_tooltip (self, event);
