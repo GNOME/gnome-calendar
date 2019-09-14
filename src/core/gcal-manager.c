@@ -883,10 +883,11 @@ gcal_manager_setup_shell_search (GcalManager             *self,
     return;
 
   self->shell_search_data_model = e_cal_data_model_new (gcal_thread_submit_job);
-  g_signal_connect_swapped (self->shell_search_data_model,
-                            "view-state-changed",
-                            G_CALLBACK (model_state_changed),
-                            self);
+  g_signal_connect_object (self->shell_search_data_model,
+                           "view-state-changed",
+                           G_CALLBACK (model_state_changed),
+                           self,
+                           G_CONNECT_SWAPPED);
 
   e_cal_data_model_set_expand_recurrences (self->shell_search_data_model, TRUE);
   e_cal_data_model_set_timezone (self->shell_search_data_model, e_cal_util_get_system_timezone ());
@@ -1608,13 +1609,13 @@ gcal_manager_startup (GcalManager *self)
 
   /* The eds_credentials_prompter responses to REQUIRED and REJECTED reasons,
      the SSL_FAILED should be handled elsewhere. */
-  g_signal_connect (self->source_registry, "credentials-required", G_CALLBACK (source_credentials_required_cb), self);
+  g_signal_connect_object (self->source_registry, "credentials-required", G_CALLBACK (source_credentials_required_cb), self, 0);
 
   e_credentials_prompter_process_awaiting_credentials (self->credentials_prompter);
 
-  g_signal_connect_swapped (self->source_registry, "source-added", G_CALLBACK (load_source), self);
-  g_signal_connect_swapped (self->source_registry, "source-removed", G_CALLBACK (remove_source), self);
-  g_signal_connect_swapped (self->source_registry, "source-changed", G_CALLBACK (source_changed), self);
+  g_signal_connect_object (self->source_registry, "source-added", G_CALLBACK (load_source), self, G_CONNECT_SWAPPED);
+  g_signal_connect_object (self->source_registry, "source-removed", G_CALLBACK (remove_source), self, G_CONNECT_SWAPPED);
+  g_signal_connect_object (self->source_registry, "source-changed", G_CALLBACK (source_changed), self, G_CONNECT_SWAPPED);
 
   /* create data model */
   self->e_data_model = e_cal_data_model_new (gcal_thread_submit_job);

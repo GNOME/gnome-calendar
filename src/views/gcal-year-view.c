@@ -492,7 +492,7 @@ update_sidebar (GcalYearView *year_view)
         {
           child_widget = l->data;
           gtk_widget_show (child_widget);
-          g_signal_connect (child_widget, "activate", G_CALLBACK (event_activated), year_view);
+          g_signal_connect_object (child_widget, "activate", G_CALLBACK (event_activated), year_view, 0);
           g_object_set_data (G_OBJECT (child_widget), "shift", GINT_TO_POINTER (i));
           gtk_container_add (GTK_CONTAINER (year_view->events_sidebar), child_widget);
         }
@@ -2118,7 +2118,7 @@ gcal_year_view_init (GcalYearView *self)
   /* bind GNOME Shell' show week numbers property to GNOME Calendar's one */
   self->calendar_settings = g_settings_new ("org.gnome.desktop.calendar");
   g_settings_bind (self->calendar_settings, "show-weekdate", self, "show-week-numbers", G_SETTINGS_BIND_DEFAULT);
-  g_signal_connect_swapped (self->calendar_settings, "changed::show-weekdate", G_CALLBACK (gtk_widget_queue_draw), self);
+  g_signal_connect_object (self->calendar_settings, "changed::show-weekdate", G_CALLBACK (gtk_widget_queue_draw), self, G_CONNECT_SWAPPED);
 
   /* layout */
   self->number_of_columns = 4;

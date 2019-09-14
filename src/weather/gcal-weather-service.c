@@ -759,16 +759,18 @@ on_gclue_simple_creation_cb (GClueSimple        *_source,
     {
       update_gclue_location (self, location);
 
-      g_signal_connect (location,
-                        "notify::location",
-                        G_CALLBACK (on_gclue_location_changed_cb),
-                        self);
+      g_signal_connect_object (location,
+                               "notify::location",
+                               G_CALLBACK (on_gclue_location_changed_cb),
+                               self,
+                               0);
     }
 
-  g_signal_connect (client,
-                    "notify::active",
-                    G_CALLBACK (on_gclue_client_activity_changed_cb),
-                    self);
+  g_signal_connect_object (client,
+                           "notify::active",
+                           G_CALLBACK (on_gclue_client_activity_changed_cb),
+                           self,
+                           0);
 
   GCAL_EXIT;
 }

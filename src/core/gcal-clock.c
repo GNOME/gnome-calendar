@@ -173,10 +173,11 @@ login_proxy_acquired_cb (GObject      *source,
       return;
     }
 
-  g_signal_connect (self->proxy,
-                    "g-signal",
-                    G_CALLBACK (logind_signal_received_cb),
-                    self);
+  g_signal_connect_object (self->proxy,
+                           "g-signal",
+                           G_CALLBACK (logind_signal_received_cb),
+                           self,
+                           0);
 
   g_debug ("Successfully acquired logind DBus proxy");
 }

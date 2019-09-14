@@ -586,15 +586,16 @@ create_row_for_alarm (GcalEvent          *event,
                                 has_sound ? "audio-volume-high-symbolic" : "audio-volume-muted-symbolic",
                                 GTK_ICON_SIZE_BUTTON);
 
-  g_signal_connect (volume_button, "toggled", G_CALLBACK (on_sound_toggle_changed_cb), row);
+  g_signal_connect_object (volume_button, "toggled", G_CALLBACK (on_sound_toggle_changed_cb), row, 0);
 
   /* Remove button */
   remove_button = WID ("remove_button");
 
-  g_signal_connect (remove_button,
-                    "clicked",
-                    G_CALLBACK (on_remove_alarm_button_clicked),
-                    row);
+  g_signal_connect_object (remove_button,
+                           "clicked",
+                           G_CALLBACK (on_remove_alarm_button_clicked),
+                           row,
+                           0);
 
   main_box = WID ("main_box");
   gtk_container_add (GTK_CONTAINER (row), main_box);
@@ -1155,10 +1156,11 @@ gcal_edit_dialog_constructed (GObject* object)
                                   G_ACTION_GROUP (self->action_group));
 
   /* Watch the main window and adapt the maximum size */
-  g_signal_connect_swapped (gtk_window_get_transient_for (GTK_WINDOW (self)),
-                            "size-allocate",
-                            G_CALLBACK (transient_size_allocate_cb),
-                            self);
+  g_signal_connect_object (gtk_window_get_transient_for (GTK_WINDOW (self)),
+                           "size-allocate",
+                           G_CALLBACK (transient_size_allocate_cb),
+                           self,
+                           G_CONNECT_SWAPPED);
 }
 
 static void

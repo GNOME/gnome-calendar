@@ -188,8 +188,8 @@ setup_child_widget (GcalMonthView *self,
   if (!gtk_widget_get_parent (widget))
     gtk_widget_set_parent (widget, GTK_WIDGET (self));
 
-  g_signal_connect (widget, "activate", G_CALLBACK (on_event_activated_cb), self);
-  g_signal_connect (widget, "notify::visible", G_CALLBACK (on_event_widget_visibility_changed_cb), self);
+  g_signal_connect_object (widget, "activate", G_CALLBACK (on_event_activated_cb), self, 0);
+  g_signal_connect_object (widget, "notify::visible", G_CALLBACK (on_event_widget_visibility_changed_cb), self, 0);
 }
 
 static gboolean
@@ -861,7 +861,7 @@ setup_month_grid (GcalMonthView *self,
 
           cell = gcal_month_cell_new ();
 
-          g_signal_connect (cell, "show-overflow", G_CALLBACK (on_month_cell_show_overflow_popover_cb), self);
+          g_signal_connect_object (cell, "show-overflow", G_CALLBACK (on_month_cell_show_overflow_popover_cb), self, 0);
 
           self->month_cell[row][col] = cell;
 
@@ -2343,6 +2343,6 @@ gcal_month_view_init (GcalMonthView *self)
                           "context",
                           G_BINDING_DEFAULT);
 
-  g_signal_connect (self->overflow_popover, "event-activated", G_CALLBACK (on_month_popover_event_activated_cb), self);
+  g_signal_connect_object (self->overflow_popover, "event-activated", G_CALLBACK (on_month_popover_event_activated_cb), self, 0);
 }
 
