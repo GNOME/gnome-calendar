@@ -922,15 +922,15 @@ is_source_enabled (ESource *source)
  * @modtype is assigned, %FALSE otherwise.
  */
 gboolean
-ask_recurrence_modification_type (GtkWidget      *parent,
+ask_recurrence_modification_type (GtkWidget             *parent,
                                   GcalRecurrenceModType *modtype,
-                                  ESource        *source)
+                                  GcalCalendar          *calendar)
 {
-  GtkWidget *dialog;
   GtkDialogFlags flags;
-  gint result;
+  ECalClient *client;
+  GtkWidget *dialog;
   gboolean is_set;
-  EClient *client;
+  gint result;
 
   flags = GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT;
   *modtype = GCAL_RECURRENCE_MOD_THIS_ONLY;
@@ -948,7 +948,7 @@ ask_recurrence_modification_type (GtkWidget      *parent,
                           GTK_RESPONSE_ACCEPT,
                           NULL);
 
-  client = g_object_get_data (G_OBJECT (source), "client");
+  client = gcal_calendar_get_client (calendar);
 
   if (!e_client_check_capability (E_CLIENT (client), E_CAL_STATIC_CAPABILITY_NO_THISANDFUTURE))
     gtk_dialog_add_button (GTK_DIALOG (dialog), _("_Subsequent events"), GTK_RESPONSE_OK);

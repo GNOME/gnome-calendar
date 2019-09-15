@@ -1515,16 +1515,14 @@ navigator_drag_drop_cb (GcalYearView   *self,
           GcalEvent *event;
           GDateTime *start_dt, *end_dt;
           GDateTime *drop_date;
-          ESource *source;
 
           event_widget = GCAL_EVENT_WIDGET (gtk_drag_get_source_widget (context));
           event = gcal_event_widget_get_event (event_widget);
           calendar = gcal_event_get_calendar (event);
-          source = gcal_calendar_get_source (calendar);
           mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
 
           if (gcal_event_has_recurrence (event) &&
-              !ask_recurrence_modification_type (GTK_WIDGET (self), &mod, source))
+              !ask_recurrence_modification_type (GTK_WIDGET (self), &mod, calendar))
             {
               goto out;
             }

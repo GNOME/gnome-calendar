@@ -107,7 +107,7 @@ gboolean             is_source_enabled                           (ESource       
 
 gboolean             ask_recurrence_modification_type            (GtkWidget             *parent,
                                                                   GcalRecurrenceModType *modtype,
-                                                                  ESource               *source);
+                                                                  GcalCalendar          *calendar);
 
 gboolean             is_workday                                  (guint	              day);
 

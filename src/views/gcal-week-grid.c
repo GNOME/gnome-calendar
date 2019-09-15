@@ -981,7 +981,6 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
   GcalCalendar *calendar;
   GtkWidget *event_widget;
   GcalEvent *event;
-  ESource *source;
   GTimeSpan timespan = 0;
   gboolean ltr;
   gint drop_cell;
@@ -1012,10 +1011,9 @@ gcal_week_grid_drag_drop (GtkWidget      *widget,
 
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
   calendar = gcal_event_get_calendar (event);
-  source = gcal_calendar_get_source (calendar);
 
   if (gcal_event_has_recurrence (event) &&
-      !ask_recurrence_modification_type (widget, &mod, source))
+      !ask_recurrence_modification_type (widget, &mod, calendar))
     {
       goto out;
     }

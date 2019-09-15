@@ -209,7 +209,6 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
   GtkWidget *event_widget;
   GDateTime *start_dt, *end_dt;
   GcalEvent *event;
-  ESource *source;
   gint diff;
   gint start_month, current_month;
   gint start_year, current_year;
@@ -227,10 +226,9 @@ gcal_month_cell_drag_drop (GtkWidget      *widget,
 
   event = gcal_event_widget_get_event (GCAL_EVENT_WIDGET (event_widget));
   calendar = gcal_event_get_calendar (event);
-  source = gcal_calendar_get_source (calendar);
 
   if (gcal_event_has_recurrence (event) &&
-      !ask_recurrence_modification_type (widget, &mod, source))
+      !ask_recurrence_modification_type (widget, &mod, calendar))
     {
       goto out;
     }

@@ -662,7 +662,6 @@ edit_dialog_closed (GtkDialog *dialog,
   GcalEvent *event;
   GcalView *view;
   GList *widgets;
-  ESource *source;
 
   GCAL_ENTRY;
 
@@ -673,7 +672,6 @@ edit_dialog_closed (GtkDialog *dialog,
   view = GCAL_VIEW (window->views[window->active_view]);
   mod = GCAL_RECURRENCE_MOD_THIS_ONLY;
   calendar = gcal_event_get_calendar (event);
-  source = gcal_calendar_get_source (calendar);
 
   if (!gcal_edit_dialog_get_recurrence_changed (edit_dialog) &&
       gcal_event_has_recurrence (event) &&
@@ -681,7 +679,7 @@ edit_dialog_closed (GtkDialog *dialog,
        response != GTK_RESPONSE_CANCEL &&
        response != GTK_RESPONSE_DELETE_EVENT &&
        gcal_event_has_recurrence (event) &&
-       !ask_recurrence_modification_type (GTK_WIDGET (dialog), &mod, source)))
+       !ask_recurrence_modification_type (GTK_WIDGET (dialog), &mod, calendar)))
     {
       return;
     }
