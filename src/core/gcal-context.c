@@ -21,6 +21,7 @@
 #define G_LOG_DOMAIN "GcalContext"
 
 #include "gcal-context.h"
+#include "gcal-date-time-utils.h"
 #include "gcal-night-light-monitor.h"
 #include "gcal-time-zone-monitor.h"
 
