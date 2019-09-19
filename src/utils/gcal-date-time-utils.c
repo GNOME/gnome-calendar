@@ -230,3 +230,23 @@ gcal_date_time_from_icaltime (const ICalTime *date)
   return g_steal_pointer (&dt);
 }
 
+/**
+ * @tz: a #GTimezone
+ *
+ * Returns an #ICalTimezone corresponding to @tz.
+ *
+ * Returns: (transfer none): an #ICalTimezone.
+ */
+ICalTimezone*
+gcal_timezone_to_icaltimezone (GTimeZone *tz)
+{
+  const gchar *tzid;
+  ICalTimezone *ical_tz;
+
+  tzid = g_time_zone_get_identifier (tz);
+  ical_tz = i_cal_timezone_get_builtin_timezone (tzid);
+
+  g_assert (ical_tz != NULL);
+  return ical_tz;
+}
+

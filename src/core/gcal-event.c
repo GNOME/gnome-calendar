@@ -20,6 +20,7 @@
 
 #include "gconstructor.h"
 #include "gcal-application.h"
+#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-event.h"
 #include "gcal-utils.h"
@@ -223,11 +224,16 @@ static ECalComponentDateTime*
 build_component_from_datetime (GcalEvent *self,
                                GDateTime *dt)
 {
+  GcalApplication *application;
+  GcalContext *context;
   ICalTime *itt;
   gchar *tzid = NULL;
 
   if (!dt)
     return NULL;
+
+  application = GCAL_APPLICATION (g_application_get_default ());
+  context = gcal_application_get_context (application);
 
   itt = gcal_date_time_to_icaltime (dt);
 
@@ -238,14 +244,13 @@ build_component_from_datetime (GcalEvent *self,
     }
   else
     {
-      ICalTimezone *zone;
+      GTimeZone *zone;
+      ICalTimezone *tz;
 
-      zone = e_cal_util_get_system_timezone ();
-      if (zone != NULL)
-        {
-          i_cal_time_set_timezone (itt, zone);
-          tzid = g_strdup (i_cal_timezone_get_tzid (zone));
-         }
+      zone = gcal_context_get_timezone (context);
+      tz = gcal_timezone_to_icaltimezone (zone);
+      i_cal_time_set_timezone (itt, tz);
+      tzid = g_strdup (i_cal_timezone_get_tzid (tz));
     }
 
   /* Call it after setting the timezone, because the DATE values do not let set the timezone */
