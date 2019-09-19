@@ -244,8 +244,8 @@ build_component_from_datetime (GcalEvent *self,
     }
   else
     {
-      GTimeZone *zone;
       ICalTimezone *tz;
+      GTimeZone *zone;
 
       zone = gcal_context_get_timezone (context);
       tz = gcal_timezone_to_icaltimezone (zone);
