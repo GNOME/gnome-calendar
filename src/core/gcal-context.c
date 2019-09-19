@@ -109,6 +109,7 @@ gcal_context_constructed (GObject *object)
 
   G_OBJECT_CLASS (gcal_context_parent_class)->constructed (object);
 
+  self->manager = gcal_manager_new (self);
   self->search_engine = gcal_search_engine_new (self);
 }
 
@@ -265,7 +266,6 @@ gcal_context_init (GcalContext *self)
 {
   self->clock = gcal_clock_new ();
   self->goa_client = goa_client_new_sync (NULL, NULL);
-  self->manager = gcal_manager_new ();
   self->settings = g_settings_new ("org.gnome.calendar");
   self->weather_service = gcal_weather_service_new ();
 
