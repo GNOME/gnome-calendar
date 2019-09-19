@@ -51,4 +51,6 @@ gboolean             gcal_date_time_is_date                      (GDateTime     
 
 GDateTime*           gcal_date_time_from_icaltime                (const ICalTime     *date);
 
+ICalTimezone*        gcal_timezone_to_icaltimezone               (GTimeZone          *tz);
+
 G_END_DECLS
