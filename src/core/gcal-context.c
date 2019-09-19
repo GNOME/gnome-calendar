@@ -103,6 +103,17 @@ on_timezone_changed_cb (GcalTimeZoneMonitor *timezone_monitor,
  */
 
 static void
+gcal_context_constructed (GObject *object)
+{
+  GcalContext *self = (GcalContext *)object;
+
+  G_OBJECT_CLASS (gcal_context_parent_class)->constructed (object);
+
+  self->manager = gcal_manager_new (self);
+  self->search_engine = gcal_search_engine_new (self);
+}
+
+static void
 gcal_context_finalize (GObject *object)
 {
   GcalContext *self = (GcalContext *)object;
@@ -193,6 +204,7 @@ gcal_context_class_init (GcalContextClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+  object_class->constructed = gcal_context_constructed;
   object_class->finalize = gcal_context_finalize;
   object_class->get_property = gcal_context_get_property;
   object_class->set_property = gcal_context_set_property;
@@ -254,10 +266,8 @@ gcal_context_init (GcalContext *self)
 {
   self->clock = gcal_clock_new ();
   self->goa_client = goa_client_new_sync (NULL, NULL);
-  self->manager = gcal_manager_new ();
   self->settings = g_settings_new ("org.gnome.calendar");
   self->weather_service = gcal_weather_service_new ();
-  self->search_engine = gcal_search_engine_new (self);
 
   self->timezone_monitor = gcal_time_zone_monitor_new ();
   g_signal_connect_object (self->timezone_monitor,

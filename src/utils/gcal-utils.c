@@ -23,6 +23,8 @@
 /* langinfo.h in glibc 2.27 defines ALTMON_* only if _GNU_SOURCE is defined.  */
 #define _GNU_SOURCE
 
+#include "gcal-application.h"
+#include "gcal-context.h"
 #include "gcal-enums.h"
 #include "gcal-utils.h"
 #include "gcal-event-widget.h"
@@ -369,13 +371,17 @@ build_component_from_details (const gchar *summary,
                               GDateTime   *initial_date,
                               GDateTime   *final_date)
 {
+  GcalApplication *application;
+  GcalContext *context;
   ECalComponent *event;
   ECalComponentDateTime *dt;
   ECalComponentText *summ;
-  ICalTimezone *zone;
+  ICalTimezone *tz;
   ICalTime *itt;
   gboolean all_day;
 
+  application = GCAL_APPLICATION (g_application_get_default ());
+  context = gcal_application_get_context (application);
   event = e_cal_component_new ();
   e_cal_component_set_new_vtype (event, E_CAL_COMPONENT_EVENT);
 
@@ -391,18 +397,21 @@ build_component_from_details (const gchar *summary,
    */
   if (all_day)
     {
-      zone = i_cal_timezone_get_utc_timezone ();
+      tz = i_cal_timezone_get_utc_timezone ();
     }
   else
     {
-      zone = e_cal_util_get_system_timezone ();
+      GTimeZone *zone;
+
+      zone = gcal_context_get_timezone (context);
+      tz = gcal_timezone_to_icaltimezone (zone);
     }
 
   /* Start date */
   itt = gcal_date_time_to_icaltime (initial_date);
-  i_cal_time_set_timezone (itt, zone);
+  i_cal_time_set_timezone (itt, tz);
   i_cal_time_set_is_date (itt, all_day);
-  dt = e_cal_component_datetime_new_take (itt, zone ? g_strdup (i_cal_timezone_get_tzid (zone)) : NULL);
+  dt = e_cal_component_datetime_new_take (itt, tz ? g_strdup (i_cal_timezone_get_tzid (tz)) : NULL);
   e_cal_component_set_dtstart (event, dt);
 
   e_cal_component_datetime_free (dt);
@@ -412,9 +421,9 @@ build_component_from_details (const gchar *summary,
     final_date = g_date_time_add_days (initial_date, 1);
 
   itt = gcal_date_time_to_icaltime (final_date);
-  i_cal_time_set_timezone (itt, zone);
+  i_cal_time_set_timezone (itt, tz);
   i_cal_time_set_is_date (itt, all_day);
-  dt = e_cal_component_datetime_new_take (itt, zone ? g_strdup (i_cal_timezone_get_tzid (zone)) : NULL);
+  dt = e_cal_component_datetime_new_take (itt, tz ? g_strdup (i_cal_timezone_get_tzid (tz)) : NULL);
   e_cal_component_set_dtend (event, dt);
 
   e_cal_component_datetime_free (dt);
@@ -476,17 +485,24 @@ icaltime_compare_with_current (const ICalTime *date1,
                                const ICalTime *date2,
                                time_t         *current_time_t)
 {
+  GcalApplication *application;
+  GcalContext *context;
+  GTimeZone *zone;
   ICalTimezone *zone1, *zone2;
   gint result = 0;
   time_t start1, start2, diff1, diff2;
 
+  application = GCAL_APPLICATION (g_application_get_default ());
+  context = gcal_application_get_context (application);
+  zone = gcal_context_get_timezone (context);
+
   zone1 = i_cal_time_get_timezone (date1);
   if (!zone1)
-    zone1 = e_cal_util_get_system_timezone ();
+    zone1 = gcal_timezone_to_icaltimezone (zone);
 
   zone2 = i_cal_time_get_timezone (date2);
   if (!zone2)
-    zone2 = e_cal_util_get_system_timezone ();
+    zone2 = gcal_timezone_to_icaltimezone (zone);
 
   start1 = i_cal_time_as_timet_with_zone (date1, zone1);
   start2 = i_cal_time_as_timet_with_zone (date2, zone2);
