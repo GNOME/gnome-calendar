@@ -49,6 +49,7 @@ GSettings*           gcal_context_get_settings                   (GcalContext   
 GcalTimeFormat       gcal_context_get_time_format                (GcalContext        *self);
 
 GTimeZone*           gcal_context_get_timezone                   (GcalContext        *self);
+ICalTimezone*        gcal_context_get_icaltimezone               (GcalContext        *self);
 
 GcalWeatherService*  gcal_context_get_weather_service            (GcalContext        *self);
 

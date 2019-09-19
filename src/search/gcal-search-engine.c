@@ -177,17 +177,13 @@ gcal_search_engine_constructed (GObject *object)
 {
   GcalSearchEngine *self = (GcalSearchEngine *)object;
   GcalManager *manager;
-  ICalTimezone *tz;
 
   G_OBJECT_CLASS (gcal_search_engine_parent_class)->constructed (object);
 
   /* Setup the data model */
   self->data_model = e_cal_data_model_new (gcal_thread_submit_job);
   e_cal_data_model_set_expand_recurrences (self->data_model, TRUE);
-  tz = e_cal_util_get_system_timezone ();
-  if (tz != NULL)
-    e_cal_data_model_set_timezone (self->data_model, tz);
-
+  e_cal_data_model_set_timezone (self->data_model, gcal_context_get_icaltimezone (self->context));
 
   manager = gcal_context_get_manager (self->context);
   g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), self, 0);

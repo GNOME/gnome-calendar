@@ -23,6 +23,8 @@
 /* langinfo.h in glibc 2.27 defines ALTMON_* only if _GNU_SOURCE is defined.  */
 #define _GNU_SOURCE
 
+#include "gcal-application.h"
+#include "gcal-context.h"
 #include "gcal-enums.h"
 #include "gcal-utils.h"
 #include "gcal-event-widget.h"
@@ -369,12 +371,17 @@ build_component_from_details (const gchar *summary,
                               GDateTime   *initial_date,
                               GDateTime   *final_date)
 {
+  GcalApplication *application;
+  GcalContext *context;
   ECalComponent *event;
   ECalComponentDateTime *dt;
   ECalComponentText *summ;
   ICalTimezone *zone = NULL;
   ICalTime *itt;
   gboolean all_day;
+
+  application = GCAL_APPLICATION (g_application_get_default ());
+  context = gcal_application_get_context (application);
 
   event = e_cal_component_new ();
   e_cal_component_set_new_vtype (event, E_CAL_COMPONENT_EVENT);
@@ -389,13 +396,13 @@ build_component_from_details (const gchar *summary,
    * When the event is all day, we consider UTC timezone by default. Otherwise,
    * we always use the system timezone to create new events
    */
-  if (!all_day)
-    {
-      zone = e_cal_util_get_system_timezone ();
-    }
-  if (zone == NULL)
+  if (all_day)
     {
       zone = i_cal_timezone_get_utc_timezone ();
+    }
+  else
+    {
+      zone = gcal_context_get_icaltimezone (context);
     }
 
   /* Start date */
@@ -476,21 +483,22 @@ icaltime_compare_with_current (const ICalTime *date1,
                                const ICalTime *date2,
                                time_t         *current_time_t)
 {
+  GcalApplication *application;
+  GcalContext *context;
   ICalTimezone *zone1, *zone2;
   gint result = 0;
   time_t start1, start2, diff1, diff2;
 
+  application = GCAL_APPLICATION (g_application_get_default ());
+  context = gcal_application_get_context (application);
+
   zone1 = i_cal_time_get_timezone (date1);
   if (!zone1)
-    zone1 = e_cal_util_get_system_timezone ();
-  if (!zone1)
-    zone1 = i_cal_timezone_get_utc_timezone ();
+    zone1 = gcal_context_get_icaltimezone (context);
 
   zone2 = i_cal_time_get_timezone (date2);
   if (!zone2)
-    zone2 = e_cal_util_get_system_timezone ();
-  if (!zone2)
-    zone2 = i_cal_timezone_get_utc_timezone ();
+    zone2 = gcal_context_get_icaltimezone (context);
 
   start1 = i_cal_time_as_timet_with_zone (date1, zone1);
   start2 = i_cal_time_as_timet_with_zone (date2, zone2);

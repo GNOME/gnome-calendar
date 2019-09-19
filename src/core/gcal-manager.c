@@ -18,6 +18,8 @@
 
 #define G_LOG_DOMAIN "GcalManager"
 
+#include "gcal-application.h"
+#include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-manager.h"
 #include "gcal-utils.h"
@@ -877,12 +879,16 @@ void
 gcal_manager_setup_shell_search (GcalManager             *self,
                                  ECalDataModelSubscriber *subscriber)
 {
-  ICalTimezone *tz;
+  GcalApplication *application;
+  GcalContext *context;
 
   g_return_if_fail (GCAL_IS_MANAGER (self));
 
   if (self->shell_search_data_model)
     return;
+
+  application = GCAL_APPLICATION (g_application_get_default ());
+  context = gcal_application_get_context (application);
 
   self->shell_search_data_model = e_cal_data_model_new (gcal_thread_submit_job);
   g_signal_connect_object (self->shell_search_data_model,
@@ -892,9 +898,7 @@ gcal_manager_setup_shell_search (GcalManager             *self,
                            G_CONNECT_SWAPPED);
 
   e_cal_data_model_set_expand_recurrences (self->shell_search_data_model, TRUE);
-  tz = e_cal_util_get_system_timezone ();
-  if (tz != NULL)
-    e_cal_data_model_set_timezone (self->shell_search_data_model, tz);
+  e_cal_data_model_set_timezone (self->shell_search_data_model, gcal_context_get_icaltimezone (context));
 
   self->search_view_data = g_new0 (ViewStateData, 1);
   self->search_view_data->subscriber = subscriber;
@@ -1424,6 +1428,8 @@ gcal_manager_get_events (GcalManager *self,
                          ICalTime    *start_date,
                          ICalTime    *end_date)
 {
+  GcalApplication *application;
+  GcalContext *context;
   time_t range_start, range_end;
   ICalTimezone *tz;
   GatherEventData data = {
@@ -1433,20 +1439,14 @@ gcal_manager_get_events (GcalManager *self,
 
   GCAL_ENTRY;
 
+  application = GCAL_APPLICATION (g_application_get_default ());
+  context = gcal_application_get_context (application);
+
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  tz = e_cal_util_get_system_timezone ();
-
-  if (tz)
-    {
-      range_start = i_cal_time_as_timet_with_zone (start_date, tz);
-      range_end = i_cal_time_as_timet_with_zone (end_date, tz);
-    }
-  else
-    {
-      range_start = i_cal_time_as_timet (start_date);
-      range_end = i_cal_time_as_timet (end_date);
-    }
+  tz = gcal_context_get_icaltimezone (context);
+  range_start = i_cal_time_as_timet_with_zone (start_date, tz);
+  range_end = i_cal_time_as_timet_with_zone (end_date, tz);
 
   e_cal_data_model_foreach_component (self->e_data_model,
                                       range_start,
@@ -1536,9 +1536,13 @@ gcal_manager_startup (GcalManager *self)
   GList *sources, *l;
   GError *error = NULL;
   ESourceCredentialsProvider *credentials_provider;
-  ICalTimezone *tz;
+  GcalApplication *application;
+  GcalContext *context;
 
   GCAL_ENTRY;
+
+  application = GCAL_APPLICATION (g_application_get_default ());
+  context = gcal_application_get_context (application);
 
   self->clients = g_hash_table_new_full ((GHashFunc) e_source_hash,
                                          (GEqualFunc) e_source_equal,
@@ -1637,9 +1641,7 @@ gcal_manager_startup (GcalManager *self)
   self->e_data_model = e_cal_data_model_new (gcal_thread_submit_job);
 
   e_cal_data_model_set_expand_recurrences (self->e_data_model, TRUE);
-  tz = e_cal_util_get_system_timezone ();
-  if (tz != NULL)
-    e_cal_data_model_set_timezone (self->e_data_model, tz);
+  e_cal_data_model_set_timezone (self->e_data_model, gcal_context_get_icaltimezone (context));
 
   sources = e_source_registry_list_enabled (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
 

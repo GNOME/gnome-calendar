@@ -21,6 +21,7 @@
 #define G_LOG_DOMAIN "GcalContext"
 
 #include "gcal-context.h"
+#include "gcal-date-time-utils.h"
 #include "gcal-night-light-monitor.h"
 #include "gcal-time-zone-monitor.h"
 
@@ -101,6 +102,16 @@ on_timezone_changed_cb (GcalTimeZoneMonitor *timezone_monitor,
 /*
  * GObject overrides
  */
+
+static void
+gcal_context_constructed (GObject *object)
+{
+  GcalContext *self = (GcalContext *)object;
+
+  G_OBJECT_CLASS (gcal_context_parent_class)->constructed (object);
+
+  self->search_engine = gcal_search_engine_new (self);
+}
 
 static void
 gcal_context_finalize (GObject *object)
@@ -193,6 +204,7 @@ gcal_context_class_init (GcalContextClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
+  object_class->constructed = gcal_context_constructed;
   object_class->finalize = gcal_context_finalize;
   object_class->get_property = gcal_context_get_property;
   object_class->set_property = gcal_context_set_property;
@@ -257,7 +269,6 @@ gcal_context_init (GcalContext *self)
   self->manager = gcal_manager_new ();
   self->settings = g_settings_new ("org.gnome.calendar");
   self->weather_service = gcal_weather_service_new ();
-  self->search_engine = gcal_search_engine_new (self);
 
   self->timezone_monitor = gcal_time_zone_monitor_new ();
   g_signal_connect_object (self->timezone_monitor,
@@ -393,6 +404,24 @@ gcal_context_get_timezone (GcalContext *self)
   g_return_val_if_fail (GCAL_IS_CONTEXT (self), NULL);
 
   return gcal_time_zone_monitor_get_timezone (self->timezone_monitor);
+}
+
+/**
+ * gcal_context_get_icaltimezone:
+ *
+ * Retrieves the system timezone.
+ *
+ * Returns: (transfer none): an #ICalTimezone
+ */
+ICalTimezone*
+gcal_context_get_icaltimezone (GcalContext *self)
+{
+  GTimeZone *tz;
+
+  g_return_val_if_fail (GCAL_IS_CONTEXT (self), NULL);
+
+  tz = gcal_time_zone_monitor_get_timezone (self->timezone_monitor);
+  return gcal_timezone_to_icaltimezone (tz);
 }
 
 /**
