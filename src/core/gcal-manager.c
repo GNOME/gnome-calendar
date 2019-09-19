@@ -90,6 +90,8 @@ struct _GcalManager
   GCancellable       *async_ops;
 
   gint                clients_synchronizing;
+
+  GcalContext        *context;
 };
 
 G_DEFINE_TYPE (GcalManager, gcal_manager, G_TYPE_OBJECT)
@@ -97,6 +99,7 @@ G_DEFINE_TYPE (GcalManager, gcal_manager, G_TYPE_OBJECT)
 enum
 {
   PROP_0,
+  PROP_CONTEXT,
   PROP_DEFAULT_CALENDAR,
   PROP_SYNCHRONIZING,
   NUM_PROPS
@@ -643,6 +646,12 @@ gcal_manager_finalize (GObject *object)
   g_clear_object (&self->e_data_model);
   g_clear_object (&self->shell_search_data_model);
 
+  if (self->context)
+    {
+      g_object_remove_weak_pointer (G_OBJECT (self->context), (gpointer *)&self->context);
+      self->context = NULL;
+    }
+
   if (self->search_view_data)
     {
       g_clear_pointer (&self->search_view_data->query, g_free);
@@ -666,6 +675,12 @@ gcal_manager_set_property (GObject      *object,
 
   switch (property_id)
     {
+    case PROP_CONTEXT:
+      g_assert (self->context == NULL);
+      self->context = g_value_get_object (value);
+      g_object_add_weak_pointer (G_OBJECT (self->context), (gpointer *)&self->context);
+      break;
+
     case PROP_DEFAULT_CALENDAR:
       gcal_manager_set_default_calendar (self, g_value_get_object (value));
       break;
@@ -693,6 +708,10 @@ gcal_manager_get_property (GObject    *object,
 
   switch (property_id)
     {
+    case PROP_CONTEXT:
+      g_value_set_object (value, self->context);
+      break;
+
     case PROP_DEFAULT_CALENDAR:
       g_value_set_object (value, gcal_manager_get_default_calendar (self));
       break;
@@ -716,6 +735,17 @@ gcal_manager_class_init (GcalManagerClass *klass)
   object_class->finalize = gcal_manager_finalize;
   object_class->set_property = gcal_manager_set_property;
   object_class->get_property = gcal_manager_get_property;
+
+  /**
+   * GcalManager:context:
+   *
+   * The #GcalContext.
+   */
+  properties[PROP_CONTEXT] = g_param_spec_object ("context",
+                                                  "Data context",
+                                                  "Data context",
+                                                  GCAL_TYPE_CONTEXT,
+                                                  G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   /**
    * GcalManager:default-calendar:
@@ -783,15 +813,18 @@ gcal_manager_init (GcalManager *self)
 /* Public API */
 /**
  * gcal_manager_new:
+ * @context: a #GcalContext
  *
  * Creates a new #GcalManager.
  *
  * Returns: (transfer full): a newly created #GcalManager
  */
 GcalManager*
-gcal_manager_new (void)
+gcal_manager_new (GcalContext *context)
 {
-  return g_object_new (GCAL_TYPE_MANAGER, NULL);
+  return g_object_new (GCAL_TYPE_MANAGER,
+                       "context", context,
+                       NULL);
 }
 
 /**
@@ -879,17 +912,12 @@ void
 gcal_manager_setup_shell_search (GcalManager             *self,
                                  ECalDataModelSubscriber *subscriber)
 {
-  GcalApplication *application;
-  GcalContext *context;
   GTimeZone *zone;
 
   g_return_if_fail (GCAL_IS_MANAGER (self));
 
   if (self->shell_search_data_model)
     return;
-
-  application = GCAL_APPLICATION (g_application_get_default ());
-  context = gcal_application_get_context (application);
 
   self->shell_search_data_model = e_cal_data_model_new (gcal_thread_submit_job);
   g_signal_connect_object (self->shell_search_data_model,
@@ -900,7 +928,7 @@ gcal_manager_setup_shell_search (GcalManager             *self,
 
   e_cal_data_model_set_expand_recurrences (self->shell_search_data_model, TRUE);
 
-  zone = gcal_context_get_timezone (context);
+  zone = gcal_context_get_timezone (self->context);
   e_cal_data_model_set_timezone (self->shell_search_data_model, gcal_timezone_to_icaltimezone (zone));
 
   self->search_view_data = g_new0 (ViewStateData, 1);
@@ -1431,8 +1459,6 @@ gcal_manager_get_events (GcalManager *self,
                          ICalTime    *start_date,
                          ICalTime    *end_date)
 {
-  GcalApplication *application;
-  GcalContext *context;
   time_t range_start, range_end;
   GTimeZone *zone;
   ICalTimezone *tz;
@@ -1443,12 +1469,9 @@ gcal_manager_get_events (GcalManager *self,
 
   GCAL_ENTRY;
 
-  application = GCAL_APPLICATION (g_application_get_default ());
-  context = gcal_application_get_context (application);
-
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  zone = gcal_context_get_timezone (context);
+  zone = gcal_context_get_timezone (self->context);
   tz = gcal_timezone_to_icaltimezone (zone);
   range_start = i_cal_time_as_timet_with_zone (start_date, tz);
   range_end = i_cal_time_as_timet_with_zone (end_date, tz);
@@ -1541,14 +1564,9 @@ gcal_manager_startup (GcalManager *self)
   GList *sources, *l;
   GError *error = NULL;
   ESourceCredentialsProvider *credentials_provider;
-  GcalApplication *application;
-  GcalContext *context;
   GTimeZone *zone;
 
   GCAL_ENTRY;
-
-  application = GCAL_APPLICATION (g_application_get_default ());
-  context = gcal_application_get_context (application);
 
   self->clients = g_hash_table_new_full ((GHashFunc) e_source_hash,
                                          (GEqualFunc) e_source_equal,
@@ -1648,7 +1666,7 @@ gcal_manager_startup (GcalManager *self)
 
   e_cal_data_model_set_expand_recurrences (self->e_data_model, TRUE);
 
-  zone = gcal_context_get_timezone (context);
+  zone = gcal_context_get_timezone (self->context);
   e_cal_data_model_set_timezone (self->e_data_model, gcal_timezone_to_icaltimezone (zone));
 
   sources = e_source_registry_list_enabled (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
