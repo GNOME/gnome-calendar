@@ -796,8 +796,6 @@ gcal_quick_add_popover_set_property (GObject      *object,
           for (l = calendars; l; l = l->next)
             on_calendar_added (manager, l->data, self);
 
-          g_list_free (calendars);
-
           /* Connect to the manager signals and keep the list updates */
           g_signal_connect (manager, "calendar-added", G_CALLBACK (on_calendar_added), self);
           g_signal_connect (manager, "calendar-changed", G_CALLBACK (on_calendar_changed), self);
