@@ -1,18 +1,18 @@
 include: 'https://gitlab.gnome.org/GNOME/citemplates/raw/master/flatpak/flatpak_ci_initiative.yml'
 
 variables:
-  GIT_SUBMODULE_STRATEGY: normal
+  GIT_SUBMODULE_STRATEGY: 'normal'
   BUNDLE: "org.gnome.Calendar.Devel.flatpak"
 
 stages:
-  - flatpak
-  - review
-  - deploy
+  - 'flatpak'
+  - 'review'
+  - 'deploy'
 
 flatpak:master:
-    extends: .flatpak
-    image: registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master
-    stage: flatpak
+    extends: '.flatpak'
+    image: 'registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master'
+    stage: 'flatpak'
     variables:
         MANIFEST_PATH: "build-aux/flatpak/org.gnome.Calendar.json"
         RUNTIME_REPO: "https://nightly.gnome.org/gnome-nightly.flatpakrepo"
@@ -23,16 +23,16 @@ flatpak:master:
         APP_ID: "org.gnome.Calendar.Devel"
 
 review:
-    extends: .review
-    stage: review
+    extends: '.review'
+    stage: 'review'
     dependencies:
-        - flatpak:master
+        - 'flatpak:master'
 
 stop_review:
-    extends: .stop_review
-    stage: review
+    extends: '.stop_review'
+    stage: 'review'
 
 flatpak:nightly:
-    extends: .publish_nightly
+    extends: '.publish_nightly'
     dependencies:
-        - flatpak:master
+        - 'flatpak:master'
