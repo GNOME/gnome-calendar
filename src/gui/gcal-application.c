@@ -254,6 +254,7 @@ gcal_application_show_about (GSimpleAction *simple,
   GcalApplication *self;
   GtkWidget *dialog;
   GtkLabel *copyright_label;
+  g_autofree gchar *program_name = NULL;
   g_autofree gchar *copyright = NULL;
 
   const gchar *authors[] = {
@@ -273,16 +274,17 @@ gcal_application_show_about (GSimpleAction *simple,
 
   self = GCAL_APPLICATION (user_data);
 
+  program_name = g_strconcat (_("Calendar"), NAME_SUFFIX, NULL);
   dialog = g_object_new (GTK_TYPE_ABOUT_DIALOG,
                          "transient-for", GTK_WINDOW (self->window),
                          "modal", TRUE,
                          "destroy-with-parent", TRUE,
-                         "program-name", _("Calendar"),
+                         "program-name", program_name,
                          "version", VERSION,
                          "license-type", GTK_LICENSE_GPL_3_0,
                          "authors", authors,
                          "artists", artists,
-                         "logo-icon-name", "org.gnome.Calendar",
+                         "logo-icon-name", APPLICATION_ID,
                          "translator-credits", _("translator-credits"),
                          NULL);
 
@@ -425,7 +427,7 @@ gcal_application_startup (GApplication *app)
 
   self = GCAL_APPLICATION (app);
 
-  gtk_window_set_default_icon_name ("org.gnome.Calendar");
+  gtk_window_set_default_icon_name (APPLICATION_ID);
 
   /* add actions */
   g_action_map_add_action_entries (G_ACTION_MAP (app),
@@ -541,7 +543,7 @@ gcal_application_dbus_register (GApplication     *application,
   if (!G_APPLICATION_CLASS (gcal_application_parent_class)->dbus_register (application, connection, object_path, error))
     GCAL_RETURN (FALSE);
 
-  search_provider_path = g_strconcat (object_path, "/SearchProvider", NULL);
+  search_provider_path = g_strconcat (object_path, PROFILE, "/SearchProvider", NULL);
 
   if (!gcal_shell_search_provider_dbus_export (self->search_provider, connection, search_provider_path, error))
     GCAL_RETURN (FALSE);
@@ -627,7 +629,7 @@ gcal_application_new (void)
 {
   return g_object_new (gcal_application_get_type (),
                        "resource-base-path", "/org/gnome/calendar",
-                       "application-id", "org.gnome.Calendar",
+                       "application-id", APPLICATION_ID,
                        "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
                        NULL);
 }
