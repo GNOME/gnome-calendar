@@ -6,7 +6,6 @@ variables:
 
 stages:
   - flatpak
-  - deploy
   - review
   - deploy
 
