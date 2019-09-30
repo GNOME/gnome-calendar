@@ -7,7 +7,6 @@
     "tags" : [
         "devel"
     ],
-    "desktop-file-name-suffix" : " (Nightly)",
     "finish-args" : [
         "--share=ipc",
         "--share=network",
