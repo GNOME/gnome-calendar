@@ -9,7 +9,7 @@ stages:
   - 'review'
   - 'deploy'
 
-flatpak:master:
+build_flatpak:
     extends: '.flatpak'
     image: 'registry.gitlab.gnome.org/gnome/gnome-runtime-images/gnome:master'
     stage: 'flatpak'
@@ -26,13 +26,13 @@ review:
     extends: '.review'
     stage: 'review'
     dependencies:
-        - 'flatpak:master'
+        - 'build_flatpak'
 
 stop_review:
     extends: '.stop_review'
     stage: 'review'
 
-flatpak:nightly:
+publish_flatpak:
     extends: '.publish_nightly'
     dependencies:
-        - 'flatpak:master'
+        - 'build_flatpak'
