@@ -8,6 +8,7 @@ stages:
   - flatpak
   - deploy
   - review
+  - deploy
 
 flatpak:master:
     extends: .flatpak
