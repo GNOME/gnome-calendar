@@ -79,20 +79,12 @@ get_value_string (GcalMultiChoice *self,
 }
 
 static void
-set_value (GcalMultiChoice         *self,
-           gint                    value,
-           GtkStackTransitionType  transition)
+apply_value (GcalMultiChoice        *self,
+             GtkStackTransitionType  transition)
 {
   GtkWidget *label;
   const gchar *name;
   gchar *text;
-
-  value = CLAMP (value, self->min_value, self->max_value);
-
-  if (self->value == value)
-    return;
-
-  self->value = value;
 
   if (gtk_stack_get_visible_child (GTK_STACK (self->stack)) == self->label1)
     {
@@ -105,7 +97,7 @@ set_value (GcalMultiChoice         *self,
       label = self->label1;
     }
 
-  text = get_value_string (self, value);
+  text = get_value_string (self, self->value);
   gtk_label_set_text (GTK_LABEL (label), text);
   g_free (text);
 
@@ -118,6 +110,21 @@ set_value (GcalMultiChoice         *self,
                             self->wrap || self->value > self->min_value);
   gtk_widget_set_sensitive (self->up_button,
                             self->wrap || self->value < self->max_value);
+}
+
+static void
+set_value (GcalMultiChoice         *self,
+           gint                    value,
+           GtkStackTransitionType  transition)
+{
+  value = CLAMP (value, self->min_value, self->max_value);
+
+  if (self->value == value)
+    return;
+
+  self->value = value;
+
+  apply_value (self, transition);
 
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_VALUE]);
 }
@@ -489,4 +496,6 @@ gcal_multi_choice_set_format_callback (GcalMultiChoice               *self,
   self->format_cb = callback;
   self->format_data = user_data;
   self->format_destroy = destroy;
+
+  apply_value (self, GTK_STACK_TRANSITION_TYPE_NONE);
 }
