@@ -68,7 +68,7 @@ static GOptionEntry gcal_application_goptions[] = {
     N_("Display version number"), NULL
   },
   {
-    "debug", 'd', 0,
+    "debug", 0, 0,
     G_OPTION_ARG_NONE, NULL,
     N_("Enable debug messages"), NULL
   },
