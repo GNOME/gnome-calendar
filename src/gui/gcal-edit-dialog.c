@@ -105,7 +105,7 @@ struct _GcalEditDialog
 
   /* new data holders */
   GcalEvent        *event;
-  ESource          *selected_source;
+  GcalCalendar     *selected_calendar;
 
   /* flags */
   gboolean          event_is_new;
@@ -650,7 +650,7 @@ on_calendar_selected_action_cb (GSimpleAction *action,
           surface = get_circle_surface_from_color (color, 16);
           gtk_image_set_from_surface (GTK_IMAGE (self->source_image), surface);
 
-          self->selected_source = gcal_calendar_get_source (calendar);
+          self->selected_calendar = calendar;
 
           gtk_label_set_label (GTK_LABEL (self->subtitle_label), gcal_calendar_get_name (calendar));
 
@@ -864,24 +864,21 @@ on_action_button_clicked_cb (GtkWidget *widget,
 
       /* Update the source if needed */
       calendar = gcal_event_get_calendar (self->event);
-      if (self->selected_source &&
-          gcal_calendar_get_source (calendar) != self->selected_source)
+      if (self->selected_calendar && calendar != self->selected_calendar)
         {
           if (self->event_is_new)
             {
-              calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (self->context),
-                                                                self->selected_source);
-              gcal_event_set_calendar (self->event, calendar);
+              gcal_event_set_calendar (self->event, self->selected_calendar);
             }
           else
             {
               gcal_manager_move_event_to_source (gcal_context_get_manager (self->context),
                                                  self->event,
-                                                 self->selected_source);
+                                                 gcal_calendar_get_source (self->selected_calendar));
             }
         }
 
-      self->selected_source = NULL;
+      self->selected_calendar = NULL;
 
       /* Send the response */
       gtk_dialog_response (GTK_DIALOG (self),
@@ -1486,6 +1483,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
   g_clear_pointer (&surface, cairo_surface_destroy);
 
   gtk_label_set_label (GTK_LABEL (self->subtitle_label), gcal_calendar_get_name (calendar));
+  self->selected_calendar = calendar;
 
   /* retrieve start and end dates */
   date_start = gcal_event_get_date_start (event);
