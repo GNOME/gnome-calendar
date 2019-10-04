@@ -867,15 +867,15 @@ gcal_window_constructed (GObject *object)
    * FIXME: this is a hack around the issue that happens when trying to bind
    * these properties using the GtkBuilder .ui file.
    */
-  g_object_bind_property (self, "context", self->calendar_popover, "context", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "context", self->calendar_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->weather_settings, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "context", self->calendar_management_dialog, "context", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "context", self->calendar_management_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->week_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->month_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->year_view, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->edit_dialog, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
   g_object_bind_property (self, "context", self->quick_add_popover, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
-  g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT);
+  g_object_bind_property (self, "context", self->search_button, "context", G_BINDING_DEFAULT | G_BINDING_SYNC_CREATE);
 
   GCAL_EXIT;
 }
@@ -907,16 +907,15 @@ gcal_window_set_property (GObject      *object,
       break;
 
     case PROP_CONTEXT:
-      if (g_set_object (&self->context, g_value_get_object (value)))
-        {
-          g_settings_bind (gcal_context_get_settings (self->context),
-                           "active-view",
-                           self,
-                           "active-view",
-                           G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
+      g_assert (self->context == NULL);
+      self->context = g_value_dup_object (value);
 
-          g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
-        }
+      g_settings_bind (gcal_context_get_settings (self->context),
+                       "active-view",
+                       self,
+                       "active-view",
+                       G_SETTINGS_BIND_SET | G_SETTINGS_BIND_GET);
+
       break;
 
     default:
@@ -1023,7 +1022,7 @@ gcal_window_class_init (GcalWindowClass *klass)
                                                   "Context",
                                                   "Context",
                                                   GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                                                  G_PARAM_CONSTRUCT_ONLY | G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   properties[PROP_NEW_EVENT_MODE] = g_param_spec_boolean ("new-event-mode",
                                                           "New Event mode",

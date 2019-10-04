@@ -783,11 +783,13 @@ gcal_quick_add_popover_set_property (GObject      *object,
       break;
 
     case PROP_CONTEXT:
-      if (g_set_object (&self->context, g_value_get_object (value)))
         {
           g_autoptr (GList) calendars = NULL;
           GcalManager *manager;
           GList *l;
+
+          g_assert (self->context == NULL);
+          self->context = g_value_dup_object (value);
 
           /* Add currently loaded sources */
           manager = gcal_context_get_manager (self->context);
@@ -807,8 +809,6 @@ gcal_quick_add_popover_set_property (GObject      *object,
                                    G_CALLBACK (update_header),
                                    self,
                                    G_CONNECT_SWAPPED);
-
-          g_object_notify (G_OBJECT (self), "context");
         }
       break;
 
@@ -889,9 +889,9 @@ gcal_quick_add_popover_class_init (GcalQuickAddPopoverClass *klass)
                                                        G_PARAM_READWRITE));
 
   /**
-   * GcalQuickAddPopover::manager:
+   * GcalQuickAddPopover::context:
    *
-   * The manager of the application.
+   * The context of the application.
    */
   g_object_class_install_property (object_class,
                                    PROP_CONTEXT,
@@ -899,7 +899,7 @@ gcal_quick_add_popover_class_init (GcalQuickAddPopoverClass *klass)
                                                         "Context of the application",
                                                         "The singleton context of the application",
                                                         GCAL_TYPE_CONTEXT,
-                                                        G_PARAM_READWRITE));
+                                                        G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/quick-add-popover.ui");
 

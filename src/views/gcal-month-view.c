@@ -2182,6 +2182,7 @@ gcal_month_view_set_property (GObject       *object,
       break;
 
     case PROP_CONTEXT:
+      g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
 
       for (i = 0; i < 42; i++)
@@ -2199,8 +2200,6 @@ gcal_month_view_set_property (GObject       *object,
                                self,
                                0);
       update_weather (self, TRUE);
-
-      g_object_notify (object, "context");
       break;
 
     default:

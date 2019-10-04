@@ -313,14 +313,12 @@ gcal_weather_settings_set_property (GObject      *object,
   switch (prop_id)
     {
     case PROP_CONTEXT:
-      if (g_set_object (&self->context, g_value_get_object (value)))
-        {
-          load_weather_settings (self);
-          update_menu_weather_sensitivity (self);
-          manage_weather_service (self);
+      g_assert (self->context == NULL);
+      self->context = g_value_dup_object (value);
 
-          g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
-        }
+      load_weather_settings (self);
+      update_menu_weather_sensitivity (self);
+      manage_weather_service (self);
       break;
 
     default:
@@ -342,7 +340,7 @@ gcal_weather_settings_class_init (GcalWeatherSettingsClass *klass)
                                                   "Context",
                                                   "Context",
                                                   GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                                                  G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
