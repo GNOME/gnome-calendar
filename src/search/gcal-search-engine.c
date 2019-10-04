@@ -107,7 +107,12 @@ search_func (GTask        *task,
                               start,
                               end);
 
-  g_task_return_pointer (task, g_steal_pointer (&model), g_object_unref);
+  gcal_search_model_wait_for_hits (model, cancellable);
+
+  if (g_cancellable_is_cancelled (cancellable))
+    g_task_return_new_error (task, G_IO_ERROR, G_IO_ERROR_CANCELLED, "Cancelled");
+  else
+    g_task_return_pointer (task, g_steal_pointer (&model), g_object_unref);
 }
 
 static void

@@ -30,4 +30,7 @@ G_DECLARE_FINAL_TYPE (GcalSearchModel, gcal_search_model, GCAL, SEARCH_MODEL, GO
 GcalSearchModel*     gcal_search_model_new                       (GCancellable       *cancellable,
                                                                   gint                max_results);
 
+void                 gcal_search_model_wait_for_hits             (GcalSearchModel    *self,
+                                                                  GCancellable       *cancellable);
+
 G_END_DECLS

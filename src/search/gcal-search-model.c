@@ -31,6 +31,9 @@
 
 #include <dazzle.h>
 
+#define MIN_RESULTS         5
+#define WAIT_FOR_RESULTS_MS 0.150
+
 struct _GcalSearchModel
 {
   GObject             parent;
@@ -244,4 +247,32 @@ gcal_search_model_new (GCancellable *cancellable,
   model->cancellable = cancellable ? g_object_ref (cancellable) : NULL;
 
   return model;
+}
+
+void
+gcal_search_model_wait_for_hits (GcalSearchModel *self,
+                                 GCancellable    *cancellable)
+{
+  g_autoptr (GMainContext) thread_context = NULL;
+  g_autoptr (GTimer) timer = NULL;
+
+  GCAL_ENTRY;
+
+  g_return_if_fail (GCAL_IS_SEARCH_MODEL (self));
+
+  thread_context = g_main_context_ref_thread_default ();
+  timer = g_timer_new ();
+
+  g_timer_start (timer);
+
+  while (g_list_model_get_n_items (self->model) < MIN_RESULTS &&
+         g_timer_elapsed (timer, NULL) < WAIT_FOR_RESULTS_MS)
+    {
+      if (g_cancellable_is_cancelled (cancellable))
+        break;
+
+      g_main_context_iteration (thread_context, FALSE);
+    }
+
+  GCAL_EXIT;
 }
