@@ -54,7 +54,7 @@ gcal_view_default_init (GcalViewInterface *iface)
                                                             "The context",
                                                             "The context of the view",
                                                             GCAL_TYPE_CONTEXT,
-                                                            G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS));
+                                                            G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS));
 
   /**
    * GcalView::create-event:

@@ -247,7 +247,6 @@ gcal_calendar_management_dialog_set_property (GObject      *object,
       g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
       setup_context (self);
-      g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
       break;
 
     default:

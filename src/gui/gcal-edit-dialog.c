@@ -1202,6 +1202,7 @@ gcal_edit_dialog_set_property (GObject      *object,
       break;
 
     case PROP_CONTEXT:
+      g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
       g_signal_connect_object (self->context,
                                "notify::time-format",

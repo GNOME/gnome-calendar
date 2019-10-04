@@ -570,6 +570,7 @@ gcal_week_view_set_property (GObject       *object,
       break;
 
     case PROP_CONTEXT:
+      g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
 
       gcal_week_grid_set_context (GCAL_WEEK_GRID (self->week_grid), self->context);
@@ -580,8 +581,6 @@ gcal_week_view_set_property (GObject       *object,
                                G_CALLBACK (gtk_widget_queue_draw),
                                self->hours_bar,
                                G_CONNECT_SWAPPED);
-
-      g_object_notify (object, "context");
       break;
 
     default:

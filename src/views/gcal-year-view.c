@@ -1744,6 +1744,7 @@ gcal_year_view_set_property (GObject      *object,
       break;
 
     case PROP_CONTEXT:
+      g_assert (self->context == NULL);
       self->context = g_value_dup_object (value);
 
       g_signal_connect_object (gcal_context_get_clock (self->context),
@@ -1758,8 +1759,6 @@ gcal_year_view_set_property (GObject      *object,
                                self,
                                0);
       update_weather (self);
-
-      g_object_notify (object, "context");
       break;
 
     case PROP_SHOW_WEEK_NUMBERS:
