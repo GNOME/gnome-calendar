@@ -1,3 +1,13 @@
+Major changes in 3.34.1:
+* Updated translations
+* Fix various crashers
+* Improve search results handling
+* Make command line argument -d stand for --date
+* Fix crashes when e_cal_util_get_system_timezone() returns NULL (Michael Catanzaro)
+* Fix first weekday calculation
+* Remove g_get_current_time
+* Readd <Ctrl>n shortcut
+
 Major changes in 3.34.0:
 * Updated translations
 
