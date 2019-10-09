@@ -49,6 +49,12 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2019-10-09" version="3.34.2">
+      <description>
+        <p>GNOME Calendar 3.34.2 release is here! It contains various stability improvements and new translations.</p>
+      </description>
+    </release>
+
     <release date="2019-10-05" version="3.34.1">
       <description>
         <p>GNOME Calendar 3.34.1 release is here! It contains various important bug fixes and new translations.</p>
