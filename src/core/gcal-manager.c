@@ -165,11 +165,15 @@ remove_source (GcalManager  *self,
   g_return_if_fail (GCAL_IS_MANAGER (self));
   g_return_if_fail (E_IS_SOURCE (source));
 
+  calendar = g_hash_table_lookup (self->clients, source);
+
+  if (!calendar)
+    return;
+
   GCAL_TRACE_MSG ("Removing calendar %s (%s)",
                   e_source_get_display_name (source),
                   e_source_get_uid (source));
 
-  calendar = g_hash_table_lookup (self->clients, source);
   g_object_ref (calendar);
 
   e_cal_data_model_remove_client (self->e_data_model,
