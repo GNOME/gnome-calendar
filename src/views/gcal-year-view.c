@@ -268,8 +268,8 @@ static void
 update_no_events_page (GcalYearView *year_view)
 {
   g_autoptr (GDateTime) now = NULL;
+  g_autofree gchar *title = NULL;
   gboolean has_range;
-  gchar *title;
 
   now = g_date_time_new_now_local ();
   has_range = gcal_date_time_compare_date (year_view->start_selected_date, year_view->end_selected_date);
@@ -297,7 +297,6 @@ update_no_events_page (GcalYearView *year_view)
 
   gtk_label_set_text (GTK_LABEL (year_view->no_events_title), title);
   update_weather (year_view);
-  g_free (title);
 }
 
 static void
@@ -1976,7 +1975,7 @@ gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
    */
   if (number_of_children == 0)
     {
-      update_no_events_page (GCAL_YEAR_VIEW (subscriber));
+      update_no_events_page (year_view);
       gtk_stack_set_visible_child_name (GTK_STACK (year_view->navigator_stack), "no-events");
     }
 
