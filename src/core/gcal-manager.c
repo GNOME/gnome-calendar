@@ -258,11 +258,13 @@ on_calendar_created_cb (GObject      *source_object,
   self = GCAL_MANAGER (user_data);
   calendar = gcal_calendar_new_finish (result, &error);
 
-  if (error &&
-      !g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED) &&
-      !g_error_matches (error, GCAL_CALENDAR_ERROR, GCAL_CALENDAR_ERROR_NOT_CALENDAR))
+  if (error)
     {
-      g_warning ("Failed to open/connect to calendar: %s", error->message);
+      if (!g_error_matches (error, G_IO_ERROR, G_IO_ERROR_CANCELLED) &&
+          !g_error_matches (error, GCAL_CALENDAR_ERROR, GCAL_CALENDAR_ERROR_NOT_CALENDAR))
+        {
+          g_warning ("Failed to open/connect to calendar: %s", error->message);
+        }
       return;
     }
 
