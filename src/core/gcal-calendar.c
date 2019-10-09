@@ -387,6 +387,9 @@ gcal_calendar_class_init (GcalCalendarClass *klass)
 static void
 gcal_calendar_init (GcalCalendar *self)
 {
+  GcalCalendarPrivate *priv = gcal_calendar_get_instance_private (self);
+
+  gdk_rgba_parse (&priv->color, "#ffffff");
 }
 
 /**
