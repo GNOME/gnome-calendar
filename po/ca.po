@@ -40,8 +40,8 @@ msgid ""
 msgstr ""
 "El Calendari del GNOME és una aplicació de calendari simple i bonica "
 "dissenyada per encaixar perfectament amb l'escriptori GNOME. Gràcies a la "
-"reutilització de components amb què es construeix, el calendari s'integra bé "
-"amb l'ecosistema GNOME."
+"reutilització dels components amb què s'ha construït l'escriptori GNOME, "
+"el calendari s'integra bé amb l'ecosistema GNOME."
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:16
 msgid ""
