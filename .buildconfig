@@ -1,0 +1,9 @@
+[default]
+name=Default
+runtime=host
+config-opts=
+run-opts=
+prefix=/home/luke/.cache/gnome-builder/install/GNOME-Calendar/host
+app-id=
+postbuild=
+prebuild=
