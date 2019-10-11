@@ -15,10 +15,20 @@
               <object class="GtkLabel" id="month_label">
                 <property name="visible">true</property>
                 <property name="can_focus">false</property>
-                <property name="hexpand">true</property>
                 <property name="xalign">0.0</property>
                 <style>
                   <class name="month-name" />
+                </style>
+              </object>
+            </child>
+            <child>
+              <object class="GtkLabel" id="weeks_label">
+                <property name="visible">true</property>
+                <property name="can_focus">false</property>
+                <property name="hexpand">true</property>
+                <property name="xalign">0.0</property>
+                <style>
+                  <class name="secondary-label" />
                 </style>
               </object>
             </child>
