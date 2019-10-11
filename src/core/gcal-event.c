@@ -867,6 +867,27 @@ gcal_event_get_all_day (GcalEvent *self)
 }
 
 /**
+ * gcal_event_set_all_day:
+ * @self: a #GcalEvent
+ * @all_day: whether the event is all day or not
+ *
+ * Sets the @GcalEvent::all-day property.
+ */
+void
+gcal_event_set_all_day (GcalEvent *self,
+                        gboolean   all_day)
+{
+  g_return_if_fail (GCAL_IS_EVENT (self));
+
+  if (self->all_day != all_day)
+    {
+      self->all_day = all_day;
+
+      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ALL_DAY]);
+    }
+}
+
+/**
  * gcal_event_get_color:
  * @self: a #GcalEvent
  *
@@ -919,27 +940,6 @@ gcal_event_get_component (GcalEvent *self)
   g_return_val_if_fail (GCAL_IS_EVENT (self), NULL);
 
   return self->component;
-}
-
-/**
- * gcal_event_set_all_day:
- * @self: a #GcalEvent
- * @all_day: whether the event is all day or not
- *
- * Sets the @GcalEvent::all-day property.
- */
-void
-gcal_event_set_all_day (GcalEvent *self,
-                        gboolean   all_day)
-{
-  g_return_if_fail (GCAL_IS_EVENT (self));
-
-  if (self->all_day != all_day)
-    {
-      self->all_day = all_day;
-
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_ALL_DAY]);
-    }
 }
 
 /**
