@@ -90,6 +90,7 @@ struct _GcalEditDialog
   GtkWidget        *until_date_selector;
 
   /* Add Alarms popover buttons */
+  GtkWidget        *at_event_button;
   GtkWidget        *five_minutes_button;
   GtkWidget        *ten_minutes_button;
   GtkWidget        *thirty_minutes_button;
@@ -481,6 +482,7 @@ struct
   gint minutes;
   gint button_offset;
 } minutes_button[] = {
+    { 0,     OFFSET (at_event_button) },
     { 5,     OFFSET (five_minutes_button) },
     { 10,    OFFSET (ten_minutes_button) },
     { 30,    OFFSET (thirty_minutes_button) },
@@ -1273,6 +1275,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/edit-dialog.ui");
 
   /* Alarms */
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, at_event_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, five_minutes_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, ten_minutes_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, thirty_minutes_button);
