@@ -1864,6 +1864,13 @@ gcal_month_view_button_press (GtkWidget      *widget,
 
       update_month_cells (self);
     }
+  else /* cell represents a day from the previous or next month => navigate to this month*/
+    {
+      gint month_add_or_sub = (clicked_cell < self->days_delay) ? -1 : 1;
+      self->date->month += month_add_or_sub;
+      *self->date = icaltime_normalize (*self->date);
+      g_object_notify (G_OBJECT (widget), "active-date");
+    }
 
   GCAL_RETURN (GDK_EVENT_PROPAGATE);
 }
