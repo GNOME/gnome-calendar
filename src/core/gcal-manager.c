@@ -670,6 +670,8 @@ gcal_manager_finalize (GObject *object)
 
   g_clear_pointer (&self->clients, g_hash_table_destroy);
 
+  G_OBJECT_CLASS (gcal_manager_parent_class)->finalize (object);
+
   GCAL_EXIT;
 }
 

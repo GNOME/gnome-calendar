@@ -1161,6 +1161,8 @@ gcal_week_header_finalize (GObject *object)
 
   for (i = 0; i < G_N_ELEMENTS (self->weather_infos); i++)
     wid_clear (&self->weather_infos[i]);
+
+  G_OBJECT_CLASS (gcal_week_header_parent_class)->finalize (object);
 }
 
 static void
