@@ -632,7 +632,7 @@ gcal_week_view_class_init (GcalWeekViewClass *klass)
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-view.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-week-view.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, header);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekView, hours_bar);

@@ -352,7 +352,7 @@ gcal_calendar_popover_class_init (GcalCalendarPopoverClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/calendar-popover.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-calendar-popover.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarPopover, calendar_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarPopover, icon_stack);

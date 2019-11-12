@@ -274,7 +274,7 @@ gcal_calendar_management_dialog_class_init (GcalCalendarManagementDialogClass *k
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/calendar-management-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-calendar-management-dialog.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, headerbar);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarManagementDialog, stack);

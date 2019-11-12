@@ -615,7 +615,7 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
 
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/new-calendar-page.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-new-calendar-page.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, add_button);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_address_entry);

@@ -971,7 +971,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
                                      G_TYPE_NONE,
                                      0);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/event-widget.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-event-widget.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, color_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEventWidget, horizontal_grid);

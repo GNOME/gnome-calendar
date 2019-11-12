@@ -565,7 +565,7 @@ create_row_for_alarm (GcalEvent          *event,
   g_object_set_data (G_OBJECT (row), "event", event);
 
   /* Build the UI */
-  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/alarm-row.ui");
+  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/ui/gui/alarm-row.ui");
 
 #define WID(x) (GTK_WIDGET (gtk_builder_get_object (builder, x)))
 
@@ -1270,7 +1270,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/edit-dialog.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-edit-dialog.ui");
 
   /* Alarms */
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, five_minutes_button);

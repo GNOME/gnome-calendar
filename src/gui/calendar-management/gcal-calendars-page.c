@@ -84,7 +84,7 @@ make_calendar_row (GcalCalendarsPage *self,
   manager = gcal_context_get_manager (self->context);
   get_source_parent_name_color (manager, gcal_calendar_get_source (calendar), &parent_name, NULL);
 
-  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/calendar-row.ui");
+  builder = gtk_builder_new_from_resource ("/org/gnome/calendar/ui/gui/calendar-management/calendar-row.ui");
 
   /*
    * Since we're destroying the builder instance before adding
@@ -486,7 +486,7 @@ gcal_calendars_page_class_init (GcalCalendarsPageClass *klass)
 
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/calendars-page.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-calendars-page.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, add_calendar_row);
   gtk_widget_class_bind_template_child (widget_class, GcalCalendarsPage, listbox);

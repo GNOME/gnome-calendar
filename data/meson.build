@@ -84,32 +84,3 @@ configure_file(
 )
 
 shell_search_provider_dbus_interfaces = files('shell-search-provider-dbus-interfaces.xml')
-
-# Resource data
-gresource = files('calendar.gresource.xml')
-
-resource_data = files(
-  'theme/Adwaita.css',
-  'ui/alarm-row.ui',
-  'ui/calendar-management-dialog.ui',
-  'ui/calendar-row.ui',
-  'ui/calendars-page.ui',
-  'ui/date-chooser.ui',
-  'ui/date-selector.ui',
-  'ui/edit-dialog.ui',
-  'ui/edit-calendar-page.ui',
-  'ui/help-overlay.ui',
-  'ui/month-cell.ui',
-  'ui/month-popover.ui',
-  'ui/month-view.ui',
-  'ui/multi-choice.ui',
-  'ui/new-calendar-page.ui',
-  'ui/quick-add-popover.ui',
-  'ui/search-popover.ui',
-  'ui/time-selector.ui',
-  'ui/weather-settings.ui',
-  'ui/week-header.ui',
-  'ui/week-view.ui',
-  'ui/window.ui',
-  'ui/year-view.ui'
-)

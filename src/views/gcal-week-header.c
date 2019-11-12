@@ -1651,7 +1651,7 @@ gcal_week_header_class_init (GcalWeekHeaderClass *kclass)
                                            1,
                                            GCAL_TYPE_EVENT_WIDGET);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/week-header.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-week-header.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button);
   gtk_widget_class_bind_template_child (widget_class, GcalWeekHeader, expand_button_box);

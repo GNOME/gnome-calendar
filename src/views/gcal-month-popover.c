@@ -721,7 +721,7 @@ gcal_month_popover_class_init (GcalMonthPopoverClass *klass)
                                            1,
                                            GCAL_TYPE_EVENT_WIDGET);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/month-popover.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-month-popover.ui");
 
   gtk_widget_class_bind_template_callback (widget_class, close_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, new_event_button_clicked_cb);

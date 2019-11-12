@@ -28,12 +28,11 @@ built_sources = gnome.mkenums(
   h_template: enum_types + '.h.template'
 )
 
+gresource = files('calendar.gresource.xml')
 built_sources += gnome.compile_resources(
   'gcal-resources',
          gresource,
-        source_dir: data_dir,
             c_name: 'calendar',
-      dependencies: resource_data,
             export: true
 )
 

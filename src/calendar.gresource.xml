@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/org/gnome/calendar/ui">
+    <file compressed="true">gui/alarm-row.ui</file>
+    <file compressed="true">gui/gcal-calendar-popover.ui</file>
+    <file compressed="true">gui/gcal-date-chooser.ui</file>
+    <file compressed="true">gui/gcal-date-selector.ui</file>
+    <file compressed="true">gui/gcal-edit-dialog.ui</file>
+    <file compressed="true">gui/gcal-event-widget.ui</file>
+    <file compressed="true">gui/gcal-quick-add-popover.ui</file>
+    <file compressed="true">gui/gcal-multi-choice.ui</file>
+    <file compressed="true">gui/gcal-time-selector.ui</file>
+    <file compressed="true">gui/gcal-window.ui</file>
+
+    <!-- Calendar Management dialog -->
+    <file compressed="true">gui/calendar-management/calendar-row.ui</file>
+    <file compressed="true">gui/calendar-management/gcal-calendar-management-dialog.ui</file>
+    <file compressed="true">gui/calendar-management/gcal-calendars-page.ui</file>
+    <file compressed="true">gui/calendar-management/gcal-edit-calendar-page.ui</file>
+    <file compressed="true">gui/calendar-management/gcal-new-calendar-page.ui</file>
+
+    <!-- Views -->
+    <file compressed="true">views/gcal-month-cell.ui</file>
+    <file compressed="true">views/gcal-month-popover.ui</file>
+    <file compressed="true">views/gcal-month-view.ui</file>
+    <file compressed="true">views/gcal-week-header.ui</file>
+    <file compressed="true">views/gcal-week-view.ui</file>
+    <file compressed="true">views/gcal-year-view.ui</file>
+
+    <!-- Weather -->
+    <file compressed="true">weather/gcal-weather-settings.ui</file>
+  </gresource>
+
+  <!-- Theme -->
+  <gresource prefix="/org/gnome/calendar">
+    <file>theme/Adwaita.css</file>
+  </gresource>
+
+  <!-- GTK -->
+  <gresource prefix="/org/gnome/calendar/gtk">
+    <file compressed="true">help-overlay.ui</file>
+  </gresource>
+</gresources>

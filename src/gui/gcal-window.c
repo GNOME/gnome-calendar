@@ -1033,7 +1033,7 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/window.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-window.ui");
 
   /* widgets */
   gtk_widget_class_bind_template_child (widget_class, GcalWindow, back_button);

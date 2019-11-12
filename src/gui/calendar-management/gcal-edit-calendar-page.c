@@ -415,7 +415,7 @@ gcal_edit_calendar_page_class_init (GcalEditCalendarPageClass *klass)
 
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/edit-calendar-page.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/calendar-management/gcal-edit-calendar-page.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, account_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEditCalendarPage, account_label);

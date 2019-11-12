@@ -2063,7 +2063,7 @@ gcal_year_view_class_init (GcalYearViewClass *klass)
                                                          FALSE,
                                                          G_PARAM_READWRITE));
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/year-view.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-year-view.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, navigator);
   gtk_widget_class_bind_template_child (widget_class, GcalYearView, sidebar);

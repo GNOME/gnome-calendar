@@ -427,7 +427,7 @@ gcal_month_cell_class_init (GcalMonthCellClass *klass)
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/month-cell.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-month-cell.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, day_label);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthCell, header_box);

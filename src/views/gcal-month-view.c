@@ -2288,7 +2288,7 @@ gcal_month_view_class_init (GcalMonthViewClass *klass)
   g_object_class_override_property (object_class, PROP_DATE, "active-date");
   g_object_class_override_property (object_class, PROP_CONTEXT, "context");
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/month-view.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/views/gcal-month-view.ui");
 
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, label_0);
   gtk_widget_class_bind_template_child (widget_class, GcalMonthView, label_1);

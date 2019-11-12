@@ -485,7 +485,7 @@ gcal_date_chooser_class_init (GcalDateChooserClass *class)
 
   widget_class->drag_data_received = calendar_drag_data_received;
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/date-chooser.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/org/gnome/calendar/ui/gui/gcal-date-chooser.ui");
 
   properties[PROP_DATE] = g_param_spec_boxed ("date",
                                               "Date",
