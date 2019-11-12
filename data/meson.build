@@ -99,7 +99,6 @@ resource_data = files(
   'ui/edit-dialog.ui',
   'ui/edit-calendar-page.ui',
   'ui/help-overlay.ui',
-  'ui/menus.ui',
   'ui/month-cell.ui',
   'ui/month-popover.ui',
   'ui/month-view.ui',
