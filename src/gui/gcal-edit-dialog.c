@@ -45,7 +45,7 @@
 
 struct _GcalEditDialog
 {
-  GtkDialog         parent;
+  HdyDialog         parent;
 
   gboolean          writable;
 
@@ -134,7 +134,7 @@ static void          on_remove_alarm_button_clicked              (GtkButton     
 static void          on_add_alarm_button_clicked_cb              (GtkWidget          *button,
                                                                   GcalEditDialog     *self);
 
-G_DEFINE_TYPE (GcalEditDialog, gcal_edit_dialog, GTK_TYPE_DIALOG)
+G_DEFINE_TYPE (GcalEditDialog, gcal_edit_dialog, HDY_TYPE_DIALOG)
 
 enum
 {

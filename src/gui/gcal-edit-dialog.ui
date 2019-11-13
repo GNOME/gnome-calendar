@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="GcalEditDialog" parent="GtkDialog">
+  <template class="GcalEditDialog" parent="HdyDialog">
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
     <property name="modal">True</property>

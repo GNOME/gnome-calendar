@@ -81,6 +81,7 @@ assert(cc.has_function('strerror'), '"strerror" not found')
 
 # options
 config_h.set('ENABLE_TRACING', enable_tracing)
+config_h.set('HANDY_USE_UNSTABLE_API', true)
 
 # _NL_TIME_FIRST_WEEKDAY is an enum and not a define
 nl_time_first_weekday_src = '''
