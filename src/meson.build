@@ -9,6 +9,7 @@ gcal_deps = [
   libdazzle_dep,
   libsoup_dep,
   libical_dep,
+  libhandy_dep,
   glib_dep,
   gtk_dep,
   gio_dep,
