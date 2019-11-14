@@ -284,16 +284,16 @@
                       <object class="HdyActionRow">
                         <property name="visible">True</property>
                         <property name="title" translatable="yes">All Day</property>
-                        <property name="activatable-widget">all_day_check</property>
+                        <property name="activatable-widget">all_day_switch</property>
 
                         <child type="action">
-                          <object class="GtkCheckButton" id="all_day_check">
+                          <object class="GtkSwitch" id="all_day_switch">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="draw_indicator">True</property>
-                            <property name="label" translatable="yes">All Day</property>
+                            <property name="valign">center</property>
+                            <property name="halign">end</property>
                             <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                            <signal name="toggled" handler="on_all_day_check_changed_cb" object="GcalEditDialog" swapped="no"/>
+                            <signal name="notify::active" handler="on_all_day_switch_active_changed_cb" object="GcalEditDialog" swapped="no"/>
                           </object>
                         </child>
 

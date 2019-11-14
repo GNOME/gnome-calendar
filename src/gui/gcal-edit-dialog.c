@@ -72,7 +72,7 @@ struct _GcalEditDialog
 
   GtkWidget        *start_date_selector;
   GtkWidget        *end_date_selector;
-  GtkWidget        *all_day_check;
+  GtkSwitch        *all_day_switch;
   GtkWidget        *start_time_selector;
   GtkWidget        *end_time_selector;
   GtkWidget        *location_entry;
@@ -238,7 +238,7 @@ find_best_timezones_for_event (GcalEditDialog  *self,
   gboolean all_day;
 
   /* Update all day */
-  all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
+  all_day = gtk_switch_get_active (self->all_day_switch);
   was_all_day = gcal_event_get_all_day (self->event);
 
   GCAL_TRACE_MSG ("Finding best timezone with all_day=%d, was_all_day=%d, event_is_new=%d",
@@ -305,7 +305,7 @@ return_datetime_for_widgets (GcalEditDialog   *self,
   GDateTime *retval;
   gboolean all_day;
 
-  all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
+  all_day = gtk_switch_get_active (self->all_day_switch);
   date = gcal_date_selector_get_date (date_selector);
   time = gcal_time_selector_get_time (time_selector);
 
@@ -367,7 +367,7 @@ set_writable (GcalEditDialog *self,
   if (self->writable == writable)
     return;
 
-  all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
+  all_day = gtk_switch_get_active (self->all_day_switch);
 
   gtk_widget_set_sensitive (self->start_time_selector, !all_day && writable);
   gtk_widget_set_sensitive (self->end_time_selector, !all_day && writable);
@@ -402,7 +402,7 @@ sync_datetimes (GcalEditDialog *self,
   GCAL_ENTRY;
 
   is_start = (widget == self->start_time_selector || widget == self->start_date_selector);
-  is_all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
+  is_all_day = gtk_switch_get_active (self->all_day_switch);
   start = get_date_start (self);
   end = get_date_end (self);
 
@@ -760,7 +760,7 @@ on_action_button_clicked_cb (GtkWidget *widget,
       gcal_event_set_description (self->event, note_text);
       g_free (note_text);
 
-      all_day = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (self->all_day_check));
+      all_day = gtk_switch_get_active (self->all_day_switch);
       was_all_day = gcal_event_get_all_day (self->event);
 
       if (!was_all_day && all_day)
@@ -934,10 +934,11 @@ on_repeat_type_changed_cb (GtkComboBox    *combobox,
 }
 
 static void
-on_all_day_check_changed_cb (GtkToggleButton *button,
-                             GcalEditDialog  *self)
+on_all_day_switch_active_changed_cb (GtkSwitch      *all_day_switch,
+                                     GParamSpec     *pspec,
+                                     GcalEditDialog *self)
 {
-  gboolean active = gtk_toggle_button_get_active (button);
+  gboolean active = gtk_switch_get_active (all_day_switch);
 
   gtk_widget_set_sensitive (self->start_time_selector, !active);
   gtk_widget_set_sensitive (self->end_time_selector, !active);
@@ -1296,7 +1297,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   /* Other */
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, alarms_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, notes_text);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, all_day_check);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, all_day_switch);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, titlebar);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, title_label);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, subtitle_label);
@@ -1317,7 +1318,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, sync_datetimes);
   gtk_widget_class_bind_template_callback (widget_class, on_action_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_add_alarm_button_clicked_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_all_day_check_changed_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_all_day_switch_active_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_repeat_duration_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_repeat_type_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_summary_entry_changed_cb);
@@ -1518,7 +1519,7 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
   g_signal_handlers_unblock_by_func (self->end_time_selector, sync_datetimes, self);
 
   /* all_day  */
-  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (self->all_day_check), all_day);
+  gtk_switch_set_active (self->all_day_switch, all_day);
 
   /* recurrence_changed */
   self->recurrence_changed = FALSE;
