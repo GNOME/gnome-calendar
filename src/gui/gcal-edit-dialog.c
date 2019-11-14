@@ -28,6 +28,7 @@
 #include "gcal-event.h"
 #include "gcal-recurrence.h"
 
+#include <dazzle.h>
 #include <libecal/libecal.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -71,7 +72,9 @@ struct _GcalEditDialog
   GtkWidget        *summary_entry;
 
   GtkWidget        *start_date_selector;
+  GtkLabel         *event_start_label;
   GtkWidget        *end_date_selector;
+  GtkLabel         *event_end_label;
   GtkSwitch        *all_day_switch;
   GtkWidget        *start_time_selector;
   GtkWidget        *end_time_selector;
@@ -390,6 +393,114 @@ remove_recurrence_properties (GcalEvent *event)
   e_cal_component_set_rrules (comp, NULL);
 }
 
+static gchar*
+format_datetime_for_display (GDateTime      *date,
+                             GcalTimeFormat  format,
+                             gboolean        all_day)
+{
+  g_autofree gchar *formatted_date = NULL;
+  g_autoptr (GDateTime) now = NULL;
+  GString *string;
+  gint days_diff;
+
+  string = g_string_new ("");
+
+  now = g_date_time_new_now_local ();
+  days_diff = gcal_date_time_compare_date (now, date);
+
+  switch (days_diff)
+    {
+    case -7:
+    case -6:
+    case -5:
+    case -4:
+    case -3:
+    case -2:
+      /* Translators: %A is the weekday name (e.g. Sunday, Monday, etc) */
+      formatted_date = g_date_time_format (date, _("Last %A"));
+      break;
+
+    case -1:
+      formatted_date = g_strdup (_("Yesterday"));
+      break;
+
+    case 0:
+      formatted_date = g_strdup (_("Today"));
+      break;
+
+    case 1:
+      formatted_date = g_strdup (_("Tomorrow"));
+      break;
+
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+      /* Translators: %A is the weekday name (e.g. Sunday, Monday, etc) */
+      formatted_date = g_date_time_format (date, _("This %A"));
+      break;
+
+    default:
+      formatted_date = g_date_time_format (date, "%x");
+      break;
+    }
+
+  if (!all_day)
+    {
+      g_autofree gchar *formatted_time = NULL;
+
+      switch (format)
+        {
+        case GCAL_TIME_FORMAT_12H:
+          formatted_time = g_date_time_format (date, "%I:%M %P");
+          break;
+
+        case GCAL_TIME_FORMAT_24H:
+          formatted_time = g_date_time_format (date, "%R");
+          break;
+
+        default:
+          g_assert_not_reached ();
+        }
+
+      /*
+       * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
+       * formatted time (e.g. 03:14 PM, or 21:29)
+       */
+      g_string_printf (string, _("%1$s, %2$s"), formatted_date, formatted_time);
+    }
+  else
+    {
+      g_string_printf (string, "%s", formatted_date);
+    }
+
+  return g_string_free (string, FALSE);
+}
+
+static void
+update_date_labels (GcalEditDialog *self)
+{
+  g_autofree gchar *start_label = NULL;
+  g_autofree gchar *end_label = NULL;
+  g_autoptr (GDateTime) start = NULL;
+  g_autoptr (GDateTime) end = NULL;
+  GcalTimeFormat time_format;
+  gboolean all_day;
+
+  time_format = gcal_context_get_time_format (self->context);
+
+  all_day = gtk_switch_get_active (self->all_day_switch);
+  start = get_date_start (self);
+  end = get_date_end (self);
+  start_label = format_datetime_for_display (start, time_format, all_day);
+  end_label = format_datetime_for_display (end, time_format, all_day);
+
+  gtk_label_set_label (self->event_start_label, start_label);
+  gtk_label_set_label (self->event_end_label, end_label);
+}
+
 static void
 sync_datetimes (GcalEditDialog *self,
                 GParamSpec     *pspec,
@@ -448,6 +559,8 @@ sync_datetimes (GcalEditDialog *self,
 out:
   g_clear_pointer (&start, g_date_time_unref);
   g_clear_pointer (&end, g_date_time_unref);
+
+  update_date_labels (self);
 
   GCAL_EXIT;
 }
@@ -942,6 +1055,8 @@ on_all_day_switch_active_changed_cb (GtkSwitch      *all_day_switch,
 
   gtk_widget_set_sensitive (self->start_time_selector, !active);
   gtk_widget_set_sensitive (self->end_time_selector, !active);
+
+  update_date_labels (self);
 }
 
 static void
@@ -1294,6 +1409,8 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, end_time_selector);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, end_date_selector);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, location_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, event_start_label);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, event_end_label);
   /* Other */
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, alarms_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, notes_text);
@@ -1520,6 +1637,8 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
 
   /* all_day  */
   gtk_switch_set_active (self->all_day_switch, all_day);
+
+  update_date_labels (self);
 
   /* recurrence_changed */
   self->recurrence_changed = FALSE;
