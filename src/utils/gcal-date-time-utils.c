@@ -129,6 +129,8 @@ gint
 gcal_date_time_compare_date (GDateTime *dt1,
                              GDateTime *dt2)
 {
+  GDate d1, d2;
+
   if (!dt1 && !dt2)
     return 0;
   else if (!dt1)
@@ -136,16 +138,17 @@ gcal_date_time_compare_date (GDateTime *dt1,
   else if (!dt2)
     return 1;
 
-  if (g_date_time_get_year (dt1) != g_date_time_get_year (dt2))
-    return (g_date_time_get_year (dt1) - g_date_time_get_year (dt2)) * 360;
+  g_date_set_dmy (&d1,
+                  g_date_time_get_day_of_month (dt1),
+                  g_date_time_get_month (dt1),
+                  g_date_time_get_year (dt1));
 
-  if (g_date_time_get_month (dt1) != g_date_time_get_month (dt2))
-    return (g_date_time_get_month (dt1) - g_date_time_get_month (dt2)) * 30;
+  g_date_set_dmy (&d2,
+                  g_date_time_get_day_of_month (dt2),
+                  g_date_time_get_month (dt2),
+                  g_date_time_get_year (dt2));
 
-  if (g_date_time_get_day_of_month (dt1) != g_date_time_get_day_of_month (dt2))
-    return g_date_time_get_day_of_month (dt1) - g_date_time_get_day_of_month (dt2);
-
-  return 0;
+  return g_date_days_between (&d1, &d2);
 }
 
 /**
