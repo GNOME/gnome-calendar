@@ -25,16 +25,14 @@
 
 struct _GcalTimeSelector
 {
-  GtkMenuButton parent;
+  GtkBox         parent;
 
   GtkAdjustment *hour_adjustment;
   GtkAdjustment *minute_adjustment;
 
-  GtkWidget *time_label;
   GtkWidget *hour_spin;
   GtkWidget *minute_spin;
   GtkWidget *period_combo;
-  GtkWidget *grid;
 
   GDateTime *time;
 
@@ -54,43 +52,7 @@ enum
   PM
 };
 
-static void     gcal_time_selector_constructed                 (GObject              *object);
-
-G_DEFINE_TYPE (GcalTimeSelector, gcal_time_selector, GTK_TYPE_MENU_BUTTON);
-
-static void
-update_label (GcalTimeSelector *selector)
-{
-  gchar *new_label;
-
-  if (selector->time_format == GCAL_TIME_FORMAT_24H)
-    {
-      new_label = g_date_time_format (selector->time, "%H:%M");
-    }
-  else
-    {
-      gchar *time_str;
-      gint hour, minute, period;
-
-      hour = (gint) gtk_adjustment_get_value (selector->hour_adjustment);
-      minute = (gint) gtk_adjustment_get_value (selector->minute_adjustment);
-
-
-      period = gtk_combo_box_get_active (GTK_COMBO_BOX (selector->period_combo));
-      time_str = g_strdup_printf ("%.2d:%.2d", hour, minute);
-
-      if (period == AM)
-        new_label = g_strdup_printf (_("%s AM"), time_str);
-      else
-        new_label = g_strdup_printf (_("%s PM"), time_str);
-
-      g_free (time_str);
-    }
-
-  gtk_label_set_label (GTK_LABEL (selector->time_label), new_label);
-
-  g_clear_pointer (&new_label, g_free);
-}
+G_DEFINE_TYPE (GcalTimeSelector, gcal_time_selector, GTK_TYPE_BOX);
 
 static void
 update_time (GcalTimeSelector *selector)
@@ -228,7 +190,6 @@ gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
   GObjectClass *object_class;
 
   object_class = G_OBJECT_CLASS (klass);
-  object_class->constructed = gcal_time_selector_constructed;
   object_class->dispose = gcal_time_selector_dispose;
   object_class->finalize = gcal_time_selector_finalize;
   object_class->get_property = gcal_time_selector_get_property;
@@ -249,13 +210,11 @@ gcal_time_selector_class_init (GcalTimeSelectorClass *klass)
 
   gtk_widget_class_set_template_from_resource (GTK_WIDGET_CLASS (klass), "/org/gnome/calendar/ui/gui/gcal-time-selector.ui");
 
-  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, time_label);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, hour_adjustment);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, hour_spin);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, minute_adjustment);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, minute_spin);
   gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, period_combo);
-  gtk_widget_class_bind_template_child (GTK_WIDGET_CLASS (klass), GcalTimeSelector, grid);
 
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), on_output);
   gtk_widget_class_bind_template_callback (GTK_WIDGET_CLASS (klass), update_time);
@@ -267,17 +226,6 @@ gcal_time_selector_init (GcalTimeSelector *self)
   self->time = g_date_time_new_now_local ();
 
   gtk_widget_init_template (GTK_WIDGET (self));
-}
-
-static void
-gcal_time_selector_constructed (GObject *object)
-{
-  GcalTimeSelector *selector = GCAL_TIME_SELECTOR (object);
-
-  /* chaining up */
-  G_OBJECT_CLASS (gcal_time_selector_parent_class)->constructed (object);
-
-  gtk_widget_set_direction (selector->grid, GTK_TEXT_DIR_LTR);
 }
 
 /* Public API */
@@ -325,8 +273,6 @@ gcal_time_selector_set_time (GcalTimeSelector *selector,
 
       gtk_adjustment_set_value (selector->hour_adjustment, hour);
       gtk_adjustment_set_value (selector->minute_adjustment, minute);
-
-      update_label (selector);
 
       g_signal_handlers_unblock_by_func (selector->hour_adjustment, update_time, selector);
       g_signal_handlers_unblock_by_func (selector->minute_adjustment, update_time, selector);

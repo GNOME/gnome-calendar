@@ -26,8 +26,7 @@
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_TIME_SELECTOR             (gcal_time_selector_get_type ())
-
-G_DECLARE_FINAL_TYPE (GcalTimeSelector, gcal_time_selector, GCAL, TIME_SELECTOR, GtkMenuButton)
+G_DECLARE_FINAL_TYPE (GcalTimeSelector, gcal_time_selector, GCAL, TIME_SELECTOR, GtkBox)
 
 GtkWidget*       gcal_time_selector_new          (void);
 

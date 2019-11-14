@@ -1,15 +1,56 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <template class="GcalTimeSelector" parent="GtkMenuButton">
-    <property name="use_popover">True</property>
-    <property name="popover">time_selector_popover</property>
+  <template class="GcalTimeSelector" parent="GtkBox">
+    <property name="spacing">6</property>
+
+    <!-- Hour -->
     <child>
-      <object class="GtkLabel" id="time_label">
+      <object class="GtkSpinButton" id="hour_spin">
         <property name="visible">True</property>
-        <property name="label" translatable="yes">00:00</property>
+        <property name="can_focus">True</property>
+        <property name="xalign">0.5</property>
+        <property name="input_purpose">number</property>
+        <property name="orientation">vertical</property>
+        <property name="adjustment">hour_adjustment</property>
+        <signal name="output" handler="on_output" object="GcalTimeSelector" swapped="no"/>
+      </object>
+    </child>
+
+    <child>
+      <object class="GtkLabel" id="label1">
+        <property name="visible">True</property>
+        <property name="label" translatable="yes">:</property>
+      </object>
+    </child>
+
+    <!-- Minute -->
+    <child>
+      <object class="GtkSpinButton" id="minute_spin">
+        <property name="visible">True</property>
+        <property name="can_focus">True</property>
+        <property name="xalign">0.5</property>
+        <property name="input_purpose">number</property>
+        <property name="orientation">vertical</property>
+        <property name="adjustment">minute_adjustment</property>
+        <signal name="output" handler="on_output" object="GcalTimeSelector" swapped="no"/>
+      </object>
+    </child>
+
+
+    <!-- AM/PM -->
+    <child>
+      <object class="GtkComboBoxText" id="period_combo">
+        <property name="valign">center</property>
+        <property name="active">0</property>
+        <signal name="changed" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
+        <items>
+          <item translatable="yes">AM</item>
+          <item translatable="yes">PM</item>
+        </items>
       </object>
     </child>
   </template>
+
   <object class="GtkAdjustment" id="hour_adjustment">
     <property name="upper">23</property>
     <property name="step_increment">1</property>
@@ -21,70 +62,5 @@
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
     <signal name="value-changed" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
-  </object>
-  <object class="GtkPopover" id="time_selector_popover">
-    <property name="position">bottom</property>
-    <child>
-      <object class="GtkGrid" id="grid">
-        <property name="visible">True</property>
-        <property name="border_width">12</property>
-        <property name="column_spacing">6</property>
-        <child>
-          <object class="GtkSpinButton" id="hour_spin">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="xalign">0.5</property>
-            <property name="input_purpose">number</property>
-            <property name="orientation">vertical</property>
-            <property name="adjustment">hour_adjustment</property>
-            <signal name="output" handler="on_output" object="GcalTimeSelector" swapped="no"/>
-          </object>
-          <packing>
-            <property name="left_attach">0</property>
-            <property name="top_attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkSpinButton" id="minute_spin">
-            <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="xalign">0.5</property>
-            <property name="input_purpose">number</property>
-            <property name="orientation">vertical</property>
-            <property name="adjustment">minute_adjustment</property>
-            <signal name="output" handler="on_output" object="GcalTimeSelector" swapped="no"/>
-          </object>
-          <packing>
-            <property name="left_attach">2</property>
-            <property name="top_attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkLabel" id="label1">
-            <property name="visible">True</property>
-            <property name="label" translatable="yes">:</property>
-          </object>
-          <packing>
-            <property name="left_attach">1</property>
-            <property name="top_attach">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkComboBoxText" id="period_combo">
-            <property name="valign">center</property>
-            <property name="active">0</property>
-            <signal name="changed" handler="update_time" object="GcalTimeSelector" swapped="yes"/>
-            <items>
-              <item translatable="yes">AM</item>
-              <item translatable="yes">PM</item>
-            </items>
-          </object>
-          <packing>
-            <property name="left_attach">3</property>
-            <property name="top_attach">0</property>
-          </packing>
-        </child>
-      </object>
-    </child>
   </object>
 </interface>
