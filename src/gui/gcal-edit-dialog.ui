@@ -344,80 +344,86 @@
                         <property name="activatable-widget">repeat_combo</property>
 
                         <child type="action">
-                          <object class="GtkBox">
+                          <object class="GtkComboBoxText" id="repeat_combo">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="valign">center</property>
-                            <property name="orientation">vertical</property>
-                            <property name="spacing">6</property>
-                            <child>
-                              <object class="GtkComboBoxText" id="repeat_combo">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="hexpand">True</property>
-                                <signal name="changed" handler="on_repeat_type_changed_cb" object="GcalEditDialog" swapped="no"/>
-                                <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                                <items>
-                                  <item translatable="yes" id="no_repeat">No Repeat</item>
-                                  <item translatable="yes" id="daily">Daily</item>
-                                  <item translatable="yes" id="mon_fri">Monday – Friday</item>
-                                  <item translatable="yes" id="weekly">Weekly</item>
-                                  <item translatable="yes" id="monthly">Monthly</item>
-                                  <item translatable="yes" id="yearly">Yearly</item>
-                                </items>
-                                <property name="active_id">no_repeat</property>
-                              </object>
-                            </child>
-                            <child>
-                              <object class="GtkBox" id="repeat_limits_box">
-                                <property name="visible">True</property>
-                                <property name="can_focus">False</property>
-                                <property name="spacing">6</property>
-                                <property name="hexpand">True</property>
-                                <property name="orientation">horizontal</property>
-                                <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                                <child>
-                                  <object class="GtkComboBoxText" id="repeat_duration_combo">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="hexpand">True</property>
-                                    <signal name="changed" handler="on_repeat_duration_changed_cb" object="GcalEditDialog" swapped="no"/>
-                                    <items>
-                                      <item translatable="yes" id="forever">Forever</item>
-                                      <item translatable="yes" id="number_of_occurrences_spin">No. of occurrences</item>
-                                      <item translatable="yes" id="until_date">Until Date</item>
-                                    </items>
-                                    <property name="active_id">forever</property>
-                                  </object>
-                                </child>
-                                <child>
-                                  <object class="GtkStack" id="repeat_duration_stack">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="halign">end</property>
-
-                                    <child>
-                                      <object class = "GtkSpinButton" id="number_of_occurrences_spin">
-                                        <property name="visible">True</property>
-                                        <property name="input_purpose">number</property>
-                                        <property name="input-hints">no-emoji</property>
-                                      </object>
-                                    </child>
-
-                                    <child>
-                                      <object class = "GcalDateSelector" id="until_date_selector">
-                                        <property name="visible">True</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                            </child>
+                            <signal name="changed" handler="on_repeat_type_changed_cb" object="GcalEditDialog" swapped="no"/>
+                            <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
+                            <items>
+                              <item translatable="yes" id="no_repeat">No Repeat</item>
+                              <item translatable="yes" id="daily">Daily</item>
+                              <item translatable="yes" id="mon_fri">Monday – Friday</item>
+                              <item translatable="yes" id="weekly">Weekly</item>
+                              <item translatable="yes" id="monthly">Monthly</item>
+                              <item translatable="yes" id="yearly">Yearly</item>
+                            </items>
+                            <property name="active_id">no_repeat</property>
                           </object>
                         </child>
 
                       </object>
                     </child>
+
+                    <!-- End Repeat -->
+                    <child>
+                      <object class="HdyActionRow">
+                        <property name="visible" bind-source="repeat_duration_combo" bind-property="visible" bind-flags="default" />
+                        <property name="title" translatable="yes">End Repeat</property>
+                        <property name="activatable-widget">repeat_combo</property>
+
+                        <child type="action">
+                          <object class="GtkComboBoxText" id="repeat_duration_combo">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="valign">center</property>
+                            <signal name="changed" handler="on_repeat_duration_changed_cb" object="GcalEditDialog" swapped="no"/>
+                            <items>
+                              <item translatable="yes" id="forever">Forever</item>
+                              <item translatable="yes" id="number_of_occurrences_spin">No. of occurrences</item>
+                              <item translatable="yes" id="until_date">Until Date</item>
+                            </items>
+                            <property name="active_id">forever</property>
+                          </object>
+                        </child>
+
+                      </object>
+                    </child>
+
+                    <!-- Number of Occurrences -->
+                    <child>
+                      <object class="HdyActionRow">
+                        <property name="visible" bind-source="number_of_occurrences_spin" bind-property="visible" bind-flags="default" />
+                        <property name="title" translatable="yes">Number of Occurrences</property>
+                        <property name="activatable-widget">number_of_occurrences_spin</property>
+
+                        <child type="action">
+                          <object class = "GtkSpinButton" id="number_of_occurrences_spin">
+                            <property name="input_purpose">number</property>
+                            <property name="input-hints">no-emoji</property>
+                            <property name="valign">center</property>
+                          </object>
+                        </child>
+
+                      </object>
+                    </child>
+
+                    <!-- End Repeat Date -->
+                    <child>
+                      <object class="HdyActionRow">
+                        <property name="visible" bind-source="until_date_selector" bind-property="visible" bind-flags="default" />
+                        <property name="title" translatable="yes">End Repeat Date</property>
+                        <property name="activatable-widget">until_date_selector</property>
+
+                        <child type="action">
+                          <object class = "GcalDateSelector" id="until_date_selector">
+                            <property name="valign">center</property>
+                          </object>
+                        </child>
+
+                      </object>
+                    </child>
+
 
                   </object>
                 </child>

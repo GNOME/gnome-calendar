@@ -85,11 +85,9 @@ struct _GcalEditDialog
 
   GtkWidget        *repeat_combo;
   GtkWidget        *repeat_duration_combo;
-  GtkWidget        *repeat_limits_box;
 
   /* Recurrence widgets */
   GtkWidget        *number_of_occurrences_spin;
-  GtkWidget        *repeat_duration_stack;
   GtkWidget        *until_date_selector;
 
   /* Add Alarms popover buttons */
@@ -1005,25 +1003,10 @@ static void
 on_repeat_duration_changed_cb (GtkComboBox    *widget,
                                GcalEditDialog *self)
 {
-  switch (gtk_combo_box_get_active (widget))
-    {
-      case 0:
-        gtk_widget_hide (self->repeat_duration_stack);
-        break;
+  gint active = gtk_combo_box_get_active (widget);
 
-      case 1:
-        gtk_widget_show (self->repeat_duration_stack);
-        gtk_stack_set_visible_child (GTK_STACK (self->repeat_duration_stack), self->number_of_occurrences_spin);
-        break;
-
-      case 2:
-        gtk_widget_show (self->repeat_duration_stack);
-        gtk_stack_set_visible_child (GTK_STACK (self->repeat_duration_stack), self->until_date_selector);
-        break;
-
-      default:
-        break;
-    }
+  gtk_widget_set_visible (self->number_of_occurrences_spin, active == 1);
+  gtk_widget_set_visible (self->until_date_selector, active == 2);
 }
 
 static void
@@ -1031,19 +1014,11 @@ on_repeat_type_changed_cb (GtkComboBox    *combobox,
                            GcalEditDialog *self)
 {
   GcalRecurrenceFrequency frequency;
-  gboolean has_recurrence;
 
   frequency = gtk_combo_box_get_active (combobox);
-  has_recurrence = frequency != GCAL_RECURRENCE_NO_REPEAT;
 
-  gtk_widget_set_visible (self->repeat_limits_box, has_recurrence);
-
-  if (has_recurrence)
-    {
-      gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
-      gtk_widget_show (self->repeat_duration_combo);
-      gtk_widget_hide (self->repeat_duration_stack);
-    }
+  gtk_combo_box_set_active (GTK_COMBO_BOX (self->repeat_duration_combo), GCAL_RECURRENCE_FOREVER);
+  gtk_widget_set_visible (self->repeat_duration_combo, frequency != GCAL_RECURRENCE_NO_REPEAT);
 }
 
 static void
@@ -1422,8 +1397,6 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, number_of_occurrences_spin);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_combo);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_duration_combo);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_duration_stack);
-  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, repeat_limits_box);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, scrolled_window);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, source_image);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, sources_popover);
@@ -1552,11 +1525,11 @@ gcal_edit_dialog_set_event (GcalEditDialog *self,
 
   if (frequency == GCAL_RECURRENCE_NO_REPEAT)
     {
-      gtk_widget_hide (self->repeat_limits_box);
+      gtk_widget_hide (self->repeat_duration_combo);
     }
   else
     {
-      gtk_widget_show (self->repeat_limits_box);
+      gtk_widget_show (self->repeat_duration_combo);
       gtk_widget_show (self->repeat_duration_combo);
     }
 
