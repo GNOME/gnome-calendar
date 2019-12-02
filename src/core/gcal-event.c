@@ -1183,68 +1183,76 @@ gcal_event_get_alarms (GcalEvent *self)
 }
 
 /**
- * gcal_event_add_alarm:
+ * gcal_event_remove_all_alarms:
  * @self: a #GcalEvent
- * @type: the minutes before the start date to trigger the alarm
- * @has_sound: whether the alarm plays a sound or not
  *
- * Adds an alarm to @self that triggers @type minutes before the event's
- * start date.
- *
- * If there's already an alarm for @type, it'll be replaced.
+ * Removes all alarms from @self.
  */
 void
-gcal_event_add_alarm (GcalEvent *self,
-                      guint      type,
-                      gboolean   has_sound)
+gcal_event_remove_all_alarms (GcalEvent *self)
 {
-  ECalComponentAlarmTrigger *trigger;
-  ECalComponentAlarmAction action;
-  ECalComponentAlarm *alarm;
-  ICalDuration *duration;
-  gchar *alarm_uid;
+  GHashTableIter iter;
+  const gchar *alarm_uid;
+  gint minutes;
+
+  GCAL_ENTRY;
 
   g_return_if_fail (GCAL_IS_EVENT (self));
 
-  /* Only 1 alarm per relative time */
-  if (g_hash_table_contains (self->alarms, GINT_TO_POINTER (type)))
+  g_hash_table_iter_init (&iter, self->alarms);
+  while (g_hash_table_iter_next (&iter, (gpointer*) &minutes, (gpointer*) &alarm_uid))
     {
-      alarm_uid = g_hash_table_lookup (self->alarms, GINT_TO_POINTER (type));
+      GCAL_TRACE_MSG ("Removing alarm %s from event %s", alarm_uid, gcal_event_get_uid (self));
 
+      e_cal_component_remove_alarm (self->component, alarm_uid);
+      g_hash_table_iter_remove (&iter);
+    }
+
+  GCAL_EXIT;
+}
+
+/**
+ * gcal_event_add_alarm:
+ * @self: a #GcalEvent
+ * @alarm: a #ECalComponentAlarm
+ *
+ * Adds @alarm to @self. If there's already an alarm scheduled for the
+ * same time, it'll be replaced.
+ */
+void
+gcal_event_add_alarm (GcalEvent          *self,
+                      ECalComponentAlarm *alarm)
+{
+  ECalComponentAlarm *new_alarm;
+  gchar *alarm_uid;
+  guint minutes;
+
+  GCAL_ENTRY;
+
+  g_return_if_fail (GCAL_IS_EVENT (self));
+
+  new_alarm = e_cal_component_alarm_copy (alarm);
+  minutes = get_alarm_trigger_minutes (self, alarm);
+
+  /* Only 1 alarm per relative time */
+  if (g_hash_table_contains (self->alarms, GINT_TO_POINTER (minutes)))
+    {
+      alarm_uid = g_hash_table_lookup (self->alarms, GINT_TO_POINTER (minutes));
       e_cal_component_remove_alarm (self->component, alarm_uid);
     }
 
-  /* Alarm */
-  alarm = e_cal_component_alarm_new ();
-
-  /* Setup the alarm trigger */
-  duration = i_cal_duration_new_null_duration ();
-  i_cal_duration_set_is_neg (duration, TRUE);
-  i_cal_duration_set_minutes (duration, type);
-
-  trigger = e_cal_component_alarm_trigger_new_relative (E_CAL_COMPONENT_ALARM_TRIGGER_RELATIVE_START, duration);
-
-  g_clear_object (&duration);
-
-  e_cal_component_alarm_take_trigger (alarm, trigger);
-
-  /* Action */
-  if (has_sound)
-    action = E_CAL_COMPONENT_ALARM_AUDIO;
-  else
-    action = E_CAL_COMPONENT_ALARM_DISPLAY;
-
-  e_cal_component_alarm_set_action (alarm, action);
-
   /* Add the alarm to the component */
-  e_cal_component_add_alarm (self->component, alarm);
+  e_cal_component_add_alarm (self->component, new_alarm);
 
   /* Add to the hash table */
-  alarm_uid = g_strdup (e_cal_component_alarm_get_uid (alarm));
+  alarm_uid = g_strdup (e_cal_component_alarm_get_uid (new_alarm));
+  g_hash_table_insert (self->alarms, GINT_TO_POINTER (minutes), alarm_uid);
 
-  g_hash_table_insert (self->alarms, GINT_TO_POINTER (type), alarm_uid);
+  GCAL_TRACE_MSG ("Added alarm %s in event %s", alarm_uid, gcal_event_get_uid (self));
 
-  e_cal_component_alarm_free (alarm);
+  e_cal_component_alarm_free (new_alarm);
+
+  GCAL_EXIT;
 }
 
 /**

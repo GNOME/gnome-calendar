@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <template class="GcalAlarmRow" parent="HdyActionRow">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child type="action">
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="valign">center</property>
+        <property name="spacing">6</property>
+        <child>
+          <object class="GtkToggleButton" id="volume_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="relief">none</property>
+            <property name="receives_default">True</property>
+            <property name="tooltip-text" translatable="yes">Toggles the sound of the alarm</property>
+            <signal name="notify::active" handler="on_sound_toggle_changed_cb" object="GcalAlarmRow" swapped="no" />
+            <child>
+              <object class="GtkImage" id="volume_icon">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="icon_name">audio-volume-high-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+        <child>
+          <object class="GtkButton" id="remove_button">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+            <property name="relief">none</property>
+            <property name="receives_default">True</property>
+            <property name="tooltip-text" translatable="yes">Remove the alarm</property>
+            <signal name="clicked" handler="on_remove_button_clicked_cb" object="GcalAlarmRow" swapped="no" />
+            <child>
+              <object class="GtkImage">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="icon_name">edit-delete-symbolic</property>
+              </object>
+            </child>
+          </object>
+        </child>
+      </object>
+    </child>
+  </template>
+</interface>

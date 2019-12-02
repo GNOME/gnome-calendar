@@ -442,38 +442,36 @@
                   </object>
                 </child>
 
+                <!-- Reminders -->
                 <child>
-                  <object class="GtkListBox">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="selection-mode">none</property>
-                    <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
+                    <property name="orientation">vertical</property>
 
                     <style>
                       <class name="frame" />
                     </style>
 
-                    <!-- Reminders -->
                     <child>
-                      <object class="HdyActionRow">
+                      <object class="GtkListBox" id="alarms_listbox">
                         <property name="visible">True</property>
-                        <property name="title" translatable="yes">Reminder</property>
-                        <property name="activatable-widget">alarms_button</property>
+                        <property name="can_focus">False</property>
+                        <property name="selection_mode">none</property>
+                        <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
 
-                        <child type="action">
-                          <object class="GtkBox">
+                        <child>
+                          <object class="HdyActionRow" id="new_alarm_row">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="valign">center</property>
-                            <property name="spacing">6</property>
-                            <property name="hexpand">True</property>
-                            <property name="orientation">vertical</property>
-                            <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                            <child>
+                            <property name="title" translatable="yes">Reminder</property>
+                            <property name="activatable-widget">alarms_button</property>
+
+                            <child type="action">
                               <object class="GtkMenuButton" id="alarms_button">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="hexpand">True</property>
+                                <property name="valign">center</property>
                                 <property name="popover">alarms_popover</property>
+                                <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
                                 <child>
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
@@ -499,13 +497,7 @@
                                 </child>
                               </object>
                             </child>
-                            <child>
-                              <object class="GtkListBox" id="alarms_listbox">
-                                <property name="visible">False</property>
-                                <property name="can_focus">False</property>
-                                <property name="selection_mode">none</property>
-                              </object>
-                            </child>
+
                           </object>
                         </child>
 
