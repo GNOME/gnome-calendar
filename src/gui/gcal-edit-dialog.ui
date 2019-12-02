@@ -219,6 +219,27 @@
                       <class name="frame" />
                     </style>
 
+                    <!-- All Day -->
+                    <child>
+                      <object class="HdyActionRow">
+                        <property name="visible">True</property>
+                        <property name="title" translatable="yes">All Day</property>
+                        <property name="activatable-widget">all_day_switch</property>
+
+                        <child type="action">
+                          <object class="GtkSwitch" id="all_day_switch">
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="valign">center</property>
+                            <property name="halign">end</property>
+                            <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
+                            <signal name="notify::active" handler="on_all_day_switch_active_changed_cb" object="GcalEditDialog" swapped="no"/>
+                          </object>
+                        </child>
+
+                      </object>
+                    </child>
+
                     <!-- Start -->
                     <child>
                       <object class="HdyExpanderRow">
@@ -309,27 +330,6 @@
                               </object>
                             </child>
 
-                          </object>
-                        </child>
-
-                      </object>
-                    </child>
-
-                    <!-- All Day -->
-                    <child>
-                      <object class="HdyActionRow">
-                        <property name="visible">True</property>
-                        <property name="title" translatable="yes">All Day</property>
-                        <property name="activatable-widget">all_day_switch</property>
-
-                        <child type="action">
-                          <object class="GtkSwitch" id="all_day_switch">
-                            <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="valign">center</property>
-                            <property name="halign">end</property>
-                            <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                            <signal name="notify::active" handler="on_all_day_switch_active_changed_cb" object="GcalEditDialog" swapped="no"/>
                           </object>
                         </child>
 
