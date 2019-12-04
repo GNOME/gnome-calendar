@@ -13,7 +13,8 @@ src/gui/calendar-management/gcal-calendars-page.c
 src/gui/calendar-management/gcal-calendars-page.ui
 src/gui/calendar-management/gcal-new-calendar-page.c
 src/gui/calendar-management/gcal-new-calendar-page.ui
-src/gui/alarm-row.ui
+src/gui/gcal-alarm-row.c
+src/gui/gcal-alarm-row.ui
 src/gui/gcal-application.c
 src/gui/gcal-calendar-popover.ui
 src/gui/gcal-date-selector.c
