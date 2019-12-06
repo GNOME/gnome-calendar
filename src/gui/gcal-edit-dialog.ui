@@ -457,44 +457,21 @@
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="selection_mode">none</property>
+                        <signal name="row-activated" handler="on_alarms_listbox_row_activated_cb" object="GcalEditDialog" swapped="no" />
                         <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
 
                         <child>
-                          <object class="HdyActionRow" id="new_alarm_row">
+                          <object class="GtkListBoxRow" id="new_alarm_row">
                             <property name="visible">True</property>
-                            <property name="title" translatable="yes">Reminder</property>
-                            <property name="activatable-widget">alarms_button</property>
+                            <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
 
-                            <child type="action">
-                              <object class="GtkMenuButton" id="alarms_button">
+                            <child>
+                              <object class="GtkLabel">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
-                                <property name="valign">center</property>
-                                <property name="popover">alarms_popover</property>
-                                <property name="sensitive" bind-source="GcalEditDialog" bind-property="writable" bind-flags="default" />
-                                <child>
-                                  <object class="GtkBox">
-                                    <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
-                                    <property name="orientation">horizontal</property>
-                                    <child>
-                                      <object class="GtkLabel">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="hexpand">True</property>
-                                        <property name="xalign">0.0</property>
-                                        <property name="label" translatable="yes">Add reminder…</property>
-                                      </object>
-                                    </child>
-                                    <child>
-                                      <object class="GtkImage">
-                                        <property name="visible">True</property>
-                                        <property name="can_focus">False</property>
-                                        <property name="icon_name">pan-down-symbolic</property>
-                                      </object>
-                                    </child>
-                                  </object>
-                                </child>
+                                <property name="expand">True</property>
+                                <property name="margin">12</property>
+                                <property name="label" translatable="yes">Add a Reminder…</property>
                               </object>
                             </child>
 
@@ -581,6 +558,7 @@
   <object class="GtkPopoverMenu" id="alarms_popover">
     <property name="can_focus">False</property>
     <property name="width_request">175</property>
+    <property name="relative-to">new_alarm_row</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>

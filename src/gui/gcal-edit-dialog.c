@@ -83,6 +83,7 @@ struct _GcalEditDialog
   GtkWidget        *notes_text;
 
   GtkWidget        *alarms_listbox;
+  GtkPopover       *alarms_popover;
   GtkListBoxRow    *new_alarm_row;
 
   GtkWidget        *repeat_combo;
@@ -1123,6 +1124,15 @@ on_add_alarm_button_clicked_cb (GtkWidget      *button,
   gtk_widget_set_sensitive (button, FALSE);
 }
 
+static void
+on_alarms_listbox_row_activated_cb (GtkListBox     *alarms_listbox,
+                                    GtkListBoxRow  *row,
+                                    GcalEditDialog *self)
+{
+  if (row == self->new_alarm_row)
+    gtk_popover_popup (self->alarms_popover);
+}
+
 
 /*
  * Gobject overrides
@@ -1302,6 +1312,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, two_days_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, three_days_button);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, one_week_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, alarms_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, new_alarm_row);
   /* Buttons */
   gtk_widget_class_bind_template_child (widget_class, GcalEditDialog, done_button);
@@ -1339,6 +1350,7 @@ gcal_edit_dialog_class_init (GcalEditDialogClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, sync_datetimes);
   gtk_widget_class_bind_template_callback (widget_class, on_action_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_add_alarm_button_clicked_cb);
+  gtk_widget_class_bind_template_callback (widget_class, on_alarms_listbox_row_activated_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_all_day_switch_active_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_repeat_duration_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_repeat_type_changed_cb);
