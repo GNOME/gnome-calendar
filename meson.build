@@ -46,7 +46,11 @@ else
   rev = ''
 endif
 
-application_id = 'org.gnome.Calendar.@0@'.format(profile)
+if profile == ''
+  application_id = 'org.gnome.Calendar'
+else
+  application_id = 'org.gnome.Calendar.@0@'.format(profile)
+endif
 calendar_buildtype = get_option('buildtype')
 calendar_debug = calendar_minor_version.is_odd() or calendar_buildtype.contains('debug')
 enable_tracing = get_option('tracing')
