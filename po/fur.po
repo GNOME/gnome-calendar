@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-06-25 17:39+0000\n"
-"PO-Revision-Date: 2019-06-30 16:20+0200\n"
+"POT-Creation-Date: 2019-12-06 19:37+0000\n"
+"PO-Revision-Date: 2019-12-16 15:29+0100\n"
 "Last-Translator: Fabio Tomat <f.t.public@gmail.com>\n"
 "Language-Team: Friulian <fur@li.org>\n"
 "Language: fur\n"
@@ -16,19 +16,20 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.2.3\n"
+"X-Generator: Poedit 2.2.4\n"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:7
-#: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:163 src/main.c:36 src/gui/gcal-application.c:280
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
+#: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
+#: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
+#: src/gui/gcal-window.ui:163
 msgid "Calendar"
 msgstr "Calendari"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:8
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
 msgid "Calendar for GNOME"
 msgstr "Calendari par GNOME"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:11
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
@@ -39,7 +40,7 @@ msgstr ""
 "che cun chei al è costruît il scritori GNOME, Calendari si integre ben cul "
 "ecosisteme GNOME."
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:16
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
@@ -50,24 +51,24 @@ msgstr ""
 "mancji. Doprâ Calendari al sarà sempliç e imediât, come che tu lu vessis "
 "doprât par agns!"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:27
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
 msgid "Week view"
 msgstr "Viodude setemanâl"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:31
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
 msgid "Search for events"
 msgstr "Cîr events"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:35
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
 msgid "Calendar management"
 msgstr "Gjestion calendari"
 
-#: data/org.gnome.Calendar.desktop.in:4
+#: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
 msgstr "Jentre e ministre i tiei calendaris"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.Calendar.desktop.in:13
+#: data/org.gnome.Calendar.desktop.in.in:13
 msgid "Calendar;Event;Reminder;"
 msgstr "Calendari;Lunari;Event;Events;Promemorie;"
 
@@ -125,431 +126,8 @@ msgid "Use GNOME night light setting to activate night-mode."
 msgstr ""
 "Dopre la impostazion de lûs noturne di GNOME par ativâ la modalitât gnot."
 
-#: data/ui/alarm-row.ui:34
-msgid "Toggles the sound of the alarm"
-msgstr "Cambie il sun dal alarme"
-
-#: data/ui/alarm-row.ui:54
-msgid "Remove the alarm"
-msgstr "Gjave l'alarme"
-
-#: data/ui/calendar-management-dialog.ui:42
-msgid "Calendar Settings"
-msgstr "Impostazions calendari"
-
-#: data/ui/calendar-popover.ui:43
-msgid "_Synchronize Calendars"
-msgstr "_Sincronize calendaris"
-
-#: data/ui/calendar-popover.ui:51
-msgid "Manage Calendars…"
-msgstr "Gjestìs i calendaris…"
-
-#: data/ui/calendar-popover.ui:75
-msgctxt "tooltip"
-msgid "Synchronizing remote calendars…"
-msgstr "Daûr a sincronizâ i calendaris rimots…"
-
-#: data/ui/calendars-page.ui:31 src/gui/gcal-window.c:706
-#: src/gui/gcal-window.c:710
-msgid "Undo"
-msgstr "Anule"
-
-#: data/ui/calendars-page.ui:97
-msgid "Add Calendar…"
-msgstr "Zonte calendari…"
-
-#: data/ui/edit-calendar-page.ui:18
-msgid "Account"
-msgstr "Account"
-
-#: data/ui/edit-calendar-page.ui:43
-msgid "Settings"
-msgstr "Impostazions"
-
-#: data/ui/edit-calendar-page.ui:64 data/ui/edit-dialog.ui:232
-msgid "Location"
-msgstr "Posizion"
-
-#: data/ui/edit-calendar-page.ui:93
-msgid "Calendar name"
-msgstr "Non calendari"
-
-#: data/ui/edit-calendar-page.ui:121 data/ui/new-calendar-page.ui:65
-msgid "Color"
-msgstr "Colôr"
-
-#: data/ui/edit-calendar-page.ui:155
-msgid "Display calendar"
-msgstr "Visualize calendari"
-
-#: data/ui/edit-calendar-page.ui:175
-msgid "Add new events to this calendar by default"
-msgstr "Di norme, zontâ gnûfs events a chest calendari"
-
-#: data/ui/edit-calendar-page.ui:190
-msgid "Remove Calendar"
-msgstr "Gjave calendari"
-
-#: data/ui/edit-dialog.ui:16 data/ui/new-calendar-page.ui:231
-#: data/ui/new-calendar-page.ui:342
-msgid "Cancel"
-msgstr "Anule"
-
-#: data/ui/edit-dialog.ui:36
-msgid "Click to select the calendar"
-msgstr "Fâs clic par selezionâ il calendari"
-
-#: data/ui/edit-dialog.ui:108 src/gui/gcal-edit-dialog.c:375
-msgid "Done"
-msgstr "Fat"
-
-#: data/ui/edit-dialog.ui:146
-msgid "Title"
-msgstr "Titul"
-
-#: data/ui/edit-dialog.ui:164
-msgid "Date"
-msgstr "Date"
-
-#: data/ui/edit-dialog.ui:180
-msgid "Repeat"
-msgstr "Ripet"
-
-#: data/ui/edit-dialog.ui:198
-msgid "Reminders"
-msgstr "Promemoriis"
-
-#: data/ui/edit-dialog.ui:216
-msgid "Notes"
-msgstr "Notis"
-
-#: data/ui/edit-dialog.ui:301
-msgid "Time"
-msgstr "Orari"
-
-#: data/ui/edit-dialog.ui:354
-msgid "All Day"
-msgstr "Dut il dì"
-
-#: data/ui/edit-dialog.ui:399
-msgid "Add reminder…"
-msgstr "Zonte promemorie…"
-
-#: data/ui/edit-dialog.ui:430
-msgid "No Repeat"
-msgstr "No sta ripeti"
-
-#: data/ui/edit-dialog.ui:431
-msgid "Daily"
-msgstr "Zornalîr"
-
-#: data/ui/edit-dialog.ui:432
-msgid "Monday – Friday"
-msgstr "Lunis – Vinars"
-
-#: data/ui/edit-dialog.ui:433
-msgid "Weekly"
-msgstr "Setemanâl"
-
-#: data/ui/edit-dialog.ui:434
-msgid "Monthly"
-msgstr "Mensîl"
-
-#: data/ui/edit-dialog.ui:435
-msgid "Yearly"
-msgstr "Anuâl"
-
-#: data/ui/edit-dialog.ui:463
-msgid "Forever"
-msgstr "Par simpri"
-
-#: data/ui/edit-dialog.ui:464
-msgid "No. of occurrences"
-msgstr "N. di ricorincis"
-
-#: data/ui/edit-dialog.ui:465
-msgid "Until Date"
-msgstr "Fin ae date"
-
-#: data/ui/edit-dialog.ui:560
-msgid "Delete Event"
-msgstr "Elimine Event"
-
-#: data/ui/edit-dialog.ui:599
-msgid "5 minutes"
-msgstr "5 minûts"
-
-#: data/ui/edit-dialog.ui:608
-msgid "10 minutes"
-msgstr "10 minûts"
-
-#: data/ui/edit-dialog.ui:617
-msgid "30 minutes"
-msgstr "30 minûts"
-
-#: data/ui/edit-dialog.ui:626
-msgid "1 hour"
-msgstr "1 ore"
-
-#: data/ui/edit-dialog.ui:634
-msgid "1 day"
-msgstr "1 dì"
-
-#: data/ui/edit-dialog.ui:643
-msgid "2 days"
-msgstr "2 dîs"
-
-#: data/ui/edit-dialog.ui:652
-msgid "3 days"
-msgstr "3 dîs"
-
-#: data/ui/edit-dialog.ui:661
-msgid "1 week"
-msgstr "1 setemane"
-
-#: data/ui/help-overlay.ui:13
-msgctxt "shortcut window"
-msgid "General"
-msgstr "Gjenerâl"
-
-#: data/ui/help-overlay.ui:17
-msgctxt "shortcut window"
-msgid "New event"
-msgstr "Gnûf event"
-
-#: data/ui/help-overlay.ui:24
-msgctxt "shortcut window"
-msgid "Close window"
-msgstr "Siere barcon"
-
-#: data/ui/help-overlay.ui:31
-msgctxt "shortcut window"
-msgid "Search"
-msgstr "Cîr"
-
-#: data/ui/help-overlay.ui:38
-msgctxt "shortcut window"
-msgid "Show help"
-msgstr "Mostre jutori"
-
-#: data/ui/help-overlay.ui:45
-msgctxt "shortcut window"
-msgid "Shortcuts"
-msgstr "Scurtis"
-
-#: data/ui/help-overlay.ui:54
-msgctxt "shortcut window"
-msgid "Navigation"
-msgstr "Navigazion"
-
-#: data/ui/help-overlay.ui:58
-msgctxt "shortcut window"
-msgid "Go back"
-msgstr "Torne indaûr"
-
-#: data/ui/help-overlay.ui:65
-msgctxt "shortcut window"
-msgid "Go forward"
-msgstr "Va Indevant"
-
-#: data/ui/help-overlay.ui:72
-msgctxt "shortcut window"
-msgid "Show today"
-msgstr "Mostre vuê"
-
-#: data/ui/help-overlay.ui:79
-msgctxt "shortcut window"
-msgid "Next view"
-msgstr "Prossime viodude"
-
-#: data/ui/help-overlay.ui:86
-msgctxt "shortcut window"
-msgid "Previous view"
-msgstr "Viodude precedent"
-
-#: data/ui/help-overlay.ui:95
-msgctxt "shortcut window"
-msgid "View"
-msgstr "Viodude"
-
-#: data/ui/help-overlay.ui:99
-msgctxt "shortcut window"
-msgid "Week view"
-msgstr "Viodude setemanâl"
-
-#: data/ui/help-overlay.ui:106
-msgctxt "shortcut window"
-msgid "Month view"
-msgstr "Viodude mês"
-
-#: data/ui/help-overlay.ui:113
-msgctxt "shortcut window"
-msgid "Year view"
-msgstr "Viodude an"
-
-#: data/ui/menus.ui:6
-msgid "From Web…"
-msgstr "Dal web…"
-
-#: data/ui/menus.ui:10
-msgid "New Local Calendar…"
-msgstr "Gnûf calendari locâl…"
-
-#: data/ui/menus.ui:14
-msgid "From File…"
-msgstr "Di file…"
-
-#: data/ui/month-popover.ui:91
-msgid "New Event…"
-msgstr "Gnûf event…"
-
-#: data/ui/new-calendar-page.ui:33 data/ui/new-calendar-page.ui:41
-msgid "Calendar Name"
-msgstr "Non calendari"
-
-#: data/ui/new-calendar-page.ui:86
-msgid "Import a Calendar"
-msgstr "Impuarte un calendari"
-
-#: data/ui/new-calendar-page.ui:105
-msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
-msgstr ""
-"In alternative, inserìs la direzion web di un calendari online che si "
-"desidere impuartâ, opûr vierç un file di calendari supuartât."
-
-#: data/ui/new-calendar-page.ui:137
-msgid "Open a File"
-msgstr "Vierç un file"
-
-#: data/ui/new-calendar-page.ui:158
-msgid "Calendars"
-msgstr "Calendaris"
-
-#: data/ui/new-calendar-page.ui:204
-msgid ""
-"If the calendar belongs to one of your online accounts, you can add it "
-"through the <a href=\"GOA\">online account settings</a>."
-msgstr ""
-"Se il calendari al fâs part di un dai tiei account online, tu puedis zontâlu "
-"cun <a href=\"GOA\">Impostazions account online</a>."
-
-#: data/ui/new-calendar-page.ui:228
-msgid "Enter your credentials"
-msgstr "Inserìs lis tôs credenziâls"
-
-#: data/ui/new-calendar-page.ui:239
-msgid "Connect"
-msgstr "Conet"
-
-#: data/ui/new-calendar-page.ui:266
-msgid "User"
-msgstr "Utent"
-
-#: data/ui/new-calendar-page.ui:280
-msgid "Password"
-msgstr "Password"
-
-#: data/ui/new-calendar-page.ui:349 data/ui/quick-add-popover.ui:130
-msgid "Add"
-msgstr "Zonte"
-
-#: data/ui/quick-add-popover.ui:117
-msgid "Edit Details…"
-msgstr "Modifiche detais…"
-
-#: data/ui/search-popover.ui:76
-msgid "No results found"
-msgstr "Nissun risultât cjatât"
-
-#: data/ui/search-popover.ui:92
-msgid "Try a different search"
-msgstr "Prove une ricercje diferente"
-
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:756
-#: src/views/gcal-week-view.c:315
-msgid "00:00"
-msgstr "00:00"
-
-#: data/ui/time-selector.ui:65
-msgid ":"
-msgstr ":"
-
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:474
-msgid "AM"
-msgstr "AM"
-
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:474
-msgid "PM"
-msgstr "PM"
-
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:318
-msgid "_Weather"
-msgstr "_Timp"
-
-#: data/ui/weather-settings.ui:30
-msgid "Show Weather"
-msgstr "Mostre timp"
-
-#: data/ui/weather-settings.ui:53
-msgid "Automatic Location"
-msgstr "Posizion automatiche"
-
-#: data/ui/window.ui:43
-msgid "Week"
-msgstr "Setemane"
-
-#: data/ui/window.ui:58
-msgid "Month"
-msgstr "Mês"
-
-#: data/ui/window.ui:72
-msgid "Year"
-msgstr "An"
-
-#: data/ui/window.ui:169
-msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "Zonte un gnûf event"
-
-#: data/ui/window.ui:180 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
-#: src/views/gcal-year-view.c:516
-msgid "Today"
-msgstr "Vuê"
-
-#: data/ui/window.ui:258
-msgid "Manage your calendars"
-msgstr "Ministre i tiei calendaris"
-
-#: data/ui/window.ui:269
-msgctxt "tooltip"
-msgid "Search for events"
-msgstr "Cîr events"
-
-#: data/ui/window.ui:309
-msgid "_Online Accounts…"
-msgstr "Account _online…"
-
-#: data/ui/window.ui:333
-msgid "_Keyboard Shortcuts"
-msgstr "_Scurtis tastiere"
-
-#: data/ui/window.ui:342
-msgid "_About Calendar"
-msgstr "_Informazions su Calendari"
-
-#: data/ui/year-view.ui:133
-msgid "No events"
-msgstr "Nissun event"
-
-#: data/ui/year-view.ui:155
-msgid "Add Event…"
-msgstr "Zonte event…"
-
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1849
+#: src/core/gcal-event.c:1878
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -558,35 +136,249 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1857
+#: src/core/gcal-event.c:1886
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1873 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1902 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:358
+#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:42
+msgid "Calendar Settings"
+msgstr "Impostazions calendari"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:18
+msgid "Account"
+msgstr "Account"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:43
+msgid "Settings"
+msgstr "Impostazions"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
+#: src/gui/gcal-edit-dialog.ui:177
+msgid "Location"
+msgstr "Posizion"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+msgid "Calendar name"
+msgstr "Non calendari"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:121
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:65
+msgid "Color"
+msgstr "Colôr"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:155
+msgid "Display calendar"
+msgstr "Visualize calendari"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:175
+msgid "Add new events to this calendar by default"
+msgstr "Di norme, zontâ gnûfs events a chest calendari"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:190
+msgid "Remove Calendar"
+msgstr "Gjave calendari"
+
+#: src/gui/calendar-management/gcal-calendars-page.c:359
 msgid "Manage Calendars"
 msgstr "Gjestìs calendaris"
 
 #. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:388
+#: src/gui/calendar-management/gcal-calendars-page.c:389
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Calendari <b>%s</b> gjavât"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:708
+#: src/gui/calendar-management/gcal-calendars-page.ui:31
+#: src/gui/gcal-window.c:705 src/gui/gcal-window.c:709
+msgid "Undo"
+msgstr "Anule"
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:97
+msgid "Add Calendar…"
+msgstr "Zonte calendari…"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:491
 msgid "New Calendar"
 msgstr "Gnûf calendari"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:863
+#: src/gui/calendar-management/gcal-new-calendar-page.c:653
 msgid "Calendar files"
 msgstr "File calendari"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:41
+msgid "Calendar Name"
+msgstr "Non calendari"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:86
+msgid "Import a Calendar"
+msgstr "Impuarte un calendari"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
+msgid ""
+"Alternatively, enter the web address of an online calendar you want to "
+"import, or open a supported calendar file."
+msgstr ""
+"In alternative, inserìs la direzion web di un calendari online che si "
+"desidere impuartâ, opûr vierç un file di calendari supuartât."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:137
+msgid "Open a File"
+msgstr "Vierç un file"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:158
+msgid "Calendars"
+msgstr "Calendaris"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:204
+msgid ""
+"If the calendar belongs to one of your online accounts, you can add it "
+"through the <a href=\"GOA\">online account settings</a>."
+msgstr ""
+"Se il calendari al fâs part di un dai tiei account online, tu puedis zontâlu "
+"cun <a href=\"GOA\">Impostazions account online</a>."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:240
+msgid "User"
+msgstr "Utent"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:254
+msgid "Password"
+msgstr "Password"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:302
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:341
+#: src/gui/gcal-edit-dialog.ui:17
+msgid "Cancel"
+msgstr "Anule"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:311
+msgid "Connect"
+msgstr "Conet"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:348
+#: src/gui/gcal-quick-add-popover.ui:130
+msgid "Add"
+msgstr "Zonte"
+
+#: src/gui/gcal-alarm-row.c:85
+#, c-format
+msgid "%1$u day, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u dì, %2$u ore e %3$u minût prime"
+msgstr[1] "%1$u dì, %2$u ore e %3$u minûts prime"
+
+#: src/gui/gcal-alarm-row.c:89
+#, c-format
+msgid "%1$u day, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u dì, %2$u oris e %3$u minût prime"
+msgstr[1] "%1$u dì, %2$u oris e %3$u minûts prime"
+
+#: src/gui/gcal-alarm-row.c:95
+#, c-format
+msgid "%1$u days, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u dîs, %2$u ore e %3$u minût prime"
+msgstr[1] "%1$u dîs, %2$u ore e %3$u minûts prime"
+
+#: src/gui/gcal-alarm-row.c:99
+#, c-format
+msgid "%1$u days, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u dîs, %2$u oris e %3$u minût prime"
+msgstr[1] "%1$u dîs, %2$u oris e %3$u minûts prime"
+
+#: src/gui/gcal-alarm-row.c:114
+#, c-format
+#| msgid "%d hour before"
+#| msgid_plural "%d hours before"
+msgid "%1$u day and %2$u hour before"
+msgid_plural "%1$u day and %2$u hours before"
+msgstr[0] "%1$u dì e %2$u ore prime"
+msgstr[1] "%1$u dì e %2$u oris prime"
+
+#: src/gui/gcal-alarm-row.c:118
+#, c-format
+#| msgid "%d hour before"
+#| msgid_plural "%d hours before"
+msgid "%1$u days and %2$u hour before"
+msgid_plural "%1$u days and %2$u hours before"
+msgstr[0] "%1$u dîs e %2$u ore prime"
+msgstr[1] "%1$u dîs e %2$u oris prime"
+
+#: src/gui/gcal-alarm-row.c:134
+#, c-format
+#| msgid "%d minute before"
+#| msgid_plural "%d minutes before"
+msgid "%1$u day and %2$u minute before"
+msgid_plural "%1$u day and %2$u minutes before"
+msgstr[0] "%1$u dì e %2$u minût prime"
+msgstr[1] "%1$u dì e %2$u minûts prime"
+
+#: src/gui/gcal-alarm-row.c:138
+#, c-format
+#| msgid "%d minute before"
+#| msgid_plural "%d minutes before"
+msgid "%1$u days and %2$u minute before"
+msgid_plural "%1$u days and %2$u minutes before"
+msgstr[0] "%1$u dîs e %2$u minût prime"
+msgstr[1] "%1$u dîs e %2$u minûts prime"
+
+#: src/gui/gcal-alarm-row.c:148
+#, c-format
+msgid "%1$u day before"
+msgid_plural "%1$u days before"
+msgstr[0] "%1$u zornade prime"
+msgstr[1] "%1$u dîs prime"
+
+#: src/gui/gcal-alarm-row.c:166
+#, c-format
+msgid "%1$u hour and %2$u minute before"
+msgid_plural "%1$u hour and %2$u minutes before"
+msgstr[0] "%1$u ore e %2$u minût prime"
+msgstr[1] "%1$u ore e %2$u minûts prime"
+
+#: src/gui/gcal-alarm-row.c:170
+#, c-format
+msgid "%1$u hours and %2$u minute before"
+msgid_plural "%1$u hours and %2$u minutes before"
+msgstr[0] "%1$u oris e %2$u minût prime"
+msgstr[1] "%1$u oris e %2$u minûts prime"
+
+#: src/gui/gcal-alarm-row.c:180
+#, c-format
+msgid "%1$u hour before"
+msgid_plural "%1$u hours before"
+msgstr[0] "%1$u ore prime"
+msgstr[1] "%1$u oris prime"
+
+#: src/gui/gcal-alarm-row.c:192
+#, c-format
+msgid "%1$u minute before"
+msgid_plural "%1$u minutes before"
+msgstr[0] "%1$u minût prime"
+msgstr[1] "%1$u minûts prime"
+
+#: src/gui/gcal-alarm-row.c:199
+msgid "Event start time"
+msgstr "Ore di inizi dal event"
+
+#: src/gui/gcal-alarm-row.ui:18
+msgid "Toggles the sound of the alarm"
+msgstr "Cambie il sun dal alarme"
+
+#: src/gui/gcal-alarm-row.ui:35
+msgid "Remove the alarm"
+msgstr "Gjave l'alarme"
 
 #: src/gui/gcal-application.c:63
 msgid "Quit GNOME Calendar"
@@ -613,45 +405,197 @@ msgstr "Vierç il calendari mostrant l'event dât"
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Copyright © 2012–%d i autôrs di Calendari"
 
-#: src/gui/gcal-application.c:286
+#: src/gui/gcal-application.c:288
 msgid "translator-credits"
 msgstr "Fabio Tomat <f.t.public@gmail.com>"
 
-#: src/gui/gcal-edit-dialog.c:375
+#: src/gui/gcal-calendar-popover.ui:43
+msgid "_Synchronize Calendars"
+msgstr "_Sincronize calendaris"
+
+#: src/gui/gcal-calendar-popover.ui:51
+msgid "Manage Calendars…"
+msgstr "Gjestìs i calendaris…"
+
+#: src/gui/gcal-calendar-popover.ui:75
+msgctxt "tooltip"
+msgid "Synchronizing remote calendars…"
+msgstr "Daûr a sincronizâ i calendaris rimots…"
+
+#: src/gui/gcal-edit-dialog.c:374
 msgid "Save"
 msgstr "Salve"
 
-#: src/gui/gcal-edit-dialog.c:530
-#, c-format
-msgid "%d minute before"
-msgid_plural "%d minutes before"
-msgstr[0] "%d minût prime"
-msgstr[1] "%d minûts prime"
+#: src/gui/gcal-edit-dialog.c:374 src/gui/gcal-edit-dialog.ui:109
+msgid "Done"
+msgstr "Fat"
 
-#: src/gui/gcal-edit-dialog.c:538
+#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
+#: src/gui/gcal-edit-dialog.c:416
 #, c-format
-msgid "%d hour before"
-msgid_plural "%d hours before"
-msgstr[0] "%d ore prime"
-msgstr[1] "%d oris prime"
+msgid "Last %A"
+msgstr "%A passât"
 
-#: src/gui/gcal-edit-dialog.c:546
+#: src/gui/gcal-edit-dialog.c:420
+msgid "Yesterday"
+msgstr "Îr"
+
+#: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
+#: src/views/gcal-year-view.c:279 src/views/gcal-year-view.c:557
+#: src/views/gcal-year-view.ui:88
+msgid "Today"
+msgstr "Vuê"
+
+#: src/gui/gcal-edit-dialog.c:428
+msgid "Tomorrow"
+msgstr "Doman"
+
+#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
+#: src/gui/gcal-edit-dialog.c:438
 #, c-format
-msgid "%d day before"
-msgid_plural "%d days before"
-msgstr[0] "%d zornade prime"
-msgstr[1] "%d dîs prime"
+msgid "This %A"
+msgstr "Chest %A"
 
-#: src/gui/gcal-edit-dialog.c:554
+#.
+#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
+#. * formatted time (e.g. 03:14 PM, or 21:29)
+#.
+#: src/gui/gcal-edit-dialog.c:468
 #, c-format
-msgid "%d week before"
-msgid_plural "%d weeks before"
-msgstr[0] "%d setemane prime"
-msgstr[1] "%d setemanis prime"
+msgid "%1$s, %2$s"
+msgstr "al/ai %1$s aes %2$s"
 
-#: src/gui/gcal-edit-dialog.c:1477 src/gui/gcal-quick-add-popover.c:686
+#: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
 msgstr "Event cence non"
+
+#: src/gui/gcal-edit-dialog.ui:37
+msgid "Click to select the calendar"
+msgstr "Fâs clic par selezionâ il calendari"
+
+#: src/gui/gcal-edit-dialog.ui:156
+msgid "Title"
+msgstr "Titul"
+
+#: src/gui/gcal-edit-dialog.ui:205
+msgid "Schedule"
+msgstr "Planificazion"
+
+#: src/gui/gcal-edit-dialog.ui:226
+msgid "All Day"
+msgstr "Dut il dì"
+
+#: src/gui/gcal-edit-dialog.ui:247
+msgid "Starts"
+msgstr "Inizi"
+
+#: src/gui/gcal-edit-dialog.ui:254 src/gui/gcal-edit-dialog.ui:302
+msgid "Check this out!"
+msgstr "Controle chest!"
+
+#: src/gui/gcal-edit-dialog.ui:295
+msgid "Ends"
+msgstr "Fin"
+
+#: src/gui/gcal-edit-dialog.ui:343
+msgid "Repeat"
+msgstr "Ripet"
+
+#: src/gui/gcal-edit-dialog.ui:354
+msgid "No Repeat"
+msgstr "No sta ripeti"
+
+#: src/gui/gcal-edit-dialog.ui:355
+msgid "Daily"
+msgstr "Zornalîr"
+
+#: src/gui/gcal-edit-dialog.ui:356
+msgid "Monday – Friday"
+msgstr "Lunis – Vinars"
+
+#: src/gui/gcal-edit-dialog.ui:357
+msgid "Weekly"
+msgstr "Setemanâl"
+
+#: src/gui/gcal-edit-dialog.ui:358
+msgid "Monthly"
+msgstr "Mensîl"
+
+#: src/gui/gcal-edit-dialog.ui:359
+msgid "Yearly"
+msgstr "Anuâl"
+
+#: src/gui/gcal-edit-dialog.ui:372
+msgid "End Repeat"
+msgstr "Finìs ripetizion"
+
+#: src/gui/gcal-edit-dialog.ui:382
+msgid "Forever"
+msgstr "Par simpri"
+
+#: src/gui/gcal-edit-dialog.ui:383
+msgid "No. of occurrences"
+msgstr "N. di ricorincis"
+
+#: src/gui/gcal-edit-dialog.ui:384
+msgid "Until Date"
+msgstr "Fin ae date"
+
+#: src/gui/gcal-edit-dialog.ui:397
+msgid "Number of Occurrences"
+msgstr "Numar di ricorincis"
+
+#: src/gui/gcal-edit-dialog.ui:415
+msgid "End Repeat Date"
+msgstr "Date di fin de ripetizion"
+
+#: src/gui/gcal-edit-dialog.ui:438
+msgid "Reminders"
+msgstr "Promemoriis"
+
+#: src/gui/gcal-edit-dialog.ui:474
+msgid "Add a Reminder…"
+msgstr "Zonte un promemorie…"
+
+#: src/gui/gcal-edit-dialog.ui:495
+msgid "Notes"
+msgstr "Notis"
+
+#: src/gui/gcal-edit-dialog.ui:539
+msgid "Delete Event"
+msgstr "Elimine Event"
+
+#: src/gui/gcal-edit-dialog.ui:573
+msgid "5 minutes"
+msgstr "5 minûts"
+
+#: src/gui/gcal-edit-dialog.ui:582
+msgid "10 minutes"
+msgstr "10 minûts"
+
+#: src/gui/gcal-edit-dialog.ui:591
+msgid "30 minutes"
+msgstr "30 minûts"
+
+#: src/gui/gcal-edit-dialog.ui:600
+msgid "1 hour"
+msgstr "1 ore"
+
+#: src/gui/gcal-edit-dialog.ui:608
+msgid "1 day"
+msgstr "1 dì"
+
+#: src/gui/gcal-edit-dialog.ui:617
+msgid "2 days"
+msgstr "2 dîs"
+
+#: src/gui/gcal-edit-dialog.ui:626
+msgid "3 days"
+msgstr "3 dîs"
+
+#: src/gui/gcal-edit-dialog.ui:635
+msgid "1 week"
+msgstr "1 setemane"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
 #: src/gui/gcal-event-widget.c:428
@@ -926,25 +870,153 @@ msgstr "Gnûf event al/ai %d di novembar"
 msgid "New Event on December %d"
 msgstr "Gnûf event al/ai %d di dicembar"
 
-#: src/gui/gcal-time-selector.c:83
-#, c-format
-msgid "%s AM"
-msgstr "%s AM"
+#: src/gui/gcal-quick-add-popover.ui:117
+msgid "Edit Details…"
+msgstr "Modifiche detais…"
 
-#: src/gui/gcal-time-selector.c:85
-#, c-format
-msgid "%s PM"
-msgstr "%s PM"
+#: src/gui/gcal-time-selector.ui:22
+msgid ":"
+msgstr ":"
 
-#: src/gui/gcal-window.c:706
+#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:475
+msgid "AM"
+msgstr "AM"
+
+#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:475
+msgid "PM"
+msgstr "PM"
+
+#: src/gui/gcal-window.c:705
 msgid "Another event deleted"
 msgstr "Un altri event eliminât"
 
-#: src/gui/gcal-window.c:710
+#: src/gui/gcal-window.c:709
 msgid "Event deleted"
 msgstr "Event eliminât"
 
-#: src/utils/gcal-utils.c:941
+#: src/gui/gcal-window.ui:43
+msgid "Week"
+msgstr "Setemane"
+
+#: src/gui/gcal-window.ui:58
+msgid "Month"
+msgstr "Mês"
+
+#: src/gui/gcal-window.ui:72
+msgid "Year"
+msgstr "An"
+
+#: src/gui/gcal-window.ui:169
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "Zonte un gnûf event"
+
+#: src/gui/gcal-window.ui:258
+msgid "Manage your calendars"
+msgstr "Ministre i tiei calendaris"
+
+#: src/gui/gcal-window.ui:269
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "Cîr events"
+
+#: src/gui/gcal-window.ui:309
+msgid "_Online Accounts…"
+msgstr "Account _online…"
+
+#: src/gui/gcal-window.ui:318 src/weather/gcal-weather-settings.ui:12
+msgid "_Weather"
+msgstr "_Timp"
+
+#: src/gui/gcal-window.ui:333
+msgid "_Keyboard Shortcuts"
+msgstr "_Scurtis tastiere"
+
+#: src/gui/gcal-window.ui:342
+msgid "_About Calendar"
+msgstr "_Informazions su Calendari"
+
+#: src/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Gjenerâl"
+
+#: src/help-overlay.ui:17
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "Gnûf event"
+
+#: src/help-overlay.ui:24
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Siere barcon"
+
+#: src/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Cîr"
+
+#: src/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Mostre jutori"
+
+#: src/help-overlay.ui:45
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Scurtis"
+
+#: src/help-overlay.ui:54
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Navigazion"
+
+#: src/help-overlay.ui:58
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "Torne indaûr"
+
+#: src/help-overlay.ui:65
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "Va Indevant"
+
+#: src/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "Mostre vuê"
+
+#: src/help-overlay.ui:79
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "Prossime viodude"
+
+#: src/help-overlay.ui:86
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "Viodude precedent"
+
+#: src/help-overlay.ui:95
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Viodude"
+
+#: src/help-overlay.ui:99
+msgctxt "shortcut window"
+msgid "Week view"
+msgstr "Viodude setemanâl"
+
+#: src/help-overlay.ui:106
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "Viodude mês"
+
+#: src/help-overlay.ui:113
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "Viodude an"
+
+#: src/utils/gcal-utils.c:958
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -952,34 +1024,42 @@ msgstr ""
 "L'event che si sta cirint di modificâ al è ciclic. Lis modifichis "
 "selezionadis e varessin di jessi aplicadis a:"
 
-#: src/utils/gcal-utils.c:944
+#: src/utils/gcal-utils.c:961
 msgid "_Cancel"
 msgstr "_Anule"
 
-#: src/utils/gcal-utils.c:946
+#: src/utils/gcal-utils.c:963
 msgid "_Only This Event"
 msgstr "_Dome chest event"
 
-#: src/utils/gcal-utils.c:953
+#: src/utils/gcal-utils.c:970
 msgid "_Subsequent events"
 msgstr "_Events seguitîfs"
 
-#: src/utils/gcal-utils.c:955
+#: src/utils/gcal-utils.c:972
 msgid "_All events"
 msgstr "_Ducj i events"
 
-#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:312
+#: src/views/gcal-month-popover.ui:91
+msgid "New Event…"
+msgstr "Gnûf event…"
+
+#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:313
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/views/gcal-week-header.c:465
+#: src/views/gcal-week-grid.c:756 src/views/gcal-week-view.c:316
+msgid "00:00"
+msgstr "00:00"
+
+#: src/views/gcal-week-header.c:462
 #, c-format
 msgid "Other event"
 msgid_plural "Other %d events"
 msgstr[0] "Altri event"
 msgstr[1] "Altris %d events"
 
-#: src/views/gcal-week-header.c:1001
+#: src/views/gcal-week-header.c:998
 #, c-format
 msgid "week %d"
 msgstr "setemane %d"
@@ -994,9 +1074,60 @@ msgstr "%d di %B…"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:519
+#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:560
 msgid "%B %d"
 msgstr "%d di %B"
+
+#: src/views/gcal-year-view.ui:133
+msgid "No events"
+msgstr "Nissun event"
+
+#: src/views/gcal-year-view.ui:155
+msgid "Add Event…"
+msgstr "Zonte event…"
+
+#: src/weather/gcal-weather-settings.ui:30
+msgid "Show Weather"
+msgstr "Mostre timp"
+
+#: src/weather/gcal-weather-settings.ui:53
+msgid "Automatic Location"
+msgstr "Posizion automatiche"
+
+#~ msgid "Date"
+#~ msgstr "Date"
+
+#~ msgid "Time"
+#~ msgstr "Orari"
+
+#~ msgid "From Web…"
+#~ msgstr "Dal web…"
+
+#~ msgid "New Local Calendar…"
+#~ msgstr "Gnûf calendari locâl…"
+
+#~ msgid "From File…"
+#~ msgstr "Di file…"
+
+#~ msgid "Enter your credentials"
+#~ msgstr "Inserìs lis tôs credenziâls"
+
+#~ msgid "No results found"
+#~ msgstr "Nissun risultât cjatât"
+
+#~ msgid "Try a different search"
+#~ msgstr "Prove une ricercje diferente"
+
+#~ msgid "%d week before"
+#~ msgid_plural "%d weeks before"
+#~ msgstr[0] "%d setemane prime"
+#~ msgstr[1] "%d setemanis prime"
+
+#~ msgid "%s AM"
+#~ msgstr "%s AM"
+
+#~ msgid "%s PM"
+#~ msgstr "%s PM"
 
 #~ msgid "Open online account settings"
 #~ msgstr "Vierç lis impostazions dai account online"
@@ -1100,12 +1231,6 @@ msgstr "%d di %B"
 
 #~ msgid "00:00 PM"
 #~ msgstr "00:00 PM"
-
-#~ msgid "Starts"
-#~ msgstr "Inizi"
-
-#~ msgid "Ends"
-#~ msgstr "Fin"
 
 #~ msgid "Create"
 #~ msgstr "Cree"
