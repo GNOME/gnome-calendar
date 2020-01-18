@@ -1,16 +1,16 @@
 # Japanese translation for gnome-calendar.
-# Copyright (C) 2015 gnome-calendar's COPYRIGHT HOLDER
+# Copyright (C) 2015-2020 gnome-calendar's COPYRIGHT HOLDER
 # This file is distributed under the same license as the gnome-calendar package.
 # Hajime Taira <htaira@redhat.com>, 2015.
 # Jiro Matsuzawa <jmatsuzawa@gnome.org>, 2015-2016, 2018.
-# sicklylife <translation@sicklylife.jp>, 2019.
+# sicklylife <translation@sicklylife.jp>, 2019-2020.
 #
 msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
 "POT-Creation-Date: 2019-12-06 19:37+0000\n"
-"PO-Revision-Date: 2019-09-08 18:00+0900\n"
+"PO-Revision-Date: 2020-01-17 00:00+0900\n"
 "Last-Translator: sicklylife <translation@sicklylife.jp>\n"
 "Language-Team: Japanese <gnome-translation@gnome.gr.jp>\n"
 "Language: ja\n"
@@ -271,101 +271,83 @@ msgstr "追加"
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
-msgstr[0] ""
+msgstr[0] "%1$u 日と %2$u 時間 %3$u 分前"
 
 #: src/gui/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
-msgstr[0] ""
+msgstr[0] "%1$u 日と %2$u 時間 %3$u 分前"
 
 #: src/gui/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
-msgstr[0] ""
+msgstr[0] "%1$u 日と %2$u 時間 %3$u 分前"
 
 #: src/gui/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
-msgstr[0] ""
+msgstr[0] "%1$u 日と %2$u 時間 %3$u 分前"
 
 #: src/gui/gcal-alarm-row.c:114
-#, fuzzy, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
+#, c-format
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
-msgstr[0] "%d 時間前"
+msgstr[0] "%1$u 日と %2$u 時間前"
 
 #: src/gui/gcal-alarm-row.c:118
-#, fuzzy, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
+#, c-format
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
-msgstr[0] "%d 時間前"
+msgstr[0] "%1$u 日と %2$u 時間前"
 
 #: src/gui/gcal-alarm-row.c:134
-#, fuzzy, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
+#, c-format
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
-msgstr[0] "%d 分前"
+msgstr[0] "%1$u 日と %2$u 分前"
 
 #: src/gui/gcal-alarm-row.c:138
-#, fuzzy, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
+#, c-format
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
-msgstr[0] "%d 分前"
+msgstr[0] "%1$u 日と %2$u 分前"
 
 #: src/gui/gcal-alarm-row.c:148
-#, fuzzy, c-format
-#| msgid "%d day before"
-#| msgid_plural "%d days before"
+#, c-format
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
-msgstr[0] "%d 日前"
+msgstr[0] "%1$u 日前"
 
 #: src/gui/gcal-alarm-row.c:166
-#, fuzzy, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
+#, c-format
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
-msgstr[0] "%d 分前"
+msgstr[0] "%1$u 時間 %2$u 分前"
 
 #: src/gui/gcal-alarm-row.c:170
-#, fuzzy, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
+#, c-format
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
-msgstr[0] "%d 分前"
+msgstr[0] "%1$u 時間 %2$u 分前"
 
 #: src/gui/gcal-alarm-row.c:180
-#, fuzzy, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
+#, c-format
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
-msgstr[0] "%d 時間前"
+msgstr[0] "%1$u 時間前"
 
 #: src/gui/gcal-alarm-row.c:192
-#, fuzzy, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
+#, c-format
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
-msgstr[0] "%d 分前"
+msgstr[0] "%1$u 分前"
 
 #: src/gui/gcal-alarm-row.c:199
 msgid "Event start time"
-msgstr ""
+msgstr "イベント開始時刻"
 
 #: src/gui/gcal-alarm-row.ui:18
 msgid "Toggles the sound of the alarm"
@@ -432,13 +414,11 @@ msgstr "完了"
 #: src/gui/gcal-edit-dialog.c:416
 #, c-format
 msgid "Last %A"
-msgstr ""
+msgstr "先週の%A"
 
 #: src/gui/gcal-edit-dialog.c:420
-#, fuzzy
-#| msgid "to Yesterday"
 msgid "Yesterday"
-msgstr "昨日まで"
+msgstr "昨日"
 
 #: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
 #: src/views/gcal-year-view.c:279 src/views/gcal-year-view.c:557
@@ -447,26 +427,23 @@ msgid "Today"
 msgstr "今日"
 
 #: src/gui/gcal-edit-dialog.c:428
-#, fuzzy
-#| msgid "to Tomorrow"
 msgid "Tomorrow"
-msgstr "明日まで"
+msgstr "明日"
 
 #. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
 #: src/gui/gcal-edit-dialog.c:438
 #, c-format
 msgid "This %A"
-msgstr ""
+msgstr "今週の%A"
 
 #.
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
 #: src/gui/gcal-edit-dialog.c:468
-#, fuzzy, c-format
-#| msgid "to %1$s %2$s"
+#, c-format
 msgid "%1$s, %2$s"
-msgstr "%1$s%2$s日まで"
+msgstr "%1$sの%2$s"
 
 #: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
@@ -482,7 +459,7 @@ msgstr "タイトル"
 
 #: src/gui/gcal-edit-dialog.ui:205
 msgid "Schedule"
-msgstr ""
+msgstr "予定"
 
 #: src/gui/gcal-edit-dialog.ui:226
 msgid "All Day"
@@ -494,7 +471,7 @@ msgstr "開始"
 
 #: src/gui/gcal-edit-dialog.ui:254 src/gui/gcal-edit-dialog.ui:302
 msgid "Check this out!"
-msgstr ""
+msgstr "日時を確認してください!"
 
 #: src/gui/gcal-edit-dialog.ui:295
 msgid "Ends"
@@ -529,10 +506,8 @@ msgid "Yearly"
 msgstr "毎年"
 
 #: src/gui/gcal-edit-dialog.ui:372
-#, fuzzy
-#| msgid "Repeat"
 msgid "End Repeat"
-msgstr "繰り返し"
+msgstr "繰り返しの終了"
 
 #: src/gui/gcal-edit-dialog.ui:382
 msgid "Forever"
@@ -547,22 +522,18 @@ msgid "Until Date"
 msgstr "次の日付まで"
 
 #: src/gui/gcal-edit-dialog.ui:397
-#, fuzzy
-#| msgid "No. of occurrences"
 msgid "Number of Occurrences"
 msgstr "発生回数"
 
 #: src/gui/gcal-edit-dialog.ui:415
 msgid "End Repeat Date"
-msgstr ""
+msgstr "繰り返し終了日"
 
 #: src/gui/gcal-edit-dialog.ui:438
 msgid "Reminders"
 msgstr "リマインダー"
 
 #: src/gui/gcal-edit-dialog.ui:474
-#, fuzzy
-#| msgid "Add reminder…"
 msgid "Add a Reminder…"
 msgstr "リマインダーを追加…"
 
@@ -822,62 +793,62 @@ msgstr "次の日曜日の新規イベント"
 #: src/gui/gcal-quick-add-popover.c:405
 #, c-format
 msgid "New Event on January %d"
-msgstr "1月%d日の新規イベント"
+msgstr "1月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.c:406
 #, c-format
 msgid "New Event on February %d"
-msgstr "2月%d日の新規イベント"
+msgstr "2月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.c:407
 #, c-format
 msgid "New Event on March %d"
-msgstr "3月%d日の新規イベント"
+msgstr "3月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.c:408
 #, c-format
 msgid "New Event on April %d"
-msgstr "4月%d日の新規イベント"
+msgstr "4月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.c:409
 #, c-format
 msgid "New Event on May %d"
-msgstr "5月%d日の新規イベント"
+msgstr "5月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.c:410
 #, c-format
 msgid "New Event on June %d"
-msgstr "6月%d日の新規イベント"
+msgstr "6月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.c:411
 #, c-format
 msgid "New Event on July %d"
-msgstr "7月%d日の新規イベント"
+msgstr "7月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.c:412
 #, c-format
 msgid "New Event on August %d"
-msgstr "8月%d日の新規イベント"
+msgstr "8月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.c:413
 #, c-format
 msgid "New Event on September %d"
-msgstr "9月%d日の新規イベント"
+msgstr "9月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.c:414
 #, c-format
 msgid "New Event on October %d"
-msgstr "10月%d日の新規イベント"
+msgstr "10月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.c:415
 #, c-format
 msgid "New Event on November %d"
-msgstr "11月%d日の新規イベント"
+msgstr "11月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.c:416
 #, c-format
 msgid "New Event on December %d"
-msgstr "12月%d日の新規イベント"
+msgstr "12月%-d日の新規イベント"
 
 #: src/gui/gcal-quick-add-popover.ui:117
 msgid "Edit Details…"
@@ -1093,7 +1064,7 @@ msgstr "イベントなし"
 
 #: src/views/gcal-year-view.ui:155
 msgid "Add Event…"
-msgstr "新規イベント"
+msgstr "新規イベント…"
 
 #: src/weather/gcal-weather-settings.ui:30
 msgid "Show Weather"
