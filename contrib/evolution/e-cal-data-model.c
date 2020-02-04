@@ -1898,8 +1898,7 @@ cal_data_model_add_to_subscriber_except_its_range (ECalDataModel *data_model,
 	/* subs_data should have set the old time range, which
 	   means only components which didn't fit into the old
 	   time range will be added */
-	if (!(instance_start <= subs_data->range_end &&
-	    instance_end >= subs_data->range_start))
+	if (instance_start >= subs_data->range_end || instance_end <= subs_data->range_start)
 		e_cal_data_model_subscriber_component_added (subs_data->subscriber, client, component);
 
 	return TRUE;
@@ -1922,8 +1921,7 @@ cal_data_model_remove_from_subscriber_except_its_range (ECalDataModel *data_mode
 	/* subs_data should have set the new time range, which
 	   means only components which don't fit into this new
 	   time range will be removed */
-	if (!(instance_start <= subs_data->range_end &&
-	    instance_end >= subs_data->range_start))
+	if (instance_start >= subs_data->range_end || instance_end <= subs_data->range_start)
 		e_cal_data_model_subscriber_component_removed (subs_data->subscriber, client,
 			e_cal_component_id_get_uid (id),
 			e_cal_component_id_get_rid (id));
@@ -2742,8 +2740,8 @@ cal_data_model_foreach_component (ECalDataModel *data_model,
 
 	/* Is the given time range in the currently used time range? */
 	if (!(in_range_start == in_range_end && in_range_start == (time_t) 0) &&
-	    (in_range_start >= data_model->priv->range_end ||
-	    in_range_end <= data_model->priv->range_start)) {
+	    (in_range_start > data_model->priv->range_end ||
+	    in_range_end < data_model->priv->range_start)) {
 		UNLOCK_PROPS ();
 		return checked_all;
 	}
