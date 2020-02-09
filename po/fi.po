@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-12-06 19:37+0000\n"
-"PO-Revision-Date: 2020-01-26 15:13+0200\n"
+"POT-Creation-Date: 2020-01-26 13:15+0000\n"
+"PO-Revision-Date: 2020-02-09 14:41+0200\n"
 "Last-Translator: Jiri Grönroos <jiri.gronroos+l10n@iki.fi>\n"
 "Language-Team: suomi <lokalisointi-lista@googlegroups.com>\n"
 "Language: fi\n"
@@ -421,7 +421,7 @@ msgstr "Valmis"
 #: src/gui/gcal-edit-dialog.c:416
 #, c-format
 msgid "Last %A"
-msgstr ""
+msgstr "Viimeinen %A"
 
 #: src/gui/gcal-edit-dialog.c:420
 msgid "Yesterday"
@@ -441,17 +441,17 @@ msgstr "Huomenna"
 #: src/gui/gcal-edit-dialog.c:438
 #, c-format
 msgid "This %A"
-msgstr ""
+msgstr "Tämä %A"
 
 #.
 #. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
 #. * formatted time (e.g. 03:14 PM, or 21:29)
 #.
 #: src/gui/gcal-edit-dialog.c:468
-#, fuzzy, c-format
+#, c-format
 #| msgid "to %1$s %2$s"
 msgid "%1$s, %2$s"
-msgstr "ajankohtaan %1$s %2$s"
+msgstr "%1$s, %2$s"
 
 #: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
@@ -467,7 +467,7 @@ msgstr "Nimi"
 
 #: src/gui/gcal-edit-dialog.ui:205
 msgid "Schedule"
-msgstr ""
+msgstr "Aikataulu"
 
 #: src/gui/gcal-edit-dialog.ui:226
 msgid "All Day"
@@ -479,7 +479,7 @@ msgstr "Alkaa"
 
 #: src/gui/gcal-edit-dialog.ui:254 src/gui/gcal-edit-dialog.ui:302
 msgid "Check this out!"
-msgstr ""
+msgstr "Tutustu tähän!"
 
 #: src/gui/gcal-edit-dialog.ui:295
 msgid "Ends"
@@ -535,7 +535,7 @@ msgstr "Toistokertojen määrä"
 
 #: src/gui/gcal-edit-dialog.ui:415
 msgid "End Repeat Date"
-msgstr ""
+msgstr "Toiston lopetuspäivä"
 
 #: src/gui/gcal-edit-dialog.ui:438
 msgid "Reminders"
