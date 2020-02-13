@@ -13,20 +13,20 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-07-13 19:05+0000\n"
-"PO-Revision-Date: 2019-08-04 18:24+0200\n"
-"Last-Translator: Tim Sabsch <tim@sabsch.com>\n"
+"POT-Creation-Date: 2019-11-13 19:19+0000\n"
+"PO-Revision-Date: 2020-02-13 06:18+0100\n"
+"Last-Translator: Christian Kirbach <christian.kirbach@gmail.com>\n"
 "Language-Team: Deutsch <gnome-de@gnome.org>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 2.2.1\n"
+"X-Generator: Poedit 2.2.4\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in:7
 #: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:163 src/main.c:36 src/gui/gcal-application.c:280
+#: data/ui/window.ui:163 src/main.c:35 src/gui/gcal-application.c:280
 msgid "Calendar"
 msgstr "Kalender"
 
@@ -157,8 +157,8 @@ msgctxt "tooltip"
 msgid "Synchronizing remote calendars…"
 msgstr "Externe Kalender abgleichen …"
 
-#: data/ui/calendars-page.ui:31 src/gui/gcal-window.c:706
-#: src/gui/gcal-window.c:710
+#: data/ui/calendars-page.ui:31 src/gui/gcal-window.c:704
+#: src/gui/gcal-window.c:708
 msgid "Undo"
 msgstr "Rückgängig"
 
@@ -472,7 +472,7 @@ msgid "Try a different search"
 msgstr "Mit veränderter Suche erneut versuchen"
 
 #: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:756
-#: src/views/gcal-week-view.c:315
+#: src/views/gcal-week-view.c:316
 msgid "00:00"
 msgstr "00:00"
 
@@ -480,11 +480,11 @@ msgstr "00:00"
 msgid ":"
 msgstr ":"
 
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:474
+#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:475
 msgid "AM"
 msgstr "AM"
 
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:474
+#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:475
 msgid "PM"
 msgstr "PM"
 
@@ -518,7 +518,7 @@ msgid "Add a new event"
 msgstr "Einen neuen Termin hinzufügen"
 
 #: data/ui/window.ui:180 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
-#: src/views/gcal-year-view.c:516
+#: src/views/gcal-year-view.c:557
 msgid "Today"
 msgstr "Heute"
 
@@ -552,7 +552,7 @@ msgid "Add Event…"
 msgstr "Termin hinzufügen …"
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1849
+#: src/core/gcal-event.c:1870
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s — %2$s"
@@ -561,24 +561,24 @@ msgstr "%1$s — %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1857
+#: src/core/gcal-event.c:1878
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s — %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1873 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1894 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:358
+#: src/gui/calendar-management/gcal-calendars-page.c:359
 msgid "Manage Calendars"
 msgstr "Kalender verwalten"
 
 #. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:388
+#: src/gui/calendar-management/gcal-calendars-page.c:389
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalendar <b>%s</b> wurde entfernt"
@@ -587,7 +587,7 @@ msgstr "Kalendar <b>%s</b> wurde entfernt"
 msgid "New Calendar"
 msgstr "Neuer Kalender"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:652
+#: src/gui/calendar-management/gcal-new-calendar-page.c:653
 msgid "Calendar files"
 msgstr "Kalenderdateien"
 
@@ -658,7 +658,7 @@ msgid_plural "%d weeks before"
 msgstr[0] "%d Woche vorher"
 msgstr[1] "%d Wochen vorher"
 
-#: src/gui/gcal-edit-dialog.c:1477 src/gui/gcal-quick-add-popover.c:687
+#: src/gui/gcal-edit-dialog.c:1480 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
 msgstr "Unbenannter Termin"
 
@@ -666,7 +666,7 @@ msgstr "Unbenannter Termin"
 #: src/gui/gcal-event-widget.c:428
 #, c-format
 msgid "At %s"
-msgstr "Am %s"
+msgstr "In %s"
 
 #: src/gui/gcal-quick-add-popover.c:117
 #, c-format
@@ -945,15 +945,15 @@ msgstr "%s AM"
 msgid "%s PM"
 msgstr "%s PM"
 
-#: src/gui/gcal-window.c:706
+#: src/gui/gcal-window.c:704
 msgid "Another event deleted"
 msgstr "Weiteren Termin gelöscht"
 
-#: src/gui/gcal-window.c:710
+#: src/gui/gcal-window.c:708
 msgid "Event deleted"
 msgstr "Termin gelöscht"
 
-#: src/utils/gcal-utils.c:942
+#: src/utils/gcal-utils.c:958
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -961,23 +961,23 @@ msgstr ""
 "Sie versuchen, einen wiederkehrenden Termin zu bearbeiten. Die ausgewählten "
 "Änderungen sollten angewendet werden auf:"
 
-#: src/utils/gcal-utils.c:945
+#: src/utils/gcal-utils.c:961
 msgid "_Cancel"
 msgstr "_Abbrechen"
 
-#: src/utils/gcal-utils.c:947
+#: src/utils/gcal-utils.c:963
 msgid "_Only This Event"
 msgstr "N_ur diesen Termin"
 
-#: src/utils/gcal-utils.c:954
+#: src/utils/gcal-utils.c:970
 msgid "_Subsequent events"
 msgstr "Nach_folgende Termine"
 
-#: src/utils/gcal-utils.c:956
+#: src/utils/gcal-utils.c:972
 msgid "_All events"
 msgstr "_Alle Termine"
 
-#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:312
+#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:313
 msgid "00 AM"
 msgstr "00"
 
@@ -1003,7 +1003,7 @@ msgstr "%d. %B …"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:519
+#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:560
 msgid "%B %d"
 msgstr "%e. %B"
 
