@@ -246,7 +246,9 @@ gcal_timezone_to_icaltimezone (GTimeZone *tz)
   tzid = g_time_zone_get_identifier (tz);
   ical_tz = i_cal_timezone_get_builtin_timezone (tzid);
 
-  g_assert (ical_tz != NULL);
+  if (!ical_tz)
+    ical_tz = i_cal_timezone_get_utc_timezone ();
+
   return ical_tz;
 }
 
