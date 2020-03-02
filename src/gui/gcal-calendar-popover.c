@@ -196,11 +196,17 @@ listbox_sort_func (GtkListBoxRow *row1,
                    gpointer       user_data)
 {
   GcalCalendar *calendar1, *calendar2;
+  gint result;
 
   calendar1 = g_object_get_data (G_OBJECT (row1), "calendar");
   calendar2 = g_object_get_data (G_OBJECT (row2), "calendar");
 
-  return g_ascii_strcasecmp (gcal_calendar_get_name (calendar1), gcal_calendar_get_name (calendar2));
+  result = g_ascii_strcasecmp (gcal_calendar_get_name (calendar1), gcal_calendar_get_name (calendar2));
+
+  if (result != 0)
+    return result;
+
+  return g_ascii_strcasecmp (gcal_calendar_get_id (calendar1), gcal_calendar_get_id (calendar2));
 }
 
 static void
