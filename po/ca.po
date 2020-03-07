@@ -403,11 +403,11 @@ msgstr "Copyright © 2012–%d els autors del Calendari"
 
 #: src/gui/gcal-application.c:288
 msgid "translator-credits"
-msgstr "Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2019"
+msgstr "Jordi Mas i Hernàndez <jmas@softcatala.org>, 2013-2020"
 
 #: src/gui/gcal-calendar-popover.ui:43
 msgid "_Synchronize Calendars"
-msgstr "_Sincronitza calendaris"
+msgstr "_Sincronitza els calendaris"
 
 #: src/gui/gcal-calendar-popover.ui:51
 msgid "Manage Calendars…"
