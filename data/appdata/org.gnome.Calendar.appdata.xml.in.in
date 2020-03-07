@@ -49,6 +49,20 @@
   <project_group>GNOME</project_group>
 
   <releases>
+    <release date="2020-03-06" version="3.36.0">
+      <description>
+        <p>GNOME Calendar 3.36 release is here!</p>
+        <p>
+          This is an exciting release with many improvements and new features:
+          <ul>
+            <li>The event editor dialog was redesigned and reimplemented</li>
+            <li>Minor tweaks to the main interface</li>
+            <li>Many improvements and fixes</li>
+          </ul>
+        </p>
+      </description>
+    </release>
+
     <release date="2019-09-09" version="3.34.0">
       <description>
         <p>GNOME Calendar 3.34 release is here!</p>
