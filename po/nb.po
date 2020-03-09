@@ -1,15 +1,15 @@
 # Norwegian bokmål translation of gnome-calendar.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Kjartan Maraas <kmaraas@gnome.org>, 2012-2019.
+# Kjartan Maraas <kmaraas@gnome.org>, 2012-2020.
 # Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com>, 2015.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: gnome-calendar 3.34.x\n"
+"Project-Id-Version: gnome-calendar 3.36.x\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-07-13 19:05+0000\n"
-"PO-Revision-Date: 2019-07-26 10:00+0200\n"
+"POT-Creation-Date: 2019-12-06 19:37+0000\n"
+"PO-Revision-Date: 2020-03-09 14:51+0100\n"
 "Last-Translator: Kjartan Maraas <kmaraas@gnome.org>\n"
 "Language-Team: Norwegian bokmål <i18n-nb@lister.ping.uio.no>\n"
 "Language: nb\n"
@@ -18,48 +18,55 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:7
-#: data/org.gnome.Calendar.desktop.in:3 data/ui/quick-add-popover.ui:187
-#: data/ui/window.ui:163 src/main.c:36 src/gui/gcal-application.c:280
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
+#: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
+#: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
+#: src/gui/gcal-window.ui:163
 msgid "Calendar"
 msgstr "Kalender"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:8
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
 msgid "Calendar for GNOME"
 msgstr "Kalender for GNOME"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:11
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
 msgid ""
 "GNOME Calendar is a simple and beautiful calendar application designed to "
 "perfectly fit the GNOME desktop. By reusing the components which the GNOME "
 "desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
-msgstr "GNOME Kalender er et enkelt og pent kalenderprogram som er laget for å passe til GNOME skrivebordet. Det gjenbruker mange av komponentene som GNOME-skrivebordet er bygget på og integrerer bra med GNOME økosystemet."
+msgstr ""
+"GNOME Kalender er et enkelt og pent kalenderprogram som er laget for å passe "
+"til GNOME skrivebordet. Det gjenbruker mange av komponentene som GNOME-"
+"skrivebordet er bygget på og integrerer bra med GNOME økosystemet."
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:16
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
 msgid ""
 "We aim to find the perfect balance between nicely crafted features and user-"
 "centred usability. No excess, nothing missing. You’ll feel comfortable using "
 "Calendar, like you’ve been using it for ages!"
-msgstr "Vi prøver å finne en perfekt balanse mellom velbygde funksjoner og brukervennlighet. Ikke for mye, og ikke for lite. Du skal føle deg komfortabel med å bruke Kalender som om du har brukt den i mange år."
+msgstr ""
+"Vi prøver å finne en perfekt balanse mellom velbygde funksjoner og "
+"brukervennlighet. Ikke for mye, og ikke for lite. Du skal føle deg "
+"komfortabel med å bruke Kalender som om du har brukt den i mange år."
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:27
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
 msgid "Week view"
 msgstr "Ukevisning"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:31
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
 msgid "Search for events"
 msgstr "Søk etter hendelser"
 
-#: data/appdata/org.gnome.Calendar.appdata.xml.in:35
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
 msgid "Calendar management"
 msgstr "Kalenderbehandling"
 
-#: data/org.gnome.Calendar.desktop.in:4
+#: data/org.gnome.Calendar.desktop.in.in:4
 msgid "Access and manage your calendars"
 msgstr "Se på og håndter dine kalendere"
 
 #. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
-#: data/org.gnome.Calendar.desktop.in:13
+#: data/org.gnome.Calendar.desktop.in.in:13
 msgid "Calendar;Event;Reminder;"
 msgstr "Kalender;Hendelse;Påminnelse;"
 
@@ -103,7 +110,9 @@ msgstr "Konfigurasjon av værtjeneste"
 msgid ""
 "Whether weather reports are shown, automatic locations are used and a "
 "location-name"
-msgstr "Hvorvidt værmeldinger vises. Automatisk lokasjon brukes og et navn på en lokasjon"
+msgstr ""
+"Hvorvidt værmeldinger vises. Automatisk lokasjon brukes og et navn på en "
+"lokasjon"
 
 #: data/org.gnome.calendar.gschema.xml.in:31
 msgid "Follow system night light"
@@ -113,423 +122,8 @@ msgstr "Følg systemets nattlys"
 msgid "Use GNOME night light setting to activate night-mode."
 msgstr "Bruk innstilling for GNOME nattlys for å aktivere nattmodus."
 
-#: data/ui/alarm-row.ui:34
-msgid "Toggles the sound of the alarm"
-msgstr "Slår av/på lyden for alarmen"
-
-#: data/ui/alarm-row.ui:54
-msgid "Remove the alarm"
-msgstr "Fjern alarmen"
-
-#: data/ui/calendar-management-dialog.ui:42
-msgid "Calendar Settings"
-msgstr "Innstillinger for kalender"
-
-#: data/ui/calendar-popover.ui:43
-msgid "_Synchronize Calendars"
-msgstr "_Synkroniser kalendere"
-
-#: data/ui/calendar-popover.ui:51
-msgid "Manage Calendars…"
-msgstr "Håndter kalendere …"
-
-#: data/ui/calendar-popover.ui:75
-msgctxt "tooltip"
-msgid "Synchronizing remote calendars…"
-msgstr "Synkroniserer eksterne kalendere …"
-
-#: data/ui/calendars-page.ui:31 src/gui/gcal-window.c:706
-#: src/gui/gcal-window.c:710
-msgid "Undo"
-msgstr "Angre"
-
-#: data/ui/calendars-page.ui:97
-msgid "Add Calendar…"
-msgstr "Legg til kalender …"
-
-#: data/ui/edit-calendar-page.ui:18
-msgid "Account"
-msgstr "Konto"
-
-#: data/ui/edit-calendar-page.ui:43
-msgid "Settings"
-msgstr "Innstillinger"
-
-#: data/ui/edit-calendar-page.ui:64 data/ui/edit-dialog.ui:232
-msgid "Location"
-msgstr "Plassering"
-
-#: data/ui/edit-calendar-page.ui:93
-msgid "Calendar name"
-msgstr "Navn på kalender"
-
-#: data/ui/edit-calendar-page.ui:121 data/ui/new-calendar-page.ui:65
-msgid "Color"
-msgstr "Farge"
-
-#: data/ui/edit-calendar-page.ui:155
-msgid "Display calendar"
-msgstr "Vis kalender"
-
-#: data/ui/edit-calendar-page.ui:175
-msgid "Add new events to this calendar by default"
-msgstr "Legg til nye hendelser i denne kalenderen som forvalg"
-
-#: data/ui/edit-calendar-page.ui:190
-msgid "Remove Calendar"
-msgstr "Fjern kalender"
-
-#: data/ui/edit-dialog.ui:16 data/ui/new-calendar-page.ui:302
-#: data/ui/new-calendar-page.ui:341
-msgid "Cancel"
-msgstr "Avbryt"
-
-#: data/ui/edit-dialog.ui:36
-msgid "Click to select the calendar"
-msgstr "Klikk for å velge kalender"
-
-#: data/ui/edit-dialog.ui:108 src/gui/gcal-edit-dialog.c:375
-msgid "Done"
-msgstr "Ferdig"
-
-#: data/ui/edit-dialog.ui:146
-msgid "Title"
-msgstr "Tittel"
-
-#: data/ui/edit-dialog.ui:164
-msgid "Date"
-msgstr "Dato"
-
-#: data/ui/edit-dialog.ui:180
-msgid "Repeat"
-msgstr "Gjenta"
-
-#: data/ui/edit-dialog.ui:198
-msgid "Reminders"
-msgstr "Påminnelser"
-
-#: data/ui/edit-dialog.ui:216
-msgid "Notes"
-msgstr "Notater"
-
-#: data/ui/edit-dialog.ui:301
-msgid "Time"
-msgstr "Tid"
-
-#: data/ui/edit-dialog.ui:354
-msgid "All Day"
-msgstr "Hele dagen"
-
-#: data/ui/edit-dialog.ui:399
-msgid "Add reminder…"
-msgstr "Legg til påminnelse …"
-
-#: data/ui/edit-dialog.ui:430
-msgid "No Repeat"
-msgstr "Ingen gjentakelse"
-
-#: data/ui/edit-dialog.ui:431
-msgid "Daily"
-msgstr "Daglig"
-
-#: data/ui/edit-dialog.ui:432
-msgid "Monday – Friday"
-msgstr "Mandag – fredag"
-
-#: data/ui/edit-dialog.ui:433
-msgid "Weekly"
-msgstr "Ukentlig"
-
-#: data/ui/edit-dialog.ui:434
-msgid "Monthly"
-msgstr "Månedlig"
-
-#: data/ui/edit-dialog.ui:435
-msgid "Yearly"
-msgstr "Årlig"
-
-#: data/ui/edit-dialog.ui:463
-msgid "Forever"
-msgstr "For alltid"
-
-#: data/ui/edit-dialog.ui:464
-msgid "No. of occurrences"
-msgstr "Antall gjentakelser"
-
-#: data/ui/edit-dialog.ui:465
-msgid "Until Date"
-msgstr "Til dato"
-
-#: data/ui/edit-dialog.ui:560
-msgid "Delete Event"
-msgstr "Slett hendelse"
-
-#: data/ui/edit-dialog.ui:599
-msgid "5 minutes"
-msgstr "Fem minutter"
-
-#: data/ui/edit-dialog.ui:608
-msgid "10 minutes"
-msgstr "Ti minutter"
-
-#: data/ui/edit-dialog.ui:617
-msgid "30 minutes"
-msgstr "Tredve minutter"
-
-#: data/ui/edit-dialog.ui:626
-msgid "1 hour"
-msgstr "En time"
-
-#: data/ui/edit-dialog.ui:634
-msgid "1 day"
-msgstr "En dag"
-
-#: data/ui/edit-dialog.ui:643
-msgid "2 days"
-msgstr "To dager"
-
-#: data/ui/edit-dialog.ui:652
-msgid "3 days"
-msgstr "Tre dager"
-
-#: data/ui/edit-dialog.ui:661
-msgid "1 week"
-msgstr "En uke"
-
-#: data/ui/help-overlay.ui:13
-msgctxt "shortcut window"
-msgid "General"
-msgstr "Generelt"
-
-#: data/ui/help-overlay.ui:17
-msgctxt "shortcut window"
-msgid "New event"
-msgstr "Ny hendelse"
-
-#: data/ui/help-overlay.ui:24
-msgctxt "shortcut window"
-msgid "Close window"
-msgstr "Lukk vindu"
-
-#: data/ui/help-overlay.ui:31
-msgctxt "shortcut window"
-msgid "Search"
-msgstr "Søk"
-
-#: data/ui/help-overlay.ui:38
-msgctxt "shortcut window"
-msgid "Show help"
-msgstr "Vis hjelp"
-
-#: data/ui/help-overlay.ui:45
-msgctxt "shortcut window"
-msgid "Shortcuts"
-msgstr "Snarveier"
-
-#: data/ui/help-overlay.ui:54
-msgctxt "shortcut window"
-msgid "Navigation"
-msgstr "Navigering"
-
-#: data/ui/help-overlay.ui:58
-msgctxt "shortcut window"
-msgid "Go back"
-msgstr "Gå tilbake"
-
-#: data/ui/help-overlay.ui:65
-msgctxt "shortcut window"
-msgid "Go forward"
-msgstr "Gå fremover"
-
-#: data/ui/help-overlay.ui:72
-msgctxt "shortcut window"
-msgid "Show today"
-msgstr "Vis i dag"
-
-#: data/ui/help-overlay.ui:79
-msgctxt "shortcut window"
-msgid "Next view"
-msgstr "Neste visning"
-
-#: data/ui/help-overlay.ui:86
-msgctxt "shortcut window"
-msgid "Previous view"
-msgstr "Forrige visning"
-
-#: data/ui/help-overlay.ui:95
-msgctxt "shortcut window"
-msgid "View"
-msgstr "Visning"
-
-#: data/ui/help-overlay.ui:99
-msgctxt "shortcut window"
-msgid "Week view"
-msgstr "Ukevisning"
-
-#: data/ui/help-overlay.ui:106
-msgctxt "shortcut window"
-msgid "Month view"
-msgstr "Månedsvisning"
-
-#: data/ui/help-overlay.ui:113
-msgctxt "shortcut window"
-msgid "Year view"
-msgstr "Årsvisning"
-
-#: data/ui/menus.ui:6
-msgid "From Web…"
-msgstr "Fra nettet …"
-
-#: data/ui/menus.ui:10
-msgid "New Local Calendar…"
-msgstr "Ny lokal kalender …"
-
-#: data/ui/menus.ui:14
-msgid "From File…"
-msgstr "Fra fil …"
-
-#: data/ui/month-popover.ui:91
-msgid "New Event…"
-msgstr "Ny hendelse …"
-
-#: data/ui/new-calendar-page.ui:33 data/ui/new-calendar-page.ui:41
-msgid "Calendar Name"
-msgstr "Navn på kalender"
-
-#: data/ui/new-calendar-page.ui:86
-msgid "Import a Calendar"
-msgstr "Importer en kalender"
-
-#: data/ui/new-calendar-page.ui:105
-msgid ""
-"Alternatively, enter the web address of an online calendar you want to "
-"import, or open a supported calendar file."
-msgstr "Oppgi alternativt nettadressen for en kalender på nettet som du ønsker å importere, eller åpne en støttet kalenderfil."
-
-#: data/ui/new-calendar-page.ui:137
-msgid "Open a File"
-msgstr "Åpne en fil"
-
-#: data/ui/new-calendar-page.ui:158
-msgid "Calendars"
-msgstr "Kalendere"
-
-#: data/ui/new-calendar-page.ui:204
-msgid ""
-"If the calendar belongs to one of your online accounts, you can add it "
-"through the <a href=\"GOA\">online account settings</a>."
-msgstr "Hvis kalenderen tilhører en av dine kontoer på nettet kan du legge den til via <a href=\"GOA\">Innstillinger for kontoer på nettet</a>."
-
-#: data/ui/new-calendar-page.ui:240
-msgid "User"
-msgstr "Bruker"
-
-#: data/ui/new-calendar-page.ui:254
-msgid "Password"
-msgstr "Passord"
-
-#: data/ui/new-calendar-page.ui:311
-msgid "Connect"
-msgstr "Koble til"
-
-#: data/ui/new-calendar-page.ui:348 data/ui/quick-add-popover.ui:130
-msgid "Add"
-msgstr "Legg til"
-
-#: data/ui/quick-add-popover.ui:117
-msgid "Edit Details…"
-msgstr "Rediger detaljer …"
-
-#: data/ui/search-popover.ui:76
-msgid "No results found"
-msgstr "Ingen treff"
-
-#: data/ui/search-popover.ui:92
-msgid "Try a different search"
-msgstr "Prøv et annet søk"
-
-#: data/ui/time-selector.ui:9 src/views/gcal-week-grid.c:756
-#: src/views/gcal-week-view.c:315
-msgid "00:00"
-msgstr "00:00"
-
-#: data/ui/time-selector.ui:65
-msgid ":"
-msgstr ":"
-
-#: data/ui/time-selector.ui:78 src/views/gcal-week-view.c:474
-msgid "AM"
-msgstr "AM"
-
-#: data/ui/time-selector.ui:79 src/views/gcal-week-view.c:474
-msgid "PM"
-msgstr "PM"
-
-#: data/ui/weather-settings.ui:12 data/ui/window.ui:318
-msgid "_Weather"
-msgstr "_Vær"
-
-#: data/ui/weather-settings.ui:30
-msgid "Show Weather"
-msgstr "Vis vær"
-
-#: data/ui/weather-settings.ui:53
-msgid "Automatic Location"
-msgstr "Automatisk lokasjon"
-
-#: data/ui/window.ui:43
-msgid "Week"
-msgstr "Uke"
-
-#: data/ui/window.ui:58
-msgid "Month"
-msgstr "Måned"
-
-#: data/ui/window.ui:72
-msgid "Year"
-msgstr "År"
-
-#: data/ui/window.ui:169
-msgctxt "tooltip"
-msgid "Add a new event"
-msgstr "Legg til en ny hendelse"
-
-#: data/ui/window.ui:180 data/ui/year-view.ui:88 src/views/gcal-year-view.c:279
-#: src/views/gcal-year-view.c:516
-msgid "Today"
-msgstr "I dag"
-
-#: data/ui/window.ui:258
-msgid "Manage your calendars"
-msgstr "Håndter dine kalendere"
-
-#: data/ui/window.ui:269
-msgctxt "tooltip"
-msgid "Search for events"
-msgstr "Søk etter hendelser"
-
-#: data/ui/window.ui:309
-msgid "_Online Accounts…"
-msgstr "K_ontoer på nettet …"
-
-#: data/ui/window.ui:333
-msgid "_Keyboard Shortcuts"
-msgstr "Tastatur_snarveier"
-
-#: data/ui/window.ui:342
-msgid "_About Calendar"
-msgstr "_Om Kalender"
-
-#: data/ui/year-view.ui:133
-msgid "No events"
-msgstr "Ingen hendelser"
-
-#: data/ui/year-view.ui:155
-msgid "Add Event…"
-msgstr "Legg til hendelse …"
-
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1849
+#: src/core/gcal-event.c:1878
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s – %2$s"
@@ -538,35 +132,241 @@ msgstr "%1$s – %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1857
+#: src/core/gcal-event.c:1886
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s %2$s – %3$s %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1873 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1902 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
 
-#: src/gui/calendar-management/gcal-calendars-page.c:358
+#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:42
+msgid "Calendar Settings"
+msgstr "Innstillinger for kalender"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:18
+msgid "Account"
+msgstr "Konto"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:43
+msgid "Settings"
+msgstr "Innstillinger"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
+#: src/gui/gcal-edit-dialog.ui:177
+msgid "Location"
+msgstr "Plassering"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+msgid "Calendar name"
+msgstr "Navn på kalender"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:121
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:65
+msgid "Color"
+msgstr "Farge"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:155
+msgid "Display calendar"
+msgstr "Vis kalender"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:175
+msgid "Add new events to this calendar by default"
+msgstr "Legg til nye hendelser i denne kalenderen som forvalg"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:190
+msgid "Remove Calendar"
+msgstr "Fjern kalender"
+
+#: src/gui/calendar-management/gcal-calendars-page.c:359
 msgid "Manage Calendars"
 msgstr "Håndter kalendere"
 
 #. Update notification label
-#: src/gui/calendar-management/gcal-calendars-page.c:388
+#: src/gui/calendar-management/gcal-calendars-page.c:389
 #, c-format
 msgid "Calendar <b>%s</b> removed"
 msgstr "Kalender <b>%s</b> fjernet"
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:31
+#: src/gui/gcal-window.c:705 src/gui/gcal-window.c:709
+msgid "Undo"
+msgstr "Angre"
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:97
+msgid "Add Calendar…"
+msgstr "Legg til kalender …"
 
 #: src/gui/calendar-management/gcal-new-calendar-page.c:491
 msgid "New Calendar"
 msgstr "Ny kalender"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:652
+#: src/gui/calendar-management/gcal-new-calendar-page.c:653
 msgid "Calendar files"
 msgstr "Kalenderfiler"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:41
+msgid "Calendar Name"
+msgstr "Navn på kalender"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:86
+msgid "Import a Calendar"
+msgstr "Importer en kalender"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
+msgid ""
+"Alternatively, enter the web address of an online calendar you want to "
+"import, or open a supported calendar file."
+msgstr ""
+"Oppgi alternativt nettadressen for en kalender på nettet som du ønsker å "
+"importere, eller åpne en støttet kalenderfil."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:137
+msgid "Open a File"
+msgstr "Åpne en fil"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:158
+msgid "Calendars"
+msgstr "Kalendere"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:204
+msgid ""
+"If the calendar belongs to one of your online accounts, you can add it "
+"through the <a href=\"GOA\">online account settings</a>."
+msgstr ""
+"Hvis kalenderen tilhører en av dine kontoer på nettet kan du legge den til "
+"via <a href=\"GOA\">Innstillinger for kontoer på nettet</a>."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:240
+msgid "User"
+msgstr "Bruker"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:254
+msgid "Password"
+msgstr "Passord"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:302
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:341
+#: src/gui/gcal-edit-dialog.ui:17
+msgid "Cancel"
+msgstr "Avbryt"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:311
+msgid "Connect"
+msgstr "Koble til"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:348
+#: src/gui/gcal-quick-add-popover.ui:130
+msgid "Add"
+msgstr "Legg til"
+
+#: src/gui/gcal-alarm-row.c:85
+#, c-format
+msgid "%1$u day, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u dag, %2$u time og %3$u minutt før"
+msgstr[1] "%1$u dag, %2$u time og %3$u minutter før"
+
+#: src/gui/gcal-alarm-row.c:89
+#, c-format
+msgid "%1$u day, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u dag, %2$u timer og %3$u minutt før"
+msgstr[1] "%1$u dag, %2$u timer og %3$u minutter før"
+
+#: src/gui/gcal-alarm-row.c:95
+#, c-format
+msgid "%1$u days, %2$u hour, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
+msgstr[0] "%1$u dager, %2$u time og %3$u minutt før"
+msgstr[1] "%1$u dager, %2$u time og %3$u minutter før"
+
+#: src/gui/gcal-alarm-row.c:99
+#, c-format
+msgid "%1$u days, %2$u hours, and %3$u minute before"
+msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
+msgstr[0] "%1$u dager, %2$u timer og %3$u minutt før"
+msgstr[1] "%1$u dager, %2$u timer og %3$u minutter før"
+
+#: src/gui/gcal-alarm-row.c:114
+#, c-format
+msgid "%1$u day and %2$u hour before"
+msgid_plural "%1$u day and %2$u hours before"
+msgstr[0] "%1$u dag og %2$u time før"
+msgstr[1] "%1$u dag og %2$u timer før"
+
+#: src/gui/gcal-alarm-row.c:118
+#, c-format
+msgid "%1$u days and %2$u hour before"
+msgid_plural "%1$u days and %2$u hours before"
+msgstr[0] "%1$u dager og %2$u time før"
+msgstr[1] "%1$u dager og %2$u time før"
+
+#: src/gui/gcal-alarm-row.c:134
+#, c-format
+msgid "%1$u day and %2$u minute before"
+msgid_plural "%1$u day and %2$u minutes before"
+msgstr[0] "%1$u dag og %2$u minutt før"
+msgstr[1] "%1$u dag og %2$u minutter før"
+
+#: src/gui/gcal-alarm-row.c:138
+#, c-format
+msgid "%1$u days and %2$u minute before"
+msgid_plural "%1$u days and %2$u minutes before"
+msgstr[0] "%1$u dager og %2$u minutt før"
+msgstr[1] "%1$u dager og %2$u minutter før"
+
+#: src/gui/gcal-alarm-row.c:148
+#, c-format
+msgid "%1$u day before"
+msgid_plural "%1$u days before"
+msgstr[0] "%1$u dag før"
+msgstr[1] "%1$u dager før"
+
+#: src/gui/gcal-alarm-row.c:166
+#, c-format
+msgid "%1$u hour and %2$u minute before"
+msgid_plural "%1$u hour and %2$u minutes before"
+msgstr[0] "%1$u time og %2$u minutt før"
+msgstr[1] "%1$u time og %2$u minutter før"
+
+#: src/gui/gcal-alarm-row.c:170
+#, c-format
+msgid "%1$u hours and %2$u minute before"
+msgid_plural "%1$u hours and %2$u minutes before"
+msgstr[0] "%1$u timer og %2$u minutt før"
+msgstr[1] "%1$u timer og %2$u minutter før"
+
+#: src/gui/gcal-alarm-row.c:180
+#, c-format
+msgid "%1$u hour before"
+msgid_plural "%1$u hours before"
+msgstr[0] "%1$u time før"
+msgstr[1] "%1$u timer før"
+
+#: src/gui/gcal-alarm-row.c:192
+#, c-format
+msgid "%1$u minute before"
+msgid_plural "%1$u minutes before"
+msgstr[0] "%1$u minutt før"
+msgstr[1] "%1$u minutter før"
+
+#: src/gui/gcal-alarm-row.c:199
+msgid "Event start time"
+msgstr "Starttid for hendelse"
+
+#: src/gui/gcal-alarm-row.ui:18
+msgid "Toggles the sound of the alarm"
+msgstr "Slår av/på lyden for alarmen"
+
+#: src/gui/gcal-alarm-row.ui:35
+msgid "Remove the alarm"
+msgstr "Fjern alarmen"
 
 #: src/gui/gcal-application.c:63
 msgid "Quit GNOME Calendar"
@@ -593,47 +393,199 @@ msgstr "Åpne kalender som viser passert hendelse"
 msgid "Copyright © 2012–%d The Calendar authors"
 msgstr "Opphavsrett © 2012–%d Kalender-utviklerne"
 
-#: src/gui/gcal-application.c:286
+#: src/gui/gcal-application.c:288
 msgid "translator-credits"
 msgstr ""
 "Kjartan Maraas <kmaraas@gnome.org>\n"
 "Åka Sikrom <a4NOSPAMPLEASETHANKYOU@hush.com"
 
-#: src/gui/gcal-edit-dialog.c:375
+#: src/gui/gcal-calendar-popover.ui:43
+msgid "_Synchronize Calendars"
+msgstr "_Synkroniser kalendere"
+
+#: src/gui/gcal-calendar-popover.ui:51
+msgid "Manage Calendars…"
+msgstr "Håndter kalendere …"
+
+#: src/gui/gcal-calendar-popover.ui:75
+msgctxt "tooltip"
+msgid "Synchronizing remote calendars…"
+msgstr "Synkroniserer eksterne kalendere …"
+
+#: src/gui/gcal-edit-dialog.c:374
 msgid "Save"
 msgstr "Lagre"
 
-#: src/gui/gcal-edit-dialog.c:530
-#, c-format
-msgid "%d minute before"
-msgid_plural "%d minutes before"
-msgstr[0] "%d minutt før"
-msgstr[1] "%d minutter før"
+#: src/gui/gcal-edit-dialog.c:374 src/gui/gcal-edit-dialog.ui:109
+msgid "Done"
+msgstr "Ferdig"
 
-#: src/gui/gcal-edit-dialog.c:538
+#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
+#: src/gui/gcal-edit-dialog.c:416
 #, c-format
-msgid "%d hour before"
-msgid_plural "%d hours before"
-msgstr[0] "%d time før"
-msgstr[1] "%d timer før"
+msgid "Last %A"
+msgstr "Forrige %A"
 
-#: src/gui/gcal-edit-dialog.c:546
+#: src/gui/gcal-edit-dialog.c:420
+msgid "Yesterday"
+msgstr "I går"
+
+#: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
+#: src/views/gcal-year-view.c:279 src/views/gcal-year-view.c:557
+#: src/views/gcal-year-view.ui:88
+msgid "Today"
+msgstr "I dag"
+
+#: src/gui/gcal-edit-dialog.c:428
+msgid "Tomorrow"
+msgstr "I morgen"
+
+#. Translators: %A is the weekday name (e.g. Sunday, Monday, etc)
+#: src/gui/gcal-edit-dialog.c:438
 #, c-format
-msgid "%d day before"
-msgid_plural "%d days before"
-msgstr[0] "%d dag før"
-msgstr[1] "%d dager før"
+msgid "This %A"
+msgstr "Kommende %A"
 
-#: src/gui/gcal-edit-dialog.c:554
+#.
+#. * Translators: %1$s is the formatted date (e.g. Today, Sunday, or even 2019-10-11) and %2$s is the
+#. * formatted time (e.g. 03:14 PM, or 21:29)
+#.
+#: src/gui/gcal-edit-dialog.c:468
 #, c-format
-msgid "%d week before"
-msgid_plural "%d weeks before"
-msgstr[0] "%d uke før"
-msgstr[1] "%d uker før"
+msgid "%1$s, %2$s"
+msgstr "%1$s, %2$s"
 
-#: src/gui/gcal-edit-dialog.c:1477 src/gui/gcal-quick-add-popover.c:687
+#: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
 msgid "Unnamed event"
 msgstr "Hendelse uten navn"
+
+#: src/gui/gcal-edit-dialog.ui:37
+msgid "Click to select the calendar"
+msgstr "Klikk for å velge kalender"
+
+#: src/gui/gcal-edit-dialog.ui:156
+msgid "Title"
+msgstr "Tittel"
+
+#: src/gui/gcal-edit-dialog.ui:205
+msgid "Schedule"
+msgstr "Planlegging"
+
+#: src/gui/gcal-edit-dialog.ui:226
+msgid "All Day"
+msgstr "Hele dagen"
+
+#: src/gui/gcal-edit-dialog.ui:247
+msgid "Starts"
+msgstr "Starter"
+
+#: src/gui/gcal-edit-dialog.ui:254 src/gui/gcal-edit-dialog.ui:302
+msgid "Check this out!"
+msgstr "Sjekk dette ut!"
+
+#: src/gui/gcal-edit-dialog.ui:295
+msgid "Ends"
+msgstr "Slutter"
+
+#: src/gui/gcal-edit-dialog.ui:343
+msgid "Repeat"
+msgstr "Gjenta"
+
+#: src/gui/gcal-edit-dialog.ui:354
+msgid "No Repeat"
+msgstr "Ingen gjentakelse"
+
+#: src/gui/gcal-edit-dialog.ui:355
+msgid "Daily"
+msgstr "Daglig"
+
+#: src/gui/gcal-edit-dialog.ui:356
+msgid "Monday – Friday"
+msgstr "Mandag – fredag"
+
+#: src/gui/gcal-edit-dialog.ui:357
+msgid "Weekly"
+msgstr "Ukentlig"
+
+#: src/gui/gcal-edit-dialog.ui:358
+msgid "Monthly"
+msgstr "Månedlig"
+
+#: src/gui/gcal-edit-dialog.ui:359
+msgid "Yearly"
+msgstr "Årlig"
+
+#: src/gui/gcal-edit-dialog.ui:372
+msgid "End Repeat"
+msgstr "Avslutt gjentakelse"
+
+#: src/gui/gcal-edit-dialog.ui:382
+msgid "Forever"
+msgstr "For alltid"
+
+#: src/gui/gcal-edit-dialog.ui:383
+msgid "No. of occurrences"
+msgstr "Antall gjentakelser"
+
+#: src/gui/gcal-edit-dialog.ui:384
+msgid "Until Date"
+msgstr "Til dato"
+
+#: src/gui/gcal-edit-dialog.ui:397
+msgid "Number of Occurrences"
+msgstr "Antall gjentakelser"
+
+#: src/gui/gcal-edit-dialog.ui:415
+msgid "End Repeat Date"
+msgstr "Sluttdato for gjentakelse"
+
+#: src/gui/gcal-edit-dialog.ui:438
+msgid "Reminders"
+msgstr "Påminnelser"
+
+#: src/gui/gcal-edit-dialog.ui:474
+msgid "Add a Reminder…"
+msgstr "Legg til påminnelse …"
+
+#: src/gui/gcal-edit-dialog.ui:495
+msgid "Notes"
+msgstr "Notater"
+
+#: src/gui/gcal-edit-dialog.ui:539
+msgid "Delete Event"
+msgstr "Slett hendelse"
+
+#: src/gui/gcal-edit-dialog.ui:573
+msgid "5 minutes"
+msgstr "Fem minutter"
+
+#: src/gui/gcal-edit-dialog.ui:582
+msgid "10 minutes"
+msgstr "Ti minutter"
+
+#: src/gui/gcal-edit-dialog.ui:591
+msgid "30 minutes"
+msgstr "Tredve minutter"
+
+#: src/gui/gcal-edit-dialog.ui:600
+msgid "1 hour"
+msgstr "En time"
+
+#: src/gui/gcal-edit-dialog.ui:608
+msgid "1 day"
+msgstr "En dag"
+
+#: src/gui/gcal-edit-dialog.ui:617
+msgid "2 days"
+msgstr "To dager"
+
+#: src/gui/gcal-edit-dialog.ui:626
+msgid "3 days"
+msgstr "Tre dager"
+
+#: src/gui/gcal-edit-dialog.ui:635
+msgid "1 week"
+msgstr "En uke"
 
 #. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
 #: src/gui/gcal-event-widget.c:428
@@ -908,25 +860,153 @@ msgstr "Ny hendelse %d november"
 msgid "New Event on December %d"
 msgstr "Ny hendelse %d desember"
 
-#: src/gui/gcal-time-selector.c:83
-#, c-format
-msgid "%s AM"
-msgstr "%s AM"
+#: src/gui/gcal-quick-add-popover.ui:117
+msgid "Edit Details…"
+msgstr "Rediger detaljer …"
 
-#: src/gui/gcal-time-selector.c:85
-#, c-format
-msgid "%s PM"
-msgstr "%s PM"
+#: src/gui/gcal-time-selector.ui:22
+msgid ":"
+msgstr ":"
 
-#: src/gui/gcal-window.c:706
+#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:475
+msgid "AM"
+msgstr "AM"
+
+#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:475
+msgid "PM"
+msgstr "PM"
+
+#: src/gui/gcal-window.c:705
 msgid "Another event deleted"
 msgstr "Enda en hendelse slettet"
 
-#: src/gui/gcal-window.c:710
+#: src/gui/gcal-window.c:709
 msgid "Event deleted"
 msgstr "Hendelse slettet"
 
-#: src/utils/gcal-utils.c:942
+#: src/gui/gcal-window.ui:43
+msgid "Week"
+msgstr "Uke"
+
+#: src/gui/gcal-window.ui:58
+msgid "Month"
+msgstr "Måned"
+
+#: src/gui/gcal-window.ui:72
+msgid "Year"
+msgstr "År"
+
+#: src/gui/gcal-window.ui:169
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "Legg til en ny hendelse"
+
+#: src/gui/gcal-window.ui:258
+msgid "Manage your calendars"
+msgstr "Håndter dine kalendere"
+
+#: src/gui/gcal-window.ui:269
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "Søk etter hendelser"
+
+#: src/gui/gcal-window.ui:309
+msgid "_Online Accounts…"
+msgstr "K_ontoer på nettet …"
+
+#: src/gui/gcal-window.ui:318 src/weather/gcal-weather-settings.ui:12
+msgid "_Weather"
+msgstr "_Vær"
+
+#: src/gui/gcal-window.ui:333
+msgid "_Keyboard Shortcuts"
+msgstr "Tastatur_snarveier"
+
+#: src/gui/gcal-window.ui:342
+msgid "_About Calendar"
+msgstr "_Om Kalender"
+
+#: src/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "Generelt"
+
+#: src/help-overlay.ui:17
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "Ny hendelse"
+
+#: src/help-overlay.ui:24
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "Lukk vindu"
+
+#: src/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "Søk"
+
+#: src/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "Vis hjelp"
+
+#: src/help-overlay.ui:45
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "Snarveier"
+
+#: src/help-overlay.ui:54
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "Navigering"
+
+#: src/help-overlay.ui:58
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "Gå tilbake"
+
+#: src/help-overlay.ui:65
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "Gå fremover"
+
+#: src/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "Vis i dag"
+
+#: src/help-overlay.ui:79
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "Neste visning"
+
+#: src/help-overlay.ui:86
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "Forrige visning"
+
+#: src/help-overlay.ui:95
+msgctxt "shortcut window"
+msgid "View"
+msgstr "Visning"
+
+#: src/help-overlay.ui:99
+msgctxt "shortcut window"
+msgid "Week view"
+msgstr "Ukevisning"
+
+#: src/help-overlay.ui:106
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "Månedsvisning"
+
+#: src/help-overlay.ui:113
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "Årsvisning"
+
+#: src/utils/gcal-utils.c:958
 msgid ""
 "The event you are trying to modify is recurring. The changes you have "
 "selected should be applied to:"
@@ -934,25 +1014,33 @@ msgstr ""
 "Hendelsen du prøver å endre er gjeninntreffende. Endringene du gjør bør "
 "brukes på:"
 
-#: src/utils/gcal-utils.c:945
+#: src/utils/gcal-utils.c:961
 msgid "_Cancel"
 msgstr "A_vbryt"
 
-#: src/utils/gcal-utils.c:947
+#: src/utils/gcal-utils.c:963
 msgid "_Only This Event"
 msgstr "K_un denne hendelsen"
 
-#: src/utils/gcal-utils.c:954
+#: src/utils/gcal-utils.c:970
 msgid "_Subsequent events"
 msgstr "_Senere hendelser"
 
-#: src/utils/gcal-utils.c:956
+#: src/utils/gcal-utils.c:972
 msgid "_All events"
 msgstr "_Alle hendelser"
 
-#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:312
+#: src/views/gcal-month-popover.ui:91
+msgid "New Event…"
+msgstr "Ny hendelse …"
+
+#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:313
 msgid "00 AM"
 msgstr "00 AM"
+
+#: src/views/gcal-week-grid.c:756 src/views/gcal-week-view.c:316
+msgid "00:00"
+msgstr "00:00"
 
 #: src/views/gcal-week-header.c:462
 #, c-format
@@ -976,6 +1064,22 @@ msgstr "%d %B …"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:519
+#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:560
 msgid "%B %d"
 msgstr "%d %B"
+
+#: src/views/gcal-year-view.ui:133
+msgid "No events"
+msgstr "Ingen hendelser"
+
+#: src/views/gcal-year-view.ui:155
+msgid "Add Event…"
+msgstr "Legg til hendelse …"
+
+#: src/weather/gcal-weather-settings.ui:30
+msgid "Show Weather"
+msgstr "Vis vær"
+
+#: src/weather/gcal-weather-settings.ui:53
+msgid "Automatic Location"
+msgstr "Automatisk lokasjon"
