@@ -22,12 +22,12 @@
 
 #include <gio/gio.h>
 
+#include "gcal-types.h"
+
 G_BEGIN_DECLS
 
 #define GCAL_TYPE_SEARCH_ENGINE (gcal_search_engine_get_type())
 G_DECLARE_FINAL_TYPE (GcalSearchEngine, gcal_search_engine, GCAL, SEARCH_ENGINE, GObject)
-
-typedef struct _GcalContext GcalContext;
 
 GcalSearchEngine*    gcal_search_engine_new                      (GcalContext        *context);
 

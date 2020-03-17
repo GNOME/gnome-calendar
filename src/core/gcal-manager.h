@@ -22,6 +22,7 @@
 #include "e-cal-data-model.h"
 #include "gcal-calendar.h"
 #include "gcal-event.h"
+#include "gcal-types.h"
 
 #include <libecal/libecal.h>
 
@@ -29,8 +30,6 @@ G_BEGIN_DECLS
 
 #define GCAL_TYPE_MANAGER (gcal_manager_get_type ())
 G_DECLARE_FINAL_TYPE (GcalManager, gcal_manager, GCAL, MANAGER, GObject)
-
-typedef struct _GcalContext GcalContext;
 
 GcalManager*         gcal_manager_new                            (GcalContext        *context);
 
