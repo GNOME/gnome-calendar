@@ -74,6 +74,7 @@ gcal_deps += libgcal_generated_sources_dep
 
 calendar_incs = [
   top_inc,
+  include_directories('.'),
   include_directories('core'),
   include_directories('gui'),
   include_directories(join_paths('gui', 'calendar-management')),
