@@ -29,8 +29,8 @@ typedef struct _GcalRangeTree GcalRangeTree;
 
 /**
  * GcalRangeTraverseFunc:
- * @start: start of range of the entry
- * @end: end of range of the entry
+ * @start: #GDateTime with the start of range of the entry
+ * @end: #GDateTime with the end of range of the entry
  * @data: (nullable): the data of the entry
  * @user_data: (closure): user data passed to the function
  *
@@ -38,10 +38,13 @@ typedef struct _GcalRangeTree GcalRangeTree;
  *
  * Returns: %TRUE to stop traversing, %FALSE to continue traversing
  */
-typedef gboolean    (*GcalRangeTraverseFunc)                     (guint16             start,
-                                                                  guint16             end,
+typedef gboolean    (*GcalRangeTraverseFunc)                     (GDateTime          *start,
+                                                                  GDateTime          *end,
                                                                   gpointer            data,
                                                                   gpointer            user_data);
+
+#define GCAL_TRAVERSE_CONTINUE FALSE;
+#define GCAL_TRAVERSE_STOP     TRUE;
 
 GType                gcal_range_tree_get_type                    (void) G_GNUC_CONST;
 
@@ -54,13 +57,13 @@ GcalRangeTree*       gcal_range_tree_ref                         (GcalRangeTree 
 void                 gcal_range_tree_unref                       (GcalRangeTree      *self);
 
 void                 gcal_range_tree_add_range                   (GcalRangeTree      *self,
-                                                                  guint16             start,
-                                                                  guint16             end,
+                                                                  GDateTime          *start,
+                                                                  GDateTime          *end,
                                                                   gpointer            data);
 
 void                 gcal_range_tree_remove_range                (GcalRangeTree      *self,
-                                                                  guint16             start,
-                                                                  guint16             end,
+                                                                  GDateTime          *start,
+                                                                  GDateTime          *end,
                                                                   gpointer            data);
 
 void                 gcal_range_tree_traverse                    (GcalRangeTree      *self,
@@ -68,13 +71,15 @@ void                 gcal_range_tree_traverse                    (GcalRangeTree 
                                                                   GcalRangeTraverseFunc func,
                                                                   gpointer           user_data);
 
+GPtrArray*           gcal_range_tree_get_all_data                (GcalRangeTree      *self);
+
 GPtrArray*           gcal_range_tree_get_data_at_range           (GcalRangeTree      *self,
-                                                                  guint16             start,
-                                                                  guint16             end);
+                                                                  GDateTime          *start,
+                                                                  GDateTime          *end);
 
 guint64              gcal_range_tree_count_entries_at_range      (GcalRangeTree      *self,
-                                                                  guint16             start,
-                                                                  guint16             end);
+                                                                  GDateTime          *start,
+                                                                  GDateTime          *end);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC (GcalRangeTree, gcal_range_tree_unref)
 
