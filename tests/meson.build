@@ -35,6 +35,7 @@ tests = [
   'server',
   'discoverer',
   'event',
+  'range-tree',
 ]
 
 foreach test : tests

@@ -19,6 +19,7 @@
 #define G_LOG_DOMAIN "GcalRangeTree"
 
 #include "gcal-range-tree.h"
+#include "utils/gcal-date-time-utils.h"
 
 /**
  * SECTION:gcal-range-tree
@@ -27,13 +28,12 @@
  * @stability:stable
  *
  * #GcalRangeTree is an augmented AVL tree implemented to be
- * able to handle ranges rather than point values. This tree
- * is used by @GcalWeekGrid to store events according to their
- * start and end minutes, and thus all the data structure was
- * optimized to handle a limited subset of values.
+ * able to handle time ranges rather than point values. This
+ * tree is used by @GcalWeekGrid to store events according to
+ * their start and end times.
  *
- * In the future, we may need to extend support for broader
- * range values, and move away from guint16 in function params.
+ * By using #GDateTime to store the ranges, it supports a very
+ * long time range.
  *
  * # Ranges
  *
@@ -46,9 +46,9 @@ typedef struct _Node
 {
   struct _Node       *left;
   struct _Node       *right;
-  guint16             start;
-  guint16             end;
-  guint16             max;
+  GDateTime          *start;
+  GDateTime          *end;
+  GDateTime          *max;
   guint16             hits;
   gint64              height;
   GPtrArray          *data_array;
@@ -73,6 +73,10 @@ destroy_tree (Node *n)
   destroy_tree (n->left);
   destroy_tree (n->right);
 
+  gcal_clear_date_time (&n->start);
+  gcal_clear_date_time (&n->end);
+  gcal_clear_date_time (&n->max);
+
   g_ptr_array_unref (n->data_array);
   g_free (n);
 }
@@ -95,48 +99,70 @@ balance (Node *n)
   return n ? height (n->left) - height (n->right) : 0;
 }
 
+/*
+ * Compares the ranges A [a_start, a_end] and B [b_start, b_end]. A is
+ * less rangy than B when either it starts before B, or starts at the
+ * same point but ends before B.
+ *
+ * Some examples:
+ *
+ * 1. [-----A----]     =  0
+ *    [-----B----]
+ *
+ * 2. [----A----]      =  1
+ *      [----B----]
+ *
+ * 3. [------A-----]   = -1
+ *    [----B----]
+ *
+ * 4.   [----A----]    = -1
+ *    [----B----]
+ *
+ * This is *not* comparing the sizes of the ranges.
+ */
 static inline gboolean
-compare_intervals (guint16 a_start,
-                   guint16 a_end,
-                   guint16 b_start,
-                   guint16 b_end)
+compare_intervals (GDateTime *a_start,
+                   GDateTime *a_end,
+                   GDateTime *b_start,
+                   GDateTime *b_end)
 {
-  if (a_start != b_start)
-    return b_start - a_start;
+  gint result = g_date_time_compare (b_start, a_start);
 
-  if (a_end != b_end)
-    return b_end - a_end;
+  if (result == 0)
+    result = g_date_time_compare (b_end, a_end);
 
-  return 0;
+  return result;
 }
 
 static inline gboolean
-is_interval_lower (Node    *n,
-                   guint32  start,
-                   guint32  end)
+is_interval_lower (Node      *n,
+                   GDateTime *start,
+                   GDateTime *end)
 {
-  return start < n->start || (start == n->start && end < n->end);
+  gint a_compare = g_date_time_compare (start, n->start);
+  return a_compare < 0 || (a_compare == 0 && g_date_time_compare (end, n->end) < 0);
 }
 
 static inline gboolean
-is_interval_higher (Node    *n,
-                    guint32  start,
-                    guint32  end)
+is_interval_higher (Node      *n,
+                    GDateTime *start,
+                    GDateTime *end)
 {
-  return start > n->start || (start == n->start && end > n->end);
+  gint a_compare = g_date_time_compare (start, n->start);
+  return a_compare > 0 || (a_compare == 0 && g_date_time_compare (end, n->end) > 0);
 }
 
 static Node*
-node_new (guint32  start,
-          guint32  end,
-          gpointer data)
+node_new (GDateTime *start,
+          GDateTime *end,
+          gpointer   data)
 {
   Node *n;
 
   n = g_new0 (Node, 1);
-  n->start = start;
-  n->end = end;
-  n->max = end;
+  n->start = g_date_time_ref (start);
+  n->end = g_date_time_ref (end);
+  n->max = g_date_time_ref (end);
   n->height = 1;
   n->hits = 1;
 
@@ -217,23 +243,31 @@ rebalance (Node *n)
 }
 
 static Node*
-insert (Node     *n,
-        guint32   start,
-        guint32   end,
-        gpointer  data)
+insert (Node      *n,
+        GDateTime *start,
+        GDateTime *end,
+        gpointer   data)
 {
+  gint result;
+
   if (!n)
     return node_new (start, end, data);
 
-  if (compare_intervals (n->start, n->end, start, end) < 0)
+  result = compare_intervals (n->start, n->end, start, end);
+
+  if (result < 0)
     n->left = insert (n->left, start, end, data);
-  else if (compare_intervals (n->start, n->end, start, end) > 0)
+  else if (result > 0)
     n->right = insert (n->right, start, end, data);
   else
     return hit_node (n, data);
 
   /* Update the current node's maximum subrange value */
-  n->max = MAX (n->max, end);
+  if (!n->max || g_date_time_compare (end, n->max) > 0)
+    {
+      gcal_clear_date_time (&n->max);
+      n->max = g_date_time_ref (end);
+    }
 
   return rebalance (n);
 }
@@ -289,23 +323,24 @@ delete_node (Node     *n,
 }
 
 static Node*
-remove (Node     *n,
-        guint32   start,
-        guint32   end,
-        gpointer  data)
+remove_node (Node      *n,
+             GDateTime *start,
+             GDateTime *end,
+             gpointer   data)
 {
   if (!n)
     return NULL;
 
   if (is_interval_lower (n, start, end))
-    n->left = remove (n->left, start, end, data);
+    n->left = remove_node (n->left, start, end, data);
   else if (is_interval_higher (n, start, end))
-    n->right = remove (n->right, start, end, data);
+    n->right = remove_node (n->right, start, end, data);
   else
     return delete_node (n, data);
 
   return rebalance (n);
 }
+
 /* Traverse */
 static inline gboolean
 run_traverse_func (Node                  *n,
@@ -330,97 +365,110 @@ traverse (Node                  *n,
           gpointer               user_data)
 {
   if (!n)
-    return FALSE;
+    return GCAL_TRAVERSE_CONTINUE;
 
   if (type == G_PRE_ORDER)
     {
       if (run_traverse_func (n, func, user_data))
-        return TRUE;
+        return GCAL_TRAVERSE_STOP;
     }
 
   if (traverse (n->left, type, func, user_data))
-    return TRUE;
+    return GCAL_TRAVERSE_STOP;
 
   if (type == G_IN_ORDER)
     {
       if (run_traverse_func (n, func, user_data))
-        return TRUE;
+        return GCAL_TRAVERSE_STOP;
     }
 
   if (traverse (n->right, type, func, user_data))
-    return TRUE;
+    return GCAL_TRAVERSE_STOP;
 
   if (type == G_POST_ORDER)
     {
       if (run_traverse_func (n, func, user_data))
-        return TRUE;
+        return GCAL_TRAVERSE_STOP;
     }
 
-  return FALSE;
+  return GCAL_TRAVERSE_CONTINUE;
 }
 
 /* Internal traverse functions */
 static inline gboolean
-gather_data_at_range (guint16  start,
-                      guint16  end,
-                      gpointer data,
-                      gpointer user_data)
+gather_all_data (GDateTime *start,
+                 GDateTime *end,
+                 gpointer   data,
+                 gpointer   user_data)
+{
+  GPtrArray *array = user_data;
+
+  g_ptr_array_add (array, data);
+
+  return FALSE;
+}
+
+static inline gboolean
+gather_data_at_range (GDateTime *start,
+                      GDateTime *end,
+                      gpointer   data,
+                      gpointer   user_data)
 {
   struct {
-    guint16 start, end;
+    GDateTime *start, *end;
     GPtrArray **array;
   } *range = user_data;
 
   /* Since we're traversing in order, stop here */
   if (compare_intervals (range->start, range->end, start, end) > 0 &&
-      start >= range->end)
+      g_date_time_compare (start, range->end) >= 0)
     {
-      return TRUE;
+      return GCAL_TRAVERSE_STOP;
     }
 
   /*
    * If the current range doesn't overlap but we're before the desired range, keep
    * traversing the tree
    */
-  if (range->start >= end)
-    return FALSE;
+  if (g_date_time_compare (range->start, end) >= 0)
+    return GCAL_TRAVERSE_CONTINUE;
 
   if (!*range->array)
     *range->array = g_ptr_array_new ();
 
   g_ptr_array_add (*range->array, data);
 
-  return FALSE;
+  return GCAL_TRAVERSE_CONTINUE;
 }
 
 static inline gboolean
-count_entries_at_range (guint16  start,
-                        guint16  end,
-                        gpointer data,
-                        gpointer user_data)
+count_entries_at_range (GDateTime *start,
+                        GDateTime *end,
+                        gpointer   data,
+                        gpointer   user_data)
 {
   struct {
-    guint16 start, end;
+    GDateTime *start, *end;
     guint64 counter;
   } *range = user_data;
 
   /* Since we're traversing in order, stop here */
   if (compare_intervals (range->start, range->end, start, end) > 0 &&
-      start >= range->end)
+      g_date_time_compare (start, range->end) >= 0)
     {
-      return TRUE;
+      return GCAL_TRAVERSE_STOP;
     }
 
   /*
    * If the current range doesn't overlap but we're before the desired range, keep
    * traversing the tree
    */
-  if (range->start >= end)
-    return FALSE;
+  if (g_date_time_compare (range->start, end) >= 0)
+    return GCAL_TRAVERSE_CONTINUE;
 
   range->counter++;
 
-  return FALSE;
+  return GCAL_TRAVERSE_CONTINUE;
 }
 static void
 gcal_range_tree_free (GcalRangeTree *self)
@@ -524,12 +572,13 @@ gcal_range_tree_unref (GcalRangeTree *self)
  */
 void
 gcal_range_tree_add_range (GcalRangeTree *self,
-                           guint16        start,
-                           guint16        end,
+                           GDateTime     *start,
+                           GDateTime     *end,
                            gpointer       data)
 {
   g_return_if_fail (self);
-  g_return_if_fail (end >= start);
+  g_return_if_fail (end && start);
+  g_return_if_fail (g_date_time_compare (end, start) >= 0);
 
   self->root = insert (self->root, start, end, data);
 }
@@ -545,14 +594,15 @@ gcal_range_tree_add_range (GcalRangeTree *self,
  */
 void
 gcal_range_tree_remove_range (GcalRangeTree *self,
-                              guint16        start,
-                              guint16        end,
+                              GDateTime     *start,
+                              GDateTime     *end,
                               gpointer       data)
 {
   g_return_if_fail (self);
-  g_return_if_fail (end >= start);
+  g_return_if_fail (end && start);
+  g_return_if_fail (g_date_time_compare (end, start) >= 0);
 
-  self->root = remove (self->root, start, end, data);
+  self->root = remove_node (self->root, start, end, data);
 }
 
 /**
@@ -575,6 +625,27 @@ gcal_range_tree_traverse (GcalRangeTree         *self,
   traverse (self->root, type, func, user_data);
 }
 
+/**
+ * gcal_range_tree_get_all_data:
+ * @self: a #GcalRangeTree
+ *
+ * Retrieves all the data currently stored in @self.
+ *
+ * Returns: (transfer full): a #GPtrArray with the stored elements
+ */
+GPtrArray*
+gcal_range_tree_get_all_data (GcalRangeTree *self)
+{
+  g_autoptr (GPtrArray) data = NULL;
+
+  g_return_val_if_fail (self, NULL);
+
+  data = g_ptr_array_new ();
+
+  gcal_range_tree_traverse (self, G_IN_ORDER, gather_all_data, data);
+
+  return g_steal_pointer (&data);
+}
 
 /**
  * gcal_range_tree_get_data_at_range:
@@ -589,18 +660,19 @@ gcal_range_tree_traverse (GcalRangeTree         *self,
  */
 GPtrArray*
 gcal_range_tree_get_data_at_range (GcalRangeTree *self,
-                                   guint16        start,
-                                   guint16        end)
+                                   GDateTime     *start,
+                                   GDateTime     *end)
 {
   GPtrArray *data;
 
   struct {
-    guint16 start, end;
+    GDateTime *start, *end;
     GPtrArray **array;
   } range = { start, end, &data };
 
   g_return_val_if_fail (self, NULL);
-  g_return_val_if_fail (end >= start, NULL);
+  g_return_val_if_fail (end && start, NULL);
+  g_return_val_if_fail (g_date_time_compare (end, start) >= 0, NULL);
 
   data = NULL;
 
@@ -622,16 +694,17 @@ gcal_range_tree_get_data_at_range (GcalRangeTree *self,
  */
 guint64
 gcal_range_tree_count_entries_at_range (GcalRangeTree *self,
-                                        guint16        start,
-                                        guint16        end)
+                                        GDateTime     *start,
+                                        GDateTime     *end)
 {
   struct {
-    guint16 start, end;
+    GDateTime *start, *end;
     guint64 counter;
   } range = { start, end, 0 };
 
   g_return_val_if_fail (self, 0);
-  g_return_val_if_fail (end >= start, 0);
+  g_return_val_if_fail (end && start, 0);
+  g_return_val_if_fail (g_date_time_compare (end, start) >= 0, 0);
 
   gcal_range_tree_traverse (self, G_IN_ORDER, count_entries_at_range, &range);
 
