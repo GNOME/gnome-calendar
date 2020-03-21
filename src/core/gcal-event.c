@@ -139,6 +139,9 @@ static GParamSpec* properties[N_PROPS] = { NULL, };
  * GcalEvent cache
  */
 
+G_LOCK_DEFINE (main_lock);
+G_LOCK_DEFINE (event_cache_lock);
+
 static GHashTable *event_cache = NULL;
 
 G_DEFINE_CONSTRUCTOR (init_event_cache_map);
@@ -272,6 +275,8 @@ gcal_event_update_uid_internal (GcalEvent *self)
 
   should_update_cache = self->uid != NULL;
 
+  G_LOCK (event_cache_lock);
+
   if (should_update_cache)
     {
       g_debug ("Removing '%s' (%p) from cache", self->uid, self);
@@ -298,6 +303,8 @@ gcal_event_update_uid_internal (GcalEvent *self)
       g_debug ("Adding %s to the cache", self->uid);
       g_hash_table_insert (event_cache, self->uid, self);
     }
+
+  G_UNLOCK (event_cache_lock);
 
   e_cal_component_id_free (id);
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_UID]);
@@ -495,7 +502,9 @@ gcal_event_finalize (GObject *object)
 
   g_debug ("Removing '%s' (%p) from cache", self->uid, self);
 
+  G_LOCK (event_cache_lock);
   g_hash_table_remove (event_cache, self->uid);
+  G_UNLOCK (event_cache_lock);
 
   g_clear_pointer (&self->dt_start, g_date_time_unref);
   g_clear_pointer (&self->dt_end, g_date_time_unref);
@@ -820,10 +829,17 @@ gcal_event_new (GcalCalendar   *calendar,
 {
   GcalEvent *event;
   g_autofree gchar *uuid;
+  gboolean event_cached;
+
+  G_LOCK (main_lock);
 
   uuid = get_uuid_from_component (gcal_calendar_get_source (calendar), component);
 
-  if (g_hash_table_contains (event_cache, uuid))
+  G_LOCK (event_cache_lock);
+  event_cached = g_hash_table_contains (event_cache, uuid);
+  G_UNLOCK (event_cache_lock);
+
+  if (event_cached)
     {
       g_debug ("Using cached value for %s", uuid);
 
@@ -843,9 +859,14 @@ gcal_event_new (GcalCalendar   *calendar,
       if (event)
         {
           g_debug ("Adding %s to the cache", event->uid);
+
+          G_LOCK (event_cache_lock);
           g_hash_table_insert (event_cache, event->uid, event);
+          G_UNLOCK (event_cache_lock);
         }
     }
+
+  G_UNLOCK (main_lock);
 
   return event;
 }
