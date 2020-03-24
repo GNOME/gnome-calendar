@@ -473,6 +473,27 @@ count_entries_at_range (GDateTime *start,
 
   return GCAL_TRAVERSE_CONTINUE;
 }
+
+static inline gboolean
+remove_data_func (GDateTime *start,
+                  GDateTime *end,
+                  gpointer   data,
+                  gpointer   user_data)
+{
+  struct {
+    GcalRangeTree *range_tree;
+    gpointer      *data;
+  } *remove_data = user_data;
+
+  if (remove_data->data == data)
+    {
+      gcal_range_tree_remove_range (remove_data->range_tree, start, end, data);
+      return GCAL_TRAVERSE_STOP;
+    }
+
+  return GCAL_TRAVERSE_CONTINUE;
+}
+
 static void
 gcal_range_tree_free (GcalRangeTree *self)
 {
@@ -628,6 +649,27 @@ gcal_range_tree_remove_range (GcalRangeTree *self,
   g_return_if_fail (g_date_time_compare (end, start) >= 0);
 
   self->root = remove_node (self->root, start, end, data);
+}
+
+/**
+ * gcal_range_tree_remove_data:
+ * @self: a #GcalRangeTree
+ * @data: user data
+ *
+ * Removes the first instance of @data found in the range tree.
+ */
+void
+gcal_range_tree_remove_data (GcalRangeTree *self,
+                             gpointer       data)
+{
+  struct {
+    GcalRangeTree *range_tree;
+    gpointer      *data;
+  } remove_data = { self, data };
+
+  g_return_if_fail (self);
+
+  gcal_range_tree_traverse (self, G_IN_ORDER, remove_data_func, &remove_data);
 }
 
 /**

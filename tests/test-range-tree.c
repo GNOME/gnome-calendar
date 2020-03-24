@@ -138,6 +138,46 @@ range_tree_smaller_range (void)
 
 /*********************************************************************************************************************/
 
+static void
+range_tree_remove_data (void)
+{
+  g_autoptr (GcalRangeTree) range_tree = NULL;
+  g_autoptr (GDateTime) start = NULL;
+  g_autoptr (GDateTime) end = NULL;
+
+  range_tree = gcal_range_tree_new ();
+  g_assert_nonnull (range_tree);
+
+  start = g_date_time_new_local (2020, 3, 17, 9, 30, 0);
+  end = g_date_time_add_hours (start, 1);
+
+  gcal_range_tree_add_range (range_tree, start, end, (gpointer) 0xdeadbeef);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 1);
+
+  gcal_range_tree_add_range (range_tree, start, end, (gpointer) 0xdeadbeef);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 2);
+
+  gcal_range_tree_add_range (range_tree, start, end, (gpointer) 0xbadcafe);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 3);
+
+  /* Remove the 2 deadbeefs */
+  gcal_range_tree_remove_data (range_tree, (gpointer) 0xdeadbeef);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 2);
+
+  gcal_range_tree_remove_data (range_tree, (gpointer) 0xdeadbeef);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 1);
+
+  /* Try again */
+  gcal_range_tree_remove_data (range_tree, (gpointer) 0xdeadbeef);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 1);
+
+  /* Remove bad cafe */
+  gcal_range_tree_remove_data (range_tree, (gpointer) 0xbadcafe);
+  g_assert_cmpint (gcal_range_tree_count_entries_at_range (range_tree, start, end), ==, 0);
+}
+
+/*********************************************************************************************************************/
+
 gint
 main (gint   argc,
       gchar *argv[])
@@ -150,6 +190,7 @@ main (gint   argc,
   g_test_add_func ("/range-tree/insert", range_tree_insert);
   g_test_add_func ("/range-tree/traverse", range_tree_traverse);
   g_test_add_func ("/range-tree/smaller-range", range_tree_smaller_range);
+  g_test_add_func ("/range-tree/remove-data", range_tree_remove_data);
 
   return g_test_run ();
 }
