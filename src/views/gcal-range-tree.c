@@ -58,6 +58,7 @@ struct _GcalRangeTree
 {
   guint               ref_count;
 
+  GDestroyNotify      destroy_func;
   Node               *root;
 };
 
@@ -153,9 +154,10 @@ is_interval_higher (Node      *n,
 }
 
 static Node*
-node_new (GDateTime *start,
-          GDateTime *end,
-          gpointer   data)
+node_new (GDateTime      *start,
+          GDateTime      *end,
+          gpointer        data,
+          GDestroyNotify  destroy_func)
 {
   Node *n;
 
@@ -166,7 +168,7 @@ node_new (GDateTime *start,
   n->height = 1;
   n->hits = 1;
 
-  n->data_array = g_ptr_array_new ();
+  n->data_array = g_ptr_array_new_with_free_func (destroy_func);
   g_ptr_array_add (n->data_array, data);
 
   return n;
@@ -243,22 +245,23 @@ rebalance (Node *n)
 }
 
 static Node*
-insert (Node      *n,
-        GDateTime *start,
-        GDateTime *end,
-        gpointer   data)
+insert (Node           *n,
+        GDateTime      *start,
+        GDateTime      *end,
+        gpointer        data,
+        GDestroyNotify  destroy_func)
 {
   gint result;
 
   if (!n)
-    return node_new (start, end, data);
+    return node_new (start, end, data, destroy_func);
 
   result = compare_intervals (n->start, n->end, start, end);
 
   if (result < 0)
-    n->left = insert (n->left, start, end, data);
+    n->left = insert (n->left, start, end, data, destroy_func);
   else if (result > 0)
-    n->right = insert (n->right, start, end, data);
+    n->right = insert (n->right, start, end, data, destroy_func);
   else
     return hit_node (n, data);
 
@@ -501,6 +504,28 @@ gcal_range_tree_new (void)
 }
 
 /**
+ * gcal_range_tree_new_with_free_func:
+ * @destroy_func: (nullable): a function to free elements with
+ *
+ * Creates a new range tree with @destroy_func as the function to
+ * destroy elements when removing them.
+ *
+ * Returns: (transfer full): a newly created #GcalRangeTree.
+ * Free with gcal_range_tree_unref() when done.
+ */
+GcalRangeTree*
+gcal_range_tree_new_with_free_func (GDestroyNotify destroy_func)
+{
+  GcalRangeTree *self;
+
+  self = g_slice_new0 (GcalRangeTree);
+  self->ref_count = 1;
+  self->destroy_func = destroy_func;
+
+  return self;
+}
+
+/**
  * gcal_range_tree_copy:
  * @self: a #GcalRangeTree
  *
@@ -580,7 +605,7 @@ gcal_range_tree_add_range (GcalRangeTree *self,
   g_return_if_fail (end && start);
   g_return_if_fail (g_date_time_compare (end, start) >= 0);
 
-  self->root = insert (self->root, start, end, data);
+  self->root = insert (self->root, start, end, data, self->destroy_func);
 }
 
 /**

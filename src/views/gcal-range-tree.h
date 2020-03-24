@@ -50,6 +50,8 @@ GType                gcal_range_tree_get_type                    (void) G_GNUC_C
 
 GcalRangeTree*       gcal_range_tree_new                         (void);
 
+GcalRangeTree*       gcal_range_tree_new_with_free_func          (GDestroyNotify      destroy_func);
+
 GcalRangeTree*       gcal_range_tree_copy                        (GcalRangeTree      *self);
 
 GcalRangeTree*       gcal_range_tree_ref                         (GcalRangeTree      *self);
