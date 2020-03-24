@@ -31,6 +31,7 @@ typedef struct
   ECalClient         *client;
 
   gboolean            read_only;
+  gboolean            visible;
 
   gulong              color_changed_handler_id;
   gulong              name_changed_handler_id;
@@ -132,6 +133,16 @@ on_source_visible_changed_cb (ESourceSelectable *source,
                               GParamSpec        *pspec,
                               GcalCalendar      *self)
 {
+  GcalCalendarPrivate *priv;
+  gboolean visible;
+
+  priv = gcal_calendar_get_instance_private (self);
+  visible = e_source_selectable_get_selected (source);
+
+  if (visible == priv->visible)
+    return;
+
+  priv->visible = visible;
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_VISIBLE]);
 }
 
@@ -169,6 +180,7 @@ gcal_calendar_initable_init (GInitable     *initable,
     }
 
   selectable_extension = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR);
+  priv->visible = e_source_selectable_get_selected (selectable_extension);
 
   update_color (self);
   priv->color_changed_handler_id = g_signal_connect (selectable_extension,
@@ -641,6 +653,9 @@ gcal_calendar_set_visible (GcalCalendar *self,
   ESourceSelectable *selectable_extension;
 
   g_return_if_fail (GCAL_IS_CALENDAR (self));
+
+  if (priv->visible == visible)
+    return;
 
   selectable_extension = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR);
   e_source_selectable_set_selected (selectable_extension, visible);
