@@ -68,6 +68,9 @@ void                 gcal_range_tree_remove_range                (GcalRangeTree 
                                                                   GDateTime          *end,
                                                                   gpointer            data);
 
+void                 gcal_range_tree_remove_data                 (GcalRangeTree      *self,
+                                                                  gpointer            data);
+
 void                 gcal_range_tree_traverse                    (GcalRangeTree      *self,
                                                                   GTraverseType       type,
                                                                   GcalRangeTraverseFunc func,
