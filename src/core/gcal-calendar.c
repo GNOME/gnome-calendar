@@ -355,43 +355,43 @@ gcal_calendar_class_init (GcalCalendarClass *klass)
                                                  "Calendar client",
                                                  "Calendar client",
                                                  E_TYPE_CAL_CLIENT,
-                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+                                                 G_PARAM_READABLE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
   properties[PROP_COLOR] = g_param_spec_boxed ("color",
                                                "Color",
                                                "Color of the calendar",
                                                GDK_TYPE_RGBA,
-                                               G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                                               G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
   properties[PROP_ID] = g_param_spec_string ("id",
                                              "Identifier",
                                              "Unique identifier of the calendar",
                                              NULL,
-                                             G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                                             G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
   properties[PROP_NAME] = g_param_spec_string ("name",
                                                "Name",
                                                "Name of the calendar",
                                                NULL,
-                                               G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                                               G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
   properties[PROP_READ_ONLY] = g_param_spec_boolean ("read-only",
                                                      "Read-only",
                                                      "Whether the calendar is read-only or not",
                                                      FALSE,
-                                                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+                                                     G_PARAM_READABLE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
   properties[PROP_SOURCE] = g_param_spec_object ("source",
                                                  "Source",
                                                  "Source",
                                                  E_TYPE_SOURCE,
-                                                 G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+                                                 G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
   properties[PROP_VISIBLE] = g_param_spec_boolean ("visible",
                                                    "Visible",
                                                    "Whether the calendar is visible",
                                                    FALSE,
-                                                   G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+                                                   G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 }
