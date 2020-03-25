@@ -134,40 +134,6 @@ enum {
 
 static GParamSpec* properties[N_PROPS] = { NULL, };
 
-
-/*
- * GcalEvent cache
- */
-
-G_LOCK_DEFINE (main_lock);
-G_LOCK_DEFINE (event_cache_lock);
-
-static GHashTable *event_cache = NULL;
-
-G_DEFINE_CONSTRUCTOR (init_event_cache_map);
-
-static void
-init_event_cache_map (void)
-{
-  event_cache = g_hash_table_new_full (g_str_hash, g_str_equal, NULL, NULL);
-}
-
-G_DEFINE_DESTRUCTOR (destroy_event_cache_map);
-
-static void
-destroy_event_cache_map (void)
-{
-  GList *events;
-
-  g_debug ("Number of cached events at destruction: %d", g_hash_table_size (event_cache));
-
-  /* Destroy all events */
-  events = g_hash_table_get_values (event_cache);
-  g_list_free_full (events, g_object_unref);
-
-  g_hash_table_destroy (event_cache);
-}
-
 /*
  * Auxiliary methods
  */
@@ -267,22 +233,10 @@ gcal_event_update_uid_internal (GcalEvent *self)
 {
   ECalComponentId *id;
   const gchar *source_id;
-  gboolean should_update_cache;
 
   /* Setup event uid */
   source_id = self->calendar ? gcal_calendar_get_id (self->calendar) : "";
   id = e_cal_component_get_id (self->component);
-
-  should_update_cache = self->uid != NULL;
-
-  G_LOCK (event_cache_lock);
-
-  if (should_update_cache)
-    {
-      g_debug ("Removing '%s' (%p) from cache", self->uid, self);
-      g_hash_table_remove (event_cache, self->uid);
-      g_clear_pointer (&self->uid, g_free);
-    }
 
   if (e_cal_component_id_get_rid (id) != NULL)
     {
@@ -297,14 +251,6 @@ gcal_event_update_uid_internal (GcalEvent *self)
                                    source_id,
                                    e_cal_component_id_get_uid (id));
     }
-
-  if (should_update_cache)
-    {
-      g_debug ("Adding %s to the cache", self->uid);
-      g_hash_table_insert (event_cache, self->uid, self);
-    }
-
-  G_UNLOCK (event_cache_lock);
 
   e_cal_component_id_free (id);
   g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_UID]);
@@ -343,125 +289,124 @@ static void
 gcal_event_set_component_internal (GcalEvent     *self,
                                    ECalComponent *component)
 {
-  if (g_set_object (&self->component, component))
+  g_autoptr (GTimeZone) zone_start = NULL;
+  g_autoptr (GTimeZone) zone_end = NULL;
+  ECalComponentDateTime *start;
+  ECalComponentDateTime *end;
+  ECalComponentText *text;
+  ICalTime *date;
+  GDateTime *date_start;
+  GDateTime *date_end;
+  gboolean start_is_all_day, end_is_all_day;
+  gchar *description, *location;
+
+  g_assert (self->component == NULL);
+
+  self->component = e_cal_component_clone (component);
+
+  /* Setup start date */
+  start = e_cal_component_get_dtstart (component);
+
+  /*
+   * A NULL start date is invalid. We set something bogus to proceed, and make
+   * it set a GError and return NULL.
+   */
+  if (!start || !e_cal_component_datetime_get_value (start))
     {
-      ECalComponentDateTime *start;
-      ECalComponentDateTime *end;
-      ECalComponentText *text;
-      ICalTime *date;
-      GDateTime *date_start;
-      GTimeZone *zone_start = NULL;
-      GDateTime *date_end;
-      GTimeZone *zone_end = NULL;
-      gboolean start_is_all_day, end_is_all_day;
-      gchar *description, *location;
+      self->is_valid = FALSE;
+      g_set_error (&self->initialization_error,
+                   GCAL_EVENT_ERROR,
+                   GCAL_EVENT_ERROR_INVALID_START_DATE,
+                   "Event '%s' has an invalid start date", gcal_event_get_uid (self));
 
-      /* Setup start date */
-      start = e_cal_component_get_dtstart (component);
+      e_cal_component_datetime_free (start);
+      start = e_cal_component_datetime_new_take (i_cal_time_new_today (), NULL);
+    }
 
-      /*
-       * A NULL start date is invalid. We set something bogus to proceed, and make
-       * it set a GError and return NULL.
-       */
-      if (!start || !e_cal_component_datetime_get_value (start))
-        {
-          self->is_valid = FALSE;
-          g_set_error (&self->initialization_error,
-                       GCAL_EVENT_ERROR,
-                       GCAL_EVENT_ERROR_INVALID_START_DATE,
-                       "Event '%s' has an invalid start date", gcal_event_get_uid (self));
+  GCAL_TRACE_MSG ("Retrieving start timezone");
 
-          e_cal_component_datetime_free (start);
-          start = e_cal_component_datetime_new_take (i_cal_time_new_today (), NULL);
-        }
+  date = i_cal_time_normalize (e_cal_component_datetime_get_value (start));
+  zone_start = get_timezone_from_ical (start);
+  date_start = g_date_time_new (zone_start,
+                                i_cal_time_get_year (date),
+                                i_cal_time_get_month (date),
+                                i_cal_time_get_day (date),
+                                i_cal_time_is_date (date) ? 0 : i_cal_time_get_hour (date),
+                                i_cal_time_is_date (date) ? 0 : i_cal_time_get_minute (date),
+                                i_cal_time_is_date (date) ? 0 : i_cal_time_get_second (date));
+  start_is_all_day = gcal_date_time_is_date (date_start);
 
-      GCAL_TRACE_MSG ("Retrieving start timezone");
+  self->dt_start = date_start;
 
-      date = i_cal_time_normalize (e_cal_component_datetime_get_value (start));
-      zone_start = get_timezone_from_ical (start);
-      date_start = g_date_time_new (zone_start,
-                                    i_cal_time_get_year (date),
-                                    i_cal_time_get_month (date),
-                                    i_cal_time_get_day (date),
-                                    i_cal_time_is_date (date) ? 0 : i_cal_time_get_hour (date),
-                                    i_cal_time_is_date (date) ? 0 : i_cal_time_get_minute (date),
-                                    i_cal_time_is_date (date) ? 0 : i_cal_time_get_second (date));
-      start_is_all_day = gcal_date_time_is_date (date_start);
+  g_clear_object (&date);
 
-      self->dt_start = date_start;
+  /* Setup end date */
+  end = e_cal_component_get_dtend (component);
+
+  if (!end || !e_cal_component_datetime_get_value (end))
+    {
+      self->all_day = TRUE;
+    }
+  else
+    {
+      GCAL_TRACE_MSG ("Retrieving end timezone");
+
+      date = i_cal_time_normalize (e_cal_component_datetime_get_value (end));
+      zone_end = get_timezone_from_ical (end);
+      date_end = g_date_time_new (zone_end,
+                                  i_cal_time_get_year (date),
+                                  i_cal_time_get_month (date),
+                                  i_cal_time_get_day (date),
+                                  i_cal_time_is_date (date) ? 0 : i_cal_time_get_hour (date),
+                                  i_cal_time_is_date (date) ? 0 : i_cal_time_get_minute (date),
+                                  i_cal_time_is_date (date) ? 0 : i_cal_time_get_second (date));
+      end_is_all_day = gcal_date_time_is_date (date_end);
+
+      self->dt_end = g_date_time_ref (date_end);
+
+      /* Setup all day */
+      self->all_day = start_is_all_day && end_is_all_day;
 
       g_clear_object (&date);
-
-      /* Setup end date */
-      end = e_cal_component_get_dtend (component);
-
-      if (!end || !e_cal_component_datetime_get_value (end))
-        {
-          self->all_day = TRUE;
-        }
-      else
-        {
-          GCAL_TRACE_MSG ("Retrieving end timezone");
-
-          date = i_cal_time_normalize (e_cal_component_datetime_get_value (end));
-          zone_end = get_timezone_from_ical (end);
-          date_end = g_date_time_new (zone_end,
-                                      i_cal_time_get_year (date),
-                                      i_cal_time_get_month (date),
-                                      i_cal_time_get_day (date),
-                                      i_cal_time_is_date (date) ? 0 : i_cal_time_get_hour (date),
-                                      i_cal_time_is_date (date) ? 0 : i_cal_time_get_minute (date),
-                                      i_cal_time_is_date (date) ? 0 : i_cal_time_get_second (date));
-          end_is_all_day = gcal_date_time_is_date (date_end);
-
-          self->dt_end = g_date_time_ref (date_end);
-
-          /* Setup all day */
-          self->all_day = start_is_all_day && end_is_all_day;
-
-          g_clear_object (&date);
-        }
-
-      /* Summary */
-      text = e_cal_component_get_summary (component);
-      if (text && e_cal_component_text_get_value (text))
-        gcal_event_set_summary (self, e_cal_component_text_get_value (text));
-      else
-        gcal_event_set_summary (self, "");
-
-      /* Location */
-      location = e_cal_component_get_location (component);
-      gcal_event_set_location (self, location ? location : "");
-
-      /* Setup description */
-      description = get_desc_from_component (component, "\n\n");
-      gcal_event_set_description (self, description);
-
-      /* Setup UID */
-      gcal_event_update_uid_internal (self);
-
-      /* Set has-recurrence to check if the component has recurrence or not */
-      self->has_recurrence = e_cal_component_has_recurrences(component);
-
-      /* Load the recurrence-rules in GcalRecurrence struct */
-      self->recurrence = gcal_recurrence_parse_recurrence_rules (component);
-
-      /* Load and setup the alarms */
-      load_alarms (self);
-
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_HAS_RECURRENCE]);
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_RECURRENCE]);
-      g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPONENT]);
-
-      g_clear_pointer (&zone_start, g_time_zone_unref);
-      g_clear_pointer (&zone_end, g_time_zone_unref);
-      g_clear_pointer (&description, g_free);
-      g_clear_pointer (&location, g_free);
-
-      e_cal_component_text_free (text);
-      e_cal_component_datetime_free (start);
-      e_cal_component_datetime_free (end);
     }
+
+  /* Summary */
+  text = e_cal_component_get_summary (component);
+  if (text && e_cal_component_text_get_value (text))
+    gcal_event_set_summary (self, e_cal_component_text_get_value (text));
+  else
+    gcal_event_set_summary (self, "");
+
+  /* Location */
+  location = e_cal_component_get_location (component);
+  gcal_event_set_location (self, location ? location : "");
+
+  /* Setup description */
+  description = get_desc_from_component (component, "\n\n");
+  gcal_event_set_description (self, description);
+
+  /* Setup UID */
+  gcal_event_update_uid_internal (self);
+
+  /* Set has-recurrence to check if the component has recurrence or not */
+  self->has_recurrence = e_cal_component_has_recurrences(component);
+
+  /* Load the recurrence-rules in GcalRecurrence struct */
+  self->recurrence = gcal_recurrence_parse_recurrence_rules (component);
+
+  /* Load and setup the alarms */
+  load_alarms (self);
+
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_HAS_RECURRENCE]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_RECURRENCE]);
+  g_object_notify_by_pspec (G_OBJECT (self), properties[PROP_COMPONENT]);
+
+  g_clear_pointer (&description, g_free);
+  g_clear_pointer (&location, g_free);
+
+  e_cal_component_text_free (text);
+  e_cal_component_datetime_free (start);
+  e_cal_component_datetime_free (end);
 }
 
 /*
@@ -499,12 +444,6 @@ static void
 gcal_event_finalize (GObject *object)
 {
   GcalEvent *self = (GcalEvent *)object;
-
-  g_debug ("Removing '%s' (%p) from cache", self->uid, self);
-
-  G_LOCK (event_cache_lock);
-  g_hash_table_remove (event_cache, self->uid);
-  G_UNLOCK (event_cache_lock);
 
   g_clear_pointer (&self->dt_start, g_date_time_unref);
   g_clear_pointer (&self->dt_end, g_date_time_unref);
@@ -827,48 +766,12 @@ gcal_event_new (GcalCalendar   *calendar,
                 ECalComponent  *component,
                 GError        **error)
 {
-  GcalEvent *event;
-  g_autofree gchar *uuid;
-  gboolean event_cached;
-
-  G_LOCK (main_lock);
-
-  uuid = get_uuid_from_component (gcal_calendar_get_source (calendar), component);
-
-  G_LOCK (event_cache_lock);
-  event_cached = g_hash_table_contains (event_cache, uuid);
-  G_UNLOCK (event_cache_lock);
-
-  if (event_cached)
-    {
-      g_debug ("Using cached value for %s", uuid);
-
-      event = g_hash_table_lookup (event_cache, uuid);
-      gcal_event_set_component_internal (event, component);
-      g_object_ref (event);
-    }
-  else
-    {
-      event = g_initable_new (GCAL_TYPE_EVENT,
-                              NULL,
-                              error,
-                              "calendar", calendar,
-                              "component", component,
-                              NULL);
-
-      if (event)
-        {
-          g_debug ("Adding %s to the cache", event->uid);
-
-          G_LOCK (event_cache_lock);
-          g_hash_table_insert (event_cache, event->uid, event);
-          G_UNLOCK (event_cache_lock);
-        }
-    }
-
-  G_UNLOCK (main_lock);
-
-  return event;
+  return g_initable_new (GCAL_TYPE_EVENT,
+                         NULL,
+                         error,
+                         "calendar", calendar,
+                         "component", component,
+                         NULL);
 }
 
 /**
