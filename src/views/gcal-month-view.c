@@ -2170,6 +2170,7 @@ gcal_month_view_set_property (GObject       *object,
                                self,
                                0);
       update_weather (self, TRUE);
+      g_object_notify (object, "context");
       break;
 
     default:
