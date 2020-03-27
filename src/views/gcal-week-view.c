@@ -62,8 +62,6 @@ static void          schedule_position_scroll                    (GcalWeekView  
 
 static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
 
-static void          gcal_data_model_subscriber_interface_init   (ECalDataModelSubscriberInterface *iface);
-
 static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSubscriberInterface *iface);
 
 enum
@@ -77,8 +75,6 @@ enum
 
 G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
-                         G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
-                                                gcal_data_model_subscriber_interface_init)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
                                                 gcal_timeline_subscriber_interface_init));
 
@@ -420,90 +416,6 @@ gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
   iface->remove_event = gcal_week_view_remove_event;
 }
 
-
-/* ECalDataModelSubscriber implementation */
-static void
-gcal_week_view_component_added (ECalDataModelSubscriber *subscriber,
-                                ECalClient              *client,
-                                ECalComponent           *comp)
-{
-  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
-  g_autoptr (GcalEvent) event = NULL;
-  GcalCalendar *calendar;
-
-  GCAL_ENTRY;
-
-  calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (self->context),
-                                                    e_client_get_source (E_CLIENT (client)));
-  event = gcal_event_new (calendar, comp, NULL);
-
-  gcal_week_view_add_event (GCAL_TIMELINE_SUBSCRIBER (subscriber), event);
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_week_view_component_modified (ECalDataModelSubscriber *subscriber,
-                                   ECalClient              *client,
-                                   ECalComponent           *comp)
-{
-  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
-  GcalWeekHeader *header;
-  gchar *uuid;
-
-  GCAL_ENTRY;
-
-  header = GCAL_WEEK_HEADER (self->header);
-
-  uuid = get_uuid_from_component (e_client_get_source (E_CLIENT (client)), comp);
-
-  gcal_week_header_remove_event (header, uuid);
-  gcal_week_grid_remove_event (GCAL_WEEK_GRID (self->week_grid), uuid);
-
-  gcal_week_view_component_added (subscriber, client, comp);
-
-  g_free (uuid);
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_week_view_component_removed (ECalDataModelSubscriber *subscriber,
-                                  ECalClient              *client,
-                                  const gchar             *uid,
-                                  const gchar             *rid)
-{
-  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
-  ESource *source;
-  gchar *uuid;
-
-  GCAL_ENTRY;
-
-  source = e_client_get_source (E_CLIENT (client));
-
-  if (rid != NULL)
-    uuid = g_strdup_printf ("%s:%s:%s", e_source_get_uid (source), uid, rid);
-  else
-    uuid = g_strdup_printf ("%s:%s", e_source_get_uid (source), uid);
-
-  gcal_week_header_remove_event (GCAL_WEEK_HEADER (self->header), uuid);
-  gcal_week_grid_remove_event (GCAL_WEEK_GRID (self->week_grid), uuid);
-
-  g_free (uuid);
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_week_view_freeze (ECalDataModelSubscriber *subscriber)
-{
-}
-
-static void
-gcal_week_view_thaw (ECalDataModelSubscriber *subscriber)
-{
-}
-
 static gboolean
 gcal_week_view_draw_hours (GcalWeekView *self,
                            cairo_t      *cr,
@@ -611,16 +523,6 @@ gcal_week_view_draw_hours (GcalWeekView *self,
   g_object_unref (layout);
 
   return FALSE;
-}
-
-static void
-gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
-{
-  iface->component_added = gcal_week_view_component_added;
-  iface->component_modified = gcal_week_view_component_modified;
-  iface->component_removed = gcal_week_view_component_removed;
-  iface->freeze = gcal_week_view_freeze;
-  iface->thaw = gcal_week_view_thaw;
 }
 
 static void
