@@ -4,7 +4,6 @@ gcal_deps = [
   gsettings_desktop_schemas_dep,
   libedataserverui_dep,
   libedataserver_dep,
-  libevolution_dep,
   libecal_dep,
   libdazzle_dep,
   libsoup_dep,
@@ -84,9 +83,6 @@ calendar_incs = [
   include_directories('weather'),
 ]
 
-calendar_incs += contrib_incs
-
-
 ###################
 # Private library #
 ###################
@@ -130,7 +126,6 @@ sources = files(
   'search/gcal-search-model.c',
   'utils/gcal-date-time-utils.c',
   'utils/gcal-source-discoverer.c',
-  'utils/gcal-thread-utils.c',
   'utils/gcal-utils.c',
   'views/gcal-month-cell.c',
   'views/gcal-month-popover.c',
