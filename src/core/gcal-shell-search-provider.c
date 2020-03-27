@@ -24,6 +24,8 @@
 #include "gcal-application.h"
 #include "gcal-debug.h"
 #include "gcal-event.h"
+#include "gcal-timeline.h"
+#include "gcal-timeline-subscriber.h"
 #include "gcal-window.h"
 #include "gcal-utils.h"
 
@@ -42,12 +44,17 @@ struct _GcalShellSearchProvider
 
   PendingSearch      *pending_search;
   GHashTable         *events;
+
+  GDateTime          *range_start;
+  GDateTime          *range_end;
+  GcalTimeline       *timeline;
 };
 
-static void   gcal_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
+static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSubscriberInterface *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GcalShellSearchProvider, gcal_shell_search_provider, G_TYPE_OBJECT,
-                         G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER, gcal_subscriber_interface_init));
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
+                                                gcal_timeline_subscriber_interface_init));
 
 enum
 {
@@ -71,48 +78,65 @@ sort_event_data (GcalEvent *a,
   return gcal_event_compare_with_current (a, b, GPOINTER_TO_INT (user_data));
 }
 
-static gboolean
-execute_search (GcalShellSearchProvider *self)
+static void
+maybe_update_range (GcalShellSearchProvider *self)
 {
   g_autoptr (GDateTime) start = NULL;
   g_autoptr (GDateTime) end = NULL;
   g_autoptr (GDateTime) now = NULL;
+  gboolean range_changed = FALSE;
+
+  GCAL_ENTRY;
+
+  now = g_date_time_new_now (gcal_context_get_timezone (self->context));
+  start = g_date_time_add_weeks (now, -1);
+  end = g_date_time_add_weeks (now, 3);
+
+  if (self->range_start && gcal_date_time_compare_date (self->range_start, start) != 0)
+    {
+      gcal_set_date_time (&self->range_start, start);
+      range_changed = TRUE;
+    }
+
+  if (self->range_end && gcal_date_time_compare_date (self->range_end, end) != 0)
+    {
+      gcal_set_date_time (&self->range_end, end);
+      range_changed = TRUE;
+    }
+
+  if (range_changed)
+    gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (self));
+}
+
+static gboolean
+execute_search (GcalShellSearchProvider *self)
+{
   g_autofree gchar *search_query = NULL;
-  GcalManager *manager;
-  time_t range_start, range_end;
   guint i;
 
   GCAL_ENTRY;
 
-  manager = gcal_context_get_manager (self->context);
-
-  now = g_date_time_new_now (gcal_context_get_timezone (self->context));
-  start = g_date_time_add_weeks (now, -1);
-  range_start = g_date_time_to_unix (start);
-
-  end = g_date_time_add_weeks (now, 3);
-  range_end = g_date_time_to_unix (end);
-
-  gcal_manager_set_shell_search_subscriber (manager,
-                                            E_CAL_DATA_MODEL_SUBSCRIBER (self),
-                                            range_start, range_end);
+  maybe_update_range (self);
 
   search_query = g_strdup_printf ("(or (contains? \"summary\" \"%s\") (contains? \"description\" \"%s\"))",
-                                  self->pending_search->terms[0], self->pending_search->terms[0]);
+                                  self->pending_search->terms[0],
+                                  self->pending_search->terms[0]);
+
   for (i = 1; i < g_strv_length (self->pending_search->terms); i++)
     {
       g_autofree gchar *complete_query = NULL;
       g_autofree gchar *second_query = NULL;
 
       second_query = g_strdup_printf ("(or (contains? \"summary\" \"%s\") (contains? \"description\" \"%s\"))",
-                                      self->pending_search->terms[0], self->pending_search->terms[0]);
+                                      self->pending_search->terms[0],
+                                      self->pending_search->terms[0]);
       complete_query = g_strdup_printf ("(and %s %s)", search_query, second_query);
 
       g_clear_pointer (&search_query, g_free);
       search_query = g_steal_pointer (&complete_query);
     }
 
-  gcal_manager_set_shell_search_query (manager,  search_query);
+  gcal_timeline_set_filter (self->timeline,  search_query);
   g_application_hold (g_application_get_default ());
 
   GCAL_RETURN (FALSE);
@@ -240,15 +264,13 @@ activate_result_cb (GcalShellSearchProvider  *self,
 {
   g_autoptr (GcalEvent) event = NULL;
   GApplication *application;
-  GcalManager *manager;
   GDateTime *dtstart;
 
   GCAL_ENTRY;
 
   application = g_application_get_default ();
 
-  manager = gcal_context_get_manager (self->context);
-  event = gcal_manager_get_event_from_shell_search (manager, result);
+  event = g_hash_table_lookup (self->events, result);
   dtstart = gcal_event_get_date_start (event);
 
   gcal_application_set_uuid (GCAL_APPLICATION (application), result);
@@ -283,20 +305,23 @@ launch_search_cb (GcalShellSearchProvider  *self,
   GCAL_RETURN (TRUE);
 }
 
-static gboolean
-query_completed_cb (GcalShellSearchProvider *self,
-                    GcalManager             *manager)
+static void
+on_timeline_completed_cb (GcalTimeline            *timeline,
+                          GParamSpec              *pspec,
+                          GcalShellSearchProvider *self)
 {
   GVariantBuilder builder;
-  GList *events, *l;
+  g_autoptr (GList) events = NULL;
+  GList *l;
   time_t current_time_t;
 
   GCAL_ENTRY;
 
-  g_hash_table_remove_all (self->events);
+  if (!gcal_timeline_is_complete (timeline))
+    GCAL_RETURN ();
 
-  events = gcal_manager_get_shell_search_events (manager);
-  if (events == NULL)
+  events = g_hash_table_get_values (self->events);
+  if (!events)
     {
       g_dbus_method_invocation_return_value (self->pending_search->invocation, g_variant_new ("(as)", NULL));
       GCAL_GOTO (out);
@@ -319,7 +344,6 @@ query_completed_cb (GcalShellSearchProvider *self,
 
       g_hash_table_insert (self->events, g_strdup (uid), l->data);
     }
-  g_list_free (events);
 
   g_dbus_method_invocation_return_value (self->pending_search->invocation, g_variant_new ("(as)", &builder));
 
@@ -329,51 +353,95 @@ out:
   g_clear_pointer (&self->pending_search, g_free);
   g_application_release (g_application_get_default ());
 
-  GCAL_RETURN (FALSE);
+  GCAL_EXIT;
 }
 
+static void
+on_manager_calendar_added_cb (GcalManager             *manager,
+                              GcalCalendar            *calendar,
+                              GcalShellSearchProvider *self)
+{
+  GCAL_ENTRY;
+
+  gcal_timeline_add_calendar (self->timeline, calendar);
+
+  GCAL_EXIT;
+}
+
+static void
+on_manager_calendar_removed_cb (GcalManager             *manager,
+                                GcalCalendar            *calendar,
+                                GcalShellSearchProvider *self)
+{
+  GCAL_ENTRY;
+
+  gcal_timeline_remove_calendar (self->timeline, calendar);
+
+  GCAL_EXIT;
+}
 
 /*
- * ECalDataModelSubscriber iface
+ * GcalTimelineSubscriber iface
  */
 
-static void
-gcal_shell_search_provider_component_changed (ECalDataModelSubscriber *subscriber,
-                                              ECalClient              *client,
-                                              ECalComponent           *comp)
+static GDateTime*
+gcal_shell_search_provider_get_range_start (GcalTimelineSubscriber *subscriber)
 {
-  ;
+  GcalShellSearchProvider *self = GCAL_SHELL_SEARCH_PROVIDER (subscriber);
+
+  return g_date_time_ref (self->range_start);
+}
+
+static GDateTime*
+gcal_shell_search_provider_get_range_end (GcalTimelineSubscriber *subscriber)
+{
+  GcalShellSearchProvider *self = GCAL_SHELL_SEARCH_PROVIDER (subscriber);
+
+  return g_date_time_ref (self->range_end);
 }
 
 static void
-gcal_shell_search_provider_component_removed (ECalDataModelSubscriber *subscriber,
-                                              ECalClient              *client,
-                                              const gchar             *uid,
-                                              const gchar             *rid)
+gcal_shell_search_provider_add_event (GcalTimelineSubscriber *subscriber,
+                                      GcalEvent              *event)
 {
-  ;
+  GcalShellSearchProvider *self = GCAL_SHELL_SEARCH_PROVIDER (subscriber);
+
+  GCAL_ENTRY;
+
+  g_hash_table_insert (self->events,
+                       g_strdup (gcal_event_get_uid (event)),
+                       g_object_ref (event));
+
+  GCAL_EXIT;
 }
 
 static void
-gcal_shell_search_provider_freeze (ECalDataModelSubscriber *subscriber)
+gcal_shell_search_provider_update_event (GcalTimelineSubscriber *subscriber,
+                                         GcalEvent              *event)
 {
-  ;
 }
 
 static void
-gcal_shell_search_provider_thaw (ECalDataModelSubscriber *subscriber)
+gcal_shell_search_provider_remove_event (GcalTimelineSubscriber *subscriber,
+                                         GcalEvent              *event)
 {
-  ;
+  GcalShellSearchProvider *self = GCAL_SHELL_SEARCH_PROVIDER (subscriber);
+
+  GCAL_ENTRY;
+
+  g_hash_table_remove (self->events, gcal_event_get_uid (event));
+
+  GCAL_EXIT;
 }
 
 static void
-gcal_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
+gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
 {
-  iface->component_added = gcal_shell_search_provider_component_changed;
-  iface->component_modified = gcal_shell_search_provider_component_changed;
-  iface->component_removed = gcal_shell_search_provider_component_removed;
-  iface->freeze = gcal_shell_search_provider_freeze;
-  iface->thaw = gcal_shell_search_provider_thaw;
+  iface->get_range_start = gcal_shell_search_provider_get_range_start;
+  iface->get_range_end = gcal_shell_search_provider_get_range_end;
+  iface->add_event = gcal_shell_search_provider_add_event;
+  iface->update_event = gcal_shell_search_provider_update_event;
+  iface->remove_event = gcal_shell_search_provider_remove_event;
 }
 
 
@@ -423,15 +491,21 @@ gcal_shell_search_provider_set_property (GObject      *object,
   switch (property_id)
     {
     case PROP_CONTEXT:
-      if (g_set_object (&self->context, g_value_get_object (value)))
-        {
-          GcalManager *manager = gcal_context_get_manager (self->context);
+      {
+        GcalManager *manager;
 
-          gcal_manager_setup_shell_search (manager, E_CAL_DATA_MODEL_SUBSCRIBER (self));
-          g_signal_connect_object (manager, "query-completed", G_CALLBACK (query_completed_cb), self, G_CONNECT_SWAPPED);
+        g_assert (self->context == NULL);
+        self->context = g_value_get_object (value);
 
-          g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
-        }
+        self->timeline = gcal_timeline_new (self->context);
+        g_signal_connect (self->timeline, "notify::complete", G_CALLBACK (on_timeline_completed_cb), self);
+
+        manager = gcal_context_get_manager (self->context);
+        g_signal_connect (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), self);
+        g_signal_connect (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), self);
+
+        g_object_notify_by_pspec (object, properties[PROP_CONTEXT]);
+      }
       break;
 
     default:
@@ -452,7 +526,7 @@ gcal_shell_search_provider_class_init (GcalShellSearchProviderClass *klass)
                                                   "The context object",
                                                   "The context object",
                                                   GCAL_TYPE_CONTEXT,
-                                                  G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+                                                  G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 }

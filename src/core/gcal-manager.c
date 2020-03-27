@@ -47,28 +47,12 @@ typedef struct
 
 typedef struct
 {
-  ECalDataModelSubscriber *subscriber;
-  gchar              *query;
-
-  guint               sources_left;
-  gboolean            passed_start;
-  gboolean            search_done;
-} ViewStateData;
-
-typedef struct
-{
   gchar              *event_uid;
   GcalCalendar       *calendar;
   GcalCalendar       *new_calendar;
   ECalComponent      *new_component;
   GcalManager        *manager;
 } MoveEventData;
-
-typedef struct
-{
-  GcalManager        *manager;
-  GList              *events;
-} GatherEventData;
 
 struct _GcalManager
 {
@@ -83,9 +67,6 @@ struct _GcalManager
 
   ESourceRegistry    *source_registry;
   ECredentialsPrompter *credentials_prompter;
-
-  ECalDataModel      *shell_search_data_model;
-  ViewStateData      *search_view_data;
 
   GCancellable       *async_ops;
 
@@ -124,36 +105,6 @@ free_async_ops_data (AsyncOpsData *data)
 {
   g_object_unref (data->event);
   g_free (data);
-}
-
-static gboolean
-gather_events (ECalDataModel         *data_model,
-               ECalClient            *client,
-               const ECalComponentId *id,
-               ECalComponent         *comp,
-               time_t                 instance_start,
-               time_t                 instance_end,
-               gpointer               user_data)
-{
-  GatherEventData *data = user_data;
-  GcalCalendar *calendar;
-  GcalEvent *event;
-  GError *error;
-
-  error = NULL;
-  calendar = g_hash_table_lookup (data->manager->clients, e_client_get_source (E_CLIENT (client)));
-  event = gcal_event_new (calendar, comp, &error);
-
-  if (error)
-    {
-      g_warning ("Error: %s", error->message);
-      g_clear_error (&error);
-      return TRUE;
-    }
-
-  data->events = g_list_append (data->events, event);/* FIXME: add me sorted */
-
-  return TRUE;
 }
 
 static void
@@ -197,21 +148,6 @@ source_changed (GcalManager *self,
 
   if (!calendar)
     GCAL_RETURN ();
-
-  if (gcal_calendar_get_visible (calendar))
-    {
-      ECalClient *client = gcal_calendar_get_client (calendar);
-
-      if (self->shell_search_data_model)
-        e_cal_data_model_add_client (self->shell_search_data_model, client);
-    }
-  else
-    {
-      const gchar *id = gcal_calendar_get_id (calendar);
-
-      if (self->shell_search_data_model)
-        e_cal_data_model_remove_client (self->shell_search_data_model, id);
-    }
 
   g_signal_emit (self, signals[CALENDAR_CHANGED], 0, calendar);
 
@@ -285,12 +221,6 @@ on_calendar_created_cb (GObject      *source_object,
   g_hash_table_insert (self->clients, g_object_ref (source), calendar);
 
   gcal_timeline_add_calendar (self->timeline, calendar);
-
-  if (visible)
-    {
-      if (self->shell_search_data_model != NULL)
-        e_cal_data_model_add_client (self->shell_search_data_model, client);
-    }
 
   /* refresh client when it's added */
   if (visible && e_client_check_refresh_supported (E_CLIENT (client)))
@@ -465,45 +395,6 @@ on_event_removed (GObject      *source_object,
 }
 
 static void
-model_state_changed (GcalManager            *self,
-                     ECalClientView         *view,
-                     ECalDataModelViewState  state,
-                     guint                   percent,
-                     const gchar            *message,
-                     const GError           *error,
-                     ECalDataModel          *data_model)
-{
-  gchar *filter;
-
-  GCAL_ENTRY;
-
-  filter = e_cal_data_model_dup_filter (data_model);
-
-  if (state == E_CAL_DATA_MODEL_VIEW_STATE_START &&
-      g_strcmp0 (self->search_view_data->query, filter) == 0)
-    {
-      self->search_view_data->passed_start = TRUE;
-      GCAL_GOTO (out);
-    }
-
-  if (self->search_view_data->passed_start &&
-      state == E_CAL_DATA_MODEL_VIEW_STATE_COMPLETE &&
-      g_strcmp0 (self->search_view_data->query, filter) == 0)
-    {
-      self->search_view_data->sources_left--;
-      self->search_view_data->search_done = (self->search_view_data->sources_left == 0);
-
-      if (self->search_view_data->search_done)
-        g_signal_emit (self, signals[QUERY_COMPLETED], 0);
-    }
-
-out:
-  g_free (filter);
-
-  GCAL_EXIT;
-}
-
-static void
 show_source_error (const gchar  *where,
                    const gchar  *what,
                    ESource      *source,
@@ -653,18 +544,11 @@ gcal_manager_finalize (GObject *object)
   GCAL_ENTRY;
 
   g_clear_object (&self->timeline);
-  g_clear_object (&self->shell_search_data_model);
 
   if (self->context)
     {
       g_object_remove_weak_pointer (G_OBJECT (self->context), (gpointer *)&self->context);
       self->context = NULL;
-    }
-
-  if (self->search_view_data)
-    {
-      g_clear_pointer (&self->search_view_data->query, g_free);
-      g_clear_pointer (&self->search_view_data, g_free);
     }
 
   g_clear_pointer (&self->clients, g_hash_table_destroy);
@@ -901,137 +785,6 @@ gcal_manager_set_default_calendar (GcalManager  *self,
 
   e_source_registry_set_default_calendar (self->source_registry,
                                           gcal_calendar_get_source (calendar));
-}
-
-/**
- * gcal_manager_setup_shell_search:
- * @self: a #GcalManager
- * @subscriber: an #ECalDataModelSubscriber
- *
- * Sets up the GNOME Shell search subscriber.
- */
-void
-gcal_manager_setup_shell_search (GcalManager             *self,
-                                 ECalDataModelSubscriber *subscriber)
-{
-  GTimeZone *zone;
-
-  g_return_if_fail (GCAL_IS_MANAGER (self));
-
-  if (self->shell_search_data_model)
-    return;
-
-  self->shell_search_data_model = e_cal_data_model_new (gcal_thread_submit_job);
-  g_signal_connect_object (self->shell_search_data_model,
-                           "view-state-changed",
-                           G_CALLBACK (model_state_changed),
-                           self,
-                           G_CONNECT_SWAPPED);
-
-  e_cal_data_model_set_expand_recurrences (self->shell_search_data_model, TRUE);
-
-  zone = gcal_context_get_timezone (self->context);
-  e_cal_data_model_set_timezone (self->shell_search_data_model, gcal_timezone_to_icaltimezone (zone));
-
-  self->search_view_data = g_new0 (ViewStateData, 1);
-  self->search_view_data->subscriber = subscriber;
-}
-
-/**
- * gcal_manager_set_shell_search_query:
- * @self: A #GcalManager instance
- * @query: query string (an s-exp)
- *
- * Set the query terms of the #ECalDataModel used in the shell search
- */
-void
-gcal_manager_set_shell_search_query (GcalManager *self,
-                                     const gchar *query)
-{
-  GCAL_ENTRY;
-
-  g_return_if_fail (GCAL_IS_MANAGER (self));
-
-  self->search_view_data->passed_start = FALSE;
-  self->search_view_data->search_done = FALSE;
-  self->search_view_data->sources_left = g_hash_table_size (self->clients);
-
-  if (self->search_view_data->query != NULL)
-    g_free (self->search_view_data->query);
-  self->search_view_data->query = g_strdup (query);
-
-  e_cal_data_model_set_filter (self->shell_search_data_model, query);
-}
-
-/**
- * gcal_manager_set_shell_search_subscriber:
- * @self: a #GcalManager
- * @subscriber: the #ECalDataModelSubscriber to subscribe
- * @range_start: the start of the range
- * @range_end: the end of the range
- *
- * Subscribe @subscriber to the shell data modal at the given range.
- */
-void
-gcal_manager_set_shell_search_subscriber (GcalManager             *self,
-                                          ECalDataModelSubscriber *subscriber,
-                                          time_t                   range_start,
-                                          time_t                   range_end)
-{
-  GCAL_ENTRY;
-
-  e_cal_data_model_subscribe (self->shell_search_data_model, subscriber, range_start, range_end);
-
-  GCAL_EXIT;
-}
-
-/**
- * gcal_manager_shell_search_done:
- * @self: a #GcalManager
- *
- * Retrieves whether the search at @self is done or not.
- *
- * Returns: %TRUE if the search is finished.
- */
-gboolean
-gcal_manager_shell_search_done (GcalManager *self)
-{
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), FALSE);
-
-  return self->search_view_data->search_done;
-}
-
-/**
- * gcal_manager_get_shell_search_events:
- * @self: a #GcalManager
- *
- * Retrieves all the events available for GNOME Shell search.
- *
- * Returns: (nullable)(transfer full)(content-type GcalEvent): a #GList
- */
-GList*
-gcal_manager_get_shell_search_events (GcalManager *self)
-{
-  time_t range_start, range_end;
-  GatherEventData data = {
-    .manager = self,
-    .events = NULL,
-  };
-
-  GCAL_ENTRY;
-
-  e_cal_data_model_get_subscriber_range (self->shell_search_data_model,
-                                         self->search_view_data->subscriber,
-                                         &range_start,
-                                         &range_end);
-
-  e_cal_data_model_foreach_component (self->shell_search_data_model,
-                                      range_start,
-                                      range_end,
-                                      gather_events,
-                                      &data);
-
-  GCAL_RETURN (data.events);
 }
 
 /**
@@ -1467,63 +1220,6 @@ gcal_manager_get_events (GcalManager *self,
   events_at_range = gcal_timeline_get_events_at_range (self->timeline, start_date, end_date);
 
   GCAL_RETURN (g_steal_pointer (&events_at_range));
-}
-
-/**
- * gcal_manager_get_event_from_shell_search:
- * @self: a #GcalManager
- * @uuid: the unique identier of the event
- *
- * Retrieves the #GcalEvent with @uuid.
- *
- * Returns: (nullable)(transfer full): a #GcalEvent
- */
-GcalEvent*
-gcal_manager_get_event_from_shell_search (GcalManager *self,
-                                          const gchar *uuid)
-{
-  GcalEvent *new_event;
-  GList *l;
-  time_t range_start, range_end;
-  GatherEventData data = {
-    .manager = self,
-    .events = NULL,
-  };
-
-
-  GCAL_ENTRY;
-
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
-
-  new_event = NULL;
-
-  e_cal_data_model_get_subscriber_range (self->shell_search_data_model,
-                                         self->search_view_data->subscriber,
-                                         &range_start,
-                                         &range_end);
-
-  e_cal_data_model_foreach_component (self->shell_search_data_model,
-                                      range_start,
-                                      range_end,
-                                      gather_events,
-                                      &data);
-
-  for (l = data.events; l != NULL; l = g_list_next (l))
-    {
-      GcalEvent *event;
-
-      event = l->data;
-
-      /* Found the event */
-      if (g_strcmp0 (gcal_event_get_uid (event), uuid) == 0)
-        new_event = event;
-      else
-        g_object_unref (event);
-    }
-
-  g_list_free (data.events);
-
-  GCAL_RETURN (new_event);
 }
 
 /**
