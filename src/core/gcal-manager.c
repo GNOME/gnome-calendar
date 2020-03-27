@@ -93,7 +93,6 @@ enum
   CALENDAR_ADDED,
   CALENDAR_CHANGED,
   CALENDAR_REMOVED,
-  QUERY_COMPLETED,
   NUM_SIGNALS
 };
 
@@ -690,14 +689,6 @@ gcal_manager_class_init (GcalManagerClass *klass)
                                             G_TYPE_NONE,
                                             1,
                                             GCAL_TYPE_CALENDAR);
-
-  signals[QUERY_COMPLETED] = g_signal_new ("query-completed",
-                                           GCAL_TYPE_MANAGER,
-                                           G_SIGNAL_RUN_LAST,
-                                           0,
-                                           NULL, NULL, NULL,
-                                           G_TYPE_NONE,
-                                           0);
 }
 
 static void
@@ -801,38 +792,6 @@ gcal_manager_get_timeline (GcalManager *self)
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
   return self->timeline;
-}
-
-/**
- * gcal_manager_query_client_data:
- *
- * Queries for a specific data field of the #ECalClient
- *
- * Returns: (nullable)(transfer none): a string representing
- * the retrieved value.
- */
-gchar*
-gcal_manager_query_client_data (GcalManager *self,
-                                ESource     *source,
-                                const gchar *field)
-{
-  GcalCalendar *calendar;
-  ECalClient *client;
-  gchar *out;
-
-  GCAL_ENTRY;
-
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
-
-  calendar = g_hash_table_lookup (self->clients, source);
-
-  if (!calendar)
-    GCAL_RETURN (NULL);
-
-  client = gcal_calendar_get_client (calendar);
-  g_object_get (client, field, &out, NULL);
-
-  GCAL_RETURN (out);
 }
 
 /**

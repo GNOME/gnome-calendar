@@ -45,13 +45,6 @@ void                 gcal_manager_set_default_calendar           (GcalManager   
 
 GcalTimeline*        gcal_manager_get_timeline                   (GcalManager        *self);
 
-void                 gcal_manager_set_query                      (GcalManager        *self,
-                                                                  const gchar        *query);
-
-gchar*               gcal_manager_query_client_data              (GcalManager        *self,
-                                                                  ESource            *source,
-                                                                  const gchar        *field);
-
 void                 gcal_manager_refresh                        (GcalManager        *self);
 
 void                 gcal_manager_create_event                   (GcalManager        *self,
