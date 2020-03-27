@@ -35,7 +35,10 @@ void                 gcal_calendar_monitor_set_range             (GcalCalendarMo
                                                                   GDateTime           *range_start,
                                                                   GDateTime           *range_end);
 
-GcalEvent*           gcal_calendar_monitor_get_cached_event     (GcalCalendarMonitor  *self,
-                                                                 const gchar          *event_id);
+GcalEvent*           gcal_calendar_monitor_get_cached_event      (GcalCalendarMonitor  *self,
+                                                                  const gchar          *event_id);
+
+void                 gcal_calendar_monitor_set_filter            (GcalCalendarMonitor *self,
+                                                                  const gchar         *filter);
 
 G_END_DECLS

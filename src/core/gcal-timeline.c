@@ -47,6 +47,7 @@ struct _GcalTimeline
   GDateTime          *range_end;
 
   GcalRangeTree      *events;
+  gchar              *filter;
 
   GHashTable         *calendars; /* GcalCalendar* -> GcalCalendarMonitor* */
   GHashTable         *subscribers; /* GcalTimelineSubscriber* -> SubscriberData* */
@@ -63,6 +64,7 @@ enum
 {
   PROP_0,
   PROP_CONTEXT,
+  PROP_FILTER,
   N_PROPS
 };
 
@@ -349,6 +351,17 @@ update_subscriber_range (GcalTimeline           *self,
   GCAL_EXIT;
 }
 
+static void
+update_calendar_monitor_filters (GcalTimeline *self)
+{
+  GcalCalendarMonitor *monitor;
+  GHashTableIter iter;
+
+  g_hash_table_iter_init (&iter, self->calendars);
+  while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &monitor))
+    gcal_calendar_monitor_set_filter (monitor, self->filter);
+}
+
 
 /*
  * Callbacks
@@ -529,6 +542,10 @@ gcal_timeline_get_property (GObject    *object,
       g_value_set_object (value, self->context);
       break;
 
+    case PROP_FILTER:
+      g_value_set_string (value, self->filter);
+      break;
+
     default:
       G_OBJECT_WARN_INVALID_PROPERTY_ID (object, prop_id, pspec);
     }
@@ -547,6 +564,10 @@ gcal_timeline_set_property (GObject      *object,
     case PROP_CONTEXT:
       g_assert (self->context == NULL);
       self->context = g_value_get_object (value);
+      break;
+
+    case PROP_FILTER:
+      gcal_timeline_set_filter (self, g_value_get_string (value));
       break;
 
     default:
@@ -573,6 +594,17 @@ gcal_timeline_class_init (GcalTimelineClass *klass)
                                                   "Data context",
                                                   GCAL_TYPE_CONTEXT,
                                                   G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * GcalTimeline::filter:
+   *
+   * The search filter.
+   */
+  properties[PROP_FILTER] = g_param_spec_string ("filter",
+                                                 "Filter",
+                                                 "Filter",
+                                                 NULL,
+                                                 G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, N_PROPS, properties);
 }
@@ -708,6 +740,35 @@ gcal_timeline_remove_subscriber (GcalTimeline           *self,
   g_hash_table_remove (self->subscribers, subscriber);
 
   update_range (self);
+
+  GCAL_EXIT;
+}
+
+const gchar*
+gcal_timeline_get_filter (GcalTimeline *self)
+{
+  g_return_val_if_fail (GCAL_IS_TIMELINE (self), NULL);
+
+  return self->filter;
+}
+
+void
+gcal_timeline_set_filter (GcalTimeline *self,
+                          const gchar  *filter)
+{
+  g_return_if_fail (GCAL_IS_TIMELINE (self));
+
+  GCAL_ENTRY;
+
+  if (g_strcmp0 (self->filter, filter) == 0)
+    GCAL_RETURN ();
+
+  g_debug ("Setting timeline filter to \"%s\"", filter);
+
+  g_clear_pointer (&self->filter, g_free);
+  self->filter = g_strdup (filter);
+
+  update_calendar_monitor_filters (self);
 
   GCAL_EXIT;
 }
