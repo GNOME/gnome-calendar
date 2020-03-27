@@ -20,7 +20,6 @@
 #define G_LOG_DOMAIN "GcalMonthView"
 
 #include "config.h"
-#include "e-cal-data-model-subscriber.h"
 #include "gcal-application.h"
 #include "gcal-clock.h"
 #include "gcal-context.h"

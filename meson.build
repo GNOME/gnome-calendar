@@ -189,7 +189,6 @@ src_dir = join_paths(meson.source_root(), 'src')
 ###########
 
 subdir('build-aux')
-subdir('contrib')
 subdir('data')
 subdir('src')
 subdir('po')
