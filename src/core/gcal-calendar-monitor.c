@@ -41,6 +41,7 @@ typedef enum
   CREATE_VIEW,
   REMOVE_VIEW,
   RANGE_UPDATED,
+  FILTER_UPDATED,
   QUIT,
 } MonitorThreadEvent;
 
@@ -76,6 +77,7 @@ struct _GcalCalendarMonitor
     GMutex            mutex;
     GDateTime        *range_start;
     GDateTime        *range_end;
+    gchar            *filter;
   } shared;
 };
 
@@ -110,14 +112,15 @@ static GParamSpec *properties [N_PROPS] = { NULL, };
  */
 
 static gchar*
-build_subscriber_filter (GDateTime *range_start,
-                         GDateTime *range_end)
+build_subscriber_filter (GDateTime   *range_start,
+                         GDateTime   *range_end,
+                         const gchar *filter)
 {
   g_autoptr (GDateTime) utc_range_start = NULL;
   g_autoptr (GDateTime) utc_range_end = NULL;
   g_autofree gchar *start_str = NULL;
   g_autofree gchar *end_str = NULL;
-  g_autofree gchar *filter = NULL;
+  g_autofree gchar *result = NULL;
 
   /*
    * XXX: E-D-S ISO8601 parser is incomplete and doesn't accept the output of
@@ -130,11 +133,21 @@ build_subscriber_filter (GDateTime *range_start,
   utc_range_end = g_date_time_to_utc (range_end);
   end_str = g_date_time_format (utc_range_end, "%Y%m%dT%H%M%SZ");
 
-  filter = g_strdup_printf ("(occur-in-time-range? (make-time \"%s\") (make-time \"%s\"))",
-                            start_str,
-                            end_str);
+  if (filter)
+    {
+      result = g_strdup_printf ("(and (occur-in-time-range? (make-time \"%s\") (make-time \"%s\")) %s)",
+                                start_str,
+                                end_str,
+                                filter);
+    }
+  else
+    {
+      result = g_strdup_printf ("(occur-in-time-range? (make-time \"%s\") (make-time \"%s\"))",
+                                start_str,
+                                end_str);
+    }
 
-  return g_steal_pointer (&filter);
+  return g_steal_pointer (&result);
 }
 
 static void
@@ -578,7 +591,7 @@ create_view (GcalCalendarMonitor *self)
   g_assert (self->shared.range_start != NULL);
   g_assert (self->shared.range_end != NULL);
 
-  filter = build_subscriber_filter (self->shared.range_start, self->shared.range_end);
+  filter = build_subscriber_filter (self->shared.range_start, self->shared.range_end, self->shared.filter);
 
   g_mutex_unlock (&self->shared.mutex);
 
@@ -686,6 +699,7 @@ message_queue_source_dispatch (GSource     *source,
 
   switch (event)
     {
+    case FILTER_UPDATED:
     case RANGE_UPDATED:
       remove_view (self);
       create_view (self);
@@ -946,6 +960,7 @@ gcal_calendar_monitor_finalize (GObject *object)
   g_clear_pointer (&self->thread_context, g_main_context_unref);
   g_clear_pointer (&self->main_context, g_main_context_unref);
   g_clear_pointer (&self->messages, g_async_queue_unref);
+  g_clear_pointer (&self->shared.filter, g_free);
   gcal_clear_date_time (&self->shared.range_start);
   gcal_clear_date_time (&self->shared.range_end);
 
@@ -1128,4 +1143,23 @@ gcal_calendar_monitor_get_cached_event (GcalCalendarMonitor *self,
   event = g_hash_table_lookup (self->events, event_id);
 
   return event ? g_object_ref (event) : NULL;
+}
+
+void
+gcal_calendar_monitor_set_filter (GcalCalendarMonitor *self,
+                                  const gchar         *filter)
+{
+  g_return_if_fail (GCAL_IS_CALENDAR_MONITOR (self));
+
+  g_mutex_lock (&self->shared.mutex);
+
+  g_clear_pointer (&self->shared.filter, g_free);
+  self->shared.filter = g_strdup (filter);
+
+  g_mutex_unlock (&self->shared.mutex);
+
+  remove_all_events (self);
+
+  if (gcal_calendar_get_visible (self->calendar))
+    notify_view_thread (self, FILTER_UPDATED);
 }

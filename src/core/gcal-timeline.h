@@ -43,4 +43,9 @@ void                 gcal_timeline_add_subscriber                (GcalTimeline  
 void                 gcal_timeline_remove_subscriber             (GcalTimeline           *self,
                                                                   GcalTimelineSubscriber *subscriber);
 
+const gchar*         gcal_timeline_get_filter                    (GcalTimeline       *self);
+
+void                 gcal_timeline_set_filter                    (GcalTimeline       *self,
+                                                                  const gchar        *filter);
+
 G_END_DECLS
