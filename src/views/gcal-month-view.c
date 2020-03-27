@@ -28,6 +28,7 @@
 #include "gcal-month-cell.h"
 #include "gcal-month-popover.h"
 #include "gcal-month-view.h"
+#include "gcal-timeline-subscriber.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
 
@@ -143,13 +144,17 @@ static void          on_month_cell_show_overflow_popover_cb      (GcalMonthCell 
                                                                   GtkWidget          *button,
                                                                   GcalMonthView      *self);
 
+static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSubscriberInterface *iface);
+
 
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view, GTK_TYPE_CONTAINER,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
                                                 e_data_model_subscriber_interface_init)
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
-                                                gtk_buildable_interface_init));
+                                                gtk_buildable_interface_init)
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
+                                                gcal_timeline_subscriber_interface_init));
 
 enum
 {
@@ -1166,6 +1171,8 @@ gcal_month_view_set_date (GcalView  *view,
   update_header_labels (self);
   update_month_cells (self);
 
+  gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
+
   GCAL_EXIT;
 }
 
@@ -1285,6 +1292,126 @@ gtk_buildable_interface_init (GtkBuildableIface *iface)
 
 
 /*
+ * GcalTimelineSubscriber iface
+ */
+
+static GDateTime*
+gcal_month_view_get_range_start (GcalTimelineSubscriber *subscriber)
+{
+  GcalMonthView *self = GCAL_MONTH_VIEW (subscriber);
+
+  return g_date_time_new_local (g_date_time_get_year (self->date),
+                                g_date_time_get_month (self->date),
+                                1, 0, 0, 0);
+}
+
+static GDateTime*
+gcal_month_view_get_range_end (GcalTimelineSubscriber *subscriber)
+{
+  g_autoptr (GDateTime) month_start = NULL;
+
+  month_start = gcal_month_view_get_range_start (subscriber);
+  return g_date_time_add_months (month_start, 1);
+}
+
+static void
+gcal_month_view_add_event (GcalTimelineSubscriber *subscriber,
+                           GcalEvent              *event)
+{
+  GcalMonthView *self;
+  GcalCalendar *calendar;
+  GtkWidget *event_widget;
+
+  self = GCAL_MONTH_VIEW (subscriber);
+  calendar = gcal_event_get_calendar (event);
+
+  event_widget = gcal_event_widget_new (self->context, event);
+  gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event_widget), gcal_calendar_is_read_only (calendar));
+
+  gtk_widget_show (event_widget);
+  gtk_container_add (GTK_CONTAINER (subscriber), event_widget);
+
+  self->pending_event_allocation = TRUE;
+}
+
+static void
+gcal_month_view_update_event (GcalTimelineSubscriber *subscriber,
+                              GcalEvent              *event)
+{
+  GcalMonthView *self;
+  GtkWidget *new_widget;
+  GList *l;
+
+  GCAL_ENTRY;
+
+  self = GCAL_MONTH_VIEW (subscriber);
+
+  l = g_hash_table_lookup (self->children, gcal_event_get_uid (event));
+
+  if (!l)
+    {
+      g_warning ("%s: Widget with uuid: %s not found in view: %s",
+                 G_STRFUNC,
+                 gcal_event_get_uid (event),
+                 gtk_widget_get_name (GTK_WIDGET (subscriber)));
+      return;
+    }
+
+  /* Destroy the old event widget (split event widgets will be destroyed too) */
+  gtk_widget_destroy (l->data);
+
+  /* Create and add the new event widget */
+  new_widget = gcal_event_widget_new (self->context, event);
+  gtk_widget_show (new_widget);
+  gtk_container_add (GTK_CONTAINER (subscriber), new_widget);
+
+  self->pending_event_allocation = TRUE;
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_month_view_remove_event (GcalTimelineSubscriber *subscriber,
+                              GcalEvent              *event)
+{
+  GcalMonthView *self;
+  const gchar *uuid;
+  GList *l;
+
+  GCAL_ENTRY;
+
+  self = GCAL_MONTH_VIEW (subscriber);
+  uuid = gcal_event_get_uid (event);
+  l = g_hash_table_lookup (self->children, uuid);
+
+  if (!l)
+    {
+      g_warning ("%s: Widget with uuid: %s not found in view: %s",
+                 G_STRFUNC,
+                 uuid,
+                 gtk_widget_get_name (GTK_WIDGET (subscriber)));
+      GCAL_RETURN ();
+    }
+
+  gtk_widget_destroy (l->data);
+
+  self->pending_event_allocation = TRUE;
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
+{
+  iface->get_range_start = gcal_month_view_get_range_start;
+  iface->get_range_end = gcal_month_view_get_range_end;
+  iface->add_event = gcal_month_view_add_event;
+  iface->update_event = gcal_month_view_update_event;
+  iface->remove_event = gcal_month_view_remove_event;
+}
+
+
+/*
  * ECalDataModelSubscriber interface
  */
 
@@ -1296,7 +1423,6 @@ gcal_month_view_component_added (ECalDataModelSubscriber *subscriber,
   g_autoptr (GcalEvent) event = NULL;
   GcalMonthView *self;
   GcalCalendar *calendar;
-  GtkWidget *event_widget;
   GError *error;
 
   GCAL_ENTRY;
@@ -1314,13 +1440,7 @@ gcal_month_view_component_added (ECalDataModelSubscriber *subscriber,
       GCAL_RETURN ();
     }
 
-  event_widget = gcal_event_widget_new (self->context, event);
-  gcal_event_widget_set_read_only (GCAL_EVENT_WIDGET (event_widget), e_client_is_readonly (E_CLIENT (client)));
-
-  gtk_widget_show (event_widget);
-  gtk_container_add (GTK_CONTAINER (subscriber), event_widget);
-
-  self->pending_event_allocation = TRUE;
+  gcal_month_view_add_event (GCAL_TIMELINE_SUBSCRIBER (self), event);
 
   GCAL_EXIT;
 }

@@ -21,6 +21,7 @@
 #include "gcal-debug.h"
 #include "gcal-enums.h"
 #include "gcal-event-widget.h"
+#include "gcal-timeline-subscriber.h"
 #include "gcal-utils.h"
 #include "gcal-view.h"
 #include "gcal-week-header.h"
@@ -63,6 +64,8 @@ static void          gcal_view_interface_init                    (GcalViewInterf
 
 static void          gcal_data_model_subscriber_interface_init   (ECalDataModelSubscriberInterface *iface);
 
+static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSubscriberInterface *iface);
+
 enum
 {
   PROP_0,
@@ -75,7 +78,9 @@ enum
 G_DEFINE_TYPE_WITH_CODE (GcalWeekView, gcal_week_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
-                                                gcal_data_model_subscriber_interface_init));
+                                                gcal_data_model_subscriber_interface_init)
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
+                                                gcal_timeline_subscriber_interface_init));
 
 /* Callbacks */
 static void
@@ -197,6 +202,8 @@ gcal_week_view_set_date (GcalView  *view,
   gcal_week_header_set_date (GCAL_WEEK_HEADER (self->header), date);
 
   schedule_position_scroll (self);
+
+  gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
 
   GCAL_EXIT;
 }
@@ -334,6 +341,85 @@ update_hours_sidebar_size (GcalWeekView *self)
   g_object_unref (layout);
 }
 
+/*
+ * GcalTimelineSubscriber iface
+ */
+
+static GDateTime*
+gcal_week_view_get_range_start (GcalTimelineSubscriber *subscriber)
+{
+  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
+
+  return gcal_date_time_get_start_of_week (self->date);
+}
+
+static GDateTime*
+gcal_week_view_get_range_end (GcalTimelineSubscriber *subscriber)
+{
+  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
+
+  return gcal_date_time_get_end_of_week (self->date);
+}
+
+static void
+gcal_week_view_add_event (GcalTimelineSubscriber *subscriber,
+                          GcalEvent              *event)
+{
+  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
+
+  GCAL_ENTRY;
+
+  if (gcal_event_is_multiday (event) || gcal_event_get_all_day (event))
+    gcal_week_header_add_event (GCAL_WEEK_HEADER (self->header), event);
+  else
+    gcal_week_grid_add_event (GCAL_WEEK_GRID (self->week_grid), event);
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_week_view_update_event (GcalTimelineSubscriber *subscriber,
+                             GcalEvent              *event)
+{
+  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
+  const gchar *event_id;
+
+  GCAL_ENTRY;
+
+  event_id = gcal_event_get_uid (event);
+  gcal_week_header_remove_event (GCAL_WEEK_HEADER (self->header), event_id);
+  gcal_week_grid_remove_event (GCAL_WEEK_GRID (self->week_grid), event_id);
+
+  gcal_week_view_add_event (subscriber, event);
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_week_view_remove_event (GcalTimelineSubscriber *subscriber,
+                             GcalEvent              *event)
+{
+  GcalWeekView *self = GCAL_WEEK_VIEW (subscriber);
+  const gchar *uuid = gcal_event_get_uid (event);
+
+  GCAL_ENTRY;
+
+  gcal_week_header_remove_event (GCAL_WEEK_HEADER (self->header), uuid);
+  gcal_week_grid_remove_event (GCAL_WEEK_GRID (self->week_grid), uuid);
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
+{
+  iface->get_range_start = gcal_week_view_get_range_start;
+  iface->get_range_end = gcal_week_view_get_range_end;
+  iface->add_event = gcal_week_view_add_event;
+  iface->update_event = gcal_week_view_update_event;
+  iface->remove_event = gcal_week_view_remove_event;
+}
+
 
 /* ECalDataModelSubscriber implementation */
 static void
@@ -351,10 +437,7 @@ gcal_week_view_component_added (ECalDataModelSubscriber *subscriber,
                                                     e_client_get_source (E_CLIENT (client)));
   event = gcal_event_new (calendar, comp, NULL);
 
-  if (gcal_event_is_multiday (event) || gcal_event_get_all_day (event))
-    gcal_week_header_add_event (GCAL_WEEK_HEADER (self->header), event);
-  else
-    gcal_week_grid_add_event (GCAL_WEEK_GRID (self->week_grid), event);
+  gcal_week_view_add_event (GCAL_TIMELINE_SUBSCRIBER (subscriber), event);
 
   GCAL_EXIT;
 }

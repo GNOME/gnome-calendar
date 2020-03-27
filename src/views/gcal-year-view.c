@@ -22,6 +22,7 @@
 #include "gcal-clock.h"
 #include "gcal-context.h"
 #include "gcal-debug.h"
+#include "gcal-timeline-subscriber.h"
 #include "gcal-year-view.h"
 #include "gcal-view.h"
 #include "gcal-utils.h"
@@ -129,11 +130,15 @@ static void          gcal_view_interface_init                    (GcalViewInterf
 static void          gcal_data_model_subscriber_interface_init   (ECalDataModelSubscriberInterface *iface);
 static void          update_weather                              (GcalYearView       *self);
 
+static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSubscriberInterface *iface);
+
 
 G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
                          G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
-                                                gcal_data_model_subscriber_interface_init));
+                                                gcal_data_model_subscriber_interface_init)
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
+                                                gcal_timeline_subscriber_interface_init));
 
 static gint
 compare_events (GcalEventWidget *widget1,
@@ -1588,6 +1593,163 @@ navigator_drag_leave_cb (GcalYearView   *self,
   gtk_widget_queue_draw (navigator);
 }
 
+/*
+ * GcalTimelineSubscriber implementation
+ */
+
+static GDateTime*
+gcal_year_view_get_range_start (GcalTimelineSubscriber *subscriber)
+{
+  GcalYearView *self = GCAL_YEAR_VIEW (subscriber);
+
+  return g_date_time_new_local (g_date_time_get_year (self->date),
+                                1, 1, 0, 0, 0);
+}
+
+static GDateTime*
+gcal_year_view_get_range_end (GcalTimelineSubscriber *subscriber)
+{
+  GcalYearView *self = GCAL_YEAR_VIEW (subscriber);
+
+  return g_date_time_new_local (g_date_time_get_year (self->date) + 1,
+                                1, 1, 0, 0, 0);
+}
+
+static void
+gcal_year_view_add_event (GcalTimelineSubscriber *subscriber,
+                          GcalEvent              *event)
+{
+  GcalYearView *self;
+  GDateTime *event_start;
+  GDateTime *event_end;
+  guint start_month;
+  guint end_month;
+  guint i;
+
+  GCAL_ENTRY;
+
+  self = GCAL_YEAR_VIEW (subscriber);
+
+  g_debug ("Caching event '%s' in Year view", gcal_event_get_uid (event));
+
+  event_start = gcal_event_get_date_start (event);
+  event_end = gcal_event_get_date_end (event);
+
+  /* Calculate the start & end months */
+  start_month = g_date_time_get_month (event_start) - 1;
+  end_month = g_date_time_get_month (event_end) - 1;
+
+  if (g_date_time_get_year (event_start) < g_date_time_get_year (self->date))
+    start_month = 0;
+
+  if (g_date_time_get_year (event_end) > g_date_time_get_year (self->date))
+    end_month = 11;
+
+  /* Add the event to the cache */
+  for (i = start_month; i <= end_month; i++)
+    g_ptr_array_add (self->events[i], g_object_ref (event));
+
+  update_sidebar (self);
+
+  gtk_widget_queue_draw (GTK_WIDGET (self->navigator));
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_year_view_remove_event (GcalTimelineSubscriber *subscriber,
+                             GcalEvent              *event)
+{
+  g_autoptr (GList) children = NULL;
+  GcalYearView *self;
+  GList *l;
+  const gchar *event_id;
+  guint n_children;
+  guint i;
+
+  GCAL_ENTRY;
+
+  self = GCAL_YEAR_VIEW (subscriber);
+  event_id = gcal_event_get_uid (event);
+
+  n_children = 0;
+  children = gtk_container_get_children (GTK_CONTAINER (self->events_sidebar));
+
+  for (l = children; l != NULL; l = g_list_next (l))
+    {
+      GcalEventWidget *child_widget;
+      GcalEvent *list_event;
+
+      child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
+      list_event = gcal_event_widget_get_event (child_widget);
+
+      if (g_strcmp0 (event_id, gcal_event_get_uid (list_event)) == 0)
+        gtk_widget_destroy (GTK_WIDGET (l->data));
+      else
+        n_children++;
+    }
+
+  /*
+   * No children left visible, all the events were removed and now we have to show the
+   * 'No Events' placeholder.
+   */
+  if (n_children == 0)
+    {
+      update_no_events_page (self);
+      gtk_stack_set_visible_child_name (GTK_STACK (self->navigator_stack), "no-events");
+    }
+
+  /* Also remove from the cached list of events */
+  for (i = 0; i < 12; i++)
+    {
+      GPtrArray *events;
+      guint j;
+
+      events = self->events[i];
+
+      for (j = 0; j < events->len; j++)
+        {
+          GcalEvent *cached_event;
+
+          cached_event = g_ptr_array_index (events, j);
+
+          if (!g_str_equal (gcal_event_get_uid (cached_event), event_id))
+            continue;
+
+          g_debug ("Removing event '%s' from Year view's cache", event_id);
+          g_ptr_array_remove (events, event);
+        }
+    }
+
+  gtk_widget_queue_draw (GTK_WIDGET (self->navigator));
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_year_view_update_event (GcalTimelineSubscriber *subscriber,
+                             GcalEvent              *event)
+{
+  GCAL_ENTRY;
+
+  gcal_year_view_remove_event (subscriber, event);
+  gcal_year_view_add_event (subscriber, event);
+
+
+  GCAL_EXIT;
+}
+
+static void
+gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
+{
+  iface->get_range_start = gcal_year_view_get_range_start;
+  iface->get_range_end = gcal_year_view_get_range_end;
+  iface->add_event = gcal_year_view_add_event;
+  iface->remove_event = gcal_year_view_remove_event;
+  iface->update_event = gcal_year_view_update_event;
+}
+
+
 /* GcalView implementation */
 static GDateTime*
 gcal_year_view_get_date (GcalView *view)
@@ -1604,6 +1766,7 @@ gcal_year_view_set_date (GcalView  *view,
   GCAL_ENTRY;
 
   update_date (GCAL_YEAR_VIEW (view), date);
+  gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
 
   GCAL_EXIT;
 }
