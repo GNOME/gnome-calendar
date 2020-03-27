@@ -22,6 +22,8 @@
 #include "gcal-context.h"
 #include "gcal-debug.h"
 #include "gcal-manager.h"
+#include "gcal-timeline.h"
+#include "gcal-timeline-subscriber.h"
 #include "gcal-utils.h"
 
 #include <libedataserverui/libedataserverui.h>
@@ -90,6 +92,8 @@ struct _GcalManager
   GCancellable       *async_ops;
 
   gint                clients_synchronizing;
+
+  GcalTimeline       *timeline;
 
   GcalContext        *context;
 };
@@ -179,6 +183,7 @@ remove_source (GcalManager  *self,
   e_cal_data_model_remove_client (self->e_data_model,
                                   e_source_get_uid (source));
 
+  gcal_timeline_remove_calendar (self->timeline, calendar);
   g_hash_table_remove (self->clients, source);
   g_signal_emit (self, signals[CALENDAR_REMOVED], 0, calendar);
 
@@ -285,6 +290,8 @@ on_calendar_created_cb (GObject      *source_object,
   source = gcal_calendar_get_source (calendar);
 
   g_hash_table_insert (self->clients, g_object_ref (source), calendar);
+
+  gcal_timeline_add_calendar (self->timeline, calendar);
 
   if (visible)
     {
@@ -653,6 +660,7 @@ gcal_manager_finalize (GObject *object)
 
   GCAL_ENTRY;
 
+  g_clear_object (&self->timeline);
   g_clear_object (&self->e_data_model);
   g_clear_object (&self->shell_search_data_model);
 
@@ -1064,10 +1072,10 @@ gcal_manager_set_subscriber (GcalManager             *self,
 
   g_return_if_fail (GCAL_IS_MANAGER (self));
 
-  e_cal_data_model_subscribe (self->e_data_model,
-                              subscriber,
-                              range_start,
-                              range_end);
+  if (GCAL_IS_TIMELINE_SUBSCRIBER (subscriber))
+    gcal_timeline_add_subscriber (self->timeline, GCAL_TIMELINE_SUBSCRIBER (subscriber));
+  else
+    e_cal_data_model_subscribe (self->e_data_model, subscriber, range_start, range_end);
 
   GCAL_EXIT;
 }
@@ -1580,6 +1588,7 @@ gcal_manager_startup (GcalManager *self)
 
   GCAL_ENTRY;
 
+  self->timeline = gcal_timeline_new (self->context);
   self->clients = g_hash_table_new_full ((GHashFunc) e_source_hash,
                                          (GEqualFunc) e_source_equal,
                                          g_object_unref,
