@@ -131,8 +131,6 @@ static void          gcal_view_interface_init                    (GcalViewInterf
 
 static void          gtk_buildable_interface_init                (GtkBuildableIface  *iface);
 
-static void          e_data_model_subscriber_interface_init      (ECalDataModelSubscriberInterface *iface);
-
 static void          on_event_activated_cb                       (GcalEventWidget    *widget,
                                                                   GcalMonthView      *self);
 
@@ -149,8 +147,6 @@ static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSu
 
 G_DEFINE_TYPE_WITH_CODE (GcalMonthView, gcal_month_view, GTK_TYPE_CONTAINER,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
-                         G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
-                                                e_data_model_subscriber_interface_init)
                          G_IMPLEMENT_INTERFACE (GTK_TYPE_BUILDABLE,
                                                 gtk_buildable_interface_init)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
@@ -1408,152 +1404,6 @@ gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
   iface->add_event = gcal_month_view_add_event;
   iface->update_event = gcal_month_view_update_event;
   iface->remove_event = gcal_month_view_remove_event;
-}
-
-
-/*
- * ECalDataModelSubscriber interface
- */
-
-static void
-gcal_month_view_component_added (ECalDataModelSubscriber *subscriber,
-                                 ECalClient              *client,
-                                 ECalComponent           *comp)
-{
-  g_autoptr (GcalEvent) event = NULL;
-  GcalMonthView *self;
-  GcalCalendar *calendar;
-  GError *error;
-
-  GCAL_ENTRY;
-
-  error = NULL;
-  self = GCAL_MONTH_VIEW (subscriber);
-  calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (self->context),
-                                                    e_client_get_source (E_CLIENT (client)));
-  event = gcal_event_new (calendar, comp, &error);
-
-  if (error)
-    {
-      g_warning ("Error creating event: %s", error->message);
-      g_clear_error (&error);
-      GCAL_RETURN ();
-    }
-
-  gcal_month_view_add_event (GCAL_TIMELINE_SUBSCRIBER (self), event);
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_month_view_component_modified (ECalDataModelSubscriber *subscriber,
-                                    ECalClient              *client,
-                                    ECalComponent           *comp)
-{
-  g_autoptr (GcalEvent) event = NULL;
-  GcalMonthView *self;
-  GcalCalendar *calendar;
-  GtkWidget *new_widget;
-  GError *error;
-  GList *l;
-
-  GCAL_ENTRY;
-
-  error = NULL;
-  self = GCAL_MONTH_VIEW (subscriber);
-  calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (self->context),
-                                                    e_client_get_source (E_CLIENT (client)));
-  event = gcal_event_new (calendar, comp, &error);
-
-  if (error)
-    {
-      g_warning ("Error creating event: %s", error->message);
-      g_clear_error (&error);
-      GCAL_RETURN ();
-    }
-
-  new_widget = gcal_event_widget_new (self->context, event);
-
-  l = g_hash_table_lookup (self->children, gcal_event_get_uid (event));
-
-  if (l)
-    {
-      gtk_widget_destroy (l->data);
-
-      gtk_widget_show (new_widget);
-      gtk_container_add (GTK_CONTAINER (subscriber), new_widget);
-    }
-  else
-    {
-      g_warning ("%s: Widget with uuid: %s not found in view: %s",
-                 G_STRFUNC, gcal_event_get_uid (event),
-                 gtk_widget_get_name (GTK_WIDGET (subscriber)));
-      gtk_widget_destroy (new_widget);
-    }
-
-  self->pending_event_allocation = TRUE;
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_month_view_component_removed (ECalDataModelSubscriber *subscriber,
-                                   ECalClient              *client,
-                                   const gchar             *uid,
-                                   const gchar             *rid)
-{
-  GcalMonthView *self;
-  g_autofree gchar *uuid = NULL;
-  const gchar *sid;
-  GList *l;
-
-  GCAL_ENTRY;
-
-  self = GCAL_MONTH_VIEW (subscriber);
-  sid = e_source_get_uid (e_client_get_source (E_CLIENT (client)));
-
-  if (rid != NULL)
-    uuid = g_strdup_printf ("%s:%s:%s", sid, uid, rid);
-  else
-    uuid = g_strdup_printf ("%s:%s", sid, uid);
-
-  l = g_hash_table_lookup (self->children, uuid);
-
-  if (!l)
-    {
-      g_warning ("%s: Widget with uuid: %s not found in view: %s",
-                 G_STRFUNC,
-                 uuid,
-                 gtk_widget_get_name (GTK_WIDGET (subscriber)));
-      GCAL_RETURN ();
-    }
-
-  gtk_widget_destroy (l->data);
-
-  self->pending_event_allocation = TRUE;
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_month_view_freeze (ECalDataModelSubscriber *subscriber)
-{
-}
-
-static void
-gcal_month_view_thaw (ECalDataModelSubscriber *subscriber)
-{
-}
-
-
-static void
-e_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
-{
-  iface->component_added = gcal_month_view_component_added;
-  iface->component_modified = gcal_month_view_component_modified;
-  iface->component_removed = gcal_month_view_component_removed;
-  iface->freeze = gcal_month_view_freeze;
-  iface->thaw = gcal_month_view_thaw;
 }
 
 

@@ -127,7 +127,7 @@ enum {
 };
 
 static void          gcal_view_interface_init                    (GcalViewInterface  *iface);
-static void          gcal_data_model_subscriber_interface_init   (ECalDataModelSubscriberInterface *iface);
+
 static void          update_weather                              (GcalYearView       *self);
 
 static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSubscriberInterface *iface);
@@ -135,8 +135,6 @@ static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSu
 
 G_DEFINE_TYPE_WITH_CODE (GcalYearView, gcal_year_view, GTK_TYPE_BOX,
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_VIEW, gcal_view_interface_init)
-                         G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
-                                                gcal_data_model_subscriber_interface_init)
                          G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
                                                 gcal_timeline_subscriber_interface_init));
 
@@ -2039,167 +2037,6 @@ gcal_year_view_direction_changed (GtkWidget        *widget,
     year_view->k = 1;
 }
 
-static void
-gcal_year_view_component_added (ECalDataModelSubscriber *subscriber,
-                                ECalClient              *client,
-                                ECalComponent           *comp)
-{
-  g_autoptr (GcalEvent) event = NULL;
-  GcalCalendar *calendar;
-  GcalYearView *self;
-  GDateTime *event_start, *event_end;
-  GError *error;
-  guint i, start_month, end_month;
-
-  GCAL_ENTRY;
-
-  error = NULL;
-  self = GCAL_YEAR_VIEW (subscriber);
-  calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (self->context),
-                                                    e_client_get_source (E_CLIENT (client)));
-  event = gcal_event_new (calendar, comp, &error);
-
-  if (error)
-    {
-      g_warning ("Error creating event: %s", error->message);
-      g_clear_error (&error);
-      GCAL_RETURN ();
-    }
-
-  g_debug ("Caching event '%s' in Year view", gcal_event_get_uid (event));
-
-  event_start = gcal_event_get_date_start (event);
-  event_end = gcal_event_get_date_end (event);
-
-  /* Calculate the start & end months */
-  start_month = g_date_time_get_month (event_start) - 1;
-  end_month = g_date_time_get_month (event_end) - 1;
-
-  if (g_date_time_get_year (event_start) < g_date_time_get_year (self->date))
-    start_month = 0;
-
-  if (g_date_time_get_year (event_end) > g_date_time_get_year (self->date))
-    end_month = 11;
-
-  /* Add the event to the cache */
-  for (i = start_month; i <= end_month; i++)
-    g_ptr_array_add (self->events[i], g_object_ref (event));
-
-  update_sidebar (self);
-
-  gtk_widget_queue_draw (GTK_WIDGET (self->navigator));
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_year_view_component_removed (ECalDataModelSubscriber *subscriber,
-                                  ECalClient              *client,
-                                  const gchar             *uid,
-                                  const gchar             *rid)
-{
-  GcalYearView *year_view;
-  GList *children, *l;
-  ESource *source;
-  g_autofree gchar *uuid = NULL;
-  guint i;
-  gint number_of_children;
-
-  GCAL_ENTRY;
-
-  year_view = GCAL_YEAR_VIEW (subscriber);
-  source = e_client_get_source (E_CLIENT (client));
-  if (rid != NULL)
-    uuid = g_strdup_printf ("%s:%s:%s", e_source_get_uid (source), uid, rid);
-  else
-    uuid = g_strdup_printf ("%s:%s", e_source_get_uid (source), uid);
-
-  children = gtk_container_get_children (GTK_CONTAINER (year_view->events_sidebar));
-  number_of_children = g_list_length (children);
-
-  for (l = children; l != NULL; l = g_list_next (l))
-    {
-      GcalEventWidget *child_widget;
-      GcalEvent *event;
-
-      child_widget = GCAL_EVENT_WIDGET (gtk_bin_get_child (GTK_BIN (l->data)));
-      event = gcal_event_widget_get_event (child_widget);
-
-      if (g_strcmp0 (uuid, gcal_event_get_uid (event)) == 0)
-        {
-          gtk_widget_destroy (GTK_WIDGET (l->data));
-          number_of_children--;
-        }
-    }
-
-  /*
-   * No children left visible, all the events were removed and now we have to show the
-   * 'No Events' placeholder.
-   */
-  if (number_of_children == 0)
-    {
-      update_no_events_page (year_view);
-      gtk_stack_set_visible_child_name (GTK_STACK (year_view->navigator_stack), "no-events");
-    }
-
-  /* Also remove from the cached list of events */
-  for (i = 0; i < 12; i++)
-    {
-      GPtrArray *events;
-      guint j;
-
-      events = year_view->events[i];
-
-      for (j = 0; j < events->len; j++)
-        {
-          GcalEvent *event;
-
-          event = g_ptr_array_index (events, j);
-
-          if (!g_str_equal (gcal_event_get_uid (event), uuid))
-            continue;
-
-          g_debug ("Removing event '%s' from Year view's cache", uuid);
-          g_ptr_array_remove (events, event);
-        }
-    }
-
-  gtk_widget_queue_draw (GTK_WIDGET (year_view->navigator));
-
-  g_list_free (children);
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_year_view_component_changed (ECalDataModelSubscriber *subscriber,
-                                  ECalClient              *client,
-                                  ECalComponent           *comp)
-{
-  ECalComponentId *id;
-
-  GCAL_ENTRY;
-
-  id = e_cal_component_get_id (comp);
-
-  gcal_year_view_component_removed (subscriber, client, e_cal_component_id_get_uid (id), e_cal_component_id_get_rid (id));
-  gcal_year_view_component_added (subscriber, client, comp);
-
-  g_clear_pointer (&id, e_cal_component_id_free);
-
-  GCAL_EXIT;
-}
-
-static void
-gcal_year_view_freeze (ECalDataModelSubscriber *subscriber)
-{
-  ;
-}
-
-static void
-gcal_year_view_thaw (ECalDataModelSubscriber *subscriber)
-{
-}
 
 static void
 gcal_year_view_class_init (GcalYearViewClass *klass)
@@ -2294,15 +2131,6 @@ gcal_year_view_init (GcalYearView *self)
                      GDK_ACTION_MOVE);
 }
 
-static void
-gcal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
-{
-  iface->component_added = gcal_year_view_component_added;
-  iface->component_modified = gcal_year_view_component_changed;
-  iface->component_removed = gcal_year_view_component_removed;
-  iface->freeze = gcal_year_view_freeze;
-  iface->thaw = gcal_year_view_thaw;
-}
 
 static void
 update_weather (GcalYearView *self)
