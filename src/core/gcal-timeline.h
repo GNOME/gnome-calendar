@@ -52,4 +52,6 @@ const gchar*         gcal_timeline_get_filter                    (GcalTimeline  
 void                 gcal_timeline_set_filter                    (GcalTimeline       *self,
                                                                   const gchar        *filter);
 
+gboolean             gcal_timeline_is_complete                   (GcalTimeline       *self);
+
 G_END_DECLS

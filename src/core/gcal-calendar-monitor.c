@@ -84,6 +84,7 @@ struct _GcalCalendarMonitor
 static gboolean      add_event_to_timeline_in_idle_cb            (gpointer           user_data);
 static gboolean      update_event_in_idle_cb                     (gpointer           user_data);
 static gboolean      remove_event_from_timeline_in_idle_cb       (gpointer           user_data);
+static gboolean      complete_in_idle_cb                         (gpointer           user_data);
 
 G_DEFINE_TYPE (GcalCalendarMonitor, gcal_calendar_monitor, G_TYPE_OBJECT)
 
@@ -92,6 +93,7 @@ enum
   EVENT_ADDED,
   EVENT_UPDATED,
   EVENT_REMOVED,
+  COMPLETED,
   N_SIGNALS,
 };
 
@@ -237,6 +239,21 @@ remove_event_in_idle (GcalCalendarMonitor *self,
   g_main_context_invoke_full (self->main_context,
                               G_PRIORITY_DEFAULT_IDLE,
                               remove_event_from_timeline_in_idle_cb,
+                              idle_data,
+                              (GDestroyNotify) idle_data_free);
+}
+
+static void
+complete_in_idle (GcalCalendarMonitor *self)
+{
+  IdleData *idle_data;
+
+  idle_data = g_new0 (IdleData, 1);
+  idle_data->monitor = g_object_ref (self);
+
+  g_main_context_invoke_full (self->main_context,
+                              G_PRIORITY_DEFAULT_IDLE,
+                              complete_in_idle_cb,
                               idle_data,
                               (GDestroyNotify) idle_data_free);
 }
@@ -567,6 +584,8 @@ on_client_view_complete_cb (ECalClientView      *view,
     }
 
   self->monitor_thread.populated = TRUE;
+
+  complete_in_idle (self);
 
   g_debug ("Finished initial loading of calendar '%s'", gcal_calendar_get_name (self->calendar));
 
@@ -939,6 +958,24 @@ on_calendar_visible_changed_cb (GcalCalendar        *calendar,
     }
 }
 
+static gboolean
+complete_in_idle_cb (gpointer user_data)
+{
+  g_autoptr (GcalEvent) event = NULL;
+  GcalCalendarMonitor *self;
+  IdleData *idle_data;
+
+  GCAL_ENTRY;
+
+  idle_data = user_data;
+  self = idle_data->monitor;
+  g_assert (idle_data->event == NULL);
+  g_assert (idle_data->event_id == NULL);
+
+  g_signal_emit (self, signals[COMPLETED], 0, event);
+  GCAL_RETURN (G_SOURCE_REMOVE);
+}
+
 
 /*
  * GObject overrides
@@ -1043,6 +1080,13 @@ gcal_calendar_monitor_class_init (GcalCalendarMonitorClass *klass)
                                          G_TYPE_NONE,
                                          1,
                                          GCAL_TYPE_EVENT);
+
+  signals[COMPLETED] = g_signal_new ("completed",
+                                     GCAL_TYPE_CALENDAR_MONITOR,
+                                     G_SIGNAL_RUN_FIRST,
+                                     0, NULL, NULL, NULL,
+                                     G_TYPE_NONE,
+                                     0);
 
   properties[PROP_CALENDAR] = g_param_spec_object ("calendar",
                                                    "Calendar",
