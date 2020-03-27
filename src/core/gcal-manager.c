@@ -875,15 +875,6 @@ gcal_manager_get_calendars (GcalManager *self)
   return g_hash_table_get_values (self->clients);
 }
 
-GcalCalendar*
-gcal_manager_get_calendar_from_source (GcalManager *self,
-                                       ESource     *source)
-{
-  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
-
-  return g_hash_table_lookup (self->clients, source);
-}
-
 /**
  * gcal_manager_get_default_calendar:
  * @self: a #GcalManager
