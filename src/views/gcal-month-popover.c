@@ -295,12 +295,10 @@ reposition_popover (GcalMonthPopover *self,
 static void
 update_event_list (GcalMonthPopover *self)
 {
-  g_autoptr (ICalTime) start = NULL;
-  g_autoptr (ICalTime) end = NULL;
   g_autoptr (GDateTime) start_dt = NULL;
   g_autoptr (GDateTime) end_dt = NULL;
-  g_autoptr (GList) events = NULL;
-  GList *l;
+  g_autoptr (GPtrArray) events = NULL;
+  guint i;
 
   gtk_container_foreach (GTK_CONTAINER (self->listbox), (GtkCallback) gtk_widget_destroy, NULL);
 
@@ -317,15 +315,9 @@ update_event_list (GcalMonthPopover *self)
                                     0, 0, 0);
   end_dt = g_date_time_add_days (start_dt, 1);
 
-  start = gcal_date_time_to_icaltime (start_dt);
-  end = gcal_date_time_to_icaltime (end_dt);
+  events = gcal_manager_get_events (gcal_context_get_manager (self->context), start_dt, end_dt);
 
-  events = gcal_manager_get_events (gcal_context_get_manager (self->context), start, end);
-
-  g_clear_object (&start);
-  g_clear_object (&end);
-
-  for (l = events; l; l = l->next)
+  for (i = 0; events && i < events->len; i++)
     {
       g_autoptr (GDateTime) event_start = NULL;
       g_autoptr (GDateTime) event_end = NULL;
@@ -333,7 +325,7 @@ update_event_list (GcalMonthPopover *self)
       GtkWidget *event_widget;
       GcalEvent *event;
 
-      event = l->data;
+      event = g_ptr_array_index (events, i);
 
       if (gcal_event_get_all_day (event))
         tz = g_time_zone_new_utc ();

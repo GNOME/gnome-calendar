@@ -85,9 +85,9 @@ gchar*               gcal_manager_add_source                     (GcalManager   
 void                 gcal_manager_save_source                    (GcalManager        *self,
                                                                   ESource            *source);
 
-GList*               gcal_manager_get_events                     (GcalManager        *self,
-                                                                  ICalTime           *range_start,
-                                                                  ICalTime           *range_end);
+GPtrArray*           gcal_manager_get_events                     (GcalManager        *self,
+                                                                  GDateTime          *range_start,
+                                                                  GDateTime          *range_end);
 
 /* GNOME Shell-related functions */
 GcalEvent*           gcal_manager_get_event_from_shell_search    (GcalManager        *self,

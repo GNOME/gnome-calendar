@@ -1465,35 +1465,20 @@ gcal_manager_move_event_to_source (GcalManager *self,
  *
  * Returns: (nullable)(transfer full)(content-type GcalEvent):a #GList
  */
-GList*
+GPtrArray*
 gcal_manager_get_events (GcalManager *self,
-                         ICalTime    *start_date,
-                         ICalTime    *end_date)
+                         GDateTime   *start_date,
+                         GDateTime   *end_date)
 {
-  time_t range_start, range_end;
-  GTimeZone *zone;
-  ICalTimezone *tz;
-  GatherEventData data = {
-    .manager = self,
-    .events = NULL,
-  };
+  g_autoptr (GPtrArray) events_at_range = NULL;
 
   GCAL_ENTRY;
 
   g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  zone = gcal_context_get_timezone (self->context);
-  tz = gcal_timezone_to_icaltimezone (zone);
-  range_start = i_cal_time_as_timet_with_zone (start_date, tz);
-  range_end = i_cal_time_as_timet_with_zone (end_date, tz);
+  events_at_range = gcal_timeline_get_events_at_range (self->timeline, start_date, end_date);
 
-  e_cal_data_model_foreach_component (self->e_data_model,
-                                      range_start,
-                                      range_end,
-                                      gather_events,
-                                      &data);
-
-  GCAL_RETURN (data.events);
+  GCAL_RETURN (g_steal_pointer (&events_at_range));
 }
 
 /**
