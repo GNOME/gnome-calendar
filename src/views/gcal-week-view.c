@@ -230,28 +230,6 @@ gcal_week_view_clear_marks (GcalView *view)
   gcal_week_grid_clear_marks (GCAL_WEEK_GRID (self->week_grid));
 }
 
-static void
-gcal_week_view_update_subscription (GcalView *view)
-{
-  g_autoptr (GDateTime) date_start = NULL;
-  g_autoptr (GDateTime) date_end = NULL;
-  GcalWeekView *self;
-  time_t range_start;
-  time_t range_end;
-
-  self = GCAL_WEEK_VIEW (view);
-  date_start = gcal_date_time_get_start_of_week (self->date);
-  range_start = g_date_time_to_unix (date_start);
-
-  date_end = gcal_date_time_get_end_of_week (self->date);
-  range_end = g_date_time_to_unix (date_end);
-
-  gcal_manager_set_subscriber (gcal_context_get_manager (self->context),
-                               E_CAL_DATA_MODEL_SUBSCRIBER (self),
-                               range_start,
-                               range_end);
-}
-
 static GDateTime*
 gcal_week_view_get_next_date (GcalView *view)
 {
@@ -278,7 +256,6 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->set_date = gcal_week_view_set_date;
   iface->get_children_by_uuid = gcal_week_view_get_children_by_uuid;
   iface->clear_marks = gcal_week_view_clear_marks;
-  iface->update_subscription = gcal_week_view_update_subscription;
   iface->get_next_date = gcal_week_view_get_next_date;
   iface->get_previous_date = gcal_week_view_get_previous_date;
 }

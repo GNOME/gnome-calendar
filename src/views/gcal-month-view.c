@@ -1202,32 +1202,6 @@ gcal_month_view_get_children_by_uuid (GcalView              *view,
   return filter_event_list_by_uid_and_modtype (children, mod, uuid);
 }
 
-static void
-gcal_month_view_update_subscription (GcalView *view)
-{
-  g_autoptr (GDateTime) date_start = NULL;
-  g_autoptr (GDateTime) date_end = NULL;
-  GcalMonthView *self;
-  time_t range_start;
-  time_t range_end;
-
-  self = GCAL_MONTH_VIEW (view);
-
-  g_assert (self->date != NULL);
-  date_start = g_date_time_new_local (g_date_time_get_year (self->date),
-                                      g_date_time_get_month (self->date),
-                                      1, 0, 0, 0);
-  range_start = g_date_time_to_unix (date_start);
-
-  date_end = g_date_time_add_months (date_start, 1);
-  range_end = g_date_time_to_unix (date_end);
-
-  gcal_manager_set_subscriber (gcal_context_get_manager (self->context),
-                               E_CAL_DATA_MODEL_SUBSCRIBER (self),
-                               range_start,
-                               range_end);
-}
-
 static GDateTime*
 gcal_month_view_get_next_date (GcalView *view)
 {
@@ -1254,7 +1228,6 @@ gcal_view_interface_init (GcalViewInterface *iface)
   iface->set_date = gcal_month_view_set_date;
   iface->clear_marks = gcal_month_view_clear_marks;
   iface->get_children_by_uuid = gcal_month_view_get_children_by_uuid;
-  iface->update_subscription = gcal_month_view_update_subscription;
   iface->get_next_date = gcal_month_view_get_next_date;
   iface->get_previous_date = gcal_month_view_get_previous_date;
 }
