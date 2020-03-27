@@ -43,6 +43,10 @@ void                 gcal_timeline_add_subscriber                (GcalTimeline  
 void                 gcal_timeline_remove_subscriber             (GcalTimeline           *self,
                                                                   GcalTimelineSubscriber *subscriber);
 
+GPtrArray*           gcal_timeline_get_events_at_range           (GcalTimeline       *self,
+                                                                  GDateTime          *range_start,
+                                                                  GDateTime          *range_end);
+
 const gchar*         gcal_timeline_get_filter                    (GcalTimeline       *self);
 
 void                 gcal_timeline_set_filter                    (GcalTimeline       *self,
