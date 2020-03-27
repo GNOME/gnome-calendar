@@ -30,6 +30,8 @@
 #include "gcal-month-view.h"
 #include "gcal-quick-add-popover.h"
 #include "gcal-search-button.h"
+#include "gcal-timeline.h"
+#include "gcal-timeline-subscriber.h"
 #include "gcal-view.h"
 #include "gcal-weather-settings.h"
 #include "gcal-week-view.h"
@@ -121,6 +123,7 @@ struct _GcalWindow
   /* day, week, month, year, list */
   GtkWidget          *views [6];
   GtkWidget          *edit_dialog;
+  gboolean            subscribed;
 
   GcalContext        *context;
   GcalWindowView      active_view;
@@ -234,6 +237,23 @@ update_today_button_sensitive (GcalWindow *window)
 }
 
 static void
+maybe_add_subscribers_to_timeline (GcalWindow *self)
+{
+  GcalTimeline *timeline;
+
+  if (self->subscribed)
+    return;
+
+
+  timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
+  gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
+  gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
+  gcal_timeline_add_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->year_view));
+
+  self->subscribed = TRUE;
+}
+
+static void
 update_active_date (GcalWindow *window,
                     GDateTime  *new_date)
 {
@@ -248,14 +268,11 @@ update_active_date (GcalWindow *window,
   gcal_set_date_time (&window->active_date, new_date);
 
   for (i = GCAL_WINDOW_VIEW_WEEK; i <= GCAL_WINDOW_VIEW_YEAR; i++)
-    {
-      GcalView *view = GCAL_VIEW (window->views[i]);
-
-      gcal_view_set_date (view, new_date);
-      gcal_view_update_subscription (view);
-    }
+    gcal_view_set_date (GCAL_VIEW (window->views[i]), new_date);
 
   update_today_button_sensitive (window);
+
+  maybe_add_subscribers_to_timeline (window);
 
   GCAL_EXIT;
 }

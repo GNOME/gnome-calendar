@@ -788,28 +788,19 @@ gcal_manager_set_default_calendar (GcalManager  *self,
 }
 
 /**
- * gcal_manager_set_subscriber:
+ * gcal_manager_get_timeline:
  * @self: a #GcalManager
- * @subscriber: a #ECalDataModelSubscriber
- * @range_start: the start of the range
- * @range_end: the end of the range
  *
- * Sets the @subscriber to show events between @range_start
- * and @range_end.
+ * Retrieves the default timeline of GNOME Calendar.
+ *
+ * Returns: (transfer none): a #GcalTimeline
  */
-void
-gcal_manager_set_subscriber (GcalManager             *self,
-                             ECalDataModelSubscriber *subscriber,
-                             time_t                   range_start,
-                             time_t                   range_end)
+GcalTimeline*
+gcal_manager_get_timeline (GcalManager *self)
 {
-  GCAL_ENTRY;
+  g_return_val_if_fail (GCAL_IS_MANAGER (self), NULL);
 
-  g_return_if_fail (GCAL_IS_MANAGER (self));
-
-  gcal_timeline_add_subscriber (self->timeline, GCAL_TIMELINE_SUBSCRIBER (subscriber));
-
-  GCAL_EXIT;
+  return self->timeline;
 }
 
 /**

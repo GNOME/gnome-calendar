@@ -193,25 +193,6 @@ gcal_view_get_children_by_uuid (GcalView              *view,
 }
 
 /**
- * gcal_view_update_subscription:
- * @self: a #GcalView
- *
- * Asks @self to update its #ECalDataModel subscription range. This
- * is called after gcal_view_set_date(), and it's safe to assume that
- * @self's active date is correct.
- */
-void
-gcal_view_update_subscription (GcalView *self)
-{
-  g_return_if_fail (GCAL_IS_VIEW (self));
-  g_return_if_fail (GCAL_VIEW_GET_IFACE (self)->update_subscription);
-
-  g_debug ("Updating subscription of %s", G_OBJECT_TYPE_NAME (self));
-
-  GCAL_VIEW_GET_IFACE (self)->update_subscription (self);
-}
-
-/**
  * gcal_view_get_next_date:
  * @self: a #GcalView
  *

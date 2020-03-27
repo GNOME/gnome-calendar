@@ -43,10 +43,7 @@ GcalCalendar*        gcal_manager_get_default_calendar           (GcalManager   
 void                 gcal_manager_set_default_calendar           (GcalManager        *self,
                                                                   GcalCalendar       *calendar);
 
-void                 gcal_manager_set_subscriber                 (GcalManager        *self,
-                                                                  ECalDataModelSubscriber *subscriber,
-                                                                  time_t              range_start,
-                                                                  time_t              range_end);
+GcalTimeline*        gcal_manager_get_timeline                   (GcalManager        *self);
 
 void                 gcal_manager_set_query                      (GcalManager        *self,
                                                                   const gchar        *query);
