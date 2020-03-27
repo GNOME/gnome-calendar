@@ -28,7 +28,9 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (GcalSearchModel, gcal_search_model, GCAL, SEARCH_MODEL, GObject)
 
 GcalSearchModel*     gcal_search_model_new                       (GCancellable       *cancellable,
-                                                                  gint                max_results);
+                                                                  gint                max_results,
+                                                                  GDateTime          *range_start,
+                                                                  GDateTime          *range_end);
 
 void                 gcal_search_model_wait_for_hits             (GcalSearchModel    *self,
                                                                   GCancellable       *cancellable);

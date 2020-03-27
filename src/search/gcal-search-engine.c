@@ -24,7 +24,8 @@
 #include "gcal-date-time-utils.h"
 #include "gcal-search-engine.h"
 #include "gcal-search-model.h"
-#include "gcal-thread-utils.h"
+#include "gcal-timeline.h"
+#include "gcal-timeline-subscriber.h"
 
 #include <dazzle.h>
 
@@ -41,7 +42,7 @@ struct _GcalSearchEngine
 {
   GObject             parent;
 
-  ECalDataModel      *data_model;
+  GcalTimeline       *timeline;
 
   GcalContext        *context;
 };
@@ -91,21 +92,17 @@ search_func (GTask        *task,
   g_autoptr (GcalSearchModel) model = NULL;
   GcalSearchEngine *self;
   SearchData *data;
-  time_t start;
-  time_t end;
 
   self = GCAL_SEARCH_ENGINE (source_object);
   data = (SearchData*) task_data;
-  start = g_date_time_to_unix (data->range_start);
-  end = g_date_time_to_unix (data->range_end);
 
-  model = gcal_search_model_new (cancellable, data->max_results);
-  e_cal_data_model_set_filter (self->data_model, data->query);
+  model = gcal_search_model_new (cancellable,
+                                 data->max_results,
+                                 data->range_start,
+                                 data->range_end);
 
-  e_cal_data_model_subscribe (self->data_model,
-                              E_CAL_DATA_MODEL_SUBSCRIBER (model),
-                              start,
-                              end);
+  gcal_timeline_set_filter (self->timeline, data->query);
+  gcal_timeline_add_subscriber (self->timeline, GCAL_TIMELINE_SUBSCRIBER (model));
 
   gcal_search_model_wait_for_hits (model, cancellable);
 
@@ -120,27 +117,9 @@ on_manager_calendar_added_cb (GcalManager      *manager,
                               GcalCalendar     *calendar,
                               GcalSearchEngine *self)
 {
-  ECalClient *client;
+  g_debug ("Adding calendar %s to search results", gcal_calendar_get_id (calendar));
 
-  g_debug ("Adding source %s to search results", gcal_calendar_get_id (calendar));
-
-  client = gcal_calendar_get_client (calendar);
-
-  if (gcal_calendar_get_visible (calendar))
-    e_cal_data_model_add_client (self->data_model, client);
-}
-
-static void
-on_manager_calendar_changed_cb (GcalManager      *manager,
-                                GcalCalendar     *calendar,
-                                GcalSearchEngine *self)
-{
-  g_debug ("Changing source %s from search results", gcal_calendar_get_id (calendar));
-
-  if (gcal_calendar_get_visible (calendar))
-    e_cal_data_model_add_client (self->data_model, gcal_calendar_get_client (calendar));
-  else
-    e_cal_data_model_remove_client (self->data_model, gcal_calendar_get_id (calendar));
+  gcal_timeline_add_calendar (self->timeline, calendar);
 }
 
 static void
@@ -148,17 +127,9 @@ on_manager_calendar_removed_cb (GcalManager      *manager,
                                 GcalCalendar     *calendar,
                                 GcalSearchEngine *self)
 {
-  g_debug ("Removing source %s from search results", gcal_calendar_get_id (calendar));
+  g_debug ("Removing calendar %s from search results", gcal_calendar_get_id (calendar));
 
-  e_cal_data_model_remove_client (self->data_model, gcal_calendar_get_id (calendar));
-}
-
-static void
-on_timezone_changed_cb (GcalContext      *context,
-                        GParamSpec       *pspec,
-                        GcalSearchEngine *self)
-{
-  g_debug ("Timezone changed");
+  gcal_timeline_remove_calendar (self->timeline, calendar);
 }
 
 
@@ -172,7 +143,7 @@ gcal_search_engine_finalize (GObject *object)
   GcalSearchEngine *self = (GcalSearchEngine *)object;
 
   g_clear_object (&self->context);
-  g_clear_object (&self->data_model);
+  g_clear_object (&self->timeline);
 
   G_OBJECT_CLASS (gcal_search_engine_parent_class)->finalize (object);
 }
@@ -182,27 +153,15 @@ gcal_search_engine_constructed (GObject *object)
 {
   GcalSearchEngine *self = (GcalSearchEngine *)object;
   GcalManager *manager;
-  GTimeZone *zone;
 
   G_OBJECT_CLASS (gcal_search_engine_parent_class)->constructed (object);
 
   /* Setup the data model */
-  self->data_model = e_cal_data_model_new (gcal_thread_submit_job);
-  e_cal_data_model_set_expand_recurrences (self->data_model, TRUE);
-
-  zone = gcal_context_get_timezone (self->context);
-  e_cal_data_model_set_timezone (self->data_model, gcal_timezone_to_icaltimezone (zone));
+  self->timeline = gcal_timeline_new (self->context);
 
   manager = gcal_context_get_manager (self->context);
   g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), self, 0);
-  g_signal_connect_object (manager, "calendar-changed", G_CALLBACK (on_manager_calendar_changed_cb), self, 0);
   g_signal_connect_object (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), self, 0);
-
-  g_signal_connect_object (self->context,
-                           "notify::timezone",
-                           G_CALLBACK (on_timezone_changed_cb),
-                           self,
-                           0);
 }
 
 static void

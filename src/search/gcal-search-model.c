@@ -20,10 +20,10 @@
 
 #define G_LOG_DOMAIN "GcalSearchModel"
 
-#include "e-cal-data-model.h"
 #include "gcal-application.h"
 #include "gcal-context.h"
 #include "gcal-debug.h"
+#include "gcal-timeline-subscriber.h"
 #include "gcal-search-hit.h"
 #include "gcal-search-hit-event.h"
 #include "gcal-search-model.h"
@@ -40,17 +40,19 @@ struct _GcalSearchModel
 
   GCancellable       *cancellable;
   gint                max_results;
+  GDateTime          *range_start;
+  GDateTime          *range_end;
 
   GListModel         *model;
 };
 
-static void e_cal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface);
+static void          gcal_timeline_subscriber_interface_init     (GcalTimelineSubscriberInterface *iface);
 
 static void g_list_model_interface_init                (GListModelInterface              *iface);
 
 G_DEFINE_TYPE_WITH_CODE (GcalSearchModel, gcal_search_model, G_TYPE_OBJECT,
-                         G_IMPLEMENT_INTERFACE (E_TYPE_CAL_DATA_MODEL_SUBSCRIBER,
-                                                e_cal_data_model_subscriber_interface_init)
+                         G_IMPLEMENT_INTERFACE (GCAL_TYPE_TIMELINE_SUBSCRIBER,
+                                                gcal_timeline_subscriber_interface_init)
                          G_IMPLEMENT_INTERFACE (G_TYPE_LIST_MODEL,
                                                 g_list_model_interface_init))
 
@@ -70,7 +72,7 @@ on_model_items_changed_cb (GListModel      *model,
 
 
 /*
- * ECalDataModelSubscriber interface
+ * GcalTimelineSubscriber interface
  */
 
 static gint
@@ -94,35 +96,33 @@ compare_search_hits_cb (gconstpointer a,
   return gcal_search_hit_compare (hit_a, hit_b);
 }
 
+static GDateTime*
+gcal_search_model_get_range_start (GcalTimelineSubscriber *subscriber)
+{
+  GcalSearchModel *self = GCAL_SEARCH_MODEL (subscriber);
+
+  return g_date_time_ref (self->range_start);
+}
+
+static GDateTime*
+gcal_search_model_get_range_end (GcalTimelineSubscriber *subscriber)
+{
+  GcalSearchModel *self = GCAL_SEARCH_MODEL (subscriber);
+
+  return g_date_time_ref (self->range_end);
+}
+
 static void
-gcal_search_model_component_added (ECalDataModelSubscriber *subscriber,
-                                   ECalClient              *client,
-                                   ECalComponent           *component)
+gcal_search_model_add_event (GcalTimelineSubscriber *subscriber,
+                             GcalEvent              *event)
 {
   g_autoptr (GcalSearchHitEvent) search_hit = NULL;
-  g_autoptr (GcalEvent) event = NULL;
-  g_autoptr (GError) error = NULL;
   GcalSearchModel *self;
-  GcalCalendar *calendar;
-  GcalContext *context;
-  ESource *source;
 
   self = GCAL_SEARCH_MODEL (subscriber);
 
   if (g_list_model_get_n_items (self->model) > self->max_results)
     return;
-
-  /* FIXME: propagate context to the model properly */
-  context = gcal_application_get_context (GCAL_APPLICATION (g_application_get_default ()));
-  source = e_client_get_source (E_CLIENT (client));
-  calendar = gcal_manager_get_calendar_from_source (gcal_context_get_manager (context), source);
-  event = gcal_event_new (calendar, component, &error);
-
-  if (error)
-    {
-      g_warning ("Error adding event to search results: %s", error->message);
-      return;
-    }
 
   GCAL_TRACE_MSG ("Adding search hit '%s'", gcal_event_get_summary (event));
 
@@ -135,38 +135,25 @@ gcal_search_model_component_added (ECalDataModelSubscriber *subscriber,
 }
 
 static void
-gcal_search_model_component_modified (ECalDataModelSubscriber *subscriber,
-                                      ECalClient              *client,
-                                      ECalComponent           *comp)
+gcal_search_model_update_event (GcalTimelineSubscriber *subscriber,
+                                GcalEvent              *event)
 {
 }
 
 static void
-gcal_search_model_component_removed (ECalDataModelSubscriber *subscriber,
-                                     ECalClient              *client,
-                                     const gchar             *uid,
-                                     const gchar             *rid)
+gcal_search_model_remove_event (GcalTimelineSubscriber *subscriber,
+                                GcalEvent              *event)
 {
 }
 
 static void
-gcal_search_model_freeze (ECalDataModelSubscriber *subscriber)
+gcal_timeline_subscriber_interface_init (GcalTimelineSubscriberInterface *iface)
 {
-}
-
-static void
-gcal_search_model_thaw (ECalDataModelSubscriber *subscriber)
-{
-}
-
-static void
-e_cal_data_model_subscriber_interface_init (ECalDataModelSubscriberInterface *iface)
-{
-  iface->component_added = gcal_search_model_component_added;
-  iface->component_modified = gcal_search_model_component_modified;
-  iface->component_removed = gcal_search_model_component_removed;
-  iface->freeze = gcal_search_model_freeze;
-  iface->thaw = gcal_search_model_thaw;
+  iface->get_range_start = gcal_search_model_get_range_start;
+  iface->get_range_end = gcal_search_model_get_range_end;
+  iface->add_event = gcal_search_model_add_event;
+  iface->update_event = gcal_search_model_update_event;
+  iface->remove_event = gcal_search_model_remove_event;
 }
 
 
@@ -215,6 +202,8 @@ gcal_search_model_finalize (GObject *object)
 
   g_cancellable_cancel (self->cancellable);
 
+  gcal_clear_date_time (&self->range_start);
+  gcal_clear_date_time (&self->range_end);
   g_clear_object (&self->cancellable);
   g_clear_object (&self->model);
 
@@ -238,13 +227,17 @@ gcal_search_model_init (GcalSearchModel *self)
 
 GcalSearchModel *
 gcal_search_model_new (GCancellable *cancellable,
-                       gint          max_results)
+                       gint          max_results,
+                       GDateTime    *range_start,
+                       GDateTime    *range_end)
 {
   GcalSearchModel *model;
 
   model = g_object_new (GCAL_TYPE_SEARCH_MODEL, NULL);
   model->max_results = max_results;
   model->cancellable = cancellable ? g_object_ref (cancellable) : NULL;
+  model->range_start = g_date_time_ref (range_start);
+  model->range_end = g_date_time_ref (range_end);
 
   return model;
 }
