@@ -131,6 +131,10 @@ void                 gcal_event_get_original_timezones           (GcalEvent     
 
 gchar*               gcal_event_format_date                      (GcalEvent          *self);
 
+gboolean             gcal_event_is_within_range                  (GcalEvent          *self,
+                                                                  GDateTime          *range_start,
+                                                                  GDateTime          *range_end);
+
 G_END_DECLS
 
 #endif /* GCAL_EVENT_H */

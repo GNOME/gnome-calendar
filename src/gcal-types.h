@@ -24,6 +24,10 @@
 
 G_BEGIN_DECLS
 
+typedef struct _GcalCalendar GcalCalendar;
 typedef struct _GcalContext GcalContext;
+typedef struct _GcalEvent GcalEvent;
+typedef struct _GcalTimeline GcalTimeline;
+typedef struct _GcalTimelineSubscriber GcalTimelineSubscriber;
 
 G_END_DECLS
