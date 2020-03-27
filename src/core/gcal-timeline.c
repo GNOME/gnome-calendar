@@ -744,6 +744,23 @@ gcal_timeline_remove_subscriber (GcalTimeline           *self,
   GCAL_EXIT;
 }
 
+GPtrArray*
+gcal_timeline_get_events_at_range (GcalTimeline *self,
+                                   GDateTime    *range_start,
+                                   GDateTime    *range_end)
+{
+  g_autoptr (GPtrArray) events_at_range = NULL;
+
+  g_return_val_if_fail (GCAL_IS_TIMELINE (self), NULL);
+  g_return_val_if_fail (range_start != NULL, NULL);
+  g_return_val_if_fail (range_end != NULL, NULL);
+  g_return_val_if_fail (g_date_time_compare (range_start, range_end) < 0, NULL);
+
+  events_at_range = gcal_range_tree_get_data_at_range (self->events, range_start, range_end);
+
+  return g_steal_pointer (&events_at_range);
+}
+
 const gchar*
 gcal_timeline_get_filter (GcalTimeline *self)
 {
