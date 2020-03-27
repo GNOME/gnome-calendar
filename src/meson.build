@@ -93,6 +93,7 @@ calendar_incs += contrib_incs
 
 sources = files(
   'core/gcal-calendar.c',
+  'core/gcal-calendar-monitor.c',
   'core/gcal-clock.c',
   'core/gcal-context.c',
   'core/gcal-event.c',
@@ -101,6 +102,8 @@ sources = files(
   'core/gcal-night-light-monitor.c',
   'core/gcal-recurrence.c',
   'core/gcal-shell-search-provider.c',
+  'core/gcal-timeline.c',
+  'core/gcal-timeline-subscriber.c',
   'core/gcal-timer.c',
   'core/gcal-time-zone-monitor.c',
   'gui/calendar-management/gcal-calendar-management-dialog.c',

@@ -1829,3 +1829,24 @@ gcal_event_format_date (GcalEvent *self)
 
   return g_steal_pointer (&formatted_string);
 }
+
+gboolean
+gcal_event_is_within_range (GcalEvent *self,
+                            GDateTime *range_start,
+                            GDateTime *range_end)
+{
+  GDateTime *event_start;
+  GDateTime *event_end;
+
+  event_start = gcal_event_get_date_start (self);
+  event_end = gcal_event_get_date_end (self);
+
+  if (gcal_event_get_all_day (self))
+    {
+      return gcal_date_time_compare_date (range_end, event_start) < 0 &&
+             gcal_date_time_compare_date (range_start, event_end) > 0;
+    }
+
+  return g_date_time_compare (range_end, event_start) > 0 &&
+         g_date_time_compare (event_end, range_start) > 0;
+}
