@@ -84,8 +84,6 @@ struct _GcalManager
   ESourceRegistry    *source_registry;
   ECredentialsPrompter *credentials_prompter;
 
-  ECalDataModel      *e_data_model;
-
   ECalDataModel      *shell_search_data_model;
   ViewStateData      *search_view_data;
 
@@ -180,9 +178,6 @@ remove_source (GcalManager  *self,
 
   g_object_ref (calendar);
 
-  e_cal_data_model_remove_client (self->e_data_model,
-                                  e_source_get_uid (source));
-
   gcal_timeline_remove_calendar (self->timeline, calendar);
   g_hash_table_remove (self->clients, source);
   g_signal_emit (self, signals[CALENDAR_REMOVED], 0, calendar);
@@ -207,7 +202,6 @@ source_changed (GcalManager *self,
     {
       ECalClient *client = gcal_calendar_get_client (calendar);
 
-      e_cal_data_model_add_client (self->e_data_model, client);
       if (self->shell_search_data_model)
         e_cal_data_model_add_client (self->shell_search_data_model, client);
     }
@@ -215,7 +209,6 @@ source_changed (GcalManager *self,
     {
       const gchar *id = gcal_calendar_get_id (calendar);
 
-      e_cal_data_model_remove_client (self->e_data_model, id);
       if (self->shell_search_data_model)
         e_cal_data_model_remove_client (self->shell_search_data_model, id);
     }
@@ -295,7 +288,6 @@ on_calendar_created_cb (GObject      *source_object,
 
   if (visible)
     {
-      e_cal_data_model_add_client (self->e_data_model, client);
       if (self->shell_search_data_model != NULL)
         e_cal_data_model_add_client (self->shell_search_data_model, client);
     }
@@ -661,7 +653,6 @@ gcal_manager_finalize (GObject *object)
   GCAL_ENTRY;
 
   g_clear_object (&self->timeline);
-  g_clear_object (&self->e_data_model);
   g_clear_object (&self->shell_search_data_model);
 
   if (self->context)
@@ -1063,10 +1054,7 @@ gcal_manager_set_subscriber (GcalManager             *self,
 
   g_return_if_fail (GCAL_IS_MANAGER (self));
 
-  if (GCAL_IS_TIMELINE_SUBSCRIBER (subscriber))
-    gcal_timeline_add_subscriber (self->timeline, GCAL_TIMELINE_SUBSCRIBER (subscriber));
-  else
-    e_cal_data_model_subscribe (self->e_data_model, subscriber, range_start, range_end);
+  gcal_timeline_add_subscriber (self->timeline, GCAL_TIMELINE_SUBSCRIBER (subscriber));
 
   GCAL_EXIT;
 }
@@ -1560,7 +1548,6 @@ gcal_manager_startup (GcalManager *self)
   GList *sources, *l;
   GError *error = NULL;
   ESourceCredentialsProvider *credentials_provider;
-  GTimeZone *zone;
 
   GCAL_ENTRY;
 
@@ -1657,14 +1644,6 @@ gcal_manager_startup (GcalManager *self)
   g_signal_connect_object (self->source_registry, "source-added", G_CALLBACK (load_source), self, G_CONNECT_SWAPPED);
   g_signal_connect_object (self->source_registry, "source-removed", G_CALLBACK (remove_source), self, G_CONNECT_SWAPPED);
   g_signal_connect_object (self->source_registry, "source-changed", G_CALLBACK (source_changed), self, G_CONNECT_SWAPPED);
-
-  /* create data model */
-  self->e_data_model = e_cal_data_model_new (gcal_thread_submit_job);
-
-  e_cal_data_model_set_expand_recurrences (self->e_data_model, TRUE);
-
-  zone = gcal_context_get_timezone (self->context);
-  e_cal_data_model_set_timezone (self->e_data_model, gcal_timezone_to_icaltimezone (zone));
 
   sources = e_source_registry_list_enabled (self->source_registry, E_SOURCE_EXTENSION_CALENDAR);
 
