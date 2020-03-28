@@ -160,25 +160,6 @@ remove_event_from_subscriber (GcalTimelineSubscriber *subscriber,
 }
 
 static gboolean
-event_is_really_within_range (GcalEvent *event,
-                              GDateTime *range_start,
-                              GDateTime *range_end)
-{
-  GDateTime *event_start;
-  GDateTime *event_end;
-
-  /* Assume that ECalClientView did its job correctly */
-  if (!gcal_event_get_all_day (event))
-    return TRUE;
-
-  event_start = gcal_event_get_date_start (event);
-  event_end = gcal_event_get_date_end (event);
-
-  return gcal_date_time_compare_date (range_end, event_start) < 0 &&
-         gcal_date_time_compare_date (range_start, event_end) > 0;
-}
-
-static gboolean
 subscriber_contains_event (GcalTimelineSubscriber *subscriber,
                            GcalEvent              *event)
 {
@@ -188,7 +169,7 @@ subscriber_contains_event (GcalTimelineSubscriber *subscriber,
   subscriber_range_start = gcal_timeline_subscriber_get_range_start (subscriber);
   subscriber_range_end = gcal_timeline_subscriber_get_range_end (subscriber);
 
-  return event_is_really_within_range (event, subscriber_range_start, subscriber_range_end);
+  return gcal_event_is_within_range (event, subscriber_range_start, subscriber_range_end);
 }
 
 static void
@@ -328,7 +309,7 @@ calculate_changed_events (GcalTimeline            *self,
     {
       GcalEvent *event = g_ptr_array_index (events_to_remove, i);
 
-      if (!event_is_really_within_range (event, old_range_start, old_range_end))
+      if (!gcal_event_is_within_range (event, old_range_start, old_range_end))
         continue;
 
       remove_event_from_subscriber (subscriber, event);
@@ -338,7 +319,7 @@ calculate_changed_events (GcalTimeline            *self,
     {
       GcalEvent *event = g_ptr_array_index (events_to_add, i);
 
-      if (!event_is_really_within_range (event, new_range_start, new_range_end))
+      if (!gcal_event_is_within_range (event, new_range_start, new_range_end))
         continue;
 
       add_event_to_subscriber (subscriber, event);
