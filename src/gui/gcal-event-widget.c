@@ -765,6 +765,23 @@ gcal_event_widget_unrealize (GtkWidget *widget)
   GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->unrealize (widget);
 }
 
+static void
+gcal_event_widget_destroy (GtkWidget *widget)
+{
+  GcalEventWidget *self;
+
+  self = GCAL_EVENT_WIDGET (widget);
+
+  /* remove timeouts */
+  if (self->vertical_label_source_id > 0)
+    {
+      g_source_remove (self->vertical_label_source_id);
+      self->vertical_label_source_id = 0;
+    }
+
+  GTK_WIDGET_CLASS (gcal_event_widget_parent_class)->destroy (widget);
+}
+
 /*
  * GObject overrides
  */
@@ -865,13 +882,6 @@ gcal_event_widget_finalize (GObject *object)
   g_clear_object (&self->event);
   g_clear_object (&self->context);
 
-  /* remove timeouts */
-  if (self->vertical_label_source_id > 0)
-    {
-      g_source_remove (self->vertical_label_source_id);
-      self->vertical_label_source_id = 0;
-    }
-
   G_OBJECT_CLASS (gcal_event_widget_parent_class)->finalize (object);
 }
 
@@ -897,6 +907,7 @@ gcal_event_widget_class_init (GcalEventWidgetClass *klass)
   widget_class->scroll_event = gcal_event_widget_scroll_event;
   widget_class->unmap = gcal_event_widget_unmap;
   widget_class->unrealize = gcal_event_widget_unrealize;
+  widget_class->destroy = gcal_event_widget_destroy;
 
   /**
    * GcalEventWidget::context:
