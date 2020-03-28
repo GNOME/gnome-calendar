@@ -1,0 +1,999 @@
+# Kurdish (Sorani) translation for gnome-calendar
+# Copyright (c) 2020 Rosetta Contributors and Canonical Ltd 2020
+# This file is distributed under the same license as the gnome-calendar package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: gnome-calendar\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2019-10-11 20:00+0000\n"
+"PO-Revision-Date: 2020-03-29 00:21+0300\n"
+"Last-Translator: Jwtiyar Nariman <jwtiyar@gmail.com>\n"
+"Language-Team: Kurdish (Sorani) <ckb@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Launchpad-Export-Date: 2020-03-28 21:20+0000\n"
+"X-Generator: Poedit 2.3\n"
+"Language: ckb\n"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
+#: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
+#: src/gui/gcal-application.c:277 src/gui/gcal-quick-add-popover.ui:187
+#: src/gui/gcal-window.ui:163
+msgid "Calendar"
+msgstr "ڕۆژژمێر"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:8
+msgid "Calendar for GNOME"
+msgstr "ڕۆژژمێر بۆ گنۆم"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:11
+msgid ""
+"GNOME Calendar is a simple and beautiful calendar application designed to "
+"perfectly fit the GNOME desktop. By reusing the components which the GNOME "
+"desktop is built on, Calendar nicely integrates with the GNOME ecosystem."
+msgstr ""
+"ڕۆژژمێری گنۆم بریتییە لە داوانامەیەکی سانا و جوان کە درووستکراوە بۆ ئەوەی "
+"بەباشی بگونجێت لەگەڵ ڕوومێزی گنۆم. بەبەکارهێنانی هەمان پێکهاتەکانی ڕوومێزی "
+"گنۆم، ڕۆژژمێر بەباشی تێکەڵدەبێت لە ژینگەی گنۆم."
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:16
+msgid ""
+"We aim to find the perfect balance between nicely crafted features and user-"
+"centred usability. No excess, nothing missing. You’ll feel comfortable using "
+"Calendar, like you’ve been using it for ages!"
+msgstr ""
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:27
+msgid "Week view"
+msgstr "پێشاندانی هەفتەیی"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:31
+msgid "Search for events"
+msgstr "گەڕان بۆ ڕووداوەکان"
+
+#: data/appdata/org.gnome.Calendar.appdata.xml.in.in:35
+msgid "Calendar management"
+msgstr "ڕێکخستنی ڕۆژژمێر"
+
+#: data/org.gnome.Calendar.desktop.in.in:4
+msgid "Access and manage your calendars"
+msgstr "بچۆناوەو و ڕۆژژمێرەکەت ڕێکبخە"
+
+#. Translators: Do NOT translate or transliterate this text (this is an icon file name)!
+#: data/org.gnome.Calendar.desktop.in:7
+msgid "org.gnome.Calendar"
+msgstr "org.gnome.Calendar"
+
+#. Translators: Search terms to find this application. Do NOT translate or localize the semicolons! The list MUST also end with a semicolon!
+#: data/org.gnome.Calendar.desktop.in.in:13
+msgid "Calendar;Event;Reminder;"
+msgstr "Calendar;Event;Reminder;"
+
+#: data/org.gnome.calendar.gschema.xml.in:6
+msgid "Window maximized"
+msgstr "پەنجەرە گەورەکرایەوە"
+
+#: data/org.gnome.calendar.gschema.xml.in:7
+msgid "Window maximized state"
+msgstr "دۆخی پەنجەرەی گەورەکراوە"
+
+#: data/org.gnome.calendar.gschema.xml.in:11
+msgid "Window size"
+msgstr "قەبارەی پەنجەرە"
+
+#: data/org.gnome.calendar.gschema.xml.in:12
+msgid "Window size (width and height)."
+msgstr "قەبارەی پەنجەرە(پانی و بەرزی)"
+
+#: data/org.gnome.calendar.gschema.xml.in:16
+msgid "Window position"
+msgstr "شوێنی پەنجەرە"
+
+#: data/org.gnome.calendar.gschema.xml.in:17
+msgid "Window position (x and y)."
+msgstr "شوێنی پەنجەرە( x و y)"
+
+#: data/org.gnome.calendar.gschema.xml.in:21
+msgid "Type of the active view"
+msgstr "جۆری پیشاندنی چالاکی"
+
+#: data/org.gnome.calendar.gschema.xml.in:22
+msgid "Type of the active window view, default value is: monthly view"
+msgstr "جۆری پیشاندانی پەنجەرەی چالاکی، نرخی بنەڕەت: پیشاندانی هەفتەیی"
+
+#: data/org.gnome.calendar.gschema.xml.in:26
+msgid "Weather Service Configuration"
+msgstr "ڕێکخستنی خزمەتگوزاری کەش و هەوا"
+
+#: data/org.gnome.calendar.gschema.xml.in:27
+msgid ""
+"Whether weather reports are shown, automatic locations are used and a "
+"location-name"
+msgstr "چ کاتێک تۆماری کەش و هەوا پیشان دەدرێت، شوێن خۆاکار و ناوی-شوێن"
+
+#: data/org.gnome.calendar.gschema.xml.in:31
+msgid "Follow system night light"
+msgstr "بەدووای ڕۆشنای شەوی سیستم بکەوە"
+
+#: data/org.gnome.calendar.gschema.xml.in:32
+msgid "Use GNOME night light setting to activate night-mode."
+msgstr "ڕێکخستنی رووناکی شەوانەی گنۆم بەکاربێنە بۆ چالاککردنی دۆزی-شەو."
+
+#: src/gui/gcal-alarm-row.ui:18
+msgid "Toggles the sound of the alarm"
+msgstr "کاراکردنی دەنگی وریاکەرەوە"
+
+#: src/gui/gcal-alarm-row.ui:35
+msgid "Remove the alarm"
+msgstr "وریاکەرەوە بسڕەوە"
+
+#: src/gui/calendar-management/gcal-calendar-management-dialog.ui:42
+msgid "Calendar Settings"
+msgstr "ڕێکخستنی ڕۆژژمێر"
+
+#: src/gui/gcal-calendar-popover.ui:43
+msgid "_Synchronize Calendars"
+msgstr "_هاودەمکردنی ڕؤژژمێر"
+
+#: src/gui/gcal-calendar-popover.ui:51
+msgid "Manage Calendars…"
+msgstr "بەڕێوەبردنی ڕۆژژمێر..."
+
+#: src/gui/gcal-calendar-popover.ui:75
+msgctxt "tooltip"
+msgid "Synchronizing remote calendars…"
+msgstr "هاودەمکردنی ڕۆژژمێری دوور..."
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:31
+#: src/gui/gcal-window.c:705 src/gui/gcal-window.c:709
+msgid "Undo"
+msgstr "گەڕانەوە"
+
+#: src/gui/calendar-management/gcal-calendars-page.ui:97
+msgid "Add Calendar…"
+msgstr "رۆژژمێر زیادبکە..."
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:18
+msgid "Account"
+msgstr "هەژمار"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:43
+msgid "Settings"
+msgstr "ڕێكخستنەكان"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:64
+#: src/gui/gcal-edit-dialog.ui:177
+msgid "Location"
+msgstr "شوێن"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:93
+msgid "Calendar name"
+msgstr "ناوی ڕۆژژمێر"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:121
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:65
+msgid "Color"
+msgstr "ڕەنگ"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:155
+msgid "Display calendar"
+msgstr "ڕۆژژمێر پیشانبدە"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:175
+msgid "Add new events to this calendar by default"
+msgstr "ڕووداوێکی نوێ زیادبکە بۆ رۆژژمێر بەشێوەی بنەڕەتی"
+
+#: src/gui/calendar-management/gcal-edit-calendar-page.ui:190
+msgid "Remove Calendar"
+msgstr "سڕینەوەی ڕۆژژمێر"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:302
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:341
+#: src/gui/gcal-edit-dialog.ui:17
+msgid "Cancel"
+msgstr "پاشگەزبوونەوە"
+
+#: src/gui/gcal-edit-dialog.ui:37
+msgid "Click to select the calendar"
+msgstr "کرتە بکە بۆ دیاریکردنی ڕۆژژمێر"
+
+#: src/gui/gcal-edit-dialog.c:374 src/gui/gcal-edit-dialog.ui:109
+msgid "Done"
+msgstr "تەواو"
+
+#: src/gui/gcal-edit-dialog.ui:156
+msgid "Title"
+msgstr "ناونیشان"
+
+#: data/ui/edit-dialog.ui:164
+msgid "Date"
+msgstr "بەروار"
+
+#: src/gui/gcal-edit-dialog.ui:343
+msgid "Repeat"
+msgstr "دووباره‌"
+
+#: src/gui/gcal-edit-dialog.ui:438
+msgid "Reminders"
+msgstr "بیرخەرەوەکان"
+
+#: src/gui/gcal-edit-dialog.ui:495
+msgid "Notes"
+msgstr "تێبینییەکان"
+
+#: data/ui/edit-dialog.ui:301
+msgid "Time"
+msgstr "کات"
+
+#: src/gui/gcal-edit-dialog.ui:226
+msgid "All Day"
+msgstr "هه‌موو ڕۆژێك"
+
+#: data/ui/edit-dialog.ui:399
+msgid "Add reminder…"
+msgstr "بیرخەرەوە زیادبکە"
+
+#: src/gui/gcal-edit-dialog.ui:354
+msgid "No Repeat"
+msgstr "بێ دووبارە"
+
+#: src/gui/gcal-edit-dialog.ui:355
+msgid "Daily"
+msgstr "ڕۆژانە"
+
+#: src/gui/gcal-edit-dialog.ui:356
+msgid "Monday – Friday"
+msgstr "دووشەم - هەینی"
+
+#: src/gui/gcal-edit-dialog.ui:357
+msgid "Weekly"
+msgstr "هەفتانە"
+
+#: src/gui/gcal-edit-dialog.ui:358
+msgid "Monthly"
+msgstr "مانگانە"
+
+#: src/gui/gcal-edit-dialog.ui:359
+msgid "Yearly"
+msgstr "ساڵانە"
+
+#: src/gui/gcal-edit-dialog.ui:382
+msgid "Forever"
+msgstr "تاکۆتایی"
+
+#: src/gui/gcal-edit-dialog.ui:383
+msgid "No. of occurrences"
+msgstr "ژمارەی ئەو دۆزینانەوە"
+
+#: src/gui/gcal-edit-dialog.ui:384
+msgid "Until Date"
+msgstr "تاکو ئەو ڕۆژە"
+
+#: src/gui/gcal-edit-dialog.ui:539
+msgid "Delete Event"
+msgstr "سڕینەوەی ڕووداو"
+
+#: src/gui/gcal-edit-dialog.ui:573
+msgid "5 minutes"
+msgstr "۵ خولەک"
+
+#: src/gui/gcal-edit-dialog.ui:582
+msgid "10 minutes"
+msgstr "۱۰ خولەک"
+
+#: src/gui/gcal-edit-dialog.ui:591
+msgid "30 minutes"
+msgstr "۳۰ خولەک"
+
+#: src/gui/gcal-edit-dialog.ui:600
+msgid "1 hour"
+msgstr "١ کاژێر"
+
+#: src/gui/gcal-edit-dialog.ui:608
+msgid "1 day"
+msgstr "1 ڕۆژ"
+
+#: src/gui/gcal-edit-dialog.ui:617
+msgid "2 days"
+msgstr "۲ ڕۆژ"
+
+#: src/gui/gcal-edit-dialog.ui:626
+msgid "3 days"
+msgstr "3 ڕۆژ"
+
+#: src/gui/gcal-edit-dialog.ui:635
+msgid "1 week"
+msgstr "۱ هەفتە"
+
+#: src/help-overlay.ui:13
+msgctxt "shortcut window"
+msgid "General"
+msgstr "گشتی"
+
+#: src/help-overlay.ui:17
+msgctxt "shortcut window"
+msgid "New event"
+msgstr "ڕووداوی نوێ"
+
+#: src/help-overlay.ui:24
+msgctxt "shortcut window"
+msgid "Close window"
+msgstr "پەنجەرە دابخە"
+
+#: src/help-overlay.ui:31
+msgctxt "shortcut window"
+msgid "Search"
+msgstr "گەڕان"
+
+#: src/help-overlay.ui:38
+msgctxt "shortcut window"
+msgid "Show help"
+msgstr "یارمەتی پێشان بدە"
+
+#: src/help-overlay.ui:45
+msgctxt "shortcut window"
+msgid "Shortcuts"
+msgstr "قەدبڕەکان"
+
+#: src/help-overlay.ui:54
+msgctxt "shortcut window"
+msgid "Navigation"
+msgstr "ڕێدۆزی"
+
+#: src/help-overlay.ui:58
+msgctxt "shortcut window"
+msgid "Go back"
+msgstr "بڕۆدواوە"
+
+#: src/help-overlay.ui:65
+msgctxt "shortcut window"
+msgid "Go forward"
+msgstr "بڕۆ پێشەوە"
+
+#: src/help-overlay.ui:72
+msgctxt "shortcut window"
+msgid "Show today"
+msgstr "ئەمڕۆ پیشانبدە"
+
+#: src/help-overlay.ui:79
+msgctxt "shortcut window"
+msgid "Next view"
+msgstr "پێشاندانی دوواتر"
+
+#: src/help-overlay.ui:86
+msgctxt "shortcut window"
+msgid "Previous view"
+msgstr "پێشاندانی پێشوو"
+
+#: src/help-overlay.ui:95
+msgctxt "shortcut window"
+msgid "View"
+msgstr "پیشاندان"
+
+#: src/help-overlay.ui:99
+msgctxt "shortcut window"
+msgid "Week view"
+msgstr "پێشاندانی هەفتەیی"
+
+#: src/help-overlay.ui:106
+msgctxt "shortcut window"
+msgid "Month view"
+msgstr "پێشاندانی مانگانە"
+
+#: src/help-overlay.ui:113
+msgctxt "shortcut window"
+msgid "Year view"
+msgstr "پیشاندانی ساڵانە"
+
+#: data/ui/menus.ui:6
+msgid "From Web…"
+msgstr "لە وێبەوە..."
+
+#: data/ui/menus.ui:10
+msgid "New Local Calendar…"
+msgstr "ڕۆژژمێرێکی ناوخۆیی نوێ..."
+
+#: data/ui/menus.ui:14
+msgid "From File…"
+msgstr "لە پەڕگەوە..."
+
+#: src/views/gcal-month-popover.ui:91
+msgid "New Event…"
+msgstr "ڕووداوی نوێ..."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:33
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:41
+msgid "Calendar Name"
+msgstr "ناوی ڕۆژژمێر"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:86
+msgid "Import a Calendar"
+msgstr "هاوردەکردنی ڕۆژژمێر"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:105
+msgid ""
+"Alternatively, enter the web address of an online calendar you want to "
+"import, or open a supported calendar file."
+msgstr ""
+"بەلاجیاتی، ناونیشانی تۆڕەی ڕۆژژمێرێکی سەرهێڵ تۆماربکە کە دەتەوێت بیهێنی، یان "
+"پەڕگەی رۆژژمێرێکی پشتگیریکراو بکەرەوە."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:137
+msgid "Open a File"
+msgstr "کردنوەی پەڕگە"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:158
+msgid "Calendars"
+msgstr "ڕۆژژمێرەکان"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:204
+msgid ""
+"If the calendar belongs to one of your online accounts, you can add it "
+"through the <a href=\"GOA\">online account settings</a>."
+msgstr ""
+"ئەگەر ڕۆژژمێرەکە هەبوو لە یەکێک لە هەژمارە سەرهێڵەکانت، تۆ دەتوانیت زیای "
+"بکەی لەناو <a href=\"GOA\">ڕێکخستنەکانی هەژمارە سەرهێڵکە</a>."
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:240
+msgid "User"
+msgstr "بەکارهێنەر"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:254
+msgid "Password"
+msgstr "تێپەڕەوشە"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:311
+msgid "Connect"
+msgstr "پەیوەندی ببەستە"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.ui:348
+#: src/gui/gcal-quick-add-popover.ui:130
+msgid "Add"
+msgstr "زۆركردن"
+
+#: src/gui/gcal-quick-add-popover.ui:117
+msgid "Edit Details…"
+msgstr "زانارییەکان دەستکاریبکە..."
+
+#: data/ui/search-popover.ui:76
+msgid "No results found"
+msgstr "هیچ ئەنجامێک نەدۆزرایەوە"
+
+#: data/ui/search-popover.ui:92
+msgid "Try a different search"
+msgstr "گەڕانێکی جیاواز تاقیبکەرەوە"
+
+#: src/views/gcal-week-grid.c:756 src/views/gcal-week-view.c:316
+msgid "00:00"
+msgstr "٠٠:٠٠"
+
+#: src/gui/gcal-time-selector.ui:22
+msgid ":"
+msgstr ":"
+
+#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:475
+msgid "AM"
+msgstr "پ ن"
+
+#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:475
+msgid "PM"
+msgstr "د ن"
+
+#: src/gui/gcal-window.ui:318 src/weather/gcal-weather-settings.ui:12
+msgid "_Weather"
+msgstr "_کەش و هەوا"
+
+#: src/weather/gcal-weather-settings.ui:30
+msgid "Show Weather"
+msgstr "کەش و هەوا پیشانبدە"
+
+#: src/weather/gcal-weather-settings.ui:53
+msgid "Automatic Location"
+msgstr "شوێنی خۆکار"
+
+#: src/gui/gcal-window.ui:43
+msgid "Week"
+msgstr "هەفتە"
+
+#: src/gui/gcal-window.ui:58
+msgid "Month"
+msgstr "مانگ"
+
+#: src/gui/gcal-window.ui:72
+msgid "Year"
+msgstr "ساڵ"
+
+#: src/gui/gcal-window.ui:169
+msgctxt "tooltip"
+msgid "Add a new event"
+msgstr "ڕووداوێکی نوێ زیادبکە"
+
+#: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
+#: src/views/gcal-year-view.c:279 src/views/gcal-year-view.c:557
+#: src/views/gcal-year-view.ui:88
+msgid "Today"
+msgstr "ئەمڕۆ"
+
+#: src/gui/gcal-window.ui:258
+msgid "Manage your calendars"
+msgstr "ڕێکخستنی ڕۆژمێرەکەت"
+
+#: src/gui/gcal-window.ui:269
+msgctxt "tooltip"
+msgid "Search for events"
+msgstr "گەڕان بۆ ڕووداوەکان"
+
+#: src/gui/gcal-window.ui:309
+msgid "_Online Accounts…"
+msgstr "_هەژماری سەرهێڵ..."
+
+#: src/gui/gcal-window.ui:333
+msgid "_Keyboard Shortcuts"
+msgstr "_قەدبڕەکانی تەختەکلیل"
+
+#: src/gui/gcal-window.ui:342
+msgid "_About Calendar"
+msgstr "_دەربارەی ڕۆژژمێر"
+
+#: src/views/gcal-year-view.ui:133
+msgid "No events"
+msgstr "ڕووداوی تێدانییە"
+
+#: src/views/gcal-year-view.ui:155
+msgid "Add Event…"
+msgstr "ڕووداو زیاد بکە"
+
+#. Translators: %1$s is the start date and %2$s is the end date.
+#: src/core/gcal-event.c:1878
+#, c-format
+msgid "%1$s — %2$s"
+msgstr "%1$s — %2$s"
+
+#.
+#. * Translators: %1$s is the start date, %2$s is the start time,
+#. * %3$s is the end date, and %4$s is the end time.
+#.
+#: src/core/gcal-event.c:1886
+#, c-format
+msgid "%1$s %2$s — %3$s %4$s"
+msgstr "%1$s %2$s — %3$s %4$s"
+
+#. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
+#. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
+#: src/core/gcal-event.c:1902 src/gui/gcal-quick-add-popover.c:470
+#, c-format
+msgid "%1$s, %2$s – %3$s"
+msgstr "%1$s, %2$s – %3$s"
+
+#: src/gui/calendar-management/gcal-calendars-page.c:359
+msgid "Manage Calendars"
+msgstr "بەڕێوەبردنی ڕۆژژمێرەکان"
+
+#. Update notification label
+#: src/gui/calendar-management/gcal-calendars-page.c:389
+#, c-format
+msgid "Calendar <b>%s</b> removed"
+msgstr "ڕۆژژمێری <b>%s</b>سڕایەوە"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:491
+msgid "New Calendar"
+msgstr "ڕۆژژمێری نوێ"
+
+#: src/gui/calendar-management/gcal-new-calendar-page.c:653
+msgid "Calendar files"
+msgstr "پەڕگەکانی ڕۆژژمێر"
+
+#: src/gui/gcal-application.c:63
+msgid "Quit GNOME Calendar"
+msgstr "دەرچوون ڕۆژژمێری گنۆم"
+
+#: src/gui/gcal-application.c:68
+msgid "Display version number"
+msgstr "ژمارەی وەشان پیشان بدە"
+
+#: src/gui/gcal-application.c:73
+msgid "Enable debug messages"
+msgstr "پەیامی هەڵەدۆزی چالاک بکە"
+
+#: src/gui/gcal-application.c:78
+msgid "Open calendar on the passed date"
+msgstr "ڕۆژژمێر بکەرەوە لە ڕۆژە ڕۆشتووەکان"
+
+#: src/gui/gcal-application.c:83
+msgid "Open calendar showing the passed event"
+msgstr "ڕۆژژمێر بکەرەوە بۆ پیشاندانی ڕۆژە ڕۆشتووەکان"
+
+#: src/gui/gcal-application.c:234
+#, c-format
+msgid "Copyright © 2012–%d The Calendar authors"
+msgstr "مافی لەبەرگرتنەوە © 2012–%d نووسەرانی ڕؤژژێر"
+
+#: src/gui/gcal-application.c:288
+msgid "translator-credits"
+msgstr ""
+"Launchpad Contributions:\n"
+"  Jwtiyar Nariman https://launchpad.net/~jwtiyar\n"
+"  brwa salam https://launchpad.net/~brwasalam"
+
+#: src/gui/gcal-edit-dialog.c:374
+msgid "Save"
+msgstr "پاشەکەوتکردن"
+
+#: src/gui/gcal-edit-dialog.c:530
+#, c-format
+msgid "%d minute before"
+msgid_plural "%d minutes before"
+msgstr[0] "پێش %d خولەک"
+msgstr[1] "پێش %d خولەک"
+
+#: src/gui/gcal-edit-dialog.c:538
+#, c-format
+msgid "%d hour before"
+msgid_plural "%d hours before"
+msgstr[0] "پێش %d کاژێر"
+msgstr[1] "پێش %d کاژێر"
+
+#: src/gui/gcal-edit-dialog.c:546
+#, c-format
+msgid "%d day before"
+msgid_plural "%d days before"
+msgstr[0] "پێش %d ڕۆژ"
+msgstr[1] "پێش %d ڕۆژ"
+
+#: src/gui/gcal-edit-dialog.c:554
+#, c-format
+msgid "%d week before"
+msgid_plural "%d weeks before"
+msgstr[0] "پێش %d هەفتە"
+msgstr[1] "پێش %d هەفتە"
+
+#: src/gui/gcal-edit-dialog.c:1512 src/gui/gcal-quick-add-popover.c:687
+msgid "Unnamed event"
+msgstr "ڕووداوی بێ ناو"
+
+#. Translators: %s is the location of the event (e.g. "Downtown, 3rd Avenue")
+#: src/gui/gcal-event-widget.c:428
+#, c-format
+msgid "At %s"
+msgstr "لە %s"
+
+#: src/gui/gcal-quick-add-popover.c:117
+#, c-format
+msgid "%s (this calendar is read-only)"
+msgstr "%s (ئەم ڕۆژژمێرە تەنها بۆ خوێندنەوەیە)"
+
+#: src/gui/gcal-quick-add-popover.c:244
+msgid "from next Monday"
+msgstr "لە دووشەممەی داهاتووەوە"
+
+#: src/gui/gcal-quick-add-popover.c:245
+msgid "from next Tuesday"
+msgstr "لە سێشەممەی داهاتووەوە"
+
+#: src/gui/gcal-quick-add-popover.c:246
+msgid "from next Wednesday"
+msgstr "لە چوارشەممەی داهاتوووەوە"
+
+#: src/gui/gcal-quick-add-popover.c:247
+msgid "from next Thursday"
+msgstr "لە پێنجشەممەی داهاتووەوە"
+
+#: src/gui/gcal-quick-add-popover.c:248
+msgid "from next Friday"
+msgstr "لە هەینی داهاتووەوە"
+
+#: src/gui/gcal-quick-add-popover.c:249
+msgid "from next Saturday"
+msgstr "لە یەکشەممەی داهاتاووەوە"
+
+#: src/gui/gcal-quick-add-popover.c:250
+msgid "from next Sunday"
+msgstr "لە شەممەی داهاتووەوە"
+
+#: src/gui/gcal-quick-add-popover.c:255
+msgid "to next Monday"
+msgstr "بۆ دووشەممەی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:256
+msgid "to next Tuesday"
+msgstr "بۆ سێشەممەی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:257
+msgid "to next Wednesday"
+msgstr "بۆ چوارشەممەی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:258
+msgid "to next Thursday"
+msgstr "بۆ پێنجشەممەی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:259
+msgid "to next Friday"
+msgstr "بۆ هەینی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:260
+msgid "to next Saturday"
+msgstr "بۆ شەممەی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:261
+msgid "to next Sunday"
+msgstr "بۆ یەکشەممەی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:266
+msgid "January"
+msgstr "کانونی دووەم"
+
+#: src/gui/gcal-quick-add-popover.c:267
+msgid "February"
+msgstr "شوبات"
+
+#: src/gui/gcal-quick-add-popover.c:268
+msgid "March"
+msgstr "ئازار"
+
+#: src/gui/gcal-quick-add-popover.c:269
+msgid "April"
+msgstr "نیسان"
+
+#: src/gui/gcal-quick-add-popover.c:270
+msgid "May"
+msgstr "ئایار"
+
+#: src/gui/gcal-quick-add-popover.c:271
+msgid "June"
+msgstr "حوزەیران"
+
+#: src/gui/gcal-quick-add-popover.c:272
+msgid "July"
+msgstr "تەمموز"
+
+#: src/gui/gcal-quick-add-popover.c:273
+msgid "August"
+msgstr "ئاب"
+
+#: src/gui/gcal-quick-add-popover.c:274
+msgid "September"
+msgstr "ئەیلول"
+
+#: src/gui/gcal-quick-add-popover.c:275
+msgid "October"
+msgstr "تشرینی یەکەم"
+
+#: src/gui/gcal-quick-add-popover.c:276
+msgid "November"
+msgstr "تشرینی دووەم"
+
+#: src/gui/gcal-quick-add-popover.c:277
+msgid "December"
+msgstr "کانونی یەکەم"
+
+#: src/gui/gcal-quick-add-popover.c:286
+#, c-format
+msgid "from Today"
+msgstr "لە ئەمڕۆوە"
+
+#: src/gui/gcal-quick-add-popover.c:290
+#, c-format
+msgid "from Tomorrow"
+msgstr "لە سبەینێەوە"
+
+#: src/gui/gcal-quick-add-popover.c:294
+#, c-format
+msgid "from Yesterday"
+msgstr "لە دوێنێووە"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gui/gcal-quick-add-popover.c:312
+#, c-format
+msgid "from %1$s %2$s"
+msgstr "لە %1$s %2$s"
+
+#: src/gui/gcal-quick-add-popover.c:323
+#, c-format
+msgid "to Today"
+msgstr "بۆ ئەمڕۆ"
+
+#: src/gui/gcal-quick-add-popover.c:327
+#, c-format
+msgid "to Tomorrow"
+msgstr "بۆ بەیانی"
+
+#: src/gui/gcal-quick-add-popover.c:331
+#, c-format
+msgid "to Yesterday"
+msgstr "بۆ سبەینێ"
+
+#. Translators:
+#. * this is the format string for representing a date consisting of a month
+#. * name and a date of month.
+#.
+#: src/gui/gcal-quick-add-popover.c:349
+#, c-format
+msgid "to %1$s %2$s"
+msgstr "بۆ %1$s %2$s"
+
+#. Translators: %1$s is the start date (e.g. "from Today") and %2$s is the end date (e.g. "to Tomorrow")
+#: src/gui/gcal-quick-add-popover.c:356
+#, c-format
+msgid "New Event %1$s %2$s"
+msgstr "ڕووداوی نوێ %1$s %2$s"
+
+#: src/gui/gcal-quick-add-popover.c:373
+#, c-format
+msgid "New Event Today"
+msgstr "ڕووداوێکی نوێ ئەمڕۆ"
+
+#: src/gui/gcal-quick-add-popover.c:377
+#, c-format
+msgid "New Event Tomorrow"
+msgstr "ڕووداوێکی نوێ سبەینێ"
+
+#: src/gui/gcal-quick-add-popover.c:381
+#, c-format
+msgid "New Event Yesterday"
+msgstr "ڕووداوێکی نوێ لە دوێنێ"
+
+#: src/gui/gcal-quick-add-popover.c:387
+msgid "New Event next Monday"
+msgstr "ڕووساوێکی نوێ بۆ دووشەممەی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:388
+msgid "New Event next Tuesday"
+msgstr "ڕووداوێکی نوێ بۆ سێشەممەی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:389
+msgid "New Event next Wednesday"
+msgstr "ڕووداوێکی نوێ بۆ چوارشەممەی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:390
+msgid "New Event next Thursday"
+msgstr "ڕووداوێکی نوێ بۆ پێنجشەممەی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:391
+msgid "New Event next Friday"
+msgstr "ڕووداوێکی بۆ هەینی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:392
+msgid "New Event next Saturday"
+msgstr "ڕووداوێکی نوێ بۆ شەممەی داهاتوو"
+
+#: src/gui/gcal-quick-add-popover.c:393
+msgid "New Event next Sunday"
+msgstr "ڕووداوێکی نوێ بۆ یەکشەممەی داهاتوو"
+
+#. Translators: %d is the numeric day of month
+#: src/gui/gcal-quick-add-popover.c:405
+#, c-format
+msgid "New Event on January %d"
+msgstr "ڕووداوێکی نوێ لە %d کانونی یەکەم"
+
+#: src/gui/gcal-quick-add-popover.c:406
+#, c-format
+msgid "New Event on February %d"
+msgstr "ڕووداوێکی نوێ لە %d شوبات"
+
+#: src/gui/gcal-quick-add-popover.c:407
+#, c-format
+msgid "New Event on March %d"
+msgstr "ڕووداوێکی نوێ لە %d ئازار"
+
+#: src/gui/gcal-quick-add-popover.c:408
+#, c-format
+msgid "New Event on April %d"
+msgstr "ڕووداوێکی نوێ لە %d نیسان"
+
+#: src/gui/gcal-quick-add-popover.c:409
+#, c-format
+msgid "New Event on May %d"
+msgstr "ڕووداوێکی نوێ لە %d ئایار"
+
+#: src/gui/gcal-quick-add-popover.c:410
+#, c-format
+msgid "New Event on June %d"
+msgstr "ڕووداوێکی نوێ لە %d حوزەیران"
+
+#: src/gui/gcal-quick-add-popover.c:411
+#, c-format
+msgid "New Event on July %d"
+msgstr "ڕووداوێکی نوێ لە %d تەمموز"
+
+#: src/gui/gcal-quick-add-popover.c:412
+#, c-format
+msgid "New Event on August %d"
+msgstr "ڕووداوێکی نوێ لە %d ئاب"
+
+#: src/gui/gcal-quick-add-popover.c:413
+#, c-format
+msgid "New Event on September %d"
+msgstr "ڕووداوێکی نوێ لە %d ئەیلول"
+
+#: src/gui/gcal-quick-add-popover.c:414
+#, c-format
+msgid "New Event on October %d"
+msgstr "ڕووداوێکی نوێ لە %d تشرینی یەکەم"
+
+#: src/gui/gcal-quick-add-popover.c:415
+#, c-format
+msgid "New Event on November %d"
+msgstr "ڕووداوێکی نوێ لە %d تشرینی دووەم"
+
+#: src/gui/gcal-quick-add-popover.c:416
+#, c-format
+msgid "New Event on December %d"
+msgstr "ڕووداوێکی نوێ لە %d کانونی یەکەم"
+
+#: src/gui/gcal-time-selector.c:83
+#, c-format
+msgid "%s AM"
+msgstr "%s پ ن"
+
+#: src/gui/gcal-time-selector.c:85
+#, c-format
+msgid "%s PM"
+msgstr "%s د ن"
+
+#: src/gui/gcal-window.c:705
+msgid "Another event deleted"
+msgstr "ڕووداوێکی تر سڕایەوە"
+
+#: src/gui/gcal-window.c:709
+msgid "Event deleted"
+msgstr "ڕووداو سڕایەوە"
+
+#: src/utils/gcal-utils.c:958
+msgid ""
+"The event you are trying to modify is recurring. The changes you have "
+"selected should be applied to:"
+msgstr ""
+
+#: src/utils/gcal-utils.c:961
+msgid "_Cancel"
+msgstr "_هەڵوەشاندنەوە"
+
+#: src/utils/gcal-utils.c:963
+msgid "_Only This Event"
+msgstr "_تەنها ئەم ڕووداوە"
+
+#: src/utils/gcal-utils.c:970
+msgid "_Subsequent events"
+msgstr "_ڕووداوی لەدواییەک"
+
+#: src/utils/gcal-utils.c:972
+msgid "_All events"
+msgstr "_هەموو ڕووداوەکان"
+
+#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:313
+msgid "00 AM"
+msgstr "٠٠ پ ن"
+
+#: src/views/gcal-week-header.c:462
+#, c-format
+msgid "Other event"
+msgid_plural "Other %d events"
+msgstr[0] "ڕووداوی تر"
+msgstr[1] "%d  ڕووداوی تر"
+
+#: src/views/gcal-week-header.c:998
+#, c-format
+msgid "week %d"
+msgstr "هەفتەی %d"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when the selection starts at the specified day and the
+#. * end is unspecified.
+#: src/views/gcal-year-view.c:288
+msgid "%B %d…"
+msgstr "%B %d…"
+
+#. Translators: This is a date format in the sidebar of the year
+#. * view when there is only one specified day selected.
+#. Translators: This is a date format in the sidebar of the year view.
+#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:560
+msgid "%B %d"
+msgstr "%B %d"
