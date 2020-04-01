@@ -1,6 +1,6 @@
 /* gcal-time-zone-monitor.c
  *
- * Copyright 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ * Copyright 2019-2020 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -88,8 +88,8 @@ gcal_time_zone_monitor_finalize (GObject *object)
 {
   GcalTimeZoneMonitor *self = (GcalTimeZoneMonitor *)object;
 
+  g_clear_pointer (&self->timezone, g_time_zone_unref);
   g_clear_object (&self->timedate1_proxy);
-  g_clear_object (&self->timezone);
 
   G_OBJECT_CLASS (gcal_time_zone_monitor_parent_class)->finalize (object);
 }
