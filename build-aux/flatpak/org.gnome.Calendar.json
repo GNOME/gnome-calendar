@@ -129,6 +129,7 @@
             "cleanup": [ "/share/GConf" ],
             "buildsystem" : "cmake-ninja",
             "config-opts" : [
+                "-DENABLE_CANBERRA=OFF",
                 "-DENABLE_DOT_LOCKING=OFF",
                 "-DENABLE_FILE_LOCKING=fcntl",
                 "-DENABLE_GTK=ON",
