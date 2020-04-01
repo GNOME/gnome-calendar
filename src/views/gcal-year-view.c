@@ -579,32 +579,6 @@ update_sidebar_headers (GtkListBoxRow *row,
 }
 
 static void
-update_date (GcalYearView *year_view,
-             GDateTime    *new_date)
-{
-  gboolean needs_reset = FALSE;
-
-  if (year_view->date &&
-      year_view->start_selected_date &&
-      !g_date_time_equal (year_view->date, new_date))
-    {
-      needs_reset = TRUE;
-    }
-
-  gcal_set_date_time (&year_view->date, new_date);
-
-  year_view->first_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
-                                                             1, G_DATE_JANUARY,
-                                                             g_date_time_get_year (year_view->date));;
-  year_view->last_week_of_year = get_last_week_of_year_dmy (year_view->first_weekday,
-                                                            31, G_DATE_DECEMBER,
-                                                            g_date_time_get_year (year_view->date));
-
-  if (needs_reset)
-    reset_sidebar (year_view);
-}
-
-static void
 calculate_coord_for_date (GcalYearView *year_view,
                           gint          day,
                           gint          month,
@@ -1761,10 +1735,36 @@ static void
 gcal_year_view_set_date (GcalView  *view,
                          GDateTime *date)
 {
+  GcalYearView *self;
+  gboolean year_changed;
+  gboolean needs_reset;
+
   GCAL_ENTRY;
 
-  update_date (GCAL_YEAR_VIEW (view), date);
-  gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
+  self = GCAL_YEAR_VIEW (view);
+
+  needs_reset = self->date &&
+                self->start_selected_date &&
+                !g_date_time_equal (self->date, date);
+
+  year_changed = !self->date || g_date_time_get_year (self->date) != g_date_time_get_year (date);
+
+  gcal_set_date_time (&self->date, date);
+
+  self->first_week_of_year = get_last_week_of_year_dmy (self->first_weekday,
+                                                        1,
+                                                        G_DATE_JANUARY,
+                                                        g_date_time_get_year (self->date));
+  self->last_week_of_year = get_last_week_of_year_dmy (self->first_weekday,
+                                                       31,
+                                                       G_DATE_DECEMBER,
+                                                       g_date_time_get_year (self->date));
+
+  if (needs_reset)
+    reset_sidebar (self);
+
+  if (year_changed)
+    gcal_timeline_subscriber_range_changed (GCAL_TIMELINE_SUBSCRIBER (view));
 
   GCAL_EXIT;
 }
