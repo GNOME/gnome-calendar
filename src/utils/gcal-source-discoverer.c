@@ -216,16 +216,24 @@ discover_file_in_thread (DiscovererData  *data,
   g_autoptr (SoupMessage) message = NULL;
   g_autoptr (SoupSession) session = NULL;
   g_autoptr (GPtrArray) source = NULL;
+  g_autoptr (SoupURI) uri = NULL;
+  g_autofree gchar *uri_str = NULL;
   const gchar *content_type;
 
   GCAL_ENTRY;
 
-  GCAL_TRACE_MSG ("Creating request for %s", data->uri);
+  uri = soup_uri_new (data->uri);
+
+  if (g_strcmp0 (soup_uri_get_scheme (uri), "webcal") == 0)
+    soup_uri_set_scheme (uri, SOUP_URI_SCHEME_HTTPS);
+
+  uri_str = soup_uri_to_string (uri, FALSE);
+  GCAL_TRACE_MSG ("Creating request for %s", uri_str);
 
   session = soup_session_new_with_options (SOUP_SESSION_TIMEOUT, 10, NULL);
   g_signal_connect (session, "authenticate", G_CALLBACK (on_soup_session_authenticate_cb), data);
 
-  message = soup_message_new ("GET", data->uri);
+  message = soup_message_new_from_uri ("GET", uri);
   input_stream = soup_session_send (session, message, cancellable, error);
 
   if (!input_stream)
