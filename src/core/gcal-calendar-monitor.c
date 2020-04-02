@@ -615,8 +615,11 @@ create_view (GcalCalendarMonitor *self)
   g_assert (self->cancellable == NULL);
   self->cancellable = g_cancellable_new ();
 
-  g_assert (self->shared.range_start != NULL);
-  g_assert (self->shared.range_end != NULL);
+  if (!self->shared.range_start || !self->shared.range_end)
+    {
+      g_mutex_unlock (&self->shared.mutex);
+      GCAL_RETURN ();
+    }
 
   filter = build_subscriber_filter (self->shared.range_start, self->shared.range_end, self->shared.filter);
 
@@ -839,7 +842,7 @@ remove_events_outside_range (GcalCalendarMonitor *self,
   g_hash_table_iter_init (&iter, self->events);
   while (g_hash_table_iter_next (&iter, NULL, (gpointer*) &event))
     {
-      if (gcal_event_is_within_range (event, range_start, range_end))
+      if (range_start && range_end && gcal_event_is_within_range (event, range_start, range_end))
         continue;
 
       g_object_ref (event);
@@ -1140,9 +1143,7 @@ gcal_calendar_monitor_set_range (GcalCalendarMonitor *self,
   gboolean range_changed;
 
   g_return_if_fail (GCAL_IS_CALENDAR_MONITOR (self));
-  g_return_if_fail (range_start != NULL);
-  g_return_if_fail (range_end != NULL);
-  g_return_if_fail (g_date_time_compare (range_start, range_end) < 0);
+  g_return_if_fail ((!range_start && !range_end) || g_date_time_compare (range_start, range_end) < 0);
 
   GCAL_ENTRY;
 

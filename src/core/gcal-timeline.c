@@ -981,7 +981,6 @@ gcal_timeline_remove_subscriber (GcalTimeline           *self,
                                  GcalTimelineSubscriber *subscriber)
 {
   g_return_if_fail (GCAL_IS_TIMELINE (self));
-  g_return_if_fail (GCAL_IS_TIMELINE_SUBSCRIBER (subscriber));
 
   GCAL_ENTRY;
 
@@ -992,6 +991,10 @@ gcal_timeline_remove_subscriber (GcalTimeline           *self,
 
   g_signal_handlers_disconnect_by_func (subscriber, on_subscriber_range_changed_cb, self);
   g_hash_table_remove (self->subscribers, subscriber);
+
+  /* If all subscribers were removed, reset the complete counter */
+  if (g_hash_table_size (self->subscribers) == 0)
+    reset_completed_calendars (self);
 
   update_range (self);
 
