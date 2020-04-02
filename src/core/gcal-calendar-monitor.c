@@ -399,7 +399,9 @@ on_client_view_objects_added_cb (ECalClientView      *view,
         {
           GenerateRecurrencesData recurrences_data;
           ICalComponent *icomponent;
+#if GCAL_ENABLE_TRACE
           gint old_size;
+#endif
 
           if (g_cancellable_is_cancelled (self->cancellable))
             return;
@@ -409,7 +411,10 @@ on_client_view_objects_added_cb (ECalClientView      *view,
           recurrences_data.monitor = self;
           recurrences_data.expanded_events = expanded_events;
 
+#if GCAL_ENABLE_TRACE
           old_size = expanded_events->len;
+#endif
+
           e_cal_client_generate_instances_for_object_sync (client,
                                                            icomponent,
                                                            range_start_time,
