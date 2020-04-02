@@ -1,6 +1,6 @@
 /* gcal-calendars-page.c
  *
- * Copyright 2019 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ * Copyright 2019-2020 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -458,7 +458,9 @@ gcal_calendars_page_set_property (GObject      *object,
     {
     case PROP_CONTEXT:
         {
+          g_autoptr (GList) calendars = NULL;
           GcalManager *manager;
+          GList *l;
 
           self->context = g_value_dup_object (value);
           g_assert (self->context != NULL);
@@ -466,6 +468,10 @@ gcal_calendars_page_set_property (GObject      *object,
           manager = gcal_context_get_manager (self->context);
           g_signal_connect_object (manager, "calendar-added", G_CALLBACK (on_manager_calendar_added_cb), self, 0);
           g_signal_connect_object (manager, "calendar-removed", G_CALLBACK (on_manager_calendar_removed_cb), self, 0);
+
+          calendars = gcal_manager_get_calendars (manager);
+          for (l = calendars; l; l = l->next)
+              add_calendar (self, l->data);
         }
       break;
 
