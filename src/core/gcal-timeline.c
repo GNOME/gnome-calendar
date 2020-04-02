@@ -400,6 +400,44 @@ calculate_changed_events (GcalTimeline            *self,
 }
 
 static void
+add_cached_events_to_subscriber (GcalTimeline           *self,
+                                 GcalTimelineSubscriber *subscriber)
+{
+  g_autoptr (GDateTime) subscriber_start = NULL;
+  g_autoptr (GDateTime) subscriber_end = NULL;
+  g_autoptr (GPtrArray) subscriber_array = NULL;
+  g_autoptr (GPtrArray) events_to_add = NULL;
+  gint i;
+
+  GCAL_ENTRY;
+
+  subscriber_start = gcal_timeline_subscriber_get_range_start (subscriber);
+  subscriber_end = gcal_timeline_subscriber_get_range_end (subscriber);
+
+  events_to_add = gcal_range_tree_get_data_at_range (self->events, subscriber_start, subscriber_end);
+
+  subscriber_array = g_ptr_array_new ();
+  g_ptr_array_add (subscriber_array, subscriber);
+
+  for (i = 0; events_to_add && i < events_to_add->len; i++)
+    {
+      GcalEvent *event = g_ptr_array_index (events_to_add, i);
+
+      if (!gcal_event_is_within_range (event, subscriber_start, subscriber_end))
+        continue;
+
+      GCAL_TRACE_MSG ("Queueing event addition for subscriber %s (event: '%s' (%s))",
+                      G_OBJECT_TYPE_NAME (subscriber),
+                      gcal_event_get_summary (event),
+                      gcal_event_get_uid (event));
+
+      queue_event_data (self, ADD_EVENT, subscriber_array, event, NULL, FALSE);
+    }
+
+  GCAL_EXIT;
+}
+
+static void
 update_subscriber_range (GcalTimeline           *self,
                          GcalTimelineSubscriber *subscriber)
 {
@@ -931,6 +969,7 @@ gcal_timeline_add_subscriber (GcalTimeline           *self,
                            self,
                            0);
 
+  add_cached_events_to_subscriber (self, subscriber);
   update_subscriber_range (self, subscriber);
   update_range (self);
 
