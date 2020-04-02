@@ -356,6 +356,16 @@ validate_url_cb (gpointer data)
 
   if (uri != NULL && SOUP_URI_IS_VALID (uri))
     {
+      /* "Support" webcal:// links by converting them to https://. This works
+       * because WebDAV is an extension of HTTP, so we can treat it as normal
+       * HTTP.
+       *
+       * Note we don't allow hidden use of http://, since we want to protect the
+       * user from accidentally leaking calendars in the clear. Only https://.
+       */
+      if (strcmp (uri->scheme, "webcal") == 0)
+        soup_uri_set_scheme (uri, SOUP_URI_SCHEME_HTTPS);
+
       discover_sources (self);
     }
   else
