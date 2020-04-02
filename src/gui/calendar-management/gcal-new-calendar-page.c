@@ -341,7 +341,7 @@ validate_url_cb (gpointer data)
   self->validate_url_resource_id = 0;
 
   uri = soup_uri_new (gtk_entry_get_text (self->calendar_address_entry));
-  valid_uri = uri != NULL;
+  valid_uri = uri != NULL && SOUP_URI_IS_VALID (uri);
 
   set_url_entry_error (self, !valid_uri);
 
