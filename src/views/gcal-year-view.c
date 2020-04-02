@@ -1825,10 +1825,9 @@ gcal_year_view_finalize (GObject *object)
   g_free (year_view->navigator_grid);
   g_free (year_view->selected_data);
 
-  g_free (year_view->start_selected_date);
-  g_free (year_view->end_selected_date);
-
-  g_clear_pointer (&year_view->date, g_free);
+  g_clear_pointer (&year_view->start_selected_date, g_date_time_unref);
+  g_clear_pointer (&year_view->end_selected_date, g_date_time_unref);
+  g_clear_pointer (&year_view->date, g_date_time_unref);
 
   g_clear_object (&year_view->calendar_settings);
 

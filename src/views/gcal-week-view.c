@@ -509,7 +509,7 @@ gcal_week_view_finalize (GObject       *object)
 
   self = GCAL_WEEK_VIEW (object);
 
-  g_clear_pointer (&self->date, g_free);
+  g_clear_pointer (&self->date, g_date_time_unref);
 
   g_clear_object (&self->context);
 
