@@ -31,12 +31,21 @@
 
 #define ENTRY_PROGRESS_TIMEOUT 100 // ms
 
+typedef enum
+{
+  ENTRY_STATE_EMPTY,
+  ENTRY_STATE_VALIDATING,
+  ENTRY_STATE_VALID,
+  ENTRY_STATE_INVALID
+} EntryState;
+
 struct _GcalNewCalendarPage
 {
   GtkBox              parent;
 
   GtkWidget          *add_button;
   GtkEntry           *calendar_address_entry;
+  EntryState          calendar_address_entry_state;
   GtkFileChooser     *calendar_file_chooser_button;
   GtkFileFilter      *calendar_file_filter;
   GtkWidget          *cancel_button;
@@ -130,7 +139,10 @@ update_add_button (GcalNewCalendarPage *self)
 {
   gboolean valid;
 
-  valid = self->local_source != NULL || self->remote_sources != NULL;
+  valid = (self->local_source != NULL || self->remote_sources != NULL) &&
+      self->calendar_address_entry_state != ENTRY_STATE_VALIDATING &&
+      self->calendar_address_entry_state != ENTRY_STATE_INVALID;
+
   gtk_widget_set_sensitive (self->add_button, valid);
 }
 
@@ -184,17 +196,21 @@ toggle_url_entry_pulsing (GcalNewCalendarPage *self,
 }
 
 static void
-set_url_entry_error (GcalNewCalendarPage *self,
-                     gboolean             error)
+update_url_entry_state (GcalNewCalendarPage *self,
+                        EntryState           state)
 {
   GtkStyleContext *context;
 
-  context = gtk_widget_get_style_context (GTK_WIDGET (self->calendar_address_entry));
+  self->calendar_address_entry_state = state;
 
-  if (error)
+  context = gtk_widget_get_style_context (GTK_WIDGET (self->calendar_address_entry));
+  if (state == ENTRY_STATE_INVALID)
     gtk_style_context_add_class (context, "error");
   else
     gtk_style_context_remove_class (context, "error");
+
+  update_add_button (self);
+  toggle_url_entry_pulsing (self, state == ENTRY_STATE_VALIDATING);
 }
 
 static void
@@ -218,8 +234,7 @@ discover_sources (GcalNewCalendarPage *self)
                                   self->cancellable,
                                   sources_discovered_cb,
                                   self);
-
-  toggle_url_entry_pulsing (self, TRUE);
+  update_url_entry_state (self, ENTRY_STATE_VALIDATING);
 
   GCAL_EXIT;
 }
@@ -314,7 +329,7 @@ sources_discovered_cb (GObject      *source_object,
       else
         {
           g_warning ("Error finding sources: %s", error->message);
-          toggle_url_entry_pulsing (self, FALSE);
+          update_url_entry_state (self, ENTRY_STATE_INVALID);
         }
       GCAL_RETURN ();
     }
@@ -322,9 +337,7 @@ sources_discovered_cb (GObject      *source_object,
   g_debug ("Found %u sources", sources->len);
 
   self->remote_sources = g_steal_pointer (&sources);
-  update_add_button (self);
-
-  toggle_url_entry_pulsing (self, FALSE);
+  update_url_entry_state (self, ENTRY_STATE_VALID);
 
   GCAL_EXIT;
 }
@@ -334,21 +347,22 @@ validate_url_cb (gpointer data)
 {
   GcalNewCalendarPage *self = data;
   g_autoptr (SoupURI) uri = NULL;
-  gboolean valid_uri;
 
   GCAL_ENTRY;
 
   self->validate_url_resource_id = 0;
 
   uri = soup_uri_new (gtk_entry_get_text (self->calendar_address_entry));
-  valid_uri = uri != NULL && SOUP_URI_IS_VALID (uri);
 
-  set_url_entry_error (self, !valid_uri);
-
-  if (valid_uri)
-    discover_sources (self);
+  if (uri != NULL && SOUP_URI_IS_VALID (uri))
+    {
+      discover_sources (self);
+    }
   else
-    g_debug ("Invalid URL passed");
+    {
+      update_url_entry_state (self, ENTRY_STATE_INVALID);
+      g_debug ("Invalid URL passed");
+    }
 
   GCAL_RETURN (G_SOURCE_REMOVE);
 }
@@ -395,7 +409,7 @@ on_credential_button_clicked_cb (GtkWidget           *button,
   if (button == self->credentials_connect_button)
     discover_sources (self);
   else
-    toggle_url_entry_pulsing (self, FALSE);
+    update_url_entry_state (self, ENTRY_STATE_INVALID);
 
   popdown_credentials_popover (self);
 }
@@ -427,7 +441,6 @@ on_url_entry_text_changed_cb (GtkEntry            *entry,
 
   /* Cleanup previous remote sources */
   g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
-  update_add_button (self);
 
   if (self->validate_url_resource_id != 0)
     g_clear_handle_id (&self->validate_url_resource_id, g_source_remove);
@@ -439,11 +452,12 @@ on_url_entry_text_changed_cb (GtkEntry            *entry,
        * it fails.
        */
       self->validate_url_resource_id = g_timeout_add (500, validate_url_cb, self);
+      update_url_entry_state (self, ENTRY_STATE_VALIDATING);
     }
   else
     {
       gtk_entry_set_progress_fraction (self->calendar_address_entry, 0);
-      set_url_entry_error (self, FALSE);
+      update_url_entry_state (self, ENTRY_STATE_EMPTY);
     }
 
   GCAL_EXIT;
