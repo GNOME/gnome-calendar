@@ -94,7 +94,7 @@ update_color (GcalCalendar *self)
   selectable_extension = e_source_get_extension (priv->source, E_SOURCE_EXTENSION_CALENDAR);
   color = e_source_selectable_get_color (selectable_extension);
 
-  if (!gdk_rgba_parse (&priv->color, color))
+  if (!color || !gdk_rgba_parse (&priv->color, color))
     gdk_rgba_parse (&priv->color, "#ffffff");
 }
 
