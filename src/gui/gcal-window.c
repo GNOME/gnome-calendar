@@ -1,7 +1,7 @@
 /* gcal-window.c
  *
  * Copyright (C) 2015 Erick Pérez Castellanos <erickpc@gnome.org>
- * Copyright (C) 2014 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ * Copyright (C) 2014-2020 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * gnome-calendar is free software: you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the
@@ -979,6 +979,22 @@ gcal_window_get_property (GObject    *object,
  * GtkWidget overrides
  */
 
+static void
+gcal_window_destroy (GtkWidget *widget)
+{
+  GcalTimeline *timeline;
+  GcalWindow *self;
+
+  self = GCAL_WINDOW (widget);
+
+  timeline = gcal_manager_get_timeline (gcal_context_get_manager (self->context));
+  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->week_view));
+  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->month_view));
+  gcal_timeline_remove_subscriber (timeline, GCAL_TIMELINE_SUBSCRIBER (self->year_view));
+
+  GTK_WIDGET_CLASS (gcal_window_parent_class)->destroy (widget);
+}
+
 static gboolean
 gcal_window_configure_event (GtkWidget         *widget,
                              GdkEventConfigure *event)
@@ -1021,6 +1037,7 @@ gcal_window_class_init (GcalWindowClass *klass)
 
   widget_class = GTK_WIDGET_CLASS (klass);
   widget_class->configure_event = gcal_window_configure_event;
+  widget_class->destroy = gcal_window_destroy;
 
 
   properties[PROP_ACTIVE_DATE] = g_param_spec_boxed ("active-date",
