@@ -289,6 +289,7 @@ client_instance_generated_cb (ICalComponent  *icomponent,
     return TRUE;
 
   event = gcal_event_new (self->calendar, ecomponent, &local_error);
+  g_clear_object (&ecomponent);
   if (local_error)
     {
       g_propagate_error (error, local_error);
@@ -351,6 +352,7 @@ on_client_view_objects_added_cb (ECalClientView      *view,
         continue;
 
       event = gcal_event_new (self->calendar, ecomponent, &error);
+      g_clear_object (&ecomponent);
 
       if (error)
         {
@@ -498,6 +500,7 @@ on_client_view_objects_modified_cb (ECalClientView      *view,
         continue;
 
       event = gcal_event_new (self->calendar, ecomponent, &error);
+      g_clear_object (&ecomponent);
 
       if (error)
         {
