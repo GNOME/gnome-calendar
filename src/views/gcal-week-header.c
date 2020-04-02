@@ -1,6 +1,6 @@
 /* gcal-week-header.c
  *
- * Copyright (C) 2016 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ * Copyright (C) 2016-2020 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *                    Vamsi Krishna Gollapudi <pandu.sonu@yahoo.com>
  *
  * This program is free software: you can redistribute it and/or modify
@@ -1725,8 +1725,8 @@ void
 gcal_week_header_add_event (GcalWeekHeader *self,
                             GcalEvent      *event)
 {
-  g_autoptr (GDateTime) start_date = NULL;
-  g_autoptr (GDateTime) end_date = NULL;
+  g_autoptr (GDateTime) event_start = NULL;
+  g_autoptr (GDateTime) event_end = NULL;
   g_autoptr (GDateTime) week_start = NULL;
   g_autoptr (GDateTime) week_end = NULL;
   gboolean all_day;
@@ -1752,8 +1752,8 @@ gcal_week_header_add_event (GcalWeekHeader *self,
                                           g_date_time_get_day_of_month (week_end),
                                           0, 0, 0);
 
-      start_date = g_date_time_ref (gcal_event_get_date_start (event));
-      end_date = g_date_time_ref (gcal_event_get_date_end (event));
+      event_start = g_date_time_ref (gcal_event_get_date_start (event));
+      event_end = g_date_time_ref (gcal_event_get_date_end (event));
 
       /*
        * Switch the week start and end by the UTC variants, in
@@ -1770,19 +1770,19 @@ gcal_week_header_add_event (GcalWeekHeader *self,
     }
   else
     {
-      start_date = g_date_time_to_local (gcal_event_get_date_start (event));
-      end_date = g_date_time_to_local (gcal_event_get_date_end (event));
+      event_start = g_date_time_to_local (gcal_event_get_date_start (event));
+      event_end = g_date_time_to_local (gcal_event_get_date_end (event));
     }
 
   /* Start position */
-  if (gcal_date_time_compare_date (start_date, week_start) >= 0)
-    start = floor (g_date_time_difference (start_date, week_start) / G_TIME_SPAN_DAY);
+  if (gcal_date_time_compare_date (event_start, week_start) >= 0)
+    start = floor (g_date_time_difference (event_start, week_start) / G_TIME_SPAN_DAY);
   else
     start = 0;
 
   /* End position */
-  if (g_date_time_compare (end_date, week_end) <= 0)
-    end = floor (g_date_time_difference (end_date, week_start) / G_TIME_SPAN_DAY) - all_day;
+  if (g_date_time_compare (event_end, week_end) <= 0)
+    end = floor (g_date_time_difference (event_end, week_start) / G_TIME_SPAN_DAY) - all_day;
   else
     end = 6;
 
