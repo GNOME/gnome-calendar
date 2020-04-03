@@ -54,8 +54,8 @@ struct _GcalNewCalendarPage
   GtkEntry           *credentials_password_entry;
   GtkPopover         *credentials_popover;
   GtkEntry           *credentials_user_entry;
-  GtkColorChooser    *local_calendar_color_button;
-  GtkEntry           *local_calendar_name_entry;
+  GtkColorChooser    *calendar_color_button;
+  GtkEntry           *calendar_name_entry;
   GtkWidget          *web_sources_listbox;
   GtkWidget          *web_sources_revealer;
 
@@ -64,8 +64,6 @@ struct _GcalNewCalendarPage
   guint               validate_url_resource_id;
 
   GCancellable       *cancellable;
-
-  ESource            *local_source;
 
   GcalContext        *context;
 };
@@ -134,53 +132,40 @@ calendar_path_to_name_suggestion (GFile *file)
   return g_steal_pointer (&basename);
 }
 
-static void
-update_add_button (GcalNewCalendarPage *self)
+static gchar *
+get_calendar_name (GcalNewCalendarPage *self)
 {
-  gboolean valid;
+  g_autofree gchar *name = NULL;
 
-  valid = (self->local_source != NULL || self->remote_sources != NULL) &&
-      self->calendar_address_entry_state != ENTRY_STATE_VALIDATING &&
-      self->calendar_address_entry_state != ENTRY_STATE_INVALID;
+  name = g_strdup (gtk_entry_get_text (self->calendar_name_entry));
+  if (!name)
+    return NULL;
 
-  gtk_widget_set_sensitive (self->add_button, valid);
+  name = g_strstrip (name);
+  if (g_utf8_strlen (name, -1) == 0)
+    return NULL;
+
+  return g_steal_pointer (&name);
+}
+
+static gboolean
+has_calendar_name (GcalNewCalendarPage *self)
+{
+  g_autofree gchar *name = get_calendar_name (self);
+
+  return name != NULL;
 }
 
 static void
-update_local_source (GcalNewCalendarPage *self)
+update_add_button (GcalNewCalendarPage *self)
 {
-  g_autofree gchar *calendar_name = NULL;
+  gboolean has_remote_calendar;
+  gboolean has_local_calendar;
 
-  g_clear_object (&self->local_source);
+  has_remote_calendar = self->calendar_address_entry_state == ENTRY_STATE_VALID;
+  has_local_calendar = self->calendar_address_entry_state == ENTRY_STATE_EMPTY && has_calendar_name (self);
 
-  calendar_name = g_strdup (gtk_entry_get_text (self->local_calendar_name_entry));
-  calendar_name = g_strstrip (calendar_name);
-
-  if (calendar_name && g_utf8_strlen (calendar_name, -1) > 0)
-    {
-      g_autofree gchar *color_string = NULL;
-      ESourceExtension *ext;
-      ESource *source;
-      GdkRGBA color;
-
-      gtk_color_chooser_get_rgba (self->local_calendar_color_button, &color);
-      color_string = gdk_rgba_to_string (&color);
-
-      /* Create the new source and add the needed extensions */
-      source = e_source_new (NULL, NULL, NULL);
-      e_source_set_parent (source, "local-stub");
-      e_source_set_display_name (source, calendar_name);
-
-      ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
-      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
-      e_source_selectable_set_color (E_SOURCE_SELECTABLE (ext), color_string);
-
-      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
-
-      self->local_source = source;
-    }
-
-  update_add_button (self);
+  gtk_widget_set_sensitive (self->add_button, has_local_calendar || has_remote_calendar);
 }
 
 static void
@@ -336,6 +321,7 @@ sources_discovered_cb (GObject      *source_object,
 
   g_debug ("Found %u sources", sources->len);
 
+  g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
   self->remote_sources = g_steal_pointer (&sources);
   update_url_entry_state (self, ENTRY_STATE_VALID);
 
@@ -372,22 +358,55 @@ on_add_button_clicked_cb (GtkWidget           *button,
                           GcalNewCalendarPage *self)
 {
   GcalManager *manager;
+  g_autofree gchar *calendar_name = NULL;
+  g_autofree gchar *color_string = NULL;
+  ESourceExtension *ext;
+  ESource *source;
+  GdkRGBA color;
 
   manager = gcal_context_get_manager (self->context);
 
-  /* Commit the new source */
-  if (self->local_source)
-    gcal_manager_save_source (manager, self->local_source);
+  calendar_name = get_calendar_name (self);
+
+  gtk_color_chooser_get_rgba (self->calendar_color_button, &color);
+  color_string = gdk_rgba_to_string (&color);
 
   /* Commit each new remote source */
   if (self->remote_sources)
     {
       guint i;
 
+      /* Apply the selected name and color to the first calendar source.
+       *
+       * FIXME: This might not be a reasonable thing to do when there are multiple sources.
+       */
+      source = g_ptr_array_index (self->remote_sources, 0);
+      if (calendar_name)
+        e_source_set_display_name (source, calendar_name);
+      ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
+      e_source_selectable_set_color (E_SOURCE_SELECTABLE (ext), color_string);
+
       for (i = 0; i < self->remote_sources->len; i++)
         gcal_manager_save_source (manager, g_ptr_array_index (self->remote_sources, i));
 
       g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
+    }
+  else
+    {
+      g_assert (calendar_name);
+
+      /* Create the new source and add the needed extensions */
+      source = e_source_new (NULL, NULL, NULL);
+      e_source_set_parent (source, "local-stub");
+      e_source_set_display_name (source, calendar_name);
+
+      ext = e_source_get_extension (source, E_SOURCE_EXTENSION_CALENDAR);
+      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
+      e_source_selectable_set_color (E_SOURCE_SELECTABLE (ext), color_string);
+
+      e_source_backend_set_backend_name (E_SOURCE_BACKEND (ext), "local");
+
+      gcal_manager_save_source (manager, source);
     }
 
   gcal_calendar_management_page_switch_page (GCAL_CALENDAR_MANAGEMENT_PAGE (self),
@@ -471,14 +490,6 @@ on_cancel_button_clicked_cb (GtkWidget                  *button,
 }
 
 static void
-on_local_calendar_name_entry_text_changed_cb (GtkEntry            *entry,
-                                              GParamSpec          *pspec,
-                                              GcalNewCalendarPage *self)
-{
-  update_local_source (self);
-}
-
-static void
 on_web_description_label_link_activated_cb (GtkLabel            *label,
                                             gchar               *uri,
                                             GcalNewCalendarPage *self)
@@ -538,11 +549,10 @@ gcal_new_calendar_page_deactivate (GcalCalendarManagementPage *page)
   gtk_container_remove (GTK_CONTAINER (headerbar), self->add_button);
   gtk_header_bar_set_show_close_button (headerbar, TRUE);
 
-  g_clear_object (&self->local_source);
   g_clear_pointer (&self->remote_sources, g_ptr_array_unref);
   update_add_button (self);
 
-  gtk_entry_set_text (self->local_calendar_name_entry, "");
+  gtk_entry_set_text (self->calendar_name_entry, "");
   gtk_entry_set_text (self->calendar_address_entry, "");
 
   toggle_url_entry_pulsing (self, FALSE);
@@ -641,8 +651,8 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_password_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_popover);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, credentials_user_entry);
-  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, local_calendar_color_button);
-  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, local_calendar_name_entry);
+  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_color_button);
+  gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, calendar_name_entry);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, web_sources_listbox);
   gtk_widget_class_bind_template_child (widget_class, GcalNewCalendarPage, web_sources_revealer);
 
@@ -652,7 +662,6 @@ gcal_new_calendar_page_class_init (GcalNewCalendarPageClass *klass)
   gtk_widget_class_bind_template_callback (widget_class, on_credential_button_clicked_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_credential_entry_activate_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_file_chooser_button_file_set_cb);
-  gtk_widget_class_bind_template_callback (widget_class, on_local_calendar_name_entry_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_url_entry_text_changed_cb);
   gtk_widget_class_bind_template_callback (widget_class, on_web_description_label_link_activated_cb);
 }

@@ -36,10 +36,9 @@
             </child>
 
             <child>
-              <object class="GtkEntry" id="local_calendar_name_entry">
+              <object class="GtkEntry" id="calendar_name_entry">
                 <property name="visible">True</property>
                 <property name="placeholder-text" translatable="yes">Calendar Name</property>
-                <signal name="notify::text" handler="on_local_calendar_name_entry_text_changed_cb" object="GcalNewCalendarPage" swapped="no" />
               </object>
             </child>
 
@@ -68,7 +67,7 @@
             </child>
 
             <child>
-              <object class="GtkColorButton" id="local_calendar_color_button">
+              <object class="GtkColorButton" id="calendar_color_button">
                 <property name="visible">True</property>
               </object>
             </child>
