@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-12-06 19:37+0000\n"
-"PO-Revision-Date: 2020-01-16 11:49+0100\n"
+"POT-Creation-Date: 2020-03-28 21:22+0000\n"
+"PO-Revision-Date: 2020-04-05 13:01+0200\n"
 "Last-Translator: Dušan Kazik <prescott66@gmail.com>\n"
 "Language-Team: Slovak <gnome-sk-list@gnome.org>\n"
 "Language: sk\n"
@@ -16,7 +16,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 1 : (n>=2 && n<=4) ? 2 : 0;\n"
-"X-Generator: Poedit 2.2.4\n"
+"X-Generator: Poedit 2.3\n"
 
 #: data/appdata/org.gnome.Calendar.appdata.xml.in.in:7
 #: data/org.gnome.Calendar.desktop.in.in:3 src/main.c:35
@@ -469,7 +469,6 @@ msgstr "Tento/Túto %A"
 #.
 #: src/gui/gcal-edit-dialog.c:468
 #, c-format
-#| msgid "to %1$s %2$s"
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
@@ -500,7 +499,7 @@ msgstr "Začína"
 
 #: src/gui/gcal-edit-dialog.ui:254 src/gui/gcal-edit-dialog.ui:302
 msgid "Check this out!"
-msgstr ""
+msgstr "Skontrolovať to!"
 
 #: src/gui/gcal-edit-dialog.ui:295
 msgid "Ends"
@@ -535,10 +534,8 @@ msgid "Yearly"
 msgstr "Ročne"
 
 #: src/gui/gcal-edit-dialog.ui:372
-#, fuzzy
-#| msgid "Repeat"
 msgid "End Repeat"
-msgstr "Opakovanie"
+msgstr "Koniec opakovania"
 
 #: src/gui/gcal-edit-dialog.ui:382
 msgid "Forever"
@@ -558,7 +555,7 @@ msgstr "Počet výskytov"
 
 #: src/gui/gcal-edit-dialog.ui:415
 msgid "End Repeat Date"
-msgstr ""
+msgstr "Dátum konca opakovania"
 
 #: src/gui/gcal-edit-dialog.ui:438
 msgid "Reminders"
