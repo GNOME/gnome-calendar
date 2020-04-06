@@ -9,9 +9,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar gnome-3-16\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2019-12-06 19:37+0000\n"
-"PO-Revision-Date: 2020-02-24 22:24+0100\n"
-"Last-Translator: Nathan Follens <nthn@unseen.is>\n"
+"POT-Creation-Date: 2020-03-28 21:22+0000\n"
+"PO-Revision-Date: 2020-04-06 20:20+0200\n"
+"Last-Translator: Justin van Steijn <jvs@fsfe.org>\n"
 "Language-Team: Dutch <gnome-nl-list@gnome.org>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
@@ -275,110 +275,92 @@ msgstr "Toevoegen"
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
-msgstr[0] "%1$u dag, %2$u uur en %3$u minuut geleden"
-msgstr[1] "%1$u dag, %2$u uur en %3$u minuten geleden"
+msgstr[0] "%1$u dag, %2$u uur en %3$u minuut van tevoren"
+msgstr[1] "%1$u dag, %2$u uur en %3$u minuten van tevoren"
 
 #: src/gui/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
-msgstr[0] "%1$u dag, %2$u uur en %3$u minuut geleden"
-msgstr[1] "%1$u dag, %2$u uur en %3$u minuten geleden"
+msgstr[0] "%1$u dag, %2$u uur en %3$u minuut van tevoren"
+msgstr[1] "%1$u dag, %2$u uur en %3$u minuten van tevoren"
 
 #: src/gui/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
-msgstr[0] "%1$u dagen, %2$u uur en %3$u minuut geleden"
-msgstr[1] "%1$u dagen, %2$u uur en %3$u minuten geleden"
+msgstr[0] "%1$u dagen, %2$u uur en %3$u minuut van tevoren"
+msgstr[1] "%1$u dagen, %2$u uur en %3$u minuten van tevoren"
 
 #: src/gui/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hours, and %3$u minutes before"
-msgstr[0] "%1$u dagen, %2$u uur en %3$u minuut geleden"
-msgstr[1] "%1$u dagen, %2$u uur en %3$u minuten geleden"
+msgstr[0] "%1$u dagen, %2$u uur en %3$u minuut van tevoren"
+msgstr[1] "%1$u dagen, %2$u uur en %3$u minuten van tevoren"
 
 #: src/gui/gcal-alarm-row.c:114
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u day and %2$u hour before"
 msgid_plural "%1$u day and %2$u hours before"
-msgstr[0] "%1$u dag en %2$u uur geleden"
-msgstr[1] "%1$u dag en %2$u uur geleden"
+msgstr[0] "%1$u dag en %2$u uur van tevoren"
+msgstr[1] "%1$u dag en %2$u uur van tevoren"
 
 #: src/gui/gcal-alarm-row.c:118
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u days and %2$u hour before"
 msgid_plural "%1$u days and %2$u hours before"
-msgstr[0] "%1$u dagen en %2$u uur geleden"
-msgstr[1] "%1$u dagen en %2$u uur geleden"
+msgstr[0] "%1$u dagen en %2$u uur van tevoren"
+msgstr[1] "%1$u dagen en %2$u uur van tevoren"
 
 #: src/gui/gcal-alarm-row.c:134
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u day and %2$u minute before"
 msgid_plural "%1$u day and %2$u minutes before"
-msgstr[0] "%1$u dag en %2$u minuut geleden"
-msgstr[1] "%1$u dag en %2$u minuten geleden"
+msgstr[0] "%1$u dag en %2$u minuut van tevoren"
+msgstr[1] "%1$u dag en %2$u minuten van tevoren"
 
 #: src/gui/gcal-alarm-row.c:138
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u days and %2$u minute before"
 msgid_plural "%1$u days and %2$u minutes before"
-msgstr[0] "%1$u dagen en %2$u minuut geleden"
-msgstr[1] "%1$u dagen en %2$u minuten geleden"
+msgstr[0] "%1$u dagen en %2$u minuut van tevoren"
+msgstr[1] "%1$u dagen en %2$u minuten van tevoren"
 
 #: src/gui/gcal-alarm-row.c:148
 #, c-format
-#| msgid "%d day before"
-#| msgid_plural "%d days before"
 msgid "%1$u day before"
 msgid_plural "%1$u days before"
-msgstr[0] "%1$u dag geleden"
-msgstr[1] "%1$u dagen geleden"
+msgstr[0] "%1$u dag van tevoren"
+msgstr[1] "%1$u dagen van tevoren"
 
 #: src/gui/gcal-alarm-row.c:166
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u hour and %2$u minute before"
 msgid_plural "%1$u hour and %2$u minutes before"
-msgstr[0] "%1$u uur en %2$u minuut geleden"
-msgstr[1] "%1$u uur en %2$u minuten geleden"
+msgstr[0] "%1$u uur en %2$u minuut van tevoren"
+msgstr[1] "%1$u uur en %2$u minuten van tevoren"
 
 #: src/gui/gcal-alarm-row.c:170
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
-msgstr[0] "%1$u uur en %2$u minuut geleden"
-msgstr[1] "%1$u uur en %2$u minuten geleden"
+msgstr[0] "%1$u uur en %2$u minuut van tevoren"
+msgstr[1] "%1$u uur en %2$u minuten van tevoren"
 
 #: src/gui/gcal-alarm-row.c:180
 #, c-format
-#| msgid "%d hour before"
-#| msgid_plural "%d hours before"
 msgid "%1$u hour before"
 msgid_plural "%1$u hours before"
-msgstr[0] "%1$u uur geleden"
-msgstr[1] "%1$u uur geleden"
+msgstr[0] "%1$u uur van tevoren"
+msgstr[1] "%1$u uur van tevoren"
 
 #: src/gui/gcal-alarm-row.c:192
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u minute before"
 msgid_plural "%1$u minutes before"
-msgstr[0] "%1$u minuut geleden"
-msgstr[1] "%1$u minuten geleden"
+msgstr[0] "%1$u minuut van tevoren"
+msgstr[1] "%1$u minuten van tevoren"
 
 #: src/gui/gcal-alarm-row.c:199
 msgid "Event start time"
@@ -479,7 +461,6 @@ msgstr "Deze %A"
 #.
 #: src/gui/gcal-edit-dialog.c:468
 #, c-format
-#| msgid "to %1$s %2$s"
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
