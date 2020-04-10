@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: gnome-calendar master\n"
 "Report-Msgid-Bugs-To: https://gitlab.gnome.org/GNOME/gnome-calendar/issues\n"
-"POT-Creation-Date: 2020-02-29 18:27+0000\n"
-"PO-Revision-Date: 2020-02-29 21:49+0100\n"
+"POT-Creation-Date: 2020-04-05 11:02+0000\n"
+"PO-Revision-Date: 2020-04-05 23:06+0200\n"
 "Last-Translator: Matej Urbančič <mateju@svn.gnome.org>\n"
 "Language-Team: Slovenian GNOME Translation Team <gnome-si@googlegroups.com>\n"
 "Language: sl_SI\n"
@@ -128,7 +128,7 @@ msgstr ""
 "Uporaba nastavitve nočne osvetlitve omogoča zagon nočnega načina prikaza."
 
 #. Translators: %1$s is the start date and %2$s is the end date.
-#: src/core/gcal-event.c:1878
+#: src/core/gcal-event.c:1802
 #, c-format
 msgid "%1$s — %2$s"
 msgstr "%1$s – %2$s"
@@ -137,14 +137,14 @@ msgstr "%1$s – %2$s"
 #. * Translators: %1$s is the start date, %2$s is the start time,
 #. * %3$s is the end date, and %4$s is the end time.
 #.
-#: src/core/gcal-event.c:1886
+#: src/core/gcal-event.c:1810
 #, c-format
 msgid "%1$s %2$s — %3$s %4$s"
 msgstr "%1$s, %2$s – %3$s, %4$s"
 
 #. Translators: %1$s is a date, %2$s is the start hour, and %3$s is the end hour
 #. Translators: %1$s is the event name, %2$s is the start hour, and %3$s is the end hour
-#: src/core/gcal-event.c:1902 src/gui/gcal-quick-add-popover.c:470
+#: src/core/gcal-event.c:1826 src/gui/gcal-quick-add-popover.c:470
 #, c-format
 msgid "%1$s, %2$s – %3$s"
 msgstr "%1$s, %2$s – %3$s"
@@ -198,7 +198,7 @@ msgid "Calendar <b>%s</b> removed"
 msgstr "Koledar <b>%s</b> je odstranjen."
 
 #: src/gui/calendar-management/gcal-calendars-page.ui:31
-#: src/gui/gcal-window.c:705 src/gui/gcal-window.c:709
+#: src/gui/gcal-window.c:722 src/gui/gcal-window.c:726
 msgid "Undo"
 msgstr "Razveljavi"
 
@@ -206,11 +206,11 @@ msgstr "Razveljavi"
 msgid "Add Calendar…"
 msgstr "Dodaj koledar ..."
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:491
+#: src/gui/calendar-management/gcal-new-calendar-page.c:505
 msgid "New Calendar"
 msgstr "Nov koledar"
 
-#: src/gui/calendar-management/gcal-new-calendar-page.c:653
+#: src/gui/calendar-management/gcal-new-calendar-page.c:667
 msgid "Calendar files"
 msgstr "Datoteke koledarja"
 
@@ -270,33 +270,37 @@ msgstr "Poveži"
 msgid "Add"
 msgstr "Dodaj"
 
+# This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:85
 #, c-format
 msgid "%1$u day, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hour, and %3$u minutes before"
 msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "%1$u dan, %2$u ur in %3$u minuto prej"
+msgstr[2] "%1$u dan, %2$u ur in %3$u minuti prej"
+msgstr[3] "%1$u dan, %2$u ur in %3$u minute prej"
 
+# This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:89
 #, c-format
 msgid "%1$u day, %2$u hours, and %3$u minute before"
 msgid_plural "%1$u day, %2$u hours, and %3$u minutes before"
 msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "%1$u dan, %2$u uro in %3$u minut prej"
+msgstr[2] "%1$u dan, %2$u uri in %3$u minut prej"
+msgstr[3] "%1$u dan, %2$u ure in %3$u minut prej"
 
+# This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:95
 #, c-format
 msgid "%1$u days, %2$u hour, and %3$u minute before"
 msgid_plural "%1$u days, %2$u hour, and %3$u minutes before"
 msgstr[0] ""
-msgstr[1] ""
-msgstr[2] ""
-msgstr[3] ""
+msgstr[1] "%1$u dan, %2$u ur in %3$u minut prej"
+msgstr[2] "%1$u dneva, %2$u ur in %3$u minut prej"
+msgstr[3] "%1$u dni, %2$u ur in %3$u minut prej"
 
+# This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:99
 #, c-format
 msgid "%1$u days, %2$u hours, and %3$u minute before"
@@ -306,6 +310,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+# This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:114
 #, c-format
 msgid "%1$u day and %2$u hour before"
@@ -315,6 +320,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+# This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:118
 #, c-format
 msgid "%1$u days and %2$u hour before"
@@ -324,6 +330,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+# This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:134
 #, c-format
 msgid "%1$u day and %2$u minute before"
@@ -333,6 +340,7 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+# This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:138
 #, c-format
 msgid "%1$u days and %2$u minute before"
@@ -351,6 +359,7 @@ msgstr[1] "%1$u dan prej"
 msgstr[2] "%1$u dneva prej"
 msgstr[3] "%1$u dni prej"
 
+# This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:166
 #, c-format
 msgid "%1$u hour and %2$u minute before"
@@ -360,10 +369,9 @@ msgstr[1] ""
 msgstr[2] ""
 msgstr[3] ""
 
+# This is wrong multiple plural!
 #: src/gui/gcal-alarm-row.c:170
 #, c-format
-#| msgid "%d minute before"
-#| msgid_plural "%d minutes before"
 msgid "%1$u hours and %2$u minute before"
 msgid_plural "%1$u hours and %2$u minutes before"
 msgstr[0] ""
@@ -455,14 +463,14 @@ msgstr "Končano"
 #: src/gui/gcal-edit-dialog.c:416
 #, c-format
 msgid "Last %A"
-msgstr ""
+msgstr "%A pred enim tednom"
 
 #: src/gui/gcal-edit-dialog.c:420
 msgid "Yesterday"
 msgstr "Včeraj"
 
 #: src/gui/gcal-edit-dialog.c:424 src/gui/gcal-window.ui:180
-#: src/views/gcal-year-view.c:279 src/views/gcal-year-view.c:557
+#: src/views/gcal-year-view.c:282 src/views/gcal-year-view.c:560
 #: src/views/gcal-year-view.ui:88
 msgid "Today"
 msgstr "Danes"
@@ -483,7 +491,6 @@ msgstr "%A"
 #.
 #: src/gui/gcal-edit-dialog.c:468
 #, c-format
-#| msgid "to %1$s %2$s"
 msgid "%1$s, %2$s"
 msgstr "%1$s, %2$s"
 
@@ -569,7 +576,7 @@ msgstr "Ponovi nekajkrat"
 
 #: src/gui/gcal-edit-dialog.ui:415
 msgid "End Repeat Date"
-msgstr ""
+msgstr "Datum konca ponavljanja"
 
 #: src/gui/gcal-edit-dialog.ui:438
 msgid "Reminders"
@@ -900,19 +907,19 @@ msgstr "Uredi podrobnosti ..."
 msgid ":"
 msgstr ":"
 
-#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:475
+#: src/gui/gcal-time-selector.ui:47 src/views/gcal-week-view.c:447
 msgid "AM"
 msgstr "dop"
 
-#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:475
+#: src/gui/gcal-time-selector.ui:48 src/views/gcal-week-view.c:447
 msgid "PM"
 msgstr "pop"
 
-#: src/gui/gcal-window.c:705
+#: src/gui/gcal-window.c:722
 msgid "Another event deleted"
 msgstr "Izbrisan je drug dogodek"
 
-#: src/gui/gcal-window.c:709
+#: src/gui/gcal-window.c:726
 msgid "Event deleted"
 msgstr "Dogodek je izbrisan"
 
@@ -1066,11 +1073,11 @@ msgstr "_Vsi dogodki"
 msgid "New Event…"
 msgstr "Nov dogodek ..."
 
-#: src/views/gcal-week-grid.c:753 src/views/gcal-week-view.c:313
+#: src/views/gcal-week-grid.c:706 src/views/gcal-week-view.c:293
 msgid "00 AM"
 msgstr "00 AM"
 
-#: src/views/gcal-week-grid.c:756 src/views/gcal-week-view.c:316
+#: src/views/gcal-week-grid.c:709 src/views/gcal-week-view.c:296
 msgid "00:00"
 msgstr "00:00"
 
@@ -1091,14 +1098,14 @@ msgstr "%d. teden"
 #. Translators: This is a date format in the sidebar of the year
 #. * view when the selection starts at the specified day and the
 #. * end is unspecified.
-#: src/views/gcal-year-view.c:288
+#: src/views/gcal-year-view.c:291
 msgid "%B %d…"
 msgstr "%B %d …"
 
 #. Translators: This is a date format in the sidebar of the year
 #. * view when there is only one specified day selected.
 #. Translators: This is a date format in the sidebar of the year view.
-#: src/views/gcal-year-view.c:294 src/views/gcal-year-view.c:560
+#: src/views/gcal-year-view.c:297 src/views/gcal-year-view.c:563
 msgid "%B %d"
 msgstr "%B %d"
 
