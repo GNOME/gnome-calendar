@@ -96,6 +96,7 @@ sources = files(
   'core/gcal-log.c',
   'core/gcal-manager.c',
   'core/gcal-night-light-monitor.c',
+  'core/gcal-range.c',
   'core/gcal-recurrence.c',
   'core/gcal-shell-search-provider.c',
   'core/gcal-timeline.c',
