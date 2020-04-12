@@ -1,6 +1,6 @@
 /* gcal-event.c
  *
- * Copyright (C) 2016 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
+ * Copyright (C) 2016-2020 Georges Basile Stavracas Neto <georges.stavracas@gmail.com>
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -898,12 +898,9 @@ gcal_event_set_date_end (GcalEvent *self,
 {
   g_return_if_fail (GCAL_IS_EVENT (self));
 
-  if (self->dt_end != dt)
+  if (gcal_set_date_time (&self->dt_end, dt))
     {
       ECalComponentDateTime *component_dt;
-
-      g_clear_pointer (&self->dt_end, g_date_time_unref);
-      self->dt_end = g_date_time_ref (dt);
 
       /* Setup the ECalComponent's datetime value */
       component_dt = build_component_from_datetime (self, dt);
@@ -946,12 +943,9 @@ gcal_event_set_date_start (GcalEvent *self,
 {
   g_return_if_fail (GCAL_IS_EVENT (self));
 
-  if (self->dt_start != dt)
+  if (gcal_set_date_time (&self->dt_start, dt))
     {
       ECalComponentDateTime *component_dt;
-
-      g_clear_pointer (&self->dt_start, g_date_time_unref);
-      self->dt_start = g_date_time_ref (dt);
 
       /* Setup the ECalComponent's datetime value */
       component_dt = build_component_from_datetime (self, dt);
